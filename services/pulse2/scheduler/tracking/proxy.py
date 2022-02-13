@@ -35,6 +35,7 @@ import random
 # Others Pulse2 Stuff
 import pulse2.utils
 
+
 class LocalProxiesUsageTracking(pulse2.utils.Singleton):
 
     # proxies structure, dict
@@ -68,7 +69,7 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
 
     def __create_proxy(self, uuid):
         """ create proxy dict if it do not exists """
-        if not uuid in self.proxies:
+        if uuid not in self.proxies:
             self.proxies[uuid] = dict()
 
     def __delete_proxy(self, uuid):
@@ -78,7 +79,7 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
 
     def __create_command(self, uuid, max_client_number, command_id):
         """ create command sub-dict if it do not exists """
-        if not command_id in self.proxies[uuid]:
+        if command_id not in self.proxies[uuid]:
             self.proxies[uuid][command_id] = {
                 "max_client_number": max_client_number,
                 "current_client_number": 0
@@ -114,7 +115,8 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
         if uuid in self.proxies:
             if command_id in self.proxies[uuid]:
                 self.proxies[uuid][command_id]["current_client_number"] -= 1
-                if self.proxies[uuid][command_id]["current_client_number"] < 0: # well, should not append
+                # well, should not append
+                if self.proxies[uuid][command_id]["current_client_number"] < 0:
                     self.proxies[uuid][command_id]["current_client_number"] = 0
 
     def create_proxy(self, uuid, max_client_number, command_id):
@@ -146,7 +148,7 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
 
     def how_much_left_for(self, uuid, command_id):
         """ create and take lock for a given command on a given proxy """
-        ret = 0 # safety mesure
+        ret = 0  # safety mesure
         if uuid in self.proxies:
             if command_id in self.proxies[uuid]:
                 cur = self.proxies[uuid][command_id]["current_client_number"]
@@ -165,7 +167,8 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
                 free_proxies.append(i)
 
         if len(free_proxies) > 0:
-            final_proxy = free_proxies[random.randint(0, len(free_proxies)-1)]
+            final_proxy = free_proxies[random.randint(
+                0, len(free_proxies) - 1)]
             result = self.__increment_usage(final_proxy, command_id)
         self.__unlock()
         if result:

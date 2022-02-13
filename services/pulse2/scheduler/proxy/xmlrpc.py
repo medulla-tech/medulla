@@ -29,7 +29,7 @@ from twisted.web.server import NOT_DONE_YET
 try:
     from twisted.web import http
 except ImportError:
-    from twisted.protocols import http # pyflakes.ignore
+    from twisted.protocols import http  # pyflakes.ignore
 
 from pulse2.utils import xmlrpcCleanup
 
@@ -53,10 +53,9 @@ class ForwardingProxy(XMLRPC):
 
     def client_response(self, result, request, func, args):
 
-        if request :
+        if request:
             request.setHeader("content-type", "text/xml")
             return self._cbRender(result, request, func, args)
-
 
     def _cbRender(self, result, request, func, args):
         if isinstance(result, ForwardingProxy):
@@ -67,25 +66,23 @@ class ForwardingProxy(XMLRPC):
 
         try:
             s = xmlrpc.client.dumps(result, methodresponse=1)
-        except:
+        except BaseException:
             f = xmlrpc.client.Fault(self.FAILURE, "can't serialize output")
             s = xmlrpc.client.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
         try:
             request.write(s)
-            if not request.finished :
+            if not request.finished:
                 request.finish()
-        except Exception as e :
+        except Exception as e:
             self.logger.debug("XMLRPC Proxy : request finish: %s" % str(e))
-
-
 
     def render(self, request):
         """ override method of xmlrpc python twisted framework """
-        try :
+        try:
             args, func_name = xmlrpc.client.loads(request.content.read())
         except Exception as e:
-            self.logger.error("xmlrpc render failed: %s"% str(e))
+            self.logger.error("xmlrpc render failed: %s" % str(e))
 
             return NOT_DONE_YET
 
@@ -103,14 +100,16 @@ class ForwardingProxy(XMLRPC):
         token = '%s:%s' % (request.getUser(),
                            request.getPassword())
         if token != cleartext_token:
-            self.logger.error("Invalid login / password for HTTP basic authentication")
+            self.logger.error(
+                "Invalid login / password for HTTP basic authentication")
             request.setResponseCode(http.UNAUTHORIZED)
-            self._cbRender(Fault(http.UNAUTHORIZED,
-                                 "Unauthorized: invalid credentials to connect to this Pulse 2 Scheduler Proxy, basic HTTP authentication is required"),
-                           request,
-                           func_name,
-                           args
-                          )
+            self._cbRender(
+                Fault(
+                    http.UNAUTHORIZED,
+                    "Unauthorized: invalid credentials to connect to this Pulse 2 Scheduler Proxy, basic HTTP authentication is required"),
+                request,
+                func_name,
+                args)
             return False
-        else :
+        else:
             return True

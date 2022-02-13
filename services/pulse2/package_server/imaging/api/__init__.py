@@ -60,13 +60,19 @@ class ImagingApi (MyXmlrpc):
     def xmlrpc_computersRegister(self, computers):
         return self.api.computersRegister(computers)
 
-    def xmlrpc_computerRegister(self, computerName, macAddress, imagingData=False, waitToBeInventoried=False):
-        return self.api.computerRegister(computerName, macAddress, imagingData, waitToBeInventoried)
+    def xmlrpc_computerRegister(
+            self,
+            computerName,
+            macAddress,
+            imagingData=False,
+            waitToBeInventoried=False):
+        return self.api.computerRegister(
+            computerName, macAddress, imagingData, waitToBeInventoried)
 
     def xmlrpc_computerUnregister(self, computerUUID, imageList, archive):
         return self.api.computerUnregister(computerUUID, imageList, archive)
 
-    def xmlrpc_computerPrepareImagingDirectory(self, uuid, imagingData = False):
+    def xmlrpc_computerPrepareImagingDirectory(self, uuid, imagingData=False):
         return self.api.computerPrepareImagingDirectory(uuid, imagingData)
 
     def xmlrpc_computerUpdate(self, MACAddress):
@@ -115,7 +121,7 @@ class ImagingApi (MyXmlrpc):
         """
         return self.api.imagingClearMenu(objmenu)
 
-    ## Imaging server configuration
+    # Imaging server configuration
     def xmlrpc_check_process_multicast(self, objprocess):
         # controle execution process multicast
         return self.api.check_process_multicast(objprocess)
@@ -123,24 +129,23 @@ class ImagingApi (MyXmlrpc):
     def xmlrpc_check_process_multicast_finish(self, objprocess):
         return self.api.check_process_multicast_finish(objprocess)
 
-    def xmlrpc_start_process_multicast(self,objprocess):
+    def xmlrpc_start_process_multicast(self, objprocess):
         # controle execution process multicast
         return self.api.start_process_multicast(objprocess)
 
-    def xmlrpc_muticast_script_exist(self,objprocess):
+    def xmlrpc_muticast_script_exist(self, objprocess):
         # controle execution process multicast
         return self.api.muticast_script_exist(objprocess)
 
-    def xmlrpc_clear_script_multicast(self,objprocess):
+    def xmlrpc_clear_script_multicast(self, objprocess):
         # controle execution process multicast
         return self.api.clear_script_multicast(objprocess)
 
-    def xmlrpc_checkDeploymentUDPSender(self,objprocess):
+    def xmlrpc_checkDeploymentUDPSender(self, objprocess):
         # check transfert starting multicast
         return self.api.checkDeploymentUDPSender(objprocess)
 
-
-    def xmlrpc_stop_process_multicast(self,objprocess):
+    def xmlrpc_stop_process_multicast(self, objprocess):
         # controle execution process multicast
         return self.api.stop_process_multicast(objprocess)
 
@@ -154,7 +159,6 @@ class ImagingApi (MyXmlrpc):
 
     def xmlrpc_ClearMulticastMultiSessionParameters(self, location):
         return self.api.ClearMulticastMultiSessionParameters(location)
-
 
     def xmlrpc_imagingServerConfigurationSet(self, conf):
         return self.api.imagingServerConfigurationSet(conf)

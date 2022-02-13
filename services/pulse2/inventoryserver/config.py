@@ -33,6 +33,7 @@ import os.path
 from mmc.site import mmcconfdir
 from pulse2.database.inventory.config import InventoryDatabaseConfig
 
+
 class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     """
     Singleton Class to hold configuration directives
@@ -73,15 +74,16 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
 
     options = {}
 
-
     def setup(self, config_file):
         InventoryDatabaseConfig.setup(self, config_file)
         self.rules_matching = []
-        if self.dbname == None:
+        if self.dbname is None:
             self.dbname = 'inventory'
 
-        if self.cp.has_option("main", "server"): # TODO remove in a future version
-            logging.getLogger().warning("'server' is obslete, please replace it in your config file by 'host'")
+        if self.cp.has_option(
+                "main", "server"):  # TODO remove in a future version
+            logging.getLogger().warning(
+                "'server' is obslete, please replace it in your config file by 'host'")
             self.bind = self.cp.get("main", 'server')
         elif self.cp.has_option('main', 'host'):
             self.bind = self.cp.get("main", 'host')
@@ -115,11 +117,13 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
         if self.cp.has_option('main', 'enable_forward'):
             self.enable_forward = self.cp.getboolean('main', 'enable_forward')
         if self.cp.has_option('main', 'enable_forward_ocsserver'):
-            self.enable_forward_ocsserver = self.cp.getboolean('main', 'enable_forward_ocsserver')
+            self.enable_forward_ocsserver = self.cp.getboolean(
+                'main', 'enable_forward_ocsserver')
         if self.cp.has_option('main', 'url_to_forward'):
             self.url_to_forward = self.cp.get('main', 'url_to_forward')
         if self.cp.has_option('main', 'inventory_periodicity'):
-            self.inventory_periodicity = self.cp.get('main', 'inventory_periodicity')
+            self.inventory_periodicity = self.cp.get(
+                'main', 'inventory_periodicity')
 
         if not os.path.isfile(self.localcert):
             raise Exception('can\'t read SSL key "%s"' % (self.localcert))
@@ -127,16 +131,18 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
         if not os.path.isfile(self.cacert):
             raise Exception('can\'t read SSL certificate "%s"' % (self.cacert))
             return False
-        if self.verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+        if self.verifypeer:  # we need twisted.internet.ssl.Certificate to activate certs
             import twisted.internet.ssl
             if not hasattr(twisted.internet.ssl, "Certificate"):
-                raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                raise Exception(
+                    'I need at least Python Twisted 2.5 to handle peer checking')
                 return False
 
         if self.cp.has_option('main', 'default_entity'):
             self.default_entity = self.cp.get('main', 'default_entity')
         if self.cp.has_option('main', 'entities_rules_file'):
-            self.entities_rules_file = self.cp.get('main', 'entities_rules_file')
+            self.entities_rules_file = self.cp.get(
+                'main', 'entities_rules_file')
         if self.cp.has_section('RulesMatching'):
             self.rules_matching = self.cp.items('RulesMatching')
         if self.cp.has_option('main', 'hostname'):
@@ -148,15 +154,21 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
             if len(self.hostname) == 3:
                 nom = self.getInventoryNoms()
                 if self.hostname[0] in nom:
-                    self.hostname[2][0] = ('nom%s%s' % (self.hostname[0], self.hostname[2][0]), self.hostname[2][0])
+                    self.hostname[2][0] = (
+                        'nom%s%s' %
+                        (self.hostname[0],
+                         self.hostname[2][0]),
+                        self.hostname[2][0])
 
         if self.cp.has_section("daemon"):
             if self.cp.has_option("daemon", "pid_path"):
                 self.pid_path = self.cp.get("daemon", "pid_path")
             if self.cp.has_option("daemon", "user"):
-                self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]
+                self.daemon_user = pwd.getpwnam(
+                    self.cp.get("daemon", "user"))[2]
             if self.cp.has_option("daemon", "group"):
-                self.daemon_group = grp.getgrnam(self.cp.get("daemon", "group"))[2]
+                self.daemon_group = grp.getgrnam(
+                    self.cp.get("daemon", "group"))[2]
             if self.cp.has_option("daemon", "umask"):
                 self.umask = string.atoi(self.cp.get("daemon", "umask"), 8)
 
@@ -171,9 +183,10 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
                 params = []
                 for param in self.cp.options(section):
                     if re.compile('^param_[0-9]+$').match(param):
-                         attrs, value = self.cp.get(section, param).split('##')
-                         params.append({'param':[x.split('::') for x in attrs.split('||')], 'value':value})
+                        attrs, value = self.cp.get(section, param).split('##')
+                        params.append(
+                            {'param': [x.split('::') for x in attrs.split('||')], 'value': value})
                 self.options[section] = {
-                    'name':self.cp.get(section, 'NAME'),
-                    'param':params
+                    'name': self.cp.get(section, 'NAME'),
+                    'param': params
                 }

@@ -28,7 +28,7 @@ xmppmaster database handler
 
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData, func, and_, desc, or_,\
-                        distinct, not_  # cast, Date, select,
+    distinct, not_  # cast, Date, select,
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.exc import DBAPIError
@@ -61,7 +61,7 @@ from pulse2.database.xmppmaster.schema import Network, Machines,\
     Mon_devices, \
     Mon_device_service, \
     Mon_rules, \
-    Mon_event , \
+    Mon_event, \
     Mon_panels_template, \
     Glpi_entity, \
     Glpi_location, \
@@ -362,8 +362,8 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             idpartage = self.search_partage_for_package(packagename)
             if idpartage == -1:
-                #print "add partage"
-                #il faut cree le partage.
+                # print "add partage"
+                # il faut cree le partage.
                 new_Syncthing_deploy_group = Syncthing_deploy_group()
                 new_Syncthing_deploy_group.namepartage = namepartage
                 new_Syncthing_deploy_group.directory_tmp = directory_tmp
@@ -374,7 +374,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 if dateend is None:
                     dateend = datetime.now() + timedelta(minutes=deltatime)
                 else:
-                    new_Syncthing_deploy_group.dateend =  dateend + timedelta(minutes=deltatime)
+                    new_Syncthing_deploy_group.dateend = dateend + \
+                        timedelta(minutes=deltatime)
                 session.add(new_Syncthing_deploy_group)
                 session.commit()
                 session.flush()
@@ -394,19 +395,19 @@ class XmppMasterDatabase(DatabaseHelper):
                     nbtransfert = nbtransfert + 1
                 WHERE
                     id = %s;""" % (iddeploy)
-        #print "incr_count_transfert_terminate", sql
+        # print "incr_count_transfert_terminate", sql
         result = session.execute(sql)
         session.commit()
         session.flush()
 
     @DatabaseHelper._sessionm
     def update_transfert_progress(self,
-                                      session,
-                                      progress,
-                                      iddeploy,
-                                      jidmachine):
+                                  session,
+                                  progress,
+                                  iddeploy,
+                                  jidmachine):
         """ this function update this level progress"""
-        sql="""
+        sql = """
                 UPDATE xmppmaster.syncthing_machine
                         INNER JOIN
                     syncthing_ars_cluster
@@ -420,20 +421,17 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.syncthing_machine.progress = IF(%s>=xmppmaster.syncthing_machine.progress,%s,xmppmaster.syncthing_machine.progress)
                 WHERE
                     xmppmaster.syncthing_deploy_group.id = %s
-                        AND xmppmaster.syncthing_machine.jidmachine LIKE '%s';""" % (progress,
-                                                                                   progress,
-                                                                                   iddeploy,
-                                                                                   jidmachine)
-        #print "update_transfert_progress", sql
+                        AND xmppmaster.syncthing_machine.jidmachine LIKE '%s';""" % (
+            progress, progress, iddeploy, jidmachine)
+        # print "update_transfert_progress", sql
         result = session.execute(sql)
         session.commit()
         session.flush()
 
-
     @DatabaseHelper._sessionm
     def get_ars_for_pausing_syncthing(self,
                                       session,
-                                      nbtransfert = 2):
+                                      nbtransfert=2):
         sql = """SELECT
                     xmppmaster.syncthing_deploy_group.id,
                     xmppmaster.syncthing_ars_cluster.liststrcluster,
@@ -451,41 +449,40 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.syncthing_deploy_group.nbtransfert >= %s
                     and
                     xmppmaster.syncthing_ars_cluster.keypartage != "pausing";""" % (nbtransfert)
-        #print "get_ars_for_pausing_syncthing"#, sql
+        # print "get_ars_for_pausing_syncthing"#, sql
         result = session.execute(sql)
         session.commit()
         session.flush()
         if result is None:
             return -1
         else:
-            re =  [y for y in [x for x in result]]
+            re = [y for y in [x for x in result]]
             for arssyncthing in re:
                 self.update_ars_status(arssyncthing[4], "pausing")
         return re
 
     @DatabaseHelper._sessionm
-    def update_ars_status( self,
-                           session,
-                           idars,
-                           keystatus="pausing"):
+    def update_ars_status(self,
+                          session,
+                          idars,
+                          keystatus="pausing"):
         sql = """UPDATE
                     xmppmaster.syncthing_ars_cluster
                 SET
                     xmppmaster.syncthing_ars_cluster.keypartage = '%s'
                 WHERE
                     xmppmaster.syncthing_ars_cluster.id = '%s';""" % (keystatus, idars)
-        #print "update_ars_status", sql
+        # print "update_ars_status", sql
         result = session.execute(sql)
         session.commit()
         session.flush()
 
-
     @DatabaseHelper._sessionm
-    def search_partage_for_package( self,
-                                    session,
-                                    packagename):
+    def search_partage_for_package(self,
+                                   session,
+                                   packagename):
         result = -1
-        sql=""" SELECT
+        sql = """ SELECT
                     xmppmaster.syncthing_deploy_group.id
                 FROM
                     xmppmaster.syncthing_deploy_group
@@ -496,19 +493,19 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-        resultat =  [x for x in result]
+        resultat = [x for x in result]
         if not resultat:
             return -1
         else:
             return resultat[0][0]
 
     @DatabaseHelper._sessionm
-    def search_ars_cluster_for_package( self,
-                                    session,
-                                    idpartage,
-                                    ars):
+    def search_ars_cluster_for_package(self,
+                                       session,
+                                       idpartage,
+                                       ars):
         result = -1
-        sql="""SELECT
+        sql = """SELECT
                 xmppmaster.syncthing_ars_cluster.id
                 FROM
                     xmppmaster.syncthing_ars_cluster
@@ -518,29 +515,30 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-        resultat =  [x for x in result]
+        resultat = [x for x in result]
         if len(resultat) == 0:
             return -1
         else:
             return resultat[0][0]
 
     @DatabaseHelper._sessionm
-    def search_ars_master_cluster_( self,
-                                    session,
-                                    idpartage,
-                                    numcluster):
+    def search_ars_master_cluster_(self,
+                                   session,
+                                   idpartage,
+                                   numcluster):
         result = -1
-        sql="""SELECT DISTINCT xmppmaster.syncthing_ars_cluster.arsmastercluster
+        sql = """SELECT DISTINCT xmppmaster.syncthing_ars_cluster.arsmastercluster
                 FROM
                     xmppmaster.syncthing_ars_cluster
                 where
                     xmppmaster.syncthing_ars_cluster.fk_deploy = %s
                       and
-                    xmppmaster.syncthing_ars_cluster.numcluster = %s limit 1;""" % (idpartage, numcluster)
+                    xmppmaster.syncthing_ars_cluster.numcluster = %s limit 1;""" % (
+            idpartage, numcluster)
         result = session.execute(sql)
         session.commit()
         session.flush()
-        resultat =  [x for x in result]
+        resultat = [x for x in result]
         countresult = len(resultat)
 
         if countresult == 0:
@@ -548,11 +546,11 @@ class XmppMasterDatabase(DatabaseHelper):
         elif countresult == 1:
             return resultat[0][0]
         else:
-            #il y a plusieurs cluster dans le deployement.
-            #il faut donc choisir celui correspondant au cluster
+            # il y a plusieurs cluster dans le deployement.
+            # il faut donc choisir celui correspondant au cluster
             ljidars = [x[0] for x in resultat]
             for jidars in ljidars:
-                #print jidars
+                # print jidars
                 if self.ars_in_num_cluster(jidars, numcluster):
                     return jidars
         return ""
@@ -565,7 +563,7 @@ class XmppMasterDatabase(DatabaseHelper):
         """
             test si jidars est dans le cluster number.
         """
-        sql="""SELECT
+        sql = """SELECT
                     id_ars
                 FROM
                     xmppmaster.has_cluster_ars
@@ -575,13 +573,13 @@ class XmppMasterDatabase(DatabaseHelper):
                 where xmppmaster.relayserver.jid like '%s'
                   and
                   xmppmaster.has_cluster_ars.id_cluster= %s;""" % (jidars,
-                                                                 numcluster )
-        #print sql
+                                                                   numcluster)
+        # print sql
 
         result = session.execute(sql)
         session.commit()
         session.flush()
-        resultat =  [x for x in result]
+        resultat = [x for x in result]
         if resultat:
             return True
         else:
@@ -595,15 +593,15 @@ class XmppMasterDatabase(DatabaseHelper):
                                  liststrcluster,
                                  arsmastercluster,
                                  fk_deploy,
-                                 type_partage= "",
-                                 devivesyncthing = "",
+                                 type_partage="",
+                                 devivesyncthing="",
                                  keypartage=''):
         try:
-            #search ars elu if exist for partage
+            # search ars elu if exist for partage
             arsmasterclusterexist = self.search_ars_master_cluster_(fk_deploy,
                                                                     numcluster)
-            ars_cluster_id = self.search_ars_cluster_for_package(fk_deploy,
-                                                                 liststrcluster)
+            ars_cluster_id = self.search_ars_cluster_for_package(
+                fk_deploy, liststrcluster)
             if ars_cluster_id == -1:
                 new_Syncthing_ars_cluster = Syncthing_ars_cluster()
                 new_Syncthing_ars_cluster.numcluster = numcluster
@@ -613,9 +611,9 @@ class XmppMasterDatabase(DatabaseHelper):
                     new_Syncthing_ars_cluster.arsmastercluster = arsmastercluster
                 else:
                     new_Syncthing_ars_cluster.arsmastercluster = arsmasterclusterexist
-                new_Syncthing_ars_cluster.keypartage =  keypartage
+                new_Syncthing_ars_cluster.keypartage = keypartage
                 new_Syncthing_ars_cluster.fk_deploy = fk_deploy
-                new_Syncthing_ars_cluster.type_partage =  type_partage
+                new_Syncthing_ars_cluster.type_partage = type_partage
                 new_Syncthing_ars_cluster.devivesyncthing = devivesyncthing
                 session.add(new_Syncthing_ars_cluster)
                 session.commit()
@@ -642,15 +640,15 @@ class XmppMasterDatabase(DatabaseHelper):
                              group_uuid,
                              result,
                              fk_arscluster,
-                             syncthing = 1,
-                             state ="",
-                             user ="",
-                             type_partage= "",
+                             syncthing=1,
+                             state="",
+                             user="",
+                             type_partage="",
                              title="",
                              inventoryuuid=None,
                              login=None,
                              macadress=None,
-                             comment = ""):
+                             comment=""):
         try:
             new_Syncthing_machine = Syncthing_machine()
             new_Syncthing_machine.jidmachine = jidmachine
@@ -687,10 +685,11 @@ class XmppMasterDatabase(DatabaseHelper):
                                    session,
                                    idgrp,
                                    idcmd,
-                                   valuecount= [0,100]):
-        setvalues =" "
+                                   valuecount=[0, 100]):
+        setvalues = " "
         if valuecount:
-            setvalues = "AND xmppmaster.syncthing_machine.progress in (%s)" % ",".join([str(x) for x in valuecount])
+            setvalues = "AND xmppmaster.syncthing_machine.progress in (%s)" % ",".join([
+                str(x) for x in valuecount])
         sql = """SELECT DISTINCT progress, COUNT(progress)
                     FROM
                         xmppmaster.syncthing_machine
@@ -700,11 +699,11 @@ class XmppMasterDatabase(DatabaseHelper):
                         """ % (idgrp, idcmd)
         sql = sql + setvalues + "\nGROUP BY progress ;"
 
-        #print sql
+        # print sql
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [(x[0],x[1]) for x in result]
+        return [(x[0], x[1]) for x in result]
 
     @DatabaseHelper._sessionm
     def stat_syncthing_transfert(self,
@@ -713,7 +712,9 @@ class XmppMasterDatabase(DatabaseHelper):
                                  idcmd):
 
         ddistribution = self.stat_syncthing_distributon(idgrp, idcmd)
-        distibution = {'nbvalue': len(ddistribution), "data_dist": ddistribution}
+        distibution = {
+            'nbvalue': len(ddistribution),
+            "data_dist": ddistribution}
 
         sql = """SELECT
                     pathpackage,
@@ -738,18 +739,18 @@ class XmppMasterDatabase(DatabaseHelper):
                     }
         try:
             progress = int(float(re[2]))
-        except:
+        except BaseException:
             progress = 0
 
-        return { 'package': re[0],
-                 'nbmachine': re[1],
-                 'progresstransfert': progress ,
-                 'distibution': distibution}
+        return {'package': re[0],
+                'nbmachine': re[1],
+                'progresstransfert': progress,
+                'distibution': distibution}
 
     @DatabaseHelper._sessionm
     def getnumcluster_for_ars(self,
-                            session,
-                            jidrelay):
+                              session,
+                              jidrelay):
         sql = """SELECT
                     xmppmaster.has_cluster_ars.id_cluster
                 FROM
@@ -795,15 +796,15 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def updateMachine_deploy_Syncthing(self,
-                                    session,
-                                    listidmachine,
-                                    statusold=2,
-                                    statusnew=3):
-        if isinstance(listidmachine, (int,str)):
+                                       session,
+                                       listidmachine,
+                                       statusold=2,
+                                       statusnew=3):
+        if isinstance(listidmachine, (int, str)):
             listidmachine = [listidmachine]
         if not listidmachine:
             return
-        listidmachine = ",".join([ str(x) for x in listidmachine])
+        listidmachine = ",".join([str(x) for x in listidmachine])
 
         sql = """UPDATE
                     xmppmaster.syncthing_machine
@@ -813,7 +814,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     syncthing = %s
                     and
                     id in (%s);""" % (statusnew, statusold, listidmachine)
-        #print sql
+        # print sql
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -822,8 +823,8 @@ class XmppMasterDatabase(DatabaseHelper):
     def getMachine_deploy_Syncthing(self,
                                     session,
                                     iddeploy,
-                                    ars = None,
-                                    status = None):
+                                    ars=None,
+                                    status=None):
         sql = """SELECT
                     xmppmaster.syncthing_machine.sessionid,
                     xmppmaster.syncthing_machine.jid_relay,
@@ -855,7 +856,7 @@ class XmppMasterDatabase(DatabaseHelper):
             sql = sql + """
             and
             xmppmaster.syncthing_machine.syncthing = %s """ % status
-        sql = sql +";"
+        sql = sql + ";"
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -865,14 +866,14 @@ class XmppMasterDatabase(DatabaseHelper):
     # xmppmaster FUNCTIONS synch syncthing
     # =====================================================================
     @DatabaseHelper._sessionm
-    def setSyncthingsync( self, session, uuidpackage, relayserver_jid,
-                          typesynchro = "create", watching = 'yes'):
+    def setSyncthingsync(self, session, uuidpackage, relayserver_jid,
+                         typesynchro="create", watching='yes'):
         try:
             new_Syncthingsync = Syncthingsync()
             new_Syncthingsync.uuidpackage = uuidpackage
-            new_Syncthingsync.typesynchro =  typesynchro
+            new_Syncthingsync.typesynchro = typesynchro
             new_Syncthingsync.relayserver_jid = relayserver_jid
-            new_Syncthingsync.watching =  watching
+            new_Syncthingsync.watching = watching
             session.add(new_Syncthingsync)
             session.commit()
             session.flush()
@@ -911,7 +912,8 @@ class XmppMasterDatabase(DatabaseHelper):
             ids = [ids]
 
         try:
-            relayservers = session.query(RelayServer).filter(RelayServer.id.in_(ids))
+            relayservers = session.query(
+                RelayServer).filter(RelayServer.id.in_(ids))
             relayservers = relayservers.all()
             session.commit()
             session.flush()
@@ -919,9 +921,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 res = {'id': relayserver.id,
                        'urlguacamole': relayserver.urlguacamole,
                        'subnet': relayserver.subnet,
-                       'nameserver' : relayserver.nameserver,
+                       'nameserver': relayserver.nameserver,
                        'ipserver': relayserver.ipserver,
-                       'ipconnection' : relayserver.ipconnection,
+                       'ipconnection': relayserver.ipconnection,
                        'port': relayserver.port,
                        'portconnection': relayserver.portconnection,
                        'mask': relayserver.mask,
@@ -936,7 +938,7 @@ class XmppMasterDatabase(DatabaseHelper):
                        'package_server_ip': relayserver.package_server_ip,
                        'package_server_port': relayserver.package_server_port,
                        'moderelayserver': relayserver.moderelayserver
-                    }
+                       }
                 relayserver_list.append(res)
             return relayserver_list
         except Exception as e:
@@ -956,13 +958,13 @@ class XmppMasterDatabase(DatabaseHelper):
             Returns:
                 It returns the list of the ARS contained in the cluster(s)
         """
-        if isinstance( idscluster, basestring ):
-            idscluster = [ idscluster.strip() ]
+        if isinstance(idscluster, basestring):
+            idscluster = [idscluster.strip()]
 
         if not idscluster:
             return []
         strlistcluster = ",".join([str(x[0]) for x in idscluster])
-        sql="""SELECT
+        sql = """SELECT
                     id_ars
                 FROM
                     xmppmaster.has_cluster_ars
@@ -1002,7 +1004,8 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x[0] for x in result]
 
     @DatabaseHelper._sessionm
-    def get_List_Mutual_ARS_from_cluster_of_list_idars(self, session, listidars):
+    def get_List_Mutual_ARS_from_cluster_of_list_idars(
+            self, session, listidars):
         """
             This function returns the list of the ars from a cluster based
             on the list id of one provided ARS.
@@ -1013,7 +1016,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 It returns the list of the ARS contained in the cluster
 
         """
-        listin = "%s"%  ",".join([str(x) for x in listidars])
+        listin = "%s" % ",".join([str(x) for x in listidars])
         sql = """SELECT
                     id_ars
                  FROM
@@ -1032,8 +1035,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_stat_ars_machine(self, session, listarsjid):
-        listin = ",".join(["'%s'" % x for  x in listarsjid])
-        sql="""
+        listin = ",".join(["'%s'" % x for x in listarsjid])
+        sql = """
             SELECT
                 groupdeploy,
                 SUM(CASE
@@ -1146,15 +1149,15 @@ class XmppMasterDatabase(DatabaseHelper):
             WHERE
                 groupdeploy IN (%s)
                     AND agenttype = 'machine'
-            GROUP BY groupdeploy;"""%listin
-        #logger.error("sql\n%s"%sql)
+            GROUP BY groupdeploy;""" % listin
+        # logger.error("sql\n%s"%sql)
         result = session.execute(sql)
         session.commit()
         session.flush()
         resultatout = {}
         if result:
             for row in result:
-                resultatout[row[0]]={}
+                resultatout[row[0]] = {}
                 resultatout[row[0]]['nblinuxmachine'] = int(row[1])
                 resultatout[row[0]]['nbwindows'] = int(row[2])
                 resultatout[row[0]]['nbdarwin'] = int(row[3])
@@ -1179,29 +1182,35 @@ class XmppMasterDatabase(DatabaseHelper):
         return resultatout
 
     @DatabaseHelper._sessionm
-    def get_ars_list_belongs_cluster(self, session, listidars, start, limit, filter):
+    def get_ars_list_belongs_cluster(
+            self,
+            session,
+            listidars,
+            start,
+            limit,
+            filter):
         try:
             start = int(start)
-        except:
+        except BaseException:
             start = -1
         try:
             limit = int(limit)
-        except:
+        except BaseException:
             limit = -1
 
-        resultobj ={'id': [],
-                    'hostname': [],
-                    'jid': [],
-                    'jid_from_relayserver': [],
-                    'cluster_name': [],
-                    'cluster_description': [],
-                    'classutil': [],
-                    'macaddress': [],
-                    'ip_xmpp': [],
-                    'enabled': [],
-                    'enabled_css': [],
-                    'mandatory': [],
-                    'switchonoff': []}
+        resultobj = {'id': [],
+                     'hostname': [],
+                     'jid': [],
+                     'jid_from_relayserver': [],
+                     'cluster_name': [],
+                     'cluster_description': [],
+                     'classutil': [],
+                     'macaddress': [],
+                     'ip_xmpp': [],
+                     'enabled': [],
+                     'enabled_css': [],
+                     'mandatory': [],
+                     'switchonoff': []}
 
         count = 0
         # filter activate
@@ -1221,13 +1230,25 @@ class XmppMasterDatabase(DatabaseHelper):
                 relayserver.groupdeploy LIKE '%%%s%%' OR
                 relayserver.package_server_ip LIKE '%%%s%%' OR
                 relayserver.package_server_port LIKE '%%%s%%' OR
-                relayserver.syncthing_port LIKE '%%%s%%') """ % (filter,filter,filter,filter,filter,
-                                                                 filter,filter,filter,filter,filter,
-                                                                 filter,filter,filter,filter,filter)
+                relayserver.syncthing_port LIKE '%%%s%%') """ % (filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter,
+                                                                 filter)
 
         if listidars:
-            listin = "%s"%  ",".join([str(x) for x in listidars if x != ""])
-            sql="""
+            listin = "%s" % ",".join([str(x) for x in listidars if x != ""])
+            sql = """
                 SELECT SQL_CALC_FOUND_ROWS
                     relayserver.id AS relayserver_id,
                     relayserver.ipserver AS relayserver_ipserver,
@@ -1266,10 +1287,10 @@ class XmppMasterDatabase(DatabaseHelper):
                                                                                     WHERE
                                                                                         id_ars in  (%s))
 
-                    )""" %  (filterars,listin)
+                    )""" % (filterars, listin)
             if start != -1 and limit != -1:
-                sql = sql+"LIMIT %s OFFSET %s"%(limit, start)
-            sql=sql+";"
+                sql = sql + "LIMIT %s OFFSET %s" % (limit, start)
+            sql = sql + ";"
             result = session.execute(sql)
 
             #  Count the ARS
@@ -1292,7 +1313,9 @@ class XmppMasterDatabase(DatabaseHelper):
                     resultobj['ip_xmpp'].append(row[1])
                     resultobj['macaddress'].append(row[13])
                     resultobj['enabled'].append(row[6])
-                    resultobj['enabled_css'].append("machineNamepresente" if (row[6] == "1" or row[6] == 1) else "machineName")
+                    resultobj['enabled_css'].append(
+                        "machineNamepresente" if (
+                            row[6] == "1" or row[6] == 1) else "machineName")
                     resultobj['mandatory'].append(row[8])
                     resultobj['switchonoff'].append(row[7])
 
@@ -1300,7 +1323,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return resultobj
 
     @DatabaseHelper._sessionm
-    def getRelayServer(self, session, enable = None ):
+    def getRelayServer(self, session, enable=None):
         relayserver_list = []
         if enable is not None:
             relayservers = session.query(RelayServer).\
@@ -1311,27 +1334,27 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         try:
             for relayserver in relayservers:
-                res = { 'id': relayserver.id,
-                        'urlguacamole': relayserver.urlguacamole,
-                        'subnet': relayserver.subnet,
-                        'nameserver' : relayserver.nameserver,
-                        'ipserver': relayserver.ipserver,
-                        'ipconnection' : relayserver.ipconnection,
-                        'port': relayserver.port,
-                        'portconnection': relayserver.portconnection,
-                        'mask': relayserver.mask,
-                        'jid': relayserver.jid,
-                        'longitude': relayserver.longitude,
-                        'latitude': relayserver.latitude,
-                        'enabled': relayserver.enabled,
-                        'switchonoff': relayserver.switchonoff,
-                        'mandatory': relayserver.mandatory,
-                        'classutil': relayserver.classutil,
-                        'groupdeploy': relayserver.groupdeploy,
-                        'package_server_ip': relayserver.package_server_ip,
-                        'package_server_port': relayserver.package_server_port,
-                        'moderelayserver': relayserver.moderelayserver
-                    }
+                res = {'id': relayserver.id,
+                       'urlguacamole': relayserver.urlguacamole,
+                       'subnet': relayserver.subnet,
+                       'nameserver': relayserver.nameserver,
+                       'ipserver': relayserver.ipserver,
+                       'ipconnection': relayserver.ipconnection,
+                       'port': relayserver.port,
+                       'portconnection': relayserver.portconnection,
+                       'mask': relayserver.mask,
+                       'jid': relayserver.jid,
+                       'longitude': relayserver.longitude,
+                       'latitude': relayserver.latitude,
+                       'enabled': relayserver.enabled,
+                       'switchonoff': relayserver.switchonoff,
+                       'mandatory': relayserver.mandatory,
+                       'classutil': relayserver.classutil,
+                       'groupdeploy': relayserver.groupdeploy,
+                       'package_server_ip': relayserver.package_server_ip,
+                       'package_server_port': relayserver.package_server_port,
+                       'moderelayserver': relayserver.moderelayserver
+                       }
                 relayserver_list.append(res)
             return relayserver_list
         except Exception as e:
@@ -1348,7 +1371,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
             for relayserver in relayserversync:
-                res={}
+                res = {}
                 res['uuidpackage'] = relayserver.uuidpackage
                 res['typesynchro'] = relayserver.typesynchro
                 res['relayserver_jid'] = relayserver.relayserver_jid
@@ -1362,33 +1385,37 @@ class XmppMasterDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
-    def xmpp_regiter_synchro_package(self, session, uuidpackage, typesynchro ):
-        #list id server relay
+    def xmpp_regiter_synchro_package(self, session, uuidpackage, typesynchro):
+        # list id server relay
         list_server_relay = self.get_List_jid_ServerRelay_enable(enabled=1)
         for jid in list_server_relay:
-            #exclude local package server
+            # exclude local package server
             if jid[0].startswith("rspulse@pulse/"):
                 continue
-            self.setSyncthingsync(uuidpackage, jid[0], typesynchro, watching='yes')
+            self.setSyncthingsync(
+                uuidpackage,
+                jid[0],
+                typesynchro,
+                watching='yes')
 
     # =====================================================================
     # xmppmaster FUNCTIONS
     # =====================================================================
 
     @DatabaseHelper._sessionm
-    def setlogxmpp( self,
-                    session,
-                    text,
-                    type = "noset",
-                    sessionname='',
-                    priority = 0,
-                    who = '',
-                    how = '',
-                    why = '',
-                    module = '',
-                    action = '',
-                    touser =  '',
-                    fromuser = ''):
+    def setlogxmpp(self,
+                   session,
+                   text,
+                   type="noset",
+                   sessionname='',
+                   priority=0,
+                   who='',
+                   how='',
+                   why='',
+                   module='',
+                   action='',
+                   touser='',
+                   fromuser=''):
         """
             this functions addition a log line in table log xmpp.
         """
@@ -1415,20 +1442,20 @@ class XmppMasterDatabase(DatabaseHelper):
     def getQAforMachine(self, session, cmd_id, uuidmachine):
         try:
             command_action = session.query(Command_action).\
-                    filter(and_(Command_action.command_id == cmd_id,
-                                Command_action.target == uuidmachine))
-            #print command_action
-            #print cmd_id
-            #print uuidmachine
+                filter(and_(Command_action.command_id == cmd_id,
+                            Command_action.target == uuidmachine))
+            # print command_action
+            # print cmd_id
+            # print uuidmachine
             command_action = command_action.all()
             listcommand = []
             for command in command_action:
                 action = []
-                action.append( command.command_id )
-                action.append( str(command.date) )
-                action.append( command.session_id )
-                action.append( command.typemessage )
-                action.append( command.command_result )
+                action.append(command.command_id)
+                action.append(str(command.date))
+                action.append(command.session_id)
+                action.append(command.typemessage)
+                action.append(command.command_result)
                 listcommand.append(action)
             return listcommand
         except Exception as e:
@@ -1437,33 +1464,44 @@ class XmppMasterDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
-    def getCommand_action_time(self, session, during_the_last_seconds, start, stop, filter = None):
+    def getCommand_action_time(
+            self,
+            session,
+            during_the_last_seconds,
+            start,
+            stop,
+            filter=None):
         try:
-            command_qa = session.query(distinct(Command_qa.id).label("id"),
-                                       Command_qa.command_name.label("command_name"),
-                                       Command_qa.command_login.label("command_login"),
-                                       Command_qa.command_os.label("command_os"),
-                                       Command_qa.command_start.label("command_start"),
-                                       Command_qa.command_grp.label("command_grp"),
-                                       Command_qa.command_machine.label("command_machine"),
-                                       Command_action.target.label("target")).join(Command_action,
-                                                                        Command_qa.id == Command_action.command_id)
-            ##si on veut passer par les groupe avant d'aller sur les machine.
+            command_qa = session.query(
+                distinct(
+                    Command_qa.id).label("id"),
+                Command_qa.command_name.label("command_name"),
+                Command_qa.command_login.label("command_login"),
+                Command_qa.command_os.label("command_os"),
+                Command_qa.command_start.label("command_start"),
+                Command_qa.command_grp.label("command_grp"),
+                Command_qa.command_machine.label("command_machine"),
+                Command_action.target.label("target")).join(
+                Command_action,
+                Command_qa.id == Command_action.command_id)
+            # si on veut passer par les groupe avant d'aller sur les machine.
             ## command_qa = command_qa.group_by(Command_qa.id)
             command_qa = command_qa.order_by(desc(Command_qa.id))
             if during_the_last_seconds:
-                command_qa = command_qa.\
-                    filter( Command_qa.command_start >= (datetime.now() - timedelta(seconds=during_the_last_seconds)))
+                command_qa = command_qa. filter(Command_qa.command_start >= (
+                    datetime.now() - timedelta(seconds=during_the_last_seconds)))
             #nb = self.get_count(deploylog)
         #len_query = session.query(func.count(distinct(Deploy.title)))[0]
 
             nbtotal = self.get_count(command_qa)
             if start != "" and stop != "":
-                command_qa = command_qa.offset(int(start)).limit(int(stop)-int(start))
+                command_qa = command_qa.offset(
+                    int(start)).limit(
+                    int(stop) - int(start))
             command_qa = command_qa.all()
             session.commit()
             session.flush()
-            ## creation des list pour affichage web organiser par colone
+            # creation des list pour affichage web organiser par colone
             result_list = []
             command_id_list = []
             command_name_list = []
@@ -1496,10 +1534,16 @@ class XmppMasterDatabase(DatabaseHelper):
             traceback.print_exc(file=sys.stdout)
             return {"nbtotal": 0, "result": result_list}
 
-
     @DatabaseHelper._sessionm
-    def setCommand_qa(self, session, command_name, command_action,
-                      command_login, command_grp='', command_machine='', command_os=''):
+    def setCommand_qa(
+            self,
+            session,
+            command_name,
+            command_action,
+            command_login,
+            command_grp='',
+            command_machine='',
+            command_os=''):
         try:
             new_Command_qa = Command_qa()
             new_Command_qa.command_name = command_name
@@ -1518,7 +1562,8 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getCommand_qa_by_cmdid(self, session, cmdid):
         try:
-            command_qa = session.query(Command_qa).filter( Command_qa.id == cmdid)
+            command_qa = session.query(
+                Command_qa).filter(Command_qa.id == cmdid)
             command_qa = command_qa.first()
             session.commit()
             session.flush()
@@ -1533,7 +1578,7 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error("getCommand_qa_by_cmdid error %s->" % str(e))
             traceback.print_exc(file=sys.stdout)
-            return {"id":  "",
+            return {"id": "",
                     "command_name": "",
                     "command_action": "",
                     "command_login": "",
@@ -1543,7 +1588,14 @@ class XmppMasterDatabase(DatabaseHelper):
                     "command_machine": ""}
 
     @DatabaseHelper._sessionm
-    def setCommand_action(self, session, target, command_id, sessionid, command_result="", typemessage="log"):
+    def setCommand_action(
+            self,
+            session,
+            target,
+            command_id,
+            sessionid,
+            command_result="",
+            typemessage="log"):
         try:
             new_Command_action = Command_action()
             new_Command_action.session_id = sessionid
@@ -1559,16 +1611,21 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def updateaddCommand_action(self, session, command_result, sessionid , typemessage = "result"):
+    def updateaddCommand_action(
+            self,
+            session,
+            command_result,
+            sessionid,
+            typemessage="result"):
         try:
-            sql="""UPDATE `xmppmaster`.`command_action`
+            sql = """UPDATE `xmppmaster`.`command_action`
                     SET
                         `typemessage` = '%s',
                         `command_result` = CONCAT(`command_result`, ' ', '%s')
                     WHERE
-                        (`session_id` = '%s');"""%(typemessage,
-                                                command_result,
-                                                sessionid)
+                        (`session_id` = '%s');""" % (typemessage,
+                                                     command_result,
+                                                     sessionid)
             result = session.execute(sql)
             session.commit()
             session.flush()
@@ -1578,7 +1635,14 @@ class XmppMasterDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
-    def logtext(self, session, text, sessionname='', type="noset", priority=0, who=''):
+    def logtext(
+            self,
+            session,
+            text,
+            sessionname='',
+            type="noset",
+            priority=0,
+            who=''):
         try:
             new_log = Logs()
             new_log.text = text
@@ -1592,9 +1656,8 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(str(e))
 
-
     @DatabaseHelper._sessionm
-    def log(self, session, msg, type = "info"):
+    def log(self, session, msg, type="info"):
         try:
             new_log = UserLog()
             new_log.msg = msg
@@ -1607,10 +1670,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
     #
     @DatabaseHelper._sessionm
-    def getlistpackagefromorganization( self,
-                                        session,
-                                        organization_name = None,
-                                        organization_id   = None):
+    def getlistpackagefromorganization(self,
+                                       session,
+                                       organization_name=None,
+                                       organization_id=None):
         """
             return list package an organization
             eg call function example:
@@ -1618,68 +1681,78 @@ class XmppMasterDatabase(DatabaseHelper):
             or
             XmppMasterDatabase().getlistpackagefromorganization( organization_name = "name")
         """
-         # recupere id organization
+        # recupere id organization
         idorganization = -1
         try:
-            if organization_id != None:
+            if organization_id is not None:
                 try:
-                    result_organization = session.query(Organization).filter(Organization.id == organization_id)
+                    result_organization = session.query(Organization).filter(
+                        Organization.id == organization_id)
                     result_organization = result_organization.one()
                     session.commit()
                     session.flush()
                     idorganization = result_organization.id
 
                 except Exception as e:
-                    logging.getLogger().debug("organization id : %s does not exists" % organization_id)
+                    logging.getLogger().debug(
+                        "organization id : %s does not exists" %
+                        organization_id)
                     return -1
-            elif organization_name != None:
+            elif organization_name is not None:
                 idorganization = self.getIdOrganization(organization_name)
                 if idorganization == -1:
-                    return {"nb" : 0, "packageslist" : []}
+                    return {"nb": 0, "packageslist": []}
             else:
-                return {"nb" : 0, "packageslist" : []}
-            result = session.query(Packages_list.id.label("id"),
-                                Packages_list.packageuuid.label("packageuuid"),
-                                Packages_list.organization_id.label("idorganization"),
-                                Organization.name.label("name")).join(Organization,
-                                                                        Packages_list.organization_id == Organization.id).\
-                                                                filter(Organization.id == idorganization)
+                return {"nb": 0, "packageslist": []}
+            result = session.query(
+                Packages_list.id.label("id"),
+                Packages_list.packageuuid.label("packageuuid"),
+                Packages_list.organization_id.label("idorganization"),
+                Organization.name.label("name")).join(
+                Organization,
+                Packages_list.organization_id == Organization.id). filter(
+                Organization.id == idorganization)
             nb = self.get_count(result)
             result = result.all()
 
-            list_result = [{"id" : x.id ,
+            list_result = [{"id": x.id,
                             "packageuuid": x.packageuuid,
                             "idorganization": x.idorganization,
-                            "name":  x.name} for x in result]
+                            "name": x.name} for x in result]
             return {"nb": nb, "packageslist": list_result}
         except Exception as e:
-            logging.getLogger().debug("load packages for organization id : %s is error : %s" % (organization_id, str(e)))
+            logging.getLogger().debug(
+                "load packages for organization id : %s is error : %s" %
+                (organization_id, str(e)))
             return {"nb": 0, "packageslist": []}
 
     #
     @DatabaseHelper._sessionm
-    def getIdOrganization(  self,
-                            session,
-                            name_organization):
+    def getIdOrganization(self,
+                          session,
+                          name_organization):
         """
             return id organization suivant le Name
             On error return -1
         """
         try:
-            result_organization = session.query(Organization).filter(Organization.name == name_organization)
-            result_organization=result_organization.one()
+            result_organization = session.query(Organization).filter(
+                Organization.name == name_organization)
+            result_organization = result_organization.one()
             session.commit()
             session.flush()
             return result_organization.id
         except Exception as e:
             logging.getLogger().error(str(e))
-            logging.getLogger().debug("organization name : %s does not exists" % name_organization)
+            logging.getLogger().debug(
+                "organization name : %s does not exists" %
+                name_organization)
             return -1
 
     @DatabaseHelper._sessionm
-    def addOrganization( self,
-                          session,
-                          name_organization):
+    def addOrganization(self,
+                        session,
+                        name_organization):
         """
             creation d'une organization
         """
@@ -1691,13 +1764,13 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
             return organization.id
-        else :
+        else:
             return id
 
     @DatabaseHelper._sessionm
-    def delOrganization( self,
-                          session,
-                          name_organization):
+    def delOrganization(self,
+                        session,
+                        name_organization):
         """
             del organization name
         """
@@ -1715,13 +1788,13 @@ class XmppMasterDatabase(DatabaseHelper):
 
     # Custom Command Quick Action################################
     @DatabaseHelper._sessionm
-    def create_Qa_custom_command( self,
-                                  session,
-                                  user,
-                                  osname,
-                                  namecmd,
-                                  customcmd,
-                                  description = ""):
+    def create_Qa_custom_command(self,
+                                 session,
+                                 user,
+                                 osname,
+                                 namecmd,
+                                 customcmd,
+                                 description=""):
         """
             create Qa_custom_command
         """
@@ -1742,13 +1815,14 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
-    def update_Glpi_entity( self,
+    def update_Glpi_entity(self,
                            session,
                            glpi_id,
-                           complete_name = None,
-                           name = None):
+                           complete_name=None,
+                           name=None):
         try:
-            result_entity = session.query(Glpi_entity).filter( Glpi_entity.glpi_id == glpi_id ).first()
+            result_entity = session.query(Glpi_entity).filter(
+                Glpi_entity.glpi_id == glpi_id).first()
             if result_entity:
                 if complete_name is not None:
                     result_entity.complete_name = complete_name
@@ -1764,13 +1838,14 @@ class XmppMasterDatabase(DatabaseHelper):
         return None
 
     @DatabaseHelper._sessionm
-    def update_Glpi_location( self,
-                           session,
-                           glpi_id,
-                           complete_name = None,
-                           name = None):
+    def update_Glpi_location(self,
+                             session,
+                             glpi_id,
+                             complete_name=None,
+                             name=None):
         try:
-            result_location = session.query(Glpi_location).filter( Glpi_location.glpi_id == glpi_id ).first()
+            result_location = session.query(Glpi_location).filter(
+                Glpi_location.glpi_id == glpi_id).first()
             if result_location:
                 if complete_name is not None:
                     result_location.complete_name = complete_name
@@ -1795,8 +1870,8 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             if name is not None and name != "":
                 result_register_key = session.query(Glpi_Register_Keys).\
-                                            filter(or_( Glpi_Register_Keys.machines_id == machines_id,
-                                                Glpi_Register_Keys.name == name)).one()
+                    filter(or_(Glpi_Register_Keys.machines_id == machines_id,
+                               Glpi_Register_Keys.name == name)).one()
                 session.commit()
                 session.flush()
                 if result_register_key:
@@ -1804,25 +1879,26 @@ class XmppMasterDatabase(DatabaseHelper):
                 else:
                     logging.getLogger().debug("id registration no exist for update")
         except Exception:
-            logging.getLogger().error("update Glpi_Register_Keys  : %s for machine %s does not exists" % (name,
-                                                                                 machines_id))
+            logging.getLogger().error(
+                "update Glpi_Register_Keys  : %s for machine %s does not exists" %
+                (name, machines_id))
         return None
 
     @DatabaseHelper._sessionm
-    def get_Glpi_entity( self,
-                         session,
-                         glpi_id):
+    def get_Glpi_entity(self,
+                        session,
+                        glpi_id):
         """
             get Glpi_entity by glpi id machine
         """
-        #logging.getLogger().error("get_Glpi_entity")
+        # logging.getLogger().error("get_Glpi_entity")
         try:
             result_entity = session.query(Glpi_entity).\
-                filter( Glpi_entity.glpi_id == glpi_id ).first()
+                filter(Glpi_entity.glpi_id == glpi_id).first()
             session.commit()
             session.flush()
             if result_entity:
-               return result_entity.get_data()
+                return result_entity.get_data()
             else:
                 logging.getLogger().debug("Glpi_entity id : %s does not exists" % glpi_id)
         except Exception as e:
@@ -1836,14 +1912,14 @@ class XmppMasterDatabase(DatabaseHelper):
         """
             get Glpi_location by glpi id machine
         """
-        #logging.getLogger().error("get_Glpi_location")
+        # logging.getLogger().error("get_Glpi_location")
         try:
             result_location = session.query(Glpi_location).\
-                filter( Glpi_location.glpi_id == glpi_id ).first()
+                filter(Glpi_location.glpi_id == glpi_id).first()
             session.commit()
             session.flush()
             if result_location:
-               return result_location.get_data()
+                return result_location.get_data()
             else:
                 logging.getLogger().debug("Glpi_location id : %s des not exists" % glpi_id)
         except Exception as e:
@@ -1851,39 +1927,41 @@ class XmppMasterDatabase(DatabaseHelper):
         return None
 
     @DatabaseHelper._sessionm
-    def get_Glpi_register_key( self,
-                               session,
-                               machines_id,
-                               name):
+    def get_Glpi_register_key(self,
+                              session,
+                              machines_id,
+                              name):
         """
             get Glpi_register_key by glpi id machine and name key reg
         """
         #logging.getLogger().error("get_Glpi_register_key %s %s" %(machines_id, name) )
         try:
             result_register_key = session.query(Glpi_Register_Keys).\
-                filter(and_( Glpi_Register_Keys.machines_id == machines_id,
-                             Glpi_Register_Keys.name == name)).one()
-            result_register_key=result_register_key
+                filter(and_(Glpi_Register_Keys.machines_id == machines_id,
+                            Glpi_Register_Keys.name == name)).one()
+            result_register_key = result_register_key
             session.commit()
             session.flush()
             if result_register_key:
-               return result_register_key.get_data()
+                return result_register_key.get_data()
             else:
-                logging.getLogger().debug("Glpi_Register_Keys  : %s"\
-                    " for machine %s does not exists" % (name,
-                                                      machines_id))
+                logging.getLogger().debug(
+                    "Glpi_Register_Keys  : %s"
+                    " for machine %s does not exists" %
+                    (name, machines_id))
         except Exception as e:
-                logging.getLogger().error("Glpi_Register_Keys  : %s "\
-                    "for machine %s does not exists" % (name,
-                                                     machines_id))
+            logging.getLogger().error(
+                "Glpi_Register_Keys  : %s "
+                "for machine %s does not exists" %
+                (name, machines_id))
         return None
 
     @DatabaseHelper._sessionm
-    def create_Glpi_entity( self,
-                            session,
-                            complete_name,
-                            name,
-                            glpi_id):
+    def create_Glpi_entity(self,
+                           session,
+                           complete_name,
+                           name,
+                           glpi_id):
         """
             create Glpi_entity
         """
@@ -1913,9 +1991,10 @@ class XmppMasterDatabase(DatabaseHelper):
                 # update entity
                 logging.getLogger().warning("update entity exist")
                 return self.update_Glpi_entity(glpi_id,
-                                        complete_name,
-                                        name)
+                                               complete_name,
+                                               name)
         return None
+
     @DatabaseHelper._sessionm
     def create_Glpi_location(self,
                              session,
@@ -1949,12 +2028,12 @@ class XmppMasterDatabase(DatabaseHelper):
             else:
                 logging.getLogger().debug("We update the location")
                 return self.update_Glpi_location(glpi_id,
-                                        complete_name,
-                                        name)
+                                                 complete_name,
+                                                 name)
         return None
 
     @DatabaseHelper._sessionm
-    def create_Glpi_register_keys( self,
+    def create_Glpi_register_keys(self,
                                   session,
                                   machines_id,
                                   name,
@@ -1965,7 +2044,6 @@ class XmppMasterDatabase(DatabaseHelper):
         """
 
         #logging.getLogger().error("create %s = %s" %(name, value))
-
 
         if machines_id is None or machines_id == '' or name is None or name == "":
             return None
@@ -2003,17 +2081,19 @@ class XmppMasterDatabase(DatabaseHelper):
                                               glpiinformation,
                                               idmachine,
                                               data):
-        retentity = self.create_Glpi_entity(glpiinformation['data']['complete_entity'][0],
-                                      glpiinformation['data']['entity'][0],
-                                      glpiinformation['data']['entity_glpi_id'][0])
+        retentity = self.create_Glpi_entity(
+            glpiinformation['data']['complete_entity'][0],
+            glpiinformation['data']['entity'][0],
+            glpiinformation['data']['entity_glpi_id'][0])
         if retentity is None:
             entity_id_xmpp = "NULL"
         else:
             entity_id_xmpp = retentity['id']
 
-        retlocation = self.create_Glpi_location(glpiinformation['data']['complete_location'][0],
-                                      glpiinformation['data']['location'][0],
-                                      glpiinformation['data']['location_glpi_id'][0])
+        retlocation = self.create_Glpi_location(
+            glpiinformation['data']['complete_location'][0],
+            glpiinformation['data']['location'][0],
+            glpiinformation['data']['location_glpi_id'][0])
         if retlocation is None:
             location_id_xmpp = "NULL"
         else:
@@ -2021,19 +2101,20 @@ class XmppMasterDatabase(DatabaseHelper):
         if 'win' in data['information']['info']['platform'].lower():
             for regwindokey in glpiinformation['data']['reg']:
                 if glpiinformation['data']['reg'][regwindokey][0] is not None:
-                    self.create_Glpi_register_keys( idmachine,
-                                                    regwindokey,
-                                                    value=glpiinformation['data']['reg'][regwindokey][0])
-        return self.updateGLPI_information_machine( idmachine,
-                                                    "UUID%s" % glpiinformation['data']['uuidglpicomputer'][0],
-                                                    glpiinformation['data']['description'][0],
-                                                    glpiinformation['data']['owner_firstname'][0],
-                                                    glpiinformation['data']['owner_realname'][0],
-                                                    glpiinformation['data']['owner'][0],
-                                                    glpiinformation['data']['model'][0],
-                                                    glpiinformation['data']['manufacturer'][0],
-                                                    entity_id_xmpp,
-                                                    location_id_xmpp)
+                    self.create_Glpi_register_keys(
+                        idmachine, regwindokey, value=glpiinformation['data']['reg'][regwindokey][0])
+        return self.updateGLPI_information_machine(
+            idmachine,
+            "UUID%s" %
+            glpiinformation['data']['uuidglpicomputer'][0],
+            glpiinformation['data']['description'][0],
+            glpiinformation['data']['owner_firstname'][0],
+            glpiinformation['data']['owner_realname'][0],
+            glpiinformation['data']['owner'][0],
+            glpiinformation['data']['model'][0],
+            glpiinformation['data']['manufacturer'][0],
+            entity_id_xmpp,
+            location_id_xmpp)
 
     @DatabaseHelper._sessionm
     def updateGLPI_information_machine(self,
@@ -2052,18 +2133,20 @@ class XmppMasterDatabase(DatabaseHelper):
             update Machine table with information retrieved from GLPI
         """
         try:
-            entity_id_xmpp = None if entity_id_xmpp in ["NULL", ""] else entity_id_xmpp
-            location_id_xmpp = None if location_id_xmpp in ["NULL",""] else location_id_xmpp
-            obj = { Machines.uuid_inventorymachine : uuid_inventory ,
-                              Machines.glpi_description : description_machine,
-                              Machines.glpi_owner_firstname : owner_firstname,
-                              Machines.glpi_owner_realname : owner_realname,
-                              Machines.glpi_owner : owner,
-                              Machines.model : model,
-                              Machines.manufacturer : manufacturer,
-                              Machines.glpi_entity_id :  entity_id_xmpp,
-                              Machines.glpi_location_id :location_id_xmpp }
-            session.query(Machines).filter( Machines.id == id).update( obj)
+            entity_id_xmpp = None if entity_id_xmpp in [
+                "NULL", ""] else entity_id_xmpp
+            location_id_xmpp = None if location_id_xmpp in [
+                "NULL", ""] else location_id_xmpp
+            obj = {Machines.uuid_inventorymachine: uuid_inventory,
+                   Machines.glpi_description: description_machine,
+                   Machines.glpi_owner_firstname: owner_firstname,
+                   Machines.glpi_owner_realname: owner_realname,
+                   Machines.glpi_owner: owner,
+                   Machines.model: model,
+                   Machines.manufacturer: manufacturer,
+                   Machines.glpi_entity_id: entity_id_xmpp,
+                   Machines.glpi_location_id: location_id_xmpp}
+            session.query(Machines).filter(Machines.id == id).update(obj)
             session.commit()
             session.flush()
             return 1
@@ -2072,7 +2155,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
-    def updateName_Qa_custom_command( self,
+    def updateName_Qa_custom_command(self,
                                      session,
                                      user,
                                      osname,
@@ -2084,10 +2167,12 @@ class XmppMasterDatabase(DatabaseHelper):
         """
 
         try:
-            session.query(Qa_custom_command).filter( Qa_custom_command.namecmd == namecmd).\
-                                            update( { Qa_custom_command.customcmd : customcmd ,
-                                                        Qa_custom_command.description : description,
-                                                        Qa_custom_command.os : osname })
+            session.query(Qa_custom_command).filter(
+                Qa_custom_command.namecmd == namecmd). update(
+                {
+                    Qa_custom_command.customcmd: customcmd,
+                    Qa_custom_command.description: description,
+                    Qa_custom_command.os: osname})
             session.commit()
             session.flush()
             return 1
@@ -2095,28 +2180,27 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().debug("updateName_Qa_custom_command error %s->" % str(e))
             return -1
 
-
     @DatabaseHelper._sessionm
-    def delQa_custom_command( self,
-                              session,
-                              user,
-                              osname,
-                              namecmd):
+    def delQa_custom_command(self,
+                             session,
+                             user,
+                             osname,
+                             namecmd):
         """
             del Qa_custom_command
         """
         try:
-            session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user,
-                                                        Qa_custom_command.os == osname,
-                                                        Qa_custom_command.namecmd == namecmd)
-                                                        ).delete()
+            session.query(Qa_custom_command).filter(
+                and_(
+                    Qa_custom_command.user == user,
+                    Qa_custom_command.os == osname,
+                    Qa_custom_command.namecmd == namecmd)).delete()
             session.commit()
             session.flush()
             return 1
         except Exception as e:
             logging.getLogger().debug("delQa_custom_command error %s ->" % str(e))
             return -1
-
 
     @DatabaseHelper._sessionm
     def get_list_of_users_for_shared_qa(self, session, namecmd):
@@ -2126,7 +2210,9 @@ class XmppMasterDatabase(DatabaseHelper):
         Returns :
             list of users"""
 
-        query = session.query(Qa_custom_command.user).filter( Qa_custom_command.namecmd == namecmd)
+        query = session.query(
+            Qa_custom_command.user).filter(
+            Qa_custom_command.namecmd == namecmd)
 
         if query is not None:
             user_list = [user[0] for user in query]
@@ -2134,49 +2220,60 @@ class XmppMasterDatabase(DatabaseHelper):
         else:
             return []
 
-
     @DatabaseHelper._sessionm
-    def getlistcommandforuserbyos( self,
-                                   session,
-                                   user,
-                                   osname  = None,
-                                   min = None,
-                                   max = None,
-                                   filt = None,
-                                   edit = None):
-        ret={ 'len'     : 0,
-              'nb'      : 0,
-              'limit'   : 0,
-              'max'     : 0,
-              'min'     : 0,
-              'filt'    : '',
-              'command' : []}
+    def getlistcommandforuserbyos(self,
+                                  session,
+                                  user,
+                                  osname=None,
+                                  min=None,
+                                  max=None,
+                                  filt=None,
+                                  edit=None):
+        ret = {'len': 0,
+               'nb': 0,
+               'limit': 0,
+               'max': 0,
+               'min': 0,
+               'filt': '',
+               'command': []}
         try:
             if edit is not None:
                 # We are in the edition view
-                result = session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user))
+                result = session.query(Qa_custom_command).filter(
+                    and_(Qa_custom_command.user == user))
             elif osname is None:
-                # We are displaying the list of QAs for use where OS is not defined (view list of QAs)
-                result = session.query(Qa_custom_command).filter(or_(Qa_custom_command.user == user, Qa_custom_command.user == 'allusers'))
+                # We are displaying the list of QAs for use where OS is not
+                # defined (view list of QAs)
+                result = session.query(Qa_custom_command).filter(
+                    or_(Qa_custom_command.user == user, Qa_custom_command.user == 'allusers'))
             else:
-                # We are displaying the list of QAs for use where OS is defined (list QAs for specific machine)
-                result = session.query(Qa_custom_command).filter(and_(or_(Qa_custom_command.user == user, Qa_custom_command.user == 'allusers'),
-                                                                      Qa_custom_command.os == osname))
+                # We are displaying the list of QAs for use where OS is defined
+                # (list QAs for specific machine)
+                result = session.query(Qa_custom_command).filter(
+                    and_(
+                        or_(
+                            Qa_custom_command.user == user,
+                            Qa_custom_command.user == 'allusers'),
+                        Qa_custom_command.os == osname))
 
-            total =  self.get_count(result)
-            #todo filter
+            total = self.get_count(result)
+            # todo filter
             if filt is not None:
-                result = result.filter(or_(result.namecmd.like('%%%s%%' % (filt)),
-                                           result.os.like('%%%s%%' % (filt)),
-                                           result.description.like('%%%s%%' % (filt))
-                                        )
-                        )
+                result = result.filter(
+                    or_(
+                        result.namecmd.like(
+                            '%%%s%%' %
+                            (filt)), result.os.like(
+                            '%%%s%%' %
+                            (filt)), result.description.like(
+                            '%%%s%%' %
+                            (filt))))
 
-            nbfilter =  self.get_count(result)
+            nbfilter = self.get_count(result)
 
             if min is not None and max is not None:
-                result = result.offset(int(min)).limit(int(max)-int(min))
-                ret['limit'] = int(max)-int(min)
+                result = result.offset(int(min)).limit(int(max) - int(min))
+                ret['limit'] = int(max) - int(min)
 
             if min:
                 ret['min'] = min
@@ -2192,14 +2289,14 @@ class XmppMasterDatabase(DatabaseHelper):
 
             arraylist = []
             for t in result:
-                obj={}
-                obj['user']=t.user
-                obj['os']=t.os
-                obj['namecmd']=t.namecmd
-                obj['customcmd']=t.customcmd
-                obj['description']=t.description
+                obj = {}
+                obj['user'] = t.user
+                obj['os'] = t.os
+                obj['namecmd'] = t.namecmd
+                obj['customcmd'] = t.customcmd
+                obj['description'] = t.description
                 arraylist.append(obj)
-            ret['command']= arraylist
+            ret['command'] = arraylist
             return ret
         except Exception as e:
             logging.getLogger().debug("getlistcommandforuserbyos error %s->" % str(e))
@@ -2207,11 +2304,11 @@ class XmppMasterDatabase(DatabaseHelper):
 ################################################
 
     @DatabaseHelper._sessionm
-    def addPackageByOrganization( self,
-                                  session,
-                                  packageuuid,
-                                  organization_name = None,
-                                  organization_id   = None ):
+    def addPackageByOrganization(self,
+                                 session,
+                                 packageuuid,
+                                 organization_name=None,
+                                 organization_id=None):
         """
         addition reference package in packages table for organization id
             the organization input parameter is either organization name or either organization id
@@ -2220,7 +2317,7 @@ class XmppMasterDatabase(DatabaseHelper):
         # recupere id organization
         idorganization = -1
         try:
-            if organization_id != None:
+            if organization_id is not None:
                 try:
                     result_organization = session.query(Organization).\
                         filter(Organization.id == organization_id)
@@ -2229,16 +2326,19 @@ class XmppMasterDatabase(DatabaseHelper):
                     session.flush()
                     idorganization = result_organization.id
                 except Exception as e:
-                    logging.getLogger().debug("organization id : %s does not exist" % organization_id)
+                    logging.getLogger().debug(
+                        "organization id : %s does not exist" %
+                        organization_id)
                     return -1
-            elif organization_name != None:
+            elif organization_name is not None:
                 idorganization = self.getIdOrganization(organization_name)
                 if idorganization == -1:
                     return -1
             else:
                 return -1
 
-            # addition reference package in listpackages for attribut organization id.
+            # addition reference package in listpackages for attribut
+            # organization id.
             packageslist = Packages_list()
             packageslist.organization_id = idorganization
             packageslist.packageuuid = packageuuid
@@ -2248,31 +2348,33 @@ class XmppMasterDatabase(DatabaseHelper):
             return packageslist.id
         except Exception as e:
             logging.getLogger().error(str(e))
-            logging.getLogger().debug("add Package [%s] for Organization : %s %s does not exists" % (packageuuid,
-                                                                                                     self.__returntextisNone__(organization_name),
-                                                                                                     self.__returntextisNone__(organization_id)))
+            logging.getLogger().debug(
+                "add Package [%s] for Organization : %s %s does not exists" %
+                (packageuuid,
+                 self.__returntextisNone__(organization_name),
+                 self.__returntextisNone__(organization_id)))
             return -1
 
-    def __returntextisNone__(para, text = ""):
-        if para == None:
+    def __returntextisNone__(para, text=""):
+        if para is None:
             return text
         else:
             return para
 
-
     ##########gestion packages###############
 
     ################################
+
     @DatabaseHelper._sessionm
     def resetPresenceMachine(self, session):
-        session.query(Machines).update({Machines.enabled : '0'})
+        session.query(Machines).update({Machines.enabled: '0'})
         session.commit()
         session.flush()
 
     @DatabaseHelper._sessionm
     def getIdMachineFromMacaddress(self, session, macaddress):
         presence = session.query(Machines.id).\
-            filter( Machines.macaddress.like(macaddress+'%')).first()
+            filter(Machines.macaddress.like(macaddress + '%')).first()
         session.commit()
         session.flush()
         return presence
@@ -2282,83 +2384,89 @@ class XmppMasterDatabase(DatabaseHelper):
         """ information machine"""
         if agenttype is None:
             machine = session.query(Machines).\
-                filter(Machines.macaddress.like(macaddress) ).first()
-        elif agenttype=="machine":
+                filter(Machines.macaddress.like(macaddress)).first()
+        elif agenttype == "machine":
             machine = session.query(Machines).\
                 filter(and_(Machines.macaddress.like(macaddress),
-                            Machines.agenttype.like("machine")) ).first()
-        elif agenttype=="relayserver":
+                            Machines.agenttype.like("machine"))).first()
+        elif agenttype == "relayserver":
             machine = session.query(Machines).\
                 filter(and_(Machines.macaddress.like(macaddress),
-                            Machines.agenttype.like("relayserver")) ).first()
+                            Machines.agenttype.like("relayserver"))).first()
         session.commit()
         session.flush()
         result = {}
         if machine:
-            result = {  "id" : machine.id,
-                        "jid" : machine.jid,
-                        "platform" : machine.platform,
-                        "archi" : machine.archi,
-                        "hostname" : machine.hostname,
-                        "uuid_inventorymachine" : machine.uuid_inventorymachine,
-                        "ip_xmpp" : machine.ip_xmpp,
-                        "ippublic" : machine.ippublic,
-                        "macaddress" : machine.macaddress,
-                        "subnetxmpp" : machine.subnetxmpp,
-                        "agenttype" : machine.agenttype,
-                        "classutil" : machine.classutil,
-                        "groupdeploy" : machine.groupdeploy,
-                        "urlguacamole" : machine.urlguacamole,
-                        "picklekeypublic" : machine.picklekeypublic,
-                        'ad_ou_user': machine.ad_ou_user,
-                        'ad_ou_machine': machine.ad_ou_machine,
-                        'kiosk_presence': machine.kiosk_presence,
-                        'lastuser': machine.lastuser,
-                        'keysyncthing' : machine.keysyncthing,
-                        'enabled' : machine.enabled,
-                        'uuid_serial_machine' : machine.uuid_serial_machine}
+            result = {"id": machine.id,
+                      "jid": machine.jid,
+                      "platform": machine.platform,
+                      "archi": machine.archi,
+                      "hostname": machine.hostname,
+                      "uuid_inventorymachine": machine.uuid_inventorymachine,
+                      "ip_xmpp": machine.ip_xmpp,
+                      "ippublic": machine.ippublic,
+                      "macaddress": machine.macaddress,
+                      "subnetxmpp": machine.subnetxmpp,
+                      "agenttype": machine.agenttype,
+                      "classutil": machine.classutil,
+                      "groupdeploy": machine.groupdeploy,
+                      "urlguacamole": machine.urlguacamole,
+                      "picklekeypublic": machine.picklekeypublic,
+                      'ad_ou_user': machine.ad_ou_user,
+                      'ad_ou_machine': machine.ad_ou_machine,
+                      'kiosk_presence': machine.kiosk_presence,
+                      'lastuser': machine.lastuser,
+                      'keysyncthing': machine.keysyncthing,
+                      'enabled': machine.enabled,
+                      'uuid_serial_machine': machine.uuid_serial_machine}
         return result
 
     @DatabaseHelper._sessionm
-    def getMachinefromuuidsetup(self, session, uuid_serial_machine, agenttype=None):
+    def getMachinefromuuidsetup(
+            self,
+            session,
+            uuid_serial_machine,
+            agenttype=None):
         """ information machine"""
         if agenttype is None:
-            machine = session.query(Machines).\
-                filter(Machines.uuid_serial_machine.like(uuid_serial_machine) ).first()
-        elif agenttype=="machine":
-            machine = session.query(Machines).\
-                filter(and_(Machines.uuid_serial_machine.like(uuid_serial_machine),
-                            Machines.agenttype.like("machine")) ).first()
-        elif agenttype=="relayserver":
-            machine = session.query(Machines).\
-                filter(and_(Machines.uuid_serial_machine.like(uuid_serial_machine),
-                            Machines.agenttype.like("relayserver")) ).first()
+            machine = session.query(Machines). filter(
+                Machines.uuid_serial_machine.like(uuid_serial_machine)).first()
+        elif agenttype == "machine":
+            machine = session.query(Machines). filter(
+                and_(
+                    Machines.uuid_serial_machine.like(uuid_serial_machine),
+                    Machines.agenttype.like("machine"))).first()
+        elif agenttype == "relayserver":
+            machine = session.query(Machines). filter(
+                and_(
+                    Machines.uuid_serial_machine.like(uuid_serial_machine),
+                    Machines.agenttype.like("relayserver"))).first()
         session.commit()
         session.flush()
         result = {}
         if machine:
-            result = {  "id" : machine.id,
-                        "jid" : machine.jid,
-                        "platform" : machine.platform,
-                        "archi" : machine.archi,
-                        "hostname" : machine.hostname,
-                        "uuid_inventorymachine" : machine.uuid_inventorymachine,
-                        "ip_xmpp" : machine.ip_xmpp,
-                        "ippublic" : machine.ippublic,
-                        "macaddress" : machine.macaddress,
-                        "subnetxmpp" : machine.subnetxmpp,
-                        "agenttype" : machine.agenttype,
-                        "classutil" : machine.classutil,
-                        "groupdeploy" : machine.groupdeploy,
-                        "urlguacamole" : machine.urlguacamole,
-                        "picklekeypublic" : machine.picklekeypublic,
-                        'ad_ou_user': machine.ad_ou_user,
-                        'ad_ou_machine': machine.ad_ou_machine,
-                        'kiosk_presence': machine.kiosk_presence,
-                        'lastuser': machine.lastuser,
-                        'keysyncthing' : machine.keysyncthing,
-                        'enabled' : machine.enabled,
-                        'uuid_serial_machine' : machine.uuid_serial_machine}
+            result = {"id": machine.id,
+                      "jid": machine.jid,
+                      "platform": machine.platform,
+                      "archi": machine.archi,
+                      "hostname": machine.hostname,
+                      "uuid_inventorymachine": machine.uuid_inventorymachine,
+                      "ip_xmpp": machine.ip_xmpp,
+                      "ippublic": machine.ippublic,
+                      "macaddress": machine.macaddress,
+                      "subnetxmpp": machine.subnetxmpp,
+                      "agenttype": machine.agenttype,
+                      "classutil": machine.classutil,
+                      "groupdeploy": machine.groupdeploy,
+                      "urlguacamole": machine.urlguacamole,
+                      "picklekeypublic": machine.picklekeypublic,
+                      'ad_ou_user': machine.ad_ou_user,
+                      'ad_ou_machine': machine.ad_ou_machine,
+                      'kiosk_presence': machine.kiosk_presence,
+                      'lastuser': machine.lastuser,
+                      'keysyncthing': machine.keysyncthing,
+                      'enabled': machine.enabled,
+                      'uuid_serial_machine': machine.uuid_serial_machine}
         return result
 
     @DatabaseHelper._sessionm
@@ -2397,35 +2505,39 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if uuid_inventorymachine is None:
             uuid_inventorymachine = ""
-        msg ="Create Machine"
+        msg = "Create Machine"
         pe = -1
         if uuid_serial_machine != "":
-            machineforupdate = self.getMachinefromuuidsetup(uuid_serial_machine,
-                                                            agenttype=agenttype)
+            machineforupdate = self.getMachinefromuuidsetup(
+                uuid_serial_machine, agenttype=agenttype)
         else:
-            machineforupdate = self.getMachinefrommacadress(macaddress,
-                                                            agenttype=agenttype)
+            machineforupdate = self.getMachinefrommacadress(
+                macaddress, agenttype=agenttype)
         if machineforupdate:
             pe = machineforupdate['id']
         if pe != -1:
             # update
-            maxlenhostname = max([len(machineforupdate['hostname']), len(hostname)])
+            maxlenhostname = max(
+                [len(machineforupdate['hostname']), len(hostname)])
             maxlenjid = max([len(machineforupdate['jid']), len(jid)])
-            maxmacadress = max([len(machineforupdate['macaddress']), len(macaddress)])
-            maxip_xmpp = max([len(machineforupdate['ip_xmpp']), len(ip_xmpp),len("ip_xmpp")])
-            maxsubnetxmpp = max([len(machineforupdate['subnetxmpp']), len(subnetxmpp), len("subnetxmpp")])
+            maxmacadress = max(
+                [len(machineforupdate['macaddress']), len(macaddress)])
+            maxip_xmpp = max(
+                [len(machineforupdate['ip_xmpp']), len(ip_xmpp), len("ip_xmpp")])
+            maxsubnetxmpp = max(
+                [len(machineforupdate['subnetxmpp']), len(subnetxmpp), len("subnetxmpp")])
             maxonoff = 6
             uuidold = str(machineforupdate['uuid_inventorymachine'])
             if uuid_inventorymachine is None:
                 uuidnew = "None"
             else:
                 uuidnew = str(uuid_inventorymachine)
-            maxuuid=max([len(uuidold), len(uuidnew)])
-            msg ="Update Machine %8s (%s)\n" \
+            maxuuid = max([len(uuidold), len(uuidnew)])
+            msg = "Update Machine %8s (%s)\n" \
                 "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|\n" \
                 "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|\n" \
                 "by\n" \
-                "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|"%(
+                "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|" % (
                     machineforupdate['id'], uuid_serial_machine,
                     maxlenhostname, "hostname",
                     maxlenjid, "jid",
@@ -2433,7 +2545,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     maxip_xmpp, "ip_xmpp",
                     maxsubnetxmpp, "subnetxmpp",
                     maxonoff, "On/OFF",
-                    maxuuid,"UUID",
+                    maxuuid, "UUID",
                     maxlenhostname, machineforupdate['hostname'],
                     maxlenjid, machineforupdate['jid'],
                     maxmacadress, machineforupdate['macaddress'],
@@ -2447,43 +2559,43 @@ class XmppMasterDatabase(DatabaseHelper):
                     maxip_xmpp, ip_xmpp,
                     maxsubnetxmpp, subnetxmpp,
                     maxonoff, "1",
-                    6,uuidnew)
+                    6, uuidnew)
             self.logger.warning(msg)
-            session.query(Machines).filter( Machines.id == pe).\
-                       update({ Machines.jid: jid,
-                                Machines.platform: platform,
-                                Machines.hostname: hostname,
-                                Machines.archi: archi,
-                                Machines.uuid_inventorymachine: uuid_inventorymachine,
-                                Machines.ippublic: ippublic,
-                                Machines.ip_xmpp: ip_xmpp,
-                                Machines.subnetxmpp: subnetxmpp,
-                                Machines.macaddress: macaddress,
-                                Machines.agenttype: agenttype,
-                                Machines.classutil: classutil,
-                                Machines.urlguacamole: urlguacamole,
-                                Machines.groupdeploy: groupdeploy,
-                                Machines.picklekeypublic: objkeypublic,
-                                Machines.ad_ou_user: ad_ou_user,
-                                Machines.ad_ou_machine: ad_ou_machine,
-                                Machines.kiosk_presence: kiosk_presence,
-                                Machines.lastuser: lastuser,
-                                Machines.keysyncthing: keysyncthing,
-                                Machines.enabled: '1',
-                                Machines.uuid_serial_machine: uuid_serial_machine
-                                })
+            session.query(Machines).filter(Machines.id == pe).\
+                update({Machines.jid: jid,
+                        Machines.platform: platform,
+                        Machines.hostname: hostname,
+                        Machines.archi: archi,
+                        Machines.uuid_inventorymachine: uuid_inventorymachine,
+                        Machines.ippublic: ippublic,
+                        Machines.ip_xmpp: ip_xmpp,
+                        Machines.subnetxmpp: subnetxmpp,
+                        Machines.macaddress: macaddress,
+                        Machines.agenttype: agenttype,
+                        Machines.classutil: classutil,
+                        Machines.urlguacamole: urlguacamole,
+                        Machines.groupdeploy: groupdeploy,
+                        Machines.picklekeypublic: objkeypublic,
+                        Machines.ad_ou_user: ad_ou_user,
+                        Machines.ad_ou_machine: ad_ou_machine,
+                        Machines.kiosk_presence: kiosk_presence,
+                        Machines.lastuser: lastuser,
+                        Machines.keysyncthing: keysyncthing,
+                        Machines.enabled: '1',
+                        Machines.uuid_serial_machine: uuid_serial_machine
+                        })
             session.commit()
             session.flush()
             return pe, msg
         else:
-            #create
+            # create
             lenhostname = len(hostname)
             lenjid = len(jid)
             lenmacadress = len(macaddress)
             lenip_xmpp = len(ip_xmpp)
             lensubnetxmpp = len(subnetxmpp)
             lenonoff = 6
-            msg ="creat Machine (%s)\n" \
+            msg = "creat Machine (%s)\n" \
                 "|%*s|%*s|%*s|%*s|%*s|%*s|\n" \
                 "|%*s|%*s|%*s|%*s|%*s|%*s|\n" % (
                     uuid_serial_machine,
@@ -2547,7 +2659,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     self.checknewjid(jid)
             except Exception as e:
                 logging.getLogger().error(str(e))
-                msg=str(e)
+                msg = str(e)
                 return -1, msg
             return new_machine.id, msg
 
@@ -2555,12 +2667,12 @@ class XmppMasterDatabase(DatabaseHelper):
     def checknewjid(self, session, newjidmachine):
         try:
             # on appelle la procedure stocke
-            sql = """call afterinsertmachine('%s');"""%newjidmachine
+            sql = """call afterinsertmachine('%s');""" % newjidmachine
             session.execute(sql)
             session.commit()
             session.flush()
         except Exception as e:
-            logging.getLogger().error("sql : %s"%traceback.format_exc())
+            logging.getLogger().error("sql : %s" % traceback.format_exc())
 
     @DatabaseHelper._sessionm
     def is_jiduser_organization_ad(self, session, jiduser):
@@ -2573,8 +2685,8 @@ class XmppMasterDatabase(DatabaseHelper):
         req = session.execute(sql)
         session.commit()
         session.flush()
-        ret=[m[0] for m in req]
-        if ret[0] == 0 :
+        ret = [m[0] for m in req]
+        if ret[0] == 0:
             return False
         return True
 
@@ -2595,13 +2707,14 @@ class XmppMasterDatabase(DatabaseHelper):
         req = session.execute(sql)
         session.commit()
         session.flush()
-        ret=[m[0] for m in req]
-        if ret[0] == 0 :
+        ret = [m[0] for m in req]
+        if ret[0] == 0:
             return False
         return True
 
     @DatabaseHelper._sessionm
-    def is_id_inventory_jiduser_organization_ad(self, session, id_inventory, jiduser):
+    def is_id_inventory_jiduser_organization_ad(
+            self, session, id_inventory, jiduser):
         """ if id_inventory exist return True"""
         sql = """SELECT COUNT(id_inventory) AS nb
             FROM
@@ -2614,47 +2727,49 @@ class XmppMasterDatabase(DatabaseHelper):
         req = session.execute(sql)
         session.commit()
         session.flush()
-        ret=[m[0] for m in req]
-        if ret[0] == 0 :
+        ret = [m[0] for m in req]
+        if ret[0] == 0:
             return False
         return True
 
     @DatabaseHelper._sessionm
-    def getAllOUuser(self, session, ctx, filt = ''):
+    def getAllOUuser(self, session, ctx, filt=''):
         """
         @return: all ou defined in the xmpp database
         """
         query = session.query(Organization_ad)
         if filter != '':
-            query = query.filter(Organization_ad.ouuser.like('%'+filt+'%'))
+            query = query.filter(Organization_ad.ouuser.like('%' + filt + '%'))
         ret = query.all()
         session.close()
         return ret
 
     @DatabaseHelper._sessionm
-    def getAllOUmachine(self, session, ctx, filt = ''):
+    def getAllOUmachine(self, session, ctx, filt=''):
         """
         @return: all ou defined in the xmpp database
         """
         query = session.query(Organization_ad)
         if filter != '':
-            query = query.filter(Organization_ad.oumachine.like('%'+filt+'%'))
+            query = query.filter(
+                Organization_ad.oumachine.like(
+                    '%' + filt + '%'))
         ret = query.all()
         session.close()
         return ret
 
     @DatabaseHelper._sessionm
     def replace_Organization_ad_id_inventory(self,
-                                session,
-                                old_id_inventory,
-                                new_id_inventory):
-        if old_id_inventory is None :
+                                             session,
+                                             old_id_inventory,
+                                             new_id_inventory):
+        if old_id_inventory is None:
             logging.getLogger().warning("Organization AD id inventory is not exits")
             return -1
         try:
             session.query(Organization_ad).\
-                filter( Organization_ad.id_inventory ==  self.uuidtoid(old_id_inventory)).\
-                    update({ Organization_ad.id_inventory : self.uuidtoid(new_id_inventory) })
+                filter(Organization_ad.id_inventory == self.uuidtoid(old_id_inventory)).\
+                update({Organization_ad.id_inventory: self.uuidtoid(new_id_inventory)})
             session.commit()
             session.flush()
             return 1
@@ -2664,25 +2779,26 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def updateOrganization_ad_id_inventory(self,
-                                session,
-                                id_inventory,
-                                jiduser,
-                                ouuser="",
-                                oumachine="",
-                                hostname="",
-                                username=""):
+                                           session,
+                                           id_inventory,
+                                           jiduser,
+                                           ouuser="",
+                                           oumachine="",
+                                           hostname="",
+                                           username=""):
         """
             update Organization_ad table in base xmppmaster
         """
         try:
-            session.query(Organization_ad).\
-                filter(Organization_ad.id_inventory ==  self.uuidtoid(id_inventory)).\
-                       update({Organization_ad.jiduser: jiduser,
-                              Organization_ad.id_inventory: self.uuidtoid(id_inventory),
-                              Organization_ad.ouuser: ouuser,
-                              Organization_ad.oumachine: oumachine,
-                              Organization_ad.hostname: hostname,
-                              Organization_ad.username: username})
+            session.query(Organization_ad). filter(
+                Organization_ad.id_inventory == self.uuidtoid(id_inventory)). update(
+                {
+                    Organization_ad.jiduser: jiduser,
+                    Organization_ad.id_inventory: self.uuidtoid(id_inventory),
+                    Organization_ad.ouuser: ouuser,
+                    Organization_ad.oumachine: oumachine,
+                    Organization_ad.hostname: hostname,
+                    Organization_ad.username: username})
             session.commit()
             session.flush()
             return 1
@@ -2692,25 +2808,25 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def updateOrganization_ad_jiduser(self,
-                                session,
-                                id_inventory,
-                                jiduser,
-                                ouuser="",
-                                oumachine="",
-                                hostname="",
-                                username=""):
+                                      session,
+                                      id_inventory,
+                                      jiduser,
+                                      ouuser="",
+                                      oumachine="",
+                                      hostname="",
+                                      username=""):
         """
             update Organization_ad table in base xmppmaster
         """
         try:
             session.query(Organization_ad).\
-                filter( Organization_ad.jiduser ==  jiduser).\
-                    update({ Organization_ad.jiduser : jiduser,
-                             Organization_ad.id_inventory : self.uuidtoid(id_inventory),
-                             Organization_ad.ouuser : ouuser,
-                             Organization_ad.oumachine : oumachine,
-                             Organization_ad.hostname : hostname,
-                             Organization_ad.username : username})
+                filter(Organization_ad.jiduser == jiduser).\
+                update({Organization_ad.jiduser: jiduser,
+                        Organization_ad.id_inventory: self.uuidtoid(id_inventory),
+                        Organization_ad.ouuser: ouuser,
+                        Organization_ad.oumachine: oumachine,
+                        Organization_ad.hostname: hostname,
+                        Organization_ad.username: username})
             session.commit()
             session.flush()
             return 1
@@ -2740,44 +2856,48 @@ class XmppMasterDatabase(DatabaseHelper):
         if not boolexistuserjid:
             # creation de organization for machine jiduser
             if self.is_id_inventory_organization_ad(id):
-                #delete for uuid
-                self.delOrganization_ad(id_inventory = id)
+                # delete for uuid
+                self.delOrganization_ad(id_inventory=id)
             try:
                 session.add(new_Organization)
                 session.commit()
                 session.flush()
             except Exception as e:
-                logging.getLogger().error("creation Organisation_ad for jid user %s inventory uuid : %s" % (jiduser, id ))
-                logging.getLogger().error("ouuser=%s\noumachine = %s\nhostname=%s\nusername=%s" % (ouuser, oumachine, hostname, username))
+                logging.getLogger().error(
+                    "creation Organisation_ad for jid user %s inventory uuid : %s" %
+                    (jiduser, id))
+                logging.getLogger().error(
+                    "ouuser=%s\noumachine = %s\nhostname=%s\nusername=%s" %
+                    (ouuser, oumachine, hostname, username))
                 logging.getLogger().error(str(e))
                 return -1
             return new_Organization.id_inventory
         else:
-            #update fiche
-            self.updateOrganization_ad_jiduser( id_inventory,
-                                                jiduser,
-                                                ouuser=ouuser,
-                                                oumachine=oumachine,
-                                                hostname=hostname,
-                                                username=username)
+            # update fiche
+            self.updateOrganization_ad_jiduser(id_inventory,
+                                               jiduser,
+                                               ouuser=ouuser,
+                                               oumachine=oumachine,
+                                               hostname=hostname,
+                                               username=username)
         return new_Organization.id_inventory
 
     @DatabaseHelper._sessionm
-    def delOrganization_ad( self,
-                            session,
-                            id_inventory = None,
-                            jiduser = None):
+    def delOrganization_ad(self,
+                           session,
+                           id_inventory=None,
+                           jiduser=None):
         """
             supp organization ad
         """
         req = session.query(Organization_ad)
         if id_inventory is not None and jiduser is not None:
-            req=req.filter(and_(Organization_ad.id_inventory == id_inventory,
-                                Organization_ad.jiduser == jiduser))
+            req = req.filter(and_(Organization_ad.id_inventory == id_inventory,
+                                  Organization_ad.jiduser == jiduser))
         elif id_inventory is not None and jiduser is None:
-            req=req.filter(Organization_ad.id_inventory == id_inventory)
+            req = req.filter(Organization_ad.id_inventory == id_inventory)
         elif jiduser is not None and id_inventory is None:
-            req=req.filter(Organization_ad.jiduser == jiduser)
+            req = req.filter(Organization_ad.jiduser == jiduser)
         else:
             return False
         try:
@@ -2814,9 +2934,8 @@ class XmppMasterDatabase(DatabaseHelper):
         this function allows to update the counter of deployments in pause
         """
         try:
-            session.query(Has_login_command).\
-                filter(and_(Has_login_command.command == idcommand)).\
-                    update({ Has_login_command.count_deploy_progress : Has_login_command.count_deploy_progress + 1})
+            session.query(Has_login_command). filter(and_(Has_login_command.command == idcommand)). update(
+                {Has_login_command.count_deploy_progress: Has_login_command.count_deploy_progress + 1})
             session.commit()
             session.flush()
             return 1
@@ -2838,11 +2957,11 @@ class XmppMasterDatabase(DatabaseHelper):
         grp_wol_broadcast_adress = {}
         result = session.query(Network.broadcast,
                                Network.mac).distinct(Network.mac).\
-                filter(
-                    and_(Network.broadcast != "",
-                         Network.broadcast.isnot(None),
-                         Network.mac.in_(listmacaddress))
-                       ).all()
+            filter(
+            and_(Network.broadcast != "",
+                 Network.broadcast.isnot(None),
+                 Network.mac.in_(listmacaddress))
+        ).all()
         for t in result:
             if t.broadcast not in grp_wol_broadcast_adress:
                 grp_wol_broadcast_adress[t.broadcast] = []
@@ -2850,7 +2969,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return grp_wol_broadcast_adress
 
     def convertTimestampToSQLDateTime(self, value):
-        return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(value))
+        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(value))
 
     def convertSQLDateTimeToTimestamp(self, value):
         return time.mktime(time.strptime(value, '%Y-%m-%d %H:%M:%S'))
@@ -2862,33 +2981,41 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         nowtime = datetime.now()
         try:
-            result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).order_by(desc(Has_login_command.id)).limit(1).one()
-            deployresult = session.query(Deploy).filter(and_(Deploy.command == idcommand)).order_by(desc(Deploy.id)).limit(1).one()
-        except :
+            result = session.query(Has_login_command).filter(
+                and_(
+                    Has_login_command.command == idcommand)).order_by(
+                desc(
+                    Has_login_command.id)).limit(1).one()
+            deployresult = session.query(Deploy).filter(
+                and_(
+                    Deploy.command == idcommand)).order_by(
+                desc(
+                    Deploy.id)).limit(1).one()
+        except BaseException:
             # error case command supp base nunualy
             return 'abandonmentdeploy'
             pass
-        if not (deployresult.startcmd <= nowtime and \
+        if not (deployresult.startcmd <= nowtime and
                 deployresult.endcmd >= nowtime):
-            #we are more in the range of deployments.
-            #abandonmentdeploy
-            for id in  self.sessionidforidcommand(idcommand):
-                self.updatedeploystate(id,"ERROR UNKNOWN ERROR")
+            # we are more in the range of deployments.
+            # abandonmentdeploy
+            for id in self.sessionidforidcommand(idcommand):
+                self.updatedeploystate(id, "ERROR UNKNOWN ERROR")
             return 'abandonmentdeploy'
 
-        if not (result.start_exec_on_time is None or \
-                str(result.start_exec_on_time) == '' or \
+        if not (result.start_exec_on_time is None or
+                str(result.start_exec_on_time) == '' or
                 str(result.start_exec_on_time) == "None"):
-            #time processing
+            # time processing
             if nowtime > result.start_exec_on_time:
                 return 'run'
-        if not (result.start_exec_on_nb_deploy is None or \
+        if not (result.start_exec_on_nb_deploy is None or
                 result.start_exec_on_nb_deploy == ''):
-            #nb of deploy processing
+            # nb of deploy processing
             if result.start_exec_on_nb_deploy <= result.count_deploy_progress:
                 return 'run'
-        for id in  self.sessionidforidcommand(idcommand):
-                self.updatedeploystate(id,"DEPLOYMENT DELAYED")
+        for id in self.sessionidforidcommand(idcommand):
+            self.updatedeploystate(id, "DEPLOYMENT DELAYED")
         return "pause"
 
     @DatabaseHelper._sessionm
@@ -2921,7 +3048,7 @@ class XmppMasterDatabase(DatabaseHelper):
             sql = sql + """
             and
             xmppmaster.syncthing_machine.jid_relay like '%s'""" % jid_relay
-        sql = sql +";"
+        sql = sql + ";"
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -2934,8 +3061,8 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         # todo: get ARS device
         datenow = datetime.now()
-        result = session.query(Deploy).filter( and_( Deploy.startcmd <= datenow,
-                                                     Deploy.syncthing == 1)).all()
+        result = session.query(Deploy).filter(
+            and_(Deploy.startcmd <= datenow, Deploy.syncthing == 1)).all()
         id_deploylist = set()
         # TODO: search keysyncthing in table machine.
         session.commit()
@@ -2955,22 +3082,22 @@ class XmppMasterDatabase(DatabaseHelper):
 
         for t in result:
             if t.group_uuid == "":
-                #machine doit faire partie d un grp
+                # machine doit faire partie d un grp
                 continue
-            #if command_pris_en_charge == -1:
-                ##on deploy qu'une commande sur 1 group a la fois en syncthing
+            # if command_pris_en_charge == -1:
+                # on deploy qu'une commande sur 1 group a la fois en syncthing
                 #command_pris_en_charge = t.command
                 #gr_pris_en_charge = t.group_uuid
-            #if t.command != command_pris_en_charge or \
-               #t.group_uuid != gr_pris_en_charge:
-                #continue
-            #if t.inventoryuuid.startswith("UUID"):
+            # if t.command != command_pris_en_charge or \
+                # t.group_uuid != gr_pris_en_charge:
+                # continue
+            # if t.inventoryuuid.startswith("UUID"):
                 #inventoryid = int(t.inventoryuuid[4:])
-            #else:
+            # else:
                 #inventoryid = int(t.inventoryuuid)
 
             e = json.loads(t.result)
-            package = os.path.basename( e['path'])
+            package = os.path.basename(e['path'])
             # We create the share if it does not exist.
             id_deploy = self.setSyncthing_deploy_group(t.title,
                                                        uuid.uuid4(),
@@ -2979,15 +3106,16 @@ class XmppMasterDatabase(DatabaseHelper):
                                                        t.group_uuid,
                                                        dateend=t.endcmd)
             id_deploylist.add(id_deploy)
-            clu =  self.clusternum(t.jid_relay)
-            ars_cluster_id = self.setSyncthing_ars_cluster( clu['numcluster'],
-                                                            clu['namecluster'],
-                                                            t.jid_relay,
-                                                            clu['choose'],
-                                                            id_deploy,
-                                                            type_partage="cluster",
-                                                            devivesyncthing="",
-                                                            keypartage='')
+            clu = self.clusternum(t.jid_relay)
+            ars_cluster_id = self.setSyncthing_ars_cluster(
+                clu['numcluster'],
+                clu['namecluster'],
+                t.jid_relay,
+                clu['choose'],
+                id_deploy,
+                type_partage="cluster",
+                devivesyncthing="",
+                keypartage='')
             cluster = self.clusterlistars()
             clusterdata = {}
             for z in cluster:
@@ -3009,7 +3137,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                       syncthing=t.syncthing,
                                       state=t.state,
                                       user=t.user,
-                                      type_partage= "",
+                                      type_partage="",
                                       title=t.title,
                                       inventoryuuid=t.inventoryuuid,
                                       login=t.login,
@@ -3048,20 +3176,24 @@ class XmppMasterDatabase(DatabaseHelper):
         listars = session.execute(sql)
         session.commit()
         session.flush()
-        cluster={"ars": [], "numcluster" : -1 , "namecluster" :"","choose" : ""}
+        cluster = {
+            "ars": [],
+            "numcluster": -1,
+            "namecluster": "",
+            "choose": ""}
         n = 0
         for z in listars:
             cluster['ars'].append(z[0])
-            cluster['numcluster']=z[1]
-            cluster['namecluster']=z[2]
-            n=n+1
+            cluster['numcluster'] = z[1]
+            cluster['namecluster'] = z[2]
+            n = n + 1
         if n != 0:
-            nb = random.randint(0, n-1)
+            nb = random.randint(0, n - 1)
             cluster['choose'] = cluster['ars'][nb]
         return cluster
 
     @DatabaseHelper._sessionm
-    def clusterlistars(self, session, enabled = 1):
+    def clusterlistars(self, session, enabled=1):
         sql = """SELECT
             GROUP_CONCAT(`jid`) AS 'listarsincluster',
             cluster_ars.name AS 'namecluster',
@@ -3075,31 +3207,31 @@ class XmppMasterDatabase(DatabaseHelper):
             xmppmaster.cluster_ars ON xmppmaster.cluster_ars.id = xmppmaster.has_cluster_ars.id_cluster"""
 
         if enabled is not None:
-            sql="""%s WHERE
+            sql = """%s WHERE
             `relayserver`.`enabled` = %s
             AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`)           """ % (sql, enabled)
 
-        sql=sql+" GROUP BY xmppmaster.has_cluster_ars.id_cluster;"
+        sql = sql + " GROUP BY xmppmaster.has_cluster_ars.id_cluster;"
         listars = session.execute(sql)
         session.commit()
         session.flush()
-        cluster={}
+        cluster = {}
         for z in listars:
             if z[3] is None:
-                za =""
+                za = ""
             else:
                 za = z[3]
-            cluster[z[2]] = { 'listarscluster' : z[0].split(","),
-                             'namecluster' : z[1],
-                             'numcluster' : z[2],
-                             'keysyncthing' : za.split(",")}
+            cluster[z[2]] = {'listarscluster': z[0].split(","),
+                             'namecluster': z[1],
+                             'numcluster': z[2],
+                             'keysyncthing': za.split(",")}
         return cluster
 
     @DatabaseHelper._sessionm
-    def chang_status_deploy_syncthing(self, session, datenow= None):
+    def chang_status_deploy_syncthing(self, session, datenow=None):
         if datenow is None:
             datenow = datetime.now()
-        sql =""" UPDATE `xmppmaster`.`deploy` SET `syncthing`='2'
+        sql = """ UPDATE `xmppmaster`.`deploy` SET `syncthing`='2'
                 WHERE `startcmd`<= "%s" and syncthing = 1;""" % datenow
         session.execute(sql)
         session.commit()
@@ -3109,7 +3241,7 @@ class XmppMasterDatabase(DatabaseHelper):
     def change_end_deploy_syncthing(self, session, iddeploy, offsettime=60):
 
         dateend = datetime.now() + timedelta(minutes=offsettime)
-        sql =""" UPDATE `xmppmaster`.`syncthing_deploy_group` SET `dateend`=%s
+        sql = """ UPDATE `xmppmaster`.`syncthing_deploy_group` SET `dateend`=%s
                 WHERE `id`= "%s";""" % (dateend, iddeploy)
 
         session.execute(sql)
@@ -3120,9 +3252,10 @@ class XmppMasterDatabase(DatabaseHelper):
     def update_status_deploy_end(self, session):
         """ this function schedued by xmppmaster """
         datenow = datetime.now()
-        result = session.query(Deploy).filter( and_( Deploy.endcmd < datenow,
-                                            Deploy.state.like('DEPLOYMENT START%%'))
-        ).all()
+        result = session.query(Deploy).filter(
+            and_(
+                Deploy.endcmd < datenow,
+                Deploy.state.like('DEPLOYMENT START%%'))).all()
         session.flush()
         session.close()
         for t in result:
@@ -3141,7 +3274,7 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.query(Deploy.sessionid).\
             filter(Deploy.command == idcommand).all()
         if result:
-            a= [m[0] for m in result]
+            a = [m[0] for m in result]
             return a
         else:
             return []
@@ -3151,18 +3284,18 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             result = session.query(Has_login_command).\
                 filter(and_(Has_login_command.command == idcommand)).\
-                    order_by(desc(Has_login_command.id)).limit(1).one()
+                order_by(desc(Has_login_command.id)).limit(1).one()
             session.commit()
             session.flush()
-            obj={
-                    'countnb': 0,
-                    'exec' : True
-                 }
+            obj = {
+                'countnb': 0,
+                'exec': True
+            }
             if result.login != '':
                 obj['login'] = result.login
             obj['idcmd'] = result.command
-            if not (result.start_exec_on_time is None or \
-                    str(result.start_exec_on_time) == '' or \
+            if not (result.start_exec_on_time is None or
+                    str(result.start_exec_on_time) == '' or
                     str(result.start_exec_on_time) == "None"):
                 obj['exectime'] = str(result.start_exec_on_time)
                 obj['exec'] = False
@@ -3171,7 +3304,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 obj['grp'] = result.grpid
             if result.nb_machine_for_deploy != '':
                 obj['nbtotal'] = result.nb_machine_for_deploy
-            if not (result.start_exec_on_nb_deploy is None or result.start_exec_on_nb_deploy == ''):
+            if not (
+                    result.start_exec_on_nb_deploy is None or result.start_exec_on_nb_deploy == ''):
                 obj['consignnb'] = result.start_exec_on_nb_deploy
                 obj['exec'] = False
             obj['rebootrequired'] = result.rebootrequired
@@ -3184,7 +3318,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     if 'spooling' in params_json:
                         obj['spooling'] = params_json['spooling']
                 except Exception as e:
-                    logging.getLogger().error("[the avanced parameters from msc] : "+str(e))
+                    logging.getLogger().error(
+                        "[the avanced parameters from msc] : " + str(e))
 
             if result.parameters_deploy is not None:
                 try:
@@ -3197,8 +3332,9 @@ class XmppMasterDatabase(DatabaseHelper):
                         params = params + '}'
                     obj['paramdeploy'] = json.loads(params)
                 except Exception as e:
-                    logging.getLogger().error("[the avanced parameters must be"\
-                        " declared in a json dictionary] : "+ str(e))
+                    logging.getLogger().error(
+                        "[the avanced parameters must be"
+                        " declared in a json dictionary] : " + str(e))
             return obj
         except Exception as e:
             logging.getLogger().error("[ obj commandid missing] : " + str(e))
@@ -3218,12 +3354,12 @@ class XmppMasterDatabase(DatabaseHelper):
                   user="",
                   login="",
                   title="",
-                  group_uuid = None,
-                  startcmd = None,
-                  endcmd = None,
-                  macadress = None,
-                  result = None,
-                  syncthing = None
+                  group_uuid=None,
+                  startcmd=None,
+                  endcmd=None,
+                  macadress=None,
+                  result=None,
+                  syncthing=None
                   ):
         """
         parameters
@@ -3231,19 +3367,20 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         createcommand = datetime.now()
         try:
-            start=int(startcmd)
-            end=int(endcmd)
-            startcmd = datetime.fromtimestamp(start).strftime("%Y-%m-%d %H:%M:%S")
+            start = int(startcmd)
+            end = int(endcmd)
+            startcmd = datetime.fromtimestamp(
+                start).strftime("%Y-%m-%d %H:%M:%S")
             endcmd = datetime.fromtimestamp(end).strftime("%Y-%m-%d %H:%M:%S")
         except Exception as e:
-            #logger.error(str(e))
+            # logger.error(str(e))
             pass
         # del doublon macadess
         if macadress is not None:
             adressemac = str(macadress).split("||")
             adressemac = list(set(adressemac))
             macadress = "||".join(adressemac)
-        #recupere login command
+        # recupere login command
         if login == "":
             login = self.loginbycommand(idcommand)[0]
         try:
@@ -3253,13 +3390,13 @@ class XmppMasterDatabase(DatabaseHelper):
             new_deploy.jid_relay = jidrelay
             new_deploy.host = host
             new_deploy.inventoryuuid = inventoryuuid
-            new_deploy.pathpackage =uuidpackage
+            new_deploy.pathpackage = uuidpackage
             new_deploy.state = state
             new_deploy.sessionid = sessionid
             new_deploy.user = user
             new_deploy.command = idcommand
             new_deploy.login = login
-            new_deploy.startcmd =startcmd
+            new_deploy.startcmd = startcmd
             new_deploy.endcmd = endcmd
             new_deploy.start = createcommand
             new_deploy.macadress = macadress
@@ -3277,9 +3414,9 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def deploy_machine_partage_exist(self,
-                                    session,
-                                    jidmachine,
-                                    uidpackage):
+                                     session,
+                                     jidmachine,
+                                     uidpackage):
         sql = """SELECT
                     *
                 FROM
@@ -3305,9 +3442,9 @@ class XmppMasterDatabase(DatabaseHelper):
                              hostname,
                              sessionid,
                              login="",
-                             startcmd = None,
-                             endcmd = None
-                            ):
+                             startcmd=None,
+                             endcmd=None
+                             ):
         """
             add ressource for cluster ressource
         """
@@ -3319,7 +3456,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_cluster_resources.hostname = hostname
             new_cluster_resources.sessionid = sessionid
             new_cluster_resources.login = login
-            new_cluster_resources.startcmd =startcmd
+            new_cluster_resources.startcmd = startcmd
             new_cluster_resources.endcmd = endcmd
             session.add(new_cluster_resources)
             session.commit()
@@ -3330,11 +3467,12 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getcluster_resources(self, session, jidmachine):
-        clusterresources = session.query(Cluster_resources).filter( Cluster_resources.jidmachine == str(jidmachine)).all()
+        clusterresources = session.query(Cluster_resources).filter(
+            Cluster_resources.jidmachine == str(jidmachine)).all()
         session.commit()
         session.flush()
-        ret = { 'len' : len(clusterresources) }
-        arraylist=[]
+        ret = {'len': len(clusterresources)}
+        arraylist = []
         for t in clusterresources:
             obj = {}
             obj['jidmachine'] = t.jidmachine
@@ -3345,58 +3483,65 @@ class XmppMasterDatabase(DatabaseHelper):
             obj['startcmd'] = str(t.startcmd)
             obj['endcmd'] = str(t.endcmd)
             arraylist.append(obj)
-        ret['resource']= arraylist
+        ret['resource'] = arraylist
         self.clean_resources(jidmachine)
         return ret
 
     @DatabaseHelper._sessionm
     def clean_resources(self, session, jidmachine):
-        session.query(Cluster_resources).filter( Cluster_resources.jidmachine == str(jidmachine) ).delete()
+        session.query(Cluster_resources).filter(
+            Cluster_resources.jidmachine == str(jidmachine)).delete()
         session.commit()
         session.flush()
 
     @DatabaseHelper._sessionm
     def delete_resources(self, session, sessionid):
-        session.query(Cluster_resources).filter( Cluster_resources.sessionid == str(sessionid) ).delete()
+        session.query(Cluster_resources).filter(
+            Cluster_resources.sessionid == str(sessionid)).delete()
         session.commit()
         session.flush()
 
     @DatabaseHelper._sessionm
     def getlinelogswolcmd(self, session, idcommand, uuid):
-        log = session.query(Logs).filter(and_(Logs.sessionname == str(idcommand) ,
-                                              Logs.type == 'wol',
-                                              Logs.who == uuid)).order_by(Logs.id)
+        log = session.query(Logs).filter(
+            and_(
+                Logs.sessionname == str(idcommand),
+                Logs.type == 'wol',
+                Logs.who == uuid)).order_by(
+            Logs.id)
         log = log.all()
         session.commit()
         session.flush()
-        ret={}
-        ret['len']= len(log)
-        arraylist=[]
+        ret = {}
+        ret['len'] = len(log)
+        arraylist = []
         for t in log:
-            obj={}
-            obj['type']=t.type
-            obj['date']=t.date
-            obj['text']=t.text
-            obj['sessionname']=t.sessionname
-            obj['priority']=t.priority
-            obj['who']=t.who
+            obj = {}
+            obj['type'] = t.type
+            obj['date'] = t.date
+            obj['text'] = t.text
+            obj['sessionname'] = t.sessionname
+            obj['priority'] = t.priority
+            obj['who'] = t.who
             arraylist.append(obj)
-        ret['log']= arraylist
+        ret['log'] = arraylist
         return ret
 
     @DatabaseHelper._sessionm
-    def get_machine_stop_deploy(self, session, cmdid , inventoryuuid):
+    def get_machine_stop_deploy(self, session, cmdid, inventoryuuid):
         """
             this function return the machines list for  1 command_id and 1 uuid
         """
-        query = session.query(Deploy).filter(and_( Deploy.inventoryuuid == inventoryuuid,
-                                                   Deploy.command == cmdid))
+        query = session.query(Deploy).filter(
+            and_(
+                Deploy.inventoryuuid == inventoryuuid,
+                Deploy.command == cmdid))
         query = query.one()
         session.commit()
         session.flush()
-        machine={}
+        machine = {}
         machine['len'] = 0
-        try :
+        try:
             machine['len'] = 1
             machine['title'] = query.title
             machine['pathpackage'] = query.pathpackage
@@ -3404,7 +3549,7 @@ class XmppMasterDatabase(DatabaseHelper):
             machine['inventoryuuid'] = query.inventoryuuid
             machine['jidmachine'] = query.jidmachine
             machine['state'] = query.state
-            machine['sessionid']=query.sessionid
+            machine['sessionid'] = query.sessionid
             machine['start'] = query.start
             machine['startcmd'] = query.startcmd
             machine['endcmd'] = query.endcmd
@@ -3425,22 +3570,22 @@ class XmppMasterDatabase(DatabaseHelper):
             this function return the machines list for 1 group id and 1 command id
         """
         machine = session.query(Deploy).filter(and_(Deploy.group_uuid == grpid,
-                                                        Deploy.command == cmdid))
+                                                    Deploy.command == cmdid))
         machine = machine.all()
         session.commit()
         session.flush()
-        ret={}
-        ret['len']= len(machine)
+        ret = {}
+        ret['len'] = len(machine)
         arraylist = []
         for t in machine:
-            obj={}
+            obj = {}
             obj['title'] = t.title
             obj['pathpackage'] = t.pathpackage
             obj['jid_relay'] = t.jid_relay
             obj['inventoryuuid'] = t.inventoryuuid
             obj['jidmachine'] = t.jidmachine
             obj['state'] = t.state
-            obj['sessionid']=t.sessionid
+            obj['sessionid'] = t.sessionid
             obj['start'] = t.start
             obj['startcmd'] = t.startcmd
             obj['endcmd'] = t.endcmd
@@ -3456,14 +3601,15 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def getstatdeployfromcommandidstartdate(self, session, command_id, datestart):
+    def getstatdeployfromcommandidstartdate(
+            self, session, command_id, datestart):
         try:
-            machinedeploy =session.query(Deploy.state,
-                                         func.count(Deploy.state)).\
-                                             filter(and_( Deploy.command == command_id,
-                                                            Deploy.startcmd == datestart
-                                                        )
-                                                ).group_by(Deploy.state)
+            machinedeploy = session.query(Deploy.state,
+                                          func.count(Deploy.state)).\
+                filter(and_(Deploy.command == command_id,
+                            Deploy.startcmd == datestart
+                            )
+                       ).group_by(Deploy.state)
             machinedeploy = machinedeploy.all()
             ret = {'totalmachinedeploy': 0,
                    'deploymentsuccess': 0,
@@ -3493,7 +3639,7 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
                    'otherstatus': 0,
-                  }
+                   }
             dynamic_status_list = self.get_log_status()
             dynamic_label = []
             dynamic_status = []
@@ -3503,7 +3649,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     dynamic_label.append(status['label'])
                     dynamic_status.append(status['status'])
 
-            liststatus = { x[0] : x[1] for x in machinedeploy}
+            liststatus = {x[0]: x[1] for x in machinedeploy}
             totalmachinedeploy = 0
             for t in liststatus:
                 ret['totalmachinedeploy'] += liststatus[t]
@@ -3567,7 +3713,8 @@ class XmppMasterDatabase(DatabaseHelper):
             return ret
 
     @DatabaseHelper._sessionm
-    def getstatdeploy_from_command_id_and_title(self, session, command_id, title):
+    def getstatdeploy_from_command_id_and_title(
+            self, session, command_id, title):
         """
         Retrieve the deploy statistics based on the command_id and name
         Args:
@@ -3580,9 +3727,9 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             machinedeploy = session.query(Deploy.state,
                                           func.count(Deploy.state)).\
-                                              filter(and_(Deploy.command == command_id,
-                                                          Deploy.title == title)
-                                                    ).group_by(Deploy.state)
+                filter(and_(Deploy.command == command_id,
+                            Deploy.title == title)
+                       ).group_by(Deploy.state)
             machinedeploy = machinedeploy.all()
             ret = {'totalmachinedeploy': 0,
                    'deploymentsuccess': 0,
@@ -3612,7 +3759,7 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
                    'otherstatus': 0,
-                  }
+                   }
             dynamic_status_list = self.get_log_status()
             dynamic_label = []
             dynamic_status = []
@@ -3622,7 +3769,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     dynamic_label.append(status['label'])
                     dynamic_status.append(status['status'])
 
-            liststatus = { x[0] : x[1] for x in machinedeploy}
+            liststatus = {x[0]: x[1] for x in machinedeploy}
             totalmachinedeploy = 0
             for t in liststatus:
                 ret['totalmachinedeploy'] += liststatus[t]
@@ -3716,8 +3863,8 @@ class XmppMasterDatabase(DatabaseHelper):
         query = session.query(Deploy).filter(and_(Deploy.command == command_id,
                                                   Deploy.title == title))
         if filter == "status" and criterion != "":
-            query = query.filter(or_(Deploy.state.contains(criterion),
-                                     Deploy.inventoryuuid.contains(criterion),))
+            query = query.filter(or_(Deploy.state.contains(
+                criterion), Deploy.inventoryuuid.contains(criterion),))
         if filter != 'infos':
             count = query.count()
             if limit != -1:
@@ -3728,7 +3875,7 @@ class XmppMasterDatabase(DatabaseHelper):
         elements = {"id": [],
                     "uuid": [],
                     "status": []
-                   }
+                    }
 
         for deployment in result:
             elements['id'].append(deployment.inventoryuuid.replace("UUID", ""))
@@ -3763,74 +3910,78 @@ class XmppMasterDatabase(DatabaseHelper):
             count = 0
         result = query.all()
         elements = {
-        "id" : [],
-        "uuid" : [],
-        "status" : []
+            "id": [],
+            "uuid": [],
+            "status": []
         }
         for deployment in result:
             elements['id'].append(deployment.inventoryuuid.replace("UUID", ""))
             elements['uuid'].append(deployment.inventoryuuid)
             elements['status'].append(deployment.state)
 
-        return {"total": count, "datas":elements}
+        return {"total": count, "datas": elements}
 
     @DatabaseHelper._sessionm
     def getdeployfromcommandid(self, session, command_id, uuid):
         if (uuid == "UUID_NONE"):
-            relayserver = session.query(Deploy).filter(and_(Deploy.command == command_id))
-            #,Deploy.result .isnot(None)
+            relayserver = session.query(Deploy).filter(
+                and_(Deploy.command == command_id))
+            # ,Deploy.result .isnot(None)
         else:
-            relayserver = session.query(Deploy).\
-                filter(and_( Deploy.inventoryuuid == uuid, Deploy.command == command_id))
-            #, Deploy.result .isnot(None)
-        #print relayserver
+            relayserver = session.query(Deploy). filter(
+                and_(Deploy.inventoryuuid == uuid, Deploy.command == command_id))
+            # , Deploy.result .isnot(None)
+        # print relayserver
         relayserver = relayserver.all()
         session.commit()
         session.flush()
-        ret={}
-        ret['len']= len(relayserver)
-        arraylist=[]
+        ret = {}
+        ret['len'] = len(relayserver)
+        arraylist = []
         for t in relayserver:
-            obj={}
-            obj['pathpackage']=t.pathpackage
-            obj['jid_relay']=t.jid_relay
-            obj['inventoryuuid']=t.inventoryuuid
-            obj['jidmachine']=t.jidmachine
-            obj['state']=t.state
-            obj['sessionid']=t.sessionid
-            obj['start']=t.start
+            obj = {}
+            obj['pathpackage'] = t.pathpackage
+            obj['jid_relay'] = t.jid_relay
+            obj['inventoryuuid'] = t.inventoryuuid
+            obj['jidmachine'] = t.jidmachine
+            obj['state'] = t.state
+            obj['sessionid'] = t.sessionid
+            obj['start'] = t.start
             if t.result is None:
-                obj['result']=""
+                obj['result'] = ""
             else:
-                obj['result']=t.result
-            obj['host']=t.host
-            obj['user']=t.user
-            obj['login']=str(t.login)
-            obj['command']=t.command
+                obj['result'] = t.result
+            obj['host'] = t.host
+            obj['user'] = t.user
+            obj['login'] = str(t.login)
+            obj['command'] = t.command
             arraylist.append(obj)
-        ret['objectdeploy']= arraylist
+        ret['objectdeploy'] = arraylist
         return ret
-
 
     @DatabaseHelper._sessionm
     def getlinelogssession(self, session, sessionnamexmpp):
-        log = session.query(Logs).filter(and_( Logs.sessionname == sessionnamexmpp, Logs.type == 'deploy')).order_by(Logs.id)
+        log = session.query(Logs).filter(
+            and_(
+                Logs.sessionname == sessionnamexmpp,
+                Logs.type == 'deploy')).order_by(
+            Logs.id)
         log = log.all()
         session.commit()
         session.flush()
-        ret={}
-        ret['len']= len(log)
-        arraylist=[]
+        ret = {}
+        ret['len'] = len(log)
+        arraylist = []
         for t in log:
-            obj={}
-            obj['type']=t.type
-            obj['date']=t.date
-            obj['text']=t.text
-            obj['sessionname']=t.sessionname
-            obj['priority']=t.priority
-            obj['who']=t.who
+            obj = {}
+            obj['type'] = t.type
+            obj['date'] = t.date
+            obj['text'] = t.text
+            obj['sessionname'] = t.sessionname
+            obj['priority'] = t.priority
+            obj['who'] = t.who
             arraylist.append(obj)
-        ret['log']= arraylist
+        ret['log'] = arraylist
         return ret
 
     @DatabaseHelper._sessionm
@@ -3861,7 +4012,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if nb_machine_in_grp != "":
                 new_logincommand.nb_machine_for_deploy = nb_machine_in_grp
             if instructions_nb_machine_for_exec != "":
-                new_logincommand.start_exec_on_nb_deploy =instructions_nb_machine_for_exec
+                new_logincommand.start_exec_on_nb_deploy = instructions_nb_machine_for_exec
             if parameterspackage != "":
                 new_logincommand.parameters_deploy = parameterspackage
             if rebootrequired == 0:
@@ -3876,7 +4027,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_logincommand.syncthing = False
             else:
                 new_logincommand.syncthing = True
-            if (type(params) is list or type(params) is dict) and len(params) != 0:
+            if (isinstance(params, list) or isinstance(
+                    params, dict)) and len(params) != 0:
                 new_logincommand.params_json = json.dumps(params)
 
             session.add(new_logincommand)
@@ -3900,16 +4052,16 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         try:
-            a=[]
+            a = []
             for t in presencelist:
-                a.append({'jid':t[0],'type': t[1], 'hostname':t[2]})
+                a.append({'jid': t[0], 'type': t[1], 'hostname': t[2]})
 
             return a
-        except:
+        except BaseException:
             return -1
 
     @DatabaseHelper._sessionm
-    def deploylog(self,session,nblastline):
+    def deploylog(self, session, nblastline):
         """ return les machines en fonction du RS """
         sql = """SELECT
                     *
@@ -3925,7 +4077,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
         try:
-            sql="""UPDATE `xmppmaster`.`deploy`
+            sql = """UPDATE `xmppmaster`.`deploy`
                 SET
                     `state` = '%s'
                 WHERE
@@ -3933,7 +4085,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
                                               'ABORT DEPLOYMENT CANCELLED BY USER')
                                 OR
-                              `state` REGEXP '^(\?!ERROR)^(\?!SUCCESS)^(\?!ABORT)'));
+                              `state` REGEXP '^(\\?!ERROR)^(\\?!SUCCESS)^(\\?!ABORT)'));
                 """ % (state, sessionid)
             result = session.execute(sql)
             session.commit()
@@ -3943,17 +4095,23 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
-    def updatemachineAD(self, session, idmachine, lastuser, ou_machine, ou_user):
+    def updatemachineAD(
+            self,
+            session,
+            idmachine,
+            lastuser,
+            ou_machine,
+            ou_user):
         """
             update Machine table in base xmppmaster
             data AD
         """
         try:
-            session.query(Machines).filter(and_( Machines.id == idmachine,
-                                                 Machines.enabled == '1')).\
-                    update({ Machines.ad_ou_machine : ou_machine,
-                             Machines.ad_ou_user : ou_user,
-                             Machines.lastuser : lastuser})
+            session.query(Machines).filter(and_(Machines.id == idmachine,
+                                                Machines.enabled == '1')).\
+                update({Machines.ad_ou_machine: ou_machine,
+                        Machines.ad_ou_user: ou_user,
+                        Machines.lastuser: lastuser})
             session.commit()
             session.flush()
             return 1
@@ -3967,10 +4125,13 @@ class XmppMasterDatabase(DatabaseHelper):
         update status deploy
         """
         try:
-            deploysession = session.query(Deploy).filter(Deploy.sessionid == sessionid).one()
+            deploysession = session.query(Deploy).filter(
+                Deploy.sessionid == sessionid).one()
             if deploysession:
-                # les status commençant par error, success, abort ne peuvent plus être modifiés.
-                regexpexlusion = re.compile("^(?!abort)^(?!success)^(?!error)",re.IGNORECASE)
+                # les status commençant par error, success, abort ne peuvent
+                # plus être modifiés.
+                regexpexlusion = re.compile(
+                    "^(?!abort)^(?!success)^(?!error)", re.IGNORECASE)
                 if regexpexlusion.match(state) is None:
                     return
                 if state == "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)":
@@ -3978,9 +4139,9 @@ class XmppMasterDatabase(DatabaseHelper):
                                                "WOL 2",
                                                "WOL 3",
                                                "WAITING MACHINE ONLINE"]:
-                        #STATUS NE CHANGE PAS
+                        # STATUS NE CHANGE PAS
                         return 0
-                #update status
+                # update status
                 deploysession.state = state
                 session.commit()
                 session.flush()
@@ -3992,7 +4153,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.close()
 
     @DatabaseHelper._sessionm
-    def delNetwork_for_machines_id(self,session, machines_id):
+    def delNetwork_for_machines_id(self, session, machines_id):
         sql = """DELETE FROM `xmppmaster`.`network`
                 WHERE
                     (`machines_id` = '%s');""" % machines_id
@@ -4002,23 +4163,32 @@ class XmppMasterDatabase(DatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
-    def addPresenceNetwork(self, session, macaddress, ipaddress, broadcast, gateway, mask, mac, id_machine):
-        #self.delNetwork_for_machines_id(id_machine)
+    def addPresenceNetwork(
+            self,
+            session,
+            macaddress,
+            ipaddress,
+            broadcast,
+            gateway,
+            mask,
+            mac,
+            id_machine):
+        # self.delNetwork_for_machines_id(id_machine)
         try:
             new_network = Network()
-            new_network.macaddress=macaddress
-            new_network.ipaddress=ipaddress
-            new_network.broadcast=broadcast
-            new_network.gateway=gateway
-            new_network.mask=mask
-            new_network.mac=mac
-            new_network.machines_id=id_machine
+            new_network.macaddress = macaddress
+            new_network.ipaddress = ipaddress
+            new_network.broadcast = broadcast
+            new_network.gateway = gateway
+            new_network.mask = mask
+            new_network.mac = mac
+            new_network.machines_id = id_machine
             session.add(new_network)
             session.commit()
             session.flush()
         except Exception as e:
             logging.getLogger().error(str(e))
-        #return new_network.toDict()
+        # return new_network.toDict()
 
     @DatabaseHelper._sessionm
     def addServerRelay(self, session,
@@ -4046,8 +4216,8 @@ class XmppMasterDatabase(DatabaseHelper):
         nb = session.execute(sql)
         session.commit()
         session.flush()
-        result=[x for x in nb][0][0]
-        if result == 0 :
+        result = [x for x in nb][0][0]
+        if result == 0:
             try:
                 new_relayserver = RelayServer()
                 new_relayserver.urlguacamole = urlguacamole
@@ -4078,9 +4248,8 @@ class XmppMasterDatabase(DatabaseHelper):
             try:
                 sql = "UPDATE `xmppmaster`.`relayserver`\
                         SET `enabled`=%s, `classutil`='%s'\
-                      WHERE `xmppmaster`.`relayserver`.`nameserver`='%s';" % (enabled,
-                                                                            classutil,
-                                                                            nameserver)
+                      WHERE `xmppmaster`.`relayserver`.`nameserver`='%s';" % (
+                    enabled, classutil, nameserver)
                 session.execute(sql)
                 session.commit()
                 session.flush()
@@ -4093,11 +4262,13 @@ class XmppMasterDatabase(DatabaseHelper):
             filter(Machines.enabled == '1').\
             scalar()
 
-
     @DatabaseHelper._sessionm
     def getIdUserforHostname(self, session, namesession, hostname):
-        idresult = session.query(Users.id).filter(and_( Users.namesession == namesession,\
-                                                        Users.hostname == hostname)).first()
+        idresult = session.query(
+            Users.id).filter(
+            and_(
+                Users.namesession == namesession,
+                Users.hostname == hostname)).first()
         session.commit()
         session.flush()
         return idresult
@@ -4107,14 +4278,14 @@ class XmppMasterDatabase(DatabaseHelper):
                 session,
                 namesession,
                 hostname,
-                city = "",
-                region_name = "",
-                time_zone = "",
-                longitude = "",
-                latitude = "",
-                postal_code = "",
-                country_code = "",
-                country_name = "",
+                city="",
+                region_name="",
+                time_zone="",
+                longitude="",
+                latitude="",
+                postal_code="",
+                country_code="",
+                country_name="",
                 creation_user="",
                 last_modif=""):
         city = city.decode('iso-8859-1').encode('utf8')
@@ -4125,7 +4296,7 @@ class XmppMasterDatabase(DatabaseHelper):
         country_name = country_name.decode('iso-8859-1').encode('utf8')
         createuser = datetime.now()
         id = self.getIdUserforHostname(namesession, hostname)
-        if id is None :
+        if id is None:
             try:
                 new_user = Users()
                 new_user.namesession = namesession
@@ -4149,17 +4320,20 @@ class XmppMasterDatabase(DatabaseHelper):
                 return -1
         else:
             try:
-                session.query(Users).filter(and_(Users.namesession == namesession,\
-                                                 Users.hostname == hostname)).\
-                    update({Users.city: city,
-                            Users.region_name:region_name,
-                            Users.time_zone:time_zone,
-                            Users.longitude:longitude,
-                            Users.latitude:latitude,
-                            Users.postal_code:postal_code,
-                            Users.country_code:country_code,
-                            Users.country_name:country_name,
-                            Users.last_modif:createuser })
+                session.query(Users).filter(
+                    and_(
+                        Users.namesession == namesession,
+                        Users.hostname == hostname)). update(
+                    {
+                        Users.city: city,
+                        Users.region_name: region_name,
+                        Users.time_zone: time_zone,
+                        Users.longitude: longitude,
+                        Users.latitude: latitude,
+                        Users.postal_code: postal_code,
+                        Users.country_code: country_code,
+                        Users.country_name: country_name,
+                        Users.last_modif: createuser})
                 session.commit()
                 session.flush()
                 return id
@@ -4178,20 +4352,22 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getdeploybyuserlen(self, session, login=None):
         if login is not None:
-            return self.get_count(session.query(Deploy).filter(Deploy.login == login))
+            return self.get_count(
+                session.query(Deploy).filter(
+                    Deploy.login == login))
 
         return self.get_count(session.query(Deploy))
 
     @DatabaseHelper._sessionm
-    def syncthingmachineless(self,session, grp, cmd):
+    def syncthingmachineless(self, session, grp, cmd):
         mach = session.query(Syncthing_machine.jidmachine,
                              Syncthing_machine.progress,
                              Syncthing_machine.startcmd,
                              Syncthing_machine.endcmd,
                              Syncthing_machine.cluster
                              ).filter(
-                                        and_(Syncthing_machine.group_uuid == grp,
-                                            Syncthing_machine.command == cmd))
+            and_(Syncthing_machine.group_uuid == grp,
+                 Syncthing_machine.command == cmd))
         result = mach.all()
         session.commit()
         session.flush()
@@ -4201,17 +4377,17 @@ class XmppMasterDatabase(DatabaseHelper):
             listchamp = []
             try:
                 machime = linemach.jidmachine.split('/')[1]
-            except:
+            except BaseException:
                 machime = linemach.jidmachine
             try:
                 cluster = json.loads(linemach.cluster)
-                ars = [ x.split('@')[0] for x in cluster["listarscluster"]]
+                ars = [x.split('@')[0] for x in cluster["listarscluster"]]
                 ###clusterlist = ",".join(cluster["listarscluster"])
                 clusterlist = ",".join(ars)
                 nbclustermachine = str(cluster["numcluster"])
-            except:
+            except BaseException:
                 clusterlist = ""
-                nbclustermachine =""
+                nbclustermachine = ""
             listchamp.append(clusterlist)
             listchamp.append(nbclustermachine)
             listchamp.append(machime)
@@ -4226,45 +4402,49 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def getLogxmpp( self,
-                    session,
-                    start_date,
-                    end_date,
-                    typelog,
-                    action,
-                    module,
-                    user,
-                    how,
-                    who,
-                    why,
-                    headercolumn):
+    def getLogxmpp(self,
+                   session,
+                   start_date,
+                   end_date,
+                   typelog,
+                   action,
+                   module,
+                   user,
+                   how,
+                   who,
+                   why,
+                   headercolumn):
         ##labelheader = [x.strip() for x in headercolumn.split("|") if x.strip() != "" and x is not "None"]
         logs = session.query(Logs)
         if headercolumn == "":
             headercolumn = "date@fromuser@who@text"
 
         if start_date != "":
-            logs = logs.filter( Logs.date > start_date)
+            logs = logs.filter(Logs.date > start_date)
         if end_date != "":
-            logs = logs.filter( Logs.date < end_date)
+            logs = logs.filter(Logs.date < end_date)
         if not (typelog == "None" or typelog == ""):
-            logs = logs.filter( Logs.type == typelog)
+            logs = logs.filter(Logs.type == typelog)
         if not (action == "None" or action == ""):
-            logs = logs.filter( Logs.action == action)
+            logs = logs.filter(Logs.action == action)
         if not (module == "None" or module == ""):
-            #plusieurs criteres peuvent se trouver dans ce parametre.
-            criterformodule = [x.strip() for x in module.split("|") if x.strip() != "" and x != "None"]
+            # plusieurs criteres peuvent se trouver dans ce parametre.
+            criterformodule = [x.strip() for x in module.split(
+                "|") if x.strip() != "" and x != "None"]
             for x in criterformodule:
-                stringsearchinmodule = "%"+x+"%"
-                logs = logs.filter( Logs.module.like(stringsearchinmodule))
+                stringsearchinmodule = "%" + x + "%"
+                logs = logs.filter(Logs.module.like(stringsearchinmodule))
         if not (user == "None" or user == ""):
-            logs = logs.filter( func.lower(Logs.fromuser).like(func.lower(user)) )
+            logs = logs.filter(
+                func.lower(
+                    Logs.fromuser).like(
+                    func.lower(user)))
         if not (how == "None" or how == ""):
-            logs = logs.filter( Logs.how == how)
+            logs = logs.filter(Logs.how == how)
         if not (who == "None" or who == ""):
-            logs = logs.filter( Logs.who == who)
+            logs = logs.filter(Logs.who == who)
         if not (why == "None" or why == ""):
-            logs = logs.filter( Logs.why == why)
+            logs = logs.filter(Logs.why == why)
         logs = logs.order_by(desc(Logs.id)).limit(1000)
         result = logs.all()
         session.commit()
@@ -4273,7 +4453,7 @@ class XmppMasterDatabase(DatabaseHelper):
         index = 0
         for linelogs in result:
             listchamp = []
-            #listchamp.append(index)
+            # listchamp.append(index)
             if headercolumn != "" and "date" in headercolumn:
                 listchamp.append(str(linelogs.date))
             if headercolumn != "" and "fromuser" in headercolumn:
@@ -4299,23 +4479,30 @@ class XmppMasterDatabase(DatabaseHelper):
             if headercolumn != "" and "text" in headercolumn:
                 listchamp.append(linelogs.text)
 
-
-            ##listchamp.append(linelogs.type)
-            ##listchamp.append(linelogs.action)
-            ##listchamp.append(linelogs.module)
-            ##listchamp.append(linelogs.how)
-            #listchamp.append(linelogs.who)
-            ##listchamp.append(linelogs.why)
-            ##listchamp.append(linelogs.priority)
-            ##listchamp.append(linelogs.touser)
-            #listchamp.append(linelogs.sessionname)
-            #listchamp.append(linelogs.text)
+            # listchamp.append(linelogs.type)
+            # listchamp.append(linelogs.action)
+            # listchamp.append(linelogs.module)
+            # listchamp.append(linelogs.how)
+            # listchamp.append(linelogs.who)
+            # listchamp.append(linelogs.why)
+            # listchamp.append(linelogs.priority)
+            # listchamp.append(linelogs.touser)
+            # listchamp.append(linelogs.sessionname)
+            # listchamp.append(linelogs.text)
             ret['data'].append(listchamp)
             #index = index + 1
         return ret
 
     @DatabaseHelper._sessionm
-    def get_deploy_from_group(self, session, group_uuid, state, intervalsearch, minimum, maximum, filt):
+    def get_deploy_from_group(
+            self,
+            session,
+            group_uuid,
+            state,
+            intervalsearch,
+            minimum,
+            maximum,
+            filt):
         """
         This function is used to retrieve the deploy of a machine's group.
 
@@ -4335,17 +4522,21 @@ class XmppMasterDatabase(DatabaseHelper):
         if group_uuid:
             deploylog = deploylog.filter(Deploy.group_uuid == group_uuid)
         if intervalsearch:
-            deploylog = deploylog.filter(Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
+            deploylog = deploylog.filter(
+                Deploy.start >= (
+                    datetime.now() -
+                    timedelta(
+                        seconds=intervalsearch)))
         if state:
             deploylog = deploylog.filter(Deploy.state == state)
 
         # TODO: Add filter support
         # if filt:
             # deploylog = deploylog.filter( or_(Deploy.state.like('%%%s%%'%(filt)),
-                                                #Deploy.pathpackage.like('%%%s%%'%(filt)),
-                                                #Deploy.start.like('%%%s%%'%(filt)),
-                                                #Deploy.login.like('%%%s%%'%(filt)),
-                                                #Deploy.host.like('%%%s%%'%(filt))))
+            # Deploy.pathpackage.like('%%%s%%'%(filt)),
+            # Deploy.start.like('%%%s%%'%(filt)),
+            # Deploy.login.like('%%%s%%'%(filt)),
+            # Deploy.host.like('%%%s%%'%(filt))))
         nb = self.get_count(deploylog)
         len_query = session.query(func.count(distinct(Deploy.title)))[0]
         # deploylog = deploylog.group_by(Deploy.title)
@@ -4353,7 +4544,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
         nb = self.get_count(deploylog)
         if minimum and maximum:
-            deploylog = deploylog.offset(int(minimum)).limit(int(maximim)-int(minimum))
+            deploylog = deploylog.offset(
+                int(minimum)).limit(
+                int(maximim) -
+                int(minimum))
 
         result = deploylog.all()
         session.commit()
@@ -4376,14 +4570,15 @@ class XmppMasterDatabase(DatabaseHelper):
                              'jidmachine': [],
                              'jid_relay': [],
                              'title': []
-                }
-        }
+                             }
+               }
         ret['lentotal'] = len_query[0]
         ret['lenquery'] = nb
         for linedeploy in result:
-            #ret['tabdeploy']['len'].append(linedeploy[1])
+            # ret['tabdeploy']['len'].append(linedeploy[1])
             ret['tabdeploy']['state'].append(linedeploy.state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['pathpackage'].append(
+                linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
             ret['tabdeploy']['start'].append(str(linedeploy.start))
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
@@ -4391,7 +4586,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['login'].append(linedeploy.login)
             ret['tabdeploy']['host'].append(linedeploy.host.split("@")[0][:-4])
             ret['tabdeploy']['macadress'].append(linedeploy.macadress)
-            if linedeploy.group_uuid == None:
+            if linedeploy.group_uuid is None:
                 linedeploy.group_uuid = ""
             ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
             ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
@@ -4402,7 +4597,15 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def get_deploy_for_machine(self, session, uuidinventory, state, intervalsearch, minimum, maximum, filt):
+    def get_deploy_for_machine(
+            self,
+            session,
+            uuidinventory,
+            state,
+            intervalsearch,
+            minimum,
+            maximum,
+            filt):
         """
         This function is used to retrieve the deploy of a user.
 
@@ -4420,11 +4623,15 @@ class XmppMasterDatabase(DatabaseHelper):
 
         deploylog = session.query(Deploy)
         if uuidinventory:
-            deploylog = deploylog.filter( Deploy.inventoryuuid == uuidinventory)
+            deploylog = deploylog.filter(Deploy.inventoryuuid == uuidinventory)
         if intervalsearch:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
+            deploylog = deploylog.filter(
+                Deploy.start >= (
+                    datetime.now() -
+                    timedelta(
+                        seconds=intervalsearch)))
         if state:
-            deploylog = deploylog.filter( Deploy.state == state)
+            deploylog = deploylog.filter(Deploy.state == state)
 
         nb = self.get_count(deploylog)
 
@@ -4433,7 +4640,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
         nb = self.get_count(deploylog)
         if minium and maximum:
-            deploylog = deploylog.offset(int(minimum)).limit(int(maximum)-int(minimum))
+            deploylog = deploylog.offset(
+                int(minimum)).limit(
+                int(maximum) -
+                int(minimum))
         result = deploylog.all()
         session.commit()
         session.flush()
@@ -4455,13 +4665,14 @@ class XmppMasterDatabase(DatabaseHelper):
                              'jidmachine': [],
                              'jid_relay': [],
                              'title': []
-                }
-        }
+                             }
+               }
         ret['lentotal'] = len_query[0]
         ret['lenquery'] = nb
         for linedeploy in result:
             ret['tabdeploy']['state'].append(linedeploy.state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['pathpackage'].append(
+                linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
             ret['tabdeploy']['start'].append(str(linedeploy.start))
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
@@ -4478,9 +4689,9 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def delDeploybygroup( self,
-                          session,
-                          numgrp):
+    def delDeploybygroup(self,
+                         session,
+                         numgrp):
         """
             creation d'une organization
         """
@@ -4529,7 +4740,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_deploy_by_team_member(self, session, login, state, intervalsearch,
-                                      minimum=None, maximum=None, filt=None):
+                                  minimum=None, maximum=None, filt=None):
         """
             This function is used to retrieve the deployements of a team.
             This team is found based on the login of a member.
@@ -4550,7 +4761,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
         deploylog = session.query(Deploy)
 
-        if not pulse_usersid or len(pulse_usersid) == 1 and pulse_usersid[0] == "root":
+        if not pulse_usersid or len(
+                pulse_usersid) == 1 and pulse_usersid[0] == "root":
             return self.get_deploy_by_user_with_interval(login,
                                                          state,
                                                          intervalsearch,
@@ -4558,26 +4770,42 @@ class XmppMasterDatabase(DatabaseHelper):
                                                          maximum=None,
                                                          filt=None)
 
-        preposition_comparaisons = [Deploy.login.op('regexp')(field)  for field in pulse_usersid]
-        deploylog= deploylog.filter( or_(*preposition_comparaisons))
+        preposition_comparaisons = [Deploy.login.op(
+            'regexp')(field) for field in pulse_usersid]
+        deploylog = deploylog.filter(or_(*preposition_comparaisons))
 
-        preposition_comparaisons_count = [ "login REGEXP '%s' "% field  for field in pulse_usersid]
+        preposition_comparaisons_count = [
+            "login REGEXP '%s' " %
+            field for field in pulse_usersid]
         preposition_sql_string = ""
         if preposition_comparaisons_count:
-            preposition_sql_string ='and (' + ' or '.join(['%s' % x for x in  preposition_comparaisons_count]) +')'
+            preposition_sql_string = 'and (' + ' or '.join(
+                ['%s' % x for x in preposition_comparaisons_count]) + ')'
 
         if state:
             deploylog = deploylog.filter(Deploy.state == state)
 
         if intervalsearch:
-            deploylog = deploylog.filter(Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
+            deploylog = deploylog.filter(
+                Deploy.start >= (
+                    datetime.now() -
+                    timedelta(
+                        seconds=intervalsearch)))
 
         if filt is not None:
-            deploylog = deploylog.filter(or_(Deploy.state.like('%%%s%%' % filt),
-                                             Deploy.pathpackage.like('%%%s%%' % filt),
-                                             Deploy.start.like('%%%s%%' % filt),
-                                             Deploy.login.like('%%%s%%' % filt),
-                                             Deploy.host.like('%%%s%%' % filt)))
+            deploylog = deploylog.filter(
+                or_(
+                    Deploy.state.like(
+                        '%%%s%%' %
+                        filt), Deploy.pathpackage.like(
+                        '%%%s%%' %
+                        filt), Deploy.start.like(
+                        '%%%s%%' %
+                        filt), Deploy.login.like(
+                        '%%%s%%' %
+                        filt), Deploy.host.like(
+                            '%%%s%%' %
+                        filt)))
             count = """select count(*) as nb from (
                             select count(id) as nb
                             from deploy
@@ -4616,7 +4844,10 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = deploylog.group_by(Deploy.title).order_by(desc(Deploy.id))
 
         if minimum is not None and maximum is not None:
-            deploylog = deploylog.offset(int(minimum)).limit(int(maximum)-int(minimum))
+            deploylog = deploylog.offset(
+                int(minimum)).limit(
+                int(maximum) -
+                int(minimum))
 
         result = deploylog.all()
         session.commit()
@@ -4641,7 +4872,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         ret['lentotal'] = len_query
         ret['total_of_rows'] = lenrequest[0][0]
-        reg = "(.*)\.(.*)@(.*)\/(.*)"
+        reg = "(.*)\\.(.*)@(.*)\\/(.*)"
 
         for linedeploy in result:
             if re.match(reg, linedeploy.host):
@@ -4655,7 +4886,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     hostname = linedeploy.host.split('.')[0]
 
             ret['tabdeploy']['state'].append(linedeploy.state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['pathpackage'].append(
+                linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
             ret['tabdeploy']['start'].append(str(linedeploy.start))
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
@@ -4671,9 +4903,16 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
 
-
     @DatabaseHelper._sessionm
-    def get_deploy_by_user_with_interval(self, session, login, state, intervalsearch, minimum=None , maximum=None, filt=None):
+    def get_deploy_by_user_with_interval(
+            self,
+            session,
+            login,
+            state,
+            intervalsearch,
+            minimum=None,
+            maximum=None,
+            filt=None):
         """
         This function is used to retrive the recent deployment done by a user.
 
@@ -4691,19 +4930,31 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         deploylog = session.query(Deploy)
         if login:
-            deploylog = deploylog.filter( Deploy.login == login)
+            deploylog = deploylog.filter(Deploy.login == login)
         if state:
-            deploylog = deploylog.filter( Deploy.state == state)
+            deploylog = deploylog.filter(Deploy.state == state)
 
         if intervalsearch:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
+            deploylog = deploylog.filter(
+                Deploy.start >= (
+                    datetime.now() -
+                    timedelta(
+                        seconds=intervalsearch)))
 
         if filt is not None:
-            deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
-                                                Deploy.pathpackage.like('%%%s%%'%(filt)),
-                                                Deploy.start.like('%%%s%%'%(filt)),
-                                                Deploy.login.like('%%%s%%'%(filt)),
-                                                Deploy.host.like('%%%s%%'%(filt))))
+            deploylog = deploylog.filter(
+                or_(
+                    Deploy.state.like(
+                        '%%%s%%' %
+                        (filt)), Deploy.pathpackage.like(
+                        '%%%s%%' %
+                        (filt)), Deploy.start.like(
+                        '%%%s%%' %
+                        (filt)), Deploy.login.like(
+                        '%%%s%%' %
+                        (filt)), Deploy.host.like(
+                            '%%%s%%' %
+                        (filt))))
             if login:
                 count = """select count(*) as nb from (
                                     select count(id) as nb
@@ -4762,32 +5013,35 @@ class XmppMasterDatabase(DatabaseHelper):
 
         ##deploylog = deploylog.add_column(func.count(Deploy.title))
         if minimum is not None and maximum is not None:
-            deploylog = deploylog.offset(int(minimum)).limit(int(maximum)-int(minimum))
+            deploylog = deploylog.offset(
+                int(minimum)).limit(
+                int(maximum) -
+                int(minimum))
         result = deploylog.all()
         session.commit()
         session.flush()
-        ret ={'total_of_rows' : 0,
-              'lentotal' : 0,
-              'tabdeploy' : {
-                                'state' : [],
-                                'pathpackage' : [],
-                                'sessionid' : [],
-                                'start' : [],
-                                'inventoryuuid' : [],
-                                'command' : [],
-                                'login' : [],
-                                'host' : [],
-                                'macadress' : [],
-                                'group_uuid' : [],
-                                'startcmd' : [],
-                                'endcmd' : [],
-                                'jidmachine' : [],
-                                'jid_relay' : [],
-                                'title' : []}}
+        ret = {'total_of_rows': 0,
+               'lentotal': 0,
+               'tabdeploy': {
+                   'state': [],
+                   'pathpackage': [],
+                   'sessionid': [],
+                   'start': [],
+                   'inventoryuuid': [],
+                   'command': [],
+                   'login': [],
+                   'host': [],
+                   'macadress': [],
+                   'group_uuid': [],
+                   'startcmd': [],
+                   'endcmd': [],
+                   'jidmachine': [],
+                   'jid_relay': [],
+                   'title': []}}
 
-        ret['lentotal'] = len_query#[0]
+        ret['lentotal'] = len_query  # [0]
         ret['total_of_rows'] = lenrequest[0][0]
-        reg = "(.*)\.(.*)@(.*)\/(.*)"
+        reg = "(.*)\\.(.*)@(.*)\\/(.*)"
         for linedeploy in result:
             if re.match(reg, linedeploy.host):
                 # New jid : name.salt@relay/macaddress
@@ -4799,7 +5053,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 except Exception as e:
                     hostname = linedeploy.host.split('.')[0]
             ret['tabdeploy']['state'].append(linedeploy.state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['pathpackage'].append(
+                linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
             ret['tabdeploy']['start'].append(str(linedeploy.start))
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
@@ -4815,9 +5070,15 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
 
-
     @DatabaseHelper._sessionm
-    def get_deploy_by_user_finished(self, session, login, intervalsearch, minimum=None, maximum=None, filt=None):
+    def get_deploy_by_user_finished(
+            self,
+            session,
+            login,
+            intervalsearch,
+            minimum=None,
+            maximum=None,
+            filt=None):
         """
         This function is used to retrieve all the deployments done by a user (or a team).
 
@@ -4838,30 +5099,45 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = session.query(Deploy)
         if login:
             if isinstance(login, list):
-                deploylog = deploylog.filter( Deploy.login.op('regexp')("|".join(login)))
+                deploylog = deploylog.filter(
+                    Deploy.login.op('regexp')(
+                        "|".join(login)))
             else:
-                deploylog = deploylog.filter( Deploy.login.like(login))
+                deploylog = deploylog.filter(Deploy.login.like(login))
 
         if intervalsearch:
-            deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
+            deploylog = deploylog.filter(
+                Deploy.start >= (
+                    datetime.now() -
+                    timedelta(
+                        seconds=intervalsearch)))
 
         if filt is not None:
-            deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
-                                                Deploy.pathpackage.like('%%%s%%' % (filt)),
-                                                Deploy.start.like('%%%s%%' % (filt)),
-                                                Deploy.login.like('%%%s%%' % (filt)),
-                                                Deploy.host.like('%%%s%%' % (filt))))
+            deploylog = deploylog.filter(
+                or_(
+                    Deploy.state.like(
+                        '%%%s%%' %
+                        (filt)), Deploy.pathpackage.like(
+                        '%%%s%%' %
+                        (filt)), Deploy.start.like(
+                        '%%%s%%' %
+                        (filt)), Deploy.login.like(
+                        '%%%s%%' %
+                        (filt)), Deploy.host.like(
+                            '%%%s%%' %
+                        (filt))))
 
-        deploylog = deploylog.filter( or_(  Deploy.state == 'DEPLOYMENT SUCCESS',
-                                            Deploy.state.startswith('ERROR'),
-                                            Deploy.state.startswith('ABORT')))
+        deploylog = deploylog.filter(or_(Deploy.state == 'DEPLOYMENT SUCCESS',
+                                         Deploy.state.startswith('ERROR'),
+                                         Deploy.state.startswith('ABORT')))
 
         len_query = session.query(func.count(distinct(Deploy.title)))[0]
 
-        # It is the same as deploylog, but for unknown reason, the count doesn't works with ORM
+        # It is the same as deploylog, but for unknown reason, the count
+        # doesn't works with ORM
         if login:
             if isinstance(login, list):
-                llogin='|'.join([ x for x in  login] )
+                llogin = '|'.join([x for x in login])
                 count = """select count(*) as nb from (
                 select count(id) as nb
                 from deploy
@@ -4874,7 +5150,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 or host LIKE "%%%s%%"
                 )
                 group by title
-                ) as x;"""%(llogin, filt,filt,filt,filt,filt,)
+                ) as x;""" % (llogin, filt, filt, filt, filt, filt,)
             else:
                 count = """select count(*) as nb from (
                 select count(id) as nb
@@ -4888,7 +5164,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 or host LIKE "%%%s%%"
                 )
                 group by title
-                ) as x;"""%(login, filt,filt,filt,filt,filt,)
+                ) as x;""" % (login, filt, filt, filt, filt, filt,)
         else:
             count = """select count(*) as nb from (
             select count(id) as nb
@@ -4901,7 +5177,7 @@ class XmppMasterDatabase(DatabaseHelper):
             or host LIKE "%%%s%%"
             )
             group by title
-            ) as x;"""%(filt,filt,filt,filt,filt,)
+            ) as x;""" % (filt, filt, filt, filt, filt,)
 
         count = session.execute(count)
         count = [nbcount for nbcount in count]
@@ -4912,34 +5188,37 @@ class XmppMasterDatabase(DatabaseHelper):
 
         #deploylog = deploylog.add_column(func.count(Deploy.title))
 
-        nbfilter =  self.get_count(deploylog)
+        nbfilter = self.get_count(deploylog)
 
         if minimum is not None and maximum is not None:
-            deploylog = deploylog.offset(int(minimum)).limit(int(maximum)-int(minimum))
+            deploylog = deploylog.offset(
+                int(minimum)).limit(
+                int(maximum) -
+                int(minimum))
         result = deploylog.all()
         session.commit()
         session.flush()
-        ret ={'lentotal' : 0,
-              'tabdeploy' : {   'len': [],
-                                'state' : [],
-                                'pathpackage' : [],
-                                'sessionid' : [],
-                                'start' : [],
-                                'inventoryuuid' : [],
-                                'command' : [],
-                                'login' : [],
-                                'host' : [],
-                                'macadress' : [],
-                                'group_uuid' : [],
-                                'startcmd' : [],
-                                'endcmd' : [],
-                                'jidmachine' : [],
-                                'jid_relay' : [],
-                                'title' : []}}
+        ret = {'lentotal': 0,
+               'tabdeploy': {'len': [],
+                             'state': [],
+                             'pathpackage': [],
+                             'sessionid': [],
+                             'start': [],
+                             'inventoryuuid': [],
+                             'command': [],
+                             'login': [],
+                             'host': [],
+                             'macadress': [],
+                             'group_uuid': [],
+                             'startcmd': [],
+                             'endcmd': [],
+                             'jidmachine': [],
+                             'jid_relay': [],
+                             'title': []}}
 
         #ret['lentotal'] = nbfilter
         ret['lentotal'] = count[0][0]
-        reg = "(.*)\.(.*)@(.*)\/(.*)"
+        reg = "(.*)\\.(.*)@(.*)\\/(.*)"
         for linedeploy in result:
             if re.match(reg, linedeploy.host):
                 # New jid : name.salt@relay/macaddress
@@ -4951,7 +5230,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     hostname = linedeploy.host.split('.')[0]
 
             ret['tabdeploy']['state'].append(linedeploy.state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['pathpackage'].append(
+                linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
             ret['tabdeploy']['start'].append(str(linedeploy.start))
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
@@ -4967,12 +5247,11 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
 
-
-
     @DatabaseHelper._sessionm
-    def getdeploybyuser(self, session, login = None, numrow = None, offset=None):
+    def getdeploybyuser(self, session, login=None, numrow=None, offset=None):
         if login is not None:
-            deploylog = session.query(Deploy).filter(Deploy.login == login).order_by(desc(Deploy.id))
+            deploylog = session.query(Deploy).filter(
+                Deploy.login == login).order_by(desc(Deploy.id))
         else:
             deploylog = session.query(Deploy).order_by(desc(Deploy.id))
         if numrow is not None:
@@ -4982,21 +5261,33 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = deploylog.all()
         session.commit()
         session.flush()
-        ret ={'len': len(deploylog),'tabdeploy': {'state': [], 'pathpackage': [], 'sessionid': [], 'inventoryuuid': [], 'command': [], 'start': [], 'login': [],  'host': []}}
+        ret = {
+            'len': len(deploylog),
+            'tabdeploy': {
+                'state': [],
+                'pathpackage': [],
+                'sessionid': [],
+                'inventoryuuid': [],
+                'command': [],
+                'start': [],
+                'login': [],
+                'host': []}}
         for linedeploy in deploylog:
             ret['tabdeploy']['state'].append(linedeploy.state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['pathpackage'].append(
+                linedeploy.pathpackage.split("/")[-1])
             ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
             ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
             ret['tabdeploy']['command'].append(linedeploy.command)
-            starttime_formated = str(linedeploy.start.strftime('%Y-%m-%d %H:%M'))
+            starttime_formated = str(
+                linedeploy.start.strftime('%Y-%m-%d %H:%M'))
             ret['tabdeploy']['start'].append(starttime_formated)
             ret['tabdeploy']['login'].append(linedeploy.login)
             ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
         return ret
 
     @DatabaseHelper._sessionm
-    def showmachinegrouprelayserver(self,session):
+    def showmachinegrouprelayserver(self, session):
         """ return les machines en fonction du RS """
         sql = """SELECT
                 `jid`,
@@ -5023,7 +5314,8 @@ class XmppMasterDatabase(DatabaseHelper):
             return quick actions informations
         """
         if grp == 0:
-            qa_custom_command = session.query(Qa_custom_command).filter(and_(Qa_custom_command.namecmd==namecmd, Qa_custom_command.user==user))
+            qa_custom_command = session.query(Qa_custom_command).filter(
+                and_(Qa_custom_command.namecmd == namecmd, Qa_custom_command.user == user))
             qa_custom_command = qa_custom_command.first()
         else:
             osdetection = ""
@@ -5036,29 +5328,29 @@ class XmppMasterDatabase(DatabaseHelper):
                     osdetection = "linux"
             if osdetection == "":
                 qa_custom_command = session.query(Qa_custom_command).\
-                    filter(and_(Qa_custom_command.customcmd==namecmd,
-                                or_(Qa_custom_command.user==user,
-                                    Qa_custom_command.user=="allusers")))
+                    filter(and_(Qa_custom_command.customcmd == namecmd,
+                                or_(Qa_custom_command.user == user,
+                                    Qa_custom_command.user == "allusers")))
             else:
                 qa_custom_command = session.query(Qa_custom_command).\
-                    filter(and_(Qa_custom_command.customcmd==namecmd,
-                                Qa_custom_command.os== osdetection,
-                                or_(Qa_custom_command.user==user,
-                                    Qa_custom_command.user=="allusers")))
+                    filter(and_(Qa_custom_command.customcmd == namecmd,
+                                Qa_custom_command.os == osdetection,
+                                or_(Qa_custom_command.user == user,
+                                    Qa_custom_command.user == "allusers")))
             qa_custom_command = qa_custom_command.first()
         if qa_custom_command:
-            result = {  "user" : qa_custom_command.user,
-                        "os" : qa_custom_command.os,
-                        "namecmd" : qa_custom_command.namecmd,
-                        "customcmd" : qa_custom_command.customcmd,
-                        "description" : qa_custom_command.description
-                        }
+            result = {"user": qa_custom_command.user,
+                      "os": qa_custom_command.os,
+                      "namecmd": qa_custom_command.namecmd,
+                      "customcmd": qa_custom_command.customcmd,
+                      "description": qa_custom_command.description
+                      }
             return result
         else:
             result = {}
 
     @DatabaseHelper._sessionm
-    def listjidRSdeploy(self,session):
+    def listjidRSdeploy(self, session):
         """ return les RS pour le deploiement """
         sql = """SELECT
                     groupdeploy
@@ -5073,7 +5365,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def listmachinesfromRSdeploy( self, session, groupdeploy ):
+    def listmachinesfromRSdeploy(self, session, groupdeploy):
         """ return les machine suivie par un RS """
         sql = """SELECT
                     *
@@ -5089,7 +5381,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def listmachinesfromdeploy( self, session, groupdeploy ):
+    def listmachinesfromdeploy(self, session, groupdeploy):
         """ return toutes les machines pour un deploy """
         sql = """SELECT
                         *
@@ -5105,7 +5397,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def ipfromjid(self, session, jid, enable = 1):
+    def ipfromjid(self, session, jid, enable=1):
         """ return ip xmpp for JID """
         user = str(jid).split("@")[0]
         if enable is None:
@@ -5132,7 +5424,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             a = list([x for x in result][0])
             return a
-        except:
+        except BaseException:
             return -1
 
     @DatabaseHelper._sessionm
@@ -5153,7 +5445,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             a = list([x for x in result][0])
             return a
-        except:
+        except BaseException:
             return -1
 
     @DatabaseHelper._sessionm
@@ -5173,7 +5465,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             a = list([x for x in result][0])
             return a
-        except:
+        except BaseException:
             return -1
 
     @DatabaseHelper._sessionm
@@ -5193,7 +5485,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             a = list([x for x in result][0])
             return a
-        except:
+        except BaseException:
             return -1
 
     @DatabaseHelper._sessionm
@@ -5213,7 +5505,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             a = list([x for x in result][0])
             return a
-        except:
+        except BaseException:
             return -1
 
     @DatabaseHelper._sessionm
@@ -5228,14 +5520,21 @@ class XmppMasterDatabase(DatabaseHelper):
             Returns:
                 It returns the UUID based on the jid, False otherwise
         """
-        uuid_inventorymachine = session.query(Machines).filter_by(jid=jid).first().uuid_inventorymachine
+        uuid_inventorymachine = session.query(Machines).filter_by(
+            jid=jid).first().uuid_inventorymachine
         if uuid_inventorymachine:
             return uuid_inventorymachine.strip('UUID')
 
         return False
 
     @DatabaseHelper._sessionm
-    def algoruleadorganisedbyusers(self, session, userou, classutilMachine = "both", rule = 8, enabled=1):
+    def algoruleadorganisedbyusers(
+            self,
+            session,
+            userou,
+            classutilMachine="both",
+            rule=8,
+            enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 8 by organization users
             Field "subject" is used to define the organisation by user OU eg Computers/HeadQuarter/Locations
@@ -5324,9 +5623,14 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x for x in result]
 
-
     @DatabaseHelper._sessionm
-    def algoruleuser(self, session, username, classutilMachine = "both", rule = 1, enabled=1):
+    def algoruleuser(
+            self,
+            session,
+            username,
+            classutilMachine="both",
+            rule=1,
+            enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 1 for user name
             Field "subject" is used to define the name of the user in this rule
@@ -5363,7 +5667,13 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulehostname(self, session, hostname, classutilMachine = "both", rule = 2, enabled=1):
+    def algorulehostname(
+            self,
+            session,
+            hostname,
+            classutilMachine="both",
+            rule=2,
+            enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search
                               only to the rule designated. rule_id = 2 for hostname
@@ -5413,8 +5723,10 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         ret = [y for y in result]
         if ret:
-            logging.getLogger().debug("Matched hostname rule with "\
-                "hostname \"%s\# by regex \#%s\"" % (hostname, ret[0].subject))
+            logging.getLogger().debug(
+                "Matched hostname rule with "
+                "hostname \"%s\\# by regex \\#%s\"" %
+                (hostname, ret[0].subject))
         return ret
 
     @DatabaseHelper._sessionm
@@ -5439,7 +5751,12 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulesubnet(self, session, subnetmachine, classutilMachine = "both",  enabled=1):
+    def algorulesubnet(
+            self,
+            session,
+            subnetmachine,
+            classutilMachine="both",
+            enabled=1):
         """
             To associate relay server that is on same networks...
         """
@@ -5467,7 +5784,13 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def algorulebynetmaskaddress(self, session, netmaskaddress, classutilMachine = "both", rule = 10, enabled=1):
+    def algorulebynetmaskaddress(
+            self,
+            session,
+            netmaskaddress,
+            classutilMachine="both",
+            rule=10,
+            enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 10 by network mask
             Field "netmaskaddress" is used to define the net mask address for association
@@ -5509,8 +5832,8 @@ class XmppMasterDatabase(DatabaseHelper):
     def algorulebynetworkaddress(self,
                                  session,
                                  subnetmachine,
-                                 classutilMachine = "both",
-                                 rule = 9, enabled=1):
+                                 classutilMachine="both",
+                                 rule=9, enabled=1):
         """
             Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 9 by network address
             Field "subject" is used to define the subnet for association
@@ -5520,8 +5843,8 @@ class XmppMasterDatabase(DatabaseHelper):
             subnetmachine CIDR machine.
                 CIDR matching with subject of table has_relayserverrules
                 -- subject is the expresseion relationel.
-                -- eg : ^55\.171\.[5-6]{1}\.[0-9]{1,3}/24$
-                -- eg : ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/24$ all adress mask 255.255.255.255
+                -- eg : ^55\\.171\\.[5-6]{1}\\.[0-9]{1,3}/24$
+                -- eg : ^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}/24$ all adress mask 255.255.255.255
         """
         if classutilMachine == "private":
             sql = """select `relayserver`.`id`
@@ -5567,12 +5890,12 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return list( [x for x in result][0])
+        return list([x for x in result][0])
 
     @DatabaseHelper._sessionm
-    def jidrelayserverforip(self, session, ip ):
+    def jidrelayserverforip(self, session, ip):
         """ return jid server relay for connection"""
-        sql ="""SELECT
+        sql = """SELECT
                     ipconnection, port, jid, urlguacamole
                 FROM
                     xmppmaster.relayserver
@@ -5584,11 +5907,15 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             a = list([x for x in result][0])
             return a
-        except:
+        except BaseException:
             return -1
 
     @DatabaseHelper._sessionm
-    def IdlonglatServerRelay(self, session, classutilMachine = "both",  enabled=1):
+    def IdlonglatServerRelay(
+            self,
+            session,
+            classutilMachine="both",
+            enabled=1):
         """ return long and lat server relay"""
         if classutilMachine == "private":
             sql = """SELECT
@@ -5599,8 +5926,8 @@ class XmppMasterDatabase(DatabaseHelper):
                             `relayserver`.`enabled` = %d
                         AND `relayserver`.`classutil` = '%s'
                     AND `relayserver`.`moderelayserver` = 'static'
-                    AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`);""" % (enabled,
-                                                                                        classutilMachine)
+                    AND (`relayserver`.`switchonoff` OR `relayserver`.`mandatory`);""" % (
+                enabled, classutilMachine)
         else:
             sql = """SELECT
                         id,longitude,latitude
@@ -5614,13 +5941,13 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x for x in result]
 
-    #@DatabaseHelper._sessionm
-    #def algoruledefault(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
-        #pass
+    # @DatabaseHelper._sessionm
+    # def algoruledefault(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
+        # pass
 
-    #@DatabaseHelper._sessionm
-    #def algorulegeo(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
-        #pass
+    # @DatabaseHelper._sessionm
+    # def algorulegeo(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
+        # pass
 
     @DatabaseHelper._sessionm
     def Orderrules(self, session):
@@ -5637,7 +5964,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def hasmachineusers(self, session, machines_id, users_id):
         result = session.query(Has_machinesusers.machines_id).\
-           filter(and_( Has_machinesusers.machines_id == machines_id,\
+            filter(and_(Has_machinesusers.machines_id == machines_id,
                         Has_machinesusers.users_id == users_id)).first()
         session.commit()
         session.flush()
@@ -5654,8 +5981,8 @@ class XmppMasterDatabase(DatabaseHelper):
     def addguacamoleidformachineid(self, session, machine_id, idguacamole):
         try:
             hasguacamole = Has_guacamole()
-            hasguacamole.idguacamole=idguacamole
-            hasguacamole.machine_id=machine_id
+            hasguacamole.idguacamole = idguacamole
+            hasguacamole.machine_id = machine_id
             session.add(hasguacamole)
             session.commit()
             session.flush()
@@ -5666,10 +5993,11 @@ class XmppMasterDatabase(DatabaseHelper):
     def addlistguacamoleidformachineid(self, session, machine_id, connection):
         # objet connection: {u'VNC': 60, u'RDP': 58, u'SSH': 59}}
         if not connection:
-            # on ajoute 1 protocole inexistant pour signaler que guacamle est configure.
+            # on ajoute 1 protocole inexistant pour signaler que guacamle est
+            # configure.
             connection['INF'] = 0
 
-        sql  = """DELETE FROM `xmppmaster`.`has_guacamole`
+        sql = """DELETE FROM `xmppmaster`.`has_guacamole`
                     WHERE
                         `xmppmaster`.`has_guacamole`.`machine_id` = '%s';""" % machine_id
         session.execute(sql)
@@ -5679,9 +6007,9 @@ class XmppMasterDatabase(DatabaseHelper):
         for idguacamole in connection:
             try:
                 hasguacamole = Has_guacamole()
-                hasguacamole.idguacamole=connection[idguacamole]
-                hasguacamole.machine_id=machine_id
-                hasguacamole.protocol=idguacamole
+                hasguacamole.idguacamole = connection[idguacamole]
+                hasguacamole.machine_id = machine_id
+                hasguacamole.protocol = idguacamole
                 session.add(hasguacamole)
                 session.commit()
                 session.flush()
@@ -5690,7 +6018,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def listserverrelay(self, session, moderelayserver = "static"):
+    def listserverrelay(self, session, moderelayserver="static"):
         sql = """SELECT
                     jid
                 FROM
@@ -5704,7 +6032,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
-    def column_list_table(self, session, tablename, basename="xmppmaster" ):
+    def column_list_table(self, session, tablename, basename="xmppmaster"):
         """
             This function returns the list of column titles in the table,
             where the name of this table is passed as a parameter.
@@ -5725,7 +6053,8 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error("\n%s" % (traceback.format_exc()))
 
     @DatabaseHelper._sessionm
-    def random_list_ars_relay_one_only_in_cluster(self, session, sessiontype_return="dict"):
+    def random_list_ars_relay_one_only_in_cluster(
+            self, session, sessiontype_return="dict"):
         """
             this function search 1 list ars.
             1 only ars by cluster.
@@ -5778,7 +6107,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
-    def listmachines(self, session, enable = '1'):
+    def listmachines(self, session, enable='1'):
         sql = """SELECT
                     jid
                 FROM
@@ -5800,7 +6129,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
-    def listMacAdressforMachine(self, session, id_machine, infomac = False):
+    def listMacAdressforMachine(self, session, id_machine, infomac=False):
         try:
             sql = """SELECT
                         GROUP_CONCAT(DISTINCT mac ORDER BY mac ASC  SEPARATOR ',') AS listmac
@@ -5809,16 +6138,20 @@ class XmppMasterDatabase(DatabaseHelper):
                     WHERE
                         machines_id = '%s';""" % (id_machine)
             if infomac:
-                logging.getLogger().debug("SQL request to get the mac addresses list "\
-                                        "for the presence machine #%s" % id_machine)
+                logging.getLogger().debug(
+                    "SQL request to get the mac addresses list "
+                    "for the presence machine #%s" %
+                    id_machine)
             listMacAdress = session.execute(sql)
             session.commit()
             session.flush()
         except Exception as e:
             logging.getLogger().error(str(e))
-        result=[x for x in listMacAdress][0]
+        result = [x for x in listMacAdress][0]
         if infomac:
-            logging.getLogger().debug("Result list MacAdress for Machine : %s" % result[0])
+            logging.getLogger().debug(
+                "Result list MacAdress for Machine : %s" %
+                result[0])
         return result
 
     @DatabaseHelper._sessionm
@@ -5838,15 +6171,19 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(str(e))
             return ""
-        try :
-            result=[x for x in jidmachine][0]
-        except:
+        try:
+            result = [x for x in jidmachine][0]
+        except BaseException:
             return ""
         return result[0]
 
     @DatabaseHelper._sessionm
-    def updateMachineidinventory(self, session, id_machineinventory, idmachine):
-        updatedb=-1
+    def updateMachineidinventory(
+            self,
+            session,
+            id_machineinventory,
+            idmachine):
+        updatedb = -1
         try:
             sql = """UPDATE `machines`
                     SET
@@ -5864,11 +6201,11 @@ class XmppMasterDatabase(DatabaseHelper):
         return int(time.mktime(date.timetuple()))
 
     def query_to_array_of_dict(self, ret,
-                               timestmp = False,
-                               list_colonne_name = True,
+                               timestmp=False,
+                               list_colonne_name=True,
                                bycolumn=True,
-                               nbelement = True,
-                               listexclude= []):
+                               nbelement=True,
+                               listexclude=[]):
         """ convert sql objet to list of dict"""
         result = []
         if ret is not None:
@@ -5883,23 +6220,25 @@ class XmppMasterDatabase(DatabaseHelper):
                             if key in listexclude:
                                 continue
                             logger.warning("value type %s" % type(value))
-                            if value is  None :
+                            if value is None:
                                 dictresult[key] = ''
                             elif isinstance(value, datetime):
-                                dictresult[key] = value.strftime("%Y-%m-%d %H:%M:%S")
+                                dictresult[key] = value.strftime(
+                                    "%Y-%m-%d %H:%M:%S")
                                 if timestmp:
-                                    dictresult["%s_stmp"%key] = self.datetimetotimestamp(value)
+                                    dictresult["%s_stmp" %
+                                               key] = self.datetimetotimestamp(value)
                             else:
                                 dictresult[key] = value
                         logger.warning("value type %s" % type(value))
                         result.append(dictresult)
 
-            else: # by column
+            else:  # by column
                 # create list by name.
                 # initialisation structure result
                 if ret:
-                    result = {"data":{index : [] for index in columns_name}}
-                    if nbelement :
+                    result = {"data": {index: [] for index in columns_name}}
+                    if nbelement:
                         result["count"] = countelt
                     if list_colonne_name:
                         result['data']['columns_name'] = columns_name
@@ -5908,28 +6247,29 @@ class XmppMasterDatabase(DatabaseHelper):
                             for key, value in row.items():
                                 if key in listexclude:
                                     continue
-                                if value is  None :
+                                if value is None:
                                     result['data'][key].append('')
                                 elif isinstance(value, datetime):
-                                    result['data'][key].append(value.strftime("%Y-%m-%d %H:%M:%S"))
-                                    #if timestmp:
-                                        #dictresult["%s_stmp"%key] = self.datetimetotimestamp(value)
+                                    result['data'][key].append(
+                                        value.strftime("%Y-%m-%d %H:%M:%S"))
+                                    # if timestmp:
+                                    #dictresult["%s_stmp"%key] = self.datetimetotimestamp(value)
                                 else:
                                     result['data'][key].append(value)
         else:
-            result =[{}]
+            result = [{}]
         return result
 
     @DatabaseHelper._sessionm
     def get_machines_list(self, session, start, end, ctx):
         def _likecriterium(field, filter):
-            return  " AND %s like '%%%s%%'"% (field,filter)
+            return " AND %s like '%%%s%%'" % (field, filter)
         # fiel for table mach
         machinefield = ['id', 'jid',
                         'uuid_serial_machine',
                         'enabled', 'platform',
-                        'archi','hostname',
-                        'uuid_inventorymachine','ippublic',
+                        'archi', 'hostname',
+                        'uuid_inventorymachine', 'ippublic',
                         'ip_xmpp', 'macaddress',
                         'subnetxmpp', 'agenttype',
                         'classutil', 'groupdeploy',
@@ -5938,78 +6278,83 @@ class XmppMasterDatabase(DatabaseHelper):
                         'lastuser',
                         'glpi_owner_firstname', 'glpi_owner_realname',
                         'glpi_owner', 'glpi_entity_id',
-                        'glpi_location_id','model',
-                        'manufacturer','need_reconf', 'kiosk_presence']
+                        'glpi_location_id', 'model',
+                        'manufacturer', 'need_reconf', 'kiosk_presence']
         # fiel for table ent and alias
-        entityfield =   {'entityname': "name",
-                         'entitypath': "complete_name",
-                         'entityid': "glpi_id"}
+        entityfield = {'entityname': "name",
+                       'entitypath': "complete_name",
+                       'entityid': "glpi_id"}
         # fiel for table location and alias
         locationfield = {'locationname': "name",
                          'locationpath': "complete_name",
                          'locationid': "glpi_id"}
         debugfunction = 0
         recherchefild = ""
-        ctx['field']=ctx['field'].strip()
-        ctx['filter']=ctx['filter'].strip()
+        ctx['field'] = ctx['field'].strip()
+        ctx['filter'] = ctx['filter'].strip()
         if "@@@DEBUG@@@" in ctx['filter']:
             debugfunction = 1
-            ctx['filter']  = ctx['filter'].replace("@@@DEBUG@@@", "").strip()
+            ctx['filter'] = ctx['filter'].replace("@@@DEBUG@@@", "").strip()
 
         if 'field' in ctx and ctx['field'].strip() != '':
             if 'filter' in ctx and ctx['filter'].strip() != '':
                 if ctx['field'] == "allchamp":
-                    tabelt=[]
+                    tabelt = []
                     for indexchamp in machinefield:
                         elt = "mach.%s" % indexchamp
-                        tabelt.append( "COALESCE(%s, '')"%elt)
+                        tabelt.append("COALESCE(%s, '')" % elt)
                     for indexchamp in entityfield:
                         elt = "ent.%s" % entityfield[indexchamp]
-                        tabelt.append( "COALESCE(%s, '')"%elt)
+                        tabelt.append("COALESCE(%s, '')" % elt)
                     for indexchamp in locationfield:
                         elt = "loc.%s" % locationfield[indexchamp]
-                        tabelt.append( "COALESCE(%s, '')"%elt)
+                        tabelt.append("COALESCE(%s, '')" % elt)
                     tabelt = ",'~',".join(tabelt)
                     ## logger.warning("tabelt %s" % tabelt)
-                    recherchefild = " AND ( concat(%s) like '%%%s%%')"% (tabelt, ctx['filter'])
+                    recherchefild = " AND ( concat(%s) like '%%%s%%')" % (
+                        tabelt, ctx['filter'])
                 else:
-                    #traitement des boolean posssible value
+                    # traitement des boolean posssible value
                     if ctx['field'] in ['need_reconf', 'kiosk_presence']:
                         reply = str(ctx['filter']).lower().strip()
-                        if reply[0] in ['y', 'o', 't', 'v', '1' ]:
+                        if reply[0] in ['y', 'o', 't', 'v', '1']:
                             ctx['filter'] = '1'
-                        elif reply[0] in ['n', 'f', '0' ]:
+                        elif reply[0] in ['n', 'f', '0']:
                             ctx['filter'] = '0'
                     if ctx['field'] in machinefield:
-                        ctx['field'] = "mach.%s"%ctx['field']
+                        ctx['field'] = "mach.%s" % ctx['field']
                     elif ctx['field'] in entityfield:
-                       ctx['field'] = "ent.%s"%entityfield[ctx['field']]
+                        ctx['field'] = "ent.%s" % entityfield[ctx['field']]
                     elif ctx['field'] in locationfield:
-                       ctx['field'] = "loc.%s"%locationfield[ctx['field']]
+                        ctx['field'] = "loc.%s" % locationfield[ctx['field']]
                     if ctx['filter'].lower().strip() == "null":
-                        recherchefild = " AND %s IS NULL "%ctx['field']
+                        recherchefild = " AND %s IS NULL " % ctx['field']
                     elif ctx['field'] in ['mach.id', 'mach.glpi_entity_id',
-                                            'mach.glpi_location_id',
-                                            'ent.glpi_id', 'loc.glpi_id']:
-                        recherchefild = " AND %s = '%s'"% (ctx['field'], ctx['filter'])
+                                          'mach.glpi_location_id',
+                                          'ent.glpi_id', 'loc.glpi_id']:
+                        recherchefild = " AND %s = '%s'" % (
+                            ctx['field'], ctx['filter'])
                     else:
-                        recherchefild = _likecriterium(ctx['field'], ctx['filter'])
-        r=re.compile(r'reg_key_.*')
-        regs=filter(r.search, self.config.summary)
-        list_reg_columns_name = [getattr( self.config, regkey).split("|")[0].split("\\")[-1] \
-                        for regkey in regs]
+                        recherchefild = _likecriterium(
+                            ctx['field'], ctx['filter'])
+        r = re.compile(r'reg_key_.*')
+        regs = filter(r.search, self.config.summary)
+        list_reg_columns_name = [getattr(self.config, regkey).split("|")[
+            0].split("\\")[-1] for regkey in regs]
         entity = " "
         if 'location' in ctx and ctx['location'] != "":
             if ctx['location'].strip() == "-1":
                 logger.warning("location is %s" % ctx['location'])
                 pass
             else:
-                entitylist = [x.strip() \
-                                for x in str(ctx['location']).replace('UUID',"").split(",")\
-                                    if x !=""]
+                entitylist = [
+                    x.strip() for x in str(
+                        ctx['location']).replace(
+                        'UUID',
+                        "").split(",") if x != ""]
                 if entitylist:
-                    entitystrlist=",".join(entitylist)
-                    entity = " AND ent.glpi_id in (%s) "% entitystrlist
+                    entitystrlist = ",".join(entitylist)
+                    entity = " AND ent.glpi_id in (%s) " % entitystrlist
 
         ordered = ""
         if (self.config.ordered == 1):
@@ -6092,21 +6437,21 @@ class XmppMasterDatabase(DatabaseHelper):
         count = ret_count.first()[0]
         session.commit()
         session.flush()
-        ret = self.query_to_array_of_dict(result,bycolumn=True,
-                                           listexclude=['picklekeypublic',
-                                                        'urlguacamole',
-                                                        'keysyncthing'])
-                                                        #'keysyncthing',
-                                           #'glpi_location_id',
-                                                        #'locationid',
-                                                        #'locationpath',
-                                                        #'locationname'
+        ret = self.query_to_array_of_dict(result, bycolumn=True,
+                                          listexclude=['picklekeypublic',
+                                                       'urlguacamole',
+                                                       'keysyncthing'])
+        # 'keysyncthing',
+        # 'glpi_location_id',
+        # 'locationid',
+        # 'locationpath',
+        # 'locationname'
         ret['column'] = self.config.summary
         ret['list_reg_columns_name'] = list_reg_columns_name
 
         for columkeyreg in list_reg_columns_name:
-            ret['data'][columkeyreg] =[]
-            for stringkeyregistre in ret['data']['regedit'] :
+            ret['data'][columkeyreg] = []
+            for stringkeyregistre in ret['data']['regedit']:
                 if stringkeyregistre == '':
                     ret['data'][columkeyreg].append('')
                 else:
@@ -6114,31 +6459,35 @@ class XmppMasterDatabase(DatabaseHelper):
                         couplekeyvalue = strkeyvalue.split('|')
                         if len(couplekeyvalue) == 2:
                             if couplekeyvalue[0] == columkeyreg:
-                                ret['data'][columkeyreg].append(couplekeyvalue[1])
+                                ret['data'][columkeyreg].append(
+                                    couplekeyvalue[1])
         ret['total'] = count
         return ret
 
     @DatabaseHelper._sessionm
-    def getPresenceuuidenabled(self, session, uuid, enabled = 0):
-        return session.query(exists().where (and_(Machines.uuid_inventorymachine == uuid,
-                                                  Machines.enabled == enabled))).scalar()
+    def getPresenceuuidenabled(self, session, uuid, enabled=0):
+        return session.query(
+            exists().where(
+                and_(
+                    Machines.uuid_inventorymachine == uuid,
+                    Machines.enabled == enabled))).scalar()
 
     @DatabaseHelper._sessionm
     def getPresenceuuid(self, session, uuid):
         machinespresente = session.query(Machines.uuid_inventorymachine).\
-            filter(and_( Machines.uuid_inventorymachine == uuid,
-                         Machines.enabled == '1')).first()
+            filter(and_(Machines.uuid_inventorymachine == uuid,
+                        Machines.enabled == '1')).first()
         session.commit()
         session.flush()
-        if machinespresente :
+        if machinespresente:
             return True
         return False
 
     @DatabaseHelper._sessionm
     def getPresenceuuids(self, session, uuids):
         if isinstance(uuids, str):
-            uuids=[uuids]
-        result = { }
+            uuids = [uuids]
+        result = {}
         for uuidmachine in uuids:
             result[uuidmachine] = False
         machinespresente = session.query(Machines.uuid_inventorymachine).\
@@ -6161,16 +6510,17 @@ class XmppMasterDatabase(DatabaseHelper):
         Return: This fonction return a dictionnary:
                 {'UUID_GLPI': [presence of the machine, initialised glpi uuid]}
         """
-        result = { }
+        result = {}
         if isinstance(uuids, basestring):
             if uuids == "":
                 return {}
             uuids = [uuids]
         if uuids:
             for uuidmachine in uuids:
-                result[uuidmachine] = [0,0]
-            machinespresente = session.query(Machines.uuid_inventorymachine,Machines.enabled).\
-                filter(Machines.uuid_inventorymachine.in_(uuids)).all()
+                result[uuidmachine] = [0, 0]
+            machinespresente = session.query(
+                Machines.uuid_inventorymachine, Machines.enabled). filter(
+                Machines.uuid_inventorymachine.in_(uuids)).all()
             session.commit()
             session.flush()
             for linemachine in machinespresente:
@@ -6207,9 +6557,9 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error("We got the error: %s" % str(e))
             return None
 
-    #topology
+    # topology
     @DatabaseHelper._sessionm
-    def listRS(self,session):
+    def listRS(self, session):
         """ return les RS pour le deploiement """
         sql = """SELECT DISTINCT
                     groupdeploy
@@ -6222,14 +6572,14 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         listrs = [x for x in result]
-        return [ i[0] for i in listrs ]
+        return [i[0] for i in listrs]
 
-    #topology
+    # topology
     @DatabaseHelper._sessionm
     def topologypulse(self, session):
         #listrs = self.listRS()
-        ## select liste des RS
-        #list des machines pour un relayserver
+        # select liste des RS
+        # list des machines pour un relayserver
 
         sql = """SELECT groupdeploy,
                     GROUP_CONCAT(jid)
@@ -6249,21 +6599,27 @@ class XmppMasterDatabase(DatabaseHelper):
             listmachines = i[1].split(',')
             resulttopologie[i[0]] = listmachines
         self.write_topologyfile(resulttopologie)
-        return [ resulttopologie]
+        return [resulttopologie]
 
-    #topology
+    # topology
     def write_topologyfile(self, topology):
-        directoryjson = os.path.join("/","usr","share","mmc","datatopology")
+        directoryjson = os.path.join(
+            "/", "usr", "share", "mmc", "datatopology")
         if not os.path.isdir(directoryjson):
-            #creation repertoire de json topology
+            # creation repertoire de json topology
             os.makedirs(directoryjson)
-            os.chmod(directoryjson, 0o777) # for example
-            uid, gid =  pwd.getpwnam('root').pw_uid, pwd.getpwnam('root').pw_gid
-            os.chown(directoryjson, uid, gid) # set user:group as root:www-data
+            os.chmod(directoryjson, 0o777)  # for example
+            uid, gid = pwd.getpwnam('root').pw_uid, pwd.getpwnam('root').pw_gid
+            # set user:group as root:www-data
+            os.chown(directoryjson, uid, gid)
         # creation topology file.
         filename = "topology.json"
-        pathfile =  os.path.join(directoryjson, filename)
-        builddatajson = { "name" : "Pulse", "type" : "AMR", "parent": None, "children": []}
+        pathfile = os.path.join(directoryjson, filename)
+        builddatajson = {
+            "name": "Pulse",
+            "type": "AMR",
+            "parent": None,
+            "children": []}
         for i in topology:
             listmachines = topology[i]
 
@@ -6276,21 +6632,21 @@ class XmppMasterDatabase(DatabaseHelper):
 
             listmachinesstring = []
             for mach in listmachines:
-                ARS['children'].append({ "name" : mach,
-                'display_name': mach.split(".")[0],
-                "type" : "AM", "parent" : i })
+                ARS['children'].append({"name": mach,
+                                        'display_name': mach.split(".")[0],
+                                        "type": "AM", "parent": i})
             #builddatajson[i] = listmachinesstring
             #ARS['children'] = builddatajson
-            #print listmachinesstring
+            # print listmachinesstring
             builddatajson['children'].append(ARS)
         #import pprint
         #pp = pprint.PrettyPrinter(indent=4)
-        #pp.pprint(builddatajson)
+        # pp.pprint(builddatajson)
 
         with open(pathfile, 'w') as outfile:
-            json.dump(builddatajson,  outfile, indent = 4)
+            json.dump(builddatajson, outfile, indent=4)
         os.chmod(pathfile, 0o777)
-        uid, gid =  pwd.getpwnam('root').pw_uid, pwd.getpwnam('root').pw_gid
+        uid, gid = pwd.getpwnam('root').pw_uid, pwd.getpwnam('root').pw_gid
         os.chown(pathfile, uid, gid)
 
     @DatabaseHelper._sessionm
@@ -6308,13 +6664,13 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         step
-        #return [x for x in step]
+        # return [x for x in step]
         try:
-            a=[]
+            a = []
             for t in step:
-                a.append ({'date':t[0],'text':t[1] })
+                a.append({'date': t[0], 'text': t[1]})
             return a
-        except:
+        except BaseException:
             return []
 
     @DatabaseHelper._sessionm
@@ -6331,11 +6687,11 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         try:
-            a=[]
+            a = []
             for t in presencelist:
                 a.append(t[0])
             return a
-        except:
+        except BaseException:
             return a
 
     @DatabaseHelper._sessionm
@@ -6355,7 +6711,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         try:
             if presence is not None:
-                if presence == True:
+                if presence:
                     strpresence = " and enabled = 1"
                 else:
                     strpresence = " and enabled = 0"
@@ -6370,7 +6726,7 @@ class XmppMasterDatabase(DatabaseHelper):
             presencelist = session.execute(sql)
             session.commit()
             session.flush()
-            return [ x[0] for x in  presencelist ]
+            return [x[0] for x in presencelist]
         except Exception as e:
             logging.getLogger().error("Error debug for the getidlistPresenceMachine function!")
             logging.getLogger().error("The presence of the machine is:  %s" % presence)
@@ -6379,33 +6735,34 @@ class XmppMasterDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
-    def getxmppmasterfilterforglpi(self, session, listqueryxmppmaster = None):
+    def getxmppmasterfilterforglpi(self, session, listqueryxmppmaster=None):
         listqueryxmppmaster[2] = listqueryxmppmaster[2].lower()
         Regexpression = False
-        if listqueryxmppmaster[2] in [ "ou user", "ou machine"]:
-            if listqueryxmppmaster[3][:1] == "/" and  listqueryxmppmaster[3][-1:] == "/":
+        if listqueryxmppmaster[2] in ["ou user", "ou machine"]:
+            if listqueryxmppmaster[3][:1] == "/" and listqueryxmppmaster[3][-1:] == "/":
                 Regexpression = True
                 fl = listqueryxmppmaster[3][1:-1]
         if not Regexpression:
             # SQL Wildcards
             # % : The percentage symbol represent zero, one or several wildcard caracters.
-            fl = listqueryxmppmaster[3].replace('*',"%")
+            fl = listqueryxmppmaster[3].replace('*', "%")
 
         if listqueryxmppmaster[2] == "ou user":
             machineid = session.query(Machines.uuid_inventorymachine).\
-                filter( Machines.uuid_inventorymachine.isnot(None))
+                filter(Machines.uuid_inventorymachine.isnot(None))
             if Regexpression:
-                machineid = machineid.filter(Machines.ad_ou_user.op('regexp')(fl))
+                machineid = machineid.filter(
+                    Machines.ad_ou_user.op('regexp')(fl))
             else:
                 machineid = machineid.filter(Machines.ad_ou_user.like(fl))
-        elif listqueryxmppmaster[2]== "ou machine":
+        elif listqueryxmppmaster[2] == "ou machine":
             machineid = session.query(Machines.uuid_inventorymachine).\
-                filter( Machines.uuid_inventorymachine.isnot(None))
+                filter(Machines.uuid_inventorymachine.isnot(None))
             if Regexpression:
-                machineid = machineid.filter(Machines.ad_ou_machine.op('regexp')(fl))
+                machineid = machineid.filter(
+                    Machines.ad_ou_machine.op('regexp')(fl))
             else:
                 machineid = machineid.filter(Machines.ad_ou_machine.like(fl))
-
 
         elif listqueryxmppmaster[2] == "online computer":
             d = XmppMasterDatabase().getlistPresenceMachineid()
@@ -6414,10 +6771,9 @@ class XmppMasterDatabase(DatabaseHelper):
         machineid = machineid.all()
         session.commit()
         session.flush()
-        ret = [str(m.uuid_inventorymachine).replace("UUID", "")  for m in machineid]
+        ret = [str(m.uuid_inventorymachine).replace("UUID", "")
+               for m in machineid]
         return ret
-
-
 
     @DatabaseHelper._sessionm
     def getListPresenceMachine(self, session):
@@ -6433,14 +6789,14 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         try:
-            a=[]
+            a = []
             for t in presencelist:
-                a.append({'jid':t[0],
+                a.append({'jid': t[0],
                           'type': t[1],
-                          'hostname':t[2],
-                          'uuid_inventorymachine':t[3]})
+                          'hostname': t[2],
+                          'uuid_inventorymachine': t[3]})
             return a
-        except:
+        except BaseException:
             return -1
 
     @DatabaseHelper._sessionm
@@ -6457,27 +6813,29 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         try:
-            a=[]
+            a = []
             for t in presencelist:
-                a.append({'id':t[0],'jid': t[1], 'platform':t[2], \
-                    'hostname': t[4], 'uuid_inventorymachine':t[5], \
-                    'agenttype':t[10], 'classutil': t[11]})
+                a.append({'id': t[0], 'jid': t[1], 'platform': t[2],
+                          'hostname': t[4], 'uuid_inventorymachine': t[5],
+                          'agenttype': t[10], 'classutil': t[11]})
             return a
-        except:
+        except BaseException:
             return -1
 
     @DatabaseHelper._sessionm
-    def changStatusPresenceMachine(self, session, jid, enable = '0'):
+    def changStatusPresenceMachine(self, session, jid, enable='0'):
         """
             update presence machine in table machine.
         """
-        machine = session.query(Machines).filter( Machines.jid == jid)
+        machine = session.query(Machines).filter(Machines.jid == jid)
         if machine:
-            machine.enabled = "%s"%enable
+            machine.enabled = "%s" % enable
             session.commit()
             session.flush()
         else:
-            logger.warning("xmpp signal changement status on machine no exist %s" % jid)
+            logger.warning(
+                "xmpp signal changement status on machine no exist %s" %
+                jid)
 
     @DatabaseHelper._sessionm
     def delMachineXmppPresence(self, session, uuidinventory):
@@ -6496,8 +6854,8 @@ class XmppMasterDatabase(DatabaseHelper):
             id = session.execute(sql)
             session.commit()
             session.flush()
-            result=[x for x in id][0]
-            sql  = """DELETE FROM `xmppmaster`.`machines`
+            result = [x for x in id][0]
+            sql = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';""" % result[0]
             if result[2] == "relayserver":
@@ -6512,12 +6870,14 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except IndexError:
-            logging.getLogger().warning("Configuration agent machine uuidglpi [%s]. no uuid in base for configuration" % uuidinventory)
+            logging.getLogger().warning(
+                "Configuration agent machine uuidglpi [%s]. no uuid in base for configuration" %
+                uuidinventory)
             return {}
         except Exception as e:
             logging.getLogger().error(str(e))
             return {}
-        resulttypemachine={"type" : typemachine }
+        resulttypemachine = {"type": typemachine}
         return resulttypemachine
 
     @DatabaseHelper._sessionm
@@ -6564,14 +6924,16 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except IndexError as index_error:
-            logging.getLogger().warning("The machine %s has not been found in the database. We cannot delete it." % hostname)
+            logging.getLogger().warning(
+                "The machine %s has not been found in the database. We cannot delete it." %
+                hostname)
             logging.getLogger().warning("We obtained the error: %s" % index_error)
             return {}
         except Exception as e:
             logging.getLogger().error(str(e))
             return {}
 
-        resulttypemachine = {"type": typemachine }
+        resulttypemachine = {"type": typemachine}
         return resulttypemachine
 
     @DatabaseHelper._sessionm
@@ -6594,7 +6956,8 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [{column: value for column, value in rowproxy.items()} for rowproxy in result]
+        return [{column: value for column, value in rowproxy.items()}
+                for rowproxy in result]
 
     @DatabaseHelper._sessionm
     def SetPresenceMachine(self, session, jid, presence=0):
@@ -6622,58 +6985,65 @@ class XmppMasterDatabase(DatabaseHelper):
             return True
         except Exception as error_presence:
             logging.getLogger().error("An error occured while setting the new presence.")
-            logging.getLogger().error("We got the error:\n %s" % str(error_presence))
+            logging.getLogger().error(
+                "We got the error:\n %s" %
+                str(error_presence))
             return False
 
     @DatabaseHelper._sessionm
-    def updatedeployresultandstate(self, session, sessionid, state, result ):
-            jsonresult = json.loads(result)
-            jsonautre = copy.deepcopy(jsonresult)
-            del (jsonautre['descriptor'])
-            del (jsonautre['packagefile'])
-            #DEPLOYMENT START
-            try:
-                deploysession = session.query(Deploy).filter(Deploy.sessionid == sessionid).one()
-                if deploysession:
-                    if deploysession.result is None or \
-                        ("wol" in jsonresult and \
-                            jsonresult['wol']  == 1 ) or \
-                        ("advanced" in jsonresult and \
-                            'syncthing' in jsonresult['advanced'] and \
-                                jsonresult['advanced']['syncthing'] == 1):
-                        jsonbase = {
-                                    "infoslist": [jsonresult['descriptor']['info']],
-                                    "descriptorslist": [jsonresult['descriptor']['sequence']],
-                                    "otherinfos": [jsonautre],
-                                    "title": deploysession.title,
-                                    "session": deploysession.sessionid,
-                                    "macadress": deploysession.macadress,
-                                    "user": deploysession.login
-                        }
-                    else:
-                        jsonbase = json.loads(deploysession.result)
-                        jsonbase['infoslist'].append(jsonresult['descriptor']['info'])
-                        jsonbase['descriptorslist'].append(jsonresult['descriptor']['sequence'])
-                        jsonbase['otherinfos'].append(jsonautre)
-                    deploysession.result = json.dumps(jsonbase, indent=3)
-                    if 'infoslist' in jsonbase and \
-                        'otherinfos' in jsonbase and \
-                        jsonbase['otherinfos'] and \
-                        'plan' in jsonbase['otherinfos'][0] and \
-                            len(jsonbase['infoslist']) != len(jsonbase['otherinfos'][0]['plan']) and \
-                            state == "DEPLOYMENT SUCCESS":
-                        state = "DEPLOYMENT PARTIAL SUCCESS"
-                    regexpexlusion = re.compile("^(?!abort)^(?!success)^(?!error)",re.IGNORECASE)
-                    if regexpexlusion.match(state) is not None:
-                        deploysession.state = state
-                session.commit()
-                session.flush()
-                session.close()
-                return 1
-            except Exception as e:
-                self.logger.error(str(e))
-                self.logger.error("\n%s" % (traceback.format_exc()))
-                return -1
+    def updatedeployresultandstate(self, session, sessionid, state, result):
+        jsonresult = json.loads(result)
+        jsonautre = copy.deepcopy(jsonresult)
+        del (jsonautre['descriptor'])
+        del (jsonautre['packagefile'])
+        # DEPLOYMENT START
+        try:
+            deploysession = session.query(Deploy).filter(
+                Deploy.sessionid == sessionid).one()
+            if deploysession:
+                if deploysession.result is None or \
+                    ("wol" in jsonresult and
+                        jsonresult['wol'] == 1) or \
+                    ("advanced" in jsonresult and
+                        'syncthing' in jsonresult['advanced'] and
+                     jsonresult['advanced']['syncthing'] == 1):
+                    jsonbase = {
+                        "infoslist": [
+                            jsonresult['descriptor']['info']],
+                        "descriptorslist": [
+                            jsonresult['descriptor']['sequence']],
+                        "otherinfos": [jsonautre],
+                        "title": deploysession.title,
+                        "session": deploysession.sessionid,
+                        "macadress": deploysession.macadress,
+                        "user": deploysession.login}
+                else:
+                    jsonbase = json.loads(deploysession.result)
+                    jsonbase['infoslist'].append(
+                        jsonresult['descriptor']['info'])
+                    jsonbase['descriptorslist'].append(
+                        jsonresult['descriptor']['sequence'])
+                    jsonbase['otherinfos'].append(jsonautre)
+                deploysession.result = json.dumps(jsonbase, indent=3)
+                if 'infoslist' in jsonbase and \
+                    'otherinfos' in jsonbase and \
+                    jsonbase['otherinfos'] and \
+                    'plan' in jsonbase['otherinfos'][0] and \
+                        len(jsonbase['infoslist']) != len(jsonbase['otherinfos'][0]['plan']) and \
+                        state == "DEPLOYMENT SUCCESS":
+                    state = "DEPLOYMENT PARTIAL SUCCESS"
+                regexpexlusion = re.compile(
+                    "^(?!abort)^(?!success)^(?!error)", re.IGNORECASE)
+                if regexpexlusion.match(state) is not None:
+                    deploysession.state = state
+            session.commit()
+            session.flush()
+            session.close()
+            return 1
+        except Exception as e:
+            self.logger.error(str(e))
+            self.logger.error("\n%s" % (traceback.format_exc()))
+            return -1
 
     @DatabaseHelper._sessionm
     def substituteinfo(self, session, listconfsubstitute, arsname):
@@ -6683,16 +7053,21 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             exclud = 'master@pulse'
 
-            incrementeiscount=[]
+            incrementeiscount = []
             for t in listconfsubstitute['conflist']:
-                result = session.query(Substituteconf.id.label("id"),
-                                       Substituteconf.jidsubtitute.label("jidsubtitute"),
-                                       Substituteconf.countsub.label("countsub"),
-                                       RelayServer.jid.label("namerelayser")).\
-                    join(RelayServer, Substituteconf.relayserver_id == RelayServer.id).\
-                        filter( and_(not_(Substituteconf.jidsubtitute.like(exclud)),
-                                    Substituteconf.type.like(t),
-                                    RelayServer.jid == arsname)).order_by(Substituteconf.countsub).all()
+                result = session.query(
+                    Substituteconf.id.label("id"),
+                    Substituteconf.jidsubtitute.label("jidsubtitute"),
+                    Substituteconf.countsub.label("countsub"),
+                    RelayServer.jid.label("namerelayser")). join(
+                    RelayServer,
+                    Substituteconf.relayserver_id == RelayServer.id). filter(
+                    and_(
+                        not_(
+                            Substituteconf.jidsubtitute.like(exclud)),
+                        Substituteconf.type.like(t),
+                        RelayServer.jid == arsname)).order_by(
+                        Substituteconf.countsub).all()
                 listcommand = []
                 test = False
                 for y in result:
@@ -6704,7 +7079,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 listconfsubstitute[t] = listcommand
             if incrementeiscount:
                 # update contsub
-                sql="""UPDATE `xmppmaster`.`substituteconf`
+                sql = """UPDATE `xmppmaster`.`substituteconf`
                     SET
                         `countsub` = `countsub` + '1'
                     WHERE
@@ -6751,7 +7126,7 @@ class XmppMasterDatabase(DatabaseHelper):
                          SET `need_reconf` = '%s'
                      WHERE
                          `xmppmaster`.`machines`.jid like('%s@%%')""" % (status,
-                                                                       user)
+                                                                         user)
             result = session.execute(sql)
             session.commit()
             session.flush()
@@ -6838,7 +7213,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         `xmppmaster`.`machines`.`agenttype` like ("machine")
                         AND
                         `xmppmaster`.`machines`.`groupdeploy` like('%s@%%');""" % (reconf,
-                                                                           user)
+                                                                                   user)
             session.execute(sql)
             session.commit()
             session.flush()
@@ -6863,8 +7238,8 @@ class XmppMasterDatabase(DatabaseHelper):
             id = session.execute(sql)
             session.commit()
             session.flush()
-            result=[x for x in id][0]
-            sql  = """DELETE FROM `xmppmaster`.`machines`
+            result = [x for x in id][0]
+            sql = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';""" % result[0]
             if result[2] == "relayserver":
@@ -6879,7 +7254,9 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except IndexError:
-            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration" % jid)
+            logging.getLogger().warning(
+                "Configuration agent machine jid [%s]. no jid in base for configuration" %
+                jid)
             return {}
         except Exception as e:
             logging.getLogger().error(str(e))
@@ -6888,12 +7265,12 @@ class XmppMasterDatabase(DatabaseHelper):
         return resulttypemachine
 
     @DatabaseHelper._sessionm
-    def getPresencejiduser(self, session, jiduser, enable = "1"):
+    def getPresencejiduser(self, session, jiduser, enable="1"):
         """
             presence machine for jid user  ...@
         """
         machine = session.query(Machines).\
-            filter(and_(Machines.jid.like('%s@%%' % (jiduser)),\
+            filter(and_(Machines.jid.like('%s@%%' % (jiduser)),
                         Machines.enabled == "%s" % enable)).first()
         session.commit()
         session.flush()
@@ -6918,8 +7295,8 @@ class XmppMasterDatabase(DatabaseHelper):
             id = session.execute(sql)
             session.commit()
             session.flush()
-            result=[x for x in id][0]
-            sql  = """DELETE FROM `xmppmaster`.`machines`
+            result = [x for x in id][0]
+            sql = """DELETE FROM `xmppmaster`.`machines`
                     WHERE
                         `xmppmaster`.`machines`.`id` = '%s';""" % result[0]
             if result[2] == "relayserver":
@@ -6934,7 +7311,9 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except IndexError:
-            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration" % jiduser)
+            logging.getLogger().warning(
+                "Configuration agent machine jid [%s]. no jid in base for configuration" %
+                jiduser)
             return {}
         except Exception as e:
             logging.getLogger().error(str(e))
@@ -6945,7 +7324,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def search_machines_from_state(self, session, state):
         dateend = datetime.now()
-        sql= """SELECT
+        sql = """SELECT
                     *
                 FROM
                     xmppmaster.deploy
@@ -6956,7 +7335,7 @@ class XmppMasterDatabase(DatabaseHelper):
         machines = session.execute(sql)
         session.commit()
         session.flush()
-        result =  [x for x in machines]
+        result = [x for x in machines]
         resultlist = []
         for t in result:
             listresult = {"id": t[0],
@@ -6983,22 +7362,24 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def Timeouterrordeploy(self, session):
-        ### test les evenements states qui ne sont plus valides sur intervalle de deployement.
-        Stateforupdateontimeout=["'WOL 1'",
-                                 "'WOL 2'",
-                                 "'WOL 3'",
-                                 "'WAITING MACHINE ONLINE'",
-                                 "'DEPLOYMENT START'",
-                                 "'WAITING REBOOT'",
-                                 "'DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)'",
-                                 "'Offline'"]
+        # test les evenements states qui ne sont plus valides sur intervalle de
+        # deployement.
+        Stateforupdateontimeout = [
+            "'WOL 1'",
+            "'WOL 2'",
+            "'WOL 3'",
+            "'WAITING MACHINE ONLINE'",
+            "'DEPLOYMENT START'",
+            "'WAITING REBOOT'",
+            "'DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)'",
+            "'Offline'"]
 
         nowdate = datetime.now()
-        set_search =','.join(Stateforupdateontimeout)
+        set_search = ','.join(Stateforupdateontimeout)
 
         # reprise code ici
         try:
-            sql= """SELECT
+            sql = """SELECT
                         *
                     FROM
                         xmppmaster.deploy
@@ -7008,10 +7389,10 @@ class XmppMasterDatabase(DatabaseHelper):
             machines = session.execute(sql)
             session.commit()
             session.flush()
-            result =  [x for x in machines]
+            result = [x for x in machines]
             resultlist = []
             for t in result:
-                self.update_state_deploy( t[0], 'ABORT ON TIMEOUT')
+                self.update_state_deploy(t[0], 'ABORT ON TIMEOUT')
                 listresult = {"id": t[0],
                               "title": t[1],
                               "jidmachine": t[2],
@@ -7068,7 +7449,7 @@ class XmppMasterDatabase(DatabaseHelper):
             sql = """UPDATE `xmppmaster`.`deploy`
                      SET `syncthing`='%s'
                      WHERE `sessionid`='%s';""" % (syncthing, sessionid)
-            #print sql
+            # print sql
             session.execute(sql)
             session.commit()
             session.flush()
@@ -7088,7 +7469,7 @@ class XmppMasterDatabase(DatabaseHelper):
             req = session.execute(sql)
             session.commit()
             session.flush()
-            ret=[elt for elt in req]
+            ret = [elt for elt in req]
             return ret[0][0]
         except Exception as e:
             logging.getLogger().error(str(e))
@@ -7105,7 +7486,7 @@ class XmppMasterDatabase(DatabaseHelper):
         presencejid = session.execute(sql)
         session.commit()
         session.flush()
-        ret=[m[0] for m in presencejid]
+        ret = [m[0] for m in presencejid]
         if ret[0] == 0:
             return False
         return True
@@ -7123,7 +7504,7 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         machinesexits = []
         try:
-            sql="""SELECT
+            sql = """SELECT
                     machines.id AS id,
                     machines.uuid_inventorymachine AS uuid,
                     machines.uuid_serial_machine AS serial,
@@ -7143,7 +7524,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return machinesexits
 
         for machine in machines:
-            mach = {'id':  machine.id,
+            mach = {'id': machine.id,
                     'uuid': machine.uuid,
                     'macs': machine.macs,
                     'serial': machine.serial}
@@ -7155,7 +7536,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             machine = session.query(Machines.id,
                                     Machines.uuid_inventorymachine).\
-                                        filter(Machines.hostname == hostname).first()
+                filter(Machines.hostname == hostname).first()
             session.commit()
             session.flush()
             if machine:
@@ -7168,14 +7549,16 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineHostname(self, session, hostname,
-                                               enable = 1, agenttype="machine"):
+                                               enable=1, agenttype="machine"):
         querymachine = session.query(Machines)
-        if enable == None:
+        if enable is None:
             querymachine = querymachine.filter(Machines.hostname == hostname)
         else:
-            querymachine = querymachine.filter(and_(Machines.hostname == hostname,
-                                                    Machines.enabled == enable,
-                                                    Machines.agenttype == agenttype))
+            querymachine = querymachine.filter(
+                and_(
+                    Machines.hostname == hostname,
+                    Machines.enabled == enable,
+                    Machines.agenttype == agenttype))
         machine = querymachine.one()
         session.commit()
         session.flush()
@@ -7192,11 +7575,11 @@ class XmppMasterDatabase(DatabaseHelper):
                       "uuid_inventorymachine": machine.uuid_inventorymachine,
                       "ip_xmpp": machine.ip_xmpp,
                       "agenttype": machine.agenttype,
-                      "keysyncthing":  machine.keysyncthing,
+                      "keysyncthing": machine.keysyncthing,
                       "enabled": machine.enabled
-                        }
+                      }
             for i in result:
-                if result[i] == None:
+                if result[i] is None:
                     result[i] = ""
         except Exception:
             result = {"uuid": -1,
@@ -7211,13 +7594,14 @@ class XmppMasterDatabase(DatabaseHelper):
                       "uuid_inventorymachine": "",
                       "ip_xmpp": "",
                       "agenttype": "",
-                      "keysyncthing":  "",
+                      "keysyncthing": "",
                       "enabled": 0
-                    }
+                      }
         return result
 
     @DatabaseHelper._sessionm
-    def get_machine_with_dupplicate_uuidinventory(self, session, uuid, enable=1):
+    def get_machine_with_dupplicate_uuidinventory(
+            self, session, uuid, enable=1):
         """
         This function is used to retrieve computers with dupplicate uuids.
         Args:
@@ -7231,11 +7615,14 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         try:
             querymachine = session.query(Machines)
-            if enable == None:
-                querymachine = querymachine.filter(Machines.uuid_inventorymachine == uuid)
+            if enable is None:
+                querymachine = querymachine.filter(
+                    Machines.uuid_inventorymachine == uuid)
             else:
-                querymachine = querymachine.filter(and_(Machines.uuid_inventorymachine == uuid,
-                                                        Machines.enabled == enable))
+                querymachine = querymachine.filter(
+                    and_(
+                        Machines.uuid_inventorymachine == uuid,
+                        Machines.enabled == enable))
             machine = querymachine.all()
             resultdata = []
             if machine:
@@ -7252,16 +7639,18 @@ class XmppMasterDatabase(DatabaseHelper):
                               "uuid_inventorymachine": t.uuid_inventorymachine,
                               "ip_xmpp": t.ip_xmpp,
                               "agenttype": t.agenttype,
-                              "keysyncthing":  t.keysyncthing,
+                              "keysyncthing": t.keysyncthing,
                               "enabled": t.enabled}
                     for i in result:
-                        if result[i] == None:
+                        if result[i] is None:
                             result[i] = ""
                     resultdata.append(result)
             session.commit()
             session.flush()
         except Exception as e:
-            logging.getLogger().error("We failed to search the computers having %s as uuid" % uuid)
+            logging.getLogger().error(
+                "We failed to search the computers having %s as uuid" %
+                uuid)
             logging.getLogger().error("The backtrace we trapped is: \n %s" % str(e))
         return resultdata
 
@@ -7280,21 +7669,24 @@ class XmppMasterDatabase(DatabaseHelper):
                   "uuid_inventorymachine": "",
                   "ip_xmpp": "",
                   "agenttype": "",
-                  "keysyncthing":  "",
-                  "enabled": enable }
+                  "keysyncthing": "",
+                  "enabled": enable}
         try:
             querymachine = session.query(Machines)
-            if enable == None:
-                querymachine = querymachine.filter(Machines.uuid_inventorymachine == uuid)
+            if enable is None:
+                querymachine = querymachine.filter(
+                    Machines.uuid_inventorymachine == uuid)
             else:
-                querymachine = querymachine.filter(and_(Machines.uuid_inventorymachine == uuid,
-                                                        Machines.enabled == enable))
+                querymachine = querymachine.filter(
+                    and_(
+                        Machines.uuid_inventorymachine == uuid,
+                        Machines.enabled == enable))
             machine = querymachine.one()
 
             session.commit()
             session.flush()
 
-            result = {'error' : 'noerror',
+            result = {'error': 'noerror',
                       "uuid": uuid,
                       "jid": machine.jid,
                       "groupdeploy": machine.groupdeploy,
@@ -7307,9 +7699,9 @@ class XmppMasterDatabase(DatabaseHelper):
                       "uuid_inventorymachine": machine.uuid_inventorymachine,
                       "ip_xmpp": machine.ip_xmpp,
                       "agenttype": machine.agenttype,
-                      "keysyncthing":  machine.keysyncthing,
+                      "keysyncthing": machine.keysyncthing,
                       "enabled": machine.enabled
-                     }
+                      }
             for i in result:
                 if result[i] is None:
                     result[i] = ""
@@ -7319,7 +7711,9 @@ class XmppMasterDatabase(DatabaseHelper):
             if enable is None:
                 logging.getLogger().error("We found no machines with the UUID %s" % uuid)
             else:
-                logging.getLogger().error("We found no machines with the UUID %s, and with enabled: %s" % (uuid, enable))
+                logging.getLogger().error(
+                    "We found no machines with the UUID %s, and with enabled: %s" %
+                    (uuid, enable))
 
             logging.getLogger().error("We encountered the following error:\n %s" % str(e))
         except MultipleResultsFound as e:
@@ -7327,7 +7721,9 @@ class XmppMasterDatabase(DatabaseHelper):
             if enable is None:
                 logging.getLogger().error("We found multiple machines with the UUID %s" % uuid)
             else:
-                logging.getLogger().error("We found multiple machines with the UUID %s, and with enabled: %s" % uuid, enable)
+                logging.getLogger().error(
+                    "We found multiple machines with the UUID %s, and with enabled: %s" %
+                    uuid, enable)
 
             logging.getLogger().error("We encountered the following error:\n %s" % str(e))
 
@@ -7336,14 +7732,16 @@ class XmppMasterDatabase(DatabaseHelper):
             if enable is None:
                 logging.getLogger().error("We were searching for machines with the UUID %s" % uuid)
             else:
-                logging.getLogger().error("We were searching for machines with the UUID %s, and with enabled: %s" % uuid, enable)
+                logging.getLogger().error(
+                    "We were searching for machines with the UUID %s, and with enabled: %s" %
+                    uuid, enable)
 
             logging.getLogger().error("We encountered the following error:\n %s" % str(e))
 
         return result
 
     @DatabaseHelper._sessionm
-    def getGuacamoleidforUuid(self, session, uuid, existtest = None):
+    def getGuacamoleidforUuid(self, session, uuid, existtest=None):
         """
             if existtest is None
              this function return the list of protocole for 1 machine
@@ -7352,24 +7750,31 @@ class XmppMasterDatabase(DatabaseHelper):
              or false si guacamole is not configued.
         """
         if existtest is None:
-            ret=session.query(Has_guacamole.idguacamole,Has_guacamole.protocol).\
-                filter(and_(Has_guacamole.idinventory == uuid.replace('UUID',''),
-                            Has_guacamole.protocol != "INF")).all()
+            ret = session.query(
+                Has_guacamole.idguacamole,
+                Has_guacamole.protocol). filter(
+                and_(
+                    Has_guacamole.idinventory == uuid.replace(
+                        'UUID',
+                        ''),
+                    Has_guacamole.protocol != "INF")).all()
             session.commit()
             session.flush()
             if ret:
-                return [(m[1],m[0]) for m in ret]
+                return [(m[1], m[0]) for m in ret]
             else:
                 return []
         else:
-            ret=session.query(Has_guacamole.idguacamole).\
-                filter(Has_guacamole.idinventory == uuid.replace('UUID','')).first()
+            ret = session.query(
+                Has_guacamole.idguacamole). filter(
+                Has_guacamole.idinventory == uuid.replace(
+                    'UUID', '')).first()
             if ret:
                 return True
             return False
 
     @DatabaseHelper._sessionm
-    def getGuacamoleIdForHostname(self, session, host, existtest = None):
+    def getGuacamoleIdForHostname(self, session, host, existtest=None):
         """
             if existtest is None
              this function return the list of protocole for 1 machine
@@ -7378,20 +7783,21 @@ class XmppMasterDatabase(DatabaseHelper):
              or false si guacamole is not configued.
         """
         if existtest is None:
-            protocole = session.query(Has_guacamole.idguacamole,Has_guacamole.protocol).\
-                    join(Machines, Machines.id == Has_guacamole.machine_id)
+            protocole = session.query(
+                Has_guacamole.idguacamole, Has_guacamole.protocol). join(
+                Machines, Machines.id == Has_guacamole.machine_id)
             protocole = protocole.filter(and_(Has_guacamole.protocol != "INF",
-                                          Machines.hostname == host))
+                                              Machines.hostname == host))
             protocole = protocole.all()
             session.commit()
             session.flush()
             if protocole:
-                return [(m[1],m[0]) for m in protocole]
+                return [(m[1], m[0]) for m in protocole]
             else:
                 return []
         else:
             protocole = session.query(Has_guacamole.idguacamole).\
-                    join(Machines, Machines.id == Has_guacamole.machine_id)
+                join(Machines, Machines.id == Has_guacamole.machine_id)
             protocole = protocole.filter(Machines.hostname == host)
 
             protocole = protocole.first()
@@ -7413,7 +7819,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 It returns True if the machines exists in pulse machine database and is online
                 It returns False if the machines exists in pulse machine database and is offline
         """
-        machine = session.query(Machines).filter(and_(Machines.jid == jid)).first()
+        machine = session.query(Machines).filter(
+            and_(Machines.jid == jid)).first()
         if machine:
             if machine.enabled == '0':
                 return False
@@ -7423,9 +7830,9 @@ class XmppMasterDatabase(DatabaseHelper):
         return None
 
     @DatabaseHelper._sessionm
-    def getPresencejid(self, session, jid, eanable = 1):
-        machine = session.query(Machines).filter(and_(Machines.jid == jid,
-                                                      Machines.enabled == eanable)).first()
+    def getPresencejid(self, session, jid, eanable=1):
+        machine = session.query(Machines).filter(
+            and_(Machines.jid == jid, Machines.enabled == eanable)).first()
         session.commit()
         session.flush()
         if machine is None:
@@ -7436,7 +7843,8 @@ class XmppMasterDatabase(DatabaseHelper):
     def getMachinefromjid(self, session, jid):
         """ information machine"""
         user = str(jid).split("@")[0]
-        machine = session.query(Machines).filter(Machines.jid.like("%s%%" % user)).first()
+        machine = session.query(Machines).filter(
+            Machines.jid.like("%s%%" % user)).first()
         session.commit()
         session.flush()
         result = {}
@@ -7468,7 +7876,8 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getMachinefromuuid(self, session, uuid):
         """ information machine """
-        machine = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).first()
+        machine = session.query(Machines).filter(
+            Machines.uuid_inventorymachine == uuid).first()
         session.commit()
         session.flush()
         result = {}
@@ -7498,12 +7907,13 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getRelayServerfromjid(self, session, jid):
-        relayserver = session.query(RelayServer).filter(RelayServer.jid.like("%s%%" % jid))
+        relayserver = session.query(RelayServer).filter(
+            RelayServer.jid.like("%s%%" % jid))
         relayserver = relayserver.first()
         session.commit()
         session.flush()
         try:
-            result = {'id':  relayserver.id,
+            result = {'id': relayserver.id,
                       'urlguacamole': relayserver.urlguacamole,
                       'subnet': relayserver.subnet,
                       'nameserver': relayserver.nameserver,
@@ -7525,30 +7935,30 @@ class XmppMasterDatabase(DatabaseHelper):
                       'moderelayserver': relayserver.moderelayserver,
                       'keysyncthing': relayserver.keysyncthing,
                       'syncthing_port': relayserver.syncthing_port
-            }
+                      }
         except Exception:
             result = {}
         return result
 
-
     @DatabaseHelper._sessionm
     def getRelayServerForMachineUuid(self, session, uuid):
-        relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).one()
+        relayserver = session.query(Machines).filter(
+            Machines.uuid_inventorymachine == uuid).one()
         session.commit()
         session.flush()
         try:
             result = {
-                        "uuid": uuid,
-                        "jid": relayserver.groupdeploy
-                        }
+                "uuid": uuid,
+                "jid": relayserver.groupdeploy
+            }
             for i in result:
-                if result[i] == None:
+                if result[i] is None:
                     result[i] = ""
         except Exception:
             result = {
-                        "uuid": uuid,
-                        "jid": ""
-                    }
+                "uuid": uuid,
+                "jid": ""
+            }
         return result
 
     @DatabaseHelper._sessionm
@@ -7558,14 +7968,15 @@ class XmppMasterDatabase(DatabaseHelper):
                         Machines.enabled == "1")).scalar()
 
     @DatabaseHelper._sessionm
-    def getRelayServerofclusterFromjidars(self, session, jid, moderelayserver=None, enablears=1):
-        #determine ARS id from jid
+    def getRelayServerofclusterFromjidars(
+            self, session, jid, moderelayserver=None, enablears=1):
+        # determine ARS id from jid
         relayserver = session.query(RelayServer).filter(RelayServer.jid == jid)
         relayserver = relayserver.first()
         session.commit()
         session.flush()
         if relayserver:
-            #object complete
+            # object complete
             notconfars = {relayserver.jid: [relayserver.ipconnection,
                                             relayserver.port,
                                             relayserver.jid,
@@ -7573,20 +7984,23 @@ class XmppMasterDatabase(DatabaseHelper):
                                             0,
                                             relayserver.syncthing_port]}
             # search for clusters where ARS is
-            clustersid = session.query(Has_cluster_ars).filter(Has_cluster_ars.id_ars == relayserver.id)
+            clustersid = session.query(Has_cluster_ars).filter(
+                Has_cluster_ars.id_ars == relayserver.id)
             clustersid = clustersid.all()
             session.commit()
             session.flush()
-            #search the ARS in the same cluster that ARS finds
+            # search the ARS in the same cluster that ARS finds
             if clustersid:
                 listcluster_id = [m.id_cluster for m in clustersid]
-                ars = session.query(RelayServer).\
-                    join(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id).\
-                        join(Cluster_ars, Has_cluster_ars.id_cluster == Cluster_ars.id)
-                ars = ars.filter(Has_cluster_ars.id_cluster.in_(listcluster_id))
-                if moderelayserver != None:
-                    ars = ars.filter(RelayServer.moderelayserver == moderelayserver)
-                if enablears != None:
+                ars = session.query(RelayServer). join(
+                    Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id). join(
+                    Cluster_ars, Has_cluster_ars.id_cluster == Cluster_ars.id)
+                ars = ars.filter(
+                    Has_cluster_ars.id_cluster.in_(listcluster_id))
+                if moderelayserver is not None:
+                    ars = ars.filter(
+                        RelayServer.moderelayserver == moderelayserver)
+                if enablears is not None:
                     ars = ars.filter(RelayServer.enabled == enablears)
                 ars = ars.all()
                 session.commit()
@@ -7620,13 +8034,14 @@ class XmppMasterDatabase(DatabaseHelper):
                     return result2
             else:
                 # there are no clusters configured for this ARS.
-                logging.getLogger().warning("Cluster ARS [%s] no configured" % relayserver.jid)
+                logging.getLogger().warning(
+                    "Cluster ARS [%s] no configured" %
+                    relayserver.jid)
                 return notconfars
         else:
             logging.getLogger().warning("Relay server no present")
             logging.getLogger().warning("ARS not known for machine")
         return {}
-
 
     @DatabaseHelper._sessionm
     def algoloadbalancerforcluster(self, session):
@@ -7694,19 +8109,23 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machines_online_for_dashboard(self, session):
-        ret = session.query(Machines.uuid_inventorymachine,
-                            Machines.macaddress).filter(and_(Machines.agenttype != "relayserver",
-                                                             Machines.enabled == '1')).all()
+        ret = session.query(
+            Machines.uuid_inventorymachine,
+            Machines.macaddress).filter(
+            and_(
+                Machines.agenttype != "relayserver",
+                Machines.enabled == '1')).all()
 
         if ret is None:
             ret = []
         else:
-            ret = [{'uuid': machine[0], 'macaddress': machine[1]} for machine in ret]
+            ret = [{'uuid': machine[0], 'macaddress': machine[1]}
+                   for machine in ret]
         return ret
 
     @DatabaseHelper._sessionm
     def get_syncthing_deploy_to_clean(self, session):
-        sql="""
+        sql = """
     SELECT
         distinct xmppmaster.syncthing_deploy_group.id,
         GROUP_CONCAT(xmppmaster.syncthing_machine.jidmachine) AS jidmachines,
@@ -7727,13 +8146,13 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-        ret = [{'id': x[0], 'jidmachines': x[1], 'jidrelays': x[2], 'numcluster': x[3],  'directory_tmp': x[4]} for x in result]
+        ret = [{'id': x[0], 'jidmachines': x[1], 'jidrelays': x[2],
+                'numcluster': x[3], 'directory_tmp': x[4]} for x in result]
         return ret
-
 
     @DatabaseHelper._sessionm
     def get_ensemble_ars_idem_cluster(self, session, ars_id):
-        sql ="""SELECT
+        sql = """SELECT
                     jid, nameserver, keysyncthing
                 FROM
                     xmppmaster.has_cluster_ars
@@ -7755,7 +8174,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_list_ars_from_cluster(self, session, cluster=0):
-        sql ="""SELECT jid, nameserver, keysyncthing  FROM xmppmaster.has_cluster_ars
+        sql = """SELECT jid, nameserver, keysyncthing  FROM xmppmaster.has_cluster_ars
                 INNER JOIN
                 xmppmaster.relayserver
                     ON xmppmaster.has_cluster_ars.id_ars = xmppmaster.relayserver.id
@@ -7766,7 +8185,6 @@ class XmppMasterDatabase(DatabaseHelper):
         return [{"jid": element[0],
                  "name": element[1],
                  "keysyncthing": element[2]} for element in result]
-
 
     @DatabaseHelper._sessionm
     def refresh_syncthing_deploy_clean(self, session, iddeploy):
@@ -7788,7 +8206,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if ret is None:
                 result = []
             else:
-                result = [{'index':id,
+                result = [{'index': id,
                            "id": rule.id,
                            'regexplog': rule.regex_logmessage,
                            'status': rule.status,
@@ -7799,8 +8217,9 @@ class XmppMasterDatabase(DatabaseHelper):
             return result
 
     @DatabaseHelper._sessionm
-    def updateMachinejidGuacamoleGroupdeploy(self, session, jid, urlguacamole, groupdeploy, idmachine):
-        updatedb=-1
+    def updateMachinejidGuacamoleGroupdeploy(
+            self, session, jid, urlguacamole, groupdeploy, idmachine):
+        updatedb = -1
         try:
             sql = """UPDATE machines
                     SET
@@ -7818,36 +8237,40 @@ class XmppMasterDatabase(DatabaseHelper):
     def get_xmppmachines_list(self, session, start, limit, filter, presence):
         try:
             start = int(start)
-        except:
+        except BaseException:
             start = -1
         try:
             limit = int(limit)
-        except:
+        except BaseException:
             limit = -1
 
-        query = session.query(Machines.id,
-                Machines.hostname,
-                Machines.enabled,
-                Machines.jid,
-                Machines.platform,
-                Machines.archi,
-                Machines.classutil,
-                Machines.urlguacamole,
-                Machines.kiosk_presence,
-                Machines.ad_ou_user,
-                Machines.ad_ou_machine,
-                Machines.macaddress,
-                Machines.ip_xmpp)\
-            .add_column(Cluster_ars.name.label('cluster_name'))\
-            .add_column(Cluster_ars.description.label('cluster_description'))\
-            .join(RelayServer, RelayServer.jid == Machines.groupdeploy)\
-            .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
-            .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
-            .filter(
-                and_(Machines.agenttype == 'machine',
-                    or_(Machines.uuid_inventorymachine == "", Machines.uuid_inventorymachine == None)
-                )
-            )
+        query = session.query(
+            Machines.id,
+            Machines.hostname,
+            Machines.enabled,
+            Machines.jid,
+            Machines.platform,
+            Machines.archi,
+            Machines.classutil,
+            Machines.urlguacamole,
+            Machines.kiosk_presence,
+            Machines.ad_ou_user,
+            Machines.ad_ou_machine,
+            Machines.macaddress,
+            Machines.ip_xmpp) .add_column(
+            Cluster_ars.name.label('cluster_name')) .add_column(
+            Cluster_ars.description.label('cluster_description')) .join(
+                RelayServer,
+                RelayServer.jid == Machines.groupdeploy) .outerjoin(
+                    Has_cluster_ars,
+                    Has_cluster_ars.id_ars == RelayServer.id) .outerjoin(
+                        Cluster_ars,
+                        Cluster_ars.id == Has_cluster_ars.id_cluster) .filter(
+                            and_(
+                                Machines.agenttype == 'machine',
+                                or_(
+                                    Machines.uuid_inventorymachine == "",
+                                    Machines.uuid_inventorymachine is None)))
 
         if presence == 'nopresence':
             query = query.filter(Machines.enabled != 1)
@@ -7876,7 +8299,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if start != -1 and limit != -1:
             query = query.offset(start).limit(limit)
 
-        query= query.all()
+        query = query.all()
 
         result = {
             'id': [],
@@ -7923,18 +8346,19 @@ class XmppMasterDatabase(DatabaseHelper):
                 if machine.cluster_description is None:
                     result['cluster_description'].append("NULL")
                 else:
-                    result['cluster_description'].append(machine.cluster_description)
+                    result['cluster_description'].append(
+                        machine.cluster_description)
         return {'total': count, 'datas': result}
 
     @DatabaseHelper._sessionm
     def get_clusters_list(self, session, start, max, filter):
         try:
             start = int(start)
-        except:
+        except BaseException:
             start = -1
         try:
             max = int(max)
-        except:
+        except BaseException:
             max = -1
 
         query = session.query(Cluster_ars)
@@ -7950,15 +8374,16 @@ class XmppMasterDatabase(DatabaseHelper):
             query = query.offset(start).limit(max)
 
         result = {
-            'id' : [],
-            'name' : [],
+            'id': [],
+            'name': [],
             'description': [],
             'nb_ars': [],
         }
 
-
         for cluster in query:
-            count_ars = session.query(Has_cluster_ars.id_cluster).filter(Has_cluster_ars.id_cluster == cluster.id).count()
+            count_ars = session.query(
+                Has_cluster_ars.id_cluster).filter(
+                Has_cluster_ars.id_cluster == cluster.id).count()
             result['id'].append(cluster.id)
             result['name'].append(cluster.name)
             result['description'].append(cluster.description)
@@ -7970,29 +8395,39 @@ class XmppMasterDatabase(DatabaseHelper):
     def get_xmpprelays_list(self, session, start, limit, filter, presence):
         try:
             start = int(start)
-        except:
+        except BaseException:
             start = -1
         try:
             limit = int(limit)
-        except:
+        except BaseException:
             limit = -1
-        query = session.query(RelayServer.id,
-                RelayServer.ipserver,
-                RelayServer.nameserver,
-                RelayServer.moderelayserver,
-                RelayServer.jid.label('jid_from_relayserver'),
-                RelayServer.classutil,
-                RelayServer.enabled,
-                RelayServer.switchonoff,
-                RelayServer.mandatory)\
-            .add_column(Machines.jid)\
-            .add_column(Cluster_ars.name.label("cluster_name"))\
-            .add_column(Cluster_ars.description.label("cluster_description"))\
-            .add_column(Machines.macaddress.label('macaddress'))\
-            .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
-            .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
-            .outerjoin(Machines, func.substring_index(Machines.jid, '/', 1) == func.substring_index(RelayServer.jid, '/', 1))\
-            .filter(RelayServer.moderelayserver == 'static')
+        query = session.query(
+            RelayServer.id,
+            RelayServer.ipserver,
+            RelayServer.nameserver,
+            RelayServer.moderelayserver,
+            RelayServer.jid.label('jid_from_relayserver'),
+            RelayServer.classutil,
+            RelayServer.enabled,
+            RelayServer.switchonoff,
+            RelayServer.mandatory) .add_column(
+            Machines.jid) .add_column(
+            Cluster_ars.name.label("cluster_name")) .add_column(
+                Cluster_ars.description.label("cluster_description")) .add_column(
+                    Machines.macaddress.label('macaddress')) .outerjoin(
+                        Has_cluster_ars,
+                        Has_cluster_ars.id_ars == RelayServer.id) .outerjoin(
+                            Cluster_ars,
+                            Cluster_ars.id == Has_cluster_ars.id_cluster) .outerjoin(
+                                Machines,
+                                func.substring_index(
+                                    Machines.jid,
+                                    '/',
+                                    1) == func.substring_index(
+                                        RelayServer.jid,
+                                        '/',
+                                        1)) .filter(
+                                            RelayServer.moderelayserver == 'static')
 
         if presence == 'nopresence':
             query = query.filter(RelayServer.enabled != 1)
@@ -8015,7 +8450,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if start != -1 and limit != -1:
             query = query.offset(start).limit(limit)
 
-        query= query.all()
+        query = query.all()
 
         result = {
             'id': [],
@@ -8064,11 +8499,11 @@ class XmppMasterDatabase(DatabaseHelper):
 
         counts = [{
             "total": int(count_ars[0]),
-            "uninventoried_offline" : int(count_ars[1]),
-            "uninventoried_online" : int(count_ars[2]),
-            "inventoried_offline" : int(count_ars[3]),
-            "inventoried_online" : int(count_ars[4]),
-            "jid" : count_ars[5]
+            "uninventoried_offline": int(count_ars[1]),
+            "uninventoried_online": int(count_ars[2]),
+            "inventoried_offline": int(count_ars[3]),
+            "inventoried_online": int(count_ars[4]),
+            "jid": count_ars[5]
         } for count_ars in counts_result]
 
         if query is not None:
@@ -8078,11 +8513,15 @@ class XmppMasterDatabase(DatabaseHelper):
                     if machine.jid == count_ars["jid"]:
                         flag = True
                         break
-                if flag == True:
-                    result['uninventoried_offline'].append(count_ars["uninventoried_offline"])
-                    result['uninventoried_online'].append(count_ars["uninventoried_online"])
-                    result['inventoried_offline'].append(count_ars["inventoried_offline"])
-                    result['inventoried_online'].append(count_ars["inventoried_online"])
+                if flag:
+                    result['uninventoried_offline'].append(
+                        count_ars["uninventoried_offline"])
+                    result['uninventoried_online'].append(
+                        count_ars["uninventoried_online"])
+                    result['inventoried_offline'].append(
+                        count_ars["inventoried_offline"])
+                    result['inventoried_online'].append(
+                        count_ars["inventoried_online"])
                     result['total_machines'].append(count_ars["total"])
                 else:
                     result['uninventoried_offline'].append(0)
@@ -8093,7 +8532,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
                 result['id'].append(machine.id)
                 result['jid'].append(machine.jid)
-                result['jid_from_relayserver'].append(machine.jid_from_relayserver)
+                result['jid_from_relayserver'].append(
+                    machine.jid_from_relayserver)
                 if machine.enabled == 1:
                     result['enabled'].append(True)
                     result['enabled_css'].append('machineNamepresente')
@@ -8111,7 +8551,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 if machine.cluster_description is None:
                     result['cluster_description'].append("NULL")
                 else:
-                    result['cluster_description'].append(machine.cluster_description)
+                    result['cluster_description'].append(
+                        machine.cluster_description)
                 result['mandatory'].append(machine.mandatory)
                 result['switchonoff'].append(machine.switchonoff)
         return {'total': count, 'datas': result}
@@ -8120,16 +8561,30 @@ class XmppMasterDatabase(DatabaseHelper):
     def change_relay_switch(self, session, jid, switch, propagate):
         id_cluster = None
         if propagate is True:
-            session.query(RelayServer).filter(func.substring_index(RelayServer.jid, '/', 1) == jid.split('/')[0],\
-                RelayServer.mandatory == 0).update(\
-                {RelayServer.switchonoff: switch})
+            session.query(RelayServer).filter(
+                func.substring_index(
+                    RelayServer.jid,
+                    '/',
+                    1) == jid.split('/')[0],
+                RelayServer.mandatory == 0).update(
+                {
+                    RelayServer.switchonoff: switch})
             try:
-                cluster = session.query(Has_cluster_ars.id_cluster)\
-                    .join(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
-                    .join(Machines, func.substring_index(Machines.jid, '/', 1) == func.substring_index(RelayServer.jid, '/', 1))\
-                    .filter(Machines.jid == jid).one()
+                cluster = session.query(
+                    Has_cluster_ars.id_cluster) .join(
+                    RelayServer,
+                    Has_cluster_ars.id_ars == RelayServer.id) .join(
+                    Machines,
+                    func.substring_index(
+                        Machines.jid,
+                        '/',
+                        1) == func.substring_index(
+                        RelayServer.jid,
+                        '/',
+                        1)) .filter(
+                        Machines.jid == jid).one()
                 id_cluster = cluster.id_cluster
-            except:
+            except BaseException:
                 pass
 
         if id_cluster is not None and propagate is True:
@@ -8148,31 +8603,34 @@ where agenttype="machine" and groupdeploy in (
 );""" % id_cluster
             session.execute(sql)
         elif id_cluster is None or propagate is False:
-            session.query(Machines).filter(Machines.agenttype=="machine", \
-            Machines.groupdeploy==jid).update(\
-                {Machines.need_reconf:1})
+            session.query(Machines).filter(Machines.agenttype == "machine",
+                                           Machines.groupdeploy == jid).update(
+                {Machines.need_reconf: 1})
         session.commit()
         session.flush()
 
-
     @DatabaseHelper._sessionm
-    def call_reconfiguration_machine(self, session, limit=None, typemachine="machine"):
+    def call_reconfiguration_machine(
+            self,
+            session,
+            limit=None,
+            typemachine="machine"):
         if typemachine in ["machine", "relay"]:
             res = session.query(Machines.id, Machines.jid).\
-                filter(and_( Machines.need_reconf == '1',
+                filter(and_(Machines.need_reconf == '1',
                             Machines.enabled == '1',
                             Machines.agenttype.like(typemachine)))
-        elif typemachine is None or typemachine=="all":
+        elif typemachine is None or typemachine == "all":
             res = session.query(Machines.id, Machines.jid).\
-                filter(and_( Machines.need_reconf == '1',
+                filter(and_(Machines.need_reconf == '1',
                             Machines.enabled == '1'))
         if limit is not None:
             res = res.limit(int(limit))
-        res= res.all()
+        res = res.all()
         listjid = []
         if res is not None:
             for machine in res:
-                listjid.append( [machine.id,machine.jid])
+                listjid.append([machine.id, machine.jid])
         session.commit()
         session.flush()
         return listjid
@@ -8182,9 +8640,12 @@ where agenttype="machine" and groupdeploy in (
         listjid = []
         if not listmachine:
             return listjid
-        res = session.query(Machines.id,
-                            Machines.need_reconf).filter(and_(Machines.need_reconf == '0',
-                                                            Machines.id.in_(listmachine))).all()
+        res = session.query(
+            Machines.id,
+            Machines.need_reconf).filter(
+            and_(
+                Machines.need_reconf == '0',
+                Machines.id.in_(listmachine))).all()
         if res is not None:
             for machine in res:
                 listjid.append(machine.id)
@@ -8221,15 +8682,20 @@ where agenttype="machine" and groupdeploy in (
         @param: jid str
         @returns: boolean"""
         try:
-            query = session.query(RelayServer.enabled)\
-            .filter(func.substring_index(RelayServer.jid, '/', 1)==jid.split('/')[0]).one()
+            query = session.query(
+                RelayServer.enabled) .filter(
+                func.substring_index(
+                    RelayServer.jid,
+                    '/',
+                    1) == jid.split('/')[0]).one()
 
             if query is not None:
                 return query.enabled
             else:
                 return False
-        except:
+        except BaseException:
             return False
+
     @DatabaseHelper._sessionm
     def get_qa_for_relays(self, session, login=""):
         """ Get the list of qa for relays
@@ -8247,13 +8713,18 @@ where agenttype="machine" and groupdeploy in (
                 .filter(Qa_relay_command.user == "allusers").all()
 
         result = []
-        tmp = {'id': 0, 'user':"", 'namecmd': "", 'customcmd': "", 'description': ""}
+        tmp = {
+            'id': 0,
+            'user': "",
+            'namecmd': "",
+            'customcmd': "",
+            'description': ""}
         if query is not None:
             for command in query:
-                result.append({'id' : command.id,
-                                'user' : command.user,
-                                'script' : command.script,
-                                'description' : command.description})
+                result.append({'id': command.id,
+                               'user': command.user,
+                               'script': command.script,
+                               'description': command.description})
         return result
 
     @DatabaseHelper._sessionm
@@ -8269,29 +8740,29 @@ where agenttype="machine" and groupdeploy in (
                         or_(
                             Qa_relay_command.user == "allusers",
                             Qa_relay_command.user == login)
-                        ),
-                        Qa_relay_command.id == qa_relay_id).one()
-            return {'id' : query.id,
-                            'user' : query.user,
-                            'name' : query.name,
-                            'script' : query.script,
-                            'description' : query.description}
-        except:
+                    ),
+                Qa_relay_command.id == qa_relay_id).one()
+            return {'id': query.id,
+                    'user': query.user,
+                    'name': query.name,
+                    'script': query.script,
+                    'description': query.description}
+        except BaseException:
             return None
-
 
     @DatabaseHelper._sessionm
     def get_qa_relay_result(self, session, result_id):
         result = {
             'id': 0,
-            'launched_id' : 0,
-            'session_id' : "",
-            'typemessage' : "log",
-            'command_result' : "",
-            'relay' : ""
+            'launched_id': 0,
+            'session_id': "",
+            'typemessage': "log",
+            'command_result': "",
+            'relay': ""
         }
 
-        query = session.query(Qa_relay_result).filter(Qa_relay_result.id == result_id).one()
+        query = session.query(Qa_relay_result).filter(
+            Qa_relay_result.id == result_id).one()
         if query is not None:
             result['id'] = query.id
             result['launched_id'] = query.launched_id
@@ -8300,11 +8771,12 @@ where agenttype="machine" and groupdeploy in (
             result['command_result'] = query.command_result
             result['relay'] = query.relay
 
-        if query.command_result == "" or query.command_result == None:
-            if query.session_id != "" and os.path.isfile(os.path.join('/','tmp', query.session_id)):
+        if query.command_result == "" or query.command_result is None:
+            if query.session_id != "" and os.path.isfile(
+                    os.path.join('/', 'tmp', query.session_id)):
                 # Try to read the tmp file
                 try:
-                    with open(os.path.join('/','tmp', query.session_id), 'r') as tmp_file:
+                    with open(os.path.join('/', 'tmp', query.session_id), 'r') as tmp_file:
                         # If some content : read it
                         content = tmp_file.read()
                         if content != "":
@@ -8312,10 +8784,13 @@ where agenttype="machine" and groupdeploy in (
                             query.command_result = content
                             session.commit()
                             result['command_result'] = content
-                            os.remove(os.path.join('/','tmp', result["session_id"]))
+                            os.remove(
+                                os.path.join(
+                                    '/', 'tmp', result["session_id"]))
                             tmp_file.close()
 
-                    # do nothing if the tmp file is not readable for any reasons
+                    # do nothing if the tmp file is not readable for any
+                    # reasons
 
                 except Exception as e:
                     result['command_result'] = ""
@@ -8323,7 +8798,13 @@ where agenttype="machine" and groupdeploy in (
         return result
 
     @DatabaseHelper._sessionm
-    def add_qa_relay_launched(self, session, qa_relay_id, login, cluster_id, jid):
+    def add_qa_relay_launched(
+            self,
+            session,
+            qa_relay_id,
+            login,
+            cluster_id,
+            jid):
         format = "%Y-%m-%d %H:%M:%S"
         execution_date = datetime.now()
 
@@ -8338,67 +8819,72 @@ where agenttype="machine" and groupdeploy in (
         session.commit()
         session.flush()
 
-        if qa_launched.id == None:
+        if qa_launched.id is None:
             qa_launched.id = 0
-        if qa_launched.id_command == None:
+        if qa_launched.id_command is None:
             qa_launched.id_command = 0
-        if qa_launched.user_command == None:
+        if qa_launched.user_command is None:
             qa_launched.user_command = ""
-        if qa_launched.command_start == None:
+        if qa_launched.command_start is None:
             qa_launched.command_start = ""
-        if qa_launched.command_cluster == None:
+        if qa_launched.command_cluster is None:
             qa_launched.command_cluster = ""
-        if qa_launched.command_relay == None:
+        if qa_launched.command_relay is None:
             qa_launched.command_relay = ""
 
-
         return {
-            'id' : qa_launched.id,
-            'id_command' : qa_launched.id_command,
-            'user_command' : qa_launched.user_command,
-            'command_start' : qa_launched.command_start.strftime(format),
-            'command_cluster' : qa_launched.command_cluster,
-            'command_relay' : qa_launched.command_relay
+            'id': qa_launched.id,
+            'id_command': qa_launched.id_command,
+            'user_command': qa_launched.user_command,
+            'command_start': qa_launched.command_start.strftime(format),
+            'command_cluster': qa_launched.command_cluster,
+            'command_relay': qa_launched.command_relay
         }
 
     @DatabaseHelper._sessionm
-    def add_qa_relay_result(self, session, jid, exec_date, qa_relay_id, launched_id, session_id=""):
+    def add_qa_relay_result(
+            self,
+            session,
+            jid,
+            exec_date,
+            qa_relay_id,
+            launched_id,
+            session_id=""):
         qa_result = Qa_relay_result()
         qa_result.id_command = qa_relay_id
         qa_result.launched_id = launched_id
-        qa_result.session_id = session_id # name_random(8,"quick_")
+        qa_result.session_id = session_id  # name_random(8,"quick_")
         qa_result.typemessage = "log"
         qa_result.command_result = ""
         qa_result.relay = jid
-
 
         session.add(qa_result)
         session.commit()
         session.flush()
 
-        if qa_result.id == None:
+        if qa_result.id is None:
             qa_result.id = 0
-        if qa_result.id_command == None:
+        if qa_result.id_command is None:
             qa_result.id_command = ""
-        if qa_result.launched_id == None:
+        if qa_result.launched_id is None:
             qa_result.launched_id = ""
-        if qa_result.session_id == None:
+        if qa_result.session_id is None:
             qa_result.session_id = ""
-        if qa_result.typemessage == None:
+        if qa_result.typemessage is None:
             qa_result.typemessage = ""
-        if qa_result.command_result == None:
+        if qa_result.command_result is None:
             qa_result.command_result = ""
-        if qa_result.relay == None:
+        if qa_result.relay is None:
             qa_result.relay = ""
 
         return {
-            'id' : qa_result.id,
-            'id_command' : qa_result.id_command,
-            'launched_id' : qa_result.launched_id,
-            'session_id' : qa_result.session_id,
-            'typemessage' : qa_result.typemessage,
-            'command_result' : qa_result.command_result,
-            'relay' : qa_result.relay
+            'id': qa_result.id,
+            'id_command': qa_result.id_command,
+            'launched_id': qa_result.launched_id,
+            'session_id': qa_result.session_id,
+            'typemessage': qa_result.typemessage,
+            'command_result': qa_result.command_result,
+            'relay': qa_result.relay
         }
 
     @DatabaseHelper._sessionm
@@ -8406,12 +8892,12 @@ where agenttype="machine" and groupdeploy in (
         format = "%Y-%m-%d %H:%M:%S"
         try:
             start = int(start)
-        except:
+        except BaseException:
             start = -1
 
         try:
             limit = int(limit)
-        except:
+        except BaseException:
             limit = -1
 
         total = 0
@@ -8438,27 +8924,29 @@ where agenttype="machine" and groupdeploy in (
 
         result = {
             'total': total,
-            'datas' : {
-                'id' : [],
-                'id_command' : [],
-                'name' : [],
-                'description' : [],
-                'user_command' : [],
-                'command_start' : [],
-                'command_cluster' : [],
-                'command_relay' : [],
-                'result_id' : []
+            'datas': {
+                'id': [],
+                'id_command': [],
+                'name': [],
+                'description': [],
+                'user_command': [],
+                'command_start': [],
+                'command_cluster': [],
+                'command_relay': [],
+                'result_id': []
             }
         }
         if query is not None:
             for launched, name, description, result_id in query:
                 result['datas']['id'].append(launched.id)
                 result['datas']['id_command'].append(launched.id_command)
-                result['datas']['command_start'].append(launched.command_start.strftime(format))
+                result['datas']['command_start'].append(
+                    launched.command_start.strftime(format))
                 if launched.command_cluster is None:
                     result['datas']['command_cluster'].append("")
                 else:
-                    result['datas']['command_cluster'].append(launched.command_cluster)
+                    result['datas']['command_cluster'].append(
+                        launched.command_cluster)
 
                 result['datas']['command_relay'].append(launched.command_relay)
                 result['datas']['user_command'].append(launched.user_command)
@@ -8472,32 +8960,33 @@ where agenttype="machine" and groupdeploy in (
 
     @DatabaseHelper._sessionm
     def getmachinesbyuuids(self, session, uuids):
-        query = session.query(Machines).filter(and_(Machines.uuid_inventorymachine.in_(uuids))).all()
+        query = session.query(Machines).filter(
+            and_(Machines.uuid_inventorymachine.in_(uuids))).all()
 
         result = {}
 
         for machine in query:
             result[machine.uuid_inventorymachine] = {
                 "id": machine.id,
-                'jid' : machine.jid,
-                'need_reconf' : machine.need_reconf,
-                'enabled' : machine.enabled,
-                'platform' : machine.platform,
-                'archi' : machine.archi,
-                'hostname' : machine.hostname,
-                'uuid_inventorymachine' : machine.uuid_inventorymachine,
-                'id_inventorymachine' : machine.uuid_inventorymachine.replace('UUID', ''),
-                'ippublic' : machine.ippublic,
-                'ip_xmpp' : machine.ip_xmpp,
-                'macaddress' : machine.macaddress,
-                'subnetxmpp' : machine.subnetxmpp,
-                'classutil' : machine.classutil,
-                'groupdeploy' : machine.groupdeploy,
-                'ad_ou_machine' : machine.ad_ou_machine,
-                'ad_ou_user' : machine.ad_ou_user,
-                'kiosk_presence' : machine.kiosk_presence,
-                'lastuser' : machine.lastuser,
-                'keysyncthing' : machine.keysyncthing,
+                'jid': machine.jid,
+                'need_reconf': machine.need_reconf,
+                'enabled': machine.enabled,
+                'platform': machine.platform,
+                'archi': machine.archi,
+                'hostname': machine.hostname,
+                'uuid_inventorymachine': machine.uuid_inventorymachine,
+                'id_inventorymachine': machine.uuid_inventorymachine.replace('UUID', ''),
+                'ippublic': machine.ippublic,
+                'ip_xmpp': machine.ip_xmpp,
+                'macaddress': machine.macaddress,
+                'subnetxmpp': machine.subnetxmpp,
+                'classutil': machine.classutil,
+                'groupdeploy': machine.groupdeploy,
+                'ad_ou_machine': machine.ad_ou_machine,
+                'ad_ou_user': machine.ad_ou_user,
+                'kiosk_presence': machine.kiosk_presence,
+                'lastuser': machine.lastuser,
+                'keysyncthing': machine.keysyncthing,
                 'uuid_serial_machine': machine.uuid_serial_machine}
         return result
 
@@ -8590,7 +9079,7 @@ where agenttype="machine" and groupdeploy in (
             logging.getLogger().error(str(e))
             return []
 
-    #TODO: Add this function for hours too.
+    # TODO: Add this function for hours too.
     #      Add in QA too.
     @DatabaseHelper._sessionm
     def stat_up_down_time_by_last_day(self,
@@ -8655,7 +9144,6 @@ where agenttype="machine" and groupdeploy in (
             logging.getLogger().error(str(e))
             return statdict
 
-
     @DatabaseHelper._sessionm
     def setMonitoring_machine(self,
                               session,
@@ -8692,16 +9180,16 @@ where agenttype="machine" and groupdeploy in (
                              doc):
         try:
             logging.getLogger().debug("==================================\n"
-                                      "device_type [%s]"%device_type)
-            #if device_type not in ['thermalPrinter',
-                                   #'nfcReader',
-                                   #'opticalReader',
-                                   #'cpu',
-                                   #'memory',
-                                   #'storage',
-                                   #'network',
-                                   #'system']:
-                #raise DomaineTypeDeviceError()
+                                      "device_type [%s]" % device_type)
+            # if device_type not in ['thermalPrinter',
+            # 'nfcReader',
+            # 'opticalReader',
+            # 'cpu',
+            # 'memory',
+            # 'storage',
+            # 'network',
+            # 'system']:
+            #raise DomaineTypeDeviceError()
             if status not in ['ready', 'busy', 'warning', 'error', 'disable']:
                 raise DomainestatusDeviceError()
             new_Monitoring_device = Mon_devices()
@@ -8823,7 +9311,7 @@ where agenttype="machine" and groupdeploy in (
     def get_info_event(self,
                        session,
                        id_device,
-                       outformat = None):
+                       outformat=None):
         def is_number_string(s):
             """ Returns True is string is a number. """
             try:
@@ -8886,7 +9374,7 @@ where agenttype="machine" and groupdeploy in (
                 'mon_devices_alarm_msg',
                 'mon_devices_doc']
 
-        sql="""
+        sql = """
             SELECT
             mon_event.id as mon_event_id,
             mon_event.status_event as mon_event_status_event,
@@ -8930,21 +9418,21 @@ where agenttype="machine" and groupdeploy in (
                     JOIN
                 xmppmaster.mon_devices ON xmppmaster.mon_devices.id = xmppmaster.mon_event.id_device
             WHERE
-                xmppmaster.mon_event.id = %s;""" %(id_device)
+                xmppmaster.mon_event.id = %s;""" % (id_device)
         result = session.execute(sql)
         session.commit()
         session.flush()
         python_dict = {}
-        tupleresult =  [i for i in result]
+        tupleresult = [i for i in result]
         if tupleresult:
             for count, value in enumerate(tupleresult[0]):
-                tp=type(value)
-                if tp == datetime  or tp == datetime.time:
+                tp = type(value)
+                if tp == datetime or tp == datetime.time:
                     value = value.strftime('%Y-%m-%d %H:%M:%S')
                 python_dict[keys[count]] = value
         if outformat is None:
             return python_dict
-        #serialization for remplace in script
+        # serialization for remplace in script
         if outformat == "json_string":
             return json.dumps(python_dict)
         elif outformat == "pickle_string":
@@ -8960,12 +9448,13 @@ where agenttype="machine" and groupdeploy in (
             # creation string parameter for bash script.
             return self._template_python_string_event(python_dict)
         elif outformat == "html_string":
-            #return string html format event
+            # return string html format event
             return self._template_html_event(python_dict)
         else:
             return ""
 
-    def replace_in_file_exist_template(self, srcfile, destfile, oldvalue, newvalue):
+    def replace_in_file_exist_template(
+            self, srcfile, destfile, oldvalue, newvalue):
         fin = open(srcfile, "rt")
         data = fin.read()
         data = data.replace(oldvalue, newvalue)
@@ -8975,35 +9464,36 @@ where agenttype="machine" and groupdeploy in (
         fin.close()
 
     def replace_in_file_template(self, srcfile, destfile, oldvalue, newvalue):
-        fin  = open(srcfile, "rt")
+        fin = open(srcfile, "rt")
         fout = open(destfile, "wt")
-        #for each line in the input file
+        # for each line in the input file
         for line in fin:
-            #read replace the string and write to output file
+            # read replace the string and write to output file
             fout.write(line.replace(oldvalue, newvalue))
-        #close input and output files
+        # close input and output files
         fin.close()
         fout.close()
 
     def _template_bash_string_event(self, python_dict):
-        bash_string=""
+        bash_string = ""
         for t in python_dict:
-            bash_string = bash_string + "%s=%s\n"%(t,python_dict[t])
+            bash_string = bash_string + "%s=%s\n" % (t, python_dict[t])
         return bash_string
 
     def _template_python_string_event(self, python_dict):
         # creation string parameter for bash script.
-        python_string=""
+        python_string = ""
         for t in python_dict:
             valor = python_dict[t]
             if isinstance(valor, basestring):
                 if is_number_string(valor):
-                    python_string = python_string + "%s = %s \n"%(t, valor)
+                    python_string = python_string + "%s = %s \n" % (t, valor)
                 else:
-                    valor = python_dict[t].replace ('"','\\"')
-                    python_string = python_string + "%s = \"%s\" \n"%(t, valor)
+                    valor = python_dict[t].replace('"', '\\"')
+                    python_string = python_string + \
+                        "%s = \"%s\" \n" % (t, valor)
             else:
-                python_string = python_string + "%s = %s \n"%(t, valor)
+                python_string = python_string + "%s = %s \n" % (t, valor)
             python_string = python_string.replace('"None"', "None")
             python_string = python_string.replace('"false"', "False")
             python_string = python_string.replace('"true"', "True")
@@ -9012,7 +9502,7 @@ where agenttype="machine" and groupdeploy in (
         return python_string
 
     def _template_html_event(self, dictresult):
-        templateevent ="""<!DOCTYPE html>
+        templateevent = """<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
@@ -9168,7 +9658,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 </body>
 </html>"""
         for t in dictresult:
-            search="@%s@"%t
+            search = "@%s@" % t
             templateevent = templateevent.replace(search, str(dictresult[t]))
         return templateevent
 
@@ -9185,22 +9675,24 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if objectlist_local_rule:
             # apply binding to find out if an alert or event is defined
             for z in objectlist_local_rule:
-                self.logger.debug("event type : %s on device %s" %( str(z['type_event']),
-                                                                   str(z['device_type'])) )
-                bindingcmd=""
-                msg, result = self.__binding_application_check(doc,
-                                                               z['binding'],
-                                                               z['device_type'])
+                self.logger.debug(
+                    "event type : %s on device %s" %
+                    (str(
+                        z['type_event']), str(
+                        z['device_type'])))
+                bindingcmd = ""
+                msg, result = self.__binding_application_check(
+                    doc, z['binding'], z['device_type'])
                 if result == -1:
                     if z['error_on_binding'] is None or \
-                        z['error_on_binding'].strip() == "":
+                            z['error_on_binding'].strip() == "":
                         # aucun trairement sur error
                         continue
                 elif result == 1:
                     # alert True
                     # create event if action associated to true
                     if z['succes_binding_cmd'] is None or \
-                        z['succes_binding_cmd'].strip() == "":
+                            z['succes_binding_cmd'].strip() == "":
                         # aucun trairement sur success binding
                         continue
                     # 1 event est a prendre en compte.
@@ -9209,37 +9701,41 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     # alert False
                     # create event if action associated to False
                     if z['no_success_binding_cmd'] is None or \
-                        z['no_success_binding_cmd'].strip() == "":
+                            z['no_success_binding_cmd'].strip() == "":
                         continue
                     bindingcmd = z['no_success_binding_cmd']
                 else:
-                    #cas pas encore prevu
-                    self.logger.warning("No treatment on"\
-                            "missing on def binding action%s " % (z))
+                    # cas pas encore prevu
+                    self.logger.warning(
+                        "No treatment on"
+                        "missing on def binding action%s " %
+                        (z))
                     continue
 
                 idevent = self.setMonitoring_event(id_machine,
-                                         id_device,
-                                         z['id'],
-                                         bindingcmd,
-                                         type_event=z['type_event'],
-                                         status_event=1)
-                #traitement event
-                script_monitoring = os.path.join("/","var","lib","pulse2","script_monitoring")
-                if not os.path.exists(script_monitoring): os.makedirs(script_monitoring)
-                tmpprocessmonitoring = os.path.join("/", "var", "lib", "pulse2", "tmpprocessmonitoring")
-                if not os.path.exists(tmpprocessmonitoring): os.makedirs(tmpprocessmonitoring)
-                namescript = "%s_%s_%s_%s"%(id_device,
-                                                z['type_event'],
-                                                getRandomName(5, pref=datetime.now().strftime("%a_%d%b%Y_%Hh%M")),
-                                                bindingcmd)
+                                                   id_device,
+                                                   z['id'],
+                                                   bindingcmd,
+                                                   type_event=z['type_event'],
+                                                   status_event=1)
+                # traitement event
+                script_monitoring = os.path.join(
+                    "/", "var", "lib", "pulse2", "script_monitoring")
+                if not os.path.exists(script_monitoring):
+                    os.makedirs(script_monitoring)
+                tmpprocessmonitoring = os.path.join(
+                    "/", "var", "lib", "pulse2", "tmpprocessmonitoring")
+                if not os.path.exists(tmpprocessmonitoring):
+                    os.makedirs(tmpprocessmonitoring)
+                namescript = "%s_%s_%s_%s" % (id_device, z['type_event'], getRandomName(
+                    5, pref=datetime.now().strftime("%a_%d%b%Y_%Hh%M")), bindingcmd)
                 dest_script = os.path.join(tmpprocessmonitoring, namescript)
 
                 if bindingcmd != "":
                     src_script = os.path.join(script_monitoring, bindingcmd)
                     if z['type_event'] == "script_python" and \
                         os.path.isfile(src_script) and \
-                                bindingcmd.endswith("py"):
+                            bindingcmd.endswith("py"):
                         # on doit executer le script python
                         # le sript python doit contenir
                         # import suivant
@@ -9247,110 +9743,116 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         # et le texte suivant pour template.
                         # serialisationpickleevent = "@@@@@event@@@@@"
                         # variable messagefrom = "@@@@@msgfrom@@@@@"
-                        # le script possede toutes les donne pour pouvoir effectier 1 traitement
+                        # le script possede toutes les donne pour pouvoir
+                        # effectier 1 traitement
 
-                        # on copy le script dans tmpprocessmonitoring le script python pour cet event.
-                        serializeinformation = self.get_info_event(idevent, outformat = "pickle_string")
+                        # on copy le script dans tmpprocessmonitoring le script
+                        # python pour cet event.
+                        serializeinformation = self.get_info_event(
+                            idevent, outformat="pickle_string")
 
                         self.replace_in_file_template(src_script,
                                                       dest_script,
-                                                     "@@@@@event@@@@@",
-                                                     serializeinformation)
-                        self.replace_in_file_exist_template(dest_script,
-                                                             dest_script,
-                                                             "@@@@@msgfrom@@@@@",
-                                                             str(msg_from))
-                        self.replace_in_file_exist_template(dest_script,
-                                                            dest_script,
-                                                            "@@@@@binding@@@@@",
-                                                            str(bindingcmd))
-                        pid =subprocess.Popen(["python", dest_script], stdin=None, stdout=None, stderr=None).pid
-                        self.logger.debug("call script python pid %s : %s " %(pid,
-                                                                              dest_script))
+                                                      "@@@@@event@@@@@",
+                                                      serializeinformation)
+                        self.replace_in_file_exist_template(
+                            dest_script, dest_script, "@@@@@msgfrom@@@@@", str(msg_from))
+                        self.replace_in_file_exist_template(
+                            dest_script, dest_script, "@@@@@binding@@@@@", str(bindingcmd))
+                        pid = subprocess.Popen(
+                            ["python", dest_script], stdin=None, stdout=None, stderr=None).pid
+                        self.logger.debug(
+                            "call script python pid %s : %s " %
+                            (pid, dest_script))
                         self.update_status_event(idevent)
 
                     elif z['type_event'] == "email" and \
-                        os.path.isfile(src_script) and \
-                                bindingcmd.endswith("py"):
+                            os.path.isfile(src_script) and \
+                            bindingcmd.endswith("py"):
                         # on doit executer le script python
                         # le sript python doit contenir la texte suivant pour template.
                         # serialisationpickleevent = "@@@@@event@@@@@"
 
-                        # on copy le script dans tmpprocessmonitoring le script python pour cet event.
-                        serializeinformation = self.get_info_event(idevent, outformat = "html_string")
+                        # on copy le script dans tmpprocessmonitoring le script
+                        # python pour cet event.
+                        serializeinformation = self.get_info_event(
+                            idevent, outformat="html_string")
                         self.replace_in_file_template(src_script,
                                                       dest_script,
-                                                     "@@@@@event@@@@@",
-                                                     serializeinformation)
-                        self.replace_in_file_exist_template(dest_script,
-                                                             dest_script,
-                                                             "@@@@@to_addrs_string@@@@@",
-                                                             z['user'])
-                        self.replace_in_file_exist_template(dest_script,
-                                                             dest_script,
-                                                             "@@@@@msgfrom@@@@@",
-                                                             str(msg_from))
-                        self.replace_in_file_exist_template(dest_script,
-                                                            dest_script,
-                                                            "@@@@@binding@@@@@",
-                                                            str(bindingcmd))
+                                                      "@@@@@event@@@@@",
+                                                      serializeinformation)
+                        self.replace_in_file_exist_template(
+                            dest_script, dest_script, "@@@@@to_addrs_string@@@@@", z['user'])
+                        self.replace_in_file_exist_template(
+                            dest_script, dest_script, "@@@@@msgfrom@@@@@", str(msg_from))
+                        self.replace_in_file_exist_template(
+                            dest_script, dest_script, "@@@@@binding@@@@@", str(bindingcmd))
                         ##pid =subprocess.Popen(["python", dest_script]).pid
-                        pid =subprocess.Popen(["python", dest_script], stdin=None, stdout=None, stderr=None).pid
-                        self.logger.debug("call script pid %s  : %s " %(pid,
-                                                                        dest_script))
+                        pid = subprocess.Popen(
+                            ["python", dest_script], stdin=None, stdout=None, stderr=None).pid
+                        self.logger.debug(
+                            "call script pid %s  : %s " %
+                            (pid, dest_script))
 
                     elif z['type_event'] == "json_string" and \
-                        os.path.isfile(src_script):
-                        serializeinformation_json =""
-                        serializeinformation_json = self.get_info_event(idevent, outformat = "json_string")
-                        self.replace_in_file_template(src_script,
-                                                      dest_script,
-                                                     "@@@@@event@@@@@",
-                                                     serializeinformation_json)
-                        self.replace_in_file_exist_template(dest_script,
-                                                            dest_script,
-                                                            "@@@@@msgfrom@@@@@",
-                                                            str(msg_from))
-                        self.replace_in_file_exist_template(dest_script,
-                                                            dest_script,
-                                                            "@@@@@binding@@@@@",
-                                                            str(bindingcmd))
+                            os.path.isfile(src_script):
+                        serializeinformation_json = ""
+                        serializeinformation_json = self.get_info_event(
+                            idevent, outformat="json_string")
+                        self.replace_in_file_template(
+                            src_script, dest_script, "@@@@@event@@@@@", serializeinformation_json)
+                        self.replace_in_file_exist_template(
+                            dest_script, dest_script, "@@@@@msgfrom@@@@@", str(msg_from))
+                        self.replace_in_file_exist_template(
+                            dest_script, dest_script, "@@@@@binding@@@@@", str(bindingcmd))
                         os.chmod(dest_script, stat.S_IEXEC)
-                        pid =subprocess.Popen( dest_script, stdin=None, stdout=None, stderr=None).pid
-                        self.logger.debug("call script python pid %s : %s " %(pid,
-                                                                              dest_script))
+                        pid = subprocess.Popen(
+                            dest_script, stdin=None, stdout=None, stderr=None).pid
+                        self.logger.debug(
+                            "call script python pid %s : %s " %
+                            (pid, dest_script))
                     elif z['type_event'] == "xmppmsg":
                         # send message user a jid reception
                         # comment le json du message a envoyer
                         destinataire = ""
-                        if  z['user'] != "" and "@" in z['user']:
+                        if z['user'] != "" and "@" in z['user']:
                             # message to user
                             destinataire = z['user']
-                        elif  z['user'] == "this":
+                        elif z['user'] == "this":
                             destinataire = xmppobject.boundjid.bare
                         else:
                             destinataire = str(msg_from)
                         if destinataire != "":
-                            serializeinformation = self.get_info_event(idevent, outformat = "pickle_string")
+                            serializeinformation = self.get_info_event(
+                                idevent, outformat="pickle_string")
                             datal = pickle.loads(serializeinformation)
                             datal['mon_rules_comment'] = ""
-                            serializeinformation_json=json.dumps(datal, indent=4)
-                            z['comment'] = z['comment'].replace("@@@@@event@@@@@", serializeinformation_json)
-                            z['comment'] = z['comment'].replace("@@@@@session_id@@@@@", str(sessionid))
-                            z['comment'] = z['comment'].replace("@@@@@msgfrom@@@@@", str(msg_from))
-                            z['comment'] = z['comment'].replace("@@@@@binding@@@@@", bindingcmd)
+                            serializeinformation_json = json.dumps(
+                                datal, indent=4)
+                            z['comment'] = z['comment'].replace(
+                                "@@@@@event@@@@@", serializeinformation_json)
+                            z['comment'] = z['comment'].replace(
+                                "@@@@@session_id@@@@@", str(sessionid))
+                            z['comment'] = z['comment'].replace(
+                                "@@@@@msgfrom@@@@@", str(msg_from))
+                            z['comment'] = z['comment'].replace(
+                                "@@@@@binding@@@@@", bindingcmd)
                             # z['comment'] json message
                             xmppobject.send_message(mto=str(msg_from),
                                                     mbody=z['comment'],
                                                     mtype='chat')
-                            self.logger.debug("msg to %s" %(str(msg_from)))
+                            self.logger.debug("msg to %s" % (str(msg_from)))
 
-    def __binding_application_check(self, datastring, bindingstring, device_type):
+    def __binding_application_check(
+            self,
+            datastring,
+            bindingstring,
+            device_type):
         resultbinding = None
         try:
-            data=json.loads(datastring)
+            data = json.loads(datastring)
         except Exception as e:
-            msg =  "[binding error device rule %s] : data from message" \
+            msg = "[binding error device rule %s] : data from message" \
                 " monitoring format json error %s" % (device_type, str(e))
             logging.getLogger().error("%s" % msg)
             return (msg, -1)
@@ -9364,22 +9866,22 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     device_type,
                     str(e),
                     bindingstring,
-                    json.dumps(data,indent=4))
+                    json.dumps(data, indent=4))
             logging.getLogger().error("%s" % msg)
             return (msg, -1)
         except Exception as e:
-            msg = "[binding device rule %s error %s] in binding:\n%s\ "\
-                "on data\n%s"%(device_type,
-                               str(e),
-                               bindingstring,
-                               json.dumps(data,indent=4))
+            msg = "[binding device rule %s error %s] in binding:\n%s\\ "\
+                "on data\n%s" % (device_type,
+                                 str(e),
+                                 bindingstring,
+                                 json.dumps(data, indent=4))
             logging.getLogger().error("%s" % msg)
             return (msg, -1)
-        msg = "[ %s : result binding %s for binding:\n%s\ "\
-                "on data\n%s"%(device_type,
-                               resultbinding,
-                               bindingstring,
-                               json.dumps(data,indent=4))
+        msg = "[ %s : result binding %s for binding:\n%s\\ "\
+            "on data\n%s" % (device_type,
+                             resultbinding,
+                             bindingstring,
+                             json.dumps(data, indent=4))
         logging.getLogger().debug("%s" % msg)
         return (msg, resultbinding)
 
@@ -9390,7 +9892,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             status_event,
                             hostname):
         try:
-            sql="""UPDATE `xmppmaster`.`mon_event`
+            sql = """UPDATE `xmppmaster`.`mon_event`
                         JOIN
                     xmppmaster.mon_machine ON xmppmaster.mon_machine.id = xmppmaster.mon_event.machines_id
                 SET
@@ -9412,7 +9914,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     def __binding_application(self, datastring, bindingstring, device_type):
         resultbinding = None
         try:
-            data=json.loads(datastring)
+            data = json.loads(datastring)
         except Exception as e:
             return "[binding error device rule %s] : data from message" \
                 " monitoring format json error %s" % (device_type, str(e))
@@ -9426,19 +9928,19 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     device_type,
                     str(e),
                     bindingstring,
-                    json.dumps(data,indent=4))
+                    json.dumps(data, indent=4))
         except Exception as e:
-            resultbinding = "[binding device rule %s error %s] in binding:\n%s\ "\
-                "on data\n%s"%(device_type,
-                               str(e),
-                               bindingstring,
-                               json.dumps(data,indent=4))
+            resultbinding = "[binding device rule %s error %s] in binding:\n%s\\ "\
+                "on data\n%s" % (device_type,
+                                 str(e),
+                                 bindingstring,
+                                 json.dumps(data, indent=4))
         return resultbinding
 
     @DatabaseHelper._sessionm
     def getlistMonitoring_devices_type(self,
-                              session,
-                              enable=1):
+                                       session,
+                                       enable=1):
         sql = ''' SELECT DISTINCT
                     LOWER(device_type)
                 FROM
@@ -9470,7 +9972,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     WHERE
                         hostname LIKE '%s'
                             AND device_type LIKE '%s';''' % (hostname,
-                                                        device_type)
+                                                             device_type)
         else:
             sql = ''' SELECT
                         *
@@ -9505,7 +10007,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                           doc):
         # search rule for device and machine
         pass
-
 
     @DatabaseHelper._sessionm
     def setMonitoring_panels_template(self,
@@ -9565,12 +10066,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             list_panels_template = []
             if status:
                 result_panels_template = session.query(Mon_panels_template).\
-                filter(and_(Mon_panels_template.status == 1)).all()
+                    filter(and_(Mon_panels_template.status == 1)).all()
             elif status is False:
                 result_panels_template = session.query(Mon_panels_template).\
-                filter(and_(Mon_panels_template.status == 0)).all()
+                    filter(and_(Mon_panels_template.status == 0)).all()
             else:
-                result_panels_template = session.query(Mon_panels_template).all()
+                result_panels_template = session.query(
+                    Mon_panels_template).all()
             session.commit()
             session.flush()
             for graphe_template in result_panels_template:
@@ -9619,31 +10121,39 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         event_types = ['log', 'ack']
         count = 0
-        query = session.query(Mon_event, Mon_devices, Mon_rules, Mon_machine, Machines)\
-            .outerjoin(Mon_devices, Mon_event.id_device == Mon_devices.id)\
-            .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)\
-            .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)\
-            .outerjoin(Machines, Mon_machine.machines_id == Machines.id)\
-            .filter(and_(
-                Mon_event.status_event == 1,
-                Mon_event.type_event.in_(event_types))
-            )
+        query = session.query(
+            Mon_event,
+            Mon_devices,
+            Mon_rules,
+            Mon_machine,
+            Machines) .outerjoin(
+            Mon_devices,
+            Mon_event.id_device == Mon_devices.id) .outerjoin(
+            Mon_rules,
+            Mon_event.id_rule == Mon_rules.id) .outerjoin(
+                Mon_machine,
+                Mon_event.machines_id == Mon_machine.id) .outerjoin(
+                    Machines,
+                    Mon_machine.machines_id == Machines.id) .filter(
+                        and_(
+                            Mon_event.status_event == 1,
+                            Mon_event.type_event.in_(event_types)))
 
         if filter != "":
             query = query.filter(or_(
-                    Machines.hostname.contains(filter),
-                    Machines.jid.contains(filter),
-                    Mon_machine.date.contains(filter),
-                    Mon_machine.statusmsg.contains(filter),
-                    Mon_devices.alarm_msg.contains(filter),
-                    Mon_rules.comment.contains(filter),
-                    Mon_rules.device_type.contains(filter),
-                    Mon_devices.firmware.contains(filter),
-                    Mon_devices.serial.contains(filter),
-                    Mon_devices.status.contains(filter),
-                    Mon_event.type_event.contains(filter)
-                    )
-                )
+                Machines.hostname.contains(filter),
+                Machines.jid.contains(filter),
+                Mon_machine.date.contains(filter),
+                Mon_machine.statusmsg.contains(filter),
+                Mon_devices.alarm_msg.contains(filter),
+                Mon_rules.comment.contains(filter),
+                Mon_rules.device_type.contains(filter),
+                Mon_devices.firmware.contains(filter),
+                Mon_devices.serial.contains(filter),
+                Mon_devices.status.contains(filter),
+                Mon_event.type_event.contains(filter)
+            )
+            )
 
         count = query.count()
         query = query.order_by(desc(Mon_machine.date))
@@ -9653,12 +10163,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if max != -1:
             query = query.limit(max)
 
-
         query = query.all()
 
         result = {
-        'total': count,
-        'datas': []
+            'total': count,
+            'datas': []
         }
         if query:
             for event, device, rule, mon_machine, machine in query:
@@ -9686,8 +10195,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     'device_firmware': device.firmware if device.firmware is not None else "",
                     'device_status': device.status if device.status is not None else "",
                     'device_alarm_msg': device.alarm_msg if device.alarm_msg is not None else "",
-                    'device_doc': device.doc if device.doc is not None else ""
-                }
+                    'device_doc': device.doc if device.doc is not None else ""}
                 result['datas'].append(tmp)
         return result
 
@@ -9724,33 +10232,41 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         event_types = ['log', 'ack']
         count = 0
-        query = session.query(Mon_event, Mon_devices, Mon_rules, Mon_machine, Machines)\
-            .outerjoin(Mon_devices, Mon_event.id_device == Mon_devices.id)\
-            .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)\
-            .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)\
-            .outerjoin(Machines, Mon_machine.machines_id == Machines.id)\
-            .filter(and_(
-                Mon_event.status_event == 0,
-                Mon_event.type_event.in_(event_types))
-            )
+        query = session.query(
+            Mon_event,
+            Mon_devices,
+            Mon_rules,
+            Mon_machine,
+            Machines) .outerjoin(
+            Mon_devices,
+            Mon_event.id_device == Mon_devices.id) .outerjoin(
+            Mon_rules,
+            Mon_event.id_rule == Mon_rules.id) .outerjoin(
+                Mon_machine,
+                Mon_event.machines_id == Mon_machine.id) .outerjoin(
+                    Machines,
+                    Mon_machine.machines_id == Machines.id) .filter(
+                        and_(
+                            Mon_event.status_event == 0,
+                            Mon_event.type_event.in_(event_types)))
 
         if filter != "":
             query = query.filter(or_(
-                    Machines.hostname.contains(filter),
-                    Machines.jid.contains(filter),
-                    Mon_machine.date.contains(filter),
-                    Mon_machine.statusmsg.contains(filter),
-                    Mon_devices.alarm_msg.contains(filter),
-                    Mon_rules.comment.contains(filter),
-                    Mon_rules.device_type.contains(filter),
-                    Mon_devices.firmware.contains(filter),
-                    Mon_devices.serial.contains(filter),
-                    Mon_devices.status.contains(filter),
-                    Mon_event.type_event.contains(filter),
-                    Mon_event.ack_user.contains(filter),
-                    Mon_event.ack_date.contains(filter),
-                    )
-                )
+                Machines.hostname.contains(filter),
+                Machines.jid.contains(filter),
+                Mon_machine.date.contains(filter),
+                Mon_machine.statusmsg.contains(filter),
+                Mon_devices.alarm_msg.contains(filter),
+                Mon_rules.comment.contains(filter),
+                Mon_rules.device_type.contains(filter),
+                Mon_devices.firmware.contains(filter),
+                Mon_devices.serial.contains(filter),
+                Mon_devices.status.contains(filter),
+                Mon_event.type_event.contains(filter),
+                Mon_event.ack_user.contains(filter),
+                Mon_event.ack_date.contains(filter),
+            )
+            )
 
         count = query.count()
         query = query.order_by(desc(Mon_machine.date))
@@ -9760,12 +10276,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if max != -1:
             query = query.limit(max)
 
-
         query = query.all()
 
         result = {
-        'total': count,
-        'datas': []
+            'total': count,
+            'datas': []
         }
         if query:
             for event, device, rule, mon_machine, machine in query:
@@ -9774,8 +10289,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     'event_status': event.status_event if event.status_event is not None else "",
                     'event_type_event': event.type_event if event.type_event is not None else "",
                     'event_cmd': event.cmd if event.cmd is not None else "",
-                    'ack_user' : event.ack_user if event.ack_user is not None else "",
-                    'ack_date' : event.ack_date.strftime("%m-%d-%Y %H:%M:%S") if event.ack_date is not None else "",
+                    'ack_user': event.ack_user if event.ack_user is not None else "",
+                    'ack_date': event.ack_date.strftime("%m-%d-%Y %H:%M:%S") if event.ack_date is not None else "",
                     'rule_id': rule.id,
                     'rule_hostname': rule.hostname if rule.hostname is not None else "",
                     'rule_device_type': rule.device_type if rule.device_type is not None else "",
@@ -9795,8 +10310,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     'device_firmware': device.firmware if device.firmware is not None else "",
                     'device_status': device.status if device.status is not None else "",
                     'device_alarm_msg': device.alarm_msg if device.alarm_msg is not None else "",
-                    'device_doc': device.doc if device.doc is not None else ""
-                }
+                    'device_doc': device.doc if device.doc is not None else ""}
                 result['datas'].append(tmp)
         return result
 
@@ -9812,15 +10326,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         try:
             id = int(id)
-        except:
+        except BaseException:
             return "failure"
         try:
-            session.query(Mon_event).filter(Mon_event.id == id)\
-            .update({Mon_event.status_event: 0, Mon_event.ack_user: user, Mon_event.ack_date:datetime.now()})
+            session.query(Mon_event).filter(Mon_event.id == id) .update(
+                {Mon_event.status_event: 0, Mon_event.ack_user: user, Mon_event.ack_date: datetime.now()})
             session.commit()
             session.flush()
             return "success"
-        except:
+        except BaseException:
             return "failure"
 
     @DatabaseHelper._sessionm
@@ -9831,8 +10345,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         @returns:
             list of float
         """
-        session.execute("call countSuccessRateLastSixWeeks(@week1, @week2, @week3, @week4, @week5, @week6)")
-        query = session.execute("select @week1, @week2, @week3, @week4, @week5, @week6")
+        session.execute(
+            "call countSuccessRateLastSixWeeks(@week1, @week2, @week3, @week4, @week5, @week6)")
+        query = session.execute(
+            "select @week1, @week2, @week3, @week4, @week5, @week6")
         query = query.fetchall()[0]
 
         return list(query)
@@ -9840,46 +10356,52 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_ars_from_cluster(self, session, id, filter=""):
         result = {
-            'in_cluster' : [],
-            'out_cluster' :[],
-            'in_ars_list' : [],
-            'out_ars_list' : []
+            'in_cluster': [],
+            'out_cluster': [],
+            'in_ars_list': [],
+            'out_ars_list': []
         }
 
-        query = session.query(Has_cluster_ars.id_ars, Has_cluster_ars.id_cluster)\
-            .add_column(RelayServer.nameserver)\
-            .add_column(RelayServer.jid)\
-            .outerjoin(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
-            .filter(Has_cluster_ars.id_cluster == id).all()
+        query = session.query(
+            Has_cluster_ars.id_ars,
+            Has_cluster_ars.id_cluster) .add_column(
+            RelayServer.nameserver) .add_column(
+            RelayServer.jid) .outerjoin(
+                RelayServer,
+                Has_cluster_ars.id_ars == RelayServer.id) .filter(
+                    Has_cluster_ars.id_cluster == id).all()
 
         if query is not None:
             for id_ars, id_cluster, name, jid in query:
                 result['in_cluster'].append({
                     'id_ars': id_ars,
                     'id_cluster': id_cluster,
-                    'name' : name,
-                    'jid' : jid
+                    'name': name,
+                    'jid': jid
                 })
                 result['in_ars_list'].append(id_ars)
 
-        query2 = session.query(Has_cluster_ars.id_ars, Has_cluster_ars.id_cluster)\
-            .add_column(RelayServer.nameserver)\
-            .add_column(RelayServer.jid)\
-            .outerjoin(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
-            .filter(not_(Has_cluster_ars.id_ars.in_(result['in_ars_list'])))\
-            .filter(RelayServer.id )
-
+        query2 = session.query(
+            Has_cluster_ars.id_ars,
+            Has_cluster_ars.id_cluster) .add_column(
+            RelayServer.nameserver) .add_column(
+            RelayServer.jid) .outerjoin(
+                RelayServer,
+                Has_cluster_ars.id_ars == RelayServer.id) .filter(
+                    not_(
+                        Has_cluster_ars.id_ars.in_(
+                            result['in_ars_list']))) .filter(
+                                RelayServer.id)
 
         query2 = query2.all()
-
 
         if query2 is not None:
             for id_ars, id_cluster, name, jid in query2:
                 result['out_cluster'].append({
-                    'id_ars' : id_ars,
-                    'id_cluster' : id_cluster,
-                    'name' : name,
-                    'jid' : jid
+                    'id_ars': id_ars,
+                    'id_cluster': id_cluster,
+                    'name': name,
+                    'jid': jid
                 })
                 result['out_ars_list'].append(id_ars)
         return result
@@ -9891,13 +10413,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         try:
             id = int(id)
             if name != "":
-                query = session.query(Cluster_ars).filter(Cluster_ars.id == id)\
-                    .update({Cluster_ars.name : name, Cluster_ars.description : description})
+                query = session.query(Cluster_ars).filter(Cluster_ars.id == id) .update(
+                    {Cluster_ars.name: name, Cluster_ars.description: description})
                 session.commit()
                 session.flush()
             else:
                 query = session.query(Cluster_ars).filter(Cluster_ars == id)\
-                    .update({Cluster_ars.description : description})
+                    .update({Cluster_ars.description: description})
                 session.commit()
                 session.flush()
 
@@ -9907,7 +10429,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.flush()
 
         except Exception as err:
-            return {'state': 'failure', 'msg':'No cluster found'}
+            return {'state': 'failure', 'msg': 'No cluster found'}
         return {'state': 'success'}
 
     @DatabaseHelper._sessionm
@@ -9928,32 +10450,32 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 session.commit()
                 session.flush()
             else:
-                return {'state': 'failure', 'msg':'This cluster has no name'}
+                return {'state': 'failure', 'msg': 'This cluster has no name'}
 
         except Exception as err:
-            return {'state': 'failure', 'msg':'No cluster found'}
+            return {'state': 'failure', 'msg': 'No cluster found'}
         return {'state': 'success'}
 
     @DatabaseHelper._sessionm
     def get_rules_list(self, session, start, end, filter):
         try:
             start = int(start)
-        except:
+        except BaseException:
             start = -1
 
         try:
             end = int(end)
-        except:
+        except BaseException:
             end = -1
 
         result = {
-            'total' : 0,
-            'datas':{
-                'id' : [],
-                'name' : [],
-                'description' : [],
-                'level' : [],
-                'count' : []
+            'total': 0,
+            'datas': {
+                'id': [],
+                'name': [],
+                'description': [],
+                'level': [],
+                'count': []
             }
         }
 
@@ -9989,9 +10511,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         try:
             id = int(id)
         except Exception as err:
-            return {'status':'error', 'message': 'Invalid id'}
+            return {'status': 'error', 'message': 'Invalid id'}
         if action not in ['raise', 'down']:
-            return {'status':'error', 'message': 'Unknown action'}
+            return {'status': 'error', 'message': 'Unknown action'}
         else:
             selected = session.query(Regles).filter(Regles.id == id).one()
             if selected is not None:
@@ -10003,7 +10525,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         .first()
 
                     if query is None:
-                        return {'status':'success', 'message': 'Is top level'}
+                        return {'status': 'success', 'message': 'Is top level'}
                     else:
                         new_level = query.level
                 else:
@@ -10012,7 +10534,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         .order_by(Regles.level)\
                         .first()
                     if query is None:
-                        return {'status':'success', 'message': 'Is lowest level'}
+                        return {
+                            'status': 'success',
+                            'message': 'Is lowest level'}
                     else:
                         new_level = query.level
 
@@ -10021,30 +10545,32 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 session.commit()
                 session.flush()
                 if action == "raise":
-                    return {'status':'success', 'message': 'raised'}
+                    return {'status': 'success', 'message': 'raised'}
                 else:
-                    return {'status':'success', 'message': 'downed'}
+                    return {'status': 'success', 'message': 'downed'}
             else:
-                return {'status':'error', 'message': 'No rule found with id # %s'%id}
+                return {
+                    'status': 'error',
+                    'message': 'No rule found with id # %s' % id}
 
     @DatabaseHelper._sessionm
     def get_relay_rules(self, session, id, start, end, filter):
         try:
             start = int(start)
-        except:
+        except BaseException:
             start = 0
         try:
             end = int(end)
-        except:
+        except BaseException:
             end = -1
 
         result = {
             'total': 0,
-            'datas' : {
-                'id' : [],
-                'subject' : [],
-                'order' : [],
-                'name' : []
+            'datas': {
+                'id': [],
+                'subject': [],
+                'order': [],
+                'name': []
             },
             'status': "error",
             'message': ""
@@ -10055,11 +10581,12 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             result['message'] = "Bad relay Id"
             return result
 
-
-        query = session.query(Has_relayserverrules).filter(Has_relayserverrules.relayserver_id == id)\
-            .add_column(Regles.name)\
-            .join(Regles, Regles.id == Has_relayserverrules.rules_id)\
-            .order_by(Has_relayserverrules.order)
+        query = session.query(Has_relayserverrules).filter(
+            Has_relayserverrules.relayserver_id == id) .add_column(
+            Regles.name) .join(
+            Regles,
+            Regles.id == Has_relayserverrules.rules_id) .order_by(
+                Has_relayserverrules.order)
 
         if filter != "":
             query = query.filter(or_(
@@ -10090,9 +10617,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def new_rule_order_relay(self, session, id):
         query = session.query(Has_relayserverrules.order)\
-        .filter(Has_relayserverrules.relayserver_id == id)\
-        .order_by(desc(Has_relayserverrules.order))\
-        .first()
+            .filter(Has_relayserverrules.relayserver_id == id)\
+            .order_by(desc(Has_relayserverrules.order))\
+            .first()
 
         if query is not None:
 
@@ -10112,46 +10639,45 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.add(has_rule)
             session.commit()
             session.flush()
-            return {'status' : 'success'}
-        except:
-            return {'status' : 'error'}
+            return {'status': 'success'}
+        except BaseException:
+            return {'status': 'error'}
 
     @DatabaseHelper._sessionm
     def delete_rule_relay(self, session, rule_id):
         try:
             rule_id = int(rule_id)
-        except:
-            return {'status' : 'error'}
+        except BaseException:
+            return {'status': 'error'}
         try:
             result = session.query(Has_relayserverrules).\
                 filter(Has_relayserverrules.id == rule_id).delete()
             session.commit()
             session.flush()
             if result == 0:
-                return {'status' : 'error', 'message': 'rule doesn\'t exist'}
+                return {'status': 'error', 'message': 'rule doesn\'t exist'}
             else:
-                return {'status' : 'success'}
-        except:
-            return {'status' : 'error'}
-
+                return {'status': 'success'}
+        except BaseException:
+            return {'status': 'error'}
 
     @DatabaseHelper._sessionm
     def move_relay_rule(self, session, relay_id, rule_id, action):
         result = {
             "status": None,
             "message": ""
-            }
+        }
 
         try:
             relay_id = int(relay_id)
-        except:
+        except BaseException:
             result['status'] = "error"
             result['message'] = "wrong relay id"
             return result
 
         try:
             rule_id = int(rule_id)
-        except:
+        except BaseException:
             result['status'] = "error"
             result['message'] = "wrong rule id"
             return result
@@ -10181,7 +10707,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 session.flush()
 
                 result['status'] = "success"
-                result['message'] = "%sed"%action
+                result['message'] = "%sed" % action
             else:
                 result['status'] = "success"
                 result['message'] = "reached top level" if action == "raise" else "reached last level"
@@ -10196,11 +10722,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     def get_relay_rule(self, session, rule_id):
         result = {
             'status': None,
-            'massage' : ''
+            'massage': ''
         }
         try:
             rule_id = int(rule_id)
-        except:
+        except BaseException:
             result['status'] = "error"
             result['message'] = "bad rule id"
             return result
@@ -10211,11 +10737,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if query is not None:
             has_rule = query
             result['datas'] = {
-                'id' : query.id,
-                'rules_id' : query.rules_id,
-                'order' : query.order,
+                'id': query.id,
+                'rules_id': query.rules_id,
+                'order': query.order,
                 'relayserver_id': query.relayserver_id,
-                'subject' : query.subject
+                'subject': query.subject
             }
             result['status'] = 'success'
             result['message'] = ""
@@ -10225,48 +10751,50 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         return result
 
-
     @DatabaseHelper._sessionm
     def get_relays_for_rule(self, session, rule_id, start, end, filter=""):
         result = {
             'status': None,
-            'massage' : '',
-            'total' : 0,
-            'datas':{
+            'massage': '',
+            'total': 0,
+            'datas': {
                 'relay_id': [],
                 'hostname': [],
                 'order': [],
                 'subject': [],
-                'id' : [],
+                'id': [],
                 'rule_id': [],
                 'enabled': []
             }
         }
         try:
             rule_id = int(rule_id)
-        except:
+        except BaseException:
             result['status'] = "error"
             result['message'] = "bad rule id"
             return result
 
         try:
             start = int(start)
-        except:
+        except BaseException:
             result['status'] = "error"
             result['message'] = "bad start offset"
             return result
         try:
             end = int(end)
-        except:
+        except BaseException:
             result['status'] = "error"
             result['message'] = "bad end limit"
             return result
 
-
-        query = session.query(Has_relayserverrules, RelayServer)\
-            .filter(and_(Has_relayserverrules.rules_id == rule_id,
-                RelayServer.moderelayserver == "static"))\
-            .join(RelayServer, RelayServer.id == Has_relayserverrules.relayserver_id)
+        query = session.query(
+            Has_relayserverrules,
+            RelayServer) .filter(
+            and_(
+                Has_relayserverrules.rules_id == rule_id,
+                RelayServer.moderelayserver == "static")) .join(
+                RelayServer,
+            RelayServer.id == Has_relayserverrules.relayserver_id)
 
         if filter != "":
             query = query.filter(or_(
@@ -10303,27 +10831,27 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def edit_rule_to_relay(self, session, id, relay_id, rule_id, subject):
         result = {
-            "status" : None,
-            "message" : ""
+            "status": None,
+            "message": ""
         }
 
         try:
             id = int(id)
-        except:
+        except BaseException:
             result['status'] = 'error'
             result['message'] = "bad id"
             return result
 
         try:
             relay_id = int(relay_id)
-        except:
+        except BaseException:
             result['status'] = 'error'
             result['message'] = "bad relay id"
             return result
 
         try:
             rule_id = int(rule_id)
-        except:
+        except BaseException:
             result['status'] = 'error'
             result['message'] = "bad rule_id"
             return result
@@ -10360,8 +10888,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         query = query.all()
 
         result = {
-        'id': [],
-        'hostname': []
+            'id': [],
+            'hostname': []
         }
 
         if query is not None:
@@ -10376,18 +10904,18 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             Returns: list of deployments
         """
         session.execute("call countDeployLastSixMonths()")
-        query = session.execute("select @month6, @month5, @month4, @month3, @month2, @month1")
+        query = session.execute(
+            "select @month6, @month5, @month4, @month3, @month2, @month1")
         query = query.fetchall()[0]
         return list(query)
 
     @DatabaseHelper._sessionm
     def get_count_agent_for_dashboard(self, session):
         session.execute("call countAgentsLastSixMonths()")
-        query = session.execute("select @month6, @month5, @month4, @month3, @month2, @month1")
+        query = session.execute(
+            "select @month6, @month5, @month4, @month3, @month2, @month1")
         query = query.fetchall()[0]
         return list(query)
-
-
 
     @DatabaseHelper._sessionm
     def get_ars_group_in_list_clusterid(self,
@@ -10410,12 +10938,12 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if isinstance(clusterid, list):
             listidcluster = [x for x in set(clusterid)]
             if listidcluster:
-                setsearch=("%s" % listidcluster)[1:-1]
+                setsearch = ("%s" % listidcluster)[1:-1]
             else:
                 raise
         searchclusterars = "(%s)" % setsearch
 
-        sql ="""SELECT
+        sql = """SELECT
                     relayserver.id AS ars_id,
                     relayserver.urlguacamole AS urlguacamole,
                     relayserver.subnet AS subnet,
@@ -10457,103 +10985,114 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         arsListInfos = []
         for ars in clusterList:
             arsInfos = {"ars_id": ars[0],
-                       "urlguacamole": ars[1],
-                       "subnet": ars[2],
-                       "nameserver": ars[3],
-                       "ipserver": ars[4],
-                       "ipconnection": ars[5],
-                       "port": ars[6],
-                       "portconnection": ars[7],
-                       "mask": ars[8],
-                       "jid": ars[9],
-                       "longitude": ars[10],
-                       "latitude": ars[11],
-                       "enabled": ars[12],
-                       "mandatory": ars[13],
-                       "switchonoff": ars[14],
-                       "classutil": ars[15],
-                       "groupdeploy": ars[16],
-                       "package_server_ip": ars[17],
-                       "package_server_port": ars[18],
-                       "moderelayserver": ars[19],
-                       "keysyncthing": ars[20],
-                       "syncthing_port": ars[21],
-                       "id_cluster": ars[22],
-                       "name_cluster": ars[23]}
+                        "urlguacamole": ars[1],
+                        "subnet": ars[2],
+                        "nameserver": ars[3],
+                        "ipserver": ars[4],
+                        "ipconnection": ars[5],
+                        "port": ars[6],
+                        "portconnection": ars[7],
+                        "mask": ars[8],
+                        "jid": ars[9],
+                        "longitude": ars[10],
+                        "latitude": ars[11],
+                        "enabled": ars[12],
+                        "mandatory": ars[13],
+                        "switchonoff": ars[14],
+                        "classutil": ars[15],
+                        "groupdeploy": ars[16],
+                        "package_server_ip": ars[17],
+                        "package_server_port": ars[18],
+                        "moderelayserver": ars[19],
+                        "keysyncthing": ars[20],
+                        "syncthing_port": ars[21],
+                        "id_cluster": ars[22],
+                        "name_cluster": ars[23]}
             arsListInfos.append(arsInfos)
         return arsListInfos
 
-
     @DatabaseHelper._sessionm
-    def get_machines_for_ban(self, session, jid_ars, start=0, end=-1, filter=""):
+    def get_machines_for_ban(
+            self,
+            session,
+            jid_ars,
+            start=0,
+            end=-1,
+            filter=""):
 
         try:
             start = int(start)
-        except:
-            start=0
-
-        try:
-            end = int(end)
-        except:
-            end=-1
-
-        subquery = session.query(self.Ban_machines.jid)\
-            .filter(self.Ban_machines.ars_server == jid_ars)\
-            .subquery()
-
-        query = session.query(Machines.jid, Machines.hostname)
-
-        if filter != "":
-            query = query.filter(
-                and_(
-                    Machines.agenttype == "machine",
-                    Machines.groupdeploy == jid_ars,
-                    Machines.hostname.contains(filter),
-                    not_(Machines.jid.in_(subquery))
-                )
-            )
-
-        else:
-            query = query.filter(
-                and_(
-                    Machines.agenttype == "machine",
-                    Machines.groupdeploy == jid_ars,
-                    not_(Machines.jid.in_(subquery))
-                )
-            )
-
-        count = query.count()
-
-        query = query.offset(start)
-        if end > 0:
-            query = query.limit(end)
-
-        query = query.all()
-
-        result = {
-            "total": count,
-            "datas": []
-        }
-
-        if query is not None:
-            for element in query:
-                result['datas'].append({"jid": element.jid, "name" : element.hostname})
-
-        return result
-
-    @DatabaseHelper._sessionm
-    def get_machines_to_unban(self, session, jid_ars, start=0, end=-1, filter=""):
-
-        try:
-            start = int(start)
-        except:
+        except BaseException:
             start = 0
 
         try:
             end = int(end)
-        except:
+        except BaseException:
             end = -1
 
+        subquery = session.query(self.Ban_machines.jid)\
+            .filter(self.Ban_machines.ars_server == jid_ars)\
+            .subquery()
+
+        query = session.query(Machines.jid, Machines.hostname)
+
+        if filter != "":
+            query = query.filter(
+                and_(
+                    Machines.agenttype == "machine",
+                    Machines.groupdeploy == jid_ars,
+                    Machines.hostname.contains(filter),
+                    not_(Machines.jid.in_(subquery))
+                )
+            )
+
+        else:
+            query = query.filter(
+                and_(
+                    Machines.agenttype == "machine",
+                    Machines.groupdeploy == jid_ars,
+                    not_(Machines.jid.in_(subquery))
+                )
+            )
+
+        count = query.count()
+
+        query = query.offset(start)
+        if end > 0:
+            query = query.limit(end)
+
+        query = query.all()
+
+        result = {
+            "total": count,
+            "datas": []
+        }
+
+        if query is not None:
+            for element in query:
+                result['datas'].append(
+                    {"jid": element.jid, "name": element.hostname})
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_machines_to_unban(
+            self,
+            session,
+            jid_ars,
+            start=0,
+            end=-1,
+            filter=""):
+
+        try:
+            start = int(start)
+        except BaseException:
+            start = 0
+
+        try:
+            end = int(end)
+        except BaseException:
+            end = -1
 
         subquery = session.query(self.Ban_machines.jid)\
             .filter(self.Ban_machines.ars_server == jid_ars)\
@@ -10595,13 +11134,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         if query is not None:
             for element in query:
-                result['datas'].append({"jid": element.jid, "name" : element.hostname})
+                result['datas'].append(
+                    {"jid": element.jid, "name": element.hostname})
 
         return result
 
     @DatabaseHelper._sessionm
     def ban_machines(self, session, jid_ars, machines, dates=[], reasons=[]):
-        if machines != "all" or type(machines) is list and 'all' not in machines:
+        if machines != "all" or isinstance(
+                machines, list) and 'all' not in machines:
             _list = machines
 
         else:
@@ -10616,7 +11157,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         Machines.agenttype == "machine",
                         not_(Machines.jid.in_(subquery))
                     )
-                )\
+            )\
                 .all()
 
             _list = []
@@ -10629,19 +11170,20 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             new_ban.ars_server = jid_ars
             try:
                 session.add(new_ban)
-            except:
+            except BaseException:
                 continue
         try:
             session.commit()
             session.flush()
-        except:
+        except BaseException:
             pass
 
-        return {'jid_ars': jid_ars, 'jid_machines':_list}
+        return {'jid_ars': jid_ars, 'jid_machines': _list}
 
     @DatabaseHelper._sessionm
     def unban_machines(self, session, jid_ars, machines, dates=[], reasons=[]):
-        if machines != "all" or type(machines) is list and 'all' not in machines:
+        if machines != "all" or isinstance(
+                machines, list) and 'all' not in machines:
             _list = machines
 
         else:
@@ -10656,13 +11198,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         try:
             query.delete()
-        except:
+        except BaseException:
             pass
         finally:
             session.commit()
             session.flush()
 
-        return {'jid_ars': jid_ars, 'jid_machines':_list}
+        return {'jid_ars': jid_ars, 'jid_machines': _list}
 
 # Update machine scheduling
     def __updatemachine(self, object_update_machine):
@@ -10681,13 +11223,16 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                    'ars': object_update_machine.ars,
                    'status': object_update_machine.status,
                    'descriptor': object_update_machine.descriptor,
-                   'md5': object_update_machine.md5 ,
+                   'md5': object_update_machine.md5,
                    'date_creation': object_update_machine.date_creation}
             return ret
 
         except Exception as error_creating:
-            logging.getLogger().error("We failed to retrieve the informations of the machine to update")
-            logging.getLogger().error("We got the error \n : %s" % str(error_creating))
+            logging.getLogger().error(
+                "We failed to retrieve the informations of the machine to update")
+            logging.getLogger().error(
+                "We got the error \n : %s" %
+                str(error_creating))
             return None
 
     @DatabaseHelper._sessionm
@@ -10714,8 +11259,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         try:
             query = session.query(self.Update_machine).\
-                       filter(self.Update_machine.jid.like(jid)).one()
-
+                filter(self.Update_machine.jid.like(jid)).one()
 
             query.hostname = hostname
             query.ars = ars
@@ -10728,7 +11272,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         except Exception as e:
             logging.getLogger().error("We failed to update the informations on the SQL Table")
             logging.getLogger().error("We got the error %s " % str(e))
-            self.logger.error("We hit the backtrace \n%s" % (traceback.format_exc()))
+            self.logger.error(
+                "We hit the backtrace \n%s" %
+                (traceback.format_exc()))
             return None
 
     @DatabaseHelper._sessionm
@@ -10773,11 +11319,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             if "Duplicate entry" in reason:
                 self.logger.info("%s already in table." % e.params[0])
                 return self.update_update_machine(hostname,
-                                            jid,
-                                            ars,
-                                            status,
-                                            descriptor,
-                                            md5)
+                                                  jid,
+                                                  ars,
+                                                  status,
+                                                  descriptor,
+                                                  md5)
             else:
                 self.logger.info("setUpdate_machine : %s" % str(e))
                 return None
@@ -10785,7 +11331,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             logging.getLogger().error(str(e))
             self.logger.error("\n%s" % (traceback.format_exc()))
             return None
-
 
     @DatabaseHelper._sessionm
     def getUpdate_machine(self,
@@ -10802,7 +11347,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 nblimit: Number maximum of machines allowed to be updated at once.
         """
 
-        sql ="""SELECT
+        sql = """SELECT
                     MIN(id) AS minid , MAX(id) AS maxid
                 FROM
                     (SELECT id
@@ -10810,8 +11355,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             update_machine
                         WHERE
                             status LIKE '%s'
-                        LIMIT %s) AS dt;""" %(status,
-                                              nblimit)
+                        LIMIT %s) AS dt;""" % (status,
+                                               nblimit)
 
         machines_jid_for_updating = []
         borne = session.execute(sql)
@@ -10820,28 +11365,29 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         minid = result[0]
         maxid = result[0]
         if minid is not None:
-            sql=""" SELECT
+            sql = """ SELECT
                         jid, ars
                     FROM
                         update_machine
                     WHERE
                         id >= %s and id <= %s and
-                            status LIKE '%s';"""%(minid,
-                                                maxid,
-                                                status)
+                            status LIKE '%s';""" % (minid,
+                                                    maxid,
+                                                    status)
             resultquery = session.execute(sql)
 
             for record_updating_machine in resultquery:
-                machines_jid_for_updating.append( (record_updating_machine.jid, record_updating_machine.ars,))
-            sql=""" delete
+                machines_jid_for_updating.append(
+                    (record_updating_machine.jid, record_updating_machine.ars,))
+            sql = """ delete
 
                     FROM
                         update_machine
                     WHERE
                         id >= %s and id <= %s and
-                            status LIKE '%s';"""%(minid,
-                                                maxid,
-                                                status)
+                            status LIKE '%s';""" % (minid,
+                                                    maxid,
+                                                    status)
             resultquery = session.execute(sql)
 
             session.commit()

@@ -42,7 +42,7 @@ class Pulse2Image:
     This is a Pulse 2 Image
     """
 
-    def __init__(self, directory, raises = True):
+    def __init__(self, directory, raises=True):
         """
         Read image information (from conf.txt and others).
 
@@ -54,7 +54,9 @@ class Pulse2Image:
         @raise Exception: exception raised when image element is missing
         """
         if not isPulse2Image(directory) and raises:
-            raise Exception('Not a valid Pulse 2 image in directory %s' % directory)
+            raise Exception(
+                'Not a valid Pulse 2 image in directory %s' %
+                directory)
 
         self.directory = directory
         self.size = 0
@@ -95,7 +97,7 @@ class Pulse2Image:
         self.has_error = info['has_error']
         try:
             self.logs = open(logPath, 'r').readlines()
-        except:
+        except BaseException:
             self.logs = []
 
     def _readGRUB(self):
@@ -108,35 +110,43 @@ class Pulse2Image:
 
         # All below this is shit
         try:
-            fd_grub_file = file(os.path.join(self.directory, PULSE2_IMAGING_GRUB_FNAME))
+            fd_grub_file = file(
+                os.path.join(
+                    self.directory,
+                    PULSE2_IMAGING_GRUB_FNAME))
         except Exception as e:
-            logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_grub_file, e))
+            logging.getLogger().error(
+                "Pulse2Image : can't read %s : %s" %
+                (fd_grub_file, e))
             raise e
-
 
         # read grub file
         for line_grub_file in fd_grub_file:
             # title line
             line_grub_file_part = re.search("^title (.*)$", line_grub_file)
-            if line_grub_file_part != None:
+            if line_grub_file_part is not None:
                 self.title = line_grub_file_part.group(1)
 
             # desc line
             line_grub_file_part = re.search("^desc (.*)$", line_grub_file)
-            if line_grub_file_part != None:
+            if line_grub_file_part is not None:
                 self.desc = line_grub_file_part.group(1)
 
             # ptabs line ?
-            line_grub_file_part = re.search("^#?ptabs \(hd([0-9]+)\) ", line_grub_file)
-            if line_grub_file_part != None:  # got one disk
+            line_grub_file_part = re.search(
+                "^#?ptabs \\(hd([0-9]+)\\) ", line_grub_file)
+            if line_grub_file_part is not None:  # got one disk
                 hd_number = int(line_grub_file_part.group(1))
 
                 self.disks[hd_number] = {}
-                self.disks[hd_number]['line'] = line_grub_file.rstrip("\n").lstrip("#")
+                self.disks[hd_number]['line'] = line_grub_file.rstrip(
+                    "\n").lstrip("#")
 
             # hd line ?
-            line_grub_file_part = re.search("^ # \(hd([0-9]+),([0-9]+)\) ([0-9]+) ([0-9]+) ([0-9]+)$", line_grub_file)
-            if line_grub_file_part != None:  # got one part (first line ?)
+            line_grub_file_part = re.search(
+                "^ # \\(hd([0-9]+),([0-9]+)\\) ([0-9]+) ([0-9]+) ([0-9]+)$",
+                line_grub_file)
+            if line_grub_file_part is not None:  # got one part (first line ?)
                 hd_number = int(line_grub_file_part.group(1))
                 part_number = int(line_grub_file_part.group(2))
                 start = int(line_grub_file_part.group(3)) * 512
@@ -153,8 +163,9 @@ class Pulse2Image:
                 self.disks[hd_number][part_number]['kind'] = kind
 
             # part line ?
-            line_grub_file_part = re.search("^#? partcopy \(hd([0-9]+),([0-9]+)\) ([0-9]+) PATH/", line_grub_file)
-            if line_grub_file_part != None:  # got one part (second line)
+            line_grub_file_part = re.search(
+                "^#? partcopy \\(hd([0-9]+),([0-9]+)\\) ([0-9]+) PATH/", line_grub_file)
+            if line_grub_file_part is not None:  # got one part (second line)
                 hd_number = int(line_grub_file_part.group(1))
                 part_number = int(line_grub_file_part.group(2))
                 try:
@@ -172,14 +183,19 @@ class Pulse2Image:
         """
         # open size file
         try:
-            fd_size_file = open(os.path.join(self.directory, PULSE2_IMAGING_SIZE_FNAME))
+            fd_size_file = open(
+                os.path.join(
+                    self.directory,
+                    PULSE2_IMAGING_SIZE_FNAME))
         except Exception as e:
-            logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_size_file, e))
+            logging.getLogger().error(
+                "Pulse2Image : can't read %s : %s" %
+                (fd_size_file, e))
             raise e
 
         for line_size_file in fd_size_file:
             line_size_file_part = re.search("^([0-9]+)", line_size_file)
-            if not line_size_file_part == None:
+            if line_size_file_part is not None:
                 self.size = int(line_size_file_part.group(1)) * 1024
         fd_size_file.close()
 
@@ -189,11 +205,14 @@ class Pulse2Image:
         """
         # open log file
         try:
-            fd_log_file = open(os.path.join(self.directory, PULSE2_IMAGING_LOG_FNAME))
+            fd_log_file = open(
+                os.path.join(
+                    self.directory,
+                    PULSE2_IMAGING_LOG_FNAME))
             for line_log_file in fd_log_file:
                 self.logs.append(line_log_file)
                 line_log_file_error = re.search("^ERROR: ", line_log_file)
-                if not line_log_file_error == None:
+                if line_log_file_error is not None:
                     self.has_error = True
             fd_log_file.close()
         except OSError:
@@ -206,10 +225,14 @@ class Pulse2Image:
 
         # open progress file
         try:
-            fd_prog_file = open(os.path.join(self.directory, PULSE2_IMAGING_PROGRESS_FNAME))
+            fd_prog_file = open(
+                os.path.join(
+                    self.directory,
+                    PULSE2_IMAGING_PROGRESS_FNAME))
             for line_prog_file in fd_prog_file:
-                line_prog_file_split = re.search("^([0-9]+): ([0-9]+)%", line_prog_file)
-                if line_prog_file_split != None:
+                line_prog_file_split = re.search(
+                    "^([0-9]+): ([0-9]+)%", line_prog_file)
+                if line_prog_file_split is not None:
                     self.current_part = int(line_prog_file_split.group(1))
                     self.progress = int(line_prog_file_split.group(2))
             fd_prog_file.close()
@@ -258,6 +281,7 @@ def isRevoImage(folder):
         except OSError:
             return False
     return False
+
 
 def isDavosImage(folder):
     """

@@ -29,6 +29,8 @@ import logging
 
 """ Class to map pkgs.pkgs_rules_global to SA
 """
+
+
 class Pkgs_rules_global(object):
     """ Mapping between pkgs.pkgs_rules_global and SA
         colunm table: 'id,pkgs_rules_algos_id,pkgs_cluster_ars_id,order,suject'
@@ -79,4 +81,3 @@ class Pkgs_rules_global(object):
             'pkgs_cluster_ars_id': self.pkgs_cluster_ars_id,
             'order': self.order,
             'suject': self.suject}
-

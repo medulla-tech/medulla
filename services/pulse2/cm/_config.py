@@ -55,7 +55,6 @@ class DefaultsNotFound(ConfigError):
 class ExtendedConfigParser(RawConfigParser):
     """Extended for processing list options having heterogenuous content"""
 
-
     def getlist(self, section, option):
         """
         Transforms string containing a list to true list datatype.
@@ -91,7 +90,7 @@ class ExtendedConfigParser(RawConfigParser):
             try:
                 float_value = float(element)
             except ValueError:
-                 # float conversion failed - element typed as str
+                # float conversion failed - element typed as str
                 ret.append(element)
                 continue
             try:
@@ -112,7 +111,6 @@ class ExtendedConfigParser(RawConfigParser):
                 ret.append(float_value)
 
         return ret
-
 
 
 class ConfigReader(type):
@@ -165,12 +163,11 @@ class ConfigReader(type):
         @type attrs: dict
         """
         att_dict = dict((k, v) for (k, v) in list(cls.__dict__.items())
-                if not k.startswith("__"))
+                        if not k.startswith("__"))
 
         attrs.update(att_dict)
 
         return type.__new__(cls, name, bases, attrs)
-
 
     def read(self, filename):
         """
@@ -186,7 +183,6 @@ class ConfigReader(type):
         if os.path.exists(filename_local):
             config_file.read(filename_local)
 
-
         for section_name in config_file.sections():
             if hasattr(self, section_name):
                 section = getattr(self, section_name)
@@ -199,7 +195,6 @@ class ConfigReader(type):
                     raise InvalidSection(section_name)
             else:
                 raise DefaultsNotFound(section_name)
-
 
     @classmethod
     def options(cls, section):
@@ -216,7 +211,6 @@ class ConfigReader(type):
             if not name.startswith("_"):
 
                 yield name, value
-
 
     @classmethod
     def cast_relations(cls, parser):
@@ -237,8 +231,6 @@ class ConfigReader(type):
                              (list, parser.getlist),
                              ]:
             yield base, method
-
-
 
     def _update_options(self, config_file, section):
         """

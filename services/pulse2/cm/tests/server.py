@@ -42,12 +42,13 @@ class EchoResponse(object):
         d.callback(request)
         return d
 
+
 class DummyTrigger(object):
     def fire(self):
         return Deferred()
 
 
-#class RClock(Clock):
+# class RClock(Clock):
 #    threadCallQueue = []
 #
 #    def __init__(self):
@@ -65,7 +66,6 @@ class DummyTrigger(object):
 class Test00_GatheringServerTestCase(TestCase):
     """ Tests the factory of GatheringServer"""
 
-
     def test01a_assign_invalid_handler(self):
         """ Test of assigning of invalid instance of handler """
         factory = GatheringFactory()
@@ -81,8 +81,6 @@ class Test00_GatheringServerTestCase(TestCase):
         # Instead of an instance having "queue_and_process" method,
         # we assign a simply object
         self.assertRaises(AttributeError, factory.protocol.set_trigger, object)
-
-
 
     def test02_make_echo(self):
         """
@@ -100,10 +98,8 @@ class Test00_GatheringServerTestCase(TestCase):
         transport = StringTransport()
         protocol.makeConnection(transport)
 
-
         protocol.dataReceived("hello")
         self.assertEqual(transport.value(), "hello")
-
 
     def test03_make_echo_with_collector(self):
         """
@@ -127,9 +123,7 @@ class Test00_GatheringServerTestCase(TestCase):
         transport = StringTransport()
         protocol.makeConnection(transport)
 
-
         protocol.dataReceived("hello")
-
 
         uid, ip, data = collector.get()
         collector.release(uid, data)

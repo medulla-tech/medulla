@@ -28,19 +28,28 @@
 
 from pulse2.package_server.utilities import md5sum
 import pulse2.package_server.common
-import urllib.request, urllib.parse, urllib.error
+import urllib.request
+import urllib.parse
+import urllib.error
 import locale
 
+
 class Mirror:
-    def __init__(self, protocol = None, server = None, port = None, mountpoint = None):
+    def __init__(self, protocol=None, server=None, port=None, mountpoint=None):
         self.protocol = protocol
         self.server = server
         self.port = port
         self.mountpoint = mountpoint
-        self.uuid = "UUID%s"%(mountpoint)
+        self.uuid = "UUID%s" % (mountpoint)
 
     def toH(self):
-        return { 'protocol' : self.protocol, 'server' : self.server, 'port' : str(self.port), 'mountpoint' : self.mountpoint, 'uuid' : self.uuid }
+        return {
+            'protocol': self.protocol,
+            'server': self.server,
+            'port': str(
+                self.port),
+            'mountpoint': self.mountpoint,
+            'uuid': self.uuid}
 
     def fromH(self, h):
         self.protocol = h['protocol']
@@ -56,21 +65,21 @@ class Mirror:
 
 
 class Command:
-    def __init__(self, name = '', command = ''):
+    def __init__(self, name='', command=''):
         self.name = name
         self.command = command
 
     def toH(self):
-        return { 'name':self.name, 'command':self.command }
+        return {'name': self.name, 'command': self.command}
 
     def fromH(self, h):
-        if type(h) == dict:
+        if isinstance(h, dict):
             self.name = h['name']
             self.command = h['command']
-        elif type(h) == Command:
+        elif isinstance(h, Command):
             self.name = h.name
             self.command = h.command
-        elif type(h) == str:
+        elif isinstance(h, str):
             self.command = h
             self.name = ''
 
@@ -82,30 +91,53 @@ class Command:
             return False
         return True
 
+
 def getCommandFromH(h):
     cmd = Command()
     cmd.fromH(h)
     return cmd
 
+
 class A_Packages:
     def __init__(self, a):
         self.packages = a
+
 
 class Package:
     def __init__(self):
         self.files = AFiles()
         self.specifiedFiles = []
 
-    def init(self, id, label, version, size, description, cmd, initcmd='',
-             precmd='', postcmd_ok='', postcmd_ko='', reboot=0, targetos='win',
-             entity_id=None, Qvendor='', Qsoftware='', Qversion='', boolcnd='',
-             licenses='', sub_packages=None, associateinventory=0, metagenerator='standard'):
-        # Mutable list sub_packages used as default argument to a method or function
+    def init(
+            self,
+            id,
+            label,
+            version,
+            size,
+            description,
+            cmd,
+            initcmd='',
+            precmd='',
+            postcmd_ok='',
+            postcmd_ko='',
+            reboot=0,
+            targetos='win',
+            entity_id=None,
+            Qvendor='',
+            Qsoftware='',
+            Qversion='',
+            boolcnd='',
+            licenses='',
+            sub_packages=None,
+            associateinventory=0,
+            metagenerator='standard'):
+        # Mutable list sub_packages used as default argument to a method or
+        # function
         sub_packages = sub_packages or []
         self.label = label
         self.version = version
         self.size = size
-        if self.size == None:
+        if self.size is None:
             self.size = 0
         self.description = description
         self.initcmd = getCommandFromH(initcmd)
@@ -141,23 +173,23 @@ class Package:
 
     def toH(self):
         ret = {
-            'label':self.label,
-            'version':self.version,
-            'size':self.size,
-            'id':self.id,
-            'description':self.description,
-            'installInit':self.initcmd.toH(),
-            'preCommand':self.precmd.toH(),
-            'command':self.cmd.toH(),
-            'postCommandSuccess':self.postcmd_ok.toH(),
-            'postCommandFailure':self.postcmd_ko.toH(),
-            'reboot':self.reboot,
-            'targetos':self.targetos,
-            'files':self.files.toH(),
-            'Qvendor':self.Qvendor,
-            'Qsoftware':self.Qsoftware,
-            'Qversion':self.Qversion,
-            'boolcnd':self.boolcnd,
+            'label': self.label,
+            'version': self.version,
+            'size': self.size,
+            'id': self.id,
+            'description': self.description,
+            'installInit': self.initcmd.toH(),
+            'preCommand': self.precmd.toH(),
+            'command': self.cmd.toH(),
+            'postCommandSuccess': self.postcmd_ok.toH(),
+            'postCommandFailure': self.postcmd_ko.toH(),
+            'reboot': self.reboot,
+            'targetos': self.targetos,
+            'files': self.files.toH(),
+            'Qvendor': self.Qvendor,
+            'Qsoftware': self.Qsoftware,
+            'Qversion': self.Qversion,
+            'boolcnd': self.boolcnd,
             'licenses': self.licenses,
             'sub_packages': self.sub_packages,
             'entity_id': self.entity_id,
@@ -170,7 +202,7 @@ class Package:
             # written into a XML-RPC stream
             try:
                 root = self.root.decode(locale.getpreferredencoding())
-            except:
+            except BaseException:
                 root = self.root
             ret['basepath'] = root
         return ret
@@ -229,7 +261,7 @@ class Package:
             self.Qversion = h['Qversion']
         if 'boolcnd' in h:
             self.boolcnd = h['boolcnd']
-        if 'licenses'in h:
+        if 'licenses' in h:
             self.licenses = h['licenses']
         if 'sub_packages' in h:
             self.sub_packages = h['sub_packages']
@@ -243,10 +275,21 @@ class Package:
         return self
 
     def equal(self, p):
-        if self.label != p.label or self.version != p.version or self.size != p.size or self.id != p.id or not(self.initcmd.equal(p.initcmd)) or not(self.precmd.equal(p.precmd)) or not(self.cmd.equal(p.cmd)) or not(self.postcmd_ok.equal(p.postcmd_ok)) or not(self.postcmd_ko.equal(p.postcmd_ko)) or self.description != p.description:
+        if self.label != p.label or self.version != p.version or self.size != p.size or self.id != p.id or not(
+            self.initcmd.equal(
+                p.initcmd)) or not(
+            self.precmd.equal(
+                p.precmd)) or not(
+                    self.cmd.equal(
+                        p.cmd)) or not(
+                            self.postcmd_ok.equal(
+                                p.postcmd_ok)) or not(
+                                    self.postcmd_ko.equal(
+                                        p.postcmd_ko)) or self.description != p.description:
             return False
         # TODO check files
         return True
+
 
 class AFiles:
     def __init__(self):
@@ -264,58 +307,84 @@ class AFiles:
     def to_h(self):
         return self.toH()
 
-    def toURI(self, mp = None):
-        if mp == None:
+    def toURI(self, mp=None):
+        if mp is None:
             return [x.toURI() for x in self.internals]
         else:
             d = pulse2.package_server.common.Common().h_desc(mp)
             if "mirror_url" in d and d['mirror_url'] != '':
                 where = d['mirror_url']
             elif "url" in d and d['url'] != '':
-                where = "%s_files"%(d['url'])
+                where = "%s_files" % (d['url'])
             else:
-                where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
+                where = "%s://%s:%s%s_files" % (d['proto'],
+                                                d['server'], str(d['port']), d['mp'])
             return [x.toURI(mp, where) for x in self.internals]
 
+
 class File:
-    def __init__(self, name = None, path = '/', checksum = None, size = 0, access = None, id = None):
-        if access is None: # dont modify the default value!
+    def __init__(
+            self,
+            name=None,
+            path='/',
+            checksum=None,
+            size=0,
+            access=None,
+            id=None):
+        if access is None:  # dont modify the default value!
             access = {}
         if 'mirror' in access:
             self.where = access['mirror']
         else:
-            if not 'proto' in access:
+            if 'proto' not in access:
                 access['proto'] = 'http'
-            if not 'file_access_uri' in access:
+            if 'file_access_uri' not in access:
                 access['file_access_uri'] = '127.0.0.1'
-            if not 'file_access_port' in access:
+            if 'file_access_port' not in access:
                 access['file_access_port'] = '80'
-            if not 'file_access_path' in access:
+            if 'file_access_path' not in access:
                 access['file_access_path'] = ''
-            self.where = "%s://%s:%s%s" % (access['proto'], access['file_access_uri'], str(access['file_access_port']), access['file_access_path'])
+            self.where = "%s://%s:%s%s" % (access['proto'],
+                                           access['file_access_uri'],
+                                           str(access['file_access_port']),
+                                           access['file_access_path'])
 
         self.name = name
         self.path = path
         self.checksum = checksum
         self.size = size
-        if id == None:
-            self.id = md5sum("%s%s" % (self.toS().replace('\\', '/'), str(self.checksum)))
+        if id is None:
+            self.id = md5sum("%s%s" %
+                             (self.toS().replace('\\', '/'), str(self.checksum)))
         else:
             self.id = id
 
-    def toURI(self, mp = None, where = None):
-        if mp == None:
-            return ("%s%s/%s" % (self.where, self.path.replace('\\', '/'), self.name)).replace(' ', '%20')
+    def toURI(self, mp=None, where=None):
+        if mp is None:
+            return (
+                "%s%s/%s" %
+                (self.where,
+                 self.path.replace(
+                     '\\',
+                     '/'),
+                    self.name)).replace(
+                ' ',
+                '%20')
         else:
-            if where == None:
+            if where is None:
                 d = pulse2.package_server.common.Common().h_desc(mp)
                 if "mirror_url".d and d['mirror_url'] != '':
                     where = d['mirror_url']
                 elif "mirror_mp".d and d['mirror_mp'] != '':
-                    where = "%s://%s:%s%s" % (d['proto'], d['server'], str(d['port']), d['mirror_mp'])
+                    where = "%s://%s:%s%s" % (d['proto'],
+                                              d['server'],
+                                              str(d['port']),
+                                              d['mirror_mp'])
                 else:
-                    where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
-            ret = where + urllib.parse.quote("%s/%s" % (self.path.replace('\\', '/'), self.name))
+                    where = "%s://%s:%s%s_files" % (d['proto'],
+                                                    d['server'], str(d['port']), d['mp'])
+            ret = where + urllib.parse.quote("%s/%s" %
+                                             (self.path.replace('\\', '/'), self.name))
             return (ret)
 
     def toS(self):
@@ -330,19 +399,20 @@ class File:
         # written into a XML-RPC stream
         try:
             name = self.name.decode(locale.getpreferredencoding())
-        except:
+        except BaseException:
             name = self.name
         try:
             path = self.path.decode(locale.getpreferredencoding())
-        except:
+        except BaseException:
             path = self.path
-        return { 'name':name, 'path':path, 'id':self.id }
+        return {'name': name, 'path': path, 'id': self.id}
 
     def to_h(self):
         return self.toH()
 
+
 class Machine:
-    def __init__(self, name = None, uuid = None):
+    def __init__(self, name=None, uuid=None):
         self.name = name
         self.uuid = uuid
 
@@ -350,7 +420,7 @@ class Machine:
         return self.uuid
 
     def to_h(self):
-        return { 'name' : self.name, 'uuid' : self.uuid }
+        return {'name': self.name, 'uuid': self.uuid}
 
     def from_h(self, h):
         if 'name' in h:
@@ -366,13 +436,14 @@ class Machine:
     def equal(self, a):
         return self.name == a.name
 
+
 class User:
-    def __init__(self, name = None, uuid = None):
+    def __init__(self, name=None, uuid=None):
         self.name = name
         self.uuid = name
 
     def to_h(self):
-        return { 'name' : self.name, 'uuid' : self.uuid }
+        return {'name': self.name, 'uuid': self.uuid}
 
     def from_h(self, h):
         if 'name' in h:

@@ -4,7 +4,9 @@ import shutil
 import zipfile
 import logging
 import http.client
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 from base64 import b64encode
 
 from .config import PullClientConfig
@@ -19,7 +21,10 @@ class DlpClient(HTTPClient):
 
     def __init__(self):
         self.config = PullClientConfig.instance()
-        HTTPClient.__init__(self, self.config.Dlp.base_url, self.config.Service.name)
+        HTTPClient.__init__(
+            self,
+            self.config.Dlp.base_url,
+            self.config.Service.name)
         if self.config.Dlp.hostname:
             self.hostname = self.config.Dlp.hostname
         else:
@@ -38,7 +43,8 @@ class DlpClient(HTTPClient):
         except urllib.error.URLError:
             logger.error("Failed to contact the DLP.")
         except CookieSessionExpired:
-            logger.error("Can't establish the session cookie with the DLP. Check your time settings.")
+            logger.error(
+                "Can't establish the session cookie with the DLP. Check your time settings.")
         except http.client.InvalidURL as error:
             logger.error("DLP URL is invalid: %s" % error.message)
         else:
@@ -49,11 +55,15 @@ class DlpClient(HTTPClient):
             elif res.code == 401:
                 logger.error("Bad DLP authkey")
             elif res.code == 404:
-                logger.error("This machine is unknown to Pulse (%s, %s)" % (self.hostname, self.mac_list))
+                logger.error(
+                    "This machine is unknown to Pulse (%s, %s)" %
+                    (self.hostname, self.mac_list))
             elif res.code == 503:
                 logger.error("Scheduler gone")
             else:
-                logger.error("Failed to authenticate against the DLP (error %i)" % res.code)
+                logger.error(
+                    "Failed to authenticate against the DLP (error %i)" %
+                    res.code)
         return False
 
     def get_commands(self):
@@ -73,7 +83,9 @@ class DlpClient(HTTPClient):
             elif res.code == 503:
                 logger.error("Package server gone")
             else:
-                logger.error("Failed to get commands from the DLP (error %i)" % res.code)
+                logger.error(
+                    "Failed to get commands from the DLP (error %i)" %
+                    res.code)
         return []
 
     def clean_package(self, dir_path, zip_path):
@@ -111,10 +123,14 @@ class DlpClient(HTTPClient):
                 zip = zipfile.ZipFile(zip_path)
                 zip.extractall(dir_path)
                 # Remove downloaded zip
-                #os.unlink(zip_path)
+                # os.unlink(zip_path)
                 # Fix permissions
                 for file in os.listdir(dir_path):
-                    os.chmod(os.path.join(dir_path, file), stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH)
+                    os.chmod(
+                        os.path.join(
+                            dir_path,
+                            file),
+                        stat.S_IRWXU | stat.S_IRWXG | stat.S_IROTH)
                 logger.debug("Package extracted at %s" % dir_path)
                 return dir_path
             elif res.code == 401:
@@ -124,7 +140,9 @@ class DlpClient(HTTPClient):
             elif res.code == 404:
                 logger.error("File %s not found" % file)
             else:
-                logger.error("Failed to get package from the DLP (error: %i)" % res.code)
+                logger.error(
+                    "Failed to get package from the DLP (error: %i)" %
+                    res.code)
         return False
 
     def send_result(self, result):
@@ -133,7 +151,9 @@ class DlpClient(HTTPClient):
                 'return_code': result.exitcode}
         try:
             logger.debug("Sending result %s to DLP" % result)
-            res = self.post('step/%s/%s' % (result.command_id, result.step_name), data=data)
+            res = self.post(
+                'step/%s/%s' %
+                (result.command_id, result.step_name), data=data)
         except urllib.error.URLError:
             logger.error("Failed to contact the DLP.")
         except http.client.InvalidURL as error:
@@ -150,7 +170,9 @@ class DlpClient(HTTPClient):
             elif res.code == 503:
                 logger.error("Scheduler gone")
             else:
-                logger.error("Failed to send result to the DLP (error: %i)" % res.code)
+                logger.error(
+                    "Failed to send result to the DLP (error: %i)" %
+                    res.code)
         return False
 
     def send_inventory(self, inventory):
@@ -168,13 +190,16 @@ class DlpClient(HTTPClient):
             elif res.code == 403 and self.auth():
                 self.send_inventory(inventory)
             else:
-                logger.error("Failed to send the inventory to the DLP (error: %i)" % res.code)
+                logger.error(
+                    "Failed to send the inventory to the DLP (error: %i)" %
+                    res.code)
         return False
 
 
 if __name__ == "__main__":
     logger = logging.getLogger()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     h = logging.StreamHandler()
     h.setFormatter(formatter)
     h.setLevel(logging.DEBUG)

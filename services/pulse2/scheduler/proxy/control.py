@@ -32,7 +32,7 @@ from pulse2.scheduler.proxy.unix import Forwarder
 from pulse2.scheduler.proxy.buffer import SendingBuffer
 
 
-class App :
+class App:
     def __init__(self, config):
         self.config = config
         SendingBuffer().init(config)
@@ -87,7 +87,6 @@ class App :
     def _eb_got_forwarder(self, failure):
         self.logger.error("forwarder get failed: %s" % failure)
 
-
     def start_emitting_buffer(self):
         SendingBuffer().restore_buffer()
         SendingBuffer().register_sender(self.forwarder.protocol)
@@ -104,19 +103,23 @@ class App :
 
         SendingBuffer().backup_buffer()
 
-        if self.listening_port :
+        if self.listening_port:
             d = self.listening_port.stopListening()
+
             @d.addCallback
             def __cb(reason):
                 self.logger.info("XMLRPC Proxy: stop port succeed")
+
             @d.addErrback
             def __eb(failure):
-                self.logger.error("XMLRPC Proxy: stop listening error: %s" % failure)
-
-
+                self.logger.error(
+                    "XMLRPC Proxy: stop listening error: %s" %
+                    failure)
 
     def run(self):
-        self.logger.info('XMLRPC Proxy of scheduler %s: starting' % self.config.name)
+        self.logger.info(
+            'XMLRPC Proxy of scheduler %s: starting' %
+            self.config.name)
         try:
             if self.config.enablessl:
                 OpenSSLContext().setup(self.config.localcert,
@@ -126,18 +129,21 @@ class App :
                 reactor.listenSSL(
                     self.config.port,
                     SchedulerSite(self.xmlrpc_proxy),
-                    interface = self.config.host,
-                    contextFactory = OpenSSLContext().getContext()
-                    )
-                self.logger.info('XMLRPC Proxy of scheduler %s: activating SSL mode' % (self.config.name))
+                    interface=self.config.host,
+                    contextFactory=OpenSSLContext().getContext()
+                )
+                self.logger.info(
+                    'XMLRPC Proxy of scheduler %s: activating SSL mode' %
+                    (self.config.name))
             else:
                 self.listening_port = reactor.listenTCP(
                     self.config.port,
                     Site(self.xmlrpc_proxy),
-                    interface = self.config.host
-                    )
+                    interface=self.config.host
+                )
         except Exception as e:
-            self.logger.error('XMLRPC Proxy of scheduler %s: can\'t bind to %s:%d, reason is %s' %
-                    (self.config.name, self.config.host, self.config.port, e))
+            self.logger.error(
+                'XMLRPC Proxy of scheduler %s: can\'t bind to %s:%d, reason is %s' %
+                (self.config.name, self.config.host, self.config.port, e))
             return False
         return True

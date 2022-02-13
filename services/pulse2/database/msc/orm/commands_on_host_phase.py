@@ -34,12 +34,16 @@ class CommandsOnHostPhase(object):
 
     def is_ready(self):
         return self.is_state("ready")
+
     def is_running(self):
         return self.is_state("running")
+
     def is_failed(self):
         return self.is_state("failed")
+
     def is_waiting(self):
         return self.is_state("waiting")
+
     def is_done(self):
         return self.is_state("done")
 
@@ -62,8 +66,6 @@ class CommandsOnHostPhase(object):
         else:
             return False
 
-
-
     def set_ready(self):
         self.set_state("ready")
 
@@ -84,7 +86,8 @@ class CommandsOnHostPhase(object):
         logging.getLogger().debug("<%s> phase state: %s" % (self.name, state))
         self.flush()
 
-    def toDict(self, relations = False):
+    def toDict(self, relations=False):
         d = self.__dict__
-        if '_sa_instance_state' in d: del d['_sa_instance_state']
+        if '_sa_instance_state' in d:
+            del d['_sa_instance_state']
         return d

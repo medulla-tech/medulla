@@ -25,6 +25,7 @@
 import logging
 from pulse2.utils import Singleton
 
+
 class ComputerGroupManager(Singleton):
     components = {}
     main = 'dyngroup'
@@ -38,7 +39,9 @@ class ComputerGroupManager(Singleton):
         self.main = name
 
     def register(self, name, klass):
-        self.logger.debug("Registering computer group manager %s / %s" % (name, str(klass)))
+        self.logger.debug(
+            "Registering computer group manager %s / %s" %
+            (name, str(klass)))
         self.components[name] = klass
 
     def validate(self):
@@ -56,7 +59,7 @@ class ComputerGroupManager(Singleton):
         klass = self.components[self.main]
         return klass().requestresult_group(ctx, gid, min, max, filter)
 
-    def result_group(self, ctx, gid, min, max, filter, idOnly = True):
+    def result_group(self, ctx, gid, min, max, filter, idOnly=True):
         klass = self.components[self.main]
         return klass().result_group(ctx, gid, min, max, filter, idOnly)
 
@@ -64,7 +67,7 @@ class ComputerGroupManager(Singleton):
         klass = self.components[self.main]
         return klass().countresult_group(ctx, gid, filter)
 
-    def get_group_results(self, ctx, gid, min, max, filter, idOnly = True):
+    def get_group_results(self, ctx, gid, min, max, filter, idOnly=True):
         """
         Wrapper that according to the group type calls result_group (static
         or stored results for a group) or requestresult_group (dynamic group)
@@ -82,9 +85,10 @@ class ComputerGroupManager(Singleton):
         klass = self.components[self.main]
         return klass().request(ctx, query, bool, min, max, filter)
 
-    def result_group_by_name(self, ctx, name, min = 0, max = -1, filter = ''):
+    def result_group_by_name(self, ctx, name, min=0, max=-1, filter=''):
         klass = self.components[self.main]
         return klass().result_group_by_name(ctx, name, min, max, filter)
+
 
 class ComputerGroupI:
     def isdyn_group(self, ctx, gid):

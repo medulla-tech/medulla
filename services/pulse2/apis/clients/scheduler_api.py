@@ -30,7 +30,8 @@ from twisted.internet import defer
 
 from pulse2.apis.clients import Pulse2Api
 
-class SchedulerApi(Pulse2Api): # Singleton
+
+class SchedulerApi(Pulse2Api):  # Singleton
     def __init__(self, default_scheduler, *attr):
         self.name = "SchedulerApi"
         self.default_scheduler = default_scheduler
@@ -42,17 +43,22 @@ class SchedulerApi(Pulse2Api): # Singleton
     def convert2id(self, scheduler):
         self.logger.debug("Looking up scheduler id using: " + str(scheduler))
         ret = None
-        if type(scheduler) == dict:
-            if "server" in scheduler and "port" in scheduler and scheduler["server"] and scheduler["port"]:
+        if isinstance(scheduler, dict):
+            if "server" in scheduler and "port" in scheduler and scheduler[
+                    "server"] and scheduler["port"]:
                 (scheduler, credentials) = makeURL(scheduler)
             elif "mountpoint" in scheduler and scheduler["mountpoint"]:
                 ret = scheduler["mountpoint"]
         elif type(scheduler) in (str, str):
             ret = scheduler
         if not ret:
-            #if type(scheduler) in (str, unicode) and scheduler in self.config.scheduler_url2id:
-            if type(scheduler) in (str, str) and scheduler in self.config.scheduler_url2id:
-                self.logger.debug("Found scheduler id from MSC config file using this key %s" % scheduler)
+            # if type(scheduler) in (str, unicode) and scheduler in
+            # self.config.scheduler_url2id:
+            if type(scheduler) in (
+                    str, str) and scheduler in self.config.scheduler_url2id:
+                self.logger.debug(
+                    "Found scheduler id from MSC config file using this key %s" %
+                    scheduler)
                 ret = self.config.scheduler_url2id[scheduler]
         if not ret:
             self.logger.debug("Using default scheduler")
@@ -61,7 +67,7 @@ class SchedulerApi(Pulse2Api): # Singleton
         return ret
 
     def cb_convert2id(self, result):
-        if type(result) == list:
+        if isinstance(result, list):
             return [self.convert2id(s) for s in result]
         else:
             return self.convert2id(result)
@@ -90,6 +96,6 @@ class SchedulerApi(Pulse2Api): # Singleton
             return defer.succeed([self.default_scheduler for m in machines])
 
     def convertMachineIntoH(self, machine):
-        if type(machine) != dict:
-            machine = {'uuid':machine}
+        if not isinstance(machine, dict):
+            machine = {'uuid': machine}
         return machine

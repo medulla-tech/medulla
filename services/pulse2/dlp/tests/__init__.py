@@ -38,30 +38,47 @@ class TestAuth(unittest.TestCase):
 
     def testWrongAuth(self):
         with self.assertRaises(HTTPError) as context:
-            self.client.post('/auth', {'authkey': 'FOO', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+            self.client.post('/auth',
+                             {'authkey': 'FOO',
+                              'hostname': 'test1',
+                              'mac_list': 'AA:BB:CC:DD:EE:FF'})
         self.assertEqual(context.exception.code, 401)
 
     def testBasHostname(self):
         with self.assertRaises(HTTPError) as context:
-            self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'FOO', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+            self.client.post('/auth',
+                             {'authkey': 'TEST',
+                              'hostname': 'FOO',
+                              'mac_list': 'AA:BB:CC:DD:EE:FF'})
         self.assertEqual(context.exception.code, 404)
 
     def testCorrectAuth(self):
-        result = self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        result = self.client.post('/auth',
+                                  {'authkey': 'TEST',
+                                   'hostname': 'test1',
+                                   'mac_list': 'AA:BB:CC:DD:EE:FF'})
         self.assertEqual(result.code, 200)
 
     def testMultipleMACs(self):
-        result = self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': ['AA:BB:CC:DD:EE:FF', 'AA:BB:CC:DD:EE:00']})
+        result = self.client.post('/auth',
+                                  {'authkey': 'TEST',
+                                   'hostname': 'test1',
+                                   'mac_list': ['AA:BB:CC:DD:EE:FF',
+                                                'AA:BB:CC:DD:EE:00']})
         self.assertEqual(result.code, 200)
 
     def testBadMAC(self):
         with self.assertRaises(HTTPError) as context:
-            self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC'})
+            self.client.post('/auth',
+                             {'authkey': 'TEST',
+                              'hostname': 'test1',
+                              'mac_list': 'AA:BB:CC'})
         self.assertEqual(context.exception.code, 400)
 
     def testBadParams(self):
         with self.assertRaises(HTTPError) as context:
-            self.client.post('/auth', {'authkey': 'TEST', 'host': 'test1', 'macs': 'AA:BB:CC'})
+            self.client.post(
+                '/auth', {'authkey': 'TEST', 'host': 'test1', 'macs': 'AA:BB:CC'})
         self.assertEqual(context.exception.code, 404)
 
 
@@ -72,10 +89,15 @@ class TestCommands(unittest.TestCase):
         clean_packages()
 
     def testGetCommands(self):
-        self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        self.client.post('/auth',
+                         {'authkey': 'TEST',
+                          'hostname': 'test1',
+                          'mac_list': 'AA:BB:CC:DD:EE:FF'})
         result = self.client.get('/commands')
         self.assertEqual(result.code, 200)
-        self.assertEqual(result.data[0]['package_uuid'], 'd13d3eaa-587a-11e3-adfa-080027fd96ca')
+        self.assertEqual(
+            result.data[0]['package_uuid'],
+            'd13d3eaa-587a-11e3-adfa-080027fd96ca')
 
     def testGetCommandsNoAuth(self):
         with self.assertRaises(HTTPError) as context:
@@ -83,7 +105,10 @@ class TestCommands(unittest.TestCase):
         self.assertEqual(context.exception.code, 403)
 
     def testPackageCache(self):
-        self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        self.client.post('/auth',
+                         {'authkey': 'TEST',
+                          'hostname': 'test1',
+                          'mac_list': 'AA:BB:CC:DD:EE:FF'})
         result = self.client.get('/commands')
         uuid = result.data[0]['package_uuid']
         infos_1 = os.stat('/tmp/test_packages/%s.zip' % uuid)
@@ -107,9 +132,13 @@ class TestFile(unittest.TestCase):
         clean_packages()
 
     def testFileDownload(self):
-        self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        self.client.post('/auth',
+                         {'authkey': 'TEST',
+                          'hostname': 'test1',
+                          'mac_list': 'AA:BB:CC:DD:EE:FF'})
         result = self.client.get('/commands')
-        result = self.client.get('/file/%s' % result.data[0]['package_uuid'] + ".zip")
+        result = self.client.get('/file/%s' %
+                                 result.data[0]['package_uuid'] + ".zip")
         fd, tmp_file = tempfile.mkstemp()
         f = os.fdopen(fd, 'w+')
         f.write(result.data)
@@ -122,7 +151,10 @@ class TestFile(unittest.TestCase):
         os.unlink(tmp_file)
 
     def testNotFoundDownload(self):
-        self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        self.client.post('/auth',
+                         {'authkey': 'TEST',
+                          'hostname': 'test1',
+                          'mac_list': 'AA:BB:CC:DD:EE:FF'})
         self.client.get('/commands')
         with self.assertRaises(HTTPError) as context:
             self.client.get('/file/notfound')
@@ -130,10 +162,16 @@ class TestFile(unittest.TestCase):
 
     def testNoRightsDownload(self):
         # generate package for test2
-        self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test2', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        self.client.post('/auth',
+                         {'authkey': 'TEST',
+                          'hostname': 'test2',
+                          'mac_list': 'AA:BB:CC:DD:EE:FF'})
         self.client.get('/commands')
         # auth as test1 and try to download test2 package
-        self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        self.client.post('/auth',
+                         {'authkey': 'TEST',
+                          'hostname': 'test1',
+                          'mac_list': 'AA:BB:CC:DD:EE:FF'})
         self.client.get('/commands')
         with self.assertRaises(HTTPError) as context:
             self.client.get('/file/fbcc96e2-58fd-11e3-877e-080027fd96ca.zip')
@@ -150,36 +188,60 @@ class TestStep(unittest.TestCase):
         clean_packages()
 
     def testSendResult(self):
-        self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        self.client.post('/auth',
+                         {'authkey': 'TEST',
+                          'hostname': 'test1',
+                          'mac_list': 'AA:BB:CC:DD:EE:FF'})
         self.client.get('/commands')
-        result = self.client.post('/step/1/upload/', data={'stdout': 'stdout', 'stderr': 'stderr', 'return_code': 0})
+        result = self.client.post(
+            '/step/1/upload/',
+            data={
+                'stdout': 'stdout',
+                'stderr': 'stderr',
+                'return_code': 0})
         self.assertEqual(result.code, 201)
 
     def testSendResultBadCohId(self):
-        self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        self.client.post('/auth',
+                         {'authkey': 'TEST',
+                          'hostname': 'test1',
+                          'mac_list': 'AA:BB:CC:DD:EE:FF'})
         with self.assertRaises(HTTPError) as context:
-            self.client.post('/step/foo/upload/', data={'stdout': 'stdout', 'stderr': 'stderr', 'return_code': 0})
+            self.client.post(
+                '/step/foo/upload/',
+                data={
+                    'stdout': 'stdout',
+                    'stderr': 'stderr',
+                    'return_code': 0})
         self.assertEqual(context.exception.code, 400)
 
-    #def testSendResultWrongCohId(self):
+    # def testSendResultWrongCohId(self):
         #self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
-        #self.client.get('/commands')
-        #with self.assertRaises(HTTPError) as context:
-            #self.client.post('/step/2/upload/', data={'stdout': 'stdout', 'stderr': 'stderr', 'return_code': 0})
+        # self.client.get('/commands')
+        # with self.assertRaises(HTTPError) as context:
+        #self.client.post('/step/2/upload/', data={'stdout': 'stdout', 'stderr': 'stderr', 'return_code': 0})
         #self.assertEqual(context.exception.code, 401)
 
-    #def testSendResultWrongStepId(self):
+    # def testSendResultWrongStepId(self):
         #self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
-        #self.client.get('/commands')
-        #with self.assertRaises(HTTPError) as context:
-            #self.client.post('/step/1/foo/', data={'stdout': 'stdout', 'stderr': 'stderr', 'return_code': 0})
+        # self.client.get('/commands')
+        # with self.assertRaises(HTTPError) as context:
+        #self.client.post('/step/1/foo/', data={'stdout': 'stdout', 'stderr': 'stderr', 'return_code': 0})
         #self.assertEqual(context.exception.code, 401)
 
     def testSenfResultServerError(self):
-        self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test2', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
+        self.client.post('/auth',
+                         {'authkey': 'TEST',
+                          'hostname': 'test2',
+                          'mac_list': 'AA:BB:CC:DD:EE:FF'})
         self.client.get('/commands')
         with self.assertRaises(HTTPError) as context:
-            self.client.post('/step/2/upload/', data={'stdout': 'stdout', 'stderr': 'stderr', 'return_code': 0})
+            self.client.post(
+                '/step/2/upload/',
+                data={
+                    'stdout': 'stdout',
+                    'stderr': 'stderr',
+                    'return_code': 0})
         self.assertEqual(context.exception.code, 503)
 
     def tearDown(self):

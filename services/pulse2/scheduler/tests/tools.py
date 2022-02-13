@@ -146,18 +146,22 @@ class TableFactory(type):
 
     def __new__(cls, name, bases, attrs):
         # all table names to generate
-        tables = [t.replace('_cols','') for t in list(cls.__dict__.keys()) if t.endswith ('_cols')]
+        tables = [
+            t.replace(
+                '_cols',
+                '') for t in list(
+                cls.__dict__.keys()) if t.endswith('_cols')]
 
         for attr_name in tables:
             # gets the ORM class
-            klass =  getattr(cls, "%s_class" % attr_name)
+            klass = getattr(cls, "%s_class" % attr_name)
             # columns parsing
             cols_attr = getattr(cls, "%s_cols" % attr_name)
-            cols = cols_attr.replace("|","").replace(" ","").split("\n")
+            cols = cols_attr.replace("|", "").replace(" ", "").split("\n")
             tab_attrs = dict([(a, None) for a in cols])
             # columns are created and attached on ORM class
             table_class = type(attr_name, (klass,), tab_attrs)
             instance = table_class()
-            attrs.update({attr_name: instance,})
+            attrs.update({attr_name: instance, })
 
-        return type.__new__(cls,name, bases, attrs)
+        return type.__new__(cls, name, bases, attrs)

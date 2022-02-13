@@ -30,26 +30,36 @@ import os
 from pulse2.package_server.common import Common
 from pulse2.package_server.xmlrpc import MyXmlrpc
 
+
 class PackageApiGet(MyXmlrpc):
     type = 'PackageApiGet'
-    def __init__(self, mp, name = ''):
+
+    def __init__(self, mp, name=''):
         MyXmlrpc.__init__(self)
         self.logger = logging.getLogger()
         self.name = name
         self.mp = mp
-        if Common().getPackages(self.mp) == None:
-            e = "(%s) %s : can't initialise at %s correctly"%(self.type, self.name, self.mp)
+        if Common().getPackages(self.mp) is None:
+            e = "(%s) %s : can't initialise at %s correctly" % (
+                self.type, self.name, self.mp)
             self.logger.error(e)
             raise e
-        self.logger.info("(%s) %s : initialised with packages : %s"%(self.type, self.name, str(list(Common().getPackages(self.mp).keys()))))
+        self.logger.info(
+            "(%s) %s : initialised with packages : %s" %
+            (self.type, self.name, str(
+                list(
+                    Common().getPackages(
+                        self.mp).keys()))))
 
     def xmlrpc_getServerDetails(self):
-        return [Common().package(x).toH() for x in Common().getPackages(self.mp)]
+        return [Common().package(x).toH()
+                for x in Common().getPackages(self.mp)]
 
-    def xmlrpc_getAllPackages(self, mirror = None):
-        return [Common().package(x).toH() for x in Common().getPackages(self.mp)]
+    def xmlrpc_getAllPackages(self, mirror=None):
+        return [Common().package(x).toH()
+                for x in Common().getPackages(self.mp)]
 
-    def xmlrpc_getAllPendingPackages(self, mirror = None):
+    def xmlrpc_getAllPendingPackages(self, mirror=None):
         ret = Common().getPendingPackages(self.mp)
         r = []
         for x in ret:
@@ -136,8 +146,10 @@ class PackageApiGet(MyXmlrpc):
     def xmlrpc_getPackageBoolcnd(self, pid):
         return Common().package(pid, self.mp).boolcnd
 
-    def xmlrpc_getPackageFiles(self, pid): # TODO remove the internals
-        return [x.toH() for x in Common().package(pid, self.mp).files.internals]
+    def xmlrpc_getPackageFiles(self, pid):  # TODO remove the internals
+        return [
+            x.toH() for x in Common().package(
+                pid, self.mp).files.internals]
 
     def xmlrpc_getFileChecksum(self, file):
         return None

@@ -31,8 +31,16 @@ import pulse2.utils
 import imp
 import os
 
+
 class MMAssignAlgo(pulse2.utils.Singleton):
-    def init(self, mirrors, mirrors_fallback, package_apis, url2mirrors, url2mirrors_fallback, url2package_apis):
+    def init(
+            self,
+            mirrors,
+            mirrors_fallback,
+            package_apis,
+            url2mirrors,
+            url2mirrors_fallback,
+            url2package_apis):
         self.logger = logging.getLogger()
         self.mirrors = mirrors
         self.mirrors_fallback = mirrors_fallback
@@ -50,6 +58,7 @@ class MMAssignAlgo(pulse2.utils.Singleton):
     def getMachinePackageApi(self, machine):
         raise Exception("getMachinePackageApi not defined")
 
+
 class UPAssignAlgo(pulse2.utils.Singleton):
     def init(self, package_api_put):
         self.logger = logging.getLogger()
@@ -58,14 +67,20 @@ class UPAssignAlgo(pulse2.utils.Singleton):
     def getUserPackageApi(self, user):
         raise Exception("getUserPackageApi not defined")
 
+
 class IntAssignAlgoManager(pulse2.utils.Singleton):
     name = ''
+
     def getAlgo(self, assign_algo):
         wanted = assign_algo
         algo, assign_algo = self._getAlgo(assign_algo)
-        logging.getLogger().debug("Using the %s %s Assign Algorythm"%(assign_algo, self.name))
+        logging.getLogger().debug(
+            "Using the %s %s Assign Algorythm" %
+            (assign_algo, self.name))
         if wanted != assign_algo:
-            logging.getLogger().warning("Can't load the wanted one (conf:%s, use:%s)"%(wanted, assign_algo))
+            logging.getLogger().warning(
+                "Can't load the wanted one (conf:%s, use:%s)" %
+                (wanted, assign_algo))
         return algo
 
     def _getAlgo(self, assign_algo):
@@ -94,19 +109,23 @@ class IntAssignAlgoManager(pulse2.utils.Singleton):
                 assign_algo = 'default'
                 ret, assign_algo = self._getAlgo(assign_algo)
             else:
-                logging.getLogger().error("Cant load any %s Assign Algorythm"%(self.name))
+                logging.getLogger().error("Cant load any %s Assign Algorythm" % (self.name))
                 ret = None
         return (ret, assign_algo)
 
     def getClassInModule(self, mod):
         raise Exception("getClassInModule not defined")
 
+
 class MMAssignAlgoManager(IntAssignAlgoManager):
     name = 'Machine/Mirrors'
+
     def getClassInModule(self, mod):
         return mod.MMUserAssignAlgo()
 
+
 class UPAssignAlgoManager(IntAssignAlgoManager):
     name = 'User/PackagePut'
+
     def getClassInModule(self, mod):
         return mod.UPUserAssignAlgo()

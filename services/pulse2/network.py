@@ -37,7 +37,8 @@ log = logging.getLogger()
 # (To get a bit value, use index of them)
 SUBNET_BITS = (0, 128, 192, 224, 240, 248, 252, 254, 255)
 
-class NetUtils :
+
+class NetUtils:
     """ Common network utils """
 
     @classmethod
@@ -53,7 +54,13 @@ class NetUtils :
         iface = get_default_netif()
 
         n_sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        netmask = fcntl.ioctl(n_sck, SIOCGIFNETMASK, struct.pack('256s', iface))[20:24]
+        netmask = fcntl.ioctl(
+            n_sck,
+            SIOCGIFNETMASK,
+            struct.pack(
+                '256s',
+                iface))[
+            20:24]
 
         return socket.inet_ntoa(netmask)
 
@@ -75,14 +82,16 @@ class NetUtils :
         @rtype: bool
         """
         if not cls.check_netmask(network, netmask):
-            log.warn("network %s is not matching to netmask %s !" % (network, netmask))
+            log.warn(
+                "network %s is not matching to netmask %s !" %
+                (network, netmask))
 
-        ip_num = struct.unpack('>L',socket.inet_aton(ip))[0]
+        ip_num = struct.unpack('>L', socket.inet_aton(ip))[0]
 
         cidr = cls.netmask_to_cidr(netmask)
-        netmask_of_network = struct.unpack('>L',socket.inet_aton(network))[0]
+        netmask_of_network = struct.unpack('>L', socket.inet_aton(network))[0]
 
-        masked = ip_num & (4294967295<<(32-int(cidr)))
+        masked = ip_num & (4294967295 << (32 - int(cidr)))
 
         return masked == netmask_of_network
 
@@ -102,10 +111,10 @@ class NetUtils :
         """
 
         cidr = cls.netmask_to_cidr(netmask)
-        netmask_of_network = struct.unpack('>L',socket.inet_aton(network))[0]
+        netmask_of_network = struct.unpack('>L', socket.inet_aton(network))[0]
 
-        return netmask_of_network == netmask_of_network & (4294967295<<(32-int(cidr)))
-
+        return netmask_of_network == netmask_of_network & (
+            4294967295 << (32 - int(cidr)))
 
     @classmethod
     def netmask_to_cidr(cls, netmask):
@@ -123,14 +132,13 @@ class NetUtils :
         dec_bytes = [int(n) for n in netmask.split(".")]
 
         count = 0
-        for byte in dec_bytes :
+        for byte in dec_bytes:
             while byte != 0:
                 if byte % 2 == 1:
                     count += 1
                 byte = byte / 2
 
         return count
-
 
     @classmethod
     def has_enough_info(cls, iface):
@@ -145,9 +153,9 @@ class NetUtils :
         """
         key = "ip"
 
-        if key not in iface :
+        if key not in iface:
             return False
-        if not iface[key] or len(iface[key].strip()) == 0 :
+        if not iface[key] or len(iface[key].strip()) == 0:
             return False
         return True
 
@@ -162,10 +170,10 @@ class NetUtils :
         @return: True if correct IPv4 format
         @rtype: bool
         """
-        if "." in candidate :
-            if len(candidate.split(".")) == 4 :
-                for num in candidate.split(".") :
-                    if not isdigit(num) :
+        if "." in candidate:
+            if len(candidate.split(".")) == 4:
+                for num in candidate.split("."):
+                    if not isdigit(num):
                         return False
                 return True
         return False
@@ -181,12 +189,12 @@ class NetUtils :
         @return: True if netmask is valid
         @rtype: bool
         """
-        if not NetUtils.is_ipv4_format(netmask) :
+        if not NetUtils.is_ipv4_format(netmask):
             return False
         for element in netmask.split("."):
             if not isdigit(element):
                 return False
-            if int(element) not in SUBNET_BITS :
+            if int(element) not in SUBNET_BITS:
                 return False
         return True
 
@@ -225,11 +233,11 @@ class NetUtils :
             s.shutdown(2)
             s.close()
             return False
-        except :
+        except BaseException:
             return True
 
 
-class NetworkDetect :
+class NetworkDetect:
     """ Detecting of the network/broadcast addresses """
 
     def __init__(self, ip, netmask):
@@ -241,14 +249,14 @@ class NetworkDetect :
         @type netmask: str
         """
 
-        if NetUtils.is_ipv4_format(ip) :
+        if NetUtils.is_ipv4_format(ip):
             self.ip = ip
-        else :
+        else:
             raise Exception("Invalid format of IP address")
 
-        if NetUtils.netmask_validate(netmask) :
+        if NetUtils.netmask_validate(netmask):
             self.netmask = netmask
-        else :
+        else:
             raise Exception("Invalid format of netmask")
 
         self.subnets = self.get_subnets(netmask)
@@ -267,7 +275,7 @@ class NetworkDetect :
 
         TOTAL_BITS = 8
 
-        for element in NetUtils.ipv4_to_dec(netmask) :
+        for element in NetUtils.ipv4_to_dec(netmask):
 
             n_bits = SUBNET_BITS.index(element)
             m_bits = TOTAL_BITS - n_bits
@@ -276,7 +284,6 @@ class NetworkDetect :
             last_bit_value = 2 ** n_bits
 
             yield (nbr_subnets, last_bit_value)
-
 
     @classmethod
     def get_valid_range(cls, nbr, last_bit, value):
@@ -296,22 +303,21 @@ class NetworkDetect :
         @rtype: tuple
         """
 
-        if nbr == 256 :
+        if nbr == 256:
             return (0, 255)
 
         start = 0
         end = 0
 
-        for attempt in range(0, nbr) :
+        for attempt in range(0, nbr):
 
             end = attempt * last_bit - 1
 
-            if value in range(start, end) :
+            if value in range(start, end):
                 return (start, end)
             start = attempt * last_bit
 
         return (value, value)
-
 
     def get_ranges(self):
         """
@@ -321,9 +327,9 @@ class NetworkDetect :
         @rtype: generator
         """
         ip_dec = NetUtils.ipv4_to_dec(self.ip)
-        ip_mask =  NetUtils.ipv4_to_dec(self.netmask)
+        ip_mask = NetUtils.ipv4_to_dec(self.netmask)
         for i in range(len(ip_dec)):
-            val=ip_dec[i]&ip_mask[i]
+            val = ip_dec[i] & ip_mask[i]
             yield val
 
     @property
@@ -332,7 +338,7 @@ class NetworkDetect :
         @return: calculated IPv4 network address
         @rtype: str
         """
-        decimals = [ str(r) for r in self.get_ranges() ]
+        decimals = [str(r) for r in self.get_ranges()]
         return ".".join(decimals)
 
     @property
@@ -341,11 +347,11 @@ class NetworkDetect :
         @return: calculated IPv4 broadcast address
         @rtype: str
         """
-        decimals = [ str(r) for r in self.get_ranges() ]
+        decimals = [str(r) for r in self.get_ranges()]
         return ".".join(decimals)
 
 
-class ResolvingCallable :
+class ResolvingCallable:
     """
     An abstract class to implement a resolving callable.
 
@@ -393,21 +399,23 @@ class ResolvingCallable :
         ps = subprocess.Popen(cmd, shell=True,
                               stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE)
-        try :
+        try:
             out, err = ps.communicate()
-        except Exception as e :
-            log.error("While executing command: %s / Raised exception: %s" % (cmd, str(e)))
+        except Exception as e:
+            log.error(
+                "While executing command: %s / Raised exception: %s" %
+                (cmd, str(e)))
 
-        if err :
-            log.error("While executing command: %s / Received error mesage: %s" % (cmd, err))
+        if err:
+            log.error(
+                "While executing command: %s / Received error mesage: %s" %
+                (cmd, err))
 
         log.debug("Command executed (%s) result: %s" % (cmd, out))
         return out
 
-
     def __call__(self, target):
         raise NotImplementedError
-
 
 
 class ChoosePerIP (ResolvingCallable):
@@ -428,30 +436,33 @@ class ChoosePerIP (ResolvingCallable):
         hostname, fqdn, ifaces = target
         last_ip = last_netmask = None
 
-        for iface in ifaces :
-            if NetUtils.has_enough_info(iface) :
+        for iface in ifaces:
+            if NetUtils.has_enough_info(iface):
                 iface_ip = iface["ip"]
                 if not NetUtils.is_ipv4_format(iface_ip):
-                    log.debug("Interface %s not matching to IPv4 format, skiping" % iface_ip)
+                    log.debug(
+                        "Interface %s not matching to IPv4 format, skiping" %
+                        iface_ip)
                     continue
-                for pref_ip, pref_netmask in self.networks :
+                for pref_ip, pref_netmask in self.networks:
 
-                    log.debug("Comparing host '%s'(%s) with my preferred network (%s/%s)" %
-                            (hostname, iface_ip, pref_ip, pref_netmask))
+                    log.debug(
+                        "Comparing host '%s'(%s) with my preferred network (%s/%s)" %
+                        (hostname, iface_ip, pref_ip, pref_netmask))
 
-                    if NetUtils.on_same_network(iface_ip, pref_ip, pref_netmask) :
+                    if NetUtils.on_same_network(
+                            iface_ip, pref_ip, pref_netmask):
 
                         return iface_ip
 
                     last_ip = pref_ip
                     last_netmask = pref_netmask
 
-        if not last_ip and not last_netmask :
+        if not last_ip and not last_netmask:
             log.debug("Not enough info to check host='%s'" % hostname)
-        else :
+        else:
             log.debug("No match host='%s'with preferred network(%s/%s)" %
-                     (hostname, last_ip, last_netmask))
-
+                      (hostname, last_ip, last_netmask))
 
         return None
 
@@ -464,11 +475,12 @@ class ChoosePerShortname (ResolvingCallable):
 
     def validate(self):
         if not os.path.exists(self.hosts_path):
-            log.warn("Command '%s' not found, omitting '%s' method." % (self.hosts_path, self.name))
+            log.warn(
+                "Command '%s' not found, omitting '%s' method." %
+                (self.hosts_path, self.name))
             return False
-        else :
+        else:
             return True
-
 
     def __call__(self, target):
         """
@@ -489,13 +501,14 @@ class ChoosePerShortname (ResolvingCallable):
         # <example of a positive response> :
         # 192.168.127.3   <hostname>
         # if negative, response empty
-        if out :
-            if len(out.split()) > 1 :
-                ip = out.split()[0] # 1st place is ip
-                if NetUtils.is_ipv4_format(ip) :
+        if out:
+            if len(out.split()) > 1:
+                ip = out.split()[0]  # 1st place is ip
+                if NetUtils.is_ipv4_format(ip):
                     return ip
 
         return None
+
 
 class ChoosePerFQDN (ResolvingCallable):
 
@@ -505,11 +518,12 @@ class ChoosePerFQDN (ResolvingCallable):
 
     def validate(self):
         if not os.path.exists(self.hosts_path):
-            log.warn("Command '%s' not found, omitting '%s' method." % (self.hosts_path, self.name))
+            log.warn(
+                "Command '%s' not found, omitting '%s' method." %
+                (self.hosts_path, self.name))
             return False
-        else :
+        else:
             return True
-
 
     def __call__(self, target):
         """
@@ -530,18 +544,16 @@ class ChoosePerFQDN (ResolvingCallable):
         # <example of a positive response> :
         # 192.168.127.3   <hostname>
         # if negative, response empty
-        if out :
-            if len(out.split()) > 1 :
-                ip = out.split()[0] # 1st place is ip
-                if NetUtils.is_ipv4_format(ip) :
+        if out:
+            if len(out.split()) > 1:
+                ip = out.split()[0]  # 1st place is ip
+                if NetUtils.is_ipv4_format(ip):
                     return ip
 
         return None
 
 
-
-
-class ChooseFirstComplete (ResolvingCallable) :
+class ChooseFirstComplete (ResolvingCallable):
 
     name = "first"
 
@@ -558,12 +570,13 @@ class ChooseFirstComplete (ResolvingCallable) :
 
         """
         hostname, fqdn, ifaces = target
-        for iface in ifaces :
-            if NetUtils.has_enough_info(iface) :
+        for iface in ifaces:
+            if NetUtils.has_enough_info(iface):
                 return iface["ip"]
         return None
 
-class ChoosePerNMBLookup (ResolvingCallable) :
+
+class ChoosePerNMBLookup (ResolvingCallable):
 
     name = "netbios"
 
@@ -573,9 +586,8 @@ class ChoosePerNMBLookup (ResolvingCallable) :
         if not os.path.exists(self.netbios_path):
             log.warn("Samba utils seems not installed, omitting nmblookup method.")
             return False
-        else :
+        else:
             return True
-
 
     def __call__(self, target):
         """
@@ -602,22 +614,22 @@ class ChoosePerNMBLookup (ResolvingCallable) :
         # name_query failed to find name WORKSTATION_NAME
 
         # So, let's go to parse!
-        if "\n" in out and len(out.split("\n")) > 1 :
+        if "\n" in out and len(out.split("\n")) > 1:
 
             second_line = out.split("\n")[1]
 
             if not second_line.startswith("name_query") \
-            and " " in second_line :
+                    and " " in second_line:
 
                 ip = second_line.split(" ")[0]
 
-                if NetUtils.is_ipv4_format(ip) :
+                if NetUtils.is_ipv4_format(ip):
                     return ip
 
         return None
 
 
-class IPResolversContainer :
+class IPResolversContainer:
     """
     Registering of all resolvers to get a correct network interface
     of a client machine.
@@ -636,7 +648,8 @@ class IPResolversContainer :
         @return: True if candidate is a resolver
         @rtype: bool
         """
-        return inspect.isclass(candidate) and issubclass(candidate, ResolvingCallable)
+        return inspect.isclass(candidate) and issubclass(
+            candidate, ResolvingCallable)
 
     @classmethod
     def get_all_resolvers(cls):
@@ -648,7 +661,7 @@ class IPResolversContainer :
         """
         return [r for r in list(globals().values()) if cls.is_resolver(r)]
 
-    def register_resolvers (self, resolve_order, resolvers=None, **kwargs) :
+    def register_resolvers(self, resolve_order, resolvers=None, **kwargs):
         """
         Registering of resolvers.
 
@@ -664,27 +677,29 @@ class IPResolversContainer :
         as a prefix, like 'dns_value', 'nmblookup_path', etc.
         """
         self.resolvers = []
-        if not resolvers :
+        if not resolvers:
             resolvers = self.get_all_resolvers()
-        else :
-            # testing if all the externals resolvers are a ResolvingCallable subclass
-            for i, candidate in enumerate(resolvers) :
-                if not self.is_resolver(candidate) :
-                    log.warn("Candidate %s isn't a resolver - ignoring" % str(candidate))
+        else:
+            # testing if all the externals resolvers are a ResolvingCallable
+            # subclass
+            for i, candidate in enumerate(resolvers):
+                if not self.is_resolver(candidate):
+                    log.warn(
+                        "Candidate %s isn't a resolver - ignoring" %
+                        str(candidate))
                     resolvers.pop(i)
 
-        for name in resolve_order :
+        for name in resolve_order:
 
-            for resolver_class in resolvers :
+            for resolver_class in resolvers:
                 resolver = resolver_class(self.networks, **kwargs)
 
-                if name == resolver.name :
+                if name == resolver.name:
                     if resolver.validate():
                         self.resolvers.append(resolver)
 
 
-
-class IPResolve (IPResolversContainer) :
+class IPResolve (IPResolversContainer):
     """
     Detecting a reachable network interface on local network
     based on inventory info ("network" section).
@@ -703,7 +718,7 @@ class IPResolve (IPResolversContainer) :
 
         self.register_resolvers(resolve_order, resolvers=None, **kwargs)
 
-    def _validate_target (self, target):
+    def _validate_target(self, target):
         """
         Validating of target format
 
@@ -714,28 +729,33 @@ class IPResolve (IPResolversContainer) :
         @rtype: bool
         """
         if not (isinstance(target, tuple) or isinstance(target, list)):
-            log.warn("Invalid target format: Tuple or list required, not %s" % type(target))
+            log.warn(
+                "Invalid target format: Tuple or list required, not %s" %
+                type(target))
             return False
 
-        if len(target) != 3 :
+        if len(target) != 3:
             log.warn("Invalid target format: Invalid length.")
             return False
 
         hostname, fqdn, ifaces = target
 
-        if not isinstance(ifaces, list) :
-            log.warn("Invalid target format: List required, not %s" % type(ifaces))
+        if not isinstance(ifaces, list):
+            log.warn(
+                "Invalid target format: List required, not %s" %
+                type(ifaces))
             return False
 
-        for iface in ifaces :
+        for iface in ifaces:
             for key, value in list(iface.items()):
-                if not isinstance(value, str) :
-                    log.warn("Invalid interface format, section '%s' (hostname='%s')" % (key, hostname))
+                if not isinstance(value, str):
+                    log.warn(
+                        "Invalid interface format, section '%s' (hostname='%s')" %
+                        (key, hostname))
                     return False
         return True
 
-
-    def get_from_target(self, target) :
+    def get_from_target(self, target):
         """
         Final getting of valid IP address.
 
@@ -751,25 +771,30 @@ class IPResolve (IPResolversContainer) :
             log.error("Bad target format")
             return None
 
-        for resolver in self.resolvers :
+        for resolver in self.resolvers:
 
             log.debug("Trying to apply '%s' method ..." % resolver.name)
             result = resolver(target)
-            if result :
-                log.info("IP address resolved by '%s' method : %s" % (resolver.name, result))
+            if result:
+                log.info(
+                    "IP address resolved by '%s' method : %s" %
+                    (resolver.name, result))
                 return result
-            else :
-                log.debug("No match, method '%s' ignored, trying the next one..." % resolver.name)
+            else:
+                log.debug(
+                    "No match, method '%s' ignored, trying the next one..." %
+                    resolver.name)
                 continue
 
         return None
 
-class PreferredNetworkParser :
+
+class PreferredNetworkParser:
 
     def __init__(self, default_ip, default_netmask):
-        if not default_ip :
+        if not default_ip:
             default_ip = get_default_ip()
-        if not default_netmask :
+        if not default_netmask:
             default_netmask = NetUtils.get_netmask()
 
         net_detect = NetworkDetect(default_ip, default_netmask)
@@ -782,26 +807,29 @@ class PreferredNetworkParser :
     @classmethod
     def check_str_format(cls, value):
         networks = value.split()
-        for ip_slash_mask in networks :
-            if not "/" in ip_slash_mask :
+        for ip_slash_mask in networks:
+            if "/" not in ip_slash_mask:
                 return False
-            elif len(ip_slash_mask.split("/")) != 2 :
+            elif len(ip_slash_mask.split("/")) != 2:
                 return False
         return True
 
     def parse(self, value):
-        if not self.check_str_format(value) :
-            log.warning("Preferred network not set, using default value: %s/%s" % self.default_network[0])
+        if not self.check_str_format(value):
+            log.warning(
+                "Preferred network not set, using default value: %s/%s" %
+                self.default_network[0])
             return self.default_network
-        else :
+        else:
             network = []
-            for ip_slash_mask in value.split() :
+            for ip_slash_mask in value.split():
                 ip, mask = ip_slash_mask.split("/")
                 net_detect = NetworkDetect(ip, mask)
-                if ip != net_detect.network :
-                    log.warn("Incorrect network address '%s' for netmask '%s', correcting to: '%s'" %
-                            (ip, mask, net_detect.network))
+                if ip != net_detect.network:
+                    log.warn(
+                        "Incorrect network address '%s' for netmask '%s', correcting to: '%s'" %
+                        (ip, mask, net_detect.network))
                     network.append((net_detect.network, mask))
-                else :
+                else:
                     network.append((ip, mask))
             return network

@@ -19,11 +19,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging, re
-try :
+import logging
+import re
+try:
     import pickle as pickle
-except ImportError :
-    import pickle # pyflakes.ignore
+except ImportError:
+    import pickle  # pyflakes.ignore
 from io import StringIO
 
 import MySQLdb
@@ -37,33 +38,39 @@ from pulse2.scheduler.config import SchedulerConfig, SchedulerDatabaseConfig
 from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck
 
+
 def sqladdslashes(s):
     return re.sub("(\\\\|'|\")", lambda o: "\\" + o.group(1), s)
 
+
 def stripbrokenchars(s):
     bad_map = {
-        "\u2019":  "'",
-        "\u2013":  "-",
+        "\u2019": "'",
+        "\u2013": "-",
     }
-    utf_map = dict([(ord(k), ord(v)) for k,v in list(bad_map.items())])
+    utf_map = dict([(ord(k), ord(v)) for k, v in list(bad_map.items())])
     return s.translate(utf_map)
 
-class PackUtils :
+
+class PackUtils:
     @classmethod
     def pack(cls, data):
         return pickle.dumps(data)
 
     @classmethod
     def unpack(cls, packet):
-        try :
+        try:
             ret = pickle.loads(packet)
             return ret
         except EOFError as e:
-            logging.getLogger().debug("EOF: Losing a packet from scheduler-proxy: %s" % str(e))
+            logging.getLogger().debug(
+                "EOF: Losing a packet from scheduler-proxy: %s" %
+                str(e))
             return None
         except Exception as e:
             logging.getLogger().warn("Losing a packet from scheduler-proxy: %s" % str(e))
             return None
+
 
 def getClientCheck(target):
     return getCheck(SchedulerConfig().client_check, {
@@ -73,6 +80,7 @@ def getClientCheck(target):
         'macs': target.getMacs()
     })
 
+
 def getServerCheck(target):
     return getCheck(SchedulerConfig().server_check, {
         'uuid': target.getUUID(),
@@ -81,6 +89,7 @@ def getServerCheck(target):
         'macs': target.getMacs()
     })
 
+
 def chooseClientInfo(target):
     host_dict = {'uuid': target.getUUID(),
                  'fqdn': target.getFQDN(),
@@ -88,7 +97,7 @@ def chooseClientInfo(target):
                  'ips': target.getIps(),
                  'macs': target.getMacs(),
                  'netmasks': target.getNetmasks()
-                }
+                 }
 
     return chooseClientIP(host_dict)
 
@@ -98,28 +107,33 @@ class UnixProtocol (object, LineReceiver):
     __data = None
 
     def dataReceived(self, data):
-        try :
-            if not self.__data :
+        try:
+            if not self.__data:
                 self.__data = StringIO()
 
             self.__data.write(data)
             packet = pickle.loads(self.__data.getvalue())
         except EOFError:
-            logging.getLogger().debug("EOF:completing the packet len=%d" % len(self.__data.getvalue()))
+            logging.getLogger().debug(
+                "EOF:completing the packet len=%d" % len(
+                    self.__data.getvalue()))
             return
         except pickle.UnpicklingError:
-            logging.getLogger().debug("Unpickle:completing the packet len=%d" % len(self.__data.getvalue()))
+            logging.getLogger().debug(
+                "Unpickle:completing the packet len=%d" % len(
+                    self.__data.getvalue()))
             return
         except Exception as e:
-            logging.getLogger().debug("Another:completing the packet len=%d" % len(self.__data.getvalue()))
-            logging.getLogger().debug("Another exception when completing packet %s"  % str(e))
+            logging.getLogger().debug(
+                "Another:completing the packet len=%d" % len(
+                    self.__data.getvalue()))
+            logging.getLogger().debug("Another exception when completing packet %s" % str(e))
             return
-
 
         if isinstance(packet, list) and len(packet) == 2:
             name, args = packet
             method = self._lookup_procedure(name)
-        else :
+        else:
             logging.getLogger().warn("Response unpacking failed")
             d = maybeDeferred(self._send_response, "NOK")
             d.addErrback(self._eb_call_failed, "response:failed")
@@ -131,29 +145,30 @@ class UnixProtocol (object, LineReceiver):
         d.addCallback(self._send_response)
         d.addErrback(self._eb_call_failed, name)
 
-
     def _send_response(self, response):
         logging.getLogger().debug("response: %s" % str(response))
         try:
             packet = PackUtils.pack(response)
             self.sendLine(packet)
         except Exception as e:
-            logging.getLogger().error("UX response sending failed: %s"  % str(e))
-
+            logging.getLogger().error("UX response sending failed: %s" % str(e))
 
     def _eb_call_failed(self, failure, method_name):
-        logging.getLogger().error("Method calling %s failed: %s" % (method_name, failure))
+        logging.getLogger().error(
+            "Method calling %s failed: %s" %
+            (method_name, failure))
 
     def _lookup_procedure(self, name):
         this_class_dict = self.__class__.__mro__[0].__dict__
         method_matches = [f for (k, f) in list(this_class_dict.items())
-                                      if k == name and callable(f)]
-        if len(method_matches)==1 :
+                          if k == name and callable(f)]
+        if len(method_matches) == 1:
             return method_matches[0]
 
 
 class UNIXFactory(Factory):
     protocol = UnixProtocol
+
 
 def chooseClientNetwork(target):
     return chooseClientIP({'uuid': target.getUUID(),
@@ -162,7 +177,7 @@ def chooseClientNetwork(target):
                            'ips': target.getIps(),
                            'macs': target.getMacs(),
                            'netmasks': target.getNetmasks()
-                         })
+                           })
 
 
 def launcher_proxymethod(*options):
@@ -172,70 +187,75 @@ def launcher_proxymethod(*options):
     """
     try:
 
-        if len(options) == 1 and callable(options[0]) :
+        if len(options) == 1 and callable(options[0]):
             # if only one option, this is a decorator without a parameter
             # so first parameter is decorated function
             fn = options[0]
             name = fn.__name__
             aliased = False
-        else :
+        else:
             # first argument supposed as alias
             name = options[0]
             aliased = True
 
-
         def wrap(f, method_name=name):
             def inner(self, *args, **kwargs):
                 # TODO - test if Phase instance
-                if self._register_only :
-                    if method_name not in self._proxy_methods :
-                        self._proxy_methods[method_name] = f#(self, f)#(f, args, kwargs)
+                if self._register_only:
+                    if method_name not in self._proxy_methods:
+                        # (self, f)#(f, args, kwargs)
+                        self._proxy_methods[method_name] = f
 
-                else :
+                else:
                     return f(self, *args, **kwargs)
 
             inner.is_proxy_fnc = True
             return inner
 
-        if not aliased :
+        if not aliased:
             return wrap(fn, name)
-        else :
+        else:
             return wrap
-    except Exception as e :
-        logging.getLogger().error("launcher_proxymethod: %s"  % str(e))
+    except Exception as e:
+        logging.getLogger().error("launcher_proxymethod: %s" % str(e))
 
 
 class ProxyProcessProtocol(ProcessProtocol):
 
-     def processExited(self, reason):
-         logging.getLogger().warn("XML Proxy: Process exited: %s" % (reason.value.exitCode))
+    def processExited(self, reason):
+        logging.getLogger().warn(
+            "XML Proxy: Process exited: %s" %
+            (reason.value.exitCode))
 
-     def errReceived(self, data):
-         logging.getLogger().warn("XMLRPC Proxy: STDERR: %s" % repr(data))
+    def errReceived(self, data):
+        logging.getLogger().warn("XMLRPC Proxy: STDERR: %s" % repr(data))
 
-     def outConnectionLost(self, reason):
-         logging.getLogger().info("XMLRPC Proxy: Connection lost: %s" % (reason.value.exitCode))
+    def outConnectionLost(self, reason):
+        logging.getLogger().info(
+            "XMLRPC Proxy: Connection lost: %s" %
+            (reason.value.exitCode))
 
 
-class SpawnProxy :
+class SpawnProxy:
     def __init__(self, path):
-         self.protocol = ProxyProcessProtocol()
-         if isinstance(path, str):
-             self.path = [path]
-         else:
-             self.path = path
+        self.protocol = ProxyProcessProtocol()
+        if isinstance(path, str):
+            self.path = [path]
+        else:
+            self.path = path
 
     def run(self):
-         return reactor.spawnProcess(self.protocol,
-                                     self.path[0],
-                                     self.path,
-                                     env=None,
-                                     childFDs={0 :"w",
-                                               1 :"r",
-                                               2:'r'}
+        return reactor.spawnProcess(self.protocol,
+                                    self.path[0],
+                                    self.path,
+                                    env=None,
+                                    childFDs={0: "w",
+                                              1: "r",
+                                              2: 'r'}
                                     )
 
-class WUInjectDB :
+
+class WUInjectDB:
     """
     A shortcut to insert the Windows Updates into the 'update' database.
     """
@@ -247,7 +267,6 @@ class WUInjectDB :
 
         self.logger = logging.getLogger()
         self.connect()
-
 
     def connect(self):
         try:
@@ -273,7 +292,6 @@ class WUInjectDB :
         except Exception as exc:
             self.logger.error("Error while creating cursor: %s" % str(exc))
 
-
     def uuid_exists(self, uuid):
         query = "SELECT 1 FROM updates WHERE uuid = '%s';" % (uuid)
 
@@ -283,7 +301,6 @@ class WUInjectDB :
             return True
         return False
 
-
     def get_update_id(self, uuid):
         query = "SELECT id FROM updates WHERE uuid = '%s';" % (uuid)
 
@@ -291,20 +308,19 @@ class WUInjectDB :
         c.execute(query)
 
         result = c.fetchall()
-        if len(result) > 0 :
+        if len(result) > 0:
             return result[0][0]
         return None
 
-
     def target_exists(self, target_uuid, update_id):
-        query = "SELECT 1 FROM targets WHERE uuid = '%s' AND update_id = %d;" % (target_uuid, update_id)
+        query = "SELECT 1 FROM targets WHERE uuid = '%s' AND update_id = %d;" % (
+            target_uuid, update_id)
 
         c = self.cursor
         c.execute(query)
         if len(c.fetchall()) == 1:
             return True
         return False
-
 
     def insert_target(self, update_id, uuid, is_installed):
         """
@@ -321,8 +337,9 @@ class WUInjectDB :
             self.conn.commit()
         except Exception as exc:
             self.conn.rollback()
-            self.logger.error("Error while inserting target into 'update' db: %s" % str(exc))
-
+            self.logger.error(
+                "Error while inserting target into 'update' db: %s" %
+                str(exc))
 
     def update_target(self, update_id, uuid, is_installed):
         """
@@ -339,7 +356,9 @@ class WUInjectDB :
             self.conn.commit()
         except Exception as exc:
             self.conn.rollback()
-            self.logger.error("Error while updating target into 'update' db: %s" % str(exc))
+            self.logger.error(
+                "Error while updating target into 'update' db: %s" %
+                str(exc))
 
     def purge_obselete_updates(self, uuid, update_uuids):
         """
@@ -351,7 +370,8 @@ class WUInjectDB :
 
         stat = "DELETE FROM targets WHERE uuid = %s " % uuid
         stat += "AND update_id NOT IN ("
-        stat += "SELECT id FROM updates WHERE updates.uuid IN('%s'))" % "', '".join(update_uuids)
+        stat += "SELECT id FROM updates WHERE updates.uuid IN('%s'))" % "', '".join(
+            update_uuids)
 
         self.logger.debug("\033[33m%s\033[0m" % stat)
 
@@ -364,10 +384,14 @@ class WUInjectDB :
             else:
                 nb_updates_removed = 0
             self.conn.commit()
-            self.logger.info("Updates: Unlinking %s updates for machine %s" % (str(nb_updates_removed), str(uuid)))
+            self.logger.info(
+                "Updates: Unlinking %s updates for machine %s" %
+                (str(nb_updates_removed), str(uuid)))
         except Exception as exc:
             self.conn.rollback()
-            self.logger.error("Error while cleaning target into 'update' db: %s" % str(exc))
+            self.logger.error(
+                "Error while cleaning target into 'update' db: %s" %
+                str(exc))
 
     def insert_WU(self,
                   uuid,
@@ -386,33 +410,43 @@ class WUInjectDB :
         stat += "VALUES ('%s', '%s', '%s', %d, %d, %d, %d, '%s');"
 
         try:
-            title = sqladdslashes(stripbrokenchars(title.decode('utf-8', 'ignore')))
+            title = sqladdslashes(
+                stripbrokenchars(
+                    title.decode(
+                        'utf-8',
+                        'ignore')))
         except Exception as e:
             self.logger.warn("WU Unable to decode title: %s" % str(e))
         try:
-            kb_number = sqladdslashes(stripbrokenchars(kb_number.decode('utf-8', 'ignore')))
+            kb_number = sqladdslashes(
+                stripbrokenchars(
+                    kb_number.decode(
+                        'utf-8', 'ignore')))
         except Exception as e:
             self.logger.warn("WU Unable to decode KB number: %s" % str(e))
         try:
-            info_url = sqladdslashes(stripbrokenchars(info_url.decode('utf-8', 'ignore')))
+            info_url = sqladdslashes(
+                stripbrokenchars(
+                    info_url.decode(
+                        'utf-8', 'ignore')))
         except Exception as e:
             self.logger.warn("WU Unable to decode info URL: %s" % str(e))
 
         try:
             stat = stat % (uuid,
-                       title,
-                       kb_number,
-                       type_id,
-                       os_class_id,
-                       need_reboot,
-                       request_user_input,
-                       info_url)
+                           title,
+                           kb_number,
+                           type_id,
+                           os_class_id,
+                           need_reboot,
+                           request_user_input,
+                           info_url)
         except Exception as e:
             import sys
-            self.logger.error('Unable to parse WU item, traceback was: '+str(sys.exc_info()))
+            self.logger.error(
+                'Unable to parse WU item, traceback was: ' + str(sys.exc_info()))
 
         self.logger.debug("\033[33m%s\033[0m" % stat)
-
 
         try:
             c = self.cursor
@@ -420,8 +454,9 @@ class WUInjectDB :
             self.conn.commit()
         except Exception as exc:
             self.conn.rollback()
-            self.logger.error("Error while insert an update record into 'update' db: %s" % str(exc))
-
+            self.logger.error(
+                "Error while insert an update record into 'update' db: %s" %
+                str(exc))
 
     def inject(self,
                target_uuid,

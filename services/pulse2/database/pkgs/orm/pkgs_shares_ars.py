@@ -29,10 +29,12 @@ import logging
 """ Class to map pkgs.pkgs_shares_ars to SA
 """
 
+
 class Pkgs_shares_ars(object):
     """ Mapping between pkgs.pkgs_shares_ars and SA
     colunm : 'id,hostname,jid,pkgs_shares_id
     """
+
     def getId(self):
         if self.id is not None:
             return self.id
@@ -65,7 +67,7 @@ class Pkgs_shares_ars(object):
             Dict of elements contained into the object.
         """
         return {
-            'id' : self.getId(),
+            'id': self.getId(),
             'hostname': self.getHostname(),
             'jid': self.getJid(),
             'pkgs_shares_id': getShareid()}

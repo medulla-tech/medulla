@@ -30,7 +30,6 @@ from twisted.internet.protocol import Protocol, Factory
 from twisted.internet.address import IPv4Address
 
 
-
 class GatheringServer(Protocol):
     """
     This service dispatches the communication between server and clients.
@@ -49,7 +48,8 @@ class GatheringServer(Protocol):
         if hasattr(value, "queue_and_process"):
             cls._handler = value
         else:
-            raise AttributeError("Handler instance must have 'queue_and_process' attribute")
+            raise AttributeError(
+                "Handler instance must have 'queue_and_process' attribute")
 
     @classmethod
     def set_trigger(cls, value):
@@ -57,8 +57,6 @@ class GatheringServer(Protocol):
             cls._trigger = value
         else:
             raise AttributeError("Handler instance must have 'fire' attribute")
-
-
 
     def dataReceived(self, data):
         """
@@ -78,17 +76,17 @@ class GatheringServer(Protocol):
         d.addCallback(self.send_response)
         d.addErrback(self._response_failed)
 
-
-        logging.getLogger().debug("data received: %s from %s" % (str(data), ip))
+        logging.getLogger().debug(
+            "data received: %s from %s" %
+            (str(data), ip))
         try:
             tr_result = self._trigger.fire()
+
             @tr_result.addCallback
             def res(result):
                 print("trigger result: %s" % (str(result)))
         except Exception as e:
             logging.getLogger().warn("trigger firing fail: %s" % str(e))
-
-
 
     def send_response(self, response):
         logging.getLogger().debug("response to client: %s" % str(response))
@@ -100,6 +98,7 @@ class GatheringServer(Protocol):
 
 class GatheringFactory(Factory):
     protocol = GatheringServer
+
 
 class Server(object):
     def __init__(self, port, key, crt, ssl_method):
@@ -132,12 +131,10 @@ class Server(object):
         else:
             raise TypeError
 
-
         self.ctx_factory = DefaultOpenSSLContextFactory(key,
                                                         crt,
                                                         ssl_method
                                                         )
-
 
     def start(self, handler, trigger):
 
@@ -155,10 +152,12 @@ class Server(object):
         @d.addCallback
         def cb(reason):
             logging.getLogger().info("endpoint start: %s" % str(reason))
+
         @d.addErrback
         def eb(failure):
-            logging.getLogger().warn("endpoint start failed: %s" % str(failure))
-
+            logging.getLogger().warn(
+                "endpoint start failed: %s" %
+                str(failure))
 
         return d
 
@@ -170,4 +169,5 @@ class Server(object):
 # openssl req -new -key server.key -out server.csr
 # openssl req -new -key client.key -out client.csr
 # openssl x509 -req -in server.csr -CA root.pem -CAkey root.key -CAcreateserial -out server.crt -days 1023
-# openssl x509 -req -in client.csr -CA root.pem -CAkey root.key -CAcreateserial -out client.crt -days 1023
+# openssl x509 -req -in client.csr -CA root.pem -CAkey root.key
+# -CAcreateserial -out client.crt -days 1023

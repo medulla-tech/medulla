@@ -51,7 +51,8 @@ class ImagingComputerConfiguration:
         self.menu = menu
         self.exclude_opts = ''
         if 'exclude_parameters' in self.menu['target']:
-            self.setExcludeParameters(self.menu['target']['exclude_parameters'])
+            self.setExcludeParameters(
+                self.menu['target']['exclude_parameters'])
         # else if no exclude_parameters is set, do as if there is no exclude
         # set.
         self.setHostname(hostname)
@@ -62,7 +63,7 @@ class ImagingComputerConfiguration:
         @param value: string of disk:part
         @type value: str
         """
-        assert(type(value) == str)
+        assert(isinstance(value, str))
         self.exclude_opts = value
 
     def setHostname(self, value):
@@ -96,27 +97,36 @@ class ImagingComputerConfiguration:
                                 self.EXCLUDE_FILE)
         if self.exclude_opts:
             # File must be updated
-            self.logger.debug('Preparing to write exclude file for computer UUID %s into file %s' % (self.computerUUID, filename))
+            self.logger.debug(
+                'Preparing to write exclude file for computer UUID %s into file %s' %
+                (self.computerUUID, filename))
             try:
                 fid = open(filename, 'w+b')
                 fid.write(self.exclude_opts)
                 fid.close()
                 self.logger.debug('Succeeded')
             except Exception as e:
-                self.logger.error("While writing exclude file for %s : %s" % (self.computerUUID, e))
+                self.logger.error(
+                    "While writing exclude file for %s : %s" %
+                    (self.computerUUID, e))
                 ret = False
         else:
             if os.path.exists(filename):
                 # File must be removed
-                self.logger.debug('Preparing to remove exclude file for computer UUID %s: %s' % (self.computerUUID, filename))
+                self.logger.debug(
+                    'Preparing to remove exclude file for computer UUID %s: %s' %
+                    (self.computerUUID, filename))
                 try:
                     os.unlink(filename)
                     self.logger.debug('Succeeded')
                 except Exception as e:
-                    self.logger.error("While removing exclude file for %s : %s" % (self.computerUUID, e))
+                    self.logger.error(
+                        "While removing exclude file for %s : %s" %
+                        (self.computerUUID, e))
                     ret = False
             else:
-                self.logger.debug('Nothing to do for the computer exclude file')
+                self.logger.debug(
+                    'Nothing to do for the computer exclude file')
 
         return ret
 
@@ -131,7 +141,9 @@ class ImagingComputerConfiguration:
                                 self.config.imaging_api['computers_folder'],
                                 self.computerUUID,
                                 self.HOSTNAME_FILE)
-        self.logger.debug('Preparing to write hostname file for computer UUID %s into file %s' % (self.computerUUID, filename))
+        self.logger.debug(
+            'Preparing to write hostname file for computer UUID %s into file %s' %
+            (self.computerUUID, filename))
         ret = True
         try:
             fid = open(filename, 'w+b')
@@ -139,6 +151,8 @@ class ImagingComputerConfiguration:
             fid.close()
             self.logger.debug('Succeeded')
         except Exception as e:
-            self.logger.error("While writing hostname file for %s : %s" % (self.computerUUID, e))
+            self.logger.error(
+                "While writing hostname file for %s : %s" %
+                (self.computerUUID, e))
             ret = False
         return ret

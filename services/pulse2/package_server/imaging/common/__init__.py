@@ -26,5 +26,6 @@
 
 import pulse2.utils
 
+
 class ImagingCommon(pulse2.utils.Singleton):
     pass

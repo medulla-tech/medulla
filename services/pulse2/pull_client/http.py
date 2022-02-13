@@ -22,8 +22,12 @@ A simple HTTP client for communicating with the DLP webservice
 
 import json
 import http.cookiejar
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.parse
+import urllib.error
+import urllib.request
+import urllib.error
+import urllib.parse
 import logging
 import contextlib
 
@@ -47,7 +51,8 @@ class HTTPClient(object):
         self.cookie_jar = http.cookiejar.CookieJar()
         handlers = [urllib.request.HTTPCookieProcessor(self.cookie_jar)]
         if self.config.Proxy.http:
-            proxy_handler = urllib.request.ProxyHandler({'http': self.config.Proxy.http})
+            proxy_handler = urllib.request.ProxyHandler(
+                {'http': self.config.Proxy.http})
         else:
             proxy_handler = urllib.request.ProxyHandler()
         handlers.append(proxy_handler)
@@ -95,6 +100,7 @@ class HTTPClient(object):
             # if the response is not an error, and there is no cookie set for the request
             # we may get a already expired session cookie because the client or the servier
             # time is not in sync
-            if response.code < 400 and not self.cookie_jar.make_cookies(response, request):
+            if response.code < 400 and not self.cookie_jar.make_cookies(
+                    response, request):
                 raise CookieSessionExpired()
         return response

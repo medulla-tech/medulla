@@ -22,10 +22,11 @@
 # PULSE2
 from mmc.database.config import DatabaseConfig
 
+
 class XmppMasterDatabaseConfig(DatabaseConfig):
     dbname = "xmppmaster"
     dbsection = "database"
 
-    #def setup(self, config_file):
-        ## read the database configuration
-        #DatabaseConfig.setup(self, config_file)
+    # def setup(self, config_file):
+    # read the database configuration
+    #DatabaseConfig.setup(self, config_file)

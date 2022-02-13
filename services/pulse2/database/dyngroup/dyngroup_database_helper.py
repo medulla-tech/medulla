@@ -37,23 +37,24 @@ logger = logging.getLogger()
 #            join_query, query_filter = filter(self.machine, filt)
 #        ...
 
+
 class DyngroupDatabaseHelper(DatabaseHelper):
     def init(self):
         self.filters = {}
 
-    def filter(self, ctx, join_query, filt, query, grpby, filters = None):
-
+    def filter(self, ctx, join_query, filt, query, grpby, filters=None):
 
         # Add filter clause
         filters = [t for t in filters if t is not None]
-        if filters != None:
+        if filters is not None:
             self.filters[ctx.userid] = and_(*filters)
         query_filter = None
 
         try:
-            if not filt.has_key('query'):
+            if 'query' not in filt:
                 return (join_query, query_filter)
-            query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
+            query_filter, join_tables = self.__treatQueryLevel(
+                ctx, query, grpby, join_query, filt['query'])
             for table in join_tables:
                 join_query = join_query.join(table)
         except KeyError as e:
@@ -63,7 +64,15 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 
         return (join_query, query_filter)
 
-    def __treatQueryLevel(self, ctx, query, grpby, join_query, queries, join_tables = [], invert = False):
+    def __treatQueryLevel(
+            self,
+            ctx,
+            query,
+            grpby,
+            join_query,
+            queries,
+            join_tables=[],
+            invert=False):
         """
         Use recursively by getAllMachines to build the query
         Used in the dyngroup context, to build AND, OR and NOT queries
@@ -71,16 +80,29 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         bool = queries[0]
         level = queries[1]
         if bool == 'OR':
-            query_filter, join_tables = self.__treatQueryLevelOR(ctx, query, grpby, join_query, level, join_tables, invert)
+            query_filter, join_tables = self.__treatQueryLevelOR(
+                ctx, query, grpby, join_query, level, join_tables, invert)
         elif bool == 'AND':
-            query_filter, join_tables = self.__treatQueryLevelAND(ctx, query, grpby, join_query, level, join_tables, invert)
+            query_filter, join_tables = self.__treatQueryLevelAND(
+                ctx, query, grpby, join_query, level, join_tables, invert)
         elif bool == 'NOT':
-            query_filter, join_tables = self.__treatQueryLevelNOT(ctx, query, grpby, join_query, level, join_tables, invert)
+            query_filter, join_tables = self.__treatQueryLevelNOT(
+                ctx, query, grpby, join_query, level, join_tables, invert)
         else:
-            self.logger.error("Don't know this kind of bool operation : %s" % (bool))
+            self.logger.error(
+                "Don't know this kind of bool operation : %s" %
+                (bool))
         return (query_filter, join_tables)
 
-    def __treatQueryLevelOR(self, ctx, query, grpby, join_query, queries, join_tables, invert = False):
+    def __treatQueryLevelOR(
+            self,
+            ctx,
+            query,
+            grpby,
+            join_query,
+            queries,
+            join_tables,
+            invert=False):
         """
         Build OR queries
         """
@@ -89,13 +111,14 @@ class DyngroupDatabaseHelper(DatabaseHelper):
             if len(lq) >= 4:
                 if lq[1] == 'dyngroup':
                     join_tab = self.computersTable()
-                    computers = ComputerGroupManager().result_group_by_name(ctx, lq[3])
+                    computers = ComputerGroupManager(
+                    ).result_group_by_name(ctx, lq[3])
                     filt = self.computersMapping(computers, invert)
                 else:
                     join_tab = self.mappingTable(ctx, lq)
                     filt = self.mapping(ctx, lq, invert)
                 join_q = join_query
-                if type(join_tab) == list:
+                if isinstance(join_tab, list):
                     for table in join_tab:
                         if table != join_query:
                             join_q = join_q.outerjoin(table)
@@ -107,7 +130,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     q = q.filter(self.filters[ctx.userid])
 
                 if lq[2] == 'online computer':
-                    if lq[3]=="True":
+                    if lq[3] == "True":
                         q = q.filter(grpby.in_(lq[4]))
                     else:
                         q = q.filter(grpby.notin_(lq[4]))
@@ -125,15 +148,27 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                         q = q.filter(False)
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                self.logger.debug("__treatQueryLevelOR : %s %s"%(str(lq), str(len(res))))
+                self.logger.debug(
+                    "__treatQueryLevelOR : %s %s" %
+                    (str(lq), str(
+                        len(res))))
                 filter_on.append(grpby.in_(res))
             else:
-                query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, lq, join_tables)
+                query_filter, join_tables = self.__treatQueryLevel(
+                    ctx, query, grpby, join_query, lq, join_tables)
                 filter_on.append(query_filter)
         query_filter = or_(*filter_on)
         return (query_filter, join_tables)
 
-    def __treatQueryLevelAND(self, ctx, query, grpby, join_query, queries, join_tables, invert = False):
+    def __treatQueryLevelAND(
+            self,
+            ctx,
+            query,
+            grpby,
+            join_query,
+            queries,
+            join_tables,
+            invert=False):
         """
         Build AND queries
         """
@@ -144,13 +179,14 @@ class DyngroupDatabaseHelper(DatabaseHelper):
             if len(lq) >= 4:
                 if lq[1] == 'dyngroup':
                     join_tab = self.computersTable()
-                    computers = ComputerGroupManager().result_group_by_name(ctx, lq[3])
+                    computers = ComputerGroupManager(
+                    ).result_group_by_name(ctx, lq[3])
                     filt = self.computersMapping(computers, invert)
                 else:
                     join_tab = self.mappingTable(ctx, lq)
                     filt = self.mapping(ctx, lq, invert)
                 join_q = join_query
-                if type(join_tab) == list:
+                if isinstance(join_tab, list):
                     for table in join_tab:
                         if table != join_query:
                             join_q = join_q.outerjoin(table)
@@ -162,7 +198,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     q = q.filter(self.filters[ctx.userid])
 
                 if lq[2] == 'online computer':
-                    if lq[3]=="True":
+                    if lq[3] == "True":
                         q = q.filter(grpby.in_(lq[4]))
                     else:
                         q = q.filter(grpby.notin_(lq[4]))
@@ -181,8 +217,11 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                self.logger.debug("__treatQueryLevelAND  : %s %s"%(str(lq), str(len(res))))
-                if result_set != None:
+                self.logger.debug(
+                    "__treatQueryLevelAND  : %s %s" %
+                    (str(lq), str(
+                        len(res))))
+                if result_set is not None:
                     result_set.intersection_update(Set(res))
                 else:
                     result_set = Set(res)
@@ -190,7 +229,8 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 
             else:
                 optimize = False
-                query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, lq, join_tables)
+                query_filter, join_tables = self.__treatQueryLevel(
+                    ctx, query, grpby, join_query, lq, join_tables)
                 filter_on.append(query_filter)
         if optimize:
             query_filter = grpby.in_(result_set)
@@ -198,7 +238,15 @@ class DyngroupDatabaseHelper(DatabaseHelper):
             query_filter = and_(*filter_on)
         return (query_filter, join_tables)
 
-    def __treatQueryLevelNOT(self, ctx, query, grpby, join_query, queries, join_tables, invert = False):
+    def __treatQueryLevelNOT(
+            self,
+            ctx,
+            query,
+            grpby,
+            join_query,
+            queries,
+            join_tables,
+            invert=False):
         """
         Build NOT queries : it switches the invert flag
         """
@@ -207,13 +255,14 @@ class DyngroupDatabaseHelper(DatabaseHelper):
             if len(lq) >= 4:
                 if lq[1] == 'dyngroup':
                     join_tab = self.computersTable()
-                    computers = ComputerGroupManager().result_group_by_name(ctx, lq[3])
+                    computers = ComputerGroupManager(
+                    ).result_group_by_name(ctx, lq[3])
                     filt = self.computersMapping(computers, invert)
                 else:
                     join_tab = self.mappingTable(ctx, lq)
                     filt = self.mapping(ctx, lq, invert)
                 join_q = join_query
-                if type(join_tab) == list:
+                if isinstance(join_tab, list):
                     for table in join_tab:
                         if table != join_query:
                             join_q = join_q.outerjoin(table)
@@ -225,7 +274,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     q = q.filter(self.filters[ctx.userid])
 
                 if lq[2] == 'online computer':
-                    if lq[3]=="True":
+                    if lq[3] == "True":
                         q = q.filter(grpby.notin_(lq[4]))
                     else:
                         q = q.filter(grpby.in_(lq[4]))
@@ -242,11 +291,15 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
-                self.logger.debug("__treatQueryLevelNOT : %s %s"%(str(lq), str(len(res))))
+                self.logger.debug(
+                    "__treatQueryLevelNOT : %s %s" %
+                    (str(lq), str(
+                        len(res))))
                 filter_on.append(grpby.in_(res))
 
             else:
-                query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, lq, join_tables, invert)
+                query_filter, join_tables = self.__treatQueryLevel(
+                    ctx, query, grpby, join_query, lq, join_tables, invert)
                 filter_on.append(query_filter)
         query_filter = not_(and_(*filter_on))
         return (query_filter, join_tables)
@@ -258,7 +311,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         ret = []
         for query in queries:
             if len(query) == 4:
-                self.mappingTable(query) #TODO check
+                self.mappingTable(query)  # TODO check
         return ret
 
     def mappingTable(self, ctx, query):
@@ -271,7 +324,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         """
         raise "mappingTable has to be defined"
 
-    def mapping(self, ctx, query, invert = False):
+    def mapping(self, ctx, query, invert=False):
         """
         Map a name and request parameters on a sqlalchemy request
 
@@ -290,7 +343,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         """
         raise "computersTable has to be defined"
 
-    def computersMapping(self, computers, invert = False):
+    def computersMapping(self, computers, invert=False):
         """
         Map the computer object on the good field in the database
 
@@ -302,8 +355,8 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         raise "computersMapping has to be defined"
 
 ############################################
-## specific code has to be defined
-## for these two last method
+# specific code has to be defined
+# for these two last method
 ############################################
 #
 #    def mappingTable(self, ctx, query):
@@ -340,17 +393,17 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 
 
 def onlyAddNew(obj, value, main):
-    if type(value) == list:
+    if isinstance(value, list):
         for i in value:
             try:
                 obj.index(i)
-            except:
+            except BaseException:
                 if i != main:
                     obj.append(i)
     else:
         try:
             obj.index(value)
-        except:
+        except BaseException:
             if value != main:
                 obj.append(value)
     return obj

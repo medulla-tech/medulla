@@ -48,7 +48,6 @@ from twisted.internet.defer import CancelledError
 from twisted.internet.task import deferLater
 
 
-
 class SessionNotFound(Exception):
     """ Similar to IndexError - session not found in container"""
 
@@ -58,7 +57,6 @@ class SessionNotFound(Exception):
 
     def __repr__(self):
         return "Session <%s> not found" % repr(self.uid)
-
 
 
 class Sessions(object):
@@ -95,7 +93,6 @@ class Sessions(object):
         self._timeout = timeout
         self._result_if_expire = result_if_expire
 
-
     def _inc(self):
         """
         Increments internal counter.
@@ -105,7 +102,6 @@ class Sessions(object):
         """
         self._id += 1
         return self._id
-
 
     def make(self):
         """
@@ -135,7 +131,6 @@ class Sessions(object):
 
         return uid, deferred
 
-
     def __contains__(self, uid):
         """
         Membership test operator.
@@ -147,7 +142,6 @@ class Sessions(object):
         @rtype: bool
         """
         return uid in self.content
-
 
     def remove(self, uid):
         """
@@ -166,7 +160,6 @@ class Sessions(object):
             del self.expirators[uid]
         else:
             raise SessionNotFound(uid)
-
 
     def get(self, uid):
         """
@@ -202,8 +195,6 @@ class Sessions(object):
         deferred = self.get(uid)
         self.remove(uid)
         return deferred
-
-
 
     def _expire(self, uid):
         """
@@ -255,7 +246,6 @@ class Collector(object):
 
         self.sessions = sessions
 
-
     def queue_and_process(self, ip, request):
         """
         Inserts request into the queue.
@@ -269,7 +259,6 @@ class Collector(object):
         self.queue.append((uid, ip, request))
 
         return deferred
-
 
     def get(self):
         """
@@ -290,8 +279,6 @@ class Collector(object):
                 return None
         except IndexError:
             return None
-
-
 
     def release(self, uid, result):
         """

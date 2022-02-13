@@ -57,7 +57,9 @@ class Command(object):
             if not step_name == Steps.DONE.name:
                 required = not (step_name in self.non_fatal_steps)
                 try:
-                    step = getattr(Steps, step_name.upper()).klass(self, step_name, required)
+                    step = getattr(
+                        Steps, step_name.upper()).klass(
+                        self, step_name, required)
                 except AttributeError:
                     step = NoopStep(self, step_name, required)
                 self.to_do.put(step)
@@ -105,7 +107,7 @@ class Command(object):
         else:
             # Check if command is still available and was not stopped
             coh_ids = [c['id'] for c in self.dlp_client.get_commands()]
-            if not self.id in coh_ids:
+            if self.id not in coh_ids:
                 self.stopped = True
                 logger.info("%s stopped." % self)
                 return
@@ -136,15 +138,20 @@ class Command(object):
     def __repr__(self):
         d = datetime.now() - datetime.fromtimestamp(self.created)
         d = d.total_seconds()
-        return "<Command(%s, to_do=%s, failed=%s, created=%is ago running=%s)>" % (self.id,
-                                                                                   self.to_do.qsize(),
-                                                                                   self.is_failed,
-                                                                                   d, self.is_running)
+        return "<Command(%s, to_do=%s, failed=%s, created=%is ago running=%s)>" % (
+            self.id, self.to_do.qsize(), self.is_failed, d, self.is_running)
 
 
 class Result(object):
 
-    def __init__(self, step_name, command_id, stdout, stderr, exitcode, send=True):
+    def __init__(
+            self,
+            step_name,
+            command_id,
+            stdout,
+            stderr,
+            exitcode,
+            send=True):
         self.command_id = command_id
         self.step_name = step_name
         self.stdout = stdout
@@ -157,7 +164,8 @@ class Result(object):
         return self.exitcode == 0
 
     def __repr__(self):
-        return "<Result(%s, step=%s, cmd=%s)" % (self.exitcode, self.step_name, self.command_id)
+        return "<Result(%s, step=%s, cmd=%s)" % (
+            self.exitcode, self.step_name, self.command_id)
 
 
 class Step(object):
@@ -179,7 +187,7 @@ class Step(object):
         logger.debug("%s running" % self)
         try:
             stdout, exitcode = self.run()
-        except:
+        except BaseException:
             # If a step makes a traceback
             # send it back as a failed result
             out = StringIO()
@@ -227,10 +235,13 @@ class ExecuteStep(Step):
 
     def run(self):
         if self.command.package_uuid:
-            workdir = os.path.join(get_packages_dir(), self.command.package_uuid)
+            workdir = os.path.join(
+                get_packages_dir(),
+                self.command.package_uuid)
         else:
             workdir = get_packages_dir()
-        output, exitcode = launcher(self.command.start_file, self.command.params, workdir)
+        output, exitcode = launcher(
+            self.command.start_file, self.command.params, workdir)
         return (output, exitcode)
 
 
@@ -238,7 +249,8 @@ class DeleteStep(Step):
 
     def run(self):
         if self.command.package_uuid:
-            package_dir = os.path.join(get_packages_dir(), self.command.package_uuid)
+            package_dir = os.path.join(
+                get_packages_dir(), self.command.package_uuid)
             if os.path.exists(package_dir):
                 shutil.rmtree(package_dir)
             if os.path.exists(package_dir + ".zip"):
@@ -259,8 +271,12 @@ class InventoryStep(Step):
             return ("%f E: %s" % (time.time(), error), p.returncode)
         # Send the inventory to the DLP
         if self.command.dlp_client.send_inventory(inventory):
-            return ("%f O: Inventory sent to the Pulse Inventory Server" % time.time(), 0)
-        return ("%f E: Failed to send inventory to the Pulse Inventory Server" % time.time(), 1)
+            return (
+                "%f O: Inventory sent to the Pulse Inventory Server" %
+                time.time(), 0)
+        return (
+            "%f E: Failed to send inventory to the Pulse Inventory Server" %
+            time.time(), 1)
 
 
 class RebootStep(Step):
@@ -281,7 +297,9 @@ class RebootStep(Step):
         stdout, error = p.communicate()
         if not p.returncode == 0:
             return ("%f E: %s" % (time.time(), error), p.returncode)
-        return ("%f O: Reboot order stacked: %s" % (time.time(), str(stdout)), 0)
+        return (
+            "%f O: Reboot order stacked: %s" %
+            (time.time(), str(stdout)), 0)
 
 
 class HaltStep(Step):
@@ -307,10 +325,20 @@ class HaltStep(Step):
 
 class Steps:
     WOL = type('StepInfo', (object,), {'name': 'wol', 'klass': WolStep})
-    UPLOAD = type('StepInfo', (object,), {'name': 'upload', 'klass': UploadStep})
-    EXECUTE = type('StepInfo', (object,), {'name': 'execute', 'klass': ExecuteStep})
-    DELETE = type('StepInfo', (object,), {'name': 'delete', 'klass': DeleteStep})
-    INVENTORY = type('StepInfo', (object,), {'name': 'inventory', 'klass': InventoryStep})
-    REBOOT = type('StepInfo', (object,), {'name': 'reboot', 'klass': RebootStep})
+    UPLOAD = type(
+        'StepInfo', (object,), {
+            'name': 'upload', 'klass': UploadStep})
+    EXECUTE = type(
+        'StepInfo', (object,), {
+            'name': 'execute', 'klass': ExecuteStep})
+    DELETE = type(
+        'StepInfo', (object,), {
+            'name': 'delete', 'klass': DeleteStep})
+    INVENTORY = type(
+        'StepInfo', (object,), {
+            'name': 'inventory', 'klass': InventoryStep})
+    REBOOT = type(
+        'StepInfo', (object,), {
+            'name': 'reboot', 'klass': RebootStep})
     HALT = type('StepInfo', (object,), {'name': 'halt', 'klass': HaltStep})
     DONE = type('StepInfo', (object,), {'name': 'done'})

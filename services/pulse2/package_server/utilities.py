@@ -29,6 +29,7 @@
 import hashlib
 import sys
 
+
 def sumfile(fobj):
     '''Returns an md5 hash for an object with read() method.'''
     m = hashlib.new('md5')
@@ -39,6 +40,7 @@ def sumfile(fobj):
         m.update(d)
     return m.hexdigest()
 
+
 def md5file(fname):
     '''Returns an md5 hash for file fname, or stdin if fname is "-".'''
     if fname == '-':
@@ -46,11 +48,12 @@ def md5file(fname):
     else:
         try:
             f = file(fname, 'rb')
-        except:
+        except BaseException:
             return 'Failed to open file'
         ret = sumfile(f)
         f.close()
     return ret
+
 
 def md5sum(str):
     return hashlib.md5(str).hexdigest()

@@ -36,10 +36,12 @@ class Sender(Protocol):
     args = None
 
     def call_remote(self, pack):
-        try :
+        try:
             self.transport.write(pack)
         except Exception as e:
-            logging.getLogger().error("\033[31mux call failed: %s\033[0m" % str(e))
+            logging.getLogger().error(
+                "\033[31mux call failed: %s\033[0m" %
+                str(e))
 
         self.send_locked = True
 
@@ -77,15 +79,14 @@ class Forwarder:
     def append_cached_method(self, name):
         self._cached_methods.append(name)
 
-
     @property
     def protocol(self):
-        if not self._protocol :
+        if not self._protocol:
             raise ValueError
             # TODO - log something
         return self._protocol
 
-    @protocol.setter # pyflakes.ignore
+    @protocol.setter  # pyflakes.ignore
     def protocol(self, value):
         self._protocol = value
 
@@ -93,24 +94,20 @@ class Forwarder:
         self.logger.debug("got UX socket protocol: %s" % protocol)
         self.protocol = protocol
 
-
     def _eb_got_protocol(self, failure):
         self.logger.error("UX protocol failed: %s" % failure)
 
     def _response_ok(self, result):
         return True
 
-
     def call_remote(self, request, func_name, args):
-        self.logger.debug("UX:calling %s" %(func_name))
-        try :
+        self.logger.debug("UX:calling %s" % (func_name))
+        try:
             packet = PackUtils.pack([func_name, args])
         except Exception as e:
             self.logger.warn("UX call pack method failed: %s" % str(e))
 
-
-
-        if func_name in self._cached_methods :
+        if func_name in self._cached_methods:
             # response always OK, but cached into buffer
             SendingBuffer().add(packet)
             self.protocol.response(True,
@@ -118,12 +115,14 @@ class Forwarder:
                                    func_name,
                                    args)
 
-        else :
+        else:
             # response immediately
-            try :
+            try:
                 self.protocol.__name__ = func_name
                 self.protocol.args = args
                 self.protocol.request = request
                 self.protocol.call_remote(packet)
             except Exception as e:
-                self.logger.warn("UX: immediate call method failed: %s" % str(e))
+                self.logger.warn(
+                    "UX: immediate call method failed: %s" %
+                    str(e))

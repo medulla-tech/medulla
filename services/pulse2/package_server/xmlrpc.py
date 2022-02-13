@@ -29,6 +29,7 @@ from twisted.internet import defer
 
 Fault = xmlrpc.client.Fault
 
+
 class MyXmlrpc(xmlrpc.XMLRPC):
     def __init__(self):
         self.mp = ""
@@ -45,7 +46,7 @@ class MyXmlrpc(xmlrpc.XMLRPC):
         """
         args, functionPath = xmlrpc.client.loads(request.content.read())
 
-        function = getattr(self, "xmlrpc_%s"%(functionPath))
+        function = getattr(self, "xmlrpc_%s" % (functionPath))
         request.setHeader("content-type", "text/xml")
 
         start = time.time()
@@ -53,16 +54,21 @@ class MyXmlrpc(xmlrpc.XMLRPC):
         def _printExecutionTime(start):
             self.logger.debug("Execution time: %f" % (time.time() - start))
 
-        def _cbRender(result, start, request, functionPath = None, args = None):
+        def _cbRender(result, start, request, functionPath=None, args=None):
             _printExecutionTime(start)
             s = request.getSession()
-            if result == None: result = 0
+            if result is None:
+                result = 0
             if isinstance(result, xmlrpc.Handler):
                 result = result.result
             if not isinstance(result, Fault):
                 result = (result,)
             try:
-                self.logger.debug('Result for ' + str(functionPath) + ": " + str(result))
+                self.logger.debug(
+                    'Result for ' +
+                    str(functionPath) +
+                    ": " +
+                    str(result))
                 s = xmlrpc.client.dumps(result, methodresponse=1)
             except Exception as e:
                 f = Fault(self.FAILURE, "can't serialize output: " + str(e))
@@ -73,15 +79,20 @@ class MyXmlrpc(xmlrpc.XMLRPC):
 
         def _ebRender(failure, start, functionPath, args, request):
             _printExecutionTime(start)
-            self.logger.error("Error during render " + functionPath + ": " + failure.getTraceback())
+            self.logger.error(
+                "Error during render " +
+                functionPath +
+                ": " +
+                failure.getTraceback())
             # Prepare a Fault result to return
             result = {}
             result['faultString'] = functionPath + " " + str(args)
-            result['faultCode'] = str(failure.type) + ": " + str(failure.value) + " "
+            result['faultCode'] = str(failure.type) + \
+                ": " + str(failure.value) + " "
             result['faultTraceback'] = failure.getTraceback()
             return result
 
-        def _cbLogger(result, request) :
+        def _cbLogger(result, request):
             """ Logging the HTTP requests """
 
             host = request.getHost().host
@@ -94,7 +105,9 @@ class MyXmlrpc(xmlrpc.XMLRPC):
 
             self.logger.debug(message)
 
-        self.logger.debug("RPC method call for %s.%s%s"%(self.mp, functionPath, str(args)))
+        self.logger.debug(
+            "RPC method call for %s.%s%s" %
+            (self.mp, functionPath, str(args)))
         defer.maybeDeferred(function, *args).addErrback(
             _ebRender, start, functionPath, args, request
         ).addCallback(

@@ -31,8 +31,10 @@ import random
 from pulse2.package_server.types import Machine
 from pulse2.package_server.xmlrpc import MyXmlrpc
 
+
 class SchedulerApi(MyXmlrpc):
     type = 'SchedulerApi'
+
     def __init__(self, name, config):
         MyXmlrpc.__init__(self)
         self.name = name
@@ -43,22 +45,24 @@ class SchedulerApi(MyXmlrpc):
             self.schedulers = self.config['schedulers'].split(' ')
         else:
             self.schedulers = ['']
-        self.logger.info("(%s) %s : initialised"%(self.type, self.name))
+        self.logger.info("(%s) %s : initialised" % (self.type, self.name))
 
     def xmlrpc_getServerDetails(self):
         return self.config
 
     def xmlrpc_getScheduler(self, m):
         machine = Machine().from_h(m)
-        if not machine.uuid in self.assign:
-            self.assign[machine.uuid] = self.schedulers[random.randint(0,len(self.schedulers)-1)]
+        if machine.uuid not in self.assign:
+            self.assign[machine.uuid] = self.schedulers[random.randint(
+                0, len(self.schedulers) - 1)]
         return self.assign[machine.uuid]
 
     def xmlrpc_getSchedulers(self, machines):
         ret = []
         for m in machines:
             machine = Machine().from_h(m)
-            if not machine.uuid in self.assign:
-                self.assign[machine.uuid] = self.schedulers[random.randint(0,len(self.schedulers)-1)]
+            if machine.uuid not in self.assign:
+                self.assign[machine.uuid] = self.schedulers[random.randint(
+                    0, len(self.schedulers) - 1)]
             ret.append(self.assign[machine.uuid])
         return ret

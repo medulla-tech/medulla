@@ -24,6 +24,7 @@
 
 import os
 
+
 class Find:
     def find(self, path, func, attr):
         for p in os.listdir(path):

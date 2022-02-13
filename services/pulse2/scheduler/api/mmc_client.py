@@ -30,16 +30,17 @@ from mmc.client.async_ import Proxy
 
 log = logging.getLogger()
 
+
 class ConfigReader(object):
     """Read and parse config files"""
+
     def __init__(self):
         scheduler_ini = os.path.join(mmcconfdir,
-                                      "pulse2",
-                                      "scheduler",
-                                      "scheduler.ini")
+                                     "pulse2",
+                                     "scheduler",
+                                     "scheduler.ini")
 
         self._scheduler_config = self.get_config(scheduler_ini)
-
 
     @classmethod
     def get_config(cls, inifile):
@@ -52,14 +53,14 @@ class ConfigReader(object):
         @return: ConfigParser.ConfigParser instance
         """
         log.debug("Load config file %s" % inifile)
-        if not os.path.exists(inifile) :
+        if not os.path.exists(inifile):
             logging.getLogger().error("Error while reading the config file: Not found.")
             return False
 
         config = ConfigParser()
         config.readfp(open(inifile))
         if os.path.isfile(inifile + '.local'):
-            config.readfp(open(inifile + '.local','r'))
+            config.readfp(open(inifile + '.local', 'r'))
 
         return config
 
@@ -72,8 +73,10 @@ class ConfigReader(object):
         """
         return self._scheduler_config
 
+
 class MMCProxy(object):
     """ Provider to connect at mmc-agent """
+
     def __init__(self):
 
         config = ConfigReader()
@@ -90,8 +93,9 @@ class MMCProxy(object):
     def _build_url(self):
         """ URL building for XML-RPC proxy """
 
-        if not self.scheduler_config.has_section("mmc_agent") :
-            log.error("Error while reading the config file: Section 'mmc_agent' not exists")
+        if not self.scheduler_config.has_section("mmc_agent"):
+            log.error(
+                "Error while reading the config file: Section 'mmc_agent' not exists")
             return False
 
         host = self.scheduler_config.get("mmc_agent", "host")
@@ -111,8 +115,7 @@ class MMCProxy(object):
             log.error("Error while connecting to mmc-agent : %s" % err)
             return False
 
-
-    def proxy (self):
+    def proxy(self):
         """
         Get the XML-RPC proxy to MMC agent.
 
@@ -120,7 +123,8 @@ class MMCProxy(object):
         """
         return self._build_proxy()
 
-class RPCClient(MMCProxy) :
+
+class RPCClient(MMCProxy):
     """
     XML-RPC Handler to execute remote functions.
     """

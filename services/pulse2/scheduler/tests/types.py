@@ -21,20 +21,16 @@
 
 """ Testing of scheduler's basetypes. """
 
+from pulse2.scheduler.tests.tools import TableFactory
+from pulse2.scheduler.utils import launcher_proxymethod
+from pulse2.scheduler.types import Phase, Circuit, DIRECTIVE
+from twisted.internet.defer import maybeDeferred
+from twisted.internet import reactor
 import logging
 import unittest
 logging.basicConfig()
 
 #from twisted.trial import unittest
-
-from twisted.internet import reactor
-from twisted.internet.defer import maybeDeferred
-
-from pulse2.scheduler.types import Phase, Circuit, DIRECTIVE
-from pulse2.scheduler.utils import launcher_proxymethod
-
-
-from pulse2.scheduler.tests.tools import TableFactory
 
 
 class CoHQueryFrame(object, metaclass=TableFactory):
@@ -50,8 +46,6 @@ class CoHQueryFrame(object, metaclass=TableFactory):
 
     def get_phases(self):
         return ["exec", "del"]
-
-
 
 
 class _MyPhase(Phase):
@@ -75,9 +69,9 @@ class _MyPhase(Phase):
         return DIRECTIVE.NEXT
 
 
-
 class ExecPhase(_MyPhase):
     name = "exec"
+
     @launcher_proxymethod("completed_01")
     def proxymethod01(self):
         pass
@@ -85,12 +79,15 @@ class ExecPhase(_MyPhase):
 
 class DelPhase(_MyPhase):
     name = "del"
+
     @launcher_proxymethod("completed_02")
     def proxymethod02(self):
         pass
 
+
 class DonePhase(_MyPhase):
     name = "done"
+
 
 class MyCircuit(Circuit):
     def __init__(self, _id, installed_phases, config):
@@ -105,7 +102,6 @@ class MyCircuit(Circuit):
         self.cmd_id = self.cohq.cmd.id
 
         self.installed_phases = installed_phases
-
 
 
 class TestPhases(unittest.TestCase):
@@ -149,13 +145,13 @@ class TestCircuit(unittest.TestCase):
         # some needed objects
         class Statistics (object):
             stats = []
-            def update(cls, id) :pass
+            def update(cls, id): pass
 
         dispatcher = type("MscContainer",
                           (object,),
-                          {"release": lambda x : x,
-                           "statistics" : Statistics()
-                                                     })
+                          {"release": lambda x: x,
+                           "statistics": Statistics()
+                           })
         self.circuit.install_dispatcher(dispatcher)
 
     def test01_circuit_setup(self):
@@ -164,6 +160,7 @@ class TestCircuit(unittest.TestCase):
 
         d = self.circuit.setup()
         d.addCallback(check)
+
         @d.addErrback
         def eb(failure):
             print("Test circuit setup failed: %s" % failure)
@@ -173,17 +170,22 @@ class TestCircuit(unittest.TestCase):
         def setup(result):
             dr = maybeDeferred(self.circuit.run)
             return dr
+
         def check(result):
             # added a little lag to wait to last phase
-            reactor.callLater(1, self.assertEqual, self.circuit.running_phase, DonePhase)
+            reactor.callLater(
+                1,
+                self.assertEqual,
+                self.circuit.running_phase,
+                DonePhase)
 
         d = self.circuit.setup()
         d.addCallback(setup)
         d.addCallback(check)
+
         @d.addErrback
         def eb(failure):
             print("Test circuit setup failed: %s" % failure)
-
 
 
 if __name__ == "__main__":

@@ -11,12 +11,12 @@
 from cx_Freeze import setup, Executable
 
 buildOptions = dict(includes=["service", "dlp"], include_msvcr=1)
-executable = Executable("config.py", base = "Win32Service",
-        targetName = "service.exe")
+executable = Executable("config.py", base="Win32Service",
+                        targetName="service.exe")
 
 setup(
-        name = "pulse_pull_client",
-        version = "0.1",
-        description = "Pulse service for Pull-mode deployment",
-        executables = [executable],
-        options = dict(build_exe = buildOptions))
+    name="pulse_pull_client",
+    version="0.1",
+    description="Pulse service for Pull-mode deployment",
+    executables=[executable],
+    options=dict(build_exe=buildOptions))

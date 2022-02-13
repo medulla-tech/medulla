@@ -29,6 +29,8 @@ import logging
 
 """ Class to map pkgs.pkgs_rules_local to SA
 """
+
+
 class Pkgs_rules_local(object):
     """ Mapping between pkgs.pkgs_rules_local and SA
         colunm table: 'id,pkgs_rules_algos_id,order,subject,pkgs_shares_id'
@@ -86,4 +88,4 @@ class Pkgs_rules_local(object):
             'pkgs_shares_id': self.pkgs_shares_id,
             'order': self.order,
             'subject': self.subject,
-            'permision' : self.permission}
+            'permision': self.permission}

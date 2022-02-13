@@ -31,16 +31,19 @@ from pulse2.package_server.types import Mirror
 from pulse2.package_server.assign_algo import MMAssignAlgoManager
 from pulse2.package_server.xmlrpc import MyXmlrpc
 
+
 class MirrorApi(MyXmlrpc):
     type = 'MirrorApi'
-    def __init__(self, services = {}, name = '', assign_algo = 'default'):
+
+    def __init__(self, services={}, name='', assign_algo='default'):
         MyXmlrpc.__init__(self)
         self.name = name
         self.mirrors = {}
         self.url2mirrors = {}
         self.assign = {}
         self.logger = logging.getLogger()
-        # Mutable dict services used as default argument to a method or function
+        # Mutable dict services used as default argument to a method or
+        # function
         try:
             for service in services:
                 if service['type'] == 'package_api_get' or service['type'] == 'package_api_put':
@@ -48,18 +51,28 @@ class MirrorApi(MyXmlrpc):
                 else:
                     type = service['type']
 
-                if not type in self.url2mirrors:
+                if type not in self.url2mirrors:
                     self.url2mirrors[type] = {}
-                if not type in self.mirrors:
+                if type not in self.mirrors:
                     self.mirrors[type] = []
                 if service['server'] == '':
                     service['server'] = 'localhost'
-                self.mirrors[type].append(Mirror(service['proto'], service['server'], service['port'], service['mp']))
+                self.mirrors[type].append(
+                    Mirror(
+                        service['proto'],
+                        service['server'],
+                        service['port'],
+                        service['mp']))
                 if 'url' in service:
-                    self.url2mirrors[type][service['url']] = self.mirrors[type][-1]
-            self.logger.debug("(%s) %s api machine/mirror server initialised"%(self.type, self.name))
+                    self.url2mirrors[type][service['url']
+                                           ] = self.mirrors[type][-1]
+            self.logger.debug(
+                "(%s) %s api machine/mirror server initialised" %
+                (self.type, self.name))
         except Exception as e:
-            self.logger.error("(%s)%s api machine/mirror server can't initialize correctly"%(self.type, self.name))
+            self.logger.error(
+                "(%s)%s api machine/mirror server can't initialize correctly" %
+                (self.type, self.name))
             raise e
 
         if 'mirror' in self.mirrors:
@@ -82,7 +95,13 @@ class MirrorApi(MyXmlrpc):
 
         # TODO find a clean way to affect another class
         self.assign_algo = MMAssignAlgoManager().getAlgo(assign_algo)
-        self.assign_algo.init(mirrors, mirrors, package_api, url2mirrors, url2mirrors, url2package_api)
+        self.assign_algo.init(
+            mirrors,
+            mirrors,
+            package_api,
+            url2mirrors,
+            url2mirrors,
+            url2package_api)
 
     def xmlrpc_getServerDetails(self):
         ret = {}

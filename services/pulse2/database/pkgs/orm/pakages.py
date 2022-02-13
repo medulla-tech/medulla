@@ -32,7 +32,7 @@ class Packages(object):
             return 0
 
     def getLabel(self):
-        if self.label != None:
+        if self.label is not None:
             return self.label
         else:
             return ""
@@ -132,6 +132,7 @@ class Packages(object):
             return self.postCommandSuccess_name
         else:
             return ""
+
     def getInstallInit_command(self):
         if self.installInit_command is not None:
             return self.installInit_command
@@ -212,17 +213,17 @@ class Packages(object):
             Dict of elements contained into the object.
         """
         return {
-            'entity_id' : self.getEntity_id(),
-            'description' : self.getDescription(),
-            'sub_packages' : self.getSub_packages(),
+            'entity_id': self.getEntity_id(),
+            'description': self.getDescription(),
+            'sub_packages': self.getSub_packages(),
             'id': self.getUuid(),
             'pk_id': self.getId(),
-            'commands':{
+            'commands': {
                 'postCommandSuccess': {
                     'command': self.getPostCommandSuccess_command(),
                     'name': self.getPostCommandSuccess_name()
                 },
-                'installInit':{
+                'installInit': {
                     'command': self.getInstallInit_command(),
                     'name': self.getInstallInit_name()
                 },

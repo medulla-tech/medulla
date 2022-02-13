@@ -37,10 +37,11 @@ from pulse2.package_server.common import Common
 from pulse2.package_server.common.getCommand import getCommand
 from pulse2.package_server.config import P2PServerCP
 
+
 class PackageApiPut(PackageApiGet):
     type = 'PackageApiPut'
 
-    def __init__(self, mp, name = '', tmp_input_dir = ''):
+    def __init__(self, mp, name='', tmp_input_dir=''):
         PackageApiGet.__init__(self, mp, name)
         self.tmp_input_dir = tmp_input_dir
         self.config = P2PServerCP()
@@ -50,7 +51,8 @@ class PackageApiPut(PackageApiGet):
         ret = []
         if os.path.exists(self.tmp_input_dir):
             for f in os.listdir(self.tmp_input_dir):
-                ret.append([f, os.path.isdir(os.path.join(self.tmp_input_dir,f))])
+                ret.append(
+                    [f, os.path.isdir(os.path.join(self.tmp_input_dir, f))])
         return ret
 
     def xmlrpc_getTemporaryFilesSuggestedCommand(self, tempdir):
@@ -90,8 +92,14 @@ class PackageApiPut(PackageApiGet):
         for file in files:
             if local_files:
                 logging.getLogger().debug("Move file %s" % file['filename'])
-                move(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
-                             os.path.join(filepath, file['filename']))
+                move(
+                    os.path.join(
+                        file['tmp_dir'],
+                        random_dir,
+                        file['filename']),
+                    os.path.join(
+                        filepath,
+                        file['filename']))
                 os.chmod(os.path.join(filepath, file['filename']), 0o660)
             else:
                 logging.getLogger().debug("Decode file %s" % file['filename'])
@@ -101,7 +109,7 @@ class PackageApiPut(PackageApiGet):
 
         return True
 
-    def xmlrpc_associatePackages(self, pid, fs, level = 0):
+    def xmlrpc_associatePackages(self, pid, fs, level=0):
         files = []
         ret = True
 
@@ -116,7 +124,7 @@ class PackageApiPut(PackageApiGet):
         try:
             ret_assoc = Common().associateFiles(self.mp, pid, files, level)
         except exceptions.OSError as e:
-           return [False, str(e)]
+            return [False, str(e)]
 
         if not self.config.package_detect_activate:
             # Run the detectNewPackages stuff to register our new package
@@ -124,7 +132,8 @@ class PackageApiPut(PackageApiGet):
             del Common().packages[pid]
             for i in range(10):
                 ret = Common().detectNewPackages()
-                if ret: break
+                if ret:
+                    break
                 time.sleep(1)
         errors = []
         if ret_assoc[1] & 1:
@@ -140,43 +149,49 @@ class PackageApiPut(PackageApiGet):
         except Exception as e:
             return [False, str(e)]
 
-    def xmlrpc_putPackageDetail(self, package, need_assign = True):
+    def xmlrpc_putPackageDetail(self, package, need_assign=True):
         self.logger.debug("xmlrpc_putPackageDetail")
         pa = Package()
         pa.fromH(package)
-        if pa.id in Common().dontgivepkgs and len(Common().dontgivepkgs[pa.id]) > 0:
+        if pa.id in Common().dontgivepkgs and len(
+                Common().dontgivepkgs[pa.id]) > 0:
             return (False, "This package is curently locked")
 
         ret = Common().editPackage(package['id'], pa, need_assign, self.mp)
-        if not ret: return False
+        if not ret:
+            return False
 
         # Create conf file in package
         ret = Common().writePackageTo(package['id'], self.mp)
         ret, confdir = ret
-        if not ret: return False
+        if not ret:
+            return False
 
         ret = Common().associatePackage2mp(package['id'], self.mp)
-        if not ret: return False
+        if not ret:
+            return False
 
         if not P2PServerCP().package_detect_activate:
             del Common().inEdition[package['id']]
 
-	# Force packavge detection
-	Common().detectNewPackages()
-	Common()._createMD5File(pa.root, force_compute=True)
-	# Reload all package info
-	#desc = Common().desc
-	#Common().init(Common().config)
-	#Common().desc = desc
+        # Force packavge detection
+        Common().detectNewPackages()
+        Common()._createMD5File(pa.root, force_compute=True)
+        # Reload all package info
+        #desc = Common().desc
+        # Common().init(Common().config)
+        #Common().desc = desc
 
         return (True, package['id'], confdir, pa.toH())
 
     def xmlrpc_dropPackage(self, pid):
         ret = Common().dropPackage(pid, self.mp)
-        if not ret: return False
+        if not ret:
+            return False
 
         ret = Common().desassociatePackage2mp(pid, self.mp)
-        if not ret: return False
+        if not ret:
+            return False
 
         return pid
 
@@ -184,31 +199,51 @@ class PackageApiPut(PackageApiGet):
         return Common().getRsyncStatus(pid, self.mp)
 
     def xmlrpc_putPackageLabel(self, pid, label):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))
 
     def xmlrpc_putPackageVersion(self, pid, version):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))
 
     def xmlrpc_putPackageSize(self, pid, size):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))
 
     def xmlrpc_putPackageInstallInit(self, pid, cmd):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))
 
     def xmlrpc_putPackagePreCommand(self, pid, cmd):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))
 
     def xmlrpc_putPackageCommand(self, pid, cmd):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))
 
     def xmlrpc_putPackagePostCommandSuccess(self, pid, cmd):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))
 
     def xmlrpc_putPackagePostCommandFailure(self, pid, cmd):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))
 
     def xmlrpc_putPackageFiles(self, pid, a_files):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))
 
     def xmlrpc_addPackageFile(self, pid, file):
-        self.logger.warn("(%s) %s : call to an unimplemented method"%(self.type, self.name))
+        self.logger.warn(
+            "(%s) %s : call to an unimplemented method" %
+            (self.type, self.name))

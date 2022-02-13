@@ -28,9 +28,9 @@ this module just prvide a method to create an API url from a dict.
 
 def makeURL(config):
     credentials = ''
-    if 'proto' in config and not 'enablessl' in config:
+    if 'proto' in config and 'enablessl' not in config:
         uri = "%s://" % config['proto']
-    elif 'protocol' in config and not 'enablessl' in config:
+    elif 'protocol' in config and 'enablessl' not in config:
         uri = "%s://" % config['protocol']
     else:
         if 'enablessl' in config and config['enablessl']:
@@ -40,7 +40,7 @@ def makeURL(config):
     if 'username' in config and config['username'] != '':
         uri += '%s:%s@' % (config['username'], config['password'])
         credentials = '%s:%s' % (config['username'], config['password'])
-    if 'server' in config and not 'host' in config:
+    if 'server' in config and 'host' not in config:
         config['host'] = config['server']
     uri += '%s:%d' % (config['host'], int(config['port']))
     return (uri, credentials)

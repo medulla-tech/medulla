@@ -34,7 +34,7 @@ from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.xmlrpc import getProxy
 
 
-class Stats :
+class Stats:
     """
     Transforms the launchers statistics dictionnary to a struct.
 
@@ -50,6 +50,7 @@ class Stats :
     self.memory.swapused = 512
     self.memory.free = 1396152
     """
+
     def __init__(self, stats):
         """
         @param stats: statistics of checked launcher
@@ -59,15 +60,19 @@ class Stats :
             cont_attr = type('Statistics', (object,), values)
             setattr(self, cont_attr_name, cont_attr)
 
+
 def getClientCheck(target):
-    return getCheck(SchedulerConfig().client_check, target);
+    return getCheck(SchedulerConfig().client_check, target)
+
 
 def getServerCheck(target):
-    return getCheck(SchedulerConfig().server_check, target);
+    return getCheck(SchedulerConfig().server_check, target)
+
 
 class NoLauncherError(Exception):
     def __repr__(self):
         return "No launcher to use"
+
 
 class LauncherCallError(Exception):
 
@@ -94,6 +99,7 @@ class LauncherCallingProvider(type):
     default_launcher = None
     # No need the launcher detection
     #single_mode = len(launchers) == 1
+
     @property
     def single_mode(self):
         return len(self.launchers) == 1
@@ -112,10 +118,9 @@ class LauncherCallingProvider(type):
         @type attrs: dict
         """
         my_dict = dict((k, v) for (k, v) in list(cls.__dict__.items())
-                if not k.startswith("__"))
+                       if not k.startswith("__"))
         attrs.update(my_dict)
-        return type.__new__(cls,name, bases, attrs)
-
+        return type.__new__(cls, name, bases, attrs)
 
     def _call(self, launcher, method, *args):
         """
@@ -133,15 +138,19 @@ class LauncherCallingProvider(type):
         @return: result of remote method
         @rtype: Deferred
         """
-        if launcher :
-            logging.getLogger().debug("Launcher: method %s(%s)" % (method, str(args)))
+        if launcher:
+            logging.getLogger().debug(
+                "Launcher: method %s(%s)" %
+                (method, str(args)))
             uri = self.launchers[launcher]
-            logging.getLogger().debug("Calling on launcher %s uri [%s]: method %s" % (launcher, uri, method))
+            logging.getLogger().debug(
+                "Calling on launcher %s uri [%s]: method %s" %
+                (launcher, uri, method))
             proxy = getProxy(uri)
             d = proxy.callRemote(method, *args)
             d.addErrback(self._call_error, launcher, method)
             return d
-        else :
+        else:
             return fail(NoLauncherError)
 
     def _call_error(self, failure, launcher, method):
@@ -158,11 +167,14 @@ class LauncherCallingProvider(type):
         @type method: str
         """
         err = failure.trap(TCPTimedOutError)
-        if err == TCPTimedOutError :
-            logging.getLogger().warn("Timeout raised on launcher '%s' when calling method '%s'" % (launcher, method))
+        if err == TCPTimedOutError:
+            logging.getLogger().warn(
+                "Timeout raised on launcher '%s' when calling method '%s'" %
+                (launcher, method))
             logging.getLogger().warn("Call aborted")
-        else :
-            logging.getLogger().error("An error occured when calling method %s on launcher %s: %s" %
+        else:
+            logging.getLogger().error(
+                "An error occured when calling method %s on launcher %s: %s" %
                 (method, launcher, failure))
         return failure
 
@@ -195,11 +207,10 @@ class LauncherCallingProvider(type):
         @return: statistics on a structured format
         @rtype: list
         """
-        if stats_dict :
+        if stats_dict:
             return Stats(stats_dict), launcher
-        else :
+        else:
             return fail(LauncherCallError(launcher))
-
 
     def _eb_stats(self, failure, launcher):
         """
@@ -212,10 +223,13 @@ class LauncherCallingProvider(type):
         @type launcher: str
         """
         err = failure.trap(TCPTimedOutError)
-        if err == TCPTimedOutError :
-            logging.getLogger().warn("Timeout raised on launcher '%s' when getting the stats" % launcher)
-        else :
-            logging.getLogger().error("An error occured when extract the stats from launcher %s: %s" %
+        if err == TCPTimedOutError:
+            logging.getLogger().warn(
+                "Timeout raised on launcher '%s' when getting the stats" %
+                launcher)
+        else:
+            logging.getLogger().error(
+                "An error occured when extract the stats from launcher %s: %s" %
                 (launcher, failure))
         return failure
 
@@ -227,11 +241,12 @@ class LauncherCallingProvider(type):
         @rtype: Deferred
         """
         d = self.get_stats(self.default_launcher)
+
         @d.addCallback
         def cb(result):
             if result and isinstance(result, tuple):
                 stats, launcher = result
-                if stats.slots.slottotal - stats.slots.slotused > 0 :
+                if stats.slots.slottotal - stats.slots.slotused > 0:
                     return True
             return False
         return d
@@ -245,15 +260,17 @@ class LauncherCallingProvider(type):
         """
         d = self._get_all_stats()
         d.addCallback(self._extract_total_slots)
+
         @d.addErrback
         def _eb(failure):
             err = failure.trap(ConnectError)
             if err == ConnectError:
                 logging.getLogger().warn("Unable to get the slots from launcher")
-            else :
-                logging.getLogger().error("An error occured when getting the slots from launcher: %s" % failure)
+            else:
+                logging.getLogger().error(
+                    "An error occured when getting the slots from launcher: %s" %
+                    failure)
         return d
-
 
     def _get_all_stats(self):
         """
@@ -263,7 +280,7 @@ class LauncherCallingProvider(type):
         @rtype: DeferredList
         """
         dl = []
-        for launcher in list(self.launchers.keys()) :
+        for launcher in list(self.launchers.keys()):
             d = self.get_stats(launcher)
             dl.append(d)
 
@@ -279,23 +296,21 @@ class LauncherCallingProvider(type):
         @return: total of slots per launcher
         @rtype: dict
         """
-        for success, result in results :
-            if success :
+        for success, result in results:
+            if success:
                 stats, launcher = result
                 self.slots[launcher] = stats.slots.slottotal
-            else :
+            else:
                 if hasattr(result, "trap"):
                     err = result.trap(ConnectionRefusedError, ConnectError)
-                    if err in (ConnectionRefusedError, ConnectError) :
+                    if err in (ConnectionRefusedError, ConnectError):
                         logging.getLogger().warn("Cannot contact a launcher from list to detect the slots !")
-                    else :
+                    else:
                         logging.getLogger().warn("Getting the slots number failed: %s" % result)
-                else :
-                     logging.getLogger().error("Getting the slots number failed: %s" % result)
+                else:
+                    logging.getLogger().error("Getting the slots number failed: %s" % result)
 
                 logging.getLogger().info("Set slots to default value from scheduler's config file")
-
-
 
         return self.slots
 
@@ -311,16 +326,16 @@ class LauncherCallingProvider(type):
         """
         final_launcher = None
         best_score = 0
-        for success, result in results :
-            if success :
+        for success, result in results:
+            if success:
                 stats, launcher = result
                 score = stats.slots.slottotal - stats.slots.slotused
                 if score > best_score:
                     best_score = score
                     final_launcher = launcher
-        if best_score > 0 :
+        if best_score > 0:
             return final_launcher
-        else :
+        else:
             logging.getLogger().warn("No free slots on launchers, operation aborted")
             return None
 
@@ -332,10 +347,12 @@ class LauncherCallingProvider(type):
         @type failure: callback failure
         """
         err = failure.trap(TCPTimedOutError)
-        if err == TCPTimedOutError :
+        if err == TCPTimedOutError:
             logging.getLogger().warn("Timeout raised when selecting a launcher")
-        else :
-            logging.getLogger().error("An error occured when selecting a launcher: %s" % failure)
+        else:
+            logging.getLogger().error(
+                "An error occured when selecting a launcher: %s" %
+                failure)
         return failure
 
     def _dispatch_launchers(self, method, *args):
@@ -352,13 +369,13 @@ class LauncherCallingProvider(type):
 
         @d_main.addCallback
         def _cb(is_free):
-            if is_free :
+            if is_free:
                 if method == "tcp_sproxy":
                     d = self._call("launcher_01", method, *args)
                 else:
                     d = self._call(self.default_launcher, method, *args)
                 d.addErrback(self._eb_select)
-            else :
+            else:
                 d = self._get_all_stats()
                 d.addCallback(self._extract_best_candidate)
                 d.addCallback(self._call, method, *args)
@@ -385,7 +402,6 @@ class LauncherCallingProvider(type):
         """
         return self._call(launcher, method, *args)
 
-
     def call_method(self, method, *args):
         """
         Selects a launcher and calls a remote method.
@@ -399,12 +415,13 @@ class LauncherCallingProvider(type):
         @return: result of remote method
         @rtype: Deferred
         """
-        if not self.single_mode :
+        if not self.single_mode:
             return self._dispatch_launchers(method, *args)
-        else :
+        else:
             return self._call(self.default_launcher,
                               method,
                               *args)
+
 
 def same_call(method):
     """
@@ -434,8 +451,7 @@ def same_call(method):
     return wrapped
 
 
-
-class RemoteCallProxy(metaclass=LauncherCallingProvider) :
+class RemoteCallProxy(metaclass=LauncherCallingProvider):
     """
     Provides the remote calls to launchers.
 
@@ -458,69 +474,133 @@ class RemoteCallProxy(metaclass=LauncherCallingProvider) :
         self.default_launcher = default_launcher
         self.slots = slots
 
+    @same_call
+    def sync_remote_push(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
+        """ Handle remote copy on target, sync mode """
+        pass
 
     @same_call
-    def sync_remote_push(self, command_id, client, files_list, wrapper_timeout):
-        """ Handle remote copy on target, sync mode """
-        pass
-    @same_call
-    def async_remote_push(self, command_id, client, files_list, wrapper_timeout):
+    def async_remote_push(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
         """ Handle remote copy on target, async mode """
         pass
+
     @same_call
-    def sync_remote_pull(self, command_id, client, files_list, wrapper_timeout):
+    def sync_remote_pull(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
         """ Handle remote copy on target, sync mode """
         pass
+
     @same_call
-    def async_remote_pull(self, command_id, client, files_list, wrapper_timeout):
+    def async_remote_pull(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
         """ Handle remote copy on target, async mode """
         pass
+
     @same_call
-    def sync_remote_delete(self, command_id, client, files_list, wrapper_timeout):
+    def sync_remote_delete(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
         """ Handle remote delete on target, sync mode """
         pass
+
     @same_call
-    def async_remote_delete(self, command_id, client, files_list, wrapper_timeout):
+    def async_remote_delete(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
         """ Handle remote delete on target, async mode """
         pass
+
     @same_call
-    def sync_remote_exec(self, command_id, client, files_list, wrapper_timeout):
+    def sync_remote_exec(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
         """ Handle remote exec on target, sync mode """
         pass
+
     @same_call
-    def async_remote_exec(self, command_id, client,  files_list, wrapper_timeout):
+    def async_remote_exec(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
         """ Handle remote exec on target, async mode """
         pass
+
     @same_call
-    def sync_remote_quickaction(self, command_id, client, files_list, wrapper_timeout):
+    def sync_remote_quickaction(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
         """ Handle remote quick action on target, sync mode """
         pass
+
     @same_call
-    def async_remote_quickaction(self, command_id, client, files_list, wrapper_timeout):
+    def async_remote_quickaction(
+            self,
+            command_id,
+            client,
+            files_list,
+            wrapper_timeout):
         """ Handle remote quick action on target, async mode """
         pass
+
     @same_call
     def sync_remote_inventory(self, command_id, client, wrapper_timeout):
         """ Handle remote inventory on target, sync mode """
         pass
+
     @same_call
     def async_remote_inventory(self, command_id, client, wrapper_timeout):
         """ Handle remote inventory on target, async mode """
         pass
+
     @same_call
     def sync_remote_reboot(self, command_id, client, wrapper_timeout):
         """ Handle remote reboot on target, sync mode """
         pass
+
     @same_call
-    def async_remote_reboot(self, command_id, client,  wrapper_timeout):
+    def async_remote_reboot(self, command_id, client, wrapper_timeout):
         """ Handle remote reboot on target, async mode """
         pass
+
     @same_call
     def sync_remote_halt(self, command_id, client, wrapper_timeout):
         """ Handle remote halt on target, sync mode """
         pass
+
     @same_call
-    def async_remote_halt(self, command_id, client,  wrapper_timeout):
+    def async_remote_halt(self, command_id, client, wrapper_timeout):
         """ Handle remote halt on target, async mode """
         pass
 
@@ -541,7 +621,7 @@ class RemoteCallProxy(metaclass=LauncherCallingProvider) :
                              'ips': ips,
                              'macs': macs,
                              'netmasks': netmasks
-                           })
+                             })
 
         if not ip or not NetUtils.is_ipv4_format(ip):
             logging.getLogger().warn("Ivalid IP address format: '%s'" % str(ip))
@@ -561,30 +641,29 @@ class RemoteCallProxy(metaclass=LauncherCallingProvider) :
 
         return self.call_method('download_file', client, path, bwlimit)
 
-
     def establish_proxy(self,
-                       uuid,
-                       fqdn,
-                       shortname,
-                       ips,
-                       macs,
-                       netmasks,
-                       requestor_ip,
-                       requested_port):
+                        uuid,
+                        fqdn,
+                        shortname,
+                        ips,
+                        macs,
+                        netmasks,
+                        requestor_ip,
+                        requested_port):
 
         def _finalize(result):
-            if type(result) == list:  # got expected struct
+            if isinstance(result, list):  # got expected struct
                 (launcher, host, port, key) = result
                 if key == '-':
                     # Key not provided => TCP Proxy
                     logging.getLogger().info(
-                        'VNC Proxy: launcher "%s" created new TCP Proxy to "%s:%s"'
-                        % (launcher, host, str(port)))
+                        'VNC Proxy: launcher "%s" created new TCP Proxy to "%s:%s"' %
+                        (launcher, host, str(port)))
                 else:
                     # Key provided => Websocket Proxy
                     logging.getLogger().info(
-                        'VNC Proxy: launcher "%s" created new WebSocket Proxy to "%s:%s" with key "%s"'
-                        % (str(launcher), str(host), str(port), str(key)))
+                        'VNC Proxy: launcher "%s" created new WebSocket Proxy to "%s:%s" with key "%s"' %
+                        (str(launcher), str(host), str(port), str(key)))
                 if host == '':
                     host = SchedulerConfig().launchers[launcher]['host']
                 return (host, port, key)
@@ -597,7 +676,7 @@ class RemoteCallProxy(metaclass=LauncherCallingProvider) :
                              'ips': ips,
                              'macs': macs,
                              'netmasks': netmasks
-                           })
+                             })
 
         if not ip or not NetUtils.is_ipv4_format(ip):
             logging.getLogger().warn("Ivalid IP address format: '%s'" % str(ip))
@@ -610,24 +689,29 @@ class RemoteCallProxy(metaclass=LauncherCallingProvider) :
                   'ip': ips,
                   'macs': macs,
                   'protocol': 'tcpsproxy'
-                 }
+                  }
         client['client_check'] = getClientCheck(client)
         client['server_check'] = getServerCheck(client)
         client['action'] = getAnnounceCheck('vnc')
 
-        d = self.call_method('tcp_sproxy', client, requestor_ip, requested_port)
+        d = self.call_method(
+            'tcp_sproxy',
+            client,
+            requestor_ip,
+            requested_port)
         d.addCallback(_finalize)
+
         @d.addErrback
         def _eb(failure):
-            logging.getLogger().warn("VNC proxy open failed: %s" % str(failure))
-
+            logging.getLogger().warn(
+                "VNC proxy open failed: %s" %
+                str(failure))
 
         return d
 
     @same_call
     def wol(self, mac_addrs, target_bcast):
         pass
-
 
     def ping_client(self, client):
         return self.call_method("icmp", client)
@@ -656,8 +740,8 @@ class RemoteCallProxy(metaclass=LauncherCallingProvider) :
         d.addCallback(_pingcb)
         return d
 
-    #TODO
-    def getLaunchersBalance(self) : pass
+    # TODO
+    def getLaunchersBalance(self): pass
 
     @same_call
     def get_zombie_ids(self):

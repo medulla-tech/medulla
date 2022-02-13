@@ -28,67 +28,95 @@ Configuration class for MMC agent inventory plugin
 
 from mmc.database.config import DatabaseConfig
 
+
 class InventoryDatabaseConfigSkel(DatabaseConfig):
     dbname = "inventory"
     list = {}
     double = {}
     halfstatic = {}
     extended = {}
+
     def getInventoryParts(self):
         """
         @return: Return all available inventory parts
         @rtype: list
         """
-        return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity", "InventoryDebugLog" ]
+        return [
+            "Bios",
+            "BootDisk",
+            "BootGeneral",
+            "BootMem",
+            "BootPart",
+            "BootPCI",
+            "Controller",
+            "Custom",
+            "Drive",
+            "Hardware",
+            "Input",
+            "Memory",
+            "Modem",
+            "Monitor",
+            "Network",
+            "Port",
+            "Printer",
+            "Slot",
+            "Software",
+            "Sound",
+            "Storage",
+            "VideoCard",
+            "Registry",
+            "Entity",
+            "InventoryDebugLog"]
 
-    def getInventoryNoms(self, table = None):
+    def getInventoryNoms(self, table=None):
         """
         @return: Return all available nomenclatures tables
         @rtype: dict
         """
         noms = {
-            'Registry':['Path']
+            'Registry': ['Path']
         }
 
-        if table == None:
+        if table is None:
             return noms
         if table in noms:
             return noms[table]
         return None
 
+
 class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
     list = {
-            'Software/ProductName':['string'],
-            'Software/Company':['string'],
-            'Hardware/ProcessorType':['string'],
-            'Hardware/OperatingSystem':['string'],
-            'Entity/Label':['string'],
-            'Drive/TotalSpace':['int']
+        'Software/ProductName': ['string'],
+        'Software/Company': ['string'],
+        'Hardware/ProcessorType': ['string'],
+        'Hardware/OperatingSystem': ['string'],
+        'Entity/Label': ['string'],
+        'Drive/TotalSpace': ['int']
     }
     double = {
-            'Software/ProductName:ProductVersion': [
-                ['Software/ProductName', 'string'],
-                ['Software/ProductVersion', 'string']
-            ],
-            'Software/Company:ProductName': [
-                ['Software/Company', 'string'],
-                ['Software/ProductName', 'string']
-            ]
+        'Software/ProductName:ProductVersion': [
+            ['Software/ProductName', 'string'],
+            ['Software/ProductVersion', 'string']
+        ],
+        'Software/Company:ProductName': [
+            ['Software/Company', 'string'],
+            ['Software/ProductName', 'string']
+        ]
     }
     triple = {
-            'Software/Company:ProductName:ProductVersion': [
-                ['Software/Company', 'string'],
-                ['Software/ProductName', 'string'],
-                ['Software/ProductVersion', 'string']
-            ]
+        'Software/Company:ProductName:ProductVersion': [
+            ['Software/Company', 'string'],
+            ['Software/ProductName', 'string'],
+            ['Software/ProductVersion', 'string']
+        ]
     }
     doubledetail = {
-            'Software/ProductVersion' : 'string'
+        'Software/ProductVersion': 'string'
     }
     halfstatic = {
-            'Registry/Value/display name' : ['string', 'Path', 'DisplayName'],
-            'Registry/Value/nomRegistryPath codePDV':['string', 'Path', 'codePDV'],
-            'Registry/Value/nomRegistryPath hardwareSerial':['string', 'Path', 'hardwareSerial']
+        'Registry/Value/display name': ['string', 'Path', 'DisplayName'],
+        'Registry/Value/nomRegistryPath codePDV': ['string', 'Path', 'codePDV'],
+        'Registry/Value/nomRegistryPath hardwareSerial': ['string', 'Path', 'hardwareSerial']
     }
     expert_mode = {}
     graph = {}
@@ -107,21 +135,31 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
                 else:
                     self.graph[i] = []
                 if self.cp.has_option("expert_mode", i):
-                    self.expert_mode[i] = self.cp.get("expert_mode", i).split('|')
+                    self.expert_mode[i] = self.cp.get(
+                        "expert_mode", i).split('|')
                 else:
                     self.expert_mode[i] = []
 
         if self.cp.has_section("computers"):
             if self.cp.has_option("computers", "display"):
-                self.display = [x.split('::') for x in self.cp.get("computers", "display").split('||')]
-
+                self.display = [
+                    x.split('::') for x in self.cp.get(
+                        "computers", "display").split('||')]
 
             # Registry::Path::path||Registry::Value::srvcomment::Path==srvcomment
-            if self.cp.has_option("computers", "content") and not self.cp.get("computers", "content") == '':
-                for c in [x.split('::') for x in self.cp.get("computers", "content").split('||')]:
+            if self.cp.has_option(
+                    "computers",
+                    "content") and not self.cp.get(
+                    "computers",
+                    "content") == '':
+                for c in [
+                    x.split('::') for x in self.cp.get(
+                        "computers",
+                        "content").split('||')]:
                     if not c[0] in self.content:
                         self.content[c[0]] = []
-                    self.content[c[0]].append( [desArrayIfUnic(x.split('==')) for x in c[1:]])
+                    self.content[c[0]].append(
+                        [desArrayIfUnic(x.split('==')) for x in c[1:]])
 
         if self.cp.has_section('querymanager'):
             if self.cp.has_option('querymanager', 'list'):
@@ -130,7 +168,7 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
                 if simple != '':
                     # Software/ProductName||Hardware/ProcessorType||Hardware/OperatingSystem||Drive/TotalSpace
                     for l in simple.split('||'):
-                        self.list[l] = ['string'] # TODO also int...
+                        self.list[l] = ['string']  # TODO also int...
 
             if self.cp.has_option('querymanager', 'double'):
                 double = self.cp.get('querymanager', 'double')
@@ -140,7 +178,8 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
                     for l in double.split('||'):
                         name, vals = l.split('::')
                         val1, val2 = vals.split('##')
-                        self.double[name] = [[val1, 'string'], [val2, 'string']]
+                        self.double[name] = [
+                            [val1, 'string'], [val2, 'string']]
 
             if self.cp.has_option('querymanager', 'halfstatic'):
                 halfstatic = self.cp.get('querymanager', 'halfstatic')

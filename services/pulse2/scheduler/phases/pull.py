@@ -25,6 +25,7 @@ from pulse2.scheduler.utils import launcher_proxymethod
 
 from pulse2.consts import PULSE2_SUCCESS_ERROR
 
+
 class PullPhase(Phase):
     """Recurrent phase frame"""
 
@@ -39,17 +40,21 @@ class PullPhase(Phase):
         @return: give-up directive
         @rtype: DIRECTIVE
         """
-        self.logger.debug("Circuit #%s: Releasing the recurrent phase" % self.coh.id)
+        self.logger.debug(
+            "Circuit #%s: Releasing the recurrent phase" %
+            self.coh.id)
         if self.coh.isStateStopped():
             return DIRECTIVE.STOPPED
-        else :
+        else:
             return DIRECTIVE.GIVE_UP
 
     def parse_pull_phase_result(self, xxx_todo_changeme7):
 
         (exitcode, stdout, stderr) = xxx_todo_changeme7
-        if exitcode == PULSE2_SUCCESS_ERROR: # success
-            self.logger.info("Circuit #%s: pull %s done (exitcode == 0)" % (self.coh.id, self.name))
+        if exitcode == PULSE2_SUCCESS_ERROR:  # success
+            self.logger.info(
+                "Circuit #%s: pull %s done (exitcode == 0)" %
+                (self.coh.id, self.name))
             self.update_history_done(exitcode, stdout, stderr)
             if self.coh.isStateStopped():
                 return DIRECTIVE.KILLED
@@ -59,21 +64,23 @@ class PullPhase(Phase):
             return self.give_up()
 
         elif self.name in self.config.non_fatal_steps:
-            self.logger.info("Circuit #%s: pull %s failed (exitcode != 0), but non fatal according to scheduler config file" % (self.coh.id, self.name))
+            self.logger.info(
+                "Circuit #%s: pull %s failed (exitcode != 0), but non fatal according to scheduler config file" %
+                (self.coh.id, self.name))
             self.update_history_failed(exitcode, stdout, stderr)
             self.phase.set_done()
             return next(self)
 
-        else: # failure: immediately give up
-            self.logger.info("Circuit #%s: pull %s failed (exitcode != 0)" % (self.coh.id, self.name))
+        else:  # failure: immediately give up
+            self.logger.info(
+                "Circuit #%s: pull %s failed (exitcode != 0)" %
+                (self.coh.id, self.name))
             self.update_history_failed(exitcode, stdout, stderr)
             return self.switch_phase_failed()
 
-
-
-
     def parse_pull_order(self, taken_in_account):
         self.parse_order(taken_in_account)
+
 
 class WOLPhase(PullPhase):
     name = "wol"

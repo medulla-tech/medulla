@@ -33,6 +33,7 @@ import logging
 import json
 import time
 
+
 class AdminDatabase(DatabaseHelper):
     is_activated = False
     session = None
@@ -47,7 +48,10 @@ class AdminDatabase(DatabaseHelper):
             return None
         self.config = config
 
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
+        self.db = create_engine(
+            self.makeConnectionPath(),
+            pool_recycle=self.config.dbpoolrecycle,
+            pool_size=self.config.dbpoolsize)
         print self.makeConnectionPath()
         if not self.db_check():
             return False
@@ -70,11 +74,12 @@ class AdminDatabase(DatabaseHelper):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except DBAPIError, e:
+            except DBAPIError as e:
                 logging.getLogger().error(e)
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error(e)
-            if ret: break
+            if ret:
+                break
         if not ret:
             raise "Database admin connection error"
         return ret

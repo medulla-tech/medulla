@@ -43,7 +43,7 @@ class Config(object, metaclass=ConfigReader):
         ssl_crt_file = None
         ssl_method = "SSLv3_METHOD"
 
-        endpoints = ["packages", "inventory","vpn_install"]
+        endpoints = ["packages", "inventory", "vpn_install"]
 
     class inventory(object):
         enablessl = False
@@ -72,7 +72,7 @@ class Config(object, metaclass=ConfigReader):
         keys = "root"
 
     class handlers(object):
-        keys= "hand01"
+        keys = "hand01"
 
     class formatters(object):
         keys = "form01"

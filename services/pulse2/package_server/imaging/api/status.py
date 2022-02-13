@@ -28,6 +28,7 @@ import os
 
 from twisted.internet.utils import getProcessOutput
 
+
 class Status:
 
     """
@@ -40,7 +41,7 @@ class Status:
         self.ret = {}
 
     def get(self):
-        d = getProcessOutput('/bin/df', ['-m'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
+        d = getProcessOutput('/bin/df', ['-m'], {'LANG': 'C', 'LANGUAGE': 'C'})
         d.addCallback(self.getAvailableSpaceOk)
         d.addErrback(self.getAvailableSpaceErr)
         return d
@@ -53,9 +54,12 @@ class Status:
                 mount = words[-1]
             except IndexError:
                 continue
-            if os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['masters_folder']).startswith(mount):
+            if os.path.join(
+                    self.config.imaging_api['base_folder'],
+                    self.config.imaging_api['masters_folder']).startswith(mount):
                 try:
-                    self.ret['space_available'] = (int(words[-2].rstrip('%')), int(words[-3]) )
+                    self.ret['space_available'] = (
+                        int(words[-2].rstrip('%')), int(words[-3]))
                 except (ValueError, IndexError):
                     pass
                 # Don't break but continue because mount maybe /, which
@@ -68,7 +72,7 @@ class Status:
         self.getMemoryInformations()
 
     def getMemoryInformations(self):
-        d = getProcessOutput('free', { 'LANG' : 'C', 'LANGUAGE' : 'C'})
+        d = getProcessOutput('free', {'LANG': 'C', 'LANGUAGE': 'C'})
         d.addCallback(self.getMemoryInformationsOk)
         d.addErrback(self.getMemoryInformationsErr)
 
@@ -82,7 +86,7 @@ class Status:
         self.getDiskInformations()
 
     def getDiskInformations(self):
-        d = getProcessOutput('/bin/df', ['-k'], { 'LANG' : 'C', 'LANGUAGE' : 'C'})
+        d = getProcessOutput('/bin/df', ['-k'], {'LANG': 'C', 'LANGUAGE': 'C'})
         d.addCallback(self.getDiskInformationsOk)
         d.addErrback(self.getDiskInformationsErr)
 

@@ -19,8 +19,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime,Text, LargeBinary, Enum
-from sqlalchemy.dialects.mysql import  TINYINT
+from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime, Text, LargeBinary, Enum
+from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
 from sqlalchemy.orm import relationship
@@ -67,7 +67,7 @@ class Profile_has_package(Base, KioskDBObj):
     # ====== Fields =============================
     package_id = Column(Integer, nullable=False)
     profil_id = Column(Integer, nullable=False)
-    package_status = Column(Enum('allowed','restricted'))
+    package_status = Column(Enum('allowed', 'restricted'))
 
 
 class Profile_has_ou(Base, KioskDBObj):

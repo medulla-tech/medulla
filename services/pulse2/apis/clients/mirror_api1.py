@@ -25,6 +25,8 @@ from pulse2.apis.clients import Pulse2Api
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
+
+
 class MirrorApi(Pulse2Api):
     def __init__(self, *attr):
         self.name = "MirrorApi"
@@ -80,7 +82,6 @@ class MirrorApi(Pulse2Api):
         return d
 
     def convertMachineIntoH(self, machine):
-        if type(machine) != dict:
-            machine = {'uuid':machine}
+        if not isinstance(machine, dict):
+            machine = {'uuid': machine}
         return machine
-

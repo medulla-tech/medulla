@@ -28,27 +28,39 @@ It provides methods to acces to package informations.
 from pulse2.apis.clients import Pulse2Api
 import twisted.internet.defer
 
+
 class PackageGetA(Pulse2Api):
     def __init__(self, *attr):
         self.name = "PackageGetApi"
         Pulse2Api.__init__(self, *attr)
 
-    def getAllPackages(self, mirror = None):
+    def getAllPackages(self, mirror=None):
         try:
             d = self.callRemote("getAllPackages", mirror)
-            d.addErrback(self.onError, "getAllPackages", mirror, [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credentials, '')}])
+            d.addErrback(self.onError,
+                         "getAllPackages",
+                         mirror,
+                         [{'label': 'A',
+                           'version': '0',
+                           'ERR': 'PULSE2ERROR_GETALLPACKAGE',
+                           'mirror': self.server_addr.replace(self.credentials,
+                                                              '')}])
             return d
         except Exception as e:
-            self.logger.error("getAllPackages %s"%(str(e)))
-            return [{'label':'A', 'version':'0', 'ERR':'PULSE2ERROR_GETALLPACKAGE', 'mirror':self.server_addr.replace(self.credentials, '')}]
+            self.logger.error("getAllPackages %s" % (str(e)))
+            return [{'label': 'A',
+                     'version': '0',
+                     'ERR': 'PULSE2ERROR_GETALLPACKAGE',
+                     'mirror': self.server_addr.replace(self.credentials,
+                                                        '')}]
 
-    def getAllPendingPackages(self, mirror = None):
+    def getAllPendingPackages(self, mirror=None):
         try:
             d = self.callRemote("getAllPendingPackages", mirror)
             d.addErrback(self.onError, "getAllPendingPackages", mirror)
             return d
         except Exception as e:
-            self.logger.error("getAllPendingPackages %s"%(str(e)))
+            self.logger.error("getAllPendingPackages %s" % (str(e)))
             return []
 
     # FIXME ! __convertDoReboot* shouldn't be needed
@@ -65,10 +77,12 @@ class PackageGetA(Pulse2Api):
                 do_reboot = pkg['reboot']
                 if do_reboot == '' or do_reboot == '0' or do_reboot == 0 or do_reboot == '0' or do_reboot == 'false' or do_reboot == 'false' or do_reboot == False or do_reboot == 'disable' or do_reboot == 'disable' or do_reboot == 'off' or do_reboot == 'off':
                     pkg['do_reboot'] = 'disable'
-                elif do_reboot == '1' or do_reboot == 1 or do_reboot == '1' or do_reboot == 'true' or do_reboot == 'true' or do_reboot == True or do_reboot == 'enable' or do_reboot == 'enable' or do_reboot == 'on' or do_reboot == 'on':
+                elif do_reboot == '1' or do_reboot == 1 or do_reboot == '1' or do_reboot == 'true' or do_reboot == 'true' or do_reboot or do_reboot == 'enable' or do_reboot == 'enable' or do_reboot == 'on' or do_reboot == 'on':
                     pkg['do_reboot'] = 'enable'
                 else:
-                    self.logger.warning("Dont know option '%s' for do_reboot, will use 'disable'"%(do_reboot))
+                    self.logger.warning(
+                        "Dont know option '%s' for do_reboot, will use 'disable'" %
+                        (do_reboot))
                 del pkg['reboot']
             except KeyError:
                 pkg['do_reboot'] = 'disable'
@@ -92,10 +106,11 @@ class PackageGetA(Pulse2Api):
             ret.append(i[1])
         return ret
 
-    def onErrorGetPackageDetailCall(self, error, pids, value = []):
+    def onErrorGetPackageDetailCall(self, error, pids, value=[]):
         # when the package server is old, this one call function does not exists
         # so we call several time the existing function
-        self.logger.warn("one of your package server does not support getPackagesDetail, you should update it.")
+        self.logger.warn(
+            "one of your package server does not support getPackagesDetail, you should update it.")
         ds = []
         for pid in pids:
             d = self.callRemote("getPackageDetail", pid)
@@ -128,7 +143,6 @@ class PackageGetA(Pulse2Api):
         d = self.callRemote("getPackageVersion", pid)
         d.addErrback(self.onError, "getPackageVersion", pid, False)
         return d
-
 
     def getPackageSize(self, pid):
         d = self.callRemote("getPackageSize", pid)

@@ -73,11 +73,12 @@ except NameError:
 try:
     import mx.DateTime as mxDateTime
 except ImportError:
-    mxDateTime = None # pyflakes.ignore
+    mxDateTime = None  # pyflakes.ignore
 
 import uuid
 
 from mmc.site import mmcconfdir
+
 
 class Singleton(object):
     """
@@ -86,7 +87,7 @@ class Singleton(object):
     """
 
     def __new__(cls, *args):
-        if not '_the_instance' in cls.__dict__:
+        if '_the_instance' not in cls.__dict__:
             cls._the_instance = object.__new__(cls)
         return cls._the_instance
 
@@ -101,6 +102,7 @@ class SingletonN(type):
         if cls.instance is None:
             cls.instance = super(SingletonN, cls).__call__(*args, **kw)
         return cls.instance
+
 
 class Pulse2ConfigParser(ConfigParser):
     """
@@ -119,7 +121,7 @@ class Pulse2ConfigParser(ConfigParser):
         For example: passwd = {base64}bWFuL2RyaXZhMjAwOA==
         """
         value = self.get(section, option)
-        m = re.search('^{(\w+)}(.+)$', value)
+        m = re.search('^{(\\w+)}(.+)$', value)
         if m:
             scheme = m.group(1)
             obfuscated = m.group(2)
@@ -134,32 +136,32 @@ def xmlrpcCleanup(data):
         Duplicate from mmc.support.mmctools.xmlrpcCleanup()
         to remove unwanted dependancies
     """
-    if type(data) == dict:
+    if isinstance(data, dict):
         ret = {}
         for key in list(data.keys()):
             # array keys must be string
             ret[str(key)] = xmlrpcCleanup(data[key])
-    elif type(data) == list:
+    elif isinstance(data, list):
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
-    elif type(data) == set:
+    elif isinstance(data, set):
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
-    elif type(data) == datetime.date:
+    elif isinstance(data, datetime.date):
         ret = tuple(data.timetuple())
-    elif type(data) == datetime.datetime:
+    elif isinstance(data, datetime.datetime):
         ret = tuple(data.timetuple())
-    elif mxDateTime and type(data) == mxDateTime.DateTimeType:
+    elif mxDateTime and isinstance(data, mxDateTime.DateTimeType):
         ret = data.tuple()
-    elif type(data) == struct_time:
+    elif isinstance(data, struct_time):
         ret = tuple(data)
     elif data is None:
         ret = False
-    elif type(data) == tuple:
+    elif isinstance(data, tuple):
         ret = [xmlrpcCleanup(x) for x in data]
-    elif type(data) == int:
+    elif isinstance(data, int):
         ret = str(data)
     else:
         ret = data
@@ -201,7 +203,7 @@ def unique(s):
         for x in s:
             u[x] = 1
     except TypeError:
-        u = None # move on to the next method
+        u = None  # move on to the next method
 
     if u is not None:
         return list(u.keys())
@@ -215,10 +217,9 @@ def unique(s):
     # sort functions in all languages or libraries, so this approach
     # is more effective in Python than it may be elsewhere.
     try:
-        t = list(s)
-        t.sort()
+        t = sorted(s)
     except TypeError:
-        t = None # move on to the next method
+        t = None  # move on to the next method
 
     if t is not None:
         assert n > 0
@@ -255,29 +256,29 @@ def same_network(ip1, ip2, netmask):
 
 
 def onlyAddNew(obj, value):
-    if type(value) == list:
+    if isinstance(value, list):
         for i in value:
             try:
                 obj.index(i)
-            except:
+            except BaseException:
                 obj.append(i)
     else:
         try:
             obj.index(value)
-        except:
+        except BaseException:
             obj.append(value)
     return obj
 
 
-def getConfigFile(module, path = mmcconfdir + "/plugins/"):
+def getConfigFile(module, path=mmcconfdir + "/plugins/"):
     """Return the path of the default config file for a plugin"""
     return os.path.join(path, module) + ".ini"
 
 
 def isdigit(i):
-    if type(i) == int or type(i) == int:
+    if isinstance(i, int) or isinstance(i, int):
         return True
-    if (type(i) == str or type(i) == str) and re.search("^\d*$", i):
+    if (isinstance(i, str) or isinstance(i, str)) and re.search("^\\d*$", i):
         return True
     return False
 
@@ -316,7 +317,7 @@ def whosdaddy():
 def printStack():
     stack = inspect.stack()
     a_stack = []
-    for i in range(1, len(stack)-1):
+    for i in range(1, len(stack) - 1):
         a_stack.append(stack[i][3])
     a_stack.reverse()
     return " > ".join(a_stack)
@@ -333,7 +334,7 @@ def isCiscoMacAddress(mac_addr):
     """
     if type(mac_addr) not in [str, str]:
         return False
-    regex = '^([0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{4})$'
+    regex = '^([0-9a-f]{4}\\.[0-9a-f]{4}\\.[0-9a-f]{4})$'
     return re.match(regex, mac_addr) is not None
 
 
@@ -391,7 +392,8 @@ def isMACAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    return isCiscoMacAddress(mac_addr) or isLinuxMacAddress(mac_addr) or isWinMacAddress(mac_addr) or isShortMacAddress(mac_addr)
+    return isCiscoMacAddress(mac_addr) or isLinuxMacAddress(
+        mac_addr) or isWinMacAddress(mac_addr) or isShortMacAddress(mac_addr)
 
 
 def reduceMACAddress(mac):
@@ -411,7 +413,8 @@ def normalizeMACAddress(mac):
     @return: the MAC address normalized (see this module documentation)
     """
     assert isMACAddress(mac)
-    return ':'.join([x_y[0] + x_y[1] for x_y in zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2])]) # any questions ?
+    return ':'.join([x_y[0] + x_y[1] for x_y in zip(reduceMACAddress(mac)
+                    [0:11:2], reduceMACAddress(mac)[1:12:2])])  # any questions ?
 
 
 def normalizeMACAddressForPXELINUX(mac):
@@ -419,7 +422,8 @@ def normalizeMACAddressForPXELINUX(mac):
     @return: the MAC address normalized for PXELINUX (uses - as separator)
     """
     assert isMACAddress(mac)
-    macaddress = '-'.join([x_y1[0] + x_y1[1] for x_y1 in zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2])]) # any questions ?
+    macaddress = '-'.join([x_y1[0] + x_y1[1] for x_y1 in zip(reduceMACAddress(mac)[
+                          0:11:2], reduceMACAddress(mac)[1:12:2])])  # any questions ?
     return '01-' + macaddress.lower()
 
 
@@ -430,7 +434,7 @@ def macToNode(mac):
     assert isMACAddress(mac)
     try:
         return int(reduceMACAddress(mac), 16)
-    except:
+    except BaseException:
         return 0
 
 
@@ -469,6 +473,7 @@ def checkEntityName(entity_name):
 
     return True
 
+
 def splitComputerPath(path):
     """
     Split the computer path according to this scheme:
@@ -505,12 +510,13 @@ def splitComputerPath(path):
         hostname = fqdn
         domain = ''
 
-    if domain and not re.match('^([a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]\.){0,10}[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$', domain):
+    if domain and not re.match(
+        '^([a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]\\.){0,10}[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$',
+            domain):
         raise TypeError('Bad domain: %s' % domain)
 
     if not re.match('^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9])$', hostname):
         raise TypeError('Bad hostname: %s' % hostname)
-
 
     return (profile, entities, hostname, domain)
 
@@ -536,7 +542,7 @@ def checkComputerName(name):
     return ret
 
 
-def rfc3339Time(ref = False):
+def rfc3339Time(ref=False):
     """
     Return a RFC 3339 string representing the time @ref
     """
@@ -545,7 +551,7 @@ def rfc3339Time(ref = False):
     return strftime('%Y-%m-%dT%H:%M:%SZ', ref)
 
 
-def humanReadable(num, unit = "B", base = 1024):
+def humanReadable(num, unit="B", base=1024):
     """
     port of my famous "human readable" formating function
     """
@@ -570,8 +576,10 @@ def humanReadable(num, unit = "B", base = 1024):
     return ret
 
 ###
-### Network interfaces related tools
+# Network interfaces related tools
 ###
+
+
 def get_ip_address(ifname):
     """ TODO: IPv6
     """
@@ -582,29 +590,35 @@ def get_ip_address(ifname):
         struct.pack('256s', ifname)
     )[20:24])
 
+
 def start_process(processname):
     """  """
     import subprocess
     subprocess.Popen([processname], shell=True)
     return check_process(processname)
 
+
 def stop_process(processname):
     """
     """
     import subprocess
     import signal
-    proc = subprocess.Popen(["pgrep", processname], stdout=subprocess.PIPE)# Kill process.
+    # Kill process.
+    proc = subprocess.Popen(["pgrep", processname], stdout=subprocess.PIPE)
     for pid in proc.stdout:
-        logging.getLogger().debug("kill pid %d "%int(pid))
+        logging.getLogger().debug("kill pid %d " % int(pid))
         os.kill(int(pid), signal.SIGTERM)
         # Check if the process that we killed is alive.
         try:
             os.kill(int(pid), 0)
         except OSError as ex:
-            logging.getLogger().warn("wasn't able to kill the process %s HINT:use signal.SIGKILL or signal.SIGABORT"% processname)
+            logging.getLogger().warn(
+                "wasn't able to kill the process %s HINT:use signal.SIGKILL or signal.SIGABORT" %
+                processname)
             raise Exception("""wasn't able to kill the process %s
-                                HINT:use signal.SIGKILL or signal.SIGABORT"""% processname)
+                                HINT:use signal.SIGKILL or signal.SIGABORT""" % processname)
     return not check_process(processname)
+
 
 def check_process(processname):
     """
@@ -612,11 +626,12 @@ def check_process(processname):
     import re
     import subprocess
     returnprocess = False
-    s = subprocess.Popen(["ps", "ax"],stdout=subprocess.PIPE)
+    s = subprocess.Popen(["ps", "ax"], stdout=subprocess.PIPE)
     for x in s.stdout:
         if re.search(processname, x):
             returnprocess = True
     return returnprocess
+
 
 def get_default_netif():
     """ Read the default interface directly from /proc.
@@ -637,7 +652,7 @@ def get_default_netif():
         fh.close()
 
     # 2nd possibility ->
-    if not netif :
+    if not netif:
         cmd = "netstat -i"
         ps = os.popen(cmd, "r")
         out = ps.read()
@@ -654,14 +669,14 @@ def get_default_netif():
     return netif
 
 
-
 def get_default_ip():
     """ Return the IP of first netif with a default gateway
     """
     netif = get_default_netif()
     return get_ip_address(netif)
 
-def noNone(var, res = ''):
+
+def noNone(var, res=''):
     """
     Some times, we don't want to see any None affected to a variable
     This function checks if variable is None. If True, return empty string by default
@@ -679,6 +694,7 @@ def noNone(var, res = ''):
         return res
     return var
 
+
 def noNoneList(var_list, res=''):
     """
     Same as noNone function but mapped to an list or another iterable.
@@ -694,7 +710,8 @@ def noNoneList(var_list, res=''):
     """
     return [noNone(var) for var in var_list]
 
-class HasSufficientMemory :
+
+class HasSufficientMemory:
     """
     Can be used as a decorator to avoid executing the functions with high costs.
 
@@ -734,8 +751,8 @@ class HasSufficientMemory :
         @returns: decorated function or neg_ret_value
         """
 
-        def wrapped (*args, **kwargs) :
-            if psutil.virtual_memory().percent < self.mem_limit :
+        def wrapped(*args, **kwargs):
+            if psutil.virtual_memory().percent < self.mem_limit:
                 return fnc(*args, **kwargs)
             else:
                 logging.getLogger().warn("Not enough memory to run '%s'" % fnc.__name__)
@@ -745,13 +762,13 @@ class HasSufficientMemory :
 
 
 def subnetForIpMask(ip, netmask):
-    resultat=[]
+    resultat = []
     try:
         ip = [int(x) for x in ip.split('.')]
         netmask = [int(x) for x in netmask.split('.')]
         for i in range(4):
-            resultat.append( str(ip[i] & netmask[i]))
-        result=".".join(resultat)
+            resultat.append(str(ip[i] & netmask[i]))
+        result = ".".join(resultat)
         return True, result
     except ValueError:
         return False, "O.O.O.O"

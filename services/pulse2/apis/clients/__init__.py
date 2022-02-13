@@ -30,11 +30,18 @@ from pulse2.apis.consts import PULSE2_ERR_404, PULSE2_ERR_CONN_REF, PULSE2_ERR_U
 from twisted.internet.error import ConnectionRefusedError
 import exceptions
 
+
 class Pulse2Api(Pulse2XMLRPCProxy):
 
     name = "pulse2API"
 
-    def __init__(self, credentials, url = 'https://localhost:9990/package_api_get1', verifypeer = False, cacert = None, localcert = None):
+    def __init__(
+            self,
+            credentials,
+            url='https://localhost:9990/package_api_get1',
+            verifypeer=False,
+            cacert=None,
+            localcert=None):
         """
         @param credentials: XML-RPC HTTP BASIC credentials = login:password
         @type credentials: str
@@ -57,12 +64,13 @@ class Pulse2Api(Pulse2XMLRPCProxy):
         # FIXME: still needed ?
         self.initialized_failed = False
 
-
-    def onError(self, error, funcname, args, default_return = []):
-        self.logger.warn("%s: %s %s has failed: %s" % (self.name, funcname, args, error))
+    def onError(self, error, funcname, args, default_return=[]):
+        self.logger.warn(
+            "%s: %s %s has failed: %s" %
+            (self.name, funcname, args, error))
         return default_return
 
-    def onErrorRaise(self, error, funcname, args, default_return = []):
+    def onErrorRaise(self, error, funcname, args, default_return=[]):
         """
         To use as a deferred error back
 
@@ -70,11 +78,15 @@ class Pulse2Api(Pulse2XMLRPCProxy):
         @rtype: list
         """
         if error.type == ConnectionRefusedError:
-            self.logger.error("%s %s has failed: connection refused" % (funcname, args))
+            self.logger.error(
+                "%s %s has failed: connection refused" %
+                (funcname, args))
             ret = ['PULSE2_ERR', PULSE2_ERR_CONN_REF,
                    self.server_addr, default_return]
         elif error.type == exceptions.ValueError:
-            self.logger.error("%s %s has failed: the mountpoint don't exists" % (funcname, args))
+            self.logger.error(
+                "%s %s has failed: the mountpoint don't exists" %
+                (funcname, args))
             ret = ['PULSE2_ERR', PULSE2_ERR_404,
                    self.server_addr, default_return]
         else:

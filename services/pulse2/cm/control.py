@@ -35,12 +35,14 @@ from pulse2.cm.endpoints import VPNInstallEndpoint
 
 class MethodNotFound(Exception):
     """ Unexisting method in an inherited endpoint """
+
     def __repr__(self):
         return "Method %s not found" % repr(self.message)
 
 
 class MethodWithoutPrefix(Exception):
     """ Method without a necessary prefix """
+
     def __init__(self, name):
         self.name = name
 
@@ -59,7 +61,6 @@ class RequestExtractor(object):
     DELIMITER = "."
     args_types_allowed = [str, tuple, list, dict]
 
-
     def extract(self, _request):
         request = eval(_request)
         if isinstance(request, list) or isinstance(request, tuple):
@@ -71,9 +72,8 @@ class RequestExtractor(object):
             else:
                 raise IndexError("Expected number of elements in request: 2")
         else:
-            #print request, type(request)
+            # print request, type(request)
             raise TypeError("Invalid request format")
-
 
     def _extract_method(self, text):
         if isinstance(text, str):
@@ -84,11 +84,14 @@ class RequestExtractor(object):
                     # returns a prefix of endpoint and a method identifier
                     return text.split(self.DELIMITER)
                 else:
-                    raise IndexError("Not allowed more than one method delimiter %s" % text)
+                    raise IndexError(
+                        "Not allowed more than one method delimiter %s" %
+                        text)
             else:
                 raise MethodWithoutPrefix(text)
         else:
-            raise TypeError("Invalid format of method identifier, <str> type expected")
+            raise TypeError(
+                "Invalid format of method identifier, <str> type expected")
 
     def _validate_args(self, args):
         if isinstance(args, str):
@@ -97,7 +100,10 @@ class RequestExtractor(object):
             if isinstance(args, args_type):
                 return args
         else:
-            raise TypeError("Invalid format of args; one of <%s> expected" % repr(self.args_types_allowed))
+            raise TypeError(
+                "Invalid format of args; one of <%s> expected" %
+                repr(
+                    self.args_types_allowed))
 
 
 class EndpointsRoot(object):
@@ -110,8 +116,6 @@ class EndpointsRoot(object):
     def __init__(self, collector):
         self.collector = collector
         self.logger = logging.getLogger()
-
-
 
     def register(self, endpoint):
         if isinstance(endpoint, Endpoint):
@@ -131,18 +135,21 @@ class EndpointsRoot(object):
             uid, ip, request = line
             d = self.call(request, from_ip=ip)
             d.addCallback(self._reply, uid)
+
             @d.addErrback
             def _eb(failure):
-                self.logger.warn("\033[31mRequest call failed: %s\033[0m" % str(failure))
+                self.logger.warn(
+                    "\033[31mRequest call failed: %s\033[0m" %
+                    str(failure))
             dl.append(d)
 
         return DeferredList(dl)
 
-
     def _reply(self, result, uid):
-        self.logger.debug("\033[34mResult for session uid: %d: %s\033[0m" % (uid, str(result)))
+        self.logger.debug(
+            "\033[34mResult for session uid: %d: %s\033[0m" %
+            (uid, str(result)))
         self.collector.release(uid, self.parser.encode(result))
-
 
     def call(self, request, from_ip):
 
@@ -153,9 +160,6 @@ class EndpointsRoot(object):
                 return endpoint.call_method(method, args, from_ip)
         else:
             raise MethodNotFound(method)
-
-
-
 
 
 class Dispatcher(object):
@@ -194,7 +198,6 @@ class Dispatcher(object):
 
         self.endpoints_lookup = config.server.endpoints
 
-
     def _start_server(self):
         """
         Starts the gateway instance.
@@ -221,17 +224,16 @@ class Dispatcher(object):
                 self.logger.info("Registering '%s' endpoint" % endpoint.prefix)
                 self.endpoints_root.register(endpoint(self.config))
 
-
-
     def _eb_start_failed(self, failure):
-        self.logger.warn("\033[31mStart server failed: %s\033[0m" % str(failure))
-
-
+        self.logger.warn(
+            "\033[31mStart server failed: %s\033[0m" %
+            str(failure))
 
     def run(self):
 
         d = self._start_server()
         return d
+
 
 if __name__ == "__main__":
 
@@ -245,8 +247,6 @@ if __name__ == "__main__":
 
     from twisted.internet import reactor
     from pulse2.cm.config import Config
-
-
 
     config = Config()
     dp = Dispatcher(config)

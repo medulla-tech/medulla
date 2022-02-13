@@ -30,6 +30,7 @@ provide methods to work with profile in the imaging module
 import logging
 from pulse2.utils import Singleton
 
+
 class ComputerImagingManager(Singleton):
     components = {}
     main = 'imaging'
@@ -39,11 +40,15 @@ class ComputerImagingManager(Singleton):
         self.logger = logging.getLogger()
 
     def select(self, name):
-        self.logger.info("Selecting imaging computer profile manager: %s" % name)
+        self.logger.info(
+            "Selecting imaging computer profile manager: %s" %
+            name)
         self.main = name
 
     def register(self, name, klass):
-        self.logger.debug("Registering imaging computer profile manager %s / %s" % (name, str(klass)))
+        self.logger.debug(
+            "Registering imaging computer profile manager %s / %s" %
+            (name, str(klass)))
         self.components[name] = klass
 
     def validate(self):
@@ -78,6 +83,7 @@ class ComputerImagingManager(Singleton):
     def isChildOfImagingServer(self, loc_uuid, main_imaging_server_uuid):
         klass = self.components[self.main]
         return klass().isChildOfImagingServer(loc_uuid, main_imaging_server_uuid)
+
 
 class ComputerImagingI:
     def isImagingInProfilePossible(self):

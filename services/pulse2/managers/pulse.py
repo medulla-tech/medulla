@@ -28,6 +28,7 @@ The pulse2 manager, it give access to eveything that is stocked in the pulse2 da
 import logging
 from pulse2.utils import Singleton
 
+
 class Pulse2Manager(Singleton):
     components = {}
     main = 'pulse2'
@@ -41,7 +42,9 @@ class Pulse2Manager(Singleton):
         self.main = name
 
     def register(self, name, klass):
-        self.logger.debug("Registering pulse2 manager %s / %s" % (name, str(klass)))
+        self.logger.debug(
+            "Registering pulse2 manager %s / %s" %
+            (name, str(klass)))
         self.components[name] = klass
 
     def validate(self):

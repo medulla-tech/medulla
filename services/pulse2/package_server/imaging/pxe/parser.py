@@ -29,22 +29,23 @@ by normalized prefixes.
 
 Output of this engine is method to execute with arguments.
 """
+
+
 import inspect
 import logging
 from functools import wraps
-
 from pulse2.utils import isMACAddress
-
-LOG_ACTION = {0 : ("boot", "booted"),
-              1 : ("menu", "choosen menu entry"),
-              2 : ("restoration", "restoration started"),
-              3 : ("restoration", "restoration finished"),
-              4 : ("backup", "backup started"),
-              5 : ("backup", "backup finished"),
-              6 : ("postinst", "postinstall started"),
-              7 : ("postinst", "postinstall finished"),
-              8 : ("error", "critical error"),
+LOG_ACTION = {0: ("boot", "booted"),
+              1: ("menu", "choosen menu entry"),
+              2: ("restoration", "restoration started"),
+              3: ("restoration", "restoration finished"),
+              4: ("backup", "backup started"),
+              5: ("backup", "backup finished"),
+              6: ("postinst", "postinstall started"),
+              7: ("postinst", "postinstall finished"),
+              8: ("error", "critical error"),
               }
+
 
 class LOG_LEVEL (object):
     """Logging levels for ImagingLog"""
@@ -56,6 +57,7 @@ class LOG_LEVEL (object):
     NOTICE = 6
     INFO = 7
     DEBUG = 8
+
 
 class LOG_STATE (object):
     """Logging states for ImagingLog"""
@@ -84,10 +86,10 @@ def assign(id):
         @wraps(fnc)
         def wrapped_fnc(self, *args, **kwargs):
 
-            if self.register_only :
+            if self.register_only:
                 # registering step called when RPC proxy created
                 self.methods[id] = fnc
-            else :
+            else:
                 # already registered, function returned with normal behavior
                 return fnc(self, *args, **kwargs)
 
@@ -98,7 +100,7 @@ def assign(id):
     return wrapper
 
 
-class ArgumentContainer :
+class ArgumentContainer:
     """
     A container with input parser.
 
@@ -107,6 +109,7 @@ class ArgumentContainer :
     as a property.
     If not, related property is None.
     """
+
     def __init__(self, packet):
         """
         @param packet: raw content of received packet
@@ -116,20 +119,20 @@ class ArgumentContainer :
 
     # ================== PARSED ARGUMENTS ========================= #
 
-
     # ------- common arguments --------------- #
     MAC_FLAG = "Mc:"
     HOSTNAME_FLAG = "ID"
     IPADDR_FLAG = "IPADDR:"
+
     @property
     def mac(self):
         """ Common argument for all PXE methods """
-        if self.MAC_FLAG in self.packet :
+        if self.MAC_FLAG in self.packet:
             start = self.packet.index(self.MAC_FLAG) + len(self.MAC_FLAG)
 
-            if len(self.packet[start:]) >= 17 :
-                mac = self.packet[start:start+17]
-                if isMACAddress(mac) :
+            if len(self.packet[start:]) >= 17:
+                mac = self.packet[start:start + 17]
+                if isMACAddress(mac):
                     return mac
 
         return None
@@ -138,8 +141,8 @@ class ArgumentContainer :
     @property
     def hostname(self):
         """ Argument for new machine registering (computerRegister)"""
-        if self.HOSTNAME_FLAG in self.packet :
-            packet = self.packet[len(self.HOSTNAME_FLAG)+1:]
+        if self.HOSTNAME_FLAG in self.packet:
+            packet = self.packet[len(self.HOSTNAME_FLAG) + 1:]
             end = packet.index(":")
             return packet[:end]
 
@@ -148,12 +151,11 @@ class ArgumentContainer :
     @property
     def ip_address(self):
         """ Special case for GLPI """
-        if self.IPADDR_FLAG in self.packet :
+        if self.IPADDR_FLAG in self.packet:
             start = self.packet.index(self.IPADDR_FLAG) + len(self.IPADDR_FLAG)
             return self.packet[start:]
 
         return None
-
 
     # ---------- logAction args -------------- #
 
@@ -178,19 +180,20 @@ class ArgumentContainer :
         phase, message = LOG_ACTION[self.level]
 
         complement = None
-        if self.level == 1 :
+        if self.level == 1:
             complement = ord(self.packet[2])
-        if self.level in [2,3,4,5] :
-            if self.packet[2] == "-" :
+        if self.level in [2, 3, 4, 5]:
+            if self.packet[2] == "-":
                 complement = self.packet[3:]
-                if "\x00" in complement :
+                if "\x00" in complement:
                     end = complement.index("\x00")
                     complement = complement[:end]
-        if complement :
+        if complement:
             return "%s: %s" % (message, complement)
-        else :
+        else:
             return message
     # --------- injectInventory args ----------- #
+
     @property
     def inventory(self):
         """ injectInventory argument """
@@ -212,28 +215,28 @@ class ArgumentContainer :
     # F:2593852
     # Mc:52:54:00:BB:00:95
 
-
     # ------------ imageDone args --------------- #
+
     @property
     def imageUUID(self):
         """imageDone argument"""
-        if self.MAC_FLAG in self.packet :
+        if self.MAC_FLAG in self.packet:
             end = self.packet.index(self.MAC_FLAG)
-            return self.packet[1:end].replace("\x00", "") # TODO
+            return self.packet[1:end].replace("\x00", "")  # TODO
 
     @property
     def password(self):
         """ Client identification controlled by server"""
-        if self.MAC_FLAG in self.packet :
+        if self.MAC_FLAG in self.packet:
             end = self.packet.index(self.MAC_FLAG)
             return self.packet[2:end].replace("\x00", "")
 
     @property
     def num(self):
         """ Menu item number """
-        if len(self.packet) > 1 :
+        if len(self.packet) > 1:
             return ord(self.packet[1])
-        else :
+        else:
             return 0
 
     @property
@@ -245,9 +248,10 @@ class ArgumentContainer :
                 idx = self.packet.index(";") + 1
                 return ord(self.packet[idx])
         except Exception as e:
-            logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
+            logging.getLogger().warn(
+                "An eror occured while parsing pnum argument: %s" %
+                str(e))
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
-
 
     @property
     def bnum(self):
@@ -261,10 +265,12 @@ class ArgumentContainer :
                 value = packet_slice[:end]
                 try:
                     return int(value)
-                except ValueError :
+                except ValueError:
                     return None
         except Exception as e:
-            logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
+            logging.getLogger().warn(
+                "An eror occured while parsing pnum argument: %s" %
+                str(e))
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
 
     @property
@@ -280,17 +286,16 @@ class ArgumentContainer :
                 value = packet_slice[start:end]
                 try:
                     return int(value)
-                except ValueError :
+                except ValueError:
                     return None
         except Exception as e:
-            logging.getLogger().warn("An eror occured while parsing pnum argument: %s" % str(e))
+            logging.getLogger().warn(
+                "An eror occured while parsing pnum argument: %s" %
+                str(e))
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
 
 
-
-
-
-class PXEMethodParser :
+class PXEMethodParser:
     """
     Extracting the methods and arguments from packet.
 
@@ -320,14 +325,15 @@ class PXEMethodParser :
         for name in dir(self):
             fnc = getattr(self, name)
 
-            if not callable(fnc) : continue
-            if not hasattr(fnc, "is_proxy_fnc"): continue
+            if not callable(fnc):
+                continue
+            if not hasattr(fnc, "is_proxy_fnc"):
+                continue
 
-            if fnc.is_proxy_fnc :
+            if fnc.is_proxy_fnc:
                 args, vargs, kwds, defaults = inspect.getargspec(fnc)
-                fnc(self,*args)
+                fnc(self, *args)
         self.register_only = False
-
 
     def get_method(self, packet):
         """
@@ -341,7 +347,7 @@ class PXEMethodParser :
         """
         marker = ord(packet[0])
 
-        if not marker in self.methods :
+        if marker not in self.methods:
             raise KeyError
 
         method = self.methods[marker]
@@ -356,10 +362,9 @@ class PXEMethodParser :
 
                 args.append(value)
 
-        logging.getLogger().debug("PXE Proxy: executed method: (%s) %s" % (str(hex(marker)), method.__name__ ))
+        logging.getLogger().debug("PXE Proxy: executed method: (%s) %s" %
+                                  (str(hex(marker)), method.__name__))
         return method, args
-
-
 
     def get_args(self, method):
         """

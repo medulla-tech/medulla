@@ -170,7 +170,6 @@ class Syncthing_machine(Base, XmppMasterDBObj):
     syncthing_ars_cluster = relationship(Syncthing_ars_cluster)
 
 
-
 class Glpi_entity(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'glpi_entity'
@@ -183,14 +182,16 @@ class Glpi_entity(Base, XmppMasterDBObj):
     glpi_id = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return "<entity('%s','%s', '%s')>" % (self.name, self.complete_name, self.glpi_id)
+        return "<entity('%s','%s', '%s')>" % (
+            self.name, self.complete_name, self.glpi_id)
 
     def get_data(self):
-        return{ 'id' : self.id,
-                'complete_name' : self.complete_name,
-                'name' : self.name,
-                'glpi_id' : self.glpi_id
+        return{'id': self.id,
+               'complete_name': self.complete_name,
+               'name': self.name,
+               'glpi_id': self.glpi_id
                }
+
 
 class Glpi_location(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -204,13 +205,14 @@ class Glpi_location(Base, XmppMasterDBObj):
     glpi_id = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return "<location('%s','%s', '%s')>" % (self.name, self.complete_name, self.glpi_id)
+        return "<location('%s','%s', '%s')>" % (
+            self.name, self.complete_name, self.glpi_id)
 
     def get_data(self):
-        return{ 'id' : self.id,
-                'complete_name' : self.complete_name,
-                'name' : self.name,
-                'glpi_id' : self.glpi_id
+        return{'id': self.id,
+               'complete_name': self.complete_name,
+               'name': self.name,
+               'glpi_id': self.glpi_id
                }
 
 
@@ -227,7 +229,7 @@ class Machines(Base, XmppMasterDBObj):
     enabled = Column(Boolean, unique=False)
     platform = Column(String(60))
     hostname = Column(String(45), nullable=False)
-    archi= Column(String(45), nullable=False)
+    archi = Column(String(45), nullable=False)
     uuid_inventorymachine = Column(String(45), nullable=False)
     ippublic = Column(String(20))
     ip_xmpp = Column(String(45))
@@ -266,21 +268,23 @@ class Glpi_Register_Keys(Base, XmppMasterDBObj):
     # id = Column(Integer, primary_key=True)
     name = Column(String(90), nullable=False)
     value = Column(String(90), nullable=False)
-    comment =  Column(String(90))
+    comment = Column(String(90))
     # ====== ForeignKey =============================
     machines_id = Column(Integer, ForeignKey('machines.id'))
     machines = relationship(Machines)
 
     def __repr__(self):
-        return "<register_keys('%s','%s', '%s', '%s')>" % (self.name, self.value, self.comment, self.machines_id)
+        return "<register_keys('%s','%s', '%s', '%s')>" % (
+            self.name, self.value, self.comment, self.machines_id)
 
     def get_data(self):
-        return{ 'id' : self.id,
-                'name' : self.name,
-                'value' : self.value,
-                'comment' : self.comment,
-                'machines_id' : self.machines_id
+        return{'id': self.id,
+               'name': self.name,
+               'value': self.value,
+               'comment': self.comment,
+               'machines_id': self.machines_id
                }
+
 
 class Network(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -356,8 +360,9 @@ class Users(Base, XmppMasterDBObj):
     postal_code = Column(String(45))
     country_code = Column(String(45))
     country_name = Column(String(45))
-    creation_user =Column(DateTime, nullable=True)
+    creation_user = Column(DateTime, nullable=True)
     last_modif = Column(DateTime, nullable=True)
+
 
 class Has_machinesusers(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -644,13 +649,13 @@ class Qa_relay_result(Base, XmppMasterDBObj):
     __tablename__ = 'qa_relay_result'
     id_command = Column(Integer,  # Quick get a ref to the initial command
                         nullable=False)
-    launched_id = Column(Integer,
-                         nullable=False)  # Reference to the specialized command (launched command)
+    # Reference to the specialized command (launched command)
+    launched_id = Column(Integer, nullable=False)
     session_id = Column(String(45), nullable=False)  # xmpp session id
     typemessage = Column(String(20), nullable=False, default='log')
     command_result = Column(Text)
-    relay = Column(String(45),
-                   nullable=False)  # If uniq command : relay, if cluster command : jid of the cluster member
+    # If uniq command : relay, if cluster command : jid of the cluster member
+    relay = Column(String(45), nullable=False)
 
 
 class Uptime_machine(Base, XmppMasterDBObj):
@@ -717,7 +722,7 @@ class Mon_devices(Base, XmppMasterDBObj):
     firmware = Column(String(10), default=None)
     status = Column(String(45), nullable=False, default="ready")
     alarm_msg = Column(String(45), default=None)
-    doc = Column(Text,  default=None)
+    doc = Column(Text, default=None)
 
 
 class Mon_device_service(Base, XmppMasterDBObj):
@@ -743,11 +748,11 @@ class Mon_rules(Base, XmppMasterDBObj):
     # id = Column(Integer, primary_key=True)
     hostname = Column(String(255), default=None)
     device_type = Column(String(255), nullable=False,
-                                  default="opticalReader")
+                         default="opticalReader")
     binding = Column(Text)
-    succes_binding_cmd = Column(Text,  default=None)
-    no_success_binding_cmd = Column(Text,  default=None)
-    error_on_binding = Column(Text,  default=None)
+    succes_binding_cmd = Column(Text, default=None)
+    no_success_binding_cmd = Column(Text, default=None)
+    error_on_binding = Column(Text, default=None)
     type_event = Column(String(255), default=None)
     user = Column(String(255), default=None)
     comment = Column(String(1024))
@@ -770,6 +775,7 @@ class Mon_event(Base, XmppMasterDBObj):
     ack_user = Column(String(90), nullable=True)
     ack_date = Column(DateTime, default=datetime.datetime.now)
 
+
 class Mon_panels_template(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'mon_panels_template'
@@ -782,6 +788,7 @@ class Mon_panels_template(Base, XmppMasterDBObj):
     parameters = Column(String(1024), default="{}")
     status = Column(Boolean, default=True)
     comment = Column(String(1024), default="")
+
 
 """
 This code is kept here as a comment, "if" we need to use it

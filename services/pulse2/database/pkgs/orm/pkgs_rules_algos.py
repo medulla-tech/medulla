@@ -29,6 +29,8 @@ import logging
 
 """ Class to map pkgs.pkgs_rules_algos to SA
 """
+
+
 class Pkgs_rules_algos(object):
     """ Mapping between pkgs.pkgs_rules_algos and SA
         colunm table: ' id,name,description,level'

@@ -26,8 +26,9 @@ from pulse2.scheduler.api.mmc_client import RPCClient
 
 log = logging.getLogger()
 
+
 class ImagingAPI(RPCClient):
-    def synchroComputer(self, uuid, wol = False):
+    def synchroComputer(self, uuid, wol=False):
         def _callback(result):
             return True
 
@@ -45,9 +46,14 @@ class ImagingAPI(RPCClient):
         return d
 
     def setWOLMenu(self, uuid, name):
-        log.info("Wake-on-lan received for client %s, creating WOL specific imaging boot menu" % name)
-        return self.synchroComputer(uuid, wol = True)
+        log.info(
+            "Wake-on-lan received for client %s, creating WOL specific imaging boot menu" %
+            name)
+        return self.synchroComputer(uuid, wol=True)
 
-    def unsetWOLMenu(self, uuid, name, status='done', message="maximum time reached"):
-        log.info("Wake-on-lan %s for client %s (%s), restoring non-WOL imaging boot menu" % (status, name, message))
-        return self.synchroComputer(uuid, wol = False)
+    def unsetWOLMenu(self, uuid, name, status='done',
+                     message="maximum time reached"):
+        log.info(
+            "Wake-on-lan %s for client %s (%s), restoring non-WOL imaging boot menu" %
+            (status, name, message))
+        return self.synchroComputer(uuid, wol=False)

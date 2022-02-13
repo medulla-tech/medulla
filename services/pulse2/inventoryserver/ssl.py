@@ -33,7 +33,7 @@ from twisted.internet import ssl
 from socketserver import ThreadingMixIn
 
 
-def makeSSLContext(verifypeer, cacert, localcert, cb, log = True):
+def makeSSLContext(verifypeer, cacert, localcert, cb, log=True):
     """
     Make the SSL context for the server, according to the parameters
 
@@ -71,11 +71,16 @@ def makeSSLContext(verifypeer, cacert, localcert, cb, log = True):
         ctx.use_certificate_file(cacert)
     return ctx
 
+
 class SecureHTTPServer(HTTPServer):
 
     def __init__(self, server_address, HandlerClass, config):
         BaseServer.__init__(self, server_address, HandlerClass)
-        ctx = makeSSLContext(config.verifypeer, config.cacert, config.localcert, self.sslReject)
+        ctx = makeSSLContext(
+            config.verifypeer,
+            config.cacert,
+            config.localcert,
+            self.sslReject)
         self.socket = SSL.Connection(ctx, socket.socket(self.address_family,
                                                         self.socket_type))
         self.server_bind()
@@ -87,11 +92,13 @@ class SecureHTTPServer(HTTPServer):
         request, client_address = self.get_request()
         self.close_request(request)
 
+
 class SecureHTTPRequestHandler(SimpleHTTPRequestHandler):
     def setup(self):
         self.connection = self.request
         self.rfile = socket._fileobject(self.request, "rb", self.rbufsize)
         self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
+
 
 class SecureThreadedHTTPServer(ThreadingMixIn, SecureHTTPServer):
     """Handle requests in a separate thread."""

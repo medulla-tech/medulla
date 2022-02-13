@@ -27,63 +27,64 @@ import unittest
 
 from pulse2.scheduler.tracking.circuits import Tracker, TimedTracker
 
+
 class Test01_Tracker(unittest.TestCase):
 
-
     def test_01_in(self):
-	numbers = [int(1000*random.random()) for i in range(1000)]
+        numbers = [int(1000 * random.random()) for i in range(1000)]
         tracker = Tracker()
-	tracker.add(numbers)
+        tracker.add(numbers)
 
         number = random.choice(numbers)
-	self.assertIn(number, tracker)
+        self.assertIn(number, tracker)
 
     def test_02_not_in(self):
-	numbers = [int(1000*random.random()) for i in range(1000)]
+        numbers = [int(1000 * random.random()) for i in range(1000)]
         tracker = Tracker()
-	tracker.add(numbers)
+        tracker.add(numbers)
 
         number = random.choice(numbers)
 
-	tracker.remove(number)
-	self.assertNotIn(number, tracker)
+        tracker.remove(number)
+        self.assertNotIn(number, tracker)
+
 
 class Test02_TimedTracker(unittest.TestCase):
 
     def test_01_in(self):
-	numbers = [int(1000*random.random()) for i in range(1000)]
+        numbers = [int(1000 * random.random()) for i in range(1000)]
         tracker = TimedTracker(5)
-	tracker.add(numbers)
+        tracker.add(numbers)
 
         number = random.choice(numbers)
-	self.assertIn(number, tracker)
+        self.assertIn(number, tracker)
 
     def test_02_not_in(self):
-	numbers = [int(1000*random.random()) for i in range(1000)]
+        numbers = [int(1000 * random.random()) for i in range(1000)]
         tracker = TimedTracker(5)
-	tracker.add(numbers)
+        tracker.add(numbers)
 
         number = random.choice(numbers)
 
-	tracker.remove(number)
-	self.assertNotIn(number, tracker)
+        tracker.remove(number)
+        self.assertNotIn(number, tracker)
 
     def test_03_timeout(self):
-	numbers = [int(1000*random.random()) for i in range(1000)]
+        numbers = [int(1000 * random.random()) for i in range(1000)]
 
-        not_expired= []
-	for i in range(10):
+        not_expired = []
+        for i in range(10):
             not_expired.append(random.choice(numbers))
 
         tracker = TimedTracker(5)
 
-	time.sleep(6)
+        time.sleep(6)
 
         for id in not_expired:
             tracker.update(id)
 
-	for id in not_expired:
-	    self.assertNotIn(id, tracker.get_expired())
+        for id in not_expired:
+            self.assertNotIn(id, tracker.get_expired())
 
 
 if __name__ == "__main__":

@@ -38,7 +38,6 @@ class Test00_Parser(TestCase):
         pack = parser.encode("hello")
         self.assertEqual(parser.decode(pack), "hello")
 
-
     def test02_encode_decode_pickle(self):
         """ test with pickle serializer """
 

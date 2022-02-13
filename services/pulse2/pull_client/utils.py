@@ -52,7 +52,8 @@ def get_registry_value(key, subkey, value):
     import winreg
     try:
         key = getattr(_winreg, key)
-        handle = winreg.OpenKey(key, subkey, 0, winreg.KEY_READ | winreg.KEY_WOW64_32KEY)
+        handle = winreg.OpenKey(
+            key, subkey, 0, winreg.KEY_READ | winreg.KEY_WOW64_32KEY)
         (value, type) = winreg.QueryValueEx(handle, value)
         return value
     except WindowsError:  # pyflakes.ignore
@@ -61,9 +62,11 @@ def get_registry_value(key, subkey, value):
 
 def get_packages_dir():
     if platform.system() == "Windows":
-        openssh = os.path.join(get_registry_value("HKEY_LOCAL_MACHINE",
-                                                  "SOFTWARE\Mandriva\OpenSSH",
-                                                  "InstallPath"))
+        openssh = os.path.join(
+            get_registry_value(
+                "HKEY_LOCAL_MACHINE",
+                "SOFTWARE\\Mandriva\\OpenSSH",
+                "InstallPath"))
         openssh_tmp = os.path.join(openssh, "tmp")
         return str(openssh_tmp)
     else:
@@ -74,23 +77,23 @@ def get_launcher_env():
     environ = copy.deepcopy(os.environ)
     if platform.system() == "Windows":
         openssh = get_registry_value("HKEY_LOCAL_MACHINE",
-                                     "SOFTWARE\Mandriva\OpenSSH",
+                                     "SOFTWARE\\Mandriva\\OpenSSH",
                                      "InstallPath")
         openssh_bin = os.path.join(openssh, "bin")
 
         # FusionInventory 2.3.X
-        fusion_registry = get_registry_value("HKEY_LOCAL_MACHINE",
-                                             "SOFTWARE\Microsoft\Windows\CurrentVersion\\Uninstall\FusionInventory-Agent",
-                                             "InstallLocation")
+        fusion_registry = get_registry_value(
+            "HKEY_LOCAL_MACHINE",
+            "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\FusionInventory-Agent",
+            "InstallLocation")
         if fusion_registry:
             if os.path.exists(fusion_registry):
                 fusion_bin = os.path.join(fusion_registry, "perl", "bin")
 
         # FusionInventory 2.2.X
         if not fusion_registry:
-            fusion_registry = get_registry_value("HKEY_LOCAL_MACHINE",
-                                                "SOFTWARE\FusionInventory-Agent",
-                                                "share-dir")
+            fusion_registry = get_registry_value(
+                "HKEY_LOCAL_MACHINE", "SOFTWARE\\FusionInventory-Agent", "share-dir")
             if fusion_registry:
                 if os.path.exists(fusion_registry):
                     fusion = os.path.dirname(fusion_registry)
@@ -98,7 +101,8 @@ def get_launcher_env():
 
         environ["OPENSSH_BIN_PATH"] = str(openssh_bin)
         environ["FUSION_BIN_PATH"] = str(fusion_bin)
-        environ["PATH"] += str(os.pathsep + openssh_bin + os.pathsep + fusion_bin)
+        environ["PATH"] += str(os.pathsep + openssh_bin +
+                               os.pathsep + fusion_bin)
         environ["CYGWIN_HOME"] = str(openssh)
     else:
         environ["OPENSSH_BIN_PATH"] = "/usr/bin"
@@ -139,7 +143,11 @@ def get_mac_addresses():
     """
     mac_addresses = []
     if platform.system() == "Windows":
-        p = Popen("pulse2-ether-list.exe", stdout=PIPE, stderr=PIPE, env=get_launcher_env())
+        p = Popen(
+            "pulse2-ether-list.exe",
+            stdout=PIPE,
+            stderr=PIPE,
+            env=get_launcher_env())
         stdout, stderr = p.communicate()
         for index, line in enumerate(stdout.split("\n")):
             # ignore header

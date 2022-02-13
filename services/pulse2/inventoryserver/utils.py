@@ -32,8 +32,11 @@ from mmc.client import sync
 from mmc.site import mmcconfdir
 
 # Read inventory-server.ini config file
-class ConfigReader :
+
+
+class ConfigReader:
     """Read and parse config files."""
+
     def __init__(self):
         self._inv_server_ini = os.path.join(mmcconfdir,
                                             "pulse2",
@@ -51,7 +54,7 @@ class ConfigReader :
         @return: configobj.ConfigObj instance
         """
         logging.getLogger().debug("Load config file %s" % inifile)
-        if not os.path.exists(inifile) :
+        if not os.path.exists(inifile):
 
             logging.getLogger().warn("Error while reading the config file:")
             logging.getLogger().warn("Not found.")
@@ -70,8 +73,9 @@ class ConfigReader :
 
 
 # Build XMLRPC connection to MMC-Agent
-class MMCProxy :
+class MMCProxy:
     """ Provider to connect at mmc-agent """
+
     def __init__(self):
 
         config = ConfigReader()
@@ -85,23 +89,23 @@ class MMCProxy :
 
         self._build_url()
 
-        if not self._failure :
+        if not self._failure:
             self._build_proxy()
 
     def _build_url(self):
         """ URL building for XML-RPC proxy """
 
-        if not "mmc_agent" in self.inv_server_config :
+        if "mmc_agent" not in self.inv_server_config:
             logging.getLogger().warn("Error while reading the config file:")
             logging.getLogger().warn("Section 'mmc_agent' not exists")
             self._failure = True
             return
 
-        mmc_section =  self.inv_server_config["mmc_agent"]
+        mmc_section = self.inv_server_config["mmc_agent"]
 
-        for option in ["username", "password", "host", "port"] :
+        for option in ["username", "password", "host", "port"]:
 
-            if option not in mmc_section :
+            if option not in mmc_section:
                 logging.getLogger().warn("Error while reading section 'mmc_agent':")
                 logging.getLogger().warn("Option '%s' not exists" % option)
 
@@ -118,24 +122,24 @@ class MMCProxy :
         self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
 
     @property
-    def failure (self):
+    def failure(self):
         """
         Failure flag to indicate the incorrect build of proxy
         @returns: bool
         """
         return self._failure
 
-    def _build_proxy (self):
+    def _build_proxy(self):
         """ Builds the XML-RPC proxy to MMC agent. """
-        try :
+        try:
             self._proxy = sync.Proxy(self._url)
 
-        except Exception as err :
+        except Exception as err:
             logging.getLogger().error("Error while connecting to mmc-agent : %s" % err)
             self._failure = True
 
     @property
-    def proxy (self):
+    def proxy(self):
         """
         Get the XML-RPC proxy to MMC agent.
         @return: mmc.client.sync.Proxy
@@ -143,7 +147,7 @@ class MMCProxy :
         return self._proxy
 
 
-class InventoryUtils :
+class InventoryUtils:
     """ Common inventory utils """
 
     @classmethod
@@ -180,9 +184,11 @@ class InventoryUtils :
         macs = []
 
         if isinstance(tags, list) and len(tags) > 0:
-            for tag in tags :
+            for tag in tags:
                 xml_tag = tag.toxml()
-                mac = xml_tag.replace('<MACADDR>','').replace('</MACADDR>','')
+                mac = xml_tag.replace(
+                    '<MACADDR>', '').replace(
+                    '</MACADDR>', '')
                 macs.append(mac)
 
         return macs

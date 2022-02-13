@@ -32,14 +32,31 @@ from pulse2.package_server.assign_algo import MMAssignAlgo
 from pulse2.package_server.assign_algo.terminal_type.database import PluginInventoryAADatabase
 from pulse2.package_server.assign_algo.terminal_type.config import PluginInventoryAAConfig
 
+
 class MMUserAssignAlgo(MMAssignAlgo):
     name = 'terminal_type'
     assign = {}
 
-    def init(self, mirrors, mirrors_fallback, package_apis, url2mirrors, url2mirrors_fallback, url2package_apis):
-        MMAssignAlgo.init(self, mirrors, mirrors_fallback, package_apis, url2mirrors, url2mirrors_fallback, url2package_apis)
+    def init(
+            self,
+            mirrors,
+            mirrors_fallback,
+            package_apis,
+            url2mirrors,
+            url2mirrors_fallback,
+            url2package_apis):
+        MMAssignAlgo.init(
+            self,
+            mirrors,
+            mirrors_fallback,
+            package_apis,
+            url2mirrors,
+            url2mirrors_fallback,
+            url2package_apis)
         self.config = PluginInventoryAAConfig()
-        self.config.setup(mmcconfdir + '/pulse2/package-server/plugin_terminal_type.ini')
+        self.config.setup(
+            mmcconfdir +
+            '/pulse2/package-server/plugin_terminal_type.ini')
         self.database = PluginInventoryAADatabase()
         self.database.activate(self.config)
         self.populateCache()
@@ -67,34 +84,37 @@ class MMUserAssignAlgo(MMAssignAlgo):
     def getMachineMirror(self, m):
         if not m['uuid'] in self.assign:
             self.assign[m['uuid']] = {}
-        if not 'getMirror' in self.assign[m['uuid']]:
+        if 'getMirror' not in self.assign[m['uuid']]:
             type = self.__getMachineType(m)
             self.assign[m['uuid']]['getMirror'] = []
-            if type != None:
+            if type is not None:
                 for u in self.config.type2url[type]['mirror']:
-                    self.assign[m['uuid']]['getMirror'].append(self.url2mirrors[u])
+                    self.assign[m['uuid']]['getMirror'].append(
+                        self.url2mirrors[u])
         return self.assign[m['uuid']]['getMirror']
 
     def getMachineMirrorFallback(self, m):
         if not m['uuid'] in self.assign:
             self.assign[m['uuid']] = {}
-        if not 'getFallbackMirror' in self.assign[m['uuid']]:
+        if 'getFallbackMirror' not in self.assign[m['uuid']]:
             type = self.__getMachineType(m)
             self.assign[m['uuid']]['getFallbackMirror'] = []
-            if type != None:
+            if type is not None:
                 for u in self.config.type2url[type]['mirror']:
-                    self.assign[m['uuid']]['getFallbackMirror'].append(self.url2mirrors_fallback[u])
+                    self.assign[m['uuid']]['getFallbackMirror'].append(
+                        self.url2mirrors_fallback[u])
         return self.assign[m['uuid']]['getFallbackMirror']
 
     def getMachinePackageApi(self, m):
         if not m['uuid'] in self.assign:
             self.assign[m['uuid']] = {}
-        if not 'getMachinePackageApi' in self.assign[m['uuid']]:
+        if 'getMachinePackageApi' not in self.assign[m['uuid']]:
             type = self.__getMachineType(m)
             self.assign[m['uuid']]['getMachinePackageApi'] = []
-            if type != None:
+            if type is not None:
                 for u in self.config.type2url[type]['package_api']:
-                    self.assign[m['uuid']]['getMachinePackageApi'].append(self.url2package_apis[u])
+                    self.assign[m['uuid']]['getMachinePackageApi'].append(
+                        self.url2package_apis[u])
         return self.assign[m['uuid']]['getMachinePackageApi']
 
     def getComputersPackageApi(self, machines):

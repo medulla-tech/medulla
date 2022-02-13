@@ -26,14 +26,14 @@ A mixin of UDP and TCP server listening on the same port.
 This proxy communicate with PXE imaging client using a custom protocol.
 """
 
-import logging
 
+
+
+import logging
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor
-
 from pulse2.package_server.imaging.pxe.api import PXEImagingApi
-
 class ProcessPacket :
     """Common packet processing"""
 
@@ -73,8 +73,7 @@ class ProcessPacket :
         """
         return method(imaging, *args)
 
-
-    def process_data (self, data, client=None):
+    def process_data(self, data, client=None):
         """
         Called when a packet received.
 
@@ -98,7 +97,6 @@ class ProcessPacket :
 
         return d
 
-
     def send_response(self, result, fnc, client=None):
         """
         Sending the result of executed method to client.
@@ -109,33 +107,36 @@ class ProcessPacket :
         @param client: tuple of (host, port)
         @type client: tuple
         """
-        if result :
+        if result:
             data = bytes(result + "\x00")
-            try :
-                if client :
-                    self.transport.write(data, client) # UDP response
-                else :
+            try:
+                if client:
+                    self.transport.write(data, client)  # UDP response
+                else:
                     self.transport.write(data)         # TCP response
-                if client :
+                if client:
                     ip, port = client
-                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s on %s:%d" %
-                            (fnc.__name__, str(data), ip, port))
-                else :
-                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s" %
-                            (fnc.__name__, str(data)))
+                    logging.getLogger().debug(
+                        "PXE Proxy: method: %s / response sent: %s on %s:%d" %
+                        (fnc.__name__, str(data), ip, port))
+                else:
+                    logging.getLogger().debug(
+                        "PXE Proxy: method: %s / response sent: %s" %
+                        (fnc.__name__, str(data)))
 
             except Exception as e:
                 logging.getLogger().warn("PXE Proxy: send response error: %s" % (str(e)))
 
         return result
 
-
     def on_exec_error(self, failure):
         logging.getLogger().warn("PXE Proxy: send response error: %s" % str(failure))
         return failure
 
+
 class UDPProxy(ProcessPacket, DatagramProtocol):
     """Proxy to processing a major part of methods"""
+
     def datagramReceived(self, data, client):
         # special case for GLPI :
         # add the IP address of client as a next argument
@@ -147,15 +148,14 @@ class UDPProxy(ProcessPacket, DatagramProtocol):
 
 class TCPProxy(ProcessPacket, Protocol):
     """Proxy to processing methods of backup"""
+
     def dataReceived(self, data):
         self.process_data(data)
 
 
-
-class PXEProxy :
+class PXEProxy:
 
     def __init__(self, config, api):
-
 
         pxe_port = config.imaging_api["pxe_port"]
 

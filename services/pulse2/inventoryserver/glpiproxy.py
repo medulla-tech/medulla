@@ -22,7 +22,9 @@
 Inventory proxy Pulse -> GLPI using Fusion Inventory plugin.
 """
 
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 import logging
 from xml.dom.minidom import parseString
 from pulse2.inventoryserver.utils import MMCProxy
@@ -70,10 +72,14 @@ class FusionErrorHandler(_ErrorHandler):
             dom = parseString(response)
             for node in dom.getElementsByTagName('ERROR'):
                 if node.nodeType == node.ELEMENT_NODE:
-                    self._message.append('An error occurred while talking with GLPI (details follow)')
-                    self._message.append("Error was: %s" % str(node.firstChild.nodeValue))
+                    self._message.append(
+                        'An error occurred while talking with GLPI (details follow)')
+                    self._message.append(
+                        "Error was: %s" % str(
+                            node.firstChild.nodeValue))
         except Exception as exc:
-            self._message.append('An error occurred while talking with GLPI (details follow)')
+            self._message.append(
+                'An error occurred while talking with GLPI (details follow)')
             self._message.append('Raw error was: %s' % str(response))
             self._message.append('With exception: %s' % str(exc))
 
@@ -84,7 +90,7 @@ class GlpiProxy:
     HEADER = {"Pragma": "no-cache",
               "User-Agent": "Proxy:FusionInventory/Pulse2/GLPI",
               "Content-Type": "application/x-compress",
-             }
+              }
 
     def __init__(self, url, ErrorHandler=FusionErrorHandler):
         """
@@ -119,7 +125,7 @@ class GlpiProxy:
             return
 
         # parsing response
-        if self.ErrorHandler :
+        if self.ErrorHandler:
             xml_response = response.read()
             self._result += self.ErrorHandler(xml_response)
 
@@ -129,12 +135,13 @@ class GlpiProxy:
         @returns: list of error messages
         @rtype: list
         """
-        if self.ErrorHandler :
+        if self.ErrorHandler:
             return self._result
-        else :
+        else:
             self._result.append("Unable to parse response from GLPI")
 
-def resolveGlpiMachineUUIDByMAC (mac):
+
+def resolveGlpiMachineUUIDByMAC(mac):
     """
     Get the machine UUID from GLPI DB layer.
 
@@ -145,14 +152,18 @@ def resolveGlpiMachineUUIDByMAC (mac):
     @rtype: str
     """
     mmc = MMCProxy()
-    if not mmc.failure :
+    if not mmc.failure:
         proxy = mmc.proxy
         try:
             uuid = proxy.glpi.getMachineUUIDByMacAddress(mac)
         except Exception as e:
-            logging.getLogger().error("Unable to resolve machine UUID for mac %s using %s, error was: %s" % (str(mac), str(mmc._url), str(e)))
+            logging.getLogger().error(
+                "Unable to resolve machine UUID for mac %s using %s, error was: %s" %
+                (str(mac), str(
+                    mmc._url), str(e)))
         return uuid
     return None
+
 
 def hasKnownOS(uuid):
     """
@@ -171,7 +182,7 @@ def hasKnownOS(uuid):
         return False
 
     mmc = MMCProxy()
-    if not mmc.failure :
+    if not mmc.failure:
         proxy = mmc.proxy
         return proxy.glpi.hasKnownOS(uuid)
     return False

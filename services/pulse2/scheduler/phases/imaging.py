@@ -25,16 +25,14 @@ from pulse2.scheduler.api.imaging import ImagingAPI
 from pulse2.consts import PULSE2_UNKNOWN_ERROR
 
 
-
 class ImagingRpcPhase(Phase):
     rpc_method_name = None
 
     def _get_rpc_method_args(self):
         return self.target.target_uuid, self.target.target_name
 
-
     def perform(self):
-        try :
+        try:
             method = getattr(ImagingAPI(), self.rpc_method_name)
             args = self._get_rpc_method_args()
 
@@ -45,17 +43,21 @@ class ImagingRpcPhase(Phase):
 
             return d
         except Exception as e:
-            self.logger.error("Circuit #%s: imaging phase failed: %s" % (self.coh.id, str(e)))
+            self.logger.error(
+                "Circuit #%s: imaging phase failed: %s" %
+                (self.coh.id, str(e)))
 
     def parse_imaging_rpc_result(self, result):
 
-        if result :
+        if result:
             self.update_history_done()
             if self.phase.switch_to_done():
                 self.coh.setStateScheduled()
                 return next(self)
-        else :
-            self.logger.info("Circuit #%s: %s phase failed (exitcode != 0)" % (self.coh.id, self.name))
+        else:
+            self.logger.info(
+                "Circuit #%s: %s phase failed (exitcode != 0)" %
+                (self.coh.id, self.name))
             self.update_history_failed()
 
             if not self.phase.switch_to_failed():
@@ -63,17 +65,20 @@ class ImagingRpcPhase(Phase):
             return self.give_up()
 
     def parse_imaging_rpc_error(self, reason):
-        self.logger.warn("Circuit #%s: %s phase failed, unattented reason: %s" %
-                (self.name, self.coh.id, reason.getErrorMessage()))
+        self.logger.warn(
+            "Circuit #%s: %s phase failed, unattented reason: %s" %
+            (self.name, self.coh.id, reason.getErrorMessage()))
         self.update_history_failed(PULSE2_UNKNOWN_ERROR,
                                    '',
                                    reason.getErrorMessage()
-                                  )
+                                   )
         return self.switch_phase_failed()
+
 
 class PreImagingMenuPhase(ImagingRpcPhase):
     name = "pre_menu"
     rpc_method_name = "setWOLMenu"
+
 
 class PostImagingMenuPhase(ImagingRpcPhase):
     name = "post_menu"

@@ -23,18 +23,19 @@
 
 import time
 
+
 class _Tracker(object):
     """ Abstract frame for trackers """
 
     ids = None
 
     def _append(self, id):
-	""" Appends id into container """
-	raise NotImplementedError
+        """ Appends id into container """
+        raise NotImplementedError
 
     def _remove(self, id):
-	""" Removes id from container """
-	raise NotImplementedError
+        """ Removes id from container """
+        raise NotImplementedError
 
     def __contains__(self, id):
         return id in self.ids
@@ -49,9 +50,9 @@ class _Tracker(object):
         @param ids: circuits ids
         @type ids: list
         """
-        for id in ids :
+        for id in ids:
             if id not in self.ids:
-		self._append(id)
+                self._append(id)
 
     def remove(self, id):
         """
@@ -88,21 +89,19 @@ class Tracker(_Tracker):
         self.ids.remove(id)
 
 
-
 class TimedTracker(_Tracker):
     """ Tracking of circuits with timestamps. """
 
     ids = {}
 
     def __init__(self, life_time):
-	self.life_time = life_time
+        self.life_time = life_time
 
     def update(self, id):
         self.ids[id] = time.time()
 
     def _append(self, id):
         self.ids[id] = time.time()
-
 
     def _remove(self, id):
         """
@@ -111,18 +110,25 @@ class TimedTracker(_Tracker):
         @param id: circuit's identifier
         @type id: int
         """
-	if id in self.ids:
-	    del self.ids[id]
+        if id in self.ids:
+            del self.ids[id]
 
     def get_expired(self):
 
         now = time.time()
 
-	return [id for (id, tp) in list(self.ids.items()) if tp + self.life_time < now]
+        return [
+            id for (
+                id,
+                tp) in list(
+                self.ids.items()) if tp +
+            self.life_time < now]
+
 
 class StoppedTracker(Tracker):
     """Controls the stopped circuits """
     pass
+
 
 class StartedTracker(TimedTracker):
     """Controls the running circuits with an expiration processing """

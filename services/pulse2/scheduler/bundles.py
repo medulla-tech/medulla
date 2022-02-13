@@ -24,7 +24,7 @@
 import logging
 
 
-class BundleElement :
+class BundleElement:
     """
     A simple table of references of one circuit.
 
@@ -46,7 +46,6 @@ class BundleElement :
     # then True, otherwise False
     finished = False
 
-
     def __init__(self, id, cmd_id, coh_id, order, target_uuid):
         self.id = id
         self.cmd_id = cmd_id
@@ -57,7 +56,7 @@ class BundleElement :
         self.finished = False
 
 
-class BundleReferences :
+class BundleReferences:
     """
     Central bundle processing.
 
@@ -80,11 +79,10 @@ class BundleReferences :
         @rtype: list
         """
         ids = []
-        for c in self.content :
+        for c in self.content:
             if c.id not in ids:
                 ids.append(c.id)
         return ids
-
 
     def update(self, circuit, finished=False):
         """
@@ -93,10 +91,12 @@ class BundleReferences :
         @param circuit: circuit to insert or update
         @type circuit: Circuit
         """
-        if circuit.cohq.cmd.fk_bundle :
+        if circuit.cohq.cmd.fk_bundle:
             c = circuit.cohq
-            if c.coh.id not in [b.coh_id for b in self.content] :
-                self.logger.debug("Circuit #%s: added to bundle control" % circuit.id)
+            if c.coh.id not in [b.coh_id for b in self.content]:
+                self.logger.debug(
+                    "Circuit #%s: added to bundle control" %
+                    circuit.id)
                 bundle = BundleElement(c.cmd.fk_bundle,
                                        circuit.cmd_id,
                                        circuit.id,
@@ -104,14 +104,16 @@ class BundleReferences :
                                        c.target.target_uuid)
                 bundle.finished = finished
                 self.content.append(bundle)
-            else :
+            else:
 
                 matches = self.get(coh_id=c.coh.id)
-                if len(matches) == 1 :
+                if len(matches) == 1:
                     bundle = matches[0]
                     bundle.finished = finished
-                else :
-                    self.logger.warn("Circuit #%s: multiple entries in the bundle control" % circuit.id)
+                else:
+                    self.logger.warn(
+                        "Circuit #%s: multiple entries in the bundle control" %
+                        circuit.id)
 
     def finish(self, coh_id):
         """
@@ -121,12 +123,12 @@ class BundleReferences :
         @type coh_id: int
         """
         matches = self.get(coh_id=coh_id)
-        if len(matches)==1:
+        if len(matches) == 1:
             b = matches[0]
             b.finished = True
-            self.logger.debug("Circuit #%s: of bundle #%s finished (order=%d)" %
-                    (coh_id, b.id, b.order))
-
+            self.logger.debug(
+                "Circuit #%s: of bundle #%s finished (order=%d)" %
+                (coh_id, b.id, b.order))
 
     def get(self, **kwargs):
         """
@@ -137,7 +139,7 @@ class BundleReferences :
 
         content = self.content
         for key, value in list(kwargs.items()):
-            content = [b for b in content if getattr(b, key)==value]
+            content = [b for b in content if getattr(b, key) == value]
 
         return content
 
@@ -150,16 +152,16 @@ class BundleReferences :
         """
 
         matches = self.get(coh_id=coh_id)
-        if len(matches)==1:
+        if len(matches) == 1:
             actual = matches[0]
-            next = self.get(id = actual.id,
-                            target_uuid = actual.target_uuid,
-                            order = actual.order + 1)
-            if len(next)==1 :
+            next = self.get(id=actual.id,
+                            target_uuid=actual.target_uuid,
+                            order=actual.order + 1)
+            if len(next) == 1:
                 return next[0]
-            else :
+            else:
                 return None
-        else :
+        else:
             return None
 
     def is_last(self, coh_id):
@@ -171,7 +173,7 @@ class BundleReferences :
         """
         if self.get_next_in_order(coh_id):
             return False
-        else :
+        else:
             return True
 
     def is_previous_finished(self, coh_id):
@@ -183,17 +185,17 @@ class BundleReferences :
         """
 
         matches = self.get(coh_id=coh_id)
-        if len(matches)==1:
+        if len(matches) == 1:
             actual = matches[0]
-            if actual.order == 1 :
+            if actual.order == 1:
                 # im first, so let's go
                 return True
 
-            matches = self.get(id = actual.id,
-                               target_uuid = actual.target_uuid,
-                               order = actual.order - 1)
+            matches = self.get(id=actual.id,
+                               target_uuid=actual.target_uuid,
+                               order=actual.order - 1)
 
-            if len(matches)==1:
+            if len(matches) == 1:
                 previous = matches[0]
                 return previous.finished
             elif not matches:
@@ -201,22 +203,23 @@ class BundleReferences :
                 return True
         return False
 
-
     def get_ready_cohs(self):
         """
         @return: all circuit ids allowed to start.
         @rtype: list
         """
-        return [c.coh_id for c in self.content if self.is_previous_finished(c.coh_id)
-                                                   and not c.finished]
-
+        return [
+            c.coh_id for c in self.content if self.is_previous_finished(
+                c.coh_id) and not c.finished]
 
     def get_banned_cohs(self):
         """
         @return: all circuit ids denied to start.
         @rtype: list
         """
-        return [c.coh_id for c in self.content if not self.is_previous_finished(c.coh_id)]
+        return [
+            c.coh_id for c in self.content if not self.is_previous_finished(
+                c.coh_id)]
 
     def remove_bundle(self, id):
         """
@@ -226,19 +229,20 @@ class BundleReferences :
         @type id: int
         """
         cohs = self.get(id=id)
-        for coh in cohs :
+        for coh in cohs:
             self.content.remove(coh)
-
 
     def clean_up_finished(self):
         """
         Removes all finished bundles.
         """
-        for id in self.all_ids :
-            finished = all(b.finished for b in self.content if b.id==id)
-            if finished :
-                self.logger.debug("Removing the bundle #%d from bundle processing" % id)
-                for b in self.content :
+        for id in self.all_ids:
+            finished = all(b.finished for b in self.content if b.id == id)
+            if finished:
+                self.logger.debug(
+                    "Removing the bundle #%d from bundle processing" %
+                    id)
+                for b in self.content:
                     self.content.remove(b)
 
     def clean_up_remaining(self, ids):
@@ -248,12 +252,12 @@ class BundleReferences :
         @param ids: bundle ids to hold
         @type ids: list
         """
-        for coh in self.content :
-            if coh.id not in ids :
-                self.logger.debug("Removing the circuit #%d from bundle processing" % coh.coh_id)
+        for coh in self.content:
+            if coh.id not in ids:
+                self.logger.debug(
+                    "Removing the circuit #%d from bundle processing" %
+                    coh.coh_id)
                 self.content.remove(coh)
-
-
 
     def clean_up(self, **kwargs):
         """
@@ -262,14 +266,14 @@ class BundleReferences :
         @param ids: commands_on_host ids
         @type ids: list
         """
-        if "coh_id" in kwargs :
+        if "coh_id" in kwargs:
             coh_id = kwargs["coh_id"]
             cohs = self.get(coh_id=coh_id)
-            for coh in cohs :
+            for coh in cohs:
                 self.content.remove(coh)
 
-        if "cmd_ids" in kwargs :
-            for cmd_id in kwargs["cmd_ids"] :
+        if "cmd_ids" in kwargs:
+            for cmd_id in kwargs["cmd_ids"]:
                 cohs = self.get(cmd_id=cmd_id)
-                for coh in cohs :
+                for coh in cohs:
                     self.content.remove(coh)

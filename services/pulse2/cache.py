@@ -34,6 +34,7 @@ from pulse2.utils import Singleton
 DEFAULT_TIMEOUT = 10
 TIMEOUT_FOREVER = -1
 
+
 class CacheManager(Singleton):
     def __init__(self):
         self._caches = {}
@@ -49,9 +50,11 @@ class CacheManager(Singleton):
     def reset(self):
         self._caches = {}
 
+
 def getCache(name, timeout=DEFAULT_TIMEOUT):
     cm = CacheManager()
     return cm.getCache(name, timeout)
+
 
 class Cache(object):
 
@@ -78,7 +81,7 @@ class Cache(object):
         return val
 
     def set(self, obj, val, timeout=None):
-        if timeout==TIMEOUT_FOREVER:
+        if timeout == TIMEOUT_FOREVER:
             # Never expires
             expires = 0
         elif timeout is None:
@@ -87,13 +90,17 @@ class Cache(object):
             expires = time.time() + timeout
         self._data[obj] = (val, expires)
 
+
 """
 Cache exceptions
 """
+
+
 class CacheFault(Exception):
     """ Object is not present in cache
     """
     pass
+
 
 class CacheExpired(Exception):
     """ Object is not valid anymore

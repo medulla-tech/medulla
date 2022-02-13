@@ -37,6 +37,7 @@ re_https_prot = re.compile('^https://')
 class Target(object):
     """ Mapping between msc.target and SA
     """
+
     def flush(self):
         """ Handle SQL flushing """
         session = sqlalchemy.create_session()
@@ -54,10 +55,12 @@ class Target(object):
         return self.target_name
 
     def getShortName(self):
-        try :
+        try:
             return self.target_name.split(".")[0]
-        except :
-            logging.getLogger().warn("Unable to get shortname from '%s'" % self.target_name)
+        except BaseException:
+            logging.getLogger().warn(
+                "Unable to get shortname from '%s'" %
+                self.target_name)
             return self.target_name
 
     def getIps(self):
@@ -72,16 +75,18 @@ class Target(object):
     def getNetmasks(self):
         return self.target_network.split('||')
 
-
     def hasEnoughInfoToWOL(self):
         # to perform a WOL, we need two informations:
         # - at least one MAC address
         # - at least one IP network broadcast
         # FIXME: ATM the test is rather simple : count items len
-        mac_len = reduce(lambda x,y: x+y, [len(x) for x in self.getMacs()])
-        bcast_len = reduce(lambda x,y: x+y, [len(x) for x in self.getBCast()])
-        result = (mac_len > 0 ) and (bcast_len > 0)
-        logging.getLogger().debug("hasEnoughInfoToWOL(#%s): %s" % (self.id, result))
+        mac_len = reduce(lambda x, y: x + y, [len(x) for x in self.getMacs()])
+        bcast_len = reduce(lambda x, y: x +
+                           y, [len(x) for x in self.getBCast()])
+        result = (mac_len > 0) and (bcast_len > 0)
+        logging.getLogger().debug(
+            "hasEnoughInfoToWOL(#%s): %s" %
+            (self.id, result))
         return result
 
     def hasEnoughInfoToConnect(self):
@@ -89,10 +94,12 @@ class Target(object):
         # - either at least one hostname
         # - or at least one IP address
         # FIXME: ATM the test is rather simple : count items len
-        ips_len = reduce(lambda x,y: x+y, [len(x) for x in self.getIps()])
+        ips_len = reduce(lambda x, y: x + y, [len(x) for x in self.getIps()])
         names_len = len(self.getFQDN())
-        result = (ips_len > 0 ) or (names_len > 0)
-        logging.getLogger().debug("hasEnoughInfoToConnect(#%s): %s" % (self.id, result))
+        result = (ips_len > 0) or (names_len > 0)
+        logging.getLogger().debug(
+            "hasEnoughInfoToConnect(#%s): %s" %
+            (self.id, result))
         return result
 
     def hasFileMirror(self):
@@ -100,9 +107,8 @@ class Target(object):
 
     def hasHTTPMirror(self):
         mirrors = self.mirrors.split('||')
-        mirror = mirrors[0] # TODO: handle when several mirrors are available
+        mirror = mirrors[0]  # TODO: handle when several mirrors are available
         return re_http_prot.match(mirror) or re_https_prot.match(mirror)
-
 
     def toH(self):
         return {

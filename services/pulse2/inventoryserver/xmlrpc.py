@@ -31,7 +31,8 @@ import twisted.web.xmlrpc
 try:
     from twisted.web import http
 except ImportError:
-    from twisted.protocols import http # pyflakes.ignore
+    from twisted.protocols import http  # pyflakes.ignore
+
 
 class InventoryHTTPChannel(http.HTTPChannel):
     """
@@ -49,6 +50,7 @@ class InventoryHTTPChannel(http.HTTPChannel):
             logger = logging.getLogger()
             logger.error(reason)
         http.HTTPChannel.connectionLost(self, reason)
+
 
 class InventorySite(twisted.web.server.Site):
     protocol = InventoryHTTPChannel

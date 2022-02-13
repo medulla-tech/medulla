@@ -63,7 +63,7 @@ class PullClientConfig(Singleton):
         # override system proxy
         # eg: http://proxy.mandriva.com:3128/
         # or: http://user:password@proxy:3129/
-        http= ""
+        http = ""
 
     def __init__(self):
         location = os.path.dirname(os.path.abspath(__file__))
@@ -82,21 +82,25 @@ class PullClientConfig(Singleton):
             for attribute, default_value in inspect.getmembers(klass):
                 if attribute.startswith("__"):
                     continue
-                if type(default_value) == int:
+                if isinstance(default_value, int):
                     method = 'getint'
-                elif type(default_value) == bool:
+                elif isinstance(default_value, bool):
                     method = 'getboolean'
                 else:
                     method = 'get'
                 try:
                     value = getattr(self.config, method)(section, attribute)
-                    if type(default_value) == list:
+                    if isinstance(default_value, list):
                         value = [v.strip() for v in value.split(' ')]
                     setattr(getattr(self, section), attribute, value)
                 except (NoSectionError, NoOptionError):
                     if default_value is None:
-                        logger.error("%s missing from section %s" % (attribute, section))
-                        raise ConfigError("%s missing from section %s" % (attribute, section))
+                        logger.error(
+                            "%s missing from section %s" %
+                            (attribute, section))
+                        raise ConfigError(
+                            "%s missing from section %s" %
+                            (attribute, section))
 
 
 NAME = "%s"

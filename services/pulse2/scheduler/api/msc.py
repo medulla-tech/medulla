@@ -30,6 +30,7 @@ from pulse2.scheduler.api.mmc_client import RPCClient
 
 log = logging.getLogger()
 
+
 class MscAPI(RPCClient):
     """ XMLRPC Proxy trough MMC agent to accessing MSC methods. """
 
@@ -65,13 +66,11 @@ class CoHTimeExtend(MscAPI):
         d.addCallback(self.send_result)
         return d
 
-
     def send_result(self, result):
         """ Callback of XMLRPC getter """
         return self._delta(result)
 
-
-    def _delta (self, coh_life_time):
+    def _delta(self, coh_life_time):
         """
         Calculate of timedelta between new command start and end.
 
@@ -84,7 +83,8 @@ class CoHTimeExtend(MscAPI):
         fmt = "%Y-%m-%d %H:%M:%S"
 
         start_timestamp = time.time()
-        start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime(fmt)
+        start_date = datetime.datetime.fromtimestamp(
+            start_timestamp).strftime(fmt)
 
         delta = int(coh_life_time) * 60 * 60
         end_timestamp = start_timestamp + delta

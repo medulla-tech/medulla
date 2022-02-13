@@ -30,6 +30,8 @@ import logging
 
 """ Class to map pkgs.pkgs_shares_ars_web to SA
 """
+
+
 class Pkgs_shares_ars_web(object):
     """ Mapping between pkgs.pkgs_shares_ars_web and SA
         colunm table: 'id,ars_share_id,packages_id,status,finger_print,size,date_edition'

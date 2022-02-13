@@ -41,7 +41,6 @@ class Trigger(object):
     # This flag says that endpoints not finished yet
     locked = False
 
-
     def __init__(self, method, *args, **kwargs):
         """
         @param method: method calling the endpoints
@@ -61,8 +60,6 @@ class Trigger(object):
 
         self.scheduled_for_next = False
 
-
-
     def fire(self):
         """
         Method called when any data received.
@@ -78,29 +75,33 @@ class Trigger(object):
         """
 
         if not self.locked:
-            #d = deferToThread(self.method,
+            # d = deferToThread(self.method,
             d = maybeDeferred(self.method,
-                             *self.args,
-                             **self.kwargs
-                             )
+                              *self.args,
+                              **self.kwargs
+                              )
             self.locked = True
+
             @d.addErrback
             def failed(failure):
-                self.logger.warn("Method <%s> calling failed: %s" % (self.method.__name__, str(failure)))
+                self.logger.warn(
+                    "Method <%s> calling failed: %s" %
+                    (self.method.__name__, str(failure)))
                 return False
+
             @d.addCallback
             def finished(result):
-                self.logger.debug("Method <%s> finished: %s" % (self.method.__name__, str(result)))
+                self.logger.debug(
+                    "Method <%s> finished: %s" %
+                    (self.method.__name__, str(result)))
                 self.locked = False
                 return True
-
 
             return d
 
         else:
             print("not unlocked yet")
             return succeed(False)
-
 
 
 if __name__ == "__main__":
@@ -112,6 +113,7 @@ if __name__ == "__main__":
 
     t = Trigger(do_something)
     d = t.fire()
+
     @d.addCallback
     def aa(reason):
         print('aa reason: %s' % str(reason))
@@ -119,14 +121,11 @@ if __name__ == "__main__":
     print("after 1st")
 
     d = t.fire()
+
     @d.addCallback
     def bb(reason):
         print('bb reason: %s' % str(reason))
 
-
     print("after 2nd")
 
     reactor.run()
-
-
-

@@ -25,6 +25,7 @@
 # MMC
 from mmc.database.config import DatabaseConfig
 
+
 class ImagingDatabaseConfig(DatabaseConfig):
     dbname = "imaging"
 

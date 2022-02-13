@@ -28,7 +28,9 @@ import logging
 import tempfile
 import shutil
 import time
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 from base64 import b64decode
 
 from pulse2.utils import isMACAddress
@@ -48,7 +50,8 @@ class Auth(object):
     def POST(self, authkey, mac_list, hostname):
         log("Authenticate computer %s with authkey %s" % (hostname, authkey))
         if not authkey == cherrypy.config.get("dlp.authkey"):
-            log("Failed to authenticate computer %s, authkey missmatch." % hostname, severity=logging.ERROR)
+            log("Failed to authenticate computer %s, authkey missmatch." %
+                hostname, severity=logging.ERROR)
             raise cherrypy.HTTPError(401, "Not authorized")
 
         if isinstance(mac_list, str):
@@ -60,7 +63,8 @@ class Auth(object):
                 raise cherrypy.HTTPError(400, "MAC address is not correct")
 
         try:
-            uuid = cherrypy.request.xmlrpc_client.pull_target_awake(hostname, mac_list)
+            uuid = cherrypy.request.xmlrpc_client.pull_target_awake(
+                hostname, mac_list)
             if uuid is not None and uuid:
                 cherrypy.session[HOSTNAME_KEY] = hostname
                 cherrypy.session[MAC_KEY] = mac_list
@@ -69,12 +73,14 @@ class Auth(object):
                 log("Result: %s" % uuid)
                 return "OK"
             else:
-                log("Not recognized machine, hostname=%s, mac_list=%s" % (hostname, mac_list), severity=logging.WARNING, traceback=True)
+                log("Not recognized machine, hostname=%s, mac_list=%s" %
+                    (hostname, mac_list), severity=logging.WARNING, traceback=True)
                 raise cherrypy.HTTPError(404, "Not found")
         except cherrypy.HTTPError:
             raise
-        except:
-            log("pull_target_awake failed\n", severity=logging.ERROR, traceback=True)
+        except BaseException:
+            log("pull_target_awake failed\n",
+                severity=logging.ERROR, traceback=True)
             raise cherrypy.HTTPError(503, "Service unavailable")
 
 
@@ -89,7 +95,8 @@ class Commands(object):
             stat_info = os.stat(package_path)
             current_time = int(time.time())
             # package cache is too old
-            if current_time - cherrypy.config.get('dlp.cache_expire') > stat_info.st_ctime:
+            if current_time - \
+                    cherrypy.config.get('dlp.cache_expire') > stat_info.st_ctime:
                 return False
             else:
                 return True
@@ -116,8 +123,9 @@ class Commands(object):
                 shutil.rmtree(tmp_dir)
                 log("Package %s created" % package_path)
                 result = True
-            except:
-                log("Failed to create the package %s" % package_uuid, logging.ERROR, True)
+            except BaseException:
+                log("Failed to create the package %s" %
+                    package_uuid, logging.ERROR, True)
                 result = False
             # Cleanup before releasing...
             os.unlink(lock_file)
@@ -133,7 +141,8 @@ class Commands(object):
     def GET(self):
         try:
             log("Get commands")
-            commands = cherrypy.request.xmlrpc_client.get_available_commands(cherrypy.session[UUID_KEY])
+            commands = cherrypy.request.xmlrpc_client.get_available_commands(
+                cherrypy.session[UUID_KEY])
             # Get package files
             for index, command in enumerate(list(commands)):
                 package_uuid = command.get('package_uuid', False)
@@ -141,14 +150,18 @@ class Commands(object):
                     packages_cache = cherrypy.config.get("dlp.cache_dir")
                     if not os.path.exists(packages_cache):
                         os.mkdir(packages_cache)
-                    package_path = os.path.join(packages_cache, "%s.zip" % package_uuid)
+                    package_path = os.path.join(
+                        packages_cache, "%s.zip" %
+                        package_uuid)
 
                     if self.check_cache(package_uuid, package_path):
                         log("Using cached package at %s" % package_path)
                     else:
-                        if not self.create_package(package_uuid, package_path, command):
+                        if not self.create_package(
+                                package_uuid, package_path, command):
                             del commands[index]
-                            log("Command %d removed from list" % command['id'], logging.ERROR)
+                            log("Command %d removed from list" %
+                                command['id'], logging.ERROR)
                             continue
                     # Remove not used infos on the client side
                     del command['files']
@@ -157,7 +170,7 @@ class Commands(object):
             cherrypy.session[COMMANDS_KEY] = commands
             cherrypy.session.save()
             return commands
-        except:
+        except BaseException:
             log("get_available_commands failed:\n", logging.ERROR, True)
             raise cherrypy.HTTPError(503, "Service Unavailable")
 
@@ -176,9 +189,10 @@ class File(object):
         # Don't let the client download all packages
         # lookup his commands to get the packages he can download
         commands = cherrypy.session.get(COMMANDS_KEY, [])
-        allowed_packages = ["%s.zip" % c['package_uuid'] for c in commands if 'package_uuid' in c]
+        allowed_packages = ["%s.zip" % c['package_uuid']
+                            for c in commands if 'package_uuid' in c]
         log("Allowed packages are: %s" % ", ".join(allowed_packages))
-        if not filename in allowed_packages:
+        if filename not in allowed_packages:
             raise cherrypy.HTTPError(401, "Not authorized")
 
         log("Serving package: %s" % path)
@@ -205,25 +219,27 @@ class Step(object):
         except ValueError:
             raise cherrypy.HTTPError(400, "Bad return code")
 
-        #if not coh_id in [c['id'] for c in commands]:
+        # if not coh_id in [c['id'] for c in commands]:
             #raise cherrypy.HTTPError(401, "Not authorized")
 
-        #for command in commands:
-            #if coh_id == command['id']:
-                #break
+        # for command in commands:
+            # if coh_id == command['id']:
+            # break
 
-        #if step_id not in command['steps']:
+        # if step_id not in command['steps']:
             #raise cherrypy.HTTPError(401, "Not a valid step")
 
         try:
-            log("Saving result (%d) for step %s of command %s" % (return_code, step_id, coh_id))
-            if not cherrypy.request.xmlrpc_client.completed_step(coh_id, step_id, stdout, stderr, return_code):
+            log("Saving result (%d) for step %s of command %s" %
+                (return_code, step_id, coh_id))
+            if not cherrypy.request.xmlrpc_client.completed_step(
+                    coh_id, step_id, stdout, stderr, return_code):
                 raise cherrypy.HTTPError(503, "Failed to save the result")
             cherrypy.response.status = 201
             return "Created"
         except cherrypy.HTTPError:
             raise
-        except:
+        except BaseException:
             log("Saving step result failed.", logging.ERROR, True)
             raise cherrypy.HTTPError(503, "Service Unavailable")
 
@@ -236,20 +252,24 @@ class Inventory(object):
         inventory_uri = cherrypy.config.get("inventory.uri")
         data = b64decode(inventory)
         try:
-            request = urllib.request.Request(inventory_uri,
-                                      data,
-                                      headers={'User-Agent': 'DLP service',
-                                               'Content-Type': 'application/x-www-form-urlencoded',
-                                               'Content-Length': len(data)})
+            request = urllib.request.Request(
+                inventory_uri,
+                data,
+                headers={
+                    'User-Agent': 'DLP service',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Length': len(data)})
             opener = urllib.request.build_opener()
             urllib.request.install_opener(opener)
             response = opener.open(request)
             if response.code == 200:
                 cherrypy.response.status = 201
             else:
-                raise cherrypy.HTTPError(response.code, "Inventory server returned an error.")
+                raise cherrypy.HTTPError(
+                    response.code, "Inventory server returned an error.")
         except (urllib.error.URLError, urllib.error.HTTPError):
-            log("Failed to send the inventory to the inventory server", logging.ERROR, True)
+            log("Failed to send the inventory to the inventory server",
+                logging.ERROR, True)
             raise cherrypy.HTTPError(503, "Service Unavailable")
 
 

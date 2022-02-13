@@ -33,6 +33,7 @@ from pulse2.utils import reduceMACAddress
 from pulse2.imaging.image import isPulse2Image
 from pulse2.package_server.imaging.cache import UUIDCache
 
+
 class Archiver:
 
     """
@@ -58,14 +59,19 @@ class Archiver:
         @rtype: bool
         """
         # Get computer folder and boot menu
-        self.cfolder = os.path.join(self.config.imaging_api['base_folder'],
-                               self.config.imaging_api['computers_folder'],
-                               self.computerUUID)
-        self.bootmenu = os.path.join(self.config.imaging_api['base_folder'],
-                                self.config.imaging_api['bootmenus_folder'],
-                                reduceMACAddress(self.macAddress))
+        self.cfolder = os.path.join(
+            self.config.imaging_api['base_folder'],
+            self.config.imaging_api['computers_folder'],
+            self.computerUUID)
+        self.bootmenu = os.path.join(
+            self.config.imaging_api['base_folder'],
+            self.config.imaging_api['bootmenus_folder'],
+            reduceMACAddress(
+                self.macAddress))
         if not os.path.exists(self.cfolder):
-            self.logger.error("Looks like computer %s is not registered, so it can't be archived" % self.computerUUID)
+            self.logger.error(
+                "Looks like computer %s is not registered, so it can't be archived" %
+                self.computerUUID)
             return False
         # Build valid image list
         for image in self.imageList:
@@ -75,7 +81,9 @@ class Archiver:
             if isPulse2Image(ifolder):
                 self.images.append(ifolder)
             else:
-                self.logger.error("Invalid image, won't be archived: %s" % image)
+                self.logger.error(
+                    "Invalid image, won't be archived: %s" %
+                    image)
         return True
 
     def prepare(self):
@@ -105,9 +113,10 @@ class Archiver:
         Prepare the directory that will be used to archive the computer data
         """
         if self.archive:
-            archivedir = os.path.join(self.config.imaging_api['base_folder'],
-                                      self.config.imaging_api['archives_folder'],
-                                      self.computerUUID)
+            archivedir = os.path.join(
+                self.config.imaging_api['base_folder'],
+                self.config.imaging_api['archives_folder'],
+                self.computerUUID)
             i = 1
             while True:
                 if not os.path.exists('%s-%d' % (archivedir, i)):

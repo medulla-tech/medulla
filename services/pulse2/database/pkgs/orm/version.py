@@ -23,10 +23,11 @@
 """ Class to map pkgs.version to SA
 """
 
+
 class Version(object):
     """ Mapping between pkgs.version and SA
         Well, nothing to map for
     """
 
     def getDbVersion(self):
-        return self.version;
+        return self.version

@@ -23,7 +23,7 @@ class ReadFlux(Thread):
 
     def run(self):
         while not self._stop.is_set():
-            line = self.pipe.readline() # blocking
+            line = self.pipe.readline()  # blocking
             if not line:
                 break
             self.output_queue.put("%f %s %s" % (time.time(),

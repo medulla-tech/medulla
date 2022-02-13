@@ -27,7 +27,6 @@ class Parser(object):
     def __init__(self, backend="json"):
         self._set_backend(backend)
 
-
     def _set_backend(self, backend):
         if backend == "json":
             import json

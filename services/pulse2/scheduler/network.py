@@ -33,10 +33,12 @@ def u_decode(text):
     else:
         return text
 
+
 def u_list_decode(u_list):
     return [u_decode(a) for a in u_list]
 
-class SchedulerNetUtils :
+
+class SchedulerNetUtils:
 
     @classmethod
     def prepare_target(cls, target):
@@ -53,17 +55,17 @@ class SchedulerNetUtils :
         fqdn = u_decode(target["fqdn"])
         ips = u_list_decode(target["ips"])
         macs = u_list_decode(target["macs"])
-        if "netmasks" in target :
+        if "netmasks" in target:
             netmasks = u_list_decode(target["netmasks"])
 
         i = 0
         ifaces = []
-        for ip in ips :
+        for ip in ips:
             iface = {}
             iface["ip"] = ip
-            if i < len(macs) :
+            if i < len(macs):
                 iface["mac"] = macs[i]
-            if i < len(netmasks) :
+            if i < len(netmasks):
                 iface["netmask"] = netmasks[i]
             ifaces.append(iface)
             i += 1

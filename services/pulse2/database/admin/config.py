@@ -22,6 +22,7 @@
 # PULSE2
 from mmc.database.config import DatabaseConfig
 
+
 class AdminDatabaseConfig(DatabaseConfig):
     dbname = "admin"
     dbsection = "database"

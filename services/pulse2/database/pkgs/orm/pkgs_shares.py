@@ -30,6 +30,8 @@ import logging
 
 """ Class to map pkgs.Extensions to SA
 """
+
+
 class Pkgs_shares(object):
     """ Mapping between pkgs.pkgs_shares and SA
         colunm table :' id,name,comments,enabled,type,uri,ars_name,ars_id,share_path'
@@ -113,13 +115,13 @@ class Pkgs_shares(object):
             'name': self.getName(),
             'comments': self.getComments(),
             'enabled': self.getEnabled(),
-            'type':self.getType(),
+            'type': self.getType(),
             'uri': self.getUri(),
             'ars_name': self.getArs_name(),
             'Ars_id': self.getArs_id(),
             'share_path': self.getshare_path(),
-            'usedquotas' : self.getusedquotas(),
-            'quotas' : self.getquotas()}
+            'usedquotas': self.getusedquotas(),
+            'quotas': self.getquotas()}
 
     def toH(self):
         return {
@@ -127,10 +129,10 @@ class Pkgs_shares(object):
             'name': self.name,
             'comments': self.comments,
             'enabled': self.enabled,
-            'type':self.type,
+            'type': self.type,
             'uri': self.uri,
             'ars_name': self.ars_name,
             'ars_id': self.ars_id,
             'share_path': self.share_path,
-            'usedquotas' : self.usedquotas,
-            'quotas' : self.quotas}
+            'usedquotas': self.usedquotas,
+            'quotas': self.quotas}

@@ -30,10 +30,11 @@ import twisted.web.xmlrpc
 try:
     from twisted.web import http
 except ImportError:
-    from twisted.protocols import http # pyflakes.ignore
+    from twisted.protocols import http  # pyflakes.ignore
 
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.xmlrpc import Pulse2XMLRPCProxy
+
 
 class SchedulerHTTPChannel(http.HTTPChannel):
     """
@@ -51,6 +52,7 @@ class SchedulerHTTPChannel(http.HTTPChannel):
             logger = logging.getLogger()
             logger.error(reason)
         http.HTTPChannel.connectionLost(self, reason)
+
 
 class SchedulerSite(twisted.web.server.Site):
     protocol = SchedulerHTTPChannel

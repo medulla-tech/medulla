@@ -27,6 +27,7 @@ import logging
 from twisted.internet import utils, reactor
 from pulse2.proxyssl.utilities import Singleton
 
+
 class RunInventory(Singleton):
 
     """
@@ -41,7 +42,9 @@ class RunInventory(Singleton):
 
     def maybeStartLoop(self):
         if self.config.polling:
-            self.logger.debug("Scheduling inventory in %s seconds" % self.config.polling_time)
+            self.logger.debug(
+                "Scheduling inventory in %s seconds" %
+                self.config.polling_time)
             reactor.callLater(self.config.polling_time, self.run)
 
     def run(self):
@@ -50,7 +53,8 @@ class RunInventory(Singleton):
         """
         if self.singleton.check_flag():
             self.logger.debug("Starting an inventory")
-            d = utils.getProcessOutputAndValue(self.config.command_name, self.config.command_attr)
+            d = utils.getProcessOutputAndValue(
+                self.config.command_name, self.config.command_attr)
             d.addCallbacks(self.onSuccess, self.onError)
         else:
             self.logger.debug("Flag not set, not starting an inventory")

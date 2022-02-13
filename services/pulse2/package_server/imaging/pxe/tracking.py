@@ -26,6 +26,7 @@ import logging
 from pulse2.utils import Singleton, SingletonN
 from pulse2.package_server.imaging.pxe.parser import LOG_ACTION, LOG_STATE
 
+
 class TrackingContainer(Singleton):
     """ A container to store choosen menu entry. """
 
@@ -53,7 +54,7 @@ class TrackingContainer(Singleton):
         @return: menu entry and mark flag
         @rtype: tuple
         """
-        if mac in self.entries :
+        if mac in self.entries:
             return self.entries[mac]
 
     def mark(self, mac):
@@ -63,7 +64,7 @@ class TrackingContainer(Singleton):
         @param mac: MAC address of client machine
         @type mac: str
         """
-        if mac in self.entries :
+        if mac in self.entries:
             entry, flag = self.entries[mac]
             self.entries[mac] = entry, True
 
@@ -74,13 +75,15 @@ class TrackingContainer(Singleton):
         @param mac: MAC address of client machine
         @type mac: str
         """
-        if mac in self.entries :
+        if mac in self.entries:
             del self.entries[mac]
 
     def __contains__(self, entry):
         return entry in self.entries
 
+
 CHOOSEN_MENU_ENTRY = LOG_ACTION[1][1]
+
 
 class EntryTracking(TrackingContainer):
     """
@@ -108,8 +111,10 @@ class EntryTracking(TrackingContainer):
         @type message: str
         """
         if phase == LOG_STATE.MENU and CHOOSEN_MENU_ENTRY in message:
-            entry = message.replace(CHOOSEN_MENU_ENTRY, "").replace(":","").strip()
-            if entry.isdigit() :
+            entry = message.replace(
+                CHOOSEN_MENU_ENTRY, "").replace(
+                ":", "").strip()
+            if entry.isdigit():
                 num = int(entry)
                 self.add(mac, num)
 

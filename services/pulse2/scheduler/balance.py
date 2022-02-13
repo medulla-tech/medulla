@@ -27,6 +27,7 @@ import logging
 import random
 import time
 
+
 class ParabolicBalance (object):
     """
     A interpretation of run of the parabolic curve, based
@@ -66,23 +67,23 @@ class ParabolicBalance (object):
         self._balances = []
         self._calc()
 
-    def get_index (self, n):
+    def get_index(self, n):
         """ """
-        if n in range(self.attempts_total+1)  :
+        if n in range(self.attempts_total + 1):
             return self.delta * n
-        else :
+        else:
             logging.getLogger().debug("ParabolicBalance: Out of area")
 
-    def fx (self, x):
+    def fx(self, x):
         """
         Integral of quadratic function.
 
         ITG (-x^2 + kx) dx = - x^3/3 + 2kx/2
         """
         k = self.attempts_total
-        return ( (k * x**2 / 2.0)  - x**3 / 3.0)
+        return ((k * x**2 / 2.0) - x**3 / 3.0)
 
-    def fx_delta (self, x):
+    def fx_delta(self, x):
         """
         Get slice of integrated area.
         """
@@ -91,23 +92,22 @@ class ParabolicBalance (object):
     def _calc(self):
 
         areas = []
-        for period in range(self.attempts_total) :
-            x = self.get_index(period+1)
+        for period in range(self.attempts_total):
+            x = self.get_index(period + 1)
             s = self.fx_delta(x)
             areas.append(s)
 
         total_area = sum(areas)
-        for area in areas :
+        for area in areas:
             balance = 1.0 * area / total_area
             self._balances.append(balance)
 
     @property
-    def balances (self):
+    def balances(self):
         return self._balances
 
 
-
-def randomListByBalance (balances, limit):
+def randomListByBalance(balances, limit):
     """
     Function to selecting the commands_on_host ids to re-schedule.
 
@@ -126,11 +126,11 @@ def randomListByBalance (balances, limit):
     @rtype: list
 
     """
-    if len(balances) > 0 :
-        if len(balances) <= limit :
+    if len(balances) > 0:
+        if len(balances) <= limit:
             # no necesity to choice the most important CoHs
             return list(balances.keys())
-        while True :
+        while True:
 
             # sort by balance
             sorted_keys = sorted(balances, key=balances.get, reverse=True)
@@ -141,26 +141,29 @@ def randomListByBalance (balances, limit):
             treshold_idx = sorted_keys.index(drw_coh)
             # remove all the keys bellow the treshold
             sorted_keys = sorted_keys[-treshold_idx:]
-            logging.getLogger().debug("Reduced interval: %s " % str(sorted_keys))
+            logging.getLogger().debug(
+                "Reduced interval: %s " %
+                str(sorted_keys))
 
             count = 0
             selected = []
-            while True :
-                if count >= limit :
+            while True:
+                if count >= limit:
                     break
-                if count >= len(sorted_keys) :
+                if count >= len(sorted_keys):
                     break
                 drw_coh = random.choice(sorted_keys)
-                if drw_coh not in selected :
+                if drw_coh not in selected:
                     selected.append(drw_coh)
                     count += 1
-            if len(selected) / limit > 0.8 :
+            if len(selected) / limit > 0.8:
                 # OK when number of selected is more than 80% of limit
                 return selected
-            else :
+            else:
                 logging.getLogger().debug("List of drawed CoHs too small. Repeat the drawing")
 
-def getBalanceByAttempts (start_date, end_date, attempts_failed) :
+
+def getBalanceByAttempts(start_date, end_date, attempts_failed):
     """
     Calculate the command priority.
 
@@ -180,7 +183,6 @@ def getBalanceByAttempts (start_date, end_date, attempts_failed) :
 
     start_timestamp = time.mktime(start_date.timetuple())
     end_timestamp = time.mktime(end_date.timetuple())
-
 
     # half-cycle timestamp
     l = (end_timestamp + start_timestamp) / 2.0

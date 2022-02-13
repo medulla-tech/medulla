@@ -23,12 +23,14 @@
 
 from pulse2.scheduler.config import SchedulerConfig
 
+
 def getAnnounceCheck(announce):
     if not announce:
         return ''
-    if not announce in SchedulerConfig().announce_check:
+    if announce not in SchedulerConfig().announce_check:
         return ''
     return SchedulerConfig().announce_check[announce]
+
 
 def getCheck(check, target):
     """
@@ -38,7 +40,7 @@ def getCheck(check, target):
             'ip':
             'macs':
         }
-        /!\ IP must be a single
+        /!\\ IP must be a single
     """
 
     ret = {}

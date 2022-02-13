@@ -36,6 +36,7 @@ from pulse2.apis import makeURL
 from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 
+
 class RPCStore(Singleton):
 
     """
@@ -55,7 +56,9 @@ class RPCStore(Singleton):
         try:
             self._initStateFile()
         except Exception as e:
-            self.logger.error('Can\'t initialize the RPC store file: %s. If the file looks corrupted, just delete it and restart the service.' % self.filename)
+            self.logger.error(
+                'Can\'t initialize the RPC store file: %s. If the file looks corrupted, just delete it and restart the service.' %
+                self.filename)
             raise e
 
     def _initStateFile(self):
@@ -72,7 +75,7 @@ class RPCStore(Singleton):
         """
         Update the RPC state file content.
         """
-        assert(type(data) == dict)
+        assert(isinstance(data, dict))
         self.logger.debug('Updating RPC replay file: %s' % self.filename)
         fobj = file(self.filename, 'w')
         self.logger.debug('Dumping and writing data')
@@ -91,10 +94,10 @@ class RPCStore(Singleton):
             fobj = file(self.filename, 'r')
             ret = pickle.load(fobj)
             fobj.close()
-        assert(type(ret) == dict)
+        assert(isinstance(ret, dict))
         return ret
 
-    def add(self, function, args, timestamp = None):
+    def add(self, function, args, timestamp=None):
         """
         Add a new function with its arguments to the RPC replay file.
 
@@ -116,11 +119,12 @@ class RPCStore(Singleton):
         """
         items = []
         try:
-            self.logger.debug('Taking at most %d items from the RPC replay file' % count)
+            self.logger.debug(
+                'Taking at most %d items from the RPC replay file' %
+                count)
             data = self.get()
             if data:
-                timestamps = list(data.keys())
-                timestamps.sort()
+                timestamps = sorted(data.keys())
                 found = 0
                 i = 0
                 while found != count and i < len(timestamps):
@@ -182,6 +186,7 @@ class RPCStore(Singleton):
         self.logger.debug('RPC store content:')
         self.logger.debug(self.get())
 
+
 class RPCReplay(Singleton):
 
     """
@@ -234,12 +239,19 @@ class RPCReplay(Singleton):
             self.logger.debug('Cancelling next RPC replay scheduling')
             self._delayedCall.cancel()
 
-    def onError(self, error, funcname, args, default_return = [], timestamp = None):
+    def onError(
+            self,
+            error,
+            funcname,
+            args,
+            default_return=[],
+            timestamp=None):
         """
         Error back to be called when a XML-RPC call fails.
         The RPC is saved so that it can be replayed later.
         """
-        # Mutable list default_return used as default argument to a method or function
+        # Mutable list default_return used as default argument to a method or
+        # function
         self.logger.warn('%s %s has failed: %s' % (funcname, args, error))
         self.logger.info('Storing RPC, it will be replayed later')
         self.store.add(funcname, args, timestamp)
@@ -299,6 +311,6 @@ class RPCReplay(Singleton):
         """
         client = self._getXMLRPCClient()
         d = client.callRemote(func, *args)
-        d.addCallbacks(lambda x : self._success.append(timestamp),
-                       self.onError, errbackArgs = (func, args, 0, timestamp))
+        d.addCallbacks(lambda x: self._success.append(timestamp),
+                       self.onError, errbackArgs=(func, args, 0, timestamp))
         return d

@@ -25,6 +25,7 @@
 # PULSE2
 from mmc.database.config import DatabaseConfig
 
+
 class Pulse2DatabaseConfig(DatabaseConfig):
     dbname = "pulse2"
 #    dbsection = "database"

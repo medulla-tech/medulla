@@ -61,7 +61,8 @@ class OcsMapping(Singleton):
         self.tables = {}
         self.nomenclatures = {}
 
-        for table in self.doc.documentElement.getElementsByTagName("MappedObject"):
+        for table in self.doc.documentElement.getElementsByTagName(
+                "MappedObject"):
             xmlname = table.getAttribute('name')
             xmlclass = table.getAttribute('class')
             if xmlclass == 'Null':
@@ -71,9 +72,11 @@ class OcsMapping(Singleton):
                 xmlfrom = field.getAttribute('from')
                 xmlto = field.getAttribute('to')
                 self.tables[xmlname][1][xmlfrom] = xmlto
-                if field.hasAttribute('type') and field.getAttribute('type') == 'nomenclature':
-                    self.tables[xmlname][1][xmlfrom] = ('nom%s%s'%(xmlclass, xmlto), xmlto)
-                    if not xmlclass in self.nomenclatures:
+                if field.hasAttribute('type') and field.getAttribute(
+                        'type') == 'nomenclature':
+                    self.tables[xmlname][1][xmlfrom] = (
+                        'nom%s%s' % (xmlclass, xmlto), xmlto)
+                    if xmlclass not in self.nomenclatures:
                         self.nomenclatures[xmlclass] = {}
                     self.nomenclatures[xmlclass][xmlto] = True
 
@@ -128,22 +131,25 @@ class OcsMapping(Singleton):
             try:
                 dbtablename = self.tables[tablename][0]
                 inventory[dbtablename] = []
-                #tag node list
+                # tag node list
                 for tag in xml.getElementsByTagName(tablename):
                     entry = {}
                     if in_network:
                         # Skip lo interface and network device with a 127.x.x.x
                         # address.
                         try:
-                            netif = tag.getElementsByTagName('DESCRIPTION')[0].childNodes[0].nodeValue
-                        except:
+                            netif = tag.getElementsByTagName('DESCRIPTION')[
+                                0].childNodes[0].nodeValue
+                        except BaseException:
                             netif = ''
                         try:
-                            ip = tag.getElementsByTagName('IPADDRESS')[0].childNodes[0].nodeValue
-                        except:
+                            ip = tag.getElementsByTagName(
+                                'IPADDRESS')[0].childNodes[0].nodeValue
+                        except BaseException:
                             ip = ''
                         if netif == 'lo' or ip.startswith('127.'):
-                            self.logger.debug('Skipping computer local interface from inventory')
+                            self.logger.debug(
+                                'Skipping computer local interface from inventory')
                             continue
                     for fieldname in self.tables[tablename][1]:
                         try:
@@ -155,12 +161,12 @@ class OcsMapping(Singleton):
                     inventory[dbtablename].append(entry)
             except IndexError:
                 pass
-        registerval={}
+        registerval = {}
         for EntryRegister in inventory['Registry']:
             for EntryRegister1 in EntryRegister:
                 if EntryRegister1 != 'Value':
-                    registerkey=EntryRegister[EntryRegister1]
+                    registerkey = EntryRegister[EntryRegister1]
                 else:
-                    registerval[registerkey]=EntryRegister[EntryRegister1]
-        inventory['RegistryInfos']=[registerval]
+                    registerval[registerkey] = EntryRegister[EntryRegister1]
+        inventory['RegistryInfos'] = [registerval]
         return inventory

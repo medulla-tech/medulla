@@ -21,7 +21,8 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-# CloseKey OpenKey QueryValueEx SetValue SetValueEx HKEY_LOCAL_MACHINE KEY_SET_VALUE REG_SZ
+# CloseKey OpenKey QueryValueEx SetValue SetValueEx HKEY_LOCAL_MACHINE
+# KEY_SET_VALUE REG_SZ
 import logging
 import os
 import re
@@ -41,7 +42,7 @@ if os.name == 'nt':
     from _winreg import CloseKey, OpenKey, QueryValueEx, SetValue, SetValueEx, HKEY_LOCAL_MACHINE, KEY_SET_VALUE REG_SZ  # pyflakes.ignore
 
 
-def makeSSLContext(verifypeer, cacert, localcert, log = False):
+def makeSSLContext(verifypeer, cacert, localcert, log=False):
     """
     Make the SSL context for the server, according to the parameters
 
@@ -86,7 +87,8 @@ class MyProxyClientFactory(proxy.ProxyClientFactory):
 
     def clientConnectionFailed(self, connector, reason):
         logging.getLogger().error("Connection failed: " + str(reason))
-        proxy.ProxyClientFactory.clientConnectionFailed(self, connector, reason)
+        proxy.ProxyClientFactory.clientConnectionFailed(
+            self, connector, reason)
 
 
 class MyProxyRequest(proxy.ProxyRequest):
@@ -97,7 +99,7 @@ class MyProxyRequest(proxy.ProxyRequest):
     """
 
     config = Pulse2InventoryProxyConfig()
-    ports = {'http' : config.port, 'https' : config.port }
+    ports = {'http': config.port, 'https': config.port}
     protocols = {'http': MyProxyClientFactory, 'https': MyProxyClientFactory}
 
     def process(self):
@@ -125,7 +127,7 @@ class MyProxyRequest(proxy.ProxyRequest):
 
         logger = logging.getLogger()
 
-        logger.debug("\nOcs Report Received");
+        logger.debug("\nOcs Report Received")
 
         # We will unzip the XML File and parsing it only if needed
         if self.config.getocsdebuglog or self.config.improve:
@@ -135,7 +137,9 @@ class MyProxyRequest(proxy.ProxyRequest):
                 sUnpack = decomp.decompress(s)
                 if decomp.unused_data:
                     logger.warn("The zip content seems to be bad.")
-                    logger.debug("The remaining bytes are : %s"%(decomp.unused_data))
+                    logger.debug(
+                        "The remaining bytes are : %s" %
+                        (decomp.unused_data))
             except Exception, e:
                 logger.error("Failed during decompression.")
                 logger.error(str(e))
@@ -148,14 +152,16 @@ class MyProxyRequest(proxy.ProxyRequest):
                 query = 'FAILS'
 
             # process on Inventory OCS XML file,
-            if query == 'INVENTORY' :
+            if query == 'INVENTORY':
                 try:
-                    if sys.platform[0:3] == "win":                          #It's here because I need Pulse2InventoryProxyConfig be initialited before improve packtage be initialat
-                        from improveWin import improveXML,getOcsDebugLog
+                    # It's here because I need Pulse2InventoryProxyConfig be
+                    # initialited before improve packtage be initialat
+                    if sys.platform[0:3] == "win":
+                        from improveWin import improveXML, getOcsDebugLog
                     elif sys.platform == "mac":
-                        from improveMac import improveXML,getOcsDebugLog # pyflakes.ignore
+                        from improveMac import improveXML, getOcsDebugLog  # pyflakes.ignore
                     else:
-                        from improveUnix import improveXML,getOcsDebugLog # pyflakes.ignore
+                        from improveUnix import improveXML, getOcsDebugLog  # pyflakes.ignore
                     logger.debug("\tOcs Inventory Report Processing")
                     if self.config.getocsdebuglog:
                         # Add Ocs Log File
@@ -166,15 +172,19 @@ class MyProxyRequest(proxy.ProxyRequest):
                         sUnpack = improveXML(sUnpack)
                         logger.debug("\t\tInformations add")
                 except ImportError:
-                    logger.error("OCS improving failed: no improving function found for "+sys.platform+" platform")
+                    logger.error(
+                        "OCS improving failed: no improving function found for " +
+                        sys.platform +
+                        " platform")
 
-            logger.debug("\tOcs Report Terminated");
+            logger.debug("\tOcs Report Terminated")
             logger.debug("\t\tuncompressed length: " + str(len(sUnpack)))
 
             # zip of xml file
             try:
                 comp = compressobj()
-                s = comp.compress(sUnpack) + comp.flush() # default to Z_FINISH
+                # default to Z_FINISH
+                s = comp.compress(sUnpack) + comp.flush()
                 logger.debug("\t\tcompressed length: " + str(len(s)))
             except Exception, e:
                 logger.error("Failed during compression.")
@@ -189,7 +199,10 @@ class MyProxyRequest(proxy.ProxyRequest):
 
         if self.config.enablessl:
             try:
-                ctx = makeSSLContext(self.config.verifypeer, self.config.cert_file, self.config.key_file)
+                ctx = makeSSLContext(
+                    self.config.verifypeer,
+                    self.config.cert_file,
+                    self.config.key_file)
                 self.reactor.connectSSL(host, port, clientFactory, ctx)
             except Exception, e:
                 logging.getLogger().error(str(e))
@@ -197,6 +210,7 @@ class MyProxyRequest(proxy.ProxyRequest):
         else:
             self.reactor.connectTCP(host, port, clientFactory)
         return NOT_DONE_YET
+
 
 class MyProxy(proxy.Proxy):
     requestFactory = MyProxyRequest
@@ -212,10 +226,12 @@ class HttpInventoryProxySingleton(Singleton):
 
     def check_flag(self):
         if self.config.flag_type == 'reg':
-            self.logger.debug("Checking flag in registry %s %s" % (self.config.flag[0], self.config.flag[1]))
+            self.logger.debug(
+                "Checking flag in registry %s %s" %
+                (self.config.flag[0], self.config.flag[1]))
             try:
                 key = OpenKey(HKEY_LOCAL_MACHINE, self.config.flag[0])
-                hk_do_inv, typeval  = QueryValueEx(key, self.config.flag[1])
+                hk_do_inv, typeval = QueryValueEx(key, self.config.flag[1])
                 ret = hk_do_inv == 'yes'
             except WindowsError, e:
                 self.logger.debug(str(e))
@@ -226,10 +242,16 @@ class HttpInventoryProxySingleton(Singleton):
         return ret
 
     def clean_flag(self):
-        self.logger.debug("Setting registry key to 'no' %s %s" % (self.config.flag[0], self.config.flag[1]))
+        self.logger.debug(
+            "Setting registry key to 'no' %s %s" %
+            (self.config.flag[0], self.config.flag[1]))
         self.checked_flag = False
         try:
-            key = OpenKey(HKEY_LOCAL_MACHINE, self.config.flag[0], 0, KEY_SET_VALUE)
+            key = OpenKey(
+                HKEY_LOCAL_MACHINE,
+                self.config.flag[0],
+                0,
+                KEY_SET_VALUE)
             SetValueEx(key, self.config.flag[1], 0, REG_SZ, "no")
             CloseKey(key)
             self.logger.debug("Registry key value set")

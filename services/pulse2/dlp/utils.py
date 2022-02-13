@@ -23,7 +23,9 @@ Utilities functions for the dlp application
 
 import os
 import time
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.error
+import urllib.parse
 import zipfile
 import cherrypy
 import logging
@@ -37,7 +39,11 @@ def log(message, severity=logging.DEBUG, traceback=False):
     start = "APIv1"
     if hostname and uuid:
         start += ' (%s, %s)' % (hostname, uuid)
-    cherrypy.request.app.log(message, start, severity=severity, traceback=traceback)
+    cherrypy.request.app.log(
+        message,
+        start,
+        severity=severity,
+        traceback=traceback)
 
 
 def download_file(url, dest, retries):
@@ -52,7 +58,7 @@ def download_file(url, dest, retries):
                     break
                 f.write(chunk)
         return True
-    except:
+    except BaseException:
         if retries > 0:
             log("Failed to download file. Retrying...", logging.WARNING)
             time.sleep(1)
@@ -71,5 +77,6 @@ def make_zipfile(output_filename, source_dir):
             for file in files:
                 filename = os.path.join(root, file)
                 if os.path.isfile(filename):  # regular files only
-                    arcname = os.path.join(os.path.relpath(root, relroot), file)
+                    arcname = os.path.join(
+                        os.path.relpath(root, relroot), file)
                     zip.write(filename, arcname)

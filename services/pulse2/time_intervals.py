@@ -30,19 +30,25 @@ RE_VALIDHOURMIN = '(([0-9]|[0-1][0-9]|[2][0-3]):([0-5][0-9]))'
 # match HH
 RE_VALIDHOUR = '(([0-9]|[1][0-9]|[2][0-3]))'
 # match full interval
-RE_VALIDSEGMENT = "^(%s|%s|%s)-(%s|%s|%s)$" % (RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR, RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR)
+RE_VALIDSEGMENT = "^(%s|%s|%s)-(%s|%s|%s)$" % (RE_VALIDHOURMINSEC,
+                                               RE_VALIDHOURMIN,
+                                               RE_VALIDHOUR,
+                                               RE_VALIDHOURMINSEC,
+                                               RE_VALIDHOURMIN,
+                                               RE_VALIDHOUR)
 
 # minimum value of a time point
 TP_MIN = "00:00:00"
 # max value of a time point
 TP_MAX = "23:59:59"
 
+
 class TimePoint:
     """ This class represents a single time value """
     value = TP_MIN  # TP value
     valid = False   # TP validity
 
-    def __init__(self, value = TP_MIN):
+    def __init__(self, value=TP_MIN):
         if self._valid(value):
             self.value = self._normalize(value)
             self.valid = True
@@ -71,23 +77,32 @@ class TimePoint:
     def _valid(self, value):
         """ Checks for value validity """
         if value:
-            return re.compile("^(%s|%s|%s)$" % (RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR)).match(value) is not None
+            return re.compile(
+                "^(%s|%s|%s)$" %
+                (RE_VALIDHOURMINSEC,
+                 RE_VALIDHOURMIN,
+                 RE_VALIDHOUR)).match(value) is not None
         return False
 
     def _normalize(self, value):
         """ Attempt to represent value always the same manner """
         if re.compile("^%s$" % RE_VALIDHOURMINSEC).match(value):
-            matched = re.compile("^%s$" % RE_VALIDHOURMINSEC).match(value).groups()
-            return "%.2d:%.2d:%.2d" % (int(matched[1]), int(matched[2]), int(matched[3]))
+            matched = re.compile("^%s$" %
+                                 RE_VALIDHOURMINSEC).match(value).groups()
+            return "%.2d:%.2d:%.2d" % (
+                int(matched[1]), int(matched[2]), int(matched[3]))
         elif re.compile("^%s$" % RE_VALIDHOURMIN).match(value):
-            matched = re.compile("^%s$" % RE_VALIDHOURMIN).match(value).groups()
+            matched = re.compile("^%s$" %
+                                 RE_VALIDHOURMIN).match(value).groups()
             return "%.2d:%.2d:00" % (int(matched[1]), int(matched[2]))
         elif re.compile("^%s$" % RE_VALIDHOUR).match(value):
             matched = re.compile("^%s$" % RE_VALIDHOUR).match(value).groups()
             return "%.2d:00:00" % (int(matched[1]))
 
+
 TimePointMin = TimePoint(TP_MIN)
 TimePointMax = TimePoint(TP_MAX)
+
 
 class TimeSegment:
     """ This class represents a single time value """
@@ -101,6 +116,7 @@ class TimeSegment:
     def __str__(self):
         return "%s-%s" % (self.start.__str__(), self.end.__str__())
 
+
 class TimeInterval:
     segments = []
 
@@ -109,10 +125,15 @@ class TimeInterval:
 
     def add(self, segment):
         if segment.start <= segment.end:
-            self.segments = self._merge_r(TimeSegment(segment.start, segment.end))
+            self.segments = self._merge_r(
+                TimeSegment(segment.start, segment.end))
         else:
-            self.segments = self._merge_r(TimeSegment(segment.start, TimePoint("23:59:59")))
-            self.segments = self._merge_r(TimeSegment(TimePoint("00:00:00"), segment.end))
+            self.segments = self._merge_r(TimeSegment(
+                segment.start, TimePoint("23:59:59")))
+            self.segments = self._merge_r(
+                TimeSegment(
+                    TimePoint("00:00:00"),
+                    segment.end))
 
     def _merge_r(self, new_segment):
         """ Merges new_segment in self.segments """
@@ -123,15 +144,16 @@ class TimeInterval:
         # try to merge
         poped_segment = self.segments.pop()
         merged_segment = _merge(poped_segment, new_segment)
-        if len(merged_segment) == 1: # got one new segment after merging => ovelap
+        if len(merged_segment) == 1:  # got one new segment after merging => ovelap
             return self._merge_r(merged_segment[0])
-        if len(merged_segment) == 2: # got 2 segments after merging => no overlap
+        if len(merged_segment) == 2:  # got 2 segments after merging => no overlap
             # as there was no overlap, merged segment contains poped_segment and new_segment
             # we attempts to merge new_segment with remaining values from segments,
             # and returns poped_segment appart
             ret = self._merge_r(new_segment)
             ret.append(poped_segment)
             return ret
+
 
 def _merge(s1, s2):
     """ Merges 2 TimeSegment() together
@@ -154,19 +176,26 @@ def _merge(s1, s2):
     # things are getting complicated, now s1 starts before s2
     elif s1.start < s2.start:                       # s1 "starts" before s2 "starts
         if s1.end < s2.start:
-            return [s1, s2]                         # s1 "finished" before s2 "starts", merge is s1, s2
+            # s1 "finished" before s2 "starts", merge is s1, s2
+            return [s1, s2]
         elif s1.end < s2.end:
-            return [TimeSegment(s1.start, s2.end)]  # s1 "finished" before s2 "end", merge is s1.start, s2.end
+            # s1 "finished" before s2 "end", merge is s1.start, s2.end
+            return [TimeSegment(s1.start, s2.end)]
         elif s1.end >= s2.end:
-            return [s1]                             # s1 "finished" after s2 "end", merge is s1
+            # s1 "finished" after s2 "end", merge is s1
+            return [s1]
     # last case: s2 starts before s1
     elif s2.start < s1.start:                       # s2 "starts" before s1 "starts
         if s2.end < s1.start:
-            return [s2, s1]                         # s2 "finished" before s1 "starts", merge is s1, s2
+            # s2 "finished" before s1 "starts", merge is s1, s2
+            return [s2, s1]
         elif s2.end < s1.end:
-            return [TimeSegment(s2.start, s1.end)]  # s2 "finished" before s1 "end", merge is s2.start, s1.end
+            # s2 "finished" before s1 "end", merge is s2.start, s1.end
+            return [TimeSegment(s2.start, s1.end)]
         elif s2.end >= s1.end:
-            return [s2]                             # s2 "finished" after s1 "end", merge is s2
+            # s2 "finished" after s1 "end", merge is s2
+            return [s2]
+
 
 def string2timeinterval(string):
     """ handle conversion from string to timeinterval """
@@ -184,17 +213,20 @@ def string2timeinterval(string):
             return None
     return tp
 
+
 def timeinterval2string(tp):
     """ handle conversion from timeinterval to string """
     if tp:
         return tp.__str__()
     return None
 
+
 def normalizeinterval(string):
     tp = string2timeinterval(string)
     if tp:
         return timeinterval2string(tp)
     return None
+
 
 def intimeinterval(interval, point):
     """ used to say if a point is in an interval

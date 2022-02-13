@@ -21,7 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging # to log stuff
+import logging  # to log stuff
 
 import twisted
 from twisted.internet import ssl
@@ -29,6 +29,7 @@ from twisted.internet import reactor
 from twisted.web.xmlrpc import Proxy
 
 import pulse2.utils
+
 
 class OpenSSLContext(pulse2.utils.Singleton):
     """
@@ -62,9 +63,8 @@ class OpenSSLContext(pulse2.utils.Singleton):
             ctx.fixBrokenPeers = False
             return ctx
         else:
-            return ssl.DefaultOpenSSLContextFactory(self.localcert_path, self.cacert_path)
-
-
+            return ssl.DefaultOpenSSLContextFactory(
+                self.localcert_path, self.cacert_path)
 
     def setup(self, localcert_path, cacert_path, verifypeer):
         """
@@ -95,15 +95,16 @@ class OpenSSLContext(pulse2.utils.Singleton):
         else:
             logger.warning("SSL enabled, but peer verification is disabled.")
 
+
 class Pulse2XMLRPCProxy(Proxy):
 
     def __init__(self,
                  url,
                  user=None,
                  password=None,
-                 verifypeer = False,
-                 cacert = None,
-                 localcert = None):
+                 verifypeer=False,
+                 cacert=None,
+                 localcert=None):
 
         self._version_reminder()
 
@@ -115,8 +116,8 @@ class Pulse2XMLRPCProxy(Proxy):
 
         self.SSLClientContext = None
 
-        if verifypeer :
-            if cacert and localcert :
+        if verifypeer:
+            if cacert and localcert:
                 OpenSSLContext().setup(localcert, cacert, verifypeer)
             self.SSLClientContext = OpenSSLContext().getContext()
 
@@ -128,7 +129,7 @@ class Pulse2XMLRPCProxy(Proxy):
         Check please its content for each release of twisted and validate it
         increasing number version bellow...
         """
-        if twisted.version.major < 10 :
+        if twisted.version.major < 10:
             logging.getLogger().warn("Uncompatible Twisted version, must be greater than 10.1")
             return False
 
@@ -138,7 +139,6 @@ class Pulse2XMLRPCProxy(Proxy):
             return False
 
         return True
-
 
     def callRemote(self, method, *args):
         """
@@ -161,13 +161,12 @@ class Pulse2XMLRPCProxy(Proxy):
             connector = reactor.connectSSL(
                 self.host, self.port or 443,
                 factory, self.SSLClientContext,
-       		)
+            )
         else:
             connector = reactor.connectTCP(
                 self.host, self.port or 80, factory,
-                )
+            )
         return d
-
 
 
 def __checkTwistedVersion(min):
@@ -175,12 +174,14 @@ def __checkTwistedVersion(min):
         if twisted.version.major > min[0] or twisted.version.major == min[0] and twisted.version.minor > min[1]:
             return True
         return False
-    except:
+    except BaseException:
         return False
+
 
 def isTwistedEnoughForLoginPass():
     min = (2, 3)
     return __checkTwistedVersion(min)
+
 
 def isTwistedEnoughForCert():
     min = (2, 5)

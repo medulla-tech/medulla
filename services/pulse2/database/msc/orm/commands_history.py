@@ -28,9 +28,12 @@ from base64 import b64encode
 
 """ Class to map msc.commands_history to SA
 """
+
+
 class CommandsHistory(object):
     """ Mapping between msc.commands_history and SA
     """
+
     def toH(self):
         return {
             'id': self.id,

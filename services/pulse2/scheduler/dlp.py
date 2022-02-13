@@ -27,6 +27,7 @@ from pulse2.scheduler.queries import get_available_commands
 from pulse2.scheduler.queries import pull_target_update
 from pulse2.scheduler.queries import machine_has_commands, verify_target
 
+
 def get_dlp_method(phase):
     methods = {"wol": "pull_completed_wol",
                "upload": "pull_completed_pull",
@@ -35,11 +36,11 @@ def get_dlp_method(phase):
                "inventory": "pull_completed_inventory",
                "reboot": "pull_completed_reboot",
                "halt": "pull_completed_halt",
-              }
+               }
     return methods[phase]
 
 
-class DownloadQuery :
+class DownloadQuery:
     """ Provides the remote queries from a DLP to the msc database """
 
     def __init__(self):
@@ -88,17 +89,16 @@ class DownloadQuery :
                          "start_date": int(start_date),
                          "end_date": int(end_date),
                          "max_failures": attempts_left,
-                         "steps" : phases,
+                         "steps": phases,
                          "todo": todo,
-                         "params" : parameters,
-                         "start_file" : start_file,
+                         "params": parameters,
+                         "start_file": start_file,
                          "non_fatal_steps": self.config.non_fatal_steps,
                          "package_uuid": package_id,
                          "urls": urls,
                          "files": files,
                          })
         return cont
-
 
     def machine_has_commands(self, uuid):
         """
@@ -135,15 +135,17 @@ class DownloadQuery :
         return d
 
     def _cb_pull_target_awake(self, uuid, hostname):
-        if uuid :
+        if uuid:
             pull_target_update(self.config.name, uuid)
             return uuid
-        else :
+        else:
             self.logger.warn("Cannot detect the UUID of %s" % hostname)
             return False
 
     def _eb_pull_target_awake(self, failure, hostname):
-        self.logger.warn("An error occurred when detect the UUID of %s: %s" % (hostname, str(failure)))
+        self.logger.warn(
+            "An error occurred when detect the UUID of %s: %s" %
+            (hostname, str(failure)))
         return False
 
     def verify_target(self, id, hostname, mac):

@@ -29,16 +29,20 @@ from twisted.web import resource
 import logging
 import cgi
 
+
 class Description(resource.Resource):
     type = 'Description'
     isLeaf = True
-    def __init__(self, services, status = {}):
+
+    def __init__(self, services, status={}):
         # Mutable dict status used as default argument to a method or function
         self.status = status
         self.services = services
         resource.Resource.__init__(self)
         self.logger = logging.getLogger()
-        self.logger.info("(%s) initialised with : %s"%(self.type, self.services))
+        self.logger.info(
+            "(%s) initialised with : %s" %
+            (self.type, self.services))
 
     def __up(self):
         return "<td class='up mandriva'>&nbsp;&nbsp;</td>"
@@ -48,7 +52,7 @@ class Description(resource.Resource):
 
     def render_GET(self, request):
         serverdetail = {}
-        #if request.path != '/':
+        # if request.path != '/':
         #    return ''
 
         body = "<html>"
@@ -63,16 +67,25 @@ class Description(resource.Resource):
                     'type' in request.args and request.args['type'] == description['type']:
                 style = 'selected'
 
-            body += "<tr class='mandriva "+style+"'><td class='mandriva "+style+"'>"+description['proto']+"://"+description['server']+":"+str(description['port'])+description['mp']+"</td><td class='mandriva "+style+"'>"+description['type']+"</td>"
+            body += "<tr class='mandriva " + style + "'><td class='mandriva " + style + "'>" + description['proto'] + "://" + description['server'] + ":" + str(
+                description['port']) + description['mp'] + "</td><td class='mandriva " + style + "'>" + description['type'] + "</td>"
             try:
                 if description['type'] == 'mirror_files':
                     if not self.status[description['mp']]:
-                        body += "<td class='mandriva "+style+"'>content</td>"
+                        body += "<td class='mandriva " + style + "'>content</td>"
                         body += self.__down()
                     else:
-                        url = "?uri="+description['proto']+"://"+description['server']+":"+str(description['port'])+cgi.escape(description['mp'])+"&proto="+description['proto']+"&server="+description['server']+"&port="+str(description['port'])+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']
-                        serverdetail[description['server']+':'+str(description['port'])+description['mp']] = url
-                        body += "<td class='mandriva "+style+"'><a class='mandriva "+style+"' href=\""+url+"\">content</a></td>"
+                        url = "?uri=" + description['proto'] + "://" + description['server'] + ":" + str(
+                            description['port']) + cgi.escape(
+                            description['mp']) + "&proto=" + description['proto'] + "&server=" + description['server'] + "&port=" + str(
+                            description['port']) + "&mp=" + cgi.escape(
+                            description['mp']) + "&type=" + description['type']
+                        serverdetail[description['server'] +
+                                     ':' +
+                                     str(description['port']) +
+                                     description['mp']] = url
+                        body += "<td class='mandriva " + style + "'><a class='mandriva " + \
+                            style + "' href=\"" + url + "\">content</a></td>"
                         body += self.__up()
                 else:
                     # FIXME NR/MDV : are the four lines below useful ?
@@ -80,13 +93,16 @@ class Description(resource.Resource):
                     # import xmlrpclib
                     # client = xmlrpclib.ServerProxy('%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp']))
                     # ret = client.getServerDetails()
-                    url = "?proto="+description['proto']+"&server="+description['server']+"&port="+str(description['port'])+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']
-                    serverdetail[description['server']+':'+str(description['port'])+description['mp']] = url
-                    body += "<td class='mandriva "+style+"'><a class='mandriva "+style+"' href='"+url+"'>details</a></td>"
+                    url = "?proto=" + description['proto'] + "&server=" + description['server'] + "&port=" + str(
+                        description['port']) + "&mp=" + cgi.escape(description['mp']) + "&type=" + description['type']
+                    serverdetail[description['server'] + ':' + \
+                        str(description['port']) + description['mp']] = url
+                    body += "<td class='mandriva " + style + "'><a class='mandriva " + \
+                        style + "' href='" + url + "'>details</a></td>"
                     body += self.__up()
                     self.status[description['mp']] = True
             except Exception:
-                body += "<td class='mandriva "+style+"'>details</td>"
+                body += "<td class='mandriva " + style + "'>details</td>"
                 body += self.__down()
                 self.status[description['mp']] = False
             body += "</tr>"

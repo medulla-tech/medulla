@@ -32,7 +32,7 @@ class Syncthingsync(object):
             return 0
 
     def getDate(self):
-        if self.date != None:
+        if self.date is not None:
             return self.date
         else:
             return ""
@@ -61,7 +61,6 @@ class Syncthingsync(object):
         else:
             return ""
 
-
     def to_array(self):
         """
         This function serialize the object to dict.
@@ -70,9 +69,9 @@ class Syncthingsync(object):
             Dict of elements contained into the object.
         """
         return {
-            'id' : self.getId(),
-            'date' : self.getDate(),
-            'uuidpackage' : self.getUuidpackage(),
+            'id': self.getId(),
+            'date': self.getDate(),
+            'uuidpackage': self.getUuidpackage(),
             'typesynchro': self.getTypesynchro(),
             'relayserver_jid': self.getRelayserver_jid(),
             'watching': self.getWatching()

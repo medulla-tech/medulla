@@ -11,19 +11,26 @@ basename = os.path.basename
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = list(range(8))
 
-#The background is set with 40 plus the number of the color, and the foreground with 30
+# The background is set with 40 plus the number of the color, and the
+# foreground with 30
 
-#These are the sequences need to get colored ouput
+# These are the sequences need to get colored ouput
 RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
 
-def formatter_message(message, use_color = True):
+
+def formatter_message(message, use_color=True):
     if use_color:
-        message = message.replace("$RESET", RESET_SEQ).replace("$BOLD", BOLD_SEQ)
+        message = message.replace(
+            "$RESET",
+            RESET_SEQ).replace(
+            "$BOLD",
+            BOLD_SEQ)
     else:
         message = message.replace("$RESET", "").replace("$BOLD", "")
     return message
+
 
 COLORS = {
     'WARNING': YELLOW,
@@ -33,20 +40,23 @@ COLORS = {
     'ERROR': RED
 }
 
+
 class ColoredFormatter(logging.Formatter):
-    def __init__(self, msg, use_color = True):
+    def __init__(self, msg, use_color=True):
         logging.Formatter.__init__(self, msg)
         self.use_color = use_color
 
     def format(self, record):
         levelname = record.levelname
         if self.use_color and levelname in COLORS:
-            levelname_color = COLOR_SEQ % (30 + COLORS[levelname]) + levelname + RESET_SEQ
+            levelname_color = COLOR_SEQ % (
+                30 + COLORS[levelname]) + levelname + RESET_SEQ
             record.levelname = levelname_color
         return logging.Formatter.format(self, record)
 
+
 class getCommand(object):
-    def __init__(self, file, log = False):
+    def __init__(self, file, log=False):
         self.file = file
         self.logger = log and log or logging.getLogger()
 
@@ -63,7 +73,8 @@ class getCommand(object):
             end_pos = strings_data.find('</assembly>') + 11
             return strings_data[:end_pos]
         else:
-            self.logger.debug('getStringsData: <?xml tag not found :-(, return all strings_data')
+            self.logger.debug(
+                'getStringsData: <?xml tag not found :-(, return all strings_data')
             return strings_data
 
     def getFileData(self):
@@ -77,10 +88,12 @@ class getCommand(object):
         d = {}
 
         # this awful piece of code convert file output to a dictionnary
-        for i in range(n-1, 0, -1):
+        for i in range(n - 1, 0, -1):
             lcount = len(l[i].split(', '))
-            if lcount == 1: lcount = 2 # lcount is at least equal to 2 to prevent empty values
-            d[l[i-1].split(', ').pop()] = " ".join(l[i].split(', ')[:lcount-1]).replace('\n', '')
+            if lcount == 1:
+                lcount = 2  # lcount is at least equal to 2 to prevent empty values
+            d[l[i - 1].split(', ').pop()] = " ".join(l[i].split(', ')
+                                                     [:lcount - 1]).replace('\n', '')
 
         return d
 
@@ -112,13 +125,15 @@ if errorlevel 1 (
 ) else (
   del /F install.log
   exit 0
-)""" % basename(self.file)
+)""" % basename(
+            self.file)
 
     def getMSIUpdateCommand(self):
         """
         Command for *.msp files (MSI update packages)
         """
-        return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
+        return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(
+            self.file)
 
     def getRegCommand(self):
         return 'regedit /s "%s"' % basename(self.file)
@@ -147,7 +162,7 @@ case "$ID" in
     echo "Your distribution is not supported yet or is not rpm based"
     exit 1
     ;;
-esac""" %(basename(self.file), basename(self.file))
+esac""" % (basename(self.file), basename(self.file))
 
     def getAptCommand(self):
         return 'apt -q -y install "%s" --reinstall' % basename(self.file)
@@ -163,7 +178,6 @@ esac""" %(basename(self.file), basename(self.file))
         Command for *.msu files (Microsoft Update packages)
         """
         return 'wusa.exe "%s" /quiet /norestart' % basename(self.file)
-
 
     def getCommand(self):
         self.logger.debug("Parsing %s:" % self.file)
@@ -203,36 +217,51 @@ esac""" %(basename(self.file), basename(self.file))
                 return self.getInnoCommand()
             elif installer == "Nullsoft.NSIS.exehead":
                 self.logger.debug("NSIS detected")
-                if re.match('^pulse2-secure-agent-.*\.exe$', basename(self.file)) and not re.search('plugin', basename(self.file)):
-                    self.logger.debug("Pulse Secure Agent detected, add /UPDATE flag")
+                if re.match(
+                    '^pulse2-secure-agent-.*\\.exe$',
+                    basename(
+                        self.file)) and not re.search(
+                    'plugin',
+                    basename(
+                        self.file)):
+                    self.logger.debug(
+                        "Pulse Secure Agent detected, add /UPDATE flag")
                     return self.getNSISUpdateCommand()
                 return self.getNSISCommand()
             elif installer == "7zS.sfx.exe":
                 self.logger.debug("7zS.sfx detected (Mozilla app inside ?)")
-                if not os.system("grep Mozilla '%s' > /dev/null" % self.file): # return code is 0 if file match
+                if not os.system(
+                    "grep Mozilla '%s' > /dev/null" %
+                        self.file):  # return code is 0 if file match
                     self.logger.debug("Mozilla App detected")
                     return self.getMozillaCommand()
                 else:
-                    return self.logger.info("I can't get a command for %s" % self.file)
+                    return self.logger.info(
+                        "I can't get a command for %s" % self.file)
             elif installer == "7-Zip.7-Zip.7zipInstall":
                 self.logger.debug("7-Zip detected")
                 return self.get7ZipCommand()
             else:
-                return self.logger.info("I can't get a command for %s" % self.file)
+                return self.logger.info(
+                    "I can't get a command for %s" %
+                    self.file)
 
         elif "Name of Creating Application" in file_data:
-            # MSI files are created with Windows Installer, but some apps like Flash Plugin, No
+            # MSI files are created with Windows Installer, but some apps like
+            # Flash Plugin, No
             if "Windows Installer" in file_data['Name of Creating Application'] or "Document Little Endian" in file_data[self.file]:
                 # MSI files
                 if re.match('(x64|Intel);[0-9]+', file_data['Template']):
                     if self.file.endswith('.msp'):
-                        self.logger.debug("%s is a MSI Update file" % self.file)
+                        self.logger.debug(
+                            "%s is a MSI Update file" % self.file)
                         return self.getMSIUpdateCommand()
                     else:
                         self.logger.debug("%s is a MSI file" % self.file)
                         return self.getMSICommand()
                 else:
-                    return self.logger.info("No Template Key for %s" % self.file)
+                    return self.logger.info(
+                        "No Template Key for %s" % self.file)
         elif "Debian binary package" in file_data[self.file] or self.file.endswith(".deb"):
             self.logger.debug("Debian package detected")
             return self.getDpkgCommand()
@@ -252,14 +281,24 @@ esac""" %(basename(self.file), basename(self.file))
             self.logger.debug("Windows Update file detected")
             return self.getMSUCommand()
         else:
-            return self.logger.info("I don't know what to do with %s (%s)" % (self.file, file_data[self.file]))
+            return self.logger.info("I don't know what to do with %s (%s)" % (
+                self.file, file_data[self.file]))
+
 
 if __name__ == "__main__":
     parser = OptionParser()
-    parser.add_option("-d", "--debug", action="store_true", dest="debug", default=False,
-                      help="Print debug messages")
-    parser.add_option("--dir", dest="dir", default=False,
-                      help="Directory who will be analyzed (default current directory)")
+    parser.add_option(
+        "-d",
+        "--debug",
+        action="store_true",
+        dest="debug",
+        default=False,
+        help="Print debug messages")
+    parser.add_option(
+        "--dir",
+        dest="dir",
+        default=False,
+        help="Directory who will be analyzed (default current directory)")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -278,7 +317,7 @@ if __name__ == "__main__":
     formatter = ColoredFormatter("%(levelname)-18s %(message)s")
     handler_stream = logging.StreamHandler()
     handler_stream.setFormatter(formatter)
-    #handler_stream.setLevel(level)
+    # handler_stream.setLevel(level)
     log.addHandler(handler_stream)
 
     for file in os.listdir(dir):

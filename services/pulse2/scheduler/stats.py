@@ -27,8 +27,7 @@ from pulse2.scheduler.queries import get_commands_stats, update_commands_stats
 from pulse2.scheduler.queries import process_non_valid
 
 
-
-class StatisticsProcessing :
+class StatisticsProcessing:
     """
     Provides the periodical and final updates of global command statistics.
 
@@ -48,14 +47,13 @@ class StatisticsProcessing :
     # previous commands (missing command == expired)
     previous = []
 
-
     def __init__(self, config):
         self.config = config
         self.logger = logging.getLogger()
 
     def update(self, cmd_id=None):
         """ Updates the global statistics or just for one command """
-        if cmd_id :
+        if cmd_id:
             self.stats[cmd_id] = self._get_stats(cmd_id)[cmd_id]
         else:
             self.stats = self._get_stats()
@@ -64,14 +62,12 @@ class StatisticsProcessing :
 
     def check_and_schedule_for_expired(self):
         """Looks for expired commands and schedules an update"""
-        for cmd_id in self.previous :
-            if cmd_id not in self.stats :
+        for cmd_id in self.previous:
+            if cmd_id not in self.stats:
                 # during previous awake presented, so now expired
                 self.watchdog_schedule(cmd_id)
 
         self.previous = list(self.stats.keys())
-
-
 
     def _get_stats(self, cmd_id=None):
         """
@@ -84,15 +80,17 @@ class StatisticsProcessing :
 
         stats = {}
 
-        if cmd_id :
-            all_states = dict([(q[1], q[2]) for q in __stats if q[0]==cmd_id])
+        if cmd_id:
+            all_states = dict([(q[1], q[2])
+                              for q in __stats if q[0] == cmd_id])
             stats[cmd_id] = all_states
         else:
             cmd_ids = []
             [cmd_ids.append(k[0]) for k in __stats]
 
-            for cmd_id in cmd_ids :
-                all_states = dict([(q[1], q[2]) for q in __stats if q[0]==cmd_id])
+            for cmd_id in cmd_ids:
+                all_states = dict([(q[1], q[2])
+                                  for q in __stats if q[0] == cmd_id])
                 stats[cmd_id] = all_states
 
         return stats
@@ -113,9 +111,10 @@ class StatisticsProcessing :
 
             update_commands_stats(cmd_id, stats)
 
-
             del self.wdogs[cmd_id]
-            self.logger.info("Final statistics updated for command: %s" % cmd_id)
+            self.logger.info(
+                "Final statistics updated for command: %s" %
+                cmd_id)
 
         except Exception as e:
             self.logger.warn("Statistics update failed: %s" % str(e))
@@ -127,11 +126,13 @@ class StatisticsProcessing :
         @param cmd_id: id of Commands record
         @type cmd_id: int
         """
-        if cmd_id in self.wdogs :
+        if cmd_id in self.wdogs:
             call_id = self.wdogs[cmd_id]
             call_id.cancel()
             self.logger.debug("Statistics: schedule cancelled: %s" % cmd_id)
-        self.logger.debug("Statistics: scheduling the final update for command %s" % cmd_id)
+        self.logger.debug(
+            "Statistics: scheduling the final update for command %s" %
+            cmd_id)
         call_id = reactor.callLater(10, self._update_for, cmd_id)
 
         self.wdogs[cmd_id] = call_id

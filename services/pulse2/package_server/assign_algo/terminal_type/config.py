@@ -22,12 +22,13 @@
 import re
 from pulse2.database.inventory.config import InventoryDatabaseConfigSkel
 
-#if sys.platform != "win32":
+# if sys.platform != "win32":
 #    import pwd
 #    import grp
 #    import string
 #    # MMC
 #    from mmc.support.config import MMCConfigParser
+
 
 class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
     type2url = {}
@@ -36,12 +37,12 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
     def setup(self, config_file):
         InventoryDatabaseConfigSkel.setup(self, config_file)
 
-        ## Load configuration file
-        #if sys.platform != "win32":
+        # Load configuration file
+        # if sys.platform != "win32":
         #    self.cp = MMCConfigParser()
-        #else:
+        # else:
         #    self.cp = ConfigParser.ConfigParser()
-        #self.cp.read(config_file)
+        # self.cp.read(config_file)
 
         for section in self.cp.sections():
             m = re.compile('^associations:(?P<index>[0-9]+)$').match(section)
@@ -58,9 +59,9 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
                 url = self.cp.get(section, 'mirror')
                 kind = self.cp.get(section, 'kind')
                 for type in types:
-                    if not type in self.type2url:
+                    if type not in self.type2url:
                         self.type2url[type] = {}
-                    if not kind in self.type2url[type]:
+                    if kind not in self.type2url[type]:
                         self.type2url[type][kind] = {}
                     self.type2url[type][kind][index] = url
         if len(list(self.type2url.keys())) == 0:
@@ -69,8 +70,7 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
         for type in self.type2url:
             for kind in self.type2url[type]:
                 sorted = []
-                keys = list(self.type2url[type][kind].keys())
-                keys.sort()
+                keys = sorted(self.type2url[type][kind].keys())
                 for index in keys:
                     sorted.append(self.type2url[type][kind][index])
                 self.type2url[type][kind] = sorted

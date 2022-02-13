@@ -75,7 +75,8 @@ def enum(*args, **kwargs):
     return type('Enum',
                 (),
                 dict((y, x) for x, y in enumerate(args), **kwargs)
-               )
+                )
+
 
 # List of phase actions
 DIRECTIVE = enum("GIVE_UP",
@@ -106,7 +107,6 @@ class PhaseProxyMethodContainer(object):
     _register_only = False
     _proxy_methods = {}
 
-
     @property
     def proxy_methods(self):
         """Returns all proxy methods of phase"""
@@ -115,7 +115,7 @@ class PhaseProxyMethodContainer(object):
     def register(self):
         """Registers all proxymethods in inherited Phase class"""
         self._register_only = True
-        for name in dir(self) :
+        for name in dir(self):
             fnc = getattr(self, name)
 
             if not hasattr(fnc, "is_proxy_fnc"):
@@ -126,7 +126,6 @@ class PhaseProxyMethodContainer(object):
                 args, vargs, kwds, defaults = inspect.getargspec(fnc)
                 fnc(self, *args)
 
-
         self._register_only = True
 
 
@@ -136,7 +135,6 @@ class PhaseBase (PhaseProxyMethodContainer):
     # name of phase
     name = None
     state_name = None
-
 
     # commands_on_host record
     coh = None
@@ -199,7 +197,7 @@ class PhaseBase (PhaseProxyMethodContainer):
         @rtype: DIRECTIVE
         """
         if self.coh.isStateStopped():
-            self.logger.info("Circuit #%s: Stop"  %self.coh.id)
+            self.logger.info("Circuit #%s: Stop" % self.coh.id)
             return DIRECTIVE.STOPPED
         if not self.cmd.in_valid_time():
             return DIRECTIVE.OVER_TIMED
@@ -212,21 +210,24 @@ class PhaseBase (PhaseProxyMethodContainer):
 
         if self.phase.is_done():
             # phase has already already done, jump to next phase
-            self.logger.debug("command_on_host #%s: %s done" % (self.coh.id, self.name))
+            self.logger.debug(
+                "command_on_host #%s: %s done" %
+                (self.coh.id, self.name))
             return self.next()
         if self.phase.is_running():
             # phase still running, immediately returns, do nothing
-            self.logger.debug("command_on_host #%s: %s still running" % (self.coh.id, self.name))
+            self.logger.debug(
+                "command_on_host #%s: %s still running" %
+                (self.coh.id, self.name))
         return DIRECTIVE.PERFORM
 
     def _switch_on(self):
         """Phase is ready to run, let's go !"""
         self.phase.set_running()
-        if not self.state_name :
+        if not self.state_name:
             self.state_name = self.name
         self.update_history_in_progress()
         return DIRECTIVE.PERFORM
-
 
     def apply_initial_rules(self):
         """
@@ -240,10 +241,9 @@ class PhaseBase (PhaseProxyMethodContainer):
                        DIRECTIVE.GIVE_UP,
                        DIRECTIVE.KILLED,
                        DIRECTIVE.STOPPED,
-                       DIRECTIVE.OVER_TIMED) :
+                       DIRECTIVE.OVER_TIMED):
             return self._switch_on()
         return ret
-
 
     def run(self):
         """
@@ -257,7 +257,7 @@ class PhaseBase (PhaseProxyMethodContainer):
             if self.apply_initial_rules():
                 return self.coh
         except Exception, e:
-            self.logger.error("Flags or rules failed: %s"  % str(e))
+            self.logger.error("Flags or rules failed: %s" % str(e))
         return self.perform()
 
     def perform(self):
@@ -273,6 +273,7 @@ class PhaseBase (PhaseProxyMethodContainer):
     def failed(self):
         raise NotImplementedError
 
+
 class Phase (PhaseBase):
     """ Main phase frame providing all the actions"""
 
@@ -284,14 +285,15 @@ class Phase (PhaseBase):
         @type failure: twisted failure
         """
 
-        logging.getLogger().error("Circuit #%s: got an error within an error: %s" %
-                (self.coh.id, extractExceptionMessage(failure)))
+        logging.getLogger().error(
+            "Circuit #%s: got an error within an error: %s" %
+            (self.coh.id, extractExceptionMessage(failure)))
         return self.give_up()
 
     def update_history_in_progress(self,
-                            error_code = PULSE2_SUCCESS_ERROR,
-                            stdout = '',
-                            stderr = ''):
+                                   error_code=PULSE2_SUCCESS_ERROR,
+                                   stdout='',
+                                   stderr=''):
         """
         Logging the MSC activity - switch the state to running.
 
@@ -307,9 +309,9 @@ class Phase (PhaseBase):
         self._update_history("running", error_code, stdout, stderr)
 
     def update_history_done(self,
-                            error_code = PULSE2_SUCCESS_ERROR,
-                            stdout = '',
-                            stderr = ''):
+                            error_code=PULSE2_SUCCESS_ERROR,
+                            stdout='',
+                            stderr=''):
         """
         Logging the MSC activity - switch the state to done.
 
@@ -325,9 +327,9 @@ class Phase (PhaseBase):
         self._update_history("done", error_code, stdout, stderr)
 
     def update_history_failed(self,
-                            error_code = PULSE2_SUCCESS_ERROR,
-                            stdout = '',
-                            stderr = ''):
+                              error_code=PULSE2_SUCCESS_ERROR,
+                              stdout='',
+                              stderr=''):
         """
         Logging the MSC activity - switch the state to failed.
 
@@ -341,7 +343,6 @@ class Phase (PhaseBase):
         @type stderr: str
         """
         self._update_history("failed", error_code, stdout, stderr)
-
 
     def _update_history(self, state, error_code, stdout, stderr):
         """
@@ -369,18 +370,18 @@ class Phase (PhaseBase):
 
     def get_client(self, announce):
         client_group = ""
-        if self.host :
+        if self.host:
 
-            for pref_net_ip, pref_netmask in self.config.preferred_network :
-                if NetUtils.on_same_network(self.host, pref_net_ip, pref_netmask):
+            for pref_net_ip, pref_netmask in self.config.preferred_network:
+                if NetUtils.on_same_network(
+                        self.host, pref_net_ip, pref_netmask):
 
                     client_group = pref_net_ip
                     break
-        else :
+        else:
             if self.config.preferred_network:
                 (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
                 client_group = pref_net_ip
-
 
         return {'host': self.host,
                 'uuid': self.target.getUUID(),
@@ -390,7 +391,7 @@ class Phase (PhaseBase):
                 'server_check': getServerCheck(self.target),
                 'action': getAnnounceCheck(announce),
                 'group': client_group
-               }
+                }
 
     def give_up(self):
         """
@@ -402,7 +403,7 @@ class Phase (PhaseBase):
         self.logger.debug("Circuit #%s: Releasing" % self.coh.id)
         if self.coh.isStateStopped():
             return DIRECTIVE.STOPPED
-        else :
+        else:
             return DIRECTIVE.GIVE_UP
 
     def failed(self):
@@ -421,14 +422,14 @@ class Phase (PhaseBase):
         @return: command directive
         @rtype: DIRECTIVE
         """
-        ltr = LaunchTimeResolver(start_date=self.coh.start_date,
-                                 end_date=self.coh.end_date,
-                                 attempts_failed=self.coh.attempts_failed,
-                                 attempts_left=self.coh.attempts_left,
-                                 max_wol_time=self.config.max_wol_time,
-                                 deployment_intervals=self.cmd.deployment_intervals,
-                                 now=time.time()
-                                 )
+        ltr = LaunchTimeResolver(
+            start_date=self.coh.start_date,
+            end_date=self.coh.end_date,
+            attempts_failed=self.coh.attempts_failed,
+            attempts_left=self.coh.attempts_left,
+            max_wol_time=self.config.max_wol_time,
+            deployment_intervals=self.cmd.deployment_intervals,
+            now=time.time())
 
         self.coh.reSchedule(ltr.get_launch_date(), True)
 
@@ -449,29 +450,28 @@ class Phase (PhaseBase):
         @param taken_in_account: if True, order successfully stacked
         @type taken_in_account: bool
         """
-        if taken_in_account: # success
+        if taken_in_account:  # success
             self.update_history_in_progress()
             self.logger.info("Circuit #%s: (%s on %s) %s order stacked" %
-                    (self.coh.id,
-                     self.cmd.title,
-                     self.target.target_name,
-                     name))
+                             (self.coh.id,
+                              self.cmd.title,
+                              self.target.target_name,
+                              name))
             return self.give_up()
-        else: # failed: launcher seems to have rejected it
+        else:  # failed: launcher seems to have rejected it
             if self.coh.isStateStopped():
                 return self.give_up()
 
             self.coh.setStateScheduled()
             self.logger.warn("Circuit #%s: (%s on %s) %s order NOT stacked" %
-                    (self.coh.id,
-                     self.cmd.title,
-                     self.target.target_name,
-                     name))
+                             (self.coh.id,
+                              self.cmd.title,
+                              self.target.target_name,
+                              name))
             return self.switch_phase_failed()
 
 
-
-class QueryContext :
+class QueryContext:
     """A simply aliasing of CoHQuery container of circuit. """
 
     def __init__(self, running_phase):
@@ -479,7 +479,6 @@ class QueryContext :
         self.cmd = running_phase.cmd
         self.phase = running_phase.phase
         self.target = running_phase.target
-
 
 
 class CircuitBase(object):
@@ -493,8 +492,6 @@ class CircuitBase(object):
     id = None
     # commands id
     cmd_id = None
-
-
 
     status = CC_STATUS.ACTIVE
 
@@ -548,7 +545,6 @@ class CircuitBase(object):
 
         self.__phases_list = []
 
-
     @property
     def is_running(self):
         return isinstance(self.running_phase, Phase)
@@ -562,10 +558,10 @@ class CircuitBase(object):
         """
         self.recurrent = recurrent
 
-        if not self.initialized :
+        if not self.initialized:
             d = maybeDeferred(self._flow_create)
 
-            if not recurrent :
+            if not recurrent:
                 d.addCallback(self._chooseClientNetwork)
                 d.addCallback(self._host_detect)
                 d.addCallback(self._network_detect)
@@ -574,7 +570,7 @@ class CircuitBase(object):
             d.addErrback(self._init_failed)
 
             return d
-        else :
+        else:
             return Deferred()
 
     def _flow_create(self):
@@ -584,19 +580,21 @@ class CircuitBase(object):
         selected = self.cohq.get_phases()
         if self.pull:
             d_mode = "pull"
-        else :
+        else:
             d_mode = "push"
 
-        self.logger.debug("Circuit #%s: started on %s mode" %(self.id, d_mode))
+        self.logger.debug(
+            "Circuit #%s: started on %s mode" %
+            (self.id, d_mode))
 
-        for phase_name in selected :
-            matches = [p for p in self.installed_phases[d_mode] if p.name==phase_name]
+        for phase_name in selected:
+            matches = [p for p in self.installed_phases[d_mode]
+                       if p.name == phase_name]
             if len(matches) == 1:
                 phases.append(matches[0])
-            else :
+            else:
                 # TODO - log it and process something .. ?
                 raise KeyError
-
 
         self.set_phases(phases)
         return True
@@ -604,11 +602,10 @@ class CircuitBase(object):
     @property
     def phases(self):
         """
-	Main container of selected phases.
-	Gets the phases iterator.
-	"""
+        Main container of selected phases.
+        Gets the phases iterator.
+        """
         return self._phases
-
 
     def set_phases(self, value):
         """
@@ -617,9 +614,14 @@ class CircuitBase(object):
         - Initial verifications of list of phases
         - converting the _phases attribute to iterator
         """
-        if isinstance(value, list) and all(p for p in value if issubclass(p, Phase)):
+        if isinstance(
+                value,
+                list) and all(
+                p for p in value if issubclass(
+                p,
+                Phase)):
             self._phases = iter(value)
-        else :
+        else:
             raise TypeError("All elements must be <Phase> type")
 
         self.__phases_list = value
@@ -641,9 +643,9 @@ class CircuitBase(object):
         @param releaser: link to MscContainer().release()
         @type releaser: callable
         """
-        if callable(releaser) :
+        if callable(releaser):
             self.releaser = releaser
-        else :
+        else:
             raise TypeError("Releaser must be a callable")
 
     def install_dispatcher(self, dispatcher):
@@ -667,14 +669,13 @@ class CircuitBase(object):
         """
         self.dispatcher.stopped_track.remove(self.id)
         self.dispatcher.started_track.remove(self.id)
-        if self.recurrent :
+        if self.recurrent:
             return
-        try :
+        try:
             self.releaser(self.cohq.coh.id, suspend_to_waitings)
             self.update_stats()
         except Exception, e:
             self.logger.error("Circuit release failed: %s" % str(e))
-
 
     @property
     def qm(self):
@@ -698,7 +699,7 @@ class CircuitBase(object):
         """
         self.dispatcher.statistics.update(self.cmd_id)
 
-        if self.cmd_id in self.dispatcher.statistics.stats :
+        if self.cmd_id in self.dispatcher.statistics.stats:
             stats = self.dispatcher.statistics.stats[self.cmd_id]
             self.cohq.cmd.update_stats(**stats)
 
@@ -719,7 +720,6 @@ class CircuitBase(object):
         """
         return chooseClientInfo(self.cohq.target)
 
-
     def _host_detect(self, host):
         """
         Network address detect callback.
@@ -732,27 +732,31 @@ class CircuitBase(object):
         @return: network address
         @rtype: str
         """
-        if host :
+        if host:
             self.host = host
 
-            for pref_net_ip, pref_netmask in self.config.preferred_network :
+            for pref_net_ip, pref_netmask in self.config.preferred_network:
                 if NetUtils.on_same_network(host, pref_net_ip, pref_netmask):
 
                     return pref_net_ip
 
             if self.config.preferred_network:
-                self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
+                self.logger.debug(
+                    "Circuit #%s: network detect failed, assigned the first of scheduler" %
+                    (self.id))
                 (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
                 return pref_net_ip
         else:
-            self.logger.warn("Circuit #%s: IP address detect failed" % (self.id))
+            self.logger.warn(
+                "Circuit #%s: IP address detect failed" %
+                (self.id))
 
         if self.config.preferred_network:
-            self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
+            self.logger.debug(
+                "Circuit #%s: network detect failed, assigned the first of scheduler" %
+                (self.id))
             (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
             return pref_net_ip
-
-
 
     def _network_detect(self, address):
         """
@@ -764,11 +768,10 @@ class CircuitBase(object):
         @return: True and Circuit instance when success
         @rtype: tuple
         """
-        if address :
+        if address:
             self.network_address = address
-        else :
+        else:
             self.logger.debug("Circuit #%s: network not assigned" % (self.id))
-
 
         return True
 
@@ -793,7 +796,10 @@ class CircuitBase(object):
         @param failure: failure reason
         @type failure: twisted failure
         """
-        self.logger.error("An error occured while detecting target's ip address: %s" % str(failure))
+        self.logger.error(
+            "An error occured while detecting target's ip address: %s" %
+            str(failure))
+
 
 class Circuit (CircuitBase):
     """
@@ -806,11 +812,16 @@ class Circuit (CircuitBase):
     def run(self):
         """ Start the workflow scenario. """
 
-        self.logger.debug("circuit #%s - assigned network: %s" % (self.id, self.network_address))
-        self.logger.debug("circuit #%s - command: #%s / order: %s" %
-                (self.id, str(self.cohq.cmd.id), str(self.cohq.cmd.order_in_bundle)))
+        self.logger.debug(
+            "circuit #%s - assigned network: %s" %
+            (self.id, self.network_address))
+        self.logger.debug(
+            "circuit #%s - command: #%s / order: %s" %
+            (self.id, str(
+                self.cohq.cmd.id), str(
+                self.cohq.cmd.order_in_bundle)))
 
-        try :
+        try:
             if not self.running_phase:
 
                 first = next(self.phases)
@@ -821,9 +832,11 @@ class Circuit (CircuitBase):
                     self.running_phase.launchers_provider = self.launchers_provider
                 self.running_phase.dispatcher = self.dispatcher
 
-        except StopIteration :
+        except StopIteration:
             # All phases passed -> relase the circuit
-            self.logger.info("Circuit #%s: all phases already processed  - releasing" % self.id)
+            self.logger.info(
+                "Circuit #%s: all phases already processed  - releasing" %
+                self.id)
             self.cohq.coh.setStateDone()
             self.release()
             return
@@ -843,19 +856,19 @@ class Circuit (CircuitBase):
         """
         self.cohq = CoHQuery(self.id)
         self.update_stats()
-	self.dispatcher.started_track.update(self.id)
-	if self.id in self.dispatcher.stopped_track :
-	    self.release()
+        self.dispatcher.started_track.update(self.id)
+        if self.id in self.dispatcher.stopped_track:
+            self.release()
         # if give-up - actual phase is probably running - do not move - wait...
-        if result == DIRECTIVE.GIVE_UP or result is None :
-            return lambda : DIRECTIVE.GIVE_UP
-        elif result == DIRECTIVE.FAILED :
+        if result == DIRECTIVE.GIVE_UP or result is None:
+            return lambda: DIRECTIVE.GIVE_UP
+        elif result == DIRECTIVE.FAILED:
             self.logger.info("Circuit #%s: failed - releasing" % self.id)
             self.release()
             return
-        elif result in (DIRECTIVE.KILLED, DIRECTIVE.OVER_TIMED) :
+        elif result in (DIRECTIVE.KILLED, DIRECTIVE.OVER_TIMED):
             self.logger.info("Circuit #%s: releasing" % self.id)
-            if result == DIRECTIVE.OVER_TIMED :
+            if result == DIRECTIVE.OVER_TIMED:
                 self.schedule_last_stats()
             self.release()
             return
@@ -864,9 +877,8 @@ class Circuit (CircuitBase):
             self.cohq.coh.setStateStopped()
             self.release()
             return
-        else :
+        else:
             return self.phase_step()
-
 
     def phase_error(self, failure):
         """
@@ -876,7 +888,6 @@ class Circuit (CircuitBase):
         @type failure: twisted failure
         """
         self.logger.error("Phase error: %s" % str(failure))
-
 
     def phase_step(self, forced_directive=None):
         """
@@ -890,36 +901,36 @@ class Circuit (CircuitBase):
         @rtype: func
         """
 
-        if forced_directive :
+        if forced_directive:
             res = forced_directive
-        else :
+        else:
             # state tests before phase processing to resolving next flow
             res = self.running_phase.apply_initial_rules()
 
-	if self.id in self.dispatcher.stopped_track :
-	    self.release()
+        if self.id in self.dispatcher.stopped_track:
+            self.release()
 
         # move on the next phase ->
-        if res == DIRECTIVE.NEXT :
+        if res == DIRECTIVE.NEXT:
 
-            try :
+            try:
                 next_phase = next(self.phases)
                 self.running_phase = next_phase(self.cohq,
                                                 self.host,
                                                 self.config)
-                if not self.recurrent :
+                if not self.recurrent:
                     self.running_phase.launchers_provider = self.launchers_provider
                 self.running_phase.dispatcher = self.dispatcher
                 self.logger.debug("next phase :%s" % (self.running_phase))
-            except StopIteration :
+            except StopIteration:
                 # end of workflow - done !
                 self.logger.info("Circuit #%s: (%s on %s) DONE" %
-                        (self.id,
-                         self.cohq.cmd.title,
-                         self.cohq.target.target_name))
+                                 (self.id,
+                                  self.cohq.cmd.title,
+                                  self.cohq.target.target_name))
                 self.release()
             except Exception, e:
-                self.logger.error("Next phase get failed: %s"  % str(e))
+                self.logger.error("Next phase get failed: %s" % str(e))
 
             else:
                 d = Deferred()
@@ -929,29 +940,32 @@ class Circuit (CircuitBase):
                 d.callback(True)
 
         # perform the phase (initial rules allready passed)
-        elif res == DIRECTIVE.PERFORM :
+        elif res == DIRECTIVE.PERFORM:
             d = maybeDeferred(self.running_phase.perform)
-            self.logger.debug("perform the phase: %s" % (self.running_phase.name))
+            self.logger.debug(
+                "perform the phase: %s" %
+                (self.running_phase.name))
             d.addCallback(self.phase_process)
             d.addCallback(self._last_activity_record)
             d.addErrback(self.phase_error)
             return
 
         # give-up - actual phase is probably running
-        elif res == DIRECTIVE.GIVE_UP :
+        elif res == DIRECTIVE.GIVE_UP:
             return False
-        elif res == DIRECTIVE.OVER_TIMED :
+        elif res == DIRECTIVE.OVER_TIMED:
 
-            if self.on_last_phase() :
-                self.logger.info("Circuit #%s: forced finish %s" % (self.id, self.running_phase.name))
+            if self.on_last_phase():
+                self.logger.info(
+                    "Circuit #%s: forced finish %s" %
+                    (self.id, self.running_phase.name))
                 return self.phase_step(DIRECTIVE.NEXT)
 
-
             if self.running_phase.coh.attempts_failed > 0 \
-                    or any_failed(self.id, self.config.non_fatal_steps) :
+                    or any_failed(self.id, self.config.non_fatal_steps):
                 self.cohq.coh.setStateFailed()
                 self.logger.info("Circuit #%s: failed" % self.id)
-            else :
+            else:
                 self.cohq.coh.setStateOverTimed()
                 self.logger.info("Circuit #%s: overtimed" % self.id)
 
@@ -961,22 +975,22 @@ class Circuit (CircuitBase):
 
             self.release()
             return
-        elif res == DIRECTIVE.KILLED :
+        elif res == DIRECTIVE.KILLED:
             self.logger.info("Circuit #%s: released" % self.id)
-            try :
+            try:
                 self.release()
             except Exception, e:
-                self.logger.error("Release failed: %s"  % str(e))
+                self.logger.error("Release failed: %s" % str(e))
             return
-        elif res == DIRECTIVE.STOPPED :
+        elif res == DIRECTIVE.STOPPED:
             self.logger.info("Circuit #%s: stopped" % self.id)
             self.cohq.coh.setStateStopped()
             self.release()
             return
-        elif res == DIRECTIVE.FAILED :
+        elif res == DIRECTIVE.FAILED:
             self.logger.info("Circuit #%s: failed - releasing" % self.id)
             self.release(True)
-        else :
+        else:
             self.logger.error("UNRECOGNIZED DIRECTIVE")
 
     def _last_activity_record(self, reason):
@@ -987,9 +1001,10 @@ class Circuit (CircuitBase):
         return reason
 
     def gotErrorInResult(self, id, reason):
-        self.logger.error("Circuit #%s: got an error within an result: %s" % (id, extractExceptionMessage(reason)))
+        self.logger.error(
+            "Circuit #%s: got an error within an result: %s" %
+            (id, extractExceptionMessage(reason)))
         return DIRECTIVE.GIVE_UP
-
 
 
 class MscContainer (object):
@@ -1026,7 +1041,10 @@ class MscContainer (object):
     @property
     def ready_candidats_to_cleanup(self):
         """ Shortcut to expired circuits according to cleanup conditions """
-        return [cmd_id for (cmd_id, expired) in self.candidats_to_cleanup.items() if expired]
+        return [
+            cmd_id for (
+                cmd_id,
+                expired) in self.candidats_to_cleanup.items() if expired]
 
     def checkout_command(self, cmd_id):
         """
@@ -1035,7 +1053,7 @@ class MscContainer (object):
         @param cmd_id: id of commands record
         @type cmd_id: int
         """
-        if cmd_id not in self.candidats_to_cleanup :
+        if cmd_id not in self.candidats_to_cleanup:
             self.candidats_to_cleanup[cmd_id] = False
 
     def set_ready_to_cleanup(self, cmd_id):
@@ -1051,6 +1069,7 @@ class MscContainer (object):
     def circuits(self):
         """Shortcut to all active circuits"""
         return [c for c in self._circuits if c.status == CC_STATUS.ACTIVE]
+
     @property
     def waiting_circuits(self):
         """Shortcut to all waiting circuits"""
@@ -1065,7 +1084,6 @@ class MscContainer (object):
         """
         self.checkout_command(circuit.cmd_id)
         self._circuits.remove(circuit)
-
 
     def cancel(self):
         """ Stops all the running loops and other traitements """
@@ -1084,8 +1102,8 @@ class MscContainer (object):
         return self.max_slots - len(self.get_running_circuits())
 
     def has_unstarted_circuits(self):
-	"""Checks the unstarted circuits to avoid a next heavy query execution"""
-	return len([c for c in self.circuits if not c.is_running]) > 0
+        """Checks the unstarted circuits to avoid a next heavy query execution"""
+        return len([c for c in self.circuits if not c.is_running]) > 0
 
     def _in_waitings(self, id):
         """
@@ -1122,7 +1140,7 @@ class MscContainer (object):
 
         # stopped circuits tracker
         self.stopped_track = StoppedTracker()
-	# started circuits tracker
+        # started circuits tracker
         self.started_track = StartedTracker(self.config.max_command_time)
 
         # mainloop locker
@@ -1132,26 +1150,26 @@ class MscContainer (object):
         self.bundles = BundleReferences(config)
 
         # dispatching the batchs of start
-	self.loop_starter = LoopingStarter(dispatcher=self,
-			                   emitting_period=config.emitting_period)
+        self.loop_starter = LoopingStarter(
+            dispatcher=self, emitting_period=config.emitting_period)
 
         # launchers driving and slots detect
         self.groups = [net for (net, mask) in self.config.preferred_network]
-        self.launchers_networks = dict([(launcher,[n[0] for n in net_and_mask])
-                  for (launcher,net_and_mask) in self.config.launchers_networks.items()])
-        self.logger.info("preferred networks by launchers: %s" % str(self.launchers_networks))
+        self.launchers_networks = dict([(launcher, [n[0] for n in net_and_mask]) for (
+            launcher, net_and_mask) in self.config.launchers_networks.items()])
+        self.logger.info("preferred networks by launchers: %s" %
+                         str(self.launchers_networks))
         self.launchers = self.config.launchers_uri
         # FIXME - main default launcher
         temp_launcher = self.launchers.keys()[0]
 
-        default_slots = dict([(name, line["slots"]) \
-                for (name, line) in self.config.launchers.items()])
+        default_slots = dict([(name, line["slots"])
+                              for (name, line) in self.config.launchers.items()])
 
         self.launchers_provider = RemoteCallProxy(self.config.launchers_uri,
                                                   default_slots,
                                                   temp_launcher)
         return self._get_all_slots()
-
 
     def _get_all_slots(self):
         """
@@ -1164,12 +1182,14 @@ class MscContainer (object):
 
         d.addCallback(self._set_slots)
         d.addCallback(self._slots_info)
+
         @d.addErrback
         def _eb(failure):
-            self.logger.error("An error occured when getting the slots:  %s" % failure)
+            self.logger.error(
+                "An error occured when getting the slots:  %s" %
+                failure)
 
         return d
-
 
     def _set_slots(self, slots):
         """
@@ -1183,7 +1203,9 @@ class MscContainer (object):
 
     def _slots_info(self, result):
         """A little log stuff on start"""
-        self.logger.info("Detected slots SUM from all launchers: %d" % self.max_slots)
+        self.logger.info(
+            "Detected slots SUM from all launchers: %d" %
+            self.max_slots)
         return result
 
     def has_free_slots(self):
@@ -1203,7 +1225,7 @@ class MscContainer (object):
         matches = [wf for wf in self._circuits if wf.id == id]
         if matches:
             return matches[0]
-        else :
+        else:
             self.logger.debug("Circuit #%s: not exists" % id)
             return None
 
@@ -1221,13 +1243,17 @@ class MscContainer (object):
         if any([True for c in self._circuits if c.id == id]):
             self.logger.debug("circuit #%d finished" % id)
             circuit = self.get(id)
-            if suspend_to_waitings :
+            if suspend_to_waitings:
                 circuit.status = CC_STATUS.WAITING
                 self.logger.info("Circuit #%d: failed and queued" % id)
-            else :
+            else:
                 self.remove_circuit(circuit)
                 self.stopped_track.remove(circuit.id)
-            self.logger.info("Remaining content: %d circuits (+%d waitings)" % ((len(self.circuits)), len(self.waiting_circuits)))
+            self.logger.info(
+                "Remaining content: %d circuits (+%d waitings)" %
+                ((len(
+                    self.circuits)), len(
+                    self.waiting_circuits)))
             return True
 
         return False

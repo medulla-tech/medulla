@@ -28,13 +28,21 @@ import unittest
 from subprocess import Popen
 import time
 import http.cookiejar
-import urllib.request, urllib.parse, urllib.error
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
+import urllib.parse
+import urllib.error
+import urllib.request
+import urllib.error
+import urllib.parse
 
 
 def run_agent():
     print("### RUNNING DLP")
-    process = Popen(['pulse2-dlp-server', '-d', '-c', os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config.ini')])
+    process = Popen(['pulse2-dlp-server',
+                     '-d',
+                     '-c',
+                     os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                                  'config.ini')])
     time.sleep(2)
     return process
 
@@ -63,7 +71,8 @@ class HTTPClient(object):
 
     def __init__(self, base_url):
         self.cookie_jar = http.cookiejar.CookieJar()
-        self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.cookie_jar))
+        self.opener = urllib.request.build_opener(
+            urllib.request.HTTPCookieProcessor(self.cookie_jar))
         urllib.request.install_opener(self.opener)
         self.base_url = base_url
 

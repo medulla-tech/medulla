@@ -35,7 +35,7 @@ class Pulse2InventoryProxyConfig(Singleton):
     port = 9999
     local_port = 9999
     path = '/'
-    command_name = "C:\Program Files\OCS Inventory Agent\OCSInventory.exe"
+    command_name = "C:\\Program Files\\OCS Inventory Agent\\OCSInventory.exe"
     command_attr = "/SERVER:127.0.0.1 /PNUM:9999"
     enablessl = True
     verifypeer = False
@@ -57,8 +57,7 @@ class Pulse2InventoryProxyConfig(Singleton):
 
     getOcsDebugLog = False
 
-
-    def setup(self, config_file = 'conf/p2ipc.ini'):
+    def setup(self, config_file='conf/p2ipc.ini'):
         # Load configuration file
         self.cp = configparser.ConfigParser()
         self.cp.read(config_file)
@@ -82,12 +81,18 @@ class Pulse2InventoryProxyConfig(Singleton):
         if self.cp.has_option('main', 'verifypeer'):
             self.verifypeer = self.cp.getboolean('main', 'verifypeer')
         if self.cp.has_option('main', 'localcert'):
-            self.key_file= self.cp.get('main', 'localcert')
+            self.key_file = self.cp.get('main', 'localcert')
         if self.cp.has_option('main', 'cacert'):
             self.cert_file = self.cp.get('main', 'cacert')
-        if self.cp.has_option('polling', 'activate') and self.cp.getboolean('polling', 'activate'):
+        if self.cp.has_option(
+                'polling',
+                'activate') and self.cp.getboolean(
+                'polling',
+                'activate'):
             self.polling = True
-            if self.cp.has_option('polling', 'type') and self.cp.get('polling', 'type') == 'reg':
+            if self.cp.has_option(
+                    'polling', 'type') and self.cp.get(
+                    'polling', 'type') == 'reg':
                 self.flag_type = 'reg'
             else:
                 self.logger.error("don't know this type of polling flag")
@@ -95,8 +100,14 @@ class Pulse2InventoryProxyConfig(Singleton):
             if self.cp.has_option('polling', 'time'):
                 self.polling_time = self.cp.getint('polling', 'time')
             if self.cp.has_option('polling', 'path'):
-                # TODO if path is given with '/' convert, get the last part to put is as name, remove the begining is HKLM
-                path = re.sub("/", "\\\\", self.cp.get('polling', 'path')).split('\\')
+                # TODO if path is given with '/' convert, get the last part to
+                # put is as name, remove the begining is HKLM
+                path = re.sub(
+                    "/",
+                    "\\\\",
+                    self.cp.get(
+                        'polling',
+                        'path')).split('\\')
                 flag = path.pop()
                 if path[0] == 'HKEY_LOCAL_MACHINE':
                     path.reverse()
@@ -107,13 +118,15 @@ class Pulse2InventoryProxyConfig(Singleton):
         if self.cp.has_option('xmlupdate', 'enable'):
             self.improve = self.cp.getboolean('xmlupdate', 'enable')
         if self.cp.has_option('xmlupdate', 'keepxmlupdate'):
-            self.savexmlmodified = self.cp.getboolean('xmlupdate', 'keepxmlupdate')
+            self.savexmlmodified = self.cp.getboolean(
+                'xmlupdate', 'keepxmlupdate')
         if self.cp.has_option('xmlupdate', 'updatedetection'):
-            self.updatedetection = self.cp.getboolean('xmlupdate', 'updatedetection')
+            self.updatedetection = self.cp.getboolean(
+                'xmlupdate', 'updatedetection')
         if self.cp.has_option('xmlupdate', 'addicon'):
             self.addicon = self.cp.getboolean('xmlupdate', 'addicon')
 
         if self.cp.has_option('ocsdebug', 'enable'):
-             self.getocsdebuglog = self.cp.getboolean('ocsdebug', 'enable')
-             if self.getocsdebuglog:
-                 self.command_attr.append("/debug")
+            self.getocsdebuglog = self.cp.getboolean('ocsdebug', 'enable')
+            if self.getocsdebuglog:
+                self.command_attr.append("/debug")

@@ -36,6 +36,7 @@ logger = logging.getLogger(__name__)
 class QueueFinished(object):
     pass
 
+
 class QueuesContainer(object):
     queues = []
 
@@ -77,7 +78,7 @@ class Poller(Thread):
         self.simple_queue = Queue()
         self.result_queue = Queue()
         self.retry_queue = Queue()
-        self.watchdog_queue =Queue()
+        self.watchdog_queue = Queue()
 
         if self.config.Triggers.post_deploy_active:
             queues = QueuesContainer()
@@ -85,18 +86,23 @@ class Poller(Thread):
             queues.add(self.simple_queue)
             queues.add(self.result_queue)
             queues.add(self.retry_queue)
-            self.workers.append(WatchdogWorker(stop,
-                                               self.watchdog_queue,
-                                               queues,
-                                               self.config.Triggers.post_deploy_script,
-                                               self.config.Triggers.folder,
-                                               )
-                                )
+            self.workers.append(
+                WatchdogWorker(
+                    stop,
+                    self.watchdog_queue,
+                    queues,
+                    self.config.Triggers.post_deploy_script,
+                    self.config.Triggers.folder,
+                ))
 
         for n in range(0, self.config.Poller.result_workers):
-            self.workers.append(ResultWorker(self.stop_workers, self.start_polling,
-                                             self.result_queue, self.retry_queue,
-                                             self.dlp_client))
+            self.workers.append(
+                ResultWorker(
+                    self.stop_workers,
+                    self.start_polling,
+                    self.result_queue,
+                    self.retry_queue,
+                    self.dlp_client))
         # only one worker for the execution/inventory step
         self.workers.append(StepWorker(self.stop_workers,
                                        self.simple_queue,
@@ -119,20 +125,22 @@ class Poller(Thread):
         # Wait before polling:
         # This is usefull when the agent is deployed in push mode, so it let the
         # push deployment finish before acting as a pull client
-        #self.stop.wait(self.config.Poller.wait_poll)
+        # self.stop.wait(self.config.Poller.wait_poll)
         while not self.stop.is_set():
-            if self.last_update_ts is None or (time.time() - self.last_update_ts) > 3 * 60:
+            if self.last_update_ts is None or (
+                    time.time() - self.last_update_ts) > 3 * 60:
                 logger.info("Checking for agent updates **** ...")
                 self.last_update_ts = time.time()
                 base_path = os.path.dirname(os.path.abspath(__file__))
 
                 if "library.zip" in base_path:
-                    if base_path.endswith("\\") or  base_path.endswith("/"):
+                    if base_path.endswith("\\") or base_path.endswith("/"):
                         base_path = base_path[:-1]
                     base_path = os.path.dirname(base_path)
 
                 try:
-                    output, exitcode = launcher('triggers/update.sh', '', base_path)
+                    output, exitcode = launcher(
+                        'triggers/update.sh', '', base_path)
                 except Exception as e:
                     logger.error("Script error: %s" % e)
                 logger.debug("Script output: %s" % output)
@@ -149,7 +157,8 @@ class Poller(Thread):
                     if self.is_new_command(cmd_dict):
                         if self.pre_deploy_phase():
                             break
-                        command = Command(cmd_dict, (self.parallel_queue, self.simple_queue), self.dlp_client)
+                        command = Command(
+                            cmd_dict, (self.parallel_queue, self.simple_queue), self.dlp_client)
                         self.commands.append(command)
 
             logger.info("Status:\n%s" % "\n".join(map(str, self.commands)))
@@ -192,16 +201,21 @@ class Poller(Thread):
     def is_new_command(self, cmd_dict):
         for command in list(self.commands):
             # command has been rescheduled
-            if command.id == cmd_dict['id'] and (command.is_failed or command.is_stopped):
+            if command.id == cmd_dict['id'] and (
+                    command.is_failed or command.is_stopped):
                 # removing old failed command
                 logger.info("Removing old command %s" % command.id)
                 self.commands.remove(command)
                 return True
             if command.id == cmd_dict['id'] and command.is_running:
-                logger.info("Command %s is already running, ignoring..." % cmd_dict['id'])
+                logger.info(
+                    "Command %s is already running, ignoring..." %
+                    cmd_dict['id'])
                 return False
             if command.id == cmd_dict['id'] and command.is_done:
-                logger.info("Command %s is already done, ignoring..." % cmd_dict['id'])
+                logger.info(
+                    "Command %s is already done, ignoring..." %
+                    cmd_dict['id'])
                 return False
         return True
 
@@ -211,11 +225,11 @@ class Poller(Thread):
 
         base_path = os.path.dirname(os.path.abspath(__file__))
         if "library.zip" in base_path:
-            if base_path.endswith("\\") or  base_path.endswith("/"):
+            if base_path.endswith("\\") or base_path.endswith("/"):
                 base_path = base_path[:-1]
             base_path = os.path.dirname(base_path)
-        path = "%s/%s" % (  self.config.Triggers.folder,
-                            self.config.Triggers.pre_deploy_script)
+        path = "%s/%s" % (self.config.Triggers.folder,
+                          self.config.Triggers.pre_deploy_script)
         logger.info("Script path: %s" % path)
         try:
             output, exitcode = launcher(path, '', base_path)
@@ -224,20 +238,21 @@ class Poller(Thread):
         logger.debug("Script output: %s" % output)
         if exitcode == 0:
 
-            logger.info("Machine unlocked, starting the post-deploy watchdog...")
+            logger.info(
+                "Machine unlocked, starting the post-deploy watchdog...")
             expires = time.time() + self.config.Triggers.post_deploy_timeout
             self.watchdog_queue.put(expires)
             return False
         else:
-            logger.info("\033[32mUnlock process done, move-on aborted; waiting to next command call\033[0m")
+            logger.info(
+                "\033[32mUnlock process done, move-on aborted; waiting to next command call\033[0m")
             return True
-
-
 
 
 if __name__ == "__main__":
     logger = logging.getLogger()
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     h = logging.StreamHandler()
     h.setFormatter(formatter)
     h.setLevel(logging.DEBUG)

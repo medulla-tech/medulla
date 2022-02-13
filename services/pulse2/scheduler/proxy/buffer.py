@@ -23,20 +23,17 @@ import os
 import logging
 try:
     import pickle as pickle
-except ImportError :
-    import pickle # pyflakes.ignore
+except ImportError:
+    import pickle  # pyflakes.ignore
 from functools import wraps
 
 from pulse2.utils import SingletonN
-
 
 
 class NotInitializedError(Exception):
 
     def __repr__(self):
         return "Buffer not initialized"
-
-
 
 
 def initialized(method):
@@ -48,13 +45,12 @@ def initialized(method):
     """
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-        if self._initialized :
+        if self._initialized:
             return method(self, *args, **kwargs)
-        else :
+        else:
             raise NotInitializedError
 
     return wrapped
-
 
 
 class SendingBuffer(object, metaclass=SingletonN):
@@ -77,13 +73,14 @@ class SendingBuffer(object, metaclass=SingletonN):
         self.sender = sender
 
     packets = []
+
     def add(self, pack):
         self.packets.append(pack)
 
     def send(self):
         """Sends a response to scheduler"""
-        if len(self.packets) > 0 :
-            if not self.sender.send_locked :
+        if len(self.packets) > 0:
+            if not self.sender.send_locked:
                 self._send()
 
     def _send(self):
@@ -100,10 +97,11 @@ class SendingBuffer(object, metaclass=SingletonN):
         some responses to send. This runtime ensures a backup to temp file,
         which can be restored when sheduler-proxy starts.
         """
-        if len(self.packets) > 0 :
-            self.logger.info("XMLRPC Proxy: Backup the buffer with %d responses"
-                    % len(self.packets))
-            with open(self.config.scheduler_proxy_buffer_tmp, "wb") as fp :
+        if len(self.packets) > 0:
+            self.logger.info(
+                "XMLRPC Proxy: Backup the buffer with %d responses" % len(
+                    self.packets))
+            with open(self.config.scheduler_proxy_buffer_tmp, "wb") as fp:
                 pickle.dump(self.packets, fp)
 
     @initialized
@@ -119,17 +117,24 @@ class SendingBuffer(object, metaclass=SingletonN):
             if os.path.exists(self.config.scheduler_proxy_buffer_tmp):
                 self.logger.info("XMLRPC Proxy: Restoring the buffer")
 
-                with open(self.config.scheduler_proxy_buffer_tmp, "rb") as fp :
+                with open(self.config.scheduler_proxy_buffer_tmp, "rb") as fp:
                     try:
                         content = pickle.load(fp)
                     except Exception as e:
-                        self.logger.warn("XMLRPC Proxy: An error occured when restoring the buffer: %s" % str(e))
+                        self.logger.warn(
+                            "XMLRPC Proxy: An error occured when restoring the buffer: %s" %
+                            str(e))
                     if isinstance(content, list):
                         self.packets.extend(content)
                     else:
-                        self.logger.warn("XMLRPC Proxy: Invalid format of backup of buffer, operation ignored")
+                        self.logger.warn(
+                            "XMLRPC Proxy: Invalid format of backup of buffer, operation ignored")
 
                     os.unlink(self.config.scheduler_proxy_buffer_tmp)
-                    self.logger.info("XMLRPC Proxy: restore buffer with %d responses" % len(SendingBuffer().packets))
+                    self.logger.info(
+                        "XMLRPC Proxy: restore buffer with %d responses" % len(
+                            SendingBuffer().packets))
         except Exception as exc:
-            self.logger.error("XMLRPC Proxy: buffer restore failed: %s"  % str(exc))
+            self.logger.error(
+                "XMLRPC Proxy: buffer restore failed: %s" %
+                str(exc))

@@ -32,6 +32,7 @@ from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
 from pulse2.proxyssl.http_inventory_proxy import MyProxy, HttpInventoryProxySingleton
 from pulse2.proxyssl.threads import RunInventory
 
+
 def handler(signum, frame):
     """
     SIGTERM handler
@@ -44,6 +45,7 @@ def handler(signum, frame):
         pass
 
     sys.exit(0)
+
 
 def initialize(config):
     singleton = HttpInventoryProxySingleton()

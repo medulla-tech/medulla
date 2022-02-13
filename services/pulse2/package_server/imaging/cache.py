@@ -34,6 +34,7 @@ import pulse2.package_server.config
 
 # FIXME : shouldn't this cache be updated by the object itself ?
 
+
 class UUIDCache(pulse2.utils.Singleton):
     """
     This is a object-cache for UUID/MAC conversion stuff.
@@ -49,18 +50,24 @@ class UUIDCache(pulse2.utils.Singleton):
 
     def __init__(self):
         pulse2.utils.Singleton.__init__(self)
-        self.cachePath = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_file']
-        self.cacheLifetime = pulse2.package_server.config.P2PServerCP().imaging_api['uuid_cache_lifetime']
+        self.cachePath = pulse2.package_server.config.P2PServerCP(
+        ).imaging_api['uuid_cache_file']
+        self.cacheLifetime = pulse2.package_server.config.P2PServerCP(
+        ).imaging_api['uuid_cache_lifetime']
 
         self.log.info("Using %s as UUID Cache File" % self.cachePath)
         if not os.path.isfile(self.cachePath):
             try:
-                self.log.info("Creating my UUID Cache File %s" % (self.cachePath))
+                self.log.info(
+                    "Creating my UUID Cache File %s" %
+                    (self.cachePath))
                 fp = open(self.cachePath, 'wb')
                 self.config.write(fp)
                 fp.close()
             except Exception as e:
-                self.log.warn("Can't create my UUID Cache File %s : %s" % (self.cachePath, e))
+                self.log.warn(
+                    "Can't create my UUID Cache File %s : %s" %
+                    (self.cachePath, e))
                 return None
         if not self._fetch():
             return None
@@ -75,7 +82,9 @@ class UUIDCache(pulse2.utils.Singleton):
             self.config.write(fp)
             fp.close()
         except Exception as e:
-            self.log.warn("Can't write my UUID Cache File %s : %s" % (self.cachePath, e))
+            self.log.warn(
+                "Can't write my UUID Cache File %s : %s" %
+                (self.cachePath, e))
             return False
         return True
 
@@ -89,7 +98,9 @@ class UUIDCache(pulse2.utils.Singleton):
             self.config.readfp(fp)
             fp.close()
         except Exception as e:
-            self.log.warn("Can't read my UUID Cache File %s : %s" % (self.cachePath, e))
+            self.log.warn(
+                "Can't read my UUID Cache File %s : %s" %
+                (self.cachePath, e))
             return False
         return True
 
@@ -113,7 +124,7 @@ class UUIDCache(pulse2.utils.Singleton):
 
         mac = pulse2.utils.normalizeMACAddress(mac)
 
-        for section in self.config.sections() :
+        for section in self.config.sections():
             if self.config.has_option(section, 'mac'):
                 if self.config.get(section, 'mac') == mac:
                     uuid = section
@@ -134,17 +145,19 @@ class UUIDCache(pulse2.utils.Singleton):
                     else:
                         updated = 0
                     if int(time.time()) - updated > self.cacheLifetime:
-                        self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
+                        self.log.debug(
+                            "Cachefault on %s/%s (expired), ignoring" %
+                            (uuid, mac))
                         self.delete(uuid)
                         # do not break the flow
                         return False
                     return {
-                        'uuid'      : uuid,
-                        'mac'       : mac,
-                        'shortname' : shortname,
-                        'fqdn'      : fqdn,
-                        'entity'    : entity,
-                        'updated'   : updated}
+                        'uuid': uuid,
+                        'mac': mac,
+                        'shortname': shortname,
+                        'fqdn': fqdn,
+                        'entity': entity,
+                        'updated': updated}
         return False
 
     def getByShortName(self, name):
@@ -162,7 +175,7 @@ class UUIDCache(pulse2.utils.Singleton):
         mac = ''
         fqdn = ''
 
-        for section in self.config.sections :
+        for section in self.config.sections:
             if self.config.has_option(section, 'shortname'):
                 if self.config.get(section, 'shortname') == name:
                     shortname = self.config.get(section, 'shortname')
@@ -180,15 +193,17 @@ class UUIDCache(pulse2.utils.Singleton):
                     else:
                         updated = 0
                     if int(time.time() - updated) > self.cacheLifetime:
-                        self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
+                        self.log.debug(
+                            "Cachefault on %s/%s (expired), ignoring" %
+                            (uuid, mac))
                         # do not break the flow
                         # return False
                     return {
-                        'uuid'      : uuid,
-                        'mac'       : mac,
-                        'shortname' : shortname,
-                        'fqdn'      : fqdn,
-                        'updated'   : updated}
+                        'uuid': uuid,
+                        'mac': mac,
+                        'shortname': shortname,
+                        'fqdn': fqdn,
+                        'updated': updated}
         return False
 
     def getByUUID(self, uuid):
@@ -227,15 +242,17 @@ class UUIDCache(pulse2.utils.Singleton):
             else:
                 updated = 0
             if int(time.time()) - updated > self.cacheLifetime:
-                self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
+                self.log.debug(
+                    "Cachefault on %s/%s (expired), ignoring" %
+                    (uuid, mac))
                 # do not break the flow
                 # return False
             return {
-                'uuid'      : uuid,
-                'mac'       : mac,
-                'shortname' : shortname,
-                'fqdn'      : fqdn,
-                'updated'    : updated}
+                'uuid': uuid,
+                'mac': mac,
+                'shortname': shortname,
+                'fqdn': fqdn,
+                'updated': updated}
         return False
 
     def get(self, uuid):
@@ -243,7 +260,7 @@ class UUIDCache(pulse2.utils.Singleton):
         """
         return self.getByUUID(uuid)
 
-    def set(self, uuid, mac, shortname = '', domain = '', entity = ''):
+    def set(self, uuid, mac, shortname='', domain='', entity=''):
         """
         Add a computer in cache.
 
@@ -275,14 +292,18 @@ class UUIDCache(pulse2.utils.Singleton):
 
         # check that if the UUID is already known, it's MAC is the same as our
         answer = self.getByUUID(uuid)
-        if answer and answer['mac'] != mac :
-            self.log.warn("Cachefault on %s/%s (mac already known : %s), updating" % (uuid, mac, answer['mac']))
+        if answer and answer['mac'] != mac:
+            self.log.warn(
+                "Cachefault on %s/%s (mac already known : %s), updating" %
+                (uuid, mac, answer['mac']))
             self.delete(uuid)
 
         # check that if the MAC is already known, it's UUID is the same as our
         answer = self.getByMac(mac)
-        if answer and answer['uuid'] != uuid :
-            self.log.warn("Cachefault on %s/%s (uuid already known : %s), updating" % (uuid, mac, answer['uuid']))
+        if answer and answer['uuid'] != uuid:
+            self.log.warn(
+                "Cachefault on %s/%s (uuid already known : %s), updating" %
+                (uuid, mac, answer['uuid']))
             self.delete(answer['uuid'])
 
         if not self.config.has_section(uuid):
@@ -310,6 +331,8 @@ class UUIDCache(pulse2.utils.Singleton):
                 self._flush()
                 ret = True
             except Exception as e:
-                self.log.error("Can't delete computer UUID %s from the cache: %s" % e)
+                self.log.error(
+                    "Can't delete computer UUID %s from the cache: %s" %
+                    e)
                 ret = False
         return ret

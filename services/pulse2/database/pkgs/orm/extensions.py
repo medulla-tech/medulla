@@ -97,7 +97,7 @@ class Extensions(object):
             'rule_order': self.getRule_order(),
             'rule_name': self.getRule_name(),
             'name': self.getName(),
-            'extension':self.getExtension(),
+            'extension': self.getExtension(),
             'magic_command': self.getMagic_command(),
             'bang': self.getBang(),
             'file': self.getFile(),

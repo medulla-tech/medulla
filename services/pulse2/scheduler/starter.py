@@ -39,17 +39,16 @@ class LoopingStarter(object):
     loop = None
 
     def __init__(self, dispatcher, emitting_period):
-	"""
-	@param dispatcher: main dispatcher reference
-	@type dispatcher: MscDispatcher
+        """
+        @param dispatcher: main dispatcher reference
+        @type dispatcher: MscDispatcher
 
-	@param emitting_period: delay inserted among the starts
-	@type emitting_period: float
-	"""
-	self.dispatcher = dispatcher
-	self.emitting_period = emitting_period
-	self.logger = logging.getLogger()
-
+        @param emitting_period: delay inserted among the starts
+        @type emitting_period: float
+        """
+        self.dispatcher = dispatcher
+        self.emitting_period = emitting_period
+        self.logger = logging.getLogger()
 
     def _run_one(self, circuit):
         """
@@ -63,18 +62,20 @@ class LoopingStarter(object):
         """
 
         d = deferToThread(circuit.run)
+
         @d.addErrback
         def eb(reason):
-	    """ Thread start fallback """
-            self.logger.error("Circuit #%s: start failed: %s" % (circuit.id, reason))
+            """ Thread start fallback """
+            self.logger.error(
+                "Circuit #%s: start failed: %s" %
+                (circuit.id, reason))
 
         @d.addCallback
         def cb(reason):
-	    """ Thread start callback """
+            """ Thread start callback """
             self.dispatcher._circuits.append(circuit)
 
         return d
-
 
     def _run_later(self, circuits):
         """
@@ -84,16 +85,15 @@ class LoopingStarter(object):
         @param circuits: circuits to start
         @type circuits: iterator
         """
-        try :
+        try:
             circuit = next(circuits)
             self._run_one(circuit)
 
-        except StopIteration :
+        except StopIteration:
             if self.loop.running:
                 self.loop.stop()
 
             self.logger.debug("circuits started")
-
 
     def run(self, circuits):
         """
@@ -105,7 +105,7 @@ class LoopingStarter(object):
         @return: list of start results
         @rtype: list
         """
-        try :
+        try:
             if len(circuits) == 0:
                 self.logger.info("Nothing to execute")
                 return True
@@ -114,14 +114,14 @@ class LoopingStarter(object):
             d = self.loop.start(self.emitting_period)
             d.addErrback(self._loop_fail)
 
-	    return d
+            return d
 
-        except Exception as e :
+        except Exception as e:
             self.logger.error("Circuits start failed: %s" % str(e))
             return False
 
     def _loop_fail(self, failure):
-	""" Looping call fallback """
+        """ Looping call fallback """
         self.logger.error("Loop call starting failed: %s" % str(failure))
 
     def cancel(self):

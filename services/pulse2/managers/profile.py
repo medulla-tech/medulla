@@ -31,6 +31,7 @@ import logging
 from pulse2.utils import Singleton
 from twisted.internet import defer
 
+
 class ComputerProfileManager(Singleton):
     components = {}
     main = 'dyngroup'
@@ -44,7 +45,9 @@ class ComputerProfileManager(Singleton):
         self.main = name
 
     def register(self, name, klass):
-        self.logger.debug("Registering computer profile manager %s / %s" % (name, str(klass)))
+        self.logger.debug(
+            "Registering computer profile manager %s / %s" %
+            (name, str(klass)))
         self.components[name] = klass
 
     def validate(self):
@@ -88,7 +91,11 @@ class ComputerProfileManager(Singleton):
         for mod in self.components:
             klass = self.components[mod]
             if hasattr(klass, 'addComputersToProfile'):
-                d = defer.maybeDeferred(klass().addComputersToProfile, ctx, computers_UUID, profile_UUID)
+                d = defer.maybeDeferred(
+                    klass().addComputersToProfile,
+                    ctx,
+                    computers_UUID,
+                    profile_UUID)
                 dl.append(d)
         deferred = defer.DeferredList(dl)
         deferred.addCallback(treatDeferList)
@@ -121,7 +128,7 @@ class ComputerProfileManager(Singleton):
         klass = self.components[self.main]
         return klass().getProfileContent(uuid)
 
-    def getForbiddenComputersUUID(self, profile_UUID = None):
+    def getForbiddenComputersUUID(self, profile_UUID=None):
         " ask to all profile managers "
         ret = []
         for mod in self.components:
@@ -147,11 +154,11 @@ class ComputerProfileManager(Singleton):
 #        return klass().isdyn_group(ctx, gid)
 
 class ComputerProfileI:
-#    def isdyn_group(self, ctx, gid):
-#        """
-#        Says if the group is a dynamic group or not (return a bool)
-#        """
-#        pass
+    #    def isdyn_group(self, ctx, gid):
+    #        """
+    #        Says if the group is a dynamic group or not (return a bool)
+    #        """
+    #        pass
 
     def getProfileByName(self, name):
         """
@@ -192,7 +199,7 @@ class ComputerProfileI:
     def getProfileContent(self, uuid):
         pass
 
-    def getForbiddenComputersUUID(self, profile_UUID = None):
+    def getForbiddenComputersUUID(self, profile_UUID=None):
         return []
 
     def areForbiddebComputers(self, computer_UUID):

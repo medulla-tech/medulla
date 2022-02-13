@@ -30,6 +30,7 @@ provide methods to work with location association with computers
 import logging
 from pulse2.utils import Singleton
 
+
 class ComputerLocationManager(Singleton):
     components = {}
     main = None
@@ -38,17 +39,20 @@ class ComputerLocationManager(Singleton):
         Singleton.__init__(self)
         self.logger = logging.getLogger()
 
-    def select(self, name = None):
+    def select(self, name=None):
         if not name:
             if len(self.components) == 1:
                 name = list(self.components.keys())[0]
             else:
-                raise Exception("Can't auto-select a computer location manager, please configure one in pulse2.ini.")
+                raise Exception(
+                    "Can't auto-select a computer location manager, please configure one in pulse2.ini.")
         self.logger.info("Selecting computer location manager: %s" % name)
         self.main = name
 
     def register(self, name, klass):
-        self.logger.debug("Registering computer location manager %s / %s" % (name, str(klass)))
+        self.logger.debug(
+            "Registering computer location manager %s / %s" %
+            (name, str(klass)))
         self.components[name] = klass
 
     def validate(self):
@@ -83,16 +87,18 @@ class ComputerLocationManager(Singleton):
         except KeyError:
             return None
 
-    def getMachinesInLocation(self, location, a_profile = []):
-        # Mutable list a_profile used as default argument to a method or function
+    def getMachinesInLocation(self, location, a_profile=[]):
+        # Mutable list a_profile used as default argument to a method or
+        # function
         try:
             klass = self.components[self.main]
             return klass().getMachinesInLocation(location, a_profile)
         except KeyError:
             return None
 
-    def getLocationsForMachine(self, machine_uuid, a_profile = []):
-        # Mutable list a_profile used as default argument to a method or function
+    def getLocationsForMachine(self, machine_uuid, a_profile=[]):
+        # Mutable list a_profile used as default argument to a method or
+        # function
         try:
             klass = self.components[self.main]
             return klass().getLocationsForMachine(machine_uuid, a_profile)
@@ -113,7 +119,7 @@ class ComputerLocationManager(Singleton):
         except KeyError:
             return True
 
-    def doesUserHaveAccessToMachines(self, ctx, machine_uuid, all = True):
+    def doesUserHaveAccessToMachines(self, ctx, machine_uuid, all=True):
         try:
             klass = self.components[self.main]
             return klass().doesUserHaveAccessToMachines(ctx, machine_uuid, all)
@@ -162,14 +168,18 @@ class ComputerLocationI(Singleton):
         """ return the linked locations for one user """
         pass
 
-    def getMachinesInLocation(self, location, a_profile = []): # TODO implement and use in glpi module
+    # TODO implement and use in glpi module
+    def getMachinesInLocation(self, location, a_profile=[]):
         """ should return the machines that are in the specified location with the good profiles (or any) """
-        # Mutable list a_profile used as default argument to a method or function
+        # Mutable list a_profile used as default argument to a method or
+        # function
         pass
 
-    def getLocationsForMachine(self, machine_uuid, a_profile = []): # TODO implement and use in glpi module
+    # TODO implement and use in glpi module
+    def getLocationsForMachine(self, machine_uuid, a_profile=[]):
         """ should return the locations in which this machine is """
-        # Mutable list a_profile used as default argument to a method or function
+        # Mutable list a_profile used as default argument to a method or
+        # function
         pass
 
     def getLocationsCount(self):
@@ -180,7 +190,7 @@ class ComputerLocationI(Singleton):
         """ should return true if the machine is accessible for this user """
         pass
 
-    def doesUserHaveAccessToMachines(self, ctx, machine_uuid, all = True):
+    def doesUserHaveAccessToMachines(self, ctx, machine_uuid, all=True):
         """ should return true if more than one or all machines are accessible for this user """
         pass
 

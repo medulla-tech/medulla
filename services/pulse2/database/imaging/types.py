@@ -31,7 +31,9 @@ class Pulse2ImagingSynchroStates:
     TODO = 1
     DONE = 2
     RUNNING = 3
-    INIT_ERROR = 4 # when the init of a target failed on the pserver side
+    INIT_ERROR = 4  # when the init of a target failed on the pserver side
+
+
 P2ISS = Pulse2ImagingSynchroStates
 
 
@@ -41,6 +43,8 @@ class Pulse2ImagingTypes:
     COMPUTER_IN_PROFILE = 3
     ALL_COMPUTERS = 4
     DELETED_COMPUTER = 5
+
+
 P2IT = Pulse2ImagingTypes
 
 
@@ -48,6 +52,8 @@ class Pulse2ImagingMenu:
     ALL = 10
     BOOTSERVICE = 11
     IMAGE = 12
+
+
 P2IM = Pulse2ImagingMenu
 
 
@@ -55,6 +61,8 @@ class Pulse2ImagingImageKind:
     IS_BOTH = 20
     IS_MASTER_ONLY = 21
     IS_IMAGE_ONLY = 22
+
+
 P2IIK = Pulse2ImagingImageKind
 
 
@@ -70,6 +78,7 @@ class Pulse2ImagingErrors:
     ERR_COMPUTER_ALREADY_EXISTS = 1009
     ERR_NEED_IMAGING_SERVER_REGISTRATION = 1010
 
+
 P2ERR = Pulse2ImagingErrors
 
 
@@ -82,6 +91,8 @@ class Pulse2ImagingLogStates:
     POSTINSTALL = 6
     ERROR = 7
     DELETE = 8
+
+
 P2ILS = Pulse2ImagingLogStates
 
 
@@ -94,4 +105,6 @@ class Pulse2ImagingLogLevel:
     LOG_NOTICE = 5
     LOG_INFO = 6
     LOG_DEBUG = 7
+
+
 P2ILL = Pulse2ImagingLogLevel

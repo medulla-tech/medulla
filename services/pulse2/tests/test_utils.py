@@ -30,7 +30,7 @@ from datetime import datetime, date
 import pytest
 import configparser
 
-#Imports for unitest
+# Imports for unitest
 import unittest
 from pulse2.utils import isMACAddress, isUUID, splitComputerPath
 
@@ -39,6 +39,8 @@ from pulse2.utils import isMACAddress, isUUID, splitComputerPath
 # pytest
 #
 ###
+
+
 def test_singleton():
     """Tests the Singleton object in pulse2/utils.py
     Test 1"""
@@ -87,7 +89,7 @@ class TestPulse2ConfigParser(object):
         self.a.read("config.ini")
         with pytest.raises(configparser.NoSectionError):
             # the result is an error
-            self.a.getpassword("AAA","bbb")
+            self.a.getpassword("AAA", "bbb")
 
     def test_getpassword_with_partial_parameters(self):
         """Test the method getpassword with conf file loaded and partial wrong parameters
@@ -95,20 +97,20 @@ class TestPulse2ConfigParser(object):
         self.a.read("config.ini")
         with pytest.raises(configparser.NoOptionError):
             # the result is an error
-            self.a.getpassword("SECTION_A","bbb")
+            self.a.getpassword("SECTION_A", "bbb")
 
     def test_getpassword_with_parameters(self):
         """Test the method getpassword with conf file loaded and good parameters
         Test 6"""
         # the file config.ini is in the same directory as this test file
         self.a.read("config.ini")
-        assert self.a.getpassword("SECTION_A","my_key1") == "my_value1"
+        assert self.a.getpassword("SECTION_A", "my_key1") == "my_value1"
 
     def test_decode_from_getpassword(self):
         """Test if the method getpassword decode a base64 value
         Test 7"""
         self.a.read("config.ini")
-        assert self.a.getpassword("SECTION_A","my_key2") == "Siv30"
+        assert self.a.getpassword("SECTION_A", "my_key2") == "Siv30"
 
 
 class TestXmlrpcCleanup(object):
@@ -122,14 +124,16 @@ class TestXmlrpcCleanup(object):
     def test_with_date(self):
         """Test xmlrpcCleanup with date
         Test 8"""
-        the_date = date(2018,0o2,0o5)
-        assert pulse2.utils.xmlrpcCleanup(the_date) == tuple(the_date.timetuple())
+        the_date = date(2018, 0o2, 0o5)
+        assert pulse2.utils.xmlrpcCleanup(
+            the_date) == tuple(the_date.timetuple())
 
     def test_with_datetime(self):
         """Test xmlrpcCleanup with datetime
         Test 9"""
-        the_date = datetime(2018,0o2,3)
-        assert pulse2.utils.xmlrpcCleanup(the_date) == tuple(the_date.timetuple())
+        the_date = datetime(2018, 0o2, 3)
+        assert pulse2.utils.xmlrpcCleanup(
+            the_date) == tuple(the_date.timetuple())
 
     def test_with_string(self):
         """Test xmlrpcCleanup with string
@@ -161,20 +165,23 @@ class TestXmlrpcCleanup(object):
     def test_with_tuple(self):
         """Test xmlrpcCleanup with tuple
         Test 15"""
-        the_date = datetime(2018,0o2,3)
-        assert pulse2.utils.xmlrpcCleanup((1,int(2),"3",the_date, None)) == [1,"2","3",tuple(the_date.timetuple()), False]
+        the_date = datetime(2018, 0o2, 3)
+        assert pulse2.utils.xmlrpcCleanup((1, int(2), "3", the_date, None)) == [
+            1, "2", "3", tuple(the_date.timetuple()), False]
 
     def test_with_list(self):
         """Test xmlrpcCleanup with list
         Test 16"""
-        the_date = datetime(2018,0o2,3)
-        assert pulse2.utils.xmlrpcCleanup([1,int(2),"3",[the_date, None]]) == [1,"2","3",[tuple(the_date.timetuple()), False]]
+        the_date = datetime(2018, 0o2, 3)
+        assert pulse2.utils.xmlrpcCleanup([1, int(2), "3", [the_date, None]]) == [
+            1, "2", "3", [tuple(the_date.timetuple()), False]]
 
     def test_with_dict(self):
         """Test xmlrpcCleanup with dict
         Test 17"""
         the_dict = {'a': 4, 1: 'value', 'key': None}
-        assert pulse2.utils.xmlrpcCleanup(the_dict) == {'a': 4, '1': 'value', 'key': False}
+        assert pulse2.utils.xmlrpcCleanup(the_dict) == {
+            'a': 4, '1': 'value', 'key': False}
 
     def test_without_parameters(self):
         """Test xmlrpcCleanup without parameters
@@ -190,12 +197,13 @@ class TestUnique(object):
         """Test with mixed list
         Test 19"""
         # Test the function unique()
-        assert pulse2.utils.unique(["c",["a","b"],(0,0), [2,3],["a","b"],"c",1,1,[2,3], (0,0)]) == [1, [2, 3], ['a', 'b'], 'c', (0,0)]
+        assert pulse2.utils.unique(["c", ["a", "b"], (0, 0), [2, 3], ["a", "b"], "c", 1, 1, [
+                                   2, 3], (0, 0)]) == [1, [2, 3], ['a', 'b'], 'c', (0, 0)]
 
     def test_with_string(self):
         """Test with string
         Test 20"""
-        assert pulse2.utils.unique("test") == ['s','e','t']
+        assert pulse2.utils.unique("test") == ['s', 'e', 't']
 
     def test_with_int(self):
         """Test with int
@@ -206,7 +214,8 @@ class TestUnique(object):
     def test_with_dict(self):
         """Test with dict
         Test 22"""
-        assert pulse2.utils.unique({"c":["a","b"],'b':(0,0),'c':4}) == ['c', 'b']
+        assert pulse2.utils.unique(
+            {"c": ["a", "b"], 'b': (0, 0), 'c': 4}) == ['c', 'b']
 
     def test_without_parameters(self):
         """Test without parameters
@@ -225,7 +234,7 @@ class TestSameNetwork(object):
         ip1 = "wrong ip1"
         ip2 = "wrong ip2"
         mask = "wrong mask"
-        assert pulse2.utils.same_network(ip1,ip2,mask) == False
+        assert pulse2.utils.same_network(ip1, ip2, mask) == False
 
     def test_with_right_string_same_network(self):
         """The ips and mask are good
@@ -233,7 +242,7 @@ class TestSameNetwork(object):
         ip1 = "192.168.1.101"
         ip2 = "192.168.1.140"
         mask = "255.255.255.0"
-        assert pulse2.utils.same_network(ip1,ip2,mask) == True
+        assert pulse2.utils.same_network(ip1, ip2, mask)
 
     def test_with_right_string_different_network(self):
         """The ips and mask are in differents network
@@ -241,7 +250,7 @@ class TestSameNetwork(object):
         ip1 = "192.168.1.101"
         ip2 = "82.190.34.140"
         mask = "255.255.255.0"
-        assert pulse2.utils.same_network(ip1,ip2,mask) == False
+        assert pulse2.utils.same_network(ip1, ip2, mask) == False
 
     def test_with_int(self):
         """The ips and mask are int
@@ -251,7 +260,7 @@ class TestSameNetwork(object):
         mask = 4
         with pytest.raises(AttributeError):
             # Generate an error
-            pulse2.utils.same_network(ip1,ip2,mask)
+            pulse2.utils.same_network(ip1, ip2, mask)
 
     def test_without_parameters(self):
         """The parameters are not given
@@ -268,7 +277,7 @@ class TestSameNetwork(object):
         mask = None
         with pytest.raises(AttributeError):
             # Generate an error
-            pulse2.utils.same_network(ip1,ip2,mask)
+            pulse2.utils.same_network(ip1, ip2, mask)
 
 
 class TestOnlyAddNew(object):
@@ -286,7 +295,7 @@ class TestOnlyAddNew(object):
         obj = None
         value = None
         with pytest.raises(AttributeError):
-            pulse2.utils.onlyAddNew(obj,value)
+            pulse2.utils.onlyAddNew(obj, value)
 
     def test_unique_value_not_in_obj(self):
         """The function is tested with unique value not declared in obj
@@ -306,8 +315,8 @@ class TestOnlyAddNew(object):
         """The function is tested with unique value declared in obj
         Test 34"""
         obj = [4]
-        value = [1,2,3,4,5,5,6,7]
-        assert pulse2.utils.onlyAddNew(obj, value) == [4,1,2,3,5,6,7]
+        value = [1, 2, 3, 4, 5, 5, 6, 7]
+        assert pulse2.utils.onlyAddNew(obj, value) == [4, 1, 2, 3, 5, 6, 7]
 
 
 class TestGetConfigFile(object):
@@ -334,12 +343,14 @@ class TestGetConfigFile(object):
     def test_with_string_and_default_path(self):
         """Test the function with string for the module name
         Test 38"""
-        assert pulse2.utils.getConfigFile("my_module") == "/etc/mmc/plugins/my_module.ini"
+        assert pulse2.utils.getConfigFile(
+            "my_module") == "/etc/mmc/plugins/my_module.ini"
 
     def test_with_string_and_string_path(self):
         """Test the function with another path
         Test 39"""
-        assert pulse2.utils.getConfigFile("my_module", "my/new/path/") == "my/new/path/my_module.ini"
+        assert pulse2.utils.getConfigFile(
+            "my_module", "my/new/path/") == "my/new/path/my_module.ini"
 
     def test_with_string_and_int_path(self):
         """Test the function with another path
@@ -381,12 +392,12 @@ class TestIsdigit(object):
     def test_with_int(self):
         """Test the function isdigit with int parameter
         Test 46"""
-        assert pulse2.utils.isdigit(-3543) == True
+        assert pulse2.utils.isdigit(-3543)
 
     def test_with_long(self):
         """Test the function isdigit with int parameter
         Test 47"""
-        assert pulse2.utils.isdigit(int(-3543)) == True
+        assert pulse2.utils.isdigit(int(-3543))
 
     def test_with_float(self):
         """Test the function isdigit with float parameter
@@ -396,7 +407,7 @@ class TestIsdigit(object):
     def test_with_int_in_string(self):
         """Test the function isdigit with int in string. The function should eval it
         Test 49"""
-        assert pulse2.utils.isdigit("4") == True
+        assert pulse2.utils.isdigit("4")
 
 
 class TestGrep(object):
@@ -418,22 +429,25 @@ class TestGrep(object):
         """Test the function. The string parameter is set with int
         Test 52"""
         with pytest.raises(TypeError):
-            pulse2.utils.grep(5,[])
+            pulse2.utils.grep(5, [])
 
     def test_with_string(self):
         """Test the function with string for string parameter
         Test 53"""
-        assert pulse2.utils.grep("the_string",[]) == []
+        assert pulse2.utils.grep("the_string", []) == []
 
     def test_with_list_as_string(self):
         """Test the function. The list parameter is set with string
         Test 54"""
-        assert pulse2.utils.grep("string","reference string") == ""
+        assert pulse2.utils.grep("string", "reference string") == ""
 
     def test_the_result_of_research(self):
         """Test if the returned result is correct
         Test 55"""
-        assert pulse2.utils.grep("is", ["this", 'string','is','relatively','long','to','test','the','result']) == ['this','is']
+        assert pulse2.utils.grep(
+            "is", [
+                "this", 'string', 'is', 'relatively', 'long', 'to', 'test', 'the', 'result']) == [
+            'this', 'is']
 
     def test_with_list_as_int(self):
         """Test the function with int instead of the list
@@ -468,7 +482,6 @@ class TestGrepv(object):
         assert pulse2.utils.grepv("a", "arbre") == ["r", 'b', 'r', 'e']
 
 
-
 ###
 #
 # Unitest
@@ -498,12 +511,33 @@ class InputTests(unittest.TestCase):
         self.assertFalse(isUUID(42))
 
     def test_computerPathValid(self):
-        self.assertEqual(splitComputerPath('hostname'), ('', '', 'hostname', ''))
+        self.assertEqual(splitComputerPath('hostname'),
+                         ('', '', 'hostname', ''))
         self.assertEqual(splitComputerPath('123456'), ('', '', '123456', ''))
-        self.assertEqual(splitComputerPath('hostname.domain-example.net'), ('', '', 'hostname', 'domain-example.net'))
-        self.assertEqual(splitComputerPath('profile:hostname'), ('profile', '', 'hostname', ''))
-        self.assertEqual(splitComputerPath('profile:/hostname'), ('profile', '', 'hostname', ''))
-        self.assertEqual(splitComputerPath('/root/sub1/sub2/hostname'), ('', '/root/sub1/sub2', 'hostname', ''))
-        self.assertEqual(splitComputerPath('profile:/root/sub1/sub2/hostname'), ('profile', '/root/sub1/sub2', 'hostname', ''))
-        self.assertRaises(TypeError, splitComputerPath, 'profile:root/sub1/sub2/hostname')
+        self.assertEqual(
+            splitComputerPath('hostname.domain-example.net'),
+            ('',
+             '',
+             'hostname',
+             'domain-example.net'))
+        self.assertEqual(splitComputerPath('profile:hostname'),
+                         ('profile', '', 'hostname', ''))
+        self.assertEqual(splitComputerPath('profile:/hostname'),
+                         ('profile', '', 'hostname', ''))
+        self.assertEqual(
+            splitComputerPath('/root/sub1/sub2/hostname'),
+            ('',
+             '/root/sub1/sub2',
+             'hostname',
+             ''))
+        self.assertEqual(
+            splitComputerPath('profile:/root/sub1/sub2/hostname'),
+            ('profile',
+             '/root/sub1/sub2',
+             'hostname',
+             ''))
+        self.assertRaises(
+            TypeError,
+            splitComputerPath,
+            'profile:root/sub1/sub2/hostname')
         self.assertRaises(TypeError, splitComputerPath, 'profile:')

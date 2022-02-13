@@ -29,6 +29,7 @@ import os
 import logging
 from stat import S_IFSOCK, S_IFLNK, S_IFREG, S_IFBLK, S_IFDIR, S_IFCHR, S_IFIFO
 
+
 def basicHealth():
     """
     Compute a health indicator as a dict with this keys:
@@ -41,14 +42,15 @@ def basicHealth():
     """
     total, free, swapused = getMem()
     return {
-        "loadavg" : getLoadAvg(),
+        "loadavg": getLoadAvg(),
         "fd": getFDSummary(),
         "memory": getMem()
     }
 
+
 def getFDSummary():
 
-    result =  {
+    result = {
         'socket': 0,
         'symlink': 0,
         'file': 0,
@@ -84,11 +86,14 @@ def getFDSummary():
 
     return result
 
+
 def getLoadAvg():
     try:
         f = open("/proc/loadavg")
     except IOError as e:
-        logging.getLogger().error('error opening /proc/loadavg: %d (%s)' % (e.errno, e.strerror))
+        logging.getLogger().error(
+            'error opening /proc/loadavg: %d (%s)' %
+            (e.errno, e.strerror))
         ret = {
             '1min': 0,
             '5min': 0,
@@ -105,6 +110,7 @@ def getLoadAvg():
     }
     return loadavg
 
+
 def getMem():
     total = 0
     cached = 0
@@ -114,7 +120,9 @@ def getMem():
     try:
         meminfo = open("/proc/meminfo")
     except IOError as e:
-        logging.getLogger().error('error opening /proc/meminfo: %d (%s)' % (e.errno, e.strerror))
+        logging.getLogger().error(
+            'error opening /proc/meminfo: %d (%s)' %
+            (e.errno, e.strerror))
         ret = {
             'total': 0,
             'free': 0,
@@ -136,8 +144,8 @@ def getMem():
     meminfo.close()
     ret = {
         'total': total,
-        'free': total-cached-buffers,
-        'swapused': swap_total-swap_free
+        'free': total - cached - buffers,
+        'swapused': swap_total - swap_free
     }
 
-    return ret # return is always in kB
+    return ret  # return is always in kB

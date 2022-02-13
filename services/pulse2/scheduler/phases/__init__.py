@@ -38,7 +38,9 @@ def push_phases():
             RebootPhase,
             HaltPhase,
             DonePhase,
-           ]
+            ]
+
+
 def pull_phases():
     from pulse2.scheduler.phases.pull import WOLPhase, UploadPhase, ExecutionPhase
     from pulse2.scheduler.phases.pull import DeletePhase, InventoryPhase
@@ -55,12 +57,12 @@ def pull_phases():
             RebootPhase,
             HaltPhase,
             DonePhase,
-           ]
+            ]
+
 
 installed_phases = {"push": push_phases(),
                     "pull": pull_phases(),
-                   }
-
+                    }
 
 
 __all__ = ["installed_phases"]

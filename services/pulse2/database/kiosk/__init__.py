@@ -23,19 +23,20 @@
 kiosk database handler
 """
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
-from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
-from sqlalchemy.exc import DBAPIError
-from sqlalchemy import update
-from datetime import date, datetime, timedelta
-# PULSE2 modules
-from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists
-from pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package, Profile_has_ou
-# Imported last
-import logging
-import json
 import time
+import json
+import logging
+from pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package, Profile_has_ou
+from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists
+from mmc.database.database_helper import DatabaseHelper
+from datetime import date, datetime, timedelta
+from sqlalchemy import update
+from sqlalchemy.exc import DBAPIError
+from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
+from sqlalchemy.orm import sessionmaker
+Session = sessionmaker()
+# PULSE2 modules
+# Imported last
 
 
 class KioskDatabase(DatabaseHelper):
@@ -56,7 +57,10 @@ class KioskDatabase(DatabaseHelper):
         if self.is_activated:
             return None
         self.config = config
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
+        self.db = create_engine(
+            self.makeConnectionPath(),
+            pool_recycle=self.config.dbpoolrecycle,
+            pool_size=self.config.dbpoolsize)
         print(self.makeConnectionPath())
         if not self.db_check():
             return False
@@ -88,7 +92,8 @@ class KioskDatabase(DatabaseHelper):
                 logging.getLogger().error(e)
             except Exception as e:
                 logging.getLogger().error(e)
-            if ret: break
+            if ret:
+                break
         if not ret:
             raise "Database kiosk connection error"
         return ret
@@ -118,7 +123,7 @@ class KioskDatabase(DatabaseHelper):
         if len(OU) == 0:
             # return le profils par default
             return
-        listou =  "('" + "','".join(OU) + "')"
+        listou = "('" + "','".join(OU) + "')"
         sql = """
             SELECT
                 distinct
@@ -221,7 +226,8 @@ class KioskDatabase(DatabaseHelper):
         import time
         now = time.strftime('%Y-%m-%d %H:%M:%S')
 
-        sql = """INSERT INTO `kiosk`.`profiles` VALUES('%s','%s', '%s', '%s');""" % ('0', name, active, now)
+        sql = """INSERT INTO `kiosk`.`profiles` VALUES('%s','%s', '%s', '%s');""" % (
+            '0', name, active, now)
 
         session.execute(sql)
         session.commit()
@@ -235,16 +241,20 @@ class KioskDatabase(DatabaseHelper):
             id = str(row)
 
         # Remove all packages associations concerning this profile
-        session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
+        session.query(Profile_has_package).filter(
+            Profile_has_package.profil_id == id).delete()
 
         # The profile is now created, but the packages are not linked to it nor added into database.
-        # If the package list is not empty, then firstly we get the status and the uuid for each packages
-        if len(packages) > 0 :
+        # If the package list is not empty, then firstly we get the status and
+        # the uuid for each packages
+        if len(packages) > 0:
             for status in list(packages.keys()):
                 for uuid in packages[status]:
 
                     # get the package id and link it with the profile
-                    result = session.query(Packages.id).filter(Packages.package_uuid == uuid)
+                    result = session.query(
+                        Packages.id).filter(
+                        Packages.package_uuid == uuid)
                     result = result.first()
                     id_package = 0
                     for row in result:
@@ -259,7 +269,7 @@ class KioskDatabase(DatabaseHelper):
                     session.commit()
                     session.flush()
             # Finally we associate the OUs with the profile.
-            if type(ous) == str and ous == "":
+            if isinstance(ous, str) and ous == "":
                 profile_ou = Profile_has_ou()
                 profile_ou.profile_id = id
                 profile_ou.ou = ous
@@ -273,7 +283,6 @@ class KioskDatabase(DatabaseHelper):
                     profile_ou = Profile_has_ou()
                     profile_ou.profile_id = id
                     profile_ou.ou = ou
-
 
                     session.add(profile_ou)
                     session.commit()
@@ -289,9 +298,12 @@ class KioskDatabase(DatabaseHelper):
         # Get the real list of packages
         package_list = xmpp_packages_list()
 
-        # For each package in this list, add if not exists or update existing packages rows
+        # For each package in this list, add if not exists or update existing
+        # packages rows
         for ref_pkg in package_list:
-            result = session.query(Packages.id).filter(Packages.package_uuid == ref_pkg['uuid']).all()
+            result = session.query(
+                Packages.id).filter(
+                Packages.package_uuid == ref_pkg['uuid']).all()
 
             # Create a Package object to interact with the database
             package = get_xmpp_package(ref_pkg['uuid'])
@@ -306,21 +318,28 @@ class KioskDatabase(DatabaseHelper):
             pkg.version_software = 0
             pkg.package_uuid = ref_pkg['uuid']
             pkg.os = os
-            # If the package is not registered into database, it is added. Else it is updated
+            # If the package is not registered into database, it is added. Else
+            # it is updated
             if len(result) == 0:
                 session.add(pkg)
                 session.commit()
                 session.flush()
             else:
                 sql = """UPDATE `package` set name='%s', version_package='%s', software='%s',\
-                description='%s', package_uuid='%s', os='%s' WHERE package_uuid='%s';""" % (
-                    ref_pkg['software'], ref_pkg['version'], ref_pkg['software'], ref_pkg['description'], ref_pkg['uuid'], os, ref_pkg['uuid'])
+                description='%s', package_uuid='%s', os='%s' WHERE package_uuid='%s';""" % (ref_pkg['software'],
+                                                                                            ref_pkg['version'],
+                                                                                            ref_pkg['software'],
+                                                                                            ref_pkg['description'],
+                                                                                            ref_pkg['uuid'],
+                                                                                            os,
+                                                                                            ref_pkg['uuid'])
 
                 session.execute(sql)
                 session.commit()
                 session.flush()
 
-        # Now we need to verify if all the registered packages are still existing into the server
+        # Now we need to verify if all the registered packages are still
+        # existing into the server
         sql = """SELECT id, package_uuid FROM package;"""
         result = session.execute(sql)
         session.commit()
@@ -331,7 +350,8 @@ class KioskDatabase(DatabaseHelper):
             if package_exists(package[1]):
                 pass
             else:
-                session.query(Packages).filter(Packages.id == package[0]).delete()
+                session.query(Packages).filter(
+                    Packages.id == package[0]).delete()
                 session.commit()
                 session.flush()
 
@@ -348,8 +368,10 @@ class KioskDatabase(DatabaseHelper):
             Boolean: True if success, else False
         """
         try:
-            session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
-            session.query(Profile_has_ou).filter(Profile_has_ou.profile_id == id).delete()
+            session.query(Profile_has_package).filter(
+                Profile_has_package.profil_id == id).delete()
+            session.query(Profile_has_ou).filter(
+                Profile_has_ou.profile_id == id).delete()
 
             session.query(Profiles).filter(Profiles.id == id).delete()
             session.commit()
@@ -410,12 +432,15 @@ class KioskDatabase(DatabaseHelper):
         from package \
         left join package_has_profil on package.id = package_has_profil.package_id \
         left join profiles on profiles.id = package_has_profil.profil_id\
-        WHERE profiles.id = '%s';""" %(id)
+        WHERE profiles.id = '%s';""" % (id)
 
-        sql_ou = """SELECT ou FROM profile_has_ous WHERE profile_id = %s"""%(id)
+        sql_ou = """SELECT ou FROM profile_has_ous WHERE profile_id = %s""" % (
+            id)
 
         response = session.execute(sql)
-        result = [{'uuid':element.package_uuid, 'name':element.package_name, 'status':element.package_status} for element in response]
+        result = [{'uuid': element.package_uuid,
+                   'name': element.package_name,
+                   'status': element.package_status} for element in response]
 
         response_ou = session.execute(sql_ou)
         dict = {}
@@ -468,21 +493,24 @@ class KioskDatabase(DatabaseHelper):
         # Update the profile
         now = time.strftime('%Y-%m-%d %H:%M:%S')
 
-        sql = """UPDATE profiles SET name='%s',active='%s' WHERE id='%s';""" % (name, active, id)
+        sql = """UPDATE profiles SET name='%s',active='%s' WHERE id='%s';""" % (
+            name, active, id)
 
         session.execute(sql)
         session.commit()
         session.flush()
 
         # Remove all packages associations concerning this profile
-        session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
-        session.query(Profile_has_ou).filter(Profile_has_ou.profile_id == id).delete()
+        session.query(Profile_has_package).filter(
+            Profile_has_package.profil_id == id).delete()
+        session.query(Profile_has_ou).filter(
+            Profile_has_ou.profile_id == id).delete()
 
         session.commit()
         session.flush()
 
         # Finally we associate the OUs with the profile.
-        if type(ous) == str and ous == "":
+        if isinstance(ous, str) and ous == "":
             profile_ou = Profile_has_ou()
             profile_ou.profile_id = id
             profile_ou.ou = ous
@@ -502,13 +530,16 @@ class KioskDatabase(DatabaseHelper):
                 session.flush()
 
         # The profile is now created, but the packages are not linked to it nor added into database.
-        # If the package list is not empty, then firstly we get the status and the uuid for each packages
+        # If the package list is not empty, then firstly we get the status and
+        # the uuid for each packages
         if len(packages) > 0:
             for status in list(packages.keys()):
                 for uuid in packages[status]:
 
                     # get the package id and link it with the profile
-                    result = session.query(Packages.id).filter(Packages.package_uuid == uuid)
+                    result = session.query(
+                        Packages.id).filter(
+                        Packages.package_uuid == uuid)
                     result = result.first()
                     id_package = 0
                     for row in result:

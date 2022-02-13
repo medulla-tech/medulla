@@ -26,23 +26,22 @@ from twisted.internet.task import Clock
 from pulse2.cm.collector import SessionNotFound
 from pulse2.cm.collector import Sessions, Collector
 
+
 class Test00_SessionsTestCase(TestCase):
     """ Test for sessions tracker"""
-
 
     def setUp(self):
         self.clock = Clock()
         self.sessions = Sessions(False, 10, self.clock)
-
 
     def test01_all_elements_are_deferred(self):
         """ To be sure if all elements are deferred instances"""
         for i in range(20):
             uid, d = self.sessions.make()
 
-        result = all(isinstance(d[1], Deferred) for d in list(self.sessions.content.values()))
+        result = all(isinstance(d[1], Deferred)
+                     for d in list(self.sessions.content.values()))
         self.assertTrue(result)
-
 
     def test02_exists(self):
         """ An occurence test of added element in container """
@@ -50,14 +49,12 @@ class Test00_SessionsTestCase(TestCase):
         uid, d = self.sessions.make()
         self.assertIn(uid, self.sessions)
 
-
     def test03_not_exists_if_removed(self):
         """ An occurence test of removed element from container """
 
         uid, d = self.sessions.make()
         self.sessions.remove(uid)
         self.assertNotIn(uid, self.sessions)
-
 
     def test04_not_exists_if_pop(self):
         """ An occurence test of returned and removed element from container """
@@ -100,6 +97,7 @@ class Test00_SessionsTestCase(TestCase):
 
         for i in range(10):
             uid, d = sessions.make()
+
             @d.addCallback
             def cb(reason):
                 """ Callback of all expired requests """
@@ -115,8 +113,6 @@ class Test00_SessionsTestCase(TestCase):
         # verify if all expired uis is no more in sessions content
         self.assertTrue(result)
 
-
-
     def test08_check_for_expired(self):
         """
         - create some tasks
@@ -129,7 +125,6 @@ class Test00_SessionsTestCase(TestCase):
         sessions = Sessions(False, 10, self.clock)
         to_expire = []
         to_stay = []
-
 
         def add_elements(expire):
             print()
@@ -144,14 +139,12 @@ class Test00_SessionsTestCase(TestCase):
             result = all(uid not in to_expire for uid in sessions.content)
             self.assertTrue(result)
 
-
         add_elements(True)
         self.clock.advance(15)
         add_elements(False)
 
         result = all(uid not in to_expire for uid in sessions.content)
         self.assertTrue(result)
-
 
 
 class Test01_CollectorTestCase(TestCase):
@@ -172,7 +165,6 @@ class Test01_CollectorTestCase(TestCase):
         # We are sure that only one element queued
         uid, ip, request = collector.get()
         self.assertEqual(request, first_data)
-
 
     def test02_add_and_release(self):
         """
@@ -199,8 +191,6 @@ class Test01_CollectorTestCase(TestCase):
 
         self.assertTrue(my_deferred is d)
 
-
-
     def test03_get_from_empty_queue(self):
         """ Empty queue returns a deferred with None """
 
@@ -208,9 +198,6 @@ class Test01_CollectorTestCase(TestCase):
 
         reason = collector.get()
         self.assertTrue(reason is None)
-
-
-
 
     def test04_get_only_valid_requests(self):
         """
@@ -236,8 +223,8 @@ class Test01_CollectorTestCase(TestCase):
             d = collector.queue_and_process("192.168.45.12", "valid")
             dl.append(d)
 
-
         dfl = DeferredList(dl)
+
         @dfl.addCallback
         def get_result(ignored):
 

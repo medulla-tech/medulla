@@ -34,6 +34,12 @@ def application(environ, start_response):
     if 'configuration' in environ:
         cherrypy.config.update(environ['configuration'])
 
-    cherrypy.tree.mount(rootV1, cherrypy.config.get('virtual_root', '').rstrip('/') + '/api/v1', app_config)
+    cherrypy.tree.mount(
+        rootV1,
+        cherrypy.config.get(
+            'virtual_root',
+            '').rstrip('/') +
+        '/api/v1',
+        app_config)
 
     return cherrypy.tree(environ, start_response)

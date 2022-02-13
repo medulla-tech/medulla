@@ -35,15 +35,16 @@ from pulse2.package_server.types import Package
 class PackageParser:
     def init(self, config):
         self.logger = logging.getLogger()
-        if 1:#config.parser == None or config.parser == 'XML':
+        if 1:  # config.parser == None or config.parser == 'XML':
             self.parser = PackageParserJSON()
         else:
-            self.logger.error("don't know how to parse this kind of package configuration %s" %
-                              (config.parser))
+            self.logger.error(
+                "don't know how to parse this kind of package configuration %s" %
+                (config.parser))
             raise Exception("UKNPKGCNF")
 
     def parse(self, file):
-        if type(file) == str:
+        if isinstance(file, str):
             return self.parser.parse_str(file)
         else:
             raise Exception("UKNPARSEMETHOD")
@@ -312,6 +313,7 @@ class PackageParserXML:
     <!ELEMENT boolcnd (#PCDATA)>
 """
 
+
 class PackageParserJSON:
     def parse_str(self, file):
         try:
@@ -321,7 +323,7 @@ class PackageParserJSON:
                     data = json.loads(open(file).read())
                 except IOError:
                     pass
-                except:
+                except BaseException:
                     pass
             else:
                 data = json.loads(file)
@@ -419,22 +421,39 @@ class PackageParserJSON:
         # Inventory section
         data['inventory'] = {}
         data['inventory']['licenses'] = package.licenses
-        data['inventory']['associateinventory'] = str(package.associateinventory)
+        data['inventory']['associateinventory'] = str(
+            package.associateinventory)
         data['inventory']['queries'] = {
-                'Qvendor':package.Qvendor,
-                'Qsoftware':package.Qsoftware,
-                'Qversion':package.Qversion,
-                'boolcnd': package.boolcnd}
+            'Qvendor': package.Qvendor,
+            'Qsoftware': package.Qsoftware,
+            'Qversion': package.Qversion,
+            'boolcnd': package.boolcnd}
 
         # Commands section
         data['commands'] = {}
-        data['commands']['preCommand'] = {'name':package.precmd.name, 'command':package.precmd.command}
-        data['commands']['installInit'] = {'name':package.initcmd.name, 'command':package.initcmd.command}
-        data['commands']['command'] = {'name':package.cmd.name, 'command':package.cmd.command}
-        data['commands']['postCommandSuccess'] = {'name':package.postcmd_ok.name, 'command':package.postcmd_ok.command}
-        data['commands']['postCommandFailure'] = {'name':package.postcmd_ko.name, 'command':package.postcmd_ko.command}
+        data['commands']['preCommand'] = {
+            'name': package.precmd.name,
+            'command': package.precmd.command}
+        data['commands']['installInit'] = {
+            'name': package.initcmd.name,
+            'command': package.initcmd.command}
+        data['commands']['command'] = {
+            'name': package.cmd.name,
+            'command': package.cmd.command}
+        data['commands']['postCommandSuccess'] = {
+            'name': package.postcmd_ok.name,
+            'command': package.postcmd_ok.command}
+        data['commands']['postCommandFailure'] = {
+            'name': package.postcmd_ko.name,
+            'command': package.postcmd_ko.command}
 
-        return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+        return json.dumps(
+            data,
+            sort_keys=True,
+            indent=4,
+            separators=(
+                ',',
+                ': '))
 
     def to_json_xmppdeploy(self, package):
         """
@@ -448,7 +467,8 @@ class PackageParserJSON:
         data['metaparameter'][package.targetos]['label'] = {}
 
         data['info'] = {}
-        data['info']['name'] = str(package.label+' '+package.version+' ('+package.id+')')
+        data['info']['name'] = str(
+            package.label + ' ' + package.version + ' (' + package.id + ')')
         data['info']['software'] = package.label
         data['info']['version'] = str(package.version)
         data['info']['description'] = package.description
@@ -469,11 +489,11 @@ class PackageParserJSON:
         sequence['typescript'] = 'Batch'
         sequence['codereturn'] = ''
         sequence['@resultcommand'] = '@resultcommand'
-        sequence['success'] = seq_count+1
+        sequence['success'] = seq_count + 1
         if package.reboot:
-            sequence['error'] = seq_count+3
+            sequence['error'] = seq_count + 3
         else:
-            sequence['error'] = seq_count+2
+            sequence['error'] = seq_count + 2
         data[package.targetos]['sequence'].append(sequence)
         data['metaparameter'][package.targetos]['label']['EXECUTE_SCRIPT'] = seq_count
         seq_count += 1
@@ -505,4 +525,10 @@ class PackageParserJSON:
         data['metaparameter']['os'] = []
         data['metaparameter']['os'].append(package.targetos)
 
-        return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+        return json.dumps(
+            data,
+            sort_keys=True,
+            indent=4,
+            separators=(
+                ',',
+                ': '))

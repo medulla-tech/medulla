@@ -27,6 +27,7 @@ import os
 from mmc.site import mmcconfdir
 from pulse2.utils import checkEntityName
 
+
 class EntitiesRules:
 
     """
@@ -35,11 +36,19 @@ class EntitiesRules:
     It allows the inventory server to assign a computer to an entity.
     """
 
-    def __init__(self, conffile = mmcconfdir + '/pulse2/inventory-server/entities-rules'):
+    def __init__(self, conffile=mmcconfdir +
+                 '/pulse2/inventory-server/entities-rules'):
         self.logger = logging.getLogger()
         self.conf = conffile
         self.rules = []
-        self.operators =["match","equal","noequal","contains","nocontains","starts","finishes"]
+        self.operators = [
+            "match",
+            "equal",
+            "noequal",
+            "contains",
+            "nocontains",
+            "starts",
+            "finishes"]
         self._readRulesFile()
 
     def _readRulesFile(self):
@@ -52,7 +61,7 @@ class EntitiesRules:
                 continue
             try:
                 # The first column may contain the quoted entity list
-                m = re.search('^"(.+)"\W+(.*)$', line)
+                m = re.search('^"(.+)"\\W+(.*)$', line)
                 if m:
                     entities = m.group(1)
                     rule = m.group(2)
@@ -71,7 +80,8 @@ class EntitiesRules:
                                 prefix = words[0].lower()
                                 words = words[1:]
                             else:
-                                raise Exception('Different operators are not supported for a rule')
+                                raise Exception(
+                                    'Different operators are not supported for a rule')
                         else:
                             if len(words) < 3:
                                 raise Exception('Malformed rule')
@@ -84,11 +94,14 @@ class EntitiesRules:
                                     if operator == 'match':
                                         # Try to compile the regexp
                                         regexp = re.compile(operand2)
-                                        subexprs.append((operand1, operator, regexp))
+                                        subexprs.append(
+                                            (operand1, operator, regexp))
                                     else:
-                                        subexprs.append((operand1, operator, operand2))
+                                        subexprs.append(
+                                            (operand1, operator, operand2))
                                 else:
-                                    self.logger.error("Operator %s is not supported, skipping" % operator)
+                                    self.logger.error(
+                                        "Operator %s is not supported, skipping" % operator)
                                 words = words[3:]
                     self.rules.append((entitieslist, prefix, subexprs))
             except Exception:
@@ -131,17 +144,19 @@ class EntitiesRules:
                 operand1, operator, operand2 = rule
                 # Get the values of the first operand
                 values = self._getValues(input, operand1)
-                #if operand1 network/ip value tab des ips
+                # if operand1 network/ip value tab des ips
                 if values == []:
                     # No corresponding value found, we break the loop
-                    self.logger.debug("No corresponding value found for operand '%s', skipping the line" % operand1)
+                    self.logger.debug(
+                        "No corresponding value found for operand '%s', skipping the line" %
+                        operand1)
                     break
                 # Loop over all the values, and break the loop if one value
                 # makes the expression returns True
                 tmpresult = False
                 for value in values:
                     if operator == 'match':
-                        tmpresult = operand2.match(value) != None
+                        tmpresult = operand2.match(value) is not None
                     elif operator == 'equal':
                         tmpresult = value == operand2
                     elif operator == 'noequal':
@@ -151,13 +166,15 @@ class EntitiesRules:
                     elif operator == 'nocontains':
                         tmpresult = not (operand2 in value)
                     elif operator == 'starts':
-                        tmpresult = value.startswith( operand2 )
+                        tmpresult = value.startswith(operand2)
                     elif operator == 'finishes':
-                        tmpresult = value.endswith( operand2 )
+                        tmpresult = value.endswith(operand2)
                     else:
                         pass
                     if tmpresult:
-                        self.logger.info('operator [%s] %s %s %s' %(operator, values, operand2, tmpresult))
+                        self.logger.info(
+                            'operator [%s] %s %s %s' %
+                            (operator, values, operand2, tmpresult))
                         break
 
                 if mainop == 'none':
@@ -170,7 +187,7 @@ class EntitiesRules:
                     else:
                         result = True
                 elif mainop == 'or':
-                    if result != None:
+                    if result is not None:
                         result = result or tmpresult
                     else:
                         result = tmpresult

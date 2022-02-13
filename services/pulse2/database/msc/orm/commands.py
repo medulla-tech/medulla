@@ -42,6 +42,7 @@ from pulse2.scheduler.timeaxis import LaunchTimeResolver
 class Commands(object):
     """ Mapping between msc.commands and SA
     """
+
     def getId(self):
         result = self.id
         return result
@@ -55,7 +56,7 @@ class Commands(object):
         return result
 
     def isPartOfABundle(self):
-        result = self.fk_bundle != None
+        result = self.fk_bundle is not None
         logging.getLogger().debug("isPartOfABundle(#%s): %s" %
                                   (self.id, result))
         return result
@@ -174,7 +175,8 @@ class Commands(object):
         if not self.deployment_intervals:  # no interval given => always perform
             result = True
         else:
-            result = LaunchTimeResolver().in_deployment_interval(self.deployment_intervals, datetime.datetime.today())
+            result = LaunchTimeResolver().in_deployment_interval(
+                self.deployment_intervals, datetime.datetime.today())
         if not result:
             logging.getLogger().debug("inDeploymentInterval(#%s): %s" %
                                       (self.id, result))
@@ -193,9 +195,10 @@ class Commands(object):
         myCommandOnHosts = session.query(CommandsOnHost)
         if target_uuids:
             myCommandOnHosts = myCommandOnHosts.join(Target)
-            myCommandOnHosts = myCommandOnHosts.filter(Target.target_uuid.in_(target_uuids))
-        myCommandOnHosts = myCommandOnHosts.filter(CommandsOnHost.fk_commands ==
-                                                   self.getId())
+            myCommandOnHosts = myCommandOnHosts.filter(
+                Target.target_uuid.in_(target_uuids))
+        myCommandOnHosts = myCommandOnHosts.filter(
+            CommandsOnHost.fk_commands == self.getId())
         session.close()
         return myCommandOnHosts.all()
 
