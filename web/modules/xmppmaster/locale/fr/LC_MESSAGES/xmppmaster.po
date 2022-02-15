@@ -7,6 +7,7 @@
 # tekmans <yvan.manon@siveo.net>, 2019
 # Nicolas Lécureuil <neoclust@mageia.org>, 2022
 # SPO <spointu@gmail.com>, 2022
+# Tom Grabherr, 2022
 # 
 #, fuzzy
 msgid ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-09 15:47+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
-"Last-Translator: SPO <spointu@gmail.com>, 2022\n"
+"Last-Translator: Tom Grabherr, 2022\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr "Audit"
 
 #: modules/xmppmaster/infoPackage.inc.php:42
 msgid "xmppmaster status"
-msgstr "Etat xmppmaster"
+msgstr "État xmppmaster"
 
 #: modules/xmppmaster/infoPackage.inc.php:45
 msgid "XMPP All users tasks"
@@ -45,7 +46,7 @@ msgstr "XMPP Toutes les tâches utilisateurs passées"
 
 #: modules/xmppmaster/infoPackage.inc.php:51
 msgid "XMPP My Past tasks"
-msgstr "XMPP Toutes mes tâches passées"
+msgstr "XMPP Mes tâches passées"
 
 #: modules/xmppmaster/infoPackage.inc.php:54
 msgid "XMPP My teams past tasks"
@@ -77,7 +78,7 @@ msgstr "Topologie machines"
 #: modules/xmppmaster/infoPackage.inc.php:76
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:28
 msgid "Alerts Detail"
-msgstr ""
+msgstr "Détails des alertes"
 
 #: modules/xmppmaster/infoPackage.inc.php:81
 #: modules/xmppmaster/infoPackage.inc.php:85
@@ -88,11 +89,11 @@ msgstr "Alertes de monitoring"
 
 #: modules/xmppmaster/infoPackage.inc.php:89
 msgid "Monitoring history"
-msgstr ""
+msgstr "Historique de monitoring"
 
 #: modules/xmppmaster/infoPackage.inc.php:109
 msgid "XMPP Machine details"
-msgstr "les détails de la machine"
+msgstr "Détails de la machine XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:122
 msgid "Edit Custom Quick Action"
@@ -1698,11 +1699,11 @@ msgstr "Firmware"
 
 #: modules/xmppmaster/xmppmaster/monitoring/alerts.php:38
 msgid "Alerts"
-msgstr ""
+msgstr "Alertes"
 
 #: modules/xmppmaster/xmppmaster/monitoring/alerts.php:39
 msgid "Alerts History"
-msgstr ""
+msgstr "Historique des alertes"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:68
 msgid "Acknowledged by"
@@ -1731,15 +1732,15 @@ msgstr "Évènement"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Name"
-msgstr ""
+msgstr "Nom de l'événement"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Date"
-msgstr ""
+msgstr "Date de l'événement"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Status"
-msgstr ""
+msgstr "Statut de l'événement"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:57
 msgid "Acknowledged By"

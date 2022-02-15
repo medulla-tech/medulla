@@ -76,7 +76,7 @@ msgstr "Комп'ютер топології XMPP"
 #: modules/xmppmaster/infoPackage.inc.php:76
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:28
 msgid "Alerts Detail"
-msgstr ""
+msgstr "Подробиці попереджень"
 
 #: modules/xmppmaster/infoPackage.inc.php:81
 #: modules/xmppmaster/infoPackage.inc.php:85
@@ -87,7 +87,7 @@ msgstr "Повідомлення спостереження"
 
 #: modules/xmppmaster/infoPackage.inc.php:89
 msgid "Monitoring history"
-msgstr ""
+msgstr "Журнал спостереження"
 
 #: modules/xmppmaster/infoPackage.inc.php:109
 msgid "XMPP Machine details"
@@ -1701,19 +1701,19 @@ msgstr "Мікропрограма пристрою"
 
 #: modules/xmppmaster/xmppmaster/monitoring/alerts.php:38
 msgid "Alerts"
-msgstr ""
+msgstr "Попередження"
 
 #: modules/xmppmaster/xmppmaster/monitoring/alerts.php:39
 msgid "Alerts History"
-msgstr ""
+msgstr "Журнал попереджень"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:68
 msgid "Acknowledged by"
-msgstr ""
+msgstr "Автор оповіщення"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:69
 msgid "Acknowledged date"
-msgstr ""
+msgstr "Дата оповіщення"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
 msgid "Hostname"
@@ -1734,31 +1734,31 @@ msgstr "Подія"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Name"
-msgstr ""
+msgstr "Назва події"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Date"
-msgstr ""
+msgstr "Дата події"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Status"
-msgstr ""
+msgstr "Стан події"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:57
 msgid "Acknowledged By"
-msgstr ""
+msgstr "Автор оповіщення"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:61
 msgid "Acknowledged Date"
-msgstr ""
+msgstr "Дата оповіщення"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
 msgid "Device Type"
-msgstr ""
+msgstr "Тип пристрою"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
 msgid "Device Doc"
-msgstr ""
+msgstr "Панель пристрою"
 
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:32
 #, php-format
