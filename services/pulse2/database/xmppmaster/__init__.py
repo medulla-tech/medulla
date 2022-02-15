@@ -3387,16 +3387,44 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_machine_stop_deploy(self, session, cmdid , inventoryuuid):
         """
-            this function return the machines list for  1 command_id and 1 uuid
+            It is used  to get a list of machines with deploiements to stop.
+
+            Args:
+                session: The SQL Alchemy session
+                cmdid: The id of the command ( = the deploiement )
+                inventoryuuid: The id of the machine on which we are trying to deploy.
+
+            Returns:
+                For the machine with `cmdid` and `inventoryuuid`, it returns a dict with
+                informations about this deploy for the machine ( title, pathpackage,pathpackage, jidmachine, etc.)
+
+                There is two possible errors:
+                    1- If no machine is found ( the `cmdid` or `inventoryuuid` does not exist.
+                    2- If there is more than one machine answering the request.
+
+                For this two specific cases, it returns an empty dict.
         """
-        query = session.query(Deploy).filter(and_( Deploy.inventoryuuid == inventoryuuid,
-                                                   Deploy.command == cmdid))
-        query = query.one()
-        session.commit()
-        session.flush()
-        machine={}
+        machine = {}
+        try:
+            query = session.query(Deploy).filter(and_(Deploy.inventoryuuid == inventoryuuid,
+                                                    Deploy.command == cmdid))
+            query = query.one()
+            session.commit()
+            session.flush()
+
+        except NoResultFound as e:
+            logging.getLogger().error(str(e))
+            logging.getLogger().error("We tried to stop the deploiement for the cmd %s. We did not find the uuid %s" % (cmdid , inventoryuuid))
+            return machine
+
+        except MultipleResultsFound as e:
+            logging.getLogger().error(str(e))
+            logging.getLogger().error("When stopping the deploiement we detected several machines for the cmd %s and uuid %s " % (cmdid , inventoryuuid))
+            return machine
+
         machine['len'] = 0
-        try :
+
+        try:
             machine['len'] = 1
             machine['title'] = query.title
             machine['pathpackage'] = query.pathpackage
@@ -3417,6 +3445,7 @@ class XmppMasterDatabase(DatabaseHelper):
             machine['syncthing'] = query.syncthing
         except Exception as e:
             logging.getLogger().error(str(e))
+
         return machine
 
     @DatabaseHelper._sessionm
@@ -3425,7 +3454,8 @@ class XmppMasterDatabase(DatabaseHelper):
             this function return the machines list for 1 group id and 1 command id
         """
         machine = session.query(Deploy).filter(and_(Deploy.group_uuid == grpid,
-                                                        Deploy.command == cmdid))
+                                                        Deploy.command == cmdid,
+                                                        not_(Deploy.sessionid.like('missingagent%'))))
         machine = machine.all()
         session.commit()
         session.flush()
@@ -3925,22 +3955,40 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
         try:
-            sql="""UPDATE `xmppmaster`.`deploy`
-                SET
-                    `state` = '%s'
-                WHERE
-                    (deploy.sessionid = '%s'
-                        AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
-                                              'ABORT DEPLOYMENT CANCELLED BY USER')
-                                OR
-                              `state` REGEXP '^(\?!ERROR)^(\?!SUCCESS)^(\?!ABORT)'));
-                """ % (state, sessionid)
+            if "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)":
+                sql="""UPDATE `xmppmaster`.`deploy`
+                            SET
+                                `state` = '%s'
+                            WHERE
+                                (deploy.sessionid = '%s'
+                                    AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
+                                                        'ABORT DEPLOYMENT CANCELLED BY USER',
+                                                        "WOL 1",
+                                                        "WOL 2",
+                                                        "WOL 3",
+                                                        "WAITING MACHINE ONLINE"
+                                                        )
+                                            OR
+                                        `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)'));
+                        """ % (state, sessionid)
+            else:
+                sql="""UPDATE `xmppmaster`.`deploy`
+                        SET
+                            `state` = '%s'
+                        WHERE
+                            (deploy.sessionid = '%s'
+                                AND ( `state` NOT IN ('DEPLOYMENT SUCCESS' ,
+                                                    'ABORT DEPLOYMENT CANCELLED BY USER')
+                                        OR
+                                    `state` REGEXP '^(?!ERROR)^(?!SUCCESS)^(?!ABORT)'));
+                        """ % (state, sessionid)
             result = session.execute(sql)
             session.commit()
             session.flush()
         except Exception, e:
             logging.getLogger().error(str(e))
             return -1
+
 
     @DatabaseHelper._sessionm
     def updatemachineAD(self, session, idmachine, lastuser, ou_machine, ou_user):
@@ -4838,7 +4886,7 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = session.query(Deploy)
         if login:
             if isinstance(login, list):
-                deploylog = deploylog.filter( Deploy.login.in_(login))
+                deploylog = deploylog.filter( Deploy.login.op('regexp')("|".join(login)))
             else:
                 deploylog = deploylog.filter( Deploy.login.like(login))
 
@@ -4861,12 +4909,12 @@ class XmppMasterDatabase(DatabaseHelper):
         # It is the same as deploylog, but for unknown reason, the count doesn't works with ORM
         if login:
             if isinstance(login, list):
-                llogin=','.join([ '"%s"'%x for x in  login] )
+                llogin='|'.join([ x for x in  login] )
                 count = """select count(*) as nb from (
                 select count(id) as nb
                 from deploy
                 where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-                AND login in (%s)
+                AND login REGEXP "%s"
                 AND (state LIKE "%%%s%%"
                 or pathpackage LIKE "%%%s%%"
                 or start LIKE "%%%s%%"
@@ -6010,6 +6058,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 if entitylist:
                     entitystrlist=",".join(entitylist)
                     entity = " AND ent.glpi_id in (%s) "% entitystrlist
+
+        ordered = ""
+        if (self.config.ordered == 1):
+            ordered = " order by mach.hostname "
+
         computerpresence = ""
         if 'computerpresence' in ctx:
             if ctx['computerpresence'] == 'presence':
@@ -6070,9 +6123,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     agenttype = 'machine'%s%s%s
                 GROUP BY mach.id
+                %s
                 limit %s, %s;""" % (computerpresence,
                                     entity,
                                     recherchefild,
+                                    ordered,
                                     start,
                                     end)
 
@@ -6514,24 +6569,108 @@ class XmppMasterDatabase(DatabaseHelper):
         return resulttypemachine
 
     @DatabaseHelper._sessionm
+    def delMachineXmppPresenceHostname(self, session, hostname):
+        """
+            Remove the `hostname` machine from the xmppmaster database.
+
+            Args:
+                session: The SQL Alchemy session.
+                hostname: The hostname of the machine we want to remove.
+        """
+        result = ['-1']
+        typemachine = "machine"
+
+        try:
+            list_hostname = """SELECT
+                        id, hostname, agenttype
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                        xmppmaster.machines.hostname  like '%s';""" % hostname
+
+            machines_id = session.execute(list_hostname)
+
+            session.commit()
+            session.flush()
+
+            result = [x for x in machines_id][0]
+
+            delete_machine = """DELETE FROM `xmppmaster`.`machines`
+                                WHERE
+                                    `xmppmaster`.`machines`.`id` = '%s';""" % result[0]
+
+            if result[2] == "relayserver":
+                typemachine = "relayserver"
+                update_status = """UPDATE `xmppmaster`.`relayserver`
+                            SET
+                                `enabled` = '0'
+                            WHERE
+                                `xmppmaster`.`relayserver`.`nameserver` = '%s';""" % result[1]
+                session.execute(update_status)
+
+            session.execute(delete_machine)
+            session.commit()
+            session.flush()
+        except IndexError as index_error:
+            logging.getLogger().warning("The machine %s has not been found in the database. We cannot delete it." % hostname)
+            logging.getLogger().warning("We obtained the error: %s" % index_error)
+            return {}
+        except Exception as e:
+            logging.getLogger().error(str(e))
+            return {}
+
+        resulttypemachine = {"type": typemachine }
+        return resulttypemachine
+
+    @DatabaseHelper._sessionm
+    def get_machine_from_hostname(self, session, hostname):
+        """
+            Retrieve the machine based on `hostname`
+            Args:
+                session: The SQL Alchemy session
+                hostname: The hostname of the machines we are searching
+            Returns:
+                List of dict. The dict contains all the machines found.
+        """
+        sql = """
+                    SELECT
+                        *
+                    FROM
+                        machines
+                    WHERE
+                        hostname like "%s%%";""" % hostname
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [{column: value for column, value in rowproxy.items()} for rowproxy in result]
+
+    @DatabaseHelper._sessionm
     def SetPresenceMachine(self, session, jid, presence=0):
         """
-            chang presence in table machines
+            Change the presence in the machine table.
+            Args:
+                session: The SQL Alchemy session
+                jid: The jid of the machine where we want to change the presence
+                presence: The new presence state/
+                          0: The machine is offline
+                          1: The machine is online
+
         """
-        user = str(jid).split("@")[0]
+        hostname = str(jid).split("@")[0]
         try:
             sql = """UPDATE
                         `xmppmaster`.`machines`
                     SET
                         `xmppmaster`.`machines`.`enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`machines`.jid like('%s@%%');""" % (presence, user)
+                        `xmppmaster`.`machines`.jid like('%s@%%');""" % (presence, hostname)
             session.execute(sql)
             session.commit()
             session.flush()
             return True
-        except Exception, e:
-            logging.getLogger().error("SetPresenceMachine : %s" % str(e))
+        except Exception as error_presence:
+            logging.getLogger().error("An error occured while setting the new presence.")
+            logging.getLogger().error("We got the error:\n %s" % str(error_presence))
             return False
 
     @DatabaseHelper._sessionm
@@ -6852,7 +6991,73 @@ class XmppMasterDatabase(DatabaseHelper):
         return resulttypemachine
 
     @DatabaseHelper._sessionm
-    def search_machines_from_state(self, session, state):
+    def update_status_waiting_for_machine_off_in_state_deploy_start(self, session):
+        """
+            Change the status of deploiements where the computer is offline.
+            It change de status from DEPLOYMENT START to WAITING MACHINE ONLINE
+        """
+        try:
+            sql = """UPDATE `xmppmaster`.`deploy`
+                        SET
+                            `state` = 'WAITING MACHINE ONLINE'
+                        WHERE
+                            deploy.sessionid IN (SELECT
+                                    sessionid
+                                FROM
+                                    xmppmaster.deploy
+                                        JOIN
+                                    xmppmaster.machines ON FS_JIDUSERTRUE(machines.jid) = FS_JIDUSERTRUE(deploy.jidmachine)
+                                WHERE
+                                    deploy.state = 'DEPLOYMENT START'
+                                        AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
+                                        AND machines.enabled = 0);"""
+            session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception:
+            logger.error("%s" % (traceback.format_exc()))
+
+    @DatabaseHelper._sessionm
+    def update_status_waiting_for_deploy_on_machine_restart_or_stop(self, session):
+        """
+            We select the machines in a stalled deploiement for more than 60 seconds in the 
+            WAITING MACHINE ONLINE state.
+        """
+        try:
+            sql = """UPDATE `xmppmaster`.`deploy`
+                        SET
+                            `state` = 'WAITING MACHINE ONLINE'
+                        WHERE
+                            `deploy`.sessionid IN (SELECT DISTINCT
+                                    `xmppmaster`.`deploy`.sessionid
+                                FROM
+                                    xmppmaster.deploy
+                                        JOIN
+                                    logs ON logs.sessionname = deploy.sessionid
+                                WHERE
+                                    deploy.state = 'DEPLOYMENT START'
+                                        AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
+                                        AND logs.text LIKE '%online. Starting deployment%'
+                                        AND logs.date < DATE_ADD(NOW(), INTERVAL - 60 SECOND)
+                                        AND NOT EXISTS( SELECT
+                                            *
+                                        FROM
+                                            logs
+                                        WHERE
+                                            logs.text LIKE 'File transfer is enabled'
+                                                AND sessionname = deploy.sessionid)
+                                GROUP BY deploy.sessionid);"""
+            session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception as stalled_error:
+            logger.error("We failed to find/select machines on a stalled deploiement for more than 60 seconds")
+            logger.error("We got the error %s" % stalled_error)
+            logger.error("We hit the backtrace: \n %s" % (traceback.format_exc()))
+
+
+    @DatabaseHelper._sessionm
+    def search_machines_from_state(self, session, state,subdep_user=None):
         dateend = datetime.now()
         sql= """SELECT
                     *
@@ -6958,6 +7163,25 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
         except Exception, e:
             logging.getLogger().error(str(e))
+
+    def restart_blocked_deployments(self, nb_reload=50):
+        """
+        Plan with blocked deployments again
+        call procedure mmc_restart_blocked_deployments
+        """
+        connection = self.db.raw_connection()
+        results = None
+        try:
+                self.logger.info("call procedure stockee mmc_restart_blocked_deployments(%s)" % nb_reload)
+                cursor = connection.cursor()
+                cursor.callproc("mmc_restart_blocked_deployments", [nb_reload])
+                results = list(cursor.fetchall())
+                cursor.close()
+                connection.commit()
+        finally:
+            connection.close()
+        self.logger.info("results (%s)" % results)
+        return results
 
     @DatabaseHelper._sessionm
     def updatedeploytosessionid(self, session, status, sessionid):
@@ -8635,6 +8859,9 @@ where agenttype="machine" and groupdeploy in (
     def setMonitoring_device_reg(self,
                                  session,
                                  hostname,
+                                 xmppobject,
+                                 msg_from,
+                                 sessionid,
                                  mon_machine_id,
                                  device_type,
                                  serial,
@@ -8665,11 +8892,14 @@ where agenttype="machine" and groupdeploy in (
             if objectlist_local_rule:
                 # A rule is defined for this device on this machine
                 self._action_new_event(objectlist_local_rule,
-                                        mon_machine_id,
-                                        id_device_reg,
-                                        doc,
-                                        status_event=1,
-                                        hostname=hostname)
+                                       xmppobject,
+                                       msg_from,
+                                       sessionid,
+                                       mon_machine_id,
+                                       id_device_reg,
+                                       doc,
+                                       status_event=1,
+                                       hostname=hostname)
             else:
                 # Check if there is a general rule for this device
                 objectlist_local_rule = self._rule_monitoring(hostname,
@@ -8683,11 +8913,14 @@ where agenttype="machine" and groupdeploy in (
                                                               localrule=False)
                 if objectlist_local_rule:
                     self._action_new_event(objectlist_local_rule,
-                                            mon_machine_id,
-                                            id_device_reg,
-                                            doc,
-                                            status_event=1,
-                                            hostname=hostname)
+                                           xmppobject,
+                                           msg_from,
+                                           sessionid,
+                                           mon_machine_id,
+                                           id_device_reg,
+                                           doc,
+                                           status_event=1,
+                                           hostname=hostname)
             logging.getLogger().debug("==================================")
             return id_device_reg
         except Exception as e:
@@ -8719,47 +8952,569 @@ where agenttype="machine" and groupdeploy in (
             logging.getLogger().error(str(e))
             return -1
 
+    @DatabaseHelper._sessionm
+    def get_info_event(self,
+                       session,
+                       id_device,
+                       outformat = None):
+        def is_number_string(s):
+            """ Returns True is string is a number. """
+            try:
+                float(s)
+                return True
+            except ValueError:
+                return False
+
+        def is_integer_string():
+            if is_number_string():
+                try:
+                    int(s)
+                    return True
+                except ValueError:
+                    return False
+            else:
+                return False
+
+        def is_float_string():
+            if is_number_string():
+                try:
+                    int(s)
+                    return False
+                except ValueError:
+                    return True
+            else:
+                return False
+
+        keys = ['mon_event_id',
+                'mon_event_status_event',
+                'mon_event_type_event',
+                'mon_event_cmd',
+                'mon_event_id_rule',
+                'mon_event_machines_id',
+                'mon_event_id_device',
+                'mon_event_parameter_other',
+                'mon_event_ack_user',
+                'mon_event_ack_date',
+                'mon_rules_id',
+                'mon_rules_hostname',
+                'mon_rules_device_type',
+                'mon_rules_binding',
+                'mon_rules_succes_binding_cmd',
+                'mon_rules_no_success_binding_cmd',
+                'mon_rules_error_on_binding',
+                'mon_rules_type_event',
+                'mon_rules_user',
+                'mon_rules_comment',
+                'mon_machine_id',
+                'mon_machine_machines_id',
+                'mon_machine_date',
+                'mon_machine_hostname',
+                'mon_machine_statusmsg',
+                'mon_devices_id',
+                'mon_devices_mon_machine_id',
+                'mon_devices_device_type',
+                'mon_devices_serial',
+                'mon_devices_firmware',
+                'mon_devices_status',
+                'mon_devices_alarm_msg',
+                'mon_devices_doc']
+
+        sql="""
+            SELECT
+            mon_event.id as mon_event_id,
+            mon_event.status_event as mon_event_status_event,
+            mon_event.type_event as mon_event_type_event,
+            mon_event.cmd as mon_event_cmd,
+            mon_event.id_rule as mon_event_id_rule ,
+            mon_event.machines_id as mon_event_machines_id,
+            mon_event.id_device as mon_event_id_device,
+            mon_event.parameter_other as mon_event_parameter_other,
+            mon_event.ack_user as mon_event_ack_user,
+            mon_event.ack_date as mon_event_ack_date,
+            mon_rules.id as mon_rules_id ,
+            mon_rules.hostname as mon_rules_hostname,
+            mon_rules.device_type as mon_rules_device_type,
+            mon_rules.binding as mon_rules_binding,
+            mon_rules.succes_binding_cmd as mon_rules_succes_binding_cmd,
+            mon_rules.no_success_binding_cmd as mon_rules_no_success_binding_cmd,
+            mon_rules.error_on_binding as mon_rules_error_on_binding,
+            mon_rules.type_event as mon_rules_type_event,
+            mon_rules.user as mon_rules_user,
+            mon_rules.comment as mon_rules_comment,
+            mon_machine.id as mon_machine_id,
+            mon_machine.machines_id as mon_machine_machines_id,
+            mon_machine.date as mon_machine_date,
+            mon_machine.hostname as mon_machine_hostname,
+            mon_machine.statusmsg as mon_devices_id,
+            mon_devices.id as mon_devices_id,
+            mon_devices.mon_machine_id as mon_devices_mon_machine_id ,
+            mon_devices.device_type as mon_devices_device_type,
+            mon_devices.serial as mon_devices_serial,
+            mon_devices.firmware as mon_devices_firmware,
+            mon_devices.status asmon_devices_status,
+            mon_devices.alarm_msg as mon_devices_alarm_msg,
+            mon_devices.doc as mon_devices_doc
+            FROM
+                xmppmaster.mon_event
+                    JOIN
+                xmppmaster.mon_rules ON xmppmaster.mon_rules.id = xmppmaster.mon_event.id_rule
+                    JOIN
+                xmppmaster.mon_machine ON xmppmaster.mon_machine.id = xmppmaster.mon_event.machines_id
+                    JOIN
+                xmppmaster.mon_devices ON xmppmaster.mon_devices.id = xmppmaster.mon_event.id_device
+            WHERE
+                xmppmaster.mon_event.id = %s;""" %(id_device)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        python_dict = {}
+        tupleresult =  [i for i in result]
+        if tupleresult:
+            for count, value in enumerate(tupleresult[0]):
+                tp=type(value)
+                if tp == datetime  or tp == datetime.time:
+                    value = value.strftime('%Y-%m-%d %H:%M:%S')
+                python_dict[keys[count]] = value
+        if outformat is None:
+            return python_dict
+        #serialization for remplace in script
+        if outformat == "json_string":
+            return json.dumps(python_dict)
+        elif outformat == "pickle_string":
+            import pickle
+            return pickle.dumps(python_dict)
+        elif outformat == "cgi_string":
+            import urllib
+            return urllib.urlencode(python_dict)
+        elif outformat == "bash_string":
+            # creation string parameter for bash script.
+            return self._template_bash_string_event(python_dict)
+        elif outformat == "python_string":
+            # creation string parameter for bash script.
+            return self._template_python_string_event(python_dict)
+        elif outformat == "html_string":
+            #return string html format event
+            return self._template_html_event(python_dict)
+        else:
+            return ""
+
+    def replace_in_file_exist_template(self, srcfile, destfile, oldvalue, newvalue):
+        fin = open(srcfile, "rt")
+        data = fin.read()
+        data = data.replace(oldvalue, newvalue)
+        fin.close()
+        fin = open(srcfile, "wt")
+        fin.write(data)
+        fin.close()
+
+    def replace_in_file_template(self, srcfile, destfile, oldvalue, newvalue):
+        fin  = open(srcfile, "rt")
+        fout = open(destfile, "wt")
+        #for each line in the input file
+        for line in fin:
+            #read replace the string and write to output file
+            fout.write(line.replace(oldvalue, newvalue))
+        #close input and output files
+        fin.close()
+        fout.close()
+
+    def _template_bash_string_event(self, python_dict):
+        bash_string=""
+        for t in python_dict:
+            bash_string = bash_string + "%s=%s\n"%(t,python_dict[t])
+        return bash_string
+
+    def _template_python_string_event(self, python_dict):
+        # creation string parameter for bash script.
+        python_string=""
+        for t in python_dict:
+            valor = python_dict[t]
+            if isinstance(valor, basestring):
+                if is_number_string(valor):
+                    python_string = python_string + "%s = %s \n"%(t, valor)
+                else:
+                    valor = python_dict[t].replace ('"','\\"')
+                    python_string = python_string + "%s = \"%s\" \n"%(t, valor)
+            else:
+                python_string = python_string + "%s = %s \n"%(t, valor)
+            python_string = python_string.replace('"None"', "None")
+            python_string = python_string.replace('"false"', "False")
+            python_string = python_string.replace('"true"', "True")
+            python_string = python_string.replace('"null"', "None")
+            python_string = python_string.replace('"NULL"', "None")
+        return python_string
+
+    def _template_html_event(self, dictresult):
+        templateevent ="""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<style type="text/css">
+table {
+border:3px solid #6495ed;
+border-collapse:collapse;
+width:90%;
+margin:auto;
+}
+thead, tfoot {
+background-color:#D0E3FA;
+background-image:url(sky.jpg);
+border:1px solid #6495ed;
+}
+tbody {
+background-color:#FFFFFF;
+border:1px solid #6495ed;
+}
+th {
+font-family:monospace;
+border:1px dotted #6495ed;
+padding:5px;
+background-color:#EFF6FF;
+width:25%;
+}
+td {
+font-family:sans-serif;
+font-size:80%;
+border:1px solid #6495ed;
+padding:5px;
+text-align:left;
+}
+caption {
+font-family:sans-serif;
+}
+
+</style>
+</head>
+<body>
+
+<h1>ALERT @mon_devices_device_type@ : e.
+</h1>
+<h2>MAchine @mon_machine_hostname@</h2>
+
+<!-- DEVICE INFORMATION -->
+<!-- mon_devices_mon_machine_id = @mon_devices_mon_machine_id@ -->
+<!-- mon_devices_doc = @mon_devices_doc@ -->
+<!-- mon_devices_status = @mon_devices_status@ -->
+<!-- mon_devices_device_type = @mon_devices_device_type@ -->
+<!-- mon_devices_firmware = @mon_devices_firmware@ -->
+<!-- mon_devices_alarm_msg = @mon_devices_alarm_msg@ -->
+<!-- mon_devices_serial = @mon_devices_serial@ -->
+<!-- mon_devices_id = @mon_devices_id@ -->
+<table>
+  <!-- <caption>Device information</caption> -->
+   <thead>
+        <tr>
+            <th colspan="5">DEVICE</th>
+        </tr>
+    </thead>
+  <tbody>
+    <tr>
+      <th scope="col">status</th>
+      <th scope="col">firmware</th>
+      <th scope="col">serial</th>
+      <th scope="col">alarm_msg</th>
+      <th scope="col">retour</th>
+    </tr>
+    <tr>
+      <td>@mon_devices_status@</td>
+      <td>@mon_devices_firmware@</td>
+      <td>@mon_devices_serial@</td>
+      <td>@mon_devices_alarm_msg@</td>
+      <td><code>@mon_devices_doc@</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MACHINES INFORMATION -->
+<!-- mon_machine_hostname = @mon_machine_hostname@
+mon_machine_statusmsg =@mon_machine_statusmsg@
+mon_machine_date = @mon_machine_date@
+mon_machine_id = @mon_machine_id@
+mon_machine_machines_id = @mon_machine_machines_id@ -->
+
+<table>
+  <!-- <caption>Device information</caption> -->
+   <thead>
+        <tr>
+            <th colspan="2">MACHINE</th>
+        </tr>
+    </thead>
+  <tbody>
+    <tr>
+      <th scope="col">host</th>
+      <th scope="col">date</th>
+    </tr>
+    <tr>
+
+      <td>@mon_machine_hostname@</td>
+      <td>@mon_machine_date@</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- EVENT INFORMATION -->
+<!-- mon_event_type_event = @mon_event_type_event@
+mon_event_id = @mon_event_id@
+mon_event_cmd = @mon_event_cmd@
+mon_event_status_event = @mon_event_status_event@
+mon_event_machines_id = @mon_event_machines_id@
+mon_event_id_device = @mon_event_id_device@
+mon_event_id_rule = @mon_event_id_rule@
+mon_event_ack_date = @mon_event_ack_date@
+mon_event_parameter_other = @mon_event_parameter_other@
+mon_event_ack_user = @mon_event_ack_user@ -->
+
+<!-- RULES INFORMATION -->
+<!-- mon_rules_user = @mon_rules_user@
+mon_rules_error_on_binding = @mon_rules_error_on_binding@
+mon_rules_id = @mon_rules_id@
+mon_rules_hostname = @mon_rules_hostname@
+mon_rules_succes_binding_cmd = @mon_rules_succes_binding_cmd@
+mon_rules_comment = @mon_rules_comment@
+mon_rules_binding = @mon_rules_binding@
+mon_rules_type_event = @mon_rules_type_event@
+mon_rules_device_type = @mon_rules_device_type@
+mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
+
+<table>
+  <!-- <caption>Device information</caption> -->
+   <thead>
+        <tr>
+            <th colspan="4">RULES</th>
+        </tr>
+    </thead>
+  <tbody>
+    <tr>
+      <th scope="col">Type</th>
+      <th scope="col">comments</th>
+      <th scope="col">BINDING</th>
+    </tr>
+    <tr>
+      <td>@mon_rules_type_event@</td>
+      <td>@mon_rules_comment@</td>
+      <td><code>@mon_rules_binding@</code></td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>"""
+        for t in dictresult:
+            search="@%s@"%t
+            templateevent = templateevent.replace(search, str(dictresult[t]))
+        return templateevent
+
     def _action_new_event(self,
                           objectlist_local_rule,
+                          xmppobject,
+                          msg_from,
+                          sessionid,
                           id_machine,
                           id_device,
                           doc,
                           status_event=1,
                           hostname=None):
-
         if objectlist_local_rule:
             # apply binding to find out if an alert or event is defined
             for z in objectlist_local_rule:
-                result = self.__binding_application(doc,
-                                                    z['binding'],
-                                                    z['device_type'])
-                if isinstance(result, basestring):
-                    # exception case
-                    # create event if action associated to exception error
-                    if z['error_on_binding'] is None:
-                        return False
-                    bindingcmd = z['error_on_binding']
-                elif result:
+                self.logger.debug("event type : %s on device %s" %( str(z['type_event']),
+                                                                   str(z['device_type'])) )
+                bindingcmd=""
+                msg, result = self.__binding_application_check(doc,
+                                                               z['binding'],
+                                                               z['device_type'])
+                if result == -1:
+                    if z['error_on_binding'] is None or \
+                        z['error_on_binding'].strip() == "":
+                        # aucun trairement sur error
+                        continue
+                elif result == 1:
                     # alert True
                     # create event if action associated to true
-                    if z['succes_binding_cmd'] is None:
-                        return False
+                    if z['succes_binding_cmd'] is None or \
+                        z['succes_binding_cmd'].strip() == "":
+                        # aucun trairement sur success binding
+                        continue
+                    # 1 event est a prendre en compte.
                     bindingcmd = z['succes_binding_cmd']
-                else:
-                    # create event if action associated to false
-                    if z['no_success_binding_cmd'] is None:
-                        return False
+                elif result == 0:
+                    # alert False
+                    # create event if action associated to False
+                    if z['no_success_binding_cmd'] is None or \
+                        z['no_success_binding_cmd'].strip() == "":
+                        continue
                     bindingcmd = z['no_success_binding_cmd']
-                if hostname is not None:
-                    self.remise_status_event(z['id'],
-                                             0,
-                                             hostname)
-                self.setMonitoring_event(id_machine,
+                else:
+                    #cas pas encore prevu
+                    self.logger.warning("No treatment on"\
+                            "missing on def binding action%s " % (z))
+                    continue
+
+                idevent = self.setMonitoring_event(id_machine,
                                          id_device,
                                          z['id'],
                                          bindingcmd,
                                          type_event=z['type_event'],
                                          status_event=1)
+                #traitement event
+                script_monitoring = os.path.join("/","var","lib","pulse2","script_monitoring")
+                if not os.path.exists(script_monitoring): os.makedirs(script_monitoring)
+                tmpprocessmonitoring = os.path.join("/", "var", "lib", "pulse2", "tmpprocessmonitoring")
+                if not os.path.exists(tmpprocessmonitoring): os.makedirs(tmpprocessmonitoring)
+                namescript = "%s_%s_%s_%s"%(id_device,
+                                                z['type_event'],
+                                                getRandomName(5, pref=datetime.now().strftime("%a_%d%b%Y_%Hh%M")),
+                                                bindingcmd)
+                dest_script = os.path.join(tmpprocessmonitoring, namescript)
+
+                if bindingcmd != "":
+                    src_script = os.path.join(script_monitoring, bindingcmd)
+                    if z['type_event'] == "script_python" and \
+                        os.path.isfile(src_script) and \
+                                bindingcmd.endswith("py"):
+                        # on doit executer le script python
+                        # le sript python doit contenir
+                        # import suivant
+                        # import pickle
+                        # et le texte suivant pour template.
+                        # serialisationpickleevent = "@@@@@event@@@@@"
+                        # variable messagefrom = "@@@@@msgfrom@@@@@"
+                        # le script possede toutes les donne pour pouvoir effectier 1 traitement
+
+                        # on copy le script dans tmpprocessmonitoring le script python pour cet event.
+                        serializeinformation = self.get_info_event(idevent, outformat = "pickle_string")
+
+                        self.replace_in_file_template(src_script,
+                                                      dest_script,
+                                                     "@@@@@event@@@@@",
+                                                     serializeinformation)
+                        self.replace_in_file_exist_template(dest_script,
+                                                             dest_script,
+                                                             "@@@@@msgfrom@@@@@",
+                                                             str(msg_from))
+                        self.replace_in_file_exist_template(dest_script,
+                                                            dest_script,
+                                                            "@@@@@binding@@@@@",
+                                                            str(bindingcmd))
+                        pid =subprocess.Popen(["python", dest_script], stdin=None, stdout=None, stderr=None).pid
+                        self.logger.debug("call script python pid %s : %s " %(pid,
+                                                                              dest_script))
+                        self.update_status_event(idevent)
+
+                    elif z['type_event'] == "email" and \
+                        os.path.isfile(src_script) and \
+                                bindingcmd.endswith("py"):
+                        # on doit executer le script python
+                        # le sript python doit contenir la texte suivant pour template.
+                        # serialisationpickleevent = "@@@@@event@@@@@"
+
+                        # on copy le script dans tmpprocessmonitoring le script python pour cet event.
+                        serializeinformation = self.get_info_event(idevent, outformat = "html_string")
+                        self.replace_in_file_template(src_script,
+                                                      dest_script,
+                                                     "@@@@@event@@@@@",
+                                                     serializeinformation)
+                        self.replace_in_file_exist_template(dest_script,
+                                                             dest_script,
+                                                             "@@@@@to_addrs_string@@@@@",
+                                                             z['user'])
+                        self.replace_in_file_exist_template(dest_script,
+                                                             dest_script,
+                                                             "@@@@@msgfrom@@@@@",
+                                                             str(msg_from))
+                        self.replace_in_file_exist_template(dest_script,
+                                                            dest_script,
+                                                            "@@@@@binding@@@@@",
+                                                            str(bindingcmd))
+                        ##pid =subprocess.Popen(["python", dest_script]).pid
+                        pid =subprocess.Popen(["python", dest_script], stdin=None, stdout=None, stderr=None).pid
+                        self.logger.debug("call script pid %s  : %s " %(pid,
+                                                                        dest_script))
+
+                    elif z['type_event'] == "json_string" and \
+                        os.path.isfile(src_script):
+                        serializeinformation_json =""
+                        serializeinformation_json = self.get_info_event(idevent, outformat = "json_string")
+                        self.replace_in_file_template(src_script,
+                                                      dest_script,
+                                                     "@@@@@event@@@@@",
+                                                     serializeinformation_json)
+                        self.replace_in_file_exist_template(dest_script,
+                                                            dest_script,
+                                                            "@@@@@msgfrom@@@@@",
+                                                            str(msg_from))
+                        self.replace_in_file_exist_template(dest_script,
+                                                            dest_script,
+                                                            "@@@@@binding@@@@@",
+                                                            str(bindingcmd))
+                        os.chmod(dest_script, stat.S_IEXEC)
+                        pid =subprocess.Popen( dest_script, stdin=None, stdout=None, stderr=None).pid
+                        self.logger.debug("call script python pid %s : %s " %(pid,
+                                                                              dest_script))
+                    elif z['type_event'] == "xmppmsg":
+                        # send message user a jid reception
+                        # comment le json du message a envoyer
+                        destinataire = ""
+                        if  z['user'] != "" and "@" in z['user']:
+                            # message to user
+                            destinataire = z['user']
+                        elif  z['user'] == "this":
+                            destinataire = xmppobject.boundjid.bare
+                        else:
+                            destinataire = str(msg_from)
+                        if destinataire != "":
+                            serializeinformation = self.get_info_event(idevent, outformat = "pickle_string")
+                            datal = pickle.loads(serializeinformation)
+                            datal['mon_rules_comment'] = ""
+                            serializeinformation_json=json.dumps(datal, indent=4)
+                            z['comment'] = z['comment'].replace("@@@@@event@@@@@", serializeinformation_json)
+                            z['comment'] = z['comment'].replace("@@@@@session_id@@@@@", str(sessionid))
+                            z['comment'] = z['comment'].replace("@@@@@msgfrom@@@@@", str(msg_from))
+                            z['comment'] = z['comment'].replace("@@@@@binding@@@@@", bindingcmd)
+                            # z['comment'] json message
+                            xmppobject.send_message(mto=str(msg_from),
+                                                    mbody=z['comment'],
+                                                    mtype='chat')
+                            self.logger.debug("msg to %s" %(str(msg_from)))
+
+    def __binding_application_check(self, datastring, bindingstring, device_type):
+        resultbinding = None
+        try:
+            data=json.loads(datastring)
+        except Exception as e:
+            msg =  "[binding error device rule %s] : data from message" \
+                " monitoring format json error %s" % (device_type, str(e))
+            logging.getLogger().error("%s" % msg)
+            return (msg, -1)
+        try:
+            logging.getLogger().debug("compile")
+            code = compile(bindingstring, '<string>', 'exec')
+            exec(code)
+        except KeyError as e:
+            msg = "[binding error device rule %s] : key %s in "\
+                "binding:\n%s\nis missing. Check your binding on data\n%s" % (
+                    device_type,
+                    str(e),
+                    bindingstring,
+                    json.dumps(data,indent=4))
+            logging.getLogger().error("%s" % msg)
+            return (msg, -1)
+        except Exception as e:
+            msg = "[binding device rule %s error %s] in binding:\n%s\ "\
+                "on data\n%s"%(device_type,
+                               str(e),
+                               bindingstring,
+                               json.dumps(data,indent=4))
+            logging.getLogger().error("%s" % msg)
+            return (msg, -1)
+        msg = "[ %s : result binding %s for binding:\n%s\ "\
+                "on data\n%s"%(device_type,
+                               resultbinding,
+                               bindingstring,
+                               json.dumps(data,indent=4))
+        logging.getLogger().debug("%s" % msg)
+        return (msg, resultbinding)
 
     @DatabaseHelper._sessionm
     def remise_status_event(self,
@@ -8818,7 +9573,7 @@ where agenttype="machine" and groupdeploy in (
                               session,
                               enable=1):
         sql = ''' SELECT DISTINCT
-                    device_type
+                    LOWER(device_type)
                 FROM
                     xmppmaster.mon_device_service
                 WHERE
@@ -8995,13 +9750,17 @@ where agenttype="machine" and groupdeploy in (
         except ValueError:
             max = -1
 
+        event_types = ['log', 'ack']
         count = 0
         query = session.query(Mon_event, Mon_devices, Mon_rules, Mon_machine, Machines)\
             .outerjoin(Mon_devices, Mon_event.id_device == Mon_devices.id)\
             .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)\
             .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)\
             .outerjoin(Machines, Mon_machine.machines_id == Machines.id)\
-            .filter(Mon_event.status_event == 1)
+            .filter(and_(
+                Mon_event.status_event == 1,
+                Mon_event.type_event.in_(event_types))
+            )
 
         if filter != "":
             query = query.filter(or_(
@@ -9014,6 +9773,7 @@ where agenttype="machine" and groupdeploy in (
                     Mon_rules.device_type.contains(filter),
                     Mon_devices.firmware.contains(filter),
                     Mon_devices.serial.contains(filter),
+                    Mon_devices.status.contains(filter),
                     Mon_event.type_event.contains(filter)
                     )
                 )
@@ -9035,12 +9795,6 @@ where agenttype="machine" and groupdeploy in (
         }
         if query:
             for event, device, rule, mon_machine, machine in query:
-                year = str(mon_machine.date.year)
-                month = str(mon_machine.date.month) if mon_machine.date.month >= 10 else '0'+str(mon_machine.date.month)
-                day = str(mon_machine.date.day) if mon_machine.date.day >= 10 else '0'+str(mon_machine.date.day)
-                hour = str(mon_machine.date.hour)  if mon_machine.date.hour >= 10 else '0'+str(mon_machine.date.hour)
-                minute = str(mon_machine.date.minute) if mon_machine.date.minute >= 10 else '0'+str(mon_machine.date.minute)
-                second = str(mon_machine.date.second) if mon_machine.date.second >= 10 else '0'+str(mon_machine.date.second)
                 tmp = {
                     'event_id': event.id,
                     'event_status': event.status_event if event.status_event is not None else "",
@@ -9054,7 +9808,116 @@ where agenttype="machine" and groupdeploy in (
                     'rule_error_on_binding': rule.error_on_binding if rule.error_on_binding is not None else "",
                     'rule_user': rule.user if rule.user is not None else "",
                     'rule_comment': rule.comment if rule.comment is not None else "",
-                    'mon_machine_date': "%s-%s-%s %s:%s:%s"%(year,month, day, hour, minute, second),
+                    'mon_machine_date': mon_machine.date.strftime("%m-%d-%Y %H:%M:%S") if mon_machine.date is not None else "",
+                    'machine_hostname': machine.hostname if machine.hostname is not None else "",
+                    'machine_jid': machine.jid if machine.jid is not None else "",
+                    'machine_enabled': machine.enabled if machine.enabled is not None else "",
+                    'machine_uuid': machine.uuid_inventorymachine if machine.uuid_inventorymachine is not None else "",
+                    'mon_machine_statusmsg': mon_machine.statusmsg if mon_machine.statusmsg is not None else "",
+                    'device_type': device.device_type if device.device_type is not None else "",
+                    'device_serial': device.serial if device.serial is not None else "",
+                    'device_firmware': device.firmware if device.firmware is not None else "",
+                    'device_status': device.status if device.status is not None else "",
+                    'device_alarm_msg': device.alarm_msg if device.alarm_msg is not None else "",
+                    'device_doc': device.doc if device.doc is not None else ""
+                }
+                result['datas'].append(tmp)
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_mon_events_history(self, session, start, max, filter):
+        """Get monitoring events informations
+        Params:
+            - sqlalchemy session: managed by DatabaseHelper._sessionm decorator
+            - int start: represents the starting offset for a sql limit clause
+            - int max: represents the number of result returned by the function
+            - string filter: if not empty this string is searched into each event
+        Returns:
+            dict events: The events history found for the limit and filter clause. The
+            dict has the following shape:
+            result = {
+                'total': 1,
+                'datas' : [
+                    {dict representing the event 1},
+                    {dict representing the event 2},
+                    ...
+                ]
+            }
+        """
+
+        try:
+            start = int(start)
+        except ValueError:
+            start = -1
+
+        try:
+            max = int(max)
+        except ValueError:
+            max = -1
+
+        event_types = ['log', 'ack']
+        count = 0
+        query = session.query(Mon_event, Mon_devices, Mon_rules, Mon_machine, Machines)\
+            .outerjoin(Mon_devices, Mon_event.id_device == Mon_devices.id)\
+            .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)\
+            .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)\
+            .outerjoin(Machines, Mon_machine.machines_id == Machines.id)\
+            .filter(and_(
+                Mon_event.status_event == 0,
+                Mon_event.type_event.in_(event_types))
+            )
+
+        if filter != "":
+            query = query.filter(or_(
+                    Machines.hostname.contains(filter),
+                    Machines.jid.contains(filter),
+                    Mon_machine.date.contains(filter),
+                    Mon_machine.statusmsg.contains(filter),
+                    Mon_devices.alarm_msg.contains(filter),
+                    Mon_rules.comment.contains(filter),
+                    Mon_rules.device_type.contains(filter),
+                    Mon_devices.firmware.contains(filter),
+                    Mon_devices.serial.contains(filter),
+                    Mon_devices.status.contains(filter),
+                    Mon_event.type_event.contains(filter),
+                    Mon_event.ack_user.contains(filter),
+                    Mon_event.ack_date.contains(filter),
+                    )
+                )
+
+        count = query.count()
+        query = query.order_by(desc(Mon_machine.date))
+
+        if start != -1:
+            query = query.offset(start)
+        if max != -1:
+            query = query.limit(max)
+
+
+        query = query.all()
+
+        result = {
+        'total': count,
+        'datas': []
+        }
+        if query:
+            for event, device, rule, mon_machine, machine in query:
+                tmp = {
+                    'event_id': event.id,
+                    'event_status': event.status_event if event.status_event is not None else "",
+                    'event_type_event': event.type_event if event.type_event is not None else "",
+                    'event_cmd': event.cmd if event.cmd is not None else "",
+                    'ack_user' : event.ack_user if event.ack_user is not None else "",
+                    'ack_date' : event.ack_date.strftime("%m-%d-%Y %H:%M:%S") if event.ack_date is not None else "",
+                    'rule_id': rule.id,
+                    'rule_hostname': rule.hostname if rule.hostname is not None else "",
+                    'rule_device_type': rule.device_type if rule.device_type is not None else "",
+                    'rule_binding': rule.binding if rule.binding is not None else "",
+                    'rule_succes_binding_cmd': rule.succes_binding_cmd if rule.succes_binding_cmd is not None else "",
+                    'rule_error_on_binding': rule.error_on_binding if rule.error_on_binding is not None else "",
+                    'rule_user': rule.user if rule.user is not None else "",
+                    'rule_comment': rule.comment if rule.comment is not None else "",
+                    'mon_machine_date': mon_machine.date.strftime("%m-%d-%Y %H:%M:%S") if mon_machine.date is not None else "",
                     'machine_hostname': machine.hostname if machine.hostname is not None else "",
                     'machine_jid': machine.jid if machine.jid is not None else "",
                     'machine_enabled': machine.enabled if machine.enabled is not None else "",
@@ -9086,7 +9949,7 @@ where agenttype="machine" and groupdeploy in (
             return "failure"
         try:
             session.query(Mon_event).filter(Mon_event.id == id)\
-            .update({Mon_event.status_event: 0})
+            .update({Mon_event.status_event: 0, Mon_event.ack_user: user, Mon_event.ack_date:datetime.now()})
             session.commit()
             session.flush()
             return "success"

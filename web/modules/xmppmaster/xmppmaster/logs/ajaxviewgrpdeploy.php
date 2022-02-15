@@ -174,6 +174,8 @@ $getdeployment = xmlrpc_getdeployment_cmd_and_title($cmd_id,
                                                     $filter,
                                                     $start,
                                                     $maxperpage);
+$status = array_combine($getdeployment["datas"]["uuid"], $getdeployment["datas"]["status"]);
+
 // Get the same machines from glpi
 $re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'],
                                 $filter,
@@ -191,8 +193,8 @@ $statsfromdeploy = xmlrpc_getstatdeploy_from_command_id_and_title($cmd_id, $titl
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 
-if ($info['len'] == 0){
-    // Refresh if no deployment is started. 
+if ($count == 0){
+    // Refresh if no deployment is started.
     installrefresh();
 }
 $timestampnow = time();
@@ -451,8 +453,8 @@ echo "<div>";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
-            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($status,"xmppmaster")))."</td>" : "";
+        foreach($dynamicstatus as $label=>$_status){
+            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
         }
         echo "</tr></thead>";
 
@@ -481,7 +483,7 @@ echo "<div>";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
+        foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
         echo "</tr>";
@@ -527,8 +529,8 @@ echo "<div>";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
-            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($status,"xmppmaster")))."</td>" : "";
+        foreach($dynamicstatus as $label=>$_status){
+            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
         }
         echo "</tr></thead>";
 
@@ -557,7 +559,7 @@ echo "<div>";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
+        foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
         echo "</tr></thead></table>";
@@ -572,39 +574,14 @@ $package = get_package_summary($package_id);
 
 if($package['name'] == "")
 {
-  $resultdeploy =json_decode($info['objectdeploy'][0]['result'], true);
-
-  if(isset($resultdeploy['infoslist'][0]))
-  {
-    $package['name'] = $resultdeploy['infoslist'][0]['name'];
-    $package['Qsoftware'] = $resultdeploy['infoslist'][0]['software'];
-    $package['Qversion'] = '';
-    $package['Qvendor'] = '';
-    $package['version'] = $resultdeploy['infoslist'][0]['version'];
-    $package['description'] = $resultdeploy['infoslist'][0]['description'];
-    $package['files'] = [];
-    $package['Size'] = "";
-  }
-  else if(isset($resultdeploy['descriptor']['info'])){
-    $package['name'] = $resultdeploy['descriptor']['info']['name'];
-    $package['Qsoftware'] = $resultdeploy['descriptor']['info']['software'];
-    $package['Qversion'] = '';
-    $package['Qvendor'] = '';
-    $package['version'] = $resultdeploy['descriptor']['info']['version'];
-    $package['description'] = $resultdeploy['descriptor']['info']['description'];
-    $package['files'] = [];
-    $package['Size'] = "";
-  }
-  else{
-    $package['name'] = "";
-    $package['Qsoftware'] = "";
-    $package['Qversion'] = "";
-    $package['Qvendor'] = "";
-    $package['version'] = "";
-    $package['description'] = "";
-    $package['files'] = [];
-    $package['Size'] = "";
-  }
+  $package['name'] = _T("Package deleted", "pkgs");
+  $package['Qsoftware'] = "";
+  $package['Qversion'] = "";
+  $package['Qvendor'] = "";
+  $package['version'] = _T("Package deleted", "pkgs");
+  $package['description'] = _T("Package deleted", "pkgs");
+  $package['files'] = [];
+  $package['Size'] = 0;
 }
 $associatedInventory = [];
 if ($package['Qsoftware'] != "")
@@ -662,34 +639,13 @@ echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
     echo "</tbody>";
 echo "</table>";
 
-if ($info['len'] != 0){
-  $uuidsuccess = array();
-  $uuiderror = array();
-  $uuidprocess = array();
-  $uuiddefault = array();
-
-  $status = [];
-  foreach ($info['objectdeploy'] as  $val){
-      $status[$val['inventoryuuid']] = "";
-      $status[$val['inventoryuuid']] = $val['state'];
-
-      switch($val['state']){
-          case "DEPLOYMENT SUCCESS":
-              $uuidsuccess[] = $val['inventoryuuid'];
-              break;
-          case "DEPLOYMENT ERROR":
-              $uuiderror[] = $val['inventoryuuid'];
-              break;
-          case "DEPLOYMENT START":
-          case "DEPLOYMENT START (REBOOT)":
-          case "DEPLOYMENT DELAYED":
-              $uuidprocess[] = $val['inventoryuuid'];
-              break;
-          default:
-              $uuiddefault[] = $val['inventoryuuid'];
-      }
-  }
+if ($count != 0){
   $params = [];
+
+  $info_from_machines[] = []; // Add 7th index
+  $info_from_machines[] = []; // Add 8th index
+  $info_from_machines[] = []; // Add 9th index
+
   foreach($info_from_machines[0] as $key => $value)
   {
       if(isset($status['UUID'.$value]))

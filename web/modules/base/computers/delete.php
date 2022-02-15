@@ -52,7 +52,7 @@ if (isset($_POST["bconfirm"])) {
             $dede = xmlrpc_imagingClearMenuFromUuidAllLocation($uuid);
         }
         if (in_array("xmppmaster", $_SESSION["supportModList"])){
-            xmppmaster_delcomputer($uuid);
+            xmppmaster_delcomputer($uuid, $_GET['cn']);
         }
 
         if (in_array("xmppmaster", $_SESSION["supportModList"])){

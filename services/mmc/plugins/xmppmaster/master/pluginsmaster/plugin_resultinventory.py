@@ -32,7 +32,7 @@ import json
 import logging
 from mmc.plugins.glpi.database import Glpi
 from pulse2.database.xmppmaster import XmppMasterDatabase
-from utils import file_put_contents
+from mmc.plugins.xmppmaster.master.lib.utils import file_put_contents
 
 
 logger = logging.getLogger()

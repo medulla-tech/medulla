@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2015-2017 Siveo, http://www.siveo.net
+ * (c) 2015-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -73,14 +73,33 @@ $submod->addPage($page);
 $page = new Page("topology", _T('XMPP topology Machine', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("alertsdetail", _T("Alerts Detail", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/detail.php");
+$submod->addPage($page);
+
+// Tabs for alerts notifications
 $page = new Page("alerts", _T("Monitoring Alerts", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/monitoring/alerts.php");
+$page->setOptions(array("visible" => true));
+
+$tab = new Tab("notificationsTab", _T("Monitoring Alerts", "xmppmaster"));
+$page->addTab($tab);
+
+//Tab2
+$tab = new Tab("notificationsHistoryTab", _T("Monitoring history", "xmppmaster"));
+$page->addTab($tab);
 $submod->addPage($page);
 
 $page = new Page("ajaxalerts");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php");
 $submod->addPage($page);
+
+$page = new Page("ajaxalertshistory");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php");
+$submod->addPage($page);
+
 
 $page = new Page("acquit");
 $page->setFile("modules/xmppmaster/xmppmaster/monitoring/acquit.php");

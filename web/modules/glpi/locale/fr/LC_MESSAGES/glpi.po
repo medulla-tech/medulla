@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:52+0200\n"
+"POT-Creation-Date: 2022-01-09 15:47+0100\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2021\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -524,7 +524,7 @@ msgid "Owner lastname"
 msgstr "Nom propriétaire"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:280
-#: modules/glpi/glpi/ajaxMachinesList.php:450
+#: modules/glpi/glpi/ajaxMachinesList.php:451
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:287
 #: modules/glpi/glpi/machinesList.php:80
 msgid "Owner"
@@ -538,7 +538,7 @@ msgid "Model"
 msgstr "Modèle"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:282
-#: modules/glpi/glpi/ajaxMachinesList.php:455
+#: modules/glpi/glpi/ajaxMachinesList.php:456
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:299
 #: modules/glpi/glpi/ajaxViewPart.php:244
 #: modules/glpi/glpi/machinesList.php:82
@@ -595,13 +595,13 @@ msgstr "Adresse de broadcast"
 msgid "Gateway address"
 msgstr "Adresse de passerelle"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:443
+#: modules/glpi/glpi/ajaxMachinesList.php:444
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:276
 #: modules/glpi/glpi/ajaxViewPart.php:233
 msgid "Computer Name"
 msgstr "Nom de la Machine"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:446
+#: modules/glpi/glpi/ajaxMachinesList.php:447
 #: modules/glpi/glpi/addLocation.php:101 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:279
 #: modules/glpi/glpi/addEntityRule.php:77
@@ -609,51 +609,51 @@ msgstr "Nom de la Machine"
 msgid "Description"
 msgstr "Description"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:447
+#: modules/glpi/glpi/ajaxMachinesList.php:448
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:281
 #: modules/glpi/glpi/ajaxViewPart.php:240
 msgid "Operating System"
 msgstr "Système d'exploitation"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:448
+#: modules/glpi/glpi/ajaxMachinesList.php:449
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:283
 #: modules/glpi/glpi/ajaxViewPart.php:241
 msgid "Computer Type"
 msgstr "Type"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:449
+#: modules/glpi/glpi/ajaxMachinesList.php:450
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:285
 #: modules/glpi/glpi/ajaxViewPart.php:238
 msgid "Last Logged User"
 msgstr "Dernier Utilisateur"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:451
+#: modules/glpi/glpi/ajaxMachinesList.php:452
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:289
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Entity"
 msgstr "Entité"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:452
+#: modules/glpi/glpi/ajaxMachinesList.php:453
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:291
 msgid "Localization"
 msgstr "Emplacement"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:453
+#: modules/glpi/glpi/ajaxMachinesList.php:454
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:293
 msgid "Owner Firstname"
 msgstr "Prénom du propriétaire"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:454
+#: modules/glpi/glpi/ajaxMachinesList.php:455
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:295
 msgid "Owner Real Name"
 msgstr "Nom du propriétaire"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:471
+#: modules/glpi/glpi/ajaxMachinesList.php:472
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:323
 msgid "Backup status"
 msgstr "Statut de la sauvegarde"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:505
+#: modules/glpi/glpi/ajaxMachinesList.php:506
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:360
 msgid "Delete computer"
 msgstr "Supprimer un ordinateur"

@@ -291,22 +291,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.file_deploy_plugin = []
         self.wolglobal_set = set() #use group wol
         self.confaccount=[] #list des account for clear
-        #clear conf compte.
-        logger.debug('Delete old ejabberd accounts')
-        cmd = "ejabberdctl --no-timeout delete_old_users 1"
-        try:
-            a = simplecommandstr(cmd)
-            logger.debug(a['result'])
-        except Exception as e:
-            pass
-        #del old message offline
-        logger.debug('Delete old offline ejabberd messages')
-        cmd = "ejabberdctl --no-timeout delete_old_messages 1"
-        try:
-            a = simplecommandstr(cmd)
-            logger.debug(a['result'])
-        except Exception as e:
-            pass
+
         # The queues. These objects are like shared lists
         # The command processes use this queue to notify an event to the event manager
         # self.queue_read_event_from_command = Queue()
@@ -323,6 +308,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.manage_scheduler = manage_scheduler(self)
         self.xmppbrowsingpath = xmppbrowsing(defaultdir=self.config.defaultdir,
                                              rootfilesystem=self.config.rootfilesystem)
+        
+        # Clear configuration accounts
+        logger.debug('Delete old ejabberd accounts')
+        cmd = "ejabberdctl --no-timeout delete_old_users 1"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        except Exception as e:
+            pass
+        # Delete old messages
+        logger.debug('Delete old offline ejabberd messages')
+        cmd = "ejabberdctl --no-timeout delete_old_messages 1"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        except Exception as e:
+            pass
+
         # dictionary used for deploy
         self.machineWakeOnLan = {}
         self.machineDeploy = {}
@@ -502,11 +505,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
             fichier.close()
             self.mesure = mesure
             print "______________________________"
-    def sendwol(self, macadress, hostnamemachine = ""):
+    def sendwol(self, macadress, machine_hostname=""):
         listmacadress = macadress.split("||")
         for macadressdata in listmacadress:
             if macadressdata != "":
-                logging.debug("wakeonlan machine  [Machine : %s]" % hostnamemachine)
+                logging.debug("wakeonlan machine  [Machine : %s]" % machine_hostname)
                 self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadressdata})
 
     def _chunklist(self, listseq, nb = 5000):
@@ -541,8 +544,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             # machine ecart temps de deploiement terminer met status a ABORT ON TIMEOUT
             result = XmppMasterDatabase().Timeouterrordeploy()
             for machine in result:
-                hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
-                msglog.append("<span class='log_err'>Deployment timed out on machine %s</span>"%hostnamemachine)
+                machine_hostname=machine['jidmachine'].split('@')[0][:-4]
+                msglog.append("<span class='log_err'>Deployment timed out on machine %s</span>"%machine_hostname)
                 msglog.append("<span class='log_err'>Machine is no longer available</span>")
             for logmsg in msglog:
                 self.xmpplog(logmsg,
@@ -554,20 +557,27 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             module="Deployment | Start | Creation",
                             date=None,
                             fromuser=machine['login'])
-            msglog=[]
-            #########################################################################
+
+            # We change de status of the machine currently in a deploy but offline.
+            # We put them back in the queue
+            XmppMasterDatabase().update_status_waiting_for_machine_off_in_state_deploy_start()
+
+
+            # We select the machines in a deploiement stalled for more than 60 seconds.
+            XmppMasterDatabase().update_status_waiting_for_deploy_on_machine_restart_or_stop()
+
+            msglog = []
             machines_scheduled_deploy = XmppMasterDatabase().search_machines_from_state("DEPLOY TASK SCHEDULED")
             for machine in machines_scheduled_deploy:
-                ##datetime_startcmd = datetime.strptime(machine['startcmd'], '%Y-%m-%d %H:%M:%S')
-                ##datetime_endcmd = datetime.strptime(machine['startcmd'], '%Y-%m-%d %H:%M:%S')
                 UUID = machine['inventoryuuid']
 
                 resultpresence = XmppMasterDatabase().getPresenceExistuuids(UUID)
                 if resultpresence[UUID][1] == 0:
-                    # la machine n'est plus dans la table machine
-                    ### voir le message a afficher.
-                    # cas on 1 deployement est cheduler.
-                    # et la machine n'existe plus. soit son uuid GLPI a changer, ou elle a ete suprimer. la machine n'existe plus.
+                    # The machine is not on the machine table anymore
+                    #  voir le message a afficher.
+                    # This can happen when the deployment is scheduled but
+                    # -1- The UUID changed
+                    # -2- The machine has been removed from the machine table.
                     msglog.append("<span class='log_err'>Machine %s disappeared "\
                         "during deployment. GLPI ID: %s</span>"%(machine['jidmachine'], UUID))
                     XmppMasterDatabase().update_state_deploy(machine['id'], "ABORT MACHINE DISAPPEARED")
@@ -577,118 +587,115 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     XmppMasterDatabase().update_state_deploy(machine['id'], "WOL 3")
             for logmsg in msglog:
                 self.xmpplog(logmsg,
-                            type='deploy',
-                            sessionname=machine['sessionid'],
-                            priority=-1,
-                            action="xmpplog",
-                            why=self.boundjid.bare,
-                            module="Deployment | Start | Creation",
-                            date=None,
-                            fromuser=machine['login'])
-            msglog=[]
-            ###########################################################################
+                             type='deploy',
+                             sessionname=machine['sessionid'],
+                             priority=-1,
+                             action="xmpplog",
+                             why=self.boundjid.bare,
+                             module="Deployment | Start | Creation",
+                             date=None,
+                             fromuser=machine['login'])
+            # Plan with blocked deployments again
+            XmppMasterDatabase().restart_blocked_deployments()
+
+            msglog = []
             machines_wol3 = XmppMasterDatabase().search_machines_from_state("WOL 3")
             for machine in machines_wol3:
                 XmppMasterDatabase().update_state_deploy(machine['id'], "WAITING MACHINE ONLINE")
-                hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
-                msglog.append("Waiting for machine %s to be online"%hostnamemachine)
+                machine_hostname = machine['jidmachine'].split('@')[0][:-4]
+                msglog.append("Waiting for machine %s to be online" % machine_hostname)
             for logmsg in msglog:
                 self.xmpplog(logmsg,
-                            type='deploy',
-                            sessionname=machine['sessionid'],
-                            priority=-1,
-                            action="xmpplog",
-                            why=self.boundjid.bare,
-                            module="Deployment | Start | Creation",
-                            date=None,
-                            fromuser=machine['login'])
+                             type='deploy',
+                             sessionname=machine['sessionid'],
+                             priority=-1,
+                             action="xmpplog",
+                             why=self.boundjid.bare,
+                             module="Deployment | Start | Creation",
+                             date=None,
+                             fromuser=machine['login'])
             msglog=[]
-            ###########################################################################
             machines_wol2 = XmppMasterDatabase().search_machines_from_state("WOL 2")
             for machine in machines_wol2:
                 if XmppMasterDatabase().getPresenceuuid(machine['inventoryuuid']):
-                    # recu presence machine.
+                    # The machine is online
                     XmppMasterDatabase().update_state_deploy(machine['id'], "WAITING MACHINE ONLINE")
                     continue
                 XmppMasterDatabase().update_state_deploy(machine['id'], "WOL 3")
-                hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
+                machine_hostname = machine['jidmachine'].split('@')[0][:-4]
                 self._addsetwol(wol_set, machine['macadress'])
-                msglog.append("Third WOL sent to machine %s"%hostnamemachine)
+                msglog.append("Third WOL sent to machine %s" % machine_hostname)
             for logmsg in msglog:
                 self.xmpplog(logmsg,
-                            type='deploy',
-                            sessionname=machine['sessionid'],
-                            priority=-1,
-                            action="xmpplog",
-                            why=self.boundjid.bare,
-                            module="Deployment | Start | Creation",
-                            date=None,
-                            fromuser=machine['login'])
-            msglog=[]
-            ###########################################################################
+                             type='deploy',
+                             sessionname=machine['sessionid'],
+                             priority=-1,
+                             action="xmpplog",
+                             why=self.boundjid.bare,
+                             module="Deployment | Start | Creation",
+                             date=None,
+                             fromuser=machine['login'])
+            msglog = []
             machines_wol1 = XmppMasterDatabase().search_machines_from_state("WOL 1")
             for machine in machines_wol1:
                 if XmppMasterDatabase().getPresenceuuid(machine['inventoryuuid']):
-                    # recu presence machine.
+                    # The machine is online
                     XmppMasterDatabase().update_state_deploy(machine['id'], "WAITING MACHINE ONLINE")
                     continue
                 XmppMasterDatabase().update_state_deploy(machine['id'], "WOL 2")
-                hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
+                machine_hostname=machine['jidmachine'].split('@')[0][:-4]
                 self._addsetwol(wol_set, machine['macadress'])
-                #self.sendwol(machine['macadress'], hostnamemachine)
 
-                msglog.append("Second WOL sent to machine %s"%hostnamemachine)
+                msglog.append("Second WOL sent to machine %s" % machine_hostname)
             for logmsg in msglog:
                 self.xmpplog(logmsg,
-                            type='deploy',
-                            sessionname=machine['sessionid'],
-                            priority=-1,
-                            action="xmpplog",
-                            why=self.boundjid.bare,
-                            module="Deployment | Start | Creation",
-                            date=None,
-                            fromuser=machine['login'])
-            msglog=[]
-            ###########################################################################
-            #relance machine off_line to on_line
-            machines_waitting_online = XmppMasterDatabase().search_machines_from_state("WAITING MACHINE ONLINE")
-            #### on verify si il y a des machines online dans cet ensemble
-            for machine in machines_waitting_online:
-                #machine WAITING MACHINE ONLINE presente ?
+                             type='deploy',
+                             sessionname=machine['sessionid'],
+                             priority=-1,
+                             action="xmpplog",
+                             why=self.boundjid.bare,
+                             module="Deployment | Start | Creation",
+                             date=None,
+                             fromuser=machine['login'])
+            msglog = []
+            # We search for all the machines in the "WAITING MACHINE ONLINE" status
+            machines_waiting_online = XmppMasterDatabase().search_machines_from_state("WAITING MACHINE ONLINE")
+            # We verify if the is online machines in the list.
+            for machine in machines_waiting_online:
                 data = json.loads(machine['result'])
                 if XmppMasterDatabase().getPresenceuuid(machine['inventoryuuid']):
-                    hostnamemachine=machine['jidmachine'].split('@')[0][:-4]
-                    msg="Machine %s online. Starting deployment"%hostnamemachine
+                    machine_hostname=machine['jidmachine'].split('@')[0][:-4]
+                    msg="Machine %s online. Starting deployment" % machine_hostname
                     self.xmpplog(msg,
-                                type='deploy',
-                                sessionname=machine['sessionid'],
-                                priority=-1,
-                                action="xmpplog",
-                                why=self.boundjid.bare,
-                                module="Deployment | Start | Creation",
-                                date=None,
-                                fromuser=machine['login'])
+                                 type='deploy',
+                                 sessionname=machine['sessionid'],
+                                 priority=-1,
+                                 action="xmpplog",
+                                 why=self.boundjid.bare,
+                                 module="Deployment | Start | Creation",
+                                 date=None,
+                                 fromuser=machine['login'])
                     XmppMasterDatabase().update_state_deploy(int(machine['id']), "DEPLOYMENT START")
-                    #"relance deployement on machine online"
-                    # il faut verifier qu'il y ai 1 groupe deja en syncthing.alors seulement on peut decoder de l'incorporer
+                    # We restart the deploiement on online machines.
+                    # We need to check if we already have a syncthing group. If so we can decide to add it.
                     if 'grp' in data['advanced'] and data['advanced']['grp'] is not None and \
                         'syncthing' in data['advanced'] and \
                             data['advanced']['syncthing'] == 1 and \
                                 XmppMasterDatabase().nbsyncthingdeploy(machine['group_uuid'],
                                                                         machine['command']) > 2:
-                        msg =  "Starting peer deployment on machine %s" % machine['jidmachine']
+                        msg = "Starting peer deployment on machine %s" % machine['jidmachine']
                         self.xmpplog(msg,
-                                    type='deploy',
-                                    sessionname=machine['sessionid'],
-                                    priority=-1,
-                                    action="xmpplog",
-                                    why=self.boundjid.bare,
-                                    module="Deployment | Start | Creation",
-                                    date=None,
+                                     type='deploy',
+                                     sessionname=machine['sessionid'],
+                                     priority=-1,
+                                     action="xmpplog",
+                                     why=self.boundjid.bare,
+                                     module="Deployment | Start | Creation",
+                                     date=None,
                                     fromuser=data['login'])
                         XmppMasterDatabase().updatedeploytosyncthing(machine['sessionid'])
                         # call plugin master syncthing
-                        ###initialisation deployement syncthing
+                        # initialisation deployement syncthing
                         self.callpluginsubstitute("deploysyncthing",
                                                     data,
                                                     sessionid = machine['sessionid'])
@@ -699,40 +706,40 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                                 machine['jid_relay']))
 
                         command = {'action': "applicationdeploymentjson",
-                                'base64': False,
-                                'sessionid': machine['sessionid'],
-                                'data': data}
+                                   'base64': False,
+                                   'sessionid': machine['sessionid'],
+                                   'data': data}
 
                         self.send_message(mto= machine['jid_relay'],
-                                        mbody=json.dumps(command),
-                                        mtype='chat')
+                                          mbody=json.dumps(command),
+                                          mtype='chat')
                         for logmsg in msglog:
                             self.xmpplog(logmsg,
-                                        type='deploy',
-                                        sessionname=machine['sessionid'],
-                                        priority=-1,
-                                        action="xmpplog",
-                                        why=self.boundjid.bare,
-                                        module="Deployment | Start | Creation",
-                                        date=None,
-                                        fromuser=machine['login'])
-                        msglog=[]
+                                         type='deploy',
+                                         sessionname=machine['sessionid'],
+                                         priority=-1,
+                                         action="xmpplog",
+                                         why=self.boundjid.bare,
+                                         module="Deployment | Start | Creation",
+                                         date=None,
+                                         fromuser=machine['login'])
+                        msglog = []
                         if 'syncthing' in data['advanced'] and \
                             data['advanced']['syncthing'] == 1:
                             self.xmpplog("<span class='log_warn'>There are not enough machines " \
                                             "to deploy in peer mode</span>",
-                                    type='deploy',
-                                    sessionname=machine['sessionid'],
-                                    priority=-1,
-                                    action="xmpplog",
-                                    why=self.boundjid.bare,
-                                    module="Deployment | Start | Creation",
-                                    date=None,
-                                    fromuser=data['login'])
+                                         type='deploy',
+                                         sessionname=machine['sessionid'],
+                                         priority=-1,
+                                         action="xmpplog",
+                                         why=self.boundjid.bare,
+                                         module="Deployment | Start | Creation",
+                                         date=None,
+                                         fromuser=data['login'])
         except Exception:
-            logger.error("%s"%(traceback.format_exc()))
+            logger.error("%s" % (traceback.format_exc()))
         finally:
-            #send wols
+            # Send wols
             wol_set.discard("")
             if len(wol_set):
                 self._sendwolgroup(wol_set)
@@ -851,8 +858,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     deployobject['UUID']))
                     logging.warning("INFO\nXMPP: No machine found for %s" % (deployobject['name']))
 
-                #listobjnoexist.append(deployobject)
-                # incription dans deploiement cette machine sans agent
+                # We add a fake entry in the database for the machine w/o agent
+                deployobject['name'] = deployobject['name'].split('.')[0]
                 XmppMasterDatabase().adddeploy(deployobject['commandid'],
                                             deployobject['name'],
                                             deployobject['name'],
@@ -950,13 +957,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
             file_put_contents("/tmp/Execution_time_plugin.txt",
                               "%s | %s \n" %(str(datetime.now()),
                               obj['result'] ))
-        #self.get_roster()
-        #try:
-            #self.get_roster()
-        #except IqError as err:
-            #print('Error: %s' % err.iq['error']['condition'])
-        #except IqTimeout:
-            #print('Error: Request timed out')
         self.send_presence()
         chatroomjoin = [self.config.confjidchatroom]
         for chatroom in chatroomjoin:
@@ -1514,13 +1514,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             fromuser=login)
             return False
 
-    def parsexmppjsonfile(self, path):
-        # puts the words False in lowercase.
-        datastr = file_get_contents(path)
-        datastr = re.sub(r"(?i) *: *false", " : false", datastr)
-        datastr = re.sub(r"(?i) *: *true", " : true", datastr)
-        file_put_contents(path, datastr)
-
     def totimestamp(self, dt, epoch=datetime(1970,1,1)):
         td = dt - epoch
         # return td.total_seconds()
@@ -1615,7 +1608,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
         descript = managepackage.loadjsonfile(os.path.join(path, 'xmppdeploy.json'))
 
-        self.parsexmppjsonfile(os.path.join(path, 'xmppdeploy.json'))
         if descript is None:
             XmppMasterDatabase().adddeploy(idcommand,
                                             jidmachine,

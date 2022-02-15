@@ -83,8 +83,11 @@ $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imagin
         }
     }
 
-
-        $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing,$inventconsole, $editconfiguration, $DeployQuickxmpp);
+        if (isExpertMode()){
+            $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing,$inventconsole, $editconfiguration, $DeployQuickxmpp);
+        }else{
+            $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing, $DeployQuickxmpp);
+        }
 
 
 /*

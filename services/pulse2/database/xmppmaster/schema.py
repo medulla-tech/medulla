@@ -184,7 +184,7 @@ class Glpi_entity(Base, XmppMasterDBObj):
 
     def __repr__(self):
         return "<entity('%s','%s', '%s')>" % (self.name, self.complete_name, self.glpi_id)
-    
+
     def get_data(self):
         return{ 'id' : self.id,
                 'complete_name' : self.complete_name,
@@ -205,7 +205,7 @@ class Glpi_location(Base, XmppMasterDBObj):
 
     def __repr__(self):
         return "<location('%s','%s', '%s')>" % (self.name, self.complete_name, self.glpi_id)
-    
+
     def get_data(self):
         return{ 'id' : self.id,
                 'complete_name' : self.complete_name,
@@ -273,7 +273,7 @@ class Glpi_Register_Keys(Base, XmppMasterDBObj):
 
     def __repr__(self):
         return "<register_keys('%s','%s', '%s', '%s')>" % (self.name, self.value, self.comment, self.machines_id)
-    
+
     def get_data(self):
         return{ 'id' : self.id,
                 'name' : self.name,
@@ -766,7 +766,9 @@ class Mon_event(Base, XmppMasterDBObj):
     machines_id = Column(Integer, nullable=False)
     id_rule = Column(Integer, nullable=False)
     id_device = Column(Integer, nullable=False)
-
+    parameter_other = Column(String(1024), nullable=True)
+    ack_user = Column(String(90), nullable=True)
+    ack_date = Column(DateTime, default=datetime.datetime.now)
 
 class Mon_panels_template(Base, XmppMasterDBObj):
     # ====== Table name =========================

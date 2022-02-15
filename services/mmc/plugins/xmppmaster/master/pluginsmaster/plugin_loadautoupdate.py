@@ -23,7 +23,7 @@
 import json
 import os
 import logging
-from utils import getRandomName
+from mmc.plugins.xmppmaster.master.lib.utils import getRandomName
 from update_remote_agent import Update_Remote_Agent
 import types
 import ConfigParser

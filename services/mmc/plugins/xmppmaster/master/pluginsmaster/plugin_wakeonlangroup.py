@@ -25,7 +25,7 @@ import json
 import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
-from utils import name_random
+from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import logging
 import os
 from wakeonlan import wol

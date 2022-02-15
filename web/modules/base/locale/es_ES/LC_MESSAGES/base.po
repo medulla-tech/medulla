@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:52+0200\n"
+"POT-Creation-Date: 2022-01-09 15:47+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/es_ES/)\n"
@@ -1052,14 +1052,14 @@ msgid "Computers list"
 msgstr "Lista de equipos"
 
 #: modules/base/includes/computers_list.inc.php:368
-#: modules/glpi/glpi/ajaxMachinesList.php:471
+#: modules/glpi/glpi/ajaxMachinesList.php:472
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:323
 #: modules/pulse2/includes/menu_actionaudit.php:66
 msgid "Backup status"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:408
-#: modules/glpi/glpi/ajaxMachinesList.php:505
+#: modules/glpi/glpi/ajaxMachinesList.php:506
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:360
 msgid "Delete computer"
 msgstr "Eliminar equipo"
@@ -1869,7 +1869,16 @@ msgid ""
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
+#: modules/dashboard/includes/panels/alertsentity.inc.php:50
+#: modules/dashboard/includes/panels/alerts.inc.php:50
 msgid "Acknowledge"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:38
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:28
+#: modules/dashboard/includes/panels/alertsentity.inc.php:49
+#: modules/dashboard/includes/panels/alerts.inc.php:49
+msgid "Detail"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:67

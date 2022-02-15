@@ -66,7 +66,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback,sys
-
+from collections import OrderedDict
 import decimal
 
 logger = logging.getLogger()
@@ -667,20 +667,20 @@ class Glpi95(DyngroupDatabaseHelper):
             contains = ctx["contains"]
 
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
-        .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
+        .outerjoin(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
         .outerjoin(self.user, Machine.users_id == self.user.c.id)\
         .join(Entities, Entities.id == Machine.entities_id)\
         .outerjoin(self.locations, Machine.locations_id == self.locations.c.id)\
         .outerjoin(self.manufacturers, Machine.manufacturers_id == self.manufacturers.c.id)\
-        .join(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)\
+        .outerjoin(self.glpi_computermodels, Machine.computermodels_id == self.glpi_computermodels.c.id)\
         .outerjoin(self.regcontents, Machine.id == self.regcontents.c.computers_id)
 
         if field != "":
-            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            query = query.outerjoin(Computersitems, Machine.id == Computersitems.computers_id)
             if field != "type":
-                query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                query = query.outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
                                    Computersitems.itemtype == "Peripheral"))\
-                    .join(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+                    .outerjoin(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
 
@@ -778,9 +778,9 @@ class Glpi95(DyngroupDatabaseHelper):
 
         if debugfunction:
             try:
-                logger.info("@@@DEBUG@@@ %s"%literalquery(query))
+                self.logger.info("@@@DEBUG@@@ %s"%literalquery(query))
             except Exception as e:
-                logger.error("display @@@DEBUG@@@ sql literal from alchemy error : %s" % e)
+                self.logger.error("display @@@DEBUG@@@ sql literal from alchemy error : %s" % e)
 
         machines = query.all()
 
@@ -1847,6 +1847,8 @@ class Glpi95(DyngroupDatabaseHelper):
         if type(uuid) == list:
             return query.filter(self.machine.c.id.in_([int(str(a).replace("UUID", "")) for a in uuid]))
         else:
+            if uuid is None:
+                uuid = ""
             return query.filter(self.machine.c.id == int(str(uuid).replace("UUID", "")))
 
     ##################### Machine output format (for ldap compatibility)
@@ -5662,6 +5664,33 @@ class Glpi95(DyngroupDatabaseHelper):
             return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'offline': len(registered_offline_machine), 'unregistered': len(unregistred_online_machine)}
         else:
             return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'offline': registered_offline_machine,'unregistered': unregistred_online_machine}
+
+
+    @DatabaseHelper._sessionm
+    def get_ancestors(self, session, uuid):
+        id = uuid.split("UUID")[1]
+        # Get the entity ancestors
+        query = session.query(Entities.ancestors_cache).filter(Entities.id == id).first()
+        # query can have 3 kind of datas:
+        # (None) None value (this is the case for the root entity )
+        # ('[0, 1]') list serialized, if the entity has less than 3 ancestors
+        # ('{"0":"0", "1": "1", "2":"2"}') dict serialized, if the entity has more than 2 ancestors
+
+        if query[0] is not None:
+            # Parse the elements in the initial order
+            decoder = json.JSONDecoder(object_pairs_hook=OrderedDict)
+            query = decoder.decode(query[0])
+        else:
+            query = []
+
+        result = []
+        if type(query) is dict:
+            for key in query:
+                # get the key, tke key = the value
+                result.append(int(key))
+        else:
+            result = [int(id) for id in query]
+        return result
 
 # Class for SQLalchemy mapping
 class Machine(object):

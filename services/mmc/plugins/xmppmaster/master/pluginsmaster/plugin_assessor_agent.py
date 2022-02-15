@@ -24,7 +24,7 @@
 
 import base64
 import json
-from utils import AESCipher, \
+from mmc.plugins.xmppmaster.master.lib.utils import AESCipher, \
                   subnetnetwork, \
                   ipfromdns
 import logging

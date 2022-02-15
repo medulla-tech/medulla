@@ -2,10 +2,11 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2021 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,9 +26,9 @@
 /**
  * this file provide session registration
  */
+session_cache_expire (30);
 session_name("PULSESESSION");
 session_start();
-session_cache_expire (30);
 
 if (!isset($_SESSION["expire"])) {
     /* session has expired */

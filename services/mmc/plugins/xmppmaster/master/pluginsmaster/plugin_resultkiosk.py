@@ -30,7 +30,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.msc import MscDatabase
 from managepackage import managepackage
 import logging
-from utils import name_random, file_put_contents, file_get_contents
+from mmc.plugins.xmppmaster.master.lib.utils import name_random, file_put_contents, file_get_contents
 import re
 from mmc.plugins.kiosk import handlerkioskpresence
 
