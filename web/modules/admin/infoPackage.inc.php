@@ -63,7 +63,7 @@ $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
 $page = new Page("conffile", _("Edit config files"));
-$page->setFile("modules/admin/admin/conffile.php");
+$page->setFile("modules/admin/admin/configfile.php");
 $submod->addPage($page);
 
 // Popup qa on relays list

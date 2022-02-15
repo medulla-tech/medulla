@@ -358,7 +358,7 @@ $orderkey = array( "glpi_owner",
 */
 
         foreach($datas as $mach => $value ){
-            if(in_array($mach,$exclud ) ||  $value[$index] ==""){
+            if(in_array($mach,$exclud ) ||  $value[$index] =="" || gettype($value[$index]) == "array"){
                 continue;
             }
             $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";

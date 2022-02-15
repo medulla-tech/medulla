@@ -191,7 +191,7 @@ $statsfromdeploy = xmlrpc_getstatdeploy_from_command_id_and_title($cmd_id, $titl
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 
-if ($info['len'] == 0){
+if ($count == 0){
     // Refresh if no deployment is started. 
     installrefresh();
 }
@@ -662,7 +662,7 @@ echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
     echo "</tbody>";
 echo "</table>";
 
-if ($info['len'] != 0){
+if ($count != 0){
   $uuidsuccess = array();
   $uuiderror = array();
   $uuidprocess = array();

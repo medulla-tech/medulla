@@ -727,7 +727,7 @@ class MscDatabase(DatabaseHelper):
             if listuser:
                 sqlfilter = sqlfilter + """
                 AND
-                    commands.creator in (%s)""" % ",".join(listuser)
+                    commands.creator REGEXP %s """ % "|".join(listuser)
             else:
                 sqlfilter = sqlfilter + """
                 AND

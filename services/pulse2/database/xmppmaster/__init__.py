@@ -4838,7 +4838,7 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = session.query(Deploy)
         if login:
             if isinstance(login, list):
-                deploylog = deploylog.filter( Deploy.login.in_(login))
+                deploylog = deploylog.filter( Deploy.login.op('regexp')("|".join(login)))
             else:
                 deploylog = deploylog.filter( Deploy.login.like(login))
 
@@ -4861,12 +4861,12 @@ class XmppMasterDatabase(DatabaseHelper):
         # It is the same as deploylog, but for unknown reason, the count doesn't works with ORM
         if login:
             if isinstance(login, list):
-                llogin=','.join([ '"%s"'%x for x in  login] )
+                llogin='|'.join([ x for x in  login] )
                 count = """select count(*) as nb from (
                 select count(id) as nb
                 from deploy
                 where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-                AND login in (%s)
+                AND login REGEXP "%s"
                 AND (state LIKE "%%%s%%"
                 or pathpackage LIKE "%%%s%%"
                 or start LIKE "%%%s%%"
@@ -6010,6 +6010,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 if entitylist:
                     entitystrlist=",".join(entitylist)
                     entity = " AND ent.glpi_id in (%s) "% entitystrlist
+
+        ordered = ""
+        if (self.config.ordered == 1):
+            ordered = " order by mach.hostname "
+
         computerpresence = ""
         if 'computerpresence' in ctx:
             if ctx['computerpresence'] == 'presence':
@@ -6070,9 +6075,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     agenttype = 'machine'%s%s%s
                 GROUP BY mach.id
+                %s
                 limit %s, %s;""" % (computerpresence,
                                     entity,
                                     recherchefild,
+                                    ordered,
                                     start,
                                     end)
 
