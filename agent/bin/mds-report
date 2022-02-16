@@ -28,6 +28,7 @@ from twisted.internet import reactor, defer
 
 from mmc.client.async_ import Proxy
 
+
 def usage():
     print("MDS installation report")
     print("This tool connects to a MMC agent and print some statistics.")
@@ -37,6 +38,7 @@ def usage():
     print()
     print("Example:")
     print("mds-report https://127.0.0.1:7080/XMLRPC")
+
 
 try:
     url = sys.argv[1]
@@ -52,6 +54,7 @@ httppass = input("Enter HTTP password:\n")
 username = "root"
 password = input("Enter LDAP root password:\n")
 
+
 class Report:
 
     """
@@ -65,7 +68,12 @@ class Report:
         self.password = password
 
     def auth(self):
-        return self.proxy.callRemote("base.ldapAuth", self.username, self.password).addCallbacks(self.authOK, self.receiveError)
+        return self.proxy.callRemote(
+            "base.ldapAuth",
+            self.username,
+            self.password).addCallbacks(
+            self.authOK,
+            self.receiveError)
 
     def authOK(self, value):
         if value:
@@ -75,14 +83,16 @@ class Report:
             self.end()
 
     def getVersion(self):
-        self.proxy.callRemote("getVersion").addCallbacks(self.printVersion, self.receiveError)
+        self.proxy.callRemote("getVersion").addCallbacks(
+            self.printVersion, self.receiveError)
 
     def printVersion(self, value):
         print("MMC agent version:", value)
         self.getPlugins()
 
     def getPlugins(self):
-        self.proxy.callRemote("base.getModList").addCallbacks(self.printPlugins, self.receiveError)
+        self.proxy.callRemote("base.getModList").addCallbacks(
+            self.printPlugins, self.receiveError)
 
     def printPlugins(self, plugins):
         print("Enabled plugins:", end=' ')
@@ -97,18 +107,23 @@ class Report:
         dl.addCallback(self.getUsersCount)
 
     def getPluginVersion(self, plugin):
-        return self.proxy.callRemote("%s.getVersion" % plugin).addCallbacks(self.printPluginVersion, self.receiveError, (plugin,))
+        return self.proxy.callRemote(
+            "%s.getVersion" %
+            plugin).addCallbacks(
+            self.printPluginVersion, self.receiveError, (plugin,))
 
     def printPluginVersion(self, version, *args):
         print("%s plugin version: %s" % (args[0], version))
 
     def getUsersCount(self, value):
-        self.proxy.callRemote("base.getUsersLdap").addCallbacks(self.printUsersCount, self.receiveError)
+        self.proxy.callRemote("base.getUsersLdap").addCallbacks(
+            self.printUsersCount, self.receiveError)
 
     def printUsersCount(self, value):
         print()
         print("Users:", len(value))
-        self.proxy.callRemote("base.getGroupsLdap").addCallbacks(self.printGroupsCount, self.receiveError)
+        self.proxy.callRemote("base.getGroupsLdap").addCallbacks(
+            self.printGroupsCount, self.receiveError)
 
     def printGroupsCount(self, value):
         print("Groups:", len(value))
@@ -116,7 +131,8 @@ class Report:
 
     def getSambaComputersCount(self):
         if "samba" in self.plugins:
-            self.proxy.callRemote("samba.getMachinesLdap").addCallbacks(self.printSambaComputersCount, self.receiveError)
+            self.proxy.callRemote("samba.getMachinesLdap").addCallbacks(
+                self.printSambaComputersCount, self.receiveError)
         else:
             self.getVDomainsCount()
 
@@ -126,7 +142,11 @@ class Report:
 
     def getVDomainsCount(self):
         if "mail" in self.plugins:
-            self.proxy.callRemote("mail.getVDomains", "").addCallbacks(self.printVDomainsCount, self.receiveError)
+            self.proxy.callRemote(
+                "mail.getVDomains",
+                "").addCallbacks(
+                self.printVDomainsCount,
+                self.receiveError)
         else:
             self.getDNSZonesCount()
 
@@ -136,7 +156,11 @@ class Report:
 
     def getDNSZonesCount(self):
         if "network" in self.plugins:
-            self.proxy.callRemote("network.getZones", "").addCallbacks(self.printDNSZonesCount, self.receiveError)
+            self.proxy.callRemote(
+                "network.getZones",
+                "").addCallbacks(
+                self.printDNSZonesCount,
+                self.receiveError)
         else:
             self.end()
 
@@ -148,7 +172,12 @@ class Report:
         dlist = []
         for item in value:
             name = item[1]["zoneName"][0]
-            dlist.append(self.proxy.callRemote("network.getZoneObjectsCount", name).addCallbacks(self.printDNSHostsCount, self.receiveError))
+            dlist.append(
+                self.proxy.callRemote(
+                    "network.getZoneObjectsCount",
+                    name).addCallbacks(
+                    self.printDNSHostsCount,
+                    self.receiveError))
         dl = defer.DeferredList(dlist)
         dl.addCallback(self.getDHCPSubnetsCount)
 
@@ -156,7 +185,11 @@ class Report:
         print("  RR in zone:", value)
 
     def getDHCPSubnetsCount(self, value):
-        self.proxy.callRemote("network.getSubnets", "").addCallbacks(self.printDHCPSubnetsCount, self.receiveError)
+        self.proxy.callRemote(
+            "network.getSubnets",
+            "").addCallbacks(
+            self.printDHCPSubnetsCount,
+            self.receiveError)
 
     def printDHCPSubnetsCount(self, value):
         print("DHCP subnets:", len(value))
@@ -166,19 +199,25 @@ class Report:
         dlist = []
         for item in value:
             name = item[1]["cn"][0]
-            dlist.append(self.proxy.callRemote("network.getSubnetHostsCount", name).addCallbacks(self.printDHCPHostsCount, self.receiveError))
+            dlist.append(
+                self.proxy.callRemote(
+                    "network.getSubnetHostsCount",
+                    name).addCallbacks(
+                    self.printDHCPHostsCount,
+                    self.receiveError))
         dl = defer.DeferredList(dlist)
         dl.addCallback(self.end)
 
     def printDHCPHostsCount(self, value):
         print("  Hosts in subnet:", value)
 
-    def end(self, value = None):
+    def end(self, value=None):
         reactor.stop()
 
     def receiveError(self, error):
         print error
         reactor.stop()
+
 
 report = Report(url, httpuser, httppass, username, password)
 report.auth()

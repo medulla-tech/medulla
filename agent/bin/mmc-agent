@@ -21,18 +21,17 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+import mmc.agent
+from mmc.support.config import MMCConfigParser
+from mmc.site import sysconfdir
+from optparse import OptionParser
+import sys
+import os.path
+import os
 from twisted.internet import glib2reactor
 
 glib2reactor.install()
 
-import os
-import os.path
-import sys
-from optparse import OptionParser
-from mmc.site import sysconfdir
-from mmc.support.config import MMCConfigParser
-
-import mmc.agent
 
 dft_inifile = os.path.join(sysconfdir, "mmc", "agent", "config.ini")
 
@@ -42,20 +41,50 @@ if __name__ == "__main__":
     parser = OptionParser()
 
     # Declare options
-    parser.add_option("-d", "--no-daemon", dest="daemonize", default=True, action="store_false",
-                      help="Do not daemonize")
-    parser.add_option("-s", "--no-daemonlog", dest="daemonizenolog", default=True, action="store_false",
-                      help="Do not daemonize and not log debug")
+    parser.add_option(
+        "-d",
+        "--no-daemon",
+        dest="daemonize",
+        default=True,
+        action="store_false",
+        help="Do not daemonize")
+    parser.add_option(
+        "-s",
+        "--no-daemonlog",
+        dest="daemonizenolog",
+        default=True,
+        action="store_false",
+        help="Do not daemonize and not log debug")
     parser.add_option("-f", "--inifile", dest="inifile", default=dft_inifile,
                       help="Path to configuration file", metavar="INIFILE")
-    parser.add_option("-k", "--kill", dest="kill", default=False, action="store_true",
-                      help="Kill running daemon, if any")
-    parser.add_option("-r", "--reload", dest="reload", default=False, action="store_true",
-                      help="Reload configuration")
-    parser.add_option("-e", "--exclude", dest="exclude", action="store", type="string",
-                      help="exclude log")
-    parser.add_option("-i", "--include", dest="include", action="store", type="string",
-                      help="exclude log")
+    parser.add_option(
+        "-k",
+        "--kill",
+        dest="kill",
+        default=False,
+        action="store_true",
+        help="Kill running daemon, if any")
+    parser.add_option(
+        "-r",
+        "--reload",
+        dest="reload",
+        default=False,
+        action="store_true",
+        help="Reload configuration")
+    parser.add_option(
+        "-e",
+        "--exclude",
+        dest="exclude",
+        action="store",
+        type="string",
+        help="exclude log")
+    parser.add_option(
+        "-i",
+        "--include",
+        dest="include",
+        action="store",
+        type="string",
+        help="exclude log")
 
     # Parse arguments
     (options, args) = parser.parse_args()

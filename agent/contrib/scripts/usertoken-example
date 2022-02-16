@@ -38,6 +38,7 @@ SUPPORT = "support@example.com"
 URL = "http://localhost/mmc/"
 SMTP = "localhost"
 
+
 class SendUserToken(ldif.LDIFParser):
 
     def handle(self, dn, entry):
