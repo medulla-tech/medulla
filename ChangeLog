@@ -4,6 +4,7 @@ Pulse 2 4.6.10
 * [BUGFIX]  Fix displaying of teams in Audit
 * [BUGFIX]  Fix displaying package order when editing a package
 * [BUGFIX]  Fix deleting machines not available in glpi
+* [BUGFIX]  Fix creation of the reversessh in backuppc
 
 Pulse 2 4.6.9
 =============
