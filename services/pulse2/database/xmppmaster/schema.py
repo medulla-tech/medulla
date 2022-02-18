@@ -741,6 +741,7 @@ class Mon_rules(Base, XmppMasterDBObj):
     # Here we define columns for the table mon_device_service.
     # Notice that each column is also a normal Python instance attribute.
     # id = Column(Integer, primary_key=True)
+    enable = Column(Integer,nullable=False, default=1)
     hostname = Column(String(255), default=None)
     device_type = Column(String(255), nullable=False,
                                   default="opticalReader")
@@ -751,6 +752,8 @@ class Mon_rules(Base, XmppMasterDBObj):
     type_event = Column(String(255), default=None)
     user = Column(String(255), default=None)
     comment = Column(String(1024))
+    os = Column(String(45),  default=None)
+    type_machine= Column(String(45),  default=None)
 
 
 class Mon_event(Base, XmppMasterDBObj):
