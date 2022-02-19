@@ -31,7 +31,7 @@ from inspect import getargspec
 import twisted.internet.error
 import twisted.copyright
 from twisted.web import xmlrpc, server
-from twisted.web.xmlrpc import XMLRPC
+from twisted.web.xmlrpc import XMLRPC, Handler
 from twisted.internet import reactor, defer
 from twisted.python import failure
 try:
@@ -281,7 +281,7 @@ class MmcServer(XMLRPC, object):
     sessions = set()
 
     def __init__(self, modules, config):
-        xmlrpc.XMLRPC.__init__(self)
+        XMLRPC.__init__(self)
         self.modules = modules
         self.config = config
 
@@ -369,7 +369,7 @@ class MmcServer(XMLRPC, object):
 
         # Check authorization using HTTP Basic
         cleartext_token = self.config.login + ":" + self.config.password
-        token = request.getUser() + ":" + request.getPassword()
+        token = str(request.getUser(), "utf-8") + ":" + str(request.getPassword(), "utf-8")
         if token != cleartext_token:
             logger.error("Invalid login / password for HTTP basic authentication")
             request.setResponseCode(http.UNAUTHORIZED)
@@ -487,7 +487,7 @@ class MmcServer(XMLRPC, object):
                     return
         if result is None:
             result = 0
-        if isinstance(result, xmlrpc.Handler):
+        if isinstance(result, Handler):
             result = result.result
         if not isinstance(result, Fault):
             result = (result,)
@@ -510,7 +510,10 @@ class MmcServer(XMLRPC, object):
             s = xmlrpc.client.dumps(f, methodresponse=1)
         request.setHeader("content-length", str(len(s)))
         request.setHeader("content-type", "application/xml")
-        request.write(s)
+        if isinstance(s, str):
+            request.write(bytes(s, "utf-8"))
+        else:
+            request.write(s)
         request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
