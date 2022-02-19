@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # (c) 2008-2009 Mandriva, http://www.mandriva.com
 #
