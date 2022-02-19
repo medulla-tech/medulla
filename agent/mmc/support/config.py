@@ -2,6 +2,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva, http://www.mandriva.com/
+# (c) 2022 Siveo, http//www.siveo.net/
 #
 # $Id$
 #
@@ -48,10 +49,12 @@ class MMCConfigParser(ConfigParser):
     def __init__(self):
         ConfigParser.__init__(self)
 
-    def _interpolate(self, section, option, value, d):
+    def get(self, section, option, **kwargs):
         try:
-            value = ConfigParser._interpolate(self, section, option, value, d)
-        except InterpolationError:
+            value = ConfigParser.get(self, section, option, **kwargs)
+        except InterpolationError as exc:
+            kwargs["raw"] = True
+            value = ConfigParser.get(self, section, option, **kwargs)
             if '%(baseDN)s' in value:
                 from mmc.plugins.base import BasePluginConfig
                 config = PluginConfigFactory.new(BasePluginConfig, "base")
