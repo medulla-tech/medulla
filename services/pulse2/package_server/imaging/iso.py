@@ -133,11 +133,11 @@ class ISOImage:
                                 self.config.imaging_api['diskless_initrdcd'])
         shutil.copy(initrd, initrdfile)
         # Read initrdcd content
-        fid = file(initrdcd)
+        fid = open(initrdcd)
         data = fid.read()
         fid.close()
         # Append content to the initrdfile
-        fid = file(initrdfile, 'ab')
+        fid = open(initrdfile, 'ab')
         fid.write(data)
         fid.close()
 

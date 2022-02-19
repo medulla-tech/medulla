@@ -106,7 +106,7 @@ class Commands(object):
         lock_file = package_path + '.lock'
         if not os.path.exists(lock_file):
             try:
-                with file(lock_file, 'a'):
+                with open(lock_file, 'a'):
                     os.utime(lock_file, None)
                 log("Creating package %s..." % package_path)
                 if os.path.exists(package_path):

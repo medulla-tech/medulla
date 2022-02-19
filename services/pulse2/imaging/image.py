@@ -110,7 +110,7 @@ class Pulse2Image:
 
         # All below this is shit
         try:
-            fd_grub_file = file(
+            fd_grub_file = open(
                 os.path.join(
                     self.directory,
                     PULSE2_IMAGING_GRUB_FNAME))

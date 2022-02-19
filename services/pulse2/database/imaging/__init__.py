@@ -45,6 +45,9 @@ from sqlalchemy.exc import InvalidRequestError
 from pulse2.managers.profile import ComputerProfileManager
 from pulse2.managers.location import ComputerLocationManager
 
+def cmp(a, b):
+    return (a > b) - (a < b)
+
 
 class ImagingException(Exception):
     pass

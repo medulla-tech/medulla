@@ -101,7 +101,7 @@ class Status:
 
     def getUptime(self):
         try:
-            f = file('/proc/uptime')
+            f = open('/proc/uptime')
             data = f.read()
             f.close()
         except Exception as e:

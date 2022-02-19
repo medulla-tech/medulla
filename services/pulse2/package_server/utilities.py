@@ -47,7 +47,7 @@ def md5file(fname):
         ret = sumfile(sys.stdin)
     else:
         try:
-            f = file(fname, 'rb')
+            f = open(fname, 'rb')
         except BaseException:
             return 'Failed to open file'
         ret = sumfile(f)

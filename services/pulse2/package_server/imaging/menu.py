@@ -905,7 +905,7 @@ class ImagingImageItem(ImagingItem):
                 postinst = os.path.join(postinstdir, self.POSTINST % order)
                 try:
                     # write header
-                    f = file(postinst, 'w+')
+                    f = open(postinst, 'w+')
                     f.write('#!/bin/bash\n')
                     f.write('\n')
                     f.write('. /usr/lib/libpostinst.sh')
@@ -961,7 +961,7 @@ def changeDefaultMenuItem(macaddress, value):
                  % macaddress)
     newlines = ''
     try:
-        for line in file(filename):
+        for line in open(filename):
             if line.startswith('default '):
                 if line == 'default %d\n' % value:
                     logger.debug(
@@ -987,7 +987,7 @@ def changeDefaultMenuItem(macaddress, value):
             return False
         # Write new boot menu
         try:
-            fid = file(filename, 'w+b')
+            fid = open(filename, 'w+b')
             fid.write(newlines)
             fid.close()
             logger.debug(
@@ -1042,7 +1042,7 @@ class ImagingMulticastMenuBuilder:
         self.action = "startdisk"
         diskfile = os.path.join(self.menu['path'], "disk")
         # load disk restore
-        fid = file(diskfile, 'r')
+        fid = open(diskfile, 'r')
         lines = fid.readlines()
         fid.close()
         self.disk = [x.strip(' \t\n\r"')
@@ -1174,7 +1174,7 @@ INITRD ../davos/initrd.img
 
         # Write new boot menu
         try:
-            fid = file(fichier, 'w+b')
+            fid = open(fichier, 'w+b')
             fid.write(content)
             fid.close()
             self.logger.debug(
@@ -1204,7 +1204,7 @@ INITRD ../davos/initrd.img
         # generation command line in tmp
         multicast_file = os.path.join("/tmp", "multicast.sh")
         try:
-            fid = file(multicast_file, 'w+b')
+            fid = open(multicast_file, 'w+b')
             fid.write(self.templatecmdline)
             fid.close()
             os.chmod(multicast_file, stat.S_IXUSR |

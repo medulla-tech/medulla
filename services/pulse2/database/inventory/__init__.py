@@ -2350,7 +2350,7 @@ class Inventory(DyngroupDatabaseHelper):
         conffile = self.confFileRule()
         num = 0
 
-        for line in file(conffile):
+        for line in open(conffile):
             line = line.replace('\t', ' ')
             line = line.strip()
             # line empty ignored

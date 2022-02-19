@@ -77,7 +77,7 @@ class RPCStore(Singleton):
         """
         assert(isinstance(data, dict))
         self.logger.debug('Updating RPC replay file: %s' % self.filename)
-        fobj = file(self.filename, 'w')
+        fobj = open(self.filename, 'w')
         self.logger.debug('Dumping and writing data')
         pickle.dump(data, fobj)
         fobj.close()
@@ -91,7 +91,7 @@ class RPCStore(Singleton):
         if not os.path.exists(self.filename):
             ret = {}
         else:
-            fobj = file(self.filename, 'r')
+            fobj = open(self.filename, 'r')
             ret = pickle.load(fobj)
             fobj.close()
         assert(isinstance(ret, dict))
