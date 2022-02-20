@@ -223,8 +223,8 @@ class AuditRecordDB(AuditRecord):
                 if current != None:
                     if type(current) == tuple or type(current) == list :
                         for i in current:
-                             cv = Current_Value(bdobjectlog, i)
-                             session.add(cv)
+                            cv = Current_Value(bdobjectlog, i)
+                            session.add(cv)
                     else:
                         cv = Current_Value(bdobjectlog, current)
                         session.add(cv)
@@ -233,8 +233,8 @@ class AuditRecordDB(AuditRecord):
                 if previous != None:
                     if type(previous) == tuple or type(previous) == list:
                         for i in previous:
-                             pv = Previous_Value(bdobjectlog, i)
-                             session.add(pv)
+                            pv = Previous_Value(bdobjectlog, i)
+                            session.add(pv)
                     else:
                         pv = Previous_Value(bdobjectlog, previous)
                         session.add(pv)

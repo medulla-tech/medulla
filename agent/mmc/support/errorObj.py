@@ -31,25 +31,25 @@ import re
 
 class errorMessage:
     def __init__(self,funcName, message = ''):
-      self.funcName = funcName
-      self.message = message
+        self.funcName = funcName
+        self.message = message
 
     def addMessage(self,message):
-      if (self.message):
-        self.message=self.message+"\n"
-      self.message=self.message+str(message)
+        if (self.message):
+            self.message=self.message+"\n"
+        self.message=self.message+str(message)
 
     def errorArray(self):
-      logger = logging.getLogger()
-      if not logger.handlers:
-          # No handler defined
-          # We create a default handler that writes to stderr
-          logger.addHandler(logging.StreamHandler())
-      logger.error("__call " + self.funcName + "\n" + self.message)
+        logger = logging.getLogger()
+        if not logger.handlers:
+            # No handler defined
+            # We create a default handler that writes to stderr
+            logger.addHandler(logging.StreamHandler())
+        logger.error("__call " + self.funcName + "\n" + self.message)
 
-      self.message=re.sub('\n',"<br />\n",self.message)
-      t=dict()
-      t['errorFuncNameXMLRPC']=self.funcName
-      t['errorCodeXMLRPC']=self.message
+        self.message=re.sub('\n',"<br />\n",self.message)
+        t=dict()
+        t['errorFuncNameXMLRPC']=self.funcName
+        t['errorCodeXMLRPC']=self.message
 
-      return t
+        return t

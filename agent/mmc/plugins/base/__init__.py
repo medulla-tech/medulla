@@ -1481,7 +1481,7 @@ class LdapUserGroupControl:
 
         for i in range(len(result_set)):
             for entry in result_set[i]:
-                    resArr.append(entry[0])
+                resArr.append(entry[0])
 
         resArr.sort()
 

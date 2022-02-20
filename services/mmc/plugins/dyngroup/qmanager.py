@@ -150,7 +150,7 @@ class QueryManager(Singleton):
                 if len(value1) < ret[2]:
                     return [ret[0], []]
             elif len(ret) > 3 and len(value2) < ret[3]:
-               return [ret[0], []]
+                return [ret[0], []]
         elif ret[0] == 'double':
             table, cols = criterion.split('/')
             if value2 == None: # ajax search on field 1

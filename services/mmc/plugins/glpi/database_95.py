@@ -3388,13 +3388,13 @@ class Glpi95(DyngroupDatabaseHelper):
         if osnames == ["other"]:
             query = query.filter(
                 or_(
-			and_(
-				not_(OS.name.like('%Windows%')), not_(OS.name.like('%Mageia%')), not_(OS.name.like('%macOS%')),
+                        and_(
+                                not_(OS.name.like('%Windows%')), not_(OS.name.like('%Mageia%')), not_(OS.name.like('%macOS%')),
                 ), Machine.operatingsystems_id == 0,
             ))
         elif osnames == ["otherw"]:
             query = query.filter(and_(not_(OS.name.like('%Windows%10%')), not_(OS.name.like('%Windows%8%')),\
-			    not_(OS.name.like('%Windows%7%')), not_(OS.name.like('%Windows%Vista%')),\
+                            not_(OS.name.like('%Windows%7%')), not_(OS.name.like('%Windows%Vista%')),\
                 not_(OS.name.like('%Windows%XP%')), OS.name.like('%Windows%')))
         # if osnames == ['%'], we want all machines, including machines without OS (used for reporting, per example...)
         elif osnames != ['%']:
@@ -5002,9 +5002,9 @@ class Glpi95(DyngroupDatabaseHelper):
             .filter(self.rules.c.sub_type=='PluginFusioninventoryInventoryRuleEntity')\
             .filter(self.rules.c.name != 'Root')\
             .scalar()
-	if rank is None:
-	    rank = 0
-	rule.ranking = rank + 1
+        if rank is None:
+            rank = 0
+        rule.ranking = rank + 1
         rule.name = rule_data['name']
         rule.description = rule_data['description']
         rule.match = rule_data['aggregator']

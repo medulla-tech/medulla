@@ -1274,7 +1274,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     machines ON SUBSTRING_INDEX(machines.jid, '@', 1) = SUBSTRING_INDEX(relayserver.jid, '@', 1)
                 WHERE
                     relayserver.moderelayserver = 'static' %s
-                    AND relayserver.id in(	 SELECT
+                    AND relayserver.id in(       SELECT
                                                 has_cluster_ars.id_ars
                                             FROM
                                                 xmppmaster.has_cluster_ars

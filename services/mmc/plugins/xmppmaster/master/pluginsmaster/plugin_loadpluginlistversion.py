@@ -142,35 +142,35 @@ def remoteinstallPlugin(self):
         self.event('restartmachineasynchrone', jidmachine)
 
 def deployPlugin(self, jid, plugin):
-        content = ''
-        fichierdata = {}
-        namefile = os.path.join(self.dirpluginlist, "plugin_%s.py" % plugin)
-        if os.path.isfile(namefile):
-            logger.debug("File plugin found %s" % namefile)
-        else:
-            logger.error("File plugin found %s" % namefile)
-            return
-        try:
-            fileplugin = open(namefile, "rb")
-            content = fileplugin.read()
-            fileplugin.close()
-        except:
-            logger.error("File read error\n%s"%(traceback.format_exc()))
-            return
-        fichierdata['action'] = 'installplugin'
-        fichierdata['data'] = {}
-        dd = {}
-        dd['datafile'] = content
-        dd['pluginname'] = "plugin_%s.py" % plugin
-        fichierdata['data'] = base64.b64encode(json.dumps(dd))
-        fichierdata['sessionid'] = "sans"
-        fichierdata['base64'] = True
-        try:
-            self.send_message(mto=jid,
-                              mbody=json.dumps(fichierdata),
-                              mtype='chat')
-        except:
-            logger.error("\n%s"%(traceback.format_exc()))
+    content = ''
+    fichierdata = {}
+    namefile = os.path.join(self.dirpluginlist, "plugin_%s.py" % plugin)
+    if os.path.isfile(namefile):
+        logger.debug("File plugin found %s" % namefile)
+    else:
+        logger.error("File plugin found %s" % namefile)
+        return
+    try:
+        fileplugin = open(namefile, "rb")
+        content = fileplugin.read()
+        fileplugin.close()
+    except:
+        logger.error("File read error\n%s"%(traceback.format_exc()))
+        return
+    fichierdata['action'] = 'installplugin'
+    fichierdata['data'] = {}
+    dd = {}
+    dd['datafile'] = content
+    dd['pluginname'] = "plugin_%s.py" % plugin
+    fichierdata['data'] = base64.b64encode(json.dumps(dd))
+    fichierdata['sessionid'] = "sans"
+    fichierdata['base64'] = True
+    try:
+        self.send_message(mto=jid,
+                          mbody=json.dumps(fichierdata),
+                          mtype='chat')
+    except:
+        logger.error("\n%s"%(traceback.format_exc()))
 
 def plugin_loadpluginlistversion(self, msg, data):
     #logger.info(json.dumps(data['plugin'], indent = 4))
@@ -181,7 +181,7 @@ def plugin_loadpluginlistversion(self, msg, data):
     for k, v in self.plugindata.items():
         deploy = False
         try:
-            # Check version
+        # Check version
             if data['plugin'][k] != v:
                 deploy = True
         except:

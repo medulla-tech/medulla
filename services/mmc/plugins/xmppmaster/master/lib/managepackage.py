@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# 
+#
 # (c) 2016-2021 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
@@ -328,7 +328,7 @@ class managepackage:
         Returns:
             It returns the list of the packages.
         """
-        listfolder = [ x for x in os.listdir(managepackage.packagedir()) if len(x) == 36] 
+        listfolder = [ x for x in os.listdir(managepackage.packagedir()) if len(x) == 36]
         return [ os.path.join(managepackage.packagedir(),x) for x in listfolder]
 
     @staticmethod

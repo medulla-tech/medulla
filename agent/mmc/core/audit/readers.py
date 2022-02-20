@@ -100,8 +100,8 @@ class AuditReaderDB:
                 self.session.close()
                 return None
             else:
-               ql = qlog.filter(self.parent.record_table.c.user_id==object_user.id)
-               qlog = ql
+                ql = qlog.filter(self.parent.record_table.c.user_id==object_user.id)
+                qlog = ql
 
         #
         # Filter by event
@@ -111,7 +111,7 @@ class AuditReaderDB:
             if action != []:
                 oraction = or_(self.parent.record_table.c.event_id==action[0].id)
                 for idact in action:
-                        oraction = or_(oraction,self.parent.record_table.c.event_id==idact.id)
+                    oraction = or_(oraction,self.parent.record_table.c.event_id==idact.id)
                 ql = qlog.filter(oraction)
                 qlog = ql
             else:

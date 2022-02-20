@@ -128,8 +128,8 @@ class class03testPackages_get (unittest.TestCase):
         self.assertEqual (result,{})
 
     def test304getLocalPackagesPath (self):
-       result = serverP.getLocalPackagesPath (["test","test"])
-       self.assertEqual (result,[])
+        result = serverP.getLocalPackagesPath (["test","test"])
+        self.assertEqual (result,[])
 
     def test305getPackageDetail (self):
         result = serverP.getPackageDetail ("test")

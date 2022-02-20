@@ -51,9 +51,9 @@ class GeneralPanel(Panel):
     def serialize(self):
         memory = psutil.virtual_memory()
         if hasattr(psutil, 'boot_time'):
-        	uptime = str(datetime.now() - datetime.fromtimestamp(psutil.boot_time()))
+            uptime = str(datetime.now() - datetime.fromtimestamp(psutil.boot_time()))
         else:
-        	uptime = str(datetime.now() - datetime.fromtimestamp(psutil.BOOT_TIME))
+            uptime = str(datetime.now() - datetime.fromtimestamp(psutil.BOOT_TIME))
 
         try:
             dist = platform.linux_distribution()

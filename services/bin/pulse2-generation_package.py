@@ -515,14 +515,14 @@ if __name__ == '__main__':
                                                                  base) ,
                                        stream=None)
     if opts.verbeux or opts.testconnect:
-            logger.debug("try Connecting with parameters\n" \
-                            "\thost: %s\n" \
-                            "\tuser: %s\n" \
-                            "\tport: %s\n" \
-                            "\tdb: %s\n" %( opts.hostname,
-                                            opts.user,
-                                            int(opts.port),
-                                            base))
+        logger.debug("try Connecting with parameters\n" \
+                        "\thost: %s\n" \
+                        "\tuser: %s\n" \
+                        "\tport: %s\n" \
+                        "\tdb: %s\n" %( opts.hostname,
+                                        opts.user,
+                                        int(opts.port),
+                                        base))
 
     try:
         db = MySQLdb.connect(host=opts.hostname,

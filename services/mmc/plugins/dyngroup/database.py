@@ -272,7 +272,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         try:
             if params['filter']:
-                 groups = groups.filter(self.groups.c.name.like('%'+params['filter'].encode('utf-8')+'%'))
+                groups = groups.filter(self.groups.c.name.like('%'+params['filter'].encode('utf-8')+'%'))
         except KeyError:
             pass
 

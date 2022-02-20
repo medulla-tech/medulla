@@ -63,11 +63,11 @@ def toUUID(id):
     return "UUID%s" % (str(id))
 
 def md5file(fname):
-     hash = hashlib.md5()
-     with open(fname, "rb") as f:
-         for chunk in iter(lambda: f.read(4096), b""):
+    hash = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
             hash.update(chunk)
-     return hash.hexdigest()
+    return hash.hexdigest()
 
 class ImagingRpcProxy(RpcProxyI):
     checkThread = {} # check thread actif waitting transfert
@@ -2697,21 +2697,21 @@ class ImagingRpcProxy(RpcProxyI):
             f = open(filexml, "r")
             #get line to add to json object
             for line in f:
-                    if line.startswith("OS"):
-                        line = line.split(" ")
-                        os = " ".join(line[1:3])
-                        break
+                if line.startswith("OS"):
+                    line = line.split(" ")
+                    os = " ".join(line[1:3])
+                    break
 
             for line in f:
-                    if line.startswith("Notes"):
-                        line = line.split(" ")
-                        description = " ".join(line[1:])
-                        break
+                if line.startswith("Notes"):
+                    line = line.split(" ")
+                    description = " ".join(line[1:])
+                    break
 
             for line in f:
-                    if line.startswith("list"):
-                        parameters = parameters + line[18:-1]
-                        break
+                if line.startswith("list"):
+                    parameters = parameters + line[18:-1]
+                    break
 
             parameters = json.loads(parameters)
             parameters["Os"] = os
@@ -2750,7 +2750,7 @@ class ImagingRpcProxy(RpcProxyI):
                 for line in f :
                     content.append(line)
 
-				#search one specific line
+                                #search one specific line
                 for line in content :
                     if line.startswith("list"):
                         pass
@@ -3110,9 +3110,9 @@ class ImagingRpcProxy(RpcProxyI):
                 # Computer added via OCS -> renamed by PXE entry
                 renamed = ComputerManager().editComputerName(self.currentContext, uuid, hostname)
                 if renamed :
-                     logger.info("Machine '%s' renamed to '%s'."% (db_computer_name, hostname))
+                    logger.info("Machine '%s' renamed to '%s'."% (db_computer_name, hostname))
                 else :
-                     logger.warning("Machine '%s' couldn't be renamed to '%s'."% (db_computer_name, hostname))
+                    logger.warning("Machine '%s' couldn't be renamed to '%s'."% (db_computer_name, hostname))
 
 
         # If a computer with this name already exists, check that the MAC
@@ -4098,15 +4098,15 @@ def getComputersNetwork_filtered(ctx, params):
         # If there is more than one address, apply preferred netowrk algo
         preferred_network = ImagingConfig().preferred_network
         if len(macAddress) > 1 and preferred_network:
-           for i in range(len(macAddress)):
-               ip = ipHostNumber[i]
-               if ipaddr.IPAddress(ip) in ipaddr.IPNetwork(preferred_network):
-                   ipHostNumber = [ip]
-                   macAddress = [macAddress[i]]
-                   networkUuids = [networkUuids[i]]
-                   subnetMask = [subnetMask[i]]
-                   domainlist = [domainlist[i]]
-                   break
+            for i in range(len(macAddress)):
+                ip = ipHostNumber[i]
+                if ipaddr.IPAddress(ip) in ipaddr.IPNetwork(preferred_network):
+                    ipHostNumber = [ip]
+                    macAddress = [macAddress[i]]
+                    networkUuids = [networkUuids[i]]
+                    subnetMask = [subnetMask[i]]
+                    domainlist = [domainlist[i]]
+                    break
         network_data[m][1]['ipHostNumber'] = ipHostNumber
         network_data[m][1]['macAddress'] = macAddress
         network_data[m][1]['networkUuids'] = networkUuids

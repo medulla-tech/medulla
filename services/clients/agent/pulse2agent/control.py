@@ -186,9 +186,9 @@ class VPNSetter(Component):
     @property
     def temp_dir(self):
         if platform.system() == "Windows":
-           return self.config.paths.package_tmp_dir_win
+            return self.config.paths.package_tmp_dir_win
         else:
-           return self.config.paths.package_tmp_dir_posix
+            return self.config.paths.package_tmp_dir_posix
 
 
 
@@ -256,9 +256,9 @@ class InitialInstalls(Component):
     @property
     def temp_dir(self):
         if platform.system() == "Windows":
-           return self.config.paths.package_tmp_dir_win
+            return self.config.paths.package_tmp_dir_win
         else:
-           return self.config.paths.package_tmp_dir_posix
+            return self.config.paths.package_tmp_dir_posix
 
 
     def download(self, url):

@@ -40,7 +40,7 @@ def schedule_main(objectxmpp):
     logging.getLogger().debug("============================================")
     try:
         result = simplecommand("ejabberdctl process_rosteritems delete none:to none master@pulse any")
-        
+
         logging.getLogger().debug("cmd = ejabberdctl process_rosteritems delete none:to none master@pulse any")
         logging.getLogger().debug("code return command = %s" % result['code'])
         logging.getLogger().debug("code return command = %s" % result['result'][0])
@@ -50,4 +50,3 @@ def schedule_main(objectxmpp):
     except Exception as execution_error:
         logging.getLogger().error("The scheduling_clean_roster plugin failed to run with the error: %s" % execution_error)
         logging.getLogger().error("We encountered the backtrace %s" % traceback.format_exc())
-

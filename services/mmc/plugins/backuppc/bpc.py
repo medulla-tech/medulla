@@ -93,9 +93,9 @@ def dictToURL(params):
     for k in list(params.keys()):
         if type(params[k]) == type([]):
             for val in params[k]:
-		if val is None:
-  		    s+= '&%s=' % k
-		else:
+                if val is None:
+                    s+= '&%s=' % k
+                else:
                     s+= '&%s=%s' % (k,val)
             del params[k]
     return urllib.parse.urlencode(params)+s
@@ -171,13 +171,13 @@ def getHTMLerr(html):
         logger.warning(d('.h1').text())
         return {'err':15,'errtext':d('.h1').text()}
     else:
-	if len(d('.editError')):
-	    errors = []
-	    for i in range(len(d('.editError'))):
-		errors.append(d('.editError').eq(i).text())
-	    error_text = '\n'.join(errors)
-	    logger.warning(error_text)
-	    return {'err':15,'errtext':error_text}
+        if len(d('.editError')):
+            errors = []
+            for i in range(len(d('.editError'))):
+                errors.append(d('.editError').eq(i).text())
+            error_text = '\n'.join(errors)
+            logger.warning(error_text)
+            return {'err':15,'errtext':error_text}
 
 
 # ==========================================================================
@@ -242,8 +242,8 @@ def get_share_names(host,backup_num):
     #init share names array
     share_names = []
     for i in range(len(lines)):
-            if lines.eq(i).text()[0]=='/':
-                    share_names = share_names + [lines.eq(i).text()]
+        if lines.eq(i).text()[0]=='/':
+            share_names = share_names + [lines.eq(i).text()]
     return {'err':0,'data':share_names}
 
 
@@ -436,7 +436,7 @@ def restore_file(host,backup_num,share_name,files):
         # Files list
         params['fcbMax']=len(files)+1
         for i in range(len(files)):
-                params['fcb'+str(i)] = urllib.parse.unquote(files[i])
+            params['fcb'+str(i)] = urllib.parse.unquote(files[i])
     else:
         destination = os.path.join(tempfiledir,os.path.basename(files))
         # Setting params
@@ -463,7 +463,7 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
     # Files list
     params['fcbMax']=len(files)+1
     for i in range(len(files)):
-            params['fcb'+str(i)] = files[i].encode('utf8','ignore')
+        params['fcb'+str(i)] = files[i].encode('utf8','ignore')
     # Converting params dict to an http get string
     html = send_request(params)
     if not html: return _CONNECTION_ERROR
@@ -512,8 +512,8 @@ def get_host_config(host,backupserver=''):
     for i in range(len(inputs)):
         key = inputs.eq(i).attr('name')
         value = inputs.eq(i).val()
-	if value is None:
-	    continue
+        if value is None:
+            continue
         # Isolating host config params
         if 'v_zZ_' in key:
             host_config[key.replace('v_zZ_','')]= value
@@ -604,12 +604,12 @@ def set_host_period_profile(uuid,newprofile):
         config['BlackoutPeriods'] = []
         #
         for period in periods:
-             m = re.search('([0-9.]+)=>([0-9.]+):([^:]+)',period)
-             config['BlackoutPeriods'] += [{ \
-                    'hourBegin':m.group(1), \
-                    'hourEnd': m.group(2), \
-                    'weekDays' : m.group(3) \
-                     }]
+            m = re.search('([0-9.]+)=>([0-9.]+):([^:]+)',period)
+            config['BlackoutPeriods'] += [{ \
+                   'hourBegin':m.group(1), \
+                   'hourEnd': m.group(2), \
+                   'weekDays' : m.group(3) \
+                    }]
         # Setting host config
         set_host_config(uuid,config)
 

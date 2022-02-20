@@ -189,10 +189,10 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(DyngroupDatabase().delete_group(ctx, id))
 
     def getContext(self, user='root'):
-            s = SecurityContext()
-            s.userid = user
-            s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
-            return s
+        s = SecurityContext()
+        s.userid = user
+        s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
+        return s
 
     def create_group(self, name, visibility, type=0, parent_id=None):
         if type == 2 and parent_id is not None: # convergence group, get parent group's user context

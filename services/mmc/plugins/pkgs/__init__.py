@@ -254,87 +254,87 @@ def create_simple_package_uuid(label, localisation=None):
     return data
 
 def to_json_xmppdeploy(package):
-        """
-            create JSON xmppdeploy descriptor
-        """
-        execscript = 0
-        if package['reboot']:
-            success = execscript + 2
-        else:
-            success = execscript + 1
-        error = success + 1
-        ###------------------------
-        ### metaparameter
-        ###------------------------
-        metaparameter = { "os": [ package['targetos'] ] }
-        metaparameter[package['targetos']] = {
-                                                "label": {
-                                                            "END_ERROR"      : error,
-                                                            "END_SUCCESS"    : success,
-                                                            "EXECUTE_SCRIPT" : execscript
-                                                }
+    """
+        create JSON xmppdeploy descriptor
+    """
+    execscript = 0
+    if package['reboot']:
+        success = execscript + 2
+    else:
+        success = execscript + 1
+    error = success + 1
+    ###------------------------
+    ### metaparameter
+    ###------------------------
+    metaparameter = { "os": [ package['targetos'] ] }
+    metaparameter[package['targetos']] = {
+                                            "label": {
+                                                        "END_ERROR"      : error,
+                                                        "END_SUCCESS"    : success,
+                                                        "EXECUTE_SCRIPT" : execscript
+                                            }
+    }
+    sequence = []
+    ###------------------------
+    ### actionprocessscriptfile
+    ###------------------------
+    sequence .append({ "step": 0,
+                       "action": "actionprocessscriptfile",
+                       "@resultcommand": "@resultcommand",
+                       "actionlabel": "EXECUTE_SCRIPT",
+                       "codereturn": "",
+                       "error": error,
+                       "script": package['command']['command'],
+                       "success": success,
+                       "typescript": "Batch" })
+    ###------------------------
+    ### actionrestart
+    ###------------------------
+    if package['reboot']:
+        sequence .append({ "action": "actionrestart",
+                           "actionlabel": "REBOOT",
+                           "step": 1})
+    ###------------------------
+    ### actionsuccescompletedend
+    ###------------------------
+    dsuccess = { "action": "actionsuccescompletedend",
+                 "actionlabel": "END_SUCCESS",
+                 "clear": "True",
+                 "inventory" : "True",
+                 "step": success}
+    #if str(package['associateinventory']) != "0":
+        #dsuccess['inventory'] = "True"
+    #else:
+        #dsuccess['inventory'] = "False"
+    sequence .append(dsuccess)
+    ###------------------------
+    ### actionerrorcompletedend
+    ###------------------------
+    sequence .append({"step": error,
+                      "action": "actionerrorcompletedend",
+                      "actionlabel": "END_ERROR"})
+    ###------------------------
+    ### info
+    ###------------------------
+    data = {
+        "info": { "Dependency": [],
+                  "description": package['description'],
+                  "metagenerator": "standard",
+                  "methodetransfert": "pushrsync",
+                  "name": str(package['label'] + ' ' +
+                              package['version'] + ' (' +
+                              package['id']+')'),
+                  "software": package['label'],
+                  "transferfile": True,
+                  "version": package['version']
         }
-        sequence = []
-        ###------------------------
-        ### actionprocessscriptfile
-        ###------------------------
-        sequence .append({ "step": 0,
-                           "action": "actionprocessscriptfile",
-                           "@resultcommand": "@resultcommand",
-                           "actionlabel": "EXECUTE_SCRIPT",
-                           "codereturn": "",
-                           "error": error,
-                           "script": package['command']['command'],
-                           "success": success,
-                           "typescript": "Batch" })
-        ###------------------------
-        ### actionrestart
-        ###------------------------
-        if package['reboot']:
-            sequence .append({ "action": "actionrestart",
-                               "actionlabel": "REBOOT",
-                               "step": 1})
-        ###------------------------
-        ### actionsuccescompletedend
-        ###------------------------
-        dsuccess = { "action": "actionsuccescompletedend",
-                     "actionlabel": "END_SUCCESS",
-                     "clear": "True",
-                     "inventory" : "True",
-                     "step": success}
-        #if str(package['associateinventory']) != "0":
-            #dsuccess['inventory'] = "True"
-        #else:
-            #dsuccess['inventory'] = "False"
-        sequence .append(dsuccess)
-        ###------------------------
-        ### actionerrorcompletedend
-        ###------------------------
-        sequence .append({"step": error,
-                          "action": "actionerrorcompletedend",
-                          "actionlabel": "END_ERROR"})
-        ###------------------------
-        ### info
-        ###------------------------
-        data = {
-            "info": { "Dependency": [],
-                      "description": package['description'],
-                      "metagenerator": "standard",
-                      "methodetransfert": "pushrsync",
-                      "name": str(package['label'] + ' ' +
-                                  package['version'] + ' (' +
-                                  package['id']+')'),
-                      "software": package['label'],
-                      "transferfile": True,
-                      "version": package['version']
-            }
-        }
+    }
 
-        data['metaparameter'] = metaparameter
-        data[package['targetos']]={}
-        data[package['targetos']]['sequence'] = sequence
+    data['metaparameter'] = metaparameter
+    data[package['targetos']]={}
+    data[package['targetos']]['sequence'] = sequence
 
-        return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+    return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
 
 def prepare_shared_folder():
     """

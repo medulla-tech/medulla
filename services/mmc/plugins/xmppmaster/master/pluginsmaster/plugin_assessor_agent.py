@@ -89,23 +89,23 @@ def testsignaturecodechaine(objectxmpp, data, sessionid, msg):
     return result
 
 def distHaversine(p1, p2):
-        """
-        #  Calculate the distance (in km) between 2 points specified by their
-        #  latitude/longitude using Haversine formula
-        #
-        #   de : Haversine formula - R. W. Sinnott, "Virtues of the Haversine",
-        #        Sky and Telescope, vol 68, no 2, 1984
-        #        http://www.census.gov/cgi-bin/geo/gisfaq?Q5.1
-        #
-        """
-        rt = 6371  # Mean Earth radius in km
-        # We consider latitude at rt whatever the point
-        dLat = p2.lat - p1.lat
-        dLong = p2.lon - p1.lon
-        a = sin(dLat/2) * sin(dLat/2) + cos(p1.lat) * cos(p2.lat) * sin(dLong/2) * sin(dLong/2)
-        c = 2 * atan2(sqrt(a), sqrt(1-a))
-        d = rt * c
-        return d
+    """
+    #  Calculate the distance (in km) between 2 points specified by their
+    #  latitude/longitude using Haversine formula
+    #
+    #   de : Haversine formula - R. W. Sinnott, "Virtues of the Haversine",
+    #        Sky and Telescope, vol 68, no 2, 1984
+    #        http://www.census.gov/cgi-bin/geo/gisfaq?Q5.1
+    #
+    """
+    rt = 6371  # Mean Earth radius in km
+    # We consider latitude at rt whatever the point
+    dLat = p2.lat - p1.lat
+    dLong = p2.lon - p1.lon
+    a = sin(dLat/2) * sin(dLat/2) + cos(p1.lat) * cos(p2.lat) * sin(dLong/2) * sin(dLong/2)
+    c = 2 * atan2(sqrt(a), sqrt(1-a))
+    d = rt * c
+    return d
 
 def MessagesAgentFromChatroomConfig(objectxmpp,
                                     action,
@@ -443,7 +443,7 @@ def MessagesAgentFromChatroomConfig(objectxmpp,
                         data['information']['users'][0],
                         result, objectxmpp, data)
                 break
-		# Network Rule : 10
+                # Network Rule : 10
         elif x[0] == 10:
             # Associates relay server based on network address
             if showinfomachine:

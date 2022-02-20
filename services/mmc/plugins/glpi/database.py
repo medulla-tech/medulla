@@ -88,4 +88,4 @@ class Glpi(DyngroupDatabaseHelper):
         return ret
 
     def __getattr__(self, attr_name):
-            return getattr(self.database, attr_name)
+        return getattr(self.database, attr_name)

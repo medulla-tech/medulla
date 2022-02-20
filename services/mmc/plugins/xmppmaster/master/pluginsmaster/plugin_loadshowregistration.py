@@ -234,4 +234,3 @@ def plugin_loadshowregistration(self, msg, data):
                     data['information'] = info
                     del data['completedatamachine']
                 logger.info("%s" % json.dumps(data, indent=4, sort_keys=True))
-

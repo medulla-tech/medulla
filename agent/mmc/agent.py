@@ -70,20 +70,20 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
     Extended version of TimedRotatingFileHandler that compress logs on rollover.
     the rotation file is compress in zip
     """
-  
-    def __init__(self, filename, when='h', interval=1, backupCount=0, 
+
+    def __init__(self, filename, when='h', interval=1, backupCount=0,
                  encoding=None, delay=False, utc=False,  compress="zip"):
-        super(TimedCompressedRotatingFileHandler, self).__init__(filename, when, 
-                                                                 interval, backupCount, encoding, 
+        super(TimedCompressedRotatingFileHandler, self).__init__(filename, when,
+                                                                 interval, backupCount, encoding,
                                                                  delay, utc)
         self.backupCountlocal= backupCount
- 
+
     def get_files_by_date(self):
         dir_name, base_name = os.path.split(self.baseFilename)
         file_names = os.listdir(dir_name)
         result = []
         result1 = []
-        prefix = '{}'.format(base_name) 
+        prefix = '{}'.format(base_name)
         for file_name in file_names:
             if file_name.startswith(prefix) and not file_name.endswith('.zip'):
                 f=os.path.join(dir_name, file_name )

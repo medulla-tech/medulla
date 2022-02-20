@@ -1282,9 +1282,9 @@ def getPanelImage(hostname, panel_title, from_timestamp, to_timestamp):
 
 
 def getPanelGraph(hostname, panel_title, from_timestamp, to_timestamp):
- return manage_grafana(hostname).grafanaGetPanelGraph(panel_title,
-                                                      from_timestamp,
-                                                      to_timestamp)
+    return manage_grafana(hostname).grafanaGetPanelGraph(panel_title,
+                                                         from_timestamp,
+                                                         to_timestamp)
 
 
 def getLastOnlineStatus(jid):

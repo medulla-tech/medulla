@@ -228,6 +228,3 @@ def convert_date(date = '0000-00-00 00:00:00'):
         except ValueError:
             timestamp = '0000-00-00 00:00:00'
     return timestamp
-
-
-
