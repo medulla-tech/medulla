@@ -24,10 +24,11 @@
 from pulse2.scheduler.starter import LoopingStarter
 from twisted.trial import unittest
 import logging
+
 logging.basicConfig()
 
 
-class Circuit (object):
+class Circuit(object):
     """A simple Circuit object having needed atributtes"""
 
     id = None
@@ -43,22 +44,17 @@ class Circuit (object):
 
 
 class Test00_LoopingStart(unittest.TestCase):
-
     def setUp(self):
         self.logger = logging.getLogger()
-        self.dispatcher = type("MscDispatcher",
-                               (object,),
-                               {"_circuits": []}
-                               )
+        self.dispatcher = type("MscDispatcher", (object,), {"_circuits": []})
         self.circuits = []
         for id in range(10):
             self.circuits.append(Circuit(id))
 
-        self.starter = LoopingStarter(self.dispatcher,
-                                      0.2)
+        self.starter = LoopingStarter(self.dispatcher, 0.2)
 
     def test01_start(self):
-        """Start of looping start """
+        """Start of looping start"""
 
         return self.starter.run(self.circuits)
 

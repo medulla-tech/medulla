@@ -32,14 +32,14 @@ log = logging.getLogger()
 
 
 class MscAPI(RPCClient):
-    """ XMLRPC Proxy trough MMC agent to accessing MSC methods. """
+    """XMLRPC Proxy trough MMC agent to accessing MSC methods."""
 
     def errorback(self, failure):
-        """ Common errorback of XMLRPC calls"""
+        """Common errorback of XMLRPC calls"""
         log.warn("MscAPI: %s" % str(failure))
 
     def get_web_def_coh_life_time(self):
-        """ Getting of default lifetime of command """
+        """Getting of default lifetime of command"""
 
         fnc = "msc.get_web_def_coh_life_time"
 
@@ -48,7 +48,7 @@ class MscAPI(RPCClient):
         return d
 
     def get_web_def_attempts_per_day(self):
-        """ Default number of daily attempts """
+        """Default number of daily attempts"""
 
         fnc = "msc.get_web_def_attempts_per_day"
 
@@ -58,16 +58,16 @@ class MscAPI(RPCClient):
 
 
 class CoHTimeExtend(MscAPI):
-    """ Get the time interval of new rescheduled delete command """
+    """Get the time interval of new rescheduled delete command"""
 
     def get_deferred(self):
-        """ Time interval deferred getter """
+        """Time interval deferred getter"""
         d = self.get_web_def_coh_life_time()
         d.addCallback(self.send_result)
         return d
 
     def send_result(self, result):
-        """ Callback of XMLRPC getter """
+        """Callback of XMLRPC getter"""
         return self._delta(result)
 
     def _delta(self, coh_life_time):
@@ -83,8 +83,7 @@ class CoHTimeExtend(MscAPI):
         fmt = "%Y-%m-%d %H:%M:%S"
 
         start_timestamp = time.time()
-        start_date = datetime.datetime.fromtimestamp(
-            start_timestamp).strftime(fmt)
+        start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime(fmt)
 
         delta = int(coh_life_time) * 60 * 60
         end_timestamp = start_timestamp + delta

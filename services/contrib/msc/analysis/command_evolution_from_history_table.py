@@ -37,7 +37,15 @@
 import sys
 import time
 
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, ForeignKey, select
+from sqlalchemy import (
+    create_engine,
+    MetaData,
+    Table,
+    Column,
+    Integer,
+    ForeignKey,
+    select,
+)
 
 if len(sys.argv) != 3:
     print("usage: %s <mysql-uri> <command-id-comma-separated>" % sys.argv[0])
@@ -47,28 +55,33 @@ if len(sys.argv) != 3:
 mysql_db = create_engine(sys.argv[1])
 metadata = MetaData(mysql_db)
 
-coh_table = Table('commands_on_host',
-                         metadata,
-                         autoload = True)
-history_table = Table("commands_history",
-                         metadata,
-                         Column('fk_commands_on_host', Integer, ForeignKey('commands_on_host.id')),
-                         autoload = True)
+coh_table = Table("commands_on_host", metadata, autoload=True)
+history_table = Table(
+    "commands_history",
+    metadata,
+    Column("fk_commands_on_host", Integer, ForeignKey("commands_on_host.id")),
+    autoload=True,
+)
 
 # prepare command ids
-ids = sys.argv[2].split(',')
+ids = sys.argv[2].split(",")
 
-hist_data = select([
-        history_table.c.fk_commands_on_host,
-        history_table.c.date,
-        history_table.c.state,
-        history_table.c.error_code
-    ]
-    ).select_from(
-        history_table.join(coh_table)
-    ).where(
-        coh_table.c.fk_commands.in_(ids)
-    ).order_by(history_table.c.date).execute().fetchall()
+hist_data = (
+    select(
+        [
+            history_table.c.fk_commands_on_host,
+            history_table.c.date,
+            history_table.c.state,
+            history_table.c.error_code,
+        ]
+    )
+    .select_from(history_table.join(coh_table))
+    .where(coh_table.c.fk_commands.in_(ids))
+    .order_by(history_table.c.date)
+    .execute()
+    .fetchall()
+)
+
 
 class deployStats:
 
@@ -91,7 +104,7 @@ class deployStats:
         "stage3",
         "stage4",
         "bundle_error",
-        "mirror_error"
+        "mirror_error",
     ]
 
     __internal_data = dict()
@@ -107,7 +120,6 @@ class deployStats:
         except KeyError:
             pass
 
-
     def getkeys(self):
         return self.__keys
 
@@ -122,85 +134,93 @@ deploy_stats = deployStats()
 lastepoch = 0
 laststates = dict()
 
-print("date;%s;" % ';'.join(deploy_stats.getkeys()))
+print("date;%s;" % ";".join(deploy_stats.getkeys()))
 
 for d in hist_data:
     # d is like this: (6445L, '1223597787.8313', 'upload_done', 0)
     (fk, epoch, operation, error_code) = d
 
-    truncated_epoch = int(float(epoch)/60)*60
-    #truncated_epoch = int(float(epoch)/1)*1
+    truncated_epoch = int(float(epoch) / 60) * 60
+    # truncated_epoch = int(float(epoch)/1)*1
 
     if not fk in list(laststates.keys()):
         laststates[fk] = None
 
-    if operation == 'upload_in_progress' and error_code in [4508, 4509]: # mirror probe, ignore
+    if operation == "upload_in_progress" and error_code in [
+        4508,
+        4509,
+    ]:  # mirror probe, ignore
         continue
 
-    if operation == None and error_code == 3001 : # broken bundle ?
-        operation = 'bundle_failed'
+    if operation == None and error_code == 3001:  # broken bundle ?
+        operation = "bundle_failed"
 
-    if operation == 'upload_failed' and error_code == 4001 : # package not found ?
-        operation = 'mirror_failed'
+    if operation == "upload_failed" and error_code == 4001:  # package not found ?
+        operation = "mirror_failed"
 
     if laststates[fk] == operation:
         print("ANOMALY: %s for %s " % (operation, fk))
         continue
     else:
-        if operation == 'upload_in_progress':
-            deploy_stats.remove('upload_error', fk)
-            deploy_stats.add('uploading', fk)
-        elif operation == 'upload_done':
-            deploy_stats.remove('uploading', fk)
-            deploy_stats.add('upload_done', fk)
-            deploy_stats.add('stage1', fk)
-        elif operation == 'upload_failed':
-            deploy_stats.remove('uploading', fk)
-            deploy_stats.add('upload_error', fk)
-        elif operation == 'execution_in_progress':
-            deploy_stats.remove('execution_error', fk)
-            deploy_stats.add('executing', fk)
-        elif operation == 'execution_done':
-            deploy_stats.remove('executing', fk)
-            deploy_stats.add('execution_done', fk)
-            deploy_stats.remove('stage1', fk)
-            deploy_stats.add('stage2', fk)
-        elif operation == 'execution_failed':
-            deploy_stats.remove('executing', fk)
-            deploy_stats.add('execution_error', fk)
-        elif operation == 'delete_in_progress':
-            deploy_stats.remove('delete_error', fk)
-            deploy_stats.add('deleting', fk)
-        elif operation == 'delete_done':
-            deploy_stats.remove('deleting', fk)
-            deploy_stats.add('delete_done', fk)
-            deploy_stats.remove('stage2', fk)
-            deploy_stats.add('stage3', fk)
-        elif operation == 'delete_failed':
-            deploy_stats.remove('deleting', fk)
-            deploy_stats.add('delete_error', fk)
-        elif operation == 'reboot_in_progress':
-            deploy_stats.remove('reboot_error', fk)
-            deploy_stats.add('rebooting', fk)
-        elif operation == 'reboot_done':
-            deploy_stats.remove('rebooting', fk)
-            deploy_stats.add('reboot_done', fk)
-            deploy_stats.remove('stage3', fk)
-            deploy_stats.add('stage4', fk)
-        elif operation == 'reboot_failed':
-            deploy_stats.remove('rebooting', fk)
-            deploy_stats.add('reboot_error', fk)
-        elif operation == 'bundle_failed':
-            deploy_stats.add('bundle_error', fk)
-        elif operation == 'mirror_failed':
-            deploy_stats.remove('upload_error', fk)
-            deploy_stats.add('mirror_error', fk)
+        if operation == "upload_in_progress":
+            deploy_stats.remove("upload_error", fk)
+            deploy_stats.add("uploading", fk)
+        elif operation == "upload_done":
+            deploy_stats.remove("uploading", fk)
+            deploy_stats.add("upload_done", fk)
+            deploy_stats.add("stage1", fk)
+        elif operation == "upload_failed":
+            deploy_stats.remove("uploading", fk)
+            deploy_stats.add("upload_error", fk)
+        elif operation == "execution_in_progress":
+            deploy_stats.remove("execution_error", fk)
+            deploy_stats.add("executing", fk)
+        elif operation == "execution_done":
+            deploy_stats.remove("executing", fk)
+            deploy_stats.add("execution_done", fk)
+            deploy_stats.remove("stage1", fk)
+            deploy_stats.add("stage2", fk)
+        elif operation == "execution_failed":
+            deploy_stats.remove("executing", fk)
+            deploy_stats.add("execution_error", fk)
+        elif operation == "delete_in_progress":
+            deploy_stats.remove("delete_error", fk)
+            deploy_stats.add("deleting", fk)
+        elif operation == "delete_done":
+            deploy_stats.remove("deleting", fk)
+            deploy_stats.add("delete_done", fk)
+            deploy_stats.remove("stage2", fk)
+            deploy_stats.add("stage3", fk)
+        elif operation == "delete_failed":
+            deploy_stats.remove("deleting", fk)
+            deploy_stats.add("delete_error", fk)
+        elif operation == "reboot_in_progress":
+            deploy_stats.remove("reboot_error", fk)
+            deploy_stats.add("rebooting", fk)
+        elif operation == "reboot_done":
+            deploy_stats.remove("rebooting", fk)
+            deploy_stats.add("reboot_done", fk)
+            deploy_stats.remove("stage3", fk)
+            deploy_stats.add("stage4", fk)
+        elif operation == "reboot_failed":
+            deploy_stats.remove("rebooting", fk)
+            deploy_stats.add("reboot_error", fk)
+        elif operation == "bundle_failed":
+            deploy_stats.add("bundle_error", fk)
+        elif operation == "mirror_failed":
+            deploy_stats.remove("upload_error", fk)
+            deploy_stats.add("mirror_error", fk)
 
         if truncated_epoch != lastepoch:
-            print("%s;%s;" % (
-                time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(truncated_epoch))),
-                ';'.join(deploy_stats.getcounts())
-            ))
+            print(
+                "%s;%s;"
+                % (
+                    time.strftime(
+                        "%Y-%m-%d %H:%M:%S", time.localtime(float(truncated_epoch))
+                    ),
+                    ";".join(deploy_stats.getcounts()),
+                )
+            )
 
     laststates[fk] = operation
     lastepoch = truncated_epoch

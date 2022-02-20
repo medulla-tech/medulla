@@ -29,6 +29,7 @@ from mmc.database.config import DatabaseConfig
 class ImagingDatabaseConfig(DatabaseConfig):
     dbname = "imaging"
 
+
 #    def setup(self, config_file):
 #        # read the database configuration
 #        DatabaseConfig.setup(self, config_file)

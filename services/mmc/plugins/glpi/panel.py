@@ -24,5 +24,6 @@ MMC glpi dasboard panel
 
 from mmc.plugins.dashboard.panel import Panel
 
+
 class GlpiPanel(Panel):
     pass

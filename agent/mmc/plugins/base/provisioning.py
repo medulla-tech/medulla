@@ -76,13 +76,17 @@ class ProvisioningManager(Singleton):
             else:
                 self.logger.info("Provisioner %s failed to validate" % name)
                 if mandatory:
-                    self.logger.error("Provisioner %s is configured as mandatory, exiting" % name)
+                    self.logger.error(
+                        "Provisioner %s is configured as mandatory, exiting" % name
+                    )
                     ret = False
                 else:
-                    self.logger.info("Provisioner %s is not configured as mandatory, so going on" % name)
+                    self.logger.info(
+                        "Provisioner %s is not configured as mandatory, so going on"
+                        % name
+                    )
         self.components = tmp
         return ret
-
 
     def doProvisioning(self, authtoken):
         """
@@ -93,6 +97,7 @@ class ProvisioningManager(Singleton):
 
         @return; Deferred resulting to authtoken
         """
+
         def _cbError(failure):
             self.logger.exception(failure.getTraceback())
             raise ProvisioningError
@@ -104,14 +109,21 @@ class ProvisioningManager(Singleton):
                 self.logger.debug("Provisioning user with %s / %s" % (name, str(klass)))
                 instance = klass()
                 if login.lower() in instance.config.exclude:
-                    self.logger.debug("User %s is in the exclude list of this provisioner, so skipping it" % login)
+                    self.logger.debug(
+                        "User %s is in the exclude list of this provisioner, so skipping it"
+                        % login
+                    )
                     continue
                 if not d:
                     d = defer.maybeDeferred(instance.doProvisioning, authtoken)
                 else:
-                    d.addCallback(lambda x: defer.maybeDeferred(instance.doProvisioning, authtoken))
+                    d.addCallback(
+                        lambda x: defer.maybeDeferred(
+                            instance.doProvisioning, authtoken
+                        )
+                    )
         if d:
-            ret = d.addCallback(lambda x:authtoken).addErrback(_cbError)
+            ret = d.addCallback(lambda x: authtoken).addErrback(_cbError)
         else:
             ret = defer.succeed(authtoken)
         return ret
@@ -129,8 +141,8 @@ class ProvisionerConfig(ConfigParser):
         self.setDefault()
         fp = open(self.conffile, "r")
         self.readfp(fp, self.conffile)
-        if os.path.isfile(self.conffile + '.local'):
-            self.readfp(open(self.conffile + '.local','r'))
+        if os.path.isfile(self.conffile + ".local"):
+            self.readfp(open(self.conffile + ".local", "r"))
         self.readConf()
         fp.close()
 
@@ -163,7 +175,7 @@ class ProvisionerI:
     database.
     """
 
-    def __init__(self, conffile, name, klass = ProvisionerConfig):
+    def __init__(self, conffile, name, klass=ProvisionerConfig):
         """
         @param conffile: provisioner configuration file
         @param name: the provisioner name
@@ -193,4 +205,5 @@ class ProvisioningError:
     """
     Raised by the ProvisioningManager if the provisioning process failed
     """
+
     pass

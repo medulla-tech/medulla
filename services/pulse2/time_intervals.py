@@ -24,18 +24,20 @@
 import re
 
 # match HH:MM:SS
-RE_VALIDHOURMINSEC = '(([0-9]|[0-1][0-9]|[2][0-3]):([0-5][0-9]):([0-5][0-9]))'
+RE_VALIDHOURMINSEC = "(([0-9]|[0-1][0-9]|[2][0-3]):([0-5][0-9]):([0-5][0-9]))"
 # match HH:MM
-RE_VALIDHOURMIN = '(([0-9]|[0-1][0-9]|[2][0-3]):([0-5][0-9]))'
+RE_VALIDHOURMIN = "(([0-9]|[0-1][0-9]|[2][0-3]):([0-5][0-9]))"
 # match HH
-RE_VALIDHOUR = '(([0-9]|[1][0-9]|[2][0-3]))'
+RE_VALIDHOUR = "(([0-9]|[1][0-9]|[2][0-3]))"
 # match full interval
-RE_VALIDSEGMENT = "^(%s|%s|%s)-(%s|%s|%s)$" % (RE_VALIDHOURMINSEC,
-                                               RE_VALIDHOURMIN,
-                                               RE_VALIDHOUR,
-                                               RE_VALIDHOURMINSEC,
-                                               RE_VALIDHOURMIN,
-                                               RE_VALIDHOUR)
+RE_VALIDSEGMENT = "^(%s|%s|%s)-(%s|%s|%s)$" % (
+    RE_VALIDHOURMINSEC,
+    RE_VALIDHOURMIN,
+    RE_VALIDHOUR,
+    RE_VALIDHOURMINSEC,
+    RE_VALIDHOURMIN,
+    RE_VALIDHOUR,
+)
 
 # minimum value of a time point
 TP_MIN = "00:00:00"
@@ -44,9 +46,10 @@ TP_MAX = "23:59:59"
 
 
 class TimePoint:
-    """ This class represents a single time value """
+    """This class represents a single time value"""
+
     value = TP_MIN  # TP value
-    valid = False   # TP validity
+    valid = False  # TP validity
 
     def __init__(self, value=TP_MIN):
         if self._valid(value):
@@ -54,7 +57,7 @@ class TimePoint:
             self.valid = True
 
     def __str__(self):
-        return self.value or ''
+        return self.value or ""
 
     def __le__(self, other):
         return self.value <= other.value
@@ -75,25 +78,27 @@ class TimePoint:
         return self.value != other.value
 
     def _valid(self, value):
-        """ Checks for value validity """
+        """Checks for value validity"""
         if value:
-            return re.compile(
-                "^(%s|%s|%s)$" %
-                (RE_VALIDHOURMINSEC,
-                 RE_VALIDHOURMIN,
-                 RE_VALIDHOUR)).match(value) is not None
+            return (
+                re.compile(
+                    "^(%s|%s|%s)$" % (RE_VALIDHOURMINSEC, RE_VALIDHOURMIN, RE_VALIDHOUR)
+                ).match(value)
+                is not None
+            )
         return False
 
     def _normalize(self, value):
-        """ Attempt to represent value always the same manner """
+        """Attempt to represent value always the same manner"""
         if re.compile("^%s$" % RE_VALIDHOURMINSEC).match(value):
-            matched = re.compile("^%s$" %
-                                 RE_VALIDHOURMINSEC).match(value).groups()
+            matched = re.compile("^%s$" % RE_VALIDHOURMINSEC).match(value).groups()
             return "%.2d:%.2d:%.2d" % (
-                int(matched[1]), int(matched[2]), int(matched[3]))
+                int(matched[1]),
+                int(matched[2]),
+                int(matched[3]),
+            )
         elif re.compile("^%s$" % RE_VALIDHOURMIN).match(value):
-            matched = re.compile("^%s$" %
-                                 RE_VALIDHOURMIN).match(value).groups()
+            matched = re.compile("^%s$" % RE_VALIDHOURMIN).match(value).groups()
             return "%.2d:%.2d:00" % (int(matched[1]), int(matched[2]))
         elif re.compile("^%s$" % RE_VALIDHOUR).match(value):
             matched = re.compile("^%s$" % RE_VALIDHOUR).match(value).groups()
@@ -105,7 +110,8 @@ TimePointMax = TimePoint(TP_MAX)
 
 
 class TimeSegment:
-    """ This class represents a single time value """
+    """This class represents a single time value"""
+
     start = TimePointMin
     end = TimePointMax
 
@@ -121,22 +127,21 @@ class TimeInterval:
     segments = []
 
     def __str__(self):
-        return ','.join([a.__str__() for a in self.segments])
+        return ",".join([a.__str__() for a in self.segments])
 
     def add(self, segment):
         if segment.start <= segment.end:
-            self.segments = self._merge_r(
-                TimeSegment(segment.start, segment.end))
+            self.segments = self._merge_r(TimeSegment(segment.start, segment.end))
         else:
-            self.segments = self._merge_r(TimeSegment(
-                segment.start, TimePoint("23:59:59")))
             self.segments = self._merge_r(
-                TimeSegment(
-                    TimePoint("00:00:00"),
-                    segment.end))
+                TimeSegment(segment.start, TimePoint("23:59:59"))
+            )
+            self.segments = self._merge_r(
+                TimeSegment(TimePoint("00:00:00"), segment.end)
+            )
 
     def _merge_r(self, new_segment):
-        """ Merges new_segment in self.segments """
+        """Merges new_segment in self.segments"""
         if new_segment is None:
             return self.segments
         if len(self.segments) == 0:  # nothing to be merged to, return seed
@@ -156,7 +161,7 @@ class TimeInterval:
 
 
 def _merge(s1, s2):
-    """ Merges 2 TimeSegment() together
+    """Merges 2 TimeSegment() together
     May return 1 array of 1 segment (in case of merge)
     or 1 array of 2 segments (no merge occured)
     in this case segments are in the same order as given
@@ -174,7 +179,7 @@ def _merge(s1, s2):
         else:
             return [s2]
     # things are getting complicated, now s1 starts before s2
-    elif s1.start < s2.start:                       # s1 "starts" before s2 "starts
+    elif s1.start < s2.start:  # s1 "starts" before s2 "starts
         if s1.end < s2.start:
             # s1 "finished" before s2 "starts", merge is s1, s2
             return [s1, s2]
@@ -185,7 +190,7 @@ def _merge(s1, s2):
             # s1 "finished" after s2 "end", merge is s1
             return [s1]
     # last case: s2 starts before s1
-    elif s2.start < s1.start:                       # s2 "starts" before s1 "starts
+    elif s2.start < s1.start:  # s2 "starts" before s1 "starts
         if s2.end < s1.start:
             # s2 "finished" before s1 "starts", merge is s1, s2
             return [s2, s1]
@@ -198,12 +203,12 @@ def _merge(s1, s2):
 
 
 def string2timeinterval(string):
-    """ handle conversion from string to timeinterval """
+    """handle conversion from string to timeinterval"""
     if not string:
         return None
     tp = TimeInterval()
-    for segment in string.split(','):
-        split = segment.split('-')
+    for segment in string.split(","):
+        split = segment.split("-")
         if len(split) == 2:
             (start, end) = list(map(TimePoint, split))
             if not (start.valid and end.valid):
@@ -215,7 +220,7 @@ def string2timeinterval(string):
 
 
 def timeinterval2string(tp):
-    """ handle conversion from timeinterval to string """
+    """handle conversion from timeinterval to string"""
     if tp:
         return tp.__str__()
     return None
@@ -229,9 +234,9 @@ def normalizeinterval(string):
 
 
 def intimeinterval(interval, point):
-    """ used to say if a point is in an interval
-        interval is a regular string
-        point is the "hour" value of a date
+    """used to say if a point is in an interval
+    interval is a regular string
+    point is the "hour" value of a date
     """
     interval = string2timeinterval(interval)
     point = TimePoint(point)

@@ -45,14 +45,15 @@ class ComputerLocationManager(Singleton):
                 name = list(self.components.keys())[0]
             else:
                 raise Exception(
-                    "Can't auto-select a computer location manager, please configure one in pulse2.ini.")
+                    "Can't auto-select a computer location manager, please configure one in pulse2.ini."
+                )
         self.logger.info("Selecting computer location manager: %s" % name)
         self.main = name
 
     def register(self, name, klass):
         self.logger.debug(
-            "Registering computer location manager %s / %s" %
-            (name, str(klass)))
+            "Registering computer location manager %s / %s" % (name, str(klass))
+        )
         self.components[name] = klass
 
     def validate(self):
@@ -157,55 +158,55 @@ class ComputerLocationManager(Singleton):
 
 class ComputerLocationI(Singleton):
     def displayLocalisationBar(self):
-        """ return True if the module want to display the location bar in computers lists """
+        """return True if the module want to display the location bar in computers lists"""
         return False
 
     def getUserProfile(self, userid):
-        """ return the linked profiles for one user """
+        """return the linked profiles for one user"""
         pass
 
     def getUserLocations(self, userid):
-        """ return the linked locations for one user """
+        """return the linked locations for one user"""
         pass
 
     # TODO implement and use in glpi module
     def getMachinesInLocation(self, location, a_profile=[]):
-        """ should return the machines that are in the specified location with the good profiles (or any) """
+        """should return the machines that are in the specified location with the good profiles (or any)"""
         # Mutable list a_profile used as default argument to a method or
         # function
         pass
 
     # TODO implement and use in glpi module
     def getLocationsForMachine(self, machine_uuid, a_profile=[]):
-        """ should return the locations in which this machine is """
+        """should return the locations in which this machine is"""
         # Mutable list a_profile used as default argument to a method or
         # function
         pass
 
     def getLocationsCount(self):
-        """ Returns the total count of locations """
+        """Returns the total count of locations"""
         pass
 
     def doesUserHaveAccessToMachine(self, ctx, machine_uuid):
-        """ should return true if the machine is accessible for this user """
+        """should return true if the machine is accessible for this user"""
         pass
 
     def doesUserHaveAccessToMachines(self, ctx, machine_uuid, all=True):
-        """ should return true if more than one or all machines are accessible for this user """
+        """should return true if more than one or all machines are accessible for this user"""
         pass
 
     def getMachinesLocations(self, machine_uuids):
-        """ should return the location in which the machines are as a dict {machine_uuid:location} """
+        """should return the location in which the machines are as a dict {machine_uuid:location}"""
         pass
 
     def getLocationsFromPathString(self, location_path):
-        """ should return the locations that correspond to that path """
+        """should return the locations that correspond to that path"""
         pass
 
     def getLocationParentPath(self, loc_uuid):
-        """ return an array containing all the parent uuids of this location """
+        """return an array containing all the parent uuids of this location"""
         pass
 
     def getLocationName(self, loc_uuid):
-        """ return a string of the location name """
+        """return a string of the location name"""
         pass

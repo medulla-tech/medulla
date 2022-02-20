@@ -28,7 +28,7 @@ from configparser import RawConfigParser
 
 
 class ConfigError(Exception):
-    """ A base frame for related exceptions """
+    """A base frame for related exceptions"""
 
     def __init__(self, name):
         """
@@ -46,7 +46,7 @@ class InvalidSection(ConfigError):
 
 
 class DefaultsNotFound(ConfigError):
-    """ Raised when section declared in config file not found in defaults"""
+    """Raised when section declared in config file not found in defaults"""
 
     def __repr__(self):
         return "Section <%s> not found in defaults" % self.name
@@ -162,8 +162,9 @@ class ConfigReader(type):
         @param attrs: dictionnary of attributtes
         @type attrs: dict
         """
-        att_dict = dict((k, v) for (k, v) in list(cls.__dict__.items())
-                        if not k.startswith("__"))
+        att_dict = dict(
+            (k, v) for (k, v) in list(cls.__dict__.items()) if not k.startswith("__")
+        )
 
         attrs.update(att_dict)
 
@@ -223,13 +224,14 @@ class ConfigReader(type):
         @return: datatype bases and related converting method
         @rtype: generator
         """
-        for base, method in [(bool, parser.getboolean),
-                             (int, parser.getint),
-                             (float, parser.getfloat),
-                             (str, parser.get),
-                             (str, parser.get),
-                             (list, parser.getlist),
-                             ]:
+        for base, method in [
+            (bool, parser.getboolean),
+            (int, parser.getint),
+            (float, parser.getfloat),
+            (str, parser.get),
+            (str, parser.get),
+            (list, parser.getlist),
+        ]:
             yield base, method
 
     def _update_options(self, config_file, section):

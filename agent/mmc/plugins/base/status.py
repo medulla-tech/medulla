@@ -30,33 +30,38 @@ from mmc.plugins.base.config import BasePluginConfig
 from mmc.support.config import PluginConfigFactory
 from mmc.support.mmctools import shlaunchDeferred, ProcessScheduler
 
+
 def getLdapRootDN():
     """
     Returns the LDAP root DN.
     """
-    config = PluginConfigFactory.new(BasePluginConfig, 'base')
-    return {'LDAP root': config.baseDN}
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
+    return {"LDAP root": config.baseDN}
+
 
 def getDisksInfos():
     """
     Returns a deferred resulting to the output of df -k
     """
-    return shlaunchDeferred('df -k')
+    return shlaunchDeferred("df -k")
+
 
 def getMemoryInfos():
     """
     Returns a deferred resulting to the output of free -m
     """
-    return shlaunchDeferred('free -m')
+    return shlaunchDeferred("free -m")
+
 
 def getUptime():
     """
     Returns the machine uptime
     """
-    f = open('/proc/uptime')
+    f = open("/proc/uptime")
     data = f.read()
     f.close()
     return data
+
 
 def listProcess():
     """
@@ -77,7 +82,7 @@ def listProcess():
             assoc.append(psdict[i].desc)
             assoc.append(psdict[i].progress)
             assoc.append(psdict[i].status)
-            #assoc.append(psdict[i].out)
+            # assoc.append(psdict[i].out)
             ret.append(assoc)
 
     return ret

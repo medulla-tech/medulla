@@ -35,20 +35,23 @@ import inspect
 import logging
 from functools import wraps
 from pulse2.utils import isMACAddress
-LOG_ACTION = {0: ("boot", "booted"),
-              1: ("menu", "choosen menu entry"),
-              2: ("restoration", "restoration started"),
-              3: ("restoration", "restoration finished"),
-              4: ("backup", "backup started"),
-              5: ("backup", "backup finished"),
-              6: ("postinst", "postinstall started"),
-              7: ("postinst", "postinstall finished"),
-              8: ("error", "critical error"),
-              }
+
+LOG_ACTION = {
+    0: ("boot", "booted"),
+    1: ("menu", "choosen menu entry"),
+    2: ("restoration", "restoration started"),
+    3: ("restoration", "restoration finished"),
+    4: ("backup", "backup started"),
+    5: ("backup", "backup finished"),
+    6: ("postinst", "postinstall started"),
+    7: ("postinst", "postinstall finished"),
+    8: ("error", "critical error"),
+}
 
 
-class LOG_LEVEL (object):
+class LOG_LEVEL(object):
     """Logging levels for ImagingLog"""
+
     EMERG = 1
     ALERT = 2
     CRIT = 3
@@ -59,8 +62,9 @@ class LOG_LEVEL (object):
     DEBUG = 8
 
 
-class LOG_STATE (object):
+class LOG_STATE(object):
     """Logging states for ImagingLog"""
+
     BOOT = "boot"
     MENU = "menu"
     RESTO = "restoration"
@@ -82,6 +86,7 @@ def assign(id):
     @return: None when registering, otherwise decorated function
     @rtype: func
     """
+
     def wrapper(fnc):
         @wraps(fnc)
         def wrapped_fnc(self, *args, **kwargs):
@@ -126,12 +131,12 @@ class ArgumentContainer:
 
     @property
     def mac(self):
-        """ Common argument for all PXE methods """
+        """Common argument for all PXE methods"""
         if self.MAC_FLAG in self.packet:
             start = self.packet.index(self.MAC_FLAG) + len(self.MAC_FLAG)
 
             if len(self.packet[start:]) >= 17:
-                mac = self.packet[start:start + 17]
+                mac = self.packet[start : start + 17]
                 if isMACAddress(mac):
                     return mac
 
@@ -140,9 +145,9 @@ class ArgumentContainer:
     # ------- computerRegister args ---------- #
     @property
     def hostname(self):
-        """ Argument for new machine registering (computerRegister)"""
+        """Argument for new machine registering (computerRegister)"""
         if self.HOSTNAME_FLAG in self.packet:
-            packet = self.packet[len(self.HOSTNAME_FLAG) + 1:]
+            packet = self.packet[len(self.HOSTNAME_FLAG) + 1 :]
             end = packet.index(":")
             return packet[:end]
 
@@ -150,7 +155,7 @@ class ArgumentContainer:
 
     @property
     def ip_address(self):
-        """ Special case for GLPI """
+        """Special case for GLPI"""
         if self.IPADDR_FLAG in self.packet:
             start = self.packet.index(self.IPADDR_FLAG) + len(self.IPADDR_FLAG)
             return self.packet[start:]
@@ -161,13 +166,13 @@ class ArgumentContainer:
 
     @property
     def level(self):
-        """ logAction argument """
+        """logAction argument"""
         assert len(self.packet) > 1
         return int(self.packet[1])
 
     @property
     def phase(self):
-        """ logAction argument """
+        """logAction argument"""
         assert len(self.packet) > 1
 
         phase, message = LOG_ACTION[self.level]
@@ -176,7 +181,7 @@ class ArgumentContainer:
 
     @property
     def message(self):
-        """ logAction argument """
+        """logAction argument"""
         phase, message = LOG_ACTION[self.level]
 
         complement = None
@@ -192,14 +197,16 @@ class ArgumentContainer:
             return "%s: %s" % (message, complement)
         else:
             return message
+
     # --------- injectInventory args ----------- #
 
     @property
     def inventory(self):
-        """ injectInventory argument """
+        """injectInventory argument"""
 
         body = self.packet[1:]
         return body
+
     # example of PXE inventory :
 
     # M:26f,U:3f9b8
@@ -226,14 +233,14 @@ class ArgumentContainer:
 
     @property
     def password(self):
-        """ Client identification controlled by server"""
+        """Client identification controlled by server"""
         if self.MAC_FLAG in self.packet:
             end = self.packet.index(self.MAC_FLAG)
             return self.packet[2:end].replace("\x00", "")
 
     @property
     def num(self):
-        """ Menu item number """
+        """Menu item number"""
         if len(self.packet) > 1:
             return ord(self.packet[1])
         else:
@@ -249,8 +256,8 @@ class ArgumentContainer:
                 return ord(self.packet[idx])
         except Exception as e:
             logging.getLogger().warn(
-                "An eror occured while parsing pnum argument: %s" %
-                str(e))
+                "An eror occured while parsing pnum argument: %s" % str(e)
+            )
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
 
     @property
@@ -269,8 +276,8 @@ class ArgumentContainer:
                     return None
         except Exception as e:
             logging.getLogger().warn(
-                "An eror occured while parsing pnum argument: %s" %
-                str(e))
+                "An eror occured while parsing pnum argument: %s" % str(e)
+            )
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
 
     @property
@@ -290,8 +297,8 @@ class ArgumentContainer:
                     return None
         except Exception as e:
             logging.getLogger().warn(
-                "An eror occured while parsing pnum argument: %s" %
-                str(e))
+                "An eror occured while parsing pnum argument: %s" % str(e)
+            )
             logging.getLogger().debug("Packet content: %s" % self.packet[1:])
 
 
@@ -312,7 +319,7 @@ class PXEMethodParser:
     methods = {}
 
     # flag to indicate if decorated function should be registered
-    # if True : method is only registered to methods dictionnary
+    # if True : method is only registered to methods dictionnary
     # if False : method is executed
     register_only = False
 
@@ -362,8 +369,9 @@ class PXEMethodParser:
 
                 args.append(value)
 
-        logging.getLogger().debug("PXE Proxy: executed method: (%s) %s" %
-                                  (str(hex(marker)), method.__name__))
+        logging.getLogger().debug(
+            "PXE Proxy: executed method: (%s) %s" % (str(hex(marker)), method.__name__)
+        )
         return method, args
 
     def get_args(self, method):
@@ -378,4 +386,4 @@ class PXEMethodParser:
         """
         args, vargs, kwds, defaults = inspect.getargspec(method)
 
-        return [a for a in args if a != 'self']
+        return [a for a in args if a != "self"]

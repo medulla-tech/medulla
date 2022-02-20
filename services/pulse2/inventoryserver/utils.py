@@ -38,10 +38,9 @@ class ConfigReader:
     """Read and parse config files."""
 
     def __init__(self):
-        self._inv_server_ini = os.path.join(mmcconfdir,
-                                            "pulse2",
-                                            "inventory-server",
-                                            "inventory-server.ini")
+        self._inv_server_ini = os.path.join(
+            mmcconfdir, "pulse2", "inventory-server", "inventory-server.ini"
+        )
 
     @classmethod
     def get_config(cls, inifile):
@@ -74,7 +73,7 @@ class ConfigReader:
 
 # Build XMLRPC connection to MMC-Agent
 class MMCProxy:
-    """ Provider to connect at mmc-agent """
+    """Provider to connect at mmc-agent"""
 
     def __init__(self):
 
@@ -93,7 +92,7 @@ class MMCProxy:
             self._build_proxy()
 
     def _build_url(self):
-        """ URL building for XML-RPC proxy """
+        """URL building for XML-RPC proxy"""
 
         if "mmc_agent" not in self.inv_server_config:
             logging.getLogger().warn("Error while reading the config file:")
@@ -119,7 +118,7 @@ class MMCProxy:
 
         logging.getLogger().debug("Building the connection URL at mmc-agent")
 
-        self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
+        self._url = "https://%s:%s@%s:%s" % (username, password, host, port)
 
     @property
     def failure(self):
@@ -130,7 +129,7 @@ class MMCProxy:
         return self._failure
 
     def _build_proxy(self):
-        """ Builds the XML-RPC proxy to MMC agent. """
+        """Builds the XML-RPC proxy to MMC agent."""
         try:
             self._proxy = sync.Proxy(self._url)
 
@@ -148,7 +147,7 @@ class MMCProxy:
 
 
 class InventoryUtils:
-    """ Common inventory utils """
+    """Common inventory utils"""
 
     @classmethod
     def is_coming_from_pxe(cls, xml_content):
@@ -162,10 +161,10 @@ class InventoryUtils:
         @return: bool
         """
         xmldoc = parseString(xml_content)
-        if not xmldoc.getElementsByTagName('OSNAME'):
+        if not xmldoc.getElementsByTagName("OSNAME"):
             return False
-        osname = xmldoc.getElementsByTagName('OSNAME')[0].firstChild.nodeValue
-        return osname == 'Unknown operating system (PXE network boot inventory)'
+        osname = xmldoc.getElementsByTagName("OSNAME")[0].firstChild.nodeValue
+        return osname == "Unknown operating system (PXE network boot inventory)"
 
     @classmethod
     def getMACs(cls, content):
@@ -179,16 +178,14 @@ class InventoryUtils:
         @rtype: generator
         """
         dom = parseString(content)
-        tags = dom.getElementsByTagName('MACADDR')
+        tags = dom.getElementsByTagName("MACADDR")
 
         macs = []
 
         if isinstance(tags, list) and len(tags) > 0:
             for tag in tags:
                 xml_tag = tag.toxml()
-                mac = xml_tag.replace(
-                    '<MACADDR>', '').replace(
-                    '</MACADDR>', '')
+                mac = xml_tag.replace("<MACADDR>", "").replace("</MACADDR>", "")
                 macs.append(mac)
 
         return macs

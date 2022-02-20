@@ -23,10 +23,11 @@
 
 # big modules
 import logging
-import os.path # for SSL cert files checking
+import os.path  # for SSL cert files checking
 
 from mmc.support.config import PluginConfig
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
+
 
 class PkgsConfig(PluginConfig):
 
@@ -34,13 +35,13 @@ class PkgsConfig(PluginConfig):
     upaa_server = "127.0.0.1"
     upaa_port = "9990"
     upaa_mountpoint = "/upaa"
-    upaa_username = ''
-    upaa_password = ''
+    upaa_username = ""
+    upaa_password = ""
     upaa_enablessl = True
     upaa_verifypeer = False
-    upaa_cacert = ''
-    upaa_localcert = ''
-    tmp_dir = os.path.join('/tmp', 'pkgs_tmp')
+    upaa_cacert = ""
+    upaa_localcert = ""
+    tmp_dir = os.path.join("/tmp", "pkgs_tmp")
 
     # Appstream settings
     appstream_url = ""
@@ -61,8 +62,9 @@ class PkgsConfig(PluginConfig):
 
         self.max_size_stanza_xmpp = 1048576
         if self.has_option("quick_deploy", "max_size_stanza_xmpp"):
-            self.max_size_stanza_xmpp = self.getint("quick_deploy",
-                                                    "max_size_stanza_xmpp")
+            self.max_size_stanza_xmpp = self.getint(
+                "quick_deploy", "max_size_stanza_xmpp"
+            )
 
         self.dbsslenable = False
         if self.has_option("database", "dbsslenable"):
@@ -72,7 +74,7 @@ class PkgsConfig(PluginConfig):
                 self.dbsslcert = self.get("database", "dbsslcert")
                 self.dbsslkey = self.get("database", "dbsslkey")
 
-        if self.has_option("database",  "dbpooltimeout"):
+        if self.has_option("database", "dbpooltimeout"):
             self.dbpooltimeout = self.getint("database", "dbpooltimeout")
         else:
             self.dbpooltimeout = 30
@@ -87,7 +89,6 @@ class PkgsConfig(PluginConfig):
             self.dbpoolsize = 5
         self.dbpasswd = self.getpassword("database", "dbpasswd")
 
-
         # API Package
         if self.has_option("user_package_api", "server"):
             self.upaa_server = self.get("user_package_api", "server")
@@ -98,13 +99,17 @@ class PkgsConfig(PluginConfig):
 
         if self.has_option("user_package_api", "username"):
             if not isTwistedEnoughForLoginPass():
-                logging.getLogger().warning("your version of twisted is not high enough to use login (user_package_api/username)")
+                logging.getLogger().warning(
+                    "your version of twisted is not high enough to use login (user_package_api/username)"
+                )
                 self.upaa_username = ""
             else:
                 self.upaa_username = self.get("user_package_api", "username")
         if self.has_option("user_package_api", "password"):
             if not isTwistedEnoughForLoginPass():
-                logging.getLogger().warning("your version of twisted is not high enough to use password (user_package_api/password)")
+                logging.getLogger().warning(
+                    "your version of twisted is not high enough to use password (user_package_api/password)"
+                )
                 self.upaa_password = ""
             else:
                 self.upaa_password = self.get("user_package_api", "password")
@@ -116,7 +121,9 @@ class PkgsConfig(PluginConfig):
         if self.upaa_enablessl:
             if self.has_option("user_package_api", "verifypeer"):
                 self.upaa_verifypeer = self.getboolean("user_package_api", "verifypeer")
-            if self.upaa_verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+            if (
+                self.upaa_verifypeer
+            ):  # we need twisted.internet.ssl.Certificate to activate certs
                 if self.has_option("user_package_api", "cacert"):
                     self.upaa_cacert = self.get("user_package_api", "cacert")
                 if self.has_option("user_package_api", "localcert"):
@@ -124,10 +131,15 @@ class PkgsConfig(PluginConfig):
                 if not os.path.isfile(self.upaa_localcert):
                     raise Exception('can\'t read SSL key "%s"' % (self.upaa_localcert))
                 if not os.path.isfile(self.upaa_cacert):
-                    raise Exception('can\'t read SSL certificate "%s"' % (self.upaa_cacert))
+                    raise Exception(
+                        'can\'t read SSL certificate "%s"' % (self.upaa_cacert)
+                    )
                 import twisted.internet.ssl
+
                 if not hasattr(twisted.internet.ssl, "Certificate"):
-                    raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                    raise Exception(
+                        "I need at least Python Twisted 2.5 to handle peer checking"
+                    )
 
         # Appstream settings
         if self.has_option("appstream", "url"):
@@ -136,8 +148,9 @@ class PkgsConfig(PluginConfig):
         # PKGS PARAMETERS
         self.centralizedmultiplesharing = False
         if self.has_option("pkgs", "centralizedmultiplesharing"):
-            self.centralizedmultiplesharing = self.getboolean("pkgs",
-                                                              "centralizedmultiplesharing")
+            self.centralizedmultiplesharing = self.getboolean(
+                "pkgs", "centralizedmultiplesharing"
+            )
         self.movepackage = False
         if self.has_option("pkgs", "movepackage"):
             self.movepackage = self.getboolean("pkgs", "movepackage")

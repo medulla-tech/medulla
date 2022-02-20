@@ -26,10 +26,11 @@ from mmc.support.config import PluginConfig
 from pulse2.database.kiosk.config import KioskDatabaseConfig
 
 
-class KioskConfig(PluginConfig,KioskDatabaseConfig):
-    """ This class is called by the __init__ of the kiosk module. """
-    def __init__(self, name = 'kiosk', conffile = None):
-        if not hasattr(self, 'initdone'):
+class KioskConfig(PluginConfig, KioskDatabaseConfig):
+    """This class is called by the __init__ of the kiosk module."""
+
+    def __init__(self, name="kiosk", conffile=None):
+        if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile)
             KioskDatabaseConfig.__init__(self)
             self.initdone = True
@@ -42,7 +43,7 @@ class KioskConfig(PluginConfig,KioskDatabaseConfig):
         set here will be overwritten by the readConf method.
         """
         PluginConfig.setDefault(self)
-        #self.confOption = "option1"
+        # self.confOption = "option1"
         # ...
 
     def readConf(self):
@@ -63,7 +64,7 @@ class KioskConfig(PluginConfig,KioskDatabaseConfig):
         Must be implemented by the subclass. ConfigException is raised
         with a corresponding error string if a check fails.
         """
-        #if not self.confOption: raise ConfigException("Conf error")
+        # if not self.confOption: raise ConfigException("Conf error")
         pass
 
     @staticmethod

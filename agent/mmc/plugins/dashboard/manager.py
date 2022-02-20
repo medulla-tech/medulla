@@ -39,7 +39,7 @@ class DashboardManager(object, metaclass=SingletonN):
             logger.info("Panel %s disabled by configuration" % panel)
 
     def get_panels(self):
-        return [ name for name, panel in list(self.panel.items()) ]
+        return [name for name, panel in list(self.panel.items())]
 
     def get_panel_infos(self, panel):
         if panel in self.panel:

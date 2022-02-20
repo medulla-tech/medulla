@@ -12,9 +12,11 @@ WEAKREF_TYPES = (weakref.ReferenceType, saferef.BoundMethodWeakref)
 
 
 def _make_id(target):
-    if hasattr(target, '__func__'):
+    if hasattr(target, "__func__"):
         return (id(target.__self__), id(target.__func__))
     return id(target)
+
+
 NONE_ID = _make_id(None)
 
 # A marker for caching
@@ -30,6 +32,7 @@ class Signal(object):
         receivers
             { receriverkey (id) : weakref(receiver) }
     """
+
     def __init__(self, providing_args=None, use_caching=False):
         """
         Create a new signal.
@@ -85,28 +88,28 @@ class Signal(object):
                 a receiver. This will usually be a string, though it may be
                 anything hashable.
         """
-        #from django.conf import settings
+        # from django.conf import settings
 
         ## If DEBUG is on, check that we got a good receiver
-        #if settings.DEBUG:
-            #import inspect
-            #assert callable(receiver), "Signal receivers must be callable."
+        # if settings.DEBUG:
+        # import inspect
+        # assert callable(receiver), "Signal receivers must be callable."
 
-            ## Check for **kwargs
-            ## Not all callables are inspectable with getargspec, so we'll
-            ## try a couple different ways but in the end fall back on assuming
-            ## it is -- we don't want to prevent registration of valid but weird
-            ## callables.
-            #try:
-                #argspec = inspect.getargspec(receiver)
-            #except TypeError:
-                #try:
-                    #argspec = inspect.getargspec(receiver.__call__)
-                #except (TypeError, AttributeError):
-                    #argspec = None
-            #if argspec:
-                #assert argspec[2] is not None, \
-                    #"Signal receivers must accept keyword arguments (**kwargs)."
+        ## Check for **kwargs
+        ## Not all callables are inspectable with getargspec, so we'll
+        ## try a couple different ways but in the end fall back on assuming
+        ## it is -- we don't want to prevent registration of valid but weird
+        ## callables.
+        # try:
+        # argspec = inspect.getargspec(receiver)
+        # except TypeError:
+        # try:
+        # argspec = inspect.getargspec(receiver.__call__)
+        # except (TypeError, AttributeError):
+        # argspec = None
+        # if argspec:
+        # assert argspec[2] is not None, \
+        # "Signal receivers must accept keyword arguments (**kwargs)."
 
         if dispatch_uid:
             lookup_key = (dispatch_uid, _make_id(sender))
@@ -181,7 +184,10 @@ class Signal(object):
         Returns a list of tuple pairs [(receiver, response), ... ].
         """
         responses = []
-        if not self.receivers or self.sender_receivers_cache.get(sender) is NO_RECEIVERS:
+        if (
+            not self.receivers
+            or self.sender_receivers_cache.get(sender) is NO_RECEIVERS
+        ):
             return responses
 
         for receiver in self._live_receivers(sender):
@@ -213,7 +219,10 @@ class Signal(object):
         receiver.
         """
         responses = []
-        if not self.receivers or self.sender_receivers_cache.get(sender) is NO_RECEIVERS:
+        if (
+            not self.receivers
+            or self.sender_receivers_cache.get(sender) is NO_RECEIVERS
+        ):
             return responses
 
         # Call each receiver with whatever arguments it can accept.
@@ -299,6 +308,7 @@ def receiver(signal, **kwargs):
             ...
 
     """
+
     def _decorator(func):
         if isinstance(signal, (list, tuple)):
             for s in signal:
@@ -306,4 +316,5 @@ def receiver(signal, **kwargs):
         else:
             signal.connect(func, **kwargs)
         return func
+
     return _decorator

@@ -25,15 +25,14 @@ import os
 
 
 class xmppbrowsing:
-    """
-    """
+    """ """
 
     def __init__(self, defaultdir=None, rootfilesystem=None):
         """
-            :param type: Uses this parameter to give a path abs
-            :type defaultdir: string
-            :type rootfilesystem :string
-            :return: Function init has no return
+        :param type: Uses this parameter to give a path abs
+        :type defaultdir: string
+        :type rootfilesystem :string
+        :return: Function init has no return
         """
         self.defaultdir = None
         self.rootfilesystem = None
@@ -62,7 +61,7 @@ class xmppbrowsing:
             "list_files_current": os.walk(pathabs).next()[2],
             "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
             "rootfilesystem": self.rootfilesystem,
-            "defaultdir": self.defaultdir
+            "defaultdir": self.defaultdir,
         }
         return self.dirinfos
 
@@ -88,7 +87,7 @@ class xmppbrowsing:
             "list_files_current": ff,
             "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
             "rootfilesystem": self.rootfilesystem,
-            "defaultdir": self.defaultdir
+            "defaultdir": self.defaultdir,
         }
         return self.dirinfos
 

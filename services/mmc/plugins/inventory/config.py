@@ -27,17 +27,20 @@ from pulse2.database.inventory.config import InventoryDatabaseConfig
 from mmc.plugins.inventory.utilities import getInventoryParts
 from mmc.support import mmctools
 
+
 class InventoryConfig(InventoryDatabaseConfig):
     disable = True
     expert_mode = {}
     graph = {}
     software_filter = []
 
-    def init(self, name = 'inventory', conffile = None):
+    def init(self, name="inventory", conffile=None):
         self.dbsection = "inventory"
         self.name = name
-        if not conffile: self.conffile = mmctools.getConfigFile(name)
-        else: self.conffile = conffile
+        if not conffile:
+            self.conffile = mmctools.getConfigFile(name)
+        else:
+            self.conffile = conffile
 
         InventoryDatabaseConfig.setup(self, self.conffile)
         self.setup(self.conffile)
@@ -47,17 +50,17 @@ class InventoryConfig(InventoryDatabaseConfig):
 
         for i in getInventoryParts():
             try:
-                self.graph[i] = self.cp.get("graph", i).split('|')
+                self.graph[i] = self.cp.get("graph", i).split("|")
             except:
                 self.graph[i] = []
             try:
-                self.expert_mode[i] = self.cp.get("expert_mode", i).split('|')
+                self.expert_mode[i] = self.cp.get("expert_mode", i).split("|")
             except:
                 self.expert_mode[i] = []
 
     def getSoftwareFilter(self):
         try:
-            self.software_filter = self.cp.get("main", "software_filter").split(',')
+            self.software_filter = self.cp.get("main", "software_filter").split(",")
         except:
             pass
         return self.software_filter

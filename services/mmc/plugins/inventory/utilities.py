@@ -23,22 +23,46 @@
 Contains some utilities methods.
 """
 
+
 def getInventoryParts():
     """
     @return: Return all available inventory parts
     @rtype: list
     """
-    return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity" ]
+    return [
+        "Bios",
+        "BootDisk",
+        "BootGeneral",
+        "BootMem",
+        "BootPart",
+        "BootPCI",
+        "Controller",
+        "Custom",
+        "Drive",
+        "Hardware",
+        "Input",
+        "Memory",
+        "Modem",
+        "Monitor",
+        "Network",
+        "Port",
+        "Printer",
+        "Slot",
+        "Software",
+        "Sound",
+        "Storage",
+        "VideoCard",
+        "Registry",
+        "Entity",
+    ]
 
 
-def getInventoryNoms(table = None):
+def getInventoryNoms(table=None):
     """
     @return: Return all available nomenclatures tables
     @rtype: dict
     """
-    noms = {
-        'Registry':['Path']
-    }
+    noms = {"Registry": ["Path"]}
 
     if table == None:
         return noms

@@ -24,7 +24,6 @@ from sqlalchemy.orm import create_session
 
 
 class Syncthingsync(object):
-
     def getId(self):
         if self.id is not None:
             return self.id
@@ -69,10 +68,10 @@ class Syncthingsync(object):
             Dict of elements contained into the object.
         """
         return {
-            'id': self.getId(),
-            'date': self.getDate(),
-            'uuidpackage': self.getUuidpackage(),
-            'typesynchro': self.getTypesynchro(),
-            'relayserver_jid': self.getRelayserver_jid(),
-            'watching': self.getWatching()
+            "id": self.getId(),
+            "date": self.getDate(),
+            "uuidpackage": self.getUuidpackage(),
+            "typesynchro": self.getTypesynchro(),
+            "relayserver_jid": self.getRelayserver_jid(),
+            "watching": self.getWatching(),
         }

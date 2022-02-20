@@ -34,13 +34,14 @@ import logging
 from time import time
 import twisted
 from twisted.python import threadable
+
 threadable.init(1)
 thread = deferToThread.__get__  # Create an alias for deferred functions
 
 
 class StringFileHandler:
 
-    data = ''
+    data = ""
 
     def __init__(self, data):
         self.data = data
@@ -54,7 +55,7 @@ class StringFileHandler:
     def read(self, a):
         if len(self.data) <= a:
             output = self.data
-            self.data = ''
+            self.data = ""
         else:
             output = self.data[0:a]
             self.data = self.data[a:]
@@ -62,8 +63,8 @@ class StringFileHandler:
 
 
 class ImagingTFTPServer(object):
-    iface = 'eth0'
-    root = '/var/lib/pulse2/imaging'
+    iface = "eth0"
+    root = "/var/lib/pulse2/imaging"
     port = 69
     strict_rfc1350 = False
     server = None
@@ -75,26 +76,24 @@ class ImagingTFTPServer(object):
         self.logger = logging.getLogger()
 
         def file_handler(TFTPServerHandler, path):
-            # Function that handles virtual files serving
+            # Function that handles virtual files serving
             # Example path: /var/lib/pulse2/imaging/bootmenus/0800275532AF
             try:
-                if path in self.file_cache and self.file_cache[path][0] - time(
-                ) < 10:
+                if path in self.file_cache and self.file_cache[path][0] - time() < 10:
                     data = self.file_cache[path][1]
                 else:
-                    if 'bootmenus/' in path:
+                    if "bootmenus/" in path:
                         # Serving a computer bootmenu
-                        x = path.split('bootmenus/')[1]
+                        x = path.split("bootmenus/")[1]
                         # Get computer mac from path
-                        mac = ':'.join([x[2 * i] + x[2 * i + 1]
-                                       for i in range(6)])
+                        mac = ":".join([x[2 * i] + x[2 * i + 1] for i in range(6)])
 
                         data = Imaging().getBuiltMenu(mac)
                     self.file_cache[path] = [int(time()), data]
                     self.logger.error(data)
             except BaseException:
                 # Serve the default bootmenu
-                data = ''
+                data = ""
 
             data = data
             self.logger.error(data)
@@ -106,15 +105,17 @@ class ImagingTFTPServer(object):
         # Set a signal catcher to get sigterm
         try:
             # Instanciate server object
-            self.server = TFTPServer(self.iface,
-                                     self.root,
-                                     self.port,
-                                     self.strict_rfc1350,
-                                     dynamic_file_callback=file_handler
-                                     )
+            self.server = TFTPServer(
+                self.iface,
+                self.root,
+                self.port,
+                self.strict_rfc1350,
+                dynamic_file_callback=file_handler,
+            )
             # Add a signal catcher for SIGTERM
             twisted.internet.reactor.addSystemEventTrigger(
-                'before', 'shutdown', self.signal_handler)
+                "before", "shutdown", self.signal_handler
+            )
         except Exception as e:
             self.logger.error(str(e))
 
@@ -130,5 +131,4 @@ class ImagingTFTPServer(object):
             deferToThread(self.server.serve_forever)
             self.running = True
         except TFTPServerConfigurationError as e:
-            self.logger.error('TFTP server configuration error: %s!' %
-                              e.message)
+            self.logger.error("TFTP server configuration error: %s!" % e.message)

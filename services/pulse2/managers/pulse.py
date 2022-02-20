@@ -31,7 +31,7 @@ from pulse2.utils import Singleton
 
 class Pulse2Manager(Singleton):
     components = {}
-    main = 'pulse2'
+    main = "pulse2"
 
     def __init__(self):
         Singleton.__init__(self)
@@ -42,9 +42,7 @@ class Pulse2Manager(Singleton):
         self.main = name
 
     def register(self, name, klass):
-        self.logger.debug(
-            "Registering pulse2 manager %s / %s" %
-            (name, str(klass)))
+        self.logger.debug("Registering pulse2 manager %s / %s" % (name, str(klass)))
         self.components[name] = klass
 
     def validate(self):
@@ -71,7 +69,7 @@ class Pulse2Manager(Singleton):
         ret = True
         for mod in self.components:
             klass = self.components[mod]
-            if hasattr(klass, 'putPackageServerEntity'):
+            if hasattr(klass, "putPackageServerEntity"):
                 r = klass().putPackageServerEntity(ps_uuid, e_uuid)
                 ret = ret and r
         return ret

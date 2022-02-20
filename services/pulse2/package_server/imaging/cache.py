@@ -45,29 +45,29 @@ class UUIDCache(pulse2.utils.Singleton):
      - if not, try to find it asking the agent, updating both disk cache and local cache, resetting lifetime
     """
 
-    log = logging.getLogger('imaging')
+    log = logging.getLogger("imaging")
     config = configparser.RawConfigParser()
 
     def __init__(self):
         pulse2.utils.Singleton.__init__(self)
-        self.cachePath = pulse2.package_server.config.P2PServerCP(
-        ).imaging_api['uuid_cache_file']
-        self.cacheLifetime = pulse2.package_server.config.P2PServerCP(
-        ).imaging_api['uuid_cache_lifetime']
+        self.cachePath = pulse2.package_server.config.P2PServerCP().imaging_api[
+            "uuid_cache_file"
+        ]
+        self.cacheLifetime = pulse2.package_server.config.P2PServerCP().imaging_api[
+            "uuid_cache_lifetime"
+        ]
 
         self.log.info("Using %s as UUID Cache File" % self.cachePath)
         if not os.path.isfile(self.cachePath):
             try:
-                self.log.info(
-                    "Creating my UUID Cache File %s" %
-                    (self.cachePath))
-                fp = open(self.cachePath, 'wb')
+                self.log.info("Creating my UUID Cache File %s" % (self.cachePath))
+                fp = open(self.cachePath, "wb")
                 self.config.write(fp)
                 fp.close()
             except Exception as e:
                 self.log.warn(
-                    "Can't create my UUID Cache File %s : %s" %
-                    (self.cachePath, e))
+                    "Can't create my UUID Cache File %s : %s" % (self.cachePath, e)
+                )
                 return None
         if not self._fetch():
             return None
@@ -78,13 +78,13 @@ class UUIDCache(pulse2.utils.Singleton):
         """
         try:
             self.log.debug("Writing my UUID Cache File %s" % (self.cachePath))
-            fp = open(self.cachePath, 'wb')
+            fp = open(self.cachePath, "wb")
             self.config.write(fp)
             fp.close()
         except Exception as e:
             self.log.warn(
-                "Can't write my UUID Cache File %s : %s" %
-                (self.cachePath, e))
+                "Can't write my UUID Cache File %s : %s" % (self.cachePath, e)
+            )
             return False
         return True
 
@@ -94,13 +94,11 @@ class UUIDCache(pulse2.utils.Singleton):
         """
         try:
             self.log.info("Reading my UUID Cache File %s" % (self.cachePath))
-            fp = open(self.cachePath, 'rb')
+            fp = open(self.cachePath, "rb")
             self.config.readfp(fp)
             fp.close()
         except Exception as e:
-            self.log.warn(
-                "Can't read my UUID Cache File %s : %s" %
-                (self.cachePath, e))
+            self.log.warn("Can't read my UUID Cache File %s : %s" % (self.cachePath, e))
             return False
         return True
 
@@ -115,9 +113,9 @@ class UUIDCache(pulse2.utils.Singleton):
         @rtype dict
         """
 
-        uuid = ''
-        shortname = ''
-        fqdn = ''
+        uuid = ""
+        shortname = ""
+        fqdn = ""
 
         if not pulse2.utils.isMACAddress(mac):
             return False
@@ -125,39 +123,40 @@ class UUIDCache(pulse2.utils.Singleton):
         mac = pulse2.utils.normalizeMACAddress(mac)
 
         for section in self.config.sections():
-            if self.config.has_option(section, 'mac'):
-                if self.config.get(section, 'mac') == mac:
+            if self.config.has_option(section, "mac"):
+                if self.config.get(section, "mac") == mac:
                     uuid = section
-                    if self.config.has_option(section, 'shortname'):
-                        shortname = self.config.get(section, 'shortname')
+                    if self.config.has_option(section, "shortname"):
+                        shortname = self.config.get(section, "shortname")
                     else:
-                        shortname = ''
-                    if self.config.has_option(section, 'fullname'):
-                        fqdn = self.config.get(section, 'fullname')
+                        shortname = ""
+                    if self.config.has_option(section, "fullname"):
+                        fqdn = self.config.get(section, "fullname")
                     else:
-                        fqdn = ''
-                    if self.config.has_option(section, 'entity'):
-                        entity = self.config.get(section, 'entity')
+                        fqdn = ""
+                    if self.config.has_option(section, "entity"):
+                        entity = self.config.get(section, "entity")
                     else:
-                        entity = ''
-                    if self.config.has_option(section, 'updated'):
-                        updated = self.config.getint(section, 'updated')
+                        entity = ""
+                    if self.config.has_option(section, "updated"):
+                        updated = self.config.getint(section, "updated")
                     else:
                         updated = 0
                     if int(time.time()) - updated > self.cacheLifetime:
                         self.log.debug(
-                            "Cachefault on %s/%s (expired), ignoring" %
-                            (uuid, mac))
+                            "Cachefault on %s/%s (expired), ignoring" % (uuid, mac)
+                        )
                         self.delete(uuid)
                         # do not break the flow
                         return False
                     return {
-                        'uuid': uuid,
-                        'mac': mac,
-                        'shortname': shortname,
-                        'fqdn': fqdn,
-                        'entity': entity,
-                        'updated': updated}
+                        "uuid": uuid,
+                        "mac": mac,
+                        "shortname": shortname,
+                        "fqdn": fqdn,
+                        "entity": entity,
+                        "updated": updated,
+                    }
         return False
 
     def getByShortName(self, name):
@@ -171,39 +170,40 @@ class UUIDCache(pulse2.utils.Singleton):
         @rtype dict
         """
 
-        uuid = ''
-        mac = ''
-        fqdn = ''
+        uuid = ""
+        mac = ""
+        fqdn = ""
 
         for section in self.config.sections:
-            if self.config.has_option(section, 'shortname'):
-                if self.config.get(section, 'shortname') == name:
-                    shortname = self.config.get(section, 'shortname')
+            if self.config.has_option(section, "shortname"):
+                if self.config.get(section, "shortname") == name:
+                    shortname = self.config.get(section, "shortname")
                     uuid = section
-                    if self.config.has_option(section, 'mac'):
-                        mac = self.config.get(section, 'mac')
+                    if self.config.has_option(section, "mac"):
+                        mac = self.config.get(section, "mac")
                     else:
-                        mac = ''
-                    if self.config.has_option(section, 'fullname'):
-                        fqdn = self.config.get(section, 'fullname')
+                        mac = ""
+                    if self.config.has_option(section, "fullname"):
+                        fqdn = self.config.get(section, "fullname")
                     else:
-                        fqdn = ''
-                    if self.config.has_option(section, 'updated'):
-                        updated = self.config.getint(section, 'updated')
+                        fqdn = ""
+                    if self.config.has_option(section, "updated"):
+                        updated = self.config.getint(section, "updated")
                     else:
                         updated = 0
                     if int(time.time() - updated) > self.cacheLifetime:
                         self.log.debug(
-                            "Cachefault on %s/%s (expired), ignoring" %
-                            (uuid, mac))
+                            "Cachefault on %s/%s (expired), ignoring" % (uuid, mac)
+                        )
                         # do not break the flow
                         # return False
                     return {
-                        'uuid': uuid,
-                        'mac': mac,
-                        'shortname': shortname,
-                        'fqdn': fqdn,
-                        'updated': updated}
+                        "uuid": uuid,
+                        "mac": mac,
+                        "shortname": shortname,
+                        "fqdn": fqdn,
+                        "updated": updated,
+                    }
         return False
 
     def getByUUID(self, uuid):
@@ -217,50 +217,48 @@ class UUIDCache(pulse2.utils.Singleton):
         @rtype dict
         """
 
-        mac = ''
-        shortname = ''
-        fqdn = ''
+        mac = ""
+        shortname = ""
+        fqdn = ""
 
         if not pulse2.utils.isUUID(uuid):
             return False
 
         if self.config.has_section(uuid):
-            if self.config.has_option(uuid, 'mac'):
-                mac = self.config.get(uuid, 'mac')
+            if self.config.has_option(uuid, "mac"):
+                mac = self.config.get(uuid, "mac")
             else:
-                mac = ''
-            if self.config.has_option(uuid, 'shortname'):
-                shortname = self.config.get(uuid, 'shortname')
+                mac = ""
+            if self.config.has_option(uuid, "shortname"):
+                shortname = self.config.get(uuid, "shortname")
             else:
-                shortname = ''
-            if self.config.has_option(uuid, 'fullname'):
-                fqdn = self.config.get(uuid, 'fullname')
+                shortname = ""
+            if self.config.has_option(uuid, "fullname"):
+                fqdn = self.config.get(uuid, "fullname")
             else:
-                fqdn = ''
-            if self.config.has_option(uuid, 'updated'):
-                updated = self.config.getint(uuid, 'updated')
+                fqdn = ""
+            if self.config.has_option(uuid, "updated"):
+                updated = self.config.getint(uuid, "updated")
             else:
                 updated = 0
             if int(time.time()) - updated > self.cacheLifetime:
-                self.log.debug(
-                    "Cachefault on %s/%s (expired), ignoring" %
-                    (uuid, mac))
+                self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
                 # do not break the flow
                 # return False
             return {
-                'uuid': uuid,
-                'mac': mac,
-                'shortname': shortname,
-                'fqdn': fqdn,
-                'updated': updated}
+                "uuid": uuid,
+                "mac": mac,
+                "shortname": shortname,
+                "fqdn": fqdn,
+                "updated": updated,
+            }
         return False
 
     def get(self, uuid):
-        """
-        """
+        """ """
         return self.getByUUID(uuid)
 
-    def set(self, uuid, mac, shortname='', domain='', entity=''):
+    def set(self, uuid, mac, shortname="", domain="", entity=""):
         """
         Add a computer in cache.
 
@@ -286,33 +284,35 @@ class UUIDCache(pulse2.utils.Singleton):
             return False
 
         # normalization
-        fqdn = shortname + '.' + domain
+        fqdn = shortname + "." + domain
         mac = pulse2.utils.normalizeMACAddress(mac)
         updated = int(time.time())
 
         # check that if the UUID is already known, it's MAC is the same as our
         answer = self.getByUUID(uuid)
-        if answer and answer['mac'] != mac:
+        if answer and answer["mac"] != mac:
             self.log.warn(
-                "Cachefault on %s/%s (mac already known : %s), updating" %
-                (uuid, mac, answer['mac']))
+                "Cachefault on %s/%s (mac already known : %s), updating"
+                % (uuid, mac, answer["mac"])
+            )
             self.delete(uuid)
 
         # check that if the MAC is already known, it's UUID is the same as our
         answer = self.getByMac(mac)
-        if answer and answer['uuid'] != uuid:
+        if answer and answer["uuid"] != uuid:
             self.log.warn(
-                "Cachefault on %s/%s (uuid already known : %s), updating" %
-                (uuid, mac, answer['uuid']))
-            self.delete(answer['uuid'])
+                "Cachefault on %s/%s (uuid already known : %s), updating"
+                % (uuid, mac, answer["uuid"])
+            )
+            self.delete(answer["uuid"])
 
         if not self.config.has_section(uuid):
             self.config.add_section(uuid)
-        self.config.set(uuid, 'mac', mac)
-        self.config.set(uuid, 'shortname', shortname)
-        self.config.set(uuid, 'fqdn', fqdn)
-        self.config.set(uuid, 'entity', entity)
-        self.config.set(uuid, 'updated', updated)
+        self.config.set(uuid, "mac", mac)
+        self.config.set(uuid, "shortname", shortname)
+        self.config.set(uuid, "fqdn", fqdn)
+        self.config.set(uuid, "entity", entity)
+        self.config.set(uuid, "updated", updated)
         self._flush()
         return True
 
@@ -331,8 +331,6 @@ class UUIDCache(pulse2.utils.Singleton):
                 self._flush()
                 ret = True
             except Exception as e:
-                self.log.error(
-                    "Can't delete computer UUID %s from the cache: %s" %
-                    e)
+                self.log.error("Can't delete computer UUID %s from the cache: %s" % e)
                 ret = False
         return ret

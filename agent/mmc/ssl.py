@@ -27,6 +27,7 @@ import logging
 
 log = logging.getLogger()
 
+
 def makeSSLContext(verifypeer, cacert, localcert):
     """
     Make the SSL context for the server, according to the parameters

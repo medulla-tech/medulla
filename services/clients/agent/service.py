@@ -29,7 +29,6 @@ from pulse2agent.control import Dispatcher
 
 
 class Handler(object):
-
     def __init__(self):
 
         path = os.path.dirname(os.path.abspath(__file__))

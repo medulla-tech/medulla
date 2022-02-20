@@ -30,26 +30,27 @@ from pulse2.managers.imaging import ComputerImagingI
 from pulse2.managers.location import ComputerLocationManager
 from pulse2.database.imaging import ImagingDatabase
 
+
 class ComputerImagingImaging(ComputerImagingI):
     def isImagingInProfilePossible(self):
-        " check if the root entity is registered "
+        "check if the root entity is registered"
         return True
         # TODO getRootLocationUUID no longer exists!
-        #root_entity_uuid = ComputerLocationManager().getRootLocationUUID()
-        #ret = ImagingDatabase().doesLocationHasImagingServer(root_entity_uuid)
-        #return ret
+        # root_entity_uuid = ComputerLocationManager().getRootLocationUUID()
+        # ret = ImagingDatabase().doesLocationHasImagingServer(root_entity_uuid)
+        # return ret
 
     def getAllImagingServers(self, user_id, is_associated):
         """
         get all the imaging server that this user can access
         """
         locations = ComputerLocationManager().getUserLocations(user_id)
-        locations = [l['uuid'] for l in locations]
+        locations = [l["uuid"] for l in locations]
         r = ImagingDatabase().getEntitiesImagingServer(locations, is_associated)
         ret = {}
         for ims, loc_uuid in r:
             ims = ims.toH()
-            ret[ims['imaging_uuid']] = ims
+            ret[ims["imaging_uuid"]] = ims
         return ret
 
     def getImagingServerEntityUUID(self, imaging_uuid):

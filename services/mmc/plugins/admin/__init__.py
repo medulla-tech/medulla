@@ -21,7 +21,8 @@
 
 # File : mmc/plugins/admin/__init__.py
 
-from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+
 # Au cas où on souhaite appeler des configs d'autres modules
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.admin.config import AdminConfig
@@ -41,6 +42,7 @@ logger = logging.getLogger()
 # PLUGIN GENERAL FUNCTIONS
 # #############################################################
 
+
 def getApiVersion():
     return APIVERSION
 
@@ -54,6 +56,8 @@ def activate():
         return False
 
     if not AdminDatabase().activate(config):
-        logger.warning("Plugin admin: an error occurred during the database initialization")
+        logger.warning(
+            "Plugin admin: an error occurred during the database initialization"
+        )
         return False
     return True

@@ -27,7 +27,7 @@ depending on the version of the database.
 
 # TODO rename location into entity (and locations in location)
 from mmc.plugins.glpi.config import GlpiConfig
-from mmc.plugins.glpi.database_084 import  Glpi084
+from mmc.plugins.glpi.database_084 import Glpi084
 from mmc.plugins.glpi.database_92 import Glpi92
 from mmc.plugins.glpi.database_94 import Glpi94
 from mmc.plugins.glpi.database_95 import Glpi95
@@ -36,17 +36,19 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 
 import logging
 
+
 class Glpi(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database.
 
     """
+
     is_activated = False
 
     def db_check(self):
         return self.database.db_check()
 
-    def activate(self, conffile = None):
+    def activate(self, conffile=None):
         self.logger = logging.getLogger()
 
         if self.is_activated:
@@ -65,7 +67,9 @@ class Glpi(DyngroupDatabaseHelper):
         elif Glpi95().try_activation(self.config):
             self.database = Glpi95()
         else:
-            self.logger.warn("Can't load the right database backend for your version of GLPI")
+            self.logger.warn(
+                "Can't load the right database backend for your version of GLPI"
+            )
             return False
 
         # activate the backend
@@ -73,9 +77,10 @@ class Glpi(DyngroupDatabaseHelper):
         self.is_activated = self.database.is_activated
         # Register the panel to the DashboardManager
         try:
-            logging.getLogger().debug('Try to load glpi panels')
+            logging.getLogger().debug("Try to load glpi panels")
             from mmc.plugins.dashboard.manager import DashboardManager
             from mmc.plugins.dashboard.panel import Panel
+
             DM = DashboardManager()
             DM.register_panel(Panel("inventory"))
             if self.database.fusionantivirus is not None:
@@ -83,7 +88,7 @@ class Glpi(DyngroupDatabaseHelper):
             # Registring OS Repartition panel
             DM.register_panel(Panel("os_repartition"))
         except ImportError:
-            logging.getLogger().debug('Failed to load glpi panels')
+            logging.getLogger().debug("Failed to load glpi panels")
 
         return ret
 

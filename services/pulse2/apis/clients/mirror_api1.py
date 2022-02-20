@@ -83,5 +83,5 @@ class MirrorApi(Pulse2Api):
 
     def convertMachineIntoH(self, machine):
         if not isinstance(machine, dict):
-            machine = {'uuid': machine}
+            machine = {"uuid": machine}
         return machine

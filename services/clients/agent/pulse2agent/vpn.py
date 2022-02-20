@@ -26,15 +26,13 @@ from .ptypes import CC, Component
 from .connect import probe
 
 
-
-
 class VPNLaunchControl(Component):
 
     __component_name__ = "vpn_launch_control"
 
     def start(self):
 
-        #if not self.probe():
+        # if not self.probe():
         #    self.logger.warn("VPN Server unreacheable")
         #    return CC.VPN | CC.REFUSED
 
@@ -45,17 +43,18 @@ class VPNLaunchControl(Component):
 
         self.logger.info("VPN Server command: %s" % repr(cmd))
 
-        process = Popen(cmd,
-                        stdout=PIPE,
-                        stderr=PIPE,
-                        )
+        process = Popen(
+            cmd,
+            stdout=PIPE,
+            stderr=PIPE,
+        )
         out, err = process.communicate()
 
         self.logger.debug("VPN Server stdout: %s" % out)
         self.logger.debug("VPN Server stderr: %s" % err)
         self.logger.debug("VPN Server start exitcode: %s" % process.returncode)
 
-        #self.queue.put((out, err))
+        # self.queue.put((out, err))
 
         # TODO - do not return directly - return something from CC
         if process.returncode == 0:
@@ -63,8 +62,8 @@ class VPNLaunchControl(Component):
         else:
             return CC.VPN | CC.FAILED
 
-
     def probe(self):
-        return probe(self.config.vpn.host,
-                     self.config.vpn.port,
-                     )
+        return probe(
+            self.config.vpn.host,
+            self.config.vpn.port,
+        )

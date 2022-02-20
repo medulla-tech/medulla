@@ -25,6 +25,8 @@ import pprint
 import logging
 
 logger = logging.getLogger()
+
+
 class Session(Exception):
     pass
 
@@ -42,8 +44,15 @@ class SessionkeyError(Session, KeyError):
 
 
 class sessiondatainfo:
-
-    def __init__(self, sessionid, datasession={}, timevalid=10, eventend=None, handlefunc=None, pathfile=None):
+    def __init__(
+        self,
+        sessionid,
+        datasession={},
+        timevalid=10,
+        eventend=None,
+        handlefunc=None,
+        pathfile=None,
+    ):
         self.sessionid = sessionid
         # timevalid en minute
         self.timevalid = timevalid
@@ -56,24 +65,30 @@ class sessiondatainfo:
         logger.debug("SESSION INFO CREATION")
 
     def jsonsession(self):
-        session = {'sessionid': self.sessionid,
-                   'timevalid': self.timevalid, 'datasession': self.datasession}
+        session = {
+            "sessionid": self.sessionid,
+            "timevalid": self.timevalid,
+            "datasession": self.datasession,
+        }
         return json.dumps(session)
 
     def sauvesession(self):
         namefilesession = os.path.join(self.pathfile, self.sessionid)
-        session = {'sessionid': self.sessionid,
-                   'timevalid': self.timevalid, 'datasession': self.datasession}
-        with open(namefilesession, 'w') as f:
+        session = {
+            "sessionid": self.sessionid,
+            "timevalid": self.timevalid,
+            "datasession": self.datasession,
+        }
+        with open(namefilesession, "w") as f:
             json.dump(session, f, indent=4)
 
     def updatesessionfromfile(self):
         namefilesession = os.path.join(self.pathfile, self.sessionid)
-        logger.debug( "SESSION INFO UPDATE SESSION")
+        logger.debug("SESSION INFO UPDATE SESSION")
         with open(namefilesession, "r") as fichier:
             session = json.load(fichier)
-        self.datasession = session['datasession']
-        self.timevalid = session['timevalid']
+        self.datasession = session["datasession"]
+        self.timevalid = session["timevalid"]
 
     def removesessionfile(self):
         namefilesession = os.path.join(self.pathfile, self.sessionid)
@@ -89,7 +104,7 @@ class sessiondatainfo:
     def decrementation(self):
         self.timevalid = self.timevalid - 1
         if self.timevalid <= 0:
-            logger.debug( "appelle callend")
+            logger.debug("appelle callend")
             self.callend()
         else:
             self.sauvesession()
@@ -101,33 +116,41 @@ class sessiondatainfo:
         return sessionid == self.sessionid
 
     def callend(self):
-        logger.debug( "signaler session fin")
+        logger.debug("signaler session fin")
         if self.handlefunc != None:
             self.handlefunc(self.datasession)
         if self.eventend != None:
             self.eventend.set()
 
     def __repr__(self):
-        return "<session %s, validate %s, data %s, eventend %s> " % (self.sessionid, self.timevalid, self.datasession, self.eventend)
+        return "<session %s, validate %s, data %s, eventend %s> " % (
+            self.sessionid,
+            self.timevalid,
+            self.datasession,
+            self.eventend,
+        )
 
 
 class session:
     def __init__(self, typemachine=None):
         self.sessiondata = []
 
-        if(typemachine == "relayserver"):
-            self.dirsavesession = os.path.join(os.path.dirname(
-                os.path.realpath(__file__)), "..", "sessionsrelayserver")
+        if typemachine == "relayserver":
+            self.dirsavesession = os.path.join(
+                os.path.dirname(os.path.realpath(__file__)), "..", "sessionsrelayserver"
+            )
         elif typemachine == "machine":
-            self.dirsavesession = os.path.join(os.path.dirname(
-                os.path.realpath(__file__)), "..", "sessionsmachine")
+            self.dirsavesession = os.path.join(
+                os.path.dirname(os.path.realpath(__file__)), "..", "sessionsmachine"
+            )
         else:
-            self.dirsavesession = os.path.join(os.path.dirname(
-                os.path.realpath(__file__)), "..", "sessions")
+            self.dirsavesession = os.path.join(
+                os.path.dirname(os.path.realpath(__file__)), "..", "sessions"
+            )
 
         if not os.path.exists(self.dirsavesession):
             os.makedirs(self.dirsavesession, mode=0o007)
-        logger.debug( "SESSION %s " % self.dirsavesession)
+        logger.debug("SESSION %s " % self.dirsavesession)
         self.loadsessions()
 
     def addsessiondatainfo(self, sessiondatainfo):
@@ -140,10 +163,13 @@ class session:
     def getcountsession(self):
         return len(self.sessiondata)
 
-    def createsessiondatainfo(self, sessionid,  datasession={}, timevalid=10, eventend=None):
-        logger.debug( "SESSION CREATION UNE SESSION")
-        obj = sessiondatainfo(sessionid, datasession, timevalid,
-                              eventend, pathfile=self.dirsavesession)
+    def createsessiondatainfo(
+        self, sessionid, datasession={}, timevalid=10, eventend=None
+    ):
+        logger.debug("SESSION CREATION UNE SESSION")
+        obj = sessiondatainfo(
+            sessionid, datasession, timevalid, eventend, pathfile=self.dirsavesession
+        )
         self.sessiondata.append(obj)
         if len(datasession) != 0:
             obj.sauvesession()
@@ -152,27 +178,34 @@ class session:
     def removefilesessionifnotsignal(self, namefilesession):
         with open(namefilesession, "r") as fichier:
             session = json.load(fichier)
-        if 'datasession' in session and 'signal' in session['datasession']:
+        if "datasession" in session and "signal" in session["datasession"]:
             return True
         else:
             os.remove(namefilesession)
             return False
 
     def loadsessions(self):
-        listfilesession = [x for x in glob.glob(os.path.join(
-            self.dirsavesession, "*")) if (os.path.isfile(x) and os.path.basename(x).startswith('command'))]
+        listfilesession = [
+            x
+            for x in glob.glob(os.path.join(self.dirsavesession, "*"))
+            if (os.path.isfile(x) and os.path.basename(x).startswith("command"))
+        ]
         for filesession in listfilesession:
             if self.removefilesessionifnotsignal(filesession):
                 try:
                     # Session id is the name of the file
-                    objsession = self.sessionfromsessiondata(os.path.basename(filesession))
+                    objsession = self.sessionfromsessiondata(
+                        os.path.basename(filesession)
+                    )
                     if objsession == None:
                         raise SessionkeyError
                     objsession.pathfile = self.dirsavesession
                     objsession.updatesessionfromfile()
                 except SessionkeyError:
                     # Session does not exist
-                    objsession = self.createsessiondatainfo(os.path.basename(filesession))
+                    objsession = self.createsessiondatainfo(
+                        os.path.basename(filesession)
+                    )
                     objsession.updatesessionfromfile()
 
     def sauvesessions(self):
@@ -217,7 +250,7 @@ class session:
             if i.sessionid == sessionid:
                 return i
         return None
-        #raise SessionkeyError
+        # raise SessionkeyError
 
     def reactualisesession(self, sessionid, timeminute=10):
         for i in self.sessiondata:

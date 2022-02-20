@@ -29,10 +29,16 @@ import logging
 
 from mmc.support.mmctools import Singleton
 from mmc.database.ddl import DDLContentManager, DBControl
-from mmc.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERSION, CUR_VERSION
+from mmc.database.sqlalchemy_tests import (
+    checkSqlalchemy,
+    MIN_VERSION,
+    MAX_VERSION,
+    CUR_VERSION,
+)
 from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker, Query
 from sqlalchemy.exc import NoSuchTableError
+
 try:
     from sqlalchemy.orm.util import _entity_descriptor
 except ImportError:
@@ -57,36 +63,53 @@ class DatabaseHelper(Singleton):
     def db_check(self):
         required_version = DDLContentManager().get_version(self.my_name)
         if not checkSqlalchemy():
-            logger.error("Sqlalchemy: current version is %s. Must be between %s and %s" % (CUR_VERSION, MIN_VERSION, MAX_VERSION))
+            logger.error(
+                "Sqlalchemy: current version is %s. Must be between %s and %s"
+                % (CUR_VERSION, MIN_VERSION, MAX_VERSION)
+            )
             return False
 
         conn = self.connected()
         if conn:
             # Glpi is an external DB, its version is not managed by Pulse
-            if self.my_name == 'Glpi':
+            if self.my_name == "Glpi":
                 return True
             elif required_version == self.db_version:
                 return True
             elif required_version > self.db_version:
                 return self.db_update()
             elif required_version != -1 and conn != required_version:
-                logger.error("%s database version error: v.%s needeed, v.%s found; please update your schema !" % (self.my_name, required_version, conn))
+                logger.error(
+                    "%s database version error: v.%s needeed, v.%s found; please update your schema !"
+                    % (self.my_name, required_version, conn)
+                )
                 return False
         else:
-            logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check %s." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser, self.configfile))
+            logger.error(
+                "Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check %s."
+                % (
+                    self.config.dbhost,
+                    self.config.dbport,
+                    self.config.dbbase,
+                    self.config.dbuser,
+                    self.configfile,
+                )
+            )
             return False
         return True
 
     def db_update(self):
         """Automatic database update"""
 
-        db_control = DBControl(user=self.config.dbuser,
-                               passwd=self.config.dbpasswd,
-                               host=self.config.dbhost,
-                               port=self.config.dbport,
-                               module=self.config.dbname,
-                               log=logger,
-                               use_same_db=True)
+        db_control = DBControl(
+            user=self.config.dbuser,
+            passwd=self.config.dbpasswd,
+            host=self.config.dbhost,
+            port=self.config.dbport,
+            module=self.config.dbname,
+            log=logger,
+            use_same_db=True,
+        )
 
         return db_control.process()
 
@@ -118,14 +141,25 @@ class DatabaseHelper(Singleton):
             port = ":" + str(self.config.dbport)
         else:
             port = ""
-        url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
-        if self.config.dbdriver == 'mysql':
+        url = "%s://%s:%s@%s%s/%s" % (
+            self.config.dbdriver,
+            self.config.dbuser,
+            self.config.dbpasswd,
+            self.config.dbhost,
+            port,
+            self.config.dbname,
+        )
+        if self.config.dbdriver == "mysql":
             # See http://www.sqlalchemy.org/docs/05/reference/dialects/mysql.html#character-sets
             # charset=utf8 will convert all data to UTF-8, even if tables are
             # stored in Latin-1
-            url += '?charset=utf8&use_unicode=0'
+            url += "?charset=utf8&use_unicode=0"
             if self.config.dbsslenable:
-                url = url + "&ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
+                url = url + "&ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (
+                    self.config.dbsslca,
+                    self.config.dbsslkey,
+                    self.config.dbsslcert,
+                )
         return url
 
     def enableLogging(self, level=None):
@@ -163,10 +197,10 @@ class DatabaseHelper(Singleton):
         try:
             self.initMappers()
         except NoSuchTableError as e:
-            logger.warn('The table %s does not exists.' % str(e))
+            logger.warn("The table %s does not exists." % str(e))
             return False
         except:
-            logger.exception('Error when initializing mappers')
+            logger.exception("Error when initializing mappers")
             return False
         return True
 
@@ -176,7 +210,6 @@ class DatabaseHelper(Singleton):
             return self.version.select().execute().fetchone()[0]
         elif hasattr(self, "Version"):
             return self.version.select().execute().fetchone()[0]
-
 
     # Session decorator to create and close session automatically
     @classmethod
@@ -192,6 +225,7 @@ class DatabaseHelper(Singleton):
                 self.session.close()
                 self.session = None
             return result
+
         return __session
 
     # Session decorator to create and close session automatically
@@ -199,13 +233,13 @@ class DatabaseHelper(Singleton):
     def _sessionm(self, func):
         @functools.wraps(func)
         def __sessionm(self, *args, **kw):
-            session_factory  = sessionmaker(bind=self.db)
+            session_factory = sessionmaker(bind=self.db)
             sessionmultithread = scoped_session(session_factory)
-            result = func(self,sessionmultithread , *args, **kw)
+            result = func(self, sessionmultithread, *args, **kw)
             sessionmultithread.remove()
             return result
-        return __sessionm
 
+        return __sessionm
 
     # listinfo decorator to handle offsets, limits and output serialization
     # for XMLRPC, can handle multiple entities queries, multiple columns
@@ -218,20 +252,29 @@ class DatabaseHelper(Singleton):
 
             # Testing if result is a Query statement
             if not isinstance(query, Query):
-                logging.getLogger().error('@_listinfo methods must return a Query object, got %s', query.__class__.__name__)
-                return {'count': 0, 'data': [], 'listinfo': 1}
+                logging.getLogger().error(
+                    "@_listinfo methods must return a Query object, got %s",
+                    query.__class__.__name__,
+                )
+                return {"count": 0, "data": [], "listinfo": 1}
 
             # Applying filters on primary entity
             # Exact filters
-            if 'filters' in params and params['filters']:
-                clauses = [_entity_descriptor(query._mapper_zero(), key) == value
-                    for key, value in params['filters'].items()]
+            if "filters" in params and params["filters"]:
+                clauses = [
+                    _entity_descriptor(query._mapper_zero(), key) == value
+                    for key, value in params["filters"].items()
+                ]
                 if clauses:
                     query = query.filter(*clauses)
             # Like filters
-            if 'like_filters' in params and params['like_filters']:
-                clauses = [_entity_descriptor(query._mapper_zero(), key).like('%' + value + '%')
-                    for key, value in params['like_filters'].items()]
+            if "like_filters" in params and params["like_filters"]:
+                clauses = [
+                    _entity_descriptor(query._mapper_zero(), key).like(
+                        "%" + value + "%"
+                    )
+                    for key, value in params["like_filters"].items()
+                ]
                 if clauses:
                     query = query.filter(*clauses)
 
@@ -242,8 +285,10 @@ class DatabaseHelper(Singleton):
             count = sum([c[0] for c in count.all()])
 
             # Applying limit and offset
-            if 'max' in params and 'min' in params:
-                query = query.limit(int(params['max']) - int(params['min'])).offset(int(params['min']))
+            if "max" in params and "min" in params:
+                query = query.limit(int(params["max"]) - int(params["min"])).offset(
+                    int(params["min"])
+                )
 
             columns = query.column_descriptions
 
@@ -261,27 +306,28 @@ class DatabaseHelper(Singleton):
                         if isinstance(item, DBObj):
                             line_.update(item.toDict())
                         else:
-                            if item.__class__.__name__ == 'Decimal':
+                            if item.__class__.__name__ == "Decimal":
                                 item = int(item)
-                            line_.update({columns[i]['name'].encode('ascii', 'ignore') : item})
+                            line_.update(
+                                {columns[i]["name"].encode("ascii", "ignore"): item}
+                            )
                     data.append(line_)
                 else:
-                    if line.__class__.__name__ == 'Decimal':
+                    if line.__class__.__name__ == "Decimal":
                         line = int(line)
-                    elif hasattr(line, '_sa_instance_state'):
+                    elif hasattr(line, "_sa_instance_state"):
                         # SA object, try to do a dict conversion
                         line = line.__dict__
-                        del line['_sa_instance_state']
+                        del line["_sa_instance_state"]
                     # Base types
                     data.append(line)
 
             # Ensure that session will be closed
             query.session.close()
 
-            return {'count': count, 'data': data, 'listinfo': 1}
+            return {"count": count, "data": data, "listinfo": 1}
 
         return __listinfo
-
 
     @classmethod
     def _logquery(self, func_):
@@ -291,6 +337,7 @@ class DatabaseHelper(Singleton):
         for security, you should always separate queries from their values
         please also note that this function is quite slow
         """
+
         @functools.wraps(func_)
         def __logquery(self, *args, **kw):
             query = func_(self, *args, **kw)
@@ -299,29 +346,36 @@ class DatabaseHelper(Singleton):
             # Begin query logging
             # ===========================================
             if isinstance(query, Query):
-                bind = query.session.get_bind(
-                        query._mapper_zero_or_none()
-                )
+                bind = query.session.get_bind(query._mapper_zero_or_none())
                 statement = query.statement
             else:
-                logging.getLogger().error('@_logquery methods must return a Query object, got %s', query.__class__.__name__)
+                logging.getLogger().error(
+                    "@_logquery methods must return a Query object, got %s",
+                    query.__class__.__name__,
+                )
                 return query
 
             dialect = bind.dialect
             compiler = statement._compiler(dialect)
+
             class LiteralCompiler(compiler.__class__):
                 def visit_bindparam(
-                        self, bindparam, within_columns_clause=False,
-                        literal_binds=False, **kwargs
+                    self,
+                    bindparam,
+                    within_columns_clause=False,
+                    literal_binds=False,
+                    **kwargs
                 ):
                     return super(LiteralCompiler, self).render_literal_bindparam(
-                            bindparam, within_columns_clause=within_columns_clause,
-                            literal_binds=literal_binds, **kwargs
+                        bindparam,
+                        within_columns_clause=within_columns_clause,
+                        literal_binds=literal_binds,
+                        **kwargs
                     )
 
             compiler = LiteralCompiler(dialect, statement)
             query_str = compiler.process(statement)
-            logging.getLogger().debug('Result query for %s:' % func_.__name__)
+            logging.getLogger().debug("Result query for %s:" % func_.__name__)
             logging.getLogger().debug(query_str)
 
             # ===========================================
@@ -334,12 +388,12 @@ class DatabaseHelper(Singleton):
 
 
 class DBObject(object):
-    to_be_exported = ['id', 'name', 'label']
+    to_be_exported = ["id", "name", "label"]
     need_iteration = []
     i18n = []
 
     def getUUID(self):
-        if hasattr(self, 'id'):
+        if hasattr(self, "id"):
             return id2uuid(self.id)
         logging.getLogger().warn("try to get %s uuid!" % type(self))
         return False
@@ -366,8 +420,8 @@ class DBObject(object):
                     ret[i] = new_attr
                 else:
                     ret[i] = attr.toH(level + 1)
-        if hasattr(self, 'id'):
-            ret['db_uuid'] = self.getUUID()
+        if hasattr(self, "id"):
+            ret["db_uuid"] = self.getUUID()
         return ret
 
 
@@ -385,14 +439,14 @@ class DBObj(object):
                 else:
                     del d[k]
         # Delete Sqlachemy instance state
-        if '_sa_instance_state' in d:
-            del d['_sa_instance_state']
+        if "_sa_instance_state" in d:
+            del d["_sa_instance_state"]
         return d
 
     def fromDict(self, d, relations=False):
-        #TODO: Test if d is dict
-        if '_sa_instance_state' in d:
-            del d['_sa_instance_state']
+        # TODO: Test if d is dict
+        if "_sa_instance_state" in d:
+            del d["_sa_instance_state"]
         # Actually we don't support relations
         for key, value in d.items():
             if key and type(value) not in [type({}), type([])]:

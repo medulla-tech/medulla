@@ -40,8 +40,7 @@ from pulse2.scheduler.timeaxis import LaunchTimeResolver
 
 
 class Commands(object):
-    """ Mapping between msc.commands and SA
-    """
+    """Mapping between msc.commands and SA"""
 
     def getId(self):
         result = self.id
@@ -57,8 +56,7 @@ class Commands(object):
 
     def isPartOfABundle(self):
         result = self.fk_bundle is not None
-        logging.getLogger().debug("isPartOfABundle(#%s): %s" %
-                                  (self.id, result))
+        logging.getLogger().debug("isPartOfABundle(#%s): %s" % (self.id, result))
         return result
 
     def getNextConnectionDelay(self):
@@ -66,24 +64,22 @@ class Commands(object):
         return result
 
     def hasToWOL(self):
-        result = self.do_wol == 'enable'
+        result = self.do_wol == "enable"
         logging.getLogger().debug("hasToWOL(#%s): %s" % (self.id, result))
         return result
 
     def hasToImagingMenu(self):
-        result = self.do_imaging_menu == 'enable'
-        logging.getLogger().debug("hasToImagingMenu(#%s): %s" %
-                                  (self.id, result))
+        result = self.do_imaging_menu == "enable"
+        logging.getLogger().debug("hasToImagingMenu(#%s): %s" % (self.id, result))
         return result
 
     def hasToRunInventory(self):
-        result = self.do_inventory == 'enable'
-        logging.getLogger().debug("hasToRunInventory(#%s): %s" %
-                                  (self.id, result))
+        result = self.do_inventory == "enable"
+        logging.getLogger().debug("hasToRunInventory(#%s): %s" % (self.id, result))
         return result
 
     def hasToReboot(self):
-        result = self.do_reboot == 'enable'
+        result = self.do_reboot == "enable"
         logging.getLogger().debug("hasToReboot(#%s): %s" % (self.id, result))
         return result
 
@@ -94,79 +90,79 @@ class Commands(object):
 
     def hasToHaltIfDone(self):
         try:
-            result = 'done' in self.do_halt.split(',')
+            result = "done" in self.do_halt.split(",")
         except AttributeError:  # workaround for buggy v.14 database
-            result = 'done' in self.do_halt
-        logging.getLogger().debug("hasToHaltIfDone(#%s): %s" %
-                                  (self.id, result))
+            result = "done" in self.do_halt
+        logging.getLogger().debug("hasToHaltIfDone(#%s): %s" % (self.id, result))
         return result
 
     def hasToHaltIfFailed(self):
         try:
-            result = 'failed' in self.do_halt.split(',')
+            result = "failed" in self.do_halt.split(",")
         except AttributeError:  # workaround for buggy v.14 database
-            result = 'failed' in self.do_halt
-        logging.getLogger().debug("hasToHaltIfFailed(#%s): %s" %
-                                  (self.id, result))
+            result = "failed" in self.do_halt
+        logging.getLogger().debug("hasToHaltIfFailed(#%s): %s" % (self.id, result))
         return result
 
     def hasToHaltIfOverTime(self):
         try:
-            result = 'over_time' in self.do_halt.split(',')
+            result = "over_time" in self.do_halt.split(",")
         except AttributeError:  # workaround for buggy v.14 database
-            result = 'over_time' in self.do_halt
-        logging.getLogger().debug("hasToHaltIfOverTime(#%s): %s" %
-                                  (self.id, result))
+            result = "over_time" in self.do_halt
+        logging.getLogger().debug("hasToHaltIfOverTime(#%s): %s" % (self.id, result))
         return result
 
     def hasToHaltIfOutOfInterval(self):
         try:
-            result = 'out_of_interval' in self.do_halt.split(',')
+            result = "out_of_interval" in self.do_halt.split(",")
         except AttributeError:
-            result = 'out_of_interval' in self.do_halt
-        logging.getLogger().debug("hasToHaltIfOutOfInterval(#%s): %s" %
-                                  (self.id, result))
+            result = "out_of_interval" in self.do_halt
+        logging.getLogger().debug(
+            "hasToHaltIfOutOfInterval(#%s): %s" % (self.id, result)
+        )
         return result
 
     def hasSomethingToUpload(self):
-        result = (len(self.files) != 0)
-        logging.getLogger().debug("hasSomethingToUpload(#%s): %s" %
-                                  (self.id, result))
+        result = len(self.files) != 0
+        logging.getLogger().debug("hasSomethingToUpload(#%s): %s" % (self.id, result))
         return result
 
     def hasSomethingToExecute(self):
         result = len(self.start_file) != 0
-        logging.getLogger().debug("hasSomethingToExecute(#%s): %s" %
-                                  (self.getId(), result))
+        logging.getLogger().debug(
+            "hasSomethingToExecute(#%s): %s" % (self.getId(), result)
+        )
         return result
 
     def hasSomethingToDelete(self):
         result = len(self.files) != 0
-        logging.getLogger().debug("hasSomethingToDelete(#%s): %s" %
-                                  (self.getId(), result))
+        logging.getLogger().debug(
+            "hasSomethingToDelete(#%s): %s" % (self.getId(), result)
+        )
         return result
 
     def hasToUseProxy(self):
-        result = (self.proxy_mode == 'queue' or self.proxy_mode == 'split')
-        logging.getLogger().debug("hasToUseProxy(#%s): %s" %
-                                  (self.getId(), result))
+        result = self.proxy_mode == "queue" or self.proxy_mode == "split"
+        logging.getLogger().debug("hasToUseProxy(#%s): %s" % (self.getId(), result))
         return result
 
     def hasToUseQueueProxy(self):
-        result = (self.proxy_mode == 'queue')
-        logging.getLogger().debug("hasToUseQueueProxy(#%s): %s" %
-                                  (self.getId(), result))
+        result = self.proxy_mode == "queue"
+        logging.getLogger().debug(
+            "hasToUseQueueProxy(#%s): %s" % (self.getId(), result)
+        )
         return result
 
     def hasToUseSplitProxy(self):
-        result = (self.proxy_mode == 'split')
-        logging.getLogger().debug("hasToUseSplitProxy(#%s): %s" %
-                                  (self.getId(), result))
+        result = self.proxy_mode == "split"
+        logging.getLogger().debug(
+            "hasToUseSplitProxy(#%s): %s" % (self.getId(), result)
+        )
         return result
 
     def isQuickAction(self):
         # TODO: a quick action is not only an action with nothing to upload
-        result = (len(self.files) == 0)
+        result = len(self.files) == 0
         logging.getLogger().debug("isQuickAction(#%s): %s" % (self.id, result))
         return result
 
@@ -176,10 +172,12 @@ class Commands(object):
             result = True
         else:
             result = LaunchTimeResolver().in_deployment_interval(
-                self.deployment_intervals, datetime.datetime.today())
+                self.deployment_intervals, datetime.datetime.today()
+            )
         if not result:
-            logging.getLogger().debug("inDeploymentInterval(#%s): %s" %
-                                      (self.id, result))
+            logging.getLogger().debug(
+                "inDeploymentInterval(#%s): %s" % (self.id, result)
+            )
         return result
 
     def in_valid_time(self):
@@ -196,9 +194,11 @@ class Commands(object):
         if target_uuids:
             myCommandOnHosts = myCommandOnHosts.join(Target)
             myCommandOnHosts = myCommandOnHosts.filter(
-                Target.target_uuid.in_(target_uuids))
+                Target.target_uuid.in_(target_uuids)
+            )
         myCommandOnHosts = myCommandOnHosts.filter(
-            CommandsOnHost.fk_commands == self.getId())
+            CommandsOnHost.fk_commands == self.getId()
+        )
         session.close()
         return myCommandOnHosts.all()
 
@@ -206,7 +206,7 @@ class Commands(object):
         return [a.split("/").pop() for a in self.files.split("\n")]
 
     def setNextConnectionDelay(self, delay):
-        """"set delay to the next attept """
+        """ "set delay to the next attept"""
         self.next_connection_delay = delay
         self.flush()
 
@@ -245,7 +245,7 @@ class Commands(object):
             self.flush()
 
     def flush(self):
-        """ Handle SQL flushing """
+        """Handle SQL flushing"""
         session = sqlalchemy.orm.create_session()
         session.add(self)
         session.flush()
@@ -253,46 +253,46 @@ class Commands(object):
 
     def toH(self):
         return {
-            'id': self.id,
-            'state': self.state,
-            'creation_date': self.creation_date,
-            'sum_running': self.sum_running,
-            'sum_done': self.sum_done,
-            'sum_stopped': self.sum_stopped,
-            'sum_overtimed': self.sum_overtimed,
-            'sum_failed': self.sum_failed,
-            'start_file': self.start_file,
-            'parameters': self.parameters,
-            'start_script': self.start_script,
-            'clean_on_success': self.clean_on_success,
-            'files': self.files,
-            'start_date': self.start_date,
-            'end_date': self.end_date,
-            'target': '',
-            'connect_as': self.connect_as,
-            'creator': self.creator,
-            'dispatched': self.dispatched,
-            'title': self.title,
-            'do_inventory': self.do_inventory,
-            'do_reboot': self.do_reboot,
-            'do_wol': self.do_wol,
-            'do_imaging_menu': self.do_imaging_menu,
-            'do_halt': self.do_halt,
-            'next_connection_delay': self.next_connection_delay,
-            'max_connection_attempt': self.max_connection_attempt,
-            'pre_command_hook': self.pre_command_hook,
-            'post_command_hook': self.post_command_hook,
-            'pre_run_hook': self.pre_run_hook,
-            'post_run_hook': self.post_run_hook,
-            'on_success_hook': self.on_success_hook,
-            'on_failure_hook': self.on_failure_hook,
-            'maxbw': self.maxbw,
-            'deployment_intervals': self.deployment_intervals,
-            'bundle_id': self.fk_bundle,  # keep it for compatibility
-            'fk_bundle': self.fk_bundle,
-            'order_in_bundle': self.order_in_bundle,
-            'proxy_mode': self.proxy_mode,
-            'type': self.type
+            "id": self.id,
+            "state": self.state,
+            "creation_date": self.creation_date,
+            "sum_running": self.sum_running,
+            "sum_done": self.sum_done,
+            "sum_stopped": self.sum_stopped,
+            "sum_overtimed": self.sum_overtimed,
+            "sum_failed": self.sum_failed,
+            "start_file": self.start_file,
+            "parameters": self.parameters,
+            "start_script": self.start_script,
+            "clean_on_success": self.clean_on_success,
+            "files": self.files,
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "target": "",
+            "connect_as": self.connect_as,
+            "creator": self.creator,
+            "dispatched": self.dispatched,
+            "title": self.title,
+            "do_inventory": self.do_inventory,
+            "do_reboot": self.do_reboot,
+            "do_wol": self.do_wol,
+            "do_imaging_menu": self.do_imaging_menu,
+            "do_halt": self.do_halt,
+            "next_connection_delay": self.next_connection_delay,
+            "max_connection_attempt": self.max_connection_attempt,
+            "pre_command_hook": self.pre_command_hook,
+            "post_command_hook": self.post_command_hook,
+            "pre_run_hook": self.pre_run_hook,
+            "post_run_hook": self.post_run_hook,
+            "on_success_hook": self.on_success_hook,
+            "on_failure_hook": self.on_failure_hook,
+            "maxbw": self.maxbw,
+            "deployment_intervals": self.deployment_intervals,
+            "bundle_id": self.fk_bundle,  # keep it for compatibility
+            "fk_bundle": self.fk_bundle,
+            "order_in_bundle": self.order_in_bundle,
+            "proxy_mode": self.proxy_mode,
+            "type": self.type,
         }
 
 

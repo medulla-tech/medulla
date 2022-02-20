@@ -29,7 +29,7 @@ from pulse2.inventoryserver.glpiproxy import _ErrorHandler, FusionErrorHandler
 
 
 class class01ErrorHandler(unittest.TestCase):
-    """ Test of error handling on parsing XML responses"""
+    """Test of error handling on parsing XML responses"""
 
     def test01issubclass(self):
         result = issubclass(FusionErrorHandler, _ErrorHandler)
@@ -53,8 +53,9 @@ class class01ErrorHandler(unittest.TestCase):
 
 
 class class02GlpiProxyTest(unittest.TestCase):
-    """ Test of forwarding inventories to GLPI """
-    def setUp (self):
+    """Test of forwarding inventories to GLPI"""
+
+    def setUp(self):
         self.xml_content = xml_inventory()
         self.url = "http://192.168.127.194/glpi/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
 
@@ -69,7 +70,7 @@ class class02GlpiProxyTest(unittest.TestCase):
 
     def test02post_incorrect_xml(self):
         glpi_proxy = GlpiProxy(self.url)
-        glpi_proxy.send(self.xml_content + "abcd*-/" )
+        glpi_proxy.send(self.xml_content + "abcd*-/")
         result = glpi_proxy.result
 
         nbr_errors = len(result)
@@ -82,6 +83,7 @@ def ok_response():
 <REPLY><RESPONSE>no_update</RESPONSE></REPLY>
 """
 
+
 def not_ok_response():
     return """<?xml version="1.0" encoding="UTF-8"?>
 <REPLY>
@@ -89,8 +91,7 @@ def not_ok_response():
 </REPLY>"""
 
 
-
-def xml_inventory() :
+def xml_inventory():
     return """<?xml version="1.0" encoding="UTF-8" ?>
 <REQUEST>
   <CONTENT>
@@ -4230,5 +4231,6 @@ def xml_inventory() :
 </REQUEST>
 """
 
-if __name__ == "__main__" :
+
+if __name__ == "__main__":
     unittest.main()

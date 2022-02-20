@@ -41,48 +41,44 @@ def basicHealth():
     @returns: a dict containing the indicators
     """
     total, free, swapused = getMem()
-    return {
-        "loadavg": getLoadAvg(),
-        "fd": getFDSummary(),
-        "memory": getMem()
-    }
+    return {"loadavg": getLoadAvg(), "fd": getFDSummary(), "memory": getMem()}
 
 
 def getFDSummary():
 
     result = {
-        'socket': 0,
-        'symlink': 0,
-        'file': 0,
-        'block': 0,
-        'folder': 0,
-        'char': 0,
-        'fifo': 0,
-        'other': 0,
+        "socket": 0,
+        "symlink": 0,
+        "file": 0,
+        "block": 0,
+        "folder": 0,
+        "char": 0,
+        "fifo": 0,
+        "other": 0,
     }
 
-    for fd in range(0, os.sysconf('SC_OPEN_MAX') - 1):
+    for fd in range(0, os.sysconf("SC_OPEN_MAX") - 1):
         try:
             statinfo = os.fstat(fd)
         except OSError:
             # not a good fd
             continue
         if statinfo.st_mode & S_IFSOCK == S_IFSOCK:
-            result['socket'] += 1
+            result["socket"] += 1
         elif statinfo.st_mode & S_IFLNK == S_IFLNK:
-            result['symlink'] += 1
+            result["symlink"] += 1
         elif statinfo.st_mode & S_IFREG == S_IFREG:
-            result['file'] += 1
+            result["file"] += 1
         elif statinfo.st_mode & S_IFBLK == S_IFBLK:
-            result['block'] += 1
+            result["block"] += 1
         elif statinfo.st_mode & S_IFDIR == S_IFDIR:
-            result['folder'] += 1
+            result["folder"] += 1
         elif statinfo.st_mode & S_IFCHR == S_IFCHR:
-            result['char'] += 1
+            result["char"] += 1
         elif statinfo.st_mode & S_IFIFO == S_IFIFO:
-            result['fifo'] += 1
+            result["fifo"] += 1
         else:
-            result['other'] += 1
+            result["other"] += 1
 
     return result
 
@@ -92,21 +88,17 @@ def getLoadAvg():
         f = open("/proc/loadavg")
     except IOError as e:
         logging.getLogger().error(
-            'error opening /proc/loadavg: %d (%s)' %
-            (e.errno, e.strerror))
-        ret = {
-            '1min': 0,
-            '5min': 0,
-            '15min': 0
-        }
+            "error opening /proc/loadavg: %d (%s)" % (e.errno, e.strerror)
+        )
+        ret = {"1min": 0, "5min": 0, "15min": 0}
         return ret
 
     data = f.read()
     f.close()
     loadavg = {
-        '1min': float(data.split()[0]),
-        '5min': float(data.split()[1]),
-        '15min': float(data.split()[2]),
+        "1min": float(data.split()[0]),
+        "5min": float(data.split()[1]),
+        "15min": float(data.split()[2]),
     }
     return loadavg
 
@@ -121,13 +113,9 @@ def getMem():
         meminfo = open("/proc/meminfo")
     except IOError as e:
         logging.getLogger().error(
-            'error opening /proc/meminfo: %d (%s)' %
-            (e.errno, e.strerror))
-        ret = {
-            'total': 0,
-            'free': 0,
-            'swapused': 0
-        }
+            "error opening /proc/meminfo: %d (%s)" % (e.errno, e.strerror)
+        )
+        ret = {"total": 0, "free": 0, "swapused": 0}
         return ret
 
     for line in meminfo:
@@ -143,9 +131,9 @@ def getMem():
             swap_free = int(line.split()[1])
     meminfo.close()
     ret = {
-        'total': total,
-        'free': total - cached - buffers,
-        'swapused': swap_total - swap_free
+        "total": total,
+        "free": total - cached - buffers,
+        "swapused": swap_total - swap_free,
     }
 
     return ret  # return is always in kB

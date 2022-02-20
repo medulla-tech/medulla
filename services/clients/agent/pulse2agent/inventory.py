@@ -33,13 +33,13 @@ SYSTEM = platform.system().upper()
 
 if SYSTEM == "WINDOWS":
 
-    from winreg import ConnectRegistry             #pyflakes.ignore
-    from winreg import OpenKey, CloseKey, EnumKey  #pyflakes.ignore
-    from winreg import HKEY_LOCAL_MACHINE          #pyflakes.ignore
-    from winreg import KEY_READ                    #pyflakes.ignore
-    from winreg import KEY_WOW64_32KEY             #pyflakes.ignore
+    from winreg import ConnectRegistry  # pyflakes.ignore
+    from winreg import OpenKey, CloseKey, EnumKey  # pyflakes.ignore
+    from winreg import HKEY_LOCAL_MACHINE  # pyflakes.ignore
+    from winreg import KEY_READ  # pyflakes.ignore
+    from winreg import KEY_WOW64_32KEY  # pyflakes.ignore
 
-    from win32com.client import Dispatch            #pyflakes.ignore
+    from win32com.client import Dispatch  # pyflakes.ignore
 
 else:
     import fcntl
@@ -48,7 +48,6 @@ from subprocess import Popen, PIPE
 
 from .pexceptions import SoftwareCheckError
 from .ptypes import Component
-
 
 
 class WindowsRegistry:
@@ -72,7 +71,7 @@ class WindowsRegistry:
         logging.getLogger().debug("Registry path: %s " % path)
         try:
             key = OpenKey(reg, path, 0, KEY_READ | KEY_WOW64_32KEY)
-        except WindowsError: # pyflakes.ignore
+        except WindowsError:  # pyflakes.ignore
 
             logging.getLogger().warn("Unable to get registry path: %s " % path)
             logging.getLogger().warn("Cannot check missing software")
@@ -86,16 +85,17 @@ class WindowsRegistry:
                 if folder in missing:
                     missing.remove(folder)
                 i += 1
-            except WindowsError: # pyflakes.ignore
+            except WindowsError:  # pyflakes.ignore
                 break
         CloseKey(key)
         return missing
+
 
 class WMIQueryManager:
     def __init__(self):
 
         objWMIService = Dispatch("WbemScripting.SWbemLocator")
-        self.service = objWMIService.ConnectServer("localhost","root/cimv2")
+        self.service = objWMIService.ConnectServer("localhost", "root/cimv2")
 
     def get(self, klass, columns):
         query = self.service.ExecQuery("Select * from %s" % klass)
@@ -109,6 +109,7 @@ class WMIQueryManager:
                     # TODO - log someone
                     line.append(None)
             yield line
+
 
 class InventoryChecker(Component):
 
@@ -133,7 +134,6 @@ class InventoryChecker(Component):
 
             for name in reg_query:
                 yield name
-
 
         elif SYSTEM == "LINUX":
 
@@ -188,18 +188,19 @@ class InventoryChecker(Component):
         # and executed as parameter
         stf = NamedTemporaryFile(mode="w", delete=False)
 
-        cmd_bash =  "%s | grep '%s'" % (base_command, filter_exp)
+        cmd_bash = "%s | grep '%s'" % (base_command, filter_exp)
         stf.write(cmd_bash)
         stf.close()
 
         command = ["bash", stf.name]
         self.logger.debug("Inventory check cmd: %s" % repr(command))
 
-        process = Popen(command,
-                        stdout=PIPE,
-                        stderr=PIPE,
-                        close_fds=True,
-                       )
+        process = Popen(
+            command,
+            stdout=PIPE,
+            stderr=PIPE,
+            close_fds=True,
+        )
         out, err = process.communicate()
         returncode = process.returncode
         if not len(err.strip()) > 0:
@@ -217,7 +218,6 @@ class InventoryChecker(Component):
 
 
 class MinimalInventory(object):
-
     def get_network(self):
         raise NotImplementedError
 
@@ -227,8 +227,6 @@ class MinimalInventory(object):
             return "Microsoft %s" % system
         else:
             return system
-
-
 
     def get(self):
         network = [n for n in self.get_network()]
@@ -240,31 +238,30 @@ class MinimalInventory(object):
 
 
 class LinuxMinimalInventory(MinimalInventory):
-
     def get_ip_netmask(self, ifname):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
-            ip = socket.inet_ntoa(fcntl.ioctl(s.fileno(),
-                                          0x8915,
-                                          struct.pack('256s', ifname[:15])
-                                          )[20:24]
-                              )
+            ip = socket.inet_ntoa(
+                fcntl.ioctl(s.fileno(), 0x8915, struct.pack("256s", ifname[:15]))[20:24]
+            )
         except IOError:
-            logging.getLogger().warn("Unable to get IP address for interface <%s>" % ifname)
+            logging.getLogger().warn(
+                "Unable to get IP address for interface <%s>" % ifname
+            )
             ip = ""
 
         try:
-            netmask = socket.inet_ntoa(fcntl.ioctl(s.fileno(),
-                                               0x891b,
-                                               struct.pack('256s',ifname)
-                                               )[20:24]
-                                   )
+            netmask = socket.inet_ntoa(
+                fcntl.ioctl(s.fileno(), 0x891B, struct.pack("256s", ifname))[20:24]
+            )
         except IOError:
-            logging.getLogger().warn("Unable to get netmask for interface <%s>" % ifname)
+            logging.getLogger().warn(
+                "Unable to get netmask for interface <%s>" % ifname
+            )
             netmask = ""
 
-        macinfo = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
-        mac = ''.join('%02x:' % ord(char) for char in macinfo[18:24])[:-1]
+        macinfo = fcntl.ioctl(s.fileno(), 0x8927, struct.pack("256s", ifname[:15]))
+        mac = "".join("%02x:" % ord(char) for char in macinfo[18:24])[:-1]
 
         return ip, mac, netmask
 
@@ -276,8 +273,7 @@ class LinuxMinimalInventory(MinimalInventory):
 
             for line in lines:
                 if ":" in line:
-                    yield line[:line.index(":")].strip()
-
+                    yield line[: line.index(":")].strip()
 
     def get_network(self):
         for ifname in self.get_interfaces():
@@ -289,21 +285,23 @@ class LinuxMinimalInventory(MinimalInventory):
     def get_hostname(self):
         return platform.node()
 
+
 class OSXMinimalInventory(MinimalInventory):
     def get_network(self):
         stf = NamedTemporaryFile(mode="w", delete=False)
 
-        cmd_bash =  "ifconfig | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}'"
+        cmd_bash = "ifconfig | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}'"
         stf.write(cmd_bash)
         stf.close()
 
         command = ["bash", stf.name]
 
-        process = Popen(command,
-                        stdout=PIPE,
-                        stderr=PIPE,
-                        close_fds=True,
-                       )
+        process = Popen(
+            command,
+            stdout=PIPE,
+            stderr=PIPE,
+            close_fds=True,
+        )
         out, err = process.communicate()
         returncode = process.returncode
         if returncode == 0:
@@ -319,23 +317,19 @@ class OSXMinimalInventory(MinimalInventory):
         os.unlink(stf.name)
 
 
-
-
 class WindowsMinimalInventory(MinimalInventory):
     def get_network(self):
         wqm = WMIQueryManager()
-        info = wqm.get("Win32_NetworkAdapterConfiguration",
-                       ["Caption",
-                        "IPEnabled",
-                        "IPAddress",
-                        "MACAddress",
-                        "IPSubnet"]
-                       )
+        info = wqm.get(
+            "Win32_NetworkAdapterConfiguration",
+            ["Caption", "IPEnabled", "IPAddress", "MACAddress", "IPSubnet"],
+        )
         for ifname, enabled, ip, mac, netmask in info:
             if enabled and ip and netmask:
                 if ip[0].startswith("127."):
                     continue
                 yield ifname, ip[0], mac, netmask[0]
+
 
 def get_minimal_inventory():
     if SYSTEM == "WINDOWS":

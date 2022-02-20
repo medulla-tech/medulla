@@ -35,7 +35,7 @@ from pulse2.utils import unique
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
-#from mmc.plugins.xmppmaster.config import xmppMasterConfig
+# from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 
 def activate():
@@ -45,10 +45,9 @@ def activate():
 
 def queryPossibilities():
     ret = {}
-    ret['OU user'] = ['list', getAllOuuser]
-    ret['OU Machine'] = ['list', getAllOumachine]
-    logging.getLogger().info('queryPossibilities %s' %
-                             (str(ret)))
+    ret["OU user"] = ["list", getAllOuuser]
+    ret["OU Machine"] = ["list", getAllOumachine]
+    logging.getLogger().info("queryPossibilities %s" % (str(ret)))
     return ret
 
 
@@ -56,10 +55,9 @@ def queryGroups():
     # Assign criterions to categories
     ret = []
     # Identification cat
-    ret.append(['ActifDirectory',
-                [['OU user', 'ex OU User'],
-                 ['OU Machine', 'ex OU Machine']
-                 ]])
+    ret.append(
+        ["ActifDirectory", [["OU user", "ex OU User"], ["OU Machine", "ex OU Machine"]]]
+    )
     return ret
 
 
@@ -76,16 +74,18 @@ def query(ctx, criterion, value):
     logging.getLogger().info(value)
     machines = []
 
-    if criterion == 'OU user':
+    if criterion == "OU user":
         machines = [x.name for x in Glpi().getMachineByHostname(ctx, value)]
-    elif criterion == 'OU Machine':
+    elif criterion == "OU Machine":
         machines = [x.name for x in Glpi().getMachineByContact(ctx, value)]
     return [machines, True]
 
 
-def getAllOuuser(ctx, value=''):
+def getAllOuuser(ctx, value=""):
     return unique([x.ouuser for x in XmppMasterDatabase().getAllOUuser(ctx, value)])
 
 
-def getAllOumachine(ctx, value=''):
-    return unique([x.oumachine for x in XmppMasterDatabase().getAllOUmachine(ctx, value)])
+def getAllOumachine(ctx, value=""):
+    return unique(
+        [x.oumachine for x in XmppMasterDatabase().getAllOUmachine(ctx, value)]
+    )

@@ -26,12 +26,10 @@ from pulse2.cm.trigger import Trigger
 
 
 class Test00_Trigger(TestCase):
-
     def setUp(self):
         self.clock = Clock()
 
     def test01_fire(self):
-
         def test_method():
             self.clock.advance(5)
 

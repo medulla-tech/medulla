@@ -23,29 +23,29 @@
 
 import os
 import tempfile
+
 try:
     from twisted.trial.unittest import TestCase
 except ImportError:
-    from unittest import TestCase, main # pyflakes.ignore
+    from unittest import TestCase, main  # pyflakes.ignore
 
 from pulse2agent._config import ExtendedConfigParser, ConfigReader
 from pulse2agent._config import InvalidSection, DefaultsNotFound
 
 
-
 class Test00_ExtendedConfigParser(TestCase):
-
     def test00_unicode(self):
-        """ Several unicode options test """
+        """Several unicode options test"""
 
         unicode_fr = "Dès Noël où un zéphyr haï me vêt de glaçons würmiens je dîne d’exquis rôtis de bœuf au kir à l’aÿ d’âge mûr & cætera"
         unicode_de = "Zwölf große Boxkämpfer jagen Viktor quer über den Sylter Deich"
         unicode_cz = "Příliš žluťoučký kůň úpěl ďábelské kódy"
         unicode_ru = "Даждъ намъ дънесь"
 
-        body = "[main]\nunicode_fr = %s\nunicode_de = %s\nunicode_cz = %s\nunicode_ru = %s"
-        content = body % (unicode_fr, unicode_de, unicode_cz ,unicode_ru)
-
+        body = (
+            "[main]\nunicode_fr = %s\nunicode_de = %s\nunicode_cz = %s\nunicode_ru = %s"
+        )
+        content = body % (unicode_fr, unicode_de, unicode_cz, unicode_ru)
 
         t_file = tempfile.NamedTemporaryFile(mode="w", delete=False)
         t_file.write(content)
@@ -62,7 +62,7 @@ class Test00_ExtendedConfigParser(TestCase):
         os.unlink(t_file.name)
 
     def test01_lists(self):
-        """ Reading of lists with several elements """
+        """Reading of lists with several elements"""
 
         list1 = ["first_element", 8, False, 0.21444]
         list2 = ["12.52.12.1", 4144]
@@ -79,7 +79,9 @@ class Test00_ExtendedConfigParser(TestCase):
             @return: list formatted as string
             @rtype: str
             """
-            return ", ".join(str(v).replace("'","").replace('"','').strip() for v in values)
+            return ", ".join(
+                str(v).replace("'", "").replace('"', "").strip() for v in values
+            )
 
         body = "[main]\nlist1 = %s\nlist2 = %s"
         content = body % (repr_list(list1), repr_list(list2))
@@ -96,8 +98,8 @@ class Test00_ExtendedConfigParser(TestCase):
 
         os.unlink(t_file.name)
 
-class Test01_ConfigReader(TestCase):
 
+class Test01_ConfigReader(TestCase):
     def setUp(self):
         class MyTestConfig(object, metaclass=ConfigReader):
             class main(object):
@@ -117,32 +119,32 @@ class Test01_ConfigReader(TestCase):
 
         self.config = MyTestConfig()
 
-
-
     def test00_options_list(self):
-        """ Test of presence of all options """
+        """Test of presence of all options"""
         options = {}
-        options["main"] = ["option_str",
-                           "option_int",
-                           "option_float",
-                           "option_bool",
-                           "option_list"]
-        options["database"] = ["name",
-                               "host",
-                               "port",
-                               "user",
-                               "password",
-                               "timeout",
-                               ]
+        options["main"] = [
+            "option_str",
+            "option_int",
+            "option_float",
+            "option_bool",
+            "option_list",
+        ]
+        options["database"] = [
+            "name",
+            "host",
+            "port",
+            "user",
+            "password",
+            "timeout",
+        ]
 
         for section_name in options:
             section = getattr(self.config, section_name)
             for name, value in self.config.options(section):
                 self.assertIn(name, options[section_name])
 
-
     def test01_override(self):
-        """Test of overriding by config file """
+        """Test of overriding by config file"""
         main_option_int = 60
         database_name = "anotherdb"
         body = "[main]\noption_int = %s\n[database]\nname = %s"
@@ -159,9 +161,8 @@ class Test01_ConfigReader(TestCase):
 
         os.unlink(t_file.name)
 
-
     def test02_add_not_existing_section(self):
-        """ File contains undeclared section """
+        """File contains undeclared section"""
         body = "[another_section]\noption1 = any string"
 
         t_file = tempfile.NamedTemporaryFile(mode="w", delete=False)
@@ -171,7 +172,6 @@ class Test01_ConfigReader(TestCase):
         self.assertRaises(DefaultsNotFound, self.config.read, t_file.name)
 
         os.unlink(t_file.name)
-
 
     def test03_bad_section_declare(self):
         """
@@ -196,7 +196,7 @@ class Test01_ConfigReader(TestCase):
         os.unlink(t_file.name)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
-    if TestCase.__module__ != "twisted.trial.unittest" :
+    if TestCase.__module__ != "twisted.trial.unittest":
         main()

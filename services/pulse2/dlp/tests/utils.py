@@ -38,11 +38,14 @@ import urllib.parse
 
 def run_agent():
     print("### RUNNING DLP")
-    process = Popen(['pulse2-dlp-server',
-                     '-d',
-                     '-c',
-                     os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                                  'config.ini')])
+    process = Popen(
+        [
+            "pulse2-dlp-server",
+            "-d",
+            "-c",
+            os.path.join(os.path.abspath(os.path.dirname(__file__)), "config.ini"),
+        ]
+    )
     time.sleep(2)
     return process
 
@@ -63,16 +66,16 @@ def run_tests(test_case, process):
 
 def clean_packages():
     # clean packages cache
-    if os.path.exists('/tmp/test_packages/'):
-        shutil.rmtree('/tmp/test_packages/')
+    if os.path.exists("/tmp/test_packages/"):
+        shutil.rmtree("/tmp/test_packages/")
 
 
 class HTTPClient(object):
-
     def __init__(self, base_url):
         self.cookie_jar = http.cookiejar.CookieJar()
         self.opener = urllib.request.build_opener(
-            urllib.request.HTTPCookieProcessor(self.cookie_jar))
+            urllib.request.HTTPCookieProcessor(self.cookie_jar)
+        )
         urllib.request.install_opener(self.opener)
         self.base_url = base_url
 

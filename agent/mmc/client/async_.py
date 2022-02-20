@@ -40,25 +40,25 @@ import os
 import stat
 from twisted.web import xmlrpc
 
-COOKIES_FILE = '/tmp/mmc-cookies'
+COOKIES_FILE = "/tmp/mmc-cookies"
+
 
 class MMCQueryProtocol(xmlrpc.QueryProtocol):
-
     def connectionMade(self):
-        self.sendCommand('POST', self.factory.path)
-        self.sendHeader('User-Agent', 'Twisted/XMLRPClib')
-        self.sendHeader('Host', self.factory.host)
-        self.sendHeader('Content-type', 'text/xml')
-        self.sendHeader('Content-length', str(len(self.factory.payload)))
+        self.sendCommand("POST", self.factory.path)
+        self.sendHeader("User-Agent", "Twisted/XMLRPClib")
+        self.sendHeader("Host", self.factory.host)
+        self.sendHeader("Content-type", "text/xml")
+        self.sendHeader("Content-length", str(len(self.factory.payload)))
         if self.factory.user:
-            auth = '%s:%s' % (self.factory.user, self.factory.password)
-            auth = auth.encode('base64').strip()
-            self.sendHeader('Authorization', 'Basic %s' % (auth,))
+            auth = "%s:%s" % (self.factory.user, self.factory.password)
+            auth = auth.encode("base64").strip()
+            self.sendHeader("Authorization", "Basic %s" % (auth,))
         try:
             # Put MMC session cookie
-            if not '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
-                h = open(COOKIES_FILE, 'r')
-                self.sendHeader('Cookie', h.read())
+            if not "<methodName>base.ldapAuth</methodName>" in self.factory.payload:
+                h = open(COOKIES_FILE, "r")
+                self.sendHeader("Cookie", h.read())
                 h.close()
         except IOError:
             pass
@@ -73,8 +73,8 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
 
     def handleResponse(self, contents):
         xmlrpc.QueryProtocol.handleResponse(self, contents)
-        if '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
-            h = open(COOKIES_FILE, 'w+')
+        if "<methodName>base.ldapAuth</methodName>" in self.factory.payload:
+            h = open(COOKIES_FILE, "w+")
             h.write(self._session)
             h.close()
             os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)

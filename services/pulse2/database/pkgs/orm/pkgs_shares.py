@@ -33,8 +33,8 @@ import logging
 
 
 class Pkgs_shares(object):
-    """ Mapping between pkgs.pkgs_shares and SA
-        colunm table :' id,name,comments,enabled,type,uri,ars_name,ars_id,share_path'
+    """Mapping between pkgs.pkgs_shares and SA
+    colunm table :' id,name,comments,enabled,type,uri,ars_name,ars_id,share_path'
     """
 
     def getId(self):
@@ -93,7 +93,7 @@ class Pkgs_shares(object):
 
     def getusedquotas(self):
         """
-            This function is used to retrieve the used quotas
+        This function is used to retrieve the used quotas
         """
         if self.usedquotas is not None:
             return self.usedquotas
@@ -102,7 +102,7 @@ class Pkgs_shares(object):
 
     def getquotas(self):
         """
-            This function is used to retrieve the quotas
+        This function is used to retrieve the quotas
         """
         if self.quotas is not None:
             return self.quotas
@@ -111,28 +111,30 @@ class Pkgs_shares(object):
 
     def to_array(self):
         return {
-            'id': self.getId(),
-            'name': self.getName(),
-            'comments': self.getComments(),
-            'enabled': self.getEnabled(),
-            'type': self.getType(),
-            'uri': self.getUri(),
-            'ars_name': self.getArs_name(),
-            'Ars_id': self.getArs_id(),
-            'share_path': self.getshare_path(),
-            'usedquotas': self.getusedquotas(),
-            'quotas': self.getquotas()}
+            "id": self.getId(),
+            "name": self.getName(),
+            "comments": self.getComments(),
+            "enabled": self.getEnabled(),
+            "type": self.getType(),
+            "uri": self.getUri(),
+            "ars_name": self.getArs_name(),
+            "Ars_id": self.getArs_id(),
+            "share_path": self.getshare_path(),
+            "usedquotas": self.getusedquotas(),
+            "quotas": self.getquotas(),
+        }
 
     def toH(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'comments': self.comments,
-            'enabled': self.enabled,
-            'type': self.type,
-            'uri': self.uri,
-            'ars_name': self.ars_name,
-            'ars_id': self.ars_id,
-            'share_path': self.share_path,
-            'usedquotas': self.usedquotas,
-            'quotas': self.quotas}
+            "id": self.id,
+            "name": self.name,
+            "comments": self.comments,
+            "enabled": self.enabled,
+            "type": self.type,
+            "uri": self.uri,
+            "ars_name": self.ars_name,
+            "ars_id": self.ars_id,
+            "share_path": self.share_path,
+            "usedquotas": self.usedquotas,
+            "quotas": self.quotas,
+        }

@@ -58,7 +58,7 @@ def test_singleton():
 
 def test_singleton_n():
     """Tests the SingletonN object in pulse2/utils.py
-Test 2"""
+    Test 2"""
 
     class UniqueSingletonN(object, metaclass=pulse2.utils.SingletonN):
         """Object for simulate SingletonN"""
@@ -125,15 +125,13 @@ class TestXmlrpcCleanup(object):
         """Test xmlrpcCleanup with date
         Test 8"""
         the_date = date(2018, 0o2, 0o5)
-        assert pulse2.utils.xmlrpcCleanup(
-            the_date) == tuple(the_date.timetuple())
+        assert pulse2.utils.xmlrpcCleanup(the_date) == tuple(the_date.timetuple())
 
     def test_with_datetime(self):
         """Test xmlrpcCleanup with datetime
         Test 9"""
         the_date = datetime(2018, 0o2, 3)
-        assert pulse2.utils.xmlrpcCleanup(
-            the_date) == tuple(the_date.timetuple())
+        assert pulse2.utils.xmlrpcCleanup(the_date) == tuple(the_date.timetuple())
 
     def test_with_string(self):
         """Test xmlrpcCleanup with string
@@ -167,21 +165,33 @@ class TestXmlrpcCleanup(object):
         Test 15"""
         the_date = datetime(2018, 0o2, 3)
         assert pulse2.utils.xmlrpcCleanup((1, int(2), "3", the_date, None)) == [
-            1, "2", "3", tuple(the_date.timetuple()), False]
+            1,
+            "2",
+            "3",
+            tuple(the_date.timetuple()),
+            False,
+        ]
 
     def test_with_list(self):
         """Test xmlrpcCleanup with list
         Test 16"""
         the_date = datetime(2018, 0o2, 3)
         assert pulse2.utils.xmlrpcCleanup([1, int(2), "3", [the_date, None]]) == [
-            1, "2", "3", [tuple(the_date.timetuple()), False]]
+            1,
+            "2",
+            "3",
+            [tuple(the_date.timetuple()), False],
+        ]
 
     def test_with_dict(self):
         """Test xmlrpcCleanup with dict
         Test 17"""
-        the_dict = {'a': 4, 1: 'value', 'key': None}
+        the_dict = {"a": 4, 1: "value", "key": None}
         assert pulse2.utils.xmlrpcCleanup(the_dict) == {
-            'a': 4, '1': 'value', 'key': False}
+            "a": 4,
+            "1": "value",
+            "key": False,
+        }
 
     def test_without_parameters(self):
         """Test xmlrpcCleanup without parameters
@@ -197,13 +207,14 @@ class TestUnique(object):
         """Test with mixed list
         Test 19"""
         # Test the function unique()
-        assert pulse2.utils.unique(["c", ["a", "b"], (0, 0), [2, 3], ["a", "b"], "c", 1, 1, [
-                                   2, 3], (0, 0)]) == [1, [2, 3], ['a', 'b'], 'c', (0, 0)]
+        assert pulse2.utils.unique(
+            ["c", ["a", "b"], (0, 0), [2, 3], ["a", "b"], "c", 1, 1, [2, 3], (0, 0)]
+        ) == [1, [2, 3], ["a", "b"], "c", (0, 0)]
 
     def test_with_string(self):
         """Test with string
         Test 20"""
-        assert pulse2.utils.unique("test") == ['s', 'e', 't']
+        assert pulse2.utils.unique("test") == ["s", "e", "t"]
 
     def test_with_int(self):
         """Test with int
@@ -214,8 +225,7 @@ class TestUnique(object):
     def test_with_dict(self):
         """Test with dict
         Test 22"""
-        assert pulse2.utils.unique(
-            {"c": ["a", "b"], 'b': (0, 0), 'c': 4}) == ['c', 'b']
+        assert pulse2.utils.unique({"c": ["a", "b"], "b": (0, 0), "c": 4}) == ["c", "b"]
 
     def test_without_parameters(self):
         """Test without parameters
@@ -343,14 +353,17 @@ class TestGetConfigFile(object):
     def test_with_string_and_default_path(self):
         """Test the function with string for the module name
         Test 38"""
-        assert pulse2.utils.getConfigFile(
-            "my_module") == "/etc/mmc/plugins/my_module.ini"
+        assert (
+            pulse2.utils.getConfigFile("my_module") == "/etc/mmc/plugins/my_module.ini"
+        )
 
     def test_with_string_and_string_path(self):
         """Test the function with another path
         Test 39"""
-        assert pulse2.utils.getConfigFile(
-            "my_module", "my/new/path/") == "my/new/path/my_module.ini"
+        assert (
+            pulse2.utils.getConfigFile("my_module", "my/new/path/")
+            == "my/new/path/my_module.ini"
+        )
 
     def test_with_string_and_int_path(self):
         """Test the function with another path
@@ -445,9 +458,19 @@ class TestGrep(object):
         """Test if the returned result is correct
         Test 55"""
         assert pulse2.utils.grep(
-            "is", [
-                "this", 'string', 'is', 'relatively', 'long', 'to', 'test', 'the', 'result']) == [
-            'this', 'is']
+            "is",
+            [
+                "this",
+                "string",
+                "is",
+                "relatively",
+                "long",
+                "to",
+                "test",
+                "the",
+                "result",
+            ],
+        ) == ["this", "is"]
 
     def test_with_list_as_int(self):
         """Test the function with int instead of the list
@@ -479,7 +502,7 @@ class TestGrepv(object):
         assert pulse2.utils.grepv("1", ["1", "2", "3"]) == ["2", "3"]
 
         # Test 60
-        assert pulse2.utils.grepv("a", "arbre") == ["r", 'b', 'r', 'e']
+        assert pulse2.utils.grepv("a", "arbre") == ["r", "b", "r", "e"]
 
 
 ###
@@ -488,56 +511,50 @@ class TestGrepv(object):
 #
 ###
 
-class InputTests(unittest.TestCase):
 
+class InputTests(unittest.TestCase):
     def test_MACValid(self):
-        self.assertTrue(isMACAddress('00:11:aa:BB:22:33'))
-        self.assertTrue(isMACAddress('00:11:aa:BB:22:33'))
+        self.assertTrue(isMACAddress("00:11:aa:BB:22:33"))
+        self.assertTrue(isMACAddress("00:11:aa:BB:22:33"))
 
     def test_MACNotValid(self):
-        self.assertFalse(isMACAddress('00:11:aa:BB:22:zz'))
-        self.assertFalse(isMACAddress('00:11:aa:BB:22:33:00'))
+        self.assertFalse(isMACAddress("00:11:aa:BB:22:zz"))
+        self.assertFalse(isMACAddress("00:11:aa:BB:22:33:00"))
 
     def test_UUIDValid(self):
-        self.assertTrue(isUUID('UUID1'))
-        self.assertTrue(isUUID('UUID1'))
-        self.assertTrue(isUUID('1a10b1f4-bb6e-4798-b39e-bb8d090dd8b6'))
+        self.assertTrue(isUUID("UUID1"))
+        self.assertTrue(isUUID("UUID1"))
+        self.assertTrue(isUUID("1a10b1f4-bb6e-4798-b39e-bb8d090dd8b6"))
 
     def test_UUIDNotValid(self):
-        self.assertFalse(isUUID('UUID0'))
-        self.assertFalse(isUUID('UUID-10'))
-        self.assertFalse(isUUID(''))
-        self.assertFalse(isUUID('1a10b1f4-bb6e-4798-b39e-bb8d090dd8b'))
+        self.assertFalse(isUUID("UUID0"))
+        self.assertFalse(isUUID("UUID-10"))
+        self.assertFalse(isUUID(""))
+        self.assertFalse(isUUID("1a10b1f4-bb6e-4798-b39e-bb8d090dd8b"))
         self.assertFalse(isUUID(42))
 
     def test_computerPathValid(self):
-        self.assertEqual(splitComputerPath('hostname'),
-                         ('', '', 'hostname', ''))
-        self.assertEqual(splitComputerPath('123456'), ('', '', '123456', ''))
+        self.assertEqual(splitComputerPath("hostname"), ("", "", "hostname", ""))
+        self.assertEqual(splitComputerPath("123456"), ("", "", "123456", ""))
         self.assertEqual(
-            splitComputerPath('hostname.domain-example.net'),
-            ('',
-             '',
-             'hostname',
-             'domain-example.net'))
-        self.assertEqual(splitComputerPath('profile:hostname'),
-                         ('profile', '', 'hostname', ''))
-        self.assertEqual(splitComputerPath('profile:/hostname'),
-                         ('profile', '', 'hostname', ''))
+            splitComputerPath("hostname.domain-example.net"),
+            ("", "", "hostname", "domain-example.net"),
+        )
         self.assertEqual(
-            splitComputerPath('/root/sub1/sub2/hostname'),
-            ('',
-             '/root/sub1/sub2',
-             'hostname',
-             ''))
+            splitComputerPath("profile:hostname"), ("profile", "", "hostname", "")
+        )
         self.assertEqual(
-            splitComputerPath('profile:/root/sub1/sub2/hostname'),
-            ('profile',
-             '/root/sub1/sub2',
-             'hostname',
-             ''))
+            splitComputerPath("profile:/hostname"), ("profile", "", "hostname", "")
+        )
+        self.assertEqual(
+            splitComputerPath("/root/sub1/sub2/hostname"),
+            ("", "/root/sub1/sub2", "hostname", ""),
+        )
+        self.assertEqual(
+            splitComputerPath("profile:/root/sub1/sub2/hostname"),
+            ("profile", "/root/sub1/sub2", "hostname", ""),
+        )
         self.assertRaises(
-            TypeError,
-            splitComputerPath,
-            'profile:root/sub1/sub2/hostname')
-        self.assertRaises(TypeError, splitComputerPath, 'profile:')
+            TypeError, splitComputerPath, "profile:root/sub1/sub2/hostname"
+        )
+        self.assertRaises(TypeError, splitComputerPath, "profile:")

@@ -32,15 +32,9 @@ logger = logging.getLogger(__name__)
 
 
 class ResultWorker(Thread):
-
     def __init__(
-            self,
-            stop,
-            start_polling,
-            result_queue,
-            retry_queue,
-            dlp_client,
-            **kwargs):
+        self, stop, start_polling, result_queue, retry_queue, dlp_client, **kwargs
+    ):
         Thread.__init__(self, **kwargs)
         self.stop = stop
         self.start_polling = start_polling
@@ -82,14 +76,7 @@ class ResultWorker(Thread):
 
 
 class StepWorker(Thread):
-
-    def __init__(
-            self,
-            stop,
-            step_queue,
-            result_queue,
-            watchdog_queue,
-            **kwargs):
+    def __init__(self, stop, step_queue, result_queue, watchdog_queue, **kwargs):
         Thread.__init__(self, **kwargs)
         self.stop = stop
         self.step_queue = step_queue
@@ -135,8 +122,9 @@ class WatchdogWorker(Thread):
 
     scheduled_to = None
 
-    def __init__(self, stop, queue, queues,
-                 post_deploy_script, triggers_folder, **kwargs):
+    def __init__(
+        self, stop, queue, queues, post_deploy_script, triggers_folder, **kwargs
+    ):
         Thread.__init__(self, **kwargs)
         self.stop = stop
         self.queue = queue
@@ -166,9 +154,11 @@ class WatchdogWorker(Thread):
         if self.scheduled_to is not None:
             now = time.time()
             logger.debug(
-                "Re-lock scheduled to %s" %
-                datetime.fromtimestamp(
-                    self.scheduled_to).strftime("'%Y-%m-%d %H:%M:%S'"))
+                "Re-lock scheduled to %s"
+                % datetime.fromtimestamp(self.scheduled_to).strftime(
+                    "'%Y-%m-%d %H:%M:%S'"
+                )
+            )
             if now > self.scheduled_to and self.queues.empty():
                 logger.info("Watchdog timeout reached")
                 self._execute()
@@ -185,10 +175,9 @@ class WatchdogWorker(Thread):
             if base_path.endswith("\\") or base_path.endswith("/"):
                 base_path = base_path[:-1]
 
-        path = "%s/%s" % (self.triggers_folder,
-                          self.post_deploy_script)
+        path = "%s/%s" % (self.triggers_folder, self.post_deploy_script)
         logger.info("Script path: %s" % path)
-        output, exitcode = launcher(path, '', base_path)
+        output, exitcode = launcher(path, "", base_path)
 
         logger.debug("Script output: %s" % output)
         if exitcode == 0:

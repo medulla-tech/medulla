@@ -76,24 +76,22 @@ class Trigger(object):
 
         if not self.locked:
             # d = deferToThread(self.method,
-            d = maybeDeferred(self.method,
-                              *self.args,
-                              **self.kwargs
-                              )
+            d = maybeDeferred(self.method, *self.args, **self.kwargs)
             self.locked = True
 
             @d.addErrback
             def failed(failure):
                 self.logger.warn(
-                    "Method <%s> calling failed: %s" %
-                    (self.method.__name__, str(failure)))
+                    "Method <%s> calling failed: %s"
+                    % (self.method.__name__, str(failure))
+                )
                 return False
 
             @d.addCallback
             def finished(result):
                 self.logger.debug(
-                    "Method <%s> finished: %s" %
-                    (self.method.__name__, str(result)))
+                    "Method <%s> finished: %s" % (self.method.__name__, str(result))
+                )
                 self.locked = False
                 return True
 
@@ -109,6 +107,7 @@ if __name__ == "__main__":
 
     def do_something(*args, **kwargs):
         import time
+
         time.sleep(2)
 
     t = Trigger(do_something)
@@ -116,7 +115,7 @@ if __name__ == "__main__":
 
     @d.addCallback
     def aa(reason):
-        print('aa reason: %s' % str(reason))
+        print("aa reason: %s" % str(reason))
 
     print("after 1st")
 
@@ -124,7 +123,7 @@ if __name__ == "__main__":
 
     @d.addCallback
     def bb(reason):
-        print('bb reason: %s' % str(reason))
+        print("bb reason: %s" % str(reason))
 
     print("after 2nd")
 

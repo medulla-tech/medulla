@@ -24,9 +24,8 @@ from mmc.support.config import PluginConfig
 
 
 class guacamoleConfig(PluginConfig):
-
-    def __init__(self, name = 'guacamole', conffile = None):
-        if not hasattr(self, 'initdone'):
+    def __init__(self, name="guacamole", conffile=None):
+        if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile)
             self.initdone = True
 
@@ -38,7 +37,6 @@ class guacamoleConfig(PluginConfig):
         set here will be overwritten by the readConf method.
         """
         PluginConfig.setDefault(self)
-
 
     def readConf(self):
         """
@@ -55,7 +53,7 @@ class guacamoleConfig(PluginConfig):
         Must be implemented by the subclass. ConfigException is raised
         with a corresponding error string if a check fails.
         """
-        #if not self.confOption: raise ConfigException("Conf error")
+        # if not self.confOption: raise ConfigException("Conf error")
         pass
 
     def activate():

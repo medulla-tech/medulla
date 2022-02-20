@@ -24,10 +24,10 @@
 from mmc.support.config import PluginConfig
 from pulse2.database.backuppc.config import BackuppcDatabaseConfig
 
-class BackuppcConfig(PluginConfig,BackuppcDatabaseConfig):
 
-    def __init__(self, name = 'backuppc', conffile = None):
-        if not hasattr(self, 'initdone'):
+class BackuppcConfig(PluginConfig, BackuppcDatabaseConfig):
+    def __init__(self, name="backuppc", conffile=None):
+        if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile)
             BackuppcDatabaseConfig.__init__(self)
             self.initdone = True
@@ -40,7 +40,7 @@ class BackuppcConfig(PluginConfig,BackuppcDatabaseConfig):
         set here will be overwritten by the readConf method.
         """
         PluginConfig.setDefault(self)
-        #self.confOption = "option1"
+        # self.confOption = "option1"
         # ...
 
     def readConf(self):
@@ -61,7 +61,7 @@ class BackuppcConfig(PluginConfig,BackuppcDatabaseConfig):
         Must be implemented by the subclass. ConfigException is raised
         with a corresponding error string if a check fails.
         """
-        #if not self.confOption: raise ConfigException("Conf error")
+        # if not self.confOption: raise ConfigException("Conf error")
         pass
 
     @staticmethod

@@ -27,14 +27,14 @@ This proxy communicate with PXE imaging client using a custom protocol.
 """
 
 
-
-
 import logging
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet.protocol import DatagramProtocol
 from twisted.internet import reactor
 from pulse2.package_server.imaging.pxe.api import PXEImagingApi
-class ProcessPacket :
+
+
+class ProcessPacket:
     """Common packet processing"""
 
     config = None
@@ -113,19 +113,23 @@ class ProcessPacket :
                 if client:
                     self.transport.write(data, client)  # UDP response
                 else:
-                    self.transport.write(data)         # TCP response
+                    self.transport.write(data)  # TCP response
                 if client:
                     ip, port = client
                     logging.getLogger().debug(
-                        "PXE Proxy: method: %s / response sent: %s on %s:%d" %
-                        (fnc.__name__, str(data), ip, port))
+                        "PXE Proxy: method: %s / response sent: %s on %s:%d"
+                        % (fnc.__name__, str(data), ip, port)
+                    )
                 else:
                     logging.getLogger().debug(
-                        "PXE Proxy: method: %s / response sent: %s" %
-                        (fnc.__name__, str(data)))
+                        "PXE Proxy: method: %s / response sent: %s"
+                        % (fnc.__name__, str(data))
+                    )
 
             except Exception as e:
-                logging.getLogger().warn("PXE Proxy: send response error: %s" % (str(e)))
+                logging.getLogger().warn(
+                    "PXE Proxy: send response error: %s" % (str(e))
+                )
 
         return result
 
@@ -154,7 +158,6 @@ class TCPProxy(ProcessPacket, Protocol):
 
 
 class PXEProxy:
-
     def __init__(self, config, api):
 
         pxe_port = config.imaging_api["pxe_port"]

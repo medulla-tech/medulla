@@ -36,8 +36,7 @@ class EntitiesRules:
     It allows the inventory server to assign a computer to an entity.
     """
 
-    def __init__(self, conffile=mmcconfdir +
-                 '/pulse2/inventory-server/entities-rules'):
+    def __init__(self, conffile=mmcconfdir + "/pulse2/inventory-server/entities-rules"):
         self.logger = logging.getLogger()
         self.conf = conffile
         self.rules = []
@@ -48,7 +47,8 @@ class EntitiesRules:
             "contains",
             "nocontains",
             "starts",
-            "finishes"]
+            "finishes",
+        ]
         self._readRulesFile()
 
     def _readRulesFile(self):
@@ -57,7 +57,7 @@ class EntitiesRules:
         """
         self.logger.debug("Reading inventory rules file %s" % self.conf)
         for line in open(self.conf):
-            if line.startswith('#') or not line.strip():
+            if line.startswith("#") or not line.strip():
                 continue
             try:
                 # The first column may contain the quoted entity list
@@ -67,41 +67,42 @@ class EntitiesRules:
                     rule = m.group(2)
                 else:
                     entities, rule = line.split(None, 1)
-                entitieslist = entities.split(',')
+                entitieslist = entities.split(",")
                 for entity in entitieslist:
                     checkEntityName(entity)
                 if entitieslist:
                     words = rule.split()
-                    prefix = 'none'
+                    prefix = "none"
                     subexprs = []
                     while words:
-                        if words[0] in ['and', 'or']:
-                            if prefix == 'none':
+                        if words[0] in ["and", "or"]:
+                            if prefix == "none":
                                 prefix = words[0].lower()
                                 words = words[1:]
                             else:
                                 raise Exception(
-                                    'Different operators are not supported for a rule')
+                                    "Different operators are not supported for a rule"
+                                )
                         else:
                             if len(words) < 3:
-                                raise Exception('Malformed rule')
+                                raise Exception("Malformed rule")
                             else:
                                 operand1, operator, operand2 = words[0:3]
                                 operator = operator.lower()
 
                                 if operator in self.operators:
                                     # TODO: Maybe check operand1 value
-                                    if operator == 'match':
+                                    if operator == "match":
                                         # Try to compile the regexp
                                         regexp = re.compile(operand2)
-                                        subexprs.append(
-                                            (operand1, operator, regexp))
+                                        subexprs.append((operand1, operator, regexp))
                                     else:
-                                        subexprs.append(
-                                            (operand1, operator, operand2))
+                                        subexprs.append((operand1, operator, operand2))
                                 else:
                                     self.logger.error(
-                                        "Operator %s is not supported, skipping" % operator)
+                                        "Operator %s is not supported, skipping"
+                                        % operator
+                                    )
                                 words = words[3:]
                     self.rules.append((entitieslist, prefix, subexprs))
             except Exception:
@@ -123,7 +124,7 @@ class EntitiesRules:
         a dict with all inventory components)
         """
         ret = []
-        section, option = parameter.split('/', 1)
+        section, option = parameter.split("/", 1)
         if section in input:
             items = input[section]
             for item in items:
@@ -148,45 +149,47 @@ class EntitiesRules:
                 if values == []:
                     # No corresponding value found, we break the loop
                     self.logger.debug(
-                        "No corresponding value found for operand '%s', skipping the line" %
-                        operand1)
+                        "No corresponding value found for operand '%s', skipping the line"
+                        % operand1
+                    )
                     break
                 # Loop over all the values, and break the loop if one value
                 # makes the expression returns True
                 tmpresult = False
                 for value in values:
-                    if operator == 'match':
+                    if operator == "match":
                         tmpresult = operand2.match(value) is not None
-                    elif operator == 'equal':
+                    elif operator == "equal":
                         tmpresult = value == operand2
-                    elif operator == 'noequal':
+                    elif operator == "noequal":
                         tmpresult = value != operand2
-                    elif operator == 'contains':
+                    elif operator == "contains":
                         tmpresult = operand2 in value
-                    elif operator == 'nocontains':
+                    elif operator == "nocontains":
                         tmpresult = not (operand2 in value)
-                    elif operator == 'starts':
+                    elif operator == "starts":
                         tmpresult = value.startswith(operand2)
-                    elif operator == 'finishes':
+                    elif operator == "finishes":
                         tmpresult = value.endswith(operand2)
                     else:
                         pass
                     if tmpresult:
                         self.logger.info(
-                            'operator [%s] %s %s %s' %
-                            (operator, values, operand2, tmpresult))
+                            "operator [%s] %s %s %s"
+                            % (operator, values, operand2, tmpresult)
+                        )
                         break
 
-                if mainop == 'none':
+                if mainop == "none":
                     result = tmpresult
-                elif mainop == 'and':
+                elif mainop == "and":
                     if not tmpresult:
                         result = False
                         # Exit AND because we have a False
                         break
                     else:
                         result = True
-                elif mainop == 'or':
+                elif mainop == "or":
                     if result is not None:
                         result = result or tmpresult
                     else:

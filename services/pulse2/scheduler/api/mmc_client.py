@@ -35,10 +35,7 @@ class ConfigReader(object):
     """Read and parse config files"""
 
     def __init__(self):
-        scheduler_ini = os.path.join(mmcconfdir,
-                                     "pulse2",
-                                     "scheduler",
-                                     "scheduler.ini")
+        scheduler_ini = os.path.join(mmcconfdir, "pulse2", "scheduler", "scheduler.ini")
 
         self._scheduler_config = self.get_config(scheduler_ini)
 
@@ -59,8 +56,8 @@ class ConfigReader(object):
 
         config = ConfigParser()
         config.readfp(open(inifile))
-        if os.path.isfile(inifile + '.local'):
-            config.readfp(open(inifile + '.local', 'r'))
+        if os.path.isfile(inifile + ".local"):
+            config.readfp(open(inifile + ".local", "r"))
 
         return config
 
@@ -75,7 +72,7 @@ class ConfigReader(object):
 
 
 class MMCProxy(object):
-    """ Provider to connect at mmc-agent """
+    """Provider to connect at mmc-agent"""
 
     def __init__(self):
 
@@ -91,21 +88,22 @@ class MMCProxy(object):
         self._build_url()
 
     def _build_url(self):
-        """ URL building for XML-RPC proxy """
+        """URL building for XML-RPC proxy"""
 
         if not self.scheduler_config.has_section("mmc_agent"):
             log.error(
-                "Error while reading the config file: Section 'mmc_agent' not exists")
+                "Error while reading the config file: Section 'mmc_agent' not exists"
+            )
             return False
 
         host = self.scheduler_config.get("mmc_agent", "host")
         port = self.scheduler_config.get("mmc_agent", "port")
 
         log.debug("Building the connection URL at mmc-agent")
-        self._url = 'https://%s:%s/XMLRPC' % (host, port)
+        self._url = "https://%s:%s/XMLRPC" % (host, port)
 
     def _build_proxy(self):
-        """ Builds the XML-RPC proxy to MMC agent. """
+        """Builds the XML-RPC proxy to MMC agent."""
         log.debug("Building mmc-agent proxy")
 
         try:

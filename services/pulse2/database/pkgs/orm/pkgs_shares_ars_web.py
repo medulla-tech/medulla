@@ -33,8 +33,8 @@ import logging
 
 
 class Pkgs_shares_ars_web(object):
-    """ Mapping between pkgs.pkgs_shares_ars_web and SA
-        colunm table: 'id,ars_share_id,packages_id,status,finger_print,size,date_edition'
+    """Mapping between pkgs.pkgs_shares_ars_web and SA
+    colunm table: 'id,ars_share_id,packages_id,status,finger_print,size,date_edition'
     """
 
     def getId(self):
@@ -47,7 +47,7 @@ class Pkgs_shares_ars_web(object):
         if self.ars_share_id is not None:
             return self.ars_share_id
         else:
-            return-1
+            return -1
 
     def getPackages_id(self):
         if self.packages_id is not None:
@@ -81,20 +81,22 @@ class Pkgs_shares_ars_web(object):
 
     def to_array(self):
         return {
-            'id': self.getId(),
-            'ars_share_id': self.getArs_share_id(),
-            'packages_id': self.getPackages_id(),
-            'status': self.getStatus(),
-            'finger_print': self.getFinger_print(),
-            'size': self.getSize(),
-            'date_edition': self.getEdition_date()}
+            "id": self.getId(),
+            "ars_share_id": self.getArs_share_id(),
+            "packages_id": self.getPackages_id(),
+            "status": self.getStatus(),
+            "finger_print": self.getFinger_print(),
+            "size": self.getSize(),
+            "date_edition": self.getEdition_date(),
+        }
 
     def toH(self):
         return {
-            'id': self.id,
-            'ars_share_id': self.ars_share_id,
-            'packages_id': self.packages_id,
-            'status': self.status,
-            'finger_print': self.finger_print,
-            'size': self.size,
-            'date_edition': self.date_edition}
+            "id": self.id,
+            "ars_share_id": self.ars_share_id,
+            "packages_id": self.packages_id,
+            "status": self.status,
+            "finger_print": self.finger_print,
+            "size": self.size,
+            "date_edition": self.date_edition,
+        }

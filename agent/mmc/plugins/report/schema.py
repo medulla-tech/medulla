@@ -25,7 +25,9 @@
 from importlib import import_module
 
 from sqlalchemy import Column, String, Integer, Float, BigInteger, func, orm
-from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 from mmc.database.database_helper import DBObj
 
@@ -38,30 +40,31 @@ class ReportingData(DBObj):
     timestamp = Column(BigInteger)
     entity_id = Column(Integer)
 
+
 class ReportingIntData(Base, ReportingData):
     # ====== Table name =========================
-    __tablename__ = 'data'
+    __tablename__ = "data"
     # ====== Fields =============================
     value = Column(Integer)
 
 
 class ReportingFloatData(Base, ReportingData):
     # ====== Table name =========================
-    __tablename__ = 'data_float'
+    __tablename__ = "data_float"
     # ====== Fields =============================
     value = Column(Float)
 
 
 class ReportingTextData(Base, ReportingData):
     # ====== Table name =========================
-    __tablename__ = 'data_text'
+    __tablename__ = "data_text"
     # ====== Fields =============================
     value = Column(String(255))
 
 
 class Indicator(Base, DBObj):
     # ====== Table name =========================
-    __tablename__ = 'indicators'
+    __tablename__ = "indicators"
     # ====== Fields =============================
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
@@ -72,7 +75,6 @@ class Indicator(Base, DBObj):
     data_type = Column(Integer)
     active = Column(Integer)
     keep_history = Column(Integer)
-
 
     @orm.reconstructor
     def afterLoad(self):
@@ -93,18 +95,20 @@ class Indicator(Base, DBObj):
             self.aggregate_func = func.concat
             self.format_func = str
 
-
-    def getCurrentValue(self, entities = []):
-        #Mutable list entities used as default argument to a method or function
-        report = import_module('.'.join(['mmc.plugins', self.module, 'report'])).exportedReport()
-        args = [entities] + eval('[' + self.params + ']')
+    def getCurrentValue(self, entities=[]):
+        # Mutable list entities used as default argument to a method or function
+        report = import_module(
+            ".".join(["mmc.plugins", self.module, "report"])
+        ).exportedReport()
+        args = [entities] + eval("[" + self.params + "]")
         return getattr(report, self.request_function)(*args)
 
-    def getValueAtTime(self, session, ts_min, ts_max , entities = []):
+    def getValueAtTime(self, session, ts_min, ts_max, entities=[]):
         # DBClass, aggegate and finalformat functions according to DataType
-        #Mutable list entities used as default argument to a method or function
-        ret = session.query(self.aggregate_func(self.dataClass.value))\
-                .filter_by(indicator_id = self.id)
+        # Mutable list entities used as default argument to a method or function
+        ret = session.query(self.aggregate_func(self.dataClass.value)).filter_by(
+            indicator_id=self.id
+        )
         # Selected entities filter, else all entities are included
         if entities:
             ret = ret.filter(self.dataClass.entity_id.in_(entities))

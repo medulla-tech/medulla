@@ -29,4 +29,4 @@ class XmppMasterDatabaseConfig(DatabaseConfig):
 
     # def setup(self, config_file):
     # read the database configuration
-    #DatabaseConfig.setup(self, config_file)
+    # DatabaseConfig.setup(self, config_file)

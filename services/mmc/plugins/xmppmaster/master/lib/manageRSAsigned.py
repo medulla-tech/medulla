@@ -55,8 +55,11 @@ class MsgsignedRSA:
         """
         self.type = type
         self.filekeypublic = os.path.join(
-            self.Setdirectorytempinfo(), "%s-public-RSA.key" % self.type)
-        self.fileallkey = os.path.join(self.Setdirectorytempinfo(), "%s-all-RSA.key" % self.type)
+            self.Setdirectorytempinfo(), "%s-public-RSA.key" % self.type
+        )
+        self.fileallkey = os.path.join(
+            self.Setdirectorytempinfo(), "%s-all-RSA.key" % self.type
+        )
         self.dirtempinfo = self.Setdirectorytempinfo()
         self.allkey = None
         self.publickey = None
@@ -69,10 +72,10 @@ class MsgsignedRSA:
         """
         if self.allkey is None or self.publickey is None:
             if os.path.exists(self.filekeypublic) and os.path.exists(self.fileallkey):
-                f = open(self.fileallkey, 'r')
+                f = open(self.fileallkey, "r")
                 self.allkey = pickle.load(f)
                 f.close()
-                f = open(self.filekeypublic, 'r')
+                f = open(self.filekeypublic, "r")
                 self.publickey = pickle.load(f)
                 f.close()
             else:
@@ -84,7 +87,7 @@ class MsgsignedRSA:
         Function load from file the complete keys to object RSA key
         """
         if os.path.exists(self.fileallkey):
-            f = open(self.fileallkey, 'r')
+            f = open(self.fileallkey, "r")
             self.allkey = pickle.load(f)
             f.close()
 
@@ -93,7 +96,7 @@ class MsgsignedRSA:
         Function load from file the public key to object RSA key
         """
         if os.path.exists(self.filekeypublic):
-            f = open(self.filekeypublic, 'r')
+            f = open(self.filekeypublic, "r")
             self.allkey = pickle.load(f)
             f.close()
 
@@ -174,15 +177,17 @@ class MsgsignedRSA:
         # In real life, you use a *much* longer key
         self.allkey = RSA.generate(1024, pool.get_bytes)
         self.publickey = self.allkey.publickey()
-        pickle.dump(self.allkey, open(self.fileallkey, 'w'))
-        pickle.dump(self.publickey, open(self.filekeypublic, 'w'))
+        pickle.dump(self.allkey, open(self.fileallkey, "w"))
+        pickle.dump(self.publickey, open(self.filekeypublic, "w"))
         return self.allkey
 
     def Setdirectorytempinfo(self):
         """
         create directory
         """
-        dirtempinfo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP")
+        dirtempinfo = os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP"
+        )
         if not os.path.exists(dirtempinfo):
             os.makedirs(dirtempinfo, mode=0o700)
         return dirtempinfo
@@ -198,4 +203,4 @@ class MsgsignedRSA:
         Function verify message with footprint
         """
         signature = int(signed_message)
-        return keypublic.verify(msg, (signature, ))
+        return keypublic.verify(msg, (signature,))

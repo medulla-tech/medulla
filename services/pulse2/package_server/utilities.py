@@ -31,8 +31,8 @@ import sys
 
 
 def sumfile(fobj):
-    '''Returns an md5 hash for an object with read() method.'''
-    m = hashlib.new('md5')
+    """Returns an md5 hash for an object with read() method."""
+    m = hashlib.new("md5")
     while True:
         d = fobj.read(8096)
         if not d:
@@ -42,14 +42,14 @@ def sumfile(fobj):
 
 
 def md5file(fname):
-    '''Returns an md5 hash for file fname, or stdin if fname is "-".'''
-    if fname == '-':
+    """Returns an md5 hash for file fname, or stdin if fname is "-"."""
+    if fname == "-":
         ret = sumfile(sys.stdin)
     else:
         try:
-            f = open(fname, 'rb')
+            f = open(fname, "rb")
         except BaseException:
-            return 'Failed to open file'
+            return "Failed to open file"
         ret = sumfile(f)
         f.close()
     return ret

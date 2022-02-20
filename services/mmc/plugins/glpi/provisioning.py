@@ -28,8 +28,8 @@ from mmc.plugins.glpi.auth import GlpiAuthenticator
 from mmc.plugins.glpi.database import Glpi
 from mmc.support.mmctools import getConfigFile
 
-class GlpiProvisionerConfig(ProvisionerConfig):
 
+class GlpiProvisionerConfig(ProvisionerConfig):
     def readConf(self):
         PROFILEACL = "profile_acl_"
         ProvisionerConfig.readConf(self)
@@ -41,9 +41,11 @@ class GlpiProvisionerConfig(ProvisionerConfig):
             if option.startswith(PROFILEACL):
                 value = self.get(self.section, option)
                 if isfile(value):
-                    acls = open(value, 'r').read().split('\n')
+                    acls = open(value, "r").read().split("\n")
                     # Clean empty lines, and join them by :
-                    value = ':' + (':'.join(x for x in acls if x.strip() and x[0] != '#'))
+                    value = ":" + (
+                        ":".join(x for x in acls if x.strip() and x[0] != "#")
+                    )
                 else:
                     self.profilesAcl[option.replace(PROFILEACL, "")] = value
         self.profilesOrder = self.get(self.section, "profiles_order").split()
@@ -61,7 +63,7 @@ class GlpiProvisioner(ProvisionerI):
     creation/sync, and update MMC user right according to the user GLPI profile
     """
 
-    def __init__(self, conffile = None, name = "glpi"):
+    def __init__(self, conffile=None, name="glpi"):
         if not conffile:
             conffile = getConfigFile(name)
         ProvisionerI.__init__(self, conffile, name, GlpiProvisionerConfig)
@@ -74,10 +76,16 @@ class GlpiProvisioner(ProvisionerI):
         Provision the MMC user account with ACLs
         """
         if not auth:
-            self.logger.warning("User authentication with GLPI web interface failed, but going on with provisioning")
+            self.logger.warning(
+                "User authentication with GLPI web interface failed, but going on with provisioning"
+            )
         profiles = Glpi().getUserProfiles(authtoken.getLogin())
-        self.logger.debug("User '%s' GLPI's profiles: %s" % (authtoken.getLogin(), str(profiles)))
-        self.logger.debug("Profiles order (from ini configuration): %s" % (self.config.profilesOrder))
+        self.logger.debug(
+            "User '%s' GLPI's profiles: %s" % (authtoken.getLogin(), str(profiles))
+        )
+        self.logger.debug(
+            "Profiles order (from ini configuration): %s" % (self.config.profilesOrder)
+        )
         selected = None
         for profile in self.config.profilesOrder:
             if profile in profiles:
@@ -95,7 +103,10 @@ class GlpiProvisioner(ProvisionerI):
                 self.logger.info("No ACL to apply for the GLPI profile %s" % selected)
             else:
                 l = ldapUserGroupControl()
-                self.logger.info("Setting MMC ACL corresponding to GLPI profile %s: %s" % (selected, acls))
+                self.logger.info(
+                    "Setting MMC ACL corresponding to GLPI profile %s: %s"
+                    % (selected, acls)
+                )
                 uid = authtoken.getLogin()
                 entry = l.getDetailedUser(uid)
                 if not "lmcUserObject" in entry["objectClass"]:
@@ -109,7 +120,9 @@ class GlpiProvisioner(ProvisionerI):
         @return: Deferred resulting to authtoken
         """
         # Perform auth to sync user
-        d = GlpiAuthenticator().authenticate(authtoken.getLogin(), authtoken.getPassword())
+        d = GlpiAuthenticator().authenticate(
+            authtoken.getLogin(), authtoken.getPassword()
+        )
         # get GLPI user profile, and sync it
         d.addCallback(self._cbProvisioning, authtoken)
         return d

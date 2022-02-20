@@ -26,19 +26,18 @@ except ImportError:
 from unittest import TestCase, main
 
 
-
 from pulse2agent.types import Component, ComponentUntitled, DispatcherFrame
 
 
 class Test01_DispatecherFrame(TestCase):
-
     def test00_add_component(self):
-
         class FooComponent(Component):
             __component_name__ = "foo"
 
         class MyDispatcher(DispatcherFrame):
-            components = [FooComponent,]
+            components = [
+                FooComponent,
+            ]
 
         config = object()
 
@@ -48,34 +47,34 @@ class Test01_DispatecherFrame(TestCase):
         self.assertIsInstance(md.foo, Component)
         self.assertIsInstance(md.foo.parent, DispatcherFrame)
 
-
     def test01_add_non_component(self):
-
         class FooComponent(object):
             __component_name__ = "foo"
 
         class MyDispatcher(DispatcherFrame):
-            components = [FooComponent,]
+            components = [
+                FooComponent,
+            ]
 
         config = object()
 
-        self.assertRaises(TypeError, MyDispatcher,config)
+        self.assertRaises(TypeError, MyDispatcher, config)
 
     def test02_add_untitled_component(self):
-
         class FooComponent(Component):
             pass
 
         class MyDispatcher(DispatcherFrame):
-            components = [FooComponent,]
+            components = [
+                FooComponent,
+            ]
 
         config = object()
 
         self.assertRaises(ComponentUntitled, MyDispatcher, config)
 
 
+if __name__ == "__main__":
 
-if __name__ == '__main__':
-
-    if TestCase.__module__ != "twisted.trial.unittest" :
+    if TestCase.__module__ != "twisted.trial.unittest":
         main()

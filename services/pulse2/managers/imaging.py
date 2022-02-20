@@ -33,22 +33,20 @@ from pulse2.utils import Singleton
 
 class ComputerImagingManager(Singleton):
     components = {}
-    main = 'imaging'
+    main = "imaging"
 
     def __init__(self):
         Singleton.__init__(self)
         self.logger = logging.getLogger()
 
     def select(self, name):
-        self.logger.info(
-            "Selecting imaging computer profile manager: %s" %
-            name)
+        self.logger.info("Selecting imaging computer profile manager: %s" % name)
         self.main = name
 
     def register(self, name, klass):
         self.logger.debug(
-            "Registering imaging computer profile manager %s / %s" %
-            (name, str(klass)))
+            "Registering imaging computer profile manager %s / %s" % (name, str(klass))
+        )
         self.components[name] = klass
 
     def validate(self):
@@ -56,11 +54,11 @@ class ComputerImagingManager(Singleton):
 
     ##############################
     def isImagingInProfilePossible(self):
-        " check in all the managers, if none of them have a isImagingInProfilePossible method, return False "
+        "check in all the managers, if none of them have a isImagingInProfilePossible method, return False"
         ret = False
         for mod in self.components:
             klass = self.components[mod]
-            if hasattr(klass, 'isImagingInProfilePossible'):
+            if hasattr(klass, "isImagingInProfilePossible"):
                 ret = True
                 r = klass().isImagingInProfilePossible()
                 if not r:

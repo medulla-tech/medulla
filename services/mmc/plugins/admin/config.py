@@ -24,16 +24,17 @@
 from mmc.support.config import PluginConfig
 from pulse2.database.admin.config import AdminDatabaseConfig
 
-class AdminConfig(PluginConfig,AdminDatabaseConfig):
-    def __init__(self, name = 'admin', conffile = None):
-        if not hasattr(self, 'initdone'):
+
+class AdminConfig(PluginConfig, AdminDatabaseConfig):
+    def __init__(self, name="admin", conffile=None):
+        if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile)
             AdminDatabaseConfig.__init__(self)
             self.initdone = True
 
     def setDefault(self):
         PluginConfig.setDefault(self)
-        #self.confOption = "option1"
+        # self.confOption = "option1"
         # ...
 
     def readConf(self):
@@ -44,7 +45,7 @@ class AdminConfig(PluginConfig,AdminDatabaseConfig):
         # ...
 
     def check(self):
-        #if not self.confOption: raise ConfigException("Conf error")
+        # if not self.confOption: raise ConfigException("Conf error")
         pass
 
     @staticmethod

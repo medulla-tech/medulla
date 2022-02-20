@@ -24,13 +24,14 @@
 Configuration classes for the audit module.
 """
 
+
 class AuditConfig:
 
     """
     Parse the audit system configuration file.
     """
 
-    def readAuditConf(self, section = "audit"):
+    def readAuditConf(self, section="audit"):
         if self.has_section(section):
             self.auditmethod = self.get(section, "method")
             if self.auditmethod == "database":

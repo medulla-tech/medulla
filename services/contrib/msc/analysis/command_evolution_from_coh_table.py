@@ -34,25 +34,88 @@ from optparse import OptionParser
 from sqlalchemy import create_engine, MetaData, Table, or_, and_
 
 parser = OptionParser()
-parser.add_option("-f", "--format", dest="format", help="Output format (default : human)", metavar="csv|human", default="human")
-parser.add_option("--created-after", dest="created_after", help="Min creation date (defaut : yesterday, same hour)", metavar="YYYY-MM-DD HH:MM:SS", default=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()-87400)))
-parser.add_option("--created-before", dest="created_before", help="Max creation date (defaut : now)", metavar="YYYY-MM-DD HH:MM:SS", default=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time())))
-parser.add_option("--started-after", dest="started_after", help="Min execution date (defaut : same value as --created-after)", metavar="YYYY-MM-DD HH:MM:SS", default=None)
-parser.add_option("--started-before", dest="started_before", help="Max execution date (defaut : same value as --created-before)", metavar="YYYY-MM-DD HH:MM:SS", default=None)
-parser.add_option("-u", "--uri", dest="uri", help="MySQL URI (defaut : mysql://root@127.0.0.1/msc)", metavar="mysql://<user>:<password>@<host>/<base>", default='mysql://root@127.0.0.1/msc')
-parser.add_option("--min", dest="min", help="Minimum targets to be displayed (default : 0)", metavar="number", default=0, type=int)
-parser.add_option("--domain", dest="domain", help="Domain regex (default : [^\.]+$)", metavar="regex", default='[^\.]+$')
-parser.add_option("--docs", dest="docs", help="Show me doc about fields", action="store_true", default=False)
-parser.add_option("--vent", dest="vent", help="Choose ventilation (default, or over-timed targeted", metavar="default|ot", default="default")
+parser.add_option(
+    "-f",
+    "--format",
+    dest="format",
+    help="Output format (default : human)",
+    metavar="csv|human",
+    default="human",
+)
+parser.add_option(
+    "--created-after",
+    dest="created_after",
+    help="Min creation date (defaut : yesterday, same hour)",
+    metavar="YYYY-MM-DD HH:MM:SS",
+    default=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() - 87400)),
+)
+parser.add_option(
+    "--created-before",
+    dest="created_before",
+    help="Max creation date (defaut : now)",
+    metavar="YYYY-MM-DD HH:MM:SS",
+    default=time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time())),
+)
+parser.add_option(
+    "--started-after",
+    dest="started_after",
+    help="Min execution date (defaut : same value as --created-after)",
+    metavar="YYYY-MM-DD HH:MM:SS",
+    default=None,
+)
+parser.add_option(
+    "--started-before",
+    dest="started_before",
+    help="Max execution date (defaut : same value as --created-before)",
+    metavar="YYYY-MM-DD HH:MM:SS",
+    default=None,
+)
+parser.add_option(
+    "-u",
+    "--uri",
+    dest="uri",
+    help="MySQL URI (defaut : mysql://root@127.0.0.1/msc)",
+    metavar="mysql://<user>:<password>@<host>/<base>",
+    default="mysql://root@127.0.0.1/msc",
+)
+parser.add_option(
+    "--min",
+    dest="min",
+    help="Minimum targets to be displayed (default : 0)",
+    metavar="number",
+    default=0,
+    type=int,
+)
+parser.add_option(
+    "--domain",
+    dest="domain",
+    help="Domain regex (default : [^\.]+$)",
+    metavar="regex",
+    default="[^\.]+$",
+)
+parser.add_option(
+    "--docs",
+    dest="docs",
+    help="Show me doc about fields",
+    action="store_true",
+    default=False,
+)
+parser.add_option(
+    "--vent",
+    dest="vent",
+    help="Choose ventilation (default, or over-timed targeted",
+    metavar="default|ot",
+    default="default",
+)
 
 (options, args) = parser.parse_args()
 
-if not options.started_after :
+if not options.started_after:
     options.started_after = options.created_after
-if not options.started_before :
+if not options.started_before:
     options.started_before = options.created_before
 
-if options.docs :
+if options.docs:
     print("Fields signification")
     print(" - Name : The name of the command")
     print(" - Creator : The creator of the command")
@@ -88,11 +151,15 @@ if options.docs :
     print("datase, or a resolv mechanism (DNS) issue.")
     print("     --> Broken Bundle : This commands depends on a failed one")
     print("You should seek out why the dependency do fail.")
-    print("     --> Package Unavailable : The required package is not on your server anymore")
+    print(
+        "     --> Package Unavailable : The required package is not on your server anymore"
+    )
     print("This is generally because the package was removed from")
     print("the server before the host can get it. This may also")
     print("be due to network issues.")
-    print("     --> Package Modified : The required package has been modified on your server")
+    print(
+        "     --> Package Modified : The required package has been modified on your server"
+    )
     print("This is generally because the package was modified on")
     print("the server before the host can get it. This may also")
     print("be due to network issues.")
@@ -128,24 +195,46 @@ if options.docs :
     print("     --> Precheck : The precheck failed, no idea why.")
     print("The target is probably crached.")
     print(" - Results : the amounts, categorized; for default ventilation :")
-    print("  + To Do : deployments still to be done; contains 'Scheduled', 'Rescheduled'")
+    print(
+        "  + To Do : deployments still to be done; contains 'Scheduled', 'Rescheduled'"
+    )
     print("  + Doing : deployments in progress; contains 'In Progress'")
-    print("  + Delayed : deployments postponed by user or scheduler action, contains 'Stopped', 'Neutralized'")
+    print(
+        "  + Delayed : deployments postponed by user or scheduler action, contains 'Stopped', 'Neutralized'"
+    )
     print("  + Done : deployments finished on success, contains 'Success'")
     print("  + Failed : deployments finished on error, contains the following field")
-    print("    + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'")
-    print("    + Plan : deployment which have failed since the deployment plan lacked information, contains 'Over Timed', 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'")
-    print("    + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'")
+    print(
+        "    + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'"
+    )
+    print(
+        "    + Plan : deployment which have failed since the deployment plan lacked information, contains 'Over Timed', 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'"
+    )
+    print(
+        "    + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'"
+    )
     print(" - And for the 'ot' ventilation :")
     print("  + Doing : deployments in progress; contains 'In Progress'")
     print("  + Done : deployments finished on success, contains 'Success'")
-    print("  + Stopped : deployments finished on success, contains 'Stopped', 'Neutralized'")
-    print("  + Scheduled : deployments still to be done; contains 'Scheduled', 'Rescheduled'")
-    print("  + Over Timed : deployments out of their time window; contains 'Over Timed'")
+    print(
+        "  + Stopped : deployments finished on success, contains 'Stopped', 'Neutralized'"
+    )
+    print(
+        "  + Scheduled : deployments still to be done; contains 'Scheduled', 'Rescheduled'"
+    )
+    print(
+        "  + Over Timed : deployments out of their time window; contains 'Over Timed'"
+    )
     print("  + Failed : deployments finished on error, contains the following field")
-    print("    + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'")
-    print("    + Plan : deployment which have failed since the deployment plan lacked information, contains 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'")
-    print("    + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'")
+    print(
+        "    + Target : deployment which have failed since the target was deficient, contains 'Not Enough Info', 'Target broken', 'Halt', 'Mac Mismatch', 'Unreachable', 'Inventory', 'Execution', 'Precheck'"
+    )
+    print(
+        "    + Plan : deployment which have failed since the deployment plan lacked information, contains 'Script', 'Broken Bundle', 'Delete', 'Timeout', 'Package Modified'"
+    )
+    print(
+        "    + Infra : deployment which have failed because of some flaws in the infrastructure, contains 'Package Unavailable', 'Connection issue'"
+    )
     sys.exit(0)
 
 # create connection
@@ -153,83 +242,86 @@ mysql_db = create_engine(options.uri)
 metadata = MetaData(mysql_db)
 
 # declare tables
-command_table = Table('commands',
-                metadata,
-                autoload = True)
-coh_table = Table('commands_on_host',
-                metadata,
-                autoload = True)
-history_table = Table("commands_history",
-                metadata,
-                autoload = True)
+command_table = Table("commands", metadata, autoload=True)
+coh_table = Table("commands_on_host", metadata, autoload=True)
+history_table = Table("commands_history", metadata, autoload=True)
 
 # gather commands
-commandData = command_table.select().where(
-            and_(
-                command_table.c.creation_date < options.created_before,
-                command_table.c.creation_date > options.created_after,
-            )
-    ).execute().fetchall()
+commandData = (
+    command_table.select()
+    .where(
+        and_(
+            command_table.c.creation_date < options.created_before,
+            command_table.c.creation_date > options.created_after,
+        )
+    )
+    .execute()
+    .fetchall()
+)
+
 
 def getStruct():
     struct = dict()
-    struct['creator'] = ''
-    struct['creation_date'] = datetime.datetime
-    struct['name'] = ''
-    struct['coh'] = dict()
-    struct['states'] = dict()
-    struct['Scheduled'] = 0
-    struct['Rescheduled'] = 0
-    struct['In Progress'] = {
-        'upload_in_progress'    : 0,
-        'execution_in_progress' : 0,
-        'delete_in_progress'    : 0,
-        'inventory_in_progress' : 0,
-        'wol_done'              : 0
+    struct["creator"] = ""
+    struct["creation_date"] = datetime.datetime
+    struct["name"] = ""
+    struct["coh"] = dict()
+    struct["states"] = dict()
+    struct["Scheduled"] = 0
+    struct["Rescheduled"] = 0
+    struct["In Progress"] = {
+        "upload_in_progress": 0,
+        "execution_in_progress": 0,
+        "delete_in_progress": 0,
+        "inventory_in_progress": 0,
+        "wol_done": 0,
     }
-    struct['Stopped'] = 0
-    struct['Neutralized'] = 0
-    struct['Over Timed'] = 0
-    struct['Fatal'] = {
-        'not_enought_info'      : 0,
-        'bundle_broken'         : 0,
-        'package_unavailable'   : 0,
-        'package_modified'      : 0,
-        'timeout'               : 0,
-        'mac_mismatch'          : 0,
-        'target_broken'         : 0,
-        'unreachable'           : 0,
-        'conn_issue'            : 0,
-        'rebooted'              : 0,
-        'precheck'              : 0,
-        'delete'                : 0,
-        'inventory'             : 0,
-        'halt'                  : 0,
-        'script'                : 0,
-        'execution'             : 0,
-        'other'                 : 0
+    struct["Stopped"] = 0
+    struct["Neutralized"] = 0
+    struct["Over Timed"] = 0
+    struct["Fatal"] = {
+        "not_enought_info": 0,
+        "bundle_broken": 0,
+        "package_unavailable": 0,
+        "package_modified": 0,
+        "timeout": 0,
+        "mac_mismatch": 0,
+        "target_broken": 0,
+        "unreachable": 0,
+        "conn_issue": 0,
+        "rebooted": 0,
+        "precheck": 0,
+        "delete": 0,
+        "inventory": 0,
+        "halt": 0,
+        "script": 0,
+        "execution": 0,
+        "other": 0,
     }
-    struct['Results'] = {
-        "To Do"     : 0,
-        "Doing"     : 0,
-        "Delayed" : 0,
-        "Done"      : 0,
-        "Target"    : 0,
-        "Plan"      : 0,
-        "Infra"     : 0,
-        "Others"    : 0,
+    struct["Results"] = {
+        "To Do": 0,
+        "Doing": 0,
+        "Delayed": 0,
+        "Done": 0,
+        "Target": 0,
+        "Plan": 0,
+        "Infra": 0,
+        "Others": 0,
     }
-    struct['Success'] = 0
-    struct['Other'] = 0
-    struct['Domains'] = list()
-    struct['Commands'] = list()
+    struct["Success"] = 0
+    struct["Other"] = 0
+    struct["Domains"] = list()
+    struct["Commands"] = list()
 
     return struct
+
 
 data = dict()
 
 for command in commandData:
-    cohData = coh_table.select().where(
+    cohData = (
+        coh_table.select()
+        .where(
             and_(
                 or_(
                     and_(
@@ -238,455 +330,879 @@ for command in commandData:
                     ),
                     coh_table.c.start_date == None,
                 ),
-                coh_table.c.fk_commands == command['id']
+                coh_table.c.fk_commands == command["id"],
             )
-        ).execute().fetchall()
+        )
+        .execute()
+        .fetchall()
+    )
     dataCommand = getStruct()
 
-    dataCommand['name'] = command['title']
-    dataCommand['creator'] = command['creator']
-    dataCommand['creation_date'] = command['creation_date']
-    dataCommand['max_connection_attempt'] = command['max_connection_attempt']
-    dataCommand['start_date'] = command['start_date']
-    dataCommand['end_date'] = command['end_date']
-    dataCommand['fk_bundle'] = command['fk_bundle']
+    dataCommand["name"] = command["title"]
+    dataCommand["creator"] = command["creator"]
+    dataCommand["creation_date"] = command["creation_date"]
+    dataCommand["max_connection_attempt"] = command["max_connection_attempt"]
+    dataCommand["start_date"] = command["start_date"]
+    dataCommand["end_date"] = command["end_date"]
+    dataCommand["fk_bundle"] = command["fk_bundle"]
 
-    for coh in cohData :
+    for coh in cohData:
         # try to guess domain
-        matched = re.search(options.domain, coh['host'])
-        if matched :
-            if matched.group(0) not in dataCommand['Domains'] :
-                dataCommand['Domains'].append(matched.group(0))
-        else :
+        matched = re.search(options.domain, coh["host"])
+        if matched:
+            if matched.group(0) not in dataCommand["Domains"]:
+                dataCommand["Domains"].append(matched.group(0))
+        else:
             continue
 
-        historyData = history_table.select().where(
-                history_table.c.fk_commands_on_host == coh['id']
-            ).execute().fetchall()
+        historyData = (
+            history_table.select()
+            .where(history_table.c.fk_commands_on_host == coh["id"])
+            .execute()
+            .fetchall()
+        )
 
-        dataCommand['coh'][coh['id']] = list()
+        dataCommand["coh"][coh["id"]] = list()
 
-        for history in historyData :
-            dataCommand['coh'][coh['id']].append([
-                time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(float(history['date']))),
-                history['error_code'],
-                history['stdout'],
-                history['state']],
+        for history in historyData:
+            dataCommand["coh"][coh["id"]].append(
+                [
+                    time.strftime(
+                        "%Y-%m-%d %H:%M:%S", time.gmtime(float(history["date"]))
+                    ),
+                    history["error_code"],
+                    history["stdout"],
+                    history["state"],
+                ],
             )
 
-        if not coh['current_state'] in dataCommand['states']:
-            dataCommand['states'][coh['current_state']] = 0
-        dataCommand['states'][coh['current_state']] += 1
+        if not coh["current_state"] in dataCommand["states"]:
+            dataCommand["states"][coh["current_state"]] = 0
+        dataCommand["states"][coh["current_state"]] += 1
 
-        if coh['current_state'] in ['scheduled']:
+        if coh["current_state"] in ["scheduled"]:
             # see how much time the command has been processed
-            number_of_try = "%d" % (command['max_connection_attempt'] - coh['attempts_left'])
+            number_of_try = "%d" % (
+                command["max_connection_attempt"] - coh["attempts_left"]
+            )
 
-            if command['max_connection_attempt'] == coh['attempts_left'] : # never processed => Scheduled
-                dataCommand['Scheduled'] += 1
-                dataCommand['Results']['To Do'] += 1
-            else : # not the case => Rescheduled
-                dataCommand['Rescheduled'] += 1
-                dataCommand['Results']['To Do'] += 1
-        elif coh['current_state'] in ['upload_failed', 'execution_failed', 'delete_failed', 'halt_failed']:
-            if coh['attempts_left'] > 0 :
-                dataCommand['Rescheduled'] += 1
-                dataCommand['Results']['To Do'] += 1
+            if (
+                command["max_connection_attempt"] == coh["attempts_left"]
+            ):  # never processed => Scheduled
+                dataCommand["Scheduled"] += 1
+                dataCommand["Results"]["To Do"] += 1
+            else:  # not the case => Rescheduled
+                dataCommand["Rescheduled"] += 1
+                dataCommand["Results"]["To Do"] += 1
+        elif coh["current_state"] in [
+            "upload_failed",
+            "execution_failed",
+            "delete_failed",
+            "halt_failed",
+        ]:
+            if coh["attempts_left"] > 0:
+                dataCommand["Rescheduled"] += 1
+                dataCommand["Results"]["To Do"] += 1
             else:
-                dataCommand['Other'] += 1
-                dataCommand['Results']['Others'] += 1
-        elif coh['current_state'] in ['wol_done', 'upload_in_progress', 'execution_in_progress', 'delete_in_progress', 'inventory_in_progress'] :
+                dataCommand["Other"] += 1
+                dataCommand["Results"]["Others"] += 1
+        elif coh["current_state"] in [
+            "wol_done",
+            "upload_in_progress",
+            "execution_in_progress",
+            "delete_in_progress",
+            "inventory_in_progress",
+        ]:
             # increment corresponding counter
-            dataCommand['In Progress'][coh['current_state']] += 1
-            dataCommand['Results']['Doing'] += 1
+            dataCommand["In Progress"][coh["current_state"]] += 1
+            dataCommand["Results"]["Doing"] += 1
 
-        elif coh['current_state'] in ['stop', 'stopped'] :
+        elif coh["current_state"] in ["stop", "stopped"]:
             # user action : next_launch_date = "2031-12-31 23:59:59"
             # scheduler action : other cases
-            if coh['next_launch_date'] == datetime.datetime(2031, 12, 31, 23, 59, 59):
-                dataCommand['Stopped'] += 1
-                dataCommand['Results']['Delayed'] += 1
-            else :
-                dataCommand['Neutralized'] += 1
-                dataCommand['Results']['Delayed'] += 1
+            if coh["next_launch_date"] == datetime.datetime(2031, 12, 31, 23, 59, 59):
+                dataCommand["Stopped"] += 1
+                dataCommand["Results"]["Delayed"] += 1
+            else:
+                dataCommand["Neutralized"] += 1
+                dataCommand["Results"]["Delayed"] += 1
 
-        elif coh['current_state'] in ['over_timed'] :
-            if coh['next_launch_date'] == datetime.datetime(2031, 12, 31, 23, 59, 59):
-                dataCommand['Stopped'] += 1
-                dataCommand['Results']['Delayed'] += 1
-            else :
+        elif coh["current_state"] in ["over_timed"]:
+            if coh["next_launch_date"] == datetime.datetime(2031, 12, 31, 23, 59, 59):
+                dataCommand["Stopped"] += 1
+                dataCommand["Results"]["Delayed"] += 1
+            else:
                 # increment counter
-                dataCommand['Over Timed'] += 1
-                dataCommand['Results']['Plan'] += 1
+                dataCommand["Over Timed"] += 1
+                dataCommand["Results"]["Plan"] += 1
 
-        elif coh['current_state'] in ['done'] :
+        elif coh["current_state"] in ["done"]:
             # increment success counters
-            dataCommand['Success'] += 1
-            dataCommand['Results']['Done'] += 1
+            dataCommand["Success"] += 1
+            dataCommand["Results"]["Done"] += 1
 
-        elif coh['current_state'] in ['failed'] :
+        elif coh["current_state"] in ["failed"]:
             # search reason of failure : get last line of logs with a non-zero error
 
             last_error = 0
             last_entry = None
-            last_message = ''
-            last_state = ''
+            last_message = ""
+            last_state = ""
 
             prev_error = 0
             prev_entry = None
-            prev_message = ''
-            prev_state = ''
+            prev_message = ""
+            prev_state = ""
 
-            for i in dataCommand['coh'][coh['id']]:
-                if i[1] != 0 :
-                    (prev_error, prev_entry, prev_message, prev_state) = (last_error, last_entry, last_message, last_state)
-                    if last_entry == None :
+            for i in dataCommand["coh"][coh["id"]]:
+                if i[1] != 0:
+                    (prev_error, prev_entry, prev_message, prev_state) = (
+                        last_error,
+                        last_entry,
+                        last_message,
+                        last_state,
+                    )
+                    if last_entry == None:
                         (last_entry, last_error, last_message, last_state) = i
                     elif last_entry <= i[0]:
                         (last_entry, last_error, last_message, last_state) = i
 
-            if last_error == 2001 :
-                last_failed = 'not_enought_info'
-                dataCommand['Results']['Target'] += 1
-            elif last_error == 3001 :
-                last_failed = 'bundle_broken'
-                dataCommand['Results']['Plan'] += 1
-            elif re.findall('E: md5sum: WARNING:', last_message) and last_state == 'upload_failed':
-                last_failed = 'package_modified'
-                dataCommand['Results']['Plan'] += 1
-            elif re.findall('E: md5sum: WARNING:', prev_message) and prev_state == 'upload_failed':
-                last_failed = 'package_modified'
-                dataCommand['Results']['Plan'] += 1
-            elif last_error == 4001 :
-                last_failed = 'package_unavailable'
-                dataCommand['Results']['Infra'] += 1
-            elif last_error == 4002 :
-                last_failed = 'package_modified'
-                dataCommand['Results']['Plan'] += 1
-            elif last_error == 209 :
-                last_failed = 'timeout'
-                dataCommand['Results']['Plan'] += 1
-            elif last_error == 243 :
-                last_failed = 'mac_mismatch'
-                dataCommand['Results']['Target'] += 1
-            elif last_error == 255 :
-                last_failed = 'unreachable'
-                dataCommand['Results']['Target'] += 1
-            elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 1', last_message) and last_error == 1 and last_state == 'delete_failed':
-                last_failed = 'rebooted'
-                dataCommand['Results']['Target'] += 1
-            elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 1', last_message) :
-                last_failed = 'precheck'
-                dataCommand['Results']['Target'] += 1
-            elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 66', last_message) and last_error == 66 and last_state == 'upload_failed':
-                last_failed = 'target_broken'
-                dataCommand['Results']['Target'] += 1
-            elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 45', last_message) and last_error == 45 and last_state == 'upload_failed':
-                last_failed = 'target_broken'
-                dataCommand['Results']['Target'] += 1
-            elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 23', last_message) and last_error == 23 and last_state == 'upload_failed':
-                last_failed = 'target_broken'
-                dataCommand['Results']['Target'] += 1
-            elif re.findall('PRE-COMMAND FAILED CLIENT SIDE: exitcode = 253', last_message) and last_error == 253:
-                last_failed = 'target_broken'
-                dataCommand['Results']['Target'] += 1
-            elif re.findall('fork: Resource temporarily unavailable', last_message) and last_error == 128:
-                last_failed = 'target_broken'
-                dataCommand['Results']['Target'] += 1
-            elif last_error == 57 and last_state == 'upload_failed':
-                last_failed = 'target_broken'
-                dataCommand['Results']['Target'] += 1
-            elif re.findall('/bin/wget: Permission denied', last_message) and last_error == 126 and last_state == 'upload_failed':
-                last_failed = 'target_broken'
-                dataCommand['Results']['Target'] += 1
-            elif re.findall('wget: command not found', last_message) and last_error == 127 and last_state == 'upload_failed':
-                last_failed = 'target_broken'
-                dataCommand['Results']['Target'] += 1
-            elif last_state == 'delete_failed':
-                last_failed = 'delete'
-                dataCommand['Results']['Plan'] += 1
-            elif last_state == 'inventory_failed':
-                last_failed = 'inventory'
-                dataCommand['Results']['Target'] += 1
-            elif last_state == 'halt_failed':
-                last_failed = 'halt'
-                dataCommand['Results']['Target'] += 1
-            elif last_state == 'upload_failed' and last_error == 1 and len(last_message.splitlines()) :
-                last_failed = 'conn_issue'
-                dataCommand['Results']['Infra'] += 1
-            elif last_state == 'execution_failed' and last_error >= 100 and last_error < 200 :
-                last_failed = 'script'
-                dataCommand['Results']['Plan'] += 1
-            elif last_state == 'execution_failed' and last_error >= 1 and last_error < 100 :
-                last_failed = 'execution'
-                dataCommand['Results']['Target'] += 1
+            if last_error == 2001:
+                last_failed = "not_enought_info"
+                dataCommand["Results"]["Target"] += 1
+            elif last_error == 3001:
+                last_failed = "bundle_broken"
+                dataCommand["Results"]["Plan"] += 1
+            elif (
+                re.findall("E: md5sum: WARNING:", last_message)
+                and last_state == "upload_failed"
+            ):
+                last_failed = "package_modified"
+                dataCommand["Results"]["Plan"] += 1
+            elif (
+                re.findall("E: md5sum: WARNING:", prev_message)
+                and prev_state == "upload_failed"
+            ):
+                last_failed = "package_modified"
+                dataCommand["Results"]["Plan"] += 1
+            elif last_error == 4001:
+                last_failed = "package_unavailable"
+                dataCommand["Results"]["Infra"] += 1
+            elif last_error == 4002:
+                last_failed = "package_modified"
+                dataCommand["Results"]["Plan"] += 1
+            elif last_error == 209:
+                last_failed = "timeout"
+                dataCommand["Results"]["Plan"] += 1
+            elif last_error == 243:
+                last_failed = "mac_mismatch"
+                dataCommand["Results"]["Target"] += 1
+            elif last_error == 255:
+                last_failed = "unreachable"
+                dataCommand["Results"]["Target"] += 1
+            elif (
+                re.findall("PRE-COMMAND FAILED CLIENT SIDE: exitcode = 1", last_message)
+                and last_error == 1
+                and last_state == "delete_failed"
+            ):
+                last_failed = "rebooted"
+                dataCommand["Results"]["Target"] += 1
+            elif re.findall(
+                "PRE-COMMAND FAILED CLIENT SIDE: exitcode = 1", last_message
+            ):
+                last_failed = "precheck"
+                dataCommand["Results"]["Target"] += 1
+            elif (
+                re.findall(
+                    "PRE-COMMAND FAILED CLIENT SIDE: exitcode = 66", last_message
+                )
+                and last_error == 66
+                and last_state == "upload_failed"
+            ):
+                last_failed = "target_broken"
+                dataCommand["Results"]["Target"] += 1
+            elif (
+                re.findall(
+                    "PRE-COMMAND FAILED CLIENT SIDE: exitcode = 45", last_message
+                )
+                and last_error == 45
+                and last_state == "upload_failed"
+            ):
+                last_failed = "target_broken"
+                dataCommand["Results"]["Target"] += 1
+            elif (
+                re.findall(
+                    "PRE-COMMAND FAILED CLIENT SIDE: exitcode = 23", last_message
+                )
+                and last_error == 23
+                and last_state == "upload_failed"
+            ):
+                last_failed = "target_broken"
+                dataCommand["Results"]["Target"] += 1
+            elif (
+                re.findall(
+                    "PRE-COMMAND FAILED CLIENT SIDE: exitcode = 253", last_message
+                )
+                and last_error == 253
+            ):
+                last_failed = "target_broken"
+                dataCommand["Results"]["Target"] += 1
+            elif (
+                re.findall("fork: Resource temporarily unavailable", last_message)
+                and last_error == 128
+            ):
+                last_failed = "target_broken"
+                dataCommand["Results"]["Target"] += 1
+            elif last_error == 57 and last_state == "upload_failed":
+                last_failed = "target_broken"
+                dataCommand["Results"]["Target"] += 1
+            elif (
+                re.findall("/bin/wget: Permission denied", last_message)
+                and last_error == 126
+                and last_state == "upload_failed"
+            ):
+                last_failed = "target_broken"
+                dataCommand["Results"]["Target"] += 1
+            elif (
+                re.findall("wget: command not found", last_message)
+                and last_error == 127
+                and last_state == "upload_failed"
+            ):
+                last_failed = "target_broken"
+                dataCommand["Results"]["Target"] += 1
+            elif last_state == "delete_failed":
+                last_failed = "delete"
+                dataCommand["Results"]["Plan"] += 1
+            elif last_state == "inventory_failed":
+                last_failed = "inventory"
+                dataCommand["Results"]["Target"] += 1
+            elif last_state == "halt_failed":
+                last_failed = "halt"
+                dataCommand["Results"]["Target"] += 1
+            elif (
+                last_state == "upload_failed"
+                and last_error == 1
+                and len(last_message.splitlines())
+            ):
+                last_failed = "conn_issue"
+                dataCommand["Results"]["Infra"] += 1
+            elif (
+                last_state == "execution_failed"
+                and last_error >= 100
+                and last_error < 200
+            ):
+                last_failed = "script"
+                dataCommand["Results"]["Plan"] += 1
+            elif (
+                last_state == "execution_failed"
+                and last_error >= 1
+                and last_error < 100
+            ):
+                last_failed = "execution"
+                dataCommand["Results"]["Target"] += 1
             else:
-                #MDV/NR print coh['id']
-                dataCommand['Other'] += 1
-                dataCommand['Results']['Others'] += 1
+                # MDV/NR print coh['id']
+                dataCommand["Other"] += 1
+                dataCommand["Results"]["Others"] += 1
                 continue
 
             # increment failure counters
-            dataCommand['Fatal'][last_failed] += 1
+            dataCommand["Fatal"][last_failed] += 1
 
         else:
-            #MDV/NR print coh['id']
-            dataCommand['Other'] += 1
-            dataCommand['Results']['Others'] += 1
+            # MDV/NR print coh['id']
+            dataCommand["Other"] += 1
+            dataCommand["Results"]["Others"] += 1
             continue
 
+    data[command["id"]] = dataCommand
 
-    data[command['id']] = dataCommand
+if options.vent == "default":
+    if options.format == "csv":
+        print(
+            ";".join(
+                (
+                    "ID",
+                    "Name",
+                    "Creator",
+                    "Created",
+                    "Start",
+                    "End",
+                    "Domains",
+                    "Total",
+                    "To Do",
+                    "Scheduled",
+                    "Rescheduled",
+                    "Doing",
+                    "In Progress",
+                    "Done",
+                    "Success",
+                    "Delayed",
+                    "Stopped",
+                    "Neutralized",
+                    "Failed",
+                    "Target",
+                    "Not Enough Info",
+                    "Target Broken",
+                    "Halt",
+                    "Mac Mismatch",
+                    "Unreachable",
+                    "Inventory",
+                    "Execution",
+                    "Rebooted",
+                    "Precheck",
+                    "Plan",
+                    "Over Timed",
+                    "Script",
+                    "Broken Bundle",
+                    "Delete",
+                    "Timeout",
+                    "Package Modified",
+                    "Infra",
+                    "Package Unavailable",
+                    "Connexion issue",
+                )
+            )
+        )
+elif options.vent == "ot":
+    if options.format == "csv":
+        print(
+            ";".join(
+                (
+                    "ID",
+                    "Name",
+                    "Creator",
+                    "Created",
+                    "Start",
+                    "End",
+                    "Domains",
+                    "Total",
+                    "Doing",
+                    "Done",
+                    "Stopped",
+                    "Scheduled",
+                    "Over Timed",
+                    "Failed",
+                    "Target",
+                    "Not Enough Info",
+                    "Target Broken",
+                    "Halt",
+                    "Mac Mismatch",
+                    "Unreachable",
+                    "Inventory",
+                    "Execution",
+                    "Rebooted",
+                    "Precheck",
+                    "Plan",
+                    "Script",
+                    "Broken Bundle",
+                    "Delete",
+                    "Timeout",
+                    "Package Modified",
+                    "Infra",
+                    "Package Unavailable",
+                    "Connexion issue",
+                )
+            )
+        )
 
-if options.vent == 'default':
-    if options.format == 'csv' :
-        print(';'.join((
-            'ID',
-            'Name',
-            'Creator',
-            'Created',
-                'Start',
-                'End',
-            'Domains',
-            'Total',
-            "To Do",
-            'Scheduled',
-            'Rescheduled',
-            "Doing",
-            'In Progress',
-            "Done",
-            'Success',
-            "Delayed",
-            'Stopped',
-            'Neutralized',
-            "Failed",
-            "Target",
-            'Not Enough Info',
-            'Target Broken',
-            'Halt',
-            'Mac Mismatch',
-            'Unreachable',
-            'Inventory',
-            'Execution',
-            'Rebooted',
-            'Precheck',
-            'Plan',
-            'Over Timed',
-            'Script',
-            'Broken Bundle',
-            'Delete',
-            'Timeout',
-            'Package Modified',
-            "Infra",
-            'Package Unavailable',
-            'Connexion issue'
-        )))
-elif options.vent == 'ot':
-    if options.format == 'csv' :
-        print(';'.join((
-            'ID',
-            'Name',
-            'Creator',
-            'Created',
-                'Start',
-                'End',
-            'Domains',
-            'Total',
-            "Doing",
-            "Done",
-            'Stopped',
-            'Scheduled',
-            'Over Timed',
-            "Failed",
-            "Target",
-            'Not Enough Info',
-            'Target Broken',
-            'Halt',
-            'Mac Mismatch',
-            'Unreachable',
-            'Inventory',
-            'Execution',
-            'Rebooted',
-            'Precheck',
-            'Plan',
-            'Script',
-            'Broken Bundle',
-            'Delete',
-            'Timeout',
-            'Package Modified',
-            "Infra",
-            'Package Unavailable',
-            'Connexion issue'
-        )))
 
 def print_human(label, value, total, subtotal):
     fmt = "{0:.<35} : {1:4d} (abs.: {2:3d} %, rel: {4:3d} %)"
     if value == 0:
         return
-    if subtotal !=0 and total != 0:
-        print(fmt.format(label, value, 100 * value / total, total, 100 * value / subtotal, subtotal))
+    if subtotal != 0 and total != 0:
+        print(
+            fmt.format(
+                label,
+                value,
+                100 * value / total,
+                total,
+                100 * value / subtotal,
+                subtotal,
+            )
+        )
     else:
         print(fmt.format(label, value, 0, total, 0, subtotal))
+
 
 ids_command = list(data.keys())
 ids_command.sort()
 for id_command in ids_command:
     command = data[id_command]
-    if len(command['coh']) > options.min:
-        if options.vent == 'default':
-            if options.format == 'human':
+    if len(command["coh"]) > options.min:
+        if options.vent == "default":
+            if options.format == "human":
                 print("================== [%s] ==================" % id_command)
-                print("%s : %s" % ('Name    ', command['name']))
-                print("%s : %s" % ('Creator ', command['creator']))
-                print("%s : %s" % ('Created ', command['creation_date']))
-                print("%s : %s" % ('Start   ', command['start_date']))
-                print("%s : %s" % ('End     ', command['end_date']))
-                print("%s : %s" % ('Domains ', command['Domains']))
+                print("%s : %s" % ("Name    ", command["name"]))
+                print("%s : %s" % ("Creator ", command["creator"]))
+                print("%s : %s" % ("Created ", command["creation_date"]))
+                print("%s : %s" % ("Start   ", command["start_date"]))
+                print("%s : %s" % ("End     ", command["end_date"]))
+                print("%s : %s" % ("Domains ", command["Domains"]))
                 print("------------------ Results ------------------")
-                print_human('Total', len(command['coh']), len(command['coh']), len(command['coh']))
-                print_human('    To Do ', command['Results']['To Do'], len(command['coh']), len(command['coh']))
-                print_human('        Scheduled ', command['Scheduled'], len(command['coh']), command['Results']['To Do'])
-                print_human('        Rescheduled ', command['Rescheduled'], len(command['coh']), command['Results']['To Do'])
-                print_human('    Doing ', command['Results']['Doing'], len(command['coh']), len(command['coh']))
-                print_human('        In Progress ', sum(command['In Progress'].values()), len(command['coh']), command['Results']['Doing'])
-                print_human('    Delayed ', command['Results']['Delayed'], len(command['coh']), command['Results']['Doing'])
-                print_human('        Stopped ', command['Stopped'], len(command['coh']), command['Results']['Delayed'])
-                print_human('        Neutralized ', command['Neutralized'], len(command['coh']), command['Results']['Delayed'])
-                print_human('    Done ', command['Results']['Done'], len(command['coh']), len(command['coh']))
-                print_human('        Success ', command['Success'], len(command['coh']), command['Results']['Done'])
-                print_human('    Failed ', command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'], len(command['coh']), len(command['coh']))
-                print_human('        Target ', command['Results']['Target'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
-                print_human('            Not Enough Info ', command['Fatal']['not_enought_info'], len(command['coh']), command['Results']['Target'])
-                print_human('            Target broken ', command['Fatal']['target_broken'], len(command['coh']), command['Results']['Target'])
-                print_human('            Halt ', command['Fatal']['halt'], len(command['coh']), command['Results']['Target'])
-                print_human('            Mac Mismatch ', command['Fatal']['mac_mismatch'], len(command['coh']), command['Results']['Target'])
-                print_human('            Unreachable ', command['Fatal']['unreachable'], len(command['coh']), command['Results']['Target'])
-                print_human('            Inventory ', command['Fatal']['inventory'], len(command['coh']), command['Results']['Target'])
-                print_human('            Execution ', command['Fatal']['execution'], len(command['coh']), command['Results']['Target'])
-                print_human('            Rebooted ', command['Fatal']['rebooted'], len(command['coh']), command['Results']['Target'])
-                print_human('            Precheck ', command['Fatal']['precheck'], len(command['coh']), command['Results']['Target'])
-                print_human('        Plan ', command['Results']['Plan'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
-                print_human('            Over Timed ', command['Over Timed'], len(command['coh']), command['Results']['Plan'])
-                print_human('            Script ', command['Fatal']['script'], len(command['coh']), command['Results']['Plan'])
-                print_human('            Broken Bundle ', command['Fatal']['bundle_broken'], len(command['coh']), command['Results']['Plan'])
-                print_human('            Delete ', command['Fatal']['delete'], len(command['coh']), command['Results']['Plan'])
-                print_human('            Timeout ', command['Fatal']['timeout'], len(command['coh']), command['Results']['Plan'])
-                print_human('            Package Modified ', command['Fatal']['package_modified'], len(command['coh']), command['Results']['Plan'])
-                print_human('        Infra ', command['Results']['Infra'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
-                print_human('            Package Unavailable ', command['Fatal']['package_unavailable'], len(command['coh']), command['Results']['Infra'])
-                print_human('            Connection Issue ', command['Fatal']['conn_issue'], len(command['coh']), command['Results']['Infra'])
-            elif options.format == 'csv':
-                print("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
-                    id_command,
-                    command['name'],
-                    command['creator'],
-                    command['creation_date'],
-                    command['start_date'],
-                    command['end_date'],
-                    ','.join(command['Domains']),
-                    len(command['coh']),
-                    command['Results']['To Do'],
-                    command['Scheduled'],
-                    command['Rescheduled'],
-                    command['Results']['Doing'],
-                    sum(command['In Progress'].values()),
-                    command['Results']['Done'],
-                    command['Success'],
-                    command['Results']['Delayed'],
-                    command['Stopped'],
-                    command['Neutralized'],
-                    command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'],
-                    command['Results']['Target'],
-                    command['Fatal']['not_enought_info'],
-                    command['Fatal']['target_broken'],
-                    command['Fatal']['halt'],
-                    command['Fatal']['mac_mismatch'],
-                    command['Fatal']['unreachable'],
-                    command['Fatal']['inventory'],
-                    command['Fatal']['execution'],
-                    command['Fatal']['rebooted'],
-                    command['Fatal']['precheck'],
-                    command['Results']['Plan'],
-                    command['Over Timed'],
-                    command['Fatal']['script'],
-                    command['Fatal']['bundle_broken'],
-                    command['Fatal']['delete'],
-                    command['Fatal']['timeout'],
-                    command['Fatal']['package_modified'],
-                    command['Results']['Infra'],
-                    command['Fatal']['package_unavailable'],
-                    command['Fatal']['conn_issue']
-                ))
-        elif options.vent == 'ot':
-            command['Results']['Plan'] -= command['Over Timed'] # over time treated as special case for this ventilation
-            if options.format == 'human':
+                print_human(
+                    "Total",
+                    len(command["coh"]),
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "    To Do ",
+                    command["Results"]["To Do"],
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "        Scheduled ",
+                    command["Scheduled"],
+                    len(command["coh"]),
+                    command["Results"]["To Do"],
+                )
+                print_human(
+                    "        Rescheduled ",
+                    command["Rescheduled"],
+                    len(command["coh"]),
+                    command["Results"]["To Do"],
+                )
+                print_human(
+                    "    Doing ",
+                    command["Results"]["Doing"],
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "        In Progress ",
+                    sum(command["In Progress"].values()),
+                    len(command["coh"]),
+                    command["Results"]["Doing"],
+                )
+                print_human(
+                    "    Delayed ",
+                    command["Results"]["Delayed"],
+                    len(command["coh"]),
+                    command["Results"]["Doing"],
+                )
+                print_human(
+                    "        Stopped ",
+                    command["Stopped"],
+                    len(command["coh"]),
+                    command["Results"]["Delayed"],
+                )
+                print_human(
+                    "        Neutralized ",
+                    command["Neutralized"],
+                    len(command["coh"]),
+                    command["Results"]["Delayed"],
+                )
+                print_human(
+                    "    Done ",
+                    command["Results"]["Done"],
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "        Success ",
+                    command["Success"],
+                    len(command["coh"]),
+                    command["Results"]["Done"],
+                )
+                print_human(
+                    "    Failed ",
+                    command["Results"]["Target"]
+                    + command["Results"]["Plan"]
+                    + command["Results"]["Infra"],
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "        Target ",
+                    command["Results"]["Target"],
+                    len(command["coh"]),
+                    command["Results"]["Target"]
+                    + command["Results"]["Plan"]
+                    + command["Results"]["Infra"],
+                )
+                print_human(
+                    "            Not Enough Info ",
+                    command["Fatal"]["not_enought_info"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Target broken ",
+                    command["Fatal"]["target_broken"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Halt ",
+                    command["Fatal"]["halt"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Mac Mismatch ",
+                    command["Fatal"]["mac_mismatch"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Unreachable ",
+                    command["Fatal"]["unreachable"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Inventory ",
+                    command["Fatal"]["inventory"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Execution ",
+                    command["Fatal"]["execution"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Rebooted ",
+                    command["Fatal"]["rebooted"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Precheck ",
+                    command["Fatal"]["precheck"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "        Plan ",
+                    command["Results"]["Plan"],
+                    len(command["coh"]),
+                    command["Results"]["Target"]
+                    + command["Results"]["Plan"]
+                    + command["Results"]["Infra"],
+                )
+                print_human(
+                    "            Over Timed ",
+                    command["Over Timed"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "            Script ",
+                    command["Fatal"]["script"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "            Broken Bundle ",
+                    command["Fatal"]["bundle_broken"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "            Delete ",
+                    command["Fatal"]["delete"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "            Timeout ",
+                    command["Fatal"]["timeout"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "            Package Modified ",
+                    command["Fatal"]["package_modified"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "        Infra ",
+                    command["Results"]["Infra"],
+                    len(command["coh"]),
+                    command["Results"]["Target"]
+                    + command["Results"]["Plan"]
+                    + command["Results"]["Infra"],
+                )
+                print_human(
+                    "            Package Unavailable ",
+                    command["Fatal"]["package_unavailable"],
+                    len(command["coh"]),
+                    command["Results"]["Infra"],
+                )
+                print_human(
+                    "            Connection Issue ",
+                    command["Fatal"]["conn_issue"],
+                    len(command["coh"]),
+                    command["Results"]["Infra"],
+                )
+            elif options.format == "csv":
+                print(
+                    "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s"
+                    % (
+                        id_command,
+                        command["name"],
+                        command["creator"],
+                        command["creation_date"],
+                        command["start_date"],
+                        command["end_date"],
+                        ",".join(command["Domains"]),
+                        len(command["coh"]),
+                        command["Results"]["To Do"],
+                        command["Scheduled"],
+                        command["Rescheduled"],
+                        command["Results"]["Doing"],
+                        sum(command["In Progress"].values()),
+                        command["Results"]["Done"],
+                        command["Success"],
+                        command["Results"]["Delayed"],
+                        command["Stopped"],
+                        command["Neutralized"],
+                        command["Results"]["Target"]
+                        + command["Results"]["Plan"]
+                        + command["Results"]["Infra"],
+                        command["Results"]["Target"],
+                        command["Fatal"]["not_enought_info"],
+                        command["Fatal"]["target_broken"],
+                        command["Fatal"]["halt"],
+                        command["Fatal"]["mac_mismatch"],
+                        command["Fatal"]["unreachable"],
+                        command["Fatal"]["inventory"],
+                        command["Fatal"]["execution"],
+                        command["Fatal"]["rebooted"],
+                        command["Fatal"]["precheck"],
+                        command["Results"]["Plan"],
+                        command["Over Timed"],
+                        command["Fatal"]["script"],
+                        command["Fatal"]["bundle_broken"],
+                        command["Fatal"]["delete"],
+                        command["Fatal"]["timeout"],
+                        command["Fatal"]["package_modified"],
+                        command["Results"]["Infra"],
+                        command["Fatal"]["package_unavailable"],
+                        command["Fatal"]["conn_issue"],
+                    )
+                )
+        elif options.vent == "ot":
+            command["Results"]["Plan"] -= command[
+                "Over Timed"
+            ]  # over time treated as special case for this ventilation
+            if options.format == "human":
                 print("================== [%s] ==================" % id_command)
-                print("%s : %s" % ('Name    ', command['name']))
-                print("%s : %s" % ('Creator ', command['creator']))
-                print("%s : %s" % ('Created ', command['creation_date']))
-                print("%s : %s" % ('Start   ', command['start_date']))
-                print("%s : %s" % ('End     ', command['end_date']))
-                print("%s : %s" % ('Domains ', command['Domains']))
+                print("%s : %s" % ("Name    ", command["name"]))
+                print("%s : %s" % ("Creator ", command["creator"]))
+                print("%s : %s" % ("Created ", command["creation_date"]))
+                print("%s : %s" % ("Start   ", command["start_date"]))
+                print("%s : %s" % ("End     ", command["end_date"]))
+                print("%s : %s" % ("Domains ", command["Domains"]))
                 print("------------------ Results ------------------")
-                print_human('Total', len(command['coh']), len(command['coh']), len(command['coh']))
-                print_human('    Doing ', command['Results']['Doing'], len(command['coh']), len(command['coh']))
-                print_human('    Done ', command['Results']['Done'], len(command['coh']), len(command['coh']))
-                print_human('    Stopped ', command['Results']['Delayed'], len(command['coh']), command['Results']['Doing'])
-                print_human('    Scheduled ', command['Results']['To Do'], len(command['coh']), len(command['coh']))
-                print_human('    Over Timed ', command['Over Timed'], len(command['coh']), len(command['coh']))
-                print_human('    Failed ', command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'], len(command['coh']), len(command['coh']))
-                print_human('        Target ', command['Results']['Target'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
-                print_human('            Not Enough Info ', command['Fatal']['not_enought_info'], len(command['coh']), command['Results']['Target'])
-                print_human('            Target broken ', command['Fatal']['target_broken'], len(command['coh']), command['Results']['Target'])
-                print_human('            Halt ', command['Fatal']['halt'], len(command['coh']), command['Results']['Target'])
-                print_human('            Mac Mismatch ', command['Fatal']['mac_mismatch'], len(command['coh']), command['Results']['Target'])
-                print_human('            Unreachable ', command['Fatal']['unreachable'], len(command['coh']), command['Results']['Target'])
-                print_human('            Inventory ', command['Fatal']['inventory'], len(command['coh']), command['Results']['Target'])
-                print_human('            Execution ', command['Fatal']['execution'], len(command['coh']), command['Results']['Target'])
-                print_human('            Rebooted ', command['Fatal']['rebooted'], len(command['coh']), command['Results']['Target'])
-                print_human('            Precheck ', command['Fatal']['precheck'], len(command['coh']), command['Results']['Target'])
-                print_human('        Plan ', command['Results']['Plan'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
-                print_human('            Script ', command['Fatal']['script'], len(command['coh']), command['Results']['Plan'])
-                print_human('            Broken Bundle ', command['Fatal']['bundle_broken'], len(command['coh']), command['Results']['Plan'])
-                print_human('            Delete ', command['Fatal']['delete'], len(command['coh']), command['Results']['Plan'])
-                print_human('            Timeout ', command['Fatal']['timeout'], len(command['coh']), command['Results']['Plan'])
-                print_human('            Package Modified ', command['Fatal']['package_modified'], len(command['coh']), command['Results']['Plan'])
-                print_human('        Infra ', command['Results']['Infra'], len(command['coh']), command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'])
-                print_human('            Package Unavailable ', command['Fatal']['package_unavailable'], len(command['coh']), command['Results']['Infra'])
-                print_human('            Connection Issue ', command['Fatal']['conn_issue'], len(command['coh']), command['Results']['Infra'])
-            elif options.format == 'csv':
-                print("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s" % (
-                    id_command,
-                    command['name'],
-                    command['creator'],
-                    command['creation_date'],
-                    command['start_date'],
-                    command['end_date'],
-                    ','.join(command['Domains']),
-                    len(command['coh']),
-                    command['Results']['Doing'],
-                    command['Results']['Done'],
-                    command['Results']['Delayed'],
-                    command['Scheduled'],
-                    command['Over Timed'],
-                    command['Results']['Target'] + command['Results']['Plan'] + command['Results']['Infra'],
-                    command['Results']['Target'],
-                    command['Fatal']['not_enought_info'],
-                    command['Fatal']['target_broken'],
-                    command['Fatal']['halt'],
-                    command['Fatal']['mac_mismatch'],
-                    command['Fatal']['unreachable'],
-                    command['Fatal']['inventory'],
-                    command['Fatal']['execution'],
-                    command['Fatal']['rebooted'],
-                    command['Fatal']['precheck'],
-                    command['Results']['Plan'],
-                    command['Fatal']['script'],
-                    command['Fatal']['bundle_broken'],
-                    command['Fatal']['delete'],
-                    command['Fatal']['timeout'],
-                    command['Fatal']['package_modified'],
-                    command['Results']['Infra'],
-                    command['Fatal']['package_unavailable'],
-                    command['Fatal']['conn_issue']
-                ))
+                print_human(
+                    "Total",
+                    len(command["coh"]),
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "    Doing ",
+                    command["Results"]["Doing"],
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "    Done ",
+                    command["Results"]["Done"],
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "    Stopped ",
+                    command["Results"]["Delayed"],
+                    len(command["coh"]),
+                    command["Results"]["Doing"],
+                )
+                print_human(
+                    "    Scheduled ",
+                    command["Results"]["To Do"],
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "    Over Timed ",
+                    command["Over Timed"],
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "    Failed ",
+                    command["Results"]["Target"]
+                    + command["Results"]["Plan"]
+                    + command["Results"]["Infra"],
+                    len(command["coh"]),
+                    len(command["coh"]),
+                )
+                print_human(
+                    "        Target ",
+                    command["Results"]["Target"],
+                    len(command["coh"]),
+                    command["Results"]["Target"]
+                    + command["Results"]["Plan"]
+                    + command["Results"]["Infra"],
+                )
+                print_human(
+                    "            Not Enough Info ",
+                    command["Fatal"]["not_enought_info"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Target broken ",
+                    command["Fatal"]["target_broken"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Halt ",
+                    command["Fatal"]["halt"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Mac Mismatch ",
+                    command["Fatal"]["mac_mismatch"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Unreachable ",
+                    command["Fatal"]["unreachable"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Inventory ",
+                    command["Fatal"]["inventory"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Execution ",
+                    command["Fatal"]["execution"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Rebooted ",
+                    command["Fatal"]["rebooted"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "            Precheck ",
+                    command["Fatal"]["precheck"],
+                    len(command["coh"]),
+                    command["Results"]["Target"],
+                )
+                print_human(
+                    "        Plan ",
+                    command["Results"]["Plan"],
+                    len(command["coh"]),
+                    command["Results"]["Target"]
+                    + command["Results"]["Plan"]
+                    + command["Results"]["Infra"],
+                )
+                print_human(
+                    "            Script ",
+                    command["Fatal"]["script"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "            Broken Bundle ",
+                    command["Fatal"]["bundle_broken"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "            Delete ",
+                    command["Fatal"]["delete"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "            Timeout ",
+                    command["Fatal"]["timeout"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "            Package Modified ",
+                    command["Fatal"]["package_modified"],
+                    len(command["coh"]),
+                    command["Results"]["Plan"],
+                )
+                print_human(
+                    "        Infra ",
+                    command["Results"]["Infra"],
+                    len(command["coh"]),
+                    command["Results"]["Target"]
+                    + command["Results"]["Plan"]
+                    + command["Results"]["Infra"],
+                )
+                print_human(
+                    "            Package Unavailable ",
+                    command["Fatal"]["package_unavailable"],
+                    len(command["coh"]),
+                    command["Results"]["Infra"],
+                )
+                print_human(
+                    "            Connection Issue ",
+                    command["Fatal"]["conn_issue"],
+                    len(command["coh"]),
+                    command["Results"]["Infra"],
+                )
+            elif options.format == "csv":
+                print(
+                    "%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s"
+                    % (
+                        id_command,
+                        command["name"],
+                        command["creator"],
+                        command["creation_date"],
+                        command["start_date"],
+                        command["end_date"],
+                        ",".join(command["Domains"]),
+                        len(command["coh"]),
+                        command["Results"]["Doing"],
+                        command["Results"]["Done"],
+                        command["Results"]["Delayed"],
+                        command["Scheduled"],
+                        command["Over Timed"],
+                        command["Results"]["Target"]
+                        + command["Results"]["Plan"]
+                        + command["Results"]["Infra"],
+                        command["Results"]["Target"],
+                        command["Fatal"]["not_enought_info"],
+                        command["Fatal"]["target_broken"],
+                        command["Fatal"]["halt"],
+                        command["Fatal"]["mac_mismatch"],
+                        command["Fatal"]["unreachable"],
+                        command["Fatal"]["inventory"],
+                        command["Fatal"]["execution"],
+                        command["Fatal"]["rebooted"],
+                        command["Fatal"]["precheck"],
+                        command["Results"]["Plan"],
+                        command["Fatal"]["script"],
+                        command["Fatal"]["bundle_broken"],
+                        command["Fatal"]["delete"],
+                        command["Fatal"]["timeout"],
+                        command["Fatal"]["package_modified"],
+                        command["Results"]["Infra"],
+                        command["Fatal"]["package_unavailable"],
+                        command["Fatal"]["conn_issue"],
+                    )
+                )

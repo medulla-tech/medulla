@@ -41,41 +41,50 @@ plugin = {"VERSION": "1.2", "NAME": "resultinventory", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
-    HEADER = {"Pragma": "no-cache",
-              "User-Agent": "Proxy:FusionInventory/Pulse2/GLPI",
-              "Content-Type": "application/x-compress",
-              }
+    HEADER = {
+        "Pragma": "no-cache",
+        "User-Agent": "Proxy:FusionInventory/Pulse2/GLPI",
+        "Content-Type": "application/x-compress",
+    }
     try:
         logging.getLogger().debug("===============MASTER============================")
         logging.getLogger().debug(plugin)
-        logging.getLogger().debug("=====================================================")
+        logging.getLogger().debug(
+            "====================================================="
+        )
 
-        if not 'inventoryslot' in xmppobject.config.__dict__:
-            xmppobject.config.__dict__['inventoryslot'] = False
+        if not "inventoryslot" in xmppobject.config.__dict__:
+            xmppobject.config.__dict__["inventoryslot"] = False
         else:
-            if isinstance(xmppobject.config.__dict__['inventoryslot'], str):
-                if xmppobject.config.__dict__['inventoryslot'].lower() == "true" or\
-                    xmppobject.config.__dict__['inventoryslot'].lower() == "1" or\
-                        xmppobject.config.__dict__['inventoryslot'].lower() == "yes":
-                    xmppobject.config.__dict__['inventoryslot'] = True
+            if isinstance(xmppobject.config.__dict__["inventoryslot"], str):
+                if (
+                    xmppobject.config.__dict__["inventoryslot"].lower() == "true"
+                    or xmppobject.config.__dict__["inventoryslot"].lower() == "1"
+                    or xmppobject.config.__dict__["inventoryslot"].lower() == "yes"
+                ):
+                    xmppobject.config.__dict__["inventoryslot"] = True
                 else:
-                    xmppobject.config.__dict__['inventoryslot'] = False
-        logger.debug("inventoryslot %s" % (xmppobject.config.__dict__['inventoryslot']))
+                    xmppobject.config.__dict__["inventoryslot"] = False
+        logger.debug("inventoryslot %s" % (xmppobject.config.__dict__["inventoryslot"]))
         # Directory inventaire.
-        RecvInventory = os.path.abspath(  os.path.join( os.path.dirname( __file__), "..", "RecvInventory"))
+        RecvInventory = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "RecvInventory")
+        )
         if not os.path.exists(RecvInventory):
-            os.makedirs( RecvInventory, 0o755 )
+            os.makedirs(RecvInventory, 0o755)
             logger.debug("create %s" % RecvInventory)
         try:
             url = xmppobject.config.inventory_url
         except:
             url = "http://localhost:9999/"
         logger.debug("url %s" % (url))
-        inventory = zlib.decompress(base64.b64decode(data['inventory']))
+        inventory = zlib.decompress(base64.b64decode(data["inventory"]))
         if xmppobject.config.inventoryslot:
             # copy fichier to
-            namefile = os.path.join(RecvInventory, "%s_%s.xml"%(time.time(), message['from'].user))
-            file_put_contents(namefile,  inventory)
+            namefile = os.path.join(
+                RecvInventory, "%s_%s.xml" % (time.time(), message["from"].user)
+            )
+            file_put_contents(namefile, inventory)
             logger.debug("copy file to %s" % namefile)
             return
         else:
@@ -83,39 +92,48 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
             request = urllib2.Request(url, inventory, HEADER)
             try:
                 response = urllib2.urlopen(request)
-                logger.debug("inject intentory to %s code wed %s" % (url, response.getcode()))
+                logger.debug(
+                    "inject intentory to %s code wed %s" % (url, response.getcode())
+                )
             except urllib2.URLError:
-                logger.error("The inventory server is not reachable. Please check pulse2-inventory-server service")
+                logger.error(
+                    "The inventory server is not reachable. Please check pulse2-inventory-server service"
+                )
                 return
 
-            machine = XmppMasterDatabase().getMachinefromjid(message['from'])
+            machine = XmppMasterDatabase().getMachinefromjid(message["from"])
             if not machine:
-                logger.error("machine missing in table %s" % (message['from']))
+                logger.error("machine missing in table %s" % (message["from"]))
                 return
             nbsize = len(inventory)
-            XmppMasterDatabase().setlogxmpp("inject inventory to Glpi",
-                                            "Master",
-                                            "",
-                                            0,
-                                            message['from'],
-                                            'Manuel',
-                                            '',
-                                            'QuickAction |Inventory | Inventory requested',
-                                            '',
-                                            '',
-                                            "Master")
+            XmppMasterDatabase().setlogxmpp(
+                "inject inventory to Glpi",
+                "Master",
+                "",
+                0,
+                message["from"],
+                "Manuel",
+                "",
+                "QuickAction |Inventory | Inventory requested",
+                "",
+                "",
+                "Master",
+            )
             if nbsize < 250:
-                XmppMasterDatabase().setlogxmpp('<font color="Orange">Warning, Inventory XML size %s byte</font>' % nbsize,
-                                                "Master",
-                                                "",
-                                                0,
-                                                message['from'],
-                                                'Manuel',
-                                                '',
-                                                'Inventory | Notify',
-                                                '',
-                                                '',
-                                                "Master")
+                XmppMasterDatabase().setlogxmpp(
+                    '<font color="Orange">Warning, Inventory XML size %s byte</font>'
+                    % nbsize,
+                    "Master",
+                    "",
+                    0,
+                    message["from"],
+                    "Manuel",
+                    "",
+                    "Inventory | Notify",
+                    "",
+                    "",
+                    "Master",
+                )
         if not xmppobject.config.inventoryslot:
             timedata = 6
         else:
@@ -124,54 +142,57 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
 
         logger.debug("** update table after injection")
 
-
-
-        if not XmppUpdateInventoried(message['from'], machine):
-        #if not xmppobject.XmppUpdateInventoried(message['from']):
-            XmppMasterDatabase().setlogxmpp('<font color="deeppink">Error Injection Inventory for Machine %s</font>' % (message['from']),
-                                            "Inventory Server",
-                                            "",
-                                            0,
-                                            message['from'],
-                                            'auto',
-                                            '',
-                                            'Inventory | Notify | Error',
-                                            '',
-                                            '',
-                                            "InvServer")
+        if not XmppUpdateInventoried(message["from"], machine):
+            # if not xmppobject.XmppUpdateInventoried(message['from']):
+            XmppMasterDatabase().setlogxmpp(
+                '<font color="deeppink">Error Injection Inventory for Machine %s</font>'
+                % (message["from"]),
+                "Inventory Server",
+                "",
+                0,
+                message["from"],
+                "auto",
+                "",
+                "Inventory | Notify | Error",
+                "",
+                "",
+                "InvServer",
+            )
         # save registry inventory
         try:
-            reginventory = json.loads(base64.b64decode(data['reginventory']))
+            reginventory = json.loads(base64.b64decode(data["reginventory"]))
         except:
             reginventory = False
         # send inventory to inventory server
-        XmppMasterDatabase().setlogxmpp("inject inventory to Glpi",
-                                        "Master",
-                                        "",
-                                        0,
-                                        message['from'],
-                                        'Manuel',
-                                        '',
-                                        'QuickAction |Inventory | Inventory requested',
-                                        '',
-                                        '',
-                                        "Master")
+        XmppMasterDatabase().setlogxmpp(
+            "inject inventory to Glpi",
+            "Master",
+            "",
+            0,
+            message["from"],
+            "Manuel",
+            "",
+            "QuickAction |Inventory | Inventory requested",
+            "",
+            "",
+            "Master",
+        )
 
         if reginventory:
             counter = 0
             while True:
-                computers_id = XmppMasterDatabase().getUuidFromJid(message['from'])
+                computers_id = XmppMasterDatabase().getUuidFromJid(message["from"])
                 time.sleep(counter)
                 if computers_id or counter >= 10:
                     break
             logging.getLogger().debug("Computers ID: %s" % computers_id)
-            nb_iter = int(reginventory['info']['max_key_index']) + 1
+            nb_iter = int(reginventory["info"]["max_key_index"]) + 1
             for num in range(1, nb_iter):
-                reg_key_num = 'reg_key_'+str(num)
+                reg_key_num = "reg_key_" + str(num)
                 try:
-                    reg_key = reginventory[reg_key_num]['key'].strip('"')
-                    reg_key_value = reginventory[reg_key_num]['value'].strip('"')
-                    key_name = reg_key.split('\\')[-1]
+                    reg_key = reginventory[reg_key_num]["key"].strip('"')
+                    reg_key_value = reginventory[reg_key_num]["value"].strip('"')
+                    key_name = reg_key.split("\\")[-1]
                     logging.getLogger().debug("Registry information:")
                     logging.getLogger().debug("  reg_key_num: %s" % reg_key_num)
                     logging.getLogger().debug("  reg_key: %s" % reg_key)
@@ -179,21 +200,31 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
                     logging.getLogger().debug("  key_name: %s" % key_name)
                     registry_id = Glpi().getRegistryCollect(reg_key)
                     logging.getLogger().debug("  registry_id: %s" % registry_id)
-                    XmppMasterDatabase().setlogxmpp("Inventory Registry information: [machine :  %s][reg_key_num : %s]"
-                                                    "[reg_key: %s][reg_key_value : %s]"
-                                                    "[key_name : %s]" % (
-                                                        message['from'], reg_key_num, reg_key, reg_key_value, key_name),
-                                                    "Master",
-                                                    "",
-                                                    0,
-                                                    message['from'],
-                                                    'Manuel',
-                                                    '',
-                                                    'QuickAction |Inventory | Inventory requested',
-                                                    '',
-                                                    '',
-                                                    "Master")
-                    Glpi().addRegistryCollectContent(computers_id, registry_id, key_name, reg_key_value)
+                    XmppMasterDatabase().setlogxmpp(
+                        "Inventory Registry information: [machine :  %s][reg_key_num : %s]"
+                        "[reg_key: %s][reg_key_value : %s]"
+                        "[key_name : %s]"
+                        % (
+                            message["from"],
+                            reg_key_num,
+                            reg_key,
+                            reg_key_value,
+                            key_name,
+                        ),
+                        "Master",
+                        "",
+                        0,
+                        message["from"],
+                        "Manuel",
+                        "",
+                        "QuickAction |Inventory | Inventory requested",
+                        "",
+                        "",
+                        "Master",
+                    )
+                    Glpi().addRegistryCollectContent(
+                        computers_id, registry_id, key_name, reg_key_value
+                    )
                 except Exception as e:
                     logging.getLogger().debug("Error getting key: %s" % reg_key)
                     pass
@@ -205,8 +236,8 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
         traceback.print_exc(file=sys.stdout)
 
 
-def getComputerByMac( mac):
-    ret = Glpi().getMachineByMacAddress('imaging_module', mac)
+def getComputerByMac(mac):
+    ret = Glpi().getMachineByMacAddress("imaging_module", mac)
     if type(ret) == list:
         if len(ret) != 0:
             return ret[0]
@@ -214,66 +245,86 @@ def getComputerByMac( mac):
             return None
     return ret
 
-def getMachineByUuidSetup( uuidsetupmachine):
+
+def getMachineByUuidSetup(uuidsetupmachine):
     if uuidsetupmachine is None or uuidsetupmachine == "":
         logger.warning("Setup uuid machine missing in inventory xmpp")
         return {}
-    machine_result=Glpi().getMachineByUuidSetup(uuidsetupmachine)
+    machine_result = Glpi().getMachineByUuidSetup(uuidsetupmachine)
     if machine_result:
-        logger.debug("machine for setup uuid machine %s" %machine_result)
+        logger.debug("machine for setup uuid machine %s" % machine_result)
     return machine_result
 
+
 def XmppUpdateInventoried(jid, machine):
-    """ search id glpi for machine
-        search on uuid setup machine is exist.
-        if not exit search on macadress """
+    """search id glpi for machine
+    search on uuid setup machine is exist.
+    if not exit search on macadress"""
     logger.debug("** function XmppUpdateInventoried")
 
-
-    if machine['uuid_serial_machine'] is not None and \
-        machine['uuid_serial_machine'] != "":
+    if (
+        machine["uuid_serial_machine"] is not None
+        and machine["uuid_serial_machine"] != ""
+    ):
         # search on uuid setup
 
-        setupuuid = getMachineByUuidSetup(machine['uuid_serial_machine'])
+        setupuuid = getMachineByUuidSetup(machine["uuid_serial_machine"])
         if setupuuid:
-            logger.debug("** search id glpi on uuid setup machine %s" % machine['uuid_serial_machine'])
-            uuid = 'UUID' + str(setupuuid['id'])
-            if machine['uuid_inventorymachine'] == uuid:
-                logger.debug("correct uuid_inventorymachine " \
-                    "in table machine id(%s) uuid_inventorymachine(%s)" %  (machine['id'],
-                                                                            machine['uuid_inventorymachine']))
+            logger.debug(
+                "** search id glpi on uuid setup machine %s"
+                % machine["uuid_serial_machine"]
+            )
+            uuid = "UUID" + str(setupuuid["id"])
+            if machine["uuid_inventorymachine"] == uuid:
+                logger.debug(
+                    "correct uuid_inventorymachine "
+                    "in table machine id(%s) uuid_inventorymachine(%s)"
+                    % (machine["id"], machine["uuid_inventorymachine"])
+                )
                 return True
-            XmppMasterDatabase().replace_Organization_ad_id_inventory(machine['id'],
-                                                                              uuid)
-            XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
-            logger.debug("** update uuid inventory (%s) for machine %s" % (uuid, machine['id']))
+            XmppMasterDatabase().replace_Organization_ad_id_inventory(
+                machine["id"], uuid
+            )
+            XmppMasterDatabase().updateMachineidinventory(uuid, machine["id"])
+            logger.debug(
+                "** update uuid inventory (%s) for machine %s" % (uuid, machine["id"])
+            )
             return True
     # update on mac address
     try:
-        result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
+        result = XmppMasterDatabase().listMacAdressforMachine(machine["id"])
         results = result[0].split(",")
         logger.debug("listMacAdressforMachine   %s" % results)
-        uuid = ''
+        uuid = ""
         for t in results:
             logger.debug("Processing mac address %s" % t)
             computer = getComputerByMac(t)
             if computer is not None:
-                logger.debug("computer find %s for mac adress %s" % (computer.id,t))
-                uuid = 'UUID' + str(computer.id)
-                if machine['uuid_inventorymachine'] != uuid :
-                    XmppMasterDatabase().replace_Organization_ad_id_inventory(machine['uuid_inventorymachine'],
-                                                                              uuid)
-                    logger.debug("** Update in Organization_ad uuid %s to %s " % (machine['uuid_inventorymachine'],
-                                                                                  uuid))
-                    logger.debug("** Update uuid inventory %s to %s" % ( uuid, machine['jid']))
-                    XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
+                logger.debug("computer find %s for mac adress %s" % (computer.id, t))
+                uuid = "UUID" + str(computer.id)
+                if machine["uuid_inventorymachine"] != uuid:
+                    XmppMasterDatabase().replace_Organization_ad_id_inventory(
+                        machine["uuid_inventorymachine"], uuid
+                    )
+                    logger.debug(
+                        "** Update in Organization_ad uuid %s to %s "
+                        % (machine["uuid_inventorymachine"], uuid)
+                    )
+                    logger.debug(
+                        "** Update uuid inventory %s to %s" % (uuid, machine["jid"])
+                    )
+                    XmppMasterDatabase().updateMachineidinventory(uuid, machine["id"])
                 else:
                     logger.debug("uuid inventory correct in base")
                 return True
 
     except KeyError:
-        logger.error("An error occurred on machine %s and we did not receive any inventory,"
-                     "make sure fusioninventory is running correctly" % machine)
+        logger.error(
+            "An error occurred on machine %s and we did not receive any inventory,"
+            "make sure fusioninventory is running correctly" % machine
+        )
     except Exception:
-        logger.error("** Update error on inventory %s\n%s" % (jid, traceback.format_exc()))
+        logger.error(
+            "** Update error on inventory %s\n%s" % (jid, traceback.format_exc())
+        )
     return False

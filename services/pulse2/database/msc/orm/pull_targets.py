@@ -23,10 +23,10 @@ from sqlalchemy.orm import create_session
 
 
 class PullTargets(object):
-    """ Targets for DLP """
+    """Targets for DLP"""
 
     def flush(self):
-        """ Handle SQL flushing """
+        """Handle SQL flushing"""
         session = create_session()
         session.add(self)
         session.flush()

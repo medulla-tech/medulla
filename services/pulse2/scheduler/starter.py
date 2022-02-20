@@ -65,14 +65,12 @@ class LoopingStarter(object):
 
         @d.addErrback
         def eb(reason):
-            """ Thread start fallback """
-            self.logger.error(
-                "Circuit #%s: start failed: %s" %
-                (circuit.id, reason))
+            """Thread start fallback"""
+            self.logger.error("Circuit #%s: start failed: %s" % (circuit.id, reason))
 
         @d.addCallback
         def cb(reason):
-            """ Thread start callback """
+            """Thread start callback"""
             self.dispatcher._circuits.append(circuit)
 
         return d
@@ -121,9 +119,9 @@ class LoopingStarter(object):
             return False
 
     def _loop_fail(self, failure):
-        """ Looping call fallback """
+        """Looping call fallback"""
         self.logger.error("Loop call starting failed: %s" % str(failure))
 
     def cancel(self):
-        """ Interrupts immediatelly the looping calls """
+        """Interrupts immediatelly the looping calls"""
         self.loop.stop()

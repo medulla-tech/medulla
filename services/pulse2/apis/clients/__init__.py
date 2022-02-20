@@ -36,29 +36,28 @@ class Pulse2Api(Pulse2XMLRPCProxy):
     name = "pulse2API"
 
     def __init__(
-            self,
-            credentials,
-            url='https://localhost:9990/package_api_get1',
-            verifypeer=False,
-            cacert=None,
-            localcert=None):
+        self,
+        credentials,
+        url="https://localhost:9990/package_api_get1",
+        verifypeer=False,
+        cacert=None,
+        localcert=None,
+    ):
         """
         @param credentials: XML-RPC HTTP BASIC credentials = login:password
         @type credentials: str
         """
         if len(str(url)) < 10:
-            url = 'https://localhost:9990/package_api_get1'
+            url = "https://localhost:9990/package_api_get1"
         else:
             url = str(url)
         url = str(url)
-        Pulse2XMLRPCProxy.__init__(self,
-                                   url,
-                                   verifypeer=verifypeer,
-                                   cacert=cacert,
-                                   localcert=localcert)
+        Pulse2XMLRPCProxy.__init__(
+            self, url, verifypeer=verifypeer, cacert=cacert, localcert=localcert
+        )
         self.SSLClientContext = None
         self.logger = logging.getLogger()
-        self.logger.debug('%s will connect to %s' % (self.name, url))
+        self.logger.debug("%s will connect to %s" % (self.name, url))
         self.server_addr = url
         self.credentials = credentials
         # FIXME: still needed ?
@@ -66,8 +65,8 @@ class Pulse2Api(Pulse2XMLRPCProxy):
 
     def onError(self, error, funcname, args, default_return=[]):
         self.logger.warn(
-            "%s: %s %s has failed: %s" %
-            (self.name, funcname, args, error))
+            "%s: %s %s has failed: %s" % (self.name, funcname, args, error)
+        )
         return default_return
 
     def onErrorRaise(self, error, funcname, args, default_return=[]):
@@ -78,19 +77,14 @@ class Pulse2Api(Pulse2XMLRPCProxy):
         @rtype: list
         """
         if error.type == ConnectionRefusedError:
-            self.logger.error(
-                "%s %s has failed: connection refused" %
-                (funcname, args))
-            ret = ['PULSE2_ERR', PULSE2_ERR_CONN_REF,
-                   self.server_addr, default_return]
+            self.logger.error("%s %s has failed: connection refused" % (funcname, args))
+            ret = ["PULSE2_ERR", PULSE2_ERR_CONN_REF, self.server_addr, default_return]
         elif error.type == exceptions.ValueError:
             self.logger.error(
-                "%s %s has failed: the mountpoint don't exists" %
-                (funcname, args))
-            ret = ['PULSE2_ERR', PULSE2_ERR_404,
-                   self.server_addr, default_return]
+                "%s %s has failed: the mountpoint don't exists" % (funcname, args)
+            )
+            ret = ["PULSE2_ERR", PULSE2_ERR_404, self.server_addr, default_return]
         else:
             self.logger.error("%s %s has failed: %s" % (funcname, args, error))
-            ret = ['PULSE2_ERR', PULSE2_ERR_UNKNOWN,
-                   self.server_addr, default_return]
+            ret = ["PULSE2_ERR", PULSE2_ERR_UNKNOWN, self.server_addr, default_return]
         return ret

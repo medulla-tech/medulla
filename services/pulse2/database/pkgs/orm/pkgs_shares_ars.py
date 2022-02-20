@@ -31,7 +31,7 @@ import logging
 
 
 class Pkgs_shares_ars(object):
-    """ Mapping between pkgs.pkgs_shares_ars and SA
+    """Mapping between pkgs.pkgs_shares_ars and SA
     colunm : 'id,hostname,jid,pkgs_shares_id
     """
 
@@ -67,13 +67,16 @@ class Pkgs_shares_ars(object):
             Dict of elements contained into the object.
         """
         return {
-            'id': self.getId(),
-            'hostname': self.getHostname(),
-            'jid': self.getJid(),
-            'pkgs_shares_id': getShareid()}
+            "id": self.getId(),
+            "hostname": self.getHostname(),
+            "jid": self.getJid(),
+            "pkgs_shares_id": getShareid(),
+        }
 
     def toH(self):
-        return {'id': self.id,
-                'hostname': self.hostname,
-                'jid': self.jid,
-                'pkgs_shares_id': self.pkgs_shares_id}
+        return {
+            "id": self.id,
+            "hostname": self.hostname,
+            "jid": self.jid,
+            "pkgs_shares_id": self.pkgs_shares_id,
+        }

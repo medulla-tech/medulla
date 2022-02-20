@@ -8,6 +8,7 @@ from mmc.agent import PluginManager
 from mmc.plugins.inventory.config import InventoryConfig
 from mmc.plugins.glpi.config import GlpiConfig
 
+
 def get_conf_array(name):
     config = PluginConfigFactory.get(name)
     array = {}
@@ -19,18 +20,20 @@ def get_conf_array(name):
         array[section] = dic
     return array
 
+
 def set_conf_array(args):
     print(args)
-    name, values = args['filename'], args['values']
+    name, values = args["filename"], args["values"]
     config = PluginConfigFactory.get(name)
     for option_name in values:
-        section_name = values[option_name]['section_name']
-        value = values[option_name]['value']
+        section_name = values[option_name]["section_name"]
+        value = values[option_name]["value"]
         if not config.has_section(section_name):
             config.add_section(section_name)
         config.set(section_name, option_name, value)
     # TODO check if the conf is OK, and return an error message if not
     return True
+
 
 def switchInventoryModule(module_name):
     """
@@ -40,11 +43,12 @@ def switchInventoryModule(module_name):
     """
     pm = PluginManager()
     pm.startPlugin(module_name)
-    if module_name == 'inventory':
-        pm.stopPlugin('glpi')
+    if module_name == "inventory":
+        pm.stopPlugin("glpi")
     else:
-        pm.stopPlugin('inventory')
+        pm.stopPlugin("inventory")
     return (True,)
+
 
 def loadInventoryConf(module_name):
     """
@@ -57,13 +61,15 @@ def loadInventoryConf(module_name):
     """
     inventory_config = PluginConfigFactory.new(InventoryConfig, "inventory")
     glpi_config = PluginConfigFactory.new(GlpiConfig, "glpi")
-    print(('Instance of inventory config in loadInventoryConf is %s' % inventory_config))
+    print(
+        ("Instance of inventory config in loadInventoryConf is %s" % inventory_config)
+    )
 
     # Enable and disable the right modules in their config
     # base_config = PluginConfigFactory.get("base")
     # base_config.set('computers', 'method', module_name)
-    glpi_config.set('main', 'disable', '0' if module_name == 'glpi' else 1)
-    inventory_config.init('inventory')
-    inventory_config.cp.set('main', 'disable', '0' if module_name == 'inventory' else 1)
+    glpi_config.set("main", "disable", "0" if module_name == "glpi" else 1)
+    inventory_config.init("inventory")
+    inventory_config.cp.set("main", "disable", "0" if module_name == "inventory" else 1)
 
-    print(('Disable: ', inventory_config.disable))
+    print(("Disable: ", inventory_config.disable))

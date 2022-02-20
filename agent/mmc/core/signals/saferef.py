@@ -8,7 +8,8 @@ aren't handled by the core weakref module).
 import traceback
 import weakref
 
-def safeRef(target, onDelete = None):
+
+def safeRef(target, onDelete=None):
     """Return a *safe* weak reference to a callable target
 
     target -- the object to be weakly referenced, if it's a
@@ -19,20 +20,21 @@ def safeRef(target, onDelete = None):
         goes out of scope with the reference object, (either a
         weakref or a BoundMethodWeakref) as argument.
     """
-    if hasattr(target, '__self__'):
+    if hasattr(target, "__self__"):
         if target.__self__ is not None:
             # Turn a bound method into a BoundMethodWeakref instance.
             # Keep track of these instances for lookup by disconnect().
-            assert hasattr(target, '__func__'), """safeRef target %r has __self__, but no __func__, don't know how to create reference""" % (target,)
-            reference = get_bound_method_weakref(
-                target=target,
-                onDelete=onDelete
+            assert hasattr(target, "__func__"), (
+                """safeRef target %r has __self__, but no __func__, don't know how to create reference"""
+                % (target,)
             )
+            reference = get_bound_method_weakref(target=target, onDelete=onDelete)
             return reference
     if callable(onDelete):
         return weakref.ref(target, onDelete)
     else:
         return weakref.ref(target)
+
 
 class BoundMethodWeakref(object):
     """'Safe' and reusable weak references to instance methods
@@ -90,7 +92,7 @@ class BoundMethodWeakref(object):
         else:
             base = super(BoundMethodWeakref, cls).__new__(cls)
             cls._allInstances[key] = base
-            base.__init__(target, onDelete, *arguments,**named)
+            base.__init__(target, onDelete, *arguments, **named)
             return base
 
     def __init__(self, target, onDelete=None):
@@ -107,6 +109,7 @@ class BoundMethodWeakref(object):
             collected).  Should take a single argument,
             which will be passed a pointer to this object.
         """
+
         def remove(weak, self=self):
             """Set self.isDead to true when method or instance is destroyed"""
             methods = self.deletionMethods[:]
@@ -123,9 +126,13 @@ class BoundMethodWeakref(object):
                     try:
                         traceback.print_exc()
                     except AttributeError:
-                        print(('Exception during saferef %s cleanup function %s: %s' % (
-                            self, function, e)
-                        ))
+                        print(
+                            (
+                                "Exception during saferef %s cleanup function %s: %s"
+                                % (self, function, e)
+                            )
+                        )
+
         self.deletionMethods = [onDelete]
         self.key = self.calculateKey(target)
         self.weakSelf = weakref.ref(target.__self__, remove)
@@ -139,7 +146,8 @@ class BoundMethodWeakref(object):
         Currently this is a two-tuple of the id()'s of the
         target object and the target function respectively.
         """
-        return (id(target.__self__),id(target.__func__))
+        return (id(target.__self__), id(target.__func__))
+
     calculateKey = classmethod(calculateKey)
 
     def __str__(self):
@@ -159,7 +167,7 @@ class BoundMethodWeakref(object):
         """Whether we are still a valid reference"""
         return self() is not None
 
-    def __bool__(self):      # Python 2 compatibility
+    def __bool__(self):  # Python 2 compatibility
         return type(self).__bool__(self)
 
     def __eq__(self, other):
@@ -186,6 +194,7 @@ class BoundMethodWeakref(object):
                 return function.__get__(target)
         return None
 
+
 class BoundNonDescriptorMethodWeakref(BoundMethodWeakref):
     """A specialized BoundMethodWeakref, for platforms where instance methods
     are not descriptors.
@@ -203,6 +212,7 @@ class BoundNonDescriptorMethodWeakref(BoundMethodWeakref):
     aren't descriptors (such as Jython) this implementation has the advantage
     of working in the most cases.
     """
+
     def __init__(self, target, onDelete=None):
         """Return a weak-reference-like instance for a bound method
 
@@ -217,9 +227,13 @@ class BoundNonDescriptorMethodWeakref(BoundMethodWeakref):
             collected).  Should take a single argument,
             which will be passed a pointer to this object.
         """
-        assert getattr(target.__self__, target.__name__) == target, \
-               ("method %s isn't available as the attribute %s of %s" %
-                (target, target.__name__, target.__self__))
+        assert (
+            getattr(target.__self__, target.__name__) == target
+        ), "method %s isn't available as the attribute %s of %s" % (
+            target,
+            target.__name__,
+            target.__self__,
+        )
         super(BoundNonDescriptorMethodWeakref, self).__init__(target, onDelete)
 
     def __call__(self):
@@ -246,10 +260,11 @@ class BoundNonDescriptorMethodWeakref(BoundMethodWeakref):
                 return getattr(target, function.__name__)
         return None
 
+
 def get_bound_method_weakref(target, onDelete):
     """Instantiates the appropiate BoundMethodWeakRef, depending on the details of
     the underlying class method implementation"""
-    if hasattr(target, '__get__'):
+    if hasattr(target, "__get__"):
         # target method is a descriptor, so the default implementation works:
         return BoundMethodWeakref(target=target, onDelete=onDelete)
     else:

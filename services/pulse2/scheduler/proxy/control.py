@@ -40,16 +40,12 @@ class App:
         self.logger = logging.getLogger()
         self.xmlrpc_proxy = ForwardingProxy(self.config)
         self.setup()
-        reactor.addSystemEventTrigger('before', 'shutdown', self.clean_up)
+        reactor.addSystemEventTrigger("before", "shutdown", self.clean_up)
 
     def setup(self):
         """Setup the forwarding proxy"""
         response_handler = self.xmlrpc_proxy.client_response
-        d = task.deferLater(reactor,
-                            2,
-                            Forwarder,
-                            response_handler,
-                            self.socket_file)
+        d = task.deferLater(reactor, 2, Forwarder, response_handler, self.socket_file)
         d.addCallback(self._got_forwarder)
         d.addErrback(self._eb_got_forwarder)
 
@@ -79,9 +75,9 @@ class App:
 
         self.xmlrpc_proxy.register_forwarder(self.forwarder)
 
-        d = task.deferLater(reactor,
-                            self.config.proxy_buffer_start_delay,
-                            self.start_emitting_buffer)
+        d = task.deferLater(
+            reactor, self.config.proxy_buffer_start_delay, self.start_emitting_buffer
+        )
         d.addErrback(self._eb_got_forwarder)
 
     def _eb_got_forwarder(self, failure):
@@ -112,38 +108,36 @@ class App:
 
             @d.addErrback
             def __eb(failure):
-                self.logger.error(
-                    "XMLRPC Proxy: stop listening error: %s" %
-                    failure)
+                self.logger.error("XMLRPC Proxy: stop listening error: %s" % failure)
 
     def run(self):
-        self.logger.info(
-            'XMLRPC Proxy of scheduler %s: starting' %
-            self.config.name)
+        self.logger.info("XMLRPC Proxy of scheduler %s: starting" % self.config.name)
         try:
             if self.config.enablessl:
-                OpenSSLContext().setup(self.config.localcert,
-                                       self.config.cacert,
-                                       self.config.verifypeer)
+                OpenSSLContext().setup(
+                    self.config.localcert, self.config.cacert, self.config.verifypeer
+                )
 
                 reactor.listenSSL(
                     self.config.port,
                     SchedulerSite(self.xmlrpc_proxy),
                     interface=self.config.host,
-                    contextFactory=OpenSSLContext().getContext()
+                    contextFactory=OpenSSLContext().getContext(),
                 )
                 self.logger.info(
-                    'XMLRPC Proxy of scheduler %s: activating SSL mode' %
-                    (self.config.name))
+                    "XMLRPC Proxy of scheduler %s: activating SSL mode"
+                    % (self.config.name)
+                )
             else:
                 self.listening_port = reactor.listenTCP(
                     self.config.port,
                     Site(self.xmlrpc_proxy),
-                    interface=self.config.host
+                    interface=self.config.host,
                 )
         except Exception as e:
             self.logger.error(
-                'XMLRPC Proxy of scheduler %s: can\'t bind to %s:%d, reason is %s' %
-                (self.config.name, self.config.host, self.config.port, e))
+                "XMLRPC Proxy of scheduler %s: can't bind to %s:%d, reason is %s"
+                % (self.config.name, self.config.host, self.config.port, e)
+            )
             return False
         return True

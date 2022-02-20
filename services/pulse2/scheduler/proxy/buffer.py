@@ -21,6 +21,7 @@
 
 import os
 import logging
+
 try:
     import pickle as pickle
 except ImportError:
@@ -31,7 +32,6 @@ from pulse2.utils import SingletonN
 
 
 class NotInitializedError(Exception):
-
     def __repr__(self):
         return "Buffer not initialized"
 
@@ -43,6 +43,7 @@ def initialized(method):
     @param method: decorated method
     @type method: callable
     """
+
     @wraps(method)
     def wrapped(self, *args, **kwargs):
         if self._initialized:
@@ -88,7 +89,9 @@ class SendingBuffer(object, metaclass=SingletonN):
         packet = self.packets[0]
         del self.packets[0]
         self.sender.call_remote(packet)
-        logging.getLogger().debug("Remaining requests to send: %d" % (len(self.packets)))
+        logging.getLogger().debug(
+            "Remaining requests to send: %d" % (len(self.packets))
+        )
 
     @initialized
     def backup_buffer(self):
@@ -99,8 +102,8 @@ class SendingBuffer(object, metaclass=SingletonN):
         """
         if len(self.packets) > 0:
             self.logger.info(
-                "XMLRPC Proxy: Backup the buffer with %d responses" % len(
-                    self.packets))
+                "XMLRPC Proxy: Backup the buffer with %d responses" % len(self.packets)
+            )
             with open(self.config.scheduler_proxy_buffer_tmp, "wb") as fp:
                 pickle.dump(self.packets, fp)
 
@@ -122,19 +125,20 @@ class SendingBuffer(object, metaclass=SingletonN):
                         content = pickle.load(fp)
                     except Exception as e:
                         self.logger.warn(
-                            "XMLRPC Proxy: An error occured when restoring the buffer: %s" %
-                            str(e))
+                            "XMLRPC Proxy: An error occured when restoring the buffer: %s"
+                            % str(e)
+                        )
                     if isinstance(content, list):
                         self.packets.extend(content)
                     else:
                         self.logger.warn(
-                            "XMLRPC Proxy: Invalid format of backup of buffer, operation ignored")
+                            "XMLRPC Proxy: Invalid format of backup of buffer, operation ignored"
+                        )
 
                     os.unlink(self.config.scheduler_proxy_buffer_tmp)
                     self.logger.info(
-                        "XMLRPC Proxy: restore buffer with %d responses" % len(
-                            SendingBuffer().packets))
+                        "XMLRPC Proxy: restore buffer with %d responses"
+                        % len(SendingBuffer().packets)
+                    )
         except Exception as exc:
-            self.logger.error(
-                "XMLRPC Proxy: buffer restore failed: %s" %
-                str(exc))
+            self.logger.error("XMLRPC Proxy: buffer restore failed: %s" % str(exc))

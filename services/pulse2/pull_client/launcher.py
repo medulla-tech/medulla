@@ -26,11 +26,9 @@ class ReadFlux(Thread):
             line = self.pipe.readline()  # blocking
             if not line:
                 break
-            self.output_queue.put("%f %s %s" % (time.time(),
-                                                self.prepend,
-                                                b64encode(line)
-                                                )
-                                  )
+            self.output_queue.put(
+                "%f %s %s" % (time.time(), self.prepend, b64encode(line))
+            )
 
     def stop(self):
         self._stop.set()
@@ -49,12 +47,14 @@ def launcher(start_file, params, workdir):
 
     output_queue.put("%f C: %s\n" % (time.time(), cmd_bash))
     logger.debug("Running %s" % cmd_bash)
-    p = Popen(["bash", stf.name],
-              bufsize=0,
-              stderr=PIPE,
-              stdout=PIPE,
-              env=get_launcher_env(),
-              cwd=workdir)
+    p = Popen(
+        ["bash", stf.name],
+        bufsize=0,
+        stderr=PIPE,
+        stdout=PIPE,
+        env=get_launcher_env(),
+        cwd=workdir,
+    )
 
     err_reader = ReadFlux(p.stderr, output_queue, prepend="E:")
     err_reader.daemon = True

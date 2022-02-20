@@ -24,9 +24,8 @@ from sqlalchemy.orm import create_session
 
 
 class CommandsOnHostPhase(object):
-
     def flush(self):
-        """ Handle SQL flushing """
+        """Handle SQL flushing"""
         session = create_session()
         session.add(self)
         session.flush()
@@ -88,6 +87,6 @@ class CommandsOnHostPhase(object):
 
     def toDict(self, relations=False):
         d = self.__dict__
-        if '_sa_instance_state' in d:
-            del d['_sa_instance_state']
+        if "_sa_instance_state" in d:
+            del d["_sa_instance_state"]
         return d

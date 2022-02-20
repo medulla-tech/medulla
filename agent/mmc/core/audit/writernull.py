@@ -29,6 +29,7 @@ import logging
 
 from mmc.support.mmctools import Singleton
 
+
 class AuditWriterI:
     """
     Interface for classes that writes record entry to the audit database.
@@ -84,19 +85,19 @@ class AuditWriterNull(Singleton, AuditWriterI):
     def __init__(self):
         self.logger = logging.getLogger()
 
-    def init(self,*args):
+    def init(self, *args):
         pass
 
-    def log(self,*args):
+    def log(self, *args):
         return self
 
-    def setup(self,*args):
+    def setup(self, *args):
         pass
 
-    def get(self,*args):
+    def get(self, *args):
         pass
 
-    def getById(self,*args):
+    def getById(self, *args):
         pass
 
     def getLog(self, start, end, plug, user, type, date1, date2, object, action):
@@ -105,10 +106,10 @@ class AuditWriterNull(Singleton, AuditWriterI):
     def getLogById(self, id):
         pass
 
-    def getActionType(self,*args):
+    def getActionType(self, *args):
         pass
 
-    def commit(self,*args):
+    def commit(self, *args):
         pass
 
     def operation(self, op):

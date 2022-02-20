@@ -44,12 +44,14 @@ class manage_infoconsole:
         self.objectxmpp = objectxmpp
         self.queueinfo = queue_in
         self.queueinfoout = queue_out
-        self.threadevent = threading.Thread(name=self.namethread, target=self.loopinfoconsol)
+        self.threadevent = threading.Thread(
+            name=self.namethread, target=self.loopinfoconsol
+        )
         self.threadevent.start()
-        logging.info('manage event start')
+        logging.info("manage event start")
 
     def loopinfoconsol(self):
-        logging.info('loopinfoconsol')
+        logging.info("loopinfoconsol")
         while True:
             try:
                 event = self.queueinfo.get(60)
@@ -57,5 +59,5 @@ class manage_infoconsole:
                     break
                 self.objectxmpp.gestioneventconsole(event, self.queueinfoout)
             except Exception as e:
-                logging.error('error in manage infoconsole %s' % str(e))
-        logging.error('quit infocommand')
+                logging.error("error in manage infoconsole %s" % str(e))
+        logging.error("quit infocommand")

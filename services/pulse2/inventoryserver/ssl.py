@@ -73,16 +73,14 @@ def makeSSLContext(verifypeer, cacert, localcert, cb, log=True):
 
 
 class SecureHTTPServer(HTTPServer):
-
     def __init__(self, server_address, HandlerClass, config):
         BaseServer.__init__(self, server_address, HandlerClass)
         ctx = makeSSLContext(
-            config.verifypeer,
-            config.cacert,
-            config.localcert,
-            self.sslReject)
-        self.socket = SSL.Connection(ctx, socket.socket(self.address_family,
-                                                        self.socket_type))
+            config.verifypeer, config.cacert, config.localcert, self.sslReject
+        )
+        self.socket = SSL.Connection(
+            ctx, socket.socket(self.address_family, self.socket_type)
+        )
         self.server_bind()
         self.server_activate()
 

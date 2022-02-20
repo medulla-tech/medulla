@@ -26,6 +26,7 @@ from sqlalchemy.exc import DBAPIError
 
 import logging
 
+
 def unique(s):
     """Return a list of the elements in s, but without duplicates.
 
@@ -94,38 +95,47 @@ def unique(s):
             u.append(x)
     return u
 
+
 def create_method(m):
     # 'm' if the name of the method to override
-    def method(self, already_in_loop = False):
+    def method(self, already_in_loop=False):
         # WARNING: recursive function, so 'already_in_loop' necessary for
         # us to know if we are recursing (True) or not (False)
         NB_DB_CONN_TRY = 2
 
         # FIXME: NOT YET IMPLEMENTED, but do not implement this using a
         # simple time.sleep(), it would lock the main loop !!!
-        #TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized, # pyflakes.ignore
+        # TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized, # pyflakes.ignore
 
-        try: # do a libmysql client call : attempt to perform the old call (_old_<method>)
-            old_m = getattr(self, '_old_%s' % m)
-            ret = old_m() # success, will send the result back
-            return ret # send the result back
-        except DBAPIError as e: # failure, catch libmysql client error
-            if already_in_loop : # just raise the exception, they will take care of it
+        try:  # do a libmysql client call : attempt to perform the old call (_old_<method>)
+            old_m = getattr(self, "_old_%s" % m)
+            ret = old_m()  # success, will send the result back
+            return ret  # send the result back
+        except DBAPIError as e:  # failure, catch libmysql client error
+            if already_in_loop:  # just raise the exception, they will take care of it
                 raise e
 
             # see http://dev.mysql.com/doc/refman/5.1/en/error-messages-client.html
             # we try to handle only situation where a reconnection worth a try
-            if e.orig.args[0] == 2013: # Lost connection to MySQL server during query error, but we do not raise the exception (will attempt again)
+            if (
+                e.orig.args[0] == 2013
+            ):  # Lost connection to MySQL server during query error, but we do not raise the exception (will attempt again)
                 logging.getLogger().warn("Lost connection to MySQL server during query")
-            elif e.orig.args[0] == 2006: # MySQL server has gone away, but we do not raise the exception (will attempt again)
+            elif (
+                e.orig.args[0] == 2006
+            ):  # MySQL server has gone away, but we do not raise the exception (will attempt again)
                 logging.getLogger().warn("MySQL server connection has gone away")
-            elif e.orig.args[0] == 2002: # Can't contact SQL server, give up
-                logging.getLogger().error("MySQL server is unreachable by socket while doing query")
+            elif e.orig.args[0] == 2002:  # Can't contact SQL server, give up
+                logging.getLogger().error(
+                    "MySQL server is unreachable by socket while doing query"
+                )
                 raise e
-            elif e.orig.args[0] == 2003: # Can't contact SQL server, give up
-                logging.getLogger().error("MySQL server is unreachable by network while doing query")
+            elif e.orig.args[0] == 2003:  # Can't contact SQL server, give up
+                logging.getLogger().error(
+                    "MySQL server is unreachable by network while doing query"
+                )
                 raise e
-            else: # Other SQL error, give-up
+            else:  # Other SQL error, give-up
                 logging.getLogger().error("Unknown MySQL error while doing query")
                 raise e
 
@@ -143,7 +153,9 @@ def create_method(m):
 
             # the loop was unsuccessful, finally raise the original exception
             raise e
+
     return method
+
 
 def handle_deconnect():
     # initialize "disconnection handling" code
@@ -151,31 +163,35 @@ def handle_deconnect():
     #  - renamed to _old_<method>
     #  - replaced by create_method
     # create_method then call _old_<method> on demand (see upper)
-    for m in ['first', 'count', 'all', '__iter__']:
-        try: # check if _old_<method> exists
-            getattr(Query, '_old_%s' % m)
-        except AttributeError: # and if not, create it
-            setattr(Query, '_old_%s' % m, getattr(Query, m))
+    for m in ["first", "count", "all", "__iter__"]:
+        try:  # check if _old_<method> exists
+            getattr(Query, "_old_%s" % m)
+        except AttributeError:  # and if not, create it
+            setattr(Query, "_old_%s" % m, getattr(Query, m))
             setattr(Query, m, create_method(m))
+
 
 def toH(w):
     ret = {}
-    for i in [f for f in dir(w) if not f.startswith('__')]:
+    for i in [f for f in dir(w) if not f.startswith("__")]:
         ret[i] = getattr(w, i)
     return ret
+
 
 def toUUID(id):
     return "UUID%s" % (str(id))
 
+
 def fromUUID(uuid):
-    return int(uuid.replace('UUID', ''))
+    return int(uuid.replace("UUID", ""))
+
 
 class DbObject(object):
     def toH(self):
         ret = {}
-        for i in [f for f in dir(self) if not f.startswith('_')]:
+        for i in [f for f in dir(self) if not f.startswith("_")]:
             t = type(getattr(self, i))
             if t == str or t == dict or t == str or t == tuple or t == int or t == int:
                 ret[i] = getattr(self, i)
-        ret['uuid'] = toUUID(getattr(self, 'id'))
+        ret["uuid"] = toUUID(getattr(self, "id"))
         return ret

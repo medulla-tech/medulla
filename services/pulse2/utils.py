@@ -87,13 +87,12 @@ class Singleton(object):
     """
 
     def __new__(cls, *args):
-        if '_the_instance' not in cls.__dict__:
+        if "_the_instance" not in cls.__dict__:
             cls._the_instance = object.__new__(cls)
         return cls._the_instance
 
 
 class SingletonN(type):
-
     def __init__(cls, name, bases, dict):
         super(SingletonN, cls).__init__(name, bases, dict)
         cls.instance = None
@@ -106,8 +105,8 @@ class SingletonN(type):
 
 class Pulse2ConfigParser(ConfigParser):
     """
-        Duplicate from the MMCConfigParser() class from the MMC Project,
-        to remove unwanted dependancies
+    Duplicate from the MMCConfigParser() class from the MMC Project,
+    to remove unwanted dependancies
     """
 
     def __init__(self):
@@ -121,7 +120,7 @@ class Pulse2ConfigParser(ConfigParser):
         For example: passwd = {base64}bWFuL2RyaXZhMjAwOA==
         """
         value = self.get(section, option)
-        m = re.search('^{(\\w+)}(.+)$', value)
+        m = re.search("^{(\\w+)}(.+)$", value)
         if m:
             scheme = m.group(1)
             obfuscated = m.group(2)
@@ -133,13 +132,13 @@ class Pulse2ConfigParser(ConfigParser):
 
 def xmlrpcCleanup(data):
     """
-        Duplicate from mmc.support.mmctools.xmlrpcCleanup()
-        to remove unwanted dependancies
+    Duplicate from mmc.support.mmctools.xmlrpcCleanup()
+    to remove unwanted dependancies
     """
     if isinstance(data, dict):
         ret = {}
         for key in list(data.keys()):
-            # array keys must be string
+            # array keys must be string
             ret[str(key)] = xmlrpcCleanup(data[key])
     elif isinstance(data, list):
         ret = []
@@ -244,9 +243,9 @@ def unique(s):
 
 def same_network(ip1, ip2, netmask):
     try:
-        ip1 = [int(x) for x in ip1.split('.')]
-        ip2 = [int(x) for x in ip2.split('.')]
-        netmask = [int(x) for x in netmask.split('.')]
+        ip1 = [int(x) for x in ip1.split(".")]
+        ip2 = [int(x) for x in ip2.split(".")]
+        netmask = [int(x) for x in netmask.split(".")]
         for i in range(4):
             if ip1[i].__and__(netmask[i]) != ip2[i].__and__(netmask[i]):
                 return False
@@ -294,7 +293,7 @@ def grepv(string, list):
 
 
 def extractExceptionMessage(exception):
-    message = ''
+    message = ""
     if hasattr(exception, "value"):
         message = exception.value
     elif hasattr(exception, "__repr__"):
@@ -334,7 +333,7 @@ def isCiscoMacAddress(mac_addr):
     """
     if type(mac_addr) not in [str, str]:
         return False
-    regex = '^([0-9a-f]{4}\\.[0-9a-f]{4}\\.[0-9a-f]{4})$'
+    regex = "^([0-9a-f]{4}\\.[0-9a-f]{4}\\.[0-9a-f]{4})$"
     return re.match(regex, mac_addr) is not None
 
 
@@ -349,7 +348,7 @@ def isLinuxMacAddress(mac_addr):
     """
     if type(mac_addr) not in [str, str]:
         return False
-    regex = '^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$'
+    regex = "^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$"
     return re.match(regex, mac_addr) is not None
 
 
@@ -364,7 +363,7 @@ def isWinMacAddress(mac_addr):
     """
     if type(mac_addr) not in [str, str]:
         return False
-    regex = '^([0-9a-fA-F][0-9a-fA-F]-){5}([0-9a-fA-F][0-9a-fA-F])$'
+    regex = "^([0-9a-fA-F][0-9a-fA-F]-){5}([0-9a-fA-F][0-9a-fA-F])$"
     return re.match(regex, mac_addr) is not None
 
 
@@ -379,7 +378,7 @@ def isShortMacAddress(mac_addr):
     """
     if type(mac_addr) not in [str, str]:
         return False
-    regex = '^(([0-9a-fA-F]){12})$'
+    regex = "^(([0-9a-fA-F]){12})$"
     return re.match(regex, mac_addr) is not None
 
 
@@ -392,8 +391,12 @@ def isMACAddress(mac_addr):
     @returns: returns True if the given MAC address is valid
     @rtype: bool
     """
-    return isCiscoMacAddress(mac_addr) or isLinuxMacAddress(
-        mac_addr) or isWinMacAddress(mac_addr) or isShortMacAddress(mac_addr)
+    return (
+        isCiscoMacAddress(mac_addr)
+        or isLinuxMacAddress(mac_addr)
+        or isWinMacAddress(mac_addr)
+        or isShortMacAddress(mac_addr)
+    )
 
 
 def reduceMACAddress(mac):
@@ -402,9 +405,9 @@ def reduceMACAddress(mac):
     """
     assert isMACAddress(mac)
     ret = mac.upper()
-    ret = ret.replace(':', '')
-    ret = ret.replace('-', '')
-    ret = ret.replace('.', '')
+    ret = ret.replace(":", "")
+    ret = ret.replace("-", "")
+    ret = ret.replace(".", "")
     return ret
 
 
@@ -413,8 +416,12 @@ def normalizeMACAddress(mac):
     @return: the MAC address normalized (see this module documentation)
     """
     assert isMACAddress(mac)
-    return ':'.join([x_y[0] + x_y[1] for x_y in zip(reduceMACAddress(mac)
-                    [0:11:2], reduceMACAddress(mac)[1:12:2])])  # any questions ?
+    return ":".join(
+        [
+            x_y[0] + x_y[1]
+            for x_y in zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2])
+        ]
+    )  # any questions ?
 
 
 def normalizeMACAddressForPXELINUX(mac):
@@ -422,9 +429,15 @@ def normalizeMACAddressForPXELINUX(mac):
     @return: the MAC address normalized for PXELINUX (uses - as separator)
     """
     assert isMACAddress(mac)
-    macaddress = '-'.join([x_y1[0] + x_y1[1] for x_y1 in zip(reduceMACAddress(mac)[
-                          0:11:2], reduceMACAddress(mac)[1:12:2])])  # any questions ?
-    return '01-' + macaddress.lower()
+    macaddress = "-".join(
+        [
+            x_y1[0] + x_y1[1]
+            for x_y1 in zip(
+                reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]
+            )
+        ]
+    )  # any questions ?
+    return "01-" + macaddress.lower()
 
 
 def macToNode(mac):
@@ -447,7 +460,7 @@ def isUUID(value):
     @return: True if the parameter is a valid UUID
     @rtype: bool
     """
-    if type(value) in [str, str] and value.startswith('UUID'):
+    if type(value) in [str, str] and value.startswith("UUID"):
         try:
             value = int(value[4:])
             ret = value > 0
@@ -468,8 +481,8 @@ def checkEntityName(entity_name):
     @raise: TypeError: if the entity name is not valid
     @return: True
     """
-    if entity_name and not re.match('^[a-zA-Z0-9]{3,64}$', entity_name):
-        raise TypeError('Bad entity name: %s' % entity_name)
+    if entity_name and not re.match("^[a-zA-Z0-9]{3,64}$", entity_name):
+        raise TypeError("Bad entity name: %s" % entity_name)
 
     return True
 
@@ -489,34 +502,35 @@ def splitComputerPath(path):
         profile = m.group(1)
         tail = m.group(2)
     else:
-        profile = ''
+        profile = ""
         tail = path
 
     # Split entity path and computer FQDN
     entities, fqdn = posixpath.split(tail)
 
-    if entities and entities != '/':
-        if not entities.startswith('/'):
+    if entities and entities != "/":
+        if not entities.startswith("/"):
             raise TypeError
         # Check entities
-        for entity in entities.split('/'):
+        for entity in entities.split("/"):
             checkEntityName(entity)
     else:
-        entities = ''
+        entities = ""
 
-    if '.' in fqdn:
-        hostname, domain = fqdn.split('.', 1)
+    if "." in fqdn:
+        hostname, domain = fqdn.split(".", 1)
     else:
         hostname = fqdn
-        domain = ''
+        domain = ""
 
     if domain and not re.match(
-        '^([a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]\\.){0,10}[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$',
-            domain):
-        raise TypeError('Bad domain: %s' % domain)
+        "^([a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]\\.){0,10}[a-zA-Z][a-zA-Z0-9-]*[a-zA-Z0-9]$",
+        domain,
+    ):
+        raise TypeError("Bad domain: %s" % domain)
 
-    if not re.match('^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9])$', hostname):
-        raise TypeError('Bad hostname: %s' % hostname)
+    if not re.match("^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9])$", hostname):
+        raise TypeError("Bad hostname: %s" % hostname)
 
     return (profile, entities, hostname, domain)
 
@@ -534,7 +548,7 @@ def checkComputerName(name):
     """
     ret = True
     try:
-        if ':' in name or '/' in name:
+        if ":" in name or "/" in name:
             raise TypeError
         splitComputerPath(name)
     except TypeError:
@@ -548,7 +562,7 @@ def rfc3339Time(ref=False):
     """
     if not ref:
         ref = gmtime()
-    return strftime('%Y-%m-%dT%H:%M:%SZ', ref)
+    return strftime("%Y-%m-%dT%H:%M:%SZ", ref)
 
 
 def humanReadable(num, unit="B", base=1024):
@@ -575,34 +589,35 @@ def humanReadable(num, unit="B", base=1024):
                 break
     return ret
 
+
 ###
 # Network interfaces related tools
 ###
 
 
 def get_ip_address(ifname):
-    """ TODO: IPv6
-    """
+    """TODO: IPv6"""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    return socket.inet_ntoa(fcntl.ioctl(
-        s.fileno(),
-        0x8915,  # SIOCGIFADDR
-        struct.pack('256s', ifname)
-    )[20:24])
+    return socket.inet_ntoa(
+        fcntl.ioctl(s.fileno(), 0x8915, struct.pack("256s", ifname))[  # SIOCGIFADDR
+            20:24
+        ]
+    )
 
 
 def start_process(processname):
-    """  """
+    """ """
     import subprocess
+
     subprocess.Popen([processname], shell=True)
     return check_process(processname)
 
 
 def stop_process(processname):
-    """
-    """
+    """ """
     import subprocess
     import signal
+
     # Kill process.
     proc = subprocess.Popen(["pgrep", processname], stdout=subprocess.PIPE)
     for pid in proc.stdout:
@@ -613,18 +628,22 @@ def stop_process(processname):
             os.kill(int(pid), 0)
         except OSError as ex:
             logging.getLogger().warn(
-                "wasn't able to kill the process %s HINT:use signal.SIGKILL or signal.SIGABORT" %
-                processname)
-            raise Exception("""wasn't able to kill the process %s
-                                HINT:use signal.SIGKILL or signal.SIGABORT""" % processname)
+                "wasn't able to kill the process %s HINT:use signal.SIGKILL or signal.SIGABORT"
+                % processname
+            )
+            raise Exception(
+                """wasn't able to kill the process %s
+                                HINT:use signal.SIGKILL or signal.SIGABORT"""
+                % processname
+            )
     return not check_process(processname)
 
 
 def check_process(processname):
-    """
-    """
+    """ """
     import re
     import subprocess
+
     returnprocess = False
     s = subprocess.Popen(["ps", "ax"], stdout=subprocess.PIPE)
     for x in s.stdout:
@@ -634,15 +653,14 @@ def check_process(processname):
 
 
 def get_default_netif():
-    """ Read the default interface directly from /proc.
-    """
+    """Read the default interface directly from /proc."""
     netif = None
 
     fh = open("/proc/net/route")
     try:
         for line in fh:
             fields = line.strip().split()
-            if fields[1] != '00000000' or not int(fields[3], 16) & 2:
+            if fields[1] != "00000000" or not int(fields[3], 16) & 2:
                 continue
 
             netif = fields[0][:15]
@@ -651,7 +669,7 @@ def get_default_netif():
     finally:
         fh.close()
 
-    # 2nd possibility ->
+    # 2nd possibility ->
     if not netif:
         cmd = "netstat -i"
         ps = os.popen(cmd, "r")
@@ -670,13 +688,12 @@ def get_default_netif():
 
 
 def get_default_ip():
-    """ Return the IP of first netif with a default gateway
-    """
+    """Return the IP of first netif with a default gateway"""
     netif = get_default_netif()
     return get_ip_address(netif)
 
 
-def noNone(var, res=''):
+def noNone(var, res=""):
     """
     Some times, we don't want to see any None affected to a variable
     This function checks if variable is None. If True, return empty string by default
@@ -695,7 +712,7 @@ def noNone(var, res=''):
     return var
 
 
-def noNoneList(var_list, res=''):
+def noNoneList(var_list, res=""):
     """
     Same as noNone function but mapped to an list or another iterable.
 
@@ -764,8 +781,8 @@ class HasSufficientMemory:
 def subnetForIpMask(ip, netmask):
     resultat = []
     try:
-        ip = [int(x) for x in ip.split('.')]
-        netmask = [int(x) for x in netmask.split('.')]
+        ip = [int(x) for x in ip.split(".")]
+        netmask = [int(x) for x in netmask.split(".")]
         for i in range(4):
             resultat.append(str(ip[i] & netmask[i]))
         result = ".".join(resultat)

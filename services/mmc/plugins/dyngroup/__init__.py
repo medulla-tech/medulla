@@ -46,18 +46,21 @@ from mmc.plugins.base import LdapUserGroupControl
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.profile import ComputerProfileManager
 
-from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 # health check
 from mmc.plugins.dyngroup.health import scheduleCheckStatus
 
-APIVERSION = '0:0:0'
+APIVERSION = "0:0:0"
 queryManager = None
 config = None
 
-NOAUTHNEEDED = ['get_active_convergence_for_host']
+NOAUTHNEEDED = ["get_active_convergence_for_host"]
 
-def getApiVersion(): return APIVERSION
+
+def getApiVersion():
+    return APIVERSION
+
 
 def activate():
     logger = logging.getLogger()
@@ -96,17 +99,21 @@ def activate_2():
 def calldb(func, *args, **kw):
     return getattr(DyngroupDatabase(), func).__call__(*args, **kw)
 
+
 class ContextMaker(ContextMakerI):
     def getContext(self):
         s = SecurityContext()
         s.userid = self.userid
         return s
 
+
 def isDynamicEnable():
     return config.dynamicEnable
 
-def isProfilesEnable(): #NEW
+
+def isProfilesEnable():  # NEW
     return config.profilesEnable
+
 
 class RpcProxy(RpcProxyI):
     # new groups implementations
@@ -118,17 +125,20 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         moreThanOneEthCard = []
         # Exclude computers who have more than one network card
-        nets = ComputerManager().getComputersNetwork(ctx, {'uuids':uuids})
+        nets = ComputerManager().getComputersNetwork(ctx, {"uuids": uuids})
         for net in nets:
             net = net[1]
-            if len(net['macAddress']) > 1:
-                if net['objectUUID'] not in moreThanOneEthCard:
-                    logging.getLogger().debug("Computer %s (%s) has more than one network card, it won't be added to profile" % (net['cn'], net['objectUUID']))
-                    moreThanOneEthCard.append(net['objectUUID'][0])
+            if len(net["macAddress"]) > 1:
+                if net["objectUUID"] not in moreThanOneEthCard:
+                    logging.getLogger().debug(
+                        "Computer %s (%s) has more than one network card, it won't be added to profile"
+                        % (net["cn"], net["objectUUID"])
+                    )
+                    moreThanOneEthCard.append(net["objectUUID"][0])
 
         return moreThanOneEthCard
 
-    def countallprofiles(self, params): #NEW
+    def countallprofiles(self, params):  # NEW
         ctx = self.currentContext
         count = DyngroupDatabase().countallgroups(ctx, params, 1)
         return count
@@ -138,18 +148,18 @@ class RpcProxy(RpcProxyI):
         count = DyngroupDatabase().countallgroups(ctx, params)
         return count
 
-    def getallprofiles(self, params): #NEW
+    def getallprofiles(self, params):  # NEW
         ctx = self.currentContext
         groups = DyngroupDatabase().getallgroups(ctx, params, 1)
         return xmlrpcCleanup([g.toH() for g in groups])
 
-    def getmachinesprofiles(self, ids): #NEW
+    def getmachinesprofiles(self, ids):  # NEW
         ret = []
         for id in ids:
             ret.append(self.getmachineprofile(id))
         return ret
 
-    def getmachineprofile(self, id): #NEW
+    def getmachineprofile(self, id):  # NEW
         ctx = self.currentContext
         profile = DyngroupDatabase().getMachineProfile(ctx, id)
         return xmlrpcCleanup(profile)
@@ -164,7 +174,7 @@ class RpcProxy(RpcProxyI):
         return DyngroupDatabase().groupNameExists(ctx, name, gid, True)
 
     def group_name_exists(self, name, gid=None):
-        #TODO possible risks of collision betwen share/group/profiles...
+        # TODO possible risks of collision betwen share/group/profiles...
         ctx = self.currentContext
         return DyngroupDatabase().groupNameExists(ctx, name, gid)
 
@@ -188,26 +198,30 @@ class RpcProxy(RpcProxyI):
             ComputerProfileManager().delProfile(profile_UUID)
         return xmlrpcCleanup(DyngroupDatabase().delete_group(ctx, id))
 
-    def getContext(self, user='root'):
+    def getContext(self, user="root"):
         s = SecurityContext()
         s.userid = user
         s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
         return s
 
     def create_group(self, name, visibility, type=0, parent_id=None):
-        if type == 2 and parent_id is not None: # convergence group, get parent group's user context
+        if (
+            type == 2 and parent_id is not None
+        ):  # convergence group, get parent group's user context
             _group_user = DyngroupDatabase()._get_group_user(parent_id)
             ctx = self.getContext(user=_group_user)
         else:
             ctx = self.currentContext
-        return xmlrpcCleanup(DyngroupDatabase().create_group(ctx, name, visibility, type, parent_id))
+        return xmlrpcCleanup(
+            DyngroupDatabase().create_group(ctx, name, visibility, type, parent_id)
+        )
 
-    def create_profile(self, name, visibility): #NEW
+    def create_profile(self, name, visibility):  # NEW
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().create_group(ctx, name, visibility, 1))
 
     def tos_group(self, id):
-        self.logger.error('tos_group is not implemented')
+        self.logger.error("tos_group is not implemented")
 
     def setname_group(self, id, name):
         ctx = self.currentContext
@@ -215,7 +229,9 @@ class RpcProxy(RpcProxyI):
 
     def setvisibility_group(self, id, visibility):
         ctx = self.currentContext
-        return xmlrpcCleanup(DyngroupDatabase().setvisibility_group(ctx, id, visibility))
+        return xmlrpcCleanup(
+            DyngroupDatabase().setvisibility_group(ctx, id, visibility)
+        )
 
     def request_group(self, id):
         ctx = self.currentContext
@@ -230,7 +246,9 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(DyngroupDatabase().bool_group(ctx, id))
 
     def setbool_group(self, id, bool, type=0, parent_id=None):
-        if type == 2 and parent_id is not None: # convergence group, get parent group's user context
+        if (
+            type == 2 and parent_id is not None
+        ):  # convergence group, get parent group's user context
             _group_user = DyngroupDatabase()._get_group_user(parent_id)
             ctx = self.getContext(user=_group_user)
         else:
@@ -239,15 +257,28 @@ class RpcProxy(RpcProxyI):
 
     def requestresult_group(self, id, start, end, filter):
         ctx = self.currentContext
-        return xmlrpcCleanup(DyngroupDatabase().requestresult_group(ctx, id, start, end, filter, queryManager))
+        return xmlrpcCleanup(
+            DyngroupDatabase().requestresult_group(
+                ctx, id, start, end, filter, queryManager
+            )
+        )
 
     def countrequestresult_group(self, id, filter):
         ctx = self.currentContext
-        return xmlrpcCleanup(DyngroupDatabase().countrequestresult_group(ctx, id, filter, queryManager))
+        return xmlrpcCleanup(
+            DyngroupDatabase().countrequestresult_group(ctx, id, filter, queryManager)
+        )
 
     def result_group(self, id, start, end, filter):
         ctx = self.currentContext
-        return xmlrpcCleanup([g.toH() for g in DyngroupDatabase().result_group(ctx, id, start, end, filter, False)])
+        return xmlrpcCleanup(
+            [
+                g.toH()
+                for g in DyngroupDatabase().result_group(
+                    ctx, id, start, end, filter, False
+                )
+            ]
+        )
 
     def countresult_group(self, id, filter):
         ctx = self.currentContext
@@ -277,7 +308,7 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().isrequest_group(ctx, id))
 
-    def isprofile(self, id): #NEW
+    def isprofile(self, id):  # NEW
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().isprofile(ctx, id))
 
@@ -285,8 +316,8 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         ret = DyngroupDatabase().reload_group(ctx, id, queryManager)
         # WIP : call ComputerProfileManager to add machines
-#        if self.isprofile(id):
-#            ComputerProfileManager().addComputersToProfile(ctx, [1, 2], id) # fake!
+        #        if self.isprofile(id):
+        #            ComputerProfileManager().addComputersToProfile(ctx, [1, 2], id) # fake!
         return xmlrpcCleanup(ret)
 
     def addmembers_to_group(self, id, uuids):
@@ -298,12 +329,15 @@ class RpcProxy(RpcProxyI):
             computers = []
             uuid2key = {}
             for c in uuids:
-                computers.append(uuids[c]['uuid'])
-                uuid2key[uuids[c]['uuid']] = c
+                computers.append(uuids[c]["uuid"])
+                uuid2key[uuids[c]["uuid"]] = c
             didnt_work = ComputerProfileManager().areForbiddebComputers(computers)
 
             if len(didnt_work) > 0:
-                logging.getLogger().debug("Can't add the following computers in that profile %s : %s"%(str(id), str(didnt_work)))
+                logging.getLogger().debug(
+                    "Can't add the following computers in that profile %s : %s"
+                    % (str(id), str(didnt_work))
+                )
                 for i in didnt_work:
                     if uuid2key[i] in uuids:
                         are_some_to_remove = True
@@ -334,21 +368,21 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         # get machines uuids from values
         request, bool, optimization = forgeRequest(elt, values)
-        req = {'request':request, 'equ_bool':bool, 'optimization' : optimization}
+        req = {"request": request, "equ_bool": bool, "optimization": optimization}
         machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, req)
         # put in the wanted format
         uuids = {}
         if type(machines) == dict:
             machines = list(machines.values())
         for m in machines:
-            uuid = m[1]['objectUUID'][0]
-            hostname = m[1]['cn'][0]
-            uuids[uuid] = {'hostname':hostname, 'uuid':uuid}
+            uuid = m[1]["objectUUID"][0]
+            hostname = m[1]["cn"][0]
+            uuids[uuid] = {"hostname": hostname, "uuid": uuid}
 
         # insert uuid in group with addmembers_to_group
         return self.addmembers_to_group(id, uuids)
 
-    def getForbiddenComputersUUID(self, profile_UUID = None):
+    def getForbiddenComputersUUID(self, profile_UUID=None):
         ret = ComputerProfileManager().getForbiddenComputersUUID(profile_UUID)
         return ret
 
@@ -396,21 +430,31 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
-        return xmlrpcCleanup(queryManager.getPossiblesCriterionsInModule(ctx, moduleName))
+        return xmlrpcCleanup(
+            queryManager.getPossiblesCriterionsInModule(ctx, moduleName)
+        )
 
     def getTypeForCriterionInModule(self, moduleName, criterion):
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
-        return xmlrpcCleanup(queryManager.getTypeForCriterionInModule(ctx, moduleName, criterion))
+        return xmlrpcCleanup(
+            queryManager.getTypeForCriterionInModule(ctx, moduleName, criterion)
+        )
 
     def getPossiblesValuesForCriterionInModule(self, moduleName, criterion):
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
-        return xmlrpcCleanup(queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion))
+        return xmlrpcCleanup(
+            queryManager.getPossiblesValuesForCriterionInModule(
+                ctx, moduleName, criterion
+            )
+        )
 
-    def getPossiblesValuesForCriterionInModuleFuzzy(self, moduleName, criterion, search = ''):
+    def getPossiblesValuesForCriterionInModuleFuzzy(
+        self, moduleName, criterion, search=""
+    ):
         """
         Used in "double" type. It's used where you search on 2 fields of a table.
         Example: On table Software, you can search on ProductName and ProductVersion
@@ -420,14 +464,18 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
-        result = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion, unescape(search))
+        result = queryManager.getPossiblesValuesForCriterionInModule(
+            ctx, moduleName, criterion, unescape(search)
+        )
         ret = result[1]
         # Only returns the 100 first results
         # FIXME: maybe the range limitation could be done on the queryManager ?
         ret = ret[:100]
         return xmlrpcCleanup(ret)
 
-    def getPossiblesValuesForCriterionInModuleFuzzyWhere(self, moduleName, criterion, value1, value2 = ''):
+    def getPossiblesValuesForCriterionInModuleFuzzyWhere(
+        self, moduleName, criterion, value1, value2=""
+    ):
         """
         Used in "double" type. It's used where you search on 2 fields of a table.
         Example: On table Software, you can search on ProductName and ProductVersion
@@ -437,7 +485,9 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         if not isDynamicEnable():
             return False
-        result = queryManager.getPossiblesValuesForCriterionInModule(ctx, moduleName, criterion, unescape(value1), unescape(value2))
+        result = queryManager.getPossiblesValuesForCriterionInModule(
+            ctx, moduleName, criterion, unescape(value1), unescape(value2)
+        )
         ret = result[1]
         # Only returns the 100 first results
         # FIXME: maybe the range limitation could be done on the queryManager ?
@@ -445,13 +495,13 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ret)
 
     def checkBoolean(self, bool):
-        if bool == None or bool == '':
+        if bool == None or bool == "":
             return [True, -1]
         b = BoolRequest()
         try:
             b.parse(bool)
         except Exception as e:
-            logging.getLogger().debug('checkBoolean failed : ')
+            logging.getLogger().debug("checkBoolean failed : ")
             logging.getLogger().debug(e)
             return [False, -1]
         return xmlrpcCleanup([b.isValid(), b.countOps()])
@@ -461,21 +511,23 @@ class RpcProxy(RpcProxyI):
         dyndatabase = DyngroupDatabase()
 
         cache = dyndatabase.getAllMachinesUuid()
-        machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, {'uuids':list(cache.keys())}, False, False, True)
+        machines = ComputerManager().getRestrictedComputersList(
+            ctx, 0, -1, {"uuids": list(cache.keys())}, False, False, True
+        )
 
         need_update = {}
         for m in machines:
-            if m['hostname'] != cache[m['uuid']]:
-                need_update[m['uuid']] = m['hostname']
+            if m["hostname"] != cache[m["uuid"]]:
+                need_update[m["uuid"]] = m["hostname"]
 
         dyndatabase.updateNewNames(need_update)
         return len(need_update)
 
     def getInfosNameGroup(self, arrayuuidgroup):
-        return  DyngroupDatabase().getInfosNameGroup(arrayuuidgroup)
+        return DyngroupDatabase().getInfosNameGroup(arrayuuidgroup)
 
-    def getMachineforentityList(self,min,max,filt):
-        return ComputerManager().getMachineforentityList(min,max,filt)
+    def getMachineforentityList(self, min, max, filt):
+        return ComputerManager().getMachineforentityList(min, max, filt)
 
     def set_profile_imaging_server(self, gid, imaging_uuid):
         if not self.isprofile(gid):
@@ -485,7 +537,7 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ret)
 
     def get_profile_imaging_server(self, gid):
-        if gid == '':
+        if gid == "":
             return False
         if not self.isprofile(gid):
             return False
@@ -500,7 +552,7 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ret)
 
     def get_profile_entity(self, gid):
-        if gid == '':
+        if gid == "":
             return False
         if not self.isprofile(gid):
             return False
@@ -509,7 +561,7 @@ class RpcProxy(RpcProxyI):
 
     def isProfileAssociatedToImagingServer(self, gid):
         ims_uuid = self.get_profile_imaging_server(gid)
-        return (ims_uuid != False)
+        return ims_uuid != False
 
     def getExtended(self, moduleName, criterion):
         if not isDynamicEnable():
@@ -517,8 +569,27 @@ class RpcProxy(RpcProxyI):
         else:
             return queryManager.getExtended(moduleName, criterion)
 
-    def add_convergence_datas(self, parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active, params):
-        ret = DyngroupDatabase().add_convergence_datas(parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active, params)
+    def add_convergence_datas(
+        self,
+        parent_group_id,
+        deploy_group_id,
+        done_group_id,
+        pid,
+        p_api,
+        command_id,
+        active,
+        params,
+    ):
+        ret = DyngroupDatabase().add_convergence_datas(
+            parent_group_id,
+            deploy_group_id,
+            done_group_id,
+            pid,
+            p_api,
+            command_id,
+            active,
+            params,
+        )
         return xmlrpcCleanup(ret)
 
     def edit_convergence_datas(self, gid, package_id, datas):
@@ -532,14 +603,16 @@ class RpcProxy(RpcProxyI):
     def get_active_convergence_for_host(self, host_uuid):
         all_convergences = DyngroupDatabase().get_active_convergences()
         host_convergences = []
-        for cv in  all_convergences:
+        for cv in all_convergences:
             # Do next with root context
             ctx = self.getContext()
-            if ComputerManager().getRestrictedComputersList(ctx, 0, -1, {'uuid': host_uuid, 'gid': cv['gid']}, False, False, True):
+            if ComputerManager().getRestrictedComputersList(
+                ctx, 0, -1, {"uuid": host_uuid, "gid": cv["gid"]}, False, False, True
+            ):
                 host_convergences.append(cv)
         return host_convergences
 
-    def get_active_convergence_commands(self,package_id):
+    def get_active_convergence_commands(self, package_id):
         ret = DyngroupDatabase().get_active_convergence_commands(package_id)
         return xmlrpcCleanup(ret)
 
@@ -567,14 +640,15 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().get_convergence_group_parent_id(gid)
         return xmlrpcCleanup(ret)
 
-#filter module xmpp in module glpi True
+
+# filter module xmpp in module glpi True
 def __onlyIn(query, module):
     for q in query[1]:
         if len(q) == 4:
             mo = q[1]
             if mo == "xmppmaster":
                 mo = "glpi"
-            if mo != module and q[1] != 'dyngroup':
+            if mo != module and q[1] != "dyngroup":
                 return False
         else:
             a = __onlyIn(q, module)
@@ -582,7 +656,8 @@ def __onlyIn(query, module):
                 return False
     return True
 
-def __addCtxFilters(ctx, filt = None):
+
+def __addCtxFilters(ctx, filt=None):
     if filt is None:
         filt = {}
     try:
@@ -590,30 +665,41 @@ def __addCtxFilters(ctx, filt = None):
             location = ctx.locations
             if type(location) != list:
                 location = [location]
-            filt['ctxlocation'] = [l.toH() for l in location]
+            filt["ctxlocation"] = [l.toH() for l in location]
     except exceptions.AttributeError:
         pass
     return filt
 
-def replyToQuery(ctx, query, bool = None, min = 0, max = 10, justId = False, toH = False, filt = None):
-    if query == None: return []
+
+def replyToQuery(
+    ctx, query, bool=None, min=0, max=10, justId=False, toH=False, filt=None
+):
+    if query == None:
+        return []
     if __onlyIn(query, ComputerManager().main):
         ComputerManager().main
         filt = __addCtxFilters(ctx, filt)
-        filt['query'] = query
-        return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, False, justId, toH))
+        filt["query"] = query
+        return xmlrpcCleanup(
+            ComputerManager().getRestrictedComputersList(
+                ctx, min, max, filt, False, justId, toH
+            )
+        )
     else:
         return xmlrpcCleanup(QueryManager().replyToQuery(ctx, query, bool, min, max))
 
-def replyToQueryLen(ctx, query, bool = None, filt = None):
-    if query == None: return 0
+
+def replyToQueryLen(ctx, query, bool=None, filt=None):
+    if query == None:
+        return 0
     if __onlyIn(query, ComputerManager().main):
         ComputerManager().main
         filt = __addCtxFilters(ctx, filt)
-        filt['query'] = query
+        filt["query"] = query
         return xmlrpcCleanup(ComputerManager().getRestrictedComputersListLen(ctx, filt))
     else:
         return xmlrpcCleanup(QueryManager().replyToQueryLen(ctx, query, bool))
+
 
 def forgeRequest(elt, values):
     i = 1
@@ -630,21 +716,24 @@ def forgeRequest(elt, values):
         requests.append("%i==%s::%s==%s" % (i, module, crit, val))
         bools.append(str(i))
         i += 1
-    request = '||'.join(requests)
-    bools = "OR("+",".join(bools)+")"
+    request = "||".join(requests)
+    bools = "OR(" + ",".join(bools) + ")"
     if optimization and ComputerManager().getManagerName() == "inventory":
-        optim = { "criterion" : crit, "data" : values }
+        optim = {"criterion": crit, "data": values}
     else:
         optim = {}
     return (request, bools, optim)
 
+
 def getDefaultModule():
     return config.defaultModule
+
 
 def getMaxElementsForStaticList():
     return config.maxElementsForStaticList
 
+
 def unescape(search):
-    if type(search) == str and search != '':
-        return re.sub('&lt;', '<', re.sub('&gt;', '>', search))
+    if type(search) == str and search != "":
+        return re.sub("&lt;", "<", re.sub("&gt;", ">", search))
     return search

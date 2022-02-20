@@ -35,13 +35,9 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
     logging.getLogger().debug("=====================================================")
     print(json.dumps(data, indent=4))
-    datasend = {
-        "action": action,
-        "sessionid": sessionid,
-        "data": data,
-        'base64': False}
+    datasend = {"action": action, "sessionid": sessionid, "data": data, "base64": False}
 
     # call plugin asynchromeremoteshell to machine or relay
-    xmppobject.send_message(mto=data['data']['jid'],
-                            mbody=json.dumps(datasend),
-                            mtype='chat')
+    xmppobject.send_message(
+        mto=data["data"]["jid"], mbody=json.dumps(datasend), mtype="chat"
+    )

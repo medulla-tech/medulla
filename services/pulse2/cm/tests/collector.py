@@ -28,43 +28,44 @@ from pulse2.cm.collector import Sessions, Collector
 
 
 class Test00_SessionsTestCase(TestCase):
-    """ Test for sessions tracker"""
+    """Test for sessions tracker"""
 
     def setUp(self):
         self.clock = Clock()
         self.sessions = Sessions(False, 10, self.clock)
 
     def test01_all_elements_are_deferred(self):
-        """ To be sure if all elements are deferred instances"""
+        """To be sure if all elements are deferred instances"""
         for i in range(20):
             uid, d = self.sessions.make()
 
-        result = all(isinstance(d[1], Deferred)
-                     for d in list(self.sessions.content.values()))
+        result = all(
+            isinstance(d[1], Deferred) for d in list(self.sessions.content.values())
+        )
         self.assertTrue(result)
 
     def test02_exists(self):
-        """ An occurence test of added element in container """
+        """An occurence test of added element in container"""
 
         uid, d = self.sessions.make()
         self.assertIn(uid, self.sessions)
 
     def test03_not_exists_if_removed(self):
-        """ An occurence test of removed element from container """
+        """An occurence test of removed element from container"""
 
         uid, d = self.sessions.make()
         self.sessions.remove(uid)
         self.assertNotIn(uid, self.sessions)
 
     def test04_not_exists_if_pop(self):
-        """ An occurence test of returned and removed element from container """
+        """An occurence test of returned and removed element from container"""
 
         uid, d = self.sessions.make()
         self.sessions.pop(uid)
         self.assertNotIn(uid, self.sessions)
 
     def test05_try_remove_unexisting(self):
-        """ An occurence test of removed element from container """
+        """An occurence test of removed element from container"""
 
         uid, d = self.sessions.make()
         self.sessions.remove(uid)
@@ -89,7 +90,7 @@ class Test00_SessionsTestCase(TestCase):
         self.assertTrue(d_before is d_after)
 
     def test07_expire(self):
-        """ test if expired requests is no more in sessions """
+        """test if expired requests is no more in sessions"""
 
         # create sessions instance with specific result
         sessions = Sessions("I'm an expired request", 10, self.clock)
@@ -100,7 +101,7 @@ class Test00_SessionsTestCase(TestCase):
 
             @d.addCallback
             def cb(reason):
-                """ Callback of all expired requests """
+                """Callback of all expired requests"""
                 # All expired requests must return this text
                 self.assertEqual(reason, "I'm an expired request")
 
@@ -148,7 +149,6 @@ class Test00_SessionsTestCase(TestCase):
 
 
 class Test01_CollectorTestCase(TestCase):
-
     def setUp(self):
         self.sessions = Sessions(False, 10, Clock())
 
@@ -182,8 +182,7 @@ class Test01_CollectorTestCase(TestCase):
 
         for i in range(10):
 
-            collector.queue_and_process("192.168.127.22",
-                                        "%s_%d" % (any_data, i))
+            collector.queue_and_process("192.168.127.22", "%s_%d" % (any_data, i))
 
         uid, ip, request = collector.get()
 
@@ -192,7 +191,7 @@ class Test01_CollectorTestCase(TestCase):
         self.assertTrue(my_deferred is d)
 
     def test03_get_from_empty_queue(self):
-        """ Empty queue returns a deferred with None """
+        """Empty queue returns a deferred with None"""
 
         collector = Collector(self.sessions)
 

@@ -30,12 +30,12 @@ from pulse2.database.inventory import Inventory
 
 logger = logging.getLogger()
 
+
 def fromUUID(uuid):
-    return int(uuid.replace('UUID', ''))
+    return int(uuid.replace("UUID", ""))
 
 
 class exportedReport(object):
-
     def __init__(self):
         self.db = Inventory()
         self.ctx = SecurityContext()
@@ -50,11 +50,13 @@ class exportedReport(object):
         """
         # Be sure to get all entities
         self.ctx.locations = None
-        if hasattr(self.ctx, 'locationsid'):
+        if hasattr(self.ctx, "locationsid"):
             del self.ctx.locationsid
         # get all entities uuids for the current user
         if entities == []:
-            entities = [entity.toH()['uuid'] for entity in self.db.getAllEntities(self.ctx)]
+            entities = [
+                entity.toH()["uuid"] for entity in self.db.getAllEntities(self.ctx)
+            ]
         return [fromUUID(str(entity)) for entity in entities]
 
     def _getComputerCountByOSes(self, entities, os_names, results, oper=operator.add):
@@ -63,15 +65,15 @@ class exportedReport(object):
             for entity in self._getEntitiesIds(entities):
                 self.ctx.locationsid = [entity]
                 os_count = self.db.getMachineByOsLike(self.ctx, os_names, count=1)
-                os_results.append({'entity_id': entity, 'value': os_count})
+                os_results.append({"entity_id": entity, "value": os_count})
         for os_result in os_results:
             count = False
             for result in results:
-                if os_result['entity_id'] == result['entity_id']:
-                    if result['value'] is not None and os_result['value'] is not None:
-                        result['value'] = oper(result['value'], os_result['value'])
+                if os_result["entity_id"] == result["entity_id"]:
+                    if result["value"] is not None and os_result["value"] is not None:
+                        result["value"] = oper(result["value"], os_result["value"])
                     else:
-                        result['value'] = 0
+                        result["value"] = 0
                     count = True
             if not count and oper == operator.add:
                 results.append(os_result)
@@ -89,12 +91,15 @@ class exportedReport(object):
         if isinstance(os_names, str):
             os_names = [os_names]
 
-        os_names = [os_name.replace('*', '%') for os_name in os_names]
-        exclude_names = [exclude_name.replace('*', '%') for exclude_name in exclude_names]
+        os_names = [os_name.replace("*", "%") for os_name in os_names]
+        exclude_names = [
+            exclude_name.replace("*", "%") for exclude_name in exclude_names
+        ]
 
         results = self._getComputerCountByOSes(entities, os_names, [])
-        results = self._getComputerCountByOSes(entities, exclude_names,
-                                               results, operator.sub)
+        results = self._getComputerCountByOSes(
+            entities, exclude_names, results, operator.sub
+        )
 
         return results
 
@@ -106,7 +111,7 @@ class exportedReport(object):
         for entity in self._getEntitiesIds(entities):
             self.ctx.locationsid = [entity]
             count = self.db.getAllComputers(self.ctx, count=1)
-            results.append({'entity_id': entity, 'value': count})
+            results.append({"entity_id": entity, "value": count})
         return results
 
     def getAllComputerCountByAgencies(self, entities, agencies):
@@ -124,7 +129,7 @@ class exportedReport(object):
             self.ctx.locationsid = [entity]
             self.ctx.agencies = agencies
             count = self.db.getAllComputersByAgencies(self.ctx, agencies, count=1)
-            results.append({'entity_id': entity, 'value': count})
+            results.append({"entity_id": entity, "value": count})
         return results
 
     def getComputerCountByTypes(self, entities, types):
@@ -144,7 +149,7 @@ class exportedReport(object):
             for entity in self._getEntitiesIds(entities):
                 self.ctx.locationsid = [entity]
                 type_count = self.db.getMachineByType(self.ctx, types, count=1)
-                results.append({'entity_id': entity, 'value': type_count})
+                results.append({"entity_id": entity, "value": type_count})
         return results
 
     def getComputerCountByState(self, entities, state):
@@ -153,7 +158,7 @@ class exportedReport(object):
         for entity in self._getEntitiesIds(entities):
             self.ctx.locationsid = [entity]
             state_count = self.db.getMachineByState(self.ctx, state, count=1)
-            result.append({'entity_id': entity, 'value': state_count})
+            result.append({"entity_id": entity, "value": state_count})
         return result
 
     def _constructSoftwareTuple(self, soft):
@@ -164,17 +169,17 @@ class exportedReport(object):
         """
         name = version = vendor = None
         if soft and isinstance(soft, str):
-            name = soft.replace('*', '%')
+            name = soft.replace("*", "%")
         elif type(soft) == dict:
-            name = soft.get('name', None)
+            name = soft.get("name", None)
             if name:
-                name = name.replace('*', '%')
-            version = soft.get('version', None)
+                name = name.replace("*", "%")
+            version = soft.get("version", None)
             if version:
-                version = version.replace('*', '%')
-            vendor = soft.get('vendor', None)
+                version = version.replace("*", "%")
+            vendor = soft.get("vendor", None)
             if vendor:
-                vendor = vendor.replace('*', '%')
+                vendor = vendor.replace("*", "%")
         if name is None:
             logger.error("Missing software name")
             return None
@@ -196,23 +201,26 @@ class exportedReport(object):
         return []
 
     def _getComputerCountBySoftwares(self, entities, softs, results, oper=operator.add):
-        soft_results= []
+        soft_results = []
         if softs:
             for entity in self._getEntitiesIds(entities):
                 self.ctx.locationsid = [entity]
-                soft_count = self.db.getAllSoftwaresImproved(self.ctx, [soft[0] for soft in softs],
-                        version=[soft[1] for soft in softs],
-                        vendor=[soft[2] for soft in softs],
-                        count=1)
-                soft_results.append({'entity_id': entity, 'value': soft_count})
+                soft_count = self.db.getAllSoftwaresImproved(
+                    self.ctx,
+                    [soft[0] for soft in softs],
+                    version=[soft[1] for soft in softs],
+                    vendor=[soft[2] for soft in softs],
+                    count=1,
+                )
+                soft_results.append({"entity_id": entity, "value": soft_count})
         for soft_result in soft_results:
             count = False
             for result in results:
-                if soft_result['entity_id'] == result['entity_id']:
-                    if result['value'] is not None and soft_result['value'] is not None:
-                        result['value'] = oper(result['value'], soft_result['value'])
+                if soft_result["entity_id"] == result["entity_id"]:
+                    if result["value"] is not None and soft_result["value"] is not None:
+                        result["value"] = oper(result["value"], soft_result["value"])
                     else:
-                        result['value'] = 0
+                        result["value"] = 0
                     count = True
             if not count and oper == operator.add:
                 results.append(soft_result)
@@ -236,6 +244,7 @@ class exportedReport(object):
         softs = self._constructSoftwaresList(soft_names)
         excludes = self._constructSoftwaresList(exclude_names)
         results = self._getComputerCountBySoftwares(entities, softs, [])
-        results = self._getComputerCountBySoftwares(entities, excludes,
-                                                    results, operator.sub)
+        results = self._getComputerCountBySoftwares(
+            entities, excludes, results, operator.sub
+        )
         return results

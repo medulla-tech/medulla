@@ -33,12 +33,14 @@ plugin = {"VERSION": "1.1", "NAME": "restartbot", "TYPE": "master"}
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("###################################################")
-    logger.debug("call %s from %s"%(plugin,message['from']))
+    logger.debug("call %s from %s" % (plugin, message["from"]))
     logger.debug("###################################################")
-    command = {'action': 'restartbot',
-               'base64': False,
-               'sessionid': sessionid,
-               'data': ''}
-    xmppobject.send_message(mto=data['data'][0],
-                            mbody=json.dumps(command),
-                            mtype='chat')
+    command = {
+        "action": "restartbot",
+        "base64": False,
+        "sessionid": sessionid,
+        "data": "",
+    }
+    xmppobject.send_message(
+        mto=data["data"][0], mbody=json.dumps(command), mtype="chat"
+    )

@@ -47,30 +47,32 @@ if "makefile" in sys.argv:
 """
 Connect to the MMC agent using the MMCProxy class defined above
 """
-login = 'mmc'
-password = 's3cr3t'
+login = "mmc"
+password = "s3cr3t"
 
-client = sync.Proxy('https://%s:%s@localhost:7080'%(login, password), False)
-client.base.ldapAuth('root', 'secret')
+client = sync.Proxy("https://%s:%s@localhost:7080" % (login, password), False)
+client.base.ldapAuth("root", "secret")
 
 """
 Test class
 """
 
+
 class class01inventoryInitTest(TestCase):
     """
     Tests classes of the inventory module
     """
+
     def setUp(self):
         self.client = client.inventory
 
     def test101inventoryExists(self):
-        result = self.client.inventoryExists('34')
+        result = self.client.inventoryExists("34")
         self.assertEqual(result, False)
 
     def test102countLastMachineInventoryPart(self):
         result = self.client.countLastMachineInventoryPart("Hardware", {})
-        self.assertEqual(result, '0')
+        self.assertEqual(result, "0")
 
     def test103getLastMachineInventoryPart(self):
         result = self.client.getLastMachineInventoryPart("Hardware", {})
@@ -78,28 +80,46 @@ class class01inventoryInitTest(TestCase):
 
     def test104getLastMachineInventoryFull(self):
         # FIXME : Add a test not to get the 'Entity' part
-        #result = self.client.getLastMachineInventoryFull({'uuid':'1337'})
-        #self.assertEqual(result, {})
+        # result = self.client.getLastMachineInventoryFull({'uuid':'1337'})
+        # self.assertEqual(result, {})
         pass
 
     def test105getAllMachinesInventoryColumn(self):
-        #result = self.client.getAllMachinesInventoryColumn('Hardware', "id")
-        #self.assertEqual(result, [])
+        # result = self.client.getAllMachinesInventoryColumn('Hardware', "id")
+        # self.assertEqual(result, [])
         pass
 
     def test106getMachines(self):
         # FIXME: Add a test before using has_key method
-        #result = self.client.getMachines()
-        #self.assertEqual(result, [])
+        # result = self.client.getMachines()
+        # self.assertEqual(result, [])
         pass
 
     def test107getInventoryEM(self):
         result = self.client.getInventoryEM("Hardware")
-        self.assertEqual(result, ['Build', 'Version', 'ProcessorCount', 'SwapSpace', 'User', 'Date', 'Workgroup', 'RegisteredName', 'RegisteredCompany', 'OSSerialNumber', 'Type', 'OsSerialKey', 'ProcessorFrequency', 'Host'])
+        self.assertEqual(
+            result,
+            [
+                "Build",
+                "Version",
+                "ProcessorCount",
+                "SwapSpace",
+                "User",
+                "Date",
+                "Workgroup",
+                "RegisteredName",
+                "RegisteredCompany",
+                "OSSerialNumber",
+                "Type",
+                "OsSerialKey",
+                "ProcessorFrequency",
+                "Host",
+            ],
+        )
 
     def test108getInventoryGraph(self):
         result = self.client.getInventoryGraph("Hardware")
-        self.assertEqual(result, ['OperatingSystem', 'ProcessorType'])
+        self.assertEqual(result, ["OperatingSystem", "ProcessorType"])
 
     def test109getMachinesBy(self):
         result = self.client.getMachinesBy("Hardware", "id", "1337")
@@ -107,8 +127,8 @@ class class01inventoryInitTest(TestCase):
 
     def test110getMachinesByDict(self):
         # FIXME: SQLAlchemy error with foreign keys
-        #result = self.client.getMachinesByDict("Hardware", {"id":"1337"})
-        #self.assertEqual(result, [])
+        # result = self.client.getMachinesByDict("Hardware", {"id":"1337"})
+        # self.assertEqual(result, [])
         pass
 
     def test111getValues(self):
@@ -120,12 +140,15 @@ class class01inventoryInitTest(TestCase):
         self.assertEqual(result, [])
 
     def test113getValueFuzzyWhere(self):
-        result = self.client.getValueFuzzyWhere("Hardware", "id", "1337", "OperatingSystem", "Mandriva")
+        result = self.client.getValueFuzzyWhere(
+            "Hardware", "id", "1337", "OperatingSystem", "Mandriva"
+        )
         self.assertEqual(result, [])
 
     def test114getValuesFuzzy(self):
         result = self.client.getValuesFuzzy("Hardware", "id", "1337")
         self.assertEqual(result, [])
+
 
 """
 Launch of the tests
@@ -133,10 +156,10 @@ Launch of the tests
 if mode == "debug":
     nb = 0
     success = []
-    suite=unittest.TestLoader().loadTestsFromTestCase(class01inventoryInitTest)
-    test=unittest.TextTestRunner(verbosity=Verbosity).run(suite)
+    suite = unittest.TestLoader().loadTestsFromTestCase(class01inventoryInitTest)
+    test = unittest.TextTestRunner(verbosity=Verbosity).run(suite)
     success.append(test.wasSuccessful())
-    nb=nb+test.testsRun
+    nb = nb + test.testsRun
 
     if False in success:
         print("One or more test are failed or have an unexpected error")

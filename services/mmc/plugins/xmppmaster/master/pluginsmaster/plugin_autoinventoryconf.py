@@ -40,17 +40,23 @@ def action(xmppobject):
     logging.getLogger().debug(plugin)
     try:
         # read max_key_index parameter to find out the number of keys
-        if hasattr(xmppobject.config, 'max_key_index'):
-            logging.getLogger().debug("Loading %s keys" % xmppobject.config.max_key_index)
+        if hasattr(xmppobject.config, "max_key_index"):
+            logging.getLogger().debug(
+                "Loading %s keys" % xmppobject.config.max_key_index
+            )
             nb_iter = int(xmppobject.config.max_key_index) + 1
             for num in range(1, nb_iter):
-                registry_key = getattr(xmppobject.config, 'reg_key_' + str(num)).split('|')[0]
+                registry_key = getattr(xmppobject.config, "reg_key_" + str(num)).split(
+                    "|"
+                )[0]
                 try:
                     registry_key_name = getattr(
-                        xmppobject.config, 'reg_key_' + str(num)).split('|')[1]
+                        xmppobject.config, "reg_key_" + str(num)
+                    ).split("|")[1]
                 except IndexError:
                     registry_key_name = getattr(
-                        xmppobject.config, 'reg_key_' + str(num)).split('\\')[-1]
+                        xmppobject.config, "reg_key_" + str(num)
+                    ).split("\\")[-1]
                 # Check that the keys are in glpi and insert them if not present
                 if not Glpi().getRegistryCollect(registry_key):
                     Glpi().addRegistryCollect(registry_key, registry_key_name)

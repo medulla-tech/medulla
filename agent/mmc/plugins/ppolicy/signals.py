@@ -6,4 +6,6 @@ ppolicy_applied = Signal(providing_args=["ppolicy_name"])
 ppolicy_removed = Signal()
 
 # Signal sent when a ppolicy attribute is changed
-ppolicy_attr_changed = Signal(providing_args=["ppolicy_name", "ppolicy_attr", "ppolicy_attr_value"])
+ppolicy_attr_changed = Signal(
+    providing_args=["ppolicy_name", "ppolicy_attr", "ppolicy_attr_value"]
+)

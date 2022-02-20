@@ -38,20 +38,16 @@ def log(message, severity=logging.DEBUG, traceback=False):
     uuid = cherrypy.session.get(UUID_KEY, False)
     start = "APIv1"
     if hostname and uuid:
-        start += ' (%s, %s)' % (hostname, uuid)
-    cherrypy.request.app.log(
-        message,
-        start,
-        severity=severity,
-        traceback=traceback)
+        start += " (%s, %s)" % (hostname, uuid)
+    cherrypy.request.app.log(message, start, severity=severity, traceback=traceback)
 
 
 def download_file(url, dest, retries):
     try:
         res = urllib.request.urlopen(url)
-        path, filename = url.rsplit('/', 1)
+        path, filename = url.rsplit("/", 1)
         blocksize = 8192
-        with open(os.path.join(dest, filename), 'wb') as f:
+        with open(os.path.join(dest, filename), "wb") as f:
             while True:
                 chunk = res.read(blocksize)
                 if not chunk:
@@ -77,6 +73,5 @@ def make_zipfile(output_filename, source_dir):
             for file in files:
                 filename = os.path.join(root, file)
                 if os.path.isfile(filename):  # regular files only
-                    arcname = os.path.join(
-                        os.path.relpath(root, relroot), file)
+                    arcname = os.path.join(os.path.relpath(root, relroot), file)
                     zip.write(filename, arcname)

@@ -38,10 +38,11 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.debug("=====================================================")
 
     struct = {}
-    if type(data['data']) is list:
-        count_params = len(data['data'])
+    if type(data["data"]) is list:
+        count_params = len(data["data"])
         if count_params == 0:
-            logging.debug("""Missing parameters :
+            logging.debug(
+                """Missing parameters :
 - param1 : subaction
 - param2 : jid_ars
 
@@ -52,47 +53,48 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
 - param N : jid_ars
 
 * or param3 : 'all' to select all machines for the specified relay. In this case, param3 is the last parameter
-""")
+"""
+            )
             return
 
         elif count_params == 1:
             logging.error("At least the jid's relay must be specified")
             return
         elif count_params == 2:
-            subaction = data['data'][0]
-            jid_ars = data['data'][1]
-            _machines = ['all']
+            subaction = data["data"][0]
+            jid_ars = data["data"][1]
+            _machines = ["all"]
 
         else:
-            subaction = data['data'][0]
-            jid_ars = data['data'][1]
-            _machines = data['data'][2:]
+            subaction = data["data"][0]
+            jid_ars = data["data"][1]
+            _machines = data["data"][2:]
         struct = {
-            'subaction' : data['data'][0],
-            'jid_ars' : data['data'][1],
-            'jid_machines': [],
+            "subaction": data["data"][0],
+            "jid_ars": data["data"][1],
+            "jid_machines": [],
         }
     else:
-        jid_ars = data['data']['jid_ars']
-        _machines = data['data']['jid_machines']
-        struct = data['data']
+        jid_ars = data["data"]["jid_ars"]
+        _machines = data["data"]["jid_machines"]
+        struct = data["data"]
 
-
-    if struct['subaction'] == "direct_ban":
+    if struct["subaction"] == "direct_ban":
         # Get  the machines jids which are in the list but not already in the
         # table ban_machines.
         result = XmppMasterDatabase().ban_machines(jid_ars, _machines)
-    if struct['subaction'] == "direct_unban":
+    if struct["subaction"] == "direct_unban":
         # Get  the machines jids which are in the list but not already in the
         # table ban_machines.
         result = XmppMasterDatabase().unban_machines(jid_ars, _machines)
-    struct['jid_machines'] = result['jid_machines']
-    datasend = {'action': 'banmachines',
-                'sessionid': data['sessionid'],
-                #'sender': xmppobject.boundjid.bare,
-                'data': struct
-                }
+    struct["jid_machines"] = result["jid_machines"]
+    datasend = {
+        "action": "banmachines",
+        "sessionid": data["sessionid"],
+        #'sender': xmppobject.boundjid.bare,
+        "data": struct,
+    }
 
-    xmppobject.send_message(mto=data['data']['jid_ars'],
-                            mbody=json.dumps(datasend),
-                            mtype='chat')
+    xmppobject.send_message(
+        mto=data["data"]["jid_ars"], mbody=json.dumps(datasend), mtype="chat"
+    )

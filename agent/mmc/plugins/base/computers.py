@@ -110,7 +110,6 @@ class ComputerI(metaclass=SingletonN):
         """
         pass
 
-
     def getComputer(self, ctx, params, empty_macs=False):
         """
         Get only one computer
@@ -147,7 +146,7 @@ class ComputerI(metaclass=SingletonN):
         """
         pass
 
-    def getComputerCount(self, ctx, params = None):
+    def getComputerCount(self, ctx, params=None):
         """
         Get the number of computer
         """
@@ -209,8 +208,7 @@ class ComputerManager(Singleton):
         return self.main
 
     def isActivated(self):
-        return (self.main != 'none')
-
+        return self.main != "none"
 
     def register(self, name, klass):
         self.logger.debug("Registering computer manager %s / %s" % (name, str(klass)))
@@ -219,8 +217,12 @@ class ComputerManager(Singleton):
     def validate(self):
         ret = (self.main == "none") or (self.main in self.components)
         if not ret:
-            self.logger.error("Selected computer manager '%s' not available" % self.main)
-            self.logger.error("Please check that the corresponding plugin was successfully enabled")
+            self.logger.error(
+                "Selected computer manager '%s' not available" % self.main
+            )
+            self.logger.error(
+                "Please check that the corresponding plugin was successfully enabled"
+            )
         return ret
 
     def canAddComputer(self):
@@ -234,7 +236,7 @@ class ComputerManager(Singleton):
     def canAssociateComputer2Location(self):
         klass = self.components[self.main]
         instance = klass()
-        if hasattr(instance, 'canAssociateComputer2Location'):
+        if hasattr(instance, "canAssociateComputer2Location"):
             return instance.canAssociateComputer2Location()
         return False
 
@@ -266,7 +268,9 @@ class ComputerManager(Singleton):
             self.logger.debug(plugin)
             klass = self.components[plugin]
             instance = klass()
-            if instance.canAddComputer() and not instance.isComputerNameAvailable(ctx, locationUUID, name):
+            if instance.canAddComputer() and not instance.isComputerNameAvailable(
+                ctx, locationUUID, name
+            ):
                 ret = False
                 break
         return ret
@@ -307,33 +311,33 @@ class ComputerManager(Singleton):
         except:
             return []
 
-    def getComputer(self, ctx, filt = None, empty_macs=False):
+    def getComputer(self, ctx, filt=None, empty_macs=False):
         self.logger.debug("getComputer %s" % filt)
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputer(ctx, filt, empty_macs)
 
-    def getMachineMac(self, ctx, filt = None):
+    def getMachineMac(self, ctx, filt=None):
         klass = self.components[self.main]
         instance = klass()
         return instance.getMachineMac(ctx, filt)
 
-    def getMachineIp(self, ctx, filt = None):
+    def getMachineIp(self, ctx, filt=None):
         klass = self.components[self.main]
         instance = klass()
         return instance.getMachineIp(ctx, filt)
 
-    def getMachineHostname(self, ctx, filt = None):
+    def getMachineHostname(self, ctx, filt=None):
         klass = self.components[self.main]
         instance = klass()
         return instance.getMachineHostname(ctx, filt)
 
-    def getComputersNetwork(self, ctx, filt = None):
+    def getComputersNetwork(self, ctx, filt=None):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputersNetwork(ctx, filt)
 
-    def getComputersList(self, ctx, filt = None):
+    def getComputersList(self, ctx, filt=None):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputersList(ctx, filt)
@@ -343,9 +347,9 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.simple_computer_count()
 
-    def getComputerCount(self, ctx, filt = {}):
+    def getComputerCount(self, ctx, filt={}):
         # Mutable dict filt used as default argument to a method or function
-        #filt = filt or {}
+        # filt = filt or {}
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputerCount(ctx, filt)
@@ -355,24 +359,28 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.getTotalComputerCount()
 
-    def getRestrictedComputersListLen(self, ctx, filt = None, advanced = True):
+    def getRestrictedComputersListLen(self, ctx, filt=None, advanced=True):
         klass = self.components[self.main]
         instance = klass()
         return instance.getRestrictedComputersListLen(ctx, filt)
 
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
+    def getRestrictedComputersList(
+        self, ctx, min=0, max=-1, filt=None, advanced=True, justId=False, toH=False
+    ):
         min = int(min)
         max = int(max)
         klass = self.components[self.main]
         instance = klass()
-        return instance.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
+        return instance.getRestrictedComputersList(
+            ctx, min, max, filt, advanced, justId, toH
+        )
 
-    def getMachineforentityList(self,  min = 0, max = -1, filt = None ):
+    def getMachineforentityList(self, min=0, max=-1, filt=None):
         min = int(min)
         max = int(max)
         klass = self.components[self.main]
         instance = klass()
-        return instance.getMachineforentityList( min, max, filt)
+        return instance.getMachineforentityList(min, max, filt)
 
     def getComputerByMac(self, mac):
         klass = self.components[self.main]
@@ -389,7 +397,7 @@ class ComputerManager(Singleton):
         instance = klass()
         ret = instance.getComputersListHeaders(ctx)
         if ret == None:
-            ret = [['cn', 'Computer Name'], ['displayName', 'Description']]
+            ret = [["cn", "Computer Name"], ["displayName", "Description"]]
         return ret
 
     def getComputerByHostnameAndMacs(self, ctx, hostname, macs):

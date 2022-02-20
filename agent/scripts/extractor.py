@@ -11,6 +11,7 @@ def coroutine(func):
         cr = func(*args, **kwargs)
         next(cr)
         return cr
+
     return start
 
 
@@ -26,8 +27,7 @@ class StringExtractor(ContentHandler):
     def startelement(self, name, attrs):
         for attr in list(attrs.keys()):
             if attr in self.valid_attrs:
-                self.target.send((self._locator.getLineNumber(),
-                                  None, attrs[attr], ""))
+                self.target.send((self._locator.getLineNumber(), None, attrs[attr], ""))
 
         if name in self.valid_elems:
             self._current_ch = ""
@@ -39,8 +39,7 @@ class StringExtractor(ContentHandler):
 
     def endelement(self, name):
         if self._current_ch:
-            self.target.send((self._current_ch_line,
-                              None, self._current_ch, ""))
+            self.target.send((self._current_ch_line, None, self._current_ch, ""))
         self._current_ch = False
         self._current_ch_line = None
 
@@ -49,14 +48,14 @@ class StringExtractor(ContentHandler):
 
 
 def extract_report(fileobj, keywords, comment_tags, options):
-    attrs = options['include_attrs'].split(',')
-    elems = options['include_elems'].split(',')
+    attrs = options["include_attrs"].split(",")
+    elems = options["include_elems"].split(",")
     results = []
 
     @coroutine
     def extract():
         while True:
-            event = (yield)
+            event = yield
             results.append(event)
 
     parser = make_parser()

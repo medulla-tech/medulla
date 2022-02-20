@@ -85,7 +85,7 @@ class Config(object, metaclass=ConfigReader):
         class_ = "handlers.TimedRotatingFileHandler"
         level = "INFO"
         formatter = "form01"
-        args = ("/var/log/mmc/pulse2-cm.log", 'midnight', 1, 7)
+        args = ("/var/log/mmc/pulse2-cm.log", "midnight", 1, 7)
 
     class formatter_form01(object):
         format = "%(asctime)s %(levelname)s %(message)s"

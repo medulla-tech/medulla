@@ -38,7 +38,7 @@ class LaunchTimeResolver:
 
     def __init__(self, **kwargs):
 
-        #self.logger = logging.getLogger()
+        # self.logger = logging.getLogger()
         for name, value in list(kwargs.items()):
             if name not in dir(self):
                 raise AttributeError("Inexisting attribute: %s" % name)
@@ -60,12 +60,12 @@ class LaunchTimeResolver:
 
     @property
     def days_delta(self):
-        """ number of days between start date and end_date"""
+        """number of days between start date and end_date"""
         return (self.end_date - self.start_date).days + 1
 
     @property
     def attempts_total(self):
-        """ Total of attempts for all days """
+        """Total of attempts for all days"""
         return self.days_delta * self.attempts_left
 
     def get_valid_axe(self):
@@ -85,15 +85,19 @@ class LaunchTimeResolver:
             if start_date > self.end_date:
                 break
             for start_hour, end_hour in self.intervals:
-                start = datetime(year=start_date.year,
-                                 month=start_date.month,
-                                 day=start_date.day,
-                                 hour=start_hour)
+                start = datetime(
+                    year=start_date.year,
+                    month=start_date.month,
+                    day=start_date.day,
+                    hour=start_hour,
+                )
 
-                end = datetime(year=start_date.year,
-                               month=start_date.month,
-                               day=start_date.day,
-                               hour=end_hour)
+                end = datetime(
+                    year=start_date.year,
+                    month=start_date.month,
+                    day=start_date.day,
+                    hour=end_hour,
+                )
                 if end_hour == 0:
                     # seconds=86399 => (one day) 00:00:00 - 23:59:59
                     end += timedelta(seconds=86399)
@@ -110,9 +114,9 @@ class LaunchTimeResolver:
 
                 axe.append((start, end))
 
-            midnight = datetime(year=start_date.year,
-                                month=start_date.month,
-                                day=start_date.day)
+            midnight = datetime(
+                year=start_date.year, month=start_date.month, day=start_date.day
+            )
 
             start_date = midnight + timedelta(days=1)
 
@@ -125,11 +129,7 @@ class LaunchTimeResolver:
         @return: deployment duration
         @rtype: int
         """
-        return sum(
-            (end -
-             start).seconds for (
-                start,
-                end) in self.get_valid_axe())
+        return sum((end - start).seconds for (start, end) in self.get_valid_axe())
 
     def get_milestone_stamps(self):
         """
@@ -198,16 +198,15 @@ class LaunchTimeResolver:
         @rtype: list
         """
         intervals = []
-        for segment in deployment_intervals.split(','):
-            unit = segment.split('-')
+        for segment in deployment_intervals.split(","):
+            unit = segment.split("-")
             if len(unit) == 2:
                 (start, end) = [int(d) for d in unit]
                 if start > end:
                     intervals.append((start, 0))
                     intervals.append((0, end))
                 elif start == end and start != 0:
-                    raise ValueError(
-                        "<start> must be less or great than to <end>")
+                    raise ValueError("<start> must be less or great than to <end>")
                 else:
                     intervals.append((start, end))
         return intervals

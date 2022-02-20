@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 def xml_fix(xml):
     bad_map = {
-        '\xc2\xa0':  ' ',
-        '\x06':  ' ',
+        "\xc2\xa0": " ",
+        "\x06": " ",
     }
 
     for key, value in list(bad_map.items()):

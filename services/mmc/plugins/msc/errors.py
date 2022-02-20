@@ -46,16 +46,16 @@ ERROR_CUSTOM = 42
 ERROR_UNKOWN = 4242
 
 errors = {
-    'ERROR_INVALIDE_FILENAME':"err_invalide_filename",
-    'ERROR_INVALIDE_DIRNAME':"err_invalide_dirname",
-    'ERROR_IS_NOT_FILE':"err_isnt_file",
-    'ERROR_IS_NOT_DIRECTORY':"err_isnt_dire",
-    'ERROR_CREATE_FILE':"err_create_file",
-    'ERROR_CREATE_DIRECTORY':"err_create_dir",
-    'ERROR_NOT_EXIST_FILE':"err_not_exist_file",
-    'ERROR_NOT_EXIST_DIRECTORY':"err_not_exist_dir",
-    'ERROR_CAN_NOT_RM_FILE':"err_cant_rm_file",
-    'ERROR_CAN_NOT_RM_DIR':"err_cant_rm_dir",
-    'ERROR_PERMISSION':"err_perm",
-    'ERROR_DEFAULT':"err_default"
+    "ERROR_INVALIDE_FILENAME": "err_invalide_filename",
+    "ERROR_INVALIDE_DIRNAME": "err_invalide_dirname",
+    "ERROR_IS_NOT_FILE": "err_isnt_file",
+    "ERROR_IS_NOT_DIRECTORY": "err_isnt_dire",
+    "ERROR_CREATE_FILE": "err_create_file",
+    "ERROR_CREATE_DIRECTORY": "err_create_dir",
+    "ERROR_NOT_EXIST_FILE": "err_not_exist_file",
+    "ERROR_NOT_EXIST_DIRECTORY": "err_not_exist_dir",
+    "ERROR_CAN_NOT_RM_FILE": "err_cant_rm_file",
+    "ERROR_CAN_NOT_RM_DIR": "err_cant_rm_dir",
+    "ERROR_PERMISSION": "err_perm",
+    "ERROR_DEFAULT": "err_default",
 }

@@ -41,10 +41,10 @@ class Archiver:
     Also handles the case when archiving is not wanted !
     """
 
-    ARCHIVING = '.archiving'
+    ARCHIVING = ".archiving"
 
     def __init__(self, config, archive, computerUUID, macAddress, imageList):
-        self.logger = logging.getLogger('imaging')
+        self.logger = logging.getLogger("imaging")
         self.config = config
         self.archive = archive
         self.computerUUID = computerUUID
@@ -60,30 +60,32 @@ class Archiver:
         """
         # Get computer folder and boot menu
         self.cfolder = os.path.join(
-            self.config.imaging_api['base_folder'],
-            self.config.imaging_api['computers_folder'],
-            self.computerUUID)
+            self.config.imaging_api["base_folder"],
+            self.config.imaging_api["computers_folder"],
+            self.computerUUID,
+        )
         self.bootmenu = os.path.join(
-            self.config.imaging_api['base_folder'],
-            self.config.imaging_api['bootmenus_folder'],
-            reduceMACAddress(
-                self.macAddress))
+            self.config.imaging_api["base_folder"],
+            self.config.imaging_api["bootmenus_folder"],
+            reduceMACAddress(self.macAddress),
+        )
         if not os.path.exists(self.cfolder):
             self.logger.error(
-                "Looks like computer %s is not registered, so it can't be archived" %
-                self.computerUUID)
+                "Looks like computer %s is not registered, so it can't be archived"
+                % self.computerUUID
+            )
             return False
         # Build valid image list
         for image in self.imageList:
-            ifolder = os.path.join(self.config.imaging_api['base_folder'],
-                                   self.config.imaging_api['masters_folder'],
-                                   image)
+            ifolder = os.path.join(
+                self.config.imaging_api["base_folder"],
+                self.config.imaging_api["masters_folder"],
+                image,
+            )
             if isPulse2Image(ifolder):
                 self.images.append(ifolder)
             else:
-                self.logger.error(
-                    "Invalid image, won't be archived: %s" %
-                    image)
+                self.logger.error("Invalid image, won't be archived: %s" % image)
         return True
 
     def prepare(self):
@@ -93,8 +95,9 @@ class Archiver:
         try:
             self.archivedir = self._prepareArchiveDirectory()
         except Exception as e:
-            self.logger.error("Can't create archive directory '%s': %s"
-                              % (self.archivedir, e))
+            self.logger.error(
+                "Can't create archive directory '%s': %s" % (self.archivedir, e)
+            )
             return False
         try:
             self._prepareComputerDirectories()
@@ -114,18 +117,19 @@ class Archiver:
         """
         if self.archive:
             archivedir = os.path.join(
-                self.config.imaging_api['base_folder'],
-                self.config.imaging_api['archives_folder'],
-                self.computerUUID)
+                self.config.imaging_api["base_folder"],
+                self.config.imaging_api["archives_folder"],
+                self.computerUUID,
+            )
             i = 1
             while True:
-                if not os.path.exists('%s-%d' % (archivedir, i)):
-                    archivedir = '%s-%d' % (archivedir, i)
+                if not os.path.exists("%s-%d" % (archivedir, i)):
+                    archivedir = "%s-%d" % (archivedir, i)
                     break
                 i += 1
-            self.logger.debug('Creating archive directory: %s' % archivedir)
+            self.logger.debug("Creating archive directory: %s" % archivedir)
             os.mkdir(archivedir)
-            self.logger.debug('Done')
+            self.logger.debug("Done")
             return archivedir
 
     def _prepareComputerDirectories(self):
@@ -134,21 +138,21 @@ class Archiver:
         be used by the imaging server. We append '.archiving' to the file /
         folders name.
         """
-        self.logger.debug('Renaming directories')
+        self.logger.debug("Renaming directories")
         os.rename(self.cfolder, self.cfolder + self.ARCHIVING)
         if os.path.exists(self.bootmenu):
             os.rename(self.bootmenu, self.bootmenu + self.ARCHIVING)
         for ifolder in self.images:
             os.rename(ifolder, ifolder + self.ARCHIVING)
-        self.logger.debug('Done')
+        self.logger.debug("Done")
 
     def _removeComputerFromCache(self):
         """
         Remove the computer from the UUID cache
         """
-        self.logger.debug('Removing computer from cache')
+        self.logger.debug("Removing computer from cache")
         UUIDCache().delete(self.computerUUID)
-        self.logger.debug('Done')
+        self.logger.debug("Done")
 
     def run(self):
         """
@@ -157,14 +161,18 @@ class Archiver:
         @return: Return a deferred object resulting to True if all was fine
         @rtype: Deferred
         """
+
         def _run_success(result):
-            self.logger.debug('Successfully archived data from UUID %s'
-                              % self.computerUUID)
+            self.logger.debug(
+                "Successfully archived data from UUID %s" % self.computerUUID
+            )
             return True
 
         def _run_error(error):
-            self.logger.error('Error while archiving data from UUID %s: %s' %
-                              (self.computerUUID, error))
+            self.logger.error(
+                "Error while archiving data from UUID %s: %s"
+                % (self.computerUUID, error)
+            )
             return False
 
         d = deferToThread(self._run)
@@ -177,7 +185,7 @@ class Archiver:
         """
         if not self.archive:
             # No archival, delete anything
-            self.logger.debug('Removing computer data')
+            self.logger.debug("Removing computer data")
             if os.path.exists(self.bootmenu + self.ARCHIVING):
                 os.unlink(self.bootmenu + self.ARCHIVING)
             shutil.rmtree(self.cfolder + self.ARCHIVING)
@@ -185,11 +193,10 @@ class Archiver:
                 shutil.rmtree(ifolder + self.ARCHIVING)
         else:
             # Archival, move everything to the archive directory
-            self.logger.debug('Moving computer data to archive directory')
+            self.logger.debug("Moving computer data to archive directory")
             # Moving boot menu if we have one
             if os.path.exists(self.bootmenu + self.ARCHIVING):
-                dst = os.path.join(self.archivedir,
-                                   os.path.basename(self.bootmenu))
+                dst = os.path.join(self.archivedir, os.path.basename(self.bootmenu))
                 shutil.move(self.bootmenu + self.ARCHIVING, dst)
             # Moving computer home
             dst = os.path.join(self.archivedir, os.path.basename(self.cfolder))
@@ -198,4 +205,4 @@ class Archiver:
             for ifolder in self.images:
                 dst = os.path.join(self.archivedir, os.path.basename(ifolder))
                 shutil.move(ifolder + self.ARCHIVING, dst)
-        self.logger.debug('Done')
+        self.logger.debug("Done")

@@ -27,11 +27,10 @@
 
 
 class Bundle(object):
-    """ Mapping between msc.bundle and SA
-    """
+    """Mapping between msc.bundle and SA"""
 
     def getId(self):
         return self.id
 
     def toH(self):
-        return {'id': self.id, 'title': self.title}
+        return {"id": self.id, "title": self.title}

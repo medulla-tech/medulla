@@ -28,7 +28,12 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm.exc import NoResultFound
 
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.report.schema import Indicator, ReportingIntData, ReportingTextData, ReportingFloatData
+from mmc.plugins.report.schema import (
+    Indicator,
+    ReportingIntData,
+    ReportingTextData,
+    ReportingFloatData,
+)
 
 
 logger = logging.getLogger()
@@ -38,6 +43,7 @@ class ReportDatabase(DatabaseHelper):
     """
     Singleton Class to query the report database.
     """
+
     is_activated = False
 
     def db_check(self):
@@ -51,9 +57,11 @@ class ReportDatabase(DatabaseHelper):
 
         logger.info("Report database is connecting")
         self.config = config
-        self.db = create_engine(self.makeConnectionPath(),
-                                pool_recycle=self.config.dbpoolrecycle,
-                                pool_size=self.config.dbpoolsize)
+        self.db = create_engine(
+            self.makeConnectionPath(),
+            pool_recycle=self.config.dbpoolrecycle,
+            pool_size=self.config.dbpoolsize,
+        )
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
             self.session = None
@@ -82,29 +90,31 @@ class ReportDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def disable_indicators_by_name(self, session, includes=[], excludes=[]):
         ## Mutable list includes used as default argument to a method or function
-        #includes = includes or []
+        # includes = includes or []
         ## Mutable list excludes used as default argument to a method or function
-        #excludes = excludes or []
+        # excludes = excludes or []
         try:
             query = session.query(Indicator)
             if includes:
                 query = query.filter(Indicator.name.in_(includes))
             if excludes:
                 query = query.filter(~Indicator.name.in_(excludes))
-            query.update({'active':0, 'keep_history':0}, synchronize_session=False)
+            query.update({"active": 0, "keep_history": 0}, synchronize_session=False)
             session.commit()
             return True
         except Exception as e:
-            logger.error('DB Error: %s', str(e))
+            logger.error("DB Error: %s", str(e))
 
     @DatabaseHelper._session
     def add_indicator(self, session, indicator_attr):
         try:
-            indicator = session.query(Indicator).filter_by(name=indicator_attr['name']).first()
+            indicator = (
+                session.query(Indicator).filter_by(name=indicator_attr["name"]).first()
+            )
             if indicator:
                 indicator.fromDict(indicator_attr)
             else:
-                logger.info('Adding new indicator %s' % indicator_attr['name'])
+                logger.info("Adding new indicator %s" % indicator_attr["name"])
                 indicator = Indicator(**indicator_attr)
                 session.add(indicator)
             session.commit()
@@ -137,13 +147,15 @@ class ReportDatabase(DatabaseHelper):
             try:
                 values = indicator.getCurrentValue()
             except:
-                logger.exception('Unable to get data for indicator : %s' % indicator.name)
+                logger.exception(
+                    "Unable to get data for indicator : %s" % indicator.name
+                )
                 continue
             for entry in values:
-                if not 'value' in entry:
+                if not "value" in entry:
                     continue
-                if entry['value'] is None:
-                    entry['value'] = 0
+                if entry["value"] is None:
+                    entry["value"] = 0
                 data = indicator.dataClass()
                 # Import value and enity_id from entry
                 data.fromDict(entry)
@@ -151,7 +163,6 @@ class ReportDatabase(DatabaseHelper):
                 data.timestamp = timestamp
                 session.add(data)
         session.commit()
-
 
     @DatabaseHelper._session
     def historize_overwrite_last(self, session, timestamp):
@@ -161,15 +172,17 @@ class ReportDatabase(DatabaseHelper):
 
         # Remove last 24 hours data
         for _class in [ReportingIntData, ReportingTextData, ReportingFloatData]:
-            session.query(_class).filter(_class.timestamp>timestamp-86400).delete()
+            session.query(_class).filter(_class.timestamp > timestamp - 86400).delete()
 
         # Doing an historization for
-        self.historize_all(timestamp-80400)
+        self.historize_all(timestamp - 80400)
 
     @DatabaseHelper._session
-    def get_indicator_value_at_time(self, session, indicator_name, ts_min, ts_max, entities=[]):
+    def get_indicator_value_at_time(
+        self, session, indicator_name, ts_min, ts_max, entities=[]
+    ):
         ## Mutable list entities used as default argument to a method or function
-        #entities = entities or []
+        # entities = entities or []
         indicator = self.get_indicator_by_name(indicator_name)
         if indicator:
             return indicator.getValueAtTime(session, ts_min, ts_max, entities)
@@ -183,7 +196,7 @@ class ReportDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def get_indicator_current_value(self, session, indicator_name, entities=[]):
         # Mutable list entities used as default argument to a method or function
-        #entities = entities or []
+        # entities = entities or []
         indicator = self.get_indicator_by_name(indicator_name)
         if indicator:
             return indicator.getCurrentValue(entities)

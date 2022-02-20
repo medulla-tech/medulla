@@ -39,7 +39,6 @@ def u_list_decode(u_list):
 
 
 class SchedulerNetUtils:
-
     @classmethod
     def prepare_target(cls, target):
         """
@@ -78,35 +77,33 @@ class SchedulerNetUtils:
         networks = SchedulerConfig().preferred_network
         netbios_path = SchedulerConfig().netbios_path
 
-        ip_resolve = IPResolve(resolve_order,
-                               networks,
-                               netbios_path=netbios_path)
+        ip_resolve = IPResolve(resolve_order, networks, netbios_path=netbios_path)
         return ip_resolve
 
 
 def chooseClientIP(msc_target):
     """
-        Attempt to guess how to reach our client
+    Attempt to guess how to reach our client
 
-        Available informations:
-        - FQDN
-        - IP adresses, in order of interrest
+    Available informations:
+    - FQDN
+    - IP adresses, in order of interrest
 
-        Expected target struct:
-        {
-            'uuid': ,
-            'fqdn': ,
-            'shortname': ,
-            'ips': [],
-            'macs': [],
-            'netmasks': [],
-        }
+    Expected target struct:
+    {
+        'uuid': ,
+        'fqdn': ,
+        'shortname': ,
+        'ips': [],
+        'macs': [],
+        'netmasks': [],
+    }
 
-        Probes:
-        - FQDN resolution
-        - Netbios resolution
-        - Host resolution
-        - IP check
+    Probes:
+    - FQDN resolution
+    - Netbios resolution
+    - Host resolution
+    - IP check
     """
     target = SchedulerNetUtils.prepare_target(msc_target)
     ip_resolve = SchedulerNetUtils.get_ip_resolve()

@@ -38,7 +38,6 @@ class CommandFailed(Exception):
 
 
 class Command(object):
-
     def __init__(self, command, queues, dlp_client):
         self.dlp_client = dlp_client
         self.command = command
@@ -52,14 +51,14 @@ class Command(object):
         logger.debug("Max failures is: %i" % self.max_failures)
         # get only steps that haven't been done in a previous run
         # because of agent restart for example
-        for step_name in self.command['todo']:
+        for step_name in self.command["todo"]:
             # ignore the "done" step
             if not step_name == Steps.DONE.name:
                 required = not (step_name in self.non_fatal_steps)
                 try:
-                    step = getattr(
-                        Steps, step_name.upper()).klass(
-                        self, step_name, required)
+                    step = getattr(Steps, step_name.upper()).klass(
+                        self, step_name, required
+                    )
                 except AttributeError:
                     step = NoopStep(self, step_name, required)
                 self.to_do.put(step)
@@ -68,35 +67,35 @@ class Command(object):
 
     @property
     def id(self):
-        return self.command['id']
+        return self.command["id"]
 
     @property
     def start_date(self):
-        return self.command['start_date']
+        return self.command["start_date"]
 
     @property
     def end_date(self):
-        return self.command['end_date']
+        return self.command["end_date"]
 
     @property
     def max_failures(self):
-        return self.command['max_failures']
+        return self.command["max_failures"]
 
     @property
     def package_uuid(self):
-        return self.command['package_uuid']
+        return self.command["package_uuid"]
 
     @property
     def start_file(self):
-        return self.command['start_file']
+        return self.command["start_file"]
 
     @property
     def params(self):
-        return self.command['params']
+        return self.command["params"]
 
     @property
     def non_fatal_steps(self):
-        return self.command['non_fatal_steps']
+        return self.command["non_fatal_steps"]
 
     def next_step(self):
         try:
@@ -106,7 +105,7 @@ class Command(object):
             logger.info("%s finished." % self)
         else:
             # Check if command is still available and was not stopped
-            coh_ids = [c['id'] for c in self.dlp_client.get_commands()]
+            coh_ids = [c["id"] for c in self.dlp_client.get_commands()]
             if self.id not in coh_ids:
                 self.stopped = True
                 logger.info("%s stopped." % self)
@@ -139,19 +138,16 @@ class Command(object):
         d = datetime.now() - datetime.fromtimestamp(self.created)
         d = d.total_seconds()
         return "<Command(%s, to_do=%s, failed=%s, created=%is ago running=%s)>" % (
-            self.id, self.to_do.qsize(), self.is_failed, d, self.is_running)
+            self.id,
+            self.to_do.qsize(),
+            self.is_failed,
+            d,
+            self.is_running,
+        )
 
 
 class Result(object):
-
-    def __init__(
-            self,
-            step_name,
-            command_id,
-            stdout,
-            stderr,
-            exitcode,
-            send=True):
+    def __init__(self, step_name, command_id, stdout, stderr, exitcode, send=True):
         self.command_id = command_id
         self.step_name = step_name
         self.stdout = stdout
@@ -165,7 +161,10 @@ class Result(object):
 
     def __repr__(self):
         return "<Result(%s, step=%s, cmd=%s)" % (
-            self.exitcode, self.step_name, self.command_id)
+            self.exitcode,
+            self.step_name,
+            self.command_id,
+        )
 
 
 class Step(object):
@@ -196,8 +195,9 @@ class Step(object):
             out.close()
             exitcode = 1
             logger.exception("Error in %s" % self)
-        result = Result(self.name, self.command.id, stdout, "", exitcode,
-                        send=self.send)
+        result = Result(
+            self.name, self.command.id, stdout, "", exitcode, send=self.send
+        )
         return result
 
     def run(self):
@@ -215,16 +215,15 @@ class NoopStep(Step):
 
 
 class WolStep(Step):
-
     def run(self):
         return ("%f O: I'm awake!" % time.time(), 0)
 
 
 class UploadStep(Step):
-
     def run(self):
-        path = self.command.dlp_client.get_package(self.command.package_uuid,
-                                                   workdir=get_packages_dir())
+        path = self.command.dlp_client.get_package(
+            self.command.package_uuid, workdir=get_packages_dir()
+        )
         if path:
             return ("%f O: Package downloaded at %s" % (time.time(), path), 0)
         else:
@@ -232,25 +231,21 @@ class UploadStep(Step):
 
 
 class ExecuteStep(Step):
-
     def run(self):
         if self.command.package_uuid:
-            workdir = os.path.join(
-                get_packages_dir(),
-                self.command.package_uuid)
+            workdir = os.path.join(get_packages_dir(), self.command.package_uuid)
         else:
             workdir = get_packages_dir()
         output, exitcode = launcher(
-            self.command.start_file, self.command.params, workdir)
+            self.command.start_file, self.command.params, workdir
+        )
         return (output, exitcode)
 
 
 class DeleteStep(Step):
-
     def run(self):
         if self.command.package_uuid:
-            package_dir = os.path.join(
-                get_packages_dir(), self.command.package_uuid)
+            package_dir = os.path.join(get_packages_dir(), self.command.package_uuid)
             if os.path.exists(package_dir):
                 shutil.rmtree(package_dir)
             if os.path.exists(package_dir + ".zip"):
@@ -259,24 +254,28 @@ class DeleteStep(Step):
 
 
 class InventoryStep(Step):
-
     def run(self):
-        p = subprocess.Popen(['perl', 'fusioninventory-agent', '--stdout'],
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             env=get_launcher_env(),
-                             cwd=get_launcher_env()['FUSION_BIN_PATH'])
+        p = subprocess.Popen(
+            ["perl", "fusioninventory-agent", "--stdout"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=get_launcher_env(),
+            cwd=get_launcher_env()["FUSION_BIN_PATH"],
+        )
         inventory, error = p.communicate()
         if not p.returncode == 0:
             return ("%f E: %s" % (time.time(), error), p.returncode)
         # Send the inventory to the DLP
         if self.command.dlp_client.send_inventory(inventory):
             return (
-                "%f O: Inventory sent to the Pulse Inventory Server" %
-                time.time(), 0)
+                "%f O: Inventory sent to the Pulse Inventory Server" % time.time(),
+                0,
+            )
         return (
-            "%f E: Failed to send inventory to the Pulse Inventory Server" %
-            time.time(), 1)
+            "%f E: Failed to send inventory to the Pulse Inventory Server"
+            % time.time(),
+            1,
+        )
 
 
 class RebootStep(Step):
@@ -289,17 +288,16 @@ class RebootStep(Step):
         else:
             args = ["shutdown.exe", "-f", "-r"]
 
-        p = subprocess.Popen(args,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             )
+        p = subprocess.Popen(
+            args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
 
         stdout, error = p.communicate()
         if not p.returncode == 0:
             return ("%f E: %s" % (time.time(), error), p.returncode)
-        return (
-            "%f O: Reboot order stacked: %s" %
-            (time.time(), str(stdout)), 0)
+        return ("%f O: Reboot order stacked: %s" % (time.time(), str(stdout)), 0)
 
 
 class HaltStep(Step):
@@ -312,10 +310,11 @@ class HaltStep(Step):
         else:
             args = ["shutdown.exe", "-f", "-s"]
 
-        p = subprocess.Popen(args,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             )
+        p = subprocess.Popen(
+            args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
 
         stdout, error = p.communicate()
         if not p.returncode == 0:
@@ -324,21 +323,13 @@ class HaltStep(Step):
 
 
 class Steps:
-    WOL = type('StepInfo', (object,), {'name': 'wol', 'klass': WolStep})
-    UPLOAD = type(
-        'StepInfo', (object,), {
-            'name': 'upload', 'klass': UploadStep})
-    EXECUTE = type(
-        'StepInfo', (object,), {
-            'name': 'execute', 'klass': ExecuteStep})
-    DELETE = type(
-        'StepInfo', (object,), {
-            'name': 'delete', 'klass': DeleteStep})
+    WOL = type("StepInfo", (object,), {"name": "wol", "klass": WolStep})
+    UPLOAD = type("StepInfo", (object,), {"name": "upload", "klass": UploadStep})
+    EXECUTE = type("StepInfo", (object,), {"name": "execute", "klass": ExecuteStep})
+    DELETE = type("StepInfo", (object,), {"name": "delete", "klass": DeleteStep})
     INVENTORY = type(
-        'StepInfo', (object,), {
-            'name': 'inventory', 'klass': InventoryStep})
-    REBOOT = type(
-        'StepInfo', (object,), {
-            'name': 'reboot', 'klass': RebootStep})
-    HALT = type('StepInfo', (object,), {'name': 'halt', 'klass': HaltStep})
-    DONE = type('StepInfo', (object,), {'name': 'done'})
+        "StepInfo", (object,), {"name": "inventory", "klass": InventoryStep}
+    )
+    REBOOT = type("StepInfo", (object,), {"name": "reboot", "klass": RebootStep})
+    HALT = type("StepInfo", (object,), {"name": "halt", "klass": HaltStep})
+    DONE = type("StepInfo", (object,), {"name": "done"})

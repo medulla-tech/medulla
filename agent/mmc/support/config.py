@@ -38,7 +38,9 @@ class ConfigException(Exception):
     """
     Exception raised when there is a configuration error.
     """
+
     pass
+
 
 class MMCConfigParser(ConfigParser):
 
@@ -55,10 +57,11 @@ class MMCConfigParser(ConfigParser):
         except InterpolationError as exc:
             kwargs["raw"] = True
             value = ConfigParser.get(self, section, option, **kwargs)
-            if '%(baseDN)s' in value:
+            if "%(baseDN)s" in value:
                 from mmc.plugins.base import BasePluginConfig
+
                 config = PluginConfigFactory.new(BasePluginConfig, "base")
-                value = value.replace('%(baseDN)s', config.baseDN)
+                value = value.replace("%(baseDN)s", config.baseDN)
             else:
                 raise InterpolationError
         return value
@@ -90,7 +93,7 @@ class MMCConfigParser(ConfigParser):
         For example: passwd = {base64}bWFuL2RyaXZhMjAwOA==
         """
         value = self.get(section, option)
-        match = re.search('^{(\w+)}(.+)$', value)
+        match = re.search("^{(\w+)}(.+)$", value)
         if match:
             scheme = match.group(1)
             obfuscated = match.group(2)
@@ -99,15 +102,17 @@ class MMCConfigParser(ConfigParser):
             ret = value
         return ret
 
+
 class PluginConfig(MMCConfigParser):
     """
     Class to hold a MMC agent plugin configuration
     """
+
     USERDEFAULT = "userdefault"
     HOOKS = "hooks"
     SERVICE = "service"
 
-    def __init__(self, name, conffile = None):
+    def __init__(self, name, conffile=None):
         MMCConfigParser.__init__(self)
         self.name = name
         self.userDefault = {}
@@ -115,12 +120,13 @@ class PluginConfig(MMCConfigParser):
         self.service = {}
         if not conffile:
             self.conffile = mmctools.getConfigFile(name)
-        else: self.conffile = conffile
+        else:
+            self.conffile = conffile
         self.setDefault()
         fid = open(self.conffile, "r")
         self.readfp(fid, self.conffile)
-        if isfile(self.conffile + '.local'):
-            fid = open(self.conffile + '.local', "r")
+        if isfile(self.conffile + ".local"):
+            fid = open(self.conffile + ".local", "r")
             self.readfp(fid, self.conffile)
         self.readConf()
 
@@ -154,6 +160,7 @@ class PluginConfig(MMCConfigParser):
         """
         pass
 
+
 class PluginConfigFactory(object):
     """
     For each plugin, we need to have only ONE config instance.
@@ -161,7 +168,9 @@ class PluginConfigFactory(object):
     can change the config at run time, and every classes using the a PluginConfig will get the new values without restarting.
     So, every PluginConfig (or a derivated) instance should be created this way
     """
+
     instances = {}
+
     @staticmethod
     def new(cls, name, *args, **kwargs):
         """

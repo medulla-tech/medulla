@@ -49,6 +49,7 @@ from mmc.plugins.dyngroup.config import DGConfig
 import mmc.plugins.msc.actions
 import mmc.plugins.msc.keychain
 import mmc.plugins.msc.package_api
+
 # Package API
 from mmc.plugins.msc.package_api import PackageGetA
 
@@ -64,18 +65,21 @@ import pulse2.database.msc.orm.commands_on_host
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 from pulse2.utils import noNoneList
 
-APIVERSION = '0:0:0'
+APIVERSION = "0:0:0"
 
 NOAUTHNEEDED = [
-    'get_web_def_coh_life_time',
-    'get_web_def_attempts_per_day',
-    'pull_target_awake',
-    'is_pull_target',
-    'checkLightPullCommands',
-    'start_command_on_host',
+    "get_web_def_coh_life_time",
+    "get_web_def_attempts_per_day",
+    "pull_target_awake",
+    "is_pull_target",
+    "checkLightPullCommands",
+    "start_command_on_host",
 ]
 
-def getApiVersion(): return APIVERSION
+
+def getApiVersion():
+    return APIVERSION
+
 
 def activate():
     """
@@ -89,7 +93,10 @@ def activate():
         return False
 
     if not os.path.isdir(config.qactionspath):
-        logger.error("Quick Actions config is invalid: %s is not a directory. Please check msc.ini." % config.qactionspath)
+        logger.error(
+            "Quick Actions config is invalid: %s is not a directory. Please check msc.ini."
+            % config.qactionspath
+        )
         return False
 
     if not MscDatabase().activate(config):
@@ -99,15 +106,19 @@ def activate():
         scheduleCheckStatus(config.check_db_interval)
 
     # Add convergence reschedule task in the task manager
-    TaskManager().addTask("msc.convergence_reschedule",
-                          (convergence_reschedule,),
-                          cron_expression=config.convergence_reschedule)
+    TaskManager().addTask(
+        "msc.convergence_reschedule",
+        (convergence_reschedule,),
+        cron_expression=config.convergence_reschedule,
+    )
     return True
+
 
 def activate_2():
     conf = MscConfig()
-    conf.init('msc')
+    conf.init("msc")
     return True
+
 
 class ContextMaker(ContextMakerI):
     def getContext(self):
@@ -118,11 +129,13 @@ class ContextMaker(ContextMakerI):
         s.filterType = "mine"
         return s
 
+
 ##
 # config
 ##
 def getRepositoryPath():
     return xmlrpcCleanup(MscConfig().repopath)
+
 
 class RpcProxy(RpcProxyI):
     ##
@@ -134,18 +147,23 @@ class RpcProxy(RpcProxyI):
 
     def scheduler_choose_client_ip(self, scheduler, uuid):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
+        computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
         network = computer[1]
 
-        interfaces = {"uuid": uuid,
-                      "fqdn": network["cn"][0],
-                      "shortname": network["cn"][0],
-                      "ips": noNoneList(network["ipHostNumber"]),
-                      "macs": noNoneList(network["macAddress"]),
-                      "netmasks": noNoneList(network["subnetMask"]),
-                      }
-        result = xmlrpcCleanup2(mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces))
-        return xmlrpcCleanup2(mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces))
+        interfaces = {
+            "uuid": uuid,
+            "fqdn": network["cn"][0],
+            "shortname": network["cn"][0],
+            "ips": noNoneList(network["ipHostNumber"]),
+            "macs": noNoneList(network["macAddress"]),
+            "netmasks": noNoneList(network["subnetMask"]),
+        }
+        result = xmlrpcCleanup2(
+            mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces)
+        )
+        return xmlrpcCleanup2(
+            mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces)
+        )
 
     ##
     # commands
@@ -153,31 +171,41 @@ class RpcProxy(RpcProxyI):
 
     # Scheduler driving
     def scheduler_start_all_commands(self, scheduler):
-        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.start_all_commands(scheduler))
+        return xmlrpcCleanup(
+            mmc.plugins.msc.client.scheduler.start_all_commands(scheduler)
+        )
 
     def scheduler_start_these_commands(self, scheduler, commands):
-        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.start_these_commands(scheduler, commands))
+        return xmlrpcCleanup(
+            mmc.plugins.msc.client.scheduler.start_these_commands(scheduler, commands)
+        )
 
     def scheduler_ping_and_probe_client(self, scheduler, uuid):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
-        if not 'fullname' in computer[1]:
-            computer[1]['fullname'] = computer[1]['cn'][0]
-        return mmc.plugins.msc.client.scheduler.ping_and_probe_client(scheduler, computer)
+        computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
+        if not "fullname" in computer[1]:
+            computer[1]["fullname"] = computer[1]["cn"][0]
+        return mmc.plugins.msc.client.scheduler.ping_and_probe_client(
+            scheduler, computer
+        )
 
     def scheduler_ping_client(self, scheduler, uuid):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
-        if not 'fullname' in computer[1]:
-            computer[1]['fullname'] = computer[1]['cn'][0]
-        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.ping_client(scheduler, computer))
+        computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
+        if not "fullname" in computer[1]:
+            computer[1]["fullname"] = computer[1]["cn"][0]
+        return xmlrpcCleanup(
+            mmc.plugins.msc.client.scheduler.ping_client(scheduler, computer)
+        )
 
     def scheduler_probe_client(self, scheduler, uuid):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
-        if not 'fullname' in computer[1]:
-            computer[1]['fullname'] = computer[1]['cn'][0]
-        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.probe_client(scheduler, computer))
+        computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
+        if not "fullname" in computer[1]:
+            computer[1]["fullname"] = computer[1]["cn"][0]
+        return xmlrpcCleanup(
+            mmc.plugins.msc.client.scheduler.probe_client(scheduler, computer)
+        )
 
     def can_download_file(self):
         path = MscConfig().web_dlpath
@@ -191,11 +219,11 @@ class RpcProxy(RpcProxyI):
         else:
             bwlimit = MscConfig().web_def_dlmaxbw
             ctx = self.currentContext
-            computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
+            computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
             try:  # FIXME: dirty bugfix, should be factorized upstream
-                computer[1]['fullname']
+                computer[1]["fullname"]
             except KeyError:
-                computer[1]['fullname'] = computer[1]['cn'][0]
+                computer[1]["fullname"] = computer[1]["cn"][0]
             mscdlp = MscDownloadProcess(ctx.userid, computer, path, bwlimit)
             ret = mscdlp.startDownload()
         return ret
@@ -214,17 +242,21 @@ class RpcProxy(RpcProxyI):
 
     def establish_vnc_proxy(self, scheduler, uuid, requestor_ip):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
+        computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
         try:  # FIXME: dirty bugfix, should be factorized upstream
-            computer[1]['fullname']
+            computer[1]["fullname"]
         except KeyError:
-            computer[1]['fullname'] = computer[1]['cn'][0]
-        return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.tcp_sproxy(scheduler, computer, requestor_ip, MscConfig().web_vnc_port))
+            computer[1]["fullname"] = computer[1]["cn"][0]
+        return xmlrpcCleanup(
+            mmc.plugins.msc.client.scheduler.tcp_sproxy(
+                scheduler, computer, requestor_ip, MscConfig().web_vnc_port
+            )
+        )
 
     ##
     # commands management
     ##
-    def add_command_quick_with_id(self, idcmd, target, lang, gid = None):
+    def add_command_quick_with_id(self, idcmd, target, lang, gid=None):
         """
         @param idcmd: id of the quick action
         @type idcmd: str
@@ -247,10 +279,19 @@ class RpcProxy(RpcProxyI):
                 desc = qas[idcmd]["title"]
             if gid:
                 # Get all targets corresponding to the computer given group ID
-                target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
+                target = ComputerGroupManager().get_group_results(
+                    ctx, gid, 0, -1, "", True
+                )
             # Use maybeDeferred because addCommandQuick will return an error
             # code in case of failure
-            d = defer.maybeDeferred(MscDatabase().addCommandQuick, ctx, qas[idcmd]["command"], target, desc, gid)
+            d = defer.maybeDeferred(
+                MscDatabase().addCommandQuick,
+                ctx,
+                qas[idcmd]["command"],
+                target,
+                desc,
+                gid,
+            )
             d.addCallback(xmlrpcCleanup)
             ret = d
         else:
@@ -273,15 +314,19 @@ class RpcProxy(RpcProxyI):
             It can be done by time search too.
         """
 
-        return MscDatabase().get_deploy_inprogress_by_team_member(login, time, minimum, maximum, filt)
+        return MscDatabase().get_deploy_inprogress_by_team_member(
+            login, time, minimum, maximum, filt
+        )
 
-    def getContext(self, user='root'):
+    def getContext(self, user="root"):
         s = SecurityContext()
         s.userid = user
         s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
         return s
 
-    def add_command_api(self, pid, target, params, mode, gid = None, proxy = [], cmd_type = 0):
+    def add_command_api(
+        self, pid, target, params, mode, gid=None, proxy=[], cmd_type=0
+    ):
         """
         @param target: must be list of UUID
         @type target: list
@@ -293,8 +338,10 @@ class RpcProxy(RpcProxyI):
             if grp.type == 2:
                 _group_user = DyngroupDatabase()._get_group_user(grp.parent_id)
                 ctx = self.getContext(user=_group_user)
-            target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
-        return mmc.plugins.msc.package_api.SendPackageCommand(ctx, pid, target, params, mode, gid, proxies = proxy, cmd_type = cmd_type).send()
+            target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, "", True)
+        return mmc.plugins.msc.package_api.SendPackageCommand(
+            ctx, pid, target, params, mode, gid, proxies=proxy, cmd_type=cmd_type
+        ).send()
 
     def get_id_command_on_host(self, id_command):
         ctx = self.currentContext
@@ -304,7 +351,9 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(MscDatabase().get_msc_listhost_commandid(command_id))
 
     def get_msc_listuuid_commandid(self, command_id, filter, start, end):
-        return xmlrpcCleanup(MscDatabase().get_msc_listuuid_commandid(command_id, filter, start, end))
+        return xmlrpcCleanup(
+            MscDatabase().get_msc_listuuid_commandid(command_id, filter, start, end)
+        )
 
     def get_deployxmppscheduler(self, login, nin, max, filt):
         return xmlrpcCleanup(MscDatabase().deployxmppscheduler(login, nin, max, filt))
@@ -313,7 +362,9 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(MscDatabase().deployxmpponmachine(command_id, uuid))
 
     def get_count_timeout_wol_deploy(self, command_id, date_start):
-        return xmlrpcCleanup(MscDatabase().get_count_timeout_wol_deploy(command_id, date_start))
+        return xmlrpcCleanup(
+            MscDatabase().get_count_timeout_wol_deploy(command_id, date_start)
+        )
 
     def expire_all_package_commands(self, pid):
         """
@@ -327,11 +378,11 @@ class RpcProxy(RpcProxyI):
         cmds = MscDatabase().get_package_cmds(pid)
 
         if cmds:
-            logging.getLogger().info('%d command will be expired' % len(cmds))
+            logging.getLogger().info("%d command will be expired" % len(cmds))
 
             # for all cmd_ids, get start_date and expire them
             for cmd_id, start_date in list(cmds.items()):
-                logging.getLogger().info('Expires command %d' % cmd_id)
+                logging.getLogger().info("Expires command %d" % cmd_id)
                 end_date = time.strftime("%Y-%m-%d %H:%M:%S")
 
             # Delete convergence groups if any
@@ -419,9 +470,9 @@ class RpcProxy(RpcProxyI):
         @rtype: str
         """
         ctx = self.currentContext
-        return xmlrpcCleanup(ComputerManager().getComputerByHostnameAndMacs(ctx,
-                                                                            hostname,
-                                                                            macs))
+        return xmlrpcCleanup(
+            ComputerManager().getComputerByHostnameAndMacs(ctx, hostname, macs)
+        )
 
     def checkLightPullCommands(self, uuid):
         """
@@ -435,45 +486,52 @@ class RpcProxy(RpcProxyI):
         """
         return xmlrpcCleanup(MscDatabase().checkLightPullCommands(uuid))
 
-    def displayLogs(self, params = {}):
+    def displayLogs(self, params={}):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().displayLogs(ctx, params))
 
-    def get_all_commands_for_consult(self, min=0, max=10, filt='', expired=True):
+    def get_all_commands_for_consult(self, min=0, max=10, filt="", expired=True):
         ctx = self.currentContext
         size, ret1 = MscDatabase().getAllCommandsConsult(ctx, min, max, filt, expired)
         ret = []
         logger = logging.getLogger()
         cache = {}
         for c in ret1:
-            if c['gid']:
-                if "G%s" % (c['gid']) in cache:
-                    c['target'] = cache["G%s" % (c['gid'])]
+            if c["gid"]:
+                if "G%s" % (c["gid"]) in cache:
+                    c["target"] = cache["G%s" % (c["gid"])]
                 else:
-                    group = DyngroupDatabase().get_group(ctx, c['gid'], True)
-                    if type(group) == bool:  # we dont have the permission to view the group
-                        c['target'] = 'UNVISIBLEGROUP'  # TODO!
+                    group = DyngroupDatabase().get_group(ctx, c["gid"], True)
+                    if (
+                        type(group) == bool
+                    ):  # we dont have the permission to view the group
+                        c["target"] = "UNVISIBLEGROUP"  # TODO!
                     elif group == None:
-                        c['target'] = 'this group has been deleted'
-                    elif hasattr(group, 'ro') and group.ro:
-                        logger.debug("user %s access to group %s in RO mode" % (ctx.userid, group.name))
-                        c['target'] = group.name
+                        c["target"] = "this group has been deleted"
+                    elif hasattr(group, "ro") and group.ro:
+                        logger.debug(
+                            "user %s access to group %s in RO mode"
+                            % (ctx.userid, group.name)
+                        )
+                        c["target"] = group.name
                     else:
-                        c['target'] = group.name
-                    cache["G%s"%(c['gid'])] = c['target']
+                        c["target"] = group.name
+                    cache["G%s" % (c["gid"])] = c["target"]
             else:
-                if "M%s"%(c['uuid']) in cache:
-                    c['target'] = cache["M%s" % (c['uuid'])]
+                if "M%s" % (c["uuid"]) in cache:
+                    c["target"] = cache["M%s" % (c["uuid"])]
                 else:
-                    if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx, c['uuid']):
-                        c['target'] = "UNVISIBLEMACHINE"
-                    elif not ComputerManager().getComputer(ctx, {'uuid': c['uuid']}):
-                        c['target'] = "UNVISIBLEMACHINE"
-                    cache["M%s" % (c['uuid'])] = c['target']
+                    if not ComputerLocationManager().doesUserHaveAccessToMachine(
+                        ctx, c["uuid"]
+                    ):
+                        c["target"] = "UNVISIBLEMACHINE"
+                    elif not ComputerManager().getComputer(ctx, {"uuid": c["uuid"]}):
+                        c["target"] = "UNVISIBLEMACHINE"
+                    cache["M%s" % (c["uuid"])] = c["target"]
             # treat c['title'] to remove the date when possible
             # "Bundle (1) - 2009/12/14 10:22:24" => "Bundle (1)"
             date_re = re.compile(" - \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d")
-            c['title'] = date_re.sub('', c['title'])
+            c["title"] = date_re.sub("", c["title"])
             ret.append(c)
         return xmlrpcCleanup((size, ret))
 
@@ -484,29 +542,43 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsonhostCurrentstate(ctx))
 
-    def count_all_commandsonhost_by_currentstate(self, current_state, filt=''):
+    def count_all_commandsonhost_by_currentstate(self, current_state, filt=""):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().countAllCommandsonhostByCurrentstate(ctx, current_state, filt))
+        return xmlrpcCleanup(
+            MscDatabase().countAllCommandsonhostByCurrentstate(ctx, current_state, filt)
+        )
 
-    def get_all_commandsonhost_by_currentstate(self, current_state, min=0, max=10, filt=''):
+    def get_all_commandsonhost_by_currentstate(
+        self, current_state, min=0, max=10, filt=""
+    ):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getAllCommandsonhostByCurrentstate(ctx, current_state, min, max, filt))
+        return xmlrpcCleanup(
+            MscDatabase().getAllCommandsonhostByCurrentstate(
+                ctx, current_state, min, max, filt
+            )
+        )
 
-    def count_all_commandsonhost_by_type(self, type=0, filt=''):
+    def count_all_commandsonhost_by_type(self, type=0, filt=""):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().countAllCommandsonhostByType(ctx, type, filt))
+        return xmlrpcCleanup(
+            MscDatabase().countAllCommandsonhostByType(ctx, type, filt)
+        )
 
-    def get_all_commandsonhost_by_type(self, type, min, max, filt=''):
+    def get_all_commandsonhost_by_type(self, type, min, max, filt=""):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getAllCommandsonhostByType(ctx, type, min, max, filt))
+        return xmlrpcCleanup(
+            MscDatabase().getAllCommandsonhostByType(ctx, type, min, max, filt)
+        )
 
-    def count_all_commands_on_host(self, uuid, filt=''):
+    def count_all_commands_on_host(self, uuid, filt=""):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().countAllCommandsOnHost(ctx, uuid, filt))
 
-    def get_all_commands_on_host(self, uuid, min, max, filt=''):
+    def get_all_commands_on_host(self, uuid, min, max, filt=""):
         ctx = self.currentContext
-        return xmlrpcCleanup(MscDatabase().getAllCommandsOnHost(ctx, uuid, min, max, filt))
+        return xmlrpcCleanup(
+            MscDatabase().getAllCommandsOnHost(ctx, uuid, min, max, filt)
+        )
 
     def get_commands_on_host(self, coh_id):
         ctx = self.currentContext
@@ -535,7 +607,9 @@ class RpcProxy(RpcProxyI):
 
     def is_array_commands_convergence_type(self, array_cmd_id):
         ctx = self.currentContext
-        return xmlrpcCleanup2(MscDatabase().isArrayCommandsCconvergenceType(ctx, array_cmd_id))
+        return xmlrpcCleanup2(
+            MscDatabase().isArrayCommandsCconvergenceType(ctx, array_cmd_id)
+        )
 
     def get_command_on_group_status(self, cmd_id):
         ctx = self.currentContext
@@ -543,7 +617,9 @@ class RpcProxy(RpcProxyI):
 
     def get_command_on_group_by_state(self, cmd_id, state, min=0, max=-1):
         ctx = self.currentContext
-        return xmlrpcCleanup2(MscDatabase().getCommandOnGroupByState(ctx, cmd_id, state, min, max))
+        return xmlrpcCleanup2(
+            MscDatabase().getCommandOnGroupByState(ctx, cmd_id, state, min, max)
+        )
 
     def get_command_on_host_title(self, cmd_id):
         ctx = self.currentContext
@@ -571,17 +647,23 @@ class RpcProxy(RpcProxyI):
 
     def get_last_commands_on_cmd_id_start_end(self, cmd_id):
         ctx = self.currentContext
-        return xmlrpcCleanup2(MscDatabase().getLastCommandsOncmd_id_start_end(ctx, cmd_id))
+        return xmlrpcCleanup2(
+            MscDatabase().getLastCommandsOncmd_id_start_end(ctx, cmd_id)
+        )
 
     def get_array_last_commands_on_cmd_id_start_end(self, array_cmd_id):
         ctx = self.currentContext
-        return xmlrpcCleanup2(MscDatabase().getarrayLastCommandsOncmd_id_start_end(ctx, array_cmd_id))
+        return xmlrpcCleanup2(
+            MscDatabase().getarrayLastCommandsOncmd_id_start_end(ctx, array_cmd_id)
+        )
 
     def set_commands_filter(self, filterType):
         ctx = self.currentContext
-        if not filterType in ['mine', 'all']:
-            filterType = 'mine'
-            logging.getLogger().error('msc.set_commands_filter called without valid parameter')
+        if not filterType in ["mine", "all"]:
+            filterType = "mine"
+            logging.getLogger().error(
+                "msc.set_commands_filter called without valid parameter"
+            )
         ctx.filterType = filterType
 
     def get_commands_filter(self):
@@ -591,12 +673,16 @@ class RpcProxy(RpcProxyI):
     def getMachineNamesOnGroupStatus(self, cmd_id, state):
         ctx = self.currentContext
         limit = DGConfig().maxElementsForStaticList
-        return xmlrpcCleanup(MscDatabase().getMachineNamesOnGroupStatus(ctx, cmd_id, state, limit))
+        return xmlrpcCleanup(
+            MscDatabase().getMachineNamesOnGroupStatus(ctx, cmd_id, state, limit)
+        )
 
     def getMachineNamesOnBundleStatus(self, bundle_id, state):
         ctx = self.currentContext
         limit = DGConfig().maxElementsForStaticList
-        return xmlrpcCleanup(MscDatabase().getMachineNamesOnBundleStatus(ctx, bundle_id, state, limit))
+        return xmlrpcCleanup(
+            MscDatabase().getMachineNamesOnBundleStatus(ctx, bundle_id, state, limit)
+        )
 
     #
     # default WEB values handling
@@ -611,7 +697,7 @@ class RpcProxy(RpcProxyI):
             localtime[2],
             localtime[3],
             localtime[4],
-            localtime[5]
+            localtime[5],
         )
 
     def get_web_def_awake(self):
@@ -705,8 +791,10 @@ class RpcProxy(RpcProxyI):
 def getPlatform(uuid):
     return xmlrpcCleanup2(Machine(uuid).getPlatform())
 
+
 def pingMachine(uuid):
     return xmlrpcCleanup2(Machine(uuid).ping())
+
 
 # Commands on host handling ###
 # FIXME: we should realy rationalize this stuff !
@@ -717,21 +805,30 @@ def start_command_on_host(coh_id):
     else:
         return xmlrpcCleanup(False)
 
+
 def pause_command_on_host(coh_id):
     pulse2.database.msc.orm.commands_on_host.togglePauseCommandOnHost(coh_id)
     return xmlrpcCleanup(True)
+
+
 def restart_command_on_host(coh_id):
     pulse2.database.msc.orm.commands_on_host.restartCommandOnHost(coh_id)
     return xmlrpcCleanup(True)
+
+
 def stop_command_on_host(coh_id):
     pulse2.database.msc.orm.commands_on_host.stopCommandOnHost(coh_id)
     mmc.plugins.msc.client.scheduler.stopCommand(None, coh_id)
     return xmlrpcCleanup(True)
+
+
 # Command on host handling ###
+
 
 def action_on_command(id, f_name, f_database, f_scheduler):
     # Update command in database
     getattr(MscDatabase(), f_database)(id)
+
 
 def action_on_bundle(id, f_name, f_database, f_scheduler):
     # Update command in database
@@ -743,34 +840,47 @@ def action_on_bundle(id, f_name, f_database, f_scheduler):
         d = getattr(mmc.plugins.msc.client.scheduler, f_scheduler)(sched, scheds[sched])
         d.addErrback(lambda err: logger.error("%s: " % (f_name) + str(err)))
 
+
 # Commands handling ###
 def stop_command(c_id):
-    return action_on_command(c_id, 'stop_command', 'stopCommand', 'stopCommands')
+    return action_on_command(c_id, "stop_command", "stopCommand", "stopCommands")
+
 
 def start_command(c_id):
-    return action_on_command(c_id, 'start_command', 'startCommand', 'startCommands')
+    return action_on_command(c_id, "start_command", "startCommand", "startCommands")
+
 
 def pause_command(c_id):
-    return action_on_command(c_id, 'pause_command', 'pauseCommand', 'pauseCommands')
+    return action_on_command(c_id, "pause_command", "pauseCommand", "pauseCommands")
+
 
 def restart_command(c_id):
-    return action_on_command(c_id, 'restart_command', 'restartCommand', 'restartCommands')
+    return action_on_command(
+        c_id, "restart_command", "restartCommand", "restartCommands"
+    )
+
+
 ###
 
 # Bundle handling ###
 def stop_bundle(bundle_id):
-    action_on_bundle(bundle_id, 'stop_bundle', 'stopBundle', 'stopCommands')
+    action_on_bundle(bundle_id, "stop_bundle", "stopBundle", "stopCommands")
     return True
+
 
 def start_bundle(bundle_id):
-    action_on_bundle(bundle_id, 'start_bundle', 'startBundle', 'startCommands')
+    action_on_bundle(bundle_id, "start_bundle", "startBundle", "startCommands")
     return True
 
+
 def pause_bundle(c_id):
-    return action_on_bundle(c_id, 'pause_bundle', 'pauseBundle', 'pauseCommands')
+    return action_on_bundle(c_id, "pause_bundle", "pauseBundle", "pauseCommands")
+
 
 def restart_bundle(c_id):
-    return action_on_bundle(c_id, 'restart_bundle', 'restartBundle', 'restartCommands')
+    return action_on_bundle(c_id, "restart_bundle", "restartBundle", "restartCommands")
+
+
 ###
 
 ##
@@ -798,6 +908,7 @@ def pa_getAllPackages(p_api, mirror=None):
 
 def pa_getPackageDetail(p_api, pid):
     return PackageGetA(p_api).getPackageDetail(pid)
+
 
 def pa_getPackageLabel(p_api, pid):
     return PackageGetA(p_api).getPackageLabel(pid)
@@ -871,23 +982,33 @@ def _get_convergence_soon_ended_commands(all=False):
     @rtype: list
     """
     ret = []
-    active_convergence_cmd_ids = DyngroupDatabase()._get_convergence_active_commands_ids()
+    active_convergence_cmd_ids = (
+        DyngroupDatabase()._get_convergence_active_commands_ids()
+    )
     if all:
         # Return all active_convergence_cmd_ids
         return active_convergence_cmd_ids
     elif active_convergence_cmd_ids:
         # Get active_convergence_cmd_ids who are soon expired
-        ret = MscDatabase()._get_convergence_soon_ended_commands(cmd_ids=active_convergence_cmd_ids)
+        ret = MscDatabase()._get_convergence_soon_ended_commands(
+            cmd_ids=active_convergence_cmd_ids
+        )
     return xmlrpcCleanup(ret)
 
 
 def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id):
-    ret = MscDatabase()._get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
+    ret = MscDatabase()._get_convergence_new_machines_to_add(
+        ctx, cmd_id, convergence_deploy_group_id
+    )
     return xmlrpcCleanup(ret)
 
 
-def _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_group_id, phases={}):
-    return MscDatabase().addMachinesToCommand(ctx, cmd_id, new_machine_ids, convergence_group_id, phases=phases)
+def _add_machines_to_convergence_command(
+    ctx, cmd_id, new_machine_ids, convergence_group_id, phases={}
+):
+    return MscDatabase().addMachinesToCommand(
+        ctx, cmd_id, new_machine_ids, convergence_group_id, phases=phases
+    )
 
 
 def _get_convergence_phases(cmd_id, deploy_group_id):
@@ -914,7 +1035,7 @@ def _get_convergence_deploy_group_id_and_user(cmd_id):
     return DyngroupDatabase()._get_convergence_deploy_group_id_and_user(cmd_id)
 
 
-def getContext(user='root'):
+def getContext(user="root"):
     s = SecurityContext()
     s.userid = user
     s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
@@ -932,18 +1053,40 @@ def convergence_reschedule(all=False):
     logger = logging.getLogger()
     cmd_ids = _get_convergence_soon_ended_commands(all=all)
     if cmd_ids:
-        logger.info("Convergence cron: %s convergence commands will be rescheduled: %s" % (len(cmd_ids), cmd_ids))
+        logger.info(
+            "Convergence cron: %s convergence commands will be rescheduled: %s"
+            % (len(cmd_ids), cmd_ids)
+        )
         for cmd_id in cmd_ids:
             try:
-                convergence_deploy_group_id, user = _get_convergence_deploy_group_id_and_user(cmd_id)
+                (
+                    convergence_deploy_group_id,
+                    user,
+                ) = _get_convergence_deploy_group_id_and_user(cmd_id)
                 ctx = getContext(user=user)
-                new_machine_ids = _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
+                new_machine_ids = _get_convergence_new_machines_to_add(
+                    ctx, cmd_id, convergence_deploy_group_id
+                )
                 if new_machine_ids:
-                    logger.info("%s machines will be added to convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
-                    phases = _get_convergence_phases(cmd_id, convergence_deploy_group_id)
-                    _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id, phases=phases)
+                    logger.info(
+                        "%s machines will be added to convergence group %s"
+                        % (len(new_machine_ids), convergence_deploy_group_id)
+                    )
+                    phases = _get_convergence_phases(
+                        cmd_id, convergence_deploy_group_id
+                    )
+                    _add_machines_to_convergence_command(
+                        ctx,
+                        cmd_id,
+                        new_machine_ids,
+                        convergence_deploy_group_id,
+                        phases=phases,
+                    )
                 _update_convergence_dates(cmd_id)
             except TypeError as e:
-                logger.warn("Error while fetching deploy_group_id and user for command %s: %s" % (cmd_id, e))
+                logger.warn(
+                    "Error while fetching deploy_group_id and user for command %s: %s"
+                    % (cmd_id, e)
+                )
     else:
         logger.info("Convergence cron: no convergence commands will be rescheduled")

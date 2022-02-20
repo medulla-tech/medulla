@@ -26,9 +26,20 @@ import logging
 
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.config import DashboardConfig
-from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel, ProcessPanel, \
-                                        ComputersOnlinePanel, UpdatePanel, BackupPanel, SuccessRatePanel, \
-                                        DeploymentsLaunchedPanel, AgentsPanel, AlertsPanel, AlertsEntityPanel
+from mmc.plugins.dashboard.panel import (
+    GeneralPanel,
+    SpacePanel,
+    ShortcutsPanel,
+    ProcessPanel,
+    ComputersOnlinePanel,
+    UpdatePanel,
+    BackupPanel,
+    SuccessRatePanel,
+    DeploymentsLaunchedPanel,
+    AgentsPanel,
+    AlertsPanel,
+    AlertsEntityPanel,
+)
 
 VERSION = "4.6.9"
 APIVERSION = "0:1:0"
@@ -36,9 +47,18 @@ REVISION = ""
 
 logger = logging.getLogger()
 
-def getVersion(): return VERSION
-def getApiVersion(): return APIVERSION
-def getRevision(): return REVISION
+
+def getVersion():
+    return VERSION
+
+
+def getApiVersion():
+    return APIVERSION
+
+
+def getRevision():
+    return REVISION
+
 
 def activate():
     config = DashboardConfig("dashboard")
@@ -60,12 +80,15 @@ def activate():
     DM.register_panel(AlertsEntityPanel("alertsentity"))
     return True
 
+
 # XML-RPC methods
 def get_panels():
     return DashboardManager().get_panels()
 
+
 def get_panel_infos(panel):
     return DashboardManager().get_panel_infos(panel)
+
 
 def get_panels_infos():
     return DashboardManager().get_panels_infos()

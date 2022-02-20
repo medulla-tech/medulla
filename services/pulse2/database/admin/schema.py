@@ -19,7 +19,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime, Text, LargeBinary, Enum
+from sqlalchemy import (
+    Column,
+    String,
+    Integer,
+    Boolean,
+    ForeignKey,
+    DateTime,
+    Text,
+    LargeBinary,
+    Enum,
+)
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
@@ -37,7 +47,7 @@ class AdminDBObj(DBObj):
 
 class Tests(Base, AdminDBObj):
     # ====== Table name =========================
-    __tablename__ = 'tests'
+    __tablename__ = "tests"
     # ====== Fields =============================
     # Here we define columns for the table version.
     # Notice that each column is also a normal Python instance attribute.

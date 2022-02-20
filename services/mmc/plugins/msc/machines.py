@@ -26,6 +26,7 @@ from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.base.computers import ComputerManager
 from mmc.support.mmctools import Singleton
 
+
 class Machine:
     def __init__(self, h_params):
         self.config = MscConfig()
@@ -33,36 +34,42 @@ class Machine:
         self.logger.debug("new machine: |%s|" % h_params)
         self.ip = None
         try:
-            self.hostname = h_params['cn']
+            self.hostname = h_params["cn"]
         except:
             try:
-                self.hostname = h_params['hostname'][0]
+                self.hostname = h_params["hostname"][0]
             except:
-                self.hostname = '???'
+                self.hostname = "???"
         try:
-            self.uuid = h_params['objectUUID'][0]
+            self.uuid = h_params["objectUUID"][0]
         except:
             self.uuid = None
         try:
-            self.displayname = h_params['displayName'][0]
+            self.displayname = h_params["displayName"][0]
         except:
             self.displayname = self.hostname
         try:
-            self.fullname = h_params['fullname']
+            self.fullname = h_params["fullname"]
         except:
             self.fullname = self.hostname
-        self.platform = ''
+        self.platform = ""
 
     def toH(self):
-        return {'hostname':self.hostname, 'uuid':self.uuid, 'displayName':self.displayname, 'fullname':self.fullname}
+        return {
+            "hostname": self.hostname,
+            "uuid": self.uuid,
+            "displayName": self.displayname,
+            "fullname": self.fullname,
+        }
 
     def getPlatform(self):
         # FIXME: please use the scheduler
-        return ''
+        return ""
 
     def ping(self):
         # FIXME: please use the scheduler
         return False
+
 
 class Machines(Singleton):
     def __init__(self):
@@ -106,7 +113,7 @@ class Machines(Singleton):
         ret = ComputerManager().getComputersList(ctx, h_params)
         self.logger.debug("getMachine: wanted |%s|, got |%s|" % (h_params, ret))
         try:
-            self.logger.debug(ret[h_params['hostname']][1])
-            return Machine(ret[h_params['hostname']][1])
+            self.logger.debug(ret[h_params["hostname"]][1])
+            return Machine(ret[h_params["hostname"]][1])
         except:
             return None

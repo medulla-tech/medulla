@@ -44,20 +44,22 @@ else:
 if "makefile" in sys.argv:
     makefile = True
 
-login = 'mmc'
-password = 's3cr3t'
+login = "mmc"
+password = "s3cr3t"
 
-client = sync.Proxy('https://%s:%s@localhost:7080'%(login, password), False)
-client.base.ldapAuth('root', 'secret')
+client = sync.Proxy("https://%s:%s@localhost:7080" % (login, password), False)
+client.base.ldapAuth("root", "secret")
 
 """
 Test class
 """
 
+
 class class01dyngroupInitTest(TestCase):
     """
     Tests classes of the dyngroup module
     """
+
     def setUp(self):
         self.client = client.dyngroup
         self.deleteUser = None
@@ -121,8 +123,8 @@ class class01dyngroupInitTest(TestCase):
 
     def test212tosGroup(self):
         # TODO : When the method will be implemented in the dyngroup plugin, test its return value :
-        #result = self.client.tos_group()
-        #self.assertEqual(result, True)
+        # result = self.client.tos_group()
+        # self.assertEqual(result, True)
         pass
 
     def test213setnameGroup(self):
@@ -132,44 +134,44 @@ class class01dyngroupInitTest(TestCase):
 
     def test214setVisibilityGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.setvisibility_group(1337, 1)
-        #self.assertEqual(result, True)
+        # result = self.client.setvisibility_group(1337, 1)
+        # self.assertEqual(result, True)
         pass
 
     def test215requestGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.request_group(1337)
-        #self.assertEqual(result, "")
+        # result = self.client.request_group(1337)
+        # self.assertEqual(result, "")
         pass
 
     def test216setRequestGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.setrequest_group(1337, "inventory.Date==2010-04-29")
-        #self.assertEqual(result, 1337)
+        # result = self.client.setrequest_group(1337, "inventory.Date==2010-04-29")
+        # self.assertEqual(result, 1337)
         pass
 
     def test217boolGroup(self):
-        #result = self.client.setrequest_group(1337, "inventory.Date==2010-04-29")
-        #result = self.client.bool_group(1337)
-        #self.assertEqual(result, False)
+        # result = self.client.setrequest_group(1337, "inventory.Date==2010-04-29")
+        # result = self.client.bool_group(1337)
+        # self.assertEqual(result, False)
         pass
 
     def test218setBoolGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.setbool_group(1337, True)
-        #self.assertEqual(result, False)
+        # result = self.client.setbool_group(1337, True)
+        # self.assertEqual(result, False)
         pass
 
     def test219requestResultGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.requestresult_group(1337, 0, 10, "")
-        #self.assertEqual(result, False)
+        # result = self.client.requestresult_group(1337, 0, 10, "")
+        # self.assertEqual(result, False)
         pass
 
     def test220countRequestResultGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.countrequestresult_group(1337, "")
-        #self.assertEqual(result, False)
+        # result = self.client.countrequestresult_group(1337, "")
+        # self.assertEqual(result, False)
         pass
 
     def test221resultGroup(self):
@@ -178,7 +180,7 @@ class class01dyngroupInitTest(TestCase):
 
     def test222countResultGroup(self):
         result = self.client.countresult_group(1337, "")
-        self.assertEqual(result, '0')
+        self.assertEqual(result, "0")
 
     def test223canShowGroup(self):
         result = self.client.canshow_group(1337)
@@ -186,14 +188,14 @@ class class01dyngroupInitTest(TestCase):
 
     def test224showGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.show_group(1337)
-        #self.assertEqual(result, '1')
+        # result = self.client.show_group(1337)
+        # self.assertEqual(result, '1')
         pass
 
     def test225hideGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.hide_group(1337)
-        #self.assertEqual(result, '1')
+        # result = self.client.hide_group(1337)
+        # self.assertEqual(result, '1')
         pass
 
     def test226isDynGroup(self):
@@ -214,96 +216,124 @@ class class01dyngroupInitTest(TestCase):
 
     def test230reloadGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.reload_group(1337)
-        #self.assertEqual(result, False)
+        # result = self.client.reload_group(1337)
+        # self.assertEqual(result, False)
         pass
 
     def test231addMembersToGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.addmembers_to_group(1337, "UUID1")
-        #self.assertEqual(result, False)
-        #self.deleteUser = "UUID1"
+        # result = self.client.addmembers_to_group(1337, "UUID1")
+        # self.assertEqual(result, False)
+        # self.deleteUser = "UUID1"
         pass
 
     def test232delMembersToGroup(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.delmembers_to_group(1337, "UUID1")
-        #self.assertEqual(result, False)
-        #self.deleteUser = "UUID1"
+        # result = self.client.delmembers_to_group(1337, "UUID1")
+        # self.assertEqual(result, False)
+        # self.deleteUser = "UUID1"
         pass
 
     def test233importMembersToGroup(self):
         # FIXME: Need a test on the group before accessing to attributes
-        #result = self.client.importmembers_to_group(1337, "Inventory/Date", "2010-04-29")
-        #self.assertEqual(result, False)
-        #self.deleteUser = "UUID1"
+        # result = self.client.importmembers_to_group(1337, "Inventory/Date", "2010-04-29")
+        # self.assertEqual(result, False)
+        # self.deleteUser = "UUID1"
         pass
 
     def test234shareWith(self):
         # FIXME: Need a test on the group before accessing to attributes
-        #result = self.client.share_with(1337)
-        #self.assertEqual(result, [])
-        #self.deleteUser = "UUID1"
+        # result = self.client.share_with(1337)
+        # self.assertEqual(result, [])
+        # self.deleteUser = "UUID1"
         pass
 
     def test235addShare(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.add_share(1337, [("login", "t"),])
-        #self.assertEqual(result, False)
-        #self.deleteUser = "UUID1"
-        #self.deleteShare = [result, [("login", "t"),]]
+        # result = self.client.add_share(1337, [("login", "t"),])
+        # self.assertEqual(result, False)
+        # self.deleteUser = "UUID1"
+        # self.deleteShare = [result, [("login", "t"),]]
         pass
 
     def test236delShare(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.del_share(1337, [("login", "t"),])
-        #self.assertEqual(result, True)
+        # result = self.client.del_share(1337, [("login", "t"),])
+        # self.assertEqual(result, True)
         pass
 
     def test237canEdit(self):
         # FIXME: Need a test on the group before access to attributes
-        #result = self.client.can_edit(1337)
-        #self.assertEqual(result, False)
+        # result = self.client.can_edit(1337)
+        # self.assertEqual(result, False)
         pass
 
     def test238getQueryPossibilities(self):
         # FIXME : Can't get the response due to a serialization error
-        #result = self.client.getQueryPossibilities()
-        #self.assertEqual(result, {})
+        # result = self.client.getQueryPossibilities()
+        # self.assertEqual(result, {})
         pass
 
     def test239getPossiblesModules(self):
         result = self.client.getPossiblesModules()
-        self.assertEqual(result, ['inventory', 'dyngroup'])
+        self.assertEqual(result, ["inventory", "dyngroup"])
 
     def test240getPossiblesCriterionsInMainModule(self):
         result = self.client.getPossiblesCriterionsInMainModule()
-        self.assertEqual(result, ['Entity/Label', 'Software/ProductName:ProductVersion', 'Software/ProductName', 'Hardware/OperatingSystem', 'Registry/Value/display name', 'Drive/TotalSpace', 'Hardware/ProcessorType'])
+        self.assertEqual(
+            result,
+            [
+                "Entity/Label",
+                "Software/ProductName:ProductVersion",
+                "Software/ProductName",
+                "Hardware/OperatingSystem",
+                "Registry/Value/display name",
+                "Drive/TotalSpace",
+                "Hardware/ProcessorType",
+            ],
+        )
 
     def test241getPossiblesCriterionInModule(self):
-        result = self.client.getPossiblesCriterionsInModule('inventory')
-        self.assertEqual(result, ['Entity/Label', 'Software/ProductName:ProductVersion', 'Software/ProductName', 'Hardware/OperatingSystem', 'Registry/Value/display name', 'Drive/TotalSpace', 'Hardware/ProcessorType'])
+        result = self.client.getPossiblesCriterionsInModule("inventory")
+        self.assertEqual(
+            result,
+            [
+                "Entity/Label",
+                "Software/ProductName:ProductVersion",
+                "Software/ProductName",
+                "Hardware/OperatingSystem",
+                "Registry/Value/display name",
+                "Drive/TotalSpace",
+                "Hardware/ProcessorType",
+            ],
+        )
 
     def test242getTypeForCriterionInModule(self):
-        result = self.client.getTypeForCriterionInModule("inventory", "Software/ProductName")
+        result = self.client.getTypeForCriterionInModule(
+            "inventory", "Software/ProductName"
+        )
         self.assertEqual(result, "list")
 
     def test243getPossiblesValuesForCriterionInModule(self):
-        result = self.client.getPossiblesValuesForCriterionInModule("inventory", "Software/ProductName")
-        self.assertEqual(result, ['list', []])
+        result = self.client.getPossiblesValuesForCriterionInModule(
+            "inventory", "Software/ProductName"
+        )
+        self.assertEqual(result, ["list", []])
 
     def test244getPossiblesValuesForCriterionInModuleFuzzy(self):
-        result = self.client.getPossiblesValuesForCriterionInModuleFuzzy("inventory", "Software/ProductName")
+        result = self.client.getPossiblesValuesForCriterionInModuleFuzzy(
+            "inventory", "Software/ProductName"
+        )
         self.assertEqual(result, [])
 
     def test245getPossiblesValuesForCriterionInModuleFuzzyWhere(self):
         # FIXME: What is the last parameter ??
-        #result = self.client.getPossiblesValuesForCriterionInModuleFuzzyWhere("inventory", "Software/ProductName", "blabla")
-        #self.assertEqual(result, [])
+        # result = self.client.getPossiblesValuesForCriterionInModuleFuzzyWhere("inventory", "Software/ProductName", "blabla")
+        # self.assertEqual(result, [])
         pass
 
     def test246checkBoolean(self):
-        result = self.client.checkBoolean('')
+        result = self.client.checkBoolean("")
         self.assertEqual(result, [True, -1])
 
     def test247updateMachineCache(self):
@@ -332,7 +362,14 @@ class class01dyngroupInitTest(TestCase):
 
     def test255forgeRequest(self):
         result = self.client.forgeRequest("Drive/TotalSpace", ["1337", "42"])
-        self.assertEqual( result, ['1==inventory::Drive/TotalSpace==1337||2==inventory::Drive/TotalSpace==42', 'OR(1,2)', {'criterion':'Drive/TotalSpace', 'data':['1337', '42']}])
+        self.assertEqual(
+            result,
+            [
+                "1==inventory::Drive/TotalSpace==1337||2==inventory::Drive/TotalSpace==42",
+                "OR(1,2)",
+                {"criterion": "Drive/TotalSpace", "data": ["1337", "42"]},
+            ],
+        )
 
     def disabled_test211createProfile(self):
         # This method is placed here not to influence the behavior of the tests (there is not yet method to delete a profile)
@@ -341,6 +378,7 @@ class class01dyngroupInitTest(TestCase):
         # TODO : Delete this new profile in tearDown() (the deleting method is not yet implemented in the dyngroup plugin)
         self.deleteProfile = result
 
+
 """
 Launch of the tests
 """
@@ -348,10 +386,10 @@ Launch of the tests
 if mode == "debug":
     nb = 0
     success = []
-    suite=unittest.TestLoader().loadTestsFromTestCase(class01dyngroupInitTest)
-    test=unittest.TextTestRunner(verbosity=Verbosity).run(suite)
+    suite = unittest.TestLoader().loadTestsFromTestCase(class01dyngroupInitTest)
+    test = unittest.TextTestRunner(verbosity=Verbosity).run(suite)
     success.append(test.wasSuccessful())
-    nb=nb+test.testsRun
+    nb = nb + test.testsRun
 
     if False in success:
         print("One or more tests failed or have an unexpected error")

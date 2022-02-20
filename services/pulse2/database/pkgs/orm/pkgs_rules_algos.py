@@ -32,8 +32,8 @@ import logging
 
 
 class Pkgs_rules_algos(object):
-    """ Mapping between pkgs.pkgs_rules_algos and SA
-        colunm table: ' id,name,description,level'
+    """Mapping between pkgs.pkgs_rules_algos and SA
+    colunm table: ' id,name,description,level'
     """
 
     def getId(self):
@@ -46,7 +46,7 @@ class Pkgs_rules_algos(object):
         if self.name is not None:
             return self.name
         else:
-            return-1
+            return -1
 
     def getDescription(self):
         if self.description is not None:
@@ -62,14 +62,16 @@ class Pkgs_rules_algos(object):
 
     def to_array(self):
         return {
-            'id': self.getId(),
-            'name': self.getName(),
-            'description': self.getDescription(),
-            'level': self.getLevel()}
+            "id": self.getId(),
+            "name": self.getName(),
+            "description": self.getDescription(),
+            "level": self.getLevel(),
+        }
 
     def toH(self):
         return {
-            'id': self.id,
-            'name': self.ars_share_id,
-            'description': self.packages_id,
-            'level': self.level}
+            "id": self.id,
+            "name": self.ars_share_id,
+            "description": self.packages_id,
+            "level": self.level,
+        }

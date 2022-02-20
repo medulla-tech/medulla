@@ -48,7 +48,7 @@ import pulse2.xmlrpc
 
 class MyServer(resource.Resource):
     def register(self, klass, mp):
-        mp = re.compile('^/').sub('', mp)
+        mp = re.compile("^/").sub("", mp)
         return self.putChild(mp, klass)
 
 
@@ -69,137 +69,176 @@ def initialize(config):
     if len(config.mirrors) > 0:
         for mirror_params in config.mirrors:
             # If source dosesnt exist, create it
-            if not os.path.isdir(mirror_params['src']):
-                os.mkdir(mirror_params['src'])
-            m_api = Mirror(
-                mirror_params['mount_point'],
-                mirror_params['mount_point'])
-            server.register(m_api, mirror_params['mount_point'])
-            services.append({'type': 'mirror',
-                             'mp': mirror_params['mount_point'],
-                             'server': config.public_ip,
-                             'port': config.port,
-                             'proto': config.proto,
-                             'src': mirror_params['src'],
-                             'mirror_mp': '%s_files' % (mirror_params['mount_point']),
-                             'mirror_url': '%s://%s:%s%s_files' % (config.proto,
-                                                                   config.public_ip,
-                                                                   config.port,
-                                                                   mirror_params['mount_point']),
-                             'url': '%s://%s:%s%s' % (config.proto,
-                                                      config.public_ip,
-                                                      config.port,
-                                                      mirror_params['mount_point'])})
+            if not os.path.isdir(mirror_params["src"]):
+                os.mkdir(mirror_params["src"])
+            m_api = Mirror(mirror_params["mount_point"], mirror_params["mount_point"])
+            server.register(m_api, mirror_params["mount_point"])
+            services.append(
+                {
+                    "type": "mirror",
+                    "mp": mirror_params["mount_point"],
+                    "server": config.public_ip,
+                    "port": config.port,
+                    "proto": config.proto,
+                    "src": mirror_params["src"],
+                    "mirror_mp": "%s_files" % (mirror_params["mount_point"]),
+                    "mirror_url": "%s://%s:%s%s_files"
+                    % (
+                        config.proto,
+                        config.public_ip,
+                        config.port,
+                        mirror_params["mount_point"],
+                    ),
+                    "url": "%s://%s:%s%s"
+                    % (
+                        config.proto,
+                        config.public_ip,
+                        config.port,
+                        mirror_params["mount_point"],
+                    ),
+                }
+            )
             server.register(
-                static.File(
-                    mirror_params['src']),
-                mirror_params['mount_point'] +
-                '_files')
-            services.append({'type': 'mirror_files',
-                             'mp': mirror_params['mount_point'] + '_files',
-                             'server': config.public_ip,
-                             'port': config.port,
-                             'proto': config.proto,
-                             'src': mirror_params['src']})
+                static.File(mirror_params["src"]),
+                mirror_params["mount_point"] + "_files",
+            )
+            services.append(
+                {
+                    "type": "mirror_files",
+                    "mp": mirror_params["mount_point"] + "_files",
+                    "server": config.public_ip,
+                    "port": config.port,
+                    "proto": config.proto,
+                    "src": mirror_params["src"],
+                }
+            )
 
     if len(config.package_api_get) > 0:
         for mirror_params in config.package_api_get:
             p_api = PackageApiGet(
-                mirror_params['mount_point'],
-                mirror_params['mount_point'])
-            server.register(p_api, mirror_params['mount_point'])
-            services.append({'type': 'package_api_get',
-                             'mp': mirror_params['mount_point'],
-                             'server': config.public_ip,
-                             'port': config.port,
-                             'proto': config.proto,
-                             'src': mirror_params['src'],
-                             'url': '%s://%s:%s%s' % (config.proto,
-                                                      config.public_ip,
-                                                      config.port,
-                                                      mirror_params['mount_point'])})
+                mirror_params["mount_point"], mirror_params["mount_point"]
+            )
+            server.register(p_api, mirror_params["mount_point"])
+            services.append(
+                {
+                    "type": "package_api_get",
+                    "mp": mirror_params["mount_point"],
+                    "server": config.public_ip,
+                    "port": config.port,
+                    "proto": config.proto,
+                    "src": mirror_params["src"],
+                    "url": "%s://%s:%s%s"
+                    % (
+                        config.proto,
+                        config.public_ip,
+                        config.port,
+                        mirror_params["mount_point"],
+                    ),
+                }
+            )
 
     if len(config.package_api_put) > 0:
         for mirror_params in config.package_api_put:
             p_api = PackageApiPut(
-                mirror_params['mount_point'],
-                mirror_params['mount_point'],
-                mirror_params['tmp_input_dir'])
-            server.register(p_api, mirror_params['mount_point'])
-            services.append({'type': 'package_api_put',
-                             'mp': mirror_params['mount_point'],
-                             'server': config.public_ip,
-                             'port': config.port,
-                             'proto': config.proto,
-                             'src': mirror_params['src'],
-                             'url': '%s://%s:%s%s' % (config.proto,
-                                                      config.public_ip,
-                                                      config.port,
-                                                      mirror_params['mount_point'])})
+                mirror_params["mount_point"],
+                mirror_params["mount_point"],
+                mirror_params["tmp_input_dir"],
+            )
+            server.register(p_api, mirror_params["mount_point"])
+            services.append(
+                {
+                    "type": "package_api_put",
+                    "mp": mirror_params["mount_point"],
+                    "server": config.public_ip,
+                    "port": config.port,
+                    "proto": config.proto,
+                    "src": mirror_params["src"],
+                    "url": "%s://%s:%s%s"
+                    % (
+                        config.proto,
+                        config.public_ip,
+                        config.port,
+                        mirror_params["mount_point"],
+                    ),
+                }
+            )
 
-    if 'mount_point' in config.user_package_api:
+    if "mount_point" in config.user_package_api:
         mirror = UserPackageApi(
-            services,
-            config.user_package_api['mount_point'],
-            config.up_assign_algo)
-        server.register(mirror, config.user_package_api['mount_point'])
-        services.append({'type': 'user_package_api',
-                         'mp': config.user_package_api['mount_point'],
-                         'server': config.public_ip,
-                         'port': config.port,
-                         'proto': config.proto})
+            services, config.user_package_api["mount_point"], config.up_assign_algo
+        )
+        server.register(mirror, config.user_package_api["mount_point"])
+        services.append(
+            {
+                "type": "user_package_api",
+                "mp": config.user_package_api["mount_point"],
+                "server": config.public_ip,
+                "port": config.port,
+                "proto": config.proto,
+            }
+        )
 
-    if 'mount_point' in config.mirror_api:
+    if "mount_point" in config.mirror_api:
         mirror = MirrorApi(
-            services,
-            config.mirror_api['mount_point'],
-            config.mm_assign_algo)
-        server.register(mirror, config.mirror_api['mount_point'])
-        services.append({'type': 'mirror_api',
-                         'mp': config.mirror_api['mount_point'],
-                         'server': config.public_ip,
-                         'port': config.port,
-                         'proto': config.proto})
+            services, config.mirror_api["mount_point"], config.mm_assign_algo
+        )
+        server.register(mirror, config.mirror_api["mount_point"])
+        services.append(
+            {
+                "type": "mirror_api",
+                "mp": config.mirror_api["mount_point"],
+                "server": config.public_ip,
+                "port": config.port,
+                "proto": config.proto,
+            }
+        )
     else:
-        logger.warn('package server initialized without mirror api')
+        logger.warn("package server initialized without mirror api")
 
-    if 'mount_point' in config.scheduler_api:
+    if "mount_point" in config.scheduler_api:
         scheduler = SchedulerApi(
-            config.scheduler_api['mount_point'],
-            config.scheduler_api)
-        server.register(scheduler, config.scheduler_api['mount_point'])
-        services.append({'type': 'scheduler_api',
-                         'mp': config.scheduler_api['mount_point'],
-                         'server': config.public_ip,
-                         'port': config.port,
-                         'proto': config.proto})
+            config.scheduler_api["mount_point"], config.scheduler_api
+        )
+        server.register(scheduler, config.scheduler_api["mount_point"])
+        services.append(
+            {
+                "type": "scheduler_api",
+                "mp": config.scheduler_api["mount_point"],
+                "server": config.public_ip,
+                "port": config.port,
+                "proto": config.proto,
+            }
+        )
         logger.info("package server initialized with scheduler api")
 
     if config.imaging_api:
         try:
-            imaging = ImagingApi(config.imaging_api['mount_point'], config)
-            server.register(imaging, config.imaging_api['mount_point'])
-            services.append({
-                'type': 'imaging',
-                'mp': config.imaging_api['mount_point'],
-                'server': config.public_ip,
-                'port': config.port,
-                'proto': config.proto
-            })
+            imaging = ImagingApi(config.imaging_api["mount_point"], config)
+            server.register(imaging, config.imaging_api["mount_point"])
+            services.append(
+                {
+                    "type": "imaging",
+                    "mp": config.imaging_api["mount_point"],
+                    "server": config.public_ip,
+                    "port": config.port,
+                    "proto": config.proto,
+                }
+            )
             logger.info("Package Server initialized with imaging API")
             try:
                 PXEProxy(config, imaging.api)
             except CannotListenError:
                 logger.error("PXE proxy: start failed")
                 logger.error(
-                    "PXE Proxy: Adress already in use: old LRS imaging-server still installed and not yet stopped")
+                    "PXE Proxy: Adress already in use: old LRS imaging-server still installed and not yet stopped"
+                )
                 logger.error(
-                    "PXE proxy: Please verify your configuration and restart the service")
+                    "PXE proxy: Please verify your configuration and restart the service"
+                )
 
             except Exception as e:
                 logger.exception("Imaging error: %s" % e)
-                logger.error(
-                    "PXE imaging service initialization failed, exiting.")
+                logger.error("PXE imaging service initialization failed, exiting.")
             else:
                 logger.info("Package Server initialized with PXE imaging API")
 
@@ -209,29 +248,28 @@ def initialize(config):
             logger.error("Package Server will run WITHOUT the imaging API")
 
     desc = Description(services)
-    server.register(desc, '/desc')
+    server.register(desc, "/desc")
     Common().setDesc(services)
 
     try:
         if config.enablessl:
             pulse2.xmlrpc.OpenSSLContext().setup(
-                config.localcert, config.cacert, config.verifypeer)
+                config.localcert, config.cacert, config.verifypeer
+            )
             twisted.internet.reactor.listenSSL(
                 port,
                 P2PSite(server),
                 interface=config.bind,
-                contextFactory=pulse2.xmlrpc.OpenSSLContext().getContext()
+                contextFactory=pulse2.xmlrpc.OpenSSLContext().getContext(),
             )
-            logger.info('activating SSL mode')
+            logger.info("activating SSL mode")
         else:
             twisted.internet.reactor.listenTCP(
-                port,
-                twisted.web.server.Site(server),
-                interface=config.bind
+                port, twisted.web.server.Site(server), interface=config.bind
             )
-        logger.info('package server listening on %s:%d' % (config.bind, port))
+        logger.info("package server listening on %s:%d" % (config.bind, port))
     except Exception as e:
-        logger.error('can\'t bind to %s:%d' % (config.bind, port))
+        logger.error("can't bind to %s:%d" % (config.bind, port))
         logger.error(e)
         ret = False
 

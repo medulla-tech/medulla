@@ -56,13 +56,14 @@ from urllib.request import Request as CookieRequest
 
 log = logging.getLogger()
 
-COOKIES_FILE = '/tmp/mmc-cookies-sync'
+COOKIES_FILE = "/tmp/mmc-cookies-sync"
 
 
 class CookieResponse:
     """
     Adapter for the LWPCookieJar.extract_cookies
     """
+
     def __init__(self, headers):
         self.headers = headers
 
@@ -78,10 +79,10 @@ class MMCBaseTransport(object):
     valid session ID and authentication information.
     """
 
-    user_agent = 'AdminProxy'
+    user_agent = "AdminProxy"
 
     def __init__(self, username, passwd, use_datetime=0):
-        """ This method returns an XMLRPC client which supports
+        """This method returns an XMLRPC client which supports
         basic authentication through cookies.
         """
         self.credentials = (username, passwd)
@@ -117,23 +118,21 @@ class MMCBaseTransport(object):
         return http.client.HTTPSConnection(host)
 
     def send_basic_auth(self, connection):
-        """ Include HTTPS Basic Authentication data in a header
-        """
+        """Include HTTPS Basic Authentication data in a header"""
         auth = encodestring("%s:%s" % self.credentials).strip()
-        auth = 'Basic %s' %(auth,)
-        connection.putheader('Authorization', auth)
+        auth = "Basic %s" % (auth,)
+        connection.putheader("Authorization", auth)
 
     def send_cookie_auth(self, connection):
-        """ Include Cookie Authentication data in a header
-        """
+        """Include Cookie Authentication data in a header"""
         try:
             cj = LWPCookieJar()
             cj.load(COOKIES_FILE, ignore_discard=True, ignore_expires=True)
 
             for cookie in cj:
-                connection.putheader('Cookie', '%s=%s' % (cookie.name, cookie.value))
+                connection.putheader("Cookie", "%s=%s" % (cookie.name, cookie.value))
             return True
-        except LoadError :
+        except LoadError:
             # mmc-cookies file is sometimes on bad format
             # (probably caused by interrupted twisted sessions)
             log.warn("mmc-cookies: invalid LWP format file, resending the credentials")
@@ -171,8 +170,8 @@ class MMCBaseTransport(object):
 
         # Creati g cookie jar
         cresponse = CookieResponse(headers)
-        crequest = CookieRequest('https://' + host + '/')
-        if '<methodName>base.ldapAuth</methodName>' in request_body:
+        crequest = CookieRequest("https://" + host + "/")
+        if "<methodName>base.ldapAuth</methodName>" in request_body:
             cj = LWPCookieJar()
             cj.extract_cookies(cresponse, crequest)
             if len(cj):
@@ -180,11 +179,7 @@ class MMCBaseTransport(object):
                 os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
 
         if errcode != 200:
-            raise xmlrpc.client.ProtocolError(
-                host + handler,
-                errcode, errmsg,
-                headers
-                )
+            raise xmlrpc.client.ProtocolError(host + handler, errcode, errmsg, headers)
 
         self.verbose = verbose
 
@@ -223,13 +218,13 @@ class MMCSafeTransport(MMCBaseTransport, xmlrpc.client.SafeTransport):
 
 
 class Proxy(xmlrpc.client.ServerProxy, object):
-    """ This subclass ServerProxy to handle login and specific MMC
+    """This subclass ServerProxy to handle login and specific MMC
     cookies mechanism.
     Can authenticate automatically if username and passwd are provided.
     If MMC server return Fault 8003, we identify with base.ldapAuth method.
     """
 
-    available_transports = {'http' : MMCTransport, 'https' : MMCSafeTransport}
+    available_transports = {"http": MMCTransport, "https": MMCSafeTransport}
 
     def __init__(self, uri, username=None, passwd=None, verbose=False):
         url = urlparse(uri)

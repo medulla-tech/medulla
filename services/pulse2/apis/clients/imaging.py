@@ -35,14 +35,14 @@ import logging
 
 
 class Imaging(Pulse2Api):
-
     def __init__(self, *attr):
         self.name = "Imaging"
         Pulse2Api.__init__(self, *attr)
 
     # Computer registration
-    def computerRegister(self, computerName, MACAddress,
-                         imagingData, waitToBeInventoried=False):
+    def computerRegister(
+        self, computerName, MACAddress, imagingData, waitToBeInventoried=False
+    ):
         """
         Called by pulse2-imaging-server to tell the Package Server to
         register a new computer. The computer name may contain a profile
@@ -54,21 +54,22 @@ class Imaging(Pulse2Api):
         @raise : TypeError is MACAddress is not a mac addr
         @rtype : bool
         """
-        if not isinstance(
-                computerName,
-                str) and not isinstance(
-                computerName,
-                str):
-            raise TypeError('Bad Computer name: %s' % computerName)
+        if not isinstance(computerName, str) and not isinstance(computerName, str):
+            raise TypeError("Bad Computer name: %s" % computerName)
         if not isMACAddress(MACAddress):
-            raise TypeError('BAD MAC address: %s' % MACAddress)
-        d = self.callRemote("computerRegister",
-                            computerName,
-                            MACAddress,
-                            imagingData,
-                            waitToBeInventoried)
-        d.addErrback(self.onErrorRaise, "Imaging:computerRegister", [
-                     computerName, MACAddress, imagingData, waitToBeInventoried])
+            raise TypeError("BAD MAC address: %s" % MACAddress)
+        d = self.callRemote(
+            "computerRegister",
+            computerName,
+            MACAddress,
+            imagingData,
+            waitToBeInventoried,
+        )
+        d.addErrback(
+            self.onErrorRaise,
+            "Imaging:computerRegister",
+            [computerName, MACAddress, imagingData, waitToBeInventoried],
+        )
         return d
 
     def computersRegister(self, computers):
@@ -83,10 +84,7 @@ class Imaging(Pulse2Api):
         @rtype: list
         """
         d = self.callRemote("computersRegister", computers)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:computersRegister",
-            [computers])
+        d.addErrback(self.onErrorRaise, "Imaging:computersRegister", [computers])
         return d
 
     def computerPrepareImagingDirectory(self, MACAddress, imagingData=False):
@@ -96,13 +94,12 @@ class Imaging(Pulse2Api):
         """
         if not isMACAddress(MACAddress):
             raise TypeError
-        d = self.callRemote(
-            "computerPrepareImagingDirectory",
-            MACAddress,
-            imagingData)
+        d = self.callRemote("computerPrepareImagingDirectory", MACAddress, imagingData)
         d.addErrback(
-            self.onErrorRaise, "Imaging:computerPrepareImagingDirectory", [
-                MACAddress, imagingData])
+            self.onErrorRaise,
+            "Imaging:computerPrepareImagingDirectory",
+            [MACAddress, imagingData],
+        )
         return d
 
     def computerCreateImageDirectory(self, MACAddress):
@@ -113,9 +110,8 @@ class Imaging(Pulse2Api):
             raise TypeError
         d = self.callRemote("computerCreateImageDirectory", MACAddress)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:computerCreateImageDirectory",
-            [MACAddress])
+            self.onErrorRaise, "Imaging:computerCreateImageDirectory", [MACAddress]
+        )
         return d
 
     def computerUnregister(self, uuid, imageList, archive=True):
@@ -126,8 +122,8 @@ class Imaging(Pulse2Api):
         """
         d = self.callRemote("computerUnregister", uuid, imageList, archive)
         d.addErrback(
-            self.onErrorRaise, "Imaging:computerUnregister", [
-                uuid, imageList, archive])
+            self.onErrorRaise, "Imaging:computerUnregister", [uuid, imageList, archive]
+        )
         return d
 
     # Computer Menu management
@@ -154,10 +150,8 @@ class Imaging(Pulse2Api):
         """
         d = self.callRemote("computerChangeDefaultMenuItem", uuid, num)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:computerChangeDefaultMenuItem",
-            uuid,
-            num)
+            self.onErrorRaise, "Imaging:computerChangeDefaultMenuItem", uuid, num
+        )
         return d
 
     # Computer log management
@@ -174,10 +168,7 @@ class Imaging(Pulse2Api):
         Called by the MMC agent.
         """
         d = self.callRemote("computerBackupImagesGet", uuid)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:computerBackupImagesGet",
-            uuid)
+        d.addErrback(self.onErrorRaise, "Imaging:computerBackupImagesGet", uuid)
         return d
 
     def imageGetLogs(self, imageUUID):
@@ -185,7 +176,7 @@ class Imaging(Pulse2Api):
         Get the imaging logs of a computer backup image.
         Called by the MMC agent.
         """
-        d = self.callRemote('imageGetLogs', imageUUID)
+        d = self.callRemote("imageGetLogs", imageUUID)
         d.addErrback(self.onError, "Imaging:imageGetLogs", [imageUUID])
         return d
 
@@ -196,8 +187,8 @@ class Imaging(Pulse2Api):
         """
         d = self.callRemote("computerImageIsoBuild", uuid, imageId)
         d.addErrback(
-            self.onErrorRaise, "Imaging:computerImageIsoBuild", [
-                uuid, imageId])
+            self.onErrorRaise, "Imaging:computerImageIsoBuild", [uuid, imageId]
+        )
         return d
 
     def computerBackupImagesSetInformations(self, imageId, informations):
@@ -206,12 +197,13 @@ class Imaging(Pulse2Api):
         Called by the MMC agent.
         """
         d = self.callRemote(
-            "computerBackupImagesSetInformations",
-            imageId,
-            informations)
+            "computerBackupImagesSetInformations", imageId, informations
+        )
         d.addErrback(
-            self.onErrorRaise, "Imaging:computerBackupImagesSetInformations", [
-                imageId, informations])
+            self.onErrorRaise,
+            "Imaging:computerBackupImagesSetInformations",
+            [imageId, informations],
+        )
         return d
 
     # Imaging server images management
@@ -230,10 +222,7 @@ class Imaging(Pulse2Api):
         Called by the MMC agent.
         """
         d = self.callRemote("imagingServerMastersGet")
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imagingServerMastersGet",
-            None)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerMastersGet", None)
         return d
 
     def imagingServerMasterSetInformations(self, imageId, informations):
@@ -241,13 +230,12 @@ class Imaging(Pulse2Api):
         Set master image informations, informations is a dict containing image label, description, and a post installation script name.
         Called by the MMC agent.
         """
-        d = self.callRemote(
-            "imagingServerMasterSetInformations",
-            imageId,
-            informations)
+        d = self.callRemote("imagingServerMasterSetInformations", imageId, informations)
         d.addErrback(
-            self.onErrorRaise, "Imaging:imagingServerMasterSetInformations", [
-                imageId, informations])
+            self.onErrorRaise,
+            "Imaging:imagingServerMasterSetInformations",
+            [imageId, informations],
+        )
         return d
 
     def imagingServerBootServicesGet(self):  # list of bootServiceData
@@ -265,22 +253,21 @@ class Imaging(Pulse2Api):
         Called by the MMC agent.
         """
         d = self.callRemote(
-            "imagingServerBootServiceSetInformations",
-            imageId,
-            informations)
+            "imagingServerBootServiceSetInformations", imageId, informations
+        )
         d.addErrback(
-            self.onErrorRaise, "Imaging:imagingServerBootServiceSetInformations", [
-                imageId, informations])
+            self.onErrorRaise,
+            "Imaging:imagingServerBootServiceSetInformations",
+            [imageId, informations],
+        )
         return d
 
     def createBootServiceFromPostInstall(self, script_file):
-        """
-        """
+        """ """
         d = self.callRemote("createBootServiceFromPostInstall", script_file)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:createBootServiceFromPostInstall",
-            [script_file])
+            self.onErrorRaise, "Imaging:createBootServiceFromPostInstall", [script_file]
+        )
         return d
 
     def bsUnlinkShFile(self, datas):
@@ -309,9 +296,8 @@ class Imaging(Pulse2Api):
         """
         d = self.callRemote("imagingServerDefaultMenuSet", imagingMenu)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imagingServerDefaultMenuSet",
-            imagingMenu)
+            self.onErrorRaise, "Imaging:imagingServerDefaultMenuSet", imagingMenu
+        )
         return d
 
     def imagingServerMasterIsoBuild(self, imageId):
@@ -320,45 +306,35 @@ class Imaging(Pulse2Api):
         Called by the MMC agent.
         """
         d = self.callRemote("imagingServerMasterIsoBuild", imageId)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imagingServerMasterIsoBuild",
-            imageId)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterIsoBuild", imageId)
         return d
 
     def imagingServerBackupToMaster(self, imageId):
         """Convert a backup image to a master."""
         d = self.callRemote("imagingServerBackupToMaster", imageId)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imagingServerBackupToMaster",
-            imageId)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerBackupToMaster", imageId)
         return d
 
     def imagingServerMasterDisable(self, imageId):
         """Disable a master."""
         d = self.callRemote("imagingServerMasterDisable", imageId)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imagingServerMasterDisable",
-            imageId)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerMasterDisable", imageId)
         return d
 
     def imagingServerMasterDelete(self, imageId, archive=True):
         """Delete a master. Maybe archive it."""
         d = self.callRemote("imagingServerMasterDelete", imageId, archive)
         d.addErrback(
-            self.onErrorRaise, "Imaging:imagingServerMasterDelete", [
-                imageId, archive])
+            self.onErrorRaise, "Imaging:imagingServerMasterDelete", [imageId, archive]
+        )
         return d
 
     def imagingServerConfigurationSet(self, configuration):
         """Set the imaging server configuration (dict)."""
         d = self.callRemote("imagingServerConfigurationSet", configuration)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imagingServerConfigurationSet",
-            configuration)
+            self.onErrorRaise, "Imaging:imagingServerConfigurationSet", configuration
+        )
         return d
 
     # inventory related stuff
@@ -368,8 +344,8 @@ class Imaging(Pulse2Api):
         """
         d = self.callRemote("injectInventory", MACAddress, inventory)
         d.addErrback(
-            self.onErrorRaise, "Imaging:injectInventory", [
-                MACAddress, inventory])
+            self.onErrorRaise, "Imaging:injectInventory", [MACAddress, inventory]
+        )
         return d
 
     # misc stuff
@@ -386,19 +362,15 @@ class Imaging(Pulse2Api):
         """
         Log action done by uuid
         """
-        d = self.callRemote(
-            "logClientAction",
-            MACAddress,
-            level,
-            phase,
-            message)
+        d = self.callRemote("logClientAction", MACAddress, level, phase, message)
         d.addErrback(
             self.onErrorRaise,
             "Imaging:logClientAction",
             MACAddress,
             level,
             phase,
-            message)
+            message,
+        )
         return d
 
     # Images related stuff
@@ -407,11 +379,7 @@ class Imaging(Pulse2Api):
         Declare a new image image_uuid as done on computer MACAddress
         """
         d = self.callRemote("imageDone", MACAddress, image_uuid)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imageDone",
-            MACAddress,
-            image_uuid)
+        d.addErrback(self.onErrorRaise, "Imaging:imageDone", MACAddress, image_uuid)
         return d
 
     def imagingServerImageDelete(self, image_uuid):
@@ -419,10 +387,7 @@ class Imaging(Pulse2Api):
         Remove an existing image (image_uuid) from the imaging server
         """
         d = self.callRemote("imagingServerImageDelete", image_uuid)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imagingServerImageDelete",
-            image_uuid)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServerImageDelete", image_uuid)
         return d
 
     def imagingServerISOCreate(self, image_uuid, size, title):
@@ -431,11 +396,8 @@ class Imaging(Pulse2Api):
         """
         d = self.callRemote("imagingServerISOCreate", image_uuid, size, title)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imagingServerISOCreate",
-            image_uuid,
-            size,
-            title)
+            self.onErrorRaise, "Imaging:imagingServerISOCreate", image_uuid, size, title
+        )
         return d
 
     def imagingClearMenu(self, macadress):
@@ -451,100 +413,75 @@ class Imaging(Pulse2Api):
         create bootmenu multicast from the imaging server
         """
         d = self.callRemote("imagingServermenuMulticast", objmenu)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:imagingServermenuMulticast",
-            objmenu)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingServermenuMulticast", objmenu)
         return d
 
     def check_process_multicast(self, objprocess):
         # control execution process multicast
         d = self.callRemote("check_process_multicast", objprocess)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:check_process_multicast",
-            objprocess)
+        d.addErrback(self.onErrorRaise, "Imaging:check_process_multicast", objprocess)
         return d
 
     def start_process_multicast(self, objprocess):
         # control execution process multicast
         d = self.callRemote("start_process_multicast", objprocess)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:start_process_multicast",
-            objprocess)
+        d.addErrback(self.onErrorRaise, "Imaging:start_process_multicast", objprocess)
         return d
 
     def checkDeploymentUDPSender(self, objprocess):
         # control execution process multicast
         d = self.callRemote("checkDeploymentUDPSender", objprocess)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:checkDeploymentUDPSender",
-            objprocess)
+        d.addErrback(self.onErrorRaise, "Imaging:checkDeploymentUDPSender", objprocess)
         return d
 
     def muticast_script_exist(self, objprocess):
         # control execution process multicast
         d = self.callRemote("muticast_script_exist", objprocess)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:muticast_script_exist",
-            objprocess)
+        d.addErrback(self.onErrorRaise, "Imaging:muticast_script_exist", objprocess)
         return d
 
     def clear_script_multicast(self, objprocess):
         # control execution process multicast
         d = self.callRemote("clear_script_multicast", objprocess)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:clear_script_multicast",
-            objprocess)
+        d.addErrback(self.onErrorRaise, "Imaging:clear_script_multicast", objprocess)
         return d
 
     def SetMulticastMultiSessionParameters(self, parameters):
         # control parametre session
         d = self.callRemote("SetMulticastMultiSessionParameters", parameters)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:SetMulticastMultiSessionParameters",
-            parameters)
+            self.onErrorRaise, "Imaging:SetMulticastMultiSessionParameters", parameters
+        )
         return d
 
     def GetMulticastMultiSessionParameters(self, location):
         # control parametre session
         d = self.callRemote("GetMulticastMultiSessionParameters", location)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:GetMulticastMultiSessionParameters",
-            location)
+            self.onErrorRaise, "Imaging:GetMulticastMultiSessionParameters", location
+        )
         return d
 
     def ClearMulticastMultiSessionParameters(self, location):
         # control parametre session
         d = self.callRemote("ClearMulticastMultiSessionParameters", location)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:ClearMulticastMultiSessionParameters",
-            location)
+            self.onErrorRaise, "Imaging:ClearMulticastMultiSessionParameters", location
+        )
         return d
 
     def stop_process_multicast(self, objprocess):
         # control execution process multicast
         d = self.callRemote("stop_process_multicast", objprocess)
-        d.addErrback(
-            self.onErrorRaise,
-            "Imaging:stop_process_multicast",
-            objprocess)
+        d.addErrback(self.onErrorRaise, "Imaging:stop_process_multicast", objprocess)
         return d
 
     def check_process_multicast_finish(self, objprocess):
         # control execution process multicast
         d = self.callRemote("check_process_multicast_finish", objprocess)
         d.addErrback(
-            self.onErrorRaise,
-            "Imaging:check_process_multicast_finish",
-            objprocess)
+            self.onErrorRaise, "Imaging:check_process_multicast_finish", objprocess
+        )
         return d
 
 
@@ -555,39 +492,41 @@ class ImagingApi(Imaging):
 
     def __init__(self, url=None):
         self.logger = logging.getLogger()
-        credit = ''
+        credit = ""
         if isinstance(url, str):
-            url = url.encode('utf-8')
+            url = url.encode("utf-8")
         if isinstance(url, str):
             self.server_addr = url
-            if url.find('@') != -1:
-                credit = url.split('/')[2].split('@')
+            if url.find("@") != -1:
+                credit = url.split("/")[2].split("@")
             Imaging.__init__(self, credit, url)
         elif isinstance(url, dict):
-            if url['enablessl']:
-                self.server_addr = 'https://'
+            if url["enablessl"]:
+                self.server_addr = "https://"
             else:
-                self.server_addr = 'http://'
+                self.server_addr = "http://"
 
-            if url['username'] != '':
-                self.server_addr += url['username']
-                credit = url['username']
-                if url['password'] != '':
-                    self.server_addr += ":" + url['password']
-                    credit += ":" + url['password']
+            if url["username"] != "":
+                self.server_addr += url["username"]
+                credit = url["username"]
+                if url["password"] != "":
+                    self.server_addr += ":" + url["password"]
+                    credit += ":" + url["password"]
                 self.server_addr += "@"
 
-            self.server_addr += url['server'] + ':' + \
-                str(url['port']) + url['mountpoint']
+            self.server_addr += (
+                url["server"] + ":" + str(url["port"]) + url["mountpoint"]
+            )
 
-            if url['verifypeer']:
+            if url["verifypeer"]:
                 Imaging.__init__(
                     self,
                     credit,
                     self.server_addr,
-                    url['verifypeer'],
-                    url['cacert'],
-                    url['localcert'])
+                    url["verifypeer"],
+                    url["cacert"],
+                    url["localcert"],
+                )
             else:
                 Imaging.__init__(self, credit, self.server_addr)
         else:
@@ -601,15 +540,14 @@ class ImagingApi(Imaging):
         for m in self.log_entrance:
             if not hasattr(self, m):
                 self.logger.debug(
-                    "the method %s is not defined, check the log_entrance you specified")
+                    "the method %s is not defined, check the log_entrance you specified"
+                )
             else:
                 setattr(self, "__%s" % m, getattr(self, m))
 
                 def temp(*attr):
-                    if hasattr(self, 'name'):
-                        self.logger.debug(
-                            "%s.%s(%s)" %
-                            (self.name, m, str(attr)))
+                    if hasattr(self, "name"):
+                        self.logger.debug("%s.%s(%s)" % (self.name, m, str(attr)))
                     else:
                         self.logger.debug("%s %s" % (m, str(attr)))
                     true_method = getattr(self, "__%s" % m)

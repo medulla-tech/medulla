@@ -38,13 +38,14 @@ class RunInventory(Singleton):
         self.config = config
         self.logger = logging.getLogger()
         from pulse2.proxyssl.http_inventory_proxy import HttpInventoryProxySingleton
+
         self.singleton = HttpInventoryProxySingleton()
 
     def maybeStartLoop(self):
         if self.config.polling:
             self.logger.debug(
-                "Scheduling inventory in %s seconds" %
-                self.config.polling_time)
+                "Scheduling inventory in %s seconds" % self.config.polling_time
+            )
             reactor.callLater(self.config.polling_time, self.run)
 
     def run(self):
@@ -54,7 +55,8 @@ class RunInventory(Singleton):
         if self.singleton.check_flag():
             self.logger.debug("Starting an inventory")
             d = utils.getProcessOutputAndValue(
-                self.config.command_name, self.config.command_attr)
+                self.config.command_name, self.config.command_attr
+            )
             d.addCallbacks(self.onSuccess, self.onError)
         else:
             self.logger.debug("Flag not set, not starting an inventory")

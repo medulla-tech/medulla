@@ -33,7 +33,7 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 
 
 class SchedulerApi(MyXmlrpc):
-    type = 'SchedulerApi'
+    type = "SchedulerApi"
 
     def __init__(self, name, config):
         MyXmlrpc.__init__(self)
@@ -41,10 +41,10 @@ class SchedulerApi(MyXmlrpc):
         self.config = config
         self.logger = logging.getLogger()
         self.assign = {}
-        if 'schedulers' in self.config:
-            self.schedulers = self.config['schedulers'].split(' ')
+        if "schedulers" in self.config:
+            self.schedulers = self.config["schedulers"].split(" ")
         else:
-            self.schedulers = ['']
+            self.schedulers = [""]
         self.logger.info("(%s) %s : initialised" % (self.type, self.name))
 
     def xmlrpc_getServerDetails(self):
@@ -53,8 +53,9 @@ class SchedulerApi(MyXmlrpc):
     def xmlrpc_getScheduler(self, m):
         machine = Machine().from_h(m)
         if machine.uuid not in self.assign:
-            self.assign[machine.uuid] = self.schedulers[random.randint(
-                0, len(self.schedulers) - 1)]
+            self.assign[machine.uuid] = self.schedulers[
+                random.randint(0, len(self.schedulers) - 1)
+            ]
         return self.assign[machine.uuid]
 
     def xmlrpc_getSchedulers(self, machines):
@@ -62,7 +63,8 @@ class SchedulerApi(MyXmlrpc):
         for m in machines:
             machine = Machine().from_h(m)
             if machine.uuid not in self.assign:
-                self.assign[machine.uuid] = self.schedulers[random.randint(
-                    0, len(self.schedulers) - 1)]
+                self.assign[machine.uuid] = self.schedulers[
+                    random.randint(0, len(self.schedulers) - 1)
+                ]
             ret.append(self.assign[machine.uuid])
         return ret

@@ -65,10 +65,8 @@ class MyXmlrpc(xmlrpc.XMLRPC):
                 result = (result,)
             try:
                 self.logger.debug(
-                    'Result for ' +
-                    str(functionPath) +
-                    ": " +
-                    str(result))
+                    "Result for " + str(functionPath) + ": " + str(result)
+                )
                 s = xmlrpc.client.dumps(result, methodresponse=1)
             except Exception as e:
                 f = Fault(self.FAILURE, "can't serialize output: " + str(e))
@@ -80,20 +78,17 @@ class MyXmlrpc(xmlrpc.XMLRPC):
         def _ebRender(failure, start, functionPath, args, request):
             _printExecutionTime(start)
             self.logger.error(
-                "Error during render " +
-                functionPath +
-                ": " +
-                failure.getTraceback())
+                "Error during render " + functionPath + ": " + failure.getTraceback()
+            )
             # Prepare a Fault result to return
             result = {}
-            result['faultString'] = functionPath + " " + str(args)
-            result['faultCode'] = str(failure.type) + \
-                ": " + str(failure.value) + " "
-            result['faultTraceback'] = failure.getTraceback()
+            result["faultString"] = functionPath + " " + str(args)
+            result["faultCode"] = str(failure.type) + ": " + str(failure.value) + " "
+            result["faultTraceback"] = failure.getTraceback()
             return result
 
         def _cbLogger(result, request):
-            """ Logging the HTTP requests """
+            """Logging the HTTP requests"""
 
             host = request.getHost().host
             method = request.method
@@ -106,13 +101,11 @@ class MyXmlrpc(xmlrpc.XMLRPC):
             self.logger.debug(message)
 
         self.logger.debug(
-            "RPC method call for %s.%s%s" %
-            (self.mp, functionPath, str(args)))
+            "RPC method call for %s.%s%s" % (self.mp, functionPath, str(args))
+        )
         defer.maybeDeferred(function, *args).addErrback(
             _ebRender, start, functionPath, args, request
-        ).addCallback(
-            _cbRender, start, request, functionPath, args
-        ).addCallback(
+        ).addCallback(_cbRender, start, request, functionPath, args).addCallback(
             _cbLogger, request
         )
         return server.NOT_DONE_YET

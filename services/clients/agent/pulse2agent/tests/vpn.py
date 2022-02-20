@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 import logging
+
 logging.basicConfig()
 
 import queue
@@ -34,14 +35,14 @@ from pulse2agent.vpn import VPNLaunchControl
 
 
 class ProcessSimulator(object):
-    output = [("establishing the connection" ,""),
-              ("","probe failed"),
-              ("next",""),
-              ("another",""),
-              ("","unable reach the host"),
-              ("end",""),
-              ]
-
+    output = [
+        ("establishing the connection", ""),
+        ("", "probe failed"),
+        ("next", ""),
+        ("another", ""),
+        ("", "unable reach the host"),
+        ("end", ""),
+    ]
 
     timeout = 0.5
     body = """
@@ -55,7 +56,10 @@ for (out, err) in %s:
     if err is not None:
         sys.stderr.write(err)
     time.sleep(%d)
-    """ % (output, timeout)
+    """ % (
+        output,
+        timeout,
+    )
 
     t_file = None
 
@@ -75,6 +79,7 @@ for (out, err) in %s:
 class ProcessSucceed(ProcessSimulator):
     body = """#!/bin/bash\nexit 0;"""
 
+
 class ProcessFailed(ProcessSimulator):
     body = """#!/bin/bash\nexit 1;"""
 
@@ -87,9 +92,7 @@ class ConfigHelper(object):
         command_args = ""
 
 
-
 class Test00_VPNLaunchControl(TestCase):
-
     def setUp(self):
         pass
 
@@ -106,12 +109,13 @@ class Test00_VPNLaunchControl(TestCase):
             config.vpn.command = "python"
             config.vpn.command_args = script.name
 
-
             launch_vpn = VPNLaunchControl(config, queue)
-            def pb(): return True
+
+            def pb():
+                return True
+
             setattr(launch_vpn, "probe", pb)
             launch_vpn.start()
-
 
             outs = errs = ""
             for out, err in ProcessSimulator.output:
@@ -122,7 +126,6 @@ class Test00_VPNLaunchControl(TestCase):
 
             self.assertEqual(outs, p_outs)
             self.assertEqual(errs, p_errs)
-
 
     def test01_return_code_succeed(self):
         """Launched script returns 0"""
@@ -135,9 +138,11 @@ class Test00_VPNLaunchControl(TestCase):
             config.vpn.command = "sh"
             config.vpn.command_args = script.name
 
-
             launch_vpn = VPNLaunchControl(config, queue)
-            def pb(): return True
+
+            def pb():
+                return True
+
             setattr(launch_vpn, "probe", pb)
             ret = launch_vpn.start()
 
@@ -154,17 +159,18 @@ class Test00_VPNLaunchControl(TestCase):
             config.vpn.command = "sh"
             config.vpn.command_args = script.name
 
-
             launch_vpn = VPNLaunchControl(config, queue)
-            def pb(): return True
+
+            def pb():
+                return True
+
             setattr(launch_vpn, "probe", pb)
             ret = launch_vpn.start()
 
             self.assertEqual(ret, CC.VPN | CC.FAILED)
 
-
     def test03_probe_failed(self):
-        """ Unreachable server """
+        """Unreachable server"""
         config = ConfigHelper()
         queue = queue.Queue()
 
@@ -174,9 +180,9 @@ class Test00_VPNLaunchControl(TestCase):
 
         self.assertEqual(ret, CC.VPN | CC.REFUSED)
 
-
     def test04_probe_succeed(self):
         """Launched script returns 0"""
+
         def build_vpn_server(config):
             server = socket(AF_INET, SOCK_STREAM)
             server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -185,19 +191,15 @@ class Test00_VPNLaunchControl(TestCase):
 
             client_connection, address = server.accept()
             if client_connection:
-                result = client_connection.recv(1024) # pyflakes.ignore
+                result = client_connection.recv(1024)  # pyflakes.ignore
                 client_connection.close()
-
 
         with ProcessSucceed() as script:
             config = ConfigHelper()
             config.vpn.command = "sh"
             config.vpn.command_args = script.name
 
-
-            t = threading.Thread(target=build_vpn_server,
-                                 args=(config,)
-                                 )
+            t = threading.Thread(target=build_vpn_server, args=(config,))
             t.start()
 
             queue = queue.Queue()
@@ -208,14 +210,7 @@ class Test00_VPNLaunchControl(TestCase):
             self.assertEqual(ret, CC.VPN | CC.DONE)
 
 
+if __name__ == "__main__":
 
-
-
-
-
-
-
-if __name__ == '__main__':
-
-    if TestCase.__module__ != "twisted.trial.unittest" :
+    if TestCase.__module__ != "twisted.trial.unittest":
         main()

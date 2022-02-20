@@ -27,12 +27,18 @@ BackupPC database handler
 
 # SqlAlchemy
 import logging
-from pulse2.database.backuppc.schema import Backup_profiles, Period_profiles, Backup_servers, Hosts
+from pulse2.database.backuppc.schema import (
+    Backup_profiles,
+    Period_profiles,
+    Backup_servers,
+    Hosts,
+)
 from mmc.database.database_helper import DatabaseHelper
 from random import randint
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
+
 Session = sessionmaker()
 
 # PULSE2 modules
@@ -47,6 +53,7 @@ class BackuppcDatabase(DatabaseHelper):
     Singleton Class to query the backuppc database.
 
     """
+
     is_activated = False
     session = None
 
@@ -65,7 +72,8 @@ class BackuppcDatabase(DatabaseHelper):
         self.db = create_engine(
             self.makeConnectionPath(),
             pool_recycle=self.config.dbpoolrecycle,
-            pool_size=self.config.dbpoolsize)
+            pool_size=self.config.dbpoolsize,
+        )
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
@@ -75,8 +83,8 @@ class BackuppcDatabase(DatabaseHelper):
         self.metadata.create_all()
         self.is_activated = True
         self.logger.debug(
-            "BackupPC database connected (version:%s)" %
-            (self.db_version))
+            "BackupPC database connected (version:%s)" % (self.db_version)
+        )
         return True
 
     def initMappers(self):
@@ -233,9 +241,7 @@ class BackuppcDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def get_hosts_by_backup_profile(self, session, profileid):
-        ret = session.query(
-            Hosts.uuid).filter_by(
-            backup_profile=profileid).all()
+        ret = session.query(Hosts.uuid).filter_by(backup_profile=profileid).all()
         if ret:
             return [m[0] for m in ret]
         else:
@@ -243,9 +249,7 @@ class BackuppcDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def get_hosts_by_period_profile(self, session, profileid):
-        ret = session.query(
-            Hosts.uuid).filter_by(
-            period_profile=profileid).all()
+        ret = session.query(Hosts.uuid).filter_by(period_profile=profileid).all()
         if ret:
             return [m[0] for m in ret]
         else:
@@ -293,13 +297,15 @@ class BackuppcDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def get_backupserver_by_entity(self, session, entity_uuid):
         try:
-            ret = session.query(
-                Backup_servers.backupserver_url).filter_by(
-                entity_uuid=entity_uuid).one()
+            ret = (
+                session.query(Backup_servers.backupserver_url)
+                .filter_by(entity_uuid=entity_uuid)
+                .one()
+            )
             if ret:
                 return ret.backupserver_url
         except BaseException:
-            ret = ''
+            ret = ""
         return ret
 
     # =====================================================================
@@ -311,35 +317,30 @@ class BackuppcDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def add_backupserver(self, session, entityuuid, serverURL):
-        server = Backup_servers(
-            entity_uuid=entityuuid,
-            backupserver_url=serverURL)
+        server = Backup_servers(entity_uuid=entityuuid, backupserver_url=serverURL)
         session.add(server)
         session.flush()
         return server.toDict()
 
     @DatabaseHelper._session
     def remove_backupserver(self, session, entityuuid):
-        ret = session.query(Backup_servers).filter_by(
-            entity_uuid=entityuuid).first()
+        ret = session.query(Backup_servers).filter_by(entity_uuid=entityuuid).first()
         if ret:
             session.delete(ret)
             session.flush()
             return True
         else:
             logger.warning(
-                "Can't find BackupServer associated to entity %s" %
-                entityuuid)
+                "Can't find BackupServer associated to entity %s" % entityuuid
+            )
 
     @DatabaseHelper._session
     def get_host_pre_backup_script(self, session, uuid):
-        return session.query(Hosts).filter_by(
-            uuid=uuid).one().pre_backup_script
+        return session.query(Hosts).filter_by(uuid=uuid).one().pre_backup_script
 
     @DatabaseHelper._session
     def get_host_post_backup_script(self, session, uuid):
-        return session.query(Hosts).filter_by(
-            uuid=uuid).one().post_backup_script
+        return session.query(Hosts).filter_by(uuid=uuid).one().post_backup_script
 
     @DatabaseHelper._session
     def set_host_pre_backup_script(self, session, uuid, script):
@@ -359,13 +360,11 @@ class BackuppcDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def get_host_pre_restore_script(self, session, uuid):
-        return session.query(Hosts).filter_by(
-            uuid=uuid).one().pre_restore_script
+        return session.query(Hosts).filter_by(uuid=uuid).one().pre_restore_script
 
     @DatabaseHelper._session
     def get_host_post_restore_script(self, session, uuid):
-        return session.query(Hosts).filter_by(
-            uuid=uuid).one().post_restore_script
+        return session.query(Hosts).filter_by(uuid=uuid).one().post_restore_script
 
     @DatabaseHelper._session
     def set_host_pre_restore_script(self, session, uuid, script):

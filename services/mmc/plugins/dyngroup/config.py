@@ -24,18 +24,21 @@ from mmc.support import mmctools
 from mmc.support.config import PluginConfig
 from pulse2.database.dyngroup.config import DyngroupDatabaseConfig
 
+
 class DGConfig(DyngroupDatabaseConfig):
     dyngroup_activate = True
-    defaultModule = ''
+    defaultModule = ""
     maxElementsForStaticList = 2000
     profilesEnable = True
     check_db_enable = False
     check_db_interval = 300
 
-    def init(self, name, conffile = None):
+    def init(self, name, conffile=None):
         self.name = name
-        if not conffile: self.conffile = mmctools.getConfigFile(name)
-        else: self.conffile = conffile
+        if not conffile:
+            self.conffile = mmctools.getConfigFile(name)
+        else:
+            self.conffile = conffile
 
         DyngroupDatabaseConfig.setup(self, self.conffile)
         self.setup(self.conffile)
@@ -46,13 +49,15 @@ class DGConfig(DyngroupDatabaseConfig):
         """
         self.disable = self.cp.getboolean("main", "disable")
         self.dynamicEnable = self.cp.getboolean("main", "dynamic_enable")
-        if self.cp.has_option('main', 'profiles_enable'):
-            self.profilesEnable = self.cp.getboolean("main", 'profiles_enable')
-        if self.cp.has_option('main', 'default_module'):
-            self.defaultModule = self.cp.get('main', 'default_module')
+        if self.cp.has_option("main", "profiles_enable"):
+            self.profilesEnable = self.cp.getboolean("main", "profiles_enable")
+        if self.cp.has_option("main", "default_module"):
+            self.defaultModule = self.cp.get("main", "default_module")
 
         if self.cp.has_option("main", "max_elements_for_static_list"):
-            self.maxElementsForStaticList = self.cp.get("main", "max_elements_for_static_list")
+            self.maxElementsForStaticList = self.cp.get(
+                "main", "max_elements_for_static_list"
+            )
 
         if self.cp.has_section("querymanager"):
             if self.cp.has_option("querymanager", "activate"):
@@ -62,8 +67,6 @@ class DGConfig(DyngroupDatabaseConfig):
             self.check_db_enable = self.cp.getboolean("main", "check_db_enable")
         if self.cp.has_option("main", "check_db_interval"):
             self.check_db_interval = self.cp.getint("main", "check_db_interval")
-
-
 
     def setDefault(self):
         """

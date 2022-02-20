@@ -39,9 +39,7 @@ class Sender(Protocol):
         try:
             self.transport.write(pack)
         except Exception as e:
-            logging.getLogger().error(
-                "\033[31mux call failed: %s\033[0m" %
-                str(e))
+            logging.getLogger().error("\033[31mux call failed: %s\033[0m" % str(e))
 
         self.send_locked = True
 
@@ -52,16 +50,14 @@ class Sender(Protocol):
     def dataReceived(self, packet):
         data = PackUtils.unpack(packet)
         self.send_locked = False
-        self.response(data,
-                      self.request,
-                      self.__name__,
-                      self.args)
+        self.response(data, self.request, self.__name__, self.args)
 
 
 class Forwarder:
     """
     This is the base class for streaming
     """
+
     _protocol = None
     _cached_methods = []
 
@@ -110,10 +106,7 @@ class Forwarder:
         if func_name in self._cached_methods:
             # response always OK, but cached into buffer
             SendingBuffer().add(packet)
-            self.protocol.response(True,
-                                   request,
-                                   func_name,
-                                   args)
+            self.protocol.response(True, request, func_name, args)
 
         else:
             # response immediately
@@ -123,6 +116,4 @@ class Forwarder:
                 self.protocol.request = request
                 self.protocol.call_remote(packet)
             except Exception as e:
-                self.logger.warn(
-                    "UX: immediate call method failed: %s" %
-                    str(e))
+                self.logger.warn("UX: immediate call method failed: %s" % str(e))

@@ -31,23 +31,22 @@ from base64 import b64encode
 
 
 class CommandsHistory(object):
-    """ Mapping between msc.commands_history and SA
-    """
+    """Mapping between msc.commands_history and SA"""
 
     def toH(self):
         return {
-            'id': self.id,
-            'fk_commands_on_host': self.fk_commands_on_host,
-            'date': self.date,
-            'stderr': b64encode(self.stderr.encode('utf-8', 'ignore')),
-            'stdout': b64encode(self.stdout.encode('utf-8', 'ignore')),
-            'error_code': self.error_code,
-            'state': self.state,
-            'phase': self.phase
+            "id": self.id,
+            "fk_commands_on_host": self.fk_commands_on_host,
+            "date": self.date,
+            "stderr": b64encode(self.stderr.encode("utf-8", "ignore")),
+            "stdout": b64encode(self.stdout.encode("utf-8", "ignore")),
+            "error_code": self.error_code,
+            "state": self.state,
+            "phase": self.phase,
         }
 
     def flush(self):
-        """ Handle SQL flushing """
+        """Handle SQL flushing"""
         session = sqlalchemy.orm.create_session()
         session.add(self)
         session.flush()

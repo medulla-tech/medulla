@@ -36,16 +36,19 @@ IPADDR_RE = re.compile("^IP Address:(.+):([0-9]+)$")  # IP Address:port
 MEM_INFO_RE = re.compile("^M:([0-9a-f]+),U:([0-9a-f]+)$")  # lower / upper mem
 # bus, dev, vendor, device, class, subclass
 BUS_INFO_RE = re.compile(
-    "^B:([0-9A-Fa-f]+),f:([0-9A-Fa-f]+),v:([0-9A-Fa-f]+),d:([0-9A-Fa-f]+),c:([0-9A-Fa-f]+),s:([0-9A-Fa-f]+)$")
+    "^B:([0-9A-Fa-f]+),f:([0-9A-Fa-f]+),v:([0-9A-Fa-f]+),d:([0-9A-Fa-f]+),c:([0-9A-Fa-f]+),s:([0-9A-Fa-f]+)$"
+)
 DISKINFO_RE = re.compile(
-    "^D:\\(hd([0-9]+)\\):CHS\\(([0-9]+),([0-9]+),([0-9]+)\\)=([0-9]+)$")  # number, CHS, size
+    "^D:\\(hd([0-9]+)\\):CHS\\(([0-9]+),([0-9]+),([0-9]+)\\)=([0-9]+)$"
+)  # number, CHS, size
 # number, type, start, len
 PARTINFO_RE = re.compile("^P:([0-9]+),t:([0-9a-f]+),s:([0-9]+),l:([0-9]+)$")
 # 3 components : vendor, version, date
 BIOSINFO_RE = re.compile("^S0:([^\\|]*)\\|([^\\|]*)\\|([^\\|]*)$")
 # 5 components : vendor, desc, ??, ??, UUID (16 hex chars)
 SYSINFO_RE = re.compile(
-    "^S1:([^\\|]*)\\|([^\\|]*)\\|([^\\|]*)\\|([^\\|]*)\\|([0-9A-F]{32})$")
+    "^S1:([^\\|]*)\\|([^\\|]*)\\|([^\\|]*)\\|([^\\|]*)\\|([0-9A-F]{32})$"
+)
 ENCLOS_RE = re.compile("^S3:([^\\|]*)\\|([0-9]+)$")  # vendor, type
 # Size in MB, Form factor, Location, Type, Speed in MHZ
 MEMSLOT_RE = re.compile("^SM:([0-9]+):([^:]*):([^:]*):([0-9]+):([0-9]+)$")
@@ -151,7 +154,8 @@ FILESYSTEMS_H = {
     "f4": "SpeedStor",
     "fd": "Linux RAID auto",
     "fe": "LANstep",
-    "ff": "XENIX BBT"}
+    "ff": "XENIX BBT",
+}
 
 # Computer types titles
 COMPUTER_TYPES = {
@@ -183,7 +187,8 @@ COMPUTER_TYPES = {
     "1a": "Compact PCI",
     "1b": "Advanced TCA",
     "1c": "Blade",
-    "1d": "Blade Enclosure"}
+    "1d": "Blade Enclosure",
+}
 
 # CPU Family titles
 # These Infos comes from dmidecode.c
@@ -392,34 +397,36 @@ FAMCPU_H = {
 
 class BootInventory:
     """
-        Class holding one inventory.
+    Class holding one inventory.
 
-        Two functions of interest :
-          - load() => fill this object using data from the client
-          - dump() => dump a struct representing the object
+    Two functions of interest :
+      - load() => fill this object using data from the client
+      - dump() => dump a struct representing the object
 
     """
+
     #######################
     # this class property #
     #######################
     # memory info (lower/upper), in bytes
-    mem_info = {'lower': 0, 'upper': 0}
+    mem_info = {"lower": 0, "upper": 0}
     # periphericals
     bus_info = {}
     # disks (and parts)
     disk_info = {}
     disk_info_i = {}  # Disk info with int indexes to avoid missordering
     # bios basic infos
-    bios_info = {'vendor': '', 'version': '', 'date': ''}
+    bios_info = {"vendor": "", "version": "", "date": ""}
     # system basic infos
     sys_info = {
-        'manufacturer': '',
-        'product': '',
-        'version': '',
-        'serial': '',
-        'uuid': ''}
+        "manufacturer": "",
+        "product": "",
+        "version": "",
+        "serial": "",
+        "uuid": "",
+    }
     # enclosure basic infos
-    enclos_info = {'vendor': '', 'type': ''}
+    enclos_info = {"vendor": "", "type": ""}
     # memory info
     memory_info = []
     # number of (logical) CPU, f.e 4 on a core 2 Duo
@@ -431,15 +438,15 @@ class BootInventory:
     # CPU Family, Initialize with "Unknown processor" =>  code 02
     famcpu_code = "02"
     # the client MAC adress
-    macaddr_info = ''
+    macaddr_info = ""
     # the client netmask
-    netmask_info = ''
+    netmask_info = ""
     # the client gateway
-    gateway_info = ''
+    gateway_info = ""
     # the client subnet
-    subnet_info = ''
+    subnet_info = ""
     # the inventory IP source (not necesary the client IP)
-    ipaddr_info = {'ip': '', 'port': 0}
+    ipaddr_info = {"ip": "", "port": 0}
     unprocessed = []
 
     def __init__(self, data=None):
@@ -467,9 +474,9 @@ class BootInventory:
         self.memory_info = []
 
         for line in data:  # process line per line
-            line = line.replace('\\~', '')
-            line = line.replace('\\~', '')
-            line = line.replace('\x06', '')
+            line = line.replace("\\~", "")
+            line = line.replace("\\~", "")
+            line = line.replace("\x06", "")
             if not len(line):
                 continue
 
@@ -477,8 +484,8 @@ class BootInventory:
 
             mo = re.match(MEM_INFO_RE, line)
             if mo:
-                self.mem_info['lower'] = int(mo.group(1), 16)
-                self.mem_info['upper'] = int(mo.group(2), 16)
+                self.mem_info["lower"] = int(mo.group(1), 16)
+                self.mem_info["upper"] = int(mo.group(2), 16)
                 continue
 
             mo = re.match(BUS_INFO_RE, line)
@@ -495,7 +502,8 @@ class BootInventory:
                     "vendor": vendor,
                     "device": device,
                     "class": cl,
-                    "subclass": subcl}
+                    "subclass": subcl,
+                }
                 continue
 
             mo = re.match(DISKINFO_RE, line)
@@ -513,7 +521,8 @@ class BootInventory:
                     "size": sz,
                     "lba_size": lba_size,
                     "lba_size_mb": lba_size * 512 / 1000 / 1000,
-                    "parts": dict()}
+                    "parts": dict(),
+                }
                 self.disk_info[num] = {
                     "C": c,
                     "H": h,
@@ -521,7 +530,8 @@ class BootInventory:
                     "size": sz,
                     "lba_size": lba_size,
                     "lba_size_mb": lba_size * 512 / 1000 / 1000,
-                    "parts": dict()}
+                    "parts": dict(),
+                }
                 current_disk = num
                 continue
 
@@ -531,52 +541,55 @@ class BootInventory:
                 t = int(mo.group(2), 16)
                 s = int(mo.group(3), 10)
                 l = int(mo.group(4), 10)
-                self.disk_info[current_disk]['parts'][num] = {
-                    'type': t,
-                    'type_hex': '%.2x' % t,
-                    'start': s,
-                    'length_mb': l * 512 / 1000 / 1000,
-                    'length': l}
-                self.disk_info_i[int(current_disk)]['parts'][int(num)] = {
-                    'type': t,
-                    'type_hex': '%.2x' % t,
-                    'start': s,
-                    'length_mb': l * 512 / 1000 / 1000,
-                    'length': l}
+                self.disk_info[current_disk]["parts"][num] = {
+                    "type": t,
+                    "type_hex": "%.2x" % t,
+                    "start": s,
+                    "length_mb": l * 512 / 1000 / 1000,
+                    "length": l,
+                }
+                self.disk_info_i[int(current_disk)]["parts"][int(num)] = {
+                    "type": t,
+                    "type_hex": "%.2x" % t,
+                    "start": s,
+                    "length_mb": l * 512 / 1000 / 1000,
+                    "length": l,
+                }
                 continue
 
             mo = re.match(BIOSINFO_RE, line)
             if mo:
-                self.bios_info['vendor'] = mo.group(1)
-                self.bios_info['version'] = mo.group(2)
-                self.bios_info['date'] = mo.group(3)
+                self.bios_info["vendor"] = mo.group(1)
+                self.bios_info["version"] = mo.group(2)
+                self.bios_info["date"] = mo.group(3)
                 continue
 
             mo = re.match(SYSINFO_RE, line)
             if mo:
-                self.sys_info['manufacturer'] = mo.group(1)
-                self.sys_info['product'] = mo.group(2)
-                self.sys_info['version'] = mo.group(3)
-                self.sys_info['serial'] = mo.group(4)
-                self.sys_info['serial'] = re.sub(
-                    r'[^a-zA-Z0-9-]', r'', self.sys_info['serial'])
-                self.sys_info['uuid'] = mo.group(5)
+                self.sys_info["manufacturer"] = mo.group(1)
+                self.sys_info["product"] = mo.group(2)
+                self.sys_info["version"] = mo.group(3)
+                self.sys_info["serial"] = mo.group(4)
+                self.sys_info["serial"] = re.sub(
+                    r"[^a-zA-Z0-9-]", r"", self.sys_info["serial"]
+                )
+                self.sys_info["uuid"] = mo.group(5)
                 continue
 
             mo = re.match(ENCLOS_RE, line)
             if mo:
-                self.enclos_info['vendor'] = mo.group(1)
-                self.enclos_info['type'] = mo.group(2)
+                self.enclos_info["vendor"] = mo.group(1)
+                self.enclos_info["type"] = mo.group(2)
                 continue
 
             mo = re.match(MEMSLOT_RE, line)
             if mo:
                 memslot_info = {}
-                memslot_info['size'] = int(mo.group(1), 10)
-                memslot_info['ff'] = mo.group(2)
-                memslot_info['location'] = mo.group(3)
-                memslot_info['type'] = int(mo.group(4), 10)
-                memslot_info['speed'] = int(mo.group(5), 10)
+                memslot_info["size"] = int(mo.group(1), 10)
+                memslot_info["ff"] = mo.group(2)
+                memslot_info["location"] = mo.group(3)
+                memslot_info["type"] = int(mo.group(4), 10)
+                memslot_info["speed"] = int(mo.group(5), 10)
                 self.memory_info += [memslot_info]
                 continue
 
@@ -587,8 +600,7 @@ class BootInventory:
 
             mo = re.match(FEATCPU_RE, line)
             if mo:
-                self.featcpu_info = [int(x, 16)
-                                     for x in mo.group(1).split(',')]
+                self.featcpu_info = [int(x, 16) for x in mo.group(1).split(",")]
                 continue
 
             mo = re.match(FREQCPU_RE, line)
@@ -614,10 +626,10 @@ class BootInventory:
 
             mo = re.match(IPADDR_RE, line)
             if mo:
-                self.ipaddr_info['ip'] = mo.group(1)
-                ipval = self.ipaddr_info['ip'].split(":")[0]
-                self.ipaddr_info['ip'] = ipval
-                self.ipaddr_info['port'] = int(mo.group(2), 10)
+                self.ipaddr_info["ip"] = mo.group(1)
+                ipval = self.ipaddr_info["ip"].split(":")[0]
+                self.ipaddr_info["ip"] = ipval
+                self.ipaddr_info["port"] = int(mo.group(2), 10)
                 continue
 
             mo = re.match(GATEWAY_RE, line)
@@ -628,19 +640,18 @@ class BootInventory:
             if mo:
                 self.netmask_info = mo.group(1)
                 logging.getLogger().info(
-                    "netmask_info load self.netmask_info%s" % str(
-                        self.netmask_info))
+                    "netmask_info load self.netmask_info%s" % str(self.netmask_info)
+                )
                 # Compute network address (subnet) from ip and netmask
-                if self.netmask_info and self.ipaddr_info['ip']:
+                if self.netmask_info and self.ipaddr_info["ip"]:
                     try:
-                        iparr = self.ipaddr_info['ip'].split(":")[0]
-                        iparr = self.ipaddr_info['ip'].split('.')
-                        netmaskarr = self.netmask_info.split('.')
+                        iparr = self.ipaddr_info["ip"].split(":")[0]
+                        iparr = self.ipaddr_info["ip"].split(".")
+                        netmaskarr = self.netmask_info.split(".")
                         subnet = []
                         for i in [0, 1, 2, 3]:
-                            subnet.append(
-                                str(int(iparr[i]) & int(netmaskarr[i])))
-                            self.subnet_info = '.'.join(subnet)
+                            subnet.append(str(int(iparr[i]) & int(netmaskarr[i])))
+                            self.subnet_info = ".".join(subnet)
                     except BaseException:
                         pass
                 continue
@@ -652,20 +663,21 @@ class BootInventory:
         Return a dict with this object values
         """
         return {
-            'mem': self.mem_info,
-            'bus': self.bus_info,
-            'disk': self.disk_info,
-            'bios': self.bios_info,
-            'sys': self.sys_info,
-            'enclos': self.enclos_info,
-            'memslot': self.memory_info,
-            'numcpu': self.numcpu_info,
-            'featcpu': self.featcpu_info,
-            'freqcpu': self.freqcpu_info,
-            'macaddr': self.macaddr_info,
-            'ipaddr': self.ipaddr_info,
-            'netmask': self.netmask_info,
-            'gateway': self.gateway_info}
+            "mem": self.mem_info,
+            "bus": self.bus_info,
+            "disk": self.disk_info,
+            "bios": self.bios_info,
+            "sys": self.sys_info,
+            "enclos": self.enclos_info,
+            "memslot": self.memory_info,
+            "numcpu": self.numcpu_info,
+            "featcpu": self.featcpu_info,
+            "freqcpu": self.freqcpu_info,
+            "macaddr": self.macaddr_info,
+            "ipaddr": self.ipaddr_info,
+            "netmask": self.netmask_info,
+            "gateway": self.gateway_info,
+        }
 
     def initialise(self, xml, entity=None, hostname=None):
         logging.getLogger().debug("initialise xml\n%s" % xml)
@@ -674,7 +686,7 @@ class BootInventory:
             if child.tag == "DEVICEID":
                 self.deviceid = child.text
             if child.tag == "QUERY":
-                child.text = 'INVENTORY'
+                child.text = "INVENTORY"
             if child.tag == "TAG":
                 if entity is not None:
                     child.text = entity
@@ -721,18 +733,18 @@ class BootInventory:
                             if dd.tag == "SKUNUMBER":
                                 pass
                             elif dd.tag == "BDATE":
-                                self.bios_info['date'] = dd.text
+                                self.bios_info["date"] = dd.text
                             elif dd.tag == "BMANUFACTURER":
-                                self.bios_info['vendor'] = dd.text
+                                self.bios_info["vendor"] = dd.text
                             elif dd.tag == "BVERSION":
-                                self.bios_info['version'] = dd.text
-                                self.sys_info['version'] = dd.text
+                                self.bios_info["version"] = dd.text
+                                self.sys_info["version"] = dd.text
                             elif dd.tag == "SMANUFACTURER":
-                                self.sys_info['manufacturer'] = dd.text
+                                self.sys_info["manufacturer"] = dd.text
                             elif dd.tag == "SMODEL":
-                                self.sys_info['product'] = dd.text
+                                self.sys_info["product"] = dd.text
                             elif dd.tag == "SSN":
-                                self.sys_info['serial'] = dd.text
+                                self.sys_info["serial"] = dd.text
                     elif cc.tag == "HARDWARE":
                         for dd in cc:
                             if dd.tag == "IPADDR":
@@ -743,7 +755,7 @@ class BootInventory:
                                 if hostname is not None:
                                     dd.text = hostname
                             elif dd.tag == "UUID":
-                                self.sys_info['uuid'] = dd.text
+                                self.sys_info["uuid"] = dd.text
                             if dd.tag == "OSNAME":
                                 pass
                             elif dd.tag == "CHASSIS_TYPE":
@@ -767,218 +779,227 @@ class BootInventory:
         Return an OCS XML string
         """
         logging.getLogger().debug(
-            "dumpOCS hostname %s  entity %s " %
-            (hostname, entity))
-        REQUEST = ET.Element('REQUEST')
+            "dumpOCS hostname %s  entity %s " % (hostname, entity)
+        )
+        REQUEST = ET.Element("REQUEST")
 
-        DEVICEID = ET.SubElement(REQUEST, 'DEVICEID')
+        DEVICEID = ET.SubElement(REQUEST, "DEVICEID")
         DEVICEID.text = (
-            "%s-%s" %
-            (hostname, time.strftime("%Y-%m-%d-%H-%M-%S"))).strip(' \t\n\r').strip()
+            ("%s-%s" % (hostname, time.strftime("%Y-%m-%d-%H-%M-%S")))
+            .strip(" \t\n\r")
+            .strip()
+        )
 
-        QUERY = ET.SubElement(REQUEST, 'QUERY')
-        QUERY.text = 'INVENTORY'
+        QUERY = ET.SubElement(REQUEST, "QUERY")
+        QUERY.text = "INVENTORY"
 
-        TAG = ET.SubElement(REQUEST, 'TAG')
-        TAG.text = entity.strip(' \t\n\r').strip()
+        TAG = ET.SubElement(REQUEST, "TAG")
+        TAG.text = entity.strip(" \t\n\r").strip()
 
         ###### CONTENT ##############################
-        CONTENT = ET.SubElement(REQUEST, 'CONTENT')
+        CONTENT = ET.SubElement(REQUEST, "CONTENT")
 
         ##### Access log section ####################
-        ACCESSLOG = ET.SubElement(CONTENT, 'ACCESSLOG')
+        ACCESSLOG = ET.SubElement(CONTENT, "ACCESSLOG")
 
-        LOGDATE = ET.SubElement(ACCESSLOG, 'LOGDATE')
-        LOGDATE.text = time.strftime(
-            "%Y-%m-%d %H:%M:%S").strip(' \t\n\r').strip()
+        LOGDATE = ET.SubElement(ACCESSLOG, "LOGDATE")
+        LOGDATE.text = time.strftime("%Y-%m-%d %H:%M:%S").strip(" \t\n\r").strip()
 
-        USERID = ET.SubElement(ACCESSLOG, 'USERID')
-        USERID.text = 'N/A'
+        USERID = ET.SubElement(ACCESSLOG, "USERID")
+        USERID.text = "N/A"
 
         ###### BIOS SECTION ##########################
-        BIOS = ET.SubElement(CONTENT, 'BIOS')
+        BIOS = ET.SubElement(CONTENT, "BIOS")
 
-        ASSETTAG = ET.SubElement(BIOS, 'ASSETTAG')
-        ASSETTAG.text = ''
+        ASSETTAG = ET.SubElement(BIOS, "ASSETTAG")
+        ASSETTAG.text = ""
 
-        MMANUFACTURER = ET.SubElement(BIOS, 'MMANUFACTURER')
-        MMANUFACTURER.text = ''
+        MMANUFACTURER = ET.SubElement(BIOS, "MMANUFACTURER")
+        MMANUFACTURER.text = ""
 
-        MMODEL = ET.SubElement(BIOS, 'MMODEL')
-        MMODEL.text = ''
+        MMODEL = ET.SubElement(BIOS, "MMODEL")
+        MMODEL.text = ""
 
-        MSN = ET.SubElement(BIOS, 'MSN')
-        MSN.text = ''
+        MSN = ET.SubElement(BIOS, "MSN")
+        MSN.text = ""
 
-        SKUNUMBER = ET.SubElement(BIOS, 'SKUNUMBER')
-        SKUNUMBER.text = ''
+        SKUNUMBER = ET.SubElement(BIOS, "SKUNUMBER")
+        SKUNUMBER.text = ""
 
-        BDATE = ET.SubElement(BIOS, 'BDATE')
-        BDATE.text = self.bios_info['date'].strip(' \t\n\r').strip()
+        BDATE = ET.SubElement(BIOS, "BDATE")
+        BDATE.text = self.bios_info["date"].strip(" \t\n\r").strip()
 
-        BMANUFACTURER = ET.SubElement(BIOS, 'BMANUFACTURER')
-        BMANUFACTURER.text = self.bios_info['vendor'].strip(' \t\n\r').strip()
+        BMANUFACTURER = ET.SubElement(BIOS, "BMANUFACTURER")
+        BMANUFACTURER.text = self.bios_info["vendor"].strip(" \t\n\r").strip()
 
-        BVERSION = ET.SubElement(BIOS, 'BVERSION')
-        BVERSION.text = self.bios_info['version'].strip(' \t\n\r').strip()
+        BVERSION = ET.SubElement(BIOS, "BVERSION")
+        BVERSION.text = self.bios_info["version"].strip(" \t\n\r").strip()
 
-        SMANUFACTURER = ET.SubElement(BIOS, 'SMANUFACTURER')
-        SMANUFACTURER.text = self.sys_info['manufacturer'].strip(
-            ' \t\n\r').strip()
+        SMANUFACTURER = ET.SubElement(BIOS, "SMANUFACTURER")
+        SMANUFACTURER.text = self.sys_info["manufacturer"].strip(" \t\n\r").strip()
 
-        SMODEL = ET.SubElement(BIOS, 'SMODEL')
-        SMODEL.text = self.sys_info['product'].strip(' \t\n\r').strip()
+        SMODEL = ET.SubElement(BIOS, "SMODEL")
+        SMODEL.text = self.sys_info["product"].strip(" \t\n\r").strip()
 
-        SSN = ET.SubElement(BIOS, 'SSN')
-        txtssn = self.sys_info['serial'].strip(' \t\n\r').strip()
+        SSN = ET.SubElement(BIOS, "SSN")
+        txtssn = self.sys_info["serial"].strip(" \t\n\r").strip()
         if txtssn == "":
             txtssn = "0"
         SSN.text = txtssn
 
         #### HARDWARE SECTION ###############################
-        HARDWARE = ET.SubElement(CONTENT, 'HARDWARE')
+        HARDWARE = ET.SubElement(CONTENT, "HARDWARE")
 
-        IPADDR = ET.SubElement(HARDWARE, 'IPADDR')
-        ipval = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
-        ipval = self.ipaddr_info['ip'].split(":")[0]
+        IPADDR = ET.SubElement(HARDWARE, "IPADDR")
+        ipval = self.ipaddr_info["ip"].strip(" \t\n\r").strip()
+        ipval = self.ipaddr_info["ip"].split(":")[0]
         IPADDR.text = ipval
 
-        DEFAULTGATEWAY = ET.SubElement(HARDWARE, 'DEFAULTGATEWAY')
-        DEFAULTGATEWAY.text = self.gateway_info.strip(' \t\n\r').strip()
+        DEFAULTGATEWAY = ET.SubElement(HARDWARE, "DEFAULTGATEWAY")
+        DEFAULTGATEWAY.text = self.gateway_info.strip(" \t\n\r").strip()
 
-        NAME = ET.SubElement(HARDWARE, 'NAME')
-        NAME.text = hostname.strip(' \t\n\r').strip()
+        NAME = ET.SubElement(HARDWARE, "NAME")
+        NAME.text = hostname.strip(" \t\n\r").strip()
 
-        UUID = ET.SubElement(HARDWARE, 'UUID')
-        _uuid = self.sys_info['uuid']
+        UUID = ET.SubElement(HARDWARE, "UUID")
+        _uuid = self.sys_info["uuid"]
         if len(_uuid) == 32:
-            UUID.text = _uuid[0:8] + '-' + _uuid[8:12] + '-' + \
-                _uuid[12:16] + '-' + _uuid[16:20] + '-' + _uuid[20:32]
+            UUID.text = (
+                _uuid[0:8]
+                + "-"
+                + _uuid[8:12]
+                + "-"
+                + _uuid[12:16]
+                + "-"
+                + _uuid[16:20]
+                + "-"
+                + _uuid[20:32]
+            )
 
-        OSNAME = ET.SubElement(HARDWARE, 'OSNAME')
-        OSNAME.text = 'Unknown operating system (PXE network boot inventory)'
+        OSNAME = ET.SubElement(HARDWARE, "OSNAME")
+        OSNAME.text = "Unknown operating system (PXE network boot inventory)"
 
-        CHASSIS_TYPE = ET.SubElement(HARDWARE, 'CHASSIS_TYPE')
-        if self.enclos_info['type'] in COMPUTER_TYPES:
-            CHASSIS_TYPE.text = COMPUTER_TYPES[self.enclos_info['type']]
+        CHASSIS_TYPE = ET.SubElement(HARDWARE, "CHASSIS_TYPE")
+        if self.enclos_info["type"] in COMPUTER_TYPES:
+            CHASSIS_TYPE.text = COMPUTER_TYPES[self.enclos_info["type"]]
         else:
-            CHASSIS_TYPE.text = 'Unknown'
+            CHASSIS_TYPE.text = "Unknown"
 
-        PROCESSORS = ET.SubElement(HARDWARE, 'PROCESSORS')
+        PROCESSORS = ET.SubElement(HARDWARE, "PROCESSORS")
         PROCESSORS.text = str(int(self.freqcpu_info / 1000))
 
-        PROCESSORN = ET.SubElement(HARDWARE, 'PROCESSORN')
+        PROCESSORN = ET.SubElement(HARDWARE, "PROCESSORN")
         PROCESSORN.text = str(self.numcpu_info)
 
-        PROCESSORT = ET.SubElement(HARDWARE, 'PROCESSORT')
+        PROCESSORT = ET.SubElement(HARDWARE, "PROCESSORT")
         PROCESSORT.text = FAMCPU_H[self.famcpu_code]
 
         #### CPUS SECTION ###############################
 
         for cpu in range(self.numcpu_info):
-            CPUS = ET.SubElement(CONTENT, 'CPUS')
-            PROCESSORS = ET.SubElement(CPUS, 'SPEED')
+            CPUS = ET.SubElement(CONTENT, "CPUS")
+            PROCESSORS = ET.SubElement(CPUS, "SPEED")
             PROCESSORS.text = str(int(self.freqcpu_info / 1000))
-            PROCESSORT = ET.SubElement(CPUS, 'NAME')
+            PROCESSORT = ET.SubElement(CPUS, "NAME")
             PROCESSORT.text = FAMCPU_H[self.famcpu_code]
 
         #### NETWORK SECTION ###############################
 
-        NETWORKS = ET.SubElement(CONTENT, 'NETWORKS')
+        NETWORKS = ET.SubElement(CONTENT, "NETWORKS")
 
-        DESCRIPTION = ET.SubElement(NETWORKS, 'DESCRIPTION')
-        DESCRIPTION.text = 'eth0'
+        DESCRIPTION = ET.SubElement(NETWORKS, "DESCRIPTION")
+        DESCRIPTION.text = "eth0"
 
-        IPADDRESS = ET.SubElement(NETWORKS, 'IPADDRESS')
-        ipval = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
+        IPADDRESS = ET.SubElement(NETWORKS, "IPADDRESS")
+        ipval = self.ipaddr_info["ip"].strip(" \t\n\r").strip()
         ipval = ipval.split(":")[0]
         IPADDRESS.text = ipval
 
-        MACADDR = ET.SubElement(NETWORKS, 'MACADDR')
-        MACADDR.text = self.macaddr_info.strip(' \t\n\r').strip()
+        MACADDR = ET.SubElement(NETWORKS, "MACADDR")
+        MACADDR.text = self.macaddr_info.strip(" \t\n\r").strip()
 
-        IPMASK = ET.SubElement(NETWORKS, 'IPMASK')
-        IPMASK.text = self.netmask_info.strip(' \t\n\r').strip()
+        IPMASK = ET.SubElement(NETWORKS, "IPMASK")
+        IPMASK.text = self.netmask_info.strip(" \t\n\r").strip()
 
-        IPGATEWAY = ET.SubElement(NETWORKS, 'IPGATEWAY')
-        IPGATEWAY.text = self.gateway_info.strip(' \t\n\r').strip()
+        IPGATEWAY = ET.SubElement(NETWORKS, "IPGATEWAY")
+        IPGATEWAY.text = self.gateway_info.strip(" \t\n\r").strip()
 
-        IPSUBNET = ET.SubElement(NETWORKS, 'IPSUBNET')
-        IPSUBNET.text = self.subnet_info.strip(' \t\n\r').strip()
+        IPSUBNET = ET.SubElement(NETWORKS, "IPSUBNET")
+        IPSUBNET.text = self.subnet_info.strip(" \t\n\r").strip()
 
-        STATUS = ET.SubElement(NETWORKS, 'STATUS')
-        STATUS.text = 'Up'
+        STATUS = ET.SubElement(NETWORKS, "STATUS")
+        STATUS.text = "Up"
 
-        TYPE = ET.SubElement(NETWORKS, 'TYPE')
-        TYPE.text = 'Ethernet'
+        TYPE = ET.SubElement(NETWORKS, "TYPE")
+        TYPE.text = "Ethernet"
 
-        VIRTUALDEV = ET.SubElement(NETWORKS, 'VIRTUALDEV')
-        VIRTUALDEV.text = '0'
+        VIRTUALDEV = ET.SubElement(NETWORKS, "VIRTUALDEV")
+        VIRTUALDEV.text = "0"
 
         #### STORAGE SECTION ###################################
 
         for k, v in self.disk_info_i.items():
-            STORAGES = ET.SubElement(CONTENT, 'STORAGES')
+            STORAGES = ET.SubElement(CONTENT, "STORAGES")
 
-            NAME = ET.SubElement(STORAGES, 'NAME')
-            NAME.text = 'hd' + str(k)
+            NAME = ET.SubElement(STORAGES, "NAME")
+            NAME.text = "hd" + str(k)
 
-            TYPE = ET.SubElement(STORAGES, 'TYPE')
-            TYPE.text = 'disk'
+            TYPE = ET.SubElement(STORAGES, "TYPE")
+            TYPE.text = "disk"
 
-            DISKSIZE = ET.SubElement(STORAGES, 'DISKSIZE')
-            DISKSIZE.text = str(v['lba_size_mb'])
-# mandriva-management-console/pulse-imaging-client
+            DISKSIZE = ET.SubElement(STORAGES, "DISKSIZE")
+            DISKSIZE.text = str(v["lba_size_mb"])
+        # mandriva-management-console/pulse-imaging-client
 
         # DRIVES SECTION #####################################
 
         for diskid in list(self.disk_info_i.keys()):
-            for partid, partinfo in self.disk_info_i[diskid]['parts'].items():
-                DRIVES = ET.SubElement(CONTENT, 'DRIVES')
+            for partid, partinfo in self.disk_info_i[diskid]["parts"].items():
+                DRIVES = ET.SubElement(CONTENT, "DRIVES")
 
-                FILESYSTEM = ET.SubElement(DRIVES, 'FILESYSTEM')
-                if partinfo['type_hex'] in FILESYSTEMS_H:
-                    FILESYSTEM.text = FILESYSTEMS_H[partinfo['type_hex']]
+                FILESYSTEM = ET.SubElement(DRIVES, "FILESYSTEM")
+                if partinfo["type_hex"] in FILESYSTEMS_H:
+                    FILESYSTEM.text = FILESYSTEMS_H[partinfo["type_hex"]]
 
-                TOTAL = ET.SubElement(DRIVES, 'TOTAL')
-                TOTAL.text = str(partinfo['length_mb'])
+                TOTAL = ET.SubElement(DRIVES, "TOTAL")
+                TOTAL.text = str(partinfo["length_mb"])
 
-                TYPE = ET.SubElement(DRIVES, 'TYPE')
-                TYPE.text = 'hd' + str(diskid) + 'p' + str(partid)
+                TYPE = ET.SubElement(DRIVES, "TYPE")
+                TYPE.text = "hd" + str(diskid) + "p" + str(partid)
 
         # MEMORY SECTION #####################################
 
         for mem_slot in self.memory_info:
-            if not mem_slot['size']:
+            if not mem_slot["size"]:
                 continue
-            MEMORIES = ET.SubElement(CONTENT, 'MEMORIES')
+            MEMORIES = ET.SubElement(CONTENT, "MEMORIES")
 
-            CAPACITY = ET.SubElement(MEMORIES, 'CAPACITY')
-            CAPACITY.text = str(mem_slot['size'])
+            CAPACITY = ET.SubElement(MEMORIES, "CAPACITY")
+            CAPACITY.text = str(mem_slot["size"])
 
-            CAPTION = ET.SubElement(MEMORIES, 'CAPTION')
-            CAPTION.text = mem_slot['location'].strip(' \t\n\r').strip()
+            CAPTION = ET.SubElement(MEMORIES, "CAPTION")
+            CAPTION.text = mem_slot["location"].strip(" \t\n\r").strip()
 
-            DESCRIPTION = ET.SubElement(MEMORIES, 'DESCRIPTION')
-            DESCRIPTION.text = 'Unknown'
+            DESCRIPTION = ET.SubElement(MEMORIES, "DESCRIPTION")
+            DESCRIPTION.text = "Unknown"
 
-            MEMORYCORRECTION = ET.SubElement(MEMORIES, 'MEMORYCORRECTION')
-            MEMORYCORRECTION.text = 'Unknown'
+            MEMORYCORRECTION = ET.SubElement(MEMORIES, "MEMORYCORRECTION")
+            MEMORYCORRECTION.text = "Unknown"
 
-            NUMSLOTS = ET.SubElement(MEMORIES, 'NUMSLOTS')
-            NUMSLOTS.text = '1'
+            NUMSLOTS = ET.SubElement(MEMORIES, "NUMSLOTS")
+            NUMSLOTS.text = "1"
 
-            SERIALNUMBER = ET.SubElement(MEMORIES, 'SERIALNUMBER')
-            SERIALNUMBER.text = 'Unknown'
+            SERIALNUMBER = ET.SubElement(MEMORIES, "SERIALNUMBER")
+            SERIALNUMBER.text = "Unknown"
 
-            TYPE = ET.SubElement(MEMORIES, 'TYPE')
-            TYPE.text = 'N/A'
+            TYPE = ET.SubElement(MEMORIES, "TYPE")
+            TYPE.text = "N/A"
 
-            SPEED = ET.SubElement(MEMORIES, 'SPEED')
-            if mem_slot['speed']:
-                SPEED.text = str(mem_slot['speed']) + ' MHz'
+            SPEED = ET.SubElement(MEMORIES, "SPEED")
+            if mem_slot["speed"]:
+                SPEED.text = str(mem_slot["speed"]) + " MHz"
             else:
-                SPEED.text = 'N/A'
+                SPEED.text = "N/A"
 
         a = '<?xml version="1.0" encoding="utf-8"?>' + ET.tostring(REQUEST)
         logging.getLogger().debug("create xml :\n%s" % a)

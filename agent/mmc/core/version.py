@@ -25,12 +25,13 @@
 
 import re
 
-r_revision = re.compile(r'\$Rev:\s*(\d+)\s*\$')
+r_revision = re.compile(r"\$Rev:\s*(\d+)\s*\$")
+
 
 def scmRevision(prop):
-    """ Extract revision number from $Rev$ svn property if it matches:
+    """Extract revision number from $Rev$ svn property if it matches:
     $Rev: XXX$
     If prop is $Rev$, that means we are not on a svn repository.
     """
     r = r_revision.match(prop)
-    return r and int(r.group(1)) or ''
+    return r and int(r.group(1)) or ""

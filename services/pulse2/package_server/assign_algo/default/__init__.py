@@ -32,7 +32,7 @@ from pulse2.package_server.assign_algo import MMAssignAlgo, UPAssignAlgo
 
 
 class MMUserAssignAlgo(MMAssignAlgo):
-    name = 'default'
+    name = "default"
     assign = {}
 
     def getMachineMirror(self, m):
@@ -40,10 +40,11 @@ class MMUserAssignAlgo(MMAssignAlgo):
         if machine.uuid not in self.assign:
             self.assign[machine.uuid] = {}
         # if not 'getMirror' in self.assign[machine.uuid]:
-        if 'getMirror' not in self.assign[machine.uuid]:
-            self.assign[machine.uuid]['getMirror'] = self.mirrors[random.randint(
-                0, len(self.mirrors) - 1)].toH()
-        return self.assign[machine.uuid]['getMirror']
+        if "getMirror" not in self.assign[machine.uuid]:
+            self.assign[machine.uuid]["getMirror"] = self.mirrors[
+                random.randint(0, len(self.mirrors) - 1)
+            ].toH()
+        return self.assign[machine.uuid]["getMirror"]
 
     def getMachineMirrorFallback(self, m):
         machine = Machine().from_h(m)
@@ -51,10 +52,11 @@ class MMUserAssignAlgo(MMAssignAlgo):
         if machine.uuid not in self.assign:
             self.assign[machine.uuid] = {}
         # if not 'getFallbackMirror' in self.assign[machine.uuid]:
-        if 'getFallbackMirror' not in self.assign[machine.uuid]:
-            self.assign[machine.uuid]['getFallbackMirror'] = self.mirrors_fallback[random.randint(
-                0, len(self.mirrors_fallback) - 1)].toH()
-        return self.assign[machine.uuid]['getFallbackMirror']
+        if "getFallbackMirror" not in self.assign[machine.uuid]:
+            self.assign[machine.uuid]["getFallbackMirror"] = self.mirrors_fallback[
+                random.randint(0, len(self.mirrors_fallback) - 1)
+            ].toH()
+        return self.assign[machine.uuid]["getFallbackMirror"]
 
     def getMachinePackageApi(self, m):
         ret = []
@@ -63,7 +65,7 @@ class MMUserAssignAlgo(MMAssignAlgo):
 
 
 class UPUserAssignAlgo(UPAssignAlgo):
-    name = 'default'
+    name = "default"
     assign = {}
 
     def getUserPackageApi(self, u):
@@ -74,9 +76,9 @@ class UPUserAssignAlgo(UPAssignAlgo):
                 self.assign[user.uuid] = self.package_api_put
             else:
                 self.assign[user.uuid] = []
-#            {
-#                'READ'=>@mirrors['package_api_put'],
-#                'WRITE'=>@mirrors['package_api_put'],
-#                'DEL'=>@mirrors['package_api_put']
-#            }
+        #            {
+        #                'READ'=>@mirrors['package_api_put'],
+        #                'WRITE'=>@mirrors['package_api_put'],
+        #                'DEL'=>@mirrors['package_api_put']
+        #            }
         return self.assign[user.uuid]

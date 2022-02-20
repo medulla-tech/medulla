@@ -24,7 +24,6 @@ from sqlalchemy.orm import create_session
 
 
 class Packages(object):
-
     def getId(self):
         if self.id is not None:
             return self.id
@@ -213,19 +212,19 @@ class Packages(object):
             Dict of elements contained into the object.
         """
         return {
-            'entity_id': self.getEntity_id(),
-            'description': self.getDescription(),
-            'sub_packages': self.getSub_packages(),
-            'id': self.getUuid(),
-            'pk_id': self.getId(),
-            'commands': {
-                'postCommandSuccess': {
-                    'command': self.getPostCommandSuccess_command(),
-                    'name': self.getPostCommandSuccess_name()
+            "entity_id": self.getEntity_id(),
+            "description": self.getDescription(),
+            "sub_packages": self.getSub_packages(),
+            "id": self.getUuid(),
+            "pk_id": self.getId(),
+            "commands": {
+                "postCommandSuccess": {
+                    "command": self.getPostCommandSuccess_command(),
+                    "name": self.getPostCommandSuccess_name(),
                 },
-                'installInit': {
-                    'command': self.getInstallInit_command(),
-                    'name': self.getInstallInit_name()
+                "installInit": {
+                    "command": self.getInstallInit_command(),
+                    "name": self.getInstallInit_name(),
                 },
                 "postCommandFailure": {
                     "command": self.getPostCommandFailure_command(),
@@ -237,26 +236,26 @@ class Packages(object):
                 },
                 "preCommand": {
                     "command": self.getPreCommand_command(),
-                    "name": self.getPreCommand_name()
-                }
+                    "name": self.getPreCommand_name(),
+                },
             },
-            'name': self.getLabel(),
-            'targetos': self.getOs(),
-            'reboot': self.getReboot(),
-            'version': self.getVersion(),
-            'inventory': {
-                'associateinventory': self.getInventory_associateinventory(),
-                'licenses': self.getInventory_licenses(),
+            "name": self.getLabel(),
+            "targetos": self.getOs(),
+            "reboot": self.getReboot(),
+            "version": self.getVersion(),
+            "inventory": {
+                "associateinventory": self.getInventory_associateinventory(),
+                "licenses": self.getInventory_licenses(),
                 "queries": {
                     "Qversion": self.getQversion(),
                     "Qvendor": self.getQvendor(),
                     "boolcnd": self.getBoolcnd(),
-                    "Qsoftware": self.getQsoftware()
+                    "Qsoftware": self.getQsoftware(),
                 },
-                "metagenerator": self.getMetaGenerator()
+                "metagenerator": self.getMetaGenerator(),
             },
             "pkgs_share_id": self.getpkgs_share_id(),
             "edition_status": self.getedition_status(),
             "conf_json": self.getconf_json(),
-            "size": self.getsize()
+            "size": self.getsize(),
         }

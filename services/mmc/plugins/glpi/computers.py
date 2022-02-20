@@ -33,70 +33,78 @@ import exceptions
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
+
 class GlpiComputers(ComputerI):
-    def __init__(self, conffile = None):
+    def __init__(self, conffile=None):
         self.logger = logging.getLogger()
         self.config = GlpiConfig("glpi", conffile)
         self.glpi = Glpi()
 
-    def getComputer(self, ctx, filt = None, empty_macs=False):
-        if filt == None or filt == '':
+    def getComputer(self, ctx, filt=None, empty_macs=False):
+        if filt == None or filt == "":
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
             if type(location) != list and location != None:
                 location = [location]
-            filt['ctxlocation'] = location
+            filt["ctxlocation"] = location
         except exceptions.AttributeError:
             pass
 
         try:
             return self.glpi.getComputer(ctx, filt, empty_macs)
         except Exception as e:
-            if len(e.args) > 0 and e.args[0].startswith('NOPERM##'):
-                machine = e.args[0].replace('NOPERM##', '')
-                self.logger.warn("User %s does not have good permissions to access machine '%s'" % (ctx.userid, machine))
+            if len(e.args) > 0 and e.args[0].startswith("NOPERM##"):
+                machine = e.args[0].replace("NOPERM##", "")
+                self.logger.warn(
+                    "User %s does not have good permissions to access machine '%s'"
+                    % (ctx.userid, machine)
+                )
                 return False
             raise e
 
     def getComputersNetwork(self, ctx, params):
-        if 'uuids' in params:
-            return list(self.glpi.getComputersList(ctx, {'uuid' : params['uuids'] }).values())
-        elif 'uuid' in params:
-            return list(self.glpi.getComputersList(ctx, {'uuid' : params['uuid'] }).values())
+        if "uuids" in params:
+            return list(
+                self.glpi.getComputersList(ctx, {"uuid": params["uuids"]}).values()
+            )
+        elif "uuid" in params:
+            return list(
+                self.glpi.getComputersList(ctx, {"uuid": params["uuid"]}).values()
+            )
         return list(self.glpi.getComputersList(ctx, {}).values())
 
     def getMachineMac(self, ctx, params):
         # format : { 'uuid' : ['mac1' ...], ... }
-        if 'uuids' in params:
-            return self.glpi.getMachinesMac(params['uuids'])
-        elif 'uuid' in params:
-            return {params['uuid'] : self.glpi.getMachineMac(params['uuid'])}
+        if "uuids" in params:
+            return self.glpi.getMachinesMac(params["uuids"])
+        elif "uuid" in params:
+            return {params["uuid"]: self.glpi.getMachineMac(params["uuid"])}
 
     def getMachineIp(self, ctx, filt):
-        return self.glpi.getMachineIp(filt['uuid'])
+        return self.glpi.getMachineIp(filt["uuid"])
 
-    def getMachineHostname(self, ctx, filt = None):
+    def getMachineHostname(self, ctx, filt=None):
         machines = self.glpi.getRestrictedComputersList(ctx, 0, -1, filt)
         ret = []
         for x, m in list(machines.values()):
-            if 'hostname' not in m:
-                if type(m['cn']) == list:
-                    m['hostname'] = m['cn'][0]
+            if "hostname" not in m:
+                if type(m["cn"]) == list:
+                    m["hostname"] = m["cn"][0]
                 else:
-                    m['hostname'] = m['cn']
-            if 'uuid' not in m:
-                if type(m['objectUUID']) == list:
-                    m['uuid'] = m['objectUUID'][0]
+                    m["hostname"] = m["cn"]
+            if "uuid" not in m:
+                if type(m["objectUUID"]) == list:
+                    m["uuid"] = m["objectUUID"][0]
                 else:
-                    m['uuid'] = m['objectUUID']
+                    m["uuid"] = m["objectUUID"]
             ret.append(m)
         if len(ret) == 1:
             return ret[0]
         return ret
 
-    def getComputersList(self, ctx, filt = None):
+    def getComputersList(self, ctx, filt=None):
         """
         Return a list of computers
 
@@ -106,101 +114,134 @@ class GlpiComputers(ComputerI):
         @return: LDAP results
         @rtype:
         """
-        if filt == None or filt == '':
+        if filt == None or filt == "":
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
             if type(location) != list and location != None:
                 location = [location]
-            filt['ctxlocation'] = location
+            filt["ctxlocation"] = location
         except exceptions.AttributeError:
             pass
 
         return self.glpi.getComputersList(ctx, filt)
 
     def __restrictLocationsOnImagingServerOrEntity(self, filt, location, ctx):
-        if 'imaging_server' in filt and filt['imaging_server'] != '':
+        if "imaging_server" in filt and filt["imaging_server"] != "":
             # Get main imaging entity uuid
-            self.logger.debug('Get main imaging entity UUID of imaging server %s' % filt['imaging_server'])
-            main_imaging_entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
+            self.logger.debug(
+                "Get main imaging entity UUID of imaging server %s"
+                % filt["imaging_server"]
+            )
+            main_imaging_entity_uuid = (
+                ComputerImagingManager().getImagingServerEntityUUID(
+                    filt["imaging_server"]
+                )
+            )
             if main_imaging_entity_uuid != None:
-                self.logger.debug('Found: %s' % main_imaging_entity_uuid)
-                filt['imaging_entities'] = [main_imaging_entity_uuid]
-                self.logger.debug('Get now children entities of this main imaging entity')
+                self.logger.debug("Found: %s" % main_imaging_entity_uuid)
+                filt["imaging_entities"] = [main_imaging_entity_uuid]
+                self.logger.debug(
+                    "Get now children entities of this main imaging entity"
+                )
                 # Get childs entities of this main_imaging_entity_uuid
                 # Search only in user context
                 for loc in self.glpi.getUserLocations(ctx.userid):
-                    if ComputerImagingManager().isChildOfImagingServer(loc.uuid, main_imaging_entity_uuid):
-                        self.logger.debug('Found %s as child entity of %s' % (loc.uuid, main_imaging_entity_uuid))
-                        filt['imaging_entities'].append(loc.uuid)
+                    if ComputerImagingManager().isChildOfImagingServer(
+                        loc.uuid, main_imaging_entity_uuid
+                    ):
+                        self.logger.debug(
+                            "Found %s as child entity of %s"
+                            % (loc.uuid, main_imaging_entity_uuid)
+                        )
+                        filt["imaging_entities"].append(loc.uuid)
             else:
-                self.logger.warn("can't get the entity that correspond to the imaging server %s"%(filt['imaging_server']))
+                self.logger.warn(
+                    "can't get the entity that correspond to the imaging server %s"
+                    % (filt["imaging_server"])
+                )
                 return [False, 0]
 
-        if 'imaging_entities' in filt:
+        if "imaging_entities" in filt:
             grep_entity = []
             for l in location:
-                if l.uuid in filt['imaging_entities']:
+                if l.uuid in filt["imaging_entities"]:
                     grep_entity.append(l)
             if grep_entity:
-                filt['ctxlocation'] = grep_entity
+                filt["ctxlocation"] = grep_entity
             else:
-                self.logger.warn("the user '%s' try to filter on an entity he shouldn't access '%s'"%(ctx.userid, filt['entity_uuid']))
+                self.logger.warn(
+                    "the user '%s' try to filter on an entity he shouldn't access '%s'"
+                    % (ctx.userid, filt["entity_uuid"])
+                )
                 return [False, 0]
         return [True, filt]
 
-    def getRestrictedComputersListLen(self, ctx, filt = None):
-        if filt == None or filt == '':
+    def getRestrictedComputersListLen(self, ctx, filt=None):
+        if filt == None or filt == "":
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
             if type(location) != list and location != None:
                 location = [location]
-            filt['ctxlocation'] = location
+            filt["ctxlocation"] = location
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
-            if not filt[0]: return 0
+            if not filt[0]:
+                return 0
             filt = filt[1]
         except exceptions.AttributeError:
             pass
         return self.glpi.getRestrictedComputersListLen(ctx, filt)
 
-    def getMachineforentityList(self, min = 0, max = -1, filt = None):
+    def getMachineforentityList(self, min=0, max=-1, filt=None):
         return self.glpi.getMachineforentityList(min, max, filt)
 
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
-        if filt == None or filt == '':
+    def getRestrictedComputersList(
+        self, ctx, min=0, max=-1, filt=None, advanced=True, justId=False, toH=False
+    ):
+        if filt == None or filt == "":
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
             if type(location) != list and location != None:
                 location = [location]
-            filt['ctxlocation'] = location
+            filt["ctxlocation"] = location
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
-            if not filt[0]: return {}
+            if not filt[0]:
+                return {}
             filt = filt[1]
         except exceptions.AttributeError:
             pass
-        if 'imaging_entities' in filt: # imaging group creation
-            computersList = self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
+        if "imaging_entities" in filt:  # imaging group creation
+            computersList = self.glpi.getRestrictedComputersList(
+                ctx, min, max, filt, advanced, justId, toH
+            )
             # display only "imaging compliant" computers
             uuids = []
-            networks = self.getComputersNetwork(ctx, {'uuids': list(computersList.keys())})
+            networks = self.getComputersNetwork(
+                ctx, {"uuids": list(computersList.keys())}
+            )
             for network in networks:
                 network = network[1]
                 # Check if computer has macAddress and ipHostNumber
-                if network['macAddress'] and network['ipHostNumber']:
-                    uuids.append(network['objectUUID'][0])
+                if network["macAddress"] and network["ipHostNumber"]:
+                    uuids.append(network["objectUUID"][0])
                 else:
-                    logging.getLogger().debug("Computer %s cannot be added in an imaging group:" % network['cn'])
-                    if not network['macAddress']:
+                    logging.getLogger().debug(
+                        "Computer %s cannot be added in an imaging group:"
+                        % network["cn"]
+                    )
+                    if not network["macAddress"]:
                         logging.getLogger().debug("No MAC found !")
-                    if not network['ipHostNumber']:
+                    if not network["ipHostNumber"]:
                         logging.getLogger().debug("No IP address found !")
-            filt['uuids'] = uuids
-        return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
+            filt["uuids"] = uuids
+        return self.glpi.getRestrictedComputersList(
+            ctx, min, max, filt, advanced, justId, toH
+        )
 
     def getTotalComputerCount(self):
         return self.glpi.getTotalComputerCount()
@@ -209,17 +250,18 @@ class GlpiComputers(ComputerI):
         result = self.glpi.mini_computers_count()
         return result
 
-    def getComputerCount(self, ctx, filt = None):
-        if filt == None or filt == '':
+    def getComputerCount(self, ctx, filt=None):
+        if filt == None or filt == "":
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
             if type(location) != list and location != None:
                 location = [location]
-            filt['ctxlocation'] = location
+            filt["ctxlocation"] = location
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
-            if not filt[0]: return 0
+            if not filt[0]:
+                return 0
             filt = filt[1]
         except exceptions.AttributeError:
             pass
@@ -241,9 +283,9 @@ class GlpiComputers(ComputerI):
         @return: the machine uuuid
         @rtype: str
         """
-        #name = params["computername"]
-        #comment = params["computerdescription"].encode("utf-8")
-        #uuid = str(uuid1())
+        # name = params["computername"]
+        # comment = params["computerdescription"].encode("utf-8")
+        # uuid = str(uuid1())
         self.logger.warning("addComputer has not yet been implemented for glpi")
         return False
 
@@ -257,7 +299,7 @@ class GlpiComputers(ComputerI):
         return self.glpi.delMachine(uuid)
 
     def getComputerByMac(self, mac):
-        ret = self.glpi.getMachineByMacAddress('imaging_module', mac)
+        ret = self.glpi.getMachineByMacAddress("imaging_module", mac)
         if type(ret) == list:
             if len(ret) != 0:
                 return ret[0]
@@ -270,32 +312,32 @@ class GlpiComputers(ComputerI):
 
     def getComputersListHeaders(self, ctx):
         __headers = {
-            'cn': ['cn', 'Computer Name'],
-            'os': ['os', 'Operating System'],
-            'description': ['displayName', 'Description'],
-            'type': ['type', 'Computer Type'],
-            'user': ['user', 'Last Logged User'],
-            'owner': ['owner', 'Owner'],
-            'owner_firstname': ['owner_firstname', 'Owner Firstname'],
-            'owner_realname': ['owner_realname', 'Owner Realname'],
-            'inventorynumber': ['inventorynumber', 'Inventory Number'],
-            'state': ['state', 'State'],
-            'entity': ['entity', 'Entity'],
-            'location': ['location', 'Location'],
-            'model': ['model', 'Model'],
-            'manufacturer': ['manufacturer', 'Manufacturer'],
+            "cn": ["cn", "Computer Name"],
+            "os": ["os", "Operating System"],
+            "description": ["displayName", "Description"],
+            "type": ["type", "Computer Type"],
+            "user": ["user", "Last Logged User"],
+            "owner": ["owner", "Owner"],
+            "owner_firstname": ["owner_firstname", "Owner Firstname"],
+            "owner_realname": ["owner_realname", "Owner Realname"],
+            "inventorynumber": ["inventorynumber", "Inventory Number"],
+            "state": ["state", "State"],
+            "entity": ["entity", "Entity"],
+            "location": ["location", "Location"],
+            "model": ["model", "Model"],
+            "manufacturer": ["manufacturer", "Manufacturer"],
         }
 
         # Add registry keys to the computers view if needed
         master_config = xmppMasterConfig()
         regvalue = []
-        r=re.compile(r'reg_key_.*')
-        regs=list(filter(r.search, self.config.summary))
+        r = re.compile(r"reg_key_.*")
+        regs = list(filter(r.search, self.config.summary))
         for regkey in regs:
-            regkeyconf = getattr( master_config, regkey).split("|")[-1]
-            if regkeyconf.startswith('HKEY'):
-                regkeyconf = getattr( master_config, regkey).split("\\")[-1]
-            __headers[regkey]=[regkey, regkeyconf]
+            regkeyconf = getattr(master_config, regkey).split("|")[-1]
+            if regkeyconf.startswith("HKEY"):
+                regkeyconf = getattr(master_config, regkey).split("\\")[-1]
+            __headers[regkey] = [regkey, regkeyconf]
 
         return [__headers[x] for x in self.config.summary]
 

@@ -25,7 +25,7 @@ MMC base dasboard panels
 from mmc.plugins.dashboard.panel import Panel
 from mmc.plugins.base.subscription import SubscriptionManager
 
-class SupportPanel(Panel):
 
+class SupportPanel(Panel):
     def serialize(self):
         return SubscriptionManager().getInformations(True)

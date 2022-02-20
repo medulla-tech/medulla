@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 # Glpi rest client to interact with GLPI webservices plugin
 # This program is part of python-glpi lib:
@@ -23,13 +23,15 @@
 import logging
 import xmlrpc.client
 
+
 class XMLRPCClient(object):
     """
     Python XMLRPC client for GLPI webservices plugin
     """
+
     def __init__(self, baseurl="http://localhost/glpi"):
         self.baseurl = baseurl
-        self.serviceurl = self.baseurl + '/plugins/webservices/xmlrpc.php'
+        self.serviceurl = self.baseurl + "/plugins/webservices/xmlrpc.php"
         self.session = None
         self.server = xmlrpc.client.ServerProxy(self.serviceurl)
         self.logger = logging.getLogger()
@@ -37,24 +39,26 @@ class XMLRPCClient(object):
     def connect(self, login_name=None, login_password=None):
         if not None in [login_name, login_password]:
             params = {
-                'login_name':login_name,
-                'login_password':login_password,
+                "login_name": login_name,
+                "login_password": login_password,
             }
             response = self.server.glpi.doLogin(params)
 
-            if 'session' in response:
-                self.session = response['session']
+            if "session" in response:
+                self.session = response["session"]
             else:
                 raise Exception("Login incorrect or server down")
         else:
-            self.logger.warn("Connected anonymously, will only be able to use non-authenticated methods")
+            self.logger.warn(
+                "Connected anonymously, will only be able to use non-authenticated methods"
+            )
         return True
 
     def __getattr__(self, attr):
-        def call(module='glpi', *args, **kwargs):
+        def call(module="glpi", *args, **kwargs):
             params = {}
             if self.session:
-                params['session'] = self.session
+                params["session"] = self.session
 
             params = dict(list(params.items()) + list(kwargs.items()))
 

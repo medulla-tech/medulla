@@ -26,10 +26,12 @@ Mapping between SA and SQL ?
 from sqlalchemy import create_engine, Table, MetaData
 from sqlalchemy.orm import create_session, mapper
 
+
 class SqlPlugin:
     """
     Class to query the dyngroup SQL db
     """
+
     def __init__(self, conf):
         self.config = conf
         self.db = create_engine(self.makeConnectionPath())
@@ -48,17 +50,28 @@ class SqlPlugin:
             port = ":" + str(self.config.dbport)
         else:
             port = ""
-        return "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
+        return "%s://%s:%s@%s%s/%s" % (
+            self.config.dbdriver,
+            self.config.dbuser,
+            self.config.dbpasswd,
+            self.config.dbhost,
+            port,
+            self.config.dbname,
+        )
 
     def initMappers(self):
         """
         Initialize all SQLalchemy mappers needed for the dyngroups database
         """
-        self.sqlDatumSave = Table("SqlDatumSave", self.metadata, autoload = True)
+        self.sqlDatumSave = Table("SqlDatumSave", self.metadata, autoload=True)
         mapper(SqlDatumSave, self.sqlDatumSave)
 
-    def hasValue(self, key, user = None):
-        datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
+    def hasValue(self, key, user=None):
+        datum = (
+            self.session.query(SqlDatumSave)
+            .filter(self.sqlDatumSave.c.k == key)
+            .first()
+        )
         if datum != None:
             if user == None or datum.user == None or user == datum.user:
                 return True
@@ -66,8 +79,12 @@ class SqlPlugin:
                 raise Exception("user don't have good rigths")
         return False
 
-    def delete(self, key, user = None):
-        datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
+    def delete(self, key, user=None):
+        datum = (
+            self.session.query(SqlDatumSave)
+            .filter(self.sqlDatumSave.c.k == key)
+            .first()
+        )
         if datum != None:
             if user == None or datum.user == None or user == datum.user:
                 self.session.delete(datum)
@@ -78,8 +95,12 @@ class SqlPlugin:
         else:
             return None
 
-    def getValue(self, key, user = None):
-        datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
+    def getValue(self, key, user=None):
+        datum = (
+            self.session.query(SqlDatumSave)
+            .filter(self.sqlDatumSave.c.k == key)
+            .first()
+        )
         if datum != None:
             if user == None or datum.user == None or user == datum.user:
                 return datum.value
@@ -87,8 +108,12 @@ class SqlPlugin:
                 raise Exception("user don't have good rigths")
         return None
 
-    def setValue(self, key, val, user = None):
-        datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
+    def setValue(self, key, val, user=None):
+        datum = (
+            self.session.query(SqlDatumSave)
+            .filter(self.sqlDatumSave.c.k == key)
+            .first()
+        )
         if datum != None:
             if user == None or datum.user == None or user == datum.user:
                 datum.value = val
@@ -103,6 +128,7 @@ class SqlPlugin:
             self.session.add(datum)
         self.session.flush()
         return val
+
 
 # Class for SQLalchemy mapping
 class SqlDatumSave(object):

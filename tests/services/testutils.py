@@ -34,20 +34,21 @@ from sqlalchemy import create_engine
 from mmc.site import mmcconfdir
 from mmc.database.config import DatabaseConfig
 
+
 def generation_Pserver(directory):
     """
     generate the package 'test' for the Package Server tests
     """
 
-    makedirs ("%s/test" %(directory))#create the directory of the test's package
+    makedirs("%s/test" % (directory))  # create the directory of the test's package
 
-    doc=Document()
+    doc = Document()
 
-    comment = doc.createComment("DOCTYPE package SYSTEM \"package_v1.dtd\"")
+    comment = doc.createComment('DOCTYPE package SYSTEM "package_v1.dtd"')
     doc.appendChild(comment)
 
     package = doc.createElement("package")
-    package.setAttribute("id","test")
+    package.setAttribute("id", "test")
     doc.appendChild(package)
 
     name = doc.createElement("name")
@@ -78,7 +79,7 @@ def generation_Pserver(directory):
     description.appendChild(dtext)
 
     commands = doc.createElement("commands")
-    commands.setAttribute("reboot","1")
+    commands.setAttribute("reboot", "1")
     package.appendChild(commands)
 
     Precommands = doc.createElement("Precommands")
@@ -93,9 +94,8 @@ def generation_Pserver(directory):
     itext = doc.createTextNode("")
     installInit.appendChild(itext)
 
-
     command = doc.createElement("command")
-    command.setAttribute("name","commande")
+    command.setAttribute("name", "commande")
     commands.appendChild(command)
 
     ctext = doc.createTextNode("./install.bat")
@@ -113,51 +113,57 @@ def generation_Pserver(directory):
     Ftext = doc.createTextNode("")
     postCommandFailure.appendChild(Ftext)
 
+    fichier = open("%s/test/conf.xml" % (directory), "w")
+    doc.writexml(fichier, indent="   ", addindent="    ", newl="\n", encoding="utf-8")
 
-    fichier=open("%s/test/conf.xml" %(directory),"w")
-    doc.writexml(fichier,indent="   ",addindent="    ",newl="\n", encoding="utf-8")
-
-    chdir("%s/test" %(directory))
-    instalfile=open("install.bat","w")
-    instalfile.write("I can\'t be installed")
+    chdir("%s/test" % (directory))
+    instalfile = open("install.bat", "w")
+    instalfile.write("I can't be installed")
     instalfile.close()
+
 
 def ipconfig():
     """
     Returns the current system IP address (from eth0).
     """
-    conf=popen("/sbin/ifconfig eth0")
-    server=conf.read()
-    server=server.split()
+    conf = popen("/sbin/ifconfig eth0")
+    server = conf.read()
+    server = server.split()
     print(server)
-    ipserver=server[6][5:]
+    ipserver = server[6][5:]
     if ipserver == "":
         print("The computer doesn't have an IP address on the eth0 interface")
         sys.exit(1)
     return ipserver
+
 
 def generation_Launcher(directory):
     """
     Generate the temporary files for Launcher's tests.
     """
     chdir(directory)
-    testfile=open("test.bin","w")
+    testfile = open("test.bin", "w")
     testfile.write("file test")
     testfile.close()
 
-def generation_Machine(driver,host,port):
+
+def generation_Machine(driver, host, port):
     """
     Add a computer into the inventory database.
     """
     dbpasswd = DatabaseConfig.dbpasswd
-    connectionM=create_engine('%s://mmc:%s@%s:%s/inventory' %(driver,dbpasswd,host,port))
-    m=connectionM.connect()
+    connectionM = create_engine(
+        "%s://mmc:%s@%s:%s/inventory" % (driver, dbpasswd, host, port)
+    )
+    m = connectionM.connect()
 
     m.execute("""INSERT INTO `Inventory` VALUES (1,'0000-00-00','00:00:00',1)""")
 
     m.execute("""INSERT INTO `Machine` VALUES (1,'localhost',NULL,NULL,NULL,NULL)""")
 
-    m.execute("""INSERT INTO `Network` VALUES (1,NULL,NULL,NULL,NULL,'',NULL,'127.0.0.1','',NULL,NULL)""")
+    m.execute(
+        """INSERT INTO `Network` VALUES (1,NULL,NULL,NULL,NULL,'',NULL,'127.0.0.1','',NULL,NULL)"""
+    )
 
     m.execute("""INSERT INTO `hasCustom` VALUES (1,1,1)""")
 
@@ -169,7 +175,8 @@ def generation_Machine(driver,host,port):
 
     return connectionM
 
-def generation_Commands(driver,host,port):
+
+def generation_Commands(driver, host, port):
 
     # Read config from ini file
     inifile = path.join(mmcconfdir, "plugins", "pulse2.ini")
@@ -177,12 +184,13 @@ def generation_Commands(driver,host,port):
     config.setup(inifile)
 
     dbpasswd = config.dbpasswd
-    connectionC=create_engine('%s://mmc:%s@%s:%s/msc' %(driver,dbpasswd,host,port))
-    c=connectionC.connect()
+    connectionC = create_engine(
+        "%s://mmc:%s@%s:%s/msc" % (driver, dbpasswd, host, port)
+    )
+    c = connectionC.connect()
 
     now = time.time()
-    tomorrow = now + 3600*24
-
+    tomorrow = now + 3600 * 24
 
     start_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
     end_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(tomorrow))
@@ -202,7 +210,11 @@ def generation_Commands(driver,host,port):
                               'Test Mandriva : Pause 6 minute\n','disable',
                               'disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,
                               0,NULL,'disable','',NULL,NULL,NULL,'none')
-                              """ % (start_date, start_date, end_date)
+                              """ % (
+        start_date,
+        start_date,
+        end_date,
+    )
     c.execute(statement)
 
     statement = """INSERT INTO `commands`
@@ -220,7 +232,11 @@ def generation_Commands(driver,host,port):
                               'Test Mandriva : Pause 6 minute\n','disable',
                               'disable',360,3,NULL,NULL,NULL,NULL,NULL,NULL,
                               0,NULL,'disable','',NULL,NULL,NULL,'none')
-                              """ % (start_date, start_date, end_date)
+                              """ % (
+        start_date,
+        start_date,
+        end_date,
+    )
     c.execute(statement)
 
     statement = """ INSERT INTO `commands_on_host`
@@ -237,7 +253,10 @@ def generation_Commands(driver,host,port):
                                'WORK_IN_PROGRESS','TODO','TODO','TODO','TODO',
                                '2009-10-29 22:53:59',3,0,0,0,'launcher_01',1,
                                'scheduler_01',NULL,NULL,NULL,0)
-                               """ % (start_date, end_date)
+                               """ % (
+        start_date,
+        end_date,
+    )
     c.execute(statement)
 
     statement = """ INSERT INTO `commands_on_host`
@@ -253,7 +272,10 @@ def generation_Commands(driver,host,port):
                                'scheduled','pending','IGNORED','IGNORED','TODO',
                                'TODO','TODO','TODO','TODO','2009-10-29 23:53:59',
                                3,0,0,0,'launcher_01',1,'scheduler_01',
-                               NULL,NULL,NULL,0) """ % (start_date, end_date)
+                               NULL,NULL,NULL,0) """ % (
+        start_date,
+        end_date,
+    )
     c.execute(statement)
 
     statement = """ INSERT INTO `commands_on_host`
@@ -269,36 +291,42 @@ def generation_Commands(driver,host,port):
                                'scheduled','pending','IGNORED','IGNORED','TODO',
                                'TODO','TODO','TODO','TODO','2009-10-29 23:53:59',
                                3,0,0,0,'launcher_01',1,'scheduler_01',
-                               NULL,NULL,NULL,0) """ % (start_date, end_date)
+                               NULL,NULL,NULL,0) """ % (
+        start_date,
+        end_date,
+    )
     c.execute(statement)
 
-
-    c.execute(""" INSERT INTO `target` VALUES (1,'localhost','file://0','','UUID1','','','','') """)
+    c.execute(
+        """ INSERT INTO `target` VALUES (1,'localhost','file://0','','UUID1','','','','') """
+    )
 
     c.close()
 
     return connectionC
 
 
-def SupEspLi (li):
+def SupEspLi(li):
     """Delete spaces in list"""
     # Verify if the element at the index i is a string or recall SupEsp
-    for i in range (0,len(li)):
-        if type (li[i]) == type (""):
-            li[i]=li[i].strip()
+    for i in range(0, len(li)):
+        if type(li[i]) == type(""):
+            li[i] = li[i].strip()
         else:
             SupEsp(li[i])
 
-def SupEspDi (di):
+
+def SupEspDi(di):
     """Delete spaces in dict"""
     # Verify if the values associated at the key k is a string or recall SupEsp
     for k in list(di.keys()):
-        if type (di[k]) == type (""):
-            di[k]=di[k].strip()
+        if type(di[k]) == type(""):
+            di[k] = di[k].strip()
         else:
             SupEsp(di[k])
 
-def SupEsp (obj):
+
+def SupEsp(obj):
     """
     Call the function SupEspLi if the object is a list, SupEspDi if it's a dict or if it's a string return the string without the space.
     """
@@ -307,7 +335,7 @@ def SupEsp (obj):
     elif type(obj) == type({}):
         SupEspDi(obj)
     elif type(obj) == type(""):
-        lobj=[obj]
-        lobj[0]=lobj[0].strip()
-        obj=lobj[0]
+        lobj = [obj]
+        lobj[0] = lobj[0].strip()
+        obj = lobj[0]
         return obj

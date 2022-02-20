@@ -45,6 +45,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
     Singleton Class to query the pulse2 database.
 
     """
+
     is_activated = False
 
     def db_check(self):
@@ -62,7 +63,8 @@ class Pulse2Database(DyngroupDatabaseHelper):
         self.db = create_engine(
             self.makeConnectionPath(),
             pool_recycle=self.config.dbpoolrecycle,
-            pool_size=self.config.dbpoolsize)
+            pool_size=self.config.dbpoolsize,
+        )
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
             self.session = None
@@ -71,8 +73,9 @@ class Pulse2Database(DyngroupDatabaseHelper):
         self.session = create_session()
         self.is_activated = True
         self.logger.debug(
-            "Pulse2 database connected (version:%s)" %
-            (self.version.select().execute().fetchone()[0]))
+            "Pulse2 database connected (version:%s)"
+            % (self.version.select().execute().fetchone()[0])
+        )
         return True
 
     def initMappers(self):
@@ -82,9 +85,12 @@ class Pulse2Database(DyngroupDatabaseHelper):
 
         # entity/package server association
         self.packageServerEntity = Table(
-            "PackageServerEntity", self.metadata, Column(
-                'entity_uuid', Text, primary_key=True), Column(
-                'package_server_uuid', Text, primary_key=True), autoload=True)
+            "PackageServerEntity",
+            self.metadata,
+            Column("entity_uuid", Text, primary_key=True),
+            Column("package_server_uuid", Text, primary_key=True),
+            autoload=True,
+        )
         mapper(PackageServerEntity, self.packageServerEntity)
 
         # version
@@ -118,8 +124,11 @@ class Pulse2Database(DyngroupDatabaseHelper):
         @rtype: the PackageServerEntity object
         """
         session = create_session()
-        ret = session.query(PackageServerEntity).filter(
-            self.packageServerEntity.c.package_server_uuid == ps_uuid).one()
+        ret = (
+            session.query(PackageServerEntity)
+            .filter(self.packageServerEntity.c.package_server_uuid == ps_uuid)
+            .one()
+        )
         session.close()
         return ret
 
@@ -132,16 +141,22 @@ class Pulse2Database(DyngroupDatabaseHelper):
         @rtype: a list of PackageServerEntity object
         """
         session = create_session()
-        ret = session.query(PackageServerEntity).filter(
-            self.packageServerEntity.c.entity_uuid == e_uuid).all()
+        ret = (
+            session.query(PackageServerEntity)
+            .filter(self.packageServerEntity.c.entity_uuid == e_uuid)
+            .all()
+        )
         session.close()
         return ret
 
     def getPackageServerEntityByEntities(self, e_uuids):
         session = create_session()
-        ret1 = session.query(PackageServerEntity).add_column(
-            self.packageServerEntity.c.entity_uuid).filter(
-            self.packageServerEntity.c.entity_uuid.in_(e_uuids)).all()
+        ret1 = (
+            session.query(PackageServerEntity)
+            .add_column(self.packageServerEntity.c.entity_uuid)
+            .filter(self.packageServerEntity.c.entity_uuid.in_(e_uuids))
+            .all()
+        )
         session.close()
         ret = {}
         for pes, e_uuid in ret1:
@@ -162,10 +177,16 @@ class Pulse2Database(DyngroupDatabaseHelper):
         @rtype: the PackageServerEntity object
         """
         session = create_session()
-        ret = session.query(PackageServerEntity).filter(
-            and_(
-                self.packageServerEntity.c.package_server_uuid == ps_uuid,
-                self.packageServerEntity.c.entity_uuid == e_uuid)).one()
+        ret = (
+            session.query(PackageServerEntity)
+            .filter(
+                and_(
+                    self.packageServerEntity.c.package_server_uuid == ps_uuid,
+                    self.packageServerEntity.c.entity_uuid == e_uuid,
+                )
+            )
+            .one()
+        )
         session.close()
         return ret
 
@@ -198,8 +219,11 @@ class Pulse2Database(DyngroupDatabaseHelper):
         @rtype: bool
         """
         session = create_session()
-        pse = session.query(PackageServerEntity).filter(
-            self.packageServerEntity.c.entity_uuid == e_uuid).all()
+        pse = (
+            session.query(PackageServerEntity)
+            .filter(self.packageServerEntity.c.entity_uuid == e_uuid)
+            .all()
+        )
         if pse and len(pse) == 1:
             session.delete(pse[0])
         else:
@@ -219,10 +243,11 @@ def id2uuid(id):
 
 
 def uuid2id(uuid):
-    return uuid.replace('UUID', '')
+    return uuid.replace("UUID", "")
+
 
 ##########################################################################
 
 
 class PackageServerEntity(database_helper.DBObject):
-    to_be_exported = ['entity_uuid', 'package_server_uuid']
+    to_be_exported = ["entity_uuid", "package_server_uuid"]

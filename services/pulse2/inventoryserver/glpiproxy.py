@@ -34,6 +34,7 @@ class _ErrorHandler:
     """
     Abstract class to implement error handling of XML responses from GLPI.
     """
+
     _message = []
 
     def __init__(self, response):
@@ -45,7 +46,7 @@ class _ErrorHandler:
         self._parse(response)
 
     def _parse(self, response):
-        """ Parsing the XML response """
+        """Parsing the XML response"""
         raise NotImplementedError
 
     def __iter__(self):
@@ -60,6 +61,7 @@ class FusionErrorHandler(_ErrorHandler):
     """
     Response parsing on check of occurence an error element on XML format.
     """
+
     # An example of error message :
 
     # <?xml version="1.0" encoding="UTF-8"?>
@@ -70,27 +72,30 @@ class FusionErrorHandler(_ErrorHandler):
     def _parse(self, response):
         try:
             dom = parseString(response)
-            for node in dom.getElementsByTagName('ERROR'):
+            for node in dom.getElementsByTagName("ERROR"):
                 if node.nodeType == node.ELEMENT_NODE:
                     self._message.append(
-                        'An error occurred while talking with GLPI (details follow)')
+                        "An error occurred while talking with GLPI (details follow)"
+                    )
                     self._message.append(
-                        "Error was: %s" % str(
-                            node.firstChild.nodeValue))
+                        "Error was: %s" % str(node.firstChild.nodeValue)
+                    )
         except Exception as exc:
             self._message.append(
-                'An error occurred while talking with GLPI (details follow)')
-            self._message.append('Raw error was: %s' % str(response))
-            self._message.append('With exception: %s' % str(exc))
+                "An error occurred while talking with GLPI (details follow)"
+            )
+            self._message.append("Raw error was: %s" % str(response))
+            self._message.append("With exception: %s" % str(exc))
 
 
 class GlpiProxy:
-    """ Sending inventories to GLPI with an error handling."""
+    """Sending inventories to GLPI with an error handling."""
 
-    HEADER = {"Pragma": "no-cache",
-              "User-Agent": "Proxy:FusionInventory/Pulse2/GLPI",
-              "Content-Type": "application/x-compress",
-              }
+    HEADER = {
+        "Pragma": "no-cache",
+        "User-Agent": "Proxy:FusionInventory/Pulse2/GLPI",
+        "Content-Type": "application/x-compress",
+    }
 
     def __init__(self, url, ErrorHandler=FusionErrorHandler):
         """
@@ -120,7 +125,7 @@ class GlpiProxy:
 
         except Exception as exc:
             self._result.append("Unable to send inventory to GLPI")
-            self._result.append('Response was: %s' % str(exc))
+            self._result.append("Response was: %s" % str(exc))
 
             return
 
@@ -158,9 +163,9 @@ def resolveGlpiMachineUUIDByMAC(mac):
             uuid = proxy.glpi.getMachineUUIDByMacAddress(mac)
         except Exception as e:
             logging.getLogger().error(
-                "Unable to resolve machine UUID for mac %s using %s, error was: %s" %
-                (str(mac), str(
-                    mmc._url), str(e)))
+                "Unable to resolve machine UUID for mac %s using %s, error was: %s"
+                % (str(mac), str(mmc._url), str(e))
+            )
         return uuid
     return None
 

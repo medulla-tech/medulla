@@ -32,8 +32,13 @@ from datetime import datetime
 import croniter
 
 # print os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(
-    os.path.realpath(__file__)), "..", "descriptorscheduler")))
+sys.path.append(
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"
+        )
+    )
+)
 logger = logging.getLogger()
 
 
@@ -60,12 +65,17 @@ class manage_scheduler:
         self.now = datetime.now()
 
         self.objectxmpp = objectxmpp
-        self.directoryschedule = os.path.abspath(os.path.join(
-            os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"))
+        self.directoryschedule = os.path.abspath(
+            os.path.join(
+                os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"
+            )
+        )
 
         # creation repertoire si non exist
         if not os.path.exists(self.directoryschedule):
-            logging.getLogger().debug("create directory scheduler %s" % self.directoryschedule)
+            logging.getLogger().debug(
+                "create directory scheduler %s" % self.directoryschedule
+            )
             os.makedirs(self.directoryschedule, 0o700)
 
         for x in os.listdir(self.directoryschedule):
@@ -81,15 +91,21 @@ class manage_scheduler:
                 pass
 
     def add_event(self, name, datascheduler):
-        tabcron = datascheduler['schedule']
+        tabcron = datascheduler["schedule"]
         cron = croniter.croniter(tabcron, self.now)
         nextd = cron.get_next(datetime)
-        if 'nb' in datascheduler:
-            nbcount = datascheduler['nb']
+        if "nb" in datascheduler:
+            nbcount = datascheduler["nb"]
         else:
             nbcount = -1
-        obj = {"name": name, "exectime": time.mktime(
-            nextd.timetuple()), "tabcron": tabcron, "timestart": str(self.now), "nbcount": nbcount, "count": 0}
+        obj = {
+            "name": name,
+            "exectime": time.mktime(nextd.timetuple()),
+            "tabcron": tabcron,
+            "timestart": str(self.now),
+            "nbcount": nbcount,
+            "count": 0,
+        }
         self.taches.append(obj)
 
     def process_on_event(self):

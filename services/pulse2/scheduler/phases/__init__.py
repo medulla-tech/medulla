@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+
 def push_phases():
     from pulse2.scheduler.phases.remote import WOLPhase, UploadPhase, ExecutionPhase
     from pulse2.scheduler.phases.remote import DeletePhase, InventoryPhase
@@ -27,18 +28,19 @@ def push_phases():
     from pulse2.scheduler.phases.imaging import PreImagingMenuPhase
     from pulse2.scheduler.phases.imaging import PostImagingMenuPhase
 
-    return [PreImagingMenuPhase,
-            WOLPhase,
-            PostImagingMenuPhase,
-            UploadPhase,
-            ExecutionPhase,
-            WUParsePhase,
-            DeletePhase,
-            InventoryPhase,
-            RebootPhase,
-            HaltPhase,
-            DonePhase,
-            ]
+    return [
+        PreImagingMenuPhase,
+        WOLPhase,
+        PostImagingMenuPhase,
+        UploadPhase,
+        ExecutionPhase,
+        WUParsePhase,
+        DeletePhase,
+        InventoryPhase,
+        RebootPhase,
+        HaltPhase,
+        DonePhase,
+    ]
 
 
 def pull_phases():
@@ -48,21 +50,23 @@ def pull_phases():
     from pulse2.scheduler.phases.remote import DonePhase
     from pulse2.scheduler.phases.remote import WUParsePhase
 
-    return [WOLPhase,
-            UploadPhase,
-            ExecutionPhase,
-            WUParsePhase,
-            DeletePhase,
-            InventoryPhase,
-            RebootPhase,
-            HaltPhase,
-            DonePhase,
-            ]
+    return [
+        WOLPhase,
+        UploadPhase,
+        ExecutionPhase,
+        WUParsePhase,
+        DeletePhase,
+        InventoryPhase,
+        RebootPhase,
+        HaltPhase,
+        DonePhase,
+    ]
 
 
-installed_phases = {"push": push_phases(),
-                    "pull": pull_phases(),
-                    }
+installed_phases = {
+    "push": push_phases(),
+    "pull": pull_phases(),
+}
 
 
 __all__ = ["installed_phases"]

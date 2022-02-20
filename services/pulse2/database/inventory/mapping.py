@@ -55,27 +55,29 @@ class EncodingSafeParser(ExpatBuilderNS):
 
 
 class OcsMapping(Singleton):
-
     def initialize(self, xmlmapping):
         self.doc = parse(xmlmapping)
         self.tables = {}
         self.nomenclatures = {}
 
-        for table in self.doc.documentElement.getElementsByTagName(
-                "MappedObject"):
-            xmlname = table.getAttribute('name')
-            xmlclass = table.getAttribute('class')
-            if xmlclass == 'Null':
+        for table in self.doc.documentElement.getElementsByTagName("MappedObject"):
+            xmlname = table.getAttribute("name")
+            xmlclass = table.getAttribute("class")
+            if xmlclass == "Null":
                 continue
             self.tables[xmlname] = [xmlclass, {}]
-            for field in table.getElementsByTagName('MappedField'):
-                xmlfrom = field.getAttribute('from')
-                xmlto = field.getAttribute('to')
+            for field in table.getElementsByTagName("MappedField"):
+                xmlfrom = field.getAttribute("from")
+                xmlto = field.getAttribute("to")
                 self.tables[xmlname][1][xmlfrom] = xmlto
-                if field.hasAttribute('type') and field.getAttribute(
-                        'type') == 'nomenclature':
+                if (
+                    field.hasAttribute("type")
+                    and field.getAttribute("type") == "nomenclature"
+                ):
                     self.tables[xmlname][1][xmlfrom] = (
-                        'nom%s%s' % (xmlclass, xmlto), xmlto)
+                        "nom%s%s" % (xmlclass, xmlto),
+                        xmlto,
+                    )
                     if xmlclass not in self.nomenclatures:
                         self.nomenclatures[xmlclass] = {}
                     self.nomenclatures[xmlclass][xmlto] = True
@@ -85,18 +87,17 @@ class OcsMapping(Singleton):
         Try to parse the file with other encodings
         """
         xml = None
-        for encoding in ['ISO-8859-1', 'UTF-8']:
-            self.logger.info('Trying to parse with enforced %s encoding'
-                             % encoding)
+        for encoding in ["ISO-8859-1", "UTF-8"]:
+            self.logger.info("Trying to parse with enforced %s encoding" % encoding)
             try:
                 builder = EncodingSafeParser()
                 builder.setEncoding(encoding)
                 xml = builder.parseString(xmlstring)
-                self.logger.info('String successfully parsed')
+                self.logger.info("String successfully parsed")
                 # Exit for loop if success
                 break
             except expat.ExpatError as e:
-                self.logger.error('Parsing failed')
+                self.logger.error("Parsing failed")
                 if expat.errors.XML_ERROR_INVALID_TOKEN in str(e):
                     pass
                 else:
@@ -118,7 +119,7 @@ class OcsMapping(Singleton):
         except expat.ExpatError as e:
             self.logger.error("Can't parse inventory XML string")
             if expat.errors.XML_ERROR_INVALID_TOKEN in str(e):
-                self.logger.error('The XML string may use a wrong encoding')
+                self.logger.error("The XML string may use a wrong encoding")
             else:
                 # Unhandled error, just re-raise it
                 raise e
@@ -127,7 +128,7 @@ class OcsMapping(Singleton):
             xml = self.parseSafe(xmltext)
         inventory = {}
         for tablename in self.tables:
-            in_network = tablename == 'NETWORKS'
+            in_network = tablename == "NETWORKS"
             try:
                 dbtablename = self.tables[tablename][0]
                 inventory[dbtablename] = []
@@ -138,18 +139,25 @@ class OcsMapping(Singleton):
                         # Skip lo interface and network device with a 127.x.x.x
                         # address.
                         try:
-                            netif = tag.getElementsByTagName('DESCRIPTION')[
-                                0].childNodes[0].nodeValue
+                            netif = (
+                                tag.getElementsByTagName("DESCRIPTION")[0]
+                                .childNodes[0]
+                                .nodeValue
+                            )
                         except BaseException:
-                            netif = ''
+                            netif = ""
                         try:
-                            ip = tag.getElementsByTagName(
-                                'IPADDRESS')[0].childNodes[0].nodeValue
+                            ip = (
+                                tag.getElementsByTagName("IPADDRESS")[0]
+                                .childNodes[0]
+                                .nodeValue
+                            )
                         except BaseException:
-                            ip = ''
-                        if netif == 'lo' or ip.startswith('127.'):
+                            ip = ""
+                        if netif == "lo" or ip.startswith("127."):
                             self.logger.debug(
-                                'Skipping computer local interface from inventory')
+                                "Skipping computer local interface from inventory"
+                            )
                             continue
                     for fieldname in self.tables[tablename][1]:
                         try:
@@ -162,11 +170,11 @@ class OcsMapping(Singleton):
             except IndexError:
                 pass
         registerval = {}
-        for EntryRegister in inventory['Registry']:
+        for EntryRegister in inventory["Registry"]:
             for EntryRegister1 in EntryRegister:
-                if EntryRegister1 != 'Value':
+                if EntryRegister1 != "Value":
                     registerkey = EntryRegister[EntryRegister1]
                 else:
                     registerval[registerkey] = EntryRegister[EntryRegister1]
-        inventory['RegistryInfos'] = [registerval]
+        inventory["RegistryInfos"] = [registerval]
         return inventory

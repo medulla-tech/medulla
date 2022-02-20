@@ -42,13 +42,24 @@ DELTA = 30
 HEALTH_REGEX = "([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}):[0-9]{2},.*scheduler ([^:]*): HEALTH: (.*)"
 
 
-def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_date, end_date, start_y, end_y):
+def create_graph(
+    label_x,
+    label_y,
+    data_x,
+    alldata_y,
+    filename,
+    title,
+    start_date,
+    end_date,
+    start_y,
+    end_y,
+):
     """
     main func
     """
     # alter file name (linpng do not seems to like spaces in filenames
 
-    filename = filename.replace(' ', '_')
+    filename = filename.replace(" ", "_")
     # Graph style
     theme.get_options()
     theme.use_color = True
@@ -69,43 +80,44 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
 
     # Draw graph title
     newtitle = "/hL/20%s" % title
-    left = WIDTH / 2  - font.text_width(newtitle) / 2
+    left = WIDTH / 2 - font.text_width(newtitle) / 2
     can.show(left, HEIGHT + DELTA, newtitle)
 
-    int_to_date = lambda x: '/a60{}' + time.strftime("%H:%M", time.localtime(x))
+    int_to_date = lambda x: "/a60{}" + time.strftime("%H:%M", time.localtime(x))
 
     xaxis = axis.X(
-        format = int_to_date,
-        label = "/20%s" % label_x,
-        label_offset = (0, -DELTA),
-        minor_tic_interval = X_MINOR_TICK_INTERVAL,
-        tic_interval = X_TICK_INTERVAL)
+        format=int_to_date,
+        label="/20%s" % label_x,
+        label_offset=(0, -DELTA),
+        minor_tic_interval=X_MINOR_TICK_INTERVAL,
+        tic_interval=X_TICK_INTERVAL,
+    )
     yaxis = axis.Y(
-        label = "/20%s" % label_y,
-        label_offset = (-DELTA, 0),
-        minor_tic_interval = (end_y - start_y) / 20,
-        tic_interval = (end_y - start_y) / 5,
+        label="/20%s" % label_y,
+        label_offset=(-DELTA, 0),
+        minor_tic_interval=(end_y - start_y) / 20,
+        tic_interval=(end_y - start_y) / 5,
     )
 
     ar = area.T(
-        size = (WIDTH, HEIGHT),
-        x_axis = xaxis,
-        y_axis = yaxis,
-        x_grid_style = line_style.gray70_dash3,
-        x_range = (start_date, end_date),
-        y_range = (start_y, end_y),
-        x_grid_interval = X_GRID_INTERVAL,
-        y_grid_interval = (end_y - start_y) / 5)
+        size=(WIDTH, HEIGHT),
+        x_axis=xaxis,
+        y_axis=yaxis,
+        x_grid_style=line_style.gray70_dash3,
+        x_range=(start_date, end_date),
+        y_range=(start_y, end_y),
+        x_grid_interval=X_GRID_INTERVAL,
+        y_grid_interval=(end_y - start_y) / 5,
+    )
 
     i = 0
     # Draw a line for each columns
     for title, data_y in alldata_y.items():
         plot = line_plot.T(
-            label = title,
-            data = list(zip(data_x, data_y)),
-            line_style = line_style.T(
-                color = colors[i],
-                width = 1))
+            label=title,
+            data=list(zip(data_x, data_y)),
+            line_style=line_style.T(color=colors[i], width=1),
+        )
         ar.add_plot(plot)
         i += 1
 
@@ -120,10 +132,10 @@ def read_logs(logfiles, start_date, stop_date):
     Read scheduler logs in log_dir from start_date to stop_date
     """
 
-    loadavg   = {}
-    fds       = {}
-    memory    = {}
-    db        = {}
+    loadavg = {}
+    fds = {}
+    memory = {}
+    db = {}
 
     # Parse all log files in the directory
     for logfile in logfiles:
@@ -142,62 +154,65 @@ def read_logs(logfiles, start_date, stop_date):
             if not res:  # give up if line do not match
                 continue
 
-            stamp = int(time.mktime(time.strptime(res.group(1), '%Y-%m-%d %H:%M')))
-            if (stamp < start_date or stamp > stop_date):  # give up if time do not match
+            stamp = int(time.mktime(time.strptime(res.group(1), "%Y-%m-%d %H:%M")))
+            if stamp < start_date or stamp > stop_date:  # give up if time do not match
                 continue
 
             scheduler = res.group(2)
             dump = eval(res.group(3))
 
-            if 'db' in dump:
+            if "db" in dump:
                 if not scheduler in db:
                     db[scheduler] = {}
                 if not stamp in db[scheduler]:
                     db[scheduler][stamp] = {}
-                    db[scheduler][stamp]    = int(dump['db']['checkedinconns'])
+                    db[scheduler][stamp] = int(dump["db"]["checkedinconns"])
                 else:
-                    db[scheduler][stamp]   += int(dump['db']['checkedinconns'])
+                    db[scheduler][stamp] += int(dump["db"]["checkedinconns"])
 
-            if 'memory' in dump:
+            if "memory" in dump:
                 if not scheduler in memory:
                     memory[scheduler] = {}
                 if not stamp in memory[scheduler]:
                     memory[scheduler][stamp] = {}
-                    memory[scheduler][stamp]    = int(dump['memory']['free'])
+                    memory[scheduler][stamp] = int(dump["memory"]["free"])
                 else:
-                    memory[scheduler][stamp]   += int(dump['memory']['free'])
+                    memory[scheduler][stamp] += int(dump["memory"]["free"])
 
-            if 'loadavg' in dump:
+            if "loadavg" in dump:
                 if not scheduler in loadavg:
                     loadavg[scheduler] = {}
                 if not stamp in loadavg[scheduler]:
-                    loadavg[scheduler][stamp] = int(dump['loadavg']['1min'])
+                    loadavg[scheduler][stamp] = int(dump["loadavg"]["1min"])
                 else:
-                    loadavg[scheduler][stamp] += int(dump['loadavg']['1min'])
+                    loadavg[scheduler][stamp] += int(dump["loadavg"]["1min"])
 
-            if 'fd' in dump:
+            if "fd" in dump:
                 if not scheduler in fds:
                     fds[scheduler] = {}
                 if not stamp in fds[scheduler]:
-                    fds[scheduler][stamp] = sum(dump['fd'].values())
+                    fds[scheduler][stamp] = sum(dump["fd"].values())
                 else:
-                    fds[scheduler][stamp] += sum(dump['fd'].values())
+                    fds[scheduler][stamp] += sum(dump["fd"].values())
 
     return (memory, loadavg, fds, db)
+
 
 # Main Loop
 if __name__ == "__main__":
 
     if len(sys.argv) < 4:
-        sys.exit("Usage : %s '<start date>' '<end date>' <log1> <log2> ..." % sys.argv[0])
+        sys.exit(
+            "Usage : %s '<start date>' '<end date>' <log1> <log2> ..." % sys.argv[0]
+        )
     (start_str, end_str) = sys.argv[1:3]
     logfiles = sys.argv[3:]
 
     sched_hours = []
 
     # Parse logs
-    start = int(time.mktime(time.strptime(start_str, '%Y-%m-%d %H:%M')))
-    stop = int(time.mktime(time.strptime(end_str, '%Y-%m-%d %H:%M')))
+    start = int(time.mktime(time.strptime(start_str, "%Y-%m-%d %H:%M")))
+    stop = int(time.mktime(time.strptime(end_str, "%Y-%m-%d %H:%M")))
     (memory, loads, fds, db) = read_logs(logfiles, start, stop)
 
     if memory:
@@ -221,8 +236,30 @@ if __name__ == "__main__":
                     sched_memory[sched].append(memory[sched][hour])
                 else:
                     sched_memory[sched].append(0)
-            create_graph("Time", "Memory", sched_hours, {sched: sched_memory[sched]}, '%s - Memory - %s-%s.png' % (sched, start_str, end_str), "Memory on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Memory", sched_hours, sched_memory, 'schedulers - Memory - %s-%s.png' % (start_str, end_str), "Memory between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Memory",
+                sched_hours,
+                {sched: sched_memory[sched]},
+                "%s - Memory - %s-%s.png" % (sched, start_str, end_str),
+                'Memory on "%s" between %s and %s' % (sched, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Memory",
+            sched_hours,
+            sched_memory,
+            "schedulers - Memory - %s-%s.png" % (start_str, end_str),
+            "Memory between %s and %s" % (start_str, end_str),
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     if loads:
         sched_loads = {}
@@ -245,8 +282,30 @@ if __name__ == "__main__":
                     sched_loads[sched].append(loads[sched][hour])
                 else:
                     sched_loads[sched].append(0)
-            create_graph("Time", "Load", sched_hours, {sched: sched_loads[sched]}, '%s - load - %s-%s.png' % (sched, start_str, end_str), "Load on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Load", sched_hours, sched_loads, 'schedulers - load - %s-%s.png' % (start_str, end_str), "Load between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Load",
+                sched_hours,
+                {sched: sched_loads[sched]},
+                "%s - load - %s-%s.png" % (sched, start_str, end_str),
+                'Load on "%s" between %s and %s' % (sched, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Load",
+            sched_hours,
+            sched_loads,
+            "schedulers - load - %s-%s.png" % (start_str, end_str),
+            "Load between %s and %s" % (start_str, end_str),
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     if fds:
         sched_fds = {}
@@ -269,8 +328,30 @@ if __name__ == "__main__":
                     sched_fds[sched].append(fds[sched][hour])
                 else:
                     sched_fds[sched].append(0)
-            create_graph("Time", "Fds", sched_hours, {sched: sched_fds[sched]}, '%s - fds - %s-%s.png' % (sched, start_str, end_str), "Fds on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Fds", sched_hours, sched_fds, 'schedulers - fds - %s-%s.png' % (start_str, end_str), "Fds between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Fds",
+                sched_hours,
+                {sched: sched_fds[sched]},
+                "%s - fds - %s-%s.png" % (sched, start_str, end_str),
+                'Fds on "%s" between %s and %s' % (sched, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Fds",
+            sched_hours,
+            sched_fds,
+            "schedulers - fds - %s-%s.png" % (start_str, end_str),
+            "Fds between %s and %s" % (start_str, end_str),
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     if db:
         sched_db = {}
@@ -293,7 +374,29 @@ if __name__ == "__main__":
                     sched_db[sched].append(db[sched][hour])
                 else:
                     sched_db[sched].append(0)
-            create_graph("Time", "Cx", sched_hours, {sched: sched_db[sched]}, '%s - cx - %s-%s.png' % (sched, start_str, end_str), "DB cx on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Cx", sched_hours, sched_db, 'schedulers - cx - %s-%s.png' % (start_str, end_str), "DB cx between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Cx",
+                sched_hours,
+                {sched: sched_db[sched]},
+                "%s - cx - %s-%s.png" % (sched, start_str, end_str),
+                'DB cx on "%s" between %s and %s' % (sched, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Cx",
+            sched_hours,
+            sched_db,
+            "schedulers - cx - %s-%s.png" % (start_str, end_str),
+            "DB cx between %s and %s" % (start_str, end_str),
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     sys.exit(0)

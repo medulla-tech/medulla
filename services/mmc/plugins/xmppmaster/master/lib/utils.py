@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-#file : master/lib/utils.py
+# file : master/lib/utils.py
 
 import netifaces
 import json
@@ -56,9 +56,11 @@ from functools import wraps
 
 logger = logging.getLogger()
 
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "pluginsmaster"))
+sys.path.append(
+    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "pluginsmaster")
+)
 
-if sys.platform.startswith('win'):
+if sys.platform.startswith("win"):
     import wmi
     import pythoncom
     import winreg as wr
@@ -68,8 +70,9 @@ if sys.platform.startswith('win'):
 #### debug decorator #########
 def minimum_runtime(t):
     """
-        Function decorator constrains the minimum execution time of the function
+    Function decorator constrains the minimum execution time of the function
     """
+
     def decorated(f):
         def wrapper(*args, **kwargs):
             start = time.time()
@@ -78,13 +81,17 @@ def minimum_runtime(t):
             if runtime < t:
                 time.sleep(t - runtime)
             return result
+
         return wrapper
+
     return decorated
 
-def dump_parameter(para=True, out=True, timeprocess = True):
+
+def dump_parameter(para=True, out=True, timeprocess=True):
     """
-        Function decorator logging in and out function.
+    Function decorator logging in and out function.
     """
+
     def decorated(decorated_function):
         @wraps(decorated_function)
         def wrapper(*dec_fn_args, **dec_fn_kwargs):
@@ -98,84 +105,111 @@ def dump_parameter(para=True, out=True, timeprocess = True):
             if para:
                 arg_names = decorated_function.__code__.co_varnames
                 params = dict(
-                    args=dict(list(zip(arg_names, dec_fn_args))),
-                    kwargs=dec_fn_kwargs)
-                result = ', '.join([
-                        '{}={}'.format(str(k), repr(v)) for k, v in list(params.items())])
-                log.info('\n@@@ call func : {}({}) file {}'.format(func_name,result, filepath))
-                log.info('\n@@@ call func : {}({}) file {}'.format(func_name,result, filepath))
+                    args=dict(list(zip(arg_names, dec_fn_args))), kwargs=dec_fn_kwargs
+                )
+                result = ", ".join(
+                    ["{}={}".format(str(k), repr(v)) for k, v in list(params.items())]
+                )
+                log.info(
+                    "\n@@@ call func : {}({}) file {}".format(
+                        func_name, result, filepath
+                    )
+                )
+                log.info(
+                    "\n@@@ call func : {}({}) file {}".format(
+                        func_name, result, filepath
+                    )
+                )
             else:
-                log.info('\n@@@ call func : {}() file {}'.format(func_name, filepath))
+                log.info("\n@@@ call func : {}() file {}".format(func_name, filepath))
             # Execute wrapped (decorated) function:
             outfunction = decorated_function(*dec_fn_args, **dec_fn_kwargs)
             timeruntime = time.time() - start
             if out:
                 if timeprocess:
-                    log.info('\n@@@ out func :{}() in {}s is -->{}'.format(func_name,
-                                                                           timeruntime,
-                                                                           outfunction))
+                    log.info(
+                        "\n@@@ out func :{}() in {}s is -->{}".format(
+                            func_name, timeruntime, outfunction
+                        )
+                    )
                 else:
-                    log.info('\n@@@ out func :{}() is -->{}'.format(func_name,
-                                                                    outfunction))
+                    log.info(
+                        "\n@@@ out func :{}() is -->{}".format(func_name, outfunction)
+                    )
             else:
                 if timeprocess:
-                    log.info('\n@@@ out func :{}() in {}s'.format(func_name,
-                                                                  timeruntime))
+                    log.info(
+                        "\n@@@ out func :{}() in {}s".format(func_name, timeruntime)
+                    )
                 else:
-                    log.info('\n@@@ out func :{}()'.format(func_name))
+                    log.info("\n@@@ out func :{}()".format(func_name))
             return outfunction
+
         return wrapper
+
     return decorated
+
+
 ###########################################
+
 
 def file_get_contents(filename, use_include_path=0, context=None, offset=-1, maxlen=-1):
     """
-        load content file or simple url
+    load content file or simple url
     """
-    if (filename.find('://') > 0):
+    if filename.find("://") > 0:
         ret = urllib.request.urlopen(filename).read()
-        if (offset > 0):
+        if offset > 0:
             ret = ret[offset:]
-        if (maxlen > 0):
+        if maxlen > 0:
             ret = ret[:maxlen]
         return ret
     else:
-        fp = open(filename, 'rb')
+        fp = open(filename, "rb")
         try:
-            if (offset > 0):
+            if offset > 0:
                 fp.seek(offset)
             ret = fp.read(maxlen)
             return ret
         finally:
             fp.close()
 
-def file_put_contents(filename,  data):
+
+def file_put_contents(filename, data):
     """
     write content "data" to file "filename"
     """
-    f = open(filename, 'w')
+    f = open(filename, "w")
     f.write(data)
     f.close()
 
-def file_put_contents_w_a(filename, data, option = "w"):
-    if option == "a" or  option == "w":
-        f = open( filename, option )
+
+def file_put_contents_w_a(filename, data, option="w"):
+    if option == "a" or option == "w":
+        f = open(filename, option)
         f.write(data)
         f.close()
+
 
 def displayDataJson(jsondata):
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(jsondata)
 
+
 def loadModule(filename):
-    if filename == '':
-        raise RuntimeError('Empty filename cannot be loaded')
+    if filename == "":
+        raise RuntimeError("Empty filename cannot be loaded")
     searchPath, file = os.path.split(filename)
     if not searchPath in sys.path:
         sys.path.append(searchPath)
-        sys.path.append(os.path.normpath(searchPath+"/../"))
+        sys.path.append(os.path.normpath(searchPath + "/../"))
     moduleName, ext = os.path.splitext(file)
-    fp, pathName, description = imp.find_module(moduleName, [searchPath,])
+    fp, pathName, description = imp.find_module(
+        moduleName,
+        [
+            searchPath,
+        ],
+    )
     try:
         module = imp.load_module(moduleName, fp, pathName, description)
     finally:
@@ -183,37 +217,41 @@ def loadModule(filename):
             fp.close()
     return module
 
+
 def call_plugin(name, *args, **kwargs):
-    nameplugin = os.path.join(args[0].modulepath, "plugin_%s"%name)
+    nameplugin = os.path.join(args[0].modulepath, "plugin_%s" % name)
     objxmpp = args[0]
-    #add compteur appel plugins
+    # add compteur appel plugins
     count = 0
     try:
-        count = getattr(args[0], "num_call%s"%name)
+        count = getattr(args[0], "num_call%s" % name)
     except AttributeError:
         count = 0
-        setattr(args[0], "num_call%s"%name, count)
+        setattr(args[0], "num_call%s" % name, count)
     if objxmpp.config.executiontimeplugins:
-        tmps1=time.clock()
+        tmps1 = time.clock()
         pluginaction = loadModule(nameplugin)
         pluginaction.action(*args, **kwargs)
-        setattr(args[0], "num_call%s"%name, count + 1)
-        tmps2=time.clock()-tmps1
-        logger.info("_xmpp_ %s Execution time: [%s] %s"% (str(datetime.now()), name, tmps2 ) )
-        cmd = "cat /proc/%s/status | grep Threads"%os.getpid()
+        setattr(args[0], "num_call%s" % name, count + 1)
+        tmps2 = time.clock() - tmps1
+        logger.info(
+            "_xmpp_ %s Execution time: [%s] %s" % (str(datetime.now()), name, tmps2)
+        )
+        cmd = "cat /proc/%s/status | grep Threads" % os.getpid()
         obj = simplecommandstr(cmd)
-        file_put_contents_w_a("/tmp/Execution_time_plugin.txt",
-                            "%s  [%s] Execution time: %s | %s \n" %(str(datetime.now()),
-                                                                    name,
-                                                                    tmps2,
-                                                                    obj['result'] ) ,
-                                                                    "a")
+        file_put_contents_w_a(
+            "/tmp/Execution_time_plugin.txt",
+            "%s  [%s] Execution time: %s | %s \n"
+            % (str(datetime.now()), name, tmps2, obj["result"]),
+            "a",
+        )
     else:
         pluginaction = loadModule(nameplugin)
         pluginaction.action(*args, **kwargs)
-        setattr(args[0], "num_call%s"%name, count + 1)
+        setattr(args[0], "num_call%s" % name, count + 1)
 
-def utc2local (utc):
+
+def utc2local(utc):
     """
     utc2local transform a utc datetime object to local object.
 
@@ -223,7 +261,7 @@ def utc2local (utc):
         datetime in local timezone
     """
     epoch = time.mktime(utc.timetuple())
-    offset = datetime.fromtimestamp (epoch) - datetime.utcfromtimestamp (epoch)
+    offset = datetime.fromtimestamp(epoch) - datetime.utcfromtimestamp(epoch)
     return utc + offset
 
 
@@ -234,28 +272,37 @@ def getRandomName(nb, pref=""):
         d = d + a[random.randint(0, 35)]
     return d
 
-def data_struct_message(action, data = {}, ret=0, base64 = False, sessionid = None):
+
+def data_struct_message(action, data={}, ret=0, base64=False, sessionid=None):
     if sessionid == None or sessionid == "" or not isinstance(sessionid, str):
         sessionid = action.strip().replace(" ", "")
-    return { 'action' : action,
-             'data' : data,
-             'ret' : 0,
-             "base64" : False,
-             "sessionid" : getRandomName(4,sessionid)}
+    return {
+        "action": action,
+        "data": data,
+        "ret": 0,
+        "base64": False,
+        "sessionid": getRandomName(4, sessionid),
+    }
+
 
 def add_method(cls):
-    """ decorateur a utiliser pour ajouter une methode a un object """
+    """decorateur a utiliser pour ajouter une methode a un object"""
+
     def decorator(func):
         @wraps(func)
         def wrapper(self, *args, **kwargs):
             return func(*args, **kwargs)
+
         setattr(cls, func.__name__, wrapper)
         # Note we are not binding func, but wrapper which accepts self but does exactly the same as func
-        return func # returning func means func can still be used normally
+        return func  # returning func means func can still be used normally
+
     return decorator
+
 
 def pathbase():
     return os.path.abspath(os.getcwd())
+
 
 def pathscript():
     return os.path.abspath(os.path.join(pathbase(), "script"))
@@ -263,6 +310,7 @@ def pathscript():
 
 def pathplugins():
     return os.path.abspath(os.path.join(pathbase(), "plugins"))
+
 
 def pathlib():
     return os.path.abspath(os.path.join(pathbase(), "lib"))
@@ -294,24 +342,27 @@ class StreamToLogger(object):
     def __init__(self, logger, log_level=logging.INFO):
         self.logger = logger
         self.log_level = log_level
-        self.linebuf = ''
+        self.linebuf = ""
 
     def write(self, buf):
         for line in buf.rstrip().splitlines():
             self.logger.log(self.log_level, line.rstrip())
 
+
 # windows
 
 
 def get_connection_name_from_guid(iface_guids):
-    iface_names = ['(unknown)' for i in range(len(iface_guids))]
+    iface_names = ["(unknown)" for i in range(len(iface_guids))]
     reg = wr.ConnectRegistry(None, wr.HKEY_LOCAL_MACHINE)
     reg_key = wr.OpenKey(
-        reg, r'SYSTEM\CurrentControlSet\Control\Network\{4d36e972-e325-11ce-bfc1-08002be10318}')
+        reg,
+        r"SYSTEM\CurrentControlSet\Control\Network\{4d36e972-e325-11ce-bfc1-08002be10318}",
+    )
     for i in range(len(iface_guids)):
         try:
-            reg_subkey = wr.OpenKey(reg_key, iface_guids[i] + r'\Connection')
-            iface_names[i] = wr.QueryValueEx(reg_subkey, 'Name')[0]
+            reg_subkey = wr.OpenKey(reg_key, iface_guids[i] + r"\Connection")
+            iface_names[i] = wr.QueryValueEx(reg_subkey, "Name")[0]
         except:
             pass
     return iface_names
@@ -330,28 +381,39 @@ def create_Win_user(username, password, full_name=None, comment=None):
         full_name = "{0} User".format(username.capitalize())
     if not comment:
         comment = "System user account for Rattail applications"
-    win32net.NetUserAdd(None, 2, {
-        'name': username,
-        'password': password,
-        'priv': win32netcon.USER_PRIV_USER,
-        'comment': comment,
-        'flags': (win32netcon.UF_NORMAL_ACCOUNT
-                  | win32netcon.UF_PASSWD_CANT_CHANGE
-                  | win32netcon.UF_DONT_EXPIRE_PASSWD),
-        'full_name': full_name,
-        'acct_expires': win32netcon.TIMEQ_FOREVER,
-    })
+    win32net.NetUserAdd(
+        None,
+        2,
+        {
+            "name": username,
+            "password": password,
+            "priv": win32netcon.USER_PRIV_USER,
+            "comment": comment,
+            "flags": (
+                win32netcon.UF_NORMAL_ACCOUNT
+                | win32netcon.UF_PASSWD_CANT_CHANGE
+                | win32netcon.UF_DONT_EXPIRE_PASSWD
+            ),
+            "full_name": full_name,
+            "acct_expires": win32netcon.TIMEQ_FOREVER,
+        },
+    )
 
-    win32net.NetLocalGroupAddMembers(None, 'Users', 3, [
-        {'domainandname': r'{0}\{1}'.format(socket.gethostname(), username)}])
+    win32net.NetLocalGroupAddMembers(
+        None,
+        "Users",
+        3,
+        [{"domainandname": r"{0}\{1}".format(socket.gethostname(), username)}],
+    )
 
     # hide_user_account(username)
     return True
 
 
 def isWinUserAdmin():
-    if os.name == 'nt':
+    if os.name == "nt":
         import ctypes
+
         # WARNING: requires Windows XP SP2 or higher!
         try:
             return ctypes.windll.shell32.IsUserAnAdmin()
@@ -359,18 +421,21 @@ def isWinUserAdmin():
             traceback.print_exc()
             # print "Admin check failed, assuming not an admin."
             return False
-    elif os.name == 'posix':
+    elif os.name == "posix":
         # Check for root on Posix
         return os.getuid() == 0
     else:
-        raise RuntimeError("Unsupported operating system for this module: %s" % (os.name,))
+        raise RuntimeError(
+            "Unsupported operating system for this module: %s" % (os.name,)
+        )
+
 
 # mac OS
 
 
 def isMacOsUserAdmin():
     obj = simplecommand("cat /etc/master.passwd")  # For linux "cat /etc/shadow")
-    if int(obj['code']) == 0:
+    if int(obj["code"]) == 0:
         return True
     else:
         return False
@@ -380,17 +445,19 @@ def name_random(nb, pref=""):
     a = "abcdefghijklnmopqrstuvwxyz0123456789"
     d = pref
     for t in range(nb):
-        d = d+a[random.randint(0, 35)]
+        d = d + a[random.randint(0, 35)]
     return d
+
 
 def name_randomplus(nb, pref=""):
     a = "abcdefghijklnmopqrstuvwxyz0123456789"
     q = str(uuid.uuid4())
-    q = pref + q.replace("-","")
+    q = pref + q.replace("-", "")
     for t in range(nb):
         d = a[random.randint(0, 35)]
     res = q + d
     return res[:nb]
+
 
 def md5(fname):
     hash = hashlib.md5()
@@ -405,8 +472,8 @@ def getShortenedIpList():
     for i in netifaces.interfaces():
         addrs = netifaces.ifaddresses(i)
         try:
-            if_mac = shorten_mac(addrs[netifaces.AF_LINK][0]['addr'])
-            if_ip = addrs[netifaces.AF_INET][0]['addr']
+            if_mac = shorten_mac(addrs[netifaces.AF_LINK][0]["addr"])
+            if_ip = addrs[netifaces.AF_INET][0]["addr"]
             address = int(if_mac, 16)
             if address != 0:
                 listmacaddress[address] = if_mac
@@ -427,8 +494,8 @@ def getIPAdressList():
     for interface in netifaces.interfaces():
         try:
             for link in netifaces.ifaddresses(interface)[netifaces.AF_INET]:
-                if link['addr'] != '127.0.0.1':
-                    ip_list.append(link['addr'])
+                if link["addr"] != "127.0.0.1":
+                    ip_list.append(link["addr"])
         except:
             pass
     return ip_list
@@ -439,39 +506,49 @@ def shorten_mac(mac):
     mac = mac.replace(":", "")
     mac = mac.replace("-", "")
     mac = mac.replace(" ", "")
-    #mac = mac.replace("/","")
+    # mac = mac.replace("/","")
     return mac
+
 
 # 3 functions used for subnet network
 
+
 def ipV4toDecimal(ipv4):
-    d = ipv4.split('.')
-    return (int(d[0])*256*256*256) + (int(d[1])*256*256) + (int(d[2])*256) + int(d[3])
+    d = ipv4.split(".")
+    return (
+        (int(d[0]) * 256 * 256 * 256)
+        + (int(d[1]) * 256 * 256)
+        + (int(d[2]) * 256)
+        + int(d[3])
+    )
 
 
 def decimaltoIpV4(ipdecimal):
-    a = float(ipdecimal)/(256*256*256)
-    b = (a - int(a))*256
-    c = (b - int(b))*256
-    d = (c - int(c))*256
+    a = float(ipdecimal) / (256 * 256 * 256)
+    b = (a - int(a)) * 256
+    c = (b - int(b)) * 256
+    d = (c - int(c)) * 256
     return "%s.%s.%s.%s" % (int(a), int(b), int(c), int(d))
+
 
 def subnetnetwork(adressmachine, mask):
     adressmachine = adressmachine.split(":")[0]
     reseaumachine = ipV4toDecimal(adressmachine) & ipV4toDecimal(mask)
     return decimaltoIpV4(reseaumachine)
 
-def subnet_address(address, maskvalue ):
+
+def subnet_address(address, maskvalue):
     addr = [int(x) for x in adress.split(".")]
     mask = [int(x) for x in maskvalue.split(".")]
     subnet = [addr[i] & mask[i] for i in range(4)]
-    broadcast =  [(addr[i] & mask[i]) | (255^mask[i]) for i in range(4)]
-    return ".".join([str(x) for x in subnet]), '.'.join([str(x) for x in broadcast])
+    broadcast = [(addr[i] & mask[i]) | (255 ^ mask[i]) for i in range(4)]
+    return ".".join([str(x) for x in subnet]), ".".join([str(x) for x in broadcast])
+
 
 def is_valid_ipv4(ip):
-    """Validates IPv4 addresses.
-    """
-    pattern = re.compile(r"""
+    """Validates IPv4 addresses."""
+    pattern = re.compile(
+        r"""
         ^
         (?:
           # Dotted variants:
@@ -504,14 +581,16 @@ def is_valid_ipv4(ip):
           4[01]\d{8}|[1-3]\d{0,9}|[4-9]\d{0,8}
         )
         $
-    """, re.VERBOSE | re.IGNORECASE)
+    """,
+        re.VERBOSE | re.IGNORECASE,
+    )
     return pattern.match(ip) is not None
 
 
 def is_valid_ipv6(ip):
-    """Validates IPv6 addresses.
-    """
-    pattern = re.compile(r"""
+    """Validates IPv6 addresses."""
+    pattern = re.compile(
+        r"""
         ^
         \s*                         # Leading whitespace
         (?!.*::.*::)                # Only a single whildcard allowed
@@ -536,37 +615,41 @@ def is_valid_ipv6(ip):
         )
         \s*                         # Trailing whitespace
         $
-    """, re.VERBOSE | re.IGNORECASE | re.DOTALL)
+    """,
+        re.VERBOSE | re.IGNORECASE | re.DOTALL,
+    )
     return pattern.match(ip) is not None
+
 
 # linux systemd or init
 
 
 def typelinux():
-    p = subprocess.Popen('cat /proc/1/comm',
-                         shell=True,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT)
+    p = subprocess.Popen(
+        "cat /proc/1/comm", shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+    )
     result = p.stdout.readlines()
     code_result = p.wait()
-    system = result[0].rstrip('\n')
+    system = result[0].rstrip("\n")
     """returns the list of ip gateway related to the interfaces"""
     return system
 
 
 def isprogramme(name):
     obj = {}
-    p = subprocess.Popen("which %s" % (name),
-                         shell=True,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT)
+    p = subprocess.Popen(
+        "which %s" % (name),
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
     result = p.stdout.readlines()
-    obj['code'] = p.wait()
-    obj['result'] = result
+    obj["code"] = p.wait()
+    obj["result"] = result
     # print obj['code']
     # print obj['result']
     # print obj
-    if obj['result'] != "":
+    if obj["result"] != "":
         return True
     else:
         return False
@@ -574,70 +657,77 @@ def isprogramme(name):
 
 def simplecommand(cmd):
     obj = {}
-    p = subprocess.Popen(cmd,
-                         shell=True,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT)
+    p = subprocess.Popen(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+    )
     result = p.stdout.readlines()
-    obj['code'] = p.wait()
-    obj['result'] = result
+    obj["code"] = p.wait()
+    obj["result"] = result
     return obj
 
 
 def simplecommandstr(cmd):
     obj = {}
-    p = subprocess.Popen(cmd,
-                         shell=True,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT)
+    p = subprocess.Popen(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+    )
     result = p.stdout.readlines()
-    obj['code'] = p.wait()
-    obj['result'] = "\n".join(result)
+    obj["code"] = p.wait()
+    obj["result"] = "\n".join(result)
     return obj
 
 
 def servicelinuxinit(name, action):
     obj = {}
-    p = subprocess.Popen("/etc/init.d/%s %s" % (name, action),
-                         shell=True,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT)
+    p = subprocess.Popen(
+        "/etc/init.d/%s %s" % (name, action),
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
     result = p.stdout.readlines()
-    obj['code'] = p.wait()
-    obj['result'] = result
+    obj["code"] = p.wait()
+    obj["result"] = result
     return obj
+
 
 # restart service
 
 
 def service(name, action):  # start | stop | restart | reload
     obj = {}
-    if sys.platform.startswith('linux'):
+    if sys.platform.startswith("linux"):
         system = ""
-        p = subprocess.Popen('cat /proc/1/comm',
-                             shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.STDOUT)
+        p = subprocess.Popen(
+            "cat /proc/1/comm",
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
         result = p.stdout.readlines()
         code_result = p.wait()
-        system = result[0].rstrip('\n')
+        system = result[0].rstrip("\n")
         if system == "init":
-            p = subprocess.Popen("/etc/init.d/%s %s" % (name, action),
-                                 shell=True,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.STDOUT)
+            p = subprocess.Popen(
+                "/etc/init.d/%s %s" % (name, action),
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
             result = p.stdout.readlines()
-            obj['code'] = p.wait()
-            obj['result'] = result
+            obj["code"] = p.wait()
+            obj["result"] = result
         elif system == "systemd":
-            p = subprocess.Popen("systemctl %s %s" % (action, name),
-                                 shell=True,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.STDOUT)
+            p = subprocess.Popen(
+                "systemctl %s %s" % (action, name),
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
             result = p.stdout.readlines()
-            obj['code'] = p.wait()
-            obj['result'] = result
-    elif sys.platform.startswith('win'):
+            obj["code"] = p.wait()
+            obj["result"] = result
+    elif sys.platform.startswith("win"):
         pythoncom.CoInitialize()
         try:
             wmi_obj = wmi.WMI()
@@ -648,9 +738,10 @@ def service(name, action):  # start | stop | restart | reload
         for dev in wmi_out:
             print(dev.Caption)
         pass
-    elif sys.platform.startswith('darwin'):
+    elif sys.platform.startswith("darwin"):
         pass
     return obj
+
 
 # listservice()
 # FusionInventory Agent
@@ -707,11 +798,13 @@ def windowsservice(name, action):
             pass
 
 
-#windowsservice("FusionInventory-Agent", "Stop")
+# windowsservice("FusionInventory-Agent", "Stop")
+
 
 def methodservice():
     import pythoncom
     import wmi
+
     pythoncom.CoInitialize()
     try:
         c = wmi.WMI()
@@ -722,7 +815,7 @@ def methodservice():
 
 
 def file_get_content(path):
-    inputFile = open(path, 'r')  # Open test.txt file in read mode
+    inputFile = open(path, "r")  # Open test.txt file in read mode
     content = inputFile.read()
     inputFile.close()
     return content
@@ -733,14 +826,15 @@ def file_put_content(filename, contents, mode="w"):
     fh.write(contents)
     fh.close()
 
+
 # windows
 # def listusergroup():
-    #import wmi
-    #c = wmi.WMI()
-    # for group in c.Win32_Group():
-    # print group.Caption
-    # for user in group.associators("Win32_GroupUser"):
-    # print "  ", user.Caption
+# import wmi
+# c = wmi.WMI()
+# for group in c.Win32_Group():
+# print group.Caption
+# for user in group.associators("Win32_GroupUser"):
+# print "  ", user.Caption
 
 # decorator to simplify the plugins
 
@@ -749,30 +843,34 @@ def pluginprocess(func):
     def wrapper(xmppobject, action, sessionid, data, message, dataerreur):
         resultaction = "result%s" % action
         result = {}
-        result['action'] = resultaction
-        result['ret'] = 0
-        result['sessionid'] = sessionid
-        result['base64'] = False
-        result['data'] = {}
-        dataerreur['action'] = resultaction
-        dataerreur['data']['msg'] = "ERROR : %s" % action
-        dataerreur['sessionid'] = sessionid
+        result["action"] = resultaction
+        result["ret"] = 0
+        result["sessionid"] = sessionid
+        result["base64"] = False
+        result["data"] = {}
+        dataerreur["action"] = resultaction
+        dataerreur["data"]["msg"] = "ERROR : %s" % action
+        dataerreur["sessionid"] = sessionid
         try:
-            response = func(xmppobject, action, sessionid, data, message, dataerreur, result)
+            response = func(
+                xmppobject, action, sessionid, data, message, dataerreur, result
+            )
             # encode  result['data'] if needed
             # print result
-            if result['base64'] == True:
-                result['data'] = base64.b64encode(json.dumps(result['data']))
-            xmppobject.send_message(mto=message['from'],
-                                    mbody=json.dumps(result),
-                                    mtype='chat')
+            if result["base64"] == True:
+                result["data"] = base64.b64encode(json.dumps(result["data"]))
+            xmppobject.send_message(
+                mto=message["from"], mbody=json.dumps(result), mtype="chat"
+            )
         except:
-            xmppobject.send_message(mto=message['from'],
-                                    mbody=json.dumps(dataerreur),
-                                    mtype='chat')
+            xmppobject.send_message(
+                mto=message["from"], mbody=json.dumps(dataerreur), mtype="chat"
+            )
             return
         return response
+
     return wrapper
+
 
 # decorator to simplify the plugins
 # Check if session exists.
@@ -787,8 +885,11 @@ def pluginmaster(func):
             objsessiondata = xmppobject.session.sessionfromsessiondata(sessionid)
         else:
             objsessiondata = None
-        response = func(xmppobject, action, sessionid, data, message, ret, objsessiondata)
+        response = func(
+            xmppobject, action, sessionid, data, message, ret, objsessiondata
+        )
         return response
+
     return wrapper
 
 
@@ -804,19 +905,30 @@ def pluginmastersessionaction(sessionaction, timeminute=10):
                 objsessiondata = xmppobject.session.sessionfromsessiondata(sessionid)
             else:
                 objsessiondata = None
-            response = func(xmppobject, action, sessionid, data,
-                            message, ret, dataobj, objsessiondata)
+            response = func(
+                xmppobject,
+                action,
+                sessionid,
+                data,
+                message,
+                ret,
+                dataobj,
+                objsessiondata,
+            )
             if sessionaction == "clear" and objsessiondata != None:
                 xmppobject.session.clear(sessionid)
             elif sessionaction == "actualise":
                 xmppobject.session.reactualisesession(sessionid, 10)
             return response
+
         return wrapper
+
     return decorator
+
 
 def find_ip():
     candidates = []
-    for test_ip in ['192.0.2.0', "192.51.100.0", "203.0.113.0"]:
+    for test_ip in ["192.0.2.0", "192.51.100.0", "203.0.113.0"]:
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.connect((test_ip, 80))
@@ -837,51 +949,54 @@ class shellcommandtimeout(object):
     def __init__(self, cmd, timeout=15):
         self.process = None
         self.obj = {}
-        self.obj['timeout'] = timeout
-        self.obj['cmd'] = cmd
-        self.obj['result'] = "result undefined"
-        self.obj['code'] = 255
-        self.obj['separateurline'] = os.linesep
+        self.obj["timeout"] = timeout
+        self.obj["cmd"] = cmd
+        self.obj["result"] = "result undefined"
+        self.obj["code"] = 255
+        self.obj["separateurline"] = os.linesep
 
     def run(self):
         def target():
             # print 'Thread started'
-            self.process = subprocess.Popen(self.obj['cmd'],
-                                            shell=True,
-                                            stdout=subprocess.PIPE,
-                                            stderr=subprocess.STDOUT)
-            self.obj['result'] = self.process.stdout.readlines()
-            self.obj['code'] = self.process.wait()
+            self.process = subprocess.Popen(
+                self.obj["cmd"],
+                shell=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+            self.obj["result"] = self.process.stdout.readlines()
+            self.obj["code"] = self.process.wait()
             self.process.communicate()
             # print 'Thread finished'
+
         thread = threading.Thread(target=target)
         thread.start()
 
-        thread.join(self.obj['timeout'])
+        thread.join(self.obj["timeout"])
         if thread.is_alive():
-            print('Terminating process')
-            print("timeout %s" % self.obj['timeout'])
-            #self.codereturn = -255
-            #self.result = "error tineour"
+            print("Terminating process")
+            print("timeout %s" % self.obj["timeout"])
+            # self.codereturn = -255
+            # self.result = "error tineour"
             self.process.terminate()
             thread.join()
 
-        #self.result = self.process.stdout.readlines()
-        self.obj['codereturn'] = self.process.returncode
+        # self.result = self.process.stdout.readlines()
+        self.obj["codereturn"] = self.process.returncode
 
-        if self.obj['codereturn'] == -15:
+        if self.obj["codereturn"] == -15:
             self.result = "error tineout"
 
         return self.obj
 
 
 def ipfromdns(name_domaine_or_ip):
-    """ This function converts a dns to ipv4
-        If not find return ""
-        function tester on OS:
-        MAcOs, linux (debian, redhat, ubuntu), windows
-        eg : print ipfromdns("sfr.fr")
-        80.125.163.172
+    """This function converts a dns to ipv4
+    If not find return ""
+    function tester on OS:
+    MAcOs, linux (debian, redhat, ubuntu), windows
+    eg : print ipfromdns("sfr.fr")
+    80.125.163.172
     """
     if name_domaine_or_ip != "" and name_domaine_or_ip != None:
         if is_valid_ipv4(name_domaine_or_ip):
@@ -896,8 +1011,8 @@ def ipfromdns(name_domaine_or_ip):
 
 
 def check_exist_ip_port(name_domaine_or_ip, port):
-    """ This function check if socket valid for connection
-        return True or False
+    """This function check if socket valid for connection
+    return True or False
     """
     ip = ipfromdns(name_domaine_or_ip)
     try:
@@ -909,66 +1024,70 @@ def check_exist_ip_port(name_domaine_or_ip, port):
         return False
 
 
-unpad = lambda s : s[0:-ord(s[-1])]
-class AESCipher:
+unpad = lambda s: s[0 : -ord(s[-1])]
 
-    def __init__( self, key , BS = 32):
+
+class AESCipher:
+    def __init__(self, key, BS=32):
         self.key = key
         self.BS = BS
 
     def _pad(self, s):
         return s + (self.BS - len(s) % self.BS) * chr(self.BS - len(s) % self.BS)
 
-    def encrypt( self, raw ):
+    def encrypt(self, raw):
         raw = self._pad(raw)
-        iv = Random.new().read( AES.block_size )
-        cipher = AES.new( self.key, AES.MODE_CBC, iv )
-        return base64.b64encode( iv + cipher.encrypt( raw ) )
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        return base64.b64encode(iv + cipher.encrypt(raw))
 
-    def decrypt( self, enc ):
+    def decrypt(self, enc):
         enc = base64.b64decode(enc)
         iv = enc[:16]
-        cipher = AES.new(self.key, AES.MODE_CBC, iv )
-        return unpad(cipher.decrypt( enc[16:] ))
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        return unpad(cipher.decrypt(enc[16:]))
+
 
 def make_tarfile(output_file_gz_bz2, source_dir, compresstype="gz"):
     """
-        creation archive tar.gz or tar.bz2
-        compresstype "gz" or "bz2"
+    creation archive tar.gz or tar.bz2
+    compresstype "gz" or "bz2"
     """
     try:
-        with tarfile.open(output_file_gz_bz2, "w:%s"%compresstype) as tar:
+        with tarfile.open(output_file_gz_bz2, "w:%s" % compresstype) as tar:
             tar.add(source_dir, arcname=os.path.basename(source_dir))
         return True
     except Exception as e:
-        logger.error("Error creating tar.%s archive : %s"%(compresstype, str(e)))
+        logger.error("Error creating tar.%s archive : %s" % (compresstype, str(e)))
         return False
 
-def extract_file(imput_file__gz_bz2, to_directory='.', compresstype="gz"):
+
+def extract_file(imput_file__gz_bz2, to_directory=".", compresstype="gz"):
     """
-        extract archive tar.gz or tar.bz2
-        compresstype "gz" or "bz2"
+    extract archive tar.gz or tar.bz2
+    compresstype "gz" or "bz2"
     """
     cwd = os.getcwd()
     absolutepath = os.path.abspath(imput_file__gz_bz2)
     try:
         os.chdir(to_directory)
-        with tarfile.open(absolutepath, "r:%s"%compresstype) as tar:
+        with tarfile.open(absolutepath, "r:%s" % compresstype) as tar:
             tar.extractall()
         return True
     except OSError as e:
-        logger.error( "Error creating tar.%s archive : %s"%(str(e),compresstype))
+        logger.error("Error creating tar.%s archive : %s" % (str(e), compresstype))
         return False
     except Exception as e:
-        logger.error( "Error creating tar.%s archive : %s"%(str(e),compresstype))
+        logger.error("Error creating tar.%s archive : %s" % (str(e), compresstype))
         return False
     finally:
         os.chdir(cwd)
     return True
 
+
 def find_files(directory, pattern):
     """
-        use f
+    use f
     """
     for root, dirs, files in os.walk(directory):
         for basename in files:
@@ -976,8 +1095,9 @@ def find_files(directory, pattern):
                 filename = str(os.path.join(root, basename))
                 yield filename
 
+
 def listfile(directory, abspath=True):
-    listfile=[]
+    listfile = []
     for root, dirs, files in os.walk(directory):
         for basename in files:
             if abspath:
@@ -986,9 +1106,10 @@ def listfile(directory, abspath=True):
                 listfile.append(os.path.join(basename))
     return listfile
 
+
 def md5folder(directory):
     hash = hashlib.md5()
-    strmdr=[]
+    strmdr = []
     for root, dirs, files in os.walk(directory):
         for basename in files:
             hash.update(md5(os.path.join(root, basename)))
@@ -999,30 +1120,40 @@ def Setdirectorytempinfo():
     """
     create directory
     """
-    dirtempinfo = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP")
+    dirtempinfo = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "..", "INFOSTMP"
+    )
     if not os.path.exists(dirtempinfo):
         os.makedirs(dirtempinfo, mode=0o700)
     return dirtempinfo
 
 
 class geolocalisation_agent:
-    def __init__(self,
-                 typeuser = "public",
-                 geolocalisation=True,
-                 ip_public=None,
-                 strlistgeoserveur=""):
+    def __init__(
+        self,
+        typeuser="public",
+        geolocalisation=True,
+        ip_public=None,
+        strlistgeoserveur="",
+    ):
         self.determination = False
         self.geolocalisation = geolocalisation
         self.ip_public = ip_public
         self.typeuser = typeuser
-        self.filegeolocalisation = os.path.join(Setdirectorytempinfo(),
-                                          'filegeolocalisation')
-        self.listgeoserver = ["http://%s/json"%x for x in re.split(r'[;,\[\(\]\)\{\}\:\=\+\*\\\?\/\#\+\&\-\$\|\s]',
-                                              strlistgeoserveur)  if x.strip()!=""];
+        self.filegeolocalisation = os.path.join(
+            Setdirectorytempinfo(), "filegeolocalisation"
+        )
+        self.listgeoserver = [
+            "http://%s/json" % x
+            for x in re.split(
+                r"[;,\[\(\]\)\{\}\:\=\+\*\\\?\/\#\+\&\-\$\|\s]", strlistgeoserveur
+            )
+            if x.strip() != ""
+        ]
         self.localisation = None
         self.getgeolocalisation()
         if self.localisation is None:
-            self.localisation=self.getdatafilegeolocalisation()
+            self.localisation = self.getdatafilegeolocalisation()
 
     def getgeolocalisationobject(self):
         if self.localisation is None:
@@ -1033,7 +1164,7 @@ class geolocalisation_agent:
         if self.geoinfoexist():
             try:
                 with open(self.filegeolocalisation) as json_data:
-                    self.localisation=json.load(json_data)
+                    self.localisation = json.load(json_data)
                 self.determination = False
                 return self.localisation
             except Exception:
@@ -1043,7 +1174,7 @@ class geolocalisation_agent:
     def setdatafilegeolocalisation(self):
         if self.localisation is not None:
             try:
-                with open(self.filegeolocalisation, 'w') as json_data:
+                with open(self.filegeolocalisation, "w") as json_data:
                     json.dump(self.localisation, json_data, indent=4)
                 self.determination = True
             except Exception:
@@ -1056,9 +1187,14 @@ class geolocalisation_agent:
 
     def getgeolocalisation(self):
         if self.geolocalisation:
-            if self.typeuser in ["public", "nomade", "both"] or self.localisation is None:
+            if (
+                self.typeuser in ["public", "nomade", "both"]
+                or self.localisation is None
+            ):
                 # on recherche a chaque fois les information
-                self.localisation = geolocalisation_agent.searchgeolocalisation(self.listgeoserver)
+                self.localisation = geolocalisation_agent.searchgeolocalisation(
+                    self.listgeoserver
+                )
                 self.determination = True
                 self.setdatafilegeolocalisation()
                 return self.localisation
@@ -1069,14 +1205,18 @@ class geolocalisation_agent:
                         self.determination = False
                     return self.localisation
                 elif not self.geoinfoexist():
-                    self.localisation = geolocalisation_agent.searchgeolocalisation(self.listgeoserver)
+                    self.localisation = geolocalisation_agent.searchgeolocalisation(
+                        self.listgeoserver
+                    )
                     self.setdatafilegeolocalisation()
                     self.determination = True
                     return self.localisation
             return None
         else:
             if not self.geoinfoexist():
-                self.localisation = geolocalisation_agent.searchgeolocalisation(self.listgeoserver)
+                self.localisation = geolocalisation_agent.searchgeolocalisation(
+                    self.listgeoserver
+                )
                 self.setdatafilegeolocalisation()
                 self.determination = True
                 return self.localisation
@@ -1085,26 +1225,26 @@ class geolocalisation_agent:
 
     def get_ip_public(self):
         if self.geolocalisation:
-            if self.localisation is  None:
+            if self.localisation is None:
                 self.getgeolocalisation()
-            if self.localisation is not None and is_valid_ipv4(self.localisation['ip']):
+            if self.localisation is not None and is_valid_ipv4(self.localisation["ip"]):
                 if not self.determination:
                     logger.warning("Determination use file")
-                self.ip_public = self.localisation['ip']
-                return self.localisation['ip']
-            else :
+                self.ip_public = self.localisation["ip"]
+                return self.localisation["ip"]
+            else:
                 return None
         else:
             if not self.determination:
                 logger.warning("use old determination ip_public")
-            if self.localisation is  None:
+            if self.localisation is None:
                 if self.geoinfoexist():
-                    dd=self.getdatafilegeolocalisation()
-                    logger.warning("%s"%dd)
-                    if  self.localisation is  not None:
-                        return self.localisation['ip']
+                    dd = self.getdatafilegeolocalisation()
+                    logger.warning("%s" % dd)
+                    if self.localisation is not None:
+                        return self.localisation["ip"]
             else:
-                return self.localisation['ip']
+                return self.localisation["ip"]
         return self.ip_public
 
     @staticmethod
@@ -1126,12 +1266,12 @@ class geolocalisation_agent:
     @staticmethod
     def searchgeolocalisation(http_url_list_geo_server):
         """
-            return objet
+        return objet
         """
         for url in http_url_list_geo_server:
             try:
                 objip = geolocalisation_agent.call_simple_page(url)
-                if  objip is None:
+                if objip is None:
                     raise
                 return objip
             except BaseException:

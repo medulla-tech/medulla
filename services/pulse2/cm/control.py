@@ -34,14 +34,14 @@ from pulse2.cm.endpoints import VPNInstallEndpoint
 
 
 class MethodNotFound(Exception):
-    """ Unexisting method in an inherited endpoint """
+    """Unexisting method in an inherited endpoint"""
 
     def __repr__(self):
         return "Method %s not found" % repr(self.message)
 
 
 class MethodWithoutPrefix(Exception):
-    """ Method without a necessary prefix """
+    """Method without a necessary prefix"""
 
     def __init__(self, name):
         self.name = name
@@ -58,6 +58,7 @@ class RequestExtractor(object):
     Received as tuple containing a global method identifier and its parameters,
     method extract() returns a ready
     """
+
     DELIMITER = "."
     args_types_allowed = [str, tuple, list, dict]
 
@@ -85,13 +86,12 @@ class RequestExtractor(object):
                     return text.split(self.DELIMITER)
                 else:
                     raise IndexError(
-                        "Not allowed more than one method delimiter %s" %
-                        text)
+                        "Not allowed more than one method delimiter %s" % text
+                    )
             else:
                 raise MethodWithoutPrefix(text)
         else:
-            raise TypeError(
-                "Invalid format of method identifier, <str> type expected")
+            raise TypeError("Invalid format of method identifier, <str> type expected")
 
     def _validate_args(self, args):
         if isinstance(args, str):
@@ -101,9 +101,9 @@ class RequestExtractor(object):
                 return args
         else:
             raise TypeError(
-                "Invalid format of args; one of <%s> expected" %
-                repr(
-                    self.args_types_allowed))
+                "Invalid format of args; one of <%s> expected"
+                % repr(self.args_types_allowed)
+            )
 
 
 class EndpointsRoot(object):
@@ -139,16 +139,17 @@ class EndpointsRoot(object):
             @d.addErrback
             def _eb(failure):
                 self.logger.warn(
-                    "\033[31mRequest call failed: %s\033[0m" %
-                    str(failure))
+                    "\033[31mRequest call failed: %s\033[0m" % str(failure)
+                )
+
             dl.append(d)
 
         return DeferredList(dl)
 
     def _reply(self, result, uid):
         self.logger.debug(
-            "\033[34mResult for session uid: %d: %s\033[0m" %
-            (uid, str(result)))
+            "\033[34mResult for session uid: %d: %s\033[0m" % (uid, str(result))
+        )
         self.collector.release(uid, self.parser.encode(result))
 
     def call(self, request, from_ip):
@@ -172,10 +173,12 @@ class Dispatcher(object):
     or just treat each incoming request, where for all types of endpoints,
     a result is always returned to producer to pass them to client.
     """
-    endpoints = [PackagesEndpoint,
-                 InventoryServerEndpoint,
-                 VPNInstallEndpoint,
-                 ]
+
+    endpoints = [
+        PackagesEndpoint,
+        InventoryServerEndpoint,
+        VPNInstallEndpoint,
+    ]
 
     endpoints_root = None
     collector = None
@@ -188,11 +191,12 @@ class Dispatcher(object):
         self.config = config
         self.logger = logging.getLogger()
 
-        self.server = Server(config.server.port,
-                             config.server.ssl_key_file,
-                             config.server.ssl_crt_file,
-                             config.server.ssl_method,
-                             )
+        self.server = Server(
+            config.server.port,
+            config.server.ssl_key_file,
+            config.server.ssl_crt_file,
+            config.server.ssl_method,
+        )
         self.collector = Collector()
         self.endpoints_root = EndpointsRoot(self.collector)
 
@@ -225,9 +229,7 @@ class Dispatcher(object):
                 self.endpoints_root.register(endpoint(self.config))
 
     def _eb_start_failed(self, failure):
-        self.logger.warn(
-            "\033[31mStart server failed: %s\033[0m" %
-            str(failure))
+        self.logger.warn("\033[31mStart server failed: %s\033[0m" % str(failure))
 
     def run(self):
 
@@ -239,6 +241,7 @@ if __name__ == "__main__":
 
     import sys
     from mmc.core.log import ColoredFormatter
+
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
     hdlr2 = logging.StreamHandler(sys.stdout)

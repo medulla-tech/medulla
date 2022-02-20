@@ -63,11 +63,12 @@ class DummyTrigger(object):
 #        self.threadCallQueue.append((f, args, kw))
 #        f(*args, **kw)
 
+
 class Test00_GatheringServerTestCase(TestCase):
-    """ Tests the factory of GatheringServer"""
+    """Tests the factory of GatheringServer"""
 
     def test01a_assign_invalid_handler(self):
-        """ Test of assigning of invalid instance of handler """
+        """Test of assigning of invalid instance of handler"""
         factory = GatheringFactory()
 
         # Instead of an instance having "queue_and_process" method,
@@ -75,7 +76,7 @@ class Test00_GatheringServerTestCase(TestCase):
         self.assertRaises(AttributeError, factory.protocol.set_handler, object)
 
     def test01b_assign_invalid_trigger(self):
-        """ Test of assigning of invalid instance of trigger """
+        """Test of assigning of invalid instance of trigger"""
         factory = GatheringFactory()
 
         # Instead of an instance having "queue_and_process" method,

@@ -35,7 +35,7 @@ class BackupPCDBObj(DBObj):
 
 class Backup_profiles(Base, BackupPCDBObj):
     # ====== Table name =========================
-    __tablename__ = 'backup_profiles'
+    __tablename__ = "backup_profiles"
     # ====== Fields =============================
     profilename = Column(String(255))
     sharenames = Column(Text())
@@ -45,7 +45,7 @@ class Backup_profiles(Base, BackupPCDBObj):
 
 class Period_profiles(Base, BackupPCDBObj):
     # ====== Table name =========================
-    __tablename__ = 'period_profiles'
+    __tablename__ = "period_profiles"
     # ====== Fields =============================
     profilename = Column(String(255))
     full = Column(Float())
@@ -54,8 +54,8 @@ class Period_profiles(Base, BackupPCDBObj):
 
 
 class Backup_servers(Base, BackupPCDBObj):
-   # ====== Table name =========================
-    __tablename__ = 'backup_servers'
+    # ====== Table name =========================
+    __tablename__ = "backup_servers"
     # ====== Fields =============================
     entity_uuid = Column(String(50))
     backupserver_url = Column(String(255))
@@ -63,13 +63,13 @@ class Backup_servers(Base, BackupPCDBObj):
 
 class Hosts(Base, BackupPCDBObj):
     # ====== Table name =========================
-    __tablename__ = 'hosts'
+    __tablename__ = "hosts"
     # ====== Fields =============================
     uuid = Column(String(50))
     backup_profile = Column(Integer)
     period_profile = Column(Integer)
-    pre_backup_script = Column(Text, default='')
-    post_backup_script = Column(Text, default='')
-    pre_restore_script = Column(Text, default='')
-    post_restore_script = Column(Text, default='')
+    pre_backup_script = Column(Text, default="")
+    post_backup_script = Column(Text, default="")
+    pre_restore_script = Column(Text, default="")
+    post_restore_script = Column(Text, default="")
     reverse_port = Column(Integer)

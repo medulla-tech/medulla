@@ -44,8 +44,12 @@ class SchedulerApi(Pulse2Api):  # Singleton
         self.logger.debug("Looking up scheduler id using: " + str(scheduler))
         ret = None
         if isinstance(scheduler, dict):
-            if "server" in scheduler and "port" in scheduler and scheduler[
-                    "server"] and scheduler["port"]:
+            if (
+                "server" in scheduler
+                and "port" in scheduler
+                and scheduler["server"]
+                and scheduler["port"]
+            ):
                 (scheduler, credentials) = makeURL(scheduler)
             elif "mountpoint" in scheduler and scheduler["mountpoint"]:
                 ret = scheduler["mountpoint"]
@@ -54,11 +58,14 @@ class SchedulerApi(Pulse2Api):  # Singleton
         if not ret:
             # if type(scheduler) in (str, unicode) and scheduler in
             # self.config.scheduler_url2id:
-            if type(scheduler) in (
-                    str, str) and scheduler in self.config.scheduler_url2id:
+            if (
+                type(scheduler) in (str, str)
+                and scheduler in self.config.scheduler_url2id
+            ):
                 self.logger.debug(
-                    "Found scheduler id from MSC config file using this key %s" %
-                    scheduler)
+                    "Found scheduler id from MSC config file using this key %s"
+                    % scheduler
+                )
                 ret = self.config.scheduler_url2id[scheduler]
         if not ret:
             self.logger.debug("Using default scheduler")
@@ -97,5 +104,5 @@ class SchedulerApi(Pulse2Api):  # Singleton
 
     def convertMachineIntoH(self, machine):
         if not isinstance(machine, dict):
-            machine = {'uuid': machine}
+            machine = {"uuid": machine}
         return machine

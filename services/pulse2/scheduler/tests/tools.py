@@ -47,6 +47,7 @@ class TableFactory(type):
     This factory must be declared as __metaclass__.
 
     """
+
     coh_class = CommandsOnHost
     coh_cols = """
 | id                     |
@@ -147,10 +148,10 @@ class TableFactory(type):
     def __new__(cls, name, bases, attrs):
         # all table names to generate
         tables = [
-            t.replace(
-                '_cols',
-                '') for t in list(
-                cls.__dict__.keys()) if t.endswith('_cols')]
+            t.replace("_cols", "")
+            for t in list(cls.__dict__.keys())
+            if t.endswith("_cols")
+        ]
 
         for attr_name in tables:
             # gets the ORM class
@@ -162,6 +163,10 @@ class TableFactory(type):
             # columns are created and attached on ORM class
             table_class = type(attr_name, (klass,), tab_attrs)
             instance = table_class()
-            attrs.update({attr_name: instance, })
+            attrs.update(
+                {
+                    attr_name: instance,
+                }
+            )
 
         return type.__new__(cls, name, bases, attrs)

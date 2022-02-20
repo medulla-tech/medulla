@@ -23,8 +23,10 @@
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.base.config import BasePluginConfig
 
+
 class TreeOU(object):
-    """ TreeOU represents the arborescence of the founded OUs"""
+    """TreeOU represents the arborescence of the founded OUs"""
+
     def __init__(self, name=""):
         self.name = name
         self.child = []
@@ -44,7 +46,7 @@ class TreeOU(object):
             False if the string don't match
         """
 
-        string = string.split('/')
+        string = string.split("/")
         temp = self
 
         for element in string:
@@ -121,7 +123,7 @@ class TreeOU(object):
         Params:
             string this string contains the OUs name separated by /, like "my_first/my_sub/my_subsub"
         """
-        string = string.split('/')
+        string = string.split("/")
         temp = self
 
         for element in string:
@@ -144,15 +146,11 @@ class TreeOU(object):
         """
 
         # This is the initial structure whe want.
-        self.json = {
-            'name':self.name,
-            'child':[],
-            'path':'/'.join(self.path)
-        }
+        self.json = {"name": self.name, "child": [], "path": "/".join(self.path)}
         # Check if the actual node has children
         for element in self.child:
             # If it's the case each child's dict is append
-            self.json['child'].append(element.recursive_json())
+            self.json["child"].append(element.recursive_json())
         return self.json
 
     def get_path(self):
@@ -186,20 +184,20 @@ class TreeOU(object):
             returns False if the string can't be generated
         """
         config = PluginConfigFactory.new(BasePluginConfig, "base")
-        if config.has_section('authentication_externalldap'):
+        if config.has_section("authentication_externalldap"):
             # Get the parameters from the config file
-            suffix = config.get('authentication_externalldap', 'suffix')
+            suffix = config.get("authentication_externalldap", "suffix")
 
-            ou_list = ou_string.split('/')
+            ou_list = ou_string.split("/")
             ou_list.reverse()
 
             ous = []
             for ou in ou_list:
-                ou = 'OU='+ou
+                ou = "OU=" + ou
                 ous.append(ou)
 
             ous.append(suffix)
-            return ','.join(ous)
+            return ",".join(ous)
 
         else:
             return False

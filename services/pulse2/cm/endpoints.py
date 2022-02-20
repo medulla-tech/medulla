@@ -55,6 +55,7 @@ class Endpoint(object):
     the name of method which will be called. That avoids the mistakes
     when a same method name is already defined in another endpoint.
     """
+
     prefix = None
     config = None
 
@@ -64,16 +65,18 @@ class Endpoint(object):
         self._mmc_proxy_init()
 
     def _mmc_proxy_init(self):
-        """Starts the cleint mmc proxy for remote calls """
+        """Starts the cleint mmc proxy for remote calls"""
         proto = "https" if self.config.mmc.enablessl else "http"
-        url = "%s://%s:%d/XMLRPC" % (proto,
-                                     self.config.mmc.host,
-                                     self.config.mmc.port,
-                                     )
-        self.mmc_proxy = Proxy(url,
-                               self.config.mmc.user,
-                               self.config.mmc.passwd,
-                               )
+        url = "%s://%s:%d/XMLRPC" % (
+            proto,
+            self.config.mmc.host,
+            self.config.mmc.port,
+        )
+        self.mmc_proxy = Proxy(
+            url,
+            self.config.mmc.user,
+            self.config.mmc.passwd,
+        )
 
     def call_method(self, name, *args):
         """
@@ -104,10 +107,11 @@ class Endpoint(object):
         @return: UUID of machine
         @rtype: Deferred
         """
-        d = self.mmc_proxy.callRemote("base.ldapAuth",
-                                      self.config.mmc.ldap_user,
-                                      self.config.mmc.ldap_passwd,
-                                      )
+        d = self.mmc_proxy.callRemote(
+            "base.ldapAuth",
+            self.config.mmc.ldap_user,
+            self.config.mmc.ldap_passwd,
+        )
 
         @d.addCallback
         def cb(result):
@@ -129,17 +133,20 @@ class AgentsInstallMap(object):
     windows = [
         'netsh advfirewall firewall add rule name="Mandriva Secure Agent" dir=in action=allow protocol=TCP localport=22',
         "##wget## ##server##/downloads/win32/pulse2-win32-agents-pack-silent.exe",
-        "##tmp## pulse2-win32-agents-pack-silent.exe"]
+        "##tmp## pulse2-win32-agents-pack-silent.exe",
+    ]
     debian = [
         "wget -O - ##server##/downloads/pulse2-agents.gpg.key | apt-key add -",
         "echo 'deb ##server##/downloads/debian common main' >> /etc/apt/sources.list",
         "apt-get update -y",
-        "apt-get install -y pulse2-agents-installer"]
+        "apt-get install -y pulse2-agents-installer",
+    ]
     debian_server = [
         "wget -O - ##server##/downloads/pulse2-agents.gpg.key | apt-key add -",
         "echo 'deb ##server##/downloads/debian common main' >> /etc/apt/sources.list",
         "apt-get update -y",
-        "apt-get install -y pulse2-agents-installer-nordp"]
+        "apt-get install -y pulse2-agents-installer-nordp",
+    ]
     redhat = [
         "yum-config-manager --add-repo ##server##/downloads/rpm/pulse2-agents.repo",
         "yum install -y pulse2-agents-installer",
@@ -148,21 +155,24 @@ class AgentsInstallMap(object):
         "yum-config-manager --add-repo ##server##/downloads/rpm/pulse2-agents.repo",
         "yum install -y pulse2-agents-installer-nordp",
     ]
-    osx = ["##wget##  ##server##/downloads/mac/Pulse2AgentsInstaller.tar",
-           "tar xvf Pulse2AgentsInstaller.tar",
-           "/usr/bin/installer -pkg Pulse2AgentsInstaller.tar -target /",
-           ]
+    osx = [
+        "##wget##  ##server##/downloads/mac/Pulse2AgentsInstaller.tar",
+        "tar xvf Pulse2AgentsInstaller.tar",
+        "/usr/bin/installer -pkg Pulse2AgentsInstaller.tar -target /",
+    ]
 
 
 class VPNInstallMap(object):
     windows = [
         "##wget## ##server##/downloads/vpn/softether/softether-silent-install.exe",
-        "##tmp## softether-silent-install.exe /S ##args##"]
+        "##tmp## softether-silent-install.exe /S ##args##",
+    ]
 
-    posix = ["##wget## ##server##/downloads/vpn/vpn-service-install.sh",
-             "##wget## ##server##/downloads/vpn/vpn-client-set.sh",
-             "##wget## ##server##/downloads/vpn/vpn-variables.in",
-             ]
+    posix = [
+        "##wget## ##server##/downloads/vpn/vpn-service-install.sh",
+        "##wget## ##server##/downloads/vpn/vpn-client-set.sh",
+        "##wget## ##server##/downloads/vpn/vpn-variables.in",
+    ]
 
 
 class PackagesEndpoint(Endpoint):
@@ -269,11 +279,9 @@ class FusionFormatter(object):
                 ip = ""
             if isinstance(ip, tuple) and len(ip) > 0:
                 ip = ip[0]
-            network = self.network_template.format(name=name,
-                                                   ipaddr=ip,
-                                                   ipmask=netmask,
-                                                   macaddr=mac,
-                                                   state=state)
+            network = self.network_template.format(
+                name=name, ipaddr=ip, ipmask=netmask, macaddr=mac, state=state
+            )
             networks.append(network)
 
         return "\n".join(networks)
@@ -289,13 +297,14 @@ class FusionFormatter(object):
         logdate_timestamp = now_datetime.strftime(logdate_format)
 
         device_id = "%s-%s" % (hostname, device_timestamp)
-        return self.template.format(deviceid=device_id,
-                                    timestamp=logdate_timestamp,
-                                    hostname=hostname,
-                                    osname=system,
-                                    osversion=osversion,
-                                    networks=self.get_networks(networks),
-                                    )  # .encode("utf-8")
+        return self.template.format(
+            deviceid=device_id,
+            timestamp=logdate_timestamp,
+            hostname=hostname,
+            osname=system,
+            osversion=osversion,
+            networks=self.get_networks(networks),
+        )  # .encode("utf-8")
 
 
 class InventoryServerEndpoint(Endpoint):
@@ -356,8 +365,8 @@ class InventoryServerEndpoint(Endpoint):
         @d.addErrback
         def eb_uuid(failure):
             self.logger.warn(
-                "Getting of UUID for machine '%s' failed: %s" %
-                (hostname, str(failure)))
+                "Getting of UUID for machine '%s' failed: %s" % (hostname, str(failure))
+            )
             return failure
 
         # Light Pull stage
@@ -368,8 +377,9 @@ class InventoryServerEndpoint(Endpoint):
         @d.addErrback
         def eb_light_pull(failure):
             self.logger.warn(
-                "Pending commands launching for machine '%s' failed: %s" %
-                (hostname, str(failure)))
+                "Pending commands launching for machine '%s' failed: %s"
+                % (hostname, str(failure))
+            )
             return failure
 
         return d
@@ -411,34 +421,37 @@ class InventoryServerEndpoint(Endpoint):
                 @rtype: Deferred
                 """
                 if result:
-                    self.logger.info(
-                        "Inventory of machine <%s> sent" %
-                        (hostname))
+                    self.logger.info("Inventory of machine <%s> sent" % (hostname))
 
                     delay = self.config.inventory.inscription_lag
                     self.logger.info(
-                        "Trying to get new UUID of %s after %d seconds" %
-                        (hostname, delay))
+                        "Trying to get new UUID of %s after %d seconds"
+                        % (hostname, delay)
+                    )
 
-                    delayed = deferLater(reactor,
-                                         delay,
-                                         self._get_machine_uuid,
-                                         hostname,
-                                         macs,
-                                         )
+                    delayed = deferLater(
+                        reactor,
+                        delay,
+                        self._get_machine_uuid,
+                        hostname,
+                        macs,
+                    )
 
                     @delayed.addErrback
                     def eb(failure):
                         self.logger.warn(
-                            "Getting of UUID for machine '%s' failed: %s" %
-                            (hostname, str(failure)))
+                            "Getting of UUID for machine '%s' failed: %s"
+                            % (hostname, str(failure))
+                        )
                         return failure
+
                     return delayed
                 else:
                     self.logger.warn(
-                        "Inventory of machine <%s> sending failed" %
-                        (hostname))
+                        "Inventory of machine <%s> sending failed" % (hostname)
+                    )
                     return fail(None)
+
             return d
 
     def update_target_ip(self, uuid, ip, netmask):
@@ -458,22 +471,22 @@ class InventoryServerEndpoint(Endpoint):
         """
         if uuid and uuid is not None:
 
-            d = self.mmc_proxy.callRemote(
-                "msc.update_target_ip", uuid, ip, netmask)
+            d = self.mmc_proxy.callRemote("msc.update_target_ip", uuid, ip, netmask)
 
             @d.addCallback
             def cb(ignored):
                 self.logger.info(
-                    "New IP/netmask of target <%s>: %s/%s" %
-                    (uuid, ip, netmask))
+                    "New IP/netmask of target <%s>: %s/%s" % (uuid, ip, netmask)
+                )
                 return uuid
 
             @d.addErrback
             def eb(failure):
                 self.logger.error(
-                    "Update of target <%s> failed: %s" %
-                    (uuid, str(failure)))
+                    "Update of target <%s> failed: %s" % (uuid, str(failure))
+                )
                 return failure
+
             return d
 
         else:
@@ -493,9 +506,7 @@ class InventoryServerEndpoint(Endpoint):
         @rtype: list
         """
 
-        self.logger.info(
-            "Looking for pending commands for machine <%s>" %
-            (hostname))
+        self.logger.info("Looking for pending commands for machine <%s>" % (hostname))
         return self.mmc_proxy.callRemote("msc.checkLightPullCommands", uuid)
 
     def launch_pending_commands(self, cohs, hostname):
@@ -514,9 +525,7 @@ class InventoryServerEndpoint(Endpoint):
         total = len(cohs)
         if total == 0:
             return DeferredList([succeed(True)])
-        self.logger.info(
-            "%d deployments to start for machine <%s>" %
-            (total, hostname))
+        self.logger.info("%d deployments to start for machine <%s>" % (total, hostname))
         dl = []
         for coh in cohs:
             d = self.mmc_proxy.callRemote("msc.start_command_on_host", coh)
@@ -540,8 +549,9 @@ class InventoryServerEndpoint(Endpoint):
             iter(results)
         except TypeError:
             self.logger.warn(
-                "Launching of pending commands for <%s> failed: %s" %
-                (hostname, results))
+                "Launching of pending commands for <%s> failed: %s"
+                % (hostname, results)
+            )
             return False
         # results format :
         # [(True, True), (True, True),...] if correct
@@ -563,14 +573,16 @@ class InventoryServerEndpoint(Endpoint):
         self.logger.info("Inventory to send:\n %s" % (str(xml)))
 
         proto = "https" if self.config.inventory.enablessl else "http"
-        url = "%s://%s:%d/" % (proto,
-                               self.config.inventory.host,
-                               self.config.inventory.port
-                               )
-        headers = {"User-Agent": "Pulse2 Connection Manager",
-                   "Content-Type": "application/x-www-form-urlencoded",
-                   "Content-Length": str(len(xml)),
-                   }
+        url = "%s://%s:%d/" % (
+            proto,
+            self.config.inventory.host,
+            self.config.inventory.port,
+        )
+        headers = {
+            "User-Agent": "Pulse2 Connection Manager",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Content-Length": str(len(xml)),
+        }
 
         # sending the inventory
         d = getPage(url, method="POST", postdata=xml, headers=headers)
@@ -584,6 +596,7 @@ class InventoryServerEndpoint(Endpoint):
             @type reason: str
             """
             from zlib import decompressobj
+
             decomp = decompressobj()
             response = decomp.decompress(reason)
             self.logger.debug("Forward result: %s" % (str(response)))
@@ -603,7 +616,7 @@ class VPNInstallEndpoint(Endpoint):
     VPN_VARIALES_PATH = "/var/lib/pulse2/clients/vpn/vpn-variables"
 
     def _check_vpn_service(self):
-        """ Returns True if VPN server running """
+        """Returns True if VPN server running"""
         process_name = "vpnserver"
         for p in psutil.process_iter():
             for arg in p.cmdline:
@@ -636,8 +649,8 @@ class VPNInstallEndpoint(Endpoint):
             """
             if uuid is not False and uuid is not None:
                 self.logger.info(
-                    "VPN install: Machine %s has uuid=%s" %
-                    (hostname, str(uuid)))
+                    "VPN install: Machine %s has uuid=%s" % (hostname, str(uuid))
+                )
                 return succeed(uuid)
             else:
                 # return fail(None)
@@ -653,31 +666,27 @@ class VPNInstallEndpoint(Endpoint):
             """
             if uuid is None:
                 self.logger.warn(
-                    "VPN install: cannot get uuid of machine from %s" %
-                    from_ip)
+                    "VPN install: cannot get uuid of machine from %s" % from_ip
+                )
                 self.logger.warn("VPN install: Account will not be created")
                 return False
 
-            path = os.path.join(self.config.vpn.scripts_path,
-                                "vpn-server-user-create.sh",
-                                )
+            path = os.path.join(
+                self.config.vpn.scripts_path,
+                "vpn-server-user-create.sh",
+            )
             password = self._password_generate()
             host, port = self.get_vpn_variables()
 
             protocol = ForkingProtocol("VPN installer")
             args = [path, uuid, password]
-            reactor.spawnProcess(protocol,
-                                 args[0],
-                                 args,
-                                 usePTY=True)
+            reactor.spawnProcess(protocol, args[0], args, usePTY=True)
 
             return (host, port, uuid, password)
 
         @d.addErrback
         def get_uuid_errback(failure):
-            self.logger.warn(
-                "VPN install: uuid get failed: %s" %
-                (str(failure)))
+            self.logger.warn("VPN install: uuid get failed: %s" % (str(failure)))
             return False
 
         return d
@@ -685,8 +694,7 @@ class VPNInstallEndpoint(Endpoint):
     def _password_generate(self):
         length = 16
         chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-        return "".join([chars[ord(c) % len(chars)]
-                       for c in os.urandom(length)])
+        return "".join([chars[ord(c) % len(chars)] for c in os.urandom(length)])
 
     def get_vpn_variables(self):
         host = port = None
@@ -704,7 +712,7 @@ class VPNInstallEndpoint(Endpoint):
 
 
 class ForkingProtocol(ProcessProtocol):
-    """ Protocol to fork a process"""
+    """Protocol to fork a process"""
 
     def __init__(self, name, callback=None):
         """

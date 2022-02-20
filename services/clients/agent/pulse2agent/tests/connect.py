@@ -25,6 +25,7 @@ import queue
 import threading
 
 from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
+
 """
 try:
     from twisted.trial.unittest import TestCase
@@ -39,7 +40,7 @@ from pulse2agent.connect import Connector, ClientEndpoint
 from pulse2agent.connect import ConnectionTimeout, ConnectionRefused
 
 PORT = 5556
-HOST = 'localhost'
+HOST = "localhost"
 
 current_dir = os.sep.join((os.path.abspath(__file__)).split(os.sep)[:-1])
 cert_dir = os.path.join(current_dir, "tls")
@@ -59,6 +60,7 @@ fail_pemfile_root = os.path.join(cert_dir, "failroot.pem")
 
 class ConfigHelper(object):
     """A simple struct container"""
+
     host = HOST
     port = PORT
     keyfile = keyfile_client
@@ -68,6 +70,7 @@ class ConfigHelper(object):
 
 # -------------- Server helpers ----------------------------------
 
+
 class SimpleSocketServer(object):
     """
     Provides a simple socket server.
@@ -75,6 +78,7 @@ class SimpleSocketServer(object):
     This instance built as context manager, allows to encapsulate
     server session with correct shotdown.
     """
+
     def __init__(self, host, port):
 
         self.server = socket(AF_INET, SOCK_STREAM)
@@ -88,19 +92,21 @@ class SimpleSocketServer(object):
     def __exit__(self, type, value, traceback):
         self.server.close()
 
+
 class SSLSocketServer(object):
 
     SHUTDOWN = "SHUTDOWN"
 
-    handler = lambda x : x
+    handler = lambda x: x
 
-    def __init__(self,
-                 recv_queue,
-                 send_queue,
-                 crtfile,
-                 keyfile,
-                 pemfile,
-                 ):
+    def __init__(
+        self,
+        recv_queue,
+        send_queue,
+        crtfile,
+        keyfile,
+        pemfile,
+    ):
         """
         Starts a SSL server instance.
 
@@ -138,36 +144,34 @@ class SSLSocketServer(object):
     def receive_put_into_queue_shutdown(self):
         result = self._receive()
         self.recv_queue.put(result)
-        #self.shutdown()
+        # self.shutdown()
 
     def loop(self):
         while True:
             result = self._receive()
             if result == self.SHUTDOWN:
-                #self.shutdown()
+                # self.shutdown()
                 print("shutdown !!!!!!!!")
                 break
 
             self.recv_queue.put(result)
             self.send_response()
 
-
-
     def _receive(self):
         client_connection, address = self.server.accept()
         if client_connection:
-            ssl_client = ssl.wrap_socket(client_connection,
-                   server_side=True,
-                   certfile=self.crtfile,
-                   keyfile=self.keyfile,
-                   ca_certs=self.pemfile,
-                   ssl_version=ssl.PROTOCOL_TLSv1
-                   )
+            ssl_client = ssl.wrap_socket(
+                client_connection,
+                server_side=True,
+                certfile=self.crtfile,
+                keyfile=self.keyfile,
+                ca_certs=self.pemfile,
+                ssl_version=ssl.PROTOCOL_TLSv1,
+            )
             result = ssl_client.read(1024)
 
             print("result received on SSL server: %s" % result)
             return result
-
 
     def send_response(self):
         data = self.send_queue.get()
@@ -179,10 +183,12 @@ class SSLSocketServer(object):
     def shutdown(self):
         self.server.close()
 
+
 def build_ssl_server(recv_queue, crtfile, keyfile, pemfile):
     server = SSLSocketServer(recv_queue, None, crtfile, keyfile, pemfile)
     server.receive_put_into_queue_shutdown()
     return server
+
 
 def build_looped_ssl_server(recv_queue, send_queue, crtfile, keyfile, pemfile):
     server = SSLSocketServer(recv_queue, send_queue, crtfile, keyfile, pemfile)
@@ -190,11 +196,8 @@ def build_looped_ssl_server(recv_queue, send_queue, crtfile, keyfile, pemfile):
     return server
 
 
-
-
 class Test00_Connector(TestCase):
     """Tests the socket connector using server helpers"""
-
 
     def test01_establish_and_verify_sent_data_nossl(self):
         """A simple echo test without SSL authentification"""
@@ -217,30 +220,30 @@ class Test00_Connector(TestCase):
 
             client_sock.close()
 
-
-
-
     def test02_establish_and_verify_sent_data_ssl(self):
         """A simple echo test with SSL authentification"""
 
         # result queue
         queue = queue.Queue()
         # starting the server in a thread
-        t = threading.Thread(target=build_ssl_server,
-                             args=(queue,
-                                   crtfile_server,
-                                   keyfile_server,
-                                   pemfile_root,
-                                   )
-                             )
+        t = threading.Thread(
+            target=build_ssl_server,
+            args=(
+                queue,
+                crtfile_server,
+                keyfile_server,
+                pemfile_root,
+            ),
+        )
         t.start()
 
         # client connection
-        connector = Connector(HOST,
-                              PORT,
-                              keyfile_client,
-                              crtfile_client,
-                              )
+        connector = Connector(
+            HOST,
+            PORT,
+            keyfile_client,
+            crtfile_client,
+        )
         client_sock = connector.connect()
         # sending some data
         client_sock.sendall("something")
@@ -251,17 +254,16 @@ class Test00_Connector(TestCase):
         client_sock.close()
 
     def test03_connection_refused(self):
-        """ Test for catch ConnectionRefused exception. """
+        """Test for catch ConnectionRefused exception."""
 
-
-        connector = Connector(HOST,
-                              PORT,
-                              keyfile_client,
-                              crtfile_client,
-                              )
+        connector = Connector(
+            HOST,
+            PORT,
+            keyfile_client,
+            crtfile_client,
+        )
 
         self.assertRaises(ConnectionRefused, connector.connect)
-
 
     def test04_nossl_server_timeout_raise(self):
         """Try to serve no SSL service to SSL client"""
@@ -271,37 +273,40 @@ class Test00_Connector(TestCase):
         with SimpleSocketServer(HOST, PORT):
 
             # client connection
-            connector = Connector(HOST,
-                                  PORT,
-                                  keyfile_client,
-                                  crtfile_client,
-                                  timeout,
-                                  )
+            connector = Connector(
+                HOST,
+                PORT,
+                keyfile_client,
+                crtfile_client,
+                timeout,
+            )
             # because client is truing to connect to a server
             # without SSL authentification, client 2 seconds after
             # raises ConnectionTimeout exception
             self.assertRaises(ConnectionTimeout, connector.connect)
 
-
     def test05_unknown_ssl_server_timeout_raise(self):
         # result queue
         queue = queue.Queue()
         # starting the server in a thread
-        t = threading.Thread(target=build_ssl_server,
-                             args=(queue,
-                                   fail_crtfile_server,
-                                   fail_keyfile_server,
-                                   fail_pemfile_root,
-                                   )
-                             )
+        t = threading.Thread(
+            target=build_ssl_server,
+            args=(
+                queue,
+                fail_crtfile_server,
+                fail_keyfile_server,
+                fail_pemfile_root,
+            ),
+        )
         t.start()
 
         # client connection
-        connector = Connector(HOST,
-                              PORT,
-                              keyfile_client,
-                              crtfile_client,
-                              )
+        connector = Connector(
+            HOST,
+            PORT,
+            keyfile_client,
+            crtfile_client,
+        )
         client_sock = connector.connect()
         # sending some data
         client_sock.sendall("something")
@@ -314,21 +319,21 @@ class Test00_Connector(TestCase):
 
 
 class Test01_ClientEndpoint(TestCase):
-
     def setUp(self):
         self.config = ConfigHelper()
-
 
     def test01_simply_send_receive_ssl(self):
 
         queue = queue.Queue()
-        t = threading.Thread(target=build_ssl_server,
-                             args=(queue,
-                                   crtfile_server,
-                                   keyfile_server,
-                                   pemfile_root,
-                                   )
-                             )
+        t = threading.Thread(
+            target=build_ssl_server,
+            args=(
+                queue,
+                crtfile_server,
+                keyfile_server,
+                pemfile_root,
+            ),
+        )
         t.start()
         # give a little lag to establish the server
         time.sleep(1)
@@ -347,37 +352,36 @@ class Test01_ClientEndpoint(TestCase):
         recv_queue = queue.Queue()
         send_queue = queue.Queue()
 
-        t = threading.Thread(target=build_looped_ssl_server,
-                             args=(recv_queue,
-                                   send_queue,
-                                   crtfile_server,
-                                   keyfile_server,
-                                   pemfile_root,
-                                   )
-                             )
+        t = threading.Thread(
+            target=build_looped_ssl_server,
+            args=(
+                recv_queue,
+                send_queue,
+                crtfile_server,
+                keyfile_server,
+                pemfile_root,
+            ),
+        )
         t.start()
         # give a little lag to establish the server
-        #time.sleep(1)
+        # time.sleep(1)
         send_queue.put("another_data")
 
         endpoint = ClientEndpoint(self.config)
         response = endpoint.request("my_data")
         time.sleep(1)
 
-        #request = recv_queue.get()
-        #self.assertEqual(request, "my_data")
-
+        # request = recv_queue.get()
+        # self.assertEqual(request, "my_data")
 
         self.assertEqual(response, "another_data")
-
 
         send_queue.put("SHUTDOWN")
 
         endpoint.close()
 
 
+if __name__ == "__main__":
 
-if __name__ == '__main__':
-
-    if TestCase.__module__ != "twisted.trial.unittest" :
+    if TestCase.__module__ != "twisted.trial.unittest":
         main()

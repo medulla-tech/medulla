@@ -33,7 +33,7 @@ import fileinput
 from distutils import file_util
 
 from .ptypes import CC
-from .ptypes import  Component, DispatcherFrame
+from .ptypes import Component, DispatcherFrame
 from .connect import ClientEndpoint
 from .connect import ConnectionTimeout, ConnectionRefused
 from .inventory import InventoryChecker, get_minimal_inventory
@@ -41,7 +41,6 @@ from .vpn import VPNLaunchControl
 from .shell import Shell
 from .pexceptions import SoftwareCheckError, ConnectionError
 from .pexceptions import SoftwareInstallError, PackageDownloadError
-
 
 
 class Protocol(Component):
@@ -59,7 +58,6 @@ class Protocol(Component):
             return "vpn_install.create_new_user"
 
 
-
 class InventorySender(Component):
     __component_name__ = "inventory_sender"
 
@@ -74,6 +72,7 @@ class InventorySender(Component):
         except ConnectionError:
             return False
         return True
+
 
 class VPNSetter(Component):
     __component_name__ = "vpn_setter"
@@ -111,27 +110,29 @@ class VPNSetter(Component):
             if isinstance(response, list):
                 if len(response) == 4:
                     host, port, user, password = response
-                    return "/VPN_SERVER=%s /VPN_PORT=%s /VPN_LOGIN=%s /VPN_PASSWORD=%s" % (host, port, user, password)
+                    return (
+                        "/VPN_SERVER=%s /VPN_PORT=%s /VPN_LOGIN=%s /VPN_PASSWORD=%s"
+                        % (host, port, user, password)
+                    )
 
             raise SoftwareInstallError("vpnclient")
         except ValueError:
             raise SoftwareInstallError("vpnclient")
 
-
-
     def set_variables(self, host, port, user, password):
-        variables = os.path.join(self.temp_dir,
-                                 "vpn-variables",
-                                 )
+        variables = os.path.join(
+            self.temp_dir,
+            "vpn-variables",
+        )
         file_util.copy_file("%s.in" % variables, variables)
-        pattern = {"VPN_SERVER_HOST": host,
-                   "VPN_SERVER_PORT": port,
-                   "VPN_SERVER_USER": user,
-                   "VPN_SERVER_PASSWORD": password,
-                   "VPN_SERVICE_SIDE": "client",
-                   }
+        pattern = {
+            "VPN_SERVER_HOST": host,
+            "VPN_SERVER_PORT": port,
+            "VPN_SERVER_USER": user,
+            "VPN_SERVER_PASSWORD": password,
+            "VPN_SERVICE_SIDE": "client",
+        }
         return self.replace(pattern, variables)
-
 
     def replace(self, pattern, in_script):
         """
@@ -154,11 +155,11 @@ class VPNSetter(Component):
 
         return replaced_items == len(pattern)
 
-
     def install(self):
-        installer = os.path.join(self.temp_dir,
-                                 "vpn-service-install.sh",
-                                 )
+        installer = os.path.join(
+            self.temp_dir,
+            "vpn-service-install.sh",
+        )
         self.logger.debug("vpn_setter: chmod +x installer")
         st = os.stat(installer)
         os.chmod(installer, st.st_mode | stat.S_IEXEC)
@@ -168,9 +169,10 @@ class VPNSetter(Component):
             self.logger.warn("vpn_setter: install failed")
             return False
 
-        setter = os.path.join(self.temp_dir,
-                              "vpn-client-set.sh",
-                              )
+        setter = os.path.join(
+            self.temp_dir,
+            "vpn-client-set.sh",
+        )
         st = os.stat(setter)
         os.chmod(setter, st.st_mode | stat.S_IEXEC)
         self.logger.debug("vpn_setter: chmod +x setter")
@@ -180,7 +182,6 @@ class VPNSetter(Component):
             self.logger.warn("vpn_setter: set failed")
             return False
 
-
         return True
 
     @property
@@ -189,8 +190,6 @@ class VPNSetter(Component):
             return self.config.paths.package_tmp_dir_win
         else:
             return self.config.paths.package_tmp_dir_posix
-
-
 
 
 class InitialInstalls(Component):
@@ -210,14 +209,14 @@ class InitialInstalls(Component):
         """
         command = self.parent.protocol.get_command("GET")
 
-        request = {"name": software,
-                   "system": platform.system(),
-                   "arch": platform.machine(),
-                   }
+        request = {
+            "name": software,
+            "system": platform.system(),
+            "arch": platform.machine(),
+        }
         if platform.system() == "Linux":
             request["distro"] = platform.linux_distribution()[0]
             request["xserver"] = 1 if "DISPLAY" in os.environ else 0
-
 
         container = (command, request)
 
@@ -230,14 +229,13 @@ class InitialInstalls(Component):
 
         # TODO - include a delete phase
 
-
-
     def do_cmd(self, command, *args):
         if "##server##" in command:
-            command = command.replace("##server##",
-                                      "http://%s" % self.config.server.host)
+            command = command.replace(
+                "##server##", "http://%s" % self.config.server.host
+            )
         if "##wget##" in command:
-            url = command.replace("##wget##","")
+            url = command.replace("##wget##", "")
             self.logger.debug("dwnld url: %s" % url)
             self.download(url)
             return
@@ -260,9 +258,8 @@ class InitialInstalls(Component):
         else:
             return self.config.paths.package_tmp_dir_posix
 
-
     def download(self, url):
-        filename = url.split('/')[-1]
+        filename = url.split("/")[-1]
         try:
             u = urllib.request.urlopen(url)
         except urllib.error.URLError:
@@ -274,7 +271,7 @@ class InitialInstalls(Component):
             os.mkdir(self.temp_dir)
 
         path = os.path.join(self.temp_dir, filename)
-        f = open(path, 'wb')
+        f = open(path, "wb")
         meta = u.info()
         filesize = int(meta.getheaders("Content-Length")[0])
         self.logger.debug("Downloading: %s bytes: %s" % (filename, filesize))
@@ -292,9 +289,6 @@ class InitialInstalls(Component):
         f.close()
         return path
 
-
-
-
     def unpack_to_tempfile(self, name, response):
         # TODO - distinct several serialisation backends
         import pickle
@@ -309,15 +303,12 @@ class InitialInstalls(Component):
         if os.path.exists(path):
             return path
         else:
-            raise # something
-
+            raise  # something
 
     def launch(self, path):
 
         returncode = self.parent.shell.call(path)
         return True if returncode == 0 else False
-
-
 
 
 class FirstRunEtap(Component):
@@ -339,19 +330,21 @@ class FirstRunEtap(Component):
         if self.config.vpn.enabled:
             self.logger.debug("check if VPN installed...")
             if not self.parent.inventory_checker.check_vpn_installed():
-                self.logger.debug("adding the vpnclient to required sw (missing=%s)" % repr(missing_software))
-                #missing_software.append("vpnclient")
+                self.logger.debug(
+                    "adding the vpnclient to required sw (missing=%s)"
+                    % repr(missing_software)
+                )
+                # missing_software.append("vpnclient")
                 vpn_installed = False
             else:
                 vpn_installed = True
-
 
         try:
             for sw in missing_software:
                 result = self.parent.initial_installs.install(sw)
                 if not result:
                     pass
-                    #raise SoftwareRequestError(sw)
+                    # raise SoftwareRequestError(sw)
 
             if self.config.vpn.enabled and not vpn_installed:
 
@@ -361,7 +354,9 @@ class FirstRunEtap(Component):
                     else:
                         args = self.parent.vpn_setter.get_created_connection()
                         self.logger.debug("created args: %s" % str(args))
-                        result = self.parent.initial_installs.install(["vpnclient"], args)
+                        result = self.parent.initial_installs.install(
+                            ["vpnclient"], args
+                        )
 
                         self.logger.debug("install of vpnclient: %s" % str(result))
                         self.parent.vpn_launch_control.start()
@@ -376,26 +371,26 @@ class FirstRunEtap(Component):
             self.logger.warn("Initial install phase failed")
             return False
         except SoftwareInstallError as e:
-            self.logger.warn("Install of %s failed (probably machine not exist yet in inventory" % str(e))
+            self.logger.warn(
+                "Install of %s failed (probably machine not exist yet in inventory"
+                % str(e)
+            )
             return False
         return True
 
 
-
-
-
-
 class Dispatcher(DispatcherFrame):
 
-    components = [Shell,
-                  FirstRunEtap,
-                  InitialInstalls,
-                  InventoryChecker,
-                  InventorySender,
-                  VPNLaunchControl,
-                  VPNSetter,
-                  Protocol,
-                  ]
+    components = [
+        Shell,
+        FirstRunEtap,
+        InitialInstalls,
+        InventoryChecker,
+        InventorySender,
+        VPNLaunchControl,
+        VPNSetter,
+        Protocol,
+    ]
 
     def __init__(self, config):
         """
@@ -406,7 +401,6 @@ class Dispatcher(DispatcherFrame):
         @type vpn_queue: Queue.Queue
         """
         super(self.__class__, self).__init__(config)
-
 
     def _connect(self):
         """
@@ -442,8 +436,6 @@ class Dispatcher(DispatcherFrame):
             self.logger.error("Agent connection failed: %s" % repr(exc))
             return False
 
-
-
     def start(self):
         if not self.config.vpn.enabled:
             # VPN connection not included, if server not available, exit
@@ -451,7 +443,7 @@ class Dispatcher(DispatcherFrame):
         else:
             if not self._connect():
                 # server not available, try to establish a VPN connection
-                #launch_vpn = VPNLaunchControl(self.config, self.queues.vpn)
+                # launch_vpn = VPNLaunchControl(self.config, self.queues.vpn)
                 if not self.inventory_checker.check_vpn_installed():
                     self.logger.warn("VPN client not installed yet")
                     return False
@@ -470,7 +462,6 @@ class Dispatcher(DispatcherFrame):
                 # first step succeed (direct connect without VPN)
                 return True
 
-
     def _mainloop(self):
         # connection establishing
         if not self.start():
@@ -481,11 +472,9 @@ class Dispatcher(DispatcherFrame):
             # TODO - stop queues, log something and exit
             return False
 
-
         if not self.inventory_sender.send():
             return False
         # looking for all needed softwares and install them if missing
-
 
         while True:
             self.logger.debug("waiting for next period")
@@ -510,6 +499,7 @@ def start():
 
     d = Dispatcher(config)
     d.mainloop()
+
 
 if __name__ == "__main__":
     start()

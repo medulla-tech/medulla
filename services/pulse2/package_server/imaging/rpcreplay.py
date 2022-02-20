@@ -50,15 +50,16 @@ class RPCStore(Singleton):
         """
         Initialize object.
         """
-        self.logger = logging.getLogger('imaging')
-        self.logger.debug('Initializing imaging RPC replay file')
-        self.filename = PackageServerConfig().imaging_api['rpc_replay_file']
+        self.logger = logging.getLogger("imaging")
+        self.logger.debug("Initializing imaging RPC replay file")
+        self.filename = PackageServerConfig().imaging_api["rpc_replay_file"]
         try:
             self._initStateFile()
         except Exception as e:
             self.logger.error(
-                'Can\'t initialize the RPC store file: %s. If the file looks corrupted, just delete it and restart the service.' %
-                self.filename)
+                "Can't initialize the RPC store file: %s. If the file looks corrupted, just delete it and restart the service."
+                % self.filename
+            )
             raise e
 
     def _initStateFile(self):
@@ -75,14 +76,15 @@ class RPCStore(Singleton):
         """
         Update the RPC state file content.
         """
-        assert(isinstance(data, dict))
-        self.logger.debug('Updating RPC replay file: %s' % self.filename)
-        fobj = open(self.filename, 'w')
-        self.logger.debug('Dumping and writing data')
+        assert isinstance(data, dict)
+        self.logger.debug("Updating RPC replay file: %s" % self.filename)
+        fobj = open(self.filename, "w")
+        self.logger.debug("Dumping and writing data")
         pickle.dump(data, fobj)
         fobj.close()
-        self.logger.debug('RPC replay file successfully updated with %d items'
-                          % len(data))
+        self.logger.debug(
+            "RPC replay file successfully updated with %d items" % len(data)
+        )
 
     def get(self):
         """
@@ -91,10 +93,10 @@ class RPCStore(Singleton):
         if not os.path.exists(self.filename):
             ret = {}
         else:
-            fobj = open(self.filename, 'r')
+            fobj = open(self.filename, "r")
             ret = pickle.load(fobj)
             fobj.close()
-        assert(isinstance(ret, dict))
+        assert isinstance(ret, dict)
         return ret
 
     def add(self, function, args, timestamp=None):
@@ -120,8 +122,8 @@ class RPCStore(Singleton):
         items = []
         try:
             self.logger.debug(
-                'Taking at most %d items from the RPC replay file' %
-                count)
+                "Taking at most %d items from the RPC replay file" % count
+            )
             data = self.get()
             if data:
                 timestamps = sorted(data.keys())
@@ -138,14 +140,13 @@ class RPCStore(Singleton):
                             found += 1
                     else:
                         # Discard entry
-                        self.logger.debug('Removing old entry: %s'
-                                          % str(data[tstamp]))
+                        self.logger.debug("Removing old entry: %s" % str(data[tstamp]))
                         del data[tstamp]
                     i += 1
                 self._updateStateFile(data)
-                self.logger.debug('Done, found %d items' % len(items))
+                self.logger.debug("Done, found %d items" % len(items))
             else:
-                self.logger.debug('RPC replay file is empty')
+                self.logger.debug("RPC replay file is empty")
         except Exception as e:
             self.logger.exception(e)
         return items
@@ -155,14 +156,15 @@ class RPCStore(Singleton):
         Remove from the RPC state file the RPCs with the given timestamp
         """
         if timestamps:
-            self.logger.debug('Removing the RPCs with these timestamps: %s'
-                              % str(timestamps))
+            self.logger.debug(
+                "Removing the RPCs with these timestamps: %s" % str(timestamps)
+            )
             try:
                 data = self.get()
                 for timestamp in timestamps:
                     del data[timestamp]
                 self._updateStateFile(data)
-                self.logger.debug('Removal done')
+                self.logger.debug("Removal done")
             except Exception as e:
                 self.logger.error(e)
 
@@ -174,8 +176,7 @@ class RPCStore(Singleton):
             self.get()
             ret = True
         except Exception as e:
-            self.logger.error('Invalid RPC replay file %s: %s'
-                              % (self.filename, e))
+            self.logger.error("Invalid RPC replay file %s: %s" % (self.filename, e))
             ret = False
         return ret
 
@@ -183,7 +184,7 @@ class RPCStore(Singleton):
         """
         Write RPC store content in log file
         """
-        self.logger.debug('RPC store content:')
+        self.logger.debug("RPC store content:")
         self.logger.debug(self.get())
 
 
@@ -203,16 +204,16 @@ class RPCReplay(Singleton):
         """
         Initialize object, and the RPCStore object.
         """
-        self.logger = logging.getLogger('imaging')
-        self.logger.debug('Initializing imaging RPC replay manager')
-        self.timer = PackageServerConfig().imaging_api['rpc_loop_timer']
-        self.count = PackageServerConfig().imaging_api['rpc_count']
-        self.interval = PackageServerConfig().imaging_api['rpc_interval']
+        self.logger = logging.getLogger("imaging")
+        self.logger.debug("Initializing imaging RPC replay manager")
+        self.timer = PackageServerConfig().imaging_api["rpc_loop_timer"]
+        self.count = PackageServerConfig().imaging_api["rpc_count"]
+        self.interval = PackageServerConfig().imaging_api["rpc_interval"]
         self._replaying = False
         self._delayedCall = None
         self.store = RPCStore()
         self.store.init()
-        reactor.addSystemEventTrigger('before', 'shutdown', self.cancelLoop)
+        reactor.addSystemEventTrigger("before", "shutdown", self.cancelLoop)
 
     def check(self):
         """
@@ -230,30 +231,23 @@ class RPCReplay(Singleton):
         """
         Schedule the next RPC replay
         """
-        self.logger.debug('Scheduling next RPC replay in %d seconds'
-                          % self.timer)
+        self.logger.debug("Scheduling next RPC replay in %d seconds" % self.timer)
         self._delayedCall = reactor.callLater(self.timer, self._run)
 
     def cancelLoop(self):
         if self._delayedCall:
-            self.logger.debug('Cancelling next RPC replay scheduling')
+            self.logger.debug("Cancelling next RPC replay scheduling")
             self._delayedCall.cancel()
 
-    def onError(
-            self,
-            error,
-            funcname,
-            args,
-            default_return=[],
-            timestamp=None):
+    def onError(self, error, funcname, args, default_return=[], timestamp=None):
         """
         Error back to be called when a XML-RPC call fails.
         The RPC is saved so that it can be replayed later.
         """
         # Mutable list default_return used as default argument to a method or
         # function
-        self.logger.warn('%s %s has failed: %s' % (funcname, args, error))
-        self.logger.info('Storing RPC, it will be replayed later')
+        self.logger.warn("%s %s has failed: %s" % (funcname, args, error))
+        self.logger.info("Storing RPC, it will be replayed later")
         self.store.add(funcname, args, timestamp)
         return default_return
 
@@ -264,25 +258,27 @@ class RPCReplay(Singleton):
         """
         url, _ = makeURL(PackageServerConfig().mmc_agent)
         return ImagingXMLRPCClient(
-            '',
+            "",
             url,
-            PackageServerConfig().mmc_agent['verifypeer'],
-            PackageServerConfig().mmc_agent['cacert'],
-            PackageServerConfig().mmc_agent['localcert'])
+            PackageServerConfig().mmc_agent["verifypeer"],
+            PackageServerConfig().mmc_agent["cacert"],
+            PackageServerConfig().mmc_agent["localcert"],
+        )
 
     def _run(self):
         """
         Schedule RPCs replay
         """
+
         def _rpcReplayCb(result):
-            self.logger.debug('All scheduled RPCs have been replayed')
+            self.logger.debug("All scheduled RPCs have been replayed")
             self.store.discardRPCs(self._success)
             self._replaying = False
 
         if self._replaying:
-            self.logger.debug('RPC replay already in progress')
+            self.logger.debug("RPC replay already in progress")
         else:
-            self.logger.debug('Starting scheduling of RPCs to replay')
+            self.logger.debug("Starting scheduling of RPCs to replay")
             self._replaying = True
             self._success = []
             try:
@@ -293,14 +289,13 @@ class RPCReplay(Singleton):
                 for item in items:
                     timestamp, func, args = item
                     interval += self.interval
-                    d = task.deferLater(reactor, interval,
-                                        self._replayRPC, *item)
+                    d = task.deferLater(reactor, interval, self._replayRPC, *item)
                     deferreds.append(d)
                 dl = defer.DeferredList(deferreds)
                 dl.addCallback(_rpcReplayCb)
             except Exception as e:
-                self.logger.exception('Error during RPC replay: %s', e)
-            self.logger.debug('End scheduling of RPCs to replay')
+                self.logger.exception("Error during RPC replay: %s", e)
+            self.logger.debug("End scheduling of RPCs to replay")
         self.startLoop()
 
     def _replayRPC(self, timestamp, func, args):
@@ -311,6 +306,9 @@ class RPCReplay(Singleton):
         """
         client = self._getXMLRPCClient()
         d = client.callRemote(func, *args)
-        d.addCallbacks(lambda x: self._success.append(timestamp),
-                       self.onError, errbackArgs=(func, args, 0, timestamp))
+        d.addCallbacks(
+            lambda x: self._success.append(timestamp),
+            self.onError,
+            errbackArgs=(func, args, 0, timestamp),
+        )
         return d

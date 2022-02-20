@@ -25,15 +25,16 @@
 from mmc.support.config import MMCConfigParser
 from mmc.support.mmctools import Singleton
 
+
 class DatabaseConfig(Singleton):
     dbsection = "database"
 
-    dbdriver = 'mysql'
+    dbdriver = "mysql"
     dbhost = "127.0.0.1"
     dbname = None
     dbport = None
-    dbuser = 'mmc'
-    dbpasswd = 'mmc'
+    dbuser = "mmc"
+    dbpasswd = "mmc"
 
     dbdebug = "ERROR"
     dbpoolrecycle = 60
@@ -49,7 +50,7 @@ class DatabaseConfig(Singleton):
         # Load configuration file
         self.cp = MMCConfigParser()
         self.cp.read(config_file)
-        self.cp.read(config_file + '.local')
+        self.cp.read(config_file + ".local")
 
         if self.cp.has_section(self.dbsection):
             if self.cp.has_option(self.dbsection, "dbdriver"):
@@ -71,10 +72,10 @@ class DatabaseConfig(Singleton):
             if self.cp.has_option(self.dbsection, "dbpoolrecycle"):
                 self.dbpoolrecycle = self.cp.getint(self.dbsection, "dbpoolrecycle")
 
-            if self.cp.has_option(self.dbsection,  "dbpoolsize"):
+            if self.cp.has_option(self.dbsection, "dbpoolsize"):
                 self.dbpoolsize = self.cp.getint(self.dbsection, "dbpoolsize")
 
-            if self.cp.has_option(self.dbsection,  "dbpooltimeout"):
+            if self.cp.has_option(self.dbsection, "dbpooltimeout"):
                 self.dbpooltimeout = self.cp.getint(self.dbsection, "dbpooltimeout")
 
             if self.cp.has_option(self.dbsection, "dbsslenable"):

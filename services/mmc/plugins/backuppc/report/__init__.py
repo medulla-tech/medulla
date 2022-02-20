@@ -27,32 +27,32 @@ Plugin to manage the interface with BackupPC
 
 
 class exportedReport(object):
-    #Add meta class singleton_N
+    # Add meta class singleton_N
 
     def getServerUsedDiskSpace(self, entities, servername, num):
-        #output format
+        # output format
         result = []
-        result.append({'entity_id': 'UUID1', 'value': 14})
-        result.append({'entity_id': 'UUID2', 'value': 18})
+        result.append({"entity_id": "UUID1", "value": 14})
+        result.append({"entity_id": "UUID2", "value": 18})
         return result
 
     def getLevel1(self, entities, servername, num):
-        #output format
+        # output format
         result = []
-        result.append({'entity_id': 'UUID1', 'value': 100})
-        result.append({'entity_id': 'UUID2', 'value': 150})
+        result.append({"entity_id": "UUID1", "value": 100})
+        result.append({"entity_id": "UUID2", "value": 150})
         return result
 
     def getLevel2_1(self, entities, servername, num):
-        #output format
+        # output format
         result = []
-        result.append({'entity_id': 'UUID1', 'value': 31})
-        result.append({'entity_id': 'UUID2', 'value': 48})
+        result.append({"entity_id": "UUID1", "value": 31})
+        result.append({"entity_id": "UUID2", "value": 48})
         return result
 
     def getLevel2_2(self, entities, servername, num):
-        #output format
+        # output format
         result = []
-        result.append({'entity_id': 'UUID1', 'value': 47})
-        result.append({'entity_id': 'UUID2', 'value': 29})
+        result.append({"entity_id": "UUID1", "value": 47})
+        result.append({"entity_id": "UUID2", "value": 29})
         return result

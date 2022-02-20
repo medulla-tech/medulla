@@ -46,19 +46,19 @@ class Mirror(Pulse2Api):
             Pulse2Api.__init__(self, credentials, mirror)
 
     def extractCredentials(self, mirror):
-        if '@' not in mirror:
-            return ('', mirror)
-        mirror = mirror.replace('http://', '')
+        if "@" not in mirror:
+            return ("", mirror)
+        mirror = mirror.replace("http://", "")
         credentials, mirror = mirror.split("@")
-        return (credentials, 'http://%s' % mirror)
+        return (credentials, "http://%s" % mirror)
 
     def convertMachineIntoH(self, machine):
         if not isinstance(machine, dict):
-            machine = {'uuid': machine}
+            machine = {"uuid": machine}
         return machine
 
     def isAvailable(self, pid):
-        """ Is my package (identified by pid) available ? """
+        """Is my package (identified by pid) available ?"""
         d = self.callRemote("isAvailable", pid)
         if self.errorback:
             d.addErrback(self.errorback)
@@ -66,7 +66,7 @@ class Mirror(Pulse2Api):
         return d
 
     def getFileURI(self, fid):
-        """ convert from a fid (File ID) to a file URI """
+        """convert from a fid (File ID) to a file URI"""
         d = self.callRemote("getFileURI", fid)
         if self.errorback:
             d.addErrback(self.errorback)
@@ -74,7 +74,7 @@ class Mirror(Pulse2Api):
         return d
 
     def getFilesURI(self, fids):
-        """ convert from a list of fids (File ID) to a list of files URI """
+        """convert from a list of fids (File ID) to a list of files URI"""
         d = self.callRemote("getFilesURI", fids)
         if self.errorback:
             d.addErrback(self.errorback)
@@ -89,29 +89,20 @@ class Mirror(Pulse2Api):
         @rtype: list
         """
         if error.type == ConnectionRefusedError:
-            self.logger.error(
-                "%s %s has failed: connection refused" %
-                (funcname, args))
-            ret = ['PULSE2_ERR', PULSE2_ERR_CONN_REF,
-                   self.server_addr, default_return]
+            self.logger.error("%s %s has failed: connection refused" % (funcname, args))
+            ret = ["PULSE2_ERR", PULSE2_ERR_CONN_REF, self.server_addr, default_return]
         elif error.type == ConnectionLost:
-            self.logger.error(
-                "%s %s has failed: connection lost" %
-                (funcname, args))
-            ret = ['PULSE2_ERR', PULSE2_ERR_LOST,
-                   self.server_addr, default_return]
+            self.logger.error("%s %s has failed: connection lost" % (funcname, args))
+            ret = ["PULSE2_ERR", PULSE2_ERR_LOST, self.server_addr, default_return]
         elif error.type == TimeoutError:
             self.logger.error("%s %s has failed: timeout" % (funcname, args))
-            ret = ['PULSE2_ERR', PULSE2_ERR_TIMEOUT,
-                   self.server_addr, default_return]
+            ret = ["PULSE2_ERR", PULSE2_ERR_TIMEOUT, self.server_addr, default_return]
         elif error.type == exceptions.ValueError:
             self.logger.error(
-                "%s %s has failed: the mountpoint don't exists" %
-                (funcname, args))
-            ret = ['PULSE2_ERR', PULSE2_ERR_404,
-                   self.server_addr, default_return]
+                "%s %s has failed: the mountpoint don't exists" % (funcname, args)
+            )
+            ret = ["PULSE2_ERR", PULSE2_ERR_404, self.server_addr, default_return]
         else:
             self.logger.error("%s %s has failed: %s" % (funcname, args, error))
-            ret = ['PULSE2_ERR', PULSE2_ERR_UNKNOWN,
-                   self.server_addr, default_return]
+            ret = ["PULSE2_ERR", PULSE2_ERR_UNKNOWN, self.server_addr, default_return]
         return ret

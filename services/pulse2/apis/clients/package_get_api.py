@@ -37,22 +37,30 @@ class PackageGetA(Pulse2Api):
     def getAllPackages(self, mirror=None):
         try:
             d = self.callRemote("getAllPackages", mirror)
-            d.addErrback(self.onError,
-                         "getAllPackages",
-                         mirror,
-                         [{'label': 'A',
-                           'version': '0',
-                           'ERR': 'PULSE2ERROR_GETALLPACKAGE',
-                           'mirror': self.server_addr.replace(self.credentials,
-                                                              '')}])
+            d.addErrback(
+                self.onError,
+                "getAllPackages",
+                mirror,
+                [
+                    {
+                        "label": "A",
+                        "version": "0",
+                        "ERR": "PULSE2ERROR_GETALLPACKAGE",
+                        "mirror": self.server_addr.replace(self.credentials, ""),
+                    }
+                ],
+            )
             return d
         except Exception as e:
             self.logger.error("getAllPackages %s" % (str(e)))
-            return [{'label': 'A',
-                     'version': '0',
-                     'ERR': 'PULSE2ERROR_GETALLPACKAGE',
-                     'mirror': self.server_addr.replace(self.credentials,
-                                                        '')}]
+            return [
+                {
+                    "label": "A",
+                    "version": "0",
+                    "ERR": "PULSE2ERROR_GETALLPACKAGE",
+                    "mirror": self.server_addr.replace(self.credentials, ""),
+                }
+            ]
 
     def getAllPendingPackages(self, mirror=None):
         try:
@@ -74,18 +82,42 @@ class PackageGetA(Pulse2Api):
     def __convertDoReboot(self, pkg):
         if pkg:
             try:
-                do_reboot = pkg['reboot']
-                if do_reboot == '' or do_reboot == '0' or do_reboot == 0 or do_reboot == '0' or do_reboot == 'false' or do_reboot == 'false' or do_reboot == False or do_reboot == 'disable' or do_reboot == 'disable' or do_reboot == 'off' or do_reboot == 'off':
-                    pkg['do_reboot'] = 'disable'
-                elif do_reboot == '1' or do_reboot == 1 or do_reboot == '1' or do_reboot == 'true' or do_reboot == 'true' or do_reboot or do_reboot == 'enable' or do_reboot == 'enable' or do_reboot == 'on' or do_reboot == 'on':
-                    pkg['do_reboot'] = 'enable'
+                do_reboot = pkg["reboot"]
+                if (
+                    do_reboot == ""
+                    or do_reboot == "0"
+                    or do_reboot == 0
+                    or do_reboot == "0"
+                    or do_reboot == "false"
+                    or do_reboot == "false"
+                    or do_reboot == False
+                    or do_reboot == "disable"
+                    or do_reboot == "disable"
+                    or do_reboot == "off"
+                    or do_reboot == "off"
+                ):
+                    pkg["do_reboot"] = "disable"
+                elif (
+                    do_reboot == "1"
+                    or do_reboot == 1
+                    or do_reboot == "1"
+                    or do_reboot == "true"
+                    or do_reboot == "true"
+                    or do_reboot
+                    or do_reboot == "enable"
+                    or do_reboot == "enable"
+                    or do_reboot == "on"
+                    or do_reboot == "on"
+                ):
+                    pkg["do_reboot"] = "enable"
                 else:
                     self.logger.warning(
-                        "Dont know option '%s' for do_reboot, will use 'disable'" %
-                        (do_reboot))
-                del pkg['reboot']
+                        "Dont know option '%s' for do_reboot, will use 'disable'"
+                        % (do_reboot)
+                    )
+                del pkg["reboot"]
             except KeyError:
-                pkg['do_reboot'] = 'disable'
+                pkg["do_reboot"] = "disable"
         return pkg
 
     def getPackageDetail(self, pid):
@@ -110,7 +142,8 @@ class PackageGetA(Pulse2Api):
         # when the package server is old, this one call function does not exists
         # so we call several time the existing function
         self.logger.warn(
-            "one of your package server does not support getPackagesDetail, you should update it.")
+            "one of your package server does not support getPackagesDetail, you should update it."
+        )
         ds = []
         for pid in pids:
             d = self.callRemote("getPackageDetail", pid)

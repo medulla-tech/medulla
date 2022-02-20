@@ -28,7 +28,7 @@ from pulse2.package_server.imaging.pxe.parser import LOG_ACTION, LOG_STATE
 
 
 class TrackingContainer(Singleton):
-    """ A container to store choosen menu entry. """
+    """A container to store choosen menu entry."""
 
     entries = {}
 
@@ -111,9 +111,7 @@ class EntryTracking(TrackingContainer):
         @type message: str
         """
         if phase == LOG_STATE.MENU and CHOOSEN_MENU_ENTRY in message:
-            entry = message.replace(
-                CHOOSEN_MENU_ENTRY, "").replace(
-                ":", "").strip()
+            entry = message.replace(CHOOSEN_MENU_ENTRY, "").replace(":", "").strip()
             if entry.isdigit():
                 num = int(entry)
                 self.add(mac, num)

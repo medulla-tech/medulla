@@ -48,6 +48,7 @@ import platform
 # also try sqlalchemy.util Sets
 try:
     from sqlalchemy.util import Set as sa_set
+
     try:
         set
     except NameError:
@@ -58,25 +59,27 @@ except ImportError:
         set
     except NameError:
         from sets import Set as set
-    set_types = set,
+    set_types = (set,)
 
 try:
     import mx.DateTime as mxDateTime
 except ImportError:
-    mxDateTime = None # pyflakes.ignore
+    mxDateTime = None  # pyflakes.ignore
 
 
 def cleanFilter(f):
     for char in "()&=":
         f = f.replace(char, "")
-    if not f.startswith('*'):
-        f = '*' + f
-    if not f.endswith('*'):
-        f = f + '*'
+    if not f.startswith("*"):
+        f = "*" + f
+    if not f.endswith("*"):
+        f = f + "*"
     return f
+
 
 # All the command lines launched by this module will use the C locale
 os.environ["LANG"] = "C"
+
 
 def cSort(stringList):
     """
@@ -87,6 +90,7 @@ def cSort(stringList):
     tupleList = [(x.lower(), x) for x in stringList]
     tupleList.sort()
     return [x[1] for x in tupleList]
+
 
 def rchown(path, uid, gid):
     """
@@ -106,6 +110,7 @@ def rchown(path, uid, gid):
         os.lchown(root, uid, gid)
         for name in files:
             os.lchown(os.path.join(root, name), uid, gid)
+
 
 def copytree(src, dst, symlinks=False):
     """
@@ -145,6 +150,7 @@ def copytree(src, dst, symlinks=False):
     if errors:
         raise Exception(errors)
 
+
 def xmlrpcCleanup(data):
     """
     Cleanup data content so that they can be send using XML-RPC.
@@ -154,7 +160,7 @@ def xmlrpcCleanup(data):
     if type(data) == dict:
         ret = {}
         for key in list(data.keys()):
-            # array keys must be string
+            # array keys must be string
             ret[str(key)] = xmlrpcCleanup(data[key])
     elif type(data) == list:
         ret = []
@@ -182,6 +188,7 @@ def xmlrpcCleanup(data):
         ret = data
     return ret
 
+
 def localifs():
     """
     Used to get a list of the up interfaces and associated IP addresses
@@ -197,36 +204,44 @@ def localifs():
 
     arch = platform.architecture()[0]
 
-    if arch == '32bit':
+    if arch == "32bit":
         var1 = 32
         var2 = 32
-    elif arch == '64bit':
+    elif arch == "64bit":
         var1 = 16
         var2 = 40
     else:
         raise OSError("Unknown architecture: %s" % arch)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    names = array.array('B', '\0' * MAXBYTES)
-    outbytes = struct.unpack('iL', fcntl.ioctl(
-        sock.fileno(),
-        SIOCGIFCONF,
-        struct.pack('iL', MAXBYTES, names.buffer_info()[0])
-        ))[0]
+    names = array.array("B", "\0" * MAXBYTES)
+    outbytes = struct.unpack(
+        "iL",
+        fcntl.ioctl(
+            sock.fileno(),
+            SIOCGIFCONF,
+            struct.pack("iL", MAXBYTES, names.buffer_info()[0]),
+        ),
+    )[0]
 
     namestr = names.tostring()
-    return [(namestr[i:i+var1].split('\0', 1)[0], socket.inet_ntoa(namestr[i+20:i+24])) \
-            for i in range(0, outbytes, var2)]
+    return [
+        (
+            namestr[i : i + var1].split("\0", 1)[0],
+            socket.inet_ntoa(namestr[i + 20 : i + 24]),
+        )
+        for i in range(0, outbytes, var2)
+    ]
+
 
 class Singleton(object):
-
     def __new__(type, *args):
-        if not '_the_instance' in type.__dict__:
+        if not "_the_instance" in type.__dict__:
             type._the_instance = object.__new__(type)
         return type._the_instance
 
-class SingletonN(type):
 
+class SingletonN(type):
     def __init__(cls, name, bases, dict):
         super(SingletonN, cls).__init__(name, bases, dict)
         cls.instance = None
@@ -236,27 +251,29 @@ class SingletonN(type):
             cls.instance = super(SingletonN, cls).__call__(*args, **kw)
         return cls.instance
 
+
 class ProcessScheduler(Singleton):
     """
     Singleton class to schedule command line jobs.
     This class has only one instance.
     """
+
     _processArr = dict()
     _event = list()
 
-    def addProcess(self,name, obj):
+    def addProcess(self, name, obj):
         self._processArr[name] = obj
 
-    def getProcess(self,name):
+    def getProcess(self, name):
         return self._processArr[name]
 
     def listProcess(self):
         return self._processArr
 
-    def rmProcess(self,name):
+    def rmProcess(self, name):
         del self._processArr[name]
 
-    def addEvent(self,obj):
+    def addEvent(self, obj):
         self._event.append(obj)
 
     def popEvent(self):
@@ -265,8 +282,8 @@ class ProcessScheduler(Singleton):
     def listEvent(self):
         return self._event
 
-class shProcessProtocol(protocol.ProcessProtocol):
 
+class shProcessProtocol(protocol.ProcessProtocol):
     def __init__(self, cmd):
         self.cmd = cmd
         self.done = False
@@ -274,20 +291,20 @@ class shProcessProtocol(protocol.ProcessProtocol):
         self.out = ""
         self.stdall = ""
         self.status = ""
-        #last output
+        # last output
         self.lastout = ""
         self.err = ""
-        #progress
+        # progress
         self.progress = -1
-        #description
+        # description
         self.desc = cmd
-        #time
+        # time
         self.time = time()
         self.exitCode = -1
 
-    def write(self,data):
+    def write(self, data):
         self.transport.write(data)
-        self.stdall = self.stdall +"<<" + data
+        self.stdall = self.stdall + "<<" + data
 
     def progressCalc(self, data):
         """
@@ -303,19 +320,19 @@ class shProcessProtocol(protocol.ProcessProtocol):
 
     def outReceived(self, data):
         self.out = self.out + data
-        self.stdall = self.stdall + ">>"+ data
+        self.stdall = self.stdall + ">>" + data
         self.lastout = data
-        self.time = time() #update time
+        self.time = time()  # update time
         self.progressCalc(data)
 
     def errReceived(self, data):
         self.err = self.err + data
-        self.stdall = self.stdall + ">>"+ data
+        self.stdall = self.stdall + ">>" + data
         self.error = True
 
     def processEnded(self, reason):
         self.exitCode = reason.value.exitCode
-        self.progress = -1;
+        self.progress = -1
         self.done = True
 
     def getExitCode(self):
@@ -323,8 +340,8 @@ class shProcessProtocol(protocol.ProcessProtocol):
             reactor.iterate()
         return self.exitCode
 
-class shProcessProtocolNonBlocking(shProcessProtocol):
 
+class shProcessProtocolNonBlocking(shProcessProtocol):
     def __init__(self, cmd):
         shProcessProtocol.__init__(self, cmd)
 
@@ -335,10 +352,10 @@ class shProcessProtocolNonBlocking(shProcessProtocol):
     def getExitCode(self):
         return self.exitCode
 
-class shSharedProcessProtocol(shProcessProtocol):
 
-    def __init__(self,cmd):
-        shProcessProtocol.__init__(self,cmd)
+class shSharedProcessProtocol(shProcessProtocol):
+    def __init__(self, cmd):
+        shProcessProtocol.__init__(self, cmd)
 
     def processEnded(self, reason):
         self.done = True
@@ -346,50 +363,56 @@ class shSharedProcessProtocol(shProcessProtocol):
         if self.exitCode == 0:
             self.status = "job successfully finished"
         else:
-            self.status = "Error: exited with code " + str(self.exitCode) + "\n" + self.stdall
-        self.progress = -1;
+            self.status = (
+                "Error: exited with code " + str(self.exitCode) + "\n" + self.stdall
+            )
+        self.progress = -1
 
 
 class shDebugProcessProtocol(shProcessProtocol):
-    def __init(self,cmd):
-        shProcessProtocol.__init__(self,cmd)
+    def __init(self, cmd):
+        shProcessProtocol.__init__(self, cmd)
 
     def outReceived(self, data):
-        print("OUT: "+data)
-        shProcessProtocol.outReceived(self,data)
+        print("OUT: " + data)
+        shProcessProtocol.outReceived(self, data)
 
-    def write(self,data):
-        print("IN: "+data)
-        shProcessProtocol.write(self,data)
+    def write(self, data):
+        print("IN: " + data)
+        shProcessProtocol.write(self, data)
 
     def errReceived(self, data):
-        print("ERR: "+data)
-        shProcessProtocol.errReceived(self,data)
-
+        print("ERR: " + data)
+        shProcessProtocol.errReceived(self, data)
 
 
 def launch(cmd, param):
     logger = logging.getLogger()
-    logger.debug("support.mmctools.launch(\""+str(cmd)+","+str(param)+"\")")
+    logger.debug('support.mmctools.launch("' + str(cmd) + "," + str(param) + '")')
     shProcess = shProcessProtocol(cmd)
-    reactor.spawnProcess(shProcess, cmd, param,os.environ)
+    reactor.spawnProcess(shProcess, cmd, param, os.environ)
     while not shProcess.done:
         reactor.iterate()
-    if shProcess.exitCode != 0: #if process not finished correctly
-        raise Exception('process not finished with exit code 0'+"\n"+shProcess.out)
+    if shProcess.exitCode != 0:  # if process not finished correctly
+        raise Exception("process not finished with exit code 0" + "\n" + shProcess.out)
     return shProcess.out
+
 
 def shlaunchDeferred(cmd):
     """
     Return a Deferred resulting in the stdout output of a shell command.
     """
+
     def cb(shprocess):
         ret = shprocess.out.split("\n")
-        if ret: ret.pop()
+        if ret:
+            ret.pop()
         return ret
+
     sh = shLaunchDeferred(cmd)
     sh.addCallback(cb)
     return sh
+
 
 def shlaunch(cmd):
     """
@@ -406,14 +429,17 @@ def shlaunch(cmd):
 
     if isinstance(shProcess.out, str):
         stdout = shProcess.out.split("\n")
-        if len(stdout) > 1: stdout.pop()
+        if len(stdout) > 1:
+            stdout.pop()
     if isinstance(shProcess.error, str):
         stderr = shProcess.error.split("\n")
-        if len(stderr) > 1: stderr.pop()
+        if len(stderr) > 1:
+            stderr.pop()
 
     return (shProcess.exitCode, stdout, stderr)
 
-def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
+
+def shlaunchBackground(cmd, desc=None, progressFunc=None, endFunc=None):
     """
     Follow backup process
 
@@ -430,7 +456,7 @@ def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
     @type progressFunc: function
     """
     logger = logging.getLogger()
-    logger.info("support.mmctools.shlaunchBackground(\""+str(cmd)+"\")")
+    logger.info('support.mmctools.shlaunchBackground("' + str(cmd) + '")')
     shProcess = shSharedProcessProtocol(cmd)
     if desc == None:
         shProcess.desc = cmd
@@ -440,12 +466,14 @@ def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
     ProcessScheduler().addProcess(shProcess.desc, shProcess)
 
     if progressFunc:
-        shProcess.progressCalc = MethodType(progressFunc, shProcess, shSharedProcessProtocol)
+        shProcess.progressCalc = MethodType(
+            progressFunc, shProcess, shSharedProcessProtocol
+        )
 
     if endFunc:
         shProcess.processEnded = MethodType(endFunc, shProcess, shSharedProcessProtocol)
 
-    reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
+    reactor.spawnProcess(shProcess, "/bin/sh", ["/bin/sh", "-c", cmd], env=os.environ)
 
 
 def shLaunchDeferred(cmd):
@@ -454,36 +482,39 @@ def shLaunchDeferred(cmd):
     """
     shProcess = shProcessProtocolNonBlocking(cmd)
     shProcess.deferred = defer.Deferred()
-    reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
+    reactor.spawnProcess(shProcess, "/bin/sh", ["/bin/sh", "-c", cmd], env=os.environ)
     return shProcess.deferred
+
 
 def shLaunch(cmd):
     shProcess = shProcessProtocol(cmd)
-    reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
+    reactor.spawnProcess(shProcess, "/bin/sh", ["/bin/sh", "-c", cmd], env=os.environ)
     while not shProcess.done:
         reactor.iterate()
     return shProcess
 
+
 def generateBackgroundProcess(cmd):
     shProcess = shProcessProtocol(cmd)
-    reactor.spawnProcess(shProcess, "/bin/sh", ['/bin/sh','-c',cmd],env=os.environ)
+    reactor.spawnProcess(shProcess, "/bin/sh", ["/bin/sh", "-c", cmd], env=os.environ)
     return shProcess
 
 
-
-def getConfigParser(module, path = mmcconfdir + "/plugins/"):
+def getConfigParser(module, path=mmcconfdir + "/plugins/"):
     """return a configParser for a plugins"""
     config = configparser.ConfigParser()
     inifile = os.path.join(path, module) + ".ini"
     fp = file(inifile, "r")
     config.readfp(fp, inifile)
-    if os.path.isfile(inifile + '.local'):
-        config.readfp(open(inifile + '.local','r'))
+    if os.path.isfile(inifile + ".local"):
+        config.readfp(open(inifile + ".local", "r"))
     return config
 
-def getConfigFile(module, path = mmcconfdir + "/plugins/"):
+
+def getConfigFile(module, path=mmcconfdir + "/plugins/"):
     """Return the path of the default config file for a plugin"""
     return os.path.join(path, module) + ".ini"
+
 
 def progressBackup(self, data):
     """
@@ -492,36 +523,41 @@ def progressBackup(self, data):
     it's also an example of callback function for shlaunchBackground
     """
     pattern = "([0-9]{1,2}).[0-9]{1,2}% done, estimate finish"
-    try: self.volumeNumber #if first loop
+    try:
+        self.volumeNumber  # if first loop
     except:
         self.volumeNumber = 1
         self.currVolume = 1
 
-    sre = re.search("Creation volume ([0-9]+)/([0-9]+)",data)
+    sre = re.search("Creation volume ([0-9]+)/([0-9]+)", data)
     try:
         self.volumeNumber = sre.group(2)
         self.currVolume = sre.group(1)
-        self.status = "volume "+sre.group(1)+"/"+sre.group(2)
+        self.status = "volume " + sre.group(1) + "/" + sre.group(2)
     except:
         pass
 
-    sre = re.search(pattern,data)
+    sre = re.search(pattern, data)
     if sre:
         group = sre.group(1)
-        if (group):
-            self.progress = int(group)/int(self.volumeNumber) + ((int(self.currVolume)-1) *100/int(self.volumeNumber))
+        if group:
+            self.progress = int(group) / int(self.volumeNumber) + (
+                (int(self.currVolume) - 1) * 100 / int(self.volumeNumber)
+            )
+
 
 def size_format(b):
     if b < 1000:
-        return '%i' % b + 'B'
+        return "%i" % b + "B"
     elif 1000 <= b < 1000000:
-        return '%.1f' % float(b/1000.0) + 'KB'
+        return "%.1f" % float(b / 1000.0) + "KB"
     elif 1000000 <= b < 1000000000:
-        return '%.1f' % float(b/1000000.0) + 'MB'
+        return "%.1f" % float(b / 1000000.0) + "MB"
     elif 1000000000 <= b < 1000000000000:
-        return '%.1f' % float(b/1000000000.0) + 'GB'
+        return "%.1f" % float(b / 1000000000.0) + "GB"
     elif 1000000000000 <= b:
-        return '%.1f' % float(b/1000000000000.0) + 'TB'
+        return "%.1f" % float(b / 1000000000000.0) + "TB"
+
 
 class ServiceManager:
     """
@@ -580,6 +616,7 @@ class RpcProxyI:
     @ivar userid: the user id (login) associated to the XML-RPC call
     @ivar currentContext: the current module security context
     """
+
     def __init__(self, request, mod):
         self.request = request
         self.session = request.getSession()
@@ -595,6 +632,7 @@ class RpcProxyI:
 
     def getFunction(self, funcname):
         return getattr(self, funcname)
+
 
 class ContextMakerI:
     """
@@ -636,6 +674,7 @@ class ContextProviderI:
         """
         self.context = context
 
+
 class SecurityContext:
     """
     Class for object that contains a security context.
@@ -643,4 +682,5 @@ class SecurityContext:
     Basically, it can be seen as a simple structure where attributes can be get
     and set.
     """
+
     pass

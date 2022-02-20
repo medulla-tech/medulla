@@ -24,15 +24,15 @@ MMC services plugin configuration
 
 from mmc.support.config import PluginConfig
 
-class ServicesConfig(PluginConfig):
 
+class ServicesConfig(PluginConfig):
     def readConf(self):
         PluginConfig.readConf(self)
-        self.journalctl_path = self.get('main', 'journalctl_path')
+        self.journalctl_path = self.get("main", "journalctl_path")
         self.services = {}
-        for plugin, services in self.items('plugins'):
+        for plugin, services in self.items("plugins"):
             self.services[plugin] = services.split(",")
         try:
-            self.blacklist = self.get('main', 'blacklist').split(',')
+            self.blacklist = self.get("main", "blacklist").split(",")
         except:
             self.blacklist = []

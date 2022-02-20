@@ -28,24 +28,44 @@ Provides access to Pkgs database
 # standard modules
 import time
 import traceback
+
 # SqlAlchemy
-from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-    Integer, ForeignKey, select, asc, or_, desc, func, not_, distinct
+from sqlalchemy import (
+    and_,
+    create_engine,
+    MetaData,
+    Table,
+    Column,
+    String,
+    Integer,
+    ForeignKey,
+    select,
+    asc,
+    or_,
+    desc,
+    func,
+    not_,
+    distinct,
+)
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import NoSuchTableError, TimeoutError
 from sqlalchemy.orm.exc import NoResultFound
-#from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
+
+# from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 ##from sqlalchemy.orm import sessionmaker
 import datetime
 import magic
 import base64
+
 # ORM mappings
 from pulse2.database.pkgs.orm.version import Version
 from pulse2.database.pkgs.orm.pakages import Packages
 from pulse2.database.pkgs.orm.extensions import Extensions
 from pulse2.database.pkgs.orm.dependencies import Dependencies
 from pulse2.database.pkgs.orm.syncthingsync import Syncthingsync
-from pulse2.database.pkgs.orm.package_pending_exclusions import Package_pending_exclusions
+from pulse2.database.pkgs.orm.package_pending_exclusions import (
+    Package_pending_exclusions,
+)
 from pulse2.database.pkgs.orm.pkgs_rules_algos import Pkgs_rules_algos
 from pulse2.database.pkgs.orm.pkgs_rules_global import Pkgs_rules_global
 from pulse2.database.pkgs.orm.pkgs_rules_local import Pkgs_rules_local
@@ -56,8 +76,9 @@ from pulse2.database.pkgs.orm.pkgs_shares import Pkgs_shares
 
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster import XmppMasterDatabase
+
 # Pulse 2 stuff
-#from pulse2.managers.location import ComputerLocationManager
+# from pulse2.managers.location import ComputerLocationManager
 # Imported last
 import logging
 import os
@@ -93,11 +114,17 @@ class PkgsDatabase(DatabaseHelper):
             pool_recycle=self.config.dbpoolrecycle,
             pool_size=self.config.dbpoolsize,
             pool_timeout=self.config.dbpooltimeout,
-            convert_unicode=True)
+            convert_unicode=True,
+        )
         self.logger.info(
             "parameters connection pkgs from mmc :  pool_recycle  %s"
-            " pool_size %s pool_timeout %s" %
-            (self.config.dbpoolrecycle, self.config.dbpoolsize, self.config.dbpooltimeout))
+            " pool_size %s pool_timeout %s"
+            % (
+                self.config.dbpoolrecycle,
+                self.config.dbpoolsize,
+                self.config.dbpooltimeout,
+            )
+        )
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
@@ -118,85 +145,53 @@ class PkgsDatabase(DatabaseHelper):
         """
         try:
             # packages
-            self.package = Table(
-                "packages",
-                self.metadata,
-                autoload=True
-            )
+            self.package = Table("packages", self.metadata, autoload=True)
 
             # extensions
-            self.extensions = Table(
-                "extensions",
-                self.metadata,
-                autoload=True
-            )
+            self.extensions = Table("extensions", self.metadata, autoload=True)
 
             # Dependencies
-            self.dependencies = Table(
-                "dependencies",
-                self.metadata,
-                autoload=True
-            )
+            self.dependencies = Table("dependencies", self.metadata, autoload=True)
 
             # Syncthingsync
-            self.syncthingsync = Table(
-                "syncthingsync",
-                self.metadata,
-                autoload=True
-            )
+            self.syncthingsync = Table("syncthingsync", self.metadata, autoload=True)
             # package_pending_exclusions
             self.package_pending_exclusions = Table(
-                "package_pending_exclusions",
-                self.metadata,
-                autoload=True
+                "package_pending_exclusions", self.metadata, autoload=True
             )
             # pkgs_shares_ars_web
             self.pkgs_shares_ars_web = Table(
-                "pkgs_shares_ars_web",
-                self.metadata,
-                autoload=True
+                "pkgs_shares_ars_web", self.metadata, autoload=True
             )
 
             # pkgs_shares_ars
             self.pkgs_shares_ars = Table(
-                "pkgs_shares_ars",
-                self.metadata,
-                autoload=True
+                "pkgs_shares_ars", self.metadata, autoload=True
             )
 
             # pkgs_shares
-            self.pkgs_shares = Table(
-                "pkgs_shares",
-                self.metadata,
-                autoload=True
-            )
+            self.pkgs_shares = Table("pkgs_shares", self.metadata, autoload=True)
 
         except NoSuchTableError as e:
             # pkgs_rules_algos
             self.pkgs_rules_algos = Table(
-                "pkgs_rules_algos",
-                self.metadata,
-                autoload=True
+                "pkgs_rules_algos", self.metadata, autoload=True
             )
 
             # pkgs_rules_global
             self.pkgs_rules_global = Table(
-                "pkgs_rules_global",
-                self.metadata,
-                autoload=True
+                "pkgs_rules_global", self.metadata, autoload=True
             )
 
             # pkgs_rules_local
             self.pkgs_rules_local = Table(
-                "pkgs_rules_local",
-                self.metadata,
-                autoload=True
+                "pkgs_rules_local", self.metadata, autoload=True
             )
         except NoSuchTableError as e:
             self.logger.error(
-                "Cant load the Pkgs database : table '%s' does not exists" %
-                (str(
-                    e.args[0])))
+                "Cant load the Pkgs database : table '%s' does not exists"
+                % (str(e.args[0]))
+            )
             return False
         return True
 
@@ -215,15 +210,11 @@ class PkgsDatabase(DatabaseHelper):
         mapper(Pkgs_rules_algos, self.pkgs_rules_algos)
         mapper(Pkgs_rules_global, self.pkgs_rules_global)
         mapper(Pkgs_rules_local, self.pkgs_rules_local)
+
     ####################################
 
     @DatabaseHelper._sessionm
-    def createPackage(
-            self,
-            session,
-            package,
-            pkgs_share_id=None,
-            edition_status=1):
+    def createPackage(self, session, package, pkgs_share_id=None, edition_status=1):
         """
         Insert the package config into database.
         Param:
@@ -235,42 +226,51 @@ class PkgsDatabase(DatabaseHelper):
             It returns the new package format
         """
 
-        request = session.query(Packages).filter(
-            Packages.uuid == package['id']).first()
+        request = session.query(Packages).filter(Packages.uuid == package["id"]).first()
 
         if request is None:
             new_package = Packages()
         else:
             new_package = request
 
-        new_package.label = package['name']
-        new_package.uuid = package['id']
-        new_package.description = package['description']
-        new_package.version = package['version']
-        new_package.os = package['targetos']
-        new_package.metagenerator = package['metagenerator']
-        new_package.entity_id = package['entity_id']
-        if isinstance(package['sub_packages'], str):
-            new_package.sub_packages = package['sub_packages']
-        elif isinstance(package['sub_packages'], list):
-            new_package.sub_packages = ",".join(package['sub_packages'])
-        new_package.reboot = package['reboot']
-        new_package.inventory_associateinventory = package['inventory']['associateinventory']
-        new_package.inventory_licenses = package['inventory']['licenses']
-        new_package.Qversion = package['inventory']['queries']['Qversion']
-        new_package.Qvendor = package['inventory']['queries']['Qvendor']
-        new_package.Qsoftware = package['inventory']['queries']['Qsoftware']
-        new_package.boolcnd = package['inventory']['queries']['boolcnd']
-        new_package.postCommandSuccess_command = package['commands']['postCommandSuccess']['command']
-        new_package.postCommandSuccess_name = package['commands']['postCommandSuccess']['name']
-        new_package.installInit_command = package['commands']['installInit']['command']
-        new_package.installInit_name = package['commands']['installInit']['name']
-        new_package.postCommandFailure_command = package['commands']['postCommandFailure']['command']
-        new_package.postCommandFailure_name = package['commands']['postCommandFailure']['name']
-        new_package.command_command = package['commands']['command']['command']
-        new_package.command_name = package['commands']['command']['name']
-        new_package.preCommand_command = package['commands']['preCommand']['command']
-        new_package.preCommand_name = package['commands']['preCommand']['name']
+        new_package.label = package["name"]
+        new_package.uuid = package["id"]
+        new_package.description = package["description"]
+        new_package.version = package["version"]
+        new_package.os = package["targetos"]
+        new_package.metagenerator = package["metagenerator"]
+        new_package.entity_id = package["entity_id"]
+        if isinstance(package["sub_packages"], str):
+            new_package.sub_packages = package["sub_packages"]
+        elif isinstance(package["sub_packages"], list):
+            new_package.sub_packages = ",".join(package["sub_packages"])
+        new_package.reboot = package["reboot"]
+        new_package.inventory_associateinventory = package["inventory"][
+            "associateinventory"
+        ]
+        new_package.inventory_licenses = package["inventory"]["licenses"]
+        new_package.Qversion = package["inventory"]["queries"]["Qversion"]
+        new_package.Qvendor = package["inventory"]["queries"]["Qvendor"]
+        new_package.Qsoftware = package["inventory"]["queries"]["Qsoftware"]
+        new_package.boolcnd = package["inventory"]["queries"]["boolcnd"]
+        new_package.postCommandSuccess_command = package["commands"][
+            "postCommandSuccess"
+        ]["command"]
+        new_package.postCommandSuccess_name = package["commands"]["postCommandSuccess"][
+            "name"
+        ]
+        new_package.installInit_command = package["commands"]["installInit"]["command"]
+        new_package.installInit_name = package["commands"]["installInit"]["name"]
+        new_package.postCommandFailure_command = package["commands"][
+            "postCommandFailure"
+        ]["command"]
+        new_package.postCommandFailure_name = package["commands"]["postCommandFailure"][
+            "name"
+        ]
+        new_package.command_command = package["commands"]["command"]["command"]
+        new_package.command_name = package["commands"]["command"]["name"]
+        new_package.preCommand_command = package["commands"]["preCommand"]["command"]
+        new_package.preCommand_name = package["commands"]["preCommand"]["name"]
         new_package.pkgs_share_id = pkgs_share_id
         new_package.edition_status = edition_status
         new_package.conf_json = json.dumps(package)
@@ -290,10 +290,12 @@ class PkgsDatabase(DatabaseHelper):
                 function delete all in the dependencies table which refers to the package
         """
         session.query(Dependencies).filter(
-            Dependencies.uuid_package == package_uuid).delete()
+            Dependencies.uuid_package == package_uuid
+        ).delete()
         if status == "delete":
             session.query(Dependencies).filter(
-                Dependencies.uuid_dependency == package_uuid).delete()
+                Dependencies.uuid_dependency == package_uuid
+            ).delete()
         session.commit()
         session.flush()
 
@@ -317,12 +319,8 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_list_packages_deploy_view(
-            self,
-            session,
-            objsearch,
-            start=-1,
-            end=-1,
-            ctx={}):
+        self, session, objsearch, start=-1, end=-1, ctx={}
+    ):
         """
         Get the list of all the packages uuid for deploy.
         Params:
@@ -334,22 +332,22 @@ class PkgsDatabase(DatabaseHelper):
         Returns:
             It returns the list of the packages.
         """
-        result = {'count': 0, "uuid": []}
-        if 'list_sharing' in objsearch and not objsearch['list_sharing']:
+        result = {"count": 0, "uuid": []}
+        if "list_sharing" in objsearch and not objsearch["list_sharing"]:
             return result
 
-        if 'filter1' in ctx:
-            filter1 = ctx['filter1']
+        if "filter1" in ctx:
+            filter1 = ctx["filter1"]
         else:
             filter1 = ""
 
-        if 'filter1' in ctx:
-            filter1 = ctx['filter1']
+        if "filter1" in ctx:
+            filter1 = ctx["filter1"]
         else:
             filter1 = ""
 
-        if 'filter' in ctx:
-            filter = ctx['filter']
+        if "filter" in ctx:
+            filter = ctx["filter"]
         else:
             filter = ""
 
@@ -384,13 +382,26 @@ class PkgsDatabase(DatabaseHelper):
                 packages.Qvendor LIKE '%%%s%%'
             OR
                 packages.Qsoftware LIKE '%%%s%%'
-            )""" % (filter, filter, filter, filter, filter, filter, filter, filter, filter, filter)
+            )""" % (
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+            )
 
         if filter1 == "":
             _filter1 = ""
         else:
             _filter1 = """ AND
-            packages.os LIKE '%%%s%%' """ % (filter1)
+            packages.os LIKE '%%%s%%' """ % (
+                filter1
+            )
 
         if start >= 0:
             limit = "LIMIT %s" % start
@@ -402,13 +413,16 @@ class PkgsDatabase(DatabaseHelper):
         else:
             offset = " "
         where_clause = ""
-        if objsearch['list_sharing']:
-            strlist = ",".join([str(x) for x in objsearch['list_sharing']])
-            where_clause = where_clause + \
-                " AND packages.`pkgs_share_id` IN (%s) " % strlist
+        if objsearch["list_sharing"]:
+            strlist = ",".join([str(x) for x in objsearch["list_sharing"]])
+            where_clause = (
+                where_clause + " AND packages.`pkgs_share_id` IN (%s) " % strlist
+            )
 
-        where_clause = where_clause + \
-            "AND pkgs_shares.enabled = 1  ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC  "
+        where_clause = (
+            where_clause
+            + "AND pkgs_shares.enabled = 1  ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC  "
+        )
 
         sql = """SELECT SQL_CALC_FOUND_ROWS
                     packages.uuid
@@ -422,24 +436,25 @@ class PkgsDatabase(DatabaseHelper):
                         FROM
                             pkgs.syncthingsync)
                 %s %s %s %s %s
-                    ;""" % (_filter, _filter1, where_clause, limit, offset)
+                    ;""" % (
+            _filter,
+            _filter1,
+            where_clause,
+            limit,
+            offset,
+        )
         ret = session.execute(sql)
         sql_count = "SELECT FOUND_ROWS();"
         ret_count = session.execute(sql_count)
-        result['count'] = ret_count.first()[0]
+        result["count"] = ret_count.first()[0]
         for package in ret:
             result["uuid"].append(package[0])
         return result
 
     @DatabaseHelper._sessionm
     def get_all_packages(
-            self,
-            session,
-            login,
-            sharing_activated=False,
-            start=-1,
-            end=-1,
-            ctx={}):
+        self, session, login, sharing_activated=False, start=-1, end=-1, ctx={}
+    ):
         """
         Get the list of all the packages stored in database.
         Params:
@@ -466,11 +481,12 @@ class PkgsDatabase(DatabaseHelper):
                 "share_type": [],
                 "permission": [],
                 "size": [],
-            }
+            },
         }
-        sharing = self.pkgs_search_share({'login': login})
-        listidsharing = [[str(x['id_sharing']), x['permission']]
-                         for x in sharing['datas']]
+        sharing = self.pkgs_search_share({"login": login})
+        listidsharing = [
+            [str(x["id_sharing"]), x["permission"]] for x in sharing["datas"]
+        ]
         idsharestr = ",".join([x[0] for x in listidsharing])
 
         #  creation  dict
@@ -478,8 +494,8 @@ class PkgsDatabase(DatabaseHelper):
         for t in listidsharing:
             dictpermission[t[0]] = t[1]
 
-        if 'filter' in ctx:
-            filter = ctx['filter']
+        if "filter" in ctx:
+            filter = ctx["filter"]
         else:
             filter = ""
 
@@ -521,9 +537,19 @@ class PkgsDatabase(DatabaseHelper):
                 packages.Qvendor LIKE '%%%s%%'
             OR
                 packages.Qsoftware LIKE '%%%s%%'
-            )""" % (filter, filter, filter, filter,
-                    filter, filter, filter, filter,
-                    filter, filter, filter)
+            )""" % (
+                    filter,
+                    filter,
+                    filter,
+                    filter,
+                    filter,
+                    filter,
+                    filter,
+                    filter,
+                    filter,
+                    filter,
+                    filter,
+                )
 
             if start >= 0:
                 limit = "LIMIT %s" % start
@@ -563,7 +589,12 @@ class PkgsDatabase(DatabaseHelper):
                                     pkgs.syncthingsync)
                             %s
                         AND pkgs_shares.enabled = 1 ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC
-                        %s %s;""" % (idsharestr, _filter, limit, offset)
+                        %s %s;""" % (
+                idsharestr,
+                _filter,
+                limit,
+                offset,
+            )
 
             ret = session.execute(sql)
             sql_count = "SELECT FOUND_ROWS();"
@@ -580,7 +611,7 @@ class PkgsDatabase(DatabaseHelper):
                 query = query.offset(start).limit(end)
             ret = query.all()
 
-        result['total'] = count
+        result["total"] = count
 
         if sharing_activated is True:
             result["datas"]["licence"] = []
@@ -600,46 +631,61 @@ class PkgsDatabase(DatabaseHelper):
                 result["datas"]["version"].append(package[3])
                 result["datas"]["conf_json"].append(conf_json)
                 result["datas"]["share_id"].append(
-                    package[6] if package[6] is not None else "")
+                    package[6] if package[6] is not None else ""
+                )
                 result["datas"]["share_name"].append(
-                    package[7] if package[7] is not None else "")
+                    package[7] if package[7] is not None else ""
+                )
                 result["datas"]["share_type"].append(
-                    package[8] if package[8] is not None else "")
-                result["datas"]["permission"].append(
-                    dictpermission[str(package[6])])
+                    package[8] if package[8] is not None else ""
+                )
+                result["datas"]["permission"].append(dictpermission[str(package[6])])
                 result["datas"]["size"].append(
-                    str(package[9]) if package[9] is not None else "")
+                    str(package[9]) if package[9] is not None else ""
+                )
                 result["datas"]["licence"].append(
-                    package[10] if package[10] is not None else "")
+                    package[10] if package[10] is not None else ""
+                )
                 result["datas"]["associateinventory"].append(
-                    package[11] if package[11] is not None else "")
+                    package[11] if package[11] is not None else ""
+                )
                 result["datas"]["qversion"].append(
-                    package[12] if package[12] is not None else "")
+                    package[12] if package[12] is not None else ""
+                )
                 result["datas"]["qvendor"].append(
-                    package[13] if package[13] is not None else "")
+                    package[13] if package[13] is not None else ""
+                )
                 result["datas"]["qsoftware"].append(
-                    package[14] if package[14] is not None else "")
+                    package[14] if package[14] is not None else ""
+                )
         else:
             for package in ret:
                 result["datas"]["id"].append(
-                    package.id if package.id is not None else "")
+                    package.id if package.id is not None else ""
+                )
                 result["datas"]["uuid"].append(
-                    package.uuid if package.uuid is not None else "")
+                    package.uuid if package.uuid is not None else ""
+                )
                 result["datas"]["name"].append(
-                    package.label if package.label is not None else "")
+                    package.label if package.label is not None else ""
+                )
                 result["datas"]["description"].append(
-                    package.description if package.description is not None else "")
+                    package.description if package.description is not None else ""
+                )
                 result["datas"]["version"].append(
-                    package.version if package.version is not None else "")
+                    package.version if package.version is not None else ""
+                )
                 try:
                     conf_json = json.loads(package.conf_json)
                 except BaseException:
                     conf_json = {}
                 result["datas"]["conf_json"].append(conf_json)
                 result["datas"]["share_id"].append(
-                    package.pkgs_share_id if package.pkgs_share_id is not None else "")
+                    package.pkgs_share_id if package.pkgs_share_id is not None else ""
+                )
                 result["datas"]["size"].append(
-                    package.size if package.size is not None else "")
+                    package.size if package.size is not None else ""
+                )
         return result
 
     @DatabaseHelper._sessionm
@@ -656,8 +702,7 @@ class PkgsDatabase(DatabaseHelper):
         """
         result = {"size": size, "uuid": uuid, "error": 0}
         try:
-            package = session.query(Packages).filter(
-                Packages.uuid == uuid).first()
+            package = session.query(Packages).filter(Packages.uuid == uuid).first()
             if package:
                 package.size = size
                 result["label"] = package.label
@@ -666,12 +711,14 @@ class PkgsDatabase(DatabaseHelper):
                 session.commit()
                 session.flush()
                 if pkgs_share_id is not None:
-                    sql_request = session.query(
-                        func.sum(
-                            Packages.size).label("total_size")).filter(
-                        Packages.pkgs_share_id == pkgs_share_id).first()
+                    sql_request = (
+                        session.query(func.sum(Packages.size).label("total_size"))
+                        .filter(Packages.pkgs_share_id == pkgs_share_id)
+                        .first()
+                    )
                     resultquotas = self.update_sharing_usedquotas(
-                        pkgs_share_id, sql_request.total_size)
+                        pkgs_share_id, sql_request.total_size
+                    )
                     result.update(resultquotas)
         except BaseException:
             result["error"] = 1
@@ -686,8 +733,7 @@ class PkgsDatabase(DatabaseHelper):
             usesize:
         """
         result = {"quotas": 0, "usedquotas": 0}
-        re = session.query(Pkgs_shares).filter(
-            Pkgs_shares.id == rule_id).first()
+        re = session.query(Pkgs_shares).filter(Pkgs_shares.id == rule_id).first()
         if re:
             re.usedquotas = usesize
         session.commit()
@@ -723,20 +769,25 @@ class PkgsDatabase(DatabaseHelper):
         session.query(Packages).filter(Packages.uuid == uuid).delete()
         session.commit()
         session.flush()
-        if packagesdata is not None and \
-                'pkgs_share_id' in packagesdata and \
-            packagesdata['pkgs_share_id'] is not None:
-            sql_request = session.query(func.sum(Packages.size).label("total_size")).\
-                filter(Packages.pkgs_share_id == packagesdata['pkgs_share_id']).first()
+        if (
+            packagesdata is not None
+            and "pkgs_share_id" in packagesdata
+            and packagesdata["pkgs_share_id"] is not None
+        ):
+            sql_request = (
+                session.query(func.sum(Packages.size).label("total_size"))
+                .filter(Packages.pkgs_share_id == packagesdata["pkgs_share_id"])
+                .first()
+            )
             return self.update_sharing_usedquotas(
-                packagesdata['pkgs_share_id'], sql_request.total_size)
+                packagesdata["pkgs_share_id"], sql_request.total_size
+            )
         return {"quotas": 0, "usedquotas": 0}
 
     ######## Extensions / Rules ##########
     @DatabaseHelper._sessionm
     def list_all_extensions(self, session):
-        ret = session.query(Extensions).order_by(
-            asc(Extensions.rule_order)).all()
+        ret = session.query(Extensions).order_by(asc(Extensions.rule_order)).all()
         extensions = []
         for extension in ret:
             extensions.append(extension.to_array())
@@ -760,15 +811,18 @@ class PkgsDatabase(DatabaseHelper):
             session: the SQLAlchemy session
             rule_id: int corresponding to the rule id we want to raise
         """
-        rule_to_raise = session.query(Extensions).filter(
-            Extensions.id == rule_id).one()
-        rule_to_switch = session.query(Extensions).filter(
-            Extensions.rule_order < rule_to_raise.rule_order).order_by(
-            desc(
-                Extensions.rule_order)).first()
+        rule_to_raise = session.query(Extensions).filter(Extensions.id == rule_id).one()
+        rule_to_switch = (
+            session.query(Extensions)
+            .filter(Extensions.rule_order < rule_to_raise.rule_order)
+            .order_by(desc(Extensions.rule_order))
+            .first()
+        )
 
-        rule_to_raise.rule_order, rule_to_switch.rule_order = rule_to_switch.getRule_order(
-        ), rule_to_raise.getRule_order()
+        rule_to_raise.rule_order, rule_to_switch.rule_order = (
+            rule_to_switch.getRule_order(),
+            rule_to_raise.getRule_order(),
+        )
         session.commit()
         session.flush()
 
@@ -780,25 +834,31 @@ class PkgsDatabase(DatabaseHelper):
             session: the SQLAlchemy session
             rule_id: int corresponding to the rule id we want to raise
         """
-        rule_to_lower = session.query(Extensions).filter(
-            Extensions.id == rule_id).one()
-        rule_to_switch = session.query(Extensions).filter(
-            Extensions.rule_order > rule_to_lower.rule_order).order_by(asc(Extensions.rule_order)).first()
+        rule_to_lower = session.query(Extensions).filter(Extensions.id == rule_id).one()
+        rule_to_switch = (
+            session.query(Extensions)
+            .filter(Extensions.rule_order > rule_to_lower.rule_order)
+            .order_by(asc(Extensions.rule_order))
+            .first()
+        )
 
-        rule_to_lower.rule_order, rule_to_switch.rule_order = rule_to_switch.getRule_order(
-        ), rule_to_lower.getRule_order()
+        rule_to_lower.rule_order, rule_to_switch.rule_order = (
+            rule_to_switch.getRule_order(),
+            rule_to_lower.getRule_order(),
+        )
         session.commit()
         session.flush()
 
     @DatabaseHelper._sessionm
     def get_last_extension_order(self, session):
-        """ Lower the selected rule
+        """Lower the selected rule
         Param:
             session: the SQLAlchemy session
             id: int corresponding to the rule id we want to raise
         """
-        last_rule = session.query(Extensions).order_by(
-            desc(Extensions.rule_order)).first()
+        last_rule = (
+            session.query(Extensions).order_by(desc(Extensions.rule_order)).first()
+        )
         session.commit()
         session.flush()
 
@@ -806,14 +866,15 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def add_extension(self, session, datas):
-        """ Lower the selected rule
+        """Lower the selected rule
         Param:
             session: the SQLAlchemy session
             id: int corresponding to the rule id we want to raise
         """
-        if 'id' in datas:
-            request = session.query(Extensions).filter(
-                Extensions.id == datas['id']).first()
+        if "id" in datas:
+            request = (
+                session.query(Extensions).filter(Extensions.id == datas["id"]).first()
+            )
             rule = request
             if request is None:
                 rule = Extensions()
@@ -821,35 +882,35 @@ class PkgsDatabase(DatabaseHelper):
             request = None
             rule = Extensions()
 
-        if 'rule_order' in datas:
-            rule.rule_order = datas['rule_order']
+        if "rule_order" in datas:
+            rule.rule_order = datas["rule_order"]
 
-        if 'rule_name' in datas:
-            rule.rule_name = datas['rule_name']
+        if "rule_name" in datas:
+            rule.rule_name = datas["rule_name"]
 
-        if 'name' in datas:
-            rule.name = datas['name']
+        if "name" in datas:
+            rule.name = datas["name"]
 
-        if 'extension' in datas:
-            rule.extension = datas['extension']
+        if "extension" in datas:
+            rule.extension = datas["extension"]
 
-        if 'magic_command' in datas:
-            rule.magic_command = datas['magic_command']
+        if "magic_command" in datas:
+            rule.magic_command = datas["magic_command"]
 
-        if 'bang' in datas:
-            rule.bang = datas['bang']
+        if "bang" in datas:
+            rule.bang = datas["bang"]
 
-        if 'file' in datas:
-            rule.file = datas['file']
+        if "file" in datas:
+            rule.file = datas["file"]
 
-        if 'strings' in datas:
-            rule.strings = datas['strings']
+        if "strings" in datas:
+            rule.strings = datas["strings"]
 
-        if 'proposition' in datas:
-            rule.proposition = datas['proposition']
+        if "proposition" in datas:
+            rule.proposition = datas["proposition"]
 
-        if 'description' in datas:
-            rule.description = datas['description']
+        if "description" in datas:
+            rule.description = datas["description"]
 
         if request is None:
             session.add(rule)
@@ -859,8 +920,7 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_extension(self, session, id):
-        return session.query(Extensions).filter(
-            Extensions.id == id).first().to_array()
+        return session.query(Extensions).filter(Extensions.id == id).first().to_array()
 
     # =====================================================================
     # pkgs FUNCTIONS synch syncthing
@@ -868,12 +928,13 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def setSyncthingsync(
-            self,
-            session,
-            uuidpackage,
-            relayserver_jid,
-            typesynchro="create",
-            watching='yes'):
+        self,
+        session,
+        uuidpackage,
+        relayserver_jid,
+        typesynchro="create",
+        watching="yes",
+    ):
         try:
             new_Syncthingsync = Syncthingsync()
             new_Syncthingsync.uuidpackage = uuidpackage
@@ -890,18 +951,21 @@ class PkgsDatabase(DatabaseHelper):
     def get_relayservers_no_sync_for_packageuuid(self, session, uuidpackage):
         result_list = []
         try:
-            relayserversync = session.query(Syncthingsync).filter(
-                and_(Syncthingsync.uuidpackage == uuidpackage)).all()
+            relayserversync = (
+                session.query(Syncthingsync)
+                .filter(and_(Syncthingsync.uuidpackage == uuidpackage))
+                .all()
+            )
             session.commit()
             session.flush()
 
             for relayserver in relayserversync:
                 res = {}
-                res['uuidpackage'] = relayserver.uuidpackage
-                res['typesynchro'] = relayserver.typesynchro
-                res['relayserver_jid'] = relayserver.relayserver_jid
-                res['watching'] = relayserver.watching
-                res['date'] = relayserver.date
+                res["uuidpackage"] = relayserver.uuidpackage
+                res["typesynchro"] = relayserver.typesynchro
+                res["relayserver_jid"] = relayserver.relayserver_jid
+                res["watching"] = relayserver.watching
+                res["date"] = relayserver.date
                 result_list.append(res)
             return result_list
         except Exception as e:
@@ -912,28 +976,27 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def pkgs_register_synchro_package(self, session, uuidpackage, typesynchro):
         """
-            This function allows to register the ARS that needs to tell the update of a package.
-            This function is only used in the "not shared" mode of the packageserver.
-            All the ARS are concerned.
-            Args:
-                session: the SQLAlchemy session
-                uuidpackage: the UUID of the package.
-                typesynchro: Tells if the package will be created or changed.
+        This function allows to register the ARS that needs to tell the update of a package.
+        This function is only used in the "not shared" mode of the packageserver.
+        All the ARS are concerned.
+        Args:
+            session: the SQLAlchemy session
+            uuidpackage: the UUID of the package.
+            typesynchro: Tells if the package will be created or changed.
         """
-        list_server_relay = XmppMasterDatabase().get_List_jid_ServerRelay_enable(enabled=1)
+        list_server_relay = XmppMasterDatabase().get_List_jid_ServerRelay_enable(
+            enabled=1
+        )
         for jid in list_server_relay:
             # Exclude the local package server
             if jid[0].startswith("rspulse@pulse/"):
                 continue
-            self.setSyncthingsync(
-                uuidpackage,
-                jid[0],
-                typesynchro,
-                watching='yes')
+            self.setSyncthingsync(uuidpackage, jid[0], typesynchro, watching="yes")
 
     @DatabaseHelper._sessionm
     def pkgs_register_synchro_package_multisharing(
-            self, session, package, typesynchro="create"):
+        self, session, package, typesynchro="create"
+    ):
         """
         This function allows to register the ARS that needs to tell the update of a package.
         This function is only used in the "shared" mode of the package server.
@@ -946,33 +1009,31 @@ class PkgsDatabase(DatabaseHelper):
 
         """
         list_idars = XmppMasterDatabase().get_List_Mutual_ARS_from_cluster_of_one_idars(
-            package['shareobject']['ars_id'])
-        list_server_relay = XmppMasterDatabase(
-        ).getRelayServerfromid(list_idars[0])
+            package["shareobject"]["ars_id"]
+        )
+        list_server_relay = XmppMasterDatabase().getRelayServerfromid(list_idars[0])
         for relaydata in list_server_relay:
 
-            if relaydata['jid'].startswith("rspulse@pulse/"):
+            if relaydata["jid"].startswith("rspulse@pulse/"):
                 continue
             self.setSyncthingsync(
-                package['id'],
-                relaydata['jid'],
-                typesynchro,
-                watching='yes')
+                package["id"], relaydata["jid"], typesynchro, watching="yes"
+            )
 
     @DatabaseHelper._sessionm
     def pkgs_unregister_synchro_package(
-            self,
-            session,
-            uuidpackage,
-            typesynchro,
-            jid_relayserver):
+        self, session, uuidpackage, typesynchro, jid_relayserver
+    ):
         listdata = jid_relayserver.split("@")
         if len(listdata) > 0:
             datadata = "%s%%" % listdata[0]
             sql = """DELETE FROM `pkgs`.`syncthingsync`
                 WHERE
                 `syncthingsync`.`uuidpackage` like '%s' AND
-                `syncthingsync`.`relayserver_jid`  like "%s" ;""" % (uuidpackage, datadata)
+                `syncthingsync`.`relayserver_jid`  like "%s" ;""" % (
+                uuidpackage,
+                datadata,
+            )
             session.execute(sql)
             session.commit()
             session.flush()
@@ -980,14 +1041,16 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def pkgs_delete_synchro_package(self, session, uuidpackage):
         session.query(Syncthingsync).filter(
-            Syncthingsync.uuidpackage == uuidpackage).delete()
+            Syncthingsync.uuidpackage == uuidpackage
+        ).delete()
         session.commit()
         session.flush()
 
     @DatabaseHelper._sessionm
     def list_pending_synchro_package(self, session):
         pendinglist = session.query(
-            distinct(Syncthingsync.uuidpackage).label("uuidpackage")).all()
+            distinct(Syncthingsync.uuidpackage).label("uuidpackage")
+        ).all()
         session.commit()
         session.flush()
         result_list = []
@@ -997,9 +1060,12 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def clear_old_pending_synchro_package(self, session, timeseconde=35):
-        sql = """DELETE FROM `pkgs`.`syncthingsync`
+        sql = (
+            """DELETE FROM `pkgs`.`syncthingsync`
             WHERE
-                `syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d SECOND);""" % timeseconde
+                `syncthingsync`.`date` < DATE_SUB(NOW(), INTERVAL %d SECOND);"""
+            % timeseconde
+        )
         session.execute(sql)
         session.commit()
         session.flush()
@@ -1007,13 +1073,7 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_package_summary(self, session, package_id):
 
-        path = os.path.join(
-            "/",
-            "var",
-            "lib",
-            "pulse2",
-            "packages",
-            package_id)
+        path = os.path.join("/", "var", "lib", "pulse2", "packages", package_id)
         size = 0
         files = []
         for root, dirs, files in os.walk(path):
@@ -1021,7 +1081,7 @@ class PkgsDatabase(DatabaseHelper):
                 size += os.path.getsize(os.path.join(root, file))
 
         diviser = 1000.0
-        units = ['B', 'Kb', 'Mb', 'Gb', 'Tb']
+        units = ["B", "Kb", "Mb", "Gb", "Tb"]
 
         count = 0
         next = True
@@ -1031,34 +1091,39 @@ class PkgsDatabase(DatabaseHelper):
             else:
                 next = False
 
-        query = session.query(
-            Packages.label,
-            Packages.version,
-            Packages.Qsoftware,
-            Packages.Qversion,
-            Packages.Qvendor,
-            Packages.description).filter(
-            Packages.uuid == package_id).first()
+        query = (
+            session.query(
+                Packages.label,
+                Packages.version,
+                Packages.Qsoftware,
+                Packages.Qversion,
+                Packages.Qvendor,
+                Packages.description,
+            )
+            .filter(Packages.uuid == package_id)
+            .first()
+        )
         session.commit()
         session.flush()
         result = {
-            'name': '',
-            'version': '',
-            'Qsoftware': '',
-            'Qversion': '',
-            'Qvendor': '',
-            'description': '',
-            'files': files,
-            'size': size,
-            'Size': '%s %s' % (round(size / (diviser**count), 2), units[count])}
+            "name": "",
+            "version": "",
+            "Qsoftware": "",
+            "Qversion": "",
+            "Qvendor": "",
+            "description": "",
+            "files": files,
+            "size": size,
+            "Size": "%s %s" % (round(size / (diviser**count), 2), units[count]),
+        }
 
         if query is not None:
-            result['name'] = query.label
-            result['version'] = query.version
-            result['Qsoftware'] = query.Qsoftware
-            result['Qversion'] = query.Qversion
-            result['Qvendor'] = query.Qvendor
-            result['description'] = query.description
+            result["name"] = query.label
+            result["version"] = query.version
+            result["Qsoftware"] = query.Qsoftware
+            result["Qversion"] = query.Qversion
+            result["Qvendor"] = query.Qvendor
+            result["description"] = query.description
 
         return result
 
@@ -1069,7 +1134,7 @@ class PkgsDatabase(DatabaseHelper):
             query = query.filter(Syncthingsync.uuidpackage == pid)
         if jidrelay != []:
             query = query.filter(Syncthingsync.relayserver_jid.in_(jidrelay))
-        query = query.delete(synchronize_session='fetch')
+        query = query.delete(synchronize_session="fetch")
         session.commit()
         session.flush()
 
@@ -1078,9 +1143,20 @@ class PkgsDatabase(DatabaseHelper):
     # =====================================================================
 
     @DatabaseHelper._sessionm
-    def SetPkgs_shares(self, session, name, comments,
-                       enabled, share_type, uri, ars_name,
-                       ars_id, share_path, usedquotas, quotas):
+    def SetPkgs_shares(
+        self,
+        session,
+        name,
+        comments,
+        enabled,
+        share_type,
+        uri,
+        ars_name,
+        ars_id,
+        share_path,
+        usedquotas,
+        quotas,
+    ):
         try:
             new_Pkgs_shares = Pkgs_shares()
             new_Pkgs_shares.name = name
@@ -1102,12 +1178,7 @@ class PkgsDatabase(DatabaseHelper):
             return None
 
     @DatabaseHelper._sessionm
-    def SetPkgs_shares_ars(self,
-                           session,
-                           shareId,
-                           hostname,
-                           jid,
-                           pkgs_shares_id):
+    def SetPkgs_shares_ars(self, session, shareId, hostname, jid, pkgs_shares_id):
         try:
             new_Pkgs_shares_ars = Pkgs_shares_ars()
             new_Pkgs_shares_ars.id = shareId
@@ -1123,11 +1194,17 @@ class PkgsDatabase(DatabaseHelper):
             return None
 
     @DatabaseHelper._sessionm
-    def SetPkgs_shares_ars_web(self, session,
-                               pkgs_share_id,
-                               ars_share_id, packages_id,
-                               status, finger_print, size,
-                               edition_date):
+    def SetPkgs_shares_ars_web(
+        self,
+        session,
+        pkgs_share_id,
+        ars_share_id,
+        packages_id,
+        status,
+        finger_print,
+        size,
+        edition_date,
+    ):
         try:
             new_Pkgs_shares_ars_web = Pkgs_shares_ars_web()
             new_Pkgs_shares_ars_web.ars_share_id = ars_share_id
@@ -1145,8 +1222,7 @@ class PkgsDatabase(DatabaseHelper):
             return None
 
     @DatabaseHelper._sessionm
-    def SetPkgs_rules_algos(self, session,
-                            name, description, level):
+    def SetPkgs_rules_algos(self, session, name, description, level):
         try:
             new_Pkgs_rules_algos = Pkgs_rules_algos()
             session.add(new_Pkgs_rules_algos)
@@ -1161,12 +1237,9 @@ class PkgsDatabase(DatabaseHelper):
             return None
 
     @DatabaseHelper._sessionm
-    def SetPkgs_rules_global(self,
-                             session,
-                             pkgs_rules_algos_id,
-                             pkgs_cluster_ars_id,
-                             order,
-                             subject):
+    def SetPkgs_rules_global(
+        self, session, pkgs_rules_algos_id, pkgs_cluster_ars_id, order, subject
+    ):
         try:
             new_Pkgs_rules_global = Pkgs_rules_local()
             new_Pkgs_rules_global.pkgs_rules_algos_id = pkgs_rules_algos_id
@@ -1182,13 +1255,9 @@ class PkgsDatabase(DatabaseHelper):
             return None
 
     @DatabaseHelper._sessionm
-    def SetPkgs_rules_local(self,
-                            session,
-                            pkgs_rules_algos_id,
-                            pkgs_shares_id,
-                            order,
-                            subject,
-                            permission):
+    def SetPkgs_rules_local(
+        self, session, pkgs_rules_algos_id, pkgs_shares_id, order, subject, permission
+    ):
         try:
             new_Pkgs_rules_local.pkgs_rules_algos_id = pkgs_rules_algos_id
             new_Pkgs_rules_local.pkgs_shares_id = pkgs_shares_id
@@ -1231,7 +1300,7 @@ class PkgsDatabase(DatabaseHelper):
 
     def _result_dict_sql_request(self, ret):
         """
-            this function return dict result sqlalchimy
+        this function return dict result sqlalchimy
         """
         resultrecord = {}
         try:
@@ -1244,40 +1313,45 @@ class PkgsDatabase(DatabaseHelper):
 
                         if "class" in typestr:
                             try:
-                                if 'decimal.Decimal' in typestr:
+                                if "decimal.Decimal" in typestr:
                                     resultrecord[keynameresult] = float(
-                                        getattr(ret, keynameresult))
+                                        getattr(ret, keynameresult)
+                                    )
                                 else:
                                     resultrecord[keynameresult] = str(
-                                        getattr(ret, keynameresult))
+                                        getattr(ret, keynameresult)
+                                    )
                             except BaseException:
                                 self.logger.warning(
-                                    "type class %s no used for key %s" %
-                                    (typestr, keynameresult))
+                                    "type class %s no used for key %s"
+                                    % (typestr, keynameresult)
+                                )
                                 resultrecord[keynameresult] = ""
                         else:
                             if isinstance(
-                                    getattr(
-                                        ret,
-                                        keynameresult),
-                                    datetime.datetime):
+                                getattr(ret, keynameresult), datetime.datetime
+                            ):
                                 resultrecord[keynameresult] = getattr(
-                                    ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
+                                    ret, keynameresult
+                                ).strftime("%m/%d/%Y %H:%M:%S")
                             else:
                                 resultrecord[keynameresult] = getattr(
-                                    ret, keynameresult)
+                                    ret, keynameresult
+                                )
         except Exception:
             self.logger.error("\n%s" % (traceback.format_exc()))
         return resultrecord
 
     @DatabaseHelper._sessionm
-    def pkgs_sharing_rule_search(self,
-                                 session,
-                                 user_information,
-                                 algoid,
-                                 enabled=1,
-                                 share_type=None,
-                                 permission=None):
+    def pkgs_sharing_rule_search(
+        self,
+        session,
+        user_information,
+        algoid,
+        enabled=1,
+        share_type=None,
+        permission=None,
+    ):
 
         sql = """SELECT
                     pkgs.pkgs_shares.id AS id_sharing,
@@ -1305,22 +1379,28 @@ class PkgsDatabase(DatabaseHelper):
         whereclause = """'%s' REGEXP (pkgs.pkgs_rules_local.subject)
                         AND pkgs.pkgs_shares.enabled = %s
                         AND pkgs.pkgs_rules_local.pkgs_rules_algos_id = %s""" % (
-            user_information, enabled, algoid)
+            user_information,
+            enabled,
+            algoid,
+        )
         typeclause = ""
         if share_type is not None:
-            typeclause = """ AND pkgs.pkgs_shares.type = '%s' """ % (
-                share_type)
+            typeclause = """ AND pkgs.pkgs_shares.type = '%s' """ % (share_type)
 
         permitionclause = ""
         if permission is not None:
-            permitionclause = """ AND pkgs.pkgs_rules_local.permission like '%%%s%%' """ % (
-                permission)
+            permitionclause = (
+                """ AND pkgs.pkgs_rules_local.permission like '%%%s%%' """
+                % (permission)
+            )
         sql = """ %s
                   %s %s %s
-                  ORDER BY pkgs.pkgs_rules_local.order;""" % (sql,
-                                                              whereclause,
-                                                              typeclause,
-                                                              permitionclause)
+                  ORDER BY pkgs.pkgs_rules_local.order;""" % (
+            sql,
+            whereclause,
+            typeclause,
+            permitionclause,
+        )
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -1329,37 +1409,35 @@ class PkgsDatabase(DatabaseHelper):
             # create dict partage
             for y in result:
                 resuldict = {}
-                resuldict['id_sharing'] = y[0] if y[0] is not None else ""
-                resuldict['name'] = y[1] if y[1] is not None else ""
-                resuldict['comments'] = y[2] if y[2] is not None else ""
-                resuldict['type'] = y[4] if y[4] is not None else ""
-                resuldict['uri'] = y[5] if y[5] is not None else ""
-                resuldict['ars_name'] = y[6] if y[6] is not None else ""
-                resuldict['ars_id'] = y[7] if y[7] is not None else ""
-                resuldict['share_path'] = y[8] if y[8] is not None else ""
-                resuldict['id_rule'] = y[9] if y[9] is not None else ""
-                resuldict['algos_id'] = y[10] if y[10] is not None else ""
-                resuldict['order_rule'] = y[11] if y[11] is not None else ""
-                resuldict['regexp'] = y[12] if y[12] is not None else ""
-                resuldict['permission'] = y[13] if y[13] is not None else ""
-                resuldict['quotas'] = str(y[14]) if y[14] is not None else ""
-                resuldict['usedquotas'] = str(
-                    y[15]) if y[15] is not None else ""
-                if resuldict['type'] == 'global':
-                    resuldict['nbpackage'] = self.nb_package_in_sharing(
-                        share_id=None)
+                resuldict["id_sharing"] = y[0] if y[0] is not None else ""
+                resuldict["name"] = y[1] if y[1] is not None else ""
+                resuldict["comments"] = y[2] if y[2] is not None else ""
+                resuldict["type"] = y[4] if y[4] is not None else ""
+                resuldict["uri"] = y[5] if y[5] is not None else ""
+                resuldict["ars_name"] = y[6] if y[6] is not None else ""
+                resuldict["ars_id"] = y[7] if y[7] is not None else ""
+                resuldict["share_path"] = y[8] if y[8] is not None else ""
+                resuldict["id_rule"] = y[9] if y[9] is not None else ""
+                resuldict["algos_id"] = y[10] if y[10] is not None else ""
+                resuldict["order_rule"] = y[11] if y[11] is not None else ""
+                resuldict["regexp"] = y[12] if y[12] is not None else ""
+                resuldict["permission"] = y[13] if y[13] is not None else ""
+                resuldict["quotas"] = str(y[14]) if y[14] is not None else ""
+                resuldict["usedquotas"] = str(y[15]) if y[15] is not None else ""
+                if resuldict["type"] == "global":
+                    resuldict["nbpackage"] = self.nb_package_in_sharing(share_id=None)
                 else:
-                    resuldict['nbpackage'] = self.nb_package_in_sharing(
-                        share_id=resuldict['id_sharing'])
+                    resuldict["nbpackage"] = self.nb_package_in_sharing(
+                        share_id=resuldict["id_sharing"]
+                    )
                 ret.append(resuldict)
         return ret
 
     @DatabaseHelper._sessionm
-    def get_Cluster_list_rule(self,
-                              session,
-                              objsearch):
-        if 'login' in objsearch:
-            sql = """
+    def get_Cluster_list_rule(self, session, objsearch):
+        if "login" in objsearch:
+            sql = (
+                """
                 SELECT
                     pkgs_cluster_ars_id
                 FROM
@@ -1367,7 +1445,9 @@ class PkgsDatabase(DatabaseHelper):
                 WHERE
                     '%s' REGEXP (pkgs.pkgs_rules_global.subject)
                          AND permission LIKE '%%r%%'
-                         AND pkgs.pkgs_rules_global.pkgs_rules_algos_id = 3;""" % objsearch['login']
+                         AND pkgs.pkgs_rules_global.pkgs_rules_algos_id = 3;"""
+                % objsearch["login"]
+            )
             result = session.execute(sql)
             session.commit()
             session.flush()
@@ -1376,56 +1456,63 @@ class PkgsDatabase(DatabaseHelper):
 
     def pkgs_search_ars_list_from_cluster_rules(self, objsearch):
         """
-            This function is used to retrieve the ars list for read permissions
-                following the defined rules.
-            Args:
-                objsearch:
-                # TODO: Fix documentation
-            Results:
-                It returns the the ars id followind the defined rules.
+        This function is used to retrieve the ars list for read permissions
+            following the defined rules.
+        Args:
+            objsearch:
+            # TODO: Fix documentation
+        Results:
+            It returns the the ars id followind the defined rules.
 
         """
         cluster_result = []
         extend_ars_list = []
         order_rules = self.pkgs_Orderrules()
         # global sharing
-        if objsearch['login'] == 'root':
+        if objsearch["login"] == "root":
             return []
         else:
             for algo in order_rules:
                 if algo[0] == 3:
                     listcluster = self.get_Cluster_list_rule(objsearch)
-                    extend_ars_list = XmppMasterDatabase().get_Arsid_list_from_clusterid_list(listcluster)
+                    extend_ars_list = (
+                        XmppMasterDatabase().get_Arsid_list_from_clusterid_list(
+                            listcluster
+                        )
+                    )
         return extend_ars_list
 
     def pkgs_search_share(self, objsearch):
         """
-            This function is used to retrieve the shares and the permissions
-                following the defined rules.
-            Args:
-                objsearch:
-                # TODO: Fix documentation
-            Results:
-                It returns the the shares and the permissions following the defined rules.
+        This function is used to retrieve the shares and the permissions
+            following the defined rules.
+        Args:
+            objsearch:
+            # TODO: Fix documentation
+        Results:
+            It returns the the shares and the permissions following the defined rules.
 
         """
         sharing_result = []
         order_rules = self.pkgs_Orderrules()
 
         wrapper = {"config": {}, "datas": []}
-        wrapper["config"]["centralizedmultiplesharing"] = self.config.centralizedmultiplesharing
+        wrapper["config"][
+            "centralizedmultiplesharing"
+        ] = self.config.centralizedmultiplesharing
         wrapper["config"]["movepackage"] = self.config.movepackage
 
         permission = None
         if "permission" in objsearch:
-            permission = objsearch['permission']
+            permission = objsearch["permission"]
 
         # global sharing
-        if objsearch['login'] == 'root':
+        if objsearch["login"] == "root":
             # global sharing yes
             # all local sharing yes
             logger.debug(
-                "As we are using the root user, we can load all the packages from the list.")
+                "As we are using the root user, we can load all the packages from the list."
+            )
             wrapper["datas"] = self.pkgs_sharing_admin_profil()
             return wrapper
         else:
@@ -1433,28 +1520,28 @@ class PkgsDatabase(DatabaseHelper):
                 id_algo = algo[0]
                 # User Rule : 1 sharing on login user
                 if id_algo == 1:
-                    if 'login' in objsearch:
-                        logger.debug(
-                            " algos id is %s [%s]" %
-                            (id_algo, algo[2]))
+                    if "login" in objsearch:
+                        logger.debug(" algos id is %s [%s]" % (id_algo, algo[2]))
                         result = self.pkgs_sharing_rule_search(
-                            objsearch['login'], algoid=id_algo, permission=permission)
+                            objsearch["login"], algoid=id_algo, permission=permission
+                        )
                         if result:
                             for t in result:
-                                re = [x['name'] for x in sharing_result]
-                                if t['name'] in re:
+                                re = [x["name"] for x in sharing_result]
+                                if t["name"] in re:
                                     continue
                                 sharing_result.append(t)
                         logger.debug("search sharing local %s" % (result))
                 elif id_algo == 2:  # 1 sharing on profile userlogger.
-                    if 'profil' in objsearch:
+                    if "profil" in objsearch:
                         debug("algos id is %s [%s]" % (id_algo, algo[2]))
                         result = self.pkgs_sharing_rule_search(
-                            objsearch['profil'], algoid=id_algo)
+                            objsearch["profil"], algoid=id_algo
+                        )
                         if result:
                             for t in result:
-                                re = [x['name'] for x in sharing_result]
-                                if t['name'] in re:
+                                re = [x["name"] for x in sharing_result]
+                                if t["name"] in re:
                                     continue
                                 sharing_result.append(t)
                         logger.debug("search sharing local %s" % (result))
@@ -1511,25 +1598,24 @@ class PkgsDatabase(DatabaseHelper):
             # create dict partage
             for y in result:
                 resuldict = {}
-                resuldict['id_sharing'] = y[0] if y[0] is not None else ""
-                resuldict['name'] = y[1] if y[1] is not None else ""
-                resuldict['comments'] = y[2] if y[2] is not None else ""
-                resuldict['type'] = y[4] if y[4] is not None else ""
-                resuldict['uri'] = y[5] if y[5] is not None else ""
-                resuldict['ars_name'] = y[6] if y[6] is not None else ""
-                resuldict['ars_id'] = y[7] if y[7] is not None else ""
-                resuldict['share_path'] = y[8] if y[8] is not None else ""
-                resuldict['permission'] = "rw"
-                resuldict['quotas'] = str(y[9]) if y[9] is not None else ""
-                resuldict['usedquotas'] = str(
-                    y[10]) if y[10] is not None else ""
+                resuldict["id_sharing"] = y[0] if y[0] is not None else ""
+                resuldict["name"] = y[1] if y[1] is not None else ""
+                resuldict["comments"] = y[2] if y[2] is not None else ""
+                resuldict["type"] = y[4] if y[4] is not None else ""
+                resuldict["uri"] = y[5] if y[5] is not None else ""
+                resuldict["ars_name"] = y[6] if y[6] is not None else ""
+                resuldict["ars_id"] = y[7] if y[7] is not None else ""
+                resuldict["share_path"] = y[8] if y[8] is not None else ""
+                resuldict["permission"] = "rw"
+                resuldict["quotas"] = str(y[9]) if y[9] is not None else ""
+                resuldict["usedquotas"] = str(y[10]) if y[10] is not None else ""
                 ret.append(resuldict)
-                if resuldict['type'] == 'global':
-                    resuldict['nbpackage'] = self.nb_package_in_sharing(
-                        share_id=None)
+                if resuldict["type"] == "global":
+                    resuldict["nbpackage"] = self.nb_package_in_sharing(share_id=None)
                 else:
-                    resuldict['nbpackage'] = self.nb_package_in_sharing(
-                        share_id=resuldict['id_sharing'])
+                    resuldict["nbpackage"] = self.nb_package_in_sharing(
+                        share_id=resuldict["id_sharing"]
+                    )
         return ret
 
     @DatabaseHelper._sessionm
@@ -1548,7 +1634,9 @@ class PkgsDatabase(DatabaseHelper):
                     FROM
                         pkgs.packages
                     WHERE
-                        packages.pkgs_share_id = %s;""" % (share_id)
+                        packages.pkgs_share_id = %s;""" % (
+                share_id
+            )
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -1579,7 +1667,9 @@ class PkgsDatabase(DatabaseHelper):
                 WHERE
                         '%s' REGEXP (pkgs.pkgs_rules_local.subject)
                         AND pkgs.pkgs_shares.enabled = 1
-                ORDER BY pkgs.pkgs_rules_local.order;""" % (loginname)
+                ORDER BY pkgs.pkgs_rules_local.order;""" % (
+            loginname
+        )
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -1588,32 +1678,32 @@ class PkgsDatabase(DatabaseHelper):
             # create dict partage
             for y in result:
                 resuldict = {}
-                resuldict['id_sharing'] = y[0]
-                resuldict['name'] = y[1]
-                resuldict['comments'] = y[2]
-                resuldict['type'] = y[4]
-                resuldict['uri'] = y[5]
-                resuldict['ars_name'] = y[6]
-                resuldict['ars_id'] = y[7]
-                resuldict['share_path'] = y[8]
+                resuldict["id_sharing"] = y[0]
+                resuldict["name"] = y[1]
+                resuldict["comments"] = y[2]
+                resuldict["type"] = y[4]
+                resuldict["uri"] = y[5]
+                resuldict["ars_name"] = y[6]
+                resuldict["ars_id"] = y[7]
+                resuldict["share_path"] = y[8]
                 # information from table pkgs_rules_local or pkgs_rules_global
-                resuldict['id_rule'] = y[9]
-                resuldict['algos_id'] = y[10]
-                resuldict['order_rule'] = y[11]
-                resuldict['regexp'] = y[12]
-                resuldict['permission'] = y[13]
+                resuldict["id_rule"] = y[9]
+                resuldict["algos_id"] = y[10]
+                resuldict["order_rule"] = y[11]
+                resuldict["regexp"] = y[12]
+                resuldict["permission"] = y[13]
                 ret.append(resuldict)
         return ret
 
     @DatabaseHelper._sessionm
     def get_pkg_name_from_uuid(self, session, uuids):
         """
-            Retrieve the name of the package based on the uuids
-            Args:
-                session: The SQL Alchemy session
-                uuids: uuids of the packages
-            Return:
-                It returns the name of the package
+        Retrieve the name of the package based on the uuids
+        Args:
+            session: The SQL Alchemy session
+            uuids: uuids of the packages
+        Return:
+            It returns the name of the package
         """
         query = session.query(Packages.label, Packages.uuid)
         if isinstance(uuids, list):
@@ -1632,12 +1722,12 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_pkg_creator_from_uuid(self, session, uuids):
         """
-            Retrieve the creator of the package based on the uuids
-            Args:
-                session: The SQL Alchemy session
-                uuids: uuids of the packages
-            Return:
-                It returns the name of the creator of the package
+        Retrieve the creator of the package based on the uuids
+        Args:
+            session: The SQL Alchemy session
+            uuids: uuids of the packages
+        Return:
+            It returns the name of the creator of the package
         """
         query = session.query(Packages.conf_json, Packages.uuid)
         if isinstance(uuids, list):
@@ -1651,8 +1741,8 @@ class PkgsDatabase(DatabaseHelper):
             for tmp in result:
                 try:
                     conf_json = json.loads(tmp.conf_json)
-                    if 'creator' in conf_json:
-                        pkg[tmp.uuid] = conf_json['creator']
+                    if "creator" in conf_json:
+                        pkg[tmp.uuid] = conf_json["creator"]
                     else:
                         pkg[tmp.uuid] = ""
                 except BaseException:
@@ -1662,29 +1752,29 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_files_infos(self, session, uuid, filename=""):
         """
-            This is used to retrieve informations about a package.
-            Args:
-                session: The SQLAlchemy session
-                uuid: uuid of the package
-                filename: name of the file to analyze
-            Return:
-                Return informations about the package:
-                    - Name
-                    - Size
-                    - Mime
-                    - Fullpath
-                    - Content
+        This is used to retrieve informations about a package.
+        Args:
+            session: The SQLAlchemy session
+            uuid: uuid of the package
+            filename: name of the file to analyze
+        Return:
+            Return informations about the package:
+                - Name
+                - Size
+                - Mime
+                - Fullpath
+                - Content
         """
-        query = session.query(Pkgs_shares.share_path)\
-            .join(Packages, Pkgs_shares.id == Packages.pkgs_share_id)\
-            .filter(Packages.uuid == uuid).first()
+        query = (
+            session.query(Pkgs_shares.share_path)
+            .join(Packages, Pkgs_shares.id == Packages.pkgs_share_id)
+            .filter(Packages.uuid == uuid)
+            .first()
+        )
 
         path = query[0] if query is not None else ""
 
-        result = {
-            "path": path,
-            "files": []
-        }
+        result = {"path": path, "files": []}
 
         if path is None:
             return result
@@ -1697,35 +1787,38 @@ class PkgsDatabase(DatabaseHelper):
         mime_reader = magic.open(magic.MAGIC_MIME)
         mime_reader.load()
 
-        if(os.path.isdir(pkg_path)):
+        if os.path.isdir(pkg_path):
             result["valid_path"] = True
             if filename == "":
                 # Get all files
-                result['files'] = [{
-                    'fullpath': os.path.join(pkg_path, pkg_file),
-                    'name': pkg_file,
-                    'size': str(os.path.getsize(os.path.join(pkg_path, pkg_file))),
-                    'mime': mime_reader.file(os.path.join(pkg_path, pkg_file)).split("; charset="),
-                } for pkg_file in os.listdir(pkg_path) if os.path.isfile(os.path.join(pkg_path, pkg_file))]
+                result["files"] = [
+                    {
+                        "fullpath": os.path.join(pkg_path, pkg_file),
+                        "name": pkg_file,
+                        "size": str(os.path.getsize(os.path.join(pkg_path, pkg_file))),
+                        "mime": mime_reader.file(
+                            os.path.join(pkg_path, pkg_file)
+                        ).split("; charset="),
+                    }
+                    for pkg_file in os.listdir(pkg_path)
+                    if os.path.isfile(os.path.join(pkg_path, pkg_file))
+                ]
             else:
                 # Get specific file
                 if os.path.join(pkg_path, filename):
                     result = {
-                        'name': filename,
-                        'mime': mime_reader.file(
-                            os.path.join(
-                                pkg_path,
-                                filename)).split("; charset="),
-                        'content': ""}
-                    if result['mime'][0].startswith("text"):
-                        fp = open(os.path.join(pkg_path, filename), 'rb')
+                        "name": filename,
+                        "mime": mime_reader.file(
+                            os.path.join(pkg_path, filename)
+                        ).split("; charset="),
+                        "content": "",
+                    }
+                    if result["mime"][0].startswith("text"):
+                        fp = open(os.path.join(pkg_path, filename), "rb")
                         result["content"] = base64.b64encode(fp.read())
                         fp.close()
                 else:
-                    result = {
-                        'size': 0,
-                        'content': ""
-                    }
+                    result = {"size": 0, "content": ""}
         else:
             result["valid_path"] = False
         return result

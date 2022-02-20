@@ -25,16 +25,16 @@ import time
 
 
 class _Tracker(object):
-    """ Abstract frame for trackers """
+    """Abstract frame for trackers"""
 
     ids = None
 
     def _append(self, id):
-        """ Appends id into container """
+        """Appends id into container"""
         raise NotImplementedError
 
     def _remove(self, id):
-        """ Removes id from container """
+        """Removes id from container"""
         raise NotImplementedError
 
     def __contains__(self, id):
@@ -66,7 +66,7 @@ class _Tracker(object):
 
 
 class Tracker(_Tracker):
-    """ Simple circuits tracking. """
+    """Simple circuits tracking."""
 
     ids = []
 
@@ -90,7 +90,7 @@ class Tracker(_Tracker):
 
 
 class TimedTracker(_Tracker):
-    """ Tracking of circuits with timestamps. """
+    """Tracking of circuits with timestamps."""
 
     ids = {}
 
@@ -117,19 +117,16 @@ class TimedTracker(_Tracker):
 
         now = time.time()
 
-        return [
-            id for (
-                id,
-                tp) in list(
-                self.ids.items()) if tp +
-            self.life_time < now]
+        return [id for (id, tp) in list(self.ids.items()) if tp + self.life_time < now]
 
 
 class StoppedTracker(Tracker):
-    """Controls the stopped circuits """
+    """Controls the stopped circuits"""
+
     pass
 
 
 class StartedTracker(TimedTracker):
-    """Controls the running circuits with an expiration processing """
+    """Controls the running circuits with an expiration processing"""
+
     pass

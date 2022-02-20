@@ -28,24 +28,25 @@ Factory used to interact with the Audit module
 from mmc.support.mmctools import Singleton
 from mmc.core.audit.writernull import AuditWriterNull
 
-class AuditFactory(Singleton):
 
-    def __init__(self, config = None, init = True):
+class AuditFactory(Singleton):
+    def __init__(self, config=None, init=True):
         Singleton.__init__(self)
-        if not hasattr(self, 'logaction'):
+        if not hasattr(self, "logaction"):
             if config == None:
                 from mmc.plugins.base import BasePluginConfig
                 from mmc.support.config import PluginConfigFactory
+
                 try:
                     # Read the configuration
-                    self.make(PluginConfigFactory.new(BasePluginConfig, 'base'), init)
+                    self.make(PluginConfigFactory.new(BasePluginConfig, "base"), init)
                 except IOError:
                     # Fallback on default configuration
                     self.make(None, init)
             else:
                 self.make(config, init)
 
-    def make(self, config, init = True):
+    def make(self, config, init=True):
         """
         Configure the logging mode database,none,syslog
         @param config: confile .ini
@@ -53,9 +54,17 @@ class AuditFactory(Singleton):
         """
         if config and config.auditmethod == "database":
             from mmc.core.audit.writers import AuditWriterDB
+
             AuditWriterDB().setConfig(config)
             if init:
-                AuditWriterDB().init(config.auditdbdriver, config.auditdbuser, config.auditdbpassword, config.auditdbhost, config.auditdbport, config.auditdbname)
+                AuditWriterDB().init(
+                    config.auditdbdriver,
+                    config.auditdbuser,
+                    config.auditdbpassword,
+                    config.auditdbhost,
+                    config.auditdbport,
+                    config.auditdbname,
+                )
             self.logaction = AuditWriterDB()
         else:
             self.logaction = AuditWriterNull()
@@ -68,28 +77,28 @@ class AuditFactory(Singleton):
         """
         return self.logaction
 
-    def log(self,*args):
+    def log(self, *args):
         """
         Log Actions
         @param **args : list of log args
         """
         return self.logaction.log(*args)
 
-    def getLog(self,*args):
+    def getLog(self, *args):
         """
         Get Log Actions return a listEvent
         @param *args : list of log filter args
         """
         return self.logaction.getLog(*args)
 
-    def getLogById(self,*args):
+    def getLogById(self, *args):
         """
         Get Log Actions return an Event
         @param *args : list of log filter args
         """
         return self.logaction.getLogById(*args)
 
-    def getActionType(self,*args):
+    def getActionType(self, *args):
         """
         Get Log Actions return an list of actions or type
         @param action : return actions
@@ -97,7 +106,7 @@ class AuditFactory(Singleton):
         """
         return self.logaction.getActionType(*args)
 
-    def setup(self,*args):
+    def setup(self, *args):
         """
         Setup database default values and set actions list for the module (MODULE_NAME)
         """

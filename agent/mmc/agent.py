@@ -34,6 +34,7 @@ from twisted.web import xmlrpc, server
 from twisted.web.xmlrpc import XMLRPC, Handler
 from twisted.internet import reactor, defer
 from twisted.python import failure
+
 try:
     from twisted.web import http
 except ImportError:
@@ -65,31 +66,41 @@ import re
 import zipfile
 from stat import ST_CTIME
 
+
 class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
     """
     Extended version of TimedRotatingFileHandler that compress logs on rollover.
     the rotation file is compress in zip
     """
 
-    def __init__(self, filename, when='h', interval=1, backupCount=0,
-                 encoding=None, delay=False, utc=False,  compress="zip"):
-        super(TimedCompressedRotatingFileHandler, self).__init__(filename, when,
-                                                                 interval, backupCount, encoding,
-                                                                 delay, utc)
-        self.backupCountlocal= backupCount
+    def __init__(
+        self,
+        filename,
+        when="h",
+        interval=1,
+        backupCount=0,
+        encoding=None,
+        delay=False,
+        utc=False,
+        compress="zip",
+    ):
+        super(TimedCompressedRotatingFileHandler, self).__init__(
+            filename, when, interval, backupCount, encoding, delay, utc
+        )
+        self.backupCountlocal = backupCount
 
     def get_files_by_date(self):
         dir_name, base_name = os.path.split(self.baseFilename)
         file_names = os.listdir(dir_name)
         result = []
         result1 = []
-        prefix = '{}'.format(base_name)
+        prefix = "{}".format(base_name)
         for file_name in file_names:
-            if file_name.startswith(prefix) and not file_name.endswith('.zip'):
-                f=os.path.join(dir_name, file_name )
-                result.append((os.stat(f).st_ctime, f)  )
-            if file_name.startswith(prefix) and  file_name.endswith('.zip'):
-                f=os.path.join(dir_name, file_name )
+            if file_name.startswith(prefix) and not file_name.endswith(".zip"):
+                f = os.path.join(dir_name, file_name)
+                result.append((os.stat(f).st_ctime, f))
+            if file_name.startswith(prefix) and file_name.endswith(".zip"):
+                f = os.path.join(dir_name, file_name)
                 result1.append((os.stat(f).st_ctime, f))
         result1.sort()
         result.sort()
@@ -105,12 +116,13 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
             dfn = self.get_files_by_date()
         except:
             return
-        dfn_zipped = '{}.zip'.format(dfn)
+        dfn_zipped = "{}.zip".format(dfn)
         if os.path.exists(dfn_zipped):
             os.remove(dfn_zipped)
-        with zipfile.ZipFile(dfn_zipped, 'w') as f:
+        with zipfile.ZipFile(dfn_zipped, "w") as f:
             f.write(dfn, dfn_zipped, zipfile.ZIP_DEFLATED)
         os.remove(dfn)
+
 
 logger = logging.getLogger()
 
@@ -124,6 +136,7 @@ VERSION = "4.6.9"
 class IncludeStartsWithFilter(logging.Filter):
     """This class create a specialized filter for logging.getLogger.
     This filter include ONLY the logs which starts by the specified criterion"""
+
     def __init__(self, criterion=""):
         """At the creation of the filter, the search criterion is given.
         Param:
@@ -147,6 +160,7 @@ class IncludeStartsWithFilter(logging.Filter):
 class IncludeContainsFilter(logging.Filter):
     """This class create a specialized filter for logging.getLogger.
     This filter include ONLY the logs which contains the specified criterions"""
+
     def __init__(self, criterion=[]):
         """At the creation of the filter, the search criterion is given.
         Param:
@@ -175,6 +189,7 @@ class IncludeContainsFilter(logging.Filter):
 class IncludeEndsWithFilter(logging.Filter):
     """This class create a specialized filter for logging.getLogger.
     This filter include ONLY the logs which ends by the specified criterion"""
+
     def __init__(self, criterion=""):
         """At the creation of the filter, the search criterion is given.
         Param:
@@ -198,6 +213,7 @@ class IncludeEndsWithFilter(logging.Filter):
 class ExcludeStartsWithFilter(logging.Filter):
     """This class create a specialized filter for logging.getLogger.
     This filter excludes ALL the logs which starts by the specified criterion"""
+
     def __init__(self, criterion=""):
         """At the creation of the filter, the search criterion is given.
         Param:
@@ -222,6 +238,7 @@ class ExcludeStartsWithFilter(logging.Filter):
 class ExcludeContainsFilter(logging.Filter):
     """This class create a specialized filter for logging.getLogger.
     This filter excludes ALL the logs which contains the specified criterion"""
+
     def __init__(self, criterion=""):
         """At the creation of the filter, the search criterion is given.
         Param:
@@ -248,6 +265,7 @@ class ExcludeContainsFilter(logging.Filter):
 class ExcludeEndsWithFilter(logging.Filter):
     """This class create a specialized filter for logging.getLogger.
     This filter excludes ALL the logs which ends by the specified criterion"""
+
     def __init__(self, criterion=""):
         """At the creation of the filter, the search criterion is given.
         Param:
@@ -286,19 +304,19 @@ class MmcServer(XMLRPC, object):
         self.config = config
 
     def _splitFunctionPath(self, functionPath):
-        if '.' in functionPath:
-            mod, func = functionPath.split('.', 1)
+        if "." in functionPath:
+            mod, func = functionPath.split(".", 1)
         else:
             mod = None
             func = functionPath
         return mod, func
 
-    def _getFunction(self, functionPath, request=''):
+    def _getFunction(self, functionPath, request=""):
         """Overrided to use functions from our plugins"""
         mod, func = self._splitFunctionPath(functionPath)
 
         try:
-            if mod and mod != 'system':
+            if mod and mod != "system":
                 try:
                     ret = getattr(self.modules[mod], func)
                 except AttributeError:
@@ -307,7 +325,7 @@ class MmcServer(XMLRPC, object):
             else:
                 ret = getattr(self, func)
         except AttributeError:
-            logger.error(functionPath + ' not found')
+            logger.error(functionPath + " not found")
             raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
         return ret
 
@@ -318,7 +336,7 @@ class MmcServer(XMLRPC, object):
         """
         mod, func = self._splitFunctionPath(functionPath)
         # Special case: reload mehod
-        if (mod, func) == ('system', 'reloadModulesConfiguration'):
+        if (mod, func) == ("system", "reloadModulesConfiguration"):
             return False
         ret = True
         if mod:
@@ -330,7 +348,10 @@ class MmcServer(XMLRPC, object):
         return ret
 
     def render_OPTIONS(self, request):
-        request.setHeader("Access-Control-Allow-Origin", request.requestHeaders.getRawHeaders("Origin"))
+        request.setHeader(
+            "Access-Control-Allow-Origin",
+            request.requestHeaders.getRawHeaders("Origin"),
+        )
         request.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
         request.setHeader("Access-Control-Allow-Credentials", "true")
         request.setHeader("Access-Control-Allow-Headers", "content-type, authorization")
@@ -350,7 +371,10 @@ class MmcServer(XMLRPC, object):
         """
 
         if request.requestHeaders.hasHeader("Origin"):
-            request.setHeader("Access-Control-Allow-Origin", request.requestHeaders.getRawHeaders("Origin"))
+            request.setHeader(
+                "Access-Control-Allow-Origin",
+                request.requestHeaders.getRawHeaders("Origin"),
+            )
         request.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
         request.setHeader("Access-Control-Allow-Credentials", "true")
         request.setHeader("Access-Control-Allow-Headers", "content-type,authorization")
@@ -369,23 +393,34 @@ class MmcServer(XMLRPC, object):
 
         # Check authorization using HTTP Basic
         cleartext_token = self.config.login + ":" + self.config.password
-        token = str(request.getUser(), "utf-8") + ":" + str(request.getPassword(), "utf-8")
+        token = (
+            str(request.getUser(), "utf-8") + ":" + str(request.getPassword(), "utf-8")
+        )
         if token != cleartext_token:
             logger.error("Invalid login / password for HTTP basic authentication")
             request.setResponseCode(http.UNAUTHORIZED)
             self._cbRender(
-                xmlrpc.Fault(http.UNAUTHORIZED, "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required"),
-                request
+                xmlrpc.Fault(
+                    http.UNAUTHORIZED,
+                    "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required",
+                ),
+                request,
             )
             return server.NOT_DONE_YET
 
         if not s.loggedin:
-            logger.debug("RPC method call from unauthenticated user: %s" % functionPath + str(args))
+            logger.debug(
+                "RPC method call from unauthenticated user: %s" % functionPath
+                + str(args)
+            )
             # Save the first sent HTTP headers, as they contain some
             # informations
             s.http_headers = request.requestHeaders.copy()
         else:
-            logger.debug("RPC method call from user %s: %s" % (s.userid, functionPath + str(args)))
+            logger.debug(
+                "RPC method call from user %s: %s"
+                % (s.userid, functionPath + str(args))
+            )
         try:
             if not s.loggedin and self._needAuth(functionPath):
                 msg = "Authentication needed: %s" % functionPath
@@ -396,7 +431,7 @@ class MmcServer(XMLRPC, object):
                     # Provide a security context when a method which doesn't
                     # require a user authentication is called
                     s = request.getSession()
-                    s.userid = 'root'
+                    s.userid = "root"
                     try:
                         self._associateContext(request, s, s.userid)
                     except Exception as e:
@@ -411,18 +446,17 @@ class MmcServer(XMLRPC, object):
         else:
             if self.config.multithreading:
                 oldargs = args
-                args = (function, s,) + args
+                args = (
+                    function,
+                    s,
+                ) + args
                 defer.maybeDeferred(self._runInThread, *args).addErrback(
                     self._ebRender, functionPath, oldargs, request
-                ).addCallback(
-                    self._cbRender, request, functionPath, oldargs
-                )
+                ).addCallback(self._cbRender, request, functionPath, oldargs)
             else:
                 defer.maybeDeferred(function, *args).addErrback(
                     self._ebRender, functionPath, args, request
-                ).addCallback(
-                    self._cbRender, request, functionPath, args
-                )
+                ).addCallback(self._cbRender, request, functionPath, args)
         return server.NOT_DONE_YET
 
     def _runInThread(self, *args, **kwargs):
@@ -430,6 +464,7 @@ class MmcServer(XMLRPC, object):
         Very similar to deferToThread, but also handles function that results
         to a Deferred object.
         """
+
         def _printExecutionTime(start):
             logger.debug("Execution time: %f" % (time.time() - start))
 
@@ -442,7 +477,10 @@ class MmcServer(XMLRPC, object):
             reactor.callFromThread(deferred.errback, failure)
 
         def _putResult(deferred, f, session, args, kwargs):
-            logger.debug("Using thread #%s for %s" % (threading.currentThread().getName().split("-")[2], f.__name__))
+            logger.debug(
+                "Using thread #%s for %s"
+                % (threading.currentThread().getName().split("-")[2], f.__name__)
+            )
             # Attach current user session to the thread
             threading.currentThread().session = session
             start = time.time()
@@ -482,7 +520,10 @@ class MmcServer(XMLRPC, object):
                 except Exception as e:
                     s.loggedin = False
                     logger.exception(e)
-                    f = Fault(8004, "MMC agent can't provide a security context for this account")
+                    f = Fault(
+                        8004,
+                        "MMC agent can't provide a security context for this account",
+                    )
                     self._cbRender(f, request)
                     return
         if result is None:
@@ -496,14 +537,28 @@ class MmcServer(XMLRPC, object):
                 # FIXME
                 # Evil hack ! We need this to transport some data as binary instead of string
                 if "jpegPhoto" in result[0]:
-                    result[0]["jpegPhoto"] = [xmlrpc.client.Binary(result[0]["jpegPhoto"][0])]
+                    result[0]["jpegPhoto"] = [
+                        xmlrpc.client.Binary(result[0]["jpegPhoto"][0])
+                    ]
         except IndexError:
             pass
         try:
             if s.loggedin:
-                logger.debug('Result for ' + s.userid + ", " + str(functionPath) + ": " + str(result))
+                logger.debug(
+                    "Result for "
+                    + s.userid
+                    + ", "
+                    + str(functionPath)
+                    + ": "
+                    + str(result)
+                )
             else:
-                logger.debug('Result for unauthenticated user, ' + str(functionPath) + ": " + str(result))
+                logger.debug(
+                    "Result for unauthenticated user, "
+                    + str(functionPath)
+                    + ": "
+                    + str(result)
+                )
             s = xmlrpc.client.dumps(result, methodresponse=1)
         except Exception as e:
             f = Fault(self.FAILURE, "can't serialize output: " + str(e))
@@ -517,12 +572,14 @@ class MmcServer(XMLRPC, object):
         request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
-        logger.error("Error during render " + functionPath + ": " + failure.getTraceback())
-        # Prepare a Fault result to return
+        logger.error(
+            "Error during render " + functionPath + ": " + failure.getTraceback()
+        )
+        # Prepare a Fault result to return
         result = {}
-        result['faultString'] = functionPath + " " + str(args)
-        result['faultCode'] = str(failure.type) + ": " + str(failure.value) + " "
-        result['faultTraceback'] = failure.getTraceback()
+        result["faultString"] = functionPath + " " + str(args)
+        result["faultCode"] = str(failure.type) + ": " + str(failure.value) + " "
+        result["faultTraceback"] = failure.getTraceback()
         return result
 
     def _associateContext(self, request, session, userid):
@@ -539,7 +596,7 @@ class MmcServer(XMLRPC, object):
             try:
                 contextMaker = getattr(self.modules[mod], "ContextMaker")
             except AttributeError:
-                # No context provided
+                # No context provided
                 continue
             cm = contextMaker(request, session, userid)
             context = cm.getContext()
@@ -563,21 +620,23 @@ class MmcServer(XMLRPC, object):
                     # Reloading configuration file
                     fid = open(obj.conffile, "r")
                     obj.readfp(fid, obj.conffile)
-                    if os.path.isfile(obj.conffile + '.local'):
-                        fid = open(obj.conffile + '.local', "r")
-                        obj.readfp(fid, obj.conffile + '.local')
+                    if os.path.isfile(obj.conffile + ".local"):
+                        fid = open(obj.conffile + ".local", "r")
+                        obj.readfp(fid, obj.conffile + ".local")
                     # Refresh config attributes
                     obj.readConf()
                 except Exception as e:
-                    logger.error('Error while reloading configuration file %s', obj.conffile)
+                    logger.error(
+                        "Error while reloading configuration file %s", obj.conffile
+                    )
                     logger.error(str(e))
-                    return 'Failed'
+                    return "Failed"
 
         # Manually expiring all logged sessions
         for session in self.sessions:
             session.expire()
         self.sessions = set()
-        return 'Done'
+        return "Done"
 
     # ======== XMLRPC Standard Introspection methods ================
 
@@ -587,31 +646,30 @@ class MmcServer(XMLRPC, object):
 
         for mod in self.modules:
             instance = self.modules[mod]
-            # Fetching module root methods
+            # Fetching module root methods
             for m in dir(instance):
                 r = getattr(instance, m)
                 # If attr is callable, we add it to method_list
-                if hasattr(r, '__call__'):
-                    method_list.append(mod + '.' + m)
+                if hasattr(r, "__call__"):
+                    method_list.append(mod + "." + m)
             # Doing same thing for module.RPCProxy if exists
-            if hasattr(instance, 'RpcProxy'):
+            if hasattr(instance, "RpcProxy"):
                 for m in dir(instance.RpcProxy):
                     r = getattr(instance.RpcProxy, m)
                     # If attr is callable, we add it to method_list
-                    if hasattr(r, '__call__'):
-                        method_list.append(mod + '.' + m)
+                    if hasattr(r, "__call__"):
+                        method_list.append(mod + "." + m)
 
         return method_list
 
-
-    def __getClassMethod(self,name):
+    def __getClassMethod(self, name):
         mod, func = self._splitFunctionPath(name)
 
         if not mod in self.modules:
             return None
 
         instance = self.modules[mod]
-        if hasattr(instance, 'RpcProxy'):
+        if hasattr(instance, "RpcProxy"):
             if hasattr(instance.RpcProxy, func):
                 return getattr(instance.RpcProxy, func)
             elif hasattr(instance, func):
@@ -629,12 +687,11 @@ class MmcServer(XMLRPC, object):
         else:
             return getargspec(method)[0]
 
-
     def methodHelp(self, name):
         method = self.__getClassMethod(name)
 
         if method is None:
-            return ''
+            return ""
         else:
             return method.__doc__
 
@@ -651,14 +708,14 @@ class MmcServer(XMLRPC, object):
         @param fileprefix: Write log file in @localstatedir@/log/mmc/mmc-fileprefix.log
         @param content: string to record in log file
         """
-        f = open(localstatedir + '/log/mmc/mmc-' + fileprefix + '.log', 'a')
-        f.write(time.asctime() + ': ' + content + "\n")
+        f = open(localstatedir + "/log/mmc/mmc-" + fileprefix + ".log", "a")
+        f.write(time.asctime() + ": " + content + "\n")
         f.close()
 
 
 class MMCApp(object):
-    """ Represent the MMCApp
-    """
+    """Represent the MMCApp"""
+
     def __init__(self, config, options):
         self.config = readConfig(config)
         self.conffile = options.inifile
@@ -670,38 +727,82 @@ class MMCApp(object):
 
             for filter in self.exclude:
                 logger.addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.clientxmpp").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.plugins.base").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.features.feature_starttls.starttls").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.thirdparty.statemachine").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.features.feature_rosterver.rosterver").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.plugins.xep_0045").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.plugins.xep_0078.legacyauth").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.features.feature_bind.bind").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.features.feature_session.session").addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.xmlstream.scheduler").addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger("sleekxmpp.clientxmpp").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger("sleekxmpp.plugins.base").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger(
+                    "sleekxmpp.features.feature_starttls.starttls"
+                ).addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.thirdparty.statemachine").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger(
+                    "sleekxmpp.features.feature_rosterver.rosterver"
+                ).addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.plugins.xep_0045").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger("sleekxmpp.plugins.xep_0078.legacyauth").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger("sleekxmpp.features.feature_bind.bind").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger(
+                    "sleekxmpp.features.feature_session.session"
+                ).addFilter(ExcludeContainsFilter(filter))
+                logging.getLogger("sleekxmpp.xmlstream.scheduler").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
 
         if hasattr(options, "include") and options.include is not None:
             self.include = options.include.split(",")
             logger.addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.clientxmpp").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.plugins.base").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.features.feature_starttls.starttls").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.thirdparty.statemachine").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.features.feature_rosterver.rosterver").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.plugins.xep_0045").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.plugins.xep_0078.legacyauth").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.features.feature_bind.bind").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.features.feature_session.session").addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.xmlstream.scheduler").addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger("sleekxmpp.clientxmpp").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger("sleekxmpp.plugins.base").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger("sleekxmpp.features.feature_starttls.starttls").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger("sleekxmpp.thirdparty.statemachine").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger(
+                "sleekxmpp.features.feature_rosterver.rosterver"
+            ).addFilter(IncludeContainsFilter(self.include))
+            logging.getLogger("sleekxmpp.plugins.xep_0045").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger("sleekxmpp.plugins.xep_0078.legacyauth").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger("sleekxmpp.features.feature_bind.bind").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger("sleekxmpp.features.feature_session.session").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger("sleekxmpp.xmlstream.scheduler").addFilter(
+                IncludeContainsFilter(self.include)
+            )
 
         if not self.daemonlog:
             self.daemon = False
         # Shared return state, so that father can know if children goes wrong
         if self.daemon:
-            self._shared_state = mp.Value('i', 0)
+            self._shared_state = mp.Value("i", 0)
 
         if self.daemon:
             self.lock = mp.Lock()
@@ -713,12 +814,16 @@ class MMCApp(object):
     def setState(self, s):
         if self.daemon:
             self._shared_state.value = s
+
     state = property(getState, setState)
 
     def daemonize(self):
         # Test if mmcagent has been already launched in daemon mode
         if os.path.isfile(self.config.pidfile):
-            print("%s already exist. Maybe mmc-agent is already running\n" % self.config.pidfile)
+            print(
+                "%s already exist. Maybe mmc-agent is already running\n"
+                % self.config.pidfile
+            )
             sys.exit(0)
 
         # do the UNIX double-fork magic, see Stevens' "Advanced
@@ -763,7 +868,7 @@ class MMCApp(object):
                 except OSError:
                     pass
 
-        if (hasattr(os, "devnull")):
+        if hasattr(os, "devnull"):
             REDIRECT_TO = os.devnull
         else:
             REDIRECT_TO = "/dev/null"
@@ -791,17 +896,19 @@ class MMCApp(object):
 
     def reload(self):
         if self.config.enablessl:
-            protocol = 'https'
+            protocol = "https"
         else:
-            protocol = 'http'
+            protocol = "http"
 
         client = xmlrpc.client.ServerProxy(
-            "%s://%s:%s@%s:%s/" % (protocol,
-                                   self.config.login,
-                                   self.config.password,
-                                   self.config.host,
-                                   self.config.port
-                                   )
+            "%s://%s:%s@%s:%s/"
+            % (
+                protocol,
+                self.config.login,
+                self.config.password,
+                self.config.host,
+                self.config.port,
+            )
         )
         try:
             client.system.reloadModulesConfiguration()
@@ -811,12 +918,12 @@ class MMCApp(object):
             return 1
 
     def readPid(self):
-        """ Try to read pid of running mmc-agent in pidfile
+        """Try to read pid of running mmc-agent in pidfile
         Return the pid or None in case of failure
         """
         try:
             if os.path.exists(self.config.pidfile):
-                f = open(self.config.pidfile, 'r')
+                f = open(self.config.pidfile, "r")
                 try:
                     line = f.readline()
                     return int(line.strip())
@@ -827,9 +934,9 @@ class MMCApp(object):
 
     def writePid(self):
         pid = os.getpid()
-        f = open(self.config.pidfile, 'w')
+        f = open(self.config.pidfile, "w")
         try:
-            f.write('%s\n' % pid)
+            f.write("%s\n" % pid)
         finally:
             f.close()
 
@@ -865,7 +972,9 @@ class MMCApp(object):
 
     def initialize(self):
         # Initialize logging object
-        logging.handlers.TimedCompressedRotatingFileHandler = TimedCompressedRotatingFileHandler
+        logging.handlers.TimedCompressedRotatingFileHandler = (
+            TimedCompressedRotatingFileHandler
+        )
         logging.config.fileConfig(self.conffile)
 
         # In foreground mode, log to stderr
@@ -896,8 +1005,10 @@ class MMCApp(object):
 
         logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
         if self.config.multithreading:
-            logger.info("Multi-threading enabled, max threads pool size is %d"
-                        % self.config.maxthreads)
+            logger.info(
+                "Multi-threading enabled, max threads pool size is %d"
+                % self.config.maxthreads
+            )
             reactor.suggestThreadPoolSize(self.config.maxthreads)
 
         # Export the MMC-AGENT variable in the environement so that
@@ -905,7 +1016,7 @@ class MMCApp(object):
         os.environ["MMC_AGENT"] = VERSION
 
         # Start audit system
-        l = AuditFactory().log('MMC-AGENT', 'MMC_AGENT_SERVICE_START')
+        l = AuditFactory().log("MMC-AGENT", "MMC_AGENT_SERVICE_START")
 
         # Ask PluginManager to load MMC plugins
         pm = PluginManager()
@@ -928,39 +1039,47 @@ class MMCApp(object):
         # Starting XMLRPC server
         r = MmcServer(mod, self.config)
         if self.config.enablessl:
-            sslContext = makeSSLContext(self.config.verifypeer, self.config.cacert,
-                                        self.config.localcert)
-            reactor.listenSSL(self.config.port, MMCSite(r),
-                              interface=self.config.host,
-                              contextFactory=sslContext)
+            sslContext = makeSSLContext(
+                self.config.verifypeer, self.config.cacert, self.config.localcert
+            )
+            reactor.listenSSL(
+                self.config.port,
+                MMCSite(r),
+                interface=self.config.host,
+                contextFactory=sslContext,
+            )
         else:
             logger.warning("SSL is disabled by configuration.")
-            reactor.listenTCP(self.config.port, server.Site(r), interface=self.config.host)
+            reactor.listenTCP(
+                self.config.port, server.Site(r), interface=self.config.host
+            )
 
         # Add event handler before shutdown
-        reactor.addSystemEventTrigger('before', 'shutdown', self.cleanUp)
-        logger.info("Listening to XML-RPC requests on %s:%s"
-                    % (self.config.host, self.config.port))
-        #Start client XMPP if module xmppmaster enable
+        reactor.addSystemEventTrigger("before", "shutdown", self.cleanUp)
+        logger.info(
+            "Listening to XML-RPC requests on %s:%s"
+            % (self.config.host, self.config.port)
+        )
+        # Start client XMPP if module xmppmaster enable
         if PluginManager().isEnabled("xmppmaster"):
             logger.info("Start client mmc Xmpp XmppMaster")
-            self.modulexmppmaster = PluginManager().getEnabledPlugins()['xmppmaster'].xmppMasterthread()
+            self.modulexmppmaster = (
+                PluginManager().getEnabledPlugins()["xmppmaster"].xmppMasterthread()
+            )
             self.modulexmppmaster.setDaemon(True)
             self.modulexmppmaster.start()
-
-
 
     def cleanUp(self):
         """
         function call before shutdown of reactor
         """
         if PluginManager().isEnabled("xmppmaster"):
-            #self.modulexmppmaster
+            # self.modulexmppmaster
             if self.modulexmppmaster.isAlive():
-                logger.info('mmc-agent xmppmaster stop...')
+                logger.info("mmc-agent xmppmaster stop...")
                 self.modulexmppmaster.stop()
-        logger.info('mmc-agent shutting down, cleaning up...')
-        l = AuditFactory().log('MMC-AGENT', 'MMC_AGENT_SERVICE_STOP')
+        logger.info("mmc-agent shutting down, cleaning up...")
+        l = AuditFactory().log("MMC-AGENT", "MMC_AGENT_SERVICE_STOP")
         l.commit()
 
         self.cleanPid()
@@ -1069,7 +1188,7 @@ class PluginManager(Singleton):
     keeps track of all enabled plugins.
     """
 
-    pluginDirectory = 'plugins/'
+    pluginDirectory = "plugins/"
     # Will contains the enabled plugins name and corresponding python
     # module objects
     plugins = {}
@@ -1124,7 +1243,7 @@ class PluginManager(Singleton):
         plugin), 0 on non-fatal failure, and the module itself if
         the load was successful
         """
-        f, p, d = imp.find_module(name, ['plugins'])
+        f, p, d = imp.find_module(name, ["plugins"])
 
         try:
             logger.debug("Trying to load module %s" % name)
@@ -1132,7 +1251,9 @@ class PluginManager(Singleton):
             logger.debug("Module %s loaded" % name)
         except Exception as e:
             logger.exception(e)
-            logger.error('Module ' + name + " raise an exception.\n" + name + " not loaded.")
+            logger.error(
+                "Module " + name + " raise an exception.\n" + name + " not loaded."
+            )
             return 0
 
         # If module has no activate function
@@ -1140,28 +1261,28 @@ class PluginManager(Singleton):
             # if not force:
             #     func = getattr(plugin, "activate")
             # else:
-                # logger.debug('Forcing plugin startup')
-                # try:
+            # logger.debug('Forcing plugin startup')
+            # try:
             # func = getattr(plugin, "activateForced")
-        # except AttributeError:
+            # except AttributeError:
             # logger.debug('Trying to force startup of plugin %s but no "activateForced" method found\nFalling back to the normale activate method' % (name,))
             func = getattr(plugin, "activate")
         except AttributeError:
-            logger.error('%s is not a MMC plugin.' % name)
+            logger.error("%s is not a MMC plugin." % name)
             plugin = None
             return 0
 
         # If is active
         try:
-            if (func()):
-                version = 'version: ' + str(getattr(plugin, "getVersion")())
-                logger.info('Plugin %s loaded, %s' % (name, version))
+            if func():
+                version = "version: " + str(getattr(plugin, "getVersion")())
+                logger.info("Plugin %s loaded, %s" % (name, version))
             else:
                 # If we can't activate it
-                logger.warning('Plugin %s not loaded.' % name)
+                logger.warning("Plugin %s not loaded." % name)
                 plugin = None
         except Exception as e:
-            logger.error('Error while trying to load plugin ' + name)
+            logger.error("Error while trying to load plugin " + name)
             logger.exception(e)
             plugin = None
             # We do no exit but go on when another plugin than base fail
@@ -1184,14 +1305,16 @@ class PluginManager(Singleton):
         ignore the disable = 1 configuration option)
         """
         if name in self.getEnabledPluginNames() or name in self.plugins:
-            logger.warning('Trying to start an already loaded plugin: %s' % (name,))
+            logger.warning("Trying to start an already loaded plugin: %s" % (name,))
             return 0
         res = self.loadPlugin(name, force=True)
         if res == 0:
             return 0
         elif res is not None and not isinstance(res, int):
             self.plugins[name] = res
-            getattr(self.plugins["base"], "setModList")([name for name in list(self.plugins.keys())])
+            getattr(self.plugins["base"], "setModList")(
+                [name for name in list(self.plugins.keys())]
+            )
         elif res == 4:
             return 4
         return res
@@ -1245,12 +1368,18 @@ class PluginManager(Singleton):
                     func = None
                 if func:
                     if not func():
-                        logger.error("Error in activation stage 2 for plugin '%s'" % plugin)
-                        logger.error("Please check your MMC agent configuration and log")
+                        logger.error(
+                            "Error in activation stage 2 for plugin '%s'" % plugin
+                        )
+                        logger.error(
+                            "Please check your MMC agent configuration and log"
+                        )
                         return 4
 
         # Set module list
-        getattr(self.plugins["base"], "setModList")([name for name in list(self.plugins.keys())])
+        getattr(self.plugins["base"], "setModList")(
+            [name for name in list(self.plugins.keys())]
+        )
         return 0
 
     def stopPlugin(self, name):
@@ -1264,12 +1393,14 @@ class PluginManager(Singleton):
             return False
         plugin = self.plugins[name]
         try:
-            deactivate = getattr(plugin, 'deactivate')
+            deactivate = getattr(plugin, "deactivate")
         except AttributeError:
-            logger.info('Plugin %s has no deactivate function' % (name,))
+            logger.info("Plugin %s has no deactivate function" % (name,))
         else:
-            logger.info('Deactivating plugin %s' % (name,))
+            logger.info("Deactivating plugin %s" % (name,))
             deactivate()
         del self.plugins[name]
-        getattr(self.plugins["base"], "setModList")([name for name in list(self.plugins.keys())])
+        getattr(self.plugins["base"], "setModList")(
+            [name for name in list(self.plugins.keys())]
+        )
         return True

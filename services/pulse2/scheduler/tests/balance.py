@@ -58,7 +58,7 @@ class class01BalanceTest(unittest.TestCase):
         for i in range(nbr_steps):
             b_offset = self.NBR_ATTEMPTS - i
             left = b.balances[i]
-            right = b.balances[b_offset - 1:b_offset][0]
+            right = b.balances[b_offset - 1 : b_offset][0]
             if round(left, 5) != round(right, 5):
                 egality = False
 

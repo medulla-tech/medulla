@@ -28,6 +28,7 @@ It only implement the write methods!
 from pulse2.managers.pulse import Pulse2I
 from pulse2.database.imaging import ImagingDatabase
 
+
 class ImagingPulse2Manager(Pulse2I):
     def getPackageServerEntityByPackageServer(self, ps_uuid):
         raise Exception("I won't do that!")
@@ -44,4 +45,6 @@ class ImagingPulse2Manager(Pulse2I):
     def putPackageServerEntity(self, ps_uuid, e_uuid):
         ims = ImagingDatabase().getImagingServerByPackageServerUUID(ps_uuid)
         entity = ImagingDatabase().getEntityByUUID(e_uuid)
-        ImagingDatabase().updateImagingServer(ims[0].getUUID(), {'fk_entity':entity.id})
+        ImagingDatabase().updateImagingServer(
+            ims[0].getUUID(), {"fk_entity": entity.id}
+        )

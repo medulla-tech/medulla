@@ -34,7 +34,7 @@ from twisted.internet import defer
 
 class ComputerProfileManager(Singleton):
     components = {}
-    main = 'dyngroup'
+    main = "dyngroup"
 
     def __init__(self):
         Singleton.__init__(self)
@@ -46,8 +46,8 @@ class ComputerProfileManager(Singleton):
 
     def register(self, name, klass):
         self.logger.debug(
-            "Registering computer profile manager %s / %s" %
-            (name, str(klass)))
+            "Registering computer profile manager %s / %s" % (name, str(klass))
+        )
         self.components[name] = klass
 
     def validate(self):
@@ -80,7 +80,8 @@ class ComputerProfileManager(Singleton):
         pass
 
     def addComputersToProfile(self, ctx, computers_UUID, profile_UUID):
-        " ask to all profile managers "
+        "ask to all profile managers"
+
         def treatDeferList(result):
             ret = True
             for r in result:
@@ -90,33 +91,31 @@ class ComputerProfileManager(Singleton):
         dl = []
         for mod in self.components:
             klass = self.components[mod]
-            if hasattr(klass, 'addComputersToProfile'):
+            if hasattr(klass, "addComputersToProfile"):
                 d = defer.maybeDeferred(
-                    klass().addComputersToProfile,
-                    ctx,
-                    computers_UUID,
-                    profile_UUID)
+                    klass().addComputersToProfile, ctx, computers_UUID, profile_UUID
+                )
                 dl.append(d)
         deferred = defer.DeferredList(dl)
         deferred.addCallback(treatDeferList)
         return deferred
 
     def delComputersFromProfile(self, computers_UUID, profile_UUID):
-        " ask to all profile managers "
+        "ask to all profile managers"
         ret = True
         for mod in self.components:
             klass = self.components[mod]
-            if hasattr(klass, 'delComputersFromProfile'):
+            if hasattr(klass, "delComputersFromProfile"):
                 r = klass().delComputersFromProfile(computers_UUID, profile_UUID)
                 ret = ret and r
         return ret
 
     def delProfile(self, profile_UUID):
-        " ask to all profile managers to remove the profile "
+        "ask to all profile managers to remove the profile"
         ret = True
         for mod in self.components:
             klass = self.components[mod]
-            if hasattr(klass, 'delProfile'):
+            if hasattr(klass, "delProfile"):
                 r = klass().delProfile(profile_UUID)
                 ret = ret and r
         return ret
@@ -129,21 +128,21 @@ class ComputerProfileManager(Singleton):
         return klass().getProfileContent(uuid)
 
     def getForbiddenComputersUUID(self, profile_UUID=None):
-        " ask to all profile managers "
+        "ask to all profile managers"
         ret = []
         for mod in self.components:
             klass = self.components[mod]
-            if hasattr(klass, 'getForbiddenComputersUUID'):
+            if hasattr(klass, "getForbiddenComputersUUID"):
                 r = klass().getForbiddenComputersUUID(profile_UUID)
                 ret.extend(r)
         return ret
 
     def areForbiddebComputers(self, computer_UUID):
-        " ask to all profile managers "
+        "ask to all profile managers"
         ret = []
         for mod in self.components:
             klass = self.components[mod]
-            if hasattr(klass, 'areForbiddebComputers'):
+            if hasattr(klass, "areForbiddebComputers"):
                 r = klass().areForbiddebComputers(computer_UUID)
                 ret.extend(r)
         return ret
@@ -152,6 +151,7 @@ class ComputerProfileManager(Singleton):
 #    def isdyn_group(self, ctx, gid):
 #        klass = self.components[self.main]
 #        return klass().isdyn_group(ctx, gid)
+
 
 class ComputerProfileI:
     #    def isdyn_group(self, ctx, gid):

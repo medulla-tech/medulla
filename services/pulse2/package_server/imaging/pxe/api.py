@@ -43,7 +43,7 @@ import xml.etree.ElementTree as ET  # form XML Building
 import time
 
 
-class PXEImagingApi (PXEMethodParser):
+class PXEImagingApi(PXEMethodParser):
     """
     A frame to recognize the method definitions to build.
 
@@ -57,6 +57,7 @@ class PXEImagingApi (PXEMethodParser):
       ArgumentContainer class as properties (with the same name)
     - don't forget to initialize PXEMethodParser instance.
     """
+
     api = None
 
     lasttime = 0
@@ -93,20 +94,15 @@ class PXEImagingApi (PXEMethodParser):
         @type ip_address: str
 
         """
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.MENU,
-                                 "menu identification")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "menu identification"
+        )
 
         if self.config.imaging_api["glpi_mode"]:
 
             d = task.deferLater(
-                reactor,
-                0,
-                self.glpi_register,
-                mac,
-                hostname,
-                ip_address)
+                reactor, 0, self.glpi_register, mac, hostname, ip_address
+            )
             d.addCallback(self._computerRegister, hostname, mac, 2)
             d.addErrback(self._ebRegisterError, mac)
 
@@ -130,13 +126,12 @@ class PXEImagingApi (PXEMethodParser):
         @rtype: deferred
         """
         logging.getLogger().debug("FIRST REGISTRATION TO ALLOW INVENTORY")
-        m = re.search('<REQUEST>.*<\\/REQUEST>', inventory)
+        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
         file_content = str(m.group(0))
         ipadress = self.ip_adressexml(file_content)
         mac1 = self.mac_adressexml(file_content)
         hostnamexml = self.hostname_xml(file_content)
-        inventory = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n%s" % (
-            file_content)
+        inventory = '<?xml version="1.0" encoding="utf-8"?>\n%s' % (file_content)
         ip_address = ipadress
         mac = mac1
         return self.send_inventory(inventory, hostnamexml)
@@ -158,33 +153,30 @@ class PXEImagingApi (PXEMethodParser):
         @type ip_address: str
         """
 
-        d = task.deferLater(
-            reactor,
-            delay,
-            self.api.computerRegister,
-            hostname,
-            mac)
+        d = task.deferLater(reactor, delay, self.api.computerRegister, hostname, mac)
         d.addCallback(self._cbRegisterOk, mac)
         d.addErrback(self._ebRegisterError, mac)
 
         return d
 
     def _cbRegisterOk(self, result, mac):
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.MENU,
-                                 "identification success")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "identification success"
+        )
 
     def _ebRegisterError(self, failure, mac):
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.WARNING,
-                                 LOG_STATE.MENU,
-                                 "identification failure")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.WARNING, LOG_STATE.MENU, "identification failure"
+        )
 
     def ipV4toDecimal(self, ipv4):
-        d = ipv4.split('.')
-        return (int(d[0]) * 256 * 256 * 256) + (int(d[1])
-                                                * 256 * 256) + (int(d[2]) * 256) + int(d[3])
+        d = ipv4.split(".")
+        return (
+            (int(d[0]) * 256 * 256 * 256)
+            + (int(d[1]) * 256 * 256)
+            + (int(d[2]) * 256)
+            + int(d[3])
+        )
 
     def decimaltoIpV4(self, ipdecimal):
         a = float(ipdecimal) / (256 * 256 * 256)
@@ -195,8 +187,7 @@ class PXEImagingApi (PXEMethodParser):
 
     def subnetreseau(self, adressmachine, mask):
         adressmachine = adressmachine.split(":")[0]
-        reseaumachine = self.ipV4toDecimal(
-            adressmachine) & self.ipV4toDecimal(mask)
+        reseaumachine = self.ipV4toDecimal(adressmachine) & self.ipV4toDecimal(mask)
         return self.decimaltoIpV4(reseaumachine)
 
     def glpi_register(self, mac, hostname, ip_address):
@@ -216,11 +207,12 @@ class PXEImagingApi (PXEMethodParser):
         logging.getLogger().debug("glpi_register")
         boot_inv = BootInventory()
         boot_inv.macaddr_info = mac
-        boot_inv.ipaddr_info = {'ip': ip_address, 'port': 0}
+        boot_inv.ipaddr_info = {"ip": ip_address, "port": 0}
         # add information network in xml glpi
         boot_inv.netmask_info = P2PServerCP().public_mask
         boot_inv.subnet_info = self.subnetreseau(
-            boot_inv.ipaddr_info['ip'], boot_inv.netmask_info)
+            boot_inv.ipaddr_info["ip"], boot_inv.netmask_info
+        )
         inventory = boot_inv.dumpOCS(hostname, "root")
         return self.send_inventory(inventory, hostname)
 
@@ -238,22 +230,23 @@ class PXEImagingApi (PXEMethodParser):
         @return: "ok" if correct, otherwise "ko"
         @rtype: str
         """
+
         def __sha512_crypt_password(password):
             if not password:
-                return ''
+                return ""
             import crypt
             import base64
-            passphrase = '$6$DzmCpUs3$'
+
+            passphrase = "$6$DzmCpUs3$"
             return crypt.crypt(password, passphrase)
 
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.INFO,
-                                 LOG_STATE.IDENTITY,
-                                 "menu identification request")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.INFO, LOG_STATE.IDENTITY, "menu identification request"
+        )
 
         if __sha512_crypt_password(password) == P2PServerCP().pxe_password:
             logging.getLogger().debug("PXE Proxy: client authentification OK")
-            return succeed('ok')
+            return succeed("ok")
         else:
             logging.getLogger().warn("PXE Proxy: client authentification FAILED")
             return succeed("ko")
@@ -305,22 +298,20 @@ class PXEImagingApi (PXEMethodParser):
         @rtype: deferred
         """
         logging.getLogger().debug("INJECT INVENTORY NEXT HOSTNAME AND ENTITY")
-        m = re.search('<REQUEST>.*<\\/REQUEST>', inventory)
+        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
         file_content = str(m.group(0))
 
         ipadress = self.ip_adressexml(file_content)
         mac1 = self.mac_adressexml(file_content)
         hostnamexml = self.hostname_xml(file_content)
 
-        inventory = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n%s" % (
-            file_content)
+        inventory = '<?xml version="1.0" encoding="utf-8"?>\n%s' % (file_content)
         ip_address = ipadress
         mac = mac1
 
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.MENU,
-                                 "boot menu shown")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "boot menu shown"
+        )
         if "Mc" not in inventory:
             inventory = inventory + "\nMAC Address:%s\n" % mac
         else:
@@ -328,10 +319,9 @@ class PXEImagingApi (PXEMethodParser):
         parsed_inventory1 = BootInventory()
         parsed_inventory1.initialise(file_content)
         parsed_inventory = parsed_inventory1.dump()
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.MENU,
-                                 "boot menu shown")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "boot menu shown"
+        )
         d = self.api.injectInventory(mac, parsed_inventory)
 
         # 2nd step - send inventory by HTTP POST to inventory server
@@ -339,6 +329,7 @@ class PXEImagingApi (PXEMethodParser):
         d.addErrback(self._injectedInventoryError)
         # self.send_inventory(parsed_inventory1., hostname)
         return d
+
     #  ------------------------ process inventory ---------------------------
 
     @assign(0xAA)
@@ -356,8 +347,8 @@ class PXEImagingApi (PXEMethodParser):
         """
         # XXX - A little hack to add networking info on GLPI mode
         logging.getLogger().debug(
-            "injectInventory mac %s ip : %s \n\n" %
-            (mac, ip_address))
+            "injectInventory mac %s ip : %s \n\n" % (mac, ip_address)
+        )
         if "Mc" not in inventory:
             inventory = inventory + "\nMAC Address:%s\n" % mac
         else:
@@ -366,16 +357,16 @@ class PXEImagingApi (PXEMethodParser):
             inventory = inventory + "\nIP Address:%\n" % ip_address
         else:
             inventory = inventory.replace("IPADDR", "IP Address")
-        inventory = [i.strip(' \t\n\r').lstrip('\x00\x00').strip()
-                     for i in inventory.split("\n")]
+        inventory = [
+            i.strip(" \t\n\r").lstrip("\x00\x00").strip() for i in inventory.split("\n")
+        ]
 
         logging.getLogger().debug("low level inventory: %s\n" % (inventory))
         parsed_inventory1 = BootInventory(inventory)
         parsed_inventory = parsed_inventory1.dump()
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.MENU,
-                                 "boot menu shown")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "boot menu shown"
+        )
         # 1st step - inject inventory trough imaging (only disk info)
         d = self.api.injectInventory(mac, parsed_inventory)
 
@@ -386,10 +377,11 @@ class PXEImagingApi (PXEMethodParser):
         return d
 
     def _injectedInventoryError(self, failure):
-        """ Inject inventory failed """
+        """Inject inventory failed"""
         logging.getLogger().error(
-            "PXE Proxy: something were wrong while injecting inventory: %s" %
-            str(failure))
+            "PXE Proxy: something were wrong while injecting inventory: %s"
+            % str(failure)
+        )
 
     def _injectedInventoryOk(self, result, mac, inventory):
         """
@@ -408,15 +400,20 @@ class PXEImagingApi (PXEMethodParser):
         @param inventory: inventory from PXE
         @type inventory: str
         """
-        if isinstance(result, list) and len(result) > 0 \
-                and isinstance(result[0], str) and result[0] == 'PULSE2_ERR':
+        if (
+            isinstance(result, list)
+            and len(result) > 0
+            and isinstance(result[0], str)
+            and result[0] == "PULSE2_ERR"
+        ):
             logging.getLogger().error(
-                "PXE Proxy: Error code = %d when inject inventory" %
-                (result[1]))
+                "PXE Proxy: Error code = %d when inject inventory" % (result[1])
+            )
             return None
         else:
             logging.getLogger().debug(
-                "PXE Proxy: Hardware inventory injected successfully into imaging")
+                "PXE Proxy: Hardware inventory injected successfully into imaging"
+            )
 
             # need the hostname and entity to send this inventory
             d = self.api.getComputerByMac(mac)
@@ -424,16 +421,15 @@ class PXEImagingApi (PXEMethodParser):
             d.addErrback(self._injectedInventoryErrorGetComputer, mac)
 
     def _injectedInventoryErrorGetComputer(self, failure, mac):
-        """ An error occured while getting the hostname """
+        """An error occured while getting the hostname"""
 
         logging.getLogger().warn(
-            "PXE Proxy: inject inventory - get hostname failed: %s" %
-            str(failure))
+            "PXE Proxy: inject inventory - get hostname failed: %s" % str(failure)
+        )
 
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.ERR,
-                                 LOG_STATE.INVENTORY,
-                                 "hardware inventory not stored")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.ERR, LOG_STATE.INVENTORY, "hardware inventory not stored"
+        )
 
     def changEntityAndHostName(self, xml, entity=None, hostname=None):
         root = ET.fromstring(xml)
@@ -478,20 +474,20 @@ class PXEImagingApi (PXEMethodParser):
         @type inventory: str
 
         """
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.INVENTORY,
-                                 "hardware inventory received")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.INVENTORY, "hardware inventory received"
+        )
         if not isinstance(computer, dict):
-            logging.getLogger().debug("PXE Proxy: Unknown client, ignore received inventory")
+            logging.getLogger().debug(
+                "PXE Proxy: Unknown client, ignore received inventory"
+            )
             return
-        hostname = computer['shortname']
-        entity = computer['entity']
-        m = re.search('<REQUEST>.*<\\/REQUEST>', inventory)
+        hostname = computer["shortname"]
+        entity = computer["entity"]
+        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
         file_content = str(m.group(0))
-        #inventory = parsed_inventory1.changEntityAndHostName(file_content,entity,hostname)
-        file_content = self.changEntityAndHostName(
-            file_content, entity, hostname)
+        # inventory = parsed_inventory1.changEntityAndHostName(file_content,entity,hostname)
+        file_content = self.changEntityAndHostName(file_content, entity, hostname)
         inventory = self.changdeviceid(file_content, hostname)
         inventory = '<?xml version="1.0" encoding="utf-8"?>' + inventory
         logging.getLogger().debug("send invotory depuis _injectedInventorySend")
@@ -499,35 +495,31 @@ class PXEImagingApi (PXEMethodParser):
 
         @d.addCallback
         def _cb(result):
-            self.api.logClientAction(mac,
-                                     LOG_LEVEL.INFO,
-                                     LOG_STATE.INVENTORY,
-                                     "hardware inventory updated")
+            self.api.logClientAction(
+                mac, LOG_LEVEL.INFO, LOG_STATE.INVENTORY, "hardware inventory updated"
+            )
 
         @d.addErrback
         def _eb(failure):
-            self.api.logClientAction(mac,
-                                     LOG_LEVEL.WARNING,
-                                     LOG_STATE.INVENTORY,
-                                     "hardware inventory not updated")
+            self.api.logClientAction(
+                mac,
+                LOG_LEVEL.WARNING,
+                LOG_STATE.INVENTORY,
+                "hardware inventory not updated",
+            )
 
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.MENU,
-                                 "menu identification")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "menu identification"
+        )
 
-        m = re.search('<REQUEST>.*<\\/REQUEST>', inventory)
+        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
         file_content = str(m.group(0))
         ipadress = self.ip_adressexml(file_content)
         ip_address = ipadress
         if self.config.imaging_api["glpi_mode"]:
             d = task.deferLater(
-                reactor,
-                0,
-                self.glpi_register,
-                mac,
-                hostname,
-                ip_address)
+                reactor, 0, self.glpi_register, mac, hostname, ip_address
+            )
             d.addCallback(self._computerRegister, hostname, mac, 2)
             d.addErrback(self._ebRegisterError, mac)
             return d
@@ -553,41 +545,47 @@ class PXEImagingApi (PXEMethodParser):
             else:
                 protocol = "http"
 
-            url = "%s://%s:%d/" % (protocol,
-                                   self.config.imaging_api["inventory_host"],
-                                   self.config.imaging_api["inventory_port"])
+            url = "%s://%s:%d/" % (
+                protocol,
+                self.config.imaging_api["inventory_host"],
+                self.config.imaging_api["inventory_port"],
+            )
 
             # POST the inventory to the inventory server
             logging.getLogger().debug(
-                "PXE Proxy: PXE inventory forwarded to inventory server at %s" %
-                url)
+                "PXE Proxy: PXE inventory forwarded to inventory server at %s" % url
+            )
             logging.getLogger().debug(
-                "POST the inventory to the inventory server \nINVENTORY\n %s" %
-                inventory)
-            d = getPage(url,
-                        method='POST',
-                        postdata=inventory,
-                        headers={
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'Content-Length': str(len(inventory)),
-                            'User-Agent': 'Pulse2 Imaging server inventory hook'
-                        },
-                        )
+                "POST the inventory to the inventory server \nINVENTORY\n %s"
+                % inventory
+            )
+            d = getPage(
+                url,
+                method="POST",
+                postdata=inventory,
+                headers={
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Length": str(len(inventory)),
+                    "User-Agent": "Pulse2 Imaging server inventory hook",
+                },
+            )
 
             @d.addCallback
             def _cb(result):
                 if result:
                     logging.getLogger().debug(
-                        "PXE Proxy: PXE inventory from client %s successfully injected" %
-                        hostname)
+                        "PXE Proxy: PXE inventory from client %s successfully injected"
+                        % hostname
+                    )
                 return result
 
             return d
 
         except Exception as e:
             logging.getLogger().error(
-                "PXE Proxy: Unable to forward PXE inventory to inventory server at %s: %s" %
-                (url, str(e)))
+                "PXE Proxy: Unable to forward PXE inventory to inventory server at %s: %s"
+                % (url, str(e))
+            )
             # This method must return a Deferred
             return Deferred()
 
@@ -603,33 +601,30 @@ class PXEImagingApi (PXEMethodParser):
 
         @rtype: deferred
         """
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.BACKUP,
-                                 "image UUID request")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.BACKUP, "image UUID request"
+        )
 
         d = self.api.computerCreateImageDirectory(mac)
 
         @d.addCallback
         def _cb(result):
             logging.getLogger().debug(
-                "PXE Proxy: create image directory result: %s" %
-                str(result))
-            self.api.logClientAction(mac,
-                                     LOG_LEVEL.DEBUG,
-                                     LOG_STATE.BACKUP,
-                                     "image UUID sent")
+                "PXE Proxy: create image directory result: %s" % str(result)
+            )
+            self.api.logClientAction(
+                mac, LOG_LEVEL.DEBUG, LOG_STATE.BACKUP, "image UUID sent"
+            )
             return result
 
         @d.addErrback
         def _eb(failure):
             logging.getLogger().warn(
-                "PXE Proxy: create image directory failed: %s" %
-                str(failure))
-            self.api.logClientAction(mac,
-                                     LOG_LEVEL.ERR,
-                                     LOG_STATE.BACKUP,
-                                     "failed to summon an image UUID")
+                "PXE Proxy: create image directory failed: %s" % str(failure)
+            )
+            self.api.logClientAction(
+                mac, LOG_LEVEL.ERR, LOG_STATE.BACKUP, "failed to summon an image UUID"
+            )
             return failure
 
         return d
@@ -648,10 +643,12 @@ class PXEImagingApi (PXEMethodParser):
         @rtype: deferred
 
         """
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.BACKUP,
-                                 "end-of-backup request: %s" % imageUUID)
+        self.api.logClientAction(
+            mac,
+            LOG_LEVEL.DEBUG,
+            LOG_STATE.BACKUP,
+            "end-of-backup request: %s" % imageUUID,
+        )
         d = self.api.imageDone(mac, imageUUID)
 
         @d.addCallback
@@ -661,18 +658,22 @@ class PXEImagingApi (PXEMethodParser):
                     mac,
                     LOG_LEVEL.DEBUG,
                     LOG_STATE.BACKUP,
-                    "end-of-backup success: %s" %
-                    imageUUID)
+                    "end-of-backup success: %s" % imageUUID,
+                )
                 logging.getLogger().debug("PXE Proxy: Backup process terminated")
                 return "ACK"
 
         @d.addErrback
         def _eb(failure):
-            self.api.logClientAction(mac,
-                                     LOG_LEVEL.WARNING,
-                                     LOG_STATE.BACKUP,
-                                     "end-of-backup failure: %s" % imageUUID)
-            logging.getLogger().warn("PXE Proxy: Backup process failed: %s" % str(failure))
+            self.api.logClientAction(
+                mac,
+                LOG_LEVEL.WARNING,
+                LOG_STATE.BACKUP,
+                "end-of-backup failure: %s" % imageUUID,
+            )
+            logging.getLogger().warn(
+                "PXE Proxy: Backup process failed: %s" % str(failure)
+            )
             return "ERROR"
 
         return d
@@ -698,8 +699,8 @@ class PXEImagingApi (PXEMethodParser):
             mac,
             LOG_LEVEL.DEBUG,
             LOG_STATE.MENU,
-            "preselected-menu-entry-change request : %d" %
-            num)
+            "preselected-menu-entry-change request : %d" % num,
+        )
 
         d = self.api.getDefaultMenuItem(mac)
         d.addCallback(self._computerChangeDefaultMenuItem, mac, num)
@@ -708,14 +709,15 @@ class PXEImagingApi (PXEMethodParser):
         def _eb(failure):
 
             logging.getLogger().warn(
-                "PXE Proxy: preselected-menu-entry-change failed: %s" %
-                str(failure))
+                "PXE Proxy: preselected-menu-entry-change failed: %s" % str(failure)
+            )
             self.api.logClientAction(
                 mac,
                 LOG_LEVEL.WARNING,
                 LOG_STATE.MENU,
-                "preselected-menu-entry-change failed : %d" %
-                num)
+                "preselected-menu-entry-change failed : %d" % num,
+            )
+
         return d
 
     def _computerChangeDefaultMenuItem(self, default_entry, mac, num):
@@ -751,8 +753,8 @@ class PXEImagingApi (PXEMethodParser):
             entry = int(default_entry)
 
         logging.getLogger().debug(
-            "PXE Proxy: Client %s has selected menu entry %s" %
-            (mac, actual_entry))
+            "PXE Proxy: Client %s has selected menu entry %s" % (mac, actual_entry)
+        )
 
         if setDefaultMenuItem:
             d = self.api.computerChangeDefaultMenuItem(mac, entry)
@@ -767,8 +769,8 @@ class PXEImagingApi (PXEMethodParser):
                 mac,
                 LOG_LEVEL.DEBUG,
                 LOG_STATE.MENU,
-                "preselected-menu-entry-change success : %d" %
-                entry)
+                "preselected-menu-entry-change success : %d" % entry,
+            )
 
             return "ACK"
 
@@ -778,8 +780,8 @@ class PXEImagingApi (PXEMethodParser):
                 mac,
                 LOG_LEVEL.WARNING,
                 LOG_STATE.MENU,
-                "preselected-menu-entry-change failed : %d" %
-                num)
+                "preselected-menu-entry-change failed : %d" % num,
+            )
 
             return "ERROR"
 
@@ -824,7 +826,9 @@ class PXEImagingApi (PXEMethodParser):
 
         @d.addErrback
         def _eb(failure):
-            logging.getLogger().warn("PXE Proxy: logging action failed: %s" % str(failure))
+            logging.getLogger().warn(
+                "PXE Proxy: logging action failed: %s" % str(failure)
+            )
             return "ERROR"
 
         return d
@@ -840,10 +844,9 @@ class PXEImagingApi (PXEMethodParser):
         @return: computer's UUID if exists, otherwise None
         @rtype: str
         """
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.BOOT,
-                                 "computer UUID request")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.BOOT, "computer UUID request"
+        )
         d = self.api.getComputerByMac(mac)
 
         @d.addCallback
@@ -851,21 +854,22 @@ class PXEImagingApi (PXEMethodParser):
             if isinstance(result, dict):
                 if "uuid" in result:
                     uuid = result["uuid"]
-                    self.api.logClientAction(mac,
-                                             LOG_LEVEL.DEBUG,
-                                             LOG_STATE.BOOT,
-                                             "computer uuid sent: %s" % uuid)
+                    self.api.logClientAction(
+                        mac,
+                        LOG_LEVEL.DEBUG,
+                        LOG_STATE.BOOT,
+                        "computer uuid sent: %s" % uuid,
+                    )
                     return uuid
 
         @d.addErrback
         def _eb(failure):
-            self.api.logClientAction(mac,
-                                     LOG_LEVEL.ERR,
-                                     LOG_STATE.BOOT,
-                                     "failed to recover a computer UUID")
+            self.api.logClientAction(
+                mac, LOG_LEVEL.ERR, LOG_STATE.BOOT, "failed to recover a computer UUID"
+            )
             logging.getLogger().warn(
-                "PXE Proxy: computer's UUID get failed: %s" %
-                str(failure))
+                "PXE Proxy: computer's UUID get failed: %s" % str(failure)
+            )
 
         return d
 
@@ -881,10 +885,9 @@ class PXEImagingApi (PXEMethodParser):
         @return: computer's hostname if exists, otherwise None
         @rtype: str
         """
-        self.api.logClientAction(mac,
-                                 LOG_LEVEL.DEBUG,
-                                 LOG_STATE.BOOT,
-                                 "hostname request")
+        self.api.logClientAction(
+            mac, LOG_LEVEL.DEBUG, LOG_STATE.BOOT, "hostname request"
+        )
         d = self.api.getComputerByMac(mac)
 
         @d.addCallback
@@ -892,21 +895,22 @@ class PXEImagingApi (PXEMethodParser):
             if isinstance(result, dict):
                 if "shortname" in result:
                     hostname = result["shortname"]
-                    self.api.logClientAction(mac,
-                                             LOG_LEVEL.DEBUG,
-                                             LOG_STATE.BOOT,
-                                             "hostname sent: %s" % hostname)
+                    self.api.logClientAction(
+                        mac,
+                        LOG_LEVEL.DEBUG,
+                        LOG_STATE.BOOT,
+                        "hostname sent: %s" % hostname,
+                    )
                     return hostname
 
         @d.addErrback
         def _eb(failure):
-            self.api.logClientAction(mac,
-                                     LOG_LEVEL.ERR,
-                                     LOG_STATE.BOOT,
-                                     "failed to obtain a hostname")
+            self.api.logClientAction(
+                mac, LOG_LEVEL.ERR, LOG_STATE.BOOT, "failed to obtain a hostname"
+            )
             logging.getLogger().warn(
-                "PXE Proxy: computer's hostname get failed: %s" %
-                str(failure))
+                "PXE Proxy: computer's hostname get failed: %s" % str(failure)
+            )
 
         return d
 
@@ -927,8 +931,8 @@ class PXEImagingApi (PXEMethodParser):
         @d.addErrback
         def _eb(failure):
             logging.getLogger().warn(
-                "PXE Proxy: server status get failed: %s" %
-                str(failure))
+                "PXE Proxy: server status get failed: %s" % str(failure)
+            )
 
         d.callback(True)
         return d

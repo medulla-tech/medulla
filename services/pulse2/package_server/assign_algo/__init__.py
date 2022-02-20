@@ -34,13 +34,14 @@ import os
 
 class MMAssignAlgo(pulse2.utils.Singleton):
     def init(
-            self,
-            mirrors,
-            mirrors_fallback,
-            package_apis,
-            url2mirrors,
-            url2mirrors_fallback,
-            url2package_apis):
+        self,
+        mirrors,
+        mirrors_fallback,
+        package_apis,
+        url2mirrors,
+        url2mirrors_fallback,
+        url2package_apis,
+    ):
         self.logger = logging.getLogger()
         self.mirrors = mirrors
         self.mirrors_fallback = mirrors_fallback
@@ -69,23 +70,23 @@ class UPAssignAlgo(pulse2.utils.Singleton):
 
 
 class IntAssignAlgoManager(pulse2.utils.Singleton):
-    name = ''
+    name = ""
 
     def getAlgo(self, assign_algo):
         wanted = assign_algo
         algo, assign_algo = self._getAlgo(assign_algo)
         logging.getLogger().debug(
-            "Using the %s %s Assign Algorythm" %
-            (assign_algo, self.name))
+            "Using the %s %s Assign Algorythm" % (assign_algo, self.name)
+        )
         if wanted != assign_algo:
             logging.getLogger().warning(
-                "Can't load the wanted one (conf:%s, use:%s)" %
-                (wanted, assign_algo))
+                "Can't load the wanted one (conf:%s, use:%s)" % (wanted, assign_algo)
+            )
         return algo
 
     def _getAlgo(self, assign_algo):
         try:
-            if os.name == 'nt':
+            if os.name == "nt":
                 curdir = os.path.dirname(__file__)
                 if "library.zip" in curdir:
                     # When we are runnning standalone (py2exe output)
@@ -96,20 +97,22 @@ class IntAssignAlgoManager(pulse2.utils.Singleton):
                     # Go to the parent directory
                     searchpath, _ = os.path.split(curdir)
                 # And enter assign_algo directory
-                searchpath = os.path.join(searchpath, 'assign_algo')
+                searchpath = os.path.join(searchpath, "assign_algo")
             else:
                 searchpath = os.path.dirname(__file__)
             logging.getLogger().debug("Algo search path: %s" % searchpath)
             f, p, d = imp.find_module(assign_algo, [searchpath])
-            mod = imp.load_module('MyAssignAlgo', f, p, d)
+            mod = imp.load_module("MyAssignAlgo", f, p, d)
             ret = self.getClassInModule(mod)
         except Exception as e:
             logging.getLogger().debug(e)
-            if assign_algo != 'default':
-                assign_algo = 'default'
+            if assign_algo != "default":
+                assign_algo = "default"
                 ret, assign_algo = self._getAlgo(assign_algo)
             else:
-                logging.getLogger().error("Cant load any %s Assign Algorythm" % (self.name))
+                logging.getLogger().error(
+                    "Cant load any %s Assign Algorythm" % (self.name)
+                )
                 ret = None
         return (ret, assign_algo)
 
@@ -118,14 +121,14 @@ class IntAssignAlgoManager(pulse2.utils.Singleton):
 
 
 class MMAssignAlgoManager(IntAssignAlgoManager):
-    name = 'Machine/Mirrors'
+    name = "Machine/Mirrors"
 
     def getClassInModule(self, mod):
         return mod.MMUserAssignAlgo()
 
 
 class UPAssignAlgoManager(IntAssignAlgoManager):
-    name = 'User/PackagePut'
+    name = "User/PackagePut"
 
     def getClassInModule(self, mod):
         return mod.UPUserAssignAlgo()

@@ -28,9 +28,9 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 from pulse2.package_server.imaging.api.functions import Imaging
 
 
-class ImagingApi (MyXmlrpc):
+class ImagingApi(MyXmlrpc):
 
-    myType = 'Imaging'
+    myType = "Imaging"
 
     def __init__(self, name, config):
         """
@@ -42,7 +42,7 @@ class ImagingApi (MyXmlrpc):
         self.api.init1(config)
 
         self.name = name
-        self.logger = logging.getLogger('imaging')
+        self.logger = logging.getLogger("imaging")
         self.logger.info("Initializing %s" % self.myType)
 
     def xmlrpc_getActiveConvergenceForHost(self, uuid):
@@ -61,13 +61,11 @@ class ImagingApi (MyXmlrpc):
         return self.api.computersRegister(computers)
 
     def xmlrpc_computerRegister(
-            self,
-            computerName,
-            macAddress,
-            imagingData=False,
-            waitToBeInventoried=False):
+        self, computerName, macAddress, imagingData=False, waitToBeInventoried=False
+    ):
         return self.api.computerRegister(
-            computerName, macAddress, imagingData, waitToBeInventoried)
+            computerName, macAddress, imagingData, waitToBeInventoried
+        )
 
     def xmlrpc_computerUnregister(self, computerUUID, imageList, archive):
         return self.api.computerUnregister(computerUUID, imageList, archive)
@@ -112,13 +110,11 @@ class ImagingApi (MyXmlrpc):
         return self.api.imagingServerISOCreate(imageUUID, size, title)
 
     def xmlrpc_imagingServermenuMulticast(self, objmenu):
-        """
-        """
+        """ """
         return self.api.imagingServermenuMulticast(objmenu)
 
     def xmlrpc_imagingClearMenu(self, objmenu):
-        """
-        """
+        """ """
         return self.api.imagingClearMenu(objmenu)
 
     # Imaging server configuration

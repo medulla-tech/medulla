@@ -28,7 +28,7 @@ from pulse2.utils import Singleton
 
 class ComputerGroupManager(Singleton):
     components = {}
-    main = 'dyngroup'
+    main = "dyngroup"
 
     def __init__(self):
         Singleton.__init__(self)
@@ -40,8 +40,8 @@ class ComputerGroupManager(Singleton):
 
     def register(self, name, klass):
         self.logger.debug(
-            "Registering computer group manager %s / %s" %
-            (name, str(klass)))
+            "Registering computer group manager %s / %s" % (name, str(klass))
+        )
         self.components[name] = klass
 
     def validate(self):
@@ -85,7 +85,7 @@ class ComputerGroupManager(Singleton):
         klass = self.components[self.main]
         return klass().request(ctx, query, bool, min, max, filter)
 
-    def result_group_by_name(self, ctx, name, min=0, max=-1, filter=''):
+    def result_group_by_name(self, ctx, name, min=0, max=-1, filter=""):
         klass = self.components[self.main]
         return klass().result_group_by_name(ctx, name, min, max, filter)
 

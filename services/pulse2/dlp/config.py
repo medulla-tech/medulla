@@ -24,24 +24,24 @@ Common dlp configuration for wgsi and server mode
 import cherrypy
 
 default_conf = {
-    'tools.sessions.on': True,
-    'tools.sessions.storage_type': "ram",
-    'tools.sessions.timeout': 100,
-    'request.show_tracebacks': False,
-    'log.screen': True,
-    'log.access_file': '',
-    'log.error_file': '',
-    'xmlrpc.client': 'xmlrpclib.ServerProxy',
-    'xmlrpc.uri': "https://username:password@localhost:8000",
-    'dlp.authkey': "secret",
-    'dlp.cache_dir': "/var/lib/pulse2/dlp_packages/",
-    'dlp.cache_expire': 108000,
-    'dlp.loglevel': "ERROR",
-    'inventory.uri': 'http://localhost:9999'
+    "tools.sessions.on": True,
+    "tools.sessions.storage_type": "ram",
+    "tools.sessions.timeout": 100,
+    "request.show_tracebacks": False,
+    "log.screen": True,
+    "log.access_file": "",
+    "log.error_file": "",
+    "xmlrpc.client": "xmlrpclib.ServerProxy",
+    "xmlrpc.uri": "https://username:password@localhost:8000",
+    "dlp.authkey": "secret",
+    "dlp.cache_dir": "/var/lib/pulse2/dlp_packages/",
+    "dlp.cache_expire": 108000,
+    "dlp.loglevel": "ERROR",
+    "inventory.uri": "http://localhost:9999",
 }
 
 app_config = {
-    '/': {
-        'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+    "/": {
+        "request.dispatch": cherrypy.dispatch.MethodDispatcher(),
     }
 }

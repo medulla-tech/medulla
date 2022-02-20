@@ -57,10 +57,8 @@ def getCache(name, timeout=DEFAULT_TIMEOUT):
 
 
 class Cache(object):
-
     def __init__(self, manager, name, timeout=DEFAULT_TIMEOUT):
-        """ timeout: time after which object expires, by default (seconds)
-        """
+        """timeout: time after which object expires, by default (seconds)"""
         self.name = name
         self.timeout = timeout
         self._manager = manager
@@ -97,12 +95,12 @@ Cache exceptions
 
 
 class CacheFault(Exception):
-    """ Object is not present in cache
-    """
+    """Object is not present in cache"""
+
     pass
 
 
 class CacheExpired(Exception):
-    """ Object is not valid anymore
-    """
+    """Object is not valid anymore"""
+
     pass

@@ -32,7 +32,7 @@ from pulse2.database.inventory.config import InventoryDatabaseConfigSkel
 
 class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
     type2url = {}
-    dbsection = 'main'
+    dbsection = "main"
 
     def setup(self, config_file):
         InventoryDatabaseConfigSkel.setup(self, config_file)
@@ -45,19 +45,19 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
         # self.cp.read(config_file)
 
         for section in self.cp.sections():
-            m = re.compile('^associations:(?P<index>[0-9]+)$').match(section)
+            m = re.compile("^associations:(?P<index>[0-9]+)$").match(section)
             if m:
-                index = m.group('index')
-                if not self.cp.has_option(section, 'terminal_types'):
+                index = m.group("index")
+                if not self.cp.has_option(section, "terminal_types"):
                     continue
-                if not self.cp.has_option(section, 'mirror'):
+                if not self.cp.has_option(section, "mirror"):
                     continue
-                if not self.cp.has_option(section, 'kind'):
+                if not self.cp.has_option(section, "kind"):
                     continue
 
-                types = self.cp.get(section, 'terminal_types').split('||')
-                url = self.cp.get(section, 'mirror')
-                kind = self.cp.get(section, 'kind')
+                types = self.cp.get(section, "terminal_types").split("||")
+                url = self.cp.get(section, "mirror")
+                kind = self.cp.get(section, "kind")
                 for type in types:
                     if type not in self.type2url:
                         self.type2url[type] = {}

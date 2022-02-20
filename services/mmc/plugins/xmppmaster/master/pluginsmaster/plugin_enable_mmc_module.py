@@ -21,21 +21,24 @@
 # MA 02110-1301, USA.
 #
 # file master/pluginsmaster/plugin_enable_mmc_module.py
-#return enable module mmc
+# return enable module mmc
 import logging
 import json
 from mmc.agent import PluginManager
+
 logger = logging.getLogger()
-plugin = { "VERSION": "1.0", "NAME": "enable_mmc_module", "TYPE": "master" }
+plugin = {"VERSION": "1.0", "NAME": "enable_mmc_module", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
     logger.debug(plugin)
     logger.debug("=====================================================")
-    datasend = { 'action': 'resultenablemmcmodul',
-                 'sessionid': sessionid,
-                 'data': PluginManager().getEnabledPluginNames()}
-    xmppobject.send_message( mto = message['from'],
-                             mbody = json.dumps(datasend),
-                             mtype = 'chat')
+    datasend = {
+        "action": "resultenablemmcmodul",
+        "sessionid": sessionid,
+        "data": PluginManager().getEnabledPluginNames(),
+    }
+    xmppobject.send_message(
+        mto=message["from"], mbody=json.dumps(datasend), mtype="chat"
+    )

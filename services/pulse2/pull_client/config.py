@@ -83,24 +83,24 @@ class PullClientConfig(Singleton):
                 if attribute.startswith("__"):
                     continue
                 if isinstance(default_value, int):
-                    method = 'getint'
+                    method = "getint"
                 elif isinstance(default_value, bool):
-                    method = 'getboolean'
+                    method = "getboolean"
                 else:
-                    method = 'get'
+                    method = "get"
                 try:
                     value = getattr(self.config, method)(section, attribute)
                     if isinstance(default_value, list):
-                        value = [v.strip() for v in value.split(' ')]
+                        value = [v.strip() for v in value.split(" ")]
                     setattr(getattr(self, section), attribute, value)
                 except (NoSectionError, NoOptionError):
                     if default_value is None:
                         logger.error(
-                            "%s missing from section %s" %
-                            (attribute, section))
+                            "%s missing from section %s" % (attribute, section)
+                        )
                         raise ConfigError(
-                            "%s missing from section %s" %
-                            (attribute, section))
+                            "%s missing from section %s" % (attribute, section)
+                        )
 
 
 NAME = "%s"

@@ -29,17 +29,15 @@ from pulse2.dlp.config import default_conf, app_config
 
 def application(environ, start_response):
     cherrypy.config.update(default_conf)
-    cherrypy.config.update({'environment': 'embedded'})
+    cherrypy.config.update({"environment": "embedded"})
 
-    if 'configuration' in environ:
-        cherrypy.config.update(environ['configuration'])
+    if "configuration" in environ:
+        cherrypy.config.update(environ["configuration"])
 
     cherrypy.tree.mount(
         rootV1,
-        cherrypy.config.get(
-            'virtual_root',
-            '').rstrip('/') +
-        '/api/v1',
-        app_config)
+        cherrypy.config.get("virtual_root", "").rstrip("/") + "/api/v1",
+        app_config,
+    )
 
     return cherrypy.tree(environ, start_response)

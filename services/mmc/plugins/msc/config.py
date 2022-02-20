@@ -50,8 +50,8 @@ class MscConfig(MscDatabaseConfig):
     ma_server = "127.0.0.1"
     ma_port = "9990"
     ma_mountpoint = "/rpc"
-    ma_username = ''
-    ma_password = ''
+    ma_username = ""
+    ma_password = ""
     ma_enablessl = True
     ma_verifypeer = False
     ma_cacert = ""
@@ -62,8 +62,8 @@ class MscConfig(MscDatabaseConfig):
     sa_server = "127.0.0.1"
     sa_port = "9990"
     sa_mountpoint = "/scheduler_api"
-    sa_username = ''
-    sa_password = ''
+    sa_username = ""
+    sa_password = ""
     sa_enablessl = True
     sa_verifypeer = False
     sa_cacert = ""
@@ -112,7 +112,7 @@ class MscConfig(MscDatabaseConfig):
     web_vnc_port = "5900"
 
     # Probe behavior
-    web_probe_order =  ""
+    web_probe_order = ""
     web_probe_order_on_demand = "ssh"
 
     # Display root commands (or not)
@@ -144,8 +144,7 @@ class MscConfig(MscDatabaseConfig):
     default_scheduler = ""
     convergence_reschedule = "42 * * * *"
 
-    schedulers = {
-    }
+    schedulers = {}
 
     check_db_enable = False
     check_db_interval = 300
@@ -153,10 +152,12 @@ class MscConfig(MscDatabaseConfig):
     # Windows Update command
     wu_command = "/usr/share/pulse-update-manager/pulse-update-manager"
 
-    def init(self, name, conffile = None):
+    def init(self, name, conffile=None):
         self.name = name
-        if not conffile: self.conffile = mmctools.getConfigFile(name)
-        else: self.conffile = conffile
+        if not conffile:
+            self.conffile = mmctools.getConfigFile(name)
+        else:
+            self.conffile = conffile
 
         MscDatabaseConfig.setup(self, self.conffile)
         self.setup(self.conffile)
@@ -194,7 +195,9 @@ class MscConfig(MscDatabaseConfig):
         if self.cp.has_option("msc", "ignore_non_fqdn"):
             self.ignore_non_fqdn = self.cp.getboolean("msc", "ignore_non_fqdn")
         if self.cp.has_option("msc", "ignore_invalid_hostname"):
-            self.ignore_invalid_hostname = self.cp.getboolean("msc", "ignore_invalid_hostname")
+            self.ignore_invalid_hostname = self.cp.getboolean(
+                "msc", "ignore_invalid_hostname"
+            )
         if self.cp.has_option("msc", "exclude_hostname"):
             self.exclude_hostname = self.cp.get("msc", "exclude_hostname")
         if self.cp.has_option("msc", "include_hostname"):
@@ -215,7 +218,6 @@ class MscConfig(MscDatabaseConfig):
         if self.cp.has_option("msc", "wu_command"):
             self.wu_command = self.cp.get("msc", "wu_command")
 
-
         for section in self.cp.sections():
             if re.compile("^scheduler_[0-9]+$").match(section):
                 if self.default_scheduler == "":
@@ -223,38 +225,66 @@ class MscConfig(MscDatabaseConfig):
                 username = self.cp.get(section, "username")
                 password = self.cp.getpassword(section, "password")
                 if not is_login_and_pass:
-                    if username != '':
-                        if username != 'username':
-                            logging.getLogger().warning("your version of twisted is not high enough to use login (%s/username)"%(section))
-                        username = ''
-                    if password != '':
-                        if password != 'password':
-                            logging.getLogger().warning("your version of twisted is not high enough to use password (%s/password)"%(section))
-                        password = ''
+                    if username != "":
+                        if username != "username":
+                            logging.getLogger().warning(
+                                "your version of twisted is not high enough to use login (%s/username)"
+                                % (section)
+                            )
+                        username = ""
+                    if password != "":
+                        if password != "password":
+                            logging.getLogger().warning(
+                                "your version of twisted is not high enough to use password (%s/password)"
+                                % (section)
+                            )
+                        password = ""
 
                 self.schedulers[section] = {
-                        'port': self.cp.get(section, "port"),
-                        'host': self.cp.get(section, "host"),
-                        'username': username,
-                        'password': password,
-                        'enablessl': self.cp.getboolean(section, "enablessl"),
-                        'verifypeer': False
-                    }
+                    "port": self.cp.get(section, "port"),
+                    "host": self.cp.get(section, "host"),
+                    "username": username,
+                    "password": password,
+                    "enablessl": self.cp.getboolean(section, "enablessl"),
+                    "verifypeer": False,
+                }
                 if self.schedulers[section]["enablessl"]:
                     if self.cp.has_option(section, "verifypeer"):
-                        self.schedulers[section]["verifypeer"] = self.cp.getboolean(section, "verifypeer")
+                        self.schedulers[section]["verifypeer"] = self.cp.getboolean(
+                            section, "verifypeer"
+                        )
                     if self.cp.has_option(section, "cacert"):
-                        self.schedulers[section]["cacert"] = self.cp.get(section, "cacert")
+                        self.schedulers[section]["cacert"] = self.cp.get(
+                            section, "cacert"
+                        )
                     if self.cp.has_option(section, "localcert"):
-                        self.schedulers[section]["localcert"] = self.cp.get(section, "localcert")
-                    if "localcert" in self.schedulers[section] and not os.path.isfile(self.schedulers[section]["localcert"]):
-                        raise Exception('can\'t read SSL key "%s"' % (self.schedulers[section]["localcert"]))
-                    if "cacert" in self.schedulers[section] and not os.path.isfile(self.schedulers[section]["cacert"]):
-                        raise Exception('can\'t read SSL certificate "%s"' % (self.schedulers[section]["cacert"]))
-                    if "verifypeer" in self.schedulers[section] and self.schedulers[section]["verifypeer"]:
+                        self.schedulers[section]["localcert"] = self.cp.get(
+                            section, "localcert"
+                        )
+                    if "localcert" in self.schedulers[section] and not os.path.isfile(
+                        self.schedulers[section]["localcert"]
+                    ):
+                        raise Exception(
+                            'can\'t read SSL key "%s"'
+                            % (self.schedulers[section]["localcert"])
+                        )
+                    if "cacert" in self.schedulers[section] and not os.path.isfile(
+                        self.schedulers[section]["cacert"]
+                    ):
+                        raise Exception(
+                            'can\'t read SSL certificate "%s"'
+                            % (self.schedulers[section]["cacert"])
+                        )
+                    if (
+                        "verifypeer" in self.schedulers[section]
+                        and self.schedulers[section]["verifypeer"]
+                    ):
                         import twisted.internet.ssl
+
                         if not hasattr(twisted.internet.ssl, "Certificate"):
-                            raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                            raise Exception(
+                                "I need at least Python Twisted 2.5 to handle peer checking"
+                            )
 
         # some default web interface values
         if self.cp.has_option("web", "web_def_awake"):
@@ -283,7 +313,10 @@ class MscConfig(MscDatabaseConfig):
             for path in dlpaths.split(","):
                 self.web_dlpath.append(path.strip())
             if not os.path.exists(self.download_directory_path):
-                logging.getLogger().warn("Plugin MSC: directory %s does not exist, please create it" % self.download_directory_path)
+                logging.getLogger().warn(
+                    "Plugin MSC: directory %s does not exist, please create it"
+                    % self.download_directory_path
+                )
 
         if self.cp.has_option("web", "web_def_dlmaxbw"):
             self.web_def_dlmaxbw = self.cp.getint("web", "web_def_dlmaxbw")
@@ -293,25 +326,37 @@ class MscConfig(MscDatabaseConfig):
                 self.web_def_deployment_intervals = time_intervals
             else:
                 self.web_def_deployment_intervals = ""
-                logging.getLogger().warn("Plugin MSC: Error parsing option web_def_deployment_intervals !")
+                logging.getLogger().warn(
+                    "Plugin MSC: Error parsing option web_def_deployment_intervals !"
+                )
         if self.cp.has_option("web", "web_allow_local_proxy"):
             self.web_allow_local_proxy = self.cp.get("web", "web_allow_local_proxy")
         if self.cp.has_option("web", "web_def_local_proxy_mode"):
-            self.web_def_local_proxy_mode = self.cp.get("web", "web_def_local_proxy_mode")
+            self.web_def_local_proxy_mode = self.cp.get(
+                "web", "web_def_local_proxy_mode"
+            )
         if self.cp.has_option("web", "web_def_max_clients_per_proxy"):
-            self.web_def_max_clients_per_proxy = self.cp.getint("web", "web_def_max_clients_per_proxy")
+            self.web_def_max_clients_per_proxy = self.cp.getint(
+                "web", "web_def_max_clients_per_proxy"
+            )
         if self.cp.has_option("web", "web_def_proxy_number"):
             self.web_def_proxy_number = self.cp.getint("web", "web_def_proxy_number")
         if self.cp.has_option("web", "web_def_proxy_selection_mode"):
-            self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_proxy_selection_mode")
+            self.web_def_proxy_selection_mode = self.cp.get(
+                "web", "web_def_proxy_selection_mode"
+            )
         if self.cp.has_option("web", "web_def_refresh_time"):
-            self.web_def_refresh_time = self.cp.getint("web", "web_def_refresh_time") * 1000
+            self.web_def_refresh_time = (
+                self.cp.getint("web", "web_def_refresh_time") * 1000
+            )
         if self.cp.has_option("web", "web_def_use_no_vnc"):
             self.web_def_use_no_vnc = self.cp.getint("web", "web_def_use_no_vnc")
         if self.cp.has_option("web", "web_def_coh_life_time"):
             self.web_def_coh_life_time = self.cp.getint("web", "web_def_coh_life_time")
         if self.cp.has_option("web", "web_def_attempts_per_day"):
-            self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_attempts_per_day")
+            self.web_def_proxy_selection_mode = self.cp.get(
+                "web", "web_def_attempts_per_day"
+            )
 
         # Allow to delete commands and bundles from audit
         if self.cp.has_option("web", "web_def_allow_delete"):
@@ -323,9 +368,13 @@ class MscConfig(MscDatabaseConfig):
         if self.cp.has_option("web", "vnc_view_only"):
             self.web_vnc_view_only = self.cp.getboolean("web", "vnc_view_only")
         if self.cp.has_option("web", "vnc_network_connectivity"):
-            self.web_vnc_network_connectivity = self.cp.get("web", "vnc_network_connectivity")
+            self.web_vnc_network_connectivity = self.cp.get(
+                "web", "vnc_network_connectivity"
+            )
         if self.cp.has_option("web", "vnc_allow_user_control"):
-            self.web_vnc_allow_user_control = self.cp.getboolean("web", "vnc_allow_user_control")
+            self.web_vnc_allow_user_control = self.cp.getboolean(
+                "web", "vnc_allow_user_control"
+            )
         if self.cp.has_option("web", "vnc_port"):
             self.web_vnc_port = self.cp.get("web", "vnc_port")
 
@@ -345,13 +394,17 @@ class MscConfig(MscDatabaseConfig):
             self.ma_mountpoint = self.cp.get("package_api", "mmountpoint")
         if self.cp.has_option("package_api", "username"):
             if not is_login_and_pass:
-                logging.getLogger().warning("your version of twisted is not high enough to use login (package_api/username)")
+                logging.getLogger().warning(
+                    "your version of twisted is not high enough to use login (package_api/username)"
+                )
                 self.ma_username = ""
             else:
                 self.ma_username = self.cp.get("package_api", "username")
         if self.cp.has_option("package_api", "password"):
             if not is_login_and_pass:
-                logging.getLogger().warning("your version of twisted is not high enough to use password (package_api/password)")
+                logging.getLogger().warning(
+                    "your version of twisted is not high enough to use password (package_api/password)"
+                )
                 self.ma_password = ""
             else:
                 self.ma_password = self.cp.get("package_api", "password")
@@ -360,7 +413,9 @@ class MscConfig(MscDatabaseConfig):
         if self.ma_enablessl:
             if self.cp.has_option("package_api", "verifypeer"):
                 self.ma_verifypeer = self.cp.getboolean("package_api", "verifypeer")
-            if self.ma_verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+            if (
+                self.ma_verifypeer
+            ):  # we need twisted.internet.ssl.Certificate to activate certs
                 if self.cp.has_option("package_api", "cacert"):
                     self.ma_cacert = self.cp.get("package_api", "cacert")
                 if self.cp.has_option("package_api", "localcert"):
@@ -368,10 +423,15 @@ class MscConfig(MscDatabaseConfig):
                 if not os.path.isfile(self.ma_localcert):
                     raise Exception('can\'t read SSL key "%s"' % (self.ma_localcert))
                 if not os.path.isfile(self.ma_cacert):
-                    raise Exception('can\'t read SSL certificate "%s"' % (self.ma_cacert))
+                    raise Exception(
+                        'can\'t read SSL certificate "%s"' % (self.ma_cacert)
+                    )
                 import twisted.internet.ssl
+
                 if not hasattr(twisted.internet.ssl, "Certificate"):
-                    raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                    raise Exception(
+                        "I need at least Python Twisted 2.5 to handle peer checking"
+                    )
 
         # Scheduler API
         if self.cp.has_section("scheduler_api"):
@@ -384,13 +444,17 @@ class MscConfig(MscDatabaseConfig):
                 self.sa_mountpoint = self.cp.get("scheduler_api", "mountpoint")
             if self.cp.has_option("scheduler_api", "username"):
                 if not is_login_and_pass:
-                    logging.getLogger().warning("your version of twisted is not high enough to use login (scheduler_api/username)")
+                    logging.getLogger().warning(
+                        "your version of twisted is not high enough to use login (scheduler_api/username)"
+                    )
                     self.sa_username = ""
                 else:
                     self.sa_username = self.cp.get("scheduler_api", "username")
             if self.cp.has_option("scheduler_api", "password"):
                 if not is_login_and_pass:
-                    logging.getLogger().warning("your version of twisted is not high enough to use password (scheduler_api/password)")
+                    logging.getLogger().warning(
+                        "your version of twisted is not high enough to use password (scheduler_api/password)"
+                    )
                     self.sa_password = ""
                 else:
                     self.sa_password = self.cp.get("scheduler_api", "password")
@@ -398,19 +462,30 @@ class MscConfig(MscDatabaseConfig):
                 self.sa_enablessl = self.cp.getboolean("scheduler_api", "enablessl")
             if self.sa_enablessl:
                 if self.cp.has_option("scheduler_api", "verifypeer"):
-                    self.sa_verifypeer = self.cp.getboolean("scheduler_api", "verifypeer")
-                if self.sa_verifypeer: # we need twisted.internet.ssl.Certificate to activate certs
+                    self.sa_verifypeer = self.cp.getboolean(
+                        "scheduler_api", "verifypeer"
+                    )
+                if (
+                    self.sa_verifypeer
+                ):  # we need twisted.internet.ssl.Certificate to activate certs
                     if self.cp.has_option("scheduler_api", "cacert"):
                         self.sa_cacert = self.cp.get("scheduler_api", "cacert")
                     if self.cp.has_option("scheduler_api", "localcert"):
                         self.sa_localcert = self.cp.get("scheduler_api", "localcert")
                     if not os.path.isfile(self.sa_localcert):
-                        raise Exception('can\'t read SSL key "%s"' % (self.sa_localcert))
+                        raise Exception(
+                            'can\'t read SSL key "%s"' % (self.sa_localcert)
+                        )
                     if not os.path.isfile(self.sa_cacert):
-                        raise Exception('can\'t read SSL certificate "%s"' % (self.sa_cacert))
+                        raise Exception(
+                            'can\'t read SSL certificate "%s"' % (self.sa_cacert)
+                        )
                     import twisted.internet.ssl
+
                     if not hasattr(twisted.internet.ssl, "Certificate"):
-                        raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+                        raise Exception(
+                            "I need at least Python Twisted 2.5 to handle peer checking"
+                        )
 
             self.scheduler_url2id = {}
 
@@ -418,44 +493,45 @@ class MscConfig(MscDatabaseConfig):
                 (url, credentials) = makeURL(self.schedulers[id])
                 self.scheduler_url2id[url] = id
 
+
 # static config ...
 COMMAND_STATES_LIST = {
-    "upload_in_progress":'',
-    "upload_done":'',
-    "upload_failed":'',
-    "execution_in_progress":'',
-    "execution_done":'',
-    "execution_failed":'',
-    "delete_in_progress":'',
-    "delete_done":'',
-    "delete_failed":'',
-    "not_reachable":'',
-    "done":'',
-    "pause":'',
-    "stop":'',
-    "scheduled":''
+    "upload_in_progress": "",
+    "upload_done": "",
+    "upload_failed": "",
+    "execution_in_progress": "",
+    "execution_done": "",
+    "execution_failed": "",
+    "delete_in_progress": "",
+    "delete_done": "",
+    "delete_failed": "",
+    "not_reachable": "",
+    "done": "",
+    "pause": "",
+    "stop": "",
+    "scheduled": "",
 }
 
 UPLOADED_EXECUTED_DELETED_LIST = {
-    "TODO":'',
-    "IGNORED":'',
-    "FAILED":'',
-    "WORK_IN_PROGRESS":'',
-    "DONE":''
+    "TODO": "",
+    "IGNORED": "",
+    "FAILED": "",
+    "WORK_IN_PROGRESS": "",
+    "DONE": "",
 }
 
-COMMANDS_HISTORY_TABLE = 'commands_history'
-COMMANDS_ON_HOST_TABLE = 'commands_on_host'
-COMMANDS_TABLE = 'commands'
+COMMANDS_HISTORY_TABLE = "commands_history"
+COMMANDS_ON_HOST_TABLE = "commands_on_host"
+COMMANDS_TABLE = "commands"
 MAX_COMMAND_LAUNCHER_PROCESSUS = 50
-CYGWIN_WINDOWS_ROOT_PATH = ''
-MOUNT_EXPLORER = '/var/autofs/ssh/'
+CYGWIN_WINDOWS_ROOT_PATH = ""
+MOUNT_EXPLORER = "/var/autofs/ssh/"
 
 MAX_LOG_SIZE = 15000
 
-basedir = ''
+basedir = ""
 
-config = { 'path_destination':'/', 'explorer':0 } # FIXME: to put in msc.ini
+config = {"path_destination": "/", "explorer": 0}  # FIXME: to put in msc.ini
 
 WINDOWS_SEPARATOR = "\\"
 LINUX_SEPARATOR = "/"

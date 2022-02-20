@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8; -*-
 #
 # (c) 2014 Mandriva, http://www.mandriva.com/

@@ -29,8 +29,10 @@ from mmc.plugins.base.ldapconnect import LDAPConnectionConfig
 from mmc.plugins.base.subscription import SubscriptionConfig
 from mmc.core.audit.config import AuditConfig
 
-class BasePluginConfig(PluginConfig, LDAPConnectionConfig, AuditConfig, SubscriptionConfig):
 
+class BasePluginConfig(
+    PluginConfig, LDAPConnectionConfig, AuditConfig, SubscriptionConfig
+):
     def readConf(self):
         PluginConfig.readConf(self)
         LDAPConnectionConfig.readLDAPConf(self, "ldap")
@@ -50,20 +52,20 @@ class BasePluginConfig(PluginConfig, LDAPConnectionConfig, AuditConfig, Subscrip
             self.computersmethod = self.get("computers", "method")
         except:
             pass
-        # User password scheme
+        # User password scheme
         try:
             self.passwordscheme = self.get("ldap", "passwordscheme")
         except:
             pass
 
-        self.baseDN = self.getdn('ldap', 'baseDN')
-        self.baseUsersDN = self.getdn('ldap', 'baseUsersDN')
+        self.baseDN = self.getdn("ldap", "baseDN")
+        self.baseUsersDN = self.getdn("ldap", "baseUsersDN")
 
         # Where LDAP computer objects are stored
         # For now we ignore if the option does not exist, because it breaks
         # all existing intallations
         try:
-            self.baseComputersDN = self.get('ldap', 'baseComputersDN')
+            self.baseComputersDN = self.get("ldap", "baseComputersDN")
         except:
             pass
         self.backuptools = self.get("backup-tools", "path")
@@ -77,7 +79,7 @@ class BasePluginConfig(PluginConfig, LDAPConnectionConfig, AuditConfig, Subscrip
             self.leak_memorytime = self.getint("memoryinfo", "time")
         self.fileoutresult = "/tmp/leak_memory.data"
         if self.has_option("memoryinfo", "outfile"):
-            self.fileoutresult   = self.get("memoryinfo", "outfile")
+            self.fileoutresult = self.get("memoryinfo", "outfile")
         self.leak_memory_disable = True
         if self.has_option("memoryinfo", "disable"):
             self.leak_memory_disable = self.getboolean("memoryinfo", "disable")

@@ -22,7 +22,6 @@ from mmc.support.config import PluginConfig
 
 
 class DashboardConfig(PluginConfig):
-
     def readConf(self):
         PluginConfig.readConf(self)
         try:

@@ -49,7 +49,8 @@ class GatheringServer(Protocol):
             cls._handler = value
         else:
             raise AttributeError(
-                "Handler instance must have 'queue_and_process' attribute")
+                "Handler instance must have 'queue_and_process' attribute"
+            )
 
     @classmethod
     def set_trigger(cls, value):
@@ -76,15 +77,14 @@ class GatheringServer(Protocol):
         d.addCallback(self.send_response)
         d.addErrback(self._response_failed)
 
-        logging.getLogger().debug(
-            "data received: %s from %s" %
-            (str(data), ip))
+        logging.getLogger().debug("data received: %s from %s" % (str(data), ip))
         try:
             tr_result = self._trigger.fire()
 
             @tr_result.addCallback
             def res(result):
                 print("trigger result: %s" % (str(result)))
+
         except Exception as e:
             logging.getLogger().warn("trigger firing fail: %s" % str(e))
 
@@ -118,23 +118,24 @@ class Server(object):
         self.port = port
         if ssl_method == "TLSv1_METHOD":
             from OpenSSL.SSL import TLSv1_METHOD
+
             ssl_method = TLSv1_METHOD
         elif ssl_method == "SSLv23_METHOD":
             from OpenSSL.SSL import SSLv23_METHOD
+
             ssl_method = SSLv23_METHOD
         elif ssl_method == "SSLv2_METHOD":
             from OpenSSL.SSL import SSLv2_METHOD
+
             ssl_method = SSLv2_METHOD
         elif ssl_method == "SSLv3_METHOD":
             from OpenSSL.SSL import SSLv3_METHOD
+
             ssl_method = SSLv3_METHOD
         else:
             raise TypeError
 
-        self.ctx_factory = DefaultOpenSSLContextFactory(key,
-                                                        crt,
-                                                        ssl_method
-                                                        )
+        self.ctx_factory = DefaultOpenSSLContextFactory(key, crt, ssl_method)
 
     def start(self, handler, trigger):
 
@@ -143,9 +144,7 @@ class Server(object):
         self.factory.protocol.set_handler(handler)
         self.factory.protocol.set_trigger(trigger)
 
-        endpoint = SSL4ServerEndpoint(reactor,
-                                      self.port,
-                                      self.ctx_factory)
+        endpoint = SSL4ServerEndpoint(reactor, self.port, self.ctx_factory)
 
         d = endpoint.listen(self.factory)
 
@@ -155,11 +154,10 @@ class Server(object):
 
         @d.addErrback
         def eb(failure):
-            logging.getLogger().warn(
-                "endpoint start failed: %s" %
-                str(failure))
+            logging.getLogger().warn("endpoint start failed: %s" % str(failure))
 
         return d
+
 
 # for TLS:
 # openssl genrsa -out root.key 4096

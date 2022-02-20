@@ -45,28 +45,19 @@ class PackagePutA(Pulse2Api):
         if self.initialized_failed:
             return -1
         d = self.callRemote("getTemporaryFilesSuggestedCommand", tempdir)
-        d.addErrback(
-            self.onError,
-            "getTemporaryFilesSuggestedCommand",
-            [tempdir])
+        d.addErrback(self.onError, "getTemporaryFilesSuggestedCommand", [tempdir])
         return d
 
     def associatePackages(self, pid, files, level=0):
         if self.initialized_failed:
-            return [
-                False,
-                "PackagePutA %s failed to initialize" %
-                self.server_addr]
+            return [False, "PackagePutA %s failed to initialize" % self.server_addr]
         d = self.callRemote("associatePackages", pid, files, level)
         d.addErrback(self.onError, "associatePackages", [pid, files, level])
         return d
 
     def removeFilesFromPackage(self, pid, files):
         if self.initialized_failed:
-            return [
-                False,
-                "PackagePutA %s failed to initialize" %
-                self.server_addr]
+            return [False, "PackagePutA %s failed to initialize" % self.server_addr]
         d = self.callRemote("removeFilesFromPackage", pid, files)
         d.addErrback(self.onError, "removeFilesFromPackage", [pid, files])
         return d
@@ -75,9 +66,7 @@ class PackagePutA(Pulse2Api):
         if self.initialized_failed:
             return -1
         d = self.callRemote("pushPackage", random_dir, files, local_files)
-        d.addErrback(
-            self.onError, "pushPackage", [
-                random_dir, files, local_files], -1)
+        d.addErrback(self.onError, "pushPackage", [random_dir, files, local_files], -1)
         return d
 
     def putPackageDetail(self, package, need_assign=True):
@@ -85,8 +74,8 @@ class PackagePutA(Pulse2Api):
             return -1
         # if 'mode' in package and package['mode'] == 'creation' and
         # package['id'] == '':
-        if 'mode' in package and package['mode'] == 'creation' and package['id'] == '':
-            package['id'] = str(uuid1())
+        if "mode" in package and package["mode"] == "creation" and package["id"] == "":
+            package["id"] = str(uuid1())
         d = self.callRemote("putPackageDetail", package, need_assign)
         d.addErrback(self.onError, "putPackageDetail", package, -1)
         return d

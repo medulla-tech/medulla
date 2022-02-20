@@ -30,7 +30,7 @@ class PullPhase(Phase):
     """Recurrent phase frame"""
 
     def perform(self):
-        """ Perform the phase action. """
+        """Perform the phase action."""
         return self.give_up()
 
     def give_up(self):
@@ -40,9 +40,7 @@ class PullPhase(Phase):
         @return: give-up directive
         @rtype: DIRECTIVE
         """
-        self.logger.debug(
-            "Circuit #%s: Releasing the recurrent phase" %
-            self.coh.id)
+        self.logger.debug("Circuit #%s: Releasing the recurrent phase" % self.coh.id)
         if self.coh.isStateStopped():
             return DIRECTIVE.STOPPED
         else:
@@ -53,8 +51,8 @@ class PullPhase(Phase):
         (exitcode, stdout, stderr) = xxx_todo_changeme7
         if exitcode == PULSE2_SUCCESS_ERROR:  # success
             self.logger.info(
-                "Circuit #%s: pull %s done (exitcode == 0)" %
-                (self.coh.id, self.name))
+                "Circuit #%s: pull %s done (exitcode == 0)" % (self.coh.id, self.name)
+            )
             self.update_history_done(exitcode, stdout, stderr)
             if self.coh.isStateStopped():
                 return DIRECTIVE.KILLED
@@ -65,16 +63,17 @@ class PullPhase(Phase):
 
         elif self.name in self.config.non_fatal_steps:
             self.logger.info(
-                "Circuit #%s: pull %s failed (exitcode != 0), but non fatal according to scheduler config file" %
-                (self.coh.id, self.name))
+                "Circuit #%s: pull %s failed (exitcode != 0), but non fatal according to scheduler config file"
+                % (self.coh.id, self.name)
+            )
             self.update_history_failed(exitcode, stdout, stderr)
             self.phase.set_done()
             return next(self)
 
         else:  # failure: immediately give up
             self.logger.info(
-                "Circuit #%s: pull %s failed (exitcode != 0)" %
-                (self.coh.id, self.name))
+                "Circuit #%s: pull %s failed (exitcode != 0)" % (self.coh.id, self.name)
+            )
             self.update_history_failed(exitcode, stdout, stderr)
             return self.switch_phase_failed()
 

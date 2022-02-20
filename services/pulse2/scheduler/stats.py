@@ -39,6 +39,7 @@ class StatisticsProcessing:
     the possibility to cancel if the previous updated circuit wasn't
     the last definitive circuit of updated command.
     """
+
     # global statistics container of valid commands
     stats = {}
     # scheduled final statistics updates
@@ -52,7 +53,7 @@ class StatisticsProcessing:
         self.logger = logging.getLogger()
 
     def update(self, cmd_id=None):
-        """ Updates the global statistics or just for one command """
+        """Updates the global statistics or just for one command"""
         if cmd_id:
             self.stats[cmd_id] = self._get_stats(cmd_id)[cmd_id]
         else:
@@ -81,16 +82,14 @@ class StatisticsProcessing:
         stats = {}
 
         if cmd_id:
-            all_states = dict([(q[1], q[2])
-                              for q in __stats if q[0] == cmd_id])
+            all_states = dict([(q[1], q[2]) for q in __stats if q[0] == cmd_id])
             stats[cmd_id] = all_states
         else:
             cmd_ids = []
             [cmd_ids.append(k[0]) for k in __stats]
 
             for cmd_id in cmd_ids:
-                all_states = dict([(q[1], q[2])
-                                  for q in __stats if q[0] == cmd_id])
+                all_states = dict([(q[1], q[2]) for q in __stats if q[0] == cmd_id])
                 stats[cmd_id] = all_states
 
         return stats
@@ -103,8 +102,7 @@ class StatisticsProcessing:
         @type cmd_id: int
         """
         try:
-            process_non_valid(self.config.name,
-                              self.config.non_fatal_steps)
+            process_non_valid(self.config.name, self.config.non_fatal_steps)
 
             all_stats = self._get_stats(cmd_id)
             stats = all_stats[cmd_id]
@@ -112,9 +110,7 @@ class StatisticsProcessing:
             update_commands_stats(cmd_id, stats)
 
             del self.wdogs[cmd_id]
-            self.logger.info(
-                "Final statistics updated for command: %s" %
-                cmd_id)
+            self.logger.info("Final statistics updated for command: %s" % cmd_id)
 
         except Exception as e:
             self.logger.warn("Statistics update failed: %s" % str(e))
@@ -131,8 +127,8 @@ class StatisticsProcessing:
             call_id.cancel()
             self.logger.debug("Statistics: schedule cancelled: %s" % cmd_id)
         self.logger.debug(
-            "Statistics: scheduling the final update for command %s" %
-            cmd_id)
+            "Statistics: scheduling the final update for command %s" % cmd_id
+        )
         call_id = reactor.callLater(10, self._update_for, cmd_id)
 
         self.wdogs[cmd_id] = call_id

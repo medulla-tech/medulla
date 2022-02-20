@@ -36,11 +36,13 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
     logging.getLogger().debug("=====================================================")
     try:
-        XmppMasterDatabase().setCommand_action(data['data']['data']['uuid_inventorymachine'],
-                                               data['data']['data']['cmdid'],
-                                               sessionid,
-                                               "".join(data['result']['result']),
-                                               typemessage="result")
+        XmppMasterDatabase().setCommand_action(
+            data["data"]["data"]["uuid_inventorymachine"],
+            data["data"]["data"]["cmdid"],
+            sessionid,
+            "".join(data["result"]["result"]),
+            typemessage="result",
+        )
 
         print(json.dumps(data, indent=4))
     except Exception as e:

@@ -44,8 +44,8 @@ class ImagingRpcPhase(Phase):
             return d
         except Exception as e:
             self.logger.error(
-                "Circuit #%s: imaging phase failed: %s" %
-                (self.coh.id, str(e)))
+                "Circuit #%s: imaging phase failed: %s" % (self.coh.id, str(e))
+            )
 
     def parse_imaging_rpc_result(self, result):
 
@@ -56,8 +56,9 @@ class ImagingRpcPhase(Phase):
                 return next(self)
         else:
             self.logger.info(
-                "Circuit #%s: %s phase failed (exitcode != 0)" %
-                (self.coh.id, self.name))
+                "Circuit #%s: %s phase failed (exitcode != 0)"
+                % (self.coh.id, self.name)
+            )
             self.update_history_failed()
 
             if not self.phase.switch_to_failed():
@@ -66,12 +67,10 @@ class ImagingRpcPhase(Phase):
 
     def parse_imaging_rpc_error(self, reason):
         self.logger.warn(
-            "Circuit #%s: %s phase failed, unattented reason: %s" %
-            (self.name, self.coh.id, reason.getErrorMessage()))
-        self.update_history_failed(PULSE2_UNKNOWN_ERROR,
-                                   '',
-                                   reason.getErrorMessage()
-                                   )
+            "Circuit #%s: %s phase failed, unattented reason: %s"
+            % (self.name, self.coh.id, reason.getErrorMessage())
+        )
+        self.update_history_failed(PULSE2_UNKNOWN_ERROR, "", reason.getErrorMessage())
         return self.switch_phase_failed()
 
 

@@ -38,13 +38,33 @@ from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
-from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder, changeDefaultMenuItem, ImagingBootServiceItem, ImagingMulticastMenuBuilder, CleanMenu
+from pulse2.package_server.imaging.menu import (
+    isMenuStructure,
+    ImagingDefaultMenuBuilder,
+    ImagingComputerMenuBuilder,
+    changeDefaultMenuItem,
+    ImagingBootServiceItem,
+    ImagingMulticastMenuBuilder,
+    CleanMenu,
+)
 from pulse2.package_server.imaging.computer import ImagingComputerConfiguration
 from pulse2.package_server.imaging.iso import ISOImage
 from pulse2.package_server.imaging.archiver import Archiver
 from pulse2.package_server.imaging.rpcreplay import RPCReplay
 
-from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable, SingletonN, check_process, start_process, stop_process, normalizeMACAddressForPXELINUX
+from pulse2.utils import (
+    isMACAddress,
+    splitComputerPath,
+    macToNode,
+    isUUID,
+    rfc3339Time,
+    humanReadable,
+    SingletonN,
+    check_process,
+    start_process,
+    stop_process,
+    normalizeMACAddressForPXELINUX,
+)
 from pulse2.apis import makeURL
 from pulse2.imaging.image import Pulse2Image
 import json
@@ -52,14 +72,14 @@ import configparser
 
 
 class Imaging(object, metaclass=SingletonN):
-    """ Common imaging function to perform PXE actions and others """
+    """Common imaging function to perform PXE actions and others"""
 
     def init1(self, config):
         """
         @param config: Package server config
         @type config: P2PServerCP
         """
-        self.logger = logging.getLogger('imaging')
+        self.logger = logging.getLogger("imaging")
         # Read and check configuration
         self.config = config
         self.myUUIDCache = UUIDCache()
@@ -72,26 +92,37 @@ class Imaging(object, metaclass=SingletonN):
 
         @raise ValueError: if the configuration is not right
         """
-        basefolder = self.config.imaging_api['base_folder']
+        basefolder = self.config.imaging_api["base_folder"]
         # Skip bootmenus folder because it is generated dynamically now
-        for folder in ['base', 'bootloader', 'diskless',
-                       'computers', 'inventories', 'masters', 'postinst']:
-            optname = folder + '_folder'
+        for folder in [
+            "base",
+            "bootloader",
+            "diskless",
+            "computers",
+            "inventories",
+            "masters",
+            "postinst",
+        ]:
+            optname = folder + "_folder"
             dirname = self.config.imaging_api[optname]
-            if folder != 'base':
+            if folder != "base":
                 dirname = os.path.join(basefolder, dirname)
             if not os.path.isdir(dirname):
                 raise ValueError(
-                    "Directory '%s' does not exists. Please check option '%s' in your configuration file." %
-                    (dirname, optname))
-        for optname in ['diskless_kernel', 'diskless_initrd']:
-            fpath = os.path.join(basefolder,
-                                 self.config.imaging_api['diskless_folder'],
-                                 self.config.imaging_api[optname])
+                    "Directory '%s' does not exists. Please check option '%s' in your configuration file."
+                    % (dirname, optname)
+                )
+        for optname in ["diskless_kernel", "diskless_initrd"]:
+            fpath = os.path.join(
+                basefolder,
+                self.config.imaging_api["diskless_folder"],
+                self.config.imaging_api[optname],
+            )
             if not os.path.isfile(fpath):
                 raise ValueError(
-                    "File '%s' does not exists. Please check option '%s' in your configuration file." %
-                    (fpath, optname))
+                    "File '%s' does not exists. Please check option '%s' in your configuration file."
+                    % (fpath, optname)
+                )
 
     def _init(self):
         """
@@ -100,49 +131,51 @@ class Imaging(object, metaclass=SingletonN):
         """
 
         def _cbDefaultMenu(menu):
-            self.logger.debug('Default computer boot menu received.')
+            self.logger.debug("Default computer boot menu received.")
             if not menu:
                 self.logger.info(
-                    'Default computer boot menu is empty. Looks like this package server has not been registered.')
+                    "Default computer boot menu is empty. Looks like this package server has not been registered."
+                )
             else:
                 try:
                     imb = ImagingDefaultMenuBuilder(self.config, menu)
                     m = imb.make()
                     m.write()
-                    self.logger.info(
-                        'Default computer boot menu successfully written')
+                    self.logger.info("Default computer boot menu successfully written")
                 except Exception as e:
                     self.logger.exception(
-                        'Error while setting default computer menu: %s', e)
+                        "Error while setting default computer menu: %s", e
+                    )
 
         def _errDefaultMenu(error):
             self.logger.error(
-                "Error while setting default computer boot menu: %s" %
-                error)
+                "Error while setting default computer boot menu: %s" % error
+            )
 
-        self.logger.debug('Starting package server internals initialization')
+        self.logger.debug("Starting package server internals initialization")
         RPCReplay().init()
         RPCReplay().firstRun()
         client = self._getXMLRPCClient()
-        func = 'imaging.getDefaultMenuForRegistering'
-        args = (self.config.imaging_api['uuid'], )
+        func = "imaging.getDefaultMenuForRegistering"
+        args = (self.config.imaging_api["uuid"],)
         d = client.callRemote(func, *args)
         d.addCallbacks(_cbDefaultMenu, _errDefaultMenu)
 
     def refreshPXEParams(self, callback=None, *args, **kw):
         def _success(params):
-            PackageServerConfig().pxe_password = params['pxe_password']
-            PackageServerConfig().pxe_keymap = params['pxe_keymap']
+            PackageServerConfig().pxe_password = params["pxe_password"]
+            PackageServerConfig().pxe_keymap = params["pxe_keymap"]
             if callback:
                 callback.__call__(*args, **kw)
 
         def _error(error):
             self.logger.error("Error while retrieving PXE Params: %s" % error)
+
         RPCReplay().init()
         RPCReplay().firstRun()
         client = self._getXMLRPCClient()
-        func = 'imaging.getPXEParams'
-        args0 = (self.config.imaging_api['uuid'], )
+        func = "imaging.getPXEParams"
+        args0 = (self.config.imaging_api["uuid"],)
         d = client.callRemote(func, *args0)
         d.addCallbacks(_success, _error)
 
@@ -153,34 +186,34 @@ class Imaging(object, metaclass=SingletonN):
         def _success(menu):
             global menu_data
             if not isMenuStructure(menu):
-                self.logger.error(
-                    "Invalid menu structure for computer MAC %s" %
-                    mac)
+                self.logger.error("Invalid menu structure for computer MAC %s" % mac)
                 # TODO: generate default menu
-                menu_data = ''
+                menu_data = ""
 
             try:
-                #self.logger.debug('Setting menu for computer UUID/MAC/hostname %s/%s/%s' % (cuuid, macaddress, hostname))
+                # self.logger.debug('Setting menu for computer UUID/MAC/hostname %s/%s/%s' % (cuuid, macaddress, hostname))
                 imb = ImagingComputerMenuBuilder(self.config, mac, menu)
                 imenu = imb.make()
                 menu_data = imenu.buildMenu()
 
             except Exception as e:
                 self.logger.exception(
-                    "Error while setting new menu of computer uuid/mac %s", str(e))
+                    "Error while setting new menu of computer uuid/mac %s", str(e)
+                )
                 # if cant generate specific menu, use default menu
                 # or minimal menu genre "Continue usual startup"
-                menu_data = ''
+                menu_data = ""
 
         def _error(error):
             global menu_data
-            menu_data = ''
+            menu_data = ""
             self.logger.error("Error while retrieving PXE Params: %s" % error)
+
         RPCReplay().init()
         RPCReplay().firstRun()
         client = self._getXMLRPCClient()
-        func = 'imaging.getGeneratedMenu'
-        args0 = (mac, )
+        func = "imaging.getGeneratedMenu"
+        args0 = (mac,)
         d = client.callRemote(func, *args0)
         d.addCallbacks(_success, _error)
         while menu_data is None:
@@ -191,7 +224,7 @@ class Imaging(object, metaclass=SingletonN):
         RPCReplay().init()
         RPCReplay().firstRun()
         client = self._getXMLRPCClient()
-        func = 'dyngroup.get_active_convergence_for_host'
+        func = "dyngroup.get_active_convergence_for_host"
         args0 = (uuid,)
         d = client.callRemote(func, *args0)
         return d
@@ -203,11 +236,12 @@ class Imaging(object, metaclass=SingletonN):
         """
         url, _ = makeURL(PackageServerConfig().mmc_agent)
         return ImagingXMLRPCClient(
-            '',
+            "",
             url,
-            PackageServerConfig().mmc_agent['verifypeer'],
-            PackageServerConfig().mmc_agent['cacert'],
-            PackageServerConfig().mmc_agent['localcert'])
+            PackageServerConfig().mmc_agent["verifypeer"],
+            PackageServerConfig().mmc_agent["cacert"],
+            PackageServerConfig().mmc_agent["localcert"],
+        )
 
     def getClientShortname(self, mac):
         """
@@ -218,7 +252,7 @@ class Imaging(object, metaclass=SingletonN):
         @rtype: str or bool
         """
         res = self.myUUIDCache.getByMac(mac)
-        return res and res['shortname']
+        return res and res["shortname"]
 
     def getServerDetails(self):
         # FIXME: I don't know if it is needed
@@ -247,58 +281,62 @@ class Imaging(object, metaclass=SingletonN):
                 * When a restoration is done
             """
             shortname = self.getClientShortname(mac)
-            if 'booted' in message:
+            if "booted" in message:
                 if shortname:
                     self.logger.info(
-                        'Imaging: Client %s (%s) has booted' %
-                        (shortname, mac))
+                        "Imaging: Client %s (%s) has booted" % (shortname, mac)
+                    )
                 else:
-                    self.logger.info(
-                        'Imaging: Unknown client (%s) has booted' %
-                        (mac))
-            elif 'restoration started' in message:
+                    self.logger.info("Imaging: Unknown client (%s) has booted" % (mac))
+            elif "restoration started" in message:
                 # image UUID is in the 36 last characters of message variable
                 # message[-37:-1] to get image UUID
                 if shortname:
-                    self.logger.info('Imaging: Client %s (%s) is restoring a disk image (%s)' % (
-                        shortname, mac, message[-37:-1]))
+                    self.logger.info(
+                        "Imaging: Client %s (%s) is restoring a disk image (%s)"
+                        % (shortname, mac, message[-37:-1])
+                    )
                 else:
-                    self.logger.info('Imaging: Unknown client (%s) is restoring a disk image (%s)' % (
-                        mac, message[-37:-1]))
-            elif 'restoration finished' in message:
+                    self.logger.info(
+                        "Imaging: Unknown client (%s) is restoring a disk image (%s)"
+                        % (mac, message[-37:-1])
+                    )
+            elif "restoration finished" in message:
                 # image UUID is in the 36 last characters of message variable
                 # message[-37:-1] to get image UUID
                 if shortname:
-                    self.logger.info('Imaging: Disk image (%s) restored successfully to client %s (%s)' % (
-                        message[-37:-1], shortname, mac))
+                    self.logger.info(
+                        "Imaging: Disk image (%s) restored successfully to client %s (%s)"
+                        % (message[-37:-1], shortname, mac)
+                    )
                 else:
-                    self.logger.info('Imaging: Disk image (%s) restored successfully to unknown client (%s)' % (
-                        message[-37:-1], mac))
+                    self.logger.info(
+                        "Imaging: Disk image (%s) restored successfully to unknown client (%s)"
+                        % (message[-37:-1], mac)
+                    )
 
         def _getmacCB(result):
             displayed_statuses = [
-                'booted',
-                'restoration started',
-                'restoration finished']
+                "booted",
+                "restoration started",
+                "restoration finished",
+            ]
             if result and isinstance(result, dict):
                 if any(s in message for s in displayed_statuses):
                     _infoLogs(message)  # Display some info logs
                 client = self._getXMLRPCClient()
-                func = 'imaging.logClientAction'
+                func = "imaging.logClientAction"
                 args = (
-                    self.config.imaging_api['uuid'],
-                    result['uuid'],
+                    self.config.imaging_api["uuid"],
+                    result["uuid"],
                     level,
                     phase,
-                    message)
+                    message,
+                )
                 d = client.callRemote(func, *args)
                 d.addCallbacks(
-                    lambda x: True,
-                    RPCReplay().onError,
-                    errbackArgs=(
-                        func,
-                        args,
-                        0))
+                    lambda x: True, RPCReplay().onError, errbackArgs=(func, args, 0)
+                )
                 return d
 
             if any(s in message for s in displayed_statuses):
@@ -310,8 +348,9 @@ class Imaging(object, metaclass=SingletonN):
             raise TypeError
 
         self.logger.debug(
-            'Imaging: Client %s sent a log message while %s (%s) : %s' %
-            (mac, phase, level, message))
+            "Imaging: Client %s sent a log message while %s (%s) : %s"
+            % (mac, phase, level, message)
+        )
         d = self.getComputerByMac(mac)
         d.addCallback(_getmacCB)
         return d
@@ -334,7 +373,7 @@ class Imaging(object, metaclass=SingletonN):
 
         if not isMACAddress(mac):
             raise TypeError
-        self.logger.debug('Imaging: Client %s asked for a menu update' % (mac))
+        self.logger.debug("Imaging: Client %s asked for a menu update" % (mac))
         d = self.getComputerByMac(mac)
         d.addCallback(_getmacCB)
         return d
@@ -369,31 +408,28 @@ class Imaging(object, metaclass=SingletonN):
                 computerName, macAddress, imagingData = item
             except (ValueError, TypeError):
                 self.logger.error(
-                    "Can't register computer, bad input value: %s" %
-                    (str(item)))
+                    "Can't register computer, bad input value: %s" % (str(item))
+                )
                 continue
             if not imagingData:
                 self.logger.error(
-                    "No imaging data available for %s / %s" %
-                    (computerName, macAddress))
+                    "No imaging data available for %s / %s" % (computerName, macAddress)
+                )
                 continue
             try:
-                if self.computerRegister(
-                        computerName, macAddress, imagingData):
+                if self.computerRegister(computerName, macAddress, imagingData):
                     # Registration succeeded
-                    ret.append(imagingData['uuid'])
+                    ret.append(imagingData["uuid"])
             except Exception as e:
                 self.logger.error(
-                    "Can't register computer %s / %s: %s" %
-                    (computerName, macAddress, str(e)))
+                    "Can't register computer %s / %s: %s"
+                    % (computerName, macAddress, str(e))
+                )
         return ret
 
     def computerRegister(
-            self,
-            computerName,
-            macAddress,
-            imagingData=False,
-            waitToBeInventoried=False):
+        self, computerName, macAddress, imagingData=False, waitToBeInventoried=False
+    ):
         """
         Method to register a new computer.
 
@@ -409,71 +445,75 @@ class Imaging(object, metaclass=SingletonN):
         def onSuccess(result):
             if not isinstance(result, list) and len(result) != 2:
                 self.logger.error(
-                    'Imaging: Registering client %s (%s) failed: %s' %
-                    (computerName, macAddress, str(result)))
+                    "Imaging: Registering client %s (%s) failed: %s"
+                    % (computerName, macAddress, str(result))
+                )
                 ret = False
             elif not result[0]:
                 self.logger.error(
-                    'Imaging: Registering client %s (%s) failed: %s' %
-                    (computerName, macAddress, result[1]))
+                    "Imaging: Registering client %s (%s) failed: %s"
+                    % (computerName, macAddress, result[1])
+                )
                 ret = False
             else:
                 uuid = result[1]
                 self.logger.info(
-                    'Imaging: Client %s (%s) registered as %s' %
-                    (computerName, macAddress, uuid))
-                self.myUUIDCache.set(
-                    uuid, macAddress, hostname, domain, entity)
+                    "Imaging: Client %s (%s) registered as %s"
+                    % (computerName, macAddress, uuid)
+                )
+                self.myUUIDCache.set(uuid, macAddress, hostname, domain, entity)
                 ret = self.computerPrepareImagingDirectory(
-                    uuid, {'mac': macAddress, 'hostname': hostname})
+                    uuid, {"mac": macAddress, "hostname": hostname}
+                )
             return ret
 
         try:
             # check MAC Addr is conform
             if not isMACAddress(macAddress):
-                raise TypeError('Malformed MAC address: %s' % macAddress)
+                raise TypeError("Malformed MAC address: %s" % macAddress)
             # check computer name is conform
             if not len(computerName):
-                raise TypeError('Malformed computer name: %s' % computerName)
-            profile, entity_path, hostname, domain = splitComputerPath(
-                computerName)
-            entity_path = entity_path.split('/')
+                raise TypeError("Malformed computer name: %s" % computerName)
+            profile, entity_path, hostname, domain = splitComputerPath(computerName)
+            entity_path = entity_path.split("/")
             entity = entity_path.pop()
         except TypeError as ex:
             self.logger.error(
-                'Imaging: Won\'t register %s as %s : %s' %
-                (macAddress, computerName, ex))
+                "Imaging: Won't register %s as %s : %s" % (macAddress, computerName, ex)
+            )
             return maybeDeferred(lambda x: x, False)
 
         if not imagingData:
             # Registration is coming from the imaging server
             self.logger.info(
-                'Imaging: Registering %s as %s' %
-                (macAddress, computerName))
+                "Imaging: Registering %s as %s" % (macAddress, computerName)
+            )
             client = self._getXMLRPCClient()
-            func = 'imaging.computerRegister'
-            args = (self.config.imaging_api['uuid'], hostname, domain,
-                    macAddress, profile, entity, waitToBeInventoried)
+            func = "imaging.computerRegister"
+            args = (
+                self.config.imaging_api["uuid"],
+                hostname,
+                domain,
+                macAddress,
+                profile,
+                entity,
+                waitToBeInventoried,
+            )
             d = client.callRemote(func, *args)
-            d.addCallbacks(
-                onSuccess,
-                client.onError,
-                errbackArgs=(
-                    func,
-                    args,
-                    False))
+            d.addCallbacks(onSuccess, client.onError, errbackArgs=(func, args, False))
             return d
         else:
             # Registration is coming from the MMC agent
-            if 'uuid' not in imagingData:
-                self.logger.error('UUID missing in imaging data')
+            if "uuid" not in imagingData:
+                self.logger.error("UUID missing in imaging data")
                 return False
-            cuuid = imagingData['uuid']
+            cuuid = imagingData["uuid"]
             self.myUUIDCache.set(cuuid, macAddress, hostname, domain)
             if not self.computerPrepareImagingDirectory(
-                    cuuid, {'mac': macAddress, 'hostname': computerName}):
+                cuuid, {"mac": macAddress, "hostname": computerName}
+            ):
                 return False
-            if self.computersMenuSet(imagingData['menu']) != [cuuid]:
+            if self.computersMenuSet(imagingData["menu"]) != [cuuid]:
                 return False
             return True
 
@@ -490,16 +530,15 @@ class Imaging(object, metaclass=SingletonN):
         @rtype: bool
         @return: True if the operation succeeded to start
         """
-        assert(isinstance(imageList, list))
+        assert isinstance(imageList, list)
         if not isUUID(computerUUID):
             return False
         macAddress = self.myUUIDCache.getByUUID(computerUUID)
         if not macAddress:
             return False
         else:
-            macAddress = macAddress['mac']
-        archiver = Archiver(self.config, archive, computerUUID, macAddress,
-                            imageList)
+            macAddress = macAddress["mac"]
+        archiver = Archiver(self.config, archive, computerUUID, macAddress, imageList)
         ret = archiver.check() and archiver.prepare()
         if ret:
             # If all is OK, start archival process in another thread
@@ -519,28 +558,32 @@ class Imaging(object, metaclass=SingletonN):
         @type imagingData: ????
         """
         target_folder = os.path.join(
-            PackageServerConfig().imaging_api['base_folder'],
-            PackageServerConfig().imaging_api['computers_folder'],
-            uuid)
+            PackageServerConfig().imaging_api["base_folder"],
+            PackageServerConfig().imaging_api["computers_folder"],
+            uuid,
+        )
         if os.path.isdir(target_folder):
             self.logger.debug(
-                'Imaging: folder %s for client %s : It already exists !' %
-                (target_folder, uuid))
+                "Imaging: folder %s for client %s : It already exists !"
+                % (target_folder, uuid)
+            )
             return True
         if os.path.exists(target_folder):
             self.logger.warn(
-                'Imaging: folder %s for client %s : It already exists, but is not a folder !' %
-                (target_folder, uuid))
+                "Imaging: folder %s for client %s : It already exists, but is not a folder !"
+                % (target_folder, uuid)
+            )
             return False
         try:
             os.mkdir(target_folder)
             self.logger.debug(
-                'Imaging: folder %s for client %s was created' %
-                (target_folder, uuid))
+                "Imaging: folder %s for client %s was created" % (target_folder, uuid)
+            )
         except Exception as e:
             self.logger.error(
-                'Imaging: I was not able to create folder %s for client %s : %s' %
-                (target_folder, uuid, e))
+                "Imaging: I was not able to create folder %s for client %s : %s"
+                % (target_folder, uuid, e)
+            )
             return False
         return True
 
@@ -563,10 +606,10 @@ class Imaging(object, metaclass=SingletonN):
 
         url, credentials = makeURL(PackageServerConfig().mmc_agent)
 
-        self.logger.info('Imaging: Starting menu update for %s' % (MACAddress))
+        self.logger.info("Imaging: Starting menu update for %s" % (MACAddress))
         client = self._getXMLRPCClient()
-        func = 'imaging.getMenu'
-        args = (MACAddress)
+        func = "imaging.getMenu"
+        args = MACAddress
         d = client.callRemote(func, *args)
         d.addCallbacks(onSuccess, client.onError, errbackArgs=(func, args, 0))
         return d
@@ -580,64 +623,62 @@ class Imaging(object, metaclass=SingletonN):
                  successful, else 0.
         @rtype: int
         """
+
         def _onSuccess(result):
             shortname = self.getClientShortname(MACAddress)
             if result and isinstance(result, list) and len(result) == 2:
                 if result[0]:
                     if shortname:
                         self.logger.debug(
-                            'Imaging: Imaging database disks and partitions information successfully updated for client %s (%s)' %
-                            (shortname, MACAddress))
+                            "Imaging: Imaging database disks and partitions information successfully updated for client %s (%s)"
+                            % (shortname, MACAddress)
+                        )
                     else:
                         self.logger.debug(
-                            'Imaging: Imaging database disks and partitions information successfully updated for unknown client (%s)' %
-                            (MACAddress))
+                            "Imaging: Imaging database disks and partitions information successfully updated for unknown client (%s)"
+                            % (MACAddress)
+                        )
                     return True
                 else:
                     if shortname:
                         self.logger.error(
-                            'Imaging: Failed to update disks and partitions information for client %s (%s): %s' %
-                            (shortname, MACAddress, result[1]))
+                            "Imaging: Failed to update disks and partitions information for client %s (%s): %s"
+                            % (shortname, MACAddress, result[1])
+                        )
                     else:
                         self.logger.error(
-                            'Imaging: Failed to update disks and partitions information for unknown client (%s): %s' %
-                            (MACAddress, result[1]))
+                            "Imaging: Failed to update disks and partitions information for unknown client (%s): %s"
+                            % (MACAddress, result[1])
+                        )
                     return False
             else:
                 if shortname:
                     self.logger.error(
-                        'Imaging: Failed to update disks and partitions information for client %s (%s): %s' %
-                        (shortname, MACAddress, result))
+                        "Imaging: Failed to update disks and partitions information for client %s (%s): %s"
+                        % (shortname, MACAddress, result)
+                    )
                 else:
                     self.logger.error(
-                        'Imaging: Failed to update disks and partitions information for unknown client (%s): %s' %
-                        (MACAddress, result))
+                        "Imaging: Failed to update disks and partitions information for unknown client (%s): %s"
+                        % (MACAddress, result)
+                    )
                 return False
 
         def _getmacCB(result):
             if result and isinstance(result, dict):
                 client = self._getXMLRPCClient()
-                func = 'imaging.injectInventory'
-                args = (
-                    self.config.imaging_api['uuid'],
-                    result['uuid'],
-                    inventory)
+                func = "imaging.injectInventory"
+                args = (self.config.imaging_api["uuid"], result["uuid"], inventory)
                 d = client.callRemote(func, *args)
-                d.addCallbacks(
-                    _onSuccess,
-                    client.onError,
-                    errbackArgs=(
-                        func,
-                        args,
-                        0))
+                d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
                 return d
             return False
 
         if not isMACAddress(MACAddress):
             raise TypeError
         self.logger.debug(
-            'Imaging: New PXE inventory received from client %s' %
-            (MACAddress))
+            "Imaging: New PXE inventory received from client %s" % (MACAddress)
+        )
         d = self.getComputerByMac(MACAddress)
         d.addCallback(_getmacCB)
         return d
@@ -658,56 +699,53 @@ class Imaging(object, metaclass=SingletonN):
         def _onSuccess(result):
             if isinstance(result, dict) and "faultCode" in result:
                 self.logger.warning(
-                    'Imaging: While processing result for %s : %s' %
-                    (MACAddress, result['faultTraceback']))
+                    "Imaging: While processing result for %s : %s"
+                    % (MACAddress, result["faultTraceback"])
+                )
                 return False
             try:
                 if result[0]:
                     self.myUUIDCache.set(
-                        result[1]['uuid'],
+                        result[1]["uuid"],
                         MACAddress,
-                        result[1]['shortname'].encode('utf-8'),
-                        result[1]['fqdn'].encode('utf-8'),
-                        result[1]['entity'].encode('utf-8'))
-                    self.logger.debug(
-                        'Imaging: Updating cache for %s' %
-                        (MACAddress))
+                        result[1]["shortname"].encode("utf-8"),
+                        result[1]["fqdn"].encode("utf-8"),
+                        result[1]["entity"].encode("utf-8"),
+                    )
+                    self.logger.debug("Imaging: Updating cache for %s" % (MACAddress))
                     return result[1]
                 else:
                     self.logger.debug(
-                        "Imaging: Unable to resolve %s neither from cache nor from database (unknown computer?)" %
-                        (MACAddress))
+                        "Imaging: Unable to resolve %s neither from cache nor from database (unknown computer?)"
+                        % (MACAddress)
+                    )
                     return False
             except Exception as e:
                 self.logger.error(
-                    'Imaging: While processing result %s for %s : %s' %
-                    (result, MACAddress, e))
+                    "Imaging: While processing result %s for %s : %s"
+                    % (result, MACAddress, e)
+                )
 
         if not isMACAddress(MACAddress):
-            raise TypeError('Bad MAC address: %s' % MACAddress)
+            raise TypeError("Bad MAC address: %s" % MACAddress)
 
         # try to extract from our cache
         res = self.myUUIDCache.getByMac(MACAddress)
         if res:  # fetched from cache
-            res['shortname'] = res['shortname'].decode('utf-8')
-            res['fqdn'] = res['fqdn'].decode('utf-8')
-            res['entity'] = res['entity'].decode('utf-8')
+            res["shortname"] = res["shortname"].decode("utf-8")
+            res["fqdn"] = res["fqdn"].decode("utf-8")
+            res["entity"] = res["entity"].decode("utf-8")
             return maybeDeferred(lambda x: x, res)
         else:  # cache fetching failed, try to obtain the real value
             self.logger.debug(
-                'Imaging: Unable to resolve %s from cache, querying database' %
-                (MACAddress))
+                "Imaging: Unable to resolve %s from cache, querying database"
+                % (MACAddress)
+            )
             client = self._getXMLRPCClient()
-            func = 'imaging.getComputerByMac'
+            func = "imaging.getComputerByMac"
             args = [MACAddress]
             d = client.callRemote(func, *args)
-            d.addCallbacks(
-                _onSuccess,
-                client.onError,
-                errbackArgs=(
-                    func,
-                    args,
-                    0))
+            d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
             return d
 
     def computersMenuSet(self, menus):
@@ -724,42 +762,40 @@ class Imaging(object, metaclass=SingletonN):
         for cuuid in menus:
             menu = menus[cuuid]
             if not isUUID(cuuid):
-                self.logger.error('Invalid computer UUID %s' % cuuid)
+                self.logger.error("Invalid computer UUID %s" % cuuid)
                 continue
             if not isMenuStructure(menu):
-                self.logger.error(
-                    "Invalid menu structure for computer UUID %s" %
-                    cuuid)
+                self.logger.error("Invalid menu structure for computer UUID %s" % cuuid)
                 continue
 
             res = self.myUUIDCache.getByUUID(cuuid)
             if not res:
                 self.logger.warn("Updating MAC address for UUID %s" % cuuid)
                 self.myUUIDCache.set(
-                    menu['target']['uuid'],
-                    menu['target']['macaddress'],
-                    menu['target']['name'],
-                    '')  # FIXME : domainname '' is probably a wrong idea
+                    menu["target"]["uuid"],
+                    menu["target"]["macaddress"],
+                    menu["target"]["name"],
+                    "",
+                )  # FIXME : domainname '' is probably a wrong idea
                 res = self.myUUIDCache.getByUUID(cuuid)
             try:
-                macaddress = res['mac']
-                hostname = res['shortname']
+                macaddress = res["mac"]
+                hostname = res["shortname"]
                 self.logger.debug(
-                    'Setting menu for computer UUID/MAC/hostname %s/%s/%s' %
-                    (cuuid, macaddress, hostname))
+                    "Setting menu for computer UUID/MAC/hostname %s/%s/%s"
+                    % (cuuid, macaddress, hostname)
+                )
                 imb = ImagingComputerMenuBuilder(self.config, macaddress, menu)
                 imenu = imb.make()
                 imenu.write()
                 ret.append(cuuid)
-                imc = ImagingComputerConfiguration(self.config,
-                                                   cuuid,
-                                                   hostname,
-                                                   menu)
+                imc = ImagingComputerConfiguration(self.config, cuuid, hostname, menu)
                 imc.write()
             except Exception as e:
                 self.logger.exception(
-                    "Error while setting new menu of computer uuid/mac %s: %s" %
-                    (cuuid, e))
+                    "Error while setting new menu of computer uuid/mac %s: %s"
+                    % (cuuid, e)
+                )
                 # FIXME: Rollback to the previous menu
         return ret
 
@@ -777,20 +813,20 @@ class Imaging(object, metaclass=SingletonN):
         @rtype: bool
         """
         if not isMenuStructure(menu):
-            self.logger.error(
-                "Can't set default computer menu: bad menu structure")
+            self.logger.error("Can't set default computer menu: bad menu structure")
             ret = False
         else:
             try:
-                self.logger.debug('Setting default boot menu for computers')
+                self.logger.debug("Setting default boot menu for computers")
                 imb = ImagingDefaultMenuBuilder(self.config, menu)
                 imenu = imb.make()
                 imenu.write()
                 ret = True
             except Exception as e:
                 self.logger.exception(
-                    "Error while setting default boot menu of unregistered computers: %s" %
-                    e)
+                    "Error while setting default boot menu of unregistered computers: %s"
+                    % e
+                )
                 ret = False
         return ret
 
@@ -809,20 +845,22 @@ class Imaging(object, metaclass=SingletonN):
         """
         ret = []
         if not isUUID(imageUUID):
-            self.logger.error('Bad image UUID %s' % str(imageUUID))
+            self.logger.error("Bad image UUID %s" % str(imageUUID))
         else:
             path = os.path.join(
-                self.config.imaging_api['base_folder'],
-                self.config.imaging_api['masters_folder'],
-                imageUUID)
+                self.config.imaging_api["base_folder"],
+                self.config.imaging_api["masters_folder"],
+                imageUUID,
+            )
             try:
                 image = Pulse2Image(path, False)
                 ret = image.logs
             except Exception as e:
                 self.logger.error(
-                    "Can't get backup logs of image with UUID %s: %s" %
-                    (imageUUID, str(e)))
-        assert(isinstance(ret, list))
+                    "Can't get backup logs of image with UUID %s: %s"
+                    % (imageUUID, str(e))
+                )
+        assert isinstance(ret, list)
         return ret
 
     def computerCreateImageDirectory(self, mac):
@@ -844,22 +882,25 @@ class Imaging(object, metaclass=SingletonN):
         def _onSuccess(result):
             if not isinstance(result, list) and len(result) != 2:
                 self.logger.error(
-                    'Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' %
-                    (image_uuid, str(result)))
+                    "Imaging: Couldn't register on the MMC agent the image with UUID %s : %s"
+                    % (image_uuid, str(result))
+                )
                 ret = False
             elif not result[0]:
                 self.logger.error(
-                    'Imaging: Couldn\'t register on the MMC agent the image with UUID %s : %s' %
-                    (image_uuid, result[1]))
+                    "Imaging: Couldn't register on the MMC agent the image with UUID %s : %s"
+                    % (image_uuid, result[1])
+                )
                 ret = False
             else:
                 image_path = os.path.join(
-                    self.config.imaging_api['base_folder'],
-                    self.config.imaging_api['masters_folder'],
-                    image_uuid)
+                    self.config.imaging_api["base_folder"],
+                    self.config.imaging_api["masters_folder"],
+                    image_uuid,
+                )
                 self.logger.debug(
-                    'Imaging: Successfully registered disk image to %s' %
-                    image_path)
+                    "Imaging: Successfully registered disk image to %s" % image_path
+                )
                 ret = image_uuid
             return ret
 
@@ -868,29 +909,28 @@ class Imaging(object, metaclass=SingletonN):
             Process result return by getComputerByMac, BTW should be either False or the required info
             """
             if not result:
-                self.logger.error(
-                    "Can't get computer UUID for MAC address %s" %
-                    (mac))
+                self.logger.error("Can't get computer UUID for MAC address %s" % (mac))
                 os.rmdir(os.path.join(target_folder, image_uuid))
                 return False
             else:  # start gathering details about our image
-                c_uuid = result['uuid']
+                c_uuid = result["uuid"]
                 isMaster = False  # by default, an image is private
                 path = os.path.join(
-                    self.config.imaging_api['base_folder'],
-                    self.config.imaging_api['masters_folder'],
-                    image_uuid)
+                    self.config.imaging_api["base_folder"],
+                    self.config.imaging_api["masters_folder"],
+                    image_uuid,
+                )
                 size = 0
                 creationDate = tuple(gmtime())
-                name = "Backup of %s" % result['shortname']
+                name = "Backup of %s" % result["shortname"]
                 desc = "In Progress"
                 creator = ""
                 state = "EMPTY"  # FIXME : define and use consts
 
                 client = self._getXMLRPCClient()
-                func = 'imaging.imageRegister'
+                func = "imaging.imageRegister"
                 args = (
-                    self.config.imaging_api['uuid'],
+                    self.config.imaging_api["uuid"],
                     c_uuid,
                     image_uuid,
                     isMaster,
@@ -900,33 +940,29 @@ class Imaging(object, metaclass=SingletonN):
                     size,
                     creationDate,
                     creator,
-                    state)
+                    state,
+                )
                 d = client.callRemote(func, *args)
                 d.addCallbacks(
-                    _onSuccess,
-                    RPCReplay().onError,
-                    errbackArgs=(
-                        func,
-                        args,
-                        False))
+                    _onSuccess, RPCReplay().onError, errbackArgs=(func, args, False)
+                )
                 return image_uuid
 
         shortname = self.getClientShortname(mac)
         if shortname:
             self.logger.info(
-                'Imaging: Client %s (%s) is creating a disk image' %
-                (shortname, mac))
+                "Imaging: Client %s (%s) is creating a disk image" % (shortname, mac)
+            )
         else:
-            self.logger.info(
-                'Imaging: Client %s is creating a disk image' %
-                (mac))
+            self.logger.info("Imaging: Client %s is creating a disk image" % (mac))
 
         if not isMACAddress(mac):
             raise TypeError
 
         target_folder = os.path.join(
-            PackageServerConfig().imaging_api['base_folder'],
-            PackageServerConfig().imaging_api['masters_folder'])
+            PackageServerConfig().imaging_api["base_folder"],
+            PackageServerConfig().imaging_api["masters_folder"],
+        )
         # compute our future UUID, using the MAC address as node
         # according the doc, the node is a 48 bits (= 6 bytes) integer
         attempts = 10
@@ -937,17 +973,17 @@ class Imaging(object, metaclass=SingletonN):
             attempts -= 1
         if not attempts:
             self.logger.warn(
-                'Imaging: I was not able to create a folder for client %s' %
-                (mac))
+                "Imaging: I was not able to create a folder for client %s" % (mac)
+            )
             return maybeDeferred(lambda x: x, False)
 
         try:
             os.mkdir(os.path.join(target_folder, image_uuid))
         except Exception as e:
             self.logger.warn(
-                'Imaging: I was not able to create folder %s for client %s : %s' %
-                (os.path.join(
-                    target_folder, image_uuid), mac, e))
+                "Imaging: I was not able to create folder %s for client %s : %s"
+                % (os.path.join(target_folder, image_uuid), mac, e)
+            )
             return maybeDeferred(lambda x: x, False)
 
         # now the folder is created (and exists), if can safely be used
@@ -966,21 +1002,17 @@ class Imaging(object, metaclass=SingletonN):
         @rtype: int
         """
         if not isMACAddress(mac):
-            self.logger.error(
-                "Get default menu item: bad computer MAC %s" %
-                str(mac))
+            self.logger.error("Get default menu item: bad computer MAC %s" % str(mac))
             ret = False
         else:
             computerUUID = self.myUUIDCache.getByMac(mac)
             if not computerUUID:
-                self.logger.error(
-                    "Can't get computer UUID for MAC address %s" %
-                    mac)
+                self.logger.error("Can't get computer UUID for MAC address %s" % mac)
                 ret = False
             else:
-                computerUUID = computerUUID['uuid']
+                computerUUID = computerUUID["uuid"]
                 client = self._getXMLRPCClient()
-                func = 'imaging.getDefaultMenuItem'
+                func = "imaging.getDefaultMenuItem"
                 d = client.callRemote(func, computerUUID)
 
                 @d.addCallback
@@ -991,13 +1023,16 @@ class Imaging(object, metaclass=SingletonN):
                             shortname = self.getClientShortname(mac)
                             if shortname:
                                 self.logger.debug(
-                                    "Client %s (%s) default menu entry is %s" %
-                                    (shortname, str(mac), order))
+                                    "Client %s (%s) default menu entry is %s"
+                                    % (shortname, str(mac), order)
+                                )
                             else:
                                 self.logger.debug(
-                                    "Unknown client %s (%s) default menu entry is %s" %
-                                    (shortname, str(mac), order))
+                                    "Unknown client %s (%s) default menu entry is %s"
+                                    % (shortname, str(mac), order)
+                                )
                             return order
+
                 return d
         return ret
 
@@ -1014,24 +1049,28 @@ class Imaging(object, metaclass=SingletonN):
         def _onSuccess(result):
             if not isinstance(result, list) and len(result) != 2:
                 self.logger.error(
-                    'Couldn\'t set default entry on %s for %s : %s' %
-                    (num, computerUUID, str(result)))
+                    "Couldn't set default entry on %s for %s : %s"
+                    % (num, computerUUID, str(result))
+                )
                 ret = False
             elif not result[0]:
                 self.logger.error(
-                    'Couldn\'t set default entry on %s for %s : %s' %
-                    (num, computerUUID, str(result)))
+                    "Couldn't set default entry on %s for %s : %s"
+                    % (num, computerUUID, str(result))
+                )
                 ret = False
             else:
                 shortname = self.getClientShortname(mac)
                 if shortname:
                     self.logger.info(
-                        'Default entry set to %s after disk image creation/restoration for client %s (%s)' %
-                        (num, shortname, mac))
+                        "Default entry set to %s after disk image creation/restoration for client %s (%s)"
+                        % (num, shortname, mac)
+                    )
                 else:
                     self.logger.info(
-                        'Default entry set to %s after disk image creation/restoration for unknown client (%s)' %
-                        (num, mac))
+                        "Default entry set to %s after disk image creation/restoration for unknown client (%s)"
+                        % (num, mac)
+                    )
                 ret = True
             return ret
 
@@ -1040,11 +1079,12 @@ class Imaging(object, metaclass=SingletonN):
             RPCReplay().onError(error, funcname, args, default_return)
             # Manually update the computer boot menu
             self.logger.warning(
-                'MMC agent can\'t be contacted: updating default menu item to the first "manually"')
+                'MMC agent can\'t be contacted: updating default menu item to the first "manually"'
+            )
             if changeDefaultMenuItem(mac, 0):
-                self.logger.warning('Update done')
+                self.logger.warning("Update done")
             else:
-                self.logger.error('Update failed')
+                self.logger.error("Update failed")
             return default_return
 
         if not isMACAddress(mac):
@@ -1053,19 +1093,15 @@ class Imaging(object, metaclass=SingletonN):
         else:
             computerUUID = self.myUUIDCache.getByMac(mac)
             if not computerUUID:
-                self.logger.error(
-                    "Can't get computer UUID for MAC address %s" %
-                    mac)
+                self.logger.error("Can't get computer UUID for MAC address %s" % mac)
                 ret = False
             else:
-                computerUUID = computerUUID['uuid']
+                computerUUID = computerUUID["uuid"]
                 client = self._getXMLRPCClient()
-                func = 'imaging.computerChangeDefaultMenuItem'
-                args = (self.config.imaging_api['uuid'], computerUUID, num)
+                func = "imaging.computerChangeDefaultMenuItem"
+                args = (self.config.imaging_api["uuid"], computerUUID, num)
                 d = client.callRemote(func, *args)
-                d.addCallbacks(
-                    _onSuccess, _onError, errbackArgs=(
-                        func, args, True))
+                d.addCallbacks(_onSuccess, _onError, errbackArgs=(func, args, True))
                 return d
         return ret
 
@@ -1080,28 +1116,33 @@ class Imaging(object, metaclass=SingletonN):
         def _onSuccess(result):
             if not isinstance(result, list) and len(result) != 2:
                 self.logger.error(
-                    'Imaging: Couldn\'t update on the MMC agent the image with UUID %s : %s' %
-                    (imageUUID, str(result)))
+                    "Imaging: Couldn't update on the MMC agent the image with UUID %s : %s"
+                    % (imageUUID, str(result))
+                )
                 ret = False
             elif not result[0]:
                 self.logger.error(
-                    'Imaging: Couldn\'t update on the MMC agent the image with UUID %s : %s' %
-                    (imageUUID, result[1]))
+                    "Imaging: Couldn't update on the MMC agent the image with UUID %s : %s"
+                    % (imageUUID, result[1])
+                )
                 ret = False
             else:
                 image_path = os.path.join(
-                    self.config.imaging_api['base_folder'],
-                    self.config.imaging_api['masters_folder'],
-                    imageUUID)
+                    self.config.imaging_api["base_folder"],
+                    self.config.imaging_api["masters_folder"],
+                    imageUUID,
+                )
                 shortname = self.getClientShortname(computerMACAddress)
                 if shortname:
                     self.logger.info(
-                        'Imaging: Disk image of client %s (%s) created successfully into %s' %
-                        (shortname, computerMACAddress, image_path))
+                        "Imaging: Disk image of client %s (%s) created successfully into %s"
+                        % (shortname, computerMACAddress, image_path)
+                    )
                 else:
                     self.logger.info(
-                        'Imaging: Disk image of unknown client (%s) created successfully into %s' %
-                        (computerMACAddress, image_path))
+                        "Imaging: Disk image of unknown client (%s) created successfully into %s"
+                        % (computerMACAddress, image_path)
+                    )
                 ret = True
             return ret
 
@@ -1111,56 +1152,54 @@ class Imaging(object, metaclass=SingletonN):
             """
             if not result:
                 self.logger.error(
-                    "Can't get computer UUID for MAC address %s" %
-                    (computerMACAddress))
+                    "Can't get computer UUID for MAC address %s" % (computerMACAddress)
+                )
                 return False
             else:
                 # start gathering details about our image
 
                 path = os.path.join(
-                    self.config.imaging_api['base_folder'],
-                    self.config.imaging_api['masters_folder'],
-                    imageUUID)
+                    self.config.imaging_api["base_folder"],
+                    self.config.imaging_api["masters_folder"],
+                    imageUUID,
+                )
                 image = Pulse2Image(path)
                 if not image:
                     state = "INVALID"
                     size = 0  # FIXME : use actual size
-                    name = "Failed backup of %s" % result['shortname']
+                    name = "Failed backup of %s" % result["shortname"]
                     desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
                 elif image.has_error:
                     state = "FAILED"
                     size = image.size
-                    name = "Backup of %s" % result['shortname']
+                    name = "Backup of %s" % result["shortname"]
                     desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
                 else:
                     state = "DONE"
                     size = image.size
-                    name = "Backup of %s" % result['shortname']
+                    name = "Backup of %s" % result["shortname"]
                     desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
 
-                c_uuid = result['uuid']
+                c_uuid = result["uuid"]
                 updateDate = tuple(gmtime())
 
                 client = self._getXMLRPCClient()
-                func = 'imaging.imageUpdate'
+                func = "imaging.imageUpdate"
                 # size converted to float to bypass xmlrpc limitations
                 args = (
-                    self.config.imaging_api['uuid'],
+                    self.config.imaging_api["uuid"],
                     c_uuid,
                     imageUUID,
                     name,
                     desc,
                     float(size),
                     updateDate,
-                    state)
+                    state,
+                )
                 d = client.callRemote(func, *args)
                 d.addCallbacks(
-                    _onSuccess,
-                    RPCReplay().onError,
-                    errbackArgs=(
-                        func,
-                        args,
-                        False))
+                    _onSuccess, RPCReplay().onError, errbackArgs=(func, args, False)
+                )
                 return True
 
         if not isUUID(imageUUID):
@@ -1191,23 +1230,24 @@ class Imaging(object, metaclass=SingletonN):
             ret = False
         else:
             path = os.path.join(
-                self.config.imaging_api['base_folder'],
-                self.config.imaging_api['masters_folder'],
-                imageUUID)
+                self.config.imaging_api["base_folder"],
+                self.config.imaging_api["masters_folder"],
+                imageUUID,
+            )
             if os.path.exists(path):
                 try:
                     shutil.rmtree(path)
                     ret = True
                 except Exception as e:
                     self.logger.error(
-                        "Error while removing image with UUID %s: %s" %
-                        (imageUUID, e))
+                        "Error while removing image with UUID %s: %s" % (imageUUID, e)
+                    )
                     ret = False
 
             else:
                 self.logger.warn(
-                    "Can't delete unavailable image with UUID %s" %
-                    imageUUID)
+                    "Can't delete unavailable image with UUID %s" % imageUUID
+                )
                 ret = False
         return ret
 
@@ -1233,7 +1273,7 @@ class Imaging(object, metaclass=SingletonN):
             iso.prepare()
             iso.create()
         except Exception as e:
-            self.logger.error('Error while creating ISO image: %s' % e)
+            self.logger.error("Error while creating ISO image: %s" % e)
             ret = False
         return ret
 
@@ -1252,7 +1292,8 @@ class Imaging(object, metaclass=SingletonN):
             "ps ax | grep drbl-ocs | grep /usr/sbin/drbl-ocs | grep -v grep| grep -v stop",
             shell=True,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
+            stderr=subprocess.PIPE,
+        )
         output, err = s.communicate()
         returnprocess = False
         logging.getLogger()
@@ -1275,79 +1316,71 @@ class Imaging(object, metaclass=SingletonN):
         if not os.path.exists("/tmp/multicastdescription.txt"):
             self._listPartition(objprocess)
         result = {}
-        result['complete'] = False
-        pathfile = "/var/lib/pulse2/imaging/masters/%s" % objprocess['uuidmaster']
+        result["complete"] = False
+        pathfile = "/var/lib/pulse2/imaging/masters/%s" % objprocess["uuidmaster"]
         partition = self._listPart(pathfile)
-        result['sizeuser'] = {}
-        result['partitionlist'] = [
-            x.strip(' \t\n\r') for x in partition[0].split(' ')]
-        for x in result['partitionlist']:
-            result['sizeuser'][x] = self._sizeImgDevice(pathfile, x)
-        result['indexpartition'] = -1
-        result['partionname'] = ""
-        result['bytesend'] = int(0)
+        result["sizeuser"] = {}
+        result["partitionlist"] = [x.strip(" \t\n\r") for x in partition[0].split(" ")]
+        for x in result["partitionlist"]:
+            result["sizeuser"][x] = self._sizeImgDevice(pathfile, x)
+        result["indexpartition"] = -1
+        result["partionname"] = ""
+        result["bytesend"] = int(0)
         if os.path.exists("/tmp/udp-sender.log"):
             r = subprocess.Popen(
-                "cat /tmp/udp-sender.log | awk 'BEGIN{ aa=-1;bb =0;a=\"0\"; } /^[0-9]./{ e=a; a= $NF; } /Starting transfer/{aa+=1;} /Transfer complete/{bb+=1;} END{ee=sprintf(\"%d %s %d\",aa,a,bb);print ee;}'",
+                'cat /tmp/udp-sender.log | awk \'BEGIN{ aa=-1;bb =0;a="0"; } /^[0-9]./{ e=a; a= $NF; } /Starting transfer/{aa+=1;} /Transfer complete/{bb+=1;} END{ee=sprintf("%d %s %d",aa,a,bb);print ee;}\'',
                 shell=True,
-                stdout=subprocess.PIPE)
-            line = [x.strip(' \t\n\r') for x in r.stdout]
+                stdout=subprocess.PIPE,
+            )
+            line = [x.strip(" \t\n\r") for x in r.stdout]
             r.wait()
             r.stdout.close()
-            lineinformation = [x.strip(' \t\n\r') for x in line[0].split(
-                ' ') if x.strip(' \t\n\r') != ""]
+            lineinformation = [
+                x.strip(" \t\n\r")
+                for x in line[0].split(" ")
+                if x.strip(" \t\n\r") != ""
+            ]
             if lineinformation[0] != "-1" and len(lineinformation) >= 3:
-                result['indexpartition'] = int(lineinformation[0])
-                result['bytesend'] = int(lineinformation[1])
-                if len(result['partitionlist']) == int(lineinformation[2]):
-                    result['complete'] = True
-                if int(result['indexpartition']) != -1:
-                    result['partionname'] = result['partitionlist'][result['indexpartition']]
-        result['finish'] = os.path.exists(
-            "/tmp/processmulticast") and not self._checkProcessDrblClonezilla()
+                result["indexpartition"] = int(lineinformation[0])
+                result["bytesend"] = int(lineinformation[1])
+                if len(result["partitionlist"]) == int(lineinformation[2]):
+                    result["complete"] = True
+                if int(result["indexpartition"]) != -1:
+                    result["partionname"] = result["partitionlist"][
+                        result["indexpartition"]
+                    ]
+        result["finish"] = (
+            os.path.exists("/tmp/processmulticast")
+            and not self._checkProcessDrblClonezilla()
+        )
         if os.path.exists("/tmp/multicastdescription.txt"):
-            f = open("/tmp/multicastdescription.txt", 'r')
+            f = open("/tmp/multicastdescription.txt", "r")
             lignes = f.readlines()
             f.close()
-            result['informations'] = lignes
-        if os.path.exists("/tmp/multicast.sh") and result['finish']:
+            result["informations"] = lignes
+        if os.path.exists("/tmp/multicast.sh") and result["finish"]:
             os.remove("/tmp/multicast.sh")
             os.remove("/tmp/processmulticast")
         return json.dumps(result)
 
     def muticast_script_exist(self, objprocess):
         # controle script existance script multicast
-        return os.path.exists(objprocess['process'])
+        return os.path.exists(objprocess["process"])
 
     def SetMulticastMultiSessionParameters(self, parameters):
         try:
             Config = configparser.ConfigParser()
-            cfgfile = open("/tmp/MultiSessionParameters.ini", 'w')
-            Config.add_section('sessionparameters')
-            Config.set('sessionparameters', 'gid', parameters['gid'])
-            Config.set('sessionparameters', 'from', parameters['from'])
-            Config.set(
-                'sessionparameters',
-                'is_master',
-                parameters['is_master'])
-            Config.set(
-                'sessionparameters',
-                'uuidmaster',
-                parameters['uuidmaster'])
-            Config.set('sessionparameters', 'itemid', parameters['itemid'])
-            Config.set(
-                'sessionparameters',
-                'itemlabel',
-                parameters['itemlabel'])
-            Config.set(
-                'sessionparameters',
-                'target_uuid',
-                parameters['target_uuid'])
-            Config.set(
-                'sessionparameters',
-                'target_name',
-                parameters['target_name'])
-            Config.set('sessionparameters', 'location', parameters['location'])
+            cfgfile = open("/tmp/MultiSessionParameters.ini", "w")
+            Config.add_section("sessionparameters")
+            Config.set("sessionparameters", "gid", parameters["gid"])
+            Config.set("sessionparameters", "from", parameters["from"])
+            Config.set("sessionparameters", "is_master", parameters["is_master"])
+            Config.set("sessionparameters", "uuidmaster", parameters["uuidmaster"])
+            Config.set("sessionparameters", "itemid", parameters["itemid"])
+            Config.set("sessionparameters", "itemlabel", parameters["itemlabel"])
+            Config.set("sessionparameters", "target_uuid", parameters["target_uuid"])
+            Config.set("sessionparameters", "target_name", parameters["target_name"])
+            Config.set("sessionparameters", "location", parameters["location"])
             Config.write(cfgfile)
             cfgfile.close()
             return True
@@ -1359,21 +1392,15 @@ class Imaging(object, metaclass=SingletonN):
         try:
             Config = configparser.ConfigParser()
             Config.read("/tmp/MultiSessionParameters.ini")
-            parameters['gid'] = Config.get('sessionparameters', 'gid')
-            parameters['from'] = Config.get('sessionparameters', 'from')
-            parameters['is_master'] = Config.get(
-                'sessionparameters', 'is_master')
-            parameters['uuidmaster'] = Config.get(
-                'sessionparameters', 'uuidmaster')
-            parameters['itemid'] = Config.get('sessionparameters', 'itemid')
-            parameters['itemlabel'] = Config.get(
-                'sessionparameters', 'itemlabel')
-            parameters['target_uuid'] = Config.get(
-                'sessionparameters', 'target_uuid')
-            parameters['target_name'] = Config.get(
-                'sessionparameters', 'target_name')
-            parameters['location'] = Config.get(
-                'sessionparameters', 'location')
+            parameters["gid"] = Config.get("sessionparameters", "gid")
+            parameters["from"] = Config.get("sessionparameters", "from")
+            parameters["is_master"] = Config.get("sessionparameters", "is_master")
+            parameters["uuidmaster"] = Config.get("sessionparameters", "uuidmaster")
+            parameters["itemid"] = Config.get("sessionparameters", "itemid")
+            parameters["itemlabel"] = Config.get("sessionparameters", "itemlabel")
+            parameters["target_uuid"] = Config.get("sessionparameters", "target_uuid")
+            parameters["target_name"] = Config.get("sessionparameters", "target_name")
+            parameters["location"] = Config.get("sessionparameters", "location")
             return parameters
         except BaseException:
             return parameters
@@ -1394,11 +1421,14 @@ class Imaging(object, metaclass=SingletonN):
         if os.path.exists("/tmp/processmulticast"):
             os.remove("/tmp/processmulticast")
         if os.path.exists("/tmp/multicast.sh"):
-            f = open("/tmp/multicast.sh", 'r')
+            f = open("/tmp/multicast.sh", "r")
             lignes = f.readlines()
             f.close()
-            s = [x.split("=")[1].strip(' \t\n\r')
-                 for x in lignes if x.startswith('groupuuid')]
+            s = [
+                x.split("=")[1].strip(" \t\n\r")
+                for x in lignes
+                if x.startswith("groupuuid")
+            ]
             if len(s) == 0:
                 return -1
             os.remove("/tmp/multicast.sh")
@@ -1407,12 +1437,12 @@ class Imaging(object, metaclass=SingletonN):
             return -1
 
     def _sizeImgDevice(self, pathfiles, device):
-        cmd = "ls -al %s/%s* | awk 'BEGIN{ result = 0; } /ptcl-img/{ result = result + $5; } END{ee = sprintf(\"%%17.0f\",result); gsub(/ /,\"\",ee); print ee}'" % (
-            pathfiles, device)
-        r = subprocess.Popen(cmd,
-                             shell=True,
-                             stdout=subprocess.PIPE)
-        line = [x.strip(' \t\n\r') for x in r.stdout]
+        cmd = (
+            'ls -al %s/%s* | awk \'BEGIN{ result = 0; } /ptcl-img/{ result = result + $5; } END{ee = sprintf("%%17.0f",result); gsub(/ /,"",ee); print ee}\''
+            % (pathfiles, device)
+        )
+        r = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        line = [x.strip(" \t\n\r") for x in r.stdout]
         r.wait()
         r.stdout.close()
         return line[0]
@@ -1425,73 +1455,74 @@ class Imaging(object, metaclass=SingletonN):
         if os.path.exists("/tmp/multicastdescription.txt"):
             os.remove("/tmp/multicastdescription.txt")
         self._listPartition(objprocess)
-        start_process(objprocess['process'])
+        start_process(objprocess["process"])
         return self._checkProcessDrblClonezilla()
 
     def _listDisk(self, pathfiles):
         if os.path.isfile("%s/disk" % pathfiles):
-            f = open("%s/disk" % pathfiles, 'r')
+            f = open("%s/disk" % pathfiles, "r")
             lignes = f.readlines()
             f.close()
-            return [x.strip(' \t\n\r') for x in lignes]
+            return [x.strip(" \t\n\r") for x in lignes]
 
     def _sizeTransferReel(self, pathfiles):
         # return Space in use disk
         if os.path.isfile("%s/clonezilla-img" % pathfiles):
-            f = open("%s/clonezilla-img" % pathfiles, 'r')
+            f = open("%s/clonezilla-img" % pathfiles, "r")
             lignes = f.readlines()
             f.close()
-            return [x.strip(' \t\n\r')
-                    for x in lignes if x.startswith('Space in use:')]
+            return [x.strip(" \t\n\r") for x in lignes if x.startswith("Space in use:")]
 
     def _listPart(self, pathfiles):
         if os.path.isfile("%s/parts" % pathfiles):
-            f = open("%s/parts" % pathfiles, 'r')
+            f = open("%s/parts" % pathfiles, "r")
             lignes = f.readlines()
             f.close()
-            return [x.strip(' \t\n\r') for x in lignes]
+            return [x.strip(" \t\n\r") for x in lignes]
 
     def _listPartition(self, objprocess):
         patitiondisk = []
         # if not os.path.isfile("/tmp/multicastdescription.txt"):
-        fe = open("/tmp/multicastdescription.txt", 'w')
+        fe = open("/tmp/multicastdescription.txt", "w")
         # exceptions.KeyError:
         try:
-            fe.write("group %s\n" % (str(objprocess['gid'])))
-            fe.write("description %s\n" % (objprocess['itemlabel']))
-            objprocess['path'] = "/var/lib/pulse2/imaging/masters/%s" % (
-                objprocess['uuidmaster'])
+            fe.write("group %s\n" % (str(objprocess["gid"])))
+            fe.write("description %s\n" % (objprocess["itemlabel"]))
+            objprocess["path"] = "/var/lib/pulse2/imaging/masters/%s" % (
+                objprocess["uuidmaster"]
+            )
         except KeyError:
             pass
         try:
-            fe.write("group %s\n" % (str(objprocess['group'])))
-            fe.write("description %s\n" % (objprocess['description']))
+            fe.write("group %s\n" % (str(objprocess["group"])))
+            fe.write("description %s\n" % (objprocess["description"]))
         except KeyError:
             pass
-        fe.write("location %s\n" % (objprocess['location']))
+        fe.write("location %s\n" % (objprocess["location"]))
         bootable = "no"
-        disk = self._listDisk(objprocess['path'])
-        diskorder = ' '.join(disk)
+        disk = self._listDisk(objprocess["path"])
+        diskorder = " ".join(disk)
         fe.write("diskorder %s\n" % diskorder)
-        part = self._listPart(objprocess['path'])
-        order = ' '.join(part)
+        part = self._listPart(objprocess["path"])
+        order = " ".join(part)
         fe.write("partorder %s\n" % order)
         for diskel in disk:
-            if os.path.isfile("%s/%s-pt.sf" % (objprocess['path'], diskel)):
-                f = open("%s/%s-pt.sf" % (objprocess['path'], diskel), 'r')
+            if os.path.isfile("%s/%s-pt.sf" % (objprocess["path"], diskel)):
+                f = open("%s/%s-pt.sf" % (objprocess["path"], diskel), "r")
                 lignes = f.readlines()
                 f.close()
                 for t in lignes:
-                    if (t.startswith('/dev')):
+                    if t.startswith("/dev"):
                         datapart = {}
                         # traitement
-                        data = [x.strip('type=, \t\n\r')
-                                for x in t.split(" ") if x != ""]
-                        data1 = data[0].split('/')
+                        data = [
+                            x.strip("type=, \t\n\r") for x in t.split(" ") if x != ""
+                        ]
+                        data1 = data[0].split("/")
                         datadesc = {}
-                        datadesc["size"] = data[5].strip(', \t\n\r')
-                        datadesc["start"] = data[3].strip(', \t\n\r')
-                        datadesc["type"] = data[6].strip('type=, \t\n\r')
+                        datadesc["size"] = data[5].strip(", \t\n\r")
+                        datadesc["start"] = data[3].strip(", \t\n\r")
+                        datadesc["type"] = data[6].strip("type=, \t\n\r")
                         if len(data) >= 8:
                             datadesc["bootable"] = "yes"
                             bootable = "yes"
@@ -1501,42 +1532,45 @@ class Imaging(object, metaclass=SingletonN):
                         datapart[data1[2]] = datadesc
                         patitiondisk.append(datapart)
                         fe.write(
-                            "%s %s %s %s\n" %
-                            (data1[2],
-                             data[5].strip(', \t\n\r'),
-                                data[6].strip('type=, \t\n\r'),
-                                bootable))
+                            "%s %s %s %s\n"
+                            % (
+                                data1[2],
+                                data[5].strip(", \t\n\r"),
+                                data[6].strip("type=, \t\n\r"),
+                                bootable,
+                            )
+                        )
         fe.close()
         return patitiondisk
 
     def checkDeploymentUDPSender(self, objprocess):
         result = {}
-        result['data'] = ""
-        result['tranfert'] = False
+        result["data"] = ""
+        result["tranfert"] = False
         if os.path.isfile("/tmp/udp-sender.log"):
             s = subprocess.Popen(
                 "grep 'Starting transfer'  /tmp/udp-sender.log",
                 shell=True,
-                stdout=subprocess.PIPE)
-            result['tranfert'] = False
+                stdout=subprocess.PIPE,
+            )
+            result["tranfert"] = False
             for x in s.stdout:
-                result['tranfert'] = True
+                result["tranfert"] = True
                 break
             s.stdout.close()
             s.wait()
             # if result['tranfert'] == True:
-            #self.logger.debug("Starting transfer exist in the file")
+            # self.logger.debug("Starting transfer exist in the file")
             # else:
-            #self.logger.debug("Starting transfer no exist in the file")
+            # self.logger.debug("Starting transfer no exist in the file")
         return result
 
     def stop_process_multicast(self, objprocess):
         # stop execution process multicast
-        s = subprocess.Popen("/usr/sbin/drbl-ocs -h 127.0.0.1 stop",
-                             shell=True,
-                             stdout=subprocess.PIPE
-                             )
-        stop_process(objprocess['process'])
+        s = subprocess.Popen(
+            "/usr/sbin/drbl-ocs -h 127.0.0.1 stop", shell=True, stdout=subprocess.PIPE
+        )
+        stop_process(objprocess["process"])
         return self._checkProcessDrblClonezilla()
 
     def imagingServerConfigurationSet(self, conf):
@@ -1555,7 +1589,7 @@ class Imaging(object, metaclass=SingletonN):
             entry = script_file.pop()
             ImagingBootServiceItem(entry).writeShFile(script_file)
         except Exception as e:
-            self.logger.error('Error while writing sh file: %s' % e)
+            self.logger.error("Error while writing sh file: %s" % e)
             ret = False
 
         return ret
@@ -1566,7 +1600,7 @@ class Imaging(object, metaclass=SingletonN):
             entry = datas.pop()
             ImagingBootServiceItem(entry).unlinkShFile(datas)
         except Exception as e:
-            self.logger.error('Error while deleting sh file: %s' % e)
+            self.logger.error("Error while deleting sh file: %s" % e)
             ret = False
 
         return ret
@@ -1582,6 +1616,6 @@ class Imaging(object, metaclass=SingletonN):
         @rtype: int
         """
         client = self._getXMLRPCClient()
-        func = 'imaging.getClonezillaParamsForTarget'
+        func = "imaging.getClonezillaParamsForTarget"
         d = client.callRemote(func, computer_uuid)
         return d

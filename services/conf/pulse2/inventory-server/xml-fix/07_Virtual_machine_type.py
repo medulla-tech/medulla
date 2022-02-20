@@ -21,6 +21,7 @@
 
 def xml_fix(xml):
     import xml.etree.cElementTree as ET
+
     xml = ET.fromstring(xml)
     tree = ET.ElementTree(xml)
     root = tree.getroot()
@@ -29,54 +30,54 @@ def xml_fix(xml):
 
     # Let's try to figure out if it looks like being a KVM using Bochs emulated BIOS
     for subelem1 in root:
-        if subelem1.tag == 'CONTENT':
+        if subelem1.tag == "CONTENT":
             for subelem2 in subelem1:
-                if subelem2.tag == 'BIOS':
+                if subelem2.tag == "BIOS":
                     for subelem3 in subelem2:
-                        if subelem3.tag == 'BMANUFACTURER':
-                            if subelem3.text == 'Bochs':
+                        if subelem3.tag == "BMANUFACTURER":
+                            if subelem3.text == "Bochs":
                                 is_bochs += 1
-                        if subelem3.tag == 'BVERSION':
-                            if subelem3.text == 'Bochs':
+                        if subelem3.tag == "BVERSION":
+                            if subelem3.text == "Bochs":
                                 is_bochs += 1
-                        if subelem3.tag == 'SMANUFACTURER':
-                            if subelem3.text == 'Bochs':
+                        if subelem3.tag == "SMANUFACTURER":
+                            if subelem3.text == "Bochs":
                                 is_bochs += 1
-                        if subelem3.tag == 'SMODEL':
-                            if subelem3.text == 'Bochs':
+                        if subelem3.tag == "SMODEL":
+                            if subelem3.text == "Bochs":
                                 is_bochs += 1
 
     # Or Vbox
     for subelem1 in root:
-        if subelem1.tag == 'CONTENT':
+        if subelem1.tag == "CONTENT":
             for subelem2 in subelem1:
-                if subelem2.tag == 'BIOS':
+                if subelem2.tag == "BIOS":
                     for subelem3 in subelem2:
-                        if subelem3.tag == 'BMANUFACTURER':
-                            if subelem3.text == 'innotek GmbH':
+                        if subelem3.tag == "BMANUFACTURER":
+                            if subelem3.text == "innotek GmbH":
                                 is_vbox += 1
-                        if subelem3.tag == 'BVERSION':
-                            if subelem3.text == 'VirtualBox':
+                        if subelem3.tag == "BVERSION":
+                            if subelem3.text == "VirtualBox":
                                 is_vbox += 1
-                        if subelem3.tag == 'SMANUFACTURER':
-                            if subelem3.text == 'innotek GmbH':
+                        if subelem3.tag == "SMANUFACTURER":
+                            if subelem3.text == "innotek GmbH":
                                 is_vbox += 1
-                        if subelem3.tag == 'SMODEL':
-                            if subelem3.text == 'VirtualBox':
+                        if subelem3.tag == "SMODEL":
+                            if subelem3.text == "VirtualBox":
                                 is_vbox += 1
 
     # Fix chassis type
     if is_bochs == 4 or is_vbox == 4:
         for subelem1 in root:
-            if subelem1.tag == 'CONTENT':
+            if subelem1.tag == "CONTENT":
                 for subelem2 in subelem1:
-                    if subelem2.tag == 'HARDWARE':
+                    if subelem2.tag == "HARDWARE":
                         for subelem3 in subelem2:
-                            if subelem3.tag == 'CHASSIS_TYPE':
-                                subelem3.text = 'Virtual Machine'
-                    if subelem2.tag == 'BIOS':
+                            if subelem3.tag == "CHASSIS_TYPE":
+                                subelem3.text = "Virtual Machine"
+                    if subelem2.tag == "BIOS":
                         for subelem3 in subelem2:
-                            if subelem3.tag == 'TYPE':
-                                subelem3.text = 'Virtual Machine'
+                            if subelem3.tag == "TYPE":
+                                subelem3.text = "Virtual Machine"
 
     return ET.tostring(root)

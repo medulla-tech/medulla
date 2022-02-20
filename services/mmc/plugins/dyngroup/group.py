@@ -24,8 +24,8 @@ from pulse2.managers.group import ComputerGroupI
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 from mmc.plugins.dyngroup.qmanager import QueryManager
 
-class DyngroupGroup(ComputerGroupI):
 
+class DyngroupGroup(ComputerGroupI):
     def isdyn_group(self, ctx, gid):
         """
         Says if the group is a dynamic group or not (return a bool)
@@ -42,9 +42,11 @@ class DyngroupGroup(ComputerGroupI):
         """
         Reply to this group query and send the result
         """
-        return DyngroupDatabase().requestresult_group(ctx, gid, min, max, filter, QueryManager())
+        return DyngroupDatabase().requestresult_group(
+            ctx, gid, min, max, filter, QueryManager()
+        )
 
-    def result_group(self, ctx, gid, min, max, filter, idOnly = True):
+    def result_group(self, ctx, gid, min, max, filter, idOnly=True):
         """
         Send the group content
         """
@@ -60,10 +62,14 @@ class DyngroupGroup(ComputerGroupI):
         """
         Reply to this query
         """
-        return DyngroupDatabase().request(ctx, query, bool, min, max, filter, QueryManager())
+        return DyngroupDatabase().request(
+            ctx, query, bool, min, max, filter, QueryManager()
+        )
 
     def result_group_by_name(self, ctx, name, min, max, filter):
         """
         Send the group content, given a group name
         """
-        return DyngroupDatabase().result_group_by_name(ctx, name, min, max, filter, QueryManager())
+        return DyngroupDatabase().result_group_by_name(
+            ctx, name, min, max, filter, QueryManager()
+        )

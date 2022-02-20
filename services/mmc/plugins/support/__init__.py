@@ -22,7 +22,7 @@
 
 import logging
 
-from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 from mmc.support.mmctools import SingletonN
 from mmc.core.tasks import TaskManager
 
@@ -35,7 +35,9 @@ from mmc.plugins.support.jsonquery import Query
 APIVERSION = "0:1:0"
 NAME = "support"
 
-def getApiVersion(): return APIVERSION
+
+def getApiVersion():
+    return APIVERSION
 
 
 def activate():
@@ -48,7 +50,7 @@ def activate():
     DM.register_panel(RemoteSupportPanel("remotesupport"))
     DM.register_panel(license_panel)
 
-    #TaskManager().addTask("support.get_license_info",
+    # TaskManager().addTask("support.get_license_info",
     #                      (LicenseChecker().get_license_info,),
     #                      cron_expression=config.cron_search_for_updates
     #                      )
@@ -57,6 +59,7 @@ def activate():
 
     return True
 
+
 class LicenseChecker(object, metaclass=SingletonN):
     """
     Periodical checks to license server.
@@ -64,7 +67,6 @@ class LicenseChecker(object, metaclass=SingletonN):
     This checks are triggered by cron and returned and parsed data
     updates the license widget on dashboard.
     """
-
 
     def get_license_info(self, offline=False):
         """
@@ -77,17 +79,17 @@ class LicenseChecker(object, metaclass=SingletonN):
         @rtype: Deferred
         """
 
-        logging.getLogger().info("Plugin Support: checking the license info on %s/%s/pulse/?country=%s" % (
-            config.license_server_url,
-            config.install_uuid,
-            config.country)
+        logging.getLogger().info(
+            "Plugin Support: checking the license info on %s/%s/pulse/?country=%s"
+            % (config.license_server_url, config.install_uuid, config.country)
         )
 
-        query = Query(config.license_server_url,
-                      config.install_uuid,
-                      config.license_tmp_file,
-                      config.country
-                      )
+        query = Query(
+            config.license_server_url,
+            config.install_uuid,
+            config.license_tmp_file,
+            config.country,
+        )
 
         d = query.get(offline)
         d.addCallback(self.data_extract)
@@ -95,7 +97,6 @@ class LicenseChecker(object, metaclass=SingletonN):
         d.addCallback(self.update_panel)
 
         return d
-
 
     def data_extract(self, response):
         """
@@ -157,7 +158,10 @@ class LicenseChecker(object, metaclass=SingletonN):
                     break
 
         if not data:
-            logging.getLogger().warning("No license data for country '%s'; widget will not be updated." % config.country)
+            logging.getLogger().warning(
+                "No license data for country '%s'; widget will not be updated."
+                % config.country
+            )
             return None
 
         if not "data" in data:
@@ -168,15 +172,19 @@ class LicenseChecker(object, metaclass=SingletonN):
             if key in data["data"]:
                 data[key] = data["data"][key]
 
-        if 'links' in data['data']:
-            data['links'] = data['data']['links']
+        if "links" in data["data"]:
+            data["links"] = data["data"]["links"]
 
         if "phone" in data:
-            data["phone_uri"] = "tel:%s" % data["phone"].replace(".", "")\
-                                       .replace("-", "").replace(" ", "")
+            data["phone_uri"] = "tel:%s" % data["phone"].replace(".", "").replace(
+                "-", ""
+            ).replace(" ", "")
 
         if "email" in data:
-            data["email_uri"] = "mailto:%s?subject=%s" % (data["email"], config.install_uuid)
+            data["email_uri"] = "mailto:%s?subject=%s" % (
+                data["email"],
+                config.install_uuid,
+            )
 
         del data["data"]
 
@@ -204,12 +212,10 @@ class LicenseChecker(object, metaclass=SingletonN):
                 data[key] = value
         return data
 
-
     def eb_get_info(self, failure):
-        """ Common errorback for querying and parsing """
+        """Common errorback for querying and parsing"""
         logging.getLogger().warning("License check failed: %s" % failure)
         return False
-
 
     def update_panel(self, data):
         """
@@ -224,40 +230,50 @@ class LicenseChecker(object, metaclass=SingletonN):
         return True
 
 
-
 config = SupportConfig(NAME)
 builder = TunnelBuilder(config)
 
 license_panel = LicensePanel("license")
 
+
 class CollectorState(object):
-    """ Container to store states of Collector """
+    """Container to store states of Collector"""
+
     in_progress = False
     info_collected = False
 
+
 cd = CollectorState()
+
 
 def open():
     return builder.open()
 
+
 def close():
     return builder.close()
+
 
 def established():
     return builder.established
 
+
 def get_port():
     return builder.port
+
 
 def get_subscription_info():
     try:
         from mmc.plugins.pulse2.inventory import getSubscriptionInfo
+
         return getSubscriptionInfo()
     except ImportError:
         return False
 
+
 def get_license_info():
     return LicenseChecker().get_license_info()
+
 
 # --------------- Collector ---------------------
 def collect_info():
@@ -280,14 +296,16 @@ def collect_info():
         cd.in_progress = False
 
     # script path
-    script = [config.collector_script_path,
-              config.collector_archive_path,
-              ]
+    script = [
+        config.collector_script_path,
+        config.collector_archive_path,
+    ]
 
     cd.in_progress = True
 
     # script calling
     Forker(script, sender).open()
+
 
 def info_collected():
     """
@@ -297,6 +315,7 @@ def info_collected():
     @rtype: bool
     """
     return cd.info_collected
+
 
 def collector_in_progress():
     """
@@ -308,12 +327,14 @@ def collector_in_progress():
 
     return cd.in_progress
 
+
 def get_archive_link():
     """
     @return: path to archive link
     @rtype: str
     """
     return config.collector_archive_path
+
 
 def delete_archive():
     """
@@ -322,6 +343,7 @@ def delete_archive():
     Called usualy after download.
     """
     import os
+
     if os.path.exists(config.collector_archive_path):
         os.unlink(config.collector_archive_path)
     cd.info_collected = False

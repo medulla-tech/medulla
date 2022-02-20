@@ -24,6 +24,7 @@ from mmc.support.config import PluginConfig
 from configparser import NoOptionError
 import logging
 
+
 class GlpiConfig(PluginConfig):
     dbpoolrecycle = 60
     dbpoolsize = 5
@@ -43,8 +44,8 @@ class GlpiConfig(PluginConfig):
 
     # computer_list section
     # complete list: ['cn', 'description', 'os', 'type', 'user', 'inventorynumber', 'state', 'entity', 'location', 'model', 'manufacturer']
-    #summary = ['cn', 'description', 'os', 'type', 'user', 'owner', 'owner_firstname', 'owner_realname', 'entity', 'location']
-    summary = ['cn', 'description', 'os', 'type', 'user', 'entity']
+    # summary = ['cn', 'description', 'os', 'type', 'user', 'owner', 'owner_firstname', 'owner_realname', 'entity', 'location']
+    summary = ["cn", "description", "os", "type", "user", "entity"]
     ordered = False
 
     # antivirus section
@@ -52,9 +53,7 @@ class GlpiConfig(PluginConfig):
 
     # manufacturer section
     manufacturerWarrantyUrl = {}
-    webservices = {
-        'purge_machine': 0
-    }
+    webservices = {"purge_machine": 0}
 
     def readConf(self):
         self.dbdriver = self.get("main", "dbdriver")
@@ -83,12 +82,14 @@ class GlpiConfig(PluginConfig):
         try:
             self.glpi_computer_uri = self.get("main", "glpi_computer_uri")
         except:
-            self.glpi_computer_uri = "" # http://localhost/glpi/front/computer.form.php?id="
+            self.glpi_computer_uri = (
+                ""  # http://localhost/glpi/front/computer.form.php?id="
+            )
         try:
-            self.activeProfiles = self.get('main', 'active_profiles').split(' ')
+            self.activeProfiles = self.get("main", "active_profiles").split(" ")
         except NoOptionError:
             # put the GLPI default values for actives profiles
-            self.activeProfiles = ['Super-Admin', 'Admin', 'Supervisor', 'Technician']
+            self.activeProfiles = ["Super-Admin", "Admin", "Supervisor", "Technician"]
         for option in ["dbport", "dbpoolrecycle", "dbpoolsize"]:
             try:
                 self.__dict__[option] = self.getint("main", option)
@@ -104,46 +105,58 @@ class GlpiConfig(PluginConfig):
             self.red = self.getint("state", "red")
 
         if self.has_option("computer_list", "summary"):
-            self.summary = self.get("computer_list", "summary").split(' ')
+            self.summary = self.get("computer_list", "summary").split(" ")
 
         if self.has_option("antivirus", "av_false_positive"):
-            self.av_false_positive = self.get("antivirus", "av_false_positive").split('||')
+            self.av_false_positive = self.get("antivirus", "av_false_positive").split(
+                "||"
+            )
 
         if self.has_option("computer_list", "ordered"):
             self.ordered = self.getint("computer_list", "ordered")
 
         if self.has_option("webservices", "purge_machine"):
-            self.webservices['purge_machine'] = self.getint("webservices", "purge_machine")
+            self.webservices["purge_machine"] = self.getint(
+                "webservices", "purge_machine"
+            )
 
         if self.has_option("webservices", "glpi_base_url"):
-            self.webservices['glpi_base_url'] = self.get("webservices", "glpi_base_url")
+            self.webservices["glpi_base_url"] = self.get("webservices", "glpi_base_url")
 
         if self.has_option("webservices", "glpi_username"):
-            self.webservices['glpi_username'] = self.get("webservices", "glpi_username")
+            self.webservices["glpi_username"] = self.get("webservices", "glpi_username")
 
         if self.has_option("webservices", "glpi_password"):
-            self.webservices['glpi_password'] = self.get("webservices", "glpi_password")
+            self.webservices["glpi_password"] = self.get("webservices", "glpi_password")
 
         # associate manufacturer's names to their warranty url
         # manufacturer must have same key in 'manufacturer' and 'manufacturer_warranty_url' sections
         # for adding its warranty url
         self.manufacturerWarranty = {}
-        if 'manufacturers' in self.sections():
-            logging.getLogger().debug('[GLPI] Get manufacturers and their warranty infos')
-            for manufacturer_key in self.options('manufacturers'):
-                if self.has_section('manufacturer_' + manufacturer_key) and self.has_option('manufacturer_' + manufacturer_key, 'url'):
+        if "manufacturers" in self.sections():
+            logging.getLogger().debug(
+                "[GLPI] Get manufacturers and their warranty infos"
+            )
+            for manufacturer_key in self.options("manufacturers"):
+                if self.has_section(
+                    "manufacturer_" + manufacturer_key
+                ) and self.has_option("manufacturer_" + manufacturer_key, "url"):
                     try:
-                        type = self.get('manufacturer_' + manufacturer_key, 'type')
+                        type = self.get("manufacturer_" + manufacturer_key, "type")
                     except NoOptionError:
                         type = "get"
                     try:
-                        params = self.get('manufacturer_' + manufacturer_key, 'params')
+                        params = self.get("manufacturer_" + manufacturer_key, "params")
                     except NoOptionError:
                         params = ""
-                    self.manufacturerWarranty[manufacturer_key] = {'names': self.get('manufacturers', manufacturer_key).split('||'),
-                                                                   'type': type,
-                                                                   'url': self.get('manufacturer_' + manufacturer_key, 'url'),
-                                                                   'params': params}
+                    self.manufacturerWarranty[manufacturer_key] = {
+                        "names": self.get("manufacturers", manufacturer_key).split(
+                            "||"
+                        ),
+                        "type": type,
+                        "url": self.get("manufacturer_" + manufacturer_key, "url"),
+                        "params": params,
+                    }
             logging.getLogger().debug(self.manufacturerWarranty)
 
     def _parse_filter_on(self, value):
@@ -171,11 +184,10 @@ class GlpiConfig(PluginConfig):
             return None
 
 
-
 class GlpiQueryManagerConfig(PluginConfig):
     activate = False
 
     def readConf(self):
         PluginConfig.readConf(self)
-        if self.has_section('querymanager'):
+        if self.has_section("querymanager"):
             self.activate = self.getboolean("querymanager", "activate")

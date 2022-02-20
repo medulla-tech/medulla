@@ -48,7 +48,7 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
     #   each item beeing:
     #     "current_client_number" => int
     #     "max_client_number" => int
-    proxies = dict()    # internal structure
+    proxies = dict()  # internal structure
 
     # access semaphore
     # /!\: by CONVENTION, ONLY PUBLIC FUNCTIONS DO TAKE LOCK
@@ -68,50 +68,56 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
         pass
 
     def __create_proxy(self, uuid):
-        """ create proxy dict if it do not exists """
+        """create proxy dict if it do not exists"""
         if uuid not in self.proxies:
             self.proxies[uuid] = dict()
 
     def __delete_proxy(self, uuid):
-        """ delete proxy dict if it exists """
+        """delete proxy dict if it exists"""
         if uuid in self.proxies:
             del self.proxies[uuid]
 
     def __create_command(self, uuid, max_client_number, command_id):
-        """ create command sub-dict if it do not exists """
+        """create command sub-dict if it do not exists"""
         if command_id not in self.proxies[uuid]:
             self.proxies[uuid][command_id] = {
                 "max_client_number": max_client_number,
-                "current_client_number": 0
+                "current_client_number": 0,
             }
 
     def __delete_command(self, uuid, command_id):
-        """ delete command sub-dict if it exists """
+        """delete command sub-dict if it exists"""
         if uuid in self.proxies:
             if command_id in self.proxies[uuid]:
                 del self.proxies[uuid][command_id]
 
     def __get_free_proxies_for_command(self, command_id):
-        """ return a list of free proxy for a given command """
+        """return a list of free proxy for a given command"""
         ret = list()
         for uuid in self.proxies:
             if command_id in self.proxies[uuid]:
-                if self.proxies[uuid][command_id]["current_client_number"] < self.proxies[uuid][command_id]["max_client_number"]:
+                if (
+                    self.proxies[uuid][command_id]["current_client_number"]
+                    < self.proxies[uuid][command_id]["max_client_number"]
+                ):
                     ret.append(uuid)
         return ret
 
     def __increment_usage(self, uuid, command_id):
-        """ attempt to increment usage of a proxy for a given command """
+        """attempt to increment usage of a proxy for a given command"""
         if uuid in self.proxies:
             if command_id in self.proxies[uuid]:
-                if self.proxies[uuid][command_id]["current_client_number"] < self.proxies[uuid][command_id]["max_client_number"]:
+                if (
+                    self.proxies[uuid][command_id]["current_client_number"]
+                    < self.proxies[uuid][command_id]["max_client_number"]
+                ):
                     self.proxies[uuid][command_id]["current_client_number"] += 1
                     return True
                 else:
                     return False
 
     def __decrement_usage(self, uuid, command_id):
-        """ attempt to decrement usage of a proxy for a given command """
+        """attempt to decrement usage of a proxy for a given command"""
         if uuid in self.proxies:
             if command_id in self.proxies[uuid]:
                 self.proxies[uuid][command_id]["current_client_number"] -= 1
@@ -120,34 +126,34 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
                     self.proxies[uuid][command_id]["current_client_number"] = 0
 
     def create_proxy(self, uuid, max_client_number, command_id):
-        """ create a given command on a given proxy """
+        """create a given command on a given proxy"""
         self.__lock()
         self.__create_proxy(uuid)
         self.__create_command(uuid, max_client_number, command_id)
         self.__unlock()
 
     def delete_proxy(self, uuid, command_id):
-        """ delete a given command on a given proxy """
+        """delete a given command on a given proxy"""
         self.__lock()
         self.__delete_command(uuid, command_id)
         self.__delete_proxy(uuid)
         self.__unlock()
 
     def take(self, uuid, command_id):
-        """ create and take lock for a given command on a given proxy """
+        """create and take lock for a given command on a given proxy"""
         self.__lock()
         ret = self.__increment_usage(uuid, command_id)
         self.__unlock()
         return ret
 
     def untake(self, uuid, command_id):
-        """ release lock for a given command on a given proxy """
+        """release lock for a given command on a given proxy"""
         self.__lock()
         self.__decrement_usage(uuid, command_id)
         self.__unlock()
 
     def how_much_left_for(self, uuid, command_id):
-        """ create and take lock for a given command on a given proxy """
+        """create and take lock for a given command on a given proxy"""
         ret = 0  # safety mesure
         if uuid in self.proxies:
             if command_id in self.proxies[uuid]:
@@ -157,7 +163,7 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
         return ret
 
     def take_one(self, candidates_proxies, command_id):
-        """ return a candidate in uuids for given command """
+        """return a candidate in uuids for given command"""
         result = False
         self.__lock()
 
@@ -167,8 +173,7 @@ class LocalProxiesUsageTracking(pulse2.utils.Singleton):
                 free_proxies.append(i)
 
         if len(free_proxies) > 0:
-            final_proxy = free_proxies[random.randint(
-                0, len(free_proxies) - 1)]
+            final_proxy = free_proxies[random.randint(0, len(free_proxies) - 1)]
             result = self.__increment_usage(final_proxy, command_id)
         self.__unlock()
         if result:

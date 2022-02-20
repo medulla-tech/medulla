@@ -24,5 +24,6 @@ MMC inventory dasboard panel
 
 from mmc.plugins.dashboard.panel import Panel
 
+
 class InventoryPanel(Panel):
     pass

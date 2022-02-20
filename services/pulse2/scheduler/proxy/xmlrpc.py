@@ -35,7 +35,7 @@ from pulse2.utils import xmlrpcCleanup
 
 
 class ForwardingProxy(XMLRPC):
-    """ XMLRPC Scheduler Proxy """
+    """XMLRPC Scheduler Proxy"""
 
     def __init__(self, config):
         XMLRPC.__init__(self)
@@ -62,7 +62,7 @@ class ForwardingProxy(XMLRPC):
             result = xmlrpcCleanup(result.result)
         if not isinstance(result, xmlrpc.client.Fault):
             result = (result,)
-        self.logger.debug('xmlrpc: %s%s => %s' % (func, (args), (result)))
+        self.logger.debug("xmlrpc: %s%s => %s" % (func, (args), (result)))
 
         try:
             s = xmlrpc.client.dumps(result, methodresponse=1)
@@ -78,7 +78,7 @@ class ForwardingProxy(XMLRPC):
             self.logger.debug("XMLRPC Proxy : request finish: %s" % str(e))
 
     def render(self, request):
-        """ override method of xmlrpc python twisted framework """
+        """override method of xmlrpc python twisted framework"""
         try:
             args, func_name = xmlrpc.client.loads(request.content.read())
         except Exception as e:
@@ -95,21 +95,20 @@ class ForwardingProxy(XMLRPC):
         return NOT_DONE_YET
 
     def _auth_validate(self, request, func_name, args):
-        cleartext_token = '%s:%s' % (self.config.username,
-                                     self.config.password)
-        token = '%s:%s' % (request.getUser(),
-                           request.getPassword())
+        cleartext_token = "%s:%s" % (self.config.username, self.config.password)
+        token = "%s:%s" % (request.getUser(), request.getPassword())
         if token != cleartext_token:
-            self.logger.error(
-                "Invalid login / password for HTTP basic authentication")
+            self.logger.error("Invalid login / password for HTTP basic authentication")
             request.setResponseCode(http.UNAUTHORIZED)
             self._cbRender(
                 Fault(
                     http.UNAUTHORIZED,
-                    "Unauthorized: invalid credentials to connect to this Pulse 2 Scheduler Proxy, basic HTTP authentication is required"),
+                    "Unauthorized: invalid credentials to connect to this Pulse 2 Scheduler Proxy, basic HTTP authentication is required",
+                ),
                 request,
                 func_name,
-                args)
+                args,
+            )
             return False
         else:
             return True

@@ -35,7 +35,7 @@ from twisted.internet.error import ProcessDone
 
 
 class ForkingProtocol(ProcessProtocol):
-    """ Protocol to fork a process"""
+    """Protocol to fork a process"""
 
     def __init__(self, name, callback=None):
         """
@@ -51,10 +51,8 @@ class ForkingProtocol(ProcessProtocol):
         self.name = name
         self.callback = callback
 
-
     def connectionMade(self):
         self.logger.debug("%s: Opening of process started" % self.name)
-
 
     def outReceived(self, data):
         self.logger.debug("%s: process data received: %s" % (self.name, data))
@@ -67,15 +65,13 @@ class ForkingProtocol(ProcessProtocol):
 
     def processEnded(self, reason):
         err = reason.trap(ProcessDone)
-        if err==ProcessDone:
+        if err == ProcessDone:
             self.logger.debug("%s: process successfully ended" % self.name)
         else:
             self.logger.warn("%s: closing failed: %s" % (self.name, reason))
 
         if self.callback:
             self.callback(reason)
-
-
 
 
 class PIDControl(object):
@@ -99,8 +95,9 @@ class PIDControl(object):
 
         if self.established:
             if self.probe():
-                self.logger.info("SSH Tunnel: Found tunnel pid=%d" % self.daemon_proc.pid)
-
+                self.logger.info(
+                    "SSH Tunnel: Found tunnel pid=%d" % self.daemon_proc.pid
+                )
 
     def set_daemon_pid(self, args):
         """
@@ -114,12 +111,12 @@ class PIDControl(object):
         """
         # A little hack - because autossh in ps list has another path
         for i, a in enumerate(args):
-            if a=="/usr/bin/autossh":
+            if a == "/usr/bin/autossh":
                 args[i] = "/usr/lib/autossh/autossh"
                 break
 
         for p in psutil.process_iter():
-            if p.cmdline == args :
+            if p.cmdline == args:
                 self.daemon_proc = p
                 self.logger.info("SSH Tunnel: pid=%d" % p.pid)
                 self.write_pid_file()
@@ -127,9 +124,8 @@ class PIDControl(object):
         self.logger.warn("SSH Tunnel: Can't find the pid for: %s" % " ".join(args))
         return False
 
-
     def kill(self):
-        """ Kills the process. """
+        """Kills the process."""
         self.logger.info("SSH Tunnel: closing the ssh tunel")
         try:
             self.daemon_proc.kill()
@@ -137,7 +133,6 @@ class PIDControl(object):
             self.logger.warn("SSH Tunnel: close failed: %s" % str(e))
 
         self.remove_pid_file()
-
 
     def probe(self):
         """
@@ -176,32 +171,31 @@ class PIDControl(object):
 
         with open(self.pid_path, "r") as f:
             lines = f.readlines()
-            #if lines:
+            # if lines:
             if len(lines) > 0:
                 try:
                     pid = int(lines[0].strip())
                     return pid
                 except ValueError:
-                    self.logger.warn("SSH Tunnel: Unable to get pid from %s" % self.pid_path)
-
+                    self.logger.warn(
+                        "SSH Tunnel: Unable to get pid from %s" % self.pid_path
+                    )
 
     def write_pid_file(self):
-        """ Writes the PID into PID file."""
+        """Writes the PID into PID file."""
         with open(self.pid_path, "w") as f:
             line = "%s\n" % str(self.daemon_proc.pid)
             f.write(line)
 
     @property
     def established(self):
-        """ Returns True if the process already opened """
+        """Returns True if the process already opened"""
         return os.path.exists(self.pid_path)
 
-
     def remove_pid_file(self):
-        """ Removes the PID file """
+        """Removes the PID file"""
         if self.established:
             os.unlink(self.pid_path)
-
 
 
 class TunnelBuilder(object):
@@ -240,15 +234,16 @@ class TunnelBuilder(object):
             pid_date = self.pid_control.get_pid_date()
             delay = pid_date + self.config.session_timeout - time.time()
             if delay > 0:
-                self.logger.info("SSH Tunnel: Already established - session will be expired at: %d seconds" % int(delay))
+                self.logger.info(
+                    "SSH Tunnel: Already established - session will be expired at: %d seconds"
+                    % int(delay)
+                )
             else:
                 delay = 1
                 # !!! do not put delay = 0 !!!
                 self.logger.info("SSH Tunnel: Found tunnel expired")
 
             self._do_expire(delay)
-
-
 
     @property
     def args(self):
@@ -258,22 +253,24 @@ class TunnelBuilder(object):
         @return: ssh command
         @rtype: list
         """
-        return ["/usr/bin/autossh",
-                "-i", self.config.identify_file,
-                "-o",
-                "PasswordAuthentication=no",
-                "-o",
-                " CheckHostIP=no",
-                "-o",
-                "UserKnownHostsFile=/dev/null",
-                "-o",
-                "StrictHostKeyChecking=no",
-                "-R", "%d:127.0.0.1:22" % self.port,
-                self.config.url,
-                "-N",
-                "&"
-                ]
-
+        return [
+            "/usr/bin/autossh",
+            "-i",
+            self.config.identify_file,
+            "-o",
+            "PasswordAuthentication=no",
+            "-o",
+            " CheckHostIP=no",
+            "-o",
+            "UserKnownHostsFile=/dev/null",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-R",
+            "%d:127.0.0.1:22" % self.port,
+            self.config.url,
+            "-N",
+            "&",
+        ]
 
     def open(self):
         """
@@ -290,9 +287,10 @@ class TunnelBuilder(object):
             self.logger.info("SSH Tunnel: establishing...")
             return self._open()
         else:
-            self.logger.warn("process already opened! (pid=%d)" % self.pid_control.daemon_proc.pid)
+            self.logger.warn(
+                "process already opened! (pid=%d)" % self.pid_control.daemon_proc.pid
+            )
             return succeed(False)
-
 
     @inlineCallbacks
     def _open(self):
@@ -303,20 +301,18 @@ class TunnelBuilder(object):
         @rtype: Deferred
         """
         protocol = ForkingProtocol(TunnelBuilder.process_ended)
-        reactor.spawnProcess(protocol,
-                             self.args[0],
-                             self.args,
-                             usePTY=True)
+        reactor.spawnProcess(protocol, self.args[0], self.args, usePTY=True)
         try:
-            yield deferLater(reactor,
-                       self.config.check_pid_delay,
-                       self.pid_control.set_daemon_pid,
-                       self.args)
+            yield deferLater(
+                reactor,
+                self.config.check_pid_delay,
+                self.pid_control.set_daemon_pid,
+                self.args,
+            )
             yield self._do_expire()
 
         except Exception as e:
             self.logger.warn("SSH Tunnel: PID check failed: %s" % e)
-
 
     def _do_expire(self, delay=None):
         """
@@ -326,9 +322,10 @@ class TunnelBuilder(object):
         @type delay: int
         """
 
-        timeout_d = deferLater(reactor,
-                               delay or self.config.session_timeout,
-                               self.pid_control.kill)
+        timeout_d = deferLater(
+            reactor, delay or self.config.session_timeout, self.pid_control.kill
+        )
+
         @timeout_d.addCallback
         def cb_timeout(reason):
             self.logger.info("SSH Tunnel: timeout reached, session closed")
@@ -339,16 +336,13 @@ class TunnelBuilder(object):
 
         return True
 
-
-
-
     def close(self):
-        """ Kills the process """
+        """Kills the process"""
         return self.pid_control.kill()
 
     @property
     def established(self):
-        """ Returns True if the process already opened """
+        """Returns True if the process already opened"""
         return self.pid_control.established
 
     @staticmethod
@@ -357,7 +351,7 @@ class TunnelBuilder(object):
 
 
 class Forker(object):
-    """ Ordinary shell execution """
+    """Ordinary shell execution"""
 
     args = []
     callback = None
@@ -378,7 +372,6 @@ class Forker(object):
 
         self.callback = callback
 
-
     def open(self):
         """
         Creates a daemon ssh session.
@@ -387,7 +380,4 @@ class Forker(object):
         @rtype: Deferred
         """
         protocol = ForkingProtocol("Collector", self.callback)
-        reactor.spawnProcess(protocol,
-                             self.args[0],
-                             self.args,
-                             usePTY=True)
+        reactor.spawnProcess(protocol, self.args[0], self.args, usePTY=True)

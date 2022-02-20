@@ -24,6 +24,7 @@
 
 from pulse2agent._config import ConfigReader
 
+
 class Config(object, metaclass=ConfigReader):
     class main(object):
         serializer = "json"
@@ -42,24 +43,31 @@ class Config(object, metaclass=ConfigReader):
         host = "vpnhost"
         port = 443
         command = "/opt/vpnclient/cpncmd"
-        command_args = ["localhost", "/CLIENT", "/CMD:AccountConnect", "pulse2connection"]
+        command_args = [
+            "localhost",
+            "/CLIENT",
+            "/CMD:AccountConnect",
+            "pulse2connection",
+        ]
         startup_delay = 5
         common_connection_for_all = False
 
     class inventory(object):
         windows_reg_path = r"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"
-        windows_software_required = ["Mandriva OpenSSH Agent",
-                                     ]
-        debian_software_required = ["pulse2-agents-installer",
-                                    ]
-        debian_server_software_required = ["pulse2-agents-installer-nordp"
-                                           ]
-        redhat_software_required = ["pulse2-agents-installer",
-                                    ]
-        redhat_server_software_required = ["pulse2-agents-installer-nordp"
-                                           ]
-        osx_software_required = ["org.pulse2-agents-installer",
-                        ]
+        windows_software_required = [
+            "Mandriva OpenSSH Agent",
+        ]
+        debian_software_required = [
+            "pulse2-agents-installer",
+        ]
+        debian_server_software_required = ["pulse2-agents-installer-nordp"]
+        redhat_software_required = [
+            "pulse2-agents-installer",
+        ]
+        redhat_server_software_required = ["pulse2-agents-installer-nordp"]
+        osx_software_required = [
+            "org.pulse2-agents-installer",
+        ]
 
     class paths(object):
         package_tmp_dir_win = "C:\\Temp"
@@ -82,7 +90,7 @@ class Config(object, metaclass=ConfigReader):
         class_ = "handlers.TimedRotatingFileHandler"
         level = "INFO"
         formatter = "form01"
-        args = ("/var/log/pulse2-agent.log", 'midnight', 1, 7)
+        args = ("/var/log/pulse2-agent.log", "midnight", 1, 7)
 
     class formatter_form01(object):
         format = "%(asctime)s %(levelname)s %(message)s"

@@ -49,7 +49,7 @@ from twisted.internet.task import deferLater
 
 
 class SessionNotFound(Exception):
-    """ Similar to IndexError - session not found in container"""
+    """Similar to IndexError - session not found in container"""
 
     def __init__(self, uid):
         Exception.__init__(self)
@@ -119,10 +119,7 @@ class Sessions(object):
         self.content[uid] = (timestamp, deferred)
 
         # timeout declaration
-        expirator = deferLater(self.clock,
-                               self._timeout,
-                               self._expire,
-                               uid)
+        expirator = deferLater(self.clock, self._timeout, self._expire, uid)
 
         # when expirator is cancelled, a errorback is fired
         expirator.addErrback(self._eb_expirator)

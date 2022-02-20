@@ -29,7 +29,6 @@ import mmc.plugins.glpi.database
 import logging
 
 
-
 # ################# display sql literal from sqlalchemy ############################
 
 from sqlalchemy.engine.default import DefaultDialect
@@ -44,6 +43,7 @@ str_type = str if is_python3 else (str, unicode)
 
 class StringLiteral(String):
     """Teach SA how to literalize various things."""
+
     def literal_processor(self, dialect):
         super_processor = super(StringLiteral, self).literal_processor(dialect)
 
@@ -56,6 +56,7 @@ class StringLiteral(String):
             if isinstance(result, bytes):
                 result = result.decode(dialect.encoding)
             return result
+
         return process
 
 
@@ -73,31 +74,43 @@ class LiteralDialect(DefaultDialect):
 def literalquery(statement):
     """NOTE: This is entirely insecure. DO NOT execute the resulting strings."""
     import sqlalchemy.orm
+
     if isinstance(statement, sqlalchemy.orm.Query):
         statement = statement.statement
     return statement.compile(
         dialect=LiteralDialect(),
-        compile_kwargs={'literal_binds': True},
+        compile_kwargs={"literal_binds": True},
     ).string
 
+
 # ################# display sql literal from sqlalchemy ############################
+
 
 def __convert(loc):
     loc.name = mmc.plugins.glpi.database.Glpi().decode(loc.name)
     return loc
+
 
 def complete_ctx(ctx):
     """
     Set GLPI user locations and profile in current security context.
     """
     if not hasattr(ctx, "locations") or ctx.locations == None:
-        logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
-        ctx.locations = list(map(__convert, mmc.plugins.glpi.database.Glpi().getUserLocations(ctx.userid)))
+        logging.getLogger().debug(
+            "adding locations in context for user %s" % (ctx.userid)
+        )
+        ctx.locations = list(
+            map(
+                __convert, mmc.plugins.glpi.database.Glpi().getUserLocations(ctx.userid)
+            )
+        )
         if type(ctx.locations) == list:
-            if hasattr(ctx.locations[0], 'id'): # GLPI 0.8
+            if hasattr(ctx.locations[0], "id"):  # GLPI 0.8
                 ctx.locationsid = [e.id for e in ctx.locations]
-            elif hasattr(ctx.locations[0], 'ID'): # GLPI 0.7x
+            elif hasattr(ctx.locations[0], "ID"):  # GLPI 0.7x
                 ctx.locationsid = [e.ID for e in ctx.locations]
     if not hasattr(ctx, "profile"):
-        logging.getLogger().debug("adding profiles in context for user %s" % (ctx.userid))
+        logging.getLogger().debug(
+            "adding profiles in context for user %s" % (ctx.userid)
+        )
         ctx.profile = ComputerLocationManager().getUserProfile(ctx.userid)

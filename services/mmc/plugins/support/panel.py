@@ -25,20 +25,18 @@ class RemoteSupportPanel(Panel):
     pass
 
 
-
 class LicensePanel(Panel):
 
     data = None
 
     def data_handler(self, data):
         """
-                A reference method to actualize by JSON query.
+        A reference method to actualize by JSON query.
 
-                @param data: info from the license server
-                @type data: dict
-                """
+        @param data: info from the license server
+        @type data: dict
+        """
         self.data = data
-
 
     def serialize(self):
         return self.data

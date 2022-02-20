@@ -27,6 +27,7 @@ Dyngroup implementation of the profile manager interface
 from pulse2.managers.profile import ComputerProfileI
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 
+
 class DyngroupProfile(ComputerProfileI):
     def getProfileByNameImagingServer(self, name, is_uuid):
         return DyngroupDatabase().getProfileByNameImagingServer(name, is_uuid)

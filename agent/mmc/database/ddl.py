@@ -36,11 +36,11 @@ from mmc.site import prefix
 SCHEMA_MASK = "schema-xxx.sql"
 
 
-# This logger is created only for the case when this module
-# is called as standallone.
+# This logger is created only for the case when this module
+# is called as standallone.
 # (usualy is called by pulse2-setup with a passed logger)
 def myLogger():
-    """ Default logging instance """
+    """Default logging instance"""
     log = logging.getLogger("DDL")
     handler = logging.StreamHandler()
     log.addHandler(handler)
@@ -76,20 +76,15 @@ class DBEngine(object):
         DBEngine.myport = port or 3306
         DBEngine.mylog = log or myLogger()
         try:
-            DBEngine.conn = MySQLdb.connect( user=myuser,
-                                    passwd=mypasswd,
-                                    host=myhost,
-                                    port=DBEngine.myport,
-                                    db=mydb)
+            DBEngine.conn = MySQLdb.connect(
+                user=myuser, passwd=mypasswd, host=myhost, port=DBEngine.myport, db=mydb
+            )
         except Exception as exc:
             DBEngine.mylog.error("Can't connect to the database: %s" % str(exc))
             return None
-        instance = super(DBEngine, cls).__new__(cls, myuser,
-                                                     mypasswd,
-                                                     myhost,
-                                                     mydb,
-                                                     DBEngine.myport,
-                                                     DBEngine.mylog)
+        instance = super(DBEngine, cls).__new__(
+            cls, myuser, mypasswd, myhost, mydb, DBEngine.myport, DBEngine.mylog
+        )
         return instance
 
     def __init__(self, user, passwd, host, db, port=None, log=None):
@@ -117,9 +112,8 @@ class DBEngine(object):
         self.passwd = passwd
         self.db = db
         self.port = DBEngine.myport
-        self.conn=DBEngine.conn
+        self.conn = DBEngine.conn
         self.log = DBEngine.mylog
-
 
     def cursor(self):
         """
@@ -132,7 +126,7 @@ class DBEngine(object):
             self.log.error("Error while creating cursor: %s" % str(exc))
 
     def __del__(self):
-        """ Closing the session """
+        """Closing the session"""
         if self.conn:
             self.conn.close()
 
@@ -176,7 +170,7 @@ class DBScriptLaunchInterface:
         """
         process = Popen(self.cmd, stdout=PIPE, stdin=PIPE, stderr=PIPE, shell=True)
         try:
-            ret, err = process.communicate('source ' + filename)
+            ret, err = process.communicate("source " + filename)
             if err:
                 self.log.error("Error while execute script '%s': %s" % (filename, err))
                 return None
@@ -187,10 +181,10 @@ class DBScriptLaunchInterface:
 
 
 class DDLContentManager:
-    """ Class to manage DDL scripts content """
+    """Class to manage DDL scripts content"""
 
     # ommitting of checking the following databases :
-    blacklisted_databases = ("glpi")
+    blacklisted_databases = "glpi"
 
     def __init__(self, log=None):
         """
@@ -210,7 +204,7 @@ class DDLContentManager:
         @return: number of script in fix format xxx
         @rtype: str
         """
-        numbers = re.findall(r'\d{3}', '%s' % filename)
+        numbers = re.findall(r"\d{3}", "%s" % filename)
         if len(numbers) == 1:
             return numbers[0]
         else:
@@ -246,7 +240,7 @@ class DDLContentManager:
         @return: list generator of filenames
         @rtype: string
         """
-        sqldir = os.path.join(prefix, 'share', 'doc', 'mmc', 'contrib', module, 'sql')
+        sqldir = os.path.join(prefix, "share", "doc", "mmc", "contrib", module, "sql")
 
         if not os.path.exists(sqldir):
             raise Exception("SQL schemas not found for module %s" % module)
@@ -279,10 +273,9 @@ class DDLContentManager:
 
 
 class DBControl:
-    """ Main base to check and update the database """
+    """Main base to check and update the database"""
 
-    def __init__(self, user, passwd, host, port,
-                 module, log=None, use_same_db=False):
+    def __init__(self, user, passwd, host, port, module, log=None, use_same_db=False):
         """
         @param user: database user
         @type user: str
@@ -312,21 +305,13 @@ class DBControl:
             db = module
         else:
             db = "mysql"
-        self.db = DBEngine(user,
-                           passwd,
-                           host,
-                           db,
-                           port=port,
-                           log=log)
+        self.db = DBEngine(user, passwd, host, db, port=port, log=log)
 
         self.module = module
         self.ddl_manager = DDLContentManager(log)
-        self.script_manager = DBScriptLaunchInterface(user,
-                                                      passwd,
-                                                      host,
-                                                      port,
-                                                      module,
-                                                      log)
+        self.script_manager = DBScriptLaunchInterface(
+            user, passwd, host, port, module, log
+        )
 
     @property
     def db_exists(self):
@@ -380,7 +365,7 @@ class DBControl:
         return False
 
     def _db_create(self):
-        """ Creating the database """
+        """Creating the database"""
         statement = "CREATE DATABASE `%s`;" % self.module
         c = self.db.cursor()
         c.execute(statement)
@@ -410,7 +395,7 @@ class DBControl:
                     yield script
 
     def process(self):
-        """ Processing all the actions """
+        """Processing all the actions"""
         version_to_install = self.ddl_manager.get_version(self.module)
         if not self.db_exists:
             self._db_create()
@@ -423,20 +408,29 @@ class DBControl:
             return True
 
         elif version_in_db < version_to_install:
-            self.log.info("'%s' database updated from version %d to %d" %
-                          (self.module, version_in_db, version_to_install))
-            scripts = self._get_scripts_to_install(version_in_db,
-                                                   version_to_install)
+            self.log.info(
+                "'%s' database updated from version %d to %d"
+                % (self.module, version_in_db, version_to_install)
+            )
+            scripts = self._get_scripts_to_install(version_in_db, version_to_install)
             for script in scripts:
                 if self.script_manager.execute(script) is None:
-                    if self.module == 'dyngroup':
-                        self.log.warn('Dyngroup known issue: Maybe your SQL engine is MyISAM, you can check with: SHOW TABLE STATUS')
-                        self.log.warn('Here is SQL request who will help you to convert from MyISAM to InnoBD engine:')
-                        self.log.warn('SELECT CONCAT("ALTER TABLE ",table_schema,".",table_name," ENGINE=InnoDB;") FROM information_schema.tables WHERE table_schema="dyngroup";')
+                    if self.module == "dyngroup":
+                        self.log.warn(
+                            "Dyngroup known issue: Maybe your SQL engine is MyISAM, you can check with: SHOW TABLE STATUS"
+                        )
+                        self.log.warn(
+                            "Here is SQL request who will help you to convert from MyISAM to InnoBD engine:"
+                        )
+                        self.log.warn(
+                            'SELECT CONCAT("ALTER TABLE ",table_schema,".",table_name," ENGINE=InnoDB;") FROM information_schema.tables WHERE table_schema="dyngroup";'
+                        )
                     return False
             return True
         else:
             self.log.error("Database '%s' version conflict" % self.module)
-            self.log.error("Installed version is %d, but you are trying to install the version %d." %
-                           (version_in_db, version_to_install))
+            self.log.error(
+                "Installed version is %d, but you are trying to install the version %d."
+                % (version_in_db, version_to_install)
+            )
             return False

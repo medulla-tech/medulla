@@ -29,19 +29,20 @@ from pulse2.scheduler.queries import machine_has_commands, verify_target
 
 
 def get_dlp_method(phase):
-    methods = {"wol": "pull_completed_wol",
-               "upload": "pull_completed_pull",
-               "execute": "pull_completed_exec",
-               "delete": "pull_completed_delete",
-               "inventory": "pull_completed_inventory",
-               "reboot": "pull_completed_reboot",
-               "halt": "pull_completed_halt",
-               }
+    methods = {
+        "wol": "pull_completed_wol",
+        "upload": "pull_completed_pull",
+        "execute": "pull_completed_exec",
+        "delete": "pull_completed_delete",
+        "inventory": "pull_completed_inventory",
+        "reboot": "pull_completed_reboot",
+        "halt": "pull_completed_halt",
+    }
     return methods[phase]
 
 
 class DownloadQuery:
-    """ Provides the remote queries from a DLP to the msc database """
+    """Provides the remote queries from a DLP to the msc database"""
 
     def __init__(self):
         self.logger = logging.getLogger()
@@ -62,20 +63,22 @@ class DownloadQuery:
         """
         cont = []
         for rec in get_available_commands(self.config.name, uuid):
-            (coh_id,
-             target_mirrors,
-             start_file,
-             files,
-             parameters,
-             creation_date,
-             start_date,
-             end_date,
-             attempts_left,
-             phases,
-             todo,
-             package_id) = rec
+            (
+                coh_id,
+                target_mirrors,
+                start_file,
+                files,
+                parameters,
+                creation_date,
+                start_date,
+                end_date,
+                attempts_left,
+                phases,
+                todo,
+                package_id,
+            ) = rec
 
-            urls = target_mirrors.split('||')
+            urls = target_mirrors.split("||")
             if len(files.strip()) > 0:
                 files = files.split("\n")
                 for index, file in enumerate(files):
@@ -84,20 +87,23 @@ class DownloadQuery:
                 files = []
                 package_id = False
 
-            cont.append({"id": coh_id,
-                         "created": int(creation_date),
-                         "start_date": int(start_date),
-                         "end_date": int(end_date),
-                         "max_failures": attempts_left,
-                         "steps": phases,
-                         "todo": todo,
-                         "params": parameters,
-                         "start_file": start_file,
-                         "non_fatal_steps": self.config.non_fatal_steps,
-                         "package_uuid": package_id,
-                         "urls": urls,
-                         "files": files,
-                         })
+            cont.append(
+                {
+                    "id": coh_id,
+                    "created": int(creation_date),
+                    "start_date": int(start_date),
+                    "end_date": int(end_date),
+                    "max_failures": attempts_left,
+                    "steps": phases,
+                    "todo": todo,
+                    "params": parameters,
+                    "start_file": start_file,
+                    "non_fatal_steps": self.config.non_fatal_steps,
+                    "package_uuid": package_id,
+                    "urls": urls,
+                    "files": files,
+                }
+            )
         return cont
 
     def machine_has_commands(self, uuid):
@@ -144,8 +150,9 @@ class DownloadQuery:
 
     def _eb_pull_target_awake(self, failure, hostname):
         self.logger.warn(
-            "An error occurred when detect the UUID of %s: %s" %
-            (hostname, str(failure)))
+            "An error occurred when detect the UUID of %s: %s"
+            % (hostname, str(failure))
+        )
         return False
 
     def verify_target(self, id, hostname, mac):

@@ -167,6 +167,7 @@ class DelayedCall:
 
     Store the function result in self.result
     """
+
     call = None
     running = False
     delay = None
@@ -187,6 +188,7 @@ class DelayedCall:
 
     def __call__(self):
         logger.debug("Running task %s" % self.f)
+
         def cb(result):
             d, self.deferred = self.deferred, None
             self.result = result
@@ -203,10 +205,8 @@ class DelayedCall:
         d.addErrback(eb)
 
     def stop(self):
-        """Stop delayed function.
-        """
-        assert self.running, ("Tried to stop a DelayedCall that was "
-                              "not running.")
+        """Stop delayed function."""
+        assert self.running, "Tried to stop a DelayedCall that was " "not running."
         self.running = False
         if self.call is not None:
             self.call.cancel()
@@ -216,9 +216,9 @@ class DelayedCall:
             d.callback(self)
 
     def _reschedule(self):
-        """Reschedule a the call with the same delay
-        """
+        """Reschedule a the call with the same delay"""
         return self.start(self.delay)
+
 
 # ScheduledCall taken from http://code.google.com/p/twistedcronservice/
 class ScheduledCall:
@@ -254,7 +254,6 @@ class ScheduledCall:
         self.kw = kw
         self.clock = reactor
 
-
     def start(self, schedule):
         """Start running function based on the provided schedule.
 
@@ -263,8 +262,7 @@ class ScheduledCall:
         invoked when the function raises an exception or returned a
         deferred that has its errback invoked.
         """
-        assert not self.running, ("Tried to start an already running "
-                                  "Scheduled.")
+        assert not self.running, "Tried to start an already running " "Scheduled."
 
         self.schedule = schedule
         self.running = True
@@ -277,10 +275,8 @@ class ScheduledCall:
         return d
 
     def stop(self):
-        """Stop running function.
-        """
-        assert self.running, ("Tried to stop a ScheduledCall that was "
-                              "not running.")
+        """Stop running function."""
+        assert self.running, "Tried to stop a ScheduledCall that was " "not running."
         self.running = False
         if self.call is not None:
             self.call.cancel()
@@ -290,6 +286,7 @@ class ScheduledCall:
 
     def __call__(self):
         logger.debug("Running task %s" % self.f)
+
         def cb(result):
             if self.running:
                 self._reschedule()
@@ -308,7 +305,6 @@ class ScheduledCall:
         d.addCallback(cb)
         d.addErrback(eb)
 
-
     def _reschedule(self):
         """
         Schedule the next iteration of this scheduled call.
@@ -318,18 +314,20 @@ class ScheduledCall:
             self._lastTime = self.clock.seconds() + delay
             self.call = self.clock.callLater(delay, self)
 
-
     def __repr__(self):
-        if hasattr(self.f, 'func_name'):
+        if hasattr(self.f, "func_name"):
             func = self.f.__name__
-            if hasattr(self.f, 'im_class'):
-                func = self.f.__self__.__class__.__name__ + '.' + func
+            if hasattr(self.f, "im_class"):
+                func = self.f.__self__.__class__.__name__ + "." + func
         else:
             func = reflect.safe_repr(self.f)
 
-        return 'ScheduledCall<%s>(%s, *%s, **%s)' % (
-            self.schedule, func, reflect.safe_repr(self.a),
-            reflect.safe_repr(self.kw))
+        return "ScheduledCall<%s>(%s, *%s, **%s)" % (
+            self.schedule,
+            func,
+            reflect.safe_repr(self.a),
+            reflect.safe_repr(self.kw),
+        )
 
 
 if __name__ == "__main__":
@@ -355,7 +353,9 @@ if __name__ == "__main__":
         print("End!")
 
     print(datetime.now())
-    TaskManager().addTask("my-task", [hello, [0], {"who": "world"}], interval=2).addErrback(err)
+    TaskManager().addTask(
+        "my-task", [hello, [0], {"who": "world"}], interval=2
+    ).addErrback(err)
     TaskManager().addTask("my-task2", [hello, [2]], delay=4).addCallback(finish_delayed)
 
     reactor.run()

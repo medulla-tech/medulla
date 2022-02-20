@@ -27,7 +27,7 @@ from configparser import RawConfigParser
 
 
 class ConfigError(Exception):
-    """ A base frame for related exceptions """
+    """A base frame for related exceptions"""
 
     def __init__(self, name):
         """
@@ -45,7 +45,7 @@ class InvalidSection(ConfigError):
 
 
 class DefaultsNotFound(ConfigError):
-    """ Raised when section declared in config file not found in defaults"""
+    """Raised when section declared in config file not found in defaults"""
 
     def __repr__(self):
         return "Section <%s> not found in defaults" % self.name
@@ -53,7 +53,6 @@ class DefaultsNotFound(ConfigError):
 
 class ExtendedConfigParser(RawConfigParser):
     """Extended for processing list options having heterogenuous content"""
-
 
     def getlist(self, section, option):
         """
@@ -90,7 +89,7 @@ class ExtendedConfigParser(RawConfigParser):
             try:
                 float_value = float(element)
             except ValueError:
-                 # float conversion failed - element typed as str
+                # float conversion failed - element typed as str
                 ret.append(element)
                 continue
             try:
@@ -111,7 +110,6 @@ class ExtendedConfigParser(RawConfigParser):
                 ret.append(float_value)
 
         return ret
-
 
 
 class ConfigReader(type):
@@ -163,13 +161,13 @@ class ConfigReader(type):
         @param attrs: dictionnary of attributtes
         @type attrs: dict
         """
-        att_dict = dict((k, v) for (k, v) in list(cls.__dict__.items())
-                if not k.startswith("__"))
+        att_dict = dict(
+            (k, v) for (k, v) in list(cls.__dict__.items()) if not k.startswith("__")
+        )
 
         attrs.update(att_dict)
 
         return type.__new__(cls, name, bases, attrs)
-
 
     def read(self, filename):
         """
@@ -195,7 +193,6 @@ class ConfigReader(type):
             else:
                 raise DefaultsNotFound(section_name)
 
-
     @classmethod
     def options(cls, section):
         """
@@ -212,7 +209,6 @@ class ConfigReader(type):
 
                 yield name, value
 
-
     @classmethod
     def cast_relations(cls, parser):
         """
@@ -224,16 +220,15 @@ class ConfigReader(type):
         @return: datatype bases and related converting method
         @rtype: generator
         """
-        for base, method in [(bool, parser.getboolean),
-                             (int, parser.getint),
-                             (float, parser.getfloat),
-                             (str, parser.get),
-                             (str, parser.get),
-                             (list, parser.getlist),
-                             ]:
+        for base, method in [
+            (bool, parser.getboolean),
+            (int, parser.getint),
+            (float, parser.getfloat),
+            (str, parser.get),
+            (str, parser.get),
+            (list, parser.getlist),
+        ]:
             yield base, method
-
-
 
     def _update_options(self, config_file, section):
         """

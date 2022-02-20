@@ -65,85 +65,71 @@ class SchedulerGateway(UnixProtocol):
         @d.addCallback
         def cb(reslut):
             return False
+
         d.callback(True)
         return d
 
     def ping_client(self, uuid, fqdn, shortname, ips, macs, netmasks):
-        client = chooseClientIP({
-            'uuid': uuid,
-            'fqdn': fqdn,
-            'shortname': shortname,
-            'ips': ips,
-            'macs': macs,
-            'netmasks': netmasks
-        })
+        client = chooseClientIP(
+            {
+                "uuid": uuid,
+                "fqdn": fqdn,
+                "shortname": shortname,
+                "ips": ips,
+                "macs": macs,
+                "netmasks": netmasks,
+            }
+        )
         if client:
             return MscDispatcher().launchers_provider.ping_client(client)
         else:
             return self._nok()
 
     def probe_client(self, uuid, fqdn, shortname, ips, macs, netmasks):
-        client = chooseClientIP({
-            'uuid': uuid,
-            'fqdn': fqdn,
-            'shortname': shortname,
-            'ips': ips,
-            'macs': macs,
-            'netmasks': netmasks
-        })
+        client = chooseClientIP(
+            {
+                "uuid": uuid,
+                "fqdn": fqdn,
+                "shortname": shortname,
+                "ips": ips,
+                "macs": macs,
+                "netmasks": netmasks,
+            }
+        )
 
         if client:
             return MscDispatcher().launchers_provider.probe_client(client)
         else:
             return self._nok()
 
-    def ping_and_probe_client(
-            self,
-            uuid,
-            fqdn,
-            shortname,
-            ips,
-            macs,
-            netmasks):
-        client = chooseClientIP({
-            'uuid': uuid,
-            'fqdn': fqdn,
-            'shortname': shortname,
-            'ips': ips,
-            'macs': macs,
-            'netmasks': netmasks
-        })
+    def ping_and_probe_client(self, uuid, fqdn, shortname, ips, macs, netmasks):
+        client = chooseClientIP(
+            {
+                "uuid": uuid,
+                "fqdn": fqdn,
+                "shortname": shortname,
+                "ips": ips,
+                "macs": macs,
+                "netmasks": netmasks,
+            }
+        )
 
         if client:
             return MscDispatcher().launchers_provider.ping_and_probe_client(client)
         else:
             return self._nok()
 
-    def download_file(
-            self,
-            uuid,
-            fqdn,
-            shortname,
-            ips,
-            macs,
-            netmasks,
-            path,
-            bwlimit):
+    def download_file(self, uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit):
         return MscDispatcher().launchers_provider.download_file(
-            uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit)
+            uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit
+        )
 
     def tcp_sproxy(
-            self,
-            uuid,
-            fqdn,
-            shortname,
-            ips,
-            macs,
-            netmasks,
-            requestor_ip,
-            requested_port):
+        self, uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port
+    ):
         return MscDispatcher().launchers_provider.establish_proxy(
-            uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port)
+            uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port
+        )
 
     def start_all_commands(self):
         return MscDispatcher().start_commands()
@@ -171,97 +157,53 @@ class SchedulerGateway(UnixProtocol):
         logging.getLogger().info("Launcher %s tells us it is alive" % launcher)
         return True
 
-    def completed_quickaction(
-            self,
-            launcher,
-            xxx_todo_changeme,
-            id,
-            from_dlp=False):
+    def completed_quickaction(self, launcher, xxx_todo_changeme, id, from_dlp=False):
         (exitcode, stdout, stderr) = xxx_todo_changeme
-        return MscDispatcher().run_proxymethod(launcher,
-                                               id,
-                                               "completed_quickaction",
-                                               (exitcode, stdout, stderr),
-                                               from_dlp
-                                               )
+        return MscDispatcher().run_proxymethod(
+            launcher, id, "completed_quickaction", (exitcode, stdout, stderr), from_dlp
+        )
 
     def completed_push(self, launcher, xxx_todo_changeme1, id, from_dlp=False):
         (exitcode, stdout, stderr) = xxx_todo_changeme1
-        return MscDispatcher().run_proxymethod(launcher,
-                                               id,
-                                               "completed_push",
-                                               (exitcode, stdout, stderr),
-                                               from_dlp
-                                               )
+        return MscDispatcher().run_proxymethod(
+            launcher, id, "completed_push", (exitcode, stdout, stderr), from_dlp
+        )
 
     def completed_pull(self, launcher, xxx_todo_changeme2, id, from_dlp=False):
         (exitcode, stdout, stderr) = xxx_todo_changeme2
-        return MscDispatcher().run_proxymethod(launcher,
-                                               id,
-                                               "completed_pull",
-                                               (exitcode, stdout, stderr),
-                                               from_dlp
-                                               )
+        return MscDispatcher().run_proxymethod(
+            launcher, id, "completed_pull", (exitcode, stdout, stderr), from_dlp
+        )
 
     def completed_exec(self, launcher, xxx_todo_changeme3, id, from_dlp=False):
         (exitcode, stdout, stderr) = xxx_todo_changeme3
-        return MscDispatcher().run_proxymethod(launcher,
-                                               id,
-                                               "completed_exec",
-                                               (exitcode, stdout, stderr),
-                                               from_dlp
-                                               )
+        return MscDispatcher().run_proxymethod(
+            launcher, id, "completed_exec", (exitcode, stdout, stderr), from_dlp
+        )
 
-    def completed_delete(
-            self,
-            launcher,
-            xxx_todo_changeme4,
-            id,
-            from_dlp=False):
+    def completed_delete(self, launcher, xxx_todo_changeme4, id, from_dlp=False):
         (exitcode, stdout, stderr) = xxx_todo_changeme4
-        return MscDispatcher().run_proxymethod(launcher,
-                                               id,
-                                               "completed_delete",
-                                               (exitcode, stdout, stderr),
-                                               from_dlp
-                                               )
+        return MscDispatcher().run_proxymethod(
+            launcher, id, "completed_delete", (exitcode, stdout, stderr), from_dlp
+        )
 
-    def completed_inventory(
-            self,
-            launcher,
-            xxx_todo_changeme5,
-            id,
-            from_dlp=False):
+    def completed_inventory(self, launcher, xxx_todo_changeme5, id, from_dlp=False):
         (exitcode, stdout, stderr) = xxx_todo_changeme5
-        return MscDispatcher().run_proxymethod(launcher,
-                                               id,
-                                               "completed_inventory",
-                                               (exitcode, stdout, stderr),
-                                               from_dlp
-                                               )
+        return MscDispatcher().run_proxymethod(
+            launcher, id, "completed_inventory", (exitcode, stdout, stderr), from_dlp
+        )
 
-    def completed_reboot(
-            self,
-            launcher,
-            xxx_todo_changeme6,
-            id,
-            from_dlp=False):
+    def completed_reboot(self, launcher, xxx_todo_changeme6, id, from_dlp=False):
         (exitcode, stdout, stderr) = xxx_todo_changeme6
-        return MscDispatcher().run_proxymethod(launcher,
-                                               id,
-                                               "completed_reboot",
-                                               (exitcode, stdout, stderr),
-                                               from_dlp
-                                               )
+        return MscDispatcher().run_proxymethod(
+            launcher, id, "completed_reboot", (exitcode, stdout, stderr), from_dlp
+        )
 
     def completed_halt(self, launcher, xxx_todo_changeme7, id, from_dlp=False):
         (exitcode, stdout, stderr) = xxx_todo_changeme7
-        return MscDispatcher().run_proxymethod(launcher,
-                                               id,
-                                               "completed_halt",
-                                               (exitcode, stdout, stderr),
-                                               from_dlp
-                                               )
+        return MscDispatcher().run_proxymethod(
+            launcher, id, "completed_halt", (exitcode, stdout, stderr), from_dlp
+        )
 
     def get_health(self):
         return getHealth()
@@ -287,8 +229,11 @@ class SchedulerGateway(UnixProtocol):
             logging.getLogger().warn("Method %s not declared" % phase)
             return False
         else:
-            return xmlrpcCleanup(MscDispatcher().run_proxymethod(
-                "dlp", id, method, (exitcode, stdout, stderr), True))
+            return xmlrpcCleanup(
+                MscDispatcher().run_proxymethod(
+                    "dlp", id, method, (exitcode, stdout, stderr), True
+                )
+            )
 
     def verify_target(self, id, hostname, mac):
         """

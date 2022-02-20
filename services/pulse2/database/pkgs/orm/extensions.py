@@ -24,7 +24,6 @@ from sqlalchemy.orm import create_session
 
 
 class Extensions(object):
-
     def getId(self):
         if self.id is not None:
             return self.id
@@ -93,15 +92,15 @@ class Extensions(object):
 
     def to_array(self):
         return {
-            'id': self.getId(),
-            'rule_order': self.getRule_order(),
-            'rule_name': self.getRule_name(),
-            'name': self.getName(),
-            'extension': self.getExtension(),
-            'magic_command': self.getMagic_command(),
-            'bang': self.getBang(),
-            'file': self.getFile(),
-            'strings': self.getStrings(),
-            'proposition': self.getProposition(),
-            'description': self.getDescription()
+            "id": self.getId(),
+            "rule_order": self.getRule_order(),
+            "rule_name": self.getRule_name(),
+            "name": self.getName(),
+            "extension": self.getExtension(),
+            "magic_command": self.getMagic_command(),
+            "bang": self.getBang(),
+            "file": self.getFile(),
+            "strings": self.getStrings(),
+            "proposition": self.getProposition(),
+            "description": self.getDescription(),
         }

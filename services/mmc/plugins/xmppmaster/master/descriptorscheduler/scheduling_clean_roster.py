@@ -30,23 +30,38 @@ import logging
 import traceback
 from utils import simplecommand
 
-plugin = {"VERSION": "1.0", "NAME": "scheduling_clean_roster", "TYPE": "all", "SCHEDULED": True}
+plugin = {
+    "VERSION": "1.0",
+    "NAME": "scheduling_clean_roster",
+    "TYPE": "all",
+    "SCHEDULED": True,
+}
 
 SCHEDULE = {"schedule": "5 0 * * *", "nb": -1}
+
 
 def schedule_main(objectxmpp):
     logging.getLogger().debug("==============Plugin scheduled==============")
     logging.getLogger().debug(plugin)
     logging.getLogger().debug("============================================")
     try:
-        result = simplecommand("ejabberdctl process_rosteritems delete none:to none master@pulse any")
+        result = simplecommand(
+            "ejabberdctl process_rosteritems delete none:to none master@pulse any"
+        )
 
-        logging.getLogger().debug("cmd = ejabberdctl process_rosteritems delete none:to none master@pulse any")
-        logging.getLogger().debug("code return command = %s" % result['code'])
-        logging.getLogger().debug("code return command = %s" % result['result'][0])
+        logging.getLogger().debug(
+            "cmd = ejabberdctl process_rosteritems delete none:to none master@pulse any"
+        )
+        logging.getLogger().debug("code return command = %s" % result["code"])
+        logging.getLogger().debug("code return command = %s" % result["result"][0])
 
         logging.getLogger().debug("============================================")
 
     except Exception as execution_error:
-        logging.getLogger().error("The scheduling_clean_roster plugin failed to run with the error: %s" % execution_error)
-        logging.getLogger().error("We encountered the backtrace %s" % traceback.format_exc())
+        logging.getLogger().error(
+            "The scheduling_clean_roster plugin failed to run with the error: %s"
+            % execution_error
+        )
+        logging.getLogger().error(
+            "We encountered the backtrace %s" % traceback.format_exc()
+        )

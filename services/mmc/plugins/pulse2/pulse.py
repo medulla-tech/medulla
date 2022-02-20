@@ -27,6 +27,7 @@ Pulse2 implementation of the pulse2 interface
 from pulse2.managers.pulse import Pulse2I
 from pulse2.database.pulse import Pulse2Database
 
+
 class Pulse2Pulse2Manager(Pulse2I):
     def getPackageServerEntityByPackageServer(self, ps_uuid):
         ret = Pulse2Database().getPackageServerEntityByPackageServer(ps_uuid)

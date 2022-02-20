@@ -66,10 +66,15 @@ class AuthenticationManager(Singleton):
             else:
                 self.logger.info("Authenticator %s failed to validate" % name)
                 if mandatory:
-                    self.logger.error("Authenticator %s is configured as mandatory, exiting" % name)
+                    self.logger.error(
+                        "Authenticator %s is configured as mandatory, exiting" % name
+                    )
                     ret = False
                 else:
-                    self.logger.info("Authenticator %s is not configured as mandatory, so going on" % name)
+                    self.logger.info(
+                        "Authenticator %s is not configured as mandatory, so going on"
+                        % name
+                    )
         self.components = tmp
         return ret
 
@@ -79,7 +84,9 @@ class AuthenticationManager(Singleton):
             for name in names.split():
                 for n, k in self.components:
                     if n == name:
-                        self.logger.info("Selecting authenticator %s / %s" % (n, str(k)))
+                        self.logger.info(
+                            "Selecting authenticator %s / %s" % (n, str(k))
+                        )
                         tmp.append((n, k))
         self.components = tmp
 
@@ -94,20 +101,30 @@ class AuthenticationManager(Singleton):
         token = AuthenticationToken()
         for name, klass in self.components:
             instance = klass()
-            self.logger.debug("Try to authenticate user with %s / %s" % (name, str(klass)))
+            self.logger.debug(
+                "Try to authenticate user with %s / %s" % (name, str(klass))
+            )
             if instance.config.authonly:
                 if user.lower() not in instance.config.authonly:
-                    self.logger.debug("User %s is not in the authonly list of this authenticator, so we skip it" % user)
+                    self.logger.debug(
+                        "User %s is not in the authonly list of this authenticator, so we skip it"
+                        % user
+                    )
                     continue
             if instance.config.exclude:
                 if user.lower() in instance.config.exclude:
-                    self.logger.debug("User %s is in the exclude list of this authenticator, so we skip it" % user)
+                    self.logger.debug(
+                        "User %s is in the exclude list of this authenticator, so we skip it"
+                        % user
+                    )
             try:
                 token = instance.authenticate(user, password)
             except Exception as e:
                 self.logger.exception(e)
                 raise AuthenticationError
-            self.logger.debug("Authentication result: " + str(token.authenticated) + str(token.infos))
+            self.logger.debug(
+                "Authentication result: " + str(token.authenticated) + str(token.infos)
+            )
             if token.authenticated:
                 # the authentication succeeded
                 break
@@ -127,8 +144,8 @@ class AuthenticatorConfig(MMCConfigParser):
         self.setDefault()
         fp = open(self.conffile, "r")
         self.readfp(fp, self.conffile)
-        if os.path.isfile(self.conffile + '.local'):
-            self.readfp(open(self.conffile + '.local','r'))
+        if os.path.isfile(self.conffile + ".local"):
+            self.readfp(open(self.conffile + ".local", "r"))
         self.readConf()
         fp.close()
 
@@ -162,7 +179,7 @@ class AuthenticatorI:
     password couple.
     """
 
-    def __init__(self, conffile, name, klass = AuthenticatorConfig):
+    def __init__(self, conffile, name, klass=AuthenticatorConfig):
         """
         @param conffile: authenticator configuration file
         @param name: the authenticator name
@@ -197,7 +214,10 @@ class AuthenticationToken:
     @ivar infos: User informations (e.g. user LDAP entry)
     @ivar session: User session information (may be used during provisioning)
     """
-    def __init__(self, authenticated = False, login = None, password = None, infos = None, session = None):
+
+    def __init__(
+        self, authenticated=False, login=None, password=None, infos=None, session=None
+    ):
         self.authenticated = authenticated
         self.login = login
         self.infos = infos
@@ -219,8 +239,10 @@ class AuthenticationToken:
     def getSession(self):
         return self.session
 
+
 class AuthenticationError(Exception):
     """
     Raised by the AuthenticationManager if the authentication process failed
     """
+
     pass

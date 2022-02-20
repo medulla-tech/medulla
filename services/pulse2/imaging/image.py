@@ -29,12 +29,12 @@ import logging
 from json import loads
 
 # some useful constants
-PULSE2_IMAGING_EXCLUDE_FNAME = 'exclude'
-PULSE2_IMAGING_GRUB_FNAME = 'conf.txt'
-PULSE2_IMAGING_CONF_FNAME = 'CONF'
-PULSE2_IMAGING_SIZE_FNAME = 'size.txt'
-PULSE2_IMAGING_LOG_FNAME = 'log.txt'
-PULSE2_IMAGING_PROGRESS_FNAME = 'progress.txt'
+PULSE2_IMAGING_EXCLUDE_FNAME = "exclude"
+PULSE2_IMAGING_GRUB_FNAME = "conf.txt"
+PULSE2_IMAGING_CONF_FNAME = "CONF"
+PULSE2_IMAGING_SIZE_FNAME = "size.txt"
+PULSE2_IMAGING_LOG_FNAME = "log.txt"
+PULSE2_IMAGING_PROGRESS_FNAME = "progress.txt"
 
 
 class Pulse2Image:
@@ -54,15 +54,13 @@ class Pulse2Image:
         @raise Exception: exception raised when image element is missing
         """
         if not isPulse2Image(directory) and raises:
-            raise Exception(
-                'Not a valid Pulse 2 image in directory %s' %
-                directory)
+            raise Exception("Not a valid Pulse 2 image in directory %s" % directory)
 
         self.directory = directory
         self.size = 0
         self.disks = {}
-        self.title = ''
-        self.desc = ''
+        self.title = ""
+        self.desc = ""
         self.logs = []
         self.has_error = False
         self.progress = 0
@@ -86,17 +84,17 @@ class Pulse2Image:
                     raise e
 
     def _readDavosJSON(self):
-        jsonPath = os.path.join(self.directory, 'davosInfo.json')
-        logPath = os.path.join(self.directory, 'davos.log')
+        jsonPath = os.path.join(self.directory, "davosInfo.json")
+        logPath = os.path.join(self.directory, "davos.log")
 
-        info = loads(open(jsonPath, 'r').read())
+        info = loads(open(jsonPath, "r").read())
 
-        self.title = info['title']
-        self.desc = info['description']
-        self.size = info['size']
-        self.has_error = info['has_error']
+        self.title = info["title"]
+        self.desc = info["description"]
+        self.size = info["size"]
+        self.has_error = info["has_error"]
         try:
-            self.logs = open(logPath, 'r').readlines()
+            self.logs = open(logPath, "r").readlines()
         except BaseException:
             self.logs = []
 
@@ -110,14 +108,11 @@ class Pulse2Image:
 
         # All below this is shit
         try:
-            fd_grub_file = open(
-                os.path.join(
-                    self.directory,
-                    PULSE2_IMAGING_GRUB_FNAME))
+            fd_grub_file = open(os.path.join(self.directory, PULSE2_IMAGING_GRUB_FNAME))
         except Exception as e:
             logging.getLogger().error(
-                "Pulse2Image : can't read %s : %s" %
-                (fd_grub_file, e))
+                "Pulse2Image : can't read %s : %s" % (fd_grub_file, e)
+            )
             raise e
 
         # read grub file
@@ -134,18 +129,19 @@ class Pulse2Image:
 
             # ptabs line ?
             line_grub_file_part = re.search(
-                "^#?ptabs \\(hd([0-9]+)\\) ", line_grub_file)
+                "^#?ptabs \\(hd([0-9]+)\\) ", line_grub_file
+            )
             if line_grub_file_part is not None:  # got one disk
                 hd_number = int(line_grub_file_part.group(1))
 
                 self.disks[hd_number] = {}
-                self.disks[hd_number]['line'] = line_grub_file.rstrip(
-                    "\n").lstrip("#")
+                self.disks[hd_number]["line"] = line_grub_file.rstrip("\n").lstrip("#")
 
             # hd line ?
             line_grub_file_part = re.search(
                 "^ # \\(hd([0-9]+),([0-9]+)\\) ([0-9]+) ([0-9]+) ([0-9]+)$",
-                line_grub_file)
+                line_grub_file,
+            )
             if line_grub_file_part is not None:  # got one part (first line ?)
                 hd_number = int(line_grub_file_part.group(1))
                 part_number = int(line_grub_file_part.group(2))
@@ -158,13 +154,14 @@ class Pulse2Image:
                 except KeyError:
                     self.disks[hd_number] = {}
                     self.disks[hd_number][part_number] = {}
-                self.disks[hd_number][part_number]['start'] = start
-                self.disks[hd_number][part_number]['size'] = l
-                self.disks[hd_number][part_number]['kind'] = kind
+                self.disks[hd_number][part_number]["start"] = start
+                self.disks[hd_number][part_number]["size"] = l
+                self.disks[hd_number][part_number]["kind"] = kind
 
             # part line ?
             line_grub_file_part = re.search(
-                "^#? partcopy \\(hd([0-9]+),([0-9]+)\\) ([0-9]+) PATH/", line_grub_file)
+                "^#? partcopy \\(hd([0-9]+),([0-9]+)\\) ([0-9]+) PATH/", line_grub_file
+            )
             if line_grub_file_part is not None:  # got one part (second line)
                 hd_number = int(line_grub_file_part.group(1))
                 part_number = int(line_grub_file_part.group(2))
@@ -173,8 +170,9 @@ class Pulse2Image:
                 except KeyError:
                     self.disks[hd_number] = {}
                     self.disks[hd_number][part_number] = {}
-                self.disks[hd_number][part_number]['line'] = \
-                    line_grub_file.rstrip("\n").lstrip("#")
+                self.disks[hd_number][part_number]["line"] = line_grub_file.rstrip(
+                    "\n"
+                ).lstrip("#")
         fd_grub_file.close()
 
     def _readSize(self):
@@ -183,14 +181,11 @@ class Pulse2Image:
         """
         # open size file
         try:
-            fd_size_file = open(
-                os.path.join(
-                    self.directory,
-                    PULSE2_IMAGING_SIZE_FNAME))
+            fd_size_file = open(os.path.join(self.directory, PULSE2_IMAGING_SIZE_FNAME))
         except Exception as e:
             logging.getLogger().error(
-                "Pulse2Image : can't read %s : %s" %
-                (fd_size_file, e))
+                "Pulse2Image : can't read %s : %s" % (fd_size_file, e)
+            )
             raise e
 
         for line_size_file in fd_size_file:
@@ -205,10 +200,7 @@ class Pulse2Image:
         """
         # open log file
         try:
-            fd_log_file = open(
-                os.path.join(
-                    self.directory,
-                    PULSE2_IMAGING_LOG_FNAME))
+            fd_log_file = open(os.path.join(self.directory, PULSE2_IMAGING_LOG_FNAME))
             for line_log_file in fd_log_file:
                 self.logs.append(line_log_file)
                 line_log_file_error = re.search("^ERROR: ", line_log_file)
@@ -226,12 +218,10 @@ class Pulse2Image:
         # open progress file
         try:
             fd_prog_file = open(
-                os.path.join(
-                    self.directory,
-                    PULSE2_IMAGING_PROGRESS_FNAME))
+                os.path.join(self.directory, PULSE2_IMAGING_PROGRESS_FNAME)
+            )
             for line_prog_file in fd_prog_file:
-                line_prog_file_split = re.search(
-                    "^([0-9]+): ([0-9]+)%", line_prog_file)
+                line_prog_file_split = re.search("^([0-9]+): ([0-9]+)%", line_prog_file)
                 if line_prog_file_split is not None:
                     self.current_part = int(line_prog_file_split.group(1))
                     self.progress = int(line_prog_file_split.group(2))
@@ -246,7 +236,7 @@ class Pulse2ImageList:
     """
 
     def __init__(self, config):
-        self.imagesdir = config.imaging_api['masters']
+        self.imagesdir = config.imaging_api["masters"]
 
     def get(self):
         """
@@ -265,12 +255,7 @@ def isRevoImage(folder):
     Return true if directory is a Revo image (old backend)
     """
     if os.path.isdir(folder):
-        should_contain = [
-            'log.txt',
-            'progress.txt',
-            'CONF',
-            'conf.txt',
-            'size.txt']
+        should_contain = ["log.txt", "progress.txt", "CONF", "conf.txt", "size.txt"]
         intersect = []
         try:
             for item in os.listdir(folder):
@@ -288,7 +273,7 @@ def isDavosImage(folder):
     Return true if directory is a Davos image (Clonezilla based)
     """
     if os.path.isdir(folder):
-        if os.path.isfile(os.path.join(folder, 'davosInfo.json')):
+        if os.path.isfile(os.path.join(folder, "davosInfo.json")):
             return True
 
 

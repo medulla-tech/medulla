@@ -66,8 +66,6 @@ def getProxy(url):
     cacert = SchedulerConfig().cacert
     localcert = SchedulerConfig().localcert
 
-    return Pulse2XMLRPCProxy(url,
-                             verifypeer=verifypeer,
-                             cacert=cacert,
-                             localcert=localcert
-                             )
+    return Pulse2XMLRPCProxy(
+        url, verifypeer=verifypeer, cacert=cacert, localcert=localcert
+    )

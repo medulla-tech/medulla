@@ -28,8 +28,10 @@ import logging
 from .parse import Parser
 from .pexceptions import ConnectionError
 
+
 class ConnectorException(Exception):
     """A general exception wrapper for client-side errors"""
+
     def __init__(self, host, port):
         self.host = host
         self.port = port
@@ -37,21 +39,23 @@ class ConnectorException(Exception):
 
 class ConnectionRefused(ConnectorException):
     """An exception to raise when connection refused from other side"""
+
     def __repr__(self):
         return "Connection on server %s:%s refused" % (self.host, self.port)
 
 
 class UnknownService(ConnectorException):
-    """An exception to raise when trying contact unable service """
+    """An exception to raise when trying contact unable service"""
+
     def __repr__(self):
         return "Unknown service %s:%s. Connection refused" % (self.host, self.port)
 
 
 class ConnectionTimeout(ConnectorException):
     """An exception to raise when a timeout of connection checked"""
+
     def __repr__(self):
         return "Timeout of connection to server %s:%s" % (self.host, self.port)
-
 
 
 class Connector(object):
@@ -84,7 +88,6 @@ class Connector(object):
         self.crtfile = crtfile
         self.ssl_enabled = enablessl
 
-
     def connect(self):
         """
         Provides a socket connection to server.
@@ -98,9 +101,10 @@ class Connector(object):
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             sock.settimeout(self.timeout)
             if self.ssl_enabled:
-                ssl_sock = ssl.wrap_socket(sock,
-                                           ssl_version=ssl.PROTOCOL_SSLv3,
-                                           )
+                ssl_sock = ssl.wrap_socket(
+                    sock,
+                    ssl_version=ssl.PROTOCOL_SSLv3,
+                )
 
                 ssl_sock.setblocking(True)
 
@@ -119,7 +123,6 @@ class Connector(object):
             if code == -2:
                 raise UnknownService(self.host, self.port)
 
-
         except socket.error as xxx_todo_changeme1:
             (code, message) = xxx_todo_changeme1.args
             if code == 111:
@@ -128,11 +131,10 @@ class Connector(object):
             else:
                 self.logger.debug("Another connection error: %s %s " % (code, message))
 
-
-
         except Exception as e:
             self.logger.debug("Client connection failed: %s" % str(e))
             import traceback
+
             self.logger.debug("\033[31m%s\033[0m" % str(traceback.format_exc()))
 
 
@@ -143,14 +145,14 @@ class ClientEndpoint(object):
 
     def __init__(self, config):
         self.logger = logging.getLogger()
-        self.connector = Connector(config.server.host,
-                                   config.server.port,
-                                   config.server.enablessl,
-                                   config.server.crtfile,
-                                   config.server.timeout,
-                                   )
+        self.connector = Connector(
+            config.server.host,
+            config.server.port,
+            config.server.enablessl,
+            config.server.crtfile,
+            config.server.timeout,
+        )
         self.parser = Parser(config.main.serializer)
-
 
     def connect(self):
         self.socket = self.connector.connect()
@@ -178,7 +180,7 @@ class ClientEndpoint(object):
         while len(data) < n:
             try:
                 chunk = self.socket.recv(n - len(data))
-                #chunk = self.socket.read(n - len(data))
+                # chunk = self.socket.read(n - len(data))
             except Exception as e:
                 self.logger.debug("SSL read failed: %s" % str(e))
 

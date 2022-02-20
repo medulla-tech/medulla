@@ -41,20 +41,22 @@ def isMenuStructure(menu):
     @rtype: bool
     """
     ret = True
-    logger = logging.getLogger('imaging')
+    logger = logging.getLogger("imaging")
     if isinstance(menu, dict):
-        for k in ['message',
-                  'default_item',
-                  'default_item_WOL',
-                  'timeout',
-                  'background_uri',
-                  'bootservices',
-                  'images',
-                  'bootcli',
-                  'disklesscli',
-                  'hidden_menu',
-                  'dont_check_disk_size',
-                  'ethercard']:
+        for k in [
+            "message",
+            "default_item",
+            "default_item_WOL",
+            "timeout",
+            "background_uri",
+            "bootservices",
+            "images",
+            "bootcli",
+            "disklesscli",
+            "hidden_menu",
+            "dont_check_disk_size",
+            "ethercard",
+        ]:
 
             if k not in menu:
                 logger.error("Menu is missing %s" % (k))
@@ -81,44 +83,47 @@ class ImagingDefaultMenuBuilder:
 
         @return the object
         """
-        self.logger = logging.getLogger('imaging')
+        self.logger = logging.getLogger("imaging")
         if not isMenuStructure(menu):
-            raise TypeError('Bad menu structure')
+            raise TypeError("Bad menu structure")
         self.menu = menu
         self.config = config
-        if 'target' in self.menu:
-            self.cacheHostname(
-                self.menu['target']['uuid'],
-                self.menu['target']['name'])
+        if "target" in self.menu:
+            self.cacheHostname(self.menu["target"]["uuid"], self.menu["target"]["name"])
 
     def cacheHostname(self, uuid, name):
         if uuid:
             target_folder = os.path.join(
-                PackageServerConfig().imaging_api['base_folder'],
-                PackageServerConfig().imaging_api['computers_folder'],
-                uuid)
+                PackageServerConfig().imaging_api["base_folder"],
+                PackageServerConfig().imaging_api["computers_folder"],
+                uuid,
+            )
             if os.path.isdir(target_folder):
                 self.logger.debug(
-                    'Imaging menu : folder %s for client %s : It already exists !' %
-                    (target_folder, uuid))
+                    "Imaging menu : folder %s for client %s : It already exists !"
+                    % (target_folder, uuid)
+                )
                 return True
             if os.path.exists(target_folder):
                 self.logger.warn(
-                    'Imaging menu : folder %s for client %s : It already exists, but is not a folder !' %
-                    (target_folder, uuid))
+                    "Imaging menu : folder %s for client %s : It already exists, but is not a folder !"
+                    % (target_folder, uuid)
+                )
                 return False
             try:
                 os.mkdir(target_folder)
                 self.logger.debug(
-                    'Imaging menu : folder %s for client %s was created' %
-                    (target_folder, uuid))
+                    "Imaging menu : folder %s for client %s was created"
+                    % (target_folder, uuid)
+                )
             except Exception as e:
                 self.logger.error(
-                    'Imaging menu : I was not able to create folder %s for client %s : %s' %
-                    (target_folder, uuid, e))
+                    "Imaging menu : I was not able to create folder %s for client %s : %s"
+                    % (target_folder, uuid, e)
+                )
                 return False
             if name:
-                target_folder = os.path.join(target_folder, 'hostname')
+                target_folder = os.path.join(target_folder, "hostname")
                 fichier = open(target_folder, "w")
                 fichier.write(name)
                 fichier.close()
@@ -129,38 +134,39 @@ class ImagingDefaultMenuBuilder:
         @return: an ImagingMenu object
         @rtype: ImagingMenu
         """
-        if 'target' in self.menu:
+        if "target" in self.menu:
             m = ImagingMenu(
                 self.config,
                 macaddress,
-                self.menu['target']['name'],
-                self.menu['target']['uuid'])
+                self.menu["target"]["name"],
+                self.menu["target"]["uuid"],
+            )
         else:
             m = ImagingMenu(self.config, macaddress)
-        m.setSplashImage(self.menu['background_uri'])
-        m.setMessage(self.menu['message'])
-        m.setTimeout(self.menu['timeout'])
-        m.setDefaultItem(self.menu['default_item'])
-        self.logger.debug('bootcli: %s' % self.menu['bootcli'])
-        m.setBootCLI(self.menu['bootcli'])
-        m.hide(self.menu['hidden_menu'])
-        if 'update_nt_boot' in self.menu:
-            m.setNTBLFix(self.menu['update_nt_boot'])
-        self.logger.debug('disklesscli: %s' % self.menu['disklesscli'])
-        m.setDisklessCLI(self.menu['disklesscli'])
+        m.setSplashImage(self.menu["background_uri"])
+        m.setMessage(self.menu["message"])
+        m.setTimeout(self.menu["timeout"])
+        m.setDefaultItem(self.menu["default_item"])
+        self.logger.debug("bootcli: %s" % self.menu["bootcli"])
+        m.setBootCLI(self.menu["bootcli"])
+        m.hide(self.menu["hidden_menu"])
+        if "update_nt_boot" in self.menu:
+            m.setNTBLFix(self.menu["update_nt_boot"])
+        self.logger.debug("disklesscli: %s" % self.menu["disklesscli"])
+        m.setDisklessCLI(self.menu["disklesscli"])
         self.logger.debug(
-            'dont_check_disk_size: %s' %
-            self.menu['dont_check_disk_size'])
-        m.setDiskSizeCheck(self.menu['dont_check_disk_size'])
-        self.logger.debug('ethercard: %s' % self.menu['ethercard'])
-        m.setEtherCard(int(self.menu['ethercard']))
-        if 'language' in self.menu:
-            m.setLanguage(int(self.menu['language']))
-        for pos, entry in list(self.menu['bootservices'].items()):
+            "dont_check_disk_size: %s" % self.menu["dont_check_disk_size"]
+        )
+        m.setDiskSizeCheck(self.menu["dont_check_disk_size"])
+        self.logger.debug("ethercard: %s" % self.menu["ethercard"])
+        m.setEtherCard(int(self.menu["ethercard"]))
+        if "language" in self.menu:
+            m.setLanguage(int(self.menu["language"]))
+        for pos, entry in list(self.menu["bootservices"].items()):
             m.addBootServiceEntry(int(pos), entry)
-        for pos, entry in list(self.menu['images'].items()):
+        for pos, entry in list(self.menu["images"].items()):
             m.addImageEntry(int(pos), entry)
-        self.logger.debug('Menu structure built successfully')
+        self.logger.debug("Menu structure built successfully")
         return m
 
 
@@ -177,11 +183,11 @@ class ImagingComputerMenuBuilder(ImagingDefaultMenuBuilder):
 
     def make(self):
         self.logger.debug(
-            'Building menu structure for computer mac %s' %
-            self.macaddress)
+            "Building menu structure for computer mac %s" % self.macaddress
+        )
         computerMenu = ImagingDefaultMenuBuilder.make(self, self.macaddress)
-        if 'raw_mode' in self.menu['target']:
-            computerMenu.setRawMode(self.menu['target']['raw_mode'])
+        if "raw_mode" in self.menu["target"]:
+            computerMenu.setRawMode(self.menu["target"]["raw_mode"])
         return computerMenu
 
 
@@ -191,18 +197,18 @@ class ImagingMenu:
     hold an imaging menu
     """
 
-    DEFAULT_MENU_FILE = 'default'
+    DEFAULT_MENU_FILE = "default"
     LANG_CODE = {
-        1: 'C',
-        2: 'fr_FR',
-        3: 'pt_BR',
-        4: 'de_DE',
+        1: "C",
+        2: "fr_FR",
+        3: "pt_BR",
+        4: "de_DE",
     }
     KEYB_CODE = {
         1: None,
-        2: 'fr',
-        3: 'pt',
-        4: 'de',
+        2: "fr",
+        3: "pt",
+        4: "de",
     }
 
     def __init__(self, config, macaddress=None, hostname=None, uuid=None):
@@ -212,7 +218,7 @@ class ImagingMenu:
         @param config: a ImagingConfig object
         @param macaddress: the client MAC Address
         """
-        self.logger = logging.getLogger('imaging')
+        self.logger = logging.getLogger("imaging")
         self.config = config  # the server configuration
         if macaddress:
             assert pulse2.utils.isMACAddress(macaddress)
@@ -234,7 +240,7 @@ class ImagingMenu:
         self.message = None
         self.keyboard = None  # the menu keymap, None is C
         self.hidden = False  # do we hide the menu ?
-        self.language = 'C'  # Menu language
+        self.language = "C"  # Menu language
         self.bootcli = False  # command line access at boot time ?
         self.disklesscli = False  # command line access at diskless time ?
         self.ntblfix = False  # NT Bootloader fix
@@ -245,30 +251,33 @@ class ImagingMenu:
 
         # kernel options put on diskless command line
         # Check if Davos or revo
-        if self.config.imaging_api['diskless_folder'] == "davos":
+        if self.config.imaging_api["diskless_folder"] == "davos":
             self.kernel_opts = [
-                'boot=live',
-                'config',
-                'noswap',
-                'edd=on',
-                'nomodeset',
-                'nosplash',
-                'noprompt',
-                'vga=788',
-                'fetch=tftp://%s/%s/fs.squashfs' %
-                (PackageServerConfig().public_ip,
-                 self.config.imaging_api['diskless_folder'])]
+                "boot=live",
+                "config",
+                "noswap",
+                "edd=on",
+                "nomodeset",
+                "nosplash",
+                "noprompt",
+                "vga=788",
+                "fetch=tftp://%s/%s/fs.squashfs"
+                % (
+                    PackageServerConfig().public_ip,
+                    self.config.imaging_api["diskless_folder"],
+                ),
+            ]
 
             # If we have a mac, we put it in kernel params
             if macaddress is not None:
-                self.kernel_opts.append('mac=' + macaddress)
+                self.kernel_opts.append("mac=" + macaddress)
         else:
             # kernel options put on diskless command line
-            self.kernel_opts = list(['quiet'])
+            self.kernel_opts = list(["quiet"])
 
-        self.rawmode = ''  # raw mode backup
+        self.rawmode = ""  # raw mode backup
 
-    def _applyReplacement(self, string, condition='global'):
+    def _applyReplacement(self, string, condition="global"):
         """
         Private func, to apply a replacement into a given string
 
@@ -285,36 +294,87 @@ class ImagingMenu:
         # key 'to' : the replacement to perform
         # key 'when' : when to perform the replacement (only 'global' for now)
         replacements = [
-            ('##PULSE2_LANG##', PackageServerConfig().pxe_keymap, 'global'),
-            ('##PULSE2_PUBLIC_IP##', PackageServerConfig().public_ip, 'global'),
-            ('##PULSE2_BOOTLOADER_DIR##', self.config.imaging_api['bootloader_folder'], 'global'),
-            ('##PULSE2_TOOLS_DIR##', self.config.imaging_api['tools_folder'], 'global'),
-            ('##PULSE2_BOOTSPLASH_FILE##', self.config.imaging_api['bootsplash_file'], 'global'),
-            ('##PULSE2_DISKLESS_DIR##', self.config.imaging_api['diskless_folder'], 'global'),
-            ('##PULSE2_DAVOS_OPTS##', self.config.imaging_api['davos_options'], 'global'),
-            ('##PULSE2_DISKLESS_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
-            ('##PULSE2_DISKLESS_INITRD##', self.config.imaging_api['diskless_initrd'], 'global'),
-            ('##PULSE2_DISKLESS_OPTS##', ' '.join(self.diskless_opts), 'global'),
-            ('##PULSE2_KERNEL_OPTS##', ' '.join(self.kernel_opts), 'global'),
-            ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
-            ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
-            ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
-            ('##PULSE2_INVENTORIES_DIR##', self.config.imaging_api['inventories_folder'], 'global'),
-            ('##PULSE2_PXE_MASK##', self.config.imaging_api['pxe_mask'], 'global'),
-            ('##PULSE2_PXE_TFTP_IP##', self.config.imaging_api['pxe_tftp_ip'], 'global'),
-            ('##PULSE2_PXE_SUBNET##', self.config.imaging_api['pxe_subnet'], 'global'),
-            ('##PULSE2_PXE_GATEWAY##', self.config.imaging_api['pxe_gateway'], 'global'),
-            ('##PULSE2_PXE_DEBUG##', self.config.imaging_api['pxe_debug'], 'global'),
-            ('##PULSE2_PXE_TIME_REBOOT##', self.config.imaging_api['pxe_time'], 'global'),
-            ('##PULSE2_PXE_XML##', self.config.imaging_api['pxe_xml'], 'global'),
-            ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global'),
-            ('##PULSE2_REVO_RAW##', self.rawmode, 'global')
+            ("##PULSE2_LANG##", PackageServerConfig().pxe_keymap, "global"),
+            ("##PULSE2_PUBLIC_IP##", PackageServerConfig().public_ip, "global"),
+            (
+                "##PULSE2_BOOTLOADER_DIR##",
+                self.config.imaging_api["bootloader_folder"],
+                "global",
+            ),
+            ("##PULSE2_TOOLS_DIR##", self.config.imaging_api["tools_folder"], "global"),
+            (
+                "##PULSE2_BOOTSPLASH_FILE##",
+                self.config.imaging_api["bootsplash_file"],
+                "global",
+            ),
+            (
+                "##PULSE2_DISKLESS_DIR##",
+                self.config.imaging_api["diskless_folder"],
+                "global",
+            ),
+            (
+                "##PULSE2_DAVOS_OPTS##",
+                self.config.imaging_api["davos_options"],
+                "global",
+            ),
+            (
+                "##PULSE2_DISKLESS_KERNEL##",
+                self.config.imaging_api["diskless_kernel"],
+                "global",
+            ),
+            (
+                "##PULSE2_DISKLESS_INITRD##",
+                self.config.imaging_api["diskless_initrd"],
+                "global",
+            ),
+            ("##PULSE2_DISKLESS_OPTS##", " ".join(self.diskless_opts), "global"),
+            ("##PULSE2_KERNEL_OPTS##", " ".join(self.kernel_opts), "global"),
+            (
+                "##PULSE2_MASTERS_DIR##",
+                self.config.imaging_api["masters_folder"],
+                "global",
+            ),
+            (
+                "##PULSE2_POSTINST_DIR##",
+                self.config.imaging_api["postinst_folder"],
+                "global",
+            ),
+            (
+                "##PULSE2_COMPUTERS_DIR##",
+                self.config.imaging_api["computers_folder"],
+                "global",
+            ),
+            (
+                "##PULSE2_INVENTORIES_DIR##",
+                self.config.imaging_api["inventories_folder"],
+                "global",
+            ),
+            ("##PULSE2_PXE_MASK##", self.config.imaging_api["pxe_mask"], "global"),
+            (
+                "##PULSE2_PXE_TFTP_IP##",
+                self.config.imaging_api["pxe_tftp_ip"],
+                "global",
+            ),
+            ("##PULSE2_PXE_SUBNET##", self.config.imaging_api["pxe_subnet"], "global"),
+            (
+                "##PULSE2_PXE_GATEWAY##",
+                self.config.imaging_api["pxe_gateway"],
+                "global",
+            ),
+            ("##PULSE2_PXE_DEBUG##", self.config.imaging_api["pxe_debug"], "global"),
+            (
+                "##PULSE2_PXE_TIME_REBOOT##",
+                self.config.imaging_api["pxe_time"],
+                "global",
+            ),
+            ("##PULSE2_PXE_XML##", self.config.imaging_api["pxe_xml"], "global"),
+            ("##PULSE2_BASE_DIR##", self.config.imaging_api["base_folder"], "global"),
+            ("##PULSE2_REVO_RAW##", self.rawmode, "global"),
         ]
         if self.mac:
             replacements.append(
-                ('##MAC##',
-                 pulse2.utils.reduceMACAddress(self.mac),
-                 'global'))
+                ("##MAC##", pulse2.utils.reduceMACAddress(self.mac), "global")
+            )
 
         output = string
         for replacement in replacements:
@@ -325,8 +385,8 @@ class ImagingMenu:
 
     def _fill_reptable(self):
         """
-         this function create array to remove accent who are not
-         compatible with MS-DOS encoding
+        this function create array to remove accent who are not
+        compatible with MS-DOS encoding
         """
         _reptable = {}
         _corresp = [
@@ -362,64 +422,65 @@ class ImagingMenu:
         """
 
         # takes global items, one by one
-        buf = '# Auto-generated by Pulse 2 Imaging Server on %s \n\n' % time.asctime()
-        buf += 'UI vesamenu.c32\n'
-        buf += 'PROMPT 0\n'
+        buf = "# Auto-generated by Pulse 2 Imaging Server on %s \n\n" % time.asctime()
+        buf += "UI vesamenu.c32\n"
+        buf += "PROMPT 0\n"
 
         # the key mapping
-        buf += 'KBDMAP %s.ktl\n' % PackageServerConfig().pxe_keymap
+        buf += "KBDMAP %s.ktl\n" % PackageServerConfig().pxe_keymap
 
         # PXE Password entry if pxe_password is set
-        if PackageServerConfig().pxe_password != '':
-            buf += 'MENU MASTER PASSWD %s\n' % PackageServerConfig().pxe_password
+        if PackageServerConfig().pxe_password != "":
+            buf += "MENU MASTER PASSWD %s\n" % PackageServerConfig().pxe_password
 
         # the menu timeout : warning, 0 means "do not wait !"
-        if self.timeout == '0':
-            buf += 'TIMEOUT 1\n'
+        if self.timeout == "0":
+            buf += "TIMEOUT 1\n"
         else:
-            buf += 'TIMEOUT %d\n' % (int(self.timeout) * 10)
+            buf += "TIMEOUT %d\n" % (int(self.timeout) * 10)
 
         # the menu default item
-        buf += 'DEFAULT %s\n' % self.default_item
+        buf += "DEFAULT %s\n" % self.default_item
 
         # the menu splash image
         if self.splashimage:
-            buf += self._applyReplacement('MENU BACKGROUND %s\n' %
-                                          self.splashimage)
+            buf += self._applyReplacement("MENU BACKGROUND %s\n" % self.splashimage)
 
         # the menu setup
-        buf += 'MENU WIDTH 78\n'
-        buf += 'MENU MARGIN 4\n'
-        buf += 'MENU ROWS 10\n'
-        buf += 'MENU VSHIFT 10\n'
-        buf += 'MENU TIMEOUTROW 18\n'
-        buf += 'MENU TABMSGROW 16\n'
-        buf += 'MENU CMDLINEROW 16\n'
-        buf += 'MENU HELPMSGROW 21\n'
-        buf += 'MENU HELPMSGENDROW 29\n'
-        buf += 'MENU TITLE %s\n' % self.hostname
+        buf += "MENU WIDTH 78\n"
+        buf += "MENU MARGIN 4\n"
+        buf += "MENU ROWS 10\n"
+        buf += "MENU VSHIFT 10\n"
+        buf += "MENU TIMEOUTROW 18\n"
+        buf += "MENU TABMSGROW 16\n"
+        buf += "MENU CMDLINEROW 16\n"
+        buf += "MENU HELPMSGROW 21\n"
+        buf += "MENU HELPMSGENDROW 29\n"
+        buf += "MENU TITLE %s\n" % self.hostname
         # do we hide the menu ? Splash screen will still be displayed
         if self.hidden:
-            buf += 'MENU HIDDEN\n'
+            buf += "MENU HIDDEN\n"
 
         # then write items
         indices = sorted(self.menuitems.keys())
         for i in indices:
             output = self._applyReplacement(self.menuitems[i].getEntry())
-            buf += '\n'
+            buf += "\n"
             buf += output
-            if PackageServerConfig(
-            ).pxe_password != '' and 'continue' not in self.menuitems[i].getEntry():
-                buf += 'MENU PASSWD\n'
+            if (
+                PackageServerConfig().pxe_password != ""
+                and "continue" not in self.menuitems[i].getEntry()
+            ):
+                buf += "MENU PASSWD\n"
 
-        assert(isinstance(buf, str))
+        assert isinstance(buf, str)
 
         # Clean brazilian characters who are not compatible
         # with MS-DOS encoding by delete accent marks
         buf = self.delete_diacritics(buf)
 
         # Encode menu using code page 437 (MS-DOS) encoding
-        buf = buf.encode('cp437')
+        buf = buf.encode("cp437")
         return buf
 
     def write(self):
@@ -428,21 +489,24 @@ class ImagingMenu:
         """
         if self.mac:
             filename = os.path.join(
-                self.config.imaging_api['base_folder'],
-                self.config.imaging_api['bootmenus_folder'],
-                pulse2.utils.normalizeMACAddressForPXELINUX(
-                    self.mac))
+                self.config.imaging_api["base_folder"],
+                self.config.imaging_api["bootmenus_folder"],
+                pulse2.utils.normalizeMACAddressForPXELINUX(self.mac),
+            )
             self.logger.debug(
-                'Preparing to write boot menu for computer MAC %s into file %s' %
-                (self.mac, filename))
+                "Preparing to write boot menu for computer MAC %s into file %s"
+                % (self.mac, filename)
+            )
         else:
             filename = os.path.join(
-                self.config.imaging_api['base_folder'],
-                self.config.imaging_api['bootmenus_folder'],
-                self.DEFAULT_MENU_FILE)
+                self.config.imaging_api["base_folder"],
+                self.config.imaging_api["bootmenus_folder"],
+                self.DEFAULT_MENU_FILE,
+            )
             self.logger.debug(
-                'Preparing to write the default boot menu for unregistered computers into file %s' %
-                filename)
+                "Preparing to write the default boot menu for unregistered computers into file %s"
+                % filename
+            )
 
         def _write(self):
             try:
@@ -456,12 +520,13 @@ class ImagingMenu:
                     os.rename(filename, backupname)
                 except Exception as e:  # can make a backup : give up !
                     self.logger.error(
-                        "While backuping boot menu %s as %s : %s" %
-                        (filename, backupname, e))
+                        "While backuping boot menu %s as %s : %s"
+                        % (filename, backupname, e)
+                    )
                     return False
 
             try:
-                fid = open(filename, 'w+b')
+                fid = open(filename, "w+b")
                 fid.write(buf)
                 fid.close()
                 for item in list(self.menuitems.values()):
@@ -469,24 +534,26 @@ class ImagingMenu:
                         item.write(self.config)
                     except Exception as e:
                         self.logger.error(
-                            'An error occurred while writing boot menu entry "%s": %s' %
-                            (str(item), str(e)))
+                            'An error occurred while writing boot menu entry "%s": %s'
+                            % (str(item), str(e))
+                        )
                 if self.mac:
                     self.logger.debug(
-                        'Successfully wrote boot menu for computer MAC %s into file %s' %
-                        (self.mac, filename))
+                        "Successfully wrote boot menu for computer MAC %s into file %s"
+                        % (self.mac, filename)
+                    )
                 else:
                     self.logger.debug(
-                        'Successfully wrote boot menu for unregistered computers into file %s' %
-                        filename)
+                        "Successfully wrote boot menu for unregistered computers into file %s"
+                        % filename
+                    )
             except Exception as e:
                 if self.mac:
                     self.logger.error(
-                        "While writing boot menu for %s : %s" %
-                        (self.mac, e))
+                        "While writing boot menu for %s : %s" % (self.mac, e)
+                    )
                 else:
-                    self.logger.error(
-                        "While writing default boot menu : %s" % e)
+                    self.logger.error("While writing default boot menu : %s" % e)
                 return False
 
             if os.path.exists(backupname):
@@ -494,22 +561,26 @@ class ImagingMenu:
                     os.unlink(backupname)
                 except Exception as e:
                     self.logger.warn(
-                        "While removing backup %s of %s : %s" %
-                        (backupname, filename, e))
+                        "While removing backup %s of %s : %s"
+                        % (backupname, filename, e)
+                    )
+
         # Retreive PXE Params
-        pulse2.package_server.imaging.api.functions.Imaging().refreshPXEParams(_write, self)
+        pulse2.package_server.imaging.api.functions.Imaging().refreshPXEParams(
+            _write, self
+        )
 
         return True
 
     def setTimeout(self, value):
         """
-            set the default timeout
+        set the default timeout
         """
         self.timeout = value
 
     def setDefaultItem(self, value):
         """
-            set the default item number
+        set the default item number
         """
         self.default_item = value.replace(" ", "-")
 
@@ -517,9 +588,9 @@ class ImagingMenu:
         """
         Add the ImagingEntry entry to our menu
         """
-        assert(isinstance(position, int) and position >= 0)
+        assert isinstance(position, int) and position >= 0
         if position in self.menuitems:
-            raise ValueError('Position %d in menu already taken' % position)
+            raise ValueError("Position %d in menu already taken" % position)
         item = ImagingImageItem(entry)
         self.menuitems[position] = item
 
@@ -527,9 +598,9 @@ class ImagingMenu:
         """
         Add the ImagingEntry entry to our menu
         """
-        assert(isinstance(position, int) and position >= 0)
+        assert isinstance(position, int) and position >= 0
         if position in self.menuitems:
-            raise ValueError('Position %d in menu already taken' % position)
+            raise ValueError("Position %d in menu already taken" % position)
         self.menuitems[position] = ImagingBootServiceItem(entry)
 
     def setKeyboard(self, mapping=None):
@@ -537,7 +608,7 @@ class ImagingMenu:
         set keyboard map
         if mapping is none, do not set keymap
         """
-        if mapping in ['fr', 'pt', 'de']:
+        if mapping in ["fr", "pt", "de"]:
             self.keyboard = mapping
 
     def hideMenu(self):
@@ -585,9 +656,9 @@ class ImagingMenu:
         Set the ethernet restoration interface
         @param value : the iface number, between 0 (default) and 9
         """
-        assert(isinstance(value, int))
-        assert(value >= 0)
-        assert(value <= 9)
+        assert isinstance(value, int)
+        assert value >= 0
+        assert value <= 9
         self.ethercard = value
 
     def setSplashImage(self, value):
@@ -595,8 +666,8 @@ class ImagingMenu:
         Set the background image
         """
         if isinstance(value, str):
-            value = value.decode('utf-8')
-        assert(isinstance(value, str))
+            value = value.decode("utf-8")
+        assert isinstance(value, str)
         self.splashimage = value
 
     def setMessage(self, value):
@@ -604,8 +675,8 @@ class ImagingMenu:
         Set the warn message
         """
         if isinstance(value, str):
-            value = value.decode('utf-8')
-        assert(isinstance(value, str))
+            value = value.decode("utf-8")
+        assert isinstance(value, str)
         self.message = value
 
     def setLanguage(self, value):
@@ -626,7 +697,7 @@ class ImagingMenu:
         """
         value = bool(value)
         if value:
-            self.rawmode = 'revoraw'
+            self.rawmode = "revoraw"
 
     def hide(self, flag):
         """
@@ -645,27 +716,29 @@ class CleanMenu:
         @type macaddress: obj
         """
         self.config = config  # the server configuration
-        uuid = macaddress['uuid']
-        self.mac = set(macaddress['mac'][uuid])  # the client MAC Address
+        uuid = macaddress["uuid"]
+        self.mac = set(macaddress["mac"][uuid])  # the client MAC Address
 
     def clear(self):
         for i in self.mac:
             if i == "":
                 continue
             filename = os.path.join(
-                self.config.imaging_api['base_folder'],
-                self.config.imaging_api['bootmenus_folder'],
-                pulse2.utils.normalizeMACAddressForPXELINUX(i))
+                self.config.imaging_api["base_folder"],
+                self.config.imaging_api["bootmenus_folder"],
+                pulse2.utils.normalizeMACAddressForPXELINUX(i),
+            )
             try:
                 os.unlink(filename)
             except Exception as e:
                 pass
             # clear hostnamebymac
             target_file = os.path.join(
-                self.config.imaging_api['base_folder'],
-                self.config.imaging_api['computers_folder'],
+                self.config.imaging_api["base_folder"],
+                self.config.imaging_api["computers_folder"],
                 "hostnamebymac",
-                pulse2.utils.normalizeMACAddressForPXELINUX(i))
+                pulse2.utils.normalizeMACAddressForPXELINUX(i),
+            )
             try:
                 os.unlink(target_file)
             except Exception as e:
@@ -684,12 +757,12 @@ class ImagingItem:
         @param entry: menu item in dict format
         @type entry: dict
         """
-        self.logger = logging.getLogger('imaging')
+        self.logger = logging.getLogger("imaging")
         self._convertEntry(entry)
-        self.label = entry['name'].replace(" ", "-")  # the item label
-        self.menulabel = entry['desc']  # the item menulabel
-        assert(isinstance(self.label, str))
-        assert(isinstance(self.menulabel, str))
+        self.label = entry["name"].replace(" ", "-")  # the item label
+        self.menulabel = entry["desc"]  # the item menulabel
+        assert isinstance(self.label, str)
+        assert isinstance(self.menulabel, str)
         self.uuid = None
 
     def __str__(self):
@@ -698,13 +771,13 @@ class ImagingItem:
 
     def _applyReplacement(self, out, network=True):
         if network:
-            device = '(nd)'
+            device = "(nd)"
         else:
             # FIXME: Is it the right device name ?
-            device = '(cdrom)'
-        out = re.sub('##PULSE2_NETDEVICE##', device, out)
+            device = "(cdrom)"
+        out = re.sub("##PULSE2_NETDEVICE##", device, out)
         if self.uuid:
-            out = re.sub('##PULSE2_IMAGE_UUID##', self.uuid, out)
+            out = re.sub("##PULSE2_IMAGE_UUID##", self.uuid, out)
         return out
 
     def _convertEntry(self, array):
@@ -713,7 +786,7 @@ class ImagingItem:
         """
         for key, value in list(array.items()):
             if isinstance(value, str):
-                value = value.decode('utf-8')
+                value = value.decode("utf-8")
             array[key] = value
 
     def write(self, config):
@@ -740,18 +813,18 @@ class ImagingBootServiceItem(ImagingItem):
         @param entry : a ImagingItem
         """
         ImagingItem.__init__(self, entry)
-        self.value = entry['value']  # the PXELINUX command line
-        assert(isinstance(self.value, str))
+        self.value = entry["value"]  # the PXELINUX command line
+        assert isinstance(self.value, str)
 
     def getEntry(self, network=True):
         """
         Return the entry, in a SYSLINUX compatible format
         """
-        buf = 'LABEL %s\n' % self.label
+        buf = "LABEL %s\n" % self.label
         if self.menulabel:
-            buf += 'MENU LABEL %s\n' % self.menulabel
+            buf += "MENU LABEL %s\n" % self.menulabel
         if self.value:
-            buf += self.value + '\n'
+            buf += self.value + "\n"
         return self._applyReplacement(buf, network)
 
     def writeShFile(self, script_file):
@@ -760,37 +833,34 @@ class ImagingBootServiceItem(ImagingItem):
         """
         config = PackageServerConfig()
         postinst_scripts_folder = os.path.join(
-            config.imaging_api['base_folder'],
-            config.imaging_api['postinst_folder'],
-            'scripts')
+            config.imaging_api["base_folder"],
+            config.imaging_api["postinst_folder"],
+            "scripts",
+        )
         if not os.path.exists(postinst_scripts_folder):
             self.logger.info(
                 "Postinst scripts directory %s doesn't exists, create it",
-                postinst_scripts_folder)
+                postinst_scripts_folder,
+            )
             os.mkdir(postinst_scripts_folder)
 
         # Create and write sh file
         try:
-            f = open(
-                os.path.join(
-                    postinst_scripts_folder,
-                    script_file[0]),
-                'w')
-            f.write('#!/bin/bash\n')
-            f.write('\n')
-            f.write('. /usr/lib/libpostinst.sh')
-            f.write('\n')
-            f.write('set -v\n')
-            f.write('\n')
+            f = open(os.path.join(postinst_scripts_folder, script_file[0]), "w")
+            f.write("#!/bin/bash\n")
+            f.write("\n")
+            f.write(". /usr/lib/libpostinst.sh")
+            f.write("\n")
+            f.write("set -v\n")
+            f.write("\n")
             f.write(script_file[1])
             f.close()
             self.logger.info(
-                'File %s successfully created',
-                os.path.join(
-                    postinst_scripts_folder,
-                    script_file[0]))
+                "File %s successfully created",
+                os.path.join(postinst_scripts_folder, script_file[0]),
+            )
         except Exception as e:
-            self.logger.exception('Error while create sh file: %s', e)
+            self.logger.exception("Error while create sh file: %s", e)
 
         return True
 
@@ -802,16 +872,18 @@ class ImagingBootServiceItem(ImagingItem):
 
         config = PackageServerConfig()
         postinst_scripts_folder = os.path.join(
-            config.imaging_api['base_folder'],
-            config.imaging_api['postinst_folder'],
-            'scripts')
+            config.imaging_api["base_folder"],
+            config.imaging_api["postinst_folder"],
+            "scripts",
+        )
         if not os.path.exists(postinst_scripts_folder):
             self.logger.exception(
                 "Error while delete sh file: Post-install script folder %s doesn't exists",
-                postinst_scripts_folder)
+                postinst_scripts_folder,
+            )
             raise Exception(
-                "Post-install script folder %s doesn't exists",
-                postinst_scripts_folder)
+                "Post-install script folder %s doesn't exists", postinst_scripts_folder
+            )
 
         try:
             os.unlink(os.path.join(postinst_scripts_folder, script_file))
@@ -833,24 +905,24 @@ class ImagingImageItem(ImagingItem):
     # Grub cmdlines
     CMDLINE = "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
 
-    POSTINST = '%02d_postinst'
-    POSTINSTDIR = 'postinst.d'
+    POSTINST = "%02d_postinst"
+    POSTINSTDIR = "postinst.d"
 
     def __init__(self, entry):
         """
         Initialize this object.
         """
         ImagingItem.__init__(self, entry)
-        self.uuid = entry['uuid']
-        assert(isinstance(self.uuid, str))
-        if 'post_install_script' in entry:
-            assert(isinstance(entry['post_install_script'], list))
-            self.post_install_script = entry['post_install_script']
+        self.uuid = entry["uuid"]
+        assert isinstance(self.uuid, str)
+        if "post_install_script" in entry:
+            assert isinstance(entry["post_install_script"], list)
+            self.post_install_script = entry["post_install_script"]
         else:
             self.post_install_script = None
 
         # Davos imaging client case
-        if PackageServerConfig().imaging_api['diskless_folder'] == "davos":
+        if PackageServerConfig().imaging_api["diskless_folder"] == "davos":
             self.CMDLINE = "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE ##PULSE2_DAVOS_OPTS##\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
             self.CMDLINE = "kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE ##PULSE2_DAVOS_OPTS##\ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
 
@@ -861,9 +933,9 @@ class ImagingImageItem(ImagingItem):
 
         @return: the entry, in a SYSLINUX compatible format.
         """
-        buf = 'LABEL %s\n' % self.label
-        buf += 'MENU LABEL %s\n' % self.label
-        buf += self.CMDLINE + '\n'
+        buf = "LABEL %s\n" % self.label
+        buf += "MENU LABEL %s\n" % self.label
+        buf += self.CMDLINE + "\n"
         return self._applyReplacement(buf, network)
 
     def write(self, config):
@@ -872,32 +944,31 @@ class ImagingImageItem(ImagingItem):
         """
         # First: remove old post-imaging directory if there is one
         postinstdir = os.path.join(
-            config.imaging_api['base_folder'],
-            config.imaging_api['masters_folder'],
+            config.imaging_api["base_folder"],
+            config.imaging_api["masters_folder"],
             self.uuid,
-            self.POSTINSTDIR)
+            self.POSTINSTDIR,
+        )
         if os.path.exists(postinstdir):
             self.logger.debug(
-                'Deleting previous post-imaging directory: %s' %
-                postinstdir)
+                "Deleting previous post-imaging directory: %s" % postinstdir
+            )
             try:
                 shutil.rmtree(postinstdir)
             except OSError as e:
                 self.logger.error(
-                    "Can't delete post-imaging directory %s: %s" %
-                    (postinstdir, e))
+                    "Can't delete post-imaging directory %s: %s" % (postinstdir, e)
+                )
                 raise
         # Then populate the post-imaging script directory if needed
         if self.post_install_script:
             try:
                 os.mkdir(postinstdir)
-                self.logger.debug(
-                    'Directory successfully created: %s' %
-                    postinstdir)
+                self.logger.debug("Directory successfully created: %s" % postinstdir)
             except OSError as e:
                 self.logger.error(
-                    "Can't create post-imaging script folder %s: %s" %
-                    (postinstdir, e))
+                    "Can't create post-imaging script folder %s: %s" % (postinstdir, e)
+                )
                 raise
 
             order = 1  # keep 0 for later use
@@ -905,34 +976,34 @@ class ImagingImageItem(ImagingItem):
                 postinst = os.path.join(postinstdir, self.POSTINST % order)
                 try:
                     # write header
-                    f = open(postinst, 'w+')
-                    f.write('#!/bin/bash\n')
-                    f.write('\n')
-                    f.write('. /usr/lib/libpostinst.sh')
-                    f.write('\n')
+                    f = open(postinst, "w+")
+                    f.write("#!/bin/bash\n")
+                    f.write("\n")
+                    f.write(". /usr/lib/libpostinst.sh")
+                    f.write("\n")
                     f.write(
-                        'echo "==> postinstall script #%d : %s"\n' %
-                        (order, script['name'].encode('utf-8')))
-                    f.write('set -v\n')
-                    f.write('\n')
-                    f.write(script['value'].encode('utf-8'))
+                        'echo "==> postinstall script #%d : %s"\n'
+                        % (order, script["name"].encode("utf-8"))
+                    )
+                    f.write("set -v\n")
+                    f.write("\n")
+                    f.write(script["value"].encode("utf-8"))
                     f.close()
                     os.chmod(postinst, stat.S_IRUSR | stat.S_IXUSR)
-                    self.logger.debug(
-                        'Successfully wrote script: %s' %
-                        postinst)
+                    self.logger.debug("Successfully wrote script: %s" % postinst)
                 except OSError as e:
                     self.logger.error(
-                        "Can't update post-imaging script %s: %s" %
-                        (postinst, e))
+                        "Can't update post-imaging script %s: %s" % (postinst, e)
+                    )
                     raise
                 except Exception as e:
                     self.logger.error(
-                        "Something wrong happened while writing post-imaging script %s: %s" %
-                        (postinst, e))
+                        "Something wrong happened while writing post-imaging script %s: %s"
+                        % (postinst, e)
+                    )
                 order += 1
         else:
-            self.logger.debug('No post-imaging script to write')
+            self.logger.debug("No post-imaging script to write")
 
 
 def changeDefaultMenuItem(macaddress, value):
@@ -952,57 +1023,60 @@ def changeDefaultMenuItem(macaddress, value):
     @rtype: bool
     """
     config = PackageServerConfig()
-    logger = logging.getLogger('imaging')
+    logger = logging.getLogger("imaging")
     filename = os.path.join(
-        config.imaging_api['base_folder'],
-        config.imaging_api['bootmenus_folder'],
-        pulse2.utils.normalizeMACAddressForPXELINUX(macaddress))
-    logger.debug('Changing default boot menu item of computer MAC %s'
-                 % macaddress)
-    newlines = ''
+        config.imaging_api["base_folder"],
+        config.imaging_api["bootmenus_folder"],
+        pulse2.utils.normalizeMACAddressForPXELINUX(macaddress),
+    )
+    logger.debug("Changing default boot menu item of computer MAC %s" % macaddress)
+    newlines = ""
     try:
         for line in open(filename):
-            if line.startswith('default '):
-                if line == 'default %d\n' % value:
+            if line.startswith("default "):
+                if line == "default %d\n" % value:
                     logger.debug(
-                        'Default item is already set to %d, nothing to do.' %
-                        value)
+                        "Default item is already set to %d, nothing to do." % value
+                    )
                     return True
                 # Change default menu item
-                newlines += 'default %d\n' % value
+                newlines += "default %d\n" % value
             else:
                 newlines += line
     except OSError as e:
-        logger.error('Error while reading computer bootmenu file %s: %s' %
-                     (filename, str(e)))
-        logger.error('This computer default menu item can\'t be changed')
-        newlines = ''
+        logger.error(
+            "Error while reading computer bootmenu file %s: %s" % (filename, str(e))
+        )
+        logger.error("This computer default menu item can't be changed")
+        newlines = ""
     if newlines:
         backupname = "%s.backup" % filename
         try:
             os.rename(filename, backupname)
         except OSError as e:  # can make a backup : give up !
-            logger.error("While backuping boot menu %s as %s : %s"
-                         % (filename, backupname, e))
+            logger.error(
+                "While backuping boot menu %s as %s : %s" % (filename, backupname, e)
+            )
             return False
         # Write new boot menu
         try:
-            fid = open(filename, 'w+b')
+            fid = open(filename, "w+b")
             fid.write(newlines)
             fid.close()
             logger.debug(
-                'Successfully wrote boot menu for computer MAC %s into file %s' %
-                (macaddress, filename))
+                "Successfully wrote boot menu for computer MAC %s into file %s"
+                % (macaddress, filename)
+            )
         except IOError as e:
-            logger.error("While writing boot menu for %s : %s"
-                         % (macaddress, e))
+            logger.error("While writing boot menu for %s : %s" % (macaddress, e))
             return False
         # Remove boot menu backup
         try:
             os.unlink(backupname)
         except OSError as e:
-            logger.warn("While removing backup %s of %s : %s"
-                        % (backupname, filename, e))
+            logger.warn(
+                "While removing backup %s of %s : %s" % (backupname, filename, e)
+            )
         return True
     return False
 
@@ -1022,10 +1096,11 @@ class ImagingMulticastMenuBuilder:
         """
 
         self.pathBootMenu = os.path.join(
-            PackageServerConfig().imaging_api['base_folder'],
-            PackageServerConfig().imaging_api['bootmenus_folder'])
-        self.logger = logging.getLogger('imaging')
-        self.logger.debug('creation commande et menu [%s] ' % (menu))
+            PackageServerConfig().imaging_api["base_folder"],
+            PackageServerConfig().imaging_api["bootmenus_folder"],
+        )
+        self.logger = logging.getLogger("imaging")
+        self.logger.debug("creation commande et menu [%s] " % (menu))
         self.menu = menu
         self.public_ip = PackageServerConfig().public_ip
         self.server_address = self.ipV4toDecimal(self.public_ip)
@@ -1038,17 +1113,16 @@ class ImagingMulticastMenuBuilder:
         # if pulse2.utils.get_ip_address(interface)==self.public_ip:
         # self.nameinterface=interface
         # break
-        #self.logger.info('interface [%s] ip [%s]'%(self.nameinterface,self.public_ip))
+        # self.logger.info('interface [%s] ip [%s]'%(self.nameinterface,self.public_ip))
         self.action = "startdisk"
-        diskfile = os.path.join(self.menu['path'], "disk")
+        diskfile = os.path.join(self.menu["path"], "disk")
         # load disk restore
-        fid = open(diskfile, 'r')
+        fid = open(diskfile, "r")
         lines = fid.readlines()
         fid.close()
-        self.disk = [x.strip(' \t\n\r"')
-                     for x in lines if x.strip(' \t\n\r"') != ""]
+        self.disk = [x.strip(' \t\n\r"') for x in lines if x.strip(' \t\n\r"') != ""]
 
-        if 'maxwaittime' in self.menu:
+        if "maxwaittime" in self.menu:
             self.templatecmdline = """#!/bin/bash
 echo -e "DO NOT DELETE" > /tmp/processmulticast
 echo "" > /tmp/udp-sender.log
@@ -1061,20 +1135,21 @@ waitting=%s
 locationuuid=%s
 maxtimetowait=%s
 drbl-ocs -sc0 -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s  --max-time-to-wait %s -l en_US.UTF-8 -h "127.0.0.1" %s multicast_restore %s %s &>> /tmp/%s.log""" % (
-                self.menu['description'],
-                self.menu['path'],
-                self.menu['master'],
-                self.menu['size'],
-                self.menu['group'],
-                self.menu['nbcomputer'],
-                self.menu['location'],
-                self.menu['maxwaittime'],
-                self.menu['nbcomputer'],
-                self.menu['maxwaittime'],
+                self.menu["description"],
+                self.menu["path"],
+                self.menu["master"],
+                self.menu["size"],
+                self.menu["group"],
+                self.menu["nbcomputer"],
+                self.menu["location"],
+                self.menu["maxwaittime"],
+                self.menu["nbcomputer"],
+                self.menu["maxwaittime"],
                 self.action,
-                self.menu['master'],
+                self.menu["master"],
                 self.disk[0],
-                self.menu['master'])
+                self.menu["master"],
+            )
         else:
             self.templatecmdline = """#!/bin/bash
 echo -e "NE PAS EFFACER\nDO NOT DELETE" > /tmp/processmulticast
@@ -1087,18 +1162,19 @@ groupuuid=%s
 waitting=%s
 locationuuid=%s
 drbl-ocs -sc0 -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8 -h "127.0.0.1" %s multicast_restore %s %s &>> /tmp/%s.log""" % (
-                self.menu['description'],
-                self.menu['path'],
-                self.menu['master'],
-                self.menu['size'],
-                self.menu['group'],
-                self.menu['nbcomputer'],
-                self.menu['location'],
-                self.menu['nbcomputer'],
+                self.menu["description"],
+                self.menu["path"],
+                self.menu["master"],
+                self.menu["size"],
+                self.menu["group"],
+                self.menu["nbcomputer"],
+                self.menu["location"],
+                self.menu["nbcomputer"],
                 self.action,
-                self.menu['master'],
+                self.menu["master"],
                 self.disk[0],
-                self.menu['master'])
+                self.menu["master"],
+            )
         self.template = """
 UI vesamenu.c32
 TIMEOUT 100
@@ -1121,41 +1197,46 @@ INITRD ../davos/initrd.img
 """
 
     def ipV4toDecimal(self, ipv4):
-        d = ipv4.split('.')
-        return (int(d[0]) * 256 * 256 * 256) + (int(d[1])
-                                                * 256 * 256) + (int(d[2]) * 256) + int(d[3])
+        d = ipv4.split(".")
+        return (
+            (int(d[0]) * 256 * 256 * 256)
+            + (int(d[1]) * 256 * 256)
+            + (int(d[2]) * 256)
+            + int(d[3])
+        )
 
     def isValidIPv4Address(self, adressmachine):
         self.logger.info(
-            "controle of the machine address %s in network %s" %
-            (adressmachine, self.networkserver))
+            "controle of the machine address %s in network %s"
+            % (adressmachine, self.networkserver)
+        )
         adressmachine = adressmachine.split(":")[0]
         reseaumachine = self.ipV4toDecimal(adressmachine) & self.mask_server
         if self.networkserver == reseaumachine:
             self.logger.info(
-                "machine address %s in network %s" %
-                (adressmachine, self.networkserver))
+                "machine address %s in network %s" % (adressmachine, self.networkserver)
+            )
             return True
         else:
             self.logger.error(
-                "machine %s in not in network %s. Please check your public_mask setting." %
-                (adressmachine, self.networkserver))
+                "machine %s in not in network %s. Please check your public_mask setting."
+                % (adressmachine, self.networkserver)
+            )
         return False
 
     def chooseMacAddress(self):
         rest = True
-        for k, v in self.menu['computer'].items():
+        for k, v in self.menu["computer"].items():
             if self.isValidIPv4Address(v):
                 mac = pulse2.utils.reduceMACAddress(k)
                 filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
-                self.logger.debug(
-                    "create bootMenu [%s] Computer ip [%s]" %
-                    (k, v))
-                menuval = self.template % (self.menu['description'],
-                                           self.public_ip,
-                                           k,  # mac
-                                           self.menu['master']
-                                           )
+                self.logger.debug("create bootMenu [%s] Computer ip [%s]" % (k, v))
+                menuval = self.template % (
+                    self.menu["description"],
+                    self.public_ip,
+                    k,  # mac
+                    self.menu["master"],
+                )
                 self.logger.debug("bootMenu [%s]\n%s" % (mac, menuval))
                 if self.writeMenuMulticast(filename, menuval) == False:
                     rest = False
@@ -1169,27 +1250,29 @@ INITRD ../davos/initrd.img
         try:
             os.rename(fichier, backupname)
         except OSError as e:  # can make a backup : give up !
-            self.logger.error("While backuping boot menu %s as %s : %s"
-                              % (fichier, backupname, e))
+            self.logger.error(
+                "While backuping boot menu %s as %s : %s" % (fichier, backupname, e)
+            )
 
         # Write new boot menu
         try:
-            fid = open(fichier, 'w+b')
+            fid = open(fichier, "w+b")
             fid.write(content)
             fid.close()
             self.logger.debug(
-                'Successfully wrote boot menu for computer MAC %s into file %s' %
-                (filename, fichier))
+                "Successfully wrote boot menu for computer MAC %s into file %s"
+                % (filename, fichier)
+            )
         except IOError as e:
-            self.logger.error("While writing boot menu for %s : %s"
-                              % (filename, e))
+            self.logger.error("While writing boot menu for %s : %s" % (filename, e))
             return False
         # Remove boot menu backup
         try:
             os.unlink(backupname)
         except OSError as e:
-            self.logger.warn("While removing backup %s of %s : %s"
-                             % (backupname, filename, e))
+            self.logger.warn(
+                "While removing backup %s of %s : %s" % (backupname, filename, e)
+            )
         return True
 
     def make(self):
@@ -1204,18 +1287,18 @@ INITRD ../davos/initrd.img
         # generation command line in tmp
         multicast_file = os.path.join("/tmp", "multicast.sh")
         try:
-            fid = open(multicast_file, 'w+b')
+            fid = open(multicast_file, "w+b")
             fid.write(self.templatecmdline)
             fid.close()
-            os.chmod(multicast_file, stat.S_IXUSR |
-                     stat.S_IWUSR | stat.S_IRUSR)
+            os.chmod(multicast_file, stat.S_IXUSR | stat.S_IWUSR | stat.S_IRUSR)
             self.logger.debug(
-                'Successfully wrote multicast command into file %s' %
-                (multicast_file))
+                "Successfully wrote multicast command into file %s" % (multicast_file)
+            )
             return True
         except IOError as e:
             self.logger.error(
-                "Error %s while writing command for multicast command in %s" %
-                (e, multicast_file))
+                "Error %s while writing command for multicast command in %s"
+                % (e, multicast_file)
+            )
             return False
         return True

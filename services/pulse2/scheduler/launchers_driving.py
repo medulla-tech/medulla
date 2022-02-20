@@ -57,7 +57,7 @@ class Stats:
         @type stats: dict
         """
         for cont_attr_name, values in list(stats.items()):
-            cont_attr = type('Statistics', (object,), values)
+            cont_attr = type("Statistics", (object,), values)
             setattr(self, cont_attr_name, cont_attr)
 
 
@@ -75,7 +75,6 @@ class NoLauncherError(Exception):
 
 
 class LauncherCallError(Exception):
-
     def __init__(self, launcher):
         self.launcher = launcher
 
@@ -93,12 +92,13 @@ class LauncherCallingProvider(type):
 
     This provider can be implemented as a metaclass.
     """
+
     # All launchers URLs identified by name of launcher
     launchers = {}
     # A launcher evaulated as the nearest
     default_launcher = None
     # No need the launcher detection
-    #single_mode = len(launchers) == 1
+    # single_mode = len(launchers) == 1
 
     @property
     def single_mode(self):
@@ -117,8 +117,9 @@ class LauncherCallingProvider(type):
         @param attrs: dictionnary of attributtes
         @type attrs: dict
         """
-        my_dict = dict((k, v) for (k, v) in list(cls.__dict__.items())
-                       if not k.startswith("__"))
+        my_dict = dict(
+            (k, v) for (k, v) in list(cls.__dict__.items()) if not k.startswith("__")
+        )
         attrs.update(my_dict)
         return type.__new__(cls, name, bases, attrs)
 
@@ -139,13 +140,11 @@ class LauncherCallingProvider(type):
         @rtype: Deferred
         """
         if launcher:
-            logging.getLogger().debug(
-                "Launcher: method %s(%s)" %
-                (method, str(args)))
+            logging.getLogger().debug("Launcher: method %s(%s)" % (method, str(args)))
             uri = self.launchers[launcher]
             logging.getLogger().debug(
-                "Calling on launcher %s uri [%s]: method %s" %
-                (launcher, uri, method))
+                "Calling on launcher %s uri [%s]: method %s" % (launcher, uri, method)
+            )
             proxy = getProxy(uri)
             d = proxy.callRemote(method, *args)
             d.addErrback(self._call_error, launcher, method)
@@ -169,13 +168,15 @@ class LauncherCallingProvider(type):
         err = failure.trap(TCPTimedOutError)
         if err == TCPTimedOutError:
             logging.getLogger().warn(
-                "Timeout raised on launcher '%s' when calling method '%s'" %
-                (launcher, method))
+                "Timeout raised on launcher '%s' when calling method '%s'"
+                % (launcher, method)
+            )
             logging.getLogger().warn("Call aborted")
         else:
             logging.getLogger().error(
-                "An error occured when calling method %s on launcher %s: %s" %
-                (method, launcher, failure))
+                "An error occured when calling method %s on launcher %s: %s"
+                % (method, launcher, failure)
+            )
         return failure
 
     def get_stats(self, launcher):
@@ -225,12 +226,13 @@ class LauncherCallingProvider(type):
         err = failure.trap(TCPTimedOutError)
         if err == TCPTimedOutError:
             logging.getLogger().warn(
-                "Timeout raised on launcher '%s' when getting the stats" %
-                launcher)
+                "Timeout raised on launcher '%s' when getting the stats" % launcher
+            )
         else:
             logging.getLogger().error(
-                "An error occured when extract the stats from launcher %s: %s" %
-                (launcher, failure))
+                "An error occured when extract the stats from launcher %s: %s"
+                % (launcher, failure)
+            )
         return failure
 
     def is_default_free(self):
@@ -249,6 +251,7 @@ class LauncherCallingProvider(type):
                 if stats.slots.slottotal - stats.slots.slotused > 0:
                     return True
             return False
+
         return d
 
     def get_all_slots(self):
@@ -268,8 +271,10 @@ class LauncherCallingProvider(type):
                 logging.getLogger().warn("Unable to get the slots from launcher")
             else:
                 logging.getLogger().error(
-                    "An error occured when getting the slots from launcher: %s" %
-                    failure)
+                    "An error occured when getting the slots from launcher: %s"
+                    % failure
+                )
+
         return d
 
     def _get_all_stats(self):
@@ -304,13 +309,21 @@ class LauncherCallingProvider(type):
                 if hasattr(result, "trap"):
                     err = result.trap(ConnectionRefusedError, ConnectError)
                     if err in (ConnectionRefusedError, ConnectError):
-                        logging.getLogger().warn("Cannot contact a launcher from list to detect the slots !")
+                        logging.getLogger().warn(
+                            "Cannot contact a launcher from list to detect the slots !"
+                        )
                     else:
-                        logging.getLogger().warn("Getting the slots number failed: %s" % result)
+                        logging.getLogger().warn(
+                            "Getting the slots number failed: %s" % result
+                        )
                 else:
-                    logging.getLogger().error("Getting the slots number failed: %s" % result)
+                    logging.getLogger().error(
+                        "Getting the slots number failed: %s" % result
+                    )
 
-                logging.getLogger().info("Set slots to default value from scheduler's config file")
+                logging.getLogger().info(
+                    "Set slots to default value from scheduler's config file"
+                )
 
         return self.slots
 
@@ -351,8 +364,8 @@ class LauncherCallingProvider(type):
             logging.getLogger().warn("Timeout raised when selecting a launcher")
         else:
             logging.getLogger().error(
-                "An error occured when selecting a launcher: %s" %
-                failure)
+                "An error occured when selecting a launcher: %s" % failure
+            )
         return failure
 
     def _dispatch_launchers(self, method, *args):
@@ -418,9 +431,7 @@ class LauncherCallingProvider(type):
         if not self.single_mode:
             return self._dispatch_launchers(method, *args)
         else:
-            return self._call(self.default_launcher,
-                              method,
-                              *args)
+            return self._call(self.default_launcher, method, *args)
 
 
 def same_call(method):
@@ -433,7 +444,7 @@ def same_call(method):
     @return: xmlrpc calling provider
     @rtype: Deferred
     """
-    # Example of use :
+    # Example of use :
     #
     # declaration like this
     #
@@ -448,6 +459,7 @@ def same_call(method):
 
     def wrapped(self, *args, **kwargs):
         return self.call_method(method.__name__, *args, **kwargs)
+
     return wrapped
 
 
@@ -475,237 +487,177 @@ class RemoteCallProxy(metaclass=LauncherCallingProvider):
         self.slots = slots
 
     @same_call
-    def sync_remote_push(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote copy on target, sync mode """
+    def sync_remote_push(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote copy on target, sync mode"""
         pass
 
     @same_call
-    def async_remote_push(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote copy on target, async mode """
+    def async_remote_push(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote copy on target, async mode"""
         pass
 
     @same_call
-    def sync_remote_pull(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote copy on target, sync mode """
+    def sync_remote_pull(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote copy on target, sync mode"""
         pass
 
     @same_call
-    def async_remote_pull(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote copy on target, async mode """
+    def async_remote_pull(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote copy on target, async mode"""
         pass
 
     @same_call
-    def sync_remote_delete(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote delete on target, sync mode """
+    def sync_remote_delete(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote delete on target, sync mode"""
         pass
 
     @same_call
-    def async_remote_delete(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote delete on target, async mode """
+    def async_remote_delete(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote delete on target, async mode"""
         pass
 
     @same_call
-    def sync_remote_exec(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote exec on target, sync mode """
+    def sync_remote_exec(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote exec on target, sync mode"""
         pass
 
     @same_call
-    def async_remote_exec(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote exec on target, async mode """
+    def async_remote_exec(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote exec on target, async mode"""
         pass
 
     @same_call
-    def sync_remote_quickaction(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote quick action on target, sync mode """
+    def sync_remote_quickaction(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote quick action on target, sync mode"""
         pass
 
     @same_call
-    def async_remote_quickaction(
-            self,
-            command_id,
-            client,
-            files_list,
-            wrapper_timeout):
-        """ Handle remote quick action on target, async mode """
+    def async_remote_quickaction(self, command_id, client, files_list, wrapper_timeout):
+        """Handle remote quick action on target, async mode"""
         pass
 
     @same_call
     def sync_remote_inventory(self, command_id, client, wrapper_timeout):
-        """ Handle remote inventory on target, sync mode """
+        """Handle remote inventory on target, sync mode"""
         pass
 
     @same_call
     def async_remote_inventory(self, command_id, client, wrapper_timeout):
-        """ Handle remote inventory on target, async mode """
+        """Handle remote inventory on target, async mode"""
         pass
 
     @same_call
     def sync_remote_reboot(self, command_id, client, wrapper_timeout):
-        """ Handle remote reboot on target, sync mode """
+        """Handle remote reboot on target, sync mode"""
         pass
 
     @same_call
     def async_remote_reboot(self, command_id, client, wrapper_timeout):
-        """ Handle remote reboot on target, async mode """
+        """Handle remote reboot on target, async mode"""
         pass
 
     @same_call
     def sync_remote_halt(self, command_id, client, wrapper_timeout):
-        """ Handle remote halt on target, sync mode """
+        """Handle remote halt on target, sync mode"""
         pass
 
     @same_call
     def async_remote_halt(self, command_id, client, wrapper_timeout):
-        """ Handle remote halt on target, async mode """
+        """Handle remote halt on target, async mode"""
         pass
 
-    def downloadFile(self,
-                     uuid,
-                     fqdn,
-                     shortname,
-                     ips,
-                     macs,
-                     netmasks,
-                     path,
-                     bwlimit):
+    def downloadFile(self, uuid, fqdn, shortname, ips, macs, netmasks, path, bwlimit):
         # choose a way to perform the operation
 
-        ip = chooseClientIP({'uuid': uuid,
-                             'fqdn': fqdn,
-                             'shortname': shortname,
-                             'ips': ips,
-                             'macs': macs,
-                             'netmasks': netmasks
-                             })
+        ip = chooseClientIP(
+            {
+                "uuid": uuid,
+                "fqdn": fqdn,
+                "shortname": shortname,
+                "ips": ips,
+                "macs": macs,
+                "netmasks": netmasks,
+            }
+        )
 
         if not ip or not NetUtils.is_ipv4_format(ip):
             logging.getLogger().warn("Ivalid IP address format: '%s'" % str(ip))
             return fail(False)
 
-        client = {'host': ip,
-                  'chosen_ip': ip,
-                  'uuid': uuid,
-                  'shortname': shortname,
-                  'ip': ips,
-                  'macs': macs,
-                  'protocol': 'ssh'
-                  }
-        client['client_check'] = getClientCheck(client)
-        client['server_check'] = getServerCheck(client)
-        client['action'] = getAnnounceCheck('download')
+        client = {
+            "host": ip,
+            "chosen_ip": ip,
+            "uuid": uuid,
+            "shortname": shortname,
+            "ip": ips,
+            "macs": macs,
+            "protocol": "ssh",
+        }
+        client["client_check"] = getClientCheck(client)
+        client["server_check"] = getServerCheck(client)
+        client["action"] = getAnnounceCheck("download")
 
-        return self.call_method('download_file', client, path, bwlimit)
+        return self.call_method("download_file", client, path, bwlimit)
 
-    def establish_proxy(self,
-                        uuid,
-                        fqdn,
-                        shortname,
-                        ips,
-                        macs,
-                        netmasks,
-                        requestor_ip,
-                        requested_port):
-
+    def establish_proxy(
+        self, uuid, fqdn, shortname, ips, macs, netmasks, requestor_ip, requested_port
+    ):
         def _finalize(result):
             if isinstance(result, list):  # got expected struct
                 (launcher, host, port, key) = result
-                if key == '-':
+                if key == "-":
                     # Key not provided => TCP Proxy
                     logging.getLogger().info(
-                        'VNC Proxy: launcher "%s" created new TCP Proxy to "%s:%s"' %
-                        (launcher, host, str(port)))
+                        'VNC Proxy: launcher "%s" created new TCP Proxy to "%s:%s"'
+                        % (launcher, host, str(port))
+                    )
                 else:
-                    # Key provided => Websocket Proxy
+                    # Key provided => Websocket Proxy
                     logging.getLogger().info(
-                        'VNC Proxy: launcher "%s" created new WebSocket Proxy to "%s:%s" with key "%s"' %
-                        (str(launcher), str(host), str(port), str(key)))
-                if host == '':
-                    host = SchedulerConfig().launchers[launcher]['host']
+                        'VNC Proxy: launcher "%s" created new WebSocket Proxy to "%s:%s" with key "%s"'
+                        % (str(launcher), str(host), str(port), str(key))
+                    )
+                if host == "":
+                    host = SchedulerConfig().launchers[launcher]["host"]
                 return (host, port, key)
             else:
                 return False
+
         # choose a way to perform the operation
-        ip = chooseClientIP({'uuid': uuid,
-                             'fqdn': fqdn,
-                             'shortname': shortname,
-                             'ips': ips,
-                             'macs': macs,
-                             'netmasks': netmasks
-                             })
+        ip = chooseClientIP(
+            {
+                "uuid": uuid,
+                "fqdn": fqdn,
+                "shortname": shortname,
+                "ips": ips,
+                "macs": macs,
+                "netmasks": netmasks,
+            }
+        )
 
         if not ip or not NetUtils.is_ipv4_format(ip):
             logging.getLogger().warn("Ivalid IP address format: '%s'" % str(ip))
             return fail(False)
 
-        client = {'host': ip,
-                  'chosen_ip': ip,
-                  'uuid': uuid,
-                  'shortname': shortname,
-                  'ip': ips,
-                  'macs': macs,
-                  'protocol': 'tcpsproxy'
-                  }
-        client['client_check'] = getClientCheck(client)
-        client['server_check'] = getServerCheck(client)
-        client['action'] = getAnnounceCheck('vnc')
+        client = {
+            "host": ip,
+            "chosen_ip": ip,
+            "uuid": uuid,
+            "shortname": shortname,
+            "ip": ips,
+            "macs": macs,
+            "protocol": "tcpsproxy",
+        }
+        client["client_check"] = getClientCheck(client)
+        client["server_check"] = getServerCheck(client)
+        client["action"] = getAnnounceCheck("vnc")
 
-        d = self.call_method(
-            'tcp_sproxy',
-            client,
-            requestor_ip,
-            requested_port)
+        d = self.call_method("tcp_sproxy", client, requestor_ip, requested_port)
         d.addCallback(_finalize)
 
         @d.addErrback
         def _eb(failure):
-            logging.getLogger().warn(
-                "VNC proxy open failed: %s" %
-                str(failure))
+            logging.getLogger().warn("VNC proxy open failed: %s" % str(failure))
 
         return d
 
@@ -726,22 +678,26 @@ class RemoteCallProxy(metaclass=LauncherCallingProvider):
             1 => ping OK, ssh NOK
             2 => ping OK, ssh OK
         """
+
         def _pingcb(result, client=client):
             def _probecb(result, client=client):
                 if not result == "Not available":
                     return 2
                 return 1
+
             if result:
                 d = self.probe_client(client)
                 d.addCallback(_probecb)
                 return d
             return 0
+
         d = self.ping_client(client)
         d.addCallback(_pingcb)
         return d
 
     # TODO
-    def getLaunchersBalance(self): pass
+    def getLaunchersBalance(self):
+        pass
 
     @same_call
     def get_zombie_ids(self):

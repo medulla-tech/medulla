@@ -29,5 +29,5 @@ plugin = {"VERSION": "1.0", "NAME": "resultreverse_ssh_on", "TYPE": "master"}
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
-    logging.getLogger().debug("%s from %s" % (data['msg'], message['from']))
+    logging.getLogger().debug("%s from %s" % (data["msg"], message["from"]))
     pass

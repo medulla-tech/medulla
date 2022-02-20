@@ -25,13 +25,13 @@ MMC services dasboard panel
 from mmc.plugins.dashboard.panel import Panel
 from mmc.plugins.services import ServiceManager
 
-class ServicesPanel(Panel):
 
+class ServicesPanel(Panel):
     def serialize(self):
         data = {}
         for plugin, services in list(ServiceManager().list_plugins_services().items()):
             for service in services:
-                if service['active_state'] not in ("active", "unavailable"):
+                if service["active_state"] not in ("active", "unavailable"):
                     if not plugin in data:
                         data[plugin] = []
                     data[plugin].append(service)

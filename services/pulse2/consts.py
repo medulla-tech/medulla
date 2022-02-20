@@ -23,12 +23,13 @@
 # important consts for overall Pulse 2 consistency
 
 # Encoding, used for a wide bunch of stuff
-PULSE2_PREFERRED_ENCODING = 'utf-8'
+PULSE2_PREFERRED_ENCODING = "utf-8"
 
 # separator used by the wrapper
-PULSE2_WRAPPER_ARG_SEPARATOR_STR = '·'
+PULSE2_WRAPPER_ARG_SEPARATOR_STR = "·"
 PULSE2_WRAPPER_ARG_SEPARATOR_UNICODE = PULSE2_WRAPPER_ARG_SEPARATOR_STR.decode(
-    PULSE2_PREFERRED_ENCODING)
+    PULSE2_PREFERRED_ENCODING
+)
 PULSE2_WRAPPER_ARG_SEPARATOR = PULSE2_WRAPPER_ARG_SEPARATOR_UNICODE
 
 # important error code :D
@@ -87,10 +88,10 @@ PULSE2_WRAPPER_ERROR_PRECHECK_BASE = PULSE2_WRAPPER_ERROR_PRECHECK_MIN
 # exit code pre-check time (including  shifting by
 # PULSE2_WRAPPER_ERROR_PRECHECK_BASE)
 PULSE2_WRAPPER_ERROR_PRECHECK_TABLE = {
-    'ERROR': PULSE2_WRAPPER_ERROR_PRECHECK_BASE + 0,
-    'HOSTNAME': PULSE2_WRAPPER_ERROR_PRECHECK_BASE + 1,
-    'IP': PULSE2_WRAPPER_ERROR_PRECHECK_BASE + 2,
-    'MAC': PULSE2_WRAPPER_ERROR_PRECHECK_BASE + 3
+    "ERROR": PULSE2_WRAPPER_ERROR_PRECHECK_BASE + 0,
+    "HOSTNAME": PULSE2_WRAPPER_ERROR_PRECHECK_BASE + 1,
+    "IP": PULSE2_WRAPPER_ERROR_PRECHECK_BASE + 2,
+    "MAC": PULSE2_WRAPPER_ERROR_PRECHECK_BASE + 3,
 }
 
 """
@@ -161,95 +162,86 @@ PULSE2_COMMANDS_NONACTIVE_STATES = [
 ]
 PULSE2_COMMANDS_ACTIVE_STATES = ["active"]
 
-PULSE2_COMMANDS_STATES = PULSE2_COMMANDS_NONACTIVE_STATES + \
-    PULSE2_COMMANDS_ACTIVE_STATES
+PULSE2_COMMANDS_STATES = (
+    PULSE2_COMMANDS_NONACTIVE_STATES + PULSE2_COMMANDS_ACTIVE_STATES
+)
 
 # Commands On Host states
 """ Commands in this state are definitively terminated """
 
-PULSE2_FAILURE_STATE = [
-    'failed',
-    'over_timed'
-]
+PULSE2_FAILURE_STATE = ["failed", "over_timed"]
 
-PULSE2_SUCCESS_STATE = [
-    'done'
-]
+PULSE2_SUCCESS_STATE = ["done"]
 
-PULSE2_TERMINATED_STATES = [
-] + PULSE2_FAILURE_STATE + PULSE2_SUCCESS_STATE
+PULSE2_TERMINATED_STATES = [] + PULSE2_FAILURE_STATE + PULSE2_SUCCESS_STATE
 
 """ Commands in this state won't be preempted """
 PULSE2_UNPREEMPTABLE_STATES = [
-    'stop',
-    'stopped',
-    'pause',
-    'paused'
+    "stop",
+    "stopped",
+    "pause",
+    "paused",
 ] + PULSE2_TERMINATED_STATES
 
 """ Commands in these states are executed somewhere """
 PULSE2_PROGRESSING_STATES = [
-    'upload_in_progress',
-    'execution_in_progress',
-    'delete_in_progress',
-    'inventory_in_progress'
-    'reboot_in_progress',
-    'halt_in_progress',
+    "upload_in_progress",
+    "execution_in_progress",
+    "delete_in_progress",
+    "inventory_in_progress" "reboot_in_progress",
+    "halt_in_progress",
 ]
 
 """ Commands in these states are running somewhere (WOL is, says, 'special') """
-PULSE2_RUNNING_STATES = [
-    'wol_in_progress'
-] + PULSE2_PROGRESSING_STATES
+PULSE2_RUNNING_STATES = ["wol_in_progress"] + PULSE2_PROGRESSING_STATES
 
 """ Commands in these states have all passed the 'inventory' stage """
 PULSE2_POST_INVENTORY_STATES = [
-    'reboot_in_progress',
-    'reboot_done',
-    'reboot_failed',
-    'halt_in_progress',
-    'halt_done',
-    'halt_failed'
+    "reboot_in_progress",
+    "reboot_done",
+    "reboot_failed",
+    "halt_in_progress",
+    "halt_done",
+    "halt_failed",
 ] + PULSE2_TERMINATED_STATES
 
 """ Commands in these states have all passed the 'halt' stage """
-PULSE2_POST_HALT_STATES = [
-] + PULSE2_TERMINATED_STATES
+PULSE2_POST_HALT_STATES = [] + PULSE2_TERMINATED_STATES
 
 
 PULSE2_FAILED_NON_FINAL_STATES = [
-    'wol_failed',
-    'upload_failed',
-    'execution_failed',
-    'delete_failed',
-    'inventory_failed',
-    'reboot_failed',
-    'halt_failed'
+    "wol_failed",
+    "upload_failed",
+    "execution_failed",
+    "delete_failed",
+    "inventory_failed",
+    "reboot_failed",
+    "halt_failed",
 ]
 
 """ The stages a command will cross by, KEEP IN THAT ORDER ! """
 PULSE2_STAGES = [
-    'awoken',
-    'uploaded',
-    'executed',
-    'deleted',
-    'inventoried',
-    'rebooted',
-    'halted'
+    "awoken",
+    "uploaded",
+    "executed",
+    "deleted",
+    "inventoried",
+    "rebooted",
+    "halted",
 ]
 
 """ The stages prefixes KEEP IN THAT ORDER ! KEEP IN SYNC WITH PREVIOUS ! """
 PULSE2_STATE_PREFIXES = [
-    'wol',
-    'upload',
-    'execution',
-    'delete',
-    'inventory',
-    'reboot',
-    'halt'
+    "wol",
+    "upload",
+    "execution",
+    "delete",
+    "inventory",
+    "reboot",
+    "halt",
 ]
-PULSE2_STAGE_TODO = 'TODO'
-PULSE2_STAGE_WORK_IN_PROGRESS = 'WORK_IN_PROGRESS'
-PULSE2_STAGE_DONE = 'DONE'
-PULSE2_STAGE_IGNORED = 'IGNORED'
-PULSE2_STAGE_FAILED = 'FAILED'
+PULSE2_STAGE_TODO = "TODO"
+PULSE2_STAGE_WORK_IN_PROGRESS = "WORK_IN_PROGRESS"
+PULSE2_STAGE_DONE = "DONE"
+PULSE2_STAGE_IGNORED = "IGNORED"
+PULSE2_STAGE_FAILED = "FAILED"

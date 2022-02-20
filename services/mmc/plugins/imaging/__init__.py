@@ -46,22 +46,24 @@ from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 APIVERSION = "0:0:0"
 
-NOAUTHNEEDED = ['computerRegister',
-                'imagingServerRegister',
-                'getGeneratedMenu',
-                'isImagingServerRegistered',
-                'getComputerByMac',
-                'imageRegister',
-                'imageUpdate',
-                'logClientAction',
-                'injectInventory',
-                'getDefaultMenuForRegistering',
-                'getPXEParams',
-                'linkImagingServerToLocation',
-                'computerChangeDefaultMenuItem',
-                'synchroComputer',
-                'getDefaultMenuItem',
-                'getClonezillaParamsForTarget']
+NOAUTHNEEDED = [
+    "computerRegister",
+    "imagingServerRegister",
+    "getGeneratedMenu",
+    "isImagingServerRegistered",
+    "getComputerByMac",
+    "imageRegister",
+    "imageUpdate",
+    "logClientAction",
+    "injectInventory",
+    "getDefaultMenuForRegistering",
+    "getPXEParams",
+    "linkImagingServerToLocation",
+    "computerChangeDefaultMenuItem",
+    "synchroComputer",
+    "getDefaultMenuItem",
+    "getClonezillaParamsForTarget",
+]
 
 
 def getApiVersion():
@@ -82,7 +84,9 @@ def activate():
 
     # Initialize imaging database
     if not ImagingDatabase().activate(config):
-        logger.warning("Plugin imaging: an error occurred during the database initialization")
+        logger.warning(
+            "Plugin imaging: an error occurred during the database initialization"
+        )
         return False
 
     # register ImagingProfile in ComputerProfileManager but only as a client
@@ -90,13 +94,15 @@ def activate():
 
     ComputerImagingManager().register("imaging", ComputerImagingImaging)
 
-    Pulse2Manager().register('imaging', ImagingPulse2Manager)
+    Pulse2Manager().register("imaging", ImagingPulse2Manager)
 
-    ComputerManager().register('imaging', InventoryComputers)
+    ComputerManager().register("imaging", InventoryComputers)
 
-    TaskManager().addTask("imaging.purge_removed_computers",
-                        (purge_removed_computers,),
-                        cron_expression=config.purge_interval)
+    TaskManager().addTask(
+        "imaging.purge_removed_computers",
+        (purge_removed_computers,),
+        cron_expression=config.purge_interval,
+    )
 
     return True
 
@@ -105,9 +111,11 @@ def activate_2():
     """
     Check that the MMC pulse2 plugin is enabled
     """
-    if not PluginManager().isEnabled('pulse2'):
+    if not PluginManager().isEnabled("pulse2"):
         ret = False
-        logging.getLogger().error("Plugin imaging: plugin is disabled because the pulse2 plugin is not available")
+        logging.getLogger().error(
+            "Plugin imaging: plugin is disabled because the pulse2 plugin is not available"
+        )
     else:
         ret = True
     return ret
@@ -122,29 +130,28 @@ def purge_removed_computers():
 
     # Creating root context to query ComputerManager
     ctx = SecurityContext()
-    ctx.userid = 'root'
+    ctx.userid = "root"
     ctx.userdn = LdapUserGroupControl().searchUserDN(ctx.userid)
 
     # Init to_delete computer list
     to_delete = []
 
     for uuid in targets:
-        if ComputerManager().getComputerCount(ctx, {'uuid': uuid}) == 0:
+        if ComputerManager().getComputerCount(ctx, {"uuid": uuid}) == 0:
             # If the target computer is not in ComputerManager database anymore
             # we unregister it from imaging
             to_delete.append(uuid)
 
     # Unregistering orphan targets without backup
     if to_delete:
-        logging.getLogger().info('Orphan imaging computer(s) found')
-        logging.getLogger().info('Going to purge %s' % ' '.join(to_delete))
+        logging.getLogger().info("Orphan imaging computer(s) found")
+        logging.getLogger().info("Going to purge %s" % " ".join(to_delete))
         computersUnregister(to_delete, False)
 
     return True
 
 
 class ContextMaker(ContextMakerI):
-
     def getContext(self):
         s = SecurityContext()
         s.userid = self.userid

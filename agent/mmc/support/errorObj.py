@@ -29,15 +29,16 @@ FIXME: deprecated ?
 import logging
 import re
 
+
 class errorMessage:
-    def __init__(self,funcName, message = ''):
+    def __init__(self, funcName, message=""):
         self.funcName = funcName
         self.message = message
 
-    def addMessage(self,message):
-        if (self.message):
-            self.message=self.message+"\n"
-        self.message=self.message+str(message)
+    def addMessage(self, message):
+        if self.message:
+            self.message = self.message + "\n"
+        self.message = self.message + str(message)
 
     def errorArray(self):
         logger = logging.getLogger()
@@ -47,9 +48,9 @@ class errorMessage:
             logger.addHandler(logging.StreamHandler())
         logger.error("__call " + self.funcName + "\n" + self.message)
 
-        self.message=re.sub('\n',"<br />\n",self.message)
-        t=dict()
-        t['errorFuncNameXMLRPC']=self.funcName
-        t['errorCodeXMLRPC']=self.message
+        self.message = re.sub("\n", "<br />\n", self.message)
+        t = dict()
+        t["errorFuncNameXMLRPC"] = self.funcName
+        t["errorCodeXMLRPC"] = self.message
 
         return t

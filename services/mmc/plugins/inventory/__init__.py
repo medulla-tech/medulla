@@ -41,31 +41,38 @@ from mmc.plugins.inventory.provisioning import InventoryProvisioner
 from mmc.plugins.inventory.locations import InventoryLocation
 from mmc.plugins.inventory.tables_def import PossibleQueries
 
-from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 APIVERSION = "0:0:0"
 
-def getApiVersion(): return APIVERSION
+
+def getApiVersion():
+    return APIVERSION
+
 
 def activate():
     logger = logging.getLogger()
     config = InventoryConfig()
     config.init("inventory")
-    logger.debug("Inventory %s"%str(config.disable))
+    logger.debug("Inventory %s" % str(config.disable))
     if config.disable:
         logger.warning("Plugin inventory: disabled by configuration.")
         return False
 
     # When this module is used by the MMC agent, the global inventory variable is shared.
     # This means an Inventory instance is not created each time a XML-RPC call is done.
-    if not InventoryLocation().init(config): # does Inventory().activate() (which does the Inventory().db_check())
+    if not InventoryLocation().init(
+        config
+    ):  # does Inventory().activate() (which does the Inventory().db_check())
         return False
 
-    logger.info("Plugin inventory: Inventory database version is %d" % Inventory().dbversion)
+    logger.info(
+        "Plugin inventory: Inventory database version is %d" % Inventory().dbversion
+    )
 
     ComputerManager().register("inventory", InventoryComputers)
-    ProvisioningManager().register('inventory', InventoryProvisioner)
-    ComputerLocationManager().register('inventory', InventoryLocation)
+    ProvisioningManager().register("inventory", InventoryProvisioner)
+    ComputerLocationManager().register("inventory", InventoryLocation)
 
     PossibleQueries().init(config)
 
@@ -73,6 +80,7 @@ def activate():
     try:
         from mmc.plugins.dashboard.manager import DashboardManager
         from mmc.plugins.inventory.panel import InventoryPanel
+
         DM = DashboardManager()
         DM.register_panel(InventoryPanel("inventory"))
     except ImportError:
@@ -89,6 +97,7 @@ class ContextMaker(ContextMakerI):
         s.locationsid = [e.id for e in s.locations]
         return s
 
+
 class RpcProxy(RpcProxyI):
     def getMachineByOwner(self, user):
         ctx = self.currentContext
@@ -100,40 +109,51 @@ class RpcProxy(RpcProxyI):
 
     def countLastMachineInventoryPart(self, part, params):
         ctx = self.currentContext
-        return xmlrpcCleanup(Inventory().countLastMachineInventoryPart(ctx, part, params))
+        return xmlrpcCleanup(
+            Inventory().countLastMachineInventoryPart(ctx, part, params)
+        )
 
     def getLastMachineInventoryPart(self, part, params):
         ctx = self.currentContext
-#        uuid = name # TODO : get uuid from name, or something like that...
-#        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
+        #        uuid = name # TODO : get uuid from name, or something like that...
+        #        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
         return xmlrpcCleanup(Inventory().getLastMachineInventoryPart(ctx, part, params))
 
     def getLastMachineInventoryPart2(self, part, params):
         ctx = self.currentContext
-#        uuid = name # TODO : get uuid from name, or something like that...
-#        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
-        return xmlrpcCleanup(Inventory().getLastMachineInventoryPart2(ctx, part, params))
+        #        uuid = name # TODO : get uuid from name, or something like that...
+        #        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
+        return xmlrpcCleanup(
+            Inventory().getLastMachineInventoryPart2(ctx, part, params)
+        )
 
-    def getReport(self,uuid,lang):
-        xsl= XLSGenerator("/var/tmp/report-"+uuid+".xls",lang)
-        xsl.get_summary_sheet(self.getLastMachineInventoryPart2('Summary', {"uuid":uuid}))
-        xsl.get_hardware_sheet(self.getLastMachineInventoryPart2("Processors", {"uuid":uuid}),
-                                self.getLastMachineInventoryPart2('Controllers', {"uuid":uuid}),
-                                self.getLastMachineInventoryPart2('GraphicCards', {"uuid":uuid}),
-                                self.getLastMachineInventoryPart2('SoundCards', {"uuid":uuid}))
-        xsl.get_network_sheet(self.getLastMachineInventoryPart2('Network', {"uuid":uuid}))
-        xsl.get_storage_sheet(self.getLastMachineInventoryPart2('Storage', {"uuid":uuid}))
+    def getReport(self, uuid, lang):
+        xsl = XLSGenerator("/var/tmp/report-" + uuid + ".xls", lang)
+        xsl.get_summary_sheet(
+            self.getLastMachineInventoryPart2("Summary", {"uuid": uuid})
+        )
+        xsl.get_hardware_sheet(
+            self.getLastMachineInventoryPart2("Processors", {"uuid": uuid}),
+            self.getLastMachineInventoryPart2("Controllers", {"uuid": uuid}),
+            self.getLastMachineInventoryPart2("GraphicCards", {"uuid": uuid}),
+            self.getLastMachineInventoryPart2("SoundCards", {"uuid": uuid}),
+        )
+        xsl.get_network_sheet(
+            self.getLastMachineInventoryPart2("Network", {"uuid": uuid})
+        )
+        xsl.get_storage_sheet(
+            self.getLastMachineInventoryPart2("Storage", {"uuid": uuid})
+        )
         # TODO : adapt Inventory().getLastMachineInventoryPart2 to Software part
-        #xsl.get_software_sheet(self.getLastMachineInventoryPart2('Software', {"uuid":uuid, "hide_win_updates":True}))
+        # xsl.get_software_sheet(self.getLastMachineInventoryPart2('Software', {"uuid":uuid, "hide_win_updates":True}))
         xsl.save()
         return xmlrpcCleanup(xsl.path)
 
     def getLastMachineInventoryFull(self, params):
         ctx = self.currentContext
-#        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
-#            return False
+        #        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
+        #            return False
         return xmlrpcCleanup(Inventory().getLastMachineInventoryFull(ctx, params))
-
 
     def getMachineInventoryFull(self, params):
         ctx = self.currentContext
@@ -162,9 +182,11 @@ class RpcProxy(RpcProxyI):
 
     def getMachineByHostnameAndMacs(self, hostname, macs):
         ctx = self.currentContext
-        return xmlrpcCleanup(Inventory().getMachineByHostnameAndMacs(ctx, hostname, macs))
+        return xmlrpcCleanup(
+            Inventory().getMachineByHostnameAndMacs(ctx, hostname, macs)
+        )
 
-    def getAllMachinesInventoryColumn(self, part, column, pattern = {}):
+    def getAllMachinesInventoryColumn(self, part, column, pattern={}):
         ret = self.getLastMachineInventoryPart(part, pattern)
         # TODO : m.uuid doesn't exists and should do that in just one call
         retour = []
@@ -177,16 +199,16 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(retour)
 
     #############
-    def getMachines(self, pattern = None):
+    def getMachines(self, pattern=None):
         ctx = self.currentContext
         return xmlrpcCleanup(Inventory().getMachines(ctx, pattern))
 
     def inventoryExists(self, uuid):
         ctx = self.currentContext
-        if uuid == '':
+        if uuid == "":
             return False
-#        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
-#            return False
+        #        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
+        #            return False
         return xmlrpcCleanup(Inventory().inventoryExists(ctx, uuid))
 
     def getInventoryEM(self, col):
@@ -199,11 +221,21 @@ class RpcProxy(RpcProxyI):
 
     def getMachinesBy(self, table, field, value):
         ctx = self.currentContext
-        return xmlrpcCleanup([ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]) for m in Inventory().getMachinesBy(ctx, table, field, value)])
+        return xmlrpcCleanup(
+            [
+                ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0])
+                for m in Inventory().getMachinesBy(ctx, table, field, value)
+            ]
+        )
 
     def getMachinesByDict(self, table, params):
         ctx = self.currentContext
-        return xmlrpcCleanup([ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0]) for m in Inventory().getMachinesByDict(ctx, table, params)])
+        return xmlrpcCleanup(
+            [
+                ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, m[0])
+                for m in Inventory().getMachinesByDict(ctx, table, params)
+            ]
+        )
 
     def getValues(self, table, field):
         return Inventory().getValues(table, field)
@@ -212,49 +244,62 @@ class RpcProxy(RpcProxyI):
         return Inventory().getValuesWhere(table, field1, value1, field2)
 
     def getValueFuzzyWhere(self, table, field1, value1, field2, fuzzy_value):
-        return Inventory().getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value)
+        return Inventory().getValueFuzzyWhere(
+            table, field1, value1, field2, fuzzy_value
+        )
 
     def getValuesFuzzy(self, table, field, fuzzy_value):
         return Inventory().getValuesFuzzy(table, field, fuzzy_value)
 
+
 def getValues(table, field):
     return Inventory().getValues(table, field)
+
 
 def getValuesWhere(table, field1, value1, field2):
     return Inventory().getValuesWhere(table, field1, value1, field2)
 
+
 def getValuesFuzzy(table, field, fuzzy_value):
     return Inventory().getValuesFuzzy(table, field, fuzzy_value)
 
+
 def getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value):
     return Inventory().getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value)
+
 
 def getMachinesBy(table, field, value):
     # TODO : ctx is missing....Inventory
     ctx = None
     return Inventory().getMachinesBy(ctx, table, field, value)
 
+
 def getInventoryHistory(days, only_new, pattern, max, min):
     # Use xmlrpcCleanup to clean the date values
-    return xmlrpcCleanup(Inventory().getInventoryHistory(days, only_new, pattern, max, min))
+    return xmlrpcCleanup(
+        Inventory().getInventoryHistory(days, only_new, pattern, max, min)
+    )
+
 
 def countInventoryHistory(days, only_new, pattern):
     return Inventory().countInventoryHistory(days, only_new, pattern)
 
+
 def getTypeOfAttribute(klass, attr):
     return Inventory().getTypeOfAttribute(klass, attr)
+
 
 def getLicensesCount(vendor, software, version):
     ctx = SecurityContext()
     ctx.userid = "root"
 
     def replace_splat(param):
-        if '*' in param:
-            return param.replace('*', '%')
+        if "*" in param:
+            return param.replace("*", "%")
         return param
 
     def check_param(param):
-        if param == '' or param == '*' or param == '%':
+        if param == "" or param == "*" or param == "%":
             return None
         return replace_splat(param)
 
@@ -262,54 +307,69 @@ def getLicensesCount(vendor, software, version):
     vendor = check_param(vendor)
     version = check_param(version)
     if software is None:
-        software = '%'
-    return xmlrpcCleanup(Inventory().getAllSoftwaresImproved(ctx,
-                                                     software,
-                                                     vendor=vendor,
-                                                     version=version,
-                                                     count=1))
+        software = "%"
+    return xmlrpcCleanup(
+        Inventory().getAllSoftwaresImproved(
+            ctx, software, vendor=vendor, version=version, count=1
+        )
+    )
+
 
 def getLocationAll(params):
     return InventoryLocation().getLocationAll(params)
 
+
 def updateEntities(id, name):
     return InventoryLocation().updateEntities(id, name)
+
 
 def createLocation(name, parent_name):
     return InventoryLocation().createLocation(name, parent_name)
 
+
 def deleteEntities(id, Label, parentId):
     return InventoryLocation().deleteEntities(id, Label, parentId)
+
 
 def parse_file_rule(param):
     return InventoryLocation().parse_file_rule(param)
 
+
 def moveEntityRuleDown(idrule):
     return InventoryLocation().moveEntityRuleDown(idrule)
+
 
 def moveEntityRuleUp(idrule):
     return InventoryLocation().moveEntityRuleUp(idrule)
 
+
 def operatorType():
     return InventoryLocation().operatorType()
+
 
 def operatorTag(MappedObject):
     return InventoryLocation().operatorTag(MappedObject)
 
+
 def operatorTagAll():
     return InventoryLocation().operatorTagAll()
+
 
 def addEntityRule(ruleobj):
     return InventoryLocation().addEntityRule(ruleobj)
 
+
 def deleteEntityRule(idrule):
     return InventoryLocation().deleteEntityRule(idrule)
+
 
 def setLocationsForUser(username, attrs):
     return InventoryLocation().setLocationsForUser(username, attrs)
 
+
 def getLocationsForUser(username):
     return InventoryLocation().getLocationsForUser(username)
+
 
 def delUser(username):
     return InventoryLocation().delUser(username)

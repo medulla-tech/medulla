@@ -31,20 +31,20 @@ class SoftwareRequestError(SmartAgentError):
 
 
 class SoftwareCheckError(SmartAgentError):
-
     def __repr__(self):
         return "Unable to check installed software: %s" % self.name
+
 
 class ConnectionError(SmartAgentError):
     def __repr__(self):
         return "Request to server %s failed" % self.name
 
-class SoftwareInstallError(SmartAgentError):
 
+class SoftwareInstallError(SmartAgentError):
     def __repr__(self):
         return "Unable to install software: %s" % self.name
 
-class PackageDownloadError(SmartAgentError):
 
+class PackageDownloadError(SmartAgentError):
     def __repr__(self):
         return "Unable to download the package: %s" % self.name

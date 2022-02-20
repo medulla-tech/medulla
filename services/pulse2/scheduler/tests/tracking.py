@@ -29,7 +29,6 @@ from pulse2.scheduler.tracking.circuits import Tracker, TimedTracker
 
 
 class Test01_Tracker(unittest.TestCase):
-
     def test_01_in(self):
         numbers = [int(1000 * random.random()) for i in range(1000)]
         tracker = Tracker()
@@ -50,7 +49,6 @@ class Test01_Tracker(unittest.TestCase):
 
 
 class Test02_TimedTracker(unittest.TestCase):
-
     def test_01_in(self):
         numbers = [int(1000 * random.random()) for i in range(1000)]
         tracker = TimedTracker(5)

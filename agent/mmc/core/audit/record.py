@@ -29,9 +29,22 @@ import uuid
 
 from sqlalchemy.orm import create_session
 from sqlalchemy import and_
-from mmc.core.audit.classes import Record, Module, Object, Object_Log, Event, Parameters, Initiator, Type, Source, Previous_Value, Current_Value
+from mmc.core.audit.classes import (
+    Record,
+    Module,
+    Object,
+    Object_Log,
+    Event,
+    Parameters,
+    Initiator,
+    Type,
+    Source,
+    Previous_Value,
+    Current_Value,
+)
 
-logger = logging.getLogger('audit')
+logger = logging.getLogger("audit")
+
 
 class AuditRecord:
 
@@ -39,7 +52,9 @@ class AuditRecord:
     Base class for a audit record object
     """
 
-    def __init__(self, module, event, user, objects, param, initiator, source, current, previous):
+    def __init__(
+        self, module, event, user, objects, param, initiator, source, current, previous
+    ):
         """
         Create a AuditRecord instance which contains all information that will
         be logged into database.
@@ -61,31 +76,31 @@ class AuditRecord:
         """
         # module string
         self.module = module
-        assert(type(self.module) == str)
+        assert type(self.module) == str
         # action string
         self.event = event
-        assert(type(self.event) == str)
+        assert type(self.event) == str
         # String
-        self.user=user
-        assert(type(self.user) == tuple)
-        assert(len(self.user) == 2)
+        self.user = user
+        assert type(self.user) == tuple
+        assert len(self.user) == 2
         # Dictionnary of string
         self.parameters = param
-        assert(type(self.parameters) == dict)
+        assert type(self.parameters) == dict
         # list of couple (object, type)
-        self.objects=objects
-        assert(type(self.objects) == list)
+        self.objects = objects
+        assert type(self.objects) == list
         #
         self.initiator = initiator
-        assert(type(self.initiator) == tuple)
-        assert(len(self.initiator) == 2)
+        assert type(self.initiator) == tuple
+        assert len(self.initiator) == 2
         #
         self.source = source
-        assert(type(source) == str)
+        assert type(source) == str
         # list of string list
-        self.previousattribute=previous
+        self.previousattribute = previous
         # list of string list
-        self.currentattribute=current
+        self.currentattribute = current
 
 
 class AuditRecordDB(AuditRecord):
@@ -94,7 +109,19 @@ class AuditRecordDB(AuditRecord):
     Class for objects that store an audit record into a database
     """
 
-    def __init__(self, parent, module, event, user, objects, param, initiator, source, current, previous):
+    def __init__(
+        self,
+        parent,
+        module,
+        event,
+        user,
+        objects,
+        param,
+        initiator,
+        source,
+        current,
+        previous,
+    ):
         """
         Insert New log in database
         @param action: action name
@@ -114,12 +141,27 @@ class AuditRecordDB(AuditRecord):
         @param agent: represent agent hostname
         @type agent: string
         """
-        AuditRecord.__init__(self, module, event, user, objects, param, initiator, source, current, previous)
+        AuditRecord.__init__(
+            self,
+            module,
+            event,
+            user,
+            objects,
+            param,
+            initiator,
+            source,
+            current,
+            previous,
+        )
         session = create_session()
         session.begin()
         try:
             # get module object from database
-            bdmodule = session.query(Module).filter(parent.module_table.c.name==module).first()
+            bdmodule = (
+                session.query(Module)
+                .filter(parent.module_table.c.name == module)
+                .first()
+            )
             # insert module object in database if it is not available
             if bdmodule == None:
                 bdmodule = Module()
@@ -128,7 +170,16 @@ class AuditRecordDB(AuditRecord):
                 session.flush()
 
             # get event object from database
-            bdevent = session.query(Event).filter(and_(parent.event_table.c.name == event, parent.event_table.c.module_id == bdmodule.id)).first()
+            bdevent = (
+                session.query(Event)
+                .filter(
+                    and_(
+                        parent.event_table.c.name == event,
+                        parent.event_table.c.module_id == bdmodule.id,
+                    )
+                )
+                .first()
+            )
             # insert event object in database if it is not available
             if bdevent == None:
                 bdevent = Event()
@@ -138,7 +189,16 @@ class AuditRecordDB(AuditRecord):
                 session.flush()
 
             # get initiator object
-            bdinitiator = session.query(Initiator).filter(and_(parent.initiator_table.c.application == initiator[1], parent.initiator_table.c.hostname == initiator[0])).first()
+            bdinitiator = (
+                session.query(Initiator)
+                .filter(
+                    and_(
+                        parent.initiator_table.c.application == initiator[1],
+                        parent.initiator_table.c.hostname == initiator[0],
+                    )
+                )
+                .first()
+            )
             # put it in database if it is not available
             if bdinitiator == None:
                 bdinitiator = Initiator()
@@ -147,8 +207,12 @@ class AuditRecordDB(AuditRecord):
                 session.add(bdinitiator)
                 session.flush()
 
-            # get source object
-            bdsource = session.query(Source).filter(parent.source_table.c.hostname == source).first()
+            # get source object
+            bdsource = (
+                session.query(Source)
+                .filter(parent.source_table.c.hostname == source)
+                .first()
+            )
             # put it in database if not available
             if bdsource == None:
                 bdsource = Source()
@@ -157,7 +221,11 @@ class AuditRecordDB(AuditRecord):
                 session.flush()
 
             # get user type
-            utype = session.query(Type).filter(parent.type_table.c.type == self.user[1]).first()
+            utype = (
+                session.query(Type)
+                .filter(parent.type_table.c.type == self.user[1])
+                .first()
+            )
             if utype == None:
                 utype = Type()
                 utype.type = self.user[1]
@@ -165,7 +233,16 @@ class AuditRecordDB(AuditRecord):
                 session.flush()
 
             # get user object
-            bduser = session.query(Object).filter(and_(parent.object_table.c.uri == self.user[0], parent.object_table.c.type_id == utype.id)).first()
+            bduser = (
+                session.query(Object)
+                .filter(
+                    and_(
+                        parent.object_table.c.uri == self.user[0],
+                        parent.object_table.c.type_id == utype.id,
+                    )
+                )
+                .first()
+            )
             if bduser == None:
                 bduser = Object()
                 bduser.uri = self.user[0]
@@ -189,9 +266,13 @@ class AuditRecordDB(AuditRecord):
             parentobj = None
             bdobjectlog = None
             if objects != None:
-                for i,j in objects:
+                for i, j in objects:
                     # Get or Insert Type id of object
-                    bdtype = session.query(Type).filter(parent.type_table.c.type==j).first()
+                    bdtype = (
+                        session.query(Type)
+                        .filter(parent.type_table.c.type == j)
+                        .first()
+                    )
                     if bdtype == None:
                         bdtype = Type()
                         bdtype.type = j
@@ -199,7 +280,17 @@ class AuditRecordDB(AuditRecord):
                         session.flush()
 
                     # Get or insert object
-                    obj = session.query(Object).filter(and_(parent.object_table.c.uri==i, parent.object_table.c.type_id==bdtype.id, parent.object_table.c.parent==parentobj)).first()
+                    obj = (
+                        session.query(Object)
+                        .filter(
+                            and_(
+                                parent.object_table.c.uri == i,
+                                parent.object_table.c.type_id == bdtype.id,
+                                parent.object_table.c.parent == parentobj,
+                            )
+                        )
+                        .first()
+                    )
                     if obj == None:
                         obj = Object()
                         obj.uri = i
@@ -221,7 +312,7 @@ class AuditRecordDB(AuditRecord):
             if bdobjectlog != None:
                 # Insert current value
                 if current != None:
-                    if type(current) == tuple or type(current) == list :
+                    if type(current) == tuple or type(current) == list:
                         for i in current:
                             cv = Current_Value(bdobjectlog, i)
                             session.add(cv)
@@ -242,7 +333,7 @@ class AuditRecordDB(AuditRecord):
             # relations on log_parameters
             if param != None:
                 for i in param:
-                    if type(i)==list:
+                    if type(i) == list:
                         for j in i:
                             p = Parameters(j, str(i[j]))
                             self.record.param_log.append(p)
@@ -266,8 +357,12 @@ class AuditRecordDB(AuditRecord):
         logging system
         """
 
-        self.log = "ID:%s" % str(uuid.uuid4()).split('-')[0]
-        self.log += " PLUGIN:%s ACTION:%s BY:%s" % (self.module, self.event, self.user[0])
+        self.log = "ID:%s" % str(uuid.uuid4()).split("-")[0]
+        self.log += " PLUGIN:%s ACTION:%s BY:%s" % (
+            self.module,
+            self.event,
+            self.user[0],
+        )
         if len(self.initiator) > 1:
             self.log += " HOST:%s" % self.initiator[0]
         if len(self.objects) > 0:
@@ -278,7 +373,7 @@ class AuditRecordDB(AuditRecord):
             # convert self.log to type <str>
             self.log = str(self.log)
             if isinstance(self.currentattribute, str):
-                value = self.currentattribute.encode('utf-8')
+                value = self.currentattribute.encode("utf-8")
             else:
                 value = str(self.currentattribute)
             self.log += " VALUE:%s" % value

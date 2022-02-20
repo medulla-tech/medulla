@@ -35,7 +35,7 @@ from twisted.internet.error import ConnectionRefusedError
 
 
 class QueryProtocol(Protocol):
-    """Protocol providing returned request """
+    """Protocol providing returned request"""
 
     def __init__(self, finished):
         """
@@ -56,9 +56,8 @@ class QueryProtocol(Protocol):
         self._data.append(data)
         self.logger.debug("License server check - received data: %s" % str(data))
 
-
     def connectionLost(self, reason):
-        """ Protocol terminated """
+        """Protocol terminated"""
 
         if reason.check(ResponseDone):
             self.logger.debug("License server check - connection successfully closed")
@@ -66,7 +65,6 @@ class QueryProtocol(Protocol):
         else:
             self.logger.warn("License server check - connection lost: %s" % str(reason))
             self.finished.errback(reason)
-
 
 
 class Query(object):
@@ -77,9 +75,10 @@ class Query(object):
     we get a complet customer info.
     """
 
-    headers = {'User-Agent': ['Twisted Web Client Example'],
-               'Content-type': ['text/json'],
-              }
+    headers = {
+        "User-Agent": ["Twisted Web Client Example"],
+        "Content-type": ["text/json"],
+    }
 
     def __init__(self, url, client_uuid, license_tmp_file, country, clock=reactor):
         """
@@ -100,7 +99,6 @@ class Query(object):
         self.license_tmp_file = license_tmp_file
         self.logger = logging.getLogger()
 
-
     def get(self, offline=False):
         """
         Gets a dictionnary containing complete customer licensing info.
@@ -114,10 +112,7 @@ class Query(object):
         if not offline:
             agent = Agent(self.clock)
 
-            d = agent.request("GET",
-                              self.url,
-                              Headers(self.headers),
-                              None)
+            d = agent.request("GET", self.url, Headers(self.headers), None)
 
             d.addCallback(self.cb_request)
             d.addErrback(self.eb_response)
@@ -128,8 +123,6 @@ class Query(object):
 
         else:
             return maybeDeferred(self.get_cached_data_from_file)
-
-
 
     def cb_request(self, response):
         """
@@ -142,7 +135,10 @@ class Query(object):
         @rtype: Deferred
         """
         if response.code != 200:
-            self.logger.warn("License server returns [%d] %s ... skiping" % (response.code, response.phrase))
+            self.logger.warn(
+                "License server returns [%d] %s ... skiping"
+                % (response.code, response.phrase)
+            )
             return None
 
         d = Deferred()
@@ -174,14 +170,12 @@ class Query(object):
             self.logger.warn("Skipping the JSON parsing")
             return None
 
-
     def eb_response(self, failure):
-        """ HHTP request error handling """
+        """HHTP request error handling"""
         if failure.check(ConnectionRefusedError):
             self.logger.warn("Unable to contact license server")
-        else :
+        else:
             self.logger.warn("JSON query on license server failed: %s" % str(failure))
-
 
     def cache_data_into_file(self, data):
         """
@@ -200,7 +194,6 @@ class Query(object):
         except Exception as e:
             self.logger.warn("JSON file dump failed: %s" % str(e))
         return data
-
 
     def get_cached_data_from_file(self):
         """

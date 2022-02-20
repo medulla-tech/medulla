@@ -22,7 +22,7 @@
 
 
 class Parser(object):
-    """ A simple wrapper for several serializers """
+    """A simple wrapper for several serializers"""
 
     def __init__(self, backend="json"):
         self._set_backend(backend)
@@ -30,18 +30,22 @@ class Parser(object):
     def _set_backend(self, backend):
         if backend == "json":
             import json
+
             self._backend = json
 
         elif backend == "marshal":
             import marshal
+
             self._backend = marshal
 
         elif backend == "pickle":
             try:
                 import pickle
+
                 self._backend = cPickle
             except ImportError:
                 import pickle
+
                 self._backend = pickle
         else:
             raise TypeError("Unknown parser type: %s" % backend)

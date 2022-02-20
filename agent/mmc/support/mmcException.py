@@ -28,8 +28,8 @@ Class for MMC exceptions
 import logging
 import sys
 
-class mmcException(Exception):
 
+class mmcException(Exception):
     def __init__(self, *kargs):
         Exception.__init__(self, kargs)
         logger = logging.getLogger()
@@ -39,7 +39,7 @@ class mmcException(Exception):
             logger.addHandler(logging.StreamHandler())
         f = sys.exc_info()[2].tb_frame
         obj = f.f_locals.get("self", None)
-        self.funcname = obj.__class__.__name__+"::"+f.f_code.co_name
+        self.funcname = obj.__class__.__name__ + "::" + f.f_code.co_name
         callStr = self.funcname + "::" + str(f.f_lineno)
         nkargs = []
         for item in kargs:

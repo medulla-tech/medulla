@@ -36,7 +36,6 @@ logger = logging.getLogger(__name__)
 
 
 class HTTPErrorHandler(urllib.request.HTTPDefaultErrorHandler):
-
     def http_error_default(self, req, res, code, msg, hdrs):
         return res
 
@@ -46,13 +45,13 @@ class CookieSessionExpired(Exception):
 
 
 class HTTPClient(object):
-
     def __init__(self, base_url, identity=None):
         self.cookie_jar = http.cookiejar.CookieJar()
         handlers = [urllib.request.HTTPCookieProcessor(self.cookie_jar)]
         if self.config.Proxy.http:
             proxy_handler = urllib.request.ProxyHandler(
-                {'http': self.config.Proxy.http})
+                {"http": self.config.Proxy.http}
+            )
         else:
             proxy_handler = urllib.request.ProxyHandler()
         handlers.append(proxy_handler)
@@ -60,7 +59,7 @@ class HTTPClient(object):
         self.opener = urllib.request.build_opener(*handlers)
 
         if identity:
-            self.opener.addheaders = [('User-agent', identity)]
+            self.opener.addheaders = [("User-agent", identity)]
         urllib.request.install_opener(self.opener)
         self.base_url = base_url
         if not self.base_url.endswith("/"):
@@ -101,6 +100,7 @@ class HTTPClient(object):
             # we may get a already expired session cookie because the client or the servier
             # time is not in sync
             if response.code < 400 and not self.cookie_jar.make_cookies(
-                    response, request):
+                response, request
+            ):
                 raise CookieSessionExpired()
         return response

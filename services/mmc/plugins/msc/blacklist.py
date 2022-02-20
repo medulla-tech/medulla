@@ -24,17 +24,19 @@
 import re
 import sre_constants
 
+
 def dottedQuadToNum(ip):
     """Convert decimal dotted quad string to long integer"""
-    bytes = ip.split('.')
+    bytes = ip.split(".")
     if len(bytes) > 4:
         raise ValueError("IPv4 Address with more than 4 bytes")
-    bytes += ['0'] * (4 - len(bytes))
+    bytes += ["0"] * (4 - len(bytes))
     bytes = [int(x) for x in bytes]
     for x in bytes:
         if x > 255 or x < 0:
             raise ValueError("%r: single byte must be 0 <= byte < 256" % (ip))
-    return ((bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3])
+    return (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3]
+
 
 def ipInRange(ipAddress, beginRange, endRange):
     """
@@ -45,6 +47,7 @@ def ipInRange(ipAddress, beginRange, endRange):
     end = dottedQuadToNum(endRange)
     return (begin <= ip) and (ip <= end)
 
+
 def processIPListFromConfig(iplist):
     """
     Parse and check a list of IP addresses or network range
@@ -52,7 +55,7 @@ def processIPListFromConfig(iplist):
     @returns: a list with the cleaned up addresses or range
     @rtype: list
     """
-    ret  = []
+    ret = []
     for ip in iplist.split(","):
         ip = ip.strip()
         if "/" in ip:
@@ -60,7 +63,7 @@ def processIPListFromConfig(iplist):
             try:
                 if not (dottedQuadToNum(begin) <= dottedQuadToNum(end)):
                     raise ValueError
-                ret.append((begin,end))
+                ret.append((begin, end))
             except ValueError:
                 pass
         else:
@@ -70,6 +73,7 @@ def processIPListFromConfig(iplist):
             except ValueError:
                 pass
     return ret
+
 
 def rfc2780Filter(ips):
     """
@@ -84,7 +88,9 @@ def rfc2780Filter(ips):
     ret = []
     for ip in ips:
         try:
-            if ipInRange(ip, "0.0.0.0", "0.255.255.255") or ipInRange(ip, "127.0.0.0", "127.255.255.255"):
+            if ipInRange(ip, "0.0.0.0", "0.255.255.255") or ipInRange(
+                ip, "127.0.0.0", "127.255.255.255"
+            ):
                 continue
             if ipInRange(ip, "0.0.0.0", "223.255.255.255"):
                 ret.append(ip)
@@ -92,6 +98,7 @@ def rfc2780Filter(ips):
             # A given IP address is malformed
             pass
     return ret
+
 
 def rfc1918Filter(ips):
     """
@@ -106,12 +113,17 @@ def rfc1918Filter(ips):
     ret = []
     for ip in ips:
         try:
-            if ipInRange(ip, "10.0.0.0", "10.255.255.255") or ipInRange(ip, "172.16.0.0", "172.31.255.255") or ipInRange(ip, "192.168.0.0", "192.168.255.255"):
+            if (
+                ipInRange(ip, "10.0.0.0", "10.255.255.255")
+                or ipInRange(ip, "172.16.0.0", "172.31.255.255")
+                or ipInRange(ip, "192.168.0.0", "192.168.255.255")
+            ):
                 ret.append(ip)
         except ValueError:
             # A given IP address is malformed
             pass
     return ret
+
 
 def excludeFilter(ips, exclude):
     """
@@ -144,6 +156,7 @@ def excludeFilter(ips, exclude):
             ret.append(ip)
     return ret
 
+
 def mergeWithIncludeFilter(ips, filteredips, include):
     """
     @param ips: list of IP addresses
@@ -171,6 +184,7 @@ def mergeWithIncludeFilter(ips, filteredips, include):
                     break
     return ret
 
+
 def isFqdn(hostname):
     """
     @param hostname: computer host name
@@ -183,9 +197,12 @@ def isFqdn(hostname):
     # DNS zones may have some host with _ in their name (they are accepted
     # in NT4 netbios name).
     ret = False
-    if re.compile("^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]\.){1,10}[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$").search(hostname):
+    if re.compile(
+        "^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]\.){1,10}[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+    ).search(hostname):
         ret = True
     return ret
+
 
 def isValidHostname(hostname):
     """
@@ -196,9 +213,12 @@ def isValidHostname(hostname):
     @rtype: bool
     """
     ret = False
-    if isFqdn(hostname) or re.compile("^[a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]$").search(hostname):
+    if isFqdn(hostname) or re.compile("^[a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]$").search(
+        hostname
+    ):
         ret = True
     return ret
+
 
 def checkWithRegexps(string, regexps):
     """
@@ -228,6 +248,7 @@ def checkWithRegexps(string, regexps):
             # The regexp is malformed, ignore it
             pass
     return ret
+
 
 def macAddressesFilter(macs, regexps):
     """

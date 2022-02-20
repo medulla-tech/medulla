@@ -28,7 +28,7 @@ import random
 import time
 
 
-class ParabolicBalance (object):
+class ParabolicBalance(object):
     """
     A interpretation of run of the parabolic curve, based
     on quadratic function : y = - ax^2 + bx.
@@ -38,6 +38,7 @@ class ParabolicBalance (object):
 
     Output is a list of balance coeficients which total is 1.
     """
+
     delta = 1
 
     #    Example for 5 attepts :
@@ -49,8 +50,8 @@ class ParabolicBalance (object):
     # |       °   |     |   °
     # |      /    |     |    \
     # |    .°     |     |     °.
-    # |   / |     |     |     | \
-    # | .   |     |     |     |   .
+    # |   / |     |     |     | \
+    # | .   |     |     |     |   .
     # |/ S0 | S1  | S2  | S3  | S4 \
     # +-----+-----+-----+-----+-----+---
     #       1     2     3     4     k=5
@@ -81,7 +82,7 @@ class ParabolicBalance (object):
         ITG (-x^2 + kx) dx = - x^3/3 + 2kx/2
         """
         k = self.attempts_total
-        return ((k * x**2 / 2.0) - x**3 / 3.0)
+        return (k * x**2 / 2.0) - x**3 / 3.0
 
     def fx_delta(self, x):
         """
@@ -141,9 +142,7 @@ def randomListByBalance(balances, limit):
             treshold_idx = sorted_keys.index(drw_coh)
             # remove all the keys bellow the treshold
             sorted_keys = sorted_keys[-treshold_idx:]
-            logging.getLogger().debug(
-                "Reduced interval: %s " %
-                str(sorted_keys))
+            logging.getLogger().debug("Reduced interval: %s " % str(sorted_keys))
 
             count = 0
             selected = []
@@ -160,7 +159,9 @@ def randomListByBalance(balances, limit):
                 # OK when number of selected is more than 80% of limit
                 return selected
             else:
-                logging.getLogger().debug("List of drawed CoHs too small. Repeat the drawing")
+                logging.getLogger().debug(
+                    "List of drawed CoHs too small. Repeat the drawing"
+                )
 
 
 def getBalanceByAttempts(start_date, end_date, attempts_failed):

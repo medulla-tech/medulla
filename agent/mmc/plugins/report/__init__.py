@@ -31,10 +31,10 @@ from functools import wraps
 
 logger = logging.getLogger()
 
-#try:
-    #from pulse2.managers.location import ComputerLocationManager
-#except ImportError:
-    #logger.warn("report: I can't load Pulse ComputerLocationManager")
+# try:
+# from pulse2.managers.location import ComputerLocationManager
+# except ImportError:
+# logger.warn("report: I can't load Pulse ComputerLocationManager")
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
 from mmc.core.version import scmRevision
@@ -50,16 +50,35 @@ REVISION = scmRevision("$Rev$")
 localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
 
 TRANSLATE_ATTRS = ("title", "value")
-TRANSLATE_ELEMS = ("homepage", "h1", "h2", "h3", "p", "header", "footer", "left", "right", "center")
+TRANSLATE_ELEMS = (
+    "homepage",
+    "h1",
+    "h2",
+    "h3",
+    "p",
+    "header",
+    "footer",
+    "left",
+    "right",
+    "center",
+)
 _gettext = None
 
 
-def getVersion(): return VERSION
-def getApiVersion(): return APIVERSION
-def getRevision(): return REVISION
+def getVersion():
+    return VERSION
+
+
+def getApiVersion():
+    return APIVERSION
+
+
+def getRevision():
+    return REVISION
+
 
 def _T(text):
-    return _gettext(text).decode('utf8')
+    return _gettext(text).decode("utf8")
 
 
 def activate():
@@ -71,9 +90,11 @@ def activate():
         logger.error("Report database not activated")
         return False
     # Add historization task in the task manager
-    TaskManager().addTask("report.historize_all",
-                          (ReportDatabase().historize_all,),
-                          cron_expression=config.historization)
+    TaskManager().addTask(
+        "report.historize_all",
+        (ReportDatabase().historize_all,),
+        cron_expression=config.historization,
+    )
     # Import indicators from XML
     import_indicators()
     return True
@@ -83,15 +104,15 @@ def import_indicators():
     config = ReportConfig("report")
     xmltemp = ET.parse(os.path.join(reportconfdir, config.indicators)).getroot()
 
-    # Indicator names list
+    # Indicator names list
     available_indicators = []
 
-    for module in xmltemp.getiterator('module'):
-        module_name = module.attrib['name']
-        for indicator in module.getiterator('indicator'):
+    for module in xmltemp.getiterator("module"):
+        module_name = module.attrib["name"]
+        for indicator in module.getiterator("indicator"):
             indicator_attr = indicator.attrib
-            indicator_attr['module'] = module_name
-            available_indicators.append(indicator_attr['name'])
+            indicator_attr["module"] = module_name
+            available_indicators.append(indicator_attr["name"])
             # Add indicator if not exists
             ReportDatabase().add_indicator(indicator_attr)
 
@@ -112,7 +133,7 @@ def setup_lang(lang):
     logger.debug("Using localedir %s" % localedir)
     bindtextdomain("templates", localedir)
     try:
-        lang = gettext.translation('templates', localedir, [lang], fallback = True)
+        lang = gettext.translation("templates", localedir, [lang], fallback=True)
         lang.install()
         _gettext = lang.gettext
     except IOError:
@@ -143,26 +164,34 @@ class RpcProxy(RpcProxyI):
             for item in container:
                 attr = translate_attrs(item.attrib)
                 result.append(attr)
-                attr['items'] = _fetchItems(item)
+                attr["items"] = _fetchItems(item)
             return result
 
         result = {}
-        xmltemp = ET.parse(os.path.join(reportconfdir, 'templates', self.config.reportTemplate)).getroot()
-        for section in xmltemp.getiterator('section'):
+        xmltemp = ET.parse(
+            os.path.join(reportconfdir, "templates", self.config.reportTemplate)
+        ).getroot()
+        for section in xmltemp.getiterator("section"):
             attr_section = translate_attrs(section.attrib)
-            if not attr_section['module'] in result:
-                result[attr_section['module']] = []
+            if not attr_section["module"] in result:
+                result[attr_section["module"]] = []
             # Adding item to attr
-            #attr_section['items'] = _fetchItems(section)
-            attr_section['tables'] = []
-            for table in section.getiterator('table'):
+            # attr_section['items'] = _fetchItems(section)
+            attr_section["tables"] = []
+            for table in section.getiterator("table"):
                 dct = translate_attrs(table.attrib)
-                dct['items'] = _fetchItems(table)
-                attr_section['tables'].append(dct)
-            result[attr_section['module']].append(attr_section)
+                dct["items"] = _fetchItems(table)
+                attr_section["tables"].append(dct)
+            result[attr_section["module"]].append(attr_section)
         return result
 
-    def set_report_path(temp_path='/var/tmp', report_path='report-%d', pdf_name='report.pdf', xls_name='report.xls', svg_path='svg'):
+    def set_report_path(
+        temp_path="/var/tmp",
+        report_path="report-%d",
+        pdf_name="report.pdf",
+        xls_name="report.xls",
+        svg_path="svg",
+    ):
         """
         This decorator sets path reports and adds these variables to the decorated function:
           * temp_path
@@ -177,15 +206,16 @@ class RpcProxy(RpcProxyI):
         pdf_path = os.path.join(report_path, pdf_name)
         xls_path = os.path.join(report_path, xls_name)
         svg_path = os.path.join(report_path, svg_path)
+
         def decorator(f):
             @wraps(f)
             def wrapper(*args, **kwargs):
                 g = f.__globals__
-                g['temp_path'] = temp_path
-                g['report_path'] = report_path
-                g['pdf_path'] = pdf_path
-                g['xls_path'] = xls_path
-                g['svg_path'] = svg_path
+                g["temp_path"] = temp_path
+                g["report_path"] = report_path
+                g["pdf_path"] = pdf_path
+                g["xls_path"] = xls_path
+                g["svg_path"] = svg_path
                 try:
                     os.makedirs(report_path)
                     os.makedirs(svg_path)
@@ -194,32 +224,36 @@ class RpcProxy(RpcProxyI):
                 os.chmod(report_path, 511)
                 os.chmod(svg_path, 511)
                 return f(*args, **kwargs)
+
             return wrapper
+
         return decorator
 
     @set_report_path()
-    def generate_report_from_csv(self, csv_files, delimiter='|', lang='C'):
+    def generate_report_from_csv(self, csv_files, delimiter="|", lang="C"):
         if not isinstance(csv_files, list):
             csv_files = [csv_files]
         setup_lang(lang)
 
-        result = {'sections': []}
+        result = {"sections": []}
 
-        xmltemp = ET.parse(os.path.join(reportconfdir, 'templates', self.config.reportTemplate)).getroot()
-        if xmltemp.tag != 'template':
-            logger.error('Incorrect XML')
+        xmltemp = ET.parse(
+            os.path.join(reportconfdir, "templates", self.config.reportTemplate)
+        ).getroot()
+        if xmltemp.tag != "template":
+            logger.error("Incorrect XML")
             return False
 
         # Setting default params
         locale = {}
-        locale['DATE_FORMAT'] = '%Y/%m/%d'
+        locale["DATE_FORMAT"] = "%Y/%m/%d"
 
         # Filling global pdf_vars
         pdf_vars = {
-            '__USERNAME__': self.currentContext.userid,
-            '__COMPANY__': self.config.company,
-            '__COMPANY_LOGO_PATH__': self.config.company_logo_path,
-            '__PULSE_LOGO_PATH__': self.config.pulse_logo_path,
+            "__USERNAME__": self.currentContext.userid,
+            "__COMPANY__": self.config.company,
+            "__COMPANY_LOGO_PATH__": self.config.company_logo_path,
+            "__PULSE_LOGO_PATH__": self.config.pulse_logo_path,
         }
 
         pdf = PDFGenerator(path=pdf_path, locale=locale)
@@ -233,14 +267,14 @@ class RpcProxy(RpcProxyI):
             @return: well formated content for header or footer
             """
             str = _T(str)
-            if str.count('###css_counter###') == 2:
+            if str.count("###css_counter###") == 2:
                 # 1st css_counter is current page
-                str = str.replace('###css_counter###', '" counter(page) "', 1)
-                #2nd css_counter is CSS total pages count
-                str = str.replace('###css_counter###', '" counter(pages) "', 1)
-                if not str.startswith('counter(page)'):
+                str = str.replace("###css_counter###", '" counter(page) "', 1)
+                # 2nd css_counter is CSS total pages count
+                str = str.replace("###css_counter###", '" counter(pages) "', 1)
+                if not str.startswith("counter(page)"):
                     str = '"' + str
-                if not str.endswith('counter(pages)'):
+                if not str.endswith("counter(pages)"):
                     str = str + '"'
             else:
                 str = '"' + str + '"'
@@ -257,37 +291,57 @@ class RpcProxy(RpcProxyI):
             @type to_feed: str
             """
             for entry in tag:
-                if 'logo' in entry.attrib:
-                    logo = entry.attrib['logo']
+                if "logo" in entry.attrib:
+                    logo = entry.attrib["logo"]
                     background_css = """
                     background: url(%s);
                     background-repeat: no-repeat;
                     background-size: Auto 50px;
                     width: 200px;
-                    """ % _replace_pdf_vars(logo)
+                    """ % _replace_pdf_vars(
+                        logo
+                    )
                     try:
-                        setattr(pdf, '_'.join([tag.tag, entry.tag, 'background']), background_css)
+                        setattr(
+                            pdf,
+                            "_".join([tag.tag, entry.tag, "background"]),
+                            background_css,
+                        )
                     except Exception as e:
-                        logging.getLogger().warn("Something were wrong where setting background for %s: tag is %s", entry.tag, tag.tag)
+                        logging.getLogger().warn(
+                            "Something were wrong where setting background for %s: tag is %s",
+                            entry.tag,
+                            tag.tag,
+                        )
                         logging.getLogger().warn("Exception: %s", e)
                 if entry.text is not None:
                     try:
-                        setattr(pdf, '_'.join([tag.tag, entry.tag]), _hf_format(entry.text))
+                        setattr(
+                            pdf, "_".join([tag.tag, entry.tag]), _hf_format(entry.text)
+                        )
                     except Exception as e:
-                        logging.getLogger().warn("Something were wrong where feeding %s: tag is %s", entry.tag, tag.tag)
+                        logging.getLogger().warn(
+                            "Something were wrong where feeding %s: tag is %s",
+                            entry.tag,
+                            tag.tag,
+                        )
                         logging.getLogger().warn("Exception: %s", e)
 
         def _localization(loc_tag):
             for entry in loc_tag:
-                if entry.tag.lower() != 'entry':
+                if entry.tag.lower() != "entry":
                     continue
-                locale[entry.attrib['name']] = _T(entry.attrib['value'])
+                locale[entry.attrib["name"]] = _T(entry.attrib["value"])
 
             # Setting Period start and period end PDF var
-            pdf_vars['__PERIOD_START__'] = datetime.strptime(time.strftime("%Y-%m-%d"), "%Y-%m-%d").strftime(locale['DATE_FORMAT'])
-            pdf_vars['__PERIOD_END__'] = datetime.strptime(time.strftime("%Y-%m-%d"), "%Y-%m-%d").strftime(locale['DATE_FORMAT'])
-            pdf_vars['__NOW_DATE__'] = datetime.now().strftime(locale['DATE_FORMAT'])
-            pdf_vars['__NOW_HOUR__'] = datetime.now().strftime('%H:%M:%S')
+            pdf_vars["__PERIOD_START__"] = datetime.strptime(
+                time.strftime("%Y-%m-%d"), "%Y-%m-%d"
+            ).strftime(locale["DATE_FORMAT"])
+            pdf_vars["__PERIOD_END__"] = datetime.strptime(
+                time.strftime("%Y-%m-%d"), "%Y-%m-%d"
+            ).strftime(locale["DATE_FORMAT"])
+            pdf_vars["__NOW_DATE__"] = datetime.now().strftime(locale["DATE_FORMAT"])
+            pdf_vars["__NOW_HOUR__"] = datetime.now().strftime("%H:%M:%S")
 
         def _replace_pdf_vars(text):
             for key in pdf_vars:
@@ -304,7 +358,7 @@ class RpcProxy(RpcProxyI):
             pdf.h3(_T(text))
 
         def _html(text):
-            #TODO: Add vars replacers
+            # TODO: Add vars replacers
             pdf.pushHTML(_replace_pdf_vars(text))
 
         def _homepage(text):
@@ -324,24 +378,24 @@ class RpcProxy(RpcProxyI):
         for level1 in xmltemp:
             attr1 = translate_attrs(level1.attrib)
             ## =========< localization strings >===================
-            if level1.tag.lower() == 'localization':
+            if level1.tag.lower() == "localization":
                 _localization(level1)
             ## =========< H1 >===================
-            if level1.tag.lower() == 'h1':
+            if level1.tag.lower() == "h1":
                 _h1(level1.text)
             ## =========< H2 >===================
-            if level1.tag.lower() == 'h2':
+            if level1.tag.lower() == "h2":
                 _h2(level1.text)
             ## =========< H3 >===================
-            if level1.tag.lower() == 'h3':
+            if level1.tag.lower() == "h3":
                 _h3(level1.text)
             ## =========< HTML >===================
-            if level1.tag.lower() == 'html':
+            if level1.tag.lower() == "html":
                 _html(level1.text)
             ## =========< HTML >===================
-            if level1.tag.lower() == 'homepage':
+            if level1.tag.lower() == "homepage":
                 _homepage(level1.text)
-            if level1.tag.lower() in ['footer', 'header']:
+            if level1.tag.lower() in ["footer", "header"]:
                 _hf_feeder(level1)
             ## =========< SECTION >===================
 
@@ -359,44 +413,46 @@ class RpcProxy(RpcProxyI):
                         headers.pop(0)
                         headers_fetched = True
             csv_name = os.path.splitext(os.path.basename(csv_file))[0]
-            pdf.pushTable(title, {'headers': headers, 'values': values})
+            pdf.pushTable(title, {"headers": headers, "values": values})
 
         # Saving outputs
         pdf.save()
-        result['pdf_path'] = pdf_path
+        result["pdf_path"] = pdf_path
         return result
 
     @set_report_path()
     def generate_report(self, period, sections, tables, items, entities, lang):
         setup_lang(lang)
-        indent_str = ''
+        indent_str = ""
 
-        entities = [int(str(entity).replace('UUID', '')) for entity in entities]
+        entities = [int(str(entity).replace("UUID", "")) for entity in entities]
 
-        result = {'sections': []}
-        #try:
-            #getLocationName = ComputerLocationManager().getLocationName
-            #entity_names = dict([(location, getLocationName([location]).decode('utf-8')) for location in entities])
-        #except NameError:
-            #logger.warn("Pulse ComputerLocationManager() not loaded")
-            #entity_names = {}
+        result = {"sections": []}
+        # try:
+        # getLocationName = ComputerLocationManager().getLocationName
+        # entity_names = dict([(location, getLocationName([location]).decode('utf-8')) for location in entities])
+        # except NameError:
+        # logger.warn("Pulse ComputerLocationManager() not loaded")
+        # entity_names = {}
         # Parsing report XML
-        xmltemp = ET.parse(os.path.join(reportconfdir, 'templates', self.config.reportTemplate)).getroot()
-        if xmltemp.tag != 'template':
-            logger.error('Incorrect XML')
+        xmltemp = ET.parse(
+            os.path.join(reportconfdir, "templates", self.config.reportTemplate)
+        ).getroot()
+        if xmltemp.tag != "template":
+            logger.error("Incorrect XML")
             return False
         # xmltemp.attrib ??? if necessary ?? ==> date and time format
 
         # Setting default params
         locale = {}
-        locale['DATE_FORMAT'] = '%Y/%m/%d'
+        locale["DATE_FORMAT"] = "%Y/%m/%d"
 
         # Filling global pdf_vars
         pdf_vars = {
-            '__USERNAME__': self.currentContext.userid,
-            '__COMPANY__': self.config.company,
-            '__COMPANY_LOGO_PATH__': self.config.company_logo_path,
-            '__PULSE_LOGO_PATH__': self.config.pulse_logo_path,
+            "__USERNAME__": self.currentContext.userid,
+            "__COMPANY__": self.config.company,
+            "__COMPANY_LOGO_PATH__": self.config.company_logo_path,
+            "__PULSE_LOGO_PATH__": self.config.pulse_logo_path,
         }
 
         xls = XLSGenerator(path=xls_path)
@@ -411,14 +467,14 @@ class RpcProxy(RpcProxyI):
             @return: well formated content for header or footer
             """
             str = _T(str)
-            if str.count('###css_counter###') == 2:
+            if str.count("###css_counter###") == 2:
                 # 1st css_counter is current page
-                str = str.replace('###css_counter###', '" counter(page) "', 1)
-                #2nd css_counter is CSS total pages count
-                str = str.replace('###css_counter###', '" counter(pages) "', 1)
-                if not str.startswith('counter(page)'):
+                str = str.replace("###css_counter###", '" counter(page) "', 1)
+                # 2nd css_counter is CSS total pages count
+                str = str.replace("###css_counter###", '" counter(pages) "', 1)
+                if not str.startswith("counter(page)"):
                     str = '"' + str
-                if not str.endswith('counter(pages)'):
+                if not str.endswith("counter(pages)"):
                     str = str + '"'
             else:
                 str = '"' + str + '"'
@@ -435,37 +491,57 @@ class RpcProxy(RpcProxyI):
             @type to_feed: str
             """
             for entry in tag:
-                if 'logo' in entry.attrib:
-                    logo = entry.attrib['logo']
+                if "logo" in entry.attrib:
+                    logo = entry.attrib["logo"]
                     background_css = """
                     background: url(%s);
                     background-repeat: no-repeat;
                     background-size: Auto 50px;
                     width: 200px;
-                    """ % _replace_pdf_vars(logo)
+                    """ % _replace_pdf_vars(
+                        logo
+                    )
                     try:
-                        setattr(pdf, '_'.join([tag.tag, entry.tag, 'background']), background_css)
+                        setattr(
+                            pdf,
+                            "_".join([tag.tag, entry.tag, "background"]),
+                            background_css,
+                        )
                     except Exception as e:
-                        logging.getLogger().warn("Something were wrong where setting background for %s: tag is %s", entry.tag, tag.tag)
+                        logging.getLogger().warn(
+                            "Something were wrong where setting background for %s: tag is %s",
+                            entry.tag,
+                            tag.tag,
+                        )
                         logging.getLogger().warn("Exception: %s", e)
                 if entry.text is not None:
                     try:
-                        setattr(pdf, '_'.join([tag.tag, entry.tag]), _hf_format(entry.text))
+                        setattr(
+                            pdf, "_".join([tag.tag, entry.tag]), _hf_format(entry.text)
+                        )
                     except Exception as e:
-                        logging.getLogger().warn("Something were wrong where feeding %s: tag is %s", entry.tag, tag.tag)
+                        logging.getLogger().warn(
+                            "Something were wrong where feeding %s: tag is %s",
+                            entry.tag,
+                            tag.tag,
+                        )
                         logging.getLogger().warn("Exception: %s", e)
 
         def _localization(loc_tag):
             for entry in loc_tag:
-                if entry.tag.lower() != 'entry':
+                if entry.tag.lower() != "entry":
                     continue
-                locale[entry.attrib['name']] = _T(entry.attrib['value'])
+                locale[entry.attrib["name"]] = _T(entry.attrib["value"])
 
             # Setting Period start and period end PDF var
-            pdf_vars['__PERIOD_START__'] = datetime.strptime(period[0], "%Y-%m-%d").strftime(locale['DATE_FORMAT'])
-            pdf_vars['__PERIOD_END__'] = datetime.strptime(period[-1], "%Y-%m-%d").strftime(locale['DATE_FORMAT'])
-            pdf_vars['__NOW_DATE__'] = datetime.now().strftime(locale['DATE_FORMAT'])
-            pdf_vars['__NOW_HOUR__'] = datetime.now().strftime('%H:%M:%S')
+            pdf_vars["__PERIOD_START__"] = datetime.strptime(
+                period[0], "%Y-%m-%d"
+            ).strftime(locale["DATE_FORMAT"])
+            pdf_vars["__PERIOD_END__"] = datetime.strptime(
+                period[-1], "%Y-%m-%d"
+            ).strftime(locale["DATE_FORMAT"])
+            pdf_vars["__NOW_DATE__"] = datetime.now().strftime(locale["DATE_FORMAT"])
+            pdf_vars["__NOW_HOUR__"] = datetime.now().strftime("%H:%M:%S")
 
         def _replace_pdf_vars(text):
             for key in pdf_vars:
@@ -482,7 +558,7 @@ class RpcProxy(RpcProxyI):
             pdf.h3(_T(text))
 
         def _html(text):
-            #TODO: Add vars replacers
+            # TODO: Add vars replacers
             pdf.pushHTML(_replace_pdf_vars(text))
 
         def _homepage(text):
@@ -499,12 +575,16 @@ class RpcProxy(RpcProxyI):
             return result
 
         def _periodDict(item_root):
-            data_dict = {'titles': [], 'dates': [], 'values': []}
+            data_dict = {"titles": [], "dates": [], "values": []}
             for date in period:
-                ts_min = int(time.mktime(datetime.strptime(date, "%Y-%m-%d").timetuple()))
-                formatted_date = datetime.fromtimestamp(ts_min).strftime(locale['DATE_FORMAT'])
-                data_dict['dates'].append(formatted_date)
-                data_dict['values'].append([])
+                ts_min = int(
+                    time.mktime(datetime.strptime(date, "%Y-%m-%d").timetuple())
+                )
+                formatted_date = datetime.fromtimestamp(ts_min).strftime(
+                    locale["DATE_FORMAT"]
+                )
+                data_dict["dates"].append(formatted_date)
+                data_dict["values"].append([])
 
             def _fetchSubs(container, parent=None, level=-1):
                 # If no subelements in container, return
@@ -515,30 +595,38 @@ class RpcProxy(RpcProxyI):
                 selected_items = 0
                 for item in container:
                     indicator_selected = 0
-                    if item.tag.lower() != 'item':
+                    if item.tag.lower() != "item":
                         continue
-                    indicator_name = item.attrib['indicator']
-                    #if items and not indicator_name in items: continue
+                    indicator_name = item.attrib["indicator"]
+                    # if items and not indicator_name in items: continue
                     if not items or indicator_name in items:
-                        data_dict['titles'].append(indent_str * level + ' ' + _T(item.attrib['title']))
+                        data_dict["titles"].append(
+                            indent_str * level + " " + _T(item.attrib["title"])
+                        )
                         indicator_selected = 1
                     # temp list to do arithmetic operations
                     values = []
                     for i in range(len(period)):
                         date = period[i]
                         # Creating a timestamp range for the specified date
-                        ts_min = int(time.mktime(datetime.strptime(date, "%Y-%m-%d").timetuple()))
-                        ts_max = ts_min + 86400   # max = min + 1day (sec)
+                        ts_min = int(
+                            time.mktime(datetime.strptime(date, "%Y-%m-%d").timetuple())
+                        )
+                        ts_max = ts_min + 86400  # max = min + 1day (sec)
                         #
-                        value = ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)
+                        value = ReportDatabase().get_indicator_value_at_time(
+                            indicator_name, ts_min, ts_max, entities
+                        )
                         values.append(value)
                         # if item is not selected, don't add value to the Data Dict
                         if not items or indicator_name in items:
-                            data_dict['values'][i].append(value)
+                            data_dict["values"][i].append(value)
                     # If item is not selected don't add values to arithmetic table list
                     #
                     if items and not indicator_name in items:
-                        (subCount, childGValues) = _fetchSubs(item, container, level + 1)
+                        (subCount, childGValues) = _fetchSubs(
+                            item, container, level + 1
+                        )
                         if subCount != 0:
                             GValues.append(values)
                             indicator_selected = 1
@@ -547,41 +635,51 @@ class RpcProxy(RpcProxyI):
                         (subCount, childGValues) = (0, None)
                         GValues.append(values)
                     # Calcating "other" line if indicator type is numeric
-                    if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and subCount != 0:
-                        #and (not items or indicator_name in items):
-                        data_dict['titles'].append(indent_str * (level + 1) +
-                                                   ' %s (%s)' %
-                                                   (_T(item.attrib['title']),
-                                                    locale['STR_OTHER']))
+                    if (
+                        ReportDatabase().get_indicator_datatype(indicator_name) == 0
+                        and subCount != 0
+                    ):
+                        # and (not items or indicator_name in items):
+                        data_dict["titles"].append(
+                            indent_str * (level + 1)
+                            + " %s (%s)"
+                            % (_T(item.attrib["title"]), locale["STR_OTHER"])
+                        )
                         for i in range(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
                             if child_sum is not None and values[i] is not None:
                                 other_value = values[i] - child_sum
                             else:
                                 other_value = None
-                            #print other_value
-                            data_dict['values'][i].append(other_value)
+                            # print other_value
+                            data_dict["values"][i].append(other_value)
                     if indicator_selected != 0:
                         selected_items += 1
                 return (selected_items, GValues)
+
             _fetchSubs(item_root)
             return data_dict
 
         def _keyvalueDict(item_root):
-            data_dict = {'headers': [locale['STR_KEY'], locale['STR_VALUE']], 'values': []}
+            data_dict = {
+                "headers": [locale["STR_KEY"], locale["STR_VALUE"]],
+                "values": [],
+            }
 
             def _fetchSubs(container, parent=None, level=-1, parent_value=0):
                 values = []
                 for item in container:
-                    if item.tag.lower() != 'item':
+                    if item.tag.lower() != "item":
                         continue
-                    indicator_name = item.attrib['indicator']
-                    indicator_label = _T(item.attrib['title'])
-                    indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
+                    indicator_name = item.attrib["indicator"]
+                    indicator_label = _T(item.attrib["title"])
+                    indicator_value = ReportDatabase().get_indicator_current_value(
+                        indicator_name, entities
+                    )
                     # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
                     # ==============================================================
                     # ==> Generate one entry for each entity [disabled]
-                    #for entry in indicator_value:
+                    # for entry in indicator_value:
                     #    if entry['entity_id'] in entity_names:
                     #        entity_name = entity_names[entry['entity_id']]
                     #    else:
@@ -590,10 +688,12 @@ class RpcProxy(RpcProxyI):
                     #        data_dict['values'].append([ indent_str * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
                     # =================================================================
                     # Calculating sum value for entities
-                    value = _sum_None([x['value'] for x in indicator_value])
+                    value = _sum_None([x["value"] for x in indicator_value])
                     values.append(value)
                     if not items or indicator_name in items:
-                        data_dict['values'].append([indent_str * level + indicator_label, value])
+                        data_dict["values"].append(
+                            [indent_str * level + indicator_label, value]
+                        )
 
                     # TODO: Calculate other cols
                     # Fetch this item subitems
@@ -601,117 +701,135 @@ class RpcProxy(RpcProxyI):
                 # Generating others value
                 if parent and values:
                     others_value = parent_value - _sum_None(values)
-                    data_dict['values'].append([indent_str * level +
-                                                ' %s (%s)' %
-                                                (parent.attrib['title'],
-                                                 locale['STR_OTHER']),
-                                                others_value])
+                    data_dict["values"].append(
+                        [
+                            indent_str * level
+                            + " %s (%s)"
+                            % (parent.attrib["title"], locale["STR_OTHER"]),
+                            others_value,
+                        ]
+                    )
+
             _fetchSubs(item_root)
             return data_dict
 
         def _period_None_to_empty_str(data):
             from copy import deepcopy
+
             datas = deepcopy(data)
-            for i in range(len(datas['titles'])):
-                for v in datas['values']:
+            for i in range(len(datas["titles"])):
+                for v in datas["values"]:
                     if v[i] is None:
-                        v[i] = ''
+                        v[i] = ""
             return datas
 
         def _keyval_None_to_empty_str(data):
             from copy import deepcopy
+
             datas = deepcopy(data)
-            for line in datas['values']:
+            for line in datas["values"]:
                 for td in line:
-                    td = td if td is not None else ''
+                    td = td if td is not None else ""
             return datas
 
         # Browsing all childs
         for level1 in xmltemp:
             attr1 = translate_attrs(level1.attrib)
             ## =========< localization strings >===================
-            if level1.tag.lower() == 'localization':
+            if level1.tag.lower() == "localization":
                 _localization(level1)
             ## =========< H1 >===================
-            if level1.tag.lower() == 'h1':
+            if level1.tag.lower() == "h1":
                 _h1(level1.text)
             ## =========< H2 >===================
-            if level1.tag.lower() == 'h2':
+            if level1.tag.lower() == "h2":
                 _h2(level1.text)
             ## =========< H3 >===================
-            if level1.tag.lower() == 'h3':
+            if level1.tag.lower() == "h3":
                 _h3(level1.text)
             ## =========< HTML >===================
-            if level1.tag.lower() == 'html':
+            if level1.tag.lower() == "html":
                 _html(level1.text)
             ## =========< HTML >===================
-            if level1.tag.lower() == 'homepage':
+            if level1.tag.lower() == "homepage":
                 _homepage(level1.text)
-            if level1.tag.lower() in ['footer', 'header']:
+            if level1.tag.lower() in ["footer", "header"]:
                 _hf_feeder(level1)
             ## =========< SECTION >===================
-            if level1.tag.lower() == 'section':
+            if level1.tag.lower() == "section":
                 # Checking if section is present in sections
                 # else we skip it
-                if not attr1['name'] in sections:
+                if not attr1["name"] in sections:
                     continue
-                section_data = {'title': attr1['title'], 'content': []}
-                # Printing section
+                section_data = {"title": attr1["title"], "content": []}
+                # Printing section
                 for level2 in level1:
                     attr2 = translate_attrs(level2.attrib)
                     ## =========< TABLE >===================
-                    if level2.tag.lower() == 'table':
+                    if level2.tag.lower() == "table":
                         # Checking if table is present in tables
                         # else we skip it
-                        if not attr2['name'] in tables:
+                        if not attr2["name"] in tables:
                             continue
                         # printing table items
-                        if attr2['type'] == 'period':
-                            data_dict = _periodDict(level2)   # period table type
-                            data_dict_without_none = _period_None_to_empty_str(data_dict)
-                        elif attr2['type'] == 'key_value':
-                            data_dict = _keyvalueDict(level2)   # key/value type
-                            data_dict_without_none = _keyval_None_to_empty_str(data_dict)
+                        if attr2["type"] == "period":
+                            data_dict = _periodDict(level2)  # period table type
+                            data_dict_without_none = _period_None_to_empty_str(
+                                data_dict
+                            )
+                        elif attr2["type"] == "key_value":
+                            data_dict = _keyvalueDict(level2)  # key/value type
+                            data_dict_without_none = _keyval_None_to_empty_str(
+                                data_dict
+                            )
 
                         # Push table to PDF and XLS
-                        xls.pushTable(attr2['title'], data_dict)
-                        pdf.pushTable(attr2['title'], data_dict)
+                        xls.pushTable(attr2["title"], data_dict)
+                        pdf.pushTable(attr2["title"], data_dict)
 
                         # Add table to result dict [to interface]
-                        section_data['content'].append({
-                            'type': 'table',
-                            'data': data_dict_without_none,
-                            'title': attr2['title']
-                        })
+                        section_data["content"].append(
+                            {
+                                "type": "table",
+                                "data": data_dict_without_none,
+                                "title": attr2["title"],
+                            }
+                        )
 
-                        if 'chart_type' in attr2:
+                        if "chart_type" in attr2:
                             # Generatinng SVG
-                            svg_filename = attr1['name'] + '_' + attr2['name']
+                            svg_filename = attr1["name"] + "_" + attr2["name"]
                             svg_filepath = os.path.join(svg_path, svg_filename)
-                            svg = SVGGenerator(path=svg_filepath, locale=locale, extra_css=self.config.graphCSS)
-                            if attr2['chart_type'] == 'line':
-                                svg.lineChart(attr2['title'], data_dict)
-                            elif attr2['chart_type'] == 'bar':
-                                svg.barChart(attr2['title'], data_dict)
-                            elif attr2['chart_type'] == 'pie':
-                                svg.pieChart(attr2['title'], data_dict)
+                            svg = SVGGenerator(
+                                path=svg_filepath,
+                                locale=locale,
+                                extra_css=self.config.graphCSS,
+                            )
+                            if attr2["chart_type"] == "line":
+                                svg.lineChart(attr2["title"], data_dict)
+                            elif attr2["chart_type"] == "bar":
+                                svg.barChart(attr2["title"], data_dict)
+                            elif attr2["chart_type"] == "pie":
+                                svg.pieChart(attr2["title"], data_dict)
                             # Insert SVG into the PDF
                             pdf.pushSVG(svg.toXML())
-                            section_data['content'].append({
-                                'type': 'chart',
-                                'svg_path': svg_filepath + '.svg',
-                                'png_path': svg_filepath + '.png'
-                            })
+                            section_data["content"].append(
+                                {
+                                    "type": "chart",
+                                    "svg_path": svg_filepath + ".svg",
+                                    "png_path": svg_filepath + ".png",
+                                }
+                            )
                             # Save SVG files (SVG/PNG)
                             svg.save()
 
-                result['sections'].append(section_data)
+                result["sections"].append(section_data)
 
         # Saving outputs
         xls.save()
         pdf.save()
-        result['pdf_path'] = pdf_path
-        result['xls_path'] = xls_path
+        result["pdf_path"] = pdf_path
+        result["xls_path"] = xls_path
         return result
 
     def historize_all(self, timestamp=None):
@@ -728,9 +846,11 @@ class RpcProxy(RpcProxyI):
 
     def get_indicator_value_at_time(self, indicator_name, ts_min, ts_max, entities=[]):
         # Mutable list entities used as default argument to a method or function
-        #entities = entities or []
-        return ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)
+        # entities = entities or []
+        return ReportDatabase().get_indicator_value_at_time(
+            indicator_name, ts_min, ts_max, entities
+        )
 
     def get_indicator_current_value(self, indicator_name, entities=[]):
-        #Mutable list entities used as default argument to a method or function
+        # Mutable list entities used as default argument to a method or function
         return ReportDatabase().get_indicator_current_value(indicator_name, entities)

@@ -33,9 +33,9 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 
 
 class UserPackageApi(MyXmlrpc):
-    type = 'UserPackageApi'
+    type = "UserPackageApi"
 
-    def __init__(self, services=None, name='', assign_algo='default'):
+    def __init__(self, services=None, name="", assign_algo="default"):
         # Mutable dict services used as default argument to a method or
         # function
         services = services or {}
@@ -46,22 +46,26 @@ class UserPackageApi(MyXmlrpc):
 
         try:
             for service in services:
-                if service['type'] == 'package_api_put':
-                    if service['server'] == '':
-                        service['server'] = 'localhost'
+                if service["type"] == "package_api_put":
+                    if service["server"] == "":
+                        service["server"] = "localhost"
                     package_api_put.append(
                         Mirror(
-                            service['proto'],
-                            service['server'],
-                            service['port'],
-                            service['mp']))
+                            service["proto"],
+                            service["server"],
+                            service["port"],
+                            service["mp"],
+                        )
+                    )
             self.logger.debug(
-                "(%s) %s api user/packageApi server initialised" %
-                (self.type, self.name))
+                "(%s) %s api user/packageApi server initialised"
+                % (self.type, self.name)
+            )
         except Exception as e:
             self.logger.error(
-                "(%s) %s api user/packageApi server can't initialize correctly" %
-                (self.type, self.name))
+                "(%s) %s api user/packageApi server can't initialize correctly"
+                % (self.type, self.name)
+            )
             raise e
 
         self.assign_algo = UPAssignAlgoManager().getAlgo(assign_algo)

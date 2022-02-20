@@ -33,9 +33,9 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 
 
 class MirrorApi(MyXmlrpc):
-    type = 'MirrorApi'
+    type = "MirrorApi"
 
-    def __init__(self, services={}, name='', assign_algo='default'):
+    def __init__(self, services={}, name="", assign_algo="default"):
         MyXmlrpc.__init__(self)
         self.name = name
         self.mirrors = {}
@@ -46,69 +46,70 @@ class MirrorApi(MyXmlrpc):
         # function
         try:
             for service in services:
-                if service['type'] == 'package_api_get' or service['type'] == 'package_api_put':
-                    type = 'package_api'
+                if (
+                    service["type"] == "package_api_get"
+                    or service["type"] == "package_api_put"
+                ):
+                    type = "package_api"
                 else:
-                    type = service['type']
+                    type = service["type"]
 
                 if type not in self.url2mirrors:
                     self.url2mirrors[type] = {}
                 if type not in self.mirrors:
                     self.mirrors[type] = []
-                if service['server'] == '':
-                    service['server'] = 'localhost'
+                if service["server"] == "":
+                    service["server"] = "localhost"
                 self.mirrors[type].append(
                     Mirror(
-                        service['proto'],
-                        service['server'],
-                        service['port'],
-                        service['mp']))
-                if 'url' in service:
-                    self.url2mirrors[type][service['url']
-                                           ] = self.mirrors[type][-1]
+                        service["proto"],
+                        service["server"],
+                        service["port"],
+                        service["mp"],
+                    )
+                )
+                if "url" in service:
+                    self.url2mirrors[type][service["url"]] = self.mirrors[type][-1]
             self.logger.debug(
-                "(%s) %s api machine/mirror server initialised" %
-                (self.type, self.name))
+                "(%s) %s api machine/mirror server initialised" % (self.type, self.name)
+            )
         except Exception as e:
             self.logger.error(
-                "(%s)%s api machine/mirror server can't initialize correctly" %
-                (self.type, self.name))
+                "(%s)%s api machine/mirror server can't initialize correctly"
+                % (self.type, self.name)
+            )
             raise e
 
-        if 'mirror' in self.mirrors:
-            mirrors = self.mirrors['mirror']
+        if "mirror" in self.mirrors:
+            mirrors = self.mirrors["mirror"]
         else:
             mirrors = []
-        if 'package_api' in self.mirrors:
-            package_api = self.mirrors['package_api']
+        if "package_api" in self.mirrors:
+            package_api = self.mirrors["package_api"]
         else:
             package_api = []
 
-        if 'mirror' in self.url2mirrors:
-            url2mirrors = self.url2mirrors['mirror']
+        if "mirror" in self.url2mirrors:
+            url2mirrors = self.url2mirrors["mirror"]
         else:
             url2mirrors = []
-        if 'package_api' in self.url2mirrors:
-            url2package_api = self.url2mirrors['package_api']
+        if "package_api" in self.url2mirrors:
+            url2package_api = self.url2mirrors["package_api"]
         else:
             url2package_api = []
 
         # TODO find a clean way to affect another class
         self.assign_algo = MMAssignAlgoManager().getAlgo(assign_algo)
         self.assign_algo.init(
-            mirrors,
-            mirrors,
-            package_api,
-            url2mirrors,
-            url2mirrors,
-            url2package_api)
+            mirrors, mirrors, package_api, url2mirrors, url2mirrors, url2package_api
+        )
 
     def xmlrpc_getServerDetails(self):
         ret = {}
-        if 'package_api' in self.mirrors:
-            ret['package_api'] = [x.toH() for x in self.mirrors['package_api']]
-        if 'mirror' in self.mirrors:
-            ret['mirror'] = [x.toH() for x in self.mirrors['mirror']]
+        if "package_api" in self.mirrors:
+            ret["package_api"] = [x.toH() for x in self.mirrors["package_api"]]
+        if "mirror" in self.mirrors:
+            ret["mirror"] = [x.toH() for x in self.mirrors["mirror"]]
         return ret
 
     def xmlrpc_getMirror(self, m):

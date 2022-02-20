@@ -38,7 +38,8 @@ class AttemptToScheduler(object):
 
     This engine is called when an inventory is received.
     """
-    # First delay after the inventory reception
+
+    # First delay after the inventory reception
     # TODO - move the delays in a .ini file ?
     FIRST_DELAY = 60
     BETWEEN_TASKS_DELAY = 1
@@ -57,26 +58,27 @@ class AttemptToScheduler(object):
             self.check_target()
         else:
             logger.warn(
-                "<Inventory2Scheduler> Unable to contact MMC Agent using XMLRPC (check host/port and credentials)")
+                "<Inventory2Scheduler> Unable to contact MMC Agent using XMLRPC (check host/port and credentials)"
+            )
             logger.warn("<Inventory2Scheduler> Scheduler actions aborted")
         logger.info("<Inventory2Scheduler> Scheduler actions finished")
 
     def check_target(self):
         if InventoryUtils.is_coming_from_pxe(self.xml):
             logger.info(
-                "<Inventory2Scheduler> Ignoring inventory for %s received (Minimal PXE inventory)" %
-                self.uuid)
+                "<Inventory2Scheduler> Ignoring inventory for %s received (Minimal PXE inventory)"
+                % self.uuid
+            )
             return
 
         if self.proxy.msc.is_pull_target(self.uuid):
             logger.info(
-                "<Inventory2Scheduler> Ignoring inventory for %s received (Client is in Pull mode)" %
-                self.uuid)
+                "<Inventory2Scheduler> Ignoring inventory for %s received (Client is in Pull mode)"
+                % self.uuid
+            )
             return
 
-        logger.info(
-            "<Inventory2Scheduler> Valid inventory for %s received" %
-            self.uuid)
+        logger.info("<Inventory2Scheduler> Valid inventory for %s received" % self.uuid)
         self.dispatch_msc()
 
     def dispatch_msc(self):
@@ -87,21 +89,23 @@ class AttemptToScheduler(object):
             tasks = self.proxy.msc.checkLightPullCommands(self.uuid)
         except Exception as e:
             logger.exception(
-                "<Inventory2Scheduler> Unable to start Light Pull, error was: %s" %
-                str(e))
+                "<Inventory2Scheduler> Unable to start Light Pull, error was: %s"
+                % str(e)
+            )
             return False
 
         # if tasks == False:
         if len(tasks) == 0:
             logger.debug(
-                "<Inventory2Scheduler> Light Pull: No deployments scheduled, skipping")
+                "<Inventory2Scheduler> Light Pull: No deployments scheduled, skipping"
+            )
             return
         else:
             # execute all commands on host :
             total = len(tasks)
             logger.info(
-                "<Inventory2Scheduler> Light Pull: %d deployments to start" %
-                total)
+                "<Inventory2Scheduler> Light Pull: %d deployments to start" % total
+            )
 
             success = self.start_all_tasks_on_host(tasks)
 
@@ -120,8 +124,9 @@ class AttemptToScheduler(object):
 
         """
         logger.info(
-            "<Inventory2Scheduler> Light Pull: Waiting %d seconds before awaking deployments" %
-            self.FIRST_DELAY)
+            "<Inventory2Scheduler> Light Pull: Waiting %d seconds before awaking deployments"
+            % self.FIRST_DELAY
+        )
 
         sleep(self.FIRST_DELAY)
 
@@ -130,13 +135,15 @@ class AttemptToScheduler(object):
                 self.proxy.msc.start_command_on_host(id)
             except Exception as e:
                 logger.exception(
-                    "<Inventory2Scheduler> Light Pull: Unable to start command %d on host %s, error was: %s" %
-                    (id, self.uuid, str(e)))
+                    "<Inventory2Scheduler> Light Pull: Unable to start command %d on host %s, error was: %s"
+                    % (id, self.uuid, str(e))
+                )
                 return False
 
             logger.info(
-                "<Inventory2Scheduler> Light Pull: Task %d on host %s successfully re-queued)" %
-                (int(id), self.uuid))
+                "<Inventory2Scheduler> Light Pull: Task %d on host %s successfully re-queued)"
+                % (int(id), self.uuid)
+            )
             sleep(self.BETWEEN_TASKS_DELAY)
 
         return True

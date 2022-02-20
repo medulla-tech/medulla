@@ -28,9 +28,10 @@ from twisted.internet.defer import maybeDeferred
 from twisted.internet import reactor
 import logging
 import unittest
+
 logging.basicConfig()
 
-#from twisted.trial import unittest
+# from twisted.trial import unittest
 
 
 class CoHQueryFrame(object, metaclass=TableFactory):
@@ -125,9 +126,9 @@ class TestPhases(unittest.TestCase):
 
 
 class TestCircuit(unittest.TestCase):
-
     def setUp(self):
         from pulse2.scheduler.config import SchedulerConfig
+
         config = SchedulerConfig()
         config.setup("/etc/mmc/pulse2/scheduler/scheduler.ini")
 
@@ -143,15 +144,17 @@ class TestCircuit(unittest.TestCase):
         self.circuit.cohq.target.target_network = "255.255.0.0||255.0.0.0"
 
         # some needed objects
-        class Statistics (object):
+        class Statistics(object):
             stats = []
-            def update(cls, id): pass
 
-        dispatcher = type("MscContainer",
-                          (object,),
-                          {"release": lambda x: x,
-                           "statistics": Statistics()
-                           })
+            def update(cls, id):
+                pass
+
+        dispatcher = type(
+            "MscContainer",
+            (object,),
+            {"release": lambda x: x, "statistics": Statistics()},
+        )
         self.circuit.install_dispatcher(dispatcher)
 
     def test01_circuit_setup(self):
@@ -167,6 +170,7 @@ class TestCircuit(unittest.TestCase):
 
     def test02_circuit_to_last_phase(self):
         """Circuit running with a simply workflow"""
+
         def setup(result):
             dr = maybeDeferred(self.circuit.run)
             return dr
@@ -174,10 +178,8 @@ class TestCircuit(unittest.TestCase):
         def check(result):
             # added a little lag to wait to last phase
             reactor.callLater(
-                1,
-                self.assertEqual,
-                self.circuit.running_phase,
-                DonePhase)
+                1, self.assertEqual, self.circuit.running_phase, DonePhase
+            )
 
         d = self.circuit.setup()
         d.addCallback(setup)

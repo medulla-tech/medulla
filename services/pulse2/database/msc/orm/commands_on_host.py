@@ -32,8 +32,7 @@ import sqlalchemy.orm
 
 
 class CommandsOnHost(object):
-    """ Mapping between msc.commands_on_host and SA
-    """
+    """Mapping between msc.commands_on_host and SA"""
 
     phases = []
 
@@ -46,74 +45,69 @@ class CommandsOnHost(object):
     def getIdTarget(self):
         return self.fk_target
 
-### Handle general states ###
+    ### Handle general states ###
     def setStateRunning(self):
-        self.setCommandStatut('in_progress')
+        self.setCommandStatut("in_progress")
 
     def isStateRunning(self):
-        result = self.getCommandStatut() == 'in_progress'
-        logging.getLogger().debug(
-            "isStateRunning(#%s): %s" %
-            (self.getId(), result))
+        result = self.getCommandStatut() == "in_progress"
+        logging.getLogger().debug("isStateRunning(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateScheduled(self):
-        self.setCommandStatut('scheduled')
+        self.setCommandStatut("scheduled")
 
     def isStateScheduled(self):
-        result = (self.getCommandStatut() ==
-                  'scheduled' or self.getCommandStatut() == 're_scheduled')
-        logging.getLogger().debug(
-            "isStateScheduled(#%s): %s" %
-            (self.getId(), result))
+        result = (
+            self.getCommandStatut() == "scheduled"
+            or self.getCommandStatut() == "re_scheduled"
+        )
+        logging.getLogger().debug("isStateScheduled(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateDone(self):
-        self.setCommandStatut('done')
+        self.setCommandStatut("done")
         self.setEndDate()  # final state: we may write the date down
 
     def isStateDone(self):
-        result = (self.getCommandStatut() == 'done')
-        logging.getLogger().debug(
-            "isStateDone(#%s): %s" %
-            (self.getId(), result))
+        result = self.getCommandStatut() == "done"
+        logging.getLogger().debug("isStateDone(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateFailed(self):
-        self.setCommandStatut('failed')
+        self.setCommandStatut("failed")
         self.setEndDate()  # final state: we may write the date down
 
     def isStateFailed(self):
-        result = (self.getCommandStatut() == 'failed')
-        logging.getLogger().debug(
-            "isStateFailed(#%s): %s" %
-            (self.getId(), result))
+        result = self.getCommandStatut() == "failed"
+        logging.getLogger().debug("isStateFailed(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateStopped(self):
-        self.setCommandStatut('stopped')
+        self.setCommandStatut("stopped")
 
     def isStateStopped(self):
-        if self.getCommandStatut() == 'stop':  # 'stop' deprecated a while ago, but may still be present, so we take the opportunity to fix it here
+        if (
+            self.getCommandStatut() == "stop"
+        ):  # 'stop' deprecated a while ago, but may still be present, so we take the opportunity to fix it here
             logging.getLogger().warn(
-                "Detected command #%s in deprecated state 'stop', setting it to 'stopped'")
+                "Detected command #%s in deprecated state 'stop', setting it to 'stopped'"
+            )
             self.setStateStopped()
-        result = (self.getCommandStatut() ==
-                  'stop' or self.getCommandStatut() == 'stopped')
-        logging.getLogger().debug(
-            "isStateStopped(#%s): %s" %
-            (self.getId(), result))
+        result = (
+            self.getCommandStatut() == "stop" or self.getCommandStatut() == "stopped"
+        )
+        logging.getLogger().debug("isStateStopped(#%s): %s" % (self.getId(), result))
         return result
 
     def setStatePaused(self):
-        self.setCommandStatut('pause')
+        self.setCommandStatut("pause")
 
     def isStatePaused(self):
-        result = (self.getCommandStatut() ==
-                  'pause' or self.getCommandStatut() == 'paused')
-        logging.getLogger().debug(
-            "isStatePaused(#%s): %s" %
-            (self.getId(), result))
+        result = (
+            self.getCommandStatut() == "pause" or self.getCommandStatut() == "paused"
+        )
+        logging.getLogger().debug("isStatePaused(#%s): %s" % (self.getId(), result))
         return result
 
     def toggleStatePaused(self):
@@ -123,23 +117,21 @@ class CommandsOnHost(object):
             self.setStatePaused()
 
     def setStateOverTimed(self):
-        self.setCommandStatut('over_timed')
+        self.setCommandStatut("over_timed")
 
     def isStateOverTimed(self):
-        result = (self.getCommandStatut() == 'over_timed')
-        logging.getLogger().debug(
-            "isStateOverTimed(#%s): %s" %
-            (self.getId(), result))
+        result = self.getCommandStatut() == "over_timed"
+        logging.getLogger().debug("isStateOverTimed(#%s): %s" % (self.getId(), result))
         return result
 
     def setStateUnreachable(self):
-        self.setCommandStatut('not_reachable')
+        self.setCommandStatut("not_reachable")
 
     def isStateUnreachable(self):
-        result = (self.getCommandStatut() == 'not_reachable')
+        result = self.getCommandStatut() == "not_reachable"
         logging.getLogger().debug(
-            "isStateUnreachable(#%s): %s" %
-            (self.getId(), result))
+            "isStateUnreachable(#%s): %s" % (self.getId(), result)
+        )
         return result
 
     def setCommandStatut(self, current_state):
@@ -151,52 +143,45 @@ class CommandsOnHost(object):
 
     def isInTimeSlot(self):
         if self.next_launch_date:
-            return time.mktime(
-                self.next_launch_date.timetuple()) <= time.time()
+            return time.mktime(self.next_launch_date.timetuple()) <= time.time()
         else:
             return True
-### /Handle general states ###
 
-### Handle launcher ###
+    ### /Handle general states ###
+
+    ### Handle launcher ###
     def setCurrentLauncher(self, launcher):
         self.current_launcher = launcher
         self.flush()
 
     def getCurrentLauncher(self):
         return self.current_launcher
-### /Handle launcher ###
 
-### Handle local proxy stuff ###
+    ### /Handle launcher ###
+
+    ### Handle local proxy stuff ###
     def isProxyClient(self):
         # I'm a client if:
         # fk_use_as_proxy is set (ie I found a proxy server)
         # fk_use_as_proxy is not equal to my id (ie the proxy server is not me)
-        result = (
-            self.fk_use_as_proxy is not None and self.fk_use_as_proxy != self.id)
-        logging.getLogger().debug(
-            "isProxyClient(#%s): %s" %
-            (self.getId(), result))
+        result = self.fk_use_as_proxy is not None and self.fk_use_as_proxy != self.id
+        logging.getLogger().debug("isProxyClient(#%s): %s" % (self.getId(), result))
         return result
 
     def isProxyServer(self):
         # I'm a server if:
         # order_in_proxy is set (ie I have chance to become a server)
         # fk_use_as_proxy is equal to my id (ie the proxy server is me)
-        result = (
-            self.order_in_proxy is not None and self.fk_use_as_proxy == self.id)
-        logging.getLogger().debug(
-            "isProxyServer(#%s): %s" %
-            (self.getId(), result))
+        result = self.order_in_proxy is not None and self.fk_use_as_proxy == self.id
+        logging.getLogger().debug("isProxyServer(#%s): %s" % (self.getId(), result))
         return result
 
     def isLocalProxy(self):
         # I'm a server if:
         # order_in_proxy is set (ie I have chance to become a server)
         # fk_use_as_proxy is equal to my id (ie the proxy server is me)
-        result = (self.order_in_proxy is not None)
-        logging.getLogger().debug(
-            "isLocalProxy(#%s): %s" %
-            (self.getId(), result))
+        result = self.order_in_proxy is not None
+        logging.getLogger().debug("isLocalProxy(#%s): %s" % (self.getId(), result))
         return result
 
     def setOrderInProxy(self, order_in_proxy):
@@ -226,29 +211,29 @@ class CommandsOnHost(object):
         elif isinstance(self.next_launch_date, str):
             return int(
                 datetime.datetime.strptime(
-                    self.next_launch_date,
-                    "%Y-%m-%d %H:%M:%S").strftime("%s"))
+                    self.next_launch_date, "%Y-%m-%d %H:%M:%S"
+                ).strftime("%s")
+            )
 
     def is_out_of_attempts(self):
         return self.attempts_failed >= self.attempts_total
 
     @property
     def days_delta(self):
-        """ number of days between start date and end_date"""
+        """number of days between start date and end_date"""
         return (self.end_date - self.start_date).days + 1
 
     @property
     def attempts_total(self):
-        """ Total of attempts for all days """
+        """Total of attempts for all days"""
         return self.days_delta * self.attempts_left
 
-
-### Misc state changes handling  ###
+    ### Misc state changes handling  ###
 
     def reSchedule(self, launch_date, decrement):
-        """ Reschedule when something went wrong
-            return True if processing can continue
-            else return False
+        """Reschedule when something went wrong
+        return True if processing can continue
+        else return False
         """
         if decrement:
             if self.attempts_total > self.attempts_failed:
@@ -258,22 +243,23 @@ class CommandsOnHost(object):
         return True
 
     def setStateInProgress(self):
-        self.setCommandStatut('in_progress')
+        self.setCommandStatut("in_progress")
 
     def setPhaseFailed(self):
-        self.setCommandStatut('phase_failed')
-### /Misc state changes handling  ###
+        self.setCommandStatut("phase_failed")
+
+    ### /Misc state changes handling  ###
 
     def extend(self, start_date, end_date, attempts):
         self.start_date = start_date
         self.next_launch_date = start_date
         self.end_date = end_date
-        #self.attempts_left += attempts
+        # self.attempts_left += attempts
         self.attempts_failed = 0
         self.flush()
 
     def flush(self):
-        """ Handle SQL flushing """
+        """Handle SQL flushing"""
         session = sqlalchemy.orm.create_session()
         session.add(self)
         session.flush()
@@ -281,32 +267,32 @@ class CommandsOnHost(object):
 
     def toH(self):
         return {
-            'id': self.id,
-            'fk_commands': self.fk_commands,
-            'fk_target': self.fk_target,
-            'host': self.host,
-            'start_date': self.start_date,
-            'end_date': self.end_date,
-            'current_state': self.current_state,
-            'stage': self.stage,
-            'awoken': self.awoken,
-            'imgmenu_changed': self.imgmenu_changed,
-            'uploaded': self.uploaded,
-            'executed': self.executed,
-            'deleted': self.deleted,
-            'rebooted': self.rebooted,
-            'inventoried': self.inventoried,
-            'halted': self.halted,
-            'next_launch_date': self.next_launch_date,
-            'attempts_left': self.attempts_left,
-            'next_attempt_date_time': self.next_attempt_date_time,
-            'current_launcher': self.current_launcher,
-            'scheduler': self.scheduler,
-            'last_wol_attempt': self.last_wol_attempt,
-            'order_in_proxy': self.order_in_proxy,
-            'fk_use_as_proxy': self.fk_use_as_proxy,
-            'max_clients_per_proxy': self.max_clients_per_proxy,
-            'phases': self.phases
+            "id": self.id,
+            "fk_commands": self.fk_commands,
+            "fk_target": self.fk_target,
+            "host": self.host,
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "current_state": self.current_state,
+            "stage": self.stage,
+            "awoken": self.awoken,
+            "imgmenu_changed": self.imgmenu_changed,
+            "uploaded": self.uploaded,
+            "executed": self.executed,
+            "deleted": self.deleted,
+            "rebooted": self.rebooted,
+            "inventoried": self.inventoried,
+            "halted": self.halted,
+            "next_launch_date": self.next_launch_date,
+            "attempts_left": self.attempts_left,
+            "next_attempt_date_time": self.next_attempt_date_time,
+            "current_launcher": self.current_launcher,
+            "scheduler": self.scheduler,
+            "last_wol_attempt": self.last_wol_attempt,
+            "order_in_proxy": self.order_in_proxy,
+            "fk_use_as_proxy": self.fk_use_as_proxy,
+            "max_clients_per_proxy": self.max_clients_per_proxy,
+            "phases": self.phases,
         }
 
     def setStartDate(self):
@@ -338,7 +324,7 @@ def startCommandOnHost(coh_id):
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
 
-    if myCommandOnHost.current_state in ('done', 'failed', 'over_timed'):
+    if myCommandOnHost.current_state in ("done", "failed", "over_timed"):
         return False
 
     myCommandOnHost.setStateScheduled()
@@ -365,7 +351,7 @@ def togglePauseCommandOnHost(coh_id):
 
 
 class CoHManager:
-    """ Manager class to encapsulate the methods bellow. """
+    """Manager class to encapsulate the methods bellow."""
 
     @classmethod
     def setBalances(cls, coh_balances):
@@ -423,10 +409,9 @@ class CoHManager:
         for id in ids:
             myCommandOnHost = session.query(CommandsOnHost).get(id)
             if myCommandOnHost:
-                if myCommandOnHost.current_state in (
-                        'done', 'failed', 'over_timed'):
+                if myCommandOnHost.current_state in ("done", "failed", "over_timed"):
                     continue
-                myCommandOnHost.current_state = 'scheduled'
+                myCommandOnHost.current_state = "scheduled"
                 session.add(myCommandOnHost)
                 session.flush()
         session.close()
