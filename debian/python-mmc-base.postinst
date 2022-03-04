@@ -5,8 +5,11 @@
 
 set -e
 
-service php7.0-fpm restart
-
+if [ -f /usr/lib/systemd/system/php7.3-fpm.service ]; then
+    service php7.3-fpm restart
+else
+    service php7.0-fpm restart
+fi
 # summary of how this script can be called:
 #        * <postinst> `configure' <most-recently-configured-version>
 #        * <old-postinst> `abort-upgrade' <new version>
