@@ -130,7 +130,8 @@ class Glpi92(DyngroupDatabaseHelper):
         except OperationalError:
             self._glpi_version = list(
                 self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
-                .fetchone().values()
+                .fetchone()
+                .values()
             )[0].replace(" ", "")
 
         if LooseVersion(self._glpi_version) >= LooseVersion("9.2") and LooseVersion(
@@ -182,7 +183,8 @@ class Glpi92(DyngroupDatabaseHelper):
         except OperationalError:
             self._glpi_version = list(
                 self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
-                .fetchone().values()
+                .fetchone()
+                .values()
             )[0].replace(" ", "")
 
         self.metadata = MetaData(self.db)
@@ -3129,10 +3131,10 @@ class Glpi92(DyngroupDatabaseHelper):
                     if networkport.networknames is not None:
                         ipaddresses = list(
                             {
-                                    ip.name
-                                    for ip in networkport.networknames.ipaddresses
-                                    if ip.name != ""
-                                }
+                                ip.name
+                                for ip in networkport.networknames.ipaddresses
+                                if ip.name != ""
+                            }
                         )
                         gateways = []
                         netmasks = []

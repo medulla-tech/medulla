@@ -7503,7 +7503,8 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [
-            {column: value for column, value in list(rowproxy.items())} for rowproxy in result
+            {column: value for column, value in list(rowproxy.items())}
+            for rowproxy in result
         ]
 
     @DatabaseHelper._sessionm
