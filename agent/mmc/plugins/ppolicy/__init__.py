@@ -177,7 +177,7 @@ class PPolicy(ldapUserGroupControl):
             # set default attributes for default password policy
             if ppolicyName == self.configPPolicy.ppolicydefault:
                 for k in self.configPPolicy.ppolicyAttributes:
-                    if type(self.configPPolicy.ppolicyAttributes[k]) == bool:
+                    if isinstance(self.configPPolicy.ppolicyAttributes[k], bool):
                         self.configPPolicy.ppolicyAttributes[k] = str(
                             self.configPPolicy.ppolicyAttributes[k]
                         ).upper()
@@ -307,9 +307,9 @@ class PPolicy(ldapUserGroupControl):
             value,
         )
         if value is not None:
-            if type(value) == bool:
+            if isinstance(value, bool):
                 value = str(value).upper()
-            elif type(value) == int:
+            elif isinstance(value, int):
                 value = str(value)
         try:
             self.l.modify_s(ppolicyDN, [(ldap.MOD_REPLACE, nameattribute, value)])
@@ -405,9 +405,9 @@ class UserPPolicy(ldapUserGroupControl):
                 [(self.dn, AT.USER), (nameattribute, AT.ATTRIBUTE)],
                 value,
             )
-            if type(value) == bool:
+            if isinstance(value, bool):
                 value = str(value).upper()
-            elif type(value) == int:
+            elif isinstance(value, int):
                 value = str(value)
             mode = ldap.MOD_REPLACE
             logger.debug("Setting %s to %s" % (nameattribute, value))

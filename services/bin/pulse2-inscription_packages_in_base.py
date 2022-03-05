@@ -95,7 +95,7 @@ class managepackage:
             dirpackage = managepackage.packagedir()
         else:
             shared_dir = os.path.abspath(os.path.realpath(shared_dir))
-        dirglobal = os.path.join(dirpackage,"sharing", "global")
+        dirglobal = os.path.join(dirpackage, "sharing", "global")
         packagelist = [os.path.join(dirglobal, f) for f in os.listdir(dirglobal) if len(f) == 36]
         dirlocal  = os.path.join(dirpackage, "sharing")
         share_pathname = [os.path.join(dirlocal, f) for f in os.listdir(dirlocal) if f != "global"]
@@ -117,9 +117,9 @@ class managepackage:
             shared_dir = os.path.abspath(os.path.realpath(shared_dir))
         for x in  managepackage.search_list_package():
             if verbose:
-                print "symbolic link %s to %s" %(x , os.path.join(dirpackage, os.path.basename(x)))
+                print "symbolic link %s to %s" %(x, os.path.join(dirpackage, os.path.basename(x)))
             try:
-                os.symlink(x , os.path.join(dirpackage, os.path.basename(x)))
+                os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
             except OSError:
                 pass
 
@@ -334,7 +334,7 @@ if __name__ == '__main__':
                     help="Password of the user in the SQL Server")
 
 
-    optp.add_option("-g", "--regeneratetable",action="store_true",
+    optp.add_option("-g", "--regeneratetable", action="store_true",
                     dest="regeneratetable", default=False,
                     help="reser the package list in the database")
 
@@ -347,7 +347,7 @@ if __name__ == '__main__':
                                        '%s:<password>@%s:%s/%s'%(opts.user,
                                                                  opts.hostname,
                                                                  opts.port,
-                                                                 base) ,
+                                                                 base),
                                        stream=None)
 
 
@@ -376,7 +376,7 @@ if __name__ == '__main__':
                 cursor.close()
 
         packagedir = os.path.join("/", "var", "lib", "pulse2", "packages")
-        sharing = os.path.join(packagedir,"sharing")
+        sharing = os.path.join(packagedir, "sharing")
         list_package = [os.path.join(packagedir, x) for x in os.listdir(packagedir) \
             if len(x) == 36 and\
                 os.path.isdir(os.path.join(packagedir, x))]

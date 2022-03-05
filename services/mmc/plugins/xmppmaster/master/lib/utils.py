@@ -484,8 +484,7 @@ def getShortenedIpList():
 
 def name_jid():
     dd = getShortenedIpList()
-    cc = list(dd.keys())
-    cc.sort()
+    cc = sorted(dd.keys())
     return dd[cc[0]]
 
 

@@ -205,7 +205,7 @@ def chown(uuid):
     simplecommand("chmod -R 755 %s"%os.path.join(_path_package(), uuid))
 
 def associatePackages(pid, fs, level = 0):
-    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
+    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
     packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
     destination = os.path.join(packages_input_dir, pid )
     errortransfert = []
@@ -356,7 +356,7 @@ def get_share_from_descriptor(package_descriptor):
         Args:
             package_descriptor: This provide informations as localisation_server.
     """
-    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages","sharing")
+    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
     if not "localisation_server" in package_descriptor:
         logging.getLogger().warning("keys localisation_server missing global sharing by default")
         return os.path.join(packages_input_dir_sharing,
@@ -444,7 +444,7 @@ def putPackageDetail(package, need_assign=True):
     # -------------------------------------------
 
     packages_id_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages", package['id'])
-    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages","sharing")
+    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
 
     prepare_shared_folder()
 
@@ -543,11 +543,11 @@ def putPackageDetail(package, need_assign=True):
 
     # writte file to xmpp deploy
     xmppdeployfile = to_json_xmppdeploy(package)
-    fichier = open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" )
+    fichier = open( os.path.join(packages_id_input_dir, "xmppdeploy.json"), "w" )
     fichier.write(xmppdeployfile)
     fichier.close()
 
-    parsexmppjsonfile(os.path.join(packages_id_input_dir,"xmppdeploy.json"))
+    parsexmppjsonfile(os.path.join(packages_id_input_dir, "xmppdeploy.json"))
 
     if centralizedmultiplesharing:
         localisation_server = package['localisation_server'] if 'localisation_server' in package else None
@@ -588,7 +588,7 @@ def putPackageDetail(package, need_assign=True):
         pkgmanage().add_package(confjson)
 
     # write file to package directory
-    with open( os.path.join(packages_id_input_dir,"conf.json"), "w" ) as outfile:
+    with open( os.path.join(packages_id_input_dir, "conf.json"), "w" ) as outfile:
         json.dump(confjson, outfile, indent = 4)
 
     result = package
@@ -609,7 +609,7 @@ def pkgs_getTemporaryFiles():
     return ret
 
 def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
-    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
+    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
     ret = {
             "version": '0.1',
             "commandcmd": [],
@@ -682,7 +682,7 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
                         # If all the criterion's rule are validate, no need to test an another rule
                         # This one is corresponding with the
                         if test_proposition is True:
-                            logging.getLogger().debug("Rule # %s found the proposition :%s ",str(rule['id']), proposition%filename)
+                            logging.getLogger().debug("Rule # %s found the proposition :%s ", str(rule['id']), proposition%filename)
                             ret['commandcmd'] = proposition%filename
                             return ret
 
@@ -698,7 +698,7 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
 
 
 def pushPackage(random_dir, files, local_files):
-    tmp_input_dir = os.path.join("/","var","lib", "pulse2", "package-server-tmpdir")
+    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
     logging.getLogger().info("pushing package from a local mmc-agent")
     if not os.path.exists(tmp_input_dir):
         os.makedirs(tmp_input_dir)
@@ -707,7 +707,7 @@ def pushPackage(random_dir, files, local_files):
         os.mkdir(filepath)
     for file in files:
         logging.getLogger().debug("Move file : %s to %s "%( os.path.join(file['tmp_dir'],
-                                                            random_dir, file['filename']),os.path.join(filepath, file['filename'])))
+                                                            random_dir, file['filename']), os.path.join(filepath, file['filename'])))
         try:
             shutil.move(os.path.join(file['tmp_dir'], random_dir, file['filename']), \
                             os.path.join(filepath, file['filename']))
@@ -998,7 +998,7 @@ class DownloadAppstreamPackageList(object):
         self.download_packages= {}
         self.update=False
 
-    def _add_appstream(self,package_name):
+    def _add_appstream(self, package_name):
         """
         This methods add package in the dict of
         package who need to be download and set it to "wait"
@@ -1010,7 +1010,7 @@ class DownloadAppstreamPackageList(object):
         """
         self.download_packages[package_name]="wait"
 
-    def _start_appstream(self,package_name):
+    def _start_appstream(self, package_name):
         """
         This methods set package in the dict of
         package who need to be download, to "downloading"
@@ -1018,7 +1018,7 @@ class DownloadAppstreamPackageList(object):
         """
         self.download_packages[package_name]="download"
 
-    def _finish_appstream(self,package_name):
+    def _finish_appstream(self, package_name):
         """
         This methods delete a package in the dict of
         not yet downloaded appstream packages.
@@ -1081,7 +1081,7 @@ class DownloadAppstreamPackageList(object):
                 logger.error(str(e))
 
         #Download packages (copy dictionnary to be able to delete entry while iterate)
-        for pkg,state in list(self.getDownloadAppstreamPackages().copy().items()):
+        for pkg, state in list(self.getDownloadAppstreamPackages().copy().items()):
             # download only wait package
             if state != "wait":
                 continue
@@ -1452,7 +1452,7 @@ def _aliasforstep(step, dictstepseq):
     return None
 
 def _stepforalias(alias, dictstepseq):
-    print("alias",alias)
+    print("alias", alias)
     for t in dictstepseq:
         print(t)
         if t == alias:
@@ -1479,8 +1479,8 @@ def _save_xmpp_json(folder, json_content):
     if not os.path.exists(folder):
         os.mkdir(folder, 0o755)
 
-    xmppdeploy = open(os.path.join(folder,'xmppdeploy.json' ),'w')
-    json.dump(content,xmppdeploy,indent=4)
+    xmppdeploy = open(os.path.join(folder, 'xmppdeploy.json' ), 'w')
+    json.dump(content, xmppdeploy, indent=4)
 
     xmppdeploy.close()
     return True

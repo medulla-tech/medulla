@@ -838,7 +838,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             session = create_session()
         query = queryManager.getQueryTree(query, bool)
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, bool, start, end, True)
-        if type(result) == dict:
+        if isinstance(result, dict):
             result = list(result.values())
         session.close()
         return result
@@ -922,7 +922,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session.close()
         connection = self.getDbConnection()
         trans = connection.begin()
-        if type(uuids) == dict:
+        if isinstance(uuids, dict):
             uuids = list(uuids.values())
         if self.isprofile(ctx, id):
             if not self.__insert_into_machines_and_profilesresults(
@@ -947,7 +947,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         connection = self.getDbConnection()
         trans = connection.begin()
 
-        if type(uuids) == dict:
+        if isinstance(uuids, dict):
             uuids = list(uuids.values())
 
         self._mini_add_members_to_group(connection, uuids, id)

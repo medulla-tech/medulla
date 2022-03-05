@@ -170,7 +170,7 @@ class exportedReport(object):
         name = version = vendor = None
         if soft and isinstance(soft, str):
             name = soft.replace("*", "%")
-        elif type(soft) == dict:
+        elif isinstance(soft, dict):
             name = soft.get("name", None)
             if name:
                 name = name.replace("*", "%")
@@ -194,7 +194,7 @@ class exportedReport(object):
              (name, version, vendor),
              ...]
         """
-        if type(softs) == list:
+        if isinstance(softs, list):
             return [self._constructSoftwareTuple(soft) for soft in softs]
         if softs:
             return [self._constructSoftwareTuple(softs)]

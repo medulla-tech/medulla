@@ -271,18 +271,18 @@ class BoolEquation(BoolElement):
         vals = []
         for k in self.list:
             b = self.list[k]
-            if type(b) == BoolValue:
+            if isinstance(b, BoolValue):
                 vals.append(b.getValue())
-            elif type(b) == int:
+            elif isinstance(b, int):
                 vals.append(b)
-            elif type(b) == BoolEquation:
+            elif isinstance(b, BoolEquation):
                 vals.extend(b._getVals())
             else:
                 vals.extend(b._count())
         return vals
 
     def parseXML(self, xml):
-        if type(xml) == str:
+        if isinstance(xml, str):
             dom = minidom.parseString(xml)
             dom = dom.firstChild
         else:

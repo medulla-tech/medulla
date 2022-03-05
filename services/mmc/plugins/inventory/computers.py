@@ -40,7 +40,7 @@ class InventoryComputers(ComputerI):
     def getComputer(self, ctx, filt=None, empty_macs=False):
         ret = self.inventory.getMachinesOnly(ctx, filt)
 
-        if type(ret) == list and len(ret) == 1:
+        if isinstance(ret, list) and len(ret) == 1:
             return ret[0].toDN(ctx, True)
         else:
             return {}
@@ -274,7 +274,7 @@ class InventoryComputers(ComputerI):
 
     def getComputerByMac(self, mac):
         ret = self.inventory.getMachinesBy(None, "Network", "MACAddress", mac, False)
-        if type(ret) == list:
+        if isinstance(ret, list):
             if len(ret) != 0:
                 return ret[0]
             else:

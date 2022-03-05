@@ -65,7 +65,7 @@ from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
-import traceback,sys
+import traceback, sys
 from collections import OrderedDict
 import decimal
 
@@ -551,7 +551,7 @@ class Glpi95(DyngroupDatabaseHelper):
         The request is in OR not in AND, so be carefull with what you want
         """
         ret = self.__filter_on_filter(query)
-        if type(ret) == type(None):
+        if isinstance(ret, type(None)):
             return query
         else:
             return query.filter(ret)
@@ -572,7 +572,7 @@ class Glpi95(DyngroupDatabaseHelper):
                 if filter_key == 'autoupdatesystems_id':
                     self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
                     a_filter_on.append(self.machine.c.autoupdatesystems_id.in_(filter_values))
-                if not filter_key in ('state','type','entity','autoupdatesystems_id') :
+                if not filter_key in ('state', 'type', 'entity', 'autoupdatesystems_id') :
                     self.logger.warn('dont know how to filter on %s' % (filter_key))
             if len(a_filter_on) == 0:
                 return None
@@ -615,7 +615,7 @@ class Glpi95(DyngroupDatabaseHelper):
         if "computerpresence" in filt:
             d = XmppMasterDatabase().getlistPresenceMachineid()
             listid = [x.replace("UUID", "") for x in d]
-            ret["computerpresence"] = ["computerpresence","xmppmaster",filt["computerpresence"] , listid]
+            ret["computerpresence"] = ["computerpresence", "xmppmaster", filt["computerpresence"], listid]
         elif "query" in filt and filt['query'][0] in ["AND", "OR", "NOT"]:
             for q in filt['query'][1]:
                 #if len(q) >=3: and  q[2].lower() in ["online computer", "ou user", "ou machine"]:
@@ -1263,7 +1263,7 @@ class Glpi95(DyngroupDatabaseHelper):
             if 'uuid' in filt:
                 query = self.filterOnUUID(query, filt['uuid'])
 
-            if 'uuids' in filt and type(filt['uuids']) == list and len(filt['uuids']) > 0:
+            if 'uuids' in filt and isinstance(filt['uuids'], list) and len(filt['uuids']) > 0:
                 query = self.filterOnUUID(query, filt['uuids'])
 
             if 'gid' in filt:
@@ -1341,18 +1341,18 @@ class Glpi95(DyngroupDatabaseHelper):
 
 
     def __getId(self, obj):
-        if type(obj) == dict:
+        if isinstance(obj, dict):
             return obj['uuid']
-        if type(obj) != str and type(obj) != str:
+        if not isinstance(obj, str) and not isinstance(obj, str):
             return obj.id
         return obj
 
     def __getName(self, obj):
-        if type(obj) == dict:
+        if isinstance(obj, dict):
             return obj['name']
-        if type(obj) != str and type(obj) != str:
+        if not isinstance(obj, str) and not isinstance(obj, str):
             return obj.name
-        if type(obj) == str and re.match('UUID', obj):
+        if isinstance(obj, str) and re.match('UUID', obj):
             l = self.getLocation(obj)
             if l: return l.name
         return obj
@@ -1455,7 +1455,7 @@ class Glpi95(DyngroupDatabaseHelper):
             query[3] = self.encode(query[3])
             r1 = re.compile('\*')
             like = False
-            if type(query[3]) == list:
+            if isinstance(query[3], list):
                 q3 = []
                 for q in query[3]:
                     if r1.search(q):
@@ -1530,7 +1530,7 @@ class Glpi95(DyngroupDatabaseHelper):
             return self.__treatQueryLevel(query)
 
     def __getPartsFromQuery(self, ctx, query):
-        if query[2] in ['OS','Operating system']:
+        if query[2] in ['OS', 'Operating system']:
             return [[self.os.c.name, query[3]]]
         elif query[2] == 'Entity':
             locid = None
@@ -1594,7 +1594,7 @@ class Glpi95(DyngroupDatabaseHelper):
         elif query[2] == 'Register key':
             return [[self.registries.c.name, query[3]]]
         elif query[2] == 'Register key value':
-            return [[self.registries.c.name, query[3][0]], [self.regcontents.c.value , query[3][1]]]
+            return [[self.registries.c.name, query[3][0]], [self.regcontents.c.value, query[3][1]]]
         elif query[2] == 'OS Version':
             return [[self.os_version.c.name, query[3]]]
         elif query[2] == 'Architecture':
@@ -1844,7 +1844,7 @@ class Glpi95(DyngroupDatabaseHelper):
         """
         Modify the given query to filter on the machine UUID
         """
-        if type(uuid) == list:
+        if isinstance(uuid, list):
             return query.filter(self.machine.c.id.in_([int(str(a).replace("UUID", "")) for a in uuid]))
         else:
             if uuid is None:
@@ -1948,7 +1948,7 @@ class Glpi95(DyngroupDatabaseHelper):
                 for regkey in regs:
                     regkeyconf = getattr( master_config, regkey).split("|")[0].split("\\")[-1]
                     try:
-                        keyname, keyvalue = self.getMachineRegistryKey(m,regkeyconf)
+                        keyname, keyvalue = self.getMachineRegistryKey(m, regkeyconf)
                         datas[regkey] = keyvalue
                     except TypeError:
                         pass
@@ -2204,7 +2204,7 @@ class Glpi95(DyngroupDatabaseHelper):
         session = create_session()
         q = session.query(Entities.id, Entities.name, Entities.completename, Entities.comment, Entities.level).add_column(self.machine.c.id).select_from(self.entities.join(self.machine)).filter(self.machine.c.id.in_(list(map(fromUUID, machine_uuids)))).all()
         ret = {}
-        for idp, namep,namepc,commentp,levelp,machineid in q:
+        for idp, namep, namepc, commentp, levelp, machineid in q:
             val={}
             val['uuid']=toUUID(idp)
             val['name']=namep
@@ -2343,7 +2343,7 @@ class Glpi95(DyngroupDatabaseHelper):
             self.logger.info("some machines have been deleted since that list was generated (%s)"%(str(Set(a_machine_uuid) - all_computers)))
             machines_uuid_size = len(all_computers)
         size = 1
-        if type(ret) == list:
+        if isinstance(ret, list):
             size = len(ret)
         if all and size == machines_uuid_size:
             return True
@@ -2388,13 +2388,13 @@ class Glpi95(DyngroupDatabaseHelper):
         for m in query:
             ma1 = m[0].to_a()
             ma2 = []
-            for x,y in ma1:
+            for x, y in ma1:
                 if x in list(ind.keys()):
-                    ma2.append([x,m[ind[x]]])
+                    ma2.append([x, m[ind[x]]])
                 else:
-                    ma2.append([x,y])
+                    ma2.append([x, y])
             ret.append(ma2)
-        if type(uuid) == list:
+        if isinstance(uuid, list):
             return ret
         return ret[0]
 
@@ -2424,7 +2424,7 @@ class Glpi95(DyngroupDatabaseHelper):
             year = sourcedate.year + month / 12
             month = month % 12 + 1
             day = min(sourcedate.day, calendar.monthrange(year, month)[1])
-            return datetime.date(year,month,day)
+            return datetime.date(year, month, day)
 
         if infocoms is not None and infocoms.warranty_date is not None:
             endDate = add_months(infocoms.warranty_date, infocoms.warranty_duration)
@@ -2513,7 +2513,7 @@ class Glpi95(DyngroupDatabaseHelper):
                     gateways = []
                     netmasks = []
                     if networkport.networknames is not None:
-                        ipaddresses = list(set([ip.name for ip in networkport.networknames.ipaddresses if ip.name != '']))
+                        ipaddresses = list({ip.name for ip in networkport.networknames.ipaddresses if ip.name != ''})
                         gateways = []
                         netmasks = []
                         for ip in networkport.networknames.ipaddresses:
@@ -3450,7 +3450,7 @@ class Glpi95(DyngroupDatabaseHelper):
 
     def getEntitiesParentsAsDict(self, lids):
         session = create_session()
-        if type(lids) != list and type(lids) != tuple:
+        if not isinstance(lids, list) and not isinstance(lids, tuple):
             lids = (lids)
         query = session.query(Entities).all()
         locs = {}
@@ -3668,7 +3668,7 @@ class Glpi95(DyngroupDatabaseHelper):
         elif int(count) == 2:
             query = session.query(self.software.c.name)
         else:
-            query = session.query(self.machine.c.id.label('computers_id'), self.machine.c.name.label('computers_name'),self.machine.c.entities_id.label('entity_id'))
+            query = session.query(self.machine.c.id.label('computers_id'), self.machine.c.name.label('computers_name'), self.machine.c.entities_id.label('entity_id'))
 
         if int(count) >= 3:
             query = query.select_from(self.machine
@@ -3712,8 +3712,8 @@ class Glpi95(DyngroupDatabaseHelper):
         # FIXME: the way the web interface process dynamic group sub-query
         # is wrong, so for the moment we need this loop:
         version = None
-        if type(swname) == list:
-            while type(swname[0]) == list:
+        if isinstance(swname, list):
+            while isinstance(swname[0], list):
                 swname = swname[0]
             name = swname[0]
             version = swname[1]
@@ -4355,7 +4355,7 @@ class Glpi95(DyngroupDatabaseHelper):
             join(Computersitems, Machine.id == Computersitems.computers_id).\
             outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
                                      Computersitems.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
+            outerjoin(Peripherals, and_(Computersitems.items_id==Peripherals.id,
                                           Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
@@ -4370,7 +4370,7 @@ class Glpi95(DyngroupDatabaseHelper):
             join(Computersitems, Machine.id == Computersitems.computers_id).\
             outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
                                           Computersitems.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
+            outerjoin(Peripherals, and_(Computersitems.items_id==Peripherals.id,
                                           Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
@@ -4394,7 +4394,7 @@ class Glpi95(DyngroupDatabaseHelper):
             join(Computersitems, Machine.id == Computersitems.computers_id).\
             outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
                                           Computersitems.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
+            outerjoin(Peripherals, and_(Computersitems.items_id==Peripherals.id,
                                           Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
@@ -4439,7 +4439,7 @@ class Glpi95(DyngroupDatabaseHelper):
         @rtype: str
         """
         ret = self.getMachineByMacAddress('imaging_module', mac)
-        if type(ret) == list:
+        if isinstance(ret, list):
             if len(ret) != 0:
                 return str(toUUID(ret[0].id))
         return None
@@ -4788,7 +4788,7 @@ class Glpi95(DyngroupDatabaseHelper):
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         raise Exception("need to be implemented when we would be able to add computers")
 
-    def _killsession(self,sessionwebservice):
+    def _killsession(self, sessionwebservice):
         """
         Destroy a session identified by a session token.
 
@@ -5278,11 +5278,11 @@ class Glpi95(DyngroupDatabaseHelper):
         # Split into hive / path / key
         hive = full_key.split('\\')[0]
         key = full_key.split('\\')[-1]
-        path = full_key.replace(hive+'\\','').replace('\\'+key,'')
+        path = full_key.replace(hive+'\\', '').replace('\\'+key, '')
         path = '/'+path+'/'
         # Get registry_id
         try:
-            registry_id = session.query(Registries).filter_by(hive=hive,path=path,key=key).first().id
+            registry_id = session.query(Registries).filter_by(hive=hive, path=path, key=key).first().id
             if registry_id:
                 return registry_id
         except:
@@ -5306,7 +5306,7 @@ class Glpi95(DyngroupDatabaseHelper):
         # Split into hive / path / key
         hive = full_key.split('\\')[0]
         key = full_key.split('\\')[-1]
-        path = full_key.replace(hive+'\\','').replace('\\'+key,'')
+        path = full_key.replace(hive+'\\', '').replace('\\'+key, '')
         path = '/'+path+'/'
         # Insert in database
         registry = Registries()
@@ -5388,7 +5388,7 @@ class Glpi95(DyngroupDatabaseHelper):
 
         # Check if already present
         try:
-            contents_id = session.query(RegContents).filter_by(computers_id=computers_id,plugin_fusioninventory_collects_registries_id=registry_id,key=key).first().id
+            contents_id = session.query(RegContents).filter_by(computers_id=computers_id, plugin_fusioninventory_collects_registries_id=registry_id, key=key).first().id
             if contents_id:
                 # Update database
                 session.query(RegContents).filter_by(id=contents_id).update({'value': str(value)})
@@ -5514,7 +5514,7 @@ class Glpi95(DyngroupDatabaseHelper):
         sql = self.__filter_on(sql)
         res = session.execute(sql)
 
-        result = [{'id':a, 'hostname':b} for a,b in res]
+        result = [{'id':a, 'hostname':b} for a, b in res]
 
         return result
 
@@ -5684,7 +5684,7 @@ class Glpi95(DyngroupDatabaseHelper):
             query = []
 
         result = []
-        if type(query) is dict:
+        if isinstance(query, dict):
             for key in query:
                 # get the key, tke key = the value
                 result.append(int(key))
@@ -5703,29 +5703,29 @@ class Machine(object):
     def to_a(self):
         owner_login, owner_firstname, owner_realname = Glpi95().getMachineOwner(self)
         return [
-            ['name',self.name],
-            ['comments',self.comment],
-            ['serial',self.serial],
-            ['otherserial',self.otherserial],
-            ['contact',self.contact],
-            ['contact_num',self.contact_num],
+            ['name', self.name],
+            ['comments', self.comment],
+            ['serial', self.serial],
+            ['otherserial', self.otherserial],
+            ['contact', self.contact],
+            ['contact_num', self.contact_num],
             ['owner', owner_login],
             ['owner_firstname', owner_firstname],
             ['owner_realname', owner_realname],
             # ['tech_num',self.tech_num],
-            ['os',self.operatingsystems_id],
-            ['os_version',self.operatingsystemversions_id],
-            ['os_sp',self.operatingsystemservicepacks_id],
-            ['os_arch',self.operatingsystemarchitectures_id],
-            ['license_number',self.license_number],
-            ['licenseid',self.licenseid],
-            ['location',self.locations_id],
-            ['domain',self.domains_id],
-            ['network',self.networks_id],
-            ['model',self.computermodels_id],
-            ['type',self.computertypes_id],
-            ['entity',self.entities_id],
-            ['uuid',Glpi95().getMachineUUID(self)]
+            ['os', self.operatingsystems_id],
+            ['os_version', self.operatingsystemversions_id],
+            ['os_sp', self.operatingsystemservicepacks_id],
+            ['os_arch', self.operatingsystemarchitectures_id],
+            ['license_number', self.license_number],
+            ['licenseid', self.licenseid],
+            ['location', self.locations_id],
+            ['domain', self.domains_id],
+            ['network', self.networks_id],
+            ['model', self.computermodels_id],
+            ['type', self.computertypes_id],
+            ['entity', self.entities_id],
+            ['uuid', Glpi95().getMachineUUID(self)]
         ]
 
 class Entities(object):

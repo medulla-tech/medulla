@@ -372,7 +372,7 @@ class RpcProxy(RpcProxyI):
         machines = ComputerManager().getRestrictedComputersList(ctx, 0, -1, req)
         # put in the wanted format
         uuids = {}
-        if type(machines) == dict:
+        if isinstance(machines, dict):
             machines = list(machines.values())
         for m in machines:
             uuid = m[1]["objectUUID"][0]
@@ -663,7 +663,7 @@ def __addCtxFilters(ctx, filt=None):
     try:
         if ctx.locations:
             location = ctx.locations
-            if type(location) != list:
+            if not isinstance(location, list):
                 location = [location]
             filt["ctxlocation"] = [l.toH() for l in location]
     except exceptions.AttributeError:
@@ -734,6 +734,6 @@ def getMaxElementsForStaticList():
 
 
 def unescape(search):
-    if type(search) == str and search != "":
+    if isinstance(search, str) and search != "":
         return re.sub("&lt;", "<", re.sub("&gt;", ">", search))
     return search

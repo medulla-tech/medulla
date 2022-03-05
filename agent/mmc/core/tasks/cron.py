@@ -410,8 +410,7 @@ def parseCronEntry(entry, min, max):
     if len(total) == 0:
         raise InvalidCronEntry("Empty cron entry")
 
-    total = list(total)
-    total.sort()
+    total = sorted(total)
 
     if total[0] < min or total[len(total) - 1] > max:
         raise InvalidCronEntry(

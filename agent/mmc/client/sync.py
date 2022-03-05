@@ -194,7 +194,7 @@ class MMCBaseTransport(object):
 
         p, u = self.getparser()
 
-        while 1:
+        while True:
             data = stream.read(1024)
             if not data:
                 break

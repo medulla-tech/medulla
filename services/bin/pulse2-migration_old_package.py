@@ -40,26 +40,26 @@ def writejsonfile(namefile, data):
 def sharing_list():
     exclude_name_package = ["sharing", ".stfolder", ".stignore"]
     folderpackages = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
-    return  [os.path.join(folderpackages,x) for x in os.listdir(folderpackages) \
-                if os.path.isdir(os.path.join(folderpackages,x)) \
+    return  [os.path.join(folderpackages, x) for x in os.listdir(folderpackages) \
+                if os.path.isdir(os.path.join(folderpackages, x)) \
                     and x not in exclude_name_package]
 
 def packages_list():
     total_packages=[]
     list_of_sharing = sharing_list()
     exclude_name_package = ["sharing", ".stfolder", ".stignore" ]
-    folderpackages = os.path.join("/", "var" ,"lib","pulse2","packages","sharing")
+    folderpackages = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
 
     for share in list_of_sharing:
         total_packages.extend(
-            [ os.path.join(share,x) for x in os.listdir(share) \
+            [ os.path.join(share, x) for x in os.listdir(share) \
                 if os.path.isdir(os.path.join(share, x)) \
                     and x not in exclude_name_package])
     return total_packages
 
 def main():
     for path_packagename in packages_list():
-        jsonfile_name = os.path.join(path_packagename,"conf.json")
+        jsonfile_name = os.path.join(path_packagename, "conf.json")
         print "We are looking for file %s" % jsonfile_name
         try:
             jsondata = readjsonfile(jsonfile_name)
@@ -96,7 +96,7 @@ def main():
             if modif:
                 print "save file %s" % jsonfile_name
                 writejsonfile(jsonfile_name, jsondata)
-                print "new file \n %s" % json.dumps(jsondata,indent=4)
+                print "new file \n %s" % json.dumps(jsondata, indent=4)
             else:
                 print "Correct values pour ce packages"
             print "The package is now fixed"

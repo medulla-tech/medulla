@@ -218,8 +218,7 @@ if __name__ == "__main__":
         for group in group_list:
             group_hours += list(groups[group].keys())
             # deduplicate list
-            group_hours = list(set(group_hours))
-            group_hours.sort()
+            group_hours = sorted(set(group_hours))
 
         # Sort groups data for pygraph
         for group in group_list:
@@ -262,8 +261,7 @@ if __name__ == "__main__":
         for launch in launcher_list:
             launch_hours += list(launchers[launch].keys())
             # deduplicate list
-            launch_hours = list(set(launch_hours))
-            launch_hours.sort()
+            launch_hours = sorted(set(launch_hours))
 
         # Sort launchers data for pygraph
         for launch in launcher_list:

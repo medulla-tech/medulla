@@ -224,8 +224,7 @@ if __name__ == "__main__":
         for sched in scheduler_list:
             sched_hours += list(memory[sched].keys())
             # deduplicate list
-            sched_hours = list(set(sched_hours))
-            sched_hours.sort()
+            sched_hours = sorted(set(sched_hours))
 
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
@@ -270,8 +269,7 @@ if __name__ == "__main__":
         for sched in scheduler_list:
             sched_hours += list(loads[sched].keys())
             # deduplicate list
-            sched_hours = list(set(sched_hours))
-            sched_hours.sort()
+            sched_hours = sorted(set(sched_hours))
 
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
@@ -316,8 +314,7 @@ if __name__ == "__main__":
         for sched in scheduler_list:
             sched_hours += list(fds[sched].keys())
             # deduplicate list
-            sched_hours = list(set(sched_hours))
-            sched_hours.sort()
+            sched_hours = sorted(set(sched_hours))
 
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
@@ -362,8 +359,7 @@ if __name__ == "__main__":
         for sched in scheduler_list:
             sched_hours += list(db[sched].keys())
             # deduplicate list
-            sched_hours = list(set(sched_hours))
-            sched_hours.sort()
+            sched_hours = sorted(set(sched_hours))
 
         # Sort scheduler data for pygraph
         for sched in scheduler_list:

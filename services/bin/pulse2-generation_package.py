@@ -23,7 +23,7 @@
 # file  : pulse2-generation_package.py
 
 import shutil
-import sys,os
+import sys, os
 import logging
 import platform
 import subprocess
@@ -178,7 +178,7 @@ class managepackage:
             dirpackage = managepackage.packagedir()
         else:
             dirpartage = os.path.abspath(os.path.realpath(dirpartage))
-        dirglobal = os.path.join(dirpackage,"sharing", "global")
+        dirglobal = os.path.join(dirpackage, "sharing", "global")
         packagelist = [os.path.join(dirglobal, f) for f in os.listdir(dirglobal) if len(f) == 36]
         dirlocal  = os.path.join(dirpackage, "sharing")
         pathnamepartage = [os.path.join(dirlocal, f) for f in os.listdir(dirlocal) if f != "global"]
@@ -198,9 +198,9 @@ class managepackage:
             dirpartage = os.path.abspath(os.path.realpath(dirpartage))
         for x in  managepackage.search_list_package():
             if verbeux:
-                print "symbolic link %s to %s" %(x , os.path.join(dirpackage, os.path.basename(x)))
+                print "symbolic link %s to %s" %(x, os.path.join(dirpackage, os.path.basename(x)))
             try:
-                os.symlink(x , os.path.join(dirpackage, os.path.basename(x)))
+                os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
             except OSError:
                 pass
 
@@ -465,31 +465,31 @@ if __name__ == '__main__':
                     dest="password", default = "",
                     help="password connection")
 
-    optp.add_option("-v", "--verbeux",action="store_true",
+    optp.add_option("-v", "--verbeux", action="store_true",
                     dest="verbeux", default=False,
                     help="mode verbeux")
 
-    optp.add_option("-r", "--report",action="store_true",
+    optp.add_option("-r", "--report", action="store_true",
                     dest="verbosereport", default=False,
                     help="print report messages to stdout")
 
-    optp.add_option("-g", "--regeneratetable",action="store_true",
+    optp.add_option("-g", "--regeneratetable", action="store_true",
                     dest="regeneratetable", default=False,
                     help="reinitialise des packages dans la bases")
 
-    optp.add_option("-m", "--move",action="store_true",
+    optp.add_option("-m", "--move", action="store_true",
                     dest="movebadpackage", default=False,
                     help="deplace les packages avec erreur vers /var/lib/pulse2/packageerror")
 
-    optp.add_option("-l", "--linkcreate",action="store_true",
+    optp.add_option("-l", "--linkcreate", action="store_true",
                     dest="linkcreate", default=False,
                     help="regenere les liens symbolique des package")
 
-    optp.add_option("-t", "--testconnect",action="store_true",
+    optp.add_option("-t", "--testconnect", action="store_true",
                     dest="testconnect", default=False,
                     help="test connection et quitte")
 
-    optp.add_option("-i", "--info",action="store_true",
+    optp.add_option("-i", "--info", action="store_true",
                     dest="info", default=False,
                     help="message information et quitte")
 
@@ -512,7 +512,7 @@ if __name__ == '__main__':
                                        '%s:<password>@%s:%s/%s'%(opts.user,
                                                                  opts.hostname,
                                                                  opts.port,
-                                                                 base) ,
+                                                                 base),
                                        stream=None)
     if opts.verbeux or opts.testconnect:
         logger.debug("try Connecting with parameters\n" \

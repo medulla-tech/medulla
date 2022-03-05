@@ -413,7 +413,7 @@ class DBObject(object):
                 # we don't want to enter in an infinite loop
                 # and generally we don't need more levels
                 attr = getattr(self, i)
-                if type(attr) == list:
+                if isinstance(attr, list):
                     new_attr = []
                     for a in attr:
                         new_attr.append(a.toH(level + 1))

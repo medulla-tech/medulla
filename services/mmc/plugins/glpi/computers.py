@@ -46,7 +46,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location != None:
+            if not isinstance(location, list) and location != None:
                 location = [location]
             filt["ctxlocation"] = location
         except exceptions.AttributeError:
@@ -90,12 +90,12 @@ class GlpiComputers(ComputerI):
         ret = []
         for x, m in list(machines.values()):
             if "hostname" not in m:
-                if type(m["cn"]) == list:
+                if isinstance(m["cn"], list):
                     m["hostname"] = m["cn"][0]
                 else:
                     m["hostname"] = m["cn"]
             if "uuid" not in m:
-                if type(m["objectUUID"]) == list:
+                if isinstance(m["objectUUID"], list):
                     m["uuid"] = m["objectUUID"][0]
                 else:
                     m["uuid"] = m["objectUUID"]
@@ -119,7 +119,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location != None:
+            if not isinstance(location, list) and location != None:
                 location = [location]
             filt["ctxlocation"] = location
         except exceptions.AttributeError:
@@ -184,7 +184,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location != None:
+            if not isinstance(location, list) and location != None:
                 location = [location]
             filt["ctxlocation"] = location
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
@@ -206,7 +206,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location != None:
+            if not isinstance(location, list) and location != None:
                 location = [location]
             filt["ctxlocation"] = location
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
@@ -256,7 +256,7 @@ class GlpiComputers(ComputerI):
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location != None:
+            if not isinstance(location, list) and location != None:
                 location = [location]
             filt["ctxlocation"] = location
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
@@ -300,7 +300,7 @@ class GlpiComputers(ComputerI):
 
     def getComputerByMac(self, mac):
         ret = self.glpi.getMachineByMacAddress("imaging_module", mac)
-        if type(ret) == list:
+        if isinstance(ret, list):
             if len(ret) != 0:
                 return ret[0]
             else:

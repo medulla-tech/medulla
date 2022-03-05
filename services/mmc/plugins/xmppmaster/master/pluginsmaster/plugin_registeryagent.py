@@ -980,7 +980,7 @@ def getComputerByMac(mac, showinfobool=True):
             "Function getComputerByMac asking glpi for machine list for mac %s" % mac
         )
     ret = Glpi().getMachineByMacAddress("imaging_module", mac)
-    if type(ret) == list:
+    if isinstance(ret, list):
         if ret:
             return ret[0]
         else:

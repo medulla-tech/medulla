@@ -49,7 +49,7 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
         self.logger = logging.getLogger()
         bind = server
         credentials = ""
-        if type(server) == dict:
+        if isinstance(server, dict):
             mountpoint = server["mountpoint"]
             port = server["port"]
             proto = server["protocol"]

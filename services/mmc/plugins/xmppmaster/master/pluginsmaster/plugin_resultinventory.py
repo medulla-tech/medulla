@@ -238,7 +238,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
 
 def getComputerByMac(mac):
     ret = Glpi().getMachineByMacAddress("imaging_module", mac)
-    if type(ret) == list:
+    if isinstance(ret, list):
         if len(ret) != 0:
             return ret[0]
         else:

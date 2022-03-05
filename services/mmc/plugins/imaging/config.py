@@ -76,7 +76,7 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
                     setattr(self, option, self.get("web", option))
 
         setattr(self, "network", "resolv_order")
-        if not type(self.resolv_order) == type([]):
+        if not isinstance(self.resolv_order, type([])):
             self.resolv_order = self.resolv_order.split(" ")
 
         if self.has_option("network", "preferred_network"):

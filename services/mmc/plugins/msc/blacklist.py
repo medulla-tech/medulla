@@ -147,7 +147,7 @@ def excludeFilter(ips, exclude):
                 # This IP is filtered
                 filtered = True
                 break
-            elif type(ex) == tuple:
+            elif isinstance(ex, tuple):
                 if ipInRange(ip, ex[0], ex[1]):
                     # This IP is filtered
                     filtered = True
@@ -178,7 +178,7 @@ def mergeWithIncludeFilter(ips, filteredips, include):
             if ip == inc and ip not in ret:
                 ret.append(ip)
                 break
-            elif type(inc) == tuple:
+            elif isinstance(inc, tuple):
                 if ipInRange(ip, inc[0], inc[1]) and ip not in ret:
                     ret.append(ip)
                     break

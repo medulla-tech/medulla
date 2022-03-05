@@ -117,9 +117,9 @@ def parseCliArgs(config):
                 except:
                     items = [token]
 
-        if type(items) == type({}):
+        if isinstance(items, type({})):
             parsedargs.append(items)
-        elif type(items) == type([]):
+        elif isinstance(items, type([])):
             parsedargs += items
         else:
             parsedargs += items

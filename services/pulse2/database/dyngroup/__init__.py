@@ -437,7 +437,7 @@ class DyngroupDatabase(DatabaseHelper):
             )
 
     def getInfosNameGroup(self, arrayuuidgroup):
-        arrayuuidgroup = list(set([x for x in arrayuuidgroup if x != ""]))
+        arrayuuidgroup = list({x for x in arrayuuidgroup if x != ""})
         session = create_session()
         result = {}
         ret = (

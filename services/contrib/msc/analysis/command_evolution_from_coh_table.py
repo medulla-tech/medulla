@@ -726,8 +726,7 @@ def print_human(label, value, total, subtotal):
         print(fmt.format(label, value, 0, total, 0, subtotal))
 
 
-ids_command = list(data.keys())
-ids_command.sort()
+ids_command = sorted(data.keys())
 for id_command in ids_command:
     command = data[id_command]
     if len(command["coh"]) > options.min:

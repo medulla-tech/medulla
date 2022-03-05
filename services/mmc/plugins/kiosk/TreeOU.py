@@ -95,7 +95,7 @@ class TreeOU(object):
         """
 
         # Verify if the children is a TreeOu object
-        if type(children) == TreeOU:
+        if isinstance(children, TreeOU):
             # Verify if the new children is not already known
             if not self.search_direct_child(children.name):
                 # Verify if the children has not already a parent

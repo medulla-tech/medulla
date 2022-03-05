@@ -73,8 +73,7 @@ def unique(s):
     # sort functions in all languages or libraries, so this approach
     # is more effective in Python than it may be elsewhere.
     try:
-        t = list(s)
-        t.sort()
+        t = sorted(s)
     except TypeError:
         pass  # move on to the next method
     else:

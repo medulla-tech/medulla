@@ -410,8 +410,7 @@ class class03testPackages_get(unittest.TestCase):
         self.assertEqual(result, {"command": "./install.bat", "name": "commande"})
 
     def test308getPackageFiles(self):
-        result = serverP.getPackageFiles("test")
-        result.sort()
+        result = sorted(serverP.getPackageFiles("test"))
         SupEsp(result)
         wanted = [
             {

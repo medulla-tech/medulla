@@ -173,7 +173,7 @@ class BoundMethodWeakref(object):
     def __eq__(self, other):
         """Compare with another reference"""
         if not isinstance(other, self.__class__):
-            return self.__class__ == type(other)
+            return isinstance(other, self.__class__)
         return self.key == other.key
 
     def __call__(self):

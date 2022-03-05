@@ -771,7 +771,7 @@ class Glpi94(DyngroupDatabaseHelper):
         The request is in OR not in AND, so be carefull with what you want
         """
         ret = self.__filter_on_filter(query)
-        if type(ret) == type(None):
+        if isinstance(ret, type(None)):
             return query
         else:
             return query.filter(ret)
@@ -1413,7 +1413,7 @@ class Glpi94(DyngroupDatabaseHelper):
 
             if (
                 "uuids" in filt
-                and type(filt["uuids"]) == list
+                and isinstance(filt["uuids"], list)
                 and len(filt["uuids"]) > 0
             ):
                 query = self.filterOnUUID(query, filt["uuids"])
@@ -1518,18 +1518,18 @@ class Glpi94(DyngroupDatabaseHelper):
         return query
 
     def __getId(self, obj):
-        if type(obj) == dict:
+        if isinstance(obj, dict):
             return obj["uuid"]
-        if type(obj) != str and type(obj) != str:
+        if not isinstance(obj, str) and not isinstance(obj, str):
             return obj.id
         return obj
 
     def __getName(self, obj):
-        if type(obj) == dict:
+        if isinstance(obj, dict):
             return obj["name"]
-        if type(obj) != str and type(obj) != str:
+        if not isinstance(obj, str) and not isinstance(obj, str):
             return obj.name
-        if type(obj) == str and re.match("UUID", obj):
+        if isinstance(obj, str) and re.match("UUID", obj):
             l = self.getLocation(obj)
             if l:
                 return l.name
@@ -1647,7 +1647,7 @@ class Glpi94(DyngroupDatabaseHelper):
             query[3] = self.encode(query[3])
             r1 = re.compile("\*")
             like = False
-            if type(query[3]) == list:
+            if isinstance(query[3], list):
                 q3 = []
                 for q in query[3]:
                     if r1.search(q):
@@ -2080,7 +2080,7 @@ class Glpi94(DyngroupDatabaseHelper):
         """
         Modify the given query to filter on the machine UUID
         """
-        if type(uuid) == list:
+        if isinstance(uuid, list):
             return query.filter(
                 self.machine.c.id.in_([int(str(a).replace("UUID", "")) for a in uuid])
             )
@@ -2673,7 +2673,7 @@ class Glpi94(DyngroupDatabaseHelper):
             )
             machines_uuid_size = len(all_computers)
         size = 1
-        if type(ret) == list:
+        if isinstance(ret, list):
             size = len(ret)
         if all and size == machines_uuid_size:
             return True
@@ -2747,7 +2747,7 @@ class Glpi94(DyngroupDatabaseHelper):
                 else:
                     ma2.append([x, y])
             ret.append(ma2)
-        if type(uuid) == list:
+        if isinstance(uuid, list):
             return ret
         return ret[0]
 
@@ -2880,13 +2880,11 @@ class Glpi94(DyngroupDatabaseHelper):
                     netmasks = []
                     if networkport.networknames is not None:
                         ipaddresses = list(
-                            set(
-                                [
+                            {
                                     ip.name
                                     for ip in networkport.networknames.ipaddresses
                                     if ip.name != ""
-                                ]
-                            )
+                                }
                         )
                         gateways = []
                         netmasks = []
@@ -4033,7 +4031,7 @@ class Glpi94(DyngroupDatabaseHelper):
 
     def getEntitiesParentsAsDict(self, lids):
         session = create_session()
-        if type(lids) != list and type(lids) != tuple:
+        if not isinstance(lids, list) and not isinstance(lids, tuple):
             lids = lids
         query = session.query(Entities).all()
         locs = {}
@@ -4299,8 +4297,8 @@ class Glpi94(DyngroupDatabaseHelper):
         # FIXME: the way the web interface process dynamic group sub-query
         # is wrong, so for the moment we need this loop:
         version = None
-        if type(swname) == list:
-            while type(swname[0]) == list:
+        if isinstance(swname, list):
+            while isinstance(swname[0], list):
                 swname = swname[0]
             name = swname[0]
             version = swname[1]
@@ -5435,7 +5433,7 @@ class Glpi94(DyngroupDatabaseHelper):
         @rtype: str
         """
         ret = self.getMachineByMacAddress("imaging_module", mac)
-        if type(ret) == list:
+        if isinstance(ret, list):
             if len(ret) != 0:
                 return str(toUUID(ret[0].id))
         return None
@@ -6788,7 +6786,7 @@ class Glpi94(DyngroupDatabaseHelper):
             query = []
 
         result = []
-        if type(query) is dict:
+        if isinstance(query, dict):
             for key in query:
                 # get the key, tke key = the value
                 result.append(int(key))

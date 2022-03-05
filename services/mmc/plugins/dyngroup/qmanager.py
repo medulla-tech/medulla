@@ -327,7 +327,7 @@ class QueryManager(Singleton):
             return retour[0]
 
     def getQueryTree(self, query, bool=None):
-        if type(query) != list:
+        if not isinstance(query, list):
             query = self.parse(query)
 
         values = {}

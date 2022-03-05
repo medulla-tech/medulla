@@ -1192,7 +1192,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         ims = []
-        if type(images[0]) == list:
+        if isinstance(images[0], list):
             for im in images:
                 i = [im[0], im[1], self.__convertType(im[2], im[1])]
                 ims.append(i)
@@ -1717,7 +1717,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
 
         def processResults(results):
-            assert type(results) == dict
+            assert isinstance(results, dict)
             if results:
                 # add short_status from the database
                 status = ImagingDatabase().getEntityStatus(location)
@@ -1994,7 +1994,7 @@ class ImagingRpcProxy(RpcProxyI):
             1 : the list of uuids of the target that failed to unregister
         @rtype: list
         """
-        if type(computers_UUID) != list:
+        if not isinstance(computers_UUID, list):
             computers_UUID = [computers_UUID]
         ret = computersUnregister(computers_UUID, backup)
         return ret
@@ -2234,7 +2234,7 @@ class ImagingRpcProxy(RpcProxyI):
         if not self.doesLocationHasImagingServer(uuid):
             return {"id": 0}
         ret = ImagingDatabase().getLocationSynchroState(uuid)
-        if type(ret) != list:
+        if not isinstance(ret, list):
             ret = ret.toH()
         return xmlrpcCleanup(ret)
 
@@ -2433,7 +2433,7 @@ class ImagingRpcProxy(RpcProxyI):
         # if pids:
         if len(pids) != 0:
             d2 = self.__synchroTargets(pids, P2IT.PROFILE)
-            if type(d2) == list and d2[0]:
+            if isinstance(d2, list) and d2[0]:
                 pass
             else:
                 d2.addCallback(treatProfiles)
@@ -2450,7 +2450,7 @@ class ImagingRpcProxy(RpcProxyI):
         # if pids:
         if len(pids) != 0:
             d3 = self.__synchroTargets(pids, P2IT.COMPUTER_IN_PROFILE)
-            if type(d3) == list and d3[0]:
+            if isinstance(d3, list) and d3[0]:
                 pass
             else:
                 d3.addCallback(treatComputersInProfile)
@@ -2648,7 +2648,7 @@ class ImagingRpcProxy(RpcProxyI):
                 hostnames = ComputerManager().getMachineHostname(ctx, {"uuids": uuids})
                 h_hostnames = {}
                 if hostnames:
-                    if type(hostnames) == list:
+                    if isinstance(hostnames, list):
                         for computer in hostnames:
                             h_hostnames[computer["uuid"]] = computer["hostname"]
                     else:
@@ -3294,7 +3294,7 @@ class ImagingRpcProxy(RpcProxyI):
                     % (profile, imaging_server_uuid),
                 ]
             p = ComputerProfileManager().getProfileByNameImagingServer(profile, is_uuid)
-            if type(p) == list:
+            if isinstance(p, list):
                 if len(p) != 1:
                     return [
                         False,
@@ -3317,7 +3317,7 @@ class ImagingRpcProxy(RpcProxyI):
         db_computer = self.__inventory_check(MACAddress, waitToBeInventoried)
         if db_computer != None:
             db_computer_name = ""
-            if type(db_computer) == dict:
+            if isinstance(db_computer, dict):
                 uuid = db_computer["uuid"]
                 if "hostname" in db_computer:
                     db_computer_name = db_computer["hostname"]
@@ -3393,7 +3393,7 @@ class ImagingRpcProxy(RpcProxyI):
                         % (uuid, MACAddress)
                     )
 
-        if uuid == None or type(uuid) == list and len(uuid) == 0:
+        if uuid == None or isinstance(uuid, list) and len(uuid) == 0:
             logger.info(
                 "the computer %s (%s) does not exist in the backend, trying to add it"
                 % (hostname, MACAddress)
@@ -3560,7 +3560,7 @@ class ImagingRpcProxy(RpcProxyI):
                 % mac,
             ]
 
-        if type(db_computer) == dict:
+        if isinstance(db_computer, dict):
             uuid = db_computer["uuid"]
             if "hostname" in db_computer:
                 db_computer_name = db_computer["hostname"]
@@ -3625,7 +3625,7 @@ class ImagingRpcProxy(RpcProxyI):
                 % uuid,
             ]
 
-        if type(db_computer) == dict:
+        if isinstance(db_computer, dict):
             uuid = db_computer["uuid"]
             if "hostname" in db_computer:
                 db_computer_name = db_computer["hostname"]
@@ -3961,7 +3961,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         try:
-            if type(item_number) != int:
+            if not isinstance(item_number, int):
                 try:
                     item_number = int(item_number)
                 except:
@@ -4027,7 +4027,7 @@ def getJustOneMacPerComputer(ctx, macs):
     @raises: TypeError if macs is not a dict
     ...
     """
-    if type(macs) == dict:
+    if isinstance(macs, dict):
         ret = {}
         for uuid in macs:
             macs_list = macs[uuid]
@@ -4125,7 +4125,7 @@ def synchroTargets(ctx, uuids, target_type, macs={}, wol=False):
         hostnames = ComputerManager().getMachineHostname(
             ctx, {"uuids": list(to_register.keys())}
         )
-        if type(hostnames) == list:
+        if isinstance(hostnames, list):
             for computer in hostnames:
                 h_hostnames[computer["uuid"]] = computer["hostname"]
         else:
@@ -4159,9 +4159,9 @@ def synchroTargets(ctx, uuids, target_type, macs={}, wol=False):
                 continue
 
             mac = h_macaddress[uuid]
-            if (type(mac) == list or type(mac) == tuple) and len(mac) == 1:
+            if (isinstance(mac, list) or isinstance(mac, tuple)) and len(mac) == 1:
                 mac = mac[0]
-                if (type(mac) == list or type(mac) == tuple) and len(mac) == 1:
+                if (isinstance(mac, list) or isinstance(mac, tuple)) and len(mac) == 1:
                     mac = mac[0]
             if uuid in h_hostnames:
                 computers.append((h_hostnames[uuid], mac, imagingData))
@@ -4182,7 +4182,7 @@ def synchroTargets(ctx, uuids, target_type, macs={}, wol=False):
                     results, uuids=list(to_register.keys()), logger=logger, url=url
                 ):
                     if (
-                        type(results) == list
+                        isinstance(results, list)
                         and len(results) > 0
                         and results[0] == "PULSE2_ERR"
                     ):
@@ -4243,7 +4243,7 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs={}):
     ):
         failures = []
         success = []
-        if type(result) == list and len(result) > 0 and result[0] == "PULSE2_ERR":
+        if isinstance(result, list) and len(result) > 0 and result[0] == "PULSE2_ERR":
             logger.warn("couldn't connect to the ImagingApi %s" % (url))
         else:
             for uuid in result:

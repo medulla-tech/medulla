@@ -33,7 +33,7 @@ class PackagePutA(pulse2.apis.clients.package_put_api.PackagePutA):
     def __init__(self, server, port=None, mountpoint=None, proto="http", login=""):
         self.logger = logging.getLogger()
         credentials = ""
-        if type(server) == dict:
+        if isinstance(server, dict):
             mountpoint = server["mountpoint"]
             port = server["port"]
             proto = server["protocol"]

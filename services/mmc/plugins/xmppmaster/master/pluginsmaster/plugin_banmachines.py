@@ -38,7 +38,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.debug("=====================================================")
 
     struct = {}
-    if type(data["data"]) is list:
+    if isinstance(data["data"], list):
         count_params = len(data["data"])
         if count_params == 0:
             logging.debug(

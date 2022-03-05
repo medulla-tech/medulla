@@ -503,7 +503,7 @@ class RpcProxy(RpcProxyI):
                 else:
                     group = DyngroupDatabase().get_group(ctx, c["gid"], True)
                     if (
-                        type(group) == bool
+                        isinstance(group, bool)
                     ):  # we dont have the permission to view the group
                         c["target"] = "UNVISIBLEGROUP"  # TODO!
                     elif group == None:

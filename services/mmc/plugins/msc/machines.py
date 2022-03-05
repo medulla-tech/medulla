@@ -101,7 +101,7 @@ class Machines(Singleton):
             self.logger.debug("getMachine: wanted |%s|, got |%s|" % (h_params, ret))
             if ret != None:
                 if ret != False:
-                    if type(ret) == list:
+                    if isinstance(ret, list):
                         return Machine(ret[1])
                     else:
                         return Machine(ret)

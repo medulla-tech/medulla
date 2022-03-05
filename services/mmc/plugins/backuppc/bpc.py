@@ -112,7 +112,7 @@ def getBackupServerByUUID(uuid):
 def dictToURL(params):
     s = ""
     for k in list(params.keys()):
-        if type(params[k]) == type([]):
+        if isinstance(params[k], type([])):
             for val in params[k]:
                 if val is None:
                     s += "&%s=" % k
@@ -607,13 +607,13 @@ def set_host_config(host, config, globalconfig=0, backupserver=""):
     # Function used to format params
     def dict_to_underscores(cfg):
         for z in list(cfg.keys()):
-            if type(cfg[z]) == type({}):
+            if isinstance(cfg[z], type({})):
                 for h in list(cfg[z].keys()):
                     cfg[z + "_zZ_" + h] = cfg[z][h]
                 del cfg[z]
                 dict_to_underscores(cfg)
                 break
-            if type(cfg[z]) == type([]):
+            if isinstance(cfg[z], type([])):
                 for h in range(len(cfg[z])):
                     cfg[z + "_zZ_" + str(h)] = cfg[z][h]
                 del cfg[z]
@@ -969,9 +969,9 @@ def file_search(
     # filename_0 to lower, for case insensitive search
     filename_0 = filename_0.lower()
     # If sharename0_, backupnum_0 are strings, we convert them to lists
-    if backupnum_0 and type(backupnum_0) == type("a"):
+    if backupnum_0 and isinstance(backupnum_0, type("a")):
         backupnum_0 = [backupnum_0]
-    if sharename_0 and type(sharename_0) == type("a"):
+    if sharename_0 and isinstance(sharename_0, type("a")):
         sharename_0 = [sharename_0]
     filesize_min = int(filesize_min)
     filesize_max = int(filesize_max)

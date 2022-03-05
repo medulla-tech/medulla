@@ -76,27 +76,27 @@ class AuditRecord:
         """
         # module string
         self.module = module
-        assert type(self.module) == str
+        assert isinstance(self.module, str)
         # action string
         self.event = event
-        assert type(self.event) == str
+        assert isinstance(self.event, str)
         # String
         self.user = user
-        assert type(self.user) == tuple
+        assert isinstance(self.user, tuple)
         assert len(self.user) == 2
         # Dictionnary of string
         self.parameters = param
-        assert type(self.parameters) == dict
+        assert isinstance(self.parameters, dict)
         # list of couple (object, type)
         self.objects = objects
-        assert type(self.objects) == list
+        assert isinstance(self.objects, list)
         #
         self.initiator = initiator
-        assert type(self.initiator) == tuple
+        assert isinstance(self.initiator, tuple)
         assert len(self.initiator) == 2
         #
         self.source = source
-        assert type(source) == str
+        assert isinstance(source, str)
         # list of string list
         self.previousattribute = previous
         # list of string list
@@ -312,7 +312,7 @@ class AuditRecordDB(AuditRecord):
             if bdobjectlog != None:
                 # Insert current value
                 if current != None:
-                    if type(current) == tuple or type(current) == list:
+                    if isinstance(current, tuple) or isinstance(current, list):
                         for i in current:
                             cv = Current_Value(bdobjectlog, i)
                             session.add(cv)
@@ -322,7 +322,7 @@ class AuditRecordDB(AuditRecord):
 
                 # Insert previous value
                 if previous != None:
-                    if type(previous) == tuple or type(previous) == list:
+                    if isinstance(previous, tuple) or isinstance(previous, list):
                         for i in previous:
                             pv = Previous_Value(bdobjectlog, i)
                             session.add(pv)
@@ -333,7 +333,7 @@ class AuditRecordDB(AuditRecord):
             # relations on log_parameters
             if param != None:
                 for i in param:
-                    if type(i) == list:
+                    if isinstance(i, list):
                         for j in i:
                             p = Parameters(j, str(i[j]))
                             self.record.param_log.append(p)

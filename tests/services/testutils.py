@@ -310,7 +310,7 @@ def SupEspLi(li):
     """Delete spaces in list"""
     # Verify if the element at the index i is a string or recall SupEsp
     for i in range(0, len(li)):
-        if type(li[i]) == type(""):
+        if isinstance(li[i], type("")):
             li[i] = li[i].strip()
         else:
             SupEsp(li[i])
@@ -320,7 +320,7 @@ def SupEspDi(di):
     """Delete spaces in dict"""
     # Verify if the values associated at the key k is a string or recall SupEsp
     for k in list(di.keys()):
-        if type(di[k]) == type(""):
+        if isinstance(di[k], type("")):
             di[k] = di[k].strip()
         else:
             SupEsp(di[k])
@@ -330,11 +330,11 @@ def SupEsp(obj):
     """
     Call the function SupEspLi if the object is a list, SupEspDi if it's a dict or if it's a string return the string without the space.
     """
-    if type(obj) == type([]):
+    if isinstance(obj, type([])):
         SupEspLi(obj)
-    elif type(obj) == type({}):
+    elif isinstance(obj, type({})):
         SupEspDi(obj)
-    elif type(obj) == type(""):
+    elif isinstance(obj, type("")):
         lobj = [obj]
         lobj[0] = lobj[0].strip()
         obj = lobj[0]

@@ -65,7 +65,7 @@ class MscDatabase(msc.MscDatabase):
         """
         if not target: # We can have this case with a convergence command without targets
             return SchedulerApi().getDefaultScheduler()
-        elif type(target[0]) == list: # target = [[uuid, hostname], [uuid, target]]
+        elif isinstance(target[0], list): # target = [[uuid, hostname], [uuid, target]]
             return SchedulerApi().getSchedulers([t[0] for t in target])
         else: # target = [uuid, hostname]
             return SchedulerApi().getScheduler(target[0])
@@ -76,11 +76,11 @@ class MscDatabase(msc.MscDatabase):
         """
         a_ip = ip.split('.')
         a_netmask = netmask.split('.')
-        a_network = [0,0,0,0]
-        for i in range(0,4):
+        a_network = [0, 0, 0, 0]
+        for i in range(0, 4):
             a_network[i] = int(a_ip[i]) & int(a_netmask[i])
         a_notnetmask = [int(i) ^ 255 for i in netmask.split('.')]
-        for i in range(0,4):
+        for i in range(0, 4):
             a_ip[i] = int(a_network[i]) | int(a_notnetmask[i])
         return '.'.join([str(x) for x in a_ip])
 

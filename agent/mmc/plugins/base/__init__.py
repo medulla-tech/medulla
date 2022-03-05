@@ -1060,9 +1060,9 @@ class LdapUserGroupControl:
             # Interpolate value
             if "%" in value:
                 for a, v in list(entry.items()):
-                    if type(v) == list:
+                    if isinstance(v, list):
                         v = v[0]
-                    if type(v) == str:
+                    if isinstance(v, str):
                         if "/" in modifiers:
                             v = delete_diacritics(v)
                         if "_" in modifiers:
@@ -1208,13 +1208,13 @@ class LdapUserGroupControl:
         attributes = []
         for k, v in list(user_info.items()):
             fields = []
-            if type(v) == list:
+            if isinstance(v, list):
                 for item in v:
-                    if type(item) == str:
+                    if isinstance(item, str):
                         item = item.encode("utf-8")
                     fields.append(item)
                 attributes.append((k, fields))
-            elif type(v) == str:
+            elif isinstance(v, str):
                 attributes.append((k, v.encode("utf-8")))
             else:
                 attributes.append((k, v))
@@ -1552,7 +1552,7 @@ class LdapUserGroupControl:
                     [(userdn, AT.USER), (attr, AT.ATTRIBUTE)],
                     attrValue,
                 )
-            if type(attrVal) == str:
+            if isinstance(attrVal, str):
                 attrVal = attrVal.encode("utf-8")
             elif isinstance(attrVal, xmlrpc.client.Binary):
                 # Needed for binary string coming from XMLRPC
@@ -1726,7 +1726,7 @@ class LdapUserGroupControl:
         try:
             ldap_result_id = self.l.search(path, searchScope)
             result_set = []
-            while 1:
+            while True:
                 result_type, result_data = self.l.result(ldap_result_id, 0)
                 if result_data == []:
                     break
@@ -1929,7 +1929,7 @@ class LdapUserGroupControl:
                 self.baseGroupsDN, searchScope, searchFilter, retrieveAttributes
             )
             result_set = []
-            while 1:
+            while True:
                 result_type, result_data = self.l.result(ldap_result_id, 0)
                 if result_data == []:
                     break
@@ -1966,7 +1966,7 @@ class LdapUserGroupControl:
             basedn = self.baseDN
         result_set = []
         ldap_result_id = self.l.search(bytes(basedn), scope, searchFilter, attrs)
-        while 1:
+        while True:
             try:
                 result_type, result_data = self.l.result(ldap_result_id, 0)
             except ldap.NO_SUCH_OBJECT:
@@ -3075,8 +3075,7 @@ class LogView:
 
     def parseLine(self, line):
         ret = None
-        patternKeys = list(self.pattern.keys())
-        patternKeys.sort()
+        patternKeys = sorted(self.pattern.keys())
         # We try each pattern until we found one that works
         for pattern in patternKeys:
             sre = re.search(self.pattern[pattern], line)

@@ -87,8 +87,7 @@ def cSort(stringList):
 
     See http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/170242
     """
-    tupleList = [(x.lower(), x) for x in stringList]
-    tupleList.sort()
+    tupleList = sorted([(x.lower(), x) for x in stringList])
     return [x[1] for x in tupleList]
 
 
@@ -157,12 +156,12 @@ def xmlrpcCleanup(data):
 
     For example, None is not accepted, and must be converted to False.
     """
-    if type(data) == dict:
+    if isinstance(data, dict):
         ret = {}
         for key in list(data.keys()):
             # array keys must be string
             ret[str(key)] = xmlrpcCleanup(data[key])
-    elif type(data) == list:
+    elif isinstance(data, list):
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
@@ -170,19 +169,19 @@ def xmlrpcCleanup(data):
         ret = []
         for item in data:
             ret.append(xmlrpcCleanup(item))
-    elif type(data) == datetime.date:
+    elif isinstance(data, datetime.date):
         ret = tuple(data.timetuple())
-    elif type(data) == datetime.datetime:
+    elif isinstance(data, datetime.datetime):
         ret = tuple(data.timetuple())
-    elif mxDateTime and type(data) == mxDateTime.DateTimeType:
+    elif mxDateTime and isinstance(data, mxDateTime.DateTimeType):
         ret = data.tuple()
-    elif type(data) == struct_time:
+    elif isinstance(data, struct_time):
         ret = tuple(data)
     elif data == None:
         ret = False
-    elif type(data) == tuple:
+    elif isinstance(data, tuple):
         ret = [xmlrpcCleanup(x) for x in data]
-    elif type(data) == int:
+    elif isinstance(data, int):
         ret = str(data)
     else:
         ret = data

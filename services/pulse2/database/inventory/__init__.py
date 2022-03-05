@@ -315,7 +315,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         # Getting requested cols
         try:
-            requested_cols = set([col[0] for col in Inventory().config.display])
+            requested_cols = {col[0] for col in Inventory().config.display}
         except BaseException:
             requested_cols = set([])
 
@@ -325,7 +325,7 @@ class Inventory(DyngroupDatabaseHelper):
                 join_query = join_query.outerjoin(self.table["hasCustom"]).outerjoin(
                     self.table["Custom"]
                 )
-            if set(["macAddress", "ipHostNumber", "subnetMask"]) & requested_cols:
+            if {"macAddress", "ipHostNumber", "subnetMask"} & requested_cols:
                 join_query = join_query.outerjoin(
                     self.table["hasNetwork"],
                     self.table["hasNetwork"].c.machine == Machine.id,
@@ -333,7 +333,7 @@ class Inventory(DyngroupDatabaseHelper):
                     self.table["Network"],
                     self.table["Network"].c.id == self.table["hasNetwork"].c.network,
                 )
-            if set(["os", "user", "type", "domain", "fullname"]) & requested_cols:
+            if {"os", "user", "type", "domain", "fullname"} & requested_cols:
                 join_query = join_query.outerjoin(
                     self.table["hasHardware"],
                     and_(
@@ -402,7 +402,7 @@ class Inventory(DyngroupDatabaseHelper):
                         )
                     )
                 # Filtering on Network params
-                if set(["macAddress", "ipHostNumber", "subnetMask"]) & requested_cols:
+                if {"macAddress", "ipHostNumber", "subnetMask"} & requested_cols:
                     clauses.append(
                         self.table["Network"].c.MACAddress.like(
                             "%" + pattern["hostname"] + "%"
@@ -417,7 +417,7 @@ class Inventory(DyngroupDatabaseHelper):
                         )
                     )
                 # Filtering on Hardware params
-                if set(["os", "user", "type", "domain", "fullname"]) & requested_cols:
+                if {"os", "user", "type", "domain", "fullname"} & requested_cols:
                     clauses.append(
                         self.table["Hardware"].c.OperatingSystem.like(
                             "%" + pattern["hostname"] + "%"
@@ -3786,7 +3786,7 @@ class Machine(object):
         # Basic info
         ret = [False, {"cn": [self.Name], "objectUUID": [toUUID(self.id)]}]
         # Get requested cols to display SET
-        requested_cols = set([col[0] for col in Inventory().config.display])
+        requested_cols = {col[0] for col in Inventory().config.display}
         # If comment is requested, we request it
         if "displayName" in requested_cols:
             comment = Inventory().getMachineCustom(ctx, {"uuid": toUUID(self.id)})
@@ -3809,7 +3809,7 @@ class Machine(object):
                 ctx, {"uuid": toUUID(self.id), "max": 1}
             )
             ret[1]["inventoryDate"] = history[0][1].strftime("%Y/%m/%d %H:%M:%S")
-        if set(["os", "user", "type", "domain", "fullname"]) & requested_cols:
+        if {"os", "user", "type", "domain", "fullname"} & requested_cols:
             hardware = Inventory().getLastMachineInventoryPart(
                 ctx, "Hardware", {"uuid": toUUID(self.id)}
             )
