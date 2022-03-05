@@ -23,7 +23,7 @@
 # MA 02110-1301, USA.
 
 from twisted.web import server, xmlrpc
-import xmlrpc.client
+from . import xmlrpc.client
 import time
 from twisted.internet import defer
 

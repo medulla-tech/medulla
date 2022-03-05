@@ -207,7 +207,7 @@ def plugin_loadpluginlistversion(self, msg, data):
     # cette function est definie dans l'instance mucbot, si on veut quel soit utiliser dans un autre plugin.
     # Show plugins information logs
     restartAgent = False
-    for k, v in self.plugindata.items():
+    for k, v in list(self.plugindata.items()):
         deploy = False
         try:
             # Check version

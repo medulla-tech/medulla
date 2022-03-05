@@ -130,7 +130,7 @@ class DefaultsFiller(object):
         """
         replaced_items = 0
         for line in fileinput.input(self.config_file, inplace=1):
-            for (old, new) in pattern.items():
+            for (old, new) in list(pattern.items()):
                 search_exp = "@@%s@@" % old
                 if search_exp in line:
                     line = line.replace(search_exp, new)
@@ -327,7 +327,7 @@ class SystemManagementResolver(object):
         @return: handler
         @rtype: PostInstallPosixHandler
         """
-        for path, handler in self.handlers.items():
+        for path, handler in list(self.handlers.items()):
             if os.path.exists(path):
                 return handler
 

@@ -947,7 +947,7 @@ class XmppMasterDatabase(DatabaseHelper):
             It returns the complete infos of the relayservers
         """
         relayserver_list = []
-        if isinstance(ids, basestring):
+        if isinstance(ids, str):
             ids = ids.split(",")
         elif isinstance(ids, int):
             ids = [ids]
@@ -997,7 +997,7 @@ class XmppMasterDatabase(DatabaseHelper):
         Returns:
             It returns the list of the ARS contained in the cluster(s)
         """
-        if isinstance(idscluster, basestring):
+        if isinstance(idscluster, str):
             idscluster = [idscluster.strip()]
 
         if not idscluster:
@@ -6673,13 +6673,13 @@ class XmppMasterDatabase(DatabaseHelper):
         result = []
         if ret is not None:
             countelt = ret.rowcount
-            columns_name = ret.keys()
+            columns_name = list(ret.keys())
             columns_name = [x for x in columns_name if x not in listexclude]
             if not bycolumn:
                 for row in ret:
                     if row is not None:
                         dictresult = {}
-                        for key, value in row.items():
+                        for key, value in list(row.items()):
                             if key in listexclude:
                                 continue
                             logger.warning("value type %s" % type(value))
@@ -6707,7 +6707,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         result["data"]["columns_name"] = columns_name
                     for row in ret:
                         if row is not None:
-                            for key, value in row.items():
+                            for key, value in list(row.items()):
                                 if key in listexclude:
                                     continue
                                 if value is None:
@@ -6826,7 +6826,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     else:
                         recherchefild = _likecriterium(ctx["field"], ctx["filter"])
         r = re.compile(r"reg_key_.*")
-        regs = filter(r.search, self.config.summary)
+        regs = list(filter(r.search, self.config.summary))
         list_reg_columns_name = [
             getattr(self.config, regkey).split("|")[0].split("\\")[-1]
             for regkey in regs
@@ -7013,7 +7013,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 {'UUID_GLPI': [presence of the machine, initialised glpi uuid]}
         """
         result = {}
-        if isinstance(uuids, basestring):
+        if isinstance(uuids, str):
             if uuids == "":
                 return {}
             uuids = [uuids]
@@ -7503,7 +7503,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [
-            {column: value for column, value in rowproxy.items()} for rowproxy in result
+            {column: value for column, value in list(rowproxy.items())} for rowproxy in result
         ]
 
     @DatabaseHelper._sessionm
@@ -10299,9 +10299,9 @@ where agenttype="machine" and groupdeploy in (
 
             return pickle.dumps(python_dict)
         elif outformat == "cgi_string":
-            import urllib
+            import urllib.request, urllib.parse, urllib.error
 
-            return urllib.urlencode(python_dict)
+            return urllib.parse.urlencode(python_dict)
         elif outformat == "bash_string":
             # creation string parameter for bash script.
             return self._template_bash_string_event(python_dict)
@@ -10345,7 +10345,7 @@ where agenttype="machine" and groupdeploy in (
         python_string = ""
         for t in python_dict:
             valor = python_dict[t]
-            if isinstance(valor, basestring):
+            if isinstance(valor, str):
                 if is_number_string(valor):
                     python_string = python_string + "%s = %s \n" % (t, valor)
                 else:

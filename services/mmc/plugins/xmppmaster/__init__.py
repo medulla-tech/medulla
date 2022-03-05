@@ -48,7 +48,7 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
     callremotefile, calllocalfile, callremotecommandshell,\
     calllistremotefileedit, callremotefileeditaction,\
     callremoteXmppMonitoring
-from master.lib.manage_grafana import manage_grafana
+from .master.lib.manage_grafana import manage_grafana
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -1309,7 +1309,7 @@ def dir_exists(path):
 
 def create_dir(path):
     try:
-        os.makedirs(path, 0755)
+        os.makedirs(path, 0o755)
         return True
     except OSError:
         return False

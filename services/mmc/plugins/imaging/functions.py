@@ -668,7 +668,7 @@ class ImagingRpcProxy(RpcProxyI):
         if len(objetclone["server_imaging"]) == 0:
             # if objetclone['server_imaging'] == False:
             return
-        for k, v in objetclone["server_imaging"].items():
+        for k, v in list(objetclone["server_imaging"].items()):
             logger.debug(
                 "/usr/bin/pulse2-synch-masters %s %s %s\n"
                 % (
@@ -2081,7 +2081,7 @@ class ImagingRpcProxy(RpcProxyI):
                 ret = 0
                 # Check all MAC addresses
                 i = 0
-                for uuid, mac in h_macaddresses.items():
+                for uuid, mac in list(h_macaddresses.items()):
                     if not pulse2.utils.isLinuxMacAddress(mac):
                         logger.info(
                             "The computer %s don't have a valid MAC address" % uuid
@@ -4431,7 +4431,7 @@ def generateMenus(logger, db, uuids, unique=False):
                     "post_install_script"
                 ].append(pis)
     if unique:
-        return list(distinct_loc.values())[0][1].values()[0]
+        return list(list(distinct_loc.values())[0][1].values())[0]
     else:
         return distinct_loc
 

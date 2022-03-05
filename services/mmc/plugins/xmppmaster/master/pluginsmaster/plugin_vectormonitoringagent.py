@@ -55,7 +55,7 @@ def process_system(
         firmware = data["firmware"]
         del data["firmware"]
     if "alarms" in data:
-        if isinstance(data["alarms"], basestring):
+        if isinstance(data["alarms"], str):
             alarm_msg = [data["alarms"]]
         elif isinstance(data["alarms"], list):
             alarm_msg = data["alarms"]
@@ -99,7 +99,7 @@ def process_nfcreader(
         firmware = data["firmware"]
         del data["firmware"]
     if "message" in data:
-        if isinstance(data["message"], basestring):
+        if isinstance(data["message"], str):
             alarm_msg = [data["message"]]
         elif isinstance(data["message"], list):
             alarm_msg = data["message"]
@@ -142,7 +142,7 @@ def process_generic(
         firmware = data["firmware"]
         del data["firmware"]
     if "message" in data:
-        if isinstance(data["message"], basestring):
+        if isinstance(data["message"], str):
             alarm_msg = [data["message"]]
         elif isinstance(data["message"], list):
             alarm_msg = data["message"]

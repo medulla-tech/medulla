@@ -938,7 +938,7 @@ class BootInventory:
 
         #### STORAGE SECTION ###################################
 
-        for k, v in self.disk_info_i.items():
+        for k, v in list(self.disk_info_i.items()):
             STORAGES = ET.SubElement(CONTENT, "STORAGES")
 
             NAME = ET.SubElement(STORAGES, "NAME")
@@ -954,7 +954,7 @@ class BootInventory:
         # DRIVES SECTION #####################################
 
         for diskid in list(self.disk_info_i.keys()):
-            for partid, partinfo in self.disk_info_i[diskid]["parts"].items():
+            for partid, partinfo in list(self.disk_info_i[diskid]["parts"].items()):
                 DRIVES = ET.SubElement(CONTENT, "DRIVES")
 
                 FILESYSTEM = ET.SubElement(DRIVES, "FILESYSTEM")

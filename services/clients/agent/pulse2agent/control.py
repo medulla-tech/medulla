@@ -146,7 +146,7 @@ class VPNSetter(Component):
         """
         replaced_items = 0
         for line in fileinput.input(in_script, inplace=1):
-            for (old, new) in pattern.items():
+            for (old, new) in list(pattern.items()):
                 search_exp = "@@%s@@" % old
                 if search_exp in line:
                     line = line.replace(search_exp, new)

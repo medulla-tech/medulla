@@ -130,8 +130,7 @@ class Glpi92(DyngroupDatabaseHelper):
         except OperationalError:
             self._glpi_version = list(
                 self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
-                .fetchone()
-                .values()
+                .fetchone().values()
             )[0].replace(" ", "")
 
         if LooseVersion(self._glpi_version) >= LooseVersion("9.2") and LooseVersion(
@@ -183,8 +182,7 @@ class Glpi92(DyngroupDatabaseHelper):
         except OperationalError:
             self._glpi_version = list(
                 self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
-                .fetchone()
-                .values()
+                .fetchone().values()
             )[0].replace(" ", "")
 
         self.metadata = MetaData(self.db)
@@ -889,7 +887,7 @@ class Glpi92(DyngroupDatabaseHelper):
         master_config = xmppMasterConfig()
         reg_columns = []
         r = re.compile(r"reg_key_.*")
-        regs = filter(r.search, self.config.summary)
+        regs = list(filter(r.search, self.config.summary))
         for regkey in regs:
             regkeyconf = getattr(master_config, regkey).split("|")[0].split("\\")[-1]
             # logging.getLogger().error(regkeyconf)
@@ -1119,7 +1117,7 @@ class Glpi92(DyngroupDatabaseHelper):
         end = int(end)
         master_config = xmppMasterConfig()
         r = re.compile(r"reg_key_.*")
-        regs = filter(r.search, self.config.summary)
+        regs = list(filter(r.search, self.config.summary))
         list_reg_columns_name = [
             getattr(master_config, regkey).split("|")[0].split("\\")[-1]
             for regkey in regs
@@ -3065,7 +3063,7 @@ class Glpi92(DyngroupDatabaseHelper):
 
         ids = []
         dict = self.searchOptions[lang]
-        for key, value in dict.items():
+        for key, value in list(dict.items()):
             if filter.lower() in value.lower():
                 ids.append(key)
 
@@ -3077,7 +3075,7 @@ class Glpi92(DyngroupDatabaseHelper):
         """
         ids = []
         dict = self.getLinkedActions()
-        for key, value in dict.items():
+        for key, value in list(dict.items()):
             if filter.lower() in value.lower():
                 ids.append(key)
 
@@ -5177,7 +5175,7 @@ class Glpi92(DyngroupDatabaseHelper):
         resultrecord = {}
         try:
             if ret:
-                for keynameresult in ret.keys():
+                for keynameresult in list(ret.keys()):
                     try:
                         if getattr(ret, keynameresult) is None:
                             resultrecord[keynameresult] = ""
@@ -5208,7 +5206,7 @@ class Glpi92(DyngroupDatabaseHelper):
                                     ).strftime("%m/%d/%Y %H:%M:%S")
                                 else:
                                     strre = getattr(ret, keynameresult)
-                                    if isinstance(strre, basestring):
+                                    if isinstance(strre, str):
                                         if encode == "utf8":
                                             resultrecord[keynameresult] = str(strre)
                                         else:

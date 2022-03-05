@@ -1226,7 +1226,7 @@ INITRD ../davos/initrd.img
 
     def chooseMacAddress(self):
         rest = True
-        for k, v in self.menu["computer"].items():
+        for k, v in list(self.menu["computer"].items()):
             if self.isValidIPv4Address(v):
                 mac = pulse2.utils.reduceMACAddress(k)
                 filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)

@@ -698,7 +698,7 @@ class Common(pulse2.utils.Singleton):
                 del self.inEdition[_pid]
 
             # Scheduling the bundle regeneration
-            for _pid, pkg in self.packages.items():
+            for _pid, pkg in list(self.packages.items()):
                 if pid in [x["pid"] for x in pkg.sub_packages]:
                     self.inEdition[_pid] = True
                     task.deferLater(reactor, 30, __regenerateBundle, _pid)

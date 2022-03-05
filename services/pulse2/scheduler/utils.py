@@ -46,8 +46,8 @@ def sqladdslashes(s):
 
 def stripbrokenchars(s):
     bad_map = {
-        "\u2019": "'",
-        "\u2013": "-",
+        "\\u2019": "'",
+        "\\u2013": "-",
     }
     utf_map = dict([(ord(k), ord(v)) for k, v in list(bad_map.items())])
     return s.translate(utf_map)

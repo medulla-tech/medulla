@@ -343,10 +343,10 @@ def prepare_shared_folder():
     """
     packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
     if not os.path.isdir(packages_input_dir_sharing):
-        os.mkdir(packages_input_dir_sharing, 0755)
+        os.mkdir(packages_input_dir_sharing, 0o755)
     packages_input_dir_sharing_global = os.path.join(packages_input_dir_sharing, "global")
     if not os.path.isdir(packages_input_dir_sharing_global):
-        os.mkdir(packages_input_dir_sharing_global, 0755)
+        os.mkdir(packages_input_dir_sharing_global, 0o755)
 
 def get_share_from_descriptor(package_descriptor):
     """
@@ -458,7 +458,7 @@ def putPackageDetail(package, need_assign=True):
         testresult = test_ln(packages_id_input_dir)
         if not testresult['result']:
             # As there is no folder nor symlink, we create it.
-            os.mkdir(packages_id_input_dir, 0755)
+            os.mkdir(packages_id_input_dir, 0o755)
 
             result = simplecommand("mv %s %s " % (packages_id_input_dir,
                                                   directorysharing))
@@ -491,7 +491,7 @@ def putPackageDetail(package, need_assign=True):
                         logger.warning("The move of the packages between shares is forbiden because the movepackage parameter is set to False")
     else:
         if not os.path.isdir(packages_id_input_dir):
-            os.mkdir(packages_id_input_dir, 0755)
+            os.mkdir(packages_id_input_dir, 0o755)
 
     if "editor" not in package:
         package["editor"] = ""
@@ -1054,7 +1054,7 @@ class DownloadAppstreamPackageList(object):
         appstream_url = PkgsConfig("pkgs").appstream_url
 
         #add non downloaded package to download package list
-        for pkg, details in getActivatedAppstreamPackages().items():
+        for pkg, details in list(getActivatedAppstreamPackages().items()):
 
             try:
                 # Creating requests session
@@ -1081,7 +1081,7 @@ class DownloadAppstreamPackageList(object):
                 logger.error(str(e))
 
         #Download packages (copy dictionnary to be able to delete entry while iterate)
-        for pkg,state in self.getDownloadAppstreamPackages().copy().items():
+        for pkg,state in list(self.getDownloadAppstreamPackages().copy().items()):
             # download only wait package
             if state != "wait":
                 continue

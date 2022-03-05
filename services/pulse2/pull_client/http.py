@@ -21,7 +21,7 @@ A simple HTTP client for communicating with the DLP webservice
 """
 
 import json
-import http.cookiejar
+from . import http.cookiejar
 import urllib.request
 import urllib.parse
 import urllib.error

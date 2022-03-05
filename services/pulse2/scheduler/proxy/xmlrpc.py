@@ -20,7 +20,7 @@
 # MA 02110-1301, USA.
 
 import logging
-import xmlrpc.client
+from . import xmlrpc.client
 
 from twisted.internet.defer import maybeDeferred
 from twisted.web.xmlrpc import XMLRPC, Fault

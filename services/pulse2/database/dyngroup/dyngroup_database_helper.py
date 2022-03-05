@@ -137,7 +137,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     else:
                         q = q.filter(False)
                 q = q.group_by(grpby).all()
-                res = map(lambda x: x[1], q)
+                res = [x[1] for x in q]
                 self.logger.debug(
                     "__treatQueryLevelOR : %s %s" % (str(lq), str(len(res)))
                 )
@@ -199,7 +199,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                         q = q.filter(False)
 
                 q = q.group_by(grpby).all()
-                res = map(lambda x: x[1], q)
+                res = [x[1] for x in q]
                 self.logger.debug(
                     "__treatQueryLevelAND  : %s %s" % (str(lq), str(len(res)))
                 )
@@ -266,7 +266,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                         q = q.filter(False)
 
                 q = q.group_by(grpby).all()
-                res = map(lambda x: x[1], q)
+                res = [x[1] for x in q]
                 self.logger.debug(
                     "__treatQueryLevelNOT : %s %s" % (str(lq), str(len(res)))
                 )

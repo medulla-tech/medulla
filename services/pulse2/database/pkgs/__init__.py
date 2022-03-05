@@ -1305,7 +1305,7 @@ class PkgsDatabase(DatabaseHelper):
         resultrecord = {}
         try:
             if ret:
-                for keynameresult in ret.keys():
+                for keynameresult in list(ret.keys()):
                     if getattr(ret, keynameresult) is None:
                         resultrecord[keynameresult] = ""
                     else:

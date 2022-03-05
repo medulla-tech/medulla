@@ -682,10 +682,10 @@ class P2PServerCP(pulse2.utils.Singleton):
 def config_addons(conf):
     if len(conf.mirrors) > 0:
         #        for mirror_params in conf.mirrors:
-        list(map(lambda x: add_access(x, conf), conf.mirrors))
+        list([add_access(x, conf) for x in conf.mirrors])
     if len(conf.package_api_get) > 0:
         #        for mirror_params in conf.package_api_get:
-        list(map(lambda x: add_server(x, conf), conf.package_api_get))
+        list([add_server(x, conf) for x in conf.package_api_get])
     return conf
 
 

@@ -130,8 +130,7 @@ class Glpi94(DyngroupDatabaseHelper):
         except OperationalError:
             self._glpi_version = list(
                 self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
-                .fetchone()
-                .values()
+                .fetchone().values()
             )[0].replace(" ", "")
 
         if LooseVersion(self._glpi_version) >= LooseVersion("9.4") and LooseVersion(
@@ -183,8 +182,7 @@ class Glpi94(DyngroupDatabaseHelper):
         except OperationalError:
             self._glpi_version = list(
                 self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
-                .fetchone()
-                .values()
+                .fetchone().values()
             )[0].replace(" ", "")
 
         self.metadata = MetaData(self.db)
@@ -2817,7 +2815,7 @@ class Glpi94(DyngroupDatabaseHelper):
 
         ids = []
         dict = self.searchOptions[lang]
-        for key, value in dict.items():
+        for key, value in list(dict.items()):
             if filter.lower() in value.lower():
                 ids.append(key)
 
@@ -2829,7 +2827,7 @@ class Glpi94(DyngroupDatabaseHelper):
         """
         ids = []
         dict = self.getLinkedActions()
-        for key, value in dict.items():
+        for key, value in list(dict.items()):
             if filter.lower() in value.lower():
                 ids.append(key)
 
@@ -4870,7 +4868,7 @@ class Glpi94(DyngroupDatabaseHelper):
         resultrecord = {}
         try:
             if ret:
-                for keynameresult in ret.keys():
+                for keynameresult in list(ret.keys()):
                     try:
                         if getattr(ret, keynameresult) is None:
                             resultrecord[keynameresult] = ""
@@ -4901,7 +4899,7 @@ class Glpi94(DyngroupDatabaseHelper):
                                     ).strftime("%m/%d/%Y %H:%M:%S")
                                 else:
                                     strre = getattr(ret, keynameresult)
-                                    if isinstance(strre, basestring):
+                                    if isinstance(strre, str):
                                         if encode == "utf8":
                                             resultrecord[keynameresult] = str(strre)
                                         else:

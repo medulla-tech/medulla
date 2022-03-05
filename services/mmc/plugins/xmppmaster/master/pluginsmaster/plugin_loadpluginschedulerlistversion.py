@@ -110,7 +110,7 @@ def read_conf_load_plugin_scheduler_list_version(objectxmpp):
 
 def plugin_loadpluginschedulerlistversion(self, msg, data):
     if "pluginscheduled" in data:
-        for k, v in self.plugindatascheduler.items():
+        for k, v in list(self.plugindatascheduler.items()):
             if k in data["pluginscheduled"]:
                 if v != data["pluginscheduled"][k]:
                     # deploy on version changes

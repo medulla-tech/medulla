@@ -3,7 +3,7 @@ import stat
 import shutil
 import zipfile
 import logging
-import http.client
+from . import http.client
 import urllib.request
 import urllib.error
 import urllib.parse

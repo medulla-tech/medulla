@@ -926,7 +926,7 @@ class MscDatabase(msc.MscDatabase):
                 order_in_proxy = None
                 max_clients_per_proxy = 0
                 try:
-                    candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], proxies)
+                    candidates = [x for x in proxies if x['uuid'] == atarget["target_uuid"]]
                     if len(candidates) == 1:
                         max_clients_per_proxy = candidates[0]['max_clients']
                         order_in_proxy = candidates[0]['priority']

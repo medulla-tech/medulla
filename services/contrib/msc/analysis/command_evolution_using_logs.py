@@ -162,7 +162,7 @@ def create_graph(
 
     i = 0
     # Draw a line for each columns
-    for title, data_y in alldata_y.items():
+    for title, data_y in list(alldata_y.items()):
         plot = line_plot.T(
             label=title,
             data=list(zip(data_x, data_y)),

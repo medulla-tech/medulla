@@ -171,7 +171,7 @@ def plugin_loadshowregistration(self, msg, data):
             if "plugin" in data:
                 strlistplugin += "\nlist plugins on machine %s\n" % msg["from"]
                 strlistplugin += "|{0:35}|{1:10}|\n".format("Plugin Name", "Version")
-                for key, value in data["plugin"].items():
+                for key, value in list(data["plugin"].items()):
                     strlistplugin += "|{0:35}|{1:10}|\n".format(key, value)
         if self.showscheduledplugins:
             if "pluginscheduled" in data:
@@ -181,7 +181,7 @@ def plugin_loadshowregistration(self, msg, data):
                 strlistplugin += "|{0:35}|{1:10}|\n".format(
                     "scheduled Plugin Name", "Version"
                 )
-                for key, value in data["pluginscheduled"].items():
+                for key, value in list(data["pluginscheduled"].items()):
                     strlistplugin += "|{0:35}|{1:10}|\n".format(key, value)
         if strlistplugin != "":
             logger.debug(strlistplugin)

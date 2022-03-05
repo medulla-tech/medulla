@@ -89,13 +89,13 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
             return
         else:
             logger.debug("injection direct of inventory")
-            request = urllib2.Request(url, inventory, HEADER)
+            request = urllib.request.Request(url, inventory, HEADER)
             try:
-                response = urllib2.urlopen(request)
+                response = urllib.request.urlopen(request)
                 logger.debug(
                     "inject intentory to %s code wed %s" % (url, response.getcode())
                 )
-            except urllib2.URLError:
+            except urllib.error.URLError:
                 logger.error(
                     "The inventory server is not reachable. Please check pulse2-inventory-server service"
                 )

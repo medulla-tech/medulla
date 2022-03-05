@@ -659,7 +659,7 @@ class Inventory(DyngroupDatabaseHelper):
                 tmp = [False, {"cn": [machine.Name], "objectUUID": [uuid]}]
                 computers[uuid] = tmp
                 machine_attributes = machine.toDN(ctx)[1]
-                for k, v in machine_attributes.items():
+                for k, v in list(machine_attributes.items()):
                     computers[uuid][1][k] = v
                 # Keep UUID order
                 uuids.append(uuid)
