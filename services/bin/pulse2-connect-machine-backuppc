@@ -94,15 +94,15 @@ if __name__ == "__main__":
     #send json to ARS
     managerQueue.json_to_ARS(commandaction)
     print managerQueue.json_from_ARS(5)
-    time.sleep(5)
-    sys.exit(0)
-    #print "second"
-    #commandaction = """{ "action" : "reverse_ssh_on",
-        #"data" : {
-                #"request" : "createcmd",
-                #"port" : %d,
-                #"host" : "%s"
-        #}
-    #}"""%(int(opts.portreverse), opts.hostreserve)
-    #managerQueue.json_to_ARS(commandaction)
+    time.sleep(30)
+    print "second"
+    commandaction = """{ "action" : "reverse_ssh_on",
+        "data" : {
+                "request" : "createcmd",
+                "port" : %d,
+                "host" : "%s"
+        }
+    }"""%(int(opts.portreverse), opts.hostreserve)
+    managerQueue.json_to_ARS(commandaction)
+    print managerQueue.json_from_ARS(5)
     time.sleep(5)
