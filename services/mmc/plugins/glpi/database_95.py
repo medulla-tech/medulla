@@ -32,7 +32,7 @@ import datetime
 import calendar, hashlib
 import time
 from configobj import ConfigObj
-from xmlrpclib import ProtocolError
+from xmlrpc.client import ProtocolError
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, Date, ForeignKey, asc, or_, not_, desc, func, distinct

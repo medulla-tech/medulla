@@ -26,7 +26,7 @@ import os
 import logging
 import traceback
 import types
-import ConfigParser
+import configparser
 import hashlib
 from mmc.plugins.xmppmaster.master.lib.utils import file_get_contents, name_random
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -69,7 +69,7 @@ def read_conf_load_plugin_monitoring_version_config(objectxmpp):
         )
         objectxmpp.monitoring_agent_config_file = defautconf
     else:
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.ConfigParser()
         Config.read(pathfileconf)
         if os.path.exists(pathfileconf + ".local"):
             Config.read(pathfileconf + ".local")

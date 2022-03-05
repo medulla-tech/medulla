@@ -29,7 +29,7 @@ from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import logging
 import os
 from wakeonlan import wol
-import ConfigParser
+import configparser
 
 logger = logging.getLogger()
 
@@ -178,7 +178,7 @@ def read_conf_wol(xmppobject):
                 % (xmppobject.wakeonlangroupremotelan)
             )
     else:
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.ConfigParser()
         Config.read(pathfileconf)
         if os.path.exists(pathfileconf + ".local"):
             Config.read(pathfileconf + ".local")

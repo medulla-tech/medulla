@@ -30,7 +30,7 @@ import traceback
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import logging
 import os
-import ConfigParser
+import configparser
 from wakeonlan import wol
 
 logger = logging.getLogger()
@@ -175,7 +175,7 @@ def read_conf_wol(xmppobject):
             "It should be located to %s)" % (plugin["NAME"], pathfileconf)
         )
     else:
-        Config = ConfigParser.ConfigParser()
+        Config = configparser.ConfigParser()
         Config.read(pathfileconf)
         if os.path.exists(pathfileconf + ".local"):
             Config.read(pathfileconf + ".local")
