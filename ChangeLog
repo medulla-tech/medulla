@@ -5,6 +5,7 @@ Pulse 2 4.6.10
 * [BUGFIX]  Fix displaying package order when editing a package
 * [BUGFIX]  Fix deleting machines not available in glpi
 * [BUGFIX]  Fix creation of the reversessh in backuppc
+* [BUGFIX]  Fix removing computers not on glpi anymore
 
 Pulse 2 4.6.9
 =============
