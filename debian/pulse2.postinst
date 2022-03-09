@@ -18,7 +18,7 @@ set -e
 # the debian-policy package
 
 case "$1" in
-    abort-upgrade|abort-remove|abort-deconfigure)
+    configure|abort-upgrade|abort-remove|abort-deconfigure)
     ;;
 
     *)
