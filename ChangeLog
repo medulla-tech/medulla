@@ -4,6 +4,7 @@ Pulse 2 4.6.9.1
 * [BUGFIX]  Fix displaying of teams in Audit 
 * [BUGFIX]  Fix deleting machines not available in glpi
 * [BUGFIX]  Fix removing computers not on glpi anymore
+* [BUGFIX]  Fix computer default name in sysprep configuration page
 
 Pulse 2 4.6.9
 =============
