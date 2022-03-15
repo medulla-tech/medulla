@@ -10870,72 +10870,65 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.flush()
         return [i[0].lower() for i in result]
 
+
     @DatabaseHelper._sessionm
-    def _rule_monitoring(
-        self,
-        session,
-        hostname,
-        mon_machine_id,
-        device_type,
-        serial,
-        firmware,
-        status,
-        alarm_msg,
-        doc,
-        localrule=True,
-    ):
-        if localrule:
-            sql = """ SELECT
-                        *
-                    FROM
-                        xmppmaster.mon_rules
-                    WHERE
-                        hostname LIKE '%s'
-                            AND device_type LIKE '%s';""" % (
-                hostname,
-                device_type,
-            )
-        else:
-            sql = """ SELECT
-                        *
-                    FROM
-                        xmppmaster.mon_rules
-                    WHERE
-                        device_type LIKE '%s';""" % (
-                device_type
-            )
-        # logging.getLogger().debug("sql %s"%sql)
+    def _rule_monitoring(self,
+                         session,
+                         hostname_machine,
+                         hostname,
+                         id_machine,
+                         platform,
+                         agenttype,
+                         mon_machine_id,
+                         device_type,
+                         serial,
+                         firmware,
+                         status,
+                         alarm_msg,
+                         doc,
+                         localrule=True):
+        result = None
+        sql = ''' SELECT
+                    *
+                FROM
+                    xmppmaster.mon_rules
+                WHERE
+                    enable = 1 AND
+                    ('%s' REGEXP hostname or NULLIF(hostname, "") is null) AND
+                    ('%s' REGEXP os or NULLIF(os, "") is null) AND
+                    (type_machine like '%s' or NULLIF(type_machine, "") is Null ) AND
+                    device_type LIKE '%s';''' % (hostname_machine,
+                                                         platform,
+                                                         agenttype,
+                                                         device_type)
+        #logging.getLogger().debug("sql %s"%sql)
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [
-            {
-                "id": i[0],
-                "hostname": i[1],
-                "device_type": i[2],
-                "binding": i[3],
-                "succes_binding_cmd": i[4],
-                "no_success_binding_cmd": i[5],
-                "error_on_binding": i[6],
-                "type_event": i[7],
-                "user": i[8],
-                "comment": i[9],
-            }
-            for i in result
-        ]
+        if result:
+            return [{'id': i[0],
+                    'hostname': i[2],
+                    'device_type': i[3],
+                    "binding": i[4],
+                    "succes_binding_cmd": i[5],
+                    "no_success_binding_cmd": i[6],
+                    "error_on_binding": i[7],
+                    "type_event": i[8],
+                    "user": i[9],
+                    "comment": i[10]} for i in result]
+        else:
+            return[]
 
     @DatabaseHelper._sessionm
-    def analyse_mon_rules(
-        self,
-        session,
-        mon_machine_id,
-        device_type,
-        serial,
-        firmware,
-        status,
-        alarm_msg,
-        doc,
-    ):
+    def analyse_mon_rules(self,
+                          session,
+                          mon_machine_id,
+                          device_type,
+                          serial,
+                          firmware,
+                          status,
+                          alarm_msg,
+                          doc):
         # search rule for device and machine
         pass
 

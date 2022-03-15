@@ -540,7 +540,7 @@ $f->push(new Table());
     //_____________
     $f->add(
         new TrFormElement(_T('Computer Name','imaging').":", new InputTplTitle('ComputerName',$Infobule_ComputerName)),
-        array("required" => True,"value" =>(isset($parameters)) ? $parameters['ComputerName'] :'-PC')
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['ComputerName'] :'windows10-PC')
     );
     //_____________
     $InputLocale = new SelectItemtitle("InputLocale",$Infobule_InputLocale);
