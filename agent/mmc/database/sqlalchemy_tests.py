@@ -23,7 +23,7 @@
 from distutils.version import StrictVersion
 from sqlalchemy import __version__
 
-MIN_VERSION = "0.6.3"   # Debian Squeeze version
+MIN_VERSION = "0.6.3"  # Debian Squeeze version
 MAX_VERSION = "1.2.18"  # Debian Buster version
 CUR_VERSION = __version__
 

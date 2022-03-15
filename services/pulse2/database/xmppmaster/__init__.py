@@ -10870,25 +10870,26 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.flush()
         return [i[0].lower() for i in result]
 
-
     @DatabaseHelper._sessionm
-    def _rule_monitoring(self,
-                         session,
-                         hostname_machine,
-                         hostname,
-                         id_machine,
-                         platform,
-                         agenttype,
-                         mon_machine_id,
-                         device_type,
-                         serial,
-                         firmware,
-                         status,
-                         alarm_msg,
-                         doc,
-                         localrule=True):
+    def _rule_monitoring(
+        self,
+        session,
+        hostname_machine,
+        hostname,
+        id_machine,
+        platform,
+        agenttype,
+        mon_machine_id,
+        device_type,
+        serial,
+        firmware,
+        status,
+        alarm_msg,
+        doc,
+        localrule=True,
+    ):
         result = None
-        sql = ''' SELECT
+        sql = """ SELECT
                     *
                 FROM
                     xmppmaster.mon_rules
@@ -10897,38 +10898,47 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     ('%s' REGEXP hostname or NULLIF(hostname, "") is null) AND
                     ('%s' REGEXP os or NULLIF(os, "") is null) AND
                     (type_machine like '%s' or NULLIF(type_machine, "") is Null ) AND
-                    device_type LIKE '%s';''' % (hostname_machine,
-                                                         platform,
-                                                         agenttype,
-                                                         device_type)
-        #logging.getLogger().debug("sql %s"%sql)
+                    device_type LIKE '%s';""" % (
+            hostname_machine,
+            platform,
+            agenttype,
+            device_type,
+        )
+        # logging.getLogger().debug("sql %s"%sql)
         result = session.execute(sql)
         session.commit()
         session.flush()
         if result:
-            return [{'id': i[0],
-                    'hostname': i[2],
-                    'device_type': i[3],
+            return [
+                {
+                    "id": i[0],
+                    "hostname": i[2],
+                    "device_type": i[3],
                     "binding": i[4],
                     "succes_binding_cmd": i[5],
                     "no_success_binding_cmd": i[6],
                     "error_on_binding": i[7],
                     "type_event": i[8],
                     "user": i[9],
-                    "comment": i[10]} for i in result]
+                    "comment": i[10],
+                }
+                for i in result
+            ]
         else:
-            return[]
+            return []
 
     @DatabaseHelper._sessionm
-    def analyse_mon_rules(self,
-                          session,
-                          mon_machine_id,
-                          device_type,
-                          serial,
-                          firmware,
-                          status,
-                          alarm_msg,
-                          doc):
+    def analyse_mon_rules(
+        self,
+        session,
+        mon_machine_id,
+        device_type,
+        serial,
+        firmware,
+        status,
+        alarm_msg,
+        doc,
+    ):
         # search rule for device and machine
         pass
 
