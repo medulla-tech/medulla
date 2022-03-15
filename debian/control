@@ -41,7 +41,7 @@ Description: Pulse 2 metapackage
 Package: pulse2-common
 Architecture: all
 Section: python
-Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8), python-netifaces, python-netaddr
+Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python3-configobj, curl, nsis, dnsutils, python3-psutil (>= 0.6.1), rpm (>= 4.8), python3-netifaces, python3-netaddr
 Description: Pulse 2 common files (doc)
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -51,7 +51,7 @@ Description: Pulse 2 common files (doc)
 Package: pulse2-tests
 Architecture: all
 Section: python
-Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8)
+Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python3-configobj, curl, nsis, dnsutils, python3-psutil (>= 0.6.1), rpm (>= 4.8)
 Description: Pulse 2 regression tests
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -140,7 +140,7 @@ Description: Pulse 2 common files
 
 Package: pulse2-inventory-server
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-pulse2-common-database-inventory (= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-openssl, python-pyinotify
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-pulse2-common-database-inventory (= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python3-openssl, python3-pyinotify
 Description: Pulse 2 inventory server
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -151,7 +151,7 @@ Description: Pulse 2 inventory server
 Package: pulse2-launchers
 Replaces: pulse2-launcher
 Architecture: any
-Pre-Depends: python-psutil (>= 0.7.0), python-openssl
+Pre-Depends: python3-psutil (>= 0.7.0), python3-openssl
 Depends: ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}, pulse2-common (= ${source:Version}), python-pulse2-common (= ${source:Version}), perl-modules, libsys-syslog-perl, openssh-client, iputils-ping, python-mmc-base (>= 3.1.1-1)
 Recommends: rsync
 Description: Pulse 2 software deployment handling service
@@ -166,7 +166,7 @@ Description: Pulse 2 software deployment handling service
 Package: python-mmc-pulse2
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4)
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python3-sqlalchemy (>= 0.4)
 Recommends: python-mmc-imaging
 Description: Pulse 2 MMC agent plugins
  Pulse 2 is Open Source computer system management for medium and large
@@ -489,7 +489,7 @@ Package: python-mmc-base
 Architecture: all
 Section: python
 Pre-depends: python-mmc-core (= ${source:Version})
-Depends: ${misc:Depends}, ${python:Depends}, python-ldap, python-xlwt, python-memory-profiler
+Depends: ${misc:Depends}, ${python:Depends}, python3-ldap, python3-xlwt, python3-memory-profiler
 Description: Management Console base plugin
  Contains the base infrastructure for all MMC plugins:
   * support classes
