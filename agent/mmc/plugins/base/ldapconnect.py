@@ -109,7 +109,7 @@ class LDAPConnection:
         @type config: LDAPConnectionConfigI
         """
         ldap.set_option(ldap.OPT_DEBUG_LEVEL, config.ldapdebuglevel)
-        self.l = ldap.initialize(config.ldapurl)
+        self.l = ldap.initialize(config.ldapurl, bytes_mode=False)
         self.l.protocol_version = ldap.VERSION3
         if config.network_timeout != None:
             self._ldapSetOption(
