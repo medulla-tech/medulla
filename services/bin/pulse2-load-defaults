@@ -28,10 +28,10 @@ import os
 import sys
 import logging
 
-from xmlrpclib import Fault, ProtocolError
+from xmlrpc.client import Fault, ProtocolError
 from socket import error as SocketError
 from optparse import OptionParser, OptionGroup
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 from mmc.client.sync import Proxy
 from mmc.site import mmcconfdir

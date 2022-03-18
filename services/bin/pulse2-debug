@@ -27,13 +27,13 @@ import subprocess
 import pprint
 import readline
 import atexit
-import xmlrpclib
-import urlparse
+import xmlrpc.client
+import urllib.parse
 import argparse
 from collections import namedtuple
 from pydoc import pager as textpager
-from ConfigParser import ConfigParser
-from httplib import CannotSendRequest
+from configparser import ConfigParser
+from http.client import CannotSendRequest
 
 from twisted.internet import task, reactor
 from twisted.python import threadable; threadable.init(1)
@@ -512,7 +512,7 @@ class cookietransportrequest:
             self.cookies.append(cookie)
 
         if response.status != 200:
-            raise xmlrpclib.ProtocolError(host + handler, response.status,
+            raise xmlrpc.client.ProtocolError(host + handler, response.status,
                                           response.reason, response.msg.headers)
 
         payload = response.read()
@@ -528,16 +528,16 @@ class cookietransportrequest:
         If the URI type is https, return a CookieSafeTransport.
         If the type is http, return a CookieTransport.
         """
-        if urlparse.urlparse(uri, "http")[0] == "https":
+        if urllib.parse.urlparse(uri, "http")[0] == "https":
             return cookiesafetransport()
         else:
             return cookietransport()
 
 
-class cookietransport(cookietransportrequest, xmlrpclib.Transport):
+class cookietransport(cookietransportrequest, xmlrpc.client.Transport):
     pass
 
-class cookiesafetransport(cookietransportrequest, xmlrpclib.SafeTransport):
+class cookiesafetransport(cookietransportrequest, xmlrpc.client.SafeTransport):
     pass
 
 
@@ -683,7 +683,7 @@ class RpcProxy:
         self.config = config
         tr = cookietransportrequest()
         self.url = config.mmc_agent_url
-        self.proxy = xmlrpclib.ServerProxy(self.url, tr.transport(self.url))
+        self.proxy = xmlrpc.client.ServerProxy(self.url, tr.transport(self.url))
         self.ldap_password = config.ldap_password
         self.auth()
 
