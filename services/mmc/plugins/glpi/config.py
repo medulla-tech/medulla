@@ -61,10 +61,8 @@ class GlpiConfig(PluginConfig):
         self.dbname = self.get("main", "dbname")
         self.dbuser = self.get("main", "dbuser")
         self.dbpasswd = self.getpassword("main", "dbpasswd")
-
         if self.has_option("main", "dbreadonly"):
             GlpiConfig.dbreadonly = self.getboolean("main", "dbreadonly")
-
         if self.has_option("main", "dbsslenable"):
             self.dbsslenable = self.getboolean("main", "dbsslenable")
             if self.dbsslenable:
@@ -138,6 +136,10 @@ class GlpiConfig(PluginConfig):
                 "[GLPI] Get manufacturers and their warranty infos"
             )
             for manufacturer_key in self.options("manufacturers"):
+                logging.getLogger().debug(
+                    "associate manufacturer's names to their warranty url"
+                    " manufacturer_" + manufacturer_key
+                )
                 if self.has_section(
                     "manufacturer_" + manufacturer_key
                 ) and self.has_option("manufacturer_" + manufacturer_key, "url"):
@@ -157,7 +159,9 @@ class GlpiConfig(PluginConfig):
                         "url": self.get("manufacturer_" + manufacturer_key, "url"),
                         "params": params,
                     }
-            logging.getLogger().debug(self.manufacturerWarranty)
+            logging.getLogger().debug(
+                "manufacturer list\n%s :" % self.manufacturerWarranty
+            )
 
     def _parse_filter_on(self, value):
         """

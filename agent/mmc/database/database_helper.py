@@ -72,11 +72,23 @@ class DatabaseHelper(Singleton):
         conn = self.connected()
         if conn:
             # Glpi is an external DB, its version is not managed by Pulse
+
             if self.my_name == "Glpi":
                 return True
-            elif required_version == self.db_version:
+
+            if self.db_version is None:
+                logger.error(
+                    "The module %s does not have a version in the database. Please check that the module is correctly installed"
+                    % self.my_name
+                )
+                return False
+            if required_version == self.db_version:
                 return True
             elif required_version > self.db_version:
+                logger.warning(
+                    "Your installation does not use the lastest schema for the %s module. Please check your installation"
+                    % self.my_name
+                )
                 return self.db_update()
             elif required_version != -1 and conn != required_version:
                 logger.error(
@@ -100,7 +112,6 @@ class DatabaseHelper(Singleton):
 
     def db_update(self):
         """Automatic database update"""
-
         db_control = DBControl(
             user=self.config.dbuser,
             passwd=self.config.dbpasswd,
@@ -110,7 +121,6 @@ class DatabaseHelper(Singleton):
             log=logger,
             use_same_db=True,
         )
-
         return db_control.process()
 
     def connected(self):
@@ -206,10 +216,9 @@ class DatabaseHelper(Singleton):
 
     @property
     def db_version(self):
-        if hasattr(self, "version"):
-            return self.version.select().execute().fetchone()[0]
-        elif hasattr(self, "Version"):
-            return self.version.select().execute().fetchone()[0]
+        result = self.db.execute("SELECT * FROM version limit 1;")
+        self.version = [element.Number for element in result][0]
+        return self.version
 
     # Session decorator to create and close session automatically
     @classmethod

@@ -48,45 +48,6 @@ def myLogger():
 
 
 class DBEngine(object):
-    def __new__(cls, user, passwd, host, db, port=None, log=None):
-        """
-        Crate Objet DBEngine or None if not connected
-        @param user: database user
-        @type user: str
-
-        @param passwd: database password
-        @type passwd: str
-
-        @param host: hostname or IP address of database machine
-        @type host: str
-
-        @param db: database name
-        @type db: str
-
-        @param port: database port
-        @type port: int
-
-        @param log: logger instance
-        @type log: object
-        """
-        myuser = user
-        mypasswd = passwd
-        myhost = host
-        mydb = db
-        DBEngine.myport = port or 3306
-        DBEngine.mylog = log or myLogger()
-        try:
-            DBEngine.conn = MySQLdb.connect(
-                user=myuser, passwd=mypasswd, host=myhost, port=DBEngine.myport, db=mydb
-            )
-        except Exception as exc:
-            DBEngine.mylog.error("Can't connect to the database: %s" % str(exc))
-            return None
-        instance = super(DBEngine, cls).__new__(
-            cls, myuser, mypasswd, myhost, mydb, DBEngine.myport, DBEngine.mylog
-        )
-        return instance
-
     def __init__(self, user, passwd, host, db, port=None, log=None):
         """
         @param user: database user
@@ -111,9 +72,23 @@ class DBEngine(object):
         self.host = host
         self.passwd = passwd
         self.db = db
-        self.port = DBEngine.myport
-        self.conn = DBEngine.conn
-        self.log = DBEngine.mylog
+        self.port = port or 3306
+        self.log = log or myLogger()
+        self.conn = None
+
+    def connectiondb(self):
+        try:
+            self.conn = MySQLdb.connect(
+                user=self.user,
+                passwd=self.passwd,
+                host=self.host,
+                port=self.port,
+                db=self.db,
+            )
+            return self.conn
+        except Exception as exc:
+            self.log.error("Can't connect to the database: %s" % str(exc))
+            return None
 
     def cursor(self):
         """
@@ -300,13 +275,12 @@ class DBControl:
         """
 
         self.log = log or myLogger()
-
         if use_same_db:
             db = module
         else:
             db = "mysql"
         self.db = DBEngine(user, passwd, host, db, port=port, log=log)
-
+        self.conn = self.db.connectiondb()
         self.module = module
         self.ddl_manager = DDLContentManager(log)
         self.script_manager = DBScriptLaunchInterface(

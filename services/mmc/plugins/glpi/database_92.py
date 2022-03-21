@@ -27,7 +27,6 @@ version 9.2
 import os
 import logging
 import re
-from sets import Set
 import datetime
 import calendar, hashlib
 import time
@@ -124,20 +123,29 @@ class Glpi92(DyngroupDatabaseHelper):
         logging.getLogger().debug("Trying to detect if GLPI version is higher than 9.2")
 
         try:
-            self._glpi_version = list(
+            versionresult = (
                 self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
-            )[0].replace(" ", "")
+            )
+            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+                " ", ""
+            )
         except OperationalError:
-            self._glpi_version = list(
-                self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
+            versionresult = (
+                self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
                 .fetchone()
                 .values()
-            )[0].replace(" ", "")
+            )
+            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+                " ", ""
+            )
+        except Exception as e:
+            logging.getLogger().error("We are searching for GLPI 9.2.")
+            return False
 
         if LooseVersion(self._glpi_version) >= LooseVersion("9.2") and LooseVersion(
             self._glpi_version
         ) <= LooseVersion("9.2.4"):
-            logging.getLogger().debug("GLPI version %s found !" % self._glpi_version)
+            logging.getLogger().debug("GLPI version %s found." % self._glpi_version)
             return True
         else:
             logging.getLogger().debug("GLPI higher than version 9.2 was not detected")
@@ -177,15 +185,24 @@ class Glpi92(DyngroupDatabaseHelper):
             setattr(Glpi92, "encode", encode_latin1)
 
         try:
-            self._glpi_version = list(
+            versionresult = (
                 self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
-            )[0].replace(" ", "")
+            )
+            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+                " ", ""
+            )
         except OperationalError:
-            self._glpi_version = list(
-                self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
+            versionresult = (
+                self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
                 .fetchone()
                 .values()
-            )[0].replace(" ", "")
+            )
+            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+                " ", ""
+            )
+        except Exception as e:
+            ilogging.getLogger().error("We are searching for GLPI 9.2.")
+            return False
 
         self.metadata = MetaData(self.db)
         self.initMappers()
@@ -6657,13 +6674,15 @@ ORDER BY
 
         final_list = []
         for machine in result:
-            if machine["os"].startswith("Debian"):
+            logging.getLogger().debug("****************************************")
+
+            if machine["os"].startswith(b"Debian"):
                 machine["os"] = "Debian"
                 try:
                     machine["version"] = machine["version"].split(" ")[0]
                 except AttributeError:
                     machine["version"] = ""
-            elif machine["os"].startswith("Microsoft"):
+            elif machine["os"].startswith(b"Microsoft"):
                 machine["os"] = machine["os"].split(" ")[1:3]
                 machine["os"] = " ".join(machine["os"])
             elif machine["os"].startswith("Ubuntu"):

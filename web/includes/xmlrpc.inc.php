@@ -57,25 +57,22 @@ function openSocket($proto, $conf) {
     if (($proto != "ssl://")
         || ($conf[$_SESSION["agent"]]["verifypeer"] != 1)
         || !function_exists("stream_socket_client")) {
-        /*
-           Not a SSL connection,
-           or simple SSL connection without client certificate and server
-           certificate check
-           or stream_socket_client function not available (PHP 5 only),
-        */
-        $context = stream_context_create();
-        stream_context_set_option($context, "ssl", "allow_self_signed", true);
-        stream_context_set_option($context, "ssl", "verify_peer", false);
+
+ $context = stream_context_create();
+       stream_context_set_option($context, "ssl", "allow_self_signed", true);
+         stream_context_set_option($context, "ssl", "verify_peer", false);
         stream_context_set_option($context, "ssl", "peer_name", $_SESSION["XMLRPC_agent"]["host"]);
-        $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
-        $ret = array($sock, $errNo, $errString);
+    $sock = stream_socket_client("tls://".$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
+
+$ret = array($sock, $errNo, $errString);
+
     } else {
         $context = stream_context_create();
         stream_context_set_option($context, "ssl", "allow_self_signed", False);
         stream_context_set_option($context, "ssl", "verify_peer", True);
         stream_context_set_option($context, "ssl", "cafile", $conf[$_SESSION["agent"]]["cacert"]);
         stream_context_set_option($context, "ssl", "local_cert", $conf[$_SESSION["agent"]]["localcert"]);
-        $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
+        $sock = stream_socket_client('$proto://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
         $ret = array($sock, $errNo, $errString);
     }
     error_reporting(E_ERROR | E_WARNING );
@@ -110,10 +107,10 @@ function xmlCall($method, $params = null) {
     global $conf;
     $date = date('d.m.Y h:i:s');
     $input = time();
+
     if (isXMLRPCError()) { // Don't do a XML-RPC call if a previous one failed
         return;
     }
-
     /*
       Set defaut login/pass if not set.
       The credentials are used to authenticate the web interface to the XML-RPC
@@ -150,21 +147,28 @@ function xmlCall($method, $params = null) {
 
     /* Connect to the XML-RPC server */
     if ($_SESSION["XMLRPC_agent"]["scheme"] == "https") {
-        $prot = "ssl://";
+        $prot = "tls://";
     } else {
         $prot = "";
     }
 
     list($sock, $errNo, $errString) = openSocket($prot, $conf);
     if (!$sock) {
+        echo "prototype";
+
+
         /* Connection failure */
-        $errObj = new ErrorHandlingItem('');
+        $errObj = new ErrorHandlingItem('');echo "prototype";
         $errObj->setMsg(_("Can't connect to MMC agent"));
         $errObj->setAdvice(_("MMC agent seems to be down or not correctly configured.") . '<br/> Error: '. $errNo . ' - '. $errString);
         $errObj->setTraceBackDisplay(false);
         $errObj->setSize(400);
         $errObj->process('');
         $errorStatus = 1;
+        echo "<pre>";
+        print_r($errObj);
+        echo "</pre>";
+//         exit(0);
         return FALSE;
     }
 

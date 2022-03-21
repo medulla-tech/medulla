@@ -86,6 +86,7 @@ def activate():
     if config.disabled:
         logger.warning("Plugin report: disabled by configuration.")
         return False
+
     if not ReportDatabase().activate(config):
         logger.error("Report database not activated")
         return False

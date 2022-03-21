@@ -66,7 +66,6 @@ class BackuppcDatabase(DatabaseHelper):
         self.logger = logging.getLogger()
         if self.is_activated:
             return None
-
         self.logger.info("BackupPC database is connecting")
         self.config = config
         self.db = create_engine(

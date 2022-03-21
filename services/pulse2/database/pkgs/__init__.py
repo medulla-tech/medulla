@@ -66,6 +66,7 @@ from pulse2.database.pkgs.orm.syncthingsync import Syncthingsync
 from pulse2.database.pkgs.orm.package_pending_exclusions import (
     Package_pending_exclusions,
 )
+
 from pulse2.database.pkgs.orm.pkgs_rules_algos import Pkgs_rules_algos
 from pulse2.database.pkgs.orm.pkgs_rules_global import Pkgs_rules_global
 from pulse2.database.pkgs.orm.pkgs_rules_local import Pkgs_rules_local

@@ -27,7 +27,6 @@ version 0.8x
 import os
 import logging
 import re
-from sets import Set
 import datetime
 import calendar, hashlib
 import time
@@ -92,6 +91,8 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.agent import PluginManager
 import traceback, sys
 
+Set = set
+
 
 class Glpi084(DyngroupDatabaseHelper):
     """
@@ -121,28 +122,33 @@ class Glpi084(DyngroupDatabaseHelper):
             "Trying to detect if GLPI version is higher than 0.84"
         )
         try:
-            self._glpi_version = list(
+            versionresult = (
                 self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
-            )[0].replace(" ", "")
-            return True
+            )
+            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+                " ", ""
+            )
         except OperationalError:
-            self._glpi_version = list(
-                self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
+            versionresult = (
+                self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
                 .fetchone()
                 .values()
-            )[0].replace(" ", "")
-            if LooseVersion(self._glpi_version) >= LooseVersion(
-                "0.84"
-            ) and LooseVersion(self._glpi_version) < LooseVersion("0.85"):
-                logging.getLogger().debug(
-                    "GLPI version %s found !" % self._glpi_version
-                )
-                return True
-            else:
-                logging.getLogger().debug(
-                    "GLPI higher than version 0.84 was not detected"
-                )
-                return False
+            )
+            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+                " ", ""
+            )
+        except Exception as e:
+            logging.getLogger().error("We are searching for GLPI 0.84.")
+            return False
+
+        if LooseVersion(self._glpi_version) >= LooseVersion("0.84") and LooseVersion(
+            self._glpi_version
+        ) < LooseVersion("0.85"):
+            logging.getLogger().debug("GLPI version %s found." % self._glpi_version)
+            return True
+        else:
+            logging.getLogger().debug("GLPI higher than version 0.84 was not detected")
+            return False
 
     @property
     def glpi_version(self):
@@ -177,15 +183,24 @@ class Glpi084(DyngroupDatabaseHelper):
             setattr(Glpi084, "decode", decode_latin1)
             setattr(Glpi084, "encode", encode_latin1)
         try:
-            self._glpi_version = list(
+            versionresult = (
                 self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
-            )[0].replace(" ", "")
+            )
+            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+                " ", ""
+            )
         except OperationalError:
-            self._glpi_version = list(
-                self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"')
+            versionresult = (
+                self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
                 .fetchone()
                 .values()
-            )[0].replace(" ", "")
+            )
+            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+                " ", ""
+            )
+        except Exception as e:
+            logging.getLogger().error("We are searching for GLPI 0.84.")
+            return False
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.logger.info("Glpi is in version %s" % (self.glpi_version))

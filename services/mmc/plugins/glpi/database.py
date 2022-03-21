@@ -50,7 +50,6 @@ class Glpi(DyngroupDatabaseHelper):
 
     def activate(self, conffile=None):
         self.logger = logging.getLogger()
-
         if self.is_activated:
             self.logger.info("Glpi don't need activation")
             return None

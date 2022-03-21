@@ -33,6 +33,7 @@ import logging
 import json
 import time
 
+logger = logging.getLogger()
 
 class AdminDatabase(DatabaseHelper):
     is_activated = False

@@ -29,7 +29,6 @@ import logging
 from random import randint
 from pulse2.utils import unique
 from xml.dom import minidom
-from sets import Set
 
 p1 = re.compile(" ")
 p2 = re.compile(",")
@@ -50,6 +49,8 @@ s2x3 = re.compile("(NOT|NON)\(", re.I)
 s2x4 = re.compile(",")
 s2x5 = re.compile("\)")
 s2x6 = re.compile("</p>$")
+
+Set = set
 
 
 class BoolRequest(object):

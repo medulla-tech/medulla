@@ -34,6 +34,7 @@ from twisted.web import xmlrpc, server
 from twisted.web.xmlrpc import XMLRPC, Handler
 from twisted.internet import reactor, defer
 from twisted.python import failure
+import json
 
 try:
     from twisted.web import http
@@ -65,6 +66,8 @@ import threading
 import re
 import zipfile
 from stat import ST_CTIME
+import slixmpp
+import traceback
 
 
 class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
@@ -369,7 +372,6 @@ class MmcServer(XMLRPC, object):
 
         @return: interpreted request
         """
-
         if request.requestHeaders.hasHeader("Origin"):
             request.setHeader(
                 "Access-Control-Allow-Origin",
@@ -380,9 +382,8 @@ class MmcServer(XMLRPC, object):
         request.setHeader("Access-Control-Allow-Headers", "content-type,authorization")
         request.setHeader("Access-Control-Expose-Headers", "content-type,cookie")
         request.setHeader("Access-Control-Max-Age", "1728000")
-
-        args, functionPath = xmlrpc.client.loads(request.content.read())
-
+        requestxml = request.content.read()
+        args, functionPath = xmlrpc.client.loads(requestxml)
         s = request.getSession()
         try:
             s.loggedin
@@ -393,14 +394,15 @@ class MmcServer(XMLRPC, object):
 
         # Check authorization using HTTP Basic
         cleartext_token = self.config.login + ":" + self.config.password
-        token = (
-            str(request.getUser(), "utf-8") + ":" + str(request.getPassword(), "utf-8")
-        )
+        user = str(request.getUser(), "utf-8")
+        password = str(request.getPassword(), "utf-8")
+
+        token = user + ":" + password
         if token != cleartext_token:
             logger.error("Invalid login / password for HTTP basic authentication")
             request.setResponseCode(http.UNAUTHORIZED)
             self._cbRender(
-                xmlrpc.Fault(
+                Fault(
                     http.UNAUTHORIZED,
                     "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required",
                 ),
@@ -530,7 +532,8 @@ class MmcServer(XMLRPC, object):
             result = 0
         if isinstance(result, Handler):
             result = result.result
-        if not isinstance(result, Fault):
+
+        if not isinstance(result, xmlrpc.client.Fault):
             result = (result,)
         try:
             if type(result[0]) == dict:
@@ -541,6 +544,8 @@ class MmcServer(XMLRPC, object):
                         xmlrpc.client.Binary(result[0]["jpegPhoto"][0])
                     ]
         except IndexError:
+            pass
+        except Exception:
             pass
         try:
             if s.loggedin:
@@ -563,12 +568,10 @@ class MmcServer(XMLRPC, object):
         except Exception as e:
             f = Fault(self.FAILURE, "can't serialize output: " + str(e))
             s = xmlrpc.client.dumps(f, methodresponse=1)
+        s = bytes(s, encoding="utf-8")
         request.setHeader("content-length", str(len(s)))
         request.setHeader("content-type", "application/xml")
-        if isinstance(s, str):
-            request.write(bytes(s, "utf-8"))
-        else:
-            request.write(s)
+        request.write(s)
         request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
@@ -721,80 +724,79 @@ class MMCApp(object):
         self.conffile = options.inifile
         self.daemon = options.daemonize
         self.daemonlog = options.daemonizenolog
-
         if hasattr(options, "exclude") and options.exclude is not None:
             self.exclude = options.exclude.split(",")
 
             for filter in self.exclude:
                 logger.addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(
+                logging.getLogger("slixmpp.xmlstream.xmlstream").addFilter(
                     ExcludeContainsFilter(filter)
                 )
-                logging.getLogger("sleekxmpp.clientxmpp").addFilter(
+                logging.getLogger("slixmpp.clientxmpp").addFilter(
                     ExcludeContainsFilter(filter)
                 )
-                logging.getLogger("sleekxmpp.plugins.base").addFilter(
-                    ExcludeContainsFilter(filter)
-                )
-                logging.getLogger(
-                    "sleekxmpp.features.feature_starttls.starttls"
-                ).addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.thirdparty.statemachine").addFilter(
+                logging.getLogger("slixmpp.plugins.base").addFilter(
                     ExcludeContainsFilter(filter)
                 )
                 logging.getLogger(
-                    "sleekxmpp.features.feature_rosterver.rosterver"
+                    "slixmpp.features.feature_starttls.starttls"
                 ).addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.plugins.xep_0045").addFilter(
-                    ExcludeContainsFilter(filter)
-                )
-                logging.getLogger("sleekxmpp.plugins.xep_0078.legacyauth").addFilter(
-                    ExcludeContainsFilter(filter)
-                )
-                logging.getLogger("sleekxmpp.features.feature_bind.bind").addFilter(
+                logging.getLogger("slixmpp.thirdparty.statemachine").addFilter(
                     ExcludeContainsFilter(filter)
                 )
                 logging.getLogger(
-                    "sleekxmpp.features.feature_session.session"
+                    "slixmpp.features.feature_rosterver.rosterver"
                 ).addFilter(ExcludeContainsFilter(filter))
-                logging.getLogger("sleekxmpp.xmlstream.scheduler").addFilter(
+                logging.getLogger("slixmpp.plugins.xep_0045").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger("slixmpp.plugins.xep_0078.legacyauth").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger("slixmpp.features.feature_bind.bind").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger("slixmpp.features.feature_session.session").addFilter(
+                    ExcludeContainsFilter(filter)
+                )
+                logging.getLogger("slixmpp.xmlstream.scheduler").addFilter(
                     ExcludeContainsFilter(filter)
                 )
 
         if hasattr(options, "include") and options.include is not None:
             self.include = options.include.split(",")
             logger.addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.xmlstream.xmlstream").addFilter(
+            logging.getLogger("slixmpp.xmlstream.xmlstream").addFilter(
                 IncludeContainsFilter(self.include)
             )
-            logging.getLogger("sleekxmpp.clientxmpp").addFilter(
+            logging.getLogger("slixmpp.clientxmpp").addFilter(
                 IncludeContainsFilter(self.include)
             )
-            logging.getLogger("sleekxmpp.plugins.base").addFilter(
+            logging.getLogger("slixmpp.plugins.base").addFilter(
                 IncludeContainsFilter(self.include)
             )
-            logging.getLogger("sleekxmpp.features.feature_starttls.starttls").addFilter(
+            logging.getLogger("slixmpp.features.feature_starttls.starttls").addFilter(
                 IncludeContainsFilter(self.include)
             )
-            logging.getLogger("sleekxmpp.thirdparty.statemachine").addFilter(
+            logging.getLogger("slixmpp.thirdparty.statemachine").addFilter(
                 IncludeContainsFilter(self.include)
             )
-            logging.getLogger(
-                "sleekxmpp.features.feature_rosterver.rosterver"
-            ).addFilter(IncludeContainsFilter(self.include))
-            logging.getLogger("sleekxmpp.plugins.xep_0045").addFilter(
+            logging.getLogger("slixmpp.features.feature_rosterver.rosterver").addFilter(
                 IncludeContainsFilter(self.include)
             )
-            logging.getLogger("sleekxmpp.plugins.xep_0078.legacyauth").addFilter(
+            logging.getLogger("slixmpp.plugins.xep_0045").addFilter(
                 IncludeContainsFilter(self.include)
             )
-            logging.getLogger("sleekxmpp.features.feature_bind.bind").addFilter(
+            logging.getLogger("slixmpp.plugins.xep_0078.legacyauth").addFilter(
                 IncludeContainsFilter(self.include)
             )
-            logging.getLogger("sleekxmpp.features.feature_session.session").addFilter(
+            logging.getLogger("slixmpp.features.feature_bind.bind").addFilter(
                 IncludeContainsFilter(self.include)
             )
-            logging.getLogger("sleekxmpp.xmlstream.scheduler").addFilter(
+            logging.getLogger("slixmpp.features.feature_session.session").addFilter(
+                IncludeContainsFilter(self.include)
+            )
+            logging.getLogger("slixmpp.xmlstream.scheduler").addFilter(
                 IncludeContainsFilter(self.include)
             )
 
@@ -972,67 +974,77 @@ class MMCApp(object):
 
     def initialize(self):
         # Initialize logging object
-        logging.handlers.TimedCompressedRotatingFileHandler = (
-            TimedCompressedRotatingFileHandler
-        )
-        logging.config.fileConfig(self.conffile)
-
-        # In foreground mode, log to stderr
-        if not self.daemon:
-            if self.daemonlog:
-                hdlr2 = logging.StreamHandler()
-                hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
-                logger.addHandler(hdlr2)
-
-        # Create log dir if it doesn't exist
+        print("Initialisation of the XMLRPC Server")
         try:
-            os.mkdir(localstatedir + "/log/mmc")
-        except OSError as xxx_todo_changeme:
-            # Raise exception if error is not "File exists"
-            (errno, strerror) = xxx_todo_changeme.args
-            # Raise exception if error is not "File exists"
-            if errno != 17:
-                raise
-            else:
-                pass
-
-        # Changing path to probe and load plugins
-        os.chdir(os.path.dirname(globals()["__file__"]))
-
-        logger.info("mmc-agent %s starting..." % VERSION)
-        logger.info("Using Python %s" % sys.version.split("\n")[0])
-        logger.info("Using Python Twisted %s" % twisted.copyright.version)
-
-        logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
-        if self.config.multithreading:
-            logger.info(
-                "Multi-threading enabled, max threads pool size is %d"
-                % self.config.maxthreads
+            logging.handlers.TimedCompressedRotatingFileHandler = (
+                TimedCompressedRotatingFileHandler
             )
-            reactor.suggestThreadPoolSize(self.config.maxthreads)
+            logging.config.fileConfig(self.conffile)
 
-        # Export the MMC-AGENT variable in the environement so that
-        # child process can know they were spawned by mmc-agent
-        os.environ["MMC_AGENT"] = VERSION
+            # In foreground mode, log to stderr
+            if not self.daemon:
+                if self.daemonlog:
+                    hdlr2 = logging.StreamHandler()
+                    hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
+                    logger.addHandler(hdlr2)
 
-        # Start audit system
-        l = AuditFactory().log("MMC-AGENT", "MMC_AGENT_SERVICE_START")
+            # Create log dir if it doesn't exist
+            try:
+                os.mkdir(localstatedir + "/log/mmc")
+            except OSError as xxx_todo_changeme:
+                # Raise exception if error is not "File exists"
+                (errno, strerror) = xxx_todo_changeme.args
+                # Raise exception if error is not "File exists"
+                if errno != 17:
+                    raise
+                else:
+                    pass
 
-        # Ask PluginManager to load MMC plugins
-        pm = PluginManager()
-        code = pm.loadPlugins()
-        if code:
-            return code
+            # Changing path to probe and load plugins
+            os.chdir(os.path.dirname(globals()["__file__"]))
 
-        try:
-            self.startService(pm.plugins)
-        except Exception as e:
-            # This is a catch all for all the exception that can happened
-            logger.exception("Program exception: " + str(e))
-            return 1
+            logger.info("mmc-agent %s starting..." % VERSION)
+            logger.info("Using Python %s" % sys.version.split("\n")[0])
+            logger.info("Using Python Twisted %s" % twisted.copyright.version)
 
-        l.commit()
+            logger.debug(
+                "Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid())
+            )
+            if self.config.multithreading:
+                logger.info(
+                    "Multi-threading enabled, max threads pool size is %d"
+                    % self.config.maxthreads
+                )
+                reactor.suggestThreadPoolSize(self.config.maxthreads)
 
+            # Export the MMC-AGENT variable in the environement so that
+            # child process can know they were spawned by mmc-agent
+            os.environ["MMC_AGENT"] = VERSION
+
+            # Start audit system
+            l = AuditFactory().log("MMC-AGENT", "MMC_AGENT_SERVICE_START")
+
+            # Ask PluginManager to load MMC plugins
+            pm = PluginManager()
+            code = pm.loadPlugins()
+            if code:
+                logger.debug(
+                    "The initialisation of the XMLRPC Server returned the code: " % code
+                )
+                return code
+
+            try:
+                self.startService(pm.plugins)
+            except Exception as e:
+                # This is a catch all for all the exception that can happened
+                logger.exception("Program exception: " + str(e))
+                logger.debug("The initialisation of the XMLRPC Server returned 1")
+                return 1
+
+            l.commit()
+        except Exception:
+            logger.error("%s" % (traceback.format_exc()))
+        logger.debug("The initialisation of the XMLRPC Server returned 0")
         return 0
 
     def startService(self, mod):
@@ -1092,7 +1104,6 @@ class MMCHTTPChannel(http.HTTPChannel):
     """
 
     def connectionMade(self):
-        logger.debug("Connection from %s" % (self.transport.getPeer().host,))
         http.HTTPChannel.connectionMade(self)
 
     def connectionLost(self, reason):
@@ -1266,7 +1277,12 @@ class PluginManager(Singleton):
             # func = getattr(plugin, "activateForced")
             # except AttributeError:
             # logger.debug('Trying to force startup of plugin %s but no "activateForced" method found\nFalling back to the normale activate method' % (name,))
+
+            version = "version: " + str(getattr(plugin, "getVersion")())
+            logger.info("Plugin %s loaded, %s" % (name, version))
+
             func = getattr(plugin, "activate")
+
         except AttributeError:
             logger.error("%s is not a MMC plugin." % name)
             plugin = None

@@ -31,7 +31,6 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
 import logging
 import re
-import exceptions
 
 from mmc.plugins.dyngroup.bool_equations import BoolRequest
 from mmc.plugins.dyngroup.qmanager import QueryManager
