@@ -28,10 +28,7 @@ from optparse import OptionParser
 import sys
 import os.path
 import os
-from twisted.internet import glib2reactor
-
-glib2reactor.install()
-
+from twisted.internet import gireactor
 
 dft_inifile = os.path.join(sysconfdir, "mmc", "agent", "config.ini")
 
