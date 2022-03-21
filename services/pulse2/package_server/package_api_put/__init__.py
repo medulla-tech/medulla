@@ -28,7 +28,6 @@
 import os
 from shutil import move
 import time
-import exceptions
 import logging
 from base64 import b64decode
 from pulse2.package_server.package_api_get import PackageApiGet

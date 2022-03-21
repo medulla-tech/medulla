@@ -21,7 +21,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from sets import Set
 from sqlalchemy import and_, or_, not_
 from pulse2.managers.group import ComputerGroupManager
 

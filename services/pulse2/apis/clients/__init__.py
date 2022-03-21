@@ -28,7 +28,6 @@ import logging
 from pulse2.xmlrpc import Pulse2XMLRPCProxy
 from pulse2.apis.consts import PULSE2_ERR_404, PULSE2_ERR_CONN_REF, PULSE2_ERR_UNKNOWN
 from twisted.internet.error import ConnectionRefusedError
-import exceptions
 
 
 class Pulse2Api(Pulse2XMLRPCProxy):
