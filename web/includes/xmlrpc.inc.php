@@ -67,7 +67,7 @@ function openSocket($proto, $conf) {
         stream_context_set_option($context, "ssl", "allow_self_signed", true);
         stream_context_set_option($context, "ssl", "verify_peer", false);
         stream_context_set_option($context, "ssl", "peer_name", $_SESSION["XMLRPC_agent"]["host"]);
-        $sock = stream_socket_client('$proto://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
+        $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
         $ret = array($sock, $errNo, $errString);
     } else {
         $context = stream_context_create();
@@ -75,7 +75,7 @@ function openSocket($proto, $conf) {
         stream_context_set_option($context, "ssl", "verify_peer", True);
         stream_context_set_option($context, "ssl", "cafile", $conf[$_SESSION["agent"]]["cacert"]);
         stream_context_set_option($context, "ssl", "local_cert", $conf[$_SESSION["agent"]]["localcert"]);
-        $sock = stream_socket_client('$proto://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
+        $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
         $ret = array($sock, $errNo, $errString);
     }
     error_reporting(E_ERROR | E_WARNING );
