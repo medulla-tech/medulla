@@ -158,11 +158,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
     def activate(self, config):
         self.logger = logging.getLogger()
-        Base = automap_base()
+
         if self.is_activated:
             return None
         # This is used to automatically create the mapping
-        Base = automap_base()
         self.config = config
         self.db = create_engine(
             self.makeConnectionPath(),
@@ -170,14 +169,10 @@ class XmppMasterDatabase(DatabaseHelper):
             pool_size=self.config.dbpoolsize,
             pool_timeout=self.config.dbpooltimeout,
         )
-
-        Base.prepare(self.db, reflect=True)
-        self.Ban_machines = Base.classes.ban_machines
-
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
-
+        Base = automap_base()
         Base.prepare(self.db, reflect=True)
         # add table auto_base
         self.Update_machine = Base.classes.update_machine
@@ -188,8 +183,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return False
         self.metadata.create_all()
         self.is_activated = True
-        result = self.db.execute("SELECT * FROM xmppmaster.version limit 1;")
-        re = [x.Number for x in result]
         return True
 
     def initMappers(self):

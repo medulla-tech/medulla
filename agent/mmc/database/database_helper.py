@@ -159,11 +159,13 @@ class DatabaseHelper(Singleton):
             port,
             self.config.dbname,
         )
-        if self.config.dbdriver == "mysql":
+        if "mysql" in self.config.dbdriver:
             # See http://www.sqlalchemy.org/docs/05/reference/dialects/mysql.html#character-sets
             # charset=utf8 will convert all data to UTF-8, even if tables are
             # stored in Latin-1
-            url += "?charset=utf8&use_unicode=0"
+            url += "?charset=utf8"
+            if not "mysqldb" in self.config.dbdriver:
+                url += "&use_unicode=0"
             if self.config.dbsslenable:
                 url = url + "&ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (
                     self.config.dbsslca,
