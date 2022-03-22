@@ -6649,7 +6649,7 @@ ON
 ORDER BY
  glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
         res = self.db.execute(sql)
-        result = [{"os": os, "version": version, "count": 1} for os, version in res]
+        result = [{"os": os.decode("utf-8"), "version": version.decode("utf-8"), "count": 1} for os, version in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -6676,13 +6676,13 @@ ORDER BY
         for machine in result:
             logging.getLogger().debug("****************************************")
 
-            if machine["os"].startswith(b"Debian"):
+            if machine["os"].startswith("Debian"):
                 machine["os"] = "Debian"
                 try:
                     machine["version"] = machine["version"].split(" ")[0]
                 except AttributeError:
                     machine["version"] = ""
-            elif machine["os"].startswith(b"Microsoft"):
+            elif machine["os"].startswith("Microsoft"):
                 machine["os"] = machine["os"].split(" ")[1:3]
                 machine["os"] = " ".join(machine["os"])
             elif machine["os"].startswith("Ubuntu"):
