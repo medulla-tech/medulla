@@ -81,8 +81,8 @@ class Update_Remote_Agent:
         }
         self.directory["version"] = (
             file_get_contents(os.path.join(self.dir_agent_base, "agentversion"))
-            .replace("\n", "")
-            .replace("\r", "")
+            .replace(b"\n", b"")
+            .replace(b"\r", b"")
             .strip()
         )
         self.directory["version_agent"] = hashlib.md5(
@@ -123,4 +123,6 @@ class Update_Remote_Agent:
             ).hexdigest()
             listmd5.append(self.directory["script_agent"][fichiername])
         listmd5.sort()
-        self.directory["fingerprint"] = hashlib.md5(json.dumps(listmd5)).hexdigest()
+        self.directory["fingerprint"] = hashlib.md5(
+            json.dumps(listmd5).encode("utf-8")
+        ).hexdigest()
