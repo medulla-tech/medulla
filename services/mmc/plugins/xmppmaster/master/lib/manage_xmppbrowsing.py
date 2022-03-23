@@ -22,7 +22,9 @@
 # file manage_xmppbrowsing.py
 
 import os
+import sys
 
+PYTHON_VERSION = sys.version_info.major
 
 class xmppbrowsing:
     """ """
@@ -55,10 +57,11 @@ class xmppbrowsing:
                 pathabs = os.path.abspath(path_abs_current)
             else:
                 pathabs = self.rootfilesystem
+        # TODO: Remove MIGRATION3
         self.dirinfos = {
             "path_abs_current": pathabs,
-            "list_dirs_current": os.walk(pathabs).next()[1],
-            "list_files_current": os.walk(pathabs).next()[2],
+            "list_dirs_current": os.walk(pathabs).next()[1] if PYTHON_VERSION == 2 else next(os.walk(pathabs))[1],
+            "list_files_current": os.walk(pathabs).next()[2] if PYTHON_VERSION == 2 else next(os.walk(pathabs))[2],
             "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
             "rootfilesystem": self.rootfilesystem,
             "defaultdir": self.defaultdir,
@@ -76,14 +79,16 @@ class xmppbrowsing:
                 pathabs = os.path.abspath(path_abs_current)
             else:
                 pathabs = self.rootfilesystem
-        list_files_current = os.walk(pathabs).next()[2]
+        # TODO: Remove MIGRATION3
+        list_files_current = os.walk(pathabs).next()[2] if PYTHON_VERSION == 2 else next(os.walk(pathabs))[2]
         ff = []
         for t in list_files_current:
             fii = os.path.join(pathabs, t)
             ff.append((t, os.path.getsize(fii)))
+        # TODO: Remove MIGRATION3
         self.dirinfos = {
             "path_abs_current": pathabs,
-            "list_dirs_current": os.walk(pathabs).next()[1],
+            "list_dirs_current": os.walk(pathabs).next()[1] if PYTHON_VERSION == 2 else next(os.walk(pathabs))[1],
             "list_files_current": ff,
             "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
             "rootfilesystem": self.rootfilesystem,

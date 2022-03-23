@@ -1,5 +1,6 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2022 Siveo, http://siveo.net
 #
 # $Id$
 #
@@ -275,6 +276,7 @@ class RpcProxy(RpcProxyI):
             global last_update_check_ts, available_updates
             o, e, ec = self.runinshell("%s -l --json" % updMgrPath)
 
+            o = o.decode("utf-8")
             # Check json part existence
             if not "===JSON_BEGIN===" in o or not "===JSON_END===" in o:
                 available_updates = False
