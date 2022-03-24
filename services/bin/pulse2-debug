@@ -392,16 +392,16 @@ def pprinttable(rows):
         pattern = " | ".join(formats)
         hpattern = " | ".join(hformats)
         separator = "-+-".join(['-' * n for n in lens])
-        print separator
-        print hpattern % tuple(headers)
-        print separator
+        print(separator)
+        print(hpattern % tuple(headers))
+        print(separator)
         for line in rows:
-            print pattern % tuple(line)
+            print(pattern % tuple(line))
     elif len(rows) == 1:
         row = rows[0]
         hwidth = len(max(row._fields,key=lambda x: len(x)))
         for i in range(len(row)):
-            print "%*s = %s" % (hwidth,row._fields[i],row[i])
+            print("%*s = %s" % (hwidth,row._fields[i],row[i]))
 
 
 def printListInfo(result):
@@ -417,8 +417,8 @@ def printListInfo(result):
     Row = namedtuple('Row', header)
     try:
         pprinttable([Row(*(line.values())) for line in result['data']])
-    except Exception, e:
-        print str(e)
+    except Exception as e:
+        print(str(e))
 
 
 class bcolors:
@@ -657,7 +657,7 @@ def prompt():
                 input = raw_input("]> ").strip()
             except (KeyboardInterrupt, EOFError) as e:
                 # Receive pipe-signal or EOFError
-                print ''
+                print('')
                 # Kill logsniffer
                 if LOGSNIFFER:
                     LOGSNIFFER.kill()
@@ -668,7 +668,7 @@ def prompt():
         except Exception:
             ex_type, ex, tb = sys.exc_info()
             #print ex_type
-            print ex
+            print(ex)
             #traceback.print_tb(tb)
             del tb
 
@@ -718,7 +718,7 @@ class xmlrpcModule():
                 # Try reconnect
                 config = self.proxyHandler.config
                 self.proxyHandler = RpcProxy(config)
-                print "Lost connection, reconnecting ..."
+                print("Lost connection, reconnecting ...")
                 return
 
             # ============= PRINTING RESULT ======================
@@ -763,7 +763,7 @@ class xmlrpcModule():
                     if len(s.split('\n')) > (getheight() - 4):
                         textpager(s)
                     else:
-                        print s
+                        print(s)
 
             # =======================================================
 
@@ -865,8 +865,8 @@ if __name__ == "__main__" :
             SCRIPT_MODE = True
             exec(args.command, CONSOLE_VARS)
             sys.exit(0)
-        except Exception, e:
-            print str(e)
+        except Exception as e:
+            print(str(e))
             sys.exit(1)
 
     if args.file:
@@ -879,14 +879,14 @@ if __name__ == "__main__" :
             exec(f.read(), CONSOLE_VARS)
             sys.exit(0)
         except IOError:
-            print 'Error while reading script file'
-        except Exception, e:
-            print str(e)
+            print('Error while reading script file')
+        except Exception as e:
+            print(str(e))
             sys.exit(1)
 
 
-    print "Pulse2 console 0.3.1 (Fev 12 2014)"
-    print "Type p2d() for more information"
+    print("Pulse2 console 0.3.1 (Fev 12 2014)")
+    print("Type p2d() for more information")
 
     # Setting command completer
     readline.parse_and_bind("tab: complete")
@@ -913,4 +913,4 @@ if __name__ == "__main__" :
     try:
         reactor.run()
     except:
-        print 'Unknown error occured'
+        print('Unknown error occured')
