@@ -153,7 +153,7 @@ def dump_parameter(para=True, out=True, timeprocess=True):
 ###########################################
 
 
-def file_get_contents(filename, use_include_path=0, context=None, offset=-1, maxlen=-1):
+def file_get_contents(filename, use_include_path=0, context=None, offset=-1, maxlen=-1, bytes=False):
     """
     load content file or simple url
     """
@@ -165,7 +165,10 @@ def file_get_contents(filename, use_include_path=0, context=None, offset=-1, max
             ret = ret[:maxlen]
         return ret
     else:
-        fp = open(filename, "rb")
+        if bytes == True:
+            fp = open(filename, "rb")
+        else:
+            fp = open(filename, "r")
         try:
             if offset > 0:
                 fp.seek(offset)
@@ -175,11 +178,14 @@ def file_get_contents(filename, use_include_path=0, context=None, offset=-1, max
             fp.close()
 
 
-def file_put_contents(filename, data):
+def file_put_contents(filename, data, bytes=False):
     """
     write content "data" to file "filename"
     """
-    f = open(filename, "w")
+    if bytes = True:
+        f = open(filename, "wb")
+    else:
+        f = open(filename, "w")
     f.write(data)
     f.close()
 
