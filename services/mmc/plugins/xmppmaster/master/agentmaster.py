@@ -96,8 +96,7 @@ def getXmppConfiguration():
 
 
 def send_message_json(to, jsonstring):
-    xmppob = ObjectXmpp()
-    xmppob.send_message(mto=to, mbody=json.dumps(jsonstring), mtype="chat")
+    ObjectXmpp().send_message(mto=to, mbody=json.dumps(jsonstring), mtype="chat")
 
 
 def callXmppFunction(functionname, *args, **kwargs):

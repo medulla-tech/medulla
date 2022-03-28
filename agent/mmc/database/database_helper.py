@@ -151,6 +151,9 @@ class DatabaseHelper(Singleton):
             port = ":" + str(self.config.dbport)
         else:
             port = ""
+        if not "+" in self.config.dbdriver:
+            if "mysql" in self.config.dbdriver:
+                self.config.dbdriver = "mysql+mysqldb"
         url = "%s://%s:%s@%s%s/%s" % (
             self.config.dbdriver,
             self.config.dbuser,
@@ -166,6 +169,8 @@ class DatabaseHelper(Singleton):
             url += "?charset=utf8"
             if not "mysqldb" in self.config.dbdriver:
                 url += "&use_unicode=0"
+            else:
+                url += "&use_unicode=1"
             if self.config.dbsslenable:
                 url = url + "&ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (
                     self.config.dbsslca,

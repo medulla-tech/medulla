@@ -126,7 +126,7 @@ class Glpi94(DyngroupDatabaseHelper):
             versionresult = (
                 self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
             )
-            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+            self._glpi_version = str(versionresult[0]).replace(
                 " ", ""
             )
         except OperationalError:
@@ -135,7 +135,7 @@ class Glpi94(DyngroupDatabaseHelper):
                 .fetchone()
                 .values()
             )
-            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+            self._glpi_version = str(versionresult[0]).replace(
                 " ", ""
             )
         except Exception as e:
@@ -188,7 +188,7 @@ class Glpi94(DyngroupDatabaseHelper):
             versionresult = (
                 self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
             )
-            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+            self._glpi_version = str(versionresult[0]).replace(
                 " ", ""
             )
         except OperationalError:
@@ -197,7 +197,7 @@ class Glpi94(DyngroupDatabaseHelper):
                 .fetchone()
                 .values()
             )
-            self._glpi_version = str(versionresult[0], encoding="utf-8").replace(
+            self._glpi_version = str(versionresult[0]).replace(
                 " ", ""
             )
         except Exception as e:
