@@ -1282,3 +1282,158 @@ class geolocalisation_agent:
             except BaseException:
                 pass
         return None
+
+
+class Converter:
+    """Object to simplify convertions from objects to base64 string"""
+
+    @staticmethod
+    def obj_to_str(obj):
+        """Transform conventionnals objects to string object
+        Params:
+            obj: the input object can be :
+                - a list,
+                - a dict,
+                - a tuple,
+                - a string
+                - a ConfigParser object
+        Returns:
+            str if success or False if failure
+        """
+        if type(obj) in (list, dict, tuple, str):
+            obj = obj.__repr__()
+            return obj
+        elif isinstance(obj, configparser.ConfigParser):
+            obj = obj.__dict__['_sections'].__repr__()
+            return obj
+        else:
+            return False
+
+    @staticmethod
+    def str_to_bytes(string):
+        """Convert str object to bytes field
+        Params:
+            - string: the string we want to convert to bytes field
+        Returns:
+            A bytes field if success or False if failure
+        """
+        if type(string) is str:
+            string = bytes(string, 'utf-8')
+            return string
+        else:
+            return False
+
+    @staticmethod
+    def obj_to_bytes(obj):
+        """Convert conventionnals objects to bytes field
+        Params:
+            obj: the object we want to convert to bytes field. The object could be
+                - a list
+                - a dict
+                - a string
+                - a tuple
+                - a configParserObject
+        Returns:
+            Field of bytes if success or False if failure
+        """
+        obj = Converter.obj_to_str(obj)
+        return Converter.str_to_bytes(obj)
+
+    @staticmethod
+    def bytes_to_str(field):
+        field = bytes.decode(field, "utf-8")
+        return field
+
+    @staticmethod
+    def bytes_to_b64(field, _bytes=False):
+        """Convert bytes field to base64
+        Params:
+            field: the bytes field we want to convert to base64
+            _bytes (default = False) : a flag to specify if the result must be
+                 a string (_bytes = False) or a bytes field (_bytes = True)
+        Returns:
+            base64 bytes field or str
+        """
+        field = base64.b64encode(field)
+        if _bytes is False:
+            field = bytes.decode(field, "utf-8")
+        return field
+
+    @staticmethod
+    def str_to_b64(string, _bytes=False):
+        """Convert a string to base64
+        Params:
+            string : the string we want to convert to base64
+            _bytes (default = False) : Specify if the result is bytes field or string
+        Returns:
+            base64 bytes field or str
+        """
+        string = Converter.str_to_bytes(field)
+        string = base64.b64encode(field)
+        if _bytes is False:
+            string = bytes.decode(field, "utf-8")
+        return string
+
+    @staticmethod
+    def obj_to_b64(obj, _bytes=False):
+        """Convert a conventionnal object to base64.
+        Params:
+            - obj : can be
+                - a string
+                - a bytes field
+                - a list
+                - a dict
+                - a tuple
+                - a ConfigParser
+            - _bytes (default = False) : Specify if the result is bytes field or string
+        Returns:
+            base64 bytes field or str
+            """
+        obj = Converter.obj_to_bytes(obj)
+        if obj is False:
+            return False
+        obj = Converter.bytes_to_b64(obj, _bytes)
+        return obj
+
+    @staticmethod
+    def b64_to_bytes(b64):
+        """Convert base64 string or bytes field to bytes field
+        Params:
+            base64 : can be encoded string or encoded bytes field.
+        Returns:
+            decoded bytes field
+        """
+        if type(b64) not in (bytes, str):
+            return False
+
+        if type(b64) is str:
+            #Convert b64-byte before converting b64
+            b64 = bytes(b64, "utf-8")
+            #convert
+            try:
+                b64 = base64.b64decode(b64, validate=True)
+            except Exception as err:
+                return False
+            return b64
+
+    @staticmethod
+    def b64_to_str(b64):
+        """Convert base64 string or bytes field to string
+        Params:
+            base64 : can be encoded string or encoded bytes field.
+        Returns:
+            decoded string
+        """
+        if type(b64) not in (bytes, str):
+            return False
+
+        if type(b64) is str:
+            #Convert b64-byte before converting b64
+            b64 = bytes(b64, "utf-8")
+            #convert
+            try:
+                b64 = base64.b64decode(b64, validate=True)
+            except Exception as err:
+                return False
+            b64 = bytes.decode(b64, "utf-8")
+            return b64
