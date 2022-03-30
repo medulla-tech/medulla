@@ -53,6 +53,7 @@ import urllib.request, urllib.error, urllib.parse
 import tarfile
 import zipfile
 from functools import wraps
+import zlib
 
 logger = logging.getLogger()
 
@@ -1287,6 +1288,63 @@ class geolocalisation_agent:
 class Converter:
     """Object to simplify convertions from objects to base64 string"""
 
+    def __init__(self, data, _bytes=False, compressed=False):
+        """A new instance of Converter determines what to do with the datas.
+        If the data is in base 64, it converts datas to bytes field or string,
+        depending on _bytes option.
+        In the other hand if the data is not in base 64 (str or bytes) it converts datas to
+        base 64 bytes field or str, depending on _bytes option.
+        In this conversion if the option compressed is set to True, the datas are compressed before base 64 conversion.
+
+        Params:
+            - data: mixed datas which will be converted
+            - _bytes: bool (default=False) to specify if the output format is bytes field or str.
+                False to convert the result into str
+                True to convert the result into bytes field
+            - compressed: bool (default=False) to specify if the datas must be compressed before the conversion.
+                False to keep the datas
+                True to compress datas
+
+        Returns:
+            There is no return value because we are in the __init__ method.
+            To prevent this, the attribute self.transform stores the result of the conversion.
+
+        Attributes:
+            self.data = stores the incoming datas
+            self.transform = stores the output datas
+            self.bytes = stores the _bytes flag
+            self.compressed = stores the compressed flag
+        """
+
+        self.data = data
+        self.transform = data
+        self.bytes = _bytes
+        self.compressed = compressed
+
+        # Determines in which way the conversion must be done
+        is_base64 = Converter.is_base64(data)
+
+        if is_base64 is False:
+            is_compressed = Converter.is_compressed(self.transform)
+
+            if is_compressed is False and self.compressed is True:
+                self.transform = Converter.obj_to_bytes(self.transform)
+                self.transform = Converter.bytes_to_compress(self.transform)
+            elif is_compressed is True and self.compressed is False:
+                # In this case self.transform is already bytes field
+                self.transform = Converter.decompress_to_bytes(self.transform)
+            else:
+                self.transform = Converter.obj_to_bytes(self.transform)
+            self.transform = Converter.bytes_to_b64(self.transform, self.bytes)
+        else:
+            self.transform = Converter.b64_to_bytes(self.transform)
+            try:
+                self.transform = Converter.decompress_to_bytes(self.transform)
+            except:
+                pass
+            if self.bytes is False:
+                self.transform = Converter.bytes_to_str(self.transform)
+
     @staticmethod
     def obj_to_str(obj):
         """Transform conventionnals objects to string object
@@ -1341,6 +1399,11 @@ class Converter:
 
     @staticmethod
     def bytes_to_str(field):
+        """Transform the specified bytes field to str
+        Params:
+            field: bytes field
+        Returns: str
+        """
         field = bytes.decode(field, "utf-8")
         return field
 
@@ -1458,3 +1521,60 @@ class Converter:
         except Exception as err:
             return False
         return True
+
+    @staticmethod
+    def bytes_to_compress(data):
+        """Compress the specified incoming datas in gzip format.
+        Params:
+            data: bytes field which will be compressed
+        Returns:
+            Gzip compressed bytes field
+        """
+        compressed = zlib.compress(data, 9)
+        return compressed
+
+    @staticmethod
+    def str_to_compress(string):
+        """Compress incoming str value.
+        Params:
+            string: str which will be compressed
+        Returns:
+            Gzip comrpessed bytes field"""
+        string = Converter.str_to_bytes(string)
+        compressed = Converter.bytes_to_compress(string)
+        return compressed
+
+    @staticmethod
+    def decompress_to_bytes(compressed):
+        """Decompress Gzip bytes field to bytes field
+        Params:
+            compressed: Gzipped bytes field
+        Returns:
+            uncompressed bytes field"""
+        data = zlib.decompress(compressed)
+        return data
+
+    @staticmethod
+    def decompress_to_str(compressed):
+        """Decompress Gzip bytes field to str
+        Params:
+            compressed: Gzipped bytes field
+        Returns:
+            uncompressed str"""
+        data = zlib.decompress(compressed)
+        data = Converter.bytes_to_str(data)
+        return data
+
+    @staticmethod
+    def is_compressed(data):
+        """Test if the specified bytes field is compressed
+        Params:
+            data : bytes field
+        Returns:
+            bool, True if the bytes field is compressed, False if not"""
+        compressed = True
+        try:
+            zlib.decompress(data)
+        except:
+            compressed = False
+        return compressed
