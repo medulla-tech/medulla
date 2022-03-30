@@ -1407,14 +1407,14 @@ class Converter:
             return False
 
         if type(b64) is str:
-            #Convert b64-byte before converting b64
+            # Convert b64-byte before converting b64
             b64 = bytes(b64, "utf-8")
-            #convert
-            try:
-                b64 = base64.b64decode(b64, validate=True)
-            except Exception as err:
-                return False
-            return b64
+        # convert
+        try:
+            b64 = base64.b64decode(b64, validate=True)
+        except Exception as err:
+            return False
+        return b64
 
     @staticmethod
     def b64_to_str(b64):
@@ -1428,12 +1428,33 @@ class Converter:
             return False
 
         if type(b64) is str:
-            #Convert b64-byte before converting b64
+            # Convert b64-byte before converting b64
             b64 = bytes(b64, "utf-8")
-            #convert
-            try:
-                b64 = base64.b64decode(b64, validate=True)
-            except Exception as err:
-                return False
-            b64 = bytes.decode(b64, "utf-8")
-            return b64
+        # convert
+        try:
+            b64 = base64.b64decode(b64, validate=True)
+        except Exception as err:
+            return False
+        b64 = bytes.decode(b64, "utf-8")
+        return b64
+
+    @staticmethod
+    def is_base64(b64):
+        """Test if the input is base64 bytes field or string
+        Params:
+            b64 : challeged bytes field or string
+        Returns:
+            Bool True if b64 is a valid base64, else False
+        """
+        if type(b64) not in (bytes, str):
+            return False
+
+        if type(b64) is str:
+            # Convert b64-byte before converting b64
+            b64 = bytes(b64, "utf-8")
+        # convert
+        try:
+            b64 = base64.b64decode(b64, validate=True)
+        except Exception as err:
+            return False
+        return True
