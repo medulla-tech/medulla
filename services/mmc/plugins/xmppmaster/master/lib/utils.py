@@ -54,6 +54,7 @@ import tarfile
 import zipfile
 from functools import wraps
 import zlib
+import io
 
 logger = logging.getLogger()
 
@@ -1355,6 +1356,9 @@ class Converter:
                 - a tuple,
                 - a string
                 - a ConfigParser object
+                - a file object (keep the cursor position).
+                    /!\ The file is NOT close at the end
+                    of the conversion
         Returns:
             str if success or False if failure
         """
@@ -1364,6 +1368,15 @@ class Converter:
         elif isinstance(obj, configparser.ConfigParser):
             obj = obj.__dict__['_sections'].__repr__()
             return obj
+        elif isinstance(obj, io.IOBase):
+            position = obj.tell()
+            obj.seek(0, 0)
+            content = obj.read()
+            obj.seek(position, 0)
+            if type(content) is bytes:
+                return bytes.decode(content, "utf-8")
+            else:
+                return content
         else:
             return False
 
@@ -1391,9 +1404,16 @@ class Converter:
                 - a string
                 - a tuple
                 - a configParserObject
+                - a file object (keep the cursor position).
+                    /!\ The file is NOT close at the end
+                    of the conversion
         Returns:
             Field of bytes if success or False if failure
         """
+        # obj is already bytes
+        if type(obj) is bytes:
+            return obj
+
         obj = Converter.obj_to_str(obj)
         return Converter.str_to_bytes(obj)
 
@@ -1417,6 +1437,9 @@ class Converter:
         Returns:
             base64 bytes field or str
         """
+        if type(field) is bool:
+            return False
+
         field = base64.b64encode(field)
         if _bytes is False:
             field = bytes.decode(field, "utf-8")
