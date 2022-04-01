@@ -1289,7 +1289,7 @@ class geolocalisation_agent:
 class Converter:
     """Object to simplify convertions from objects to base64 string"""
 
-    def __init__(self, data, _bytes=False, compressed=False):
+    def __init__(self, data, **kwargs):
         """A new instance of Converter determines what to do with the datas.
         If the data is in base 64, it converts datas to bytes field or string,
         depending on _bytes option.
@@ -1299,12 +1299,19 @@ class Converter:
 
         Params:
             - data: mixed datas which will be converted
-            - _bytes: bool (default=False) to specify if the output format is bytes field or str.
+            - kwargs: dict of options
+
+        kwargs Options:
+            - bytes: bool (default=False) to specify if the output format is bytes field or str.
                 False to convert the result into str
                 True to convert the result into bytes field
-            - compressed: bool (default=False) to specify if the datas must be compressed before the conversion.
+            - compress: bool (default=False) to specify if the datas must be compressed before the conversion.
                 False to keep the datas
                 True to compress datas
+            - b64: bool (default: determined by the converter) to force the converter to consider incoming data as b64.
+                True: the incoming data is in base 64 format
+                False: the incoming data isn't in base 64 format
+            - loads: bool (default=False) to specify if the converter has to try to convert self.transform into dict/list object
 
         Returns:
             There is no return value because we are in the __init__ method.
@@ -1315,16 +1322,31 @@ class Converter:
             self.transform = stores the output datas
             self.bytes = stores the _bytes flag
             self.compressed = stores the compressed flag
+            self.loads = stores the loads flag
         """
 
         self.data = data
         self.transform = data
-        self.bytes = _bytes
-        self.compressed = compressed
+        self.bytes = False
+        self.compressed = False
+        self.loads = False
 
-        # Determines in which way the conversion must be done
-        is_base64 = Converter.is_base64(data)
+        # Set the options
+        if 'bytes' in kwargs and type(kwargs['bytes']) is bool:
+            self.bytes = kwargs['bytes']
+        if 'compress' in kwargs and type(kwargs['compress']) is bool:
+            self.compressed = kwargs['compress']
 
+        if 'loads' in kwargs and type(kwargs['loads']) is bool:
+            self.loads = kwargs['loads']
+
+        if 'b64' in kwargs and type(kwargs['b64']) is bool:
+            is_base64 = kwargs['b64']
+        else:
+            # Determines in which way the conversion must be done
+            is_base64 = Converter.is_base64(data)
+
+        # Obj to b64 conversion
         if is_base64 is False:
             is_compressed = Converter.is_compressed(self.transform)
 
@@ -1338,6 +1360,7 @@ class Converter:
                 self.transform = Converter.obj_to_bytes(self.transform)
             self.transform = Converter.bytes_to_b64(self.transform, self.bytes)
         else:
+            # B64 to obj conversion
             self.transform = Converter.b64_to_bytes(self.transform)
             try:
                 self.transform = Converter.decompress_to_bytes(self.transform)
@@ -1349,6 +1372,12 @@ class Converter:
                     self.transform =  tmp
                 except:
                     pass
+            if self.loads is True:
+                try:
+                    self.transform = json.loads(self.transform)
+                except:
+                    pass
+
     @staticmethod
     def obj_to_str(obj):
         """Transform conventionnals objects to string object
@@ -1365,8 +1394,10 @@ class Converter:
         Returns:
             str if success or False if failure
         """
-        if type(obj) in (list, dict, tuple, str):
-            obj = obj.__repr__()
+        if type(obj) is str:
+            return obj
+        if type(obj) in (list, dict, tuple):
+            obj = json.dumps(obj)
             return obj
         elif isinstance(obj, configparser.ConfigParser):
             obj = obj.__dict__['_sections'].__repr__()
@@ -1441,7 +1472,6 @@ class Converter:
                 if type(content) is bytes:
                     return content
                 else:
-                    content = Converter.obj_to_str(content)
                     return Converter.str_to_bytes(content)
 
         obj = Converter.obj_to_str(obj)
@@ -1631,3 +1661,26 @@ class Converter:
         except:
             compressed = False
         return compressed
+
+    def __str__(self):
+        """ Gives a printable representation of the self.transform value.
+        If self.transform is a base 64, split every 76 chars to corresponds to rfc4648
+
+        Returns:
+            str
+        """
+        content = self.transform
+        if Converter.is_base64(self.transform):
+            if type(self.transform) is str:
+                return '\n'.join(self.transform[pos:pos+76] for pos in range(0, len(self.transform), 76))
+            else:
+                return "%s"%self.transform
+        else:
+            return "%s"%self.transform
+
+    def __repr__(self):
+        """Gives an official representation value for the transformed value
+
+        Returns :
+            mixed values: may be dict, list, string, bytes, depending on the transformation
+        """
