@@ -1684,3 +1684,4 @@ class Converter:
         Returns :
             mixed values: may be dict, list, string, bytes, depending on the transformation
         """
+        return self.transform
