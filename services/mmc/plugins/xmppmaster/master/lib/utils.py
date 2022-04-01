@@ -1344,8 +1344,11 @@ class Converter:
             except:
                 pass
             if self.bytes is False:
-                self.transform = Converter.bytes_to_str(self.transform)
-
+                try:
+                    tmp = Converter.bytes_to_str(self.transform)
+                    self.transform =  tmp
+                except:
+                    pass
     @staticmethod
     def obj_to_str(obj):
         """Transform conventionnals objects to string object
