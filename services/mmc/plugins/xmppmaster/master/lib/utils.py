@@ -1368,15 +1368,23 @@ class Converter:
         elif isinstance(obj, configparser.ConfigParser):
             obj = obj.__dict__['_sections'].__repr__()
             return obj
-        elif isinstance(obj, io.IOBase):
-            position = obj.tell()
-            obj.seek(0, 0)
-            content = obj.read()
-            obj.seek(position, 0)
-            if type(content) is bytes:
+        if isinstance(obj, io.IOBase):
+            content = None
+            if obj.closed or obj.readable() is False:
+                with open(obj.name, "rb") as fp:
+                    content = fp.read()
+                    fp.close()
+                # here the content is in bytes
                 return bytes.decode(content, "utf-8")
             else:
-                return content
+                position = obj.tell()
+                obj.seek(0, 0)
+                content = obj.read()
+                obj.seek(position, 0)
+                if type(content) is str:
+                    return content
+                else:
+                    return bytes.decode(content, "utf-8")
         else:
             return False
 
@@ -1413,6 +1421,25 @@ class Converter:
         # obj is already bytes
         if type(obj) is bytes:
             return obj
+
+        if isinstance(obj, io.IOBase):
+            content = None
+            if obj.closed or obj.readable() is False:
+                with open(obj.name, "rb") as fp:
+                    content = fp.read()
+                    fp.close()
+                # here the content is in bytes
+                return content
+            else:
+                position = obj.tell()
+                obj.seek(0, 0)
+                content = obj.read()
+                obj.seek(position, 0)
+                if type(content) is bytes:
+                    return content
+                else:
+                    content = Converter.obj_to_str(content)
+                    return Converter.str_to_bytes(content)
 
         obj = Converter.obj_to_str(obj)
         return Converter.str_to_bytes(obj)
