@@ -707,6 +707,24 @@ def callrestartbot(uuid):
         logging.getLogger().error("call restart bot for machine %s : jid xmpp missing" % uuid)
         return "jid missing"
 
+def callrestartbothostname(hostname):
+    """
+        This function is used to restart a computer based on the hostname.
+        Args:
+            hostname: The hostname of the machine we want to restart.
+    """
+    machine = XmppMasterDatabase().get_machine_from_hostname(hostname)
+    if machine:
+        if len(machine) > 1:
+            logging.getLogger().warning("Several Machine have the same hostname %s in the xmppmaster SQL database" % hostname)
+        else:
+            if machine[0]['jid']:
+                logging.getLogger().debug("Restarting the agent for the machine %s" % hostname)
+                callrestartbotbymaster(machine[0]['jid'])
+            else:
+                logging.getLogger().error("The machine %s has not been found in the xmppmaster SQL database." % hostname)
+                logging.getLogger().error("Please check the logs in the client machine")
+
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -933,9 +951,14 @@ def get_conf_master_agent():
 def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
 
-def delcomputer(uuid):
-    callrestartbot(uuid)
-    return XmppMasterDatabase().delMachineXmppPresence(uuid)
+
+def delcomputer(uuid, hostname=""):
+    if uuid not in [None, ""] :
+        callrestartbot(uuid)
+        return XmppMasterDatabase().delMachineXmppPresence(uuid)
+    else:
+        callrestartbothostname(hostname)
+        return XmppMasterDatabase().delMachineXmppPresenceHostname(hostname)
 
 def get_log_status():
     return XmppMasterDatabase().get_log_status()
