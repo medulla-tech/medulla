@@ -2702,7 +2702,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     Machines.kiosk_presence: kiosk_presence,
                     Machines.lastuser: lastuser,
                     Machines.keysyncthing: keysyncthing,
-                    Machines.enabled: "1",
+                    Machines.enabled: 1,
                     Machines.uuid_serial_machine: uuid_serial_machine,
                 }
             )
