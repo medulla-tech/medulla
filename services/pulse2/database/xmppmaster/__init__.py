@@ -10354,12 +10354,12 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if rule is not None:
             if action == "raise":
                 selected = session.query(Has_relayserverrules)\
-                    .filter(Has_relayserverrules.order < rule.order)\
+                    .filter(and_(Has_relayserverrules.rules_id == rule.rules_id, Has_relayserverrules.order < rule.order))\
                     .order_by(desc(Has_relayserverrules.order)).first()
 
             elif action == "down":
                 selected = session.query(Has_relayserverrules)\
-                    .filter(Has_relayserverrules.order > rule.order)\
+                    .filter(and_(Has_relayserverrules.rules_id == rule.rules_id, Has_relayserverrules.order > rule.order))\
                     .order_by(Has_relayserverrules.order).first()
             else:
                 result['status'] = "error"
