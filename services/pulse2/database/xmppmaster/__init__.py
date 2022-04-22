@@ -8260,7 +8260,7 @@ class XmppMasterDatabase(DatabaseHelper):
             for machine in query:
                 flag = False
                 for count_ars in counts:
-                    if machine.jid == count_ars["jid"]:
+                    if machine.jid_from_relayserver == count_ars["jid"]:
                         flag = True
                         break
                 if flag == True:
