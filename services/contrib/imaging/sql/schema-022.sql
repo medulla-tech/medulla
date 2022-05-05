@@ -33,7 +33,7 @@ ALTER TABLE Entity ADD COLUMN pxe_login VARCHAR(255) NOT NULL DEFAULT "" AFTER u
 -- if the login failed, load ${loaded-menu}. If MENU is always loaded, the password is not checked and we have access to the main menu
 UPDATE BootService SET value="set url_path http://${next-server}/downloads/davos/
 iseq ${platform} pcbios && sanboot --no-describe --drive 0x80 ||
-imgfetch ${next-server}/downloads/davos/refind.conf
+imgfetch ${url_path}refind.conf
 iseq ${buildarch} x86_64 && chain -ar ${url_path}refind_x64.efi ||
 iseq ${buildarch} i386 && chain -ar ${url_path}refind_ia32.efi ||
 iseq ${buildarch} arm32 && chain -ar ${url_path}refind_aa32.efi ||
