@@ -319,8 +319,8 @@ if (isset($_POST["bvalid"])) {
             exit;
         }
     } else {
-        $str = sprintf(_T("Failed to generate the boot menu those computers : %s", "imaging"), implode($ret[1], ", "));
-        new NotifyWidgetFailure();
+        $str = sprintf(_T("Error generating the menu : %s", "imaging"), $ret[1]);
+        new NotifyWidgetFailure($str);
         xmlrpc_setfromxmppmasterlogxmpp($str,
                                     "IMG",
                                     '',
