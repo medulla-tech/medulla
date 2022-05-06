@@ -2421,8 +2421,9 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             ret, target = db.setMyMenuTarget(uuid, params, target_type)
             db.changeTargetsSynchroState([uuid], target_type, P2ISS.TODO)
-        except Exception, e:
-            return [False, "setMyMenuTarget : %s" % str(e)]
+        except Exception:
+            msg = "Please make sure that an item is set as default for normal boot and for WOL boot"
+            return [False, msg]
 
         if not isRegistered:
             # send the menu to the good imaging server to register the computer
