@@ -284,7 +284,7 @@ WHERE
 	AND sessionname = deploy.sessionid
 	AND ((logs.text REGEXP '^First WOL|^Second WOL|^Third WOL|.*Trying to continue deployment|Starting deployment|^Key successfully present'
 	AND logs.date < DATE_ADD(NOW(), INTERVAL - 600 SECOND))
-	OR (logs.text REGEXP '^Client generated transfer command is'
+	OR (logs.text REGEXP '^Taking resource'
 	AND logs.date < DATE_ADD(NOW(), INTERVAL - 1 DAY)))
 GROUP BY deploy.sessionid limit nombre_reload;
 -- declare NOT FOUND handler
