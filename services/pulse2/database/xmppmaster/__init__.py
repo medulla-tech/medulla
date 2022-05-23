@@ -3547,6 +3547,8 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentpending': 0,
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
+                   'errorhashmissing': 0,
+                   'aborthashinvalid': 0,
                    'otherstatus': 0,
                   }
             dynamic_status_list = self.get_log_status()
@@ -3611,6 +3613,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['deploymentpending'] = liststatus[t]
                 elif t == 'DEPLOYMENT DELAYED':
                     ret['deploymentdelayed'] = liststatus[t]
+                elif t == 'ERROR HASH MISSING':
+                    ret['errorhashmissing'] = liststatus[t]
+                elif t == 'ABORT HASH INVALID':
+                    ret['aborthashinvalid'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
@@ -3666,6 +3672,8 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentpending': 0,
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
+                   'errorhashmissing': 0,
+                   'aborthashinvalid': 0,
                    'otherstatus': 0,
                   }
             dynamic_status_list = self.get_log_status()
@@ -3730,6 +3738,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['deploymentpending'] = liststatus[t]
                 elif t == 'DEPLOYMENT DELAYED':
                     ret['deploymentdelayed'] = liststatus[t]
+                elif t == 'ERROR HASH MISSING':
+                    ret['errorhashmissing'] = liststatus[t]
+                elif t == 'ABORT HASH INVALID':
+                    ret['aborthashinvalid'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
