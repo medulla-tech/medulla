@@ -266,24 +266,24 @@ DECLARE nombreselect INTEGER DEFAULT 0;
 DECLARE cursor_session_reload CURSOR FOR
 -- deploy list fields :'id,title,jidmachine,jid_relay,pathpackage,state,sessionid,start,startcmd,endcmd,inventoryuuid,host,user,command,group_uuid,login,macadress,syncthing,result,subdep'
 -- logs list fields :' id,date,type,module,text,fromuser,touser,action,sessionname,how,why,priority,who'
-
 SELECT DISTINCT
     `xmppmaster`.`deploy`.sessionid,
 	`xmppmaster`.`deploy`.title,
-    fs_jidusertrue( `xmppmaster`.`deploy`.jidmachine),
-    fs_jidusertrue( `xmppmaster`.`deploy`.jid_relay),
+    fs_jidusertrue(`xmppmaster`.`deploy`.jidmachine),
+    fs_jidusertrue(`xmppmaster`.`deploy`.jid_relay),
     `xmppmaster`.`logs`.text
 FROM
     xmppmaster.deploy
 JOIN
     logs ON logs.sessionname = deploy.sessionid
 WHERE
-    deploy.title  NOT like "Convergence%"
+    deploy.title NOT LIKE "Convergence%"
 	AND deploy.state = 'DEPLOYMENT START'
 	AND (NOW() BETWEEN deploy.startcmd AND deploy.endcmd)
 	AND sessionname = deploy.sessionid
 	AND ((logs.text REGEXP '^First WOL|^Second WOL|^Third WOL|.*Trying to continue deployment|Starting deployment|^Key successfully present'
-	AND logs.date < DATE_ADD(NOW(), INTERVAL - 600 SECOND))
+	AND logs.date < DATE_ADD(NOW(), INTERVAL - 600 SECOND)
+	AND logs.id IN (SELECT MAX(logs.id) FROM logs WHERE sessionname = deploy.sessionid))
 	OR (logs.text REGEXP '^Taking resource'
 	AND logs.date < DATE_ADD(NOW(), INTERVAL - 1 DAY)))
 GROUP BY deploy.sessionid limit nombre_reload;
