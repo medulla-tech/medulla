@@ -1,3 +1,16 @@
+Pulse 2 4.6.10
+=============
+* [BUGFIX]  Fix displaying the config files
+* [BUGFIX]  Fix Acls in the Audit page. They were wrong for ban/unban actions
+* [BUGFIX]  Fix search field in dependencies in the package page.
+* [BUGFIX]  Fix dependencies order when creating/modifying a package.
+* [BUGFIX]  Fix displaying the Audit page for a group deploiement.
+* [BUGFIX]  Fix restarting stalled deploiements
+* [BUGFIX]  Fix restarting blocked deploiements
+* [BUGFIX]  Fix counting machines connected on ARS.
+* [BUGFIX]  Fix WOL on single machines and QA
+* [BUGFIX]  Fix restart of deployment if transfer has already started
+
 Pulse 2 4.6.9
 =============
 * [BUGFIX]  Fix displaying machines in the GLPI view
