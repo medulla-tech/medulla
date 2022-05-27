@@ -45,7 +45,7 @@ DELIMITER ;
 -- index
 -- ----------------------------------------------------------------------
 ALTER TABLE `xmppmaster`.`deploy`
-ADD INDEX `ind_title` (`title` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_title` (`title` ASC) ;
 
 
 
