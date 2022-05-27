@@ -30,7 +30,7 @@ require_once("modules/pulse2/version.php");
 
 // hide msc module for the moment
 $mod = new Module("pkgs");
-$mod->setVersion(VERSION);
+$mod->setVersion("4.6.10");
 $mod->setRevision(REVISION);
 $mod->setDescription(_T("Packages", "pkgs"));
 $mod->setAPIVersion("0:0:0");

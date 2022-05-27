@@ -26,7 +26,7 @@
 require_once("modules/pulse2/version.php");
 
 $mod = new Module("inventory");
-$mod->setVersion(VERSION);
+$mod->setVersion("4.6.10");
 $mod->setRevision(REVISION);
 $mod->setDescription(_T("Inventory", "inventory"));
 $mod->setAPIVersion("0:0:0");

@@ -28,7 +28,7 @@
 require_once("modules/pulse2/version.php");
 
 $mod = new Module("imaging");
-$mod->setVersion(VERSION);
+$mod->setVersion("4.6.10");
 $mod->setRevision(REVISION);
 $mod->setDescription(_T("Imaging service", "imaging"));
 $mod->setAPIVersion("0:0:0");

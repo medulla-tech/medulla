@@ -25,7 +25,7 @@
 require_once("modules/pulse2/version.php");
 
 $mod = new Module("kiosk");
-$mod->setVersion("4.0");
+$mod->setVersion("4.6.10");
 $mod->setRevision('');
 $mod->setDescription(_T("kiosk", "kiosk"));
 $mod->setAPIVersion("0:0:0");

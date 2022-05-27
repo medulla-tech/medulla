@@ -27,7 +27,7 @@ require_once("modules/pulse2/version.php");
 $MMCApp =& MMCApp::getInstance();
 
 $mod = new Module("glpi");
-$mod->setVersion(VERSION);
+$mod->setVersion("4.6.10");
 $mod->setRevision(REVISION);
 $mod->setDescription(_T("GLPI Inventory", "glpi"));
 $mod->setAPIVersion("0:0:0");
