@@ -1,3 +1,22 @@
+Pulse 2 4.6.10
+=============
+
+* [CORRECTION DE BUG] Correction de l'affichage des fichiers de configuration
+* [CORRECTION DE BUG] Correction des ACLs dans la page Audit. L'affichage
+était incorrect pour les actions bannir/débannir
+* [CORRECTION DE BUG] Correction du champs recherche de dépendance dans la
+page package.
+* [CORRECTION DE BUG] Correction de l'ordre des dépendances lors de la
+création/modification d'un package.
+* [CORRECTION DE BUG] Correction de l'affichage de la page audit lors d'un
+déploiement de groupe.
+* [CORRECTION DE BUG] Correction du redémarrages des déploiements interrompus
+* [CORRECTION DE BUG] Correction du redémarrages des déploiements à l'arret
+* [CORRECTION DE BUG] Correction du comptage des machines connecté aux ARS
+* [CORRECTION DE BUG] Correction du WOL sur une machine seule et dans les QAs
+* [CORRECTION DE BUG] Correction du redémarrage des déploiements sur le
+transfert a déjà démarré.
+
 Pulse 2 4.6.9
 =============
 * [FONCTIONNALITE]    Ajout du support des Equipe dans la page Audit
