@@ -140,10 +140,11 @@ echo "<br><br><br>";
     $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ?  xmlrpc_getjidMachinefromuuid( $uuid ) : $jid);
     $ma = xmlrpc_getMachinefromjid($machine);
 
+    $jid = $ma['jid'] ? isset($ma) : $jid;
+
     if (isset($_POST["bcreate"])){
         header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/editfileconf", array()));
     }
-
 
 $param = array(
     "cn" => $_GET['cn'],
@@ -152,7 +153,10 @@ $param = array(
     "entity" => $_GET['entity'],
     "owner" => $_GET['owner'],
     "user" => $_GET['user'],
-    "os" => $_GET['os']
+    "os" => $_GET['os'],
+    "jid" => $jid,
+    "machjid" => $ma['jid'],
+    "machine" => $machine
 );
 
     $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxFilterfileconf"),"container", $param);
