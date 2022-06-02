@@ -429,6 +429,16 @@ class ImagingMenu:
         buf += 'iseq ${username} %s && iseq ${password} %s && set loaded-menu MENU || set loaded-menu MAIN\n'%(self._applyReplacement('##PXE_LOGIN##'),self._applyReplacement('##PXE_PASSWORD##'))
         buf += 'goto ${loaded-menu}\n'
 
+        buf += ':exceptions\n'
+        buf += '### The next 2 lines (I believe) override the options picked up via DHCP (i.e. options 67 etc)\n'
+        buf += '### Set 210 --&gt; configure the destination TFTP server (holding the PXELinux kernel and config files)\n'
+        buf += 'set 210:string tftp://${next-server}/bootloader/\n'
+        buf += '### Set 209 --&gt; configure the location to the GRUB-format config files in PXELinux \n'
+        buf += 'set 209:string pxelinux.cfg/localboot.cfg\n'
+        buf += '### Chain --&gt; Load the new PXELinux kernel\n'
+        buf += 'chain tftp://${next-server}/bootloader/pxelinux.0\n'
+        buf += 'goto MENU\n'
+
         for i in indices:
             if hasattr(self.menuitems[i], 'value'):
                 # the item represents a bootservice objet
