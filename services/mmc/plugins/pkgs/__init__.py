@@ -422,10 +422,11 @@ def putPackageDetail(package, need_assign=True):
     if "localisation_server" not in package or package['localisation_server']== "":
         package['localisation_server']="global"
 
-    if "creator" not in  package or package['creator'] == "":
-        package['creator']="root"
-        package['creation_date']=strdate
+    if package['creation_date'] == "" and package['edition_date'] != "":
+        package['creation_date'] = package['edition_date']
 
+    if "creator" not in  package or package['creator'] == "":
+        package['creator'] = "root"
 
     if package['creator'] == "" and package['editor'] != "":
         #package old format_exc
