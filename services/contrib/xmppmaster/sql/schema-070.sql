@@ -47,6 +47,8 @@ DELIMITER ;
 ALTER TABLE `xmppmaster`.`deploy`
 ADD INDEX IF NOT EXISTS `ind_title` (`title` ASC) ;
 
+ALTER TABLE `xmppmaster`.`agent_subscription` 
+ADD INDEX IF NOT EXISTS `ind_subs` (`name` ASC);
 
 
 -- ----------------------------------------------------------------------
