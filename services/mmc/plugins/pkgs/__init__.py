@@ -500,7 +500,7 @@ def putPackageDetail(package, need_assign=True):
     if "edition_date" not in package:
         package["edition_date"] = ""
 
-    confjson={
+    confjson = {
         "sub_packages" : [],
         "description" : package['description'],
         "entity_id" : "0",
@@ -510,7 +510,6 @@ def putPackageDetail(package, need_assign=True):
         "creator": package["creator"],
         "creation_date": package["creation_date"],
         "editor" : package["editor"] if "editor" in package else "",
-        "edition_date" : package["edition_date"] if "edition_date" in package else "",
         "edition_date" : package["edition_date"] if "edition_date" in package else "",
         "commands" :{
             "postCommandSuccess" : {"command" : "", "name" : ""},
