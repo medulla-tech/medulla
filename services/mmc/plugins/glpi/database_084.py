@@ -480,6 +480,29 @@ class Glpi084(DyngroupDatabaseHelper):
         self.group = Table("glpi_groups", self.metadata, autoload = True)
         mapper(Group, self.group)
 
+        # items contents
+        self.computersitems = Table("glpi_computers_items", self.metadata, autoload = True)
+        mapper(Computersitems, self.computersitems)
+
+        # Monitors items
+        self.monitors = Table("glpi_monitors", self.metadata,
+            autoload = True)
+        mapper(Monitors, self.monitors)
+
+        # Phones items
+        self.phones = Table("glpi_phones", self.metadata,
+            autoload = True)
+        mapper(Phones, self.phones)
+
+        # Printers items
+        self.printers = Table("glpi_printers", self.metadata,
+            autoload = True)
+        mapper(Printers, self.printers)
+
+         # Peripherals items
+        self.peripherals = Table("glpi_peripherals", self.metadata, autoload = True)
+        mapper(Peripherals, self.peripherals)
+
     ##################### internal query generators
     def __filter_on(self, query):
         """
@@ -656,7 +679,7 @@ class Glpi084(DyngroupDatabaseHelper):
             if field != "type":
                 query = query.outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
                                    Computersitems.itemtype == "Peripheral"))\
-                    .outerjoin(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+                        .outerjoin(Manufacturers, Peripherals.manufacturers_id == Manufacturers.id)
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
 
@@ -852,7 +875,7 @@ class Glpi084(DyngroupDatabaseHelper):
             if field != "type":
                 query = query.outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
                                    Computersitems.itemtype == "Peripheral"))\
-                    .outerjoin(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+                        .outerjoin(Manufacturers, Peripherals.manufacturers_id == Manufacturers.id)
         # fild always exist
         query = query.add_column(Machine.name.label("cn"))
         if uuidsetup != "" or idmachine != "":
@@ -5062,6 +5085,51 @@ class Glpi084(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getAllArchitectures(self, ctx, filt=''):
+        """ Added for compatibility with the current interface """
+        return []
+
+    def getAllNamePrinters(self, ctx, filt=''):
+        """ @return: all printer name in the GLPI database """
+        session = create_session()
+        query = session.query(Printers)
+        if filter != '':
+            query = query.filter(Printers.name.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllSerialPrinters(self, ctx, filt=''):
+        """ @return: all printer serial in the GLPI database """
+        session = create_session()
+        query = session.query(Printers)
+        if filter != '':
+            query = query.filter(Printers.serial.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllNamePeripherals(self, ctx, filt=''):
+        """ @return: all peripheral name in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(Peripherals.name.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllSerialPeripherals(self, ctx, filt=''):
+        """ @return: all peripheral serials in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(or_(Peripherals.serial.like('%' + filt + '%'),
+                                     Peripherals.name.like('%' + filt + '%')))
+        ret = query.all()
+        session.close()
+        return ret
+
     @DatabaseHelper._sessionm
     def addRegistryCollectContent(self, session, computers_id, registry_id, key, value):
         """
@@ -5524,4 +5592,19 @@ class OsVersion(DbTOA):
     pass
 
 class OCSLinks(DbTOA):
+    pass
+
+class Monitors(DbTOA):
+    pass
+
+class Phones(DbTOA):
+    pass
+
+class Printers(DbTOA):
+    pass
+
+class Computersitems(DbTOA):
+    pass
+
+class Peripherals(DbTOA):
     pass
