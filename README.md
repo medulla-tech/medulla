@@ -47,6 +47,6 @@ Read [code documentation](http://doc.siveo.net/)
 ## Community
 
 * Access community [Pulse forum](https://forum.pulse2.fr/)
-* Discuss on IRC chanel [irc.freenode.net](irc.freenode.net)
+* Discuss on IRC chanel [irc.libera.chat](irc.libera.chat)
   * Channel : #pulse-fr
   * Channel : #pulse-en
