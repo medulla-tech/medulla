@@ -2,7 +2,7 @@ Source: pulse2
 Section: admin
 Priority: extra
 Maintainer: Nicolas Lécureuil <nicolas.lecureuil@siveo.net>
-Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python3-all (>= 3.5), gettext, autotools-dev, xsltproc, docbook-xsl, docbook-xml
+Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python3-all (>= 3.9), gettext, autotools-dev, xsltproc, docbook-xsl, docbook-xml
 Standards-Version: 3.9.3
 Homepage: http://projects.mandriva.org/projects/mmc/
 X-Python-Version: >= 2.6
@@ -199,7 +199,7 @@ Description: Pulse 2 inventory plugin for MMC agent
 Package: python-mmc-glpi
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-sqlalchemy (>= 0.4), python-mysqldb (>= 1.2.1), python-pulse2-common (= ${binary:Version})
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python3-sqlalchemy (>= 0.4), python3-mysqldb (>= 1.2.1), python-pulse2-common (= ${binary:Version})
 Description: Pulse 2 GLPI plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -211,7 +211,7 @@ Description: Pulse 2 GLPI plugin for MMC agent
 Package: python-mmc-dyngroup
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-dyngroup (= ${binary:Version}), python-ipaddr (>= 2.1.10)
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-dyngroup (= ${binary:Version}), python3-ipaddr (>= 2.1.10)
 Description: Pulse 2 dyngroup plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -223,7 +223,7 @@ Description: Pulse 2 dyngroup plugin for MMC agent
 Package: python-mmc-pkgs
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-msc (= ${binary:Version}), python-requests (>= 0.12.1), python-unidecode, python-magic
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-msc (= ${binary:Version}), python3-requests (>= 0.12.1), python3-unidecode, python3-magic
 Description: Pulse 2 pkgs plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -233,7 +233,7 @@ Description: Pulse 2 pkgs plugin for MMC agent
 Package: python-mmc-imaging
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-imaging (= ${binary:Version}), python-ipaddr (>= 2.1.10)
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-imaging (= ${binary:Version}), python3-ipaddr (>= 2.1.10)
 Description: Pulse 2 imaging plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -244,7 +244,7 @@ Package: python-mmc-backuppc
 Architecture: all
 Section: python
 Pre-Depends: backuppc
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-backuppc (= ${binary:Version}), python-pyquery
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-backuppc (= ${binary:Version}), python3-pyquery
 Description: Pulse 2 BackupPC plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -275,7 +275,7 @@ Description: Pulse 2 support plugin (admin access)
 
 Package: pulse2-package-server
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common (= ${binary:Version}), genisoimage, python-mmc-base (>= 3.1.1-1), python-openssl, binutils | binutils-multiarch
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common (= ${binary:Version}), genisoimage, python-mmc-base (>= 3.1.1-1), python3-openssl, binutils | binutils-multiarch
 Description: Pulse 2 package server
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -285,7 +285,7 @@ Description: Pulse 2 package server
 
 Package: pulse2-scheduler
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-msc (= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-openssl
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-msc (= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python3-openssl
 Description: Pulse 2 software deployment scheduling service
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -296,7 +296,7 @@ Description: Pulse 2 software deployment scheduling service
 
 Package: pulse2-cm
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-openssl
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-openssl
 Description: Pulse 2 Connection Manager
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -413,7 +413,7 @@ Description: Pulse 2 UUID resolver
 
 Package: pulse2-dlp-server
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-cherrypy3, python-pulse2-common (= ${binary:Version})
+Depends: ${misc:Depends}, ${python:Depends}, python3-cherrypy3, python-pulse2-common (= ${binary:Version})
 Description: Pulse 2 Download provider service
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -423,7 +423,7 @@ Description: Pulse 2 Download provider service
 
 Package: pulse2-register-pxe
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-cherrypy3, python-pulse2-common (= ${binary:Version}), python-pyinotify, python-magic
+Depends: ${misc:Depends}, ${python:Depends}, python-cherrypy3, python-pulse2-common (= ${binary:Version}), python3-pyinotify, python3-magic
 Description: Pulse 2 Register PXE Service
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -431,7 +431,7 @@ Description: Pulse 2 Register PXE Service
 Package: python-mmc-xmppmaster
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4), python-sleekxmpp, python-geoip, python-dnspython, geoip-database-contrib, python-croniter
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python3-sqlalchemy (>= 0.4), python3-slixmmp, python3-geoip, python3-dnspython, geoip-database-contrib, python3-croniter
 Description: Pulse 2 MMC agent plugins
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -451,7 +451,7 @@ Description: Pulse 2 GLPI computer group plugin for MMC web interface
 Package: python-mmc-guacamole
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4)
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python3-sqlalchemy (>= 0.4)
 Description: Pulse 2 MMC agent plugins
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -480,7 +480,7 @@ Description: Pulse 2 MMC agent plugins
 Package: python-mmc-core
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python3-twisted, python-memory-profiler
+Depends: ${misc:Depends}, ${python:Depends}, python3-twisted, python3-memory-profiler
 Suggests: python-sqlalchemy (>= 0.5), python-mysqldb (>= 1.2.2-7)
 Description: Core shared dependency for MMC API
  Contains base functions used by MMC.
@@ -506,34 +506,34 @@ Description: Management Console password policy plugin
 Package: python-mmc-dashboard
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-psutil (>= 0.6.1)
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python3-psutil (>= 0.6.1)
 Description: Management Console dashboard plugin
  Provides a simple dashboard in MMC.
 
 Package: python-mmc-services
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-systemd-dbus (>= 0.1), systemd
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python3-systemd-dbus (>= 0.1), systemd
 Description: Management Console systemd services plugin
  Handles system services through systemd.
 
 Package: python-mmc-database
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-sqlalchemy (>= 0.7), python-mysqldb
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python3-sqlalchemy (>= 0.7), python3-mysqldb
 Description: Management Console database common files
  Allow the use of SQL databases within MMC framework.
 
 Package: python-mmc-report
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-mmc-database (= ${source:Version}), python-pygal, python-weasyprint, python-xlwt
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-mmc-database (= ${source:Version}), python3-pygal, python3-weasyprint, python3-xlwt
 Description: Generate reports within MMC framework
  Module to generate reports for other modules.
 
 Package: mmc-agent
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-openssl | python-pyopenssl, python (>= 2.6) | python-multiprocessing, ldap-utils, python-gobject (>= 2.21.4)
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python3-openssl | python3-pyopenssl, python3 (>= 3.9), ldap-utils
 Description: Management Console Agent
  XMLRPC server of the MMC API.
 
