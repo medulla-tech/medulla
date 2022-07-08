@@ -52,7 +52,6 @@ endif
 ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
-	sed -i 's/site-packages/dist-packages/g' configure
 	PYTHON=python3 ./configure --host=$(DEB_HOST_GNU_TYPE) \
 		    --build=$(DEB_BUILD_GNU_TYPE) \
 		    --prefix=/usr \
@@ -60,6 +59,7 @@ endif
 		    --localstatedir=/var \
 		    --disable-python-check \
 		    --disable-silent-rules \
+		    --disable-wol \
 		    CFLAGS="$(CFLAGS) $(CPPFLAGS)" \
 		    LDFLAGS="$(LDFLAGS)"
 
