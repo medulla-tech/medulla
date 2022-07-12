@@ -101,7 +101,7 @@ end;
 DELIMITER ;
 
 ALTER TABLE `xmppmaster`.`def_remote_deploy_status` ADD UNIQUE INDEX `uniqreg` (`regex_logmessage` ASC);
-INSERT INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*hash invalid.*', 'ABORT HASH INVALID', 'aborthashinvalid');
+INSERT IGNORE INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*hash invalid.*', 'ABORT HASH INVALID', 'aborthashinvalid');
 
 -- ----------------------------------------------------------------------
 -- Database version
