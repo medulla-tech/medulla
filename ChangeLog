@@ -1,9 +1,15 @@
+* [BUGFIX]  Fix diplay of config files
+* [BUGFIX]  Support Optiplex 3050 in iPXE
+
 Pulse 2 4.6.10
 =============
 * [BUGFIX]  Fix displaying machines in the GLPI view
 * [BUGFIX]  Fix displaying of teams in Audit
 * [BUGFIX]  Fix displaying package order when editing a package
 * [BUGFIX]  Fix deleting machines not available in glpi
+* [BUGFIX]  Fix creation of the reversessh in backuppc
+* [BUGFIX]  Fix removing computers not on glpi anymore
+* [BUGFIX]  Fix computer default name in sysprep configuration page
 
 Pulse 2 4.6.9
 =============

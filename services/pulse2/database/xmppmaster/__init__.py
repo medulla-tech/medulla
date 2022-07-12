@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net/
+# (c) 2016-2021 siveo, http://www.siveo.net/
 #
 # $Id$
 #
@@ -322,6 +322,31 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(str(e))
             self.logger.error("\n%s" % (traceback.format_exc()))
+
+    @DatabaseHelper._sessionm
+    def update_count_subscription(self,
+                                  session,
+                                  agentsubtitutename,
+                                  countroster):
+        logging.getLogger().debug("update_count_subscription %s" % agentsubtitutename)
+        try:
+            result = session.query(Substituteconf).filter(Substituteconf.jidsubtitute == agentsubtitutename).all()
+            first_value = True
+            for t in result:
+                logging.getLogger().debug("countsub %s->%s ars %s" % (t.countsub,
+                                                                      t.jidsubtitute,
+                                                                      t.relayserver_id))
+                if first_value:
+                    first_value = False
+                    t.countsub = countroster
+                else:
+                    t.countsub = 0
+            session.commit()
+            session.flush()
+            return True
+        except Exception, e:
+            logging.getLogger().error("update_count_subscription %s" % str(e))
+            return False
 
     @DatabaseHelper._sessionm
     def update_enable_for_agent_subscription(self,
@@ -3522,6 +3547,8 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentpending': 0,
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
+                   'errorhashmissing': 0,
+                   'aborthashinvalid': 0,
                    'otherstatus': 0,
                   }
             dynamic_status_list = self.get_log_status()
@@ -3586,6 +3613,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['deploymentpending'] = liststatus[t]
                 elif t == 'DEPLOYMENT DELAYED':
                     ret['deploymentdelayed'] = liststatus[t]
+                elif t == 'ERROR HASH MISSING':
+                    ret['errorhashmissing'] = liststatus[t]
+                elif t == 'ABORT HASH INVALID':
+                    ret['aborthashinvalid'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
@@ -3641,6 +3672,8 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentpending': 0,
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
+                   'errorhashmissing': 0,
+                   'aborthashinvalid': 0,
                    'otherstatus': 0,
                   }
             dynamic_status_list = self.get_log_status()
@@ -3705,6 +3738,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['deploymentpending'] = liststatus[t]
                 elif t == 'DEPLOYMENT DELAYED':
                     ret['deploymentdelayed'] = liststatus[t]
+                elif t == 'ERROR HASH MISSING':
+                    ret['errorhashmissing'] = liststatus[t]
+                elif t == 'ABORT HASH INVALID':
+                    ret['aborthashinvalid'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
@@ -6726,31 +6763,58 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def substituteinfo(self, session, listconfsubstitute, arsname):
         """
-            search  subtitute agent jid for agent machine
+           cette fonction crée les listes ordonnée de substitut pour configure les machines.
+           pour assure le load balancing sur les différents substituts elle utilise la somme totale de chaque substitut. et attribut celui le moin utilise.
+           Elle tient compte des ars associe au substitut.
+           Si la machine a 1 ars, les substitut agrege au ars sont participant.
         """
         try:
-            exclud = 'master@pulse'
+            excluded_ars = 'master@pulse'
 
             incrementeiscount=[]
-            for t in listconfsubstitute['conflist']:
-                result = session.query(Substituteconf.id.label("id"),
-                                       Substituteconf.jidsubtitute.label("jidsubtitute"),
-                                       Substituteconf.countsub.label("countsub"),
-                                       RelayServer.jid.label("namerelayser")).\
-                    join(RelayServer, Substituteconf.relayserver_id == RelayServer.id).\
-                        filter( and_(not_(Substituteconf.jidsubtitute.like(exclud)),
-                                    Substituteconf.type.like(t),
-                                    RelayServer.jid == arsname)).order_by(Substituteconf.countsub).all()
-                listcommand = []
-                test = False
-                for y in result:
-                    listcommand.append(y.jidsubtitute)
-                    if not test:
-                        test = True
-                        incrementeiscount.append(str(y.id))
-                listcommand.append(exclud)
-                listconfsubstitute[t] = listcommand
-            if incrementeiscount:
+            for substituteinfo in listconfsubstitute['conflist']:
+                try:
+                    sql="""SELECT
+                                substituteconf.id AS id,
+                                substituteconf.jidsubtitute AS jidsubtitute,
+                                substituteconf.countsub AS countsub,
+                                substituteconf.type AS type,
+                                relayserver.jid AS namerelayser,
+                                SUM(substituteconf.countsub) AS totsub
+                            FROM
+                                substituteconf
+                                    JOIN
+                                relayserver ON substituteconf.relayserver_id = relayserver.id
+                            WHERE
+                                substituteconf.jidsubtitute NOT LIKE '%s'
+                                    AND substituteconf.type LIKE '%s'
+                                    AND (substituteconf.jidsubtitute IN (SELECT
+                                        substituteconf.jidsubtitute
+                                    FROM
+                                        substituteconf
+                                    WHERE
+                                        substituteconf.relayserver_id = (SELECT
+                                                id
+                                            FROM
+                                                relayserver
+                                            WHERE
+                                                relayserver.jid LIKE '%s')))
+                            GROUP BY substituteconf.jidsubtitute
+                            ORDER BY totsub;""" % (excluded_ars, substituteinfo, arsname)
+                    resultproxy = session.execute(sql)
+                    listcommand = []
+                    infsub = [{"id":x[0], "sub": x[1] , "totalcount": int(x[5])} for x in resultproxy]
+                    self.logger.debug("%s -> %s" % (substituteinfo, infsub))
+                    if infsub:
+                        incrementeiscount.append(str(infsub[0]['id']))
+                    for t in infsub:
+                        listcommand.append(t['sub'])
+                    listcommand.append(exclud)
+                    listconfsubstitute[substituteinfo] = listcommand
+                except Exception as e:
+                    self.logger.error("\n%s" % traceback.format_exc())
+
+            if len(incrementeiscount) != 0:
                 # update contsub
                 sql="""UPDATE `xmppmaster`.`substituteconf`
                     SET
@@ -6759,9 +6823,9 @@ class XmppMasterDatabase(DatabaseHelper):
                         `id` IN (%s);""" % ','.join([x for x in incrementeiscount])
                 result = session.execute(sql)
                 session.commit()
-                session.flush()
         except Exception, e:
             logging.getLogger().error("substituteinfo : %s" % str(e))
+        logging.getLogger().debug("substitute list : %s" % listconfsubstitute)
         return listconfsubstitute
 
     @DatabaseHelper._sessionm
@@ -7020,7 +7084,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def update_status_waiting_for_deploy_on_machine_restart_or_stop(self, session):
         """
-            We select the machines in a stalled deploiement for more than 60 seconds in the 
+            We select the machines in a stalled deploiement for more than 60 seconds in the
             WAITING MACHINE ONLINE state.
         """
         try:
@@ -8208,7 +8272,7 @@ class XmppMasterDatabase(DatabaseHelper):
             for machine in query:
                 flag = False
                 for count_ars in counts:
-                    if machine.jid == count_ars["jid"]:
+                    if machine.jid_from_relayserver == count_ars["jid"]:
                         flag = True
                         break
                 if flag == True:
@@ -9583,10 +9647,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.flush()
         return [i[0].lower() for i in result]
 
+
     @DatabaseHelper._sessionm
     def _rule_monitoring(self,
                          session,
+                         hostname_machine,
                          hostname,
+                         id_machine,
+                         platform,
+                         agenttype,
                          mon_machine_id,
                          device_type,
                          serial,
@@ -9595,36 +9664,37 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                          alarm_msg,
                          doc,
                          localrule=True):
-        if localrule:
-            sql = ''' SELECT
-                        *
-                    FROM
-                        xmppmaster.mon_rules
-                    WHERE
-                        hostname LIKE '%s'
-                            AND device_type LIKE '%s';''' % (hostname,
-                                                        device_type)
-        else:
-            sql = ''' SELECT
-                        *
-                    FROM
-                        xmppmaster.mon_rules
-                    WHERE
-                        device_type LIKE '%s';''' % (device_type)
+        result = None
+        sql = ''' SELECT
+                    *
+                FROM
+                    xmppmaster.mon_rules
+                WHERE
+                    enable = 1 AND
+                    ('%s' REGEXP hostname or NULLIF(hostname, "") is null) AND
+                    ('%s' REGEXP os or NULLIF(os, "") is null) AND
+                    (type_machine like '%s' or NULLIF(type_machine, "") is Null ) AND
+                    device_type LIKE '%s';''' % (hostname_machine,
+                                                         platform,
+                                                         agenttype,
+                                                         device_type)
         #logging.getLogger().debug("sql %s"%sql)
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [{'id': i[0],
-                 'hostname': i[1],
-                 'device_type': i[2],
-                 "binding": i[3],
-                 "succes_binding_cmd": i[4],
-                 "no_success_binding_cmd": i[5],
-                 "error_on_binding": i[6],
-                 "type_event": i[7],
-                 "user": i[8],
-                 "comment": i[9]} for i in result]
+        if result:
+            return [{'id': i[0],
+                    'hostname': i[2],
+                    'device_type': i[3],
+                    "binding": i[4],
+                    "succes_binding_cmd": i[5],
+                    "no_success_binding_cmd": i[6],
+                    "error_on_binding": i[7],
+                    "type_event": i[8],
+                    "user": i[9],
+                    "comment": i[10]} for i in result]
+        else:
+            return[]
 
     @DatabaseHelper._sessionm
     def analyse_mon_rules(self,

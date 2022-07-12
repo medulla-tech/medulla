@@ -33,6 +33,8 @@ import json
 import tempfile
 import urllib2
 import re
+from Crypto.Hash import SHA256
+import hashlib
 from contextlib import closing
 from ConfigParser import ConfigParser
 from base64 import b64encode, b64decode
@@ -407,6 +409,61 @@ def parsexmppjsonfile(path):
     datastr = re.sub(r"(?i) *: *true", " : true", datastr)
     file_put_contents(path, datastr)
 
+def generate_hash(path, package_id):
+    source = "/var/lib/pulse2/packages/sharing/" + path + "/" + package_id
+    dest = "/var/lib/pulse2/packages/hash/" + path + "/" + package_id
+    BLOCK_SIZE = 65535
+
+    if PkgsConfig("pkgs").hashing_algo:
+        hash_type = PkgsConfig("pkgs").hashing_algo
+
+    try:
+        file_hash = hashlib.new(hash_type)
+    except:
+        logging.error("Wrong hash type")
+
+    if not os.path.exists(dest):
+        os.makedirs(dest)
+
+    source_file = os.listdir(source)
+
+    for file_package in sorted(source_file):
+        with open(source + "/" + file_package, "rb") as _file:
+            try:
+                file_hash = hashlib.new(hash_type)
+            except:
+                logging.error("Wrong hash type")
+            file_block = _file.read(BLOCK_SIZE) # Read from the file. Take in the amount declared above
+            while len(file_block) > 0: # While there is still data being read from the file
+                file_hash.update(file_block) # Update the hash
+                file_block = _file.read(BLOCK_SIZE) # Read the next block from the file
+
+        try:
+            with open(dest + "/" + file_package + ".hash", 'wb') as _file:
+                _file.write(file_hash.hexdigest())
+        except:
+            logger.debug("The 'docs' directory does not exist")
+
+    #FOREACH FILES IN DEST IN ALPHA ORDER AND ADD KEY AES32, CONCAT AND HASH
+    content = ""
+    if PkgsConfig("pkgs").keyAES32:
+        salt = PkgsConfig("pkgs").keyAES32
+    filelist = os.listdir(dest)
+    for file_package in sorted(filelist):
+        with open(dest + "/" + file_package, "rb") as infile:
+            content += infile.read()
+
+    content += salt
+    try:
+        file_hash = hashlib.new(hash_type)
+    except:
+        logging.error("Wrong hash type")
+    file_hash.update(content)
+    content = file_hash.hexdigest()
+
+    with open(dest + ".hash", 'wb') as outfile:
+        outfile.write(content)
+
 def putPackageDetail(package, need_assign=True):
     """
         This function is used to create or edite a package
@@ -427,13 +484,14 @@ def putPackageDetail(package, need_assign=True):
         return False
 
     # ___ try compability with old packages ___
-    if "localisation_server" not in  package:
+    if "localisation_server" not in package or package['localisation_server']== "":
         package['localisation_server']="global"
 
-    if "creator" not in  package:
-        package['creator']="root"
-        package['creation_date']=strdate
+    if package['creation_date'] == "" and package['edition_date'] != "":
+        package['creation_date'] = package['edition_date']
 
+    if "creator" not in  package or package['creator'] == "":
+        package['creator'] = "root"
 
     if package['creator'] == "" and package['editor'] != "":
         #package old format_exc
@@ -499,7 +557,10 @@ def putPackageDetail(package, need_assign=True):
     if "edition_date" not in package:
         package["edition_date"] = ""
 
-    confjson={
+    if bool(PkgsConfig("pkgs").generate_hash):
+        generate_hash(package['localisation_server'], package["id"])
+
+    confjson = {
         "sub_packages" : [],
         "description" : package['description'],
         "entity_id" : "0",
@@ -509,7 +570,6 @@ def putPackageDetail(package, need_assign=True):
         "creator": package["creator"],
         "creation_date": package["creation_date"],
         "editor" : package["editor"] if "editor" in package else "",
-        "edition_date" : package["edition_date"] if "edition_date" in package else "",
         "edition_date" : package["edition_date"] if "edition_date" in package else "",
         "commands" :{
             "postCommandSuccess" : {"command" : "", "name" : ""},
@@ -583,20 +643,36 @@ def putPackageDetail(package, need_assign=True):
             PkgsDatabase().pkgs_register_synchro_package_multisharing(package,
                                                                   typesynchro )
     else:
+        pkgs_shares = PkgsDatabase().pkgs_sharing_admin_profil()
+        pkgs_share_id = 0
+        for share in pkgs_shares:
+            if share['name'] != package['localisation_server']:
+                continue
+            else:
+                pkgs_share_id = share['id_sharing']
+                package['shareobject'] = share
+                break
+
+        pkgs_share_id = share['id_sharing']
         pkgs_register_synchro_package(package['id'],
                                       typesynchro )
-        pkgmanage().add_package(confjson)
+
+        pkgmanage().add_package(confjson, pkgs_share_id)
 
     # write file to package directory
     with open( os.path.join(packages_id_input_dir,"conf.json"), "w" ) as outfile:
         json.dump(confjson, outfile, indent = 4)
+
+    logger.warning(PkgsConfig("pkgs").generate_hash)
 
     result = package
     package['postCommandSuccess'] = {"command" : "", "name" : ""}
     package['installInit'] = {"command" : "", "name" : ""},
     package['postCommandFailure'] = {"command" : "", "name" : ""}
     package['preCommand'] =  {"command" : "", "name" : ""}
+
     result = [True, package['id'], packages_id_input_dir, package]
+
     return result
 
 def pkgs_getTemporaryFiles():
