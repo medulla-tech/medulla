@@ -205,6 +205,11 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
  */
 
 $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
+
+if(!isset($json['info']['creator']) || $json['info']['creator'] == ""){
+  $json['info']['creator'] = 'root';
+}
+
 // display an edit package form (description, version, ...)
 $f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
 $f->push(new Table());

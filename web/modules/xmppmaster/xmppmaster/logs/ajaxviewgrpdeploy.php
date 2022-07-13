@@ -452,6 +452,8 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>"._T("Error Hash Missing","xmppmaster")."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>"._T("Abort Hash Invalid","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
         foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
@@ -482,6 +484,8 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>".$wol2."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>".$errorhashmissing."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>".$aborthashinvalid."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
         foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
@@ -528,6 +532,8 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>"._T("Error Hash Missing","xmppmaster")."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>"._T("Abort Hash Invalid","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
         foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
@@ -558,6 +564,8 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>".$wol2."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>".$errorhashmissing."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>".$aborthashinvalid."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
         foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
@@ -816,6 +824,12 @@ function fillSearch(content){
     if ($errorunknownerror > 0){
         echo 'datas.push({"label":"Error Unknown Error ", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
+    if ($errorhashmissing > 0){
+        echo 'datas.push({"label":"Error Hash Missing ", "value":parseInt('.$errorhashmissing.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorhashmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($aborthashinvalid > 0){
+        echo 'datas.push({"label":"Abort Hash Invalid ", "value":parseInt('.$aborthashinvalid.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("aborthashinvalid",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
     if ($otherstatus > 0){
         echo 'datas.push({"label":"Other Status ", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
@@ -906,6 +920,12 @@ function fillSearch(content){
     }
     if ($errorunknownerror > 0){
         echo 'datas2.push({"label":"Error Unknown Error ", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "onclick":"fillSearch", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($errorhashmissing > 0){
+        echo 'datas2.push({"label":"Error Hash Missing ", "value":parseInt('.$errorhashmissing.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorhashmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($aborthashinvalid > 0){
+        echo 'datas2.push({"label":"Abort Hash Invalid ", "value":parseInt('.$aborthashinvalid.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("aborthashinvalid",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($otherstatus > 0){
         echo 'datas2.push({"label":"Other Status ", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "onclick":"fillSearch", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';

@@ -429,15 +429,8 @@ def normalizeMACAddressForPXELINUX(mac):
     @return: the MAC address normalized for PXELINUX (uses - as separator)
     """
     assert isMACAddress(mac)
-    macaddress = "-".join(
-        [
-            x_y1[0] + x_y1[1]
-            for x_y1 in zip(
-                reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]
-            )
-        ]
-    )  # any questions ?
-    return "01-" + macaddress.lower()
+    macaddress = '-'.join(map(lambda (x, y): x + y, zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]))) # any questions ?
+    return macaddress.lower()
 
 
 def macToNode(mac):

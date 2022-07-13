@@ -3,11 +3,11 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2017 Siveo, http://http://www.siveo.net
+ * (c) 2017-2022 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,6 +55,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $params['background_uri'] = $_POST['boot_xpm'];
         $params['message'] = $_POST['boot_msg'];
         $params['language'] = $_POST['language'];
+        $params['pxe_login'] = $_POST['pxe_login'];
         if ($_POST['pxe_password'] != $_POST['old_pxe_password'])
             $params['pxe_password'] = $_POST['pxe_password'];
         $params['clonezilla_saver_params'] = $_POST['clonezilla_saver_params'];

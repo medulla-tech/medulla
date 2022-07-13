@@ -2,10 +2,11 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007 Mandriva, http://www.mandriva.com/
+# (c) 2022 Siveo, http://siveo.net
 #
 # $Id$
 #
-# This file is part of Mandriva Management Console (MMC).
+# This file is part of Management Console (MMC).
 #
 # MMC is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1863,6 +1864,9 @@ class ImagingRpcProxy(RpcProxyI):
     def getClonezillaRestorerParams(self, location_uuid):
         return ImagingDatabase().getClonezillaRestorerParams(location_uuid)
 
+    def getPXELogin(self, location_uuid):
+        return ImagingDatabase().getPXELogin(location_uuid)
+
     def getPXEPasswordHash(self, location_uuid):
         return ImagingDatabase().getPXEPasswordHash(location_uuid)
 
@@ -2576,8 +2580,9 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             ret, target = db.setMyMenuTarget(uuid, params, target_type)
             db.changeTargetsSynchroState([uuid], target_type, P2ISS.TODO)
-        except Exception as e:
-            return [False, "setMyMenuTarget : %s" % str(e)]
+        except Exception:
+            msg = "Please make sure that an item is set as default for normal boot and for WOL boot"
+            return [False, msg]
 
         if not isRegistered:
             # send the menu to the good imaging server to register the computer
@@ -3877,6 +3882,7 @@ class ImagingRpcProxy(RpcProxyI):
             return {}
         params = {}
         params["pxe_keymap"] = location.pxe_keymap
+        params["pxe_login"] = location.pxe_login
         params["pxe_password"] = location.pxe_password
         return xmlrpcCleanup(params)
 

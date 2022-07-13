@@ -92,7 +92,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />'._T("Set timeout","pkgs").'
+                    }" />'._T("Set timeout (in seconds)","pkgs").'
                 </td>
                 <td>
                     <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
@@ -107,7 +107,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />'._T("Set timeout","pkgs").'
+                    }" />'._T("Set timeout (in seconds)","pkgs").'
                 </td>
                 <td>
                     <input type="number" min="0" value="800"  name="timeout"  />

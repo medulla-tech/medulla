@@ -1,10 +1,11 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2007-2010 Mandriva, http://www.mandriva.com/
+# (c) 2022 Siveo, http://siveo.net
 #
 # $Id$
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://siveo.net
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -163,6 +164,7 @@ class Imaging(object, metaclass=SingletonN):
 
     def refreshPXEParams(self, callback=None, *args, **kw):
         def _success(params):
+            PackageServerConfig().pxe_login = params["pxe_login"]
             PackageServerConfig().pxe_password = params["pxe_password"]
             PackageServerConfig().pxe_keymap = params["pxe_keymap"]
             if callback:
