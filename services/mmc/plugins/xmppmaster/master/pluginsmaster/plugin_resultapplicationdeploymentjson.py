@@ -23,10 +23,8 @@
 # file pluginsmaster/plugin_resultapplicationdeploymentjson.py
 
 
-import json
 import logging
 import traceback
-import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
 logger = logging.getLogger()

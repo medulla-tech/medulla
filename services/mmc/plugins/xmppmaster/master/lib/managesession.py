@@ -21,7 +21,6 @@
 import glob
 import os
 import json
-import pprint
 import logging
 
 logger = logging.getLogger()

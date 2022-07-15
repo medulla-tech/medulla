@@ -23,7 +23,6 @@
 # file pluginsmaster/plugin_resultdownloadfile.py
 
 from mmc.plugins.xmppmaster.master.lib.utils import (
-    pluginmaster,
     pluginmastersessionaction,
 )
 import base64

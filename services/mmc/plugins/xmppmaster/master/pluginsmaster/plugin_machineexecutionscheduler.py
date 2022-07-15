@@ -25,12 +25,9 @@ this plugin check status of deploy
 if deploy is pause, run, abandonned
 
 """
-import base64
 import json
-import os
 import sys
 import mmc.plugins.xmppmaster.master.lib.utils
-import pprint
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
 import logging

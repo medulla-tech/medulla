@@ -23,8 +23,6 @@
 # file pluginsmaster/plugin_asynchroremoteQA.py
 
 import logging
-import traceback
-import sys
 import json
 
 plugin = {"VERSION": "1.0", "NAME": "asynchroremoteQA", "TYPE": "master"}

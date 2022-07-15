@@ -27,7 +27,6 @@ from mmc.plugins.xmppmaster.master.lib.utils import getRandomName
 import types
 import configparser
 from pulse2.database.xmppmaster import XmppMasterDatabase
-from sleekxmpp import jid
 import time
 
 logger = logging.getLogger()

@@ -23,25 +23,18 @@
 # file pluginsmaster/plugin_downloadfile.py
 
 
-import base64
 import json
-import os
 import sys
 from mmc.plugins.xmppmaster.master.lib.utils import (
     simplecommand,
     file_get_content,
     file_put_content,
 )
-import pprint
 import logging
 
 import traceback
 
-import datetime
-import configparser
-
 from pulse2.database.xmppmaster import XmppMasterDatabase
-from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 plugin = {"VERSION": "1.0", "NAME": "downloadfileexpert", "TYPE": "master"}
 

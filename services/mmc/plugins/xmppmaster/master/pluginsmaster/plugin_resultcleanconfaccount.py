@@ -23,14 +23,9 @@
 # file /pluginsmaster/plugin_resultcleanconfaccount.py
 
 import logging
-import traceback
-import sys
-import json
 from mmc.plugins.xmppmaster.master.lib.utils import (
     simplecommandstr,
-    file_get_content,
-    file_put_content,
-)
+    )
 
 logger = logging.getLogger()
 
