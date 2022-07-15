@@ -46,8 +46,7 @@ from sqlalchemy import (
     ForeignKeyConstraint,
     MetaData,
     create_engine,
-    func,
-)
+    )
 
 from mmc.core.audit.classes import (
     Record,

@@ -25,7 +25,6 @@ MMC Dyngroup Backend plugin
 It provide an API to work with the informations in the Dyngroup database.
 It also provide access to the QueryManager API
 """
-import os
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 
@@ -44,8 +43,6 @@ from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base import LdapUserGroupControl
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.profile import ComputerProfileManager
-
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 # health check
 from mmc.plugins.dyngroup.health import scheduleCheckStatus

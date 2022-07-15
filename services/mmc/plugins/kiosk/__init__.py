@@ -25,20 +25,15 @@
 Plugin to manage the interface with Kiosk
 """
 import logging
-import json
 import uuid
 import os
 import base64
 import re
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
-
-from mmc.support.config import PluginConfig, PluginConfigFactory
+from mmc.support.config import PluginConfigFactory
 from mmc.plugins.kiosk.config import KioskConfig
 from mmc.plugins.kiosk.TreeOU import TreeOU
-from mmc.plugins.base import ComputerI
 from mmc.plugins.base.config import BasePluginConfig
-from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
 
 
@@ -52,7 +47,7 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 
 # lib coparaison de version
-from distutils.version import LooseVersion, StrictVersion
+from distutils.version import LooseVersion
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"

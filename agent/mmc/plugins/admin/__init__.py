@@ -21,14 +21,10 @@
 # MA 02110-1301, USA.
 
 import logging
-
-# Au cas où on souhaite appeler des configs d'autres modules
-from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.admin.config import AdminConfig
 
 # import pour la database
 from pulse2.database.admin import AdminDatabase
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"

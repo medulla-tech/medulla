@@ -21,7 +21,6 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from mmc.support.mmctools import shLaunchDeferred
 
 # def sysPing(ip, port = 22):
 # """

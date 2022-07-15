@@ -85,9 +85,6 @@ from twisted.internet import defer
 import hashlib
 
 _digest = hashlib.sha1
-
-
-from twisted.internet import reactor
 from mmc.core.tasks import TaskManager
 from time import strftime
 import gc

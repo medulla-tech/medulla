@@ -61,17 +61,12 @@ import glob
 import time
 import pwd
 import grp
-import string
 import threading
 import re
 import zipfile
-from stat import ST_CTIME
-import slixmpp
 import traceback
-import types
 import time
 import sys
-import hashlib
 
 import random
 
