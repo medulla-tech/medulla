@@ -28,9 +28,7 @@
 
 from pulse2.package_server.utilities import md5sum
 import pulse2.package_server.common
-import urllib.request
 import urllib.parse
-import urllib.error
 import locale
 
 

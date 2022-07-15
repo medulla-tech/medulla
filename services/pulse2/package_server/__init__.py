@@ -33,16 +33,12 @@ from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 
-# from pulse2.package_server.imaging.tftp_server import ImagingTFTPServer
 import pulse2.utils
 
 from threading import Thread
 from twisted.internet import task
 from twisted.internet import utils
 from twisted.internet import defer
-
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
-
 
 class ThreadPackageHelper(Thread):
     def __init__(self, config):

@@ -1,11 +1,10 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
+# (c) 2021-2022 Siveo, http://www.siveo.net
 #
 # $Id$
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net/
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,9 +22,6 @@
 # MA 02110-1301, USA.
 
 # uses SA to handle sessions
-# file : pkgs_agent/lib/plugins/pkgs/orm/pkgs_rules_algos.py
-
-import logging
 
 """ Class to map pkgs.pkgs_rules_algos to SA
 """
@@ -39,26 +35,26 @@ class Pkgs_rules_algos(object):
     def getId(self):
         if self.id is not None:
             return self.id
-        else:
-            return 0
+
+        return 0
 
     def getName(self):
         if self.name is not None:
             return self.name
-        else:
-            return -1
+
+        return -1
 
     def getDescription(self):
         if self.description is not None:
             return self.description
-        else:
-            return ""
+
+        return ""
 
     def getLevel(self):
         if self.level is not None:
             return self.level
-        else:
-            return ""
+
+        return ""
 
     def to_array(self):
         return {

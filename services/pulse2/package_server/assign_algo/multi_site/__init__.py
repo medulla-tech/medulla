@@ -27,10 +27,7 @@
 """
 
 import logging
-from twisted.internet import defer
 from pulse2.package_server.assign_algo import MMAssignAlgo
-from urllib.parse import urlparse
-from pulse2.package_server.imaging.api.functions import Imaging
 from pulse2.package_server.types import Machine
 import random
 

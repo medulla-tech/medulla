@@ -1,11 +1,10 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
+# (c) 2021-2022 Siveo, http://www.siveo.net/
 #
 # $Id$
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net/
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,60 +23,58 @@
 
 # uses SA to handle sessions
 
-# file : orm/pkgs_shares_ars_web.py
-
-import logging
-
-""" Class to map pkgs.pkgs_shares_ars_web to SA
+""" 
+    Class to map pkgs.pkgs_shares_ars_web to SA
 """
 
 
 class Pkgs_shares_ars_web(object):
-    """Mapping between pkgs.pkgs_shares_ars_web and SA
+    """
+    Mapping between pkgs.pkgs_shares_ars_web and SA
     colunm table: 'id,ars_share_id,packages_id,status,finger_print,size,date_edition'
     """
 
     def getId(self):
         if self.id is not None:
             return self.id
-        else:
-            return 0
+
+        return 0
 
     def getArs_share_id(self):
         if self.ars_share_id is not None:
             return self.ars_share_id
-        else:
-            return -1
+
+        return -1
 
     def getPackages_id(self):
         if self.packages_id is not None:
             return self.packages_id
-        else:
-            return ""
+
+        return ""
 
     def getStatus(self):
         if self.status is not None:
             return self.status
-        else:
-            return ""
+
+        return ""
 
     def getFinger_print(self):
         if self.finger_print is not None:
             return self.finger_print
-        else:
-            return ""
+
+        return ""
 
     def getSize(self):
         if self.size is not None:
             return self.size
-        else:
-            return 0
+
+        return 0
 
     def getEdition_date(self):
         if self.date_edition is not None:
             return self.date_edition
-        else:
-            return ""
+
+        return ""
 
     def to_array(self):
         return {

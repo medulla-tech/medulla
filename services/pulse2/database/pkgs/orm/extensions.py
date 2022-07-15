@@ -1,8 +1,8 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2013 Mandriva, http://www.mandriva.com/
+# (c) 2019-2012 Siveo, http://www.siveo.net/
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net/
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,76 +19,72 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging
-from sqlalchemy.orm import create_session
-
-
 class Extensions(object):
     def getId(self):
         if self.id is not None:
             return self.id
-        else:
-            return 0
+
+        return 0
 
     def getRule_order(self):
         if self.rule_order is not None:
             return self.rule_order
-        else:
-            return 0
+
+        return 0
 
     def getRule_name(self):
         if self.rule_name is not None:
             return self.rule_name
-        else:
-            return ""
+
+        return ""
 
     def getName(self):
         if self.name is not None:
             return self.name
-        else:
-            return ""
+
+        return ""
 
     def getExtension(self):
         if self.extension is not None:
             return self.extension
-        else:
-            return ""
+
+        return ""
 
     def getMagic_command(self):
         if self.magic_command is not None:
             return self.magic_command
-        else:
-            return ""
+
+        return ""
 
     def getBang(self):
         if self.bang is not None:
             return self.bang
-        else:
-            return ""
+
+        return ""
 
     def getFile(self):
         if self.file is not None:
             return self.file
-        else:
-            return ""
+
+        return ""
 
     def getStrings(self):
         if self.strings is not None:
             return self.strings
-        else:
-            return ""
+
+        return ""
 
     def getProposition(self):
         if self.proposition is not None:
             return self.proposition
-        else:
-            return ""
+
+        return ""
 
     def getDescription(self):
         if self.description is not None:
             return self.description
-        else:
-            return ""
+
+        return ""
 
     def to_array(self):
         return {
@@ -103,4 +99,5 @@ class Extensions(object):
             "strings": self.getStrings(),
             "proposition": self.getProposition(),
             "description": self.getDescription(),
-        }
+        }services/pulse2/database/pkgs/orm/extensions.py
+

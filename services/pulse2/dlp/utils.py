@@ -24,8 +24,6 @@ Utilities functions for the dlp application
 import os
 import time
 import urllib.request
-import urllib.error
-import urllib.parse
 import zipfile
 import cherrypy
 import logging

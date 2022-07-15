@@ -1,11 +1,10 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
+# (c) 2021-2022 Siveo, http://www.siveo.net/
 #
 # $Id$
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,9 +22,6 @@
 # MA 02110-1301, USA.
 
 # uses SA to handle sessions
-# file : /pkgs/orm/pkgs_rules_global.py
-
-import logging
 
 """ Class to map pkgs.pkgs_rules_global to SA
 """
@@ -39,32 +35,32 @@ class Pkgs_rules_global(object):
     def getId(self):
         if self.id is not None:
             return self.id
-        else:
-            return 0
+
+        return 0
 
     def getRules_algos_id(self):
         if self.pkgs_rules_algos_id is not None:
             return self.pkgs_rules_algos_id
-        else:
-            return -1
+
+        return -1
 
     def getCluster_ars_id(self):
         if self.pkgs_cluster_ars_id is not None:
             return self.pkgs_cluster_ars_id
-        else:
-            return ""
+
+        return ""
 
     def getOrder(self):
         if self.order is not None:
             return self.order
-        else:
-            return ""
+
+        return ""
 
     def getSuject(self):
         if self.suject is not None:
             return self.suject
-        else:
-            return ""
+
+        return ""
 
     def to_array(self):
         return {

@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2020 siveo, http://www.siveo.net
+# (c) 2020-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -20,18 +20,12 @@
 # MA 02110-1301, USA.
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct, Table
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import update
-from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.admin.schema import Tests
 # Imported last
 import logging
-import json
-import time
 
 logger = logging.getLogger()
 

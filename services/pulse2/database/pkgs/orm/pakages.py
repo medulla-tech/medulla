@@ -1,8 +1,8 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2013 Mandriva, http://www.mandriva.com/
+# (c) 2021-2022 Siveo, http://www.siveo.net/
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net/
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,190 +19,186 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging
-from sqlalchemy.orm import create_session
-
-
 class Packages(object):
     def getId(self):
         if self.id is not None:
             return self.id
-        else:
-            return 0
+
+        return 0
 
     def getLabel(self):
         if self.label is not None:
             return self.label
-        else:
-            return ""
+
+        return ""
 
     def getDescription(self):
         if self.description is not None:
             return self.description
-        else:
-            return ""
+
+        return ""
 
     def getUuid(self):
         if self.uuid is not None:
             return self.uuid
-        else:
-            return ""
+
+        return ""
 
     def getVersion(self):
         if self.version is not None:
             return self.version
-        else:
-            return ""
+
+        return ""
 
     def getOs(self):
         if self.os is not None:
             return self.os
-        else:
-            return ""
+
+        return ""
 
     def getMetaGenerator(self):
         if self.metagenerator is not None:
             return self.metagenerator
-        else:
-            return "expert"
+
+        return "expert"
 
     def getEntity_id(self):
         if self.entity_id is not None:
             return self.entity_id
-        else:
-            return "0"
+
+        return "0"
 
     def getSub_packages(self):
         if self.sub_packages is not None:
             return self.sub_packages
-        else:
-            return ""
+
+        return ""
 
     def getReboot(self):
         if self.reboot is not None:
             return self.getReboot
-        else:
-            return ""
+
+        return ""
 
     def getInventory_associateinventory(self):
         if self.inventory_associateinventory is not None:
             return self.inventory_associateinventory
-        else:
-            return ""
+ 
+        return ""
 
     def getInventory_licenses(self):
         if self.inventory_licenses is not None:
             return self.inventory_licenses
-        else:
-            return ""
+
+        return ""
 
     def getQversion(self):
         if self.Qversion is not None:
             return self.Qversion
-        else:
-            return ""
+
+        return ""
 
     def getQvendor(self):
         if self.Qvendor is not None:
             return self.Qvendor
-        else:
-            return ""
+
+        return ""
 
     def getQsoftware(self):
         if self.Qsoftware is not None:
             return self.Qsoftware
-        else:
-            return ""
+
+        return ""
 
     def getBoolcnd(self):
         if self.boolcnd is not None:
             return self.boolcnd
-        else:
-            return 0
+
+        return 0
 
     def getPostCommandSuccess_command(self):
         if self.postCommandSuccess_command is not None:
             return self.postCommandSuccess_command
-        else:
-            return ""
+
+        return ""
 
     def getPostCommandSuccess_name(self):
         if self.postCommandSuccess_name is not None:
             return self.postCommandSuccess_name
-        else:
-            return ""
+
+        return ""
 
     def getInstallInit_command(self):
         if self.installInit_command is not None:
             return self.installInit_command
-        else:
-            return ""
+
+        return ""
 
     def getInstallInit_name(self):
         if self.installInit_name is not None:
             return self.installInit_name
-        else:
-            return ""
+
+        return ""
 
     def getPostCommandFailure_command(self):
         if self.postCommandFailure_command is not None:
             return self.postCommandFailure_command
-        else:
-            return ""
+
+        return ""
 
     def getPostCommandFailure_name(self):
         if self.postCommandFailure_name is not None:
             return self.postCommandFailure_name
-        else:
-            return ""
+
+        return ""
 
     def getCommand_command(self):
         if self.command_command is not None:
             return self.command_command
-        else:
-            return ""
+
+        return ""
 
     def getCommand_name(self):
         if self.command_name is not None:
             return self.command_name
-        else:
-            return ""
+
+        return ""
 
     def getPreCommand_command(self):
         if self.preCommand_command is not None:
             return self.preCommand_command
-        else:
-            return ""
+
+        return ""
 
     def getPreCommand_name(self):
         if self.preCommand_name is not None:
             return self.preCommand_name
-        else:
-            return ""
+
+        return ""
 
     def getpkgs_share_id(self):
         if self.pkgs_share_id is not None:
             return self.pkgs_share_id
-        else:
-            return None
+
+        return None
 
     def getedition_status(self):
         if self.edition_status is not None:
             return self.edition_status
-        else:
-            return ""
+
+        return ""
 
     def getconf_json(self):
         if self.conf_json is not None:
             return self.conf_json
-        else:
-            return ""
+
+        return ""
 
     def getsize(self):
         if self.size is not None:
             return self.size
-        else:
-            return "0"
+
+        return "0"
 
     def to_array(self):
         """

@@ -1,8 +1,8 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2013 Mandriva, http://www.mandriva.com/
+# (c) 2019-2022 Siveo, http://www.siveo.net/
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net/
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,46 +19,42 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging
-from sqlalchemy.orm import create_session
-
-
 class Syncthingsync(object):
     def getId(self):
         if self.id is not None:
             return self.id
-        else:
-            return 0
+
+        return 0
 
     def getDate(self):
         if self.date is not None:
             return self.date
-        else:
-            return ""
+
+        return ""
 
     def getUuidpackage(self):
         if self.uuidpackage is not None:
             return self.uuidpackage
-        else:
-            return ""
+
+        return ""
 
     def getTypesynchro(self):
         if self.typesynchro is not None:
             return self.typesynchro
-        else:
-            return ""
+
+        return ""
 
     def getRelayserver_jid(self):
         if self.relayserver_jid is not None:
             return self.relayserver_jid
-        else:
-            return ""
+
+        return ""
 
     def getWatching(self):
         if self.watching is not None:
             return self.watching
-        else:
-            return ""
+
+        return ""
 
     def to_array(self):
         """

@@ -36,7 +36,6 @@ import os
 import sys
 import imp
 import traceback
-import pickle
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn, ForkingMixIn
 from threading import Thread, Semaphore

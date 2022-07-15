@@ -27,7 +27,7 @@ Test module for the Pulse 2 package server: Mirror's module, Mirror_API's module
 
 import xmlrpc.client
 import unittest
-import urllib.request, urllib.error, urllib.parse
+import urllib.request
 import sys
 import string
 from os import system, getcwd, chdir, popen

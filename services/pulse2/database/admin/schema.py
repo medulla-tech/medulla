@@ -23,19 +23,9 @@ from sqlalchemy import (
     Column,
     String,
     Integer,
-    Boolean,
-    ForeignKey,
-    DateTime,
-    Text,
-    LargeBinary,
-    Enum,
 )
-from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
-from sqlalchemy.orm import relationship
-import datetime
-
 
 Base = declarative_base()
 

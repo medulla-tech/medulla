@@ -20,10 +20,7 @@
 
 """ Tracking of selected menu entries. """
 
-import time
-import logging
-
-from pulse2.utils import Singleton, SingletonN
+from pulse2.utils import Singleton
 from pulse2.package_server.imaging.pxe.parser import LOG_ACTION, LOG_STATE
 
 

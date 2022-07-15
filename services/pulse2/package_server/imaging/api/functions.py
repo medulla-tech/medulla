@@ -61,10 +61,8 @@ from pulse2.utils import (
     rfc3339Time,
     humanReadable,
     SingletonN,
-    check_process,
     start_process,
     stop_process,
-    normalizeMACAddressForPXELINUX,
 )
 from pulse2.apis import makeURL
 from pulse2.imaging.image import Pulse2Image

@@ -1,11 +1,10 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
+# (c) 2019-2022 Siveo, http://www.siveo.net
 #
 # $Id$
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net/
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +25,6 @@
 Provides access to Pkgs database
 """
 # standard modules
-import time
 import traceback
 
 # SqlAlchemy
@@ -35,30 +33,19 @@ from sqlalchemy import (
     create_engine,
     MetaData,
     Table,
-    Column,
-    String,
-    Integer,
-    ForeignKey,
-    select,
     asc,
-    or_,
     desc,
     func,
-    not_,
     distinct,
 )
-from sqlalchemy.orm import create_session, mapper, relation
-from sqlalchemy.exc import NoSuchTableError, TimeoutError
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm import create_session, mapper
+from sqlalchemy.exc import NoSuchTableError
 
-# from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
-##from sqlalchemy.orm import sessionmaker
 import datetime
 import magic
 import base64
 
 # ORM mappings
-from pulse2.database.pkgs.orm.version import Version
 from pulse2.database.pkgs.orm.pakages import Packages
 from pulse2.database.pkgs.orm.extensions import Extensions
 from pulse2.database.pkgs.orm.dependencies import Dependencies

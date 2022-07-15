@@ -20,12 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import twisted.web.xmlrpc
 import twisted.web.server
-
-import twisted.internet.defer
-import twisted.internet.reactor
-import twisted.internet.ssl
 
 import logging
 

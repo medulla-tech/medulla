@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2018 siveo, http://www.siveo.net
+# (c) 2018-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -34,10 +34,8 @@ from pulse2.database.kiosk.schema import (
 )
 from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists
 from mmc.database.database_helper import DatabaseHelper
-from datetime import date, datetime, timedelta
-from sqlalchemy import update
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
 
 Session = sessionmaker()

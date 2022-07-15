@@ -4849,7 +4849,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if not password:
             return ""
         import crypt
-        import base64
 
         passphrase = "$6$DzmCpUs3$"
         return crypt.crypt(password, passphrase)

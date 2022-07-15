@@ -25,7 +25,6 @@ import logging
 
 import twisted.web.server
 import twisted.internet.error
-import twisted.web.xmlrpc
 
 try:
     from twisted.web import http

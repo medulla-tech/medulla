@@ -34,7 +34,6 @@ from pulse2.database.backuppc.schema import (
     Hosts,
 )
 from mmc.database.database_helper import DatabaseHelper
-from random import randint
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker

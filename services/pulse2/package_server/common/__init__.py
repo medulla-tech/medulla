@@ -45,7 +45,6 @@ from pulse2.package_server.parser import (
 )
 from pulse2.package_server.find import Find
 import pulse2.utils
-from pulse2.package_server.utilities import md5file
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
 from twisted.internet import reactor, task
 

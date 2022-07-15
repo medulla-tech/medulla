@@ -1,10 +1,10 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2007-2009 Mandriva, http://www.mandriva.com/
-#
+#     2019-2022 Siveo, http://www.siveo.net/
 # $Id$
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net/
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 
 import logging
 import re
-import os
 from mmc.site import mmcconfdir
 from pulse2.utils import checkEntityName
 

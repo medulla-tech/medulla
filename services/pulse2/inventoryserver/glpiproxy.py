@@ -23,8 +23,6 @@ Inventory proxy Pulse -> GLPI using Fusion Inventory plugin.
 """
 
 import urllib.request
-import urllib.error
-import urllib.parse
 import logging
 from xml.dom.minidom import parseString
 from pulse2.inventoryserver.utils import MMCProxy

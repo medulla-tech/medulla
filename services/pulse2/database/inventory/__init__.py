@@ -2,10 +2,10 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2009 Mandriva, http://www.mandriva.com/
-#
+# (c) 2019-2022 Siveo, http://www.siveo.net/
 # $Id$
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net/
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,12 +30,9 @@ from pulse2.managers.group import ComputerGroupManager
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.database.utilities import unique, handle_deconnect
-from mmc.database.utilities import DbObject  # pyflakes.ignore
-from mmc.database.database_helper import DatabaseHelper, DBObj  # pyflakes.ignore
 from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.utils import same_network, Singleton, isUUID
 from mmc.site import mmcconfdir
-from pulse2.utils import checkEntityName
 from sqlalchemy import (
     and_,
     create_engine,
@@ -51,7 +48,6 @@ from sqlalchemy import (
     distinct,
 )
 from sqlalchemy.orm import create_session, mapper
-import sqlalchemy.databases
 from lxml import etree
 
 # standard modules

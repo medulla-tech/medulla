@@ -1,11 +1,10 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
+# (c) 2021-2022 Siveo, http://www.siveo.net
 #
 # $Id$
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net/
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,13 +23,8 @@
 
 # uses SA to handle sessions
 
-# file : pkgs/orm/pkgs_shares.py
-
-import logging
-
 """ Class to map pkgs.Extensions to SA
 """
-
 
 class Pkgs_shares(object):
     """Mapping between pkgs.pkgs_shares and SA
@@ -40,56 +34,56 @@ class Pkgs_shares(object):
     def getId(self):
         if self.id is not None:
             return self.id
-        else:
-            return 0
+
+        return 0
 
     def getName(self):
         if self.name is not None:
             return self.name
-        else:
-            return ""
+
+        return ""
 
     def getComments(self):
         if self.comments is not None:
             return self.comments
-        else:
-            return ""
+
+        return ""
 
     def getEnabled(self):
         if self.enabled is not None:
             return self.enabled
-        else:
-            return 0
+
+        return 0
 
     def getType(self):
         if self.type is not None:
             return self.type
-        else:
-            return ""
+
+        return ""
 
     def getUri(self):
         if self.uri is not None:
             return self.uri
-        else:
-            return ""
+
+        return ""
 
     def getArs_name(self):
         if self.ars_name is not None:
             return self.ars_name
-        else:
-            return ""
+
+        return ""
 
     def getArs_id(self):
         if self.ars_id is not None:
             return self.ars_id
-        else:
-            return 0
+
+        return 0
 
     def getshare_path(self):
         if self.share_path is not None:
             return self.share_path
-        else:
-            return ""
+
+        return ""
 
     def getusedquotas(self):
         """
@@ -97,8 +91,8 @@ class Pkgs_shares(object):
         """
         if self.usedquotas is not None:
             return self.usedquotas
-        else:
-            return ""
+
+        return ""
 
     def getquotas(self):
         """
@@ -106,8 +100,8 @@ class Pkgs_shares(object):
         """
         if self.quotas is not None:
             return self.quotas
-        else:
-            return ""
+
+        return ""
 
     def to_array(self):
         return {

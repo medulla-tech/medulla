@@ -29,7 +29,6 @@ A inventory is injected to test its good behavior
 import unittest
 import sys
 import os
-import os.path
 import time
 
 from unittest import TestCase
