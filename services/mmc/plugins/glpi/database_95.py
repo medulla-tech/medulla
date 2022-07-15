@@ -6592,8 +6592,11 @@ class Glpi95(DyngroupDatabaseHelper):
                 machine["os"] = " ".join(machine["os"])
             elif machine["os"].startswith("Ubuntu"):
                 machine["os"] = "Ubuntu"
-                # We want just the XX.yy version number
-                machine["version"] = machine["version"].split(" ")[0].split(".")
+                if machine['version'] is not None:
+                    # We want just the XX.yy version number
+                    machine["version"] = machine["version"].split(" ")[0].split(".")
+                else:
+                    machine['version'] = "00.00"
                 if len(machine["version"]) >= 2:
                     machine["version"] = machine["version"][0:2]
                 machine["version"] = ".".join(machine["version"])
@@ -6610,7 +6613,6 @@ class Glpi95(DyngroupDatabaseHelper):
             elif machine["os"].startswith("macOS") or machine["os"].startswith("OS X"):
                 machine["version"] = machine["version"].split(" (")[0].split(".")[0:2]
                 machine["version"] = ".".join(machine["version"])
-
             else:
                 pass
 
