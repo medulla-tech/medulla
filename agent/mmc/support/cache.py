@@ -293,7 +293,7 @@ class LocMemCache(BaseCache):
 ###
 def genericHashFunc(*args, **kwargs):
     def freeze(o):
-        if isinstance(o, list) or isinstance(o, tuple):
+        if isinstance(o, (list, tuple)):
             return tuple([freeze(x) for x in o])
         elif isinstance(o, dict):
             return freeze(list(o.items()))

@@ -724,7 +724,7 @@ class IPResolve(IPResolversContainer):
         @return: True if format is valid
         @rtype: bool
         """
-        if not (isinstance(target, tuple) or isinstance(target, list)):
+        if not (isinstance(target, (tuple, list)):
             log.warn(
                 "Invalid target format: Tuple or list required, not %s" % type(target)
             )

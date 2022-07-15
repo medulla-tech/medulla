@@ -312,7 +312,7 @@ class AuditRecordDB(AuditRecord):
             if bdobjectlog != None:
                 # Insert current value
                 if current != None:
-                    if isinstance(current, tuple) or isinstance(current, list):
+                    if isinstance(current, (tuple, list)):
                         for i in current:
                             cv = Current_Value(bdobjectlog, i)
                             session.add(cv)
@@ -322,7 +322,7 @@ class AuditRecordDB(AuditRecord):
 
                 # Insert previous value
                 if previous != None:
-                    if isinstance(previous, tuple) or isinstance(previous, list):
+                    if isinstance(previous, (tuple, list)):
                         for i in previous:
                             pv = Previous_Value(bdobjectlog, i)
                             session.add(pv)

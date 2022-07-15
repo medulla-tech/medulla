@@ -64,7 +64,7 @@ class RequestExtractor(object):
 
     def extract(self, _request):
         request = eval(_request)
-        if isinstance(request, list) or isinstance(request, tuple):
+        if isinstance(request, (list, tuple)):
             if len(request) == 2:
                 t_method, args = request
                 prefix, method = self._extract_method(t_method)

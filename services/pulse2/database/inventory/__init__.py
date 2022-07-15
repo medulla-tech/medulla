@@ -1804,7 +1804,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         result = session.query(klass)
         for v in values:
-            if isinstance(v, str) or isinstance(v, str):
+            if isinstance(v, str):
                 if hasattr(table.c, v):
                     result = result.filter(getattr(table.c, v).like(values[v]))
         res = result.first()
@@ -4142,7 +4142,7 @@ class InventoryCreator(Inventory):
                         if id is None:
                             k = klass()
                             for field in trunc_entry:
-                                if isinstance(field, str) or isinstance(field, str):
+                                if isinstance(field, str):
                                     setattr(k, field, trunc_entry[field])
                             session.add(k)
                             # Immediately flush this new row, because we need an

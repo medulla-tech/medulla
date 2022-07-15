@@ -367,7 +367,7 @@ class Forker(object):
 
         if isinstance(script, list):
             self.args = script
-        elif isinstance(script, str) or isinstance(script, str):
+        elif isinstance(script, str):
             self.args = script.split(" ")
 
         self.callback = callback
