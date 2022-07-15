@@ -24,7 +24,6 @@
 import datetime
 import json
 import traceback
-import sys
 import os
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from pulse2.database.msc import MscDatabase

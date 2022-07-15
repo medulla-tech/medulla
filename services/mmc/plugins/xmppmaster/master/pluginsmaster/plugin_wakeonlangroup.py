@@ -22,7 +22,6 @@
 #
 
 import json
-import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
 from mmc.plugins.xmppmaster.master.lib.utils import name_random

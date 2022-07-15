@@ -21,19 +21,10 @@
 # MA 02110-1301, USA.
 
 
-# nota jfk todo implement class for gestion call from script or console.
-import sys
-import os
-import platform
-import os.path
-import json
-from multiprocessing import Process, Queue, TimeoutError
+# TODO: Implement a class to handle call from scripts or console
 import threading
-from .utils import getRandomName, call_plugin
-from sleekxmpp import jid
-import traceback
+from .utils import getRandomName
 import logging
-import time
 
 logger = logging.getLogger()
 

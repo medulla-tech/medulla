@@ -22,11 +22,7 @@
 #
 # file pluginsmaster/plugin_resultwakeonlan.py
 
-import json
-
 import logging
-
-# plugin_resultwakeonLan
 
 plugin = {"VERSION": "1.0", "NAME": "resultwakeonlan", "TYPE": "master"}
 

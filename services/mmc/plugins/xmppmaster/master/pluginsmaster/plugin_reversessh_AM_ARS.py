@@ -24,7 +24,6 @@
 # this plugin can be called from quick action
 # eg : plugin_reversessh_AM_ARS@_@{ "proxyport" : 5225", "remoteport" : 9091 }
 import json
-from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import logging
 
 from pulse2.database.xmppmaster import XmppMasterDatabase

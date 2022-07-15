@@ -19,12 +19,3 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import threading
-import time
-import logging
-
-from mmc.plugins.xmppmaster.config import xmppMasterConfig
-from mmc.agent import PluginManager
-import posix_ipc
-
-logger = logging.getLogger()
