@@ -23,7 +23,6 @@
 # file pluginsmaster/plugin_applicationdeployment.py
 
 import json
-import mmc.plugins.xmppmaster.master.lib.utils
 import logging
 
 

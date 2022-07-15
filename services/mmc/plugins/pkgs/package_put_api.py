@@ -25,7 +25,6 @@ This module define the package put API
 It provides methods to modify the content of packages.
 """
 import logging
-import mmc.plugins.pkgs.config
 import pulse2.apis.clients.package_put_api
 
 

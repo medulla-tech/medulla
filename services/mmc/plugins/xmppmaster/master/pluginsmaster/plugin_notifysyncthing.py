@@ -23,7 +23,6 @@
 # file pluginsmaster/plugin_notifysyncthing.py
 
 import json
-import mmc.plugins.xmppmaster.master.lib.utils
 import logging
 from pulse2.database.pkgs import PkgsDatabase
 

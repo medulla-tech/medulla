@@ -22,9 +22,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-import mmc.plugins.msc
-import pulse2.apis.clients.mirror
-
 ## need to get a PackageApiManager, it will manage a PackageApi for each mirror
 ## defined in the conf file.
 # class Mirror(pulse2.apis.clients.mirror_api.Mirror):

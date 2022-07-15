@@ -27,7 +27,6 @@ if deploy is pause, run, abandonned
 """
 import json
 import sys
-import mmc.plugins.xmppmaster.master.lib.utils
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
 import logging

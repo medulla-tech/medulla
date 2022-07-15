@@ -22,7 +22,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import urllib.parse
-import urllib.request, urllib.parse, urllib.error
 import re
 
 from twisted.internet import reactor, defer

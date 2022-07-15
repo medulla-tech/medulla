@@ -25,7 +25,6 @@ This module define the user package_api API
 It provide methods to tell which package_api a user can use to modify packages.
 """
 import logging
-import mmc.plugins.pkgs.config
 from mmc.support.mmctools import Singleton
 import pulse2.apis.clients.user_packageapi_api
 

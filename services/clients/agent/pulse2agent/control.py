@@ -27,7 +27,7 @@ import time
 import logging
 import logging.config
 import platform
-import urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.error
 import fileinput
 
 from distutils import file_util

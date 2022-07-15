@@ -25,7 +25,7 @@
 import os.path
 import os
 from pyquery import PyQuery as pq
-import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.parse
 import re, string
 import logging
 import tempfile

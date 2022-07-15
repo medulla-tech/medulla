@@ -26,7 +26,7 @@ import base64
 import traceback
 import os
 import sys
-import urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.error
 import time
 import json
 import logging

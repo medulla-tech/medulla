@@ -22,8 +22,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
-import mmc.plugins.msc.config
-
 # def msc_exec(command):
 # proc = shLaunch(command)
 # return_var = proc.exitCode

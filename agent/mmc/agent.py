@@ -52,7 +52,6 @@ import imp
 import logging
 import logging.config
 import xmlrpc.client
-import xmlrpc.server
 from logging.handlers import TimedRotatingFileHandler
 import os
 import sys

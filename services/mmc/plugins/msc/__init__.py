@@ -45,7 +45,6 @@ from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.machines import Machines, Machine
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 from mmc.plugins.dyngroup.config import DGConfig
-import mmc.plugins.msc.actions
 import mmc.plugins.msc.keychain
 import mmc.plugins.msc.package_api
 

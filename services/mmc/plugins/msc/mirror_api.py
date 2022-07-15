@@ -26,9 +26,6 @@ Module to connect to the Mirror API XMLRPC API.
 This api provides methods to know which package or mirror API to connect
 to know package you can install on a computer.
 """
-import mmc.plugins.msc
-import pulse2.apis.clients.mirror_api
-
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
 # class MirrorApi(Singleton):
