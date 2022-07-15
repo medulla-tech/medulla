@@ -24,12 +24,7 @@
 """
 Qaction represents a qaction file
 """
-
-import re
-import os
 import logging
-import dircache
-from mmc.plugins.msc.config import MscConfig
 
 log = logging.getLogger()
 

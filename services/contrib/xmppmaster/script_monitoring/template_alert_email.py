@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
 import smtplib
-import sys, logging
+import sys
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 

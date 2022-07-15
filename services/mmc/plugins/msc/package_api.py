@@ -24,19 +24,11 @@
 This module define the package get API.
 It provides methods to get informations on packages.
 """
-import re
 import logging
 import time
 
-from twisted.python import failure
-from twisted.internet import defer
-
-from sqlalchemy.orm import create_session
-
 from mmc.plugins.msc import MscConfig
 from mmc.plugins.msc.database import MscDatabase
-
-from pulse2.managers.group import ComputerGroupManager
 import pulse2.apis.clients.package_get_api
 
 

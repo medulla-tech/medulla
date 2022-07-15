@@ -21,12 +21,9 @@
 
 
 import GeoIP
-import os
-import sys
 from math import cos
 from math import sin
 from math import acos
-from math import asin
 from math import atan2
 from math import degrees
 from math import radians

@@ -29,7 +29,6 @@ import logging
 import re
 import datetime
 import calendar, hashlib
-import time
 from configobj import ConfigObj
 from xmlrpc.client import ProtocolError
 
@@ -58,9 +57,6 @@ except ImportError:
     from sqlalchemy.sql.operators import ColumnOperators
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.exc import OperationalError
-from mmc.support.mmctools import shlaunch
-import base64
-import json
 import requests
 from mmc.site import mmcconfdir
 from mmc.database.database_helper import DatabaseHelper
@@ -70,7 +66,6 @@ from pulse2.utils import same_network, unique, noNone
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.config import GlpiConfig
-from mmc.plugins.glpi.GLPIClient import XMLRPCClient
 from mmc.plugins.glpi.utilities import complete_ctx, literalquery
 from mmc.plugins.glpi.database_utils import (
     decode_latin1,
@@ -83,7 +78,7 @@ from mmc.plugins.glpi.database_utils import (
 )
 from mmc.plugins.glpi.database_utils import DbTOA  # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
-from distutils.version import LooseVersion, StrictVersion
+from distutils.version import LooseVersion
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.database.xmppmaster import XmppMasterDatabase

@@ -24,58 +24,16 @@
 
 import sys
 import os
-import re
-
-import configparser
-import operator
 import zlib
-import slixmpp
-from slixmpp import jid
-
-import netifaces
-import random
 import base64
 import json
-from optparse import OptionParser
-import copy
-from . import lib
-from .lib.networkinfo import networkagentinfo
-from .lib.managesession import sessiondatainfo, session
 from .lib.utils import *
-from .lib.managepackage import managepackage
-from .lib.manageADorganization import manage_fqdn_window_activedirectory
-from .lib.manageRSAsigned import MsgsignedRSA
-from .lib.localisation import Localisation
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
-from mmc.plugins.base import getModList
-from mmc.plugins.base.computers import ComputerManager
-from .lib.manage_scheduler import manage_scheduler
-from pulse2.database.xmppmaster import XmppMasterDatabase
-from pulse2.database.pkgs import PkgsDatabase
-from mmc.plugins.msc.database import MscDatabase
 import traceback
-import pprint
-from . import pluginsmaster
-import pickle
 import logging
 import threading
-import netaddr
-from time import mktime, sleep
-from datetime import datetime
-from multiprocessing import Process, Queue, TimeoutError
 from mmc.agent import PluginManager
-from .lib.update_remote_agent import Update_Remote_Agent
-from distutils.version import LooseVersion, StrictVersion
-from slixmpp.exceptions import IqError, IqTimeout
-from slixmpp.xmlstream.stanzabase import ElementBase, ET, JID
-from slixmpp.stanza.iq import Iq
 import asyncio
-from .lib.manage_xmppbrowsing import xmppbrowsing
-
-from mmc.plugins.msc import convergence_reschedule
-
-import hashlib
-import posix_ipc
 
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))

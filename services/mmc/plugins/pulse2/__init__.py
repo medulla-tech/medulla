@@ -46,7 +46,7 @@ from pulse2.database.pulse import Pulse2Database
 from pulse2.managers.pulse import Pulse2Manager
 from mmc.plugins.pulse2.pulse import Pulse2Pulse2Manager
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from pulse2.version import getVersion  # pyflakes.ignore
 
 
 import logging

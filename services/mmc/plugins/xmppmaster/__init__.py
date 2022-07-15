@@ -24,11 +24,9 @@ Plugin to manage the interface with xmppmaster
 
 import logging
 import os
-import sys
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from .master.lib.managepackage import apimanagepackagemsc
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 import hashlib
 import json
 
@@ -39,7 +37,7 @@ from pulse2.database.pkgs import PkgsDatabase
 
 import zlib
 import base64
-from .master.lib.utils import name_random, simplecommand, file_get_contents
+from .master.lib.utils import name_random, file_get_contents
 from .xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import (
     XmppSimpleCommand,

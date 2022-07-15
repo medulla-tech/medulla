@@ -21,18 +21,8 @@
 # along with MMC; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-import os
 import os.path
-import glob
-import datetime
-import logging
-import time
 import xmlrpc.client
-
-from mmc.plugins.msc.config import MscConfig
-from mmc.plugins.msc.scheduler_api import SchedulerApi
-from mmc.plugins.msc.client.scheduler import getProxy
-from twisted.internet.threads import deferToThread
 import twisted.internet.defer
 
 # class MscDownloadProcess:

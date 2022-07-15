@@ -33,11 +33,10 @@ import json
 import tempfile
 import urllib.request, urllib.error, urllib.parse
 import re
-from Crypto.Hash import SHA256
 import hashlib
 from contextlib import closing
 from configparser import ConfigParser
-from base64 import b64encode, b64decode
+from base64 import b64encode
 from time import time
 from json import loads as parse_json
 import subprocess
@@ -45,19 +44,13 @@ from twisted.internet.threads import deferToThread
 
 from mmc.site import mmcconfdir
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
-from mmc.core.tasks import TaskManager
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.panel import Panel
-
-from mmc.plugins.msc.package_api import PackageGetA
 from mmc.plugins.pulse2.utils import notificationManager
-from mmc.plugins.pkgs.package_put_api import PackagePutA
 from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
-from pulse2.managers.location import ComputerLocationManager
 import uuid
 import json
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 from pulse2.database.pkgs import PkgsDatabase
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -68,7 +61,6 @@ from mmc.plugins.xmppmaster.master.lib.utils import (
     file_put_contents,
     file_get_contents,
     make_tarfile,
-    extract_file,
     md5folder,
 )
 from mmc.plugins.xmppmaster.master.lib.managepackage import apimanagepackagemsc

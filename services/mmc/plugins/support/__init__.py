@@ -21,10 +21,7 @@
 """ Product manager plugin base """
 
 import logging
-
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 from mmc.support.mmctools import SingletonN
-from mmc.core.tasks import TaskManager
 
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.support.config import SupportConfig

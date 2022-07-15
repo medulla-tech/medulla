@@ -21,10 +21,6 @@
 
 # File : mmc/plugins/admin/__init__.py
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
-
-# Au cas où on souhaite appeler des configs d'autres modules
-from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.admin.config import AdminConfig
 
 # import pour la database

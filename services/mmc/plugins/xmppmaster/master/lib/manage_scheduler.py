@@ -22,7 +22,6 @@
 
 import sys
 import os
-import platform
 import os.path
 
 import traceback

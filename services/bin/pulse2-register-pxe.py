@@ -23,16 +23,13 @@
 # This module is dedicated to analyse inventories sent by a Pulse 2 Client.
 # The original inventory is sent using one line per kind of
 # """
-import select
 import socket
 import pyinotify
 import time
-import gzip
 import os
 import re
 import json
 import datetime
-from pulse2.package_server.config import P2PServerCP
 from mmc.site import mmcconfdir
 import sys
 import configparser
