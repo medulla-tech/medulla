@@ -22,10 +22,7 @@
 #
 # file pluginsmaster/plugin_applicationdeployment.py
 
-import base64
 import json
-import os
-import pprint
 import logging
 from pulse2.database.xmppmaster import XmppMasterDatabase
 

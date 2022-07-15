@@ -22,8 +22,6 @@
 #
 # file pluginsmaster/plugin_resultguacamoleconf.py
 
-import traceback
-import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import logging
 

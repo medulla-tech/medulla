@@ -23,18 +23,12 @@
 # file /pluginsmaster/plugin_deploysyncthing.py
 
 
-import base64
 import json
-import os
-import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
-from mmc.plugins.glpi.database import Glpi
-import traceback
-from mmc.plugins.xmppmaster.master.lib.utils import name_random, name_randomplus
+from mmc.plugins.xmppmaster.master.lib.utils import name_randomplus
 from sleekxmpp import jid
 
 import logging
-from random import randint
 
 logger = logging.getLogger()
 # plugin run wake on lan on mac adress

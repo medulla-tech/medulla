@@ -23,9 +23,6 @@
 # file pluginsmaster/plugin_autoinventoryconf.py
 
 from mmc.plugins.glpi.database import Glpi
-from mmc.plugins.xmppmaster.config import xmppMasterConfig
-import hashlib
-from pulse2.database.xmppmaster import XmppMasterDatabase
 import logging
 import traceback
 import sys

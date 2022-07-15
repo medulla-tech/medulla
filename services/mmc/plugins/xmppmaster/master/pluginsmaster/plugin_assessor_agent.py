@@ -29,7 +29,7 @@ import logging
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
 from random import randint
-from localisation import Localisation, Point
+from localisation import Point
 import operator
 import netaddr
 import os
@@ -37,7 +37,7 @@ import configparser
 
 from manageADorganization import manage_fqdn_window_activedirectory
 
-from math import cos, sin, acos, asin, atan2, degrees, radians, sqrt
+from math import cos, sin, atan2, sqrt
 
 logger = logging.getLogger()
 
