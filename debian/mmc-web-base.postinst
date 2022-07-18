@@ -35,7 +35,7 @@ case "$1" in
         chmod 660 /etc/mmc/mmc.ini
 
         # We create the d3 folder for the dashboard
-        if [ ! -d "/usr/share/mmc/jsframework/d3" ]; then
+        if [ ! -L "/usr/share/mmc/jsframework/d3" ]; then
             ln -s /usr/lib/nodejs/d3/ /usr/share/mmc/jsframework/
         fi
 
