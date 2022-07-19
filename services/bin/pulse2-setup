@@ -40,7 +40,7 @@ from subprocess import call
 from optparse import OptionParser
 from configobj import ConfigObj, MissingInterpolationOption
 import gzip
-from StringIO import StringIO
+from io import StringIO
 import sqlalchemy as sa
 import logging
 import ldap
@@ -66,7 +66,7 @@ def read_opt(prompt, default=None):
     if default is not None:
         prompt += ' (default: %s)' % default
     prompt = 'INPUT    - ' + prompt + ': '
-    s = raw_input(prompt)
+    s = input(prompt)
     if not s and default is not None:
         s = default
     return s
@@ -81,7 +81,7 @@ def read_bool(prompt, default):
     correct = False
     ret = default
     while not correct:
-        s = raw_input(prompt)
+        s = input(prompt)
         if len(s) == 0:
             break
 
@@ -129,7 +129,7 @@ def read_ip(prompt, default):
     correct = False
     ret = default
     while not correct:
-        s = raw_input(prompt)
+        s = input(prompt)
         if len(s) == 0:
             break
 
@@ -401,7 +401,7 @@ def apply_conf_diff(origin, current, only_override=False):
     @rtype: ConfigObj
     """
 
-    for (sec_name, section) in current.items():
+    for (sec_name, section) in list(current.items()):
         if sec_name in origin:
             options_to_delete = []
             for opt_name in section:
@@ -524,7 +524,7 @@ class Pulse2ConfigFile(object):
     def _populate(self, d):
         if not self.config:
             self.config = ConfigObj(list_values=False)
-        for name, section in d.iteritems():
+        for name, section in d.items():
             self.config[name] = section
 
     def write_path(self, path):
@@ -1234,7 +1234,7 @@ class SetupApp(object):
         if not os.path.exists(key_path):
             log.info('Creating a RSA key pair for user root')
             ret = call("/usr/bin/ssh-keygen -t rsa -N '' -f %s" % key_path, shell=True)
-            if ret<>0:
+            if ret!=0:
                 log.error('Can not create RSA key pair for user root')
                 sys.exit(1)
 
@@ -1333,7 +1333,7 @@ class SetupApp(object):
     def commit(self):
         """ Write down all config files
         """
-        for (path, conf) in self.confs.iteritems():
+        for (path, conf) in self.confs.items():
             conf.config = apply_conf_diff(self.orig_confs[path].config, conf.config)
             if len(conf.config) == 0:
                 # if empty local config do not generate
