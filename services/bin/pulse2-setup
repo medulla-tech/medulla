@@ -408,7 +408,7 @@ def apply_conf_diff(origin, current, only_override=False):
                 try:
                     value = current[sec_name].get(opt_name)
 
-                except MissingInterpolationOption, e:
+                except MissingInterpolationOption as e:
                     current.interpolation = False
                     value = current[sec_name].get(opt_name)
                     current.interpolation = True
@@ -416,7 +416,7 @@ def apply_conf_diff(origin, current, only_override=False):
                 if opt_name in origin[sec_name]:
                     try:
                         orig_value = origin[sec_name].get(opt_name)
-                    except MissingInterpolationOption, e:
+                    except MissingInterpolationOption as e:
 
                         origin.interpolation = False
                         if only_override:
@@ -489,7 +489,7 @@ class Pulse2ConfigFile(object):
             log.debug("Load config file %s" % loc_path)
             try:
                 self.local_config = ConfigObj(loc_path, list_values=False)
-            except Exception, e:
+            except Exception as e:
                 log.error("Error while parsing file: %s" % loc_path)
                 log.error(str(e))
                 sys.exit(1)
@@ -498,7 +498,7 @@ class Pulse2ConfigFile(object):
             log.debug("Load config file %s" % fpath)
             try:
                 self.config = ConfigObj(fpath, list_values=False)
-            except Exception, e:
+            except Exception as e:
                 log.error("Error while parsing file: %s" % fpath)
                 log.error(str(e))
                 sys.exit(1)
@@ -537,7 +537,7 @@ class Pulse2ConfigFile(object):
             self.config.write()
             os.chmod(path, self.mode)
             log.info("Wrote configuration file: %s" % path)
-        except IOError, e:
+        except IOError as e:
             log.error("Can not write file: %s" % path)
             log.debug(str(e))
             sys.exit(1)
@@ -857,17 +857,17 @@ class SetupApp(object):
             try:
                 invalids = []
                 conn.simple_bind_s(self.config['ldapadmindn'], self.config['ldappasswd'])
-            except ldap.INVALID_CREDENTIALS, e:
+            except ldap.INVALID_CREDENTIALS as e:
                 invalids += ['ldapbasedn', 'ldapadmindn', 'ldappasswd']
                 log.error("Invalid credentials, check base DN, admin DN and password.")
                 log.debug(str(e))
                 sys.exit()
-            except ldap.SERVER_DOWN, e:
+            except ldap.SERVER_DOWN as e:
                 invalids += ['ldapurl']
                 log.error("Incorrect server")
                 log.debug(str(e))
                 sys.exit()
-            except ldap.UNWILLING_TO_PERFORM, e:
+            except ldap.UNWILLING_TO_PERFORM as e:
                 invalids += ['ldappasswd']
                 log.error("Empty password not supported")
                 log.debug(str(e))
@@ -912,7 +912,7 @@ class SetupApp(object):
         try:
             crs = conn.execute("SELECT schema_name FROM information_schema.schemata;")
             databases = [line[0] for line in crs.fetchall()]
-        except sa.exc.OperationalError, e:
+        except sa.exc.OperationalError as e:
             raise e
 
         return databases
@@ -937,7 +937,7 @@ class SetupApp(object):
             try:
                 conn = self.engine.connect()
                 invalid = False
-            except sa.exc.OperationalError, e:
+            except sa.exc.OperationalError as e:
                 log.error("Can't connect to the database")
                 log.debug(str(e))
 
@@ -949,7 +949,7 @@ class SetupApp(object):
                     try:
                         conn.execute('DROP DATABASE IF EXISTS `%s`' % db)
                         log.info("Database '%s' dropped" % db)
-                    except sa.exc.OperationalError, e:
+                    except sa.exc.OperationalError as e:
                         raise e
             # remove computer boot menus
             dir = "/var/lib/pulse2/imaging/"
@@ -997,7 +997,7 @@ class SetupApp(object):
                 # Do not know how to check if user exists, then try and catch
                 conn.execute('CREATE USER %s@%s', self.config['dbuser'], host)
                 log.info('Creates user %s@%s' % (self.config['dbuser'], host))
-            except sa.exc.OperationalError, e:
+            except sa.exc.OperationalError as e:
                 if e.orig[0]==1396:
                     # This error means 'user exists'
                     log.debug('User already exists: %s@%s' % (self.config['dbuser'], host))
@@ -1019,7 +1019,7 @@ class SetupApp(object):
                     log.info('Grant rights on db %s' % module)
                     # Put db name without sqlalchemy quoting: it was surrounded by `''
                     conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], host)
-            except sa.exc.OperationalError, e:
+            except sa.exc.OperationalError as e:
                 if e.orig[0]==1044:
                     log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (
                         self.config['dbuser'], self.config['dbhost']))
@@ -1220,7 +1220,7 @@ class SetupApp(object):
                      self.confs['plugins/msc.ini'].get('msc', 'download_directory_path'),
                      self.confs['pulse2/package-server/package-server.ini'].get('main', 'tmp_input_dir'),
                      LoggingConfig.log_dir]:
-	     if path and not os.path.isdir(path):
+            if path and not os.path.isdir(path):
                 log.info("Creating directory: %s" % path)
                 os.makedirs(path)
 
