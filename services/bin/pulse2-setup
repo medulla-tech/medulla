@@ -66,7 +66,7 @@ def read_opt(prompt, default=None):
     if default is not None:
         prompt += ' (default: %s)' % default
     prompt = 'INPUT    - ' + prompt + ': '
-    s = input(prompt)
+    s = eval(input(prompt))
     if not s and default is not None:
         s = default
     return s
@@ -81,7 +81,7 @@ def read_bool(prompt, default):
     correct = False
     ret = default
     while not correct:
-        s = input(prompt)
+        s = eval(input(prompt))
         if len(s) == 0:
             break
 
@@ -129,7 +129,7 @@ def read_ip(prompt, default):
     correct = False
     ret = default
     while not correct:
-        s = input(prompt)
+        s = eval(input(prompt))
         if len(s) == 0:
             break
 
@@ -157,7 +157,7 @@ class DistroHandler(object):
             if ret != 0:
                 return False
         # Stop scripts
-        for runlevel in (0,1,6):
+        for runlevel in (0, 1, 6):
             ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/K01%(name)s" % \
                        {'name': name, 'runlevel': runlevel},
                        shell=True)
@@ -167,14 +167,14 @@ class DistroHandler(object):
 
     def disable_srv(self, name):
         # Start scripts
-        for runlevel in (2,3,4,5):
+        for runlevel in (2, 3, 4, 5):
             ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/S20%(name)s" % \
                        {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
         # Stop scripts
-        for runlevel in (0,1,6):
+        for runlevel in (0, 1, 6):
             ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/K01%(name)s" % \
                        {'name': name, 'runlevel': runlevel},
                        shell=True)
@@ -524,7 +524,7 @@ class Pulse2ConfigFile(object):
     def _populate(self, d):
         if not self.config:
             self.config = ConfigObj(list_values=False)
-        for name, section in d.items():
+        for name, section in list(d.items()):
             self.config[name] = section
 
     def write_path(self, path):
@@ -1333,7 +1333,7 @@ class SetupApp(object):
     def commit(self):
         """ Write down all config files
         """
-        for (path, conf) in self.confs.items():
+        for (path, conf) in list(self.confs.items()):
             conf.config = apply_conf_diff(self.orig_confs[path].config, conf.config)
             if len(conf.config) == 0:
                 # if empty local config do not generate
