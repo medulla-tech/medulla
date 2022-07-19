@@ -4167,7 +4167,7 @@ def synchroTargets(ctx, uuids, target_type, macs={}, wol=False):
                 continue
 
             mac = h_macaddress[uuid]
-            if (isinstance(mac, (list, tuple)) and len(mac) == 1:
+            if isinstance(mac, (list, tuple)) and len(mac) == 1:
                 mac = mac[0]
             if uuid in h_hostnames:
                 computers.append((h_hostnames[uuid], mac, imagingData))

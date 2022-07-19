@@ -4344,7 +4344,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_logincommand.syncthing = False
             else:
                 new_logincommand.syncthing = True
-            if (isinstance(params, (list, dict)) and len(params) != 0:
+            if isinstance(params, (list, dict)) and len(params) != 0:
                 new_logincommand.params_json = json.dumps(params)
 
             session.add(new_logincommand)
