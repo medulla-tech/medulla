@@ -337,7 +337,7 @@ class Service(object):
         if self.is_enable():
             log.info('Starting service: %s' % self.name)
             if not self.handler.start_srv(self.name):
-                log.warn('Cannot start service: %s' % self.name)
+                log.warning('Cannot start service: %s' % self.name)
                 if fatal:
                     sys.exit(1)
 
@@ -345,7 +345,7 @@ class Service(object):
         log.info('Reloading service: %s' % self.name)
         if self.is_enable():
             if not self.handler.reload_srv(self.name):
-                log.warn('Cannot reload service: %s' % self.name)
+                log.warning('Cannot reload service: %s' % self.name)
                 if fatal:
                     sys.exit(1)
 
@@ -703,8 +703,8 @@ class SetupApp(object):
 
         # Warn the user about --reset-db
         if self.options['reset_db']:
-            log.warn("I will delete all Pulse2 databases and existing computers data (images, bootmenus)")
-            log.warn("Existing masters will be kept")
+            log.warning("I will delete all Pulse2 databases and existing computers data (images, bootmenus)")
+            log.warning("Existing masters will be kept")
             if not self.read_bool('Are you sure ?', True):
                 log.info("OK. Exiting")
                 sys.exit(0)
