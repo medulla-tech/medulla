@@ -184,7 +184,7 @@ def file_put_contents(filename, data, bytes=False):
     """
     write content "data" to file "filename"
     """
-    if bytes = True:
+    if bytes == True:
         f = open(filename, "wb")
     else:
         f = open(filename, "w")
