@@ -52,6 +52,8 @@ from mmc.plugins.pkgs.config import PkgsConfig
 import uuid
 import json
 
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+
 from pulse2.database.pkgs import PkgsDatabase
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback

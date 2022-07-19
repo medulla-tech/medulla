@@ -27,6 +27,7 @@ import os
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from .master.lib.managepackage import apimanagepackagemsc
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 import hashlib
 import json
 

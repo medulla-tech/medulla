@@ -30,6 +30,8 @@ import os
 import base64
 import re
 
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+
 from mmc.support.config import PluginConfigFactory
 from mmc.plugins.kiosk.config import KioskConfig
 from mmc.plugins.kiosk.TreeOU import TreeOU
