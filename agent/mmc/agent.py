@@ -1249,7 +1249,7 @@ class MMCApp(object):
             code = pm.loadPlugins()
             if code:
                 logger.debug(
-                    "The initialisation of the XMLRPC Server returned the code: " % code
+                    "The initialisation of the XMLRPC Server returned the code: %s " % code
                 )
                 return code
 
