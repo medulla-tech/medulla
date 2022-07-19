@@ -99,5 +99,5 @@ class Extensions(object):
             "strings": self.getStrings(),
             "proposition": self.getProposition(),
             "description": self.getDescription(),
-        }services/pulse2/database/pkgs/orm/extensions.py
+        }
 
