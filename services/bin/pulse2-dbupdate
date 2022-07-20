@@ -47,8 +47,8 @@ def db_update (options):
                                module=options.database,
                                log=log)
         db_control.process()
-    except Exception, exc :
-        log.warn("An error occured when running dbupdate : %s" % str(exc))
+    except Exception as exc :
+        log.warning("An error occured when running dbupdate : %s" % str(exc))
 
 def options_validate(options):
     """
@@ -64,19 +64,19 @@ def options_validate(options):
     is_complete = True
 
     if not options.user :
-        log.warn("Option --user required.")
+        log.warning("Option --user required.")
         is_complete = False
 
     if not options.password :
-        log.warn("Option --password required.")
+        log.warning("Option --password required.")
         is_complete = False
 
     if not options.host :
-        log.warn("Option --host required.")
+        log.warning("Option --host required.")
         is_complete = False
 
     if not options.database :
-        log.warn("Option --db required.")
+        log.warning("Option --db required.")
         is_complete = False
 
     return is_complete
