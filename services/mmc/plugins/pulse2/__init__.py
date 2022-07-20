@@ -272,6 +272,10 @@ class RpcProxy(RpcProxyI):
         @deferred
         def _getProductUpdates():
             updMgrPath = "/usr/share/pulse-update-manager/pulse-update-manager"
+
+            if os.path.exists(updMgrPath)
+                return False
+
             global last_update_check_ts, available_updates
             o, e, ec = self.runinshell("%s -l --json" % updMgrPath)
 
