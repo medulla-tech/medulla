@@ -88,4 +88,3 @@ if (displayLocalisationBar()) {
 }
 
 ?>
-<script>jQuery('#location option[value="UUID1"]').prop('selected', true);</script>
