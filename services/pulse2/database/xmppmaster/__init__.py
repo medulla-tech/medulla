@@ -8095,8 +8095,12 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def Timeouterrordeploy(self, session):
-        # test les evenements states qui ne sont plus valides sur intervalle de
-        # deployement.
+        """
+        Args:
+            session: The SqlAlchemy session
+        Returns:
+            It returns an Array with the list of deploys in timeout
+        """
         Stateforupdateontimeout = [
             "'WOL 1'",
             "'WOL 2'",
@@ -8111,7 +8115,6 @@ class XmppMasterDatabase(DatabaseHelper):
         nowdate = datetime.now()
         set_search = ",".join(Stateforupdateontimeout)
 
-        # reprise code ici
         try:
             sql = """SELECT
                         *
