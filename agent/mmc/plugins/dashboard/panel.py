@@ -29,6 +29,8 @@ import platform
 import psutil
 from datetime import datetime
 
+import distro
+
 from mmc.support.mmctools import size_format, shlaunch
 from mmc.plugins.base import getUsersLdap
 
@@ -54,9 +56,9 @@ class GeneralPanel(Panel):
             uptime = str(datetime.now() - datetime.fromtimestamp(psutil.BOOT_TIME))
 
         try:
-            dist = platform.linux_distribution()
+            dist = distro.linux_distribution()
         except:
-            dist = platform.dist()
+            dist = distro.dist()
         return {
             "hostname": socket.gethostname(),
             "dist": dist,

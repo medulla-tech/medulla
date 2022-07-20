@@ -244,9 +244,9 @@ def startService(config):
         config.dbencoding = 'ascii'
 
     if warn_debian :
-        import platform
+        import distro
         try :
-            (p,v,i) = platform.dist()
+            (p,v,i) = distro.dist()
             if p == 'debian' :
                 logger.warn('scheduler "%s": Please make sure that your python-mysql package is at least 1.2.2-7; on Debian-based platforms previous versions are buggy (broken auto-reconnect), see http://packages.debian.org/changelogs/pool/main/p/python-mysqldb/python-mysqldb_1.2.2-7/changelog#versionversion1.2.2-7' % (config.name))
         except :
