@@ -143,7 +143,7 @@ class DBScriptLaunchInterface:
         @param filename: script to execute
         @type filename: str
         """
-        process = Popen(self.cmd, stdout=PIPE, stdin=PIPE, stderr=PIPE, shell=True)
+        process = Popen(self.cmd, text=True, stdout=PIPE, stdin=PIPE, stderr=PIPE, shell=True)
         try:
             ret, err = process.communicate("source " + filename)
             if err:
