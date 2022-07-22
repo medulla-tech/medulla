@@ -1363,7 +1363,7 @@ msgstr "OU Machines"
 
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:107
 msgid "cluster_description"
-msgstr "clister_description"
+msgstr "cluster_description"
 
 #: modules/xmppmaster/xmppmaster/customQA.php:38
 #, php-format
