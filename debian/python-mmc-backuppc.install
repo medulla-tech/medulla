@@ -1,4 +1,4 @@
-usr/lib/python3.?/*-packages/mmc/plugins/backuppc
+usr/lib/python3/*-packages/mmc/plugins/backuppc
 etc/mmc/plugins/backuppc.ini
 usr/sbin/pulse2-backup-servers
 usr/sbin/pulse2-disconnect-machine-backuppc

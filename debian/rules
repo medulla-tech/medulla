@@ -95,9 +95,9 @@ install: build
 	rm -frv $(DESTDIR)/usr/share/mmc/media/images/msc/opencliparts_0.18
 	cp  $(DESTDIR)/etc/mmc/apache/mmc.conf $(DESTDIR)/etc/apache2/conf-available/
 	# Workaround install issue
-	mkdir -p $(DESTDIR)/usr/lib/python3.9/dist-packages/
-	mv -f $(DESTDIR)/usr/lib/python3.9/site-packages/mmc $(DESTDIR)/usr/lib/python3.9/dist-packages/
-	mv -f $(DESTDIR)/usr/lib/python3.9/site-packages/pulse2 $(DESTDIR)/usr/lib/python3.9/dist-packages/
+	mkdir -p $(DESTDIR)/usr/lib/python3/dist-packages/
+	mv -f $(DESTDIR)/usr/lib/python3.9/site-packages/mmc $(DESTDIR)/usr/lib/python3/dist-packages/
+	mv -f $(DESTDIR)/usr/lib/python3.9/site-packages/pulse2 $(DESTDIR)/usr/lib/python3/dist-packages/
 
 binary-indep: build install
 	dh_testdir

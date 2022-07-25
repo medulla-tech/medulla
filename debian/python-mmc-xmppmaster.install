@@ -11,5 +11,5 @@ etc/mmc/plugins/registeryagent.ini
 etc/mmc/plugins/loadreconf.ini
 etc/mmc/plugins/wakeonlan.ini
 etc/mmc/plugins/wakeonlangroup.ini
-usr/lib/python3.?/*-packages/mmc/plugins/xmppmaster
-usr/lib/python3.?/*-packages/pulse2/database/xmppmaster
+usr/lib/python3/*-packages/mmc/plugins/xmppmaster
+usr/lib/python3/*-packages/pulse2/database/xmppmaster

@@ -1,2 +1,2 @@
 etc/mmc/plugins/guacamole.ini
-usr/lib/python3.?/*-packages/mmc/plugins/guacamole
+usr/lib/python3/*-packages/mmc/plugins/guacamole
