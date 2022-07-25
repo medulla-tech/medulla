@@ -4,8 +4,8 @@ Priority: extra
 Maintainer: Nicolas Lécureuil <nicolas.lecureuil@siveo.net>
 Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python3-all (>= 3.9), gettext, autotools-dev, xsltproc, docbook-xsl, docbook-xml
 Standards-Version: 3.9.3
-Homepage: http://projects.mandriva.org/projects/mmc/
-X-Python-Version: >= 2.6
+Homepage: https://github.com/pulse-project/pulse2
+X-Python-Version: >= 3.9
 
 Package: pulse2
 Architecture: all
