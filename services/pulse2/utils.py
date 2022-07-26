@@ -275,10 +275,12 @@ def getConfigFile(module, path=mmcconfdir + "/plugins/"):
 
 
 def isdigit(i):
-    if isinstance(i, int) or isinstance(i, int):
+    if isinstance(i, int):
         return True
-    if (isinstance(i, str) or isinstance(i, str)) and re.search("^\\d*$", i):
+
+    if isinstance(i, str) and re.search("^\\d*$", i):
         return True
+
     return False
 
 
