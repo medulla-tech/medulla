@@ -117,7 +117,7 @@ class managepackage:
             shared_dir = os.path.abspath(os.path.realpath(shared_dir))
         for x in  managepackage.search_list_package():
             if verbose:
-                print "symbolic link %s to %s" %(x, os.path.join(dirpackage, os.path.basename(x)))
+                print("symbolic link %s to %s" %(x, os.path.join(dirpackage, os.path.basename(x))))
             try:
                 os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
             except OSError:
@@ -365,12 +365,12 @@ if __name__ == '__main__':
             except MySQLdb.Error as e:
                 errorstr = "%s" % traceback.format_exc()
                 logger.error("\n%s" % (errorstr))
-                print "%s" % (errorstr)
+                print("%s" % (errorstr))
                 sys.exit(255)
             except Exception as e:
                 errorstr = "%s" % traceback.format_exc()
                 logger.error("\n%s" % (errorstr))
-                print "%s" % (errorstr)
+                print("%s" % (errorstr))
                 sys.exit(255)
             finally:
                 cursor.close()
@@ -487,30 +487,30 @@ if __name__ == '__main__':
                                                     package_infos['conf_json'],
                                                     package_infos['size'])
 
-            print sql
+            print(sql)
             try:
                 lastrowid = -1
                 cursor = db.cursor()
                 cursor.execute(sql)
                 lastrowid = cursor.lastrowid
-                print "create package id=%s" % lastrowid
+                print("create package id=%s" % lastrowid)
                 db.commit()
             except MySQLdb.Error as e:
                 errorstr = "%s" % traceback.format_exc()
-                print "%s" % (str(e))
+                print("%s" % (str(e)))
             except Exception as e:
                 errorstr = "%s" % traceback.format_exc()
                 logger.error("\n%s" % (errorstr))
-                print "%s" % (errorstr)
+                print("%s" % (errorstr))
             finally:
                 cursor.close()
     except Exception as e:
         errorstr = "%s" % traceback.format_exc()
         logger.error("\n%s" % (errorstr))
-        print "%s" % (errorstr)
+        print("%s" % (errorstr))
         sys.exit(1)
     finally:
         if db is not None:
             db.close()
     for package in list_package:
-        print package
+        print(package)

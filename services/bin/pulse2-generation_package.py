@@ -116,7 +116,7 @@ def add_coloring_to_emit_windows(fn):
 
         ret = fn(*args)
         args[0]._set_color(FOREGROUND_WHITE)
-        # print "after"
+        # print("after")
         return ret
     return new
 
@@ -138,7 +138,7 @@ def add_coloring_to_emit_ansi(fn):
         else:
             color = '\x1b[0m'  # normal
         args[1].msg = color + str(args[1].msg) + '\x1b[0m'  # normal
-        # print "after"
+        # print("after")
         return fn(*args)
     return new
 
@@ -198,7 +198,7 @@ class managepackage:
             dirpartage = os.path.abspath(os.path.realpath(dirpartage))
         for x in  managepackage.search_list_package():
             if verbeux:
-                print "symbolic link %s to %s" %(x, os.path.join(dirpackage, os.path.basename(x)))
+                print("symbolic link %s to %s") % (x, os.path.join(dirpackage, os.path.basename(x)))
             try:
                 os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
             except OSError:
@@ -281,7 +281,7 @@ class managepackage:
             It returns the version of the package
         """
         for package in managepackage.listpackages():
-            # print os.path.join(package,"xmppdeploy.json")
+            # print(os.path.join(package,"xmppdeploy.json"))
             try:
                 outputJSONFile = managepackage.loadjsonfile(os.path.join(package, "xmppdeploy.json"))
                 if 'info' in outputJSONFile \
@@ -496,7 +496,7 @@ if __name__ == '__main__':
     opts, args = optp.parse_args()
 
     if opts.info:
-        print textprogramme
+        print(textprogramme)
         sys.exit(0)
 
     if not os.path.exists("/var/lib/pulse2/packageerror"):
@@ -545,7 +545,7 @@ if __name__ == '__main__':
 
         if opts.regeneratetable:
             if opts.verbosereport:
-                print "truncate table package"
+                print("truncate table package")
             try:
                 cursor = db.cursor()
                 cursor.execute("DELETE FROM `pkgs`.`packages` WHERE 1;")
@@ -553,12 +553,12 @@ if __name__ == '__main__':
             except MySQLdb.Error as e:
                 errorstr = "%s" % traceback.format_exc()
                 logger.error("\n%s" % (errorstr))
-                print "%s" % (errorstr)
+                print("%s" % (errorstr))
                 sys.exit(255)
             except Exception as e:
                 errorstr = "%s" % traceback.format_exc()
                 logger.error("\n%s" % (errorstr))
-                print "%s" % (errorstr)
+                print("%s" % (errorstr))
                 sys.exit(255)
             finally:
                 cursor.close()
@@ -574,16 +574,16 @@ if __name__ == '__main__':
             if opts.verbosereport:
                 print("\nPARTAGE LISTE")
                 for part in sharingid:
-                    print "%s %s" % (part, sharingid[part])
+                    print("%s %s" % (part, sharingid[part]))
         except MySQLdb.Error as e:
             errorstr = "%s" % traceback.format_exc()
             logger.error("\n%s" % (errorstr))
-            print "%s" % (errorstr)
+            print("%s" % (errorstr))
             sys.exit(255)
         except Exception as e:
             errorstr = "%s" % traceback.format_exc()
             logger.error("\n%s" % (errorstr))
-            print "%s" % (errorstr)
+            print("%s" % (errorstr))
             sys.exit(255)
         finally:
             cursor.close()
@@ -598,7 +598,7 @@ if __name__ == '__main__':
         bad_package=[]
         listpackage = managepackage.search_list_package()
         if opts.verbeux:
-            print "LISTE DES PACKAGES"
+            print("LISTE DES PACKAGES")
         for t in listpackage:
             packagename.append(os.path.basename(t))
             partagename.add(os.path.basename(os.path.dirname(t)))
@@ -611,18 +611,18 @@ if __name__ == '__main__':
             partagename =  os.path.basename(os.path.dirname(t))
             package_partage[partagename].append(t)
         if opts.verbeux:
-            print json.dumps(package_partage, indent=4)
+            print(json.dumps(package_partage, indent=4))
         creationpackageinbase=[]
         errorcreationpackageinbase=[]
         for partage in package_partage:
             for path_package in package_partage[partage]:
                 jsonfilepath = os.path.join(path_package, "conf.json")
                 if opts.verbeux:
-                    print "analyse package suivant %s" % jsonfilepath
+                    print("analyse package suivant %s" % jsonfilepath)
 
                 contenuedejson = managepackage.loadjsonfile(jsonfilepath)
                 if contenuedejson is None:
-                    #print "WARNING PACKAGE %s BAD"%path_package
+                    #print("WARNING PACKAGE %s BAD"%path_package)
                     bad_package.append(path_package)
                     continue
 
@@ -650,7 +650,7 @@ if __name__ == '__main__':
                 if contenuedejson['metagenerator'] == "manual":
                     edition_status = 0
 
-                ### print json.dumps(contenuedejson, indent=4)
+                ### print(json.dumps(contenuedejson, indent=4))
                 du = simplecommand("du -sb")
                 result = simplecommand("du -b %s" % path_package)
                 taillebytefolder = int(result['result'][0].split()[0])
@@ -688,9 +688,9 @@ if __name__ == '__main__':
                 for p in fiche:
                     fiche[p] = MySQLdb.escape_string(str(fiche[p]))
                 if opts.verbeux:
-                    print "creation package %s(%s) dans partage %s" %(fiche['label'],
+                    print("creation package %s(%s) dans partage %s" %(fiche['label'],
                                                                     fiche['uuid'],
-                                                                    partage)
+                                                                    partage))
 
                 sql="""INSERT INTO `pkgs`.`packages` (
                                                 `label`,
@@ -757,7 +757,7 @@ if __name__ == '__main__':
                                                         fiche['edition_status'],
                                                         fiche['conf_json'],
                                                         fiche['size'])
-                #print sql
+                #print(sql)
                 try:
                     lastrowid = -1
                     cursor = db.cursor()
@@ -776,7 +776,7 @@ if __name__ == '__main__':
                     if opts.verbeux:
                         logger.error("\n%s" % (errorstr))
                     if opts.verbeux:
-                        print "%s" % (str(e))
+                        print("%s" % (str(e)))
                     errorcreationpackageinbase.append({ "packagename" : fiche['label'],
                                                         "uuid" : fiche['uuid'],
                                                         "sharing" : partage,
@@ -785,71 +785,71 @@ if __name__ == '__main__':
                 except Exception as e:
                     errorstr = "%s" % traceback.format_exc()
                     logger.error("\n%s" % (errorstr))
-                    print "%s" % (errorstr)
+                    print("%s" % (errorstr))
                 finally:
                     cursor.close()
         if opts.verbosereport:
             if  creationpackageinbase:
-                print "PACKAGE ADD IN BASE"
-                print "+%6s+%15s+%36s+%40s+"%('------',
+                print("PACKAGE ADD IN BASE")
+                print("+%6s+%15s+%36s+%40s+"%('------',
                                             '---------------',
                                             '------------------------------------',
-                                            '----------------------------------------')
-                print "|%6s|%15s|%36s|%40s|"%('ID',
+                                            '----------------------------------------'))
+                print("|%6s|%15s|%36s|%40s|"%('ID',
                                         'sharing',
                                         'uuid package',
-                                        'package name')
+                                        'package name'))
                 for inscription in creationpackageinbase:
-                    print "|%6s|%15s|%36s|%40s|"%(inscription['id'],
+                    print("|%6s|%15s|%36s|%40s|"%(inscription['id'],
                                             inscription['sharing'],
                                             inscription['uuid'],
-                                            inscription['packagename'])
-                print "+%6s+%15s+%36s+%40s+"%('------',
+                                            inscription['packagename']))
+                print("+%6s+%15s+%36s+%40s+"%('------',
                                             '---------------',
                                             '------------------------------------',
-                                            '----------------------------------------')
+                                            '----------------------------------------'))
             else:
-                print "\n No packages have been injected in the database"
+                print("\n No packages have been injected in the database")
         print
         print
         if  errorcreationpackageinbase and opts.verbosereport:
-            print "PACKAGE ERROR INJECTION"
+            print("PACKAGE ERROR INJECTION")
 
-            print "+%15s+%36s+%36s+%50s+"%('---------------',
+            print("+%15s+%36s+%36s+%50s+"%('---------------',
                                             '------------------------------------',
                                             '------------------------------------',
                                             '--------------------------------------------------'\
-                                                '------------------------------------')
+                                                '------------------------------------'))
 
             for inscription in errorcreationpackageinbase:
-                print "|%15s|%36s|%36s|%50s|"%(inscription['sharing'],
+                print("|%15s|%36s|%36s|%50s|"%(inscription['sharing'],
                                                 inscription['uuid'],
                                                 inscription['packagename'],
-                                                inscription['error'])
-            print "+%15s+%36s+%36s+%50s+"%('---------------',
+                                                inscription['error']))
+            print("+%15s+%36s+%36s+%50s+"%('---------------',
                                             '------------------------------------',
                                             '------------------------------------',
                                             '--------------------------------------------------'\
-                                                '------------------------------------')
+                                                '------------------------------------'))
 
         if opts.verbosereport:
             if bad_package:
-                print "List Package non conforme"
+                print("List Package non conforme")
                 for t in bad_package:
-                    print t
+                    print(t)
 
         if opts.movebadpackage:
             for t in bad_package:
                 if opts.verbosereport:
-                    print "move %s to packageerror" % os.path.basename(t)
+                    print("move %s to packageerror" % os.path.basename(t))
                 re = simplecommand("mv %s /var/lib/pulse2/packageerror/"%t)
                 if opts.verbeux:
                     if re['code'] != 0:
-                        print re['result']
+                        print(re['result'])
 
         if opts.linkcreate:
             if opts.verbosereport:
-                print "update lien symbolique"
+                print("update lien symbolique")
             managepackage.del_link_symbolic()
             managepackage.package_for_deploy_from_partage(verbeux = opts.verbosereport)
 
@@ -857,7 +857,7 @@ if __name__ == '__main__':
     except Exception as e:
         errorstr = "%s" % traceback.format_exc()
         logger.error("\n%s" % (errorstr))
-        print "%s" % (errorstr)
+        print("%s" % (errorstr))
         #raise GuacamoleError("MySQL connection error")
         sys.exit(1)
     finally:
