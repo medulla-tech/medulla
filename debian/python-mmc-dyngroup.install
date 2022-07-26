@@ -1,2 +1,3 @@
 usr/lib/python3/*-packages/mmc/plugins/dyngroup
 etc/mmc/plugins/dyngroup.ini
+usr/share/doc/pulse2/contrib/dyngroup

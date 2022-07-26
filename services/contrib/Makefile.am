@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
-contribdir = $(datadir)/doc/mmc/contrib
+contribdir = $(datadir)/doc/pulse2/contrib
 qactionsdir = $(localstatedir)/lib/pulse2/qactions
 
 dist_qactions_DATA = msc/qactions/001reboot.msc \
@@ -29,6 +29,7 @@ dist_qactions_DATA = msc/qactions/001reboot.msc \
 
 nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	admin/sql/schema-001.sql \
+	admin/sql/schema-002.sql \
 	dyngroup/sql/schema-001.sql \
 	dyngroup/sql/schema-002.sql \
 	dyngroup/sql/schema-003.sql \
@@ -146,30 +147,6 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	msc/qactions/102mdv_test_blocking.msc \
 	msc/qactions/103mdv_test_demux.msc \
 	msc/qactions/104mdv_test_sleep_1minute.msc \
-	package-server/some_examples/ff02000009/conf.xml \
-	package-server/some_examples/ff02000009/install.bat \
-	package-server/some_examples/ff02000012/conf.xml \
-	package-server/some_examples/ff02000012/install.bat \
-	package-server/some_examples/ff02000016/conf.xml \
-	package-server/some_examples/ff02000016/install.bat \
-	package-server/some_examples/ff030001/conf.xml \
-	package-server/some_examples/ff030001/install.bat \
-	package-server/some_examples/nvu0100/conf.xml \
-	package-server/some_examples/nvu0100/install.bat \
-	package-server/some_examples/ooo02000000/install.bat \
-	package-server/some_examples/ooo02030000/install.bat \
-	package-server/some_examples/summon-dummy-packages.sh \
-	package-server/some_examples/summon-dummy-packages.xml \
-	package-server/some_examples/tb02000009/conf.xml \
-	package-server/some_examples/tb02000009/install.bat \
-	package-server/some_examples/tb02000012/conf.xml \
-	package-server/some_examples/tb02000012/install.bat \
-	package-server/some_examples/tb02000016/conf.xml \
-	package-server/some_examples/tb02000016/install.bat \
-	package-server/some_examples/wscp0308beta/conf.xml \
-	package-server/some_examples/wscp0308beta/install.bat \
-	package-server/some_examples/download-firefox-setup.sh \
-	package-server/some_examples/download-thunderbird-setup.sh \
 	package-server/tests/pserver-max-dl \
 	package-server/tests/pserver-max-tcp-conn \
 	package-server/tests/pserver-plist \
@@ -262,6 +239,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \
+	kiosk/sql/schema-004.sql \
+	kiosk/sql/schema-005.sql \
 	pkgs/sql/schema-001.sql \
 	pkgs/sql/schema-002.sql \
 	pkgs/sql/schema-003.sql \

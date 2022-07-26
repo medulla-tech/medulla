@@ -90,7 +90,7 @@ install: build
 	cp $(CURDIR)/web/conf/apache/pulse.conf $(DESTDIR)/etc/apache2/conf-available/
 	mkdir -p $(DESTDIR)/var/lib/pulse2/file-transfer
 	#(workaround) Remove schema-018.sql
-	rm -fv $(DESTDIR)/usr/share/doc/pulse2-common/contrib/imaging/sql/schema-018.sql
+	rm -fv $(DESTDIR)/usr/share/doc/pulse2/contrib/imaging/sql/schema-018.sql
 	# Remove opencliparts files
 	rm -frv $(DESTDIR)/usr/share/mmc/media/images/msc/opencliparts_0.18
 	cp  $(DESTDIR)/etc/mmc/apache/mmc.conf $(DESTDIR)/etc/apache2/conf-available/
@@ -98,6 +98,8 @@ install: build
 	mkdir -p $(DESTDIR)/usr/lib/python3/dist-packages/
 	mv -f $(DESTDIR)/usr/lib/python3.9/site-packages/mmc $(DESTDIR)/usr/lib/python3/dist-packages/
 	mv -f $(DESTDIR)/usr/lib/python3.9/site-packages/pulse2 $(DESTDIR)/usr/lib/python3/dist-packages/
+	# Manually copy custom SQL views into /usr/share/doc/pulse2/
+	cp services/contrib/glpi-*.sql  $(DESTDIR)/usr/share/doc/pulse2/contrib/
 
 binary-indep: build install
 	dh_testdir
@@ -138,17 +140,16 @@ binary-arch: build install
 	chown www-data:root debian/python-mmc-support/etc/mmc/plugins/support
 	chmod 750 debian/python-mmc-support/etc/mmc/plugins/support
 	dh_fixperms -Xetc/mmc \
-                    -Xusr/share/doc/pulse2-common/contrib/ \
+                    -Xusr/share/doc/pulse2/contrib/ \
                     -Xvar/lib/pulse2/dlp_packages \
                     -Xvar/lib/pulse2/dlp_sessions \
 		    -Xvar/log/mmc
 	dh_installchangelogs -Npulse2 ChangeLog
 	dh_installdocs -Npulse2
-	find debian/pulse2-common/usr/share/doc/pulse2-common/contrib/ -path '*/imaging/lrsgznbd/*' -prune -o -name 'Makefile*' -exec rm {} \;
-	find debian/pulse2-common/usr/share/doc/pulse2-common/contrib/package-server/some_examples -name '*.bat' -exec chmod 644 {} \;
+	find debian/python-mmc-imaging/usr/share/doc/pulse2/contrib/ -path '*/imaging/lrsgznbd/*' -prune -o -name 'Makefile*' -exec rm {} \;
 	for PKG in $(PKG_LIST); do \
 		rm -r debian/$$PKG/usr/share/doc/$$PKG; \
-		ln -sf pulse2-common debian/$$PKG/usr/share/doc/$$PKG; \
+		ln -sf pulse2 debian/$$PKG/usr/share/doc/$$PKG; \
 	done
 	dh_shlibdeps
 

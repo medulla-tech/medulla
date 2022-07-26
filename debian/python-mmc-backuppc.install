@@ -3,3 +3,4 @@ etc/mmc/plugins/backuppc.ini
 usr/sbin/pulse2-backup-servers
 usr/sbin/pulse2-disconnect-machine-backuppc
 usr/sbin/pulse2-connect-machine-backuppc
+usr/share/doc/pulse2/contrib/backuppc

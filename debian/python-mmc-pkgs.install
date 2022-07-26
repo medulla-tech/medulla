@@ -1,3 +1,4 @@
 usr/lib/python3/*-packages/pulse2/database/pkgs
 usr/lib/python3/*-packages/mmc/plugins/pkgs
 etc/mmc/plugins/pkgs.ini
+usr/share/doc/pulse2/contrib/pkgs

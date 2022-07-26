@@ -1,2 +1,3 @@
 usr/lib/python3/*-packages/mmc/plugins/pulse2
 etc/mmc/plugins/pulse2.ini
+usr/share/doc/pulse2/contrib/pulse2

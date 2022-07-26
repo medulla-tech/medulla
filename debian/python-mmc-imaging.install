@@ -1,2 +1,5 @@
 usr/lib/python3/*-packages/mmc/plugins/imaging
 etc/mmc/plugins/imaging.ini
+usr/share/doc/pulse2/contrib/imaging
+usr/share/doc/pulse2/contrib/imaging-server
+usr/share/doc/pulse2/contrib/package-server

@@ -2,3 +2,4 @@ usr/lib/python3/*-packages/mmc/plugins/inventory
 etc/mmc/plugins/inventory.ini
 usr/sbin/pulse2-inventory-clean-database
 usr/share/man/man1/pulse2-inventory-clean-database.1
+usr/share/doc/pulse2/contrib/inventory
