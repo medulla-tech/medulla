@@ -22,6 +22,7 @@
 
 include_once("modules/dashboard/includes/panel.class.php");
 require_once("modules/glpi/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $options = array(
     "class" => "GlpiPanel",
@@ -33,7 +34,7 @@ $options = array(
 class GlpiPanel extends Panel {
 
     function display_content() {
-
+        // TODO : check this function
         $result = getMachineNumberByState();
         $count = $result['count'];
         $days = $result['days'];
@@ -41,7 +42,7 @@ class GlpiPanel extends Panel {
         $jsonCount = json_encode($count);
         $jsonDays= json_encode($days);
         $total = get_computer_count_for_dashboard();
-        $unregistered = json_encode($total['unregistered']);
+        $unregistered = json_encode($total['total_uninventoried']);
         $createGroupText = json_encode(_T("Create a group", "glpi"));
         $lessThanText = json_encode(_T("< %s days: %percent% (%d)", "glpi"));
         $moreThanText = json_encode(_T("> %s days: %percent% (%d)", "glpi"));

@@ -1359,6 +1359,11 @@ def write_content(path, datas, mode="w"):
         except:
             return False
 
+
+def get_computer_count_for_dashboard():
+    return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard())
+
+
 def get_count_success_rate_for_dashboard():
     result = XmppMasterDatabase().get_count_success_rate_for_dashboard()
     return result

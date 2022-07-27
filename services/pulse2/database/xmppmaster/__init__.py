@@ -7902,6 +7902,37 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
+    def get_computer_count_for_dashboard(self, session):
+        sql = """SELECT
+          SUM(1) as total,
+          SUM(CASE WHEN enabled = 0 THEN 1 ELSE 0 END) as total_offline,
+          SUM(CASE WHEN enabled = 0 AND uuid_inventorymachine = "" THEN 1 ELSE 0 END) as offline_uninventoried,
+          SUM(CASE WHEN enabled = 0 AND uuid_inventorymachine != "" THEN 1 ELSE 0 END) as offline_inventoried,
+          SUM(CASE WHEN enabled = 1 THEN 1 ELSE 0 END) as total_online,
+          SUM(CASE WHEN enabled = 1 AND uuid_inventorymachine = "" THEN 1 ELSE 0 END) as online_uninventoried,
+          SUM(CASE WHEN enabled = 1 AND uuid_inventorymachine != "" THEN 1 ELSE 0 END) as online_inventoried,
+          SUM(CASE WHEN uuid_inventorymachine = "" THEN 1 ELSE 0 END) as total_uninventoried,
+          SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
+        FROM machines WHERE agenttype="machine";"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        # There is only one line so we can truncate
+        ret = [{
+            'total': int(x[0]), 'total_offline': int(x[1]),
+            'offline_uninventoried': int(x[2]), 'offline_inventoried': int(x[3]), 'total_online': int(x[4]),
+            'online_uninventoried' : int(x[5]), 'online_inventoried': int(x[6]),
+            'total_uninventoried': int(x[7]), 'total_inventoried': int(x[8])} for x in result][0]
+
+        return ret
+        return {
+            "registered": len(inventory_filtered_machines),
+            "online": len(registered_online_machine),
+            "offline": len(registered_offline_machine),
+            "unregistered": len(unregistred_online_machine),
+        }
+
+    @DatabaseHelper._sessionm
     def get_syncthing_deploy_to_clean(self, session):
         sql="""
     SELECT

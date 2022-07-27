@@ -20,8 +20,9 @@
  */
 
 include_once("modules/dashboard/includes/panel.class.php");
-require_once("modules/backuppc/includes/xmlrpc.php");?>
-
+require_once("modules/backuppc/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+?>
 <script src="modules/dashboard/graph/js/donut.js"></script>
 <?php $options = array(
     "class" => "BackupPanel",
@@ -36,13 +37,16 @@ class BackupPanel extends Panel {
     function display_content() {
         $urlRedirect = urlStrRedirect("base/computers/createBackupStaticGroup");
         $total_machines = getComputerCount();
+        $all = get_computer_count_for_dashboard();
         $machines_backup = get_count_of_backuped_hosts();
-        $machines_not_backup = $total_machines - $machines_backup;
+        $uninventoried = $all['total_uninventoried'];
+        // Doesn't count uninventoried machines in the not backupped machines
+        // The uninventoried machines are separately counted
+        $machines_not_backup = $all['total'] - $machines_backup - $all['total_uninventoried'];
         $configured_text = _T("Backup configured", "dashboard")." : ";
         $not_configured_text = _T("Backup not configured", "dashboard")." : ";
         $total_machines_text =  _T("Total machines", "dashboard")." :" ;
         $uninventorized_text = _T("Uninventoried Machines","dashboard")." : ";
-        $uninventorized = get_computer_count_for_dashboard()["unregistered"];
         echo <<< BACKUP
         <div id="backup-graph"></div>
           <script>
@@ -50,10 +54,10 @@ class BackupPanel extends Panel {
               {"label": "$configured_text", "value":$machines_backup, "href":"$urlRedirect&backup=yes"},
               {'label': '', 'value': 0, "href": ""},
               {'label': '$not_configured_text', 'value': $machines_not_backup, "href": "$urlRedirect&backup=no"},
-              {'label': '$uninventorized_text', 'value': $uninventorized, "href": "#"}
+              {'label': '$uninventorized_text', 'value': $uninventoried, "href": "#"}
             ];
 
-            donut("backup-graph",backupDatas, "Total", $total_machines+$uninventorized);
+            donut("backup-graph",backupDatas, "Total", $all['total']);
           </script>
 BACKUP;
       }
