@@ -20,12 +20,21 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+
+START TRANSACTION;
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
 --
 -- Table structure for table `upd_list`
 --
+
+ALTER TABLE upd_list_package DROP CONSTRAINT fk_upd_list_package_1;
+ALTER TABLE upd_list_package DROP CONSTRAINT fk_upd_list_package_2;
+ALTER TABLE upd_list_package DROP CONSTRAINT fk_upd_list_package_3;
+ALTER TABLE upd_rules DROP CONSTRAINT fk_upd_method;
+ALTER TABLE upd_rules DROP CONSTRAINT fk_upd_pack;
 
 DROP TABLE IF EXISTS `upd_list`;
 CREATE TABLE `upd_list` (
@@ -45,31 +54,6 @@ CREATE TABLE `upd_list` (
 
 LOCK TABLES `upd_list` WRITE;
     INSERT INTO `upd_list` VALUES (1,'white_list','The Whitelist, is the list of packages allowed to be installed',2,'include',0),(2,'black_list','The Blacklist, is the list of packages not allowed to be installed',1,'exclude',0),(3,'grey_list','The Greylist, is the list of the packages for which we need to take a look',3,'exclude',0);
-UNLOCK TABLES;
-
---
--- Table structure for table `upd_list_package`
---
-
-DROP TABLE IF EXISTS `upd_list_package`;
-CREATE TABLE `upd_list_package` (
-  `package_id` int(11) NOT NULL,
-  `list_id` int(11) NOT NULL,
-  `method_id` int(11) NOT NULL,
-  `actif` int(11) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`package_id`,`list_id`,`method_id`),
-  KEY `fk_pack` (`package_id`),
-  KEY `fk_list` (`list_id`),
-  KEY `fk_methode` (`method_id`),
-  CONSTRAINT `fk_upd_list_package_1` FOREIGN KEY (`package_id`) REFERENCES `upd_package` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_upd_list_package_2` FOREIGN KEY (`list_id`) REFERENCES `upd_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_upd_list_package_3` FOREIGN KEY (`method_id`) REFERENCES `upd_method` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
---
--- Dumping data for table `upd_list_package`
---
-
-LOCK TABLES `upd_list_package` WRITE;
 UNLOCK TABLES;
 
 --
@@ -94,30 +78,6 @@ CREATE TABLE `upd_method` (
 
 LOCK TABLES `upd_method` WRITE;
 INSERT INTO `upd_method` VALUES (1,'interactif','pull curl cdn',3,45,'Delay 3 time the update','{\n    \"messagelist\": {\n        \"1\": \"Accept or deny the update\", \n        \"3\": \"The update will start in 5 minutes. Please save your work.\", \n        \"2\": \"Accept the second update\", \n        \"warning\": \"Please save your work\"\n    }\n}\n'),(2,'direct','pull curl cdn',0,0,'Update without user interaction.','{}'),(3,'conditionnel','pull curl cdn',3,45,'Delay the install 3 times if the user is connected. If not, we install','{\n    \"messagelist\": {\n        \"1\": \"Accept or deny the update\", \n        \"3\": \"The update will start in 5 minutes. Please save your work.\", \n        \"2\": \"Accept the second update\", \n        \"warning\": \"Please save your work\"\n    }\n}\n'),(4,'no_process','pull curl cdn',0,0,'Do not install','{ }');
-UNLOCK TABLES;
-
-
-
---
--- Table structure for table `upd_msg_send`
---
-
-DROP TABLE IF EXISTS `upd_msg_send`;
-CREATE TABLE `upd_msg_send` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `jid` varchar(255) NOT NULL,
-  `json_msg` text NOT NULL,
-  `ars` varchar(255) DEFAULT NULL COMMENT 'ars\n',
-  `session_id` varchar(25) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `upd_msg_send`
---
-
-LOCK TABLES `upd_msg_send` WRITE;
 UNLOCK TABLES;
 
 --
@@ -168,6 +128,55 @@ CREATE TABLE `upd_package_unknown` (
 LOCK TABLES `upd_package_unknown` WRITE;
 UNLOCK TABLES;
 
+
+--
+-- Table structure for table `upd_list_package`
+--
+
+DROP TABLE IF EXISTS `upd_list_package`;
+CREATE TABLE `upd_list_package` (
+  `package_id` int(11) NOT NULL,
+  `list_id` int(11) NOT NULL,
+  `method_id` int(11) NOT NULL,
+  `actif` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`package_id`,`list_id`,`method_id`),
+  KEY `fk_pack` (`package_id`),
+  KEY `fk_list` (`list_id`),
+  KEY `fk_methode` (`method_id`),
+  CONSTRAINT `fk_upd_list_package_1` FOREIGN KEY (`package_id`) REFERENCES `upd_package` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_upd_list_package_2` FOREIGN KEY (`list_id`) REFERENCES `upd_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `fk_upd_list_package_3` FOREIGN KEY (`method_id`) REFERENCES `upd_method` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+--
+-- Dumping data for table `upd_list_package`
+--
+
+LOCK TABLES `upd_list_package` WRITE;
+UNLOCK TABLES;
+
+
+
+--
+-- Table structure for table `upd_msg_send`
+--
+
+DROP TABLE IF EXISTS `upd_msg_send`;
+CREATE TABLE `upd_msg_send` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `jid` varchar(255) NOT NULL,
+  `json_msg` text NOT NULL,
+  `ars` varchar(255) DEFAULT NULL COMMENT 'ars\n',
+  `session_id` varchar(25) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `upd_msg_send`
+--
+
+LOCK TABLES `upd_msg_send` WRITE;
+UNLOCK TABLES;
 --
 -- Table structure for table `upd_rules`
 --
@@ -204,3 +213,5 @@ UNLOCK TABLES;
 --
 
 INSERT INTO `version` VALUES (2);
+
+COMMIT;
