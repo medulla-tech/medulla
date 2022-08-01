@@ -506,7 +506,7 @@ Description: Management Console password policy plugin
 Package: python-mmc-dashboard
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python3-psutil (>= 0.6.1)
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python3-psutil (>= 0.6.1), python3-distro
 Description: Management Console dashboard plugin
  Provides a simple dashboard in MMC.
 

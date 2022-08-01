@@ -1055,7 +1055,8 @@ Requires:   python-base
 Requires:   python
 %endif
 Requires:   python-mmc-base >= %{version}
-Requires:   python-psutil >= 0.6.1
+Requires:   python3-psutil >= 0.6.1
+Requires:   python3-distro
 
 %description -n python-mmc-dashboard
 Console dashboard plugin
