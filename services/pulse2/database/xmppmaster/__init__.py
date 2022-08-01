@@ -8158,7 +8158,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return resultlist
         except Exception as e:
             logging.getLogger().error(str(e))
-            logging.getLogger().error("fn Timeouterrordeploy on sql %s"(sql))
+            logging.getLogger().error("fn Timeouterrordeploy on sql %s" % (sql))
             return resultlist
 
     @DatabaseHelper._sessionm
