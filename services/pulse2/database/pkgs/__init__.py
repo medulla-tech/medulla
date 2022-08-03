@@ -160,7 +160,6 @@ class PkgsDatabase(DatabaseHelper):
             # pkgs_shares
             self.pkgs_shares = Table("pkgs_shares", self.metadata, autoload=True)
 
-        except NoSuchTableError as e:
             # pkgs_rules_algos
             self.pkgs_rules_algos = Table(
                 "pkgs_rules_algos", self.metadata, autoload=True
