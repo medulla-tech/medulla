@@ -241,6 +241,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	kiosk/sql/schema-003.sql \
 	kiosk/sql/schema-004.sql \
 	kiosk/sql/schema-005.sql \
+	kiosk/sql/schema-006.sql \
 	pkgs/sql/schema-001.sql \
 	pkgs/sql/schema-002.sql \
 	pkgs/sql/schema-003.sql \

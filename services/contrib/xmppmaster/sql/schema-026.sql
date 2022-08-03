@@ -74,22 +74,6 @@ ADD INDEX `ind_relay_jid` (`jid` ASC);
 ALTER TABLE `xmppmaster`.`relayserver` 
 ADD INDEX `ind_relay_grpdeploy` (`groupdeploy` ASC);
 
--- base kiosk
-ALTER TABLE `kiosk`.`profile_has_ous`
-CHANGE COLUMN `ou` `ou` VARCHAR(200) NULL DEFAULT NULL ;
-ALTER TABLE `kiosk`.`profile_has_ous`
-ADD INDEX `ind_pr_ous_ou` (`ou` ASC);
-
-ALTER TABLE `kiosk`.`profile_has_ous`
-ADD INDEX `ind_profile` (`profile_id` ASC);
-
-
-ALTER TABLE `kiosk`.`package_has_profil` 
-ADD INDEX `ind_packid` (`package_id` ASC);
-
-ALTER TABLE `kiosk`.`package_has_profil` 
-ADD INDEX `ind_profil` (`profil_id` ASC);
-
 ALTER TABLE `xmppmaster`.`deploy` 
 ADD INDEX `ind_start_cmd` (`startcmd` ASC),
 ADD INDEX `ind_end_cmd` (`endcmd` ASC);
