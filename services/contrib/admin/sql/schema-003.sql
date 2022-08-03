@@ -39,6 +39,6 @@ ALTER TABLE `admin`.`upd_rules`
 ADD CONSTRAINT `fk_upd_pack` FOREIGN KEY (`package_id`) REFERENCES `upd_package` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 
-INSERT INTO `version` VALUES (3);
+UPDATE version SET Number = 3;
 
 COMMIT;

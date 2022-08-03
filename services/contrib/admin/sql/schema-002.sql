@@ -201,6 +201,6 @@ UNLOCK TABLES;
 -- Dumping data for table `version`
 --
 
-INSERT INTO `version` VALUES (2);
+UPDATE version SET Number = 2;
 
 COMMIT;
