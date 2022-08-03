@@ -138,19 +138,25 @@ class messagefilexmpp:
             except:
                 pass
 
-    def sendstr(self, msg, timeout=0, priority= 9):
+    def sendstr(self, msg, timeout=0, priority=9):
         try:
-            self.mpsend.send(msg.encode('utf-8'), timeout = timeout, priority= priority)
+            self.mpsend.send(msg.encode("utf-8"), timeout=timeout, priority=priority)
         except posix_ipc.BusyError:
-            logger.warning("msg posix %s \"BusyError on send message\""\
-                "[timeout is %s] -- VERIFY SUBSTITUTE MASTER IS ON : " %  (self.name_queue,timeout))
+            logger.warning(
+                'msg posix %s "BusyError on send message"'
+                "[timeout is %s] -- VERIFY SUBSTITUTE MASTER IS ON : "
+                % (self.name_queue, timeout)
+            )
 
-    def sendbytes(self, msg, timeout=0, priority= 9):
+    def sendbytes(self, msg, timeout=0, priority=9):
         try:
-            self.mpsend.send(msg, timeout = timeout, priority= priority)
+            self.mpsend.send(msg, timeout=timeout, priority=priority)
         except posix_ipc.BusyError:
-            logger.warning("msg posix %s \"BusyError on send message\""\
-                "[timeout is %s] -- VERIFY SUBSTITUTE MASTER IS ON : " %  (self.name_queue,timeout))
+            logger.warning(
+                'msg posix %s "BusyError on send message"'
+                "[timeout is %s] -- VERIFY SUBSTITUTE MASTER IS ON : "
+                % (self.name_queue, timeout)
+            )
 
     def iqsendpulse(self, mto, mbody, timeout):
         mbody["mto"] = mto
@@ -1249,7 +1255,8 @@ class MMCApp(object):
             code = pm.loadPlugins()
             if code:
                 logger.debug(
-                    "The initialisation of the XMLRPC Server returned the code: %s " % code
+                    "The initialisation of the XMLRPC Server returned the code: %s "
+                    % code
                 )
                 return code
 
