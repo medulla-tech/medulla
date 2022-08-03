@@ -30,12 +30,6 @@ START TRANSACTION;
 -- Table structure for table `upd_list`
 --
 
-ALTER TABLE upd_list_package DROP CONSTRAINT fk_upd_list_package_1;
-ALTER TABLE upd_list_package DROP CONSTRAINT fk_upd_list_package_2;
-ALTER TABLE upd_list_package DROP CONSTRAINT fk_upd_list_package_3;
-ALTER TABLE upd_rules DROP CONSTRAINT fk_upd_method;
-ALTER TABLE upd_rules DROP CONSTRAINT fk_upd_pack;
-
 DROP TABLE IF EXISTS `upd_list`;
 CREATE TABLE `upd_list` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -142,10 +136,7 @@ CREATE TABLE `upd_list_package` (
   PRIMARY KEY (`package_id`,`list_id`,`method_id`),
   KEY `fk_pack` (`package_id`),
   KEY `fk_list` (`list_id`),
-  KEY `fk_methode` (`method_id`),
-  CONSTRAINT `fk_upd_list_package_1` FOREIGN KEY (`package_id`) REFERENCES `upd_package` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_upd_list_package_2` FOREIGN KEY (`list_id`) REFERENCES `upd_list` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_upd_list_package_3` FOREIGN KEY (`method_id`) REFERENCES `upd_method` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  KEY `fk_methode` (`method_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 --
 -- Dumping data for table `upd_list_package`
@@ -195,9 +186,7 @@ CREATE TABLE `upd_rules` (
   `actif` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `pack_id` (`package_id`),
-  KEY `method_id` (`method_id`),
-  CONSTRAINT `fk_upd_method` FOREIGN KEY (`method_id`) REFERENCES `upd_method` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `fk_upd_pack` FOREIGN KEY (`package_id`) REFERENCES `upd_package` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+  KEY `method_id` (`method_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

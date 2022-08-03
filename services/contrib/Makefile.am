@@ -30,6 +30,7 @@ dist_qactions_DATA = msc/qactions/001reboot.msc \
 nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	admin/sql/schema-001.sql \
 	admin/sql/schema-002.sql \
+	admin/sql/schema-003.sql \
 	dyngroup/sql/schema-001.sql \
 	dyngroup/sql/schema-002.sql \
 	dyngroup/sql/schema-003.sql \
