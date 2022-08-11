@@ -254,7 +254,10 @@ def update_package_size(uuid):
         uuid: The uuid of the package
     """
     package_root = os.path.join("/", "var", "lib", "pulse2", "packages", uuid)
-    size = simplecommand("du -Lab %s" % package_root)["result"][-1].split("\t")[0]
+    size = simplecommand("du -Lab %s" % package_root)["result"][-1]
+    if type(size) is bytes:
+        size = size.decode("utf-8")
+    size = size.split("\t")[0]
     return PkgsDatabase().update_package_size(uuid, size)
 
 
