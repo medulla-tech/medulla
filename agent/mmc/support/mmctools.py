@@ -503,8 +503,9 @@ def getConfigParser(module, path=mmcconfdir + "/plugins/"):
     """return a configParser for a plugins"""
     config = configparser.ConfigParser()
     inifile = os.path.join(path, module) + ".ini"
-    fp = file(inifile, "r")
-    config.readfp(fp, inifile)
+    with open(inifile, 'r') as filepointer:
+        config.readfp(filepointer, inifile)
+        filepointer.close()
     if os.path.isfile(inifile + ".local"):
         config.readfp(open(inifile + ".local", "r"))
     return config

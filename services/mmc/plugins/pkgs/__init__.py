@@ -1735,9 +1735,10 @@ def xmpp_packages_list():
         if os.path.isfile(os.path.join(path, dirname, "xmppdeploy.json")) is True:
             # 3 - Extracts the package information and add it to the package list
             # json_content = json.load(file(path+'/'+dirname+'/xmppdeploy.json'))
-            json_content = json.load(
-                file(os.path.join(path, dirname, "xmppdeploy.json"))
-            )
+            json_content = {}
+            with open(os.path.join(path, dirname, "xmppdeploy.json"), "r") as xmppdeploy:
+                json_content = json.load(xmppdeploy)
+                xmppdeploy.close()
             json_content["info"]["uuid"] = dirname
             xmpp_list.append(json_content["info"])
     return xmpp_list
