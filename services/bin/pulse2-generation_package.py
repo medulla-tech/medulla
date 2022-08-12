@@ -210,10 +210,11 @@ class managepackage:
             dirpartage = os.path.abspath(os.path.realpath(dirpartage))
         for x in managepackage.search_list_package():
             if verbeux:
-                print("symbolic link %s to %s") % (
+                logger.debug("symbolic link %s to %s" % (
                     x,
-                    os.path.join(dirpackage, os.path.basename(x)),
-                )
+                    os.path.join(dirpackage, os.path.basename(x))
+                ))
+
             try:
                 os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
             except OSError:
