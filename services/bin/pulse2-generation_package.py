@@ -36,36 +36,37 @@ from datetime import datetime
 from optparse import OptionParser
 import MySQLdb
 import getpass
+
 logger = logging.getLogger()
+
 
 def simplecommand(cmd):
     obj = {}
-    p = subprocess.Popen(cmd,
-                         shell=True,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT)
+    p = subprocess.Popen(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+    )
     result = p.stdout.readlines()
-    obj['code'] = p.wait()
-    obj['result'] = result
+    obj["code"] = p.wait()
+    obj["result"] = result
     return obj
 
 
-
 def add_coloring_to_emit_windows(fn):
-        # add methods we need to the class
+    # add methods we need to the class
     # def _out_handle(self):
-        #import ctypes
-        # return ctypes.windll.kernel32.GetStdHandle(self.STD_OUTPUT_HANDLE)
-    #out_handle = property(_out_handle)
+    # import ctypes
+    # return ctypes.windll.kernel32.GetStdHandle(self.STD_OUTPUT_HANDLE)
+    # out_handle = property(_out_handle)
 
     def _set_color(self, code):
         import ctypes
+
         # Constants from the Windows API
         self.STD_OUTPUT_HANDLE = -11
         hdl = ctypes.windll.kernel32.GetStdHandle(self.STD_OUTPUT_HANDLE)
         ctypes.windll.kernel32.SetConsoleTextAttribute(hdl, code)
 
-    setattr(logging.StreamHandler, '_set_color', _set_color)
+    setattr(logging.StreamHandler, "_set_color", _set_color)
 
     def new(*args):
         FOREGROUND_BLUE = 0x0001  # text color contains blue.
@@ -74,41 +75,46 @@ def add_coloring_to_emit_windows(fn):
         FOREGROUND_INTENSITY = 0x0008  # text color is intensified.
         FOREGROUND_WHITE = FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED
         # winbase.h
-        #STD_INPUT_HANDLE = -10
-        #STD_OUTPUT_HANDLE = -11
-        #STD_ERROR_HANDLE = -12
+        # STD_INPUT_HANDLE = -10
+        # STD_OUTPUT_HANDLE = -11
+        # STD_ERROR_HANDLE = -12
 
         # wincon.h
-        #FOREGROUND_BLACK     = 0x0000
+        # FOREGROUND_BLACK     = 0x0000
         FOREGROUND_BLUE = 0x0001
         FOREGROUND_GREEN = 0x0002
-        #FOREGROUND_CYAN      = 0x0003
+        # FOREGROUND_CYAN      = 0x0003
         FOREGROUND_RED = 0x0004
         FOREGROUND_MAGENTA = 0x0005
         FOREGROUND_YELLOW = 0x0006
-        #FOREGROUND_GREY      = 0x0007
+        # FOREGROUND_GREY      = 0x0007
         FOREGROUND_INTENSITY = 0x0008  # foreground color is intensified.
 
-        #BACKGROUND_BLACK     = 0x0000
-        #BACKGROUND_BLUE      = 0x0010
-        #BACKGROUND_GREEN     = 0x0020
-        #BACKGROUND_CYAN      = 0x0030
-        #BACKGROUND_RED       = 0x0040
-        #BACKGROUND_MAGENTA   = 0x0050
+        # BACKGROUND_BLACK     = 0x0000
+        # BACKGROUND_BLUE      = 0x0010
+        # BACKGROUND_GREEN     = 0x0020
+        # BACKGROUND_CYAN      = 0x0030
+        # BACKGROUND_RED       = 0x0040
+        # BACKGROUND_MAGENTA   = 0x0050
         BACKGROUND_YELLOW = 0x0060
-        #BACKGROUND_GREY      = 0x0070
+        # BACKGROUND_GREY      = 0x0070
         BACKGROUND_INTENSITY = 0x0080  # background color is intensified.
 
         levelno = args[1].levelno
-        if(levelno >= 50):
-            color = BACKGROUND_YELLOW | FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_INTENSITY
-        elif(levelno >= 40):
+        if levelno >= 50:
+            color = (
+                BACKGROUND_YELLOW
+                | FOREGROUND_RED
+                | FOREGROUND_INTENSITY
+                | BACKGROUND_INTENSITY
+            )
+        elif levelno >= 40:
             color = FOREGROUND_RED | FOREGROUND_INTENSITY
-        elif(levelno >= 30):
+        elif levelno >= 30:
             color = FOREGROUND_YELLOW | FOREGROUND_INTENSITY
-        elif(levelno >= 20):
+        elif levelno >= 20:
             color = FOREGROUND_GREEN
-        elif(levelno >= 10):
+        elif levelno >= 10:
             color = FOREGROUND_MAGENTA
         else:
             color = FOREGROUND_WHITE
@@ -118,6 +124,7 @@ def add_coloring_to_emit_windows(fn):
         args[0]._set_color(FOREGROUND_WHITE)
         # print("after")
         return ret
+
     return new
 
 
@@ -125,26 +132,28 @@ def add_coloring_to_emit_ansi(fn):
     # add methods we need to the class
     def new(*args):
         levelno = args[1].levelno
-        if(levelno >= 50):
-            color = '\x1b[31m'  # red
-        elif(levelno >= 40):
-            color = '\x1b[31m'  # red
-        elif(levelno >= 30):
-            color = '\x1b[33m'  # yellow
-        elif(levelno >= 20):
-            color = '\x1b[32m'  # green
-        elif(levelno >= 10):
-            color = '\x1b[35m'  # pink
+        if levelno >= 50:
+            color = "\x1b[31m"  # red
+        elif levelno >= 40:
+            color = "\x1b[31m"  # red
+        elif levelno >= 30:
+            color = "\x1b[33m"  # yellow
+        elif levelno >= 20:
+            color = "\x1b[32m"  # green
+        elif levelno >= 10:
+            color = "\x1b[35m"  # pink
         else:
-            color = '\x1b[0m'  # normal
-        args[1].msg = color + str(args[1].msg) + '\x1b[0m'  # normal
+            color = "\x1b[0m"  # normal
+        args[1].msg = color + str(args[1].msg) + "\x1b[0m"  # normal
         # print("after")
         return fn(*args)
+
     return new
+
 
 class managepackage:
     # variable de classe
-    agenttype="relayserver"
+    agenttype = "relayserver"
 
     @staticmethod
     def packagedir():
@@ -153,67 +162,75 @@ class managepackage:
 
         @return: string: The path of the package folder.
         """
-        if sys.platform.startswith('linux'):
+        if sys.platform.startswith("linux"):
             if managepackage.agenttype == "relayserver":
                 return os.path.join("/", "var", "lib", "pulse2", "packages")
             else:
-                return os.path.join(os.path.expanduser('~pulseuser'),
-'packages')
-        elif sys.platform.startswith('win'):
+                return os.path.join(os.path.expanduser("~pulseuser"), "packages")
+        elif sys.platform.startswith("win"):
             return os.path.join(
-                os.environ["ProgramFiles"], "Pulse", "var", "tmp", "packages")
-        elif sys.platform.startswith('darwin'):
-            return os.path.join(
-                "/opt", "Pulse", "packages")
+                os.environ["ProgramFiles"], "Pulse", "var", "tmp", "packages"
+            )
+        elif sys.platform.startswith("darwin"):
+            return os.path.join("/opt", "Pulse", "packages")
         else:
             return None
 
     @staticmethod
-    def search_list_package(dirpartage = None):
+    def search_list_package(dirpartage=None):
         """
-            list tout les packages in les partages
+        list tout les packages in les partages
         """
-        packagelist=[]
+        packagelist = []
         if dirpartage is None:
             dirpackage = managepackage.packagedir()
         else:
             dirpartage = os.path.abspath(os.path.realpath(dirpartage))
         dirglobal = os.path.join(dirpackage, "sharing", "global")
-        packagelist = [os.path.join(dirglobal, f) for f in os.listdir(dirglobal) if len(f) == 36]
-        dirlocal  = os.path.join(dirpackage, "sharing")
-        pathnamepartage = [os.path.join(dirlocal, f) for f in os.listdir(dirlocal) if f != "global"]
+        packagelist = [
+            os.path.join(dirglobal, f) for f in os.listdir(dirglobal) if len(f) == 36
+        ]
+        dirlocal = os.path.join(dirpackage, "sharing")
+        pathnamepartage = [
+            os.path.join(dirlocal, f) for f in os.listdir(dirlocal) if f != "global"
+        ]
         for part in pathnamepartage:
             filelist = [os.path.join(part, f) for f in os.listdir(part) if len(f) == 36]
             packagelist += filelist
         return packagelist
 
     @staticmethod
-    def package_for_deploy_from_partage(dirpartage = None, verbeux = False):
+    def package_for_deploy_from_partage(dirpartage=None, verbeux=False):
         """
-            Cette fonction crée les liens symbolique pour les partages.
+        Cette fonction crée les liens symbolique pour les partages.
         """
         if dirpartage is None:
             dirpackage = managepackage.packagedir()
         else:
             dirpartage = os.path.abspath(os.path.realpath(dirpartage))
-        for x in  managepackage.search_list_package():
+        for x in managepackage.search_list_package():
             if verbeux:
-                print("symbolic link %s to %s") % (x, os.path.join(dirpackage, os.path.basename(x)))
+                print("symbolic link %s to %s") % (
+                    x,
+                    os.path.join(dirpackage, os.path.basename(x)),
+                )
             try:
                 os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
             except OSError:
                 pass
 
     @staticmethod
-    def del_link_symbolic(dirpackage = None):
+    def del_link_symbolic(dirpackage=None):
         """
-            Cette fonction suprime les liens symboliques cassés pour les partages.
+        Cette fonction suprime les liens symboliques cassés pour les partages.
         """
         if dirpackage is None:
             dirpackage = managepackage.packagedir()
         else:
             dirpackage = os.path.abspath(os.path.realpath(dirpackage))
-        packagelist = [os.path.join(dirpackage, f) for f in os.listdir(dirpackage) if len(f) == 36]
+        packagelist = [
+            os.path.join(dirpackage, f) for f in os.listdir(dirpackage) if len(f) == 36
+        ]
         for fi in packagelist:
             if os.path.islink(fi) and not os.path.exists(fi):
                 os.remove(fi)
@@ -225,8 +242,11 @@ class managepackage:
         Returns:
             It returns the list of the packages.
         """
-        return [os.path.join(managepackage.packagedir(), x) for x in os.listdir(
-            managepackage.packagedir()) if os.path.isdir(os.path.join(managepackage.packagedir(), x))]
+        return [
+            os.path.join(managepackage.packagedir(), x)
+            for x in os.listdir(managepackage.packagedir())
+            if os.path.isdir(os.path.join(managepackage.packagedir(), x))
+        ]
 
     @staticmethod
     def loadjsonfile(filename):
@@ -239,12 +259,10 @@ class managepackage:
         """
 
         if os.path.isfile(filename):
-            with open(filename,
-'r') as info:
+            with open(filename, "r") as info:
                 jsonFile = info.read()
             try:
-                outputJSONFile = json.loads(jsonFile.decode('utf-8',
-'ignore'))
+                outputJSONFile = json.loads(jsonFile.decode("utf-8", "ignore"))
                 return outputJSONFile
             except Exception as e:
                 logger.error("We failed to decode the file %s" % filename)
@@ -256,16 +274,25 @@ class managepackage:
         for package in managepackage.listpackages():
             try:
                 outputJSONFile = managepackage.loadjsonfile(
-                    os.path.join(package, "xmppdeploy.json"))
-                if 'info' in outputJSONFile \
-                        and ('software' in outputJSONFile['info'] and\
-                            'version' in outputJSONFile['info']) \
-                        and (outputJSONFile['info']['software'] == packagename or\
-                            outputJSONFile['info']['name'] == packagename):
+                    os.path.join(package, "xmppdeploy.json")
+                )
+                if (
+                    "info" in outputJSONFile
+                    and (
+                        "software" in outputJSONFile["info"]
+                        and "version" in outputJSONFile["info"]
+                    )
+                    and (
+                        outputJSONFile["info"]["software"] == packagename
+                        or outputJSONFile["info"]["name"] == packagename
+                    )
+                ):
                     return outputJSONFile
             except Exception as e:
-                logger.error("Please verify the format of the descriptor for"
-                             "the package %s." %s)
+                logger.error(
+                    "Please verify the format of the descriptor for"
+                    "the package %s." % s
+                )
                 logger.error("we are encountering the error: %s" % str(e))
         return None
 
@@ -283,14 +310,26 @@ class managepackage:
         for package in managepackage.listpackages():
             # print(os.path.join(package,"xmppdeploy.json"))
             try:
-                outputJSONFile = managepackage.loadjsonfile(os.path.join(package, "xmppdeploy.json"))
-                if 'info' in outputJSONFile \
-                        and ('software' in outputJSONFile['info'] and 'version' in outputJSONFile['info']) \
-                        and (outputJSONFile['info']['software'] == packagename or outputJSONFile['info']['name'] == packagename):
-                    return outputJSONFile['info']['version']
+                outputJSONFile = managepackage.loadjsonfile(
+                    os.path.join(package, "xmppdeploy.json")
+                )
+                if (
+                    "info" in outputJSONFile
+                    and (
+                        "software" in outputJSONFile["info"]
+                        and "version" in outputJSONFile["info"]
+                    )
+                    and (
+                        outputJSONFile["info"]["software"] == packagename
+                        or outputJSONFile["info"]["name"] == packagename
+                    )
+                ):
+                    return outputJSONFile["info"]["version"]
             except Exception as e:
-                logger.error("Please verify the version for the package %s in the descriptor"
-                             "in the xmppdeploy.json file." % package)
+                logger.error(
+                    "Please verify the version for the package %s in the descriptor"
+                    "in the xmppdeploy.json file." % package
+                )
                 logger.error("we are encountering the error: %s" % str(e))
         return None
 
@@ -306,14 +345,24 @@ class managepackage:
         for package in managepackage.listpackages():
             try:
                 outputJSONFile = managepackage.loadjsonfile(
-                    os.path.join(package, "xmppdeploy.json"))
-                if 'info' in outputJSONFile \
-                    and (('software' in outputJSONFile['info'] and outputJSONFile['info']['software'] == packagename)
-                         or ('name' in outputJSONFile['info'] and outputJSONFile['info']['name'] == packagename)):
+                    os.path.join(package, "xmppdeploy.json")
+                )
+                if "info" in outputJSONFile and (
+                    (
+                        "software" in outputJSONFile["info"]
+                        and outputJSONFile["info"]["software"] == packagename
+                    )
+                    or (
+                        "name" in outputJSONFile["info"]
+                        and outputJSONFile["info"]["name"] == packagename
+                    )
+                ):
                     return package
             except Exception as e:
-                logger.error("Please verify the name for the package %s in the descriptor"
-                             "in the xmppdeploy.json file." % package)
+                logger.error(
+                    "Please verify the name for the package %s in the descriptor"
+                    "in the xmppdeploy.json file." % package
+                )
                 logger.error("we are encountering the error: %s" % str(e))
         return None
 
@@ -330,15 +379,15 @@ class managepackage:
         for package in managepackage.listpackages():
             try:
                 outputJSONFile = managepackage.loadjsonfile(
-                    os.path.join(package, "conf.json"))
-                if 'id' in outputJSONFile and outputJSONFile['id'] == uuidpackage:
+                    os.path.join(package, "conf.json")
+                )
+                if "id" in outputJSONFile and outputJSONFile["id"] == uuidpackage:
                     return package
             except Exception as e:
                 logger.error("The conf.json for the package %s is missing" % package)
                 logger.error("we are encountering the error: %s" % str(e))
         logger.error("We did not find the package %s" % package)
         return None
-
 
     @staticmethod
     def getversionpackageuuid(packageuuid):
@@ -354,35 +403,39 @@ class managepackage:
         for package in managepackage.listpackages():
             try:
                 outputJSONFile = managepackage.loadjsonfile(
-                    os.path.join(package, "conf.json"))
-                if 'id' in outputJSONFile and outputJSONFile['id'] == packageuuid \
-                    and 'version' in outputJSONFile:
-                    return outputJSONFile['version']
+                    os.path.join(package, "conf.json")
+                )
+                if (
+                    "id" in outputJSONFile
+                    and outputJSONFile["id"] == packageuuid
+                    and "version" in outputJSONFile
+                ):
+                    return outputJSONFile["version"]
             except Exception as e:
                 logger.error(
-                    "package %s verify format descriptor conf.json [%s]" %
-                    (packageuuid, str(e)))
-        logger.error("package %s verify version" \
-                        "in descriptor conf.json [%s]" %(packageuuid))
+                    "package %s verify format descriptor conf.json [%s]"
+                    % (packageuuid, str(e))
+                )
+        logger.error(
+            "package %s verify version" "in descriptor conf.json [%s]" % (packageuuid)
+        )
         return None
 
     @staticmethod
     def getnamepackagefromuuidpackage(uuidpackage):
         pathpackage = os.path.join(
-            managepackage.packagedir(),
-            uuidpackage,
-            "xmppdeploy.json")
+            managepackage.packagedir(), uuidpackage, "xmppdeploy.json"
+        )
         if os.path.isfile(pathpackage):
             outputJSONFile = managepackage.loadjsonfile(pathpackage)
-            return outputJSONFile['info']['name']
+            return outputJSONFile["info"]["name"]
         return None
 
     @staticmethod
     def getdescriptorpackageuuid(packageuuid):
         jsonfile = os.path.join(
-            managepackage.packagedir(),
-            packageuuid,
-            "xmppdeploy.json")
+            managepackage.packagedir(), packageuuid, "xmppdeploy.json"
+        )
         if os.path.isfile(jsonfile):
             try:
                 outputJSONFile = managepackage.loadjsonfile(jsonfile)
@@ -394,9 +447,10 @@ class managepackage:
     def getpathpackage(uuidpackage):
         return os.path.join(managepackage.packagedir(), uuidpackage)
 
-if __name__ == '__main__':
-    base="pkgs"
-    textprogramme="""
+
+if __name__ == "__main__":
+    base = "pkgs"
+    textprogramme = """
     Usage: generation_package.py [options]
 
     Ce Programme permet de migrer
@@ -439,59 +493,93 @@ if __name__ == '__main__':
                             /var/lib/pulse2/packageerror
     -l, --linkcreate      regenere les liens symbolique des package
     """
-    textprogrammehelp="\nCe Programme permet de migrer\n" \
-        "les packages de /var/lib/pulse/packages\n" \
-        "\nvers\n" \
-        "les partages /var/lib/pulse/packages/sharing\n"\
+    textprogrammehelp = (
+        "\nCe Programme permet de migrer\n"
+        "les packages de /var/lib/pulse/packages\n"
+        "\nvers\n"
+        "les partages /var/lib/pulse/packages/sharing\n"
         "\nvoir pour information generation_package.py -i"
-
+    )
 
     logging.StreamHandler.emit = add_coloring_to_emit_ansi(logging.StreamHandler.emit)
-    logging.basicConfig(level = logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.basicConfig(
+        level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
+    )
     optp = OptionParser(description=textprogrammehelp)
-    optp.add_option("-H", "--host",
-                    dest="hostname", default = "localhost",
-                    help="hostname SGBD")
+    optp.add_option(
+        "-H", "--host", dest="hostname", default="localhost", help="hostname SGBD"
+    )
 
-    optp.add_option("-P", "--port",
-                    dest="port", default = 3306,
-                    help="port_decreation")
+    optp.add_option("-P", "--port", dest="port", default=3306, help="port_decreation")
 
-    optp.add_option("-u", "--user",
-                    dest="user", default = "root",
-                    help="user compter")
-    password=""
-    optp.add_option("-p", "--password",
-                    dest="password", default = "",
-                    help="password connection")
+    optp.add_option("-u", "--user", dest="user", default="root", help="user compter")
+    password = ""
+    optp.add_option(
+        "-p", "--password", dest="password", default="", help="password connection"
+    )
 
-    optp.add_option("-v", "--verbeux", action="store_true",
-                    dest="verbeux", default=False,
-                    help="mode verbeux")
+    optp.add_option(
+        "-v",
+        "--verbeux",
+        action="store_true",
+        dest="verbeux",
+        default=False,
+        help="mode verbeux",
+    )
 
-    optp.add_option("-r", "--report", action="store_true",
-                    dest="verbosereport", default=False,
-                    help="print report messages to stdout")
+    optp.add_option(
+        "-r",
+        "--report",
+        action="store_true",
+        dest="verbosereport",
+        default=False,
+        help="print report messages to stdout",
+    )
 
-    optp.add_option("-g", "--regeneratetable", action="store_true",
-                    dest="regeneratetable", default=False,
-                    help="reinitialise des packages dans la bases")
+    optp.add_option(
+        "-g",
+        "--regeneratetable",
+        action="store_true",
+        dest="regeneratetable",
+        default=False,
+        help="reinitialise des packages dans la bases",
+    )
 
-    optp.add_option("-m", "--move", action="store_true",
-                    dest="movebadpackage", default=False,
-                    help="deplace les packages avec erreur vers /var/lib/pulse2/packageerror")
+    optp.add_option(
+        "-m",
+        "--move",
+        action="store_true",
+        dest="movebadpackage",
+        default=False,
+        help="deplace les packages avec erreur vers /var/lib/pulse2/packageerror",
+    )
 
-    optp.add_option("-l", "--linkcreate", action="store_true",
-                    dest="linkcreate", default=False,
-                    help="regenere les liens symbolique des package")
+    optp.add_option(
+        "-l",
+        "--linkcreate",
+        action="store_true",
+        dest="linkcreate",
+        default=False,
+        help="regenere les liens symbolique des package",
+    )
 
-    optp.add_option("-t", "--testconnect", action="store_true",
-                    dest="testconnect", default=False,
-                    help="test connection et quitte")
+    optp.add_option(
+        "-t",
+        "--testconnect",
+        action="store_true",
+        dest="testconnect",
+        default=False,
+        help="test connection et quitte",
+    )
 
-    optp.add_option("-i", "--info", action="store_true",
-                    dest="info", default=False,
-                    help="message information et quitte")
+    optp.add_option(
+        "-i",
+        "--info",
+        action="store_true",
+        dest="info",
+        default=False,
+        help="message information et quitte",
+    )
 
     opts, args = optp.parse_args()
 
@@ -508,36 +596,36 @@ if __name__ == '__main__':
     if opts.password != "":
         Passwordbase = opts.password
     else:
-        Passwordbase = getpass.getpass(prompt='Password for mysql://' \
-                                       '%s:<password>@%s:%s/%s'%(opts.user,
-                                                                 opts.hostname,
-                                                                 opts.port,
-                                                                 base),
-                                       stream=None)
+        Passwordbase = getpass.getpass(
+            prompt="Password for mysql://"
+            "%s:<password>@%s:%s/%s" % (opts.user, opts.hostname, opts.port, base),
+            stream=None,
+        )
     if opts.verbeux or opts.testconnect:
-        logger.debug("try Connecting with parameters\n" \
-                        "\thost: %s\n" \
-                        "\tuser: %s\n" \
-                        "\tport: %s\n" \
-                        "\tdb: %s\n" %( opts.hostname,
-                                        opts.user,
-                                        int(opts.port),
-                                        base))
+        logger.debug(
+            "try Connecting with parameters\n"
+            "\thost: %s\n"
+            "\tuser: %s\n"
+            "\tport: %s\n"
+            "\tdb: %s\n" % (opts.hostname, opts.user, int(opts.port), base)
+        )
 
     try:
-        db = MySQLdb.connect(host=opts.hostname,
-                             user=opts.user,
-                             passwd=Passwordbase,
-                             port = int(opts.port),
-                             db=base)
+        db = MySQLdb.connect(
+            host=opts.hostname,
+            user=opts.user,
+            passwd=Passwordbase,
+            port=int(opts.port),
+            db=base,
+        )
 
         if opts.verbeux:
-            logger.debug("Connecting with parameters\n" \
-                            "\thost: %s\n" \
-                            "\tuser: %s\n" \
-                            "\tdb: %s\n" %( opts.hostname,
-                                        opts.user,
-                                        base))
+            logger.debug(
+                "Connecting with parameters\n"
+                "\thost: %s\n"
+                "\tuser: %s\n"
+                "\tdb: %s\n" % (opts.hostname, opts.user, base)
+            )
 
         if opts.testconnect:
             logger.debug("CONNECT SUCCESS")
@@ -564,7 +652,7 @@ if __name__ == '__main__':
                 cursor.close()
 
         cursor = db.cursor()
-        sharingid={}
+        sharingid = {}
         try:
             cursor.execute("SELECT id,name FROM pkgs.pkgs_shares;")
             records = cursor.fetchall()
@@ -588,14 +676,12 @@ if __name__ == '__main__':
         finally:
             cursor.close()
 
-
-
-        packagename=[]
-        partagename=set()
+        packagename = []
+        partagename = set()
         partagename.add("global")
 
-        package_partage={}
-        bad_package=[]
+        package_partage = {}
+        bad_package = []
         listpackage = managepackage.search_list_package()
         if opts.verbeux:
             print("LISTE DES PACKAGES")
@@ -604,16 +690,16 @@ if __name__ == '__main__':
             partagename.add(os.path.basename(os.path.dirname(t)))
 
         for t in partagename:
-            package_partage[t]=[]
+            package_partage[t] = []
 
         for t in listpackage:
             packagename.append(os.path.basename(t))
-            partagename =  os.path.basename(os.path.dirname(t))
+            partagename = os.path.basename(os.path.dirname(t))
             package_partage[partagename].append(t)
         if opts.verbeux:
             print(json.dumps(package_partage, indent=4))
-        creationpackageinbase=[]
-        errorcreationpackageinbase=[]
+        creationpackageinbase = []
+        errorcreationpackageinbase = []
         for partage in package_partage:
             for path_package in package_partage[partage]:
                 jsonfilepath = os.path.join(path_package, "conf.json")
@@ -622,77 +708,110 @@ if __name__ == '__main__':
 
                 contenuedejson = managepackage.loadjsonfile(jsonfilepath)
                 if contenuedejson is None:
-                    #print("WARNING PACKAGE %s BAD"%path_package)
+                    # print("WARNING PACKAGE %s BAD"%path_package)
                     bad_package.append(path_package)
                     continue
 
-                if not('localisation_server' in contenuedejson and contenuedejson['localisation_server'] != "") :
-                    contenuedejson['localisation_server'] = partage
-                    contenuedejson['previous_localisation_server'] = partage
+                if not (
+                    "localisation_server" in contenuedejson
+                    and contenuedejson["localisation_server"] != ""
+                ):
+                    contenuedejson["localisation_server"] = partage
+                    contenuedejson["previous_localisation_server"] = partage
 
-                if not ("creator" in contenuedejson and contenuedejson['creator'] != "") :
-                    contenuedejson['creator'] = "root"
+                if not (
+                    "creator" in contenuedejson and contenuedejson["creator"] != ""
+                ):
+                    contenuedejson["creator"] = "root"
 
-                if not ("edition" in contenuedejson  and contenuedejson['edition'] != "") :
-                    contenuedejson['edition'] = "root"
+                if not (
+                    "edition" in contenuedejson and contenuedejson["edition"] != ""
+                ):
+                    contenuedejson["edition"] = "root"
 
-                if not "creation_date" in contenuedejson or\
-                        contenuedejson['creation_date'] == "" :
-                    contenuedejson['creation_date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                if (
+                    not "creation_date" in contenuedejson
+                    or contenuedejson["creation_date"] == ""
+                ):
+                    contenuedejson["creation_date"] = datetime.now().strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    )
 
-                if not "edition_date" in contenuedejson or\
-                        contenuedejson['edition_date'] == "" :
-                    contenuedejson['edition_date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                if 'metagenerator' not in contenuedejson:
-                    contenuedejson['metagenerator'] = "expert"
+                if (
+                    not "edition_date" in contenuedejson
+                    or contenuedejson["edition_date"] == ""
+                ):
+                    contenuedejson["edition_date"] = datetime.now().strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    )
+                if "metagenerator" not in contenuedejson:
+                    contenuedejson["metagenerator"] = "expert"
 
                 edition_status = 1
-                if contenuedejson['metagenerator'] == "manual":
+                if contenuedejson["metagenerator"] == "manual":
                     edition_status = 0
 
                 ### print(json.dumps(contenuedejson, indent=4))
                 du = simplecommand("du -sb")
                 result = simplecommand("du -b %s" % path_package)
-                taillebytefolder = int(result['result'][0].split()[0])
-                fiche={ "size" : "%s" % taillebytefolder,
-                        "label" :contenuedejson['name'],
-                        "description" : contenuedejson['description'],
-                        "version" : contenuedejson['version'],
-                        "os" : contenuedejson['targetos'],
-                        "metagenerator" : contenuedejson['metagenerator'],
-                        "uuid" : contenuedejson['id'],
-                        "entity_id": contenuedejson['entity_id'],
-                        "sub_packages": json.dumps(contenuedejson['sub_packages']),
-                        "reboot": contenuedejson['reboot'],
-                        "inventory_associateinventory": contenuedejson['inventory']['associateinventory'],
-                        "inventory_licenses": contenuedejson['inventory']['licenses'],
-                        "Qversion": contenuedejson['inventory']['queries']['Qversion'],
-                        "Qvendor": contenuedejson['inventory']['queries']['Qvendor'],
-                        "Qsoftware": contenuedejson['inventory']['queries']['Qsoftware'],
-                        "boolcnd": contenuedejson['inventory']['queries']['boolcnd'],
-                        "postCommandSuccess_command": contenuedejson['commands']['postCommandSuccess']['command'],
-                        "postCommandSuccess_name": contenuedejson['commands']['postCommandSuccess']['name'],
-                        "installInit_command": contenuedejson['commands']['installInit']['command'],
-                        "installInit_name": contenuedejson['commands']['installInit']['name'],
-                        "postCommandFailure_command": contenuedejson['commands']['postCommandFailure']['command'],
-                        "postCommandFailure_name": contenuedejson['commands']['postCommandFailure']['name'],
-                        "command_command": contenuedejson['commands']['command']['command'],
-                        "command_name": contenuedejson['commands']['command']['name'],
-                        "preCommand_command": contenuedejson['commands']['preCommand']['command'],
-                        "preCommand_name": contenuedejson['commands']['preCommand']['name'],
-                        "pkgs_share_id": sharingid[partage],
-                        "edition_status": 1,
-                        "conf_json": json.dumps(contenuedejson)}
-
+                taillebytefolder = int(result["result"][0].split()[0])
+                fiche = {
+                    "size": "%s" % taillebytefolder,
+                    "label": contenuedejson["name"],
+                    "description": contenuedejson["description"],
+                    "version": contenuedejson["version"],
+                    "os": contenuedejson["targetos"],
+                    "metagenerator": contenuedejson["metagenerator"],
+                    "uuid": contenuedejson["id"],
+                    "entity_id": contenuedejson["entity_id"],
+                    "sub_packages": json.dumps(contenuedejson["sub_packages"]),
+                    "reboot": contenuedejson["reboot"],
+                    "inventory_associateinventory": contenuedejson["inventory"][
+                        "associateinventory"
+                    ],
+                    "inventory_licenses": contenuedejson["inventory"]["licenses"],
+                    "Qversion": contenuedejson["inventory"]["queries"]["Qversion"],
+                    "Qvendor": contenuedejson["inventory"]["queries"]["Qvendor"],
+                    "Qsoftware": contenuedejson["inventory"]["queries"]["Qsoftware"],
+                    "boolcnd": contenuedejson["inventory"]["queries"]["boolcnd"],
+                    "postCommandSuccess_command": contenuedejson["commands"][
+                        "postCommandSuccess"
+                    ]["command"],
+                    "postCommandSuccess_name": contenuedejson["commands"][
+                        "postCommandSuccess"
+                    ]["name"],
+                    "installInit_command": contenuedejson["commands"]["installInit"][
+                        "command"
+                    ],
+                    "installInit_name": contenuedejson["commands"]["installInit"][
+                        "name"
+                    ],
+                    "postCommandFailure_command": contenuedejson["commands"][
+                        "postCommandFailure"
+                    ]["command"],
+                    "postCommandFailure_name": contenuedejson["commands"][
+                        "postCommandFailure"
+                    ]["name"],
+                    "command_command": contenuedejson["commands"]["command"]["command"],
+                    "command_name": contenuedejson["commands"]["command"]["name"],
+                    "preCommand_command": contenuedejson["commands"]["preCommand"][
+                        "command"
+                    ],
+                    "preCommand_name": contenuedejson["commands"]["preCommand"]["name"],
+                    "pkgs_share_id": sharingid[partage],
+                    "edition_status": 1,
+                    "conf_json": json.dumps(contenuedejson),
+                }
 
                 for p in fiche:
                     fiche[p] = MySQLdb.escape_string(str(fiche[p]))
                 if opts.verbeux:
-                    print("creation package %s(%s) dans partage %s" %(fiche['label'],
-                                                                    fiche['uuid'],
-                                                                    partage))
+                    print(
+                        "creation package %s(%s) dans partage %s"
+                        % (fiche["label"], fiche["uuid"], partage)
+                    )
 
-                sql="""INSERT INTO `pkgs`.`packages` (
+                sql = """INSERT INTO `pkgs`.`packages` (
                                                 `label`,
                                                 `description`,
                                                 `uuid`,
@@ -727,37 +846,38 @@ if __name__ == '__main__':
                                                         "%s","%s","%s","%s","%s",
                                                         "%s","%s","%s","%s","%s",
                                                         "%s","%s","%s","%s","%s",
-                                                        "%s","%s","%s","%s");"""%(
-                                                        fiche['label'],
-                                                        fiche['description'],
-                                                        fiche['uuid'],
-                                                        fiche['version'],
-                                                        fiche['os'],
-                                                        fiche['metagenerator'],
-                                                        fiche['entity_id'],
-                                                        fiche['sub_packages'],
-                                                        fiche['reboot'],
-                                                        fiche['inventory_associateinventory'],
-                                                        fiche['inventory_licenses'],
-                                                        fiche['Qversion'],
-                                                        fiche['Qvendor'],
-                                                        fiche['Qsoftware'],
-                                                        fiche['boolcnd'],
-                                                        fiche['postCommandSuccess_command'],
-                                                        fiche['postCommandSuccess_name'],
-                                                        fiche['installInit_command'],
-                                                        fiche['installInit_name'],
-                                                        fiche['postCommandFailure_command'],
-                                                        fiche['postCommandFailure_name'],
-                                                        fiche['command_command'],
-                                                        fiche['command_name'],
-                                                        fiche['preCommand_command'],
-                                                        fiche['preCommand_name'],
-                                                        fiche['pkgs_share_id'],
-                                                        fiche['edition_status'],
-                                                        fiche['conf_json'],
-                                                        fiche['size'])
-                #print(sql)
+                                                        "%s","%s","%s","%s");""" % (
+                    fiche["label"],
+                    fiche["description"],
+                    fiche["uuid"],
+                    fiche["version"],
+                    fiche["os"],
+                    fiche["metagenerator"],
+                    fiche["entity_id"],
+                    fiche["sub_packages"],
+                    fiche["reboot"],
+                    fiche["inventory_associateinventory"],
+                    fiche["inventory_licenses"],
+                    fiche["Qversion"],
+                    fiche["Qvendor"],
+                    fiche["Qsoftware"],
+                    fiche["boolcnd"],
+                    fiche["postCommandSuccess_command"],
+                    fiche["postCommandSuccess_name"],
+                    fiche["installInit_command"],
+                    fiche["installInit_name"],
+                    fiche["postCommandFailure_command"],
+                    fiche["postCommandFailure_name"],
+                    fiche["command_command"],
+                    fiche["command_name"],
+                    fiche["preCommand_command"],
+                    fiche["preCommand_name"],
+                    fiche["pkgs_share_id"],
+                    fiche["edition_status"],
+                    fiche["conf_json"],
+                    fiche["size"],
+                )
+                # print(sql)
                 try:
                     lastrowid = -1
                     cursor = db.cursor()
@@ -765,10 +885,14 @@ if __name__ == '__main__':
 
                     lastrowid = cursor.lastrowid
                     db.commit()
-                    creationpackageinbase.append({ "packagename" :  fiche['label'],
-                                                "uuid" : fiche['uuid'],
-                                                "id" : lastrowid,
-                                                "sharing" : partage})
+                    creationpackageinbase.append(
+                        {
+                            "packagename": fiche["label"],
+                            "uuid": fiche["uuid"],
+                            "id": lastrowid,
+                            "sharing": partage,
+                        }
+                    )
 
                 except MySQLdb.Error as e:
 
@@ -777,10 +901,14 @@ if __name__ == '__main__':
                         logger.error("\n%s" % (errorstr))
                     if opts.verbeux:
                         print("%s" % (str(e)))
-                    errorcreationpackageinbase.append({ "packagename" : fiche['label'],
-                                                        "uuid" : fiche['uuid'],
-                                                        "sharing" : partage,
-                                                        "error" : str(e)})
+                    errorcreationpackageinbase.append(
+                        {
+                            "packagename": fiche["label"],
+                            "uuid": fiche["uuid"],
+                            "sharing": partage,
+                            "error": str(e),
+                        }
+                    )
 
                 except Exception as e:
                     errorstr = "%s" % traceback.format_exc()
@@ -789,48 +917,78 @@ if __name__ == '__main__':
                 finally:
                     cursor.close()
         if opts.verbosereport:
-            if  creationpackageinbase:
+            if creationpackageinbase:
                 print("PACKAGE ADD IN BASE")
-                print("+%6s+%15s+%36s+%40s+"%('------',
-                                            '---------------',
-                                            '------------------------------------',
-                                            '----------------------------------------'))
-                print("|%6s|%15s|%36s|%40s|"%('ID',
-                                        'sharing',
-                                        'uuid package',
-                                        'package name'))
+                print(
+                    "+%6s+%15s+%36s+%40s+"
+                    % (
+                        "------",
+                        "---------------",
+                        "------------------------------------",
+                        "----------------------------------------",
+                    )
+                )
+                print(
+                    "|%6s|%15s|%36s|%40s|"
+                    % ("ID", "sharing", "uuid package", "package name")
+                )
                 for inscription in creationpackageinbase:
-                    print("|%6s|%15s|%36s|%40s|"%(inscription['id'],
-                                            inscription['sharing'],
-                                            inscription['uuid'],
-                                            inscription['packagename']))
-                print("+%6s+%15s+%36s+%40s+"%('------',
-                                            '---------------',
-                                            '------------------------------------',
-                                            '----------------------------------------'))
+                    print(
+                        "|%6s|%15s|%36s|%40s|"
+                        % (
+                            inscription["id"],
+                            inscription["sharing"],
+                            inscription["uuid"],
+                            inscription["packagename"],
+                        )
+                    )
+                print(
+                    "+%6s+%15s+%36s+%40s+"
+                    % (
+                        "------",
+                        "---------------",
+                        "------------------------------------",
+                        "----------------------------------------",
+                    )
+                )
             else:
                 print("\n No packages have been injected in the database")
         print
         print
-        if  errorcreationpackageinbase and opts.verbosereport:
+        if errorcreationpackageinbase and opts.verbosereport:
             print("PACKAGE ERROR INJECTION")
 
-            print("+%15s+%36s+%36s+%50s+"%('---------------',
-                                            '------------------------------------',
-                                            '------------------------------------',
-                                            '--------------------------------------------------'\
-                                                '------------------------------------'))
+            print(
+                "+%15s+%36s+%36s+%50s+"
+                % (
+                    "---------------",
+                    "------------------------------------",
+                    "------------------------------------",
+                    "--------------------------------------------------"
+                    "------------------------------------",
+                )
+            )
 
             for inscription in errorcreationpackageinbase:
-                print("|%15s|%36s|%36s|%50s|"%(inscription['sharing'],
-                                                inscription['uuid'],
-                                                inscription['packagename'],
-                                                inscription['error']))
-            print("+%15s+%36s+%36s+%50s+"%('---------------',
-                                            '------------------------------------',
-                                            '------------------------------------',
-                                            '--------------------------------------------------'\
-                                                '------------------------------------'))
+                print(
+                    "|%15s|%36s|%36s|%50s|"
+                    % (
+                        inscription["sharing"],
+                        inscription["uuid"],
+                        inscription["packagename"],
+                        inscription["error"],
+                    )
+                )
+            print(
+                "+%15s+%36s+%36s+%50s+"
+                % (
+                    "---------------",
+                    "------------------------------------",
+                    "------------------------------------",
+                    "--------------------------------------------------"
+                    "------------------------------------",
+                )
+            )
 
         if opts.verbosereport:
             if bad_package:
@@ -842,23 +1000,22 @@ if __name__ == '__main__':
             for t in bad_package:
                 if opts.verbosereport:
                     print("move %s to packageerror" % os.path.basename(t))
-                re = simplecommand("mv %s /var/lib/pulse2/packageerror/"%t)
+                re = simplecommand("mv %s /var/lib/pulse2/packageerror/" % t)
                 if opts.verbeux:
-                    if re['code'] != 0:
-                        print(re['result'])
+                    if re["code"] != 0:
+                        print(re["result"])
 
         if opts.linkcreate:
             if opts.verbosereport:
                 print("update lien symbolique")
             managepackage.del_link_symbolic()
-            managepackage.package_for_deploy_from_partage(verbeux = opts.verbosereport)
-
+            managepackage.package_for_deploy_from_partage(verbeux=opts.verbosereport)
 
     except Exception as e:
         errorstr = "%s" % traceback.format_exc()
         logger.error("\n%s" % (errorstr))
         print("%s" % (errorstr))
-        #raise GuacamoleError("MySQL connection error")
+        # raise GuacamoleError("MySQL connection error")
         sys.exit(1)
     finally:
         db.close()
