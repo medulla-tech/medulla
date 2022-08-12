@@ -262,7 +262,7 @@ class managepackage:
             with open(filename, "r") as info:
                 jsonFile = info.read()
             try:
-                outputJSONFile = json.loads(jsonFile.decode("utf-8", "ignore"))
+                outputJSONFile = json.loads(jsonFile)
                 return outputJSONFile
             except Exception as e:
                 logger.error("We failed to decode the file %s" % filename)
