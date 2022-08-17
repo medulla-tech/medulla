@@ -423,7 +423,7 @@ Description: Pulse 2 Download provider service
 
 Package: pulse2-register-pxe
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-cherrypy3, python-pulse2-common (= ${binary:Version}), python3-pyinotify, python3-magic
+Depends: ${misc:Depends}, ${python:Depends}, python-pulse2-common (= ${binary:Version}), python3-pyinotify, python3-magic
 Description: Pulse 2 Register PXE Service
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
