@@ -65,7 +65,7 @@ class BaseAction(object):
         self.config = P2PServerCP()
         try:
             self.config.setup(options.inifile)
-        except Exception, e:
+        except Exception as e:
             log.error('Error parsing conf file: %s' % e)
             sys.exit(ERROR_BAD_CONFIG)
 
@@ -93,7 +93,7 @@ class BaseAction(object):
             ret = False
         if options.certificates:
             certs = options.certificates.split(':')
-            if len(certs)<>2:
+            if len(certs) != 2:
                 log.error('Bad option: --certificates argument must be \'cacert:localcert\'')
                 ret = False
             else:
@@ -171,7 +171,7 @@ def generate_uuid():
     """
     Generate an uuid
     """
-    print uuid.uuid1()
+    print(uuid.uuid1())
 
 if __name__ == '__main__':
     code = 0
