@@ -39,7 +39,11 @@ reactor.run()
 import os
 import stat
 import base64
+import logging
+
 from twisted.web import xmlrpc
+
+logger = logging.getLogger()
 
 COOKIES_FILE = "/tmp/mmc-cookies"
 
@@ -62,6 +66,9 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
                 h = open(COOKIES_FILE, "r")
                 self.sendHeader(b"Cookie", h.read())
                 h.close()
+        except FileNotFoundError as error_opening_cookie:
+            logger.error("An error occured while open the file %s." %  COOKIES_FILE)
+            logger.error("The error is \n %s" % error_opening_cookie)
         except IOError:
             pass
         self.endHeaders()
