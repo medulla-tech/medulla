@@ -40,6 +40,7 @@ import os
 import stat
 import base64
 import logging
+import traceback
 
 from twisted.web import xmlrpc
 
@@ -69,7 +70,9 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
         except FileNotFoundError as error_opening_cookie:
             logger.error("An error occured while open the file %s." %  COOKIES_FILE)
             logger.error("The error is \n %s" % error_opening_cookie)
-        except IOError:
+        except IOError as error_ioerror:
+            logger.error("An unkown error occured. The message is %s" % error_ioerror)
+            logger.error("We hit the backtrace: \n %s" % traceback.format_exc())
             pass
         self.endHeaders()
         self.transport.write(self.factory.payload)
