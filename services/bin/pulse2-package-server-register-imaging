@@ -84,7 +84,7 @@ class BaseAction(object):
 
         log.debug("Connecting from: %s" % self.client_url)
         log.debug("Connecting to: %s" % options.mmc_url)
-        self.proxy = async_.Proxy(options.mmc_url)
+        self.proxy = async_.Proxy(bytes(options.mmc_url, 'utf-8'))
 
     def _check_options(self, options):
         ret = True

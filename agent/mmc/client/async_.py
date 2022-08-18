@@ -2,7 +2,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva, http://www.mandriva.com
-# (c) 2021 Siveo, http://www.siveo.net/
+# (c) 2017-2022 Siveo, http://www.siveo.net/
 # $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
@@ -38,6 +38,7 @@ reactor.run()
 
 import os
 import stat
+import base64
 from twisted.web import xmlrpc
 
 COOKIES_FILE = "/tmp/mmc-cookies"
@@ -45,20 +46,21 @@ COOKIES_FILE = "/tmp/mmc-cookies"
 
 class MMCQueryProtocol(xmlrpc.QueryProtocol):
     def connectionMade(self):
-        self.sendCommand("POST", self.factory.path)
-        self.sendHeader("User-Agent", "Twisted/XMLRPClib")
-        self.sendHeader("Host", self.factory.host)
-        self.sendHeader("Content-type", "text/xml")
-        self.sendHeader("Content-length", str(len(self.factory.payload)))
+        self._response = None
+        self.sendCommand(b"POST", bytes(self.factory.path))
+        self.sendHeader(b"User-Agent", b"Twisted/XMLRPClib")
+        self.sendHeader(b"Host", bytes(self.factory.host))
+        self.sendHeader(b"Content-type", b"text/xml")
+        self.sendHeader(b"Content-length", bytes(len(self.factory.payload)))
         if self.factory.user:
             auth = "%s:%s" % (self.factory.user, self.factory.password)
-            auth = auth.encode("base64").strip()
-            self.sendHeader("Authorization", "Basic %s" % (auth,))
+            auth = base64.b64encode(bytes(auth, 'utf-8'))
+            self.sendHeader(b"Authorization", b"Basic %s" % (auth,))
         try:
             # Put MMC session cookie
-            if not "<methodName>base.ldapAuth</methodName>" in self.factory.payload:
+            if not b"<methodName>base.ldapAuth</methodName>" in self.factory.payload:
                 h = open(COOKIES_FILE, "r")
-                self.sendHeader("Cookie", h.read())
+                self.sendHeader(b"Cookie", h.read())
                 h.close()
         except IOError:
             pass
@@ -78,6 +80,7 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
             h.write(self._session)
             h.close()
             os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
+            self._response = contents
 
 
 class MMCQueryFactory(xmlrpc._QueryFactory):
