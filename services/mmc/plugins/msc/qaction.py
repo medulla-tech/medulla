@@ -23,6 +23,7 @@
 
 """
 Qaction represents a qaction file
+PULSE2_DEPRECATED
 """
 import logging
 

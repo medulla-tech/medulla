@@ -22,6 +22,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 # class MscDownloadProcess:
+"""
+PULSE2_DEPRECATED
+"""
 
 # """
 # Class to download file from a computer

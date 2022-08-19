@@ -25,6 +25,7 @@
 Module to connect to the Mirror API XMLRPC API.
 This api provides methods to know which package or mirror API to connect
 to know package you can install on a computer.
+PULSE2_DEPRECATED
 """
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
