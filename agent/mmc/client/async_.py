@@ -34,6 +34,7 @@ def cb(result):
 proxy = async_.Proxy("https://127.0.0.1:7080/XMLRPC", "mmc", "s3cr3t")
 proxy.callRemote("base.ldapAuth", "root", "passpass").addCallbacks(cb)
 reactor.run()
+PULSE_DEPRECATED
 """
 
 import os

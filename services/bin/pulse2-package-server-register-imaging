@@ -22,6 +22,7 @@
 
 """
 Pulse 2 Package Server Imaging module registration.
+PULSE_DEPRECATED
 """
 
 import os
