@@ -226,7 +226,7 @@ if ($error) {
             <div class="control-group">
                 <label class="control-label"></label>
                 <div class="controls">
-			        <input name="bConnect" type="submit" class="btn btn-primary" value="<?php echo  _("Connect"); ?>" />
+			        <input name="bConnect" type="submit" class="btn btn-primary" id="connect_button" value="<?php echo  _("Connect"); ?>" />
                 </div>
             </div>
         </form>
