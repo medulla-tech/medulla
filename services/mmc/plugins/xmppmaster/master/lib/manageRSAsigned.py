@@ -21,7 +21,6 @@
 
 
 from Crypto.PublicKey import RSA
-from Crypto.Util import randpool
 import pickle
 import os
 import base64
@@ -173,9 +172,8 @@ class MsgsignedRSA:
         """
         Function generate clef RSA to file
         """
-        pool = randpool.RandomPool()
         # In real life, you use a *much* longer key
-        self.allkey = RSA.generate(1024, pool.get_bytes)
+        self.allkey = RSA.generate(1024)
         self.publickey = self.allkey.publickey()
         pickle.dump(self.allkey, open(self.fileallkey, "w"))
         pickle.dump(self.publickey, open(self.filekeypublic, "w"))
