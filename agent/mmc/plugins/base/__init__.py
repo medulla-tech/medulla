@@ -392,7 +392,13 @@ def getGroupEntry(cn):
 def getGroupsLdap(searchFilter=""):
     ldapObj = ldapUserGroupControl()
     searchFilter = cleanFilter(searchFilter)
-    return ldapObj.searchGroup(searchFilter)
+
+    # Need to cast bytes to str
+    raw = ldapObj.searchGroup(searchFilter)
+    result = {}
+    for key in raw:
+        result[key.decode("utf-8")] = [val.decode("utf-8") if type(val) is bytes else val for val in raw[key]]
+    return result
 
 
 def getDefaultUserGroup():
