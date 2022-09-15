@@ -428,7 +428,6 @@ var template = [
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
-require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/data_Windows_Answer_File_Generator.inc.php");
 require("../includes/class_form.php");

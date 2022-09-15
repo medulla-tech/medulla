@@ -2,6 +2,7 @@
 * [BUGFIX]  Support Optiplex 3050 in iPXE
 * [BUGFIX]  Fix display of the Master list page when there is a lot of
 computers listed.
+* [BUGFIX]  Fix php support up to 7.4 in the imaging page.
 
 Pulse 2 4.6.10
 =============
