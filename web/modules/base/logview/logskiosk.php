@@ -36,7 +36,7 @@
 | type        | varchar(6)       | NO   |     | noset             |                |
 | module      | varchar(45)      | YES  |     |                   |                |
 | text        | varchar(255)     | NO   |     | NULL              |                |
-| sessionname | varchar(20)      | YES  |     |                   |                |
+| sessionname | varchar(45)      | YES  |     |                   |                |
 | how         | varchar(255)     | YES  |     | ""                |                |
 | who         | varchar(45)      | YES  |     | ""                |                |
 | why         | varchar(255)     | YES  |     | ""                |                |
