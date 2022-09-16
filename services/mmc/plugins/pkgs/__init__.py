@@ -262,7 +262,11 @@ def update_package_size(uuid):
 
 
 def _remove_non_ascii(text):
-    return unidecode(str(text, encoding="utf-8"))
+    if type(text) is bytes:
+        text = unidecode(text.decode("utf-8"))
+    else:
+        text = unidecode(text)
+    return text
 
 
 def create_simple_package_uuid(label, localisation=None):
