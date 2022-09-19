@@ -2,10 +2,11 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2022 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,19 +47,22 @@ for ($idx = 0; $idx < count($users); $idx++) {
     if ($users[$idx]["enabled"]) {
         $css[$idx] = "userName";
     } else $css[$idx] = "userNameDisabled";
-    $arrUser[]=$users[$idx]['uid'];
+    $arrUser[]=is_object($users[$idx]['uid']) ? $users[$idx]['uid']->scalar : $users[$idx]['uid'];
 
-    $arrSnUser[]=$users[$idx]['givenName'].' '.$users[$idx]['sn'];;
+    $givenName = is_object($users[$idx]['givenName']) ? $users[$idx]['givenName']->scalar : $users[$idx]['givenName'];
+    $sn = is_object($users[$idx]['sn']) ? $users[$idx]['sn']->scalar : $users[$idx]['sn'];
+    $arrSnUser[]=$givenName.' '.$sn;
 
     if (strlen($users[$idx]["mail"]) > 0) {
-        $mails[] = '<a href="mailto:' . $users[$idx]["mail"] . '">' . $users[$idx]["mail"] . "</a>";
+        $mails[] = is_object($users[$idx]["mail"]) ? '<a href="mailto:' . $users[$idx]["mail"]->scalar . '">' . $users[$idx]["mail"]->scalar . "</a>" : '<a href="mailto:' . $users[$idx]["mail"] . '">' . $users[$idx]["mail"] . "</a>";
     } else {
-        $mails[] = $users[$idx]["mail"];
+        $mails[] =  is_object($users[$idx]["mail"]) ? $users[$idx]["mail"]->scalar : $users[$idx]["mail"];
     }
     /* We display the smallest telephone number, hopefully it is the user phone extension */
     $num = null;
-    foreach($users[$idx]["telephoneNumber"] as $number) {
-        if ($num == null) $num = $number;
+    foreach($users[$idx]["telephoneNumber"] as $_number) {
+        $number = is_object($_number) ? $_number->scalar : $_number;
+        if ($num == null) $num = is_object($number)? $number->scalar: $number;
         else if (strlen($number) < strlen($num)) $num = $number;
     }
     $phones[] = $num;
