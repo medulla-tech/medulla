@@ -941,14 +941,25 @@ class SelectItem extends AbstractTpl {
             $this->setSelected($paramArray["value"]);
         }
         $ret = '';
-        foreach ($this->elements as $key => $item) {
+        foreach ($this->elements as $key => $_item) {
+          if(is_object($_item)){
+            $item = $_item->scalar;
+          }
+          else{
+            $item = $_item;
+          }
           if(isset($this->elementsVal[$key])){
             if ($this->elementsVal[$key] == $this->selected) {
                 $selected = 'selected="selected"';
             } else {
                 $selected = "";
             }
-            $ret .= "\t<option value=\"" . $this->elementsVal[$key] . "\" $selected>$item</option>\n";
+            if(is_object($this->elementsVal[$key])){
+              $ret .= "\t<option value=\"" . $this->elementsVal[$key]->scalar . "\" $selected>$item</option>\n";
+            }
+            else{
+              $ret .= "\t<option value=\"" . $this->elementsVal[$key] . "\" $selected>$item</option>\n";
+            }
           }
         }
         return $ret;
@@ -1059,6 +1070,9 @@ class FormElement extends HtmlElement {
         $existACL = existAclAttr(isset($this->template->name) ? $this->template->name : "");
 
         //if not
+        if(isset($arrParam['value']) && is_object($arrParam['value'])){
+          $arrParam['value'] = $arrParam['value']->scalar;
+        }
         if (!$existACL) {
             $aclattrright = "rw";
             $isAclattrright = true;
