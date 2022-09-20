@@ -5905,6 +5905,8 @@ class Glpi95(DyngroupDatabaseHelper):
         except NoResultFound:
             user = User()
             user.name = username
+        if type(password) is str:
+            password = bytes(password, "utf-8")
         user.password = hashlib.sha1(password).hexdigest()
         user.firstname = ""
         user.realname = ""

@@ -411,7 +411,10 @@ def getUserDefaultPrimaryGroup():
 
 
 def getUserPrimaryGroup(uid):
-    return ldapUserGroupControl().getUserPrimaryGroup(uid)
+    if type(uid) is bytes:
+        uid = uid.decode("utf-8")
+    raw = ldapUserGroupControl().getUserPrimaryGroup(uid)
+    return raw
 
 
 def getUserSecondaryGroups(uid):
@@ -799,8 +802,9 @@ def delete_diacritics(s):
     @return: cleaned string
     @rtype: unicode
     """
-    if isinstance(s, str):
-        s = str(s, "utf8", "replace")
+    if isinstance(s, bytes):
+        s = s.decode("utf-8")
+
     ret = []
     for c in s:
         ret.append(_reptable.get(ord(c), c))
@@ -1378,8 +1382,11 @@ class LdapUserGroupControl:
         @param uiduser: user uid (not full ldap path)
         @type uiduser: unicode
         """
-        cngroup = cngroup.encode("utf-8")
-        uiduser = uiduser.encode("utf-8")
+        if type(cngroup) is bytes:
+            cngroup = cngroup.decode("utf-8")
+        if type(uiduser) is bytes:
+            uiduser = uiduser.decode("utf-8")
+
         groupdn = "cn=" + cngroup + "," + self.baseGroupsDN
         userdn = self.searchUserDN(uiduser)
         r = AF().log(
@@ -1388,9 +1395,9 @@ class LdapUserGroupControl:
             [(groupdn, AT.GROUP), (userdn, AT.USER)],
         )
 
-        operations = [(ldap.MOD_DELETE, "memberUid", uiduser)]
+        operations = [(ldap.MOD_DELETE, "memberUid", bytes(uiduser, "utf-8"))]
         if self.posixGroupIsRFC2307bis():
-            operations.append((ldap.MOD_DELETE, "uniqueMember", userdn))
+            operations.append((ldap.MOD_DELETE, "uniqueMember", bytes(userdn, "utf-8")))
 
         try:
             self.l.modify_s(groupdn, operations)
@@ -1460,7 +1467,9 @@ class LdapUserGroupControl:
         @return: the name of the group
         @rtype: unicode
         """
-        gidNumber = self.getDetailedUser(uid)["gidNumber"][0]
+        if isinstance(uid, xmlrpc.client.Binary):
+            uid = str(uid)
+        gidNumber = int(self.getDetailedUser(uid)["gidNumber"][0])
         try:
             group = self.getDetailedGroupById(gidNumber)["cn"][0]
         except KeyError:
@@ -1479,6 +1488,12 @@ class LdapUserGroupControl:
         @return: a list of the name of the group
         @rtype: unicode
         """
+        if isinstance(uid, xmlrpc.client.Binary):
+            uid = str(uid)
+        elif type(uid) is bytes:
+            uid = uid.decode("utf-8")
+        else:
+            uid = uid
         primary = self.getUserPrimaryGroup(uid)
         secondary = self.getAllGroupsFromUser(uid)
         try:
@@ -1500,8 +1515,11 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseGroupsDN
-        cngroup = cngroup.encode("utf-8")
-        uid = uid.encode("utf-8")
+
+        if type(cngroup) is bytes:
+            cngroup = cngroup.decode("utf-8")
+        if type(uid) is bytes:
+            uid = uid.encode("utf-8")
         groupdn = "cn=" + cngroup + "," + base
         userdn = self.searchUserDN(uid)
         r = AF().log(
@@ -1510,9 +1528,9 @@ class LdapUserGroupControl:
             [(groupdn, AT.GROUP), (userdn, AT.USER)],
         )
 
-        operations = [(ldap.MOD_ADD, "memberUid", uid)]
+        operations = [(ldap.MOD_ADD, "memberUid", bytes(uid, "utf-8"))]
         if self.posixGroupIsRFC2307bis():
-            operations.append((ldap.MOD_ADD, "uniqueMember", userdn))
+            operations.append((ldap.MOD_ADD, "uniqueMember", bytes(userdn, "utf-8")))
 
         try:
             self.l.modify_s(groupdn, operations)
@@ -1859,11 +1877,18 @@ class LdapUserGroupControl:
         @return: the DN of the user entry, or an empty string if not found
         @rtype: str
         """
+        if isinstance(uid, xmlrpc.client.Binary):
+            _uid = str(uid)
+        elif type(uid) is bytes:
+            _uid = uid.decode('utf-8')
+        else:
+            _uid = uid
+
         if uid == "root":
             ret = self.config.username
         else:
             result = self.l.search_s(
-                self.config.baseUsersDN, ldap.SCOPE_SUBTREE, "uid=" + uid
+                self.config.baseUsersDN, ldap.SCOPE_SUBTREE, "uid=" + _uid
             )
             if result:
                 ret, entry = result[0]
@@ -1884,7 +1909,7 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseGroupsDN
-        cn = "cn=" + group.encode("utf-8") + ", " + base
+        cn = "cn=" + group + ", " + base
         attrs = []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
         c, attrs = attrib[0]
