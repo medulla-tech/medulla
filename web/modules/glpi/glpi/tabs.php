@@ -1,7 +1,7 @@
 <?php
 /*
  * (c) 2008 Mandriva, http://www.mandriva.com
- * (c) 2021 Siveo, http://www.siveo.net
+ * (c) 2021-2022 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -28,6 +28,9 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
+global $conf;
+$glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? htmlentities($conf['global']['glpidisplayname']) : "GLPI";
+
 /*
  * Display right top shortcuts menu
  */
@@ -45,10 +48,10 @@ if (isset($_GET['hostname'])) { $hostname = clean_xss($_GET['hostname']); }
 
 $uri = getGlpiMachineUri();
 if ($uri) {
-    $glpi_link = sprintf('<a href="%s" target="new">GLPI</a>', $uri.str_replace('UUID', '', clean_xss($uuid)));
+    $glpi_link = sprintf('<a href="%s" target="new">'.$glpidisplayname.'</a>', $uri.str_replace('UUID', '', clean_xss($uuid)));
 }
 else {
-    $glpi_link = 'GLPI';
+    $glpi_link = $glpidisplayname;
 }
 
 $p = new TabbedPageGenerator();
