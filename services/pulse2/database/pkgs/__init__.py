@@ -1093,16 +1093,15 @@ class PkgsDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         result = {
-            "name": "",
-            "version": "",
-            "Qsoftware": "",
-            "Qversion": "",
-            "Qvendor": "",
-            "description": "",
-            "files": files,
-            "size": size,
-            "Size": "%s %s" % (round(size / (diviser**count), 2), units[count]),
-        }
+            'name' : '',
+            'version': '',
+            'Qsoftware' : '',
+            'Qversion' : '',
+            'Qvendor': '',
+            'description' : '',
+            'files' : files,
+            'size' : str(size),
+            'Size' : '%s %s'%(round(size/(diviser**count), 2), units[count])}
 
         if query is not None:
             result["name"] = query.label

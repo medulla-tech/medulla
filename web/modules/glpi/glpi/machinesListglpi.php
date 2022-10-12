@@ -1,10 +1,10 @@
 <?php
 /**
- * (c) 2021 Siveo, http://www.siveo.net/
+ * (c) 2021-2022 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,9 @@
 require("graph/navbar.inc.php");
 require("modules/glpi/includes/html.php");
 require("modules/base/computers/localSidebar.php");
-
-$p = new PageGenerator(_T("Machines List view glpi", 'glpi'));
+global $conf;
+$glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? $conf['global']['glpidisplayname'] : 'glpi';
+$p = new PageGenerator(_T("Machines List view $glpidisplayname", 'glpi'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
