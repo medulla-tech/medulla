@@ -22,6 +22,9 @@
  */
 
 require_once("modules/dyngroup/includes/includes.php");
+global $conf;
+$glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? $conf['global']['glpidisplayname'] : 'glpi';
+
 if (
         count($_POST) == 0 &&
         !isset($_GET['request']) &&
@@ -134,7 +137,12 @@ if (count($modules) == 1) {
 
     foreach ($modules as $name) {
         if ($name == quickGet('add_req')) {
-            print "<td style=\"width:80px;border:0\">$name</td>";
+            if($name === "glpi"){
+              print "<td style=\"width:80px;border:0\">$glpidisplayname</td>";
+            }
+            else{
+              print "<td style=\"width:80px;border:0\">$name</td>";
+            }
         } else {
             $_SESSION['request'] = $request->toS();
             $url_params = array(
@@ -146,9 +154,18 @@ if (count($modules) == 1) {
             // When sub_id is transmitted add it to params
             if (quickGet('sub_id') != '')
                 $url_params['sub_id'] = quickGet('sub_id');
-            print "<td style=\"width:80px;border:0\"><a href='" .
-                    urlStr("base/computers/$target", $url_params) .
-                    "'>$name</a></td>";
+
+                if($name == "glpi"){
+                  print "<td style=\"width:80px;border:0\"><a href='" .
+                          urlStr("base/computers/$target", $url_params) .
+                          "'>$glpidisplayname</a></td>";
+                }
+                else{
+                  print "<td style=\"width:80px;border:0\"><a href='" .
+                          urlStr("base/computers/$target", $url_params) .
+                          "'>$name</a></td>";
+                }
+
         }
     }
     print "<td style=\"border:0\"></td></tr></table>";
@@ -176,6 +193,7 @@ if (quickGet('add_req')) {
             foreach ($fields as $field) {
                 $param_name = $field[0];
                 $description = $field[1];
+                $description = preg_replace('#glpi#i', $glpidisplayname, $description);
                 if ($param_name == quickGet('add_param')) {
                     print "<td>$param_name</td>";
                 } else {

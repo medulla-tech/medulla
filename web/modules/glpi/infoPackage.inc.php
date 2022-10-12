@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2022 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -23,6 +24,8 @@
  */
 
 require_once("modules/pulse2/version.php");
+global $conf;
+$glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? htmlentities($conf['global']['glpidisplayname']) : 'glpi';
 
 $MMCApp =& MMCApp::getInstance();
 
@@ -196,7 +199,7 @@ $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
 
-$page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
+$page = new Page("glpitabs", _T("Inventory ($glpidisplayname) on machine", "glpi"));
 $page->setFile("modules/glpi/glpi/tabs.php");
 $page->setOptions(array("visible"=>False));
 $tab = new Tab("tab0", _T("Summary tab (GLPI)", 'glpi'));
