@@ -8234,6 +8234,14 @@ class XmppMasterDatabase(DatabaseHelper):
             'inventoried_online': [],
             'total_machines': [],
         }
+        result1 = []
+        if query is not None:
+            for machine in query:
+                result1.append(machine.jid)
+            if result1:
+                filtregroupeselect =   'and groupdeploy in (' + ",".join([ '"%s"'% x for x in result1])+')'
+            else:
+                filtregroupeselect=""
         sql_counts = """SELECT
             SUM(1) AS total,
             SUM(CASE
@@ -8254,7 +8262,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 ELSE 0
             END) AS `inventoried_online`,
             groupdeploy as jid
-        from machines where agenttype="machine" group by groupdeploy;"""
+        from machines where agenttype="machine" %s  group by groupdeploy;"""%filtregroupeselect
 
         counts_result = session.execute(sql_counts)
         #uninventoried_offline = [x for x in count_uninventoried_offline]
@@ -8265,7 +8273,10 @@ class XmppMasterDatabase(DatabaseHelper):
             "uninventoried_online" : int(count_ars[2]),
             "inventoried_offline" : int(count_ars[3]),
             "inventoried_online" : int(count_ars[4]),
-            "jid" : count_ars[5]
+            "linux" : int(count_ars[5]),
+            "Windows" : int(count_ars[6]),
+            "AMD64" : int(count_ars[7]),
+            "jid" : count_ars[8]
         } for count_ars in counts_result]
 
         if query is not None:
@@ -8280,14 +8291,19 @@ class XmppMasterDatabase(DatabaseHelper):
                     result['uninventoried_online'].append(count_ars["uninventoried_online"])
                     result['inventoried_offline'].append(count_ars["inventoried_offline"])
                     result['inventoried_online'].append(count_ars["inventoried_online"])
+                    result['linux'].append(count_ars["linux"])
+                    result['Windows'].append(count_ars["Windows"])
+                    result['AMD64'].append(count_ars["AMD64"])
                     result['total_machines'].append(count_ars["total"])
                 else:
                     result['uninventoried_offline'].append(0)
                     result['uninventoried_online'].append(0)
                     result['inventoried_offline'].append(0)
                     result['inventoried_online'].append(0)
+                    result['linux'].append(0)
+                    result['Windows'].append(0)
+                    result['AMD64'].append(0)
                     result['total_machines'].append(0)
-
                 result['id'].append(machine.id)
                 result['jid'].append(machine.jid)
                 result['jid_from_relayserver'].append(machine.jid_from_relayserver)
