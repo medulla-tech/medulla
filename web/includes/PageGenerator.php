@@ -2,7 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
- * (c) 2021 Siveo, http://siveo.net
+ * (c) 2021-2022 Siveo, http://siveo.net
  * $Id$
  *
  * This file is part of Management Console (MMC).
@@ -1262,12 +1262,13 @@ class AjaxFilter extends HtmlElement {
             </div>
             <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
             <div id="searchBest">
-                <input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
-                        return false;" />
-                    <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
-                         onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
-                                 pushSearch<?php echo $this->formid ?>();
-                                 return false;" />
+                <input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>"/>
+                <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
+                     onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
+                             pushSearch<?php echo $this->formid ?>();
+                             return false;" />
+                 <button style="margin-left:20px;" onclick="pushSearch<?php echo $this->formid ?>();
+                         return false;"><?php echo _T("Search", "glpi");?></button>
             </div>
             </div>
 
