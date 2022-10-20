@@ -600,14 +600,13 @@ def putPackageDetail(package, need_assign=True):
     typesynchro = 'create'
     if 'mode' in package and   package['mode'] !=  'creation':
         typesynchro = 'chang'
+    if not os.path.exists(os.path.join(packages_id_input_dir,"xmppdeploy.json")):
+        # write file to xmpp deploy
+        xmppdeployfile = to_json_xmppdeploy(package)
+        with open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" ) as fichier:
+            fichier.write(xmppdeployfile)
 
-    # writte file to xmpp deploy
-    xmppdeployfile = to_json_xmppdeploy(package)
-    fichier = open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" )
-    fichier.write(xmppdeployfile)
-    fichier.close()
-
-    parsexmppjsonfile(os.path.join(packages_id_input_dir,"xmppdeploy.json"))
+        parsexmppjsonfile(os.path.join(packages_id_input_dir,"xmppdeploy.json"))
 
     if centralizedmultiplesharing:
         localisation_server = package['localisation_server'] if 'localisation_server' in package else None

@@ -3,6 +3,7 @@
 * [BUGFIX]  Fix display of the Master list page when there is a lot of
 computers listed.
 * [BUGFIX]  Fix php support up to 7.4 in the imaging page.
+* [BUGFIX]  Fix modification of packages and correctness of xmppdeploy.json
 
 Pulse 2 4.6.10
 =============
