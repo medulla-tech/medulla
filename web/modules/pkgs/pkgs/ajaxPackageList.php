@@ -2,7 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
- * (c) 2016-2021 Siveo, http://siveo.net/
+ * (c) 2016-2022 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -67,6 +67,16 @@ if (isset($_GET["start"])) {
     $start = $_GET["start"];
 } else {
     $start = 0;
+}
+
+if(isset($_GET['toggleupdates'])){
+  $filter['toggleupdates'] = htmlentities($_GET['toggleupdates']);
+}
+else if (isset($_SESSION['toggleupdates'])){
+  $filter['toggleupdates'] = htmlentities($_SESSION['toggleupdates']);
+}
+else{
+  $filter["toggleupdates"] = "hide";
 }
 
 $detailAction = new ActionItem(_T("Package Detail", "pkgs"), "detail", "display", "pkgs", "pkgs");
