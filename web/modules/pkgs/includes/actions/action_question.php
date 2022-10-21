@@ -6,29 +6,29 @@ require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
 
-    $message = (isset($message)) ? base64_decode($message) : "" ;
+$message = (isset($message)) ? base64_decode($message) : "" ;
 
-        $packageList = xmpp_packages_list();
-        $options = "";
+    $packageList = xmpp_packages_list();
+    $options = "";
 
-        foreach($packageList as $id=>$package)
+    foreach($packageList as $id=>$package)
+    {
+        if(isset($packageuuid) && $packageuuid == $package['uuid'])
         {
-            if(isset($packageuuid) && $packageuuid == $package['uuid'])
-            {
-                $options .= "<option value='".$package['uuid']."' selected>".$package['name']."</option>";
-            }
-            else
-                $options .= "<option value='".$package['uuid']."'>".$package['name']."</option>";
+            $options .= "<option value='".$package['uuid']."' selected>".$package['name']."</option>";
         }
+        else
+            $options .= "<option value='".$package['uuid']."'>".$package['name']."</option>";
+    }
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1><?php echo _T('Update Notification', 'pkgs'); ?></h1>
+    <h1><?php echo _T('Update Question', 'pkgs'); ?></h1>
 </div>
 <div class="content">
 
     <div>
-        <input type="hidden" name="action" value="action_notification" />
+        <input type="hidden" name="action" value="action_question" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
     <table id="tableToggle">
@@ -43,8 +43,31 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
             </th>
         </tr>
 
+        <tr>
+           <?php
+            $gotoyes = (isset($gotoyes)) ? $gotoyes : "";
+            echo '
+            <th>'._T("If yes go to step","pkgs").'</th>
+            <td>
+                <input " type="text"  value="'.$gotoyes.'" name="gotoyes"  />
+            </td>';
+            ?>
+        </tr>
 
-        <tr class="toggleable">
+        <tr>
+            <?php
+            $gotono = (isset($gotono)) ? $gotono : "";
+
+            echo '
+            <th>'._T("If no go to step","pkgs").'</th>
+            <th>
+                <input " type="text"  value="'.$gotono.'" name="gotono"  />
+            </th>';
+
+            ?>
+        </tr>
+
+        <tr>
             <?php
             if(isset($timeout))
             {
@@ -79,11 +102,9 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
             }
             ?>
         </tr>
-        <tr>
 
-        </tr>
-
-
+       
+        
     </table>
         <!-- Option timeout -->
     </div>
