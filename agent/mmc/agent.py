@@ -78,7 +78,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "4.6.9"
+VERSION = "4.7.0"
 
 
 class messagefilexmpp:

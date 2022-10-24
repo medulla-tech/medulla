@@ -1,3 +1,6 @@
+Pulse 2 4.6.10 ( unreleased )
+=============
+* [FEATURE] Migrate to python3 
 * [BUGFIX]  Fix diplay of config files
 * [BUGFIX]  Support Optiplex 3050 in iPXE
 * [BUGFIX]  Fix display of the Master list page when there is a lot of

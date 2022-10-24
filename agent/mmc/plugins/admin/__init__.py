@@ -27,7 +27,7 @@ from mmc.plugins.admin.config import AdminConfig
 from pulse2.database.admin import AdminDatabase
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
-VERSION = "1.0.0"
+VERSION = "4.7.0"
 APIVERSION = "4:1:3"
 
 
