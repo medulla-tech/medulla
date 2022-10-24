@@ -1,16 +1,16 @@
 # RHEL6 compat hacks
-%if %_vendor == "redhat"
+%if "%_vendor" == "redhat"
 %define configure2_5x %configure
 %define make %{__make}
 %define makeinstall_std %{__make} DESTDIR=%{?buildroot:%{buildroot}} install
 %define mkrel(c:) %{-c: 0.%{-c*}.}%{1}%{?subrel:.%subrel}%{?distsuffix:%distsuffix}%{?!distsuffix:.el6}
 %define py_puresitedir %(python -c 'import distutils.sysconfig; print distutils.sysconfig.get_python_lib()' 2>/dev/null || echo PYTHON-LIBDIR-NOT-FOUND)
 %endif
-# Turn off the brp-python-bytecompile script
-%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
+# Turn off the brp-python3-bytecompile script
+%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python3-bytecompile[[:space:]].*$!!g')
 %define __requires_exclude ^(pear\\(graph.*|pear\\(includes.*|pear\\(modules.*)$
 
-%if %_vendor == "Mageia"
+%if "%_vendor" == "Mageia"
 %define webappsdir /httpd/conf/webapps.d
 %define with_report 1
 %else
@@ -24,7 +24,7 @@
 %define debug_package          %{nil}
 
 %define use_git                1
-%define git                    SHA
+%define git                    c9a18c92
 %define real_version           4.7.0
 %define mmc_version            4.7.0
 
@@ -51,7 +51,7 @@ Source6:        get_file.php
 BuildRequires:	python3-devel
 BuildRequires:	gettext
 BuildRequires:	gettext-devel
-%if %_vendor == "Mageia"
+%if "%_vendor" == "Mageia"
 BuildRequires:  xsltproc
 %else
 BuildRequires:  libxslt
@@ -61,29 +61,29 @@ BuildRequires:  docbook-style-xsl
 
 Requires:       mmc-agent
 Requires:       mmc-web-base
-Requires:       python-mmc-base
+Requires:       python3-mmc-base
 Requires:       mmc-web-dyngroup
-Requires:       python-mmc-dyngroup
+Requires:       python3-mmc-dyngroup
 Requires:       mmc-web-imaging
-Requires:       python-mmc-imaging
+Requires:       python3-mmc-imaging
 Requires:       mmc-web-msc
-Requires:       python-mmc-msc
+Requires:       python3-mmc-msc
 Requires:       mmc-web-pkgs
-Requires:       python-mmc-pkgs
+Requires:       python3-mmc-pkgs
 Requires:       mmc-web-pulse2
-Requires:       python-mmc-pulse2
+Requires:       python3-mmc-pulse2
 Requires:       mmc-web-kiosk
-Requires:       python-mmc-kiosk
+Requires:       python3-mmc-kiosk
 Requires:       mmc-web-admin
-Requires:       python-mmc-admin
+Requires:       python3-mmc-admin
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
 Requires:       pulse2-package-server
 Requires:       pulse2-scheduler
-Requires:       python-pulse2-common-database-dyngroup
+Requires:       python3-pulse2-common-database-dyngroup
 Requires:       pulse-mmc-web-computers-inventory-backend
-Requires:       pulse-python-mmc-computers-inventory-backend
+Requires:       pulse-python3-mmc-computers-inventory-backend
 Requires:       pulse2-homepage
 
 %description
@@ -94,18 +94,18 @@ base and password policies modules.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-dyngroup
+%package -n python3-mmc-dyngroup
 Summary:    Dynamic computer group plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-pulse2-common-database-dyngroup = %version-%release
+Requires:   python3-pulse2-common-database-dyngroup = %version-%release
 
-%description -n python-mmc-dyngroup
+%description -n python3-mmc-dyngroup
 This package contains the dynamic computer group plugin for the MMC agent. It
 stores into a database static and dynamic group of computers to ease massive
 software deployment.
 
-%files -n python-mmc-dyngroup
+%files -n python3-mmc-dyngroup
 %defattr(-,root,root,0755)
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/dyngroup.ini
 %python3_sitelib/mmc/plugins/dyngroup
@@ -128,17 +128,17 @@ ease massive software deployment.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-backuppc
+%package -n python3-mmc-backuppc
 Summary:    Backuppc plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   p7zip
-Requires:   python-pyquery
+Requires:   python3-pyquery
 
-%description -n python-mmc-backuppc
+%description -n python3-mmc-backuppc
 This package contains the backuppc plugin for the MMC agent.
 
-%files -n python-mmc-backuppc
+%files -n python3-mmc-backuppc
 %defattr(-,root,root,0755)
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/backuppc.ini
 %python3_sitelib/mmc/plugins/backuppc
@@ -150,17 +150,17 @@ This package contains the backuppc plugin for the MMC agent.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-connection-manager
+%package -n python3-mmc-connection-manager
 Summary:    Connection Manager plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   p7zip
-Requires:   python-pyquery
+Requires:   python3-pyquery
 
-%description -n python-mmc-connection-manager
+%description -n python3-mmc-connection-manager
 This package contains the connection manager plugin for the MMC agent.
 
-%files -n python-mmc-connection-manager
+%files -n python3-mmc-connection-manager
 %defattr(-,root,root,0755)
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/pulse2/cm
 %python3_sitelib/mmc/plugins/backuppc
@@ -208,23 +208,23 @@ service pulse2-launchers stop >/dev/null 2>&1 || :
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-glpi
+%package -n python3-mmc-glpi
 Summary:    GLPI plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-mmc-base >= %mmc_version
-Requires:   python-sqlalchemy >= 0.6.3
+Requires:   python3-mmc-base >= %mmc_version
+Requires:   python3-sqlalchemy >= 0.6.3
 Requires:   MySQL-python >= 1.2.1
-Requires:   python-pulse2-common = %version-%release
+Requires:   python3-pulse2-common = %version-%release
 
-Provides:   pulse-python-mmc-computers-inventory-backend = %version-%release
+Provides:   pulse-python3-mmc-computers-inventory-backend = %version-%release
 
-%description -n python-mmc-glpi
+%description -n python3-mmc-glpi
 This package contains the GLPI plugin for the MMC agent. It connects to a
 GLPI database to get a company inventory. This package contains the
 inventory plugin for the MMC agent.
 
-%files -n python-mmc-glpi
+%files -n python3-mmc-glpi
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/glpi.ini
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/glpi_search_options.ini
 %python3_sitelib/mmc/plugins/glpi
@@ -249,23 +249,23 @@ allows one to query a GLPI database to display computer inventory.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-msc
+%package -n python3-mmc-msc
 Summary:    Pulse 2 MSC plugin for MMC agent
 Group:      System/Servers
-%if %_vendor == "redhat"
-Requires:   python-libs
+%if "%_vendor" == "redhat"
+Requires:   python3-libs
 %endif
 Requires:   pulse2-common = %version-%release
-Requires:   python-mmc-base >= %mmc_version
-Requires:   python-pulse2-common-database-msc = %version-%release
-Requires:   python-xlwt
+Requires:   python3-mmc-base >= %mmc_version
+Requires:   python3-pulse2-common-database-msc = %version-%release
+Requires:   python3-xlwt
 
-%description -n python-mmc-msc
+%description -n python3-mmc-msc
 This package contains the MSC (Mageia Secure Control) plugin for the MMC
 agent. It allows one to control and manage the entire software deployment
 process.
 
-%files -n python-mmc-msc
+%files -n python3-mmc-msc
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/msc.ini
 %python3_sitelib/mmc/plugins/msc
 %{_var}/lib/pulse2/qactions
@@ -290,18 +290,18 @@ deployment process.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-imaging
+%package -n python3-mmc-imaging
 Summary:    Imaging plugin for MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-pulse2-common-database-imaging = %version-%release
+Requires:   python3-pulse2-common-database-imaging = %version-%release
 # Needed for ImportError: No module named tasks
-Requires:   python-mmc-core >= 3.1.1
-Requires:   python-ipaddr
-%description -n python-mmc-imaging
+Requires:   python3-mmc-core >= 3.1.1
+Requires:   python3-ipaddr
+%description -n python3-mmc-imaging
 This package contains the imaging plugin for MMC agent.
 
-%files -n python-mmc-imaging
+%files -n python3-mmc-imaging
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/imaging.ini
 %python3_sitelib/mmc/plugins/imaging
 
@@ -311,7 +311,7 @@ This package contains the imaging plugin for MMC agent.
 Summary:	Imaging plugin for the MMC web interface
 Group:		System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-mmc-base >= %mmc_version
+Requires:       python3-mmc-base >= %mmc_version
 
 %description -n mmc-web-imaging
 This package contains the imaging plugin for the MMC web interface.
@@ -322,18 +322,18 @@ This package contains the imaging plugin for the MMC web interface.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-support
+%package -n python3-mmc-support
 Summary:    Imaging plugin for MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-pulse2-common-database-imaging = %version-%release
+Requires:   python3-pulse2-common-database-imaging = %version-%release
 # Needed for ImportError: No module named tasks
-Requires:   python-mmc-core >= 3.1.1
+Requires:   python3-mmc-core >= 3.1.1
 
-%description -n python-mmc-support
+%description -n python3-mmc-support
 This package contains the imaging plugin for MMC agent.
 
-%files -n python-mmc-support
+%files -n python3-mmc-support
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/support.ini
 %python3_sitelib/mmc/plugins/support
 
@@ -343,7 +343,7 @@ This package contains the imaging plugin for MMC agent.
 Summary:        Imaging plugin for the MMC web interface
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-mmc-base >= %mmc_version
+Requires:       python3-mmc-base >= %mmc_version
 
 %description -n mmc-web-support
 This package contains the imaging plugin for the MMC web interface.
@@ -354,21 +354,21 @@ This package contains the imaging plugin for the MMC web interface.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-inventory
+%package -n python3-mmc-inventory
 Summary:    Inventory plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-mmc-base >= %mmc_version
-Requires:   python-pulse2-common-database-inventory = %version-%release
-Requires:   python-magic
-Requires:   python-inotify
+Requires:   python3-mmc-base >= %mmc_version
+Requires:   python3-pulse2-common-database-inventory = %version-%release
+Requires:   python3-magic
+Requires:   python3-inotify
 
-Provides:   pulse-python-mmc-computers-inventory-backend = %version-%release
+Provides:   pulse-python3-mmc-computers-inventory-backend = %version-%release
 
-%description -n python-mmc-inventory
+%description -n python3-mmc-inventory
 This package contains the inventory plugin for the MMC agent
 
-%files -n python-mmc-inventory
+%files -n python3-mmc-inventory
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/inventory.ini
 %python3_sitelib/mmc/plugins/inventory
 %_sbindir/pulse2-inventory-clean-database
@@ -381,12 +381,12 @@ This package contains the inventory plugin for the MMC agent
 Summary:    Pulse 2 Register PXE Servic/
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-mmc-base >= %mmc_version
-Requires:   python-pulse2-common-database-inventory = %version-%release
-Requires:   python-magic
-Requires:   python-inotify
+Requires:   python3-mmc-base >= %mmc_version
+Requires:   python3-pulse2-common-database-inventory = %version-%release
+Requires:   python3-magic
+Requires:   python3-inotify
 
-Conflicts:  python-mmc-inventory < 4.6.1
+Conflicts:  python3-mmc-inventory < 4.6.1
 
 %description -n pulse2-register-pxe
 Pulse 2 Register PXE Service
@@ -414,34 +414,34 @@ This package contains the inventory plugin for the MMC web interface.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-pkgs
+%package -n python3-mmc-pkgs
 Summary:    Pkgs plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-mmc-msc = %version-%release
+Requires:   python3-mmc-msc = %version-%release
 Requires:   python2-requests
 Requires:   python2-unidecode
-Requires:   python-magic
+Requires:   python3-magic
 
-%description -n python-mmc-pkgs
+%description -n python3-mmc-pkgs
 This package contains the pkgs plugin for the MMC agent.
 
-%files -n python-mmc-pkgs
+%files -n python3-mmc-pkgs
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/pkgs.ini
 %python3_sitelib/mmc/plugins/pkgs
 %python3_sitelib/pulse2/database/pkgs
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-kiosk
+%package -n python3-mmc-kiosk
 Summary:    Kiosk plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 
-%description -n python-mmc-kiosk
+%description -n python3-mmc-kiosk
 This package contains the pkgs plugin for the MMC agent.
 
-%files -n python-mmc-kiosk
+%files -n python3-mmc-kiosk
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
 %python3_sitelib/mmc/plugins/kiosk
 %python3_sitelib/pulse2/database/kiosk
@@ -449,35 +449,35 @@ This package contains the pkgs plugin for the MMC agent.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-admin
+%package -n python3-mmc-admin
 Summary:    Kiosk plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-pulse2-common-database-admin = %version-%release
+Requires:   python3-pulse2-common-database-admin = %version-%release
 
-%description -n python-mmc-admin
+%description -n python3-mmc-admin
 This package contains the admin plugin for the MMC agent.
 
-%files -n python-mmc-admin
+%files -n python3-mmc-admin
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/admin.ini
-%python2_sitelib/mmc/plugins/admin
+%python3_sitelib/mmc/plugins/admin
 %{_docdir}/mmc/contrib/admin
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-xmppmaster
+%package -n python3-mmc-xmppmaster
 Summary:    Xmppmaster plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-mmc-msc = %version-%release
-Requires:   python-GeoIP
+Requires:   python3-mmc-msc = %version-%release
+Requires:   python3-GeoIP
 Requires:   GeoIP-data
-Requires:   python-croniter
+Requires:   python3-croniter
 
-%description -n python-mmc-xmppmaster
+%description -n python3-mmc-xmppmaster
 This package contains the xmppmaster plugin for the MMC agent.
 
-%pre -n     python-mmc-xmppmaster
+%pre -n     python3-mmc-xmppmaster
 if ! getent passwd | grep -q "^pulsetransfert:"; then
     echo -n "Adding user pulsetransfert..."
     adduser --system \
@@ -487,7 +487,7 @@ if ! getent passwd | grep -q "^pulsetransfert:"; then
     echo "..done"
 fi
 
-%files -n python-mmc-xmppmaster
+%files -n python3-mmc-xmppmaster
 %{_sysconfdir}/mmc/plugins/xmppmaster.ini
 %{_sysconfdir}/mmc/plugins/inventoryconf.ini
 %{_sysconfdir}/mmc/plugins/resultinventory.ini
@@ -506,16 +506,16 @@ fi
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-guacamole
+%package -n python3-mmc-guacamole
 Summary:    Guacamole plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-mmc-msc = %version-%release
+Requires:   python3-mmc-msc = %version-%release
 
-%description -n python-mmc-guacamole
+%description -n python3-mmc-guacamole
 This package contains the guacamole plugin for the MMC agent.
 
-%files -n python-mmc-guacamole
+%files -n python3-mmc-guacamole
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/guacamole.ini
 %python3_sitelib/mmc/plugins/guacamole
 %_datadir/mmc/modules/guacamole/locale
@@ -554,23 +554,23 @@ interface.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-pulse2
+%package -n python3-mmc-pulse2
 Summary:    Pulse 2 MMC agent interface plugins
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-mmc-base >= %mmc_version
-Requires:   python-mmc-msc = %version-%release
-Requires:   python-mmc-dyngroup = %version-%release
-Requires:   python-mmc-pkgs = %version-%release
-Requires:   python-pulse2-common = %version-%release
-Requires:   python-sqlalchemy >= 0.6.3
-Requires:   pulse-python-mmc-computers-inventory-backend = %version-%release
-Requires:   python-service-identity
+Requires:   python3-mmc-base >= %mmc_version
+Requires:   python3-mmc-msc = %version-%release
+Requires:   python3-mmc-dyngroup = %version-%release
+Requires:   python3-mmc-pkgs = %version-%release
+Requires:   python3-pulse2-common = %version-%release
+Requires:   python3-sqlalchemy >= 0.6.3
+Requires:   pulse-python3-mmc-computers-inventory-backend = %version-%release
+Requires:   python3-service-identity
 
-%description -n python-mmc-pulse2
+%description -n python3-mmc-pulse2
 This package will install all the Pulse 2 MMC agent interface plugins
 
-%files -n python-mmc-pulse2
+%files -n python3-mmc-pulse2
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/pulse2.ini
 %python3_sitelib/mmc/plugins/pulse2
 
@@ -595,15 +595,15 @@ This package contains the base plugin for the MMC web interface.
 Summary:        Pulse2 common files
 Group:          System/Servers
 Requires:       p7zip
-Requires:       python-configobj
+Requires:       python3-configobj
 Requires:       curl
 Requires:       nsis
 Requires:       bind-utils
-Requires:       python-psutil >= 0.6.1
-Requires:       python-netaddr
-Requires:       python-netifaces
+Requires:       python3-psutil >= 0.6.1
+Requires:       python3-netaddr
+Requires:       python3-netifaces
 
-Requires:       python-mmc-connection-manager
+Requires:       python3-mmc-connection-manager
 
 Provides:       /usr/sbin/pulse2-debug
 
@@ -638,9 +638,9 @@ This package contains Pulse 2 common files like documentation.
 Summary:        Pulse 2 inventory server
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common = %version-%release
-Requires:       python-pulse2-common-database-inventory = %version-%release
-Requires:       python-mmc-base >= %mmc_version
+Requires:       python3-pulse2-common = %version-%release
+Requires:       python3-pulse2-common-database-inventory = %version-%release
+Requires:       python3-mmc-base >= %mmc_version
 Requires:       pyOpenSSL
 
 %description -n pulse2-inventory-server
@@ -670,8 +670,8 @@ service pulse2-inventory-server stop >/dev/null 2>&1 || :
 Summary:        Pulse 2 package server
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common = %version-%release
-Requires:       python-mmc-core
+Requires:       python3-pulse2-common = %version-%release
+Requires:       python3-mmc-core
 Requires:       genisoimage
 Requires:       pyOpenSSL
 
@@ -705,7 +705,7 @@ service pulse2-package-server start >/dev/null 2>&1 || :
 %package -n     pulse2-scheduler
 Summary:        Pulse 2 scheduler service
 Group:          System/Servers
-Requires:       python-mmc-database
+Requires:       python3-mmc-database
 
 %description -n pulse2-scheduler
 This package contains the Pulse 2 scheduler service. It connects to the MSC
@@ -739,88 +739,88 @@ service pulse2-scheduler stop >/dev/null 2>&1 || :
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database-dyngroup
+%package -n     python3-pulse2-common-database-dyngroup
 Summary:        Pulse 2 common dynamic groups database files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common-database = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
 
-%description -n python-pulse2-common-database-dyngroup
+%description -n python3-pulse2-common-database-dyngroup
 This package contains Pulse 2 common dynamic groups database files.
 
-%files -n python-pulse2-common-database-dyngroup
+%files -n python3-pulse2-common-database-dyngroup
 %python3_sitelib/pulse2/database/dyngroup
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database-imaging
+%package -n     python3-pulse2-common-database-imaging
 Summary:        Pulse 2 common imaging database files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common-database = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
 
-%description -n python-pulse2-common-database-imaging
+%description -n python3-pulse2-common-database-imaging
 This package contains Pulse 2 common imaging database files
 
-%files -n python-pulse2-common-database-imaging
+%files -n python3-pulse2-common-database-imaging
 %python3_sitelib/pulse2/database/imaging
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database-inventory
+%package -n     python3-pulse2-common-database-inventory
 Summary:        Pulse 2 common inventory database files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common-database = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
 
-%description -n python-pulse2-common-database-inventory
+%description -n python3-pulse2-common-database-inventory
 This package contains Pulse 2 common inventory database files
 
-%files -n python-pulse2-common-database-inventory
+%files -n python3-pulse2-common-database-inventory
 %python3_sitelib/pulse2/database/inventory
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database-msc
+%package -n     python3-pulse2-common-database-msc
 Summary:        Pulse 2 common MSC database files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common-database = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
 
-%description -n python-pulse2-common-database-msc
+%description -n python3-pulse2-common-database-msc
 This package contains Pulse 2 common MSC database files
 
-%files -n python-pulse2-common-database-msc
+%files -n python3-pulse2-common-database-msc
 %python3_sitelib/pulse2/database/msc
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database-admin
+%package -n     python3-pulse2-common-database-admin
 Summary:        Pulse 2 common admin database files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common-database = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
 
-%description -n python-pulse2-common-database-admin
+%description -n python3-pulse2-common-database-admin
 This package contains Pulse 2 common admin database files
 
-%files -n python-pulse2-common-database-admin
-%python2_sitelib/pulse2/database/admin
+%files -n python3-pulse2-common-database-admin
+%python3_sitelib/pulse2/database/admin
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common-database
+%package -n     python3-pulse2-common-database
 Summary:        Pulse 2 common database files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common = %version-%release
-Requires:       python-sqlalchemy >= 0.6.3
+Requires:       python3-pulse2-common = %version-%release
+Requires:       python3-sqlalchemy >= 0.6.3
 Requires:       MySQL-python
 
-%description -n python-pulse2-common-database
+%description -n python3-pulse2-common-database
 This package contains Pulse 2 common database files.
 
-%files -n python-pulse2-common-database
+%files -n python3-pulse2-common-database
 %python3_sitelib/pulse2/database/__init__.py
 %python3_sitelib/pulse2/database/pulse/__init__.py
 %python3_sitelib/pulse2/database/pulse/config.py
@@ -830,7 +830,7 @@ This package contains Pulse 2 common database files.
 %package -n     pulse2-uuid-resolver
 Summary:        Helper to resolve Pulse's UUID into IP address
 Group:          System/Servers
-Requires:       python-pulse2-common = %version-%release
+Requires:       python3-pulse2-common = %version-%release
 
 %description -n pulse2-uuid-resolver
 This package contains a helper to resolve Pulse's UUID into IP address.
@@ -844,8 +844,8 @@ This package contains a helper to resolve Pulse's UUID into IP address.
 %package -n     pulse2-dlp-server
 Summary:        Pulse 2 Download provider service
 Group:          System/Servers
-Requires:       python-pulse2-common = %version-%release
-Requires:       python-cherrypy
+Requires:       python3-pulse2-common = %version-%release
+Requires:       python3-cherrypy
 
 %description -n pulse2-dlp-server
 This package contains a WSGI daemon to provide "pull mode" interface
@@ -868,23 +868,23 @@ service pulse2-dlp-server stop >/dev/null 2>&1 || :
 
 #--------------------------------------------------------------------
 
-%package -n     python-pulse2-common
+%package -n     python3-pulse2-common
 Summary:        Pulse 2 common files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python-twisted-web >= 2.4.0
+Requires:       python3-twisted-web >= 2.4.0
 
-Provides:       python-pulse2-meta < 1.5.0
-Obsoletes:      python-pulse2-meta = %version-%release
+Provides:       python3-pulse2-meta < 1.5.0
+Obsoletes:      python3-pulse2-meta = %version-%release
 
 Provides:       pulse2-common-client-apis < 1.5.0
 Obsoletes:      pulse2-common-client-apis = %version-%release
 
 
-%description -n python-pulse2-common
+%description -n python3-pulse2-common
 This package contains Pulse 2 common files.
 
-%files -n python-pulse2-common
+%files -n python3-pulse2-common
 %python3_sitelib/pulse2/apis
 %python3_sitelib/pulse2/imaging
 %python3_sitelib/pulse2/managers
@@ -906,19 +906,19 @@ This package contains Pulse 2 common files.
 %package -n mmc-agent
 Summary:    Console agent
 Group:      System/Servers
-%if %_vendor == "Mageia"
-Requires:   python-base
-Requires:   python-OpenSSL
-Requires:   python-gobject
+%if "%_vendor" == "Mageia"
+Requires:   python3-base
+Requires:   python3-OpenSSL
+Requires:   python3-gobject
 %else
 Requires:   python3
 Requires:   pyOpenSSL
 Requires:   pygobject2
 %endif
-Requires:   python-mmc-base
+Requires:   python3-mmc-base
 Requires:   logrotate
-Requires(pre): python-mmc-base
-Requires:   python-mmc-base
+Requires(pre): python3-mmc-base
+Requires:   python3-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python3-memory-profiler
 Requires:   python3-posix-ipc
@@ -955,21 +955,21 @@ This is the underlying service used by the MMC web interface.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-core
+%package -n python3-mmc-core
 Summary:    Console core
 Group:      System/Servers
-%if %_vendor == "Mageia"
-Requires:   python-base
+%if "%_vendor" == "Mageia"
+Requires:   python3-base
 %else
 Requires:   python
 %endif
-Requires:   python-twisted-web
+Requires:   python3-twisted-web
 
-%description -n python-mmc-core
+%description -n python3-mmc-core
 Contains the mmc core python classes used by all other
 modules.
 
-%files -n python-mmc-core
+%files -n python3-mmc-core
 %defattr(-,root,root,0755)
 %dir %{py_puresitedir}/mmc
 %{py_puresitedir}/mmc/core
@@ -984,28 +984,28 @@ modules.
 
 #--------------------------------------------------------------------
 
-%package -n	    python-mmc-base
+%package -n	    python3-mmc-base
 Summary:	    Console base plugin
 Group:      	System/Servers
-%if %_vendor == "Mageia"
-Requires:       python-base
+%if "%_vendor" == "Mageia"
+Requires:       python3-base
 %else
 Requires:       python
 %endif
-Requires:  	python-ldap
-Requires:   	python-mmc-plugins-tools
-Requires:   	python-mmc-core
-Requires:   	python-mmc-dashboard >= %{version}
+Requires:  	python3-ldap
+Requires:   	python3-mmc-plugins-tools
+Requires:   	python3-mmc-core
+Requires:   	python3-mmc-dashboard >= %{version}
 
-%description -n	python-mmc-base
+%description -n	python3-mmc-base
 Contains the base infrastructure for all MMC plugins:
  * support classes
  * base LDAP management classes
 
-%post -n python-mmc-base
+%post -n python3-mmc-base
 sed -i 's!%%(basedn)s!%%(baseDN)s!g' %{_sysconfdir}/mmc/plugins/base.ini
 
-%files -n python-mmc-base
+%files -n python3-mmc-base
 %defattr(-,root,root,0755)
 %attr(0755,root,root) %dir %{_sysconfdir}/mmc/plugins
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/base.ini
@@ -1020,21 +1020,21 @@ sed -i 's!%%(basedn)s!%%(baseDN)s!g' %{_sysconfdir}/mmc/plugins/base.ini
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-ppolicy
+%package -n python3-mmc-ppolicy
 Summary:    Console password policy plugin
 Group:      System/Servers
-%if %_vendor == "Mageia"
-Requires:       python-base
+%if "%_vendor" == "Mageia"
+Requires:       python3-base
 %else
 Requires:       python
 %endif
-Requires:   python-mmc-core
+Requires:   python3-mmc-core
 
-%description -n python-mmc-ppolicy
+%description -n python3-mmc-ppolicy
 Contains the password policy python classes to handle
 password policies in LDAP.
 
-%files -n python-mmc-ppolicy
+%files -n python3-mmc-ppolicy
 %defattr(-,root,root,0755)
 %attr(0755,root,root) %dir %{_sysconfdir}/mmc/plugins
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/ppolicy.ini
@@ -1046,22 +1046,22 @@ password policies in LDAP.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-dashboard
+%package -n python3-mmc-dashboard
 Summary:    Console dashboard plugin
 Group:      System/Servers
-%if %_vendor == "Mageia"
-Requires:   python-base
+%if "%_vendor" == "Mageia"
+Requires:   python3-base
 %else
 Requires:   python
 %endif
-Requires:   python-mmc-base >= %{version}
+Requires:   python3-mmc-base >= %{version}
 Requires:   python3-psutil >= 0.6.1
 Requires:   python3-distro
 
-%description -n python-mmc-dashboard
+%description -n python3-mmc-dashboard
 Console dashboard plugin
 
-%files -n python-mmc-dashboard
+%files -n python3-mmc-dashboard
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/dashboard.ini
 %{py_puresitedir}/mmc/plugins/dashboard
 
@@ -1080,27 +1080,27 @@ Dashboard module for the MMC web interface
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-services
+%package -n python3-mmc-services
 Summary:    Console services plugin
 Group:      System/Servers
-%if %_vendor == "Mageia"
-Requires:   python-base
+%if "%_vendor" == "Mageia"
+Requires:   python3-base
 %else
 Requires:   python
 %endif
-Requires:   python-mmc-base >= %{version}
-Requires:   python-systemd-dbus
-Requires:   python-dbus
+Requires:   python3-mmc-base >= %{version}
+Requires:   python3-systemd-dbus
+Requires:   python3-dbus
 
-%description -n python-mmc-services
+%description -n python3-mmc-services
 Console services plugin
 
-%files -n python-mmc-services
+%files -n python3-mmc-services
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/services.ini
 %{py_puresitedir}/mmc/plugins/services
 
-%post -n python-mmc-services
-%if %_vendor == "Mageia"
+%post -n python3-mmc-services
+%if "%_vendor" == "Mageia"
 sed -i 's!named,!!' %{_sysconfdir}/mmc/plugins/services.ini
 %endif
 # remove ldap from the services list if present
@@ -1141,7 +1141,7 @@ Contains the password policy web interface
 %package -n 	mmc-web-base
 Summary:        MMC web interface to interact with a MMC agent
 Group:          System/Servers
-%if %_vendor == "Mageia"
+%if "%_vendor" == "Mageia"
 Requires:       apache >= 2.0.52
 Requires:       apache-mod_php
 %else
@@ -1186,18 +1186,18 @@ fi
 
 #--------------------------------------------------------------------
 
-%package -n	python-mmc-plugins-tools
+%package -n	python3-mmc-plugins-tools
 Summary:	Required tools for some MMC plugins
 Group:		System/Servers
-%if %_vendor == "Mageia"
+%if "%_vendor" == "Mageia"
 Requires:	cdrkit-genisoimage
 %else
 Requires:       genisoimage
 %endif
-%description -n	python-mmc-plugins-tools
+%description -n	python3-mmc-plugins-tools
 Contains common tools needed by some plugins of mmc-agent package.
 
-%files -n python-mmc-plugins-tools
+%files -n python3-mmc-plugins-tools
 %defattr(-,root,root,0755)
 %dir %{_libdir}/mmc
 %dir %{_libdir}/mmc/backup-tools
@@ -1207,23 +1207,23 @@ Contains common tools needed by some plugins of mmc-agent package.
 #--------------------------------------------------------------------
 
 %if %with_report
-%package -n python-mmc-report
+%package -n python3-mmc-report
 Summary:    Console report plugin
 Group:      System/Servers
-%if %_vendor == "Mageia"
-Requires:   python-base
+%if "%_vendor" == "Mageia"
+Requires:   python3-base
 %else
 Requires:   python
 %endif
-Requires:   python-mmc-base >= %{version}
-Requires:   python-psutil >= 0.6.1
-Requires:   python-xlwt
-Requires:   python-weasyprint
+Requires:   python3-mmc-base >= %{version}
+Requires:   python3-psutil >= 0.6.1
+Requires:   python3-xlwt
+Requires:   python3-weasyprint
 
-%description -n python-mmc-report
+%description -n python3-mmc-report
 Console report plugin
 
-%files -n python-mmc-report
+%files -n python3-mmc-report
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/report.ini
 %{_sysconfdir}/mmc/plugins/report
 %{py_puresitedir}/mmc/plugins/report
@@ -1257,22 +1257,22 @@ Admin module for the MMC web interface
 
 #--------------------------------------------------------------------
 
-%package -n     python-mmc-database
+%package -n     python3-mmc-database
 Summary:        Console database common files
 Group:          System/Servers
-Requires:       python-mmc-base = %version-%release
-Requires:       python-sqlalchemy >= 0.6.3
-%if %_vendor == "Mageia"
-Requires:       python-mysql
+Requires:       python3-mmc-base = %version-%release
+Requires:       python3-sqlalchemy >= 0.6.3
+%if "%_vendor" == "Mageia"
+Requires:       python3-mysql
 %else
 Requires:       MySQL-python
 %endif
 
-%description -n python-mmc-database
+%description -n python3-mmc-database
 Console database common files
 Allow the use of SQL databases within MMC framework.
 
-%files -n python-mmc-database
+%files -n python3-mmc-database
 %{py_puresitedir}/mmc/database
 %endif
 
@@ -1311,9 +1311,9 @@ cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/htt
 
 mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
-cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/mmc/contrib/
-cp services/contrib/glpi-94.sql %buildroot%_datadir/doc/mmc/contrib/
-cp services/contrib/glpi-95.sql %buildroot%_datadir/doc/mmc/contrib/
+cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/pulse2/contrib/
+cp services/contrib/glpi-94.sql %buildroot%_datadir/doc/pulse2/contrib/
+cp services/contrib/glpi-95.sql %buildroot%_datadir/doc/pulse2/contrib/
 
 rm -f %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
 mv %buildroot%python3_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
