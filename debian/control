@@ -31,9 +31,7 @@ Depends: ${misc:Depends},
          pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client,
          pulse2-inventory-server,
-         pulse2-launchers,
          pulse-imaging-scripts,
-         pulse2-scheduler,
          pulse2-homepage
 Description: Pulse 2 metapackage
  This empty package depends on all Pulse2/MMC required packages.
@@ -147,21 +145,6 @@ Description: Pulse 2 inventory server
  .
  This package contains Pulse 2 inventory server. It collects computers
  inventories and insert them into the database.
-
-Package: pulse2-launchers
-Replaces: pulse2-launcher
-Architecture: any
-Pre-Depends: python3-psutil (>= 0.7.0), python3-openssl
-Depends: ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}, pulse2-common (= ${source:Version}), python-pulse2-common (= ${source:Version}), perl-modules, libsys-syslog-perl, openssh-client, iputils-ping, python-mmc-base (>= 3.1.1-1)
-Recommends: rsync
-Description: Pulse 2 software deployment handling service
- Pulse 2 is Open Source computer system management for medium and large
- organizations.
- .
- This package contains the Pulse 2 launcher service. The Pulse 2 scheduler
- service asks the launcher to connect to a set of target computers and start
- a deployment. Multiple launchers can be instantiated at the same time for
- scalability.
 
 Package: python-mmc-pulse2
 Architecture: all
@@ -283,28 +266,6 @@ Description: Pulse 2 package server
  This package contains the Pulse 2 package server. The package server manages
  the packages and the images repository.
 
-Package: pulse2-scheduler
-Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-msc (= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python3-openssl
-Description: Pulse 2 software deployment scheduling service
- Pulse 2 is Open Source computer system management for medium and large
- organizations.
- .
- This package contains the Pulse 2 scheduler service. It connects to the MSC
- database and tell to Pulse 2 launchers to start
- new deployment jobs when needed.
-
-Package: pulse2-cm
-Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-openssl
-Description: Pulse 2 Connection Manager
- Pulse 2 is Open Source computer system management for medium and large
- organizations.
- .
- This package contains the Pulse 2 Connection Manager. This service
- provides incoming connections from pulse2 clients which controls
- initial agent installs and updates the target table by correct IP.
-
 Package: mmc-web-dyngroup
 Architecture: all
 Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
@@ -410,16 +371,6 @@ Description: Pulse 2 UUID resolver
  organizations.
  .
  This package contains a helper to resolve Pulse's UUID into IP address.
-
-Package: pulse2-dlp-server
-Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python3-cherrypy3, python-pulse2-common (= ${binary:Version})
-Description: Pulse 2 Download provider service
- Pulse 2 is Open Source computer system management for medium and large
- organizations.
- .
- This package contains a WSGI daemon to provide "pull mode" interface
- for clients outside the corporate LAN.
 
 Package: pulse2-register-pxe
 Architecture: all

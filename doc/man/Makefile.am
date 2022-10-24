@@ -25,8 +25,6 @@ man_MANS = \
 	pulse2-inventory-server.1 \
 	pulse2-msc-clean-database.1 \
 	pulse2-package-server.1 \
-	pulse2-package-server-register-imaging.1 \
-	pulse2-scheduler.1 \
-	pulse2-scheduler-manager.1
+	pulse2-package-server-register-imaging.1
 
 EXTRA_DIST = $(man_MANS)

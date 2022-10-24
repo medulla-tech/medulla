@@ -21,7 +21,7 @@
 
 # We'll symlink /usr/share/doc/<package> to the pulse2-common one
 # So we need a list of available packages
-PKG_LIST = $(shell cat debian/control  | grep Package | awk '{ print $$2 }' | grep -v '^pulse2-common$$' | grep -v '^pulse2$$' | grep -v '^pulse2-uuid-resolver$$' | grep -v '^pulse2-imaging-server$$' | grep -v '^pulse2-dlp-server$$' | tr "\n" " ")
+PKG_LIST = $(shell cat debian/control  | grep Package | awk '{ print $$2 }' | grep -v '^pulse2-common$$' | grep -v '^pulse2$$' | grep -v '^pulse2-uuid-resolver$$' | grep -v '^pulse2-imaging-server$$' | tr "\n" " ")
 
 PACKAGE=pulse2
 DESTDIR=$(CURDIR)/debian/tmp
@@ -125,24 +125,12 @@ binary-arch: build install
 	# Must be readable by backuppc
 	chmod 0644 $(DESTDIR)/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini
 	# Must be writable by web-server
-	chown www-data:root debian/pulse2-dlp-server/var/lib/pulse2/dlp_packages/ \
-			    debian/pulse2-dlp-server/var/lib/pulse2/dlp_sessions/
-	chmod 750 debian/pulse2-dlp-server/var/lib/pulse2/dlp_packages/ \
-		  debian/pulse2-dlp-server/var/lib/pulse2/dlp_sessions/
-	# Create www-data writable log file for pulse2-dlp
-	touch debian/pulse2-dlp-server/var/log/mmc/pulse2-dlp-server.log
-	chown www-data:root debian/pulse2-dlp-server/var/log/mmc/pulse2-dlp-server.log
-	chmod 750 debian/pulse2-dlp-server/var/log/mmc/pulse2-dlp-server.log
 	dh_install --sourcedir=$(DESTDIR) --fail-missing
-	# Enable logging for pulse2-dlp standalone
-	sed -i 's!^#[[:space:]]log.error_file[[:space:]]=!log.error_file =!' debian/pulse2-dlp-server/etc/mmc/pulse2/dlp-server/dlp-server.ini
 	# This directory must be writable for www-data (first run)
 	chown www-data:root debian/python-mmc-support/etc/mmc/plugins/support
 	chmod 750 debian/python-mmc-support/etc/mmc/plugins/support
 	dh_fixperms -Xetc/mmc \
                     -Xusr/share/doc/pulse2/contrib/ \
-                    -Xvar/lib/pulse2/dlp_packages \
-                    -Xvar/lib/pulse2/dlp_sessions \
 		    -Xvar/log/mmc
 	dh_installchangelogs -Npulse2 ChangeLog
 	dh_installdocs -Npulse2

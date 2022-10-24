@@ -4,7 +4,6 @@
 %define make %{__make}
 %define makeinstall_std %{__make} DESTDIR=%{?buildroot:%{buildroot}} install
 %define mkrel(c:) %{-c: 0.%{-c*}.}%{1}%{?subrel:.%subrel}%{?distsuffix:%distsuffix}%{?!distsuffix:.el6}
-%define py_puresitedir %(python -c 'import distutils.sysconfig; print distutils.sysconfig.get_python_lib()' 2>/dev/null || echo PYTHON-LIBDIR-NOT-FOUND)
 %endif
 # Turn off the brp-python3-bytecompile script
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python3-bytecompile[[:space:]].*$!!g')
@@ -41,7 +40,6 @@ Group:		System/Servers
 URL:		https://github.com/pulse-project/pulse
 Source0:        %{name}_%{real_version}.orig.tar.gz
 #TODO: Adapt for Mageia
-Source1:        pulse2-dlp-server.init
 Source2:        pulse2-inventory-server.service
 Source3:        pulse2-imaging-server.service
 Source4:        pulse2-register-pxe.service
@@ -80,7 +78,6 @@ Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
 Requires:       pulse2-package-server
-Requires:       pulse2-scheduler
 Requires:       python3-pulse2-common-database-dyngroup
 Requires:       pulse-mmc-web-computers-inventory-backend
 Requires:       pulse-python3-mmc-computers-inventory-backend
@@ -150,27 +147,6 @@ This package contains the backuppc plugin for the MMC agent.
 
 #--------------------------------------------------------------------
 
-%package -n python3-mmc-connection-manager
-Summary:    Connection Manager plugin for the MMC agent
-Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Requires:   p7zip
-Requires:   python3-pyquery
-
-%description -n python3-mmc-connection-manager
-This package contains the connection manager plugin for the MMC agent.
-
-%files -n python3-mmc-connection-manager
-%defattr(-,root,root,0755)
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/pulse2/cm
-%python3_sitelib/mmc/plugins/backuppc
-%python3_sitelib/pulse2/cm
-%{_sysconfdir}/init.d/pulse2-cm
-%_sbindir/pulse2-cm
-%_sbindir/pulse2-create-group
-
-##--------------------------------------------------------------------
-
 %package -n     mmc-web-backuppc
 Summary:        Backuppc plugin for the MMC web interface
 Group:          System/Servers
@@ -182,29 +158,6 @@ This package contains the backuppc plugin for the MMC web interface.
 
 %files -n mmc-web-backuppc
 %{_datadir}/mmc/modules/backuppc
-
-#--------------------------------------------------------------------
-
-%package -n     pulse2-launchers
-Summary:        Pulse 2 launcher service
-Group:          System/Servers
-Obsoletes:      pulse2-launcher < 1.5.0
-Provides:       pulse2-launcher = %version-%release
-
-%description -n pulse2-launchers
-This package contains the Pulse 2 launcher service. The Pulse 2 scheduler
-service asks the launcher to connect to a set of target computers and start
-a deployment. Multiple launchers can be instantiated at the same time for
-scalability.
-
-%post -n pulse2-launchers
-service pulse2-launchers start >/dev/null 2>&1 || :
-
-%preun -n pulse2-launchers
-service pulse2-launchers stop >/dev/null 2>&1 || :
-
-%files -n pulse2-launchers
-%{_sysconfdir}/mmc/pulse2/launchers/keys
 
 #--------------------------------------------------------------------
 
@@ -461,7 +414,7 @@ This package contains the admin plugin for the MMC agent.
 %files -n python3-mmc-admin
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/admin.ini
 %python3_sitelib/mmc/plugins/admin
-%{_docdir}/mmc/contrib/admin
+%{_docdir}/pulse2/contrib/admin
 
 #--------------------------------------------------------------------
 
@@ -621,7 +574,8 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-inscription_packages_in_base.py
 %{_sbindir}/pulse2-generation_package.py
 %{_sbindir}/pulse2-migration_old_package.py
-%_docdir/mmc/contrib/
+%{_sbindir}/pulse2-create-group
+%_docdir/pulse2/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
 %_var/lib/pulse2/file-transfer
@@ -631,7 +585,7 @@ This package contains Pulse 2 common files like documentation.
 
 # Split later in its own rpm
 %python3_sitelib/pulse2/tests/test_utils.py
-
+%python3_sitelib/pulse2/tests/__pycache__/test_utils.*
 #--------------------------------------------------------------------
 
 %package -n     pulse2-inventory-server
@@ -699,43 +653,6 @@ service pulse2-package-server start >/dev/null 2>&1 || :
 %_mandir/man1/pulse2-package-server.1*
 %_mandir/man1/pulse2-package-server-register-imaging.1.*
 %python3_sitelib/pulse2/package_server
-
-#--------------------------------------------------------------------
-
-%package -n     pulse2-scheduler
-Summary:        Pulse 2 scheduler service
-Group:          System/Servers
-Requires:       python3-mmc-database
-
-%description -n pulse2-scheduler
-This package contains the Pulse 2 scheduler service. It connects to the MSC
-(Mageia Secure Control) database and tell to Pulse 2 launchers to start
-new deployment jobs when needed.
-
-%post -n pulse2-scheduler
-service pulse2-scheduler start >/dev/null 2>&1 || :
-
-%preun -n pulse2-scheduler
-service pulse2-scheduler stop >/dev/null 2>&1 || :
-
-%files -n pulse2-scheduler
-%{_sysconfdir}/init.d/pulse2-scheduler
-%dir %_var/lib/pulse2/packages
-%dir %_var/lib/pulse2/imaging
-%dir %_var/lib/pulse2/imaging/bootmenus
-%dir %_var/lib/pulse2/imaging/isos
-%dir %_var/lib/pulse2/imaging/computers
-%dir %_var/lib/pulse2/imaging/inventories
-%dir %_var/lib/pulse2/imaging/masters
-#dir _var/lib/pulse2/imaging/custom
-%dir %_var/lib/pulse2/imaging/archives
-%config(noreplace) %_sysconfdir/mmc/pulse2/scheduler/scheduler.ini
-%{_sysconfdir}/mmc/pulse2/scheduler/keys
-%{_sbindir}/pulse2-scheduler
-%{_sbindir}/pulse2-scheduler-manager
-%{_sbindir}/pulse2-scheduler-proxy
-%_mandir/man1/pulse2-scheduler*.1*
-%python3_sitelib/pulse2/scheduler
 
 #--------------------------------------------------------------------
 
@@ -824,6 +741,9 @@ This package contains Pulse 2 common database files.
 %python3_sitelib/pulse2/database/__init__.py
 %python3_sitelib/pulse2/database/pulse/__init__.py
 %python3_sitelib/pulse2/database/pulse/config.py
+%python3_sitelib/pulse2/database/__pycache__/__init__.*
+%python3_sitelib/pulse2/database/pulse/__pycache__/__init__.*
+%python3_sitelib/pulse2/database/pulse/__pycache__/config.*
 
 #--------------------------------------------------------------------
 
@@ -839,32 +759,6 @@ This package contains a helper to resolve Pulse's UUID into IP address.
 %dir %{_sysconfdir}/mmc/pulse2/uuid-resolver
 %attr(0644,root,root) %config(noreplace) %_sysconfdir/mmc/pulse2/uuid-resolver/uuid-resolver.ini
 %_bindir/pulse2-uuid-resolver
-
-#--------------------------------------------------------------------
-%package -n     pulse2-dlp-server
-Summary:        Pulse 2 Download provider service
-Group:          System/Servers
-Requires:       python3-pulse2-common = %version-%release
-Requires:       python3-cherrypy
-
-%description -n pulse2-dlp-server
-This package contains a WSGI daemon to provide "pull mode" interface
-for clients outside the corporate LAN.
-
-%post -n pulse2-dlp-server
-service pulse2-dlp-server start >/dev/null 2>&1 || :
-
-
-%preun -n pulse2-dlp-server
-service pulse2-dlp-server stop >/dev/null 2>&1 || :
-
-%files -n pulse2-dlp-server
-%_bindir/pulse2-dlp-server
-%attr(0640,root,root) %config(noreplace) %_sysconfdir/mmc/pulse2/dlp-server/dlp-apache.conf
-%attr(0640,root,root) %config(noreplace) %_sysconfdir/mmc/pulse2/dlp-server/dlp-server.ini
-%attr(0640,root,root) %config(noreplace) %_sysconfdir/mmc/pulse2/dlp-server/dlp-wsgi.ini
-%python3_sitelib/pulse2/dlp
-%_sysconfdir/init.d/pulse2-dlp-server
 
 #--------------------------------------------------------------------
 
@@ -898,6 +792,16 @@ This package contains Pulse 2 common files.
 %python3_sitelib/pulse2/version.py
 %python3_sitelib/pulse2/xmlrpc.py
 %python3_sitelib/pulse2/network.py
+%python3_sitelib/pulse2/__pycache__/cache.*
+%python3_sitelib/pulse2/__pycache__/consts.*
+%python3_sitelib/pulse2/__pycache__/health.*
+%python3_sitelib/pulse2/__pycache__/network.*
+%python3_sitelib/pulse2/__pycache__/site.*
+%python3_sitelib/pulse2/__pycache__/utils.*
+%python3_sitelib/pulse2/__pycache__/version.*
+%python3_sitelib/pulse2/__pycache__/xmlrpc.*
+%python3_sitelib/pulse2/__pycache__/__init__.*
+%python3_sitelib/pulse2/__pycache__/time_intervals.*
 
 %doc %_docdir/pulse2
 
@@ -949,9 +853,10 @@ This is the underlying service used by the MMC web interface.
 %doc %{_mandir}/man1/mmc-agent.1.*
 %doc %{_mandir}/man1/mmc-helper.1.*
 %doc %{_mandir}/man1/mmc-stats.1.*
-%dir %{py_puresitedir}/mmc
-%{py_puresitedir}/mmc/agent.py*
-%{_docdir}/mmc/contrib/monit/mmc-agent
+%dir %{python3_sitelib}/mmc
+%{python3_sitelib}/mmc/agent.py*
+%{python3_sitelib}/mmc/__pycache__/agent.*
+%{_docdir}/pulse2/contrib/monit/mmc-agent
 
 #--------------------------------------------------------------------
 
@@ -971,16 +876,21 @@ modules.
 
 %files -n python3-mmc-core
 %defattr(-,root,root,0755)
-%dir %{py_puresitedir}/mmc
-%{py_puresitedir}/mmc/core
-%{py_puresitedir}/mmc/support
-%{py_puresitedir}/mmc/__init__.py*
-%{py_puresitedir}/mmc/site.py*
-%{py_puresitedir}/mmc/ssl.py*
-%{py_puresitedir}/mmc/client
-%dir %{py_puresitedir}/mmc/plugins
-%{py_puresitedir}/mmc/plugins/__init__.py*
-%{_docdir}/mmc/contrib/audit
+%dir %{python3_sitelib}/mmc
+%{python3_sitelib}/mmc/core
+%{python3_sitelib}/mmc/support
+%{python3_sitelib}/mmc/__init__.py*
+%{python3_sitelib}/mmc/site.py*
+%{python3_sitelib}/mmc/ssl.py*
+%{python3_sitelib}/mmc/client
+%dir %{python3_sitelib}/mmc/plugins
+%{python3_sitelib}/mmc/plugins/__init__.py*
+%{python3_sitelib}/mmc/plugins/__pycache__/__init__.*
+
+%{_docdir}/pulse2/contrib/audit
+%{python3_sitelib}/mmc/__pycache__/__init__.*
+%{python3_sitelib}/mmc/__pycache__/site.*
+%{python3_sitelib}/mmc/__pycache__/ssl.*
 
 #--------------------------------------------------------------------
 
@@ -1010,13 +920,13 @@ sed -i 's!%%(basedn)s!%%(baseDN)s!g' %{_sysconfdir}/mmc/plugins/base.ini
 %attr(0755,root,root) %dir %{_sysconfdir}/mmc/plugins
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/base.ini
 %attr(0755,root,root) %{_sbindir}/mds-report
-%dir %{py_puresitedir}/mmc
-%dir %{py_puresitedir}/mmc/plugins
-%{py_puresitedir}/mmc/plugins/base
-%{_docdir}/mmc/contrib/base
-%{_docdir}/mmc/contrib/scripts/usertoken-example
-%{_docdir}/mmc/contrib/scripts/mmc-check-users-primary-group
-%exclude %{py_puresitedir}/mmc/plugins/report
+%dir %{python3_sitelib}/mmc
+%dir %{python3_sitelib}/mmc/plugins
+%{python3_sitelib}/mmc/plugins/base
+%{_docdir}/pulse2/contrib/base
+%{_docdir}/pulse2/contrib/scripts/usertoken-example
+%{_docdir}/pulse2/contrib/scripts/mmc-check-users-primary-group
+%exclude %{python3_sitelib}/mmc/plugins/report
 
 #--------------------------------------------------------------------
 
@@ -1038,11 +948,11 @@ password policies in LDAP.
 %defattr(-,root,root,0755)
 %attr(0755,root,root) %dir %{_sysconfdir}/mmc/plugins
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/ppolicy.ini
-%dir %{py_puresitedir}/mmc
-%dir %{py_puresitedir}/mmc/plugins
-%{py_puresitedir}/mmc/plugins/ppolicy
-%{_docdir}/mmc/contrib/ppolicy
-%{_docdir}/mmc/contrib/scripts/mmc-check-expired-passwords-example
+%dir %{python3_sitelib}/mmc
+%dir %{python3_sitelib}/mmc/plugins
+%{python3_sitelib}/mmc/plugins/ppolicy
+%{_docdir}/pulse2/contrib/ppolicy
+%{_docdir}/pulse2/contrib/scripts/mmc-check-expired-passwords-example
 
 #--------------------------------------------------------------------
 
@@ -1063,7 +973,7 @@ Console dashboard plugin
 
 %files -n python3-mmc-dashboard
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/dashboard.ini
-%{py_puresitedir}/mmc/plugins/dashboard
+%{python3_sitelib}/mmc/plugins/dashboard
 
 #--------------------------------------------------------------------
 
@@ -1097,7 +1007,7 @@ Console services plugin
 
 %files -n python3-mmc-services
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/services.ini
-%{py_puresitedir}/mmc/plugins/services
+%{python3_sitelib}/mmc/plugins/services
 
 %post -n python3-mmc-services
 %if "%_vendor" == "Mageia"
@@ -1226,8 +1136,8 @@ Console report plugin
 %files -n python3-mmc-report
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/report.ini
 %{_sysconfdir}/mmc/plugins/report
-%{py_puresitedir}/mmc/plugins/report
-%{_docdir}/mmc/contrib/report
+%{python3_sitelib}/mmc/plugins/report
+%{_docdir}/pulse2/contrib/report
 
 #--------------------------------------------------------------------
 
@@ -1273,7 +1183,7 @@ Console database common files
 Allow the use of SQL databases within MMC framework.
 
 %files -n python3-mmc-database
-%{py_puresitedir}/mmc/database
+%{python3_sitelib}/mmc/database
 %endif
 
 #--------------------------------------------------------------------
@@ -1299,8 +1209,6 @@ mkdir -p %buildroot%_var/lib/pulse2/packages
 rm -rf %buildroot%{_sysconfdir}/init.d/pulse2-imaging-server
 
 mkdir -p %buildroot%_prefix/lib/systemd/system
-
-cp %{SOURCE1} %buildroot%_sysconfdir/init.d/pulse2-dlp-server
 
 cp %{SOURCE2} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE3} %buildroot%_prefix/lib/systemd/system
@@ -1353,3 +1261,5 @@ cp services/systemd/mmc-agent.service %buildroot%_prefix/lib/systemd/system/
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
+rm -fv %buildroot%_sysconfdir/init.d/pulse2-cm
+rm -fv %buildroot%_sysconfdir/init.d/pulse2-scheduler

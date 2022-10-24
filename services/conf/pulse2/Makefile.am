@@ -23,8 +23,7 @@
 pulseconfdir = $(sysconfdir)/mmc/pulse2
 
 certpaths = \
-	package-server/keys inventory-server/keys scheduler/keys \
-	launchers/keys cm/keys
+	package-server/keys inventory-server/keys
 certca = $(patsubst %,%/cacert.pem,$(certpaths))
 certpriv = $(patsubst %,%/privkey.pem,$(certpaths))
 
@@ -41,22 +40,11 @@ nobase_pulseconf_DATA = \
 	inventory-server/xml-fix/08_Microsoft_consistency.py \
 	inventory-server/xml-fix/99_Strip_leading_trailing_spaces.py \
 	inventory-server/OcsNGMap.xml \
-	scheduler/scheduler.ini atftpd/pcre.conf \
+	atftpd/pcre.conf \
 	uuid-resolver/uuid-resolver.ini \
-	dlp-server/dlp-server.ini dlp-server/dlp-wsgi.ini dlp-server/dlp-apache.conf cm/cm.ini \
 	$(certca) $(certpriv)
 
-EXTRA_DIST = $(nobase_pulseconf_DATA) \
-             scheduler/scheduler.ini.in
-CLEANFILES = scheduler/scheduler.ini
-
-scheduler/scheduler.ini: Makefile
-	rm -f $@ $@.tmp
-	$(MKDIR_P) $(@D)
-	srcdir=''; \
-	  test -f ./$@.in || srcdir=$(srcdir)/; \
-	  $(edit) $${srcdir}$@.in >$@.tmp
-	mv $@.tmp $@
+EXTRA_DIST = $(nobase_pulseconf_DATA)
 
 edit = sed \
         -e 's|@bindir[@]|$(bindir)|g' \

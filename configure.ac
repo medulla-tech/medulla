@@ -119,9 +119,7 @@ if test "x$enable_python_check" = "xyes"; then
    AX_PYTHON_MODULE([ldap], [1])
    AX_PYTHON_MODULE([OpenSSL], [1])
    AX_PYTHON_MODULE([multiprocessing], [1])
-   AX_PYTHON_MODULE([gobject], [1])
    AX_PYTHON_MODULE([twisted.web], [1])
-   AX_PYTHON_MODULE([mmc], [1])
 fi
 
 dnl check for headers
