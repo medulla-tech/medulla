@@ -1223,8 +1223,9 @@ cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/pulse2/contrib/
 cp services/contrib/glpi-94.sql %buildroot%_datadir/doc/pulse2/contrib/
 cp services/contrib/glpi-95.sql %buildroot%_datadir/doc/pulse2/contrib/
 
-rm -f %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
-mv %buildroot%python3_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
+# Does not  seems usefull now we do not use package server.
+#rm -f %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
+#mv %buildroot%python3_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
 
 rm -f %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api.py
 mv %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api.py
