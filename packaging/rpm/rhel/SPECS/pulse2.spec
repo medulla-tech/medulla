@@ -9,6 +9,9 @@
 %global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python3-bytecompile[[:space:]].*$!!g')
 %define __requires_exclude ^(pear\\(graph.*|pear\\(includes.*|pear\\(modules.*)$
 
+
+%global __python %{__python3}
+
 %if "%_vendor" == "Mageia"
 %define webappsdir /httpd/conf/webapps.d
 %define with_report 1
