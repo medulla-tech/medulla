@@ -1192,6 +1192,7 @@ Allow the use of SQL databases within MMC framework.
 %setup -q  -n pulse2-%version
 cp %{SOURCE5}   agent/mmc/plugins/base
 cp %{SOURCE6}   web/modules/base/computers
+sed -e 's/python python2 //' -i configure
 
 %build
 
