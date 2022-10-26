@@ -33,12 +33,10 @@ except ImportError:
 
 def usage(argv):
     print(
-        "Usage: %s db_conn_string [--id entity_id|--name entity_name]" % argv[0],
-        file=sys.stderr,
+        "Usage: %s db_conn_string [--id entity_id|--name entity_name]" % argv[0]
     )
     print(
         "Where db_conn_string is a SQLAlchemy connection string, e.g. mysql://user:password@host/database",
-        file=sys.stderr,
     )
     return 1
 
