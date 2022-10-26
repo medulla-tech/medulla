@@ -1227,9 +1227,6 @@ cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/pulse2/contrib/
 cp services/contrib/glpi-94.sql %buildroot%_datadir/doc/pulse2/contrib/
 cp services/contrib/glpi-95.sql %buildroot%_datadir/doc/pulse2/contrib/
 
-rm -f %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api.py
-mv %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api.py
-
 # install log rotation stuff
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
 cat > %{buildroot}%{_sysconfdir}/logrotate.d/mmc-agent << EOF
