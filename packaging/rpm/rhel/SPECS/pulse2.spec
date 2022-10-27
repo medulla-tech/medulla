@@ -253,7 +253,6 @@ Requires:   pulse2-common = %version-%release
 Requires:   python3-pulse2-common-database-imaging = %version-%release
 # Needed for ImportError: No module named tasks
 Requires:   python3-mmc-core >= 3.1.1
-Requires:   python3-ipaddr
 %description -n python3-mmc-imaging
 This package contains the imaging plugin for MMC agent.
 
