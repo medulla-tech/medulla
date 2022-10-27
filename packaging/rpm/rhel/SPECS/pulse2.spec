@@ -100,6 +100,9 @@ Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python3-pulse2-common-database-dyngroup = %version-%release
 
+Obsoletes:  python-mmc-dyngroup < 4.7.0
+Provides:   python-mmc-dyngroup = %version-%release
+
 %description -n python3-mmc-dyngroup
 This package contains the dynamic computer group plugin for the MMC agent. It
 stores into a database static and dynamic group of computers to ease massive
@@ -134,6 +137,9 @@ Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   p7zip
 Requires:   python3-pyquery
+
+Obsoletes:  python-mmc-backuppc < 4.7.0
+Provides:   python-mmc-backuppc = %version-%release
 
 %description -n python3-mmc-backuppc
 This package contains the backuppc plugin for the MMC agent.
@@ -174,6 +180,10 @@ Requires:   MySQL-python >= 1.2.1
 Requires:   python3-pulse2-common = %version-%release
 
 Provides:   pulse-python3-mmc-computers-inventory-backend = %version-%release
+
+Obsoletes:  python-mmc-glpi < 4.7.0
+Provides:   python-mmc-glpi = %version-%release
+
 
 %description -n python3-mmc-glpi
 This package contains the GLPI plugin for the MMC agent. It connects to a
@@ -216,6 +226,9 @@ Requires:   python3-mmc-base >= %mmc_version
 Requires:   python3-pulse2-common-database-msc = %version-%release
 Requires:   python3-xlwt
 
+Obsoletes:  python-mmc-msc < 4.7.0
+Provides:   python-mmc-msc = %version-%release
+
 %description -n python3-mmc-msc
 This package contains the MSC (Mageia Secure Control) plugin for the MMC
 agent. It allows one to control and manage the entire software deployment
@@ -253,6 +266,11 @@ Requires:   pulse2-common = %version-%release
 Requires:   python3-pulse2-common-database-imaging = %version-%release
 # Needed for ImportError: No module named tasks
 Requires:   python3-mmc-core >= 3.1.1
+
+Obsoletes:  python-mmc-imaging < 4.7.0
+Provides:   python-mmc-imaging = %version-%release
+
+
 %description -n python3-mmc-imaging
 This package contains the imaging plugin for MMC agent.
 
@@ -284,6 +302,9 @@ Requires:   pulse2-common = %version-%release
 Requires:   python3-pulse2-common-database-imaging = %version-%release
 # Needed for ImportError: No module named tasks
 Requires:   python3-mmc-core >= 3.1.1
+
+Obsoletes:  python-mmc-support < 4.7.0
+Provides:   python-mmc-support = %version-%release
 
 %description -n python3-mmc-support
 This package contains the imaging plugin for MMC agent.
@@ -319,6 +340,9 @@ Requires:   python3-magic
 Requires:   python3-inotify
 
 Provides:   pulse-python3-mmc-computers-inventory-backend = %version-%release
+
+Obsoletes:  python-mmc-inventory < 4.7.0
+Provides:   python-mmc-inventory = %version-%release
 
 %description -n python3-mmc-inventory
 This package contains the inventory plugin for the MMC agent
@@ -378,6 +402,9 @@ Requires:   python2-requests
 Requires:   python2-unidecode
 Requires:   python3-magic
 
+Obsoletes:  python-mmc-pkgs < 4.7.0
+Provides:   python-mmc-pkgs = %version-%release
+
 %description -n python3-mmc-pkgs
 This package contains the pkgs plugin for the MMC agent.
 
@@ -392,6 +419,9 @@ This package contains the pkgs plugin for the MMC agent.
 Summary:    Kiosk plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
+
+Obsoletes:  python-mmc-kiosk < 4.7.0
+Provides:   python-mmc-kiosk = %version-%release
 
 %description -n python3-mmc-kiosk
 This package contains the pkgs plugin for the MMC agent.
@@ -409,6 +439,9 @@ Summary:    Kiosk plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python3-pulse2-common-database-admin = %version-%release
+
+Obsoletes:  python-mmc-admin < 4.7.0
+Provides:   python-mmc-admin = %version-%release
 
 %description -n python3-mmc-admin
 This package contains the admin plugin for the MMC agent.
@@ -428,6 +461,9 @@ Requires:   python3-mmc-msc = %version-%release
 Requires:   python3-GeoIP
 Requires:   GeoIP-data
 Requires:   python3-croniter
+
+Obsoletes:  python-mmc-xmppmaster < 4.7.0
+Provides:   python-mmc-xmppmaster = %version-%release
 
 %description -n python3-mmc-xmppmaster
 This package contains the xmppmaster plugin for the MMC agent.
@@ -467,6 +503,9 @@ Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python3-mmc-msc = %version-%release
 
+Obsoletes:  python-mmc-guacamole < 4.7.0
+Provides:   python-mmc-guacamole = %version-%release
+
 %description -n python3-mmc-guacamole
 This package contains the guacamole plugin for the MMC agent.
 
@@ -483,7 +522,6 @@ Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
-
 %description -n mmc-web-pkgs
 This package contains the package management plugin for the MMC web
 interface.
@@ -498,7 +536,6 @@ Summary:        Kiosk plugin for the MMC web interface
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
-
 
 %description -n mmc-web-kiosk
 This package contains the kiosk plugin for the MMC web
@@ -521,6 +558,9 @@ Requires:   python3-pulse2-common = %version-%release
 Requires:   python3-sqlalchemy >= 0.6.3
 Requires:   pulse-python3-mmc-computers-inventory-backend = %version-%release
 Requires:   python3-service-identity
+
+Obsoletes:  python-mmc-pulse2 < 4.7.0
+Provides:   python-mmc-pulse2 = %version-%release
 
 %description -n python3-mmc-pulse2
 This package will install all the Pulse 2 MMC agent interface plugins
@@ -664,6 +704,9 @@ Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       python3-pulse2-common-database = %version-%release
 
+Obsoletes:  python-pulse2-common-database-dyngroup < 4.7.0
+Provides:   python-pulse2-common-database-dyngroup = %version-%release
+
 %description -n python3-pulse2-common-database-dyngroup
 This package contains Pulse 2 common dynamic groups database files.
 
@@ -677,6 +720,9 @@ Summary:        Pulse 2 common imaging database files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       python3-pulse2-common-database = %version-%release
+
+Obsoletes:  python-pulse2-common-database-imaging < 4.7.0
+Provides:   python-pulse2-common-database-imaging= %version-%release
 
 %description -n python3-pulse2-common-database-imaging
 This package contains Pulse 2 common imaging database files
@@ -692,6 +738,9 @@ Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       python3-pulse2-common-database = %version-%release
 
+Obsoletes:  python-pulse2-common-database-inventory < 4.7.0
+Provides:   python-pulse2-common-database-inventory = %version-%release
+
 %description -n python3-pulse2-common-database-inventory
 This package contains Pulse 2 common inventory database files
 
@@ -706,6 +755,9 @@ Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       python3-pulse2-common-database = %version-%release
 
+Obsoletes:  python-pulse2-common-database-msc < 4.7.0
+Provides:   python-pulse2-common-database-msc = %version-%release
+
 %description -n python3-pulse2-common-database-msc
 This package contains Pulse 2 common MSC database files
 
@@ -719,6 +771,9 @@ Summary:        Pulse 2 common admin database files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       python3-pulse2-common-database = %version-%release
+
+Obsoletes:  python-pulse2-common-database-admin < 4.7.0
+Provides:   python-pulse2-common-database-admin = %version-%release
 
 %description -n python3-pulse2-common-database-admin
 This package contains Pulse 2 common admin database files
@@ -735,6 +790,9 @@ Requires:       pulse2-common = %version-%release
 Requires:       python3-pulse2-common = %version-%release
 Requires:       python3-sqlalchemy >= 0.6.3
 Requires:       MySQL-python
+
+Obsoletes:  python-pulse2-common-database < 4.7.0
+Provides:   python-pulse2-common-database = %version-%release
 
 %description -n python3-pulse2-common-database
 This package contains Pulse 2 common database files.
@@ -776,6 +834,8 @@ Obsoletes:      python3-pulse2-meta = %version-%release
 Provides:       pulse2-common-client-apis < 1.5.0
 Obsoletes:      pulse2-common-client-apis = %version-%release
 
+Obsoletes:      python-pulse2-common < 4.7.0
+Provides:       python-pulse2-common = %version-%release
 
 %description -n python3-pulse2-common
 This package contains Pulse 2 common files.
@@ -872,6 +932,9 @@ Requires:   python
 %endif
 Requires:   python3-twisted-web
 
+Obsoletes:  python-mmc-core < 4.7.0
+Provides:   python-mmc-core = %version-%release
+
 %description -n python3-mmc-core
 Contains the mmc core python classes used by all other
 modules.
@@ -909,6 +972,9 @@ Requires:   	python3-mmc-plugins-tools
 Requires:   	python3-mmc-core
 Requires:   	python3-mmc-dashboard >= %{version}
 
+Obsoletes:  python-mmc-base < 4.7.0
+Provides:   python-mmc-base = %version-%release
+
 %description -n	python3-mmc-base
 Contains the base infrastructure for all MMC plugins:
  * support classes
@@ -942,6 +1008,9 @@ Requires:       python
 %endif
 Requires:   python3-mmc-core
 
+Obsoletes:  python-mmc-ppolicy < 4.7.0
+Provides:   python-mmc-ppolicy = %version-%release
+
 %description -n python3-mmc-ppolicy
 Contains the password policy python classes to handle
 password policies in LDAP.
@@ -969,6 +1038,9 @@ Requires:   python
 Requires:   python3-mmc-base >= %{version}
 Requires:   python3-psutil >= 0.6.1
 Requires:   python3-distro
+
+Obsoletes:  python-mmc-dashboard < 4.7.0
+Provides:   python-mmc-dashboard = %version-%release
 
 %description -n python3-mmc-dashboard
 Console dashboard plugin
@@ -1003,6 +1075,9 @@ Requires:   python
 Requires:   python3-mmc-base >= %{version}
 Requires:   python3-systemd-dbus
 Requires:   python3-dbus
+
+Obsoletes:  python-mmc-services < 4.7.0
+Provides:   python-mmc-services = %version-%release
 
 %description -n python3-mmc-services
 Console services plugin
@@ -1106,6 +1181,10 @@ Requires:	cdrkit-genisoimage
 %else
 Requires:       genisoimage
 %endif
+
+Obsoletes:  python-mmc-plugins-tools < 4.7.0
+Provides:   python-mmc-plugins-tools = %version-%release
+
 %description -n	python3-mmc-plugins-tools
 Contains common tools needed by some plugins of mmc-agent package.
 
@@ -1131,6 +1210,9 @@ Requires:   python3-mmc-base >= %{version}
 Requires:   python3-psutil >= 0.6.1
 Requires:   python3-xlwt
 Requires:   python3-weasyprint
+
+Obsoletes:  python-mmc-report < 4.7.0
+Provides:   python-mmc-report = %version-%release
 
 %description -n python3-mmc-report
 Console report plugin
@@ -1179,6 +1261,9 @@ Requires:       python3-mysql
 %else
 Requires:       MySQL-python
 %endif
+
+Obsoletes:  python-mmc-database < 4.7.0
+Provides:   python-mmc-database = %version-%release
 
 %description -n python3-mmc-database
 Console database common files
