@@ -826,7 +826,7 @@ This package contains a helper to resolve Pulse's UUID into IP address.
 Summary:        Pulse 2 common files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python3-twisted-web >= 2.4.0
+Requires:       python3-twisted >= 2.4.0
 
 Provides:       python3-pulse2-meta < 1.5.0
 Obsoletes:      python3-pulse2-meta = %version-%release
@@ -930,7 +930,7 @@ Requires:   python3-base
 %else
 Requires:   python
 %endif
-Requires:   python3-twisted-web
+Requires:   python3-twisted
 
 Obsoletes:  python-mmc-core < 4.7.0
 Provides:   python-mmc-core = %version-%release
