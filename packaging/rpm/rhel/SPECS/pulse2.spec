@@ -26,7 +26,7 @@
 %define debug_package          %{nil}
 
 %define use_git                1
-%define git                    c9a18c92
+%define git                    SHA
 %define real_version           4.7.0
 %define mmc_version            4.7.0
 
