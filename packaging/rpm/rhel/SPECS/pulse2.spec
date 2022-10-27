@@ -888,7 +888,6 @@ Requires:   python3-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python3-memory-profiler
 Requires:   python3-posix-ipc
-Requires:   python3-gi
 
 %description -n mmc-agent
 XMLRPC server of the Console API.
