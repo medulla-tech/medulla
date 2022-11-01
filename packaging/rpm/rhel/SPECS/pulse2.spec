@@ -876,8 +876,8 @@ Requires:   python3-OpenSSL
 Requires:   python3-gobject
 %else
 Requires:   python3
-Requires:   pyOpenSSL
-Requires:   pygobject2
+Requires:   python3-pyOpenSSL
+Requires:   python3-gi
 %endif
 Requires:   python3-mmc-base
 Requires:   logrotate
