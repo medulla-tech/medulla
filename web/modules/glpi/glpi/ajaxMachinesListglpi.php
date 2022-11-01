@@ -32,20 +32,6 @@ global $config;
 .selectable{
 	cursor:pointer;
 }
-
-li.displayg a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("img/common/icn_show.gif");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-    filter: grayscale(50%);
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    opacity:0.5;
-}
 </style>
 <?php
 

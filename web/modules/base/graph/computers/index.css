@@ -171,6 +171,29 @@ li.groupshare a {
         text-decoration: none;
         color: #FFF;
 }
+li.display a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/fileviewer.png");
+    background-repeat: no-repeat;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.displayg a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/fileviewer.png");
+    background-repeat: no-repeat;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
 
 li.inventory a {
     	padding: 0px 0px 5px 23px;
@@ -183,11 +206,25 @@ li.inventory a {
         color: #FFF;
 }
 
+li.inventoryg a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("modules/base/graph/computers/inventory.png");
+    background-repeat: no-repeat;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
+
 li.remove_machine a,
 li.delete a {
         padding: 1px 3px 5px 20px;
         margin: 0 0px 0 0px;
-        background-image: url("img/common/button_cancel.png");
+        background-image: url("modules/base/graph/computers/delete.png");
         background-repeat: no-repeat;
         background-position: left top;
         line-height: 18px;
@@ -301,7 +338,7 @@ li.delbootmenu a {
 li.config a {
         padding: 0px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/run.png");
+        background-image: url("modules/base/graph/computers/run.png");
         background-repeat: no-repeat;
         background-position: left top;
         line-height: 18px;
@@ -312,7 +349,7 @@ li.config a {
 li.configg a {
         padding: 0px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/run.png");
+        background-image: url("modules/base/graph/computers/run.png");
         background-repeat: no-repeat;
         background-position: left top;
         line-height: 18px;
