@@ -598,8 +598,6 @@ Requires:       python3-psutil >= 0.6.1
 Requires:       python3-netaddr
 Requires:       python3-netifaces
 
-Requires:       python3-mmc-connection-manager
-
 Provides:       /usr/sbin/pulse2-debug
 
 %description -n pulse2-common
