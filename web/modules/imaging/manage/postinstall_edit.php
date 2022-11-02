@@ -59,7 +59,6 @@ if ($task == "edit") {
 
 // create page
 $p = new PageGenerator(_T($title, "imaging"));
-$sidemenu->setBackgroundImage("modules/imaging/graph/images/section_large.png");
 $sidemenu->forceActiveItem("postinstall");
 $p->setSideMenu($sidemenu);
 $p->display();

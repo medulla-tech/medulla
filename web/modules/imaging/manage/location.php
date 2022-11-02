@@ -38,7 +38,6 @@ if(!isset($params))
     $params = array();
 
 $p = new PageGenerator();
-$sidemenu->setBackgroundImage("modules/imaging/graph/images/section_large.png");
 $p->setSideMenu($sidemenu);
 $p->display();
 

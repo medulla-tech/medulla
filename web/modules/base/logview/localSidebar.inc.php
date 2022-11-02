@@ -11,7 +11,7 @@ $mod = $MMCApp->getModule("base");
 $submod = $mod->getSubmod("logview");
  foreach ($submod->getPages() as $page) {
     if ($page->isVisible()){
-       $sidemenu->addSideMenuItem(new SideMenuItem($page->getDescription(),      "base", "logview", $page->getAction(), "img/common/logview_active.png", "img/common/logview_inactive.png"));
+       $sidemenu->addSideMenuItem(new SideMenuItem($page->getDescription(),      "base", "logview", $page->getAction()));
     }
 }
     $p = new PageGenerator();
