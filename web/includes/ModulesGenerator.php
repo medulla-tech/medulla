@@ -315,7 +315,7 @@ class SubModule {
                     width: '.$this->_imgsize.'px;
                 }
                 #navbar ul li#navbar'.$this->getName().' a {
-                    background: url("'.$this->_img.'.png") no-repeat #1b1e21;
+                    background: url("'.$this->_img.'.png") no-repeat #8CB63C;
                     color: #fff;
                     background-position: 50% 10px;
                     background-size: 35px 35px;
