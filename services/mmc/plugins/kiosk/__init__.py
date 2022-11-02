@@ -143,7 +143,7 @@ def get_ou_list():
 
         # Get the parameters from the config file
         ldapurl = config.get('authentication_externalldap', 'ldapurl')
-        suffix = config.get('authentication_externalldap', 'suffix')
+        suffix = config.get('authentication_externalldap', 'suffix_ou')
         bindname = config.get('authentication_externalldap', 'bindname')
         bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
 
@@ -210,7 +210,7 @@ def get_ou_tree():
 
         # Get the parameters from the config file
         ldapurl = config.get('authentication_externalldap', 'ldapurl')
-        suffix = config.get('authentication_externalldap', 'suffix')
+        suffix = config.get('authentication_externalldap', 'suffix_ou')
         bindname = config.get('authentication_externalldap', 'bindname')
         bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
 
