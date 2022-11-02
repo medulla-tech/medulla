@@ -35,9 +35,6 @@ from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, stopCommand
 from pulse2.database.msc.orm.commands_on_host import CoHManager
 from pulse2.database.msc.orm.target import Target
 
-# Pulse 2 stuff
-from pulse2.scheduler.timeaxis import LaunchTimeResolver
-
 
 class Commands(object):
     """Mapping between msc.commands and SA"""
@@ -164,20 +161,6 @@ class Commands(object):
         # TODO: a quick action is not only an action with nothing to upload
         result = len(self.files) == 0
         logging.getLogger().debug("isQuickAction(#%s): %s" % (self.id, result))
-        return result
-
-    def inDeploymentInterval(self):
-        # TODO: a quick action is not only an action with nothing to upload
-        if not self.deployment_intervals:  # no interval given => always perform
-            result = True
-        else:
-            result = LaunchTimeResolver().in_deployment_interval(
-                self.deployment_intervals, datetime.datetime.today()
-            )
-        if not result:
-            logging.getLogger().debug(
-                "inDeploymentInterval(#%s): %s" % (self.id, result)
-            )
         return result
 
     def in_valid_time(self):
