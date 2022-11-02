@@ -1,20 +1,22 @@
 li.install a {
-        padding: 0px 0px 5px 20px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/install.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.installg a {
-        padding: 0px 0px 5px 20px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/install.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -25,22 +27,24 @@ li.installg a {
 }
 
 li.folder a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/folder.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.folderg a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/folder.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -50,22 +54,24 @@ li.folderg a {
         opacity:0.5;
 }
 li.console a {
-        padding: 3px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/console.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.consoleg a {
-        padding: 3px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/console.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -75,43 +81,47 @@ li.consoleg a {
         opacity:0.5;
 }
 li.monit a {
-        padding: 3px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/process.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 li.quick a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/quick.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.guaca a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/guaca.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.guacag a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/guaca.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -121,11 +131,12 @@ li.guacag a {
         opacity:0.5;
 }
 li.quickg a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/quick.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -136,22 +147,24 @@ li.quickg a {
 }
 
 li.logfile a {
-        padding: 0px 0px 5px 20px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/logfile.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.logfileg a {
-        padding: 0px 0px 5px 20px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/logfile.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -162,115 +175,35 @@ li.logfileg a {
 }
 
 li.groupshare a {
-        padding: 3px 0px 5px 20px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/dyngroup/img/share.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 li.display a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/base/graph/computers/fileviewer.png");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/fileviewer.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
 }
 
 li.displayg a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/base/graph/computers/fileviewer.png");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-    filter: grayscale(50%);
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    opacity:0.5;
-}
-
-li.inventory a {
-    	padding: 0px 0px 5px 23px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/inventory.png");
+        background-image: url("modules/base/graph/computers/fileviewer.png");
         background-repeat: no-repeat;
         background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.inventoryg a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/base/graph/computers/inventory.png");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-    filter: grayscale(50%);
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    opacity:0.5;
-}
-
-li.remove_machine a,
-li.delete a {
-        padding: 1px 3px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/delete.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.csv a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/csv.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.download a {
-        padding: 0px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/download.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.backuppc a {
-        padding: 0px 0px 5px 25px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/backuppc.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.vncclientg a {
-        padding: 0px 0px 5px 25px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/vncclient.png");
-        background-repeat: no-repeat;
-        background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -280,34 +213,78 @@ li.vncclientg a {
         opacity:0.5;
 }
 
-li.vncclient a {
-        padding: 0px 0px 5px 25px;
+li.inventory a {
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/vncclient.png");
+        background-image: url("modules/base/graph/computers/inventory.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.inventoryg a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/inventory.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+
+li.remove_machine a,
+li.delete a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/delete.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.csv a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/csv.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.backuppc a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/backuppc.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.imaging a {
-	padding: 1px 3px 5px 20px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/imaging.png");
         background-repeat: no-repeat;
         background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.monitoring a {
-        padding: 1px 3px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/monitoring.png");
-        background-repeat: no-repeat;
-        background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -316,6 +293,7 @@ li.monitoring a {
 li.addbootmenu a {
     background-image:url("modules/imaging/graph/images/imaging-add.png");
     background-position:left top;
+    background-size: 25px 25px;
     background-repeat:no-repeat;
     color:#FFFFFF;
     line-height:18px;
@@ -327,6 +305,7 @@ li.addbootmenu a {
 li.delbootmenu a {
     background-image:url("modules/imaging/graph/images/imaging-del.png");
     background-position:left top;
+    background-size: 25px 25px;
     background-repeat:no-repeat;
     color:#FFFFFF;
     line-height:18px;
@@ -336,22 +315,24 @@ li.delbootmenu a {
 }
 
 li.config a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/run.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.configg a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/run.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;

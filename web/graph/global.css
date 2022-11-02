@@ -206,7 +206,7 @@ p {
 
 #navbar #logo {
     float: left;
-    padding: 15px 15px 15px 30px;
+    padding: 10px 10px 10px 30px;
 }
 
 #navbar ul {
@@ -334,54 +334,6 @@ p {
 
 #sidebar ul li a:hover {
     color: #444;
-}
-
-/* ---------------------------------------- */
-/* 3b. Subnav / Users    		            */
-/* ---------------------------------------- */
-
-#sidebar ul.users li#global a {
-    background-image: url("../img/users/icn_global.gif");
-}
-
-#sidebar ul.users li#global a:hover {
-    background-image: url("../img/users/icn_global_ro.gif");
-}
-
-#sidebar ul.users li#addUser a {
-    background-image: url("../img/users/icn_addUser.gif");
-}
-
-#sidebar ul.users li#addUser a:hover {
-    background-image: url("../img/users/icn_addUser_ro.gif");
-}
-
-#sidebar ul.users li#changePasswd a {
-    background-image: url("../img/access/icn_global.gif");
-}
-
-#sidebar ul.users li#changePasswd a:hover {
-    background-image: url("../img/access/icn_global_ro.gif");
-}
-
-/* ---------------------------------------- */
-/* 3c. Subnav / Groups         		        */
-/* ---------------------------------------- */
-
-#sidebar ul.groups li#global a {
-    background-image: url("../img/groups/icn_global.gif");
-}
-
-#sidebar ul.groups li#global a:hover {
-    background-image: url("../img/groups/icn_global_ro.gif");
-}
-
-#sidebar ul.groups li#addGroup a {
-    background-image: url("../img/groups/icn_addGroup.gif");
-}
-
-#sidebar ul.groups li#addGroup a:hover {
-    background-image: url("../img/groups/icn_addGroup_ro.gif");
 }
 
 /* ---------------------------------------- */
@@ -787,22 +739,24 @@ li.advanced a {
 }
 
 li.folder a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/folder.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.folderg a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/folder.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -812,22 +766,24 @@ li.folderg a {
         opacity:0.5;
 }
 li.console a {
-        padding: 3px 0px  5px 22px;
+    padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/console.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.consoleg a {
-        padding: 3px 0px  5px 22px;
+    padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/console.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -836,33 +792,38 @@ li.consoleg a {
         -moz-filter: grayscale(50%);
         opacity:0.5;
 }
+
 li.monit a {
-        padding: 3px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/process.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
+
 li.quick a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/quick.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.quickg a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/quick.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -873,22 +834,24 @@ li.quickg a {
 }
 
 li.guaca a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/guaca.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.guacag a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/guaca.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -899,11 +862,12 @@ li.guacag a {
 }
 
 li.quickg a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../modules/base/graph/computers/quick.png");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -1211,8 +1175,6 @@ input#param.searchfieldreal {
 }
 
 #searchBest{
-    background: url('search.gif') #FFF no-repeat;
-    padding-left: 55px;
     border-radius: 6px;
     background-position: left center;
     margin-right: 0;
