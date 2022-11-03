@@ -184,8 +184,8 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
   $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
   $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
 
-  $fileviewer = new ActionItem(_("files viewer"),"fileviewer","display","computers", "xmppmaster", "xmppmaster");
-  $filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","displayg","computers","xmppmaster", "xmppmaster");
+  $fileviewer = new ActionItem(_("files viewer"),"fileviewer","fileviewer","computers", "xmppmaster", "xmppmaster");
+  $filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","fileviewerg","computers","xmppmaster", "xmppmaster");
 }
 else{
   $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
