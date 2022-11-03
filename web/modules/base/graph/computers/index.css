@@ -1,7 +1,7 @@
 li.install a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/install.png");
+        background-image: url("img/actions/deploy.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -13,7 +13,7 @@ li.install a {
 li.installg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/install.png");
+        background-image: url("img/actions/deploy.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -29,7 +29,7 @@ li.installg a {
 li.folder a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/folder.png");
+        background-image: url("img/actions/folderexplorer.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -41,7 +41,7 @@ li.folder a {
 li.folderg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/folder.png");
+        background-image: url("img/actions/folderexplorer.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -56,7 +56,7 @@ li.folderg a {
 li.console a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
+        background-image: url("img/actions/console.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -68,7 +68,7 @@ li.console a {
 li.consoleg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
+        background-image: url("img/actions/console.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -83,7 +83,7 @@ li.consoleg a {
 li.monit a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/process.png");
+        background-image: url("img/actions/monitoring.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -94,7 +94,7 @@ li.monit a {
 li.quick a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
+        background-image: url("img/actions/quickaction.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -102,11 +102,27 @@ li.quick a {
         text-decoration: none;
         color: #FFF;
 }
+}
+li.quickg a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("img/actions/quickaction.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
 
 li.guaca a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
+        background-image: url("img/actions/control.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -118,7 +134,7 @@ li.guaca a {
 li.guacag a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
+        background-image: url("img/actions/control.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -129,22 +145,6 @@ li.guacag a {
         -webkit-filter: grayscale(50%);
         -moz-filter: grayscale(50%);
         opacity:0.5;
-}
-li.quickg a {
-        padding: 5px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        background-size: 25px 25px;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
 
 li.logfile a {
         padding: 5px 0px  5px 22px;
@@ -177,7 +177,7 @@ li.logfileg a {
 li.groupshare a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/dyngroup/img/share.png");
+        background-image: url("img/actions/share.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -188,7 +188,7 @@ li.groupshare a {
 li.display a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/fileviewer.png");
+        background-image: url("img/actions/fileviewer.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -200,7 +200,7 @@ li.display a {
 li.displayg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/fileviewer.png");
+        background-image: url("img/actions/fileviewer.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -216,7 +216,7 @@ li.displayg a {
 li.inventory a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/inventory.png");
+        background-image: url("img/actions/inventory.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -228,7 +228,7 @@ li.inventory a {
 li.inventoryg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/inventory.png");
+        background-image: url("img/actions/inventory.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -245,7 +245,7 @@ li.remove_machine a,
 li.delete a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/delete.png");
+        background-image: url("img/actions/delete.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -257,7 +257,7 @@ li.delete a {
 li.csv a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/csv.png");
+        background-image: url("img/actions/csvexport.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -269,7 +269,7 @@ li.csv a {
 li.backuppc a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/backuppc.png");
+        background-image: url("img/actions/backup.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -281,7 +281,7 @@ li.backuppc a {
 li.imaging a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/imaging.png");
+        background-image: url("img/actions/imaging.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -317,7 +317,7 @@ li.delbootmenu a {
 li.config a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/run.png");
+        background-image: url("img/actions/settings.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -329,7 +329,7 @@ li.config a {
 li.configg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/run.png");
+        background-image: url("img/actions/settings.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;

@@ -297,12 +297,12 @@ class SubModule {
                     width: '.$this->_imgsize.';
                 }
                 #navbar ul li#navbar'.$this->getName().' a {
-                    background: url("'.$this->_img.'.png") no-repeat transparent;
+                    background: url("'.$this->_img.'.svg") no-repeat transparent;
                     background-position: 50% 10px;
                     background-size: 35px 35px;
                 }
                 #navbar ul li#navbar'.$this->getName().' a:hover {
-                    background: url("'.$this->_img.'.png") no-repeat transparent;
+                    background: url("'.$this->_img.'.svg") no-repeat transparent;
                     background-position: 50% 10px;
                     background-size: 35px 35px;
                     filter: grayscale(50%);
@@ -315,7 +315,7 @@ class SubModule {
                     width: '.$this->_imgsize.'px;
                 }
                 #navbar ul li#navbar'.$this->getName().' a {
-                    background: url("'.$this->_img.'.png") no-repeat #8CB63C;
+                    background: url("'.$this->_img.'.svg") no-repeat #8CB63C;
                     color: #fff;
                     background-position: 50% 10px;
                     background-size: 35px 35px;

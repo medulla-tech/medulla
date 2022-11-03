@@ -232,7 +232,7 @@ p {
     display: block;
     text-align: center;
     font-size: 11px;
-    color: #81919e;
+    color: #fff;
     line-height: 16px;
     /* default icon */
     position: relative;
@@ -590,7 +590,7 @@ li.down a {
 li.backup a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
-    background-image: url("../img/common/cd.png");
+    background-image: url("../img/actions/backup.svg");
     background-repeat: no-repeat;
     background-position: left top;
     line-height: 18px;
@@ -741,7 +741,7 @@ li.advanced a {
 li.folder a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/folder.png");
+        background-image: url("../img/actions/folderexplorer.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -753,7 +753,7 @@ li.folder a {
 li.folderg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/folder.png");
+        background-image: url("../img/actions/folderexplorer.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -768,7 +768,7 @@ li.folderg a {
 li.console a {
     padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/console.png");
+        background-image: url("../img/actions/console.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -780,7 +780,7 @@ li.console a {
 li.consoleg a {
     padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/console.png");
+        background-image: url("../img/actions/console.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -796,7 +796,7 @@ li.consoleg a {
 li.monit a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/process.png");
+        background-image: url("../img/actions/monitoring.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -808,7 +808,7 @@ li.monit a {
 li.quick a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/quick.png");
+        background-image: url("../img/actions/quickaction.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -820,7 +820,7 @@ li.quick a {
 li.quickg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/quick.png");
+        background-image: url("../img/actions/quickaction.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -836,7 +836,7 @@ li.quickg a {
 li.guaca a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/guaca.png");
+        background-image: url("../img/actions/control.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -848,23 +848,7 @@ li.guaca a {
 li.guacag a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/guaca.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        background-size: 25px 25px;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-
-li.quickg a {
-        padding: 5px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/quick.png");
+        background-image: url("../img/actions/control.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -1064,7 +1048,7 @@ td.noMachineName {
 
 td.machineName {
     padding: 0 0 0 37px;
-    background-image: url("../img/machines/machine_down.png");
+    background-image: url("../img/other/machine_down.svg");
     background-position: 7px center;
     /*background-position: 7px 7px;*/
     background-repeat: no-repeat;
@@ -1073,7 +1057,7 @@ td.machineName {
 
 td.machineNamepresente {
     padding: 0 0 0 37px;
-    background-image: url("../img/machines/machine_up.png");
+    background-image: url("../img/other/machine_up.svg");
     background-position: 7px center;
     /*background-position: 7px 7px;*/
     background-repeat: no-repeat;
