@@ -207,8 +207,6 @@ class IconeElement extends HtmlElement {
         $this->alt = $alt;
         $this->params = $params;
         $this->title = $title;
-        $this->width = "25";
-        $this->height = "25";
         $this->style= "";
     }
     function setstyle($sty){
@@ -219,9 +217,9 @@ class IconeElement extends HtmlElement {
         echo ($this->alt != "") ? "alt='$this->alt'" : "alt='image' ";
         echo ($this->title != "") ? "title='$this->title' " : " ";
         if( $this->style != "")
-            echo " style='position:relative; top: 3px;cursor: s-resize;' />";
+            echo " style='position:relative; top: 3px;cursor: s-resize;' width='25' height='25' />";
         else
-            echo " style='".$this->style."' />";
+            echo " style='".$this->style."' width='25' height='25' />";
                       echo "<script type='text/javascript'>
                         jQuery('#".$this->id."').click(function(){fn_".$this->id."()});
                         </script>\n";
