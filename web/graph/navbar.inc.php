@@ -38,7 +38,7 @@ $root = $conf["global"]["root"];
 <?php
 if (getMMCLogo()) {
 ?>
-<a href="http://www.medulla-tech.io/">
+<a href="https://medulla-tech.io">
 	<img src="<?=getMMCLogo()?>" alt="Medulla" id="logo" width="153" height="50"/>
 </a>
 <?php
