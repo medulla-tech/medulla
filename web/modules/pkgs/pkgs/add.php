@@ -319,8 +319,8 @@ if (isset($_POST['bconfirm'])){
         <tr>
             <td style="border: none;">
                 <div>
-                    <img src="img/common/icn_arrowup.png" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
-                    <img src="img/common/icn_arrowdown.png" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/></a><br/>
+                    <img src="img/other/up.svg" width="25" height="25" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
+                    <img src="img/other/down.svg" width="25" height="25" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/></a><br/>
                 </div>
             </td>
             <td style="border: none;">
@@ -334,8 +334,8 @@ if (isset($_POST['bconfirm'])){
             </td>
             <td style="border: none;">
                 <div>
-                    <img src="img/common/icn_arrowright.gif" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
-                    <img src="img/common/icn_arrowleft.gif" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
+                    <img src="img/other/right.svg" width="25" height="25" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
+                    <img src="img/other/left.svg" width="25" height="25" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
                 </div>
             </td>
             <td style="border: none;">
