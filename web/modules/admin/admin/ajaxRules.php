@@ -125,16 +125,6 @@ else{
   .clickable{
     cursor: pointer;
   }
-  li.addbootmenu a {
-      background-image:url("modules/imaging/graph/images/imaging-add.png");
-      background-position:left top;
-      background-repeat:no-repeat;
-      color:#FFFFFF;
-      line-height:18px;
-      margin:0 0;
-      padding: 4px 3px 5px 20px;
-      text-decoration:none;
-  }
 </style>
 
 <script>

@@ -90,7 +90,7 @@ p {
 /* ---------------------------------------- */
 
 #header {
-    background-color: #292f36;
+    background-color: #25607D;
     border-bottom: 1px solid #d4d4d4;
     border-top: 1px solid #21262b;
     padding: 0 0px 0px 0px;
@@ -206,7 +206,7 @@ p {
 
 #navbar #logo {
     float: left;
-    padding: 15px 15px 15px 30px;
+    padding: 10px 10px 10px 30px;
 }
 
 #navbar ul {
@@ -232,7 +232,7 @@ p {
     display: block;
     text-align: center;
     font-size: 11px;
-    color: #81919e;
+    color: #fff;
     line-height: 16px;
     /* default icon */
     position: relative;
@@ -325,7 +325,7 @@ p {
     background-repeat: no-repeat;
     background-color:#f5f6f7;
     color: #8fa0b1;
-    padding: 12px 8px 12px 60px;
+    padding: 12px 8px 12px 30px;
     background-position: 20px 0;
     border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
@@ -334,54 +334,6 @@ p {
 
 #sidebar ul li a:hover {
     color: #444;
-}
-
-/* ---------------------------------------- */
-/* 3b. Subnav / Users    		            */
-/* ---------------------------------------- */
-
-#sidebar ul.users li#global a {
-    background-image: url("../img/users/icn_global.gif");
-}
-
-#sidebar ul.users li#global a:hover {
-    background-image: url("../img/users/icn_global_ro.gif");
-}
-
-#sidebar ul.users li#addUser a {
-    background-image: url("../img/users/icn_addUser.gif");
-}
-
-#sidebar ul.users li#addUser a:hover {
-    background-image: url("../img/users/icn_addUser_ro.gif");
-}
-
-#sidebar ul.users li#changePasswd a {
-    background-image: url("../img/access/icn_global.gif");
-}
-
-#sidebar ul.users li#changePasswd a:hover {
-    background-image: url("../img/access/icn_global_ro.gif");
-}
-
-/* ---------------------------------------- */
-/* 3c. Subnav / Groups         		        */
-/* ---------------------------------------- */
-
-#sidebar ul.groups li#global a {
-    background-image: url("../img/groups/icn_global.gif");
-}
-
-#sidebar ul.groups li#global a:hover {
-    background-image: url("../img/groups/icn_global_ro.gif");
-}
-
-#sidebar ul.groups li#addGroup a {
-    background-image: url("../img/groups/icn_addGroup.gif");
-}
-
-#sidebar ul.groups li#addGroup a:hover {
-    background-image: url("../img/groups/icn_addGroup_ro.gif");
 }
 
 /* ---------------------------------------- */
@@ -545,137 +497,10 @@ ul.action li a:hover {
     color: #95AABF;
 }
 
-li.display a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/icn_show.gif");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.display a:hover {
-    background-image: url("../img/common/icn_show_ro.gif");
-}
-
-li.audit a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/audit.png");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.delete a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/button_cancel.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 li.editacl a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
     background-image: url("../img/common/icn_acl.gif");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.edit a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/edit2.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.add a {
-    padding: 1px 3px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/icn_add.gif");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.up a {
-    padding: 1px 3px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/icn_arrowup.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.down a {
-    padding: 1px 3px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/icn_arrowdown.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.backup a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/cd.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.stop a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/stop.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.stopg a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/stop.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-    filter: grayscale(50%);
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    opacity:0.5;
-}
-
-li.start a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/start.png");
     background-repeat: no-repeat;
     background-position: left top;
     line-height: 18px;
@@ -692,32 +517,6 @@ li.reload a {
     line-height: 18px;
     text-decoration: none;
     color: #FFF;
-}
-
-li.restart a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/restart.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.restartg a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/restart.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-    filter: grayscale(50%);
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    opacity:0.5;
 }
 
 li.info a {
@@ -786,23 +585,138 @@ li.advanced a {
     color: #FFF;
 }
 
-li.folder a {
-        padding: 0px 0px  5px 22px;
+
+/* ---------------------------------------- */
+/*    Icons for Actions                     */
+/* ---------------------------------------- */
+
+li.fileviewer a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/fileviewer.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.fileviewerg a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/fileviewer.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
+
+li.inventory a {
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/folder.png");
+        background-image: url("../img/actions/inventory.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.inventoryg a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/inventory.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+
+li.backuppc a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/backup.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.install a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/deploy.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.installg a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/deploy.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
+
+li.imaging a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/imaging.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.folder a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/folderexplorer.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.folderg a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/folder.png");
+        background-image: url("../img/actions/folderexplorer.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -811,23 +725,26 @@ li.folderg a {
         -moz-filter: grayscale(50%);
         opacity:0.5;
 }
+
 li.console a {
-        padding: 3px 0px  5px 22px;
+    padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/console.png");
+        background-image: url("../img/actions/console.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.consoleg a {
-        padding: 3px 0px  5px 22px;
+    padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/console.png");
+        background-image: url("../img/actions/console.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -836,33 +753,66 @@ li.consoleg a {
         -moz-filter: grayscale(50%);
         opacity:0.5;
 }
+
 li.monit a {
-        padding: 3px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/process.png");
+        background-image: url("../img/actions/monitoring.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
-li.quick a {
-        padding: 0px 0px  5px 22px;
+
+li.config a {
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/quick.png");
+        background-image: url("../img/actions/settings.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.configg a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/settings.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+
+li.quick a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/quickaction.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.quickg a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/quick.png");
+        background-image: url("../img/actions/quickaction.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -873,22 +823,24 @@ li.quickg a {
 }
 
 li.guaca a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/guaca.png");
+        background-image: url("../img/actions/control.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
 }
 
 li.guacag a {
-        padding: 0px 0px  5px 22px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/guaca.png");
+        background-image: url("../img/actions/control.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -898,12 +850,98 @@ li.guacag a {
         opacity:0.5;
 }
 
-li.quickg a {
-        padding: 0px 0px  5px 22px;
+li.edit a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/edit.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.groupshare a {
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../modules/base/graph/computers/quick.png");
+        background-image: url("../img/actions/share.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.remove_machine a,
+li.delete a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/delete.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.csv a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("img/actions/csvexport.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.backup a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/backup.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.display a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/display.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.logfile a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/fileviewer.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.logfileg a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/fileviewer.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
@@ -912,6 +950,291 @@ li.quickg a {
         -moz-filter: grayscale(50%);
         opacity:0.5;
 }
+
+li.package a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/packages.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.packageg a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/packages.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: 25px 25px;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+
+li.reconfiguregroup a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/reconfiguregroup.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.reconfiguregroupg a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/reconfiguregroup.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
+
+li.stop a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/stop.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.stopg a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/stop.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
+
+li.start a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/start.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.restart a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/restart.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.up a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/up.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.down a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/down.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.audit a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/details.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.ban a{
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/ban.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+	line-height: 18px;
+	text-decoration: none;
+	color: #FFF;
+}
+
+li.bang a{
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/ban.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+	line-height: 18px;
+	text-decoration: none;
+	color: #FFF;
+	filter: grayscale(50%);
+	-webkit-filter: grayscale(50%);
+	-moz-filter: grayscale(50%);
+	opacity:0.5;
+}
+
+li.unban a{
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/unban.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+	line-height: 18px;
+	text-decoration: none;
+	color: #FFF;
+}
+
+li.unbang a{
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/unban.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+	line-height: 18px;
+	text-decoration: none;
+	color: #FFF;
+	filter: grayscale(50%);
+	-webkit-filter: grayscale(50%);
+	-moz-filter: grayscale(50%);
+	opacity:0.5;
+}
+
+li.add a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/add.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.addbootmenu a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/addfile.svg");
+    background-repeat:no-repeat;
+    background-position:left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.delbootmenu a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/delfile.svg");
+    background-repeat:no-repeat;
+    background-position:left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.removebootmenu a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/delete.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.showbootmenu a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/show.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.duplicatescript a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/duplicate.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.createbootservice a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/transformfile.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
 
 .user_container {
     padding-top: 40px;
@@ -1100,17 +1423,20 @@ td.noMachineName {
 
 td.machineName {
     padding: 0 0 0 37px;
-    background-image: url("../img/machines/icn_machinesList.gif");
+    background-image: url("../img/other/machine_down.svg");
     background-position: 7px center;
     /*background-position: 7px 7px;*/
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
 }
 
 td.machineNamepresente {
     padding: 0 0 0 37px;
-    background-image: url("../img/machines/icn_machinesListUp.gif");
+    background-image: url("../img/other/machine_up.svg");
     background-position: 7px center;
     /*background-position: 7px 7px;*/
     background-repeat: no-repeat;
+    background-size: 25px 25px;
 }
 
 td.phoneName {
@@ -1208,8 +1534,6 @@ input#param.searchfieldreal {
 }
 
 #searchBest{
-    background: url('search.gif') #FFF no-repeat;
-    padding-left: 55px;
     border-radius: 6px;
     background-position: left center;
     margin-right: 0;

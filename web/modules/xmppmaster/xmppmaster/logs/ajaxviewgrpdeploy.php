@@ -46,25 +46,6 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
     cursor: pointer;
 }
 
-li.groupshare a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/dyngroup/img/share.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-li.remove_machine a {
-    background-image: url("img/common/button_cancel.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 progress{
     border-color: #ffffff;
     background-color: #009ea9;
