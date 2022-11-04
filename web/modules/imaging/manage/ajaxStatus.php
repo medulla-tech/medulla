@@ -141,7 +141,7 @@ padding:5px;
             <p class="stat">
             <? $urlRedirect = urlStrRedirect("imaging/manage/creategroupcustonmenu")."&location=".$location; ?>
             <? $urlRedirectgroupimaging = urlStrRedirect("imaging/manage/creategroupcustonmenuimaging")."&location=".$location; ?>
-                <img src="img/machines/icn_machinesList.gif" /> <strong>
+                <img src="img/other/machine_down.svg" width="25" height="25" /> <strong>
                 <?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?>
                 <?php
                     if (intval($customMenu_count) > 0){
@@ -176,10 +176,10 @@ padding:5px;
                         </span>
                     </a>';
                     echo '<a  href="'. $urlRedirect .'">';
-                    echo '<img src="img/machines/icn_machinesList.gif" title="create group "/>';
+                    echo '<img src="img/other/machine_down.svg" title="create group" width="25" height="25" />';
                     echo '</a>';
                     echo '<a href="'. $urlRedirectgroupimaging .'"  class="lienstylebouton boutoncreation">';
-                    echo '<img src="img/machines/icn_machinesList.gif" title="create group imaging" />';
+                    echo '<img src="img/other/machine_down.svg" title="create group imaging" width="25" height="25" />';
                     echo '</a>)';
 
                     echo '<div id="popupinformation1" title="Custom Menu">';
@@ -225,7 +225,7 @@ padding:5px;
             }
             ?>
             <p class="stat">
-                <img src="img/machines/icn_machinesList.gif" />
+                <img src="img/other/machine_down.svg" width="25" height="25" />
                 <strong>
                     <?php echo $short_status['rescue']; ?>
                 </strong>/<?php echo $short_status['total']; ?>

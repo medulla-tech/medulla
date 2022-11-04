@@ -407,7 +407,7 @@ function item_list() {
             if (isset($entry['read_only']) && $entry['read_only' ]) {
                 $url = '<img src="modules/imaging/graph/images/service-action-ro.png" style="vertical-align: middle" alt="'._T('boot service from profile', 'imaging').'"/> ';
             } else {
-                $url = '<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" alt="'._T('boot service', 'imaging').'"/> ';
+                $url = '<img src="img/other/confitem.svg" style="vertical-align: middle" width="25" height="25" alt="'._T('boot service', 'imaging').'"/> ';
             }
         }
 

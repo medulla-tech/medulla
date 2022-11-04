@@ -196,7 +196,7 @@ class raphaelPie extends HtmlElement {
             jQuery('#$this->id ul').append(
                 '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
                 + '<a href="' + href[i] + '"><img title="' +
-                '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
+                '" style="height: 10px; padding-left: 3px;" src="img/other/machine_down.svg" /></a></span></li>'
             );
         }*/
         </script>

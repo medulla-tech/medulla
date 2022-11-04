@@ -508,17 +508,6 @@ li.editacl a {
     color: #FFF;
 }
 
-li.reload a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/reload.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 li.info a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
@@ -567,17 +556,6 @@ li.wait a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
     background-image: url("../img/common/todo.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-li.advanced a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/run.png");
     background-repeat: no-repeat;
     background-position: left top;
     line-height: 18px;
@@ -1035,10 +1013,10 @@ li.stopg a {
     opacity:0.5;
 }
 
-li.start a {
+li.restart a {
     padding: 5px 0px  5px 22px;
     margin: 0 0px 0 0px;
-    background-image: url("../img/actions/start.svg");
+    background-image: url("../img/actions/restart.svg");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: 25px 25px;
@@ -1047,10 +1025,10 @@ li.start a {
     color: #FFF;
 }
 
-li.restart a {
+li.reload a {
     padding: 5px 0px  5px 22px;
     margin: 0 0px 0 0px;
-    background-image: url("../img/actions/restart.svg");
+    background-image: url("../img/actions/reload.svg");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: 25px 25px;
@@ -1235,6 +1213,40 @@ li.createbootservice a {
     color: #FFF;
 }
 
+li.advanced a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/confitem.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.start a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/play.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.convergence a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("../img/actions/convergence.svg");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
 
 .user_container {
     padding-top: 40px;
@@ -1386,23 +1398,32 @@ td.shareName {
 td.shareAction { text-align: right; }
 
 td.groupName {
-    padding: 0 0 0 43px;
-    background-image: url("../img/groups/icn_groupsList.gif");
-    background-position: 9px 6px;
+    padding: 0 0 0 37px;
+    background-image: url("../img/other/usergroup.svg");
+    background-position: 7px center;
+    /*background-position: 7px 7px;*/
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
 }
 
 td.groupAction { text-align: right; }
 
 td.userName {
-    padding: 0 0 0 34px;
-    background-image: url("../img/users/icn_usersList.gif");
-    background-position: 13px 6px;
+    padding: 0 0 0 37px;
+    background-image: url("../img/other/user.svg");
+    background-position: 7px center;
+    /*background-position: 7px 7px;*/
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
 }
 
 td.userNameDisabled {
-    padding: 0 0 0 34px;
-    background-image: url("../img/users/icn_usersList.gif");
-    background-position: 13px 6px;
+    padding: 0 0 0 37px;
+    background-image: url("../img/other/user.svg");
+    background-position: 7px center;
+    /*background-position: 7px 7px;*/
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
 }
 
 td.userAction { text-align: right; }
