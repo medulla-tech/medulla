@@ -396,9 +396,9 @@ function item_list() {
             $entry['default_name'] = $entry['image']['name'];
             $kind = 'IM';
             if ($entry['read_only']) {
-                $url = '<img src="modules/imaging/graph/images/imaging-action-ro.png" style="vertical-align: middle" alt="'._T('master from the profile', 'imaging').'"/> ';
+                $url = '<img src="img/other/imagingscript_ro.svg" style="vertical-align: middle" width="25" height="25" alt="'._T('master from the profile', 'imaging').'"/> ';
             } else {
-                $url = '<img src="modules/imaging/graph/images/imaging-action.png" style="vertical-align: middle" alt="'._T('master', 'imaging').'"/> ';
+                $url = '<img src="img/other/imagingscript_rw.svg" style="vertical-align: middle" width="25" height="25" alt="'._T('master', 'imaging').'"/> ';
             }
         } else {
             $a_desc[] = $entry['boot_service']['default_desc'];

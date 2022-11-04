@@ -41,7 +41,7 @@ function echo_obj($obj) {
         echo nl2br($obj->__toString());
     } else if (is_bool($obj)) {
         if ($obj)
-            echo '<img src="img/common/icn_yes.gif" alt="yes" />';
+            echo '<img src="img/other/yes.svg" alt="yes" width="25" height="25" />';
     }
     else {
         echo nl2br($obj);

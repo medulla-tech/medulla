@@ -530,17 +530,6 @@ li.empty a {
     color: #FFF;
 }
 
-li.ok a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/icn_yes.gif");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 li.load a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
@@ -868,7 +857,7 @@ li.delete a {
 li.csv a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("img/actions/csvexport.svg");
+        background-image: url("../img/actions/csvexport.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -1243,9 +1232,22 @@ li.convergence a {
         background-image: url("../img/actions/convergence.svg");
         background-repeat: no-repeat;
         background-position: left top;
+        background-size: 25px 25px;
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
+}
+
+li.ok a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/other/yes.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 .user_container {
