@@ -250,7 +250,7 @@ padding:5px;
                     ?>
             </p>
             <p class="stat">
-                <img src="img/common/cd.png" />
+                <img src="img/other/diskimage.svg" width="25" height="25" />
                 <? echo '<a href="'.'main.php?module=imaging&submod=manage&action=master'.'"'; ?>
                 <strong><?php echo $short_status['master']." "; ?></strong>
                 <?php echo _T("masters are available", "imaging").'</a>'; ?>

@@ -207,6 +207,8 @@ class IconeElement extends HtmlElement {
         $this->alt = $alt;
         $this->params = $params;
         $this->title = $title;
+        $this->width = "25";
+        $this->height = "25";
         $this->style= "";
     }
     function setstyle($sty){
@@ -227,7 +229,7 @@ class IconeElement extends HtmlElement {
 }
 class Iconereply extends IconeElement {
     function Iconereply($id,$title){
-        parent::IconeElement($id,'modules/imaging/graph/images/imaging-add.png',"",$title);
+        parent::IconeElement($id,'img/other/expand.svg',"",$title);
     }
 }
 
