@@ -370,16 +370,3 @@ _T('Mozilla Firefox, LibreOffice, Microsoft Office 2003 ...', 'dyngroup');
 _T('Installed software (specific version)', 'dyngroup');
 _T('Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ...', 'dyngroup');
 ?>
-<style>
-    li.delete a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/delete.png   ");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-    }
-
-</style>

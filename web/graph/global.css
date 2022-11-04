@@ -980,6 +980,7 @@ li.groupshare a {
         color: #FFF;
 }
 
+li.remove_machine a,
 li.delete a {
     padding: 5px 0px  5px 22px;
     margin: 0 0px 0 0px;
