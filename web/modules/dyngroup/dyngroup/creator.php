@@ -2,10 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2022 Siveo, Http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -140,6 +141,9 @@ if (count($modules) == 1) {
             if($name === "glpi"){
               print "<td style=\"width:80px;border:0\">$glpidisplayname</td>";
             }
+            else if($name == "dyngroup"){
+              print "<td style=\"width:80px;border:0\">"._T("Existing group", "dyngroup")."</td>";
+            }
             else{
               print "<td style=\"width:80px;border:0\">$name</td>";
             }
@@ -159,6 +163,11 @@ if (count($modules) == 1) {
                   print "<td style=\"width:80px;border:0\"><a href='" .
                           urlStr("base/computers/$target", $url_params) .
                           "'>$glpidisplayname</a></td>";
+                }
+                else if($name == "dyngroup"){
+                  print "<td style=\"width:80px;border:0\"><a href='" .
+                          urlStr("base/computers/$target", $url_params) .
+                          "'>"._T("Existing group", "dyngroup")."</a></td>";
                 }
                 else{
                   print "<td style=\"width:80px;border:0\"><a href='" .
