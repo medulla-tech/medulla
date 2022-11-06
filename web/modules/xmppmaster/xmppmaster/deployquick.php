@@ -213,8 +213,8 @@ $jid = (isset($_GET['jid'])) ? $_GET['jid'] : '';
 //                 if ($pos1 !== false) {
 //                     echo '<td id="winservices" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 }
-                echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/navbar/process.png" height="45" width="45"> </td>';
-                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/navbar/diskusage.png" height="45" width="45"> </td>';
+                echo '<td id="clone_ps_aux" align="center"><img src="img/actions/process.svg" height="45" width="45"> </td>';
+                 echo '<td id="disk_usage" align="center"><img src="img/actions/disk.svg" height="45" width="45"> </td>';
 //                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
@@ -223,7 +223,7 @@ $jid = (isset($_GET['jid'])) ? $_GET['jid'] : '';
 //
 //                 echo '<td id="netstat" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="cputimes" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
-                echo '<td id="agentinfo" align="center"><img src="modules/base/graph/navbar/information.png" height="45" width="45"> </td>';
+                echo '<td id="agentinfo" align="center"><img src="img/actions/info.svg" height="45" width="45"> </td>';
             echo "</tr>";
             echo '<tr>';
 //                 echo '<td id="battery0" align="center">battery </td>';
