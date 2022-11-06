@@ -1444,6 +1444,7 @@ def create_msg_xmpp_quick_deploy(folder, create = False):
         logger.debug("Quick deployment package %s.xmpp found"%pathaqpackage)
 
 def save_xmpp_json(folder, json_content):
+    logger = logging.getLogger()
     structpackage = json.loads(json_content)
     qdeploy_generate(folder)
     keysupp = [ "actionlabel",
@@ -1513,12 +1514,20 @@ def save_xmpp_json(folder, json_content):
                 valerror = _stepforalias(stepseq['error'], vv)
                 if valerror != None:
                     stepseq['error'] = valerror
+
+    # Extracts the uuid of the folder
+    folder_list = folder.split("/")
+    uuid = folder_list[-1]
+
+    structpackage['metaparameter']['uuid'] = uuid
     json_content= json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
     # Refresh the dependencies list
     uuid = folder.split('/')[-1]
     dependencies_list = structpackage['info']['Dependency']
     pkgmanage().refresh_dependencies(uuid, dependencies_list)
+    from mmc.plugins.kiosk import update_launcher
+    update_launcher(uuid, structpackage['info']['launcher'])
 
 def _aliasforstep(step, dictstepseq):
     for t in dictstepseq:

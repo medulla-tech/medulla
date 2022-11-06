@@ -397,6 +397,17 @@ if(isExpertMode1())
     $rb->setSelected($spooling);
     $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
+    if(isset($json["info"]["launcher"]) && $json["info"]["launcher"] != "")
+    {
+        $launcher = (base64_decode($json["info"]["launcher"], true) != false)? $launcher = base64_decode($json["info"]["launcher"]) : $json["info"]["launcher"];
+    }
+    else{
+    $launcher = "";
+    }
+    $f->add(
+            new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")), ["value"=>$launcher,"placeholder"=>"C:\Program Files\my_app\app.exe"]
+    );
+
     // Get the sorted list of dependencies
     if(isset($json['info']['Dependency']))
     {
