@@ -53,14 +53,14 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             <tr>
             <?
                 if ($_GET['presencemachinexmpp']){
-                    echo '<td id="shutdown0" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                    echo '<td id="reboot0" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
-                    echo '<td id="inventory0" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
-                    echo '<td id="vncchangeperms0" align="center"><img src="modules/base/graph/computers/remotedesktop.png" height="70" width="70" ></td>';
-                    echo '<td id="installkey0" align="center"><img src="modules/base/graph/computers/installkeydesktop.png" height="70" width="70" ></td>';
+                    echo '<td id="shutdown0" align="center"><img src="img/actions/power.svg" height="70" width="70"> </td>';
+                    echo '<td id="reboot0" align="center"><img src="img/actions/restart.svg" height="70" width="70" ></td>';
+                    echo '<td id="inventory0" align="center"><img src="img/actions/inventory.svg" height="70" width="70" ></td>';
+                    echo '<td id="vncchangeperms0" align="center"><img src="img/actions/control.svg" height="70" width="70" ></td>';
+                    echo '<td id="installkey0" align="center"><img src="img/actions/key.svg" height="70" width="70" ></td>';
                 }
                 else{
-                    echo '<td id="wol0" align="center"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
+                    echo '<td id="wol0" align="center"><img src="img/actions/power.svg" height="70" width="70" ></td>';
                 }
                 ?>
             </tr>

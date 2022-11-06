@@ -497,17 +497,6 @@ ul.action li a:hover {
     color: #95AABF;
 }
 
-li.editacl a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("../img/common/icn_acl.gif");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 li.info a {
     padding: 3px 0px 5px 20px;
     margin: 0 0px 0 0px;
@@ -1227,7 +1216,7 @@ li.start a {
 }
 
 li.convergence a {
-        padding: 3px 0px 5px 20px;
+        padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("../img/actions/convergence.svg");
         background-repeat: no-repeat;
@@ -1239,9 +1228,21 @@ li.convergence a {
 }
 
 li.ok a {
-    padding: 3px 0px 5px 20px;
+    padding: 5px 0px  5px 22px;
     margin: 0 0px 0 0px;
     background-image: url("../img/other/yes.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.editacl a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/key.svg");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: 25px 25px;
