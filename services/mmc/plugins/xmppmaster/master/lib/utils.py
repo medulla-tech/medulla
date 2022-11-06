@@ -910,6 +910,18 @@ def check_exist_ip_port(name_domaine_or_ip, port):
         return False
 
 
+def utc2local (utc):
+    """Convert utc datetime to local datetime.
+    Param:
+        utc datetime in utc format, not in naive format
+    Returns:
+        local datetime converted into local datetime."""
+
+    epoch = time.mktime(utc.timetuple())
+    offset = datetime.fromtimestamp (epoch) - datetime.utcfromtimestamp (epoch)
+    return utc + offset
+
+
 unpad = lambda s : s[0:-ord(s[-1])]
 class AESCipher:
 

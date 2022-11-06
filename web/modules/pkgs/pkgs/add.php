@@ -308,6 +308,10 @@ if (isset($_POST['bconfirm'])){
         $rb->setSelected('ordinary');
         $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
+        $f->add(
+                new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")), ["value"=>"","placeholder"=>"C:\Program Files\my_app\app.exe"]
+        );
+
         $packagesInOption = '';
         $dependencies = get_dependencies_list_from_permissions($_SESSION["login"]);
         foreach($dependencies as $package)

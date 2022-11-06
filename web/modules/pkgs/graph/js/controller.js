@@ -212,7 +212,7 @@ function createSequence()
 {
     // Create a new sequence
     var sequence = [];
-
+    var actualSection = "Install";
     /**
      * Get all the form element in #current-actions and serialize them
      */
@@ -226,8 +226,16 @@ function createSequence()
         // For each element in form :
             // Add {form.elementName : form.elementValue} to action
         jQuery.each(datas,function(idoption, actionRaw){
+          if(actionRaw['value'] == "action_section_install"){
+            actualSection = "Install";
+          }
+          if(actionRaw['value'] =='action_section_update'){
+            actualSection = "Update";
+          }
+          if(actionRaw['value'] == "action_section_uninstall"){
+            actualSection = "Delete"
+          }
             if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script' || actionRaw['name'] == "set"){
-
                actionRaw['value'] = btoa(actionRaw['value'])
             }
             if(actionRaw['name'] == 'environ')
@@ -243,6 +251,18 @@ function createSequence()
                 })
 
                 action[actionRaw['name']] = tmp;
+            }
+
+            if(actionRaw['name'] == 'stat'){
+              action['status'] = actualSection;
+              var stat = parseInt(actionRaw['value'])
+
+              if(stat <0 || isNaN(stat) || stat == null)
+                stat = 0;
+              if(stat > 100)
+                stat = 100;
+
+              action['stat'] = stat;
             }
             else
                 action[actionRaw['name']] = actionRaw['value'];
@@ -290,11 +310,15 @@ function createInfo()
                     'codereturn','command','filename','goto','old_Qsoftware','old_Qvendor','old_Qversion','old_associateinventory',
                     'old_boolcnd','old_label', 'old_description','old_licenses','old_methodetransfert','old_p_api','old_package-method',
                     'old_pkgs','old_pkgs-title','old_targetos','old_version','p_api','random_dir','step','mode','waiting', 'set',
-                    'old_limit_rate_ko', 'old_spooling', 'old_Elements', 'pathdirectorytounzip', 'package-method', 'error']) >= 0)
+                    'old_limit_rate_ko', 'old_spooling', 'old_Elements', 'pathdirectorytounzip', 'package-method', 'error', 'stat','message','type']) >= 0)
                 {
                     // All the element from the array are not added into the info section.
                     // Dependency is also ignored because it is managed outside this loop
                 }
+
+                // The launcher can contains some special characters
+                else if(param["name"] == "launcher")
+                  info[param["name"]] = btoa(param["value"]);
 
                 else
                     info[param['name']] = param['value'];
