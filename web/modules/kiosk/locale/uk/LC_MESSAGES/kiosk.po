@@ -151,9 +151,9 @@ msgid "Modify the profile"
 msgstr "Змінити профіль"
 
 #: modules/kiosk/kiosk/localSidebar.php:24
-msgid "Profils List"
+msgid "Profile List"
 msgstr "Список профілів"
 
 #: modules/kiosk/kiosk/localSidebar.php:25
-msgid "Add Profil"
+msgid "Add Profile"
 msgstr "Додати профіль"
