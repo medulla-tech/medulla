@@ -114,8 +114,6 @@ def deploypackage(data, message, xmppobject, sessionid):
     current_date = datetime.datetime.utcnow()
     current_date = current_date.replace(tzinfo=pytz.UTC)
     section = ""
-    # Get the install timestamp sent by the kiosk
-    sent_datetime = datetime.datetime.utcnow()
 
     if "utcdatetime" in data:
         date_str = data["utcdatetime"].replace("(","")
