@@ -410,6 +410,7 @@ def parsexmppjsonfile(path):
     file_put_contents(path, datastr)
 
 def generate_hash(path, package_id):
+    logger = logging.getLogger()
     source = "/var/lib/pulse2/packages/sharing/" + path + "/" + package_id
     dest = "/var/lib/pulse2/packages/hash/" + path + "/" + package_id
     BLOCK_SIZE = 65535
@@ -420,7 +421,7 @@ def generate_hash(path, package_id):
     try:
         file_hash = hashlib.new(hash_type)
     except:
-        logging.error("Wrong hash type")
+        logger.error("Wrong hash type")
 
     if not os.path.exists(dest):
         os.makedirs(dest)
@@ -432,7 +433,7 @@ def generate_hash(path, package_id):
             try:
                 file_hash = hashlib.new(hash_type)
             except:
-                logging.error("Wrong hash type")
+                logger.error("Wrong hash type")
             file_block = _file.read(BLOCK_SIZE) # Read from the file. Take in the amount declared above
             while len(file_block) > 0: # While there is still data being read from the file
                 file_hash.update(file_block) # Update the hash
@@ -457,7 +458,7 @@ def generate_hash(path, package_id):
     try:
         file_hash = hashlib.new(hash_type)
     except:
-        logging.error("Wrong hash type")
+        logger.error("Wrong hash type")
     file_hash.update(content)
     content = file_hash.hexdigest()
 
