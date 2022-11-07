@@ -32,7 +32,7 @@ ldapurl = ldap://127.0.0.1:389
 # LDAP debug level - set this to 255 to debug LDAP connection problems
 #ldapdebuglevel = 0
 # LDAP base DN
-baseDN = dc=mandriva, dc=com
+baseDN = dc=siveo, dc=lan
 # Users location in the LDAP
 baseUsersDN = ou=Users, %(baseDN)s
 # Groups location in the LDAP
@@ -126,7 +126,8 @@ destpath = /home/archives
 # timeout, we try the next LDAP server in the list or give up if it the last.
 #network_timeout =
 # LDAP suffix where to search for user
-#suffix = cn=Users,dc=mandriva,dc=com
+#suffix = cn=Users,dc=siveo,dc=lan
+#suffix_ou = dc=siveo,dc=lan
 # How to bind to the LDAP. Empty if anonymous
 #bindname = cn=account, cn=Users, dc=linboxad, dc=com
 #bindpasswd = s3cr3t
