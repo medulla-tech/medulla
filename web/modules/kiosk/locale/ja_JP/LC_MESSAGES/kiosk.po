@@ -148,11 +148,3 @@ msgstr ""
 #: modules/kiosk/kiosk/editProfile.php:177
 msgid "Modify the profile"
 msgstr ""
-
-#: modules/kiosk/kiosk/localSidebar.php:24
-msgid "Profile List"
-msgstr ""
-
-#: modules/kiosk/kiosk/localSidebar.php:25
-msgid "Add Profile"
-msgstr ""

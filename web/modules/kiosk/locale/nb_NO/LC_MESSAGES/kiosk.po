@@ -148,11 +148,3 @@ msgstr "endre"
 #: modules/kiosk/kiosk/editProfile.php:177
 msgid "Modify the profile"
 msgstr "Endre profilen"
-
-#: modules/kiosk/kiosk/localSidebar.php:24
-msgid "Profile List"
-msgstr "Liste over profiler"
-
-#: modules/kiosk/kiosk/localSidebar.php:25
-msgid "Add Profile"
-msgstr "Legg til profil"
