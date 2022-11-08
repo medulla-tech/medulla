@@ -40,21 +40,30 @@ $p->display();
 
 $profiles = xmlrpc_get_profiles_list();
 
+$action_editProfiles = new ActionItem(_T("Edit Profile",'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
+$action_deleteProfile = new ActionItem(_T("Delete Profile",'kiosk'), "delete", "delete", "profile", "kiosk", "kiosk");
+
 $profiles_name = [];
 $profiles_date = [];
 $profiles_status = [];
+$action_edit = [];
+$action_delete = [];
 
 $params = [];
+
+$count = count($profiles);
 foreach($profiles as $element)
 {
     $profiles_name[] = $element['name'];
     $profiles_status[] = ($element['active'] == 1) ? _T("Active","kiosk") : _T("Inactive","kiosk");
     $params[] = ['id'=>$element['id'], 'name'=>$element['name']];
+
+    $action_edit[] = $action_editProfiles;
+    $action_delete[] = $action_deleteProfile;
 }
 $n = new OptimizedListInfos($profiles_name, _T("Profile Name", "kiosk"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($profiles_status, _T("Profile Status", "kiosk"));
-
 // parameters are :
 // - label
 // - action
@@ -62,12 +71,10 @@ $n->addExtraInfo($profiles_status, _T("Profile Status", "kiosk"));
 // - profile get parameter
 // - module
 // - submodule
-$action_editProfiles = new ActionItem(_T("Edit Profil",'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
-$action_deleteProfil = new ActionItem(_T("Delete Profil",'kiosk'), "delete", "delete", "profile", "kiosk", "kiosk");
-
 $n->setParamInfo($params);
-$n->addActionItemArray($action_editProfiles);
-$n->addActionItemArray($action_deleteProfil);
+$n->addActionItemArray($action_edit);
+$n->addActionItemArray($action_delete);
+$n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 
 $n->display();
