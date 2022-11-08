@@ -11076,7 +11076,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_conformity_update_by_entity(self, session):
         """
-        jfkjfk
             This function renvoi le nombre total de machine a mettre a jour pour 1 entity
         """
         sql=""" SELECT
@@ -11104,7 +11103,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 value in rowproxy.items()}
                         for rowproxy in resultquery]
         return result
-
 
 
     @DatabaseHelper._sessionm
@@ -11139,4 +11137,3 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 value in rowproxy.items()}
                         for rowproxy in resultquery]
         return result
-

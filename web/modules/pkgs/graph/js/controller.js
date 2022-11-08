@@ -245,13 +245,12 @@ function createSequence()
                 actualSection = "Delete"
             }
             // convert to base64
-            if (jQuery.inArray(actionRaw['name'] , array_convert_to_base64 ) > -1){
-                actionRaw['value'] = btoa(actionRaw['value'])
-            }
-//             if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script' || actionRaw['name'] == "set" || actionRaw['name'] == "message" || actionRaw['name'] == "notification"){
-//
-//                actionRaw['value'] = btoa(actionRaw['value'])
+//             if (jQuery.inArray(actionRaw['name'] , array_convert_to_base64 ) > -1){
+//                 actionRaw['value'] = btoa(actionRaw['value'])
 //             }
+            if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script' || actionRaw['name'] == "set" || actionRaw['name'] == "message" || actionRaw['name'] == "notification"){
+               actionRaw['value'] = btoa(actionRaw['value'])
+            }
             if(actionRaw['name'] == 'environ')
             {
                 tmp = {}
