@@ -1251,6 +1251,54 @@ li.editacl a {
     color: #FFF;
 }
 
+li.auditbymachine a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/auditbymachine.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.auditbyupdate a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/auditbyupdate.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.updateall a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/updateall.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.updateone a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/updateone.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
 .user_container {
     padding-top: 40px;
 }
