@@ -56,7 +56,40 @@ foreach ($entities as $entity) {
     $actiondeploySpecifics[] = $deploySpecific;
     
     $entityNames[] = $entity["completename"];
-    $complRates[] = '';
+    $compliancerate = getEntityComplianceRate($entity["uuid"]);
+    switch(intval($compliancerate)){
+        case $compliancerate <= 10:
+            $color = "#ff0000";
+            break;
+        case $compliancerate <= 20:
+            $color = "#ff3535";
+            break;
+        case $compliancerate <= 30:
+            $color = "#ff5050";
+            break;
+        case $compliancerate <= 40:
+            $color = "#ff8080";
+            break;
+        case $compliancerate <  50:
+            $color = "#ffA0A0";
+            break;
+        case $compliancerate <=  60:
+            $color = "#c8ffc8";
+            break;
+        case $compliancerate <= 70:
+            $color = "#97ff97";
+            break;
+        case $compliancerate <= 80:
+            $color = "#64ff64";
+            break;
+        case $compliancerate <=  90:
+            $color = "#2eff2e";
+            break;
+        case $compliancerate >90:
+            $color = "#00ff00";
+            break;
+    }
+    $complRates[] = "<div class='progress' style='width: ".$compliancerate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliancerate."% </div>";
 }
 
 $n = new OptimizedListInfos($entityNames, _T("Entity name", "updates"));
