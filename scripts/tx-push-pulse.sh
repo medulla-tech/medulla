@@ -15,7 +15,7 @@ test -d .tx || tx init --host=https://fr.transifex.com/
 
 args=$@
 
-modules="dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc support guacamole base ppolicy services dashboard report xmppmaster"
+modules="dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc support guacamole base ppolicy services dashboard report xmppmaster updates"
 
 for mod in $modules
 do

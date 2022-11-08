@@ -13,7 +13,7 @@ fi
 
 test -d .tx || tx init --host=https://fr.transifex.com/
 
-pulse_modules="dyngroup glpi imaging inventory msc pkgs pulse2 backuppc update support"
+pulse_modules="dyngroup glpi imaging inventory msc pkgs pulse2 backuppc update support updates"
 
 dir=`pwd`
 
