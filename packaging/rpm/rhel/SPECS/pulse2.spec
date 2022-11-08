@@ -76,6 +76,8 @@ Requires:       mmc-web-kiosk
 Requires:       python-mmc-kiosk
 Requires:       mmc-web-admin
 Requires:       python-mmc-admin
+Requires:       mmc-web-updates
+Requires:       python-mmc-updates
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
@@ -439,18 +441,33 @@ Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 
 %description -n python-mmc-kiosk
-This package contains the pkgs plugin for the MMC agent.
+This package contains the kiosk plugin for the MMC agent.
 
 %files -n python-mmc-kiosk
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
 %python2_sitelib/mmc/plugins/kiosk
 %python2_sitelib/pulse2/database/kiosk
 
+#--------------------------------------------------------------------
+
+%package -n python-mmc-updates
+Summary:    OS Updates plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+
+%description -n python-mmc-updates
+This package contains the updates plugin for the MMC agent.
+
+%files -n python-mmc-updates
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/updates.ini
+%python2_sitelib/mmc/plugins/updates
+%python2_sitelib/pulse2/database/updates
+
 
 #--------------------------------------------------------------------
 
 %package -n python-mmc-admin
-Summary:    Kiosk plugin for the MMC agent
+Summary:    Admin plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python-pulse2-common-database-admin = %version-%release
@@ -554,6 +571,22 @@ interface.
 
 #--------------------------------------------------------------------
 
+%package -n     mmc-web-updates
+Summary:        OS Updates plugin for the MMC web interface
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       mmc-web-base >= %mmc_version
+
+
+%description -n mmc-web-updates
+This package contains the updates plugin for the MMC web
+interface.
+
+%files -n mmc-web-updates
+%{_datadir}/mmc/modules/updates
+
+#--------------------------------------------------------------------
+
 %package -n python-mmc-pulse2
 Summary:    Pulse 2 MMC agent interface plugins
 Group:      System/Servers
@@ -562,6 +595,8 @@ Requires:   python-mmc-base >= %mmc_version
 Requires:   python-mmc-msc = %version-%release
 Requires:   python-mmc-dyngroup = %version-%release
 Requires:   python-mmc-pkgs = %version-%release
+Requires:   python-mmc-kiosk = %version-%release
+Requires:   python-mmc-updates = %version-%release
 Requires:   python-pulse2-common = %version-%release
 Requires:   python-sqlalchemy >= 0.6.3
 Requires:   pulse-python-mmc-computers-inventory-backend = %version-%release
