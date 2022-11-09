@@ -24,31 +24,16 @@
 
 from datetime import datetime
 
-from scrapy import Selector
-from tqdm import tqdm
 import requests
-import math
-import re
-import sqlite3
 import subprocess
 import sys, os
-import tempfile
-import xml.etree.ElementTree as ET
-import time
 import signal
 import logging
 import traceback
-import configparser
-# from lxml import etree
-from pathlib import Path
-from lxml import etree
-from multiprocessing import cpu_count
-from multiprocessing.pool import ThreadPool
 import MySQLdb
 import base64
 import getpass
 from optparse import OptionParser
-import json
 
 #from  MySQLdb import IntegrityError
 # Global Variables
@@ -78,7 +63,6 @@ class download_packages:
             dirpackage = os.path.join(self.directory_output_package, i[2])
             self.download_url(i[1], dirpackage, i[2] , i[3], i[0], i[4])
         cursor.close()
-        self.db.close()
 
     def download_url(self, urlpath, dirpackage, updateid, kb, title, description):
         logger.debug("download %s" % urlpath)
