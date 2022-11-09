@@ -188,7 +188,7 @@ class download_packages:
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         template="""{
-            "urlpath" : "%s"
+            "urlpath" : "%s",
             "localisation_server": "global",
             "sub_packages": [],
             "metagenerator": "manual",
