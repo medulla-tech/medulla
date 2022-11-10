@@ -76,6 +76,8 @@ Requires:       mmc-web-kiosk
 Requires:       python-mmc-kiosk
 Requires:       mmc-web-admin
 Requires:       python-mmc-admin
+Requires:       mmc-web-urbackup
+Requires:       python-mmc-urbackup
 Requires:       mmc-web-updates
 Requires:       python-mmc-updates
 Requires:       pulse2-common
@@ -353,6 +355,38 @@ This package contains the imaging plugin for the MMC web interface.
 %files -n mmc-web-support
 %defattr(-,root,root,0755)
 %{_datadir}/mmc/modules/support
+
+#--------------------------------------------------------------------
+
+%package -n python-mmc-urbackup
+Summary:    Urbackup plugin for MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   python-pulse2-common-database-urbackup = %version-%release
+# Needed for ImportError: No module named tasks
+Requires:   python-mmc-core >= 3.1.1
+
+%description -n python-mmc-urbackup
+This package contains the urbackup plugin for MMC agent.
+
+%files -n python-mmc-urbackup
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/urbackup.ini
+%python2_sitelib/mmc/plugins/urbackup
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-urbackup
+Summary:        Urbackup plugin for the MMC web interface
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       python-mmc-base >= %mmc_version
+
+%description -n mmc-web-urbackup
+This package contains the urbackup plugin for the MMC web interface.
+
+%files -n mmc-web-urbackup
+%defattr(-,root,root,0755)
+%{_datadir}/mmc/modules/urbackup
 
 #--------------------------------------------------------------------
 

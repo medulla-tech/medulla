@@ -58,6 +58,7 @@ $paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUU
 $inventAction = new ActionItem(_T("Inventory", "pulse2"),"invtabs","inventory","inventory", "base", "computers");
 $extticketAction = new ActionItem(_T("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
 $backupAction = new ActionItem(_T("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc");
+$urbackupAction = new ActionItem(_("Urbackup"),"checkMachine","urbackup","urbackup", "urbackup", "urbackup");
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
@@ -98,13 +99,13 @@ if (in_array("xmppmaster", $_SESSION["supportModList"]) && isset($_GET['cmd_id']
 }
 else{
     if (in_array("xmppmaster", $_SESSION["supportModList"])){
-        $actions = array($inventAction, $extticketAction, $backupAction,
+        $actions = array($inventAction, $extticketAction, $backupAction, $urbackupAction,
                             $vncClientAction, $mscAction,
                             $imgAction,$inventxmppbrowsing,$inventconsole,
                             $DeployQuickxmpp);
     }
     else{
-        $actions = array($inventAction, $extticketAction, $backupAction, $vncClientAction, $mscAction, $imgAction);
+        $actions = array($inventAction, $extticketAction, $backupAction, $urbackupAction, $vncClientAction, $mscAction, $imgAction);
     }
 }
 
