@@ -22,6 +22,7 @@
  */
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -30,9 +31,11 @@ $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
 $entities = getUserLocations();
+$entitycompliances = xmlrpc_get_conformity_update_by_entity();
 
 echo "<pre>";
 //print_r($entities);
+//print_r($entitycompliances);
 echo "</pre>";
 
 $detailsByMach = new ActionItem(_T("Details by machines", "updates"),"detailsByMachines","auditbymachine","", "updates", "updates");
@@ -56,7 +59,10 @@ foreach ($entities as $entity) {
     $actiondeploySpecifics[] = $deploySpecific;
     
     $entityNames[] = $entity["completename"];
-    $compliancerate = getEntityComplianceRate($entity["uuid"]);
+}
+
+foreach ($entitycompliances as $entitycompliance) {
+    $compliancerate = $entitycompliance['taux_a_ne_pas_mettre_a_jour'];
     switch(intval($compliancerate)){
         case $compliancerate <= 10:
             $color = "#ff0000";
