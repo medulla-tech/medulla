@@ -224,8 +224,9 @@ CREATE TABLE IF NOT EXISTS `up_black_list` (
   `type_rule` varchar(2) NOT NULL DEFAULT 'id' COMMENT 'type_rule = kb updateid_or_kb represente 1 kb   OU   type_rule updateid_or_kb represente 1 update_id.',
   PRIMARY KEY (`id`),
   KEY `ind_enable` (`enable_rule`),
-  KEY `ind_type` (`type_rule`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  KEY `ind_type` (`type_rule`),
+  KEY `updatekb` (`updateid_or_kb`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Drop the procedure
 -- drop procedure intit_table_update_data;
@@ -2513,7 +2514,7 @@ CREATE TABLE `up_list_produit` (
   `name_procedure` varchar(80) DEFAULT NULL,
   `enable` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packages_Vstudio_2008');
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packages_Vstudio_2010');
