@@ -174,7 +174,7 @@ call up_reinit_table_update_data();
 -- this table contient les updates des machines possible
 -- ----------------------------------------------------------------------
 
-CREATE TABLE `up_machine_windows` (
+CREATE TABLE IF NOT EXISTS `up_machine_windows` (
   `id_machine` int(11) NOT NULL,
   `update_id` varchar(38) NOT NULL,
   `kb` varchar(45) DEFAULT NULL,
@@ -188,7 +188,7 @@ CREATE TABLE `up_machine_windows` (
 -- this table exclut ou pas les updates windows
 -- ----------------------------------------------------------------------
 
-CREATE TABLE `up_black_list` (
+CREATE TABLE IF NOT EXISTS `up_black_list` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `updateid_or_kb` varchar(38) NOT NULL COMMENT 'updateid_or_kb  \nkb ou update_id  de la mise à jour.\n update or kb exclude  windows exclude si regexp match',
   `userjid_regexp` varchar(180) NOT NULL COMMENT 'regexp  exclusion sur le user jid :  .* exclude completement cette mise a jour   ^jfk  exclude toute les machine ou le nom commence par jfk ',
@@ -343,7 +343,7 @@ WHERE
 -- injection les update_id deja installer dans tmp_t1
  INSERT IGNORE INTO tmp_t1  select updateid from xmppmaster.update_data where kb in (select c1 from tmp_kb_updateid);
 
-CREATE temporary TABLE tmp_result_procedure AS (SELECT * FROM
+CREATE temporary TABLE IF NOT EXISTS `tmp_result_procedure` AS (SELECT * FROM
     tmp_my_mise_a_jour
 WHERE
     updateid NOT IN (SELECT
@@ -511,7 +511,7 @@ END LOOP;
 -- on utilise le filter pour definir filter
 -- msrcseverity  uniquement  'Critical'
 
-CREATE temporary TABLE IF NOT EXISTS tmp_my_mise_a_jour AS (SELECT * FROM
+CREATE temporary TABLE IF NOT EXISTS `tmp_my_mise_a_jour` AS (SELECT * FROM
     xmppmaster.update_data
 WHERE
     title LIKE filterp
@@ -566,7 +566,7 @@ WHERE
 -- injection les update_id deja installer dans tmp_t1
  INSERT IGNORE INTO tmp_t1  select updateid from xmppmaster.update_data where kb in (select c1 from tmp_kb_updateid);
 
-CREATE temporary TABLE tmp_result_procedure AS (SELECT * FROM
+CREATE temporary TABLE `tmp_result_procedure` AS (SELECT * FROM
     tmp_my_mise_a_jour
 WHERE
     updateid NOT IN (SELECT
@@ -685,6 +685,9 @@ END$$
 DELIMITER ;
 ;*/
 
+
+USE `xmppmaster`;
+DROP procedure IF EXISTS `update_datetime`;
 
 DELIMITER $$
 USE `xmppmaster`$$
@@ -2476,12 +2479,13 @@ DELIMITER ;
 -- list produits actifs
 -- -------------------------------------------------------
 
+USE `xmppmaster`;
 CREATE TABLE `up_list_produit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name_procedure` varchar(80) DEFAULT NULL,
   `enable` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packages_Vstudio_2008');
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packages_Vstudio_2010');
