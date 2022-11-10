@@ -171,8 +171,6 @@ $namestep=_T("Update Question","pkgs");
             echo '</td>';
             ?>
         </tr>
-
-
         <tr>
             <?php
             $textcasecoche=_T("customize time for timeout","pkgs");
@@ -210,9 +208,6 @@ $namestep=_T("Update Question","pkgs");
             }
             ?>
         </tr>
-
-
-
     </table>
         <!-- Option timeout -->
     </div>
