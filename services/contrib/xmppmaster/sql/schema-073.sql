@@ -168,6 +168,34 @@ DELIMITER ;
 -- Execute the procedure
 call up_reinit_table_update_data();
 
+
+-- ----------------------------------------------------------------------
+-- CREATE TABLE up_gray_list
+-- this table are the updates machine applicable
+-- ----------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `up_gray_list` (
+  `updateid` varchar(36) NOT NULL,
+  `kb` varchar(16) NOT NULL,
+  `revisionid` varchar(16) NOT NULL,
+  `title` varchar(1024) NOT NULL,
+  `description` varchar(1024) NOT NULL,
+  `updateid_package` varchar(36) NOT NULL,
+  `payloadfiles` varchar(2048) NOT NULL,
+  `supersededby` varchar(2048) DEFAULT NULL,
+  `creationdate` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `title_short` varchar(500) DEFAULT NULL,
+  `valided` tinyint(4) DEFAULT 0,
+  `validity_date` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`updateid`),
+  KEY `kb` (`kb`),
+  KEY `revision` (`revisionid`),
+  KEY `update_id` (`updateid_package`,`title_short`),
+  KEY `validity` (`valided`),
+  KEY `daye_calidity` (`validity_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 -- ----------------------------------------------------------------------
 -- CREATE TABLE up_machine_windows
 -- this table are the updates machine
