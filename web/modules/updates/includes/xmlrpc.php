@@ -31,12 +31,23 @@ function xmlrpc_test_xmppmaster(){
     return xmlCall("updates.test_xmppmaster");
 }
 
-function xmlrpc_get_black_list(){
-    return xmlCall("updates.get_black_list");
+function xmlrpc_get_grey_list($start, $end, $filter=""){
+    return xmlCall("updates.get_grey_list", [$start, $end, $filter]);
 }
 
-function xmlrpc_get_grey_list(){
-    return xmlCall("updates.get_grey_list");
+function xmlrpc_get_white_list($start, $end, $filter=""){
+    return xmlCall("updates.get_white_list", [$start, $end, $filter]);
 }
 
+function xmlrpc_get_black_list($start, $end, $filter=""){
+    return xmlCall("updates.get_black_list", [$start, $end, $filter]);
+}
+
+function xmlrpc_approve_update($updateid){
+    return xmlCall("updates.approve_update", [$updateid]);
+}
+
+function xmlrpc_grey_update($updateid){
+    return xmlCall("updates.grey_update", [$updateid]);
+}
 ?>

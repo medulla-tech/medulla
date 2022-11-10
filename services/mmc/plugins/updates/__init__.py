@@ -64,11 +64,17 @@ def tests():
 def test_xmppmaster():
     return UpdatesDatabase().test_xmppmaster()
 
-def get_black_list():
-    return UpdatesDatabase().get_black_list()
+def get_grey_list(start, end, filter=""):
+    return UpdatesDatabase().get_grey_list(start, end, filter)
 
-def get_grey_list():
-    return UpdatesDatabase().get_grey_list()
+def get_white_list(start, end, filter=""):
+    return UpdatesDatabase().get_white_list(start, end, filter)
 
-def approve_update():
-    return UpdatesDatabase().approve_update()
+def get_black_list(start, end, filter=""):
+    return UpdatesDatabase().get_black_list(start, end, filter)
+
+def approve_update(updateid):
+    return UpdatesDatabase().approve_update(updateid)
+
+def grey_update(updateid):
+    return UpdatesDatabase().grey_update(updateid)

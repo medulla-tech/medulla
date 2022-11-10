@@ -1299,6 +1299,42 @@ li.updateone a {
     color: #FFF;
 }
 
+li.approveupdate a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/approveupdate.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.banupdate a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/banupdate.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.unlist a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/unlist.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
 .user_container {
     padding-top: 40px;
 }

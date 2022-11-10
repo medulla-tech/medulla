@@ -1,6 +1,6 @@
 <?php
-/*
- * (c) 2022 Siveo, http://www.siveo.net
+/**
+ * (c) 2022 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -17,21 +17,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-require("graph/navbar.inc.php");
-require("localSidebar.php");
-
-$p = new PageGenerator(_T("Manage Windows Updates", 'updates'));
-$p->setSideMenu($sidemenu);
-$p->display();
-
 require_once("modules/updates/includes/xmlrpc.php");
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWin"));
-$ajax->display();
-$ajax->displayDivToUpdate();
+var_dump('test ban');
+exit;
+
+if(isset($_GET['updateid'])){
+    
+    header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+}
 
 ?>
-

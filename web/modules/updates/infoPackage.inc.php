@@ -26,14 +26,21 @@ $page = new Page("updatesListWin", _T('Manage Windows Updates', 'updates'));
 $page->setFile("modules/updates/updates/updatesListWin.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdatesGreyListWin", _T("Manage Greylist", "updates"));
-$page->setFile("modules/updates/updates/ajaxUpdatesGreyListWin.php");
+$page = new Page("ajaxUpdatesListWin", _T("Manage Windows Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxUpdatesListWin.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdatesWhiteListWin", _T("Manage Whitelist", "updates"));
-$page->setFile("modules/updates/updates/ajaxUpdatesWhiteListWin.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page = new Page("whitelistUpdate", _T('Approve Update', 'updates'));
+$page->setFile("modules/updates/updates/whitelistUpdate.php");
+$submod->addPage($page);
+
+$page = new Page("blacklistUpdate", _T('Ban Update', 'updates'));
+$page->setFile("modules/updates/updates/blacklistUpdate.php");
+$submod->addPage($page);
+
+$page = new Page("greylistUpdate", _T('Unlist Update', 'updates'));
+$page->setFile("modules/updates/updates/greylistUpdate.php");
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
