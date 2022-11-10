@@ -197,6 +197,22 @@ CREATE TABLE IF NOT EXISTS `up_gray_list` (
 
 
 -- ----------------------------------------------------------------------
+-- CREATE TABLE up_user_gray_list_commentaire
+-- this table allows user to add a comment to an update
+-- ----------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS  `up_user_gray_list_commentaire` ( 
+  `id` int(11) NOT NULL, 
+  `updateid` varchar(36) NOT NULL, 
+  `commentaires` varchar(45) DEFAULT NULL, 
+  `user` varchar(45) DEFAULT NULL, 
+  `creationdate` timestamp NULL DEFAULT current_timestamp(), 
+  PRIMARY KEY (`id`), 
+  KEY `update` (`updateid`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- ----------------------------------------------------------------------
 -- CREATE TABLE up_machine_windows
 -- this table are the updates machine
 -- this table contient les updates des machines possible
