@@ -132,15 +132,15 @@ class UpdatesDatabase(DatabaseHelper):
                 FROM 
                     xmppmaster.up_black_list 
                 INNER JOIN 
-                    xmppmaster.up_package 
+                    xmppmaster.up_packages 
                 ON 
-                    up_black_list.updateid_or_kb = up_package.kb
+                    up_black_list.updateid_or_kb = up_packages.kb
                 OR
-                    up_black_list.updateid_or_kb = up_package.updateid """
+                    up_black_list.updateid_or_kb = up_packages.updateid """
         
         if filter:
                 filterwhere="""AND
-                        up_package.title LIKE '%%%s%%'
+                        up_packages.title LIKE '%%%s%%'
                     LIMIT 5 OFFSET 5""" % filter
                 sql=sql+filterwhere
            
