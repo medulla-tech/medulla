@@ -28,6 +28,8 @@ from mmc.plugins.updates.config import UpdatesConfig
 
 # import pour la database
 from pulse2.database.updates import UpdatesDatabase
+
+from pulse2.database.xmppmaster import XmppMasterDatabase
 import logging
 
 VERSION = "1.0.0"

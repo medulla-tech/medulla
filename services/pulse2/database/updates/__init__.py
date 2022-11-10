@@ -25,6 +25,11 @@ from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import update
 from datetime import date, datetime, timedelta
+from sqlalchemy.orm import sessionmaker
+
+# On importe la base de xmpp
+# from pulse2.database.xmppmaster import XmppMasterDatabase
+
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.updates.schema import Tests
@@ -32,6 +37,11 @@ from pulse2.database.updates.schema import Tests
 import logging
 import json
 import time
+
+#Session = sessionmaker()
+
+logger = logging.getLogger()
+
 
 class UpdatesDatabase(DatabaseHelper):
     is_activated = False
