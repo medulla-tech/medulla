@@ -1425,6 +1425,33 @@ def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
     result = XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
     return result
 
+def get_conformity_update_by_entity():
+    result = XmppMasterDatabase().get_conformity_update_by_entity()
+    for t in result:
+        t['a_mettre_a_jour']=int(t['a_mettre_a_jour'])
+        t['a_ne_pas_mettre_a_jour']=int(t['a_ne_pas_mettre_a_jour'])
+        if t['total_machine_entity'] == 0:
+            t['taux_a_ne_pas_mettre_a_jour'] = 100
+            t['taux_a_mettre_a_jour'] = 0
+        else:
+            t['taux_a_ne_pas_mettre_a_jour'] = str(float(t['a_ne_pas_mettre_a_jour']) /float( t['total_machine_entity'])*100)
+            t['taux_a_mettre_a_jour'] = str(float(t['a_mettre_a_jour'] )/ float(t['total_machine_entity'])*100)
+    return result
+
+
+def get_conformity_update_by_entity_in_gray_list():
+    result = XmppMasterDatabase().get_conformity_update_by_entity_in_gray_list()
+    for t in result:
+        t['a_mettre_a_jour']=int(t['a_mettre_a_jour'])
+        t['a_ne_pas_mettre_a_jour']=int(t['a_ne_pas_mettre_a_jour'])
+        if t['total_machine_entity'] == 0:
+            t['taux_a_ne_pas_mettre_a_jour'] = 100
+            t['taux_a_mettre_a_jour'] = 0
+        else:
+            t['taux_a_ne_pas_mettre_a_jour'] = str(float(t['a_ne_pas_mettre_a_jour']) /float( t['total_machine_entity'])*100)
+            t['taux_a_mettre_a_jour'] = str(float(t['a_mettre_a_jour'] )/ float(t['total_machine_entity'])*100)
+    return result
+
 def ban_machines(subaction, jid_ars, machines):
     sessionid = name_random(8, "banmachines")
     datasend = {

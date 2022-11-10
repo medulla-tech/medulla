@@ -179,22 +179,22 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
       switch($_packages['conf_json'][$i]['metagenerator']){
           case "expert":
               $_arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package_expert.png'/>" .
-                                          "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package.svg' width='25' height='25'/>" .
+                                          "<span title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $_packages['conf_json'][$i]['name'].
                                           "</span>" ;
           break;
           case "standard":
               $_arraypackagename[] = "<img style='position:relative; top : 5px;
-                                          'src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          'src='img/other/package.svg' width='25' height='25'/>".
+                                          "<span title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $_packages['conf_json'][$i]['name'].
                                           "</span>"  ;
           break;
           default: //"manual":
               $_arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package_ro.svg' width='25' height='25'/>".
+                                          "<span title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $_packages['conf_json'][$i]['name'].
                                           "</span>" ;
           break;
@@ -343,22 +343,22 @@ else{
       switch($p['metagenerator']){
           case "expert":
               $arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package_expert.png'/>" .
-                                          "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package.svg' width='25' height='25'/>" .
+                                          "<span title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $p['label'].
                                           "</span>" ;
           break;
           case "standard":
               $arraypackagename[] = "<img style='position:relative; top : 5px;
-                                          'src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          'src='img/other/package.svg' width='25' height='25'/>".
+                                          "<span title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $p['label'].
                                           "</span>"  ;
           break;
           default: //"manual":
               $arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package_ro.svg' width='25' height='25'/>".
+                                          "<span title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $p['label'].
                                           "</span>" ;
           break;

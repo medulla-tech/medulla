@@ -32,20 +32,6 @@ global $config;
 .selectable{
 	cursor:pointer;
 }
-
-li.displayg a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("img/common/icn_show.gif");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-    filter: grayscale(50%);
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    opacity:0.5;
-}
 </style>
 <?php
 
@@ -105,8 +91,8 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
   $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
   $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
   $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
-	$fileviewer = new ActionItem(_("files viewer"),"fileviewer","display","computers", "xmppmaster", "xmppmaster");
-	$filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","displayg","computers","xmppmaster", "xmppmaster");
+	$fileviewer = new ActionItem(_("files viewer"),"fileviewer","fileviewer","computers", "xmppmaster", "xmppmaster");
+	$filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","fileviewerg","computers","xmppmaster", "xmppmaster");
 }else{
   $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
 }

@@ -156,8 +156,8 @@ foreach ($diff as $user) {
   </div>
   </td><td style="border: none;">
   <div>
-  <input type="image" name="badduser" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->"/><br/>
-  <input type="image" name="bdeluser" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" />
+  <input type="image" name="badduser" style="padding: 5px;" src="img/other/right.svg" width="25" height="25" value = "-->"/><br/>
+  <input type="image" name="bdeluser" style="padding: 5px;" src="img/other/left.svg" width="25" height="25" value="<--" />
   </div>
   </td><td style="border: none;">
 

@@ -22,14 +22,8 @@
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass("control");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Core services", "services"), "services", "control", "index",
-                                            "modules/services/graph/img/icn_global_active.gif",
-                                            "modules/services/graph/img/icn_global.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Other services", "services"), "services", "control", "others",
-                                            "modules/services/graph/img/icn_global_active.gif",
-                                            "modules/services/graph/img/icn_global.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Services log", "services"), "services", "control", "log",
-                                            "modules/services/graph/img/icn_global_active.gif",
-                                            "modules/services/graph/img/icn_global.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Core services", "services"), "services", "control", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Other services", "services"), "services", "control", "others"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Services log", "services"), "services", "control", "log"));
 
 ?>

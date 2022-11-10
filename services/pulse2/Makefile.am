@@ -39,6 +39,7 @@ pythonmodules = apis apis.clients database database.admin database.dyngroup \
 	scheduler.tracking scheduler.api scheduler.tests \
 	database.backuppc database.urbackup\
 	database.pkgs database.pkgs.orm \
+	database.updates \
 	dlp dlp.api dlp.tests \
 	cm cm.tests tests
 

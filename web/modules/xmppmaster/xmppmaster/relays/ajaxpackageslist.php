@@ -51,22 +51,22 @@ foreach($list['datas']['size'] as $size){
   switch($list['datas']['metagenerator'][$row]){
     case "expert":
         $packagesname[] = "<img style='position:relative; top : 5px;'
-                                    src='modules/pkgs/graph/img/package_expert.png'/>" .
-                                    "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $filesstr."'>".
+                                    src='img/other/package.svg' width='25' height='25'/>" .
+                                    "<span title='Package Expert Mode\n".$countfiles ." files : \n". $filesstr."'>".
                                         $list['datas']['name'][$row].
                                     "</span>" ;
     break;
       case "standard":
           $packagesname[] = "<img style='position:relative; top : 5px;
-                                      'src='modules/pkgs/graph/img/package.png'/>".
-                                      "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $filesstr."'>".
+                                      'src='img/other/package.svg' width='25' height='25'/>".
+                                      "<span title='Package Standart Mode\n".$countfiles ." files : \n". $filesstr."'>".
                                           $list['datas']['name'][$row].
                                       "</span>"  ;
       break;
       default: //"manual":
           $packagesname[] = "<img style='position:relative; top : 5px;'
-                                      src='modules/pkgs/graph/img/package.png'/>".
-                                      "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $filesstr."'>".
+                                      src='img/other/package_ro.svg' width='25' height='25'/>".
+                                      "<span title='Package manual Mode\n".$countfiles ." files : \n". $filesstr."'>".
                                           $list['datas']['name'][$row].
                                       "</span>" ;
       break;

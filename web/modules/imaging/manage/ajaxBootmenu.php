@@ -83,8 +83,8 @@ require("../includes/ajaxcommon.inc.php");
 
         $a_label[]= sprintf("%s%s", (
             $kind == 'IM' ?
-                 '<img src="modules/imaging/graph/images/imaging-action.png" style="vertical-align: middle" /> '
-                 :'<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> '
+                 '<img src="img/other/imagingscript_rw.svg" style="vertical-align: middle" width="25" height="25" /> '
+                 :'<img src="img/other/confitem.svg" style="vertical-align: middle" width="25" height="25" /> '
              ), $default_name);
         $a_default[] = $entry['default'];
         $a_display[] = ($entry['hidden'] ? False:True);

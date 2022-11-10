@@ -74,7 +74,7 @@ foreach($arraynotdeploy['elements'] as $id=>$deploy)
     'login'=>$deploy['login'],
     'gid'=>$deploy['gid'],
     'uuid'=>$deploy['uuid_inventory']];
-  $notd_packagename[] = '<img style="position:relative;top : 5px;" src="modules/msc/graph/images/install_package.png" /> '.$deploy['package_name'];
+  $notd_packagename[] = '<img style="position:relative;top : 5px;" src="img/other/package.svg" width="25" height="25" /> '.$deploy['package_name'];
   //$notd_packagename[] = $deploy['package_name'];
   $date = (array)$deploy['date_start'];
   $notd_datestart [] = date("Y-m-d H:i:s",$date['timestamp']);
@@ -87,11 +87,11 @@ foreach($arraynotdeploy['elements'] as $id=>$deploy)
   {
     $name = getInfosNameGroup($deploy['gid']);
     $name = $name[$deploy['gid']]['name'];
-    $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_groupsList.gif"/> '.$name;
+    $name = '<img style="position:relative;top : 5px;" src="img/other/machinegroup.svg" width="25" height="25" /> '.$name;
     //echo '<a href="main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&tab=grouptablogs&uuid=&hostname=&gid='.$deploy['gid'].'&cmd_id='.$deploy['cmd_id'].'&login='.$deploy['login'].'">'.$deploy['package_name'].'</a><br />';
     $logAction = new ActionItem(_("detaildeploy"),
                                     "viewlogs",//Action
-                                    "logfile",//class
+                                    "audit",//class
                                     "",
                                     "xmppmaster",//submod
                                     "xmppmaster",
@@ -101,10 +101,10 @@ foreach($arraynotdeploy['elements'] as $id=>$deploy)
   else
   {
     $name = $deploy['machine_name'];
-    $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_machinesList.gif"/> '.$name;
+    $name = '<img style="position:relative;top : 5px;" src="img/other/machine_down.svg" width="25" height="25" /> '.$name;
     $logAction = new ActionItem(_("detaildeploy"),
                                     "viewlogs",//Action
-                                    "logfile",//class
+                                    "audit",//class
                                     "",
                                     "xmppmaster",//submod
                                     "xmppmaster",

@@ -20,6 +20,7 @@ usr/share/doc/mmc/contrib/inventory
 usr/share/doc/mmc/contrib/samba
 usr/share/doc/mmc/contrib/pulse2
 usr/share/doc/mmc/contrib/pkgs
+usr/share/doc/mmc/contrib/updates
 usr/share/doc/mmc/contrib/monit/pulse2
 usr/sbin/pulse2-setup
 usr/sbin/pulse2-create-group
@@ -33,4 +34,5 @@ usr/sbin/pulse2-packageparser.py
 usr/sbin/pulse2-inscription_packages_in_base.py
 usr/sbin/pulse2-generation_package.py
 usr/sbin/pulse2-migration_old_package.py
+usr/sbin/medulla-generate-update-package.py
 var/lib/pulse2/file-transfer

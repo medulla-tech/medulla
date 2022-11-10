@@ -23,6 +23,10 @@ maxperpage = 10
 ; community can be yes or no
 community = yes
 
+; If we want to change glpi displayed name in the interface,
+; we just have to change this value
+glpidisplayname = glpi
+
 ; Debug section
 [debug]
 ; 0 : no information
