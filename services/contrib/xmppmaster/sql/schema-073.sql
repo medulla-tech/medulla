@@ -197,6 +197,105 @@ CREATE TABLE IF NOT EXISTS `up_gray_list` (
 
 
 -- ----------------------------------------------------------------------
+-- trigger TABLE up_gray_list
+-- suppression recopier sur up_gray_list_flop
+-- ----------------------------------------------------------------------
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_DELETE`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_AFTER_DELETE` AFTER DELETE ON `up_gray_list` FOR EACH ROW
+BEGIN
+INSERT IGNORE INTO `xmppmaster`.`up_gray_list_flop` (`updateid`,
+ `kb`,
+ `revisionid`,
+`title`,
+`description`,
+ `updateid_package`,
+ `payloadfiles`,
+ `supersededby`,
+ `creationdate`,
+ `title_short`,
+ `valided`,
+ `validity_date`) VALUES (old.updateid,
+ old.kb,
+ old.revisionid,
+old.title,
+old.description,
+old.updateid_package,
+old.payloadfiles,
+old.supersededby,
+old.creationdate,
+old.title_short,
+old.valided,
+old.validity_date);
+END$$
+DELIMITER ;
+
+
+-- ----------------------------------------------------------------------
+-- CREATE TABLE up_gray_list_flop
+-- this table are the updates machine applicable plus valide dans le temps.
+-- ----------------------------------------------------------------------
+CREATE TABLE `up_gray_list_flop` (
+  `updateid` varchar(36) NOT NULL,
+  `kb` varchar(16) NOT NULL,
+  `revisionid` varchar(16) NOT NULL,
+  `title` varchar(1024) NOT NULL,
+  `description` varchar(1024) NOT NULL,
+  `updateid_package` varchar(36) NOT NULL,
+  `payloadfiles` varchar(2048) NOT NULL,
+  `supersededby` varchar(2048) DEFAULT NULL,
+  `creationdate` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `title_short` varchar(500) DEFAULT NULL,
+  `valided` tinyint(4) DEFAULT 0,
+  `validity_date` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`updateid`),
+  KEY `kb` (`kb`),
+  KEY `revision` (`revisionid`),
+  KEY `update_id` (`updateid_package`,`title_short`),
+  KEY `validity` (`valided`),
+  KEY `daye_calidity` (`validity_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------------------------------------------------
+-- trigger TABLE up_gray_list_flop
+-- suppression recopier sur up_gray_list et mis a jour la date de validity
+-- ----------------------------------------------------------------------
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_flop_AFTER_DELETE`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_flop_AFTER_DELETE` AFTER DELETE ON `up_gray_list_flop` FOR EACH ROW
+BEGIN
+INSERT IGNORE INTO `xmppmaster`.`up_gray_list` (`updateid`,
+ `kb`,
+ `revisionid`,
+`title`,
+`description`,
+ `updateid_package`,
+ `payloadfiles`,
+ `supersededby`,
+ `creationdate`,
+ `title_short`,
+ `valided`,
+ `validity_date`) VALUES (old.updateid,
+old.kb,
+old.revisionid,
+old.title,
+old.description,
+old.updateid_package,
+old.payloadfiles,
+old.supersededby,
+old.creationdate,
+old.title_short,
+old.valided,
+now() + INTERVAL 10 day) ON DUPLICATE KEY UPDATE validity_date = now() + INTERVAL 10 day;
+END$$
+DELIMITER ;
+
+-- ----------------------------------------------------------------------
 -- CREATE TABLE up_user_gray_list_commentaire
 -- this table allows user to add a comment to an update
 -- ----------------------------------------------------------------------
