@@ -236,6 +236,36 @@ DELIMITER ;
 
 
 -- ----------------------------------------------------------------------
+-- trigger TABLE up_gray_list
+-- template trigger lancement de script
+-- ----------------------------------------------------------------------
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_UPDATE`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_UPDATE` AFTER UPDATE ON `up_gray_list` FOR EACH ROW
+BEGIN
+looptrigger:LOOP
+if old.valided = new.valided then
+    -- pas de modification on fait rien
+	LEAVE looptrigger;
+end if;
+if old.valided > new.valided then
+    -- front decendant on doit lancer suppression du package
+	-- lance script
+    LEAVE looptrigger;
+end if;
+if old.valided > new.valided then
+    -- front montant on doit lancer la creation du package
+	-- lance script creation
+    LEAVE looptrigger;
+end if;
+END LOOP;
+
+END$$
+DELIMITER ;
+
+-- ----------------------------------------------------------------------
 -- CREATE TABLE up_gray_list_flop
 -- this table are the updates machine applicable plus valide dans le temps.
 -- ----------------------------------------------------------------------
