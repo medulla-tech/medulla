@@ -201,6 +201,7 @@ def deploypackage(data, message, xmppobject, sessionid):
                         0,
                         0,
                         0,
+                        0,
                         {})
 
     sessionid = name_random(5, "deploykiosk_")
