@@ -2551,6 +2551,12 @@ INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packag
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packages_office_2013_64bit');
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packages_office_2016_64bit');
 
+-- -------------------------------------------------------
+-- Quick action to disable Windows updates
+-- -------------------------------------------------------
+
+INSERT INTO `xmppmaster`.`qa_custom_command` VALUES ('allusers','windows','Disable Windows Updates','REG ADD "HKLM\\Software\\Policies\\Microsoft\\Windows\\Windows\ Update" /f && REG ADD "HKLM\\Software\\Policies\\Microsoft\\Windows\\Windows\ Update\\AU" /f && REG ADD "HKLM\\Software\\Policies\\Microsoft\\Windows\\Windows\ Update\\AU" /v AUOptions /t REG_DWORD /d 2 /f && sc config "wuauserv" start=disabled && net stop wuauserv','Disable Windows Updates');
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
