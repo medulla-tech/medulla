@@ -2550,13 +2550,7 @@ INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packag
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packages_office_2010_64bit');
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packages_office_2013_64bit');
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_packages_office_2016_64bit');
-UPDATE `xmppmaster`.`up_list_produit`
-SET
-    `enable` = '1'
-WHERE
-    (`name_procedure` IN ('up_packages_Win10_X64_1903' , 'up_packages_Win10_X64_21H1',
-        'up_packages_Win10_X64_21H2',
-        'up_packages_Win_Malicious_X64'));
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
