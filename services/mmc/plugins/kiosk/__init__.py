@@ -351,7 +351,7 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
                                 'description': packageprofile[2],
                                 "version" : packageprofile[3]
                                }
-    patternname = re.compile("(?i)" + packageprofile[0])
+    patternname = re.compile("(?i)" + packageprofile[0].replace('+', '\+').replace('*', '\*'))
     for soft_glpi in list_software_glpi:
         #TODO
         # Into the pulse package provide Vendor information for the software name
