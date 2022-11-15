@@ -21,12 +21,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
- 
+
 $relayid = (isset($_GET['id'])) ? htmlentities($_GET['id']) : null;
 $ruleid = (isset($_GET['rule_id'])) ? htmlentities($_GET['rule_id']) : null;
 $relayname = (isset($_GET['hostname'])) ? htmlentities($_GET['hostname']) : null;
 $rulename = (isset($_GET['name'])) ? htmlentities($_GET['name']) : null;
 $action = (isset($_GET['mod'])) ? htmlentities($_GET['mod']) : null;
+unset($_GET['mod']);
+$_GET['action'] = $_GET['prev_action'];
+
 
 if(in_array($action, ["raise", "down"]) && $relayid != null && $ruleid != null){
   $result = xmlrpc_move_relay_rule($relayid, $ruleid, $action);
@@ -42,11 +45,6 @@ else{
   new NotifyWidgetFailure(_T("Can't move the rule", "admin"));
 }
 
-header("Location: " . urlStrRedirect("admin/admin/rules_tabs", [
-  'id'=>$_GET['id'],
-  'jid'=>$_GET['jid'],
-  'hostname'=>$_GET['hostname'],
-
-]));
+header("Location: " . urlStrRedirect("admin/admin/rulesDetail", $_GET));
 exit;
 ?>
