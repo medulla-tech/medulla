@@ -136,8 +136,14 @@ def get_ou_list():
 
     # Check the ldap config
     config = PluginConfigFactory.new(BasePluginConfig, "base")
+    kconfig = KioskConfig("kiosk")
 
-    if config.has_section('authentication_externalldap'):
+    ous = []
+    # STEP 1 : Generates OUs list from db OR ldap
+    if kconfig.use_external_ldap is False:
+        # read OUs from xmppmaster db
+        ous = XmppMasterDatabase().get_ou_list_from_machines()
+    elif config.has_section('authentication_externalldap'):
         id = str(uuid.uuid4())
         file = '/tmp/ous-'+id
 
@@ -183,14 +189,15 @@ def get_ou_list():
 
         # Delete the file
         os.remove(file)
-
-        tree = TreeOU()
-        for line in ous:
-            tree.create_recursively(line)
-
-        return tree.recursive_json()
     else:
         return False
+
+    # Step 2 - Recreate OUs tree
+    tree = TreeOU()
+    for line in ous:
+        tree.create_recursively(line)
+
+    return tree.recursive_json()
 
 def get_ou_tree():
     """This function returns the list of OUs
@@ -203,8 +210,13 @@ def get_ou_tree():
 
     # Check the ldap config
     config = PluginConfigFactory.new(BasePluginConfig, "base")
+    kconfig = KioskConfig("kiosk")
 
-    if config.has_section('authentication_externalldap'):
+    ous = []
+
+    if kconfig.use_external_ldap is False:
+        ous = XmppMasterDatabase().get_ou_list_from_machines()
+    elif config.has_section('authentication_externalldap'):
         id = str(uuid.uuid4())
         file = '/tmp/ous-'+id
 
@@ -220,7 +232,6 @@ def get_ou_tree():
 
         os.system(command)
 
-        ous = []
         # Parse the file
         with open(file, 'r') as ou_file:
             lines = ou_file.read().splitlines()
@@ -250,14 +261,14 @@ def get_ou_tree():
 
         # Delete the file
         os.remove(file)
-
-        tree = TreeOU()
-        for line in ous:
-            tree.create_recursively(line)
-
-        return tree
     else:
         return False
+
+    tree = TreeOU()
+    for line in ous:
+        tree.create_recursively(line)
+
+    return tree
 
 def str_to_ou(string):
     return TreeOU().str_to_ou(string)
@@ -276,10 +287,16 @@ def get_users_from_ou(ou):
         returns False for some issues
     """
     config = PluginConfigFactory.new(BasePluginConfig, "base")
+    kconfig = KioskConfig("kiosk")
 
-    ou = str_to_ou(ou)
+    users = []
+    if kconfig.use_external_ldap is False:
+        ou = ou.replace('/', '@@')
+        users = XmppMasterDatabase().get_users_from_ou_from_machines(ou)
+    elif config.has_section('authentication_externalldap'):
 
-    if config.has_section('authentication_externalldap'):
+        ou = str_to_ou(ou)
+
         id = str(uuid.uuid4())
         file = '/tmp/users_ou-'+id
 
@@ -292,7 +309,6 @@ def get_users_from_ou(ou):
         (objectclass=person))" dn > %s""" % (ldapurl, ou, bindname, bindpasswd, file)
 
         os.system(command)
-        users = []
         # Parse the file
         with open(file, 'r') as user_file:
             lines = user_file.read().splitlines()
@@ -317,11 +333,9 @@ def get_users_from_ou(ou):
 
         # Delete the file
         os.remove(file)
-
-        return users
-
     else:
         return False
+    return users
 
 def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil, fromplugin = False):
     """
@@ -415,13 +429,19 @@ def get_ou_for_user(user):
         returns False for some issues
     """
     config = PluginConfigFactory.new(BasePluginConfig, "base")
-    if config.has_section('authentication_externalldap'):
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
+    kconfig = KioskConfig("kiosk")
+
+    ous = []
+    if kconfig.use_external_ldap is False:
+        ous = XmppMasterDatabase().get_ou_for_user_from_machines(user)
+    elif config.has_section('authentication_externalldap'):
         id = str(uuid.uuid4())
         file = '/tmp/ou_user-'+id
 
         # Get the parameters from the config file
         ldapurl = config.get('authentication_externalldap', 'ldapurl')
-        suffix = config.get('authentication_externalldap', 'suffix')
+        suffix = config.get('authentication_externalldap', 'suffix_ou')
         bindname = config.get('authentication_externalldap', 'bindname')
         bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
 
@@ -429,7 +449,6 @@ def get_ou_for_user(user):
         (samaccountname=%s))" dn > %s""" % (ldapurl, suffix, bindname, bindpasswd, user, file)
 
         os.system(command)
-        ous = []
         with open(file, 'r') as user_file:
             lines = user_file.read().splitlines()
 
@@ -458,9 +477,9 @@ def get_ou_for_user(user):
                 ous.append(ou)
         # Delete the file
         os.remove(file)
-        return ous
     else:
         return False
+    return ous
 
 def notify_kiosks():
     """This function send a notification message for all the machine which have a kiosk on it.

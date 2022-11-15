@@ -188,7 +188,7 @@ class TreeOU(object):
         config = PluginConfigFactory.new(BasePluginConfig, "base")
         if config.has_section('authentication_externalldap'):
             # Get the parameters from the config file
-            suffix = config.get('authentication_externalldap', 'suffix')
+            suffix = config.get('authentication_externalldap', 'suffix_ou')
 
             ou_list = ou_string.split('/')
             ou_list.reverse()
