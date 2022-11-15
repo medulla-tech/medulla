@@ -204,7 +204,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_DELETE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_AFTER_DELETE` AFTER DELETE ON `up_gray_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_DELETE` AFTER DELETE ON `up_gray_list` FOR EACH ROW
 BEGIN
 	IF LENGTH(OLD.updateid) = 36 THEN
 		INSERT IGNORE INTO `xmppmaster`.`up_gray_list_flop` (`updateid`,
@@ -270,7 +270,7 @@ DELIMITER ;
 -- this table are the updates machine applicable plus valide dans le temps.
 -- ----------------------------------------------------------------------
 
-CREATE TABLE `up_gray_list_flop` (
+CREATE TABLE IF NOT EXISTS `up_gray_list_flop` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
   `revisionid` varchar(16) NOT NULL,
@@ -2639,7 +2639,7 @@ DROP procedure IF EXISTS `base_wsusscn2`.`reduction_base`;
 
 DELIMITER $$
 USE `base_wsusscn2`$$
-CREATE DEFINER=`jfk`@`localhost` PROCEDURE `reduction_base`()
+CREATE PROCEDURE `reduction_base`()
 BEGIN
 
 DELETE FROM `base_wsusscn2`.`update_data`
@@ -2659,7 +2659,7 @@ DELIMITER ;
 -- -------------------------------------------------------
 
 USE `xmppmaster`;
-CREATE TABLE `up_list_produit` (
+CREATE TABLE IF NOT EXISTS `up_list_produit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name_procedure` varchar(80) DEFAULT NULL,
   `enable` tinyint(1) NOT NULL DEFAULT 0,
