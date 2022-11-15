@@ -127,16 +127,6 @@ ul.leftfile, ul.rightfile {
 .marge {
     margin-bottom:20px;
 }
- li.folder a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/folder.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
 .Localdestination{
         padding: 0px 0px  5px 22px;
         margin: 0 0px 0 0px;

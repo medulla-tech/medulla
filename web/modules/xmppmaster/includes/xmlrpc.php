@@ -419,6 +419,10 @@ function xmlrpc_runXmppWolforuuid($uuid){
     return xmlCall("xmppmaster.CallXmppPlugin", array("wakeonlan", array("UUID"=>$uuid)));
 }
 
+function xmlrpc_runXmppWolforuuidsarray($uuids){
+    return xmlCall("xmppmaster.runXmppWolforuuidsarray",array($uuids));
+}
+
 function xmlrpc_callInventoryinterface($uuid){
     return xmlCall("xmppmaster.callInventoryinterface", array($uuid));
 }
@@ -749,5 +753,13 @@ function xmlrpc_get_machines_to_unban($jid_ars, $start=0, $end=-1, $filter=""){
 
 function xmlrpc_ban_machines($subaction, $jid_ars, $machines){
   return xmlCall("xmppmaster.ban_machines", [$subaction, $jid_ars, $machines]);
+}
+
+function xmlrpc_get_conformity_update_by_entity(){
+  return xmlCall("xmppmaster.get_conformity_update_by_entity");
+}
+
+function xmlrpc_get_conformity_update_by_entity_in_gray_list(){
+  return xmlCall("xmppmaster.get_conformity_update_by_entity_in_gray_list");
 }
 ?>

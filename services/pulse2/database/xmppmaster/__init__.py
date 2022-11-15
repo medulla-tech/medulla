@@ -3547,6 +3547,8 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentpending': 0,
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
+                   'errorhashmissing': 0,
+                   'aborthashinvalid': 0,
                    'otherstatus': 0,
                   }
             dynamic_status_list = self.get_log_status()
@@ -3611,6 +3613,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['deploymentpending'] = liststatus[t]
                 elif t == 'DEPLOYMENT DELAYED':
                     ret['deploymentdelayed'] = liststatus[t]
+                elif t == 'ERROR HASH MISSING':
+                    ret['errorhashmissing'] = liststatus[t]
+                elif t == 'ABORT HASH INVALID':
+                    ret['aborthashinvalid'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
@@ -3666,6 +3672,8 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentpending': 0,
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
+                   'errorhashmissing': 0,
+                   'aborthashinvalid': 0,
                    'otherstatus': 0,
                   }
             dynamic_status_list = self.get_log_status()
@@ -3730,6 +3738,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['deploymentpending'] = liststatus[t]
                 elif t == 'DEPLOYMENT DELAYED':
                     ret['deploymentdelayed'] = liststatus[t]
+                elif t == 'ERROR HASH MISSING':
+                    ret['errorhashmissing'] = liststatus[t]
+                elif t == 'ABORT HASH INVALID':
+                    ret['aborthashinvalid'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
@@ -3976,6 +3988,28 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def updatemachine_kiosk_presence(self, session, idmachine, presence):
+        """Modify the kiosk presence for the specified machines
+            Params:
+                session : sql session
+                idmachine : int corresponding to the xmppmaster.machine.id
+                presence : str representing the presence ("True" or "False")
+
+            Returns:
+                int : 1 value if success
+                int : -1 value if failure
+        """
+        try:
+            session.query(Machines).filter( Machines.id ==  idmachine).\
+                    update({ Machines.kiosk_presence : presence})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
 
     @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
@@ -8260,7 +8294,7 @@ class XmppMasterDatabase(DatabaseHelper):
             for machine in query:
                 flag = False
                 for count_ars in counts:
-                    if machine.jid == count_ars["jid"]:
+                    if machine.jid_from_relayserver == count_ars["jid"]:
                         flag = True
                         break
                 if flag == True:
@@ -11038,3 +11072,68 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.commit()
             session.flush()
         return machines_jid_for_updating
+
+    @DatabaseHelper._sessionm
+    def get_conformity_update_by_entity(self, session):
+        """
+            This function renvoi le nombre total de machine a mettre a jour pour 1 entity
+        """
+        sql=""" SELECT
+                    glpi_entity_id as entity,
+                        COUNT(*) AS total_machine_entity,
+                        SUM(CASE
+                            WHEN (COALESCE(update_id, '') != '') THEN 1
+                            ELSE 0
+                        END) AS a_mettre_a_jour,
+                        SUM(CASE
+                            WHEN (COALESCE(update_id, '') = '') THEN 1
+                            ELSE 0
+                        END) AS a_ne_pas_mettre_a_jour
+            FROM
+                xmppmaster.machines
+                    LEFT JOIN
+                xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+            WHERE
+                platform LIKE 'Mic%'
+                    group by glpi_entity_id ;"""
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+
+
+    @DatabaseHelper._sessionm
+    def get_conformity_update_by_entity_in_gray_list(self, session):
+        """
+            This function renvoi le nombre total de machine a mettre a jour pour 1 entity prenant en compte que les mise a jour enable dans gray list
+        """
+        sql="""SELECT
+                    glpi_entity_id AS entity,
+                    COUNT(*) AS total_machine_entity,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') != '') THEN 1
+                        ELSE 0
+                    END) AS a_mettre_a_jour,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') = '') THEN 1
+                        ELSE 0
+                    END) AS a_ne_pas_mettre_a_jour
+                FROM
+                    xmppmaster.machines
+                        LEFT JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                        JOIN
+                    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                WHERE
+                    platform LIKE 'Mic%' and xmppmaster.up_gray_list.valided = 1
+                GROUP BY glpi_entity_id;"""
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result

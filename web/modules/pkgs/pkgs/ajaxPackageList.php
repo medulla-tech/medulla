@@ -2,7 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
- * (c) 2016-2021 Siveo, http://siveo.net/
+ * (c) 2016-2022 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -67,6 +67,16 @@ if (isset($_GET["start"])) {
     $start = $_GET["start"];
 } else {
     $start = 0;
+}
+
+if(isset($_GET['toggleupdates'])){
+  $filter['toggleupdates'] = htmlentities($_GET['toggleupdates']);
+}
+else if (isset($_SESSION['toggleupdates'])){
+  $filter['toggleupdates'] = htmlentities($_SESSION['toggleupdates']);
+}
+else{
+  $filter["toggleupdates"] = "hide";
 }
 
 $detailAction = new ActionItem(_T("Package Detail", "pkgs"), "detail", "display", "pkgs", "pkgs");
@@ -179,22 +189,22 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
       switch($_packages['conf_json'][$i]['metagenerator']){
           case "expert":
               $_arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package_expert.png'/>" .
-                                          "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package.svg' width='25' height='25'/>" .
+                                          "<span title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $_packages['conf_json'][$i]['name'].
                                           "</span>" ;
           break;
           case "standard":
               $_arraypackagename[] = "<img style='position:relative; top : 5px;
-                                          'src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          'src='img/other/package.svg' width='25' height='25'/>".
+                                          "<span title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $_packages['conf_json'][$i]['name'].
                                           "</span>"  ;
           break;
           default: //"manual":
               $_arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package_ro.svg' width='25' height='25'/>".
+                                          "<span title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $_packages['conf_json'][$i]['name'].
                                           "</span>" ;
           break;
@@ -343,22 +353,22 @@ else{
       switch($p['metagenerator']){
           case "expert":
               $arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package_expert.png'/>" .
-                                          "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package.svg' width='25' height='25'/>" .
+                                          "<span title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $p['label'].
                                           "</span>" ;
           break;
           case "standard":
               $arraypackagename[] = "<img style='position:relative; top : 5px;
-                                          'src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          'src='img/other/package.svg' width='25' height='25'/>".
+                                          "<span title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $p['label'].
                                           "</span>"  ;
           break;
           default: //"manual":
               $arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package_ro.svg' width='25' height='25'/>".
+                                          "<span title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $p['label'].
                                           "</span>" ;
           break;

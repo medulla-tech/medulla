@@ -42,7 +42,7 @@ foreach( $arraydeploy['tabdeploy']['start'] as $ss){
     }
 }
 
-$logAction =new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
+$logAction =new ActionItem(_("detaildeploy"),"viewlogs","audit","computer", "xmppmaster", "xmppmaster");
 
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 

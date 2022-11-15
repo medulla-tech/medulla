@@ -225,10 +225,10 @@ function update() {
             jQuery('#'+value).parents("tr").toggle();
         });
         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#Installation_Notes').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+            jQuery('#Installation_Notes').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
         }
         else{
-            jQuery('#Installation_Notes').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+            jQuery('#Installation_Notes').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
         }
     };
 
@@ -251,10 +251,10 @@ function update() {
             jQuery('#'+value).parents("tr").toggle();
         });
         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#General_Settings').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+            jQuery('#General_Settings').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
         }
         else{
-            jQuery('#General_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+            jQuery('#General_Settings').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
         }
     };
 
@@ -265,10 +265,10 @@ function update() {
             jQuery('#'+value).parents("tr").toggle();
         });
         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#Regional_Settings').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+            jQuery('#Regional_Settings').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
         }
         else{
-            jQuery('#Regional_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+            jQuery('#Regional_Settings').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
         }
     };
 
@@ -290,10 +290,10 @@ function update() {
             jQuery('#'+value).parents("tr").toggle();
         });
         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#Out_Of_Box_Experience').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+            jQuery('#Out_Of_Box_Experience').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
         }
         else{
-            jQuery('#Out_Of_Box_Experience').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+            jQuery('#Out_Of_Box_Experience').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
         }
     };
 
@@ -311,10 +311,10 @@ function update() {
             jQuery('#'+value).parents("tr").toggle();
         });
         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#Partition_Settings').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+            jQuery('#Partition_Settings').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
         }
         else{
-            jQuery('#Partition_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+            jQuery('#Partition_Settings').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
         }
     };
 
@@ -333,10 +333,10 @@ function update() {
 
         });
         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#User_Account').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+            jQuery('#User_Account').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
         }
         else{
-            jQuery('#User_Account').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+            jQuery('#User_Account').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
         }
     };
 
@@ -347,10 +347,10 @@ function update() {
             jQuery('#'+value).toggle();
         });
         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#awfg_show').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+            jQuery('#awfg_show').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
         }
         else{
-            jQuery('#awfg_show').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+            jQuery('#awfg_show').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
         }
     };
 
@@ -360,10 +360,10 @@ function update() {
             jQuery('#'+value).parents("tr").toggle();
         });
         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#Specialize_Settings').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+            jQuery('#Specialize_Settings').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
         }
         else{
-            jQuery('#Specialize_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+            jQuery('#Specialize_Settings').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
         }
     };
 

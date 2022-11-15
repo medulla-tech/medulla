@@ -40,7 +40,7 @@ Pulse manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX
 
 ## Documentation
 
-Read [documentation](http://pulse-automation-tools.readthedocs.org/) 
+Read [documentation](http://pulse-user-manual.readthedocs.org/) 
 
 Read [code documentation](http://doc.siveo.net/)
 

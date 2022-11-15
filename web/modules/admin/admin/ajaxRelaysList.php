@@ -59,10 +59,10 @@ $switchoffaction = new ActionPopupItem(_("Switch"), "switchrelay", 'stop', "", "
 $switchonaction = new ActionPopupItem(_("Switch"), "switchrelay", 'start', "", "admin", "admin");
 $switchemptyaction = new EmptyActionItem1(_("Switch"), "switchrelay", 'stopg', "", "admin", "admin");
 
-$reconfigureaction = new ActionPopupItem(_("Reconfigure Machines"), "reconfiguremachines", 'restart', "nopropagate", "admin", "admin");
-$reconfigureemptyaction = new EmptyActionItem1(_("Reconfigure Machines"), "reconfiguremachines", 'restartg', "nopropagate", "admin", "admin");
+$reconfigureaction = new ActionPopupItem(_("Reconfigure Machines"), "reconfiguremachines", 'reconfiguregroup', "nopropagate", "admin", "admin");
+$reconfigureemptyaction = new EmptyActionItem1(_("Reconfigure Machines"), "reconfiguremachines", 'reconfiguregroupg', "nopropagate", "admin", "admin");
 
-$qalisteaction = new ActionItem(_("QA Launched"), "qalaunched", 'inventory', "", "admin", "admin");
+$qalisteaction = new ActionItem(_("QA Launched"), "qalaunched", 'audit', "", "admin", "admin");
 
 $vncaction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
 $vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
@@ -70,7 +70,7 @@ $vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote contro
 $packageaction = new ActionItem(_("Packages List"), "packageslist", 'package', "", "admin", "admin");
 $packageemptyaction = new EmptyActionItem1(_("Packages List"), "packageslist", 'packageg', "", "admin", "admin");
 
-$relayRulesAction = new ActionItem(_("Relay Rules"), "rules_tabs", 'inventory', "", "admin", "admin");
+$relayRulesAction = new ActionItem(_("Relay Rules"), "rules_tabs", 'config', "", "admin", "admin");
 
 $banAction = new ActionPopupItem(_("Ban"), "ban", 'ban', "", "admin", "admin");
 $banEmptyAction = new EmptyActionItem1(_("Ban"), "ban", 'bang', "", "admin", "admin");

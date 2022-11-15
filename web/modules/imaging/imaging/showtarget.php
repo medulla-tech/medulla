@@ -132,6 +132,7 @@ $ret = $ret[$id];
             return false;"/>
     </br>
 <?php
+echo '<div id="list-wrapper" style="max-height:50vh;overflow-y:scroll">';
 foreach ($ret as $target) {
     /*
      * $target = array(
@@ -159,6 +160,7 @@ foreach ($ret as $target) {
         printf('<input type="hidden" name="type_uuid_%s" value="%s"/>', $target[0], $target[1]);
     }
 }
+echo '</div>';
 
 if (isset($_GET['from'])) {
     // Come from a computer target page
