@@ -122,6 +122,13 @@ jQuery(function(){
                     action['script'] = btoa(action['script'])
                 }
             }
+            if ('message' in action){
+
+                if (!isBase64(action['message'])){
+                    action['message'] = btoa(action['message'])
+                }
+            }
+
             if ('set' in action){
                 if (isBase64(action['set'])){
                     action['set'] = atob(action['set'])
@@ -213,6 +220,8 @@ function createSequence()
     // Create a new sequence
     var sequence = [];
     var actualSection = "Install";
+    // convertit directement en base64
+    var array_convert_to_base64 = ['command','script',"set", "message", "notification"];
     /**
      * Get all the form element in #current-actions and serialize them
      */
@@ -226,16 +235,20 @@ function createSequence()
         // For each element in form :
             // Add {form.elementName : form.elementValue} to action
         jQuery.each(datas,function(idoption, actionRaw){
-          if(actionRaw['value'] == "action_section_install"){
-            actualSection = "Install";
-          }
-          if(actionRaw['value'] =='action_section_update'){
-            actualSection = "Update";
-          }
-          if(actionRaw['value'] == "action_section_uninstall"){
-            actualSection = "Delete"
-          }
-            if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script' || actionRaw['name'] == "set"){
+            if(actionRaw['value'] == "action_section_install"){
+                actualSection = "Install";
+            }
+            if(actionRaw['value'] =='action_section_update'){
+                actualSection = "Update";
+            }
+            if(actionRaw['value'] == "action_section_uninstall"){
+                actualSection = "Delete"
+            }
+            // convert to base64
+//             if (jQuery.inArray(actionRaw['name'] , array_convert_to_base64 ) > -1){
+//                 actionRaw['value'] = btoa(actionRaw['value'])
+//             }
+            if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script' || actionRaw['name'] == "set" || actionRaw['name'] == "message" || actionRaw['name'] == "notification"){
                actionRaw['value'] = btoa(actionRaw['value'])
             }
             if(actionRaw['name'] == 'environ')
@@ -279,6 +292,7 @@ function createSequence()
 // Get info from interface and return it as json
 function createInfo()
 {
+    console.log("createInfo");
     var info = {};
 
     // Manage dependencies

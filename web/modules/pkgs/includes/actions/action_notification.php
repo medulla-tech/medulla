@@ -1,139 +1,99 @@
 <?php
-/**
- * (c) 2018 Siveo, http://www.siveo.net
- *
- * $Id$
- *
- * This file is part of Mandriva Management Console (MMC).
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
- */
+require_once("../xmlrpc.php");
+require_once("../../../../includes/session.inc.php");
+require_once("../../../../includes/xmlrpc.inc.php");
+require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
-/*
-Descriptor Type
----------------
-{
-    "action": "action_notification",
-    "step": 2,
-    "actionlabel": "2b70431b",
-    "type": "kiosk",
-    "message": "test3"
-}
-*/
-$tableToggle=  "tableToggle".uniqid();
-$toggleable =  "toggleable".uniqid();
-$idclass =  "#".$tableToggle.' tr.'.$toggleable;
+
+    $message = (isset($message)) ? base64_decode($message) : "" ;
+
+        $packageList = xmpp_packages_list();
+        $options = "";
+
+        foreach($packageList as $id=>$package)
+        {
+            if(isset($packageuuid) && $packageuuid == $package['uuid'])
+            {
+                $options .= "<option value='".$package['uuid']."' selected>".$package['name']."</option>";
+            }
+            else
+                $options .= "<option value='".$package['uuid']."'>".$package['name']."</option>";
+        }
+$lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1>Deployment notification</h1>
+    <h1><?php echo _T('Update Notification', 'pkgs'); ?></h1>
 </div>
-
 <div class="content">
+
     <div>
-        <input type="hidden" name="step" />
         <input type="hidden" name="action" value="action_notification" />
-        <?php
-        extract($_POST);
-        $lab =  (isset($actionlabel))? $actionlabel : uniqid(); ?>
+        <input type="hidden" name="step" />
+        <input type="hidden" name="codereturn" value=""/>
+    <table id="tableToggle">
+        <tr class="toggleable">
+            <th><?php echo _T('Step label: ', 'pkgs'); ?></th>
+            <th><input id="laction" type="text" name="actionlabel" value="<?php echo $lab; ?>"/></th>
+        </tr>
+        <tr>
+            <th><?php echo _T('Message', 'pkgs'); ?></th>
+            <th>
+                <textarea class="special_textarea" name="message" ><?php echo $message; ?></textarea>
+            </th>
+        </tr>
 
-        <table id="tableToggle">
 
-           <tr class="toggleable">
-                <th>Step label : </th>
-                <th>
-                    <input type="text" name="actionlabel" value="<?php echo $lab;?>"/>
-                <th></th>
-                <th></th>
-            </tr>
+        <tr class="toggleable">
+            <?php
+            if(isset($timeout))
+            {
+                echo '
+                <td>
+                    <input type="checkbox" checked onclick="
+                    if(jQuery(this).is(\':checked\')){
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
+                    }
+                    else{
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
+                    }" />'._T("Set timeout (in seconds)","pkgs").'
+                </td>
+                <td>
+                    <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
+                </td>';
+            }
+            else{
+                echo '
+                <td>
+                    <input type="checkbox" checked onclick="
+                    if(jQuery(this).is(\':checked\')){
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
+                    }
+                    else{
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
+                    }" />'._T("Set timeout (in seconds)","pkgs").'
+                </td>
+                <td>
+                    <input type="number" min="0" value="800"  name="timeout"  />
+                </td>';
+            }
+            ?>
+        </tr>
+        <tr>
 
-            <tr>
-              <td>
-                Notification Type
-              </td>
-              <td>
-                  <select name="type">
-                    <option value="machine" <?php echo (isset($type) && $type="machine") ? "selected": ""; ?>>Machine</option>
-                    <option value="user" <?php echo (isset($type) && $type="user") ? "selected": ""; ?>>User</option>
-                    <option value="kiosk" <?php echo (isset($type) && $type="kiosk") ? "selected": ""; ?>>Kiosk</option>
-                  </select>
-              </td>
-              <td>
-                Notification Message
-              </td>
-              <? if(isset($message))
-              {
-                  echo '
-                  <td>
-                      <input type="text" name="message" value="'.$message.'"/>
-                  </td>';
-              }
-              else{
-                  echo '<td>
-                          <input type="text" name="message"/>
-                      </td>';
-              }?>
-          </tr>
-          <!-- Options for kiosk notification -->
-          <tr class="suboption">
-            <td>
-              <?php if(isset($stat))
-              {?>
-                <input type="checkbox" checked
-                    onclick="if(jQuery(this).is(':checked')){
-                                jQuery(this).closest('td').next().find('input').prop('disabled',false);
-                            }
-                            else{
-                                jQuery(this).closest('td').next().find('input').prop('disabled',true);
-                            }" />Progression Stat
-              <?php }
-              else{?>
-                <input type="checkbox"
-                    onclick="if(jQuery(this).is(':checked')){
-                                jQuery(this).closest('td').next().find('input').prop('disabled',false);
-                            }
-                            else{
-                                jQuery(this).closest('td').next().find('input').prop('disabled',true);
-                            }" />Progression Stat
-              <?php }?>
-            </td>
-            <td>
-              <?php if (isset($stat))
-              {
-                echo '<input type="number" min="1" max="100" name="stat" value="'.$_POST['stat'].'"/>';
-              }
-              else{
-                echo '<input type="number" disabled min="1" max="100" value="1" name="stat" />';
-              }?>
-
-            </td>
-            <td></td>
-            <td></td>
-          </tr>
+        </tr>
 
 
     </table>
-
+        <!-- Option timeout -->
     </div>
 
-    <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
 </div>
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
         jQuery("#tableToggle tr.toggleable").hide();
     });
-
 </script>

@@ -1,5 +1,5 @@
 /**
- * (c) 2016-2021 Siveo, http://www.siveo.net/
+ * (c) 2016-2022 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -80,7 +80,9 @@ var actionsList = [
     'action_section_update',     // define update section
     //'action_section_launch',     // define launch section
     'action_section_uninstall',  // define uninstall section
-    'action_notification', //define a notification action which send infos of deployment status
+    'action_notification',  // Display a "OK" popup
+    'action_question',  // Ask a "YES" / "NO" question, if YES : goto A, then goto B
+    'action_choice', //choice with specific timeout
 ];
 /**
  *
