@@ -195,7 +195,6 @@ CREATE TABLE IF NOT EXISTS `up_gray_list` (
   KEY `daye_calidity` (`validity_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 -- ----------------------------------------------------------------------
 -- trigger TABLE up_gray_list
 -- suppression recopier sur up_gray_list_flop
@@ -346,6 +345,22 @@ CREATE TABLE IF NOT EXISTS  `up_user_gray_list_commentaire` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+-- ----------------------------------------------------------------------
+-- CREATE TABLE up_white_list
+-- this table are the updates machine applicable directement automatiquement
+-- ----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS  `up_white_list` (
+  `updateid` varchar(36) NOT NULL,
+  `kb` varchar(16) NOT NULL,
+  `title` varchar(1024) NOT NULL,
+  `description` varchar(1024) NOT NULL,
+  `creationdate` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `title_short` varchar(500) DEFAULT NULL,
+  `valided` tinyint(4) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`updateid`),
+  KEY `kb` (`kb`),
+  KEY `validity` (`valided`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- ----------------------------------------------------------------------
 -- CREATE TABLE up_machine_windows
 -- this table are the updates machine
