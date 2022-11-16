@@ -203,7 +203,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_DELETE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_AFTER_DELETE` AFTER DELETE ON `up_gray_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_DELETE` AFTER DELETE ON `up_gray_list` FOR EACH ROW
 BEGIN
 	-- regle si 1 certain temps le package na pas etait utiliser il passe dans les updates historique
 	-- si son etat etait a 1 alors le package est supprimer
@@ -343,7 +343,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_UPDATE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_AFTER_UPDATE` AFTER UPDATE ON `up_gray_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_UPDATE` AFTER UPDATE ON `up_gray_list` FOR EACH ROW
 BEGIN
 looptrigger:LOOP
 	-- regle
@@ -500,7 +500,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_INSERT`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT` AFTER INSERT ON `up_gray_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT` AFTER INSERT ON `up_gray_list` FOR EACH ROW
 BEGIN
 -- apres insertion,
 -- on rend actif et deploiable le package updateid si validated est vrai
@@ -575,7 +575,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_flop_AFTER_DELETE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_flop_AFTER_DELETE` AFTER DELETE ON `up_gray_list_flop` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_flop_AFTER_DELETE` AFTER DELETE ON `up_gray_list_flop` FOR EACH ROW
 BEGIN
 	IF LENGTH(OLD.updateid) = 36 THEN
         set @logtext = concat("replace dans la table up_gray_list update : ", old.updateid  );
@@ -728,7 +728,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_UPDATE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_black_list_AFTER_UPDATE` AFTER UPDATE ON `up_black_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_black_list_AFTER_UPDATE` AFTER UPDATE ON `up_black_list` FOR EACH ROW
 BEGIN
 	DELETE FROM `xmppmaster`.`up_gray_list`
 	WHERE
@@ -785,7 +785,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_INSERT`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_black_list_AFTER_INSERT` AFTER INSERT ON `up_black_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_black_list_AFTER_INSERT` AFTER INSERT ON `up_black_list` FOR EACH ROW
 BEGIN
 	DELETE FROM `xmppmaster`.`up_gray_list`
 	WHERE
