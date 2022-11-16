@@ -9766,7 +9766,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.commit()
             session.flush()
             return new_Monitoring_panels_template.id
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return -1
 
@@ -9807,7 +9807,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                        'status': graphe_template.status,
                        'comment': graphe_template.comment}
                 list_panels_template.append(res)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
         return list_panels_template
 
@@ -10388,12 +10388,12 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if rule is not None:
             if action == "raise":
                 selected = session.query(Has_relayserverrules)\
-                    .filter(Has_relayserverrules.order < rule.order)\
+                    .filter(and_(Has_relayserverrules.rules_id == rule.rules_id, Has_relayserverrules.order < rule.order))\
                     .order_by(desc(Has_relayserverrules.order)).first()
 
             elif action == "down":
                 selected = session.query(Has_relayserverrules)\
-                    .filter(Has_relayserverrules.order > rule.order)\
+                    .filter(and_(Has_relayserverrules.rules_id == rule.rules_id, Has_relayserverrules.order > rule.order))\
                     .order_by(Has_relayserverrules.order).first()
             else:
                 result['status'] = "error"
@@ -11136,4 +11136,51 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         result= [{column: value for column,
                 value in rowproxy.items()}
                         for rowproxy in resultquery]
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_ou_list_from_machines(self, session):
+        """Get all ous listed in machines table (in ad_ou_machine and ad_ou_user fields)
+        Returns list: all unique OUs found in the table
+        """
+        query = session.query(Machines.ad_ou_machine, Machines.ad_ou_user).group_by(Machines.ad_ou_machine, Machines.ad_ou_user).all()
+        result = []
+        if query is not None:
+            for ou in query:
+                if ou[0] != '':
+                    if ou[0] not in result:
+                        result.append(ou[0].replace('@@','/'))
+
+                if ou[1] != '':
+                    if ou[1] not in result:
+                        result.append(ou[1].replace('@@','/'))
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_users_from_ou_from_machines(self, session, ou):
+        """Get all users listed in machines table corresponding to ad_ou_user = ou
+        Params:
+            ou (str) : The location where the users are searched
+        Returns list: all unique OUs found in the table
+        """
+        result = []
+        query = session.query(Machines.lastuser).filter(Machines.ad_ou_user == ou).group_by(Machines.lastuser).all()
+
+        if query is not None:
+            result = [user[0] for user in query]
+        return result
+    
+    @DatabaseHelper._sessionm
+    def get_ou_for_user_from_machines(self, session, user):
+        """Get user's ous listed in machines table corresponding to lastuser = user
+        Params:
+            user (str) : The user searched
+        Returns list: all unique OUs found in the table
+        """
+        result = []
+        query = session.query(Machines.ad_ou_user).filter(Machines.lastuser == user).group_by(Machines.ad_ou_user).all()
+
+        if query is not None:
+            result = [ou[0].replace('@@', '/') for ou in query]
         return result

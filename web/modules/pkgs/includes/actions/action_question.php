@@ -109,7 +109,7 @@ $namestep=_T("Update Question","pkgs");
             $gotoyes = (isset($gotoyes)) ? $gotoyes : "";
 
             echo '<th data-title="'._T("On 1 positive answer jump to the step label","pkgs").'">';
-            echo _T("If yes go to step","pkgs").'</th>';
+            echo _T("If 'yes' go to step","pkgs").'</th>';
             echo '<td>';
            ?>
             <span  data-title="<?php echo _T('input step label', 'pkgs'); ?>">
