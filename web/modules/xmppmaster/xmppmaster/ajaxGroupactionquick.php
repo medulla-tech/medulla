@@ -51,7 +51,7 @@ foreach ($dd[7] as $val ){
     $machinetarget[]= '<a href="'.urlStrRedirect("base/computers/glpitabs", ["cn"=>$namemachine, "objectUUID"=>$val]).'">'.$namemachine.'</a>';
 }
 $log = array();
-$resultmachine = new ActionItem(_T("Os", "xmppmaster"),"QAcustommachgrp","logfile","computer", "xmppmaster", "xmppmaster");
+$resultmachine = new ActionItem(_T("Os", "xmppmaster"),"QAcustommachgrp","audit","computer", "xmppmaster", "xmppmaster");
 
 $listnamegroup=[];
 $params =  array();

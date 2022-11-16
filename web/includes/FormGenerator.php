@@ -817,11 +817,11 @@ class MembersTpl extends AbstractTpl {
 
         <td class="membersTplSwitchs">
             <a href="#" onclick="switch_' . $this->name . '(\'available_' . $this->name . '\', \'' . $this->name . '\'); event.returnValue=false; return false;">
-                <img style="padding: 5px;" src="img/common/icn_arrowright.gif" value="<--" />
+                <img style="padding: 5px;" src="img/other/right.svg" width="25" height="25" value="<--" />
             </a>
             <br/>
             <a href="#" onclick="switch_' . $this->name . '(\'' . $this->name . '\', \'available_' . $this->name . '\'); event.returnValue=false; return false;">
-                <img style="padding: 5px;" src="img/common/icn_arrowleft.gif" value = "-->" />
+                <img style="padding: 5px;" src="img/other/left.svg" width="25" height="25" value = "-->" />
             </a>
         </td>
 

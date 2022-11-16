@@ -104,15 +104,15 @@ input[type="text"] {
                 <tr>
                 <?
                     if ($nbr_presense != 0){
-                        echo '<td id="shutdown" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                        echo '<td id="reboot" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
-                        echo '<td id="inventory" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
-                        echo '<td id="vncchangeperms" align="center"><img src="modules/base/graph/computers/remotedesktop.png" height="70" width="70" ></td>';
-                        echo '<td id="installkey" align="center"><img src="modules/base/graph/computers/installkeydesktop.png" height="70" width="70" ></td>';
+                        echo '<td id="shutdown" align="center"><img src="img/actions/power.svg" height="70" width="70"> </td>';
+                        echo '<td id="reboot" align="center"><img src="img/actions/restart.svg" height="70" width="70" ></td>';
+                        echo '<td id="inventory" align="center"><img src="img/actions/inventory.svg" height="70" width="70" ></td>';
+                        echo '<td id="vncchangeperms" align="center"><img src="img/actions/control.svg" height="70" width="70" ></td>';
+                        echo '<td id="installkey" align="center"><img src="img/actions/key.svg" height="70" width="70" ></td>';
 
                     }
                     if ($nbr_absent != 0){
-                        echo '<td id="wol"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
+                        echo '<td id="wol"><img src="img/actions/power.svg" height="70" width="70" ></td>';
                     }
                 ?>
                 </tr>

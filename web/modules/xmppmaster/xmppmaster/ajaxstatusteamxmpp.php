@@ -127,7 +127,7 @@ foreach( $arraydeploy['tabdeploy']['endcmd'] as $ss){
 
 $logAction = new ActionItem(_("detaildeploy"),
                                 "viewlogs",
-                                "logfile",
+                                "audit",
                                 "computer",
                                 "xmppmaster",
                                 "xmppmaster");
@@ -205,9 +205,9 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         }
         //recherche information de deployement sur ce groupe.
         if ($convergence[$arraydeploy['tabdeploy']['command'][$index]] != 0 ){
-            $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_convergence.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
+            $arraytitlename[] = "<img style='position:relative;top : 5px;'src='img/other/convergence.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$index];
         }else{
-            $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_package.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
+            $arraytitlename[] = "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$index];
         }
 
         if( $totalmachinedeploy == 0){
@@ -274,12 +274,12 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
             $arrayname[] = _T("This group doesn't exist", "xmppmaster");
         }
         else {
-            $arrayname[] = "<span style='text-decoration : underline;'><img style='position:relative;top : 5px;'src='img/machines/icn_groupsList.gif'/>" . $groupname[$groupid]['name']."</span>";
+            $arrayname[] = "<span style='text-decoration : underline;'><img style='position:relative;top : 5px;'src='img/other/machinegroup.svg' width='25' height='25'/>" . $groupname[$groupid]['name']."</span>";
         }
     }
     else{
-        $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_package.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
-        $arrayname[] = "<img style='position:relative;top : 5px;'src='img/machines/icn_machinesList.gif'/> " . $arraydeploy['tabdeploy']['host'][$index];
+        $arraytitlename[] = "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$index];
+        $arrayname[] = "<img style='position:relative;top : 5px;'src='img/other/machine_down.svg' width='25' height='25'/> " . $arraydeploy['tabdeploy']['host'][$index];
         if ($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT ERROR")
         {
             $arraystate[]="<span style='font-weight: bold; color : red;'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
@@ -303,21 +303,21 @@ if(isset($arraynotdeploy))
       $logs[] = $logAction;
       $params[] = $param;
 
-      $arraytitlename[] = '<img style="position:relative;top : 5px;" src="modules/msc/graph/images/install_package.png" /> '.$deploy['package_name'];
+      $arraytitlename[] = '<img style="position:relative;top : 5px;" src="img/other/package.svg"  width="25" height="25" /> '.$deploy['package_name'];
 
       $name = "";
       if($deploy['gid'] != "")
       {
           $name = getInfosNameGroup($deploy['gid']);
           $name = $name[$deploy['gid']]['name'];
-          $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_groupsList.gif"/> '.$name;
+          $name = '<img style="position:relative;top : 5px;" src="img/other/machinegroup.svg" width="25" height="25" /> '.$name;
           //echo '<a href="main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&tab=grouptablogs&uuid=&hostname=&gid='.$deploy['gid'].'&cmd_id='.$deploy['cmd_id'].'&login='.$deploy['login'].'">'.$deploy['package_name'].'</a><br />';
         }
 
       else
       {
           $name = $deploy['machine_name'];
-          $name = '<img style="position:relative;top : 5px;" src="img/machines/icn_machinesList.gif"/> '.$name;
+          $name = '<img style="position:relative;top : 5px;" src="img/other/machine_down.svg" width="25" height="25" /> '.$name;
       }
       $arrayname[] = $name;
 

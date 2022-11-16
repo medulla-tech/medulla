@@ -46,25 +46,6 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
     cursor: pointer;
 }
 
-li.groupshare a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/dyngroup/img/share.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-li.remove_machine a {
-    background-image: url("img/common/button_cancel.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 progress{
     border-color: #ffffff;
     background-color: #009ea9;
@@ -286,7 +267,7 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
             echo '<td>'.$end_date.'</td>';
             echo '<td>'.$creator_user.'</td>';
             if($isconvergence != 0){
-                echo "<td><img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/></td>";
+                echo "<td><img style='position:relative;top : 5px;' src='img/other/convergence.svg' width='25' height='25'/></td>";
             }
 
 
@@ -710,7 +691,7 @@ echo'
 }else{
 $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
                                     "viewlogs",
-                                    "logfile",
+                                    "audit",
                                     "logfile",
                                     "xmppmaster",
                                     "xmppmaster");

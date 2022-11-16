@@ -50,10 +50,10 @@ $switchoffaction = new ActionPopupItem(_("Switch"), "switchrelay", 'stop', "", "
 $switchonaction = new ActionPopupItem(_("Switch"), "switchrelay", 'start', "", "xmppmaster", "xmppmaster");
 $switchemptyaction = new EmptyActionItem1(_("Switch"), "switchrelay", 'stopg', "", "xmppmaster", "xmppmaster");
 
-$reconfigureaction = new ActionPopupItem(_("Reconfigure Machines"), "reconfiguremachines", 'restart', "nopropagate", "xmppmaster", "xmppmaster");
-$reconfigureemptyaction = new EmptyActionItem1(_("Reconfigure Machines"), "reconfiguremachines", 'restartg', "nopropagate", "xmppmaster", "xmppmaster");
+$reconfigureaction = new ActionPopupItem(_("Reconfigure Machines"), "reconfiguremachines", 'reconfiguregroup', "nopropagate", "xmppmaster", "xmppmaster");
+$reconfigureemptyaction = new EmptyActionItem1(_("Reconfigure Machines"), "reconfiguremachines", 'reconfiguregroupg', "nopropagate", "xmppmaster", "xmppmaster");
 
-$qalisteaction = new ActionItem(_("QA Launched"), "qalaunched", 'inventory', "", "xmppmaster", "xmppmaster");
+$qalisteaction = new ActionItem(_("QA Launched"), "qalaunched", 'audit', "", "xmppmaster", "xmppmaster");
 
 $vncaction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
 $vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
