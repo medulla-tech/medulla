@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net
+# (c) 2016-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -656,16 +656,16 @@ def getshowmachinegrouprelayserver():
 def get_qaction(groupname, user, grp, completename):
     return XmppMasterDatabase().get_qaction(groupname, user, grp, completename)
 
-def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os=""):
-    return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os)
+def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os="", jid=""):
+    return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os, jid)
 
 
 def getCommand_action_time(during_the_last_seconds, start, stop, filt):
     return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds, start, stop, filt)
 
 
-def setCommand_action(target, command_id, sessionid, command_result, typemessage):
-    return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage)
+def setCommand_action(target, command_id, sessionid, command_result, typemessage, jid=""):
+    return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage, jid)
 
 
 def getCommand_qa_by_cmdid(cmdid):
@@ -674,6 +674,14 @@ def getCommand_qa_by_cmdid(cmdid):
 
 def getQAforMachine(cmd_id, uuidmachine):
     resultdata = XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
+    if resultdata[0][3] == "result":
+        # encode 64 str? to transfer xmlrpc if string with sequence escape
+        resultdata[0][4] = base64.b64encode(resultdata[0][4])
+    return resultdata
+
+
+def getQAforMachineByJid(cmd_id, jid):
+    resultdata = XmppMasterDatabase().getQAforMachineByJid(cmd_id, jid)
     if resultdata[0][3] == "result":
         # encode 64 str? to transfer xmlrpc if string with sequence escape
         resultdata[0][4] = base64.b64encode(resultdata[0][4])
