@@ -1425,32 +1425,22 @@ def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
     result = XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
     return result
 
+
 def get_conformity_update_by_entity():
     result = XmppMasterDatabase().get_conformity_update_by_entity()
-    for t in result:
-        t['a_mettre_a_jour']=int(t['a_mettre_a_jour'])
-        t['a_ne_pas_mettre_a_jour']=int(t['a_ne_pas_mettre_a_jour'])
-        if t['total_machine_entity'] == 0:
-            t['taux_a_ne_pas_mettre_a_jour'] = 100
-            t['taux_a_mettre_a_jour'] = 0
+    resultarray=[]
+    for t in  result:
+        r={'entity' : t,
+           'nbmachines' : int( result[t]['nbmachines']),
+           'nbupdate' : int(result[t]['nbupdate']),
+           'totalmach' : int(result[t]['totalmach'])
+           }
+        if int(result[t]['totalmach']) != 0:
+            r['conformite']=(float(result[t]['totalmach'])-float(result[t]['nbmachines']))/float(result[t]['totalmach'])*100.
         else:
-            t['taux_a_ne_pas_mettre_a_jour'] = str(float(t['a_ne_pas_mettre_a_jour']) /float( t['total_machine_entity'])*100)
-            t['taux_a_mettre_a_jour'] = str(float(t['a_mettre_a_jour'] )/ float(t['total_machine_entity'])*100)
-    return result
-
-
-def get_conformity_update_by_entity_in_gray_list():
-    result = XmppMasterDatabase().get_conformity_update_by_entity_in_gray_list()
-    for t in result:
-        t['a_mettre_a_jour']=int(t['a_mettre_a_jour'])
-        t['a_ne_pas_mettre_a_jour']=int(t['a_ne_pas_mettre_a_jour'])
-        if t['total_machine_entity'] == 0:
-            t['taux_a_ne_pas_mettre_a_jour'] = 100
-            t['taux_a_mettre_a_jour'] = 0
-        else:
-            t['taux_a_ne_pas_mettre_a_jour'] = str(float(t['a_ne_pas_mettre_a_jour']) /float( t['total_machine_entity'])*100)
-            t['taux_a_mettre_a_jour'] = str(float(t['a_mettre_a_jour'] )/ float(t['total_machine_entity'])*100)
-    return result
+            r['totalmach'] = 100.
+        resultarray.append(r)
+    return resultarray
 
 def ban_machines(subaction, jid_ars, machines):
     sessionid = name_random(8, "banmachines")
