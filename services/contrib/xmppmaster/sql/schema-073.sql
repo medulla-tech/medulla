@@ -209,7 +209,7 @@ BEGIN
 	-- si son etat etait a 1 alors le package est supprimer
 	-- remarque que sa soit 1 remise en flip flop ou 1 suppression reelle le package est supprimer
 	-- lance script -s pour supprimer
-	set @cmd = concat( "/usr/sbin/modulla_tool_package ", "-s ", old.updateid);
+	set @cmd = concat( "/usr/sbin/medulla_tool_package ", "-s ", old.updateid);
 	SET @result = "pas implanter encore sys_exec dans Mariadb";
 	-- SET @result = sys_exec(@cmd);
 	set @resulttxt = concat( "resultat command ", @result);
@@ -356,7 +356,7 @@ looptrigger:LOOP
 	if old.valided > new.valided then
 		-- front decendant on doit lancer suppression du package
 		-- lance script -s pour supprimer
-		set @cmd = concat( "/usr/sbin/modulla_tool_package ", "-s ", new.updateid);
+		set @cmd = concat( "/usr/sbin/medulla_tool_package ", "-s ", new.updateid);
 		SET @result = "pas implanter encore sys_exec dans Mariadb";
 		-- SET @result = sys_exec(@cmd);
 		set @resulttxt = concat( "resultat command ", @result);
@@ -410,7 +410,7 @@ looptrigger:LOOP
 	if old.valided < new.valided then
 		-- front montant on doit lancer la creation du package
 		-- lance script -c pour creation
-		set @cmd = concat( "/usr/sbin/modulla_tool_package ", "-c ", new.updateid);
+		set @cmd = concat( "/usr/sbin/medulla_tool_package ", "-c ", new.updateid);
 		SET @result = "pas implanter encore sys_exec dans Mariadb";
 		-- SET @result = sys_exec(@cmd);
 		set @resulttxt = concat( "resultat command ", @result);
@@ -512,7 +512,7 @@ looptrigger:LOOP
 	if new.valided = 1 then
 		-- nouvelle
 		-- lance script creation du package
-		set @cmd = concat( "/usr/sbin/modulla_tool_package ", "-c ", new.updateid);
+		set @cmd = concat( "/usr/sbin/medulla_tool_package ", "-c ", new.updateid);
 		SET @result = "pas implanter encore sys_exec dans Mariadb";
 		-- SET @result = sys_exec(@cmd);
 		set @resulttxt = concat( "resultat command ", @result);
