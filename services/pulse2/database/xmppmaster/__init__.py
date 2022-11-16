@@ -7947,12 +7947,6 @@ class XmppMasterDatabase(DatabaseHelper):
             'total_uninventoried': int(x[7]), 'total_inventoried': int(x[8])} for x in result][0]
 
         return ret
-        return {
-            "registered": len(inventory_filtered_machines),
-            "online": len(registered_online_machine),
-            "offline": len(registered_offline_machine),
-            "unregistered": len(unregistred_online_machine),
-        }
 
     @DatabaseHelper._sessionm
     def get_syncthing_deploy_to_clean(self, session):
