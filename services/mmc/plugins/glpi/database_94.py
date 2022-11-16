@@ -2560,6 +2560,74 @@ class Glpi94(DyngroupDatabaseHelper):
 
     def getLastMachineSummaryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         #Mutable dict options used as default argument to a method or function
+        authtoken =  base64.b64encode(GlpiConfig.webservices['glpi_username']+":"+GlpiConfig.webservices['glpi_password'])
+        headers = {'content-type': 'application/json',
+                   'Authorization': "Basic " + authtoken
+                   }
+        url = GlpiConfig.webservices['glpi_base_url'] + "initSession"
+        self.logger.debug("Create session REST")
+        r = requests.get(url, headers=headers)
+
+        sessionwebservice = None
+        if r.status_code == 200 :
+            sessionwebservice =  str(json.loads(r.text)['session_token'])
+
+            self.logger.debug("session %s"%sessionwebservice)
+            url_os = GlpiConfig.webservices['glpi_base_url'] + "Computer/" + str(fromUUID(uuid))+'/Item_OperatingSystem'
+            headers = {
+            'content-type': 'application/json',
+            'Session-Token': sessionwebservice
+            }
+            parameters = {'expand_dropdowns': 'True'}
+            r2 = requests.get(url_os, headers=headers, params=parameters)
+            license_number = ""
+            operating_system = ""
+            arch=""
+            last_inventory=""
+            if r2.status_code == 200:
+                row_datas2 = json.loads(r2.text)
+                print(row_datas2)
+                license_number = row_datas2[0]['license_number']
+                operating_system = row_datas2[0]['operatingsystems_id']
+                arch = row_datas2[0]['operatingsystemarchitectures_id']
+                last_inventory = row_datas2[0]['date_mod']
+
+            url = GlpiConfig.webservices['glpi_base_url'] + "Computer/" + str(fromUUID(uuid))
+
+            parameters = {'expand_dropdowns': 'True'}
+            r = requests.get(url, headers=headers, params=parameters)
+            if r.status_code == 200:
+                row_datas = json.loads(r.text)
+                print(row_datas)
+
+                final_datas = [[
+                ['Computer Name', ['computer_name', 'text', row_datas['name']]],
+                ['Description', ['description', 'text', row_datas['comment']]],
+                ['Entity (Location)', row_datas['entities_id']],
+                ['Domain', row_datas['domains_id']],
+                ['Last Logged User', row_datas['contact']],
+                # ['Owner', None],
+                # ['Owner Firstname', None],
+                # ['Owner Realname', None],
+                ['OS', operating_system],
+                # ['Service Pack', None],
+                ['Architecture', arch],
+                ['Windows Key', license_number],
+                ['Model / Type', str(row_datas['computermodels_id'])+' / '+ str(row_datas['computertypes_id'])],
+                ['Manufacturer', row_datas['manufacturers_id']],
+                ['Serial Number', row_datas['serial']],
+                # ['Inventory Number', ['inventory_number', 'text', 'Default string']],
+                # ['State', None],
+                # ['Warranty End Date', ''],
+                ['Last Inventory Date', last_inventory]
+                ]]
+                # self._killsession(sessionwebservice)
+
+                return final_datas
+            else:
+                self.logger.debug(r.status_code)
+        self._killsession(sessionwebservice)
+
         query = self.filterOnUUID(
             session.query(Machine).add_entity(Infocoms) \
             .add_column(self.entities.c.name) \
