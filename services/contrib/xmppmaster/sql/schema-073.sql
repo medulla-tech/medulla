@@ -195,7 +195,6 @@ CREATE TABLE IF NOT EXISTS `up_gray_list` (
   KEY `daye_calidity` (`validity_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 -- ----------------------------------------------------------------------
 -- trigger TABLE up_gray_list
 -- suppression recopier sur up_gray_list_flop
@@ -206,7 +205,84 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_DELETE` AFTER DELETE ON `up_gray_list` FOR EACH ROW
 BEGIN
+	-- regle si 1 certain temps le package na pas etait utiliser il passe dans les updates historique
+	-- si son etat etait a 1 alors le package est supprimer
+	-- remarque que sa soit 1 remise en flip flop ou 1 suppression reelle le package est supprimer
+	-- lance script -s pour supprimer
+	set @cmd = concat( "/usr/sbin/medulla_tool_package ", "-s ", old.updateid);
+	SET @result = "pas implanter encore sys_exec dans Mariadb";
+	-- SET @result = sys_exec(@cmd);
+	set @resulttxt = concat( "resultat command ", @result);
+	set @logtext = concat("Creation command : ", @cmd );
+	INSERT INTO `xmppmaster`.`logs` (`type`,
+									`module`,
+									`text`,
+									`fromuser`,
+									`touser`,
+									`action`,
+									`sessionname`,
+									`how`,
+									`why`,
+									`priority`,
+									`who`)
+	VALUES ('automate_Maria',
+			'update',
+			@logtext,
+			'up_gray_list_AFTER_DELETE',
+			'medulla',
+			'delete',
+			old.updateid,
+			'auto',
+			'mariadb',
+			'-1',
+			'system');
+			INSERT INTO `xmppmaster`.`logs` (`type`,
+									`module`,
+									`text`,
+									`fromuser`,
+									`touser`,
+									`action`,
+									`sessionname`,
+									`how`,
+									`why`,
+									`priority`,
+									`who`)
+	VALUES ('automate_Maria',
+			'update',
+			@resulttxt,
+			'up_gray_list_AFTER_DELETE',
+			'medulla',
+			'creation',
+			old.updateid,
+			'auto',
+			'mariadb',
+			'-1',
+			'system');
 	IF LENGTH(OLD.updateid) = 36 THEN
+		set @logtext = concat("replace dans la table up_gray_list_flop package  : ", old.updateid );
+		INSERT INTO `xmppmaster`.`logs` (`type`,
+										`module`,
+										`text`,
+										`fromuser`,
+										`touser`,
+										`action`,
+										`sessionname`,
+										`how`,
+										`why`,
+										`priority`,
+										`who`)
+		VALUES ('automate_Maria',
+				'update',
+				@logtext,
+				'up_gray_list_AFTER_DELETE',
+				'medulla',
+				'delete',
+				old.updateid,
+				'auto',
+				'mariadb',
+				'-1',
+				'system');
+
 		INSERT IGNORE INTO `xmppmaster`.`up_gray_list_flop` (`updateid`,
 		 `kb`,
 		 `revisionid`,
@@ -221,7 +297,7 @@ BEGIN
 		 `validity_date`) VALUES (old.updateid,
 		 old.kb,
 		 old.revisionid,
-		old.title,
+		 old.title,
 		old.description,
 		old.updateid_package,
 		old.payloadfiles,
@@ -230,6 +306,30 @@ BEGIN
 		old.title_short,
 		old.valided,
 		old.validity_date);
+	else
+		set @logtext = concat("Suppression definitive package  : ", old.updateid );
+		INSERT INTO `xmppmaster`.`logs` (`type`,
+										`module`,
+										`text`,
+										`fromuser`,
+										`touser`,
+										`action`,
+										`sessionname`,
+										`how`,
+										`why`,
+										`priority`,
+										`who`)
+		VALUES ('automate_Maria',
+				'update',
+				@logtext,
+				'up_gray_list_AFTER_DELETE',
+				'medulla',
+				'delete',
+				old.updateid,
+				'auto',
+				'mariadb',
+				'-1',
+				'system');
 	END IF;
 END$$
 DELIMITER ;
@@ -246,20 +346,121 @@ USE `xmppmaster`$$
 CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_UPDATE` AFTER UPDATE ON `up_gray_list` FOR EACH ROW
 BEGIN
 looptrigger:LOOP
-if old.valided = new.valided then
-    -- pas de modification on fait rien
-	LEAVE looptrigger;
-end if;
-if old.valided > new.valided then
-    -- front decendant on doit lancer suppression du package
-	-- lance script
-    LEAVE looptrigger;
-end if;
-if old.valided > new.valided then
-    -- front montant on doit lancer la creation du package
-	-- lance script creation
-    LEAVE looptrigger;
-end if;
+	-- regle
+	-- si on modifie etat de validity alors on fait l'action d'ajouter ou retire le package
+	-- si aucun changement d'etat on ne fait rien
+	if old.valided = new.valided then
+		-- pas de modification on fait rien
+		LEAVE looptrigger;
+	end if;
+	if old.valided > new.valided then
+		-- front decendant on doit lancer suppression du package
+		-- lance script -s pour supprimer
+		set @cmd = concat( "/usr/sbin/medulla_tool_package ", "-s ", new.updateid);
+		SET @result = "pas implanter encore sys_exec dans Mariadb";
+		-- SET @result = sys_exec(@cmd);
+		set @resulttxt = concat( "resultat command ", @result);
+		set @logtext = concat("Creation command : ", @cmd );
+		INSERT INTO `xmppmaster`.`logs` (`type`,
+										`module`,
+										`text`,
+										`fromuser`,
+										`touser`,
+										`action`,
+										`sessionname`,
+										`how`,
+										`why`,
+										`priority`,
+										`who`)
+		VALUES ('automate_Maria',
+				'update',
+				@logtext,
+				'up_gray_list_AFTER_UPDATE',
+				'medulla',
+				'delete',
+				new.updateid,
+				'auto',
+				'mariadb',
+				'-1',
+				'system');
+				INSERT INTO `xmppmaster`.`logs` (`type`,
+										`module`,
+										`text`,
+										`fromuser`,
+										`touser`,
+										`action`,
+										`sessionname`,
+										`how`,
+										`why`,
+										`priority`,
+										`who`)
+		VALUES ('automate_Maria',
+				'update',
+				@resulttxt,
+				'up_gray_list_AFTER_UPDATE',
+				'medulla',
+				'creation',
+				new.updateid,
+				'auto',
+				'mariadb',
+				'-1',
+				'system');
+		LEAVE looptrigger;
+	end if;
+	if old.valided < new.valided then
+		-- front montant on doit lancer la creation du package
+		-- lance script -c pour creation
+		set @cmd = concat( "/usr/sbin/medulla_tool_package ", "-c ", new.updateid);
+		SET @result = "pas implanter encore sys_exec dans Mariadb";
+		-- SET @result = sys_exec(@cmd);
+		set @resulttxt = concat( "resultat command ", @result);
+		set @logtext = concat("Creation command : ", @cmd );
+		INSERT INTO `xmppmaster`.`logs` (`type`,
+										`module`,
+										`text`,
+										`fromuser`,
+										`touser`,
+										`action`,
+										`sessionname`,
+										`how`,
+										`why`,
+										`priority`,
+										`who`)
+		VALUES ('automate_Maria',
+				'update',
+				@logtext,
+				'up_gray_list_AFTER_UPDATE',
+				'medulla',
+				'creation',
+				new.updateid,
+				'auto',
+				'mariadb',
+				'-1',
+				'system');
+				INSERT INTO `xmppmaster`.`logs` (`type`,
+										`module`,
+										`text`,
+										`fromuser`,
+										`touser`,
+										`action`,
+										`sessionname`,
+										`how`,
+										`why`,
+										`priority`,
+										`who`)
+		VALUES ('automate_Maria',
+				'update',
+				@resulttxt,
+				'up_gray_list_AFTER_UPDATE',
+				'medulla',
+				'creation',
+				new.updateid,
+				'auto',
+				'mariadb',
+				'-1',
+				'system');
+		LEAVE looptrigger;
+	end if;
 END LOOP;
 
 END$$
@@ -292,6 +493,81 @@ CREATE TABLE IF NOT EXISTS `up_gray_list_flop` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------------------------------------------------
+-- trigger TABLE up_gray_list_AFTER_INSERT
+-- suppression recopier sur up_gray_list et mis a jour la date de validity
+-- ----------------------------------------------------------------------
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_INSERT`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT` AFTER INSERT ON `up_gray_list` FOR EACH ROW
+BEGIN
+-- apres insertion,
+-- on rend actif et deploiable le package updateid si validated est vrai
+looptrigger:LOOP
+	if  new.valided = 0 then
+		-- pas valided alors rien faire
+		LEAVE looptrigger;
+	end if;
+	if new.valided = 1 then
+		-- nouvelle
+		-- lance script creation du package
+		set @cmd = concat( "/usr/sbin/medulla_tool_package ", "-c ", new.updateid);
+		SET @result = "pas implanter encore sys_exec dans Mariadb";
+		-- SET @result = sys_exec(@cmd);
+		set @resulttxt = concat( "resultat command ", @result);
+		set @logtext = concat("Creation command : ", @cmd );
+		INSERT INTO `xmppmaster`.`logs` (`type`,
+										`module`,
+										`text`,
+										`fromuser`,
+										`touser`,
+										`action`,
+										`sessionname`,
+										`how`,
+										`why`,
+										`priority`,
+										`who`)
+		VALUES ('automate_Maria',
+				'update',
+				@logtext,
+				'up_gray_list_AFTER_INSERT',
+				'medulla',
+				'creation',
+				new.updateid,
+				'auto',
+				'mariadb',
+				'-1',
+				'system');
+				INSERT INTO `xmppmaster`.`logs` (`type`,
+										`module`,
+										`text`,
+										`fromuser`,
+										`touser`,
+										`action`,
+										`sessionname`,
+										`how`,
+										`why`,
+										`priority`,
+										`who`)
+		VALUES ('automate_Maria',
+				'update',
+				@resulttxt,
+				'up_gray_list_AFTER_INSERT',
+				'medulla',
+				'creation',
+				new.updateid,
+				'auto',
+				'mariadb',
+				'-1',
+				'system');
+		LEAVE looptrigger;
+	end if;
+END LOOP;
+END$$
+DELIMITER ;
+
+-- ----------------------------------------------------------------------
 -- trigger TABLE up_gray_list_flop
 -- suppression recopier sur up_gray_list et mis a jour la date de validity
 -- ----------------------------------------------------------------------
@@ -302,6 +578,29 @@ USE `xmppmaster`$$
 CREATE TRIGGER `xmppmaster`.`up_gray_list_flop_AFTER_DELETE` AFTER DELETE ON `up_gray_list_flop` FOR EACH ROW
 BEGIN
 	IF LENGTH(OLD.updateid) = 36 THEN
+        set @logtext = concat("replace dans la table up_gray_list update : ", old.updateid  );
+		INSERT INTO `xmppmaster`.`logs` (`type`,
+									`module`,
+									`text`,
+									`fromuser`,
+									`touser`,
+									`action`,
+									`sessionname`,
+									`how`,
+									`why`,
+									`priority`,
+									`who`)
+	VALUES ('automate_Maria',
+			'update',
+            @logtext,
+            'up_gray_list_flop_AFTER_DELETE',
+            'medulla',
+            'delete',
+            old.updateid,
+            'auto',
+            'mariadb',
+            '-1',
+            'system');
 		INSERT IGNORE INTO `xmppmaster`.`up_gray_list` (`updateid`,
 		 `kb`,
 		 `revisionid`,
@@ -326,9 +625,34 @@ BEGIN
 									old.valided,
 									now() + INTERVAL 10 day)
 		ON DUPLICATE KEY UPDATE validity_date = now() + INTERVAL 10 day;
+	else
+		set @logtext = concat("supprime definitivement de la table up_gray_list_flop update : ", old.updateid  );
+		INSERT INTO `xmppmaster`.`logs` (`type`,
+									`module`,
+									`text`,
+									`fromuser`,
+									`touser`,
+									`action`,
+									`sessionname`,
+									`how`,
+									`why`,
+									`priority`,
+									`who`)
+	VALUES ('automate_Maria',
+			'update',
+            @logtext,
+            'up_gray_list_flop_AFTER_DELETE',
+            'medulla',
+            'delete',
+            old.updateid,
+            'auto',
+            'mariadb',
+            '-1',
+            'system');
 	END IF;
 END$$
 DELIMITER ;
+
 
 -- ----------------------------------------------------------------------
 -- CREATE TABLE up_user_gray_list_commentaire
@@ -346,6 +670,22 @@ CREATE TABLE IF NOT EXISTS  `up_user_gray_list_commentaire` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+-- ----------------------------------------------------------------------
+-- CREATE TABLE up_white_list
+-- this table are the updates machine applicable directement automatiquement
+-- ----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS  `up_white_list` (
+  `updateid` varchar(36) NOT NULL,
+  `kb` varchar(16) NOT NULL,
+  `title` varchar(1024) NOT NULL,
+  `description` varchar(1024) NOT NULL,
+  `creationdate` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `title_short` varchar(500) DEFAULT NULL,
+  `valided` tinyint(4) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`updateid`),
+  KEY `kb` (`kb`),
+  KEY `validity` (`valided`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- ----------------------------------------------------------------------
 -- CREATE TABLE up_machine_windows
 -- this table are the updates machine
@@ -377,6 +717,127 @@ CREATE TABLE IF NOT EXISTS `up_black_list` (
   KEY `ind_type` (`type_rule`),
   KEY `updatekb` (`updateid_or_kb`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- ----------------------------------------------------------------------
+-- les 2 triggers suivant implemente la regle update ou insert dans la table black list
+-- suppression des package et des update dans la gray list.
+-- Synchronise gray list en fonction de black list
+-- ----------------------------------------------------------------------
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_UPDATE`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE TRIGGER `xmppmaster`.`up_black_list_AFTER_UPDATE` AFTER UPDATE ON `up_black_list` FOR EACH ROW
+BEGIN
+	DELETE FROM `xmppmaster`.`up_gray_list`
+	WHERE
+		`updateid` IN (SELECT
+			updateid_or_kb
+		FROM
+			xmppmaster.up_black_list
+		WHERE
+			userjid_regexp = '.*'
+			AND type_rule = 'id');
+	-- update les updateid de flop
+	UPDATE `xmppmaster`.`up_gray_list_flop`
+	SET
+		`updateid` = LEFT(UUID(), 8),
+		`kb` = 'bidon'
+	WHERE
+		`updateid` IN (SELECT
+				updateid_or_kb
+			FROM
+				xmppmaster.up_black_list
+			WHERE
+				userjid_regexp = '.*'
+					AND type_rule = 'id');
+	-- suppression des kb list
+	DELETE FROM `xmppmaster`.`up_gray_list`
+	WHERE
+		`kb` IN (SELECT
+			updateid_or_kb
+		FROM
+			xmppmaster.up_black_list
+
+		WHERE
+			userjid_regexp = '.*'
+			AND type_rule = 'kb');
+
+	UPDATE `xmppmaster`.`up_gray_list_flop`
+	SET
+		`kb` = 'bidon'
+	WHERE
+		`updateid` IN (SELECT
+				updateid_or_kb
+			FROM
+				xmppmaster.up_black_list
+			WHERE
+				userjid_regexp = '.*'
+					AND type_rule = 'kb');
+	DELETE FROM `xmppmaster`.`up_gray_list_flop`
+	WHERE
+		(`kb` = 'bidon');
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_INSERT`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE TRIGGER `xmppmaster`.`up_black_list_AFTER_INSERT` AFTER INSERT ON `up_black_list` FOR EACH ROW
+BEGIN
+	DELETE FROM `xmppmaster`.`up_gray_list`
+	WHERE
+		`updateid` IN (SELECT
+			updateid_or_kb
+		FROM
+			xmppmaster.up_black_list
+		WHERE
+			userjid_regexp = '.*'
+			AND type_rule = 'id');
+	-- update les updateid de flop
+	UPDATE `xmppmaster`.`up_gray_list_flop`
+	SET
+		`updateid` = LEFT(UUID(), 8),
+		`kb` = 'bidon'
+	WHERE
+		`updateid` IN (SELECT
+				updateid_or_kb
+			FROM
+				xmppmaster.up_black_list
+			WHERE
+				userjid_regexp = '.*'
+					AND type_rule = 'id');
+	-- suppression des kb list
+	DELETE FROM `xmppmaster`.`up_gray_list`
+	WHERE
+		`kb` IN (SELECT
+			updateid_or_kb
+		FROM
+			xmppmaster.up_black_list
+
+		WHERE
+			userjid_regexp = '.*'
+			AND type_rule = 'kb');
+
+	UPDATE `xmppmaster`.`up_gray_list_flop`
+	SET
+		`kb` = 'bidon'
+	WHERE
+		`updateid` IN (SELECT
+				updateid_or_kb
+			FROM
+				xmppmaster.up_black_list
+			WHERE
+				userjid_regexp = '.*'
+					AND type_rule = 'kb');
+	DELETE FROM `xmppmaster`.`up_gray_list_flop`
+	WHERE
+		(`kb` = 'bidon');
+END$$
+DELIMITER ;
+
 
 -- Drop the procedure
 -- drop procedure intit_table_update_data;
