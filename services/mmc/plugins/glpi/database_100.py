@@ -5634,38 +5634,6 @@ class Glpi100(DyngroupDatabaseHelper):
         return result1
 
 
-
-    @DatabaseHelper._sessionm
-    def get_computer_count_for_dashboard(self, session, count=True):
-        inventory_filtered_machines = self.__filter_on(session.query(Machine.id).filter(Machine.is_deleted == 0, \
-                                                                                        Machine.is_template == 0)).all()
-        ret = self.__getRestrictedComputersListQuery(None, '', session, True, False)
-
-        inventory_filtered_machines = ['UUID%s'%id[0] for id in inventory_filtered_machines]
-        online_machines = XmppMasterDatabase().get_machines_online_for_dashboard()
-
-        unregistred_online_machine = []
-        registered_online_machine = []
-        registered_offline_machine = []
-
-        registered_online_uuid_list = []
-        for machine in online_machines:
-            if machine['uuid'] is None or machine['uuid'] == "":
-                unregistred_online_machine.append(machine['macaddress'])
-            else:
-                registered_online_uuid_list.append(machine['uuid'])
-                registered_online_machine.append(machine['uuid'])
-
-        for machine in inventory_filtered_machines:
-            if machine not in registered_online_machine:
-                registered_offline_machine.append(machine)
-
-        if count is True:
-            return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'offline': len(registered_offline_machine), 'unregistered': len(unregistred_online_machine)}
-        else:
-            return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'offline': registered_offline_machine,'unregistered': unregistred_online_machine}
-
-
     @DatabaseHelper._sessionm
     def get_ancestors(self, session, uuid):
         id = uuid.split("UUID")[1]

@@ -27,6 +27,7 @@ import os
 import sys
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
+from mmc.support.mmctools import xmlrpcCleanup
 from master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 import hashlib
