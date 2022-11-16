@@ -57,7 +57,7 @@ class BackupPanel extends Panel {
               {'label': '$uninventoried_text', 'value': $uninventoried, "href": "#"}
             ];
 
-            donut("backup-graph",backupDatas, "Total", $all['total']);
+            donut("backup-graph",backupDatas, "Total", $all\['total'\]);
           </script>
 BACKUP;
       }
