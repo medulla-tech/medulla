@@ -1439,6 +1439,9 @@ def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
     result = XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
     return result
 
+def get_conformity_update_by_machine():
+    result = XmppMasterDatabase().get_conformity_update_by_machine()
+    return result
 
 def get_conformity_update_by_entity():
     result = XmppMasterDatabase().get_conformity_update_by_entity()
