@@ -46,10 +46,12 @@ echo "<pre>";
 echo "</pre>";
 
 // The action items for moving updates between lists
+$enableUpd = new ActionItem(_T("Enable Update", "updates"), "enableUpdate", "enableupdate", "", "updates", "updates");
+$disableUpd = new ActionPopupItem(_T("Disable Update", "updates"), "disableUpdate", "disableupdate", "updates", "updates");
+$whitelistUpd = new ActionPopupItem(_T("Approve Update", "updates"), "whitelistUpdate", "deploy", "updates", "updates");
 $greylistUpd = new ActionPopupItem(_T("Unlist Update", "updates"), "greylistUpdate", "unlist", "updates", "updates");
-$whitelistUpd = new ActionPopupItem(_T("Approve Update", "updates"), "whitelistUpdate", "approveupdate", "updates", "updates");
-$blacklistUpd = new ActionItem(_T("Ban Update", "updates"), "blacklistUpdate", "banupdate", "", "updates", "updates");
-$unBan = new ActionPopupItem(_T("Unban Update", "updates"), "deleteRule", "unlist","", "updates", "updates");
+$blacklistUpd = new ActionPopupItem(_T("Ban Update", "updates"), "blacklistUpdate", "banupdate", "updates", "updates");
+$unBanUpd = new ActionItem(_T("Unban Update", "updates"), "deleteRule", "unlist", "", "updates", "updates");
 
 // Initialisation of the arrays that will contain the parameters of each table
 $params_grey = [];
@@ -58,10 +60,12 @@ $params_black = [];
 $params_unBan = [];
 
 // Initialisation of the arrays that will hold the actions
+$actionenableUpds = [];
+$actiondisableUpds = [];
 $actiongreylistUpds = [];
 $actionwhitelistUpds = [];
 $actionblacklistUpds = [];
-$actionunBan = [];
+$actionunBanUpds = [];
 
 // Counters for each list
 $count_grey = $grey_list['nb_element_total'];
@@ -70,6 +74,8 @@ $count_black = $black_list['nb_element_total'];
 
 // ########## Greylist loop ########## //
 for($i=0; $i < $count_grey; $i++){
+    $actionenableUpds[] = $enableUpd;
+    $actiondisableUpds[] = $disableUpd;
     $actionwhitelistUpds[] = $whitelistUpd;
     $actionblacklistUpds[] = $blacklistUpd;
 
@@ -90,9 +96,7 @@ for($i=0; $i < $count_white; $i++){
 
 // ########## blackList loop ########## //
 for($i=0; $i < $count_black; $i++){
-    // $actiongreylistUpds[] = $greylistUpd;
-    // $actionwhitelistUpds[] = $whitelistUpd;
-    $actionunBan[] = $unBan;
+    $actionunBanUpds[] = $unBanUpd;
 
     $title_black[] = $black_list['title'][$i];
 
@@ -108,9 +112,9 @@ $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter));
 $g->setParamInfo($params_grey);
 echo '<h2> GreyList</h2>';
+$g->addActionItemArray($actionenableUpds);
+$g->addActionItemArray($actiondisableUpds);
 $g->addActionItemArray($actionwhitelistUpds);
-
-// ##### C'est ce bouton qui m'interesse ###### //
 $g->addActionItemArray($actionblacklistUpds);
 $g->display();
 
@@ -132,9 +136,7 @@ $b->setItemCount($count_black);
 $b->setNavBar(new AjaxNavBar($count_black, $filter));
 $b->setParamInfo($params_unBan);
 echo '</br></br><h2> BlackList</h2>';
-// $b->addActionItemArray($actionwhitelistUpds);
-// $b->addActionItemArray($actiongreylistUpds);
-$b->addActionItemArray($actionunBan);
+$b->addActionItemArray($actionunBanUpds);
 $b->display();
 
 
