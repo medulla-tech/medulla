@@ -86,7 +86,6 @@ if ($uuid != '')
 {
     $count = $machines['count'];
 }
-
 if ($typeOfDetail == "entitie")
 {
     for($i=0; $i < $count; $i++){
@@ -94,7 +93,7 @@ if ($typeOfDetail == "entitie")
             $detailsByMachs[] = $detailsByMach;
             $machineNames[] = $machines['data']['hostname'][$i];
             $machineByEntitie[] = $machines['data']['glpi_entity_id'][$i];
-            
+
             $compliance_computer = xmlrpc_get_conformity_update_by_machine($machines['data']['id'][$i]);
             $comp = $compliance_computer['0']['update_waiting'];
             switch(intval($comp)){
@@ -150,6 +149,19 @@ if ($typeOfDetail == "group")
 }
 
 echo '<pre>';
+// print_r($ctx);
+// var_dump($filter);
+// var_dump($count);
+// print_r($machines);
+// var_dump($match);
+// var_dump($count_machineNames);
+// print_r($machines['data']);
+//print_r($machines['data']['hostname']);
+//print_r($machines['data']['entityid']);
+//print_r($machines['data']['platform']);
+// print_r($machineByEntitie);
+// print_r($compliancerate);
+// print_r($test);
 echo '</pre>';
 
 
