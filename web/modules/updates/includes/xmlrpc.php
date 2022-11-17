@@ -23,12 +23,8 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// function xmlrpc_tests(){
-//     return xmlCall("updates.tests");
-// }
-
-function xmlrpc_test_xmppmaster(){
-    return xmlCall("updates.test_xmppmaster");
+function xmlrpc_tests(){
+    return xmlCall("updates.tests");
 }
 
 function xmlrpc_get_grey_list($start, $end, $filter=""){
@@ -43,11 +39,23 @@ function xmlrpc_get_black_list($start, $end, $filter=""){
     return xmlCall("updates.get_black_list", [$start, $end, $filter]);
 }
 
+function xmlrpc_get_family_list($start, $end, $filter=""){
+    return xmlCall("updates.get_family_list", [$start, $end, $filter]);
+}
+
 function xmlrpc_approve_update($updateid){
     return xmlCall("updates.approve_update", [$updateid]);
 }
 
 function xmlrpc_grey_update($updateid){
     return xmlCall("updates.grey_update", [$updateid]);
+}
+
+function xmlrpc_exclude_update($updateid){
+    return xmlCall("updates.exclude_update", [$updateid]);
+}
+
+function xmlrpc_delete_rule($updateid){
+    return xmlCall("updates.exclude_update", [$updateid]);
 }
 ?>

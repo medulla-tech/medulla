@@ -31,16 +31,20 @@ $page->setFile("modules/updates/updates/ajaxUpdatesListWin.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("greylistUpdate", _T('Unlist Update', 'updates'));
+$page->setFile("modules/updates/updates/greylistUpdate.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
 $page = new Page("whitelistUpdate", _T('Approve Update', 'updates'));
-$page->setFile("modules/updates/updates/whitelistUpdate.php");
+$page->setFile("modules/updates/updates/whitelistUpdate.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
 $page = new Page("blacklistUpdate", _T('Ban Update', 'updates'));
-$page->setFile("modules/updates/updates/blacklistUpdate.php");
+$page->setFile("modules/updates/updates/blacklistUpdate.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("greylistUpdate", _T('Unlist Update', 'updates'));
-$page->setFile("modules/updates/updates/greylistUpdate.php");
+$page = new Page("deleteRule", _T('UnBan Update', 'updates'));
+$page->setFile("modules/updates/updates/deleteRule.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);

@@ -25,13 +25,28 @@ require_once("modules/updates/includes/xmlrpc.php");
 // var_dump('test grey');
 // exit;
 
-if(isset($_GET['updateid'])){
+if(isset($_POST['bconfirm'])){
     $updateid = $_GET['updateid'];
-    // var_dump($updateid);
-    // exit;
-    xmlrpc_grey_update($updateid);
-    
+    $retour = xmlrpc_grey_update($updateid);
+    // Si retour est True, cela signifie que le packet a bien change de liste
+    if($retour == True){
+        $str = _T("Package moved successfully to greylist", "updates");
+        new NotifyWidgetSuccess($str);
+        // Sinon j'affiche un message d'erreur
+    } else {
+        new NotifyWidgetFailure(_T("Error moving package to greylist", "updates"));
+    }
+    // Je redirige vers ma page
     header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+} else {
+    $updateid = $_GET['updateid'];
+    // Creation et affichage de la modal
+    $f = new PopupForm(_T("Unlist Update"));
+    $hidden = new HiddenTpl("updateid");
+    $f->add($hidden, array("value" => $updateid, "hide" => True));
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
 }
 
 ?>

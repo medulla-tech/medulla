@@ -22,11 +22,7 @@
  */
 require_once("modules/updates/includes/xmlrpc.php");
 
-$updateid = $_GET['updateid'];
-// var_dump($updateid);
-// exit;
-
-header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
-
+var_dump('test deBan');
+exit;
 
 ?>
