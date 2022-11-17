@@ -11072,16 +11072,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.flush()
         return machines_jid_for_updating
 
-
-
-
-
-
-
     @DatabaseHelper._sessionm
     def get_update_by_entity(self, session):
         """
-            This function renvoi le nombre total d update a mettre a jour par entity
+            This function returns the total number of updates to apply for each entity
         """
         sql="""SELECT
                     glpi_entity_id as entity,
@@ -11108,7 +11102,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_machine_by_entity_in_gray_list(self, session):
         """
-            This function renvoi le nombre total de machine a mettre a jour pour 1 entity prenant en compte que les mise a jour enable dans gray list
+            This function returns the machines to update in an entity considering only the updates enabled in gray list
         """
         sql=""" SELECT
                     glpi_entity_id AS entity,
@@ -11137,7 +11131,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_conformity_update_by_entity(self, session):
         """
-            This function renvoi le nombre total de machine a mettre a jour pour 1 entity prenant en compte que les mise a jour enable dans gray list
+            This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
         """
         result={}
         for x in self.get_update_by_entity():
@@ -11146,11 +11140,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
            result[x['entity']]['nbmachines'] =  x['machine_a_mettre_a_jour']
         return result
 
-
     @DatabaseHelper._sessionm
     def get_conformity_update_by_entity_in_gray_list(self, session):
         """
-            This function renvoi le nombre total de machine a mettre a jour pour 1 entity prenant en compte que les mise a jour enable dans gray list
+            This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
         """
         sql="""SELECT
                     glpi_entity_id AS entity,
