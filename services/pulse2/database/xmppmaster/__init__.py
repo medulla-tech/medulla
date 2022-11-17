@@ -11074,28 +11074,24 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return machines_jid_for_updating
 
     @DatabaseHelper._sessionm
-    def get_conformity_update_by_entity(self, session):
+    def get_update_by_entity(self, session):
         """
-            This function renvoi le nombre total de machine a mettre a jour pour 1 entity
+            This function renvoi le nombre total d update a mettre a jour par entity
         """
-        sql=""" SELECT
+        sql="""SELECT
                     glpi_entity_id as entity,
-                        COUNT(*) AS total_machine_entity,
+                    count(*) as nombre_machine,
                         SUM(CASE
                             WHEN (COALESCE(update_id, '') != '') THEN 1
                             ELSE 0
-                        END) AS a_mettre_a_jour,
-                        SUM(CASE
-                            WHEN (COALESCE(update_id, '') = '') THEN 1
-                            ELSE 0
-                        END) AS a_ne_pas_mettre_a_jour
-            FROM
-                xmppmaster.machines
-                    LEFT JOIN
-                xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
-            WHERE
-                platform LIKE 'Mic%'
-                    group by glpi_entity_id ;"""
+                        END) AS update_a_mettre_a_jour
+                FROM
+                    xmppmaster.machines
+                        LEFT JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                WHERE
+                    platform LIKE 'Mic%'
+                        group by glpi_entity_id;"""
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
@@ -11104,6 +11100,46 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         for rowproxy in resultquery]
         return result
 
+    @DatabaseHelper._sessionm
+    def get_conformity_update_by_entity(self, session):
+        """
+            This function renvoi le nombre total de machine a mettre a jour pour 1 entity prenant en compte que les mise a jour enable dans gray list
+        """
+        result={}
+        for x in self.get_update_by_entity():
+            result[x['entity']] = { 'totalmach' : x['nombre_machine'], 'nbupdate' : x['update_a_mettre_a_jour'], 'nbmachines' : 0 }
+        for x in self.get_machine_by_entity_in_gray_list():
+           result[x['entity']]['nbmachines'] =  x['machine_a_mettre_a_jour']
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_machine_by_entity_in_gray_list(self, session):
+        """
+            This function renvoi le nombre total de machine a mettre a jour pour 1 entity prenant en compte que les mise a jour enable dans gray list
+        """
+        sql=""" SELECT
+                    glpi_entity_id AS entity,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') != '') THEN 1
+                        ELSE 0
+                    END) AS machine_a_mettre_a_jour
+                FROM
+                    xmppmaster.machines
+                        LEFT JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                        JOIN
+                    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                WHERE
+                    platform LIKE 'Mic%'
+                        AND xmppmaster.up_gray_list.valided = 1
+                GROUP BY glpi_entity_id;"""
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
 
     @DatabaseHelper._sessionm
     def get_conformity_update_by_entity_in_gray_list(self, session):
