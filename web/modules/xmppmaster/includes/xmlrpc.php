@@ -1,7 +1,7 @@
 <?php
 
 /*
- * (c) 2015-2020 Siveo, http://www.siveo.net
+ * (c) 2015-2022 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -361,8 +361,8 @@ function xmlrpc_get_qaction($groupname, $user, $grp = 0, $completename = ""){
     return xmlCall("xmppmaster.get_qaction", array($groupname, $user, $grp, $completename));
 }
 
-function xmlrpc_setCommand_qa($command_name, $command_action, $command_login, $command_grp="", $command_machine='', $command_os=""){
-    return xmlCall("xmppmaster.setCommand_qa", array($command_name, $command_action, $command_login, $command_grp, $command_machine, $command_os));
+function xmlrpc_setCommand_qa($command_name, $command_action, $command_login, $command_grp="", $command_machine='', $command_os="", $jid=""){
+    return xmlCall("xmppmaster.setCommand_qa", array($command_name, $command_action, $command_login, $command_grp, $command_machine, $command_os, $jid));
 }
 
 function xmlrpc_getCommand_action_time($duration, $start, $stop, $filter){
@@ -373,12 +373,16 @@ function xmlrpc_getCommand_qa_by_cmdid($cmdid){
     return xmlCall("xmppmaster.getCommand_qa_by_cmdid", array($cmdid));
 }
 
-function xmlrpc_setCommand_action($target, $command_id, $sessionid, $command_result ="", $typemessage="log" ){
-    return xmlCall("xmppmaster.setCommand_action", array($target, $command_id, $sessionid, $command_result, $typemessage));
+function xmlrpc_setCommand_action($target, $command_id, $sessionid, $command_result ="", $typemessage="log", $jid=""){
+    return xmlCall("xmppmaster.setCommand_action", array($target, $command_id, $sessionid, $command_result, $typemessage, $jid));
 }
 
 function xmlrpc_getQAforMachine($cmd_id, $uuid){
     return xmlCall("xmppmaster.getQAforMachine", array($cmd_id, $uuid));
+}
+
+function xmlrpc_getQAforMachineByJid($cmd_id, $jid){
+  return xmlCall("xmppmaster.getQAforMachineByJid", array($cmd_id, $jid));
 }
 
 function xmlrpc_runXmppAsyncCommand( $command , $machineinfo ){
