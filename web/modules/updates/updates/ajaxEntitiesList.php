@@ -33,11 +33,6 @@ $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 $entities = getUserLocations();
 $entitycompliances = xmlrpc_get_conformity_update_by_entity();
 
-echo "<pre>";
-//print_r($entities);
-//print_r($entitycompliances);
-echo "</pre>";
-
 $detailsByMach = new ActionItem(_T("Details by machines", "updates"),"detailsByMachines","auditbymachine","", "updates", "updates");
 $detailsByUpd = new ActionItem(_T("Details by updates", "updates"),"detailsByUpdates","auditbyupdate","", "updates", "updates");
 $deployAll = new ActionItem(_T("Deploy all updates", "updates"),"deployAllUpdates","updateall","", "updates", "updates");
@@ -50,6 +45,8 @@ $actiondeployAlls = [];
 $actiondeploySpecifics = [];
 $entityNames = [];
 $complRates = [];
+$totalMachine = [];
+$nbupadte = [];
 
 $count = count($entities);
 foreach ($entities as $entity) {
@@ -59,10 +56,12 @@ foreach ($entities as $entity) {
     $actiondeploySpecifics[] = $deploySpecific;
     
     $entityNames[] = $entity["completename"];
+
+    $params[] = array('uuid' => $entity['uuid']);
 }
 
 foreach ($entitycompliances as $entitycompliance) {
-    $compliancerate = $entitycompliance['taux_a_ne_pas_mettre_a_jour'];
+    $compliancerate = $entitycompliance['conformite'];
     switch(intval($compliancerate)){
         case $compliancerate <= 10:
             $color = "#ff0000";
@@ -96,11 +95,23 @@ foreach ($entitycompliances as $entitycompliance) {
             break;
     }
     $complRates[] = "<div class='progress' style='width: ".$compliancerate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliancerate."% </div>";
+    $totalMachine[] = $entitycompliance['totalmach'];
+    $nbupdate[] = $entitycompliance['nbupdate'];
 }
+
+echo "<pre>";
+// print_r($entities);
+// print_r($entitycompliances);
+// print_r($totalMachine);
+echo "</pre>";
 
 $n = new OptimizedListInfos($entityNames, _T("Entity name", "updates"));
 $n->disableFirstColumnActionLink();
+
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
+$n->addExtraInfo($nbupdate, _T("Missing Updates", "updates"));
+$n->addExtraInfo($totalMachine, _T("Total Machines", "updates"));
+
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
