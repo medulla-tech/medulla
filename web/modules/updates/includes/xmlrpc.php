@@ -47,15 +47,19 @@ function xmlrpc_approve_update($updateid){
     return xmlCall("updates.approve_update", [$updateid]);
 }
 
-function xmlrpc_grey_update($updateid){
-    return xmlCall("updates.grey_update", [$updateid]);
+function xmlrpc_grey_update($updateid, $enabled=0){
+    return xmlCall("updates.grey_update", [$updateid, $enabled]);
 }
 
 function xmlrpc_exclude_update($updateid){
     return xmlCall("updates.exclude_update", [$updateid]);
 }
 
-function xmlrpc_delete_rule($updateid){
-    return xmlCall("updates.exclude_update", [$updateid]);
+function xmlrpc_delete_rule($id){
+    return xmlCall("updates.delete_rule", [$id]);
+}
+
+function xmlrpc_white_unlist_update($updateid, $enabled=0){
+    return xmlCall("updates.white_unlist_update", [$updateid, $enabled]);
 }
 ?>

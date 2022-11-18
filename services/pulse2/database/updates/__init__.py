@@ -127,17 +127,28 @@ class UpdatesDatabase(DatabaseHelper):
         else:
             return [x for x in result]
             # return resultat[0][1]
-    
+
 
     @DatabaseHelper._sessionm
-    def get_black_list(self, session, start, end, filter=""):
+    def get_black_list(self, session, start, limit, filter=""):
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            limit = int(limit)
+        except:
+            limit= -1
 
-        black_list = { 'nb_element_total': 0,
+        black_list = {  'nb_element_total': 0,
+                        'id' : [],
                         'updateid_or_kb' : [],
                         'title': [] }
 
         sql="""SELECT SQL_CALC_FOUND_ROWS
-                    *
+                    up_black_list.updateid_or_kb,
+                    up_packages.title,
+                    up_black_list.id
                 FROM
                     xmppmaster.up_black_list
                 INNER JOIN
@@ -147,12 +158,15 @@ class UpdatesDatabase(DatabaseHelper):
                 OR
                     up_black_list.updateid_or_kb = up_packages.updateid """
 
+        filterlimit=""
+        if limit != -1 and start != -1:
+            filterlimit= "LIMIT %s, %s"%(start, limit)
+        
         if filter:
-                filterwhere="""AND
-                        up_packages.title LIKE '%%%s%%'
-                    LIMIT 5 OFFSET 5""" % filter
-                sql=sql+filterwhere
-
+            filterwhere="""AND
+                    up_packages.title LIKE '%%%s%%' """ % filter
+            sql += filterwhere
+        sql += filterlimit
         sql+=";"
 
         result = session.execute(sql)
@@ -166,23 +180,31 @@ class UpdatesDatabase(DatabaseHelper):
         session.commit()
         session.flush()
 
-        if result:
+        if result is not None:
             for list_b in result:
                 black_list['updateid_or_kb'].append(list_b.updateid_or_kb)
                 black_list['title'].append(list_b.title)
-                # black_list.append((list_b.updateid_or_kb))
+                black_list['id'].append(list_b.id)
 
         return black_list
 
 
     @DatabaseHelper._sessionm
-    def get_grey_list(self, session, start, end, filter=""):
+    def get_grey_list(self, session, start, limit, filter=""):
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
         try:
             grey_list={ 'nb_element_total': 0,
                         'updateid' : [],
                         'title' : [],
                         'kb' : []}
-            # Je recupere les infos et je compte le nombre d'entrees
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         *
@@ -191,25 +213,22 @@ class UpdatesDatabase(DatabaseHelper):
                     WHERE
                         valided = 0 """
 
-            if filter:
+            filterlimit= ""
+            if start != -1 and limit != -1:
+                filterlimit= "LIMIT %s, %s"%(start, limit)
+            if filter != "":
                 filterwhere="""AND
-                        title LIKE '%%%s%%'
-                        LIMIT 5 OFFSET 5""" % filter
-                sql=sql+filterwhere
-
+                        title LIKE '%%%s%%' """%filter
+                sql += filterwhere
+            sql += filterlimit
             sql+=";"
-
-            logger.info("sql function get_grey_list: %s" % (sql))
 
             result = session.execute(sql)
 
-            # Je recupere mon nombre de ligne grace a la requete du dessus SQL_CALC_FOUND_ROWS
             sql_count = "SELECT FOUND_ROWS();"
-            # J'execut la fonction
             ret_count = session.execute(sql_count)
             nb_element_total = ret_count.first()[0]
 
-            # Je passe la valeur dans mon objet
             grey_list['nb_element_total'] = nb_element_total
 
             session.commit()
@@ -222,13 +241,21 @@ class UpdatesDatabase(DatabaseHelper):
                     grey_list['kb'].append(list_b.kb)
 
         except Exception as e:
-            logging.getLogger().error("error function get_grey_list")
+            logger.error("error function get_grey_list")
 
         return grey_list
 
-    
     @DatabaseHelper._sessionm
-    def get_white_list(self, session, start=0, end=-1, filter=""):
+    def get_white_list(self, session, start=0, limit=-1, filter=""):
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
         try:
             white_list={ 'nb_element_total': 0,
                         'updateid' : [],
@@ -242,10 +269,13 @@ class UpdatesDatabase(DatabaseHelper):
 
             if filter:
                 filterwhere="""AND
-                        title LIKE '%%%s%%'
-                    LIMIT 5 OFFSET 5""" % filter
-                sql=sql+filterwhere
+                        title LIKE '%%%s%%' """ % filter
+                sql +=filterwhere
 
+            filterlimit= ""
+            if start != -1 and limit != -1:
+                filterlimit= "LIMIT %s, %s"%(start, limit)
+            sql += filterlimit
             sql+=";"
 
             result = session.execute(sql)
@@ -263,28 +293,59 @@ class UpdatesDatabase(DatabaseHelper):
                    white_list['kb'].append(list_w.kb)
 
         except Exception as e:
-            logging.getLogger().error("error function get_grey_list")
+            logger.error("error function get_white_list")
 
         return white_list
 
-    
+
     @DatabaseHelper._sessionm
-    def approve_update(self, session, updateid, enabled=1):
+    def approve_update(self, session, updateid):
         try:
-            sql="""UPDATE `xmppmaster`.`up_gray_list`
-                    SET
-                        valided = %s
-                    WHERE
-                        (updateid = '%s');"""%(enabled, updateid)
+            sql = """SELECT updateid,
+                        kb,
+                        title,
+                        description
+                    FROM xmppmaster.up_gray_list
+                    WHERE updateid = '%s' or kb='%s' LIMIT 1;"""%(updateid, updateid)
             result = session.execute(sql)
+            selected = {
+                "updateid": "",
+                "kb":"",
+                "title":"",
+                "description":""
+            }
             session.commit()
             session.flush()
-            return True
-        except Exception, e:
-            logging.getLogger().error(str(e))
-        return False
 
-    
+            if result is not None:
+                selected = [{
+                "updateid": elem.updateid,
+                "kb":elem.kb,
+                "title":elem.title,
+                "description":elem.description
+            } for elem in result]
+            selected = selected[0]
+
+            sql2 = """INSERT INTO 
+                        xmppmaster.up_white_list (updateid, kb, title, description, valided) 
+                        VALUES("%s", "%s", "%s", "%s", %s)"""%(
+                            selected['updateid'],
+                            selected['kb'],
+                            selected['title'],
+                            selected['description'],
+                            1
+                        )
+            try:
+                session.execute(sql2)
+                session.commit()
+                session.flush()
+                return True
+            except Exception as e:
+                return False
+
+        except Exception as e:
+            return False
+
     @DatabaseHelper._sessionm
     def grey_update(self, session, updateid, enabled=0):
         try:
@@ -319,9 +380,9 @@ class UpdatesDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def delete_rule(self, session, updateid):
+    def delete_rule(self, session, id):
         try:
-            sql="""DELETE FROM `xmppmaster`.`up_black_list` WHERE (`updateid_or_kb` = '%s');"""%(updateid)
+            sql="""DELETE FROM `xmppmaster`.`up_black_list` WHERE (`id` = '%s');"""%(id)
 
             result = session.execute(sql)
             session.commit()
@@ -370,6 +431,6 @@ class UpdatesDatabase(DatabaseHelper):
                    family_list['name_procedure'].append(list_f.name_procedure)
 
         except Exception as e:
-            logging.getLogger().error("error function get_family_list")
+            logger.error("error function get_family_list")
 
         return family_list

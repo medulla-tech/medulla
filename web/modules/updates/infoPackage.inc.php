@@ -82,8 +82,33 @@ $page = new Page("deleteRule", _T('UnBan Update', 'updates'));
 $page->setFile("modules/updates/updates/deleteRule.php");
 $submod->addPage($page);
 
+$page = new Page("grayEnable", _T('Gray Enable', 'updates'));
+$page->setFile("modules/updates/updates/grayEnable.php", array("noHeader"=>true,"visible"=>false));
+$submod->addPage($page);
+
+$page = new Page("grayDisable", _T('Grey Disable', 'updates'));
+$page->setFile("modules/updates/updates/grayDisable.php", array("noHeader"=>true,"visible"=>false));
+$submod->addPage($page);
+
+$page = new Page("grayApprove", _T('Grey Approve', 'updates'));
+$page->setFile("modules/updates/updates/grayApprove.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+// Also used for whitelist
+$page = new Page("banUpdate", _T('Ban Update', 'updates'));
+$page->setFile("modules/updates/updates/banUpdate.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("whiteUnlist", _T('White Unlist', 'updates'));
+$page->setFile("modules/updates/updates/whiteUnlist.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+
+$page = new Page("blackUnban", _T('Black Unban', 'updates'));
+$page->setFile("modules/updates/updates/blackUnban.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod); ?>
-
