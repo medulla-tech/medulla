@@ -37,16 +37,16 @@ $black_list = xmlrpc_get_black_list($start, $end, $filter);
 
 // == Declare actions for the lists ==
 // GrayList Actions
-$grayEnableAction = new ActionItem(_T("Enable Update", "updates"),"grayEnable","quick","", "updates", "updates");
-$grayDisableAction = new ActionPopupItem(_T("Disable Update", "updates"), "grayDisable", "display", "updates", "updates");
-$grayApproveAction = new ActionPopupItem(_T("Approve Update", "updates"), "grayApprove", "edit", "updates", "updates");
+$grayEnableAction = new ActionItem(_T("Enable Update", "updates"),"grayEnable","enableupdate","", "updates", "updates");
+$grayDisableAction = new ActionPopupItem(_T("Disable Update", "updates"), "disableupdate", "display", "updates", "updates");
+$grayApproveAction = new ActionPopupItem(_T("Approve Update", "updates"), "deploy", "edit", "updates", "updates");
 
 // WhiteList Actions
-$whiteUnlistAction = new ActionPopupItem(_T("Unlist Update", "updates"), "whiteUnlist", "display", "updates", "updates");
-$banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "delete", "updates", "updates");
+$whiteUnlistAction = new ActionPopupItem(_T("Unlist Update", "updates"), "whiteUnlist", "unlist", "updates", "updates");
+$banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "banupdate", "updates", "updates");
 
 // BlackList Actions
-$blackUnbanAction = new ActionItem(_T("unban Update", "updates"),"blackUnban","quick","", "updates", "updates");
+$blackUnbanAction = new ActionItem(_T("unban Update", "updates"),"blackUnban","unlist","", "updates", "updates");
 
 // Actions wrapper
 $whiteActions = [
