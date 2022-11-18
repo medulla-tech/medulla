@@ -53,8 +53,18 @@ $page = new Page("updatesListWin", _T('Manage Windows Updates', 'updates'));
 $page->setFile("modules/updates/updates/updatesListWin.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdatesListWin", _T("Manage Windows Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxUpdatesListWin.php");
+$page = new Page("ajaxUpdatesListWinWhite", _T("Manage Windows Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxUpdatesListWinWhite.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxUpdatesListWinGray", _T("Manage Windows Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxUpdatesListWinGray.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxUpdatesListWinBlack", _T("Manage Windows Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxUpdatesListWinBlack.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
