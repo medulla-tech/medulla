@@ -53,8 +53,18 @@ $page = new Page("updatesListWin", _T('Manage Windows Updates', 'updates'));
 $page->setFile("modules/updates/updates/updatesListWin.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdatesListWin", _T("Manage Windows Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxUpdatesListWin.php");
+$page = new Page("ajaxUpdatesListWinWhite", _T("Manage Windows Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxUpdatesListWinWhite.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxUpdatesListWinGray", _T("Manage Windows Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxUpdatesListWinGray.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxUpdatesListWinBlack", _T("Manage Windows Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxUpdatesListWinBlack.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
@@ -82,8 +92,33 @@ $page = new Page("deleteRule", _T('UnBan Update', 'updates'));
 $page->setFile("modules/updates/updates/deleteRule.php");
 $submod->addPage($page);
 
+$page = new Page("grayEnable", _T('Gray Enable', 'updates'));
+$page->setFile("modules/updates/updates/grayEnable.php", array("noHeader"=>true,"visible"=>false));
+$submod->addPage($page);
+
+$page = new Page("grayDisable", _T('Grey Disable', 'updates'));
+$page->setFile("modules/updates/updates/grayDisable.php", array("noHeader"=>true,"visible"=>false));
+$submod->addPage($page);
+
+$page = new Page("grayApprove", _T('Grey Approve', 'updates'));
+$page->setFile("modules/updates/updates/grayApprove.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+// Also used for whitelist
+$page = new Page("banUpdate", _T('Ban Update', 'updates'));
+$page->setFile("modules/updates/updates/banUpdate.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("whiteUnlist", _T('White Unlist', 'updates'));
+$page->setFile("modules/updates/updates/whiteUnlist.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+
+$page = new Page("blackUnban", _T('Black Unban', 'updates'));
+$page->setFile("modules/updates/updates/blackUnban.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod); ?>
-

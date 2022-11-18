@@ -1329,7 +1329,7 @@ li.updateone a {
 li.approveupdate a {
     padding: 5px 0px  5px 22px;
     margin: 0 0px 0 0px;
-    background-image: url("../img/actions/approveupdate.svg");
+    background-image: url("../img/actions/deploy.svg");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: 25px 25px;
@@ -1365,7 +1365,7 @@ li.unlist a {
 li.enableupdate a {
     padding: 5px 0px  5px 22px;
     margin: 0 0px 0 0px;
-    background-image: url("../img/actions/enableupdate.svg");
+    background-image: url("../img/actions/enable.svg");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: 25px 25px;
@@ -1377,7 +1377,7 @@ li.enableupdate a {
 li.enableupdateg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../img/actions/enableupdate.svg");
+        background-image: url("../img/actions/enable.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;
@@ -1393,7 +1393,7 @@ li.enableupdateg a {
 li.disableupdate a {
     padding: 5px 0px  5px 22px;
     margin: 0 0px 0 0px;
-    background-image: url("../img/actions/disableupdate.svg");
+    background-image: url("../img/actions/disable.svg");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: 25px 25px;
@@ -1405,7 +1405,7 @@ li.disableupdate a {
 li.disableupdateg a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../img/actions/disableupdate.svg");
+        background-image: url("../img/actions/disable.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;

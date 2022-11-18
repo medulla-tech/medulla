@@ -72,7 +72,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 
 </style>
 <?php
-$namestep=_T("Update Question","pkgs");
+$namestep=_T("User Question","pkgs");
 ?>
 <div class="header">
     <h1 data-title="<?php echo _T('This step allows you to submit 1 question to the user', 'pkgs'); ?>" ><?php echo $namestep; ?></h1>

@@ -23,7 +23,7 @@ extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1><?php echo _T('Update Notification', 'pkgs'); ?></h1>
+    <h1><?php echo _T('User Notification', 'pkgs'); ?></h1>
 </div>
 <div class="content">
 
