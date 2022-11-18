@@ -29,9 +29,23 @@ $p->display();
 
 require_once("modules/updates/includes/xmlrpc.php");
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWin"));
-$ajax->display();
-$ajax->displayDivToUpdate();
+$ajaxG = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinGray"), "containerGray", [], "formGray");
+$ajaxG->display();
+print "<br/><br/><br/>";
+$ajaxG->displayDivToUpdate();
 
+
+print "<br/><br/><br/>";
+$ajaxW = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinWhite"), "containerWhite", [], "formWhite");
+$ajaxW->display();
+print "<br/><br/><br/>";
+$ajaxW->displayDivToUpdate();
+
+print "<br/><br/><br/>";
+
+$ajaxB = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinBlack"), "containerBlack", [], "formBlack");
+$ajaxB->display();
+print "<br/><br/><br/>";
+$ajaxB->displayDivToUpdate();
 ?>
 
