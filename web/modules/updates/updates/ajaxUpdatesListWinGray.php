@@ -36,10 +36,10 @@ echo '</pre>';
 // Appel de fonction pour récupérer la Liste Grise dans up_gray_list
 $grey_list = xmlrpc_get_grey_list($start, $end, $filter);
 // GrayList Actions
-$grayEnableAction = new ActionItem(_T("Enable Update", "updates"),"grayEnable","quick","", "updates", "updates");
-$grayDisableAction = new ActionPopupItem(_T("Disable Update", "updates"), "grayDisable", "display", "updates", "updates");
-$grayApproveAction = new ActionPopupItem(_T("Approve Update", "updates"), "grayApprove", "edit", "updates", "updates");
-$banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "delete", "updates", "updates");
+$grayEnableAction = new ActionItem(_T("Enable Update", "updates"),"grayEnable","enableupdate","", "updates", "updates");
+$grayDisableAction = new ActionPopupItem(_T("Disable Update", "updates"), "grayDisable", "disableupdate", "updates", "updates");
+$grayApproveAction = new ActionPopupItem(_T("Approve Update", "updates"), "grayApprove", "deploy", "updates", "updates");
+$banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "banupdate", "updates", "updates");
 $grayActions = [
     "enable"=>[],
     "disable"=>[],

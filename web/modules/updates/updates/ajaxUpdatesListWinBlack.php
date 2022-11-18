@@ -34,7 +34,7 @@ echo '</pre>';
 $black_list = xmlrpc_get_black_list($start, $end, $filter);
 
 // BlackList Actions
-$blackUnbanAction = new ActionItem(_T("unban Update", "updates"),"blackUnban","quick","", "updates", "updates");
+$blackUnbanAction = new ActionItem(_T("unban Update", "updates"),"blackUnban","unlist","", "updates", "updates");
 $blackActions = ["unban" =>[]];
 
 $params_black = [];

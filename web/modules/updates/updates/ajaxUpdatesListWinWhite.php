@@ -34,8 +34,8 @@ echo '<pre>';
 echo '</pre>';
 $white_list = xmlrpc_get_white_list($start, $end, $filter);
 // WhiteList Actions
-$whiteUnlistAction = new ActionPopupItem(_T("Unlist Update", "updates"), "whiteUnlist", "display", "updates", "updates");
-$banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "delete", "updates", "updates");
+$whiteUnlistAction = new ActionPopupItem(_T("Unlist Update", "updates"), "whiteUnlist", "unlist", "updates", "updates");
+$banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "banupdate", "updates", "updates");
 $whiteActions = [
     "unlist"=>[],
     "ban"=>[]
