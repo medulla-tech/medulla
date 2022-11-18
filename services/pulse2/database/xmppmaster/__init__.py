@@ -11145,6 +11145,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     xmppmaster.machines
                         LEFT JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                WHERE
+                    platform LIKE 'Mic%'
                         group by glpi_entity_id;"""
         resultquery = session.execute(sql)
         session.commit()
@@ -11171,6 +11173,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
                         JOIN
                     xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                WHERE
+                    platform LIKE 'Mic%'
                         AND xmppmaster.up_gray_list.valided = 1
                 GROUP BY glpi_entity_id;"""
         resultquery = session.execute(sql)
@@ -11216,7 +11220,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         JOIN
                     xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
-                    xmppmaster.up_gray_list.valided = 1
+                    platform LIKE 'Mic%' and xmppmaster.up_gray_list.valided = 1
                 GROUP BY glpi_entity_id;"""
         resultquery = session.execute(sql)
         session.commit()
