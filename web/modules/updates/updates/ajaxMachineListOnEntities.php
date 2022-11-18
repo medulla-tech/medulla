@@ -66,11 +66,7 @@ $machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
 $filter = array('gid' => $gid);
 $listGroup = getRestrictedComputersList(0, -1, $filter, False);
 
-// Voir requete similaire mais conformity_update_by_machine
-// $compliancerate = xmlrpc_get_conformity_update_by_entity();
-
-// j'ai demandé à jfk il voit ça début d'aprem
-// $test = xmlrpc_get_conformity_update_by_entity_in_gray_list();
+print_r($listGroup);
 
 // POUR POUVOIR COMPARER L UUID AVEC ENTITYID
 if ($uuid != '')
@@ -90,16 +86,7 @@ if ($uuid != '')
 {
     $count = $machines['count'];
 }
-//$count = $machines['count'];
 
-// for($i=0; $i < $count; $i++){
-//     if($machines['data']['entityid'][$i] == $match){
-//         $detailsByMachs[] = $detailsByMach;
-//         $machineNames[] = $machines['data']['hostname'][$i];
-//         $machineByEntitie[] = $machines['data']['glpi_entity_id'][$i];
-
-//         $platform[] = $machines['data']['platform'][$i];
-//     }
 if ($typeOfDetail == "entitie")
 {
     for($i=0; $i < $count; $i++){
@@ -108,6 +95,42 @@ if ($typeOfDetail == "entitie")
             $machineNames[] = $machines['data']['hostname'][$i];
             $machineByEntitie[] = $machines['data']['glpi_entity_id'][$i];
             
+            $compliance_computer = xmlrpc_get_conformity_update_by_machine($machines['data']['id'][$i]);
+            $comp = $compliance_computer['0']['update_waiting'];
+            switch(intval($comp)){
+                case $comp <= 10:
+                    $color = "#ff0000";
+                    break;
+                case $comp <= 20:
+                    $color = "#ff3535";
+                    break;
+                case $comp <= 30:
+                    $color = "#ff5050";
+                    break;
+                case $comp <= 40:
+                    $color = "#ff8080";
+                    break;
+                case $comp <  50:
+                    $color = "#ffA0A0";
+                    break;
+                case $comp <=  60:
+                    $color = "#c8ffc8";
+                    break;
+                case $comp <= 70:
+                    $color = "#97ff97";
+                    break;
+                case $comp <= 80:
+                    $color = "#64ff64";
+                    break;
+                case $comp <=  90:
+                    $color = "#2eff2e";
+                    break;
+                case $comp >90:
+                    $color = "#00ff00";
+                    break;
+            }
+            $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
+
             $platform[] = $machines['data']['platform'][$i];
         }
         // TOTAL LIGNE APRES COMPARAISON
@@ -125,62 +148,9 @@ if ($typeOfDetail == "group")
         $platform[] = $v[1]['os'];
     }        
 }
-// $platform = "Microsoft Windows 10 Professionnel";
-// $plat = explode(" ", $platform, 2);
-// echo $plat[0];
 
 echo '<pre>';
-// print_r($ctx);
-// var_dump($filter);
-// var_dump($count);
-// print_r($machines);
-// var_dump($match);
-// var_dump($count_machineNames);
-// print_r($machines['data']);
-//print_r($machines['data']['hostname']);
-//print_r($machines['data']['entityid']);
-//print_r($machines['data']['platform']);
-// print_r($machineByEntitie);
-// print_r($compliancerate);
-// print_r($test);
 echo '</pre>';
-
-foreach ($compliancerate as $complience) {
-    $comp = $complience['taux_a_ne_pas_mettre_a_jour'];
-    switch(intval($comp)){
-        case $comp <= 10:
-            $color = "#ff0000";
-            break;
-        case $comp <= 20:
-            $color = "#ff3535";
-            break;
-        case $comp <= 30:
-            $color = "#ff5050";
-            break;
-        case $comp <= 40:
-            $color = "#ff8080";
-            break;
-        case $comp <  50:
-            $color = "#ffA0A0";
-            break;
-        case $comp <=  60:
-            $color = "#c8ffc8";
-            break;
-        case $comp <= 70:
-            $color = "#97ff97";
-            break;
-        case $comp <= 80:
-            $color = "#64ff64";
-            break;
-        case $comp <=  90:
-            $color = "#2eff2e";
-            break;
-        case $comp >90:
-            $color = "#00ff00";
-            break;
-    }
-    $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
-}
 
 
 $n = new OptimizedListInfos($machineNames, _T("Name machine", "updates"));
@@ -193,10 +163,5 @@ $n->addActionItemArray($detailsByMachs);
 $n->setItemCount($count_machineNames);
 $n->setNavBar(new AjaxNavBar($count_machineNames, $ctx['filter']));
 $n->setParamInfo($params);
-
-/*$n->addActionItemArray($actiondetailsByMachs);
-$n->addActionItemArray($actiondetailsByUpds);
-$n->addActionItemArray($actiondeployAlls);
-$n->addActionItemArray($actiondeploySpecifics);*/
 $n->display();
 ?>

@@ -11228,11 +11228,34 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     
     
     @DatabaseHelper._sessionm
-    def get_conformity_update_by_machine(self, session):
+    def get_conformity_update_by_machine(self, session, idmachine):
         """
             This function returns the the update already done and update enable
         """
-        sql="""SELECT 
+        sql="""SELECT COUNT(*) AS update_waiting
+                FROM
+                    xmppmaster.up_gray_list
+                INNER JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                WHERE
+                    up_gray_list.valided = 1
+                AND
+                    up_machine_windows.id_machine = '%s';"""%(idmachine)
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+
+
+    @DatabaseHelper._sessionm
+    def get_conformity_update_for_group(self, session, uuidArray):
+        """
+            This function returns the the update already done and update enable
+        """
+        sql="""SELECT
                     COUNT(*) AS nombre_machine,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
@@ -11244,7 +11267,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
                 WHERE
                     platform LIKE 'Mic%'
-                        AND uuid_inventorymachine IN ('uuid1' , 'uuid2');"""
+                        AND uuid_inventorymachine IN ('%s');"""(uuidArray)
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
