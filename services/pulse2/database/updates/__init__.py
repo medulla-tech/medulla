@@ -264,8 +264,7 @@ class UpdatesDatabase(DatabaseHelper):
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         *
-                    FROM xmppmaster.up_gray_list
-                    WHERE valided = 1 """
+                    FROM xmppmaster.up_white_list """
 
             if filter:
                 filterwhere="""AND
@@ -277,7 +276,6 @@ class UpdatesDatabase(DatabaseHelper):
                 filterlimit= "LIMIT %s, %s"%(start, limit)
             sql += filterlimit
             sql+=";"
-
             result = session.execute(sql)
 
             sql_count = "SELECT FOUND_ROWS();"
@@ -314,8 +312,6 @@ class UpdatesDatabase(DatabaseHelper):
                 "title":"",
                 "description":""
             }
-            session.commit()
-            session.flush()
 
             if result is not None:
                 selected = [{
@@ -335,14 +331,13 @@ class UpdatesDatabase(DatabaseHelper):
                             selected['description'],
                             1
                         )
-            try:
-                session.execute(sql2)
-                session.commit()
-                session.flush()
-                return True
-            except Exception as e:
-                return False
+            session.execute(sql2)
 
+            sql3 = """DELETE FROM xmppmaster.up_gray_list WHERE updateid = '%s' or kb='%s'"""%(updateid, updateid)
+            session.execute(sql3)
+            session.commit()
+            session.flush()
+            return True
         except Exception as e:
             return False
 
@@ -434,3 +429,15 @@ class UpdatesDatabase(DatabaseHelper):
             logger.error("error function get_family_list")
 
         return family_list
+
+
+    @DatabaseHelper._sessionm
+    def white_unlist_update(self, session, updateid):
+        sql = """DELETE FROM xmppmaster.up_white_list WHERE updateid = '%s' or kb='%s'"""%(updateid, updateid)
+        try:
+            session.execute(sql)
+            session.commit()
+            session.flush()
+            return True
+        except:
+            return False

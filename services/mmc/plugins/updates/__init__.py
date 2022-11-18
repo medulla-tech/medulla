@@ -89,3 +89,6 @@ def exclude_update(updateid):
 
 def delete_rule(id):
      return UpdatesDatabase().delete_rule(id)
+
+def white_unlist_update(updateid):
+    return UpdatesDatabase().white_unlist_update(updateid)

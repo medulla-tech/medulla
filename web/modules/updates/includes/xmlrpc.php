@@ -59,7 +59,7 @@ function xmlrpc_delete_rule($id){
     return xmlCall("updates.delete_rule", [$id]);
 }
 
-function xmlrpc_white_unlist_update($updateid, $enabled=0){
-    return xmlCall("updates.white_unlist_update", [$updateid, $enabled]);
+function xmlrpc_white_unlist_update($updateid){
+    return xmlCall("updates.white_unlist_update", [$updateid]);
 }
 ?>

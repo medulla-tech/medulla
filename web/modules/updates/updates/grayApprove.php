@@ -20,11 +20,32 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 require_once("modules/updates/includes/xmlrpc.php");
 $updateid = htmlentities($_GET['updateid']);
+$title = htmlentities($_GET['title']);
 
-echo '<pre>';
-print_r($_GET);
-echo '</pre>';
-xmlrpc_approve_update($updateid);
+if(isset($_POST['bconfirm'])){
+    $result = xmlrpc_approve_update($updateid);
+    if($result){
+        $str = sprintf(_T("The update %s (%s) has been approved.", "updates"), $title, $updateid);
+        new NotifyWidgetSuccess($str);
+    }
+    else{
+        $str = sprintf(_T("The update %s (%s) hasn't been approved", "updates"), $title, $updateid);
+        new NotifyWidgetFailure($str);
+    }
+    header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+    exit;
+}
+else{
+    $f = new PopupForm(sprintf(_T("<b>Approve</b> update %s (%s) ?", "update"), $title, $updateid));
+    $hidden = new HiddenTpl("updateid");
+    $f->add($hidden, array("value" =>$updateid, "hide" => True));
+    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
+}
+
 ?>
