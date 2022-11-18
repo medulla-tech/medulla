@@ -767,8 +767,12 @@ function xmlrpc_get_conformity_update_by_entity(){
   return xmlCall("xmppmaster.get_conformity_update_by_entity");
 }
 
-function xmlrpc_get_conformity_update_by_machine(){
-  return xmlCall("xmppmaster.get_conformity_update_by_machine");
+function xmlrpc_get_conformity_update_by_machine($idmachine){
+  return xmlCall("xmppmaster.get_conformity_update_by_machine", [$idmachine]);
+}
+
+function xmlrpc_get_conformity_update_for_group($uuidArray){
+  return xmlCall("xmppmaster.get_conformity_update_for_group", [$uuidArray]);
 }
 
 ?>
