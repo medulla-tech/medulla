@@ -1447,6 +1447,10 @@ def get_conformity_update_for_group(uuidArray):
     result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
     return result
 
+def get_count_grey_list_enable():
+    result = XmppMasterDatabase().get_count_grey_list_enable()
+    return result
+
 def get_conformity_update_by_entity():
     result = XmppMasterDatabase().get_conformity_update_by_entity()
     resultarray=[]

@@ -11255,6 +11255,26 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
 
     @DatabaseHelper._sessionm
+    def get_count_grey_list_enable(self, session):
+        """
+            This function returns the the update already done and update enable
+        """
+        sql="""SELECT COUNT(*) AS enable_grey
+                FROM
+                    xmppmaster.up_gray_list
+                WHERE
+                    valided = 1;"""
+                
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+
+
+    @DatabaseHelper._sessionm
     def get_conformity_update_for_group(self, session, uuidArray):
         """
             This function returns the the update already done and update enable
@@ -11279,10 +11299,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result= [{column: value for column,
-                value in rowproxy.items()}
-                        for rowproxy in resultquery]
-        return result
+        
+        return resultquery
     
 
     @DatabaseHelper._sessionm
