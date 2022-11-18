@@ -23,8 +23,11 @@
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/base/includes/computers.inc.php");
 
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
+$gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
+$groupname = (isset($_GET['groupname'])) ? $_GET['groupname'] : "";
 $filter = "Microsoft";
 $field = "platform";
 $contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
@@ -48,8 +51,20 @@ $ctx['uuid'] = $uuid;
 
 $detailsByMach = new ActionItem(_T("Test", "updates"),"detailsByMachines","display","", "updates", "updates");
 
+if ($uuid == '')
+{
+    $typeOfDetail = "group";
+    print_r(_T("<h2>Computers from group ".$groupname."</h2>","updates"));
+}
+else
+{
+    $typeOfDetail = "entitie";
+}
+
 // A VOIR SI JE M'EN SORS AVEC DES BOUCLES MAIS PEUT ETRE REFAIRE UNE REQUETE EN FONCTION DE L'ENTITYID
 $machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
+$filter = array('gid' => $gid);
+$listGroup = getRestrictedComputersList(0, -1, $filter, False);
 
 // Voir requete similaire mais conformity_update_by_machine
 // $compliancerate = xmlrpc_get_conformity_update_by_entity();
@@ -58,8 +73,11 @@ $machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
 // $test = xmlrpc_get_conformity_update_by_entity_in_gray_list();
 
 // POUR POUVOIR COMPARER L UUID AVEC ENTITYID
-preg_match("/UUID([0-9]+)/", $uuid, $matches);
-$match = (int)$matches[1];
+if ($uuid != '')
+{
+    preg_match("/UUID([0-9]+)/", $uuid, $matches);
+    $match = (int)$matches[1];
+}
 
 $params = [];
 $machineNames = [];
@@ -68,7 +86,11 @@ $detailsByMachs = [];
 $machineByEntitie = [];
 $platform = [];
 // TOTAL NOMBRE DE LIGNE REQUETE
-$count = $machines['count'];
+if ($uuid != '')
+{
+    $count = $machines['count'];
+}
+//$count = $machines['count'];
 
 // for($i=0; $i < $count; $i++){
 //     if($machines['data']['entityid'][$i] == $match){
@@ -78,17 +100,30 @@ $count = $machines['count'];
 
 //         $platform[] = $machines['data']['platform'][$i];
 //     }
-
-for($i=0; $i < $count; $i++){
-    if($machines['data']['entityid'][$i] == $match){
-        $detailsByMachs[] = $detailsByMach;
-        $machineNames[] = $machines['data']['hostname'][$i];
-        $machineByEntitie[] = $machines['data']['glpi_entity_id'][$i];
-        
-        $platform[] = $machines['data']['platform'][$i];
+if ($typeOfDetail == "entitie")
+{
+    for($i=0; $i < $count; $i++){
+        if($machines['data']['entityid'][$i] == $match){
+            $detailsByMachs[] = $detailsByMach;
+            $machineNames[] = $machines['data']['hostname'][$i];
+            $machineByEntitie[] = $machines['data']['glpi_entity_id'][$i];
+            
+            $platform[] = $machines['data']['platform'][$i];
+        }
+        // TOTAL LIGNE APRES COMPARAISON
+        $count_machineNames = count($machineNames);
     }
-    // TOTAL LIGNE APRES COMPARAISON
-    $count_machineNames = count($machineNames);
+}
+
+if ($typeOfDetail == "group")
+{
+    foreach ($listGroup as $k => $v) {
+        $detailsByMachs[] = $detailsByMach;
+        $machineNames[] = $v[1]['cn'][0];
+        $machineByEntitie[] = $v[1]['objectUUID'][0];
+        
+        $platform[] = $v[1]['os'];
+    }        
 }
 // $platform = "Microsoft Windows 10 Professionnel";
 // $plat = explode(" ", $platform, 2);
@@ -102,9 +137,9 @@ echo '<pre>';
 // var_dump($match);
 // var_dump($count_machineNames);
 // print_r($machines['data']);
-print_r($machines['data']['hostname']);
-print_r($machines['data']['entityid']);
-print_r($machines['data']['platform']);
+//print_r($machines['data']['hostname']);
+//print_r($machines['data']['entityid']);
+//print_r($machines['data']['platform']);
 // print_r($machineByEntitie);
 // print_r($compliancerate);
 // print_r($test);

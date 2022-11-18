@@ -11225,6 +11225,34 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 value in rowproxy.items()}
                         for rowproxy in resultquery]
         return result
+    
+    
+    @DatabaseHelper._sessionm
+    def get_conformity_update_by_machine(self, session):
+        """
+            This function returns the the update already done and update enable
+        """
+        sql="""SELECT 
+                    COUNT(*) AS nombre_machine,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') != '') THEN 1
+                        ELSE 0
+                    END) AS update_a_mettre_a_jour
+                FROM
+                    xmppmaster.machines
+                        LEFT JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                WHERE
+                    platform LIKE 'Mic%'
+                        AND uuid_inventorymachine IN ('uuid1' , 'uuid2');"""
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+    
 
     @DatabaseHelper._sessionm
     def get_ou_list_from_machines(self, session):
