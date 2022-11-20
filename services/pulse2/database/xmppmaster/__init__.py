@@ -11224,7 +11224,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         JOIN
                     xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
-                    xmppmaster.up_gray_list.valided = 1
+                    platform LIKE 'Mic%'
+                        AND xmppmaster.up_gray_list.valided = 1
                 GROUP BY glpi_entity_id;"""
         resultquery = session.execute(sql)
         session.commit()
