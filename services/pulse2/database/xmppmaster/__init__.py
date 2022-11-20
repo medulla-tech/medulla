@@ -11135,17 +11135,21 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             This function returns the total number of updates to apply for each entity
         """
         sql="""SELECT
-                    glpi_entity_id as entity,
-                    count(*) as nombre_machine,
-                        SUM(CASE
-                            WHEN (COALESCE(update_id, '') != '') THEN 1
-                            ELSE 0
-                        END) AS update_a_mettre_a_jour
+                    glpi_entity.glpi_id AS entity,
+                    COUNT(*) AS nombre_machine,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') != '') THEN 1
+                        ELSE 0
+                    END) AS update_a_mettre_a_jour
                 FROM
                     xmppmaster.machines
+                        JOIN
+                    glpi_entity ON machines.glpi_entity_id = glpi_entity.id
                         LEFT JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
-                        group by glpi_entity_id;"""
+                WHERE
+                    platform LIKE 'Mic%'
+                GROUP BY glpi_entity.glpi_id;"""
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
@@ -11159,20 +11163,24 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
             This function returns the machines to update in an entity considering only the updates enabled in gray list
         """
-        sql=""" SELECT
-                    glpi_entity_id AS entity,
+        sql="""SELECT
+                    glpi_entity.glpi_id AS entity,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
                         ELSE 0
                     END) AS machine_a_mettre_a_jour
                 FROM
                     xmppmaster.machines
+                        JOIN
+                    glpi_entity ON machines.glpi_entity_id = glpi_entity.id
                         LEFT JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
                         JOIN
                     xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                WHERE
+                    platform LIKE 'Mic%'
                         AND xmppmaster.up_gray_list.valided = 1
-                GROUP BY glpi_entity_id;"""
+                GROUP BY glpi_entity.glpi_id;"""
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
