@@ -1,5 +1,5 @@
 /**
- * (c) 2016-2021 Siveo, http://www.siveo.net/
+ * (c) 2016-2022 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -76,9 +76,13 @@ var actionsList = [
     //'action_pwd_package', //Go to package folder
     'actioncleaning', //Remove uploaded files
 
-    'action_section_install',    // definie section install
-    'action_section_update',     // definie section update
-    'action_section_uninstall', // definie section uninstall
+    'action_section_install',    // define install section
+    'action_section_update',     // define update section
+    //'action_section_launch',     // define launch section
+    'action_section_uninstall',  // define uninstall section
+    'action_notification',  // Display a "OK" popup
+    'action_question',  // Ask a "YES" / "NO" question, if YES : goto A, then goto B
+    'action_choice', //choice with specific timeout
 ];
 /**
  *

@@ -37,9 +37,11 @@ ALTER TABLE `xmppmaster`.`mon_event`
 ALTER TABLE `xmppmaster`.`mon_event` 
     ADD COLUMN `ack_date` TIMESTAMP NULL DEFAULT NULL AFTER `ack_user`;
 
+ALTER TABLE `xmppmaster`.`cluster_resources`
+ADD INDEX IF NOT EXISTS `jidindex` (`jidmachine` ASC);
 
 SET FOREIGN_KEY_CHECKS=1;
 
-UPDATE version SET Number = 60;
+UPDATE version SET Number = 65;
 
 COMMIT;

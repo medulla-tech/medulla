@@ -25,6 +25,7 @@ require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 include_once("modules/dashboard/includes/panel.class.php");
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 ?>
 <script src="modules/dashboard/graph/js/pie.js"></script>
 <?php
@@ -41,7 +42,7 @@ class os_repartitionPanel extends Panel {
     $pcs = xmlrpc_get_os_for_dashboard();
 
     $uninventorized_text = _T("Uninventoried Machines", "dashboard");
-    $uninventorized = $total = get_computer_count_for_dashboard()['unregistered'];
+    $uninventorized = get_computer_count_for_dashboard()['total_uninventoried'];
 
     $pcs = array_map(function($pcs) {
     return array(

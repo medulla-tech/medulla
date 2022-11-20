@@ -113,6 +113,12 @@ if($criterion == '')
     case 'deploymentdelayed':
       $criterion = "DEPLOYMENT DELAYED";
       break;
+    case 'errorhashmissing':
+      $criterion = "ERROR HASH MISSING";
+      break;
+    case 'aborthashinvalid':
+      $criterion = "ABORT HASH INVALID";
+      break;
   }
 }
 

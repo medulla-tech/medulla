@@ -286,7 +286,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Set timeout
+                    }" />'._T('Set timeout (in seconds)', 'pkgs').'
                 </td>
                 <td>
                     <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
@@ -301,7 +301,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />'._T("Set timeout", "pkgs").'
+                    }" />'._T("Set timeout  (in seconds)", "pkgs").'
                 </td>
                 <td>
                     <input type="number" min="0" value="10" disabled name="timeout"  />

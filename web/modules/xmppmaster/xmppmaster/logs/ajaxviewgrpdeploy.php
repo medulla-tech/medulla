@@ -46,25 +46,6 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
     cursor: pointer;
 }
 
-li.groupshare a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/dyngroup/img/share.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-li.remove_machine a {
-    background-image: url("img/common/button_cancel.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 progress{
     border-color: #ffffff;
     background-color: #009ea9;
@@ -286,7 +267,7 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
             echo '<td>'.$end_date.'</td>';
             echo '<td>'.$creator_user.'</td>';
             if($isconvergence != 0){
-                echo "<td><img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/></td>";
+                echo "<td><img style='position:relative;top : 5px;' src='img/other/convergence.svg' width='25' height='25'/></td>";
             }
 
 
@@ -452,6 +433,8 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>"._T("Error Hash Missing","xmppmaster")."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>"._T("Abort Hash Invalid","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
         foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
@@ -482,6 +465,8 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>".$wol2."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>".$errorhashmissing."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>".$aborthashinvalid."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
         foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
@@ -528,6 +513,8 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>"._T("Error Hash Missing","xmppmaster")."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>"._T("Abort Hash Invalid","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
         foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
@@ -558,6 +545,8 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>".$wol2."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>".$errorhashmissing."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>".$aborthashinvalid."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
         foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
@@ -702,7 +691,7 @@ echo'
 }else{
 $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
                                     "viewlogs",
-                                    "logfile",
+                                    "audit",
                                     "logfile",
                                     "xmppmaster",
                                     "xmppmaster");
@@ -816,6 +805,12 @@ function fillSearch(content){
     if ($errorunknownerror > 0){
         echo 'datas.push({"label":"Error Unknown Error ", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
+    if ($errorhashmissing > 0){
+        echo 'datas.push({"label":"Error Hash Missing ", "value":parseInt('.$errorhashmissing.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorhashmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($aborthashinvalid > 0){
+        echo 'datas.push({"label":"Abort Hash Invalid ", "value":parseInt('.$aborthashinvalid.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("aborthashinvalid",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
     if ($otherstatus > 0){
         echo 'datas.push({"label":"Other Status ", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
@@ -906,6 +901,12 @@ function fillSearch(content){
     }
     if ($errorunknownerror > 0){
         echo 'datas2.push({"label":"Error Unknown Error ", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "onclick":"fillSearch", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($errorhashmissing > 0){
+        echo 'datas2.push({"label":"Error Hash Missing ", "value":parseInt('.$errorhashmissing.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorhashmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($aborthashinvalid > 0){
+        echo 'datas2.push({"label":"Abort Hash Invalid ", "value":parseInt('.$aborthashinvalid.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("aborthashinvalid",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($otherstatus > 0){
         echo 'datas2.push({"label":"Other Status ", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "onclick":"fillSearch", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';

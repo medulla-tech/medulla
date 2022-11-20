@@ -111,7 +111,7 @@ class InventoryPanel extends Panel {
         $('inventory-graphs').insert(
             '<li style="color: ' + colors[i].split('-')[2] + '"><span style="color: #000">' + legend[i]
             + '<a href="' + href[i] + '"><img title="' + createGroupText +
-            '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
+            '" style="height: 10px; padding-left: 3px;" src="img/other/machine_down.svg" /></a></span></li>'
         );
     }
     $('inventory-graphs').insert('</ul>');

@@ -7,6 +7,10 @@ set -e
 
 if [ -f /usr/lib/systemd/system/php7.3-fpm.service ]; then
     service php7.3-fpm restart
+fi
+
+if [ -f /lib/systemd/system/php7.4-fpm.service ]; then
+    service php7.4-fpm restart
 else
     service php7.0-fpm restart
 fi

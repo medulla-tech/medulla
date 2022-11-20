@@ -25,26 +25,20 @@
 $sidemenu = new SideMenu();
 $sidemenu->setClass("audit");
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_("All modules"), "base","audit","indexall",
-    "img/common/logview_active.png", "img/common/logview_inactive.png"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_("Users and Groups"), "base", "audit","indexbase",
-    "img/common/logview_active.png", "img/common/logview_inactive.png"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_("All modules"), "base","audit","indexall"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_("Users and Groups"), "base", "audit","indexbase"));
 
 if(in_array("samba", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_("Samba"), "base","audit","indexsamba",
-    "img/common/logview_active.png", "img/common/logview_inactive.png"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Samba"), "base","audit","indexsamba"));
 }
 if(in_array("mail", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_("Mail"), "base","audit","indexmail",
-    "img/common/logview_active.png", "img/common/logview_inactive.png"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Mail"), "base","audit","indexmail"));
 }
 if(in_array("proxy", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_("Proxy"), "base","audit","indexproxy",
-    "img/common/logview_active.png", "img/common/logview_inactive.png"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Proxy"), "base","audit","indexproxy"));
 }
 if(in_array("network", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_("Network"), "base","audit","indexnetwork",
-    "img/common/logview_active.png", "img/common/logview_inactive.png"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_("Network"), "base","audit","indexnetwork"));
 }
 
 /* This module doesn't have audit capabilities for now, so disable it

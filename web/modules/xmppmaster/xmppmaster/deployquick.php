@@ -53,14 +53,14 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             <tr>
             <?
                 if ($_GET['presencemachinexmpp']){
-                    echo '<td id="shutdown0" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                    echo '<td id="reboot0" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
-                    echo '<td id="inventory0" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
-                    echo '<td id="vncchangeperms0" align="center"><img src="modules/base/graph/computers/remotedesktop.png" height="70" width="70" ></td>';
-                    echo '<td id="installkey0" align="center"><img src="modules/base/graph/computers/installkeydesktop.png" height="70" width="70" ></td>';
+                    echo '<td id="shutdown0" align="center"><img src="img/actions/power.svg" height="70" width="70"> </td>';
+                    echo '<td id="reboot0" align="center"><img src="img/actions/restart.svg" height="70" width="70" ></td>';
+                    echo '<td id="inventory0" align="center"><img src="img/actions/inventory.svg" height="70" width="70" ></td>';
+                    echo '<td id="vncchangeperms0" align="center"><img src="img/actions/control.svg" height="70" width="70" ></td>';
+                    echo '<td id="installkey0" align="center"><img src="img/actions/key.svg" height="70" width="70" ></td>';
                 }
                 else{
-                    echo '<td id="wol0" align="center"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
+                    echo '<td id="wol0" align="center"><img src="img/actions/power.svg" height="70" width="70" ></td>';
                 }
                 ?>
             </tr>
@@ -213,8 +213,8 @@ $jid = (isset($_GET['jid'])) ? $_GET['jid'] : '';
 //                 if ($pos1 !== false) {
 //                     echo '<td id="winservices" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 }
-                echo '<td id="clone_ps_aux" align="center"><img src="modules/base/graph/navbar/process.png" height="45" width="45"> </td>';
-                 echo '<td id="disk_usage" align="center"><img src="modules/base/graph/navbar/diskusage.png" height="45" width="45"> </td>';
+                echo '<td id="clone_ps_aux" align="center"><img src="img/actions/process.svg" height="45" width="45"> </td>';
+                 echo '<td id="disk_usage" align="center"><img src="img/actions/disk.svg" height="45" width="45"> </td>';
 //                 echo '<td id="sensors_fans" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="mmemory" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="ifconfig" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
@@ -223,7 +223,7 @@ $jid = (isset($_GET['jid'])) ? $_GET['jid'] : '';
 //
 //                 echo '<td id="netstat" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
 //                 echo '<td id="cputimes" align="center"><img src="modules/base/graph/navbar/load_hl.png" height="45" width="45"> </td>';
-                echo '<td id="agentinfo" align="center"><img src="modules/base/graph/navbar/information.png" height="45" width="45"> </td>';
+                echo '<td id="agentinfo" align="center"><img src="img/actions/info.svg" height="45" width="45"> </td>';
             echo "</tr>";
             echo '<tr>';
 //                 echo '<td id="battery0" align="center">battery </td>';

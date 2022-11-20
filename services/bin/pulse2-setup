@@ -449,10 +449,11 @@ class Pulse2ConfigFile(object):
     """
     clsnames = ['PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
                 'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
-                'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig',
+                'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsUrbackupConfig',
                 'InventoryServerConfig', 'PackageServerConfig', 'SchedulerConfig',
                 'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig',
-                'PluginsKioskConfig', 'PluginsXmppmasterConfig', 'PluginsAdminConfig']
+                'PluginsKioskConfig', 'PluginsXmppmasterConfig', 'PluginsAdminConfig',
+                'PluginsUpdatesConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -652,8 +653,9 @@ class PluginsMscConfig(Pulse2ConfigFile):
     path = 'plugins/msc.ini'
 
 
-class PluginsBackuppcConfig(Pulse2ConfigFile):
-    path = 'plugins/backuppc.ini'
+class PluginsUrbackupConfig(Pulse2ConfigFile):
+    path = 'plugins/urbackup.ini'
+
 
 
 class InventoryServerConfig(LoggingConfig):
@@ -686,6 +688,10 @@ class PluginsAdminConfig(Pulse2ConfigFile):
     path = 'plugins/admin.ini'
 
 
+class PluginsUpdatesConfig(Pulse2ConfigFile):
+    path = 'plugins/updates.ini'
+
+
 class SetupApp(object):
     defaults = {}
     confs = {}
@@ -710,7 +716,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk', 'pkgs', 'xmppmaster', 'admin']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update', 'kiosk', 'pkgs', 'xmppmaster', 'admin', 'updates']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -821,8 +827,6 @@ class SetupApp(object):
         self.defaults['glpi_webservices_user'] = self.options["glpi_webservices_user"]
         self.defaults['glpi_webservices_passwd'] = self.options["glpi_webservices_passwd"]
         self.defaults['ipexternal'] = self.options["ipexternal"] or self.find_ip()
-        self.defaults['backuppc_ip'] = self.options["backuppc_ip"] or '127.0.0.1'
-        self.defaults['backuppc_entity'] = self.options["backuppc_entity"] or 'UUID1'
 
     def read_config(self):
         """ Read some global config values
@@ -833,12 +837,8 @@ class SetupApp(object):
                                                            self.defaults['glpi.plugin.enable'])
         self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)',
                                                                self.defaults['package.service.enable'])
-        self.config['backup.service.enable'] = self.read_bool('Enable backup server (backuppc)',
-                                                               self.defaults['backup.service.enable'])
         self.config['server.ip.external'] = self.read_ip('Server external IP address',
                                                          self.defaults['ipexternal'])
-        self.config['backuppc_ip'] = self.read_opt('BackupPC IP', self.defaults['backuppc_ip'])
-        self.config['backuppc_entity'] = self.read_opt('BackupPC Entity', self.defaults['backuppc_entity'])
 
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
@@ -1094,12 +1094,6 @@ class SetupApp(object):
         self.confs['plugins/pulse2.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/pulse2.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
-        # backuppc
-        self.confs['plugins/backuppc.ini'].set('database', 'dbhost', self.config['dbhost'])
-        self.confs['plugins/backuppc.ini'].set('database', 'dbport', self.config['dbport'])
-        self.confs['plugins/backuppc.ini'].set('database', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/backuppc.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
-
         # kiosk
         self.confs['plugins/kiosk.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/kiosk.ini'].set('database', 'dbport', self.config['dbport'])
@@ -1123,6 +1117,18 @@ class SetupApp(object):
         self.confs['plugins/admin.ini'].set('database', 'dbport', self.config['dbport'])
         self.confs['plugins/admin.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/admin.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # urbackup
+        self.confs['plugins/urbackup.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/urbackup.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/urbackup.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/urbackup.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # updates
+        self.confs['plugins/updates.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/updates.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/updates.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/updates.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
     def init_glpi(self):
         """GLPI coupling"""
@@ -1201,17 +1207,20 @@ class SetupApp(object):
                 invsvr_conf = self.confs["pulse2/inventory-server/inventory-server.ini"]
                 invsvr_conf.set("main", "enable_forward", False)
 
-        #Enable BackupPC module
-        self.confs['plugins/backuppc.ini'].set('main', 'disable', 0)
+        #Enable Urbackup module
+        self.confs['plugins/urbackup.ini'].set('main', 'disable', 0)
 
         #Enable Kiosk module
-        #self.confs['plugins/kiosk.ini'].set('main', 'disable', 0)
+        self.confs['plugins/kiosk.ini'].set('main', 'disable', 0)
 
         #Enable pkgs module
         self.confs['plugins/pkgs.ini'].set('main', 'disable', 0)
 
         #Enable admin module
         self.confs['plugins/admin.ini'].set('main', 'disable', 0)
+
+        #Enable updates module
+        self.confs['plugins/updates.ini'].set('main', 'disable', 0)
 
         # Ensure various dirs are created
         for path in [self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
@@ -1308,18 +1317,6 @@ class SetupApp(object):
                     log.error('Can not register imaging server')
             else:
                 log.info('Imaging server already registered')
-
-        # Associate local BackupPC server to first entity (UUID1)
-        binpath = path_lookup('pulse2-backup-servers')
-        if binpath is not None and self.config['backup.service.enable']:
-            cmd = binpath + ' -a -e ' + self.config['backuppc_entity'] + ' -p http://' + self.config['backuppc_ip'] + '/backuppc/index.cgi'
-            log.debug('Call: %s' % cmd)
-            if call(cmd, shell=True) != 0:
-                log.error('Unable to associate BackupPC server on %(backuppc_ip)s to entity %(backuppc_entity)s' % self.config)
-            else:
-                log.info('BackupPC server http://%(backuppc_ip)s/backuppc/index.cgi associated to entity %(backuppc_entity)s' % self.config)
-        else:
-            log.error("BackupPC server is not probably installed")
 
         binpath = path_lookup('pulse2-create-group')
         grp_name = self.config['defaultUserGroup']
@@ -1435,10 +1432,6 @@ if __name__ == '__main__':
                       help="MySQL administrator password")
     parser.add_option("--external-ip-address", dest="ipexternal",
                       help="Set an external IP Address used in package-server.ini")
-    parser.add_option("--backuppc-ip", dest="backuppc_ip",
-                      help="BackupPC IP, you can specify port. Per example: 127.0.0.1:81")
-    parser.add_option("--backuppc-entity", dest="backuppc_entity",
-                      help="Entity who will be linked to BackupPC (default: UUID1)")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -1481,8 +1474,6 @@ if __name__ == '__main__':
         'glpi_dbhost': options.glpidbhost,
         'glpi_dbport': options.glpidbport,
         'ipexternal': options.ipexternal,
-        'backuppc_ip': options.backuppc_ip,
-        'backuppc_entity': options.backuppc_entity,
     }
 
     # Run the setup app

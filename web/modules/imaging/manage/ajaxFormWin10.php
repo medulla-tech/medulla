@@ -266,7 +266,7 @@ var template = [
 '</RunSynchronousCommand>',
 '<RunSynchronousCommand wcm:action="add">',
 '<Order>2</Order>',
-'<Path>powershell.exe -executionpolicy bypass -File c:\\Windows\\INF\\driverpack\\install-driver-cert.ps1</Path>',
+'<Path>powershell.exe -executionpolicy bypass -File c:\\ProgramData\\SysPrep\\drivers\\install-driver-cert.ps1</Path>',
 '</RunSynchronousCommand>',
 '</RunSynchronous>',
 '</component>',
@@ -428,7 +428,6 @@ var template = [
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
-require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/data_Windows_Answer_File_Generator.inc.php");
 require("../includes/class_form.php");

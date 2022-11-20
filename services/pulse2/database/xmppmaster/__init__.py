@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net/
+# (c) 2016-2022 siveo, http://www.siveo.net/
 #
 # $Id$
 #
@@ -322,6 +322,31 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(str(e))
             self.logger.error("\n%s" % (traceback.format_exc()))
+
+    @DatabaseHelper._sessionm
+    def update_count_subscription(self,
+                                  session,
+                                  agentsubtitutename,
+                                  countroster):
+        logging.getLogger().debug("update_count_subscription %s" % agentsubtitutename)
+        try:
+            result = session.query(Substituteconf).filter(Substituteconf.jidsubtitute == agentsubtitutename).all()
+            first_value = True
+            for t in result:
+                logging.getLogger().debug("countsub %s->%s ars %s" % (t.countsub,
+                                                                      t.jidsubtitute,
+                                                                      t.relayserver_id))
+                if first_value:
+                    first_value = False
+                    t.countsub = countroster
+                else:
+                    t.countsub = 0
+            session.commit()
+            session.flush()
+            return True
+        except Exception, e:
+            logging.getLogger().error("update_count_subscription %s" % str(e))
+            return False
 
     @DatabaseHelper._sessionm
     def update_enable_for_agent_subscription(self,
@@ -1437,6 +1462,31 @@ class XmppMasterDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
+    def getQAforMachineByJid(self, session, cmd_id, jid):
+        try:
+            command_action = session.query(Command_action).\
+                    filter(and_(Command_action.command_id == cmd_id,
+                                Command_action.jid_target == jid))
+            #print command_action
+            #print cmd_id
+            #print uuidmachine
+            command_action = command_action.all()
+            listcommand = []
+            for command in command_action:
+                action = []
+                action.append( command.command_id )
+                action.append( str(command.date) )
+                action.append( command.session_id )
+                action.append( command.typemessage )
+                action.append( command.command_result )
+                listcommand.append(action)
+            return listcommand
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            traceback.print_exc(file=sys.stdout)
+            return []
+
+    @DatabaseHelper._sessionm
     def getCommand_action_time(self, session, during_the_last_seconds, start, stop, filter = None):
         try:
             command_qa = session.query(distinct(Command_qa.id).label("id"),
@@ -1446,7 +1496,9 @@ class XmppMasterDatabase(DatabaseHelper):
                                        Command_qa.command_start.label("command_start"),
                                        Command_qa.command_grp.label("command_grp"),
                                        Command_qa.command_machine.label("command_machine"),
-                                       Command_action.target.label("target")).join(Command_action,
+                                       Command_action.target.label("target"),
+                                       Command_qa.jid_machine.label("jid_machine"),
+                                       ).join(Command_action,
                                                                         Command_qa.id == Command_action.command_id)
             ##si on veut passer par les groupe avant d'aller sur les machine.
             ## command_qa = command_qa.group_by(Command_qa.id)
@@ -1473,6 +1525,7 @@ class XmppMasterDatabase(DatabaseHelper):
             command_grp_list = []
             command_machine_list = []
             command_target_list = []
+            jid_machine_list = []
             for command in command_qa:
                 command_id_list.append(command.id)
                 command_name_list.append(command.command_name)
@@ -1482,6 +1535,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 command_grp_list.append(command.command_grp)
                 command_machine_list.append(command.command_machine)
                 command_target_list.append(command.target)
+                jid_machine_list.append(command.jid_machine)
             result_list.append(command_id_list)
             result_list.append(command_name_list)
             result_list.append(command_login_list)
@@ -1490,6 +1544,7 @@ class XmppMasterDatabase(DatabaseHelper):
             result_list.append(command_grp_list)
             result_list.append(command_machine_list)
             result_list.append(command_target_list)
+            result_list.append(jid_machine_list)
             return {"nbtotal": nbtotal, "result": result_list}
         except Exception, e:
             logging.getLogger().debug("getCommand_action_time error %s->" % str(e))
@@ -1499,7 +1554,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def setCommand_qa(self, session, command_name, command_action,
-                      command_login, command_grp='', command_machine='', command_os=''):
+                      command_login, command_grp='', command_machine='', command_os='', jid=""):
         try:
             new_Command_qa = Command_qa()
             new_Command_qa.command_name = command_name
@@ -1508,6 +1563,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_Command_qa.command_grp = command_grp
             new_Command_qa.command_machine = command_machine
             new_Command_qa.command_os = command_os
+            new_Command_qa.jid_machine = jid
             session.add(new_Command_qa)
             session.commit()
             session.flush()
@@ -1543,7 +1599,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     "command_machine": ""}
 
     @DatabaseHelper._sessionm
-    def setCommand_action(self, session, target, command_id, sessionid, command_result="", typemessage="log"):
+    def setCommand_action(self, session, target, command_id, sessionid, command_result="", typemessage="log", jid=""):
         try:
             new_Command_action = Command_action()
             new_Command_action.session_id = sessionid
@@ -1551,6 +1607,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_Command_action.typemessage = typemessage
             new_Command_action.command_result = command_result
             new_Command_action.target = target
+            new_Command_action.jid_target = jid
             session.add(new_Command_action)
             session.commit()
             session.flush()
@@ -3522,6 +3579,8 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentpending': 0,
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
+                   'errorhashmissing': 0,
+                   'aborthashinvalid': 0,
                    'otherstatus': 0,
                   }
             dynamic_status_list = self.get_log_status()
@@ -3586,6 +3645,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['deploymentpending'] = liststatus[t]
                 elif t == 'DEPLOYMENT DELAYED':
                     ret['deploymentdelayed'] = liststatus[t]
+                elif t == 'ERROR HASH MISSING':
+                    ret['errorhashmissing'] = liststatus[t]
+                elif t == 'ABORT HASH INVALID':
+                    ret['aborthashinvalid'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
@@ -3641,6 +3704,8 @@ class XmppMasterDatabase(DatabaseHelper):
                    'deploymentpending': 0,
                    'deploymentdelayed': 0,
                    'deploymentspooled': 0,
+                   'errorhashmissing': 0,
+                   'aborthashinvalid': 0,
                    'otherstatus': 0,
                   }
             dynamic_status_list = self.get_log_status()
@@ -3705,6 +3770,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret['deploymentpending'] = liststatus[t]
                 elif t == 'DEPLOYMENT DELAYED':
                     ret['deploymentdelayed'] = liststatus[t]
+                elif t == 'ERROR HASH MISSING':
+                    ret['errorhashmissing'] = liststatus[t]
+                elif t == 'ABORT HASH INVALID':
+                    ret['aborthashinvalid'] = liststatus[t]
 
                 elif t in dynamic_status:
                     index = dynamic_status.index(t)
@@ -3951,6 +4020,28 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def updatemachine_kiosk_presence(self, session, idmachine, presence):
+        """Modify the kiosk presence for the specified machines
+            Params:
+                session : sql session
+                idmachine : int corresponding to the xmppmaster.machine.id
+                presence : str representing the presence ("True" or "False")
+
+            Returns:
+                int : 1 value if success
+                int : -1 value if failure
+        """
+        try:
+            session.query(Machines).filter( Machines.id ==  idmachine).\
+                    update({ Machines.kiosk_presence : presence})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
 
     @DatabaseHelper._sessionm
     def updatedeploystate1(self, session, sessionid, state):
@@ -6726,31 +6817,58 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def substituteinfo(self, session, listconfsubstitute, arsname):
         """
-            search  subtitute agent jid for agent machine
+           cette fonction crée les listes ordonnée de substitut pour configure les machines.
+           pour assure le load balancing sur les différents substituts elle utilise la somme totale de chaque substitut. et attribut celui le moin utilise.
+           Elle tient compte des ars associe au substitut.
+           Si la machine a 1 ars, les substitut agrege au ars sont participant.
         """
         try:
-            exclud = 'master@pulse'
+            excluded_ars = 'master@pulse'
 
             incrementeiscount=[]
-            for t in listconfsubstitute['conflist']:
-                result = session.query(Substituteconf.id.label("id"),
-                                       Substituteconf.jidsubtitute.label("jidsubtitute"),
-                                       Substituteconf.countsub.label("countsub"),
-                                       RelayServer.jid.label("namerelayser")).\
-                    join(RelayServer, Substituteconf.relayserver_id == RelayServer.id).\
-                        filter( and_(not_(Substituteconf.jidsubtitute.like(exclud)),
-                                    Substituteconf.type.like(t),
-                                    RelayServer.jid == arsname)).order_by(Substituteconf.countsub).all()
-                listcommand = []
-                test = False
-                for y in result:
-                    listcommand.append(y.jidsubtitute)
-                    if not test:
-                        test = True
-                        incrementeiscount.append(str(y.id))
-                listcommand.append(exclud)
-                listconfsubstitute[t] = listcommand
-            if incrementeiscount:
+            for substituteinfo in listconfsubstitute['conflist']:
+                try:
+                    sql="""SELECT
+                                substituteconf.id AS id,
+                                substituteconf.jidsubtitute AS jidsubtitute,
+                                substituteconf.countsub AS countsub,
+                                substituteconf.type AS type,
+                                relayserver.jid AS namerelayser,
+                                SUM(substituteconf.countsub) AS totsub
+                            FROM
+                                substituteconf
+                                    JOIN
+                                relayserver ON substituteconf.relayserver_id = relayserver.id
+                            WHERE
+                                substituteconf.jidsubtitute NOT LIKE '%s'
+                                    AND substituteconf.type LIKE '%s'
+                                    AND (substituteconf.jidsubtitute IN (SELECT
+                                        substituteconf.jidsubtitute
+                                    FROM
+                                        substituteconf
+                                    WHERE
+                                        substituteconf.relayserver_id = (SELECT
+                                                id
+                                            FROM
+                                                relayserver
+                                            WHERE
+                                                relayserver.jid LIKE '%s')))
+                            GROUP BY substituteconf.jidsubtitute
+                            ORDER BY totsub;""" % (excluded_ars, substituteinfo, arsname)
+                    resultproxy = session.execute(sql)
+                    listcommand = []
+                    infsub = [{"id":x[0], "sub": x[1] , "totalcount": int(x[5])} for x in resultproxy]
+                    self.logger.debug("%s -> %s" % (substituteinfo, infsub))
+                    if infsub:
+                        incrementeiscount.append(str(infsub[0]['id']))
+                    for t in infsub:
+                        listcommand.append(t['sub'])
+                    listcommand.append(exclud)
+                    listconfsubstitute[substituteinfo] = listcommand
+                except Exception as e:
+                    self.logger.error("\n%s" % traceback.format_exc())
+
+            if len(incrementeiscount) != 0:
                 # update contsub
                 sql="""UPDATE `xmppmaster`.`substituteconf`
                     SET
@@ -6759,9 +6877,9 @@ class XmppMasterDatabase(DatabaseHelper):
                         `id` IN (%s);""" % ','.join([x for x in incrementeiscount])
                 result = session.execute(sql)
                 session.commit()
-                session.flush()
         except Exception, e:
             logging.getLogger().error("substituteinfo : %s" % str(e))
+        logging.getLogger().debug("substitute list : %s" % listconfsubstitute)
         return listconfsubstitute
 
     @DatabaseHelper._sessionm
@@ -7838,6 +7956,31 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
+    def get_computer_count_for_dashboard(self, session):
+        sql = """SELECT
+          SUM(1) as total,
+          SUM(CASE WHEN enabled = 0 THEN 1 ELSE 0 END) as total_offline,
+          SUM(CASE WHEN enabled = 0 AND uuid_inventorymachine = "" THEN 1 ELSE 0 END) as offline_uninventoried,
+          SUM(CASE WHEN enabled = 0 AND uuid_inventorymachine != "" THEN 1 ELSE 0 END) as offline_inventoried,
+          SUM(CASE WHEN enabled = 1 THEN 1 ELSE 0 END) as total_online,
+          SUM(CASE WHEN enabled = 1 AND uuid_inventorymachine = "" THEN 1 ELSE 0 END) as online_uninventoried,
+          SUM(CASE WHEN enabled = 1 AND uuid_inventorymachine != "" THEN 1 ELSE 0 END) as online_inventoried,
+          SUM(CASE WHEN uuid_inventorymachine = "" THEN 1 ELSE 0 END) as total_uninventoried,
+          SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
+        FROM machines WHERE agenttype="machine";"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        # There is only one line so we can truncate
+        ret = [{
+            'total': int(x[0]), 'total_offline': int(x[1]),
+            'offline_uninventoried': int(x[2]), 'offline_inventoried': int(x[3]), 'total_online': int(x[4]),
+            'online_uninventoried' : int(x[5]), 'online_inventoried': int(x[6]),
+            'total_uninventoried': int(x[7]), 'total_inventoried': int(x[8])} for x in result][0]
+
+        return ret
+
+    @DatabaseHelper._sessionm
     def get_syncthing_deploy_to_clean(self, session):
         sql="""
     SELECT
@@ -8208,7 +8351,7 @@ class XmppMasterDatabase(DatabaseHelper):
             for machine in query:
                 flag = False
                 for count_ars in counts:
-                    if machine.jid == count_ars["jid"]:
+                    if machine.jid_from_relayserver == count_ars["jid"]:
                         flag = True
                         break
                 if flag == True:
@@ -9680,7 +9823,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.commit()
             session.flush()
             return new_Monitoring_panels_template.id
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
             return -1
 
@@ -9721,7 +9864,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                        'status': graphe_template.status,
                        'comment': graphe_template.comment}
                 list_panels_template.append(res)
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
         return list_panels_template
 
@@ -10302,12 +10445,12 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if rule is not None:
             if action == "raise":
                 selected = session.query(Has_relayserverrules)\
-                    .filter(Has_relayserverrules.order < rule.order)\
+                    .filter(and_(Has_relayserverrules.rules_id == rule.rules_id, Has_relayserverrules.order < rule.order))\
                     .order_by(desc(Has_relayserverrules.order)).first()
 
             elif action == "down":
                 selected = session.query(Has_relayserverrules)\
-                    .filter(Has_relayserverrules.order > rule.order)\
+                    .filter(and_(Has_relayserverrules.rules_id == rule.rules_id, Has_relayserverrules.order > rule.order))\
                     .order_by(Has_relayserverrules.order).first()
             else:
                 result['status'] = "error"
@@ -10925,7 +11068,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             self.logger.error("\n%s" % (traceback.format_exc()))
             return None
 
-
     @DatabaseHelper._sessionm
     def getUpdate_machine(self,
                           session,
@@ -10986,3 +11128,229 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.commit()
             session.flush()
         return machines_jid_for_updating
+
+    @DatabaseHelper._sessionm
+    def get_update_by_entity(self, session):
+        """
+            This function returns the total number of updates to apply for each entity
+        """
+        sql="""SELECT
+                    glpi_entity.glpi_id AS entity,
+                    COUNT(*) AS nombre_machine,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') != '') THEN 1
+                        ELSE 0
+                    END) AS update_a_mettre_a_jour
+                FROM
+                    xmppmaster.machines
+                        JOIN
+                    glpi_entity ON machines.glpi_entity_id = glpi_entity.id
+                        LEFT JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                WHERE
+                    platform LIKE 'Mic%'
+                GROUP BY glpi_entity.glpi_id;"""
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_machine_by_entity_in_gray_list(self, session):
+        """
+            This function returns the machines to update in an entity considering only the updates enabled in gray list
+        """
+        sql="""SELECT
+                    glpi_entity.glpi_id AS entity,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') != '') THEN 1
+                        ELSE 0
+                    END) AS machine_a_mettre_a_jour
+                FROM
+                    xmppmaster.machines
+                        JOIN
+                    glpi_entity ON machines.glpi_entity_id = glpi_entity.id
+                        LEFT JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                        JOIN
+                    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                WHERE
+                    platform LIKE 'Mic%'
+                        AND xmppmaster.up_gray_list.valided = 1
+                GROUP BY glpi_entity.glpi_id;"""
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_conformity_update_by_entity(self, session):
+        """
+            This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
+        """
+        result={}
+        for x in self.get_update_by_entity():
+            result[x['entity']] = { 'totalmach' : x['nombre_machine'], 'nbupdate' : x['update_a_mettre_a_jour'], 'nbmachines' : 0 }
+        for x in self.get_machine_by_entity_in_gray_list():
+           result[x['entity']]['nbmachines'] =  x['machine_a_mettre_a_jour']
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_conformity_update_by_entity_in_gray_list(self, session):
+        """
+            This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
+        """
+        sql="""SELECT
+                    glpi_entity_id AS entity,
+                    COUNT(*) AS total_machine_entity,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') != '') THEN 1
+                        ELSE 0
+                    END) AS a_mettre_a_jour,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') = '') THEN 1
+                        ELSE 0
+                    END) AS a_ne_pas_mettre_a_jour
+                FROM
+                    xmppmaster.machines
+                        LEFT JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                        JOIN
+                    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                WHERE
+                    platform LIKE 'Mic%'
+                        AND xmppmaster.up_gray_list.valided = 1
+                GROUP BY glpi_entity_id;"""
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+    
+    
+    @DatabaseHelper._sessionm
+    def get_conformity_update_by_machine(self, session, idmachine):
+        """
+            This function returns the the update already done and update enable
+        """
+        sql="""SELECT COUNT(*) AS update_waiting
+                FROM
+                    xmppmaster.up_gray_list
+                INNER JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                WHERE
+                    up_gray_list.valided = 1
+                AND
+                    up_machine_windows.id_machine = '%s';"""%(idmachine)
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+
+
+    @DatabaseHelper._sessionm
+    def get_count_grey_list_enable(self, session):
+        """
+            This function returns the the update already done and update enable
+        """
+        sql="""SELECT COUNT(*) AS enable_grey
+                FROM
+                    xmppmaster.up_gray_list
+                WHERE
+                    valided = 1;"""
+                
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+
+
+    @DatabaseHelper._sessionm
+    def get_conformity_update_for_group(self, session, uuidArray):
+        """
+            This function returns the the update already done and update enable
+        """
+        array_GUID = " AND uuid_inventorymachine IN ('%s')" % ",".join([str(x) for x in uuidArray])
+        
+        sql="""SELECT
+                    COUNT(*) AS nombre_machine,
+                    SUM(CASE
+                        WHEN (COALESCE(update_id, '') != '') THEN 1
+                        ELSE 0
+                    END) AS update_a_mettre_a_jour
+                FROM
+                    xmppmaster.machines
+                        LEFT JOIN
+                    xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                WHERE
+                    platform LIKE 'Mic%'"""
+                    
+        sql = sql + array_GUID + ";"
+                        
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        
+        return resultquery
+    
+
+    @DatabaseHelper._sessionm
+    def get_ou_list_from_machines(self, session):
+        """Get all ous listed in machines table (in ad_ou_machine and ad_ou_user fields)
+        Returns list: all unique OUs found in the table
+        """
+        query = session.query(Machines.ad_ou_machine, Machines.ad_ou_user).group_by(Machines.ad_ou_machine, Machines.ad_ou_user).all()
+        result = []
+        if query is not None:
+            for ou in query:
+                if ou[0] != '':
+                    if ou[0] not in result:
+                        result.append(ou[0].replace('@@','/'))
+
+                if ou[1] != '':
+                    if ou[1] not in result:
+                        result.append(ou[1].replace('@@','/'))
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_users_from_ou_from_machines(self, session, ou):
+        """Get all users listed in machines table corresponding to ad_ou_user = ou
+        Params:
+            ou (str) : The location where the users are searched
+        Returns list: all unique OUs found in the table
+        """
+        result = []
+        query = session.query(Machines.lastuser).filter(Machines.ad_ou_user == ou).group_by(Machines.lastuser).all()
+
+        if query is not None:
+            result = [user[0] for user in query]
+        return result
+    
+    @DatabaseHelper._sessionm
+    def get_ou_for_user_from_machines(self, session, user):
+        """Get user's ous listed in machines table corresponding to lastuser = user
+        Params:
+            user (str) : The user searched
+        Returns list: all unique OUs found in the table
+        """
+        result = []
+        query = session.query(Machines.ad_ou_user).filter(Machines.lastuser == user).group_by(Machines.ad_ou_user).all()
+
+        if query is not None:
+            result = [ou[0].replace('@@', '/') for ou in query]
+        return result

@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net
+# (c) 2016-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -474,7 +474,7 @@ class Command_qa(Base, XmppMasterDBObj):
     command_start = Column(DateTime, default=datetime.datetime.now)
     command_grp = Column(String(11), default=None)
     command_machine = Column(String(11), default=None)
-
+    jid_machine = Column(String(255), nullable=False)
 
 class Command_action(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -490,7 +490,7 @@ class Command_action(Base, XmppMasterDBObj):
     typemessage = Column(String(20), default="log")
     command_result = Column(Text)
     target = Column(String(45), nullable=False)
-
+    jid_target = Column(String(255), nullable=False)
 
 class ParametersDeploy(Base, XmppMasterDBObj):
     # ====== Table name =========================

@@ -74,10 +74,10 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $delete[] = $deletecommand;
     if($groupid){
         $groupname = getPGobject($arraydeploy['tabdeploy']['groupid'][$index], true)->getName();
-        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/machines/icn_groupsList.gif'/> " . $groupname ;
+        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machinegroup.svg' width='25' height='25'/> " . $groupname ;
     }
     else{
-        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/machines/icn_machinesList.gif'/> " . $arraydeploy['tabdeploy']['host'][$index] ;
+        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machine_down.svg' width='25' height='25'/> " . $arraydeploy['tabdeploy']['host'][$index] ;
     }
     $index++;
 }
