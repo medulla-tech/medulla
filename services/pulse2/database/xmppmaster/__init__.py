@@ -11224,7 +11224,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         JOIN
                     xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
-                    xmppmaster.up_gray_list.valided = 1
+                    platform LIKE 'Mic%'
+                        AND xmppmaster.up_gray_list.valided = 1
                 GROUP BY glpi_entity_id;"""
         resultquery = session.execute(sql)
         session.commit()
@@ -11259,10 +11260,32 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
 
     @DatabaseHelper._sessionm
+    def get_count_grey_list_enable(self, session):
+        """
+            This function returns the the update already done and update enable
+        """
+        sql="""SELECT COUNT(*) AS enable_grey
+                FROM
+                    xmppmaster.up_gray_list
+                WHERE
+                    valided = 1;"""
+                
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+
+
+    @DatabaseHelper._sessionm
     def get_conformity_update_for_group(self, session, uuidArray):
         """
             This function returns the the update already done and update enable
         """
+        array_GUID = " AND uuid_inventorymachine IN ('%s')" % ",".join([str(x) for x in uuidArray])
+        
         sql="""SELECT
                     COUNT(*) AS nombre_machine,
                     SUM(CASE
@@ -11274,15 +11297,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         LEFT JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
                 WHERE
-                    platform LIKE 'Mic%'
-                        AND uuid_inventorymachine IN ('%s');"""(uuidArray)
+                    platform LIKE 'Mic%'"""
+                    
+        sql = sql + array_GUID + ";"
+                        
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result= [{column: value for column,
-                value in rowproxy.items()}
-                        for rowproxy in resultquery]
-        return result
+        
+        return resultquery
     
 
     @DatabaseHelper._sessionm

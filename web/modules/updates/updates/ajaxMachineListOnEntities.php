@@ -54,20 +54,82 @@ $detailsByMach = new ActionItem(_T("Test", "updates"),"detailsByMachines","displ
 if ($uuid == '')
 {
     $typeOfDetail = "group";
-    print_r(_T("<h2>Computers from group ".$groupname."</h2>","updates"));
 }
 else
 {
     $typeOfDetail = "entitie";
 }
 
-// A VOIR SI JE M'EN SORS AVEC DES BOUCLES MAIS PEUT ETRE REFAIRE UNE REQUETE EN FONCTION DE L'ENTITYID
 $machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
-$filter = array('gid' => $gid);
-$listGroup = getRestrictedComputersList(0, -1, $filter, False);
+$filterGid = array('gid' => $gid);
+$listGroup = getRestrictedComputersList(0, -1, $filterGid, False);
 
-print_r($listGroup);
+$group_array = [];
 
+if ($typeOfDetail == "group")
+{
+    print_r(_T("<h2>Global compliance rate for ".$groupname."</h2>", "updates"));
+    echo "<br>";
+
+    foreach ($listGroup as $key => $value)
+    {
+        array_push($group_array, $key);
+    }
+
+    $group_compliance = xmlrpc_get_conformity_update_for_group($group_array);
+
+    print_r("--------------------------------");
+    print_r($group_compliance);
+    print_r("--------------------------------");
+
+    switch(intval($group_compliance)){
+        case $group_compliance <= 10:
+            $color = "#ff0000";
+            break;
+        case $group_compliance <= 20:
+            $color = "#ff3535";
+            break;
+        case $group_compliance <= 30:
+            $color = "#ff5050";
+            break;
+        case $group_compliance <= 40:
+            $color = "#ff8080";
+            break;
+        case $group_compliance <  50:
+            $color = "#ffA0A0";
+            break;
+        case $group_compliance <=  60:
+            $color = "#c8ffc8";
+            break;
+        case $group_compliance <= 70:
+            $color = "#97ff97";
+            break;
+        case $group_compliance <= 80:
+            $color = "#64ff64";
+            break;
+        case $group_compliance <=  90:
+            $color = "#2eff2e";
+            break;
+        case $group_compliance >90:
+            $color = "#00ff00";
+            break;
+    }
+    echo "<div class='progress' style='width: ".$group_compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$group_compliance."% </div>";
+}
+
+echo "<br>";
+echo "<br>";
+
+if ($typeOfDetail == "group")
+{
+    print_r(_T("<h2>Computers from group ".$groupname."</h2>","updates"));
+}
+else
+{
+    print_r(_T("<h2>Computers from entitie </h2>","updates"));
+}
+
+// A VOIR SI JE M'EN SORS AVEC DES BOUCLES MAIS PEUT ETRE REFAIRE UNE REQUETE EN FONCTION DE L'ENTITYID
 // POUR POUVOIR COMPARER L UUID AVEC ENTITYID
 if ($uuid != '')
 {
@@ -87,6 +149,9 @@ if ($uuid != '')
     $count = $machines['count'];
 }
 
+$all_grey_enable = xmlrpc_get_count_grey_list_enable();
+$all_grey_enable = $all_grey_enable['0']['enable_grey'];
+
 if ($typeOfDetail == "entitie")
 {
     for($i=0; $i < $count; $i++){
@@ -94,9 +159,19 @@ if ($typeOfDetail == "entitie")
             $detailsByMachs[] = $detailsByMach;
             $machineNames[] = $machines['data']['hostname'][$i];
             $machineByEntitie[] = $machines['data']['glpi_entity_id'][$i];
-            
+
             $compliance_computer = xmlrpc_get_conformity_update_by_machine($machines['data']['id'][$i]);
             $comp = $compliance_computer['0']['update_waiting'];
+
+            if ($all_grey_enable != '0' and $comp != '0')
+            {
+                $comp = $comp / $all_grey_enable * 100;
+            }
+            else
+            {
+                $comp = '0';
+            }
+
             switch(intval($comp)){
                 case $comp <= 10:
                     $color = "#ff0000";
@@ -150,6 +225,19 @@ if ($typeOfDetail == "group")
 }
 
 echo '<pre>';
+// print_r($ctx);
+// var_dump($filter);
+// var_dump($count);
+// print_r($machines);
+// var_dump($match);
+// var_dump($count_machineNames);
+// print_r($machines['data']);
+//print_r($machines['data']['hostname']);
+//print_r($machines['data']['entityid']);
+//print_r($machines['data']['platform']);
+// print_r($machineByEntitie);
+// print_r($compliancerate);
+// print_r($test);
 echo '</pre>';
 
 
