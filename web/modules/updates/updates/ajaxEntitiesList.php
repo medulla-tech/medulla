@@ -120,45 +120,6 @@ foreach ($entities as $entity) {
     $totalMachine[] = $totalmach;
     $nbupdate[] = $nbupdateentity ;
 }
-
-$n = new OptimizedListInfos($entityNames, _T("Entity name", "updates"));
-$n->disableFirstColumnActionLink();
-
-$n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($nbupdate, _T("Missing Updates", "updates"));
-$n->addExtraInfo($totalMachine, _T("Total Machines", "updates"));
-
-$n->setItemCount($count);
-$n->setNavBar(new AjaxNavBar($count, $filter));
-$n->setParamInfo($params);
-
-$n->addActionItemArray($actiondetailsByMachs);
-$n->addActionItemArray($actiondetailsByUpds);
-$n->addActionItemArray($actiondeployAlls);
-$n->addActionItemArray($actiondeploySpecifics);
-$n->display();
-?>
-$deployAll;
-    $actiondeploySpecifics[] = $deploySpecific;
-    $entityNames[] = $entity["completename"];
-    $params[] = array('uuid' => $entity['uuid']);
-    $color = colorconf(100);
-    if (isset($identity[$id_entity])){
-        $conformite = $identity[$id_entity]['conformite'];
-        $color = colorconf(intval($conformite));
-        $totalmach=intval($identity[$id_entity]['totalmach']);
-        $nbupdateentity=intval($identity[$id_entity]['nbupdate']);
-
-    }else{
-        $conformite = "100";
-        $totalmach=0;
-        $nbupdateentity=0;
-    }
-    $complRates[] ="<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$conformite."% </div>";
-    $totalMachine[] = $totalmach;
-    $nbupdate[] = $nbupdateentity ;
-}
-
 $n = new OptimizedListInfos($entityNames, _T("Entity name", "updates"));
 $n->disableFirstColumnActionLink();
 
