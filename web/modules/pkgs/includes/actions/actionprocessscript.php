@@ -1,10 +1,42 @@
 <?php
+/**
+ * (c) 2016-2022 Siveo, http://www.siveo.net/
+ *
+ * $Id$
+ *
+ * This file is part of Pulse 2, http://www.siveo.net/
+ *
+ * Pulse 2 is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Pulse 2 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with Pulse 2; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ *
+ */
+
 require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
 require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
+$gotoreturncode = [];
+
+// Get centralize all the goto-return codes into $gotoreturncode variable
+foreach($_POST as $key => $value){
+  if(preg_match("#^gotoreturncode#", $key)){
+    $code = intval(explode('@', $key)[1]);
+    $gotoreturncode[] = ["code"=>htmlentities($code), "label"=>htmlentities($value)];
+  }
+}
 
     $command = (isset($command)) ? base64_decode($command) : "" ;
 
@@ -198,6 +230,9 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         </tr>
         <tr class="toggleable">
            <?php
+            /*
+            // DO NOT REMOVE : if we want to remove the gotoreturn system and rollback to the end success/error system
+
             if(isset($success))
             {
                 echo '
@@ -229,10 +264,14 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     <input type="text" value="END_SUCCESS" disabled name="success"  />
                 </td>';
             }
+            */
             ?>
         </tr>
         <tr class="toggleable">
             <?php
+            /*
+            // DO NOT REMOVE : if we want to remove the gotoreturn system and rollback to the end success/error system
+
             if(isset($error))
             {
                 echo '
@@ -264,7 +303,38 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                     <input type="text" value="END_ERROR" enabled name="error"  />
                 </td>';
             }
+            */
             ?>
+        </tr>
+        <tr class="toggleable">
+          <td  width="100%">
+            <input type="checkbox" checked onclick="if(jQuery(this).is(':checked')){
+              jQuery(this).next('.add-goto').attr('disabled', false);
+              jQuery(this).parent().find('.goto-on-return-section').show();
+              jQuery(this).parent().find('.goto-on-return-section input[name=\'gotoreturncode\']').not('.ignore').attr('disabled', false);
+            }
+            else{
+              jQuery(this).next('.add-goto').attr('disabled', true);
+              jQuery(this).parent().find('.goto-on-return-section').hide();
+              jQuery(this).parent().find('.goto-on-return-section input[name=\'gotoreturncode\']').not('.ignore').attr('disabled', true);
+            }"/><?php echo _T("On return code, goto ","pkgs");?>
+            <input type="button" class="add-goto btn btn-primary" class="add-goto" value="<?php echo _T("Add goto","pkgs");?>"
+            onclick="jQuery(this).parent().find('.goto-on-return-section').append('<div class=\'goto-on-return\'>Return Code <input type=\'text\' name=\'gotoreturncode\'/> Goto Label <input type=\'text\' name=\'gotolabel\'/><input type=\'button\' value=\'Delete\' onclick=\'jQuery(this).parent().remove()\'/></div>')"/>
+            <div class="goto-on-return-section">
+              <?php
+              if(count($gotoreturncode) > 0){
+                foreach($gotoreturncode as $row){?>
+                  <div class='goto-on-return'>Return Code <input type='text' name='gotoreturncode' value='<?php echo $row['code'];?>'/> Goto Label <input type='text' name='gotolabel' value="<?php echo $row['label'];?>"/><input type='button' value='Delete' onclick='jQuery(this).parent().remove()'/></div>
+                <?php }
+              }
+              else{
+                ?>
+                <div class='goto-on-return'>Return Code <input type='text' name='gotoreturncode' value='-1'/> Goto Label <input type='text' name='gotolabel' value="END_ERROR"/><input type='button' value='Delete' onclick='jQuery(this).parent().remove()'/></div>
+                <?php
+              }
+              ?>
+            </div>
+          </td>
         </tr>
     </table>
         <!-- Option timeout -->
