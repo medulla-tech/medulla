@@ -8817,6 +8817,48 @@ where agenttype="machine" and groupdeploy in (
             return -1
 
     @DatabaseHelper._sessionm
+    def Update_version_agent_machine_md5(self,
+                                         session,
+                                         hostname,
+                                         md5,
+                                         version):
+        """
+        This function updates the md5 and the version of the agent in the uptime_machine
+        table.
+        Args:
+            session: The sqlalchemy session
+            hostname: The hostname of the machine
+            md5: The md5 fingerprint of the agent.
+            version: The version of the agent
+        """
+        try:
+            sql="""
+                UPDATE
+                    `xmppmaster`.`uptime_machine`
+                SET
+                    `md5agentversion` = '%s',
+                    `version` = '%s'
+                WHERE
+                    (id = (SELECT
+                            id
+                        FROM
+                            xmppmaster.uptime_machine
+                        WHERE
+                            hostname LIKE '%s' AND status = 1
+                        ORDER BY id DESC
+                        LIMIT 1));"""%(md5,
+                                       version,
+                                       hostname)
+            session.execute(sql)
+            session.commit()
+            session.flush()
+            return True
+        except Exception, e:
+            logging.getLogger().error("We failed to update the md5 and the version of the running agent for %s" % hostname)
+            logging.getLogger().error("we encounterd the error: %s" % str(e))
+            return False
+
+    @DatabaseHelper._sessionm
     def last_event_presence_xmpp(self,
                                  session,
                                  jid,
