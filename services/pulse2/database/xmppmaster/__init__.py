@@ -8303,7 +8303,6 @@ class XmppMasterDatabase(DatabaseHelper):
             "inventoried":[],
             'uninventoried' : [],
             'publicclass' : [],
-            'nblinuxmachine' : [],
             'mach_on' : [],
             'nbmachinereconf' : [],
             'kioskon' : [],
