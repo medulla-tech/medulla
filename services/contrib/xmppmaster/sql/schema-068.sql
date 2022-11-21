@@ -25,7 +25,7 @@
 -- ----------------------------------------------------------------------
 -- ADD COLUMNS md5agentversion AND version table uptime_machine
 -- ADD INDEX ON COLUMNS  md5agentversion AND version and date
-- ----------------------------------------------------------------------
+-- ----------------------------------------------------------------------
 
 START TRANSACTION;
 
