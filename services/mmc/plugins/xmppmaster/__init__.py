@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net
+# (c) 2016-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -27,6 +27,7 @@ import os
 import sys
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
+from mmc.support.mmctools import xmlrpcCleanup
 from master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 import hashlib
@@ -655,16 +656,16 @@ def getshowmachinegrouprelayserver():
 def get_qaction(groupname, user, grp, completename):
     return XmppMasterDatabase().get_qaction(groupname, user, grp, completename)
 
-def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os=""):
-    return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os)
+def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os="", jid=""):
+    return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os, jid)
 
 
 def getCommand_action_time(during_the_last_seconds, start, stop, filt):
     return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds, start, stop, filt)
 
 
-def setCommand_action(target, command_id, sessionid, command_result, typemessage):
-    return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage)
+def setCommand_action(target, command_id, sessionid, command_result, typemessage, jid=""):
+    return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage, jid)
 
 
 def getCommand_qa_by_cmdid(cmdid):
@@ -673,6 +674,14 @@ def getCommand_qa_by_cmdid(cmdid):
 
 def getQAforMachine(cmd_id, uuidmachine):
     resultdata = XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
+    if resultdata[0][3] == "result":
+        # encode 64 str? to transfer xmlrpc if string with sequence escape
+        resultdata[0][4] = base64.b64encode(resultdata[0][4])
+    return resultdata
+
+
+def getQAforMachineByJid(cmd_id, jid):
+    resultdata = XmppMasterDatabase().getQAforMachineByJid(cmd_id, jid)
     if resultdata[0][3] == "result":
         # encode 64 str? to transfer xmlrpc if string with sequence escape
         resultdata[0][4] = base64.b64encode(resultdata[0][4])
@@ -1359,6 +1368,11 @@ def write_content(path, datas, mode="w"):
         except:
             return False
 
+
+def get_computer_count_for_dashboard():
+    return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard())
+
+
 def get_count_success_rate_for_dashboard():
     result = XmppMasterDatabase().get_count_success_rate_for_dashboard()
     return result
@@ -1425,6 +1439,34 @@ def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
     result = XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
     return result
 
+def get_conformity_update_by_machine(idmachine):
+    result = XmppMasterDatabase().get_conformity_update_by_machine(idmachine)
+    return result
+
+def get_conformity_update_for_group(uuidArray):
+    result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
+    return result
+
+def get_count_grey_list_enable():
+    result = XmppMasterDatabase().get_count_grey_list_enable()
+    return result
+
+def get_conformity_update_by_entity():
+    result = XmppMasterDatabase().get_conformity_update_by_entity()
+    resultarray=[]
+    for t in  result:
+        r={'entity' : t,
+           'nbmachines' : int( result[t]['nbmachines']),
+           'nbupdate' : int(result[t]['nbupdate']),
+           'totalmach' : int(result[t]['totalmach'])
+           }
+        if int(result[t]['totalmach']) != 0:
+            r['conformite']=(float(result[t]['totalmach'])-float(result[t]['nbmachines']))/float(result[t]['totalmach'])*100.
+        else:
+            r['totalmach'] = 100.
+        resultarray.append(r)
+    return resultarray
+
 def ban_machines(subaction, jid_ars, machines):
     sessionid = name_random(8, "banmachines")
     datasend = {
@@ -1437,3 +1479,30 @@ def ban_machines(subaction, jid_ars, machines):
     callXmppPlugin("banmachines", datasend)
 
     return True
+
+
+def reload_deploy(uuid,
+                  cmd_id,
+                  gid,
+                  sessionid,
+                  hostname,
+                  login,
+                  title,
+                  start,
+                  endcmd,
+                  startcmd,
+                  force_redeploy,
+                  rechedule):
+
+    result = XmppMasterDatabase().reload_deploy(uuid,
+                                                        cmd_id,
+                                                        gid,
+                                                        sessionid,
+                                                        hostname,
+                                                        login,
+                                                        title,
+                                                        start,
+                                                        endcmd,
+                                                        startcmd,
+                                                        force_redeploy,
+                                                        rechedule)

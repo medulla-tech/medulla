@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2017 Siveo, http://www.siveo.net
+ * (c) 2017-2022 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -22,111 +22,7 @@
  *
  * file : xmppmaster/QAcustommachgrp.php
  */
-?>
-<style>
-li.folder a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/folder.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-}
 
-li.folderg a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/folder.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-       filter: grayscale(50%);
-       -webkit-filter: grayscale(50%);
-       -moz-filter: grayscale(50%);
-       opacity:0.5;
-}
-li.console a {
-       padding: 3px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/console.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-}
-
-li.consoleg a {
-       padding: 3px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/console.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-       filter: grayscale(50%);
-       -webkit-filter: grayscale(50%);
-       -moz-filter: grayscale(50%);
-       opacity:0.5;
-}
-li.quick a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/quick.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-}
-
-li.guaca a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/guaca.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-}
-
-li.guacag a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/guaca.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-       filter: grayscale(50%);
-       -webkit-filter: grayscale(50%);
-       -moz-filter: grayscale(50%);
-       opacity:0.5;
-}
-li.quickg a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/quick.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-       filter: grayscale(50%);
-       -webkit-filter: grayscale(50%);
-       -moz-filter: grayscale(50%);
-       opacity:0.5;
-}
-
-</style>
-<?php
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
@@ -134,10 +30,21 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
 echo "<br><br><br>";
 
-$machinelist = getRestrictedComputersList(0, -1, array('uuid' => $_GET['uuid']), False);
-$machine = $machinelist[$_GET['uuid']][1];
-$namemachine = $machine['cn'][0];
-$usermachine = $machine['user'][0];
+if($_GET['uuid'] != ''){
+    $machinelist = getRestrictedComputersList(0, -1, array('uuid' => $_GET['uuid']), False);
+    $machine = $machinelist[$_GET['uuid']][1];
+    $namemachine = $machine['cn'][0];
+    $usermachine = $machine['user'][0];
+}
+else if(isset($_GET['jid']) && $_GET['jid'] != ""){
+    $xmppmachine = xmlrpc_getMachinefromjid(htmlentities($_GET['jid']));
+    $namemachine = $xmppmachine["hostname"];
+    $usermachine = "";
+}
+else{
+    $namemachine = _T("Undefined", "xmppmaster");
+    $usermachine = _T("Undefined", "xmppmaster");
+}
 
 $p = new PageGenerator(_T("Quick action on machine", 'xmppmaster')." : $namemachine");
 $p->setSideMenu($sidemenu);
@@ -150,8 +57,16 @@ echo "<h3>". _T("Name of Quick Action  :", 'xmppmaster')." ". $custom_command['c
 
 $result = "";
 $listmessage = array();
+if($_GET['uuid'] != ''){
+    $resultAQformachine = xmlrpc_getQAforMachine($_GET['cmd_id'], $_GET['uuid'] );
+}
+else if(isset($_GET['jid']) && $_GET['jid'] != ""){
+    $resultAQformachine = xmlrpc_getQAforMachineByJid($_GET['cmd_id'], $_GET['jid'] );
+}
+else{
+    $resultAQformachine = [];
+}
 
-$resultAQformachine = xmlrpc_getQAforMachine($_GET['cmd_id'], $_GET['uuid'] );
 if (count($resultAQformachine) != 0){
     foreach($resultAQformachine as $message ){
         if ( $message[3] == "result"){

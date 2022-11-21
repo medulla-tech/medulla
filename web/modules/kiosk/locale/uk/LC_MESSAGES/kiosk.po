@@ -149,11 +149,3 @@ msgstr "змінити"
 #: modules/kiosk/kiosk/editProfile.php:177
 msgid "Modify the profile"
 msgstr "Змінити профіль"
-
-#: modules/kiosk/kiosk/localSidebar.php:24
-msgid "Profils List"
-msgstr "Список профілів"
-
-#: modules/kiosk/kiosk/localSidebar.php:25
-msgid "Add Profil"
-msgstr "Додати профіль"

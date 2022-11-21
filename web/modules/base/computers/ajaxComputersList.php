@@ -144,7 +144,7 @@ function join_value($n) {
 }
 $_GET['groupname'] = isset($_GET['groupname'])?$_GET['groupname'] : null;
 if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
-    ?><a href='<?php echo urlStr("base/computers/csv", array('gid' => $_GET['gid'], 'location' => $_GET['location'], 'groupname' => $_GET['groupname'])) ?>'><img src='modules/pulse2/graph/csv.png' alt='export csv'/></a><?php
+    ?><a href='<?php echo urlStr("base/computers/csv", array('gid' => $_GET['gid'], 'location' => $_GET['location'], 'groupname' => $_GET['groupname'])) ?>'><img src='img/actions/csvexport.svg' alt='export csv' width='25' height='25'/></a><?php
 }
 ?>
 
