@@ -7,7 +7,9 @@ require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
 
+$titlemessage = (isset($titlemessage)) ? base64_decode($titlemessage) : "" ;
 $message = (isset($message)) ? base64_decode($message) : "" ;
+
     $packageList = xmpp_packages_list();
     $options = "";
 
@@ -20,7 +22,9 @@ $message = (isset($message)) ? base64_decode($message) : "" ;
         else
             $options .= "<option value='".$package['uuid']."'>".$package['name']."</option>";
     }
-$lab =  (isset($actionlabel))? $actionlabel : uniqid();
+$lab =  (isset($actionlabel))? $actionlabel : "UpQues".uniqid();
+
+
 ?>
 <!-- Style a modifier pour le title des boites de dialog -->
 <style>
@@ -72,15 +76,13 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 
 </style>
 <?php
-$namestep=_T("User Question","pkgs");
+$namestep=_T("Update Question","pkgs");
 ?>
 <div class="header">
     <h1 data-title="<?php echo _T('This step allows you to submit 1 question to the user', 'pkgs'); ?>" ><?php echo $namestep; ?></h1>
 </div>
 
 <div class="content">
-
-
     <div>
         <input type="hidden" name="action" value="action_question" />
         <input type="hidden" name="step" />
@@ -92,7 +94,24 @@ $namestep=_T("User Question","pkgs");
                 <input id="laction" type="text" name="actionlabel" value="<?php echo $lab; ?>"/>
             </th>
         </tr>
-
+        <?php
+            $sizeheader = (isset($sizeheader)) ? $sizeheader : 15;
+            $sizemessage = (isset($sizemessage)) ? $sizemessage : 10;
+        ?>
+        <tr>
+            <th <?php echo 'data-title="'._T('Title Message for user', 'pkgs').'"'; ?> >
+                    <?php echo _T('title Message', 'pkgs'); ?>
+            </th>
+            <th>
+                <span  data-title="<?php echo _T('input Text title for user', 'pkgs'); ?>">
+                    <textarea class="special_textarea" name="titlemessage" ><?php echo $titlemessage; ?></textarea>
+                </span>
+                <span  data-title="<?php echo _T('size header text dialog box', 'pkgs'); ?>">
+                    <?php echo _T('Size Text', 'pkgs'); ?>
+                    <?php echo'<input style="width:35px;" type="number"  value="'.$sizeheader.'" name="sizeheader" min=10 max=20 />'; ?>
+                </span>
+            </th>
+        </tr>
         <tr>
             <th <?php echo 'data-title="'._T('Question Message for user', 'pkgs').'"'; ?> >
                     <?php echo _T('Message', 'pkgs'); ?>
@@ -101,24 +120,59 @@ $namestep=_T("User Question","pkgs");
                 <span  data-title="<?php echo _T('input Message for user', 'pkgs'); ?>">
                     <textarea class="special_textarea" name="message" ><?php echo $message; ?></textarea>
                 </span>
+                 <span  data-title="<?php echo _T('size Message text dialog box', 'pkgs'); ?>">
+                    <?php echo _T('Size Text', 'pkgs'); ?>
+                    <?php echo'<input style="width:35px;" type="number"  value="'.$sizemessage.'" name="sizemessage" min=7 max=15 />'; ?>
+                </span>
             </th>
         </tr>
+
+        <tr>
+          <?php
+            $textbuttonyes = (isset($textbuttonyes)) ? $textbuttonyes : "Yes";
+
+            echo '<th data-title="'._T("Cutomise button positive reponse","pkgs").'">';
+            echo _T("Text button True","pkgs").'</th>';
+            echo '<th>';
+           ?>
+             <span  data-title="<?php echo _T('input button text', 'pkgs'); ?>">
+            <?php echo'<input  type="text"  value="'.$textbuttonyes.'" name="textbuttonyes"  />'; ?>
+            </span>
+            <?php
+            echo '</th>';
+            ?>
+        </tr>
+
+        <tr>
+          <?php
+            $textbuttonno = (isset($textbuttonno)) ? $textbuttonno : "No";
+            echo '<th data-title="'._T("Cutomise button negative reponse","pkgs").'">';
+            echo _T("Text button False","pkgs").'</th>';
+            echo '<th>';
+           ?>
+             <span  data-title="<?php echo _T('input button text', 'pkgs'); ?>">
+            <?php echo'<input  type="text"  value="'.$textbuttonno.'" name="textbuttonno"  />'; ?>
+            </span>
+            <?php
+            echo '</th>';
+            ?>
+        </tr>
+
         <!--input Positive reponse-->
         <tr>
            <?php
             $gotoyes = (isset($gotoyes)) ? $gotoyes : "";
 
             echo '<th data-title="'._T("On 1 positive answer jump to the step label","pkgs").'">';
-            echo _T("If 'yes' go to step","pkgs").'</th>';
+            echo _T("If yes go to step","pkgs").'</th>';
             echo '<td>';
            ?>
             <span  data-title="<?php echo _T('input step label', 'pkgs'); ?>">
-            <?php echo'<input  type="text"  value="'.$gotoyes.'" name="gotoyes"  />'; ?>
+            <?php echo'<input  style="width:80px;" type="text"  value="'.$gotoyes.'" name="gotoyes"  />'; ?>
             </span>
+            </td>
 
-            <?php
-            echo '</td>';
-            ?>
+
         </tr>
         <!--input Negative reponse-->
         <tr>
@@ -171,6 +225,8 @@ $namestep=_T("User Question","pkgs");
             echo '</td>';
             ?>
         </tr>
+
+
         <tr>
             <?php
             $textcasecoche=_T("customize time for timeout","pkgs");
@@ -208,6 +264,9 @@ $namestep=_T("User Question","pkgs");
             }
             ?>
         </tr>
+
+
+
     </table>
         <!-- Option timeout -->
     </div>

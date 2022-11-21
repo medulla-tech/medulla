@@ -5,9 +5,11 @@ require_once("../../../../includes/xmlrpc.inc.php");
 require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
-
+//     if( base64_decode($message, true) != false){
+//                         $message = base64_decode($message);
+//     }
     $message = (isset($message)) ? base64_decode($message) : "" ;
-
+    $titlemessage= (isset($message)) ? base64_decode($message) : "" ;
         $packageList = xmpp_packages_list();
         $options = "";
 
@@ -23,7 +25,7 @@ extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1><?php echo _T('User Notification', 'pkgs'); ?></h1>
+    <h1><?php echo _T('Update Notification', 'pkgs'); ?></h1>
 </div>
 <div class="content">
 
@@ -34,13 +36,60 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
     <table id="tableToggle">
         <tr class="toggleable">
             <th><?php echo _T('Step label: ', 'pkgs'); ?></th>
-            <th><input id="laction" type="text" name="actionlabel" value="<?php echo $lab; ?>"/></th>
+            <th><input id="laction" type="text" name="actionlabel" value="<?php echo $lab; ?>"/>
+            </th>
+        </tr>
+
+
+
+
+         <?php
+            $sizeheader = (isset($sizeheader)) ? $sizeheader : 15;
+            $sizemessage = (isset($sizemessage)) ? $sizemessage : 10;
+        ?>
+        <tr>
+            <th <?php echo 'data-title="'._T('Title Message for user', 'pkgs').'"'; ?> >
+                    <?php echo _T('title Message', 'pkgs'); ?>
+            </th>
+            <th>
+                <span  data-title="<?php echo _T('input Text title for user', 'pkgs'); ?>">
+                    <textarea class="special_textarea" name="titlemessage" ><?php echo $titlemessage; ?></textarea>
+                </span>
+                <span  data-title="<?php echo _T('size header text dialog box', 'pkgs'); ?>">
+                    <?php echo _T('Size Text', 'pkgs'); ?>
+                    <?php echo'<input style="width:35px;" type="number"  value="'.$sizeheader.'" name="sizeheader" min=10 max=20 />'; ?>
+                </span>
+            </th>
         </tr>
         <tr>
-            <th><?php echo _T('Message', 'pkgs'); ?></th>
-            <th>
-                <textarea class="special_textarea" name="message" ><?php echo $message; ?></textarea>
+            <th <?php echo 'data-title="'._T('Question Message for user', 'pkgs').'"'; ?> >
+                    <?php echo _T('Message', 'pkgs'); ?>
             </th>
+            <th>
+                <span  data-title="<?php echo _T('input Message for user', 'pkgs'); ?>">
+                    <textarea class="special_textarea" name="message" ><?php echo $message; ?></textarea>
+                </span>
+                 <span  data-title="<?php echo _T('size Message text dialog box', 'pkgs'); ?>">
+                    <?php echo _T('Size Text', 'pkgs'); ?>
+                    <?php echo'<input style="width:35px;" type="number"  value="'.$sizemessage.'" name="sizemessage" min=7 max=15 />'; ?>
+                </span>
+            </th>
+        </tr>
+
+        <tr>
+          <?php
+            $textbuttonyes = (isset($textbuttonyes)) ? $textbuttonyes : "Yes";
+
+            echo '<th data-title="'._T("Cutomise button positive reponse","pkgs").'">';
+            echo _T("Text button True","pkgs").'</th>';
+            echo '<th>';
+           ?>
+             <span  data-title="<?php echo _T('input button text', 'pkgs'); ?>">
+            <?php echo'<input  type="text"  value="'.$textbuttonyes.'" name="textbuttonyes"  />'; ?>
+            </span>
+            <?php
+            echo '</th>';
+            ?>
         </tr>
 
 

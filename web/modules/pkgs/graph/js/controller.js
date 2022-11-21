@@ -128,6 +128,14 @@ jQuery(function(){
                     action['message'] = btoa(action['message'])
                 }
             }
+             }
+            if ('titlemessage' in action){
+
+                if (!isBase64(action['titlemessage'])){
+                    action['titlemessage'] = btoa(action['titlemessage'])
+                }
+            }
+
 
             if ('set' in action){
                 if (isBase64(action['set'])){
@@ -221,7 +229,7 @@ function createSequence()
     var sequence = [];
     var actualSection = "Install";
     // convertit directement en base64
-    var array_convert_to_base64 = ['command','script',"set", "message", "notification"];
+    var array_convert_to_base64 = ['command','script',"set", "message", "notification","titlemessage"];
     /**
      * Get all the form element in #current-actions and serialize them
      */
@@ -269,7 +277,7 @@ function createSequence()
 //             if (jQuery.inArray(actionRaw['name'] , array_convert_to_base64 ) > -1){
 //                 actionRaw['value'] = btoa(actionRaw['value'])
 //             }
-            if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script' || actionRaw['name'] == "set" || actionRaw['name'] == "message" || actionRaw['name'] == "notification"){
+             if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script' || actionRaw['name'] == "set" || actionRaw['name'] == "message" || actionRaw['name'] == "notification" || actionRaw['name'] == "titlemessage"){
                actionRaw['value'] = btoa(actionRaw['value'])
             }
             if(actionRaw['name'] == 'environ')
@@ -341,11 +349,11 @@ function createInfo()
                         info[param['name']] = false;
                 }
 
-                else if(jQuery.inArray(param['name'],['Dependency',"members[]",'environ','action','actionlabel','boolcnd','script','comment',
+                 else if(jQuery.inArray(param['name'],['Dependency',"members[]",'environ','action','actionlabel','boolcnd','script','comment',
                     'codereturn','command','filename','goto','old_Qsoftware','old_Qvendor','old_Qversion','old_associateinventory',
                     'old_boolcnd','old_label', 'old_description','old_licenses','old_methodetransfert','old_p_api','old_package-method',
                     'old_pkgs','old_pkgs-title','old_targetos','old_version','p_api','random_dir','step','mode','waiting', 'set',
-                    'old_limit_rate_ko', 'old_spooling', 'old_Elements', 'pathdirectorytounzip', 'package-method', 'error', 'stat','message','type']) >= 0)
+                    'old_limit_rate_ko', 'old_spooling', 'old_Elements', 'pathdirectorytounzip', 'package-method', 'error', 'message', 'titlemessage']) >= 0)
                 {
                     // All the element from the array are not added into the info section.
                     // Dependency is also ignored because it is managed outside this loop
