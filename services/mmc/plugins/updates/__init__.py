@@ -75,8 +75,20 @@ def get_white_list(start, end, filter=""):
 def get_black_list(start, end, filter=""):
     return UpdatesDatabase().get_black_list(start, end, filter)
 
+def get_family_list(start, end, filter=""):
+    return UpdatesDatabase().get_family_list(start, end, filter)
+
 def approve_update(updateid):
     return UpdatesDatabase().approve_update(updateid)
 
-def grey_update(updateid):
-    return UpdatesDatabase().grey_update(updateid)
+def grey_update(updateid, enabled=0):
+    return UpdatesDatabase().grey_update(updateid, enabled)
+
+def exclude_update(updateid):
+    return UpdatesDatabase().exclude_update(updateid)
+
+def delete_rule(id):
+     return UpdatesDatabase().delete_rule(id)
+
+def white_unlist_update(updateid):
+    return UpdatesDatabase().white_unlist_update(updateid)

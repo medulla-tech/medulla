@@ -22,10 +22,32 @@
  */
 require_once("modules/updates/includes/xmlrpc.php");
 
-if(isset($_GET['updateid'])){
+// var_dump(xmlrpc_approve_update($updateid));
+// exit;
+
+if(isset($_POST['bconfirm'])){
     $updateid = $_GET['updateid'];
-    xmlrpc_approve_update($updateid);
+    $retour = xmlrpc_approve_update($updateid);
+    // Si retour est True, cela signifie que le packet a bien change de liste
+    if($retour == True){
+        $str = _T("Package moved successfully to whitelist", "updates");
+        new NotifyWidgetSuccess($str);
+        // Sinon j'affiche un message d'erreur
+    } else {
+        new NotifyWidgetFailure(_T("Error moving package to whitelist", "updates"));
+    }
+    // Je redirige vers ma page
     header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+} else {
+    $updateid = $_GET['updateid'];
+    // Création et affichage de la modal
+    $f = new PopupForm(_T("Approve Update"));
+    $hidden = new HiddenTpl("updateid");
+    $f->add($hidden, array("value" => $updateid, "hide" => True));
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
 }
+
 
 ?>

@@ -36,19 +36,17 @@ class ComputersOnlinePanel extends Panel {
 
     function display_content() {
         $urlRedirect = urlStrRedirect("base/computers/createMachinesStaticGroup");
-        $total = get_computer_count_for_dashboard();
+        $counts = get_computer_count_for_dashboard();
 
-        $total_machines = $total['online'] + $total['offline']+ $total['unregistered'];
-        $machines_online = $total['online'];
-
-        $machines_offline = $total['registered'] - $total['online'];
+        $total_machines = $counts['total'];
+        $machines_online = $counts['total_online'];
+        $machines_offline = $counts['total_offline'];
+        $uninventorized = $counts["total_uninventoried"];
 
         $online_text = _T("Machines online","dashboard")." : ";
         $offline_text = _T("Machines offline","dashboard")." : ";
         $uninventorized_text = _T("Uninventoried Machines","dashboard")." : ";
-        $uninventorized = $total["unregistered"];
 
-        $total_machines = $machines_online + $machines_offline + $total['unregistered'];
           echo <<< ONLINE
           <div id="computersonline-graph"></div>
           <script>

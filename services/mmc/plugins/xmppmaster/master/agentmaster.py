@@ -403,7 +403,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 pref="deploysyncthing"))
 
     def iqsendpulse(self, to, datain, timeout):
-        # send iq synchronous message
+        # send iq synchronous message cf. https://xmpp.org/extensions/xep-0099.html
+        ref_time = max(2, timeout -1)
+        start_iq = time.time()
         if type(datain) == dict or type(datain) == list:
             try:
                 data = json.dumps(datain)
@@ -415,10 +417,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
         else:
             data = datain
         try:
+            struccmd = {'action' : "" , 'data' : ""}
+            try:
+                struccmd = json.loads(data)
+                error_text = "error for IQ [%s] data [%s]" % (struccmd['action'],
+                                                              struccmd['data'])
+            except Exception:
+                pass
             data = data.encode("base64")
         except Exception as e:
             logging.error("iqsendpulse : encode base64 : %s" % str(e))
-            return '{"err" : "%s"}' % str(e).replace('"', "'")
+            return '{"err" : "%s"}' % error_text
         try:
             iq = self.make_iq_get(queryxmlns='custom_xep', ito=to)
             itemXML = ET.Element('{%s}data' % data)
@@ -433,34 +442,115 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             for z in child:
                                 if z.tag.endswith('data'):
                                     # decode result
-                                    # TODO : Replace print by log
-                                    #print z.tag[1:-5]
-                                    return base64.b64decode(z.tag[1:-5])
                                     try:
                                         data = base64.b64decode(z.tag[1:-5])
                                         # TODO : Replace print by log
-                                        #print "RECEIVED data"
-                                        #print data
                                         return data
                                     except Exception as e:
                                         logging.error("iqsendpulse : %s" % str(e))
                                         logger.error("%s" % (traceback.format_exc()))
-                                        return '{"err" : "%s"}' % str(e).replace('"', "'")
+                                        return '{"err" : "%s"}' % error_text
                                     return "{}"
             except IqError as e:
                 err_resp = e.iq
-                logging.error("iqsendpulse : Iq error %s" % str(err_resp).replace('"', "'"))
-                logger.error("%s" % (traceback.format_exc()))
-                return '{"err" : "%s"}' % str(err_resp).replace('"', "'")
-
-            except IqTimeout:
-                logging.error("iqsendpulse : Timeout Error")
-                return '{"err" : "Timeout Error"}'
+                errortext = ""
+                end_iq = time.time()
+                conditionxmppiq = ""
+                try:
+                    conditionxmppiq = err_resp['error']['condition'] 
+                except Exception:
+                    pass
+                try:
+                    errortext = err_resp['error']['text']
+                    error_text = "%s\\n%s" % (error_text, err_resp['error']['text'])
+                except Exception:
+                    logging.error("Iq xml error\n%s" % str(err_resp).replace('"', "'"))
+                    logger.error("display trace back %s" % (traceback.format_exc()))
+                self.errorhandlingstanzaiq( err_resp, err_resp.keys())
+                if errortext == "User session not found":
+                    logging.error("User session not found on iq %s second"%(end_iq-start_iq))
+                    logging.error("Making the machine %s in status OFF in machine table"%(str(to)))
+                    error_text = "%s\\n(Making the machine (%s) in status OFF)"%(error_text, str(to))
+                    XmppMasterDatabase().changStatusPresenceMachine( to, enable = '0')
+                elif  errortext == "No module is handling this query" and \
+                    conditionxmppiq == "service-unavailable" :
+                    logging.error("The IQ query is sent to a JID that cannot handle the query.")
+                    error_text = "%s\\n(The IQ query is sent to a JID "\
+                        "that cannot handle the query.)"%(error_text)
+                    if len(to.split("/")) == 1:
+                        logging.error("verify : missing ressource in jid %s" % to)
+                        error_text = "%s\\nmissing ressource in JID %s"%(error_text, to)
+                return '{"err" : "%s"}' % error_text
+            except IqTimeout as e:
+                err_resp = e.iq
+                self.errorhandlingstanzaiq( err_resp, err_resp.keys())
+                end_iq=time.time()
+                logging.error("TIMEOUT ERROR %s s for %s"%(timeout, error_text))
+                error_text = "%s\\nTIMEOUT ERROR"%(error_text)
+                if (end_iq - start_iq) < ref_time:
+                    logging.error("direct Time out Error on iq %s"%(end_iq-start_iq))
+                    logging.error("status off Machine %s in table machine"%(str(to)))
+                    XmppMasterDatabase().changStatusPresenceMachine( to, enable = '0')
+                return '{"err" : "%s"}' % error_text
         except Exception as e:
             logging.error("iqsendpulse : error %s" % str(e).replace('"', "'"))
             logger.error("%s" % (traceback.format_exc()))
             return '{"err" : "%s"}' % str(e).replace('"', "'")
         return "{}"
+
+    def code_return_html(self, code):
+        """
+        This function allow to provide userfriendly return messages
+        Args:
+            code: The return code provided by urllib2
+
+        Returns:
+            It returns a userfriendly return message based on the code provided by
+            urllib2.
+        """
+        msghtml = "error html code %s" % code
+        if code == 200:
+            msghtml = "[%s succes]" % code
+        if code == 301:
+            msghtml = "[%s Moved Permanently]" % code
+        if code == 302:
+            msghtml = "[%s Moved temporarily]" % code
+        if code == 400:
+            msghtml = "[%s Bad Request]" % code
+        if code == 401:
+            msghtml = "[%s Unauthorized]" % code
+        elif code == 403:
+            msghtml = "[%s Forbidden]" % code
+        elif code == 404:
+            msghtml = "[%s Not Found]" % code
+        elif code == 408:
+            msghtml = "[%s Request Timeout]" % code
+        elif code == 500:
+            msghtml = "[%s Internal Server Error]" % code
+        elif code == 503:
+            msghtml = "[%s Service Unavailable ]" % code
+        elif code == 504:
+            msghtml = "[%s Gateway Timeout]" % code
+        return msghtml
+
+    def errorhandlingstanzaiq(self, msg, msgkey):
+        logger.error("STANZA MESSAGE ERROR IQ")
+        messagestanza=""
+        for t in msgkey:
+            
+            if t != 'error' and t != "lang":
+                e = str(msg[t])
+                if e != "":
+                    messagestanza+="%s : %s\n"%(t, e)
+        if 'error' in msgkey:
+            messagestanza+="Error information\n"
+            for t in msg['error'].keys():
+                if t != "lang":
+                    e = str(msg['error'][t])
+                    if e != "":
+                        messagestanza+="%s : %s\n"%(t, e)
+        if messagestanza != "":
+            logger.error(messagestanza)
 
     def garbagedeploy(self):
         MscDatabase().xmppstage_statecurrent_xmpp()

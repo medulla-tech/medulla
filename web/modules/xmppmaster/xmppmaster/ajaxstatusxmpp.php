@@ -26,9 +26,7 @@
 //require("modules/dyngroup/includes/includes.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-?>
 
-<?php
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = $_GET["filter"];
@@ -99,8 +97,17 @@ $logAction = new ActionItem(_("detaildeploy"),
                                 "xmppmaster",
                                 "xmppmaster");
 
+$reloadAction = new ActionPopupItem(_("reload"),
+                                "popupReloadDeploy&previous=".$_GET['previous'],
+                                "start",
+                                "",
+                                "xmppmaster",
+                                "xmppmaster");
+
 
 for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
+    //$infomachine = xmlrpc_getdeployfromcommandid($arraydeploy['tabdeploy']['command'][$i], $arraydeploy['tabdeploy']['inventoryuuid'][$i]);
+
     $param=array();
     $param['uuid']= $arraydeploy['tabdeploy']['inventoryuuid'][$i];
     $param['hostname']=$arraydeploy['tabdeploy']['host'][$i];
@@ -111,7 +118,9 @@ for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
     $param['start']=$arraydeploy['tabdeploy']['start'][$i];
     $param['endcmd']=$arraydeploy['tabdeploy']['endcmd'][$i];
     $param['startcmd']=$arraydeploy['tabdeploy']['startcmd'][$i];
+    $param['sessionid']=$arraydeploy['tabdeploy']['sessionid'][$i];
     $logs[] = $logAction;
+    $reloads[] = $reloadAction;
     $params[] = $param;
 }
 
@@ -298,6 +307,7 @@ if(isset($arraynotdeploy))
       $errormach[] = '0 (0%)';
       $abortmachuser[] = '0 (0%)';
       $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
+      $reloads[] = $reloadAction;
   }
 }
 
@@ -317,6 +327,7 @@ $n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning"));
 $n->addActionItemArray($logs);
+$n->addActionItemArray($reloads);
  //function AjaxNavBar($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "", $paginator = false) {
 
 $n->setParamInfo($params);

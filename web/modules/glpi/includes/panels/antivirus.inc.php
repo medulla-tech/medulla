@@ -23,6 +23,7 @@
 
 include_once("modules/dashboard/includes/panel.class.php");
 require_once("modules/glpi/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $options = array(
     "class" => "AntivirusPanel",
@@ -37,7 +38,7 @@ class AntivirusPanel extends Panel {
 
         $count = getAntivirusStatus();
         $uninventorized_text = _T("Uninventoried Machines", "dashboard");
-        $uninventorized = get_computer_count_for_dashboard()['unregistered'];
+        $uninventorized = get_computer_count_for_dashboard()['total_uninventoried'];
 
         $jsonCount = json_encode($count);
         $createGroupText = json_encode(_T("Create a group", "glpi"));

@@ -69,16 +69,6 @@ if (isset($_GET["start"])) {
     $start = 0;
 }
 
-if(isset($_GET['toggleupdates'])){
-  $filter['toggleupdates'] = htmlentities($_GET['toggleupdates']);
-}
-else if (isset($_SESSION['toggleupdates'])){
-  $filter['toggleupdates'] = htmlentities($_SESSION['toggleupdates']);
-}
-else{
-  $filter["toggleupdates"] = "hide";
-}
-
 $detailAction = new ActionItem(_T("Package Detail", "pkgs"), "detail", "display", "pkgs", "pkgs");
 $editAction = new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs", "pkgs", "pkgs");
 $editExpertAction = new EmptyActionItem(_T("Please switch to Expert mode to edit this package", "pkgs"));

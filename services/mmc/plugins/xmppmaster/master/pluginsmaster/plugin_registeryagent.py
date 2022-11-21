@@ -133,6 +133,16 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                 '',
                                                 xmppobject.boundjid.bare,
                                                 xmppobject.boundjid.bare)
+            md5agentversion = data['md5agentversion']  if "md5agentversion" in data else ""
+            agent_version = data['versionagent']  if "versionagent" in data else ""
+            computer_hostname = data['machine']  if "machine" in data else ""
+            arrayhost = computer_hostname.split('.')
+            arrayhost.pop()
+            if arrayhost:
+                computer_hostname='.'.join(arrayhost)
+                XmppMasterDatabase().Update_version_agent_machine_md5(computer_hostname,
+                                                                      md5agentversion,
+                                                                      agent_version)
             if 'oldjid' in data:
                 logger.debug("The hostname changed from %s to %s" % (data['oldjid'], data['from']))
                 XmppMasterDatabase().delPresenceMachinebyjiduser(jid.JID(data['oldjid']).user)

@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2016 Siveo, http://www.siveo.net
+ * (c) 2015-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -48,14 +48,14 @@ $refresh = new RefreshButton();
 $refresh->display();
 
 print "<br/><br/><br/>";
-$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1'), 'formRunning'  );
+$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1', 'previous'=>'index'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 print "<br/><br/><br/>";
-$ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => $_SESSION['login']), 'formRunning1' );
+$ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => $_SESSION['login'], 'previous'=>'index'), 'formRunning1' );
 $ajax1->setRefresh($refresh->refreshtime());
 $ajax1->display();
 print "<br/><br/><br/>";

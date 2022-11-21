@@ -119,7 +119,8 @@ $ajax = new AjaxFilterAudit(urlStrRedirect("xmppmaster/xmppmaster/ajaxviewgrpdep
   'title' => urlencode ( $_GET['title']),
   'startdeploy' => urlencode ( $_GET['start']),
   'endcmd' => urlencode ( $_GET['endcmd']),
-  'startcmd' => urlencode ( $_GET['startcmd'])
+  'startcmd' => urlencode ( $_GET['startcmd']),
+  'previous'=>'viewlogs',
 ));
 
 $sidemenu->display();

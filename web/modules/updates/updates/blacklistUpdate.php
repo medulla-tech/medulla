@@ -22,12 +22,11 @@
  */
 require_once("modules/updates/includes/xmlrpc.php");
 
-var_dump('test ban');
-exit;
+$updateid = $_GET['updateid'];
+// var_dump($updateid);
+// exit;
 
-if(isset($_GET['updateid'])){
-    
-    header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
-}
+header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+
 
 ?>

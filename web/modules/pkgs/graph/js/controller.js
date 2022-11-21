@@ -1,5 +1,5 @@
 /**
- * (c) 2016-2021 Siveo, http://www.siveo.net/
+ * (c) 2016-2022 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -234,7 +234,28 @@ function createSequence()
 
         // For each element in form :
             // Add {form.elementName : form.elementValue} to action
+        gotoreturncode = [];
         jQuery.each(datas,function(idoption, actionRaw){
+            tmp = {}
+            if(actionRaw['name'] == 'gotoreturncode' && !isNaN(parseInt(actionRaw['value']))){
+              tmp["code"] = actionRaw['value']
+              tmp["gotoreturncode@"+actionRaw['value']] = ""
+              gotoreturncode.push(tmp);
+              return; // Equivalent to continue
+            }
+
+            if(actionRaw['name'] == 'gotolabel' && actionRaw['value'] != ""){
+              if(gotoreturncode[gotoreturncode.length-1] !== undefined){
+                gotoreturncode[gotoreturncode.length-1]["gotolabel"] = actionRaw["value"]
+                code = gotoreturncode[gotoreturncode.length-1]["code"]
+                if(code !== undefined && code != "")
+                {
+                  action["gotoreturncode@"+code] = actionRaw["value"]
+                }
+              }
+              return; // Equivalent to continue
+            }
+
             if(actionRaw['value'] == "action_section_install"){
                 actualSection = "Install";
             }
