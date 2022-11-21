@@ -3,6 +3,7 @@
 * [FEATURE] New Kiosk feature
 * [FEATURE] Packaging feature allows to define return codes different to 0 and 1 for branching to other steps
 * [FEATURE] Ability to restart a failed deployment from the interface
+* [FEATURE] Improve Admin view when connected user is root
 * [BUGFIX]  Fix diplay of config files
 * [BUGFIX]  Support Optiplex 3050 in iPXE
 * [BUGFIX]  Fix display of the Master list page when there is a lot of
