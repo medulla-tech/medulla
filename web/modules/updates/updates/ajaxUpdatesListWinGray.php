@@ -22,19 +22,15 @@
  */
 require_once("modules/updates/includes/xmlrpc.php");
 
-
-
-// Configuration global de $maxperpage, $filter, $start, $end
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
-echo '<pre>';
-// print_r($_GET);
-echo '</pre>';
-// Appel de fonction pour récupérer la Liste Grise dans up_gray_list
+
+// Get Datas
 $grey_list = xmlrpc_get_grey_list($start, $maxperpage, $filter);
+
 // GrayList Actions
 $grayEnableAction = new ActionItem(_T("Enable Update", "updates"),"grayEnable","enableupdate","", "updates", "updates");
 $grayEnableEmptyAction = new EmptyActionItem1(_("Enable Update"),"grayEnable", "enableupdateg","","updates", "updates");
@@ -61,11 +57,6 @@ for($i=0; $i < $count_partial; $i++){
     $grayActions["disable"][] = ($grey_list['valided'][$i] == 1) ? $grayDisableAction : $grayDisableEmptyAction;
     $grayActions["approve"][] = $grayApproveAction;
     $grayActions["ban"][] = $banAction;
-
-
-    // $actionwhitelistUpds[] = $whitelistUpd;
-
-    // $actionblacklistUpds[] = $blacklistUpd;
 
     $icon = ($grey_list['valided'][$i] == 1) ? '<img style="position:relative; top : 5px;" src="img/other/updateenabled.svg" width="25" height="25">' : '<img style="position:relative; top : 5px;" src="img/other/updatedisabled.svg" width="25" height="25">';
     $titles_grey[] = $icon.$grey_list['title'][$i];
@@ -97,6 +88,7 @@ $g->addActionItemArray($grayActions['enable']);
 $g->addActionItemArray($grayActions['disable']);
 $g->addActionItemArray($grayActions['approve']);
 $g->addActionItemArray($grayActions['ban']);
-
+$g->start = 0;
+$g->end = $count_grey;
 $g->display();
 ?>
