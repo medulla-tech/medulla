@@ -128,7 +128,6 @@ jQuery(function(){
                     action['message'] = btoa(action['message'])
                 }
             }
-             }
             if ('titlemessage' in action){
 
                 if (!isBase64(action['titlemessage'])){
