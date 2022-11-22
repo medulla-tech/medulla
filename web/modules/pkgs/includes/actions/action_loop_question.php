@@ -22,7 +22,7 @@ $message = (isset($message)) ? base64_decode($message) : "" ;
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1><?php echo _T('Loop Question', 'pkgs'); ?></h1>
+    <h1 data-title="<?php echo _T('Allow the connected user to postpone an action', 'pkgs'); ?>"><?php echo _T('User Postpone Options', 'pkgs'); ?></h1>
 </div>
 <div class="content">
     <div>
@@ -39,29 +39,29 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
             $sizemessage = (isset($sizemessage)) ? $sizemessage : 10;
         ?>
         <tr>
-            <th <?php echo 'data-title="'._T('Title Message for user', 'pkgs').'"'; ?> >
-                    <?php echo _T('title Message', 'pkgs'); ?>
+            <th>
+                    <?php echo _T('Message box title', 'pkgs'); ?>
             </th>
             <th>
-                <span  data-title="<?php echo _T('input Text title for user', 'pkgs'); ?>">
+                <span  data-title="<?php echo _T('Insert title of message box', 'pkgs'); ?>">
                     <textarea class="special_textarea" name="titlemessage" ><?php echo $titlemessage; ?></textarea>
                 </span>
-                <span  data-title="<?php echo _T('size header text dialog box', 'pkgs'); ?>">
-                    <?php echo _T('Size Text', 'pkgs'); ?>
+                <span  data-title="<?php echo _T('Define text size for message box title', 'pkgs'); ?>">
+                    <?php echo _T('Text size', 'pkgs'); ?>
                     <?php echo'<input style="width:35px;" type="number"  value="'.$sizeheader.'" name="sizeheader" min=10 max=20 />'; ?>
                 </span>
             </th>
         </tr>
         <tr>
-            <th <?php echo 'data-title="'._T('Question Message for user', 'pkgs').'"'; ?> >
-                    <?php echo _T('Message', 'pkgs'); ?>
+            <th>
+                    <?php echo _T('Question', 'pkgs'); ?>
             </th>
             <th>
-                <span  data-title="<?php echo _T('input Message for user', 'pkgs'); ?>">
+                <span  data-title="<?php echo _T('Insert question for user', 'pkgs'); ?>">
                     <textarea class="special_textarea" name="message" ><?php echo $message; ?></textarea>
                 </span>
-                 <span  data-title="<?php echo _T('size Message text dialog box', 'pkgs'); ?>">
-                    <?php echo _T('Size Text', 'pkgs'); ?>
+                 <span  data-title="<?php echo _T('Define text size for question', 'pkgs'); ?>">
+                    <?php echo _T('Text size', 'pkgs'); ?>
                     <?php echo'<input style="width:35px;" type="number"  value="'.$sizemessage.'" name="sizemessage" min=7 max=15 />'; ?>
                 </span>
             </th>
@@ -70,11 +70,11 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
           <?php
             $textbuttonyes = (isset($textbuttonyes)) ? $textbuttonyes : "Yes";
 
-            echo '<th data-title="'._T("Cutomise button positive reponse","pkgs").'">';
-            echo _T("Text button True","pkgs").'</th>';
+            echo '<th>';
+            echo _T("True button text","pkgs").'</th>';
             echo '<th>';
            ?>
-             <span  data-title="<?php echo _T('input button text', 'pkgs'); ?>">
+             <span  data-title="<?php echo _T('Define text to be shown on button returning True', 'pkgs'); ?>">
             <?php echo'<input  type="text"  value="'.$textbuttonyes.'" name="textbuttonyes"  />'; ?>
             </span>
             <?php
@@ -85,11 +85,11 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         <tr>
           <?php
             $textbuttonno = (isset($textbuttonno)) ? $textbuttonno : "No";
-            echo '<th data-title="'._T("Cutomise button negative reponse","pkgs").'">';
-            echo _T("Text button False","pkgs").'</th>';
+            echo '<th>';
+            echo _T("False button text","pkgs").'</th>';
             echo '<th>';
            ?>
-             <span  data-title="<?php echo _T('input button text', 'pkgs'); ?>">
+             <span  data-title="<?php echo _T('Define text to be shown on button returning False', 'pkgs'); ?>">
             <?php echo'<input  type="text"  value="'.$textbuttonno.'" name="textbuttonno"  />'; ?>
             </span>
             <?php
@@ -105,11 +105,13 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
            <?php
             $gotoyes = (isset($gotoyes)) ? $gotoyes : "";
             echo '
-            <th>'._T("If yes go to step","pkgs").'</th>
+            <th>'._T("If 'True' go to step","pkgs").'</th>
             <td>
-                <input " type="text"  value="'.$gotoyes.'" name="gotoyes"  />
-            </td>';
             ?>
+             <span  data-title="<?php echo _T('Define step label if user response is True', 'pkgs'); ?>">
+             <?php echo'<input  style="width:80px;" type="text"  value="'.$gotoyes.'" name="gotoyes"  />'; ?>
+             </span>
+             </td>
         </tr>
 
         <tr>
@@ -117,40 +119,50 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
             $gotolookterminate = (isset($gotolookterminate)) ? $gotolookterminate : "";
 
             echo '
-            <th>'._T("goto step if compteur loop is 0","pkgs").'</th>
-            <th>
-                <input " type="text"  value="'.$gotolookterminate.'" name="gotolookterminate"  />
-            </th>';
-
+            <th>'._T("If 'Max Postponements Reached' go to step","pkgs").'</th>
+            <td>
             ?>
+             <span  data-title="<?php echo _T('Define step label if the maximum number of postponements reached', 'pkgs'); ?>">
+             <?php echo'<input  style="width:80px;" type="text"  value="'.$gotolookterminate.'" name="gotolookterminate"  />'; ?>
+             </span>
+             </td>
         </tr>
 
         <tr>
             <?php
             $gotonouser = (isset($gotonouser)) ? $gotonouser : "";
 
-            echo '
-            <th>'._T("If 'no user' go to step","pkgs").'</th>
-            <th>
-                <input " type="text"  value="'.$gotonouser.'" name="gotonouser"  />
-            </th>';
+            echo '<th>';
+            echo _T("If 'No User' go to step","pkgs").'</th>';
+            echo '<td>';
+            ?>
+            <span  data-title="<?php echo _T('Define step label if no user is connected', 'pkgs'); ?>">
+            <?php echo'<input  type="text"  value="'.$gotonouser.'" name="gotonouser"  />'; ?>
+            </span>
 
+            <?php
+            echo '</td>';
             ?>
         </tr>
         <tr>
             <?php
             $gototimeout = (isset($gototimeout)) ? $gototimeout : "";
 
-            echo '
-            <th>'._T("If 'timeout' go to step","pkgs").'</th>
-            <th>
-                <input " type="text"  value="'.$gototimeout.'" name="gototimeout"  />
-            </th>';
+            echo '<th>';
+            echo _T("If 'Timeout' go to step","pkgs").'</th>';
+            echo '<td>';
+            ?>
+            <span  data-title="<?php echo _T('Define step label if no response is given before the timeout', 'pkgs'); ?>">
+            <?php echo'<input  type="text"  value="'.$gototimeout.'" name="gototimeout"  />'; ?>
+            </span>
 
+            <?php
+            echo '</td>';
             ?>
         </tr>
         <tr>
             <?php
+            $textinputcasecoche=_T("Set maximum time waiting for a response","pkgs");
             if(isset($timeout))
             {
                 echo '
@@ -163,9 +175,9 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
                     }" />'._T("Set timeout (in seconds)","pkgs").'
                 </td>
-                <td>
-                    <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
-                </td>';
+                <td><span data-title="'.$textinputcasecoche.'">'.
+                    '<input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
+                </span></td>';
             }
             else{
                 echo '
@@ -178,8 +190,8 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
                     }" />'._T("Set timeout (in seconds)","pkgs").'
                 </td>
-                <td>
-                    <input type="number" min="0" value="800"  name="timeout"  />
+                <td><span data-title="'.$textinputcasecoche.'">'.
+                    '<input type="number" min="0" value="800"  name="timeout"  />
                 </td>';
             }
             ?>
@@ -188,27 +200,33 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
        <?php
             $loopnumber = (isset($loopnumber)) ? $loopnumber : 1;
             echo '<tr class="toggleable">';
-            echo '<td>'._T("repeat question on No response","pkgs").'</td>';
+            echo '<td>'._T("Maximum allowed postponements","pkgs").'</td>';
             echo '<td>
+            <span  data-title="<?php echo _T('Define the maximum number of times a user can postpone the question', 'pkgs'); ?>">
                     <input type="number" min="1" value="'.$loopnumber.'" name="loopnumber"  />
-                </td>';
+            </span></td>';
             echo '</tr>';
         ?>
         <?php
             $timeloop = (isset($timeloop)) ? $timeloop : 900;
             echo '<tr class="toggleable">';
-            echo '<td>'._T("loop time","pkgs").'</td>';
+            echo '<td>'._T("Interval","pkgs").'</td>';
             echo '<td>
+            <span  data-title="<?php echo _T('Define the interval between two questions to the user', 'pkgs'); ?>">
                     <input type="number" min="1" value="'.$timeloop.'" name="timeloop"  />
-                </td>';
+            </span></td>';
             echo '</tr>';
         ?>
     </table>
         <!-- Option timeout -->
     </div>
 
+    <span  data-title="<?php echo _T('Delete this step', 'pkgs').' '.$namestep ; ?>">
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
-    <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
+    </span>
+     <span  data-title="<?php echo _T('Show additional options for this step', 'pkgs').' '.$namestep ; ?>">
+     <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
+    </span>
 </div>
 
 <script type="text/javascript">
