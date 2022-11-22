@@ -1445,6 +1445,11 @@ def get_conformity_update_by_machine(idmachine):
 
 def get_conformity_update_for_group(uuidArray):
     result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
+    nbmachinetotal = len(uuidArray)
+    if result[0]['nombre_machine'] == 0 or result[0]['update_a_mettre_a_jour'] == 0:
+        result[0]['confirmite'] = 100
+    else:
+        result[0]['confirmite'] = (float(result[0]['nombre_machine'])/float(nbmachinetotal)) * 100.
     return result
 
 def get_count_grey_list_enable():
@@ -1479,3 +1484,30 @@ def ban_machines(subaction, jid_ars, machines):
     callXmppPlugin("banmachines", datasend)
 
     return True
+
+
+def reload_deploy(uuid,
+                  cmd_id,
+                  gid,
+                  sessionid,
+                  hostname,
+                  login,
+                  title,
+                  start,
+                  endcmd,
+                  startcmd,
+                  force_redeploy,
+                  rechedule):
+
+    result = XmppMasterDatabase().reload_deploy(uuid,
+                                                        cmd_id,
+                                                        gid,
+                                                        sessionid,
+                                                        hostname,
+                                                        login,
+                                                        title,
+                                                        start,
+                                                        endcmd,
+                                                        startcmd,
+                                                        force_redeploy,
+                                                        rechedule)
