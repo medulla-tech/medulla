@@ -29,10 +29,10 @@ USE `xmppmaster`;
 SET FOREIGN_KEY_CHECKS=0;
 
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX `ind_hostname` (`hostname` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_hostname` (`hostname` ASC) ;
 
 ALTER TABLE `xmppmaster`.`cluster_resources`
-ADD INDEX `ind_jid_search` (`jidmachine` ASC);
+ADD INDEX IF NOT EXISTS `ind_jid_search` (`jidmachine` ASC);
 ;
 
 DROP EVENT IF EXISTS purgecluster_resource;
@@ -49,47 +49,47 @@ CREATE EVENT IF NOT EXISTS purgecluster_resource
 -- Database add index
 -- ------------------ ----------------------------------------------------
 ALTER TABLE `xmppmaster`.`has_cluster_ars`
-ADD INDEX `ind_id_ars` (`id_ars` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_id_ars` (`id_ars` ASC) ;
 ALTER TABLE `xmppmaster`.`has_cluster_ars`
-ADD INDEX `ind_id_cluster` (`id_cluster` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_id_cluster` (`id_cluster` ASC) ;
 
 ALTER TABLE `xmppmaster`.`relayserver`
-ADD INDEX `ind_server_name` (`nameserver` ASC);
-autre
+ADD INDEX IF NOT EXISTS `ind_server_name` (`nameserver` ASC);
+
 ALTER TABLE `xmppmaster`.`relayserver`
-ADD INDEX `ind_mode_ars` (`moderelayserver` ASC)
+ADD INDEX IF NOT EXISTS `ind_mode_ars` (`moderelayserver` ASC)
 
 -- ----------------------------------------------------------------------
 -- Database add index
 -- ------------------ ----------------------------------------------------
 ALTER TABLE `xmppmaster`.`agent_subscription`
-ADD INDEX `ind_name` (`name` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_name` (`name` ASC) ;
 -- ----------------------------------------------------------------------
 -- Database supprime index en doublon dans deploy table
 -- ------------------ ----------------------------------------------------
- ALTER TABLE `xmppmaster`.`deploy`
-DROP INDEX `ind_end_cmd` ;
+ALTER TABLE `xmppmaster`.`deploy`
+DROP INDEX IF NOT EXISTS `ind_end_cmd` ;
 
 ALTER TABLE `xmppmaster`.`deploy`
-DROP INDEX `ind_start_cmd` ;
+DROP INDEX IF NOT EXISTS `ind_start_cmd` ;
 ;
 
 -- ----------------------------------------------------------------------
 -- Database add index
 -- ------------------ ----------------------------------------------------
 ALTER TABLE `xmppmaster`.`deploy`
-ADD INDEX `ind_syncthing` (`syncthing` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_syncthing` (`syncthing` ASC) ;
 
 ALTER TABLE `xmppmaster`.`deploy`
-ADD INDEX `ind_session` (`sessionid` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_session` (`sessionid` ASC) ;
 
 -- ----------------------------------------------------------------------
 -- Database add index  dans machines table
 -- ------------------ ----------------------------------------------------
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX `ind_groupedeploy` (`groupdeploy` ASC)
+ADD INDEX IF NOT EXISTS `ind_groupedeploy` (`groupdeploy` ASC)
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX `ind_macadress` (`macaddress` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_macadress` (`macaddress` ASC) ;
 -- ----------------------------------------------------------------------
 -- Database controle insertion dans table machine
 -- ------------------ ----------------------------------------------------
@@ -134,7 +134,7 @@ DELIMITER ;
 -- Database history for deploy table
 -- ----------------------------------------------------------------------
 -- Database creation historydeploy table
-CREATE TABLE `historydeploy` (
+CREATE TABLE IF NOT EXISTS `historydeploy` (
   `id` int(11) NOT NULL DEFAULT 0,
   `title` varchar(255) DEFAULT NULL,
   `jidmachine` varchar(255) NOT NULL,
@@ -153,12 +153,13 @@ CREATE TABLE `historydeploy` (
   `login` varchar(45) DEFAULT NULL,
   `macadress` varchar(255) DEFAULT NULL,
   `syncthing` int(11) DEFAULT 0,
-  `result` mediumtext DEFAULT NULL
+  `result` mediumtext DEFAULT NULL,
+  `subdep` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- add index deploy table on status
 ALTER TABLE `xmppmaster`.`deploy`
-ADD INDEX `ind_state` (`state` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_state` (`state` ASC) ;
 
 -- delete old historydeploy
 
@@ -179,7 +180,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`deploy_AFTER_DELETE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `xmppmaster`.`deploy_AFTER_DELETE` AFTER DELETE ON `deploy` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`deploy_AFTER_DELETE` AFTER DELETE ON `deploy` FOR EACH ROW
 BEGIN
 INSERT INTO historydeploy
       (id,
@@ -198,7 +199,8 @@ INSERT INTO historydeploy
       login,
       macadress,
       syncthing,
-      result)
+      result,
+      subdep)
     VALUES
       (OLD.id,
       OLD.title,
@@ -218,7 +220,8 @@ INSERT INTO historydeploy
       OLD.login,
       OLD.macadress,
       OLD.syncthing,
-      OLD.result);
+      OLD.result,
+      OLD.subdep);
 END$$
 DELIMITER ;
 
@@ -249,7 +252,7 @@ DROP procedure IF EXISTS `xmppmaster`.`mon-onlineoffline`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `mon-onlineoffline`(IN param_hostname VARCHAR(45))
+CREATE PROCEDURE `mon-onlineoffline`(IN param_hostname VARCHAR(45))
 BEGIN
   SELECT
     date AS 'time',
@@ -286,6 +289,6 @@ SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 67;
+UPDATE version SET Number = 75;
 
 COMMIT;
