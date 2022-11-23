@@ -83,7 +83,7 @@ $g->addExtraInfo($kbs_gray, _T("KB", "updates"));
 $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter, 'updateSearchParamformGray'));
 $g->setParamInfo($params_grey);
-echo '<h2> GreyList</h2>';
+echo '<h2> Grey list</h2>';
 $g->addActionItemArray($grayActions['enable']);
 $g->addActionItemArray($grayActions['disable']);
 $g->addActionItemArray($grayActions['approve']);

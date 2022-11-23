@@ -73,7 +73,7 @@ $b->setItemCount($count_black);
 $b->start = 0;
 $b->end = $count_black;
 $b->setParamInfo($params_black);
-echo '</br></br><h2> BlackList</h2>';
+echo '</br></br><h2> Blacklisted updates</h2>';
 $b->addActionItemArray($blackActions["unban"]);
 $b->display();
 
