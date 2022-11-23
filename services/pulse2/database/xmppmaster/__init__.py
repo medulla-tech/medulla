@@ -11521,7 +11521,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_conformity_update_by_machine(self, session, idmachine):
         """
-            This function returns the the update already done and update enable
+            This function returns value for compliance rate for one machine
+            Params: id of one machine
+            Return : waiting updates
         """
         sql="""SELECT COUNT(*) AS update_waiting
                 FROM
@@ -11544,7 +11546,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_idmachine_from_name(self, session, name):
         """
-            This function returns the the update already done and update enable
+            This function returns id of machine searched by hostname
         """
         sql="""SELECT id AS id_machine
                 FROM
@@ -11583,7 +11585,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_conformity_update_for_group(self, session, uuidArray):
         """
-            This function returns the the update already done and update enable
+            This function returns value for compliance rate for group
+            Params: array of uuid group
+            Return : waiting updates and count of machine
         """
         array_GUID = " AND uuid_inventorymachine IN ('%s')" % ",".join([str(x) for x in uuidArray])
         
