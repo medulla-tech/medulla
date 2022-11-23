@@ -34,11 +34,11 @@ else if (isset($_GET['cn'])){
 
 $f->add(new HiddenTpl("login"), array("value" => $_SESSION['login'], "hide" => True));
 
-$force = new TrFormElement(_T("Force deploy", "xmppmaster"), new CheckboxTpl("force"));
+$force = new TrFormElement(_T("Force re-deployment during initial validity period", "xmppmaster"), new CheckboxTpl("force"));
 
 $f->add($force, ["value"=>""]);
 $date = $_GET['startcmd'];
-$reschedule = new TrFormElement('<br>'._T("Rechedule deploy between now and 1 day", "xmppmaster"), new CheckboxTpl("reschedule"));
+$reschedule = new TrFormElement('<br>'._T("Rechedule deployment between now and 1 day", "xmppmaster"), new CheckboxTpl("reschedule"));
 $f->add($reschedule, ["value"=>""]);
 
 $f->addValidateButton("bconfirm");
