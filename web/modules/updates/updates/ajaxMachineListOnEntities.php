@@ -84,9 +84,9 @@ if ($typeOfDetail == "group")
     $group_compliance = xmlrpc_get_conformity_update_for_group($group_array);
     $group_compliance = $group_compliance['0'];
 
-    $color_group_compliance = colorconf($group_compliance['confirmite']);
+    $color_group_compliance = colorconf($group_compliance['compliance']);
 
-    echo "<div class='progress' style='max-width: 25%; width: ".$group_compliance['confirmite']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".$group_compliance['confirmite']."% </div>";
+    echo "<div class='progress' style='max-width: 25%; width: ".$group_compliance['compliance']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".$group_compliance['compliance']."% </div>";
 }
 
 echo "<br>";
@@ -113,7 +113,7 @@ $params = [];
 $machineNames = [];
 $complRates = [];
 $detailsByMachs = [];
-$machineByEntitie = [];
+$missingUpdatesMachine = [];
 $platform = [];
 // TOTAL NOMBRE DE LIGNE REQUETE
 if ($uuid != '')
@@ -130,18 +130,21 @@ if ($typeOfDetail == "entitie")
         if($machines['data']['entityid'][$i] == $match){
             $detailsByMachs[] = $detailsByMach;
             $machineNames[] = $machines['data']['hostname'][$i];
-            $machineByEntitie[] = $machines['data']['glpi_entity_id'][$i];
+            
 
             $compliance_computer = xmlrpc_get_conformity_update_by_machine($machines['data']['id'][$i]);
+            
             $comp = $compliance_computer['0']['update_waiting'];
+            $missingUpdatesMachine[] = $comp;
 
             if ($all_grey_enable != '0' and $comp != '0')
             {
                 $comp = $comp / $all_grey_enable * 100;
             }
-            else
+            
+            if ($comp == '0')
             {
-                $comp = '0';
+                $comp = '100';
             }
 
             $color = colorconf($comp);
@@ -160,20 +163,17 @@ if ($typeOfDetail == "group")
     foreach ($listGroup as $k => $v) {
         $detailsByMachs[] = $detailsByMach;
         $machineNames[] = $v[1]['cn'][0];
-        $machineByEntitie[] = "null";
+        $missingUpdatesMachine[] = "null";
         
         $platform[] = $v[1]['os'];
-
-        //GET ID WITH $v[cn] or other
-    }
+    }        
 }
-
 
 $n = new OptimizedListInfos($machineNames, _T("Name machine", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($platform, _T("Plateform", "updates"));
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($machineByEntitie, _T("Missing updates", "updates"));
+$n->addExtraInfo($missingUpdatesMachine, _T("Missing updates", "updates"));
 $n->addActionItemArray($detailsByMachs);
 
 $n->setItemCount($count_machineNames);
