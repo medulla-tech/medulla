@@ -163,11 +163,24 @@ if ($typeOfDetail == "group")
         $machineByEntitie[] = "null";
         
         $platform[] = $v[1]['os'];
-
-        //GET ID WITH $v[cn] or other
-    }
+    }        
 }
 
+echo '<pre>';
+// print_r($ctx);
+// var_dump($filter);
+// var_dump($count);
+// print_r($machines);
+// var_dump($match);
+// var_dump($count_machineNames);
+// print_r($machines['data']);
+//print_r($machines['data']['hostname']);
+//print_r($machines['data']['entityid']);
+//print_r($machines['data']['platform']);
+// print_r($machineByEntitie);
+// print_r($compliancerate);
+// print_r($test);
+echo '</pre>';
 
 $n = new OptimizedListInfos($machineNames, _T("Name machine", "updates"));
 $n->disableFirstColumnActionLink();
