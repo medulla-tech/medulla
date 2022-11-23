@@ -89,7 +89,7 @@ foreach($arraynotdeploy['elements'] as $id=>$deploy)
     $name = $name[$deploy['gid']]['name'];
     $name = '<img style="position:relative;top : 5px;" src="img/other/machinegroup.svg" width="25" height="25" /> '.$name;
     //echo '<a href="main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&tab=grouptablogs&uuid=&hostname=&gid='.$deploy['gid'].'&cmd_id='.$deploy['cmd_id'].'&login='.$deploy['login'].'">'.$deploy['package_name'].'</a><br />';
-    $logAction = new ActionItem(_("detaildeploy"),
+    $logAction = new ActionItem(_("View deployment details"),
                                     "viewlogs",//Action
                                     "audit",//class
                                     "",
@@ -102,7 +102,7 @@ foreach($arraynotdeploy['elements'] as $id=>$deploy)
   {
     $name = $deploy['machine_name'];
     $name = '<img style="position:relative;top : 5px;" src="img/other/machine_down.svg" width="25" height="25" /> '.$name;
-    $logAction = new ActionItem(_("detaildeploy"),
+    $logAction = new ActionItem(_("View deployment details"),
                                     "viewlogs",//Action
                                     "audit",//class
                                     "",

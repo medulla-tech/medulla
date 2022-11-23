@@ -5,6 +5,8 @@ $lab = "END_SUCCESS";
 // $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">END_SUCCESS</div>
     <h1><?php echo _T("End Success", "pkgs"); ?></h1>
 </div>
 

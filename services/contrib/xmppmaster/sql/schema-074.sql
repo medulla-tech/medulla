@@ -39,6 +39,12 @@ ALTER TABLE command_qa ADD COLUMN jid_machine varchar(255) NOT NULL AFTER comman
 ALTER TABLE command_action ADD COLUMN jid_target varchar(255) NOT NULL AFTER target;
 
 -- ----------------------------------------------------------------------
+-- ALTER deploy
+-- Add a column deploy.subdep to have the deployment substitute used
+-- ----------------------------------------------------------------------
+ALTER TABLE `xmppmaster`.`deploy` ADD COLUMN `subdep` varchar(45) NULL AFTER result;
+
+-- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
 UPDATE version SET Number = 74;

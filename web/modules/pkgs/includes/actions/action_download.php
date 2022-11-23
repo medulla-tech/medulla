@@ -20,6 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ * file : modules/pkgs/includes/actions/action_download.php
  */
 require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
@@ -70,6 +71,8 @@ $toggleable =  "toggleable".uniqid();
 $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">down_</div>
     <h1><?php echo _T('Download File', 'pkgs'); ?></h1>
 </div>
 

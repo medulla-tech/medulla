@@ -22,17 +22,13 @@
  */
 require_once("modules/updates/includes/xmlrpc.php");
 
-// Configuration global de $maxperpage, $filter, $start, $end
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
-echo '<pre>';
-// print_r($_GET);
-echo '</pre>';
-$white_list = xmlrpc_get_white_list($start, $end, $filter);
+$white_list = xmlrpc_get_white_list($start, $maxperpage, $filter);
 // WhiteList Actions
 $whiteUnlistAction = new ActionPopupItem(_T("Unlist Update", "updates"), "whiteUnlist", "unlist", "updates", "updates");
 $banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "banupdate", "updates", "updates");
@@ -49,9 +45,6 @@ for($i=0; $i < $count_white; $i++){
     $tmp = [];
     $whiteActions["unlist"][] = $whiteUnlistAction;
     $whiteActions["ban"][] = $banAction;
-
-    // $actiongreylistUpds[] = $greylistUpd;
-    // $actionblacklistUpds[] = $blacklistUpd;
 
     $titles_white[] = $white_list['title'][$i];
 
@@ -81,8 +74,11 @@ $w->addExtraInfo($updateids_white, _T("Update Id", "updates"));
 $w->addExtraInfo($kbs_white, _T("KB", "updates"));
 $w->setItemCount($count_white);
 $w->setNavBar(new AjaxNavBar($count_white, $filter, 'updateSearchParamformWhite'));
+$w->start = 0;
+$w->end = $count_white;
 $w->setParamInfo($params_white);
-echo '</br></br><h2> WhiteList</h2>';
+echo '</br></br><h2> Whitelisted updates</h2>';
 $w->addActionItemArray($whiteActions["unlist"]);
 $w->addActionItemArray($whiteActions["ban"]);
 $w->display();
+?>

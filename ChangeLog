@@ -1,9 +1,16 @@
+* [FEATURE] Improved backup management using urbackup
+* [FEATURE] New OS Updates feature
+* [FEATURE] New Kiosk feature
+* [FEATURE] Packaging feature allows to define return codes different to 0 and 1 for branching to other steps
+* [FEATURE] Ability to restart a failed deployment from the interface
+* [FEATURE] Improve Admin view when connected user is root
 * [BUGFIX]  Fix diplay of config files
 * [BUGFIX]  Support Optiplex 3050 in iPXE
 * [BUGFIX]  Fix display of the Master list page when there is a lot of
 computers listed.
 * [BUGFIX]  Fix php support up to 7.4 in the imaging page.
 * [BUGFIX]  Fix modification of packages and correctness of xmppdeploy.json
+* [BUGFIX]  Fix traceback when displaying results of a quick action executed on an uninventoried machine
 
 Pulse 2 4.6.10
 =============

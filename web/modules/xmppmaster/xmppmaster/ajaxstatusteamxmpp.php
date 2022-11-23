@@ -125,7 +125,7 @@ foreach( $arraydeploy['tabdeploy']['endcmd'] as $ss){
     $arraydeploy['tabdeploy']['startcmd'] = $startcmd;
 
 
-$logAction = new ActionItem(_("detaildeploy"),
+$logAction = new ActionItem(_("View deployment details"),
                                 "viewlogs",
                                 "audit",
                                 "computer",
