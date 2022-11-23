@@ -6741,7 +6741,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def SetPresenceMachine(self, session, jid, presence=0):
-         """
+        """
             Change the presence in the machine table.
             Args:
                 session: The SQL Alchemy session
