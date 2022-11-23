@@ -42,7 +42,7 @@ ALTER TABLE command_action ADD COLUMN jid_target varchar(255) NOT NULL AFTER tar
 -- ALTER deploy
 -- Add a column deploy.subdep to have the deployment substitute used
 -- ----------------------------------------------------------------------
-ALTER TABLE `xmppmaster`.`deploy` ADD COLUMN `subdep` varchar(255) NULL AFTER result;
+ALTER TABLE `xmppmaster`.`deploy` ADD COLUMN `subdep` varchar(45) NULL AFTER result;
 
 -- ----------------------------------------------------------------------
 -- Database version
