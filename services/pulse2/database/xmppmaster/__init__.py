@@ -1275,7 +1275,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         LEFT OUTER JOIN
                     cluster_ars ON cluster_ars.id = has_cluster_ars.id_cluster
                         LEFT OUTER JOIN
-                    machines ON SUBSTRING_INDEX(machines.jid, '@', 1) = SUBSTRING_INDEX(relayserver.jid, '@', 1)
+                    machines ON machines.hostname = relayserver.nameserver 
                 WHERE
                     relayserver.moderelayserver = 'static' %s
                     AND relayserver.id in(	 SELECT
@@ -4711,7 +4711,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if intervalsearch:
             deploylog = deploylog.filter(Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
 
-        if filt is not None:
+        if filt:
             deploylog = deploylog.filter(or_(Deploy.state.like('%%%s%%' % filt),
                                              Deploy.pathpackage.like('%%%s%%' % filt),
                                              Deploy.start.like('%%%s%%' % filt),
@@ -4837,7 +4837,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if intervalsearch:
             deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
 
-        if filt is not None:
+        if filt:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%'%(filt)),
                                                 Deploy.start.like('%%%s%%'%(filt)),
@@ -4900,7 +4900,7 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = deploylog.order_by(desc(Deploy.id))
 
         ##deploylog = deploylog.add_column(func.count(Deploy.title))
-        if minimum is not None and maximum is not None:
+        if minimum  and maximum:
             deploylog = deploylog.offset(int(minimum)).limit(int(maximum)-int(minimum))
         result = deploylog.all()
         session.commit()
@@ -4983,13 +4983,20 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if intervalsearch:
             deploylog = deploylog.filter( Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch)))
-
-        if filt is not None:
+        filter_filt=""
+        if filt:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%' % (filt)),
                                                 Deploy.start.like('%%%s%%' % (filt)),
                                                 Deploy.login.like('%%%s%%' % (filt)),
                                                 Deploy.host.like('%%%s%%' % (filt))))
+            filter_filt=""" AND (state LIKE "%%%s%%"
+                or pathpackage LIKE "%%%s%%"
+                or start LIKE "%%%s%%"
+                or login LIKE "%%%s%%"
+                or host LIKE "%%%s%%"
+                ) """( filt,filt,filt,filt,filt)
+
 
         deploylog = deploylog.filter( or_(  Deploy.state == 'DEPLOYMENT SUCCESS',
                                             Deploy.state.startswith('ERROR'),
@@ -5005,42 +5012,24 @@ class XmppMasterDatabase(DatabaseHelper):
                 select count(id) as nb
                 from deploy
                 where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-                AND login REGEXP "%s"
-                AND (state LIKE "%%%s%%"
-                or pathpackage LIKE "%%%s%%"
-                or start LIKE "%%%s%%"
-                or login LIKE "%%%s%%"
-                or host LIKE "%%%s%%"
-                )
+                AND login REGEXP "%s" %s
                 group by title
-                ) as x;"""%(llogin, filt,filt,filt,filt,filt,)
+                ) as x;"""%(llogin, filter_filt)
             else:
                 count = """select count(*) as nb from (
                 select count(id) as nb
                 from deploy
                 where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-                AND login LIKE "%s"
-                AND (state LIKE "%%%s%%"
-                or pathpackage LIKE "%%%s%%"
-                or start LIKE "%%%s%%"
-                or login LIKE "%%%s%%"
-                or host LIKE "%%%s%%"
-                )
+                AND login LIKE "%s" %s
                 group by title
-                ) as x;"""%(login, filt,filt,filt,filt,filt,)
+                ) as x;"""%(login,filter_filt)
         else:
             count = """select count(*) as nb from (
             select count(id) as nb
             from deploy
-            where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-            AND (state LIKE "%%%s%%"
-            or pathpackage LIKE "%%%s%%"
-            or start LIKE "%%%s%%"
-            or login LIKE "%%%s%%"
-            or host LIKE "%%%s%%"
-            )
+            where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH) %s
             group by title
-            ) as x;"""%(filt,filt,filt,filt,filt,)
+            ) as x;"""%(filter_filt)
 
         count = session.execute(count)
         count = [nbcount for nbcount in count]
@@ -5053,7 +5042,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         nbfilter =  self.get_count(deploylog)
 
-        if minimum is not None and maximum is not None:
+        if minimum and maximum:
             deploylog = deploylog.offset(int(minimum)).limit(int(maximum)-int(minimum))
         result = deploylog.all()
         session.commit()
@@ -5105,8 +5094,6 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['jid_relay'].append(linedeploy.jid_relay)
             ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
-
-
 
     @DatabaseHelper._sessionm
     def getdeploybyuser(self, session, login = None, numrow = None, offset=None):
@@ -6740,9 +6727,21 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [{column: value for column, value in rowproxy.items()} for rowproxy in result]
 
+    def jid_to_hostname(self, jid):
+        try:
+            user = jid.split('@')[0].split('.')
+            if len(user) > 1:
+                user = user[:-1]
+        except Exception :
+            return None
+        user=".".join(user)
+        if not user:
+            return None
+        return user
+
     @DatabaseHelper._sessionm
     def SetPresenceMachine(self, session, jid, presence=0):
-        """
+         """
             Change the presence in the machine table.
             Args:
                 session: The SQL Alchemy session
@@ -6750,16 +6749,18 @@ class XmppMasterDatabase(DatabaseHelper):
                 presence: The new presence state/
                           0: The machine is offline
                           1: The machine is online
-
         """
-        hostname = str(jid).split("@")[0]
+        user = self.jid_to_hostname(jid)
+        if not user:
+            logging.getLogger().error("SetPresenceMachine jid error : %s" % jid)
+            return False
         try:
             sql = """UPDATE
                         `xmppmaster`.`machines`
                     SET
                         `xmppmaster`.`machines`.`enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`machines`.jid like('%s@%%');""" % (presence, hostname)
+                        `xmppmaster`.`machines`.hostname like '%s' limit 1;""" % (presence, user)
             session.execute(sql)
             session.commit()
             session.flush()
@@ -6768,6 +6769,7 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error("An error occured while setting the new presence.")
             logging.getLogger().error("We got the error:\n %s" % str(error_presence))
             return False
+
 
     @DatabaseHelper._sessionm
     def updatedeployresultandstate(self, session, sessionid, state, result ):
@@ -6924,13 +6926,16 @@ class XmppMasterDatabase(DatabaseHelper):
         """
             update boolean need_reconf in table machines
         """
-        user = str(jid).split("@")[0]
+        user = self.jid_to_hostname(jid)
+        if not user:
+            logging.getLogger().error("SetPresenceMachine jid error : %s" % jid)
+            return False
         try:
             sql = """UPDATE `xmppmaster`.`machines`
                          SET `need_reconf` = '%s'
                      WHERE
-                         `xmppmaster`.`machines`.jid like('%s@%%')""" % (status,
-                                                                       user)
+                         `xmppmaster`.`machines`.hostname like '%s' limit 1;""" % (status, 
+                                                                                   user)
             result = session.execute(sql)
             session.commit()
             session.flush()
@@ -6967,6 +6972,7 @@ class XmppMasterDatabase(DatabaseHelper):
         else:
             return {}
 
+
     @DatabaseHelper._sessionm
     def update_Presence_Relay(self, session, jid, presence=0):
         """
@@ -6985,22 +6991,23 @@ class XmppMasterDatabase(DatabaseHelper):
                     SET
                         `enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`machines`.`jid` like('%s@%%');""" % (presence,
-                                                                           user)
+                        `xmppmaster`.`machines`.`jid` like('%s@%%') limit 1;""" % ( presence,
+                                                                                    user)
             session.execute(sql)
             sql = """UPDATE
                         `xmppmaster`.`relayserver`
                     SET
                         `enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`relayserver`.`jid` like('%s@%%');""" % (presence,
-                                                                              user)
+                        `xmppmaster`.`relayserver`.`jid` like('%s@%%') limit 1;""" % (presence,
+                                                                                      user)
             session.execute(sql)
             session.commit()
             session.flush()
-        except Exception, e:
-            logging.getLogger().error(str(e))
-            logging.getLogger().error("\n%s" % (traceback.format_exc()))
+        except Exception as e:
+            logging.getLogger().error("Function : update_Presence_Relay, we got the error: " % str(e))
+            logging.getLogger().error("We encountered the backtrace: \n%s" % traceback.format_exc())
+
 
     @DatabaseHelper._sessionm
     def update_reconf_mach_of_Relay_down(self, session, jid, reconf=1):
@@ -8281,7 +8288,7 @@ class XmppMasterDatabase(DatabaseHelper):
             .add_column(Machines.macaddress.label('macaddress'))\
             .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)\
             .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
-            .outerjoin(Machines, func.substring_index(Machines.jid, '/', 1) == func.substring_index(RelayServer.jid, '/', 1))\
+            .outerjoin(Machines, Machines.hostname == RelayServer.nameserver)\
             .filter(RelayServer.moderelayserver == 'static')
 
         if presence == 'nopresence':
@@ -8561,13 +8568,13 @@ class XmppMasterDatabase(DatabaseHelper):
     def change_relay_switch(self, session, jid, switch, propagate):
         id_cluster = None
         if propagate is True:
-            session.query(RelayServer).filter(func.substring_index(RelayServer.jid, '/', 1) == jid.split('/')[0],\
-                RelayServer.mandatory == 0).update(\
+            session.query(RelayServer).filter(and_(func.substring_index(RelayServer.jid, '/', 1) == jid.split('/')[0],\
+                RelayServer.mandatory == 0)).update(\
                 {RelayServer.switchonoff: switch})
             try:
                 cluster = session.query(Has_cluster_ars.id_cluster)\
                     .join(RelayServer, Has_cluster_ars.id_ars == RelayServer.id)\
-                    .join(Machines, func.substring_index(Machines.jid, '/', 1) == func.substring_index(RelayServer.jid, '/', 1))\
+                    .join(Machines, Machines.hostname == RelayServer.nameserver)\
                     .filter(Machines.jid == jid).one()
                 id_cluster = cluster.id_cluster
             except:
@@ -8663,14 +8670,14 @@ where agenttype="machine" and groupdeploy in (
         @returns: boolean"""
         try:
             query = session.query(RelayServer.enabled)\
-            .filter(func.substring_index(RelayServer.jid, '/', 1)==jid.split('/')[0]).one()
-
+                .filter(func.substring_index(RelayServer.jid, '/', 1)==jid.split('/')[0]).one()
             if query is not None:
                 return query.enabled
             else:
                 return False
         except:
             return False
+
     @DatabaseHelper._sessionm
     def get_qa_for_relays(self, session, login=""):
         """ Get the list of qa for relays
