@@ -130,7 +130,6 @@ if ($typeOfDetail == "entitie")
         if($machines['data']['entityid'][$i] == $match){
             $detailsByMachs[] = $detailsByMach;
             $machineNames[] = $machines['data']['hostname'][$i];
-            
 
             $compliance_computer = xmlrpc_get_conformity_update_by_machine($machines['data']['id'][$i]);
             
@@ -163,7 +162,28 @@ if ($typeOfDetail == "group")
     foreach ($listGroup as $k => $v) {
         $detailsByMachs[] = $detailsByMach;
         $machineNames[] = $v[1]['cn'][0];
-        $missingUpdatesMachine[] = "null";
+
+        //FUNCTION TO GET ID
+        $id_machine = xmlrpc_get_ipmachine_from_name($v[1]['cn'][0]);
+
+        $compliance_computer = xmlrpc_get_conformity_update_by_machine($id_machine['id_machine']);
+
+        $comp = $compliance_computer['0']['update_waiting'];
+        $missingUpdatesMachine[] = $comp;
+
+        if ($all_grey_enable != '0' and $comp != '0')
+        {
+            $comp = $comp / $all_grey_enable * 100;
+        }
+
+        if ($comp == '0')
+        {
+            $comp = '100';
+        }
+
+        $color = colorconf($comp);
+
+        $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
         
         $platform[] = $v[1]['os'];
     }        
