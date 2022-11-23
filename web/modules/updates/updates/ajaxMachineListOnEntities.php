@@ -66,6 +66,11 @@ $listGroup = getRestrictedComputersList(0, -1, $filterGid, False);
 
 $group_array = [];
 
+function colorconf($conf){
+    $colorDisplay=array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
+    return $colorDisplay[intval(($conf-($conf%10))/10)];
+}
+
 if ($typeOfDetail == "group")
 {
     print_r(_T("<h2>Global compliance rate for ".$groupname."</h2>", "updates"));
@@ -77,44 +82,11 @@ if ($typeOfDetail == "group")
     }
 
     $group_compliance = xmlrpc_get_conformity_update_for_group($group_array);
+    $group_compliance = $group_compliance['0'];
 
-    print_r("--------------------------------");
-    print_r($group_compliance);
-    print_r("--------------------------------");
+    $color_group_compliance = colorconf($group_compliance['compliance']);
 
-    switch(intval($group_compliance)){
-        case $group_compliance <= 10:
-            $color = "#ff0000";
-            break;
-        case $group_compliance <= 20:
-            $color = "#ff3535";
-            break;
-        case $group_compliance <= 30:
-            $color = "#ff5050";
-            break;
-        case $group_compliance <= 40:
-            $color = "#ff8080";
-            break;
-        case $group_compliance <  50:
-            $color = "#ffA0A0";
-            break;
-        case $group_compliance <=  60:
-            $color = "#c8ffc8";
-            break;
-        case $group_compliance <= 70:
-            $color = "#97ff97";
-            break;
-        case $group_compliance <= 80:
-            $color = "#64ff64";
-            break;
-        case $group_compliance <=  90:
-            $color = "#2eff2e";
-            break;
-        case $group_compliance >90:
-            $color = "#00ff00";
-            break;
-    }
-    echo "<div class='progress' style='width: ".$group_compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$group_compliance."% </div>";
+    echo "<div class='progress' style='max-width: 25%; width: ".$group_compliance['compliance']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".$group_compliance['compliance']."% </div>";
 }
 
 echo "<br>";
@@ -172,38 +144,8 @@ if ($typeOfDetail == "entitie")
                 $comp = '0';
             }
 
-            switch(intval($comp)){
-                case $comp <= 10:
-                    $color = "#ff0000";
-                    break;
-                case $comp <= 20:
-                    $color = "#ff3535";
-                    break;
-                case $comp <= 30:
-                    $color = "#ff5050";
-                    break;
-                case $comp <= 40:
-                    $color = "#ff8080";
-                    break;
-                case $comp <  50:
-                    $color = "#ffA0A0";
-                    break;
-                case $comp <=  60:
-                    $color = "#c8ffc8";
-                    break;
-                case $comp <= 70:
-                    $color = "#97ff97";
-                    break;
-                case $comp <= 80:
-                    $color = "#64ff64";
-                    break;
-                case $comp <=  90:
-                    $color = "#2eff2e";
-                    break;
-                case $comp >90:
-                    $color = "#00ff00";
-                    break;
-            }
+            $color = colorconf($comp);
+
             $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
 
             $platform[] = $machines['data']['platform'][$i];
@@ -218,7 +160,7 @@ if ($typeOfDetail == "group")
     foreach ($listGroup as $k => $v) {
         $detailsByMachs[] = $detailsByMach;
         $machineNames[] = $v[1]['cn'][0];
-        $machineByEntitie[] = $v[1]['objectUUID'][0];
+        $machineByEntitie[] = "null";
         
         $platform[] = $v[1]['os'];
     }        
@@ -240,12 +182,11 @@ echo '<pre>';
 // print_r($test);
 echo '</pre>';
 
-
 $n = new OptimizedListInfos($machineNames, _T("Name machine", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($platform, _T("Plateform", "updates"));
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($machineByEntitie, _T("Enitie_machine", "updates"));
+$n->addExtraInfo($machineByEntitie, _T("Missing updates", "updates"));
 $n->addActionItemArray($detailsByMachs);
 
 $n->setItemCount($count_machineNames);

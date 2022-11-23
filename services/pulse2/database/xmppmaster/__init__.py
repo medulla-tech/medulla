@@ -11575,12 +11575,17 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     platform LIKE 'Mic%'"""
                     
         sql = sql + array_GUID + ";"
-                        
+        logging.getLogger().info(sql)
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        
-        return resultquery
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        for t in result:
+            if t['update_a_mettre_a_jour'] == None:
+               t['update_a_mettre_a_jour'] = 0
+        return result
     
 
     @DatabaseHelper._sessionm

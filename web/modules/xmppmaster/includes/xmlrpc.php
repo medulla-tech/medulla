@@ -804,4 +804,5 @@ function xmlrpc_get_conformity_update_for_group($uuidArray){
 function xmlrpc_get_count_grey_list_enable(){
   return xmlCall("xmppmaster.get_count_grey_list_enable");
 }
+
 ?>
