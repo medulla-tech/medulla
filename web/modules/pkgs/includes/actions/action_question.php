@@ -115,7 +115,7 @@ $namestep=_T("User Question","pkgs");
             </th>
         </tr>
         <tr>
-            <th <?php>
+            <th>
                     <?php echo _T('Question', 'pkgs'); ?>
             </th>
             <th>
