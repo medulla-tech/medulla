@@ -74,6 +74,8 @@ $toggleable =  "toggleable".uniqid();
 $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">unzip_</div>
     <h1><?php echo _T('Unzip File', 'pkgs'); ?></h1>
 </div>
 <div class="content">

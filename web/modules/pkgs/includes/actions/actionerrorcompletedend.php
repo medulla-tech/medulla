@@ -4,6 +4,8 @@ extract($_POST);
 $lab = "END_ERROR";
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">END_ERROR</div>
     <h1><?php echo _T('End Error', 'pkgs'); ?></h1>
 </div>
 

@@ -76,9 +76,11 @@ $lab =  (isset($actionlabel))? $actionlabel : "UpQues".uniqid();
 
 </style>
 <?php
-$namestep=_T("Update Question","pkgs");
+$namestep=_T("User Question","pkgs");
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">ask_</div>
     <h1 data-title="<?php echo _T('Submit a question to the connected user', 'pkgs'); ?>" ><?php echo $namestep; ?></h1>
 </div>
 
@@ -263,9 +265,6 @@ $namestep=_T("Update Question","pkgs");
             }
             ?>
         </tr>
-
-
-
     </table>
         <!-- Option timeout -->
     </div>

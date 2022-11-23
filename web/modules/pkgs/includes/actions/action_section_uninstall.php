@@ -15,6 +15,8 @@ extract($_POST);
 
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">Uninst_</div>
     <h1><?php echo _T('Uninstall Section', 'pkgs'); ?></h1>
 </div>
 <div class="content">
