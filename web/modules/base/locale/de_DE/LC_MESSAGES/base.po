@@ -951,7 +951,7 @@ msgstr "GLPI Inventar"
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
-msgid "detaildeploy"
+msgid "View deployment details"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:104

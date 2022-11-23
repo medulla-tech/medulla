@@ -90,16 +90,16 @@ foreach( $arraydeploy['tabdeploy']['endcmd'] as $ss){
     $arraydeploy['tabdeploy']['startcmd'] = $startcmd;
 
 
-$logAction = new ActionItem(_("detaildeploy"),
+$logAction = new ActionItem(_("View deployment details"),
                                 "viewlogs",
                                 "audit",
                                 "computer",
                                 "xmppmaster",
                                 "xmppmaster");
 
-$reloadAction = new ActionPopupItem(_("reload"),
+$reloadAction = new ActionPopupItem(_("Restart deployment"),
                                 "popupReloadDeploy&previous=".$_GET['previous'],
-                                "start",
+                                "reload",
                                 "",
                                 "xmppmaster",
                                 "xmppmaster");

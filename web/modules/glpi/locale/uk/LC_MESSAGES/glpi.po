@@ -748,7 +748,7 @@ msgid "Inventory"
 msgstr "Облік"
 
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:91
-msgid "detaildeploy"
+msgid "View deployment details"
 msgstr "докладне розгортання"
 
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:116

@@ -666,7 +666,7 @@ if ($count != 0){
   }
   $presencemachinexmpplist = xmlrpc_getPresenceuuids($info_from_machines[8]);
 
-  $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
+  $action_log = new ActionItem(_T("View deployment details", 'xmppmaster'),
                                       "viewlogs",
                                       "logfile",
                                       "logfile",
@@ -674,9 +674,9 @@ if ($count != 0){
                                       "xmppmaster");
 
 
-  $reloadAction = new ActionPopupItem(_("reload"),
+  $reloadAction = new ActionPopupItem(_("Restart deployment"),
                                   "popupReloadDeploy&previous=".$_GET['previous'],
-                                  "start",
+                                  "reload",
                                   "",
                                   "xmppmaster",
                                   "xmppmaster");
@@ -715,7 +715,7 @@ echo'
 </tbody>
 </table>';
 }else{
-$action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
+$action_log = new ActionItem(_T("View deployment details", 'xmppmaster'),
                                     "viewlogs",
                                     "reload",
                                     "logfile",
