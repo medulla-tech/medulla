@@ -21,17 +21,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 require_once("modules/updates/includes/xmlrpc.php");
-// Configuration global de $maxperpage, $filter, $start, $end
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
-echo '<pre>';
-// print_r($_GET);
-echo '</pre>';
-// Appel de fonction pour récupérer la Liste Grise dans up_black_list
-$black_list = xmlrpc_get_black_list($start, $end, $filter);
+$black_list = xmlrpc_get_black_list($start, $maxperpage, $filter);
 
 // BlackList Actions
 $blackUnbanAction = new ActionItem(_T("unban Update", "updates"),"blackUnban","unlist","", "updates", "updates");
@@ -43,7 +39,7 @@ $kbs_black = [];
 $updateids_black = [];
 $titles_black = [];
 
-// ########## Boucle blackList ########## //
+// ########## Set params ########## //
 for($i=0; $i < $count_black; $i++){
     $blackActions["unban"][] = $blackUnbanAction;
 
@@ -65,7 +61,7 @@ for($i=0; $i < $count_black; $i++){
     }
 }
 
-// ########## Affichage Tableau BlackList ########## //
+// ########## Display BlackList Table ########## //
 
 $b = new OptimizedListInfos($titles_black, _T("Update name", "updates"));
 $b->addExtraInfo($updateids_black, _T("Update Id", "updates"));
@@ -73,12 +69,12 @@ $b->addExtraInfo($kbs_black, _T("KB", "updates"));
 $b->disableFirstColumnActionLink();
 $b->setItemCount($count_black);
 $b->setNavBar(new AjaxNavBar($count_black, $filter, 'updateSearchParamformBlack'));
+$b->setItemCount($count_black);
+$b->start = 0;
+$b->end = $count_black;
 $b->setParamInfo($params_black);
 echo '</br></br><h2> BlackList</h2>';
 $b->addActionItemArray($blackActions["unban"]);
 $b->display();
 
-echo '<pre>';
-// print_r($b);
-echo '</pre>';
 ?>
