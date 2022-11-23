@@ -76,7 +76,7 @@ $lab =  (isset($actionlabel))? $actionlabel : "UpQues".uniqid();
 
 </style>
 <?php
-$namestep=_T("Update Question","pkgs");
+$namestep=_T("User Question","pkgs");
 ?>
 <div class="header">
     <!-- definie prefixe label -->

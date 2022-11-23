@@ -76,17 +76,17 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 
 </style>
 <?php
-$namestep=_T("Update choise","pkgs");
+$namestep=_T("User choice","pkgs");
 ?>
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">choice_</div>
-    <h1 data-title="<?php echo _T('Submit a choise to the connected user', 'pkgs'); ?>" ><?php echo $namestep; ?></h1>
+    <h1 data-title="<?php echo _T('Submit a choice to the connected user', 'pkgs'); ?>" ><?php echo $namestep; ?></h1>
 </div>
 
 <div class="content">
     <div>
-        <input type="hidden" name="action" value="action_choise" />
+        <input type="hidden" name="action" value="action_choice" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
     <table id="tableToggle">
