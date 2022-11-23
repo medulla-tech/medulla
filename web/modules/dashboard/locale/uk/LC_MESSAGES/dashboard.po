@@ -57,11 +57,11 @@ msgstr "Панель оновлень"
 
 #: modules/dashboard/infoPackage.inc.php:76
 msgid "Alerts Panel"
-msgstr ""
+msgstr "Панель попереджень"
 
 #: modules/dashboard/infoPackage.inc.php:79
 msgid "Alerts by Entity Panel"
-msgstr ""
+msgstr "Попередження від панелі елементів"
 
 #: modules/dashboard/includes/panels/space.inc.php:28
 msgid "Disk usage"
@@ -130,7 +130,7 @@ msgstr "Створити групу"
 
 #: modules/dashboard/includes/panels/alertsentity.inc.php:28
 msgid "Alerts by Entity"
-msgstr ""
+msgstr "Попередження за елементами"
 
 #: modules/dashboard/includes/panels/alertsentity.inc.php:49
 #: modules/dashboard/includes/panels/alerts.inc.php:49
@@ -155,7 +155,7 @@ msgstr "Дата"
 #: modules/dashboard/includes/panels/alertsentity.inc.php:56
 #: modules/dashboard/includes/panels/alerts.inc.php:56
 msgid "Evenement"
-msgstr ""
+msgstr "Події"
 
 #: modules/dashboard/includes/panels/alertsentity.inc.php:57
 #: modules/dashboard/includes/panels/alerts.inc.php:57
@@ -165,7 +165,7 @@ msgstr "Комп’ютер"
 #: modules/dashboard/includes/panels/alertsentity.inc.php:70
 #: modules/dashboard/includes/panels/alerts.inc.php:70
 msgid "No alerts"
-msgstr ""
+msgstr "Немає попереджень"
 
 #: modules/dashboard/includes/panels/agents.inc.php:30
 msgid "Agents"
@@ -177,7 +177,7 @@ msgstr "Машини у Pulse з "
 
 #: modules/dashboard/includes/panels/alerts.inc.php:28
 msgid "Alerts"
-msgstr ""
+msgstr "Попередження"
 
 #: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"

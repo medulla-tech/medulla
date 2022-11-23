@@ -1,0 +1,25 @@
+Utilise par le substitute monitoring.
+
+ 
+
+le repertoire "/var/lib/pulse2/script_monitoring" contient les scripts templates personalisées suivant le besoin.
+les fichiers templates servent à généré les scripts de monitoring
+
+
+
+les fichiers suivant sont des exemples de template et il montre comment réupérer les métas données de l'événement dans vos scripts.
+les marqueurs de la forme @@@@@event@@@@@ sont remplacés par les informations de l'événement.
+
+
+
+
+fichier template pour envoye 1 mail sur 1 événement 
+/var/lib/pulse2/script_monitoring/template_alert_email.py
+
+
+fichier
+/var/lib/pulse2/script_monitoring/template_script_json.sh pour exécuter 1 script bash avec les datas données de l'événement
+
+fichier 
+/var/lib/pulse2/script_monitoring/template_script_python.py pour exécuter 1 script python avec les datas données de l'événement
+

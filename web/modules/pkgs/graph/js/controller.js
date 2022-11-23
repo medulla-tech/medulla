@@ -1,5 +1,5 @@
 /**
- * (c) 2016-2021 Siveo, http://www.siveo.net/
+ * (c) 2016-2022 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -19,11 +19,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ *
+ * file modules/pkgs/graph/js/controller.js
  */
 
 function isBase64(str) {
     try {
-        return btoa(atob(str)) == str;
+        return b64EncodeUnicode(b64DecodeUnicode(str)) == str;
     } catch (err) {
         return false;
     }
@@ -80,7 +82,14 @@ jQuery( function() {
         start  : function(event, ui){
             jQuery(ui.helper).css("width",'100%');
             jQuery(ui.helper).css("height",'100%');
-            jQuery(ui.helper).children('.content').children("div").find("input[name='actionlabel']").val(uuid);
+            ff=jQuery(ui.helper).children('.header').children("div").html();
+            if (ff === undefined || ff === null) {
+                uuidval= uuid("step_")
+            }
+            else{
+                uuidval= uuid(ff)
+            }
+            jQuery(ui.helper).children('.content').children("div").find("input[name='actionlabel']").val(uuidval);
         }
     });
     jQuery( "ul, li" ).disableSelection();
@@ -114,17 +123,31 @@ jQuery(function(){
         jQuery.each(sequence, function(id,action){
             if ('command' in action){
                 if (!isBase64(action['command'])){
-                    action['command'] = btoa(action['command'])
+                    action['command'] = b64EncodeUnicode(action['command'])
                 }
             }
             if ('script' in action){
                 if (!isBase64(action['script'])){
-                    action['script'] = btoa(action['script'])
+                    action['script'] = b64EncodeUnicode(action['script'])
                 }
             }
+            if ('message' in action){
+
+                if (!isBase64(action['message'])){
+                    action['message'] = b64EncodeUnicode(action['message'])
+                }
+            }
+            if ('titlemessage' in action){
+
+                if (!isBase64(action['titlemessage'])){
+                    action['titlemessage'] = b64EncodeUnicode(action['titlemessage'])
+                }
+            }
+
+
             if ('set' in action){
                 if (isBase64(action['set'])){
-                    action['set'] = atob(action['set'])
+                    action['set'] = b64DecodeUnicode(action['set'])
                 }
             }
 
@@ -212,7 +235,9 @@ function createSequence()
 {
     // Create a new sequence
     var sequence = [];
-
+    var actualSection = "Install";
+    // convertit directement en base64
+    var array_convert_to_base64 = ['command','script',"set", "message", "notification","titlemessage"];
     /**
      * Get all the form element in #current-actions and serialize them
      */
@@ -225,11 +250,44 @@ function createSequence()
 
         // For each element in form :
             // Add {form.elementName : form.elementValue} to action
+        gotoreturncode = [];
         jQuery.each(datas,function(idoption, actionRaw){
-            if(actionRaw['name'] == 'command' || actionRaw['name'] == 'script' || actionRaw['name'] == "set"){
+            tmp = {}
 
-               actionRaw['value'] = btoa(actionRaw['value'])
+
+            if(actionRaw['name'] == 'gotoreturncode' && !isNaN(parseInt(actionRaw['value']))){
+              tmp["code"] = actionRaw['value']
+              tmp["gotoreturncode@"+actionRaw['value']] = ""
+              gotoreturncode.push(tmp);
+              return; // Equivalent to continue
             }
+
+            if(actionRaw['name'] == 'gotolabel' && actionRaw['value'] != ""){
+              if(gotoreturncode[gotoreturncode.length-1] !== undefined){
+                gotoreturncode[gotoreturncode.length-1]["gotolabel"] = actionRaw["value"]
+                code = gotoreturncode[gotoreturncode.length-1]["code"]
+                if(code !== undefined && code != "")
+                {
+                  action["gotoreturncode@"+code] = actionRaw["value"]
+                }
+              }
+              return; // Equivalent to continue
+            }
+
+            if(actionRaw['value'] == "action_section_install"){
+                actualSection = "Install";
+            }
+            if(actionRaw['value'] =='action_section_update'){
+                actualSection = "Update";
+            }
+            if(actionRaw['value'] == "action_section_uninstall"){
+                actualSection = "Delete"
+            }
+            // convert to base64
+            if (jQuery.inArray(actionRaw['name'] , array_convert_to_base64 ) > -1){
+                actionRaw['value'] = b64EncodeUnicode(actionRaw['value'])
+            }
+
             if(actionRaw['name'] == 'environ')
             {
                 tmp = {}
@@ -243,6 +301,18 @@ function createSequence()
                 })
 
                 action[actionRaw['name']] = tmp;
+            }
+
+            if(actionRaw['name'] == 'stat'){
+              action['status'] = actualSection;
+              var stat = parseInt(actionRaw['value'])
+
+              if(stat <0 || isNaN(stat) || stat == null)
+                stat = 0;
+              if(stat > 100)
+                stat = 100;
+
+              action['stat'] = stat;
             }
             else
                 action[actionRaw['name']] = actionRaw['value'];
@@ -259,6 +329,7 @@ function createSequence()
 // Get info from interface and return it as json
 function createInfo()
 {
+//     console.log("createInfo");
     var info = {};
 
     // Manage dependencies
@@ -286,15 +357,28 @@ function createInfo()
                         info[param['name']] = false;
                 }
 
-                else if(jQuery.inArray(param['name'],['Dependency',"members[]",'environ','action','actionlabel','boolcnd','script','comment',
-                    'codereturn','command','filename','goto','old_Qsoftware','old_Qvendor','old_Qversion','old_associateinventory',
-                    'old_boolcnd','old_label', 'old_description','old_licenses','old_methodetransfert','old_p_api','old_package-method',
-                    'old_pkgs','old_pkgs-title','old_targetos','old_version','p_api','random_dir','step','mode','waiting', 'set',
-                    'old_limit_rate_ko', 'old_spooling', 'old_Elements', 'pathdirectorytounzip', 'package-method', 'error']) >= 0)
+                 else if(jQuery.inArray(param['name'],['Dependency',"members[]",
+                    'environ','action','actionlabel','boolcnd','script','comment',
+                    'codereturn','command','filename','goto','old_Qsoftware',
+                    'old_Qvendor','old_Qversion','old_associateinventory',
+                    'old_boolcnd','old_label', 'old_description','old_licenses',
+                    'old_methodetransfert','old_p_api','old_package-method',
+                    'old_pkgs','old_pkgs-title','old_targetos','old_version',
+                    'p_api','random_dir','step','mode','waiting', 'set',
+                    'old_limit_rate_ko', 'old_spooling', 'old_Elements',
+                    'pathdirectorytounzip', 'package-method', 'error',
+                    'message','titlemessage', 'sizemessage', 'textbuttonyes',
+                    'sizeheader', 'timeloop', 'gotoyes', 'gototimeout',
+                    'textbuttonyes', 'loopnumber','textbuttonno',
+                    'gotolookterminate', 'gotonouser', ]) >= 0)
                 {
                     // All the element from the array are not added into the info section.
                     // Dependency is also ignored because it is managed outside this loop
                 }
+
+                // The launcher can contains some special characters
+                else if(param["name"] == "launcher")
+                  info[param["name"]] = b64EncodeUnicode(param["value"]);
 
                 else
                     info[param['name']] = param['value'];
@@ -360,6 +444,26 @@ function getActionsList()
 
 }
 
-function uuid() {
-    return (((1+Math.random())*0x10000)|0).toString(16).substring(1)+(((1+Math.random())*0x10000)|0).toString(16).substring(1);
+function uuid(prefixe="step_") {
+    uuidval=(((1+Math.random())*0x10000)|0).toString(16).substring(1)+(((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    return prefixe+uuidval;
 }
+
+
+// Source : https://stackoverflow.com/questions/30106476/using-javascripts-atob-to-decode-base64-doesnt-properly-decode-utf-8-strings
+function b64EncodeUnicode(str) {
+    // first we use encodeURIComponent to get percent-encoded UTF-8,
+    // then we convert the percent encodings into raw bytes which
+    // can be fed into btoa.
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
+        function toSolidBytes(match, p1) {
+            return String.fromCharCode('0x' + p1);
+    }));
+}
+function b64DecodeUnicode(str) {
+        // Going backwards: from bytestream, to percent-encoding, to original string.
+        return decodeURIComponent(atob(str).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+    }
+

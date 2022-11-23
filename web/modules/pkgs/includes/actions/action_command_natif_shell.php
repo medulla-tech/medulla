@@ -1,13 +1,12 @@
 <?php
+// file : modules/pkgs/includes/actions/action_command_natif_shell.php
 require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
-/*
-echo "<pre>";
-    print_r( $_POST );
-echo "</pre>";*/
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">cmd_</div>
     <h1><?php echo _T('Run Command in shell', 'pkgs') ?></h1>
 </div>
 <div class="content">
@@ -39,7 +38,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />'._T("Set timeout", "pkgs").
+                    }" />'._T("Set timeout (in seconds)", "pkgs").
                 '</td>
                 <td>
                     <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
@@ -54,7 +53,8 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />'._T("Set timeout","pkgs").'
+                    }" />'._T("Set timeout (in seconds)", "pkgs").
+
                 </td>
                 <td>
                     <input type="number" min="0" value="10" disabled name="timeout"  />

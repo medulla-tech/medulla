@@ -1,0 +1,15 @@
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 141.7 141.7" style="enable-background:new 0 0 141.7 141.7;" xml:space="preserve">
+<path d="M77.06 18H23V123.9H97.44V43.34H77.07V18H77.06Z" fill="white" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M77.06 18V43.34H97.44L77.15 18H77.06Z" fill="#8CB63C" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.83 56.97H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.83 67.03H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.83 77.08H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.83 87.14H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.83 97.19H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M82.83 107.25H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<mask id="path-9-inside-1_9_180" fill="white">
+<rect x="41" y="60" width="81" height="20" rx="3"/>
+</mask>
+<rect x="41" y="60" width="81" height="20" rx="3" fill="#8BB53C" stroke="#25607E" stroke-width="7.8" mask="url(#path-9-inside-1_9_180)"/>
+</svg>

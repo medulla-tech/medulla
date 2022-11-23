@@ -1,5 +1,5 @@
 /**
- * (c) 2016-2021 Siveo, http://www.siveo.net/
+ * (c) 2016-2022 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -19,6 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
+ *
+ * file modules/pkgs/graph/js/class.js
  */
 
 //FilesList contains the name of the uploaded files which will be transfered into the package
@@ -53,7 +55,7 @@ var labelList = [];
 
 //action is a shortcut to the action value.
 var action = jQuery('select[name="action"]').val();
-
+// console.log("action " + action);
 /**
  * The uncommented actions here are shown into available action list
  *
@@ -79,6 +81,10 @@ var actionsList = [
     'action_section_install',    // definie section install
     'action_section_update',     // definie section update
     'action_section_uninstall', // definie section uninstall
+    'action_notification',  // Display a "OK" popup
+    'action_question',  // Ask a "YES" / "NO" question, if YES : goto A, then goto B
+    //'action_choice', //choice with specific timeout
+    'action_loop_question',
 ];
 /**
  *
@@ -289,6 +295,7 @@ var actionToCreate =
  */
 function Workflow()
 {
+//     console.log("Workflow");
     //info attribute is designed to contain workflow information (describe, files, etc.)
     //TODO
     this.info = {};
@@ -326,6 +333,7 @@ function Workflow()
     *
     */
     this.display = function(selector, callback=null) {
+//          console.log("display");
         jQuery(selector).html('');
 
         jQuery.each(this.sequence, function(key,action){
@@ -409,6 +417,7 @@ function Workflow()
      *
      */
     this.sort = function(){
+//          console.log("sort");
         var optionsLabelled = ['goto-label','succes-label','error-label']
         var tmp = [];
 
@@ -483,10 +492,11 @@ function Workflow()
      * @param json
      */
     this.import = function(sequence){
+//          console.log("import");
         this.sequence = {};
         jQuery.each(sequence, function(name,value){
-            console.log(name);
-            console.log(value);
+//             console.log(name);
+//             console.log(value);
         });
         this.sequence = sequence;
     }

@@ -46,25 +46,6 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
     cursor: pointer;
 }
 
-li.groupshare a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/dyngroup/img/share.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-li.remove_machine a {
-    background-image: url("img/common/button_cancel.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 progress{
     border-color: #ffffff;
     background-color: #009ea9;
@@ -174,6 +155,8 @@ $getdeployment = xmlrpc_getdeployment_cmd_and_title($cmd_id,
                                                     $filter,
                                                     $start,
                                                     $maxperpage);
+$status = array_combine($getdeployment["datas"]["uuid"], $getdeployment["datas"]["status"]);
+
 // Get the same machines from glpi
 $re = xmlrpc_get_machine_for_id($getdeployment['datas']['id'],
                                 $filter,
@@ -192,7 +175,7 @@ $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 
 if ($count == 0){
-    // Refresh if no deployment is started. 
+    // Refresh if no deployment is started.
     installrefresh();
 }
 $timestampnow = time();
@@ -284,7 +267,7 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
             echo '<td>'.$end_date.'</td>';
             echo '<td>'.$creator_user.'</td>';
             if($isconvergence != 0){
-                echo "<td><img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/></td>";
+                echo "<td><img style='position:relative;top : 5px;' src='img/other/convergence.svg' width='25' height='25'/></td>";
             }
 
 
@@ -450,9 +433,11 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>"._T("Error Hash Missing","xmppmaster")."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>"._T("Abort Hash Invalid","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
-            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($status,"xmppmaster")))."</td>" : "";
+        foreach($dynamicstatus as $label=>$_status){
+            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
         }
         echo "</tr></thead>";
 
@@ -480,8 +465,10 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>".$wol2."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>".$errorhashmissing."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>".$aborthashinvalid."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
+        foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
         echo "</tr>";
@@ -526,9 +513,11 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>"._T("WOL 2","xmppmaster")."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>"._T("WOL 3","xmppmaster")."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) ? "<td>"._T("Waiting Machine Online","xmppmaster")."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>"._T("Error Hash Missing","xmppmaster")."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>"._T("Abort Hash Invalid","xmppmaster")."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>"._T("Other Status","xmppmaster")."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
-            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($status,"xmppmaster")))."</td>" : "";
+        foreach($dynamicstatus as $label=>$_status){
+            echo (isset($$label)&&$$label) ? "<td>".ucfirst(strtolower(_T($_status,"xmppmaster")))."</td>" : "";
         }
         echo "</tr></thead>";
 
@@ -556,8 +545,10 @@ echo "<div>";
         echo (isset($wol2)&&$wol2) ? "<td>".$wol2."</td>" : "";
         echo (isset($wol3)&&$wol3) ? "<td>".$wol3."</td>" : "";
         echo (isset($waitingmachineonline)&&$waitingmachineonline) > 0 ? "<td>".$waitingmachineonline."</td>" : "";
+        echo (isset($errorhashmissing)&&$errorhashmissing) ? "<td>".$errorhashmissing."</td>" : "";
+        echo (isset($aborthashinvalid)&&$aborthashinvalid) ? "<td>".$aborthashinvalid."</td>" : "";
         echo (isset($otherstatus)&&$otherstatus) ? "<td>".$otherstatus."</td>" : "";
-        foreach($dynamicstatus as $label=>$status){
+        foreach($dynamicstatus as $label=>$_status){
             echo (isset($$label)&&$$label) ? "<td>".$$label."</td>" : "";
         }
         echo "</tr></thead></table>";
@@ -572,39 +563,14 @@ $package = get_package_summary($package_id);
 
 if($package['name'] == "")
 {
-  $resultdeploy =json_decode($info['objectdeploy'][0]['result'], true);
-
-  if(isset($resultdeploy['infoslist'][0]))
-  {
-    $package['name'] = $resultdeploy['infoslist'][0]['name'];
-    $package['Qsoftware'] = $resultdeploy['infoslist'][0]['software'];
-    $package['Qversion'] = '';
-    $package['Qvendor'] = '';
-    $package['version'] = $resultdeploy['infoslist'][0]['version'];
-    $package['description'] = $resultdeploy['infoslist'][0]['description'];
-    $package['files'] = [];
-    $package['Size'] = "";
-  }
-  else if(isset($resultdeploy['descriptor']['info'])){
-    $package['name'] = $resultdeploy['descriptor']['info']['name'];
-    $package['Qsoftware'] = $resultdeploy['descriptor']['info']['software'];
-    $package['Qversion'] = '';
-    $package['Qvendor'] = '';
-    $package['version'] = $resultdeploy['descriptor']['info']['version'];
-    $package['description'] = $resultdeploy['descriptor']['info']['description'];
-    $package['files'] = [];
-    $package['Size'] = "";
-  }
-  else{
-    $package['name'] = "";
-    $package['Qsoftware'] = "";
-    $package['Qversion'] = "";
-    $package['Qvendor'] = "";
-    $package['version'] = "";
-    $package['description'] = "";
-    $package['files'] = [];
-    $package['Size'] = "";
-  }
+  $package['name'] = _T("Package deleted", "pkgs");
+  $package['Qsoftware'] = "";
+  $package['Qversion'] = "";
+  $package['Qvendor'] = "";
+  $package['version'] = _T("Package deleted", "pkgs");
+  $package['description'] = _T("Package deleted", "pkgs");
+  $package['files'] = [];
+  $package['Size'] = 0;
 }
 $associatedInventory = [];
 if ($package['Qsoftware'] != "")
@@ -663,35 +629,17 @@ echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
 echo "</table>";
 
 if ($count != 0){
-  $uuidsuccess = array();
-  $uuiderror = array();
-  $uuidprocess = array();
-  $uuiddefault = array();
-
-  $status = [];
-  foreach ($info['objectdeploy'] as  $val){
-      $status[$val['inventoryuuid']] = "";
-      $status[$val['inventoryuuid']] = $val['state'];
-
-      switch($val['state']){
-          case "DEPLOYMENT SUCCESS":
-              $uuidsuccess[] = $val['inventoryuuid'];
-              break;
-          case "DEPLOYMENT ERROR":
-              $uuiderror[] = $val['inventoryuuid'];
-              break;
-          case "DEPLOYMENT START":
-          case "DEPLOYMENT START (REBOOT)":
-          case "DEPLOYMENT DELAYED":
-              $uuidprocess[] = $val['inventoryuuid'];
-              break;
-          default:
-              $uuiddefault[] = $val['inventoryuuid'];
-      }
-  }
   $params = [];
+
+  $info_from_machines[] = []; // Add 7th index
+  $info_from_machines[] = []; // Add 8th index
+  $info_from_machines[] = []; // Add 9th index
+
   foreach($info_from_machines[0] as $key => $value)
   {
+    $infomachine = xmlrpc_getdeployfromcommandid($cmd_id, 'UUID'.$value);
+    $sessionid = $infomachine['objectdeploy'][0]['sessionid'];
+
       if(isset($status['UUID'.$value]))
         $info_from_machines[7][] = '<span class="status">'.$status['UUID'.$value].'</span>';
       $info_from_machines[8][] = 'UUID'.$value;
@@ -708,10 +656,31 @@ if ($count != 0){
         'gid' => $_GET['gid'],
         'gr_cmd_id' => $_GET['cmd_id'],
         'gr_login' => $_GET['login'],
+        'sessionid' => $sessionid,
+        'title'=>$_GET['title'],
+        'start'=>$creation_date,
+        'startcmd'=>$start_date,
+        'endcmd'=>$end_date
       ];
 
   }
   $presencemachinexmpplist = xmlrpc_getPresenceuuids($info_from_machines[8]);
+
+  $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
+                                      "viewlogs",
+                                      "logfile",
+                                      "logfile",
+                                      "xmppmaster",
+                                      "xmppmaster");
+
+
+  $reloadAction = new ActionPopupItem(_("reload"),
+                                  "popupReloadDeploy&previous=".$_GET['previous'],
+                                  "start",
+                                  "",
+                                  "xmppmaster",
+                                  "xmppmaster");
+
   $raw = 0;
   foreach($info_from_machines[8] as $key => $value)
   {
@@ -721,6 +690,8 @@ if ($count != 0){
     $info_from_machines[5][$raw] = '<span class="machine-inventory">'.$info_from_machines[5][$raw].'</span>';
     $info_from_machines[6][$raw] = '<span class="machine-inventory">'.$info_from_machines[6][$raw].'</span>';
     $info_from_machines[9][] = ($presencemachinexmpplist[$value] == "1") ? 'machineNamepresente' : 'machineName';
+    $actionsLog[] = $action_log;
+    $actionsReload[] = $reloadAction;
     $raw++;
   }
 
@@ -746,7 +717,7 @@ echo'
 }else{
 $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
                                     "viewlogs",
-                                    "logfile",
+                                    "reload",
                                     "logfile",
                                     "xmppmaster",
                                     "xmppmaster");
@@ -760,7 +731,8 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
   $n->addExtraInfo($info_from_machines[6], _T("Entity", "glpi"));
 
   $n->setParamInfo($params);
-  $n->addActionItem($action_log);
+  $n->addActionItem($actionsLog);
+  $n->addActionItem($actionsReload);
   $n->setMainActionClasses($info_from_machines[9]);
   $n->setItemCount($count);
   $n->setNavBar(new AjaxNavBar($count, $filter));
@@ -860,6 +832,12 @@ function fillSearch(content){
     if ($errorunknownerror > 0){
         echo 'datas.push({"label":"Error Unknown Error ", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
+    if ($errorhashmissing > 0){
+        echo 'datas.push({"label":"Error Hash Missing ", "value":parseInt('.$errorhashmissing.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorhashmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($aborthashinvalid > 0){
+        echo 'datas.push({"label":"Abort Hash Invalid ", "value":parseInt('.$aborthashinvalid.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("aborthashinvalid",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
     if ($otherstatus > 0){
         echo 'datas.push({"label":"Other Status ", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
@@ -950,6 +928,12 @@ function fillSearch(content){
     }
     if ($errorunknownerror > 0){
         echo 'datas2.push({"label":"Error Unknown Error ", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "onclick":"fillSearch", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($errorhashmissing > 0){
+        echo 'datas2.push({"label":"Error Hash Missing ", "value":parseInt('.$errorhashmissing.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorhashmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+    }
+    if ($aborthashinvalid > 0){
+        echo 'datas2.push({"label":"Abort Hash Invalid ", "value":parseInt('.$aborthashinvalid.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("aborthashinvalid",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($otherstatus > 0){
         echo 'datas2.push({"label":"Other Status ", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "onclick":"fillSearch", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';

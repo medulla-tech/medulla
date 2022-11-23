@@ -18,6 +18,8 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
 
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">wait_</div>
     <h1><?php echo _T('Wait and go to step', 'pkgs'); ?></h1>
 </div>
 <div class="content">

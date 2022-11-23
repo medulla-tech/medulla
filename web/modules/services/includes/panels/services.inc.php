@@ -47,6 +47,6 @@ class ServicesPanel extends Panel {
         if ($errors)
             echo '<p class="alert alert-error">' . $errors . '</p>';
         else
-            echo '<p class="alert alert-success"><img src="img/common/icn_yes.gif" style="vertical-align: bottom" /> ' . _T("All services are up", "services") . '</p>';
+            echo '<p class="alert alert-success"><img src="img/other/yes.svg" style="vertical-align: bottom" width="25" height="25" /> ' . _T("All services are up", "services") . '</p>';
     }
 }

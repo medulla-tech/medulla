@@ -55,6 +55,9 @@ class KioskConfig(PluginConfig,KioskDatabaseConfig):
         KioskDatabaseConfig.setup(self, self.conffile)
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
+        self.use_external_ldap = False
+        if self.has_option("provider", "use_external_ldap"):
+            self.use_external_ldap = self.getboolean("provider", "use_external_ldap")
         # ...
 
     def check(self):
