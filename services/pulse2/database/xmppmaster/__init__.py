@@ -11542,7 +11542,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     
     
     @DatabaseHelper._sessionm
-    def get_ipmachine_from_name(self, session, name):
+    def get_idmachine_from_name(self, session, name):
         """
             This function returns the the update already done and update enable
         """

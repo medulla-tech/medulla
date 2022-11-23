@@ -1452,8 +1452,8 @@ def get_conformity_update_for_group(uuidArray):
         result[0]['compliance'] = (float(result[0]['nombre_machine'])/float(nbmachinetotal)) * 100.
     return result
 
-def get_ipmachine_from_name(name):
-    result = XmppMasterDatabase().get_ipmachine_from_name(name)
+def get_idmachine_from_name(name):
+    result = XmppMasterDatabase().get_idmachine_from_name(name)
     return result
 
 def get_count_grey_list_enable():

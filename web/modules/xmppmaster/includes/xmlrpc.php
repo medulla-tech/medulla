@@ -801,8 +801,8 @@ function xmlrpc_get_conformity_update_for_group($uuidArray){
   return xmlCall("xmppmaster.get_conformity_update_for_group", [$uuidArray]);
 }
 
-function xmlrpc_get_ipmachine_from_name($name){
-  return xmlCall("xmppmaster.get_ipmachine_from_name", [$name]);
+function xmlrpc_get_idmachine_from_name($name){
+  return xmlCall("xmppmaster.get_idmachine_from_name", [$name]);
 }
 
 function xmlrpc_get_count_grey_list_enable(){
