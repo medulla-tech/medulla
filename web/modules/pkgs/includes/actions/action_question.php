@@ -186,7 +186,7 @@ $namestep=_T("User Question","pkgs");
             echo '<td>';
            ?>
             <span  data-title="<?php echo _T('Define step label if user response is False', 'pkgs'); ?>">
-            <?php echo'<input  type="text"  value="'.$gotono.'" name="gotono"  />'; ?>
+            <?php echo'<input  style="width:80px;" type="text"  value="'.$gotono.'" name="gotono"  />'; ?>
             </span>
 
             <?php
@@ -203,7 +203,7 @@ $namestep=_T("User Question","pkgs");
             echo '<td>';
            ?>
             <span  data-title="<?php echo _T('Define step label if no user is connected', 'pkgs'); ?>">
-            <?php echo'<input  type="text"  value="'.$gotonouser.'" name="gotonouser"  />'; ?>
+            <?php echo'<input  style="width:80px;" type="text"  value="'.$gotonouser.'" name="gotonouser"  />'; ?>
             </span>
 
             <?php
@@ -220,7 +220,7 @@ $namestep=_T("User Question","pkgs");
             echo '<td>';
            ?>
             <span  data-title="<?php echo _T('Define step label if no response is given before the timeout', 'pkgs'); ?>">
-            <?php echo'<input  type="text"  value="'.$gototimeout.'" name="gototimeout"  />'; ?>
+            <?php echo'<input  style="width:80px;" type="text"  value="'.$gototimeout.'" name="gototimeout"  />'; ?>
             </span>
 
             <?php
