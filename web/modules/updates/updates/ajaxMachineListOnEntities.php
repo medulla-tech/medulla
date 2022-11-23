@@ -84,9 +84,9 @@ if ($typeOfDetail == "group")
     $group_compliance = xmlrpc_get_conformity_update_for_group($group_array);
     $group_compliance = $group_compliance['0'];
 
-    $color_group_compliance = colorconf($group_compliance['confirmite']);
+    $color_group_compliance = colorconf($group_compliance['compliance']);
 
-    echo "<div class='progress' style='max-width: 25%; width: ".$group_compliance['confirmite']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".$group_compliance['confirmite']."% </div>";
+    echo "<div class='progress' style='max-width: 25%; width: ".$group_compliance['compliance']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".$group_compliance['compliance']."% </div>";
 }
 
 echo "<br>";

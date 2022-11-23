@@ -1447,9 +1447,9 @@ def get_conformity_update_for_group(uuidArray):
     result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
     nbmachinetotal = len(uuidArray)
     if result[0]['nombre_machine'] == 0 or result[0]['update_a_mettre_a_jour'] == 0:
-        result[0]['confirmite'] = 100
+        result[0]['compliance'] = 100
     else:
-        result[0]['confirmite'] = (float(result[0]['nombre_machine'])/float(nbmachinetotal)) * 100.
+        result[0]['compliance'] = (float(result[0]['nombre_machine'])/float(nbmachinetotal)) * 100.
     return result
 
 def get_count_grey_list_enable():
