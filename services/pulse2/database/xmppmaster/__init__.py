@@ -11521,7 +11521,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_conformity_update_by_machine(self, session, idmachine):
         """
-            This function returns the the update already done and update enable
+            This function returns value for compliance rate for one machine
+            Params: id of one machine
+            Return : waiting updates
         """
         sql="""SELECT COUNT(*) AS update_waiting
                 FROM
@@ -11532,6 +11534,38 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     up_gray_list.valided = 1
                 AND
                     up_machine_windows.id_machine = '%s';"""%(idmachine)
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+    
+    
+    @DatabaseHelper._sessionm
+    def get_idmachine_from_name(self, session, name):
+        """
+            This function returns id of machine searched by hostname
+        """
+        sql="""SELECT id AS id_machine
+                FROM
+                    xmppmaster.machines
+                WHERE
+                    hostname = '%s' LIMIT 1;"""%(name)
+
+
+    @DatabaseHelper._sessionm
+    def get_count_grey_list_enable(self, session):
+        """
+            This function returns the the update already done and update enable
+        """
+        sql="""SELECT COUNT(*) AS enable_grey
+                FROM
+                    xmppmaster.up_gray_list
+                WHERE
+                    valided = 1;"""
+                
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
@@ -11564,7 +11598,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_conformity_update_for_group(self, session, uuidArray):
         """
-            This function returns the the update already done and update enable
+            This function returns value for compliance rate for group
+            Params: array of uuid group
+            Return : waiting updates and count of machine
         """
         array_GUID = " AND uuid_inventorymachine IN ('%s')" % ",".join([str(x) for x in uuidArray])
         
