@@ -83,7 +83,6 @@ var actionsList = [
     'action_section_uninstall', // definie section uninstall
     'action_notification',  // Display a "OK" popup
     'action_question',  // Ask a "YES" / "NO" question, if YES : goto A, then goto B
-    //'action_choice', //choice with specific timeout
     'action_loop_question',
 ];
 /**
