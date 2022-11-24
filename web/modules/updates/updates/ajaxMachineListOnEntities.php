@@ -164,7 +164,7 @@ if ($typeOfDetail == "group")
         $machineNames[] = $v[1]['cn'][0];
 
         //FUNCTION TO GET ID
-        $id_machine = xmlrpc_get_ipmachine_from_name($v[1]['cn'][0]);
+        $id_machine = xmlrpc_get_idmachine_from_name($v[1]['cn'][0]);
 
         $compliance_computer = xmlrpc_get_conformity_update_by_machine($id_machine['id_machine']);
 
