@@ -393,7 +393,7 @@ def getstatdeployfromcommandidstartdate(command_id, datestart):
 
 def get_machine_stop_deploy(cmdid, uuid):
     result = XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid)
-    if machine:
+    if result:
         msg_stop_deploy = {
             "action": "enddeploy",
             "sessionid": result['sessionid'],
