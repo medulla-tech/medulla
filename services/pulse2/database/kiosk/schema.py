@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2018 siveo, http://www.siveo.net
+# (c) 2018-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -65,7 +65,7 @@ class Profile_has_package(Base, KioskDBObj):
     # ====== Table name =========================
     __tablename__ = 'package_has_profil'
     # ====== Fields =============================
-    package_id = Column(Integer, nullable=False)
+    package_uuid = Column(String(255), nullable=False)
     profil_id = Column(Integer, nullable=False)
     package_status = Column(Enum('allowed','restricted'))
 

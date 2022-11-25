@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2022 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -27,9 +27,11 @@ require_once("../../../includes/session.inc.php");
 require_once("../../../includes/PageGenerator.php");
 require_once("../../../includes/acl.inc.php");
 
+
 if(isset($_POST['name'], $_POST['active']))
 {
-    $name = rename_profile($_POST['name']);
+
+    $name = rename_profile(htmlentities($_POST['name']));
     if(is_string($_POST['ous']) && $_POST['ous'] == "none")
         $ous = "";
     else
@@ -37,9 +39,9 @@ if(isset($_POST['name'], $_POST['active']))
 
     // Add the profile to the database
     if(isset($_POST['packages']))
-        $result = xmlrpc_create_profile($name, $ous, $_POST['active'], $_POST['packages']);
+        $result = xmlrpc_create_profile($name, $ous, htmlentities($_POST['active']), $_POST['packages']);
     else
-        $result = xmlrpc_create_profile($name, $ous, $_POST['active']);
+        $result = xmlrpc_create_profile($name, $ous, htmlentities($_POST['active']));
 
     new NotifyWidgetSuccess(sprintf(_T("Profile %s successfully added", "kiosk"),$name));
 }
