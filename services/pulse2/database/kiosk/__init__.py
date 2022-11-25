@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2018 siveo, http://www.siveo.net
+# (c) 2018-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -36,7 +36,6 @@ from pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package
 import logging
 import json
 import time
-
 
 class KioskDatabase(DatabaseHelper):
     """
@@ -122,19 +121,19 @@ class KioskDatabase(DatabaseHelper):
         sql = """
             SELECT
                 distinct
-                kiosk.package.name as 'name_package',
+                pkgs.packages.label as 'name_package',
                 kiosk.profiles.name as 'name_profile',
-                kiosk.package.description,
-                kiosk.package.version_package,
-                kiosk.package.software,
-                kiosk.package.version_software,
-                kiosk.package.package_uuid,
-                kiosk.package.os,
+                pkgs.packages.description,
+                pkgs.packages.version version_package,
+                pkgs.packages.Qsoftware as software,
+                pkgs.packages.Qversion version_software,
+                pkgs.packages.uuid as package_uuid,
+                pkgs.packages.os,
                 kiosk.package_has_profil.package_status
             FROM
-                kiosk.package
+                pkgs.packages
                   inner join
-                kiosk.package_has_profil on kiosk.package.id = kiosk.package_has_profil.package_id
+                kiosk.package_has_profil on pkgs.packages.uuid = kiosk.package_has_profil.package_uuid
                   inner join
                 kiosk.profiles on profiles.id = kiosk.package_has_profil.profil_id
 
@@ -214,9 +213,6 @@ class KioskDatabase(DatabaseHelper):
             The value returned is the id of the new profile
         """
 
-        # refresh the packages in the database
-        self.refresh_package_list()
-
         # Creation of the new profile
         import time
         now = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -243,16 +239,9 @@ class KioskDatabase(DatabaseHelper):
             for status in packages.keys():
                 for uuid in packages[status]:
 
-                    # get the package id and link it with the profile
-                    result = session.query(Packages.id).filter(Packages.package_uuid == uuid)
-                    result = result.first()
-                    id_package = 0
-                    for row in result:
-                        id_package = str(row)
-
                     profile = Profile_has_package()
                     profile.profil_id = id
-                    profile.package_id = id_package
+                    profile.package_uuid = uuid
                     profile.package_status = status
 
                     session.add(profile)
@@ -404,11 +393,11 @@ class KioskDatabase(DatabaseHelper):
         profile = session.query(Profiles).filter(Profiles.id == id).first()
 
         sql = """select \
-        package.name as package_name,
-        package.package_uuid,
+        pkgs.packages.label as package_name,
+        pkgs.packages.uuid as package_uuid,
         package_status
-        from package \
-        left join package_has_profil on package.id = package_has_profil.package_id \
+        from pkgs.packages \
+        left join package_has_profil on pkgs.packages.uuid = package_has_profil.package_uuid \
         left join profiles on profiles.id = package_has_profil.profil_id\
         WHERE profiles.id = '%s';""" %(id)
 
@@ -507,16 +496,9 @@ class KioskDatabase(DatabaseHelper):
             for status in packages.keys():
                 for uuid in packages[status]:
 
-                    # get the package id and link it with the profile
-                    result = session.query(Packages.id).filter(Packages.package_uuid == uuid)
-                    result = result.first()
-                    id_package = 0
-                    for row in result:
-                        id_package = str(row)
-
                     profile = Profile_has_package()
                     profile.profil_id = id
-                    profile.package_id = id_package
+                    profile.package_uuid = uuid
                     profile.package_status = status
 
                     session.add(profile)

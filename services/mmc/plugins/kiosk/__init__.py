@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2018 siveo, http://www.siveo.net
+# (c) 2018-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -101,6 +101,7 @@ def get_profiles_name_list():
 
 
 def create_profile(name, ous, active, packages):
+
     result = KioskDatabase().create_profile(name, ous, active, packages)
     notify_kiosks()
     return result
@@ -365,12 +366,10 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
                                 'description': packageprofile[2],
                                 "version" : packageprofile[3]
                                }
-    patternname = re.compile("(?i)" + packageprofile[0].replace('+', '\+').replace('*', '\*'))
+    patternname = re.compile("(?i)" + packageprofile[4].replace('+', '\+').replace('*', '\*').replace('(', '\(').replace(')', '\)').replace('.', '\.'))
     for soft_glpi in list_software_glpi:
-        #TODO
-        # Into the pulse package provide Vendor information for the software name
-        # For now we use the package name which must match with glpi name
-        if patternname.match(str(soft_glpi[0])) or patternname.match(str(soft_glpi[1])):
+        if patternname.match(str(soft_glpi[0])) or patternname.match(str(soft_glpi[1])) or (soft_glpi[1] == packageprofile[4] and soft_glpi[2] == packageprofile[5]):
+
             # Process with this package which is installed on the machine
             # The package could be deleted
             structuredatakioskelement['icon'] =  'kiosk.png'
