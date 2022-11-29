@@ -76,3 +76,13 @@ class Profile_has_ou(Base, KioskDBObj):
     # ====== Fields =============================
     profile_id = Column(Integer, nullable=False)
     ou = Column(Text)
+
+class Acknowledgements(Base, KioskDBObj):
+    __tablename__ = 'acknowledgements'
+    id_package_has_profil = Column(Integer, nullable=False)
+    askuser = Column(String(255), nullable=False)
+    askdate = Column(DateTime, default=datetime.datetime.now, nullable=False)
+    acknowledgedbyuser = Column(String(255), nullable=True)
+    startdate = Column(DateTime, default=datetime.datetime.now, nullable=False)
+    enddate = Column(DateTime, nullable=True)
+    status = Column(Enum('waiting', 'accepted', 'rejected'), nullable=False, default="waiting")
