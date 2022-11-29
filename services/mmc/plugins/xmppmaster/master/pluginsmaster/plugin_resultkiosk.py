@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# (c) 2016-2017 siveo, http://www.siveo.net
+# (c) 2016-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -29,6 +29,7 @@ import traceback
 import sys
 import os
 from pulse2.database.xmppmaster import XmppMasterDatabase
+from pulse2.database.kiosk import KioskDatabase
 from pulse2.database.msc import MscDatabase
 from managepackage import managepackage
 import logging
@@ -39,7 +40,7 @@ from mmc.plugins.pkgs import get_xmpp_package
 
 logger = logging.getLogger()
 
-plugin = {"VERSION": "1.3", "NAME": "resultkiosk", "TYPE": "master"}
+plugin = {"VERSION": "1.4", "NAME": "resultkiosk", "TYPE": "master"}
 
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
@@ -62,6 +63,14 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             machine =  XmppMasterDatabase().getMachinefromjid(message['from'])
             if "id" in machine:
                 result = XmppMasterDatabase().updatemachine_kiosk_presence(machine['id'], data['value'])
+        elif data['subaction'] == 'ask':
+            machine = XmppMasterDatabase().getMachinefromjid(message['from'])
+            profiles = []
+            if machine is not None:
+                OUmachine = [machine['ad_ou_machine'].replace("\n",'').replace("\r",'').replace('@@','/')]
+                OUuser = [machine['ad_ou_user'].replace("\n", '').replace("\r", '').replace('@@','/')]
+                OU =  [elem for elem in set(OUmachine + OUuser) if elem != ""]
+                profiles = KioskDatabase().add_askacknowledge(OU, data['uuid'], data['askuser'])
         else:
             print "No subaction found"
     else:

@@ -31,7 +31,7 @@ from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists
-from pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package, Profile_has_ou
+from  pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package, Profile_has_ou, Acknowledges
 # Imported last
 import logging
 import json
@@ -153,6 +153,68 @@ class KioskDatabase(DatabaseHelper):
             session.flush()
             l = [x for x in result]
             return l
+        except Exception, e:
+            logging.getLogger().error("get_profile_list_for_OUList")
+            logging.getLogger().error(str(e))
+            return ""
+
+    @DatabaseHelper._sessionm
+    def add_askacknowledge(self, session, OU, package_uuid, askuser):
+        if len(OU) == 0:
+            return False
+        listou =  "('" + "','".join(OU) + "')"
+        sql = """SELECT
+    distinct
+    kiosk.profiles.id as profile_id,
+    kiosk.profiles.name as 'name_profile',
+    kiosk.package_has_profil.package_status,
+    kiosk.package_has_profil.id as package_has_profil_id,
+    kiosk.package_has_profil.package_uuid
+FROM
+    kiosk.package_has_profil
+INNER JOIN
+    kiosk.profiles on profiles.id = kiosk.package_has_profil.profil_id
+WHERE
+    kiosk.profiles.id in
+        (SELECT DISTINCT
+            profile_id
+        FROM
+            kiosk.profile_has_ous
+        WHERE
+            ou IN (%s)
+        )
+AND kiosk.package_has_profil.package_uuid = '%s'
+AND
+    kiosk.package_has_profil.id not in(
+        (SELECT
+            id_package_has_profil
+        FROM
+            kiosk.acknowledges
+        WHERE
+            id_package_has_profil = kiosk.package_has_profil.id
+        AND
+            kiosk.acknowledges.askuser = '%s'
+            )
+    )
+AND kiosk.profiles.active = 1
+;""" % (listou, package_uuid, askuser)
+
+        try:
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            associations = [x for x in result]
+
+            for element in associations:
+                new_acknowledge = Acknowledges()
+                new_acknowledge.id_package_has_profil = element.package_has_profil_id
+                new_acknowledge.askuser = askuser
+                new_acknowledge.acknowledgedbyuser=""
+                session.add(new_acknowledge)
+                session.commit()
+                session.flush()
+
+            return associations
         except Exception, e:
             logging.getLogger().error("get_profile_list_for_OUList")
             logging.getLogger().error(str(e))
