@@ -31,7 +31,7 @@ from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists
-from  pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package, Profile_has_ou, Acknowledges
+from  pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package, Profile_has_ou, Acknowledgements
 # Imported last
 import logging
 import json
@@ -189,11 +189,11 @@ AND
         (SELECT
             id_package_has_profil
         FROM
-            kiosk.acknowledges
+            kiosk.acknowledgements
         WHERE
             id_package_has_profil = kiosk.package_has_profil.id
         AND
-            kiosk.acknowledges.askuser = '%s'
+            kiosk.acknowledgements.askuser = '%s'
             )
     )
 AND kiosk.profiles.active = 1
@@ -206,7 +206,7 @@ AND kiosk.profiles.active = 1
             associations = [x for x in result]
 
             for element in associations:
-                new_acknowledge = Acknowledges()
+                new_acknowledge = Acknowledgements()
                 new_acknowledge.id_package_has_profil = element.package_has_profil_id
                 new_acknowledge.askuser = askuser
                 new_acknowledge.acknowledgedbyuser=""

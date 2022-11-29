@@ -24,7 +24,7 @@
 
 START TRANSACTION;
 
-CREATE TABLE IF NOT EXISTS acknowledges(
+CREATE TABLE IF NOT EXISTS acknowledgements(
     id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id),
     id_package_has_profil INT NOT NULL,
     askuser VARCHAR(255) NOT NULL, -- user asking grants on specific package

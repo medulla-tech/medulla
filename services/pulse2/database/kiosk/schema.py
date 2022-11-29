@@ -77,8 +77,8 @@ class Profile_has_ou(Base, KioskDBObj):
     profile_id = Column(Integer, nullable=False)
     ou = Column(Text)
 
-class Acknowledges(Base, KioskDBObj):
-    __tablename__ = 'acknowledges'
+class Acknowledgements(Base, KioskDBObj):
+    __tablename__ = 'acknowledgements'
     id_package_has_profil = Column(Integer, nullable=False)
     askuser = Column(String(255), nullable=False)
     askdate = Column(DateTime, default=datetime.datetime.now, nullable=False)
