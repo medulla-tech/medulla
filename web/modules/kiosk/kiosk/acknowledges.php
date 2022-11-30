@@ -4,7 +4,7 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-$p = new PageGenerator(_T("Acknowledges",'kiosk'));
+$p = new PageGenerator(_T("Acknowledgements",'kiosk'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
