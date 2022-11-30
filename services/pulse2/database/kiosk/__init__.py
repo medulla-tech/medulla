@@ -31,7 +31,9 @@ from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists
-from  pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package, Profile_has_ou, Acknowledgements
+from pulse2.database.kiosk.schema import Profiles, Profile_has_package, Profile_has_ou, Acknowledgements
+from pulse2.database.pkgs.orm.pakages import Packages
+
 # Imported last
 import logging
 import json
@@ -336,7 +338,8 @@ AND kiosk.profiles.active = 1
         """
         Refresh the package table, to be sure to not link the profile with deprecated packages.
         """
-
+        # deprecated
+        return
         # Get the real list of packages
         package_list = xmpp_packages_list()
 
@@ -566,3 +569,105 @@ AND kiosk.profiles.active = 1
                     session.add(profile)
                     session.commit()
                     session.flush()
+
+
+    @DatabaseHelper._sessionm
+    def get_acknowledges_for_sharings(self, session, sharings, start=0, end=-1, filter=""):
+        try:
+            start = int(start)
+        except:
+            start = 0
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        sqlfilter = ""
+        if filter != "":
+            sqlfilter = """ WHERE pkgs.packages.label like "%%%s%%"
+                OR pkgs.packages.uuid like "%%%s%%"
+                OR profiles.name like "%%%s%%"
+                OR acknowledgements.askuser like "%%%s%%"
+                OR acknowledgements.askdate like "%%%s%%"
+                OR acknowledgements.acknowledgedbyuser like "%%%s%%"
+                OR acknowledgements.startdate like "%%%s%%"
+                OR acknowledgements.enddate like "%%%s%%"
+                OR acknowledgements.status like "%%%s%%" """%(filter, filter, filter, filter, filter, filter, filter, filter, filter)
+
+        sqllimit = ""
+        if limit != -1:
+            sqllimit = "LIMIT %s, %s"%(start, limit)
+
+
+        sql = """SELECT SQL_CALC_FOUND_ROWS
+            pkgs.packages.label,
+            pkgs.packages.uuid,
+            profiles.name,
+            askuser,
+            askdate,
+            acknowledgedbyuser,
+            startdate,
+            enddate,
+            status,
+            acknowledgements.id
+        FROM acknowledgements
+        JOIN package_has_profil ON acknowledgements.id_package_has_profil = package_has_profil.id
+        JOIN profiles ON profiles.id = package_has_profil.profil_id
+        LEFT JOIN pkgs.packages ON pkgs.packages.uuid = package_has_profil.package_uuid
+        %s
+        %s
+        ORDER BY askdate DESC; """%(sqlfilter, sqllimit)
+
+        sql_count = "SELECT FOUND_ROWS();"
+        query = session.execute(sql)
+        ret_count = session.execute(sql_count)
+        count = ret_count.first()[0]
+        result = {
+            "total" : count,
+            "datas" : []
+        }
+
+        if query is not None:
+            for element in query:
+                askdate = ""
+                startdate = ""
+                enddate = ""
+                if element[4] is not None:
+                    askdate = element[4].strftime("%Y-%m-%d %H:%M:%S")
+                if element[6] is not None:
+                    startdate = element[6].strftime("%Y-%m-%d %H:%M:%S")
+                if element[7] is not None:
+                    enddate = element[7].strftime("%Y-%m-%d %H:%M:%S")
+
+                result['datas'].append({
+                    "package_name": element[0] if element[0] is not None else "",
+                    "package_uuid": element[1] if element[1] is not None else "",
+                    "profile_name": element[2] if element[2] is not None else "",
+                    "askuser":element[3] if element[3] is not None else "",
+                    "askdate": askdate,
+                    "acknowledgedbyuser": element[5] if element[5] is not None else "",
+                    "startdate" : startdate,
+                    "enddate": enddate,
+                    "status": element[8] if element[8] is not None else "",
+                    "id": element[9] if element[8] is not None else ""
+                })
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def update_acknowledgement(self, session, id, acknowledgedbyuser, startdate, enddate, status):
+        query = session.query(Acknowledgements).filter(Acknowledgements.id == id)
+
+        try:
+            query = query.one()
+        except:
+            return False
+
+        query.acknowledgedbyuser = acknowledgedbyuser
+        query.startdate = startdate
+        query.enddate = enddate
+        query.status = status
+        session.commit()
+        session.flush()
+
+        return True
