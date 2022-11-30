@@ -43,7 +43,7 @@ $result = xmlrpc_get_acknowledges_for_sharings($sharings, $start, $maxperpage, $
 
 $count = $result['total'];
 $params = $result['datas'];
-$modifyAction = new ActionPopupItem(_T("Modify Authorisations", "kiosk"), "modifyAcknowledge", "edit", "kiosk", "kiosk");
+$modifyAction = new ActionPopupItem(_T("Modify Installation Authorisations", "kiosk"), "modifyAcknowledge", "edit", "kiosk", "kiosk");
 
 $status = [];
 $package_uuids = [];
