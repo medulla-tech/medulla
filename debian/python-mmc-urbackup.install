@@ -1,2 +1,3 @@
 usr/lib/python2.?/*-packages/mmc/plugins/urbackup
 etc/mmc/plugins/urbackup.ini
+usr/lib/python2.?/*-packages/pulse2/database/urbackup
