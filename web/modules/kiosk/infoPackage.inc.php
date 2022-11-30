@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2022 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -69,6 +69,20 @@ $submod->addPage($page);
 
 $page = new Page("delete", _T('Delete profile', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/index.php");//, array("expert" => True)
+$submod->addPage($page);
+
+$page = new Page("acknowledges", _T('Acknowledge', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/acknowledges.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxAcknowledges", _T('Acknowledges', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/ajaxAcknowledges.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, 'noHeader'=>false));
+$submod->addPage($page);
+
+$page = new Page("modifyAcknowledge", _T('Modify Acknowledge', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/modifyAcknowledge.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, 'noHeader'=>false));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);

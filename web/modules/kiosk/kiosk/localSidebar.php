@@ -1,6 +1,6 @@
 <?
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2022 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -23,5 +23,5 @@ $sidemenu= new SideMenu();
 $sidemenu->setClass("kiosk");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Profile List", 'kiosk'), "kiosk", "kiosk", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Profile", 'kiosk'), "kiosk", "kiosk", "add"));
-
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Acknowledges", "kiosk"), "kiosk", "kiosk", "acknowledges"));
 ?>
