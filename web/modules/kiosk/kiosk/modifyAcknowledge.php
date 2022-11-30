@@ -40,11 +40,11 @@ if(isset($_POST['bvalidate'])){
     $enddatestr = ($enddate == '') ? 'unlimited time' : $enddate;
 
     if($result){
-        $str = sprintf(_T("%s has the right %s on package %s (%s) from %s to %s.", "updates"), $askuser, $status, $package_name, $profile_name, $startdate, $enddatestr);
+        $str = sprintf(_T("%s has been granted the rights %s on package %s (%s) from %s to %s.", "updates"), $askuser, $status, $package_name, $profile_name, $startdate, $enddatestr);
         new NotifyWidgetSuccess($str);
     }
     else{
-        $str = sprintf(_T("Error during editing the acnowledgement", "updates"), $title, $updateid);
+        $str = sprintf(_T("Error while changing the authorisations", "updates"), $title, $updateid);
         new NotifyWidgetFailure($str);
     }
     header('location: '.urlStrRedirect("kiosk/kiosk/acknowledges"));
@@ -66,13 +66,13 @@ $newacknowledgedbyuser = $_SESSION['login'];
 
 
 if(!$id || !$status || !$startdate || !$package_uuid || !$profile_name || !$package_name || !$askdate || ! $askuser){
-    $f = new PopupWindowForm(_T("Modify Acknowledge", "kiosk"));
-    $f->add(new textTpl(_T("This acknowledge can't be edited (missing parameter)", "kiosk")));
+    $f = new PopupWindowForm(_T("Modify Installation Authorisations", "kiosk"));
+    $f->add(new textTpl(_T("This authorisation can't be edited (missing parameter)", "kiosk")));
     $f->addCancelButton("bback");
 }
 
 else{
-    $f = new PopupWindowForm(sprintf(_T("%s asked acknowledge for package %s (profile %s)", "kiosk"), $askuser, $package_name, $profile_name));
+    $f = new PopupWindowForm(sprintf(_T("%s requested installation authorisation for package %s (profile %s)", "kiosk"), $askuser, $package_name, $profile_name));
 
     $f->add(new HiddenTpl("id", ["visible"=>false]), ["value" => $id, "hide"=>false]);
     $f->add(new HiddenTpl("acknowledgedbyuser", ["visible"=>false]), ["value" => $newacknowledgedbyuser, "hide"=>false]);
