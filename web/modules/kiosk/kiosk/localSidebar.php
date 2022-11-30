@@ -23,5 +23,5 @@ $sidemenu= new SideMenu();
 $sidemenu->setClass("kiosk");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Profile List", 'kiosk'), "kiosk", "kiosk", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Profile", 'kiosk'), "kiosk", "kiosk", "add"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Acknowledges", "kiosk"), "kiosk", "kiosk", "acknowledges"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Installation Requests", "kiosk"), "kiosk", "kiosk", "acknowledges"));
 ?>
