@@ -579,3 +579,14 @@ def update_launcher(uuid, launcher):
         # Update the datas for all the kiosks
         structuredatakiosk = get_packages_for_machine(machine)
     notify_kiosks()
+
+def get_acknowledges_for_sharings(sharings, start=0, limit=-1, filter=""):
+    acknowledges = KioskDatabase().get_acknowledges_for_sharings(sharings, start, limit, filter)
+
+    return acknowledges
+
+
+def update_acknowledgement(id, acknowledgedbyuser, startdate, enddate, status):
+    result = KioskDatabase().update_acknowledgement(id, acknowledgedbyuser, startdate, enddate, status)
+
+    return result
