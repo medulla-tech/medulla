@@ -36,5 +36,5 @@ CREATE TABLE IF NOT EXISTS acknowledgements(
 );
 
 
-UPDATE version SET Number = 7
+UPDATE version SET Number = 7;
 COMMIT;
