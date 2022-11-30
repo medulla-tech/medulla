@@ -362,6 +362,7 @@ This package contains the imaging plugin for the MMC web interface.
 Summary:    Urbackup plugin for MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
+Obsoletes:  python-pulse2-common-database-urbackup
 
 %description -n python-mmc-urbackup
 This package contains the urbackup plugin for MMC agent.
