@@ -38,6 +38,7 @@ from pulse2.database.pkgs.orm.pakages import Packages
 import logging
 import json
 import time
+from datetime import datetime
 
 class KioskDatabase(DatabaseHelper):
     """
@@ -131,7 +132,8 @@ class KioskDatabase(DatabaseHelper):
                 pkgs.packages.Qversion version_software,
                 pkgs.packages.uuid as package_uuid,
                 pkgs.packages.os,
-                kiosk.package_has_profil.package_status
+                kiosk.package_has_profil.package_status,
+                kiosk.package_has_profil.id as id_package_has_profil
             FROM
                 pkgs.packages
                   inner join
@@ -218,7 +220,7 @@ AND kiosk.profiles.active = 1
 
             return associations
         except Exception, e:
-            logging.getLogger().error("get_profile_list_for_OUList")
+            logging.getLogger().error("add_askacknowledge")
             logging.getLogger().error(str(e))
             return ""
 
@@ -652,6 +654,53 @@ AND kiosk.profiles.active = 1
                     "id": element[9] if element[8] is not None else ""
                 })
 
+        return result
+
+
+    @DatabaseHelper._sessionm
+    def get_acknowledges_for_package_profile(self, session, id_package_profil, uuid_package, user):
+        today = datetime.now()
+        query = session.query(Acknowledgements)\
+            .add_column(Profile_has_package.package_uuid)\
+            .filter(and_(
+                Acknowledgements.id_package_has_profil == id_package_profil,
+                Acknowledgements.askuser== user),
+                Acknowledgements.startdate <= today.strftime("%Y-%m-%d %H:%M:%S"),
+                or_(
+                   Acknowledgements.enddate > today.strftime("%Y-%m-%d %H:%M:%S"),
+                   Acknowledgements.enddate is None,
+                   Acknowledgements.enddate == "",
+                   )
+                )\
+            .join(Profile_has_package, Profile_has_package.id == Acknowledgements.id_package_has_profil)\
+            .all()
+
+        result = []
+
+        if query is not None:
+            for element, package_uuid in query:
+                askdate = ""
+                startdate = ""
+                enddate = ""
+                if element.askdate is not None:
+                    askdate = element.askdate.strftime("%Y-%m-%d %H:%M:%S")
+                if element.startdate is not None:
+                    startdate = element.startdate.strftime("%Y-%m-%d %H:%M:%S")
+                if element.enddate is not None:
+                    enddate = element.enddate.strftime("%Y-%m-%d %H:%M:%S")
+
+
+                result.append({
+                    "askuser": element.askuser if element.askuser is not None else "",
+                    "askdate": askdate,
+                    "acknowledgedbyuser": element.acknowledgedbyuser if element.acknowledgedbyuser is not None else "",
+                    "startdate" : startdate,
+                    "enddate": enddate,
+                    "status": element.status if element.status is not None else "",
+                    "id": element.id if element.id is not None else "",
+                    "id_package_has_profil" : element.id_package_has_profil,
+                    "package_uuid" : package_uuid
+                })
         return result
 
     @DatabaseHelper._sessionm
