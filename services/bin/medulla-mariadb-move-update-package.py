@@ -288,13 +288,14 @@ class synch_packages:
             download file from url urlpath in directory
         """
         logger.debug("function create_package_file")
+        logger.debug("function create_package_file %s" %self.path_in_base)
         if os.path.isdir(self.path_in_base):
             ff = os.listdir(self.path_in_base)
             if len(ff) >=3:
                 logger.debug("package exists %s already" % (self.param['uidpackage']))
                 return True
         elif os.path.isdir(self.path_in_partage):
-            ff = os.listdir(self.path_in_base)
+            ff = os.listdir(self.path_in_partage)
             if len(ff) >=3:
                 logger.debug("package exists %s already" % (self.param['uidpackage']))
                 return True
@@ -910,9 +911,9 @@ if __name__ == "__main__":
         print(parametre_dis)
         print("exemples")
         print ("command information\n")
-        print ("\t1) affiche cette info")
+        print ("\t1) affiche cette info option -i")
         print ("\t\tpython3 ./%s -i\n" % os.path.basename(sys.argv[0]))
-        print ("\n\t2) test connection")
+        print ("\n\t2) test connection option -t")
         print ("\t\tpython3 ./%s -t -uroot -P 3306 -Hlocalhost -p siveo\n" % os.path.basename(sys.argv[0]))
         print ("\tPARAMETRE CONNECION CORRECT: CONNECT SUCCESS")
         print ("\ttest connection format debug")
@@ -923,13 +924,12 @@ if __name__ == "__main__":
                     "\tport: 3306\n" \
                     "\tdb: 3306\n")
         print ("PARAMETRE CONNECION CORRECT: CONNECT SUCCESS\n")
-        print ("\n\t3) forces the complete creation of an update package and installs it in pkgs")
+        print ("\n\t3) forces the complete creation of an update package and installs it in pkgs option -C")
         print ("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -C" % os.path.basename(sys.argv[0]))
         print ("\t\tIf the package exists it is completely recreated")
         print ("\t\tIf the package is installed it reinstalls it")
         print ("package c9240667-c3d9-4ba0-8a4e-e258473f7b73 is successfully installed\n")
-        print ("ls /var/lib/pulse2/base_update_package")
-        print ("c9240667-c3d9-4ba0-8a4e-e258473f7b73         <--- package create")
+
         print ("SELECT uuid FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
         print ("+--------------------------------------+")
         print ("| uuid                                 |")
@@ -937,29 +937,30 @@ if __name__ == "__main__":
         print ("| c9240667-c3d9-4ba0-8a4e-e258473f7b73 |    <<--- package installer  ")
         print ("+--------------------------------------+")
         print ("ls -al  /var/lib/pulse2/packages/sharing/winupdates/")
-        print ("c9240667-c3d9-4ba0-8a4e-e258473f7b73 -> /var/lib/pulse2/base_update_package/c9240667-c3d9-4ba0-8a4e-e258473f7b73  synclink creer")
-        print ("\n\t4 creation package and installs it in pkgs")
+        print "c9240667-c3d9-4ba0-8a4e-e258473f7b73"
+
+        print ("\n\t4 creation if no exist package and installs it in pkgs if is not installed option -c")
         print ("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -c "%os.path.basename(sys.argv[0]))
         print ("\t\tpackage exists c9240667-c3d9-4ba0-8a4e-e258473f7b73 already")
-        print ("\t\tthe symlink is installed /var/lib/pulse2/packages/sharing/winupdates/c9240667-c3d9-4ba0-8a4e-e258473f7b73")
         print ("\t\tpackage c9240667-c3d9-4ba0-8a4e-e258473f7b73 is installed in pkgs")
 
-        print ("\n\t5 uninstall package")
+        print ("\n\t5 uninstall package option -s")
         print ("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -s "%os.path.basename(sys.argv[0]))
-        print ("\t\tRemove synclink and delete from pkgs")
-        print ("\t\tthe package still exists")
+        print ("\t\tpackage move to base update : the package still exists")
         print ("ls /var/lib/pulse2/base_update_package")
         print ("c9240667-c3d9-4ba0-8a4e-e258473f7b73     <---the package still exists")
-        print ("ls  /var/lib/pulse2/packages/sharing/winupdates/    synclink uninstall")
-        print ("MariaDB [pkgs]> SELECT * FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
+        print ("ls  /var/lib/pulse2/packages/sharing/winupdates/    uninstall")
+        print ("uninstall pkgs")
+        print ("SELECT * FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
         print ("Empty set (0.000 sec)  package uninstall in pkgs")
 
-        print ("\n\t6 complete uninstall package ")
+        print ("\n\t6 complete uninstall package option -S")
         print ("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -S "%os.path.basename(sys.argv[0]))
-        print ("\t\tRemove synclink and delete from pkgs delete package")
+        print ("\t\tRemove package")
         print ("\t\tthe package no longer exists")
         print ("ls /var/lib/pulse2/base_update_package    <---  the package no longer exists")
-        print ("ls  /var/lib/pulse2/packages/sharing/winupdates/    synclink uninstall")
+        print ("ls  /var/lib/pulse2/packages/sharing/winupdates/    <---  the package no longer exists")
+        print ("uninstall pkgs")
         print ("MariaDB [pkgs]> SELECT * FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
         print ("Empty set (0.000 sec)  package uninstall in pkgs")
         print ("*************************************************************************************************************************")
