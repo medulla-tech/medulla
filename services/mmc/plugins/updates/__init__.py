@@ -30,6 +30,7 @@ from mmc.plugins.updates.config import UpdatesConfig
 from pulse2.database.updates import UpdatesDatabase
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
+from mmc.plugins.glpi.database import Glpi
 import logging
 
 VERSION = "1.0.0"
@@ -87,8 +88,14 @@ def grey_update(updateid, enabled=0):
 def exclude_update(updateid):
     return UpdatesDatabase().exclude_update(updateid)
 
+def get_count_machine_as_not_upd(updateid):
+    return UpdatesDatabase().get_count_machine_as_not_upd(updateid)
+
 def delete_rule(id):
      return UpdatesDatabase().delete_rule(id)
 
 def white_unlist_update(updateid):
     return UpdatesDatabase().white_unlist_update(updateid)
+
+def get_machine_with_update(kb):
+    return Glpi().get_machine_with_update(kb)
