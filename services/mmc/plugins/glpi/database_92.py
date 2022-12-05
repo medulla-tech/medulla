@@ -5650,6 +5650,56 @@ ORDER BY
         result.append(entity)
         return result
 
+
+    @DatabaseHelper._sessionm
+    def get_machine_with_update(self, session, kb):
+        sqlrequest ="""
+            SELECT 
+                glpi.glpi_computers.id AS uuid_inventory,
+                glpi.glpi_computers.name AS hostname,
+                glpi.glpi_entities.completename AS entity,
+                glpi.glpi_softwares.name AS kb, 
+                SUBSTR(glpi.glpi_softwares.name,
+                    LOCATE('KB', glpi.glpi_softwares.name), length(glpi.glpi_softwares.name)-2) as numkb,
+                glpi.glpi_computers_softwareversions.date_install AS dateinstall,
+                glpi.glpi_computers.date_creation AS input_computer
+            FROM
+                glpi.glpi_computers
+                    INNER JOIN
+                glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
+                    INNER JOIN
+                glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_computers_softwareversions.softwareversions_id
+                    INNER JOIN
+                glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
+            WHERE
+                glpi.glpi_softwares.name LIKE 'Update (KB%s)';"""%(kb)
+        uuid_inventory=[]
+        hostname=[]
+        entity=[]
+        kb=[]
+        numkb=[]
+        dateinstall=[]
+        input_computer=[]
+        result = []
+        res = self.db.execute(sqlrequest)
+        for element in res:
+            uuid_inventory.append( element.uuid_inventory )
+            hostname.append( element.hostname )
+            entity.append( element.entity )
+            kb.append( element.kb )
+            numkb.append( element.numkb )
+            dateinstall.append( element.dateinstall )
+            input_computer.append( element.input_computer )
+        result.append(uuid_inventory)
+        result.append(hostname)
+        result.append(entity)
+        result.append(kb)
+        result.append(numkb)
+        result.append(dateinstall)
+        result.append(input_computer)
+        return result
+
+
     @DatabaseHelper._sessionm
     def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
         criterion = filter['criterion']
