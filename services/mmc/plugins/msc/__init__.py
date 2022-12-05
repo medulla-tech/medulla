@@ -601,11 +601,16 @@ class RpcProxy(RpcProxyI):
     #
     # default WEB values handling
     #
-    def get_def_package_label(self, label, version):
+    def get_def_package_label(self, label, version, typedepl=None):
+        """ typedepl="-@upd@" for update """
         localtime = time.localtime()
-        return "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
+        typepackage=""
+        if typedepl is not None:
+            typepackage = typedepl
+        return "%s (%s) %s- %04d/%02d/%02d %02d:%02d:%02d" % (
             label,
             version,
+            typepackage,
             localtime[0],
             localtime[1],
             localtime[2],
