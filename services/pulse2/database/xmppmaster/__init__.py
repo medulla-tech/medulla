@@ -4812,7 +4812,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def get_deploy_by_user_with_interval(self, session, login, state, intervalsearch, minimum=None , maximum=None, filt=None):
+    def get_deploy_by_user_with_interval(self, session, login, state, intervalsearch, minimum=None , maximum=None, filt=None, type_deploy="command"):
         """
         This function is used to retrive the recent deployment done by a user.
 
@@ -4829,6 +4829,7 @@ class XmppMasterDatabase(DatabaseHelper):
             If intervalsearch is not used it is by default in the last 24 hours.
         """
         deploylog = session.query(Deploy)
+        deploylog = deploylog.filter( Deploy.sessionid.like("%s%%"%type_deploy))
         if login:
             deploylog = deploylog.filter( Deploy.login == login)
         if state:
@@ -4847,7 +4848,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 count = """select count(*) as nb from (
                                     select count(id) as nb
                                     from deploy
-                                    where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+                                    where
+                                    sessionid like "%s%%" AND
+                                     start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
                                     AND login like "%s"
                                     AND (state LIKE "%%%s%%"
                                     or pathpackage LIKE "%%%s%%"
@@ -4856,12 +4859,14 @@ class XmppMasterDatabase(DatabaseHelper):
                                     or host LIKE "%%%s%%"
                                     )
                                     group by title
-                                    ) as x;""" % (login, filt, filt, filt, filt, filt,)
+                                    ) as x;""" % (type_deploy, login, filt, filt, filt, filt, filt,)
             else:
                 count = """select count(*) as nb from (
                                     select count(id) as nb
                                     from deploy
-                                    where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+                                    where
+                                    sessionid like "%s%%" AND
+                                     start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
                                     AND (state LIKE "%%%s%%"
                                     or pathpackage LIKE "%%%s%%"
                                     or start LIKE "%%%s%%"
@@ -4869,23 +4874,27 @@ class XmppMasterDatabase(DatabaseHelper):
                                     or host LIKE "%%%s%%"
                                     )
                                     group by title
-                                    ) as x;""" % (filt, filt, filt, filt, filt,)
+                                    ) as x;""" % (type_deploy, filt, filt, filt, filt, filt,)
         else:
             if login:
                 count = """select count(*) as nb from (
                                     select count(id) as nb
                                         from deploy
-                                        where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+                                        where
+                                    sessionid like "%s%%" AND
+                                     start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
                                         AND login like "%s"
                                         group by title
-                                    ) as x;""" % (login)
+                                    ) as x;""" % (type_deploy, login)
             else:
                 count = """select count(*) as nb from (
                                     select count(id) as nb
                                         from deploy
-                                        where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+                                        where
+                                    sessionid like "%s%%" AND
+                                     start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
                                         group by title
-                                    ) as x;"""
+                                    ) as x;"""%(type_deploy)
 
         len_query = self.get_count(deploylog)
 
@@ -4956,7 +4965,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def get_deploy_by_user_finished(self, session, login, intervalsearch, minimum=None, maximum=None, filt=None):
+    def get_deploy_by_user_finished(self, session, login, intervalsearch, minimum=None, maximum=None, filt=None, type_deploy="command"):
         """
         This function is used to retrieve all the deployments done by a user (or a team).
 
@@ -4975,6 +4984,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 If login is a list, this returns all the past deploys for the group this user belong to.
         """
         deploylog = session.query(Deploy)
+        deploylog = deploylog.filter( Deploy.sessionid.like("%s%%"%type_deploy))
         if login:
             if isinstance(login, list):
                 deploylog = deploylog.filter( Deploy.login.op('regexp')("|".join(login)))
@@ -5011,25 +5021,31 @@ class XmppMasterDatabase(DatabaseHelper):
                 count = """select count(*) as nb from (
                 select count(id) as nb
                 from deploy
-                where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
+                where
+                sessionid like "%s%%" AND
+                start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
                 AND login REGEXP "%s" %s
                 group by title
-                ) as x;"""%(llogin, filter_filt)
+                ) as x;"""%(type_deploy,llogin, filter_filt)
             else:
                 count = """select count(*) as nb from (
                 select count(id) as nb
                 from deploy
-                where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
+                where
+                sessionid like "%s%%" AND
+                 start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
                 AND login LIKE "%s" %s
                 group by title
-                ) as x;"""%(login,filter_filt)
+                ) as x;"""%(type_deploy,login,filter_filt)
         else:
             count = """select count(*) as nb from (
             select count(id) as nb
             from deploy
-            where start >= DATE_SUB(NOW(),INTERVAL 3 MONTH) %s
+            where
+                sessionid like "%s%%" AND
+                 start >= DATE_SUB(NOW(),INTERVAL 3 MONTH) %s
             group by title
-            ) as x;"""%(filter_filt)
+            ) as x;"""%(type_deploy,filter_filt)
 
         count = session.execute(count)
         count = [nbcount for nbcount in count]

@@ -506,7 +506,8 @@ def get_deploy_by_team_member(login, state, intervalsearch, minimum=None, maximu
     return XmppMasterDatabase().get_deploy_by_team_member(login, state, intervalsearch, minimum, maximum, filt)
 
 
-def get_deploy_inprogress_by_team_member(login, intervalsearch, minimum=None, maximum=None, filt=None):
+def get_deploy_inprogress_by_team_member(login, intervalsearch, minimum=None,
+                                         maximum=None, filt=None, type_deploy="command"):
     """
     This function is used to retrieve not yet done deployements of a team.
     This team is found based on the login of a member.
@@ -535,7 +536,8 @@ def get_deploy_inprogress_by_team_member(login, intervalsearch, minimum=None, ma
                                                               intervalsearch,
                                                                minimum,
                                                                maximum,
-                                                               filt)
+                                                               filt,
+                                                               type_deploy)
 
 def get_deploy_xmpp_teamscheduler(login, minimum=None, maximum=None, filt=None):
     """
@@ -560,7 +562,7 @@ def get_deploy_xmpp_teamscheduler(login, minimum=None, maximum=None, filt=None):
     result = MscDatabase().deployxmppscheduler(pulse_usersidlist, minimum, maximum, filt)
     return result
 
-def get_deploy_by_team_finished(login, intervalsearch, minimum=None, maximum=None, filt=None):
+def get_deploy_by_team_finished(login, intervalsearch, minimum=None, maximum=None, filt=None, type_deploy="command"):
     """
     This function is used to retrieve all the deployments done by a team.
     Args:
@@ -572,7 +574,6 @@ def get_deploy_by_team_finished(login, intervalsearch, minimum=None, maximum=Non
     Returns:
         It returns all the deployment done by a team
     """
-
     if minimum == "":
         minimum = None
     if maximum == "":
@@ -582,9 +583,9 @@ def get_deploy_by_team_finished(login, intervalsearch, minimum=None, maximum=Non
                                                     intervalsearch,
                                                     minimum,
                                                     maximum,
-                                                    filt)
+                                                    filt, type_deploy)
 
-def get_deploy_by_user_with_interval(login, state, intervalsearch, minimum=None, maximum=None, filt=None):
+def get_deploy_by_user_with_interval(login, state, intervalsearch, minimum=None, maximum=None, filt=None,type_deploy="command"):
     """
     This function is used to retrive the recent deployment done by a user.
 
@@ -605,9 +606,9 @@ def get_deploy_by_user_with_interval(login, state, intervalsearch, minimum=None,
         maximum = None
     if filt == "":
         filt = None
-    return XmppMasterDatabase().get_deploy_by_user_with_interval(login, state, intervalsearch, minimum, maximum, filt)
+    return XmppMasterDatabase().get_deploy_by_user_with_interval(login, state, intervalsearch, minimum, maximum, filt, type_deploy)
 
-def get_deploy_by_user_finished(login, intervalsearch, minimum=None, maximum=None, filt=None):
+def get_deploy_by_user_finished(login, intervalsearch, minimum=None, maximum=None, filt=None, type_deploy="command"):
     """
     This function is used to retrieve all the deployments done by a user (or a team).
 
@@ -628,7 +629,7 @@ def get_deploy_by_user_finished(login, intervalsearch, minimum=None, maximum=Non
         minimum = None
     if maximum == "":
         maximum = None
-    return XmppMasterDatabase().get_deploy_by_user_finished(login, intervalsearch, minimum, maximum, filt)
+    return XmppMasterDatabase().get_deploy_by_user_finished(login, intervalsearch, minimum, maximum, filt, type_deploy)
 
 
 def getdeploybyuser(login, numrow, offset):
