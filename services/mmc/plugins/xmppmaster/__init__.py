@@ -167,6 +167,8 @@ def setlogxmpp(text,
                action,
                touser,
                fromuser):
+    if sessionname.startswith('update'):
+        type="update"
     return XmppMasterDatabase().setlogxmpp(text,
                                            type,
                                            sessionname,

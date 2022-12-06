@@ -703,6 +703,7 @@ AND kiosk.profiles.active = 1
                 })
         return result
 
+
     @DatabaseHelper._sessionm
     def update_acknowledgement(self, session, id, acknowledgedbyuser, startdate, enddate, status):
         query = session.query(Acknowledgements).filter(Acknowledgements.id == id)
