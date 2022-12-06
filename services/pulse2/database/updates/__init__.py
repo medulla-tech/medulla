@@ -204,20 +204,19 @@ class UpdatesDatabase(DatabaseHelper):
             grey_list={ 'nb_element_total': 0,
                         'updateid' : [],
                         'title' : [],
-                        'kb' : []}
+                        'kb' : [],
+                        'valided' : []}
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         *
                     FROM
-                        xmppmaster.up_gray_list
-                    WHERE
-                        valided = 0 """
+                        xmppmaster.up_gray_list """
 
             filterlimit= ""
             if start != -1 and limit != -1:
                 filterlimit= "LIMIT %s, %s"%(start, limit)
             if filter != "":
-                filterwhere="""AND
+                filterwhere="""WHERE
                         title LIKE '%%%s%%' """%filter
                 sql += filterwhere
             sql += filterlimit
@@ -239,6 +238,7 @@ class UpdatesDatabase(DatabaseHelper):
                     grey_list['updateid'].append(list_b.updateid)
                     grey_list['title'].append(list_b.title)
                     grey_list['kb'].append(list_b.kb)
+                    grey_list['valided'].append(list_b.valided)
 
         except Exception as e:
             logger.error("error function get_grey_list")

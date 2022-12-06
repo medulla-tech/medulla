@@ -30,11 +30,11 @@ if(isset($_POST['bconfirm'])){
     $retour = xmlrpc_grey_update($updateid);
     // Si retour est True, cela signifie que le packet a bien change de liste
     if($retour == True){
-        $str = _T("Package moved successfully to greylist", "updates");
+        $str = _T("Package moved successfully to grey list", "updates");
         new NotifyWidgetSuccess($str);
         // Sinon j'affiche un message d'erreur
     } else {
-        new NotifyWidgetFailure(_T("Error moving package to greylist", "updates"));
+        new NotifyWidgetFailure(_T("Error moving package to grey list", "updates"));
     }
     // Je redirige vers ma page
     header('location: '.urlStrRedirect("updates/updates/updatesListWin"));

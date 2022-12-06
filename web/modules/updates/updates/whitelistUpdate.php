@@ -30,11 +30,11 @@ if(isset($_POST['bconfirm'])){
     $retour = xmlrpc_approve_update($updateid);
     // Si retour est True, cela signifie que le packet a bien change de liste
     if($retour == True){
-        $str = _T("Package moved successfully to whitelist", "updates");
+        $str = _T("Package moved successfully to white list", "updates");
         new NotifyWidgetSuccess($str);
         // Sinon j'affiche un message d'erreur
     } else {
-        new NotifyWidgetFailure(_T("Error moving package to whitelist", "updates"));
+        new NotifyWidgetFailure(_T("Error moving package to white list", "updates"));
     }
     // Je redirige vers ma page
     header('location: '.urlStrRedirect("updates/updates/updatesListWin"));

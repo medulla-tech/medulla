@@ -749,7 +749,7 @@ msgid "Inventory"
 msgstr "Inventaire"
 
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:91
-msgid "detaildeploy"
+msgid "View deployment details"
 msgstr "Détail du déploiment"
 
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:116

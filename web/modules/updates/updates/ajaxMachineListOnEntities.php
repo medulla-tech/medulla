@@ -49,7 +49,7 @@ $ctx['maxperpage'] = $maxperpage;
 $uuid = htmlspecialchars($_GET['uuid']);
 $ctx['uuid'] = $uuid;
 
-$detailsByMach = new ActionItem(_T("Test", "updates"),"detailsByMachines","display","", "updates", "updates");
+$detailsByMach = new ActionItem(_T("View details", "updates"),"detailsByMachines","display","", "updates", "updates");
 
 if ($uuid == '')
 {
@@ -98,7 +98,7 @@ if ($typeOfDetail == "group")
 }
 else
 {
-    print_r(_T("<h2>Computers from entitie </h2>","updates"));
+    print_r(_T("<h2>Computers from entity </h2>","updates"));
 }
 
 // A VOIR SI JE M'EN SORS AVEC DES BOUCLES MAIS PEUT ETRE REFAIRE UNE REQUETE EN FONCTION DE L'ENTITYID
@@ -164,7 +164,7 @@ if ($typeOfDetail == "group")
         $machineNames[] = $v[1]['cn'][0];
 
         //FUNCTION TO GET ID
-        $id_machine = xmlrpc_get_ipmachine_from_name($v[1]['cn'][0]);
+        $id_machine = xmlrpc_get_idmachine_from_name($v[1]['cn'][0]);
 
         $compliance_computer = xmlrpc_get_conformity_update_by_machine($id_machine['id_machine']);
 
@@ -189,9 +189,9 @@ if ($typeOfDetail == "group")
     }        
 }
 
-$n = new OptimizedListInfos($machineNames, _T("Name machine", "updates"));
+$n = new OptimizedListInfos($machineNames, _T("Machine name", "updates"));
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($platform, _T("Plateform", "updates"));
+$n->addExtraInfo($platform, _T("Platform", "updates"));
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
 $n->addExtraInfo($missingUpdatesMachine, _T("Missing updates", "updates"));
 $n->addActionItemArray($detailsByMachs);

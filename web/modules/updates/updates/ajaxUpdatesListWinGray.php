@@ -22,22 +22,20 @@
  */
 require_once("modules/updates/includes/xmlrpc.php");
 
-
-
-// Configuration global de $maxperpage, $filter, $start, $end
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
-echo '<pre>';
-// print_r($_GET);
-echo '</pre>';
-// Appel de fonction pour récupérer la Liste Grise dans up_gray_list
-$grey_list = xmlrpc_get_grey_list($start, $end, $filter);
+
+// Get Datas
+$grey_list = xmlrpc_get_grey_list($start, $maxperpage, $filter);
+
 // GrayList Actions
 $grayEnableAction = new ActionItem(_T("Enable Update", "updates"),"grayEnable","enableupdate","", "updates", "updates");
+$grayEnableEmptyAction = new EmptyActionItem1(_("Enable Update"),"grayEnable", "enableupdateg","","updates", "updates");
 $grayDisableAction = new ActionPopupItem(_T("Disable Update", "updates"), "grayDisable", "disableupdate", "updates", "updates");
+$grayDisableEmptyAction = new EmptyActionItem1(_T("Disable Update", "updates"),"grayDisable", "disableupdateg","","updates", "updates");
 $grayApproveAction = new ActionPopupItem(_T("Approve Update", "updates"), "grayApprove", "approveupdate", "updates", "updates");
 $banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "banupdate", "updates", "updates");
 $grayActions = [
@@ -48,23 +46,20 @@ $grayActions = [
 ];
 $params_grey = [];
 $count_grey = $grey_list['nb_element_total'];
+$count_partial = count($grey_list['title']);
 
 $kbs_gray = [];
 $updateids_gray = [];
 $titles_grey = [];
 // ########## Boucle greyList ########## //
-for($i=0; $i < $count_grey; $i++){
-    $grayActions["enable"][] = $grayEnableAction;
-    $grayActions["disable"][] = $grayDisableAction;
+for($i=0; $i < $count_partial; $i++){
+    $grayActions["enable"][] = ($grey_list['valided'][$i] == 0) ? $grayEnableAction : $grayEnableEmptyAction;
+    $grayActions["disable"][] = ($grey_list['valided'][$i] == 1) ? $grayDisableAction : $grayDisableEmptyAction;
     $grayActions["approve"][] = $grayApproveAction;
     $grayActions["ban"][] = $banAction;
 
-
-    // $actionwhitelistUpds[] = $whitelistUpd;
-
-    // $actionblacklistUpds[] = $blacklistUpd;
-
-    $titles_grey[] = $grey_list['title'][$i];
+    $icon = ($grey_list['valided'][$i] == 1) ? '<img style="position:relative; top : 5px;" src="img/other/updateenabled.svg" width="25" height="25">' : '<img style="position:relative; top : 5px;" src="img/other/updatedisabled.svg" width="25" height="25">';
+    $titles_grey[] = $icon.$grey_list['title'][$i];
 
     $params_grey[] = array(
         'updateid' => $grey_list['updateid'][$i],
@@ -88,11 +83,12 @@ $g->addExtraInfo($kbs_gray, _T("KB", "updates"));
 $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter, 'updateSearchParamformGray'));
 $g->setParamInfo($params_grey);
-echo '<h2> GreyList</h2>';
+echo '<h2> Grey list</h2>';
 $g->addActionItemArray($grayActions['enable']);
 $g->addActionItemArray($grayActions['disable']);
 $g->addActionItemArray($grayActions['approve']);
 $g->addActionItemArray($grayActions['ban']);
-
+$g->start = 0;
+$g->end = $count_grey;
 $g->display();
 ?>

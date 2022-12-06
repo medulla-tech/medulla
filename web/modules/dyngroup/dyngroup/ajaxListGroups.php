@@ -138,7 +138,7 @@ if ($is_gp != 1) { // Simple group
     if (in_array("update", $_SESSION["supportModList"])) {
         $n->addActionItem(new ActionItem(_T("Update on this group", "dyngroup"),"view_updates", "reload", "id","base", "computers"));
     }
-    $n->addActionItem(new ActionItem(_("Detail by machines from updates"),"detailsByMachines", "auditbymachine","updates", "updates", "updates") );
+    $n->addActionItem(new ActionItem(_("Updates compliance by machines"),"detailsByMachines", "auditbymachine","updates", "updates", "updates") );
     $n->addActionItem(new ActionItem(_("Deploy all update on this group"),"deployAllUpdates", "updateall","updates", "updates", "updates") );
     $n->addActionItem(new ActionItem(_("Deploy specific update on this group"),"deploySpecificUpdate", "updateone","updates", "updates", "updates") );
 } else { // Imaging group

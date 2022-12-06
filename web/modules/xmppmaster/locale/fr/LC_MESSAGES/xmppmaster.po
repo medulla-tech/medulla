@@ -908,7 +908,7 @@ msgid "OFFLINE"
 msgstr "Déconnecté"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:747
-msgid "Deployment Detail"
+msgid "Deployment detail"
 msgstr "Détails du déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:753
@@ -1405,7 +1405,7 @@ msgstr "Déploiements lancés sur des machines hors-lignes (derniers 3 mois )"
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
-msgid "detaildeploy"
+msgid "View deployment details"
 msgstr "Détail du déploiment"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:118

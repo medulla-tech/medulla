@@ -7,7 +7,9 @@ require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
 
+$titlemessage = (isset($titlemessage)) ? base64_decode($titlemessage) : "" ;
 $message = (isset($message)) ? base64_decode($message) : "" ;
+
     $packageList = xmpp_packages_list();
     $options = "";
 
@@ -20,7 +22,9 @@ $message = (isset($message)) ? base64_decode($message) : "" ;
         else
             $options .= "<option value='".$package['uuid']."'>".$package['name']."</option>";
     }
-$lab =  (isset($actionlabel))? $actionlabel : uniqid();
+$lab =  (isset($actionlabel))? $actionlabel : "UpQues".uniqid();
+
+
 ?>
 <!-- Style a modifier pour le title des boites de dialog -->
 <style>
@@ -75,62 +79,114 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 $namestep=_T("User Question","pkgs");
 ?>
 <div class="header">
-    <h1 data-title="<?php echo _T('This step allows you to submit 1 question to the user', 'pkgs'); ?>" ><?php echo $namestep; ?></h1>
+    <!-- definie prefixe label -->
+    <div style="display:none;">ask_</div>
+    <h1 data-title="<?php echo _T('Submit a question to the connected user', 'pkgs'); ?>" ><?php echo $namestep; ?></h1>
 </div>
 
 <div class="content">
-
-
     <div>
         <input type="hidden" name="action" value="action_question" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
     <table id="tableToggle">
         <tr class="toggleable">
-            <th <?php echo 'data-title="'._T('define Step Label', 'pkgs').'"'; ?> ><?php echo _T('Step label: ', 'pkgs'); ?></th>
-            <th <?php echo 'data-title="'._T('Cutomize or not step label', 'pkgs').'"'; ?> >
+            <th><?php echo _T('Step label: ', 'pkgs'); ?></th>
+            <th>
                 <input id="laction" type="text" name="actionlabel" value="<?php echo $lab; ?>"/>
+            </th>
+        </tr>
+        <?php
+            $sizeheader = (isset($sizeheader)) ? $sizeheader : 15;
+            $sizemessage = (isset($sizemessage)) ? $sizemessage : 10;
+        ?>
+        <tr>
+            <th>
+                    <?php echo _T('Message box title', 'pkgs'); ?>
+            </th>
+            <th>
+                <span  data-title="<?php echo _T('Insert title of message box', 'pkgs'); ?>">
+                    <textarea class="special_textarea" name="titlemessage" ><?php echo $titlemessage; ?></textarea>
+                </span>
+                <span  data-title="<?php echo _T('Define text size for message box title', 'pkgs'); ?>">
+                    <?php echo _T('Text size', 'pkgs'); ?>
+                    <?php echo'<input style="width:35px;" type="number"  value="'.$sizeheader.'" name="sizeheader" min=10 max=20 />'; ?>
+                </span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                    <?php echo _T('Question', 'pkgs'); ?>
+            </th>
+            <th>
+                <span  data-title="<?php echo _T('Insert question for user', 'pkgs'); ?>">
+                    <textarea class="special_textarea" name="message" ><?php echo $message; ?></textarea>
+                </span>
+                 <span  data-title="<?php echo _T('Define text size for question', 'pkgs'); ?>">
+                    <?php echo _T('Text size', 'pkgs'); ?>
+                    <?php echo'<input style="width:35px;" type="number"  value="'.$sizemessage.'" name="sizemessage" min=7 max=15 />'; ?>
+                </span>
             </th>
         </tr>
 
         <tr>
-            <th <?php echo 'data-title="'._T('Question Message for user', 'pkgs').'"'; ?> >
-                    <?php echo _T('Message', 'pkgs'); ?>
-            </th>
-            <th>
-                <span  data-title="<?php echo _T('input Message for user', 'pkgs'); ?>">
-                    <textarea class="special_textarea" name="message" ><?php echo $message; ?></textarea>
-                </span>
-            </th>
+          <?php
+            $textbuttonyes = (isset($textbuttonyes)) ? $textbuttonyes : "Yes";
+
+            echo '<th>';
+            echo _T("True button text","pkgs").'</th>';
+            echo '<th>';
+           ?>
+             <span  data-title="<?php echo _T('Define text to be shown on button returning True', 'pkgs'); ?>">
+            <?php echo'<input  type="text"  value="'.$textbuttonyes.'" name="textbuttonyes"  />'; ?>
+            </span>
+            <?php
+            echo '</th>';
+            ?>
         </tr>
+
+        <tr>
+          <?php
+            $textbuttonno = (isset($textbuttonno)) ? $textbuttonno : "No";
+            echo '<th>';
+            echo _T("False button text","pkgs").'</th>';
+            echo '<th>';
+           ?>
+             <span  data-title="<?php echo _T('Define text to be shown on button returning False', 'pkgs'); ?>">
+            <?php echo'<input  type="text"  value="'.$textbuttonno.'" name="textbuttonno"  />'; ?>
+            </span>
+            <?php
+            echo '</th>';
+            ?>
+        </tr>
+
         <!--input Positive reponse-->
         <tr>
            <?php
             $gotoyes = (isset($gotoyes)) ? $gotoyes : "";
 
-            echo '<th data-title="'._T("On 1 positive answer jump to the step label","pkgs").'">';
-            echo _T("If 'yes' go to step","pkgs").'</th>';
+            echo '<th>';
+            echo _T("If 'True' go to step","pkgs").'</th>';
             echo '<td>';
            ?>
-            <span  data-title="<?php echo _T('input step label', 'pkgs'); ?>">
-            <?php echo'<input  type="text"  value="'.$gotoyes.'" name="gotoyes"  />'; ?>
+            <span  data-title="<?php echo _T('Define step label if user response is True', 'pkgs'); ?>">
+            <?php echo'<input  style="width:80px;" type="text"  value="'.$gotoyes.'" name="gotoyes"  />'; ?>
             </span>
+            </td>
 
-            <?php
-            echo '</td>';
-            ?>
+
         </tr>
         <!--input Negative reponse-->
         <tr>
            <?php
             $gotono = (isset($gotono)) ? $gotono : "";
 
-            echo '<th data-title="'._T("On 1 negative answer jump to the step label","pkgs").'">';
-            echo _T("If 'no' go to step","pkgs").'</th>';
+            echo '<th>';
+            echo _T("If 'False' go to step","pkgs").'</th>';
             echo '<td>';
            ?>
-            <span  data-title="<?php echo _T('input step label', 'pkgs'); ?>">
-            <?php echo'<input  type="text"  value="'.$gotono.'" name="gotoyes"  />'; ?>
+            <span  data-title="<?php echo _T('Define step label if user response is False', 'pkgs'); ?>">
+            <?php echo'<input  style="width:80px;" type="text"  value="'.$gotono.'" name="gotono"  />'; ?>
             </span>
 
             <?php
@@ -142,12 +198,12 @@ $namestep=_T("User Question","pkgs");
            <?php
             $gotonouser = (isset($gotonouser)) ? $gotonouser : "";
 
-            echo '<th data-title="'._T("direct jump to the step label if no user session exist on machine","pkgs").'">';
-            echo _T("If 'no user' go to step","pkgs").'</th>';
+            echo '<th>';
+            echo _T("If 'No User' go to step","pkgs").'</th>';
             echo '<td>';
            ?>
-            <span  data-title="<?php echo _T('input step label', 'pkgs'); ?>">
-            <?php echo'<input  type="text"  value="'.$gotonouser.'" name="gotoyes"  />'; ?>
+            <span  data-title="<?php echo _T('Define step label if no user is connected', 'pkgs'); ?>">
+            <?php echo'<input  style="width:80px;" type="text"  value="'.$gotonouser.'" name="gotonouser"  />'; ?>
             </span>
 
             <?php
@@ -159,22 +215,23 @@ $namestep=_T("User Question","pkgs");
            <?php
             $gototimeout = (isset($gototimeout)) ? $gototimeout : "";
 
-            echo '<th data-title="'._T("direct jump to the step label if timeout","pkgs").'">';
-            echo _T("If 'timeout' go to step","pkgs").'</th>';
+            echo '<th>';
+            echo _T("If 'Timeout' go to step","pkgs").'</th>';
             echo '<td>';
            ?>
-            <span  data-title="<?php echo _T('input step label', 'pkgs'); ?>">
-            <?php echo'<input  type="text"  value="'.$gototimeout.'" name="gotoyes"  />'; ?>
+            <span  data-title="<?php echo _T('Define step label if no response is given before the timeout', 'pkgs'); ?>">
+            <?php echo'<input  style="width:80px;" type="text"  value="'.$gototimeout.'" name="gototimeout"  />'; ?>
             </span>
 
             <?php
             echo '</td>';
             ?>
         </tr>
+
+
         <tr>
             <?php
-            $textcasecoche=_T("customize time for timeout","pkgs");
-            $textinputcasecoche=_T("chang time in secondes","pkgs");
+            $textinputcasecoche=_T("Set maximum time waiting for a response","pkgs");
             if(isset($timeout))
             {
                 echo '
@@ -185,9 +242,9 @@ $namestep=_T("User Question","pkgs");
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />'.'<span data-title="'.$textcasecoche.'">'._T("Set timeout (in seconds)","pkgs").'
-                </span></td>
-                <td>'.'<span data-title="'.$textinputcasecoche.'">'.
+                    }" />'._T("Set timeout (in seconds)","pkgs").'
+                </td>
+                <td><span data-title="'.$textinputcasecoche.'">'.
                     '<input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
                 </span></td>';
             }
@@ -202,8 +259,8 @@ $namestep=_T("User Question","pkgs");
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
                     }" />'._T("Set timeout (in seconds)","pkgs").'
                 </td>
-                <td>
-                    <input type="number" min="0" value="800"  name="timeout"  />
+                <td><span data-title="'.$textinputcasecoche.'">'.
+                    '<input type="number" min="0" value="800"  name="timeout"  />
                 </td>';
             }
             ?>
@@ -211,10 +268,10 @@ $namestep=_T("User Question","pkgs");
     </table>
         <!-- Option timeout -->
     </div>
-    <span  data-title="<?php echo _T('Delete this step label', 'pkgs').' '.$namestep ; ?>">
+    <span  data-title="<?php echo _T('Delete this step', 'pkgs').' '.$namestep ; ?>">
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
     </span>
-     <span  data-title="<?php echo _T('Paraneter this step label', 'pkgs').' '.$namestep ; ?>">
+     <span  data-title="<?php echo _T('Show additional options for this step', 'pkgs').' '.$namestep ; ?>">
     <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
     </span>
 </div>

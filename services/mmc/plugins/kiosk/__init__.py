@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2018 siveo, http://www.siveo.net
+# (c) 2018-2022 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -101,6 +101,7 @@ def get_profiles_name_list():
 
 
 def create_profile(name, ous, active, packages):
+
     result = KioskDatabase().create_profile(name, ous, active, packages)
     notify_kiosks()
     return result
@@ -199,6 +200,7 @@ def get_ou_list():
 
     return tree.recursive_json()
 
+
 def get_ou_tree():
     """This function returns the list of OUs
 
@@ -270,6 +272,7 @@ def get_ou_tree():
 
     return tree
 
+
 def str_to_ou(string):
     return TreeOU().str_to_ou(string)
 
@@ -337,6 +340,7 @@ def get_users_from_ou(ou):
         return False
     return users
 
+
 def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil, fromplugin = False):
     """
     This function launch the kiosk actions when a prensence machine is active
@@ -358,19 +362,19 @@ def handlerkioskpresence(jid, id, os, hostname, uuid_inventorymachine, agenttype
         send_message_to_machine(datas, jid, name_random(6, "initialisation_kiosk"))
     return datas
 
-def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatakiosk):
+
+def __search_software_in_glpi(list_software_glpi, list_granted_packages, packageprofile, structuredatakiosk):
     structuredatakioskelement={ 'name': packageprofile[0],
                                 "action" : [],
                                 'uuid':  packageprofile[6],
                                 'description': packageprofile[2],
-                                "version" : packageprofile[3]
+                                "version" : packageprofile[3],
+                                "profile" : packageprofile[1]
                                }
-    patternname = re.compile("(?i)" + packageprofile[0].replace('+', '\+').replace('*', '\*'))
+    patternname = re.compile("(?i)" + packageprofile[4].replace('+', '\+').replace('*', '\*').replace('(', '\(').replace(')', '\)').replace('.', '\.'))
     for soft_glpi in list_software_glpi:
-        #TODO
-        # Into the pulse package provide Vendor information for the software name
-        # For now we use the package name which must match with glpi name
-        if patternname.match(str(soft_glpi[0])) or patternname.match(str(soft_glpi[1])):
+        if patternname.match(str(soft_glpi[0])) or patternname.match(str(soft_glpi[1])) or (soft_glpi[1] == packageprofile[4] and soft_glpi[2] == packageprofile[5]):
+
             # Process with this package which is installed on the machine
             # The package could be deleted
             structuredatakioskelement['icon'] =  'kiosk.png'
@@ -390,7 +394,25 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
         if packageprofile[8] == "allowed":
             structuredatakioskelement['action'].append('Install')
         else:
-            structuredatakioskelement['action'].append('Ask')
+            trigger = False
+            for ack in list_granted_packages:
+                if ack['package_uuid'] == structuredatakioskelement['uuid']:
+                    if ack['id_package_has_profil'] != packageprofile[9]:
+                        continue
+                    else:
+                        if ack['status'] == 'allowed':
+                            structuredatakioskelement['action'].append('Install')
+                        elif ack['status'] == 'waiting':
+                            trigger = True
+                        elif ack['status'] == 'rejected':
+                            trigger = True
+                else:
+                    continue
+
+            if len(structuredatakioskelement['action']) == 0 and trigger is False:
+                structuredatakioskelement['action'].append('Ask')
+
+
     return structuredatakioskelement
 
 
@@ -481,6 +503,7 @@ def get_ou_for_user(user):
         return False
     return ous
 
+
 def notify_kiosks():
     """This function send a notification message for all the machine which have a kiosk on it.
     """
@@ -499,6 +522,7 @@ def notify_kiosks():
         }
         send_message_to_machine(datas, machine['jid'], name_random(6, "profiles_updated"))
 
+
 def notify_kiosk(machine):
     """This function send a notification message for the specified machine.
     Param:
@@ -514,6 +538,7 @@ def notify_kiosk(machine):
         }
     }
     send_message_to_machine(datas, machine['jid'], name_random(6, "profiles_updated"))
+
 
 def get_packages_for_machine(machine):
     """Get a list of the packages for the concerned machine.
@@ -540,6 +565,10 @@ def get_packages_for_machine(machine):
         # linux and mac os does not have an Organization Unit.
         # For mac os and linux, profile association will be done on the login name.
         return
+
+    granted_packages = []
+    for element in list_profile_packages:
+        granted_packages += KioskDatabase().get_acknowledges_for_package_profile(element[9], element[6], machine['lastuser'])
     list_software_glpi = []
     softwareonmachine = Glpi().getLastMachineInventoryPart(machine['uuid_inventorymachine'],
                                                            'Softwares', 0, -1, '',
@@ -551,11 +580,12 @@ def get_packages_for_machine(machine):
 
     #Create structuredatakiosk for initialization
     for packageprofile in list_profile_packages:
-        structuredatakiosk.append( __search_software_in_glpi(list_software_glpi,
+        structuredatakiosk.append( __search_software_in_glpi(list_software_glpi, granted_packages,
         packageprofile, structuredatakiosk))
     logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, machine['hostname']))
 
     return structuredatakiosk
+
 
 def update_launcher(uuid, launcher):
     """ Send the new launcher for the specified package.
@@ -580,3 +610,15 @@ def update_launcher(uuid, launcher):
         # Update the datas for all the kiosks
         structuredatakiosk = get_packages_for_machine(machine)
     notify_kiosks()
+
+
+def get_acknowledges_for_sharings(sharings, start=0, limit=-1, filter=""):
+    acknowledges = KioskDatabase().get_acknowledges_for_sharings(sharings, start, limit, filter)
+
+    return acknowledges
+
+
+def update_acknowledgement(id, acknowledgedbyuser, startdate, enddate, status):
+    result = KioskDatabase().update_acknowledgement(id, acknowledgedbyuser, startdate, enddate, status)
+
+    return result

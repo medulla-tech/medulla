@@ -19,7 +19,6 @@ Depends: ${misc:Depends},
          mmc-web-pkgs, python-mmc-pkgs,
          mmc-web-pulse2, python-mmc-pulse2,
          mmc-web-kiosk, python-mmc-kiosk,
-         mmc-web-backuppc, python-mmc-backuppc,
          mmc-web-urbackup, python-mmc-urbackup,
          mmc-web-dashboard, python-mmc-dashboard,
          mmc-web-ppolicy, python-mmc-ppolicy,
@@ -119,16 +118,6 @@ Description: Pulse 2 common backuppc database files.
  organizations.
  .
  This package contains Pulse 2 common BackupPC database files.
-
-Package: python-pulse2-common-database-urbackup
-Architecture: all
-Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database (= ${binary:Version})
-Description: Pulse 2 common urbackup database files.
- Pulse 2 is Open Source computer system management for medium and large
- organizations.
- .
- This package contains Pulse 2 common Urbackup database files.
 
 Package: python-pulse2-common-database
 Architecture: all
@@ -264,10 +253,11 @@ Description: Pulse 2 BackupPC plugin for MMC agent
  This package contains the BackupPC plugin for MMC agent.
 
 Package: python-mmc-urbackup
+Replaces: python-pulse2-common-database-urbackup
 Architecture: all
 Section: python
 Pre-Depends: urbackup-server
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-urbackup (= ${binary:Version}), python-pyquery
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1)
 Description: Pulse 2 Urbackup plugin for MMC agent
  Pulse 2 is Open Source computer system management for medium and large
  organizations.

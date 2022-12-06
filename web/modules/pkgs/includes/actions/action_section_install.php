@@ -1,4 +1,5 @@
 <?php
+// file modules/pkgs/includes/actions/action_section_install.php
 require_once("../../../../includes/i18n.inc.php");
 extract($_POST);
 /*
@@ -15,6 +16,8 @@ extract($_POST);
 
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">inst_</div>
     <h1><?php echo _T('Install Section', 'pkgs'); ?></h1>
 </div>
 <div class="content">

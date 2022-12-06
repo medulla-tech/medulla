@@ -25,7 +25,6 @@
 /*
 require("graph/navbar.inc.php");
 require("localSidebar.php");
-require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");*/
 
 

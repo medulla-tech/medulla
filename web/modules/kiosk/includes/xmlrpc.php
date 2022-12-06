@@ -1,7 +1,7 @@
 <?php
 
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2022 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -65,5 +65,13 @@ function xmlrpc_get_ou_list(){
 function xmlrpc_get_users_from_ou($ou){
     // Returns the users of the OU specified in $ou ($ou is formated like this : root/son/grand_son)
     return xmlcall('kiosk.get_users_from_ou',[$ou]);
+}
+
+function xmlrpc_get_acknowledges_for_sharings($sharings, $start, $limit, $filter){
+    return xmlcall("kiosk.get_acknowledges_for_sharings", [$sharings, $start, $limit, $filter]);
+}
+
+function xmlrpc_update_acknowledgement($id, $acknowledgedbyuser, $startdate, $enddate, $status){
+    return xmlcall("kiosk.update_acknowledgement", [$id, $acknowledgedbyuser, $startdate, $enddate, $status]);
 }
 ?>

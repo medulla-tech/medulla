@@ -74,7 +74,7 @@ $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","comput
 
 $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
 $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
-$logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
+$logAction = new ActionItem(_("View deployment details"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
 $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {

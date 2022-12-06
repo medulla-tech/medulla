@@ -362,9 +362,7 @@ This package contains the imaging plugin for the MMC web interface.
 Summary:    Urbackup plugin for MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
-Requires:   python-pulse2-common-database-urbackup = %version-%release
-# Needed for ImportError: No module named tasks
-Requires:   python-mmc-core >= 3.1.1
+Obsoletes:  python-pulse2-common-database-urbackup
 
 %description -n python-mmc-urbackup
 This package contains the urbackup plugin for MMC agent.
@@ -372,6 +370,7 @@ This package contains the urbackup plugin for MMC agent.
 %files -n python-mmc-urbackup
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/urbackup.ini
 %python2_sitelib/mmc/plugins/urbackup
+%python2_sitelib/pulse2/database/urbackup
 
 #--------------------------------------------------------------------
 
@@ -691,6 +690,8 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-generation_package.py
 %{_sbindir}/pulse2-migration_old_package.py
 %{_sbindir}/medulla-generate-update-package.py
+%{_sbindir}/medulla-mariadb-move-update-package.py
+
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf

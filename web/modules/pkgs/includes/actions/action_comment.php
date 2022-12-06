@@ -1,4 +1,5 @@
 <?php
+// file : modules/pkgs/includes/actions/action_comment.php
 require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
@@ -9,6 +10,8 @@ $toggleable =  "toggleable".uniqid();
 $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
+    <!-- definie prefixe label -->
+    <div style="display:none;">comment_</div>
     <h1><?php echo _T("Add info in deployment log","pkgs"); ?></h1>
 </div>
 
