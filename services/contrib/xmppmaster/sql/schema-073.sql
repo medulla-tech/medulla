@@ -693,7 +693,7 @@ CREATE TABLE IF NOT EXISTS  `up_white_list` (
 CREATE TABLE IF NOT EXISTS `up_machine_windows` (
   `id_machine` int(11) NOT NULL,
   `update_id` varchar(38) NOT NULL,
-  `kb` varchar(45) DEFAULT NULL,
+  `kb` varchar(45) NOT NULL,
   PRIMARY KEY (`id_machine`,`update_id`),
   KEY `up_machine_windows_id_machine1_idx` (`id_machine`),
   CONSTRAINT `fk_up_machine_windows_1` FOREIGN KEY (`id_machine`) REFERENCES `machines` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
