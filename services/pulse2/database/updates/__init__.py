@@ -432,6 +432,26 @@ class UpdatesDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
+    def get_count_machine_as_not_upd(self, session, updateid):
+        """
+            This function returns the the update already done and update enable
+        """
+        sql="""SELECT COUNT(*) AS nb_machine_missing_update
+                FROM
+                    xmppmaster.up_machine_windows
+                WHERE
+                    (update_id = '%s');"""%(updateid)
+
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result= [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+        return result
+
+
+    @DatabaseHelper._sessionm
     def white_unlist_update(self, session, updateid):
         sql = """DELETE FROM xmppmaster.up_white_list WHERE updateid = '%s' or kb='%s'"""%(updateid, updateid)
         try:

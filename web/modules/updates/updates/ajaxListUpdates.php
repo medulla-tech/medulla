@@ -30,34 +30,101 @@ $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
+$grey_list = xmlrpc_get_grey_list($start, $maxperpage, $filter);
+$white_list = xmlrpc_get_white_list($start, $maxperpage, $filter);
+
+$count_grey = $grey_list['nb_element_total'];
+$count_partial_grey = count($grey_list['title']);
+
+$count_white = $white_list['nb_element_total'];
+$count_partial_white = count($white_list['title']);
+
+$final_partial_count = $count_partial_grey + $count_partial_white;
+
 function colorconf($conf){
     $colorDisplay=array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
     return $colorDisplay[intval(($conf-($conf%10))/10)];
 }
 
-//$updates = getUserLocations();
-//$updatesCompliances = xmlrpc_get_conformity_update_by_entity();
+$all_update = [];
+array_push($all_update, $grey_list);
+array_push($all_update, $white_list);
 
-$params = [];
+$any_n = "/\d+? \d+? .*$/";
 
-$updateNames = [];
+$detailsUpd = new ActionItem(_T("Details", "updates"),"test","auditbymachine","", "updates", "updates");
+
+$kbs_gray = [];
+$updateids_gray = [];
+$titles = [];
 $complRates = [];
-$machineWithoutUpd = [];
 $machineWithUpd = [];
+$machineWithoutUpd = [];
+$actionDetails = [];
 
+// ########## Boucle greyList ########## //
+for($i=0; $i < $count_partial_grey; $i++){
+    $titles[] = $all_update['0']['title'][$i];
 
-$count = count($updates);
-foreach ($updates as $update) {
-    $updateNames[] = $update["title"];
+    $actionDetails[] = $detailsUpd;
 
-    //$color = colorconf(100);
-    //$complRates[] ="<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$conformite."% </div>";
-    
-    //$machineWithoutUpd[] = $updatesCompliances;
-    //$machineWithUpd[] = $updatesCompliances;
+    $with_Upd = xmlrpc_get_machine_with_update($all_update['0']['kb'][$i]);
+
+    $count_machine = array_unique($with_Upd['hostname']);
+    $count_machine = sizeof($count_machine);
+
+    $machineWithUpd[] = $count_machine;
+
+    $without_Upd = xmlrpc_get_count_machine_as_not_upd($all_update['0']['kb'][$i]);
+
+    $machineWithoutUpd[] = $without_Upd['0']['nb_machine_missing_update'];
+
+    if ($without_Upd['0']['nb_machine_missing_update'] != "0")
+    {
+        $compliance_rate = ($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100;
+    }
+    else
+    {
+        $compliance_rate = '100';
+    }
+
+    $color = colorconf($compliance_rate);
+
+    $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
 }
 
-$n = new OptimizedListInfos($updateNames, _T("Update name", "updates"));
+for($i=0; $i < $count_partial_white; $i++)
+{
+    $titles[] = $all_update['1']['title'][$i];
+
+    $actionDetails[] = $detailsUpd;
+
+    $with_Upd = xmlrpc_get_machine_with_update($all_update['1']['kb'][$i]);
+
+    $count_machine = array_unique($with_Upd['hostname']);
+    $count_machine = sizeof($count_machine);
+
+    $machineWithUpd[] = $count_machine;
+
+    $without_Upd = xmlrpc_get_count_machine_as_not_upd($all_update['1']['kb'][$i]);
+
+    $machineWithoutUpd[] = $without_Upd['0']['nb_machine_missing_update'];
+
+    if ($without_Upd['0']['nb_machine_missing_update'] != "0")
+    {
+        $compliance_rate = ($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100;
+    }
+    else
+    {
+        $compliance_rate = '100';
+    }
+
+    $color = colorconf($compliance_rate);
+
+    $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
+}
+
+$n = new OptimizedListInfos($titles, _T("Update name", "updates"));
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
@@ -67,6 +134,8 @@ $n->addExtraInfo($machineWithoutUpd, _T("Machine without this updates", "updates
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
+
+$n->addActionItemArray($actionDetails);
 
 $n->display();
 ?>

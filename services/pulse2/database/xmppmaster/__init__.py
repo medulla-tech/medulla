@@ -11553,19 +11553,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     xmppmaster.machines
                 WHERE
                     hostname = '%s' LIMIT 1;"""%(name)
-
-
-    @DatabaseHelper._sessionm
-    def get_count_grey_list_enable(self, session):
-        """
-            This function returns the the update already done and update enable
-        """
-        sql="""SELECT COUNT(*) AS enable_grey
-                FROM
-                    xmppmaster.up_gray_list
-                WHERE
-                    valided = 1;"""
-                
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
