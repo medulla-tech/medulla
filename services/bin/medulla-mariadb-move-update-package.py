@@ -36,7 +36,6 @@ import getpass
 import json
 from optparse import OptionParser
 import shutil
-import traceback
 #from  MySQLdb import IntegrityError
 # Global Variables
 
