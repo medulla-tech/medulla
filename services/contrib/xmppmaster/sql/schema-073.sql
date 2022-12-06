@@ -211,7 +211,7 @@ BEGIN
 	-- lance script -s pour supprimer
 	set @cmd = concat( "/usr/sbin/medulla-mariadb-move-update-package.py ", old.updateid, " -s");
 	SET @result = "pas implanter encore sys_exec dans Mariadb";
-	SET @result= sys_exec(@cmd);
+	SET @result = sys_exec(@cmd);
 	set @resulttxt = concat( "resultat command ", @result);
 	set @logtext = concat("Creation command : ", @cmd );
 	INSERT INTO `xmppmaster`.`logs` (`type`,
@@ -258,8 +258,6 @@ BEGIN
 			'mariadb',
 			'-1',
 			'system');
-
-
 
 	IF LENGTH(OLD.updateid) = 36 THEN
 		set @logtext = concat("replace dans la table up_gray_list_flop package  : ", old.updateid );
@@ -347,7 +345,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_UPDATE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE  TRIGGER `xmppmaster`.`up_gray_list_AFTER_UPDATE` AFTER UPDATE ON `up_gray_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_UPDATE` AFTER UPDATE ON `up_gray_list` FOR EACH ROW
 BEGIN
 looptrigger:LOOP
 
@@ -503,7 +501,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_INSERT`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE  TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT` AFTER INSERT ON `up_gray_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT` AFTER INSERT ON `up_gray_list` FOR EACH ROW
 BEGIN
 looptrigger:LOOP
 	if  new.valided = 0 then
