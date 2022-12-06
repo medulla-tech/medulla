@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2020 Siveo, http://www.siveo.net/
+ * (c) 2022 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -19,9 +19,9 @@
  * along with Pulse 2; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
- *
- * file : modules/pkgs/includes/actions/action_download.php
  */
+
+// file : modules/pkgs/includes/actions/action_download.php
 require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");

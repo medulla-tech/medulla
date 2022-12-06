@@ -81,6 +81,7 @@ var actionsList = [
     'action_section_install',    // definie section install
     'action_section_update',     // definie section update
     'action_section_uninstall', // definie section uninstall
+    'action_kiosknotification',  // Notify kiosk
     'action_notification',  // Display a "OK" popup
     'action_question',  // Ask a "YES" / "NO" question, if YES : goto A, then goto B
     'action_loop_question',
