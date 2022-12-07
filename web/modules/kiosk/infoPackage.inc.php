@@ -44,6 +44,11 @@ $page = new Page("index", _T('Profile List', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/index.php");//, array("expert" => True)
 $submod->addPage($page);
 
+$page = new Page("ajaxProfilesList", _T('Profile List', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/ajaxProfilesList.php");//, array("expert" => True)
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
 $page = new Page("add", _T('Add Profile', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/add.php");//, array("expert" => True)
 $submod->addPage($page);
@@ -67,8 +72,9 @@ $page = new Page("edit", _T('Edit Profile', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/editProfile.php");//, array("expert" => True)
 $submod->addPage($page);
 
-$page = new Page("delete", _T('Delete profile', 'kiosk'));
-$page->setFile("modules/kiosk/kiosk/index.php");//, array("expert" => True)
+$page = new Page("deleteProfile", _T('Delete Profile', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/deleteProfile.php");//, array("expert" => True)
+$page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
 $page = new Page("acknowledges", _T('Installation Requests', 'kiosk'));
