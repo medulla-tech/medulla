@@ -305,12 +305,14 @@ function xmlrpc_getnotdeploybyteamuserrecent($login,
                                              $duree,
                                              $min=null,
                                              $max=null,
-                                             $filt=null) {
+                                             $filt=null,
+                                             $type_deploy="command") {
     return xmlCall("xmppmaster.get_deploy_inprogress_by_team_member", array($login,
                                                                             $duree,
                                                                             $min,
                                                                             $max,
-                                                                            $filt));
+                                                                            $filt,
+                                                                            $type_deploy));
 }
 
 
@@ -336,12 +338,19 @@ function xmlrpc_get_deploy_by_team_finished($login,
                                                                    $filt));
 }
 
-function xmlrpc_get_deploy_by_user_with_interval($login , $state, $duree, $min=null, $max=null, $filt=null) {
-    return xmlCall("xmppmaster.get_deploy_by_user_with_interval", array($login, $state, $duree, $min, $max, $filt));
+function xmlrpc_get_deploy_by_user_with_interval($login , $state, $duree,
+                                                 $min=null, $max=null, $filt=null,
+                                                 $type_deploy="command") {
+    return xmlCall("xmppmaster.get_deploy_by_user_with_interval", array($login, $state, $duree,
+                                                                        $min, $max, $filt,
+                                                                        $type_deploy));
 }
 
-function xmlrpc_get_deploy_by_user_finished( $login, $duree, $min=null, $max=null, $filt=null) {
-    return xmlCall("xmppmaster.get_deploy_by_user_finished", array($login, $duree, $min , $max, $filt));
+function xmlrpc_get_deploy_by_user_finished( $login, $duree, $min=null, $max=null,
+                                             $filt=null,$type_deploy="command") {
+    return xmlCall("xmppmaster.get_deploy_by_user_finished", array($login,
+                                                                   $duree, $min , $max, $filt,
+                                                                   $type_deploy);
 }
 
 

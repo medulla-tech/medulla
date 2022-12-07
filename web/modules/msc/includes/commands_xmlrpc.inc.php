@@ -278,8 +278,8 @@ function get_array_last_commands_on_cmd_id_start_end($array_cmd_id) {
     return xmlCall('msc.get_array_last_commands_on_cmd_id_start_end', array($array_cmd_id));
 }
 
-function get_def_package_label($label, $version) {
-    return xmlCall('msc.get_def_package_label', array($label, $version));
+function get_def_package_label($label, $version, $typedepl=null) {
+    return xmlCall('msc.get_def_package_label', array($label, $version, $typedepl));
 }
 
 function getMachineNamesOnGroupStatus($cmd_id, $state) {
@@ -324,7 +324,9 @@ function delete_command_on_host($id) {
     return xmlCall('msc.delete_command_on_host', array($id));
 }
 
-function xmlrpc_get_deploy_inprogress_by_team_member( $login, $time, $min=null, $max=null, $filt=null) {
-    return xmlCall("msc.get_deploy_inprogress_by_team_member", array($login, $time, $min , $max, $filt));
+function xmlrpc_get_deploy_inprogress_by_team_member( $login, $time, $min=null, $max=null, $filt=null,
+                                             $type_deploy="command") {
+    return xmlCall("msc.get_deploy_inprogress_by_team_member", array($login, $time, $min , $max, $filt,
+                                                                            $type_deploy));
 }
 ?>

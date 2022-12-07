@@ -257,7 +257,8 @@ class RpcProxy(RpcProxyI):
             ret = -1
         return ret
 
-    def get_deploy_inprogress_by_team_member(self, login, time, minimum, maximum, filt):
+    def get_deploy_inprogress_by_team_member(self, login, time, minimum,
+                                             maximum, filt, type_deploy="command"):
         """
         This function is used to retrieve not yet done deployements of a team.
         This team is found based on the login of a member.
@@ -272,8 +273,8 @@ class RpcProxy(RpcProxyI):
             It returns all the deployement not yet started of a specific team.
             It can be done by time search too.
         """
-
-        return MscDatabase().get_deploy_inprogress_by_team_member(login, time, minimum, maximum, filt)
+        return MscDatabase().get_deploy_inprogress_by_team_member(login, time, minimum,
+                                                                  maximum, filt, type_deploy)
 
     def getContext(self, user='root'):
         s = SecurityContext()

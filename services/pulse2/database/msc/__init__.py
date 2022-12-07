@@ -995,7 +995,8 @@ class MscDatabase(DatabaseHelper):
         return nb_machine_select_for_deploy_cycle, updatemachine
 
     @DatabaseHelper._sessionm
-    def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch, minimum, maximum, filt):
+    def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch,
+                                             minimum, maximum, filt, type_deploy="command"):
         """
         This function is used to retrieve not yet done deployements of a team.
         This team is found based on the login of a member.
@@ -1039,6 +1040,10 @@ class MscDatabase(DatabaseHelper):
         .filter(CommandsOnHostPhase.state == 'ready')\
         .filter(Commands.end_date > datereduced)\
         .filter(Commands.type != 2)
+        if type_deploy != "command":
+            query = query.filter(Commands.title.like("%%-@upd@%%"))
+        else:
+            query = query.filter(Commands.creator.in_(list_login))
 
         if list_login:
             query = query.filter(Commands.creator.in_(list_login))
