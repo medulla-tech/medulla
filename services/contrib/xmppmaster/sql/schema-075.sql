@@ -57,22 +57,13 @@ ALTER TABLE `xmppmaster`.`relayserver`
 ADD INDEX IF NOT EXISTS `ind_server_name` (`nameserver` ASC);
 
 ALTER TABLE `xmppmaster`.`relayserver`
-ADD INDEX IF NOT EXISTS `ind_mode_ars` (`moderelayserver` ASC)
+ADD INDEX IF NOT EXISTS `ind_mode_ars` (`moderelayserver` ASC);
 
 -- ----------------------------------------------------------------------
 -- Database add index
 -- ------------------ ----------------------------------------------------
 ALTER TABLE `xmppmaster`.`agent_subscription`
 ADD INDEX IF NOT EXISTS `ind_name` (`name` ASC) ;
--- ----------------------------------------------------------------------
--- Database supprime index en doublon dans deploy table
--- ------------------ ----------------------------------------------------
-ALTER TABLE `xmppmaster`.`deploy`
-DROP INDEX IF NOT EXISTS `ind_end_cmd` ;
-
-ALTER TABLE `xmppmaster`.`deploy`
-DROP INDEX IF NOT EXISTS `ind_start_cmd` ;
-;
 
 -- ----------------------------------------------------------------------
 -- Database add index
@@ -87,7 +78,7 @@ ADD INDEX IF NOT EXISTS `ind_session` (`sessionid` ASC) ;
 -- Database add index  dans machines table
 -- ------------------ ----------------------------------------------------
 ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX IF NOT EXISTS `ind_groupedeploy` (`groupdeploy` ASC)
+ADD INDEX IF NOT EXISTS `ind_groupedeploy` (`groupdeploy` ASC);
 ALTER TABLE `xmppmaster`.`machines`
 ADD INDEX IF NOT EXISTS `ind_macadress` (`macaddress` ASC) ;
 -- ----------------------------------------------------------------------
@@ -268,20 +259,12 @@ DELIMITER ;
 ;
 
 -- ----------------------------------------------------------------------
--- Database index on date on table uptime_machine
--- ----------------------------------------------------------------------
-
-ALTER TABLE `xmppmaster`.`uptime_machine`
-ADD INDEX `ind_date` (`date` ASC) ;
-;
-
--- ----------------------------------------------------------------------
 -- Database index on date on table substituteconf
 -- ----------------------------------------------------------------------
 ALTER TABLE `xmppmaster`.`substituteconf`
-ADD INDEX `ind_type` (`type` ASC) ,
-ADD INDEX `ind_count` (`countsub` ASC) ,
-ADD INDEX `ind_sidsubstitute` (`jidsubtitute` ASC) ;
+ADD INDEX IF NOT EXISTS `ind_type` (`type` ASC) ,
+ADD INDEX IF NOT EXISTS `ind_count` (`countsub` ASC) ,
+ADD INDEX IF NOT EXISTS `ind_sidsubstitute` (`jidsubtitute` ASC) ;
 ;
 
 
