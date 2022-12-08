@@ -1207,6 +1207,9 @@ class SetupApp(object):
                 invsvr_conf = self.confs["pulse2/inventory-server/inventory-server.ini"]
                 invsvr_conf.set("main", "enable_forward", False)
 
+        #Enable xmppmaster module
+        self.confs['plugins/xmppmaster.ini'].set('main', 'disable', 0)
+
         #Enable Urbackup module
         self.confs['plugins/urbackup.ini'].set('main', 'disable', 0)
 
