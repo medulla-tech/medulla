@@ -28,8 +28,8 @@ require_once("../../../../includes/xmlrpc.inc.php");
 require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
-$message = (isset($message)) ? base64_decode($message) : "" ;
-$lab = (isset($actionlabel)) ? $actionlabel : uniqid() ; 
+    $message = (isset($message)) ? base64_decode($message) : "" ;
+    $lab = (isset($actionlabel)) ? $actionlabel : uniqid() ; 
 /*
 Descriptor Type
 ---------------
@@ -37,13 +37,9 @@ Descriptor Type
     "action": "action_kiosknotification",
     "step": 2,
     "actionlabel": "2b70431b",
-    "type": "kiosk",
     "message": "test3"
 }
 */
-$tableToggle = "tableToggle".uniqid();
-$toggleable = "toggleable".uniqid();
-$idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 
 <!-- Style a modifier pour le title des boites de dialog -->
@@ -108,10 +104,7 @@ $namestep=_T("Kiosk Notification","pkgs");
     <div>
         <input type="hidden" name="step" />
         <input type="hidden" name="action" value="action_kiosknotification" />
-        <?php
-
         <table id="tableToggle">
-
             <tr class="toggleable">
                 <th><?php echo _T('Step label: ', 'pkgs'); ?></th>
                 <th><input id="laction" type="text" name="actionlabel" value="<?php echo $lab; ?>"/>
@@ -132,24 +125,26 @@ $namestep=_T("Kiosk Notification","pkgs");
             <tr class="suboption">
                 <td>
                 <?php if(isset($stat))
-                {?>
+                {
+                    echo '
                     <input type="checkbox" checked
-                        onclick="if(jQuery(this).is(':checked')){
-                                    jQuery(this).closest('td').next().find('input').prop('disabled',false);
+                        onclick="if(jQuery(this).is(\':checked\')){
+                                    jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
                                 }
                                 else{
-                                    jQuery(this).closest('td').next().find('input').prop('disabled',true);
-                                }" /><?php echo _T('Progression (percentage)', 'pkgs'); ?>
-                <?php }
-                else{?>
+                                    jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
+                                }" />'._T("Progression (percentage)", "pkgs");
+                }
+                else{
+                    echo '
                     <input type="checkbox"
-                        onclick="if(jQuery(this).is(':checked')){
-                                    jQuery(this).closest('td').next().find('input').prop('disabled',false);
+                        onclick="if(jQuery(this).is(\':checked\')){
+                                    jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
                                 }
                                 else{
-                                    jQuery(this).closest('td').next().find('input').prop('disabled',true);
-                                }" /><?php echo _T('Progression (percentage)', 'pkgs'); ?>
-                <?php }?>
+                                    jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
+                                }" />'._T("Progression (percentage)", "pkgs");
+                }?>
                 </td>
                 <td>
                 <span  data-title="<?php echo _T('Define progression percentage to be shown in kiosk', 'pkgs'); ?>">
@@ -163,17 +158,15 @@ $namestep=_T("Kiosk Notification","pkgs");
                 </span>
                 </td>
             </tr>
-
-
-    </table>
+        </table>
 
     </div>
 
     <span  data-title="<?php echo _T('Delete this step', 'pkgs'); ?>">
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent().parent('li').detach()" value="<?php echo _T("Delete", "pkgs");?>" />
     </span>
     <span  data-title="<?php echo _T('Show additional options for this step', 'pkgs'); ?>">
-    <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="<?php echo _T("Options", "pkgs");?>" />
     </span>
 
 </div>
