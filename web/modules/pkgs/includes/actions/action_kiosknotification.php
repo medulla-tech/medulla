@@ -28,6 +28,8 @@ require_once("../../../../includes/xmlrpc.inc.php");
 require_once("../../../../includes/i18n.inc.php");
 
 extract($_POST);
+$message = (isset($message)) ? base64_decode($message) : "" ;
+$lab = (isset($actionlabel)) ? $actionlabel : uniqid() ; 
 /*
 Descriptor Type
 ---------------
@@ -107,8 +109,6 @@ $namestep=_T("Kiosk Notification","pkgs");
         <input type="hidden" name="step" />
         <input type="hidden" name="action" value="action_kiosknotification" />
         <?php
-        extract($_POST);
-        $lab =  (isset($actionlabel))? $actionlabel : uniqid(); ?>
 
         <table id="tableToggle">
 
