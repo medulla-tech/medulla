@@ -27,5 +27,16 @@ START TRANSACTION;
 USE kiosk;
 ALTER TABLE package_has_profil change column package_id package_uuid VARCHAR(255) NOT NULL;
 
+ALTER TABLE `kiosk`.`profile_has_ous`
+CHANGE COLUMN `ou` `ou` VARCHAR(200) NULL DEFAULT NULL ;
+
+ALTER TABLE `kiosk`.`profile_has_ous`
+ADD INDEX IF NOT EXISTS `ind_pr_ous_ou` (`ou` ASC),
+ADD INDEX IF NOT EXISTS `ind_profile` (`profile_id` ASC);
+
+ALTER TABLE `kiosk`.`package_has_profil` 
+ADD INDEX IF NOT EXISTS `ind_packid` (`package_id` ASC),
+ADD INDEX IF NOT EXISTS `ind_profil` (`profil_id` ASC);
+
 UPDATE version SET Number = 6;
 COMMIT;
