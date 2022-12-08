@@ -370,7 +370,7 @@ function createInfo()
                     'message','titlemessage', 'sizemessage', 'textbuttonyes',
                     'sizeheader', 'timeloop', 'gotoyes', 'gototimeout',
                     'textbuttonyes', 'loopnumber','textbuttonno',
-                    'gotolookterminate', 'gotonouser', ]) >= 0)
+                    'gotolookterminate', 'gotonouser', 'old_launcher']) >= 0)
                 {
                     // All the element from the array are not added into the info section.
                     // Dependency is also ignored because it is managed outside this loop

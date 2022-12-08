@@ -440,7 +440,7 @@ def generate_hash(path, package_id):
                 file_block = _file.read(BLOCK_SIZE) # Read the next block from the file
 
         try:
-            with open(dest + "/" + file_package + ".hash", 'wb') as _file:
+            with open((os.path.join(dest, file_package)) + ".hash", 'wb') as _file:
                 _file.write(file_hash.hexdigest())
         except:
             logger.debug("The 'docs' directory does not exist")
@@ -1446,6 +1446,7 @@ def create_msg_xmpp_quick_deploy(folder, create = False):
 
 def save_xmpp_json(folder, json_content):
     logger = logging.getLogger()
+    logger.debug("JSON content: %s" % json_content)
     structpackage = json.loads(json_content)
     qdeploy_generate(folder)
     keysupp = [ "actionlabel",

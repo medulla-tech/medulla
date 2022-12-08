@@ -350,7 +350,7 @@ function xmlrpc_get_deploy_by_user_finished( $login, $duree, $min=null, $max=nul
                                              $filt=null,$type_deploy="command") {
     return xmlCall("xmppmaster.get_deploy_by_user_finished", array($login,
                                                                    $duree, $min , $max, $filt,
-                                                                   $type_deploy);
+                                                                   $type_deploy));
 }
 
 

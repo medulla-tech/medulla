@@ -62,6 +62,14 @@ if ($CUSTOM_MENU == 1) {
     print "</td></tr></table>";
 }
 
+if ($_GET['gid']) {
+    /* This is a group custom menu, so we propose to restore default location
+     * menu */
+    print "<table><tr><td>";
+    printf(_T('<a href="%s">Click here</a> to get back the default menu.', 'imaging'), $_SERVER['REQUEST_URI'] . '&reset_defaultMenu=1');
+    print "</td></tr></table>";
+}
+
 if ($IN_GROUP == 1) {
     /* This machine is in an imaging group, so we propose to leave the group */
     $params = getParams();
