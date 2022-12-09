@@ -100,7 +100,7 @@ class KioskDatabase(DatabaseHelper):
     # =====================================================================
 
     @DatabaseHelper._sessionm
-    def get_profiles_list(self, session):
+    def get_profiles_list(self, session, start=0, limit=-1, filter=""):
         """
         Return a list of all the existing profiles.
         The list contains all the elements of the profile.
@@ -108,12 +108,33 @@ class KioskDatabase(DatabaseHelper):
         Returns:
             A list of all the founded entities.
         """
-        ret = session.query(Profiles).all()
+
+        try:
+            start = int(start)
+        except:
+            start = 0
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+
+        ret = session.query(Profiles)
+        if filter != "":
+            ret = ret.filter(or_(
+                Profiles.name.contains(filter),
+                Profiles.active.contains(filter),
+                Profiles.creation_date.contains(filter))
+            )
+        count = ret.count()
+        if limit != -1:
+            ret = ret.limit(limit).offset(start)
+        ret = ret.all()
         lines = []
         for row in ret:
             lines.append(row.toDict())
 
-        return lines
+        return {"total": count, "datas": lines}
 
     @DatabaseHelper._sessionm
     def get_profile_list_for_OUList(self, session, OU):

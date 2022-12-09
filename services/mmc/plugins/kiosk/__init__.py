@@ -92,8 +92,8 @@ def activate():
 # KIOSK DATABASE FUNCTIONS
 # #############################################################
 
-def get_profiles_list():
-    return KioskDatabase().get_profiles_list()
+def get_profiles_list(start=0, limit=-1, filter=""):
+    return KioskDatabase().get_profiles_list(start, limit, filter)
 
 
 def get_profiles_name_list():
