@@ -2477,6 +2477,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 uuidnew = "None"
             else:
                 uuidnew = str(uuid_inventorymachine)
+            if lastuser is None or lastuser == "":
+                lastuser = str(machineforupdate['lastuser'])
             maxuuid=max([len(uuidold), len(uuidnew)])
             msg ="Update Machine %8s (%s)\n" \
                 "|%*s|%*s|%*s|%*s|%*s|%*s|%*s|\n" \

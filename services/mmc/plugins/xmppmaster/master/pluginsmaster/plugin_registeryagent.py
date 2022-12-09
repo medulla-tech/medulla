@@ -95,6 +95,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     if showinfobool:
                         logger.info("** uuid setup_machine is %s" % data['uuid_serial_machine'])
                 interfacedata = []
+                macaddressesadded = []
                 interfaceblacklistdata = []
                 for interface in data['information']["listipinfo"]:
                     # exclude mac address from table network
@@ -102,8 +103,9 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                   xmppobject.blacklisted_mac_addresses,
                                                   showinfobool=showinfobool):
                         interfaceblacklistdata.append(interface)
-                    else:
+                    elif interface['macaddress'] not in macaddressesadded:
                         interfacedata.append(interface)
+                        macaddressesadded.append(interface['macaddress'])
 
                 data['information']["listipinfo"] = interfacedata
                 if showinfobool:
