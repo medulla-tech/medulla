@@ -162,17 +162,17 @@ if (count($modules) == 1) {
                 if($name == "glpi"){
                   print "<td style=\"width:80px;border:0\"><a href='" .
                           urlStr("base/computers/$target", $url_params) .
-                          "'>$glpidisplayname</a></td>";
+                          "' id='glpi'>$glpidisplayname</a></td>";
                 }
                 else if($name == "dyngroup"){
                   print "<td style=\"width:80px;border:0\"><a href='" .
                           urlStr("base/computers/$target", $url_params) .
-                          "'>"._T("Existing group", "dyngroup")."</a></td>";
+                          "' id='dyngroup'>"._T("Existing group", "dyngroup")."</a></td>";
                 }
                 else{
                   print "<td style=\"width:80px;border:0\"><a href='" .
                           urlStr("base/computers/$target", $url_params) .
-                          "'>$name</a></td>";
+                          "' id='$name'>$name</a></td>";
                 }
 
         }
@@ -206,6 +206,7 @@ if (quickGet('add_req')) {
                 if ($param_name == quickGet('add_param')) {
                     print "<td>$param_name</td>";
                 } else {
+                    $nameStripped = str_replace(['(', ')', ' '], '-', $param_name);
                     $_SESSION['request'] = $request->toS();
                     $url_params = array(
                         'req' => quickGet('add_req'),
@@ -218,7 +219,7 @@ if (quickGet('add_req')) {
                         $url_params['sub_id'] = quickGet('sub_id');
                     print "<tr><td style=\"padding-left:20px;\"><a href='" .
                             urlStr("base/computers/$target", $url_params) .
-                            "'>" . _T($param_name, 'dyngroup') . "</a></td>" .
+                            "' id='".$nameStripped . "'>" . _T($param_name, 'dyngroup') . "</a></td>" .
                             "<td>" . ($description == '' ? '' : _T($description, 'dyngroup') ) . "</td>" .
                             "</tr>";
                 }
