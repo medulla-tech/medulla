@@ -530,6 +530,10 @@ class ListInfos extends HtmlElement {
         $this->cssClass = $name;
     }
 
+    function setCssIds($a_names) {
+        $this->cssIds = $a_names;
+    }
+
     /**
      * set a cssclass for each row
      */
@@ -663,12 +667,19 @@ class ListInfos extends HtmlElement {
         for ($idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
             if (($this->start - $idx) % 2) {
                 echo "<tr";
+                if (!empty($this->cssIds[$idx])) {
+                    echo " id='". $this->cssIds[$idx]."'";
+                }
                 if (!empty($this->cssClasses[$idx])) {
                     echo " class=\"" . $this->cssClasses[$idx] . "\"";
                 }
                 echo ">";
             } else {
-                echo "<tr class=\"alternate";
+                echo "<tr";
+                if (!empty($this->cssIds[$idx])) {
+                    echo " id='". $this->cssIds[$idx]."'";
+                }
+                echo " class=\"alternate";
                 if (!empty($this->cssClasses[$idx])) {
                     echo " " . $this->cssClasses[$idx];
                 }

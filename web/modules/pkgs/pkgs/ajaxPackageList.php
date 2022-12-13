@@ -289,6 +289,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
     if($_count > 0){
       // Display the list
       $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
+      $n->setCssIds($_packages['uuid']);
       $n->disableFirstColumnActionLink();
       $n->addExtraInfo($_packages['share_name'], _T("Share", "pkgs"));
       $n->addExtraInfo($_packages['permission'], _T("Permissions", "pkgs"));
@@ -434,6 +435,7 @@ else{
     // Display the list
     $n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
     $n->disableFirstColumnActionLink();
+    $n->setCssIds($uuid);
     $n->addExtraInfo($desc, _T("Description", "pkgs"));
     $n->addExtraInfo($versions, _T("Version", "pkgs"));
     $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
