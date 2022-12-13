@@ -231,10 +231,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
           if ($_packages['conf_json'][$i]['metagenerator'] == 'manual') {
               $_editActions[] = $emptyAction;
               if ($_SESSION['login'] == "root"){
-                  $_delActions[] = $delAction;
+                $_delActions[] = $delAction;
               }
               else{
-                  $_delActions[] = $emptyAction;
+                $_delActions[] = $emptyAction;
               }
           }
           else if ($_packages['conf_json'][$i]['metagenerator'] == 'expert') {
@@ -266,6 +266,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
               $_editActions[] = $emptyAction;
               if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw'){
                 $_delActions[] = $delAction;
+
               }
               else{
                 $_delActions[] = $emptyAction;
@@ -288,7 +289,12 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
 
     if($_count > 0){
       // Display the list
+      $ids = [];
+      foreach($_packages['uuid'] as $uuid){
+        $ids[] = 'p'.$uuid;
+      }
       $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
+      $n->setCssIds($ids);
       $n->disableFirstColumnActionLink();
       $n->addExtraInfo($_packages['share_name'], _T("Share", "pkgs"));
       $n->addExtraInfo($_packages['permission'], _T("Permissions", "pkgs"));
@@ -432,8 +438,13 @@ else{
   }
   if($count > 0){
     // Display the list
+    $ids = [];
+    foreach($_packages['uuid'] as $uuid){
+      $ids[] = 'p'.$uuid;
+    }
     $n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
     $n->disableFirstColumnActionLink();
+    $n->setCssIds($ids);
     $n->addExtraInfo($desc, _T("Description", "pkgs"));
     $n->addExtraInfo($versions, _T("Version", "pkgs"));
     $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
