@@ -325,8 +325,8 @@ function delete_command_on_host($id) {
 }
 
 function xmlrpc_get_deploy_inprogress_by_team_member( $login, $time, $min=null, $max=null, $filt=null,
-                                             $type_deploy="command") {
+                                             $typedeploy="command") {
     return xmlCall("msc.get_deploy_inprogress_by_team_member", array($login, $time, $min , $max, $filt,
-                                                                            $type_deploy));
+                                                                            $typedeploy));
 }
 ?>

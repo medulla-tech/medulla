@@ -4316,12 +4316,14 @@ class XmppMasterDatabase(DatabaseHelper):
     def get_count1(self, q):
         return q.with_entities(func.count()).scalar()
 
-    @DatabaseHelper._sessionm
-    def getdeploybyuserlen(self, session, login=None):
-        if login is not None:
-            return self.get_count(session.query(Deploy).filter(Deploy.login == login))
 
-        return self.get_count(session.query(Deploy))
+    @DatabaseHelper._sessionm
+    def getdeploybyuserlen(self, session, login=None, typedeploy="command"):
+        deploybyuserlen = session.query(Deploy).filter(Deploy.sessionid.like('%s%%'%(typedeploy)))
+        if login is not None:
+            return self.get_count(deploybyuserlen.filter(Deploy.login == login))
+        else:
+            return self.get_count(deploybyuserlen)
 
     @DatabaseHelper._sessionm
     def syncthingmachineless(self,session, grp, cmd):
@@ -4456,7 +4458,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def get_deploy_from_group(self, session, group_uuid, state, intervalsearch, minimum, maximum, filt):
+    def get_deploy_from_group(self, session, group_uuid, state, intervalsearch, minimum, maximum, filt, typedeploy="command"):
         """
         This function is used to retrieve the deploy of a machine's group.
 
@@ -4471,7 +4473,7 @@ class XmppMasterDatabase(DatabaseHelper):
         Returns:
             It returns all the deployement of a group.
         """
-        deploylog = session.query(Deploy)
+        deploylog = session.query(Deploy).filter(Deploy.sessionid.like('%s%%'%(typedeploy)))
 
         if group_uuid:
             deploylog = deploylog.filter(Deploy.group_uuid == group_uuid)
@@ -4543,7 +4545,8 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def get_deploy_for_machine(self, session, uuidinventory, state, intervalsearch, minimum, maximum, filt):
+    def get_deploy_for_machine(self, session, uuidinventory, state,
+                               intervalsearch, minimum, maximum, filt, typedeploy="command"):
         """
         This function is used to retrieve the deploy of a user.
 
@@ -4559,7 +4562,7 @@ class XmppMasterDatabase(DatabaseHelper):
             It returns all the deployement for a machine.
         """
 
-        deploylog = session.query(Deploy)
+        deploylog = session.query(Deploy).filter(Deploy.sessionid.like('%s%%'%(typedeploy)))
         if uuidinventory:
             deploylog = deploylog.filter( Deploy.inventoryuuid == uuidinventory)
         if intervalsearch:
@@ -4670,7 +4673,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_deploy_by_team_member(self, session, login, state, intervalsearch,
-                                      minimum=None, maximum=None, filt=None):
+                                      minimum=None, maximum=None, filt=None,
+                                      typedeploy="command"):
         """
             This function is used to retrieve the deployements of a team.
             This team is found based on the login of a member.
@@ -4689,7 +4693,7 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         pulse_usersid = self.get_teammembers_from_login(login)
 
-        deploylog = session.query(Deploy)
+        deploylog = session.query(Deploy).filter( Deploy.sessionid.like("%s%%"%typedeploy))
 
         if not pulse_usersid or len(pulse_usersid) == 1 and pulse_usersid[0] == "root":
             return self.get_deploy_by_user_with_interval(login,
@@ -4697,7 +4701,8 @@ class XmppMasterDatabase(DatabaseHelper):
                                                          intervalsearch,
                                                          minimum=None,
                                                          maximum=None,
-                                                         filt=None)
+                                                         filt=None,
+                                                         typedeploy=typedeploy)
 
         preposition_comparaisons = [Deploy.login.op('regexp')(field)  for field in pulse_usersid]
         deploylog= deploylog.filter( or_(*preposition_comparaisons))
@@ -4722,16 +4727,19 @@ class XmppMasterDatabase(DatabaseHelper):
             count = """select count(*) as nb from (
                             select count(id) as nb
                             from deploy
-                            where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
-                            %s
-                            AND (state LIKE "%%%s%%"
-                            or pathpackage LIKE "%%%s%%"
-                            or start LIKE "%%%s%%"
-                            or login LIKE "%%%s%%"
-                            or host LIKE "%%%s%%"
-                            )
+                            where
+                                sessionid like "%s%%" AND
+                                start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+                                %s
+                                AND (state LIKE "%%%s%%"
+                                or pathpackage LIKE "%%%s%%"
+                                or start LIKE "%%%s%%"
+                                or login LIKE "%%%s%%"
+                                or host LIKE "%%%s%%"
+                                )
                             group by title
-                            ) as x;""" % (preposition_sql_string,
+                            ) as x;""" % (typedeploy,
+                                          preposition_sql_string,
                                           filt,
                                           filt,
                                           filt,
@@ -4742,10 +4750,13 @@ class XmppMasterDatabase(DatabaseHelper):
             count = """select count(*) as nb from (
                             select count(id) as nb
                             from deploy
-                            where start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
+                            where
+                                sessionid like "%s%%" AND
+                                start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
                             %s
                             group by title
-                            ) as x;""" % preposition_sql_string
+                            ) as x;""" % (typedeploy,
+                                          preposition_sql_string)
 
         len_query = self.get_count(deploylog)
 
@@ -4814,7 +4825,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def get_deploy_by_user_with_interval(self, session, login, state, intervalsearch, minimum=None , maximum=None, filt=None, type_deploy="command"):
+    def get_deploy_by_user_with_interval(self, session, login, state, intervalsearch, minimum=None , maximum=None, filt=None, typedeploy="command"):
         """
         This function is used to retrive the recent deployment done by a user.
 
@@ -4831,7 +4842,7 @@ class XmppMasterDatabase(DatabaseHelper):
             If intervalsearch is not used it is by default in the last 24 hours.
         """
         deploylog = session.query(Deploy)
-        deploylog = deploylog.filter( Deploy.sessionid.like("%s%%"%type_deploy))
+        deploylog = deploylog.filter( Deploy.sessionid.like("%s%%"%typedeploy))
         if login:
             deploylog = deploylog.filter( Deploy.login == login)
         if state:
@@ -4861,7 +4872,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                     or host LIKE "%%%s%%"
                                     )
                                     group by title
-                                    ) as x;""" % (type_deploy, login, filt, filt, filt, filt, filt,)
+                                    ) as x;""" % (typedeploy, login, filt, filt, filt, filt, filt,)
             else:
                 count = """select count(*) as nb from (
                                     select count(id) as nb
@@ -4876,7 +4887,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                     or host LIKE "%%%s%%"
                                     )
                                     group by title
-                                    ) as x;""" % (type_deploy, filt, filt, filt, filt, filt,)
+                                    ) as x;""" % (typedeploy, filt, filt, filt, filt, filt,)
         else:
             if login:
                 count = """select count(*) as nb from (
@@ -4887,7 +4898,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                      start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
                                         AND login like "%s"
                                         group by title
-                                    ) as x;""" % (type_deploy, login)
+                                    ) as x;""" % (typedeploy, login)
             else:
                 count = """select count(*) as nb from (
                                     select count(id) as nb
@@ -4896,7 +4907,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                     sessionid like "%s%%" AND
                                      start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
                                         group by title
-                                    ) as x;"""%(type_deploy)
+                                    ) as x;"""%(typedeploy)
 
         len_query = self.get_count(deploylog)
 
@@ -4967,7 +4978,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def get_deploy_by_user_finished(self, session, login, intervalsearch, minimum=None, maximum=None, filt=None, type_deploy="command"):
+    def get_deploy_by_user_finished(self, session, login, intervalsearch, minimum=None, maximum=None, filt=None, typedeploy="command"):
         """
         This function is used to retrieve all the deployments done by a user (or a team).
 
@@ -4986,7 +4997,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 If login is a list, this returns all the past deploys for the group this user belong to.
         """
         deploylog = session.query(Deploy)
-        deploylog = deploylog.filter( Deploy.sessionid.like("%s%%"%type_deploy))
+        deploylog = deploylog.filter( Deploy.sessionid.like("%s%%"%typedeploy))
         if login:
             if isinstance(login, list):
                 deploylog = deploylog.filter( Deploy.login.op('regexp')("|".join(login)))
@@ -5028,7 +5039,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
                 AND login REGEXP "%s" %s
                 group by title
-                ) as x;"""%(type_deploy,llogin, filter_filt)
+                ) as x;"""%(typedeploy,llogin, filter_filt)
             else:
                 count = """select count(*) as nb from (
                 select count(id) as nb
@@ -5038,7 +5049,7 @@ class XmppMasterDatabase(DatabaseHelper):
                  start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
                 AND login LIKE "%s" %s
                 group by title
-                ) as x;"""%(type_deploy,login,filter_filt)
+                ) as x;"""%(typedeploy,login,filter_filt)
         else:
             count = """select count(*) as nb from (
             select count(id) as nb
@@ -5047,7 +5058,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 sessionid like "%s%%" AND
                  start >= DATE_SUB(NOW(),INTERVAL 3 MONTH) %s
             group by title
-            ) as x;"""%(type_deploy,filter_filt)
+            ) as x;"""%(typedeploy,filter_filt)
 
         count = session.execute(count)
         count = [nbcount for nbcount in count]
@@ -5114,11 +5125,12 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def getdeploybyuser(self, session, login = None, numrow = None, offset=None):
+    def getdeploybyuser(self, session, login = None, numrow = None, offset=None, typedeploy="command"):
+        deploylog = session.query(Deploy).filter(Deploy.sessionid.like('%s%%'%(typedeploy)))
         if login is not None:
-            deploylog = session.query(Deploy).filter(Deploy.login == login).order_by(desc(Deploy.id))
+            deploylog = deploylog.filter(Deploy.login == login).order_by(desc(Deploy.id))
         else:
-            deploylog = session.query(Deploy).order_by(desc(Deploy.id))
+            deploylog = deploylog.order_by(desc(Deploy.id))
         if numrow is not None:
             deploylog = deploylog.limit(numrow)
             if offset is not None:
