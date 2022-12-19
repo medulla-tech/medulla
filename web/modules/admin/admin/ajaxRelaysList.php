@@ -142,8 +142,16 @@ foreach($relays['datas']['hostname'] as $key=>$array){
   $qalistActions[] = $qalisteaction;
   $raw++;
 }
+
+// Avoiding the CSS selector (tr id) to start with a number
+$ids = [];
+foreach($relays['datas']['id'] as $id_relay){
+  $ids[] = 'r'.$id_relay;
+  }
+
 echo '<div id="switchresult"></div>';
 $n = new OptimizedListInfos( $relays['datas']['hostname'], _T("Relays Xmpp", "admin"));
+$n->setcssIds($ids);
 $n->setMainActionClasses($relays['datas']['enabled_css']);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $relays['datas']['jid'], _T("Jid", "xmppmaster"));
