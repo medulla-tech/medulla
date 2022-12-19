@@ -48,12 +48,21 @@ $page = new Page("detailsByUpdates", _T('List updates', 'updates'));
 $page->setFile("modules/updates/updates/detailsByUpdates.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdateToDeploy", _T("Deploy specific updates", "updates"));
+$page = new Page("detailsSpecificUpdate", _T('Machine details for specific update', 'updates'));
+$page->setFile("modules/updates/updates/detailsSpecificUpdate.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxListMachineDetailSpecificUpdate", _T("Manage machine details for specific update", "updates"));
+$page->setFile("modules/updates/updates/ajaxListMachineDetailSpecificUpdate.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxUpdateToDeploy", _T("Manage deploy specific update", "updates"));
 $page->setFile("modules/updates/updates/ajaxUpdateToDeploy.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxListUpdates", _T("Manage Updates", "updates"));
+$page = new Page("ajaxListUpdates", _T("Manage List Updates", "updates"));
 $page->setFile("modules/updates/updates/ajaxListUpdates.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
