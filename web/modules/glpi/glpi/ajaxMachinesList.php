@@ -412,8 +412,14 @@ $orderkey = array( "glpi_owner",
         $index++;
     }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids = [];
+foreach($datas['uuid_serial_machine'] as $uuid_machine){
+    $ids[] = 'm'.$uuid_machine;
+    }
 
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
+$n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 $n->dissociateColumnActionLink($dissociatedFirstColumns);
 if(in_array ("description", $machines1["column"])) $n->addExtraInfo($datas["glpi_description"], _T("Description", "glpi"));
