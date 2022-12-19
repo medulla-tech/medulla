@@ -23,12 +23,33 @@
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/base/includes/computers.inc.php");
 
 global $conf;
+$location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $maxperpage = $conf["global"]["maxperpage"];
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
+$gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
+$contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
+$filter  = isset($_GET['filter'])?$_GET['filter']:"";
+$filterCTX = "Microsoft";
+$field = "platform";
+
+$ctx = [];
+$ctx['location'] = $location;
+$ctx['filter'] = $filterCTX;
+$ctx['field'] = $field;
+$ctx['contains'] = $contains;
+
+$ctx['start'] = $start;
+$ctx['end'] = $end;
+$ctx['maxperpage'] = $maxperpage;
+
+$uuid = htmlspecialchars($_GET['uuid']);
+$ctx['uuid'] = $uuid;
+
+//$uuidCut = substr($uuid, -1);
 
 $grey_list = xmlrpc_get_grey_list($start, $maxperpage, $filter);
 $white_list = xmlrpc_get_white_list($start, $maxperpage, $filter);
@@ -41,6 +62,19 @@ $count_partial_white = count($white_list['title']);
 
 $final_partial_count = $count_partial_grey + $count_partial_white;
 
+if ($uuid == '')
+{
+    $typeOfDetail = "group";
+}
+else
+{
+    $typeOfDetail = "entitie";
+}
+
+$entityMachineList = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
+$filterGid = array('gid' => $gid);
+$groupMachineList = getRestrictedComputersList(0, -1, $filterGid, False);
+
 function colorconf($conf){
     $colorDisplay=array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
     return $colorDisplay[intval(($conf-($conf%10))/10)];
@@ -52,7 +86,7 @@ array_push($all_update, $white_list);
 
 $any_n = "/\d+? \d+? .*$/";
 
-$detailsUpd = new ActionItem(_T("Details", "updates"),"test","auditbymachine","", "updates", "updates");
+$detailsUpd = new ActionItem(_T("Details", "updates"),"detailsSpecificUpdate","auditbymachine","", "updates", "updates");
 
 $kbs_gray = [];
 $updateids_gray = [];
@@ -62,74 +96,166 @@ $machineWithUpd = [];
 $machineWithoutUpd = [];
 $actionDetails = [];
 
-// ########## Boucle greyList ########## //
-for($i=0; $i < $count_partial_grey; $i++){
-    $titles[] = $all_update['0']['title'][$i];
 
-    $actionDetails[] = $detailsUpd;
+for($i=0; $i < $count_partial_grey; $i++)
+{
+    $in_unique_with_Upd = "False";
+    $in_unique_without_Upd = "False";
 
     $with_Upd = xmlrpc_get_machine_with_update($all_update['0']['kb'][$i]);
 
-    $count_machine = array_unique($with_Upd['hostname']);
-    $count_machine = sizeof($count_machine);
-
-    $machineWithUpd[] = $count_machine;
-
     $without_Upd = xmlrpc_get_count_machine_as_not_upd($all_update['0']['kb'][$i]);
 
-    $machineWithoutUpd[] = $without_Upd['0']['nb_machine_missing_update'];
+    $unique_with_Upd = array_unique($with_Upd);
+    $unique_without_Upd = array_unique($without_Upd);
 
-    if ($without_Upd['0']['nb_machine_missing_update'] != "0")
+    if ($typeOfDetail == "entitie")
     {
-        $compliance_rate = ($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100;
+        foreach ($unique_with_Upd['hostname'] as $unique)
+        {
+            if (in_array($unique, $entityMachineList))
+            {
+                $in_unique_with_Upd = "True";
+            }
+        }
+
+        foreach ($unique_without_Upd['id_machine'] as $unique)
+        {
+            if (in_array($unique, $entityMachineList))
+            {
+                $in_unique_without_Upd = "True";
+            }
+        }
     }
-    else
+
+    if ($typeOfDetail == "group")
     {
-        $compliance_rate = '100';
+        foreach ($unique_with_Upd['hostname'] as $unique)
+        {
+            if (in_array($unique, $groupMachineList))
+            {
+                $in_unique_with_Upd = "True";
+            }
+        }
+
+        foreach ($unique_without_Upd['id_machine'] as $unique)
+        {
+            if (in_array($unique, $groupMachineList))
+            {
+                $in_unique_without_Upd = "True";
+            }
+        }
     }
 
-    $color = colorconf($compliance_rate);
+    if ($in_unique_with_Upd == "True" || $in_unique_without_Upd == "True")
+    {
+        $titles[] = $all_update['0']['title'][$i];
+        $actionDetails[] = $detailsUpd;
 
-    $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
+        $count_machine = array_unique($with_Upd['hostname']);
+        $count_machine = sizeof($count_machine);
+        $machineWithUpd[] = $count_machine;
+
+        $machineWithoutUpd[] = $without_Upd['0']['nb_machine_missing_update'];
+
+        if ($without_Upd['0']['nb_machine_missing_update'] != "0")
+        {
+            $compliance_rate = ($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100;
+        }
+        else
+        {
+            $compliance_rate = '100';
+        }
+
+        $color = colorconf($compliance_rate);
+        $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
+    }
 }
 
 for($i=0; $i < $count_partial_white; $i++)
 {
-    $titles[] = $all_update['1']['title'][$i];
+    $in_unique_with_Upd = "False";
+    $in_unique_without_Upd = "False";
 
-    $actionDetails[] = $detailsUpd;
+    $with_Upd = xmlrpc_get_machine_with_update($all_update['0']['kb'][$i]);
 
-    $with_Upd = xmlrpc_get_machine_with_update($all_update['1']['kb'][$i]);
+    $without_Upd = xmlrpc_get_count_machine_as_not_upd($all_update['0']['kb'][$i]);
 
-    $count_machine = array_unique($with_Upd['hostname']);
-    $count_machine = sizeof($count_machine);
+    $unique_with_Upd = array_unique($with_Upd);
+    $unique_without_Upd = array_unique($without_Upd);
 
-    $machineWithUpd[] = $count_machine;
-
-    $without_Upd = xmlrpc_get_count_machine_as_not_upd($all_update['1']['kb'][$i]);
-
-    $machineWithoutUpd[] = $without_Upd['0']['nb_machine_missing_update'];
-
-    if ($without_Upd['0']['nb_machine_missing_update'] != "0")
+    if ($typeOfDetail == "entitie")
     {
-        $compliance_rate = ($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100;
+        foreach ($unique_with_Upd['hostname'] as $unique)
+        {
+            if (in_array($unique, $entityMachineList))
+            {
+                $in_unique_with_Upd = "True";
+            }
+        }
+
+        foreach ($unique_without_Upd['id_machine'] as $unique)
+        {
+            if (in_array($unique, $entityMachineList))
+            {
+                $in_unique_without_Upd = "True";
+            }
+        }
     }
-    else
+
+    if ($typeOfDetail == "group")
     {
-        $compliance_rate = '100';
+        foreach ($unique_with_Upd['hostname'] as $unique)
+        {
+            if (in_array($unique, $groupMachineList))
+            {
+                $in_unique_with_Upd = "True";
+            }
+        }
+
+        foreach ($unique_without_Upd['id_machine'] as $unique)
+        {
+            if (in_array($unique, $groupMachineList))
+            {
+                $in_unique_without_Upd = "True";
+            }
+        }
     }
+    
 
-    $color = colorconf($compliance_rate);
+    if ($in_unique_with_Upd == "True" && $in_unique_without_Upd == "True")
+    {
+        $titles[] = $all_update['0']['title'][$i];
+        $actionDetails[] = $detailsUpd;
 
-    $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
+        $count_machine = array_unique($with_Upd['hostname']);
+        $count_machine = sizeof($count_machine);
+        $machineWithUpd[] = $count_machine;
+
+        $machineWithoutUpd[] = $without_Upd['0']['nb_machine_missing_update'];
+
+        if ($without_Upd['0']['nb_machine_missing_update'] != "0")
+        {
+            $compliance_rate = ($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100;
+        }
+        else
+        {
+            $compliance_rate = '100';
+        }
+
+        $color = colorconf($compliance_rate);
+        $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
+    }
 }
+
+
 
 $n = new OptimizedListInfos($titles, _T("Update name", "updates"));
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
 $n->addExtraInfo($machineWithUpd, _T("Machine with this updates", "updates"));
-$n->addExtraInfo($machineWithoutUpd, _T("Machine without this updates", "updates"));
+$n->addExtraInfo($machineWithoutUpd, _T("Machine without this updates (waiting)", "updates"));
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
