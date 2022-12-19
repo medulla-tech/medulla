@@ -536,6 +536,13 @@ class ListInfos extends HtmlElement {
     }
 
     /**
+     * set cssids for each row
+     */
+    function setCssIds($a_names) {
+        $this->cssIds = $a_names;
+    }
+
+    /**
      * set a cssclass for each row
      */
     function setCssClasses($a_names) {
@@ -686,6 +693,7 @@ class ListInfos extends HtmlElement {
                 }
                 echo "\">";
             }
+            
 
             //link to first action (if we have an action)
             if (count($this->arrAction) && $this->firstColumnActionLink && !in_array($idx, $this->dissociateColumnsActionLink)) {
