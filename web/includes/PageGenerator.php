@@ -531,10 +531,6 @@ class ListInfos extends HtmlElement {
         $this->cssClass = $name;
     }
 
-    function setCssIds($a_names) {
-        $this->cssIds = $a_names;
-    }
-
     /**
      * set cssids for each row
      */
