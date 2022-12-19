@@ -259,7 +259,14 @@ foreach($datas['uuid'] as $uuid)
 	$raw++;
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids = [];
+foreach($datas['cn'] as $cn_machine){
+	$ids[] = 'm'.$cn_machine;
+	}
+
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
+$n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 if(array_key_exists("description", $datas))
   $n->addExtraInfo($datas["description"], _T("Description", "glpi"));
