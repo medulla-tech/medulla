@@ -249,6 +249,7 @@ def create_simple_package_uuid(label, localisation=None):
                       This is set to None by default
     Returns: It returns the new simple package uuid
     """
+    label=re.sub(r"[^a-zA-Z0-9]","",label)
     if localisation is not None:
         label = label + "_" + localisation
     data = _remove_non_ascii((str(uuid.uuid1())[:9] + label+"_").replace(' ', '_'))
