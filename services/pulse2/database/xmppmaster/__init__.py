@@ -65,7 +65,12 @@ from pulse2.database.xmppmaster.schema import Network, Machines,\
     Mon_panels_template, \
     Glpi_entity, \
     Glpi_location, \
-    Glpi_Register_Keys
+    Glpi_Register_Keys, \
+    Up_machine_windows, \
+    Update_data, \
+    Up_black_list, \
+    Up_white_list, \
+    Up_gray_list
 # Imported last
 import logging
 import json
