@@ -11714,3 +11714,93 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if query is not None:
             result = [ou[0].replace('@@', '/') for ou in query]
         return result
+
+    # ################################## update function ####################################
+
+    @DatabaseHelper._sessionm
+    def update_Up_machine_windows(self,
+                            session,
+                            id_machine,
+                            update_id,
+                            curent_deploy,
+                            required_deploy,
+                            start_date,
+                            end_date):
+        """
+            update table Up_machine_windows for deploy individuel
+            id_machine integer
+            update_id  uuid
+            curent_deploy boolean
+            required_deploy boolean,
+            start_date datetime,
+            end_date datetime
+        """
+        try:
+            result = session.query(Up_machine_windows).filter(and_(Up_machine_windows.id_machine == id_machine,Up_machine_windows.update_id == update_id)).first()
+            if result is None:
+                logging.getLogger().warning("update_Up_machine_windows no update [%s] for this id machine (%s)" % (update_id, id_machine))
+            else:
+                result.curent_deploy=curent_deploy
+                result.required_deploy=required_deploy
+                result.start_date=start_date
+                result.end_date=end_date
+                logging.getLogger().debug("update_Up_machine_windows\n\tid machine%s\n\tupdate_id %s"\
+                                          "\n\tkb %s\n\tcurent_deploy %s\n\trequired_deploy %s"\
+                                          "\n\tstart_date %s\n\tend_date %s" % (id_machine,
+                                                                                Up_machine_windows.update_id,
+                                                                                result.kb,
+                                                                                result.curent_deploy,
+                                                                                result.required_deploy,
+                                                                                result.start_date,
+                                                                                result.end_date))
+
+                session.commit()
+                session.flush()
+        except Exception as e:
+            logging.getLogger().error("An error occured on update_Up_machine_windows function.")
+            logging.getLogger().error("We obtained the error: \n %s" % str(e))
+            return False
+        return True
+
+
+    @DatabaseHelper._sessionm
+    def update_all_for_machine_Up_machine_windows( self,
+                                                    session,
+                                                    id_machine,
+                                                    start_date,
+                                                    end_date,
+                                                    required_deploy=True):
+        """
+            demande de faire toute les mise a jour d'une machine dans 1 slot de temps
+            id_machine integer
+            required_deploy boolean default mise a jour
+        """
+        try:
+            result = session.query(Up_machine_windows).filter(Up_machine_windows.id_machine == id_machine).all()
+            if result is None:
+                logging.getLogger().warning("update_Up_machine_windows no update for this id machine (%s)" % (id_machine))
+            else:
+                for t in result:
+                    t.required_deploy=required_deploy
+                    t.start_date=start_date
+                    t.end_date=end_date
+                    logging.getLogger().debug("update_Up_machine_windows\n\tid machine%s\n\tupdate_id %s"\
+                                            "\n\tkb %s\n\tcurent_deploy %s\n\trequired_deploy %s"\
+                                            "\n\tstart_date %s\n\tend_date %s" % (id_machine,
+                                                                                    t.update_id,
+                                                                                    t.kb,
+                                                                                    t.curent_deploy,
+                                                                                    t.required_deploy,
+                                                                                    t.start_date,
+                                                                                    t.end_date))
+
+                    session.commit()
+                    session.flush()
+        except Exception as e:
+            logging.getLogger().error("An error occured on update_Up_machine_windows function.")
+            logging.getLogger().error("We obtained the error: \n %s" % str(e))
+            return False
+        return True
+
+
+    # ##################################END update function ####################################
