@@ -3819,6 +3819,21 @@ class XmppMasterDatabase(DatabaseHelper):
         if filter == "status" and criterion != "":
             query = query.filter(or_(Deploy.state.contains(criterion),
                                      Deploy.inventoryuuid.contains(criterion),))
+
+        if filter == "relays" and criterion != "":
+            query = query.join(Machines, Machines.groupdeploy == Deploy.jid_relay)
+
+            query = query.filter(
+                and_(
+                    or_(
+                        Machines.groupdeploy.contains(criterion),
+                        Machines.hostname.contains(criterion),
+                        Machines.uuid_serial_machine.contains(criterion)
+                    ),
+                    Machines.agenttype == "relayserver"
+                )
+            )
+
         if filter != 'infos':
             count = query.count()
             if limit != -1:
