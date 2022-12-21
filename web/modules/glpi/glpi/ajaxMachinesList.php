@@ -415,7 +415,7 @@ $orderkey = array( "glpi_owner",
 // Avoiding the CSS selector (tr id) to start with a number
 $ids = [];
 foreach($datas['uuid_serial_machine'] as $uuid_machine){
-    $ids[] = 'm'.$uuid_machine;
+    $ids[] = 'm_'.$uuid_machine;
     }
 
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
