@@ -262,7 +262,7 @@ foreach($datas['uuid'] as $uuid)
 // Avoiding the CSS selector (tr id) to start with a number
 $ids = [];
 foreach($datas['cn'] as $cn_machine){
-	$ids[] = 'm'.$cn_machine;
+	$ids[] = 'm_'.$cn_machine;
 	}
 
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));

@@ -146,7 +146,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
 // Avoiding the CSS selector (tr id) to start with a number
 $ids = [];
 foreach($relays['datas']['jid'] as $id_relay){
-  $ids[] = 'r'.$params[0]['jid']; 
+  $ids[] = 'r_'.$params[0]['jid']; 
   }
 
 echo '<div id="switchresult"></div>';
