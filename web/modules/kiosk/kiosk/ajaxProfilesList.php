@@ -55,7 +55,15 @@ foreach($profiles as $element)
     $action_edit[] = $action_editProfiles;
     $action_delete[] = $action_deleteProfile;
 }
+
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_kiosk = [];
+foreach($profiles as $index => $name_kiosk){
+    $ids_kiosk[] = 'k_'.$name_kiosk['name'];
+}
+
 $n = new OptimizedListInfos($profiles_name, _T("Profile Name", "kiosk"));
+$n->setcssIds($ids_kiosk);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($profiles_status, _T("Profile Status", "kiosk"));
 // parameters are :
