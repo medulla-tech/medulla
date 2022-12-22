@@ -202,7 +202,14 @@ if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "msc")))));
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_deploy = [];
+foreach($params as $pid_pkgs){
+    $ids_deploy[] = 'p_'.$pid_pkgs['pid'];
+}
+
 $n = new OptimizedListInfos($a_packages, _T("Package", "msc"));
+$n->setcssIds($ids_deploy);
 $n->addExtraInfo($a_description, _T("Description", "msc"));
 $n->addExtraInfo($a_pversions, _T("Version", "msc"));
 $n->addExtraInfo($a_sizes, _T("Package size", "msc"));
