@@ -72,7 +72,7 @@ foreach($users as $index => $uid_users){
 
 // $arrUser is the list of all Users
 $n = new UserInfos($arrUser, _("Login"));
-$n->setcssIds($ids_users)
+$n->setcssIds($ids_users);
 $n->setItemCount($usercount);
 $n->setNavBar(new AjaxPaginator($usercount, $filter, "updateSearchParam",  $maxperpage));
 
