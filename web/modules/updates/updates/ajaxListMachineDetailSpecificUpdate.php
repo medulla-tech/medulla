@@ -56,8 +56,6 @@ $entityMachineList = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
 $filterGid = array('gid' => $gid);
 $groupMachineList = getRestrictedComputersList(0, -1, $filterGid, False);
 
-print_r($groupMachineList);
-
 $count_with_upd = $withUpdArray['nb_element_total'];
 $count_without_upd = $withoutUpdArray['nb_element_total'];
 
