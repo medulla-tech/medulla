@@ -110,7 +110,15 @@ for ($i=0;$i< count( $dd[0] );$i++){
     $logs[] = $resultmachine;
     $params[] = $param;
 }
+
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_grpqa = [];
+foreach($dd['1'] as $name_grpqa){
+    $ids_grpqa[] = 'rqa_'.$name_grpqa;
+}
+
 $n = new OptimizedListInfos( $dd[1], _T("Custom Command", "xmppmaster"));
+$n->setcssIds($ids_grpqa);
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $dd[3], _T("Os", "xmppmaster"));
