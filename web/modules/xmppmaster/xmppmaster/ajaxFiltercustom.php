@@ -81,7 +81,15 @@ a.info:hover span{
         $val['editcreate'] = 'editeqa';
         $params[] = $val;
     }
+
+    // Avoiding the CSS selector (tr id) to start with a number
+    $ids_qa = [];
+    foreach($params as $name_qa){
+        $ids_qa[] = 'qa_'.$name_qa['namecmd'];
+    }
+
     $n = new OptimizedListInfos($names, _T("Custom command name", "xmppmaster"));
+    $n->setcssIds($ids_qa);
     $n->setCssClass("package");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($desc, _T("Description", "xmppmaster"));
