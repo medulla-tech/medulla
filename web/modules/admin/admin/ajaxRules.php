@@ -89,8 +89,15 @@ foreach($rulesList['datas']['name'] as $key=>$array){
     $is_default = true;
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_clusters_rules = [];
+foreach($params as $index => $name_rule){
+  $ids_clusters_rules[] = 'cr_'.$name_rule['name'];
+}
+
 if($rulesList['total'] > 0){
   $n = new OptimizedListInfos( $rulesList['datas']['name'], _T("Rule", "admin"));
+  $n->setcssIds($ids_clusters_rules);
   $n->disableFirstColumnActionLink();
   $n->addExtraInfo( $rulesList['datas']['description'], _T("Description", "admin"));
   $n->addExtraInfo( $rulesList['datas']['level'], _T("Level", "admin"));

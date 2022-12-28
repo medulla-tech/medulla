@@ -103,7 +103,7 @@ foreach ($list as $group) {
 // Avoiding the CSS selector (tr id) to start with a number
 $ids_grp = [];
 foreach($ids as $index => $gid_grp){
-    $ids_grp[] = 'g'.$gid_grp['groupname'];
+    $ids_grp[] = 'g_'.$gid_grp['groupname'];
     }
 
 if ($is_gp != 1) { // Simple Group
