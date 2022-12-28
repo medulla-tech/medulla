@@ -120,7 +120,15 @@ foreach ($entities as $entity) {
     $totalMachine[] = $totalmach;
     $nbupdate[] = $nbupdateentity ;
 }
+
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_entity = [];
+foreach($entityNames as $name_entity){
+    $ids_entity[] = 'e_'.$name_entity;
+}
+
 $n = new OptimizedListInfos($entityNames, _T("Entity name", "updates"));
+$n->setcssIds($ids_entity);
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
