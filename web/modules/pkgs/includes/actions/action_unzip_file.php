@@ -76,7 +76,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">unzip_</div>
-    <h1><?php echo _T('Unzip File', 'pkgs'); ?></h1>
+    <h1 class="action"><?php echo _T('Unzip File', 'pkgs'); ?></h1>
 </div>
 <div class="content">
     <div>
@@ -96,7 +96,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <tr>
             <th width="16%"><?php echo _T('Zip file:', 'pkgs'); ?></th>
             <th width="25%">
-                <input type="text" name="filename" value="<?php echo (isset($filename))? $filename : ""; ?>"/>
+                <input type="text" name="filename" class="zip_file" value="<?php echo (isset($filename))? $filename : ""; ?>"/>
             </th>
             <th></th>
             <th></th>
@@ -231,7 +231,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
             {
                 echo '
                 <td>
-                    <input type="checkbox" checked onclick="
+                    <input type="checkbox" id="pathdirectorytounzip" checked onclick="
                     if(jQuery(this).is(\':checked\')){
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
                     }
@@ -240,13 +240,13 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                     }" />'._T("Unzip to specified folder","pkgs").'
                 </td>
                 <td>
-                    <input " type="text"  value="'.$pathdirectorytounzip.'" name="pathdirectorytounzip"  />
+                    <input type="text" class="pathdirectorytounzip" value="'.$pathdirectorytounzip.'" name="pathdirectorytounzip"  />
                 </td><td></td><td></td>';
             }
             else{
                 echo '
                 <td>
-                    <input type="checkbox"  onclick="
+                    <input type="checkbox" id="pathdirectorytounzip" onclick="
                     if(jQuery(this).is(\':checked\')){
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
                     }
@@ -255,7 +255,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                     }" />'._T("Unzip to specified folder","pkgs").'
                 </td>
                 <td>
-                    <input type="text" value="" disabled name="pathdirectorytounzip"  />
+                    <input type="text" class="pathdirectorytounzip" value="" disabled name="pathdirectorytounzip"  />
                 </td><td></td><td></td>';
             }
             ?>
