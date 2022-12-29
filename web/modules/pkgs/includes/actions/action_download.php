@@ -73,7 +73,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">down_</div>
-    <h1><?php echo _T('Download File', 'pkgs'); ?></h1>
+    <h1 class="action"><?php echo _T('Download File', 'pkgs'); ?></h1>
 </div>
 
 <div class="content">
@@ -129,7 +129,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 
         echo '<th width="16%">'._T('Download File:', 'pkgs').'</th>
                 <th>
-                    <input type="text" name="url" value="'.$url.'"/>
+                    <input type="text" name="url" class="url_name" value="'.$url.'"/>
                 </th>
             </table>';
             ?>
