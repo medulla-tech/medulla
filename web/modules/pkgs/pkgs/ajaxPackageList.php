@@ -288,10 +288,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
     }
 
     if($_count > 0){
-      // Display the list
+      // Avoiding the CSS selector (tr id) to start with a number
       $ids = [];
       foreach($_packages['uuid'] as $uuid){
-        $ids[] = 'p'.$uuid;
+        $ids[] = 'p_'.$uuid;
       }
       $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
       $n->setCssIds($ids);
