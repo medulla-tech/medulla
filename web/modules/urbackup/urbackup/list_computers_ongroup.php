@@ -116,7 +116,7 @@ $clients = $array['navitems']['clients'];
 
 ?>
 <br>
-<h2><?php echo _T("Add member to this profil", 'urbackup'); ?></h2>
+<h2><?php echo _T("Add member to this profile", 'urbackup'); ?></h2>
 <br>
 <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=add_member_togroup&amp;groupname=<?php echo $group_name; ?>&amp;groupid=<?php echo $group_id; ?>" method="post">
     <select name="client">
@@ -135,8 +135,8 @@ $clients = $array['navitems']['clients'];
 <br>
 <br>
 <div style="display:flex">
-    <div style="background-color: #d4d4d4; padding: 5px;">
-        <h3> <?php echo _T("Computer <b>outside</b> the profile","urbackup"); ?></h3>
+    <div style="padding: 5px;">
+        <h3 style="margin-left: 10px; margin-bottom: 5px;"> <?php echo _T("Computer <b>outside</b> the profile","urbackup"); ?></h3>
         <div>
             <?php
             foreach($clients as $client)
@@ -157,8 +157,8 @@ $clients = $array['navitems']['clients'];
             ?>
         </div>
     </div>
-    <div style="margin-left: 50px; background-color: #d4d4d4; padding: 5px;">
-        <h3><?php echo _T("Computer <b>inside</b> the profile","urbackup"); ?></h3>
+    <div style="margin-left: 50px; padding: 5px;">
+        <h3 style="margin-left: 10px; margin-bottom: 5px;"><?php echo _T("Computer <b>inside</b> the profile","urbackup"); ?></h3>
         <div>
             <?php
             foreach($clients as $client)
