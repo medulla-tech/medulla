@@ -41,6 +41,7 @@ $client_id = htmlspecialchars($_GET["clientid"]);
 $backupstate = htmlspecialchars($_GET["backupstate"]);
 $backuptype = htmlspecialchars($_GET["backuptype"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
+$disableClient = htmlspecialchars($_GET["disableclient"]);
 
 //-----------------------------------START LOGIN FUNCTION
 $url = $url_urbackup."?a=login";
@@ -196,7 +197,7 @@ $stats = xmlrpc_get_stats();
 
 <a class='btn btn-small btn-primary' title=<?php echo _T("Start incremental backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=incremental&amp;clientid=<?php echo $client_id ?>">Start incremental backup</a>
 <a class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=full&amp;clientid=<?php echo $client_id ?>">Start full backup</a>
-<a class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=delete_client&amp;clientid=<?php echo $client_id ?>&amp;jidmachine=<?php echo $jidMachine ?>">Delete this client</a>
+<a class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupename=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Disable backup for this client</a>
 <br>
 <br>
 <?php echo _T("Profile name: ", 'urbackup'); ?><a href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_ongroup&amp;groupid=<?php echo $groupid ?>&groupname=<?php echo $groupname ?>"><?php echo $groupname; ?></a>
@@ -222,6 +223,15 @@ if ($backupstate == "false")
         </script>
         <?php
     }
+}
+
+if ($disableClient == "true")
+{
+    ?>
+    <script>
+        alert("The backups for this client has been disabled successfully.");
+    </script>
+    <?php
 }
 ?>
 <h2> <?php echo _T("File save", 'urbackup'); ?> </h2>
