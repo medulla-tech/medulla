@@ -30,7 +30,7 @@ extract($_POST);
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">cmd_</div>
-    <h1><?php echo _T('Run Command in shell', 'pkgs') ?></h1>
+    <h1 class="action"><?php echo _T('Run Command in shell', 'pkgs') ?></h1>
 </div>
 <div class="content">
 

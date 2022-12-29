@@ -49,7 +49,7 @@ $environstr = trim($environstr,",\n\r");
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">setenv_</div>
-    <h1><?php echo _T('Set Environment variables', 'pkgs'); ?></h1>
+    <h1 class="action"><?php echo _T('Set Environment variables', 'pkgs'); ?></h1>
 </div>
 <div class="content">
     <div>

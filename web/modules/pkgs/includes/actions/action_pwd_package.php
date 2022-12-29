@@ -31,7 +31,7 @@ $toggleable  =  "toggleable".uniqid();
 $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
-    <h1><?php echo _T('Go to package folder', 'pkgs'); ?></h1>
+    <h1 class="action"><?php echo _T('Go to package folder', 'pkgs'); ?></h1>
 </div>
 
 <div class="content">

@@ -57,7 +57,7 @@ $options = "";
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">restart_</div>
-    <h1><?php echo _T('Restart', 'pkgs'); ?></h1>
+    <h1 class="action"><?php echo _T('Restart', 'pkgs'); ?></h1>
 </div>
 
 <div class="content">

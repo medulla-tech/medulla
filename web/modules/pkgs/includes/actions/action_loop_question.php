@@ -100,7 +100,7 @@ $namestep=_T("User Postpone Options","pkgs");
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">loop_</div>
-    <h1 data-title="<?php echo _T('Allow the connected user to postpone an action', 'pkgs'); ?>"><?php echo $namestep; ?></h1>
+    <h1 class="action" data-title="<?php echo _T('Allow the connected user to postpone an action', 'pkgs'); ?>"><?php echo $namestep; ?></h1>
 </div>
 <div class="content">
     <div>

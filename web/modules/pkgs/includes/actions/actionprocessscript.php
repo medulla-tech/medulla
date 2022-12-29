@@ -57,7 +57,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">script_</div>
-    <h1><?php echo _T('Run command', 'pkgs'); ?></h1>
+    <h1 class="action"><?php echo _T('Run command', 'pkgs'); ?></h1>
 </div>
 <div class="content">
 

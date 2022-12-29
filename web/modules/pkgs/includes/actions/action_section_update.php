@@ -38,7 +38,7 @@ extract($_POST);
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">upd_</div>
-    <h1><?php echo _T('Update Section', 'pkgs'); ?></h1>
+    <h1 class="action"><?php echo _T('Update Section', 'pkgs'); ?></h1>
 </div>
 <div class="content">
     <div>

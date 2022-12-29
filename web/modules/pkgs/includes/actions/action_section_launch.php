@@ -38,7 +38,7 @@ extract($_POST);
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">Launch_</div>
-    <h1>Launch Section</h1>
+    <h1 class="action">Launch Section</h1>
 </div>
 <div class="content">
     <div>
