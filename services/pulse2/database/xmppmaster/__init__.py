@@ -8043,10 +8043,11 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         # There is only one line so we can truncate
         ret = [{
-            'total': int(x[0]), 'total_offline': int(x[1]),
-            'offline_uninventoried': int(x[2]), 'offline_inventoried': int(x[3]), 'total_online': int(x[4]),
-            'online_uninventoried' : int(x[5]), 'online_inventoried': int(x[6]),
-            'total_uninventoried': int(x[7]), 'total_inventoried': int(x[8])} for x in result][0]
+            'total': int(x[0]) if x[0] is not None else 0, 'total_offline': int(x[1]) if x[1] is not None else 0,
+            'offline_uninventoried': int(x[2]) if x[2] is not None else 0, 'offline_inventoried': int(x[3]) if x[3] is not None else 0, 'total_online': int(x[4]) if x[4] is not None else 0,
+            'online_uninventoried' : int(x[5]) if x[5] is not None else 0, 'online_inventoried': int(x[6]) if x[6] is not None else 0,
+            'total_uninventoried': int(x[7]) if x[7] is not None else 0, 'total_inventoried': int(x[8]) if x[8] is not None else 0} for x in result][0]
+
 
         return ret
 
