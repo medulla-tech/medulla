@@ -12,6 +12,7 @@ computers listed.
 * [BUGFIX]  Fix modification of packages and correctness of xmppdeploy.json
 * [BUGFIX]  Fix traceback when displaying results of a quick action executed on an uninventoried machine
 * [BUGFIX]  Fix searching from relay jid, hostname or uuid in deploy audit log
+* [BUGFIX]  Fix the History menu. It was displayed twice.
 
 Pulse 2 4.6.10
 =============
