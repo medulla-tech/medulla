@@ -34,7 +34,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
     <!-- definie prefixe label -->
 
     <div style="display:none;">clean_</div>
-    <h1><?php echo _T('Remove uploaded files', 'pkgs'); ?></h1>
+    <h1 class="action"><?php echo _T('Remove uploaded files', 'pkgs'); ?></h1>
 </div>
 
 <div class="content">

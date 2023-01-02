@@ -33,7 +33,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">conf_</div>
-    <h1><?php echo _T('Set config file parameter', 'pkgs'); ?></h1>
+    <h1 class="action"><?php echo _T('Set config file parameter', 'pkgs'); ?></h1>
 </div>
 
 <div class="content">

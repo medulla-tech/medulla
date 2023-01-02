@@ -102,7 +102,7 @@ $namestep=_T("User Notification","pkgs");
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">notif_</div>
-    <h1 data-title="<?php echo _T('Send a notification to the connected user', 'pkgs'); ?>"><?php echo $namestep; ?></h1>
+    <h1 class="action" data-title="<?php echo _T('Send a notification to the connected user', 'pkgs'); ?>"><?php echo $namestep; ?></h1>
 </div>
 <div class="content">
 

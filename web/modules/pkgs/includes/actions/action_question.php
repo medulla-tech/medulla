@@ -103,7 +103,7 @@ $namestep=_T("User Question","pkgs");
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">ask_</div>
-    <h1 data-title="<?php echo _T('Submit a question to the connected user', 'pkgs'); ?>" ><?php echo $namestep; ?></h1>
+    <h1 class="action" data-title="<?php echo _T('Submit a question to the connected user', 'pkgs'); ?>" ><?php echo $namestep; ?></h1>
 </div>
 
 <div class="content">

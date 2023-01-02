@@ -97,7 +97,7 @@ $namestep=_T("Kiosk Notification","pkgs");
 <div class="header">
     <!-- definie prefixe label -->
     <div style="display:none;">kiosk_</div>
-    <h1 data-title="<?php echo _T('Send a notification to the kiosk', 'pkgs'); ?>"><?php echo $namestep; ?></h1>
+    <h1 class="action" data-title="<?php echo _T('Send a notification to the kiosk', 'pkgs'); ?>"><?php echo $namestep; ?></h1>
 </div>
 
 <div class="content">
