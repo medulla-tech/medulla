@@ -5574,14 +5574,14 @@ class Glpi100(DyngroupDatabaseHelper):
                 glpi.glpi_softwares.name AS kb, 
                 SUBSTR(glpi.glpi_softwares.name,
                     LOCATE('KB', glpi.glpi_softwares.name), length(glpi.glpi_softwares.name)-2) as numkb,
-                glpi.glpi_computers_softwareversions.date_install AS dateinstall,
+                glpi.glpi_items_softwareversions.date_install AS dateinstall,
                 glpi.glpi_computers.date_creation AS input_computer
             FROM
                 glpi.glpi_computers
                     INNER JOIN
-                glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
+                glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.computers_id
                     INNER JOIN
-                glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_computers_softwareversions.softwareversions_id
+                glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_items_softwareversions.softwareversions_id
                     INNER JOIN
                 glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
             WHERE
