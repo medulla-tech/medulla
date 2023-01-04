@@ -35,7 +35,7 @@ ADD INDEX IF NOT EXISTS `ind_pr_ous_ou` (`ou` ASC),
 ADD INDEX IF NOT EXISTS `ind_profile` (`profile_id` ASC);
 
 ALTER TABLE `kiosk`.`package_has_profil` 
-ADD INDEX IF NOT EXISTS `ind_packid` (`package_id` ASC),
+ADD INDEX IF NOT EXISTS `ind_packid` (`package_uuid` ASC),
 ADD INDEX IF NOT EXISTS `ind_profil` (`profil_id` ASC);
 
 UPDATE version SET Number = 6;
