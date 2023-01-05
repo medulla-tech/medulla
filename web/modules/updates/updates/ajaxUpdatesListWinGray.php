@@ -75,8 +75,13 @@ for($i=0; $i < $count_partial; $i++){
     }
 }
 
+// Add css ids to each tr tag in the table
+foreach($grey_list['updateid'] as $updateid) {
+    $ids [] = 'u_'.$updateid;
+}
 // ########## Affichage Tableau GreyList ########## //
 $g = new OptimizedListInfos($titles_grey, _T("Update name", "updates"));
+$g-> Setcssids($ids);
 $g->disableFirstColumnActionLink();
 $g->addExtraInfo($updateids_gray, _T("Update Id", "updates"));
 $g->addExtraInfo($kbs_gray, _T("KB", "updates"));
