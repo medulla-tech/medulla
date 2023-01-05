@@ -1032,7 +1032,8 @@ class MscDatabase(DatabaseHelper):
                               Target.target_name,
                               Target.target_uuid,
                               Target.id_group,
-                              Target.target_macaddr)\
+                              Target.target_macaddr,
+                              Commands.deployment_intervals)\
         .join(CommandsOnHost, Commands.id == CommandsOnHost.fk_commands)\
         .join(Target, Target.id == CommandsOnHost.fk_target)\
         .join(CommandsOnHostPhase, CommandsOnHostPhase.fk_commands_on_host == CommandsOnHost.id)\
@@ -1087,7 +1088,8 @@ class MscDatabase(DatabaseHelper):
                            'machine_name':element[8],
                            'uuid_inventory':element[9],
                            'gid': element[10],
-                           'mac_address': element[11]})
+                           'mac_address': element[11],
+                            'deployment_intervals' : element[12]})
         return result
 
     def deleteCommand(self, cmd_id):
