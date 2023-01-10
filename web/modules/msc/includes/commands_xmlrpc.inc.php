@@ -329,4 +329,9 @@ function xmlrpc_get_deploy_inprogress_by_team_member( $login, $time, $min=null, 
     return xmlCall("msc.get_deploy_inprogress_by_team_member", array($login, $time, $min , $max, $filt,
                                                                             $typedeploy));
 }
+
+function xmlrpc_get_conrainte_slot_deployment_commands($array_command) {
+    return xmlCall("msc.get_conrainte_slot_deployment_commands", array($array_command));
+}
+
 ?>

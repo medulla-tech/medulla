@@ -1025,6 +1025,14 @@ class MscDatabase(DatabaseHelper):
         return nb_machine_select_for_deploy_cycle, updatemachine
 
     @DatabaseHelper._sessionm
+    def get_conrainte_slot_deployment_commands(self,session, commands):
+        res = session.query(Commands.id, Commands.deployment_intervals).filter(Commands.id.in_(commands)).all()
+        result={}
+        for element in res:
+            result[str(element[0])] = element[1]
+        return result
+
+    @DatabaseHelper._sessionm
     def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch,
                                              minimum, maximum, filt, typedeploy="command"):
         """

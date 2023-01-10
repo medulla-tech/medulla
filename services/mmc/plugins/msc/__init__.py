@@ -276,6 +276,9 @@ class RpcProxy(RpcProxyI):
         return MscDatabase().get_deploy_inprogress_by_team_member(login, time, minimum,
                                                                   maximum, filt, typedeploy)
 
+    def get_conrainte_slot_deployment_commands(self, commands):
+        return MscDatabase().get_conrainte_slot_deployment_commands(commands)
+
     def getContext(self, user='root'):
         s = SecurityContext()
         s.userid = user

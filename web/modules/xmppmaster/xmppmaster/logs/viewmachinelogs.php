@@ -83,6 +83,9 @@ include_once('modules/pkgs/includes/xmlrpc.php');
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id, $uuid);
 
+$tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
+$contrainte  = count($tab)?$tab[$cmd_id]:"";
+
 $pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
 $pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);
 
@@ -350,6 +353,11 @@ $showText = _T("Show", "xmppmaster");
                             echo '<td style="width: ;">';
                                 echo '<span style=" padding-left: 32px;">'._T("Start Date","xmppmaster").'</span>';
                             echo '</td>';
+                            if ($contrainte != ""){
+                                echo '<td style="width: ;">';
+                                echo '<span style=" padding-left: 32px;">'._T("Deployment Interval Constraint","xmppmaster").'</span>';
+                                echo '</td>';
+                            }
                             echo '<td style="width: ;">';
                                 echo '<span style=" padding-left: 32px;">'._T("Stop Date","xmppmaster").'</span>';
                             echo '</td>';
@@ -369,6 +377,11 @@ $showText = _T("Show", "xmppmaster");
                             echo "<td>";
                             echo $start_date_plan_msc;
                             echo "</td>";
+                            if ($contrainte != ""){
+                                echo "<td>";
+                                echo $contrainte;
+                                echo "</td>";
+                            }
                             echo "<td>";
                                 echo $end_date_plan_msc;
                             echo "</td>";
