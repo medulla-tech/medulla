@@ -81,7 +81,7 @@ foreach($grey_list['updateid'] as $updateid) {
 }
 // ########## Affichage Tableau GreyList ########## //
 $g = new OptimizedListInfos($titles_grey, _T("Update name", "updates"));
-$g-> Setcssids($ids);
+$g-> setCssIds($ids);
 $g->disableFirstColumnActionLink();
 $g->addExtraInfo($updateids_gray, _T("Update Id", "updates"));
 $g->addExtraInfo($kbs_gray, _T("KB", "updates"));
