@@ -936,7 +936,7 @@ if __name__ == "__main__":
         print ("| c9240667-c3d9-4ba0-8a4e-e258473f7b73 |    <<--- package installer  ")
         print ("+--------------------------------------+")
         print ("ls -al  /var/lib/pulse2/packages/sharing/winupdates/")
-        print "c9240667-c3d9-4ba0-8a4e-e258473f7b73"
+        print ("c9240667-c3d9-4ba0-8a4e-e258473f7b73")
 
         print ("\n\t4 creation if no exist package and installs it in pkgs if is not installed option -c")
         print ("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -c "%os.path.basename(sys.argv[0]))
