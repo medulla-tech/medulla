@@ -62,6 +62,37 @@ CREATE TABLE IF NOT EXISTS `up_action_update_packages` (
   UNIQUE KEY `packages_UNIQUE` (`packages`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='cette table enregistre les actions a faire sur les packages. Elle est lu cycliquement pour appliquer les actions.\n'
 
+
+-- ----------------------------------------------------------------------
+-- trigger AFTER_INSERT
+-- Ce trigger leve 1 erreur si la commande insere n'est pas conforme
+-- la command texte de ce champ doit contenir commencer par
+-- /usr/sbin/medulla-mariadb-move-update-package
+-- or
+-- /usr/sbin/medulla_tool_package
+-- ----------------------------------------------------------------------
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_action_update_packages_AFTER_INSERT`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_action_update_packages_AFTER_INSERT` AFTER INSERT ON `up_action_update_packages` FOR EACH ROW
+BEGIN
+-- seul les commandes commencant par peucent etre insere
+-- /usr/sbin/medulla-mariadb-move-update-package
+-- /usr/sbin/medulla_tool_package
+set @dede = 0;
+set @dede1 = 0;
+SELECT new.action REGEXP '^/usr/sbin/medulla-mariadb-move-update-package' into @dede;
+SELECT new.action REGEXP '^/usr/sbin/medulla_tool_package' into @dede1;
+if  not( @dede = 1 or @dede1 = 1) then
+	SIGNAL SQLSTATE '23000'
+      SET MESSAGE_TEXT = 'cannot insert 1 command not belonging to the domain defined by medulla', MYSQL_ERRNO = 1452;
+ end if;
+END$$
+DELIMITER ;
+
+
 -- ----------------------------------------------------------------------
 -- CREATE TABLE update_data
 -- this table are the updates windows
