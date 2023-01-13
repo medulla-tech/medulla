@@ -23,6 +23,7 @@
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/html.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -72,7 +73,9 @@ $entitycompliances = xmlrpc_get_conformity_update_by_entity();
 $detailsByMach = new ActionItem(_T("Details by machines", "updates"),"detailsByMachines","auditbymachine","", "updates", "updates");
 $detailsByUpd = new ActionItem(_T("Details by updates", "updates"),"detailsByUpdates","auditbyupdate","", "updates", "updates");
 $deployAll = new ActionItem(_T("Deploy all updates", "updates"),"deployAllUpdates","updateall","", "updates", "updates");
+$emptyDeployAll = new EmptyActionItem1(_T("Deploy all updates", "updates"),"deployAllUpdates","updateallg","", "updates", "updates");
 $deploySpecific = new ActionItem(_T("Deploy specific updates", "updates"),"deploySpecificUpdate","updateone","", "updates", "updates");
+$emptyDeploySpecific = new EmptyActionItem1(_T("Deploy specific updates", "updates"),"deploySpecificUpdate","updateoneg","", "updates", "updates");
 
 $params = [];
 $actiondetailsByMachs = [];
@@ -100,10 +103,8 @@ foreach ($entities as $entity) {
     $id_entity = intval(substr($entity["uuid"],4));
     $actiondetailsByMachs[] = $detailsByMach;
     $actiondetailsByUpds[] = $detailsByUpd;
-    $actiondeployAlls[] = $deployAll;
-    $actiondeploySpecifics[] = $deploySpecific;
     $entityNames[] = $entity["completename"];
-    $params[] = array('uuid' => $entity['uuid']);
+    $params[] = array('uuid' => $entity['uuid'], 'completename'=>$entity['completename']);
     $color = colorconf(100);
     if (isset($identity[$id_entity])){
         $conformite = $identity[$id_entity]['conformite'];
@@ -111,10 +112,21 @@ foreach ($entities as $entity) {
         $totalmach=intval($identity[$id_entity]['totalmach']);
         $nbupdateentity=intval($identity[$id_entity]['nbupdate']);
 
+        if($conformite == 100){
+            $actiondeployAlls[] = $emptyDeployAll;
+            $actiondeploySpecifics[] = $emptyDeploySpecific;
+
+        }
+        else{
+            $actiondeployAlls[] = $deployAll;
+            $actiondeploySpecifics[] = $deploySpecific;
+        }
     }else{
         $conformite = "100";
         $totalmach=0;
         $nbupdateentity=0;
+        $actiondeployAlls[] = $emptyDeployAll;
+        $actiondeploySpecifics[] = $emptyDeploySpecific;
     }
     $complRates[] ="<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$conformite."% </div>";
     $totalMachine[] = $totalmach;
@@ -135,5 +147,7 @@ $n->addActionItemArray($actiondetailsByMachs);
 $n->addActionItemArray($actiondetailsByUpds);
 $n->addActionItemArray($actiondeployAlls);
 $n->addActionItemArray($actiondeploySpecifics);
+$n->start = 0;
+$n->end = $count;
 $n->display();
 ?>

@@ -11664,3 +11664,60 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if query is not None:
             result = [ou[0].replace('@@', '/') for ou in query]
         return result
+
+    @DatabaseHelper._sessionm
+    def get_updates_by_entity(self, session, entity, start=0, limit=-1, filter=""):
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID" ,"")
+
+        try:
+            entity = int(entity)
+        except:
+            pass
+
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        sub = session.query(Machines.id)\
+        .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id).filter(Glpi_entity.glpi_id == entity).subquery()
+        query = session.query(Up_machine_windows).filter(and_(
+            Up_machine_windows.id_machine.in_(sub),
+            Up_machine_windows.required_deploy != 1,
+            Up_machine_windows.curent_deploy != 1)
+        )
+
+        if filter != "":
+            query = query.filter(or_(
+                Up_machine_windows.kb.contains(filter),
+                Up_machine_windows.update_id.contains(filter)))
+        count = query.count()
+
+        query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        query = query.all()
+
+        result = {
+            "total" : count,
+            "datas": []
+        }
+
+        for element in query:
+            result['datas'].append({
+                "id_machine": Up_machine_windows.id_machine if not None else 0,
+                "update_id": Up_machine_windows.update_id if not None else "",
+                "kb": Up_machine_windows.kb if not None else "",
+                "current_deploy": up_machine_windows.curent_deploy if not None else "",
+                "required_deploy": up_machine_windows.required_deploy if not None else "",
+                "start_date": up_machine_windows.start_date if not None else "",
+                "end_date": up_machine_windows.end_date if not None else "",
+            })
+        return result
