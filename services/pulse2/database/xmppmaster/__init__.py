@@ -11825,12 +11825,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             limit = -1
 
         sub = session.query(Machines.id)\
-        .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id).filter(Glpi_entity.glpi_id == entity).subquery()
+        .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id).filter(Glpi_entity.glpi_id == entity)
+
+        sub = sub.subquery()
         query = session.query(Up_machine_windows).filter(and_(
             Up_machine_windows.id_machine.in_(sub),
             Up_machine_windows.required_deploy != 1,
             Up_machine_windows.curent_deploy != 1)
-        )
+        )\
+        .group_by(Up_machine_windows.update_id)
 
         if filter != "":
             query = query.filter(or_(
@@ -11843,20 +11846,145 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             query = query.limit(limit)
 
         query = query.all()
-
+        pkgs_list = {}
         result = {
             "total" : count,
             "datas": []
         }
 
         for element in query:
+            startdate = ""
+            if element.start_date is not None:
+                startdate = element.start_date
+
+            enddate = ""
+            if element.end_date is not None:
+                enddate = element.end_date
             result['datas'].append({
-                "id_machine": Up_machine_windows.id_machine if not None else 0,
-                "update_id": Up_machine_windows.update_id if not None else "",
-                "kb": Up_machine_windows.kb if not None else "",
-                "current_deploy": up_machine_windows.curent_deploy if not None else "",
-                "required_deploy": up_machine_windows.required_deploy if not None else "",
-                "start_date": up_machine_windows.start_date if not None else "",
-                "end_date": up_machine_windows.end_date if not None else "",
+                "id_machine": element.id_machine if not None else 0,
+                "update_id": element.update_id if not None else "",
+                "kb": element.kb if not None else "",
+                "current_deploy": element.curent_deploy if not None else "",
+                "required_deploy": element.required_deploy if not None else "",
+                "start_date": startdate,
+                "end_date": enddate,
+                "pkgs_label":"",
+                "pkgs_version":"",
+                "pkgs_description":""
+            })
+            pkgs_list[element.update_id] = {}
+
+        sql2 = """SELECT pkgs.packages.uuid,
+            pkgs.packages.label,
+            pkgs.packages.version,
+            pkgs.packages.description
+            FROM pkgs.packages
+            WHERE pkgs.packages.uuid in ("%s")
+            """%(','.join(pkgs_list.keys()))
+        query2 = session.execute(sql2)
+
+        for element in query2:
+            pkgs_list[element[0]] = {
+                "label": element[1],
+                "version": element[2],
+                "description": element[3]
+            }
+
+        for element in result['datas']:
+            if element['update_id'] in pkgs_list:
+                element["pkgs_label"] = pkgs_list[element['update_id']]["label"]
+                element["pkgs_version"] = pkgs_list[element['update_id']]["version"]
+                element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_updates_machines_by_entity(self, session, entity, pid, start, limit, filter):
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID" ,"")
+        try:
+            entity = int(entity)
+        except:
+            pass
+        try:
+            start = int(start)
+        except:
+            start = 0
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        query = session.query(Machines.id, Machines.uuid_inventorymachine, Machines.jid, Machines.hostname)\
+            .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)\
+            .join(Up_machine_windows, Up_machine_windows.id_machine == Machines.id)\
+            .filter(
+                and_(Up_machine_windows.update_id == pid,
+                    Glpi_entity.glpi_id == entity
+                )
+            ).all()
+
+        result = []
+
+        for machine in query:
+            result.append({
+                "id":machine.id,
+                "uuid_inventorymachine":machine.uuid_inventorymachine,
+                "jid": machine.jid,
+                "hostname": machine.hostname
             })
         return result
+
+    @DatabaseHelper._sessionm
+    def pending_entity_update_by_pid(self, session, entity, pid="", startdate="", enddate=""):
+        start_date = None
+        end_date = None
+
+        current = datetime.today()
+        a_week_from_current = current + timedelta(days=7)
+
+        if startdate != "":
+            try:
+                start_date = datetime.strptime(startdate, "%Y-%m-%d %H:%M:%S")
+            except:
+                start_date = current
+
+        if enddate != "":
+            try:
+                end_date = datetime.strptime(enddate, "%Y-%m-%d %H:%M:%S")
+            except:
+                end_date = a_week_from_current
+
+        if start_date > end_date:
+            start_date, end_date = end_date, start_date
+
+        if end_date < current:
+            end_date = a_week_from_current
+
+
+        sub = session.query(Machines.id)\
+            .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id).filter(Glpi_entity.glpi_id == entity).subquery()
+
+        query = session.query(Up_machine_windows)
+
+        if pid == "":
+            query = query.filter(
+                and_(
+                    Up_machine_windows.required_deploy == 0,
+                    Up_machine_windows.id_machine.in_(sub),
+                )
+            )
+        else:
+            query = query.filter(
+                and_(
+                    Up_machine_windows.update_id == pid
+                )
+            )
+
+        for element in query:
+            element.required_deploy = 1
+            element.start_date = start_date
+            element.end_date = end_date
+            session.commit()
+            session.flush()
+
+        return []
