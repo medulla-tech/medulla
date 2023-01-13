@@ -22,11 +22,15 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
+require_once("modules/updates/includes/xmlrpc.php");
 
 $entity = htmlentities($_GET['uuid']);
 $completename = htmlentities($_GET['completename']);
 
-require_once("modules/updates/includes/xmlrpc.php");
+$p = new PageGenerator(_T(sprintf("Updates on Entity %s", $completename)));
+$p->setSideMenu($sidemenu);
+$p->display();
+
 
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdateToDeploy"), "container", ["entity"=>$entity, "completename"=>$completename]);
 $ajax->display();

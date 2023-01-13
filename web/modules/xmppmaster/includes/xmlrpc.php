@@ -1,7 +1,7 @@
 <?php
 
 /*
- * (c) 2015-2022 Siveo, http://www.siveo.net
+ * (c) 2015-2023 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -812,4 +812,13 @@ function xmlrpc_get_count_grey_list_enable(){
 function xmlrpc_get_updates_by_entity($entity, $start, $limit, $filter=""){
   return xmlCall("xmppmaster.get_updates_by_entity", [$entity, $start, $limit, $filter]);
 }
+
+function xmlrpc_get_updates_machines_by_entity($entity, $pid, $start=0, $limit=-1, $filter=""){
+  return xmlCall("xmppmaster.get_updates_machines_by_entity", [$entity, $pid, $start, $end, $filter]);
+}
+
+function xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate="", $enddate=""){
+  return xmlCall("xmppmaster.pending_entity_update_by_pid", [$entity, $pid, $startdate, $enddate]);
+}
+
 ?>

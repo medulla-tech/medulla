@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016-2022 siveo, http://www.siveo.net
+# (c) 2016-2023 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -1520,3 +1520,9 @@ def reload_deploy(uuid,
 
 def get_updates_by_entity(entity, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_updates_by_entity(entity, start, limit, filter)
+
+def get_updates_machines_by_entity(entity, pid, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_updates_machines_by_entity(entity, pid, start, limit, filter)
+
+def pending_entity_update_by_pid(entity, pid, startdate="", enddate=""):
+    return XmppMasterDatabase().pending_entity_update_by_pid(entity, pid, startdate, enddate)
