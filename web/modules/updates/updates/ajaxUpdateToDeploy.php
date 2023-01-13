@@ -22,26 +22,40 @@
  */
 
 require_once("modules/updates/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 global $conf;
+$entityId = htmlentities($_GET['entity']);
+$entityCompleteName = htmlentities($_GET['completename']);
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
-$updates_list = xmlrpc_get_white_list($start, $end, $filter);
+// $updates_list = xmlrpc_get_white_list($start, $end, $filter);
+$updates_list = xmlrpc_get_updates_by_entity($entityId, $start, $end, $filter);
 
-$deployThisUpdate = new ActionItem(_T("Deploy this update", "updates"),"deployUpdate","quick","", "updates", "updates");
+$deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"),"deployUpdate","quick","", "updates", "updates");
+
 
 $params = [];
 $names_updates = [];
 $actionspeclistUpds = [];
 
-$count = count($updates_list);
+$count = $updates_list['total'];
+$updates_list = $updates_list['datas'];
+
+$row = 0;
+
 foreach ($updates_list['title'] as $update) {
     $actionspeclistUpds[] = $deployThisUpdate;
-
     $names_updates[] = $update;
+    $params[] = [
+        "pid" => $updates_list["updateid"][$row],
+        "kb" => $updates_list["kb"][$row],
+        "entity"=> $entityId,
+    ];
+    $row++;
 }
 
 $n = new OptimizedListInfos($names_updates, _T("Update name", "updates"));
@@ -50,7 +64,9 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
 
-echo '<h2> Updates</h2>';
+echo '<h2>';
+echo _T(sprintf("Updates on Entity %s", $entityCompleteName), "updates");
+echo '</h2>';
 
 $n->addActionItemArray($actionspeclistUpds);
 

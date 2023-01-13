@@ -1525,3 +1525,6 @@ def reload_deploy(uuid,
                                                         startcmd,
                                                         force_redeploy,
                                                         rechedule)
+
+def get_updates_by_entity(entity, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_updates_by_entity(entity, start, limit, filter)

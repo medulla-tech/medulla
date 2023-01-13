@@ -821,4 +821,7 @@ function xmlrpc_get_count_grey_list_enable(){
   return xmlCall("xmppmaster.get_count_grey_list_enable");
 }
 
+function xmlrpc_get_updates_by_entity($entity, $start, $limit, $filter=""){
+  return xmlCall("xmppmaster.get_updates_by_entity", [$entity, $start, $limit, $filter]);
+}
 ?>
