@@ -125,6 +125,10 @@ $isconvergence = is_commands_convergence_type($cmd_id);
 // Get syncthing stats for this deployment
 $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
 
+// get contrainte group
+$tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
+$contrainte  = count($tab)?$tab[$cmd_id]:"";
+
 // search from msc table CommandsOnHost
 $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start, $end);
 
@@ -251,6 +255,9 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
         echo "<tr>";
             echo '<td>'._T("Creation Date", "xmppmaster").'</td>';
             echo '<td>'._T("Start Date", "xmppmaster").'</td>';
+            if ($contrainte != ""){
+                echo '<td>'._T("contraint slot", "xmppmaster").'</td>';
+            }
             echo '<td>'._T("End Date", "xmppmaster").'</td>';
             echo '<td>'._T("Creator", "xmppmaster").'</td>';
             if($isconvergence != 0){
@@ -264,6 +271,9 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
         echo "<tr>";
             echo '<td>'.$creation_date.'</td>';
             echo '<td>'. $start_date.'</td>';
+            if ($contrainte != ""){
+                echo '<td>'.$contrainte.'</td>';
+            }
             echo '<td>'.$end_date.'</td>';
             echo '<td>'.$creator_user.'</td>';
             if($isconvergence != 0){

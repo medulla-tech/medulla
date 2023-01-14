@@ -78,7 +78,7 @@ foreach($arraynotdeploy['elements'] as $id=>$deploy)
   //$notd_packagename[] = $deploy['package_name'];
   $date = (array)$deploy['date_start'];
   $notd_datestart [] = date("Y-m-d H:i:s",$date['timestamp']);
-  $notd_state[] = '<span style="font-weight: bold; color : Orange;">DEPLOYMENT NOT LAUNCHED</span>';
+  $notd_state[] = '<span style="font-weight: bold; color : Orange;">DEPLOYMENT NOT LAUNCHED<span style="opacity: 0.5;">('.$deploy['deployment_intervals'].')</span></span>';
   $notd_nb_machines[] = $deploy['nb_machines'];
   $notd_logins[] = $deploy['login'];
 

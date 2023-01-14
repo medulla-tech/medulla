@@ -56,6 +56,9 @@ if (isset($arraydeploy['total_of_rows']))
     $arraydeploy['lentotal'] += $arraynotdeploy['total'];
   }
 }
+
+$tab = xmlrpc_get_conrainte_slot_deployment_commands($arraydeploy['tabdeploy']['command']);
+
 $arrayname = array();
 $arraytitlename = array();
 $arraystate = array();
@@ -69,6 +72,24 @@ $successmach=array();
 $errormach=array();
 $abortmachuser = array();
 $processmachr = array();
+
+
+$contrainte = array();
+
+// Display contrainte in title
+// foreach ($arraydeploy['tabdeploy']['command'] as $dd=>$ss)
+// {
+//     if ($tab[$arraydeploy['tabdeploy']['command'][$dd]] != "") {
+//         $arraydeploy['tabdeploy']['state'][$dd] = '<span title="'._T('Deployment Interval Constraint','xmppmaster')." ".$tab[$arraydeploy['tabdeploy']['command'][$dd]].'">'.$arraydeploy['tabdeploy']['state'][$dd]."</span>";
+//     }
+// }
+// or avec second line pour la contrainte
+foreach ($arraydeploy['tabdeploy']['command'] as $dd=>$ss)
+{
+    if ($tab[$arraydeploy['tabdeploy']['command'][$dd]] != "") {
+        $arraydeploy['tabdeploy']['state'][$dd] = $arraydeploy['tabdeploy']['state'][$dd].'<br><span title="'._T("Deployment Interval Constraint","xmppmaster"). '" style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Contraint :","xmppmaster").$tab[$arraydeploy['tabdeploy']['command'][$dd]]."</span>";
+    }
+}
 
 foreach( $arraydeploy['tabdeploy']['start'] as $ss){
     if (gettype($ss) == "string"){
@@ -289,7 +310,6 @@ if(isset($arraynotdeploy))
           $name = '<img style="position:relative;top : 5px;" src="img/other/machinegroup.svg" width="25" height="25" /> '.$name;
           //echo '<a href="main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&tab=grouptablogs&uuid=&hostname=&gid='.$deploy['gid'].'&cmd_id='.$deploy['cmd_id'].'&login='.$deploy['login'].'">'.$deploy['package_name'].'</a><br />';
         }
-
       else
       {
           $name = $deploy['machine_name'];
@@ -300,7 +320,13 @@ if(isset($arraynotdeploy))
       $date = (array)$deploy['date_start'];
       $arraydeploy['tabdeploy']['start'][] = substr($date['scalar'], 0, 4).'-'.substr($date['scalar'], 4, 2).'-'.substr($date['scalar'], 6, 2).' '.substr($date['scalar'], 9);
       //TODO
-      $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline</span>';
+      if ($deploy['deployment_intervals'] != "")
+      {
+        $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline<br><span style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Contraint :","xmppmaster").
+        $deploy['deployment_intervals'].'</span></span>';
+      }else{
+          $arraystate[] = '<span style="font-weight : bold; color : orange;">Offline</span>';
+      }
       $tolmach[] = $deploy['nb_machines'];
       $processmachr[] = '0 (0%)';
       $successmach[] = '0 (0%)';
@@ -310,7 +336,6 @@ if(isset($arraynotdeploy))
       $reloads[] = $reloadAction;
   }
 }
-
 $n = new OptimizedListInfos( $arraytitlename, _T("Deployment", "xmppmaster"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
