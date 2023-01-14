@@ -96,11 +96,19 @@ $machineWithUpd = [];
 $machineWithoutUpd = [];
 $actionDetails = [];
 
+foreach($groupMachineList[UUID1][1][cn] as $member)
+{
+    $id_machine = xmlrpc_get_idmachine_from_name($member);
+
+    array_push($groupMachineList[UUID1][1], $id_machine[0]);
+}
 
 for($i=0; $i < $count_partial_grey; $i++)
 {
     $in_unique_with_Upd = "False";
     $in_unique_without_Upd = "False";
+
+    $params[] = array('kb' => $all_update['0']['kb'][$i]);
 
     $with_Upd = xmlrpc_get_machine_with_update($all_update['0']['kb'][$i]);
 
@@ -147,8 +155,8 @@ for($i=0; $i < $count_partial_grey; $i++)
         }
     }
 
-    if ($in_unique_with_Upd == "True" || $in_unique_without_Upd == "True")
-    {
+    /*if ($in_unique_with_Upd == "True" || $in_unique_without_Upd == "True")
+    {*/
         $titles[] = $all_update['0']['title'][$i];
         $actionDetails[] = $detailsUpd;
 
@@ -169,13 +177,15 @@ for($i=0; $i < $count_partial_grey; $i++)
 
         $color = colorconf($compliance_rate);
         $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
-    }
+    //}
 }
 
 for($i=0; $i < $count_partial_white; $i++)
 {
     $in_unique_with_Upd = "False";
     $in_unique_without_Upd = "False";
+
+    $params[] = array('kb' => $all_update['0']['kb'][$i]);
 
     $with_Upd = xmlrpc_get_machine_with_update($all_update['0']['kb'][$i]);
 
@@ -247,8 +257,6 @@ for($i=0; $i < $count_partial_white; $i++)
         $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
     }
 }
-
-
 
 $n = new OptimizedListInfos($titles, _T("Update name", "updates"));
 $n->disableFirstColumnActionLink();

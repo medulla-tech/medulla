@@ -27,15 +27,19 @@ require_once("modules/base/includes/computers.inc.php");
 
 global $conf;
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
+$kb = (isset($_GET['kb'])) ? $_GET['kb'] : "";
 $maxperpage = $conf["global"]["maxperpage"];
 $gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
+$contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
+$filter  = isset($_GET['filter'])?$_GET['filter']:"";
+$filterCTX = "Microsoft";
+$field = "platform";
 
 $ctx = [];
 $ctx['location'] = $location;
-$ctx['filter'] = $filter;
+$ctx['filter'] = $filterCTX;
 $ctx['field'] = $field;
 $ctx['contains'] = $contains;
 
@@ -46,10 +50,11 @@ $ctx['maxperpage'] = $maxperpage;
 $uuid = htmlspecialchars($_GET['uuid']);
 $ctx['uuid'] = $uuid;
 
-$uuidCut = substr($uuid, -1);
+//$uuidCut = substr($uuid, -1);
 
-//$withUpdArray = xmlrpc_get_grey_list($start, $maxperpage, $filter);
-//$withoutUpdArray = xmlrpc_get_white_list($start, $maxperpage, $filter);
+$entityMachineList = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
+$filterGid = array('gid' => $gid);
+$groupMachineList = getRestrictedComputersList(0, -1, $filterGid, False);
 
 $count_with_upd = $withUpdArray['nb_element_total'];
 $count_without_upd = $withoutUpdArray['nb_element_total'];
@@ -66,48 +71,82 @@ else
 $withUpd = [];
 $withoutUpd = [];
 
-$titles = [];
-$complRates = [];
-$machineWithUpd = [];
-$machineWithoutUpd = [];
-$actionDetails = [];
+$titles_with = [];
+$plateform_with = [];
 
-$hostnames = [];
-$ids = [];
+$titles_without = [];
+$plateform_without = [];
+
+$with_Upd = xmlrpc_get_machine_with_update($kb);
+$without_Upd = xmlrpc_get_count_machine_as_not_upd($kb);
+
+$unique_with_Upd = array_unique($with_Upd);
+$unique_without_Upd = array_unique($without_Upd);
 
 if ($typeOfDetail == "entitie")
 {
-    
+    $count = $entityMachineList['count'];
+    for($i=0; $i < $count; $i++)
+    {
+        if (in_array($entityMachineList['data']['hostname'][$i], $unique_with_Upd))
+        {
+            $titles_with[] = $entityMachineList['data']['hostname'][$i];
+            $plateform_with[] = $entityMachineList['data']['plateform'][$i];
+        }
+    }
+
+    for($i=0; $i < $count; $i++)
+    {
+        if (in_array($entityMachineList['data']['hostname'][$i], $unique_without_Upd))
+        {
+            $titles_without[] = $entityMachineList['data']['hostname'][$i];
+            $plateform_without[] = $entityMachineList['data']['plateform'][$i];
+        }
+    }
 }
     
 
 if ($typeOfDetail == "group")
 {
-     
+    foreach ($listGroup as $k => $v)
+    {
+        if (in_array($v[1]['cn'][0], $unique_with_Upd))
+        {
+            $titles_with[] = $v[1]['cn'][0];
+            $plateform_with[] = $v[1]['os'][0];
+        }
+    }
+
+    foreach ($listGroup as $k => $v)
+    {
+        if (in_array($v[1]['cn'][0], $unique_without_Upd))
+        {
+            $titles_without[] = $v[1]['cn'][0];
+            $plateform_without[] = $v[1]['os'][0];
+        }
+    }
 }
 
 
-// ########## Boucle greyList ########## //
-for($i=0; $i < $count_with_upd; $i++)
-{
-
-}
-
-for($i=0; $i < $count_without_upd; $i++)
-{
-
-}
-
-$n = new OptimizedListInfos($titles, _T("Update name", "updates"));
+echo "<h2>Machine without update</h2>";
+$n = new OptimizedListInfos($titles_without, _T("Update name", "updates"));
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($complRates, _T("Plateform", "updates"));
+$n->addExtraInfo($plateform_without, _T("Plateform", "updates"));
 
-$n->setItemCount($count);
-$n->setNavBar(new AjaxNavBar($count, $filter));
-$n->setParamInfo($params);
-
-$n->addActionItemArray($actionDetails);
+$n->setItemCount($count_count_with);
+$n->setNavBar(new AjaxNavBar($count_count_with, $filter));
 
 $n->display();
+
+echo "<h2>Machine with update</h2>";
+$w = new OptimizedListInfos($titles_with, _T("Update name", "updates"));
+$w->disableFirstColumnActionLink();
+
+$w->addExtraInfo($plateform_with, _T("Plateform", "updates"));
+
+$w->setItemCount($count_without);
+$w->setNavBar(new AjaxNavBar($count_without, $filter));
+
+$w->display();
 ?>
