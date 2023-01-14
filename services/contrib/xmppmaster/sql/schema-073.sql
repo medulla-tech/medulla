@@ -76,7 +76,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_action_update_packages_AFTER_INSERT`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_action_update_packages_AFTER_INSERT` AFTER INSERT ON `up_action_update_packages` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_action_update_packages_AFTER_INSERT` AFTER INSERT ON `up_action_update_packages` FOR EACH ROW
 BEGIN
 -- seul les commandes commencant par peucent etre insere
 -- /usr/sbin/medulla-mariadb-move-update-package
@@ -251,7 +251,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_DELETE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_AFTER_DELETE` AFTER DELETE ON `up_gray_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_DELETE` AFTER DELETE ON `up_gray_list` FOR EACH ROW
 BEGIN
 -- regle si 1 certain temps le package na pas etait utiliser il passe dans les updates historique
 	-- si son etat etait a 1 alors le package est supprimer
@@ -261,7 +261,7 @@ BEGIN
     INSERT IGNORE INTO `xmppmaster`.`up_action_update_packages` (`action`, `packages`, `option`)
             VALUES (@cmd, old.updateid,"-c" );
 	SET @result = "pas implanter encore sys_exec dans Mariadb";
-	SET @result= sys_exec(@cmd);
+	SET @result = sys_exec(@cmd);
 	set @resulttxt = concat( "resultat command ", @result);
 	set @logtext = concat("Creation command : ", @cmd );
 	INSERT IGNORE INTO `xmppmaster`.`logs` (`type`,
@@ -286,28 +286,6 @@ BEGIN
 			'mariadb',
 			'-1',
 			'system');
-	-- INSERT INTO `xmppmaster`.`logs` (`type`,
-	--								`module`,
-	--								`text`,
-	--								`fromuser`,
-	--								`touser`,
-	--								`action`,
-	--								`sessionname`,
-	--								`how`,
-	--								`why`,
-	--								`priority`,
-	--								`who`)
-	-- VALUES ('automate_Maria',
-	--		'update',
-	--		@resulttxt,
-	--		'up_gray_list_AFTER_DELETE',
-	--		'medulla',
-	--		'creation',
-	--		old.updateid,
-	--		'auto',
-	--		'mariadb',
-	--		'-1',
-	--		'system');
 
 	IF LENGTH(OLD.updateid) = 36 THEN
 		set @logtext = concat("replace dans la table up_gray_list_flop package  : ", old.updateid );
@@ -393,7 +371,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_UPDATE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_AFTER_UPDATE` AFTER UPDATE ON `up_gray_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_UPDATE` AFTER UPDATE ON `up_gray_list` FOR EACH ROW
 BEGIN
 looptrigger:LOOP
 	if old.valided = new.valided then
@@ -404,8 +382,6 @@ looptrigger:LOOP
         INSERT IGNORE INTO `xmppmaster`.`up_action_update_packages` (`action`, `packages`, `option`)
             VALUES (@cmd, new.updateid,"-c" );
 
-		-- SET @result= sys_exec(@cmd);
-		-- set @resulttxt = concat( "resultat command ", @result);
 		set @logtext = concat("Creation command : ", @cmd );
 		INSERT INTO `xmppmaster`.`logs` (`type`,
 										`module`,
@@ -429,28 +405,6 @@ looptrigger:LOOP
 				'mariadb',
 				'-1',
 				'system');
-		-- INSERT INTO `xmppmaster`.`logs` (`type`,
-		-- 								`module`,
-		-- 								`text`,
-		--								`fromuser`,
-		--								`touser`,
-		--								`action`,
-		--								`sessionname`,
-		--								`how`,
-		--								`why`,
-		--								`priority`,
-		--								`who`)
-		-- VALUES ('automate_Maria',
-		--		'update',
-		--		@resulttxt,
-		--		'up_gray_list_AFTER_UPDATE',
-		--		'medulla',
-		--		'creation',
-		--		new.updateid,
-		--		'auto',
-		--		'mariadb',
-		--		'-1',
-		--		'system');
 		LEAVE looptrigger;
 	end if;
 	if old.valided < new.valided then
@@ -482,28 +436,6 @@ looptrigger:LOOP
 				'mariadb',
 				'-1',
 				'system');
-		-- INSERT INTO `xmppmaster`.`logs` (`type`,
-		--								`module`,
-		--								`text`,
-		--								`fromuser`,
-		--								`touser`,
-		--								`action`,
-		--								`sessionname`,
-		--								`how`,
-		--								`why`,
-		--								`priority`,
-		--								`who`)
-		-- VALUES ('automate_Maria',
-		--		'update',
-		--		@resulttxt,
-		--		'up_gray_list_AFTER_UPDATE',
-		--		'medulla',
-		--		'creation',
-		--		new.updateid,
-		--		'auto',
-		--		'mariadb',
-		--		'-1',
-		--		'system');
 		LEAVE looptrigger;
 	end if;
 END LOOP;
@@ -545,7 +477,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_INSERT`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT` AFTER INSERT ON `up_gray_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT` AFTER INSERT ON `up_gray_list` FOR EACH ROW
 BEGIN
 looptrigger:LOOP
 	if  new.valided = 0 then
@@ -555,8 +487,6 @@ looptrigger:LOOP
 		set @cmd = concat( "/usr/sbin/medulla-mariadb-move-update-package.py ", new.updateid, " -c");
         INSERT IGNORE INTO `xmppmaster`.`up_action_update_packages` (`action`, `packages`, `option`)
 			VALUES (@cmd, new.updateid,"-c" );
-	--	SET @result= sys_exec(@cmd);
-	--	set @resulttxt = concat( "resultat command ", @result);
 		set @logtext = concat("Creation command : ", @cmd );
 		INSERT INTO `xmppmaster`.`logs` (`type`,
 										`module`,
@@ -581,28 +511,6 @@ looptrigger:LOOP
 				'-1',
 				'system');
 
-		-- INSERT INTO `xmppmaster`.`logs` (`type`,
-		--								`module`,
-		--								`text`,
-		--								`fromuser`,
-		--								`touser`,
-		--								`action`,
-		--								`sessionname`,
-		--								`how`,
-		--								`why`,
-		--								`priority`,
-		--								`who`)
-		-- VALUES ('automate_Maria',
-		--		'update',
-		--		@resulttxt,
-		--		'up_gray_list_AFTER_INSERT',
-		--		'medulla',
-		--		'creation',
-		--		new.updateid,
-		--		'auto',
-		--		'mariadb',
-		--		'-1',
-		--		'system');
 		LEAVE looptrigger;
 	end if;
 END LOOP;
@@ -646,8 +554,8 @@ BEGIN
 		INSERT IGNORE INTO `xmppmaster`.`up_gray_list` (`updateid`,
 		 `kb`,
 		 `revisionid`,
-		`title`,
-		`description`,
+		 `title`,
+		 `description`,
 		 `updateid_package`,
 		 `payloadfiles`,
 		 `supersededby`,
