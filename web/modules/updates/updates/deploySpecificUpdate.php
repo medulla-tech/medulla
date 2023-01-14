@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net
+ * (c) 2022-2023 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -22,15 +22,17 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
+require_once("modules/updates/includes/xmlrpc.php");
 
+$entity = htmlentities($_GET['uuid']);
+$completename = htmlentities($_GET['completename']);
 
-$p = new PageGenerator(_T("Deploy specific update", 'updates'));
+$p = new PageGenerator(_T(sprintf("Updates on Entity %s", $completename)));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-require_once("modules/updates/includes/xmlrpc.php");
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdateToDeploy"));
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdateToDeploy"), "container", ["entity"=>$entity, "completename"=>$completename]);
 $ajax->display();
 $ajax->displayDivToUpdate();
 

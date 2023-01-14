@@ -268,6 +268,18 @@ ADD INDEX IF NOT EXISTS `ind_sidsubstitute` (`jidsubtitute` ASC) ;
 ;
 
 
+-- ----------------------------------------------------------------------
+-- Database up_machine_windows colunm for multi deploiement
+-- ----------------------------------------------------------------------
+ALTER TABLE `xmppmaster`.`up_machine_windows`
+ADD COLUMN `curent_deploy` TINYINT(1) NULL DEFAULT 0 AFTER `kb`,
+ADD COLUMN `required_deploy` TINYINT(1) NULL DEFAULT 0 AFTER `curent_deploy`,
+ADD COLUMN `start_date` TIMESTAMP NULL AFTER `deployrequis`,
+ADD COLUMN `end_date` TIMESTAMP NULL AFTER `start_date`;
+
+
+
+
 SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------------------------------------------------
 -- Database version
