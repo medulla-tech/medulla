@@ -50,3 +50,4 @@ Read [code documentation](http://doc.siveo.net/)
 * Discuss on IRC chanel [irc.libera.chat](irc.libera.chat)
   * Channel : #pulse-fr
   * Channel : #pulse-en
+* Discord Channel: https://discord.gg/NfTeZkgZ
