@@ -97,6 +97,11 @@ $gid = $group->create($groupName, false);
 $group->setOwner('update');
 $group->addMembers($grp);
 
+// Used to set start and end date
+$current = time();
+$start_date = date("Y-m-d h:i:s", $current);
+$end_date = strtotime("+7day", $current);
+$end_date = date("Y-m-d h:i:s", $end_date);
 
 $params = [];
 $familyNames = [];
@@ -122,7 +127,9 @@ $paramsToSend =[
     "copy_mode"=>"push",
     "deployment_intervals"=>"",
     "tab"=>"tablaunch",
-    "badvanced"=>1
+    "badvanced"=>1,
+    "start_date"=>$start_date,
+    "end_date"=>$end_date
 ];
 header("location:".urlStrRedirect("base/computers/groupmsctabs", $paramsToSend));
 
