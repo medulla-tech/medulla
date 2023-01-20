@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022 Siveo, http://siveo.net/
+ * (c) 2022-2023 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -25,6 +25,11 @@ require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
 
+function colorconf($conf){
+    $colorDisplay=array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
+    return $colorDisplay[intval(($conf-($conf%10))/10)];
+}
+
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
 $groupname = (isset($_GET['groupname'])) ? $_GET['groupname'] : "";
@@ -36,78 +41,23 @@ $start = (isset($_GET['start'])) ? $_GET['start'] : 0;
 $maxperpage = (isset($_GET['maxperpage'])) ? $_GET['maxperpage'] : $config['maxperpage'];
 $end = (isset($_GET['end'])) ? $_GET['end'] : $maxperpage - 1;
 
+$uuid = !empty($_GET['uuid']) ? htmlspecialchars($_GET['uuid']) : "";
+$entityName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
 $ctx = [];
-$ctx['location'] = $location;
+// location generates a filter on entity
+$ctx['location'] = !empty($location) ? $location: $uuid;
 $ctx['filter'] = $filter;
 $ctx['field'] = $field;
 $ctx['contains'] = $contains;
-
 $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
-$uuid = htmlspecialchars($_GET['uuid']);
-$ctx['uuid'] = $uuid;
 
 $detailsByMach = new ActionItem(_T("View details", "updates"),"detailsByMachines","display","", "updates", "updates");
 
-if ($uuid == '')
-{
-    $typeOfDetail = "group";
-}
-else
-{
-    $typeOfDetail = "entitie";
-}
-
-$machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
-$filterGid = array('gid' => $gid);
-$listGroup = getRestrictedComputersList(0, -1, $filterGid, False);
-
-$group_array = [];
-
-function colorconf($conf){
-    $colorDisplay=array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
-    return $colorDisplay[intval(($conf-($conf%10))/10)];
-}
-
-if ($typeOfDetail == "group")
-{
-    print_r(_T("<h2>Global compliance rate for ".$groupname."</h2>", "updates"));
-    echo "<br>";
-
-    foreach ($listGroup as $key => $value)
-    {
-        array_push($group_array, $key);
-    }
-
-    $group_compliance = xmlrpc_get_conformity_update_for_group($group_array);
-    $group_compliance = $group_compliance['0'];
-
-    $color_group_compliance = colorconf($group_compliance['compliance']);
-
-    echo "<div class='progress' style='max-width: 25%; width: ".$group_compliance['compliance']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".$group_compliance['compliance']."% </div>";
-}
-
-echo "<br>";
-echo "<br>";
-
-if ($typeOfDetail == "group")
-{
-    print_r(_T("<h2>Computers from group ".$groupname."</h2>","updates"));
-}
-else
-{
-    print_r(_T("<h2>Computers from entity </h2>","updates"));
-}
-
-// A VOIR SI JE M'EN SORS AVEC DES BOUCLES MAIS PEUT ETRE REFAIRE UNE REQUETE EN FONCTION DE L'ENTITYID
-// POUR POUVOIR COMPARER L UUID AVEC ENTITYID
-if ($uuid != '')
-{
-    preg_match("/UUID([0-9]+)/", $uuid, $matches);
-    $match = (int)$matches[1];
-}
+$all_grey_enable = xmlrpc_get_count_grey_list_enable();
+$all_grey_enable = $all_grey_enable['0']['enable_grey'];
 
 $params = [];
 $machineNames = [];
@@ -115,51 +65,30 @@ $complRates = [];
 $detailsByMachs = [];
 $missingUpdatesMachine = [];
 $platform = [];
-// TOTAL NOMBRE DE LIGNE REQUETE
-if ($uuid != '')
+$filterOn = [];
+if ($uuid == '')
 {
-    $count = $machines['count'];
-}
+    $typeOfDetail = "group";
+    $filterOn = array('gid' => $gid);
 
-$all_grey_enable = xmlrpc_get_count_grey_list_enable();
-$all_grey_enable = $all_grey_enable['0']['enable_grey'];
+    // Needed all machines of the group to calculate the compliance rate
+    $listGroup = getRestrictedComputersList(0, -1, $filterOn, true, true);
 
-if ($typeOfDetail == "entitie")
-{
-    for($i=0; $i < $count; $i++){
-        if($machines['data']['entityid'][$i] == $match){
-            $detailsByMachs[] = $detailsByMach;
-            $machineNames[] = $machines['data']['hostname'][$i];
+    $group_compliance = xmlrpc_get_conformity_update_for_group(array_keys($listGroup));
+    $group_compliance = $group_compliance['0'];
 
-            $compliance_computer = xmlrpc_get_conformity_update_by_machine($machines['data']['id'][$i]);
-            
-            $comp = $compliance_computer['0']['update_waiting'];
-            $missingUpdatesMachine[] = $comp;
+    $color_group_compliance = colorconf($group_compliance['compliance']);
 
-            if ($all_grey_enable != '0' and $comp != '0')
-            {
-                $comp = $comp / $all_grey_enable * 100;
-            }
-            
-            if ($comp == '0')
-            {
-                $comp = '100';
-            }
+    $compliance_bloc = sprintf(_T("<h2>Global compliance rate for %s</h2>", "updates"), $groupname);
+    $compliance_bloc .= "<br>";
+    $compliance_bloc .= "<div class='progress' style='max-width: 25%; width: ".$group_compliance['compliance']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".$group_compliance['compliance']."% </div>";
 
-            $color = colorconf($comp);
 
-            $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
+    $machines = getRestrictedComputersList($start, $end, $filterOn, true);
+    $count = getRestrictedComputersListLen($filterOn, True);
+    $tabletitle = sprintf(_T("Computers from group %s","updates"), $groupname);
 
-            $platform[] = $machines['data']['platform'][$i];
-        }
-        // TOTAL LIGNE APRES COMPARAISON
-        $count_machineNames = count($machineNames);
-    }
-}
-
-if ($typeOfDetail == "group")
-{
-    foreach ($listGroup as $k => $v) {
+    foreach ($machines as $k => $v) {
         $detailsByMachs[] = $detailsByMach;
         $machineNames[] = $v[1]['cn'][0];
 
@@ -184,10 +113,61 @@ if ($typeOfDetail == "group")
         $color = colorconf($comp);
 
         $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
-        
         $platform[] = $v[1]['os'];
-    }        
+    }
+
 }
+else
+{
+    $typeOfDetail = "entitie";
+    $filterOn = array('entity' => $uuid);
+
+    $tabletitle = sprintf(_T("Computers from entity %s","updates"), $entityName);
+    // No usage
+    $match = (int)str_replace('UUID', '', $uuid);
+
+    $compliance_bloc = "";
+
+    $machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
+    $count = $machines['count'];
+    $machines = $machines['data'];
+
+    for($i=0; $i < $count; $i++){
+        $detailsByMachs[] = $detailsByMach;
+        $machineNames[] = $machines['hostname'][$i];
+
+        $compliance_computer = xmlrpc_get_conformity_update_by_machine($machines['id'][$i]);
+
+        $comp = $compliance_computer['0']['update_waiting'];
+        $missingUpdatesMachine[] = $comp;
+
+        if ($all_grey_enable != '0' and $comp != '0')
+        {
+            $comp = $comp / $all_grey_enable * 100;
+        }
+
+        if ($comp == '0')
+        {
+            $comp = '100';
+        }
+
+        $color = colorconf($comp);
+
+        $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
+
+        $platform[] = $machines['platform'][$i];
+        // TOTAL LIGNE APRES COMPARAISON
+    }
+}
+
+// Display group compliance, for entity, compliance_bloc == ""
+echo $compliance_bloc;
+
+echo "<br>";
+echo "<br>";
+
+echo '<h2>'.$tabletitle.'</h2>';
+
 
 $n = new OptimizedListInfos($machineNames, _T("Machine name", "updates"));
 $n->disableFirstColumnActionLink();
@@ -196,8 +176,8 @@ $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
 $n->addExtraInfo($missingUpdatesMachine, _T("Missing updates", "updates"));
 $n->addActionItemArray($detailsByMachs);
 
-$n->setItemCount($count_machineNames);
-$n->setNavBar(new AjaxNavBar($count_machineNames, $ctx['filter']));
+$n->setItemCount($count);
+$n->setNavBar(new AjaxNavBar($count, $ctx['filter']));
 $n->setParamInfo($params);
 $n->display();
 ?>
