@@ -40,7 +40,7 @@ if(isset($_POST['bconfirm'])){
     header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
 } else {
     $updateid = $_GET['updateid'];
-    // Création et affichage de la modal
+    // Creation et affichage de la modal
     $f = new PopupForm(_T("Approve Update"));
     $hidden = new HiddenTpl("updateid");
     $f->add($hidden, array("value" => $updateid, "hide" => True));
