@@ -11639,14 +11639,14 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             Params: array of uuid group
             Return : waiting updates and count of machine
         """
-        array_GUID = " AND uuid_inventorymachine IN ('%s')" % ",".join([str(x) for x in uuidArray])
+        array_GUID = " AND uuid_inventorymachine IN (%s)" % ",".join(["'%s'"%str(x) for x in uuidArray])
         
         sql="""SELECT
-                    COUNT(*) AS nombre_machine,
+                    COUNT(*) AS count_machines,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
                         ELSE 0
-                    END) AS update_a_mettre_a_jour
+                    END) AS pending_updates
                 FROM
                     xmppmaster.machines
                         LEFT JOIN
@@ -11663,8 +11663,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 value in rowproxy.items()}
                         for rowproxy in resultquery]
         for t in result:
-            if t['update_a_mettre_a_jour'] == None:
-               t['update_a_mettre_a_jour'] = 0
+            if t['pending_updates'] == None:
+               t['pending_updates'] = 0
         return result
     
 
