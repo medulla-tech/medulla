@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:03+0100\n"
+"POT-Creation-Date: 2023-01-24 10:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,7 +106,7 @@ msgstr ""
 
 #: modules/updates/updates/ajaxListUpdates.php:264
 #: modules/updates/updates/ajaxEntitiesList.php:146
-#: modules/updates/updates/ajaxMachineListOnEntities.php:195
+#: modules/updates/updates/ajaxMachineListOnEntities.php:175
 msgid "Compliance rate"
 msgstr ""
 
@@ -264,31 +264,34 @@ msgstr ""
 msgid "Total Machines"
 msgstr ""
 
-#: modules/updates/updates/ajaxMachineListOnEntities.php:52
+#: modules/updates/updates/ajaxMachineListOnEntities.php:57
 msgid "View details"
 msgstr ""
 
-#: modules/updates/updates/ajaxMachineListOnEntities.php:76
-msgid "<h2>Global compliance rate for "
+#: modules/updates/updates/ajaxMachineListOnEntities.php:82
+#, php-format
+msgid "<h2>Global compliance rate for %s</h2>"
 msgstr ""
 
-#: modules/updates/updates/ajaxMachineListOnEntities.php:97
-msgid "<h2>Computers from group "
+#: modules/updates/updates/ajaxMachineListOnEntities.php:89
+#, php-format
+msgid "Computers from group %s"
 msgstr ""
 
-#: modules/updates/updates/ajaxMachineListOnEntities.php:101
-msgid "<h2>Computers from entity </h2>"
+#: modules/updates/updates/ajaxMachineListOnEntities.php:125
+#, php-format
+msgid "Computers from entity %s"
 msgstr ""
 
-#: modules/updates/updates/ajaxMachineListOnEntities.php:192
+#: modules/updates/updates/ajaxMachineListOnEntities.php:172
 msgid "Machine name"
 msgstr ""
 
-#: modules/updates/updates/ajaxMachineListOnEntities.php:194
+#: modules/updates/updates/ajaxMachineListOnEntities.php:174
 msgid "Platform"
 msgstr ""
 
-#: modules/updates/updates/ajaxMachineListOnEntities.php:196
+#: modules/updates/updates/ajaxMachineListOnEntities.php:176
 msgid "Missing updates"
 msgstr ""
 
