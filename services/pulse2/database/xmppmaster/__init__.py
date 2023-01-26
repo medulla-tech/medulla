@@ -11639,7 +11639,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             Params: array of uuid group
             Return : waiting updates and count of machine
         """
-        array_GUID = " AND uuid_inventorymachine IN (%s)" % ",".join(["'%s'"%str(x) for x in uuidArray])
+        if uuidArray != []:
+            array_GUID = " AND uuid_inventorymachine IN (%s)" % ",".join(["'%s'"%str(x) for x in uuidArray])
+        else:
+            array_GUID = " AND uuid_inventorymachine IN ('')"
         
         sql="""SELECT
                     COUNT(*) AS count_machines,
