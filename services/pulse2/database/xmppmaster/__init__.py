@@ -11877,27 +11877,33 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             })
             pkgs_list[element.update_id] = {}
 
-        sql2 = """SELECT pkgs.packages.uuid,
+        if pkgs_list != {}:
+            if pkgs_list.keys() != []:
+                concat = "in (%s)"%','.join(['"%s"'%uuid for uuid in pkgs_list.keys()])
+            else:
+                concat = '= ""'
+
+            sql2 = """SELECT pkgs.packages.uuid,
             pkgs.packages.label,
             pkgs.packages.version,
             pkgs.packages.description
             FROM pkgs.packages
-            WHERE pkgs.packages.uuid in ("%s")
-            """%(','.join(pkgs_list.keys()))
-        query2 = session.execute(sql2)
+            WHERE pkgs.packages.uuid %s
+            """%concat
+            query2 = session.execute(sql2)
 
-        for element in query2:
-            pkgs_list[element[0]] = {
-                "label": element[1],
-                "version": element[2],
-                "description": element[3]
-            }
+            for element in query2:
+                pkgs_list[element[0]] = {
+                    "label": element[1],
+                    "version": element[2],
+                    "description": element[3]
+                }
 
-        for element in result['datas']:
-            if element['update_id'] in pkgs_list:
-                element["pkgs_label"] = pkgs_list[element['update_id']]["label"]
-                element["pkgs_version"] = pkgs_list[element['update_id']]["version"]
-                element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
+            for element in result['datas']:
+                if element['update_id'] in pkgs_list:
+                    element["pkgs_label"] = pkgs_list[element['update_id']]["label"]
+                    element["pkgs_version"] = pkgs_list[element['update_id']]["version"]
+                    element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
         return result
 
     @DatabaseHelper._sessionm
