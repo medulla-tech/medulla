@@ -1536,3 +1536,6 @@ def get_updates_machines_by_entity(entity, pid, start=0, limit=-1, filter=""):
 
 def pending_entity_update_by_pid(entity, pid, startdate="", enddate=""):
     return XmppMasterDatabase().pending_entity_update_by_pid(entity, pid, startdate, enddate)
+
+def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)

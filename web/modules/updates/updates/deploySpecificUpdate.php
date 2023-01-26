@@ -24,15 +24,38 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/updates/includes/xmlrpc.php");
 
-$entity = htmlentities($_GET['uuid']);
-$completename = htmlentities($_GET['completename']);
 
-$p = new PageGenerator(_T(sprintf("Updates on Entity %s", $completename)));
+$params = [];
+
+if(!empty($_GET['uuid'])){
+    $entity = htmlentities($_GET['uuid']);
+    $completename = htmlentities($_GET['completename']);
+    $params = ["entity"=>$entity, "completename"=>$completename];
+    $p = new PageGenerator(_T(sprintf("Updates on Entity %s", $completename)));
+}
+else if(!empty($_GET['gid'])){
+    $gid = htmlentities($_GET['gid']);
+    $groupname = htmlentities($_GET['groupname']);
+    $params = ["group"=>$gid, "groupname"=>$groupname];
+
+    $p = new PageGenerator(_T(sprintf("Updates on Group %s", $groupname)));
+}
+else if(!empty($_GET['id'])) {
+    $id = htmlentities($_GET['id']);
+    $glpi_id = (!empty($_GET['glpi_id'])) ? htmlentities($_GET['glpi_id']) : "";
+    $cn = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
+    $params = ["id"=>$id, "cn"=>$cn, "glpi_id"=>$glpi_id];
+    $p = new PageGenerator(_T(sprintf("Updates on machine %s", $cn)));
+}
+else{
+    $p = new PageGenerator(_T(sprintf("Updates ", )));
+
+}
+
 $p->setSideMenu($sidemenu);
 $p->display();
 
-
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdateToDeploy"), "container", ["entity"=>$entity, "completename"=>$completename]);
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdateToDeploy"), "container", $params);
 $ajax->display();
 $ajax->displayDivToUpdate();
 

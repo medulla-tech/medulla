@@ -54,7 +54,7 @@ $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
 
-$detailsByMach = new ActionItem(_T("View details", "updates"),"detailsByMachines","display","", "updates", "updates");
+$detailsByMach = new ActionItem(_T("View details", "updates"),"deploySpecificUpdate","display","", "updates", "updates");
 
 $all_grey_enable = xmlrpc_get_count_grey_list_enable();
 $all_grey_enable = $all_grey_enable['0']['enable_grey'];
@@ -94,8 +94,8 @@ if ($uuid == '')
 
         //FUNCTION TO GET ID
         $id_machine = xmlrpc_get_idmachine_from_name($v[1]['cn'][0]);
-
-        $compliance_computer = xmlrpc_get_conformity_update_by_machine($id_machine['id_machine']);
+        $id_machine = $id_machine[0]['id_machine'];
+        $compliance_computer = xmlrpc_get_conformity_update_by_machine($id_machine);
 
         $comp = $compliance_computer['0']['update_waiting'];
         $missingUpdatesMachine[] = $comp;
@@ -114,6 +114,11 @@ if ($uuid == '')
 
         $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
         $platform[] = $v[1]['os'];
+        $params[] = [
+            "id"=>$id_machine,
+            "glpi_id"=>$k,
+            "cn"=>$v[1]['cn'][0],
+        ];
     }
 
 }
@@ -156,7 +161,12 @@ else
         $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
 
         $platform[] = $machines['platform'][$i];
-        // TOTAL LIGNE APRES COMPARAISON
+
+        $params[] = [
+            "id"=>$machines['id'][$i],
+            "glpi_id" => $machines['uuid_inventorymachine'][$i],
+            "cn"=>$machines['hostname'][$i],
+        ];
     }
 }
 
