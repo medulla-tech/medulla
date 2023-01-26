@@ -11997,3 +11997,83 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.flush()
 
         return []
+
+    @DatabaseHelper._sessionm
+    def get_updates_by_uuids(self, session, uuids, start=0, limit=-1, filter=""):
+        sub = session.query(Machines.id).filter(Machines.uuid_inventorymachine.in_(uuids)).subquery()
+
+        query = session.query(Up_machine_windows).filter(and_(
+            Up_machine_windows.id_machine.in_(sub),
+            Up_machine_windows.required_deploy != 1,
+            Up_machine_windows.curent_deploy != 1)
+        )\
+        .group_by(Up_machine_windows.update_id)
+
+        if filter != "":
+            query = query.filter(or_(
+                Up_machine_windows.kb.contains(filter),
+                Up_machine_windows.update_id.contains(filter)))
+        count = query.count()
+
+        query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        query = query.all()
+        pkgs_list = {}
+        result = {
+            "total" : count,
+            "datas": []
+        }
+
+        for element in query:
+            startdate = ""
+            if element.start_date is not None:
+                startdate = element.start_date
+
+            enddate = ""
+            if element.end_date is not None:
+                enddate = element.end_date
+            result['datas'].append({
+                "id_machine": element.id_machine if not None else 0,
+                "update_id": element.update_id if not None else "",
+                "kb": element.kb if not None else "",
+                "current_deploy": element.curent_deploy if not None else "",
+                "required_deploy": element.required_deploy if not None else "",
+                "start_date": startdate,
+                "end_date": enddate,
+                "pkgs_label":"",
+                "pkgs_version":"",
+                "pkgs_description":""
+            })
+            pkgs_list[element.update_id] = {}
+
+        if pkgs_list != {}:
+            if pkgs_list.keys() != []:
+                concat = "in (%s)"%','.join(['"%s"'%uuid for uuid in pkgs_list.keys()])
+            else:
+                concat = '= ""'
+
+            sql2 = """SELECT pkgs.packages.uuid,
+            pkgs.packages.label,
+            pkgs.packages.version,
+            pkgs.packages.description
+            FROM pkgs.packages
+            WHERE pkgs.packages.uuid %s
+            """%concat
+            query2 = session.execute(sql2)
+
+            for element in query2:
+                pkgs_list[element[0]] = {
+                    "label": element[1],
+                    "version": element[2],
+                    "description": element[3]
+                }
+
+            for element in result['datas']:
+                if element['update_id'] in pkgs_list:
+                    print(pkgs_list[element['update_id']])
+                    element["pkgs_label"] = pkgs_list[element['update_id']]["label"]
+                    element["pkgs_version"] = pkgs_list[element['update_id']]["version"]
+                    element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
+        return result
