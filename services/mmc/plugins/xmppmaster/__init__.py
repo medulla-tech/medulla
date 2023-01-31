@@ -931,11 +931,16 @@ def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
 
 def runXmppWolforuuidsarray(uuids):
-    mach_infos = XmppMasterDatabase().getmachinesbyuuids(uuids)
-    macaddresslist = []
-    # creation list mac address
-    for infos in mach_infos:
-        macaddresslist.append(mach_infos[infos]['macaddress'])
+    if 'jid' in uuids:
+        mach_infos = XmppMasterDatabase().getMachinefromjid(uuids['jid'])
+        if 'macaddress' in mach_infos:
+            macaddresslist = [mach_infos['macaddress']]
+    else:
+        mach_infos = XmppMasterDatabase().getmachinesbyuuids(uuids)
+        macaddresslist = []
+        # creation list mac address
+        for infos in mach_infos:
+            macaddresslist.append(mach_infos[infos]['macaddress'])
     callXmppPlugin('wakeonlangroup', {'macadress': macaddresslist})
     return True
 

@@ -432,7 +432,11 @@ function xmlrpc_runXmppWol($pluginname, $macadress){
 }
 
 function xmlrpc_runXmppWolforuuid($uuid){
-    return xmlCall("xmppmaster.CallXmppPlugin", array("wakeonlan", array("UUID"=>$uuid)));
+    /*
+    $uuid is an array of uuids ['UUID1', 'UUID2'] ...
+    or $uuid has the form ['jid'=>'jidmachine']
+    */
+    return xmlCall("xmppmaster.runXmppWolforuuidsarray",array($uuid));
 }
 
 function xmlrpc_runXmppWolforuuidsarray($uuids){
