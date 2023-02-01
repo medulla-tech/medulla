@@ -716,7 +716,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'urbackup', 'update', 'kiosk', 'pkgs', 'xmppmaster', 'admin', 'updates']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'pkgs', 'xmppmaster', 'admin']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
