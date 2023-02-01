@@ -42,6 +42,7 @@ Pulse manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX
 
 Read [documentation](https://pulse-user-manual.readthedocs.io) 
 
+
 ## Community
 
 * Access community [Pulse forum](https://forum.pulse2.fr/)

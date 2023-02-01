@@ -249,6 +249,7 @@ def create_simple_package_uuid(label, localisation=None):
                       This is set to None by default
     Returns: It returns the new simple package uuid
     """
+    label=re.sub(r"[^a-zA-Z0-9]","",label)
     if localisation is not None:
         label = label + "_" + localisation
     data = _remove_non_ascii((str(uuid.uuid1())[:9] + label+"_").replace(' ', '_'))
@@ -410,6 +411,7 @@ def parsexmppjsonfile(path):
     file_put_contents(path, datastr)
 
 def generate_hash(path, package_id):
+    logger = logging.getLogger()
     source = "/var/lib/pulse2/packages/sharing/" + path + "/" + package_id
     dest = "/var/lib/pulse2/packages/hash/" + path + "/" + package_id
     BLOCK_SIZE = 65535
@@ -420,7 +422,7 @@ def generate_hash(path, package_id):
     try:
         file_hash = hashlib.new(hash_type)
     except:
-        logging.error("Wrong hash type")
+        logger.error("Wrong hash type")
 
     if not os.path.exists(dest):
         os.makedirs(dest)
@@ -432,14 +434,14 @@ def generate_hash(path, package_id):
             try:
                 file_hash = hashlib.new(hash_type)
             except:
-                logging.error("Wrong hash type")
+                logger.error("Wrong hash type")
             file_block = _file.read(BLOCK_SIZE) # Read from the file. Take in the amount declared above
             while len(file_block) > 0: # While there is still data being read from the file
                 file_hash.update(file_block) # Update the hash
                 file_block = _file.read(BLOCK_SIZE) # Read the next block from the file
 
         try:
-            with open(dest + "/" + file_package + ".hash", 'wb') as _file:
+            with open((os.path.join(dest, file_package)) + ".hash", 'wb') as _file:
                 _file.write(file_hash.hexdigest())
         except:
             logger.debug("The 'docs' directory does not exist")
@@ -457,7 +459,7 @@ def generate_hash(path, package_id):
     try:
         file_hash = hashlib.new(hash_type)
     except:
-        logging.error("Wrong hash type")
+        logger.error("Wrong hash type")
     file_hash.update(content)
     content = file_hash.hexdigest()
 
@@ -600,14 +602,13 @@ def putPackageDetail(package, need_assign=True):
     typesynchro = 'create'
     if 'mode' in package and   package['mode'] !=  'creation':
         typesynchro = 'chang'
+    if not os.path.exists(os.path.join(packages_id_input_dir,"xmppdeploy.json")):
+        # write file to xmpp deploy
+        xmppdeployfile = to_json_xmppdeploy(package)
+        with open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" ) as fichier:
+            fichier.write(xmppdeployfile)
 
-    # writte file to xmpp deploy
-    xmppdeployfile = to_json_xmppdeploy(package)
-    fichier = open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" )
-    fichier.write(xmppdeployfile)
-    fichier.close()
-
-    parsexmppjsonfile(os.path.join(packages_id_input_dir,"xmppdeploy.json"))
+        parsexmppjsonfile(os.path.join(packages_id_input_dir,"xmppdeploy.json"))
 
     if centralizedmultiplesharing:
         localisation_server = package['localisation_server'] if 'localisation_server' in package else None
@@ -1445,6 +1446,8 @@ def create_msg_xmpp_quick_deploy(folder, create = False):
         logger.debug("Quick deployment package %s.xmpp found"%pathaqpackage)
 
 def save_xmpp_json(folder, json_content):
+    logger = logging.getLogger()
+    logger.debug("JSON content: %s" % json_content)
     structpackage = json.loads(json_content)
     qdeploy_generate(folder)
     keysupp = [ "actionlabel",
@@ -1514,12 +1517,20 @@ def save_xmpp_json(folder, json_content):
                 valerror = _stepforalias(stepseq['error'], vv)
                 if valerror != None:
                     stepseq['error'] = valerror
+
+    # Extracts the uuid of the folder
+    folder_list = folder.split("/")
+    uuid = folder_list[-1]
+
+    structpackage['metaparameter']['uuid'] = uuid
     json_content= json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
     # Refresh the dependencies list
     uuid = folder.split('/')[-1]
     dependencies_list = structpackage['info']['Dependency']
     pkgmanage().refresh_dependencies(uuid, dependencies_list)
+    from mmc.plugins.kiosk import update_launcher
+    update_launcher(uuid, structpackage['info']['launcher'])
 
 def _aliasforstep(step, dictstepseq):
     for t in dictstepseq:

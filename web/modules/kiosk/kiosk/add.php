@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2022 Siveo, http://siveo.net
  * $Id$
  *
  * This file is part of Management Console (MMC).
@@ -34,6 +34,23 @@ require_once("modules/imaging/includes/class_form.php");
 require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
 
+// Need the user sharing groups
+if(isset($_SESSION['sharings'])){
+    $sharings = $_SESSION['sharings'];
+  }
+  else{
+    $sharings = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+  }
+
+  // Get all packages for this sharings
+  if($sharings['config']['centralizedmultiplesharing'] == true){
+    $packages = xmlrpc_get_all_packages($_SESSION['login'], $sharings['config']['centralizedmultiplesharing'], -1, -1, $filter);
+
+  }
+
+  else{
+    $packages = xmlrpc_xmppGetAllPackages($filter, -1, -1);
+  }
 ?>
 
 <style type="text/css">
@@ -84,15 +101,15 @@ if(is_array($ou_list))
     $available_packages = [];
     $available_packages_str = "";
 
-    foreach(xmpp_packages_list() as $package)
+    $row = 0;
+    foreach($packages['datas']['uuid'] as $package)
     {
-        $available_packages[$package['software']] = $package['uuid'];
+        $available_packages[$packages['datas']['name'][$row]] = $package;
+        $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
+        $row++;
     }
 
-    // Generate the list of packages in the available list. This is the process by default when adding new profile
-    foreach($available_packages as $package_name=>$package_uuid){
-        $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package_uuid.'">'.$package_name.'</li>';
-    }
+
     $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packages">
         <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
         <div style="width:100%">

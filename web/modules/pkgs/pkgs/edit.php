@@ -106,6 +106,10 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 $str= _T("Package successfully edited", "pkgs");
                 new NotifyWidgetSuccess($str);
                 $package = $ret[3];
+                if(!isset($_POST["bassoc"])) {
+                  header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('pid' => $_GET['pid'], 'packageUuid' => $package['id'], 'permission' => $_GET['permission'], 'mod' => $_GET['mod'])));
+                  exit;
+                }
             }
             $pid = $package['id'];
 
@@ -397,6 +401,17 @@ if(isExpertMode1())
     $rb->setSelected($spooling);
     $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
+    if(isset($json["info"]["launcher"]) && $json["info"]["launcher"] != "")
+    {
+        $launcher = (base64_decode($json["info"]["launcher"], true) != false)? $launcher = base64_decode($json["info"]["launcher"]) : $json["info"]["launcher"];
+    }
+    else{
+    $launcher = "";
+    }
+    $f->add(
+            new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")), ["value"=>$launcher,"placeholder"=>"C:\Program Files\my_app\app.exe"]
+    );
+
     // Get the sorted list of dependencies
     if(isset($json['info']['Dependency']))
     {
@@ -447,8 +462,8 @@ if(isExpertMode1())
         <tr>
             <td style="border: none;">
                 <div>
-                    <img src="img/common/icn_arrowup.png" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
-                    <img src="img/common/icn_arrowdown.png" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/></a><br/>
+                    <img src="img/other/up.svg" width="25" height="25" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
+                    <img src="img/other/down.svg" width="25" height="25" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/></a><br/>
                 </div>
             </td>
             <td style="border: none;">
@@ -462,8 +477,8 @@ if(isExpertMode1())
             </td>
             <td style="border: none;">
                 <div>
-                    <img src="img/common/icn_arrowright.gif" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
-                    <img src="img/common/icn_arrowleft.gif" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
+                    <img src="img/other/right.svg" width="25" height="25" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
+                    <img src="img/other/left.svg" width="25" height="25" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
                 </div>
             </td>
             <td style="border: none;">

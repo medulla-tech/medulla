@@ -53,17 +53,6 @@ a.info:hover span{
     font-weight:none;
     padding:5px;
 }
-
-li.groupshare a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/dyngroup/img/share.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
 </style>
 
 <?php
@@ -92,7 +81,15 @@ li.groupshare a {
         $val['editcreate'] = 'editeqa';
         $params[] = $val;
     }
+
+    // Avoiding the CSS selector (tr id) to start with a number
+    $ids_qa = [];
+    foreach($params as $name_qa){
+        $ids_qa[] = 'qa_'.$name_qa['namecmd'];
+    }
+
     $n = new OptimizedListInfos($names, _T("Custom command name", "xmppmaster"));
+    $n->setcssIds($ids_qa);
     $n->setCssClass("package");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($desc, _T("Description", "xmppmaster"));

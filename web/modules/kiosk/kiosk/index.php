@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2022 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -23,54 +23,16 @@
 require("modules/kiosk/graph/index.css");
 require_once("modules/kiosk/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
+
 require("graph/navbar.inc.php");
-require("modules/kiosk/kiosk/localSidebar.php");
-
-
-if(isset($_GET['action'],$_GET['id']) && $_GET['action'] == "delete")
-{
-    xmlrpc_delete_profile($_GET['id']);
-    //TODO : Add notification when the profile is deleted
-}
-
+require("localSidebar.php");
 
 $p = new PageGenerator(_T("List of profils",'kiosk'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$profiles = xmlrpc_get_profiles_list();
+$ajax = new AjaxFilter(urlStrRedirect("kiosk/kiosk/ajaxProfilesList"));
+$ajax->display();
+$ajax->displayDivToUpdate();
 
-$profiles_name = [];
-$profiles_date = [];
-$profiles_status = [];
-
-$params = [];
-foreach($profiles as $element)
-{
-    $profiles_name[] = $element['name'];
-    $profiles_status[] = ($element['active'] == 1) ? _T("Active","kiosk") : _T("Inactive","kiosk");
-    $params[] = ['id'=>$element['id'], 'name'=>$element['name']];
-}
-$n = new OptimizedListInfos($profiles_name, _T("Profile Name", "kiosk"));
-$n->disableFirstColumnActionLink();
-$n->addExtraInfo($profiles_status, _T("Profile Status", "kiosk"));
-
-// parameters are :
-// - label
-// - action
-// - class (icon)
-// - profile get parameter
-// - module
-// - submodule
-$action_editPackage = new ActionItem(_T("Associate Packages", 'kiosk'),"editPackages","list","profile","kiosk", "kiosk");
-$action_editProfiles = new ActionItem(_T("Edit Profil",'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
-$action_deleteProfil = new ActionItem(_T("Delete Profil",'kiosk'), "delete", "delete", "profile", "kiosk", "kiosk");
-
-$n->setParamInfo($params);
-$n->addActionItemArray($action_editPackage);
-$n->addActionItemArray($action_editProfiles);
-$n->addActionItemArray($action_deleteProfil);
-$n->setNavBar(new AjaxNavBar($count, $filter1));
-
-$n->display();
 ?>

@@ -46,25 +46,6 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
     cursor: pointer;
 }
 
-li.groupshare a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/dyngroup/img/share.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-li.remove_machine a {
-    background-image: url("img/common/button_cancel.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
 progress{
     border-color: #ffffff;
     background-color: #009ea9;
@@ -143,6 +124,10 @@ $isconvergence = is_commands_convergence_type($cmd_id);
 
 // Get syncthing stats for this deployment
 $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'],$_GET['cmd_id'] );
+
+// get contrainte group
+$tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
+$contrainte  = count($tab)?$tab[$cmd_id]:"";
 
 // search from msc table CommandsOnHost
 $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start, $end);
@@ -270,6 +255,9 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
         echo "<tr>";
             echo '<td>'._T("Creation Date", "xmppmaster").'</td>';
             echo '<td>'._T("Start Date", "xmppmaster").'</td>';
+            if ($contrainte != ""){
+                echo '<td>'._T("contraint slot", "xmppmaster").'</td>';
+            }
             echo '<td>'._T("End Date", "xmppmaster").'</td>';
             echo '<td>'._T("Creator", "xmppmaster").'</td>';
             if($isconvergence != 0){
@@ -283,10 +271,13 @@ echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
         echo "<tr>";
             echo '<td>'.$creation_date.'</td>';
             echo '<td>'. $start_date.'</td>';
+            if ($contrainte != ""){
+                echo '<td>'.$contrainte.'</td>';
+            }
             echo '<td>'.$end_date.'</td>';
             echo '<td>'.$creator_user.'</td>';
             if($isconvergence != 0){
-                echo "<td><img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/></td>";
+                echo "<td><img style='position:relative;top : 5px;' src='img/other/convergence.svg' width='25' height='25'/></td>";
             }
 
 
@@ -656,6 +647,9 @@ if ($count != 0){
 
   foreach($info_from_machines[0] as $key => $value)
   {
+    $infomachine = xmlrpc_getdeployfromcommandid($cmd_id, 'UUID'.$value);
+    $sessionid = $infomachine['objectdeploy'][0]['sessionid'];
+
       if(isset($status['UUID'.$value]))
         $info_from_machines[7][] = '<span class="status">'.$status['UUID'.$value].'</span>';
       $info_from_machines[8][] = 'UUID'.$value;
@@ -672,10 +666,31 @@ if ($count != 0){
         'gid' => $_GET['gid'],
         'gr_cmd_id' => $_GET['cmd_id'],
         'gr_login' => $_GET['login'],
+        'sessionid' => $sessionid,
+        'title'=>$_GET['title'],
+        'start'=>$creation_date,
+        'startcmd'=>$start_date,
+        'endcmd'=>$end_date
       ];
 
   }
   $presencemachinexmpplist = xmlrpc_getPresenceuuids($info_from_machines[8]);
+
+  $action_log = new ActionItem(_T("View deployment details", 'xmppmaster'),
+                                      "viewlogs",
+                                      "logfile",
+                                      "logfile",
+                                      "xmppmaster",
+                                      "xmppmaster");
+
+
+  $reloadAction = new ActionPopupItem(_("Restart deployment"),
+                                  "popupReloadDeploy&previous=".$_GET['previous'],
+                                  "reload",
+                                  "",
+                                  "xmppmaster",
+                                  "xmppmaster");
+
   $raw = 0;
   foreach($info_from_machines[8] as $key => $value)
   {
@@ -685,6 +700,8 @@ if ($count != 0){
     $info_from_machines[5][$raw] = '<span class="machine-inventory">'.$info_from_machines[5][$raw].'</span>';
     $info_from_machines[6][$raw] = '<span class="machine-inventory">'.$info_from_machines[6][$raw].'</span>';
     $info_from_machines[9][] = ($presencemachinexmpplist[$value] == "1") ? 'machineNamepresente' : 'machineName';
+    $actionsLog[] = $action_log;
+    $actionsReload[] = $reloadAction;
     $raw++;
   }
 
@@ -708,9 +725,9 @@ echo'
 </tbody>
 </table>';
 }else{
-$action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
+$action_log = new ActionItem(_T("View deployment details", 'xmppmaster'),
                                     "viewlogs",
-                                    "logfile",
+                                    "reload",
                                     "logfile",
                                     "xmppmaster",
                                     "xmppmaster");
@@ -724,7 +741,8 @@ $action_log = new ActionItem(_T("Deployment Detail", 'xmppmaster'),
   $n->addExtraInfo($info_from_machines[6], _T("Entity", "glpi"));
 
   $n->setParamInfo($params);
-  $n->addActionItem($action_log);
+  $n->addActionItem($actionsLog);
+  $n->addActionItem($actionsReload);
   $n->setMainActionClasses($info_from_machines[9]);
   $n->setItemCount($count);
   $n->setNavBar(new AjaxNavBar($count, $filter));

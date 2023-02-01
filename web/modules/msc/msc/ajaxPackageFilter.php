@@ -202,7 +202,14 @@ if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "msc")))));
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_deploy = [];
+foreach($params as $pid_pkgs){
+    $ids_deploy[] = 'p_'.$pid_pkgs['pid'];
+}
+
 $n = new OptimizedListInfos($a_packages, _T("Package", "msc"));
+$n->setcssIds($ids_deploy);
 $n->addExtraInfo($a_description, _T("Description", "msc"));
 $n->addExtraInfo($a_pversions, _T("Version", "msc"));
 $n->addExtraInfo($a_sizes, _T("Package size", "msc"));
@@ -251,16 +258,5 @@ $n->display();
         text-decoration: none;
         color: #FFF;
     }
-
-li.convergence a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/convergence.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
 
 </style>

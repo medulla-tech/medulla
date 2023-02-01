@@ -16,7 +16,7 @@ test -d .tx || tx init --host=https://www.transifex.com
 [ ! x$1 == x ] && lang="-l $1" && shift 1
 args=$@
 
-modules="base ppolicy services dashboard report xmppmaster dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc support guacamole"
+modules="base ppolicy services dashboard report xmppmaster dyngroup glpi imaging inventory kiosk msc pkgs pulse2 backuppc support guacamole updates urbackup"
 
 for mod in $modules
 do

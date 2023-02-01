@@ -52,8 +52,16 @@ if($clusters['total'] > 0){
 
     $row++;
   }
+
+  // Avoiding the CSS selector (tr id) to start with a number
+  $ids_clusters = [];
+  foreach($params as $index => $name_cluster){
+    $ids_clusters[] = 'c_'.$name_cluster['name'];
+  }
+
   echo '<div id="switchresult"></div>';
   $n = new OptimizedListInfos( $clusters['datas']['name'], _T("Clusters", "xmppmaster"));
+  $n->setcssIds($ids_clusters);
   //$n->setMainActionClasses($clusters['datas']);
   $n->disableFirstColumnActionLink();
   $n->addExtraInfo( $clusters['datas']['description'], _T("Description", "xmppmaster"));

@@ -952,7 +952,7 @@ class PkgsDatabase(DatabaseHelper):
             'Qvendor': '',
             'description' : '',
             'files' : files,
-            'size' : size,
+            'size' : str(size),
             'Size' : '%s %s'%(round(size/(diviser**count), 2), units[count])}
 
         if query is not None:

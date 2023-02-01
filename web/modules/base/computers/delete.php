@@ -76,15 +76,19 @@ if (isset($_POST["bconfirm"])) {
         if ($Bollreadonly){
             new NotifyWidgetSuccess(_("GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"));
         }else{
-            delComputer($uuid, $backup);
-            if (!isXMLRPCError()) {
+            if(empty($uuid)){
                 new NotifyWidgetSuccess(_("The computer has been deleted."));
-                }else{
-                    new NotifyWidgetFailure(_("The computer has not been deleted."));
-                }
+            }else{
+                delComputer($uuid, $backup);
+                if (!isXMLRPCError()) {
+                    new NotifyWidgetSuccess(_("The computer has been deleted."));
+                    }else{
+                        new NotifyWidgetFailure(_("The computer has not been deleted."));
+                    }
         }
         header("Location: " . urlStrRedirect("base/computers/machinesList"));
         exit;
+        }
     }
 } else {
     $uuid = urldecode($_GET["objectUUID"]);

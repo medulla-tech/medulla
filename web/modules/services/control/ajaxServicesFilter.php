@@ -70,10 +70,17 @@ foreach($objList as $moduleObj) {
             include('servicesList.inc.php');
         }
 
+        // Avoiding the CSS selector (tr id) to start with a number
+        $ids_services = [];
+        foreach($names as $name_service){
+            $ids_services[] = 's_'.$name_service;
+        }
+
         $t = new TitleElement($moduleObj->getDescription(), 3);
         $t->display();
 
         $n = new ListInfos($names, _T("Service"));
+        $n->setcssIds($ids_services);
         $n->first_elt_padding = 1;
         $n->disableFirstColumnActionLink();
         $n->addExtraInfo($descs, _T("Description"));

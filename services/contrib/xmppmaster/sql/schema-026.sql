@@ -26,73 +26,41 @@ START TRANSACTION;
 -- Table machines creation index
 --
 
-CREATE INDEX ind_jid_machine on machines (jid(12) ASC);
-
 ALTER TABLE `xmppmaster`.`machines` 
-ADD INDEX `ind_uuid_machine` (`uuid_inventorymachine` ASC);
+ADD INDEX IF NOT EXISTS `ind_jid_machine` (jid(12) ASC),
+ADD INDEX IF NOT EXISTS `ind_uuid_machine` (`uuid_inventorymachine` ASC);
 
 --
 -- Table deploy creation index
 --
 
 ALTER TABLE `xmppmaster`.`deploy` 
-ADD INDEX `ind_deploy_uuid` (`inventoryuuid` ASC);
-
-ALTER TABLE `xmppmaster`.`deploy` 
-ADD INDEX `ind_deploy_jidM` (`jidmachine` ASC);
-
-ALTER TABLE `xmppmaster`.`deploy` 
-ADD INDEX `ind_deploy_start` (`startcmd` ASC);
-
-ALTER TABLE `xmppmaster`.`deploy` 
-ADD INDEX `ind_deploy_end` (`endcmd` ASC);
-
-ALTER TABLE `xmppmaster`.`deploy` 
-ADD INDEX `ind_deploy_cmd` (`command` ASC);
-
-ALTER TABLE `xmppmaster`.`deploy` 
-ADD INDEX `ind_deploy_grp` (`group_uuid` ASC);
+ADD INDEX IF NOT EXISTS `ind_deploy_uuid` (`inventoryuuid` ASC),
+ADD INDEX IF NOT EXISTS `ind_deploy_jidM` (`jidmachine` ASC),
+ADD INDEX IF NOT EXISTS `ind_deploy_start` (`startcmd` ASC),
+ADD INDEX IF NOT EXISTS `ind_deploy_end` (`endcmd` ASC),
+ADD INDEX IF NOT EXISTS `ind_deploy_cmd` (`command` ASC),
+ADD INDEX IF NOT EXISTS `ind_deploy_grp` (`group_uuid` ASC);
 
 --
 -- Table log creation index
 --
 
 ALTER TABLE `xmppmaster`.`logs` 
-ADD INDEX `ind_log_sessionid` (`sessionname` ASC);
-
-ALTER TABLE `xmppmaster`.`logs` 
-ADD INDEX `ind_log_type` (`type` ASC);
+ADD INDEX IF NOT EXISTS `ind_log_sessionid` (`sessionname` ASC),
+ADD INDEX IF NOT EXISTS `ind_log_type` (`type` ASC);
 
 --
 -- Table relayserver creation index
 --
 
 ALTER TABLE `xmppmaster`.`relayserver` 
-ADD INDEX `ind_relay_jid` (`jid` ASC);
-
-
-ALTER TABLE `xmppmaster`.`relayserver` 
-ADD INDEX `ind_relay_grpdeploy` (`groupdeploy` ASC);
-
--- base kiosk
-ALTER TABLE `kiosk`.`profile_has_ous`
-CHANGE COLUMN `ou` `ou` VARCHAR(200) NULL DEFAULT NULL ;
-ALTER TABLE `kiosk`.`profile_has_ous`
-ADD INDEX `ind_pr_ous_ou` (`ou` ASC);
-
-ALTER TABLE `kiosk`.`profile_has_ous`
-ADD INDEX `ind_profile` (`profile_id` ASC);
-
-
-ALTER TABLE `kiosk`.`package_has_profil` 
-ADD INDEX `ind_packid` (`package_id` ASC);
-
-ALTER TABLE `kiosk`.`package_has_profil` 
-ADD INDEX `ind_profil` (`profil_id` ASC);
+ADD INDEX IF NOT EXISTS `ind_relay_jid` (`jid` ASC),
+ADD INDEX IF NOT EXISTS `ind_relay_grpdeploy` (`groupdeploy` ASC);
 
 ALTER TABLE `xmppmaster`.`deploy` 
-ADD INDEX `ind_start_cmd` (`startcmd` ASC),
-ADD INDEX `ind_end_cmd` (`endcmd` ASC);
+ADD INDEX IF NOT EXISTS `ind_start_cmd` (`startcmd` ASC),
+ADD INDEX IF NOT EXISTS `ind_end_cmd` (`endcmd` ASC);
 
 
 UPDATE version SET Number = 26;

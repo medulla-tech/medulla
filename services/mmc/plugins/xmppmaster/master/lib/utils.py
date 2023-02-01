@@ -213,6 +213,7 @@ def call_plugin(name, *args, **kwargs):
         pluginaction.action(*args, **kwargs)
         setattr(args[0], "num_call%s"%name, count + 1)
 
+
 def utc2local (utc):
     """
     utc2local transform a utc datetime object to local object.
