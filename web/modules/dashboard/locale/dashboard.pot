@@ -83,7 +83,6 @@ msgid "Machines offline"
 msgstr ""
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:48
-#: modules/dashboard/includes/panels/backup.inc.php:49
 msgid "Uninventoried Machines"
 msgstr ""
 
@@ -105,22 +104,6 @@ msgstr ""
 
 #: modules/dashboard/includes/panels/general.inc.php:44
 msgid "RAM"
-msgstr ""
-
-#: modules/dashboard/includes/panels/backup.inc.php:31
-msgid "Machines backup"
-msgstr ""
-
-#: modules/dashboard/includes/panels/backup.inc.php:46
-msgid "Backup configured"
-msgstr ""
-
-#: modules/dashboard/includes/panels/backup.inc.php:47
-msgid "Backup not configured"
-msgstr ""
-
-#: modules/dashboard/includes/panels/backup.inc.php:48
-msgid "Total machines"
 msgstr ""
 
 #: modules/dashboard/includes/panels/alertsentity.inc.php:28
