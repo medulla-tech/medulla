@@ -49,4 +49,4 @@ Read [documentation](https://pulse-user-manual.readthedocs.io)
 * Discuss on IRC chanel [irc.libera.chat](irc.libera.chat)
   * Channel : #pulse-fr
   * Channel : #pulse-en
-* Discord Channel: https://discord.gg/NfTeZkgZ
+* Discord Channel: https://discord.gg/JEFpWZVZ
