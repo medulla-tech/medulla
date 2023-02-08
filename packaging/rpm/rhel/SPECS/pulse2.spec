@@ -25,8 +25,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           4.6.10
-%define mmc_version            4.6.10
+%define real_version           4.6.11
+%define mmc_version            4.6.11
 
 Summary:	Management Console
 Name:		pulse2
