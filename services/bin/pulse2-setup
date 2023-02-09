@@ -260,21 +260,13 @@ class SystemctlHandler(object):
     apache_dir = None
 
     def enable_srv(self, name):
-        default_config = os.path.join(sysconfdir, 'default', name)
-        if os.path.exists(default_config):
-            ret = call("sed -i 's/ENABLE=no/ENABLE=yes/' %s" % default_config, shell=True)
-        else:
-            ret = call("/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
+        ret = call("/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
         if ret != 0:
             return False
         return ret==0
 
     def disable_srv(self, name):
-        default_config = os.path.join(sysconfdir, 'default', name)
-        if os.path.exists(default_config):
-            ret = call("sed -i 's/ENABLE=yes/ENABLE=no/' %s" % default_config, shell=True)
-        else:
-            ret = call("/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
+        ret = call("/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
         if ret != 0:
             return False
         return ret==0
