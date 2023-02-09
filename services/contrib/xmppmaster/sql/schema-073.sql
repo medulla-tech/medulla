@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `up_action_update_packages` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `action_UNIQUE` (`action`),
   UNIQUE KEY `packages_UNIQUE` (`packages`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='cette table enregistre les actions a faire sur les packages. Elle est lu cycliquement pour appliquer les actions.\n'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='cette table enregistre les actions a faire sur les packages. Elle est lu cycliquement pour appliquer les actions.\n';
 
 
 -- ----------------------------------------------------------------------
