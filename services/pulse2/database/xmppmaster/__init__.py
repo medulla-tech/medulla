@@ -2837,16 +2837,21 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         grp_wol_broadcast_adress = {}
         result = session.query(Network.broadcast,
-                               Network.mac).distinct(Network.mac).\
+                               Network.macaddress).distinct(Network.macaddress).\
                 filter(
                     and_(Network.broadcast != "",
                          Network.broadcast.isnot(None),
-                         Network.mac.in_(listmacaddress))
+                         Network.macaddress.in_(listmacaddress))
                        ).all()
+
+        if not bool(result):
+            logger.error("An error occured while checking the broadcast address.")
+            logger.error("Please check that the broadcast information exists for the following macaddresses: %s" % listmacaddress)
+
         for t in result:
             if t.broadcast not in grp_wol_broadcast_adress:
                 grp_wol_broadcast_adress[t.broadcast] = []
-            grp_wol_broadcast_adress[t.broadcast].append(t.mac)
+            grp_wol_broadcast_adress[t.broadcast].append(t.macaddress)
         return grp_wol_broadcast_adress
 
     def convertTimestampToSQLDateTime(self, value):

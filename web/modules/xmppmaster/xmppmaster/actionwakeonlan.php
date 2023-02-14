@@ -46,16 +46,24 @@ if (isset($_GET['wol']) && $_GET['wol']){
 switch($_GET['action']){
     case "deployquick":
             // work for one machine
-            if ($_GET['wol']){
-                xmlrpc_synchroComputer($_GET['objectUUID'], true,  false);
+            if(!empty($_GET['objectUUID'])){
+                if ($_GET['wol']){
+                    xmlrpc_synchroComputer($_GET['objectUUID'], true,  false);
+                }
+                else{
+                    xmlrpc_synchroComputer($_GET['objectUUID'], false,  false);
+                }
+            }
+
+            if(!empty($_GET['jid'])){
+                xmlrpc_runXmppWolforuuid(["jid"=>$_GET['jid']]);
             }
             else{
-                xmlrpc_synchroComputer($_GET['objectUUID'], false,  false);
+                xmlrpc_runXmppWolforuuid([$_GET['objectUUID']]);
             }
             //  xmlrpc_runXmppWolforuuid($_GET['objectUUID']);
             $groupewol[]=$_GET['objectUUID'];
             if (!empty($groupewol)) {
-                xmlrpc_runXmppWolforuuidsarray($groupewol);
                 xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send wol to presente [ Machine : \"".$_GET['cn']."\"]",
                                                 "QA",
                                                 '' ,
