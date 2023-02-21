@@ -1,7 +1,5 @@
 # Pulse
 
-[![Build Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=master)](https://travis-ci.org/pulse-project/pulse2/branches)
-
 Pulse is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are. 
 
 Pulse provides a real-time management solution for complex and distributed environments.
