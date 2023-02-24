@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2019
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2021
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 15:47+0100\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2021\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,11 +59,11 @@ msgstr "Rediger en pakke"
 
 #: modules/pkgs/infoPackage.inc.php:75
 msgid "Package detail"
-msgstr ""
+msgstr "Pakkedetalj"
 
 #: modules/pkgs/infoPackage.inc.php:78
 msgid "Package File Preview"
-msgstr ""
+msgstr "Forhåndsvisning av pakkefil"
 
 #: modules/pkgs/infoPackage.inc.php:92
 msgid "Create licence static group"
@@ -84,7 +84,7 @@ msgstr "Vis speilstatus"
 
 #: modules/pkgs/infoPackage.inc.php:123
 msgid "Pending Package synchronization"
-msgstr ""
+msgstr "Venter på pakkesynkronisering"
 
 #: modules/pkgs/infoPackage.inc.php:127
 #: modules/pkgs/pkgs/ajaxPackageList.php:77
@@ -109,15 +109,15 @@ msgstr "Liste over ventende pakker"
 
 #: modules/pkgs/pkgs/pending.php:41
 msgid "All the pendings have been deleted"
-msgstr ""
+msgstr "Alle ventende er slettet"
 
 #: modules/pkgs/pkgs/pending.php:44
 msgid "The package "
-msgstr ""
+msgstr "Pakken"
 
 #: modules/pkgs/pkgs/pending.php:47
 msgid "The relays <b>"
-msgstr ""
+msgstr "Reléene <b>"
 
 #: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
 msgid "Appstream updates"
@@ -129,7 +129,7 @@ msgstr "Appstrøm oppdatering"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:72 modules/pkgs/pkgs/detail.php:268
 msgid "Package Detail"
-msgstr ""
+msgstr "Pakkedetalj"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:74
 msgid "Please switch to Expert mode to edit this package"
@@ -137,33 +137,33 @@ msgstr "Bytt til ekspertmodus for å redigere denne pakken"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:75
 msgid "You must have write rights to edit this package"
-msgstr ""
+msgstr "Du må ha skriverettigheter for å redigere denne pakken"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:78
 msgid "You must have write rights to delete this package"
-msgstr ""
+msgstr "Du må ha skriverettigheter for å slette denne pakken"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:142
 #: modules/pkgs/pkgs/ajaxPackageList.php:146
 msgid "Sharing disk usage"
-msgstr ""
+msgstr "Deler diskbruk"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:142
 msgid "Package occupation"
-msgstr ""
+msgstr "Pakke størrelse"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:145
 msgid "Not limited"
-msgstr ""
+msgstr "Ikke begrenset"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:146
 #: modules/pkgs/pkgs/ajaxPackageList.php:162
 msgid "not limited"
-msgstr ""
+msgstr "ikke begrenset"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:176
 msgid "Non precised"
-msgstr ""
+msgstr "Ikke presisert"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:291
 #: modules/pkgs/pkgs/ajaxPackageList.php:435
@@ -173,19 +173,19 @@ msgstr ""
 msgid "Package name"
 msgstr "Pakkenavn"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:293 modules/pkgs/pkgs/edit.php:306
+#: modules/pkgs/pkgs/ajaxPackageList.php:293 modules/pkgs/pkgs/edit.php:311
 #: modules/pkgs/pkgs/add.php:224
 msgid "Share"
-msgstr ""
+msgstr "Del"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:294
 msgid "Permissions"
-msgstr ""
+msgstr "Tillatelser"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:296
 #: modules/pkgs/pkgs/ajaxPackageList.php:437 modules/pkgs/pkgs/addRule.php:60
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/detail.php:204 modules/pkgs/pkgs/edit.php:244
+#: modules/pkgs/pkgs/detail.php:204 modules/pkgs/pkgs/edit.php:249
 #: modules/pkgs/pkgs/editRule.php:65 modules/pkgs/pkgs/add.php:232
 msgid "Description"
 msgstr "Beskrivelse"
@@ -216,7 +216,7 @@ msgstr "Pakkestørrelse"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:301
 msgid "Share usage"
-msgstr ""
+msgstr "Del bruk"
 
 #: modules/pkgs/pkgs/addXMPP.php:40
 msgid "Available Actions"
@@ -232,17 +232,17 @@ msgstr "Slett denne regelen"
 
 #: modules/pkgs/pkgs/desynchronization.php:54
 msgid "Delete Pending"
-msgstr ""
+msgstr "Sletting venter"
 
 #: modules/pkgs/pkgs/desynchronization.php:57
 #: modules/pkgs/pkgs/desynchronization.php:74
 msgid "Remove package "
-msgstr ""
+msgstr "Fjern pakke"
 
 #: modules/pkgs/pkgs/desynchronization.php:57
 #: modules/pkgs/pkgs/desynchronization.php:81
 msgid "Remove specific jids from "
-msgstr ""
+msgstr "Fjern spesifikke jids fra"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:39
 #, php-format
@@ -368,7 +368,7 @@ msgid "Element in Strings Result"
 msgstr "Elementer i Strengresulatat"
 
 #: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
-#: modules/pkgs/pkgs/add.php:382
+#: modules/pkgs/pkgs/add.php:386
 msgid "Add"
 msgstr "Legg til"
 
@@ -378,7 +378,7 @@ msgstr "Tilknyttet pakke"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
 msgid "Remove all packages from pending"
-msgstr ""
+msgstr "Fjern alle ventende pakker"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:80
 msgid "Show mirrors"
@@ -386,19 +386,19 @@ msgstr "Vis speil"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:81
 msgid "Remove packages from pending"
-msgstr ""
+msgstr "Fjern pakker kø"
 
 #: modules/pkgs/pkgs/preview.php:5
 msgid "Content for file "
-msgstr ""
+msgstr "Filinnhold"
 
 #: modules/pkgs/pkgs/preview.php:16
 msgid "NL mode (unix)"
-msgstr ""
+msgstr "NL modus (unix)"
 
 #: modules/pkgs/pkgs/preview.php:17
 msgid "CRLF mode (win)"
-msgstr ""
+msgstr "CRLF modus (win)"
 
 #: modules/pkgs/pkgs/remove.php:39
 msgid "The package has been deleted."
@@ -430,15 +430,15 @@ msgstr "Aktiver denne Appstream strømmen"
 
 #: modules/pkgs/pkgs/detail.php:35
 msgid "Executed Command"
-msgstr ""
+msgstr "Utført Kommando"
 
 #: modules/pkgs/pkgs/detail.php:40
 msgid "Type Script"
-msgstr ""
+msgstr "Typeskript"
 
 #: modules/pkgs/pkgs/detail.php:45
 msgid "Shebang"
-msgstr ""
+msgstr "Shebang"
 
 #: modules/pkgs/pkgs/detail.php:51
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
@@ -447,28 +447,28 @@ msgstr "Skript"
 
 #: modules/pkgs/pkgs/detail.php:56
 msgid "Timeout"
-msgstr ""
+msgstr "Pause"
 
 #: modules/pkgs/pkgs/detail.php:61
 msgid "Code Return"
-msgstr ""
+msgstr "Kode retur"
 
 #: modules/pkgs/pkgs/detail.php:66
 msgid "Alternate Package"
-msgstr ""
+msgstr "Alternativ pakke"
 
 #: modules/pkgs/pkgs/detail.php:71
 msgid "Set Environ Variable"
-msgstr ""
+msgstr "Angi miljøvariabel"
 
 #: modules/pkgs/pkgs/detail.php:81 modules/pkgs/pkgs/detail.php:240
-#: modules/pkgs/pkgs/edit.php:517
+#: modules/pkgs/pkgs/edit.php:533
 msgid "File"
 msgstr "Fil"
 
 #: modules/pkgs/pkgs/detail.php:87
 msgid "Set"
-msgstr ""
+msgstr "Angi"
 
 #: modules/pkgs/pkgs/detail.php:92
 #: modules/pkgs/includes/actions/action_download.php:73
@@ -481,7 +481,7 @@ msgstr "Last ned fil"
 #: modules/pkgs/pkgs/detail.php:128 modules/pkgs/pkgs/detail.php:133
 #: modules/pkgs/pkgs/detail.php:138
 msgid "Result Command"
-msgstr ""
+msgstr "Resultatkommando"
 
 #: modules/pkgs/pkgs/detail.php:144 modules/pkgs/pkgs/detail.php:225
 #: modules/pkgs/includes/actions/actionrestart.php:36
@@ -490,7 +490,7 @@ msgstr "Omstart"
 
 #: modules/pkgs/pkgs/detail.php:144
 msgid "Agent Machine"
-msgstr ""
+msgstr "Agent maskin"
 
 #: modules/pkgs/pkgs/detail.php:144
 msgid "Machine"
@@ -502,11 +502,11 @@ msgstr "Venter"
 
 #: modules/pkgs/pkgs/detail.php:149
 msgid "secs."
-msgstr ""
+msgstr "sek."
 
 #: modules/pkgs/pkgs/detail.php:150
 msgid "Go to"
-msgstr ""
+msgstr "Gå til"
 
 #: modules/pkgs/pkgs/detail.php:156
 msgid "Comment"
@@ -514,31 +514,31 @@ msgstr "Kommentar"
 
 #: modules/pkgs/pkgs/detail.php:161
 msgid "Inventory Activated"
-msgstr ""
+msgstr "Inventar er Aktivert"
 
 #: modules/pkgs/pkgs/detail.php:166
 msgid "Clear package after install"
-msgstr ""
+msgstr "Fjern pakken etter installasjon"
 
 #: modules/pkgs/pkgs/detail.php:171
 msgid "If error go to"
-msgstr ""
+msgstr "Hvis feil gå til"
 
 #: modules/pkgs/pkgs/detail.php:174
 msgid "If success go to"
-msgstr ""
+msgstr "Hvis suksess gå til"
 
 #: modules/pkgs/pkgs/detail.php:187
 msgid "Detail of Package "
-msgstr ""
+msgstr "Pakkedetalj"
 
 #: modules/pkgs/pkgs/detail.php:192
 msgid "Context"
-msgstr ""
+msgstr "Sammenheng"
 
 #: modules/pkgs/pkgs/detail.php:194
 msgid "Package Name"
-msgstr ""
+msgstr "Pakkenavn"
 
 #: modules/pkgs/pkgs/detail.php:195
 msgid "Creator"
@@ -546,7 +546,7 @@ msgstr "Skaper"
 
 #: modules/pkgs/pkgs/detail.php:197
 msgid "Edited By"
-msgstr ""
+msgstr "Redigert Av"
 
 #: modules/pkgs/pkgs/detail.php:198
 msgid "Creation Date"
@@ -554,15 +554,15 @@ msgstr "Opprettelsedato"
 
 #: modules/pkgs/pkgs/detail.php:200
 msgid "Last Modification Date"
-msgstr ""
+msgstr "Siste Endringsdag"
 
 #: modules/pkgs/pkgs/detail.php:202
 msgid "Sharing Location"
-msgstr ""
+msgstr "Deler plassering"
 
 #: modules/pkgs/pkgs/detail.php:203
 msgid "Package Uuid"
-msgstr ""
+msgstr "Pakke Uuid"
 
 #: modules/pkgs/pkgs/detail.php:206
 msgid "Type"
@@ -570,9 +570,9 @@ msgstr "Type"
 
 #: modules/pkgs/pkgs/detail.php:216
 msgid "Transfer Method"
-msgstr ""
+msgstr "Overføringsmetode"
 
-#: modules/pkgs/pkgs/detail.php:218 modules/pkgs/pkgs/edit.php:365
+#: modules/pkgs/pkgs/detail.php:218 modules/pkgs/pkgs/edit.php:370
 #: modules/pkgs/pkgs/add.php:295
 msgid "Transfer method"
 msgstr "Overføringsmetode"
@@ -583,21 +583,21 @@ msgstr "Størrelse"
 
 #: modules/pkgs/pkgs/detail.php:220
 msgid "Transferfile"
-msgstr ""
+msgstr "Overfør fil"
 
-#: modules/pkgs/pkgs/detail.php:222 modules/pkgs/pkgs/edit.php:378
+#: modules/pkgs/pkgs/detail.php:222 modules/pkgs/pkgs/edit.php:383
 #: modules/pkgs/pkgs/add.php:301
 msgid "bandwidth throttling (ko)"
 msgstr "båndbredde struping (ko)"
 
-#: modules/pkgs/pkgs/detail.php:223 modules/pkgs/pkgs/edit.php:393
+#: modules/pkgs/pkgs/detail.php:223 modules/pkgs/pkgs/edit.php:398
 #: modules/pkgs/pkgs/add.php:309
 msgid "Spooling"
 msgstr "Spooling"
 
 #: modules/pkgs/pkgs/detail.php:223
 msgid "Priority"
-msgstr ""
+msgstr "Prioritering"
 
 #: modules/pkgs/pkgs/detail.php:224
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:84
@@ -606,7 +606,7 @@ msgstr "Inventar"
 
 #: modules/pkgs/pkgs/detail.php:232
 msgid "View File Content"
-msgstr ""
+msgstr "Se filinnhold"
 
 #: modules/pkgs/pkgs/detail.php:235
 msgid "Files"
@@ -614,26 +614,26 @@ msgstr "Filer"
 
 #: modules/pkgs/pkgs/detail.php:235
 msgid "Total"
-msgstr ""
+msgstr "Totalt"
 
 #: modules/pkgs/pkgs/detail.php:242
 msgid "Ratio Size/Total"
-msgstr ""
+msgstr "Forhold Størrelse/Total"
 
 #: modules/pkgs/pkgs/detail.php:243
 msgid "Mime"
-msgstr ""
+msgstr "Mime"
 
 #: modules/pkgs/pkgs/detail.php:244
 msgid "Mime Type"
-msgstr ""
+msgstr "Mime Type"
 
 #: modules/pkgs/pkgs/detail.php:245 modules/pkgs/pkgs/detail.php:293
 msgid "Action"
 msgstr "Handling"
 
-#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:440
-#: modules/pkgs/pkgs/add.php:317
+#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:456
+#: modules/pkgs/pkgs/add.php:321
 msgid "Dependencies"
 msgstr "Avhengigheter"
 
@@ -643,11 +643,11 @@ msgstr "Pakke"
 
 #: modules/pkgs/pkgs/detail.php:292
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #: modules/pkgs/pkgs/detail.php:321
 msgid "Sequences"
-msgstr ""
+msgstr "Sekvenser"
 
 #: modules/pkgs/pkgs/edit.php:38
 msgid "Edit package"
@@ -696,89 +696,93 @@ msgstr "<br/>Filen ble slettet. %s"
 msgid "Failed to delete files"
 msgstr "Kunne ikke slette filer"
 
-#: modules/pkgs/pkgs/edit.php:242
+#: modules/pkgs/pkgs/edit.php:247
 msgid "Package label"
 msgstr "Pakke-etikett"
 
-#: modules/pkgs/pkgs/edit.php:243
+#: modules/pkgs/pkgs/edit.php:248
 msgid "Package version"
 msgstr "Pakkeversjon"
 
-#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:247
+#: modules/pkgs/pkgs/edit.php:257 modules/pkgs/pkgs/add.php:247
 msgid "Command's name : "
 msgstr "Kommando navn:"
 
-#: modules/pkgs/pkgs/edit.php:252
+#: modules/pkgs/pkgs/edit.php:257
 msgid "Command : "
 msgstr "Kommando"
 
-#: modules/pkgs/pkgs/edit.php:256 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:261 modules/pkgs/pkgs/add.php:251
 msgid "Need a reboot ?"
 msgstr "Trens en omstart?"
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:256
 msgid "Windows"
 msgstr "Windows"
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:256
 msgid "Linux"
 msgstr "Linux"
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:256
 msgid "Mac OS"
 msgstr "Mac OS"
 
-#: modules/pkgs/pkgs/edit.php:335 modules/pkgs/pkgs/add.php:275
+#: modules/pkgs/pkgs/edit.php:340 modules/pkgs/pkgs/add.php:275
 msgid "Operating System"
 msgstr "Operativsystem"
 
-#: modules/pkgs/pkgs/edit.php:378 modules/pkgs/pkgs/add.php:302
+#: modules/pkgs/pkgs/edit.php:383 modules/pkgs/pkgs/add.php:302
 msgid "<in ko>"
 msgstr "<in ko>"
 
-#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:395 modules/pkgs/pkgs/add.php:306
 msgid "high priority"
 msgstr "høy prioritet"
 
-#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:395 modules/pkgs/pkgs/add.php:306
 msgid "ordinary priority"
 msgstr "ordinær prioritet"
 
-#: modules/pkgs/pkgs/edit.php:450 modules/pkgs/pkgs/add.php:327
+#: modules/pkgs/pkgs/edit.php:408 modules/pkgs/pkgs/add.php:312
+msgid "Launcher (kiosk)"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:466 modules/pkgs/pkgs/add.php:331
 msgid "Added dependencies"
 msgstr "Avhengigheter som er lagt til"
 
-#: modules/pkgs/pkgs/edit.php:466 modules/pkgs/pkgs/add.php:343
+#: modules/pkgs/pkgs/edit.php:482 modules/pkgs/pkgs/add.php:347
 msgid "Available dependencies"
 msgstr "Tilgjengelige avhengigheter"
 
-#: modules/pkgs/pkgs/edit.php:467 modules/pkgs/pkgs/add.php:344
+#: modules/pkgs/pkgs/edit.php:483 modules/pkgs/pkgs/add.php:348
 msgid "search by name ..."
-msgstr ""
+msgstr "søk etter navn"
 
-#: modules/pkgs/pkgs/edit.php:526
+#: modules/pkgs/pkgs/edit.php:542
 msgid "Delete file"
 msgstr "Slett Fil"
 
-#: modules/pkgs/pkgs/edit.php:526
+#: modules/pkgs/pkgs/edit.php:542
 msgid "Are you sure you want to delete this file?"
 msgstr "Er du sikker på at du vil slette denne filen?"
 
-#: modules/pkgs/pkgs/edit.php:542
+#: modules/pkgs/pkgs/edit.php:558
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/includes/html.inc.php:59
 msgid "Click here to select files"
 msgstr "Klikk her for å velge filer"
 
-#: modules/pkgs/pkgs/edit.php:543
+#: modules/pkgs/pkgs/edit.php:559
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 #: modules/pkgs/includes/html.inc.php:42
 msgid "Upload Queued Files"
 msgstr "Last opp køede filer"
 
-#: modules/pkgs/pkgs/edit.php:619 modules/pkgs/pkgs/add.php:444
+#: modules/pkgs/pkgs/edit.php:635 modules/pkgs/pkgs/add.php:448
 msgid "Accentuated and special chars are not allowed"
-msgstr ""
+msgstr "Aksentuerte og spesielle tegn er ikke tillatt"
 
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
@@ -855,7 +859,7 @@ msgstr "Skap en tom pakke"
 msgid "Package source"
 msgstr "Pakkekilde"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:523
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:527
 msgid "Files directory"
 msgstr "Filkatalog"
 
@@ -889,12 +893,12 @@ msgstr ""
 "Du kan også be Google om lydløs installasjonsbrytere. Hvis du føler deg heldig, er dette et Google-søk som kan hjelpe: \\n\\n\n"
 "<a href=\"@@GOOGLE_SEARCH_URL@@\">Google søk</a>"
 
-#: modules/pkgs/pkgs/add.php:545
+#: modules/pkgs/pkgs/add.php:549
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Filopplastning (<b><u title='%s'>%s M maks</u></b>)"
 
-#: modules/pkgs/pkgs/add.php:545
+#: modules/pkgs/pkgs/add.php:549
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -1111,11 +1115,11 @@ msgstr "Kommando"
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:42
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:57
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:271
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:256
 #: modules/pkgs/includes/actions/actionprocessscript.php:95
 #: modules/pkgs/includes/actions/actionprocessscript.php:110
-msgid "Set timeout"
-msgstr "Sett timeout"
+msgid "Set timeout (in seconds)"
+msgstr ""
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
 msgid "Execute script"
@@ -1183,6 +1187,10 @@ msgstr ""
 msgid "Force hash-bang"
 msgstr "Tving hash-bang"
 
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:271
+msgid "Set timeout  (in seconds)"
+msgstr ""
+
 #: modules/pkgs/includes/actions/actionrestart.php:17
 msgid "Restart Machine"
 msgstr "Start maskinen på nytt"
@@ -1223,19 +1231,19 @@ msgstr "Slett pakke"
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:97
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:102
 msgid "Forced inventory"
-msgstr ""
+msgstr "Tvunget inventar"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:93
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:98
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:103
 msgid "No inventory"
-msgstr ""
+msgstr "Inget inventar"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:94
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:99
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:104
 msgid "Inventory on change"
-msgstr ""
+msgstr "Inventar ved endring"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:28
 msgid "Set Environment variables"
@@ -1275,7 +1283,7 @@ msgstr "Vent i (sekunder)"
 
 #: modules/pkgs/includes/actions/action_download.php:127
 msgid "Download File:"
-msgstr ""
+msgstr "Last ned Fil:"
 
 #: modules/pkgs/includes/html.inc.php:60
 #: modules/pkgs/includes/html.inc.php:151

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 15:47+0100\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -26,14 +26,17 @@ msgid "kiosk"
 msgstr "кіоск"
 
 #: modules/kiosk/infoPackage.inc.php:43
+#: modules/kiosk/kiosk/localSidebar.php:24
 msgid "Profile List"
 msgstr "Список профілів"
 
 #: modules/kiosk/infoPackage.inc.php:47
+#: modules/kiosk/kiosk/localSidebar.php:25
 msgid "Add Profile"
 msgstr "Додати профіль"
 
-#: modules/kiosk/infoPackage.inc.php:66 modules/kiosk/kiosk/editProfile.php:43
+#: modules/kiosk/infoPackage.inc.php:66 modules/kiosk/kiosk/index.php:43
+#: modules/kiosk/kiosk/editProfile.php:43
 msgid "Edit Profile"
 msgstr "Змінити профіль"
 
@@ -55,37 +58,29 @@ msgstr "Не вдалося оновити профіль %s"
 msgid "List of profils"
 msgstr "Список профілів"
 
-#: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
+#: modules/kiosk/kiosk/index.php:44
+msgid "Delete Profile"
+msgstr ""
+
+#: modules/kiosk/kiosk/index.php:58 modules/kiosk/kiosk/add.php:71
 #: modules/kiosk/kiosk/editProfile.php:73
 msgid "Active"
 msgstr "Активний"
 
-#: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
+#: modules/kiosk/kiosk/index.php:58 modules/kiosk/kiosk/add.php:71
 #: modules/kiosk/kiosk/editProfile.php:73
 msgid "Inactive"
 msgstr "Неактивний"
 
-#: modules/kiosk/kiosk/index.php:54 modules/kiosk/kiosk/add.php:63
+#: modules/kiosk/kiosk/index.php:64 modules/kiosk/kiosk/add.php:63
 #: modules/kiosk/kiosk/editProfile.php:65
 msgid "Profile Name"
 msgstr "Назва профілю"
 
-#: modules/kiosk/kiosk/index.php:56 modules/kiosk/kiosk/add.php:74
+#: modules/kiosk/kiosk/index.php:66 modules/kiosk/kiosk/add.php:74
 #: modules/kiosk/kiosk/editProfile.php:76
 msgid "Profile Status"
 msgstr "Стан профілю"
-
-#: modules/kiosk/kiosk/index.php:65
-msgid "Associate Packages"
-msgstr "Пов'язані пакунки"
-
-#: modules/kiosk/kiosk/index.php:66
-msgid "Edit Profil"
-msgstr "Змінити профіль"
-
-#: modules/kiosk/kiosk/index.php:67
-msgid "Delete Profil"
-msgstr "Вилучити профіль"
 
 #: modules/kiosk/kiosk/add.php:43
 msgid "Add New Profile"
