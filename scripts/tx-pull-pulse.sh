@@ -2,7 +2,8 @@
 
 # This script maps PO and POT files to transifex ressources
 # on https://www.transifex.com
-
+# tx script can be downloaded on https://developers.transifex.com/docs/cli
+#
 SCRIPT_PROJECT=`pwd`
 
 which tx > /dev/null
