@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 15:47+0100\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -1656,14 +1656,14 @@ msgstr "Назва"
 
 #: modules/imaging/includes/post_install_script.php:65
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:90
-#: modules/imaging/manage/ajaxFormWin10.php:816
-#: modules/imaging/manage/ajaxFormWin8.php:809
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:675
+#: modules/imaging/manage/ajaxFormWin10.php:815
+#: modules/imaging/manage/ajaxFormWin8.php:808
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:674
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:76
 #: modules/imaging/manage/ajaxBootmenu.php:99
 #: modules/imaging/manage/sysprepList.php:87
-#: modules/imaging/manage/ajaxFormWin7.php:727
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:678
+#: modules/imaging/manage/ajaxFormWin7.php:726
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:677
 #: modules/imaging/manage/service_edit.php:61
 #: modules/imaging/manage/ajaxServiceLevel2.php:93
 #: modules/imaging/manage/master_edit.php:59
@@ -1731,413 +1731,413 @@ msgstr ""
 msgid "Add <b>%s</b> to available Boot Services ?"
 msgstr "Додати <b>%s</b> до доступних служб завантаження?"
 
-#: modules/imaging/manage/ajaxFormWin10.php:449
-#: modules/imaging/manage/ajaxFormWin8.php:423
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:308
-#: modules/imaging/manage/ajaxFormWin7.php:348
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:292
+#: modules/imaging/manage/ajaxFormWin10.php:448
+#: modules/imaging/manage/ajaxFormWin8.php:422
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:307
+#: modules/imaging/manage/ajaxFormWin7.php:347
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:291
 msgid "Installation Notes"
 msgstr "Нотатки щодо встановлення"
 
-#: modules/imaging/manage/ajaxFormWin10.php:455
-#: modules/imaging/manage/ajaxFormWin8.php:429
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:314
+#: modules/imaging/manage/ajaxFormWin10.php:454
+#: modules/imaging/manage/ajaxFormWin8.php:428
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:313
 #: modules/imaging/manage/master_iso.php:90
-#: modules/imaging/manage/ajaxFormWin7.php:354
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:298
+#: modules/imaging/manage/ajaxFormWin7.php:353
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:297
 #: modules/imaging/imaging/images_iso.php:93
 msgid "Title"
 msgstr "Заголовок"
 
-#: modules/imaging/manage/ajaxFormWin10.php:459
-#: modules/imaging/manage/ajaxFormWin8.php:433
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:318
-#: modules/imaging/manage/ajaxFormWin7.php:358
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:302
+#: modules/imaging/manage/ajaxFormWin10.php:458
+#: modules/imaging/manage/ajaxFormWin8.php:432
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:317
+#: modules/imaging/manage/ajaxFormWin7.php:357
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:301
 msgid "Enter your comments here..."
 msgstr "Тут ви можете ввести свої коментарі…"
 
-#: modules/imaging/manage/ajaxFormWin10.php:468
-#: modules/imaging/manage/ajaxFormWin8.php:442
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:327
-#: modules/imaging/manage/ajaxFormWin7.php:366
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:311
+#: modules/imaging/manage/ajaxFormWin10.php:467
+#: modules/imaging/manage/ajaxFormWin8.php:441
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:326
+#: modules/imaging/manage/ajaxFormWin7.php:365
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:310
 msgid "Os Settings"
 msgstr "Параметри ОС"
 
-#: modules/imaging/manage/ajaxFormWin10.php:499
-#: modules/imaging/manage/ajaxFormWin8.php:473
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:358
-#: modules/imaging/manage/ajaxFormWin7.php:397
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:342
+#: modules/imaging/manage/ajaxFormWin10.php:498
+#: modules/imaging/manage/ajaxFormWin8.php:472
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:357
+#: modules/imaging/manage/ajaxFormWin7.php:396
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:341
 msgid "Product Key"
 msgstr "Ключ продукту"
 
-#: modules/imaging/manage/ajaxFormWin10.php:504
-#: modules/imaging/manage/ajaxFormWin8.php:478
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:363
-#: modules/imaging/manage/ajaxFormWin7.php:402
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:347
+#: modules/imaging/manage/ajaxFormWin10.php:503
+#: modules/imaging/manage/ajaxFormWin8.php:477
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:362
+#: modules/imaging/manage/ajaxFormWin7.php:401
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:346
 msgid "Organization Name"
 msgstr "Назва організації"
 
-#: modules/imaging/manage/ajaxFormWin10.php:512
-#: modules/imaging/manage/ajaxFormWin8.php:486
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:371
-#: modules/imaging/manage/ajaxFormWin7.php:410
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:355
+#: modules/imaging/manage/ajaxFormWin10.php:511
+#: modules/imaging/manage/ajaxFormWin8.php:485
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:370
+#: modules/imaging/manage/ajaxFormWin7.php:409
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:354
 msgid "Accept EULA"
 msgstr "Погодитися з EULA"
 
-#: modules/imaging/manage/ajaxFormWin10.php:520
-#: modules/imaging/manage/ajaxFormWin8.php:494
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:379
-#: modules/imaging/manage/ajaxFormWin7.php:418
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:363
+#: modules/imaging/manage/ajaxFormWin10.php:519
+#: modules/imaging/manage/ajaxFormWin8.php:493
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:378
+#: modules/imaging/manage/ajaxFormWin7.php:417
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:362
 msgid "Skip automatic activation"
 msgstr "Пропустити автоматичну активацію"
 
-#: modules/imaging/manage/ajaxFormWin10.php:528
-#: modules/imaging/manage/ajaxFormWin8.php:502
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:387
-#: modules/imaging/manage/ajaxFormWin7.php:426
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:371
+#: modules/imaging/manage/ajaxFormWin10.php:527
+#: modules/imaging/manage/ajaxFormWin8.php:501
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:386
+#: modules/imaging/manage/ajaxFormWin7.php:425
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:370
 msgid "Skip License Rearm"
 msgstr "Пропустити ліцензування"
 
-#: modules/imaging/manage/ajaxFormWin10.php:537
-#: modules/imaging/manage/ajaxFormWin8.php:511
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:396
-#: modules/imaging/manage/ajaxFormWin7.php:435
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:380
+#: modules/imaging/manage/ajaxFormWin10.php:536
+#: modules/imaging/manage/ajaxFormWin8.php:510
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:395
+#: modules/imaging/manage/ajaxFormWin7.php:434
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:379
 msgid "Setup Language"
 msgstr "Налаштувати мову"
 
-#: modules/imaging/manage/ajaxFormWin10.php:542
-#: modules/imaging/manage/ajaxFormWin8.php:516
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:401
-#: modules/imaging/manage/ajaxFormWin7.php:440
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:385
+#: modules/imaging/manage/ajaxFormWin10.php:541
+#: modules/imaging/manage/ajaxFormWin8.php:515
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:400
+#: modules/imaging/manage/ajaxFormWin7.php:439
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:384
 msgid "Computer Name"
 msgstr "Назва комп'ютера"
 
-#: modules/imaging/manage/ajaxFormWin10.php:550
-#: modules/imaging/manage/ajaxFormWin8.php:532
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:409
-#: modules/imaging/manage/ajaxFormWin7.php:456
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:401
+#: modules/imaging/manage/ajaxFormWin10.php:549
+#: modules/imaging/manage/ajaxFormWin8.php:531
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:408
+#: modules/imaging/manage/ajaxFormWin7.php:455
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:400
 msgid "Keyboard or input method"
 msgstr "Клавіатура або метод введення"
 
-#: modules/imaging/manage/ajaxFormWin10.php:558
-#: modules/imaging/manage/ajaxFormWin8.php:540
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:417
-#: modules/imaging/manage/ajaxFormWin7.php:464
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:409
+#: modules/imaging/manage/ajaxFormWin10.php:557
+#: modules/imaging/manage/ajaxFormWin8.php:539
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:416
+#: modules/imaging/manage/ajaxFormWin7.php:463
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:408
 msgid "Currency and Date format"
 msgstr "Валюта і формат дати"
 
-#: modules/imaging/manage/ajaxFormWin10.php:566
-#: modules/imaging/manage/ajaxFormWin8.php:548
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:425
-#: modules/imaging/manage/ajaxFormWin7.php:472
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:417
+#: modules/imaging/manage/ajaxFormWin10.php:565
+#: modules/imaging/manage/ajaxFormWin8.php:547
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:424
+#: modules/imaging/manage/ajaxFormWin7.php:471
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:416
 msgid "Time Zone"
 msgstr "Часовий пояс"
 
-#: modules/imaging/manage/ajaxFormWin10.php:574
-#: modules/imaging/manage/ajaxFormWin8.php:556
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:433
-#: modules/imaging/manage/ajaxFormWin7.php:480
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:425
+#: modules/imaging/manage/ajaxFormWin10.php:573
+#: modules/imaging/manage/ajaxFormWin8.php:555
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:432
+#: modules/imaging/manage/ajaxFormWin7.php:479
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:424
 msgid "UI Language"
 msgstr "Мова інтерфейсу"
 
-#: modules/imaging/manage/ajaxFormWin10.php:585
-#: modules/imaging/manage/ajaxFormWin8.php:567
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:444
-#: modules/imaging/manage/ajaxFormWin7.php:491
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:436
+#: modules/imaging/manage/ajaxFormWin10.php:584
+#: modules/imaging/manage/ajaxFormWin8.php:566
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:443
+#: modules/imaging/manage/ajaxFormWin7.php:490
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:435
 msgid "Partition Settings"
 msgstr "Параметри поділу на розділи"
 
-#: modules/imaging/manage/ajaxFormWin10.php:594
-#: modules/imaging/manage/ajaxFormWin8.php:576
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:453
-#: modules/imaging/manage/ajaxFormWin7.php:500
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:445
+#: modules/imaging/manage/ajaxFormWin10.php:593
+#: modules/imaging/manage/ajaxFormWin8.php:575
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:452
+#: modules/imaging/manage/ajaxFormWin7.php:499
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:444
 msgid "Wipe Disk"
 msgstr "Витерти диск"
 
-#: modules/imaging/manage/ajaxFormWin10.php:602
-#: modules/imaging/manage/ajaxFormWin8.php:584
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:461
-#: modules/imaging/manage/ajaxFormWin7.php:508
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:453
+#: modules/imaging/manage/ajaxFormWin10.php:601
+#: modules/imaging/manage/ajaxFormWin8.php:583
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:460
+#: modules/imaging/manage/ajaxFormWin7.php:507
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:452
 msgid "Install to disk"
 msgstr "Встановити на диск"
 
-#: modules/imaging/manage/ajaxFormWin10.php:610
-#: modules/imaging/manage/ajaxFormWin8.php:592
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:469
-#: modules/imaging/manage/ajaxFormWin7.php:516
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:461
+#: modules/imaging/manage/ajaxFormWin10.php:609
+#: modules/imaging/manage/ajaxFormWin8.php:591
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:468
+#: modules/imaging/manage/ajaxFormWin7.php:515
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:460
 msgid "Partition Order"
 msgstr "Порядок розділів"
 
-#: modules/imaging/manage/ajaxFormWin10.php:618
-#: modules/imaging/manage/ajaxFormWin8.php:600
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:477
-#: modules/imaging/manage/ajaxFormWin7.php:524
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:469
+#: modules/imaging/manage/ajaxFormWin10.php:617
+#: modules/imaging/manage/ajaxFormWin8.php:599
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:476
+#: modules/imaging/manage/ajaxFormWin7.php:523
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:468
 msgid "Extend OS Partition"
 msgstr "Розширити розділ ОС"
 
-#: modules/imaging/manage/ajaxFormWin10.php:626
-#: modules/imaging/manage/ajaxFormWin8.php:608
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:485
-#: modules/imaging/manage/ajaxFormWin7.php:532
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:477
+#: modules/imaging/manage/ajaxFormWin10.php:625
+#: modules/imaging/manage/ajaxFormWin8.php:607
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:484
+#: modules/imaging/manage/ajaxFormWin7.php:531
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:476
 msgid "Main Partition Format"
 msgstr "Формат основного розділу"
 
-#: modules/imaging/manage/ajaxFormWin10.php:639
-#: modules/imaging/manage/ajaxFormWin8.php:621
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:498
-#: modules/imaging/manage/ajaxFormWin7.php:545
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:490
+#: modules/imaging/manage/ajaxFormWin10.php:638
+#: modules/imaging/manage/ajaxFormWin8.php:620
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:497
+#: modules/imaging/manage/ajaxFormWin7.php:544
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:489
 msgid "Main Partition Letter"
 msgstr "Літера основного розділу"
 
-#: modules/imaging/manage/ajaxFormWin10.php:650
-#: modules/imaging/manage/ajaxFormWin8.php:632
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:509
-#: modules/imaging/manage/ajaxFormWin7.php:556
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:501
+#: modules/imaging/manage/ajaxFormWin10.php:649
+#: modules/imaging/manage/ajaxFormWin8.php:631
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:508
+#: modules/imaging/manage/ajaxFormWin7.php:555
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:500
 msgid "Security Settings"
 msgstr "Параметри безпеки"
 
-#: modules/imaging/manage/ajaxFormWin10.php:659
-#: modules/imaging/manage/ajaxFormWin8.php:641
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:518
-#: modules/imaging/manage/ajaxFormWin7.php:565
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:510
+#: modules/imaging/manage/ajaxFormWin10.php:658
+#: modules/imaging/manage/ajaxFormWin8.php:640
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:517
+#: modules/imaging/manage/ajaxFormWin7.php:564
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:509
 msgid "Protect Your Computer"
 msgstr "Захист вашого комп'ютера"
 
-#: modules/imaging/manage/ajaxFormWin10.php:675
-#: modules/imaging/manage/ajaxFormWin8.php:657
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:534
-#: modules/imaging/manage/ajaxFormWin7.php:581
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:526
+#: modules/imaging/manage/ajaxFormWin10.php:674
+#: modules/imaging/manage/ajaxFormWin8.php:656
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:533
+#: modules/imaging/manage/ajaxFormWin7.php:580
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:525
 msgid "Network Location"
 msgstr "Розташування у мережі"
 
-#: modules/imaging/manage/ajaxFormWin10.php:683
-#: modules/imaging/manage/ajaxFormWin8.php:665
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:542
-#: modules/imaging/manage/ajaxFormWin7.php:589
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:534
+#: modules/imaging/manage/ajaxFormWin10.php:682
+#: modules/imaging/manage/ajaxFormWin8.php:664
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:541
+#: modules/imaging/manage/ajaxFormWin7.php:588
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:533
 msgid "Hide EULA page"
 msgstr "Приховати сторінку EULA"
 
-#: modules/imaging/manage/ajaxFormWin10.php:691
-#: modules/imaging/manage/ajaxFormWin8.php:673
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:550
-#: modules/imaging/manage/ajaxFormWin7.php:597
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:542
+#: modules/imaging/manage/ajaxFormWin10.php:690
+#: modules/imaging/manage/ajaxFormWin8.php:672
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:549
+#: modules/imaging/manage/ajaxFormWin7.php:596
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:541
 msgid "Enable Firewall"
 msgstr "Увімкнути брандмауер"
 
-#: modules/imaging/manage/ajaxFormWin10.php:699
-#: modules/imaging/manage/ajaxFormWin8.php:681
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:558
-#: modules/imaging/manage/ajaxFormWin7.php:605
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:550
+#: modules/imaging/manage/ajaxFormWin10.php:698
+#: modules/imaging/manage/ajaxFormWin8.php:680
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:557
+#: modules/imaging/manage/ajaxFormWin7.php:604
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:549
 msgid "Disable auto daylight timeset"
 msgstr "Вимкнути автоматичне встановлення літнього часу"
 
-#: modules/imaging/manage/ajaxFormWin10.php:707
-#: modules/imaging/manage/ajaxFormWin8.php:689
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:566
-#: modules/imaging/manage/ajaxFormWin7.php:613
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:558
+#: modules/imaging/manage/ajaxFormWin10.php:706
+#: modules/imaging/manage/ajaxFormWin8.php:688
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:565
+#: modules/imaging/manage/ajaxFormWin7.php:612
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:557
 msgid "Hide wireless setup in OOBE"
 msgstr "Приховати налаштування бездротової мережі у OOBE"
 
-#: modules/imaging/manage/ajaxFormWin10.php:712
-#: modules/imaging/manage/ajaxFormWin8.php:694
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:571
-#: modules/imaging/manage/ajaxFormWin7.php:618
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:563
+#: modules/imaging/manage/ajaxFormWin10.php:711
+#: modules/imaging/manage/ajaxFormWin8.php:693
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin7.php:617
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
 msgid "Category View"
 msgstr "Перегляд категорій"
 
-#: modules/imaging/manage/ajaxFormWin10.php:712
-#: modules/imaging/manage/ajaxFormWin8.php:694
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:571
-#: modules/imaging/manage/ajaxFormWin7.php:618
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:563
+#: modules/imaging/manage/ajaxFormWin10.php:711
+#: modules/imaging/manage/ajaxFormWin8.php:693
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin7.php:617
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
 msgid "Classic View"
 msgstr "Класичний перегляд"
 
-#: modules/imaging/manage/ajaxFormWin10.php:715
-#: modules/imaging/manage/ajaxFormWin8.php:697
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:574
-#: modules/imaging/manage/ajaxFormWin7.php:621
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:566
+#: modules/imaging/manage/ajaxFormWin10.php:714
+#: modules/imaging/manage/ajaxFormWin8.php:696
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:573
+#: modules/imaging/manage/ajaxFormWin7.php:620
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:565
 msgid "Control Panel View"
 msgstr "Перегляд панелі керування"
 
-#: modules/imaging/manage/ajaxFormWin10.php:720
-#: modules/imaging/manage/ajaxFormWin8.php:702
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:579
-#: modules/imaging/manage/ajaxFormWin7.php:626
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:571
+#: modules/imaging/manage/ajaxFormWin10.php:719
+#: modules/imaging/manage/ajaxFormWin8.php:701
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
+#: modules/imaging/manage/ajaxFormWin7.php:625
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
 msgid "Large"
 msgstr "Великий"
 
-#: modules/imaging/manage/ajaxFormWin10.php:720
-#: modules/imaging/manage/ajaxFormWin8.php:702
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:579
-#: modules/imaging/manage/ajaxFormWin7.php:626
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:571
+#: modules/imaging/manage/ajaxFormWin10.php:719
+#: modules/imaging/manage/ajaxFormWin8.php:701
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
+#: modules/imaging/manage/ajaxFormWin7.php:625
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
 msgid "Small"
 msgstr "Малий"
 
-#: modules/imaging/manage/ajaxFormWin10.php:723
-#: modules/imaging/manage/ajaxFormWin8.php:705
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:582
-#: modules/imaging/manage/ajaxFormWin7.php:629
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:574
+#: modules/imaging/manage/ajaxFormWin10.php:722
+#: modules/imaging/manage/ajaxFormWin8.php:704
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:581
+#: modules/imaging/manage/ajaxFormWin7.php:628
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:573
 msgid "Control Panel Icon Size"
 msgstr "Розмір піктограм панелі керування"
 
-#: modules/imaging/manage/ajaxFormWin10.php:733
-#: modules/imaging/manage/ajaxFormWin8.php:716
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:592
-#: modules/imaging/manage/ajaxFormWin7.php:640
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:585
+#: modules/imaging/manage/ajaxFormWin10.php:732
+#: modules/imaging/manage/ajaxFormWin8.php:715
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:591
+#: modules/imaging/manage/ajaxFormWin7.php:639
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:584
 msgid "Domain Settings"
 msgstr "Параметри домену"
 
-#: modules/imaging/manage/ajaxFormWin10.php:737
-#: modules/imaging/manage/ajaxFormWin8.php:720
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:596
-#: modules/imaging/manage/ajaxFormWin7.php:644
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:589
+#: modules/imaging/manage/ajaxFormWin10.php:736
+#: modules/imaging/manage/ajaxFormWin8.php:719
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:595
+#: modules/imaging/manage/ajaxFormWin7.php:643
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:588
 msgid "Domain"
 msgstr "Домен"
 
-#: modules/imaging/manage/ajaxFormWin10.php:741
-#: modules/imaging/manage/ajaxFormWin8.php:725
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:600
-#: modules/imaging/manage/ajaxFormWin7.php:649
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:594
+#: modules/imaging/manage/ajaxFormWin10.php:740
+#: modules/imaging/manage/ajaxFormWin8.php:724
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:599
+#: modules/imaging/manage/ajaxFormWin7.php:648
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:593
 msgid "Domain User"
 msgstr "Користувач домену"
 
-#: modules/imaging/manage/ajaxFormWin10.php:745
-#: modules/imaging/manage/ajaxFormWin8.php:730
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:604
-#: modules/imaging/manage/ajaxFormWin7.php:654
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:599
+#: modules/imaging/manage/ajaxFormWin10.php:744
+#: modules/imaging/manage/ajaxFormWin8.php:729
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:603
+#: modules/imaging/manage/ajaxFormWin7.php:653
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:598
 msgid "Domain Password"
 msgstr "Пароль домену"
 
-#: modules/imaging/manage/ajaxFormWin10.php:749
-#: modules/imaging/manage/ajaxFormWin8.php:735
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:608
-#: modules/imaging/manage/ajaxFormWin7.php:659
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:604
+#: modules/imaging/manage/ajaxFormWin10.php:748
+#: modules/imaging/manage/ajaxFormWin8.php:734
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:607
+#: modules/imaging/manage/ajaxFormWin7.php:658
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:603
 msgid "Join Domain"
 msgstr "Долучитися до домену"
 
-#: modules/imaging/manage/ajaxFormWin10.php:753
-#: modules/imaging/manage/ajaxFormWin8.php:740
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:612
-#: modules/imaging/manage/ajaxFormWin7.php:664
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:609
+#: modules/imaging/manage/ajaxFormWin10.php:752
+#: modules/imaging/manage/ajaxFormWin8.php:739
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:611
+#: modules/imaging/manage/ajaxFormWin7.php:663
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:608
 msgid "MachineObjectOU"
 msgstr "MachineObjectOU"
 
-#: modules/imaging/manage/ajaxFormWin10.php:764
-#: modules/imaging/manage/ajaxFormWin8.php:751
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:623
-#: modules/imaging/manage/ajaxFormWin7.php:675
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:620
+#: modules/imaging/manage/ajaxFormWin10.php:763
+#: modules/imaging/manage/ajaxFormWin8.php:750
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:622
+#: modules/imaging/manage/ajaxFormWin7.php:674
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:619
 msgid "Administrator Account"
 msgstr "Обліковий запис адміністратора"
 
-#: modules/imaging/manage/ajaxFormWin10.php:769
-#: modules/imaging/manage/ajaxFormWin8.php:756
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:628
-#: modules/imaging/manage/ajaxFormWin7.php:680
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:625
+#: modules/imaging/manage/ajaxFormWin10.php:768
+#: modules/imaging/manage/ajaxFormWin8.php:755
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:627
+#: modules/imaging/manage/ajaxFormWin7.php:679
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:624
 msgid "Password"
 msgstr "Пароль"
 
-#: modules/imaging/manage/ajaxFormWin10.php:781
-#: modules/imaging/manage/ajaxFormWin8.php:768
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:640
-#: modules/imaging/manage/ajaxFormWin7.php:692
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:637
+#: modules/imaging/manage/ajaxFormWin10.php:780
+#: modules/imaging/manage/ajaxFormWin8.php:767
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:639
+#: modules/imaging/manage/ajaxFormWin7.php:691
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:636
 msgid "User Account"
 msgstr "Обліковий запис"
 
-#: modules/imaging/manage/ajaxFormWin10.php:790
-#: modules/imaging/manage/ajaxFormWin8.php:777
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:649
-#: modules/imaging/manage/ajaxFormWin7.php:701
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:646
+#: modules/imaging/manage/ajaxFormWin10.php:789
+#: modules/imaging/manage/ajaxFormWin8.php:776
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:648
+#: modules/imaging/manage/ajaxFormWin7.php:700
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:645
 msgid "Customer Experience Improvement Program (CEIP)"
 msgstr "Програма поліпшення за враженнями споживачів (CEIP)"
 
-#: modules/imaging/manage/ajaxFormWin10.php:798
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:657
-#: modules/imaging/manage/ajaxFormWin7.php:709
+#: modules/imaging/manage/ajaxFormWin10.php:797
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:656
+#: modules/imaging/manage/ajaxFormWin7.php:708
 msgid "Copy Profile"
 msgstr "Копіювати профіль"
 
-#: modules/imaging/manage/ajaxFormWin10.php:803
-#: modules/imaging/manage/ajaxFormWin8.php:796
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:662
-#: modules/imaging/manage/ajaxFormWin7.php:714
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:665
+#: modules/imaging/manage/ajaxFormWin10.php:802
+#: modules/imaging/manage/ajaxFormWin8.php:795
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:661
+#: modules/imaging/manage/ajaxFormWin7.php:713
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:664
 msgid "User Name"
 msgstr "Ім'я користувача"
 
-#: modules/imaging/manage/ajaxFormWin10.php:811
-#: modules/imaging/manage/ajaxFormWin8.php:804
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:670
-#: modules/imaging/manage/ajaxFormWin7.php:722
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:673
+#: modules/imaging/manage/ajaxFormWin10.php:810
+#: modules/imaging/manage/ajaxFormWin8.php:803
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:669
+#: modules/imaging/manage/ajaxFormWin7.php:721
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:672
 msgid "Group"
 msgstr "Група"
 
-#: modules/imaging/manage/ajaxFormWin10.php:821
-#: modules/imaging/manage/ajaxFormWin8.php:814
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:680
-#: modules/imaging/manage/ajaxFormWin7.php:732
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:683
+#: modules/imaging/manage/ajaxFormWin10.php:820
+#: modules/imaging/manage/ajaxFormWin8.php:813
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:679
+#: modules/imaging/manage/ajaxFormWin7.php:731
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:682
 msgid "Password: (Optional)"
 msgstr "Пароль: (необов'язковий)"
 
-#: modules/imaging/manage/ajaxFormWin10.php:828
-#: modules/imaging/manage/ajaxFormWin8.php:821
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:687
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:690
+#: modules/imaging/manage/ajaxFormWin10.php:827
+#: modules/imaging/manage/ajaxFormWin8.php:820
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:686
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:689
 msgid "UAC"
 msgstr "UAC"
 
-#: modules/imaging/manage/ajaxFormWin10.php:833
-#: modules/imaging/manage/ajaxFormWin8.php:826
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:692
-#: modules/imaging/manage/postinstall_edit.php:162
-#: modules/imaging/manage/ajaxConfiguration.php:123
+#: modules/imaging/manage/ajaxFormWin10.php:832
+#: modules/imaging/manage/ajaxFormWin8.php:825
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
+#: modules/imaging/manage/postinstall_edit.php:161
+#: modules/imaging/manage/ajaxConfiguration.php:130
 #: modules/imaging/manage/master_clone.php:121
-#: modules/imaging/manage/ajaxFormWin7.php:736
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:695
+#: modules/imaging/manage/ajaxFormWin7.php:735
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
 #: modules/imaging/manage/service_edit.php:71
 #: modules/imaging/manage/master_edit.php:72
 #: modules/imaging/manage/bootmenu_edit.php:101
@@ -2145,19 +2145,19 @@ msgstr "UAC"
 msgid "Validate"
 msgstr "Перевірити"
 
-#: modules/imaging/manage/ajaxFormWin10.php:833
-#: modules/imaging/manage/ajaxFormWin8.php:826
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:692
-#: modules/imaging/manage/ajaxFormWin7.php:736
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:695
+#: modules/imaging/manage/ajaxFormWin10.php:832
+#: modules/imaging/manage/ajaxFormWin8.php:825
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
+#: modules/imaging/manage/ajaxFormWin7.php:735
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
 msgid "Create Xml Windows Answer File Generator"
 msgstr "Створити породжувач файла відповідей Windows у XML"
 
-#: modules/imaging/manage/ajaxFormWin10.php:841
-#: modules/imaging/manage/ajaxFormWin8.php:834
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:700
-#: modules/imaging/manage/ajaxFormWin7.php:744
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:703
+#: modules/imaging/manage/ajaxFormWin10.php:840
+#: modules/imaging/manage/ajaxFormWin8.php:833
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:699
+#: modules/imaging/manage/ajaxFormWin7.php:743
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:702
 msgid "Xml Windows Answer File Generator"
 msgstr "Породжувач файла відповідей Windows у XML"
 
@@ -2247,30 +2247,30 @@ msgid "Failed to move <strong>%s</strong> in the default boot menu"
 msgstr ""
 "Не вдалося пересунути <strong>%s</strong> у типовому меню завантаження"
 
-#: modules/imaging/manage/ajaxFormWin8.php:524
-#: modules/imaging/manage/ajaxFormWin7.php:448
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:393
+#: modules/imaging/manage/ajaxFormWin8.php:523
+#: modules/imaging/manage/ajaxFormWin7.php:447
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:392
 msgid "Show Windows Live"
 msgstr "Показати Windows Live"
 
-#: modules/imaging/manage/ajaxFormWin8.php:649
-#: modules/imaging/manage/ajaxFormWin7.php:573
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:518
+#: modules/imaging/manage/ajaxFormWin8.php:648
+#: modules/imaging/manage/ajaxFormWin7.php:572
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:517
 msgid "System Updates"
 msgstr "Оновлення системи"
 
-#: modules/imaging/manage/ajaxFormWin8.php:785
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:654
+#: modules/imaging/manage/ajaxFormWin8.php:784
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:653
 msgid "System Background Colour"
 msgstr "Колір тла системи"
 
-#: modules/imaging/manage/ajaxFormWin8.php:792
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:661
+#: modules/imaging/manage/ajaxFormWin8.php:791
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:660
 msgid "For Windows 8"
 msgstr "Для Windows 8"
 
-#: modules/imaging/manage/ajaxFormWin8.php:793
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:662
+#: modules/imaging/manage/ajaxFormWin8.php:792
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:661
 msgid "For Windows 8.1"
 msgstr "Для Windows 8.1"
 
@@ -2332,14 +2332,14 @@ msgstr "Ідентифікатор"
 msgid "Available post-imaging scripts"
 msgstr "Доступні скрипти після створення образу"
 
-#: modules/imaging/manage/save_configuration.php:67
+#: modules/imaging/manage/save_configuration.php:68
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
 msgstr "Налаштування сервера образів <strong>%s</strong> збережено."
 
-#: modules/imaging/manage/save_configuration.php:83
-#: modules/imaging/manage/location.php:62
-#: modules/imaging/manage/location.php:66
+#: modules/imaging/manage/save_configuration.php:84
+#: modules/imaging/manage/location.php:61
+#: modules/imaging/manage/location.php:65
 #: modules/imaging/manage/master_add.php:71
 #: modules/imaging/manage/master_add.php:75
 #: modules/imaging/manage/service_show_used.php:128
@@ -2360,81 +2360,86 @@ msgstr "Засіб створення sysprep"
 msgid "Sysprep list"
 msgstr "Список sysprep"
 
-#: modules/imaging/manage/postinstall_edit.php:91
+#: modules/imaging/manage/postinstall_edit.php:90
 #, php-format
 msgid "<strong>%s</strong> script %s"
 msgstr "Скрипт <strong>%s</strong> %s"
 
-#: modules/imaging/manage/postinstall_edit.php:92
+#: modules/imaging/manage/postinstall_edit.php:91
 msgid "Notify Success : "
 msgstr "Сповіщення щодо успіху: "
 
-#: modules/imaging/manage/postinstall_edit.php:108
-#: modules/imaging/manage/postinstall_edit.php:123
+#: modules/imaging/manage/postinstall_edit.php:107
+#: modules/imaging/manage/postinstall_edit.php:122
 msgid "Notify Error : "
 msgstr "Сповіщення щодо помилки: "
 
-#: modules/imaging/manage/postinstall_edit.php:122
+#: modules/imaging/manage/postinstall_edit.php:121
 #, php-format
 msgid "<strong>%s</strong> script wasn't %s"
 msgstr "Скрипт <strong>%s</strong> не був %s"
 
-#: modules/imaging/manage/postinstall_edit.php:158
+#: modules/imaging/manage/postinstall_edit.php:157
 msgid "Script value"
 msgstr "Значення скрипту"
 
-#: modules/imaging/manage/ajaxConfiguration.php:28
+#: modules/imaging/manage/ajaxConfiguration.php:29
 msgid "Imaging server configuration"
 msgstr "Налаштування сервера образів"
 
-#: modules/imaging/manage/ajaxConfiguration.php:59
+#: modules/imaging/manage/ajaxConfiguration.php:60
 msgid "Menu language"
 msgstr "Мова меню"
 
-#: modules/imaging/manage/ajaxConfiguration.php:62
-msgid "PXE Password"
-msgstr "Пароль PXE"
-
 #: modules/imaging/manage/ajaxConfiguration.php:63
+msgid "PXE Login"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:64
+#: modules/imaging/manage/ajaxConfiguration.php:66
 msgid "Leave this field empty to unset PXE Password"
 msgstr "Не заповнюйте це поле, щоб не встановлювати пароль PXE"
 
-#: modules/imaging/manage/ajaxConfiguration.php:79
+#: modules/imaging/manage/ajaxConfiguration.php:65
+msgid "PXE Password"
+msgstr "Пароль PXE"
+
+#: modules/imaging/manage/ajaxConfiguration.php:86
 msgid "Clonezilla parameters for saving images"
 msgstr "Параметри Clonezilla для збереження образів"
 
-#: modules/imaging/manage/ajaxConfiguration.php:82
+#: modules/imaging/manage/ajaxConfiguration.php:89
 msgid "Clonezilla parameters for restoring images"
 msgstr "Параметри Clonezilla для відновлення образів"
 
-#: modules/imaging/manage/ajaxConfiguration.php:90
+#: modules/imaging/manage/ajaxConfiguration.php:97
 msgid "Default menu parameters"
 msgstr "Параметри типового меню"
 
-#: modules/imaging/manage/ajaxConfiguration.php:94
+#: modules/imaging/manage/ajaxConfiguration.php:101
 #: modules/imaging/imaging/configure.php:43
 msgid "Default menu label"
 msgstr "Типова мітка меню"
 
-#: modules/imaging/manage/ajaxConfiguration.php:97
+#: modules/imaging/manage/ajaxConfiguration.php:104
 msgid "Default menu timeout"
 msgstr "Час очікування типового меню"
 
-#: modules/imaging/manage/ajaxConfiguration.php:105
+#: modules/imaging/manage/ajaxConfiguration.php:112
 msgid "Hide menu"
 msgstr "Приховати меню"
 
-#: modules/imaging/manage/ajaxConfiguration.php:109
+#: modules/imaging/manage/ajaxConfiguration.php:116
 #: modules/imaging/imaging/configure.php:62
 msgid "Boot options"
 msgstr "Параметри завантаження"
 
-#: modules/imaging/manage/ajaxConfiguration.php:112
+#: modules/imaging/manage/ajaxConfiguration.php:119
 #: modules/imaging/imaging/configure.php:65
 msgid "Full path to the XPM displayed at boot"
 msgstr "Повний шлях до XPM, показаний при завантаженні"
 
-#: modules/imaging/manage/ajaxConfiguration.php:115
+#: modules/imaging/manage/ajaxConfiguration.php:122
 #: modules/imaging/imaging/configure.php:69
 msgid "Message displayed during backup/restoration"
 msgstr "Повідомлення, показане при резервному копіюванні та відновленні"
@@ -2778,24 +2783,24 @@ msgid "Remove this boot service from imaging server %s"
 msgstr "Вилучити цю службу завантаження з сервера образів %s"
 
 #: modules/imaging/manage/service_show_used.php:171
-#: modules/imaging/imaging/showtarget.php:149
+#: modules/imaging/imaging/showtarget.php:150
 msgid "Imaging server"
 msgstr "Сервер образів"
 
 #: modules/imaging/manage/service_show_used.php:178
-#: modules/imaging/imaging/showtarget.php:156
+#: modules/imaging/imaging/showtarget.php:157
 #, php-format
 msgid "Remove this master from computer %s"
 msgstr "Вилучити цю основну систему з комп'ютера %s"
 
 #: modules/imaging/manage/service_show_used.php:179
-#: modules/imaging/imaging/showtarget.php:157
+#: modules/imaging/imaging/showtarget.php:158
 msgid "Imaging group"
 msgstr "Група образів"
 
 #: modules/imaging/manage/service_show_used.php:179
 #: modules/imaging/imaging/configure.php:39
-#: modules/imaging/imaging/showtarget.php:157
+#: modules/imaging/imaging/showtarget.php:158
 msgid "Computer"
 msgstr "Комп'ютер"
 
@@ -3381,8 +3386,8 @@ msgstr "Змінено меню завантаження для <strong>%s</stro
 
 #: modules/imaging/imaging/configure.php:322
 #, php-format
-msgid "Failed to generate the boot menu those computers : %s"
-msgstr "Не вдалося створити меню завантаження для таких комп'ютерів: %s"
+msgid "Error generating the menu : %s"
+msgstr ""
 
 #: modules/imaging/imaging/configure.php:351
 msgid ""
@@ -3709,7 +3714,7 @@ msgstr ""
 "Якщо ви хочете вилучити цю основу з однієї або декількох цілей, позначте "
 "пункти цих цілей і натисніть кнопку «Вилучити»."
 
-#: modules/imaging/imaging/showtarget.php:148
+#: modules/imaging/imaging/showtarget.php:149
 #, php-format
 msgid "Remove this master from imaging server %s"
 msgstr "Вилучити цю основну систему із сервера образів %s"

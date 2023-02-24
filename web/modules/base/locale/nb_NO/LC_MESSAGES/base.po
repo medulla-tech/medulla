@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2021
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 15:47+0100\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2021\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,13 +60,13 @@ msgstr "Bruker"
 msgid "User and group"
 msgstr "Bruker og gruppe"
 
-#: modules/base/audit/indexmail.php:31 modules/base/audit/localSidebar.php:38
+#: modules/base/audit/indexmail.php:31 modules/base/audit/localSidebar.php:35
 #: modules/base/users/ajaxFilter.php:80
 msgid "Mail"
 msgstr "E-post"
 
 #: modules/base/audit/indexnetwork.php:31
-#: modules/base/audit/localSidebar.php:46
+#: modules/base/audit/localSidebar.php:41
 msgid "Network"
 msgstr "Nettverk"
 
@@ -77,7 +77,7 @@ msgstr "Hendelsedetaljer"
 #: modules/base/audit/logview.php:58 modules/base/audit/ajaxLogFilter.php:114
 #: modules/base/logview/logsdeployment.php:297
 #: modules/base/logview/ajax_showlog.php:68
-#: modules/dyngroup/dyngroup/creator.php:239
+#: modules/dyngroup/dyngroup/creator.php:266
 msgid "Date"
 msgstr "Dato"
 
@@ -159,15 +159,15 @@ msgstr "Søk handling"
 msgid "All modules"
 msgstr "Alle moduler"
 
-#: modules/base/audit/indexsamba.php:31 modules/base/audit/localSidebar.php:34
+#: modules/base/audit/indexsamba.php:31 modules/base/audit/localSidebar.php:32
 msgid "Samba"
 msgstr "Samba"
 
-#: modules/base/audit/localSidebar.php:30
+#: modules/base/audit/localSidebar.php:29
 msgid "Users and Groups"
 msgstr "Brukere og grupper"
 
-#: modules/base/audit/localSidebar.php:42
+#: modules/base/audit/localSidebar.php:38
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -440,22 +440,22 @@ msgid "Backup"
 msgstr "Sikkerhetskopi"
 
 #: modules/base/computers/index.php:48
-#: modules/base/computers/localSidebar.php:5
-#: modules/glpi/glpi/machinesListglpi.php:39
+#: modules/base/computers/localSidebar.php:6
+#: modules/glpi/glpi/machinesListglpi.php:40
 #: modules/glpi/glpi/machinesList.php:39
 #: modules/xmppmaster/xmppmaster/machinesList.php:39
 msgid "All computers"
 msgstr "Alle datamaskiner"
 
 #: modules/base/computers/index.php:52
-#: modules/glpi/glpi/machinesListglpi.php:43
+#: modules/glpi/glpi/machinesListglpi.php:44
 #: modules/glpi/glpi/machinesList.php:43
 #: modules/xmppmaster/xmppmaster/machinesList.php:43
 msgid "Online computers"
 msgstr "Online datamaskiner"
 
 #: modules/base/computers/index.php:56
-#: modules/glpi/glpi/machinesListglpi.php:47
+#: modules/glpi/glpi/machinesListglpi.php:48
 #: modules/glpi/glpi/machinesList.php:47
 #: modules/xmppmaster/xmppmaster/machinesList.php:47
 msgid "Offline computers"
@@ -540,8 +540,9 @@ msgid "Location"
 msgstr "Plassering"
 
 #: modules/base/computers/localSidebar.php:7
-msgid "All computers glpi"
-msgstr "Alle maskiners glpi"
+#, php-format
+msgid "All computers %s"
+msgstr ""
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
 msgid "Add user"
@@ -918,42 +919,42 @@ msgid "The password is too short."
 msgstr "Passordet er for kort."
 
 #: modules/base/includes/computers_list.inc.php:100
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:75
 msgid "Inventory"
 msgstr "Inventar"
 
 #: modules/base/includes/computers_list.inc.php:101
-#: modules/glpi/glpi/ajaxMachinesList.php:194
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:95
+#: modules/glpi/glpi/ajaxMachinesList.php:166
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:81
 msgid "Monitoring"
 msgstr "Overvåking"
 
 #: modules/base/includes/computers_list.inc.php:102
-#: modules/glpi/glpi/ajaxMachinesList.php:187
-#: modules/glpi/glpi/ajaxMachinesList.php:190
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:86
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:90
+#: modules/glpi/glpi/ajaxMachinesList.php:159
+#: modules/glpi/glpi/ajaxMachinesList.php:162
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:72
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
 msgid "GLPI Inventory"
 msgstr "GLPI Inventar"
 
 #: modules/base/includes/computers_list.inc.php:103
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:91
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:77
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:95
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
-msgid "View deployment details"
+msgid "detaildeploy"
 msgstr "detaljutrulling"
 
 #: modules/base/includes/computers_list.inc.php:104
 #: modules/base/includes/computers_list.inc.php:107
-#: modules/glpi/glpi/ajaxMachinesList.php:198
-#: modules/glpi/glpi/ajaxMachinesList.php:199
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:87
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
+#: modules/glpi/glpi/ajaxMachinesList.php:170
+#: modules/glpi/glpi/ajaxMachinesList.php:171
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:73
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:78
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:83
 msgid "Software deployment"
 msgstr "Utrulling av Programvare"
 
@@ -963,14 +964,14 @@ msgstr "Les logg"
 
 #: modules/base/includes/computers_list.inc.php:109
 #: modules/base/includes/computers_list.inc.php:110
-#: modules/glpi/glpi/ajaxMachinesList.php:201
-#: modules/glpi/glpi/ajaxMachinesList.php:202
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:99
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:100
+#: modules/glpi/glpi/ajaxMachinesList.php:173
+#: modules/glpi/glpi/ajaxMachinesList.php:174
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:85
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:86
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:39
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:40
-#: modules/pulse2/includes/menu_actionaudit.php:78
-#: modules/pulse2/includes/menu_action.php:74
+#: modules/pulse2/includes/menu_actionaudit.php:79
+#: modules/pulse2/includes/menu_action.php:75
 msgid "xmppconsole"
 msgstr "xmppkonsoll"
 
@@ -978,64 +979,64 @@ msgstr "xmppkonsoll"
 #: modules/base/includes/computers_list.inc.php:113
 #: modules/base/includes/computers_list.inc.php:125
 #: modules/base/includes/computers_list.inc.php:126
-#: modules/glpi/glpi/ajaxMachinesList.php:205
-#: modules/glpi/glpi/ajaxMachinesList.php:206
-#: modules/glpi/glpi/ajaxMachinesList.php:208
-#: modules/glpi/glpi/ajaxMachinesList.php:209
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:102
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:103
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:104
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:107
-#: modules/pulse2/includes/menu_actionaudit.php:79
-#: modules/pulse2/includes/menu_actionaudit.php:82
-#: modules/pulse2/includes/menu_action.php:70
-#: modules/pulse2/includes/menu_action.php:84
-#: modules/pulse2/includes/menu_action.php:86
+#: modules/glpi/glpi/ajaxMachinesList.php:177
+#: modules/glpi/glpi/ajaxMachinesList.php:178
+#: modules/glpi/glpi/ajaxMachinesList.php:180
+#: modules/glpi/glpi/ajaxMachinesList.php:181
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:88
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:90
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:93
+#: modules/pulse2/includes/menu_actionaudit.php:80
+#: modules/pulse2/includes/menu_actionaudit.php:83
+#: modules/pulse2/includes/menu_action.php:71
+#: modules/pulse2/includes/menu_action.php:85
+#: modules/pulse2/includes/menu_action.php:87
 msgid "files browsing"
 msgstr "Bla igjennom filer"
 
 #: modules/base/includes/computers_list.inc.php:119
 #: modules/base/includes/computers_list.inc.php:121
-#: modules/glpi/glpi/ajaxMachinesList.php:212
-#: modules/glpi/glpi/ajaxMachinesList.php:213
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:105
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:106
+#: modules/glpi/glpi/ajaxMachinesList.php:184
+#: modules/glpi/glpi/ajaxMachinesList.php:185
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:91
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:39
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:37
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:38
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:88
 #: modules/admin/infoPackage.inc.php:65
 #: modules/admin/admin/ajaxRelaysList.php:46
 #: modules/admin/admin/ajaxRelaysList.php:48
-#: modules/pulse2/includes/menu_actionaudit.php:80
+#: modules/pulse2/includes/menu_actionaudit.php:81
 msgid "Edit config files"
 msgstr "Rediger konfigurasjonsfiler"
 
 #: modules/base/includes/computers_list.inc.php:128
 #: modules/base/includes/computers_list.inc.php:130
 #: modules/base/includes/computers_list.inc.php:141
-#: modules/glpi/glpi/ajaxMachinesList.php:195
-#: modules/glpi/glpi/ajaxMachinesList.php:219
-#: modules/glpi/glpi/ajaxMachinesList.php:231
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:96
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:111
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:121
+#: modules/glpi/glpi/ajaxMachinesList.php:167
+#: modules/glpi/glpi/ajaxMachinesList.php:191
+#: modules/glpi/glpi/ajaxMachinesList.php:203
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:82
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:107
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:41
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:42
 #: modules/admin/admin/ajaxRelaysList.php:67
 #: modules/admin/admin/ajaxRelaysList.php:68
-#: modules/pulse2/includes/menu_actionaudit.php:75
-#: modules/pulse2/includes/menu_action.php:64
+#: modules/pulse2/includes/menu_actionaudit.php:76
+#: modules/pulse2/includes/menu_action.php:65
 msgid "Remote control"
 msgstr "Fjernkontroll"
 
 #: modules/base/includes/computers_list.inc.php:132
-#: modules/glpi/glpi/ajaxMachinesList.php:222
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:113
+#: modules/glpi/glpi/ajaxMachinesList.php:194
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:99
 #: modules/pulse2/includes/menu_group_action.php:76
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:159
 msgid "Imaging management"
@@ -1047,21 +1048,21 @@ msgstr "Last ned fil"
 
 #: modules/base/includes/computers_list.inc.php:134
 #: modules/base/users/ajaxFilter.php:85
-#: modules/glpi/glpi/ajaxMachinesList.php:224
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:114
+#: modules/glpi/glpi/ajaxMachinesList.php:196
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:100
 msgid "extTicket issue"
 msgstr "extTicket-problem"
 
 #: modules/base/includes/computers_list.inc.php:136
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:116
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:102
 msgid "Show Profile"
 msgstr "Vis profil"
 
 #: modules/base/includes/computers_list.inc.php:138
-#: modules/glpi/glpi/ajaxMachinesList.php:228
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:118
-#: modules/pulse2/includes/menu_actionaudit.php:68
-#: modules/pulse2/includes/menu_action.php:75
+#: modules/glpi/glpi/ajaxMachinesList.php:200
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:104
+#: modules/pulse2/includes/menu_actionaudit.php:69
+#: modules/pulse2/includes/menu_action.php:76
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:71
 msgid "Quick action"
 msgstr "Hurtighandling"
@@ -1071,15 +1072,15 @@ msgid "Computers list"
 msgstr "Datamaskinliste"
 
 #: modules/base/includes/computers_list.inc.php:368
-#: modules/glpi/glpi/ajaxMachinesList.php:472
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:323
+#: modules/glpi/glpi/ajaxMachinesList.php:444
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:309
 #: modules/pulse2/includes/menu_actionaudit.php:66
 msgid "Backup status"
 msgstr "Backup status"
 
 #: modules/base/includes/computers_list.inc.php:408
-#: modules/glpi/glpi/ajaxMachinesList.php:506
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:360
+#: modules/glpi/glpi/ajaxMachinesList.php:483
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:351
 msgid "Delete computer"
 msgstr "Slett datamaskin"
 
@@ -1345,8 +1346,8 @@ msgstr "Alle brukere"
 #: modules/base/groups/members.php:191 modules/base/groups/edit.php:117
 #: modules/dyngroup/includes/groups.inc.php:85
 #: modules/dyngroup/includes/groups.inc.php:283
-#: includes/PageGenerator.php:2646 includes/PageGenerator.php:2715
-#: includes/PageGenerator.php:2741
+#: includes/PageGenerator.php:2647 includes/PageGenerator.php:2716
+#: includes/PageGenerator.php:2742
 msgid "Confirm"
 msgstr "Bekreft"
 
@@ -1357,7 +1358,7 @@ msgstr "Bekreft"
 #: modules/imaging/imaging/multicast.php:390
 #: modules/dyngroup/includes/groups.inc.php:86
 #: modules/dyngroup/includes/groups.inc.php:284
-#: includes/PageGenerator.php:2650 includes/PageGenerator.php:2719
+#: includes/PageGenerator.php:2651 includes/PageGenerator.php:2720
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -1415,11 +1416,11 @@ msgstr "Gruppenavn"
 msgid "Create"
 msgstr "Legg til"
 
-#: modules/base/groups/localSidebar.php:28
+#: modules/base/groups/localSidebar.php:27
 msgid "List"
 msgstr "Liste"
 
-#: modules/base/groups/localSidebar.php:29 includes/FormGenerator.php:720
+#: modules/base/groups/localSidebar.php:28 includes/FormGenerator.php:720
 msgid "Add"
 msgstr "Legg til"
 
@@ -1758,34 +1759,41 @@ msgstr[1] ""
 msgid "Appstream"
 msgstr "Appstream"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:215
-#: modules/glpi/glpi/ajaxMachinesList.php:216
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:108
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:109
+#: modules/glpi/glpi/ajaxMachinesList.php:187
+#: modules/glpi/glpi/ajaxMachinesList.php:188
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:94
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:95
 msgid "files viewer"
 msgstr "filviser"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:345
+#: modules/glpi/glpi/ajaxMachinesList.php:453
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:318
+#: modules/pulse2/includes/menu_actionaudit.php:67
+#: modules/pulse2/includes/menu_action.php:61
+msgid "Urbackup"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:328
 msgid "cluster list"
 msgstr "cluster liste"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:346
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:329
 msgid "cluster nb ars"
 msgstr "cluster nb ars"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:347
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:330
 msgid "machine"
 msgstr "maskin"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:348
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:331
 msgid "progress"
 msgstr "framdrift"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:349
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:332
 msgid "start"
 msgstr "start"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:350
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:333
 msgid "end"
 msgstr "slutt"
 
@@ -1794,21 +1802,21 @@ msgstr "slutt"
 #: modules/admin/admin/ajaxRelaysList.php:50
 #: modules/admin/admin/ajaxRelaysList.php:51
 msgid "Relay Detail"
-msgstr ""
+msgstr "Relé detalj"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
 #: modules/admin/admin/ajaxRelaysList.php:53
 #: modules/admin/admin/ajaxRelaysList.php:54
 msgid "Detail actions"
-msgstr ""
+msgstr "Detalj handlinger"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:48
 #: modules/admin/admin/ajaxRelaysList.php:56
 #: modules/admin/admin/ajaxRelaysList.php:57
 msgid "Console Relay"
-msgstr ""
+msgstr "Konsoll relé"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
@@ -1824,19 +1832,19 @@ msgstr "Bytt"
 #: modules/admin/admin/ajaxRelaysList.php:62
 #: modules/admin/admin/ajaxRelaysList.php:63
 msgid "Reconfigure Machines"
-msgstr ""
+msgstr "Rekonfigurer maskiner"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:56
 #: modules/admin/admin/ajaxRelaysList.php:65
 msgid "QA Launched"
-msgstr ""
+msgstr "QA startet"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:61
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:62
 #: modules/admin/admin/ajaxRelaysList.php:70
 #: modules/admin/admin/ajaxRelaysList.php:71
 msgid "Packages List"
-msgstr ""
+msgstr "Pakkeliste"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
 #: modules/admin/admin/reconfiguremachines.php:25
@@ -1845,11 +1853,14 @@ msgid ""
 "<em><b>reconfiguration of all the machines</b></em> managed by the "
 "relayserver."
 msgstr ""
+"Du må merke av i boksen <b>\"Jeg er klar over at denne handlingen tvinger "
+"frem en <em><b>rekonfigurasjon av alle maskinene</b></em> administrert av "
+"reléserveren."
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
 #: modules/admin/admin/reconfiguremachines.php:32
 msgid "The machines of the relay "
-msgstr ""
+msgstr "Maskinene til reléet"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
 #: modules/admin/admin/reconfiguremachines.php:51
@@ -1858,11 +1869,14 @@ msgid ""
 "machines</b></em> managed by the relayserver.<br />Check this box if it is "
 "what you want."
 msgstr ""
+"Jeg er klar over at denne handlingen tvinger en <em><b>rekonfigurasjon av "
+"alle maskinene</b></em>som administreres av reléserveren.<br />Kryss av i "
+"denne boksen hvis det er det du vil ha."
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
 #: modules/admin/admin/ajaxqalaunched.php:35
 msgid "Show Result"
-msgstr ""
+msgstr "Vis Resultat"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
 #: modules/admin/admin/switchrelay.php:25
@@ -1871,11 +1885,14 @@ msgid ""
 "forcing a <em><b>reconfiguration of all the machines</b></em> managed by the"
 " cluster."
 msgstr ""
+"Du må merke av i boksen <b>\"Jeg er klar over at dette deaktiverer/aktiverer"
+" et relé som tvinger en <em><b>3rekonfigurasjon av alle maskinene</b></em> "
+"administrert av klyngen."
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
 #: modules/admin/admin/switchrelay.php:32
 msgid "The relay "
-msgstr ""
+msgstr "Reléet"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
 #: modules/admin/admin/switchrelay.php:51
@@ -1884,19 +1901,22 @@ msgid ""
 " of all the machines</b></em> managed by the cluster.<br />Check this box if"
 " it is what you want."
 msgstr ""
+"Jeg er klar over at dette deaktiverer/aktiverer et relé som tvinger en "
+"<em><b>rekonfigurasjon av alle maskinene</b></em> som administreres av "
+"klyngen.<br /> Merk av i denne boksen hvis det er det du vil ha."
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
 #: modules/dashboard/includes/panels/alertsentity.inc.php:50
 #: modules/dashboard/includes/panels/alerts.inc.php:50
 msgid "Acknowledge"
-msgstr ""
+msgstr "Anerkjenne"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:38
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:28
 #: modules/dashboard/includes/panels/alertsentity.inc.php:49
 #: modules/dashboard/includes/panels/alerts.inc.php:49
 msgid "Detail"
-msgstr ""
+msgstr "Detalj"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:67
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
@@ -1917,7 +1937,7 @@ msgstr "Oppetid"
 
 #: modules/admin/admin/ajaxClustersList.php:34
 msgid "Edit Cluster"
-msgstr ""
+msgstr "Rediger klynge"
 
 #: modules/admin/admin/ajaxRulesDetail.php:32
 msgid "Edit rule"
@@ -1925,17 +1945,17 @@ msgstr "Rediger regel"
 
 #: modules/admin/admin/ajaxRelaysList.php:73
 msgid "Relay Rules"
-msgstr ""
+msgstr "Relé regler"
 
 #: modules/admin/admin/ajaxRelaysList.php:75
 #: modules/admin/admin/ajaxRelaysList.php:76
 msgid "Ban"
-msgstr ""
+msgstr "Forby"
 
 #: modules/admin/admin/ajaxRelaysList.php:78
 #: modules/admin/admin/ajaxRelaysList.php:79
 msgid "Unban"
-msgstr ""
+msgstr "Opphev forbud"
 
 #: modules/pulse2/includes/menu_group_action.php:82
 msgid "Group Quick action"
@@ -2111,24 +2131,24 @@ msgstr "Paginering"
 msgid "Go to page"
 msgstr "Gå til side"
 
-#: includes/PageGenerator.php:1429
+#: includes/PageGenerator.php:1430
 msgid "No item available"
 msgstr "Ingen enheter tilgjengelig"
 
-#: includes/PageGenerator.php:1648
+#: includes/PageGenerator.php:1649
 msgid "Select entity"
 msgstr "velg enhet"
 
-#: includes/PageGenerator.php:2268 includes/FormGenerator.php:645
+#: includes/PageGenerator.php:2269 includes/FormGenerator.php:645
 #: graph/header.inc.php:251
 msgid "Close"
 msgstr "Steng"
 
-#: includes/PageGenerator.php:2893
+#: includes/PageGenerator.php:2894
 msgid "Select all"
 msgstr "Velg alt"
 
-#: includes/PageGenerator.php:2893
+#: includes/PageGenerator.php:2894
 msgid "Unselect all"
 msgstr "Avmarker alt"
 

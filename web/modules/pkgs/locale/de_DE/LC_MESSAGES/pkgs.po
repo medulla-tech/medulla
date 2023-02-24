@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 15:47+0100\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2021\n"
 "Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
@@ -172,7 +172,7 @@ msgstr ""
 msgid "Package name"
 msgstr "Paketname"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:293 modules/pkgs/pkgs/edit.php:306
+#: modules/pkgs/pkgs/ajaxPackageList.php:293 modules/pkgs/pkgs/edit.php:311
 #: modules/pkgs/pkgs/add.php:224
 msgid "Share"
 msgstr ""
@@ -184,7 +184,7 @@ msgstr ""
 #: modules/pkgs/pkgs/ajaxPackageList.php:296
 #: modules/pkgs/pkgs/ajaxPackageList.php:437 modules/pkgs/pkgs/addRule.php:60
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/detail.php:204 modules/pkgs/pkgs/edit.php:244
+#: modules/pkgs/pkgs/detail.php:204 modules/pkgs/pkgs/edit.php:249
 #: modules/pkgs/pkgs/editRule.php:65 modules/pkgs/pkgs/add.php:232
 msgid "Description"
 msgstr "Beschreibung"
@@ -367,7 +367,7 @@ msgid "Element in Strings Result"
 msgstr ""
 
 #: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
-#: modules/pkgs/pkgs/add.php:382
+#: modules/pkgs/pkgs/add.php:386
 msgid "Add"
 msgstr "Hinzufgen"
 
@@ -459,7 +459,7 @@ msgid "Set Environ Variable"
 msgstr ""
 
 #: modules/pkgs/pkgs/detail.php:81 modules/pkgs/pkgs/detail.php:240
-#: modules/pkgs/pkgs/edit.php:517
+#: modules/pkgs/pkgs/edit.php:533
 msgid "File"
 msgstr "Datei"
 
@@ -569,7 +569,7 @@ msgstr "Typ"
 msgid "Transfer Method"
 msgstr ""
 
-#: modules/pkgs/pkgs/detail.php:218 modules/pkgs/pkgs/edit.php:365
+#: modules/pkgs/pkgs/detail.php:218 modules/pkgs/pkgs/edit.php:370
 #: modules/pkgs/pkgs/add.php:295
 msgid "Transfer method"
 msgstr ""
@@ -582,12 +582,12 @@ msgstr "Gre"
 msgid "Transferfile"
 msgstr ""
 
-#: modules/pkgs/pkgs/detail.php:222 modules/pkgs/pkgs/edit.php:378
+#: modules/pkgs/pkgs/detail.php:222 modules/pkgs/pkgs/edit.php:383
 #: modules/pkgs/pkgs/add.php:301
 msgid "bandwidth throttling (ko)"
 msgstr ""
 
-#: modules/pkgs/pkgs/detail.php:223 modules/pkgs/pkgs/edit.php:393
+#: modules/pkgs/pkgs/detail.php:223 modules/pkgs/pkgs/edit.php:398
 #: modules/pkgs/pkgs/add.php:309
 msgid "Spooling"
 msgstr ""
@@ -629,8 +629,8 @@ msgstr ""
 msgid "Action"
 msgstr "Aktionen"
 
-#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:440
-#: modules/pkgs/pkgs/add.php:317
+#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:456
+#: modules/pkgs/pkgs/add.php:321
 msgid "Dependencies"
 msgstr ""
 
@@ -693,87 +693,91 @@ msgstr ""
 msgid "Failed to delete files"
 msgstr "Fehler beim Lschen der Dateien"
 
-#: modules/pkgs/pkgs/edit.php:242
+#: modules/pkgs/pkgs/edit.php:247
 msgid "Package label"
 msgstr "Paket Beschriftung"
 
-#: modules/pkgs/pkgs/edit.php:243
+#: modules/pkgs/pkgs/edit.php:248
 msgid "Package version"
 msgstr "Paket Version"
 
-#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:247
+#: modules/pkgs/pkgs/edit.php:257 modules/pkgs/pkgs/add.php:247
 msgid "Command's name : "
 msgstr "Command Name:"
 
-#: modules/pkgs/pkgs/edit.php:252
+#: modules/pkgs/pkgs/edit.php:257
 msgid "Command : "
 msgstr "Command:"
 
-#: modules/pkgs/pkgs/edit.php:256 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:261 modules/pkgs/pkgs/add.php:251
 msgid "Need a reboot ?"
 msgstr "Braucht einen Neustart?"
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:256
 msgid "Windows"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:256
 msgid "Linux"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:256
 msgid "Mac OS"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:335 modules/pkgs/pkgs/add.php:275
+#: modules/pkgs/pkgs/edit.php:340 modules/pkgs/pkgs/add.php:275
 msgid "Operating System"
 msgstr "Betriebssystem"
 
-#: modules/pkgs/pkgs/edit.php:378 modules/pkgs/pkgs/add.php:302
+#: modules/pkgs/pkgs/edit.php:383 modules/pkgs/pkgs/add.php:302
 msgid "<in ko>"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:395 modules/pkgs/pkgs/add.php:306
 msgid "high priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:395 modules/pkgs/pkgs/add.php:306
 msgid "ordinary priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:450 modules/pkgs/pkgs/add.php:327
+#: modules/pkgs/pkgs/edit.php:408 modules/pkgs/pkgs/add.php:312
+msgid "Launcher (kiosk)"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:466 modules/pkgs/pkgs/add.php:331
 msgid "Added dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:466 modules/pkgs/pkgs/add.php:343
+#: modules/pkgs/pkgs/edit.php:482 modules/pkgs/pkgs/add.php:347
 msgid "Available dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:467 modules/pkgs/pkgs/add.php:344
+#: modules/pkgs/pkgs/edit.php:483 modules/pkgs/pkgs/add.php:348
 msgid "search by name ..."
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:526
+#: modules/pkgs/pkgs/edit.php:542
 msgid "Delete file"
 msgstr "Datei lschen"
 
-#: modules/pkgs/pkgs/edit.php:526
+#: modules/pkgs/pkgs/edit.php:542
 msgid "Are you sure you want to delete this file?"
 msgstr "Sind Sie sicher, dass Sie die Datei lschen mchten?"
 
-#: modules/pkgs/pkgs/edit.php:542
+#: modules/pkgs/pkgs/edit.php:558
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/includes/html.inc.php:59
 msgid "Click here to select files"
 msgstr "Klicken Sie hier um Dateien zu whlen"
 
-#: modules/pkgs/pkgs/edit.php:543
+#: modules/pkgs/pkgs/edit.php:559
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 #: modules/pkgs/includes/html.inc.php:42
 msgid "Upload Queued Files"
 msgstr "Eingereihte Dateien hochladen"
 
-#: modules/pkgs/pkgs/edit.php:619 modules/pkgs/pkgs/add.php:444
+#: modules/pkgs/pkgs/edit.php:635 modules/pkgs/pkgs/add.php:448
 msgid "Accentuated and special chars are not allowed"
 msgstr ""
 
@@ -852,7 +856,7 @@ msgstr "Ein leeres Paket erstellen"
 msgid "Package source"
 msgstr "Paketquelle"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:523
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:527
 msgid "Files directory"
 msgstr "Dateien-Verzeichnis"
 
@@ -881,12 +885,12 @@ msgid ""
 "        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:545
+#: modules/pkgs/pkgs/add.php:549
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Dateien Upload (<b><u title='%s'>%sM max</u></b>)"
 
-#: modules/pkgs/pkgs/add.php:545
+#: modules/pkgs/pkgs/add.php:549
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -1103,10 +1107,10 @@ msgstr "Befehl"
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:42
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:57
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:271
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:256
 #: modules/pkgs/includes/actions/actionprocessscript.php:95
 #: modules/pkgs/includes/actions/actionprocessscript.php:110
-msgid "Set timeout"
+msgid "Set timeout (in seconds)"
 msgstr ""
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
@@ -1167,6 +1171,10 @@ msgstr ""
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:226
 msgid "Force hash-bang"
+msgstr ""
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:271
+msgid "Set timeout  (in seconds)"
 msgstr ""
 
 #: modules/pkgs/includes/actions/actionrestart.php:17
