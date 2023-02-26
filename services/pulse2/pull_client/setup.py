@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 # A simple setup script for creating a Windows service. See the comments in the
 # Config.py and ServiceHandler.py files for more information on how to set this
 # up.

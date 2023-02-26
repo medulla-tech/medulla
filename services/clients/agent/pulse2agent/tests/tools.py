@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 import os
 import ssl
 import time

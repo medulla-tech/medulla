@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 """
 Various functions to get values from config files and
 to edit these values.
