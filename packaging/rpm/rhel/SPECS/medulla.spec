@@ -29,7 +29,7 @@
 %define mmc_version            4.6.11
 
 Summary:	Management Console
-Name:		pulse2
+Name:		medulla
 Version:	%real_version
 %if ! %use_git
 Release:        1%{?dist}
@@ -1348,7 +1348,7 @@ Allow the use of SQL databases within MMC framework.
 #--------------------------------------------------------------------
 
 %prep
-%setup -q  -n pulse2-%version
+%setup -q  -n medulla-%version
 cp %{SOURCE5}   agent/mmc/plugins/base
 cp %{SOURCE6}   web/modules/base/computers
 
