@@ -791,65 +791,65 @@ function fillSearch(content){
         echo 'datas.push({"label":"WOL 3", "value":parseInt('.$wol3.'), "color": "#5D01A9", "href":"'.urlredirect_group_for_deploy("wol3",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($waitingmachineonline > 0){
-        echo 'datas.push({"label":"Waiting Machine Online ", "value":parseInt('.$waitingmachineonline.'), "color": "#6F01F3", "href":"'.urlredirect_group_for_deploy("waitingmachineonline",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Waiting Machine Online", "value":parseInt('.$waitingmachineonline.'), "color": "#6F01F3", "href":"'.urlredirect_group_for_deploy("waitingmachineonline",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($deploymentpending > 0){
-        echo 'datas.push({"label":"Deployment Pending (Reboot/Shutdown/...) ", "value":parseInt('.$deploymentpending.'), "color": "#665899", "href":"'.urlredirect_group_for_deploy("deploymentpending",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Deployment Pending (Reboot/Shutdown/...)", "value":parseInt('.$deploymentpending.'), "color": "#665899", "href":"'.urlredirect_group_for_deploy("deploymentpending",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($deploymentdelayed > 0){
-        echo 'datas.push({"label":"Deployment Delayed ", "value":parseInt('.$deploymentdelayed.'), "color": "#7080AF", "href":"'.urlredirect_group_for_deploy("deploymentdelayed",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Deployment Delayed", "value":parseInt('.$deploymentdelayed.'), "color": "#7080AF", "href":"'.urlredirect_group_for_deploy("deploymentdelayed",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($deploymentstart > 0){
         echo 'datas.push({"label":"Deployment Start", "value":parseInt('.$deploymentstart.'), "color": "#2E9AFE", "href":"'.urlredirect_group_for_deploy("deploymentstart",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if($abortalternativerelaysdown > 0){
-        echo 'datas.push({"label":"Abort Alternative Relays Down ", "value":parseInt('.$abortalternativerelaysdown.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortalternativerelaysdown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Alternative Relays Down", "value":parseInt('.$abortalternativerelaysdown.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortalternativerelaysdown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortrelaydown > 0){
-        echo 'datas.push({"label":"Abort Relay Down ", "value":parseInt('.$abortrelaydown.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortrelaydown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Relay Down", "value":parseInt('.$abortrelaydown.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortrelaydown",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortmissingagent > 0){
-        echo 'datas.push({"label":"Abort Missing Agent ", "value":parseInt('.$abortmissingagent.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmissingagent",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Missing Agent", "value":parseInt('.$abortmissingagent.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmissingagent",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortinconsistentglpiinformation > 0){
-        echo 'datas.push({"label":"Abort Inconsistent GLPI Information ", "value":parseInt('.$abortinconsistentglpiinformation.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinconsistentglpiinformation",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Inconsistent GLPI Information", "value":parseInt('.$abortinconsistentglpiinformation.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinconsistentglpiinformation",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
 
     if ($abortinforelaymissing > 0){
-        echo 'datas.push({"label":"Abort Info For Relay Missing ", "value":parseInt('.$abortinforelaymissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinforelaymissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Info For Relay Missing", "value":parseInt('.$abortinforelaymissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortinforelaymissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortpackageidentifiermissing > 0){
-        echo 'datas.push({"label":"Abort Package Identifier Missing ", "value":parseInt('.$abortpackageidentifiermissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageidentifiermissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Package Identifier Missing", "value":parseInt('.$abortpackageidentifiermissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageidentifiermissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortpackagenamemissing > 0){
-        echo 'datas.push({"label":"Abort Package Name Missing ", "value":parseInt('.$abortpackagenamemissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackagenamemissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Package Name Missing", "value":parseInt('.$abortpackagenamemissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackagenamemissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortpackageversionmissing > 0){
-        echo 'datas.push({"label":"Abort Package Version Missing ", "value":parseInt('.$abortpackageversionmissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageversionmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Package Version Missing", "value":parseInt('.$abortpackageversionmissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageversionmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortdescriptormissing > 0){
-        echo 'datas.push({"label":"Abort Descriptor Missing ", "value":parseInt('.$abortdescriptormissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdescriptormissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Descriptor Missing", "value":parseInt('.$abortdescriptormissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdescriptormissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortmachinedisappeared > 0){
-        echo 'datas.push({"label":"Abort Machine Disappeared ", "value":parseInt('.$abortmachinedisappeared.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmachinedisappeared",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Machine Disappeared", "value":parseInt('.$abortmachinedisappeared.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortmachinedisappeared",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortdeploymentcancelledbyuser > 0){
-        echo 'datas.push({"label":"ABORT DEPLOYMENT CANCELLED BY USER ", "value":parseInt('.$abortdeploymentcancelledbyuser.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdeploymentcancelledbyuser",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"ABORT DEPLOYMENT CANCELLED BY USER", "value":parseInt('.$abortdeploymentcancelledbyuser.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdeploymentcancelledbyuser",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($abortduplicatemachines > 0){
-        echo 'datas.push({"label":"Abort Duplicate Machines ", "value":parseInt('.$abortduplicatemachines.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortduplicatemachines",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Duplicate Machines", "value":parseInt('.$abortduplicatemachines.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortduplicatemachines",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($errorunknownerror > 0){
-        echo 'datas.push({"label":"Error Unknown Error ", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Error Unknown Error", "value":parseInt('.$errorunknownerror.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorunknownerror",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($errorhashmissing > 0){
-        echo 'datas.push({"label":"Error Hash Missing ", "value":parseInt('.$errorhashmissing.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorhashmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Error Hash Missing", "value":parseInt('.$errorhashmissing.'), "color": "#ff0000", "href":"'.urlredirect_group_for_deploy("errorhashmissing",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($aborthashinvalid > 0){
-        echo 'datas.push({"label":"Abort Hash Invalid ", "value":parseInt('.$aborthashinvalid.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("aborthashinvalid",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Abort Hash Invalid", "value":parseInt('.$aborthashinvalid.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("aborthashinvalid",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
     if ($otherstatus > 0){
-        echo 'datas.push({"label":"Other Status ", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
+        echo 'datas.push({"label":"Other Status", "value":parseInt('.$otherstatus.'), "color": "#FFDA00", "href":"'.urlredirect_group_for_deploy("otherstatus",$_GET['gid'],$_GET['login'],$cmd_id).'"});';
     }
 
     foreach($dynamicstatus as $label=>$status){
