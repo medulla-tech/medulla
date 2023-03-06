@@ -413,6 +413,12 @@ def generate_hash(path, package_id):
     source = "/var/lib/pulse2/packages/sharing/" + path + "/" + package_id
     dest = "/var/lib/pulse2/packages/hash/" + path + "/" + package_id
     BLOCK_SIZE = 65535
+    
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+
+    if os.path.exists(os.path.join(dest, ".hash")):
+        os.remove(os.path.join(dest, ".hash"))
 
     if PkgsConfig("pkgs").hashing_algo:
         hash_type = PkgsConfig("pkgs").hashing_algo
