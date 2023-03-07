@@ -417,8 +417,8 @@ def generate_hash(path, package_id):
     if os.path.exists(dest):
         shutil.rmtree(dest)
 
-    if os.path.exists(os.path.join(dest, ".hash")):
-        os.remove(os.path.join(dest, ".hash"))
+    if os.path.exists(dest + ".hash"):
+        os.remove(dest + ".hash")
 
     if PkgsConfig("pkgs").hashing_algo:
         hash_type = PkgsConfig("pkgs").hashing_algo
