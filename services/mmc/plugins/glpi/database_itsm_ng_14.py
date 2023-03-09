@@ -121,7 +121,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         if config != None:
             self.config = config
         else:
-            self.config = Itsm-ngConfig("glpi")
+            self.config = GlpiConfig("glpi")
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
@@ -4799,7 +4799,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         headers = {'content-type': 'application/json',
                    'Session-Token': sessionwebservice
                    }
-        url = Itsm-ngConfig.webservices['glpi_base_url'] + "killSession"
+        url = GlpiConfig.webservices['glpi_base_url'] + "killSession"
         r = requests.get(url, headers=headers)
         if r.status_code == 200 :
             self.logger.debug("Kill session REST: %s"%sessionwebservice)
@@ -4814,17 +4814,17 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         @return: True if the machine successfully deleted
         @rtype: bool
         """
-        authtoken =  base64.b64encode(Itsm-ngConfig.webservices['glpi_username']+":"+Itsm-ngConfig.webservices['glpi_password'])
+        authtoken =  base64.b64encode(GlpiConfig.webservices['glpi_username']+":"+GlpiConfig.webservices['glpi_password'])
         headers = {'content-type': 'application/json',
                    'Authorization': "Basic " + authtoken
                    }
-        url = Itsm-ngConfig.webservices['glpi_base_url'] + "initSession"
+        url = GlpiConfig.webservices['glpi_base_url'] + "initSession"
         self.logger.debug("Create session REST")
         r = requests.get(url, headers=headers)
         if r.status_code == 200 :
             sessionwebservice =  str(json.loads(r.text)['session_token'])
             self.logger.debug("session %s"%sessionwebservice)
-            url = Itsm-ngConfig.webservices['glpi_base_url'] + "Computer/" + str(fromUUID(uuid))
+            url = GlpiConfig.webservices['glpi_base_url'] + "Computer/" + str(fromUUID(uuid))
             headers = {'content-type': 'application/json',
                         'Session-Token': sessionwebservice
             }
