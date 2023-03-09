@@ -7468,9 +7468,31 @@ class XmppMasterDatabase(DatabaseHelper):
         return {}
 
     @DatabaseHelper._sessionm
+    def getAgenttype(self, session, hostname):
+        """
+            This function is use to define the agenttype of an agent.
+            Args:
+                session: The SqlAlchemy session
+                hostname: The hostname of the machine where we try to define the agenttype.
+
+            Returns:
+                It returns the type of an agent.
+                If two or more machines have the same hostname, we use the first one.
+                Can be machine, relay or None ( if we can't detect ).
+
+        """
+        machine = session.query(Machines.agenttype).\
+                                        filter(Machines.hostname == hostname).first()
+        if machine:
+            return machine.agenttype
+
+        return None
+
+    @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineHostname(self, session, hostname,
-                                               enable = 1, agenttype="machine"):
+                                               enable=1, agenttype="machine"):
         querymachine = session.query(Machines)
+        agenttype = self.getAgenttype(hostname)
         if enable == None:
             querymachine = querymachine.filter(Machines.hostname == hostname)
         else:
