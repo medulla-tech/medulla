@@ -1148,6 +1148,8 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
         return -1
     jidARS = machine['groupdeploy']
     jidAM = jidmachine
+    ipAM = machine['ip_xmpp']
+
     #logging.getLogger().error("machine %s " % machine)
     #logging.getLogger().error("jidARS %s " % machine['groupdeploy'])
     #logging.getLogger().error("jidAM %s " %jidmachine)
@@ -1198,6 +1200,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
                      "data": {"ipARS": ipARS,
                               "jidARS": jidARS,
                               "jidAM": jidAM,
+                              "ipAM": ipAM,
                               "remoteport": remoteport,
                               "portproxy": proxyportars,
                               "type_reverse": type_reverse,
