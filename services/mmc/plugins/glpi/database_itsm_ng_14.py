@@ -76,6 +76,10 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         logging.getLogger().debug('Trying to detect if ITSM-NG version is higher than 1.4')
 
+
+        if not os.path.isdir("/usr/share/itsm-ng"):
+            return False
+
         try:
             self._itsm_ng_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except OperationalError:
