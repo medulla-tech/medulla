@@ -109,7 +109,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             return False
 
     @property
-    def itsm_ng_version(self):
+    def glpi_version(self):
         return self._itsm_ng_version
 
     def itsm_ng_version_new(self):
@@ -144,7 +144,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
         self.metadata = MetaData(self.db)
         self.initMappers()
-        self.logger.info("Itsm-ng is in version %s" % (self.itsm_ng_version))
+        self.logger.info("Itsm-ng is in version %s" % (self.glpi_version))
         self.metadata.create_all()
         self.is_activated = True
         self.logger.debug("Itsm-ng finish activation")
