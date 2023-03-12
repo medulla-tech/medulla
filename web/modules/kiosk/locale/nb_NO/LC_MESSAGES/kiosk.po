@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 15:47+0100\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
-"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,14 +26,17 @@ msgid "kiosk"
 msgstr "kiosk"
 
 #: modules/kiosk/infoPackage.inc.php:43
+#: modules/kiosk/kiosk/localSidebar.php:24
 msgid "Profile List"
 msgstr "Profilliste"
 
 #: modules/kiosk/infoPackage.inc.php:47
+#: modules/kiosk/kiosk/localSidebar.php:25
 msgid "Add Profile"
 msgstr "Legg til profil"
 
-#: modules/kiosk/infoPackage.inc.php:66 modules/kiosk/kiosk/editProfile.php:43
+#: modules/kiosk/infoPackage.inc.php:66 modules/kiosk/kiosk/index.php:43
+#: modules/kiosk/kiosk/editProfile.php:43
 msgid "Edit Profile"
 msgstr "Rediger profil"
 
@@ -55,37 +58,29 @@ msgstr "Kan ikke oppdatere profilen %s"
 msgid "List of profils"
 msgstr "Liste over profiler"
 
-#: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
+#: modules/kiosk/kiosk/index.php:44
+msgid "Delete Profile"
+msgstr "Slett profil"
+
+#: modules/kiosk/kiosk/index.php:58 modules/kiosk/kiosk/add.php:71
 #: modules/kiosk/kiosk/editProfile.php:73
 msgid "Active"
 msgstr "Aktiv"
 
-#: modules/kiosk/kiosk/index.php:51 modules/kiosk/kiosk/add.php:71
+#: modules/kiosk/kiosk/index.php:58 modules/kiosk/kiosk/add.php:71
 #: modules/kiosk/kiosk/editProfile.php:73
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: modules/kiosk/kiosk/index.php:54 modules/kiosk/kiosk/add.php:63
+#: modules/kiosk/kiosk/index.php:64 modules/kiosk/kiosk/add.php:63
 #: modules/kiosk/kiosk/editProfile.php:65
 msgid "Profile Name"
 msgstr "Profilnavn"
 
-#: modules/kiosk/kiosk/index.php:56 modules/kiosk/kiosk/add.php:74
+#: modules/kiosk/kiosk/index.php:66 modules/kiosk/kiosk/add.php:74
 #: modules/kiosk/kiosk/editProfile.php:76
 msgid "Profile Status"
 msgstr "Profil Status"
-
-#: modules/kiosk/kiosk/index.php:65
-msgid "Associate Packages"
-msgstr "Tilhørende pakker"
-
-#: modules/kiosk/kiosk/index.php:66
-msgid "Edit Profil"
-msgstr "Rediger profil"
-
-#: modules/kiosk/kiosk/index.php:67
-msgid "Delete Profil"
-msgstr "Slett profil"
 
 #: modules/kiosk/kiosk/add.php:43
 msgid "Add New Profile"
@@ -148,11 +143,3 @@ msgstr "endre"
 #: modules/kiosk/kiosk/editProfile.php:177
 msgid "Modify the profile"
 msgstr "Endre profilen"
-
-#: modules/kiosk/kiosk/localSidebar.php:24
-msgid "Profils List"
-msgstr "Liste over profiler"
-
-#: modules/kiosk/kiosk/localSidebar.php:25
-msgid "Add Profil"
-msgstr "Legg til profil"

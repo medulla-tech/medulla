@@ -3,11 +3,11 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2016 siveo, http://www.siveo.net
+ * (c) 2016-2022 siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -531,9 +531,16 @@ class DynamicDateTpl extends InputTpl {
         $this->name = $name;
         $this->size = "";
         $this->fieldType = "text";
-    }
 
+        $this->readonly = true;
+    }
+    function setReadOnly($new){
+        $this->readonly = $new;
+    }
     function display($arrParam = array()) {
+        if($arrParam == []){
+            $arrParam = $this->options;
+        }
         $e = new InputTpl($this->name);
         if (!isset($GLOBALS["__JSCALENDAR_SOURCED__"])) { // to avoid double-sourcing
             $GLOBALS["__JSCALENDAR_SOURCED__"] = 1;
@@ -552,9 +559,10 @@ class DynamicDateTpl extends InputTpl {
             }
         }
 
+        $readonlystr = ($this->readonly) ? "readonly=1" : "";
         print '
             <span id="container_input_' . $this->name . '">
-                <input style="width:100px" name="' . $this->name . '" id="' . $this->name . '" type="' . $this->fieldType . '" size="' . $this->size . '" value="' . $arrParam["value"] . '" readonly=1 />
+                <input style="width:100px" name="' . $this->name . '" id="' . $this->name . '" type="' . $this->fieldType . '" size="' . $this->size . '" value="' . $arrParam["value"] . '"'.$readonlystr.' />
                 <input type="image" style="width: 24px;height: 21px;vertical-align: bottom;" src="graph/jscalendar/img/calendar.png" id="' . $this->name . '_button" />
         ';
 
@@ -817,11 +825,11 @@ class MembersTpl extends AbstractTpl {
 
         <td class="membersTplSwitchs">
             <a href="#" onclick="switch_' . $this->name . '(\'available_' . $this->name . '\', \'' . $this->name . '\'); event.returnValue=false; return false;">
-                <img style="padding: 5px;" src="img/common/icn_arrowright.gif" value="<--" />
+                <img style="padding: 5px;" src="img/other/right.svg" width="25" height="25" value="<--" />
             </a>
             <br/>
             <a href="#" onclick="switch_' . $this->name . '(\'' . $this->name . '\', \'available_' . $this->name . '\'); event.returnValue=false; return false;">
-                <img style="padding: 5px;" src="img/common/icn_arrowleft.gif" value = "-->" />
+                <img style="padding: 5px;" src="img/other/left.svg" width="25" height="25" value = "-->" />
             </a>
         </td>
 

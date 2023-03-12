@@ -68,8 +68,15 @@ for ($idx = 0; $idx < count($users); $idx++) {
     $phones[] = $num;
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_users = [];
+foreach($users as $index => $uid_users){
+    $ids_users[] = 'u_'.$uid_users['uid'];
+}
+
 // $arrUser is the list of all Users
 $n = new UserInfos($arrUser, _("Login"));
+$n->setcssIds($ids_users);
 $n->setItemCount($usercount);
 $n->setNavBar(new AjaxPaginator($usercount, $filter, "updateSearchParam",  $maxperpage));
 

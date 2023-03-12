@@ -143,7 +143,7 @@ foreach ($images as $image) {
 
     $list_params[] = $l_params;
     # TODO no label in image!
-    $a_label[] = sprintf("%s%s", '<img src="modules/imaging/graph/images/imaging-action.png" style="vertical-align: middle" /> ', $name);
+    $a_label[] = sprintf("%s%s", '<img src="img/other/imagingscript_rw.svg" style="vertical-align: middle" width="25" height="25" /> ', $name);
     $a_desc[] = $image['desc'];
     $a_date[] = _toDate($image['creation_date']);
     $a_size[] = humanReadable($image['size']);

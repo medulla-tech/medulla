@@ -1,24 +1,8 @@
 # -*- coding: utf-8; -*-
-#
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2010 Mandriva, http://www.mandriva.com
-#
-# $Id$
-#
-# This file is part of Mandriva Management Console (MMC).
-#
-# MMC is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MMC is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 This module declare all the necessary stuff to connect to a glpi database in it's
@@ -6662,6 +6646,55 @@ class Glpi94(DyngroupDatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
+    def get_machine_with_update(self, session, kb):
+        sqlrequest ="""
+            SELECT 
+                glpi.glpi_computers.id AS uuid_inventory,
+                glpi.glpi_computers.name AS hostname,
+                glpi.glpi_entities.completename AS entity,
+                glpi.glpi_softwares.name AS kb, 
+                SUBSTR(glpi.glpi_softwares.name,
+                    LOCATE('KB', glpi.glpi_softwares.name), length(glpi.glpi_softwares.name)-2) as numkb,
+                glpi.glpi_computers_softwareversions.date_install AS dateinstall,
+                glpi.glpi_computers.date_creation AS input_computer
+            FROM
+                glpi.glpi_computers
+                    INNER JOIN
+                glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
+                    INNER JOIN
+                glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_computers_softwareversions.softwareversions_id
+                    INNER JOIN
+                glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
+            WHERE
+                glpi.glpi_softwares.name LIKE 'Update (KB%s)';"""%(kb)
+        uuid_inventory=[]
+        hostname=[]
+        entity=[]
+        kb=[]
+        numkb=[]
+        dateinstall=[]
+        input_computer=[]
+        result = []
+        res = self.db.execute(sqlrequest)
+        for element in res:
+            uuid_inventory.append( element.uuid_inventory )
+            hostname.append( element.hostname )
+            entity.append( element.entity )
+            kb.append( element.kb )
+            numkb.append( element.numkb )
+            dateinstall.append( element.dateinstall )
+            input_computer.append( element.input_computer )
+        result.append(uuid_inventory)
+        result.append(hostname)
+        result.append(entity)
+        result.append(kb)
+        result.append(numkb)
+        result.append(dateinstall)
+        result.append(input_computer)
+        return result
+
+
+    @DatabaseHelper._sessionm
     def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
         criterion = filter["criterion"]
         filter = filter["filter"]
@@ -6735,50 +6768,6 @@ class Glpi94(DyngroupDatabaseHelper):
 
         return result1
 
-    @DatabaseHelper._sessionm
-    def get_computer_count_for_dashboard(self, session, count=True):
-        inventory_filtered_machines = self.__filter_on(
-            session.query(Machine.id).filter(
-                Machine.is_deleted == 0, Machine.is_template == 0
-            )
-        ).all()
-        ret = self.__getRestrictedComputersListQuery(None, "", session, True, False)
-
-        inventory_filtered_machines = [
-            "UUID%s" % id[0] for id in inventory_filtered_machines
-        ]
-        online_machines = XmppMasterDatabase().get_machines_online_for_dashboard()
-
-        unregistred_online_machine = []
-        registered_online_machine = []
-        registered_offline_machine = []
-
-        registered_online_uuid_list = []
-        for machine in online_machines:
-            if machine["uuid"] is None or machine["uuid"] == "":
-                unregistred_online_machine.append(machine["macaddress"])
-            else:
-                registered_online_uuid_list.append(machine["uuid"])
-                registered_online_machine.append(machine["uuid"])
-
-        for machine in inventory_filtered_machines:
-            if machine not in registered_online_machine:
-                registered_offline_machine.append(machine)
-
-        if count is True:
-            return {
-                "registered": len(inventory_filtered_machines),
-                "online": len(registered_online_machine),
-                "offline": len(registered_offline_machine),
-                "unregistered": len(unregistred_online_machine),
-            }
-        else:
-            return {
-                "registered": inventory_filtered_machines,
-                "online": registered_online_machine,
-                "offline": registered_offline_machine,
-                "unregistered": unregistred_online_machine,
-            }
 
     @DatabaseHelper._sessionm
     def get_ancestors(self, session, uuid):

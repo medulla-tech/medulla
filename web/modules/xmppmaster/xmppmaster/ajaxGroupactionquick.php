@@ -1,6 +1,6 @@
 <?php
 /**
- *  (c) 2015-2021 Siveo, http://www.siveo.net
+ *  (c) 2015-2022 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -43,15 +43,30 @@ foreach ($dd[4] as $val ){
     $startdate[] = timestamp_to_datetime($val->timestamp);
 }
 $machinetarget =  array();
+$row = 0;
 foreach ($dd[7] as $val ){
-    $target = getRestrictedComputersList(0, -1, array('uuid' => $val), False);
-    $machine = $target[$val][1];
-    $namemachine = $machine['cn'][0];
-    $usermachine = $machine['user'][0];
-    $machinetarget[]= '<a href="'.urlStrRedirect("base/computers/glpitabs", ["cn"=>$namemachine, "objectUUID"=>$val]).'">'.$namemachine.'</a>';
+    if($val != ""){
+        $target = getRestrictedComputersList(0, -1, array('uuid' => $val), False);
+        $machine = $target[$val][1];
+        $namemachine = $machine['cn'][0];
+        $usermachine = $machine['user'][0];
+        $machinetarget[]= '<a href="'.urlStrRedirect("base/computers/glpitabs", ["cn"=>$namemachine, "objectUUID"=>$val]).'">'.$namemachine.'</a>';
+    }
+    else if($val == "" && $dd[8][$row] != ""){
+        $xmppmachine = xmlrpc_getMachinefromjid($dd[8][$row]);
+        $namemachine = $xmppmachine["hostname"];
+        $usermachine = "";
+        $machinetarget[]= $namemachine;
+    }
+    else{
+        $namemachine = "";
+        $usermachine = "";
+        $machinetarget[]= 'undefined';
+    }
+    $row++;
 }
 $log = array();
-$resultmachine = new ActionItem(_T("Os", "xmppmaster"),"QAcustommachgrp","logfile","computer", "xmppmaster", "xmppmaster");
+$resultmachine = new ActionItem(_T("Os", "xmppmaster"),"QAcustommachgrp","audit","computer", "xmppmaster", "xmppmaster");
 
 $listnamegroup=[];
 $params =  array();
@@ -60,6 +75,7 @@ for ($i=0;$i< count( $dd[0] );$i++){
     $param['cmd_id'] = $dd[0][$i];
     $param['gid']    = $dd[5][$i];
     $param['uuid']   = $dd[7][$i];
+    $param['jid']   = $dd[8][$i];
     if($param['gid'] != ""){
         $gr = xmlCall("dyngroup.get_group", array($param['gid'], false, false));
         $listnamegroup[] = _T("Group : ") . $gr['name'];
@@ -68,12 +84,24 @@ for ($i=0;$i< count( $dd[0] );$i++){
     }
     else{
         $param['groupname'] = "";
-        $machinelist = getRestrictedComputersList(0, -1, array('uuid' => $param['uuid']), False);
-        $machine = $machinelist[$_GET['uuid']][1];
-        $namemachine = $machine['cn'][0];
-        $usermachine = $machine['user'][0];
-        $listnamegroup[] = _T("Computer") .$namemachine;
-        $param['machname'] =  $namemachine;
+        if($param['uuid'] != ""){
+            $machinelist = getRestrictedComputersList(0, -1, array('uuid' => $param['uuid']), False);
+            $machine = $machinelist[$_GET['uuid']][1];
+            $namemachine = $machine['cn'][0];
+            $usermachine = $machine['user'][0];
+            $listnamegroup[] = _T("Computer") .$namemachine;
+            $param['machname'] =  $namemachine;
+        }
+        else if($param['uuid'] == "" && $param['jid'] != ''){
+            $xmppmachine = xmlrpc_getMachinefromjid($param['jid']);
+            $namemachine = $xmppmachine["hostname"];
+            $machinetarget[]= $namemachine;
+            $param['machname'] =  $namemachine;
+        }
+        else{
+            $listnamegroup[] = _T("Computer");
+            $param['machname'] =  "undefined";
+        }
     }
     $param['login']  = $dd[2][$i];
     $param['os']     = $dd[3][$i];
@@ -82,7 +110,15 @@ for ($i=0;$i< count( $dd[0] );$i++){
     $logs[] = $resultmachine;
     $params[] = $param;
 }
+
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_grpqa = [];
+foreach($dd['1'] as $name_grpqa){
+    $ids_grpqa[] = 'rqa_'.$name_grpqa;
+}
+
 $n = new OptimizedListInfos( $dd[1], _T("Custom Command", "xmppmaster"));
+$n->setcssIds($ids_grpqa);
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $dd[3], _T("Os", "xmppmaster"));

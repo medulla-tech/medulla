@@ -2,10 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2022 Siveo, Http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -140,6 +141,9 @@ if (count($modules) == 1) {
             if($name === "glpi"){
               print "<td style=\"width:80px;border:0\">$glpidisplayname</td>";
             }
+            else if($name == "dyngroup"){
+              print "<td style=\"width:80px;border:0\">"._T("Existing group", "dyngroup")."</td>";
+            }
             else{
               print "<td style=\"width:80px;border:0\">$name</td>";
             }
@@ -158,12 +162,17 @@ if (count($modules) == 1) {
                 if($name == "glpi"){
                   print "<td style=\"width:80px;border:0\"><a href='" .
                           urlStr("base/computers/$target", $url_params) .
-                          "'>$glpidisplayname</a></td>";
+                          "' id='glpi'>$glpidisplayname</a></td>";
+                }
+                else if($name == "dyngroup"){
+                  print "<td style=\"width:80px;border:0\"><a href='" .
+                          urlStr("base/computers/$target", $url_params) .
+                          "' id='dyngroup'>"._T("Existing group", "dyngroup")."</a></td>";
                 }
                 else{
                   print "<td style=\"width:80px;border:0\"><a href='" .
                           urlStr("base/computers/$target", $url_params) .
-                          "'>$name</a></td>";
+                          "' id='$name'>$name</a></td>";
                 }
 
         }
@@ -197,6 +206,7 @@ if (quickGet('add_req')) {
                 if ($param_name == quickGet('add_param')) {
                     print "<td>$param_name</td>";
                 } else {
+                    $nameStripped = str_replace(['(', ')', ' '], '-', $param_name);
                     $_SESSION['request'] = $request->toS();
                     $url_params = array(
                         'req' => quickGet('add_req'),
@@ -209,7 +219,7 @@ if (quickGet('add_req')) {
                         $url_params['sub_id'] = quickGet('sub_id');
                     print "<tr><td style=\"padding-left:20px;\"><a href='" .
                             urlStr("base/computers/$target", $url_params) .
-                            "'>" . _T($param_name, 'dyngroup') . "</a></td>" .
+                            "' id='".$nameStripped . "'>" . _T($param_name, 'dyngroup') . "</a></td>" .
                             "<td>" . ($description == '' ? '' : _T($description, 'dyngroup') ) . "</td>" .
                             "</tr>";
                 }
@@ -370,16 +380,3 @@ _T('Mozilla Firefox, LibreOffice, Microsoft Office 2003 ...', 'dyngroup');
 _T('Installed software (specific version)', 'dyngroup');
 _T('Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ...', 'dyngroup');
 ?>
-<style>
-    li.delete a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/msc/graph/images/actions/delete.png   ");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-    }
-
-</style>

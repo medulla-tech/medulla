@@ -64,6 +64,7 @@ $paramArray = array('cn' => (isset($_SESSION['cn'])) ? $_SESSION['cn'] : $cn, 'o
 $inventAction = new ActionItem(_T("Inventory", "pulse2"),"invtabs","inventory","inventory", "base", "computers");
 //$extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
 $backupAction = new ActionItem(_("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc");
+$urbackupAction = new ActionItem(_("Urbackup"),"checkMachine","urbackup","urbackup", "urbackup", "urbackup");
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
     $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
     $DeployQuickxmpp->setWidth(600);
@@ -86,7 +87,7 @@ $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imagin
         if (isExpertMode()){
             $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing,$inventconsole, $editconfiguration, $DeployQuickxmpp);
         }else{
-            $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing, $DeployQuickxmpp);
+            $actions = array($inventAction, $backupAction, $urbackupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing, $DeployQuickxmpp);
         }
 
 

@@ -28,7 +28,6 @@ require("modules/base/computers/localSidebar.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
 $p = new PageGenerator(_T("Monitoring Configurator", 'xmppmaster'));

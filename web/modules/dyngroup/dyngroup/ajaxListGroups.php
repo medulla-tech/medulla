@@ -100,11 +100,18 @@ foreach ($list as $group) {
     }
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_grp = [];
+foreach($ids as $index => $gid_grp){
+    $ids_grp[] = 'g_'.$gid_grp['groupname'];
+    }
+
 if ($is_gp != 1) { // Simple Group
     $n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
 } else { // Imaging group
     $n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
 }
+$n->setcssIds($ids_grp);
 $n->setTableHeaderPadding(0);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
@@ -138,6 +145,9 @@ if ($is_gp != 1) { // Simple group
     if (in_array("update", $_SESSION["supportModList"])) {
         $n->addActionItem(new ActionItem(_T("Update on this group", "dyngroup"),"view_updates", "reload", "id","base", "computers"));
     }
+    $n->addActionItem(new ActionItem(_("Updates compliance by machines"),"detailsByMachines", "auditbymachine","updates", "updates", "updates") );
+    $n->addActionItem(new ActionItem(_("Deploy all update on this group"),"deployAllUpdates", "updateall","updates", "updates", "updates") );
+    $n->addActionItem(new ActionItem(_("Deploy specific update on this group"),"deploySpecificUpdate", "updateone","updates", "updates", "updates") );
 } else { // Imaging group
     $n->addActionItem(new ActionItem(_T("Display this imaging group's content", 'dyngroup'), "display", "display", "id", "imaging", "manage"));
     if (in_array("inventory", $_SESSION["supportModList"])) {
@@ -159,6 +169,7 @@ if ($is_gp != 1) { // Simple group
             $n->addActionItem(new ActionItem(_("Imaging management"),"groupimgtabs","imaging","computer", "imaging", "manage"));
         }
     }
+    $n->addActionItem(new ActionItem(_("Updates compliance by machines"),"detailsByMachines", "auditbymachine","updates", "updates", "updates") );
 }
  if (in_array("xmppmaster", $_SESSION["supportModList"])) {
         // quick action for group with xmppmodule

@@ -69,7 +69,7 @@ $a_details = array();
 $n = null;
 
 function draw_image($url, $label) {
-    return '<img style="vertical-align: middle;" title="' . $label . '" src="' . $url . '"/>';
+    return '<img style="vertical-align: middle;" width="25" height="25" title="' . $label . '" src="' . $url . '"/>';
 }
 
 foreach ($cmds as $item) {
@@ -133,13 +133,13 @@ foreach ($cmds as $item) {
     $no_actions = False;
     if (!isset($bid) || $bid == '') {
         $a_donepercent[] = $done_percent;
-        $img = draw_image("modules/msc/graph/images/install_package.png", _T('Package', 'msc'));
+        $img = draw_image("img/other/package.svg", _T('Package', 'msc'));
     } else {
-        $img = draw_image("modules/msc/graph/images/install_bundle.png", _T('Bundle', 'msc'));
+        $img = draw_image("img/other/bundle.svg", _T('Bundle', 'msc'));
         $a_donepercent[] = '-';
     }
     if (isset($type) && $type == 2) {
-        $img = draw_image("modules/msc/graph/images/install_convergence.png", _T('Package', 'msc'));
+        $img = draw_image("img/other/convergence.svg", _T('Package', 'msc'));
     }
     // If NOW> end_dates, we hide start/stop buttons
     if (mktime() > _toTimestamp($end_date))
@@ -153,27 +153,27 @@ foreach ($cmds as $item) {
     if ($target == 'UNVISIBLEMACHINE') {
         $target = _T('Unavailable computer', 'msc');
         $a_cmd[] = $img . " " . $label;
-        $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('Machine', 'msc')) . " " . $target;
+        $a_target[] = draw_image("img/other/machine_down.svg", _T('Machine', 'msc')) . " " . $target;
         $no_actions = True;
     } elseif ($target == 'UNVISIBLEGROUP') {
         $target = _T('Unavailable group', 'msc');
         $a_cmd[] = $img . " " . $label;
-        $a_target[] = draw_image("img/machines/icn_groupsList.gif", _T('Group', 'msc')) . " " . $target;
+        $a_target[] = draw_image("img/other/machinegroup.svg", _T('Group', 'msc')) . " " . $target;
         $no_actions = True;
     } else {
         $a_cmd[] = sprintf("<a href='%s' class='bundle link' title='%s'>%s %s</a>", $linkdetail, $label, $img, $label);
         // the link on the target is finally not wanted // $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target);
         if (!isset($gid) || $gid == '') {
             if ($machine_pull) {
-                $a_target[] = draw_image("img/machines/icn_machinePull.gif", _T('Machine', 'msc')) . " " . $target;
+                $a_target[] = draw_image("img/other/machine_down.svg", _T('Machine', 'msc')) . " " . $target;
             }
             else {
-                $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('Machine', 'msc')) . " " . $target;
+                $a_target[] = draw_image("img/other/machine_down.svg", _T('Machine', 'msc')) . " " . $target;
             }
             $param['uuid'] = $target_uuid;
             $param['hostname'] = $target;
         } else {
-            $a_target[] = draw_image("img/machines/icn_groupsList.gif", _T('Group', 'msc')) . " " . $target;
+            $a_target[] = draw_image("img/other/machinegroup.svg", _T('Group', 'msc')) . " " . $target;
             $param['gid'] = $gid;
         }
     }

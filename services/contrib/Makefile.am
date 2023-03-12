@@ -234,21 +234,30 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-064.sql \
 	xmppmaster/sql/schema-065.sql \
 	xmppmaster/sql/schema-066.sql \
+	xmppmaster/sql/schema-067.sql \
+	xmppmaster/sql/schema-068.sql \
+	xmppmaster/sql/schema-069.sql \
 	xmppmaster/sql/schema-070.sql \
 	xmppmaster/sql/schema-071.sql \
 	xmppmaster/sql/schema-072.sql \
 	xmppmaster/sql/schema-073.sql \
+	xmppmaster/sql/schema-074.sql \
+	xmppmaster/sql/schema-075.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \
 	kiosk/sql/schema-004.sql \
 	kiosk/sql/schema-005.sql \
 	kiosk/sql/schema-006.sql \
+	kiosk/sql/schema-007.sql \
 	pkgs/sql/schema-001.sql \
 	pkgs/sql/schema-002.sql \
 	pkgs/sql/schema-003.sql \
 	pkgs/sql/schema-004.sql \
 	pkgs/sql/schema-005.sql \
+	pkgs/sql/schema-006.sql \
+	updates/sql/schema-001.sql \
+	urbackup/sql/schema-001.sql \
 	monit/pulse2 \
 	samba/smb.conf \
 	test-xmlrpc.php \

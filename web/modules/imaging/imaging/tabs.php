@@ -62,7 +62,10 @@ function resetDefaultMenu($uuid) {
 }
 
 if (isset($_GET['reset_defaultMenu']) && $_GET['reset_defaultMenu'] == 1) {
-    resetDefaultMenu($params['uuid']);
+    if(isset($_GET['gid']) && $_GET['gid'] != "")
+        resetDefaultMenu($_GET['gid']);
+    else
+        resetDefaultMenu($params['uuid']);
 }
 
 

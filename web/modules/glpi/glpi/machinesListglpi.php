@@ -26,7 +26,7 @@ require("modules/glpi/includes/html.php");
 require("modules/base/computers/localSidebar.php");
 global $conf;
 $glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? $conf['global']['glpidisplayname'] : 'glpi';
-$p = new PageGenerator(_T("Machines List view $glpidisplayname", 'glpi'));
+$p = new PageGenerator(sprintf(_T("Machines List view %s", 'glpi'), $glpidisplayname));
 $p->setSideMenu($sidemenu);
 $p->display();
 

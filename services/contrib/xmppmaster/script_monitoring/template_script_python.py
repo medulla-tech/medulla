@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
-import pickle #lib obligatoire pour la serialisation
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+import pickle # lib obligatoire pour la serialisation
 
 # metadata a mettre dans le script python
 serialisationpickleevent = """@@@@@event@@@@@"""

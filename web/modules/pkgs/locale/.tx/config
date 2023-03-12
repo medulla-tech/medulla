@@ -1,9 +1,9 @@
 [main]
 host = https://www.transifex.com
 
-[pulse-1.pkgs]
+[o:siveo:p:pulse-1:r:pkgs]
 file_filter = <lang>/LC_MESSAGES/pkgs.po
 source_file = pkgs.pot
 source_lang = en_US
-type = PO
+type        = PO
 

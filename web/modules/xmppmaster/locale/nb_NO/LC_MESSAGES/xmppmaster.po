@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022
 # Nicolas Lécureuil <neoclust@mageia.org>, 2022
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 15:47+0100\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2022\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,11 +48,11 @@ msgstr "XMPP Mine historiske oppgaver"
 
 #: modules/xmppmaster/infoPackage.inc.php:54
 msgid "XMPP My teams past tasks"
-msgstr ""
+msgstr "XMPP Mine teams tidligere oppgaver"
 
 #: modules/xmppmaster/infoPackage.inc.php:57
 msgid "XMPP My teams tasks"
-msgstr ""
+msgstr "XMPP Mine teams oppgaver"
 
 #: modules/xmppmaster/infoPackage.inc.php:60
 #: modules/xmppmaster/infoPackage.inc.php:63
@@ -76,18 +76,18 @@ msgstr "XMPP topology Maskin"
 #: modules/xmppmaster/infoPackage.inc.php:76
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:28
 msgid "Alerts Detail"
-msgstr ""
+msgstr "Varslingsdetaljer"
 
 #: modules/xmppmaster/infoPackage.inc.php:81
 #: modules/xmppmaster/infoPackage.inc.php:85
 #: modules/xmppmaster/xmppmaster/monitoring/alerts.php:29
 #: modules/xmppmaster/xmppmaster/localSidebar.php:37
 msgid "Monitoring Alerts"
-msgstr ""
+msgstr "Overvåkingsvarsler"
 
 #: modules/xmppmaster/infoPackage.inc.php:89
 msgid "Monitoring history"
-msgstr ""
+msgstr "Overvåkingshistorikk"
 
 #: modules/xmppmaster/infoPackage.inc.php:109
 msgid "XMPP Machine details"
@@ -116,11 +116,11 @@ msgstr "XMPP gruppelogger"
 
 #: modules/xmppmaster/infoPackage.inc.php:152
 msgid "XMPP Monitoring view"
-msgstr ""
+msgstr "XMPP-overvåkingsvisning"
 
 #: modules/xmppmaster/infoPackage.inc.php:155
 msgid "File Viewer"
-msgstr ""
+msgstr "Filviser"
 
 #: modules/xmppmaster/infoPackage.inc.php:159
 #: modules/xmppmaster/infoPackage.inc.php:163
@@ -216,7 +216,7 @@ msgstr "Liste over alle datamaskingrupper"
 
 #: modules/xmppmaster/infoPackage.inc.php:327
 msgid "List all groups of computers by teams"
-msgstr ""
+msgstr "List alle grupper av datamaskiner etter team"
 
 #: modules/xmppmaster/infoPackage.inc.php:332
 msgid "ajax view grp deploy"
@@ -236,7 +236,7 @@ msgstr "List maskin utrulling"
 
 #: modules/xmppmaster/infoPackage.inc.php:352
 msgid "List computer deploy by team"
-msgstr ""
+msgstr "List datamaskin utrulling etter team"
 
 #: modules/xmppmaster/infoPackage.inc.php:357
 msgid "List of not launched deployments"
@@ -248,42 +248,42 @@ msgstr "Overfør synk liste ikke overførte"
 
 #: modules/xmppmaster/infoPackage.inc.php:367
 msgid "Switch Relay"
-msgstr ""
+msgstr "Bytt relé"
 
 #: modules/xmppmaster/infoPackage.inc.php:372
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:53
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
 msgid "Reconfigure Machines"
-msgstr ""
+msgstr "Rekonfigurer maskiner"
 
 #: modules/xmppmaster/infoPackage.inc.php:377
 msgid "Relays Detail Actions"
-msgstr ""
+msgstr "Reléenes detaljhandlinger"
 
 #: modules/xmppmaster/infoPackage.inc.php:382
 #: modules/xmppmaster/infoPackage.inc.php:387
 msgid "Qa launched on Relays"
-msgstr ""
+msgstr "Qa startet på reléene"
 
 #: modules/xmppmaster/infoPackage.inc.php:392
 msgid "Qa result on Relays"
-msgstr ""
+msgstr "Qa resultat på reléene"
 
 #: modules/xmppmaster/infoPackage.inc.php:397
 #: modules/xmppmaster/infoPackage.inc.php:402
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:61
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:62
 msgid "Packages List"
-msgstr ""
+msgstr "Pakkeliste"
 
 #: modules/xmppmaster/infoPackage.inc.php:407
 #: modules/xmppmaster/infoPackage.inc.php:411
 #: modules/xmppmaster/xmppmaster/localSidebar.php:41
 msgid "Monitoring Configuration"
-msgstr ""
+msgstr "Overvåkingskonfigurasjon"
 
 #: modules/xmppmaster/includes/html.inc.php:86
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:564
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:554
 msgid "Refresh"
 msgstr "Oppdater"
 
@@ -293,11 +293,11 @@ msgstr "Endre oppdatering"
 
 #: modules/xmppmaster/includes/html.inc.php:385
 msgid "The file will be automatically saved"
-msgstr ""
+msgstr "Filen lagres automatisk"
 
 #: modules/xmppmaster/includes/html.inc.php:388
 msgid "Edit file: "
-msgstr ""
+msgstr "Rediger fil:"
 
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
@@ -308,76 +308,76 @@ msgstr "Slett denne hurtighandlingen: %s"
 msgid "Computer deploy group"
 msgstr "Utrullingsgruppe maskiner"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:190
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:89
 msgid "Deployment [machine "
 msgstr "Utrulling [maskin"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:194
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:93
 msgid "Hide"
 msgstr "Skjul"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:195
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:94
 msgid "Show"
 msgstr "Vis"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:261
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:160
 msgid "Wake on Lan"
 msgstr "Wake on Lan"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:357
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:256
 msgid "IP Address (from XMPP)"
-msgstr ""
+msgstr "IP Adresse (fra XMPP)"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:359
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:258
 msgid "IP Address (from GLPI)"
-msgstr ""
+msgstr "IP Adresse (fra GLPI)"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:362
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:261
 msgid "Machine Details"
 msgstr "Maskindetaljer"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:368
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:830
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:267
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:729
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:32
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
 msgid "Machine"
 msgstr "Maskin"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:375
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:274
 msgid "MAC Address"
 msgstr "MAC Adresse"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:402
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:301
 msgid "Package Details"
 msgstr "Pakkedetaljer"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:408
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:272
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:307
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:255
 msgid "Creator"
 msgstr "Skaper"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:411
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:574
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:628
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:310
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:473
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:594
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
 msgid "Name"
 msgstr "Navn"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:414
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:313
 msgid "Folder"
 msgstr "Mappe"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:417
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:269
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:316
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:252
 msgid "Creation Date"
 msgstr "Opprettelsedato"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:440
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:339
 msgid "Deployment plan"
 msgstr "Utrullingsplan"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:446
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:345
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:315
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
@@ -389,551 +389,567 @@ msgstr "Utrullingsplan"
 msgid "User"
 msgstr "Bruker"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:449
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:348
 msgid "Package Name"
-msgstr ""
+msgstr "Pakkenavn"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:452
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:270
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:351
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:253
 msgid "Start Date"
 msgstr "Start Dato"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:455
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:354
 msgid "Stop Date"
 msgstr "Stopp Dato"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:458
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:357
 msgid "Session Id"
-msgstr ""
+msgstr "Økt ID"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:509
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:408
 msgid "Start deployment : "
 msgstr "Start utrulling"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:516
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:415
 msgid "XMPP Information"
-msgstr ""
+msgstr "XMPP Informasjon"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:522
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:421
 msgid "Machine JID"
-msgstr ""
+msgstr "Maskin JID"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:525
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:424
 msgid "Relay Server JID"
-msgstr ""
+msgstr "Reléserver JID"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:528
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:427
 msgid "Machine IP"
-msgstr ""
+msgstr "Maskin IP"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:531
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:430
 msgid "Relay Server IP"
-msgstr ""
+msgstr "Reléserver IP"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:534
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:433
 msgid "Master IP"
-msgstr ""
+msgstr "Master IP"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:568
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:467
 msgid "Package and Dependency"
 msgstr "Pakker og avhengigheter"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:577
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:476
 msgid "Software"
 msgstr "Programvare"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:580
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:634
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:479
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:600
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:80
 msgid "Version"
 msgstr "Versjon"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:583
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:637
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:755
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:482
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:603
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:700
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:79
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:54
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:55
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:98
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:87
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:611
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:510
 msgid "Deployment phases"
 msgstr "Utrullingsfaser"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:617
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:516
 msgid "START"
 msgstr "START"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:620
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:519
 msgid "STEP"
 msgstr "TRINN"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:623
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:522
 msgid "DESCRIPTION"
 msgstr "BESKRIVELSE"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:720
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:619
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:50
 msgid "Deployment Status"
-msgstr ""
+msgstr "Utrullingsstatus"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:723
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:727
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:732
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:622
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:626
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:631
 msgid "Complete"
 msgstr "Ferdig"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:723
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:724
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:727
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:622
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:623
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:626
 msgid "yes"
 msgstr "ja"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:724
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:623
 msgid "Successed"
-msgstr ""
+msgstr "Vellykket"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:728
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:760
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:492
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:627
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:659
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:479
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:312
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:345
 msgid "Success"
 msgstr "Suksess"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:728
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:627
 msgid "no"
 msgstr "nei"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:732
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:631
 msgid "processing"
-msgstr ""
+msgstr "behandling"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:747
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:646
 msgid "Not completed"
-msgstr ""
+msgstr "Ikke fullført"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:747
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:752
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:756
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:760
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:646
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:651
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:655
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:659
 msgid "labelled"
-msgstr ""
+msgstr "Merket"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:752
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:651
 msgid "Processing"
-msgstr ""
+msgstr "Behandles"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:756
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:655
 msgid "Failure"
-msgstr ""
+msgstr "Mislykket"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:768
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:667
 msgid "Executed Command"
-msgstr ""
+msgstr "Utført Kommando"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:773
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:672
 msgid "Type Script"
-msgstr ""
+msgstr "Typeskript"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:778
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:677
 msgid "Shebang"
-msgstr ""
+msgstr "Shebang"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:784
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:683
 msgid "Script"
 msgstr "Skript"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:789
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:688
 msgid "Timeout"
-msgstr ""
+msgstr "Pause"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:794
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:693
 msgid "Code Return"
-msgstr ""
+msgstr "Kode retur"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:799
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:698
 msgid "Alternate Package"
-msgstr ""
+msgstr "Alternativ pakke"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:804
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:703
 msgid "Set Environ Variable"
-msgstr ""
+msgstr "Angi miljøvariabel"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:814
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:713
 msgid "File"
 msgstr "Fil"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:820
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:719
 msgid "Set"
-msgstr ""
+msgstr "Angi"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:825
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:724
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:43
 msgid "Download File"
 msgstr "Last ned fil"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:830
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:729
 msgid "Restart"
 msgstr "Omstart"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:830
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:729
 msgid "Agent Machine"
-msgstr ""
+msgstr "Agent maskin"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:835
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:734
 msgid "Waiting"
 msgstr "Venter"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:835
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:734
 msgid "secs."
-msgstr ""
+msgstr "sek."
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:836
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:735
 msgid "Go to"
-msgstr ""
+msgstr "Gå til"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:842
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:741
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:77
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:77
 msgid "Comment"
 msgstr "Kommentar"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:847
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:746
 msgid "Inventory"
 msgstr "Inventar"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:855
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:754
 msgid "Clear package after install"
-msgstr ""
+msgstr "Fjern pakken etter installasjon"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:864
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:868
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:875
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:763
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:767
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:774
 msgid "Next Step"
-msgstr ""
+msgstr "Neste Steg"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:864
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:868
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:875
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:763
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:767
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:774
 msgid "at"
-msgstr ""
+msgstr "ved"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:881
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:885
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:889
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:894
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:898
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:902
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:907
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:912
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:917
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:780
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:784
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:788
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:793
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:797
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:801
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:806
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:811
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:816
 msgid "Result Command"
-msgstr ""
+msgstr "Resultatkommando"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:938
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:837
 msgid "Environment"
 msgstr "Miljø"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:944
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:843
 msgid "key"
 msgstr "nøkkel"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:947
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:846
 msgid "value"
 msgstr "verdi"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:161
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:142
 msgid "Deployment [ group"
 msgstr "Utrulling [ gruppe"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:271
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:254
 msgid "End Date"
-msgstr ""
+msgstr "Sluttdato"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:274
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:257
 msgid "Convergence"
 msgstr "Konvergens"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:276
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:259
 msgid "Syncthing enabled"
-msgstr ""
+msgstr "Synkronisering aktivert"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:277
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:260
 msgid "Progress"
-msgstr ""
+msgstr "Framgang"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:291
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:274
 msgid "Yes"
 msgstr "Ja"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:291
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:274
 msgid "No"
 msgstr "Nei"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:304
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:287
 msgid "Syncthing Detail"
-msgstr ""
+msgstr "Synkroniseringsdetalj"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:309
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:292
 msgid "Share name"
 msgstr "Navn på delt område"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:310
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:293
 msgid "Number of participants"
 msgstr "Antall deltagere"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:311
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:294
 msgid "Transfer progress"
 msgstr "Overføringsframdrift"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:312
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:295
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:38
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:28
 msgid "Detail"
-msgstr ""
+msgstr "Detalj"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:322
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:305
 msgid "Show Transfer"
-msgstr ""
+msgstr "Vis Overføring"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:322
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:305
 msgid "refresh View"
-msgstr ""
+msgstr "oppdater visningen"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:345
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:328
 msgid "cluster list"
 msgstr "cluster liste"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:346
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:329
 msgid "cluster nb ars"
 msgstr "cluster nb ars"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:347
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:330
 msgid "machine"
 msgstr "maskin"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:348
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:331
 msgid "progress"
 msgstr "framdrift"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:349
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:332
 msgid "start"
 msgstr "start"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:350
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:333
 msgid "end"
 msgstr "slutt"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:408
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:391
 msgid "Deployment complete"
-msgstr ""
+msgstr "Utrulling komplett"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:411
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:394
 msgid "Deployment in progress"
 msgstr "Utrulling pågår"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:412
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:395
 msgid "Started since"
 msgstr "Startet siden"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:417
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:400
 msgid "WAITING FOR START "
 msgstr "VENTER FOR Å STARTE"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:424
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:407
 msgid "Abort Deployment"
 msgstr "Avbryt utrulling"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:430
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:413
 msgid "Graph"
-msgstr ""
+msgstr "Graf"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:414
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:494
+msgid "Deployment Success"
+msgstr "Utrulling Lykkes"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:415
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:495
+msgid "Deployment Error"
+msgstr "Utrullingsfeil"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:416
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:496
+msgid "Abort Missing Agent"
+msgstr "Avbryt manglende agent"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:417
+msgid "Abort inconsistent GLPI Information"
+msgstr "Avbryt inkonsistent GLPI-informasjon"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:418
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:498
+msgid "Abort Relay Down"
+msgstr "Avbryt relé ned"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:419
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:499
+msgid "Abort Alternative relay down"
+msgstr "Avbryt alternativ relé ned"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:420
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:500
+msgid "Abort Info Relay Missing"
+msgstr "Avbryt info Relé mangler"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:421
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:501
+msgid "Error Unknown Error"
+msgstr "Feil Ukjent feil"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:422
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:502
+msgid "Abort Package Identifier Missing"
+msgstr "Avbryt pakkeidentifikator mangler"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:423
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:503
+msgid "Abort Package Name Missing"
+msgstr "Avbryt pakkenavn mangler"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:424
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:504
+msgid "Abort Package Version Missing"
+msgstr "Avbryt pakkeversjon mangler"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:425
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:505
+msgid "Abort Descriptor Missing"
+msgstr "Avbryt beskrivelse mangler"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:426
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:506
+msgid "Abort Machine Disappeared"
+msgstr "Avbryt maskin forsvant"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:427
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:507
+msgid "Abort Deployment Cancelled By User"
+msgstr "Avbryt utrulling, kansellert av bruker"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:428
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:508
+msgid "Abort Duplicate Machines"
+msgstr "Avbryt Duplikatmaskiner"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:429
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:509
+msgid "Deployment Delayed"
+msgstr "Utrulling Forsinket"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:430
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:510
+msgid "Deployment start"
+msgstr "Utrullingsstart"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:431
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:507
-msgid "Deployment Success"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:511
+msgid "Deployment Pending"
+msgstr "Utrulling Venter"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:432
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:508
-msgid "Deployment Error"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:512
+msgid "WOL 1"
+msgstr "Vol 1"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:433
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:509
-msgid "Abort Missing Agent"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:513
+msgid "WOL 2"
+msgstr "VOL 2"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:434
-msgid "Abort inconsistent GLPI Information"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:514
+msgid "WOL 3"
+msgstr "Vol 3"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:435
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:511
-msgid "Abort Relay Down"
-msgstr ""
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:515
+msgid "Waiting Machine Online"
+msgstr "Venter for Maskin Online"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:436
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:512
-msgid "Abort Alternative relay down"
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:516
+msgid "Error Hash Missing"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:437
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:513
-msgid "Abort Info Relay Missing"
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:517
+msgid "Abort Hash Invalid"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:438
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:514
-msgid "Error Unknown Error"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:439
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:515
-msgid "Abort Package Identifier Missing"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:440
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:516
-msgid "Abort Package Name Missing"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:441
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:517
-msgid "Abort Package Version Missing"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:442
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:518
-msgid "Abort Descriptor Missing"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:443
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:519
-msgid "Abort Machine Disappeared"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:444
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:520
-msgid "Abort Deployment Cancelled By User"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:445
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:521
-msgid "Abort Duplicate Machines"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:446
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:522
-msgid "Deployment Delayed"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:447
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:523
-msgid "Deployment start"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:448
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:524
-msgid "Deployment Pending"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:449
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:525
-msgid "WOL 1"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:450
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:526
-msgid "WOL 2"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:451
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:527
-msgid "WOL 3"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:452
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:528
-msgid "Waiting Machine Online"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:453
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:529
 msgid "Other Status"
-msgstr ""
+msgstr "Annen status"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:491
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:478
 msgid "Summary Graph"
-msgstr ""
+msgstr "Sammendragsgraf"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:493
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:480
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:313
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:346
 msgid "Error"
 msgstr "Feil"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:494
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:481
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:314
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:347
 msgid "Aborted"
 msgstr "Avbrutt"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:506
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:493
 msgid "Detailed Graph"
-msgstr ""
+msgstr "Detaljert graf"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:510
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:497
 msgid "Abort Inconsistent GLPI Information"
-msgstr ""
+msgstr "Avbryt, inkonsekvent GLPI-informasjon"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:568
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:559
 msgid "Package Detail"
+msgstr "Pakkedetalj"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:566
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:570
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:571
+msgid "Package deleted"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:631
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:597
 msgid "Associated Inventory"
-msgstr ""
+msgstr "Tilknyttet inventar"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:640
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:606
 msgid "Size"
 msgstr "Størrelse"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:707
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:652
 msgid "OFFLINE"
-msgstr ""
+msgstr "Frakoblet"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:747
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:692
 msgid "Deployment Detail"
 msgstr "Utrullingsdetalj"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:753
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:698
 msgid "Machine Name"
 msgstr "Maskinnavn"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:756
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:701
 #: modules/xmppmaster/xmppmaster/editqa.php:78
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:99
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:88
 msgid "Operating System"
 msgstr "Operativsystem"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:757
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:702
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:189
 msgid "Status"
 msgstr "Status"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:758
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:703
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:91
 msgid "Type"
 msgstr "Type"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:759
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:704
 msgid "Last User"
 msgstr "Siste Bruker"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:760
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:705
 msgid "Entity"
 msgstr "Enhet"
 
@@ -943,11 +959,11 @@ msgstr "Utrull maskin"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:51
 msgid "Machine Inventory"
-msgstr ""
+msgstr "Maskin Inventar"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:52
 msgid "Relays"
-msgstr ""
+msgstr "Reléer"
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:35
 msgid "Wake On Lan"
@@ -963,7 +979,7 @@ msgstr "Hurtigovervåking"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:58
 msgid "Machine : "
-msgstr ""
+msgstr "Maskin:"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:65
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:79
@@ -977,55 +993,55 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:284
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:286
 msgid "time out command"
-msgstr ""
+msgstr "time out kommando"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:68
 msgid "BATTERY"
-msgstr ""
+msgstr "BATTERI"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:83
 msgid "WIN SERVICES"
-msgstr ""
+msgstr "WIN TJENESTER"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:97
 msgid "PROCESSES LIST"
-msgstr ""
+msgstr "PROSESSLISTE"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:111
 msgid "DISK USAGE"
-msgstr ""
+msgstr "DISKBRUK"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:125
 msgid "SENSORS FANS"
-msgstr ""
+msgstr "SENSORVIFTER"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:139
 msgid "MEMORY USAGE"
-msgstr ""
+msgstr "MINNEBRUK"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:153
 msgid "NETWORK INTERFACE"
-msgstr ""
+msgstr "NETTVERKSGRENSESNITT"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:167
 msgid "CPU NUM"
-msgstr ""
+msgstr "CPU NUM"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:181
 msgid "NETSTAT"
-msgstr ""
+msgstr "NETSTAT"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:186
 msgid "Proto"
-msgstr ""
+msgstr "Proto"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:187
 msgid "Local address"
-msgstr ""
+msgstr "Lokal adresse"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:188
 msgid "Remote address"
-msgstr ""
+msgstr "Ekstern adresse"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:190
 msgid "PID"
@@ -1033,75 +1049,75 @@ msgstr "PID"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:191
 msgid "Program name"
-msgstr ""
+msgstr "Programnavn"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:216
 msgid "AGENT LOG MACHINE"
-msgstr ""
+msgstr "AGENT LOG MASKIN"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:234
 msgid "TIMES CPU"
-msgstr ""
+msgstr "ANTALL CPU"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:252
 msgid "CPU num"
-msgstr ""
+msgstr "CPU num"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:268
 msgid "Total Times"
-msgstr ""
+msgstr "Totalt Antall"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:301
 msgid "BASE AGENT"
-msgstr ""
+msgstr "BASIS AGENT"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:303
 msgid "REMOTE AGENT"
-msgstr ""
+msgstr "FJERNAGENT"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:305
 msgid "REMOTE IMAGE"
-msgstr ""
+msgstr "FJERNBILDE"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:311
 msgid "PLUGINS"
-msgstr ""
+msgstr "PLUGINS"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:318
 msgid "Base plugins"
-msgstr ""
+msgstr "Basis plugins"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:335
 msgid "Base scheduler plugins"
-msgstr ""
+msgstr "Grunnleggende planleggingstillegg"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:347
 msgid "Remote plugins"
-msgstr ""
+msgstr "Eksterne plugins"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:357
 msgid "Remote scheduler plugins"
-msgstr ""
+msgstr "Ekstern planlegger-plugins"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:376
 msgid "UPDATE DETAILS"
-msgstr ""
+msgstr "OPPDATERINGSDETALJER"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:382
 msgid "Parameters"
-msgstr ""
+msgstr "Parametre"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:405
 msgid "Folder Path"
-msgstr ""
+msgstr "Mappesti"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:552
 msgid "Remote image verifications"
-msgstr ""
+msgstr "Bekreftelse av ekstern bilde"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:560
 msgid "Diff information"
-msgstr ""
+msgstr "Diff informasjon"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:571
 msgid "Action"
@@ -1154,35 +1170,35 @@ msgstr "Pakkestørrelse"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:84
 msgid "Transfer Method"
-msgstr ""
+msgstr "Overføringsmetode"
 
 #: modules/xmppmaster/xmppmaster/relays/relaysList.php:28
 msgid "XMPP Relays list"
-msgstr ""
+msgstr "XMPP Reléliste"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:39
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:37
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:38
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:89
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:88
 msgid "Edit config files"
 msgstr "Rediger konfigurasjonsfiler"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:42
 msgid "Relay Detail"
-msgstr ""
+msgstr "Relé detalj"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
 msgid "Detail actions"
-msgstr ""
+msgstr "Detalj handlinger"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:48
 msgid "Console Relay"
-msgstr ""
+msgstr "Konsoll relé"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
@@ -1193,7 +1209,7 @@ msgstr "Bytt"
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:56
 #: modules/xmppmaster/xmppmaster/relays/qalaunched.php:74
 msgid "QA Launched"
-msgstr ""
+msgstr "QA startet"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
@@ -1204,22 +1220,22 @@ msgstr "Fjernkontroll"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:124
 msgid "Relays Xmpp"
-msgstr ""
+msgstr "Relé Xmpp"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:127
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:100
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
 msgid "Jid"
-msgstr ""
+msgstr "Jid"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:128
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:106
 msgid "Cluster Name"
-msgstr ""
+msgstr "Klyngenavn"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:129
 msgid "Cluster Description"
-msgstr ""
+msgstr "Klyngebeskrivelse"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:130
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:123
@@ -1230,12 +1246,12 @@ msgstr "Totalt antall maskiner"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:131
 msgid "Uninventoried Online"
-msgstr ""
+msgstr "Ikke inventarisert online"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:132
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:102
 msgid "Class Util"
-msgstr ""
+msgstr "Klasseverktøy"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:133
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:108
@@ -1245,7 +1261,7 @@ msgstr "Mac Adresse"
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:134
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:109
 msgid "Xmpp IP"
-msgstr ""
+msgstr "Xmpp IP"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
 msgid ""
@@ -1253,14 +1269,17 @@ msgid ""
 "<em><b>reconfiguration of all the machines</b></em> managed by the "
 "relayserver."
 msgstr ""
+"Du må merke av i boksen <b>\"Jeg er klar over at denne handlingen tvinger "
+"frem en <em><b>rekonfigurasjon av alle maskinene</b></em> administrert av "
+"reléserveren."
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
 msgid "The machines of the relay "
-msgstr ""
+msgstr "Maskinene til reléet"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:39
 msgid "Reconfigure all the machines of the relay"
-msgstr ""
+msgstr "Konfigurer alle maskinene til reléet på nytt"
 
 #: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
 msgid ""
@@ -1268,22 +1287,25 @@ msgid ""
 "machines</b></em> managed by the relayserver.<br />Check this box if it is "
 "what you want."
 msgstr ""
+"Jeg er klar over at denne handlingen tvinger en <em><b>rekonfigurasjon av "
+"alle maskinene</b></em>som administreres av reléserveren.<br />Kryss av i "
+"denne boksen hvis det er det du vil ha."
 
 #: modules/xmppmaster/xmppmaster/relays/qaresult.php:29
 msgid "Relay Quick Result Action"
-msgstr ""
+msgstr "Relé, rask resultathandling"
 
 #: modules/xmppmaster/xmppmaster/relays/detailactions.php:28
 msgid "Detail Actions"
-msgstr ""
+msgstr "Detaljhandlinger"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
 msgid "Show Result"
-msgstr ""
+msgstr "Vis Resultat"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:53
 msgid "Quick Action"
-msgstr ""
+msgstr "Hurtighandling"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
 msgid ""
@@ -1291,18 +1313,21 @@ msgid ""
 "forcing a <em><b>reconfiguration of all the machines</b></em> managed by the"
 " cluster."
 msgstr ""
+"Du må merke av i boksen <b>\"Jeg er klar over at dette deaktiverer/aktiverer"
+" et relé som tvinger en <em><b>3rekonfigurasjon av alle maskinene</b></em> "
+"administrert av klyngen."
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
 msgid "The relay "
-msgstr ""
+msgstr "Reléet"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:39
 msgid "Switch Off the relay"
-msgstr ""
+msgstr "Slå av releet"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:39
 msgid "Switch On the relay"
-msgstr ""
+msgstr "Slå på releet"
 
 #: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
 msgid ""
@@ -1310,17 +1335,20 @@ msgid ""
 " of all the machines</b></em> managed by the cluster.<br />Check this box if"
 " it is what you want."
 msgstr ""
+"Jeg er klar over at dette deaktiverer/aktiverer et relé som tvinger en "
+"<em><b>rekonfigurasjon av alle maskinene</b></em> som administreres av "
+"klyngen.<br /> Merk av i denne boksen hvis det er det du vil ha."
 
 #: modules/xmppmaster/xmppmaster/relays/qalaunched.php:47
 msgid "Relay Quick Leunched Action"
-msgstr ""
+msgstr "Relee, Hurtigstarts handling"
 
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:60
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:113
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:311
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:67
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:210
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:66
 #: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:65
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:189
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:88
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:60
 #, php-format
 msgid "Sorry, the remote machine [%s] takes too much time to answer."
@@ -1328,11 +1356,11 @@ msgstr "Beklager, den eksterne maskinen [%s] tar for lang tid å svare."
 
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php:62
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:115
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:313
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:69
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:212
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:68
 #: modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php:68
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:191
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:305
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:90
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:295
 #: modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php:62
 #, php-format
 msgid "Error : %s"
@@ -1345,27 +1373,27 @@ msgstr "xmppkonsoll"
 
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:97
 msgid "Machines Xmpp"
-msgstr ""
+msgstr "Maskiners Xmpp"
 
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:101
 msgid "Arch"
-msgstr ""
+msgstr "Bue"
 
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:103
 msgid "Kiosk presence"
-msgstr ""
+msgstr "Kiosk tilstedeværelse"
 
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:104
 msgid "AD OU User"
-msgstr ""
+msgstr "AD OU Bruker"
 
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:105
 msgid "AD OU Machine"
-msgstr ""
+msgstr "AD OU Maskin"
 
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:107
 msgid "cluster_description"
-msgstr ""
+msgstr "klyngebeskrivelse"
 
 #: modules/xmppmaster/xmppmaster/customQA.php:38
 #, php-format
@@ -1434,27 +1462,27 @@ msgstr "Tidligere oppgaver (siste 3 måneder)"
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:225
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:258
 msgid "GROUP ERROR"
-msgstr ""
+msgstr "GRUPPEFEIL"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:228
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:261
 msgid "GROUP PARTIAL SUCCESS"
-msgstr ""
+msgstr "GRUPPE, DELVIS SUKSESS"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:231
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:264
 msgid "GROUP FULL SUCCESS"
-msgstr ""
+msgstr "GRUPPE FULL SUKSESS"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:241
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:274
 msgid "This group doesn't exist"
-msgstr ""
+msgstr "Denne gruppen eksisterer ikke"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:309
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:342
 msgid "Progress / Status"
-msgstr ""
+msgstr "Fremgang / Status"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:311
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:344
@@ -1486,7 +1514,7 @@ msgstr "Alle brukeroppgaver"
 
 #: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:28
 msgid "My teams tasks"
-msgstr ""
+msgstr "Mine teams oppgaver"
 
 #: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:29
 #: modules/xmppmaster/xmppmaster/auditmypastdeploysteam.php:35
@@ -1501,66 +1529,66 @@ msgstr "Alle brukeres tidligere oppgaver"
 
 #: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:31
 msgid "My teams past tasks"
-msgstr ""
+msgstr "Mine teams historiske oppgaver"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:60
 msgid "Monitoring for"
-msgstr ""
+msgstr "Overvåk for"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:97
 msgid "Graph for one day"
-msgstr ""
+msgstr "Graf for en dag"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:97
 msgid "1 day"
-msgstr ""
+msgstr "1 dag"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:98
 msgid "Graph for one week"
-msgstr ""
+msgstr "Graf for en uke"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:98
 msgid "1 week"
-msgstr ""
+msgstr "1 uke"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:99
 msgid "Graph for one month"
-msgstr ""
+msgstr "Graf for en måned"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:99
 msgid "1 month"
-msgstr ""
+msgstr "1 måned"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:100
 msgid "Graph for three months"
-msgstr ""
+msgstr "Graf for tre måneder"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:100
 msgid "3 months"
-msgstr ""
+msgstr "3 måneder"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:126
 msgid "Panel Graph for one year"
-msgstr ""
+msgstr "Panelgraf for ett år"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:128
 msgid "custom"
-msgstr ""
+msgstr "tilpasset"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:135
 msgid "Monitoring item"
-msgstr ""
+msgstr "Overvåket enhet"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:137
 msgid "Last value"
-msgstr ""
+msgstr "Siste verdi"
 
 #: modules/xmppmaster/xmppmaster/monitoringview.php:138
 msgid "History"
 msgstr "Historikk"
 
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:100
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:102
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:101
 msgid "Config file"
 msgstr "Konfig fil"
 
@@ -1583,76 +1611,76 @@ msgstr "Tilstand"
 msgid "Package"
 msgstr "Pakke"
 
-#: modules/xmppmaster/xmppmaster/listfichierconf.php:159
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:231
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:239
-#: modules/xmppmaster/xmppmaster/listconffile.php:158
+#: modules/xmppmaster/xmppmaster/listfichierconf.php:56
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:130
+#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:138
+#: modules/xmppmaster/xmppmaster/listconffile.php:54
 msgid "Edit config file"
 msgstr "Rediger konfigurasjonsfil"
 
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:327
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:383
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:226
+#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:282
 msgid "Save Configuration"
 msgstr "Lagre konfigurasjon"
 
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:327
-#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:383
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:226
+#: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:282
 msgid "File :"
 msgstr "Fil:"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:263
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:263
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:162
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:253
 msgid "File manager"
 msgstr "Filhåndterer"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:548
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:447
 msgid "Copy remote folder"
 msgstr "Kopier fjernfolder"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:552
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:451
 msgid "to local folder"
 msgstr "til lokal folder"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:578
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:477
 msgid "The folder copy has been requested successfully"
 msgstr "Forespørsel om kopi av mappen har blitt gjort"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:602
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:501
 msgid "Copy remote file"
 msgstr "Kopier fjernlagret fil"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:608
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:507
 msgid "to local File"
 msgstr "til lokal fil"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:632
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:531
 msgid "The file copy has been requested successfully"
 msgstr "Forespørsel om kopi av filen har blitt gjort"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
 msgid "Acknowledge"
-msgstr ""
+msgstr "Anerkjenne"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:65
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:63
 msgid "Machine name"
-msgstr ""
+msgstr "Maskinnavn"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:69
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:67
 msgid "Date Event"
-msgstr ""
+msgstr "Datohendelse"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:70
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:70
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Type"
-msgstr ""
+msgstr "Hendelsestype"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:71
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:71
 msgid "Machine Message"
-msgstr ""
+msgstr "Maskinmelding"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:72
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:72
@@ -1664,39 +1692,39 @@ msgstr "Enhet"
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:73
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
 msgid "Device Status"
-msgstr ""
+msgstr "Enhetsstatus"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:74
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:74
 msgid "Device Message"
-msgstr ""
+msgstr "Enhetsmelding"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:75
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:75
 msgid "Device Serial"
-msgstr ""
+msgstr "Enhets serienummer"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:76
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:76
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
 msgid "Device Firmware"
-msgstr ""
+msgstr "Enhetens fastvare"
 
 #: modules/xmppmaster/xmppmaster/monitoring/alerts.php:38
 msgid "Alerts"
-msgstr ""
+msgstr "Varsler"
 
 #: modules/xmppmaster/xmppmaster/monitoring/alerts.php:39
 msgid "Alerts History"
-msgstr ""
+msgstr "Varslingshistorikk"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:68
 msgid "Acknowledged by"
-msgstr ""
+msgstr "Anerkjent av"
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:69
 msgid "Acknowledged date"
-msgstr ""
+msgstr "Anerkjent dato"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
 msgid "Hostname"
@@ -1708,7 +1736,7 @@ msgstr "Dato"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:50
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
@@ -1717,76 +1745,76 @@ msgstr "Hendelse"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Name"
-msgstr ""
+msgstr "Hendelsesnavn"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Date"
-msgstr ""
+msgstr "Hendelsesdato"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:54
 msgid "Event Status"
-msgstr ""
+msgstr "Hendelsesstatus"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:57
 msgid "Acknowledged By"
-msgstr ""
+msgstr "Anerkjent av"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:61
 msgid "Acknowledged Date"
-msgstr ""
+msgstr "Anerkjent Dato"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
 msgid "Device Type"
-msgstr ""
+msgstr "Enhetstype"
 
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
 msgid "Device Doc"
-msgstr ""
+msgstr "Enhetsdok."
 
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:32
 #, php-format
 msgid "Failed acknowledging the alert : %s on device %s_%s (%s)"
-msgstr ""
+msgstr "Kunne ikke bekrefte varselet: %s på enhet %s_%s (%s)"
 
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:34
 #, php-format
 msgid "Success acknowledging the alert : %s on device %s_%s (%s)"
-msgstr ""
+msgstr "Suksess med å bekrefte varselet: %s på enhet %s_%s (%s)"
 
 #: modules/xmppmaster/xmppmaster/monitoring/acquit.php:39
 #, php-format
 msgid "Acknowledge this alert : %s on device %s_%s (%s)"
-msgstr ""
+msgstr "Bekreft dette varselet : %s på enhet %s_%s (%s)"
 
 #: modules/xmppmaster/xmppmaster/monitoring/monconfig.php:34
 msgid "Monitoring Configurator"
-msgstr ""
+msgstr "Overvåker Konfigurator"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:47
 msgid "Console Agent Relay Server"
 msgstr "Konsollagents Relé Server"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:49
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:163
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:62
 msgid "Console"
 msgstr "Konsoll"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:107
 msgid "Shell command"
-msgstr ""
+msgstr "Skallkomando"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:111
-#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:232
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:131
 msgid "Press return key to start your command"
 msgstr "Trykk på returtasten for å kjøre kommandoen"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:125
 msgid "Command result : "
-msgstr ""
+msgstr "Kommando resultat:"
 
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:129
 msgid "Error Code :"
-msgstr ""
+msgstr "Feilkode:"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
 msgid "Computer Name"
@@ -1835,21 +1863,21 @@ msgstr "Kommandobeskrivelse"
 
 #: modules/xmppmaster/xmppmaster/filebrowser.php:62
 msgid "File viewer"
-msgstr ""
+msgstr "Filviser"
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:84
 msgid "Custom command name"
 msgstr "Egendefinert kommandonavn"
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:106
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Edit a Quick Action"
 msgstr "Rediger hurtighandling"
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:107
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:96
 msgid "Share a Quick Action"
 msgstr "Del hurtighandling"
 
-#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:108
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:97
 msgid "Delete a Quick Action"
 msgstr "Slett hurtighandling"
 
@@ -1878,7 +1906,7 @@ msgstr "Egendefinert kommando"
 
 #: modules/xmppmaster/xmppmaster/machinesList.php:29
 msgid "XMPP Machines list"
-msgstr ""
+msgstr "XMPP-maskinliste"
 
 #: modules/xmppmaster/xmppmaster/machinesList.php:39
 msgid "All computers"
@@ -1904,114 +1932,114 @@ msgstr "Det tilpassede kvalitetsnivået er definert for operativsystem"
 msgid "Sorry the machine is off"
 msgstr "Beklager maskinen er slått av"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:303
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:293
 #, php-format
 msgid "Sorry, the remote machine [%s] takes too long to answer."
 msgstr "Beklager, den eksterne maskinen [%s] tar for lang tid for å svare."
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:352
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:342
 msgid "Downloads basket"
 msgstr "Last ned kurv"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:356
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:346
 msgid "Folders"
 msgstr "Mapper"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:359
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:349
 msgid "Remove last folder"
 msgstr "Fjern siste mappe"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:360
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:350
 msgid "Remove all folders"
 msgstr "Fjern alle mapper"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:365
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:355
 msgid "Files"
 msgstr "Filer"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:368
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:358
 msgid "Remove last file"
 msgstr "Fjern siste fil"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:369
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:359
 msgid "Remove all files"
 msgstr "Fjern alle filer"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:374
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:364
 msgid "Downloads basket to"
 msgstr "Last ned kurv til"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:377
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:367
 msgid "Download list selection"
 msgstr "Last ned listevalg"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:394
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:384
 msgid "Local folder"
 msgstr "Lokal mappe"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:419
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:409
 msgid "Remote tree view"
 msgstr "Ekstern tre vy"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:422
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:412
 msgid "root:"
 msgstr "root:"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:425
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:415
 msgid "Current path: "
 msgstr "Gjeldende sti:"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:457
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:466
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:447
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:456
 msgid "Summary download"
 msgstr "Last ned sammendrag"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:554
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:544
 msgid "Computer view"
 msgstr "Maskin vy"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:574
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:564
 msgid "History download"
 msgstr "Last ned historikk"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:584
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:574
 #: modules/xmppmaster/xmppmaster/localSidebar.php:52
 msgid "File Manager"
 msgstr "Filhåndterer"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:794
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:784
 msgid "Download from"
 msgstr "Last ned fra"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:796
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:786
 msgid "Folders list"
 msgstr "Mappeliste"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:804
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:794
 msgid "Files list"
 msgstr "Filliste"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:812
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:802
 msgid "To local folder"
 msgstr "Til lokal mappe"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:829
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:819
 msgid "Confirm"
 msgstr "Bekreft"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:841
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:831
 msgid "The list (folder & files) copy has been requested successfully"
 msgstr "Listekopi (mappe og filer) er blitt forespurt"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:849
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:839
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:142
+#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:38
 msgid "Quick action on machine"
 msgstr "Hurtighandling på maskin"
 
-#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:149
+#: modules/xmppmaster/xmppmaster/QAcustommachgrp.php:45
 msgid "Name of Quick Action  :"
 msgstr "Navn på hurtighandling:"
 
@@ -2021,7 +2049,7 @@ msgstr "Last ned filer og mapper"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:33
 msgid "List of Uninventoried Machines"
-msgstr ""
+msgstr "Liste over ikke-inventererte maskiner"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:45
 msgid "Custom Quick Actions"

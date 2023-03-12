@@ -98,7 +98,7 @@ if (isset($_GET["agentsessionexpired"])) {
         <!--<div id="headerLeft"><div id="headerRight">
             <p class="lock"></p>
         </div></div>-->
-<img src="img/login/pulse_logo.png" alt ="[x]"/></a>
+<img src="img/login/medulla.svg" alt ="[x]" width="153" height="50"/></a>
         </div>
 
         <div id="interface">

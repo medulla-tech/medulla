@@ -1,5 +1,5 @@
 --
--- (c) 2018 Siveo, http://www.siveo.net/
+-- (c) 2022 Siveo, http://www.siveo.net/
 --
 -- This file is part of Pulse 2, http://www.siveo.net/
 --
@@ -22,16 +22,21 @@
 -- Database version
 -- ----------------------------------------------------------------------
 
-ALTER TABLE `kiosk`.`profile_has_ous`
-ADD INDEX `ind_pr_ous_ou` (`ou` ASC);
+START TRANSACTION;
+
+USE kiosk;
+ALTER TABLE package_has_profil change column package_id package_uuid VARCHAR(255) NOT NULL;
 
 ALTER TABLE `kiosk`.`profile_has_ous`
-ADD INDEX `ind_profile` (`profile_id` ASC);
+CHANGE COLUMN `ou` `ou` VARCHAR(200) NULL DEFAULT NULL ;
+
+ALTER TABLE `kiosk`.`profile_has_ous`
+ADD INDEX IF NOT EXISTS `ind_pr_ous_ou` (`ou` ASC),
+ADD INDEX IF NOT EXISTS `ind_profile` (`profile_id` ASC);
 
 ALTER TABLE `kiosk`.`package_has_profil` 
-ADD INDEX `ind_packid` (`package_id` ASC);
-
-ALTER TABLE `kiosk`.`package_has_profil` 
-ADD INDEX `ind_profil` (`profil_id` ASC);
+ADD INDEX IF NOT EXISTS `ind_packid` (`package_uuid` ASC),
+ADD INDEX IF NOT EXISTS `ind_profil` (`profil_id` ASC);
 
 UPDATE version SET Number = 6;
+COMMIT;

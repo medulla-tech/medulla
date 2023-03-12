@@ -48,7 +48,7 @@ if (isset($_GET['hostname'])) { $hostname = clean_xss($_GET['hostname']); }
 
 $uri = getGlpiMachineUri();
 if ($uri) {
-    $glpi_link = sprintf('<a href="%s" target="new">'.$glpidisplayname.'</a>', $uri.str_replace('UUID', '', clean_xss($uuid)));
+    $glpi_link = sprintf('<a href="%s" target="new">%s</a>', $uri.str_replace('UUID', '', clean_xss($uuid)), $glpidisplayname);
 }
 else {
     $glpi_link = $glpidisplayname;

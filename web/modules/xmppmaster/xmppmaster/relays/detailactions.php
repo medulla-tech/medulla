@@ -44,12 +44,12 @@ if(isset($_GET['jid']))
   echo '</tr>';
 
   echo '<tr>';
-  echo '<td id="reboot" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70"></td>';
-  echo '<td id="process" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'clone_ps_aux']).'"><img src="modules/base/graph/navbar/process.png" height="70" width="70"></a></td>';
-  echo '<td id="diskusage" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'disk_usage']).'"><img src="modules/base/graph/navbar/diskusage.png" height="70" width="70"></a></td>';
-  echo '<td id="agentversion" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="modules/base/graph/navbar/information.png" height="70" width="70"></a></td>';
-  echo '<td id="netstat" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'netstat']).'"><img src="modules/base/graph/computers/network.png" height="70" width="70"></a></td>';
-  echo '<td id="console" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/consolexmpp", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="modules/base/graph/computers/console.jpg" height="70" width="70"></a></td>';
+  echo '<td id="reboot" align="center"><img src="img/actions/restart.svg" height="70" width="70"></td>';
+  echo '<td id="process" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'clone_ps_aux']).'"><img src="img/actions/process.svg" height="70" width="70"></a></td>';
+  echo '<td id="diskusage" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'disk_usage']).'"><img src="img/actions/disk.svg" height="70" width="70"></a></td>';
+  echo '<td id="agentversion" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="img/actions/info.svg" height="70" width="70"></a></td>';
+  echo '<td id="netstat" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'netstat']).'"><img src="img/actions/network.svg" height="70" width="70"></a></td>';
+  echo '<td id="console" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/consolexmpp", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="img/actions/console.svg" height="70" width="70"></a></td>';
   echo '</tr>';
   echo '</table>';
   $qalist = xmlrpc_get_qa_for_relays($_SESSION['login']);

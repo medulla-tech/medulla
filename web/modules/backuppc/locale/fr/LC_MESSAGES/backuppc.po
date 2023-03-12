@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-09 15:47+0100\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2017-09-12 12:18+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2019\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38
@@ -46,12 +46,12 @@ msgid "Edit host config"
 msgstr "Editer la configuration de la machine"
 
 #: modules/backuppc/infoPackage.inc.php:54
-#: modules/backuppc/backuppc/hostStatus.php:324
+#: modules/backuppc/backuppc/hostStatus.php:221
 msgid "Advanced scripts"
 msgstr "Scripts avancés"
 
 #: modules/backuppc/infoPackage.inc.php:57
-#: modules/backuppc/backuppc/hostStatus.php:325
+#: modules/backuppc/backuppc/hostStatus.php:222
 msgid "File search"
 msgstr "Recherche de fichiers"
 
@@ -298,7 +298,7 @@ msgid "Restore"
 msgstr "Restaurer"
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:302
+#: modules/backuppc/backuppc/hostStatus.php:199
 msgid "Configuration saved"
 msgstr "Configuration enregistrée"
 
@@ -441,7 +441,7 @@ msgid "Backup size (new) [Mb]"
 msgstr "Taille de sauvegarde (nouveaux) [Mo]"
 
 #: modules/backuppc/backuppc/hostSummary.php:262
-#: modules/backuppc/backuppc/BrowseShareNames.php:171
+#: modules/backuppc/backuppc/BrowseShareNames.php:68
 msgid "Browse"
 msgstr "Parcourir"
 
@@ -719,7 +719,7 @@ msgstr "Exclusions"
 
 #: modules/backuppc/backuppc/edit.php:142
 #: modules/backuppc/backuppc/EditBackupProfile.php:149
-#: modules/backuppc/backuppc/BrowseShareNames.php:163
+#: modules/backuppc/backuppc/BrowseShareNames.php:60
 #: modules/backuppc/backuppc/fileSearch.php:127
 msgid "Folder"
 msgstr "Dossier"
@@ -746,7 +746,7 @@ msgstr "Journal d'erreurs"
 msgid "Error log"
 msgstr "Journal d'erreurs"
 
-#: modules/backuppc/backuppc/BrowseShareNames.php:137
+#: modules/backuppc/backuppc/BrowseShareNames.php:34
 msgid "Browse backup"
 msgstr "Parcourir la sauvegarde"
 
@@ -803,20 +803,20 @@ msgstr "Log de sauvegarde"
 msgid "backup log"
 msgstr "Log de sauvegarde"
 
-#: modules/backuppc/backuppc/hostStatus.php:148
+#: modules/backuppc/backuppc/hostStatus.php:45
 msgid "Notify Error : Backup configuration Computer"
 msgstr "Notification d'Erreur : Configuration sauvegarde Ordinateur"
 
-#: modules/backuppc/backuppc/hostStatus.php:162
-#: modules/backuppc/backuppc/hostStatus.php:291
+#: modules/backuppc/backuppc/hostStatus.php:59
+#: modules/backuppc/backuppc/hostStatus.php:188
 msgid "Notify Computer :"
 msgstr "Notification Ordinateur"
 
-#: modules/backuppc/backuppc/hostStatus.php:162
+#: modules/backuppc/backuppc/hostStatus.php:59
 msgid "has been added to backup system successfully."
 msgstr "A été ajouté à la sauvegarde avec succès"
 
-#: modules/backuppc/backuppc/hostStatus.php:173
+#: modules/backuppc/backuppc/hostStatus.php:70
 #, php-format
 msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
@@ -826,20 +826,20 @@ msgstr ""
 "pouvez désormais configurer les jeux de fichiers à sauvegarder ainsi que sa "
 "planification de sauvegardes."
 
-#: modules/backuppc/backuppc/hostStatus.php:291
+#: modules/backuppc/backuppc/hostStatus.php:188
 msgid "Save configure host "
 msgstr "Sauvegarder la configuration du client"
 
-#: modules/backuppc/backuppc/hostStatus.php:316
+#: modules/backuppc/backuppc/hostStatus.php:213
 #, php-format
 msgid "%s's backup status"
 msgstr "Statut de la sauvegarde de %s"
 
-#: modules/backuppc/backuppc/hostStatus.php:319
+#: modules/backuppc/backuppc/hostStatus.php:216
 msgid "Summary"
 msgstr "Résumé"
 
-#: modules/backuppc/backuppc/hostStatus.php:323
+#: modules/backuppc/backuppc/hostStatus.php:220
 msgid "Configuration"
 msgstr "Configuration"
 

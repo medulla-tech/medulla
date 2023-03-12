@@ -79,7 +79,7 @@ foreach ($services as $entry) {
         $remActions[] = $emptyAction;
     }
 
-    $icon = '<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" /> ';
+    $icon = '<img src="img/other/confitem.svg" style="vertical-align: middle" width="25" height="25" /> ';
 
     $a_label[]= sprintf("%s%s", $icon, $entry['default_name']);
     $a_desc[]= $entry['default_desc'];

@@ -1,26 +1,8 @@
 # -*- coding:Utf-8; -*-
-#
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007 Mandriva, http://www.mandriva.com/
-# (c) 2022 Siveo, http://siveo.net
-#
-# $Id$
-#
-# This file is part of Management Console (MMC).
-#
-# MMC is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MMC is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MMC; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 Class to manage imaging mmc-agent api
@@ -240,17 +222,21 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: bool
         """
         old_bootMenu = self.getComputerBootMenu(uuid)
-        # Adding location default menu entries
-        # get computer location
-        try:
-            entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid][
-                "uuid"
-            ]
-        except KeyError:
-            raise Exception(
-                "Unable to generate menu for computer %s: deleted but still present in imaging database"
-                % uuid
-            )
+        if uuid.startswith("UUID"):
+            # Adding location default menu entries
+            # get computer location
+            try:
+                entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
+
+            except KeyError:
+                raise Exception("Unable to generate menu for computer %s: deleted but still present in imaging database" % uuid)
+        else:
+            id_menu = old_bootMenu[1][0]['fk_menu'] if old_bootMenu[0] > 0 else 0
+            if id_menu == 0:
+                return False
+            entity = ImagingDatabase().getTargetsEntity([uuid])
+            entity_uuid = entity[0][0].uuid
+
         # get location bootMenu
         locationBM = self.getLocationBootMenu(entity_uuid)
         # return locationBM

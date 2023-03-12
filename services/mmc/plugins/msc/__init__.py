@@ -1,25 +1,8 @@
 # -*- coding: utf-8; -*-
-#
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007 Mandriva, http://www.mandriva.com/
-#
-# $Id$
-#
-# This file is part of Mandriva Management Console (MMC).
-#
-# MMC is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MMC is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MMC; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+# SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 Class to manage msc mmc-agent plugin
@@ -296,7 +279,8 @@ class RpcProxy(RpcProxyI):
             ret = -1
         return ret
 
-    def get_deploy_inprogress_by_team_member(self, login, time, minimum, maximum, filt):
+    def get_deploy_inprogress_by_team_member(self, login, time, minimum,
+                                             maximum, filt, typedeploy="command"):
         """
         This function is used to retrieve not yet done deployements of a team.
         This team is found based on the login of a member.
@@ -311,10 +295,11 @@ class RpcProxy(RpcProxyI):
             It returns all the deployement not yet started of a specific team.
             It can be done by time search too.
         """
+        return MscDatabase().get_deploy_inprogress_by_team_member(login, time, minimum,
+                                                                  maximum, filt, typedeploy)
 
-        return MscDatabase().get_deploy_inprogress_by_team_member(
-            login, time, minimum, maximum, filt
-        )
+    def get_conrainte_slot_deployment_commands(self, commands):
+        return MscDatabase().get_conrainte_slot_deployment_commands(commands)
 
     def getContext(self, user="root"):
         s = SecurityContext()
@@ -685,11 +670,16 @@ class RpcProxy(RpcProxyI):
     #
     # default WEB values handling
     #
-    def get_def_package_label(self, label, version):
+    def get_def_package_label(self, label, version, typedepl=None):
+        """ typedepl="-@upd@" for update """
         localtime = time.localtime()
-        return "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
+        typepackage=""
+        if typedepl is not None:
+            typepackage = typedepl
+        return "%s (%s) %s- %04d/%02d/%02d %02d:%02d:%02d" % (
             label,
             version,
+            typepackage,
             localtime[0],
             localtime[1],
             localtime[2],

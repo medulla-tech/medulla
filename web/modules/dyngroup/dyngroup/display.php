@@ -147,15 +147,3 @@ function __my_header($label, $sidemenu, $item, $group) {
 
     })
 </script>
-<style>
-li.remove_machine a {
-        padding: 1px 3px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("img/common/button_cancel.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-</style>
