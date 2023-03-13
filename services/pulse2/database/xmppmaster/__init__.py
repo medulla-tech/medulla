@@ -7881,7 +7881,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getRelayServerForMachineUuid(self, session, uuid):
-        relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).one()
+        relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).filter(Machines.agenttype == "machine").one()
         session.commit()
         session.flush()
         try:
