@@ -21,8 +21,8 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-This module declare all the necessary stuff to connect to a itsm-ng database in it's
-version 1.4
+This module declare all the necessary stuff to connect to a glpi database in it's
+version 9.3
 """
 import os
 import logging
@@ -71,9 +71,9 @@ import decimal
 
 logger = logging.getLogger()
 
-class Itsm_ng14(DyngroupDatabaseHelper):
+class Glpi93(DyngroupDatabaseHelper):
     """
-    Singleton Class to query the glpi database in version >= 9.4
+    Singleton Class to query the glpi database in version > 9.3
 
     """
     is_activated = False
@@ -85,39 +85,39 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
     def try_activation(self, config):
         """
-        function to see if that itsm-ng database backend is the one we need to use
+        function to see if that glpi database backend is the one we need to use
         """
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if ITSM-NG version is higher than 1.4 %s' % dburi)
+        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.3')
 
-	try:
-            self._itsm_ng_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "itsmversion"').fetchone().values()[0].replace(' ', '')
-	except AttributeError:
-	    return False
+        try:
+            self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
+        except OperationalError:
+            self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
-        if LooseVersion(self._itsm_ng_version) >=  LooseVersion("1.4") and LooseVersion(self._itsm_ng_version) <=  LooseVersion("1.4.99"):
-            logging.getLogger().debug('ITSM-NG version %s found !' % self._itsm_ng_version)
+        if LooseVersion(self._glpi_version) >=  LooseVersion("9.3") and LooseVersion(self._glpi_version) <=  LooseVersion("9.3.9"):
+            logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
-            logging.getLogger().debug('ITSM-NG higher than version 1.4 was not detected')
+            logging.getLogger().debug('GLPI higher than version 9.3 was not detected')
             return False
 
     @property
     def glpi_version(self):
-        return self._itsm_ng_version
+        return self._glpi_version
 
-    def itsm_ng_version_new(self):
+    def glpi_version_new(self):
         return False
 
     def activate(self, config = None):
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
-            self.logger.info("Itsm-ng don't need activation")
+            self.logger.info("Glpi don't need activation")
             return None
-        self.logger.info("Itsm-ng is activating")
+        self.logger.info("Glpi is activating")
         if config != None:
             self.config = config
         else:
@@ -126,24 +126,24 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
             self.db.execute(u'SELECT "\xe9"')
-            setattr(Itsm_ng14, "decode", decode_utf8)
-            setattr(Itsm_ng14, "encode", encode_utf8)
+            setattr(Glpi93, "decode", decode_utf8)
+            setattr(Glpi93, "encode", encode_utf8)
         except:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
-            setattr(Itsm_ng14, "decode", decode_latin1)
-            setattr(Itsm_ng14, "encode", encode_latin1)
+            setattr(Glpi93, "decode", decode_latin1)
+            setattr(Glpi93, "encode", encode_latin1)
 
         try:
-            self._itsm_ng_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
+            self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         except OperationalError:
-            self._itsm_ng_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "itsmversion"').fetchone().values()[0].replace(' ', '')
+            self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
         self.metadata = MetaData(self.db)
         self.initMappers()
-        self.logger.info("Itsm-ng is in version %s" % (self.glpi_version))
+        self.logger.info("Glpi is in version %s" % (self.glpi_version))
         self.metadata.create_all()
         self.is_activated = True
-        self.logger.debug("Itsm-ng finish activation")
+        self.logger.debug("Glpi finish activation")
 
         searchOptionConfFile = os.path.join(mmcconfdir, "plugins", "glpi_search_options.ini")
         self.searchOptions = ConfigObj(searchOptionConfFile)
@@ -390,7 +390,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             Column('name', String(255), nullable=False),
             Column('serial', String(255), nullable=False),
             Column('license_number', String(255), nullable=True),
-            Column('licenseid', String(255), nullable=True),
+            Column('license_id', String(255), nullable=True),
             Column('is_deleted', Integer, nullable=False),
             Column('is_template', Integer, nullable=False),
             Column('states_id', Integer, ForeignKey('glpi_states.id'), nullable=False),
@@ -451,8 +451,8 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         mapper(Software, self.software)
 
         # glpi_inst_software
-        self.inst_software = Table("glpi_items_softwareversions", self.metadata,
-            Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+        self.inst_software = Table("glpi_computers_softwareversions", self.metadata,
+            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
             Column('softwareversions_id', Integer, ForeignKey('glpi_softwareversions.id')),
             autoload = True)
         mapper(InstSoftware, self.inst_software)
@@ -543,7 +543,6 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             autoload = True)
         mapper(Peripherals, self.peripherals)
 
-
     # internal query generators
     def __filter_on(self, query):
         """
@@ -610,6 +609,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             result = element[0]
         return result
 
+
     def __xmppmasterfilter(self, filt = None):
         ret = {}
         if "computerpresence" in filt:
@@ -631,11 +631,13 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machines_list1(self, session, start, end, ctx):
+        # start and end are used to set the limit parameter in the query
+
         debugfunction = False
         if 'filter' in ctx and "@@@DEBUG@@@" in ctx['filter']:
             debugfunction = True
             ctx['filter']  = ctx['filter'].replace("@@@DEBUG@@@", "").strip()
-        # start and end are used to set the limit parameter in the query
+
         start = int(start)
         end = int(end)
         location = ""
@@ -770,17 +772,15 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
         # From now we can have the count of machines
         count = query.count()
-
         # Then continue with others criterions and filters
         query = query.offset(start).limit(end)
-
         columns_name = [column['name'] for column in query.column_descriptions]
 
         if debugfunction:
             try:
                 self.logger.info("@@@DEBUG@@@ %s"%literalquery(query))
             except Exception as e:
-                self.logger.error("display @@@DEBUG@@@ sql literal from alchemy error : %s" % e)
+                self.logger.error("display @@@DEBUG@@@ sql literal from alchemy : %s" % e)
 
         machines = query.all()
 
@@ -862,7 +862,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             online_machines = []
             online_machines = XmppMasterDatabase().getlistPresenceMachineid()
             if online_machines is not None:
-                online_machines = [int(id.replace("UUID", "")) for id in online_machines if id != "UUID" and id != ""]
+                online_machines = [int(uuid.replace("UUID", "")) for uuid in online_machines if uuid !=""]
 
         query = session.query(Machine.id.label('uuid')).distinct(Machine.id)\
             .join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)\
@@ -1063,7 +1063,6 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             result['data']['uuidglpicomputer'] = result['data'].pop('uuid')
         return result
 
-
     def __getRestrictedComputersListQuery(self, ctx, filt = None, session = create_session(), displayList = False, count = False):
         """
         Get the sqlalchemy query to get a list of computers with some filters
@@ -1072,7 +1071,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         if session == None:
             session = create_session()
 
-        query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
+        query = (count and session.query(func.count(Machine.id.distinct()))) or session.query(Machine)
         # manage criterion  for xmppmaster
         ret = self.__xmppmasterfilter(filt)
 
@@ -1176,12 +1175,14 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 if 'owner' in self.config.summary or \
                    'owner_firstname' in self.config.summary or \
                    'owner_realname' in self.config.summary:
-                    join_query = join_query.outerjoin(self.user, Machine.users_id == User.id)
+                    join_query = join_query.outerjoin(self.user, self.machine.c.users_id == self.user.c.id)
                 try:
                     if regs[0]:
                         join_query = join_query.outerjoin(self.regcontents)
                 except IndexError:
                     pass
+
+
 
             if self.fusionagents is not None:
                 join_query = join_query.outerjoin(self.fusionagents)
@@ -1431,12 +1432,12 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.softwareversions, self.software]
         elif query[2] == 'Installed software (specific version)':
             return base + [self.inst_software, self.softwareversions, self.software]
-        elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
+        elif query[2] == 'Installed software (specific vendor and version)':  # hidden internal dyngroup
             return base + [self.inst_software, self.softwareversions, self.software, self.manufacturers]
         elif query[2] == 'User location':
             return base + [self.user, self.locations]
         elif query[2] == 'Register key':
-            return base + [ self.regcontents]#self.collects, self.registries,
+            return base + [self.regcontents]  # self.collects, self.registries,
         elif query[2] == 'Register key value':
             return base + [ self.regcontents, self.registries ]#self.collects, self.registries,
         elif query[2] == 'OS Version':
@@ -1578,9 +1579,9 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         elif query[2] == 'Printer serial':
             return [[self.printers.c.serial, query[3]]]
         elif query[2] == 'Peripheral name':
-            return [[self.peripheral.c.name, query[3]]]
+            return [[self.peripherals.c.name, query[3]]]
         elif query[2] == 'Peripheral serial':
-            return [[self.peripheral.c.serial, query[3]]]
+            return [[self.peripherals.c.serial, query[3]]]
         elif query[2] == 'Group': # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Network':
@@ -2629,6 +2630,12 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 .outerjoin(self.registries) \
             ), int(str(uuid).replace("UUID", "")))
 
+        if min != 0:
+            query = query.offset(min)
+        if max != -1:
+            max = int(max) - int(min)
+            query = query.limit(max)
+
         if count:
             ret = query.count()
         else:
@@ -2719,14 +2726,14 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
         return values[name]
 
-    def setItsm_ngEditableValue(self, uuid, name, value):
+    def setGlpiEditableValue(self, uuid, name, value):
         """
-        Set a new value for a Itsm-ng field
+        Set a new value for a Glpi field
 
         @param uuid: machine uuid
         @type uuid: string
 
-        @param name: Itsm-ng field who will be updated
+        @param name: Glpi field who will be updated
         @param name: string
 
         @param value: The new value
@@ -3170,6 +3177,45 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
         session.close()
         return ret
+
+    def getLastMachineConnectionsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
+        session = create_session()
+        # knokno
+        uuid = int(uuid.replace('UUID', ''))
+        query = session.query(distinct(Computersitems.itemtype)).filter(Computersitems.computers_id == uuid)
+        query = self.__filter_on(query)
+        ret = session.execute(query)
+
+        connectionslist = []
+
+        for element in ret:
+            itemtype = element[0]
+            _itemtype = itemtype.lower()+"s"
+            if hasattr(self, _itemtype):
+                connection = eval("self.%s"%_itemtype)
+                query = session.query(Computersitems.items_id,Computersitems.itemtype, connection.c.name, connection.c.serial).\
+                        join(connection, connection.c.id == Computersitems.items_id).\
+                        filter(Computersitems.computers_id == uuid, Computersitems.itemtype == itemtype)
+                query = self.__filter_on(query).all()
+
+            connectionslist += query
+        session.close()
+
+        table = []
+        for row in connectionslist:
+            tmprow = []
+
+            tmprow.append(['type', row[1]])
+            tmprow.append(['name', row[2]])
+            tmprow.append(['serial', row[3]])
+            table.append(tmprow)
+
+        if count:
+            return len(table)
+
+        return table
 
     def getSearchOptionValue(self, log):
         try:
@@ -4105,6 +4151,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         ret = query.group_by(self.os_sp.c.name).all()
         session.close()
         return ret
+
     def getMachineByOsSp(self, ctx, filt):
         """ @return: all machines that have this contact number """
         session = create_session()
@@ -4211,8 +4258,6 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             self.logger.error("\n with the backtrace \n%s" % (traceback.format_exc()))
         return resultrecord
 
-
-
     def _machineobject(self, ret):
         """ result view glpi_computers_pulse """
         if ret:
@@ -4251,7 +4296,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                         'operatingsystemservicepacks_id': ret.operatingsystemservicepacks_id,
                         'operatingsystemarchitectures_id': ret.operatingsystemarchitectures_id,
                         'license_number': ret.license_number,
-                        'license_id': ret.licenseid,
+                        'license_id': ret.license_id,
                         'operatingsystemkernelversions_id': ret.operatingsystemkernelversions_id}
             except Exception:
                 self.logger.error("\n%s" % (traceback.format_exc()))
@@ -4337,47 +4382,51 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         query = query.filter(self.os_arch.c.name == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getMachineByPrinter(self, ctx, filt):
         session = create_session()
         query = session.query(Machine).select_from(self.machine.join(self.computersitems)).\
-        select_from(self.computersitems.join(self.printers))
+            select_from(self.computersitems.join(self.printers))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.printers.c.name == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getMachineByPrinterserial(self, ctx, filt):
         session = create_session()
         query = session.query(Machine).distinct(Machine.id).\
             join(Computersitems, Machine.id == Computersitems.computers_id).\
-            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
+            outerjoin(Printers, and_(Computersitems.items_id == Printers.id,
                                      Computersitems.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
-                                          Computersitems.itemtype == 'Peripheral'))
+            outerjoin(Peripherals,and_(Computersitems.items_id == Peripherals.id,
+                                       Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.printers.c.serial == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getMachineByPeripheral(self, ctx, filt):
         session = create_session()
         query = session.query(Machine).distinct(Machine.id).\
             join(Computersitems, Machine.id == Computersitems.computers_id).\
-            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
-                                          Computersitems.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
-                                          Computersitems.itemtype == 'Peripheral'))
+            outerjoin(Printers, and_(Computersitems.items_id == Printers.id,
+                                     Computersitems.itemtype == 'Printer')).\
+            outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                        Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.peripherals.c.name == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getMachineInformationByUuidSetup(self, uuidsetupmachine):
         """
@@ -4392,16 +4441,17 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         session = create_session()
         query = session.query(Machine).distinct(Machine.id).\
             join(Computersitems, Machine.id == Computersitems.computers_id).\
-            outerjoin(Printers, and_(Computersitems.items_id==Printers.id,
-                                          Computersitems.itemtype == 'Printer')).\
-            outerjoin(Peripherals,and_(Computersitems.items_id==Peripherals.id,
-                                          Computersitems.itemtype == 'Peripheral'))
+            outerjoin(Printers, and_(Computersitems.items_id == Printers.id,
+                                     Computersitems.itemtype == 'Printer')).\
+            outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                        Computersitems.itemtype == 'Peripheral'))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.peripherals.c.serial == filt)
         ret = query.all()
         session.close()
+        return ret
 
     def getComputersOS(self, uuids):
         if isinstance(uuids, str):
@@ -5335,7 +5385,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllArchitectures(self, ctx, filt = ''):
+    def getAllArchitectures(self, ctx, filt=''):
         """ @return: all hostnames defined in the GLPI database """
         session = create_session()
         query = session.query(OsArch)
@@ -5345,22 +5395,43 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllNamePrinters(self, ctx, filt = ''):
+    def getAllNamePrinters(self, ctx, filt=''):
         """ @return: all printer name in the GLPI database """
         session = create_session()
         query = session.query(Printers)
         if filter != '':
-            query = query.filter(Printers.name.like('%'+filt+'%'))
+            query = query.filter(Printers.name.like('%' + filt + '%'))
         ret = query.all()
         session.close()
         return ret
 
-    def getAllSerialPrinters(self, ctx, filt = ''):
+    def getAllSerialPrinters(self, ctx, filt=''):
         """ @return: all printer serial in the GLPI database """
         session = create_session()
         query = session.query(Printers)
         if filter != '':
-            query = query.filter(Printers.serial.like('%'+filt+'%'))
+            query = query.filter(Printers.serial.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllNamePeripherals(self, ctx, filt=''):
+        """ @return: all peripheral name in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(Peripherals.name.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllSerialPeripherals(self, ctx, filt=''):
+        """ @return: all peripheral serials in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(or_(Peripherals.serial.like('%' + filt + '%'),
+                                     Peripherals.name.like('%' + filt + '%')))
         ret = query.all()
         session.close()
         return ret
@@ -5428,19 +5499,24 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             ]
         """
 
-        sql = session.query(Machine.operatingsystems_id,
-            Machine.operatingsystemversions_id,
-            OS.name,
-            OsVersion.name)\
-        .join(OS, OS.id == Machine.operatingsystems_id)\
-        .outerjoin(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)\
-        .order_by(asc(OsVersion.name))
-        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
-        sql = self.__filter_on(sql)
+        sql="""SELECT
+  glpi_operatingsystems.name as os,
+  glpi_operatingsystemversions.name as version_name
+FROM
+  glpi_computers_pulse
+INNER JOIN
+  glpi_operatingsystems
+ON
+  operatingsystems_id = glpi_operatingsystems.id
 
-        res = sql.all()
-
-        result = [{'os': element[2], 'version': element[3], 'count':1} for element in res]
+left JOIN
+  glpi_operatingsystemversions
+ON
+  operatingsystemversions_id = glpi_operatingsystemversions.id
+ORDER BY
+ glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
+        res = self.db.execute(sql)
+        result = [{'os': os, 'version': version, 'count':1} for os, version in res]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -5464,21 +5540,23 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         for machine in result:
             if machine['os'].startswith('Debian'):
                 machine['os'] = 'Debian'
-                machine['version'] = machine['version'].split(" ")[0]
+                try:
+                    machine['version'] = machine['version'].split(" ")[0]
+                except AttributeError:
+                    machine['version'] = ""
             elif machine['os'].startswith('Microsoft'):
                 machine['os'] = machine['os'].split(' ')[1:3]
                 machine['os'] = ' '.join(machine['os'])
             elif machine['os'].startswith('Ubuntu'):
                 machine['os'] = 'Ubuntu'
-                if machine['version'] is not None:
-                    # We want just the XX.yy version number
+                # We want just the XX.yy version number
+                try:
                     machine['version'] = machine['version'].split(" ")[0].split(".")
-                else:
-                    machine['version'] = "00.00"
-
+                except AttributeError:
+                    machine['version'] = ""
                 if len(machine['version']) >= 2:
                     machine['version'] = machine['version'][0:2]
-                machine['version'] = '.'.join(machine['version'])
+                    machine['version'] = '.'.join(machine['version'])
             elif machine['os'].startswith('Mageia'):
                 machine['os'] = machine['os'].split(" ")[0]
             elif machine['os'].startswith('Unknown'):
@@ -5486,13 +5564,18 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 machine['version'] = ""
             elif machine['os'].startswith("CentOS"):
                 machine['os'] = machine['os'].split(" ")[0]
-                machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
-                machine['version'] = ".".join(machine['version'])
+                try:
+                    machine['version'] = machine['version'].split("(")[0].split(".")[0:2]
+                    machine['version'] = ".".join(machine['version'])
+                except AttributeError:
+                    machine['version'] = ""
 
             elif machine['os'].startswith("macOS") or machine['os'].startswith("OS X"):
-                machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
-                machine['version'] = ".".join(machine['version'])
-
+                try:
+                    machine['version'] = machine['version'].split(" (")[0].split(".")[0:2]
+                    machine['version'] = ".".join(machine['version'])
+                except AttributeError:
+                    machine['version'] = ""
             else:
                 pass
 
@@ -5523,7 +5606,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
-    def get_machine_for_hostname(self, session, strlisthostname):
+    def get_machine_for_hostname(self, session, strlisthostname, filter, start, end):
         sqlrequest ="""
             SELECT
                 `glpi_computers`.`id` AS `id`,
@@ -5578,14 +5661,14 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 glpi.glpi_softwares.name AS kb, 
                 SUBSTR(glpi.glpi_softwares.name,
                     LOCATE('KB', glpi.glpi_softwares.name), length(glpi.glpi_softwares.name)-2) as numkb,
-                glpi.glpi_items_softwareversions.date_install AS dateinstall,
+                glpi.glpi_computers_softwareversions.date_install AS dateinstall,
                 glpi.glpi_computers.date_creation AS input_computer
             FROM
                 glpi.glpi_computers
                     INNER JOIN
-                glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.computers_id
+                glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
                     INNER JOIN
-                glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_items_softwareversions.softwareversions_id
+                glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_computers_softwareversions.softwareversions_id
                     INNER JOIN
                 glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
             WHERE
@@ -5713,6 +5796,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             result = [int(id) for id in query]
         return result
 
+
 # Class for SQLalchemy mapping
 class Machine(object):
     __tablename__ = 'glpi_computers_pulse'
@@ -5722,7 +5806,7 @@ class Machine(object):
     def toH(self):
         return { 'hostname':self.name, 'uuid':toUUID(self.id) }
     def to_a(self):
-        owner_login, owner_firstname, owner_realname = Itsm_ng14().getMachineOwner(self)
+        owner_login, owner_firstname, owner_realname = Glpi93().getMachineOwner(self)
         return [
             ['name',self.name],
             ['comments',self.comment],
@@ -5739,14 +5823,14 @@ class Machine(object):
             ['os_sp',self.operatingsystemservicepacks_id],
             ['os_arch',self.operatingsystemarchitectures_id],
             ['license_number',self.license_number],
-            ['licenseid',self.licenseid],
+            ['license_id',self.license_id],
             ['location',self.locations_id],
             ['domain',self.domains_id],
             ['network',self.networks_id],
             ['model',self.computermodels_id],
             ['type',self.computertypes_id],
             ['entity',self.entities_id],
-            ['uuid',Itsm_ng14().getMachineUUID(self)]
+            ['uuid',Glpi93().getMachineUUID(self)]
         ]
 
 class Entities(object):
@@ -5903,10 +5987,16 @@ class OsVersion(DbTOA):
 class Computersitems(DbTOA):
     pass
 
+
 class Computersviewitemsprinter(DbTOA):
     pass
 
+
 class Computersviewitemsperipheral(DbTOA):
+    pass
+
+
+class Peripheralsmanufacturers(DbTOA):
     pass
 
 class Monitors(DbTOA):
@@ -5919,15 +6009,4 @@ class Printers(DbTOA):
     pass
 
 class Peripherals(DbTOA):
-    pass
-
-class Computersviewitemsprinter(DbTOA):
-    pass
-
-
-class Computersviewitemsperipheral(DbTOA):
-    pass
-
-
-class Peripheralsmanufacturers(DbTOA):
     pass
