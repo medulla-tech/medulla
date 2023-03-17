@@ -5778,10 +5778,13 @@ class Glpi100(DyngroupDatabaseHelper):
             pass
 
         elif criterion == "Last Logged User":
-            pass
+            query = query.filter(and_(User.name.in_(values)))
+            query = query.join(User, User.id == Machine.users_id)
 
         elif criterion == "User location":
-            pass
+            query = query.filter(and_(Locations.name.in_(values)))
+            query = query.join(User, User.id == Machine.users_id)
+            query = query.join(Locations, Locations.id == User.location_id)
 
         elif criterion == "Vendors":
             pass
