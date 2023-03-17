@@ -450,7 +450,7 @@ class managepackage:
                 return outputJSONFile
             except Exception:
                 return None
-        else
+        else:
             logger.error("The %s file is missing" % xmppdeployFile)
             return None
 
