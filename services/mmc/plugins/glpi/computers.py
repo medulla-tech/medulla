@@ -319,3 +319,6 @@ class GlpiComputers(ComputerI):
         @rtype: str or None
         """
         return self.glpi.getMachineByHostnameAndMacs(ctx, hostname, macs)
+
+    def getComputerFilteredByCriterion(self, ctx, criterion, values):
+        return self.glpi.getComputerFilteredByCriterion(ctx, criterion, values)
