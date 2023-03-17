@@ -2,10 +2,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2023 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +38,21 @@ if (isset($groupname) && $groupname != '' && !xmlrpc_group_name_exists($groupnam
     $group->create($groupname, ($visibility == 'visible'));
     $content = file($_FILES['importfile']['tmp_name']);
     $content = array_map('chop', $content);
-    $group->importMembers($elementare, $content);
+
+    $oldSystemCriterion = [
+        "Group", "Online computer", "Register key",
+        "Installed version", "Inventory number", "Register key value",
+        "System type", "Contact number", "Contact",
+        "Installed software (specific version)", "Last Logged User", "User location",
+        "Vendors", "Owner of the machine", "Software versions"
+    ];
+    if(in_array($elementare, $oldSystemCriterion)){
+        $group->importMembers($elementare, $content);
+    }
+    else{
+        $group->importCsvColumn($elementare, $content);
+    }
+
     new NotifyWidgetSuccess(_T("Group successfully created", "dyngroup"));
     header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id)));
     exit;

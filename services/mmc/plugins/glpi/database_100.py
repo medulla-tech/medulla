@@ -5693,6 +5693,129 @@ class Glpi100(DyngroupDatabaseHelper):
             result = [int(id) for id in query]
         return result
 
+    @DatabaseHelper._sessionm
+    def getComputerFilteredByCriterion(self, session, ctx, criterion, values):
+        query = session.query(Machine.id, Machine.name)
+
+        if criterion == "Computer name" :
+            query = query.filter(and_(Machine.name.in_(values)))
+
+        elif criterion == "Register key":
+            query = query.filter(and_(RegContents.value.in_(values)))
+            query = query.join(RegContents, RegContents.computers_id, Machine.id)
+
+        elif criterion == "Peripheral serial":
+            query = query.filter(and_(Peripherals.serial.in_(values)))
+            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                   Computersitems.itemtype == "Peripheral"))
+
+        elif criterion == "State":
+            query = query.filter(and_(State.name.in_(values)))
+            query = query.join(State, State.id == Machine.states_id)
+
+        elif criterion == "Location":
+            query = query.filter(and_(Locations.name.in_(values)))
+            query = query.join(Locations, Locations.id == Machine.locations_id)
+
+        elif criterion == "Printer serial":
+            query = query.filter(and_(Printers.serial.in_(values)))
+            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            query = query.join(Printers, and_(Computersitems.items_id==Printers.id,
+                Computersitems.itemtype == 'Printer'))
+
+        elif criterion == "Printer name":
+            query = query.filter(and_(Printers.name.in_(values)))
+            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            query = query.join(Printers, and_(Computersitems.items_id==Printers.id,
+                Computersitems.itemtype == 'Printer'))
+
+        elif criterion == "OS Version":
+            query = query.filter(and_(OsVersion.name.in_(values)))
+            query = query.join(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)
+
+        elif criterion == "Installed version":
+            pass
+
+        elif criterion == "Description":
+            query = query.filter(and_(Machine.comment.in_(values)))
+
+        elif criterion == "System model":
+            query = query.filter(and_(Model.name.in_(values)))
+            query = query.join(Model, Model.id == Machine.computermodels_id)
+
+        elif criterion == "Inventory number":
+            pass
+
+        elif criterion == "Register key value":
+            pass
+
+        elif criterion == "System type":
+            pass
+
+        elif criterion == "Online computer":
+            pass
+
+        elif criterion == "Operating system":
+            query = query.filter(and_(OS.name.in_(values)))
+            query = query.join(OS, OS.items_id == Machine.operatingsystems_id)
+
+        elif criterion == "Contact number":
+            pass
+
+        elif criterion == "Service Pack":
+            query = query.filter(and_(OsSp.name.in_(values)))
+            query = query.join(OsSp, OsSp.id, Machine.operatingsystemservicepacks_id)
+
+        elif criterion == "Contact":
+            pass
+
+        elif criterion == "Architecture":
+            query = query.filter(and_(OsArch.name.in_(values)))
+            query = query.join(OsArch, OsArch.id, Machine.operatingsystemarchitectures_id)
+
+        elif criterion == "Installed software (specific version)":
+            pass
+
+        elif criterion == "Last Logged User":
+            pass
+
+        elif criterion == "User location":
+            pass
+
+        elif criterion == "Vendors":
+            pass
+
+        elif criterion == "Peripheral name":
+            query = query.filter(and_(Peripherals.name.in_(values)))
+            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+                                   Computersitems.itemtype == "Peripheral"))
+
+        elif criterion == "Entity":
+            query = query.filter(or_(Entities.id.in_(values), Entities.completename.in_(values)))
+            query = query.join(Entities, Entities.id, Machine.entities_id)
+
+        elif criterion == "Owner of the machine":
+            pass
+
+        elif criterion == "Software versions":
+            pass
+
+        elif criterion == "System manufacturer":
+            query = query.filter(and_(Manufacturers.name.in_(values)))
+            query = query.join(Manufacturers, Manufacturers.id, Machine.manufacturers_id)
+
+        query = query.filter(and_(Machine.is_deleted==0, Machine.is_template==0))
+        response = query.all()
+
+        result = {}
+        for element in response:
+            uuid = "UUID%i"%element.id
+            name = element.name
+            result["UUID%i"%element.id] = {"uuid": uuid, "hostname": name}
+        return result
+
 # Class for SQLalchemy mapping
 class Machine(object):
     __tablename__ = 'glpi_computers_pulse'
