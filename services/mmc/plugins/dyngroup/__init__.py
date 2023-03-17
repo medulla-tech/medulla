@@ -270,6 +270,25 @@ class RpcProxy(RpcProxyI):
 #            ComputerProfileManager().addComputersToProfile(ctx, [1, 2], id) # fake!
         return xmlrpcCleanup(ret)
 
+    def importCsvColumn(self, id, criterion, values):
+        id = int(id)
+        ctx = self.currentContext
+        # get machines uuids from values
+        uuids = {}
+        uuids = ComputerManager().getComputerFilteredByCriterion(ctx, criterion, values)
+
+        registered_machines = DyngroupDatabase().getRegisteredMachines(list(uuids.keys()))
+        unregistered_uuids = list(set(uuids)- set(registered_machines))
+
+        unregistered_machines = {}
+
+        for uuid in uuids:
+            unregistered_machines[uuid] = uuids[uuid]
+
+        DyngroupDatabase().addMissingMachines(unregistered_machines)
+        DyngroupDatabase().associateMachinesToGroup(id, list(uuids.keys()))
+
+
     def addmembers_to_group(self, id, uuids):
         ctx = self.currentContext
         # remove all the computers that cant be added to a profile from the list

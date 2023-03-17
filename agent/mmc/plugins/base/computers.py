@@ -396,3 +396,9 @@ class ComputerManager(Singleton):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputerByHostnameAndMacs(ctx, hostname, macs)
+
+    def getComputerFilteredByCriterion(self, ctx, criterion, values, other=None):
+        logging.getLogger().warning(222)
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getComputerFilteredByCriterion(ctx, criterion, values)
