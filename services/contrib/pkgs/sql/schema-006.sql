@@ -30,6 +30,10 @@ START TRANSACTION;
 ALTER TABLE packages
 CHANGE command_command command_command TEXT NULL DEFAULT NULL;
 
+# resize COLUMN label
+ALTER TABLE `pkgs`.`packages`
+CHANGE COLUMN `label` `label` VARCHAR(1024) NULL DEFAULT NULL ;
+
 -- UPDATE version SET Number = 6;
 
 COMMIT;

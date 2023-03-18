@@ -2,7 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
- * (c) 2016-2021 Siveo, http://siveo.net/
+ * (c) 2016-2022 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -179,22 +179,22 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
       switch($_packages['conf_json'][$i]['metagenerator']){
           case "expert":
               $_arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package_expert.png'/>" .
-                                          "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package.svg' width='25' height='25'/>" .
+                                          "<span title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $_packages['conf_json'][$i]['name'].
                                           "</span>" ;
           break;
           case "standard":
               $_arraypackagename[] = "<img style='position:relative; top : 5px;
-                                          'src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          'src='img/other/package.svg' width='25' height='25'/>".
+                                          "<span title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $_packages['conf_json'][$i]['name'].
                                           "</span>"  ;
           break;
           default: //"manual":
               $_arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package_ro.svg' width='25' height='25'/>".
+                                          "<span title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $_packages['conf_json'][$i]['name'].
                                           "</span>" ;
           break;
@@ -231,10 +231,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
           if ($_packages['conf_json'][$i]['metagenerator'] == 'manual') {
               $_editActions[] = $emptyAction;
               if ($_SESSION['login'] == "root"){
-                  $_delActions[] = $delAction;
+                $_delActions[] = $delAction;
               }
               else{
-                  $_delActions[] = $emptyAction;
+                $_delActions[] = $emptyAction;
               }
           }
           else if ($_packages['conf_json'][$i]['metagenerator'] == 'expert') {
@@ -266,6 +266,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
               $_editActions[] = $emptyAction;
               if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw'){
                 $_delActions[] = $delAction;
+
               }
               else{
                 $_delActions[] = $emptyAction;
@@ -287,8 +288,13 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
     }
 
     if($_count > 0){
-      // Display the list
+      // Avoiding the CSS selector (tr id) to start with a number
+      $ids = [];
+      foreach($_packages['uuid'] as $uuid){
+        $ids[] = 'p_'.$uuid;
+      }
       $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
+      $n->setCssIds($ids);
       $n->disableFirstColumnActionLink();
       $n->addExtraInfo($_packages['share_name'], _T("Share", "pkgs"));
       $n->addExtraInfo($_packages['permission'], _T("Permissions", "pkgs"));
@@ -343,22 +349,22 @@ else{
       switch($p['metagenerator']){
           case "expert":
               $arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package_expert.png'/>" .
-                                          "<span style='border-bottom: 4px double blue' title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package.svg' width='25' height='25'/>" .
+                                          "<span title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $p['label'].
                                           "</span>" ;
           break;
           case "standard":
               $arraypackagename[] = "<img style='position:relative; top : 5px;
-                                          'src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double black' title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          'src='img/other/package.svg' width='25' height='25'/>".
+                                          "<span title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $p['label'].
                                           "</span>"  ;
           break;
           default: //"manual":
               $arraypackagename[] = "<img style='position:relative; top : 5px;'
-                                          src='modules/pkgs/graph/img/package.png'/>".
-                                          "<span style='border-bottom: 4px double green' title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                                          src='img/other/package_ro.svg' width='25' height='25'/>".
+                                          "<span title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                               $p['label'].
                                           "</span>" ;
           break;
@@ -432,8 +438,13 @@ else{
   }
   if($count > 0){
     // Display the list
+    $ids = [];
+    foreach($_packages['uuid'] as $uuid){
+      $ids[] = 'p'.$uuid;
+    }
     $n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
     $n->disableFirstColumnActionLink();
+    $n->setCssIds($ids);
     $n->addExtraInfo($desc, _T("Description", "pkgs"));
     $n->addExtraInfo($versions, _T("Version", "pkgs"));
     $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));

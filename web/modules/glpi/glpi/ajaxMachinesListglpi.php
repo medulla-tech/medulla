@@ -32,20 +32,6 @@ global $config;
 .selectable{
 	cursor:pointer;
 }
-
-li.displayg a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("img/common/icn_show.gif");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-    filter: grayscale(50%);
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    opacity:0.5;
-}
 </style>
 <?php
 
@@ -88,7 +74,7 @@ $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","comput
 
 $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
 $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
-$logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
+$logAction = new ActionItem(_("View deployment details"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
 $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
@@ -105,8 +91,8 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
   $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
   $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
   $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
-	$fileviewer = new ActionItem(_("files viewer"),"fileviewer","display","computers", "xmppmaster", "xmppmaster");
-	$filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","displayg","computers","xmppmaster", "xmppmaster");
+	$fileviewer = new ActionItem(_("files viewer"),"fileviewer","fileviewer","computers", "xmppmaster", "xmppmaster");
+	$filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","fileviewerg","computers","xmppmaster", "xmppmaster");
 }else{
   $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
 }
@@ -273,7 +259,14 @@ foreach($datas['uuid'] as $uuid)
 	$raw++;
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids = [];
+foreach($datas['cn'] as $cn_machine){
+	$ids[] = 'm_'.$cn_machine;
+	}
+
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
+$n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 if(array_key_exists("description", $datas))
   $n->addExtraInfo($datas["description"], _T("Description", "glpi"));
@@ -325,6 +318,11 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])){
   if ($msc_vnc_show_icon) {
     $n->addActionItemArray($actionVncClient);
   };
+}
+
+if (in_array("xmppmaster", $_SESSION["supportModList"])){
+	if (in_array("urbackup", $_SESSION["supportModList"]))
+		$n->addActionItem(new ActionItem(_("Urbackup"),"checkMachine","urbackup","urbackup", "urbackup", "urbackup"));
 }
 
 if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SESSION["supportModList"]) ) {

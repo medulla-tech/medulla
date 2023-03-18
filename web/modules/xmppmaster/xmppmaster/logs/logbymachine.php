@@ -27,7 +27,6 @@
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 $delete = isset($_GET['postaction'])?true:false;
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2020 Siveo, http://www.siveo.net
+ * (c) 2020-2021 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -23,16 +23,28 @@
  */
 
 require("graph/navbar.inc.php");
-require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
+require("modules/base/computers/localSidebar.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $p = new PageGenerator(_T("Monitoring Alerts", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-print "<br/><br/><br/>";
-$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxalerts"), "container", array());
-$ajax->display();
-print "<br/><br/><br/>";
-$ajax->displayDivToUpdate();
+$page = new TabbedPageGenerator();
+//Display sidemenu
+$page->setSideMenu($sidemenu);
+
+$tabList = array(
+	'notificationsTab' => _T('Alerts', "xmppmaster"),
+	'notificationsHistoryTab' => _T('Alerts History', "xmppmaster"),
+
+);
+
+//create tabList, where tab parameter is the page name to display.
+foreach ($tabList as $tab => $str) {
+    $page->addTab("$tab", $str, "", "modules/xmppmaster/xmppmaster/monitoring/$tab.php");
+}
+$page->display();
+
+
 ?>

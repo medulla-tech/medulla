@@ -34,34 +34,6 @@ global $config;
 .selectable{
 	cursor:pointer;
 }
-
-li.displayg a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("img/common/icn_show.gif");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-    filter: grayscale(50%);
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    opacity:0.5;
-}
-
-li.inventoryg a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/base/graph/computers/inventory.png");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-    filter: grayscale(50%);
-    -webkit-filter: grayscale(50%);
-    -moz-filter: grayscale(50%);
-    opacity:0.5;
-}
 </style>
 
 <style>
@@ -212,8 +184,8 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
   $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
   $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
 
-  $fileviewer = new ActionItem(_("files viewer"),"fileviewer","display","computers", "xmppmaster", "xmppmaster");
-  $filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","displayg","computers","xmppmaster", "xmppmaster");
+  $fileviewer = new ActionItem(_("files viewer"),"fileviewer","fileviewer","computers", "xmppmaster", "xmppmaster");
+  $filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","fileviewerg","computers","xmppmaster", "xmppmaster");
 }
 else{
   $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
@@ -440,8 +412,14 @@ $orderkey = array( "glpi_owner",
         $index++;
     }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids = [];
+foreach($datas['uuid_serial_machine'] as $uuid_machine){
+    $ids[] = 'm_'.$uuid_machine;
+    }
 
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
+$n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 $n->dissociateColumnActionLink($dissociatedFirstColumns);
 if(in_array ("description", $machines1["column"])) $n->addExtraInfo($datas["glpi_description"], _T("Description", "glpi"));
@@ -474,6 +452,11 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])){
   if ($msc_vnc_show_icon) {
     $n->addActionItemArray($actionVncClient);
   };
+}
+
+if (in_array("xmppmaster", $_SESSION["supportModList"])){
+  if (in_array("urbackup", $_SESSION["supportModList"]))
+    $n->addActionItem(new ActionItem(_("Urbackup"),"checkMachine","urbackup","urbackup", "urbackup", "urbackup"));
 }
 
 

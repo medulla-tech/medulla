@@ -51,37 +51,37 @@ if(isset($_GET['cn'])){
                     if ($clef == "SSH"){
                       $os_up_case = strtoupper($dd["platform"]);
                       if (strpos ($os_up_case, "WINDOW") !== false){
-                          $src = 'modules/xmppmaster/graph/img/cmd.png';
+                          $src = 'img/actions/cmd.svg';
                           $title = "CMD";
                           $alt = "Remote cmd View";
                       }
                       else {
-                        $src = 'modules/xmppmaster/graph/img/SSHguacamole.png';
+                        $src = 'img/actions/ssh.svg';
                         $title = "SSH";
                         $alt = "Remote ssh View";
                       }
                         echo '<td align="center" id="ssh">
                             <img src="'.$src.'"
                             alt="'.$alt.'"
-                            style="width:104px;height:104px;">
+                            style="width:70px;height:70px;">
                             <br>
                             <h1>'.$title.'</h1>
                         </td>';
                         }
                     if ($clef == "RDP"){
                         echo '<td align="center" id="rdp">
-                            <img src="modules/xmppmaster/graph/img/RDPguacamole.png"
+                            <img src="img/actions/rdp.svg"
                             alt="remote rdp View"
-                            style="width:104px;height:104px;">
+                            style="width:70px;height:70px;">
                             <br>
                             <h1>RDP</h1>
                         </td>';
                         }
                     if ($clef == "VNC"){
                         echo '<td align="center" id="vnc">
-                            <img src="modules/xmppmaster/graph/img/VNCguacamole.png"
+                            <img src="img/actions/vnc.svg"
                             alt="remote vnc View"
-                            style="width:104px;height:104px;">
+                            style="width:70px;height:70px;">
                             <br>
                             <h1>VNC</h1>
                         </td>';

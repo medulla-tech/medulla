@@ -62,14 +62,14 @@ $a_desc = array();
 foreach($scripts as $script) {
 
     if ($script['is_local']) { // 'is_local' is a duplicated PostInstallScript
-        $url = '<img src="modules/imaging/graph/images/postinst-action.png" style="vertical-align: middle" /> ';
+        $url = '<img src="img/other/imagingscript_rw.svg" style="vertical-align: middle" width="25" height="25" /> ';
         $a_edit[] = $editAction;
         $a_delete[] = $deleteAction;
         // Don't display "Create Boot Service" icon if a Boot Service already created
         // from this PostInstall entry
         $a_create[] = ($script['fk_boot_service']) ? $bsCreatedAction : $createAction;
     } else {
-        $url = '<img src="modules/imaging/graph/images/postinst-action-ro.png" style="vertical-align: middle" /> ';
+        $url = '<img src="img/other/imagingscript_ro.svg" style="vertical-align: middle" width="25" height="25" /> ';
         $a_edit[] = $emptyAction;
         $a_delete[] = $emptyAction;
         // Don't display "Create Boot Service" icon if a Boot Service already created

@@ -480,6 +480,29 @@ class Glpi084(DyngroupDatabaseHelper):
         self.group = Table("glpi_groups", self.metadata, autoload = True)
         mapper(Group, self.group)
 
+        # items contents
+        self.computersitems = Table("glpi_computers_items", self.metadata, autoload = True)
+        mapper(Computersitems, self.computersitems)
+
+        # Monitors items
+        self.monitors = Table("glpi_monitors", self.metadata,
+            autoload = True)
+        mapper(Monitors, self.monitors)
+
+        # Phones items
+        self.phones = Table("glpi_phones", self.metadata,
+            autoload = True)
+        mapper(Phones, self.phones)
+
+        # Printers items
+        self.printers = Table("glpi_printers", self.metadata,
+            autoload = True)
+        mapper(Printers, self.printers)
+
+         # Peripherals items
+        self.peripherals = Table("glpi_peripherals", self.metadata, autoload = True)
+        mapper(Peripherals, self.peripherals)
+
     ##################### internal query generators
     def __filter_on(self, query):
         """
@@ -656,7 +679,7 @@ class Glpi084(DyngroupDatabaseHelper):
             if field != "type":
                 query = query.outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
                                    Computersitems.itemtype == "Peripheral"))\
-                    .outerjoin(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+                        .outerjoin(Manufacturers, Peripherals.manufacturers_id == Manufacturers.id)
         if 'cn' in self.config.summary:
             query = query.add_column(Machine.name.label("cn"))
 
@@ -753,9 +776,9 @@ class Glpi084(DyngroupDatabaseHelper):
 
         if debugfunction:
             try:
-                logger.info("@@@DEBUG@@@ %s"%literalquery(query))
+                self.logger.info("@@@DEBUG@@@ %s"%literalquery(query))
             except Exception as e:
-                logger.error("display @@@DEBUG@@@ sql literal from alchemy error : %s" % e)
+                self.logger.error("display @@@DEBUG@@@ sql literal from alchemy error : %s" % e)
 
         machines = query.all()
 
@@ -852,7 +875,7 @@ class Glpi084(DyngroupDatabaseHelper):
             if field != "type":
                 query = query.outerjoin(Peripherals, and_(Computersitems.items_id == Peripherals.id,
                                    Computersitems.itemtype == "Peripheral"))\
-                    .outerjoin(Peripheralsmanufacturers, Peripherals.manufacturers_id == Peripheralsmanufacturers.id)
+                        .outerjoin(Manufacturers, Peripherals.manufacturers_id == Manufacturers.id)
         # fild always exist
         query = query.add_column(Machine.name.label("cn"))
         if uuidsetup != "" or idmachine != "":
@@ -5062,6 +5085,51 @@ class Glpi084(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getAllArchitectures(self, ctx, filt=''):
+        """ Added for compatibility with the current interface """
+        return []
+
+    def getAllNamePrinters(self, ctx, filt=''):
+        """ @return: all printer name in the GLPI database """
+        session = create_session()
+        query = session.query(Printers)
+        if filter != '':
+            query = query.filter(Printers.name.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllSerialPrinters(self, ctx, filt=''):
+        """ @return: all printer serial in the GLPI database """
+        session = create_session()
+        query = session.query(Printers)
+        if filter != '':
+            query = query.filter(Printers.serial.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllNamePeripherals(self, ctx, filt=''):
+        """ @return: all peripheral name in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(Peripherals.name.like('%' + filt + '%'))
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllSerialPeripherals(self, ctx, filt=''):
+        """ @return: all peripheral serials in the GLPI database """
+        session = create_session()
+        query = session.query(Peripherals)
+        if filter != '':
+            query = query.filter(or_(Peripherals.serial.like('%' + filt + '%'),
+                                     Peripherals.name.like('%' + filt + '%')))
+        ret = query.all()
+        session.close()
+        return ret
+
     @DatabaseHelper._sessionm
     def addRegistryCollectContent(self, session, computers_id, registry_id, key, value):
         """
@@ -5241,6 +5309,56 @@ class Glpi084(DyngroupDatabaseHelper):
         result.append(contact)
         result.append(entity)
         return result
+
+
+    @DatabaseHelper._sessionm
+    def get_machine_with_update(self, session, kb):
+        sqlrequest ="""
+            SELECT 
+                glpi.glpi_computers.id AS uuid_inventory,
+                glpi.glpi_computers.name AS hostname,
+                glpi.glpi_entities.completename AS entity,
+                glpi.glpi_softwares.name AS kb, 
+                SUBSTR(glpi.glpi_softwares.name,
+                    LOCATE('KB', glpi.glpi_softwares.name), length(glpi.glpi_softwares.name)-2) as numkb,
+                glpi.glpi_computers_softwareversions.date_install AS dateinstall,
+                glpi.glpi_computers.date_creation AS input_computer
+            FROM
+                glpi.glpi_computers
+                    INNER JOIN
+                glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
+                    INNER JOIN
+                glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_computers_softwareversions.softwareversions_id
+                    INNER JOIN
+                glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
+            WHERE
+                glpi.glpi_softwares.name LIKE 'Update (KB%s)';"""%(kb)
+        uuid_inventory=[]
+        hostname=[]
+        entity=[]
+        kb=[]
+        numkb=[]
+        dateinstall=[]
+        input_computer=[]
+        result = []
+        res = self.db.execute(sqlrequest)
+        for element in res:
+            uuid_inventory.append( element.uuid_inventory )
+            hostname.append( element.hostname )
+            entity.append( element.entity )
+            kb.append( element.kb )
+            numkb.append( element.numkb )
+            dateinstall.append( element.dateinstall )
+            input_computer.append( element.input_computer )
+        result.append(uuid_inventory)
+        result.append(hostname)
+        result.append(entity)
+        result.append(kb)
+        result.append(numkb)
+        result.append(dateinstall)
+        result.append(input_computer)
+        return result
+
 
     @DatabaseHelper._sessionm
     def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
@@ -5524,4 +5642,19 @@ class OsVersion(DbTOA):
     pass
 
 class OCSLinks(DbTOA):
+    pass
+
+class Monitors(DbTOA):
+    pass
+
+class Phones(DbTOA):
+    pass
+
+class Printers(DbTOA):
+    pass
+
+class Computersitems(DbTOA):
+    pass
+
+class Peripherals(DbTOA):
     pass

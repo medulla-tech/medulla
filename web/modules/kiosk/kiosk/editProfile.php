@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2022 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -38,7 +38,61 @@ require("modules/kiosk/kiosk/localSidebar.php");
     @import url(modules/kiosk/graph/style.min.css);
 </style>
 <?php
+
+if(isset($_SESSION['sharings'])){
+    $sharings = $_SESSION['sharings'];
+  }
+  else{
+    $sharings = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+  }
+
+  // Get all packages for this sharings
+  if($sharings['config']['centralizedmultiplesharing'] == true){
+    $packages = xmlrpc_get_all_packages($_SESSION['login'], $sharings['config']['centralizedmultiplesharing'], -1, -1, $filter);
+  }
+  else{
+    $packages = xmlrpc_xmppGetAllPackages($filter, -1, -1);
+  }
+
 $profile = xmlrpc_get_profile_by_id($_GET['id']);
+// Get the list of the packages
+$available_packages_str = "";
+$restricted_packages_str = "";
+$allowed_packages_str = "";
+
+$allowedPackages = [];
+$restrictedPackages = [];
+
+// Get packages from the profile and divide it into two list : restrictedPackages and allowedPackages
+foreach($profile['packages'] as $tmpPackage)
+{
+    if($tmpPackage['status'] == 'restricted')
+        $restrictedPackages[$tmpPackage['name']]=$tmpPackage['uuid'];
+    else
+        $allowedPackages[$tmpPackage['name']]=$tmpPackage['uuid'];
+}
+
+
+// The packages are contained into the lists :
+// - available_packages
+// - allowedPackages
+// - restrictedPackages
+$row = 0;
+foreach($packages['datas']['uuid'] as $package)
+{
+    if(in_array($package, $allowedPackages)){
+        $allowed_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
+    }
+    else if(in_array($package, $restrictedPackages)){
+        $restricted_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
+    }
+    else{
+        $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
+
+    }
+    $row++;
+}
+
 
 $p = new PageGenerator(_T("Edit Profile",'kiosk'));
 $p->setSideMenu($sidemenu);
@@ -84,59 +138,6 @@ $defaultValue = (count($profile['ous']) > 0 && $profile['ous'][0] !="") ? ["valu
 
 // Create a section without table in the form
 $f->add(new TitleElement(_T("Manage packages", "kiosk")));
-
-// Get the list of the packages
-$available_packages = [];
-$available_packages_str = "";
-
-$allowedPackages = [];
-$restrictedPackages = [];
-
-// Divide the packages into two list : restrictedPackages and allowedPackages
-foreach($profile['packages'] as $tmpPackage)
-{
-    if($tmpPackage['status'] == 'restricted')
-        $restrictedPackages[$tmpPackage['name']]=$tmpPackage['uuid'];
-    else
-        $allowedPackages[$tmpPackage['name']]=$tmpPackage['uuid'];
-}
-
-// Generate a simplified list of package. This list contains all the packages. If some packages must be ignored it is precised here.
-foreach(xmpp_packages_list() as $package)
-{
-    $available_packages[$package['software']] = $package['uuid'];
-}
-
-// Create a third list of the remaining packages
-$tmpAvailableList = [];
-foreach($available_packages as $name=>$uuid)
-{
-    if(in_array($uuid, $allowedPackages))
-        continue;
-    else if(in_array($uuid, $restrictedPackages))
-        continue;
-    else
-    {
-        $tmpAvailableList[$name] = $uuid;
-    }
-}
-
-// The packages are contained into the lists :
-// - available_packages
-// - allowedPackages
-// - restrictedPackages
-$available_packages = $tmpAvailableList;
-
-// Generate the list of packages in the available list. This is the process by default when adding new profile
-foreach($available_packages as $package_name=>$package_uuid){
-    $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package_uuid.'">'.$package_name.'</li>';
-}
-foreach($allowedPackages as $package_name=>$package_uuid){
-    $allowed_packages_str .= '<li data-draggable="item" data-uuid="'.$package_uuid.'">'.$package_name.'</li>';
-}
-foreach($restrictedPackages as $package_name=>$package_uuid){
-    $restricted_packages_str .= '<li data-draggable="item" data-uuid="'.$package_uuid.'">'.$package_name.'</li>';
-}
 
 $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packages">
         <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->

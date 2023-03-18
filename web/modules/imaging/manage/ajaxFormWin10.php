@@ -266,7 +266,7 @@ var template = [
 '</RunSynchronousCommand>',
 '<RunSynchronousCommand wcm:action="add">',
 '<Order>2</Order>',
-'<Path>powershell.exe -executionpolicy bypass -File c:\\Windows\\INF\\driverpack\\install-driver-cert.ps1</Path>',
+'<Path>powershell.exe -executionpolicy bypass -File c:\\ProgramData\\SysPrep\\drivers\\install-driver-cert.ps1</Path>',
 '</RunSynchronousCommand>',
 '</RunSynchronous>',
 '</component>',

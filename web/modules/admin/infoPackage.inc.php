@@ -21,7 +21,7 @@
 require_once("modules/pulse2/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("4.6.9");
+$mod->setVersion("4.6.11");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");
@@ -164,7 +164,7 @@ $submod->addPage($page);
 
 $page = new Page("ban", _T("Ban Machines", "admin"));
 $page->setFile("modules/admin/admin/ban.php");
-$page->setOptions(array("AJAX" => true));
+$page->setOptions(array("AJAX" => false, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("ajaxban", _T("Ban Machines", "admin"));
@@ -174,7 +174,7 @@ $submod->addPage($page);
 
 $page = new Page("unban", _T("Unban Machines", "admin"));
 $page->setFile("modules/admin/admin/unban.php");
-$page->setOptions(array("AJAX" => true, "visible" => false));
+$page->setOptions(array("AJAX" => false, "noHeader" => True));
 $submod->addPage($page);
 
 $page = new Page("ajaxunban", _T("Unban Machines", "admin"));

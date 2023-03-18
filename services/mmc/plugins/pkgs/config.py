@@ -78,11 +78,11 @@ class PkgsConfig(PluginConfig):
             self.dbpooltimeout = 30
 
         if self.has_option("database", "dbpoolrecycle"):
-            self.dbpoolrecycle = self.get("database", "dbpoolrecycle")
+            self.dbpoolrecycle = self.getint("database", "dbpoolrecycle")
         else:
             self.dbpoolrecycle = 60
         if self.has_option("database", "dbpoolsize"):
-            self.dbpoolsize = self.get("database", "dbpoolsize")
+            self.dbpoolsize = self.getint("database", "dbpoolsize")
         else:
             self.dbpoolsize = 5
         self.dbpasswd = self.getpassword("database", "dbpasswd")
@@ -141,3 +141,15 @@ class PkgsConfig(PluginConfig):
         self.movepackage = False
         if self.has_option("pkgs", "movepackage"):
             self.movepackage = self.getboolean("pkgs", "movepackage")
+
+        self.generate_hash = False
+        if self.has_option("integrity_checks", "generate_hash"):
+            self.generate_hash = self.getboolean("integrity_checks", "generate_hash")
+
+        self.hashing_algo = 'SHA256'
+        if self.has_option("integrity_checks", "hashing_algo"):
+            self.hashing_algo = self.get("integrity_checks", "hashing_algo")
+            
+        self.keyAES32 = 'abcdefghijklnmopqrstuvwxyz012345'
+        if self.has_option("integrity_checks", "keyAES32"):
+            self.keyAES32 = self.get("integrity_checks", "keyAES32")

@@ -18,15 +18,7 @@ set -e
 # the debian-policy package
 
 case "$1" in
-    configure)
-	if [ ! -e "/tmp/pulse-update-manager" ]; then
-		cd /usr/lib/systemd/system/
-     		for service in $(ls mmc-agent.service pulse2-*); do systemctl restart $service; done
-	fi
-
-    ;;
-
-    abort-upgrade|abort-remove|abort-deconfigure)
+    configure|abort-upgrade|abort-remove|abort-deconfigure)
     ;;
 
     *)

@@ -66,7 +66,14 @@ foreach($rules as $id=>$rule)
     $params[] = ['id'=>$rule['id']];
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_rules = [];
+foreach($rule_names as $name_rule){
+  $ids_rules[] = 'r_'.$name_rule;
+}
+
 $n = new OptimizedListInfos($rule_names, _T("Rule Name", "pkgs"));
+$n->setcssIds($ids_rules);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($rule_orders, _T("Rules Order", "pkgs"));
 $n->addExtraInfo($descriptions, _T("Rule Description", "pkgs"));

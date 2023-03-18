@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net
+# (c) 2016-2023 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -27,6 +27,7 @@ import os
 import sys
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
+from mmc.support.mmctools import xmlrpcCleanup
 from master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 import hashlib
@@ -166,6 +167,8 @@ def setlogxmpp(text,
                action,
                touser,
                fromuser):
+    if sessionname.startswith('update'):
+        type="update"
     return XmppMasterDatabase().setlogxmpp(text,
                                            type,
                                            sessionname,
@@ -392,19 +395,21 @@ def getstatdeployfromcommandidstartdate(command_id, datestart):
 
 def get_machine_stop_deploy(cmdid, uuid):
     result = XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid)
-    msg_stop_deploy = {
-        "action": "enddeploy",
-        "sessionid": result['sessionid'],
-        'data': {"typerequest": "bansessionid"},
-        "ret": 0,
-        'base64': False
-    }
-    updatedeploystate(result['sessionid'], 'ABORT DEPLOYMENT CANCELLED BY USER')
-    if 'jid_relay' in result and result['jid_relay'] != "fake_jidrelay":
-        send_message_json(result['jid_relay'], msg_stop_deploy)
-    if 'jidmachine' in result and result['jidmachine'] != "fake_jidmachine":
-        send_message_json(result['jidmachine'], msg_stop_deploy)
-    return True
+    if result:
+        msg_stop_deploy = {
+            "action": "enddeploy",
+            "sessionid": result['sessionid'],
+            'data': {"typerequest": "bansessionid"},
+            "ret": 0,
+            'base64': False
+        }
+        updatedeploystate(result['sessionid'], 'ABORT DEPLOYMENT CANCELLED BY USER')
+        if 'jid_relay' in result and result['jid_relay'] != "fake_jidrelay":
+            send_message_json(result['jid_relay'], msg_stop_deploy)
+        if 'jidmachine' in result and result['jidmachine'] != "fake_jidmachine":
+            send_message_json(result['jidmachine'], msg_stop_deploy)
+        return True
+    return False
 
 
 def get_group_stop_deploy(grpid, cmdid):
@@ -431,13 +436,14 @@ def getlinelogswolcmd(idcommand, uuid):
     return XmppMasterDatabase().getlinelogswolcmd(idcommand, uuid)
 
 
-def getdeploybyuserlen(login):
+def getdeploybyuserlen(login, typedeploy="command"):
     if not login:
         login = None
-    return XmppMasterDatabase().getdeploybyuserlen(login)
+    return XmppMasterDatabase().getdeploybyuserlen(login, typedeploy)
 
 
-def get_deploy_for_machine(uuidinventory, state, intervalsearch, minimum, maximum, filt):
+
+def get_deploy_for_machine(uuidinventory, state, intervalsearch, minimum, maximum, filt,typedeploy="command"):
     """
     This function is used to retrieve the deploy of a user.
     Args:
@@ -450,10 +456,10 @@ def get_deploy_for_machine(uuidinventory, state, intervalsearch, minimum, maximu
     Returns:
         It returns all the deployement for a machine.
     """
-    return XmppMasterDatabase().get_deploy_for_machine(uuidinventory, state, intervalsearch, minimum, maximum, filt)
+    return XmppMasterDatabase().get_deploy_for_machine(uuidinventory, state, intervalsearch, minimum, maximum, filt,typedeploy)
 
 
-def get_deploy_from_group(gid, state, intervalsearch, minimum, maximum, filt):
+def get_deploy_from_group(gid, state, intervalsearch, minimum, maximum, filt,typedeploy="command"):
     """
     This function is used to retrieve the deploy of a machine's group.
     Args:
@@ -467,14 +473,15 @@ def get_deploy_from_group(gid, state, intervalsearch, minimum, maximum, filt):
     Returns:
         It returns all the deployement of a group.
     """
-    return XmppMasterDatabase().get_deploy_from_group(gid, state, intervalsearch, minimum, maximum, filt)
+    return XmppMasterDatabase().get_deploy_from_group(gid, state, intervalsearch, minimum, maximum, filt,typedeploy)
 
 
 def delDeploybygroup(numgrp):
     return XmppMasterDatabase().delDeploybygroup(numgrp)
 
 
-def get_deploy_by_team_member(login, state, intervalsearch, minimum=None, maximum=None, filt=None):
+def get_deploy_by_team_member(login, state, intervalsearch, minimum=None,
+                              maximum=None, filt=None, typedeploy="command"):
     """
     This function is used to retrieve the deployements of a team.
     This team is found based on the login of a member.
@@ -498,10 +505,12 @@ def get_deploy_by_team_member(login, state, intervalsearch, minimum=None, maximu
         maximum = None
     if filt == "":
         filt = None
-    return XmppMasterDatabase().get_deploy_by_team_member(login, state, intervalsearch, minimum, maximum, filt)
+    return XmppMasterDatabase().get_deploy_by_team_member(login, state, intervalsearch,
+                                                          minimum, maximum, filt, typedeploy)
 
 
-def get_deploy_inprogress_by_team_member(login, intervalsearch, minimum=None, maximum=None, filt=None):
+def get_deploy_inprogress_by_team_member(login, intervalsearch, minimum=None,
+                                         maximum=None, filt=None, typedeploy="command"):
     """
     This function is used to retrieve not yet done deployements of a team.
     This team is found based on the login of a member.
@@ -530,7 +539,8 @@ def get_deploy_inprogress_by_team_member(login, intervalsearch, minimum=None, ma
                                                               intervalsearch,
                                                                minimum,
                                                                maximum,
-                                                               filt)
+                                                               filt,
+                                                               typedeploy)
 
 def get_deploy_xmpp_teamscheduler(login, minimum=None, maximum=None, filt=None):
     """
@@ -555,7 +565,8 @@ def get_deploy_xmpp_teamscheduler(login, minimum=None, maximum=None, filt=None):
     result = MscDatabase().deployxmppscheduler(pulse_usersidlist, minimum, maximum, filt)
     return result
 
-def get_deploy_by_team_finished(login, intervalsearch, minimum=None, maximum=None, filt=None):
+def get_deploy_by_team_finished(login, intervalsearch, minimum=None,
+                                maximum=None, filt=None, typedeploy="command"):
     """
     This function is used to retrieve all the deployments done by a team.
     Args:
@@ -567,7 +578,6 @@ def get_deploy_by_team_finished(login, intervalsearch, minimum=None, maximum=Non
     Returns:
         It returns all the deployment done by a team
     """
-
     if minimum == "":
         minimum = None
     if maximum == "":
@@ -577,9 +587,12 @@ def get_deploy_by_team_finished(login, intervalsearch, minimum=None, maximum=Non
                                                     intervalsearch,
                                                     minimum,
                                                     maximum,
-                                                    filt)
+                                                    filt,
+                                                    typedeploy)
 
-def get_deploy_by_user_with_interval(login, state, intervalsearch, minimum=None, maximum=None, filt=None):
+def get_deploy_by_user_with_interval(login, state, intervalsearch,
+                                     minimum=None, maximum=None, filt=None,
+                                     typedeploy="command"):
     """
     This function is used to retrive the recent deployment done by a user.
 
@@ -600,9 +613,10 @@ def get_deploy_by_user_with_interval(login, state, intervalsearch, minimum=None,
         maximum = None
     if filt == "":
         filt = None
-    return XmppMasterDatabase().get_deploy_by_user_with_interval(login, state, intervalsearch, minimum, maximum, filt)
+    return XmppMasterDatabase().get_deploy_by_user_with_interval(login, state,
+                                                                 intervalsearch, minimum, maximum, filt, typedeploy)
 
-def get_deploy_by_user_finished(login, intervalsearch, minimum=None, maximum=None, filt=None):
+def get_deploy_by_user_finished(login, intervalsearch, minimum=None, maximum=None, filt=None, typedeploy="command"):
     """
     This function is used to retrieve all the deployments done by a user (or a team).
 
@@ -623,15 +637,14 @@ def get_deploy_by_user_finished(login, intervalsearch, minimum=None, maximum=Non
         minimum = None
     if maximum == "":
         maximum = None
-    return XmppMasterDatabase().get_deploy_by_user_finished(login, intervalsearch, minimum, maximum, filt)
+    return XmppMasterDatabase().get_deploy_by_user_finished(login, intervalsearch, minimum, maximum, filt, typedeploy)
 
-
-def getdeploybyuser(login, numrow, offset):
+def getdeploybyuser(login, numrow, offset, typedeploy="command"):
     if not numrow:
         numrow = None
     if not offset:
         offset = None
-    return XmppMasterDatabase().getdeploybyuser(login, numrow, offset)
+    return XmppMasterDatabase().getdeploybyuser(login, numrow, offset, typedeploy)
 
 
 def getshowmachinegrouprelayserver():
@@ -653,16 +666,16 @@ def getshowmachinegrouprelayserver():
 def get_qaction(groupname, user, grp, completename):
     return XmppMasterDatabase().get_qaction(groupname, user, grp, completename)
 
-def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os=""):
-    return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os)
+def setCommand_qa(command_name, command_action, command_login, command_grp="", command_machine='', command_os="", jid=""):
+    return XmppMasterDatabase().setCommand_qa(command_name, command_action, command_login, command_grp, command_machine, command_os, jid)
 
 
 def getCommand_action_time(during_the_last_seconds, start, stop, filt):
     return XmppMasterDatabase().getCommand_action_time(during_the_last_seconds, start, stop, filt)
 
 
-def setCommand_action(target, command_id, sessionid, command_result, typemessage):
-    return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage)
+def setCommand_action(target, command_id, sessionid, command_result, typemessage, jid=""):
+    return XmppMasterDatabase().setCommand_action(target, command_id, sessionid, command_result, typemessage, jid)
 
 
 def getCommand_qa_by_cmdid(cmdid):
@@ -671,6 +684,14 @@ def getCommand_qa_by_cmdid(cmdid):
 
 def getQAforMachine(cmd_id, uuidmachine):
     resultdata = XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
+    if resultdata[0][3] == "result":
+        # encode 64 str? to transfer xmlrpc if string with sequence escape
+        resultdata[0][4] = base64.b64encode(resultdata[0][4])
+    return resultdata
+
+
+def getQAforMachineByJid(cmd_id, jid):
+    resultdata = XmppMasterDatabase().getQAforMachineByJid(cmd_id, jid)
     if resultdata[0][3] == "result":
         # encode 64 str? to transfer xmlrpc if string with sequence escape
         resultdata[0][4] = base64.b64encode(resultdata[0][4])
@@ -909,6 +930,20 @@ def xmppGetAllPackages(login, filter,  start, end):
 def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
 
+def runXmppWolforuuidsarray(uuids):
+    if 'jid' in uuids:
+        mach_infos = XmppMasterDatabase().getMachinefromjid(uuids['jid'])
+        if 'macaddress' in mach_infos:
+            macaddresslist = [mach_infos['macaddress']]
+    else:
+        mach_infos = XmppMasterDatabase().getmachinesbyuuids(uuids)
+        macaddresslist = []
+        # creation list mac address
+        for infos in mach_infos:
+            macaddresslist.append(mach_infos[infos]['macaddress'])
+    callXmppPlugin('wakeonlangroup', {'macadress': macaddresslist})
+    return True
+
 ############### synchro syncthing package #####################
 
 def pkgs_delete_synchro_package(uuidpackage):
@@ -1129,6 +1164,8 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
         return -1
     jidARS = machine['groupdeploy']
     jidAM = jidmachine
+    ipAM = machine['ip_xmpp']
+
     #logging.getLogger().error("machine %s " % machine)
     #logging.getLogger().error("jidARS %s " % machine['groupdeploy'])
     #logging.getLogger().error("jidAM %s " %jidmachine)
@@ -1179,6 +1216,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
                      "data": {"ipARS": ipARS,
                               "jidARS": jidARS,
                               "jidAM": jidAM,
+                              "ipAM": ipAM,
                               "remoteport": remoteport,
                               "portproxy": proxyportars,
                               "type_reverse": type_reverse,
@@ -1294,6 +1332,9 @@ def get_mon_events(start, maxperpage, filter):
     result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter)
     return result
 
+def get_mon_events_history(start, maxperpage, filter):
+    result = XmppMasterDatabase().get_mon_events_history(start, maxperpage, filter)
+    return result
 
 def acquit_mon_event(id, user):
     result = XmppMasterDatabase().acquit_mon_event(id, user)
@@ -1344,6 +1385,11 @@ def write_content(path, datas, mode="w"):
                 return True
         except:
             return False
+
+
+def get_computer_count_for_dashboard():
+    return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard())
+
 
 def get_count_success_rate_for_dashboard():
     result = XmppMasterDatabase().get_count_success_rate_for_dashboard()
@@ -1411,6 +1457,45 @@ def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
     result = XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
     return result
 
+def get_conformity_update_by_machine(idmachine):
+    result = XmppMasterDatabase().get_conformity_update_by_machine(idmachine)
+    return result
+
+def get_conformity_update_for_group(uuidArray):
+    result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
+    nbmachinetotal = len(uuidArray)
+    result[0]['pending_updates'] = int(result[0]['pending_updates'])
+
+    if result[0]['count_machines'] == 0 or result[0]['pending_updates'] == 0:
+        result[0]['compliance'] = 100
+    else:
+        result[0]['compliance'] = (float(result[0]['count_machines'])/float(nbmachinetotal)) * 100.
+    return result
+
+def get_idmachine_from_name(name):
+    result = XmppMasterDatabase().get_idmachine_from_name(name)
+    return result
+
+def get_count_grey_list_enable():
+    result = XmppMasterDatabase().get_count_grey_list_enable()
+    return result
+
+def get_conformity_update_by_entity():
+    result = XmppMasterDatabase().get_conformity_update_by_entity()
+    resultarray=[]
+    for t in  result:
+        r={'entity' : t,
+           'nbmachines' : int( result[t]['nbmachines']),
+           'nbupdate' : int(result[t]['nbupdate']),
+           'totalmach' : int(result[t]['totalmach'])
+           }
+        if int(result[t]['totalmach']) != 0:
+            r['conformite']=(float(result[t]['totalmach'])-float(result[t]['nbmachines']))/float(result[t]['totalmach'])*100.
+        else:
+            r['totalmach'] = 100.
+        resultarray.append(r)
+    return resultarray
+
 def ban_machines(subaction, jid_ars, machines):
     sessionid = name_random(8, "banmachines")
     datasend = {
@@ -1423,3 +1508,42 @@ def ban_machines(subaction, jid_ars, machines):
     callXmppPlugin("banmachines", datasend)
 
     return True
+
+
+def reload_deploy(uuid,
+                  cmd_id,
+                  gid,
+                  sessionid,
+                  hostname,
+                  login,
+                  title,
+                  start,
+                  endcmd,
+                  startcmd,
+                  force_redeploy,
+                  rechedule):
+
+    result = XmppMasterDatabase().reload_deploy(uuid,
+                                                        cmd_id,
+                                                        gid,
+                                                        sessionid,
+                                                        hostname,
+                                                        login,
+                                                        title,
+                                                        start,
+                                                        endcmd,
+                                                        startcmd,
+                                                        force_redeploy,
+                                                        rechedule)
+
+def get_updates_by_entity(entity, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_updates_by_entity(entity, start, limit, filter)
+
+def get_updates_machines_by_entity(entity, pid, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_updates_machines_by_entity(entity, pid, start, limit, filter)
+
+def pending_entity_update_by_pid(entity, pid, startdate="", enddate=""):
+    return XmppMasterDatabase().pending_entity_update_by_pid(entity, pid, startdate, enddate)
+
+def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)

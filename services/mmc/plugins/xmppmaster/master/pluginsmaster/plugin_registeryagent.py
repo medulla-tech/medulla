@@ -25,7 +25,7 @@
 # import time
 from manageRSAsigned import MsgsignedRSA
 from sleekxmpp import jid
-from utils import getRandomName
+from mmc.plugins.xmppmaster.master.lib.utils import getRandomName
 import re
 from distutils.version import LooseVersion
 import ConfigParser
@@ -95,6 +95,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                     if showinfobool:
                         logger.info("** uuid setup_machine is %s" % data['uuid_serial_machine'])
                 interfacedata = []
+                macaddressesadded = []
                 interfaceblacklistdata = []
                 for interface in data['information']["listipinfo"]:
                     # exclude mac address from table network
@@ -102,8 +103,9 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                   xmppobject.blacklisted_mac_addresses,
                                                   showinfobool=showinfobool):
                         interfaceblacklistdata.append(interface)
-                    else:
+                    elif interface['macaddress'] not in macaddressesadded:
                         interfacedata.append(interface)
+                        macaddressesadded.append(interface['macaddress'])
 
                 data['information']["listipinfo"] = interfacedata
                 if showinfobool:
@@ -133,6 +135,16 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                                 '',
                                                 xmppobject.boundjid.bare,
                                                 xmppobject.boundjid.bare)
+            md5agentversion = data['md5agentversion']  if "md5agentversion" in data else ""
+            agent_version = data['versionagent']  if "versionagent" in data else ""
+            computer_hostname = data['machine']  if "machine" in data else ""
+            arrayhost = computer_hostname.split('.')
+            arrayhost.pop()
+            if arrayhost:
+                computer_hostname='.'.join(arrayhost)
+                XmppMasterDatabase().Update_version_agent_machine_md5(computer_hostname,
+                                                                      md5agentversion,
+                                                                      agent_version)
             if 'oldjid' in data:
                 logger.debug("The hostname changed from %s to %s" % (data['oldjid'], data['from']))
                 XmppMasterDatabase().delPresenceMachinebyjiduser(jid.JID(data['oldjid']).user)

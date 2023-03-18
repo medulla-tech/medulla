@@ -76,8 +76,8 @@ if($total != 0){
   $n->setParamInfo($params);
   $n->addExtraInfo($rules['datas']['order'], _T("Order", "admin"));
   $n->addExtraInfo($rules['datas']['subject'], _T("Subject", "admin"));
-  $n->addActionItemArray($raiseActions);
-  $n->addActionItemArray($lowerActions);
+  //$n->addActionItemArray($raiseActions);
+  //$n->addActionItemArray($lowerActions);
   $n->addActionItemArray($editActions);
   $n->addActionItemArray($deleteActions);
   $n->start = 0;

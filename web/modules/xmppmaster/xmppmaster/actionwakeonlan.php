@@ -45,14 +45,21 @@ if (isset($_GET['wol']) && $_GET['wol']){
 switch($_GET['action']){
     case "deployquick":
             // work for one machine
-            if ($_GET['wol']){
-                xmlrpc_synchroComputer($_GET['objectUUID'], true,  false);
+            if(!empty($_GET['objectUUID'])){
+                if ($_GET['wol']){
+                    xmlrpc_synchroComputer($_GET['objectUUID'], true,  false);
+                }
+                else{
+                    xmlrpc_synchroComputer($_GET['objectUUID'], false,  false);
+                }
+            }
+
+            if(!empty($_GET['jid'])){
+                xmlrpc_runXmppWolforuuid(["jid"=>$_GET['jid']]);
             }
             else{
-                xmlrpc_synchroComputer($_GET['objectUUID'], false,  false);
+                xmlrpc_runXmppWolforuuid([$_GET['objectUUID']]);
             }
-            xmlrpc_runXmppWolforuuid($_GET['objectUUID']);
-
             xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send wol to presente [ Machine : \"".$_GET['cn']."\"]",
                                             "QA",
                                             '' ,
@@ -66,9 +73,10 @@ switch($_GET['action']){
                                             'QuickAction | WOL sent');
         break;
     case "deployquickgroup":
-        //work for all machines on group
+        // work for all machines on group
         header('Content-type: application/json');
         $uuid = array();
+        $groupewol = array();
         $cn = array();
         $presence = array();
         $machine_already_present = array();
@@ -93,13 +101,13 @@ switch($_GET['action']){
             if( xmlrpc_getPresenceuuid($key) == 0 ){
                 $presence[] = 0;
                 $machine_not_present[] = $value[1]['cn'][0];
+                $groupewol[] = $key;
                 if ($_GET['wol']){
                     xmlrpc_synchroComputer($key, true,  false);
                 }
                 else{
                     xmlrpc_synchroComputer($key, false,  false);
                 }
-                xmlrpc_runXmppWolforuuid( $key );
                 xmlrpc_setfromxmppmasterlogxmpp("QA : [user : \"".$_SESSION["login"]."\"] ".
                                                     "[Group :\"".$_GET['groupname'].
                                                     "\"] sent Wol to absent [machine : \"".$value[1]['cn'][0]."\"]",
@@ -120,6 +128,8 @@ switch($_GET['action']){
             };
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }
+        if (!empty($groupewol)) {
+            xmlrpc_runXmppWolforuuidsarray($groupewol); }
         echo json_encode($result);
     break;
 }
