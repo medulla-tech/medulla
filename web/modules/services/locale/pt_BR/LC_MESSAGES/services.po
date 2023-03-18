@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:52+0200\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: modules/services/infoPackage.inc.php:32
 msgid "Services management"
@@ -42,7 +42,7 @@ msgid "Others services"
 msgstr "Outros serviços"
 
 #: modules/services/infoPackage.inc.php:76 modules/services/control/log.php:38
-#: modules/services/control/localSidebar.php:31
+#: modules/services/control/localSidebar.php:27
 msgid "Services log"
 msgstr "Log dos serviços"
 
@@ -57,7 +57,7 @@ msgid "Poweroff"
 msgstr "Desligar"
 
 #: modules/services/control/others.php:29
-#: modules/services/control/localSidebar.php:28
+#: modules/services/control/localSidebar.php:26
 msgid "Other services"
 msgstr "Outros Serviços"
 
@@ -145,6 +145,7 @@ msgid "%d inactive service"
 msgid_plural "%d inactive services"
 msgstr[0] "%d serviço inativo"
 msgstr[1] "%d serviços inativos"
+msgstr[2] "%d serviços inativos"
 
 #: modules/services/includes/panels/services.inc.php:50
 msgid "All services are up"

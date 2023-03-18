@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2022 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -36,12 +36,12 @@ if(isset($_POST['id'], $_POST['name'], $_POST['active']))
         $ous = $_POST['ous'];
     // Update the profile
     if(isset($_POST['packages']))
-        xmlrpc_update_profile($_POST['id'], $_POST['name'], $ous, $_POST['active'], $_POST['packages']);
+        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $_POST['packages']);
     else
-        xmlrpc_update_profile($_POST['id'], $_POST['name'], $ous, $_POST['active']);
+        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active']);
 
-    new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated','kiosk'),$_POST['name']));
+    new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated','kiosk'),htmlentities($_POST['name'])));
 }
 else
-    new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile %s','kiosk'),$_POST['name']));
+    new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile %s','kiosk'),htmlentities($_POST['name'])));
 ?>

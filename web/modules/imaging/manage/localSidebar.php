@@ -25,27 +25,25 @@
 $sidemenu= new SideMenu();
 $sidemenu->setClass("manage computers");
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Imaging server status","imaging"), "imaging", "manage", "index", "modules/imaging/graph/images/imaging-status-active.png", "modules/imaging/graph/images/imaging-status-inactive.png")
+    new SideMenuItem(_T("Imaging server status","imaging"), "imaging", "manage", "index")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Manage masters","imaging"), "imaging", "manage", "master", "modules/imaging/graph/images/imaging-master-active.png", "modules/imaging/graph/images/imaging-master-inactive.png")
+    new SideMenuItem(_T("Manage masters","imaging"), "imaging", "manage", "master")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Manage boot services","imaging"), "imaging", "manage", "service", "modules/imaging/graph/images/imaging-service-active.png", "modules/imaging/graph/images/imaging-service-inactive.png")
+    new SideMenuItem(_T("Manage boot services","imaging"), "imaging", "manage", "service")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Default boot menu","imaging"), "imaging", "manage", "bootmenu", "modules/imaging/graph/images/imaging-bootmenu-active.png", "modules/imaging/graph/images/imaging-bootmenu-inactive.png")
+    new SideMenuItem(_T("Default boot menu","imaging"), "imaging", "manage", "bootmenu")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Post-imaging scripts","imaging"), "imaging", "manage", "postinstall", "modules/imaging/graph/images/imaging-postinst-active.png", "modules/imaging/graph/images/imaging-postinst-inactive.png")
+    new SideMenuItem(_T("Post-imaging scripts","imaging"), "imaging", "manage", "postinstall")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Imaging Configuration","imaging"), "imaging", "manage", "configuration", "modules/imaging/graph/images/imaging-configuration-active.png", "modules/imaging/graph/images/imaging-configuration-inactive.png")
+    new SideMenuItem(_T("Imaging Configuration","imaging"), "imaging", "manage", "configuration")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Windows System Image Manager","imaging"), "imaging", "manage", "systemImageManager",
- "modules/imaging/graph/images/imaging-configuration-active.png",
- "modules/imaging/graph/images/imaging-configuration-inactive.png")
+    new SideMenuItem(_T("Windows System Image Manager","imaging"), "imaging", "manage", "systemImageManager")
 );
 
 if (in_array("dyngroup", $_SESSION["modulesList"])) {

@@ -28,7 +28,6 @@ require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 
-require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
 

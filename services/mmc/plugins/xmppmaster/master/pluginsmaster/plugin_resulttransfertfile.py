@@ -21,11 +21,11 @@
 # MA 02110-1301, USA.
 #
 # file pluginsmaster/plugin_resulttransfertfile.py
-from utils import pluginmastersessionaction
+from mmc.plugins.xmppmaster.master.lib.utils import pluginmastersessionaction
 import base64
 import json
 import zlib
-from utils import md5
+from mmc.plugins.xmppmaster.master.lib.utils import md5
 import hashlib
 
 import logging

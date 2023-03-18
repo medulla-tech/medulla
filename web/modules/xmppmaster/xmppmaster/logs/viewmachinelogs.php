@@ -44,107 +44,6 @@
   box-shadow:4px 4px 6px #888;
 }
 
- li.folder a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/folder.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.folderg a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/folder.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.console a {
-        padding: 3px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.consoleg a {
-        padding: 3px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.quick a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.guaca a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.guacag a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.quickg a {
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-
 .actions:target {
    background-color: #ffa;
 }
@@ -183,6 +82,9 @@ include_once('modules/pkgs/includes/xmlrpc.php');
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id, $uuid);
+
+$tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
+$contrainte  = count($tab)?$tab[$cmd_id]:"";
 
 $pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
 $pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);
@@ -295,14 +197,6 @@ $showText = _T("Show", "xmppmaster");
         echo "</div>";
     }
     if ( $info['len'] == 0 || $boolterminate == false){
-        echo'
-            <script type="text/javascript">
-            setTimeout(refresh, 120000);
-            function  refresh(){
-                jQuery( "#formpage" ).submit();
-            }
-        </script>
-        ';
         $result = command_detail($cmd_id);
         $start_date = mktime($result['start_date'][3],
                             $result['start_date'][4],
@@ -459,6 +353,11 @@ $showText = _T("Show", "xmppmaster");
                             echo '<td style="width: ;">';
                                 echo '<span style=" padding-left: 32px;">'._T("Start Date","xmppmaster").'</span>';
                             echo '</td>';
+                            if ($contrainte != ""){
+                                echo '<td style="width: ;">';
+                                echo '<span style=" padding-left: 32px;">'._T("Deployment Interval Constraint","xmppmaster").'</span>';
+                                echo '</td>';
+                            }
                             echo '<td style="width: ;">';
                                 echo '<span style=" padding-left: 32px;">'._T("Stop Date","xmppmaster").'</span>';
                             echo '</td>';
@@ -478,6 +377,11 @@ $showText = _T("Show", "xmppmaster");
                             echo "<td>";
                             echo $start_date_plan_msc;
                             echo "</td>";
+                            if ($contrainte != ""){
+                                echo "<td>";
+                                echo $contrainte;
+                                echo "</td>";
+                            }
                             echo "<td>";
                                 echo $end_date_plan_msc;
                             echo "</td>";

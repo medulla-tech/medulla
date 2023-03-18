@@ -24,8 +24,7 @@
 
 $sidemenu= new SideMenu();
 $sidemenu->setClass("groups");
-$sidemenu->setBackgroundImage("img/groups/icn_groups_large.gif");
-$sidemenu->addSideMenuItem(new SideMenuItem(_("List"), "base","groups","index", "img/groups/icn_global_active.gif", "img/groups/icn_global.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_("Add"), "base","groups","add", "img/groups/icn_addGroup_active.gif", "img/groups/icn_addGroup.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_("List"), "base","groups","index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_("Add"), "base","groups","add"));
 
 ?>

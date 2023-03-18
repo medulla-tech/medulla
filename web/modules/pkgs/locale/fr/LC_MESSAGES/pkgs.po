@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:52+0200\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: SPO <spointu@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: modules/pkgs/infoPackage.inc.php:35 modules/pkgs/infoPackage.inc.php:41
 msgid "Packages"
@@ -174,7 +174,7 @@ msgstr "Non précisé"
 msgid "Package name"
 msgstr "Nom du package"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:293 modules/pkgs/pkgs/edit.php:306
+#: modules/pkgs/pkgs/ajaxPackageList.php:293 modules/pkgs/pkgs/edit.php:311
 #: modules/pkgs/pkgs/add.php:224
 msgid "Share"
 msgstr "Partage"
@@ -186,7 +186,7 @@ msgstr "Permissions"
 #: modules/pkgs/pkgs/ajaxPackageList.php:296
 #: modules/pkgs/pkgs/ajaxPackageList.php:437 modules/pkgs/pkgs/addRule.php:60
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/detail.php:204 modules/pkgs/pkgs/edit.php:244
+#: modules/pkgs/pkgs/detail.php:204 modules/pkgs/pkgs/edit.php:249
 #: modules/pkgs/pkgs/editRule.php:65 modules/pkgs/pkgs/add.php:232
 msgid "Description"
 msgstr "Description"
@@ -371,7 +371,7 @@ msgid "Element in Strings Result"
 msgstr "Élément de recherche dans Strings"
 
 #: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
-#: modules/pkgs/pkgs/add.php:382
+#: modules/pkgs/pkgs/add.php:386
 msgid "Add"
 msgstr "Ajouter"
 
@@ -465,7 +465,7 @@ msgid "Set Environ Variable"
 msgstr "Définir variable d'environnement"
 
 #: modules/pkgs/pkgs/detail.php:81 modules/pkgs/pkgs/detail.php:240
-#: modules/pkgs/pkgs/edit.php:505
+#: modules/pkgs/pkgs/edit.php:533
 msgid "File"
 msgstr "Fichier"
 
@@ -575,7 +575,7 @@ msgstr "Type"
 msgid "Transfer Method"
 msgstr "Méthode de transfert"
 
-#: modules/pkgs/pkgs/detail.php:218 modules/pkgs/pkgs/edit.php:365
+#: modules/pkgs/pkgs/detail.php:218 modules/pkgs/pkgs/edit.php:370
 #: modules/pkgs/pkgs/add.php:295
 msgid "Transfer method"
 msgstr "Méthode de transfert"
@@ -588,12 +588,12 @@ msgstr "Taille"
 msgid "Transferfile"
 msgstr "Transfert"
 
-#: modules/pkgs/pkgs/detail.php:222 modules/pkgs/pkgs/edit.php:378
+#: modules/pkgs/pkgs/detail.php:222 modules/pkgs/pkgs/edit.php:383
 #: modules/pkgs/pkgs/add.php:301
 msgid "bandwidth throttling (ko)"
 msgstr "Limitation de la bande passante (ko)"
 
-#: modules/pkgs/pkgs/detail.php:223 modules/pkgs/pkgs/edit.php:393
+#: modules/pkgs/pkgs/detail.php:223 modules/pkgs/pkgs/edit.php:398
 #: modules/pkgs/pkgs/add.php:309
 msgid "Spooling"
 msgstr "Mise en file"
@@ -635,8 +635,8 @@ msgstr "Type Mime"
 msgid "Action"
 msgstr "Action"
 
-#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:428
-#: modules/pkgs/pkgs/add.php:317
+#: modules/pkgs/pkgs/detail.php:284 modules/pkgs/pkgs/edit.php:456
+#: modules/pkgs/pkgs/add.php:321
 msgid "Dependencies"
 msgstr "Dépendances"
 
@@ -699,87 +699,91 @@ msgstr "Le fichier a été supprimé avec succès. %s"
 msgid "Failed to delete files"
 msgstr "Impossible de supprimer les fichiers"
 
-#: modules/pkgs/pkgs/edit.php:242
+#: modules/pkgs/pkgs/edit.php:247
 msgid "Package label"
 msgstr "Libellé du package"
 
-#: modules/pkgs/pkgs/edit.php:243
+#: modules/pkgs/pkgs/edit.php:248
 msgid "Package version"
 msgstr "Version du package"
 
-#: modules/pkgs/pkgs/edit.php:252 modules/pkgs/pkgs/add.php:247
+#: modules/pkgs/pkgs/edit.php:257 modules/pkgs/pkgs/add.php:247
 msgid "Command's name : "
 msgstr "Nom de la commande : "
 
-#: modules/pkgs/pkgs/edit.php:252
+#: modules/pkgs/pkgs/edit.php:257
 msgid "Command : "
 msgstr "Commande : "
 
-#: modules/pkgs/pkgs/edit.php:256 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:261 modules/pkgs/pkgs/add.php:251
 msgid "Need a reboot ?"
 msgstr "Besoin de redémarrer ?"
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:256
 msgid "Windows"
 msgstr "Windows"
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:256
 msgid "Linux"
 msgstr "Linux"
 
-#: modules/pkgs/pkgs/edit.php:263 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:256
 msgid "Mac OS"
 msgstr "Mac OS"
 
-#: modules/pkgs/pkgs/edit.php:335 modules/pkgs/pkgs/add.php:275
+#: modules/pkgs/pkgs/edit.php:340 modules/pkgs/pkgs/add.php:275
 msgid "Operating System"
 msgstr "Système d'exploitation"
 
-#: modules/pkgs/pkgs/edit.php:378 modules/pkgs/pkgs/add.php:302
+#: modules/pkgs/pkgs/edit.php:383 modules/pkgs/pkgs/add.php:302
 msgid "<in ko>"
 msgstr "<in ko>"
 
-#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:395 modules/pkgs/pkgs/add.php:306
 msgid "high priority"
 msgstr "Haute priorité"
 
-#: modules/pkgs/pkgs/edit.php:390 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:395 modules/pkgs/pkgs/add.php:306
 msgid "ordinary priority"
 msgstr "Priorité normale"
 
-#: modules/pkgs/pkgs/edit.php:438 modules/pkgs/pkgs/add.php:327
+#: modules/pkgs/pkgs/edit.php:408 modules/pkgs/pkgs/add.php:312
+msgid "Launcher (kiosk)"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:466 modules/pkgs/pkgs/add.php:331
 msgid "Added dependencies"
 msgstr "Dépendances ajoutées"
 
-#: modules/pkgs/pkgs/edit.php:454 modules/pkgs/pkgs/add.php:343
+#: modules/pkgs/pkgs/edit.php:482 modules/pkgs/pkgs/add.php:347
 msgid "Available dependencies"
 msgstr "Dépendances disponible"
 
-#: modules/pkgs/pkgs/edit.php:455 modules/pkgs/pkgs/add.php:344
+#: modules/pkgs/pkgs/edit.php:483 modules/pkgs/pkgs/add.php:348
 msgid "search by name ..."
 msgstr "recherche par nom"
 
-#: modules/pkgs/pkgs/edit.php:514
+#: modules/pkgs/pkgs/edit.php:542
 msgid "Delete file"
 msgstr "Supprimer le fichier"
 
-#: modules/pkgs/pkgs/edit.php:514
+#: modules/pkgs/pkgs/edit.php:542
 msgid "Are you sure you want to delete this file?"
 msgstr "Etes-vous sur de vouloir supprimer ce fichier ?"
 
-#: modules/pkgs/pkgs/edit.php:530
+#: modules/pkgs/pkgs/edit.php:558
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/includes/html.inc.php:59
 msgid "Click here to select files"
 msgstr "Cliquer ici pour sélectionner les fichiers"
 
-#: modules/pkgs/pkgs/edit.php:531
+#: modules/pkgs/pkgs/edit.php:559
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 #: modules/pkgs/includes/html.inc.php:42
 msgid "Upload Queued Files"
 msgstr "Transmettre les fichiers en attente"
 
-#: modules/pkgs/pkgs/edit.php:607 modules/pkgs/pkgs/add.php:444
+#: modules/pkgs/pkgs/edit.php:635 modules/pkgs/pkgs/add.php:448
 msgid "Accentuated and special chars are not allowed"
 msgstr "Les caractères spéciaux et accentués ne sont pas autorisés."
 
@@ -859,7 +863,7 @@ msgstr "Faire un package vide"
 msgid "Package source"
 msgstr "Source des packages"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:523
+#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:527
 msgid "Files directory"
 msgstr "Répertoire des fichiers"
 
@@ -893,12 +897,12 @@ msgstr ""
 "Vous pouvez également faire une recherche Google. Si vous vous êtes chanceux, voici une recherche Google qui pourrait vous aider:\\n\\n\n"
 "<a href=\"@@GOOGLE_SEARCH_URL@@\">Recherche Googleh</a>"
 
-#: modules/pkgs/pkgs/add.php:545
+#: modules/pkgs/pkgs/add.php:549
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Envoi de fichiers (<b><u title='%s'>%sM max</u></b>)"
 
-#: modules/pkgs/pkgs/add.php:545
+#: modules/pkgs/pkgs/add.php:549
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -1115,11 +1119,11 @@ msgstr "Commande"
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:42
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:57
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:271
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:256
 #: modules/pkgs/includes/actions/actionprocessscript.php:95
 #: modules/pkgs/includes/actions/actionprocessscript.php:110
-msgid "Set timeout"
-msgstr "Configurer le délai d'attente"
+msgid "Set timeout (in seconds)"
+msgstr ""
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:35
 msgid "Execute script"
@@ -1186,6 +1190,10 @@ msgstr ""
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:226
 msgid "Force hash-bang"
 msgstr "Forcer le hash-bang"
+
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:271
+msgid "Set timeout  (in seconds)"
+msgstr ""
 
 #: modules/pkgs/includes/actions/actionrestart.php:17
 msgid "Restart Machine"

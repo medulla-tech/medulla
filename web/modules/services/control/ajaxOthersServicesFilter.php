@@ -46,7 +46,14 @@ foreach($list as $service) {
     include('servicesList.inc.php');
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_services_other = [];
+foreach($names as $name_service){
+    $ids_services_other[] = 'so_'.$name_service;
+}
+
 $n = new ListInfos($names, _T("Service"));
+$n->setcssIds($ids_services_other);
 $n->first_elt_padding = 1;
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($descs, _T("Description"));

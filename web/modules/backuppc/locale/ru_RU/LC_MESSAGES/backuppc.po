@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:52+0200\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2017-09-12 12:18+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -44,12 +44,12 @@ msgid "Edit host config"
 msgstr ""
 
 #: modules/backuppc/infoPackage.inc.php:54
-#: modules/backuppc/backuppc/hostStatus.php:324
+#: modules/backuppc/backuppc/hostStatus.php:221
 msgid "Advanced scripts"
 msgstr ""
 
 #: modules/backuppc/infoPackage.inc.php:57
-#: modules/backuppc/backuppc/hostStatus.php:325
+#: modules/backuppc/backuppc/hostStatus.php:222
 msgid "File search"
 msgstr ""
 
@@ -294,7 +294,7 @@ msgid "Restore"
 msgstr ""
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:302
+#: modules/backuppc/backuppc/hostStatus.php:199
 msgid "Configuration saved"
 msgstr ""
 
@@ -435,7 +435,7 @@ msgid "Backup size (new) [Mb]"
 msgstr ""
 
 #: modules/backuppc/backuppc/hostSummary.php:262
-#: modules/backuppc/backuppc/BrowseShareNames.php:171
+#: modules/backuppc/backuppc/BrowseShareNames.php:68
 msgid "Browse"
 msgstr ""
 
@@ -710,7 +710,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/edit.php:142
 #: modules/backuppc/backuppc/EditBackupProfile.php:149
-#: modules/backuppc/backuppc/BrowseShareNames.php:163
+#: modules/backuppc/backuppc/BrowseShareNames.php:60
 #: modules/backuppc/backuppc/fileSearch.php:127
 msgid "Folder"
 msgstr ""
@@ -737,7 +737,7 @@ msgstr ""
 msgid "Error log"
 msgstr ""
 
-#: modules/backuppc/backuppc/BrowseShareNames.php:137
+#: modules/backuppc/backuppc/BrowseShareNames.php:34
 msgid "Browse backup"
 msgstr ""
 
@@ -794,40 +794,40 @@ msgstr ""
 msgid "backup log"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:148
+#: modules/backuppc/backuppc/hostStatus.php:45
 msgid "Notify Error : Backup configuration Computer"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:162
-#: modules/backuppc/backuppc/hostStatus.php:291
+#: modules/backuppc/backuppc/hostStatus.php:59
+#: modules/backuppc/backuppc/hostStatus.php:188
 msgid "Notify Computer :"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:162
+#: modules/backuppc/backuppc/hostStatus.php:59
 msgid "has been added to backup system successfully."
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:173
+#: modules/backuppc/backuppc/hostStatus.php:70
 #, php-format
 msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
 "configure its filesets and scheduling."
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:291
+#: modules/backuppc/backuppc/hostStatus.php:188
 msgid "Save configure host "
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:316
+#: modules/backuppc/backuppc/hostStatus.php:213
 #, php-format
 msgid "%s's backup status"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:319
+#: modules/backuppc/backuppc/hostStatus.php:216
 msgid "Summary"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:323
+#: modules/backuppc/backuppc/hostStatus.php:220
 msgid "Configuration"
 msgstr ""
 

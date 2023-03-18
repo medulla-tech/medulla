@@ -257,7 +257,8 @@ class RpcProxy(RpcProxyI):
             ret = -1
         return ret
 
-    def get_deploy_inprogress_by_team_member(self, login, time, minimum, maximum, filt):
+    def get_deploy_inprogress_by_team_member(self, login, time, minimum,
+                                             maximum, filt, typedeploy="command"):
         """
         This function is used to retrieve not yet done deployements of a team.
         This team is found based on the login of a member.
@@ -272,8 +273,11 @@ class RpcProxy(RpcProxyI):
             It returns all the deployement not yet started of a specific team.
             It can be done by time search too.
         """
+        return MscDatabase().get_deploy_inprogress_by_team_member(login, time, minimum,
+                                                                  maximum, filt, typedeploy)
 
-        return MscDatabase().get_deploy_inprogress_by_team_member(login, time, minimum, maximum, filt)
+    def get_conrainte_slot_deployment_commands(self, commands):
+        return MscDatabase().get_conrainte_slot_deployment_commands(commands)
 
     def getContext(self, user='root'):
         s = SecurityContext()
@@ -601,11 +605,16 @@ class RpcProxy(RpcProxyI):
     #
     # default WEB values handling
     #
-    def get_def_package_label(self, label, version):
+    def get_def_package_label(self, label, version, typedepl=None):
+        """ typedepl="-@upd@" for update """
         localtime = time.localtime()
-        return "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
+        typepackage=""
+        if typedepl is not None:
+            typepackage = typedepl
+        return "%s (%s) %s- %04d/%02d/%02d %02d:%02d:%02d" % (
             label,
             version,
+            typepackage,
             localtime[0],
             localtime[1],
             localtime[2],

@@ -37,8 +37,14 @@ for ($idx = 0; $idx < count($groups); $idx++) {
     $arrNb[] = '<span style="font-weight: normal;">('.$groups[$idx][2].')</span>';
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_groups = [];
+foreach($arrGroup as $index => $name_group){
+    $ids_groups[] = 'g_'.$name_group;
+}
 
 $n = new ListInfos($arrGroup,_("Groups"));
+$n->setcssIds($ids_groups);
 $n->setCssClass("groupName");
 $n->addExtraInfo($arrComment,_("Comments"));
 $n->setAdditionalInfo($arrNb);

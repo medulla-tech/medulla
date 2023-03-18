@@ -55,7 +55,7 @@ $rulesList = xmlrpc_get_rules_list($start, $end, $filter);
 
 $raiseAction = new ActionItem(_T("Raise Rule", "admin"),"moveRule","up","", "admin", "admin", "", "raise");
 $lowerAction = new ActionItem(_T("Lower Rule", "admin"),"moveRule","down","", "admin", "admin", "", "down");
-$listAction = new ActionItem(_T("Rule Detail", "admin"),"rulesDetail","inventory","", "admin", "admin");
+$listAction = new ActionItem(_T("Rule Detail", "admin"),"rulesDetail","display","", "admin", "admin");
 $newAction = new ActionItem(_T("New Rule", "admin"),"rules_tabs","addbootmenu","tab", "admin", "admin", "newRelayRule");
 $raiseActions = [];
 $lowerActions = [];
@@ -89,8 +89,15 @@ foreach($rulesList['datas']['name'] as $key=>$array){
     $is_default = true;
 }
 
+// Avoiding the CSS selector (tr id) to start with a number
+$ids_clusters_rules = [];
+foreach($params as $index => $name_rule){
+  $ids_clusters_rules[] = 'cr_'.$name_rule['name'];
+}
+
 if($rulesList['total'] > 0){
   $n = new OptimizedListInfos( $rulesList['datas']['name'], _T("Rule", "admin"));
+  $n->setcssIds($ids_clusters_rules);
   $n->disableFirstColumnActionLink();
   $n->addExtraInfo( $rulesList['datas']['description'], _T("Description", "admin"));
   $n->addExtraInfo( $rulesList['datas']['level'], _T("Level", "admin"));
@@ -124,16 +131,6 @@ else{
 <style>
   .clickable{
     cursor: pointer;
-  }
-  li.addbootmenu a {
-      background-image:url("modules/imaging/graph/images/imaging-add.png");
-      background-position:left top;
-      background-repeat:no-repeat;
-      color:#FFFFFF;
-      line-height:18px;
-      margin:0 0;
-      padding: 4px 3px 5px 20px;
-      text-decoration:none;
   }
 </style>
 

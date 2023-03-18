@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:52+0200\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/zh_TW/)\n"
@@ -61,43 +61,48 @@ msgstr "備份狀態"
 
 #: modules/pulse2/includes/menu_actionaudit.php:67
 #: modules/pulse2/includes/menu_action.php:61
+msgid "Urbackup"
+msgstr ""
+
+#: modules/pulse2/includes/menu_actionaudit.php:68
+#: modules/pulse2/includes/menu_action.php:62
 #: modules/pulse2/includes/menu_group_action.php:76
 msgid "Imaging management"
 msgstr "影像管理"
 
-#: modules/pulse2/includes/menu_actionaudit.php:68
-#: modules/pulse2/includes/menu_action.php:75
+#: modules/pulse2/includes/menu_actionaudit.php:69
+#: modules/pulse2/includes/menu_action.php:76
 msgid "Quick action"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:71
-#: modules/pulse2/includes/menu_actionaudit.php:76
-#: modules/pulse2/includes/menu_action.php:79
-#: modules/pulse2/includes/menu_action.php:82
-#: modules/pulse2/includes/menu_action.php:91
+#: modules/pulse2/includes/menu_actionaudit.php:72
+#: modules/pulse2/includes/menu_actionaudit.php:77
+#: modules/pulse2/includes/menu_action.php:80
+#: modules/pulse2/includes/menu_action.php:83
+#: modules/pulse2/includes/menu_action.php:92
 msgid "Software deployment"
 msgstr "軟體部署"
 
-#: modules/pulse2/includes/menu_actionaudit.php:75
-#: modules/pulse2/includes/menu_action.php:64
-#: modules/pulse2/includes/menu_action.php:67
+#: modules/pulse2/includes/menu_actionaudit.php:76
+#: modules/pulse2/includes/menu_action.php:65
+#: modules/pulse2/includes/menu_action.php:68
 msgid "Remote control"
 msgstr "遠端控制"
 
-#: modules/pulse2/includes/menu_actionaudit.php:78
-#: modules/pulse2/includes/menu_action.php:74
+#: modules/pulse2/includes/menu_actionaudit.php:79
+#: modules/pulse2/includes/menu_action.php:75
 msgid "xmppconsole"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:79
-#: modules/pulse2/includes/menu_actionaudit.php:82
-#: modules/pulse2/includes/menu_action.php:70
-#: modules/pulse2/includes/menu_action.php:84
-#: modules/pulse2/includes/menu_action.php:86
+#: modules/pulse2/includes/menu_actionaudit.php:80
+#: modules/pulse2/includes/menu_actionaudit.php:83
+#: modules/pulse2/includes/menu_action.php:71
+#: modules/pulse2/includes/menu_action.php:85
+#: modules/pulse2/includes/menu_action.php:87
 msgid "files browsing"
 msgstr ""
 
-#: modules/pulse2/includes/menu_actionaudit.php:80
+#: modules/pulse2/includes/menu_actionaudit.php:81
 msgid "Edit config files"
 msgstr ""
 

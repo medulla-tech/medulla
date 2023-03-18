@@ -27,7 +27,7 @@ import base64
 import json
 import os
 import sys
-from utils import simplecommand, file_get_content, file_put_content
+from mmc.plugins.xmppmaster.master.lib.utils import simplecommand, file_get_content, file_put_content
 import pprint
 import logging
 
@@ -166,4 +166,3 @@ def scpfile(scr, dest):
                 "-o ConnectTimeout=10 "
     cmdpre =  "%s %s %s"%(cmdpre, scr, dest)
     return cmdpre
-

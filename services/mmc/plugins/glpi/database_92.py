@@ -778,9 +778,9 @@ class Glpi92(DyngroupDatabaseHelper):
 
         if debugfunction:
             try:
-                logger.info("@@@DEBUG@@@ %s"%literalquery(query))
+                self.logger.info("@@@DEBUG@@@ %s"%literalquery(query))
             except Exception as e:
-                logger.error("display @@@DEBUG@@@ sql literal from alchemy : %s" % e)
+                self.logger.error("display @@@DEBUG@@@ sql literal from alchemy : %s" % e)
 
         machines = query.all()
 
@@ -5650,6 +5650,56 @@ ORDER BY
         result.append(entity)
         return result
 
+
+    @DatabaseHelper._sessionm
+    def get_machine_with_update(self, session, kb):
+        sqlrequest ="""
+            SELECT 
+                glpi.glpi_computers.id AS uuid_inventory,
+                glpi.glpi_computers.name AS hostname,
+                glpi.glpi_entities.completename AS entity,
+                glpi.glpi_softwares.name AS kb, 
+                SUBSTR(glpi.glpi_softwares.name,
+                    LOCATE('KB', glpi.glpi_softwares.name), length(glpi.glpi_softwares.name)-2) as numkb,
+                glpi.glpi_computers_softwareversions.date_install AS dateinstall,
+                glpi.glpi_computers.date_creation AS input_computer
+            FROM
+                glpi.glpi_computers
+                    INNER JOIN
+                glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
+                    INNER JOIN
+                glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_computers_softwareversions.softwareversions_id
+                    INNER JOIN
+                glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
+            WHERE
+                glpi.glpi_softwares.name LIKE 'Update (KB%s)';"""%(kb)
+        uuid_inventory=[]
+        hostname=[]
+        entity=[]
+        kb=[]
+        numkb=[]
+        dateinstall=[]
+        input_computer=[]
+        result = []
+        res = self.db.execute(sqlrequest)
+        for element in res:
+            uuid_inventory.append( element.uuid_inventory )
+            hostname.append( element.hostname )
+            entity.append( element.entity )
+            kb.append( element.kb )
+            numkb.append( element.numkb )
+            dateinstall.append( element.dateinstall )
+            input_computer.append( element.input_computer )
+        result.append(uuid_inventory)
+        result.append(hostname)
+        result.append(entity)
+        result.append(kb)
+        result.append(numkb)
+        result.append(dateinstall)
+        result.append(input_computer)
+        return result
+
+
     @DatabaseHelper._sessionm
     def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
         criterion = filter['criterion']
@@ -5720,36 +5770,31 @@ ORDER BY
         return result1
 
 
-
     @DatabaseHelper._sessionm
-    def get_computer_count_for_dashboard(self, session, count=True):
-        inventory_filtered_machines = self.__filter_on(session.query(Machine.id).filter(Machine.is_deleted == 0, \
-                                                                                        Machine.is_template == 0)).all()
-        ret = self.__getRestrictedComputersListQuery(None, '', session, True, False)
+    def get_ancestors(self, session, uuid):
+        id = uuid.split("UUID")[1]
+        # Get the entity ancestors
+        query = session.query(Entities.ancestors_cache).filter(Entities.id == id).first()
+        # query can have 3 kind of datas:
+        # (None) None value (this is the case for the root entity )
+        # ('[0, 1]') list serialized, if the entity has less than 3 ancestors
+        # ('{"0":"0", "1": "1", "2":"2"}') dict serialized, if the entity has more than 2 ancestors
 
-        inventory_filtered_machines = ['UUID%s'%id[0] for id in inventory_filtered_machines]
-        online_machines = XmppMasterDatabase().get_machines_online_for_dashboard()
-
-        unregistred_online_machine = []
-        registered_online_machine = []
-        registered_offline_machine = []
-
-        registered_online_uuid_list = []
-        for machine in online_machines:
-            if machine['uuid'] is None or machine['uuid'] == "":
-                unregistred_online_machine.append(machine['macaddress'])
-            else:
-                registered_online_uuid_list.append(machine['uuid'])
-                registered_online_machine.append(machine['uuid'])
-
-        for machine in inventory_filtered_machines:
-            if machine not in registered_online_machine:
-                registered_offline_machine.append(machine)
-
-        if count is True:
-            return {"registered" : len(inventory_filtered_machines), "online": len(registered_online_machine), 'offline': len(registered_offline_machine), 'unregistered': len(unregistred_online_machine)}
+        if query[0] is not None:
+            # Parse the elements in the initial order
+            decoder = json.JSONDecoder(object_pairs_hook=OrderedDict)
+            query = decoder.decode(query[0])
         else:
-            return {"registered" : inventory_filtered_machines, "online": registered_online_machine, 'offline': registered_offline_machine,'unregistered': unregistred_online_machine}
+            query = []
+
+        result = []
+        if type(query) is dict:
+            for key in query:
+                # get the key, tke key = the value
+                result.append(int(key))
+        else:
+            result = [int(id) for id in query]
+        return result
 
 
     @DatabaseHelper._sessionm
