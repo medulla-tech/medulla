@@ -12,7 +12,7 @@ import logging
 import os
 from wakeonlan import wol
 import ConfigParser
-
+from netifaces import interfaces, ifaddresses, AF_INET
 logger = logging.getLogger()
 
 # plugin run wake on lan on mac address
@@ -30,10 +30,20 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
         logger.debug("compteurcallplugin %s" % compteurcallplugin)
         if compteurcallplugin == 0:
             read_conf_wol(xmppobject)
-            xmppobject.wakeonlantargetsubnet=True
+            xmppobject.brodcastwol=[]
+            for ifaceName in interfaces():
+                addrs = ifaddresses(ifaceName)
+                k=addrs[AF_INET]
+                for t in k:
+                    if 'broadcast' not in t:
+                        break
+                    if 'netmask' not in t:
+                        break
+                    if 'addr' not in t:
+                        break
+                    xmppobject.brodcastwol.append(t['broadcast'])
     except:
         logger.error("plugin %s\n%s" % (plugin['NAME'], traceback.format_exc()))
-
 
     senddataplugin = {  'action': 'wakeonlangroup',
                         'sessionid': sessionid,
@@ -100,9 +110,18 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                             historymessage(xmppobject, sessionid, msglog)
                             logger.debug(msglog)
                 else:
-                    wol.send_magic_packet(*data['macadress'], port=xmppobject.wakeonlangroupport)
+                    for z in xmppobject.brodcastwol:
+                        try:
+                            wol.send_magic_packet(*data['macadress'],
+                                                    ip_address=z,
+                                                    port=xmppobject.wakeonlangroupport)
+                        except Exception as e:
+                            if "Connection refused" in str(e):
+                                logger.debug('WOL impossible on broadcast %s' % z)
+                                xmppobject.brodcastwol.remove(z)
+
                     msglog = "A local lan WOL request have been sent to the" \
-                            " mac address %s and port %s" % (data['macadress'],
+                            "(display only for 10 adress) mac address %s and port %s" % (data['macadress'][:10],
                                                              xmppobject.wakeonlangroupport)
                     historymessage(xmppobject, sessionid, msglog)
                     logger.debug(msglog)
@@ -177,7 +196,6 @@ def read_conf_wol(xmppobject):
 
             if Config.has_option("parameters", "targetsubnet"):
                 xmppobject.wakeonlantargetsubnet = Config.getboolean('parameters', 'targetsubnet')
-                logger.info("parameters targetsubnet ignored : targetsubnet is True")
         if not xmppobject.wakeonlangroupremotelan:
             logger.info("parameters is\nremotelan %s"\
                 "\nwakeonlanport %s\ntargetsubnet %s" %(xmppobject.wakeonlangroupremotelan,
