@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
+# file pluginsmaster/plugin_wakeonlangroup.py
 import json
 import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -110,6 +111,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                             historymessage(xmppobject, sessionid, msglog)
                             logger.debug(msglog)
                 else:
+                    dellist=[]
                     for z in xmppobject.brodcastwol:
                         try:
                             wol.send_magic_packet(*data['macadress'],
@@ -118,7 +120,9 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                         except Exception as e:
                             if "Connection refused" in str(e):
                                 logger.debug('WOL impossible on broadcast %s' % z)
-                                xmppobject.brodcastwol.remove(z)
+                                dellist.append(z)
+                    for t in dellist:
+                        xmppobject.brodcastwol.remove(t)
 
                     msglog = "A local lan WOL request have been sent to the" \
                             "(display only for 10 adress) mac address %s and port %s" % (data['macadress'][:10],

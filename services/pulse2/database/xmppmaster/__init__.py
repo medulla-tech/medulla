@@ -7777,7 +7777,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND xmppmaster.network.broadcast IS NOT NULL;"""%re
         else:
             return None
-        logging.getLogger().error("JFKJFK SQL %s" %sql)
         result = session.execute(sql)
         session.commit()
         session.flush()
