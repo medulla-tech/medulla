@@ -291,7 +291,7 @@ if(isset($arraynotdeploy))
       $date = (array)$deploy['date_start'];
       $arraydeploy['tabdeploy']['start'][] = substr($date['scalar'], 0, 4).'-'.substr($date['scalar'], 4, 2).'-'.substr($date['scalar'], 6, 2).' '.substr($date['scalar'], 9);
       //TODO
-      $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline</span>';
+      $arraystate[] = '<span style="font-weight : bold; color : orange;">Pending</span>';
       $tolmach[] = $deploy['nb_machines'];
       $processmachr[] = '0 (0%)';
       $successmach[] = '0 (0%)';
