@@ -322,10 +322,10 @@ if(isset($arraynotdeploy))
       //TODO
       if ($deploy['deployment_intervals'] != "")
       {
-        $arraystate[] = '<span style="font-weight: bold; color : orange;">Offline<br><span style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Contraint :","xmppmaster").
+        $arraystate[] = '<span style="font-weight: bold; color : orange;">Pending<br><span style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Contraint :","xmppmaster").
         $deploy['deployment_intervals'].'</span></span>';
       }else{
-          $arraystate[] = '<span style="font-weight : bold; color : orange;">Offline</span>';
+          $arraystate[] = '<span style="font-weight : bold; color : orange;">Pending</span>';
       }
       $tolmach[] = $deploy['nb_machines'];
       $processmachr[] = '0 (0%)';
