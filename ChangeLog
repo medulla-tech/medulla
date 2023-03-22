@@ -1,23 +1,31 @@
-Pulse 2 4.6.10
+Pulse 2 4.6.11
 =============
-* [BUGFIX]  Fix displaying the config files
-* [BUGFIX]  Fix Acls in the Audit page. They were wrong for ban/unban actions
-* [BUGFIX]  Fix search field in dependencies in the package page.
-* [BUGFIX]  Fix dependencies order when creating/modifying a package.
-* [BUGFIX]  Fix displaying the Audit page for a group deploiement.
-* [BUGFIX]  Fix restarting stalled deploiements
-* [BUGFIX]  Fix restarting blocked deploiements
-* [BUGFIX]  Fix counting machines connected on ARS.
-* [BUGFIX]  Fix WOL on single machines and QA
-* [BUGFIX]  Fix restart of deployment if transfer has already started
-* [BUGFIX]  Fix deleting machines not available in glpi
+* [FEATURE] Improved backup management using urbackup
+* [FEATURE] New OS Updates feature
+* [FEATURE] New Kiosk feature
+* [FEATURE] Packaging feature allows to define return codes different to 0 and 1 for branching to other steps
+* [FEATURE] Ability to restart a failed deployment from the interface
+* [FEATURE] Improve Admin view when connected user is root
+* [FEATURE] Add itsm-ng support
+* [BUGFIX]  Fix diplay of config files
+* [BUGFIX]  Support Optiplex 3050 in iPXE
+* [BUGFIX]  Fix display of the Master list page when there is a lot of
+computers listed.
+* [BUGFIX]  Fix php support up to 7.4 in the imaging page.
+* [BUGFIX]  Fix modification of packages and correctness of xmppdeploy.json
+* [BUGFIX]  Fix traceback when displaying results of a quick action executed on an uninventoried machine
+* [BUGFIX]  Fix searching from relay jid, hostname or uuid in deploy audit log
+* [BUGFIX]  Fix the History menu. It was displayed twice.
 
-Pulse 2 4.6.9
+Pulse 2 4.6.10
 =============
 * [BUGFIX]  Fix displaying machines in the GLPI view
 * [BUGFIX]  Fix displaying of teams in Audit
-* [BUGFIX]  Fix display of the Audit page. Sometimes the page was empty
-* [BUGFIX]  Remove refresh of audit page when deploy was falling.
+* [BUGFIX]  Fix displaying package order when editing a package
+* [BUGFIX]  Fix deleting machines not available in glpi
+* [BUGFIX]  Fix creation of the reversessh in backuppc
+* [BUGFIX]  Fix removing computers not on glpi anymore
+* [BUGFIX]  Fix computer default name in sysprep configuration page
 
 Pulse 2 4.6.9
 =============

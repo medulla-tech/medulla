@@ -1,26 +1,8 @@
 # -*- coding: utf-8; -*-
-#
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com/
-#
-# $Id$
-#
-# This file is part of Pulse 2, http://pulse2.mandriva.org
-#
-# Pulse 2 is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# Pulse 2 is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 Provides access to MSC database
@@ -28,7 +10,7 @@ Provides access to MSC database
 
 # standard modules
 import time
-
+import re
 # SqlAlchemy
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
                        Integer, ForeignKey, select, asc, or_, desc, func, not_, distinct
@@ -73,6 +55,7 @@ class MscDatabase(DatabaseHelper):
             return None
 
         self.logger.info("Msc database is connecting")
+        self.pattern = re.compile("^([0-9]{1,2})[-;'.|@#\"]{1}[0-9]{1,2}$")
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, \
                 pool_size = self.config.dbpoolsize, pool_timeout = self.config.dbpooltimeout, convert_unicode = True)
@@ -888,6 +871,35 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         session.close()
 
+    @DatabaseHelper._sessionm
+    def test_deploy_in_partiel_slot(self, session, title):
+        """
+        This function is used to check if 1 partial slot constraint does not prohibit deploying on 1 machine
+        Args:
+            session: The SQL Alchemy session
+            title: le nom du deployement.
+            Returns:
+                True la machine peut etre deploye
+                False la machine ne peut pas etre deploye.
+        """
+        datenow = datetime.datetime.now()
+        hactuel = int(datenow.strftime('%H'))
+        query = session.query(Commands.deployment_intervals).filter(Commands.title.like(title))
+        nb = query.count()
+        if nb == 0 :
+            return True
+        res = query.first()
+        if not res:
+            return True
+        # analyse si deploy true or false
+        tb=[re.sub("[-'*;|@#\"]{1}", "-", x) for x in res.deployment_intervals.split(',') if self.pattern.match(x.strip())]
+        for c in tb:
+            start, end = c.split('-')
+            if hactuel >= int(start) and hactuel <= int(end):
+                # on a trouver 1 cas on deploy
+                return True
+        return False
+
 
     @DatabaseHelper._sessionm
     def deployxmpp(self, session, limitnbr=100):
@@ -995,7 +1007,16 @@ class MscDatabase(DatabaseHelper):
         return nb_machine_select_for_deploy_cycle, updatemachine
 
     @DatabaseHelper._sessionm
-    def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch, minimum, maximum, filt):
+    def get_conrainte_slot_deployment_commands(self,session, commands):
+        res = session.query(Commands.id, Commands.deployment_intervals).filter(Commands.id.in_(commands)).all()
+        result={}
+        for element in res:
+            result[str(element[0])] = element[1]
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch,
+                                             minimum, maximum, filt, typedeploy="command"):
         """
         This function is used to retrieve not yet done deployements of a team.
         This team is found based on the login of a member.
@@ -1031,7 +1052,8 @@ class MscDatabase(DatabaseHelper):
                               Target.target_name,
                               Target.target_uuid,
                               Target.id_group,
-                              Target.target_macaddr)\
+                              Target.target_macaddr,
+                              Commands.deployment_intervals)\
         .join(CommandsOnHost, Commands.id == CommandsOnHost.fk_commands)\
         .join(Target, Target.id == CommandsOnHost.fk_target)\
         .join(CommandsOnHostPhase, CommandsOnHostPhase.fk_commands_on_host == CommandsOnHost.id)\
@@ -1039,6 +1061,10 @@ class MscDatabase(DatabaseHelper):
         .filter(CommandsOnHostPhase.state == 'ready')\
         .filter(Commands.end_date > datereduced)\
         .filter(Commands.type != 2)
+        if typedeploy != "command":
+            query = query.filter(Commands.title.like("%%-@upd@%%"))
+        else:
+            query = query.filter(Commands.creator.in_(list_login))
 
         if list_login:
             query = query.filter(Commands.creator.in_(list_login))
@@ -1082,7 +1108,8 @@ class MscDatabase(DatabaseHelper):
                            'machine_name':element[8],
                            'uuid_inventory':element[9],
                            'gid': element[10],
-                           'mac_address': element[11]})
+                           'mac_address': element[11],
+                            'deployment_intervals' : element[12]})
         return result
 
     def deleteCommand(self, cmd_id):
@@ -2310,10 +2337,10 @@ class MscDatabase(DatabaseHelper):
             t= {    "fk_target" : x[0],
                     "startdate" : x[1].strftime('%Y-%m-%d %H:%M:%S'),
                     "enddate" : x[2].strftime('%Y-%m-%d %H:%M:%S'),
-                    "next_launch_date" : x[3].strftime('%Y-%m-%d %H:%M:%S'),
+                    "next_launch_date" : x[3].strftime('%Y-%m-%d %H:%M:%S') if x[3] is not None else "",
                     "start_dateunixtime" : time.mktime(x[1].timetuple()),
                     "end_dateunixtime" :time.mktime(x[2].timetuple()),
-                    "next_launch_dateunixtime" :time.mktime(x[3].timetuple())
+                    "next_launch_dateunixtime" :time.mktime(x[3].timetuple()) if x[3] is not None else ""
             }
             ret.append(t)
         return ret

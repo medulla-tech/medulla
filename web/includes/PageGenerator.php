@@ -41,7 +41,7 @@ function echo_obj($obj) {
         echo nl2br($obj->__toString());
     } else if (is_bool($obj)) {
         if ($obj)
-            echo '<img src="img/common/icn_yes.gif" alt="yes" />';
+            echo '<img src="img/other/yes.svg" alt="yes" width="25" height="25" />';
     }
     else {
         echo nl2br($obj);
@@ -292,6 +292,7 @@ class ActionPopupItem extends ActionItem {
         } else {
             $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($param);
         }
+
         echo "<li class=\"" . $this->classCss . "\">";
         echo "<a title=\"" . $this->desc . "\" href=\"main.php?module=" . $this->module . "&amp;submod=" . $this->submod . "&amp;action=" . $this->action . $urlChunk . "\"";
         echo " onclick=\"PopupWindow(event,'main.php?module=" . $this->module . "&amp;submod=" . $this->submod . "&amp;action=" . $this->action . $urlChunk . "', " . $this->width . "); return false;\">&nbsp;</a>";
@@ -531,6 +532,13 @@ class ListInfos extends HtmlElement {
     }
 
     /**
+     * set cssids for each row
+     */
+    function setCssIds($a_names) {
+        $this->cssIds = $a_names;
+    }
+
+    /**
      * set a cssclass for each row
      */
     function setCssClasses($a_names) {
@@ -663,17 +671,25 @@ class ListInfos extends HtmlElement {
         for ($idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
             if (($this->start - $idx) % 2) {
                 echo "<tr";
+                if (!empty($this->cssIds[$idx])) {
+                    echo " id='". $this->cssIds[$idx]."'";
+                }
                 if (!empty($this->cssClasses[$idx])) {
                     echo " class=\"" . $this->cssClasses[$idx] . "\"";
                 }
                 echo ">";
             } else {
-                echo "<tr class=\"alternate";
+                echo "<tr";
+                if (!empty($this->cssIds[$idx])) {
+                    echo " id='". $this->cssIds[$idx]."'";
+                }
+                echo " class=\"alternate";
                 if (!empty($this->cssClasses[$idx])) {
                     echo " " . $this->cssClasses[$idx];
                 }
                 echo "\">";
             }
+            
 
             //link to first action (if we have an action)
             if (count($this->arrAction) && $this->firstColumnActionLink && !in_array($idx, $this->dissociateColumnsActionLink)) {
@@ -1255,7 +1271,7 @@ class AjaxFilter extends HtmlElement {
         $root = $conf["global"]["root"];
         $maxperpage = $conf["global"]["maxperpage"];
         ?>
-        <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;" style="margin-bottom:20px;">
+        <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;" style="margin-bottom:20px;margin-top:20px;">
 
             <div id="loader<?php echo $this->formid ?>">
                 <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
@@ -1794,7 +1810,7 @@ class SideMenuItem {
 
         if ($active) {
             return "#sidebar ul.$this->submod li#$this->cssId a {
-                        background-color: #2295d2;
+                        background-color: #8CB63C;
                         color: #fff;
                         $bgi_active
             }";

@@ -32,7 +32,7 @@ foreach ($submods as $submod) {
     $submod = $mod->getSubmod($submod);
     foreach ($submod->getPages() as $page) {
         if ($page->hasAccessAndVisible($mod, $submod)) {
-            $item = new SideMenuItem($page->getDescription(), $mod->getName(), $submod->getName(), $page->getAction(), $page->getImg("active"), $page->getImg("default"));
+            $item = new SideMenuItem($page->getDescription(), $mod->getName(), $submod->getName(), $page->getAction());
             $item->cssId = join("_", array($mod->getName(), $submod->getName(), $page->getAction()));
             $sidemenu->addSideMenuItem($item);
         }

@@ -3,10 +3,11 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
+ * (c) 2022 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,6 +60,8 @@ $f->add(
         new TrFormElement(_T("Menu language", "imaging"), $language)
 );
 
+$pxe_login_label = _T("PXE Login", "imaging");
+$pxe_login_label_desc = _T('Leave this field empty to unset PXE Password', 'imaging');
 $pxe_password_label = _T('PXE Password', 'imaging');
 $pxe_password_label_desc = _T('Leave this field empty to unset PXE Password', 'imaging');
 $pxe_password_label = <<<EOS
@@ -70,6 +73,10 @@ $pxe_password_label = <<<EOS
 
 </a>
 EOS;
+
+$f->add(
+        new TrFormElement($pxe_login_label, new InputTpl('pxe_login')), array("value" => xmlrpc_getPXELogin($location) == '' ? '' : xmlrpc_getPXELogin($location))
+);
 
 $f->add(
         new TrFormElement($pxe_password_label, new PasswordTpl('pxe_password')), array("value" => xmlrpc_getPXEPasswordHash($location) == '' ? '' : '.......')
@@ -94,7 +101,7 @@ $f->add(
         new TrFormElement(_T('Default menu label', 'imaging'), new InputTpl("default_m_label")), array("value" => $default_menu['default_name'])
 );
 $f->add(
-        new TrFormElement(_T('Default menu timeout', 'imaging'), new InputTpl("default_m_timeout")), array("value" => $default_menu['timeout'])
+        new TrFormElement(_T('Default menu timeout', 'imaging')." (s.)", new InputTpl("default_m_timeout")), array("value" => $default_menu['timeout'])
 );
 if ($default_menu["hidden_menu"]) {
     $hidden_menu_value = 'CHECKED';

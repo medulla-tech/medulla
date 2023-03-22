@@ -1,25 +1,8 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 # -*- coding: utf-8; -*-
 #
-# (c) 2018 siveo, http://www.siveo.net
-#
-# This file is part of Pulse 2, http://www.siveo.net
-#
-# Pulse 2 is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# Pulse 2 is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
-
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.base.config import BasePluginConfig
 
@@ -160,7 +143,7 @@ class TreeOU(object):
         get_path generate the "path" between the root tree and the actual node.
 
         Returns:
-            String of the path from root tree and the pointed node.
+            list of the path from root tree and the pointed node.
         """
         canonical = []
         temp = self
@@ -188,7 +171,7 @@ class TreeOU(object):
         config = PluginConfigFactory.new(BasePluginConfig, "base")
         if config.has_section('authentication_externalldap'):
             # Get the parameters from the config file
-            suffix = config.get('authentication_externalldap', 'suffix')
+            suffix = config.get('authentication_externalldap', 'suffix_ou')
 
             ou_list = ou_string.split('/')
             ou_list.reverse()
@@ -203,3 +186,28 @@ class TreeOU(object):
 
         else:
             return False
+
+    def recursive_paths(self, list):
+        """This method returns the list of the paths for all the childrens.
+        Params:
+            list : reference to the final list.
+        Returns:
+            The list of all the childrens
+        """
+        for children in self.child:
+            if children is not None:
+                list.append("/".join(children.get_path()))
+                children.recursive_paths(list)
+        return list
+
+    def recursive_parent(self, list):
+        """This method returns the list of the parents recursively.
+        Params:
+            list: reference to the final list.
+        Returns:
+            The list of all the parents in canonical format (/parent1/parent2).
+        """
+        if self.parent  is not None:
+            list.append("/".join(self.parent.get_path()))
+            self.parent.recursive_parent(list)
+        return list

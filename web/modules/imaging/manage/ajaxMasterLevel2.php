@@ -74,7 +74,7 @@ foreach ($masters as $master) {
         $addActions[] = $delAction;
     }
     $list_params[] = $l_params;
-    $a_label[] = sprintf("%s%s", '<img src="modules/imaging/graph/images/imaging-action.png" style="vertical-align: middle" /> ', $master['name']);
+    $a_label[] = sprintf("%s%s", '<img src="img/other/imagingscript_rw.svg" style="vertical-align: middle" width="25" height="25" /> ', $master['name']);
     $a_desc[] = $master['desc'];
     $a_date[] = _toDate($master['creation_date']);
     $a_size[] = humanReadable($master['size']);

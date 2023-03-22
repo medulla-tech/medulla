@@ -1,23 +1,8 @@
 # -*- coding: utf-8; -*-
-#
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2012 Mandriva, http://www.mandriva.com
-# (c) 2021 Siveo, http://siveo.net
-#
-# This file is part of Management Console (MMC).
-#
-# MMC is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MMC is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# SPDX-FileCopyrightText: 2007-2012 Mandriva, http://www.mandriva.com/
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 MMC Dashboard panels
@@ -147,4 +132,12 @@ class DeploymentsLaunchedPanel(Panel):
 
 class AgentsPanel(Panel):
     """This class is called by the Agents widget from the dashboard"""
+    pass
+
+class AlertsPanel(Panel):
+    """This class is called by the Alerts widget from the dashboard"""
+    pass
+
+class AlertsEntityPanel(Panel):
+    """This class is called by the Alerts Entity widget from the dashboard"""
     pass

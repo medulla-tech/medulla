@@ -22,111 +22,6 @@
  *
  * File customQA.php
  */
-?>
-<style>
-li.folder a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/folder.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-}
-
-li.folderg a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/folder.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-       filter: grayscale(50%);
-       -webkit-filter: grayscale(50%);
-       -moz-filter: grayscale(50%);
-       opacity:0.5;
-}
-li.console a {
-       padding: 3px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/console.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-}
-
-li.consoleg a {
-       padding: 3px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/console.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-       filter: grayscale(50%);
-       -webkit-filter: grayscale(50%);
-       -moz-filter: grayscale(50%);
-       opacity:0.5;
-}
-li.quick a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/quick.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-}
-
-li.guaca a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/guaca.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-}
-
-li.guacag a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/guaca.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-       filter: grayscale(50%);
-       -webkit-filter: grayscale(50%);
-       -moz-filter: grayscale(50%);
-       opacity:0.5;
-}
-li.quickg a {
-       padding: 0px 0px  5px 22px;
-       margin: 0 0px 0 0px;
-       background-image: url("modules/base/graph/computers/quick.png");
-       background-repeat: no-repeat;
-       background-position: left top;
-       line-height: 18px;
-       text-decoration: none;
-       color: #FFF;
-       filter: grayscale(50%);
-       -webkit-filter: grayscale(50%);
-       -moz-filter: grayscale(50%);
-       opacity:0.5;
-}
-
-</style>
-<?php
 
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
@@ -139,11 +34,10 @@ echo "<br><br><br>";
     $jid  = isset($_GET['jid']) ? $_GET['jid'] : ( isset($_POST['jid']) ? $_POST['jid'] : "");
     $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ?  xmlrpc_getjidMachinefromuuid( $uuid ) : $jid);
     $ma = xmlrpc_getMachinefromjid($machine);
-
+    $jid = isset($ma['jid']) ? $ma['jid']   : $jid;
     if (isset($_POST["bcreate"])){
         header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/editfileconf", array()));
     }
-
 
 $param = array(
     "cn" => $_GET['cn'],
@@ -152,7 +46,10 @@ $param = array(
     "entity" => $_GET['entity'],
     "owner" => $_GET['owner'],
     "user" => $_GET['user'],
-    "os" => $_GET['os']
+    "os" => $_GET['os'],
+    "jid" => $jid,
+    "machjid" => $ma['jid'],
+    "machine" => $machine
 );
 
     $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxFilterfileconf"),"container", $param);

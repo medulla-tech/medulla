@@ -1,26 +1,8 @@
 # -*- coding: utf-8; -*-
-#
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2010 Mandriva, http://www.mandriva.com/
-#
-# $Id$
-#
-# This file is part of Pulse 2, http://pulse2.mandriva.org
-#
-# Pulse 2 is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# Pulse 2 is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
+# SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 Database class for imaging
@@ -3540,6 +3522,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         passphrase = '$6$DzmCpUs3$'
         return crypt.crypt(password, passphrase)
 
+    def getPXELogin(self, location_uuid):
+        session = create_session()
+        login = session.query(Entity.pxe_login).filter(Entity.uuid == location_uuid).scalar()
+        session.close()
+        return login
+
     def getPXEPasswordHash(self, location_uuid):
         session = create_session()
         password = session.query(Entity.pxe_password).filter(Entity.uuid == location_uuid).scalar()
@@ -3550,8 +3538,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         try:
             location = session.query(Entity).filter(Entity.uuid == uuid).one()
+            if 'pxe_login' in params:
+                location.pxe_login = params['pxe_login']
             if 'pxe_password' in params:
-                location.pxe_password = self.__sha512_crypt_password(params['pxe_password'])
+                #location.pxe_password = self.__sha512_crypt_password(params['pxe_password'])
+                location.pxe_password = params['pxe_password']
             if 'pxe_keymap' in params:
                 location.pxe_keymap = params['pxe_keymap']
             elif 'language' in params:

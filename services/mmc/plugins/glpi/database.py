@@ -1,24 +1,8 @@
 # -*- coding: utf-8; -*-
-#
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2009 Mandriva, http://www.mandriva.com
-#
-# $Id$
-#
-# This file is part of Mandriva Management Console (MMC).
-#
-# MMC is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MMC is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# SPDX-FileCopyrightText:2007-2014 Mandriva, http://www.mandriva.com
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 """
 This module provides the methods to access the database, it's a wrapper to call the good backend
@@ -27,10 +11,13 @@ depending on the version of the database.
 
 # TODO rename location into entity (and locations in location)
 from mmc.plugins.glpi.config import GlpiConfig
-from mmc.plugins.glpi.database_084 import  Glpi084
+from mmc.plugins.glpi.database_itsm_ng_14 import Itsm_ng14
+from mmc.plugins.glpi.database_084 import Glpi084
 from mmc.plugins.glpi.database_92 import Glpi92
+from mmc.plugins.glpi.database_93 import Glpi93
 from mmc.plugins.glpi.database_94 import Glpi94
 from mmc.plugins.glpi.database_95 import Glpi95
+from mmc.plugins.glpi.database_100 import Glpi100
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 
@@ -56,14 +43,20 @@ class Glpi(DyngroupDatabaseHelper):
         self.config = GlpiConfig("glpi", conffile)
 
         # we choose the good backend for the database
-        if Glpi084().try_activation(self.config):
+        if Itsm_ng14().try_activation(self.config):
+            self.database = Itsm_ng14()
+        elif  Glpi084().try_activation(self.config):
             self.database = Glpi084()
         elif Glpi92().try_activation(self.config):
             self.database = Glpi92()
+        elif Glpi93().try_activation(self.config):
+            self.database = Glpi93()
         elif Glpi94().try_activation(self.config):
             self.database = Glpi94()
         elif Glpi95().try_activation(self.config):
             self.database = Glpi95()
+        elif Glpi100().try_activation(self.config):
+            self.database = Glpi100()
         else:
             self.logger.warn("Can't load the right database backend for your version of GLPI")
             return False

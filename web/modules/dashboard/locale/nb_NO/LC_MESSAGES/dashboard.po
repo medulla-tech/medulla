@@ -4,16 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2020
+# Nicolas Lécureuil <neoclust@mageia.org>, 2022
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-01 13:52+0200\n"
+"POT-Creation-Date: 2022-11-14 15:37+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
-"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2020\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,39 +22,47 @@ msgstr ""
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/dashboard/infoPackage.inc.php:36
-#: modules/dashboard/infoPackage.inc.php:40
-#: modules/dashboard/infoPackage.inc.php:46
+#: modules/dashboard/infoPackage.inc.php:37
+#: modules/dashboard/infoPackage.inc.php:41
+#: modules/dashboard/infoPackage.inc.php:47
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: modules/dashboard/infoPackage.inc.php:51
+#: modules/dashboard/infoPackage.inc.php:52
 msgid "Panels"
 msgstr "Paneler"
 
-#: modules/dashboard/infoPackage.inc.php:55
+#: modules/dashboard/infoPackage.inc.php:56
 msgid "Session Panels"
 msgstr "Øktpanel"
 
-#: modules/dashboard/infoPackage.inc.php:60
+#: modules/dashboard/infoPackage.inc.php:61
 msgid "Computers Online Panel"
 msgstr "Panel for aktive maskiner"
 
-#: modules/dashboard/infoPackage.inc.php:63
+#: modules/dashboard/infoPackage.inc.php:64
 msgid "Space Panel"
-msgstr ""
+msgstr "Mellomromspanel"
 
-#: modules/dashboard/infoPackage.inc.php:66
+#: modules/dashboard/infoPackage.inc.php:67
 msgid "General Panel"
-msgstr ""
+msgstr "Generelt panel"
 
-#: modules/dashboard/infoPackage.inc.php:69
+#: modules/dashboard/infoPackage.inc.php:70
 msgid "Backup Panel"
-msgstr ""
+msgstr "Sikkerhetskopieringspanel"
 
-#: modules/dashboard/infoPackage.inc.php:72
+#: modules/dashboard/infoPackage.inc.php:73
 msgid "Update Panel"
-msgstr ""
+msgstr "Oppdateringspanel"
+
+#: modules/dashboard/infoPackage.inc.php:76
+msgid "Alerts Panel"
+msgstr "Varslingspanel"
+
+#: modules/dashboard/infoPackage.inc.php:79
+msgid "Alerts by Entity Panel"
+msgstr "Varslingspanel for enheter"
 
 #: modules/dashboard/includes/panels/space.inc.php:28
 msgid "Disk usage"
@@ -120,13 +129,56 @@ msgstr "Ikke støttet"
 msgid "Create a group"
 msgstr "Lag gruppe"
 
+#: modules/dashboard/includes/panels/alertsentity.inc.php:28
+msgid "Alerts by Entity"
+msgstr "Varsler etter enheter"
+
+#: modules/dashboard/includes/panels/alertsentity.inc.php:49
+#: modules/dashboard/includes/panels/alerts.inc.php:49
+msgid "Detail"
+msgstr "Detalj"
+
+#: modules/dashboard/includes/panels/alertsentity.inc.php:50
+#: modules/dashboard/includes/panels/alerts.inc.php:50
+msgid "Acknowledge"
+msgstr "Anerkjenne"
+
+#: modules/dashboard/includes/panels/alertsentity.inc.php:54
+#: modules/dashboard/includes/panels/alerts.inc.php:54
+msgid "Status"
+msgstr "Status"
+
+#: modules/dashboard/includes/panels/alertsentity.inc.php:55
+#: modules/dashboard/includes/panels/alerts.inc.php:55
+msgid "Date"
+msgstr "Dato"
+
+#: modules/dashboard/includes/panels/alertsentity.inc.php:56
+#: modules/dashboard/includes/panels/alerts.inc.php:56
+msgid "Evenement"
+msgstr "Begivenhet"
+
+#: modules/dashboard/includes/panels/alertsentity.inc.php:57
+#: modules/dashboard/includes/panels/alerts.inc.php:57
+msgid "Machine"
+msgstr "Maskin"
+
+#: modules/dashboard/includes/panels/alertsentity.inc.php:70
+#: modules/dashboard/includes/panels/alerts.inc.php:70
+msgid "No alerts"
+msgstr "Ingen varsler"
+
 #: modules/dashboard/includes/panels/agents.inc.php:30
 msgid "Agents"
-msgstr ""
+msgstr "Agenter"
 
 #: modules/dashboard/includes/panels/agents.inc.php:52
 msgid "Machines in Pulse from "
-msgstr ""
+msgstr "Maskiner i Pulse fra"
+
+#: modules/dashboard/includes/panels/alerts.inc.php:28
+msgid "Alerts"
+msgstr "Varsler"
 
 #: modules/dashboard/includes/panels/plugins.inc.php:29
 msgid "Plugins loaded"
@@ -159,11 +211,11 @@ msgstr "Pulse prosesser"
 
 #: modules/dashboard/includes/panels/deploymentsLaunched.inc.php:30
 msgid "Deployments Launched"
-msgstr ""
+msgstr "Utrullinger Startet"
 
 #: modules/dashboard/includes/panels/deploymentsLaunched.inc.php:52
 msgid "Deployements launched from "
-msgstr ""
+msgstr "Utrullinger Startet fra"
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:31
 msgid "Machines Online"
@@ -191,11 +243,11 @@ msgstr "Oppdateringer er tilgjengelige"
 
 #: modules/dashboard/includes/panels/successRate.inc.php:30
 msgid "Success Rate"
-msgstr ""
+msgstr "Suksess rate"
 
 #: modules/dashboard/includes/panels/successRate.inc.php:44
 msgid "Deployment success rates for the past 6 weeks"
-msgstr ""
+msgstr "Utrullings Suksess rater for de siste 6 ukene"
 
 #: modules/dashboard/includes/panels/general.inc.php:29
 msgid "General"

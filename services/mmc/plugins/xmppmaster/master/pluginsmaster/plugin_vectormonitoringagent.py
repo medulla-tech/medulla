@@ -1,40 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
-#
-# (c) 2016-2018 siveo, http://www.siveo.net
-#
-# This file is part of Pulse 2, http://www.siveo.net
-#
-# Pulse 2 is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# Pulse 2 is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
-#
-# file pluginsmaster pluginsmaster/plugin_vectormonitoringagent.py
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 import sys
 import json
-
 import logging
-
-
 import traceback
 from pulse2.database.xmppmaster import XmppMasterDatabase
 logger = logging.getLogger()
 
-plugin = {"VERSION": "1.1", "NAME": "vectormonitoringagent", "TYPE": "master"}
+plugin = {"VERSION": "1.3", "NAME": "vectormonitoringagent", "TYPE": "master"}
 
 
 def process_system(functionname,
+                   xmppobject,
+                   msg_from,
+                   sessionid,
                    data,
                    id_machine,
                    hostname,
@@ -58,6 +40,9 @@ def process_system(functionname,
             alarm_msg = data['alarms']
         del data['alarms']
     XmppMasterDatabase().setMonitoring_device_reg(hostname,
+                                                  xmppobject,
+                                                  msg_from,
+                                                  sessionid,
                                                   id_mon_machine,
                                                   device_type,
                                                   serial,
@@ -66,8 +51,10 @@ def process_system(functionname,
                                                   json.dumps(alarm_msg),
                                                   json.dumps(data['metriques']))
 
-
-def process_nfcReader(functionname,
+def process_nfcreader(functionname,
+                      xmppobject,
+                      msg_from,
+                      sessionid,
                       data,
                       id_machine,
                       hostname,
@@ -92,6 +79,9 @@ def process_nfcReader(functionname,
             alarm_msg = data['message']
         del data['message']
     XmppMasterDatabase().setMonitoring_device_reg(hostname,
+                                                  xmppobject,
+                                                  msg_from,
+                                                  sessionid,
                                                   id_mon_machine,
                                                   device_type,
                                                   serial,
@@ -100,8 +90,10 @@ def process_nfcReader(functionname,
                                                   json.dumps(alarm_msg),
                                                   json.dumps(data['metriques']))
 
-
 def process_generic(functionname,
+                    xmppobject,
+                    msg_from,
+                    sessionid,
                     data,
                     id_machine,
                     hostname,
@@ -124,7 +116,25 @@ def process_generic(functionname,
         elif isinstance(data['message'], list):
             alarm_msg = data['message']
         del data['message']
+    logger.debug("call setMonitoring_device_reg hostname %s\n"\
+                                        " id_mon_machine %s \n"\
+                                        " device_type, %s\n"\
+                                        " serial %s \n" \
+                                        " firmware %s\n" \
+                                        " status %s\n" \
+                                        " alarm_msg %s\n" \
+                                        " metriques %s"% (hostname,
+                                                            id_mon_machine,
+                                                            device_type,
+                                                            serial,
+                                                            firmware,
+                                                            status,
+                                                            json.dumps(alarm_msg),
+                                                            json.dumps(data['metriques'])))
     XmppMasterDatabase().setMonitoring_device_reg(hostname,
+                                                  xmppobject,
+                                                  msg_from,
+                                                  sessionid,
                                                   id_mon_machine,
                                                   device_type,
                                                   serial,
@@ -133,9 +143,8 @@ def process_generic(functionname,
                                                   json.dumps(alarm_msg),
                                                   json.dumps(data['metriques']))
 
-
 def callFunction(functionname, *args, **kwargs):
-    functionname = "process_%s" % functionname
+    functionname = "process_%s" % functionname.lower()
     logger.debug("**call function %s %s %s" % (functionname, args, kwargs))
     thismodule = sys.modules[__name__]
     try:
@@ -146,10 +155,9 @@ def callFunction(functionname, *args, **kwargs):
     except Exception:
         logger.error("\n%s" % (traceback.format_exc()))
 
-
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("#################################################")
-    logger.debug(plugin)
+    logger.debug("call plugin %s from %s" % (plugin,message['from']))
     logger.debug(json.dumps(data, indent=4))
     logger.debug("#################################################")
 
@@ -164,46 +172,29 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
 
     machine = XmppMasterDatabase().getMachinefromjid(message['from'])
     logger.debug("Machine %s %s" % (machine['id'], machine['hostname']))
-    if "subaction" in data:
-        if data['subaction'] == "terminalInformations":
-            # load version agent agentversion
-            statusmsg = ""
-            if 'status' in data:
-                statusmsg = json.dumps(data['status'])
-            id_mom_machine = XmppMasterDatabase().setMonitoring_machine(
-                                 machine['id'],
-                                 machine['hostname'],
-                                 date=data['date'],
-                                 statusmsg=statusmsg)
-            if 'device_service' in data:
-                for element in data['device_service']:
-                    for devicename in element:
-                        # call process functions defined
-                        if devicename.lower() in xmppobject.typelistMonitoring_device:
-                            # globals()["process_%s"%element](data['opticalReader'])
-                            callFunction(devicename,
-                                         element[devicename],
-                                         machine['id'],
-                                         machine['hostname'],
-                                         id_mom_machine)
-        elif data['subaction'] == "terminalAlert":
-            if 'device_service' in data:
-                # load version agent agentversion
-                statusmsg = ""
-                if 'status' in data:
-                    statusmsg = json.dumps(data['status'])
-                id_mom_machine = XmppMasterDatabase().setMonitoring_machine(
-                                    machine['id'],
-                                    machine['hostname'],
-                                    date=data['date'],
-                                    statusmsg=statusmsg)
-                for element in data['device_service']:
-                    for devicename in element:
-                        # call defined process functions
-                        if devicename.lower() in xmppobject.typelistMonitoring_device:
-                            # globals()["process_%s"%element](data['opticalReader'])
-                            callFunction(devicename,
-                                         element[devicename],
-                                         machine['id'],
-                                         machine['hostname'],
-                                         id_mom_machine)
+    if "subaction" in data and \
+        data['subaction'].lower() in [ "terminalinformations", "terminalalert"]:
+        # inscription message alert depuis machine
+        statusmsg = ""
+        if 'status' in data:
+            statusmsg = json.dumps(data['status'])
+        id_mom_machine = XmppMasterDatabase().setMonitoring_machine(
+                                machine['id'],
+                                machine['hostname'],
+                                date=data['date'],
+                                statusmsg=statusmsg)
+        # for each device/service call process
+        if 'device_service' in data:
+            for element in data['device_service']:
+                for devicename in element:
+                    # call process functions defined
+                    if devicename.lower() in xmppobject.typelistMonitoring_device:
+                        # globals()["process_%s"%element](data['opticalReader'])
+                        callFunction(devicename,
+                                        xmppobject,
+                                        str(message['from']),
+                                        sessionid,
+                                        element[devicename],
+                                        machine['id'],
+                                        machine['hostname'],
+                                        id_mom_machine)

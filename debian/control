@@ -1,4 +1,4 @@
-Source: pulse2
+Source: medulla
 Section: admin
 Priority: extra
 Maintainer: Nicolas Lécureuil <nicolas.lecureuil@siveo.net>
@@ -19,12 +19,13 @@ Depends: ${misc:Depends},
          mmc-web-pkgs, python-mmc-pkgs,
          mmc-web-pulse2, python-mmc-pulse2,
          mmc-web-kiosk, python-mmc-kiosk,
-         mmc-web-backuppc, python-mmc-backuppc,
+         mmc-web-urbackup, python-mmc-urbackup,
          mmc-web-dashboard, python-mmc-dashboard,
          mmc-web-ppolicy, python-mmc-ppolicy,
          mmc-web-services, python-mmc-services,
          mmc-web-support, python-mmc-support,
          mmc-web-xmppmaster, python-mmc-xmppmaster,
+         mmc-web-updates, python-mmc-updates,
          pulse2-uuid-resolver,
          mmc-web-admin, python-mmc-admin,
          pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
@@ -166,7 +167,7 @@ Description: Pulse 2 software deployment handling service
 Package: python-mmc-pulse2
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4)
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-mmc-kiosk (= ${binary:Version}), python-mmc-updates (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4)
 Recommends: python-mmc-imaging
 Description: Pulse 2 MMC agent plugins
  Pulse 2 is Open Source computer system management for medium and large
@@ -250,6 +251,18 @@ Description: Pulse 2 BackupPC plugin for MMC agent
  organizations.
  .
  This package contains the BackupPC plugin for MMC agent.
+
+Package: python-mmc-urbackup
+Replaces: python-pulse2-common-database-urbackup
+Architecture: all
+Section: python
+Pre-Depends: urbackup-server
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1)
+Description: Pulse 2 Urbackup plugin for MMC agent
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the Urbackup plugin for MMC agent.
 
 Package: python-mmc-support
 Architecture: all
@@ -383,6 +396,15 @@ Description: Pulse 2 BackupPC plugin for MMC web interface
  .
  This package contains the BackupPC plugin for the MMC web interface.
 
+Package: mmc-web-urbackup
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 Urbackup plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the Urbackup plugin for the MMC web interface.
+
 Package: mmc-web-monitoring
 Architecture: all
 Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
@@ -431,7 +453,7 @@ Description: Pulse 2 Register PXE Service
 Package: python-mmc-xmppmaster
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4), python-sleekxmpp, python-geoip, python-dnspython, geoip-database-contrib, python-croniter
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-mmc-kiosk (= ${binary:Version}), python-mmc-updates (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4), python-sleekxmpp, python-geoip, python-dnspython, geoip-database-contrib, python-croniter
 Description: Pulse 2 MMC agent plugins
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -578,3 +600,21 @@ Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version}), ajax-php-file-manager
 Description: Xmpp mmc module
 
+Package: mmc-web-updates
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 OS Updates plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Pulse 2 MMC agent interface plugins
+
+Package: python-mmc-updates
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1)
+Description: Pulse 2 MMC agent plugins
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Pulse 2 MMC agent interface plugins.

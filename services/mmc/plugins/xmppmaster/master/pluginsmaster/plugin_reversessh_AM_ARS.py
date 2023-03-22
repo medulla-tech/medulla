@@ -1,30 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
-#
-# (c) 2020 siveo, http://www.siveo.net
-#
-# This file is part of Pulse 2, http://www.siveo.net
-#
-# Pulse 2 is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# Pulse 2 is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-# MA 02110-1301, USA.
-#
-# file pluginsmaster/plugin_reversessh_AM_ARS.py
-# this plugin can be called from quick action
-# eg : plugin_reversessh_AM_ARS@_@{ "proxyport" : 5225", "remoteport" : 9091 }
+# SPDX-FileCopyrightText: 2020-2023 Siveo <support@siveo.net>
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+"""
+this plugin can be called from quick action
+eg : plugin_reversessh_AM_ARS@_@{ "proxyport" : 5225", "remoteport" : 9091 }
+"""
 import json
-from utils import name_random
+from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import logging
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -99,7 +83,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                 proxyportars = resultatinformation['get_free_tcp_port']
             else:
                 proxyportars = proxyport
-            
+
             result = xmppobject.iqsendpulse(jidARS,
                                             {"action": "information",
                                              "data": {"listinformation": ["add_proxy_port_reverse"],
@@ -122,7 +106,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                                       }
                              }
             result = xmppobject.iqsendpulse(jidAM, structreverse, timeout)
-            
+
             del structreverse['data']['private_key_ars']
             del structreverse['data']['public_key_ars']
             structreverse['data']['uninterrupted'] = uninterrupted

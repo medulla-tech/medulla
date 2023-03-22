@@ -61,26 +61,23 @@ switch($_GET['action']){
             else{
                 xmlrpc_runXmppWolforuuid([$_GET['objectUUID']]);
             }
-            //  xmlrpc_runXmppWolforuuid($_GET['objectUUID']);
-            $groupewol[]=$_GET['objectUUID'];
-            if (!empty($groupewol)) {
-                xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send wol to presente [ Machine : \"".$_GET['cn']."\"]",
-                                                "QA",
-                                                '' ,
-                                                0,
-                                                $_GET['cn'],
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'QuickAction | WOL sent');
-            }
+            xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send wol to presente [ Machine : \"".$_GET['cn']."\"]",
+                                            "QA",
+                                            '' ,
+                                            0,
+                                            $_GET['cn'],
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'QuickAction | WOL sent');
         break;
     case "deployquickgroup":
         // work for all machines on group
         header('Content-type: application/json');
         $uuid = array();
+        $groupewol = array();
         $cn = array();
         $presence = array();
         $machine_already_present = array();
@@ -105,7 +102,7 @@ switch($_GET['action']){
             if( xmlrpc_getPresenceuuid($key) == 0 ){
                 $presence[] = 0;
                 $machine_not_present[] = $value[1]['cn'][0];
-                $groupewol[]=$key;
+                $groupewol[] = $key;
                 if ($_GET['wol']){
                     xmlrpc_synchroComputer($key, true,  false);
                 }

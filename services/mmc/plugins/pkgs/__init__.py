@@ -1,28 +1,7 @@
-# -*- coding: utf-8; -*-
-#
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2008 Mandriva
-# (c) 2017-2021 Siveo
-#
-# $Id$
-#
-# This file is part of MMC.
-#
-# MMC is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MMC is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MMC; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-# /plugins/pkgs/__init__.py
+# SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 import logging
 import os
@@ -411,6 +390,7 @@ def parsexmppjsonfile(path):
     file_put_contents(path, datastr)
 
 def generate_hash(path, package_id):
+    logger = logging.getLogger()
     source = "/var/lib/pulse2/packages/sharing/" + path + "/" + package_id
     dest = "/var/lib/pulse2/packages/hash/" + path + "/" + package_id
     BLOCK_SIZE = 65535
@@ -427,7 +407,7 @@ def generate_hash(path, package_id):
     try:
         file_hash = hashlib.new(hash_type)
     except:
-        logging.error("Wrong hash type")
+        logger.error("Wrong hash type")
 
     if not os.path.exists(dest):
         os.makedirs(dest)
@@ -439,7 +419,7 @@ def generate_hash(path, package_id):
             try:
                 file_hash = hashlib.new(hash_type)
             except:
-                logging.error("Wrong hash type")
+                logger.error("Wrong hash type")
             file_block = _file.read(BLOCK_SIZE) # Read from the file. Take in the amount declared above
             while len(file_block) > 0: # While there is still data being read from the file
                 file_hash.update(file_block) # Update the hash
@@ -464,7 +444,7 @@ def generate_hash(path, package_id):
     try:
         file_hash = hashlib.new(hash_type)
     except:
-        logging.error("Wrong hash type")
+        logger.error("Wrong hash type")
     file_hash.update(content)
     content = file_hash.hexdigest()
 
@@ -567,7 +547,7 @@ def putPackageDetail(package, need_assign=True):
     if bool(PkgsConfig("pkgs").generate_hash):
         generate_hash(package['localisation_server'], package["id"])
 
-    confjson={
+    confjson = {
         "sub_packages" : [],
         "description" : package['description'],
         "entity_id" : "0",
@@ -577,7 +557,6 @@ def putPackageDetail(package, need_assign=True):
         "creator": package["creator"],
         "creation_date": package["creation_date"],
         "editor" : package["editor"] if "editor" in package else "",
-        "edition_date" : package["edition_date"] if "edition_date" in package else "",
         "edition_date" : package["edition_date"] if "edition_date" in package else "",
         "commands" :{
             "postCommandSuccess" : {"command" : "", "name" : ""},
@@ -1452,6 +1431,8 @@ def create_msg_xmpp_quick_deploy(folder, create = False):
         logger.debug("Quick deployment package %s.xmpp found"%pathaqpackage)
 
 def save_xmpp_json(folder, json_content):
+    logger = logging.getLogger()
+    logger.debug("JSON content: %s" % json_content)
     structpackage = json.loads(json_content)
     qdeploy_generate(folder)
     keysupp = [ "actionlabel",
@@ -1521,12 +1502,20 @@ def save_xmpp_json(folder, json_content):
                 valerror = _stepforalias(stepseq['error'], vv)
                 if valerror != None:
                     stepseq['error'] = valerror
+
+    # Extracts the uuid of the folder
+    folder_list = folder.split("/")
+    uuid = folder_list[-1]
+
+    structpackage['metaparameter']['uuid'] = uuid
     json_content= json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
     # Refresh the dependencies list
     uuid = folder.split('/')[-1]
     dependencies_list = structpackage['info']['Dependency']
     pkgmanage().refresh_dependencies(uuid, dependencies_list)
+    from mmc.plugins.kiosk import update_launcher
+    update_launcher(uuid, structpackage['info']['launcher'])
 
 def _aliasforstep(step, dictstepseq):
     for t in dictstepseq:

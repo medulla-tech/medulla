@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2022 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -44,6 +44,11 @@ $page = new Page("index", _T('Profile List', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/index.php");//, array("expert" => True)
 $submod->addPage($page);
 
+$page = new Page("ajaxProfilesList", _T('Profile List', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/ajaxProfilesList.php");//, array("expert" => True)
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
 $page = new Page("add", _T('Add Profile', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/add.php");//, array("expert" => True)
 $submod->addPage($page);
@@ -67,8 +72,23 @@ $page = new Page("edit", _T('Edit Profile', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/editProfile.php");//, array("expert" => True)
 $submod->addPage($page);
 
-$page = new Page("delete", _T('Delete profile', 'kiosk'));
-$page->setFile("modules/kiosk/kiosk/index.php");//, array("expert" => True)
+$page = new Page("deleteProfile", _T('Delete Profile', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/deleteProfile.php");//, array("expert" => True)
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("acknowledges", _T('Installation Requests', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/acknowledges.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxAcknowledges", _T('Installation Requests', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/ajaxAcknowledges.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, 'noHeader'=>false));
+$submod->addPage($page);
+
+$page = new Page("modifyAcknowledge", _T('Modify Installation Authorisations', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/modifyAcknowledge.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, 'noHeader'=>false));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);

@@ -217,9 +217,9 @@ class IconeElement extends HtmlElement {
         echo ($this->alt != "") ? "alt='$this->alt'" : "alt='image' ";
         echo ($this->title != "") ? "title='$this->title' " : " ";
         if( $this->style != "")
-            echo " style='position:relative; top: 3px;cursor: s-resize;' />";
+            echo " style='position:relative; top: 3px;cursor: s-resize;' width='25' height='25' />";
         else
-            echo " style='".$this->style."' />";
+            echo " style='".$this->style."' width='25' height='25' />";
                       echo "<script type='text/javascript'>
                         jQuery('#".$this->id."').click(function(){fn_".$this->id."()});
                         </script>\n";
@@ -227,7 +227,7 @@ class IconeElement extends HtmlElement {
 }
 class Iconereply extends IconeElement {
     function Iconereply($id,$title){
-        parent::IconeElement($id,'modules/imaging/graph/images/imaging-add.png',"",$title);
+        parent::IconeElement($id,'img/other/expand.svg',"",$title);
     }
 }
 

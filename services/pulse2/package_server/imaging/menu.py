@@ -1,23 +1,7 @@
 # -*- coding: utf-8; -*-
-#
-# (c) 2009-2010 Mandriva, http://www.mandriva.com/
-#
-# $Id$
-#
-# This file is part of Pulse 2, http://pulse2.mandriva.org
-#
-# Pulse 2 is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# Pulse 2 is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-FileCopyrightText: 2009-2010 Mandriva, http://www.mandriva.com/
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 """
     client menu handling classes
@@ -33,6 +17,7 @@ import stat
 import pulse2.utils
 import pulse2.package_server.imaging.api.functions
 from pulse2.package_server.config import P2PServerCP as PackageServerConfig
+import unicodedata
 
 
 def isMenuStructure(menu):
@@ -233,7 +218,7 @@ class ImagingMenu:
                 'nosplash',
                 'noprompt',
                 'vga=788',
-                'fetch=tftp://%s/%s/fs.squashfs' % (PackageServerConfig().public_ip, self.config.imaging_api['diskless_folder'])]
+                'fetch=${url_path}fs.squashfs']
 
             # If we have a mac, we put it in kernel params
             if macaddress is not None:
@@ -262,6 +247,8 @@ class ImagingMenu:
         replacements = [
             ('##PULSE2_LANG##', PackageServerConfig().pxe_keymap, 'global'),
             ('##PULSE2_PUBLIC_IP##', PackageServerConfig().public_ip, 'global'),
+            ('##PXE_LOGIN##', PackageServerConfig().pxe_login, 'global'),
+            ('##PXE_PASSWORD##', PackageServerConfig().pxe_password, 'global'),
             ('##PULSE2_BOOTLOADER_DIR##', self.config.imaging_api['bootloader_folder'], 'global'),
             ('##PULSE2_TOOLS_DIR##', self.config.imaging_api['tools_folder'], 'global'),
             ('##PULSE2_BOOTSPLASH_FILE##', self.config.imaging_api['bootsplash_file'], 'global'),
@@ -290,6 +277,11 @@ class ImagingMenu:
                 ('##MAC##',
                  pulse2.utils.reduceMACAddress(self.mac),
                  'global'))
+            # To get normal macaddress aa:bb:cc ... instead of aa-bb-cc ...
+            replacements.append(
+                ('##MACADDRESS##',
+                self.mac,
+                'global'))
 
         output = string
         for replacement in replacements:
@@ -329,6 +321,123 @@ class ImagingMenu:
         for c in s:
             ret.append(_reptable.get(ord(c) ,c))
         return u"".join(ret)
+
+    def buildMenuIpxe(self):
+        """
+        @return: the SYSLINUX boot menu as a string encoded using CP-437
+        @rtype: str
+        """
+
+        if self.hostname != "":
+            menu_title = 'item --gap Host %s registered!\n'%self.hostname
+        else:
+            menu_title = 'item --gap Host is NOT registered!\n'
+
+        # takes global items, one by one
+        buf = '#!ipxe\n'
+        if PackageServerConfig().pxe_password != '':
+            buf += 'set loaded-menu MAIN\n'
+        else:
+            buf += 'set loaded-menu MENU\n'
+
+        buf += 'cpuid --ext 29 && set arch x86_64 || set arch i386\n'
+        buf += 'goto get_console\n'
+        buf += ':console_set\n'
+        buf += 'colour --rgb 0x00567a 1 ||\n'
+        buf += 'colour --rgb 0x00567a 2 ||\n'
+        buf += 'colour --rgb 0x00567a 4 ||\n'
+        buf += 'cpair --foreground 7 --background 2 2 ||\n'
+        buf += 'goto ${loaded-menu}\n'
+        buf += ':alt_console\n'
+        buf += 'cpair --background 0 1 ||\n'
+        buf += 'cpair --background 1 2 ||\n'
+        buf += 'goto ${loaded-menu}\n'
+        buf += ':get_console\n'
+        buf += 'console --picture http://${next-server}/downloads/davos/ipxe.png --left 100 --right 80 && goto console_set || goto alt_console\n'
+        buf += ':MAIN\n'
+        buf += 'menu\n'
+        buf += 'colour --rgb 0xff0000 0 ||\n'
+        buf += 'cpair --foreground 1 1 ||\n'
+        buf += 'cpair --foreground 0 3 ||\n'
+        buf += 'cpair --foreground 4 4 ||\n'
+        buf += menu_title
+        buf += 'item --gap -- -------------------------------------\n'
+        indices = self.menuitems.keys()
+        indices.sort()
+        has_continue_bootservice = False
+        for i in indices:
+            if self.menuitems[i].label != "continue":
+                continue
+            else:
+                has_continue_bootservice = True
+                if hasattr(self.menuitems[i], 'value'):
+                    buf += 'item %s %s\n'%(self._applyReplacement(self.menuitems[i].label), self.menuitems[i].menulabel)
+                else:
+                    buf += 'item %s %s\n'%(self._applyReplacement(self.menuitems[i].label), self.menuitems[i].label)
+                break
+        buf += 'item protected Password\n'
+        if has_continue_bootservice:
+            buf += 'choose --default continue --timeout %s target && goto ${target}\n'% (int(self.timeout) * 1000)
+        else:
+            buf += 'choose --default protected --timeout %s target && goto ${target}\n'% (int(self.timeout) * 1000)
+        buf += ':MENU\n'
+        buf += 'menu\n'
+        buf += 'colour --rgb 0xff0000 0 ||\n'
+        buf += 'cpair --foreground 1 1 ||\n'
+        buf += 'cpair --foreground 0 3 ||\n'
+        buf += 'cpair --foreground 4 4 ||\n'
+        buf += menu_title
+        buf += 'item --gap -- -------------------------------------\n'
+
+        # write items
+        indices = self.menuitems.keys()
+        indices.sort()
+        for i in indices:
+            if hasattr(self.menuitems[i], 'value'):
+                output = 'item %s %s\n'%(self._applyReplacement(self.menuitems[i].label), self.menuitems[i].menulabel)
+            else:
+                output = 'item %s %s\n'%(self._applyReplacement(self.menuitems[i].label), self.menuitems[i].label)
+            buf += output
+        # the menu default item
+        buf += 'choose --default %s ' % self.default_item
+
+        # the menu timeout : warning, 0 means "do not wait !"
+        if self.timeout == '0':
+            buf += '--timeout 1000 '
+        else:
+            buf += '--timeout %d ' % (int(self.timeout) * 1000)
+        buf += 'target && goto ${target}\n'
+        buf += ':protected\n'
+        buf += 'login || goto ${loaded-menu}\n'
+        buf += 'iseq ${username} %s && iseq ${password} %s && set loaded-menu MENU || set loaded-menu MAIN\n'%(self._applyReplacement('##PXE_LOGIN##'),self._applyReplacement('##PXE_PASSWORD##'))
+        buf += 'goto ${loaded-menu}\n'
+
+        buf += ':exceptions\n'
+        buf += '### The next 2 lines (I believe) override the options picked up via DHCP (i.e. options 67 etc)\n'
+        buf += '### Set 210 --&gt; configure the destination TFTP server (holding the PXELinux kernel and config files)\n'
+        buf += 'set 210:string tftp://${next-server}/bootloader/\n'
+        buf += '### Set 209 --&gt; configure the location to the GRUB-format config files in PXELinux \n'
+        buf += 'set 209:string pxelinux.cfg/localboot.cfg\n'
+        buf += '### Chain --&gt; Load the new PXELinux kernel\n'
+        buf += 'chain tftp://${next-server}/bootloader/pxelinux.0\n'
+        buf += 'goto MENU\n'
+
+        for i in indices:
+            if hasattr(self.menuitems[i], 'value'):
+                # the item represents a bootservice objet
+                buf+= ':%s\n%s\n'%(self._applyReplacement(self.menuitems[i].label), self._applyReplacement(self.menuitems[i].value))
+            else:
+                # the item represents an imagingimageitem object
+                buf+= ':%s\n%s\n'%(self._applyReplacement(self.menuitems[i]._applyReplacement(self.menuitems[i].label)), self._applyReplacement(self.menuitems[i]._applyReplacement(self.menuitems[i].CMDLINE)))
+        assert(type(buf) == unicode)
+        # Clean brazilian characters who are not compatible
+        # with MS-DOS encoding by delete accent marks
+        buf = self.delete_diacritics(buf)
+        # normalize chars before encoding to cp437
+        buf = ''.join(char for char in unicodedata.normalize('NFD', buf) if unicodedata.category(char) != 'Mn')
+        # Encode menu using code page 437 (MS-DOS) encoding
+        buf = buf.encode('cp437')
+        return buf
 
     def buildMenu(self):
         """
@@ -410,7 +519,7 @@ class ImagingMenu:
 
         def _write(self):
             try:
-                buf = self.buildMenu()
+                buf = self.buildMenuIpxe()
             except Exception, e:
                 logging.getLogger().error(str(e))
 
@@ -778,9 +887,11 @@ class ImagingImageItem(ImagingItem):
 
         # Davos imaging client case
         if PackageServerConfig().imaging_api['diskless_folder'] == "davos":
-            self.CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE ##PULSE2_DAVOS_OPTS##\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
-            self.CMDLINE = u"kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE ##PULSE2_DAVOS_OPTS##\ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
-
+            self.CMDLINE = "set url_path http://${next-server}/downloads/##PULSE2_DISKLESS_DIR##/\n"
+            self.CMDLINE += u"set kernel_args ##PULSE2_KERNEL_OPTS## davos_action=RESTORE_IMAGE image_uuid=##PULSE2_IMAGE_UUID## initrd=##PULSE2_DISKLESS_INITRD##\n"
+            self.CMDLINE += u"kernel ${url_path}vmlinuz ${kernel_args}\n"
+            self.CMDLINE += u"initrd ${url_path}##PULSE2_DISKLESS_INITRD##\n"
+            self.CMDLINE += u"boot || goto MENU\n"
 
     def getEntry(self, network = True):
         """
