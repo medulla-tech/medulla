@@ -891,6 +891,31 @@ def xmppGetAllPackages(login, filter,  start, end):
 def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
 
+def runXmppWolforuuidsarray(uuids):
+    """
+    renvoi les informations wol network
+    """
+    if isinstance(uuids, dict) and 'jid' in uuids:
+        mach_infos = XmppMasterDatabase().getMacsMachinefromjid(str(uuids['jid']))
+    elif isinstance(uuids, list):
+        mach_infos = XmppMasterDatabase().getMacsMachinefromjid(uuids)
+    else:
+        return False
+    if mach_infos is None:
+        return False
+    macaddresslist=[]
+    broadcastlist=[]
+    groupdeploylist=[]
+    for element in mach_infos:
+        macaddresslist.append(element['macaddress'])
+        broadcastlist.append(element['broadcast'])
+        groupdeploylist.append(element['groupdeploy'].split("/")[0])
+    callXmppPlugin('wakeonlangroup', {'macadress' : macaddresslist,
+                                      'broadcast' : broadcastlist,
+                                      'groupdeploy' :groupdeploylist
+                                      })
+    return True
+
 ############### synchro syncthing package #####################
 
 def pkgs_delete_synchro_package(uuidpackage):

@@ -186,6 +186,11 @@ class XmppMasterDatabase(DatabaseHelper):
             raise "Database connection error"
         return ret
 
+    # ---------------------- function dict from dataset -------------------------
+    def _return_dict_from_dataset_mysql(self, resultproxy):
+        return [{column: value for column, value in rowproxy.items()}
+                for rowproxy in resultproxy]
+
     # =====================================================================
     # xmppmaster FUNCTIONS deploy syncthing
     # =====================================================================
@@ -7337,6 +7342,53 @@ class XmppMasterDatabase(DatabaseHelper):
         if machine is None:
             return False
         return True
+
+    @DatabaseHelper._sessionm
+    def getMacsMachinefromjid(self, session, jidorjid):
+        if isinstance(jidorjid, str) and "@" in jidorjid:
+            # jid
+            """ information machine"""
+            user = str(jidorjid).split("@")[0]
+
+            sql = """
+            SELECT
+                xmppmaster.network.macaddress,
+                xmppmaster.network.broadcast,
+                xmppmaster.machines.groupdeploy
+            FROM
+                xmppmaster.machines
+                    INNER JOIN
+                xmppmaster.network ON xmppmaster.network.machines_id = xmppmaster.machines.id
+            WHERE
+                xmppmaster.machines.jid LIKE '%s%%'
+                    AND xmppmaster.network.ipaddress IS NOT NULL
+                    AND xmppmaster.network.mask IS NOT NULL
+                    AND xmppmaster.network.broadcast IS NOT NULL;"""%user
+        elif isinstance(jidorjid, list) and jidorjid:
+            # uuid
+            re = ",".join([ "'%s'"%t  for t in jidorjid])
+            sql = """
+            SELECT
+                xmppmaster.network.macaddress,
+                xmppmaster.network.broadcast,
+                xmppmaster.machines.groupdeploy
+            FROM
+                xmppmaster.machines
+                    INNER JOIN
+                xmppmaster.network ON xmppmaster.network.machines_id = xmppmaster.machines.id
+            WHERE
+                xmppmaster.machines.uuid_inventorymachine in(%s)
+                    AND xmppmaster.network.ipaddress IS NOT NULL
+                    AND xmppmaster.network.mask IS NOT NULL
+                    AND xmppmaster.network.broadcast IS NOT NULL;"""%re
+        else:
+            return None
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        d = self._return_dict_from_dataset_mysql(result)
+        return d
+
 
     @DatabaseHelper._sessionm
     def getMachinefromjid(self, session, jid):
