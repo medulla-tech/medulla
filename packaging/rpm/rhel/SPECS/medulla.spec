@@ -1420,5 +1420,8 @@ cp %{buildroot}%{_sysconfdir}/mmc/apache/mmc.conf %{buildroot}%_webappconfdir/mm
 mkdir -p %buildroot%_prefix/lib/systemd/system/
 cp services/systemd/mmc-agent.service %buildroot%_prefix/lib/systemd/system/
 
+# For compatibility
+mv %buildroot%_datadir/doc/medulla %buildroot%_datadir/doc/pulse2
+
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
