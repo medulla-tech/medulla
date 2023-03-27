@@ -37,6 +37,7 @@ echo "<h2>" . _T("Planned tasks") . "</h2>";
 $login   = array();
 $startdeploy = array();
 
+$enddeploy = array();
 foreach( $arraydeploy['tabdeploy']['start'] as $start_date){
   $startdeploy[] = date("Y-m-d H:i:s", mktime( $start_date[3],
                         $start_date[4],
@@ -45,14 +46,37 @@ foreach( $arraydeploy['tabdeploy']['start'] as $start_date){
                         $start_date[2],
                         $start_date[0]));
 }
+
+foreach( $arraydeploy['tabdeploy']['end'] as $start_date){
+  $enddeploy[] = date("Y-m-d H:i:s", mktime( $start_date[3],
+                        $start_date[4],
+                        $start_date[5],
+                        $start_date[1],
+                        $start_date[2],
+                        $start_date[0]));
+}
+
+
 foreach( $arraydeploy['tabdeploy']['command'] as $ss){
    $login[]=xmlrpc_loginbycommand($ss);
 }
 
-$deletecommand = new ActionItem(_("Delete deploy"), "index", "delete", "audit", "xmppmaster", "xmppmaster");
+$deletecommand = new ActionItem(_("Delete deploy"),
+                                "index",
+                                "delete",
+                                "audit",
+                                "xmppmaster",
+                                "xmppmaster");
+$logAction = new ActionItem(_("View deployment details"),
+                                "viewlogs",
+                                "audit",
+                                "computer",
+                                "xmppmaster",
+                                "xmppmaster");
 // delete_command
 $arraytitlename=array();
 $delete=array();
+$logs=array();
 $params=array();
 $arraytargetname=array();
 $index = 0;
@@ -72,6 +96,7 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $param['postaction']="delete";
     $params[] = $param;
     $delete[] = $deletecommand;
+    $logs[] = $logAction;
     if($groupid){
         $groupname = getPGobject($arraydeploy['tabdeploy']['groupid'][$index], true)->getName();
         $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machinegroup.svg' width='25' height='25'/> " . $groupname ;
@@ -92,6 +117,7 @@ $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning1"));
+$n->addActionItemArray($logs);
 $n->addActionItemArray($delete);
 $n->setTableHeaderPadding(0);
 
