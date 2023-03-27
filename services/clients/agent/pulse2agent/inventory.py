@@ -69,12 +69,12 @@ class WindowsRegistry:
         @rtype: list
         """
         reg = ConnectRegistry(None, HKEY_LOCAL_MACHINE)
-        logging.getLogger().debug("Registry path: %s " % path)
+        logging.getLogger().debug(f"Registry path: {path} ")
         try:
             key = OpenKey(reg, path, 0, KEY_READ | KEY_WOW64_32KEY)
         except WindowsError: # pyflakes.ignore
 
-            logging.getLogger().warn("Unable to get registry path: %s " % path)
+            logging.getLogger().warn(f"Unable to get registry path: {path} ")
             logging.getLogger().warn("Cannot check missing software")
             return []
 
@@ -98,7 +98,7 @@ class WMIQueryManager:
         self.service = objWMIService.ConnectServer("localhost","root/cimv2")
 
     def get(self, klass, columns):
-        query = self.service.ExecQuery("Select * from %s" % klass)
+        query = self.service.ExecQuery(f"Select * from {klass}")
 
         for q in query:
             line = []
@@ -125,18 +125,12 @@ class InventoryChecker(Component):
         @rtype: generator
         """
 
-        if SYSTEM == "WINDOWS":
-            path = self.config.inventory.windows_reg_path
-            software_required = self.config.inventory.windows_software_required
+        if SYSTEM == "DARWIN":
+            base_command = "/usr/sbin/pkgutil --pkgs"
 
-            reg_query = WindowsRegistry.get_missing(path, software_required)
-
-            for name in reg_query:
-                yield name
-
-
+            software_required = self.config.inventory.osx_software_required
+            yield from self.posix_shell_query(base_command, software_required)
         elif SYSTEM == "LINUX":
-
             distname, version, id = platform.linux_distribution()
 
             if distname.lower() in ("debian", "ubuntu", "mint"):
@@ -148,15 +142,12 @@ class InventoryChecker(Component):
                 software_required = self.config.inventory.redhat_software_required
                 base_command = "/usr/bin/rpm -qa"
 
-            for name in self.posix_shell_query(base_command, software_required):
-                yield name
+            yield from self.posix_shell_query(base_command, software_required)
+        elif SYSTEM == "WINDOWS":
+            software_required = self.config.inventory.windows_software_required
 
-        elif SYSTEM == "DARWIN":
-            software_required = self.config.inventory.osx_software_required
-            base_command = "/usr/sbin/pkgutil --pkgs"
-
-            for name in self.posix_shell_query(base_command, software_required):
-                yield name
+            path = self.config.inventory.windows_reg_path
+            yield from WindowsRegistry.get_missing(path, software_required)
 
     def check_vpn_installed(self):
         return os.path.exists(self.config.vpn.command)
@@ -188,12 +179,12 @@ class InventoryChecker(Component):
         # and executed as parameter
         stf = NamedTemporaryFile(mode="w", delete=False)
 
-        cmd_bash =  "%s | grep '%s'" % (base_command, filter_exp)
+        cmd_bash = f"{base_command} | grep '{filter_exp}'"
         stf.write(cmd_bash)
         stf.close()
 
         command = ["bash", stf.name]
-        self.logger.debug("Inventory check cmd: %s" % repr(command))
+        self.logger.debug(f"Inventory check cmd: {repr(command)}")
 
         process = Popen(command,
                         stdout=PIPE,
@@ -202,15 +193,15 @@ class InventoryChecker(Component):
                        )
         out, err = process.communicate()
         returncode = process.returncode
-        if not len(err.strip()) > 0:
-            self.logger.debug("Inventory check out: %s" % repr(out))
+        if len(err.strip()) <= 0:
+            self.logger.debug(f"Inventory check out: {repr(out)}")
             for name in software_required:
                 if name not in out:
                     yield name
         else:
-            self.logger.warn("Inventory check errcode: %s" % repr(returncode))
-            self.logger.warn("Inventory check nok: %s" % repr(out))
-            self.logger.warn("Inventory check failed: %s" % repr(err))
+            self.logger.warn(f"Inventory check errcode: {repr(returncode)}")
+            self.logger.warn(f"Inventory check nok: {repr(out)}")
+            self.logger.warn(f"Inventory check failed: {repr(err)}")
             raise SoftwareCheckError(repr(err))
 
         os.unlink(stf.name)
@@ -223,15 +214,12 @@ class MinimalInventory(object):
 
     def get_osname(self):
         system = platform.system()
-        if system.upper() == "WINDOWS":
-            return "Microsoft %s" % system
-        else:
-            return system
+        return f"Microsoft {system}" if system.upper() == "WINDOWS" else system
 
 
 
     def get(self):
-        network = [n for n in self.get_network()]
+        network = list(self.get_network())
         hostname = platform.node()
         system = self.get_osname()
         version = platform.version()
@@ -250,7 +238,7 @@ class LinuxMinimalInventory(MinimalInventory):
                                           )[20:24]
                               )
         except IOError:
-            logging.getLogger().warn("Unable to get IP address for interface <%s>" % ifname)
+            logging.getLogger().warn(f"Unable to get IP address for interface <{ifname}>")
             ip = ""
 
         try:
@@ -260,7 +248,7 @@ class LinuxMinimalInventory(MinimalInventory):
                                                )[20:24]
                                    )
         except IOError:
-            logging.getLogger().warn("Unable to get netmask for interface <%s>" % ifname)
+            logging.getLogger().warn(f"Unable to get netmask for interface <{ifname}>")
             netmask = ""
 
         macinfo = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
@@ -307,13 +295,13 @@ class OSXMinimalInventory(MinimalInventory):
         out, err = process.communicate()
         returncode = process.returncode
         if returncode == 0:
-            logging.getLogger().debug("Network check out: %s" % repr(out))
+            logging.getLogger().debug(f"Network check out: {repr(out)}")
             for mac in out.split("\n"):
                 yield "", "", mac, ""
         else:
-            logging.getLogger().warn("Network check errcode: %s" % repr(returncode))
-            logging.getLogger().warn("Network check nok: %s" % repr(out))
-            logging.getLogger().warn("Network check failed: %s" % repr(err))
+            logging.getLogger().warn(f"Network check errcode: {repr(returncode)}")
+            logging.getLogger().warn(f"Network check nok: {repr(out)}")
+            logging.getLogger().warn(f"Network check failed: {repr(err)}")
             raise SoftwareCheckError(repr(err))
 
         os.unlink(stf.name)
@@ -332,9 +320,7 @@ class WindowsMinimalInventory(MinimalInventory):
                         "IPSubnet"]
                        )
         for ifname, enabled, ip, mac, netmask in info:
-            if enabled and ip and netmask:
-                if ip[0].startswith("127."):
-                    continue
+            if enabled and ip and netmask and not ip[0].startswith("127."):
                 yield ifname, ip[0], mac, netmask[0]
 
 def get_minimal_inventory():

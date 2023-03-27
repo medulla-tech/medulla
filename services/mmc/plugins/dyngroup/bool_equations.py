@@ -73,7 +73,7 @@ class BoolRequest(object):
         return str
 
     def isValid(self):
-        if self.equ == None:
+        if self.equ is None:
             self.logger.debug("isValid: no equation")
             return False
         return self.equ.check()
@@ -94,7 +94,7 @@ class BoolRequest(object):
     def toS(self):
         return self.equ.toS()
     def toXML(self):
-        return "<BoolRequest>"+self.equ.toXML()+"</BoolRequest>"
+        return f"<BoolRequest>{self.equ.toXML()}</BoolRequest>"
 
 # Operators ####################################
 class BoolOperator(object): # abstract
@@ -150,9 +150,6 @@ class BoolOperatorOr(BoolOperator):
                 for x in list:
                     retour.append(x)
             retour = unique(retour)
-
-            for list in neg: # don't know what to do with neg values...
-                pass
 
         return [retour, True]
     def getTree(self, lists):
@@ -239,17 +236,16 @@ class BoolEquation(BoolElement):
         else:
             dom = xml
 
-        if self.h_op[dom.getAttribute('t')]: # should be a node AND/OR/NOT
-            self.op = self.h_op[dom.getAttribute('t')]()
-            for child in dom.childNodes: # node p
-                if child.firstChild.nodeType == dom.TEXT_NODE:
-                    bv = BoolValue(child.firstChild.nodeValue)
-                    self.list[bv.id] = bv
-                else:
-                    be = BoolEquation(child.firstChild, True)
-                    self.list[be.id] = be
-        else:
+        if not self.h_op[dom.getAttribute('t')]:
             raise "unknown"
+        self.op = self.h_op[dom.getAttribute('t')]()
+        for child in dom.childNodes: # node p
+            if child.firstChild.nodeType == dom.TEXT_NODE:
+                bv = BoolValue(child.firstChild.nodeValue)
+                self.list[bv.id] = bv
+            else:
+                be = BoolEquation(child.firstChild, True)
+                self.list[be.id] = be
 
 
     def parse(self, str):
@@ -258,17 +254,13 @@ class BoolEquation(BoolElement):
         return self.parseXML(xml)
 
     def merge(self, lists):
-        retour = []
-        for beid in self.list:
-            retour.append(self.list[beid].merge(lists))
+        retour = [self.list[beid].merge(lists) for beid in self.list]
         retour = self.op.merge(retour)
         logging.getLogger().debug('>>>> new one')
         return retour
 
     def getTree(self, lists):
-        retour = []
-        for beid in self.list:
-            retour.append(self.list[beid].getTree(lists))
+        retour = [self.list[beid].getTree(lists) for beid in self.list]
         retour = self.op.getTree(retour)
         return retour
 

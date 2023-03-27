@@ -154,7 +154,7 @@ class RegisterAction(BaseAction):
             log.info('Registration succeeded')
             code = 0
         else:
-            log.error('Registration failed: %s' % msg)
+            log.error(f'Registration failed: {msg}')
             code = ERROR_REGISTRATION_FAILURE
 
         reactor.stop()
@@ -219,11 +219,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     # For the rest, it is handled by *Actions
-    if options.check:
-        action = CheckAction(options)
-    else:
-        action = RegisterAction(options)
-
+    action = CheckAction(options) if options.check else RegisterAction(options)
     action.run()
     reactor.run()
     sys.exit(code)

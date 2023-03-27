@@ -131,14 +131,10 @@ def getLicensesCount(vendor, software, version, valcount=1):
     ctx.userid = "root"
 
     def replace_splat(param):
-        if '*' in param:
-            return param.replace('*', '%')
-        return param
+        return param.replace('*', '%') if '*' in param else param
 
     def check_param(param):
-        if param == '' or param == '*' or param == '%':
-            return None
-        return replace_splat(param)
+        return None if param in ['', '*', '%'] else replace_splat(param)
 
     software = check_param(software)
     vendor = check_param(vendor)
@@ -165,7 +161,7 @@ def inventoryExists(uuid):
 
 
 def getReport(uuid,lang):
-    xsl= XLSGenerator("/var/tmp/report-"+uuid+".xls",lang)
+    xsl = XLSGenerator(f"/var/tmp/report-{uuid}.xls", lang)
     xsl.get_summary_sheet(getLastMachineInventoryPart(uuid, "Summary"))
     xsl.get_hardware_sheet(getLastMachineInventoryPart(uuid, "Processors"),
                             getLastMachineInventoryPart(uuid, "Controllers"),
@@ -301,10 +297,7 @@ def get_machines_with_os_and_version(os, version):
 
 
 def getMachinesMac(uuid):
-    if uuid != '':
-        return xmlrpcCleanup(Glpi().getMachinesMac(uuid))
-    else:
-        return ""
+    return xmlrpcCleanup(Glpi().getMachinesMac(uuid)) if uuid != '' else ""
 
 def get_machine_for_hostname(strlisthostnale, filter="", start=0, end=0):
     return xmlrpcCleanup(Glpi().get_machine_for_hostname(strlisthostnale, filter, start, end))

@@ -109,7 +109,7 @@ def translate_attrs(attrs):
 
 def setup_lang(lang):
     global _gettext
-    logger.debug("Using localedir %s" % localedir)
+    logger.debug(f"Using localedir {localedir}")
     bindtextdomain("templates", localedir)
     try:
         lang = gettext.translation('templates', localedir, [lang], fallback = True)
@@ -150,7 +150,7 @@ class RpcProxy(RpcProxyI):
         xmltemp = ET.parse(os.path.join(reportconfdir, 'templates', self.config.reportTemplate)).getroot()
         for section in xmltemp.getiterator('section'):
             attr_section = translate_attrs(section.attrib)
-            if not attr_section['module'] in result:
+            if attr_section['module'] not in result:
                 result[attr_section['module']] = []
             # Adding item to attr
             #attr_section['items'] = _fetchItems(section)

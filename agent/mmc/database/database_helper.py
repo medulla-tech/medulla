@@ -57,23 +57,26 @@ class DatabaseHelper(Singleton):
     def db_check(self):
         required_version = DDLContentManager().get_version(self.my_name)
         if not checkSqlalchemy():
-            logger.error("Sqlalchemy: current version is %s. Must be between %s and %s" % (CUR_VERSION, MIN_VERSION, MAX_VERSION))
+            logger.error(
+                f"Sqlalchemy: current version is {CUR_VERSION}. Must be between {MIN_VERSION} and {MAX_VERSION}"
+            )
             return False
 
-        conn = self.connected()
-        if conn:
+        if conn := self.connected():
             # Glpi is an external DB, its version is not managed by Pulse
-            if self.my_name == 'Glpi':
-                return True
-            elif required_version == self.db_version:
+            if self.my_name == 'Glpi' or required_version == self.db_version:
                 return True
             elif required_version > self.db_version:
                 return self.db_update()
             elif required_version != -1 and conn != required_version:
-                logger.error("%s database version error: v.%s needeed, v.%s found; please update your schema !" % (self.my_name, required_version, conn))
+                logger.error(
+                    f"{self.my_name} database version error: v.{required_version} needeed, v.{conn} found; please update your schema !"
+                )
                 return False
         else:
-            logger.error("Can't connect to database (s=%s, p=%s, b=%s, l=%s, p=******). Please check %s." % (self.config.dbhost, self.config.dbport, self.config.dbbase, self.config.dbuser, self.configfile))
+            logger.error(
+                f"Can't connect to database (s={self.config.dbhost}, p={self.config.dbport}, b={self.config.dbbase}, l={self.config.dbuser}, p=******). Please check {self.configfile}."
+            )
             return False
         return True
 
@@ -93,17 +96,13 @@ class DatabaseHelper(Singleton):
     def connected(self):
         try:
             if self.db is not None:
-                if hasattr(self, "version"):
-                    return self.version.select().execute().fetchone()[0]
-                elif hasattr(self, "Version"):
+                if hasattr(self, "version") or hasattr(self, "Version"):
                     return self.version.select().execute().fetchone()[0]
                 else:
                     return True
             return False
         except:
-            if self.db is not None and self.session is not None:
-                return True
-            return False
+            return self.db is not None and self.session is not None
 
     def makeConnectionPath(self):
         """
@@ -114,18 +113,15 @@ class DatabaseHelper(Singleton):
         """
         if self.config is None:
             raise Exception("Object must have a config attribute")
-        if self.config.dbport:
-            port = ":" + str(self.config.dbport)
-        else:
-            port = ""
-        url = "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
+        port = f":{str(self.config.dbport)}" if self.config.dbport else ""
+        url = f"{self.config.dbdriver}://{self.config.dbuser}:{self.config.dbpasswd}@{self.config.dbhost}{port}/{self.config.dbname}"
         if self.config.dbdriver == 'mysql':
             # See http://www.sqlalchemy.org/docs/05/reference/dialects/mysql.html#character-sets
             # charset=utf8 will convert all data to UTF-8, even if tables are
             # stored in Latin-1
             url += '?charset=utf8&use_unicode=0'
             if self.config.dbsslenable:
-                url = url + "&ssl_ca=%s&ssl_key=%s&ssl_cert=%s" % (self.config.dbsslca, self.config.dbsslkey, self.config.dbsslcert)
+                url += f"&ssl_ca={self.config.dbsslca}&ssl_key={self.config.dbsslkey}&ssl_cert={self.config.dbsslcert}"
         return url
 
     def enableLogging(self, level=None):
@@ -148,7 +144,7 @@ class DatabaseHelper(Singleton):
 
     def getDbConnection(self):
         ret = None
-        for i in range(NB_DB_CONN_TRY):
+        for _ in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
             except:
@@ -172,9 +168,7 @@ class DatabaseHelper(Singleton):
 
     @property
     def db_version(self):
-        if hasattr(self, "version"):
-            return self.version.select().execute().fetchone()[0]
-        elif hasattr(self, "Version"):
+        if hasattr(self, "version") or hasattr(self, "Version"):
             return self.version.select().execute().fetchone()[0]
 
 
@@ -230,8 +224,12 @@ class DatabaseHelper(Singleton):
                     query = query.filter(*clauses)
             # Like filters
             if 'like_filters' in params and params['like_filters']:
-                clauses = [_entity_descriptor(query._mapper_zero(), key).like('%' + value + '%')
-                    for key, value in params['like_filters'].iteritems()]
+                clauses = [
+                    _entity_descriptor(query._mapper_zero(), key).like(
+                        f'%{value}%'
+                    )
+                    for key, value in params['like_filters'].iteritems()
+                ]
                 if clauses:
                     query = query.filter(*clauses)
 
@@ -239,7 +237,7 @@ class DatabaseHelper(Singleton):
             primary_id = _entity_descriptor(query._mapper_zero(), "id")
             count = query.with_entities(func.count(primary_id))
             # Scalar doesn't work if multiple entities are selected
-            count = sum([c[0] for c in count.all()])
+            count = sum(c[0] for c in count.all())
 
             # Applying limit and offset
             if 'max' in params and 'min' in params:
@@ -263,7 +261,7 @@ class DatabaseHelper(Singleton):
                         else:
                             if item.__class__.__name__ == 'Decimal':
                                 item = int(item)
-                            line_.update({columns[i]['name'].encode('ascii', 'ignore') : item})
+                            line_[columns[i]['name'].encode('ascii', 'ignore')] = item
                     data.append(line_)
                 else:
                     if line.__class__.__name__ == 'Decimal':
@@ -321,7 +319,7 @@ class DatabaseHelper(Singleton):
 
             compiler = LiteralCompiler(dialect, statement)
             query_str = compiler.process(statement)
-            logging.getLogger().debug('Result query for %s:' % func_.__name__)
+            logging.getLogger().debug(f'Result query for {func_.__name__}:')
             logging.getLogger().debug(query_str)
 
             # ===========================================
@@ -341,7 +339,7 @@ class DBObject(object):
     def getUUID(self):
         if hasattr(self, 'id'):
             return id2uuid(self.id)
-        logging.getLogger().warn("try to get %s uuid!" % type(self))
+        logging.getLogger().warn(f"try to get {type(self)} uuid!")
         return False
 
     def to_h(self):
@@ -350,9 +348,6 @@ class DBObject(object):
     def toH(self, level=0):
         ret = {}
         for i in dir(self):
-            if i in self.i18n:
-                pass
-
             if i in self.to_be_exported:
                 ret[i] = getattr(self, i)
             if i in self.need_iteration and level < 1:
@@ -360,9 +355,7 @@ class DBObject(object):
                 # and generally we don't need more levels
                 attr = getattr(self, i)
                 if type(attr) == list:
-                    new_attr = []
-                    for a in attr:
-                        new_attr.append(a.toH(level + 1))
+                    new_attr = [a.toH(level + 1) for a in attr]
                     ret[i] = new_attr
                 else:
                     ret[i] = attr.toH(level + 1)

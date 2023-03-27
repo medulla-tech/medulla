@@ -44,11 +44,8 @@ class SqlPlugin:
 
         @rtype: str
         """
-        if self.config.dbport:
-            port = ":" + str(self.config.dbport)
-        else:
-            port = ""
-        return "%s://%s:%s@%s%s/%s" % (self.config.dbdriver, self.config.dbuser, self.config.dbpasswd, self.config.dbhost, port, self.config.dbname)
+        port = f":{str(self.config.dbport)}" if self.config.dbport else ""
+        return f"{self.config.dbdriver}://{self.config.dbuser}:{self.config.dbpasswd}@{self.config.dbhost}{port}/{self.config.dbname}"
 
     def initMappers(self):
         """
@@ -60,7 +57,7 @@ class SqlPlugin:
     def hasValue(self, key, user = None):
         datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
         if datum != None:
-            if user == None or datum.user == None or user == datum.user:
+            if user is None or datum.user is None or user == datum.user:
                 return True
             else:
                 raise Exception("user don't have good rigths")
@@ -69,7 +66,7 @@ class SqlPlugin:
     def delete(self, key, user = None):
         datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
         if datum != None:
-            if user == None or datum.user == None or user == datum.user:
+            if user is None or datum.user is None or user == datum.user:
                 self.session.delete(datum)
                 self.session.flush()
                 return key
@@ -81,7 +78,7 @@ class SqlPlugin:
     def getValue(self, key, user = None):
         datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
         if datum != None:
-            if user == None or datum.user == None or user == datum.user:
+            if user is None or datum.user is None or user == datum.user:
                 return datum.value
             else:
                 raise Exception("user don't have good rigths")
@@ -89,22 +86,21 @@ class SqlPlugin:
 
     def setValue(self, key, val, user = None):
         datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
-        if datum != None:
-            if user == None or datum.user == None or user == datum.user:
-                datum.value = val
-                self.session.add(datum)
-            else:
-                raise Exception("user don't have good rigths")
-        else:
+        if datum is None:
             datum = SqlDatumSave()
             datum.k = key
             datum.value = val
             datum.user = user
             self.session.add(datum)
+        elif user is None or datum.user is None or user == datum.user:
+            datum.value = val
+            self.session.add(datum)
+        else:
+            raise Exception("user don't have good rigths")
         self.session.flush()
         return val
 
 # Class for SQLalchemy mapping
 class SqlDatumSave(object):
     def toS(self):
-        return str(self.id) + ") " + str(self.k) + " = " + str(self.value)
+        return f"{str(self.id)}) {str(self.k)} = {str(self.value)}"

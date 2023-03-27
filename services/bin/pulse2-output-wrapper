@@ -71,10 +71,10 @@ from pulse2.consts import PULSE2_WRAPPER_ARG_SEPARATOR_STR
 class ExitCode(object): # the only way I found to exit with the right exit code
     value = PULSE2_WRAPPER_ERROR_SIGNAL_BASE + signal.SIGKILL # prepare to be killed with SIGKILL
 
-    def __new__(type):
-        if not '_the_instance' in type.__dict__:
-            type._the_instance = object.__new__(type)
-        return type._the_instance
+    def __new__(cls):
+        if '_the_instance' not in cls.__dict__:
+            cls._the_instance = object.__new__(cls)
+        return cls._the_instance
     def set(self, value):
         self.value = value
     def get(self):
@@ -170,7 +170,7 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
             return line
         spaceleft = self.max_log_size-self.size
         self.size += len(line)
-        return line[0:spaceleft]
+        return line[:spaceleft]
 
     def outReceived(self, data):
         """ Format stdout
@@ -203,13 +203,13 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
     def processEnded(self, reason):
         """ Fired when process has finished
         """
-        if reason.value.exitCode != None:
-            # keeps the given exit code
-            exitcode = int(reason.value.exitCode)
-        else:
+        if reason.value.exitCode is None:
             # killed on signal, shift by PULSE2_WRAPPER_ERROR_SIGNAL_BASE
             exitcode = int(reason.value.signal) + PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
+        else:
+            # keeps the given exit code
+            exitcode = int(reason.value.exitCode)
         format(str(exitcode), 'X')
         ExitCode().set(exitcode)
         if twisted.internet.reactor.running:
@@ -228,20 +228,23 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
         """ Fired when process has finished
         """
         # compute good exitcode
-        if reason.value.exitCode != None:
-            # keeps the given exit code
-            exitcode = int(reason.value.exitCode)
-        else:
+        if reason.value.exitCode is None:
             # killed on signal, shift by PULSE2_WRAPPER_ERROR_SIGNAL_BASE
             exitcode = int(reason.value.signal) + PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
+        else:
+            # keeps the given exit code
+            exitcode = int(reason.value.exitCode)
         if exitcode == 0: # continue in flow if everything went good
             if self.config['check-server-side']: # if something has to be checked server-side, do it
                 for verif in self.config['check-server-side'].split(','): # iterate over checks to do
-                    if not re.search('^%s$' % verif, self.stdout, re.M): # if not found, tell it and exit
+                    if not re.search(f'^{verif}$', self.stdout, re.M): # if not found, tell it and exit
                         if config.thru_string:
                             format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.thru_string), 'T')
-                        format("PRE-COMMAND FAILED SERVER SIDE: expected result '%s' was not found !" % (verif), 'P')
+                        format(
+                            f"PRE-COMMAND FAILED SERVER SIDE: expected result '{verif}' was not found !",
+                            'P',
+                        )
                         format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.check_command), 'P')
                         for line in self.stdout.splitlines():
                             format(line, 'P')
@@ -254,7 +257,7 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
         else: # something goes bad, print pre-command output then exits
             if config.thru_string:
                 format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.thru_string), 'T')
-            format("PRE-COMMAND FAILED CLIENT SIDE: exitcode = %s !" % (exitcode), 'P')
+            format(f"PRE-COMMAND FAILED CLIENT SIDE: exitcode = {exitcode} !", 'P')
             format(PULSE2_WRAPPER_ARG_SEPARATOR_STR.join(config.check_command), 'P')
             stdout_split = self.stdout.splitlines()
             stderr_split = self.stderr.splitlines()

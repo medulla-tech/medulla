@@ -31,7 +31,8 @@ def checkSqlalchemy():
     """
     Check if the provided version of sqlalchemy is suitable for mmc-core
     """
-    if StrictVersion(MIN_VERSION) <= StrictVersion(CUR_VERSION) <=  StrictVersion(MAX_VERSION) :
-        return True
-    else:
-        return False
+    return (
+        StrictVersion(MIN_VERSION)
+        <= StrictVersion(CUR_VERSION)
+        <= StrictVersion(MAX_VERSION)
+    )

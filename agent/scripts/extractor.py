@@ -63,5 +63,4 @@ def extract_report(fileobj, keywords, comment_tags, options):
     parser.setContentHandler(StringExtractor(extract(), attrs, elems))
     parser.parse(fileobj)
 
-    for result in results:
-        yield result
+    yield from results

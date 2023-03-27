@@ -171,7 +171,7 @@ def stop_scheduler(config, wait_for_completion = False):
 def clear_pidfile(config):
     os.setegid(0)
     os.seteuid(0)
-    pid_file = os.path.join(config.pid_path, '%s.pid' % config.name)
+    pid_file = os.path.join(config.pid_path, f'{config.name}.pid')
     if os.path.isfile(pid_file):
         os.unlink(pid_file)
     os.setegid(config.daemon_group)
@@ -181,7 +181,7 @@ def set_pidfile(config, pid):
     os.setegid(0)
     os.seteuid(0)
     pid_path = config.pid_path
-    pid_file = os.path.join(config.pid_path, '%s.pid' % config.name)
+    pid_file = os.path.join(config.pid_path, f'{config.name}.pid')
     if not os.path.isdir(pid_path):
         os.makedirs(pid_path)
     os.system("echo %d > %s" % (pid, pid_file))
@@ -218,7 +218,7 @@ def get_pidfile(config):
     os.setegid(0)
     os.seteuid(0)
     name = config.name
-    pid_file = os.path.join(config.pid_path, '%s.pid' % name)
+    pid_file = os.path.join(config.pid_path, f'{name}.pid')
     if not os.path.isfile(pid_file):
         os.setegid(config.daemon_group)
         os.seteuid(config.daemon_user)
@@ -316,11 +316,11 @@ if __name__ == "__main__":
 
     def __status():
         pid = get_pidfile(config)
-        if not pid :
+        if not pid:
             print('Pulse2 Scheduler is stopped')
             return 3
-        elif pid_is_alive(pid) :
-            print('Pulse2 Scheduler (pid %s) is running...' % pid)
+        elif pid_is_alive(pid):
+            print(f'Pulse2 Scheduler (pid {pid}) is running...')
             return 0
         else:
             print('Pulse2 Scheduler dead but pid file exists')

@@ -57,7 +57,7 @@ class ParameterError(Exception):
         self._arg = arg
 
     def __repr__(self):
-        return "Invalid parameter '%s'" % self._arg
+        return f"Invalid parameter '{self._arg}'"
 
 
 MODULE_NAME = os.path.splitext(os.path.basename(__file__))[0]
@@ -216,10 +216,7 @@ class InventoryURLGen(object):
             config = P2PServerCP()
             config.setup(self.pkg_ini_path)
             host = config.public_ip
-            if host == "":
-                self.host = self.probe_fqdn()
-            else:
-                self.host = config.public_ip
+            self.host = self.probe_fqdn() if host == "" else config.public_ip
 
 
     def probe_fqdn(self):
@@ -233,16 +230,12 @@ class InventoryURLGen(object):
 
 
     def get_url(self):
-        if self.enablessl:
-            proto = "https"
-        else:
-            proto = "http"
-
-        return "server = %s://%s:%s" % (proto, self.host, self.port)
+        proto = "https" if self.enablessl else "http"
+        return f"server = {proto}://{self.host}:{self.port}"
 
     def get_tag(self):
         if self.tag:
-            return "tag = %s" % self.tag
+            return f"tag = {self.tag}"
 
 
 
@@ -410,17 +403,17 @@ class MacCreator(AbsCreator):
                             )
 
         version_splitted = self.config.mac.version.split(".")
-        version_maj, version_min = version_splitted[0:2]
+        version_maj, version_min = version_splitted[:2]
 
         product_info = {
-            "CFBundleDevelopmentRegion" : "English",
-            "CFBundleGetInfoString": "Pulse2 Agents Installer for OS X %s" % self.config.mac.version,
-            "CFBundleIdentifier": self.config.mac.package_id ,
+            "CFBundleDevelopmentRegion": "English",
+            "CFBundleGetInfoString": f"Pulse2 Agents Installer for OS X {self.config.mac.version}",
+            "CFBundleIdentifier": self.config.mac.package_id,
             "CFBundleName": self.package_name,
             "CFBundleIconFile": "header.png",
             "IFMajorVersion": version_maj,
             "IFMinorVersion": version_min,
-            "IFPkgBuildDate" : datetime.datetime.now(),
+            "IFPkgBuildDate": datetime.datetime.now(),
             "IFPkgBuildVersion": "10H574",
             "IFPkgCreator": "",
             "FPkgFlagAllowBackRev": False,
@@ -428,16 +421,15 @@ class MacCreator(AbsCreator):
             "IFPkgFlagBackgroundAlignment": "bottomright",
             "IFPkgFlagBackgroundScaling": "tofit",
             "IFPkgFlagDefaultLocation": "/",
-            "IFPkgFlagFollowLinks" : False,
-        #    "IFPkgFlagInstalledSize": 50468,
+            "IFPkgFlagFollowLinks": False,
             "IFPkgFlagIsRequired": False,
             "IFPkgFlagOverwritePermissions": False,
             "IFPkgFlagRelocatable": False,
             "IFPkgFlagRestartAction": "NoRestart",
             "IFPkgFlagRootVolumeOnly": True,
             "IFPkgFlagUpdateInstalledLanguages": False,
-            "IFPkgFormatVersion": 0.10000000149011612
-            }
+            "IFPkgFormatVersion": 0.10000000149011612,
+        }
 
         filename = os.path.join(path, "Info.plist")
         f = open(filename, "w")
@@ -472,7 +464,7 @@ class MacCreator(AbsCreator):
         password = self.config.generate_vnc_password(self.platform_directory)
         postflight = os.path.join(self.dir_current, self.postflight_file)
         with open(postflight, "wt") as fout:
-            with open("%s.in" % postflight, "rt") as fin:
+            with open(f"{postflight}.in", "rt") as fin:
                 for line in fin:
                     if "@vnc_password@" in line:
                         fout.write(line.replace("@vnc_password@", password))
@@ -555,13 +547,12 @@ class RpmCreator(AbsCreator):
     resources_path_list = ["SOURCES"]
 
     def _head_line(self, name, value):
-        return "%define " + "%s %s" % (name, value)
+        return f"%define {name} {value}"
 
 
     def control_file_generate(self):
 
-        var_header = []
-        var_header.append(self._head_line("name", self.package_name))
+        var_header = [self._head_line("name", self.package_name)]
         var_header.append(self._head_line("version", self.version))
         var_header.append(self._head_line("release", self.release))
         var_header.append(self._head_line("requires", ", ".join(self.dependencies)))
@@ -602,9 +593,7 @@ install /var/lib/pulse2/clients/config/agentconf.ini %buildroot%_prefix/pulse-xm
         content = "\n".join(var_header) + "\n" + specs
 
 
-        path = os.path.join(self.dir_destination,
-                            "SPECS",
-                            "%s.spec" % self.package_name)
+        path = os.path.join(self.dir_destination, "SPECS", f"{self.package_name}.spec")
 
         with open(path, "w") as f:
             f.write(content)
@@ -621,7 +610,7 @@ install /var/lib/pulse2/clients/config/agentconf.ini %buildroot%_prefix/pulse-xm
         os.chdir(destination)
         r_files = os.listdir(destination)
 
-        name_version = "%s-%s" % (self.package_name, self.version)
+        name_version = f"{self.package_name}-{self.version}"
 
         dir_util.mkpath(name_version)
 
@@ -870,7 +859,7 @@ class SmartAgentPrepare(object):
         replaced_items = 0
         for line in fileinput.input(in_script, inplace=1):
             for (old, new) in pattern.iteritems():
-                search_exp = "@@%s@@" % old
+                search_exp = f"@@{old}@@"
                 if search_exp in line:
                     line = line.replace(search_exp, new)
                     replaced_items += 1

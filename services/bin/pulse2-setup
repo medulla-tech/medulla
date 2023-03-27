@@ -64,8 +64,8 @@ def path_lookup(exe):
 
 def read_opt(prompt, default=None):
     if default is not None:
-        prompt += ' (default: %s)' % default
-    prompt = 'INPUT    - ' + prompt + ': '
+        prompt += f' (default: {default})'
+    prompt = f'INPUT    - {prompt}: '
     s = raw_input(prompt)
     if not s and default is not None:
         s = default
@@ -73,11 +73,8 @@ def read_opt(prompt, default=None):
 
 
 def read_bool(prompt, default):
-    if default is True:
-        prompt += ' (Y/n)'
-    else:
-        prompt += ' (y/N)'
-    prompt = 'INPUT    - ' + prompt + ': '
+    prompt += ' (Y/n)' if default is True else ' (y/N)'
+    prompt = f'INPUT    - {prompt}: '
     correct = False
     ret = default
     while not correct:
@@ -101,22 +98,19 @@ def gen_passwd(size=10):
 
 
 def read_passwd(prompt, default, check=False):
-    prompt += ' (default: ' + default + ')'
+    prompt += f' (default: {default})'
     match = False
     while not match:
-        pwd = getpass.getpass('INPUT    - ' + prompt + ': ')
+        pwd = getpass.getpass(f'INPUT    - {prompt}: ')
         if check:
-            pwd2 = getpass.getpass('INPUT    - ' + prompt + ' (confirm): ')
+            pwd2 = getpass.getpass(f'INPUT    - {prompt} (confirm): ')
             match = (pwd == pwd2)
             if not match:
                 log.info('Passwords do not match. Retry.')
         else:
             match = True
 
-    if not pwd:
-        return default
-
-    return pwd
+    return pwd or default
 
 re_ip4 = re.compile(r'([0-9]{1,3})(\.([0-9]{1,3})){3}')
 
@@ -124,8 +118,8 @@ re_ip4 = re.compile(r'([0-9]{1,3})(\.([0-9]{1,3})){3}')
 def read_ip(prompt, default):
     """ TODO: IPv6
     """
-    prompt += ' (default: ' + default + ')'
-    prompt = 'INPUT    - ' + prompt + ': '
+    prompt += f' (default: {default})'
+    prompt = f'INPUT    - {prompt}: '
     correct = False
     ret = default
     while not correct:
@@ -214,42 +208,33 @@ class DebianHandler(DistroHandler):
     def enable_srv(self, name):
         default_config = os.path.join(sysconfdir, 'default', name)
         if os.path.exists(default_config):
-            ret = call("sed -i 's/ENABLE=no/ENABLE=yes/' %s" % default_config,
-                       shell=True)
+            ret = call(f"sed -i 's/ENABLE=no/ENABLE=yes/' {default_config}", shell=True)
+        elif self.mode == "classic":
+            ret = call(f"/usr/sbin/update-rc.d {name} defaults", shell=True)
         else:
-            if self.mode == "classic":
-                ret = call("/usr/sbin/update-rc.d %s defaults" % name,
-                           shell=True)
-            else:
-                ret = call("/sbin/insserv %s" % name, shell=True)
+            ret = call(f"/sbin/insserv {name}", shell=True)
         return ret == 0
 
     def disable_srv(self, name):
         default_config = os.path.join(sysconfdir, 'default', name)
         if os.path.exists(default_config):
-            ret = call("sed -i 's/ENABLE=yes/ENABLE=no/' %s" % default_config,
-                       shell=True)
+            ret = call(f"sed -i 's/ENABLE=yes/ENABLE=no/' {default_config}", shell=True)
+        elif self.mode == "classic":
+            ret = call(f"/usr/sbin/update-rc.d -f {name} remove", shell=True)
         else:
-            if self.mode == "classic":
-                ret = call("/usr/sbin/update-rc.d -f %s remove" % name,
-                           shell=True)
-            else:
-                ret = call("/sbin/insserv -r %s" % name, shell=True)
+            ret = call(f"/sbin/insserv -r {name}", shell=True)
         return ret == 0
 
     def start_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %s start" % name,
-                   shell=True)
+        ret = call(f"/usr/sbin/invoke-rc.d {name} start", shell=True)
         return ret == 0
 
     def stop_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %s stop" % name,
-                   shell=True)
+        ret = call(f"/usr/sbin/invoke-rc.d {name} stop", shell=True)
         return ret == 0
 
     def reload_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %s reload" % name,
-                   shell=True)
+        ret = call(f"/usr/sbin/invoke-rc.d {name} reload", shell=True)
         return ret == 0
 
 
@@ -261,15 +246,11 @@ class SystemctlHandler(object):
 
     def enable_srv(self, name):
         ret = call("/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
-        if ret != 0:
-            return False
-        return ret==0
+        return False if ret != 0 else ret==0
 
     def disable_srv(self, name):
         ret = call("/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
-        if ret != 0:
-            return False
-        return ret==0
+        return False if ret != 0 else ret==0
 
     def start_srv(self, name):
         ret = call("/bin/systemctl start %(name)s.service" % {'name': name}, shell=True)
@@ -285,7 +266,10 @@ class SystemctlHandler(object):
 
 
 def get_distro_handler():
-    if os.path.exists('/bin/systemctl') and ( os.path.realpath('/sbin/init') == "/usr/lib/systemd/systemd" or os.path.realpath('/sbin/init') == "/lib/systemd/systemd" ):
+    if os.path.exists('/bin/systemctl') and os.path.realpath('/sbin/init') in [
+        "/usr/lib/systemd/systemd",
+        "/lib/systemd/systemd",
+    ]:
         return SystemctlHandler()
     elif os.path.exists('/usr/sbin/update-rc.d'):
         return DebianHandler()
@@ -312,34 +296,33 @@ class Service(object):
             self.disable_srv()
 
     def enable_srv(self):
-        log.info('Enabling service: %s' % self.name)
+        log.info(f'Enabling service: {self.name}')
         if not self.handler.enable_srv(self.name):
-            log.error('Can not enable service: %s' % self.name)
+            log.error(f'Can not enable service: {self.name}')
             sys.exit(1)
 
     def disable_srv(self):
-        log.info('Disabling service: %s' % self.name)
+        log.info(f'Disabling service: {self.name}')
         if not self.handler.disable_srv(self.name):
-            log.error('Can not disable service: %s' % self.name)
+            log.error(f'Can not disable service: {self.name}')
             sys.exit(1)
 
     def restart(self, fatal=False):
-        log.info('Stopping service: %s' % self.name)
+        log.info(f'Stopping service: {self.name}')
         self.handler.stop_srv(self.name)
         if self.is_enable():
-            log.info('Starting service: %s' % self.name)
+            log.info(f'Starting service: {self.name}')
             if not self.handler.start_srv(self.name):
-                log.warn('Cannot start service: %s' % self.name)
+                log.warn(f'Cannot start service: {self.name}')
                 if fatal:
                     sys.exit(1)
 
     def reload(self, fatal=False):
-        log.info('Reloading service: %s' % self.name)
-        if self.is_enable():
-            if not self.handler.reload_srv(self.name):
-                log.warn('Cannot reload service: %s' % self.name)
-                if fatal:
-                    sys.exit(1)
+        log.info(f'Reloading service: {self.name}')
+        if self.is_enable() and not self.handler.reload_srv(self.name):
+            log.warn(f'Cannot reload service: {self.name}')
+            if fatal:
+                sys.exit(1)
 
 
 class SrvMmcAgent(Service):
@@ -458,12 +441,12 @@ class Pulse2ConfigFile(object):
     def __init__(self, reset=False):
         if self.defaults:
             self._populate(self.__class__.defaults)
+        elif reset:
+            self._load()
+
         else:
-            if not reset:
-                # If not resetting conf, load existing
-                self._load(True)
-            else:
-                self._load()
+            # If not resetting conf, load existing
+            self._load(True)
 
     def _load(self, current=False):
         """ Load config file, if any
@@ -542,7 +525,7 @@ class Pulse2ConfigFile(object):
             return ""
 
     def set(self, section, option, value):
-        if not section in self.config:
+        if section not in self.config:
             self.config[section] = {}
         self.config[section][option] = value
 
@@ -556,10 +539,7 @@ class Pulse2ConfigFile(object):
         return section in self.config
 
     def has_option(self, section, option):
-        if self.has_section(section):
-            return option in self.config[section]
-        else:
-            return False
+        return option in self.config[section] if self.has_section(section) else False
 
     def commit(self):
         self._remove_comments()
@@ -592,16 +572,21 @@ class LoggingConfig(Pulse2ConfigFile):
         Pulse2ConfigFile.__init__(self, *args, **kwargs)
 
         # Add logging module configuration
-        d = {'loggers': {'keys': 'root'},
-             'handlers': {'keys': 'hand01'},
-             'formatters': {'keys': 'form01'},
-             'logger_root': {'level': 'NOTSET',
-                             'handlers': 'hand01'},
-             'handler_hand01': {'class': 'FileHandler',
-                                'level': 'INFO',
-                                'formatter': 'form01',
-                                'args': '("'+os.path.join(self.log_dir, self.log_path)+'",)'},
-             'formatter_form01': {'format': '%(asctime)s %(levelname)s %(message)s'}}
+        d = {
+            'loggers': {'keys': 'root'},
+            'handlers': {'keys': 'hand01'},
+            'formatters': {'keys': 'form01'},
+            'logger_root': {'level': 'NOTSET', 'handlers': 'hand01'},
+            'handler_hand01': {
+                'class': 'FileHandler',
+                'level': 'INFO',
+                'formatter': 'form01',
+                'args': f'("{os.path.join(self.log_dir, self.log_path)}",)',
+            },
+            'formatter_form01': {
+                'format': '%(asctime)s %(levelname)s %(message)s'
+            },
+        }
         self._populate(d)
 
 
@@ -728,33 +713,21 @@ class SetupApp(object):
             self.services.append(cls(self.distro_handler, self.config))
 
     def read_opt(self, name, default):
-        if self.options['batch']:
-            return default
-        else:
-            return read_opt(name, default)
+        return default if self.options['batch'] else read_opt(name, default)
 
     def read_bool(self, name, default):
-        if self.options['batch']:
-            return default
-        else:
-            return read_bool(name, default)
+        return default if self.options['batch'] else read_bool(name, default)
 
     def read_passwd(self, name, default=None):
         if self.options['batch']:
-            if default is not None:
-                return default
-            else:
-                return gen_passwd()
+            return default if default is not None else gen_passwd()
         else:
             return read_passwd(name, default)
 
     def read_ip(self, name, default=None):
         if default is None:
             default = get_default_ip()
-        if self.options['batch']:
-            return default
-        else:
-            return read_ip(name, default)
+        return default if self.options['batch'] else read_ip(name, default)
 
     def find_ip(self):
         for ip_interface in netifaces.interfaces():
@@ -1128,16 +1101,16 @@ class SetupApp(object):
         glpi_conf = self.confs["plugins/glpi.ini"]
 
         url = self.read_opt("Glpi URL", self.defaults["glpiurl"])
-        if not url.endswith("/") :
-            url = url + "/"
-        if url.startswith("http") :
-            base_url = "%s/" % url
-            computer_url = "%s/front/computer.form.php?id=" % url
-            fusion_url = "%s/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
-        else :
-            base_url = "http://%s/" % url
-            computer_url = "http://%s/front/computer.form.php?id=" % url
-            fusion_url = "http://%s/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
+        if not url.endswith("/"):
+            url = f"{url}/"
+        if url.startswith("http"):
+            base_url = f"{url}/"
+            computer_url = f"{url}/front/computer.form.php?id="
+            fusion_url = f"{url}/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
+        else:
+            base_url = f"http://{url}/"
+            computer_url = f"http://{url}/front/computer.form.php?id="
+            fusion_url = f"http://{url}/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
 
         glpi_conf.set("main", "glpi_computer_uri", computer_url)
         glpi_conf.set("authentication_glpi", "baseurl", base_url)
@@ -1274,17 +1247,17 @@ class SetupApp(object):
             :return: return True is the service exist and is started, False otherwise
             :rtype: boolean
         """
-        log.debug('Looking if service %s is started' % service )
+        log.debug(f'Looking if service {service} is started')
         try:
             status = check_output(["systemctl", "is-active", service])
             if status.strip('\n') == 'active':
-                log.debug('The service %s is started' % service)
+                log.debug(f'The service {service} is started')
                 return True
         except CalledProcessError:
-                log.debug('The service %s does not exist' % service)
-                return False
+            log.debug(f'The service {service} does not exist')
+            return False
 
-        log.debug('The service %s is not started' % service)
+        log.debug(f'The service {service} is not started')
         return False
 
     def post_restart(self):
@@ -1297,17 +1270,14 @@ class SetupApp(object):
         if self.config['package.service.enable']:
             binpath = path_lookup('pulse2-package-server-register-imaging')
             ps_conf = self.confs['pulse2/package-server/package-server.ini']
-            basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc_agent', 'username'),
-                                                              ps_conf.get('mmc_agent', 'password'),
-                                                              ps_conf.get('mmc_agent', 'host'),
-                                                              ps_conf.get('mmc_agent', 'port'))
-            cmd = basecmd + '--check'
-            log.debug('Call: %s' % cmd)
+            basecmd = f"{binpath} -m https://{ps_conf.get('mmc_agent', 'username')}:{ps_conf.get('mmc_agent', 'password')}@{ps_conf.get('mmc_agent', 'host')}:{ps_conf.get('mmc_agent', 'port')} "
+            cmd = f'{basecmd}--check'
+            log.debug(f'Call: {cmd}')
             if call(cmd, shell=True) == 0:
                 # This uuid is not registered
                 log.info('Registering imaging server')
                 cmd = basecmd + '--name \'Local imaging server\''
-                log.debug('Call: %s' % cmd)
+                log.debug(f'Call: {cmd}')
                 if call(cmd, shell=True) != 0:
                     log.error('Can not register imaging server')
             else:
@@ -1315,12 +1285,12 @@ class SetupApp(object):
 
         binpath = path_lookup('pulse2-create-group')
         grp_name = self.config['defaultUserGroup']
-        cmd = "%s '%s'" % (binpath, grp_name)
-        log.debug('Call: %s' % cmd)
+        cmd = f"{binpath} '{grp_name}'"
+        log.debug(f'Call: {cmd}')
         if call(cmd, shell=True) != 0:
-            log.error("Unable to create group '%s'" % grp_name)
+            log.error(f"Unable to create group '{grp_name}'")
         else:
-            log.info("Group %s successfully created" % grp_name)
+            log.info(f"Group {grp_name} successfully created")
 
     def commit(self):
         """ Write down all config files
@@ -1430,11 +1400,7 @@ if __name__ == '__main__':
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
-    if options.debug:
-        level = logging.DEBUG
-    else:
-        level = logging.INFO
-
+    level = logging.DEBUG if options.debug else logging.INFO
     # Init logger
     hdlr2 = logging.StreamHandler()
     hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))

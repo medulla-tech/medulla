@@ -97,7 +97,7 @@ class Indicator(Base, DBObj):
     def getCurrentValue(self, entities = []):
         #Mutable list entities used as default argument to a method or function
         report = import_module('.'.join(['mmc.plugins', self.module, 'report'])).exportedReport()
-        args = [entities] + eval('[' + self.params + ']')
+        args = [entities] + eval(f'[{self.params}]')
         return getattr(report, self.request_function)(*args)
 
     def getValueAtTime(self, session, ts_min, ts_max , entities = []):

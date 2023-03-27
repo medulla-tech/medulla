@@ -62,10 +62,10 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
         logging.config.fileConfig(self.inifile)
         logger = logging.getLogger()
         init_logger_debug()
-        logger.info("Pulse 2 Package Server %s starting..." % getVersion())
-        logger.info("Pulse 2 Package Server build '%s'" % str(getRevision()))
+        logger.info(f"Pulse 2 Package Server {getVersion()} starting...")
+        logger.info(f"Pulse 2 Package Server build '{str(getRevision())}'")
         logger.info("Using Python %s" % sys.version.split("\n")[0])
-        logger.info("Using Python Twisted %s" % twisted.copyright.version)
+        logger.info(f"Using Python Twisted {twisted.copyright.version}")
         if config.use_iocp_reactor:
             logger.info("Using IOCP reactor")
         ThreadLauncher().initialize(config)
@@ -86,7 +86,7 @@ class Pulse2PackageServer(win32serviceutil.ServiceFramework):
 
     def CheckForQuit(self):
         retval = win32event.WaitForSingleObject(self.hWaitStop, 10)
-        if not retval == win32event.WAIT_TIMEOUT:
+        if retval != win32event.WAIT_TIMEOUT:
             # Received Quit from Win32
             twisted.internet.reactor.stop()
         twisted.internet.reactor.callLater(1.0, self.CheckForQuit)

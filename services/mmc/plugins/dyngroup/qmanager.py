@@ -47,7 +47,7 @@ class QueryManager(Singleton):
     def activate(self):
         self.logger = logging.getLogger()
 
-        os.chdir(os.path.dirname(mmc.support.mmctools.__file__) + '/..')
+        os.chdir(f'{os.path.dirname(mmc.support.mmctools.__file__)}/..')
 
         # hash{ pluginName:module }
         self.queryablePlugins = self._getQueryablePlugins()
@@ -126,14 +126,14 @@ class QueryManager(Singleton):
         try:
             return self.queryGroups[moduleName]
         except:
-            self.logger.error("Dyngroup module %s don't exists"%(moduleName))
+            self.logger.error(f"Dyngroup module {moduleName} don't exists")
             return []
 
     def getPossiblesCriterionsInModule(self, ctx, moduleName):
         try:
             return self.queryPossibilities[moduleName].keys()
         except:
-            self.logger.error("Dyngroup module %s don't exists"%(moduleName))
+            self.logger.error(f"Dyngroup module {moduleName} don't exists")
             return []
 
     def getTypeForCriterionInModule(self, ctx, moduleName, criterion):
@@ -146,18 +146,18 @@ class QueryManager(Singleton):
             if len(value1) < ret[2]:
                 return [ret[0], []]
         elif ret[0] == 'double' and len(ret) > 2:
-            if value2 == None:
+            if value2 is None:
                 if len(value1) < ret[2]:
                     return [ret[0], []]
             elif len(ret) > 3 and len(value2) < ret[3]:
                return [ret[0], []]
         elif ret[0] == 'double':
             table, cols = criterion.split('/')
-            if value2 == None: # ajax search on field 1
+            if value2 is None: # ajax search on field 1
                 return [ret[0], ret[1](ctx, table, cols, value1)]
             else: # ajax search on field 2
                 return [ret[0], ret[1](ctx, table, cols, value1, value2)]
-        if value2 == None:
+        if value2 is None:
             return [ret[0], ret[1](ctx, value1)]
 
         return [ret[0], ret[1](ctx, value1, value2)]
@@ -208,54 +208,6 @@ class QueryManager(Singleton):
 
     def _replyToQuery(self, ctx, query, bool = None):
         raise "DON'T USE _replyToQuery!!!"
-        self.__recursive_query(ctx, query)
-
-        values = {}
-
-        # TODO does not seems to work...
-        #['AND', [['1', 'dyngroup', 'groupname', 'test']]]
-        for qid, module, criterion, value in query:
-            val, neg = self._getPluginReplyToQuery(
-                ctx,
-                self.queryablePlugins[module],
-                [criterion, value]
-            )
-            values[str(qid)] = [val, neg]
-
-        self.logger.debug(values)
-
-        br = BoolRequest()
-        if bool == None or bool == '' or bool == 0 or bool == '0':
-            bool = 'AND('+','.join(map(lambda a:a[0][0], values))+')'
-
-
-        all = ComputerManager().getComputersList(ctx)
-        #all = ComputerManager().getRestrictedComputersList(ctx, 0, 50)
-        # for the moment everything is based on names... should be changed into uuids
-        #all = map(lambda a: a[1]['cn'][0], all.values())
-        all = all.keys()
-        values['A'] = [all, True]
-
-        bool = 'AND(A, '+bool+')'
-
-        br.parse(bool)
-        if bool == None or not br.isValid(): # no bool specified = only AND
-            if len(values.keys()) > 0:
-                retour = values.pop()
-                for val in values:
-                    neg = val[1]
-                    val = val[0]
-                    if neg:
-                        retour = filter(lambda a,val=val:a in val, retour)
-                    else:
-                        retour = filter(lambda a,val=val:a not in val, retour)
-
-                return retour
-            else:
-                return [] # TODO : when plugged on Machines : should return : Machine - values_neg
-        else:
-            retour = br.merge(values)
-            return retour[0]
 
     def replyToQueryXML(self, ctx, query, bool = None, min = 0, max = 10):
         return self._replyToQueryXML(ctx, query, bool)[int(min):int(max)]
@@ -276,7 +228,7 @@ class QueryManager(Singleton):
         self.logger.debug(values)
 
         br = BoolRequest()
-        if bool == None or bool == '':
+        if bool is None or bool == '':
             bool = "<AND><p>"+('</p><p>'.join(map(lambda a:a[0][0], values)))+"</p></AND>"
 
         all = ComputerManager().getComputersList(ctx)
@@ -284,23 +236,22 @@ class QueryManager(Singleton):
         all = map(lambda a: a[1]['cn'][0], all)
         values['A'] = [all, True]
 
-        bool = '<AND><p>A</p><p>'+bool+'</p></AND>'
+        bool = f'<AND><p>A</p><p>{bool}</p></AND>'
 
         br.parseXML(bool)
-        if bool == None or not br.isValid(): # no bool specified = only AND
-            if len(values.keys()) > 0:
-                retour = values.pop()
-                for val in values:
-                    neg = val[1]
-                    val = val[0]
-                    if neg:
-                        retour = filter(lambda a,val=val:a in val, retour)
-                    else:
-                        retour = filter(lambda a,val=val:a not in val, retour)
-
-                return retour
-            else:
+        if bool is None or not br.isValid(): # no bool specified = only AND
+            if len(values.keys()) <= 0:
                 return [] # TODO : when plugged on Machines : should return : Machine - values_neg
+            retour = values.pop()
+            for val in values:
+                neg = val[1]
+                val = val[0]
+                retour = (
+                    filter(lambda a, val=val: a in val, retour)
+                    if neg
+                    else filter(lambda a, val=val: a not in val, retour)
+                )
+            return retour
         else:
             retour = br.merge(values)
             return retour[0]
@@ -309,13 +260,12 @@ class QueryManager(Singleton):
         if type(query) != list:
             query = self.parse(query)
 
-        values = {}
-
-        for qid, module, criterion, value in query:
-            values[str(qid)] = [qid, module, criterion, value]
-
+        values = {
+            str(qid): [qid, module, criterion, value]
+            for qid, module, criterion, value in query
+        }
         br = BoolRequest()
-        if bool == None or bool == '' or bool == 0 or bool == '0': # no bool specified = only AND
+        if bool is None or bool == '' or bool == 0 or bool == '0': # no bool specified = only AND
             bool = 'AND('+','.join(map(lambda a:a, values))+')'
 
         br.parse(bool)
@@ -361,7 +311,7 @@ def getAvailablePlugins(path):
     @return: list of all .py in a path
     @rtype: list
     """
-    ret = []
-    for item in glob.glob(os.path.join(path, "*", "__init__.py")):
-        ret.append(item.split("/")[1])
-    return ret
+    return [
+        item.split("/")[1]
+        for item in glob.glob(os.path.join(path, "*", "__init__.py"))
+    ]

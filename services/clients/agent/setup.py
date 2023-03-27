@@ -125,7 +125,7 @@ class DefaultsFiller(object):
         replaced_items = 0
         for line in fileinput.input(self.config_file, inplace=1):
             for (old, new) in pattern.iteritems():
-                search_exp = "@@%s@@" % old
+                search_exp = f"@@{old}@@"
                 if search_exp in line:
                     line = line.replace(search_exp, new)
                     replaced_items += 1
@@ -232,8 +232,10 @@ class PostInstallPosixHandler(object):
 class PostInstallSystemVHandler(PostInstallPosixHandler):
     """SystemV (based on inittab) handler"""
 
-    insert_service_cmd = "/usr/sbin/update-rc.d %s defaults" % PostInstallPosixHandler.SCRIPT_NAME
-    start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
+    insert_service_cmd = (
+        f"/usr/sbin/update-rc.d {PostInstallPosixHandler.SCRIPT_NAME} defaults"
+    )
+    start_service_cmd = f"/etc/init.d/{PostInstallPosixHandler.SCRIPT_NAME} start"
 
     include_files = [("linux/pulse2-agent.init.lsb",
                       "/etc/init.d/pulse2-agent"),
@@ -243,11 +245,16 @@ class PostInstallSystemVHandler(PostInstallPosixHandler):
                       "/etc/pulse2agent.ini"),
                      ]
 
+
+
+
 class PostInstallSysCtlHandler(PostInstallPosixHandler):
     """Sysctl handler"""
 
-    insert_service_cmd = "/bin/chkconfig --add  %s" % PostInstallPosixHandler.SCRIPT_NAME
-    start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
+    insert_service_cmd = (
+        f"/bin/chkconfig --add  {PostInstallPosixHandler.SCRIPT_NAME}"
+    )
+    start_service_cmd = f"/etc/init.d/{PostInstallPosixHandler.SCRIPT_NAME} start"
 
     include_files = [("linux/pulse2-agent.init",
                       "/etc/init.d/pulse2-agent"),
@@ -270,7 +277,7 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
                      ]
     def post_copy_tasks(self):
 
-        cmd_link = "ln -s /lib/systemd/system/%s.service /etc/systemd/system/%s.service" % (self.SCRIPT_NAME, self.SCRIPT_NAME)
+        cmd_link = f"ln -s /lib/systemd/system/{self.SCRIPT_NAME}.service /etc/systemd/system/{self.SCRIPT_NAME}.service"
         cmd_systemd_reload = " /bin/systemctl daemon-reload"
         for cmd in [cmd_link, cmd_systemd_reload]:
             result = call(cmd, shell=True)

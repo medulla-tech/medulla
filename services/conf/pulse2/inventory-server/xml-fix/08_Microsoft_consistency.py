@@ -85,9 +85,11 @@ def xml_fix(xml):
         # Doesn't seem to work with GLPI sadly
         if subelem2.tag == 'OPERATINGSYSTEM':
           for subelem3 in subelem2:
-            if subelem3.tag == 'FULL_NAME':
-              if re.search('^Microsoft Windows (2000|2003|XP|Vista|7|8) ',subelem3.text) and not subelem2.findall('PUBLISHER'):
-                children = ET.SubElement(subelem2,'PUBLISHER')
-                children.text = 'Microsoft Corporation'
+            if (subelem3.tag == 'FULL_NAME' and re.search(
+                '^Microsoft Windows (2000|2003|XP|Vista|7|8) ',
+                subelem3.text,
+            ) and not subelem2.findall('PUBLISHER')):
+              children = ET.SubElement(subelem2,'PUBLISHER')
+              children.text = 'Microsoft Corporation'
 
   return ET.tostring(root)

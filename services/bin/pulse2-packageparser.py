@@ -119,15 +119,15 @@ class PackageParser:
     """PackageParser manage the tests for the packages"""
     excluded_list = ['.stfolder', 'sharing', '.stignore']
     def __init__(self):
-        index = 0
         log_file = os.path.join("/", "var", "log", "mmc", "packageparser.log")
         self.log_file = log_file
         logfile_exists = os.path.isfile(self.log_file)
         if logfile_exists is True:
+            index = 0
             while logfile_exists:
 
                 index += 1
-                self.log_file = "%s.%s"%(log_file, index)
+                self.log_file = f"{log_file}.{index}"
                 logfile_exists = os.path.isfile(self.log_file)
 
         self.package_folder = ["/", "var", "lib", "pulse2", "packages"]
@@ -155,14 +155,14 @@ class PackageParser:
         Returns:
             True if the specified package has no corrupted dependencies"""
         dependencies_list = package.info["Dependency"]
-        uuids_list = [package.uuid for package in self.packages_list]
         flag = True
 
         if not dependencies_list:
             flag = True
         else:
+            uuids_list = [package.uuid for package in self.packages_list]
             for dependency in dependencies_list:
-                if not dependency in uuids_list:
+                if dependency not in uuids_list:
                     self.logger.error("The dependency %s for the package %s (%s) is not existing",
                                       dependency, package.uuid, package.name)
                     package.to_summary("error", "The dependency {0} is not existing"
@@ -222,23 +222,23 @@ class PackageParser:
                     self.counts['invalids'] += 1
             self.logger.info("\n")
             self.logger.info("====== Counts ======")
-            self.logger.info("Total : %s"%self.counts['total'])
-            self.logger.info("Valids : %s"%self.counts['valids'])
-            self.logger.info("Invalids : %s"%self.counts['invalids'])
+            self.logger.info(f"Total : {self.counts['total']}")
+            self.logger.info(f"Valids : {self.counts['valids']}")
+            self.logger.info(f"Invalids : {self.counts['invalids']}")
 
             self.logger.info("\n")
             self.logger.info("====== Invalids ======")
             for element in self.summary['invalids']:
-                self.logger.info("%s : %s"%(element['uuid'], element['msg']))
+                self.logger.info(f"{element['uuid']} : {element['msg']}")
 
             self.logger.info("\n")
             self.logger.info("====== Valids ======")
             for element in self.summary['valids']:
-                self.logger.info("%s"%(element['uuid']))
+                self.logger.info(f"{element['uuid']}")
 
 if __name__ == "__main__":
     checker = PackageParser()
     checker.run()
     # To use the package report into script.
     # All the information are sent to /var/log/mmc/package/packageparser.log
-    print("A report is generated into the %s file."%checker.log_file)
+    print(f"A report is generated into the {checker.log_file} file.")

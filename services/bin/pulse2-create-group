@@ -73,7 +73,7 @@ class CredentialsConfig(object):
         path = os.path.join(sysconfdir, "mmc", "agent", "config.ini")
         config = MMCConfigParser()
         config.read(path)
-        config.read("%s.local" % path)
+        config.read(f"{path}.local")
 
         return config
 
@@ -99,7 +99,7 @@ class GroupCreator(object):
                                      )
 
     def _auth_failed(self, failure):
-        logger.error("LDAP Authentification failed: %s" % repr(failure))
+        logger.error(f"LDAP Authentification failed: {repr(failure)}")
         reactor.stop()
         sys.exit(1)
 
@@ -111,13 +111,16 @@ class GroupCreator(object):
         def result_groups(result):
             if isinstance(result, dict):
                 return self.name in [name for (name, desc, n) in result.itervalues()]
-            else:
-                logger.warn("Strange result of occurence of group '%s': %s (dict expected)" % (self.name, repr(result)))
-                return False
+            logger.warn(
+                f"Strange result of occurence of group '{self.name}': {repr(result)} (dict expected)"
+            )
+            return False
 
         @d.addErrback
         def result_groups_failed(failure):
-            logger.error("Test of occurence of group '%s' in existing groups failed: %s" % (self.name, repr(failure)))
+            logger.error(
+                f"Test of occurence of group '{self.name}' in existing groups failed: {repr(failure)}"
+            )
             reactor.stop()
             sys.exit(1)
 
@@ -132,12 +135,12 @@ class GroupCreator(object):
         return d
 
     def _call_failed(self, failure):
-        logger.error("Creating of group '%s' failed: %s" % (self.name, repr(failure)))
+        logger.error(f"Creating of group '{self.name}' failed: {repr(failure)}")
         reactor.stop()
         sys.exit(1)
 
     def _call_finished(self, result):
-        logger.debug("Group '%s' successfully created: %s" % (self.name, repr(result)))
+        logger.debug(f"Group '{self.name}' successfully created: {repr(result)}")
         reactor.stop()
 
     def run(self):
@@ -147,7 +150,7 @@ class GroupCreator(object):
         @d.addCallback
         def group_exists(exists):
             if exists:
-                logger.debug("Group '%s' already exists" % (self.name))
+                logger.debug(f"Group '{self.name}' already exists")
                 reactor.stop()
             else:
                 return self._create()
@@ -165,7 +168,7 @@ if __name__ == "__main__":
     logger.setLevel(level)
 
     if len(args) != 2:
-        logger.error("%s takes only one parameter as group name to create" % (MODULE_NAME))
+        logger.error(f"{MODULE_NAME} takes only one parameter as group name to create")
         sys.exit(1)
 
     name = args[1]

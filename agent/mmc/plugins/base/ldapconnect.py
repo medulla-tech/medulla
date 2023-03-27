@@ -58,7 +58,7 @@ class LDAPConnectionConfig:
         except:
             self.ldapurl = None
         if not self.ldapurl and self.ldapserver:
-            self.ldapurl = 'ldap://' + self.ldapserver
+            self.ldapurl = f'ldap://{self.ldapserver}'
         try:
             self.network_timeout = self.getint(section, "network_timeout")
         except:

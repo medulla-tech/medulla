@@ -47,7 +47,7 @@ class Benchmark:
     def __init__(self, URL, sleep):
         self.url = URL
         self.sleep = sleep
-        self.mapi = Proxy('%s/rpc' % self.url)
+        self.mapi = Proxy(f'{self.url}/rpc')
         self.inprogress = 0
 
     def schedule(self):
@@ -57,12 +57,14 @@ class Benchmark:
         self.mapi.callRemote('getMirror', {'uuid' : '0'}).addCallbacks(self.getPackageAPI, self.onError)
 
     def getPackageAPI(self, mirror):
-        self.mirror = Proxy('%s://%s:%s%s' % (mirror['protocol'], mirror['server'], mirror['port'], mirror['mountpoint']))
+        self.mirror = Proxy(
+            f"{mirror['protocol']}://{mirror['server']}:{mirror['port']}{mirror['mountpoint']}"
+        )
         self.mapi.callRemote('getApiPackage', {'uuid' : '0'}).addCallbacks(self.getPackages, self.onError)
 
     def getPackages(self, papis):
         self.papis = papis
-        self.papi = Proxy('%s%s' % (self.url, self.papis[0]['mountpoint']))
+        self.papi = Proxy(f"{self.url}{self.papis[0]['mountpoint']}")
         self.papi.callRemote('getAllPackages', {'uuid' : '0'}).addCallbacks(self.startBenchLoop, self.onError)
 
     def startBenchLoop(self, packages):

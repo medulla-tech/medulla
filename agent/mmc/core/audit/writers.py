@@ -69,7 +69,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Connect to the database.
         """
-        dburl = self.config.auditdbdriver + "://" + self.config.auditdbuser + ":" + self.config.auditdbpassword + "@" + self.config.auditdbhost + ":" + str(self.config.auditdbport) + "/" + self.config.auditdbname
+        dburl = f"{self.config.auditdbdriver}://{self.config.auditdbuser}:{self.config.auditdbpassword}@{self.config.auditdbhost}:{str(self.config.auditdbport)}/{self.config.auditdbname}"
         dboptions = {}
         if self.config.auditdbdriver == 'mysql':
             dburl += '?charset=utf8&use_unicode=0'
@@ -110,25 +110,25 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Init database tables.
         """
-        if version == None:
+        if version is None:
             version = self.getUptodateVersion()
-        getattr(self, "_initTables" + self.config.auditdbdriver + "V" + str(version))()
+        getattr(self, f"_initTables{self.config.auditdbdriver}V{str(version)}")()
 
     def _initMappers(self, version = None):
         """
         Init database mappers.
         """
-        if version == None:
+        if version is None:
             version = self.getUptodateVersion()
-        getattr(self, "_initMappers" + self.config.auditdbdriver + "V" + str(version))()
+        getattr(self, f"_initMappers{self.config.auditdbdriver}V{str(version)}")()
 
     def _populateTables(self, version = None):
         """
         Populate tables before the first use.
         """
-        if version == None:
+        if version is None:
             version = self.getUptodateVersion()
-        getattr(self, "_populateTables" + self.config.auditdbdriver + "V" + str(version))()
+        getattr(self, f"_populateTables{self.config.auditdbdriver}V{str(version)}")()
 
     def operation(self, op):
         """
@@ -352,7 +352,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Update database version number in the version table
         """
-        if version == None:
+        if version is None:
             version = self.getUptodateVersion()
         session = create_session()
         session.execute(self.version_table.delete())

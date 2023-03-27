@@ -5,19 +5,21 @@ import sys, logging
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-to_addrs_array = []
 html = u"""@@@@@event@@@@@"""
 
 to_addrs_string = u"""@@@@@to_addrs_string@@@@@"""
-html = html.strip() 
-if html.strip() == '' or html.startswith("@@@@@event"):
+html = html.strip()
+if not html.strip() or html.startswith("@@@@@event"):
     # pas de message html
     sys.exit(-1)
 
-to_addrs_string = to_addrs_string.strip() 
-if to_addrs_string != '' and not to_addrs_string.startswith("@@@@@to_addrs_string"):
-    to_addrs_array = [x.strip("'\" \n") for x in to_addrs_string.split(",") if "@" in x]
-
+to_addrs_string = to_addrs_string.strip()
+if not to_addrs_string or to_addrs_string.startswith("@@@@@to_addrs_string"):
+    to_addrs_array = []
+else:
+    to_addrs_array = [
+        x.strip("'\" \n") for x in to_addrs_string.split(",") if "@" in x
+    ]
 if not to_addrs_array:
     #pas de destinataire
     sys.exit(-1)

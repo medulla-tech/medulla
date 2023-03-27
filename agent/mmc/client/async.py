@@ -51,15 +51,17 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
         self.sendHeader('Content-type', 'text/xml')
         self.sendHeader('Content-length', str(len(self.factory.payload)))
         if self.factory.user:
-            auth = '%s:%s' % (self.factory.user, self.factory.password)
+            auth = f'{self.factory.user}:{self.factory.password}'
             auth = auth.encode('base64').strip()
-            self.sendHeader('Authorization', 'Basic %s' % (auth,))
+            self.sendHeader('Authorization', f'Basic {auth}')
         try:
             # Put MMC session cookie
-            if not '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
-                h = open(COOKIES_FILE, 'r')
-                self.sendHeader('Cookie', h.read())
-                h.close()
+            if (
+                '<methodName>base.ldapAuth</methodName>'
+                not in self.factory.payload
+            ):
+                with open(COOKIES_FILE, 'r') as h:
+                    self.sendHeader('Cookie', h.read())
         except IOError:
             pass
         self.endHeaders()
@@ -67,16 +69,14 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
 
     def lineReceived(self, line):
         xmlrpc.QueryProtocol.lineReceived(self, line)
-        if line:
-            if line.startswith("Set-Cookie: "):
-                self._session = line.split()[1]
+        if line and line.startswith("Set-Cookie: "):
+            self._session = line.split()[1]
 
     def handleResponse(self, contents):
         xmlrpc.QueryProtocol.handleResponse(self, contents)
         if '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
-            h = open(COOKIES_FILE, 'w+')
-            h.write(self._session)
-            h.close()
+            with open(COOKIES_FILE, 'w+') as h:
+                h.write(self._session)
             os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
 
 

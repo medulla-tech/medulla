@@ -85,7 +85,7 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
         file_names = os.listdir(dir_name)
         result = []
         result1 = []
-        prefix = '{}'.format(base_name) 
+        prefix = f'{base_name}'
         for file_name in file_names:
             if file_name.startswith(prefix) and not file_name.endswith('.zip'):
                 f=os.path.join(dir_name, file_name )
@@ -107,7 +107,7 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
             dfn = self.get_files_by_date()
         except:
             return
-        dfn_zipped = '{}.zip'.format(dfn)
+        dfn_zipped = f'{dfn}.zip'
         if os.path.exists(dfn_zipped):
             os.remove(dfn_zipped)
         with zipfile.ZipFile(dfn_zipped, 'w') as f:
@@ -240,10 +240,7 @@ class ExcludeContainsFilter(logging.Filter):
             or
             False if the criterion is found (= don't print the record)
         """
-        if re.search(self.criterion, record.getMessage(), re.I):
-            return False
-        else:
-            return True
+        return not re.search(self.criterion, record.getMessage(), re.I)
 
 
 # include log ending by the criterion
@@ -309,8 +306,8 @@ class MmcServer(xmlrpc.XMLRPC, object):
             else:
                 ret = getattr(self, func)
         except AttributeError:
-            logger.error(functionPath + ' not found')
-            raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
+            logger.error(f'{functionPath} not found')
+            raise Fault("NO_SUCH_FUNCTION", f"No such function {functionPath}")
         return ret
 
     def _needAuth(self, functionPath):
@@ -444,7 +441,9 @@ class MmcServer(xmlrpc.XMLRPC, object):
             reactor.callFromThread(deferred.errback, failure)
 
         def _putResult(deferred, f, session, args, kwargs):
-            logger.debug("Using thread #%s for %s" % (threading.currentThread().getName().split("-")[2], f.__name__))
+            logger.debug(
+                f'Using thread #{threading.currentThread().getName().split("-")[2]} for {f.__name__}'
+            )
             # Attach current user session to the thread
             threading.currentThread().session = session
             start = time.time()
@@ -516,13 +515,12 @@ class MmcServer(xmlrpc.XMLRPC, object):
         request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
-        logger.error("Error during render " + functionPath + ": " + failure.getTraceback())
-        # Prepare a Fault result to return
-        result = {}
-        result['faultString'] = functionPath + " " + str(args)
-        result['faultCode'] = str(failure.type) + ": " + str(failure.value) + " "
-        result['faultTraceback'] = failure.getTraceback()
-        return result
+        logger.error(f"Error during render {functionPath}: {failure.getTraceback()}")
+        return {
+            'faultString': f"{functionPath} {str(args)}",
+            'faultCode': f"{str(failure.type)}: {str(failure.value)} ",
+            'faultTraceback': failure.getTraceback(),
+        }
 
     def _associateContext(self, request, session, userid):
         """
@@ -541,9 +539,8 @@ class MmcServer(xmlrpc.XMLRPC, object):
                 # No context provided
                 continue
             cm = contextMaker(request, session, userid)
-            context = cm.getContext()
-            if context:
-                logger.debug("Attaching module '%s' context to user session" % mod)
+            if context := cm.getContext():
+                logger.debug(f"Attaching module '{mod}' context to user session")
                 session.contexts[mod] = context
 
         # Add associated context session to sessions set
@@ -591,14 +588,14 @@ class MmcServer(xmlrpc.XMLRPC, object):
                 r = getattr(instance, m)
                 # If attr is callable, we add it to method_list
                 if hasattr(r, '__call__'):
-                    method_list.append(mod + '.' + m)
+                    method_list.append(f'{mod}.{m}')
             # Doing same thing for module.RPCProxy if exists
             if hasattr(instance, 'RpcProxy'):
                 for m in dir(instance.RpcProxy):
                     r = getattr(instance.RpcProxy, m)
                     # If attr is callable, we add it to method_list
                     if hasattr(r, '__call__'):
-                        method_list.append(mod + '.' + m)
+                        method_list.append(f'{mod}.{m}')
 
         return method_list
 
@@ -606,36 +603,27 @@ class MmcServer(xmlrpc.XMLRPC, object):
     def __getClassMethod(self,name):
         mod, func = self._splitFunctionPath(name)
 
-        if not mod in self.modules:
+        if mod not in self.modules:
             return None
 
         instance = self.modules[mod]
-        if hasattr(instance, 'RpcProxy'):
-            if hasattr(instance.RpcProxy, func):
-                return getattr(instance.RpcProxy, func)
-            elif hasattr(instance, func):
-                return getattr(instance, func)
-            else:
-                return None
+        if hasattr(instance, 'RpcProxy') and hasattr(instance.RpcProxy, func):
+            return getattr(instance.RpcProxy, func)
+        elif hasattr(instance, 'RpcProxy') and hasattr(instance, func):
+            return getattr(instance, func)
         else:
             return None
 
     def methodSignature(self, name):
         method = self.__getClassMethod(name)
 
-        if method is None:
-            return []
-        else:
-            return getargspec(method)[0]
+        return [] if method is None else getargspec(method)[0]
 
 
     def methodHelp(self, name):
         method = self.__getClassMethod(name)
 
-        if method is None:
-            return ''
-        else:
-            return method.__doc__
+        return '' if method is None else method.__doc__
 
     # ===============================================================
 
@@ -650,9 +638,8 @@ class MmcServer(xmlrpc.XMLRPC, object):
         @param fileprefix: Write log file in @localstatedir@/log/mmc/mmc-fileprefix.log
         @param content: string to record in log file
         """
-        f = open(localstatedir + '/log/mmc/mmc-' + fileprefix + '.log', 'a')
-        f.write(time.asctime() + ': ' + content + "\n")
-        f.close()
+        with open(f'{localstatedir}/log/mmc/mmc-{fileprefix}.log', 'a') as f:
+            f.write(f'{time.asctime()}: {content}' + "\n")
 
 
 class MMCApp(object):
@@ -936,8 +923,9 @@ class MMCApp(object):
 
         # Add event handler before shutdown
         reactor.addSystemEventTrigger('before', 'shutdown', self.cleanUp)
-        logger.info("Listening to XML-RPC requests on %s:%s"
-                    % (self.config.host, self.config.port))
+        logger.info(
+            f"Listening to XML-RPC requests on {self.config.host}:{self.config.port}"
+        )
         #Start client XMPP if module xmppmaster enable
         if PluginManager().isEnabled("xmppmaster"):
             logger.info("Start client mmc Xmpp XmppMaster")
@@ -951,11 +939,12 @@ class MMCApp(object):
         """
         function call before shutdown of reactor
         """
-        if PluginManager().isEnabled("xmppmaster"):
-            #self.modulexmppmaster
-            if self.modulexmppmaster.isAlive():
-                logger.info('mmc-agent xmppmaster stop...')
-                self.modulexmppmaster.stop()
+        if (
+            PluginManager().isEnabled("xmppmaster")
+            and self.modulexmppmaster.isAlive()
+        ):
+            logger.info('mmc-agent xmppmaster stop...')
+            self.modulexmppmaster.stop()
         logger.info('mmc-agent shutting down, cleaning up...')
         l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_STOP')
         l.commit()
@@ -970,7 +959,7 @@ class MMCHTTPChannel(http.HTTPChannel):
     """
 
     def connectionMade(self):
-        logger.debug("Connection from %s" % (self.transport.getPeer().host,))
+        logger.debug(f"Connection from {self.transport.getPeer().host}")
         http.HTTPChannel.connectionMade(self)
 
     def connectionLost(self, reason):
@@ -1106,7 +1095,7 @@ class PluginManager(Singleton):
         plugins = []
         for path in glob.glob(os.path.join(self.pluginDirectory, "*", "__init__.py*")):
             plugin = path.split("/")[1]
-            if not plugin in plugins:
+            if plugin not in plugins:
                 plugins.append(plugin)
         return plugins
 
@@ -1181,14 +1170,14 @@ class PluginManager(Singleton):
         ignore the disable = 1 configuration option)
         """
         if name in self.getEnabledPluginNames() or name in self.plugins:
-            logger.warning('Trying to start an already loaded plugin: %s' % (name,))
+            logger.warning(f'Trying to start an already loaded plugin: {name}')
             return 0
         res = self.loadPlugin(name, force=True)
         if res == 0:
             return 0
         elif res is not None and not isinstance(res, int):
             self.plugins[name] = res
-            getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
+            getattr(self.plugins["base"], "setModList")(list(self.plugins.keys()))
         elif res == 4:
             return 4
         return res
@@ -1205,7 +1194,7 @@ class PluginManager(Singleton):
         sys.path.append("plugins")
         # self.modList = []
         plugins = self.getAvailablePlugins()
-        if not "base" in plugins:
+        if "base" not in plugins:
             logger.error("Plugin 'base' is not available. Please install it.")
             return 1
         else:
@@ -1240,14 +1229,13 @@ class PluginManager(Singleton):
                     func = getattr(mod[plugin], "activate_2")
                 except AttributeError:
                     func = None
-                if func:
-                    if not func():
-                        logger.error("Error in activation stage 2 for plugin '%s'" % plugin)
-                        logger.error("Please check your MMC agent configuration and log")
-                        return 4
+                if func and not func():
+                    logger.error(f"Error in activation stage 2 for plugin '{plugin}'")
+                    logger.error("Please check your MMC agent configuration and log")
+                    return 4
 
         # Set module list
-        getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
+        getattr(self.plugins["base"], "setModList")(list(self.plugins.keys()))
         return 0
 
     def stopPlugin(self, name):
@@ -1257,16 +1245,16 @@ class PluginManager(Singleton):
         @rtype: boolean
         returns: True on success, False if the module is not loaded.
         """
-        if not name in self.plugins:
+        if name not in self.plugins:
             return False
         plugin = self.plugins[name]
         try:
             deactivate = getattr(plugin, 'deactivate')
         except AttributeError:
-            logger.info('Plugin %s has no deactivate function' % (name,))
+            logger.info(f'Plugin {name} has no deactivate function')
         else:
-            logger.info('Deactivating plugin %s' % (name,))
+            logger.info(f'Deactivating plugin {name}')
             deactivate()
         del self.plugins[name]
-        getattr(self.plugins["base"], "setModList")([name for name in self.plugins.keys()])
+        getattr(self.plugins["base"], "setModList")(list(self.plugins.keys()))
         return True

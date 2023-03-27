@@ -68,10 +68,23 @@ class GlpiAuthenticator(AuthenticatorI):
     def _cbIndexPage(self, value):
         self.logger.debug("GlpiAuthenticator: on index page")
         phpsessid = value.response_headers["set-cookie"][0].split("=")
-        params = { "method" : "POST", "cookies" : { phpsessid[0] : phpsessid[1]},
-                   "headers": {"Content-Type": "application/x-www-form-urlencoded", "Referer" : urlparse.urljoin(self.config.baseurl, self.config.loginpage)},
-                   "postdata" : urllib.urlencode({value.login_namename : self.user, value.login_passwordname : self.password, "_glpi_csrf_token" : value.glpi_csrf_token})}
-        return params
+        return {
+            "method": "POST",
+            "cookies": {phpsessid[0]: phpsessid[1]},
+            "headers": {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "Referer": urlparse.urljoin(
+                    self.config.baseurl, self.config.loginpage
+                ),
+            },
+            "postdata": urllib.urlencode(
+                {
+                    value.login_namename: self.user,
+                    value.login_passwordname: self.password,
+                    "_glpi_csrf_token": value.glpi_csrf_token,
+                }
+            ),
+        }
 
     def _cbLoginPost(self, params):
         self.logger.debug("GlpiAuthenticator: posting on login page")
@@ -87,7 +100,9 @@ class GlpiAuthenticator(AuthenticatorI):
         Return a deferred object resulting to True or False
         """
         if not self.config.doauth:
-            self.logger.debug("GlpiAuthenticator: do not authenticate user %s (doauth = False)" % user)
+            self.logger.debug(
+                f"GlpiAuthenticator: do not authenticate user {user} (doauth = False)"
+            )
             return defer.succeed(True)
         self.user = user
         self.password = password
@@ -115,15 +130,15 @@ class HTTPClientFactoryWithHeader(HTTPClientFactory):
         # <input type='hidden' name='_glpi_csrf_token' value='82d37af7f30d76f2238d49c28167654f'>
         m = re.search('input type="hidden" name="_glpi_csrf_token" value="([0-9a-z]{32})">', page)
         if m is not None:
-            self.glpi_csrf_token = m.group(1)
+            self.glpi_csrf_token = m[1]
 
         m = re.search('input type="password" name="([0-9a-z]{19})" id="login_password"', page)
         if m is not None:
-            self.login_passwordname =  m.group(1)
+            self.login_passwordname = m[1]
 
         m = re.search('input type="text" name="([0-9a-z]{19})" id="login_name"', page)
         if m is not None:
-            self.login_namename =  m.group(1)
+            self.login_namename = m[1]
 
         if self.waiting:
             self.waiting = 0

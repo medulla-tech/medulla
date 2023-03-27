@@ -97,7 +97,9 @@ class Report:
         dl.addCallback(self.getUsersCount)
 
     def getPluginVersion(self, plugin):
-        return self.proxy.callRemote("%s.getVersion" % plugin).addCallbacks(self.printPluginVersion, self.receiveError, (plugin,))
+        return self.proxy.callRemote(f"{plugin}.getVersion").addCallbacks(
+            self.printPluginVersion, self.receiveError, (plugin,)
+        )
 
     def printPluginVersion(self, version, *args):
         print "%s plugin version: %s" % (args[0], version)

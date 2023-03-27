@@ -35,17 +35,10 @@ def activate():
     return conf.dyngroup_activate
 
 def queryPossibilities():
-    ret = {}
-    ret['groupname'] = ['list', getAllGroupName]
-    return ret
+    return {'groupname': ['list', getAllGroupName]}
 
 def queryGroups():
-    # Assign criterions to categories
-    ret = []
-    #
-    ret.append(['Group', [ ['groupname',''] ]])
-    #
-    return ret
+    return [['Group', [ ['groupname',''] ]]]
 
 def extendedPossibilities():
     return ""

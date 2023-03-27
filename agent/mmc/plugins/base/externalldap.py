@@ -32,7 +32,7 @@ from mmc.plugins.base.ldapconnect import LDAPConnectionConfig, LDAPConnection
 from mmc.plugins.base.auth import AuthenticatorConfig, AuthenticatorI, AuthenticationToken
 from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
 
-INI = mmcconfdir + "/plugins/base.ini"
+INI = f"{mmcconfdir}/plugins/base.ini"
 
 class ExternalLdapAuthenticatorConfig(AuthenticatorConfig, LDAPConnectionConfig):
     """
@@ -131,21 +131,24 @@ class ExternalLdapAuthenticator(AuthenticatorI):
 
         @return: a couple (user DN, user entry)
         """
-        users = l.search_s(self.config.suffix, ldap.SCOPE_SUBTREE, "(&(%s=%s)(%s))" % (self.config.attr, login, self.config.filter))
+        users = l.search_s(
+            self.config.suffix,
+            ldap.SCOPE_SUBTREE,
+            f"(&({self.config.attr}={login})({self.config.filter}))",
+        )
         for user in users:
-            self.logger.debug("Found user dn: %s" % user[0])
+            self.logger.debug(f"Found user dn: {user[0]}")
             self.logger.debug(str(user))
-        # Check that the login string exactly matches LDAP content
-        if users and users[0][1][self.config.attr][0] == login:
-            ret = users[0]
-        else:
-            ret = (None, None)
-        return ret
+        return (
+            users[0]
+            if users and users[0][1][self.config.attr][0] == login
+            else (None, None)
+        )
 
     def ldapBind(self, l, userdn, password):
         if isinstance(password, xmlrpclib.Binary):
             password = str(password)
-        self.logger.debug("Binding with dn: %s %s" % (userdn, password))
+        self.logger.debug(f"Binding with dn: {userdn} {password}")
         l.simple_bind_s(userdn, password)
 
 
@@ -157,7 +160,7 @@ class ExternalLdapProvisionerConfig(ProvisionerConfig):
     def readConf(self):
         ProvisionerConfig.readConf(self)
         for attr in ["uid", "givenName", "sn"]:
-            option = "ldap_" + attr
+            option = f"ldap_{attr}"
             self.__dict__[option] = self.get(self.section, option)
         if self.has_option(self.section, "profile_attr"):
             self.profileAttr = self.get(self.section, "profile_attr")

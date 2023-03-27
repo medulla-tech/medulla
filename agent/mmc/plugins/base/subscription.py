@@ -58,12 +58,9 @@ class SubscriptionConfig:
 
     def getValueMacro(self, section, field, is_int = False):
         try:
-            if is_int:
-                value = self.getint(section, field)
-            else:
-                value = self.get(section, field)
-            setattr(self, "subs_%s"%field, value)
-            logger.debug("%s = %s"%(field, str(value)))
+            value = self.getint(section, field) if is_int else self.get(section, field)
+            setattr(self, f"subs_{field}", value)
+            logger.debug(f"{field} = {str(value)}")
         except:
             pass
 
@@ -79,15 +76,17 @@ class SubscriptionConfig:
             product_name = self.get(section, 'product_name')
             product_name = product_name.split(' & ')
             self.subs_product_name = []
-            for pn in product_name:
-                if pn in self.subs_possible_product_names:
-                    self.subs_product_name.append(pn)
-            if len(self.subs_product_name) == 0:
+            self.subs_product_name.extend(
+                pn for pn in product_name if pn in self.subs_possible_product_names
+            )
+            if not self.subs_product_name:
                 self.subs_product_name = ['MDS']
         except:
             pass
 
-        logger.info("This version has been subscribed for '%s' products"%(" & ".join(self.subs_product_name)))
+        logger.info(
+            f"""This version has been subscribed for '{" & ".join(self.subs_product_name)}' products"""
+        )
 
         self.getValueMacro(section, "vendor_name")
         self.getValueMacro(section, "vendor_mail")
@@ -144,8 +143,12 @@ class SubscriptionManager(object):
             for user in users:
                 try:
                     user = user[0][1]
-                    if (('uid' in user and not user['uid'] == ['nobody']) and
-                            ('gidNumber' in user and not user['gidNumber'] == ['512'])):
+                    if (
+                        'uid' in user
+                        and user['uid'] != ['nobody']
+                        and 'gidNumber' in user
+                        and user['gidNumber'] != ['512']
+                    ):
                         userCount += 1
                 except:
                     pass
@@ -164,17 +167,13 @@ class SubscriptionManager(object):
         if self.config.subs_users == 0:
             return True
         users = searchUserAdvanced()
-        if len(users) < self.config.subs_users:
-            return True
-        return False
+        return len(users) < self.config.subs_users
 
     def checkComputers(self):
         from mmc.plugins.base import ComputerManager
         if self.config.subs_computers == 0:
             return True
-        if ComputerManager().getTotalComputerCount() < self.config.subs_computers:
-            return True
-        return False
+        return ComputerManager().getTotalComputerCount() < self.config.subs_computers
 
     def checkAll(self):
         return self.checkUsers() and self.checkComputers()

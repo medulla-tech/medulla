@@ -72,7 +72,7 @@ class Pulse2ProxySsl(win32serviceutil.ServiceFramework):
 
     def CheckForQuit(self):
         retval = win32event.WaitForSingleObject(self.hWaitStop, 10)
-        if not retval == win32event.WAIT_TIMEOUT:
+        if retval != win32event.WAIT_TIMEOUT:
             # Received Quit from Win32
             twisted.internet.reactor.stop()
         twisted.internet.reactor.callLater(1.0, self.CheckForQuit)

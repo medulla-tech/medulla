@@ -84,11 +84,11 @@ def deleteOldInventories(inventory):
     to_delete = map(lambda x: x['id'], inventory.select(inventory.c.Date <= "0000-00-00").execute().fetchall())
     if len(to_delete) > 0:
         logger.info("deleteOldInventories : will purge %d inventories" % len(to_delete))
-        for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+        for i in range(1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
                 inventory.delete(inventory.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteOldInventories : done %d%%" % (i * 100 / (1+len(to_delete)/split_on)))
-        logger.debug("deleteOldInventories : purged inventories : %s" % to_delete)
+        logger.debug(f"deleteOldInventories : purged inventories : {to_delete}")
     else:
         logger.info("deleteOldInventories : no inventory to purge")
 
@@ -97,15 +97,18 @@ def deleteWrongInventories(inventory):
     to_delete = None
     for table in mandatory_elements:
         # First we look for inventory parts not linked all mandatory has*
-        has_table = Table("has" + table, metadata, autoload = True)
+        has_table = Table(f"has{table}", metadata, autoload = True)
 
-        to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
-                outerjoin(inventory, has_table, has_table.c.inventory == inventory.c.id).\
-                select(has_table.c.inventory == None).\
-                execute().\
-                fetchall()
+        to_merge = map(
+            lambda x: x['id'],
+            outerjoin(
+                inventory, has_table, has_table.c.inventory == inventory.c.id
             )
-        if to_delete == None:
+            .select(has_table.c.inventory is None)
+            .execute()
+            .fetchall(),
+        )
+        if to_delete is None:
             to_delete = to_merge
         else:
             to_delete = list(set(to_delete).union(set(to_merge)))
@@ -114,11 +117,11 @@ def deleteWrongInventories(inventory):
     if len(to_delete) > 0:
         logger.info("deleteWrongInventories : will purge %d rows" % (len(to_delete)))
         to_delete = list(set(to_delete)) # now I may deduplicate my IDs
-        for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+        for i in range(1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
                 inventory.delete(inventory.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteWrongInventories : done %d%%" % ((i * 100 / (1+len(to_delete)/split_on))))
-        logger.debug("deleteWrongInventories : purged rows : %s" % (to_delete))
+        logger.debug(f"deleteWrongInventories : purged rows : {to_delete}")
     else:
         logger.info("deleteWrongInventories : no rows to purge")
 
@@ -128,15 +131,16 @@ def deleteWrongMachines(machine):
     to_delete = None
     for table in mandatory_elements:
         # First we look for inventory parts not linked all mandatory has*
-        has_table = Table("has" + table, metadata, autoload = True)
+        has_table = Table(f"has{table}", metadata, autoload = True)
 
-        to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
-                outerjoin(machine, has_table, has_table.c.machine == machine.c.id).\
-                select(has_table.c.machine == None).\
-                execute().\
-                fetchall()
-            )
-        if to_delete == None:
+        to_merge = map(
+            lambda x: x['id'],
+            outerjoin(machine, has_table, has_table.c.machine == machine.c.id)
+            .select(has_table.c.machine is None)
+            .execute()
+            .fetchall(),
+        )
+        if to_delete is None:
             to_delete = to_merge
         else:
             to_delete = list(set(to_delete).intersection(set(to_merge)))
@@ -145,11 +149,11 @@ def deleteWrongMachines(machine):
     if len(to_delete) > 0:
         logger.info("deleteWrongMachines : will purge %d rows" % (len(to_delete)))
         to_delete = list(set(to_delete)) # now I may deduplicate my IDs
-        for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+        for i in range(1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
                 machine.delete(machine.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteWrongMachines : done %d%%" % ((i * 100 / (1+len(to_delete)/split_on))))
-        logger.debug("deleteWrongMachines : purged rows : %s" % (to_delete))
+        logger.debug(f"deleteWrongMachines : purged rows : {to_delete}")
     else:
         logger.info("deleteWrongMachines : no rows to purge")
 
@@ -160,25 +164,32 @@ def deleteHasTablesMissingInventories(inventory):
     """
 
     for table in peripheral_tables:
-        has_table = Table("has" + table, metadata, autoload = True)
+        has_table = Table(f"has{table}", metadata, autoload = True)
 
-        to_delete = map(lambda x: x['inventory'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
-            outerjoin(has_table, inventory, has_table.c.inventory == inventory.c.id).\
-            select(inventory.c.id == None).\
-            execute().\
-            fetchall()
+        to_delete = map(
+            lambda x: x['inventory'],
+            outerjoin(
+                has_table, inventory, has_table.c.inventory == inventory.c.id
+            )
+            .select(inventory.c.id is None)
+            .execute()
+            .fetchall(),
         )
 
         if len(to_delete) > 0:
             logger.info("deleteHasTablesMissingInventories : on table has%s: will purge %d rows" % (table, len(to_delete)))
             to_delete = list(set(to_delete)) # now I may deduplicate my IDs
-            for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+            for i in range(1+len(to_delete)/split_on): # delete by split_on-pack
                 if do_execute:
                     has_table.delete(has_table.c.inventory.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
                 logger.info("deleteHasTablesMissingInventories : done %d%% in has%s" % ((i * 100 / (1+len(to_delete)/split_on)), table))
-            logger.debug("deleteHasTablesMissingInventories : on table has%s : purged rows : %s" % (table, to_delete))
+            logger.debug(
+                f"deleteHasTablesMissingInventories : on table has{table} : purged rows : {to_delete}"
+            )
         else:
-            logger.info("deleteHasTablesMissingInventories : on table has%s: no rows to purge" % (table))
+            logger.info(
+                f"deleteHasTablesMissingInventories : on table has{table}: no rows to purge"
+            )
 
 def deleteHasTablesMissingMachines(machine):
     """
@@ -186,25 +197,30 @@ def deleteHasTablesMissingMachines(machine):
     """
 
     for table in peripheral_tables:
-        has_table = Table("has" + table, metadata, autoload = True)
+        has_table = Table(f"has{table}", metadata, autoload = True)
 
-        to_delete = map(lambda x: x['machine'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
-            outerjoin(has_table, machine, has_table.c.machine == machine.c.id).\
-            select(machine.c.id == None).\
-            execute().\
-            fetchall()
+        to_delete = map(
+            lambda x: x['machine'],
+            outerjoin(has_table, machine, has_table.c.machine == machine.c.id)
+            .select(machine.c.id is None)
+            .execute()
+            .fetchall(),
         )
 
         if len(to_delete) > 0:
             logger.info("deleteHasTablesMissingMachines : on table has%s: will purge %d rows" % (table, len(to_delete)))
             to_delete = list(set(to_delete)) # now I may deduplicate my IDs
-            for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+            for i in range(1+len(to_delete)/split_on): # delete by split_on-pack
                 if do_execute:
                     has_table.delete(has_table.c.machine.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
                 logger.info("deleteHasTablesMissingMachines : done %d%% in has%s" % ((i * 100 / (1+len(to_delete)/split_on)), table))
-            logger.debug("deleteHasTablesMissingMachines : on table cleanUpInventoryParts%s : purged rows : %s" % (table, to_delete))
+            logger.debug(
+                f"deleteHasTablesMissingMachines : on table cleanUpInventoryParts{table} : purged rows : {to_delete}"
+            )
         else:
-            logger.info("deleteHasTablesMissingMachines : on table has%s: no rows to purge" % (table))
+            logger.info(
+                f"deleteHasTablesMissingMachines : on table has{table}: no rows to purge"
+            )
 
 def deleteHasTablesMissingParts(machine):
     """
@@ -214,25 +230,34 @@ def deleteHasTablesMissingParts(machine):
 
         # First we look for inventory parts not linked to any has*
         element = Table(table, metadata, autoload = True)
-        has_table = Table("has" + table, metadata, autoload = True)
+        has_table = Table(f"has{table}", metadata, autoload = True)
 
-        to_delete = map(lambda x: x[table.lower()], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
-            outerjoin(has_table, element, has_table.c.get(table.lower()) == element.c.id).\
-            select(element.c.id == None).\
-            execute().\
-            fetchall()
+        to_delete = map(
+            lambda x: x[table.lower()],
+            outerjoin(
+                has_table,
+                element,
+                has_table.c.get(table.lower()) == element.c.id,
+            )
+            .select(element.c.id is None)
+            .execute()
+            .fetchall(),
         )
 
         if len(to_delete) > 0:
             logger.info("deleteHasTablesMissingParts : on table %s: will purge %d rows" % (table, len(to_delete)))
             to_delete = list(set(to_delete)) # now I may deduplicate my IDs
-            for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+            for i in range(1+len(to_delete)/split_on): # delete by split_on-pack
                 if do_execute:
                     element.delete(element.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
                 logger.info("deleteHasTablesMissingParts : done %d%% in %s" % ((i * 100 / (1+len(to_delete)/split_on)), table))
-            logger.debug("deleteHasTablesMissingParts : on table %s : purged rows : %s" % (table, to_delete))
+            logger.debug(
+                f"deleteHasTablesMissingParts : on table {table} : purged rows : {to_delete}"
+            )
         else:
-            logger.info("deleteHasTablesMissingParts : on table %s: no rows to purge" % (table))
+            logger.info(
+                f"deleteHasTablesMissingParts : on table {table}: no rows to purge"
+            )
 
 def cleanUpInventoryParts(inventory):
     """
@@ -242,25 +267,32 @@ def cleanUpInventoryParts(inventory):
 
         # First we look for inventory parts not linked to any has*
         element = Table(table, metadata, autoload = True)
-        has_table = Table("has" + table, metadata, autoload = True)
+        has_table = Table(f"has{table}", metadata, autoload = True)
 
-        to_delete = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
-            outerjoin(element, has_table, has_table.c.get(table.lower()) == element.c.id).\
-            select(has_table.c.get(table.lower()) == None).\
-            execute().\
-            fetchall()
+        to_delete = map(
+            lambda x: x['id'],
+            outerjoin(
+                element,
+                has_table,
+                has_table.c.get(table.lower()) == element.c.id,
+            )
+            .select(has_table.c.get(table.lower()) is None)
+            .execute()
+            .fetchall(),
         )
 
         if len(to_delete) > 0:
             logger.info("cleanUpInventoryParts : on table %s: will purge %d rows" % (table, len(to_delete)))
             to_delete = list(set(to_delete)) # now I may deduplicate my IDs
-            for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+            for i in range(1+len(to_delete)/split_on): # delete by split_on-pack
                 if do_execute:
                     element.delete(element.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
                 logger.info("cleanUpInventoryParts : done %d%% in %s" % ((i * 100 / (1+len(to_delete)/split_on)), table))
-            logger.debug("cleanUpInventoryParts : on table %s : purged rows : %s" % (table, to_delete))
+            logger.debug(
+                f"cleanUpInventoryParts : on table {table} : purged rows : {to_delete}"
+            )
         else:
-            logger.info("cleanUpInventoryParts : on table %s: no rows to purge" % (table))
+            logger.info(f"cleanUpInventoryParts : on table {table}: no rows to purge")
 
 def deleteEmptyInventories(inventory):
     """
@@ -273,15 +305,18 @@ def deleteEmptyInventories(inventory):
     to_delete = None
     for table in peripheral_tables:
         # First we look for inventory parts not linked to any has*
-        has_table = Table("has" + table, metadata, autoload = True)
+        has_table = Table(f"has{table}", metadata, autoload = True)
 
-        to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
-                outerjoin(inventory, has_table, has_table.c.inventory == inventory.c.id).\
-                select(has_table.c.inventory == None).\
-                execute().\
-                fetchall()
+        to_merge = map(
+            lambda x: x['id'],
+            outerjoin(
+                inventory, has_table, has_table.c.inventory == inventory.c.id
             )
-        if to_delete == None:
+            .select(has_table.c.inventory is None)
+            .execute()
+            .fetchall(),
+        )
+        if to_delete is None:
             to_delete = to_merge
         else:
             to_delete = list(set(to_delete).intersection(set(to_merge)))
@@ -290,11 +325,11 @@ def deleteEmptyInventories(inventory):
     if len(to_delete) > 0:
         logger.info("deleteEmptyInventories : will purge %d rows" % (len(to_delete)))
         to_delete = list(set(to_delete)) # now I may deduplicate my IDs
-        for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+        for i in range(1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
                 inventory.delete(inventory.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteEmptyInventories : done %d%%" % ((i * 100 / (1+len(to_delete)/split_on))))
-        logger.debug("deleteEmptyInventories : purged rows : %s" % (to_delete))
+        logger.debug(f"deleteEmptyInventories : purged rows : {to_delete}")
     else:
         logger.info("deleteEmptyInventories : no rows to purge")
 
@@ -304,15 +339,16 @@ def deleteEmptyMachines(machine):
     to_delete = None
     for table in peripheral_tables:
         # First we look for inventory parts not linked to any has*
-        has_table = Table("has" + table, metadata, autoload = True)
+        has_table = Table(f"has{table}", metadata, autoload = True)
 
-        to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
-                outerjoin(machine, has_table, has_table.c.machine == machine.c.id).\
-                select(has_table.c.machine == None).\
-                execute().\
-                fetchall()
-            )
-        if to_delete == None:
+        to_merge = map(
+            lambda x: x['id'],
+            outerjoin(machine, has_table, has_table.c.machine == machine.c.id)
+            .select(has_table.c.machine is None)
+            .execute()
+            .fetchall(),
+        )
+        if to_delete is None:
             to_delete = to_merge
         else:
             to_delete = list(set(to_delete).intersection(set(to_merge)))
@@ -321,30 +357,30 @@ def deleteEmptyMachines(machine):
     if len(to_delete) > 0:
         logger.info("deleteEmptyMachines : will purge %d rows" % (len(to_delete)))
         to_delete = list(set(to_delete)) # now I may deduplicate my IDs
-        for i in range(0, 1+len(to_delete)/split_on): # delete by split_on-pack
+        for i in range(1+len(to_delete)/split_on): # delete by split_on-pack
             if do_execute:
                 machine.delete(machine.c.id.in_(to_delete[i*split_on:(i+1)*split_on])).execute()
             logger.info("deleteEmptyMachines : done %d%%" % ((i * 100 / (1+len(to_delete)/split_on))))
-        logger.debug("deleteEmptyMachines : purged rows : %s" % (to_delete))
+        logger.debug(f"deleteEmptyMachines : purged rows : {to_delete}")
     else:
         logger.info("deleteEmptyMachines : no rows to purge")
 
 def optimizeTables():
 
     for table in peripheral_tables:
-        logger.info("optimizeTables : will optimize %s" % (table))
-        res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute()
-        logger.info("optimizeTables : optimized %s" % (table))
+        logger.info(f"optimizeTables : will optimize {table}")
+        res = text(f'OPTIMIZE TABLE {table}', bind=mysql_db).execute()
+        logger.info(f"optimizeTables : optimized {table}")
 
-    for table in map(lambda x: 'has%s' % x, peripheral_tables):
-        logger.info("optimizeTables : will optimize %s" % (table))
-        res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
-        logger.info("optimizeTables : optimized %s" % (table))
+    for table in map(lambda x: f'has{x}', peripheral_tables):
+        logger.info(f"optimizeTables : will optimize {table}")
+        res = text(f'OPTIMIZE TABLE {table}', bind=mysql_db).execute().fetchone()
+        logger.info(f"optimizeTables : optimized {table}")
 
     for table in ['Inventory', 'Machine']:
-        logger.info("optimizeTables : will optimize %s" % (table))
-        res = text('OPTIMIZE TABLE %s' % table, bind=mysql_db).execute().fetchone()
-        logger.info("optimizeTables : optimized %s" % (table))
+        logger.info(f"optimizeTables : will optimize {table}")
+        res = text(f'OPTIMIZE TABLE {table}', bind=mysql_db).execute().fetchone()
+        logger.info(f"optimizeTables : optimized {table}")
 
 def usage(argv):
     print >> sys.stderr, 'Usage: %s [db_conn_string]' % argv[0]

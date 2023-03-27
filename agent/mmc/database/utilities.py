@@ -72,8 +72,7 @@ def unique(s):
     # sort functions in all languages or libraries, so this approach
     # is more effective in Python than it may be elsewhere.
     try:
-        t = list(s)
-        t.sort()
+        t = sorted(s)
     except TypeError:
         pass  # move on to the next method
     else:
@@ -153,19 +152,19 @@ def handle_deconnect():
     # create_method then call _old_<method> on demand (see upper)
     for m in ['first', 'count', 'all', '__iter__']:
         try: # check if _old_<method> exists
-            getattr(Query, '_old_%s' % m)
+            getattr(Query, f'_old_{m}')
         except AttributeError: # and if not, create it
-            setattr(Query, '_old_%s' % m, getattr(Query, m))
+            setattr(Query, f'_old_{m}', getattr(Query, m))
             setattr(Query, m, create_method(m))
 
 def toH(w):
-    ret = {}
-    for i in filter(lambda f: not f.startswith('__'), dir(w)):
-        ret[i] = getattr(w, i)
-    return ret
+    return {
+        i: getattr(w, i)
+        for i in filter(lambda f: not f.startswith('__'), dir(w))
+    }
 
 def toUUID(id):
-    return "UUID%s" % (str(id))
+    return f"UUID{str(id)}"
 
 def fromUUID(uuid):
     return int(uuid.replace('UUID', ''))
@@ -175,7 +174,7 @@ class DbObject(object):
         ret = {}
         for i in filter(lambda f: not f.startswith('_'), dir(self)):
             t = type(getattr(self, i))
-            if t == str or t == dict or t == unicode or t == tuple or t == int or t == long:
+            if t in [str, dict, unicode, tuple, int, long]:
                 ret[i] = getattr(self, i)
         ret['uuid'] = toUUID(getattr(self, 'id'))
         return ret

@@ -131,12 +131,12 @@ class TaskManager(object):
 
         if interval:
             self.tasks[label] = LoopingCall(tmp_task[0], *tmp_task[1], **tmp_task[2])
-            logger.debug("Creating interval task %s (interval: %s)" % (label, interval))
+            logger.debug(f"Creating interval task {label} (interval: {interval})")
             return self.tasks[label].start(interval)
 
         if cron_expression:
             self.tasks[label] = ScheduledCall(tmp_task[0], *tmp_task[1], **tmp_task[2])
-            logger.debug("Creating cron task %s (cron: %s)" % (label, cron_expression))
+            logger.debug(f"Creating cron task {label} (cron: {cron_expression})")
             return self.tasks[label].start(CronSchedule(cron_expression))
 
         # If no delay nor interval nor cron_expression
@@ -155,13 +155,13 @@ class TaskManager(object):
             self.tasks[label].stop()
             del self.tasks[label]
         except KeyError:
-            raise TaskDoesNotExists("Unknown task %s" % label)
+            raise TaskDoesNotExists(f"Unknown task {label}")
 
     def getTask(self, label):
         try:
             return self.tasks[label]
         except KeyError:
-            raise TaskDoesNotExists("Unknown task %s" % label)
+            raise TaskDoesNotExists(f"Unknown task {label}")
 
 
 class DelayedCall:
@@ -188,7 +188,7 @@ class DelayedCall:
         return d
 
     def __call__(self):
-        logger.debug("Running task %s" % self.f)
+        logger.debug(f"Running task {self.f}")
         def cb(result):
             d, self.deferred = self.deferred, None
             self.result = result
@@ -291,7 +291,7 @@ class ScheduledCall:
             d.callback(self)
 
     def __call__(self):
-        logger.debug("Running task %s" % self.f)
+        logger.debug(f"Running task {self.f}")
         def cb(result):
             if self.running:
                 self._reschedule()
@@ -300,7 +300,7 @@ class ScheduledCall:
                 d.callback(self)
 
         def eb(failure):
-            logger.error("Failed to start task %s" % self.f)
+            logger.error(f"Failed to start task {self.f}")
             self.running = False
             d, self.deferred = self.deferred, None
             d.errback(failure)
@@ -325,13 +325,11 @@ class ScheduledCall:
         if hasattr(self.f, 'func_name'):
             func = self.f.func_name
             if hasattr(self.f, 'im_class'):
-                func = self.f.im_class.__name__ + '.' + func
+                func = f'{self.f.im_class.__name__}.{func}'
         else:
             func = reflect.safe_repr(self.f)
 
-        return 'ScheduledCall<%s>(%s, *%s, **%s)' % (
-            self.schedule, func, reflect.safe_repr(self.a),
-            reflect.safe_repr(self.kw))
+        return f'ScheduledCall<{self.schedule}>({func}, *{reflect.safe_repr(self.a)}, **{reflect.safe_repr(self.kw)})'
 
 
 if __name__ == "__main__":

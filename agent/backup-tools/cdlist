@@ -28,13 +28,11 @@ import os.path
 
 class MediaObject:
     def __init__(self,dest,size):
-        self._dest = dest+"/"
+        self._dest = f"{dest}/"
         self._size = size
-        self._volumes = dict()
-        self._volumes[0] = 0
-        self._filehandle = dict()
-        self._filehandle[0] = open(self._dest+'list1','w')
-        self._errorhandle = open(self._dest+'error.log','w')
+        self._volumes = {0: 0}
+        self._filehandle = {0: open(f'{self._dest}list1', 'w')}
+        self._errorhandle = open(f'{self._dest}error.log', 'w')
 
 
     def addFile(self,filename):
@@ -86,7 +84,7 @@ def walktree(top = ".", depthfirst = True):
     try:
         names = os.listdir(top)
     except:
-        names = list()
+        names = []
     if not depthfirst:
         yield top, names
     for name in names:
@@ -95,8 +93,7 @@ def walktree(top = ".", depthfirst = True):
         except os.error:
             continue
         if stat.S_ISDIR(st.st_mode):
-            for (newtop, children) in walktree (os.path.join(top, name), depthfirst):
-                yield newtop, children
+            yield from walktree (os.path.join(top, name), depthfirst)
     if depthfirst:
         yield top, names
 

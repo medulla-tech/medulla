@@ -69,15 +69,15 @@ class ConfigReader :
 
         @return: ConfigParser.ConfigParser instance
         """
-        log.debug("Load config file %s" % inifile)
+        log.debug(f"Load config file {inifile}")
         if not os.path.exists(inifile) :
             log.error("Error while reading the config file: Not found.")
             sys.exit(2)
 
         config = ConfigParser()
         config.readfp(open(inifile))
-        if os.path.isfile(inifile + '.local'):
-            config.readfp(open(inifile + '.local','r'))
+        if os.path.isfile(f'{inifile}.local'):
+            config.readfp(open(f'{inifile}.local', 'r'))
 
         return config
 
@@ -128,7 +128,7 @@ class MMCProxy :
         port = self.pkg_server_config.get("mmc_agent", "port")
 
         log.debug("Building the connection URL at mmc-agent")
-        self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
+        self._url = f'https://{username}:{password}@{host}:{port}'
 
     def _get_ldap_password(self):
         """
@@ -248,21 +248,19 @@ class LoadDefaults (RPCClient):
         opt = self.options
 
         if opt.default_menu or opt.link_img_server \
-               or opt.unlink_img_server :
+                   or opt.unlink_img_server :
             log.debug("Options validated")
             return
 
-        if (opt.loc_id or opt.is_id or opt.loc_name) \
-            and not (opt.link_img_server or opt.default_menu) :
+        if opt.loc_id or opt.is_id or opt.loc_name:
 
             log.error("Incorrect combination of options.")
-            log.error("Type '%s --help' for more information." % MODULE_NAME)
+            log.error(f"Type '{MODULE_NAME} --help' for more information.")
             sys.exit(2)
 
-        if not opt.link_img_server or opt.default_menu :
-            log.error("Options required.")
-            log.error("Type '%s --help' for more information." % MODULE_NAME)
-            sys.exit(2)
+        log.error("Options required.")
+        log.error(f"Type '{MODULE_NAME} --help' for more information.")
+        sys.exit(2)
 
         log.debug("Options validated")
 
@@ -312,7 +310,7 @@ class LoadDefaults (RPCClient):
         if success1 and success2 :
             log.info("Imaging server successfully unassociated.")
 
-    def synchroLocation (self):
+    def synchroLocation(self):
         """ Wrapper for the remote function """
         loc_id = self.options.loc_id or "UUID1"
 
@@ -320,11 +318,10 @@ class LoadDefaults (RPCClient):
         fnc = self.proxy.imaging.synchroLocation
         args = [loc_id]
 
-        success = self.rpc_execute(fnc, *args)
-        if success :
+        if success := self.rpc_execute(fnc, *args):
             log.info("Menu successfully associated.")
 
-def run(argv) :
+def run(argv):
     """ Run the script """
     # Parse command line options
     usage = "pulse2-load-defaults options"
@@ -358,11 +355,7 @@ def run(argv) :
 
     (options, args) = parser.parse_args(argv)
 
-    if options.debug:
-        level = logging.DEBUG
-    else:
-        level = logging.INFO
-
+    level = logging.DEBUG if options.debug else logging.INFO
     # Init logger
     handler = logging.StreamHandler()
     handler.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))

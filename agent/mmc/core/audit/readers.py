@@ -61,15 +61,19 @@ class AuditReaderDB:
         # Filter by module
         #
         if plug != 0:
-            plugin = self.session.query(Module).filter(self.parent.module_table.c.name.like("%"+plug+"%")).first()
-            if plugin != None:
-
-                ql = qlog.filter(self.parent.record_table.c.module_id==plugin.id)
-                qlog = ql
-            else:
+            plugin = (
+                self.session.query(Module)
+                .filter(self.parent.module_table.c.name.like(f"%{plug}%"))
+                .first()
+            )
+            if plugin is None:
                 self.session.close()
                 return None
 
+            else:
+
+                ql = qlog.filter(self.parent.record_table.c.module_id==plugin.id)
+                qlog = ql
         #
         # Filter by date
         #
@@ -88,47 +92,62 @@ class AuditReaderDB:
         if user != 0:
             # type_id: 1 => USER
             # type_id: 2 => SYSTEMUSER
-            object_user = self.session.query(Object).filter(
-                and_(
-                    or_(
-                        self.parent.object_table.c.type_id==1,
-                        self.parent.object_table.c.type_id==2,
-                    ),
-                    self.parent.object_table.c.uri.like("%"+user+"%"),
-                )).first()
-            if object_user==None:
+            object_user = (
+                self.session.query(Object)
+                .filter(
+                    and_(
+                        or_(
+                            self.parent.object_table.c.type_id == 1,
+                            self.parent.object_table.c.type_id == 2,
+                        ),
+                        self.parent.object_table.c.uri.like(f"%{user}%"),
+                    )
+                )
+                .first()
+            )
+            if object_user is None:
                 self.session.close()
                 return None
             else:
-               ql = qlog.filter(self.parent.record_table.c.user_id==object_user.id)
-               qlog = ql
+                ql = qlog.filter(self.parent.record_table.c.user_id==object_user.id)
+                qlog = ql
 
         #
         # Filter by event
         #
         if action != 0:
-            action = self.session.query(Event).filter(self.parent.event_table.c.name.like("%"+action+"%")).all()
-            if action != []:
-                oraction = or_(self.parent.record_table.c.event_id==action[0].id)
-                for idact in action:
-                        oraction = or_(oraction,self.parent.record_table.c.event_id==idact.id)
-                ql = qlog.filter(oraction)
-                qlog = ql
-            else:
+            action = (
+                self.session.query(Event)
+                .filter(self.parent.event_table.c.name.like(f"%{action}%"))
+                .all()
+            )
+            if action == []:
                 return None
 
 
+            oraction = or_(self.parent.record_table.c.event_id==action[0].id)
+            for idact in action:
+                    oraction = or_(oraction,self.parent.record_table.c.event_id==idact.id)
+            ql = qlog.filter(oraction)
+            qlog = ql
         #
         # Filter by object
         #
         if object != 0:
-            obj= self.session.query(Object).filter(self.parent.object_table.c.uri.like("%"+object+"%")).all()
+            obj = (
+                self.session.query(Object)
+                .filter(self.parent.object_table.c.uri.like(f"%{object}%"))
+                .all()
+            )
             if obj != []:
                 orobj = or_(self.parent.object_log_table.c.object_id==obj[0].id)
                 for idobj in obj:
                     orobj = or_(orobj,self.parent.object_log_table.c.object_id==idobj.id)
-                object_log = self.session.query(Object_Log).filter(orobj).all()
-                if object_log:
+                if (
+                    object_log := self.session.query(Object_Log)
+                    .filter(orobj)
+                    .all()
+                ):
                     orobjlog = or_(self.parent.record_table.c.id==object_log[0].record_id)
                     for idobjectlog in object_log:
                         orobjlog = or_(orobjlog,self.parent.record_table.c.id==idobjectlog.record_id)
@@ -145,7 +164,11 @@ class AuditReaderDB:
         # Filter by type
         #
         if type != 0:
-            typ = self.session.query(Type).filter(self.parent.type_table.c.type.like("%"+type+"%")).first()
+            typ = (
+                self.session.query(Type)
+                .filter(self.parent.type_table.c.type.like(f"%{type}%"))
+                .first()
+            )
             if typ != None:
                 ql = qlog.filter(self.parent.object_table.c.type_id==typ.id).join("obj_log")
                 qlog = ql
@@ -201,24 +224,14 @@ class AuditReaderDB:
                     #
                     #if lobject.type_id==2:
                     lpattr = self.session.query(Previous_Value).filter(self.parent.previous_value_table.c.object_log_id==objects.id).all()
-                    #
-                    # Put attr in array !
-                    #
-
-                    pattr=[]
-                    for p in lpattr:
-                        pattr.append(p.value)
-
+                    pattr = [p.value for p in lpattr]
                     lcattr = self.session.query(Current_Value).filter(self.parent.current_value_table.c.object_log_id==objects.id).all()
 
-                    cattr=[]
-                    for c in lcattr:
-                        cattr.append(c.value)
-
+                    cattr = [c.value for c in lcattr]
                     llistobj.append({"object":str(lobject.uri), "type":str(ltype.type), "previous":pattr,"current":cattr})
-                #else:
-                 #   llistobj.append({})
-                    #llistobj.append({"object":str(lobject.uri), "type":str(ltype.type)})
+                        #else:
+                         #   llistobj.append({})
+                            #llistobj.append({"object":str(lobject.uri), "type":str(ltype.type)})
             #
             #    Final array
             #

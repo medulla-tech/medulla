@@ -40,7 +40,7 @@ from pulse2.scheduler.config import SchedulerConfig
 import logging
 import logging.config
 
-def app() :
+def app():
     from pulse2.scheduler.proxy.control import App
 
     config = SchedulerConfig()
@@ -48,10 +48,8 @@ def app() :
     d = task.deferLater(reactor, config.initial_wait, app.run)
     @d.addCallback
     def cb(result):
-        if result :
-            return 0
-        else :
-            return 1
+        return 0 if result else 1
+
     @d.addErrback
     def eb(result):
         return 1

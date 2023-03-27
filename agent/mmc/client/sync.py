@@ -119,7 +119,7 @@ class MMCBaseTransport(object):
         """ Include HTTPS Basic Authentication data in a header
         """
         auth = encodestring("%s:%s" % self.credentials).strip()
-        auth = 'Basic %s' %(auth,)
+        auth = f'Basic {auth}'
         connection.putheader('Authorization', auth)
 
     def send_cookie_auth(self, connection):
@@ -130,7 +130,7 @@ class MMCBaseTransport(object):
             cj.load(COOKIES_FILE, ignore_discard=True, ignore_expires=True)
 
             for cookie in cj:
-                connection.putheader('Cookie', '%s=%s' % (cookie.name, cookie.value))
+                connection.putheader('Cookie', f'{cookie.name}={cookie.value}')
             return True
         except LoadError :
             # mmc-cookies file is sometimes on bad format
@@ -170,7 +170,7 @@ class MMCBaseTransport(object):
 
         # Creati g cookie jar
         cresponse = CookieResponse(headers)
-        crequest = CookieRequest('https://' + host + '/')
+        crequest = CookieRequest(f'https://{host}/')
         if '<methodName>base.ldapAuth</methodName>' in request_body:
             cj = LWPCookieJar()
             cj.extract_cookies(cresponse, crequest)

@@ -65,26 +65,27 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         color.orange,
     ]
 
-    can = canvas.init("%s" % filename)
+    can = canvas.init(f"{filename}")
 
     # Draw graph title
-    newtitle = "/hL/20%s" % title
+    newtitle = f"/hL/20{title}"
     left = WIDTH / 2  - font.text_width(newtitle) / 2
     can.show(left, HEIGHT + DELTA, newtitle)
 
     int_to_date = lambda x: '/a60{}' + time.strftime("%H:%M", time.localtime(x))
 
     xaxis = axis.X(
-        format = int_to_date,
-        label = "/20%s" % label_x,
-        label_offset = (0, -DELTA),
-        minor_tic_interval = X_MINOR_TICK_INTERVAL,
-        tic_interval = X_TICK_INTERVAL)
+        format=int_to_date,
+        label=f"/20{label_x}",
+        label_offset=(0, -DELTA),
+        minor_tic_interval=X_MINOR_TICK_INTERVAL,
+        tic_interval=X_TICK_INTERVAL,
+    )
     yaxis = axis.Y(
-        label = "/20%s" % label_y,
-        label_offset = (-DELTA, 0),
-        minor_tic_interval = (end_y - start_y) / 20,
-        tic_interval = (end_y - start_y) / 5,
+        label=f"/20{label_y}",
+        label_offset=(-DELTA, 0),
+        minor_tic_interval=(end_y - start_y) / 20,
+        tic_interval=(end_y - start_y) / 5,
     )
 
     ar = area.T(
@@ -97,9 +98,8 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         x_grid_interval = X_GRID_INTERVAL,
         y_grid_interval = (end_y - start_y) / 5)
 
-    i = 0
     # Draw a line for each columns
-    for title, data_y in alldata_y.iteritems():
+    for i, (title, data_y) in enumerate(alldata_y.iteritems()):
         plot = line_plot.T(
             label = title,
             data = zip(data_x, data_y),
@@ -107,8 +107,6 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
                 color = colors[i],
                 width = 1))
         ar.add_plot(plot)
-        i += 1
-
     ar.draw()
     can.close()
 
@@ -189,7 +187,9 @@ def read_logs(logfiles, start_date, stop_date):
 if __name__ == "__main__":
 
     if len(sys.argv) < 4:
-        sys.exit("Usage : %s '<start date>' '<end date>' <log1> <log2> ..." % sys.argv[0])
+        sys.exit(
+            f"Usage : {sys.argv[0]} '<start date>' '<end date>' <log1> <log2> ..."
+        )
     (start_str, end_str) = sys.argv[1:3]
     logfiles = sys.argv[3:]
 
@@ -208,21 +208,41 @@ if __name__ == "__main__":
         # Get all sched hours
         for sched in scheduler_list:
             sched_hours += memory[sched].keys()
-            # deduplicate list
-            sched_hours = list(set(sched_hours))
-            sched_hours.sort()
-
+            sched_hours = sorted(set(sched_hours))
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
             for hour in sched_hours:
-                if not sched in sched_memory:
+                if sched not in sched_memory:
                     sched_memory[sched] = []
                 if hour in memory[sched]:
                     sched_memory[sched].append(memory[sched][hour])
                 else:
                     sched_memory[sched].append(0)
-            create_graph("Time", "Memory", sched_hours, {sched: sched_memory[sched]}, '%s - Memory - %s-%s.png' % (sched, start_str, end_str), "Memory on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Memory", sched_hours, sched_memory, 'schedulers - Memory - %s-%s.png' % (start_str, end_str), "Memory between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Memory",
+                sched_hours,
+                {sched: sched_memory[sched]},
+                f'{sched} - Memory - {start_str}-{end_str}.png',
+                "Memory on \"%s\" between %s and %s"
+                % (sched, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Memory",
+            sched_hours,
+            sched_memory,
+            f'schedulers - Memory - {start_str}-{end_str}.png',
+            f"Memory between {start_str} and {end_str}",
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     if loads:
         sched_loads = {}
@@ -232,21 +252,41 @@ if __name__ == "__main__":
         # Get all sched hours
         for sched in scheduler_list:
             sched_hours += loads[sched].keys()
-            # deduplicate list
-            sched_hours = list(set(sched_hours))
-            sched_hours.sort()
-
+            sched_hours = sorted(set(sched_hours))
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
             for hour in sched_hours:
-                if not sched in sched_loads:
+                if sched not in sched_loads:
                     sched_loads[sched] = []
                 if hour in loads[sched]:
                     sched_loads[sched].append(loads[sched][hour])
                 else:
                     sched_loads[sched].append(0)
-            create_graph("Time", "Load", sched_hours, {sched: sched_loads[sched]}, '%s - load - %s-%s.png' % (sched, start_str, end_str), "Load on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Load", sched_hours, sched_loads, 'schedulers - load - %s-%s.png' % (start_str, end_str), "Load between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Load",
+                sched_hours,
+                {sched: sched_loads[sched]},
+                f'{sched} - load - {start_str}-{end_str}.png',
+                "Load on \"%s\" between %s and %s"
+                % (sched, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Load",
+            sched_hours,
+            sched_loads,
+            f'schedulers - load - {start_str}-{end_str}.png',
+            f"Load between {start_str} and {end_str}",
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     if fds:
         sched_fds = {}
@@ -256,21 +296,41 @@ if __name__ == "__main__":
         # Get all sched hours
         for sched in scheduler_list:
             sched_hours += fds[sched].keys()
-            # deduplicate list
-            sched_hours = list(set(sched_hours))
-            sched_hours.sort()
-
+            sched_hours = sorted(set(sched_hours))
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
             for hour in sched_hours:
-                if not sched in sched_fds:
+                if sched not in sched_fds:
                     sched_fds[sched] = []
                 if hour in fds[sched]:
                     sched_fds[sched].append(fds[sched][hour])
                 else:
                     sched_fds[sched].append(0)
-            create_graph("Time", "Fds", sched_hours, {sched: sched_fds[sched]}, '%s - fds - %s-%s.png' % (sched, start_str, end_str), "Fds on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Fds", sched_hours, sched_fds, 'schedulers - fds - %s-%s.png' % (start_str, end_str), "Fds between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Fds",
+                sched_hours,
+                {sched: sched_fds[sched]},
+                f'{sched} - fds - {start_str}-{end_str}.png',
+                "Fds on \"%s\" between %s and %s"
+                % (sched, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Fds",
+            sched_hours,
+            sched_fds,
+            f'schedulers - fds - {start_str}-{end_str}.png',
+            f"Fds between {start_str} and {end_str}",
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     if db:
         sched_db = {}
@@ -280,20 +340,40 @@ if __name__ == "__main__":
         # Get all sched hours
         for sched in scheduler_list:
             sched_hours += db[sched].keys()
-            # deduplicate list
-            sched_hours = list(set(sched_hours))
-            sched_hours.sort()
-
+            sched_hours = sorted(set(sched_hours))
         # Sort scheduler data for pygraph
         for sched in scheduler_list:
             for hour in sched_hours:
-                if not sched in sched_db:
+                if sched not in sched_db:
                     sched_db[sched] = []
                 if hour in db[sched]:
                     sched_db[sched].append(db[sched][hour])
                 else:
                     sched_db[sched].append(0)
-            create_graph("Time", "Cx", sched_hours, {sched: sched_db[sched]}, '%s - cx - %s-%s.png' % (sched, start_str, end_str), "DB cx on \"%s\" between %s and %s" % (sched, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Cx", sched_hours, sched_db, 'schedulers - cx - %s-%s.png' % (start_str, end_str), "DB cx between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Cx",
+                sched_hours,
+                {sched: sched_db[sched]},
+                f'{sched} - cx - {start_str}-{end_str}.png',
+                "DB cx on \"%s\" between %s and %s"
+                % (sched, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Cx",
+            sched_hours,
+            sched_db,
+            f'schedulers - cx - {start_str}-{end_str}.png',
+            f"DB cx between {start_str} and {end_str}",
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     sys.exit(0)

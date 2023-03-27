@@ -43,15 +43,17 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
         self.sendHeader('Content-type', 'text/xml')
         self.sendHeader('Content-length', str(len(self.factory.payload)))
         if self.factory.user:
-            auth = '%s:%s' % (self.factory.user, self.factory.password)
+            auth = f'{self.factory.user}:{self.factory.password}'
             auth = auth.encode('base64').strip()
-            self.sendHeader('Authorization', 'Basic %s' % (auth,))
+            self.sendHeader('Authorization', f'Basic {auth}')
         try:
             # Put MMC session cookie
-            if not '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
-                h = open(COOKIES_FILE, 'r')
-                self.sendHeader('Cookie', h.read())
-                h.close()
+            if (
+                '<methodName>base.ldapAuth</methodName>'
+                not in self.factory.payload
+            ):
+                with open(COOKIES_FILE, 'r') as h:
+                    self.sendHeader('Cookie', h.read())
         except IOError:
             pass
         self.endHeaders()
@@ -59,9 +61,8 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
 
     def lineReceived(self, line):
         xmlrpc.QueryProtocol.lineReceived(self, line)
-        if line:
-            if line.startswith("Set-Cookie: "):
-                self._session = line.split()[1]
+        if line and line.startswith("Set-Cookie: "):
+            self._session = line.split()[1]
 
     def handleResponse(self, contents):
         xmlrpc.QueryProtocol.handleResponse(self, contents)
@@ -106,8 +107,8 @@ class ConfigReader :
 
         config = ConfigParser()
         config.readfp(open(inifile,'r'))
-        if os.path.isfile(inifile + '.local'):
-            config.readfp(open(inifile + '.local','r'))
+        if os.path.isfile(f'{inifile}.local'):
+            config.readfp(open(f'{inifile}.local', 'r'))
 
         return config
 
@@ -145,7 +146,7 @@ class MMCProxy :
         port = self._config.get("mmc_agent", "port")
 
         syslog("Building the connection URL at mmc-agent")
-        self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
+        self._url = f'https://{username}:{password}@{host}:{port}'
 
     def _get_ldap_password(self):
         """
@@ -194,7 +195,7 @@ class CallMethod :
         d.addErrback(self._errorback_proxy)
 
     def _errorback_proxy(self, failure):
-        syslog("Proxy call failed : %s" % str(failure))
+        syslog(f"Proxy call failed : {str(failure)}")
         reactor.stop()
 
     def auth(self):
@@ -205,7 +206,7 @@ class CallMethod :
         d.addErrback(self._errorback_auth)
 
     def _errorback_auth(self, failure):
-        syslog("Authentification failed : %s" % str(failure))
+        syslog(f"Authentification failed : {str(failure)}")
         reactor.stop()
 
     def call_method(self, result=None):
@@ -229,7 +230,7 @@ class CallMethod :
         reactor.stop()
 
     def _errorback_method(self, failure):
-        syslog("Method call failed : %s" % str(failure))
+        syslog(f"Method call failed : {str(failure)}")
         reactor.stop()
 
 if __name__ == "__main__" :

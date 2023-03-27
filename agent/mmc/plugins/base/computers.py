@@ -204,7 +204,7 @@ class ComputerManager(Singleton):
         self.logger = logging.getLogger()
 
     def select(self, name):
-        self.logger.info("Selecting computer manager: %s" % name)
+        self.logger.info(f"Selecting computer manager: {name}")
         self.main = name
 
     def getManagerName(self):
@@ -215,13 +215,13 @@ class ComputerManager(Singleton):
 
 
     def register(self, name, klass):
-        self.logger.debug("Registering computer manager %s / %s" % (name, str(klass)))
+        self.logger.debug(f"Registering computer manager {name} / {str(klass)}")
         self.components[name] = klass
 
     def validate(self):
         ret = (self.main == "none") or (self.main in self.components)
         if not ret:
-            self.logger.error("Selected computer manager '%s' not available" % self.main)
+            self.logger.error(f"Selected computer manager '{self.main}' not available")
             self.logger.error("Please check that the corresponding plugin was successfully enabled")
         return ret
 
@@ -310,7 +310,7 @@ class ComputerManager(Singleton):
             return []
 
     def getComputer(self, ctx, filt = None, empty_macs=False):
-        self.logger.debug("getComputer %s" % filt)
+        self.logger.debug(f"getComputer {filt}")
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputer(ctx, filt, empty_macs)
@@ -390,7 +390,7 @@ class ComputerManager(Singleton):
         klass = self.components[self.main]
         instance = klass()
         ret = instance.getComputersListHeaders(ctx)
-        if ret == None:
+        if ret is None:
             ret = [['cn', 'Computer Name'], ['displayName', 'Description']]
         return ret
 

@@ -29,13 +29,13 @@ class XMLRPCClient(object):
     """
     def __init__(self, baseurl="http://localhost/glpi"):
         self.baseurl = baseurl
-        self.serviceurl = self.baseurl + '/plugins/webservices/xmlrpc.php'
+        self.serviceurl = f'{self.baseurl}/plugins/webservices/xmlrpc.php'
         self.session = None
         self.server = xmlrpclib.ServerProxy(self.serviceurl)
         self.logger = logging.getLogger()
 
     def connect(self, login_name=None, login_password=None):
-        if not None in [login_name, login_password]:
+        if None not in [login_name, login_password]:
             params = {
                 'login_name':login_name,
                 'login_password':login_password,

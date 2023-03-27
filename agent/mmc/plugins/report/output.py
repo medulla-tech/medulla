@@ -140,13 +140,13 @@ class PDFGenerator(object):
                 setattr(self, '_'.join([hf, place, 'background']), '')
 
     def h1(self, str):
-        self.content += '<h1>%s</h1>' % str
+        self.content += f'<h1>{str}</h1>'
 
     def h2(self, str):
-        self.content += '<h2>%s</h2>' % str
+        self.content += f'<h2>{str}</h2>'
 
     def h3(self, str):
-        self.content += '<h3>%s</h3>' % str
+        self.content += f'<h3>{str}</h3>'
 
     @property
     def _css_file_content(self):
@@ -337,7 +337,7 @@ class PDFGenerator(object):
 
     def pushSVG(self, svg):
         self.content += '<div class="graph">'
-        self.content += '<img src="data:image/svg+xml;charset=utf-8;base64,%s" />' % b64encode(svg.encode('utf8'))
+        self.content += f"""<img src="data:image/svg+xml;charset=utf-8;base64,{b64encode(svg.encode('utf8'))}" />"""
         self.content += '</div>'
 
 
@@ -463,17 +463,16 @@ class SVGGenerator(object):
         """
         Remove items where all values are 0 or None for all periods
         """
-        values_idx = range(0, len(datas['titles']))
+        values_idx = range(len(datas['titles']))
         values_idx.reverse()
-        periods_idx = range(0, len(datas['dates']))
+        periods_idx = range(len(datas['dates']))
         periods_idx.reverse()
         for value_idx in values_idx:
-            remove = True
-            for period_idx in periods_idx:
-                if datas['values'][period_idx][value_idx] is not None and \
-                        datas['values'][period_idx][value_idx] > 0:
-                    remove = False
-                    break
+            remove = not any(
+                datas['values'][period_idx][value_idx] is not None
+                and datas['values'][period_idx][value_idx] > 0
+                for period_idx in periods_idx
+            )
             if remove:
                 del datas['titles'][value_idx]
                 for period in datas['values']:

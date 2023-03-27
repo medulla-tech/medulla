@@ -82,7 +82,7 @@ def options_validate(options):
     return is_complete
 
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
 
     parser = OptionParser()
 
@@ -109,12 +109,7 @@ if __name__ == "__main__" :
 
     (options, args) = parser.parse_args()
 
-    if options.verbose :
-        level = logging.NOTSET
-    else :
-        level = logging.DEBUG
-
-
+    level = logging.NOTSET if options.verbose else logging.DEBUG
     handler = logging.StreamHandler()
     handler.setLevel(level)
     log.addHandler(handler)

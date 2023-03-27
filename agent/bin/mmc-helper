@@ -58,11 +58,9 @@ example: mmc-helper audit initdb
 ret = 0
 printusage = False
 if len(sys.argv) == 2:
-    if sys.argv[1] == 'help':
-        printusage = True
-    else:
-        printusage = True
+    if sys.argv[1] != 'help':
         ret = 1
+    printusage = True
 elif len(sys.argv) == 3:
     if sys.argv[1] == 'audit':
         a = AuditFactory(None, False)

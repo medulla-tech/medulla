@@ -34,9 +34,7 @@ class DGConfig(DyngroupDatabaseConfig):
 
     def init(self, name, conffile = None):
         self.name = name
-        if not conffile: self.conffile = mmctools.getConfigFile(name)
-        else: self.conffile = conffile
-
+        self.conffile = conffile or mmctools.getConfigFile(name)
         DyngroupDatabaseConfig.setup(self, self.conffile)
         self.setup(self.conffile)
 
@@ -54,9 +52,10 @@ class DGConfig(DyngroupDatabaseConfig):
         if self.cp.has_option("main", "max_elements_for_static_list"):
             self.maxElementsForStaticList = self.cp.get("main", "max_elements_for_static_list")
 
-        if self.cp.has_section("querymanager"):
-            if self.cp.has_option("querymanager", "activate"):
-                self.dyngroup_activate = self.cp.getboolean("querymanager", "activate")
+        if self.cp.has_section("querymanager") and self.cp.has_option(
+            "querymanager", "activate"
+        ):
+            self.dyngroup_activate = self.cp.getboolean("querymanager", "activate")
 
         if self.cp.has_option("main", "check_db_enable"):
             self.check_db_enable = self.cp.getboolean("main", "check_db_enable")

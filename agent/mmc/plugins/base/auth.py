@@ -45,7 +45,7 @@ class AuthenticationManager(Singleton):
         @param name: the name of the authenticator
         @param klass: the class name of the authenticator
         """
-        self.logger.debug("Registering authenticator %s / %s" % (name, str(klass)))
+        self.logger.debug(f"Registering authenticator {name} / {str(klass)}")
         self.components.append((name, klass))
 
     def validate(self):
@@ -79,7 +79,7 @@ class AuthenticationManager(Singleton):
             for name in names.split():
                 for n, k in self.components:
                     if n == name:
-                        self.logger.info("Selecting authenticator %s / %s" % (n, str(k)))
+                        self.logger.info(f"Selecting authenticator {n} / {str(k)}")
                         tmp.append((n, k))
         self.components = tmp
 
@@ -127,8 +127,8 @@ class AuthenticatorConfig(MMCConfigParser):
         self.setDefault()
         fp = file(self.conffile, "r")
         self.readfp(fp, self.conffile)
-        if os.path.isfile(self.conffile + '.local'):
-            self.readfp(open(self.conffile + '.local','r'))
+        if os.path.isfile(f'{self.conffile}.local'):
+            self.readfp(open(f'{self.conffile}.local', 'r'))
         self.readConf()
         fp.close()
 
@@ -168,7 +168,7 @@ class AuthenticatorI:
         @param name: the authenticator name
         """
         self.logger = logging.getLogger()
-        self.config = klass(conffile, "authentication_" + name)
+        self.config = klass(conffile, f"authentication_{name}")
 
     def authenticate(self, user, password):
         """

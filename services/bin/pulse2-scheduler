@@ -61,7 +61,7 @@ class SchedulerSetupError(Exception):
         self.msg = msg
 
     def __repr__(self):
-        return "Scheduler setup failed: %s" % self.msg
+        return f"Scheduler setup failed: {self.msg}"
 
 class App :
     listen_unix = None
@@ -87,7 +87,7 @@ class App :
         return d
 
     def eb_setup(self, failure):
-        self.logger.error("scheduler setup failed: %s" % str(failure))
+        self.logger.error(f"scheduler setup failed: {str(failure)}")
         reactor.stop()
         return failure
 
@@ -104,7 +104,7 @@ class App :
                           self.schedule_dispatcher)
 
     def eb_start(self, failure):
-        self.logger.error("scheduler start failed: %s" % str(failure))
+        self.logger.error(f"scheduler start failed: {str(failure)}")
         reactor.stop()
         return failure
 
@@ -132,8 +132,9 @@ class App :
         d = maybeDeferred(MscDispatcher().initialize, self.config)
         @d.addErrback
         def _eb(failure):
-            self.logger.error("Dispatcher init error: %s" % str(failure))
+            self.logger.error(f"Dispatcher init error: {str(failure)}")
             reactor.stop()
+
         return d
 
     def schedule_dispatcher(self):
@@ -145,7 +146,7 @@ class App :
         return d
 
     def eb_loop(self, failure):
-        self.logger.error("Main loop runtime failed: %s" % str(failure))
+        self.logger.error(f"Main loop runtime failed: {str(failure)}")
 
     def spawn_proxy(self, reason):
         """ Starts the scheduler-proxy as a child process. """
@@ -170,7 +171,9 @@ class App :
 
     def clean_up(self):
         """ Cleanning up routine called before the shutdown. """
-        self.logger.info('scheduler %s: Shutting down and cleaning up' % (self.config.name))
+        self.logger.info(
+            f'scheduler {self.config.name}: Shutting down and cleaning up'
+        )
 
         # dispatcher invalidate
         MscDispatcher().cancel()
@@ -178,7 +181,7 @@ class App :
         self.loop.stop()
 
         # attempt to stop the unix socket listening
-        if self.listen_unix :
+        if self.listen_unix:
             d = self.listen_unix.stopListening()
             @d.addCallback
             def cb(reason):
@@ -186,16 +189,18 @@ class App :
                 if os.path.exists(self.socket_file):
                     self.logger.info("Unix socket: unlinking the file")
                     os.unlink(self.socket_file)
+
             # attempt to stop the scheduler-proxy
             d.addCallback(self.close_proxy)
 
             @d.addCallback
             def final(reason):
-                self.logger.info('scheduler %s: End' % (self.config.name))
+                self.logger.info(f'scheduler {self.config.name}: End')
 
             @d.addErrback
             def eb(failure):
-                self.logger.error("Unix socket: stop listening error: %s" % failure)
+                self.logger.error(f"Unix socket: stop listening error: {failure}")
+
             return d
 
 

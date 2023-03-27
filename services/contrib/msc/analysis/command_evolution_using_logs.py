@@ -115,26 +115,27 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         color.brown
     ]
 
-    can = canvas.init("%s" % filename)
+    can = canvas.init(f"{filename}")
 
     # Draw graph title
-    newtitle = "/hL/20%s" % title
+    newtitle = f"/hL/20{title}"
     left = WIDTH / 2  - font.text_width(newtitle) / 2
     can.show(left, HEIGHT + DELTA, newtitle)
 
     int_to_date = lambda x: '/a60{}' + time.strftime("%H:%M", time.localtime(x))
 
     xaxis = axis.X(
-        format = int_to_date,
-        label = "/20%s" % label_x,
-        label_offset = (0, -DELTA),
-        minor_tic_interval = X_MINOR_TICK_INTERVAL,
-        tic_interval = X_TICK_INTERVAL)
+        format=int_to_date,
+        label=f"/20{label_x}",
+        label_offset=(0, -DELTA),
+        minor_tic_interval=X_MINOR_TICK_INTERVAL,
+        tic_interval=X_TICK_INTERVAL,
+    )
     yaxis = axis.Y(
-        label = "/20%s" % label_y,
-        label_offset = (-DELTA, 0),
-        minor_tic_interval = (end_y - start_y) / 20,
-        tic_interval = (end_y - start_y) / 5,
+        label=f"/20{label_y}",
+        label_offset=(-DELTA, 0),
+        minor_tic_interval=(end_y - start_y) / 20,
+        tic_interval=(end_y - start_y) / 5,
     )
 
     ar = area.T(
@@ -148,9 +149,8 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         y_grid_interval = (end_y - start_y) / 5
     )
 
-    i = 0
     # Draw a line for each columns
-    for title, data_y in alldata_y.iteritems():
+    for i, (title, data_y) in enumerate(alldata_y.iteritems()):
         plot = line_plot.T(
             label = title,
             data = zip(data_x, data_y),
@@ -158,8 +158,6 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
                 color = colors[i],
                 width = 1))
         ar.add_plot(plot)
-        i += 1
-
     ar.draw()
     can.close()
 
@@ -256,7 +254,9 @@ def read_logs(logfiles, start_date, stop_date):
 if __name__ == "__main__":
 
     if len(sys.argv) < 4:
-        sys.exit("Usage : %s '<start date>' '<end date>' <log1> <log2> ..." % sys.argv[0])
+        sys.exit(
+            f"Usage : {sys.argv[0]} '<start date>' '<end date>' <log1> <log2> ..."
+        )
     (start_str, end_str) = sys.argv[1:3]
     logfiles = sys.argv[3:]
 
@@ -281,22 +281,42 @@ if __name__ == "__main__":
         # Get all group hours
         for group in group_list:
             group_hours += groups[group].keys()
-            # deduplicate list
-            group_hours = list(set(group_hours))
-            group_hours.sort()
-
+            group_hours = sorted(set(group_hours))
         # Sort groups data for pygraph
         for group in group_list:
             for hour in group_hours:
-                if not group in groups_actions:
+                if group not in groups_actions:
                     groups_actions[group] = []
                 if hour in groups[group]:
                     groups_actions[group].append(groups[group][hour])
                 else:
                     groups_actions[group].append(0)
 
-            create_graph("Time", "Number of actions", group_hours, {group: groups_actions[group]}, 'group %s  - %s-%s.png' % (group, start_str, end_str), "Running actions on group \"%s\" between %s and %s" % (group, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Number of actions", group_hours, groups_actions, 'groups - %s-%s.png' % (start_str, end_str), "Running actions per group between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Number of actions",
+                group_hours,
+                {group: groups_actions[group]},
+                f'group {group}  - {start_str}-{end_str}.png',
+                "Running actions on group \"%s\" between %s and %s"
+                % (group, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Number of actions",
+            group_hours,
+            groups_actions,
+            f'groups - {start_str}-{end_str}.png',
+            f"Running actions per group between {start_str} and {end_str}",
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
 
     if runnings:
@@ -307,21 +327,41 @@ if __name__ == "__main__":
         # Get all launch hours
         for launch in launcher_list:
             launch_hours += runnings[launch].keys()
-            # deduplicate list
-            launch_hours = list(set(launch_hours))
-            launch_hours.sort()
-
+            launch_hours = sorted(set(launch_hours))
         # Sort launchers data for pygraph
         for launch in launcher_list:
             for hour in launch_hours:
-                if not launch in launch_actions:
+                if launch not in launch_actions:
                     launch_actions[launch] = []
                 if hour in runnings[launch]:
                     launch_actions[launch].append(runnings[launch][hour])
                 else:
                     launch_actions[launch].append(0)
-            create_graph("Time", "Number of actions", launch_hours, {launch: launch_actions[launch]}, '%s - running - %s-%s.png' % (launch, start_str, end_str), "Running actions on \"%s\" between %s and %s" % (launch, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Number of actions", launch_hours, launch_actions, 'launchers - running - %s-%s.png' % (start_str, end_str), "Running actions between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Number of actions",
+                launch_hours,
+                {launch: launch_actions[launch]},
+                f'{launch} - running - {start_str}-{end_str}.png',
+                "Running actions on \"%s\" between %s and %s"
+                % (launch, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Number of actions",
+            launch_hours,
+            launch_actions,
+            f'launchers - running - {start_str}-{end_str}.png',
+            f"Running actions between {start_str} and {end_str}",
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     if zombies:
         launch_zombies = {}
@@ -331,10 +371,7 @@ if __name__ == "__main__":
         # Get all launch hours
         for launch in launcher_list:
             launch_hours += zombies[launch].keys()
-            # deduplicate list
-            launch_hours = list(set(launch_hours))
-            launch_hours.sort()
-
+            launch_hours = sorted(set(launch_hours))
         # Sort launchers data for pygraph
         for launch in launcher_list:
             for hour in launch_hours:
@@ -344,8 +381,31 @@ if __name__ == "__main__":
                     launch_zombies[launch].append(zombies[launch][hour])
                 else:
                     launch_zombies[launch].append(0)
-            create_graph("Time", "Number of actions", launch_hours, {launch: launch_zombies[launch]}, '%s - zombies - %s-%s.png' % (launch, start_str, end_str), "Zombies on \"%s\" between %s and %s" % (launch, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Number of actions", launch_hours, launch_zombies, 'launchers - zombies - %s-%s.png' % (start_str, end_str), "Zombies between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Number of actions",
+                launch_hours,
+                {launch: launch_zombies[launch]},
+                f'{launch} - zombies - {start_str}-{end_str}.png',
+                "Zombies on \"%s\" between %s and %s"
+                % (launch, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Number of actions",
+            launch_hours,
+            launch_zombies,
+            f'launchers - zombies - {start_str}-{end_str}.png',
+            f"Zombies between {start_str} and {end_str}",
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     if loads:
         launch_loads = {}
@@ -355,20 +415,40 @@ if __name__ == "__main__":
         # Get all launch hours
         for launch in launcher_list:
             launch_hours += loads[launch].keys()
-            # deduplicate list
-            launch_hours = list(set(launch_hours))
-            launch_hours.sort()
-
+            launch_hours = sorted(set(launch_hours))
         # Sort launchers data for pygraph
         for launch in launcher_list:
             for hour in launch_hours:
-                if not launch in launch_loads:
+                if launch not in launch_loads:
                     launch_loads[launch] = []
                 if hour in loads[launch]:
                     launch_loads[launch].append(loads[launch][hour])
                 else:
                     launch_loads[launch].append(0)
-            create_graph("Time", "Load", launch_hours, {launch: launch_loads[launch]}, '%s - load - %s-%s.png' % (launch, start_str, end_str), "Load on \"%s\" between %s and %s" % (launch, start_str, end_str), start, stop, 0, y_max)
-        create_graph("Time", "Load", launch_hours, launch_loads, 'launchers - load - %s-%s.png' % (start_str, end_str), "Load between %s and %s" % (start_str, end_str), start, stop, 0, y_max)
+            create_graph(
+                "Time",
+                "Load",
+                launch_hours,
+                {launch: launch_loads[launch]},
+                f'{launch} - load - {start_str}-{end_str}.png',
+                "Load on \"%s\" between %s and %s"
+                % (launch, start_str, end_str),
+                start,
+                stop,
+                0,
+                y_max,
+            )
+        create_graph(
+            "Time",
+            "Load",
+            launch_hours,
+            launch_loads,
+            f'launchers - load - {start_str}-{end_str}.png',
+            f"Load between {start_str} and {end_str}",
+            start,
+            stop,
+            0,
+            y_max,
+        )
 
     sys.exit(0)

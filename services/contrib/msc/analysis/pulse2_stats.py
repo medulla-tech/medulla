@@ -64,10 +64,10 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         color.orange,
     ]
 
-    can = canvas.init("%s"%filename)
+    can = canvas.init(f"{filename}")
 
     # Draw graph title
-    newtitle = "/hL/20%s"%title
+    newtitle = f"/hL/20{title}"
     left = WIDTH / 2  - font.text_width(newtitle)/2
     can.show(left, HEIGHT + DELTA, newtitle)
 
@@ -75,17 +75,17 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
     int_to_date = lambda x: '/a60{}' + time.strftime("%H:%M", time.localtime(x))
 
     xaxis = axis.X(
-        format = int_to_date,
-        label = "/20%s" % label_x,
-        label_offset = (0, -DELTA),
-        minor_tic_interval = X_MINOR_TICK_INTERVAL,
-        tic_interval = X_TICK_INTERVAL
+        format=int_to_date,
+        label=f"/20{label_x}",
+        label_offset=(0, -DELTA),
+        minor_tic_interval=X_MINOR_TICK_INTERVAL,
+        tic_interval=X_TICK_INTERVAL,
     )
     yaxis = axis.Y(
-        label = "/20%s" % label_y,
-        label_offset = (-DELTA, 0),
-        minor_tic_interval = Y_MINOR_TICK_INTERVAL,
-        tic_interval = Y_TICK_INTERVAL
+        label=f"/20{label_y}",
+        label_offset=(-DELTA, 0),
+        minor_tic_interval=Y_MINOR_TICK_INTERVAL,
+        tic_interval=Y_TICK_INTERVAL,
     )
 
     ar = area.T(
@@ -99,9 +99,8 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
         y_grid_interval = Y_GRID_INTERVAL
     )
 
-    i = 0
     # Draw a line for each columns
-    for title, data_y in alldata_y.iteritems():
+    for i, (title, data_y) in enumerate(alldata_y.iteritems()):
         plot = line_plot.T(
             label = title,
             data = zip(data_x,data_y),
@@ -111,8 +110,6 @@ def create_graph(label_x, label_y, data_x, alldata_y, filename, title, start_dat
             )
         )
         ar.add_plot(plot)
-        i += 1
-
     ar.draw()
     can.close()
 
@@ -181,12 +178,12 @@ def read_logs(log_dir, start_date, stop_date):
 if __name__ == "__main__":
 
     if len(sys.argv) != 4:
-        sys.exit("Usage : %s <logs_directory> '<start date>' '<end date>'"%sys.argv[0])
+        sys.exit(f"Usage : {sys.argv[0]} <logs_directory> '<start date>' '<end date>'")
 
     (log_dir, start_str, end_str) = sys.argv[1:]
 
     if not os.path.isdir(sys.argv[1]):
-        sys.exit("ERROR, %s : no such directory."%sys.argv[1])
+        sys.exit(f"ERROR, {sys.argv[1]} : no such directory.")
 
     groups_actions = {}
     launch_actions = {}
@@ -205,23 +202,39 @@ if __name__ == "__main__":
         # Get all group hours
         for group in group_list:
             group_hours += groups[group].keys()
-            # deduplicate list
-            group_hours = list(set(group_hours))
-            group_hours.sort()
-
+            group_hours = sorted(set(group_hours))
         # Sort groups data for pygraph
         for group in group_list:
 
             for hour in group_hours:
-                if not group in groups_actions:
+                if group not in groups_actions:
                     groups_actions[group] = []
                 if hour in groups[group]:
                     groups_actions[group].append(groups[group][hour])
                 else:
                     groups_actions[group].append(0)
 
-            create_graph("Horaires", "Nombre d'actions", group_hours, {group: groups_actions[group]}, 'group %s  - %s-%s.png' % (group, start_str, end_str), "Evolution du nombre d'actions en cours sur le group \"%s\" entre %s et %s" % (group, start_str, end_str), start, stop)
-        create_graph("Horaires", "Nombre d'actions", group_hours, groups_actions, 'groups - %s-%s.png' % (start_str, end_str), "Evolution du nombre d'actions en cours sur les differents groups entre %s et %s" % (start_str, end_str), start, stop)
+            create_graph(
+                "Horaires",
+                "Nombre d'actions",
+                group_hours,
+                {group: groups_actions[group]},
+                f'group {group}  - {start_str}-{end_str}.png',
+                "Evolution du nombre d'actions en cours sur le group \"%s\" entre %s et %s"
+                % (group, start_str, end_str),
+                start,
+                stop,
+            )
+        create_graph(
+            "Horaires",
+            "Nombre d'actions",
+            group_hours,
+            groups_actions,
+            f'groups - {start_str}-{end_str}.png',
+            f"Evolution du nombre d'actions en cours sur les differents groups entre {start_str} et {end_str}",
+            start,
+            stop,
+        )
 
 
     if launchers:
@@ -230,22 +243,38 @@ if __name__ == "__main__":
         # Get all launch hours
         for launch in launcher_list:
             launch_hours += launchers[launch].keys()
-            # deduplicate list
-            launch_hours = list(set(launch_hours))
-            launch_hours.sort()
-
+            launch_hours = sorted(set(launch_hours))
         # Sort launchers data for pygraph
         for launch in launcher_list:
 
             for hour in launch_hours:
-                if not launch in launch_actions:
+                if launch not in launch_actions:
                     launch_actions[launch] = []
                 if hour in launchers[launch]:
                     launch_actions[launch].append(launchers[launch][hour])
                 else:
                     launch_actions[launch].append(0)
 
-            create_graph("Horaires", "Nombre d'actions", launch_hours, {launch: launch_actions[launch]}, '%s - %s-%s.png' % (launch, start_str, end_str), "Evolution du nombre d'actions en cours sur le launcher \"%s\" entre %s et %s" % (launch, start_str, end_str), start, stop)
-        create_graph("Horaires", "Nombre d'actions", launch_hours, launch_actions, 'launchers - %s-%s.png' % (start_str, end_str), "Evolution du nombre d'actions en cours sur les differents launchers entre %s et %s" % (start_str, end_str), start, stop)
+            create_graph(
+                "Horaires",
+                "Nombre d'actions",
+                launch_hours,
+                {launch: launch_actions[launch]},
+                f'{launch} - {start_str}-{end_str}.png',
+                "Evolution du nombre d'actions en cours sur le launcher \"%s\" entre %s et %s"
+                % (launch, start_str, end_str),
+                start,
+                stop,
+            )
+        create_graph(
+            "Horaires",
+            "Nombre d'actions",
+            launch_hours,
+            launch_actions,
+            f'launchers - {start_str}-{end_str}.png',
+            f"Evolution du nombre d'actions en cours sur les differents launchers entre {start_str} et {end_str}",
+            start,
+            stop,
+        )
 
     sys.exit(0)

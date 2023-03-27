@@ -58,18 +58,16 @@ def subnetForIpMask(ip, netmask):
     try:
         ip = map(lambda x: int(x), ip.split('.'))
         netmask = map(lambda x: int(x), netmask.split('.'))
-        for i in range(4):
-            result.append( str(ip[i] & netmask[i]))
+        result.extend(str(ip[i] & netmask[i]) for i in range(4))
         result=".".join(result)
         return True, result
     except ValueError:
         return False, "O.O.O.O"
 
 def tmpfile(name,string):
-    if(logging.getLogger().getEffectiveLevel()<=logging.DEBUG):
-        z=open("/tmp/%s"%name,"w")
-        z.write(string)
-        z.close()
+    if (logging.getLogger().getEffectiveLevel()<=logging.DEBUG):
+        with open(f"/tmp/{name}", "w") as z:
+            z.write(string)
 
 
 

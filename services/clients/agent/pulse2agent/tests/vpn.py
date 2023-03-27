@@ -214,7 +214,5 @@ class Test00_VPNLaunchControl(TestCase):
 
 
 
-if __name__ == '__main__':
-
-    if TestCase.__module__ != "twisted.trial.unittest" :
-        main()
+if __name__ == '__main__' and TestCase.__module__ != "twisted.trial.unittest":
+    main()

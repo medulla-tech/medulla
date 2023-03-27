@@ -64,17 +64,17 @@ class ComponentError(Exception):
 class ComponentInitError(ComponentError):
 
     def __repr__(self):
-        return "Initialisation of component %s failed" % repr(self.name)
+        return f"Initialisation of component {repr(self.name)} failed"
 
 class ComponentAlreadyInitialized(ComponentError):
 
     def __repr__(self):
-        return "Component %s already initialized" % repr(self.name)
+        return f"Component {repr(self.name)} already initialized"
 
 class ComponentUntitled(ComponentError):
 
     def __repr__(self):
-        return "Untitled component %s" % repr(self.name)
+        return f"Untitled component {repr(self.name)}"
 
 
 class Component(object):
@@ -96,11 +96,13 @@ class Component(object):
             if hasattr(self, name):
                 setattr(self, name, value)
             else:
-                raise AttributeError("Attribute %s isn't declared as attribute of component" % name)
+                raise AttributeError(
+                    f"Attribute {name} isn't declared as attribute of component"
+                )
 
 
     def __repr__(self):
-        return "Component object '%s' on %s" % (repr(self.__component_name__), id(self))
+        return f"Component object '{repr(self.__component_name__)}' on {id(self)}"
 
     @property
     def parent(self):
@@ -148,9 +150,12 @@ class DispatcherFrame(object):
     def _get_cmpt_attribute_names(self):
         """ Returns the attributes only 'declared' on 1st level """
         for name, attribute in self.__class__.__bases__[0].__dict__.iteritems():
-            if not name.startswith("_") and not callable(attribute):
-                if name != "components":
-                    yield name
+            if (
+                not name.startswith("_")
+                and not callable(attribute)
+                and name != "components"
+            ):
+                yield name
 
 
     def _set_component_kwargs(self):
@@ -168,7 +173,7 @@ class DispatcherFrame(object):
             cmpt_instance = component(**self._component_kwargs)
             cmpt_instance.parent = self
 
-            if not cmpt_instance.__component_name__ in self.__dict__:
+            if cmpt_instance.__component_name__ not in self.__dict__:
                 setattr(self,
                         cmpt_instance.__component_name__,
                         cmpt_instance

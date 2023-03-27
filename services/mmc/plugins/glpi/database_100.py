@@ -98,7 +98,7 @@ class Glpi100(DyngroupDatabaseHelper):
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
 
         if LooseVersion(self._glpi_version) >=  LooseVersion("10.0") and LooseVersion(self._glpi_version) <=  LooseVersion("10.0.9"):
-            logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
+            logging.getLogger().debug(f'GLPI version {self._glpi_version} found !')
             return True
         else:
             logging.getLogger().debug('GLPI higher than version 10.0 was not detected')
@@ -118,10 +118,7 @@ class Glpi100(DyngroupDatabaseHelper):
             self.logger.info("Glpi don't need activation")
             return None
         self.logger.info("Glpi is activating")
-        if config != None:
-            self.config = config
-        else:
-            self.config = GlpiConfig("glpi")
+        self.config = config if config != None else GlpiConfig("glpi")
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
@@ -140,7 +137,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         self.metadata = MetaData(self.db)
         self.initMappers()
-        self.logger.info("Glpi is in version %s" % (self.glpi_version))
+        self.logger.info(f"Glpi is in version {self.glpi_version}")
         self.metadata.create_all()
         self.is_activated = True
         self.logger.debug("Glpi finish activation")
@@ -551,30 +548,32 @@ class Glpi100(DyngroupDatabaseHelper):
         The request is in OR not in AND, so be carefull with what you want
         """
         ret = self.__filter_on_filter(query)
-        if type(ret) == type(None):
-            return query
-        else:
-            return query.filter(ret)
+        return query if type(ret) == type(None) else query.filter(ret)
 
     def __filter_on_filter(self, query):
         if self.config.filter_on != None:
             a_filter_on = []
             for filter_key, filter_values in self.config.filter_on.items():
                 if filter_key == 'state':
-                    self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
+                    self.logger.debug(f'will filter {filter_key} in ({str(filter_values)})')
                     a_filter_on.append(self.machine.c.states_id.in_(filter_values))
                 if filter_key == 'type':
-                    self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
+                    self.logger.debug(f'will filter {filter_key} in ({str(filter_values)})')
                     a_filter_on.append(self.machine.c.computertypes_id.in_(filter_values))
                 if filter_key == 'entity':
-                    self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
+                    self.logger.debug(f'will filter {filter_key} in ({str(filter_values)})')
                     a_filter_on.append(self.machine.c.entities_id.in_(filter_values))
                 if filter_key == 'autoupdatesystems_id':
-                    self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
+                    self.logger.debug(f'will filter {filter_key} in ({str(filter_values)})')
                     a_filter_on.append(self.machine.c.autoupdatesystems_id.in_(filter_values))
-                if not filter_key in ('state','type','entity','autoupdatesystems_id') :
-                    self.logger.warn('dont know how to filter on %s' % (filter_key))
-            if len(a_filter_on) == 0:
+                if filter_key not in (
+                    'state',
+                    'type',
+                    'entity',
+                    'autoupdatesystems_id',
+                ):
+                    self.logger.warn(f'dont know how to filter on {filter_key}')
+            if not a_filter_on:
                 return None
             elif len(a_filter_on) == 1:
                 return a_filter_on[0]
@@ -619,13 +618,14 @@ class Glpi100(DyngroupDatabaseHelper):
         elif "query" in filt and filt['query'][0] in ["AND", "OR", "NOT"]:
             for q in filt['query'][1]:
                 #if len(q) >=3: and  q[2].lower() in ["online computer", "ou user", "ou machine"]:
-                if len(q) >=3:
-                    if  q[2].lower() in ["online computer",
-                                         'ou machine',
-                                         'ou user']:
-                        listid = XmppMasterDatabase().getxmppmasterfilterforglpi(q)
-                        q.append(listid)
-                        ret[q[2]] = [q[1], q[2], q[3], listid]
+                if len(q) >= 3 and q[2].lower() in [
+                    "online computer",
+                    'ou machine',
+                    'ou user',
+                ]:
+                    listid = XmppMasterDatabase().getxmppmasterfilterforglpi(q)
+                    q.append(listid)
+                    ret[q[2]] = [q[1], q[2], q[3], listid]
         return ret
 
 

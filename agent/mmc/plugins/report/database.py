@@ -61,9 +61,7 @@ class ReportDatabase(DatabaseHelper):
         # Uncomment this line to connect to mysql and parse tables
         self.is_activated = True
         logger.debug("Report database connected")
-        if not self.db_check():
-            return self.db_update()
-        return True
+        return True if self.db_check() else self.db_update()
 
     def initMappers(self):
         """
@@ -76,7 +74,7 @@ class ReportDatabase(DatabaseHelper):
         try:
             return session.query(Indicator).filter_by(name=name).one()
         except NoResultFound:
-            logger.error("Can't find indicator %s in the DB" % name)
+            logger.error(f"Can't find indicator {name} in the DB")
             return False
 
     @DatabaseHelper._session
@@ -100,16 +98,19 @@ class ReportDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def add_indicator(self, session, indicator_attr):
         try:
-            indicator = session.query(Indicator).filter_by(name=indicator_attr['name']).first()
-            if indicator:
+            if (
+                indicator := session.query(Indicator)
+                .filter_by(name=indicator_attr['name'])
+                .first()
+            ):
                 indicator.fromDict(indicator_attr)
             else:
-                logger.info('Adding new indicator %s' % indicator_attr['name'])
+                logger.info(f"Adding new indicator {indicator_attr['name']}")
                 indicator = Indicator(**indicator_attr)
                 session.add(indicator)
             session.commit()
         except:
-            logger.exception("Failed to add indicator with values %s" % indicator_attr)
+            logger.exception(f"Failed to add indicator with values {indicator_attr}")
             return False
         return True
 
@@ -137,10 +138,10 @@ class ReportDatabase(DatabaseHelper):
             try:
                 values = indicator.getCurrentValue()
             except:
-                logger.exception('Unable to get data for indicator : %s' % indicator.name)
+                logger.exception(f'Unable to get data for indicator : {indicator.name}')
                 continue
             for entry in values:
-                if not 'value' in entry:
+                if 'value' not in entry:
                     continue
                 if entry['value'] is None:
                     entry['value'] = 0
@@ -168,22 +169,15 @@ class ReportDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def get_indicator_value_at_time(self, session, indicator_name, ts_min, ts_max, entities=[]):
-        ## Mutable list entities used as default argument to a method or function
-        #entities = entities or []
-        indicator = self.get_indicator_by_name(indicator_name)
-        if indicator:
+        if indicator := self.get_indicator_by_name(indicator_name):
             return indicator.getValueAtTime(session, ts_min, ts_max, entities)
 
     @DatabaseHelper._session
     def get_indicator_datatype(self, session, indicator_name):
-        indicator = self.get_indicator_by_name(indicator_name)
-        if indicator:
+        if indicator := self.get_indicator_by_name(indicator_name):
             return indicator.data_type
 
     @DatabaseHelper._session
     def get_indicator_current_value(self, session, indicator_name, entities=[]):
-        # Mutable list entities used as default argument to a method or function
-        #entities = entities or []
-        indicator = self.get_indicator_by_name(indicator_name)
-        if indicator:
+        if indicator := self.get_indicator_by_name(indicator_name):
             return indicator.getCurrentValue(entities)

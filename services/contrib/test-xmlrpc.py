@@ -76,11 +76,8 @@ def _end():
 
 # parse cli args
 def parseCliArgs(config):
-    args=[]
     method = config["func"]
-    if config["args"]:
-        args = config["args"].split(';')
-
+    args = config["args"].split(';') if config["args"] else []
     parsedargs = []
     for arg in args: # parse args
         tokenlist = arg.split('|')                     # split arrays args
@@ -111,8 +108,6 @@ def parseCliArgs(config):
 
         if type(items) == type({}):
             parsedargs.append(items)
-        elif type(items) == type([]):
-            parsedargs += items
         else:
             parsedargs += items
         del(items)

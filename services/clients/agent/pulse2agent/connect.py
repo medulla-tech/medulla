@@ -38,19 +38,19 @@ class ConnectorException(Exception):
 class ConnectionRefused(ConnectorException):
     """An exception to raise when connection refused from other side"""
     def __repr__(self):
-        return "Connection on server %s:%s refused" % (self.host, self.port)
+        return f"Connection on server {self.host}:{self.port} refused"
 
 
 class UnknownService(ConnectorException):
     """An exception to raise when trying contact unable service """
     def __repr__(self):
-        return "Unknown service %s:%s. Connection refused" % (self.host, self.port)
+        return f"Unknown service {self.host}:{self.port}. Connection refused"
 
 
 class ConnectionTimeout(ConnectorException):
     """An exception to raise when a timeout of connection checked"""
     def __repr__(self):
-        return "Timeout of connection to server %s:%s" % (self.host, self.port)
+        return f"Timeout of connection to server {self.host}:{self.port}"
 
 
 

@@ -39,13 +39,12 @@ import getpass
 logger = logging.getLogger()
 
 def simplecommand(cmd):
-    obj = {}
     p = subprocess.Popen(cmd,
                          shell=True,
                          stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
     result = p.stdout.readlines()
-    obj['code'] = p.wait()
+    obj = {'code': p.wait()}
     obj['result'] = result
     return obj
 
@@ -258,15 +257,15 @@ class managepackage:
                 outputJSONFile = managepackage.loadjsonfile(
                     os.path.join(package, "xmppdeploy.json"))
                 if 'info' in outputJSONFile \
-                        and ('software' in outputJSONFile['info'] and\
-                            'version' in outputJSONFile['info']) \
-                        and (outputJSONFile['info']['software'] == packagename or\
-                            outputJSONFile['info']['name'] == packagename):
+                            and ('software' in outputJSONFile['info'] and\
+                                'version' in outputJSONFile['info']) \
+                            and (outputJSONFile['info']['software'] == packagename or\
+                                outputJSONFile['info']['name'] == packagename):
                     return outputJSONFile
             except Exception as e:
                 logger.error("Please verify the format of the descriptor for"
                              "the package %s." %s)
-                logger.error("we are encountering the error: %s" % str(e))
+                logger.error(f"we are encountering the error: {str(e)}")
         return None
 
     @staticmethod
@@ -285,13 +284,13 @@ class managepackage:
             try:
                 outputJSONFile = managepackage.loadjsonfile(os.path.join(package, "xmppdeploy.json"))
                 if 'info' in outputJSONFile \
-                        and ('software' in outputJSONFile['info'] and 'version' in outputJSONFile['info']) \
-                        and (outputJSONFile['info']['software'] == packagename or outputJSONFile['info']['name'] == packagename):
+                            and ('software' in outputJSONFile['info'] and 'version' in outputJSONFile['info']) \
+                            and (outputJSONFile['info']['software'] == packagename or outputJSONFile['info']['name'] == packagename):
                     return outputJSONFile['info']['version']
             except Exception as e:
                 logger.error("Please verify the version for the package %s in the descriptor"
                              "in the xmppdeploy.json file." % package)
-                logger.error("we are encountering the error: %s" % str(e))
+                logger.error(f"we are encountering the error: {str(e)}")
         return None
 
     @staticmethod
@@ -308,13 +307,13 @@ class managepackage:
                 outputJSONFile = managepackage.loadjsonfile(
                     os.path.join(package, "xmppdeploy.json"))
                 if 'info' in outputJSONFile \
-                    and (('software' in outputJSONFile['info'] and outputJSONFile['info']['software'] == packagename)
+                        and (('software' in outputJSONFile['info'] and outputJSONFile['info']['software'] == packagename)
                          or ('name' in outputJSONFile['info'] and outputJSONFile['info']['name'] == packagename)):
                     return package
             except Exception as e:
                 logger.error("Please verify the name for the package %s in the descriptor"
                              "in the xmppdeploy.json file." % package)
-                logger.error("we are encountering the error: %s" % str(e))
+                logger.error(f"we are encountering the error: {str(e)}")
         return None
 
     @staticmethod
@@ -334,9 +333,9 @@ class managepackage:
                 if 'id' in outputJSONFile and outputJSONFile['id'] == uuidpackage:
                     return package
             except Exception as e:
-                logger.error("The conf.json for the package %s is missing" % package)
-                logger.error("we are encountering the error: %s" % str(e))
-        logger.error("We did not find the package %s" % package)
+                logger.error(f"The conf.json for the package {package} is missing")
+                logger.error(f"we are encountering the error: {str(e)}")
+        logger.error(f"We did not find the package {package}")
         return None
 
 
@@ -356,14 +355,14 @@ class managepackage:
                 outputJSONFile = managepackage.loadjsonfile(
                     os.path.join(package, "conf.json"))
                 if 'id' in outputJSONFile and outputJSONFile['id'] == packageuuid \
-                    and 'version' in outputJSONFile:
+                        and 'version' in outputJSONFile:
                     return outputJSONFile['version']
             except Exception as e:
                 logger.error(
-                    "package %s verify format descriptor conf.json [%s]" %
-                    (packageuuid, str(e)))
+                    f"package {packageuuid} verify format descriptor conf.json [{str(e)}]"
+                )
         logger.error("package %s verify version" \
-                        "in descriptor conf.json [%s]" %(packageuuid))
+                            "in descriptor conf.json [%s]" %(packageuuid))
         return None
 
     @staticmethod
@@ -385,8 +384,7 @@ class managepackage:
             "xmppdeploy.json")
         if os.path.isfile(jsonfile):
             try:
-                outputJSONFile = managepackage.loadjsonfile(jsonfile)
-                return outputJSONFile
+                return managepackage.loadjsonfile(jsonfile)
             except Exception:
                 return None
 

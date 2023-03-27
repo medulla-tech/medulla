@@ -76,14 +76,16 @@ def getBackupServerByUUID(uuid):
         entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
         parent_entities = [entity_uuid] + ComputerLocationManager().getLocationParentPath(entity_uuid)
     except:
-        logger.error("Cannot get Entity for this UUID (%s)" % uuid)
+        logger.error(f"Cannot get Entity for this UUID ({uuid})")
         return ''
     url = ''
     for _uuid in parent_entities:
-        url = BackuppcDatabase().get_backupserver_by_entity(_uuid)
-        if url: return url
+        if url := BackuppcDatabase().get_backupserver_by_entity(_uuid):
+            return url
     # If we're here, Backup host not mapped
-    logger.error("Cannot get BackupServer for this UUID (%s), please check Entity <> BackupServer mappings." % uuid)
+    logger.error(
+        f"Cannot get BackupServer for this UUID ({uuid}), please check Entity <> BackupServer mappings."
+    )
     return ''
 
 
@@ -92,10 +94,7 @@ def dictToURL(params):
     for k in params.keys():
         if type(params[k]) == type([]):
             for val in params[k]:
-		if val is None:
-  		    s+= '&%s=' % k
-		else:
-                    s+= '&%s=%s' % (k,val)
+                s += f'&{k}=' if val is None else f'&{k}={val}'
             del params[k]
     return urllib.urlencode(params)+s
 
@@ -118,7 +117,7 @@ def send_request(params,url=''):
         response = urllib2.urlopen(url,params_str)
         return unicode(response.read(),'utf8').encode('ascii', 'xmlcharrefreplace')
     except:
-        logger.error("Unable to connect to BackupPC server : %s" % url)
+        logger.error(f"Unable to connect to BackupPC server : {url}")
         return ''
 
 
@@ -130,22 +129,19 @@ def getTableByTitle(html,title):
     d = pq(html)
     # Searching for the right title
     titles = d('div.h2')
-    div = []
-    for i in xrange(len(title)):
-        if titles.eq(i).text() == title:
-            div = titles.eq(i)
-            break
-    if div:
-        return div.nextAll().filter('table').eq(0)
-    else:
-        return []
+    div = next(
+        (
+            titles.eq(i)
+            for i in xrange(len(title))
+            if titles.eq(i).text() == title
+        ),
+        [],
+    )
+    return div.nextAll().filter('table').eq(0) if div else []
 
 def getTableHeader(table):
     header = table.find('.tableheader').find('td')
-    hd = []
-    for i in xrange(len(header)):
-        hd += [header.eq(i).text()]
-    return hd
+    return [header.eq(i).text() for i in xrange(len(header))]
 
 def getTableContent(table):
     count = len(table.find('tr'))
@@ -155,9 +151,7 @@ def getTableContent(table):
         if table.find('tr').eq(i).attr('class')=='tableheader':
             continue
         cols = table.find('tr').eq(i).find('td')
-        line = []
-        for i in xrange(len(cols)):
-            line += [cols.eq(i).text()]
+        line = [cols.eq(i).text() for i in xrange(len(cols))]
         lines += [line]
     return [list(i) for i in zip(*lines)]
 
@@ -170,13 +164,11 @@ def getHTMLerr(html):
         logger.warning(d('.h1').text())
         return {'err':15,'errtext':d('.h1').text()}
     else:
-	if len(d('.editError')):
-	    errors = []
-	    for i in xrange(len(d('.editError'))):
-		errors.append(d('.editError').eq(i).text())
-	    error_text = '\n'.join(errors)
-	    logger.warning(error_text)
-	    return {'err':15,'errtext':error_text}
+        if len(d('.editError')):
+            errors = [d('.editError').eq(i).text() for i in xrange(len(d('.editError')))]
+            error_text = '\n'.join(errors)
+            logger.warning(error_text)
+            return {'err':15,'errtext':error_text}
 
 
 # ==========================================================================
@@ -191,13 +183,15 @@ def get_host_list(pattern=""):
     if not html:
         return _CONNECTION_ERROR
     d = pq(html)
-    hosts=[]
     options=d('select:first').find('option')
     if not options:
         return _FORMAT_ERROR
-    for i in xrange(len(options)):
-        if options.eq(i).attr('value') != '#' and pattern in options.eq(i).text():
-            hosts += [options.eq(i).text()]
+    hosts = [
+        options.eq(i).text()
+        for i in xrange(len(options))
+        if options.eq(i).attr('value') != '#'
+        and pattern in options.eq(i).text()
+    ]
     return {'err':0,'data':hosts}
 
 
@@ -210,8 +204,7 @@ def get_backup_list(host):
         return _CONNECTION_ERROR
     if getHTMLerr(html):
         return getHTMLerr(html)
-    tb_bak_sum = getTableByTitle(html,'Backup Summary')
-    if tb_bak_sum:
+    if tb_bak_sum := getTableByTitle(html, 'Backup Summary'):
         bk_list = getTableContent(tb_bak_sum)
         return {'err':0,'data':bk_list}
     else:
@@ -221,10 +214,7 @@ def get_backup_list(host):
 
 def get_share_names(host,backup_num):
     # Setting params
-    params = {}
-    params['action'] = 'browse'
-    params['host'] = host
-    params['num'] = backup_num
+    params = {'action': 'browse', 'host': host, 'num': backup_num}
     # Sending request
     html = send_request(params)
     if not html:
@@ -252,8 +242,13 @@ def list_files(host,backup_num,share_name,dir,filter,recursive=0):
     pattern (optional): to specify if a search is done.
     """
     # Setting params
-    params = {'action':'browse','host':host,'num':backup_num,'share':share_name}
-    params['dir'] = dir if recursive == 2 else dir.encode('utf8','ignore')
+    params = {
+        'action': 'browse',
+        'host': host,
+        'num': backup_num,
+        'share': share_name,
+        'dir': dir if recursive == 2 else dir.encode('utf8', 'ignore'),
+    }
     # Sending request
     html = send_request(params)
     if not html: return _CONNECTION_ERROR
@@ -337,18 +332,27 @@ def download_file(filepath,params):
             if os.path.splitext(filepath)[1] == '.zip':
                 parentpath = os.path.dirname(filepath)
                 # Making sub temp dir
-                _tempdir = parentpath+'/temp'
+                _tempdir = f'{parentpath}/temp'
                 os.mkdir(_tempdir)
-                _filepath = filepath +'.old'
+                _filepath = f'{filepath}.old'
                 os.rename(filepath,_filepath)
                 # Unzip
-                proc = subprocess.Popen(['7z -o%s x %s'% (_tempdir,_filepath)], stdout=subprocess.PIPE, shell=True)
+                proc = subprocess.Popen(
+                    [f'7z -o{_tempdir} x {_filepath}'],
+                    stdout=subprocess.PIPE,
+                    shell=True,
+                )
                 (out, err) = proc.communicate()
                 # Output to debug
                 logger.debug(out)
                 logger.debug(err)
                 # Switching to tempdir and rezip
-                proc = subprocess.Popen(['7z a ../%s .' % os.path.basename(filepath)], stdout=subprocess.PIPE, shell=True, cwd = _tempdir)
+                proc = subprocess.Popen(
+                    [f'7z a ../{os.path.basename(filepath)} .'],
+                    stdout=subprocess.PIPE,
+                    shell=True,
+                    cwd=_tempdir,
+                )
                 (out, err) = proc.communicate()
                 # Output to debug
                 logger.debug(out)
@@ -380,7 +384,7 @@ def get_download_status():
         if download_status[k]['time'] == 1 and  int(time.time())-download_status[k]['time'] > 24*60*60:
             del download_status[k]
             # Delete files (if not a direct restore)
-            if not '>DIRECT:' in k: os.unlink(k)
+            if '>DIRECT:' not in k: os.unlink(k)
         elif '>DIRECT:' in k:
             # Check restore status
             status = get_host_status(download_status[k]['host'])['status']
@@ -416,8 +420,10 @@ def restore_file(host,backup_num,share_name,files):
         global download_status
         download_status[destination].update({'status':1})
         download_status[destination].update(result)
+
     def _failure(failure):
         logger.error(str(failure))
+
     #
     # Generating temp filepath
     # If tempdir doesnt exist we create it
@@ -428,14 +434,16 @@ def restore_file(host,backup_num,share_name,files):
     tempfiledir = tempfile.mkdtemp()
     os.chmod(tempfiledir,511)
     if isinstance(files,list):
-        destination= os.path.join(tempfiledir,'restore-%s.zip' % time.strftime('%Y-%m-%d-%H%M%S'))
+        destination = os.path.join(
+            tempfiledir, f"restore-{time.strftime('%Y-%m-%d-%H%M%S')}.zip"
+        )
         # Setting params
         params = {'action':'Restore','host':host,'num':backup_num,'type':'2'}
         params.update({'share':share_name,'relative':'1','compressLevel':'5'})
         # Files list
         params['fcbMax']=len(files)+1
         for i in xrange(len(files)):
-                params['fcb'+str(i)] = urllib.unquote(files[i])
+            params[f'fcb{str(i)}'] = urllib.unquote(files[i])
     else:
         destination = os.path.join(tempfiledir,os.path.basename(files))
         # Setting params
@@ -462,17 +470,21 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
     # Files list
     params['fcbMax']=len(files)+1
     for i in xrange(len(files)):
-            params['fcb'+str(i)] = files[i].encode('utf8','ignore')
+        params[f'fcb{str(i)}'] = files[i].encode('utf8','ignore')
     # Converting params dict to an http get string
     html = send_request(params)
     if not html: return _CONNECTION_ERROR
     if getHTMLerr(html):
         return getHTMLerr(html)
-    else:
-        # Updating download status table
-        global download_status
-        download_status['>DIRECT:'+host] = {'status':0,'host':host,'time':int(time.time()),'destdir':share_name+pathHdr}
-        return {'err':0}
+    # Updating download status table
+    global download_status
+    download_status[f'>DIRECT:{host}'] = {
+        'status': 0,
+        'host': host,
+        'time': int(time.time()),
+        'destdir': share_name + pathHdr,
+    }
+    return {'err':0}
 
 
 # ==========================================================================
@@ -535,16 +547,17 @@ def set_host_config(host,config,globalconfig=0,backupserver=''):
         for z in cfg.keys():
             if type(cfg[z])==type({}):
                 for h in cfg[z].keys():
-                    cfg[z+'_zZ_'+h] = cfg[z][h]
+                    cfg[f'{z}_zZ_{h}'] = cfg[z][h]
                 del cfg[z]
                 dict_to_underscores(cfg)
                 break
             if type(cfg[z])==type([]):
                 for h in xrange(len(cfg[z])):
-                    cfg[z+'_zZ_'+str(h)] = cfg[z][h]
+                    cfg[f'{z}_zZ_{str(h)}'] = cfg[z][h]
                 del cfg[z]
                 dict_to_underscores(cfg)
                 break
+
     if not host and not globalconfig: return
     params = {}
     params['host'] = host
@@ -554,22 +567,18 @@ def set_host_config(host,config,globalconfig=0,backupserver=''):
     __config = config.copy()
     # Setting overrides
     for p in __config.keys():
-        params['override_'+p] = '1'
+        params[f'override_{p}'] = '1'
     # Formatting config dict
     dict_to_underscores(__config)
     # Setting overrides and params
     for p in __config:
-        params['v_zZ_'+p] = __config[p]
+        params[f'v_zZ_{p}'] = __config[p]
     # TODO : fix this for all params
     if 'BackupFilesExclude' in _config:
         params['vflds.BackupFilesExclude'] = _config['RsyncShareName']
     # Sending HTTP request
     html = send_request(params,backupserver)
-    if not html:
-        return _CONNECTION_ERROR
-    if getHTMLerr(html):
-        return getHTMLerr(html)
-    return {'err':0}
+    return getHTMLerr(html) or {'err':0} if html else _CONNECTION_ERROR
 
 
 def set_host_backup_profile(uuid,newprofile):
@@ -578,8 +587,7 @@ def set_host_backup_profile(uuid,newprofile):
         # Get profile data
         profile = BackuppcDatabase().edit_backup_profile(newprofile,{})
         # Define config dict
-        config = {}
-        config['RsyncShareName'] = profile['sharenames'].split('\n')
+        config = {'RsyncShareName': profile['sharenames'].split('\n')}
         config['ClientCharset'] = profile['encoding']
         excludes = profile['excludes'].split('||')
         for i in xrange(len(excludes)):
@@ -594,21 +602,17 @@ def set_host_period_profile(uuid,newprofile):
         # Get profile data
         profile = BackuppcDatabase().edit_period_profile(newprofile,{})
         # Define config dict
-        config = {}
-        config['FullPeriod'] = profile['full']
-        config['IncrPeriod'] = profile['incr']
+        config = {'FullPeriod': profile['full'], 'IncrPeriod': profile['incr']}
         # Blackout periods
         periods = profile['exclude_periods'].split('\n')
         #
         config['BlackoutPeriods'] = []
         #
         for period in periods:
-             m = re.search('([0-9.]+)=>([0-9.]+):([^:]+)',period)
-             config['BlackoutPeriods'] += [{ \
-                    'hourBegin':m.group(1), \
-                    'hourEnd': m.group(2), \
-                    'weekDays' : m.group(3) \
-                     }]
+            m = re.search('([0-9.]+)=>([0-9.]+):([^:]+)',period)
+            config['BlackoutPeriods'] += [
+                {'hourBegin': m[1], 'hourEnd': m[2], 'weekDays': m[3]}
+            ]
         # Setting host config
         set_host_config(uuid,config)
 
@@ -618,7 +622,7 @@ def host_exists(uuid):
 
 def get_host_rsync_path(uuid):
     machine_info = Glpi().getLastMachineInventoryFull(uuid)
-    machine = dict((key, value) for (key, value) in machine_info)
+    machine = dict(machine_info)
     if 'Windows'.lower() in machine['os'].lower():
         try:
             if '64' in machine['os_arch']:
@@ -687,7 +691,7 @@ def set_backup_for_host(uuid):
 
 def unset_backup_for_host(uuid):
     if not host_exists(uuid):
-        logger.warning('Backup is not set for the machine %s' % uuid)
+        logger.warning(f'Backup is not set for the machine {uuid}')
         return
     #
     server_url = getBackupServerByUUID(uuid)
@@ -724,21 +728,18 @@ def unset_backup_for_host(uuid):
 # ==========================================================================
 
 def get_xfer_log(host,backupnum):
-    params = {}
-    params['host'] = host
-    params['action'] = 'view'
-    params['type'] = 'XferErr'
-    params['num'] = backupnum
+    params = {'host': host, 'action': 'view', 'type': 'XferErr', 'num': backupnum}
     html = send_request(params)
     if not html:
         return _CONNECTION_ERROR
     if getHTMLerr(html):
         return getHTMLerr(html)
     d=pq(html)
-    if not d('pre:first'):
-        return _FORMAT_ERROR
-    else:
-        return {'err':0,'data':d('pre:first').text()}
+    return (
+        {'err': 0, 'data': d('pre:first').text()}
+        if d('pre:first')
+        else _FORMAT_ERROR
+    )
 
 def get_host_log(host):
     params = {
@@ -752,10 +753,11 @@ def get_host_log(host):
     if getHTMLerr(html):
         return getHTMLerr(html)
     d=pq(html)
-    if not d('pre:first'):
-        return _FORMAT_ERROR
-    else:
-        return {'err':0,'data':d('pre:first').text()}
+    return (
+        {'err': 0, 'data': d('pre:first').text()}
+        if d('pre:first')
+        else _FORMAT_ERROR
+    )
 
 def build_fileindex(host):
     res = get_backup_list(host)
@@ -767,16 +769,12 @@ def build_fileindex(host):
     #
     global file_index
     # If file_index doesnt contain host, we add it
-    if not host in file_index:
+    if host not in file_index:
         file_index[host]={}
     # Building file index for all Backup points
     for backupnum in backups:
         # Setting params for XferLog page
-        params = {}
-        params['host'] = host
-        params['action'] = 'view'
-        params['type'] = 'XferLOG'
-        params['num'] = backupnum
+        params = {'host': host, 'action': 'view', 'type': 'XferLOG', 'num': backupnum}
         # Sending request
         html = send_request(params)
         # Error treatment
@@ -799,12 +797,12 @@ def build_fileindex(host):
         for line in lines:
             if len(line)<3:
                 continue
-            if line[0:2]!= '  ':
+            if line[:2] != '  ':
                 if 'backup started' in line:
                     r1 = re.search('for directory ([^(^)]+) \(baseline backup.+\)',line)
                     r2 = re.search('for directory ([^(^)]+)',line)
-                    r = r1 or r2
-                    if r: current_share = r.group(1)
+                    if r := r1 or r2:
+                        current_share = r.group(1)
                     file_index[host][backupnum][current_share] = {\
                                                                         'actions':[], \
                                                                         'types':[], \
@@ -831,7 +829,7 @@ def build_fileindex(host):
 def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize_max=-1,type_0=''):
     global file_index
     # If no entry in file_index, we build host file index
-    if not host in file_index:
+    if host not in file_index:
         res = build_fileindex(host)
         # If error, we abort
         if res['err']: return res
@@ -848,10 +846,10 @@ def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize
     #
     for backupnum in file_index[host]:
         # If there is a backupnum filter, we apply it
-        if backupnum_0 and not backupnum in backupnum_0: continue
+        if backupnum_0 and backupnum not in backupnum_0: continue
         for sharename in file_index[host][backupnum]:
             # If there is a sharename filter, we apply it
-            if sharename_0 and not sharename in sharename_0: continue
+            if sharename_0 and sharename not in sharename_0: continue
             for i in xrange(len(file_index[host][backupnum][sharename]['paths'])):
                 # ========== TYPE FILTERING =============================
                 _type = file_index[host][backupnum][sharename]['types'][i]
@@ -867,13 +865,16 @@ def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize
                 if filesize_max != -1 and size > filesize_max: continue
                 if filesize_min != -1 and size < filesize_min: continue
                 # =========== APPENDING RESULT ENTRY =================================
-                result.append({   'backupnum' : backupnum, \
-                                    'sharename' : sharename, \
-                                    'filepath'  : '/'+filepath, \
-                                    'filename'  : filename, \
-                                    'filesize'  : size, \
-                                    'type'      : _type
-                                })
+                result.append(
+                    {
+                        'backupnum': backupnum,
+                        'sharename': sharename,
+                        'filepath': f'/{filepath}',
+                        'filename': filename,
+                        'filesize': size,
+                        'type': _type,
+                    }
+                )
     return {'err':0, 'data' : result}
 
 
@@ -883,8 +884,7 @@ def apply_backup_profile(profileid):
     # Getting profile settings
     profile = BackuppcDatabase().edit_backup_profile(profileid,{})
     # Define config dict
-    config = {}
-    config['RsyncShareName'] = profile['sharenames'].split('\n')
+    config = {'RsyncShareName': profile['sharenames'].split('\n')}
     config['ClientCharset'] = profile['encoding']
     excludes = profile['excludes'].split('||')
     for i in xrange(len(excludes)):
@@ -902,9 +902,7 @@ def apply_period_profile(profileid):
     # Getting profile settings
     profile = BackuppcDatabase().edit_period_profile(profileid,{})
     # Define config dict
-    config = {}
-    config['FullPeriod'] = profile['full']
-    config['IncrPeriod'] = profile['incr']
+    config = {'FullPeriod': profile['full'], 'IncrPeriod': profile['incr']}
     # Blackout periods
     periods = profile['exclude_periods'].split('\n')
     #
@@ -912,11 +910,9 @@ def apply_period_profile(profileid):
     #
     for period in periods:
         m = re.search('([0-9.]+)=>([0-9.]+):([^:]+)',period)
-        config['BlackoutPeriods'] += [{ \
-        'hourBegin':m.group(1), \
-        'hourEnd': m.group(2), \
-        'weekDays' : m.group(3) \
-        }]
+        config['BlackoutPeriods'] += [
+            {'hourBegin': m[1], 'hourEnd': m[2], 'weekDays': m[3]}
+        ]
     #
     for host in hosts:
         set_host_config(host,config)
@@ -928,42 +924,21 @@ def apply_period_profile(profileid):
 # ====================================================================
 
 def start_full_backup(host):
-    params = {}
-    params['host'] = host
-    params['action'] = 'Start_Full_Backup'
-    params['doit'] = '1'
+    params = {'host': host, 'action': 'Start_Full_Backup', 'doit': '1'}
     html = send_request(params)
-    if not html:
-        return _CONNECTION_ERROR
-    if getHTMLerr(html):
-        return getHTMLerr(html)
-    return {'err':0}
+    return getHTMLerr(html) or {'err':0} if html else _CONNECTION_ERROR
 
 
 def start_incr_backup(host):
-    params = {}
-    params['host'] = host
-    params['action'] = 'Start_Incr_Backup'
-    params['doit'] = '1'
+    params = {'host': host, 'action': 'Start_Incr_Backup', 'doit': '1'}
     html = send_request(params)
-    if not html:
-        return _CONNECTION_ERROR
-    if getHTMLerr(html):
-        return getHTMLerr(html)
-    return {'err':0}
+    return getHTMLerr(html) or {'err':0} if html else _CONNECTION_ERROR
 
 
 def stop_backup(host,backoff=''):
-    params = {}
-    params['host'] = host
-    params['action'] = 'Stop_Dequeue_Backup'
-    params['doit'] = '1'
+    params = {'host': host, 'action': 'Stop_Dequeue_Backup', 'doit': '1'}
     html = send_request(params)
-    if not html:
-        return _CONNECTION_ERROR
-    if getHTMLerr(html):
-        return getHTMLerr(html)
-    return {'err':0}
+    return getHTMLerr(html) or {'err':0} if html else _CONNECTION_ERROR
 
 
 def get_host_status(host):
@@ -1032,7 +1007,7 @@ def get_global_status(entity_uuid):
     url = BackuppcDatabase().get_backupserver_by_entity(entity_uuid)
     if url == "":
         for id in entities_parent:
-            url = BackuppcDatabase().get_backupserver_by_entity("UUID%s"%id)
+            url = BackuppcDatabase().get_backupserver_by_entity(f"UUID{id}")
             if url != "":
                 break;
 
@@ -1051,10 +1026,10 @@ def get_global_status(entity_uuid):
             return result
         tb_good = getTableContent(tb_good)
         if not tb_good:
-            tb_good = [[] for i in xrange(12)]
+            tb_good = [[] for _ in xrange(12)]
         tb_none = getTableContent(tb_none)
         if not tb_none:
-            tb_none = [[] for i in xrange(12)]
+            tb_none = [[] for _ in xrange(12)]
         #
         result['data'] = { \
             'hosts':tb_good[0]+tb_none[0], \

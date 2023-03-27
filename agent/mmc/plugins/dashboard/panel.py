@@ -82,12 +82,8 @@ class SpacePanel(Panel):
         parts = psutil.disk_partitions()
         partitions = []
 
-        # get --bind mounts
-        bind_mounts = []
         exitcode, stdout, stderr = shlaunch("findmnt -nr | fgrep [ | cut -d' ' -f1")
-        if exitcode == 0:
-            bind_mounts = stdout
-
+        bind_mounts = stdout if exitcode == 0 else []
         for part in parts:
             if 'loop' not in part.device and part.mountpoint not in bind_mounts:
                 try:
@@ -114,14 +110,15 @@ class SpacePanel(Panel):
 class ProcessPanel(Panel):
     def serialize(self):
         exitcode, stdout, stderr = shlaunch("ps aux | grep 'pulse\|mmc' | grep -v 'defunct' | grep -v 'grep' | awk '{ if ($11 == \"/usr/bin/python\" || $11 == \"python\" || $11 == \"/bin/sh\") print $12; else print $11 }'")
-        if exitcode == 0:
-            return {
+        return (
+            {
                 'process': stdout,
             }
-        else:
-            return {
+            if exitcode == 0
+            else {
                 'process': stderr,
             }
+        )
 
 
 class ComputersOnlinePanel(Panel):

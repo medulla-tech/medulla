@@ -119,7 +119,7 @@ class BaseCache(object):
         """
         value = self.get(key)
         if value is None:
-            raise ValueError("Key '%s' not found" % key)
+            raise ValueError(f"Key '{key}' not found")
         new_value = value + delta
         self.set(key, new_value)
         return new_value
@@ -190,7 +190,7 @@ class LocMemCache(BaseCache):
             self._lock.writer_leaves()
 
     def get(self, key, default=None):
-        log.debug("Get cache value: %s" % (key, ))
+        log.debug(f"Get cache value: {key}")
         self._lock.reader_enters()
         try:
             exp = self._expire_info.get(key)
@@ -283,7 +283,7 @@ class LocMemCache(BaseCache):
 ###
 def genericHashFunc(*args, **kwargs):
     def freeze(o):
-        if isinstance(o, list) or isinstance(o, tuple):
+        if isinstance(o, (list, tuple)):
             return tuple(map(lambda x: freeze(x), o))
         elif isinstance(o, dict):
             return freeze(o.items())
@@ -316,15 +316,13 @@ class CacheableObject(object):
 
         if self.cache.has_key(key):
             ret = self.cache.get(key)
-            log.debug("%s(%s, %s): key=%s, value=%s" % (method.__name__,
-                                                        args, kwargs,
-                                                        key, ret))
+            log.debug(f"{method.__name__}({args}, {kwargs}): key={key}, value={ret}")
         else:
             ret = method(self, *args, **kwargs)
             self.cache.set(key, ret)
-            log.debug("%s(%s, %s): key=%s, value=<EMPTY CACHE>" % (method.__name__,
-                                                                   args, kwargs,
-                                                                   key))
+            log.debug(
+                f"{method.__name__}({args}, {kwargs}): key={key}, value=<EMPTY CACHE>"
+            )
         return ret
 
 
@@ -339,10 +337,7 @@ class _DeferredCache(object):
     def __init__(self, op, hashFunc=None):
         self.op = op
         self.cache = LocMemCache(op.func_name)
-        if hashFunc is None:
-            self.hashFunc = genericHashFunc
-        else:
-            self.hashFunc = hashFunc
+        self.hashFunc = genericHashFunc if hashFunc is None else hashFunc
 
     def cb_triggerUserCallback(self, res, deferred):
         deferred.callback(res)
@@ -356,14 +351,14 @@ class _DeferredCache(object):
         # Currently not in progress - start it
         key = self.hashFunc(*args, **kwargs)
         if key is None:
-            log.debug("DeferredCache(%s) not hashable: not caching. " % self.op.func_name)
+            log.debug(f"DeferredCache({self.op.func_name}) not hashable: not caching. ")
             return self.op(*args, **kwargs)
 
         if self.cache.has_key(key):
-            log.debug("DeferredCache(%s): using cache" % self.op.func_name)
+            log.debug(f"DeferredCache({self.op.func_name}): using cache")
             opDeferred = self.cache.get(key)
         else:
-            log.debug("DeferredCache(%s): caching" % self.op.func_name)
+            log.debug(f"DeferredCache({self.op.func_name}): caching")
             opDeferred = self.op(*args, **kwargs)
             self.cache.set(key, opDeferred)
 

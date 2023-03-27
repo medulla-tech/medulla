@@ -131,19 +131,25 @@ class GlpiConfig(PluginConfig):
         if 'manufacturers' in self.sections():
             logging.getLogger().debug('[GLPI] Get manufacturers and their warranty infos')
             for manufacturer_key in self.options('manufacturers'):
-                if self.has_section('manufacturer_' + manufacturer_key) and self.has_option('manufacturer_' + manufacturer_key, 'url'):
+                if self.has_section(
+                    f'manufacturer_{manufacturer_key}'
+                ) and self.has_option(f'manufacturer_{manufacturer_key}', 'url'):
                     try:
-                        type = self.get('manufacturer_' + manufacturer_key, 'type')
+                        type = self.get(f'manufacturer_{manufacturer_key}', 'type')
                     except NoOptionError:
                         type = "get"
                     try:
-                        params = self.get('manufacturer_' + manufacturer_key, 'params')
+                        params = self.get(f'manufacturer_{manufacturer_key}', 'params')
                     except NoOptionError:
                         params = ""
-                    self.manufacturerWarranty[manufacturer_key] = {'names': self.get('manufacturers', manufacturer_key).split('||'),
-                                                                   'type': type,
-                                                                   'url': self.get('manufacturer_' + manufacturer_key, 'url'),
-                                                                   'params': params}
+                    self.manufacturerWarranty[manufacturer_key] = {
+                        'names': self.get('manufacturers', manufacturer_key).split(
+                            '||'
+                        ),
+                        'type': type,
+                        'url': self.get(f'manufacturer_{manufacturer_key}', 'url'),
+                        'params': params,
+                    }
             logging.getLogger().debug(self.manufacturerWarranty)
 
     def _parse_filter_on(self, value):

@@ -55,7 +55,7 @@ def running(daemonize, inifile, noconsoledebug = True):
 
     # Create log dir if it doesn't exist
     # TODO: should parse conf to know where are logs, if any
-    os.system('mkdir -p %s/log/mmc' % localstatedir)
+    os.system(f'mkdir -p {localstatedir}/log/mmc')
 
     # if we daemonize, we start by that before trying to initialise the service
     if daemonize:
@@ -67,19 +67,16 @@ def running(daemonize, inifile, noconsoledebug = True):
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
     # Log to stderr when not in daemon mode
-    if not daemonize:
-        if noconsoledebug:
-            hdlr2 = logging.StreamHandler()
-            hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
-            logger.addHandler(hdlr2)
+    if not daemonize and noconsoledebug:
+        hdlr2 = logging.StreamHandler()
+        hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
+        logger.addHandler(hdlr2)
 
-    logger.info("Inventory server version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
+    logger.info(
+        f"Inventory server version('{str(getVersion())}') build('{str(getRevision())}')"
+    )
 
-    if InventoryGetService().initialise(config):
-        ret = 0
-    else:
-        ret = 1
-
+    ret = 0 if InventoryGetService().initialise(config) else 1
     if daemonize:
         _shared_state.value = ret
         _lock.release()
