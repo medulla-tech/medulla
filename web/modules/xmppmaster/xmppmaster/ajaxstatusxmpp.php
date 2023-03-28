@@ -39,8 +39,14 @@ if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1'){
   $status="";
   $LastdeployINsecond = 3600*24;
   echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
-  $arraydeploy = xmlrpc_get_deploy_by_user_with_interval( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter,"command") ;
-  $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
+  $arraydeploy = xmlrpc_get_deploy_by_user_with_interval( $_GET['login'] ,
+                                                          $status,
+                                                          $LastdeployINsecond,
+                                                          $start,
+                                                          $end,
+                                                          $filter,
+                                                          "command") ;
+//   $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 }
 else {
   $LastdeployINsecond = 3600*2160;
@@ -51,10 +57,10 @@ else {
 if (isset($arraydeploy['total_of_rows']))
 {
   $arraydeploy['lentotal'] = $arraydeploy['total_of_rows'];
-  if (isset($arraynotdeploy['total']))
-  {
-    $arraydeploy['lentotal'] += $arraynotdeploy['total'];
-  }
+//   if (isset($arraynotdeploy['total']))
+//   {
+//     $arraydeploy['lentotal'] += $arraynotdeploy['total'];
+//   }
 }
 
 $tab = xmlrpc_get_conrainte_slot_deployment_commands($arraydeploy['tabdeploy']['command']);
@@ -276,6 +282,8 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     }
     else{
         $arraytitlename[] = "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$index];
+
+
         $arrayname[] = "<img style='position:relative;top : 5px;'src='img/other/machine_down.svg' width='25' height='25'/> " . $arraydeploy['tabdeploy']['host'][$index];
         if ($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT ERROR")
         {
@@ -287,7 +295,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     }
     $index++;
 }
-
+/*
 if(isset($arraynotdeploy))
 {
   foreach($arraynotdeploy['elements'] as $id=>$deploy)
@@ -335,7 +343,7 @@ if(isset($arraynotdeploy))
       $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
       $reloads[] = $reloadAction;
   }
-}
+}*/
 $n = new OptimizedListInfos( $arraytitlename, _T("Deployment", "xmppmaster"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();

@@ -30,7 +30,7 @@ $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 $arraydeploy= xmlrpc_get_deployxmppscheduler( $_GET['login'] , $start, $end, $filter);
-
+$convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
 $etat="";
 $LastdeployINsecond = 3600 * 72;
 echo "<h2>" . _T("Planned tasks") . "</h2>";
@@ -107,6 +107,27 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $index++;
 }
 
+$notdeployment_intervals = _T("No deployment intervals contraint", "xmppmaster");
+
+foreach($arraydeploy['tabdeploy']['journee'] as $key => $value){
+  if ($value == 1){
+      $deployment_intervals = _T("deployment intervals contraints", "xmppmaster");
+      $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span style="color:darkblue" title="%s %s" > %s </span>',$deployment_intervals, $arraydeploy['tabdeploy']['deployment_intervals'][$key], $arraydeploy['tabdeploy']['title'][$key] );
+  }else{
+
+       $arraydeploy['tabdeploy']['title'][$key]=sprintf('<span title="%s" > %s </span>',$notdeployment_intervals, $arraydeploy['tabdeploy']['title'][$key]);
+  }
+  if ($convergence[$arraydeploy['tabdeploy']['command'][$key]] != 0 ){
+           $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/convergence.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
+        }else{
+             $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
+        }
+/*
+  if ($arraydeploy['tabdeploy']['groupid'][$key] != "")
+  {//group
+
+  }*/
+}
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 $n = new OptimizedListInfos($arraydeploy['tabdeploy']['title'], _T("Deployment", "xmppmaster"));
 $n->addExtraInfo( $arraytargetname, _T("Target", "xmppmaster"));
