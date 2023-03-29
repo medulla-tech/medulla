@@ -86,7 +86,7 @@ $rescheduleAction = new ActionPopupItem(_T("Reschedule", "xmppmaster"),
 $arraytitlename=array();
 $delete=array();
 $logs   = array();
-$dede=array();
+$arrayrescheduled=array();
 $params=array();
 $arraytargetname=array();
 $index = 0;
@@ -111,7 +111,7 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $params[] = $param;
     $delete[] = $deletecommand;
     $logs[] = $logAction;
-    $dede[] =  $rescheduleAction;
+    $arrayrescheduled[] =  $rescheduleAction;
     if($groupid){
         $groupname = getPGobject($arraydeploy['tabdeploy']['groupid'][$index], true)->getName();
         $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machinegroup.svg' width='25' height='25'/> " . $groupname ;
@@ -125,13 +125,23 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
 $notdeployment_intervals = _T("No deployment intervals contraint", "xmppmaster");
 
 foreach($arraydeploy['tabdeploy']['journee'] as $key => $value){
-  if ($value == 1){
-      $deployment_intervals = _T("deployment intervals contraints", "xmppmaster");
-      $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span style="color:darkblue" title="%s %s" > %s </span>',$deployment_intervals, $arraydeploy['tabdeploy']['deployment_intervals'][$key], $arraydeploy['tabdeploy']['title'][$key] );
-  }else{
+    if ($value == 1){
+        $style='style="color:darkblue"';
+    }else
+    {
+        $style='';
+    }
+    if ($arraydeploy['tabdeploy']['deployment_intervals'][$key] != ""){
+        $deployment_intervals = _T("deployment intervals contraints", "xmppmaster")." ".$arraydeploy['tabdeploy']['deployment_intervals'][$key];
+    }else
+    {
+         $deployment_intervals = _T("No deployment intervals contraint", "xmppmaster");
+    }
 
-       $arraydeploy['tabdeploy']['title'][$key]=sprintf('<span title="%s" > %s </span>',$notdeployment_intervals, $arraydeploy['tabdeploy']['title'][$key]);
-  }
+    $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span %s title="%s " > %s </span>',
+                                                        $style,
+                                                        $deployment_intervals,
+                                                        $arraydeploy['tabdeploy']['title'][$key] );
   if ($convergence[$arraydeploy['tabdeploy']['command'][$key]] != 0 ){
            $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/convergence.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
         }else{
@@ -153,7 +163,7 @@ $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning1"));
-$n->addActionItemArray($dede);
+$n->addActionItemArray($arrayrescheduled);
 $n->addActionItemArray($logs);
 $n->addActionItemArray($delete);
 $n->setTableHeaderPadding(0);
