@@ -28,8 +28,8 @@ require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 // affichedebugJFKJFK( $_GET,  "GET");
 // affichedebugJFKJFK( $_POST,  "POST");
 if (isset($_POST["bconfirm"])) {
-   extract($_POST);
- extend_command($cmd_id, $start_date, $end_date);
+    extract($_POST);
+    extend_command($cmd_id, $start_date, $end_date, $deployment_intervals);
 //      if (isset($deployment_intervals) && isset($old_deployment_intervals)){
 //          if ($start_date != $old_$start_date || $end_date != $old_end_date)
 //          {
