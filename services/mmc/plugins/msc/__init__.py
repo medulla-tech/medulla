@@ -325,7 +325,7 @@ class RpcProxy(RpcProxyI):
             DyngroupDatabase().delete_package_convergence(pid)
         return True
 
-    def extend_command(self, cmd_id, start_date, end_date):
+    def extend_command(self, cmd_id, start_date, end_date, deployment_intervals=None):
         """
         Custom command re-scheduling.
 
@@ -338,7 +338,7 @@ class RpcProxy(RpcProxyI):
         @param end_date: new end date of command
         @type end_date: str
         """
-        MscDatabase().extend_command(cmd_id, start_date, end_date)
+        MscDatabase().extend_command(cmd_id, start_date, end_date, deployment_intervals)
 
     def delete_command(self, cmd_id):
         """

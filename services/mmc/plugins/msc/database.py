@@ -568,7 +568,7 @@ class MscDatabase(msc.MscDatabase):
             ret[x.id] = x.start_date
         return ret
 
-    def extend_command(self, cmd_id, start_date, end_date):
+    def extend_command(self, cmd_id, start_date, end_date, deployment_intervals=None):
         """
         Custom command re-scheduling.
 
@@ -582,7 +582,7 @@ class MscDatabase(msc.MscDatabase):
         @type end_date: str
         """
 
-        self.extendCommand(cmd_id, start_date, end_date)
+        self.extendCommand(cmd_id, start_date, end_date, deployment_intervals)
 
     def applyCmdPatterns(self, cmd, patternActions = None):
         """

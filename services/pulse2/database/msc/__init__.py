@@ -1245,7 +1245,7 @@ class MscDatabase(DatabaseHelper):
 
         return True
 
-    def extendCommand(self, cmd_id, start_date, end_date):
+    def extendCommand(self, cmd_id, start_date, end_date, deployment_intervals=None):
         """
         Custom command re-scheduling.
 
@@ -1263,6 +1263,8 @@ class MscDatabase(DatabaseHelper):
         if cmd :
             cmd.start_date = start_date
             cmd.end_date = end_date
+            if deployment_intervals is not None:
+                cmd.deployment_intervals = deployment_intervals
             cmd.sum_running = cmd.sum_failed
             cmd.sum_failed = 0
             session.add(cmd)
