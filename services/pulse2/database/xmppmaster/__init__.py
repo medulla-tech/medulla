@@ -2592,7 +2592,15 @@ class XmppMasterDatabase(DatabaseHelper):
                     session.commit()
                     session.flush()
                 else:
-                    self.checknewjid(jid)
+                     sql = """DELETE FROM xmppmaster.machines
+                        WHERE
+                        hostname LIKE '%s' and
+                            id < %s;
+                            """ % (hostname, new_machine.id);
+                    self.logger.error(sql)
+                    session.execute(sql)
+                    session.commit()
+                    session.flush()
             except Exception, e:
                 logging.getLogger().error(str(e))
                 msg=str(e)
