@@ -247,6 +247,12 @@ $page->setFile("modules/xmppmaster/xmppmaster/xmppremotecmdshell.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
+/* Reschedule popup */
+$page = new Page("rechedulercmd", _T("Reschedule a command", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/rechedulercmd.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
 // $tab = new Tab("tablaunch", _T("MSC launch tab for a machine", "msc"));
 //     $page->addTab($tab);
 // --------------QUICK ACTION--------------------

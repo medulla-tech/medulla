@@ -67,19 +67,30 @@ $deletecommand = new ActionItem(_("Delete deploy"),
                                 "audit",
                                 "xmppmaster",
                                 "xmppmaster");
+
 $logAction = new ActionItem(_("View deployment details"),
                                 "viewlogs",
                                 "audit",
                                 "computer",
                                 "xmppmaster",
                                 "xmppmaster");
+
+
+$rescheduleAction = new ActionPopupItem(_T("Reschedule", "xmppmaster"),
+                                        "rechedulercmd",
+                                        "edit",
+                                        "computer",
+                                        "xmppmaster",
+                                        "xmppmaster");
 // delete_command
 $arraytitlename=array();
 $delete=array();
-$logs=array();
+$logs   = array();
+$dede=array();
 $params=array();
 $arraytargetname=array();
 $index = 0;
+$deployment_intervals=array();
 foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $param=array();
     $param['uuid']= $arraydeploy['tabdeploy']['inventoryuuid'][$index];
@@ -93,10 +104,14 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $param['title']=$arraydeploy['tabdeploy']['title'][$index];
     $param['creator']=$arraydeploy['tabdeploy']['creator'][$index];
     $param['titledeploy']=$arraydeploy['tabdeploy']['titledeploy'][$index];
+    $param['deployment_intervals']=$arraydeploy['tabdeploy']['deployment_intervals'][$index];
+    $param['start_date']=$startdeploy[$index];
+    $param['end_date']=$enddeploy[$index];
     $param['postaction']="delete";
     $params[] = $param;
     $delete[] = $deletecommand;
     $logs[] = $logAction;
+    $dede[] =  $rescheduleAction;
     if($groupid){
         $groupname = getPGobject($arraydeploy['tabdeploy']['groupid'][$index], true)->getName();
         $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machinegroup.svg' width='25' height='25'/> " . $groupname ;
@@ -138,6 +153,7 @@ $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning1"));
+$n->addActionItemArray($dede);
 $n->addActionItemArray($logs);
 $n->addActionItemArray($delete);
 $n->setTableHeaderPadding(0);
