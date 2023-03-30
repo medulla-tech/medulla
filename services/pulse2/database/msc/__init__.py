@@ -664,9 +664,6 @@ class MscDatabase(DatabaseHelper):
         Returns:
             It returns the list of all the scheduled deployments on msc
         """
-        listuser = []
-        if isinstance(login, list):
-            listuser = [ '"%s"'%x.strip() for x in login if x.strip() != ""]
         #datenow = datetime.datetime.now()
         sqlselect="""
             SELECT
@@ -708,14 +705,13 @@ class MscDatabase(DatabaseHelper):
                 AND
                     phase.state = 'ready'"""
         if login:
-            if listuser:
-                sqlfilter = sqlfilter + """
-                AND
-                    commands.creator REGEXP %s """ % "|".join(listuser)
+            creator = "AND commands.creator"
+            if isinstance(login, list):
+                listuser = "%s REGEXP '%s' " % (creator, "|".join( [ '%s'%x.strip() for x in login if x.strip() != ""]))
             else:
-                sqlfilter = sqlfilter + """
-                AND
-                    commands.creator = '%s'""" % login
+                listuser = "%s like '%s' " %(creator, login )
+            sqlfilter = sqlfilter +' ' + listuser
+
         if filt:
             recherche="%%%%%s%%%%"%(filt)
             sqlfilter = sqlfilter + """

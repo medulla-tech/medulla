@@ -4658,7 +4658,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         xmppmaster.pulse_team_user.id_user = xmppmaster.pulse_users.id
                 WHERE
                     xmppmaster.pulse_team_user.id_team
-                        IN (SELECT
+                        IN (SELECT distinct
                                 xmppmaster.pulse_team_user.id_team
                             FROM
                                 xmppmaster.pulse_users
