@@ -274,7 +274,7 @@ ADD INDEX IF NOT EXISTS `ind_sidsubstitute` (`jidsubtitute` ASC) ;
 ALTER TABLE `xmppmaster`.`up_machine_windows`
 ADD COLUMN `curent_deploy` TINYINT(1) NULL DEFAULT 0 AFTER `kb`,
 ADD COLUMN `required_deploy` TINYINT(1) NULL DEFAULT 0 AFTER `curent_deploy`,
-ADD COLUMN `start_date` TIMESTAMP NULL AFTER `deployrequis`,
+ADD COLUMN `start_date` TIMESTAMP NULL AFTER `required_deploy`,
 ADD COLUMN `end_date` TIMESTAMP NULL AFTER `start_date`;
 
 
