@@ -290,14 +290,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.xmppbrowsingpath = xmppbrowsing(defaultdir=self.config.defaultdir,
                                              rootfilesystem=self.config.rootfilesystem)
         
-        # Clear configuration accounts
-        logger.debug('Delete old ejabberd accounts')
-        cmd = "ejabberdctl --no-timeout delete_old_users 1"
-        try:
-            a = simplecommandstr(cmd)
-            logger.debug(a['result'])
-        except Exception as e:
-            pass
         # Delete old messages
         logger.debug('Delete old offline ejabberd messages')
         cmd = "ejabberdctl --no-timeout delete_old_messages 1"
