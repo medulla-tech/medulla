@@ -2274,7 +2274,7 @@ class Glpi100(DyngroupDatabaseHelper):
         if parent_id == -1: # parent_id is -1 for root entity
             parent_id = 0
 
-        while parent_id != 0:
+        while parent_id != 0 and parent_id is not None:
             en_id = parent_id
             en = session.query(Entities).filter(self.entities.c.id == parent_id).first()
             path.append(toUUID(en.id))
