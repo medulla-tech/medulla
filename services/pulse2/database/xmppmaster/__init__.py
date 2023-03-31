@@ -2544,23 +2544,20 @@ class XmppMasterDatabase(DatabaseHelper):
                     session.commit()
                     session.flush()
                 else:
-                    self.checknewjid(jid)
+                    sql = """DELETE FROM xmppmaster.machines
+                        WHERE
+                        hostname LIKE '%s' and
+                            id < %s;
+                            """ % (hostname, new_machine.id);
+                    self.logger.debug(sql)
+                    session.execute(sql)
+                    session.commit()
+                    session.flush()
             except Exception, e:
                 logging.getLogger().error(str(e))
                 msg=str(e)
                 return -1, msg
             return new_machine.id, msg
-
-    @DatabaseHelper._sessionm
-    def checknewjid(self, session, newjidmachine):
-        try:
-            # on appelle la procedure stocke
-            sql = """call afterinsertmachine('%s');"""%newjidmachine
-            session.execute(sql)
-            session.commit()
-            session.flush()
-        except Exception, e:
-            logging.getLogger().error("sql : %s"%traceback.format_exc())
 
     @DatabaseHelper._sessionm
     def is_jiduser_organization_ad(self, session, jiduser):

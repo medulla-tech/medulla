@@ -291,14 +291,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.file_deploy_plugin = []
         self.wolglobal_set = set() #use group wol
         self.confaccount=[] #list des account for clear
-        #clear conf compte.
-        logger.debug('Delete old ejabberd accounts')
-        cmd = "ejabberdctl --no-timeout delete_old_users 1"
-        try:
-            a = simplecommandstr(cmd)
-            logger.debug(a['result'])
-        except Exception as e:
-            pass
         #del old message offline
         logger.debug('Delete old offline ejabberd messages')
         cmd = "ejabberdctl --no-timeout delete_old_messages 1"
