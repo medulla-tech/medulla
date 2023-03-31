@@ -85,12 +85,12 @@ def send_message_json(to, jsonstring):
 
 
 def callXmppFunction(functionname, *args, **kwargs):
-    logging.getLogger().debug("**call function %s %s %s" % (functionname, args, kwargs))
+    logging.getLogger().debug(f"**call function {functionname} {args} {kwargs}")
     return getattr(ObjectXmpp(), functionname)(*args, **kwargs)
 
 
 def callXmppPlugin(plugin, data):
-    logging.getLogger().debug("**call plugin %s" % (plugin))
+    logging.getLogger().debug(f"**call plugin {plugin}")
     ObjectXmpp().callpluginmasterfrommmc(plugin, data)
 
 
@@ -116,11 +116,10 @@ def callvncchangepermsbymaster(to, askpermission):
 
 def callremotefile(jidmachine, currentdir="", timeout=40):
     strctfilestrcompress = ObjectXmpp().iqsendpulse(jidmachine, {"action": "remotefile", "data": currentdir}, timeout)
-    try :
-        strctfilestr=zlib.decompress(base64.b64decode(strctfilestrcompress))
-        return strctfilestr
+    try:
+        return zlib.decompress(base64.b64decode(strctfilestrcompress))
     except Exception as e:
-        logger.error("%s" % (traceback.format_exc()))
+        logger.error(f"{traceback.format_exc()}")
     return strctfilestrcompress
 
 def calllistremotefileedit(jidmachine):
@@ -173,7 +172,6 @@ class XmppCommandDiffered:
             self.t2.start()
         else:
             logger.debug("XmppCommandDiffered error XMPP not initialized")
-            pass
 
     def differed(self):
         """
@@ -182,7 +180,7 @@ class XmppCommandDiffered:
         # Pre-command
         self.xmpp = ObjectXmpp()
         if self.precommand != None:
-            logger.debug("exec command %s" % self.precommand)
+            logger.debug(f"exec command {self.precommand}")
             a = simplecommandstr(self.precommand)
             if a['code'] != 0:
                 return
@@ -200,19 +198,15 @@ class XmppCommandDiffered:
         # Post-command running after XMPP Command
         if self.postcommand != None:
             while not self.e.isSet():
-                # Wait for timeout or event thread
-                event_is_set = self.e.wait(self.t)
-                if event_is_set:
+                if event_is_set := self.e.wait(self.t):
                     # After session completes, execute post-command shell
                     b = simplecommandstr(self.postcommand)
                     # Sends b['result'] to log
                     logger.debug(b['result'])
-                else:
-                    # Timeout
-                    if not self.xmpp.session.isexist(self.sessionid):
-                        logger.debug('Action session %s timed out' % self.action)
-                        logger.debug("Timeout error")
-                        break
+                elif not self.xmpp.session.isexist(self.sessionid):
+                    logger.debug(f'Action session {self.action} timed out')
+                    logger.debug("Timeout error")
+                    break
 
 
 class XmppSimpleCommand:
@@ -244,7 +238,7 @@ class XmppSimpleCommand:
     def resultsession(self):
         while not self.e.isSet():
             event_is_set = self.e.wait(self.t)
-            logger.debug('The event is set to: %s' % event_is_set)
+            logger.debug(f'The event is set to: {event_is_set}')
             if event_is_set:
                 self.result = self.session.datasession
             else:
@@ -262,9 +256,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def __init__(self, conf):  # jid, password, room, nick):
         namelibplugins = "master/pluginsmaster"
         self.modulepath = os.path.abspath(\
-                os.path.join(os.path.dirname(os.path.realpath(__file__)),"..",
+                    os.path.join(os.path.dirname(os.path.realpath(__file__)),"..",
                              namelibplugins))
-        logger.debug('Module path plugin xmppmaster is %s'%self.modulepath)
+        logger.debug(f'Module path plugin xmppmaster is {self.modulepath}')
         self.listmodulemmc = PluginManager().getEnabledPluginNames()
         self.config = conf
         self.session = session()
@@ -289,7 +283,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.manage_scheduler = manage_scheduler(self)
         self.xmppbrowsingpath = xmppbrowsing(defaultdir=self.config.defaultdir,
                                              rootfilesystem=self.config.rootfilesystem)
-        
+
         # Delete old messages
         logger.debug('Delete old offline ejabberd messages')
         cmd = "ejabberdctl --no-timeout delete_old_messages 1"
@@ -379,11 +373,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # send iq synchronous message cf. https://xmpp.org/extensions/xep-0099.html
         ref_time = max(2, timeout -1)
         start_iq = time.time()
-        if type(datain) == dict or type(datain) == list:
+        if type(datain) in [dict, list]:
             try:
                 data = json.dumps(datain)
             except Exception as e:
-                logging.error("iqsendpulse : encode json : %s" % str(e))
+                logging.error(f"iqsendpulse : encode json : {str(e)}")
                 return '{"err" : "%s"}' % str(e).replace('"', "'")
         elif type(datain) == unicode:
             data = str(datain)
@@ -393,13 +387,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
             struccmd = {'action' : "" , 'data' : ""}
             try:
                 struccmd = json.loads(data)
-                error_text = "error for IQ [%s] data [%s]" % (struccmd['action'],
-                                                              struccmd['data'])
+                error_text = f"error for IQ [{struccmd['action']}] data [{struccmd['data']}]"
             except Exception:
                 pass
             data = data.encode("base64")
         except Exception as e:
-            logging.error("iqsendpulse : encode base64 : %s" % str(e))
+            logging.error(f"iqsendpulse : encode base64 : {str(e)}")
             return '{"err" : "%s"}' % error_text
         try:
             iq = self.make_iq_get(queryxmlns='custom_xep', ito=to)
@@ -420,8 +413,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                         # TODO : Replace print by log
                                         return data
                                     except Exception as e:
-                                        logging.error("iqsendpulse : %s" % str(e))
-                                        logger.error("%s" % (traceback.format_exc()))
+                                        logging.error(f"iqsendpulse : {str(e)}")
+                                        logger.error(f"{traceback.format_exc()}")
                                         return '{"err" : "%s"}' % error_text
                                     return "{}"
             except IqError as e:
@@ -438,36 +431,36 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     error_text = "%s\\n%s" % (error_text, err_resp['error']['text'])
                 except Exception:
                     logging.error("Iq xml error\n%s" % str(err_resp).replace('"', "'"))
-                    logger.error("display trace back %s" % (traceback.format_exc()))
+                    logger.error(f"display trace back {traceback.format_exc()}")
                 self.errorhandlingstanzaiq( err_resp, err_resp.keys())
                 if errortext == "User session not found":
-                    logging.error("User session not found on iq %s second"%(end_iq-start_iq))
-                    logging.error("Making the machine %s in status OFF in machine table"%(str(to)))
+                    logging.error(f"User session not found on iq {end_iq - start_iq} second")
+                    logging.error(f"Making the machine {str(to)} in status OFF in machine table")
                     error_text = "%s\\n(Making the machine (%s) in status OFF)"%(error_text, str(to))
                     XmppMasterDatabase().changStatusPresenceMachine( to, enable = '0')
-                elif  errortext == "No module is handling this query" and \
-                    conditionxmppiq == "service-unavailable" :
+                elif errortext == "No module is handling this query" and \
+                        conditionxmppiq == "service-unavailable":
                     logging.error("The IQ query is sent to a JID that cannot handle the query.")
                     error_text = "%s\\n(The IQ query is sent to a JID "\
-                        "that cannot handle the query.)"%(error_text)
+                            "that cannot handle the query.)"%(error_text)
                     if len(to.split("/")) == 1:
-                        logging.error("verify : missing ressource in jid %s" % to)
+                        logging.error(f"verify : missing ressource in jid {to}")
                         error_text = "%s\\nmissing ressource in JID %s"%(error_text, to)
                 return '{"err" : "%s"}' % error_text
             except IqTimeout as e:
                 err_resp = e.iq
                 self.errorhandlingstanzaiq( err_resp, err_resp.keys())
                 end_iq=time.time()
-                logging.error("TIMEOUT ERROR %s s for %s"%(timeout, error_text))
+                logging.error(f"TIMEOUT ERROR {timeout} s for {error_text}")
                 error_text = "%s\\nTIMEOUT ERROR"%(error_text)
                 if (end_iq - start_iq) < ref_time:
-                    logging.error("direct Time out Error on iq %s"%(end_iq-start_iq))
-                    logging.error("status off Machine %s in table machine"%(str(to)))
+                    logging.error(f"direct Time out Error on iq {end_iq - start_iq}")
+                    logging.error(f"status off Machine {str(to)} in table machine")
                     XmppMasterDatabase().changStatusPresenceMachine( to, enable = '0')
                 return '{"err" : "%s"}' % error_text
         except Exception as e:
-            logging.error("iqsendpulse : error %s" % str(e).replace('"', "'"))
-            logger.error("%s" % (traceback.format_exc()))
+            logging.error(f"""iqsendpulse : error {str(e).replace('"', "'")}""")
+            logger.error(f"{traceback.format_exc()}")
             return '{"err" : "%s"}' % str(e).replace('"', "'")
         return "{}"
 
@@ -481,29 +474,29 @@ class MUCBot(sleekxmpp.ClientXMPP):
             It returns a userfriendly return message based on the code provided by
             urllib2.
         """
-        msghtml = "error html code %s" % code
+        msghtml = f"error html code {code}"
         if code == 200:
-            msghtml = "[%s succes]" % code
+            msghtml = f"[{code} succes]"
         if code == 301:
-            msghtml = "[%s Moved Permanently]" % code
+            msghtml = f"[{code} Moved Permanently]"
         if code == 302:
-            msghtml = "[%s Moved temporarily]" % code
+            msghtml = f"[{code} Moved temporarily]"
         if code == 400:
-            msghtml = "[%s Bad Request]" % code
+            msghtml = f"[{code} Bad Request]"
         if code == 401:
-            msghtml = "[%s Unauthorized]" % code
+            msghtml = f"[{code} Unauthorized]"
         elif code == 403:
-            msghtml = "[%s Forbidden]" % code
+            msghtml = f"[{code} Forbidden]"
         elif code == 404:
-            msghtml = "[%s Not Found]" % code
+            msghtml = f"[{code} Not Found]"
         elif code == 408:
-            msghtml = "[%s Request Timeout]" % code
+            msghtml = f"[{code} Request Timeout]"
         elif code == 500:
-            msghtml = "[%s Internal Server Error]" % code
+            msghtml = f"[{code} Internal Server Error]"
         elif code == 503:
-            msghtml = "[%s Service Unavailable ]" % code
+            msghtml = f"[{code} Service Unavailable ]"
         elif code == 504:
-            msghtml = "[%s Gateway Timeout]" % code
+            msghtml = f"[{code} Gateway Timeout]"
         return msghtml
 
     def errorhandlingstanzaiq(self, msg, msgkey):
@@ -511,7 +504,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         messagestanza=""
         for t in msgkey:
             
-            if t != 'error' and t != "lang":
+            if t not in ['error', "lang"]:
                 e = str(msg[t])
                 if e != "":
                     messagestanza+="%s : %s\n"%(t, e)
@@ -572,7 +565,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         listmacadress = macadress.split("||")
         for macadressdata in listmacadress:
             if macadressdata != "":
-                logging.debug("wakeonlan machine  [Machine : %s]" % machine_hostname)
+                logging.debug(f"wakeonlan machine  [Machine : {machine_hostname}]")
                 self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadressdata})
 
     def _chunklist(self, listseq, nb = 5000):
@@ -593,7 +586,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 self.callpluginmasterfrommmc('wakeonlangroup',
                                             {'macadress': list(listsend)})
         except Exception:
-            logger.error("%s"%(traceback.format_exc()))
+            logger.error(f"{traceback.format_exc()}")
 
     def _addsetwol( self, setdata, macadress):
         listmacadress = macadress.split("||")
@@ -601,15 +594,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
             setdata.add(macadressdata)
 
     def scheduledeployrecoveryjob(self):
-        msglog=[]
         wol_set = set()
+        msglog = []
         try:
             # machine ecart temps de deploiement terminer met status a ABORT ON TIMEOUT
             result = XmppMasterDatabase().Timeouterrordeploy()
             for machine in result:
                 machine_hostname=machine['jidmachine'].split('@')[0][:-4]
-                msglog.append("<span class='log_err'>Deployment timed out on machine %s</span>"%machine_hostname)
-                msglog.append("<span class='log_err'>Machine is no longer available</span>")
+                msglog.extend(
+                    (
+                        f"<span class='log_err'>Deployment timed out on machine {machine_hostname}</span>",
+                        "<span class='log_err'>Machine is no longer available</span>",
+                    )
+                )
             for logmsg in msglog:
                 self.xmpplog(logmsg,
                             type='deploy',
@@ -641,8 +638,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     # This can happen when the deployment is scheduled but
                     # -1- The UUID changed
                     # -2- The machine has been removed from the machine table.
-                    msglog.append("<span class='log_err'>Machine %s disappeared "\
-                        "during deployment. GLPI ID: %s</span>"%(machine['jidmachine'], UUID))
+                    msglog.append(
+                        f"<span class='log_err'>Machine {machine['jidmachine']} disappeared during deployment. GLPI ID: {UUID}</span>"
+                    )
                     XmppMasterDatabase().update_state_deploy(machine['id'], "ABORT MACHINE DISAPPEARED")
                 elif resultpresence[UUID][0] == 1:
                     XmppMasterDatabase().update_state_deploy(machine['id'], "WAITING MACHINE ONLINE")
@@ -666,7 +664,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             for machine in machines_wol3:
                 XmppMasterDatabase().update_state_deploy(machine['id'], "WAITING MACHINE ONLINE")
                 machine_hostname = machine['jidmachine'].split('@')[0][:-4]
-                msglog.append("Waiting for machine %s to be online" % machine_hostname)
+                msglog.append(f"Waiting for machine {machine_hostname} to be online")
             for logmsg in msglog:
                 self.xmpplog(logmsg,
                              type='deploy',
@@ -687,7 +685,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 XmppMasterDatabase().update_state_deploy(machine['id'], "WOL 3")
                 machine_hostname = machine['jidmachine'].split('@')[0][:-4]
                 self._addsetwol(wol_set, machine['macadress'])
-                msglog.append("Third WOL sent to machine %s" % machine_hostname)
+                msglog.append(f"Third WOL sent to machine {machine_hostname}")
             for logmsg in msglog:
                 self.xmpplog(logmsg,
                              type='deploy',
@@ -709,7 +707,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 machine_hostname=machine['jidmachine'].split('@')[0][:-4]
                 self._addsetwol(wol_set, machine['macadress'])
 
-                msglog.append("Second WOL sent to machine %s" % machine_hostname)
+                msglog.append(f"Second WOL sent to machine {machine_hostname}")
             for logmsg in msglog:
                 self.xmpplog(logmsg,
                              type='deploy',
@@ -728,7 +726,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 data = json.loads(machine['result'])
                 if XmppMasterDatabase().getPresenceuuid(machine['inventoryuuid']):
                     machine_hostname=machine['jidmachine'].split('@')[0][:-4]
-                    msg="Machine %s online. Starting deployment" % machine_hostname
+                    msg = f"Machine {machine_hostname} online. Starting deployment"
                     self.xmpplog(msg,
                                  type='deploy',
                                  sessionname=machine['sessionid'],
@@ -742,11 +740,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     # We restart the deploiement on online machines.
                     # We need to check if we already have a syncthing group. If so we can decide to add it.
                     if 'grp' in data['advanced'] and data['advanced']['grp'] is not None and \
-                        'syncthing' in data['advanced'] and \
-                            data['advanced']['syncthing'] == 1 and \
-                                XmppMasterDatabase().nbsyncthingdeploy(machine['group_uuid'],
+                            'syncthing' in data['advanced'] and \
+                                data['advanced']['syncthing'] == 1 and \
+                                    XmppMasterDatabase().nbsyncthingdeploy(machine['group_uuid'],
                                                                         machine['command']) > 2:
-                        msg = "Starting peer deployment on machine %s" % machine['jidmachine']
+                        msg = f"Starting peer deployment on machine {machine['jidmachine']}"
                         self.xmpplog(msg,
                                      type='deploy',
                                      sessionname=machine['sessionid'],
@@ -765,8 +763,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         self.syncthingdeploy()
                     else:
                         datasession = self.session.sessiongetdata(machine['sessionid'])
-                        msglog.append("Starting deployment on machine %s from ARS %s" %(machine['jidmachine'],
-                                                                                machine['jid_relay']))
+                        msglog.append(
+                            f"Starting deployment on machine {machine['jidmachine']} from ARS {machine['jid_relay']}"
+                        )
 
                         command = {'action': "applicationdeploymentjson",
                                    'base64': False,
@@ -788,9 +787,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                          fromuser=machine['login'])
                         msglog = []
                         if 'syncthing' in data['advanced'] and \
-                            data['advanced']['syncthing'] == 1:
+                                data['advanced']['syncthing'] == 1:
                             self.xmpplog("<span class='log_warn'>There are not enough machines " \
-                                            "to deploy in peer mode</span>",
+                                                "to deploy in peer mode</span>",
                                          type='deploy',
                                          sessionname=machine['sessionid'],
                                          priority=-1,
@@ -800,7 +799,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                          date=None,
                                          fromuser=data['login'])
         except Exception:
-            logger.error("%s" % (traceback.format_exc()))
+            logger.error(f"{traceback.format_exc()}")
         finally:
             # Send wols
             wol_set.discard("")
