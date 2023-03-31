@@ -696,7 +696,7 @@ class BootInventory:
                             elif dd.tag == "SMODEL":
                                 self.sys_info['product'] = dd.text
                             elif dd.tag == "SSN":
-                                self.sys_info['serial'] = dd.text
+                                self.sys_info['serial'] = dd.text if dd.text is not None else ""
                     elif cc.tag == "HARDWARE":
                         for dd in cc:
                             if dd.tag == "IPADDR":
