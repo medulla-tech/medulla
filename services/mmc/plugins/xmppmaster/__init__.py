@@ -1,4 +1,4 @@
-runXmppWolforuuidsarray# -*- coding: utf-8; -*-
+# -*- coding: utf-8; -*-
 #
 # (c) 2016-2023 siveo, http://www.siveo.net
 #
