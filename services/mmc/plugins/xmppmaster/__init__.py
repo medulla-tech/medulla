@@ -1030,17 +1030,28 @@ def xmpp_getPackageDetail(pid_package):
 
 
 def runXmppWolforuuidsarray(uuids):
-    if 'jid' in uuids:
-        mach_infos = XmppMasterDatabase().getMachinefromjid(uuids['jid'])
-        if 'macaddress' in mach_infos:
-            macaddresslist = [mach_infos['macaddress']]
+    """
+    renvoi les informations wol network
+    """
+    if isinstance(uuids, dict) and 'jid' in uuids:
+        mach_infos = XmppMasterDatabase().getMacsMachinefromjid(str(uuids['jid']))
+    elif isinstance(uuids, list):
+        mach_infos = XmppMasterDatabase().getMacsMachinefromjid(uuids)
     else:
-        mach_infos = XmppMasterDatabase().getmachinesbyuuids(uuids)
-        macaddresslist = []
-        # creation list mac address
-        for infos in mach_infos:
-            macaddresslist.append(mach_infos[infos]['macaddress'])
-    callXmppPlugin('wakeonlangroup', {'macadress': macaddresslist})
+        return False
+    if mach_infos is None:
+        return False
+    macaddresslist=[]
+    broadcastlist=[]
+    groupdeploylist=[]
+    for element in mach_infos:
+        macaddresslist.append(element['macaddress'])
+        broadcastlist.append(element['broadcast'])
+        groupdeploylist.append(element['groupdeploy'].split("/")[0])
+    callXmppPlugin('wakeonlangroup', {'macadress' : macaddresslist,
+                                      'broadcast' : broadcastlist,
+                                      'groupdeploy' :groupdeploylist
+                                      })
     return True
 
 

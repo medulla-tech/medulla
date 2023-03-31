@@ -14,6 +14,7 @@ from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.database_itsm_ng_14 import Itsm_ng14
 from mmc.plugins.glpi.database_084 import Glpi084
 from mmc.plugins.glpi.database_92 import Glpi92
+from mmc.plugins.glpi.database_93 import Glpi93
 from mmc.plugins.glpi.database_94 import Glpi94
 from mmc.plugins.glpi.database_95 import Glpi95
 from mmc.plugins.glpi.database_100 import Glpi100
@@ -49,6 +50,8 @@ class Glpi(DyngroupDatabaseHelper):
             self.database = Glpi084()
         elif Glpi92().try_activation(self.config):
             self.database = Glpi92()
+        elif Glpi93().try_activation(self.config):
+            self.database = Glpi93()
         elif Glpi94().try_activation(self.config):
             self.database = Glpi94()
         elif Glpi95().try_activation(self.config):

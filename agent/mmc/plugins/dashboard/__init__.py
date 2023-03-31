@@ -28,7 +28,6 @@ from mmc.plugins.dashboard.panel import (
 )
 
 VERSION = "4.7.0"
-VERSION = "4.6.11"
 APIVERSION = "0:1:0"
 REVISION = ""
 

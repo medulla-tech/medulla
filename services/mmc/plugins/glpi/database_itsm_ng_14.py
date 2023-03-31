@@ -69,21 +69,17 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
     def try_activation(self, config):
         """
-        function to see if that glpi database backend is the one we need to use
+        function to see if that itsm-ng database backend is the one we need to use
         """
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if ITSM-NG version is higher than 1.4')
+        logging.getLogger().debug('Trying to detect if ITSM-NG version is higher than 1.4 %s' % dburi)
 
-
-        if not os.path.isdir("/usr/share/itsm-ng"):
-            return False
-
-        try:
-            self._itsm_ng_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
-        except OperationalError:
+	try:
             self._itsm_ng_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "itsmversion"').fetchone().values()[0].replace(' ', '')
+	except AttributeError:
+	    return False
 
         if LooseVersion(self._itsm_ng_version) >=  LooseVersion("1.4") and LooseVersion(self._itsm_ng_version) <=  LooseVersion("1.4.99"):
             logging.getLogger().debug('ITSM-NG version %s found !' % self._itsm_ng_version)
