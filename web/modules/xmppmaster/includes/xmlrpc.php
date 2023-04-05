@@ -840,4 +840,21 @@ function xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate="", $endd
 function xmlrpc_get_updates_by_uuids($uuids, $start=0, $limit=-1, $filter=""){
   return xmlCall("xmppmaster.get_updates_by_uuids", [$uuids, $start, $limit, $filter]);
 }
+
+function affichedebugSIVEO($a, $title=""){
+    if ($title != ""){
+        printf("<h2>%s</h2>", $title);
+    }
+    echo"<pre>";
+    print_r($a);
+    echo"</pre>";
+}
+
+
+function affichefile($a){
+    echo"<h3>";
+    echo $a;
+    echo"</h3>";
+}
+
 ?>
