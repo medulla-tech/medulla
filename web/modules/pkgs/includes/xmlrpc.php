@@ -26,52 +26,21 @@ function getPApiDetail($papiid) {
     return xmlCall("pkgs.getPApiDetail", array($papiid));
 }
 
-// function getUserPackageApi() {
-//     return xmlCall("pkgs.upaa_getUserPackageApi");
-// }
-
 function putPackageDetail($package, $need_assign = True) {
     return xmlCall("pkgs.putPackageDetail", array($package, $need_assign));
 }
 
+function pkgs_get_infos_details($puuidpackage) {
+    return xmlCall("pkgs.pkgs_get_infos_details", array($puuidpackage));
+}
 
 function xmlrpc_pkgs_search_share($objectsearch){
     return xmlCall("pkgs.pkgs_search_share", array($objectsearch));
 }
 
-// function pushPackage($papi, $random_dir, $files, $local_mmc) {
-//     return xmlCall("pkgs.ppa_pushPackage", array($papi, $random_dir, $files, $local_mmc));
-// }
-
 function pushPackage1($random_dir, $files, $local_mmc) {
     return xmlCall("pkgs.pushPackage", array($random_dir, $files, $local_mmc));
 }
-
-// function getPackageDetail($papiid, $pid) {
-//     return xmlCall("pkgs.ppa_getPackageDetail", array($papiid, $pid));
-// }
-
-// function getTemporaryFiles($papiid) {
-//     return xmlCall("pkgs.ppa_getTemporaryFiles", array($papiid));
-// }
-
-// function xmlrpc_getMMCIP() {
-//     return xmlCall('pkgs.getMMCIP');
-// }
-/*
- * Try to suggest a command line by parsing *.exe
- * or *.msi file in tempdir
- *
- * @param $papiid: a Package API
- * @type $papiid: str
- *
- * @param $tempdir: tempdir
- * @type $tempdir: str
- */
-
-// function getTemporaryFileSuggestedCommand($papiid, $tempdir) {
-//     return xmlcall("pkgs.ppa_getTemporaryFileSuggestedCommand", array($papiid, $tempdir));
-// }
 
 function getTemporaryFiles() {
     return xmlCall("pkgs.pkgs_getTemporaryFiles", array());
@@ -88,14 +57,6 @@ function associatePackages($pid, $files, $level = 0) {
 function removeFilesFromPackage($pid, $files) {
     return xmlCall("pkgs.removeFilesFromPackage", array($pid, $files));
 }
-
-// function dropPackage($p_api, $pid) {
-//     return xmlCall("pkgs.ppa_dropPackage", array($p_api, $pid));
-// }
-
-// function getRsyncStatus($p_api, $pid) {
-//     return xmlCall("pkgs.ppa_getRsyncStatus", array($p_api, $pid));
-// }
 
 function getLicensesCount($vendor, $software, $version) {
     $module = (in_array('inventory', $_SESSION['modulesList'])) ? 'inventory' : 'glpi';

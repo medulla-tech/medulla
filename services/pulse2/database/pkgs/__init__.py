@@ -1670,6 +1670,55 @@ class PkgsDatabase(DatabaseHelper):
         return [x for x in result][0][0]
 
     @DatabaseHelper._sessionm
+    def pkgs_get_infos_details(self, session, uuid):
+
+        ret = {}
+        try:
+            sql = (
+                """SELECT
+                        pkgs.packages.label,
+                        pkgs.packages.description,
+                        pkgs.packages.uuid,
+                        pkgs.packages.version,
+                        pkgs.packages.os,
+                        pkgs.packages.inventory_licenses as AssoINVinventorylicence,
+                        pkgs.packages.Qversion as AssoINVversion,
+                        pkgs.packages.Qvendor as AssoINVvendor,
+                        pkgs.packages.Qsoftware as AssoINVsoftware,
+                        pkgs.pkgs_shares.name as sharename,
+                        pkgs.pkgs_shares.comments as sharecomments,
+                        GROUP_CONCAT(pkgs.dependencies.uuid_dependency ) as dependencies
+                    FROM
+                        pkgs.packages
+                            INNER JOIN
+                        pkgs.pkgs_shares ON pkgs.pkgs_shares.id = pkgs.packages.pkgs_share_id
+                            LEFT JOIN
+                       pkgs.dependencies ON pkgs.dependencies.uuid_package = pkgs.packages.uuid
+                       = pkgs.packages.pkgs_share_id
+                    WHERE
+                        uuid = '%s';"""
+                % uuid
+            )
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            ret = self._return_dict_from_dataset_mysql(result)
+            if ret:
+                ret = ret[0]
+            return ret
+        except Exception:
+            self.logger.error("\n%s" % (traceback.format_exc()))
+
+    def _return_dict_from_dataset_mysql(self, resultproxy):
+        return [
+            {
+                column: value if value is not None else ""
+                for column, value in rowproxy.items()
+            }
+            for rowproxy in resultproxy
+        ]
+
+    @DatabaseHelper._sessionm
     def pkgs_get_sharing_list_login(self, session, loginname):
         sql = """SELECT
                     distinct pkgs.pkgs_shares.id as id_sharing,
