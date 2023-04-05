@@ -31,13 +31,13 @@ $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 
 $arraydeploy = xmlrpc_get_deploy_xmpp_teamscheduler( $_GET['login'] , $start, $end, $filter);
-
+$convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
 $etat="";
 $LastdeployINsecond = 3600 * 72;
 echo "<h2>" . _T("Planned tasks") . "</h2>";
 $login   = array();
 $startdeploy = array();
-
+$enddeploy= array();
 function convtostringdate($data){
     if (is_array($data) && count($data) == 9){
         return date("Y-m-d H:i:s", mktime( $data[3],
@@ -58,19 +58,43 @@ function convtostringdate($data){
 
 foreach( $arraydeploy['tabdeploy']['start'] as $start_date){
     $startdeploy[] = convtostringdate($start_date);
+    $enddeploy[] = convtostringdate($end_date);
     }
 
 foreach( $arraydeploy['tabdeploy']['command'] as $ss){
    $arraydeploy['tabdeploy']['login'][]=xmlrpc_loginbycommand($ss);
 }
 
-$deletecommand = new ActionItem(_("Delete deploy"), "index", "delete", "audit", "xmppmaster", "xmppmaster");
+$deletecommand = new ActionItem(_("Delete deploy"),
+                                "index",
+                                "delete",
+                                "audit",
+                                "xmppmaster",
+                                "xmppmaster");
+$logAction = new ActionItem(_("View deployment details"),
+                                "viewlogs",
+                                "audit",
+                                "computer",
+                                "xmppmaster",
+                                "xmppmaster");
+
+
+$rescheduleAction = new ActionPopupItem(_T("Reschedule", "xmppmaster"),
+                                        "rechedulercmd",
+                                        "edit",
+                                        "computer",
+                                        "xmppmaster",
+                                        "xmppmaster");
+
 // delete_command
 $arraytitlename=array();
 $delete=array();
+$logs   = array();
+$replanifie=array();
 $params=array();
 $arraytargetname=array();
 $index = 0;
+$deployment_intervals=array();
 foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $param=array();
     $param['uuid']= $arraydeploy['tabdeploy']['inventoryuuid'][$index];
@@ -84,9 +108,14 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $param['title']=$arraydeploy['tabdeploy']['title'][$index];
     $param['creator']=$arraydeploy['tabdeploy']['creator'][$index];
     $param['titledeploy']=$arraydeploy['tabdeploy']['titledeploy'][$index];
+    $param['deployment_intervals']=$arraydeploy['tabdeploy']['deployment_intervals'][$index];
+    $param['start_date']=$startdeploy[$index];
+    $param['end_date']=$enddeploy[$index];
     $param['postaction']="delete";
     $params[] = $param;
     $delete[] = $deletecommand;
+    $logs[] = $logAction;
+    $replanifie[] =  $rescheduleAction;
     if($groupid){
         $groupname = getPGobject($arraydeploy['tabdeploy']['groupid'][$index], true)->getName();
         $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machinegroup.svg' width='25' height='25' /> " . $groupname ;
@@ -96,6 +125,38 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     }
     $index++;
 }
+
+
+foreach($arraydeploy['tabdeploy']['journee'] as $key => $value){
+    if ($value == 1){
+        $style='style="color:darkblue"';
+    }else
+    {
+        $style='';
+    }
+    if ($arraydeploy['tabdeploy']['deployment_intervals'][$key] != ""){
+        $deployment_intervals = _T("deployment intervals contraints", "xmppmaster")." ".$arraydeploy['tabdeploy']['deployment_intervals'][$key];
+    }else
+    {
+         $deployment_intervals = _T("No deployment intervals contraint", "xmppmaster");
+    }
+
+    $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span %s title="%s " > %s </span>',
+                                                        $style,
+                                                  $deployment_intervals = _T("No deployment intervals contraint", "xmppmaster");
+
+
+    $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span %s title="%s " > %s </span>',
+                                                        $style,
+               $deployment_intervals,
+                                                        $arraydeploy['tabdeploy']['title'][$key] );
+    if ($convergence[$arraydeploy['tabdeploy']['command'][$key]] != 0 ){
+           $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/convergence.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
+        }else{
+             $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
+        }
+}
+
 
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 $n = new OptimizedListInfos($arraydeploy['tabdeploy']['title'], _T("Deployment", "xmppmaster"));
@@ -107,6 +168,8 @@ $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning1"));
+$n->addActionItemArray($replanifie);
+$n->addActionItemArray($logs);
 $n->addActionItemArray($delete);
 $n->setTableHeaderPadding(0);
 

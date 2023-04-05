@@ -451,6 +451,193 @@ def generate_hash(path, package_id):
     with open(dest + ".hash", 'wb') as outfile:
         outfile.write(content)
 
+def pkgs_get_infos_details(uuidpackage):
+    #logger.error(verify_package(uuidpackage))
+    infodetail =  PkgsDatabase().pkgs_get_infos_details(uuidpackage)
+    infodetail['verify'] = verify_package(uuidpackage)
+    return infodetail
+
+def verify_package(uuidpackage):#JFKJFK
+    # verify fichier existe
+    control={'Package_info' : False,
+             'deploy_xmppdeploy':False,
+             'conf_confjson':False }
+    contentconf = contentxmppdeploy = ""
+    pathpackages_id = os.path.join("/", "var", "lib", "pulse2", "packages")
+    packages_id_input_dir = os.path.join(pathpackages_id, uuidpackage)
+    path_file_xmppdeploy = os.path.join(packages_id_input_dir, "xmppdeploy.json" )
+    path_file_conf = os.path.join(packages_id_input_dir, "conf.json" )
+
+    if not os.path.isdir(packages_id_input_dir): control['Package_dirpackage'] =  " Package directory %s not found"%packages_id_input_dir
+    if not os.path.islink(packages_id_input_dir): control['Package_linkpackage'] = "%s is not 1 symbolic link to the share check package placement"%packages_id_input_dir
+
+    nb = len([ x for x in control.keys() if x.startswith('Package')])
+    if nb == 0:
+        control['Package_info'] = False
+    else:
+        control['Package_info'] = True
+    # test existance fichier json xmppdeploy et conf
+    if not os.path.isfile(path_file_xmppdeploy): control['deploy_jsonxmppdeploy'] = "File %s not found"  % path_file_xmppdeploy
+    if not os.path.isfile(path_file_conf): control['conf_existconf'] = " File %s not found"  % path_file_conf
+
+    if 'deploy_jsonxmppdeploy' not in  control:
+        # verification json correct
+        try:
+            with open(path_file_xmppdeploy) as mon_fichier:
+                contentxmppdeploy = json.load(mon_fichier)
+        except:
+            control['deploy_correctjsonxmppdeploy'] = "the xmppdeploy file of package %s is badly formatted"%uuidpackage
+
+        if not 'deploy_correctjsonxmppdeploy' in control:
+            testkey =  ['info', 'metaparameter']
+            keylist = contentxmppdeploy.keys()
+            for t in  testkey:
+                if not t in contentxmppdeploy:
+                    control["deploy_xmpp_section_missing_%s"%t] = "In xmppdeply Session main option %s missing"%t
+            if contentxmppdeploy['info']:
+                keylistinfo=['localisation_server',
+                            'previous_localisation_server',
+                            'creator',
+                            'editor',
+                            'description',
+                            'version',
+                            ]
+                for t in  keylistinfo:
+                    if t not in contentxmppdeploy['info']:
+                        control['deploy_info_'+ t] = "In xmppdeploy Session main/info option %s missing"%t
+
+                list_control_type = contentxmppdeploy['info'].keys()
+                for x in list_control_type:
+                    if x in ['Dependency']:
+                        if not isinstance(contentxmppdeploy['info'][x], list):
+                            control['deploy_type_error_%s'%x]="in xmppdeploy, option %s must be 1 list of dependencies"%s
+                            continue
+                        # controle dependency exist
+                        for depend in contentxmppdeploy['info'][x]:
+                            if not os.path.isdir(os.path.join(pathpackages_id, depend)):
+                                control['deploy_dependencie_missing_%s'%depend] = "in xmppdeploy, this dependency %s no longer exists or is incorrectly installed"%depend
+                        continue
+
+                    if x in ['transferfile']:
+                        if not isinstance(contentxmppdeploy['info'][x], bool):
+                            control['deploy_type_error_%s'%x]="in xmppdeploy, Section main/info option %s must be 1 boolean."%x
+                        continue
+                    if x in ['creator',
+                            'creation_date',
+                            'version',
+                            'packageUuid',
+                            'editor',
+                            'metagenerator',
+                            'edition_date',
+                            'localisation_server',
+                            'description',
+                            'previous_localisation_server',
+                            'name',
+                            'methodetransfert',
+                            'software']:
+                        if not isinstance(contentxmppdeploy['info'][x], (str, unicode)):
+                            control['deploy_type_error_%s'%x]="in xmppdeploy, section main/info/ option %s must be 1 character string."%x
+                            continue
+                        if contentxmppdeploy['info'][x]=="":
+                            control['deploy_value_missing_%s'%x]="in xmppdeploy, Section main/info/ the option %s is not filled in."%x
+                            continue
+                    if x in [ 'description']:
+                        t= [y for y in  re.split(r'[^a-zA-Z0-9_,;-\\&%!;()}\[\],]',
+                                                    contentxmppdeploy['info'][x]) if y == ""]
+                        if t:
+                            control["deploy_char_forbiden_%s" % x]="in xmppdeploy, Section main/info/ the option %s presents characters not allowed"%x
+
+            if contentxmppdeploy['metaparameter']:
+                keylistinfo=['os',
+                            'uuid']
+                for t in  keylistinfo:
+                    if t not in contentxmppdeploy['metaparameter']:
+                        control['deploy_metaparameter_'+ t] ="in xmppdeploy, Section main/metaparameter option %s missing"%t
+
+
+
+                if 'metaparameter' in contentxmppdeploy and 'os' in contentxmppdeploy['metaparameter']:
+                    if len(contentxmppdeploy['metaparameter']['os']) == 0:
+                        control['deploy_metaparameter_os_missing']="in xmppdeploy, Section main/metaparameter option os must contain 1 os win, linux or mac"
+                else:
+                    control['deploy_metaparameter_section_os_missing']="in xmppdeploy, Section main/metaparameter option os missing"
+
+            r = [x for x in contentxmppdeploy.keys() if x in ['win', 'linux', 'mac'] ]
+            # controle sequence
+            for t in r:
+                for index, listetape in enumerate(contentxmppdeploy[t]['sequence']):
+                    #listetape = contentxmppdeploy[t]['sequence']
+                    if 'actionlabel' not in listetape or 'step' not in listetape:
+                        control['deploy_sequence_%s_step_or_actionlabel_missingindex%s' % (t,index)] = "in xmppdeploy, section main/%s/sequence ( step %s) actionlabel or step options are required"%(t,index)
+                        continue
+
+                    if  not isinstance(listetape['step'], int):
+                        control['deploy_sequence_%s_step_missing_etape%s' % (t,index)] = "in xmppdeploy, Section main/%s/sequence (step %s) the option step must be 1 integer"%(t,index)
+                        continue
+
+                    if  listetape['actionlabel'] == "":
+                        control['deploy_sequence_%s_step%s_actionlabel_missing' % (t, contentxmppdeploy[t]['sequence']['step'])] ="in xmppdeploy, Section main/%s/sequence (index %s) step %s option actionlabel must not be empty"%(t,index, contentxmppdeploy[t]['sequence']['step'])
+    nb = len([ x for x in control.keys() if x.startswith('deploy')])
+    if nb == 0:
+        control['deploy_xmppdeploy'] = False
+    else:
+        control['deploy_xmppdeploy'] = True
+
+    if 'conf_existconf' not in control:
+        try:
+            with open(path_file_conf) as mon_fichier:
+                contentconf = json.load(mon_fichier)
+        except:
+            control['conf_correctconfjson'] = "file conf.json of package %s is not correct"%uuidpackage
+
+        if not 'conf_correctconfjson' in control:
+            ## verify conf
+            keycontrol= [   "localisation_server",
+                            "sub_packages",
+                            "metagenerator",
+                            "description",
+                            "creator",
+                            "edition_date",
+                            "previous_localisation_server",
+                            "entity_id",
+                            "creation_date",
+                            "inventory",
+                            "version",
+                            "reboot",
+                            "editor",
+                            "targetos",
+                            "commands",
+                            "id",
+                            "name"]
+            keyslist=contentconf.keys()
+            for x in keycontrol:
+                if x not in keyslist:
+                    control['conf_%s'%x] = "in conf.json, Section main option %s missing" % x
+
+            for x in keyslist:
+                if x in ['sub_packages']:
+                    #verify que c'est 1 listetape
+                    if not isinstance (contentconf[x], list):
+                        control['conf_type_error_%s'%x] = "in conf.json, Section main option %s type must be 1 list" % x
+                    continue
+                if x in ['inventory','commands']:
+                    if not isinstance (contentconf[x], dict):
+                        control['conf_type_error_%s'%x] = "in conf.json, Section main option %s type must be 1 dict" % x
+                    continue
+
+                if x in ['reboot']:
+                    #if not isinstance (contentconf[x], int):
+                        #control['conf_type_error_%s'%x] =  "dans conf.json, Section principal option %s type doit etre 1 entier" % x
+                    continue
+                if contentconf[x] == "":
+                    control['conf_value_missing_%s'%x] = "in conf.json, Main section option %s value must not be filled in" % x
+    nb = len([ x for x in control.keys() if x.startswith('conf')])
+    if nb == 0:
+        control['conf_confjson'] = False
+    else:
+        control['conf_confjson'] = True
+    return control
+
 def putPackageDetail(package, need_assign=True):
     """
         This function is used to create or edite a package

@@ -76,20 +76,27 @@ if ( isset ($_POST['bStop'])) {
     if(isset($cn)){
         $hostname = $cn;
     }
-    if  (!$gid || $mach){
-        require_once ("modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php");
-    }
-    else{
+    if (isset ($groupid) && $groupid != "")
+    {
+        require_once ("modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php");
 
-      $params = [
-        'uuid'=>$_GET['uuid'],
-        'hostname'=>$_GET['hostname'],
-        'gid'=>$_GET['gid'],
-        'cmd_id'=>$_GET['cmd_id'],
-        'login'=>$_GET['login'],
+    }else
+    {
+        if  (!$gid || $mach){
+            require_once ("modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php");
+        }
+        else{
 
-      ];
-      require_once ("modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php");
+        $params = [
+            'uuid'=>$_GET['uuid'],
+            'hostname'=>$_GET['hostname'],
+            'gid'=>$_GET['gid'],
+            'cmd_id'=>$_GET['cmd_id'],
+            'login'=>$_GET['login'],
+
+        ];
+        require_once ("modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php");
+        }
     }
 
 ?>

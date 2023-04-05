@@ -122,8 +122,6 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $index++;
 }
 
-$notdeployment_intervals = _T("No deployment intervals contraint", "xmppmaster");
-
 foreach($arraydeploy['tabdeploy']['journee'] as $key => $value){
     if ($value == 1){
         $style='style="color:darkblue"';
