@@ -48,7 +48,8 @@ if (isset($groupname) && $groupname != '' && !xmlrpc_group_name_exists($groupnam
         "Installed software (specific version)",
         "Vendors",
         "Owner of the machine",
-        "Register key value"
+        "Register key value",
+        "Peripheral serial",
     ];
     if(in_array($elementare, $oldSystemCriterion)){
         $group->importMembers($elementare, $content);

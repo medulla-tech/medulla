@@ -5456,10 +5456,12 @@ class Glpi084(DyngroupDatabaseHelper):
             query = query.join(RegContents, RegContents.computers_id, Machine.id)
 
         elif criterion == "Peripheral serial":
-            query = query.filter(and_(Peripherals.serial.in_(values)))
-            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-            query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
-                                   Computersitems.itemtype == "Peripheral"))
+            # for unknown reason the mapping of Peripherals object is not reachable
+            # query = query.filter(and_(self.peripherals.serial.in_(values)))
+            # query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            # query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
+            #                       Computersitems.itemtype == "Peripheral"))
+            pass
 
         elif criterion == "State":
             query = query.filter(and_(State.name.in_(values)))
@@ -5511,21 +5513,21 @@ class Glpi084(DyngroupDatabaseHelper):
 
         elif criterion == "Operating system":
             query = query.filter(and_(OS.name.in_(values)))
-            query = query.join(OS, OS.items_id == Machine.operatingsystems_id)
+            query = query.join(OS, OS.id == Machine.operatingsystems_id)
 
         elif criterion == "Contact number":
             query = query.filter(and_(Machine.contact_num.in_(values)))
 
         elif criterion == "Service Pack":
             query = query.filter(and_(OsSp.name.in_(values)))
-            query = query.join(OsSp, OsSp.id, Machine.operatingsystemservicepacks_id)
+            query = query.join(OsSp, OsSp.id == Machine.operatingsystemservicepacks_id)
 
         elif criterion == "Contact":
             query = query.filter(and_(Machine.contact.in_(values)))
 
         elif criterion == "Architecture":
-            query = query.filter(and_(OsArch.name.in_(values)))
-            query = query.join(OsArch, OsArch.id, Machine.operatingsystemarchitectures_id)
+            # added for compatibility
+            pass
 
         elif criterion == "Installed software (specific version)":
             pass
@@ -5537,7 +5539,7 @@ class Glpi084(DyngroupDatabaseHelper):
         elif criterion == "User location":
             query = query.filter(and_(Locations.name.in_(values)))
             query = query.join(User, User.id == Machine.users_id)
-            query = query.join(Locations, Locations.id == User.location_id)
+            query = query.join(Locations, Locations.id == User.locations_id)
 
         elif criterion == "Vendors":
             pass
@@ -5549,8 +5551,8 @@ class Glpi084(DyngroupDatabaseHelper):
                                    Computersitems.itemtype == "Peripheral"))
 
         elif criterion == "Entity":
-            query = query.filter(or_(Entities.id.in_(values), Entities.completename.in_(values)))
-            query = query.join(Entities, Entities.id, Machine.entities_id)
+            query = query.filter(and_(Entities.name.in_(values)))
+            query = query.join(Entities, Entities.id == Machine.entities_id)
 
 
         elif criterion == "Owner of the machine":
