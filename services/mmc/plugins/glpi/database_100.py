@@ -285,16 +285,23 @@ class Glpi100(DyngroupDatabaseHelper):
         self.fusionagents = None
 
         if self.fusionantivirus is not None: # Fusion is not installed
-            self.logger.debug('Load glpi_plugin_fusioninventory_locks')
-            self.fusionlocks = Table('glpi_plugin_fusioninventory_locks', self.metadata,
-                Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
-                autoload = True)
-            mapper(FusionLocks, self.fusionlocks)
-            self.logger.debug('Load glpi_plugin_fusioninventory_agents')
-            self.fusionagents = Table('glpi_plugin_fusioninventory_agents', self.metadata,
-                Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
-                autoload = True)
-            mapper(FusionAgents, self.fusionagents)
+            try:
+                self.logger.debug('Load glpi_plugin_fusioninventory_locks')
+                self.fusionlocks = Table('glpi_plugin_fusioninventory_locks', self.metadata,
+                    Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                    autoload = True)
+                mapper(FusionLocks, self.fusionlocks)
+                self.logger.debug('Load glpi_plugin_fusioninventory_agents')
+                self.fusionagents = Table('glpi_plugin_fusioninventory_agents', self.metadata,
+                    Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                    autoload = True)
+                mapper(FusionAgents, self.fusionagents)
+            except:
+                self.logger.debug('Load glpi_agents')
+                self.fusionagents = Table('glpi_agents', self.metadata,
+                    Column('entities_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                    autoload = True)
+                mapper(FusionAgents, self.fusionagents)
 
         # glpi_items_disks
         self.disk = Table('glpi_items_disks', self.metadata,
@@ -462,23 +469,42 @@ class Glpi100(DyngroupDatabaseHelper):
         mapper(Group, self.group)
 
         # collects
-        self.collects = Table("glpi_plugin_fusioninventory_collects", self.metadata,
-            Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
-            autoload = True)
-        mapper(Collects, self.collects)
+	try:
+            self.collects = Table("glpi_plugin_fusioninventory_collects", self.metadata,
+                Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
+                autoload = True)
+            mapper(Collects, self.collects)
+	except:
+            self.collects = Table("glpi_plugin_glpiinventory_collects", self.metadata,
+                Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
+                autoload = True)
+            mapper(Collects, self.collects)
 
         # registries
-        self.registries = Table("glpi_plugin_fusioninventory_collects_registries", self.metadata,
-            Column('plugin_fusioninventory_collects_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects.id')),
-            autoload = True)
-        mapper(Registries, self.registries)
+        try:
+            self.registries = Table("glpi_plugin_fusioninventory_collects_registries", self.metadata,
+                Column('plugin_fusioninventory_collects_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects.id')),
+                autoload = True)
+            mapper(Registries, self.registries)
+        except:
+            self.registries = Table("glpi_plugin_glpiinventory_collects_registries", self.metadata,
+                Column('plugin_fusioninventory_collects_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects.id')),
+                autoload = True)
+            mapper(Registries, self.registries)
 
         # registries contents
-        self.regcontents = Table("glpi_plugin_fusioninventory_collects_registries_contents", self.metadata,
-            Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
-            Column('plugin_fusioninventory_collects_registries_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects_registries.id')),
-            autoload = True)
-        mapper(RegContents, self.regcontents)
+        try:
+            self.regcontents = Table("glpi_plugin_fusioninventory_collects_registries_contents", self.metadata,
+                Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                Column('plugin_fusioninventory_collects_registries_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects_registries.id')),
+                autoload = True)
+            mapper(RegContents, self.regcontents)
+        except:
+            self.regcontents = Table("glpi_plugin_glpiinventory_collects_registries_contents", self.metadata,
+                Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                Column('plugin_glpiinventory_collects_registries_id', Integer, ForeignKey('glpi_plugin_glpiinventory_collects_registries.id')),
+                autoload = True)
+            mapper(RegContents, self.regcontents)
 
         # items contents
         self.computersitems = Table("glpi_computers_items", self.metadata,

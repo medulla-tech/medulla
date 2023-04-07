@@ -24,6 +24,10 @@ START TRANSACTION;
 USE `xmppmaster`;
 DROP procedure IF EXISTS `afterinsertmachine`;
 
+
+INSERT IGNORE INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*ABORT DEPLOYMENT SHUTDOWN.*', 'ABORT RESUMPTION ERROR', 'abortontimeout');
+INSERT IGNORE INTO `xmppmaster`.`def_remote_deploy_status` (`regex_logmessage`, `status`, `label`) VALUES ('.*Resumption deploy session.*', 'DEPLOYMENT START', 'restartdeploy');
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
