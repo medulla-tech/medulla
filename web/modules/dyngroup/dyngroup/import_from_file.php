@@ -40,11 +40,15 @@ if (isset($groupname) && $groupname != '' && !xmlrpc_group_name_exists($groupnam
     $content = array_map('chop', $content);
 
     $oldSystemCriterion = [
-        "Group", "Online computer", "Register key",
-        "Installed version", "Inventory number", "Register key value",
-        "System type", "Contact number", "Contact",
+        "Group",
+        "Online computer",
+        "Installed version",
+        "Contact number",
+        "Contact",
         "Installed software (specific version)",
-        "Vendors", "Owner of the machine", "Software versions"
+        "Vendors",
+        "Owner of the machine",
+        "Register key value"
     ];
     if(in_array($elementare, $oldSystemCriterion)){
         $group->importMembers($elementare, $content);

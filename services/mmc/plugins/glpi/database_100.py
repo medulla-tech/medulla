@@ -5745,30 +5745,34 @@ class Glpi100(DyngroupDatabaseHelper):
             query = query.join(Model, Model.id == Machine.computermodels_id)
 
         elif criterion == "Inventory number":
-            pass
+            query = query.filter(and_(Machine.otherserial.in_(values)))
 
         elif criterion == "Register key value":
-            pass
+            query = query.filter(and_(RegContents.value.in_(values)))
+            query = query.join(RegContents, RegContents.computers_id, Machine.id)
 
         elif criterion == "System type":
-            pass
+            query = query.filter(self.glpi_computertypes.c.name.in_(values))
+            query = query.join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)
 
         elif criterion == "Online computer":
-            pass
+            # for csv import that doesn't make any sense
+            online_machines = [int(id) for id in XmppMasterDatabase().getidlistPresenceMachine(presence=True) if id != "UUID" and id != ""]
+            query = query.filter(and_(Machine.id.in_(online_machines)))
 
         elif criterion == "Operating system":
             query = query.filter(and_(OS.name.in_(values)))
             query = query.join(OS, OS.items_id == Machine.operatingsystems_id)
 
         elif criterion == "Contact number":
-            pass
+            query = query.filter(and_(Machine.contact_num.in_(values)))
 
         elif criterion == "Service Pack":
             query = query.filter(and_(OsSp.name.in_(values)))
             query = query.join(OsSp, OsSp.id, Machine.operatingsystemservicepacks_id)
 
         elif criterion == "Contact":
-            pass
+            query = query.filter(and_(Machine.contact.in_(values)))
 
         elif criterion == "Architecture":
             query = query.filter(and_(OsArch.name.in_(values)))
@@ -5803,7 +5807,10 @@ class Glpi100(DyngroupDatabaseHelper):
             pass
 
         elif criterion == "Software versions":
-            pass
+            query = query.filter(and_(SoftwareVersion.name.in_(values)))
+            query = query.group_by(Machine.id)
+            query.join(InstSoftware, InstSoftware.items_id == Machine.id)
+            query.join(SoftwareVersion, InstSoftware.softwareversions_id == SoftwareVersion.id)
 
         elif criterion == "System manufacturer":
             query = query.filter(and_(Manufacturers.name.in_(values)))
