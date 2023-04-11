@@ -1353,7 +1353,6 @@ cp %{SOURCE5}   agent/mmc/plugins/base
 cp %{SOURCE6}   web/modules/base/computers
 
 %build
-sh autogen.sh
 %configure2_5x --disable-python-check
 
 %make_build
