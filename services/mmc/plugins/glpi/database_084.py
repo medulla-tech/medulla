@@ -5556,7 +5556,8 @@ class Glpi084(DyngroupDatabaseHelper):
 
 
         elif criterion == "Owner of the machine":
-            pass
+            query = query.filter(and_(User.name.in_(values)))
+            query = query.join(User, User.id == Machine.users_id)
 
         elif criterion == "Software versions":
             query = query.filter(and_(SoftwareVersion.name.in_(values)))
