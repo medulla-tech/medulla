@@ -38,7 +38,7 @@ Release:        0.%git.1%{?dist}
 %endif
 License:	GPL
 Group:		System/Servers
-URL:		https://github.com/pulse-project/pulse
+URL:		https://github.com/medulla-tech/medulla
 Source0:        %{name}_%{real_version}.orig.tar.gz
 #TODO: Adapt for Mageia
 Source1:        pulse2-dlp-server.init
