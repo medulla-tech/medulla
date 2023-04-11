@@ -1,9 +1,10 @@
 #!/bin/bash
 
 VERSION='4.7.0'
-
+BRANCH='cnam-pre'
 rm -f medulla-*.tar.gz medulla-*.tar.gz.md5
-git clean -fdx && ./autogen.sh && ./configure --sysconfdir=/etc --localstatedir=/var --disable-python-check --disable-conf && make distcheck
+git clean -fdx && ./autogen.sh && ./configure --sysconfdir=/etc --localstatedir=/var --disable-python-check --disable-conf
+git archive -o medulla-$VERSION.tar.gz $BRANCH
 tar xzvf medulla-$VERSION.tar.gz
 cp setup.py medulla-$VERSION
 cp -frv debian medulla-$VERSION
