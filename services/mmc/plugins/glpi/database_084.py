@@ -5472,16 +5472,20 @@ class Glpi084(DyngroupDatabaseHelper):
             query = query.join(Locations, Locations.id == Machine.locations_id)
 
         elif criterion == "Printer serial":
-            query = query.filter(and_(Printers.serial.in_(values)))
-            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-            query = query.join(Printers, and_(Computersitems.items_id==Printers.id,
-                Computersitems.itemtype == 'Printer'))
+            # for unknown reason the mapping of Peripherals object is not reachable
+            # query = query.filter(and_(self.printers.c.serial.in_(values)))
+            # query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            # query = query.join(self.printers, and_(Computersitems.items_id==self.printers.c.id,
+            #    Computersitems.itemtype == 'Printer'))
+            pass
 
         elif criterion == "Printer name":
-            query = query.filter(and_(Printers.name.in_(values)))
-            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-            query = query.join(Printers, and_(Computersitems.items_id==Printers.id,
-                Computersitems.itemtype == 'Printer'))
+            # for unknown reason the mapping of Peripherals object is not reachable
+            # query = query.filter(and_(self.printers.c.name.in_(values)))
+            # query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
+            # query = query.join(self.printers, and_(Computersitems.items_id==self.printers.c.id,
+            #    Computersitems.itemtype == 'Printer'))
+            pass
 
         elif criterion == "OS Version":
             query = query.filter(and_(OsVersion.name.in_(values)))

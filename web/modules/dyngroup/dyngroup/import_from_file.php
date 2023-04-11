@@ -49,7 +49,9 @@ if (isset($groupname) && $groupname != '' && !xmlrpc_group_name_exists($groupnam
         "Vendors",
         "Owner of the machine",
         "Register key value",
-        "Peripheral serial",
+        "Peripheral serial", // Disabled because of non recognized mapping in mmc
+        "Printer serial", // Disabled because of non recognized mapping in mmc
+        "Printer name", // Disabled because of non recognized mapping in mmc
     ];
     if(in_array($elementare, $oldSystemCriterion)){
         $group->importMembers($elementare, $content);
