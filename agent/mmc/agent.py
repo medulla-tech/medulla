@@ -62,7 +62,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "4.7.0"
+VERSION = "5.0.0"
 
 
 class messagefilexmpp:
@@ -351,7 +351,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpclib.Fault
 ctx = None
-VERSION = "4.7.0"
+VERSION = "5.0.0"
 
 
 class IncludeStartsWithFilter(logging.Filter):
