@@ -1,12 +1,12 @@
-usr/share/doc/pulse2/Pulse2-User-Manual-EN.pdf
+usr/share/doc/medulla/Pulse2-User-Manual-EN.pdf
 usr/share/doc/pulse2/contrib/samba
 usr/share/doc/pulse2/contrib/test-xmlrpc.examples
 usr/share/doc/pulse2/contrib/test-xmlrpc.php
 usr/share/doc/pulse2/contrib/test-xmlrpc.py
 usr/share/doc/pulse2/contrib/update
-usr/share/doc/pulse2/dev
-usr/share/doc/pulse2/examples
-usr/share/doc/pulse2/install
+usr/share/doc/medulla/dev
+usr/share/doc/medulla/examples
+usr/share/doc/medulla/install
 usr/share/doc/pulse2/contrib/monit/pulse2
 usr/share/mmc/conf/apache/pulse.conf
 etc/apache2/conf-available/pulse.conf
@@ -26,7 +26,6 @@ usr/share/doc/mmc/contrib/package-server
 usr/share/doc/mmc/contrib/msc
 usr/share/doc/mmc/contrib/imaging
 usr/share/doc/mmc/contrib/inventory
-usr/share/doc/mmc/contrib/samba
 usr/share/doc/mmc/contrib/pulse2
 usr/share/doc/mmc/contrib/pkgs
 usr/share/doc/mmc/contrib/updates
