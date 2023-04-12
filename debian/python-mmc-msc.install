@@ -4,4 +4,4 @@ usr/sbin/pulse2-msc-clean-database
 usr/share/man/man1/pulse2-msc-clean-database.1
 var/lib/pulse2/qactions
 usr/share/doc/pulse2/contrib/msc
-usr/share/doc/pulse2/user/msc
+usr/share/doc/medulla/user/msc
