@@ -1,16 +1,20 @@
-Pulse 2 4.7.0 ( unreleased )
+Medulla  5.0.0 ( unreleased )
 =============
 * [FEATURE] Migrate to python3 
 
-Pulse 2 4.6.11
+Medulla 4.6.11
 =============
-* [FEATURE] Improved backup management using urbackup
-* [FEATURE] New OS Updates feature
-* [FEATURE] New Kiosk feature
 * [FEATURE] Packaging feature allows to define return codes different to 0 and 1 for branching to other steps
 * [FEATURE] Ability to restart a failed deployment from the interface
 * [FEATURE] Improve Admin view when connected user is root
 * [FEATURE] Add itsm-ng support
+* [FEATURE] Add GLPI 10 support
+* [FEATURE] Add iPXE support
+* [FEATURE] Add new feature for integrity of packages.
+* [FEATURE] Allow to display the name of the used ITSM
+* [FEATURE] Add user notification 
+* [FEATURE] Use new Medulla branding
+* [FEATURE] Add systemctl support in pulse2-setup
 * [BUGFIX]  Fix diplay of config files
 * [BUGFIX]  Support Optiplex 3050 in iPXE
 * [BUGFIX]  Fix display of the Master list page when there is a lot of
@@ -20,9 +24,16 @@ computers listed.
 * [BUGFIX]  Fix traceback when displaying results of a quick action executed on an uninventoried machine
 * [BUGFIX]  Fix searching from relay jid, hostname or uuid in deploy audit log
 * [BUGFIX]  Fix the History menu. It was displayed twice.
-
-Pulse 2 4.6.10
-=============
+* [BUGFIX]  Fix deleting a deploiement after it had been processed.
+* [BUGFIX]  Fix displaying actions depending of the ACLs
+* [BUGFIX]  Fix GLPI 9.3 Compatibility
+* [BUGFIX]  Fix multicast menu synchronisation
+* [BUGFIX]  Fix pulse2-setup where glpi is on a different port than 3306
+* [BUGFIX]  Fix GLPI 9.4 Compatibility
+* [BUGFIX]  Fix registration of relay servers
+* [BUGFIX]  Fix inventory for machines from a PXE inventory
+* [BUGFIX]  Fix displaying missing hostname in audit page
+* [BUGFIX]  Fix ordering machines in the computer page
 * [BUGFIX]  Fix displaying machines in the GLPI view
 * [BUGFIX]  Fix displaying of teams in Audit
 * [BUGFIX]  Fix displaying package order when editing a package
@@ -30,6 +41,14 @@ Pulse 2 4.6.10
 * [BUGFIX]  Fix creation of the reversessh in backuppc
 * [BUGFIX]  Fix removing computers not on glpi anymore
 * [BUGFIX]  Fix computer default name in sysprep configuration page
+* [BUGFIX]  Fix order bug in rules list
+* [BUGFIX]  Fix restart of deployment if transfer has already started
+* [BUGFIX]  Fix backtraces when editing packages
+* [BUGFIX]  Fix php 7.4 support in the imaging section
+* [BUGFIX]  Fix selecting the entity in imaging
+* [BUGFIX]  Add ids in the webpages (used in playwright functional tests)
+* [BUGFIX]  Fix xmlrpc int limits
+* [BUGFIX]  Fix WOL support
 
 Pulse 2 4.6.9
 =============
