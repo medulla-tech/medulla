@@ -1,3 +1,9 @@
+Medulla 4.7.0
+=============
+* [FEATURE] Improved backup management using urbackup
+* [FEATURE] New OS Updates feature
+* [FEATURE] New Kiosk feature
+
 Medulla 4.6.11
 =============
 * [FEATURE] Packaging feature allows to define return codes different to 0 and 1 for branching to other steps
