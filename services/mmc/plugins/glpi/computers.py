@@ -64,19 +64,14 @@ class GlpiComputers(ComputerI):
         ret = []
         for x, m in machines.values():
             if 'hostname' not in m:
-                if type(m['cn']) == list:
-                    m['hostname'] = m['cn'][0]
-                else:
-                    m['hostname'] = m['cn']
+                m['hostname'] = m['cn'][0] if type(m['cn']) == list else m['cn']
             if 'uuid' not in m:
                 if type(m['objectUUID']) == list:
                     m['uuid'] = m['objectUUID'][0]
                 else:
                     m['uuid'] = m['objectUUID']
             ret.append(m)
-        if len(ret) == 1:
-            return ret[0]
-        return ret
+        return ret[0] if len(ret) == 1 else ret
 
     def getComputersList(self, ctx, filt = None):
         """
@@ -88,7 +83,7 @@ class GlpiComputers(ComputerI):
         @return: LDAP results
         @rtype:
         """
-        if filt == None or filt == '':
+        if filt is None or filt == '':
             filt = {}
         try:
             complete_ctx(ctx)
@@ -104,36 +99,42 @@ class GlpiComputers(ComputerI):
     def __restrictLocationsOnImagingServerOrEntity(self, filt, location, ctx):
         if 'imaging_server' in filt and filt['imaging_server'] != '':
             # Get main imaging entity uuid
-            self.logger.debug('Get main imaging entity UUID of imaging server %s' % filt['imaging_server'])
+            self.logger.debug(
+                f"Get main imaging entity UUID of imaging server {filt['imaging_server']}"
+            )
             main_imaging_entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
             if main_imaging_entity_uuid != None:
-                self.logger.debug('Found: %s' % main_imaging_entity_uuid)
+                self.logger.debug(f'Found: {main_imaging_entity_uuid}')
                 filt['imaging_entities'] = [main_imaging_entity_uuid]
                 self.logger.debug('Get now children entities of this main imaging entity')
                 # Get childs entities of this main_imaging_entity_uuid
                 # Search only in user context
                 for loc in self.glpi.getUserLocations(ctx.userid):
                     if ComputerImagingManager().isChildOfImagingServer(loc.uuid, main_imaging_entity_uuid):
-                        self.logger.debug('Found %s as child entity of %s' % (loc.uuid, main_imaging_entity_uuid))
+                        self.logger.debug(
+                            f'Found {loc.uuid} as child entity of {main_imaging_entity_uuid}'
+                        )
                         filt['imaging_entities'].append(loc.uuid)
             else:
-                self.logger.warn("can't get the entity that correspond to the imaging server %s"%(filt['imaging_server']))
+                self.logger.warn(
+                    f"can't get the entity that correspond to the imaging server {filt['imaging_server']}"
+                )
                 return [False, 0]
 
         if 'imaging_entities' in filt:
-            grep_entity = []
-            for l in location:
-                if l.uuid in filt['imaging_entities']:
-                    grep_entity.append(l)
-            if grep_entity:
+            if grep_entity := [
+                l for l in location if l.uuid in filt['imaging_entities']
+            ]:
                 filt['ctxlocation'] = grep_entity
             else:
-                self.logger.warn("the user '%s' try to filter on an entity he shouldn't access '%s'"%(ctx.userid, filt['entity_uuid']))
+                self.logger.warn(
+                    f"the user '{ctx.userid}' try to filter on an entity he shouldn't access '{filt['entity_uuid']}'"
+                )
                 return [False, 0]
         return [True, filt]
 
     def getRestrictedComputersListLen(self, ctx, filt = None):
-        if filt == None or filt == '':
+        if filt is None or filt == '':
             filt = {}
         try:
             complete_ctx(ctx)
@@ -152,7 +153,7 @@ class GlpiComputers(ComputerI):
         return self.glpi.getMachineforentityList(min, max, filt)
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
-        if filt == None or filt == '':
+        if filt is None or filt == '':
             filt = {}
         try:
             complete_ctx(ctx)
@@ -176,11 +177,13 @@ class GlpiComputers(ComputerI):
                 if network['macAddress'] and network['ipHostNumber']:
                     uuids.append(network['objectUUID'][0])
                 else:
-                    logging.getLogger().debug("Computer %s cannot be added in an imaging group:" % network['cn'])
-                    if not network['macAddress']:
-                        logging.getLogger().debug("No MAC found !")
-                    if not network['ipHostNumber']:
-                        logging.getLogger().debug("No IP address found !")
+                    logging.getLogger().debug(
+                        f"Computer {network['cn']} cannot be added in an imaging group:"
+                    )
+                if not network['macAddress']:
+                    logging.getLogger().debug("No MAC found !")
+                if not network['ipHostNumber']:
+                    logging.getLogger().debug("No IP address found !")
             filt['uuids'] = uuids
         return self.glpi.getRestrictedComputersList(ctx, min, max, filt, advanced, justId, toH)
 
@@ -188,11 +191,10 @@ class GlpiComputers(ComputerI):
         return self.glpi.getTotalComputerCount()
 
     def simple_computer_count(self):
-        result = self.glpi.mini_computers_count()
-        return result
+        return self.glpi.mini_computers_count()
 
     def getComputerCount(self, ctx, filt = None):
-        if filt == None or filt == '':
+        if filt is None or filt == '':
             filt = {}
         try:
             complete_ctx(ctx)
@@ -241,10 +243,7 @@ class GlpiComputers(ComputerI):
     def getComputerByMac(self, mac):
         ret = self.glpi.getMachineByMacAddress('imaging_module', mac)
         if type(ret) == list:
-            if len(ret) != 0:
-                return ret[0]
-            else:
-                return None
+            return ret[0] if len(ret) != 0 else None
         return ret
 
     def getComputersOS(self, uuids):
