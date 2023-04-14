@@ -5762,7 +5762,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         elif criterion == "Operating system":
             query = query.filter(and_(OS.name.in_(values)))
-            query = query.join(OS, OS.items_id == Machine.operatingsystems_id)
+            query = query.join(OS, OS.id == Machine.operatingsystems_id)
 
         elif criterion == "Contact number":
             query = query.filter(and_(Machine.contact_num.in_(values)))
