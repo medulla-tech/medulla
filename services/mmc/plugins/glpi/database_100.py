@@ -1562,9 +1562,9 @@ class Glpi100(DyngroupDatabaseHelper):
         elif query[2] == 'Printer serial':
             return [[self.printers.c.serial, query[3]]]
         elif query[2] == 'Peripheral name':
-            return [[self.peripheral.c.name, query[3]]]
+            return [[self.peripherals.c.name, query[3]]]
         elif query[2] == 'Peripheral serial':
-            return [[self.peripheral.c.serial, query[3]]]
+            return [[self.peripherals.c.serial, query[3]]]
         elif query[2] == 'Group': # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Network':
