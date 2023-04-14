@@ -94,7 +94,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
 	try:
             self._itsm_ng_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "itsmversion"').fetchone().values()[0].replace(' ', '')
-	except AttributeError:
+	except OperationalError, AttributeError:
 	    return False
 
         if LooseVersion(self._itsm_ng_version) >=  LooseVersion("1.4") and LooseVersion(self._itsm_ng_version) <=  LooseVersion("1.4.99"):
