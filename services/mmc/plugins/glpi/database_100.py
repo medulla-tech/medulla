@@ -5788,7 +5788,7 @@ class Glpi100(DyngroupDatabaseHelper):
         elif criterion == "User location":
             query = query.filter(and_(Locations.name.in_(values)))
             query = query.join(User, User.id == Machine.users_id)
-            query = query.join(Locations, Locations.id == User.location_id)
+            query = query.join(Locations, Locations.id == User.locations_id)
 
         elif criterion == "Vendors":
             pass
