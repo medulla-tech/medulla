@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import shutil
@@ -191,10 +191,10 @@ class managepackage:
             dirpartage = os.path.abspath(os.path.realpath(dirpartage))
         for x in managepackage.search_list_package():
             if verbeux:
-                logger.debug("symbolic link %s to %s" % (
-                    x,
-                    os.path.join(dirpackage, os.path.basename(x))
-                ))
+                logger.debug(
+                    "symbolic link %s to %s"
+                    % (x, os.path.join(dirpackage, os.path.basename(x)))
+                )
 
             try:
                 os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
@@ -752,9 +752,15 @@ if __name__ == "__main__":
                         "associateinventory"
                     ],
                     "inventory_licenses": contenuedejson["inventory"]["licenses"],
-                    "Qversion": contenuedejson["inventory"]["queries"]["Qversion"].encode(encoding = 'UTF-8', errors = 'strict'),
-                    "Qvendor": contenuedejson["inventory"]["queries"]["Qvendor"].encode(encoding = 'UTF-8', errors = 'strict'),
-                    "Qsoftware": contenuedejson["inventory"]["queries"]["Qsoftware"].encode(encoding = 'UTF-8', errors = 'strict'),
+                    "Qversion": contenuedejson["inventory"]["queries"][
+                        "Qversion"
+                    ].encode(encoding="UTF-8", errors="strict"),
+                    "Qvendor": contenuedejson["inventory"]["queries"]["Qvendor"].encode(
+                        encoding="UTF-8", errors="strict"
+                    ),
+                    "Qsoftware": contenuedejson["inventory"]["queries"][
+                        "Qsoftware"
+                    ].encode(encoding="UTF-8", errors="strict"),
                     "boolcnd": contenuedejson["inventory"]["queries"]["boolcnd"],
                     "postCommandSuccess_command": contenuedejson["commands"][
                         "postCommandSuccess"
@@ -877,7 +883,6 @@ if __name__ == "__main__":
                     )
 
                 except MySQLdb.Error as e:
-
                     errorstr = "%s" % traceback.format_exc()
                     if opts.verbeux:
                         logger.error("\n%s" % (errorstr))
