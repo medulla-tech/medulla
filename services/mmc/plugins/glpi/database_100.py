@@ -5769,14 +5769,14 @@ class Glpi100(DyngroupDatabaseHelper):
 
         elif criterion == "Service Pack":
             query = query.filter(and_(OsSp.name.in_(values)))
-            query = query.join(OsSp, OsSp.id, Machine.operatingsystemservicepacks_id)
+            query = query.join(OsSp, OsSp.id == Machine.operatingsystemservicepacks_id)
 
         elif criterion == "Contact":
             query = query.filter(and_(Machine.contact.in_(values)))
 
         elif criterion == "Architecture":
             query = query.filter(and_(OsArch.name.in_(values)))
-            query = query.join(OsArch, OsArch.id, Machine.operatingsystemarchitectures_id)
+            query = query.join(OsArch, OsArch.id == Machine.operatingsystemarchitectures_id)
 
         elif criterion == "Installed software (specific version)":
             pass
@@ -5801,7 +5801,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         elif criterion == "Entity":
             query = query.filter(or_(Entities.id.in_(values), Entities.completename.in_(values)))
-            query = query.join(Entities, Entities.id, Machine.entities_id)
+            query = query.join(Entities, Entities.id == Machine.entities_id)
 
         elif criterion == "Owner of the machine":
             pass
@@ -5814,7 +5814,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         elif criterion == "System manufacturer":
             query = query.filter(and_(Manufacturers.name.in_(values)))
-            query = query.join(Manufacturers, Manufacturers.id, Machine.manufacturers_id)
+            query = query.join(Manufacturers, Manufacturers.id == Machine.manufacturers_id)
 
         query = query.filter(and_(Machine.is_deleted==0, Machine.is_template==0))
         response = query.all()
