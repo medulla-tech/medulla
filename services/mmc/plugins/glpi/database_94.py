@@ -1352,9 +1352,9 @@ class Glpi94(DyngroupDatabaseHelper):
         elif query[2] == 'Printer serial':
             return [[self.printers.c.serial, query[3]]]
         elif query[2] == 'Peripheral name':
-            return [[self.peripheral.c.name, query[3]]]
+            return [[self.peripherals.c.name, query[3]]]
         elif query[2] == 'Peripheral serial':
-            return [[self.peripheral.c.serial, query[3]]]
+            return [[self.peripherals.c.serial, query[3]]]
         elif query[2] == 'Group': # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Network':
@@ -5745,21 +5745,21 @@ class Glpi94(DyngroupDatabaseHelper):
 
         elif criterion == "Operating system":
             query = query.filter(and_(OS.name.in_(values)))
-            query = query.join(OS, OS.items_id == Machine.operatingsystems_id)
+            query = query.join(OS, OS.id == Machine.operatingsystems_id)
 
         elif criterion == "Contact number":
             query = query.filter(and_(Machine.contact_num.in_(values)))
 
         elif criterion == "Service Pack":
             query = query.filter(and_(OsSp.name.in_(values)))
-            query = query.join(OsSp, OsSp.id, Machine.operatingsystemservicepacks_id)
+            query = query.join(OsSp, OsSp.id == Machine.operatingsystemservicepacks_id)
 
         elif criterion == "Contact":
             query = query.filter(and_(Machine.contact.in_(values)))
 
         elif criterion == "Architecture":
             query = query.filter(and_(OsArch.name.in_(values)))
-            query = query.join(OsArch, OsArch.id, Machine.operatingsystemarchitectures_id)
+            query = query.join(OsArch, OsArch.id == Machine.operatingsystemarchitectures_id)
 
         elif criterion == "Installed software (specific version)":
             pass
@@ -5771,7 +5771,7 @@ class Glpi94(DyngroupDatabaseHelper):
         elif criterion == "User location":
             query = query.filter(and_(Locations.name.in_(values)))
             query = query.join(User, User.id == Machine.users_id)
-            query = query.join(Locations, Locations.id == User.location_id)
+            query = query.join(Locations, Locations.id == User.locations_id)
 
         elif criterion == "Vendors":
             pass
@@ -5784,7 +5784,7 @@ class Glpi94(DyngroupDatabaseHelper):
 
         elif criterion == "Entity":
             query = query.filter(or_(Entities.id.in_(values), Entities.completename.in_(values)))
-            query = query.join(Entities, Entities.id, Machine.entities_id)
+            query = query.join(Entities, Entities.id == Machine.entities_id)
 
         elif criterion == "Owner of the machine":
             pass
@@ -5797,7 +5797,7 @@ class Glpi94(DyngroupDatabaseHelper):
 
         elif criterion == "System manufacturer":
             query = query.filter(and_(Manufacturers.name.in_(values)))
-            query = query.join(Manufacturers, Manufacturers.id, Machine.manufacturers_id)
+            query = query.join(Manufacturers, Manufacturers.id == Machine.manufacturers_id)
 
         query = query.filter(and_(Machine.is_deleted==0, Machine.is_template==0))
         response = query.all()
