@@ -19,7 +19,6 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
-<<<<<<< HEAD
 -- ----------------------------------------------------------------------
 -- Database xmppmaster
 -- ----------------------------------------------------------------------
@@ -105,31 +104,6 @@ DELIMITER ;
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-=======
-START TRANSACTION;
-
-USE `xmppmaster`;
-SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------------------------------------------------
--- Database add colunms in table mon_event
---    - parameter_other : Field reserved for 1 subsequent use 
---    - ack_user        : field used to indicate the user who acquitted the alarm
---    - ack_date        : field used to indicate when the alarm was acquired. 
--- ----------------------------------------------------------------------
-
-ALTER TABLE `xmppmaster`.`mon_event`
-    ADD COLUMN `parameter_other` VARCHAR(1024) NULL DEFAULT NULL AFTER `id_device`,
-    ADD COLUMN `ack_user` VARCHAR(90) NULL DEFAULT NULL AFTER `parameter_other`;
-ALTER TABLE `xmppmaster`.`mon_event` 
-    ADD COLUMN `ack_date` TIMESTAMP NULL DEFAULT NULL AFTER `ack_user`;
-
-ALTER TABLE `xmppmaster`.`cluster_resources`
-ADD INDEX IF NOT EXISTS `jidindex` (`jidmachine` ASC);
-
-SET FOREIGN_KEY_CHECKS=1;
-
->>>>>>> integration
 UPDATE version SET Number = 65;
 
 COMMIT;
