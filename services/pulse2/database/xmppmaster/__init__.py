@@ -8164,6 +8164,28 @@ class XmppMasterDatabase(DatabaseHelper):
                  "name": element[1],
                  "keysyncthing": element[2]} for element in result]
 
+    @DatabaseHelper._sessionm
+    def get_list_ars(self, session):
+        """
+            cettte fonction renvoi les ars
+        """
+        try:
+            sql="""SELECT
+                        jid,
+                        SUBSTRING_INDEX(jid, '@', 1) AS user,
+                        SUBSTR(SUBSTRING_INDEX(jid, '/', 1),
+                            LOCATE('@', jid) + 1) AS domaine
+                    FROM
+                        xmppmaster.relayserver;"""
+            #self.logger.info("get_list_ars : %s" % sql)
+            resultproxy=session.execute(sql)
+            session.commit()
+            session.flush()
+            return self._return_dict_from_dataset_mysql(resultproxy)
+        except Exception:
+            logging.getLogger().error("sql get_list_ars : %s" % traceback.format_exc())
+        return {}
+
 
     @DatabaseHelper._sessionm
     def refresh_syncthing_deploy_clean(self, session, iddeploy):
