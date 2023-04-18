@@ -135,7 +135,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
         try:
             self._itsm_ng_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
-        except OperationalError:
+        except Exception:
             self._itsm_ng_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "itsmversion"').fetchone().values()[0].replace(' ', '')
 
         self.metadata = MetaData(self.db)
