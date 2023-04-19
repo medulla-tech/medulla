@@ -5782,8 +5782,7 @@ class Glpi100(DyngroupDatabaseHelper):
             pass
 
         elif criterion == "Last Logged User":
-            query = query.filter(and_(User.name.in_(values)))
-            query = query.join(User, User.id == Machine.users_id)
+            query = query.filter(and_(Machine.contact.in_(values)))
 
         elif criterion == "User location":
             query = query.filter(and_(Locations.name.in_(values)))
