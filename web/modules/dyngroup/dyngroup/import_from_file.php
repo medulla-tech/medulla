@@ -48,6 +48,7 @@ if (isset($groupname) && $groupname != '' && !xmlrpc_group_name_exists($groupnam
         "Installed software (specific version)",
         "Vendors",
         "Owner of the machine",
+        "Register key",
         "Register key value",
         "Peripheral serial", // Disabled because of non recognized mapping in mmc
         "Printer serial", // Disabled because of non recognized mapping in mmc
