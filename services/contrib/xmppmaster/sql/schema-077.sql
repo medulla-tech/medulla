@@ -408,7 +408,6 @@ END$$
 DELIMITER ;
 ;
 
-
 -- ------------------------------------------------------------------------
 -- ------------------------------------------------------------------------
 -- ------------------------------------------------------------------------
@@ -433,7 +432,7 @@ BEGIN
 SET @ignorestatus0 = "DEPLOYMENT SUCCESS";
 SET @ignorestatus1 = "WAITING MACHINE ONLINE";
 set @total = 0;
-SET @time_waitting_reconf = 15;
+SET @time_waitting_reconf = 15s;
  IF force_redeploy > 0 THEN
 	set @cmd = (select command from  xmppmaster.deploy where sessionid like IN_sessid limit 1);
  else
@@ -466,6 +465,6 @@ DELIMITER ;
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 75;
+UPDATE version SET Number = 77;
 
 COMMIT;
