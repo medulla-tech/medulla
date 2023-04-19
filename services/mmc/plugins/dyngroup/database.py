@@ -46,9 +46,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         if 'gname' in params:
             return self.__getMachinesByGroupName(ctx, params['gname'])
-        if 'gid' in params:
-            return self.__getMachines(ctx, params['gid'])
-        return []
+        return self.__getMachines(ctx, params['gid']) if 'gid' in params else []
 
     def __getMachinesFirstStep(self, ctx, session = None):
         """
@@ -59,7 +57,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             session = create_session()
         select_from = self.machines.join(self.results).join(self.groups)
         (join_tables, filter_on) = self.__permissions_query(ctx, session)
-        if join_tables == None:
+        if join_tables is None:
             return (select_from, filter_on)
         return (self.__merge_join_query(select_from, join_tables), filter_on)
 
@@ -71,7 +69,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if not session:
             session = create_session()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
-        if filter_on == None:
+        if filter_on is None:
             filter_on = and_(self.groups.c.id == gid)
         else:
             filter_on = and_(self.groups.c.id == gid, filter_on)
@@ -85,7 +83,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if not session:
             session = create_session()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
-        if filter_on == None:
+        if filter_on is None:
             filter_on = and_(self.groups.c.name == groupname)
         else:
             filter_on = and_(self.groups.c.name == groupname, filter_on)
@@ -129,11 +127,10 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         group = self.get_group(ctx, id)
         session = create_session()
         for login, t in shares:
-            user = self.__getUser(login, t, session)
-            if user:
+            if user := self.__getUser(login, t, session):
                 self.__deleteShare(group.id, user.id, session)
             else:
-                self.logger.debug("no share to delete! ('%s')" % (login))
+                self.logger.debug(f"no share to delete! ('{login}')")
         session.close()
         return True
 
@@ -160,13 +157,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if self.isprofile(ctx, id):
             result = result.select_from(self.machines.join(self.profilesResults))
             result = result.filter(self.profilesResults.c.FK_groups == id)
-            if filter:
-                result = result.filter(self.machines.c.name.like('%'+filter+'%'))
         else:
             result = result.select_from(self.machines.join(self.results))
             result = result.filter(self.results.c.FK_groups == id)
-            if filter:
-                result = result.filter(self.machines.c.name.like('%'+filter+'%'))
+        if filter:
+            result = result.filter(self.machines.c.name.like(f'%{filter}%'))
         result = result.order_by(asc(self.machines.c.name))
         return result
 
@@ -223,9 +218,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             groups = groups.filter(filter_on)
 
         if ctx.userid == 'root' \
-                and 'localSidebar' in params \
-                and params['localSidebar'] \
-                and root_user:
+                    and 'localSidebar' in params \
+                    and params['localSidebar'] \
+                    and root_user:
             groups = groups.filter(self.groups.c.FK_users == root_user.id)
 
         if 'canShow' in params:
@@ -248,7 +243,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         try:
             if params['static']:
-                groups = groups.filter(self.groups.c.query == None)
+                groups = groups.filter(self.groups.c.query is None)
         except KeyError:
             pass
 
@@ -293,7 +288,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         try:
             if params['min']:
                 min = int(params['min'])
-                groups = groups.offset(int(min))
+                groups = groups.offset(min)
         except KeyError:
             pass
 
@@ -320,27 +315,17 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         return True if a group with this name exists and does not have the same id
         """
-        type = 0
-        if isProfile:
-            type = 1
-        if id == None or id == '':
-            if self.countallgroups(ctx, {'name':name, 'owner':ctx.userid}, type) == 0:
-                return False
-            else:
-                return True
-
+        type = 1 if isProfile else 0
+        if id is None or id == '':
+            return self.countallgroups(ctx, {'name':name, 'owner':ctx.userid}, type) != 0
         owner = self.get_group_owner(ctx, id)
         if owner == False:
             return True
         grps = self.getallgroups(ctx, {'name':name, 'owner':owner.login}, type)
-        for grp in grps:
-            if str(grp.id) != str(id):
-                return True
-        return False
+        return any(str(grp.id) != str(id) for grp in grps)
 
     def get_group_owner(self, ctx, id):
-        group = self.get_group(ctx, id)
-        if group:
+        if group := self.get_group(ctx, id):
             session = create_session()
             user = session.query(Users).select_from(self.users.join(self.groups)).filter(self.groups.c.id == id).first()
             session.close()
@@ -356,8 +341,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if not group:
             return False
         if ro: # do tests to put the flag ro
-            r = self.__getGroupInSession(ctx, session, id, False)
-            if r:
+            if r := self.__getGroupInSession(ctx, session, id, False):
                 setattr(group, 'ro', False)
             else:
                 setattr(group, 'ro', True)
@@ -379,8 +363,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         convergence_group_ids = []
         for line in session.query(Convergence).filter_by(packageUUID = packageUUID):
-            convergence_group_ids.append(line.deployGroupId)
-            convergence_group_ids.append(line.doneGroupId)
+            convergence_group_ids.extend((line.deployGroupId, line.doneGroupId))
         if convergence_group_ids:
             session.query(ShareGroup).filter(ShareGroup.FK_groups.in_(convergence_group_ids)).delete(synchronize_session='fetch')
             session.query(Groups).filter(Groups.id.in_(convergence_group_ids)).delete(synchronize_session='fetch')
@@ -467,15 +450,14 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     def getRegisteredMachines(self, session, uuids):
         query = session.query(Machines).filter(Machines.uuid.in_(uuids)).all()
 
-        result = {}
-        for machine in query:
-            result[machine.uuid] = {
-                "id":machine.id,
-                "uuid":machine.uuid,
-                "hostname":machine.name
+        return {
+            machine.uuid: {
+                "id": machine.id,
+                "uuid": machine.uuid,
+                "hostname": machine.name,
             }
-
-        return result
+            for machine in query
+        }
 
     @DatabaseHelper._sessionm
     def addMissingMachines(self, session, machines):
@@ -518,8 +500,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         only if the ctx user have the good permissions on it
         """
         session = create_session()
-        group = self.__get_group_permissions_request(ctx, session).filter(self.groups.c.id == id).first()
-        if group:
+        if (
+            group := self.__get_group_permissions_request(ctx, session)
+            .filter(self.groups.c.id == id)
+            .first()
+        ):
             group.name = name.encode('utf-8')
             session.add(group)
             session.flush()
@@ -598,9 +583,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         user_id = self.__getOrCreateUser(ctx)
         s = self.getShareGroup(id, user_id)
-        if not s:
-            return False
-        return (s.display_in_menu == 1)
+        return (s.display_in_menu == 1) if s else False
 
     def show_group(self, ctx, id):
         """
@@ -652,7 +635,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except:
             pass
         session.close()
-        return (q != None and q != '')
+        return q not in [None, '']
 
     def isrequest_group(self, ctx, id):
         """
@@ -678,10 +661,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session = create_session()
         g = self.__getGroupInSession(ctx, session, id)
         session.close()
-        if g:
-            return (g.type == 1)
-        else:
-            return False
+        return (g.type == 1) if g else False
 
     #########################################
     ## PERMISSIONS
@@ -745,7 +725,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         get a group content (machines)
         """
-        if group == None: return []
+        if group is None: return []
         session = create_session()
         if self.isrequest_group(ctx, group.id):
             ret = self.__request(ctx, group.query, group.bool, 0, -1, '', queryManager, session)
@@ -774,8 +754,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         session = create_session()
         group = self.__getGroupByNameInSession(ctx, session, name, False)
-        content = self.__getContent(ctx, group, queryManager)
-        return content
+        return self.__getContent(ctx, group, queryManager)
 
     def __request(self, ctx, query, bool, start, end, filter, queryManager, session = None):
         """
@@ -810,10 +789,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         result = self.__result_group_query(ctx, session, id, filter)
         if int(start) != 0 or int(end) != -1:
             result = result.offset(int(start)).limit(int(end) - int(start))
-        if justId:
-            ret = map(lambda m:m.uuid, result.all())
-        else:
-            ret = result.all()
+        ret = map(lambda m:m.uuid, result.all()) if justId else result.all()
         session.close()
         return ret
 
@@ -900,11 +876,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         Remove from a group member computers, specified by a uuids list.
         """
         # Is current group a profile ?
-        if self.isprofile(ctx, id):
-            resultTable = self.profilesResults
-        else:
-            resultTable = self.results
-
+        resultTable = self.profilesResults if self.isprofile(ctx, id) else self.results
         group = self.get_group(ctx, id)
         connection = self.getDbConnection()
         trans = connection.begin()
@@ -925,7 +897,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         try:
             query = query.one()
         except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.error('Error where fetching deploy group for group %s (package %s): %s' % (gid, package_id, e))
+            self.logger.error(
+                f'Error where fetching deploy group for group {gid} (package {package_id}): {e}'
+            )
             return False
 
         return query.deployGroupId
@@ -936,7 +910,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         try:
             query = query.one()
         except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.error('Error while fetching parent id for convergence group %s: %s' % (gid, e))
+            self.logger.error(
+                f'Error while fetching parent id for convergence group {gid}: {e}'
+            )
             return None
 
         return query.parent_id
@@ -1004,25 +980,21 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             papi = cPickle.loads(line.papi)
             if 'mountpoint' not in papi:
                 papi['mountpoint'] =  '/package_api_get1'
-            if not papi['mountpoint'] in ret:
+            if papi['mountpoint'] not in ret:
                 ret[papi['mountpoint']] = {}
             ret[papi['mountpoint']][line.packageUUID] = line.active
         return ret
 
     @DatabaseHelper._session
     def get_active_convergence_commands(self, session, package_id):
-        ret = []
         query = session.query(Convergence)
         query = query.filter(and_(
                     Convergence.packageUUID == package_id,
                     Convergence.active == 1,
                 ))
-        for line in query:
-            ret.append({
-                'gid': line.parentGroupId,
-                'cmd_id': line.commandId
-            })
-        return ret
+        return [
+            {'gid': line.parentGroupId, 'cmd_id': line.commandId} for line in query
+        ]
 
     @DatabaseHelper._session
     def get_active_convergences(self, session):
@@ -1060,7 +1032,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             ret = query.one()
             return ret.commandId
         except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
+            self.logger.warn(
+                f"Error while fetching convergence command id for group {gid} (package UUID {package_id}): {e}"
+            )
             return None
 
     @DatabaseHelper._session
@@ -1090,7 +1064,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return ret.active
         except (MultipleResultsFound, NoResultFound) as e:
             self.logger.error("is_convergence_active")
-            self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
+            self.logger.warn(
+                f"Error while fetching convergence command id for group {gid} (package UUID {package_id}): {e}"
+            )
             return None
 
     @DatabaseHelper._session
@@ -1102,7 +1078,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         try:
             return query.one().login
         except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.warn("Error while fetching user for group %s: %s" % (gid, e))
+            self.logger.warn(f"Error while fetching user for group {gid}: {e}")
             return None
 
     @DatabaseHelper._session
@@ -1111,14 +1087,18 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         try:
             deploy_group_id = query.one().deployGroupId
         except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.warn("Error while fetching convergence deploy group id for command %s: %s" % (command_id, e))
+            self.logger.warn(
+                f"Error while fetching convergence deploy group id for command {command_id}: {e}"
+            )
             return None
 
         query = session.query(Users).join(Groups).filter(Groups.id == deploy_group_id)
         try:
             user = query.one().login
         except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.warn("Error while fetching user for deploy group %s: %s" % (deploy_group_id, e))
+            self.logger.warn(
+                f"Error while fetching user for deploy group {deploy_group_id}: {e}"
+            )
             return None
         return deploy_group_id, user
 
