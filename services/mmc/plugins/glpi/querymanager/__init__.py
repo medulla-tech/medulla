@@ -50,11 +50,11 @@ def queryPossibilities():
     ret['Entity'] = ['list', getAllEntities]
     ret['Vendors'] = ['list', getAllSoftwareVendors]
     ret['Software versions'] = ['list', getAllSoftwareVersions]
-    ret['Register key'] = ['list', getAllRegistryKey]
-    ret['Register key value'] = ['double',
-                                getRegisterKeyValue,
-                                3,
-                                2]
+    # ret['Register key'] = ['list', getAllRegistryKey]
+    # ret['Register key value'] = ['double',
+    #                             getRegisterKeyValue,
+    #                             3,
+    #                             2]
     ret['Online computer'] = [ 'bool' ]
     ret['OS Version'] = ['list', getAllOsVersions]
     ret['Architecture'] = ['list', getAllArchitectures]
@@ -127,11 +127,11 @@ def queryGroups():
                   '(32-bit, 64-bit)']
                  ]])
     # REGISTER
-    ret.append(['Register',
-                [['Register key',
-                  'Microsoft Windows keys registers'],
-                ['Register key value',
-                  'Microsoft Windows keys registers value']]])
+    # ret.append(['Register',
+    #             [['Register key',
+    #               'Microsoft Windows keys registers'],
+    #             ['Register key value',
+    #               'Microsoft Windows keys registers value']]])
     #PRESENCE XMPP
     ret.append(['Presence',
                 [['Online computer', 'Presence of the machine Yes/No']

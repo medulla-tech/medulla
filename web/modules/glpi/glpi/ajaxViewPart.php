@@ -148,6 +148,10 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
                 printf('<p>%s</p>', _T('Unable to detect any Antivirus software on this machine.', 'glpi'));
                 printf('<p>%s</p>', _T('Please ensure you are running GLPI with FusionInventory plugin and FusionInventory Agent on this client.', 'glpi'));
                 break;
+            case 'Registry':
+                printf('<p>%s</p>', _T('Unable to detect any Registry key on this machine.', 'glpi'));
+                printf('<p>%s</p>', _T('Please ensure you are running GLPI with FusionInventory plugin and FusionInventory Agent on this client.', 'glpi'));
+                break;
             default:
                 printf('<p>%s</p>', _T('No record found.', 'glpi'));
             }

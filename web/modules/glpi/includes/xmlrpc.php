@@ -62,7 +62,8 @@ function getGlpiMachineUri() {
 }
 
 function getMachineNumberByState() {
-    return xmlCall("glpi.getMachineNumberByState");
+    // Not used anymore
+    // return xmlCall("glpi.getMachineNumberByState");
 }
 
 function getMachineListByState($groupName) {

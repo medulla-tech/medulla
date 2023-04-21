@@ -71,8 +71,8 @@ class Glpi(DyngroupDatabaseHelper):
             from mmc.plugins.dashboard.panel import Panel
             DM = DashboardManager()
             DM.register_panel(Panel("inventory"))
-            if self.database.fusionantivirus is not None:
-                DM.register_panel(Panel("antivirus"))
+            # if self.database.fusionantivirus is not None:
+                # DM.register_panel(Panel("antivirus"))
             # Registring OS Repartition panel
             DM.register_panel(Panel("os_repartition"))
         except ImportError:

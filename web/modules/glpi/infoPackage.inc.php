@@ -48,9 +48,9 @@ $submod->addPage($page);
 $mod->addSubmod($submod);
 
 // Set the rights for glpi/includes/panels/antivirus.inc.php
-$page = new Page('antivirus_dashboard', _T('Antivirus Panel', 'glpi'));
-$submod->addPage($page);
-$mod->addSubmod($submod);
+// $page = new Page('antivirus_dashboard', _T('Antivirus Panel', 'glpi'));
+// $submod->addPage($page);
+// $mod->addSubmod($submod);
 
 // Set the rights for glpi/includes/panels/inventory.inc.php
 $page = new Page('inventory_dashboard', _T('Inventory Panel', 'glpi'));
