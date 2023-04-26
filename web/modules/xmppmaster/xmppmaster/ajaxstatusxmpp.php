@@ -49,7 +49,9 @@ if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1'){
 //   $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 }
 else {
-  $LastdeployINsecond = 3600*2160;
+    // 24h*30d = 720
+    // 24h*90d = 2160
+  $LastdeployINsecond = 3600*720;
   echo "<h2>" . _T("Past tasks") ."</h2>";
   $arraydeploy = xmlrpc_get_deploy_by_user_finished( $_GET['login'] ,
                                                      $LastdeployINsecond,
