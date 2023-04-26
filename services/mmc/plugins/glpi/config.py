@@ -45,6 +45,7 @@ class GlpiConfig(PluginConfig):
         self.dbname = self.get("main", "dbname")
         self.dbuser = self.get("main", "dbuser")
         self.dbpasswd = self.getpassword("main", "dbpasswd")
+        itsm_plugin = "fusion"
 
         if self.has_option("main", "dbreadonly"):
             GlpiConfig.dbreadonly = self.getboolean("main", "dbreadonly")
@@ -60,6 +61,9 @@ class GlpiConfig(PluginConfig):
             self.check_db_enable = self.getboolean("main", "check_db_enable")
         if self.has_option("main", "check_db_interval"):
             self.check_db_interval = self.getint("main", "check_db_interval")
+
+        if self.has_option("main", "itsm_plugin"):
+            self.itsm_plugin = self.getint("main", "itsm_plugin")
 
         self.disable = self.getint("main", "disable")
         self.displayLocalisationBar = self.getboolean("main", "localisation")

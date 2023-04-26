@@ -284,14 +284,25 @@ class Glpi95(DyngroupDatabaseHelper):
         # glpi_plugin_fusioninventory_agents
         self.fusionagents = None
 
-        if self.fusionantivirus is not None: # Fusion is not installed
-            self.logger.debug('Load glpi_plugin_fusioninventory_locks')
+        if self.fusionantivirus is not None and self.itsm_plugin = "fusion":
+                        self.logger.debug('Load glpi_plugin_fusioninventory_locks')
             self.fusionlocks = Table('glpi_plugin_fusioninventory_locks', self.metadata,
                 Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 autoload = True)
             mapper(FusionLocks, self.fusionlocks)
             self.logger.debug('Load glpi_plugin_fusioninventory_agents')
             self.fusionagents = Table('glpi_plugin_fusioninventory_agents', self.metadata,
+                Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                autoload = True)
+            mapper(FusionAgents, self.fusionagents)
+        else:
+            self.logger.debug('Load glpi_plugin_fusioninventory_locks')
+            self.fusionlocks = Table('glpi_plugin_fusioninventory_locks', self.metadata,
+                Column('items_id', Integer, ForeignKey('glpi_computers_pulse.id')),
+                autoload = True)
+            mapper(FusionLocks, self.fusionlocks)
+            self.logger.debug('Load glpi_plugin_ocsinventoryng_ocslinks')
+            self.fusionagents = Table('glpi_plugin_ocsinventoryng_ocslinks', self.metadata,
                 Column('computers_id', Integer, ForeignKey('glpi_computers_pulse.id')),
                 autoload = True)
             mapper(FusionAgents, self.fusionagents)
@@ -1636,7 +1647,7 @@ class Glpi95(DyngroupDatabaseHelper):
 
         date_mod = self.machine.c.date_mod
         if self.fusionagents is not None:
-            date_mod = FusionAgents.last_contact
+            date_mod = FusionAgents.computer_update
 
         for value in ['green', 'orange', 'red']:
             # This loop instanciate self.filt_green,
@@ -2767,7 +2778,7 @@ class Glpi95(DyngroupDatabaseHelper):
             .add_column(self.glpi_operatingsystemarchitectures.c.name) \
             .add_column(self.glpi_domains.c.name) \
             .add_column(self.state.c.name) \
-            .add_column(self.fusionagents.c.last_contact) \
+            .add_column(self.fusionagents.c.computer_update) \
             .select_from(
                 self.machine.outerjoin(self.entities) \
                 .outerjoin(self.locations) \
@@ -2836,7 +2847,7 @@ class Glpi95(DyngroupDatabaseHelper):
                 date_mod = machine.date_mod
 
                 if self.fusionagents is not None and last_contact is not None:
-                    date_mod = last_contact
+                    date_mod = computer_update
 
                 l = [
                     ['Computer Name', ['computer_name', 'text', machine.name]],
@@ -4619,7 +4630,7 @@ class Glpi95(DyngroupDatabaseHelper):
 
         date_mod = self.machine.c.date_mod
         if self.fusionagents is not None:
-            date_mod = FusionAgents.last_contact
+            date_mod = FusionAgents.computer_update
 
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
 
