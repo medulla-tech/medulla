@@ -37,7 +37,7 @@ logger = logging.getLogger()
 
 # plugin run wake on lan on mac address
 # group mac address wakeonlangroup different wakeonlan
-plugin = {"VERSION": "1.4", "NAME": "wakeonlangroup", "TYPE": "master"}
+plugin = {"VERSION": "1.5", "NAME": "wakeonlangroup", "TYPE": "master"}
 
 def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
