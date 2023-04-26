@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import shutil
@@ -191,10 +191,10 @@ class managepackage:
             dirpartage = os.path.abspath(os.path.realpath(dirpartage))
         for x in managepackage.search_list_package():
             if verbeux:
-                logger.debug("symbolic link %s to %s" % (
-                    x,
-                    os.path.join(dirpackage, os.path.basename(x))
-                ))
+                logger.debug(
+                    "symbolic link %s to %s"
+                    % (x, os.path.join(dirpackage, os.path.basename(x)))
+                )
 
             try:
                 os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
@@ -736,37 +736,60 @@ if __name__ == "__main__":
                 ### print(json.dumps(contenuedejson, indent=4))
                 du = simplecommand("du -sb")
                 result = simplecommand("du -b %s" % path_package)
-                taillebytefolder = int(result['result'][0].split()[0])
-                fiche={ "size" : "%s" % taillebytefolder,
-                        "label" :contenuedejson['name'],
-                        "description" : contenuedejson['description'],
-                        "version" : contenuedejson['version'],
-                        "os" : contenuedejson['targetos'],
-                        "metagenerator" : contenuedejson['metagenerator'],
-                        "uuid" : contenuedejson['id'],
-                        "entity_id": contenuedejson['entity_id'],
-                        "sub_packages": json.dumps(contenuedejson['sub_packages']),
-                        "reboot": contenuedejson['reboot'],
-                        "inventory_associateinventory": contenuedejson['inventory']['associateinventory'],
-                        "inventory_licenses": contenuedejson['inventory']['licenses'],
-                        "Qversion": contenuedejson['inventory']['queries']['Qversion'].encode(encoding = 'UTF-8', errors = 'strict'),
-                        "Qvendor": contenuedejson['inventory']['queries']['Qvendor'].encode(encoding = 'UTF-8', errors = 'strict'),
-                        "Qsoftware": contenuedejson['inventory']['queries']['Qsoftware'].encode(encoding = 'UTF-8', errors = 'strict'),
-                        "boolcnd": contenuedejson['inventory']['queries']['boolcnd'],
-                        "postCommandSuccess_command": contenuedejson['commands']['postCommandSuccess']['command'],
-                        "postCommandSuccess_name": contenuedejson['commands']['postCommandSuccess']['name'],
-                        "installInit_command": contenuedejson['commands']['installInit']['command'],
-                        "installInit_name": contenuedejson['commands']['installInit']['name'],
-                        "postCommandFailure_command": contenuedejson['commands']['postCommandFailure']['command'],
-                        "postCommandFailure_name": contenuedejson['commands']['postCommandFailure']['name'],
-                        "command_command": contenuedejson['commands']['command']['command'],
-                        "command_name": contenuedejson['commands']['command']['name'],
-                        "preCommand_command": contenuedejson['commands']['preCommand']['command'],
-                        "preCommand_name": contenuedejson['commands']['preCommand']['name'],
-                        "pkgs_share_id": sharingid[partage],
-                        "edition_status": 1,
-                        "conf_json": json.dumps(contenuedejson)}
-
+                taillebytefolder = int(result["result"][0].split()[0])
+                fiche = {
+                    "size": "%s" % taillebytefolder,
+                    "label": contenuedejson["name"],
+                    "description": contenuedejson["description"],
+                    "version": contenuedejson["version"],
+                    "os": contenuedejson["targetos"],
+                    "metagenerator": contenuedejson["metagenerator"],
+                    "uuid": contenuedejson["id"],
+                    "entity_id": contenuedejson["entity_id"],
+                    "sub_packages": json.dumps(contenuedejson["sub_packages"]),
+                    "reboot": contenuedejson["reboot"],
+                    "inventory_associateinventory": contenuedejson["inventory"][
+                        "associateinventory"
+                    ],
+                    "inventory_licenses": contenuedejson["inventory"]["licenses"],
+                    "Qversion": contenuedejson["inventory"]["queries"][
+                        "Qversion"
+                    ].encode(encoding="UTF-8", errors="strict"),
+                    "Qvendor": contenuedejson["inventory"]["queries"]["Qvendor"].encode(
+                        encoding="UTF-8", errors="strict"
+                    ),
+                    "Qsoftware": contenuedejson["inventory"]["queries"][
+                        "Qsoftware"
+                    ].encode(encoding="UTF-8", errors="strict"),
+                    "boolcnd": contenuedejson["inventory"]["queries"]["boolcnd"],
+                    "postCommandSuccess_command": contenuedejson["commands"][
+                        "postCommandSuccess"
+                    ]["command"],
+                    "postCommandSuccess_name": contenuedejson["commands"][
+                        "postCommandSuccess"
+                    ]["name"],
+                    "installInit_command": contenuedejson["commands"]["installInit"][
+                        "command"
+                    ],
+                    "installInit_name": contenuedejson["commands"]["installInit"][
+                        "name"
+                    ],
+                    "postCommandFailure_command": contenuedejson["commands"][
+                        "postCommandFailure"
+                    ]["command"],
+                    "postCommandFailure_name": contenuedejson["commands"][
+                        "postCommandFailure"
+                    ]["name"],
+                    "command_command": contenuedejson["commands"]["command"]["command"],
+                    "command_name": contenuedejson["commands"]["command"]["name"],
+                    "preCommand_command": contenuedejson["commands"]["preCommand"][
+                        "command"
+                    ],
+                    "preCommand_name": contenuedejson["commands"]["preCommand"]["name"],
+                    "pkgs_share_id": sharingid[partage],
+                    "edition_status": 1,
+                    "conf_json": json.dumps(contenuedejson),
+                }
 
                 for p in fiche:
                     fiche[p] = MySQLdb.escape_string(str(fiche[p]))
@@ -860,7 +883,6 @@ if __name__ == "__main__":
                     )
 
                 except MySQLdb.Error as e:
-
                     errorstr = "%s" % traceback.format_exc()
                     if opts.verbeux:
                         logger.error("\n%s" % (errorstr))
