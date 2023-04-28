@@ -19,43 +19,55 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+-- ----------------------------------------------------------------------
+-- Database xmppmaster
+-- ----------------------------------------------------------------------
+-- ----------------------------------------------------------------------
+-- ADD COLUMNS md5agentversion AND version table uptime_machine
+-- ADD INDEX ON COLUMNS  md5agentversion AND version and date
+-- ----------------------------------------------------------------------
+
 START TRANSACTION;
-USE xmppmaster;
+
+USE `xmppmaster`;
+SET FOREIGN_KEY_CHECKS=0;
+
+ALTER TABLE `xmppmaster`.`uptime_machine`
+ADD COLUMN `timetempunix` int(11) DEFAULT NULL AFTER `date`,
+ADD COLUMN `md5agentversion` VARCHAR(32) NULL AFTER `timetempunix`,
+ADD COLUMN `version` VARCHAR(10) NULL AFTER `md5agentversion`,
+ADD INDEX `ind_md5agent` (`md5agentversion` ASC) ,
+ADD INDEX `ind_agenntversion` (`version` ASC) ,
+ADD INDEX `ind_date` (`date` ASC),
+ADD INDEX `ind_time_unix` (`timetempunix` ASC);
+
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`uptime_machine_BEFORE_INSERT`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE TRIGGER `xmppmaster`.`uptime_machine_BEFORE_INSERT` BEFORE INSERT ON `uptime_machine` FOR EACH ROW
+BEGIN
+IF new.timetempunix IS NULL then SET new.timetempunix =  UNIX_TIMESTAMP(new.date);END IF;
+END$$
+DELIMITER ;
 
 -- ----------------------------------------------------------------------
--- Optimisation of admin view as root
+-- PURGE uptime_machine OLD RECORD  Weeks
 -- ----------------------------------------------------------------------
-ALTER TABLE `xmppmaster`.`machines`
-ADD INDEX  IF NOT EXISTS `index_group_deploy` (`groupdeploy` ASC) ;
+CREATE EVENT IF NOT EXISTS purgeuptimemachine
+  ON SCHEDULE
+  AT
+  (CURRENT_TIMESTAMP + INTERVAL 1 DAY) ON COMPLETION PRESERVE ENABLE
+  DO
+    DELETE FROM xmppmaster.uptime_machine
+    WHERE
+        date < DATE_SUB(NOW(), INTERVAL 4 WEEK);
 
-DROP INDEX IF EXISTS `ind_relay_jid` on `xmppmaster`.`relayserver` ;
-
-ALTER TABLE `xmppmaster`.`relayserver`
-ADD INDEX IF NOT EXISTS `ind_mode` (`moderelayserver` ASC) ;
-
-ALTER TABLE `xmppmaster`.`relayserver`
-ADD INDEX IF NOT EXISTS `ind_presence` (`enabled` ASC) ;
-
-ALTER TABLE `xmppmaster`.`relayserver`
-ADD FULLTEXT INDEX  IF NOT EXISTS `ind_nameserver` (`nameserver`) ;
-
-ALTER TABLE `xmppmaster`.`relayserver`
-ADD FULLTEXT INDEX  IF NOT EXISTS `ind_ipserver` (`ipserver`) ;
-
-ALTER TABLE `xmppmaster`.`relayserver`
-ADD FULLTEXT INDEX  IF NOT EXISTS `ind_jid` (`jid`) ;
-
-ALTER TABLE `xmppmaster`.`relayserver`
-ADD FULLTEXT INDEX  IF NOT EXISTS `ind_classutil` (`classutil`) ;
-
-ALTER TABLE `xmppmaster`.`has_cluster_ars`
-ADD INDEX IF NOT EXISTS `ind_ars` (`id_ars` ASC) ,
-ADD INDEX IF NOT EXISTS `ind_cluster` (`id_cluster` ASC) ;
-
-ALTER TABLE `xmppmaster`.`cluster_ars`
-ADD FULLTEXT INDEX IF NOT EXISTS `ind_name` (`name`) ,
-ADD FULLTEXT INDEX IF NOT EXISTS `ind_description` (`description`) ;
-
+SET FOREIGN_KEY_CHECKS=1;
+-- ----------------------------------------------------------------------
+-- Database version
+-- ----------------------------------------------------------------------
 UPDATE version SET Number = 68;
 
 COMMIT;
