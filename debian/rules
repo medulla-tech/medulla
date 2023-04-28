@@ -126,8 +126,8 @@ binary-arch: build install
 	# Must be writable by web-server
 	dh_install --sourcedir=$(DESTDIR) --fail-missing
 	# This directory must be writable for www-data (first run)
-	chown www-data:root debian/python-mmc-support/etc/mmc/plugins/support
-	chmod 750 debian/python-mmc-support/etc/mmc/plugins/support
+	chown www-data:root debian/python3-mmc-support/etc/mmc/plugins/support
+	chmod 750 debian/python3-mmc-support/etc/mmc/plugins/support
 	dh_fixperms -Xetc/mmc \
                     -Xusr/share/doc/pulse2/contrib/ \
 		    -Xvar/log/mmc
