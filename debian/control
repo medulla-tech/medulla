@@ -404,7 +404,7 @@ Description: Pulse 2 Register PXE Service
 Package: python3-mmc-xmppmaster
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-mmc-base (>= 3.1.1-1), python3-mmc-msc (= ${binary:Version}), python3-mmc-inventory (= ${binary:Version}) | python3-mmc-glpi (= ${binary:Version}), python3-mmc-dyngroup (= ${binary:Version}), python3-mmc-pkgs (= ${binary:Version}), python3-mmc-kiosk (= ${binary:Version}), python3-mmc-updates (= ${binary:Version}), python3-pulse2-common (= ${binary:Version}), python3-sqlalchemy (>= 0.4), python3-sleekxmpp, python3-geoip, python3-dnspython, geoip-database-contrib, python3-croniter
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-mmc-base (>= 3.1.1-1), python3-mmc-msc (= ${binary:Version}), python3-mmc-inventory (= ${binary:Version}) | python3-mmc-glpi (= ${binary:Version}), python3-mmc-dyngroup (= ${binary:Version}), python3-mmc-pkgs (= ${binary:Version}), python3-mmc-kiosk (= ${binary:Version}), python3-mmc-updates (= ${binary:Version}), python3-pulse2-common (= ${binary:Version}), python3-sqlalchemy (>= 0.4), python3-slixmpp, python3-geoip, python3-dnspython, geoip-database-contrib, python3-croniter
 Description: Pulse 2 MMC agent plugins
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
