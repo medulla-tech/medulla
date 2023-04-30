@@ -7,14 +7,22 @@ kiosk database handler
 """
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
-from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
+from sqlalchemy.orm import sessionmaker
+
+Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import update
 from datetime import date, datetime, timedelta
+
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists
-from pulse2.database.kiosk.schema import Profiles, Profile_has_package, Profile_has_ou, Acknowledgements
+from pulse2.database.kiosk.schema import (
+    Profiles,
+    Profile_has_package,
+    Profile_has_ou,
+    Acknowledgements,
+)
 from pulse2.database.pkgs.orm.pakages import Packages
 
 # Imported last
@@ -22,6 +30,7 @@ import logging
 import json
 import time
 from datetime import datetime
+
 
 class KioskDatabase(DatabaseHelper):
     """
@@ -38,7 +47,6 @@ class KioskDatabase(DatabaseHelper):
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
-
         if self.is_activated:
             return None
         self.config = config
@@ -107,13 +115,14 @@ class KioskDatabase(DatabaseHelper):
         except:
             limit = -1
 
-
         ret = session.query(Profiles)
         if filter != "":
-            ret = ret.filter(or_(
-                Profiles.name.contains(filter),
-                Profiles.active.contains(filter),
-                Profiles.creation_date.contains(filter))
+            ret = ret.filter(
+                or_(
+                    Profiles.name.contains(filter),
+                    Profiles.active.contains(filter),
+                    Profiles.creation_date.contains(filter),
+                )
             )
         count = ret.count()
         if limit != -1:
@@ -179,7 +188,7 @@ class KioskDatabase(DatabaseHelper):
     def add_askacknowledge(self, session, OU, package_uuid, askuser):
         if len(OU) == 0:
             return False
-        listou =  "('" + "','".join(OU) + "')"
+        listou = "('" + "','".join(OU) + "')"
         sql = """SELECT
     distinct
     kiosk.profiles.id as profile_id,
@@ -214,7 +223,11 @@ AND
             )
     )
 AND kiosk.profiles.active = 1
-;""" % (listou, package_uuid, askuser)
+;""" % (
+            listou,
+            package_uuid,
+            askuser,
+        )
 
         try:
             result = session.execute(sql)
@@ -226,7 +239,7 @@ AND kiosk.profiles.active = 1
                 new_acknowledge = Acknowledgements()
                 new_acknowledge.id_package_has_profil = element.package_has_profil_id
                 new_acknowledge.askuser = askuser
-                new_acknowledge.acknowledgedbyuser=""
+                new_acknowledge.acknowledgedbyuser = ""
                 session.add(new_acknowledge)
                 session.commit()
                 session.flush()
@@ -326,7 +339,6 @@ AND kiosk.profiles.active = 1
         if len(packages) > 0:
             for status in list(packages.keys()):
                 for uuid in packages[status]:
-
                     profile = Profile_has_package()
                     profile.profil_id = id
                     profile.package_uuid = uuid
@@ -617,7 +629,6 @@ AND kiosk.profiles.active = 1
         if len(packages) > 0:
             for status in list(packages.keys()):
                 for uuid in packages[status]:
-
                     profile = Profile_has_package()
                     profile.profil_id = id
                     profile.package_uuid = uuid
@@ -627,9 +638,10 @@ AND kiosk.profiles.active = 1
                     session.commit()
                     session.flush()
 
-
     @DatabaseHelper._sessionm
-    def get_acknowledges_for_sharings(self, session, sharings, start=0, end=-1, filter=""):
+    def get_acknowledges_for_sharings(
+        self, session, sharings, start=0, end=-1, filter=""
+    ):
         try:
             start = int(start)
         except:
@@ -649,12 +661,21 @@ AND kiosk.profiles.active = 1
                 OR acknowledgements.acknowledgedbyuser like "%%%s%%"
                 OR acknowledgements.startdate like "%%%s%%"
                 OR acknowledgements.enddate like "%%%s%%"
-                OR acknowledgements.status like "%%%s%%" """%(filter, filter, filter, filter, filter, filter, filter, filter, filter)
+                OR acknowledgements.status like "%%%s%%" """ % (
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+                filter,
+            )
 
         sqllimit = ""
         if limit != -1:
-            sqllimit = "LIMIT %s, %s"%(start, limit)
-
+            sqllimit = "LIMIT %s, %s" % (start, limit)
 
         sql = """SELECT SQL_CALC_FOUND_ROWS
             pkgs.packages.label,
@@ -673,16 +694,16 @@ AND kiosk.profiles.active = 1
         LEFT JOIN pkgs.packages ON pkgs.packages.uuid = package_has_profil.package_uuid
         %s
         %s
-        ORDER BY askdate DESC; """%(sqlfilter, sqllimit)
+        ORDER BY askdate DESC; """ % (
+            sqlfilter,
+            sqllimit,
+        )
 
         sql_count = "SELECT FOUND_ROWS();"
         query = session.execute(sql)
         ret_count = session.execute(sql_count)
         count = ret_count.first()[0]
-        result = {
-            "total" : count,
-            "datas" : []
-        }
+        result = {"total": count, "datas": []}
 
         if query is not None:
             for element in query:
@@ -696,39 +717,51 @@ AND kiosk.profiles.active = 1
                 if element[7] is not None:
                     enddate = element[7].strftime("%Y-%m-%d %H:%M:%S")
 
-                result['datas'].append({
-                    "package_name": element[0] if element[0] is not None else "",
-                    "package_uuid": element[1] if element[1] is not None else "",
-                    "profile_name": element[2] if element[2] is not None else "",
-                    "askuser":element[3] if element[3] is not None else "",
-                    "askdate": askdate,
-                    "acknowledgedbyuser": element[5] if element[5] is not None else "",
-                    "startdate" : startdate,
-                    "enddate": enddate,
-                    "status": element[8] if element[8] is not None else "",
-                    "id": element[9] if element[8] is not None else ""
-                })
+                result["datas"].append(
+                    {
+                        "package_name": element[0] if element[0] is not None else "",
+                        "package_uuid": element[1] if element[1] is not None else "",
+                        "profile_name": element[2] if element[2] is not None else "",
+                        "askuser": element[3] if element[3] is not None else "",
+                        "askdate": askdate,
+                        "acknowledgedbyuser": element[5]
+                        if element[5] is not None
+                        else "",
+                        "startdate": startdate,
+                        "enddate": enddate,
+                        "status": element[8] if element[8] is not None else "",
+                        "id": element[9] if element[8] is not None else "",
+                    }
+                )
 
         return result
 
-
     @DatabaseHelper._sessionm
-    def get_acknowledges_for_package_profile(self, session, id_package_profil, uuid_package, user):
+    def get_acknowledges_for_package_profile(
+        self, session, id_package_profil, uuid_package, user
+    ):
         today = datetime.now()
-        query = session.query(Acknowledgements)\
-            .add_column(Profile_has_package.package_uuid)\
-            .filter(and_(
-                Acknowledgements.id_package_has_profil == id_package_profil,
-                Acknowledgements.askuser== user),
+        query = (
+            session.query(Acknowledgements)
+            .add_column(Profile_has_package.package_uuid)
+            .filter(
+                and_(
+                    Acknowledgements.id_package_has_profil == id_package_profil,
+                    Acknowledgements.askuser == user,
+                ),
                 Acknowledgements.startdate <= today.strftime("%Y-%m-%d %H:%M:%S"),
                 or_(
-                   Acknowledgements.enddate > today.strftime("%Y-%m-%d %H:%M:%S"),
-                   Acknowledgements.enddate is None,
-                   Acknowledgements.enddate == "",
-                   )
-                )\
-            .join(Profile_has_package, Profile_has_package.id == Acknowledgements.id_package_has_profil)\
+                    Acknowledgements.enddate > today.strftime("%Y-%m-%d %H:%M:%S"),
+                    Acknowledgements.enddate is None,
+                    Acknowledgements.enddate == "",
+                ),
+            )
+            .join(
+                Profile_has_package,
+                Profile_has_package.id == Acknowledgements.id_package_has_profil,
+            )
             .all()
+        )
 
         result = []
 
@@ -744,23 +777,29 @@ AND kiosk.profiles.active = 1
                 if element.enddate is not None:
                     enddate = element.enddate.strftime("%Y-%m-%d %H:%M:%S")
 
-
-                result.append({
-                    "askuser": element.askuser if element.askuser is not None else "",
-                    "askdate": askdate,
-                    "acknowledgedbyuser": element.acknowledgedbyuser if element.acknowledgedbyuser is not None else "",
-                    "startdate" : startdate,
-                    "enddate": enddate,
-                    "status": element.status if element.status is not None else "",
-                    "id": element.id if element.id is not None else "",
-                    "id_package_has_profil" : element.id_package_has_profil,
-                    "package_uuid" : package_uuid
-                })
+                result.append(
+                    {
+                        "askuser": element.askuser
+                        if element.askuser is not None
+                        else "",
+                        "askdate": askdate,
+                        "acknowledgedbyuser": element.acknowledgedbyuser
+                        if element.acknowledgedbyuser is not None
+                        else "",
+                        "startdate": startdate,
+                        "enddate": enddate,
+                        "status": element.status if element.status is not None else "",
+                        "id": element.id if element.id is not None else "",
+                        "id_package_has_profil": element.id_package_has_profil,
+                        "package_uuid": package_uuid,
+                    }
+                )
         return result
 
-
     @DatabaseHelper._sessionm
-    def update_acknowledgement(self, session, id, acknowledgedbyuser, startdate, enddate, status):
+    def update_acknowledgement(
+        self, session, id, acknowledgedbyuser, startdate, enddate, status
+    ):
         query = session.query(Acknowledgements).filter(Acknowledgements.id == id)
 
         try:
