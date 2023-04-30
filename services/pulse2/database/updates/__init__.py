@@ -47,7 +47,7 @@ class UpdatesDatabase(DatabaseHelper):
         self.config = config
 
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        print self.makeConnectionPath()
+        print(self.makeConnectionPath())
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)

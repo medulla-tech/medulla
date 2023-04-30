@@ -232,7 +232,7 @@ AND kiosk.profiles.active = 1
                 session.flush()
 
             return associations
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("add_askacknowledge")
             logging.getLogger().error(str(e))
             return ""
