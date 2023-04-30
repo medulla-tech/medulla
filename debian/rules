@@ -133,7 +133,7 @@ binary-arch: build install
 		    -Xvar/log/mmc
 	dh_installchangelogs -Npulse2 ChangeLog
 	dh_installdocs -Npulse2
-	find debian/python3-mmc-imaging/usr/share/doc/pulse2/contrib/ -path '*/imaging/lrsgznbd/*' -prune -o -name 'Makefile*' -exec rm {} \;
+	find debian/pulse2-common/usr/share/doc/pulse2/contrib/ -path '*/imaging/lrsgznbd/*' -prune -o -name 'Makefile*' -exec rm {} \;
 	for PKG in $(PKG_LIST); do \
 		rm -r debian/$$PKG/usr/share/doc/$$PKG; \
 		ln -sf pulse2 debian/$$PKG/usr/share/doc/$$PKG; \
