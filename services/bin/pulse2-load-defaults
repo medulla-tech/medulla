@@ -154,7 +154,7 @@ class MMCProxy :
 
             log.debug("Create a mmc-agent proxy")
 
-        except Exception, err :
+        except Exception as err :
             log.error("Error while connecting to mmc-agent : %s" % err)
             sys.exit(2)
 

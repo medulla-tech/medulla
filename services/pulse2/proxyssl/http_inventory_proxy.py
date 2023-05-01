@@ -121,7 +121,7 @@ class MyProxyRequest(proxy.ProxyRequest):
                     logger.debug(
                         "The remaining bytes are : %s" %
                         (decomp.unused_data))
-            except Exception, e:
+            except Exception as e:
                 logger.error("Failed during decompression.")
                 logger.error(str(e))
                 raise e
@@ -167,7 +167,7 @@ class MyProxyRequest(proxy.ProxyRequest):
                 # default to Z_FINISH
                 s = comp.compress(sUnpack) + comp.flush()
                 logger.debug("\t\tcompressed length: " + str(len(s)))
-            except Exception, e:
+            except Exception as e:
                 logger.error("Failed during compression.")
                 logger.error(str(e))
                 raise e
@@ -185,7 +185,7 @@ class MyProxyRequest(proxy.ProxyRequest):
                     self.config.cert_file,
                     self.config.key_file)
                 self.reactor.connectSSL(host, port, clientFactory, ctx)
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error(str(e))
                 raise
         else:
@@ -236,5 +236,5 @@ class HttpInventoryProxySingleton(Singleton):
             SetValueEx(key, self.config.flag[1], 0, REG_SZ, "no")
             CloseKey(key)
             self.logger.debug("Registry key value set")
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Can't change registry key value: %s", str(e))

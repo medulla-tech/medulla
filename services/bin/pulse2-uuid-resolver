@@ -166,7 +166,7 @@ class MMCProxy :
             self._proxy = Proxy(self._url)
             syslog("Create a mmc-agent proxy")
 
-        except Exception, err :
+        except Exception as err :
             syslog("Error while connecting to mmc-agent : %s" % err)
             sys.exit(2)
 

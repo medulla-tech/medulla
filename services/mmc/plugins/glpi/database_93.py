@@ -2771,7 +2771,7 @@ class Glpi93(DyngroupDatabaseHelper):
 
             session.close()
             return True
-        except Exception, e:
+        except Exception as e:
             self.logger.error(e)
             return False
 

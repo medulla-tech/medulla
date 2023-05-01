@@ -53,8 +53,7 @@ def running(cfgfile, daemonize):
 
     try:
         dp = Dispatcher(config)
-    except Exception, e:
-        print e
+    except Exception as e:
         logger.exception(e)
         raise
 

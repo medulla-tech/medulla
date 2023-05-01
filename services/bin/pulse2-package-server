@@ -81,7 +81,7 @@ def running(inifile, daemonize, noconsoledebug = True):
 
     try:
         ThreadLauncher().initialize(config)
-    except Exception, e:
+    except Exception as e:
         logger.exception(e)
         raise
     twisted.internet.reactor.addSystemEventTrigger('before', 'shutdown', cleanUp, config)

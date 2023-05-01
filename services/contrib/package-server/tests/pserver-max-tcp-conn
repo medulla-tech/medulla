@@ -43,7 +43,7 @@ def updateFdLimit():
     hard = 2048
     try:
         resource.setrlimit(eval("resource." + res), (soft, hard))
-    except Exception, e:
+    except Exception as e:
         print "Can't set resource limits for resource='%s', soft='%d', hard='%d'" % (res, soft, hard)
         print e
 
