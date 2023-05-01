@@ -35,7 +35,6 @@ class UrbackupDatabase(DatabaseHelper):
             self.makeConnectionPath(),
             pool_recycle=self.config.dbpoolrecycle,
             pool_size=self.config.dbpoolsize)
-        print self.makeConnectionPath()
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)

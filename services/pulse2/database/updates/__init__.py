@@ -69,9 +69,9 @@ class UpdatesDatabase(DatabaseHelper):
         for i in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except DBAPIError, e:
+            except DBAPIError as e:
                 logging.getLogger().error(e)
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error(e)
             if ret: break
         if not ret:
@@ -336,7 +336,7 @@ class UpdatesDatabase(DatabaseHelper):
             session.commit()
             session.flush()
             return True
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
         return False
 
@@ -352,7 +352,7 @@ class UpdatesDatabase(DatabaseHelper):
             
             session.flush()
             return True
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
         return False
 
@@ -367,7 +367,7 @@ class UpdatesDatabase(DatabaseHelper):
             session.flush()
             return True
 
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
         return False
 
