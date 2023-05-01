@@ -5454,12 +5454,12 @@ class XmppMasterDatabase(DatabaseHelper):
                                                 Deploy.start.like('%%%s%%' % (filt)),
                                                 Deploy.login.like('%%%s%%' % (filt)),
                                                 Deploy.host.like('%%%s%%' % (filt))))
-            filter_filt=""" AND (state LIKE "%%%s%%"
-                or pathpackage LIKE "%%%s%%"
-                or start LIKE "%%%s%%"
-                or login LIKE "%%%s%%"
-                or host LIKE "%%%s%%"
-                ) """( filt,filt,filt,filt,filt)
+            filter_filt=""" AND (state LIKE '%%%s%%'
+                or pathpackage LIKE '%%%s%%'
+                or start LIKE '%%%s%%'
+                or login LIKE '%%%s%%'
+                or host LIKE '%%%s%%'
+                ) """(filt,filt,filt,filt,filt)
 
 
         deploylog = deploylog.filter(
