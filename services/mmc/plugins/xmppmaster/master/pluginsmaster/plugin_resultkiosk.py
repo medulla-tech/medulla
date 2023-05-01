@@ -167,7 +167,6 @@ def deploypackage(data, message, xmppobject, sessionid):
         target = MscDatabase().xmpp_create_Target(uuidmachine, machine['hostname'])
 
     except Exception as e:
-        print str(e)
         traceback.print_exc(file=sys.stdout)
 
     idtarget = target['id']
