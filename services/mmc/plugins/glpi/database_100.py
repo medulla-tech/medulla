@@ -469,12 +469,12 @@ class Glpi100(DyngroupDatabaseHelper):
         mapper(Group, self.group)
 
         # collects
-	try:
+        try:
             self.collects = Table("glpi_plugin_fusioninventory_collects", self.metadata,
                 Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
                 autoload = True)
             mapper(Collects, self.collects)
-	except:
+        except:
             self.collects = Table("glpi_plugin_glpiinventory_collects", self.metadata,
                 Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
                 autoload = True)
