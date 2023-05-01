@@ -877,7 +877,7 @@ if __name__ == "__main__":
     logger = logging.getLogger()
     commandline=  " ".join(sys.argv)
     logger.debug("comand line %s"%commandline)
-    print ("comand line %s"% " ".join(sys.argv))
+    print("comand line %s"% " ".join(sys.argv))
 
     parametre_display = vars(opts).copy()
     parametre_display['password']="xxxxx"
@@ -885,67 +885,67 @@ if __name__ == "__main__":
     if opts.debugmode:
         logger.debug(parametre_dis)
     if opts.show_parametre:
-        print ("*************************************************************************************************************************")
-        print ("*********************************************** utility usage information ***********************************************")
-        print ("*************************************************************************************************************************")
+        print("*************************************************************************************************************************")
+        print("*********************************************** utility usage information ***********************************************")
+        print("*************************************************************************************************************************")
         print("your command line : %s" % commandline)
         print("Current or default option")
         print(parametre_dis)
         print("exemples")
-        print ("command information\n")
-        print ("\t1) affiche cette info option -i")
-        print ("\t\tpython3 ./%s -i\n" % os.path.basename(sys.argv[0]))
-        print ("\n\t2) test connection option -t")
-        print ("\t\tpython3 ./%s -t -uroot -P 3306 -Hlocalhost -p siveo\n" % os.path.basename(sys.argv[0]))
-        print ("\tPARAMETRE CONNECION CORRECT: CONNECT SUCCESS")
-        print ("\ttest connection format debug")
-        print ("\t\tpython3 ./%s -t -uroot -P 3306 -Hlocalhost -p siveo -d"% os.path.basename(sys.argv[0]))
+        print("command information\n")
+        print("\t1) affiche cette info option -i")
+        print("\t\tpython3 ./%s -i\n" % os.path.basename(sys.argv[0]))
+        print("\n\t2) test connection option -t")
+        print("\t\tpython3 ./%s -t -uroot -P 3306 -Hlocalhost -p siveo\n" % os.path.basename(sys.argv[0]))
+        print("\tPARAMETRE CONNECION CORRECT: CONNECT SUCCESS")
+        print("\ttest connection format debug")
+        print("\t\tpython3 ./%s -t -uroot -P 3306 -Hlocalhost -p siveo -d"% os.path.basename(sys.argv[0]))
         print("try Connecting with parameters\n" \
                     "\thost: localhost\n" \
                     "\tuser: root\n" \
                     "\tport: 3306\n" \
                     "\tdb: 3306\n")
-        print ("PARAMETRE CONNECION CORRECT: CONNECT SUCCESS\n")
-        print ("\n\t3) forces the complete creation of an update package and installs it in pkgs option -C")
-        print ("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -C" % os.path.basename(sys.argv[0]))
-        print ("\t\tIf the package exists it is completely recreated")
-        print ("\t\tIf the package is installed it reinstalls it")
-        print ("package c9240667-c3d9-4ba0-8a4e-e258473f7b73 is successfully installed\n")
+        print("PARAMETRE CONNECION CORRECT: CONNECT SUCCESS\n")
+        print("\n\t3) forces the complete creation of an update package and installs it in pkgs option -C")
+        print("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -C" % os.path.basename(sys.argv[0]))
+        print("\t\tIf the package exists it is completely recreated")
+        print("\t\tIf the package is installed it reinstalls it")
+        print("package c9240667-c3d9-4ba0-8a4e-e258473f7b73 is successfully installed\n")
 
-        print ("SELECT uuid FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
-        print ("+--------------------------------------+")
-        print ("| uuid                                 |")
-        print ("+--------------------------------------+")
-        print ("| c9240667-c3d9-4ba0-8a4e-e258473f7b73 |    <<--- package installer  ")
-        print ("+--------------------------------------+")
-        print ("ls -al  /var/lib/pulse2/packages/sharing/winupdates/")
-        print ("c9240667-c3d9-4ba0-8a4e-e258473f7b73")
+        print("SELECT uuid FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
+        print("+--------------------------------------+")
+        print("| uuid                                 |")
+        print("+--------------------------------------+")
+        print("| c9240667-c3d9-4ba0-8a4e-e258473f7b73 |    <<--- package installer  ")
+        print("+--------------------------------------+")
+        print("ls -al  /var/lib/pulse2/packages/sharing/winupdates/")
+        print("c9240667-c3d9-4ba0-8a4e-e258473f7b73")
 
-        print ("\n\t4 creation if no exist package and installs it in pkgs if is not installed option -c")
-        print ("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -c "%os.path.basename(sys.argv[0]))
-        print ("\t\tpackage exists c9240667-c3d9-4ba0-8a4e-e258473f7b73 already")
-        print ("\t\tpackage c9240667-c3d9-4ba0-8a4e-e258473f7b73 is installed in pkgs")
+        print("\n\t4 creation if no exist package and installs it in pkgs if is not installed option -c")
+        print("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -c "%os.path.basename(sys.argv[0]))
+        print("\t\tpackage exists c9240667-c3d9-4ba0-8a4e-e258473f7b73 already")
+        print("\t\tpackage c9240667-c3d9-4ba0-8a4e-e258473f7b73 is installed in pkgs")
 
-        print ("\n\t5 uninstall package option -s")
-        print ("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -s "%os.path.basename(sys.argv[0]))
-        print ("\t\tpackage move to base update : the package still exists")
-        print ("ls /var/lib/pulse2/base_update_package")
-        print ("c9240667-c3d9-4ba0-8a4e-e258473f7b73     <---the package still exists")
-        print ("ls  /var/lib/pulse2/packages/sharing/winupdates/    uninstall")
-        print ("uninstall pkgs")
-        print ("SELECT * FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
-        print ("Empty set (0.000 sec)  package uninstall in pkgs")
+        print("\n\t5 uninstall package option -s")
+        print("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -s "%os.path.basename(sys.argv[0]))
+        print("\t\tpackage move to base update : the package still exists")
+        print("ls /var/lib/pulse2/base_update_package")
+        print("c9240667-c3d9-4ba0-8a4e-e258473f7b73     <---the package still exists")
+        print("ls  /var/lib/pulse2/packages/sharing/winupdates/    uninstall")
+        print("uninstall pkgs")
+        print("SELECT * FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
+        print("Empty set (0.000 sec)  package uninstall in pkgs")
 
-        print ("\n\t6 complete uninstall package option -S")
-        print ("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -S "%os.path.basename(sys.argv[0]))
-        print ("\t\tRemove package")
-        print ("\t\tthe package no longer exists")
-        print ("ls /var/lib/pulse2/base_update_package    <---  the package no longer exists")
-        print ("ls  /var/lib/pulse2/packages/sharing/winupdates/    <---  the package no longer exists")
-        print ("uninstall pkgs")
-        print ("MariaDB [pkgs]> SELECT * FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
-        print ("Empty set (0.000 sec)  package uninstall in pkgs")
-        print ("*************************************************************************************************************************")
+        print("\n\t6 complete uninstall package option -S")
+        print("\t\tpython3 ./%s -uroot -P 3306 -Hlocalhost -p siveo -U c9240667-c3d9-4ba0-8a4e-e258473f7b73 -S "%os.path.basename(sys.argv[0]))
+        print("\t\tRemove package")
+        print("\t\tthe package no longer exists")
+        print("ls /var/lib/pulse2/base_update_package    <---  the package no longer exists")
+        print("ls  /var/lib/pulse2/packages/sharing/winupdates/    <---  the package no longer exists")
+        print("uninstall pkgs")
+        print("MariaDB [pkgs]> SELECT * FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';")
+        print("Empty set (0.000 sec)  package uninstall in pkgs")
+        print("*************************************************************************************************************************")
         sys.exit(1)
 
     if opts.partage == "":
@@ -1000,27 +1000,27 @@ if __name__ == "__main__":
     nbtrue=  len ([x for x in [ opts.forcecreatepackage,opts.createpackage,opts.forcedelpackage,opts.delpackage ] if x])
     valquit=0
     if nbtrue != 1:
-        print ( "at least 1 of the following options is required (sScC) -s or -S or -c or -C")
+        print( "at least 1 of the following options is required (sScC) -s or -S or -c or -C")
         valquit=1
 
 
     if opts.uidpackage == "":
-        print ( "you must have the -U option to specify the update uuid")
+        print( "you must have the -U option to specify the update uuid")
         logger.debug( "you must have the -U option to specify the update uuid")
         sys.exit(1)
 
     if len(opts.uidpackage) != 36 or uuid_validate( opts.uidpackage) == None:
-        print ( "uuid de l'option U n'est pas conforme")
+        print( "uuid de l'option U n'est pas conforme")
         #obligatoirement ce parametre avec 1 uuid valable pour option -u")
-        print (uuid_validate( opts.uidpackage))
+        print(uuid_validate( opts.uidpackage))
         valquit=1
 
     if opts.nametable == "":
-        print ( "l'option -T 'table produit' ne peut pas etre vide")
+        print( "l'option -T 'table produit' ne peut pas etre vide")
         valquit=1
 
     if  valquit:
-        print ( "at least 1 of the following options is required (sScC) -s or -S or -c or -C")
+        print( "at least 1 of the following options is required (sScC) -s or -S or -c or -C")
 
         sys.exit(1)
     try:
@@ -1048,8 +1048,8 @@ if __name__ == "__main__":
 
     except Exception as e:
         errorstr = "%s" % traceback.format_exc()
-        print ("ERROR CONNECTION")
-        print ("\n%s" % (errorstr))
+        print("ERROR CONNECTION")
+        print("\n%s" % (errorstr))
         logger.error("\n%s" % (errorstr))
         sys.exit(1)
     finally:

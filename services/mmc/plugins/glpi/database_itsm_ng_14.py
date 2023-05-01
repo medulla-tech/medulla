@@ -1504,7 +1504,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                             else:
                                 ret.append(partA.like(self.encode(partB)))
                         except Exception as e:
-                            print str(e)
+                            print(str(e))
                             traceback.print_exc(file=sys.stdout)
                             ret.append(partA.like(self.encode(partB)))
             if ctx.userid != 'root':
