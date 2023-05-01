@@ -393,7 +393,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     # decode result
                                     try:
                                         data = base64.b64decode(z.tag[1:-5])
-                                        # TODO : Replace print by log
                                         return data
                                     except Exception as e:
                                         logging.error("iqsendpulse : %s" % str(e))
@@ -525,7 +524,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         mem_usage = memory_usage(-1, interval=1, timeout=1)
         mesure = str(mem_usage[0]).replace(".",",")
         if mesure != self.mesure:
-            print "__________leak memory_________"
             taillepris = (mem_usage[0] - self.mesuref)
             self.mesuref = mem_usage[0]
             fichier = open(self.name_file_log_leak_memory, "a")
@@ -540,10 +538,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                                                     round((taillepris *1024 * 1024)/self.countseconde,2))
             fichier.write(stem)
             self.countseconde = 0
-            print stem
             fichier.close()
             self.mesure = mesure
-            print "______________________________"
     def sendwol(self, macadress, machine_hostname=""):
         listmacadress = macadress.split("||")
         for macadressdata in listmacadress:
@@ -2653,13 +2649,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                              " example {....sendother : \"autre@infos\"} jid is databpointer by data['autre']['infos']\n"
                                              " data is %s" % (json.dumps(data, indent=4)))
                                 break
-                        # print jidmachine
                         jidmachine = str(jidmachine)
                         if jidmachine != "":
                             self.send_message(mto=jidmachine,
                                               mbody=json.dumps(data),
                                               mtype='chat')
-                            #print "send %s" % json.dumps(data)
                     if not "sendemettor" in data['data']:
                         data['data']['sendemettor'] = True
                     if data['data']['sendemettor'] == True:
