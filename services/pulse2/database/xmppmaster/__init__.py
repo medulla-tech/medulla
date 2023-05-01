@@ -5184,7 +5184,7 @@ class XmppMasterDatabase(DatabaseHelper):
                             %s
                             group by title
                             ) as x;""" % (typedeploy,
-                                          preposition_sql_string)
+                                          preposition_sql_string))
 
         len_query = self.get_count(deploylog)
 
