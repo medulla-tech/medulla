@@ -9359,7 +9359,7 @@ class XmppMasterDatabase(DatabaseHelper):
             .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)\
             .outerjoin(Machines, Machines.hostname == RelayServer.nameserver)\
             .filter(RelayServer.moderelayserver == 'static')\
-            .filter(Machines.agenttype == 'relayserver')
+            .filter(Machines.agenttype == 'relayserver'))
 
         if presence == "nopresence":
             query = query.filter(RelayServer.enabled != 1)
