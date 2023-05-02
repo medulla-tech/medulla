@@ -50,6 +50,7 @@ if sys.platform.startswith("win"):
     import win32net
     import win32netcon
 
+
 #### debug decorator #########
 def minimum_runtime(t):
     """
@@ -136,7 +137,9 @@ def dump_parameter(para=True, out=True, timeprocess=True):
 ###########################################
 
 
-def file_get_contents(filename, use_include_path=0, context=None, offset=-1, maxlen=-1, bytes=False):
+def file_get_contents(
+    filename, use_include_path=0, context=None, offset=-1, maxlen=-1, bytes=False
+):
     """
     load content file or simple url
     """
@@ -1313,16 +1316,16 @@ class Converter:
         self.loads = False
 
         # Set the options
-        if 'bytes' in kwargs and type(kwargs['bytes']) is bool:
-            self.bytes = kwargs['bytes']
-        if 'compress' in kwargs and type(kwargs['compress']) is bool:
-            self.compressed = kwargs['compress']
+        if "bytes" in kwargs and type(kwargs["bytes"]) is bool:
+            self.bytes = kwargs["bytes"]
+        if "compress" in kwargs and type(kwargs["compress"]) is bool:
+            self.compressed = kwargs["compress"]
 
-        if 'loads' in kwargs and type(kwargs['loads']) is bool:
-            self.loads = kwargs['loads']
+        if "loads" in kwargs and type(kwargs["loads"]) is bool:
+            self.loads = kwargs["loads"]
 
-        if 'b64' in kwargs and type(kwargs['b64']) is bool:
-            is_base64 = kwargs['b64']
+        if "b64" in kwargs and type(kwargs["b64"]) is bool:
+            is_base64 = kwargs["b64"]
         else:
             # Determines in which way the conversion must be done
             is_base64 = Converter.is_base64(data)
@@ -1350,7 +1353,7 @@ class Converter:
             if self.bytes is False:
                 try:
                     tmp = Converter.bytes_to_str(self.transform)
-                    self.transform =  tmp
+                    self.transform = tmp
                 except:
                     pass
             if self.loads is True:
@@ -1381,7 +1384,7 @@ class Converter:
             obj = json.dumps(obj)
             return obj
         elif isinstance(obj, configparser.ConfigParser):
-            obj = obj.__dict__['_sections'].__repr__()
+            obj = obj.__dict__["_sections"].__repr__()
             return obj
         if isinstance(obj, io.IOBase):
             content = None
@@ -1412,7 +1415,7 @@ class Converter:
             A bytes field if success or False if failure
         """
         if type(string) is str:
-            string = bytes(string, 'utf-8')
+            string = bytes(string, "utf-8")
             return string
         else:
             return False
@@ -1515,7 +1518,7 @@ class Converter:
             - _bytes (default = False) : Specify if the result is bytes field or string
         Returns:
             base64 bytes field or str
-            """
+        """
         obj = Converter.obj_to_bytes(obj)
         if obj is False:
             return False
@@ -1644,7 +1647,7 @@ class Converter:
         return compressed
 
     def __str__(self):
-        """ Gives a printable representation of the self.transform value.
+        """Gives a printable representation of the self.transform value.
         If self.transform is a base 64, split every 76 chars to corresponds to rfc4648
 
         Returns:
@@ -1653,11 +1656,14 @@ class Converter:
         content = self.transform
         if Converter.is_base64(self.transform):
             if type(self.transform) is str:
-                return '\n'.join(self.transform[pos:pos+76] for pos in range(0, len(self.transform), 76))
+                return "\n".join(
+                    self.transform[pos : pos + 76]
+                    for pos in range(0, len(self.transform), 76)
+                )
             else:
-                return "%s"%self.transform
+                return "%s" % self.transform
         else:
-            return "%s"%self.transform
+            return "%s" % self.transform
 
     def __repr__(self):
         """Gives an official representation value for the transformed value
