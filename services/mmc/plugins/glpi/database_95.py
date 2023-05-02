@@ -5705,8 +5705,7 @@ class Glpi95(DyngroupDatabaseHelper):
             query = query.filter(and_(Machine.name.in_(values)))
 
         elif criterion == "Register key":
-            query = query.filter(and_(RegContents.value.in_(values)))
-            query = query.join(RegContents, RegContents.computers_id, Machine.id)
+            pass
 
         elif criterion == "Peripheral serial":
             query = query.filter(and_(Peripherals.serial.in_(values)))
@@ -5752,8 +5751,7 @@ class Glpi95(DyngroupDatabaseHelper):
             query = query.filter(and_(Machine.otherserial.in_(values)))
 
         elif criterion == "Register key value":
-            query = query.filter(and_(RegContents.value.in_(values)))
-            query = query.join(RegContents, RegContents.computers_id, Machine.id)
+            pass
 
         elif criterion == "System type":
             query = query.filter(self.glpi_computertypes.c.name.in_(values))
