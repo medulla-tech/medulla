@@ -149,7 +149,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 'glpi_domains', 'glpi_computermodels', 'glpi_networks'):
             setattr(self, i, Table(i, self.metadata, autoload = True))
             j = self.getTableName(i)
-            exec "class %s(DbTOA): pass" % j
+            exec("class %s(DbTOA): pass" % j)
             mapper(eval(j), getattr(self, i))
             self.klass[i] = eval(j)
 
@@ -165,7 +165,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         for i in self.devices:
             setattr(self, i, Table("glpi_%s"%i, self.metadata, autoload = True))
             j = self.getTableName(i)
-            exec "class %s(DbTOA): pass" % j
+            exec("class %s(DbTOA): pass" % j)
             mapper(eval(j), getattr(self, i))
             self.klass[i] = eval(j)
 
@@ -174,7 +174,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 Column('%s_id'%i, Integer, ForeignKey('glpi_%s.id'%i)),
                 autoload = True))
             j = self.getTableName("computers_%s"%i)
-            exec "class %s(DbTOA): pass" % j
+            exec("class %s(DbTOA): pass" % j)
             mapper(eval(j), getattr(self, "computers_%s"%i))
             self.klass["computers_%s"%i] = eval(j)
 
