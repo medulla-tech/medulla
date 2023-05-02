@@ -78,7 +78,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
         try:
             self._itsm_ng_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "itsmversion"').fetchone().values()[0].replace(' ', '')
-        except OperationalError, AttributeError:
+        except (OperationalError, AttributeError):
 	        return False
 
         if LooseVersion(self._itsm_ng_version) >=  LooseVersion("1.4") and LooseVersion(self._itsm_ng_version) <=  LooseVersion("1.4.99"):
@@ -4986,9 +4986,9 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             .filter(self.rules.c.sub_type=='PluginFusioninventoryInventoryRuleEntity')\
             .filter(self.rules.c.name != 'Root')\
             .scalar()
-	if rank is None:
-	    rank = 0
-	rule.ranking = rank + 1
+        if rank is None:
+            rank = 0
+        rule.ranking = rank + 1
         rule.name = rule_data['name']
         rule.description = rule_data['description']
         rule.match = rule_data['aggregator']
