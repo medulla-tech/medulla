@@ -10,7 +10,7 @@ imaging plugin
 """
 import logging
 from twisted.internet import defer
-import time, ipaddr
+import time
 import traceback
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI  # , ContextMakerI, SecurityContext
