@@ -10,7 +10,7 @@ XML-RPC server implementation of the MMC agent.
 from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
 import signal
 import multiprocessing as mp
-from inspect import getargspec
+from inspect import getfullargspec
 
 import twisted.internet.error
 import twisted.copyright
@@ -906,7 +906,7 @@ class MmcServer(XMLRPC, object):
         if method is None:
             return []
         else:
-            return getargspec(method)[0]
+            return getfullargspec(method)[0]
 
     def methodHelp(self, name):
         method = self.__getClassMethod(name)
