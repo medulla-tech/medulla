@@ -1056,7 +1056,6 @@ class MMCApp(object):
                 # exit first parent and return
                 sys.exit(self.state)
         except OSError as e:
-            print("fork #1 failed: %d (%s)" % (e.errno, e.strerror), file=sys.stderr)
             sys.exit(1)
 
         # decouple from parent environment
