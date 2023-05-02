@@ -28,8 +28,8 @@ import time
 from datetime import datetime
 import imp
 import requests
-from Crypto import Random
-from Crypto.Cipher import AES
+from Cryptodome import Random
+from Cryptodome.Cipher import AES
 import urllib.request, urllib.error, urllib.parse
 import tarfile
 import zipfile
