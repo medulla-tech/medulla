@@ -349,7 +349,7 @@ logger = logging.getLogger()
 
 sys.path.append("plugins")
 
-Fault = xmlrpclib.Fault
+Fault = xmlrpc.client.Fault
 ctx = None
 VERSION = "5.0.0"
 
