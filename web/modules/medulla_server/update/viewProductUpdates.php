@@ -26,7 +26,7 @@ print "<h1>"._T('Available updates','update')."</h1>";
 
 require_once("includes/xmlrpc.inc.php");
 //require_once("modules/update/includes/xmlrpc.inc.php");
-require_once("modules/pulse2/includes/xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 $updates = getProductUpdates();
 $update_titles = array();
 

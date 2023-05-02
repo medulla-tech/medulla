@@ -22,8 +22,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/pulse2/includes/xmlrpc.inc.php");
-require_once("modules/pulse2/includes/utilities.php");
+require("modules/medulla_server/includes/xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 function select_locations($selected, $name = 'locations') {
     $sel = new SelectItem($name);

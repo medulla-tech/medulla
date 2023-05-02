@@ -1,2 +1,2 @@
-usr/lib/python3/*-packages/mmc/plugins/pulse2
-etc/mmc/plugins/pulse2.ini
+usr/lib/python3/*-packages/mmc/plugins/medulla_server
+etc/mmc/plugins/medulla_server.ini

@@ -23,28 +23,28 @@
  */
 
 function getUserLocations() {
-    if (!isset($_SESSION["pulse2.getUserLocations"])) {
-        $locations = xmlCall("pulse2.getUserLocations");
+    if (!isset($_SESSION["medulla_server.getUserLocations"])) {
+        $locations = xmlCall("medulla_server.getUserLocations");
         $ret = array();
         foreach($locations as $loc) {
             if (isset($loc["isrootentity"])) {
-                $loc["altname"] =  _T("Root entity", "pulse2");
+                $loc["altname"] =  _T("Root entity", "medulla_server");
             } else if (isset($loc["level"])) {
                 $loc["altname"] = str_repeat("&nbsp;", 2 * ($loc["level"] - 1)) . $loc["name"];
             }
             $ret[] = $loc;
         }
-        $_SESSION["pulse2.getUserLocations"] = $ret;
+        $_SESSION["medulla_server.getUserLocations"] = $ret;
     }
-    return $_SESSION["pulse2.getUserLocations"];
+    return $_SESSION["medulla_server.getUserLocations"];
 }
 
 function xmlrpc_getLocationParentPath($uuid) {
-    return xmlCall("pulse2.getLocationParentPath", array($uuid));
+    return xmlCall("medulla_server.getLocationParentPath", array($uuid));
 }
 
 function xmlrpc_getLocationName($uuid) {
-    return xmlCall("pulse2.getLocationName", array($uuid));
+    return xmlCall("medulla_server.getLocationName", array($uuid));
 }
 
 ?>

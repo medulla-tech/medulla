@@ -29,7 +29,7 @@ pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
 	plugins.inventory plugins.inventory.report plugins.inventory.provisioning_plugins \
 	plugins.inventory.provisioning_plugins.network_to_entity \
 	plugins.inventory.querymanager plugins.msc plugins.msc.client \
-	plugins.pkgs plugins.backuppc plugins.backuppc.report plugins.pulse2 \
+	plugins.pkgs plugins.backuppc plugins.backuppc.report plugins.medulla_server \
 	plugins.support plugins.kiosk plugins.admin plugins.updates plugins.urbackup\
 	plugins.xmppmaster plugins.xmppmaster.master plugins.xmppmaster.master.lib \
 	plugins.xmppmaster.master.pluginsmaster plugins.xmppmaster.master.script \

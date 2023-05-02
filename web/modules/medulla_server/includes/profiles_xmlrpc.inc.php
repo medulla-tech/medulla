@@ -1,7 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com/
+ * (c) 2007-2010 Mandriva, http://www.mandriva.com/
  *
  * $Id$
  *
@@ -22,20 +22,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function isdyn_group($gid) {
-    return xmlCall("pulse2.isdyn_group", array($gid));
+
+function xmlrpc_isImagingInProfilePossible() {
+    return xmlCall("medulla_server.isImagingInProfilePossible");
 }
 
-function isrequest_group($gid) {
-    return xmlCall("pulse2.isrequest_group", array($gid));
+function __get_and_store($prefix, $option, $function) {
+    if (!isset($_SESSION[$prefix.".".$option])) {
+        $_SESSION[$prefix.".".$option] = xmlCall($prefix.".".$function);
+    }
+    return $_SESSION["medulla_server.".$option];
 }
 
-function requestresult_group($gid, $min, $max, $filter) {
-    return xmlCall("pulse2.requestresult_group", array($gid, $min, $max, $filter));
+function areProfilesPossible() {
+    return __get_and_store("medulla_server", "areProfilesPossible", "areProfilesPossible");
 }
 
-function result_group($gid, $min, $max, $filter) {
-    return xmlCall("pulse2.result_group", array($gid, $min, $max, $filter));
+function xmlrpc_getAllImagingServersForProfiles($is_associated = false) {
+    return xmlCall("medulla_server.getAllImagingServersForProfiles", array($is_associated));
 }
 
 ?>

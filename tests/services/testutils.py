@@ -163,7 +163,7 @@ def generation_Machine(driver, host, port):
 def generation_Commands(driver, host, port):
 
     # Read config from ini file
-    inifile = path.join(mmcconfdir, "plugins", "pulse2.ini")
+    inifile = path.join(mmcconfdir, "plugins", "medulla_server.ini")
     config = DatabaseConfig()
     config.setup(inifile)
 

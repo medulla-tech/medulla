@@ -1,7 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2007-2008 Mandriva, http://www.mandriva.com/
  *
  * $Id$
  *
@@ -22,19 +22,20 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+function isdyn_group($gid) {
+    return xmlCall("medulla_server.isdyn_group", array($gid));
+}
 
-// Prevent any error message to corrupt this output
-ob_clean();
-//print rand(10,5000);
-$command = "bash -c \"ps aux|grep 'pulse-update-manager'|grep -v 'grep'\"";
-//$return = 0;
+function isrequest_group($gid) {
+    return xmlCall("medulla_server.isrequest_group", array($gid));
+}
 
-exec($command, $output, $return);
+function requestresult_group($gid, $min, $max, $filter) {
+    return xmlCall("medulla_server.requestresult_group", array($gid, $min, $max, $filter));
+}
 
-if ($return != 0)
-    print '<script type="text/javascript">window.location.href=\'index.php\'</script>';
-else
-    print '<img src="modules/pulse2/graph/loader.gif" alt="" />';
+function result_group($gid, $min, $max, $filter) {
+    return xmlCall("medulla_server.result_group", array($gid, $min, $max, $filter));
+}
 
-die();
 ?>

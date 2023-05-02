@@ -638,7 +638,7 @@ class PluginsInventoryConfig(Pulse2ConfigFile):
 
 
 class PluginsPulse2Config(Pulse2ConfigFile):
-    path = 'plugins/pulse2.ini'
+    path = 'plugins/medulla_server.ini'
 
 
 class PluginsMscConfig(Pulse2ConfigFile):
@@ -708,7 +708,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'urbackup', 'update', 'kiosk', 'pkgs', 'xmppmaster', 'admin', 'updates']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'medulla_server', 'urbackup', 'update', 'kiosk', 'pkgs', 'xmppmaster', 'admin', 'updates']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -783,7 +783,7 @@ class SetupApp(object):
 
         Note 1: db admin credentials are not stored in any file, except host.
         Note 2: current version does not support diffenriated db host or credentials. All
-          db must be on the same host. Default value are taken from plugins/pulse2.ini file.
+          db must be on the same host. Default value are taken from plugins/medulla_server.ini file.
         """
         self.defaults['inventory.service.enable'] = self.options["server_inventory"]
         self.defaults['package.service.enable'] = self.options["server_package"]
@@ -796,18 +796,18 @@ class SetupApp(object):
         self.defaults['ldappasswd'] = self.options['ldappasswd'] or self.confs['plugins/base.ini'].get('ldap', 'password')
         self.defaults['defaultUserGroup'] = self.confs['plugins/base.ini'].get('ldap', 'defaultUserGroup')
 
-        self.defaults['dbhost'] = self.options['dbhost'] or self.confs['plugins/pulse2.ini'].get('database', 'dbhost')
-        self.defaults['dbport'] = self.options['dbport'] or self.confs['plugins/pulse2.ini'].get('database', 'dbport')
+        self.defaults['dbhost'] = self.options['dbhost'] or self.confs['plugins/medulla_server.ini'].get('database', 'dbhost')
+        self.defaults['dbport'] = self.options['dbport'] or self.confs['plugins/medulla_server.ini'].get('database', 'dbport')
         self.defaults['dbadminuser'] = self.options['dbadminuser'] or 'root'
         self.defaults['dbadminpasswd'] = self.options['dbadminpasswd'] or ''
 
-        self.defaults['dbuser'] = self.confs['plugins/pulse2.ini'].get('database', 'dbuser')
-        passwd = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
+        self.defaults['dbuser'] = self.confs['plugins/medulla_server.ini'].get('database', 'dbuser')
+        passwd = self.confs['plugins/medulla_server.ini'].get('database', 'dbpasswd')
         if passwd == 'mmc':
             # If passwd in config file is the default (weak) one, prefer generating a random one
             self.defaults['dbpasswd'] = gen_passwd()
         else:
-            self.defaults['dbpasswd'] = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
+            self.defaults['dbpasswd'] = self.confs['plugins/medulla_server.ini'].get('database', 'dbpasswd')
 
         self.defaults['glpiurl'] = self.options["glpi_url"] or "http://127.0.0.1"
         self.defaults['glpidbuser'] = self.options["glpi_dbuser"]
@@ -1080,11 +1080,11 @@ class SetupApp(object):
         self.confs['pulse2/scheduler/scheduler.ini']\
             .set('database', 'dbpasswd', self.config['dbpasswd'])
 
-        # pulse2
-        self.confs['plugins/pulse2.ini'].set('database', 'dbhost', self.config['dbhost'])
-        self.confs['plugins/pulse2.ini'].set('database', 'dbport', self.config['dbport'])
-        self.confs['plugins/pulse2.ini'].set('database', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/pulse2.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+        # medulla_server
+        self.confs['plugins/medulla_server.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/medulla_server.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/medulla_server.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/medulla_server.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # kiosk
         self.confs['plugins/kiosk.ini'].set('database', 'dbhost', self.config['dbhost'])

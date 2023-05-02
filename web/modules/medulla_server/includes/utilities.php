@@ -22,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 
 function quickGet($name, $p_first = false, $urldecode = True) {
     if ($p_first) {
@@ -63,9 +63,9 @@ function right_top_shortcuts_display() {
         (isset($_GET['uuid']) and $_GET['uuid'] != "") or
         (isset($_GET['action']) and in_array($_GET['action'], array('BrowseFiles', 'BrowseShareNames', 'hostStatus')))
     ) { // Computers
-        include_once('modules/pulse2/includes/menu_action.php');
+        include_once('modules/medulla_server/includes/menu_action.php');
     } elseif (isset($_GET['gid'])) { // Groups
-        include_once('modules/pulse2/includes/menu_group_action.php');
+        include_once('modules/medulla_server/includes/menu_group_action.php');
     }
 }
 
@@ -84,7 +84,7 @@ function getEntitiesSelectableElements($AllEntitiesValue = False) {
 
     if ($AllEntitiesValue) {
         if (count($locations) > 1) {
-            $list['Pulse2ALL'] = _T('All my entities', 'pulse2');
+            $list['Pulse2ALL'] = _T('All my entities', 'medulla_server');
             $values['Pulse2ALL'] = '';
         }
     }

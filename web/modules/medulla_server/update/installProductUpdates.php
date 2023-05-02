@@ -1,7 +1,8 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2010 Mandriva, http://www.mandriva.com/
+ * (c) 2007-2013 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -21,25 +22,32 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+?>
+<?php
+//ici jfk
 
 
-function xmlrpc_isImagingInProfilePossible() {
-    return xmlCall("pulse2.isImagingInProfilePossible");
-}
+require_once("modules/medulla_server/includes/xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/html.inc.php");
+require_once("graph/navbar.inc.php");
 
-function __get_and_store($prefix, $option, $function) {
-    if (!isset($_SESSION[$prefix.".".$option])) {
-        $_SESSION[$prefix.".".$option] = xmlCall($prefix.".".$function);
-    }
-    return $_SESSION["pulse2.".$option];
-}
 
-function areProfilesPossible() {
-    return __get_and_store("pulse2", "areProfilesPossible", "areProfilesPossible");
-}
+installProductUpdates();
 
-function xmlrpc_getAllImagingServersForProfiles($is_associated = false) {
-    return xmlCall("pulse2.getAllImagingServersForProfiles", array($is_associated));
-}
+// ============================================================
+
+$MMCApp = & MMCApp::getInstance();
+
+$p = new PageGenerator(_T("Installing updates ...", 'update'));
+$p->display();
 
 ?>
+<div id="update_status"></div>
+<script type="text/javascript">
+    var update_status = function(){
+	jQuery('#update_status').load('<?php print urlStrRedirect("medulla_server/update/ajaxInstallProductUpdates"); ?>');
+	setTimeout(update_status, 500);
+    };
+    update_status();
+
+</script>

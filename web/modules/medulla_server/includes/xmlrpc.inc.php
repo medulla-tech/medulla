@@ -24,21 +24,21 @@
 
 function displayLocalisationBar() {
     if (!isset($_SESSION["displayLocalisationBar"])) {
-        $_SESSION["displayLocalisationBar"] = xmlCall("pulse2.displayLocalisationBar");
+        $_SESSION["displayLocalisationBar"] = xmlCall("medulla_server.displayLocalisationBar");
     }
     return $_SESSION["displayLocalisationBar"];
 }
 
 
 function getProductUpdates(){
-    return xmlCall("pulse2.getProductUpdates", array());
+    return xmlCall("medulla_server.getProductUpdates", array());
 }
 
 function installProductUpdates(){
-    return xmlCall("pulse2.installProductUpdates", array());
+    return xmlCall("medulla_server.installProductUpdates", array());
 }
 
-function xmlrpc_setfrompulse2logxmpp(   $text,
+function xmlrpc_setfrommedulla_serverlogxmpp(   $text,
                                             $type = "infouser",
                                             $sessionname = '' ,
                                             $priority = 0,
@@ -48,7 +48,7 @@ function xmlrpc_setfrompulse2logxmpp(   $text,
                                             $action = '',
                                             $touser =  '',
                                             $fromuser = "",
-                                            $module = 'pulse2'){
+                                            $module = 'medulla_server'){
     return xmlCall("xmppmaster.setlogxmpp", array(  $text,
                                                     $type ,
                                                     $sessionname,

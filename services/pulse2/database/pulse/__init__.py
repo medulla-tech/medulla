@@ -33,7 +33,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
 
     def db_check(self):
         self.my_name = "pulse2"
-        self.configfile = "pulse2.ini"
+        self.configfile = "medulla_server.ini"
         return DyngroupDatabaseHelper.db_check(self)
 
     def activate(self, config):

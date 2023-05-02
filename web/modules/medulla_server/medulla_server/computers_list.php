@@ -25,8 +25,8 @@
  *
  * File : computers_list.php
  */
-require("modules/pulse2/includes/xmlrpc.inc.php");
-require_once("modules/pulse2/includes/utilities.php");
+require("modules/medulla_server/includes/xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 $param = array();
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )

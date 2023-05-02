@@ -26,12 +26,12 @@
 /**
  * module declaration
  */
-require_once("modules/pulse2/version.php");
+require_once("modules/medulla_server/version.php");
 
-$mod = new Module("pulse2");
+$mod = new Module("medulla_server");
 $mod->setVersion(VERSION);
 $mod->setRevision(REVISION);
-$mod->setDescription(_T("Pulse2", "pulse2"));
+$mod->setDescription(_T("Medulla", "pulse2"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(700);
 
@@ -44,12 +44,12 @@ $submod = & $base->getSubmod('computers');
 
 $page = new Page("computers_list", _T("Computers list", "pulse2"));
 $page->setOptions(array("visible"=>False));
-$page->setFile("modules/pulse2/pulse2/computers_list.php");
+$page->setFile("modules/medulla_server/medulla_server/computers_list.php");
 $submod->addPage($page);
 
 $page = new Page("select_location", _T("Location selection in computer edit", "pulse2"));
 $page->setOptions(array("visible"=>False));
-$page->setFile("modules/pulse2/includes/select_location.php");
+$page->setFile("modules/medulla_server/includes/select_location.php");
 $submod->addPage($page);
 
 unset($submod);
@@ -64,13 +64,13 @@ $submod->setVisibility(False);
 
 
 $page = new Page("viewProductUpdates", _T("viewProductUpdates", "pulse2"));
-$page->setFile("modules/pulse2/update/viewProductUpdates.php");
+$page->setFile("modules/medulla_server/update/viewProductUpdates.php");
  $page->setOptions(array("visible" => False, "noHeader" => True));
 //$page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
 $page = new Page("installProductUpdates",_T('install Product Updates', 'pulse2'));
-$page->setFile("modules/pulse2/update/installProductUpdates.php");
+$page->setFile("modules/medulla_server/update/installProductUpdates.php");
 // $page->setOptions(array("visible" => True, "noHeader" => False));
 $submod->addPage($page);
 

@@ -634,8 +634,8 @@ Provides:   python-mmc-pulse2 = %version-%release
 This package will install all the Pulse 2 MMC agent interface plugins
 
 %files -n python3-mmc-pulse2
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/pulse2.ini
-%python3_sitelib/mmc/plugins/pulse2
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/medulla_server.ini
+%python3_sitelib/mmc/plugins/medulla_server
 
 #--------------------------------------------------------------------
 
@@ -650,7 +650,7 @@ Requires:       mmc-web-imaging
 This package contains the base plugin for the MMC web interface.
 
 %files -n mmc-web-pulse2
-%{_datadir}/mmc/modules/pulse2
+%{_datadir}/mmc/modules/medulla_server
 
 #--------------------------------------------------------------------
 

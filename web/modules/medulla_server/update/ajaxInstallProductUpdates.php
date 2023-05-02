@@ -1,8 +1,7 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2013 Mandriva, http://www.mandriva.com
+ * (c) 2007-2008 Mandriva, http://www.mandriva.com
  *
  * $Id$
  *
@@ -22,32 +21,20 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
+
+// Prevent any error message to corrupt this output
+ob_clean();
+//print rand(10,5000);
+$command = "bash -c \"ps aux|grep 'pulse-update-manager'|grep -v 'grep'\"";
+//$return = 0;
+
+exec($command, $output, $return);
+
+if ($return != 0)
+    print '<script type="text/javascript">window.location.href=\'index.php\'</script>';
+else
+    print '<img src="modules/medulla_server/graph/loader.gif" alt="" />';
+
+die();
 ?>
-<?php
-//ici jfk
-
-
-require_once("modules/pulse2/includes/xmlrpc.inc.php");
-require_once("modules/pulse2/includes/html.inc.php");
-require_once("graph/navbar.inc.php");
-
-
-installProductUpdates();
-
-// ============================================================
-
-$MMCApp = & MMCApp::getInstance();
-
-$p = new PageGenerator(_T("Installing updates ...", 'update'));
-$p->display();
-
-?>
-<div id="update_status"></div>
-<script type="text/javascript">
-    var update_status = function(){
-	jQuery('#update_status').load('<?php print urlStrRedirect("pulse2/update/ajaxInstallProductUpdates"); ?>');
-	setTimeout(update_status, 500);
-    };
-    update_status();
-
-</script>
