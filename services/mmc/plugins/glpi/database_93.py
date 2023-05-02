@@ -5052,9 +5052,9 @@ class Glpi93(DyngroupDatabaseHelper):
             .filter(self.rules.c.sub_type=='PluginFusioninventoryInventoryRuleEntity')\
             .filter(self.rules.c.name != 'Root')\
             .scalar()
-	if rank is None:
-	    rank = 0
-	rule.ranking = rank + 1
+        if rank is None:
+            rank = 0
+        rule.ranking = rank + 1
         rule.name = rule_data['name']
         rule.description = rule_data['description']
         rule.match = rule_data['aggregator']
