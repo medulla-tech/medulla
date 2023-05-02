@@ -101,20 +101,17 @@ class Glpi92(DyngroupDatabaseHelper):
         logging.getLogger().debug("Trying to detect if GLPI version is higher than 9.2")
 
         try:
-            versionresult = (
-                list(self.db.execute("SELECT version FROM glpi_configs").fetchone().values())
+            versionresult = list(
+                self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
             )
-            self._glpi_version = str(versionresult[0]).replace(
-                " ", ""
-            )
+            self._glpi_version = str(versionresult[0]).replace(" ", "")
         except OperationalError:
-            versionresult = (
-                list(self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
-                .fetchone().values())
+            versionresult = list(
+                self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
+                .fetchone()
+                .values()
             )
-            self._glpi_version = str(versionresult[0]).replace(
-                " ", ""
-            )
+            self._glpi_version = str(versionresult[0]).replace(" ", "")
         except Exception as e:
             logging.getLogger().error("We are searching for GLPI 9.2.")
             return False
@@ -162,20 +159,17 @@ class Glpi92(DyngroupDatabaseHelper):
             setattr(Glpi92, "encode", encode_latin1)
 
         try:
-            versionresult = (
-                list(self.db.execute("SELECT version FROM glpi_configs").fetchone().values())
+            versionresult = list(
+                self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
             )
-            self._glpi_version = str(versionresult[0]).replace(
-                " ", ""
-            )
+            self._glpi_version = str(versionresult[0]).replace(" ", "")
         except OperationalError:
-            versionresult = (
-                list(self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
-                .fetchone().values())
+            versionresult = list(
+                self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
+                .fetchone()
+                .values()
             )
-            self._glpi_version = str(versionresult[0]).replace(
-                " ", ""
-            )
+            self._glpi_version = str(versionresult[0]).replace(" ", "")
         except Exception as e:
             ilogging.getLogger().error("We are searching for GLPI 9.2.")
             return False
@@ -6151,7 +6145,6 @@ class Glpi92(DyngroupDatabaseHelper):
         # Adding rule criteria
 
         for i in range(len(rule_data["criteria"])):
-
             cr = RuleCriterion()
             cr.rules_id = rule.id
             cr.criteria = rule_data["criteria"][i]
@@ -6208,7 +6201,6 @@ class Glpi92(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def moveEntityRuleUp(self, session, id):
-
         rule = session.query(Rule).filter_by(id=id).one()
         # get previous rule
         previous = (
@@ -6232,7 +6224,6 @@ class Glpi92(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def moveEntityRuleDown(self, session, id):
-
         rule = session.query(Rule).filter_by(id=id).one()
         # get next rule
         next_ = (
@@ -6256,7 +6247,6 @@ class Glpi92(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def editEntityRule(self, session, id, rule_data):
-
         rule = session.query(Rule).filter_by(id=id).one()
         # Delete associated criteria and actions
         session.query(RuleCriterion).filter_by(rules_id=id).delete()
@@ -6276,7 +6266,6 @@ class Glpi92(DyngroupDatabaseHelper):
         # Adding rule criteria
 
         for i in range(len(rule_data["criteria"])):
-
             cr = RuleCriterion()
             cr.rules_id = rule.id
             cr.criteria = rule_data["criteria"][i]
@@ -6312,7 +6301,6 @@ class Glpi92(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getEntityRule(self, session, id):
-
         rule = session.query(Rule).filter_by(id=id).one()
         criteria = session.query(RuleCriterion).filter_by(rules_id=id).all()
         actions = session.query(RuleAction).filter_by(rules_id=id).all()
@@ -6346,7 +6334,6 @@ class Glpi92(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def deleteEntityRule(self, session, id):
-
         # Delete rule
         session.query(Rule).filter_by(id=id).delete()
         # Delete associated criteria and actions
@@ -6379,7 +6366,6 @@ class Glpi92(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def setLocationsForUser(self, session, username, profiles):
-
         user_id = session.query(User).filter_by(name=username).one().id
         # Delete all user entity profiles
         session.query(UserProfile).filter_by(users_id=user_id).delete()
@@ -6625,7 +6611,10 @@ ON
 ORDER BY
  glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
         res = self.db.execute(sql)
-        result = [{"os": os.decode("utf-8"), "version": version.decode("utf-8"), "count": 1} for os, version in res]
+        result = [
+            {"os": os.decode("utf-8"), "version": version.decode("utf-8"), "count": 1}
+            for os, version in res
+        ]
 
         def _add_element(element, list):
             """Private function which merge the element to the specified list.
@@ -6775,10 +6764,9 @@ ORDER BY
         result.append(entity)
         return result
 
-
     @DatabaseHelper._sessionm
     def get_machine_with_update(self, session, kb):
-        sqlrequest ="""
+        sqlrequest = """
             SELECT 
                 glpi.glpi_computers.id AS uuid_inventory,
                 glpi.glpi_computers.name AS hostname,
@@ -6797,24 +6785,26 @@ ORDER BY
                     INNER JOIN
                 glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
             WHERE
-                glpi.glpi_softwares.name LIKE 'Update (KB%s)';"""%(kb)
-        uuid_inventory=[]
-        hostname=[]
-        entity=[]
-        kb=[]
-        numkb=[]
-        dateinstall=[]
-        input_computer=[]
+                glpi.glpi_softwares.name LIKE 'Update (KB%s)';""" % (
+            kb
+        )
+        uuid_inventory = []
+        hostname = []
+        entity = []
+        kb = []
+        numkb = []
+        dateinstall = []
+        input_computer = []
         result = []
         res = self.db.execute(sqlrequest)
         for element in res:
-            uuid_inventory.append( element.uuid_inventory )
-            hostname.append( element.hostname )
-            entity.append( element.entity )
-            kb.append( element.kb )
-            numkb.append( element.numkb )
-            dateinstall.append( element.dateinstall )
-            input_computer.append( element.input_computer )
+            uuid_inventory.append(element.uuid_inventory)
+            hostname.append(element.hostname)
+            entity.append(element.entity)
+            kb.append(element.kb)
+            numkb.append(element.numkb)
+            dateinstall.append(element.dateinstall)
+            input_computer.append(element.input_computer)
         result.append(uuid_inventory)
         result.append(hostname)
         result.append(entity)
@@ -6823,7 +6813,6 @@ ORDER BY
         result.append(dateinstall)
         result.append(input_computer)
         return result
-
 
     @DatabaseHelper._sessionm
     def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
@@ -6898,7 +6887,6 @@ ORDER BY
         result1 = {"total": nb, "listelet": result}
 
         return result1
-
 
     @DatabaseHelper._sessionm
     def get_ancestors(self, session, uuid):
