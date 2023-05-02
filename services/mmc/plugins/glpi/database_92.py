@@ -102,16 +102,15 @@ class Glpi92(DyngroupDatabaseHelper):
 
         try:
             versionresult = (
-                self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
+                list(self.db.execute("SELECT version FROM glpi_configs").fetchone().values())
             )
             self._glpi_version = str(versionresult[0]).replace(
                 " ", ""
             )
         except OperationalError:
             versionresult = (
-                self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
-                .fetchone()
-                .values()
+                list(self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
+                .fetchone().values())
             )
             self._glpi_version = str(versionresult[0]).replace(
                 " ", ""
@@ -164,16 +163,15 @@ class Glpi92(DyngroupDatabaseHelper):
 
         try:
             versionresult = (
-                self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
+                list(self.db.execute("SELECT version FROM glpi_configs").fetchone().values())
             )
             self._glpi_version = str(versionresult[0]).replace(
                 " ", ""
             )
         except OperationalError:
             versionresult = (
-                self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
-                .fetchone()
-                .values()
+                list(self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
+                .fetchone().values())
             )
             self._glpi_version = str(versionresult[0]).replace(
                 " ", ""
@@ -1959,7 +1957,7 @@ class Glpi92(DyngroupDatabaseHelper):
                             else:
                                 ret.append(partA.like(self.encode(partB)))
                         except Exception as e:
-                            print(str(e))
+                            print((str(e)))
                             traceback.print_exc(file=sys.stdout)
                             ret.append(partA.like(self.encode(partB)))
             if ctx.userid != "root":

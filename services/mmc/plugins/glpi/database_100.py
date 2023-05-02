@@ -11,12 +11,11 @@ version 10.0
 import os
 import logging
 import re
-from sets import Set
 import datetime
 import calendar, hashlib
 import time
 from configobj import ConfigObj
-from xmlrpclib import ProtocolError
+from xmlrpc.client import ProtocolError
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, Date, ForeignKey, asc, or_, not_, desc, func, distinct
@@ -77,9 +76,9 @@ class Glpi100(DyngroupDatabaseHelper):
         logging.getLogger().debug('Trying to detect if GLPI version is higher than 10.0')
 
         try:
-            self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
+            self._glpi_version = list(self.db.execute('SELECT version FROM glpi_configs').fetchone().values())[0].replace(' ', '')
         except OperationalError:
-            self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
+            self._glpi_version = list(self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values())[0].replace(' ', '')
 
         if LooseVersion(self._glpi_version) >=  LooseVersion("10.0") and LooseVersion(self._glpi_version) <=  LooseVersion("10.0.9"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
@@ -109,7 +108,7 @@ class Glpi100(DyngroupDatabaseHelper):
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         try:
-            self.db.execute(u'SELECT "\xe9"')
+            self.db.execute('SELECT "\xe9"')
             setattr(Glpi100, "decode", decode_utf8)
             setattr(Glpi100, "encode", encode_utf8)
         except:
@@ -118,9 +117,9 @@ class Glpi100(DyngroupDatabaseHelper):
             setattr(Glpi100, "encode", encode_latin1)
 
         try:
-            self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
+            self._glpi_version = list(self.db.execute('SELECT version FROM glpi_configs').fetchone().values())[0].replace(' ', '')
         except OperationalError:
-            self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
+            self._glpi_version = list(self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values())[0].replace(' ', '')
 
         self.metadata = MetaData(self.db)
         self.initMappers()
@@ -135,7 +134,7 @@ class Glpi100(DyngroupDatabaseHelper):
         return True
 
     def getTableName(self, name):
-        return ''.join(map(lambda x:x.capitalize(), name.split('_')))
+        return ''.join([x.capitalize() for x in name.split('_')])
 
     def initMappers(self):
         """
@@ -569,7 +568,7 @@ class Glpi100(DyngroupDatabaseHelper):
     def __filter_on_filter(self, query):
         if self.config.filter_on != None:
             a_filter_on = []
-            for filter_key, filter_values in self.config.filter_on.items():
+            for filter_key, filter_values in list(self.config.filter_on.items()):
                 if filter_key == 'state':
                     self.logger.debug('will filter %s in (%s)' % (filter_key, str(filter_values)))
                     a_filter_on.append(self.machine.c.states_id.in_(filter_values))
@@ -656,7 +655,7 @@ class Glpi100(DyngroupDatabaseHelper):
         master_config = xmppMasterConfig()
         reg_columns = []
         r=re.compile(r'reg_key_.*')
-        regs=filter(r.search, self.config.summary)
+        regs=list(filter(r.search, self.config.summary))
         for regkey in regs:
             regkeyconf = getattr( master_config, regkey).split("|")[0].split("\\")[-1]
             #logging.getLogger().error(regkeyconf)
@@ -857,7 +856,7 @@ class Glpi100(DyngroupDatabaseHelper):
         end = int(end)
         master_config = xmppMasterConfig()
         r = re.compile(r'reg_key_.*')
-        regs = filter(r.search, self.config.summary)
+        regs = list(filter(r.search, self.config.summary))
         list_reg_columns_name = [getattr(master_config, regkey).split("|")[0].split("\\")[-1] \
                                  for regkey in regs]
         uuidsetup = ctx['uuidsetup'] if "uuidsetup" in ctx else ""
@@ -1126,7 +1125,7 @@ class Glpi100(DyngroupDatabaseHelper):
             # filtering on locations
             if 'location' in filt:
                 location = filt['location']
-                if location == '' or location == u'' or not self.displayLocalisationBar:
+                if location == '' or location == '' or not self.displayLocalisationBar:
                     location = None
             else:
                 location = None
@@ -1170,7 +1169,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
             if displayList:
                 r=re.compile('reg_key_.*')
-                regs=filter(r.search, self.config.summary)
+                regs=list(filter(r.search, self.config.summary))
                 if 'os' in self.config.summary:
                     join_query = join_query.outerjoin(self.os)
                 if 'type' in self.config.summary:
@@ -1252,7 +1251,7 @@ class Glpi100(DyngroupDatabaseHelper):
                     if 'manufacturer' in self.config.summary:
                         clauses.append(self.manufacturers.c.name.like('%'+filt['hostname']+'%'))
                     r=re.compile('reg_key_.*')
-                    regs=filter(r.search, self.config.summary)
+                    regs=list(filter(r.search, self.config.summary))
                     try:
                         if regs[0]:
                             clauses.append(self.regcontents.c.value.like('%'+filt['hostname']+'%'))
@@ -1280,9 +1279,9 @@ class Glpi100(DyngroupDatabaseHelper):
                 gid = filt['gid']
                 machines = []
                 if ComputerGroupManager().isrequest_group(ctx, gid):
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
+                    machines = [fromUUID(m) for m in ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, '')]
                 else:
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, 0, -1, ''))
+                    machines = [fromUUID(m) for m in ComputerGroupManager().result_group(ctx, gid, 0, -1, '')]
                 query = query.filter(self.machine.c.id.in_(machines))
 
             if 'request' in filt:
@@ -1291,7 +1290,7 @@ class Glpi100(DyngroupDatabaseHelper):
                     bool = None
                     if 'equ_bool' in filt:
                         bool = filt['equ_bool']
-                    machines = map(lambda m: fromUUID(m), ComputerGroupManager().request(ctx, request, bool, 0, -1, ''))
+                    machines = [fromUUID(m) for m in ComputerGroupManager().request(ctx, request, bool, 0, -1, '')]
                     query = query.filter(self.machine.c.id.in_(machines))
 
             if 'date' in filt:
@@ -1353,14 +1352,14 @@ class Glpi100(DyngroupDatabaseHelper):
     def __getId(self, obj):
         if type(obj) == dict:
             return obj['uuid']
-        if type(obj) != str and type(obj) != unicode:
+        if type(obj) != str and type(obj) != str:
             return obj.id
         return obj
 
     def __getName(self, obj):
         if type(obj) == dict:
             return obj['name']
-        if type(obj) != str and type(obj) != unicode:
+        if type(obj) != str and type(obj) != str:
             return obj.name
         if type(obj) == str and re.match('UUID', obj):
             l = self.getLocation(obj)
@@ -1379,9 +1378,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     def computersMapping(self, computers, invert = False):
         if not invert:
-            return Machine.id.in_(map(lambda x:fromUUID(x), computers))
+            return Machine.id.in_([fromUUID(x) for x in computers])
         else:
-            return Machine.id.not_(ColumnOperators.in_(map(lambda x:fromUUID(x), computers)))
+            return Machine.id.not_(ColumnOperators.in_([fromUUID(x) for x in computers]))
 
     def mappingTable(self, ctx, query):
         """
@@ -1646,7 +1645,7 @@ class Glpi100(DyngroupDatabaseHelper):
             if len(ret) > 0:
                 raise Exception("NOPERM##%s" % (ret[0][1]['fullname']))
             return False
-        return ret.values()[0]
+        return list(ret.values())[0]
 
     def getRestrictedComputersListStatesLen(self, ctx, filt, orange, red):
         """
@@ -1779,9 +1778,9 @@ class Glpi100(DyngroupDatabaseHelper):
             query = query.limit(max)
 
         if justId:
-            ret = map(lambda m: self.getMachineUUID(m), query.all())
+            ret = [self.getMachineUUID(m) for m in query.all()]
         elif toH:
-            ret = map(lambda m: m.toH(), query.all())
+            ret = [m.toH() for m in query.all()]
         else:
             if filt is not None and 'get' in filt:
                 ret = self.__formatMachines(query.all(),
@@ -1953,7 +1952,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 master_config = xmppMasterConfig()
                 regvalue = []
                 r=re.compile(r'reg_key_.*')
-                regs=filter(r.search, self.config.summary)
+                regs=list(filter(r.search, self.config.summary))
                 for regkey in regs:
                     regkeyconf = getattr( master_config, regkey).split("|")[0].split("\\")[-1]
                     try:
@@ -2144,7 +2143,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 ret = []
             session.close()
 
-        ret = map(lambda l: setUUID(l), ret)
+        ret = [setUUID(l) for l in ret]
         return ret
 
     def __get_all_locations(self):
@@ -2211,7 +2210,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
     def getMachinesLocations(self, machine_uuids):
         session = create_session()
-        q = session.query(Entities.id, Entities.name, Entities.completename, Entities.comment, Entities.level).add_column(self.machine.c.id).select_from(self.entities.join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
+        q = session.query(Entities.id, Entities.name, Entities.completename, Entities.comment, Entities.level).add_column(self.machine.c.id).select_from(self.entities.join(self.machine)).filter(self.machine.c.id.in_(list(map(fromUUID, machine_uuids)))).all()
         ret = {}
         for idp, namep,namepc,commentp,levelp,machineid in q:
             val={}
@@ -2240,7 +2239,7 @@ class Glpi100(DyngroupDatabaseHelper):
             q = session.query(User).select_from(self.user.join(self.userprofile).join(self.entities)).filter(self.entities.c.name.in_(inloc)).filter(self.user.c.name != userid).distinct().all()
             session.close()
             # Only returns the user names
-            ret = map(lambda u: u.name, q)
+            ret = [u.name for u in q]
         # Always append the given userid
         ret.append(userid)
         return ret
@@ -2338,7 +2337,7 @@ class Glpi100(DyngroupDatabaseHelper):
         if ctx.userid == "root":
             query = self.filterOnUUID(query, a_machine_uuid)
         else:
-            a_locations = map(lambda loc:loc.name, ctx.locations)
+            a_locations = [loc.name for loc in ctx.locations]
             query = query.select_from(self.machine.join(self.entities))
             query = query.filter(self.entities.c.name.in_(a_locations))
             query = self.filterOnUUID(query, a_machine_uuid)
@@ -2347,7 +2346,7 @@ class Glpi100(DyngroupDatabaseHelper):
         machines_uuid_size = len(a_machine_uuid)
         all_computers = session.query(Machine)
         all_computers = self.filterOnUUID(all_computers, a_machine_uuid).all()
-        all_computers = Set(map(lambda m:toUUID(str(m.id)), all_computers))
+        all_computers = Set([toUUID(str(m.id)) for m in all_computers])
         if len(all_computers) != machines_uuid_size:
             self.logger.info("some machines have been deleted since that list was generated (%s)"%(str(Set(a_machine_uuid) - all_computers)))
             machines_uuid_size = len(all_computers)
@@ -2360,7 +2359,7 @@ class Glpi100(DyngroupDatabaseHelper):
             return True
         elif (not all) and len(ret) > 0:
             return True
-        ret = Set(map(lambda m:toUUID(str(m.id)), ret))
+        ret = Set([toUUID(str(m.id)) for m in ret])
         self.logger.info("dont have permissions on %s"%(str(Set(a_machine_uuid) - ret)))
         return False
 
@@ -2398,7 +2397,7 @@ class Glpi100(DyngroupDatabaseHelper):
             ma1 = m[0].to_a()
             ma2 = []
             for x,y in ma1:
-                if x in ind.keys():
+                if x in list(ind.keys()):
                     ma2.append([x,m[ind[x]]])
                 else:
                     ma2.append([x,y])
@@ -2445,7 +2444,7 @@ class Glpi100(DyngroupDatabaseHelper):
         return ''
 
     def getManufacturerWarranty(self, manufacturer, serial):
-        for manufacturer_key, manufacturer_infos in self.config.manufacturerWarranty.items():
+        for manufacturer_key, manufacturer_infos in list(self.config.manufacturerWarranty.items()):
             if manufacturer in manufacturer_infos['names']:
                 manufacturer_info = manufacturer_infos.copy()
                 manufacturer_info['url'] = manufacturer_info['url'].replace('@@SERIAL@@', serial)
@@ -2462,7 +2461,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         ids = []
         dict = self.searchOptions[lang]
-        for key, value in dict.iteritems():
+        for key, value in dict.items():
             if filter.lower() in value.lower():
                 ids.append(key)
 
@@ -2474,7 +2473,7 @@ class Glpi100(DyngroupDatabaseHelper):
         """
         ids = []
         dict = self.getLinkedActions()
-        for key, value in dict.iteritems():
+        for key, value in dict.items():
             if filter.lower() in value.lower():
                 ids.append(key)
 
@@ -3382,7 +3381,7 @@ class Glpi100(DyngroupDatabaseHelper):
         """
         @return: all machines that have this os using LIKE
         """
-        if isinstance(osnames, basestring):
+        if isinstance(osnames, str):
             osnames = [osnames]
 
         if int(count) == 1:
@@ -3966,7 +3965,7 @@ class Glpi100(DyngroupDatabaseHelper):
     @DatabaseHelper._sessionm
     def getMachineByType(self, session, ctx, types, count=0):
         """ @return: all machines that have this type """
-        if isinstance(types, basestring):
+        if isinstance(types, str):
             types = [types]
 
         if int(count) == 1:
@@ -4186,7 +4185,7 @@ class Glpi100(DyngroupDatabaseHelper):
         resultrecord = {}
         try:
             if ret :
-                for keynameresult in ret.keys():
+                for keynameresult in list(ret.keys()):
                     try:
                         if getattr(ret, keynameresult) is None:
                             resultrecord[keynameresult] = ""
@@ -4206,7 +4205,7 @@ class Glpi100(DyngroupDatabaseHelper):
                                     resultrecord[keynameresult] = getattr(ret, keynameresult).strftime("%m/%d/%Y %H:%M:%S")
                                 else:
                                     strre = getattr(ret, keynameresult)
-                                    if isinstance(strre, basestring):
+                                    if isinstance(strre, str):
                                         if encode == "utf8":
                                             resultrecord[keynameresult] = str(strre)
                                         else:
@@ -4605,7 +4604,7 @@ class Glpi100(DyngroupDatabaseHelper):
         Get a dictionnary and return an object
         """
         from collections import namedtuple
-        o = namedtuple('dict2obj', ' '.join(d.keys()))
+        o = namedtuple('dict2obj', ' '.join(list(d.keys())))
         return o(**d)
 
     def getMachineIp(self, uuid):
@@ -5032,7 +5031,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         # Adding rule criteria
 
-        for i in xrange(len(rule_data['criteria'])):
+        for i in range(len(rule_data['criteria'])):
 
             cr = RuleCriterion()
             cr.rules_id = rule.id
@@ -5151,7 +5150,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         # Adding rule criteria
 
-        for i in xrange(len(rule_data['criteria'])):
+        for i in range(len(rule_data['criteria'])):
 
             cr = RuleCriterion()
             cr.rules_id = rule.id
