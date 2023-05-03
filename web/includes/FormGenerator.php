@@ -376,7 +376,7 @@ class PasswordTpl extends InputTpl {
 class IntegerTpl extends InputTpl {
 
     function __construct($name, $regexp = '/.+/') {
-        $this->InputTpl($name, $regexp);
+        parent::__construct($name, $regexp);
         $this->fieldType = "number";
         $this->attributcustom ='';
     }
@@ -390,7 +390,7 @@ class IntegerTpl extends InputTpl {
 class IA5InputTpl extends InputTpl {
 
     function __construct($name) {
-        $this->InputTpl($name, '/^[\x00-\x7f]*$/');
+        parent::__construct($name, '/^[\x00-\x7f]*$/');
     }
 
 }
@@ -401,7 +401,7 @@ class IA5InputTpl extends InputTpl {
 class IPInputTpl extends InputTpl {
 
     function __construct($name) {
-        $this->InputTpl($name, '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/');
+        parent::__construct($name, '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/');
     }
 
 }
@@ -412,7 +412,7 @@ class IPInputTpl extends InputTpl {
 class MACInputTpl extends InputTpl {
 
     function __construct($name) {
-        $this->InputTpl($name, '/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i');
+        parent::__construct($name, '/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i');
     }
 
 }
@@ -424,7 +424,7 @@ class MACInputTpl extends InputTpl {
 class DomainInputTpl extends InputTpl {
 
     function __construct($name) {
-        $this->InputTpl($name, '/^([a-z0-9][a-z0-9-]*[a-z0-9]\.){0,10}[a-z0-9][a-z0-9-]*[a-z0-9]$/');
+        parent::__construct($name, '/^([a-z0-9][a-z0-9-]*[a-z0-9]\.){0,10}[a-z0-9][a-z0-9-]*[a-z0-9]$/');
     }
 
 }
@@ -432,7 +432,7 @@ class DomainInputTpl extends InputTpl {
 class MailInputTpl extends InputTpl {
 
     function __construct($name) {
-        $this->InputTpl($name, '/^([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z0-9]{2,}){0,1}$/');
+        parent::__construct($name, '/^([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z0-9]{2,}){0,1}$/');
     }
 
 }
@@ -443,7 +443,7 @@ class MailInputTpl extends InputTpl {
 class NumericInputTpl extends InputTpl {
 
     function __construct($name) {
-        $this->InputTpl($name, '/^[0-9]*$/');
+        parent::__construct($name, '/^[0-9]*$/');
     }
 
 }
@@ -900,6 +900,7 @@ class MembersTpl extends AbstractTpl {
  */
 class SelectItem extends AbstractTpl {
 
+    
     public $elements; /*     * < list of all elements */
     public $elementsVal; /*     * < list of elements values */
     public $selected; /*     * < element who are selected */

@@ -579,7 +579,7 @@ class AsciiInputTpl extends InputTpl {
   */
 
   function __construct($name) {
-    $this->InputTpl($name, '/^[A-Za-z0-9\.\-\!\?\ \.\#%$&@\*\+_\/]*$/');
+    parent::__construct($name, '/^[A-Za-z0-9\.\-\!\?\ \.\#%$&@\*\+_\/]*$/');
   }
 }
 ?>

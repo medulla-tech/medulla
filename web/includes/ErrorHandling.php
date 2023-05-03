@@ -95,9 +95,19 @@ class ErrorHandlingItem {
         }
         $str .= '</div>';
 
-        $logstr = "PHP XMLRPC error: ".$xmlResponse["faultString"].' at '.gmdate("d M Y H:i:s")."\n\n";
+
+	if (is_array($xmlResponse)) {
+	    $logstr = "PHP XMLRPC error: ".$xmlResponse["faultString"].' at '.gmdate("d M Y H:i:s")."\n\n";
+	} else {
+	    $logstr = "PHP XMLRPC error: ".$xmlResponse.' at '.gmdate("d M Y H:i:s")."\n\n";
+	}
         $logstr .= "Python Server traceback: \n";
-        $logstr .= htmlentities($xmlResponse["faultTraceback"])."\n";
+	if (is_array($xmlResponse)) {
+	    $logstr .= htmlentities($xmlResponse["faultTraceback"])."\n";
+	} else {
+            $logstr .= htmlentities($xmlResponse)."\n";
+	}
+
         $ret =error_log($logstr);
 
         $n = new NotifyWidget();
