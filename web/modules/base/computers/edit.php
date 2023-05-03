@@ -64,7 +64,7 @@ $f = new ValidatingForm();
 $f->push(new Table());
 
 if ($_GET["action"]=="add") {
-    if (in_array("pulse2", $_SESSION["modulesList"])) {
+    if (in_array("medulla_server", $_SESSION["modulesList"])) {
         /*
            Be more permissive for Pulse 2 computer name, as it will be checked
            internally.
@@ -116,8 +116,8 @@ foreach ($addParams as $p) {
 }
 
 if (canAssociateComputer2Location()) {
-    if (in_array("pulse2", $_SESSION["modulesList"])) {
-        require('modules/pulse2/includes/select_location.php');
+    if (in_array("medulla_server", $_SESSION["modulesList"])) {
+        require('modules/medulla_server/includes/select_location.php');
         $value = isset($_POST["location_uuid"]) ? $_POST["location_uuid"] : '';
         $f->add(
                 new TrFormElement(_("Location"),

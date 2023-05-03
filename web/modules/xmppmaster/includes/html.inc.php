@@ -112,7 +112,7 @@ class RefreshButton{
 }
 
 class CheckActionItem extends ActionItem{
-  function CheckActionItem($title, $class, $disabled, $value, $paramString, $action, $submod, $module){
+  function __construct($title, $class, $disabled, $value, $paramString, $action, $submod, $module){
     $this->title = $title;
     $this->class = $class;
     $this->disabled = $disabled;
@@ -226,7 +226,7 @@ class Editor{
   //editor elements
   protected $m_content = "";
 
-  public function Editor($file, $name, $id="", $css=[], $scripts=[], $mode='out', $language='plain_text'){
+  public function __construct($file, $name, $id="", $css=[], $scripts=[], $mode='out', $language='plain_text'){
     $this->setFileName($file);
     $this->setName($name);
     $this->setId($id);

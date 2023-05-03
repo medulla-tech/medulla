@@ -24,7 +24,7 @@
 /* Add new sidemenu item */
 
 require_once("modules/dyngroup/includes/includes.php");
-require_once("modules/pulse2/includes/profiles_xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/profiles_xmlrpc.inc.php");
 
 if (isProfilesEnable() && areProfilesPossible()) {
     $sidemenu->addSideMenuItem(

@@ -28,7 +28,7 @@ require("modules/base/computers/localSidebar.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 $p = new PageGenerator(_T("Monitoring Configurator", 'xmppmaster'));
 $p->setSideMenu($sidemenu);

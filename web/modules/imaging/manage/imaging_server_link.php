@@ -30,8 +30,8 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
 
 // get entities
-require("modules/pulse2/includes/xmlrpc.inc.php");
-require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
+require("modules/medulla_server/includes/xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $location = getCurrentLocation();

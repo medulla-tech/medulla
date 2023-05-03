@@ -32,4 +32,20 @@ global $conf;
 
 fetchIniFile();
 
+
+function affichedebugJFKJFK($a, $title="", $file=""){
+    if ($title != ""){
+        printf("<h2>%s -> ".$file."</h2> " , $title);
+    }
+    echo"<pre>";
+    print_r($a);
+    echo"</pre>";
+}
+
+
+function affichefile($a){
+    echo"<h3>";
+    echo $a;
+    echo"</h3>";
+}
 ?>

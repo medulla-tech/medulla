@@ -24,9 +24,9 @@ require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla_server/includes/utilities.php");
 class AjaxFilterAudit extends AjaxFilter {
-  function AjaxFilterAudit($url, $divid = "container", $params = array(), $formid = "") {
+  function __construct($url, $divid = "container", $params = array(), $formid = "") {
       $this->AjaxFilter($url, $divid, $params, $formid);
   }
 

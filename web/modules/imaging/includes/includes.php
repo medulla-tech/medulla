@@ -67,7 +67,7 @@ function getCurrentLocation() {
 }
 
 class LedElement extends HtmlElement {
-    function LedElement($color){
+    function __construct($color){
         $this->color=$color;
         $this->value='<img style="vertical-align: middle" src="modules/imaging/graph/images/led_circle_'.$this->color.'.png">';
     }
@@ -270,7 +270,7 @@ class ImageLogs extends HtmlElement {
         'user.err'=>'LOG_ERR',
     );
 
-    function ImageLogs($logs) {
+    function __construct($logs) {
         assert(is_array($logs));
         $this->logs = $logs;
     }

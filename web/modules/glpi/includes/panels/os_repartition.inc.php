@@ -20,8 +20,8 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-require_once("modules/pulse2/includes/xmlrpc.inc.php");
-require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 include_once("modules/dashboard/includes/panel.class.php");
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/glpi/includes/xmlrpc.php");

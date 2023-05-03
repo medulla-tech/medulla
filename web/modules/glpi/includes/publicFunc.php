@@ -33,13 +33,13 @@
  //getUserLocations
 
 require_once "modules/glpi/includes/xmlrpc.php";
-require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 
 class buttonTpl2 extends AbstractTpl {
     var $class = '';
     var $cssClass = 'btn btn-small';
 
-    function buttonTpl2($id,$text,$class='') {
+    function __construct($id,$text,$class='') {
         $this->id = $id;
         $this->text = $text;
         $this->class = $class;

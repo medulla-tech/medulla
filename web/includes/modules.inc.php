@@ -148,11 +148,10 @@ function fetchIniFile() {
  */
 function includeInfoPackage($dirA) {
     foreach ($dirA as $path) {
-        if (file_exists("$path/infoPackage.inc.php")) {
-            require_once("$path/infoPackage.inc.php");
+       if (file_exists("$path/infoPackage.inc.php")) {
+         require_once("$path/infoPackage.inc.php");
         }
     }
-
     $MMCApp =& MMCApp::getInstance();
     $MMCApp->process();
 }

@@ -78,7 +78,7 @@ function getPGobject($id, $load = false) {
 
 class ConvergenceGroup extends Group {
 
-    function __Construct($id = null, $load = false, $ro = False, $root_context = false) {
+    function __construct($id = null, $load = false, $ro = False, $root_context = false) {
         parent::Group($id, $load, $ro, $root_context);
         $this->type = 2;
         $this->isDeployGroup = True;
@@ -208,7 +208,7 @@ class ConvergenceGroup extends Group {
 
 class Profile extends Group {
     # use the same methods as Group except for the creation
-    function Profile($id = null, $load = false) {
+    function __construct($id = null, $load = false) {
         parent::Group($id, $load);
         $this->type = 1;
     }
@@ -221,7 +221,7 @@ class Profile extends Group {
     function isGroup() { return False; }
 }
 class Group {
-    function Group($id = null, $load = false, $ro = false, $root_context = false) {
+    function __construct($id = null, $load = false, $ro = false, $root_context = false) {
         if ($id && $load) {
             $params = __xmlrpc_get_group($id, $ro, $root_context);
             if ($params == False) {
@@ -354,7 +354,7 @@ class Group {
         return False;
     }
     function prettyDisplay($canbedeleted = false, $default_params = array()) {
-        include("modules/pulse2/pulse2/computers_list.php");
+        include("modules/medulla_server/medulla_server/computers_list.php");
     }
 
     function getId(){return $this->id;}

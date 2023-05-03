@@ -28,7 +28,7 @@ require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 //Force the presence of all computers
 $_SESSION['computerpresence'] = "all_computer";

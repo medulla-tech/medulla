@@ -89,7 +89,7 @@ class ServerAPI {
   protected $mountpoint;
   protected $protocol;
 
-    function ServerAPI($h = null) {
+    function __construct($h = null) {
         if ($h) {
             $this->server = $h['server'];
             $this->port = $h['port'];
@@ -111,7 +111,7 @@ class ServerAPI {
 }
 
 class Package {
-    function Package($h_pkg) {
+    function __construct($h_pkg) {
         $this->label = $h_pkg['label'];
         $this->description = $h_pkg['description'];
         $this->version = $h_pkg['version'];

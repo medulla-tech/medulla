@@ -35,7 +35,7 @@ require_once("../../../includes/PageGenerator.php");
 
 require_once('../includes/xmlrpc.php');
 
-require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
+require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
 xmlrpc_runXmppReverseSSHforGuacamole($_GET['uuid'], $_GET['cux_id'], $_GET['cux_type']);
 

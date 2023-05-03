@@ -27,7 +27,7 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 $refresh = new RefreshButton();
 $p = new PageGenerator(_T("All users tasks", 'xmppmaster'));

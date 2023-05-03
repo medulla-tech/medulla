@@ -23,7 +23,7 @@ class ValidateButtonTpl extends HtmlElement {
     var $class = '';
     var $cssClass = 'btn btn-small';
 
-    function ValidateButtonTpl($id, $value, $class='', $infobulle='', $params = array()) {
+    function __construct($id, $value, $class='', $infobulle='', $params = array()) {
         $this->id = $id;
         $this->value = $value;
         $this->class = $class;

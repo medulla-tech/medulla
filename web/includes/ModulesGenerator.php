@@ -34,7 +34,7 @@ class MMCApp {
     * Constructor
     * private
     */
-   function MMCApp() {
+   function __construct() {
         $this->_modules = array();
         $this->_styleobj = new StyleGenerator();
    }
@@ -121,7 +121,7 @@ class StyleGenerator {
     /**
      * Default constructor
      */
-    function StyleGenerator() {
+    function __construct() {
         $this->_csslines = array();
     }
 
@@ -161,7 +161,7 @@ class SubModule {
     var $_priority; /**< specify order to show submod */
 
 
-    function SubModule($name,$desc = "") {
+    function __construct($name,$desc = "") {
         $this->_name = $name;
         $this->setDescription($desc);
         $this->_visibility = True;
@@ -375,20 +375,29 @@ class ExpertSubModule extends SubModule {
  * define Modules
  */
 class Module {
-    var $_name; /**< module name */
-    var $_version;
-    var $_apiversion;
-    var $_revision;
-    var $_submod;
-    var $_acl;
-    var $_priority;
+    public $_name;
+    /**< module name */
+    public $_version;
+    public $_apiversion;
+    public $_revision;
+    public $_submod;
+    public $_acl;
+    public $_priority;
 
 
-    function Module($name) {
+    function __construct($name) {
+
+//         affichedebugJFKJFK($name, "$name", __FILE__);
+
         $this->_name = $name;
+        $this->_revision = 0;
+
         $this->_pages = array();
         $this->_submod = array();
         $this->_priority = 50;
+        $this->_priority = 50;
+
+        $this->_name = $name;
     }
 
     function __toString() {
@@ -535,7 +544,7 @@ class Page {
     var $_file;
     var $_img;
 
-    function Page($action,$desc = "") {
+    function __construct($action,$desc = "") {
         $this->_action = $action;
         $this->_noheader = 0;
         $this->_tab = array();
@@ -705,7 +714,7 @@ class Tab {
     var $_name;
     var $_desc;
 
-    function Tab($name, $description) {
+    function __construct($name, $description) {
         $this->_name = $name;
         $this->_desc = $description;
         $this->_options["noACL"] = False;

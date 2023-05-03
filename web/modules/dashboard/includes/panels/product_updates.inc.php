@@ -21,7 +21,7 @@
  */
 
 include_once("modules/dashboard/includes/panel.class.php");
-require_once("modules/pulse2/includes/xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 
 $options = array(
     "class" => "UpdatePanel",
@@ -59,11 +59,11 @@ class UpdatePanel extends Panel {
                 print <<<EOS
                 <a title="View updates" class="btnSecondary"
                     href="javascript:;"
-                    onclick="PopupWindow(event,'main.php?module=pulse2&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
+                    onclick="PopupWindow(event,'main.php?module=medulla_server&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
                     >$view_updates_text</a>
                     <br/><br/>
                     <a title="Install updates" class="btnSecondary"
-                    href="main.php?module=pulse2&amp;submod=update&amp;action=installProductUpdates"
+                    href="main.php?module=medulla_server&amp;submod=update&amp;action=installProductUpdates"
                     >$install_updates_text</a>
                 </center>
 EOS;

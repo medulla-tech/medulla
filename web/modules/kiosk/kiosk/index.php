@@ -22,7 +22,7 @@
 
 require("modules/kiosk/graph/index.css");
 require_once("modules/kiosk/includes/xmlrpc.php");
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");

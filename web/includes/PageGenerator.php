@@ -69,7 +69,7 @@ function debug($obj, $return = FALSE) {
  */
 class ActionEncapsulator {
 
-    function ActionEncapsulator() {
+    function __construct() {
 
     }
 
@@ -89,7 +89,7 @@ class EditInPlace extends ActionEncapsulator {
     var $url;
     var $param;
 
-    function EditInPlace($origText, $url, $param) {
+    function __construct($origText, $url, $param) {
         $this->origText = $origText;
         $this->url = $url;
         $this->param = $param;
@@ -149,7 +149,7 @@ class ActionItem {
      *    in the CSS global.css
      * @param $paramString add "&$param=" at the very end of the url
      */
-    function ActionItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $mod = false) {
+    function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $mod = false) {
         $this->desc = $desc;
         $this->action = $action;
         $this->classCss = $classCss;
@@ -265,8 +265,8 @@ class ActionPopupItem extends ActionItem {
 
     private $_displayType = 0;
 
-    function ActionPopupItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300, $mod = false) {
-        $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
+    function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300, $mod = false) {
+        parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         $this->setWidth($width);
     }
 
@@ -325,7 +325,7 @@ class ActionConfirmItem extends ActionItem {
     var $_displayType = 0;
     var $_confirmMessage = '';
 
-    function ActionConfirmItem($desc, $action, $classCss, $paramString, $module = null, $submod = null, $confirmMessage, $tab = null, $width = 300, $mod = false) {
+    function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $confirmMessage, $tab = null, $width = 300, $mod = false) {
         $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         //$this->setWidth($width);
         $this->_confirmMessage = $confirmMessage;
@@ -352,7 +352,7 @@ class ActionConfirmItem extends ActionItem {
 
 class EmptyActionItem extends ActionItem {
 
-    function EmptyActionItem($desc = "") {
+    function __construct($desc = "") {
         $this->classCss='empty';
         $this->desc=$desc;
     }
@@ -391,7 +391,7 @@ class ListInfos extends HtmlElement {
      * constructor
      * @param $tab must be an array of array
      */
-    function ListInfos($tab, $description = "", $extranavbar = "", $width = "", $tooltip = "") {
+    function __construct($tab, $description = "", $extranavbar = "", $width = "", $tooltip = "") {
         $this->arrInfo = $tab;
         $this->arrAction = array();
         $this->description[] = $description;
@@ -876,7 +876,7 @@ class SimpleNavBar extends HtmlElement {
      * @param $max: max quantity of elements in a page
      * @param $paginator: boolean which enable the selector of the number of results in a page
      */
-    function SimpleNavBar($curstart, $curend, $itemcount, $extra = "", $max = "", $paginator = false) {
+    function __construct($curstart, $curend, $itemcount, $extra = "", $max = "", $paginator = false) {
         global $conf;
         if (isset($max) && $max != "") {
             $this->max = $max;
@@ -1086,7 +1086,7 @@ class SimplePaginator extends SimpleNavBar {
      * @param $filter: the current list filter
      * @param $max: max quantity of elements in a page
      */
-    function SimplePaginator($curstart, $curend, $itemcount, $extra = "", $max = "") {
+    function __construct($curstart, $curend, $itemcount, $extra = "", $max = "") {
         $this->SimpleNavBar($curstart, $curend, $itemcount, $extra, $max, true);
     }
 
@@ -1109,7 +1109,7 @@ class AjaxNavBar extends SimpleNavBar {
      * @param $jsfunc: the name of the javascript function that applies the AJAX filter for the ListInfos widget
      * @param $max: the max number of elements to display in a page
      */
-    function AjaxNavBar($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "", $paginator = false) {
+    function __construct($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "", $paginator = false) {
         global $conf;
 
         if (isset($_GET["start"])) {
@@ -1126,7 +1126,7 @@ class AjaxNavBar extends SimpleNavBar {
             } else
                 $curend = 0;
         }
-        $this->SimpleNavBar($curstart, $curend, $itemcount, null, $max, $paginator);
+        parent::__construct($curstart, $curend, $itemcount, null, $max, $paginator);
         $this->filter = $filter;
         $this->jsfunc = $jsfunc;
         if (isset($_GET['divID']))
@@ -1188,8 +1188,9 @@ class AjaxPaginator extends AjaxNavBar {
      * @param $jsfunc: the name of the javascript function that applies the AJAX filter for the ListInfos widget
      * @param $max: the max number of elements to display in a page
      */
-    function AjaxPaginator($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "") {
+    function __construct($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "") {
         $this->AjaxNavBar($itemcount, $filter, $jsfunc, $max, true);
+        parent::__construct($itemcount, $filter, $jsfunc, $max, true);
     }
 
 }
@@ -1206,7 +1207,7 @@ class AjaxFilter extends HtmlElement {
      * @param $divid: div ID which is updated by the URL output
      * @param $formid: change the form id (usefull for multiple Ajaxfilter in one page)
      */
-    function AjaxFilter($url, $divid = "container", $params = array(), $formid = "") {
+    function __construct($url, $divid = "container", $params = array(), $formid = "") {
         if (strpos($url, "?") === False)
         /* Add extra ? needed to build the URL */
             $this->url = $url . "?";
@@ -1404,7 +1405,7 @@ class AjaxFilter extends HtmlElement {
 class multifieldTpl extends AbstractTpl {
     var $fields;
 
-    function multifieldTpl($fields) {
+    function __construct($fields) {
         $this->fields = $fields;
     }
 
@@ -1426,7 +1427,7 @@ class multifieldTpl extends AbstractTpl {
 }
 
 class textTpl extends AbstractTpl {
-    function textTpl($text) {
+    function __construct($text) {
         $this->text = $text;
     }
 
@@ -1437,7 +1438,7 @@ class textTpl extends AbstractTpl {
 
 class NoLocationTpl extends AbstractTpl {
 
-    function NoLocationTpl($name) {
+    function __construct($name) {
         $this->name = $name;
         $this->size = '13';
     }
@@ -1455,7 +1456,7 @@ class NoLocationTpl extends AbstractTpl {
 
 class SingleLocationTpl extends AbstractTpl {
 
-    function SingleLocationTpl($name, $label) {
+    function __construct($name, $label) {
         $this->name = $name;
         $this->label = $label;
         $this->value = null;
@@ -1479,8 +1480,8 @@ class SingleLocationTpl extends AbstractTpl {
 
 class AjaxFilterLocation extends AjaxFilter {
 
-    function AjaxFilterLocation($url, $divid = "container", $paramname = 'location', $params = array()) {
-        $this->AjaxFilter($url, $divid, $params);
+    function __construct($url, $divid = "container", $paramname = 'location', $params = array()) {
+        parent::__construct($url, $divid, $params);
         $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
         $this->paramname = $paramname;
         $this->checkbox=array();
@@ -1645,8 +1646,8 @@ class AjaxFilterLocation extends AjaxFilter {
 
 class AjaxLocation extends AjaxFilterLocation {
 
-    function AjaxLocation($url, $divid = "container", $paramname = 'location', $params = array()) {
-        $this->AjaxFilterLocation($url, $divid, $paramname, $params);
+    function __construct($url, $divid = "container", $paramname = 'location', $params = array()) {
+        parent::__construct($url, $divid, $paramname, $params);
         $this->location = new SelectItem($paramname, 'pushSearchLocation', 'searchfieldreal noborder');
         $this->onchange="pushSearchLocation(); return false;";
     }
@@ -1715,7 +1716,7 @@ class AjaxLocation extends AjaxFilterLocation {
 }
 class Checkbox {
 
-    function Checkbox($paramname,$description)
+    function __construct($paramname,$description)
     {
         $this->paramname=$paramname;
         $this->description=$description;
@@ -1758,7 +1759,7 @@ class SideMenuItem {
      * @param $activebg background image to use when menu is currently activated
      * @param $inactivebg background image to use when menu is currently inactivated
      */
-    function SideMenuItem($text, $module, $submod, $action, $activebg = "", $inactivebg = "") {
+    function __construct($text, $module, $submod, $action, $activebg = "", $inactivebg = "") {
         $this->text = $text;
         $this->module = $module;
         $this->submod = $submod;
@@ -1860,7 +1861,7 @@ class SideMenu {
      *  SideMenu default constructor
      *     initalize empty itemArray for SideMenuItem
      */
-    function SideMenu() {
+    function __construct() {
         $this->itemArray = array();
         $this->backgroundImage = null;
         $this->activatedItem = null;
@@ -1952,7 +1953,7 @@ class PageGenerator {
     /**
      *  Constructor
      */
-    function PageGenerator($title = "") {
+    function __construct($title = "") {
         $content = array();
         $this->title = $title;
     }
@@ -2020,8 +2021,8 @@ class PageGenerator {
  */
 class DisplayFile extends HtmlElement {
 
-    function DisplayFile($file) {
-        $this->HtmlElement();
+    function __construct($file) {
+        parent::__construct();
         $this->file = $file;
     }
 
@@ -2036,8 +2037,9 @@ class DisplayFile extends HtmlElement {
  */
 class TabbedPage extends Div {
 
-    function TabbedPage($title, $file) {
-        $this->Div(array("class" => "tabdiv"));
+    function __construct($title, $file) {
+        parent::__construct(array("class" => "tabdiv"));
+        
         $this->title = $title;
         $this->add(new DisplayFile($file));
     }
@@ -2059,7 +2061,7 @@ class TabbedPage extends Div {
  */
 class TabWidget extends HtmlElement {
 
-    function TabWidget($id, $title, $params = array()) {
+    function __construct($id, $title, $params = array()) {
         $this->id = $id;
         $this->title = $title;
         $this->params = $params;
@@ -2092,8 +2094,8 @@ class TabWidget extends HtmlElement {
  */
 class TabbedPageGenerator extends PageGenerator {
 
-    function TabbedPageGenerator() {
-        $this->PageGenerator();
+    function __construct() {
+        parent::__construct();
         $this->topfile = null;
         $this->tabselector = new TabSelector();
         $this->pages = array();
@@ -2179,8 +2181,8 @@ class TabbedPageGenerator extends PageGenerator {
  */
 class TabSelector extends HtmlContainer {
 
-    function TabSelector() {
-        $this->HtmlContainer();
+    function __construct() {
+        parent::__construct();
         $this->tabs = array();
         $this->order = array();
     }
@@ -2221,7 +2223,7 @@ class NotifyWidget {
     /**
      * default constructor
      */
-    function NotifyWidget($save = True) {
+    function __construct($save = True) {
         $this->id = uniqid();
         $this->strings = array();
         // 0: info (default, blue info bubble)
@@ -2299,7 +2301,8 @@ class NotifyWidget {
 class NotifyWidgetSuccess extends NotifyWidget {
 
     function NotifyWidgetSuccess($message) {
-        parent::NotifyWidget();
+        // parent::NotifyWidget();
+        parent::__construct();
         $this->add("<div class=\"alert alert-success\">$message</div>");
     }
 
@@ -2311,8 +2314,9 @@ class NotifyWidgetSuccess extends NotifyWidget {
  */
 class NotifyWidgetFailure extends NotifyWidget {
 
-    function NotifyWidgetFailure($message) {
-        parent::NotifyWidget();
+    function __construct($message) {
+        parent::__construct();
+        // parent::NotifyWidget();
         $this->add("<div class=\"alert alert-error\">$message</div>");
         $this->level = 4;
         $this->save();
@@ -2326,8 +2330,10 @@ class NotifyWidgetFailure extends NotifyWidget {
  */
 class NotifyWidgetWarning extends NotifyWidget {
 
-    function NotifyWidgetWarning($message) {
-        parent::NotifyWidget();
+    function __construct($message) {
+        // parent::NotifyWidget();
+        parent::__construct();
+
         $this->add("<div class=\"alert\">$message</div>");
         $this->level = 3;
         $this->save();
@@ -2340,7 +2346,7 @@ class NotifyWidgetWarning extends NotifyWidget {
  */
 class Message extends HtmlElement {
 
-    function Message($msg, $type = "info") {
+    function __construct($msg, $type = "info") {
         $this->msg = $msg;
         $this->type = $type;
     }
@@ -2428,7 +2434,7 @@ class HtmlElement {
 
     var $options;
 
-    function HtmlElement() {
+    function __construct() {
         $this->options = array();
     }
 
@@ -2453,7 +2459,7 @@ class HtmlContainer {
     var $popped;
     var $debug;
 
-    function HtmlContainer() {
+    function __construct() {
         $this->elements = array();
         $this->popped = False;
         $this->index = -1;
@@ -2526,8 +2532,9 @@ class HtmlContainer {
 
 class Div extends HtmlContainer {
 
-    function Div($options = array(), $class = Null) {
-        $this->HtmlContainer();
+    function __construct($options = array(), $class = Null) {
+        //$this->HtmlContainer();
+        parent::__construct();
         $this->name = $class;
         $this->options = $options;
         $this->display = True;
@@ -2556,8 +2563,9 @@ class Div extends HtmlContainer {
 
 class Form extends HtmlContainer {
 
-    function Form($options = array()) {
-        $this->HtmlContainer();
+    function __construct($options = array()) {
+        parent::__construct();
+
         if (!isset($options["method"]))
             $options["method"] = "post";
         if (!isset($options["id"]))
@@ -2625,7 +2633,7 @@ class Form extends HtmlContainer {
 
 class Button {
 
-    function Button($module = null, $submod = null, $action = null) { # TODO also verify ACL on tabs
+    function __construct($module = null, $submod = null, $action = null) { # TODO also verify ACL on tabs
         if ($module == null) {
             $this->module = $_GET["module"];
         } else {
@@ -2675,8 +2683,9 @@ class Button {
 
 class ValidatingForm extends Form {
 
-    function ValidatingForm($options = array()) {
-        $this->Form($options);
+    function __construct($options = array()) {
+        parent::__construct($options);
+
         $this->options["onsubmit"] = "return validateForm('" . $this->options["id"] . "');";
     }
 
@@ -2698,9 +2707,10 @@ class ValidatingForm extends Form {
  */
 class PopupForm extends Form {
 
-    function PopupForm($title, $id = 'Form') {
+    function __construct($title, $id = 'Form') {
         $options = array("action" => $_SERVER["REQUEST_URI"], 'id' => $id);
-        $this->Form($options);
+        parent::__construct($options);
+
         $this->title = $title;
         $this->text = array();
         $this->ask = "";
@@ -2745,9 +2755,9 @@ class PopupForm extends Form {
  */
 class PopupWindowForm extends PopupForm {
 
-    function PopupWindowForm($title) {
+    function __construct($title) {
         $options = array("action" => $_SERVER["REQUEST_URI"]);
-        $this->PopupForm($options);
+        parent::__construct($options);
         $this->title = $title;
         $this->text = array();
         $this->ask = "";
@@ -2762,8 +2772,8 @@ class PopupWindowForm extends PopupForm {
 
 class Table extends HtmlContainer {
 
-    function Table($options = array()) {
-        $this->HtmlContainer();
+    function __construct($options = array()) {
+        parent::__construct();
         $this->lines = array();
         $this->tr_style = '';
         $this->td_style = '';
@@ -2808,10 +2818,10 @@ class Table extends HtmlContainer {
 
 class DivForModule extends Div {
 
-    function DivForModule($title, $color, $options = array()) {
+    function __construct($title, $color, $options = array()) {
         $options["style"] = "background-color: " . $color;
         $options["class"] = "formblock";
-        $this->Div($options);
+        parent::__construct($options);
         $this->title = $title;
         $this->color = $color;
     }
@@ -2839,7 +2849,7 @@ class DivExpertMode extends Div {
 
 class ModuleTitleElement extends HtmlElement {
 
-    function ModuleTitleElement($title) {
+    function __construct($title) {
         $this->title = $title;
     }
 
@@ -2851,7 +2861,7 @@ class ModuleTitleElement extends HtmlElement {
 
 class TitleElement extends HtmlElement {
 
-    function TitleElement($title, $level = 2) {
+    function __construct($title, $level = 2) {
         $this->title = $title;
         $this->level = $level;
     }
@@ -2864,7 +2874,7 @@ class TitleElement extends HtmlElement {
 
 class SpanElement extends HtmlElement {
 
-    function SpanElement($content, $class = Null) {
+    function __construct($content, $class = Null) {
         $this->name = $class;
         $this->content = $content;
         $this->class = $class;
@@ -2882,7 +2892,7 @@ class SpanElement extends HtmlElement {
 
 class ParaElement extends HtmlElement {
 
-    function ParaElement($content, $class=null) {
+    function __construct($content, $class=null) {
         $this->name = $class;
         $this->content = $content;
         $this->class = $class;
@@ -2901,7 +2911,7 @@ class ParaElement extends HtmlElement {
 
 class SelectElement extends HtmlElement {
 
-    function SelectElement($name, $nametab) {
+    function __construct($name, $nametab) {
         $this->name = $name;
         $this->nametab = $nametab;
     }
@@ -2915,7 +2925,7 @@ class SelectElement extends HtmlElement {
 
 class TrTitleElement extends HtmlElement {
 
-    function TrTitleElement($arrtitles) {
+    function __construct($arrtitles) {
         $this->titles = $arrtitles;
     }
 
@@ -2932,7 +2942,7 @@ class TrTitleElement extends HtmlElement {
 
 class AjaxPage extends HtmlElement {
 
-    function AjaxPage($url, $id = "container", $params = array(), $refresh = 10) {
+    function __construct($url, $id = "container", $params = array(), $refresh = 10) {
         $this->url = $url;
         $this->id = $id;
         $this->class = "";

@@ -26,7 +26,7 @@
 
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 
 $computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence'] : (isset($_SESSION['computerpresence']) ? $_SESSION['computerpresence'] : "all_computer");

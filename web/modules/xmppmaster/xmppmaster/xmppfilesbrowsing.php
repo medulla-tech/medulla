@@ -254,9 +254,9 @@ $p = new PageGenerator(_T("File manager", 'xmppmaster')." on ". $ma['hostname'])
 $p->setSideMenu($sidemenu);
 $p->display();
 
-require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
+require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
-include_once('modules/pulse2/includes/menu_actionaudit.php');
+include_once('modules/medulla_server/includes/menu_actionaudit.php');
 echo "<br><br><br>";
 
 // creation repertoire namemachine si non existe.

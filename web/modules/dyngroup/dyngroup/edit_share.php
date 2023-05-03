@@ -27,7 +27,7 @@ require("modules/base/includes/groups.inc.php");
 require("graph/navbar.inc.php");
 
 require("modules/dyngroup/includes/groups.inc.php");
-require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
+require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 
 /*
  * Display right top shortcuts menu

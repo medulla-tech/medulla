@@ -22,7 +22,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
+require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 require("modules/dyngroup/includes/groups.inc.php");
 if (in_array("imaging", $_SESSION["modulesList"])) {
                     require_once('modules/imaging/includes/xmlrpc.inc.php');

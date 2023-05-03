@@ -39,7 +39,7 @@ if (isset($_POST['bconfirm'])){
 
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
-require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 
 if (isset($_GET['id']))
     $rule = getEntityRule($_GET['id']);

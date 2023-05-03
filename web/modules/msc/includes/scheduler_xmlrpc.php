@@ -84,7 +84,7 @@ function xmlrpc_setfrommsclogxmpp(   $text,
                                             $action = '',
                                             $touser =  '',
                                             $fromuser = "",
-                                            $module = 'pulse2'){
+                                            $module = 'medulla_server'){
     return xmlCall("xmppmaster.setlogxmpp", array(  $text,
                                                     $type ,
                                                     $sessionname,

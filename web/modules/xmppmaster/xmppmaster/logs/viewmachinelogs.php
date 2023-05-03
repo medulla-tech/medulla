@@ -72,9 +72,9 @@
 
 <?
 
-require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
+require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
-include_once('modules/pulse2/includes/menu_actionaudit.php');
+include_once('modules/medulla_server/includes/menu_actionaudit.php');
 include_once('modules/glpi/includes/xmlrpc.php');
 include_once('modules/pkgs/includes/xmlrpc.php');
 

@@ -24,7 +24,7 @@
  */
 
 require_once("modules/dyngroup/includes/groups.inc.php");
-require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
+require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 require_once("modules/msc/includes/mscoptions_xmlrpc.php"); # to read msc.ini
 
 /**
@@ -32,7 +32,7 @@ require_once("modules/msc/includes/mscoptions_xmlrpc.php"); # to read msc.ini
  */
 class MyNumericInputTpl extends InputTpl {
 
-    function MyNumericInputTpl($name) {
+    function __construct($name) {
         $this->InputTpl($name, '/^[1-9][0-9]*$/');
         $this->size = 2;
     }
@@ -41,7 +41,7 @@ class MyNumericInputTpl extends InputTpl {
 
 class ProxySelector extends HtmlElement {
 
-    function ProxySelector($machines, $members, $diff, $gid, $proxy_number,$local_proxy_selection_mode) {
+    function __construct($machines, $members, $diff, $gid, $proxy_number,$local_proxy_selection_mode) {
         $this->machines = $machines;
         $this->members = $members;
         $this->diff = $diff;

@@ -91,7 +91,7 @@ Why: Groupe ou machine
 
     class DateTimeTplnew extends DateTimeTpl{
 
-        function DateTimeTplnew($name, $label = null){
+        function __construct($name, $label = null){
             $this->label = $label;
             parent::__construct($name);
         }
@@ -107,7 +107,7 @@ class SelectItemlabeltitle extends SelectItem {
     /**
      * constructor
      */
-    function SelectItemlabeltitle($idElt, $label = null, $title = null, $jsFunc = null, $style = null) {
+    function __construct($idElt, $label = null, $title = null, $jsFunc = null, $style = null) {
         $this->title = $title;
         $this->label = $label;
         parent::SelectItem($idElt, $jsFunc, $style);

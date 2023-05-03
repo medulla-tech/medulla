@@ -32,7 +32,7 @@ require_once("../../../includes/PageGenerator.php");
 
 require_once('../includes/xmlrpc.php');
 
-require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
+require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
 switch($_GET['action']){
     case "detailactions":

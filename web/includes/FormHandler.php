@@ -27,7 +27,7 @@ class FormHandler {
     var $data;
     var $arr;
 
-    function FormHandler($name, $data) {
+    function __construct($name, $data) {
         //echo "<pre>";
         //print_r($data);
         //echo '</pre>';

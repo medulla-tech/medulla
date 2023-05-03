@@ -27,7 +27,7 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-include_once('modules/pulse2/includes/menu_actionaudit.php');
+include_once('modules/medulla_server/includes/menu_actionaudit.php');
 echo "<br><br><br>";
 
 if($_GET['uuid'] != ''){

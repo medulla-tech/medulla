@@ -31,7 +31,7 @@ require_once("../../../includes/PageGenerator.php");
 require_once("../includes/includes.php");
 require_once('../includes/xmlrpc.inc.php');
 require_once("../../base/includes/edit.inc.php");
-require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
+require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 openlog('php', LOG_CONS | LOG_NDELAY | LOG_PID, LOG_USER | LOG_PERROR);
 syslog(LOG_ERR, 'Error!');
 extract($_GET);

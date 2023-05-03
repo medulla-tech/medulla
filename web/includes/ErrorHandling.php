@@ -35,7 +35,7 @@ class ErrorHandlingItem {
     var $_level;
     var $_showTraceBack;
 
-    function ErrorHandlingItem($regexp) {
+    function __construct($regexp) {
         $this->regexp = '#'.$regexp.'#';
         $this->msgRegExp = false;
         $this->_size = 800; //default notify Widget size
@@ -133,7 +133,7 @@ class ErrorHandlingItem {
 
 class ErrorHandlingControler{
     var $eiList;
-    function ErrorHandlingControler() {
+    function __construct() {
         $this->eiList = array();
     }
 

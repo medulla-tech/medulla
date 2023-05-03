@@ -60,7 +60,7 @@ if (isset($_GET['imaging_server'])) {
 }
 
 if (in_array("dyngroup", $_SESSION["modulesList"])) {
-    require_once("modules/pulse2/includes/groups_xmlrpc.inc.php");
+    require_once("modules/medulla_server/includes/groups_xmlrpc.inc.php");
     require_once("modules/dyngroup/includes/dyngroup.php");
     if (isset($_GET['gid'])) {
         $filter['gid'] = $_GET['gid'];

@@ -27,7 +27,7 @@
     require_once("../../../includes/session.inc.php");
     require_once("../../../includes/PageGenerator.php");
     require_once('../includes/xmlrpc.php');
-    require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
+    require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
     // recuperation des donnees de la custom qa
     $customqa = xmlrpc_get_qaction($_GET['namecmd'], $_GET['user'], 1, $_GET['namecmdos']);

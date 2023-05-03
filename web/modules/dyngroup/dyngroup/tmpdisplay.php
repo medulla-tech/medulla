@@ -54,7 +54,7 @@ if (strlen($_GET['id'])) {
 }
 print "<a href='main.php?module=base&submod=computers&action=creator_step2$get'>"._T('back', 'dyngroup')."</a>";
 
-include("modules/pulse2/pulse2/computers_list.php");
+include("modules/medulla_server/medulla_server/computers_list.php");
 # TODO put bool in the first page whereas it is actualy in the second
 
 ?>

@@ -34,7 +34,7 @@ define ("DIR_SYS_PREP", "/var/lib/pulse2/imaging/postinst/sysprep");
 
 <?php
     class ajaxSelectItem extends Form  {
-        function ajaxSelectItem($idElt,$style = null) {
+        function __construct($idElt,$style = null) {
             $options = array();
             $this->idElt=$idElt;
             $this->idselect="select_$idElt";

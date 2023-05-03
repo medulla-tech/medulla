@@ -28,7 +28,7 @@ require_once("includes/xmlrpc.inc.php");
 
 class EmptyActionItem1 extends ActionItem {
 
-    function EmptyActionItem() {
+    function __construct() {
         //$this->classCss='empty';
         $this->desc='';
     }
@@ -93,7 +93,7 @@ function list_computers($names,
     }
 
     /* $pull_list is an array with UUIDs of pull machines */
-    $pull_list = (in_array("pulse2", $_SESSION["modulesList"])) ? get_pull_targets() : array();
+    $pull_list = (in_array("medulla_server", $_SESSION["modulesList"])) ? get_pull_targets() : array();
 
     $emptyAction = new EmptyActionItem();
 

@@ -23,7 +23,7 @@
  */
 class Autocomplete extends InputTpl {
 
-    function Autocomplete($name, $ajaxfile, $module, $criterion, $value = '', $limit, $extracriterion = '', $edition = false) {
+    function __construct($name, $ajaxfile, $module, $criterion, $value = '', $limit, $extracriterion = '', $edition = false) {
         parent::InputTpl($name);
         $this->ajaxfile = $ajaxfile;
         $this->module = $module;

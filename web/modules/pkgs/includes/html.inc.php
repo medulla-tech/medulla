@@ -22,7 +22,7 @@
  */
 class MultiFileTpl extends AbstractTpl {
 
-    function MultiFileTpl($name) {
+    function __construct($name) {
         $this->name = $name;
     }
 
@@ -115,7 +115,7 @@ class MultiFileTpl extends AbstractTpl {
 
 class MultiFileTpl2 extends AbstractTpl {
 
-    function MultiFileTpl2($name) {
+    function __construct($name) {
         $this->name = $name;
     }
 
@@ -206,7 +206,7 @@ class MultiFileTpl2 extends AbstractTpl {
 
 class MultiFileTpl3 extends AbstractTpl {
 
-    function MultiFileTpl2($name) {
+    function __construct($name) {
         $this->name = $name;
     }
 
@@ -296,7 +296,7 @@ class buttonTpl extends AbstractTpl {
     var $class = '';
     var $cssClass = 'btn btn-small';
 
-    function buttonTpl($id,$text,$class='') {
+    function __construct($id,$text,$class='') {
         $this->id = $id;
         $this->text = $text;
         $this->class = $class;

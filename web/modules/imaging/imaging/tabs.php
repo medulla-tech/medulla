@@ -30,7 +30,7 @@ if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
 require_once('graph/navbar.inc.php');
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 $params = getParams();
 $hostname = $params['hostname'];

@@ -81,7 +81,7 @@ class TextareaTpl extends AbstractTpl {
     var $rows;
     var $cols;
 
-    function TextareaTpl($name) {
+    function __construct($name) {
         $this->name = $name;
         $this->rows = 3;
         $this->cols = 21;
@@ -113,7 +113,7 @@ class TextareaTpl extends AbstractTpl {
 
 class FileTpl extends AbstractTpl {
 
-    function FileTpl($name) {
+    function __construct($name) {
         $this->name = $name;
     }
 
@@ -135,7 +135,7 @@ class RadioTpl extends AbstractTpl {
     var $choiceWidget;
     var $selected;
 
-    function RadioTpl($name) {
+    function __construct($name) {
         $this->name = $name;
     }
 
@@ -213,7 +213,7 @@ class RadioTpl extends AbstractTpl {
 
 class ImageTpl extends AbstractTpl {
 
-    function ImageTpl($name) {
+    function __construct($name) {
         $this->name = $name;
     }
 
@@ -249,7 +249,7 @@ class ImageTpl extends AbstractTpl {
  */
 class CheckboxTpl extends AbstractTpl {
 
-    function CheckboxTpl($name, $rightlabel = null, $jsFunc = null) {
+    function __construct($name, $rightlabel = null, $jsFunc = null) {
         $this->name = $name;
         $this->rightlabel = $rightlabel;
         $this->jsFunc = $jsFunc;
@@ -309,7 +309,7 @@ class CheckboxTpl extends AbstractTpl {
  */
 class InputTpl extends AbstractTpl {
 
-    function InputTpl($name, $regexp = '/.+/') {
+    function __construct($name, $regexp = '/.+/') {
         $this->name = $name;
         $this->regexp = $regexp;
         $this->fieldType = "text";
@@ -363,7 +363,7 @@ class InputTpl extends AbstractTpl {
  */
 class PasswordTpl extends InputTpl {
 
-    function PasswordTpl($name, $regexp = '/.+/') {
+    function __construct($name, $regexp = '/.+/') {
         $this->InputTpl($name, $regexp);
         $this->fieldType = "password";
     }
@@ -375,7 +375,7 @@ class PasswordTpl extends InputTpl {
  */
 class IntegerTpl extends InputTpl {
 
-    function IntegerTpl($name, $regexp = '/.+/') {
+    function __construct($name, $regexp = '/.+/') {
         $this->InputTpl($name, $regexp);
         $this->fieldType = "number";
         $this->attributcustom ='';
@@ -389,7 +389,7 @@ class IntegerTpl extends InputTpl {
  */
 class IA5InputTpl extends InputTpl {
 
-    function IA5InputTpl($name) {
+    function __construct($name) {
         $this->InputTpl($name, '/^[\x00-\x7f]*$/');
     }
 
@@ -400,7 +400,7 @@ class IA5InputTpl extends InputTpl {
  */
 class IPInputTpl extends InputTpl {
 
-    function IPInputTpl($name) {
+    function __construct($name) {
         $this->InputTpl($name, '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/');
     }
 
@@ -411,7 +411,7 @@ class IPInputTpl extends InputTpl {
  */
 class MACInputTpl extends InputTpl {
 
-    function MACInputTpl($name) {
+    function __construct($name) {
         $this->InputTpl($name, '/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i');
     }
 
@@ -423,7 +423,7 @@ class MACInputTpl extends InputTpl {
  */
 class DomainInputTpl extends InputTpl {
 
-    function DomainInputTpl($name) {
+    function __construct($name) {
         $this->InputTpl($name, '/^([a-z0-9][a-z0-9-]*[a-z0-9]\.){0,10}[a-z0-9][a-z0-9-]*[a-z0-9]$/');
     }
 
@@ -431,7 +431,7 @@ class DomainInputTpl extends InputTpl {
 
 class MailInputTpl extends InputTpl {
 
-    function MailInputTpl($name) {
+    function __construct($name) {
         $this->InputTpl($name, '/^([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z0-9]{2,}){0,1}$/');
     }
 
@@ -442,7 +442,7 @@ class MailInputTpl extends InputTpl {
  */
 class NumericInputTpl extends InputTpl {
 
-    function NumericInputTpl($name) {
+    function __construct($name) {
         $this->InputTpl($name, '/^[0-9]*$/');
     }
 
@@ -453,7 +453,7 @@ class NumericInputTpl extends InputTpl {
  */
 class HiddenTpl extends AbstractTpl {
 
-    function HiddenTpl($name) {
+    function __construct($name) {
         $this->name = $name;
     }
 
@@ -480,7 +480,7 @@ class HiddenTpl extends AbstractTpl {
  */
 class DateTpl extends InputTpl {
 
-    function DateTpl($name) {
+    function __construct($name) {
         $this->name = $name;
     }
 
@@ -527,7 +527,7 @@ class DateTpl extends InputTpl {
  */
 class DynamicDateTpl extends InputTpl {
 
-    function DynamicDateTpl($name) {
+    function __construct($name) {
         $this->name = $name;
         $this->size = "";
         $this->fieldType = "text";
@@ -685,7 +685,7 @@ class DateTimeTpl extends AbstractTpl {
 
 class MultipleInputTpl extends AbstractTpl {
 
-    function MultipleInputTpl($name, $desc = '', $new = false, $formId = "Form") {
+    function __construct($name, $desc = '', $new = false, $formId = "Form") {
         $this->name = $name;
         /*
           stripslashes is needed, because some characters may be backslashed
@@ -784,7 +784,7 @@ class MultipleInputTpl extends AbstractTpl {
 
 class MembersTpl extends AbstractTpl {
 
-    function MembersTpl($name) {
+    function __construct($name) {
         $this->name = $name;
         $this->titleLeft = "";
         $this->titleRight = "";
@@ -900,15 +900,16 @@ class MembersTpl extends AbstractTpl {
  */
 class SelectItem extends AbstractTpl {
 
-    var $elements; /*     * < list of all elements */
-    var $elementsVal; /*     * < list of elements values */
-    var $selected; /*     * < element who are selected */
-    var $id; /*     * < id for css property */
+    public $elements; /*     * < list of all elements */
+    public $elementsVal; /*     * < list of elements values */
+    public $selected; /*     * < element who are selected */
+    public $id; /*     * < id for css property */
+    public $jsFunc;
 
     /**
      * constructor
      */
-    function SelectItem($idElt, $jsFunc = null, $style = null) {
+    function __construct($idElt, $jsFunc = null, $style = null) {
         $this->id = str_replace("[]", "", $idElt);
         $this->name = $idElt;
         $this->jsFunc = $jsFunc;
@@ -1056,7 +1057,7 @@ class FormElement extends HtmlElement {
     var $cssErrorName;
     var $tooltip;
 
-    function FormElement($desc, $tpl, $extraInfo = array()) {
+    function __construct($desc, $tpl, $extraInfo = array()) {
         $this->desc = $desc;
         $this->template = &$tpl;
         foreach ($extraInfo as $key => $value) {
@@ -1124,7 +1125,7 @@ class DeletableTrFormElement extends FormElement {
     var $desc;
     var $cssErrorName;
 
-    function DeletableTrFormElement($desc, $tpl, $extraInfo = array(), $formId) {
+    function __construct($desc, $tpl, $extraInfo = array(), $formId) {
         $this->desc = $desc;
         $this->template = &$tpl;
         foreach ($extraInfo as $key => $value) {
@@ -1227,7 +1228,7 @@ class TrFormElement extends FormElement {
     var $desc;
     var $cssErrorName;
 
-    function TrFormElement($desc, $tpl, $extraInfo = array()) {
+    function __construct($desc, $tpl, $extraInfo = array()) {
         $this->desc = $desc;
         $this->template = &$tpl;
         $this->tooltip = False;

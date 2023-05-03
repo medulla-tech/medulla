@@ -40,7 +40,7 @@ $computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence']
 $_SESSION['computerpresence'] = $computerpresence;
 
 
-if (in_array("pulse2", $_SESSION["modulesList"])) {
+if (in_array("medulla_server", $_SESSION["modulesList"])) {
       //Radiobox Mode
       echo '<input type="radio" ';
       if ($computerpresence == "all_computer") echo "checked";
@@ -55,7 +55,7 @@ if (in_array("pulse2", $_SESSION["modulesList"])) {
       echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
       echo '<label for="namepresence3" style="display:initial;">'._('Offline computers').'</label>';
 
-      include("modules/pulse2/pulse2/computers_list.php");
+      include("modules/medulla_server/medulla_server/computers_list.php");
     }
 else {
     $param = array();

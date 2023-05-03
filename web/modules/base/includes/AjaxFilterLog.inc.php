@@ -63,7 +63,7 @@ class AjaxLogNavBar extends SimpleNavBar {
      * @param $extra: extra URL parameter to pass the next/list button
      * @param $jsfunc: the name of the javascript function that applies the AJAX filter for the ListInfos widget
      */
-    function AjaxLogNavBar($itemcount, $filter, $maxperpage, $jsfunc = "updateSearchParam",$extra="" ) {
+    function __construct($itemcount, $filter, $maxperpage, $jsfunc = "updateSearchParam",$extra="" ) {
         global $conf;
         $this->itemcount = $itemcount;
         $this->extra = $extra;
@@ -126,7 +126,7 @@ class AjaxLogNavBar extends SimpleNavBar {
  */
 class LogDynamicDateTpl extends InputTpl {
 
-    function LogDynamicDateTpl($name,$defaultvalue) {
+    function __construct($name,$defaultvalue) {
         $this->name = $name;
         $this->value = $defaultvalue;
     }
@@ -320,7 +320,7 @@ class LogListInfos extends OptimizedListInfos {
 
 
 class AjaxFilterLog extends AjaxFilter {
-    function AjaxFilterLog($url, $type, $module="all", $divid = "container" ) {
+    function __construct($url, $type, $module="all", $divid = "container" ) {
         $this->AjaxFilter($url, $divid);
         $this->begindate = new LogDynamicDateTpl("begindate",_("Begin date"));
         $this->enddate = new LogDynamicDateTpl("enddate",_("End date"));

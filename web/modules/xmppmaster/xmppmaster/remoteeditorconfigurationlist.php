@@ -139,9 +139,9 @@ $p = new PageGenerator(_T("Edit config file", 'xmppmaster')." on ". $ma['hostnam
 $p->setSideMenu($sidemenu);
 $p->display();
 
-require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
+require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
-include_once('modules/pulse2/includes/menu_actionaudit.php');
+include_once('modules/medulla_server/includes/menu_actionaudit.php');
 
     $result = xmlrpc_remotefileeditaction($ma['jid'], array('action' => 'listconfigfile'));
     if ($result['numerror'] != 0){

@@ -26,7 +26,7 @@ require_once("mscoptions_xmlrpc.php"); # to read msc.ini
 
 class CommandOnHost {
 
-    function CommandOnHost($coh) {
+    function __construct($coh) {
         $statusTable = getStatusTable();
         $this->db_coh = get_commands_on_host($coh);
         $this->db_cmd = command_detail($this->db_coh['fk_commands']);
@@ -103,7 +103,7 @@ class CommandOnHost {
 
 class Bundle {
 
-    function Bundle($bundle_id) {
+    function __construct($bundle_id) {
         $this->db_bundle = bundle_detail($bundle_id);
         addtoBreadcrumb($this->db_bundle[0]['title']);
         if (!$this->db_cmd) { # use does not have the good permissions
@@ -170,7 +170,7 @@ class Bundle {
 
 class Command {
 
-    function Command($cmd) {
+    function __construct($cmd) {
         $this->db_cmd = command_detail($cmd);
         $this->error = false;
         if (!$this->db_cmd) { # use does not have the good permissions
@@ -267,7 +267,7 @@ function i18nparts($str) {
 
 class CommandHistory {
 
-    function CommandHistory($coh_id) {
+    function __construct($coh_id) {
         // TODO : ch is a list, we have to chose the good one (ie : the most recent date)
         $this->db_ch = get_command_history($coh_id);
         $this->db_coh = get_commands_on_host($coh_id);

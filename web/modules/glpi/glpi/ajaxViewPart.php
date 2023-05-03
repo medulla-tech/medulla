@@ -25,7 +25,7 @@
 
 /* Get GLPI xmlrpc includes */
 require_once("modules/glpi/includes/xmlrpc.php");
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 /*
  * Display Glpi Inventory part infos (Summary, Hardware, Network, etc..)

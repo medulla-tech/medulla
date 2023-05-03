@@ -23,8 +23,8 @@
  */
 
 class AjaxFilterGlpi extends AjaxFilter {
-    function AjaxFilterGlpi($url, $divid = "container", $params = array(), $formid = "") {
-        $this->AjaxFilter($url, $divid, $params, $formid);
+    function __construct($url, $divid = "container", $params = array(), $formid = "") {
+        parent::__construct($url, $divid, $params, $formid);
     }
 
     function display($arrParam = array()) {
@@ -194,8 +194,8 @@ if ($this->refresh) {
     - peripherals field selectbox
     - value field
    */
-   function AjaxFilterParams($url, $divid = "container", $paramname = 'location', $params = array()) {
-       $this->AjaxFilter($url, $divid, $params);
+   function __construct($url, $divid = "container", $paramname = 'location', $params = array()) {
+       parent::__construct($url, $divid, $params);
        $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
        $this->paramname = $paramname;
        $this->checkbox=array();
@@ -391,8 +391,8 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
     - peripherals field selectbox
     - value field
    */
-   function AjaxFilterParams($url, $divid = "container", $paramname = 'dede', $params = array()) {
-       $this->AjaxFilter($url, $divid, $params);
+   function __construct($url, $divid = "container", $paramname = 'dede', $params = array()) {
+       parent::__construct($url, $divid, $params);
        $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
        $this->paramname = $paramname;
        $this->checkbox=array();

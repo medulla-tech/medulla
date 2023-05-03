@@ -22,7 +22,7 @@
  */
 
     class  TrFormElementcollapse extends TrFormElement{
-        function TrFormElementcollapse( $tpl, $extraInfo = array()){
+        function __construct( $tpl, $extraInfo = array()){
             parent::TrFormElement($desc, $tpl, $extraInfo);
         }
 
@@ -115,7 +115,7 @@
  */
 class InputTplTitle extends InputTpl {
     var $title;
-    function InputTplTitle($name,$title=null,$regexp = '/.+/'){
+    function __construct($name,$title=null,$regexp = '/.+/'){
         $this->title=$title;
         parent::InputTpl($name,$regexp);
     }
@@ -169,7 +169,7 @@ class SelectItemtitle extends SelectItem {
     /**
      * constructor
      */
-    function SelectItemtitle($idElt, $title=null, $jsFunc = null, $style = null) {
+    function __construct($idElt, $title=null, $jsFunc = null, $style = null) {
         $this->title=$title;
         parent::SelectItem($idElt, $jsFunc, $style);
     }
@@ -201,7 +201,7 @@ class SelectItemtitle extends SelectItem {
  * click launch function fn_"id_element"
  */
 class IconeElement extends HtmlElement {
-    function IconeElement($id, $src, $alt="", $title="", $params = array()) {
+    function __construct($id, $src, $alt="", $title="", $params = array()) {
         $this->id = $id;
         $this->src = $src;
         $this->alt = $alt;
@@ -226,7 +226,7 @@ class IconeElement extends HtmlElement {
     }
 }
 class Iconereply extends IconeElement {
-    function Iconereply($id,$title){
+    function __construct($id,$title){
         parent::IconeElement($id,'img/other/expand.svg',"",$title);
     }
 }
@@ -235,7 +235,7 @@ class buttonTpl extends HtmlElement {
     var $class = '';
     var $cssClass = 'btn btn-small';
 
-    function buttonTpl($id, $value, $class='', $infobulle='', $params = array()) {
+    function __construct($id, $value, $class='', $infobulle='', $params = array()) {
         $this->id = $id;
         $this->value = $value;
         $this->class = $class;
@@ -265,7 +265,7 @@ class buttonTpl extends HtmlElement {
 
 class SpanElementtitle extends HtmlElement {
 
-    function SpanElementtitle($content, $class = Null,$title=Null,$id=null) {
+    function __construct($content, $class = Null,$title=Null,$id=null) {
         $this->name = $class;
         $this->content = $content;
         $this->class = $class;

@@ -35,7 +35,7 @@ function parse_subrequest($str) {
 
 class Request {
 
-    function Request() {
+    function _construct() {
         $this->subs = array();
         $this->nextSubId = 1;
     }
@@ -138,7 +138,7 @@ class Request {
 
 class SubRequest {
 
-    function SubRequest($module = null, $criterion = null, $value = null, $value2 = null, $operator = null) {
+    function __construct($module = null, $criterion = null, $value = null, $value2 = null, $operator = null) {
         $this->sep_plural = array('>', '<');
         $this->module = $module;
         $this->crit = $criterion;

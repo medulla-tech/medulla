@@ -23,8 +23,8 @@
  */
 
 require_once('modules/imaging/includes/xmlrpc.inc.php');
-require("modules/pulse2/includes/profiles_xmlrpc.inc.php");
-require_once("modules/pulse2/includes/utilities.php");
+require("modules/medulla_server/includes/profiles_xmlrpc.inc.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];

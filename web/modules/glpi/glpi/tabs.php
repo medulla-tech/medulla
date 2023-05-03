@@ -26,7 +26,7 @@
 require_once("modules/glpi/includes/xmlrpc.php");
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla_server/includes/utilities.php");
 
 global $conf;
 $glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? htmlentities($conf['global']['glpidisplayname']) : "GLPI";

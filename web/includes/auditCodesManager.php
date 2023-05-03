@@ -27,7 +27,7 @@ class AuditCodesManager {
 
     var $codes;
 
-    function AuditCodesManager() {
+    function __construct() {
         # global audit codes
         $this->codes = array(
             'MMC_AGENT_SERVICE_START' => _("Daemon start"),

@@ -29,7 +29,7 @@ class multicol extends HtmlElement {
     public $widths;
     public $valigns;
 
-    function multicol() {
+    function __construct() {
         $this->cols = array();
         $this->widths = array();
         $this->paddings = array();

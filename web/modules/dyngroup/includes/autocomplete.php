@@ -22,7 +22,7 @@
  */
 
 class Autocomplete {
-    function Autocomplete($module, $criterion, $value = '', $edition = false) {
+    function __construct($module, $criterion, $value = '', $edition = false) {
         $this->module = $module;
         $this->criterion = $criterion;
         $this->val = $value;

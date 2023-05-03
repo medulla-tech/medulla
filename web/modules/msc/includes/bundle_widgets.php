@@ -23,7 +23,7 @@
  */
 
 class RenderedMSCBundleChoice {
-    function RenderedMSCBundleChoice() {
+    function __construct() {
         $this->err = array();
     }
     function treatPost() {
@@ -153,7 +153,7 @@ select.list
 }
 
 class RenderedMSCBundleChoiceM extends RenderedMSCBundleChoice {
-    function RenderedMSCBundleChoiceM($machine) {
+    function __construct($machine) {
         $this->machine = $machine;
         $this->title_right = _T('Actions in bundle', 'msc');
         $this->title_left = _T('Possible actions', 'msc');
@@ -182,7 +182,7 @@ class RenderedMSCBundleChoiceM extends RenderedMSCBundleChoice {
 }
 
 class RenderedMSCBundleChoiceG extends RenderedMSCBundleChoice {
-    function RenderedMSCBundleChoiceG($group) {
+    function __construct($group) {
         $this->group = $group;
         $this->title_right = _T('Actions in bundle', 'msc');
         $this->title_left = _T('Possible actions', 'msc');
@@ -212,7 +212,7 @@ class RenderedMSCBundleChoiceG extends RenderedMSCBundleChoice {
 
 // SORT BUNDLE WIDGETS
 class RenderedMSCBundleSortParent {
-    function RenderedMSCBundleSortParent() {
+    function __construct() {
         $this->input_pre = 'si_';
         $this->buttons = array(
             array('blaunch_bundle', _T("Launch", "msc"), "btnPrimary")
@@ -280,7 +280,7 @@ class RenderedMSCBundleSortParent {
 }
 
 class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
-    function RenderedMSCBundleSort() {
+    function __construct() {
         parent::RenderedMSCBundleSortParent();
         $this->buttons []= array('badvanced_bundle', _T("Launch (advanced)", "msc"), "btnPrimary");
         $this->buttons []= array('bcancel_bundle', _T("Cancel", "msc"), "btnSecondary");
@@ -309,7 +309,7 @@ class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
 }
 
 class RenderedMSCBundleSortM extends RenderedMSCBundleSort {
-    function RenderedMSCBundleSortM($machine, $members) {
+    function __construct($machine, $members) {
         parent::RenderedMSCBundleSort();
         $this->machine = $machine;
         $this->members = $members;
@@ -324,7 +324,7 @@ class RenderedMSCBundleSortM extends RenderedMSCBundleSort {
 }
 
 class RenderedMSCBundleSortG extends RenderedMSCBundleSort {
-    function RenderedMSCBundleSortG($group, $members) {
+    function __construct($group, $members) {
         parent::RenderedMSCBundleSort();
         $this->group = $group;
         $this->members = $members;
@@ -336,7 +336,7 @@ class RenderedMSCBundleSortG extends RenderedMSCBundleSort {
 }
 
 class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
-    function RenderedMSCBundleSortAdv() {
+    function __construct() {
         parent::RenderedMSCBundleSortParent();
     }
     function display_options($f) {
@@ -382,7 +382,7 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
 }
 
 class RenderedMSCBundleSortAdvM extends RenderedMSCBundleSortAdv {
-    function RenderedMSCBundleSortAdvM($machine, $members) {
+    function __construct($machine, $members) {
         parent::RenderedMSCBundleSortAdv();
         $this->machine = $machine;
         $this->members = $members;
@@ -398,7 +398,7 @@ class RenderedMSCBundleSortAdvM extends RenderedMSCBundleSortAdv {
 }
 
 class RenderedMSCBundleSortAdvG extends RenderedMSCBundleSortAdv {
-    function RenderedMSCBundleSortAdvG($group, $members) {
+    function __construct($group, $members) {
         parent::RenderedMSCBundleSortAdv();
         $this->group = $group;
         $this->members = $members;

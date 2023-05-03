@@ -71,7 +71,7 @@ class Step {
      * - $params['step']
      * - etc.
      */
-    public function Step($params)
+    public function __construct($params)
     {
         $this->label = $params['label'];
         unset($params['label']);			//Extract label
@@ -519,7 +519,7 @@ class TextareaTplArray extends AbstractTpl{
   */
   protected $params = array();
   protected $value;
-  public function TextareaTplArray($params = [])
+  public function __construct($params = [])
   {
     if(is_array($params))
     {
@@ -578,7 +578,7 @@ class AsciiInputTpl extends InputTpl {
   *   $name : string which corresponding to the name of the input and the GET/POST data of the form
   */
 
-  function AsciiInputTpl($name) {
+  function __construct($name) {
     $this->InputTpl($name, '/^[A-Za-z0-9\.\-\!\?\ \.\#%$&@\*\+_\/]*$/');
   }
 }

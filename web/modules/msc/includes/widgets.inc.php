@@ -36,7 +36,7 @@ _T("Other/N.A.", "msc");
 
 class RenderedMSCHost extends RenderedLabel {
 
-    function RenderedMSCHost($machine, $probe_order) {
+    function __construct($machine, $probe_order) {
         $this->hostname = $machine->hostname;
         $this->machine = $machine;
         $this->platform = $machine->platform;
@@ -69,7 +69,7 @@ class RenderedMSCHost extends RenderedLabel {
 
 class RenderedMSCGroupDontExists extends HtmlElement {
 
-    function RenderedMSCGroupDontExists($name) {
+    function __construct($name) {
         $this->name = $name;
         $this->str = sprintf(_T('group "%s" is not defined in the MSC module, or you don\'t have permissions to access it', 'msc'), $this->name);
     }
@@ -91,7 +91,7 @@ class RenderedMSCGroupDontExists extends HtmlElement {
 
 class RenderedMSCHostDontExists extends HtmlElement {
 
-    function RenderedMSCHostDontExists($name) {
+    function __construct($name) {
         $this->name = $name;
         $this->str = sprintf(_T('%s host is not defined in the MSC module, or you don\'t have permissions to access it', 'msc'), $this->name);
     }
@@ -113,7 +113,7 @@ class RenderedMSCHostDontExists extends HtmlElement {
 
 class RenderedMSCCommandDontExists extends RenderedMSCHostDontExists {
 
-    function RenderedMSCCommandDontExists() {
+    function __construct() {
         $this->str = _T("You don't have the right permissions to display this command", "msc");
     }
 
@@ -121,7 +121,7 @@ class RenderedMSCCommandDontExists extends RenderedMSCHostDontExists {
 
 class RedirectMSC extends HtmlElement {
 
-    function RedirectMSC($dest) {
+    function __construct($dest) {
         print "<html><head><meta http-equiv=\"refresh\" content=\"0;url=$dest\"></head></html>";
         exit();
     }
@@ -132,7 +132,7 @@ class RedirectMSC extends HtmlElement {
 
 class RenderedLabel extends HtmlElement {
 
-    function RenderedLabel($level, $text) {
+    function __construct($level, $text) {
         $this->level = $level;
         $this->text = $text;
     }
@@ -147,7 +147,7 @@ class RenderedLabel extends HtmlElement {
 
 class RenderedMSCActions extends HtmlElement {
 
-    function RenderedMSCActions($script_list, $qa_on_name, $params) {
+    function __construct($script_list, $qa_on_name, $params) {
         $this->list = array();
         $this->qa_on_name = $qa_on_name;
         $this->params = $params;
@@ -290,7 +290,7 @@ class RenderedMSCActions extends HtmlElement {
 
 class RenderedMSCAction extends HtmlElement {
 
-    function RenderedMSCAction($script) {
+    function __construct($script) {
         $this->filename = $script['filename'];
         /* Try to find a localized version of the quick action title */
         if (!empty($script['title' . $_SESSION['lang']])) {
@@ -311,7 +311,7 @@ class RenderedMSCAction extends HtmlElement {
 
 class RenderedImgInput extends HtmlElement {
 
-    function RenderedImgInput($path, $style = '') {
+    function __construct($path, $style = '') {
         $this->path = $path;
         $this->style = $style;
     }
@@ -338,7 +338,7 @@ class RenderedImgInput extends HtmlElement {
 
 class AjaxFilterCommands extends AjaxFilter {
 
-    function AjaxFilterCommands($url, $divid = "container", $paramname = 'commands', $params = array(), $formid = 'Form') {
+    function __construct($url, $divid = "container", $paramname = 'commands', $params = array(), $formid = 'Form') {
         $this->AjaxFilter($url, $divid, $params, $formid);
         $this->commands = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
         $this->paramname = $paramname;
@@ -508,7 +508,7 @@ class AjaxFilterCommands extends AjaxFilter {
 
 class AjaxFilterCommandsStates extends AjaxFilter {
 
-    function AjaxFilterCommandsStates($url, $divid = "container", $paramname1 = 'commands', $paramname2 = 'currentstate', $params = array()) {
+    function __construct($url, $divid = "container", $paramname1 = 'commands', $paramname2 = 'currentstate', $params = array()) {
         $this->AjaxFilter($url, $divid, $params);
 
         /* Commands selection dropdown */
