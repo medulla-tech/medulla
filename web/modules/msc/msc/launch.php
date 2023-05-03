@@ -923,7 +923,8 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         //reset the result
         intervals = true;
         if(value === "undefined" || value == ""){
-            // We accept empty value, so we quit the test in this case
+            // We accept empty value, so we activate the button and quit the test in this case
+            enableSubmitButton();
             return
         }
 
