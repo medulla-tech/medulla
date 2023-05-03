@@ -13,7 +13,7 @@ from sqlalchemy import (
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
-
+import datetime
 
 Base = declarative_base()
 
