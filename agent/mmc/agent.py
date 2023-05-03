@@ -32,7 +32,7 @@ from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory
 from mmc.core.log import ColoredFormatter
 
-import imp
+import importlib
 import logging
 import logging.config
 import xmlrpc.client
@@ -1487,11 +1487,12 @@ class PluginManager(Singleton):
         plugin), 0 on non-fatal failure, and the module itself if
         the load was successful
         """
-        f, p, d = imp.find_module(name, ["plugins"])
-
+        sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "plugins"))
         try:
             logger.debug("Trying to load module %s" % name)
-            plugin = imp.load_module(name, f, p, d)
+            spec = importlib.util.find_spec(name)
+            plugin = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(plugin)
             logger.debug("Module %s loaded" % name)
         except Exception as e:
             logger.exception(e)
@@ -1516,8 +1517,9 @@ class PluginManager(Singleton):
 
             func = getattr(plugin, "activate")
 
-        except AttributeError:
+        except AttributeError as error:
             logger.error("%s is not a MMC plugin." % name)
+            logger.error("We obtained the error \n %s." % error)
             plugin = None
             return 0
 
