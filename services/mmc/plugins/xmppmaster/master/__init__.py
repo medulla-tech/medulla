@@ -2,5 +2,5 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-from lib import utils
-from lib import managesession
+from mmc.plugins.xmppmaster.master.lib  import utils
+from mmc.plugins.xmppmaster.master.lib  import managesession
