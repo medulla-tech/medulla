@@ -9,6 +9,7 @@ Inventory database backend
 """
 
 from pulse2.managers.group import ComputerGroupManager
+from mmc.database.database_helper import DatabaseHelper
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.database.utilities import unique, handle_deconnect
