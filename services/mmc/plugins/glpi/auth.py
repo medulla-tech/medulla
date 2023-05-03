@@ -8,7 +8,7 @@ import urllib.parse
 import re
 
 from twisted.internet import reactor, defer
-from twisted.web.client import HTTPClientFactory, getPage
+from twisted.web import client
 
 try:
     from twisted.web.client import _parse
@@ -74,7 +74,7 @@ class GlpiAuthenticator(AuthenticatorI):
 
     def _cbLoginPost(self, params):
         self.logger.debug("GlpiAuthenticator: posting on login page")
-        d = getPage(
+        d = agent.request(
             urllib.parse.urljoin(self.config.baseurl, self.config.loginpost),
             None,
             **params
@@ -106,7 +106,7 @@ class GlpiAuthenticator(AuthenticatorI):
         return True
 
 
-class HTTPClientFactoryWithHeader(HTTPClientFactory):
+class HTTPClientFactoryWithHeader(client.Agent):
     """
     HTTPClientFactory don't allow to get the HTTP header.
     So we subclass the page() method and modify it to get the HTTP payload

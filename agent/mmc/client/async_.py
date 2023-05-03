@@ -26,6 +26,7 @@ import base64
 import logging
 import traceback
 
+import xmlrpc.client
 from twisted.web import xmlrpc
 
 logger = logging.getLogger()
@@ -77,7 +78,7 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
             self._response = contents
 
 
-class MMCQueryFactory(xmlrpc._QueryFactory):
+class MMCQueryFactory(xmlrpc.Proxy):
 
     protocol = MMCQueryProtocol
 
