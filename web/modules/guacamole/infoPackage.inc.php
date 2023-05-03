@@ -25,24 +25,8 @@
 /**
  * module declaration
  */
-// require_once("modules/pulse2/version.php");
-// $mod = new Module("guacamole");
-// $mod->setVersion(VERSION);
-// $mod->setRevision(REVISION);
-// $mod->setDescription(_T("guacamole", "guacamole"));
-// $mod->setAPIVersion("0:0:0");
-// // Create a glpi submodule only for guacamole Dashboard ACL
-// $submod = new SubModule("guacamole");
-// $submod->setDescription(_T("guacamole", "guacamole"));
-// // hide this submodule from Web UI
-// $submod->setVisibility(False);
-// $page = new Page('guacamole_dashboard', _T('guacamole Dashboard', 'guacamole'));
-// $submod->addPage($page);
-// $mod->addSubmod($submod);
-// $MMCApp =& MMCApp::getInstance();
-// $MMCApp->addModule($mod);
 
-require_once("modules/pulse2/version.php");
+require_once("modules/medulla_server/version.php");
 
 $mod = new Module("guacamole");
 $mod->setVersion(VERSION);

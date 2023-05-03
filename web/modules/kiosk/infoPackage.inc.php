@@ -22,7 +22,7 @@
 /**
  * module declaration
  */
-require_once("modules/pulse2/version.php");
+require_once("modules/medulla_server/version.php");
 
 $mod = new Module("kiosk");
 $mod->setVersion("4.0");

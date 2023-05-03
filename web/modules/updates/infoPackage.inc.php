@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/pulse2/version.php");
+require_once("modules/medulla_server/version.php");
 
 $mod = new Module("updates");
 $mod->setVersion("1.0");

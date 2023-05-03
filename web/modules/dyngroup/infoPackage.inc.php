@@ -22,7 +22,7 @@
  */
 
 require_once("modules/dyngroup/includes/includes.php");
-require_once("modules/pulse2/version.php");
+require_once("modules/medulla_server/version.php");
 
 $mod = new Module("dyngroup");
 $mod->setVersion(VERSION);
