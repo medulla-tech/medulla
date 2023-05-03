@@ -27,7 +27,6 @@
 assert_options(ASSERT_ACTIVE, 1);
 assert_options(ASSERT_WARNING, 1);
 assert_options(ASSERT_BAIL, 1);
-assert_options(ASSERT_QUIET_EVAL, 1);
 
 /* Callback called when an assert failed */
 function mmc_assert_handler($file, $line, $code) {
