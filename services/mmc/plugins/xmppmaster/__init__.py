@@ -19,6 +19,7 @@ import json
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
 from pulse2.database.pkgs import PkgsDatabase
+from pulse2.utils import xmlrpcCleanup
 
 import zlib
 import base64
