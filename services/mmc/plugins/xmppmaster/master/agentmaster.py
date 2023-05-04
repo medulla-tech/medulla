@@ -15,7 +15,7 @@ import logging
 import threading
 from mmc.agent import PluginManager
 import asyncio
-
+import slixmpp
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
 sys.path.append(
@@ -234,7 +234,7 @@ class XmppSimpleCommand:
         return self.result
 
 
-class MUCBot(sleekxmpp.ClientXMPP):
+class MUCBot(slixmpp.ClientXMPP):
     def __init__(self, conf):  # jid, password, room, nick):
         namelibplugins = "master/pluginsmaster"
         self.modulepath = os.path.abspath(\
