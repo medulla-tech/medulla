@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import logging
@@ -257,7 +257,7 @@ def create_simple_package_uuid(label, localisation=None):
                       This is set to None by default
     Returns: It returns the new simple package uuid
     """
-    label=re.sub(r"[^a-zA-Z0-9]","",label)
+    label = re.sub(r"[^a-zA-Z0-9]", "", label)
     if localisation is not None:
         label = label + "_" + localisation
     data = _remove_non_ascii((str(uuid.uuid1())[:9] + label + "_").replace(" ", "_"))
@@ -456,7 +456,7 @@ def generate_hash(path, package_id):
     source = "/var/lib/pulse2/packages/sharing/" + path + "/" + package_id
     dest = "/var/lib/pulse2/packages/hash/" + path + "/" + package_id
     BLOCK_SIZE = 65535
-    
+
     if os.path.exists(dest):
         shutil.rmtree(dest)
 
@@ -482,13 +482,17 @@ def generate_hash(path, package_id):
                 file_hash = hashlib.new(hash_type)
             except:
                 logger.error("Wrong hash type")
-            file_block = _file.read(BLOCK_SIZE) # Read from the file. Take in the amount declared above
-            while len(file_block) > 0: # While there is still data being read from the file
-                file_hash.update(file_block) # Update the hash
-                file_block = _file.read(BLOCK_SIZE) # Read the next block from the file
+            file_block = _file.read(
+                BLOCK_SIZE
+            )  # Read from the file. Take in the amount declared above
+            while (
+                len(file_block) > 0
+            ):  # While there is still data being read from the file
+                file_hash.update(file_block)  # Update the hash
+                file_block = _file.read(BLOCK_SIZE)  # Read the next block from the file
 
         try:
-            with open((os.path.join(dest, file_package)) + ".hash", 'wb') as _file:
+            with open((os.path.join(dest, file_package)) + ".hash", "wb") as _file:
                 _file.write(file_hash.hexdigest())
         except:
             logger.debug("The 'docs' directory does not exist")
@@ -663,16 +667,18 @@ def putPackageDetail(package, need_assign=True):
         },
     }
 
-    typesynchro = 'create'
-    if 'mode' in package and   package['mode'] !=  'creation':
-        typesynchro = 'chang'
-    if not os.path.exists(os.path.join(packages_id_input_dir,"xmppdeploy.json")):
+    typesynchro = "create"
+    if "mode" in package and package["mode"] != "creation":
+        typesynchro = "chang"
+    if not os.path.exists(os.path.join(packages_id_input_dir, "xmppdeploy.json")):
         # write file to xmpp deploy
         xmppdeployfile = to_json_xmppdeploy(package)
-        with open( os.path.join(packages_id_input_dir,"xmppdeploy.json"), "w" ) as fichier:
+        with open(
+            os.path.join(packages_id_input_dir, "xmppdeploy.json"), "w"
+        ) as fichier:
             fichier.write(xmppdeployfile)
 
-        parsexmppjsonfile(os.path.join(packages_id_input_dir,"xmppdeploy.json"))
+        parsexmppjsonfile(os.path.join(packages_id_input_dir, "xmppdeploy.json"))
 
     if centralizedmultiplesharing:
         localisation_server = (
@@ -1227,7 +1233,6 @@ class DownloadAppstreamPackageList(object):
 
         # add non downloaded package to download package list
         for pkg, details in list(getActivatedAppstreamPackages().items()):
-
             try:
                 # Creating requests session
                 s = requests.Session()
@@ -1656,21 +1661,22 @@ def save_xmpp_json(folder, json_content):
             if "error" in stepseq:
                 valerror = _stepforalias(stepseq["error"], vv)
                 if valerror != None:
-                    stepseq['error'] = valerror
+                    stepseq["error"] = valerror
 
     # Extracts the uuid of the folder
     folder_list = folder.split("/")
     uuid = folder_list[-1]
 
-    structpackage['metaparameter']['uuid'] = uuid
-    json_content= json.dumps(structpackage)
+    structpackage["metaparameter"]["uuid"] = uuid
+    json_content = json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
     # Refresh the dependencies list
     uuid = folder.split("/")[-1]
     dependencies_list = structpackage["info"]["Dependency"]
     pkgmanage().refresh_dependencies(uuid, dependencies_list)
     from mmc.plugins.kiosk import update_launcher
-    update_launcher(uuid, structpackage['info']['launcher'])
+
+    update_launcher(uuid, structpackage["info"]["launcher"])
 
 
 def _aliasforstep(step, dictstepseq):
@@ -1735,7 +1741,9 @@ def xmpp_packages_list():
             # 3 - Extracts the package information and add it to the package list
             # json_content = json.load(file(path+'/'+dirname+'/xmppdeploy.json'))
             json_content = {}
-            with open(os.path.join(path, dirname, "xmppdeploy.json"), "r") as xmppdeploy:
+            with open(
+                os.path.join(path, dirname, "xmppdeploy.json"), "r"
+            ) as xmppdeploy:
                 json_content = json.load(xmppdeploy)
                 xmppdeploy.close()
             json_content["info"]["uuid"] = dirname
