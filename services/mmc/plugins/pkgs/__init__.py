@@ -25,7 +25,7 @@ from mmc.site import mmcconfdir
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.panel import Panel
-from mmc.plugins.pulse2.utils import notificationManager
+from mmc.plugins.medulla_server.utils import notificationManager
 from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
 import uuid
