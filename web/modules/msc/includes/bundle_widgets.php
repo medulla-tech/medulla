@@ -281,7 +281,7 @@ class RenderedMSCBundleSortParent {
 
 class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
     function __construct() {
-        parent::RenderedMSCBundleSortParent();
+        parent::__construct();
         $this->buttons []= array('badvanced_bundle', _T("Launch (advanced)", "msc"), "btnPrimary");
         $this->buttons []= array('bcancel_bundle', _T("Cancel", "msc"), "btnSecondary");
     }
@@ -310,7 +310,7 @@ class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
 
 class RenderedMSCBundleSortM extends RenderedMSCBundleSort {
     function __construct($machine, $members) {
-        parent::RenderedMSCBundleSort();
+        parent::__construct();
         $this->machine = $machine;
         $this->members = $members;
         $this->initCount();
@@ -325,7 +325,7 @@ class RenderedMSCBundleSortM extends RenderedMSCBundleSort {
 
 class RenderedMSCBundleSortG extends RenderedMSCBundleSort {
     function __construct($group, $members) {
-        parent::RenderedMSCBundleSort();
+        parent::__construct();
         $this->group = $group;
         $this->members = $members;
         $this->initCount();
@@ -337,7 +337,7 @@ class RenderedMSCBundleSortG extends RenderedMSCBundleSort {
 
 class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
     function __construct() {
-        parent::RenderedMSCBundleSortParent();
+        parent::__construct();
     }
     function display_options($f) {
         // $start_date is now()
@@ -383,7 +383,7 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
 
 class RenderedMSCBundleSortAdvM extends RenderedMSCBundleSortAdv {
     function __construct($machine, $members) {
-        parent::RenderedMSCBundleSortAdv();
+        parent::__construct();
         $this->machine = $machine;
         $this->members = $members;
         $this->buttons []= array('bcancel_bundle', _T("Cancel bundle creation", "msc"), "btnSecondary");
@@ -399,7 +399,7 @@ class RenderedMSCBundleSortAdvM extends RenderedMSCBundleSortAdv {
 
 class RenderedMSCBundleSortAdvG extends RenderedMSCBundleSortAdv {
     function __construct($group, $members) {
-        parent::RenderedMSCBundleSortAdv();
+        parent::__construct();
         $this->group = $group;
         $this->members = $members;
         $this->buttons []= array('bcancel_bundle', _T("Cancel bundle creation", "msc"), "btnSecondary");

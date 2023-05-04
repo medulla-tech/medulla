@@ -101,7 +101,7 @@ class SelectItemlabeltitle extends SelectItem {
     function __construct($idElt, $label = null, $title = null, $jsFunc = null, $style = null) {
         $this->title = $title;
         $this->label = $label;
-        parent::SelectItem($idElt, $jsFunc, $style);
+        parent::__construct($idElt, $jsFunc, $style);
     }
 
     function to_string($paramArray = null) {

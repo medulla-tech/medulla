@@ -33,7 +33,7 @@ require_once("modules/msc/includes/mscoptions_xmlrpc.php"); # to read msc.ini
 class MyNumericInputTpl extends InputTpl {
 
     function __construct($name) {
-        $this->InputTpl($name, '/^[1-9][0-9]*$/');
+        parent::__construct($name, '/^[1-9][0-9]*$/');
         $this->size = 2;
     }
 }

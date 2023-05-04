@@ -34,7 +34,7 @@ require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 class TextlabelTpl extends AbstractTpl {
     var $name;
-    function TextlabelTpl($name) {
+    function __construct($name) {
         $this->name = $name;
     }
     function display($arrParam = array()) {

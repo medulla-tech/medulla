@@ -339,7 +339,7 @@ class RenderedImgInput extends HtmlElement {
 class AjaxFilterCommands extends AjaxFilter {
 
     function __construct($url, $divid = "container", $paramname = 'commands', $params = array(), $formid = 'Form') {
-        $this->AjaxFilter($url, $divid, $params, $formid);
+        parent::__construct($url, $divid, $params, $formid);
         $this->commands = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
         $this->paramname = $paramname;
         $elts = array("mine" => _T("My commands", "msc"), "all" => _T("All users commands", "msc"));
@@ -509,7 +509,7 @@ class AjaxFilterCommands extends AjaxFilter {
 class AjaxFilterCommandsStates extends AjaxFilter {
 
     function __construct($url, $divid = "container", $paramname1 = 'commands', $paramname2 = 'currentstate', $params = array()) {
-        $this->AjaxFilter($url, $divid, $params);
+        parent::__construct($url, $divid, $params);
 
         /* Commands selection dropdown */
         $this->commands = new SelectItem($paramname1, 'pushSearch', 'searchfieldreal noborder');

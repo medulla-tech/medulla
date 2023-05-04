@@ -42,7 +42,7 @@ define ("DIR_SYS_PREP", "/var/lib/pulse2/imaging/postinst/sysprep");
             $this->idchoixform="afficheform_$idElt";
             $options["id"]=$this->idform;
             $options["method"] = "";
-            $this->Form($options);
+            parent::__construct($options);
             $this->select = new SelectItem($this->idselect, "change".$idElt, $style);
         }
 

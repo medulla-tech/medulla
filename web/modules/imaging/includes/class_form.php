@@ -23,7 +23,7 @@
 
     class  TrFormElementcollapse extends TrFormElement{
         function __construct( $tpl, $extraInfo = array()){
-            parent::TrFormElement($desc, $tpl, $extraInfo);
+            parent::__construct($desc, $tpl, $extraInfo);
         }
 
         function display($arrParam = array()) {
@@ -117,7 +117,7 @@ class InputTplTitle extends InputTpl {
     var $title;
     function __construct($name,$title=null,$regexp = '/.+/'){
         $this->title=$title;
-        parent::InputTpl($name,$regexp);
+        parent::__construct($name,$regexp);
     }
 
     /**
@@ -171,7 +171,7 @@ class SelectItemtitle extends SelectItem {
      */
     function __construct($idElt, $title=null, $jsFunc = null, $style = null) {
         $this->title=$title;
-        parent::SelectItem($idElt, $jsFunc, $style);
+        parent::__construct($idElt, $jsFunc, $style);
     }
     function to_string($paramArray = null) {
         $ret = "<select";
@@ -227,7 +227,7 @@ class IconeElement extends HtmlElement {
 }
 class Iconereply extends IconeElement {
     function __construct($id,$title){
-        parent::IconeElement($id,'img/other/expand.svg',"",$title);
+        parent::__construct($id,'img/other/expand.svg',"",$title);
     }
 }
 

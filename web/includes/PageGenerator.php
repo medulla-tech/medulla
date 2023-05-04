@@ -326,7 +326,7 @@ class ActionConfirmItem extends ActionItem {
     var $_confirmMessage = '';
 
     function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $confirmMessage, $tab = null, $width = 300, $mod = false) {
-        $this->ActionItem($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
+        parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
         //$this->setWidth($width);
         $this->_confirmMessage = $confirmMessage;
     }
@@ -1087,7 +1087,7 @@ class SimplePaginator extends SimpleNavBar {
      * @param $max: max quantity of elements in a page
      */
     function __construct($curstart, $curend, $itemcount, $extra = "", $max = "") {
-        $this->SimpleNavBar($curstart, $curend, $itemcount, $extra, $max, true);
+        parent::__construct($curstart, $curend, $itemcount, $extra, $max, true);
     }
 
 }
@@ -1189,7 +1189,7 @@ class AjaxPaginator extends AjaxNavBar {
      * @param $max: the max number of elements to display in a page
      */
     function __construct($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "") {
-        $this->AjaxNavBar($itemcount, $filter, $jsfunc, $max, true);
+        parent::__construct($itemcount, $filter, $jsfunc, $max, true);
         parent::__construct($itemcount, $filter, $jsfunc, $max, true);
     }
 
@@ -1242,7 +1242,9 @@ class AjaxFilter extends HtmlElement {
         $extra = "";
         foreach ($_GET as $key => $value) {
             if (!in_array($key, array('module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage')))
-                $extra += $key + "_" + $value;
+            {
+                $extra .= $key . "_". $value;
+            }
         }
         // then get our filter info
         if (isset($_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_filter_" . $extra])) {
@@ -2220,6 +2222,9 @@ class TabSelector extends HtmlContainer {
  */
 class NotifyWidget {
 
+    public $id;
+    public $strings;
+    public $level;
     /**
      * default constructor
      */
@@ -2271,7 +2276,7 @@ class NotifyWidget {
             return "img/common/big_icn_info.png";
     }
 
-    function begin() {
+    static function begin() {
         return '<div style="padding: 10px">';
     }
 
@@ -2283,7 +2288,7 @@ class NotifyWidget {
         return $str;
     }
 
-    function end() {
+    static function end() {
         $str = '<div style="clear: left; text-align: right; margin-top: 1em;"><button class="btn btn-small" onclick="closePopup()">' . _("Close") . '</button></div></div>';
         return $str;
     }
@@ -2300,7 +2305,7 @@ class NotifyWidget {
  */
 class NotifyWidgetSuccess extends NotifyWidget {
 
-    function NotifyWidgetSuccess($message) {
+    function __construct($message) {
         // parent::NotifyWidget();
         parent::__construct();
         $this->add("<div class=\"alert alert-success\">$message</div>");

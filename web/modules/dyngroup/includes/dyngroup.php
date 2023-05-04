@@ -79,7 +79,7 @@ function getPGobject($id, $load = false) {
 class ConvergenceGroup extends Group {
 
     function __construct($id = null, $load = false, $ro = False, $root_context = false) {
-        parent::Group($id, $load, $ro, $root_context);
+        parent::__construct($id, $load, $ro, $root_context);
         $this->type = 2;
         $this->isDeployGroup = True;
         $this->isDoneGroup = False;
@@ -209,7 +209,7 @@ class ConvergenceGroup extends Group {
 class Profile extends Group {
     # use the same methods as Group except for the creation
     function __construct($id = null, $load = false) {
-        parent::Group($id, $load);
+        parent::__construct($id, $load);
         $this->type = 1;
     }
     function create($name, $visibility) { $this->id =  __xmlrpc_create_profile($name, $visibility); return $this->id; }

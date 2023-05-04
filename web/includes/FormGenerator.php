@@ -364,7 +364,7 @@ class InputTpl extends AbstractTpl {
 class PasswordTpl extends InputTpl {
 
     function __construct($name, $regexp = '/.+/') {
-        $this->InputTpl($name, $regexp);
+        parent::__construct($name, $regexp);
         $this->fieldType = "password";
     }
 

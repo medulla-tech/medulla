@@ -90,7 +90,11 @@ class ErrorHandlingItem {
             $str .= gmdate("d M Y H:i:s") . "\n\n";
             $str .= "PHP XMLRPC call: " . $xmlResponse["faultString"] . "\n\n";
             $str .= "Python Server traceback:\n";
-            $str .= htmlentities($xmlResponse["faultTraceback"])."\n";
+            if (is_array($xmlResponse)) {
+	        $str .= htmlentities($xmlResponse["faultTraceback"])."\n";
+            } else {
+                $str .= htmlentities($xmlResponse)."\n";
+	    }
             $str .= '</pre></div>';
         }
         $str .= '</div>';
@@ -103,7 +107,7 @@ class ErrorHandlingItem {
 	}
         $logstr .= "Python Server traceback: \n";
 	if (is_array($xmlResponse)) {
-	    $logstr .= htmlentities($xmlResponse["faultTraceback"])."\n";
+            $logstr .= htmlentities($xmlResponse["faultTraceback"])."\n";
 	} else {
             $logstr .= htmlentities($xmlResponse)."\n";
 	}

@@ -27,7 +27,7 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("modules/medulla_server/includes/utilities.php");
 class AjaxFilterAudit extends AjaxFilter {
   function __construct($url, $divid = "container", $params = array(), $formid = "") {
-      $this->AjaxFilter($url, $divid, $params, $formid);
+    parent::__construct($url, $divid, $params, $formid);
   }
 
   function display($arrParam = array()) {

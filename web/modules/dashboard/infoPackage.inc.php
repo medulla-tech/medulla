@@ -29,6 +29,7 @@ $MMCApp =& MMCApp::getInstance();
 /* Get the base module instance reference */
 $base = &$MMCApp->getModule('base');
 /* Get the main sub-module instance reference */
+
 $main = &$base->getSubmod('main');
 
 $mod = new Module("dashboard");

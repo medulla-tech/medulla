@@ -78,7 +78,7 @@ class AjaxLogNavBar extends SimpleNavBar {
             else
                 $this->curend = 0;
         }
-        $this->SimpleNavBar($this->curstart, $this->curend, $this->itemcount, null, $this->max);
+        parent::__construct($this->curstart, $this->curend, $this->itemcount, null, $this->max);
         $this->filter = $filter;
         $this->jsfunc = $jsfunc;
     }
@@ -321,7 +321,7 @@ class LogListInfos extends OptimizedListInfos {
 
 class AjaxFilterLog extends AjaxFilter {
     function __construct($url, $type, $module="all", $divid = "container" ) {
-        $this->AjaxFilter($url, $divid);
+        parent::__construct($url, $divid);
         $this->begindate = new LogDynamicDateTpl("begindate",_("Begin date"));
         $this->enddate = new LogDynamicDateTpl("enddate",_("End date"));
         $this->filtertype = new SelectItem("filtertype");

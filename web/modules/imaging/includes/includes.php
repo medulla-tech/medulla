@@ -271,7 +271,6 @@ class ImageLogs extends HtmlElement {
     );
 
     function __construct($logs) {
-        assert(is_array($logs));
         $this->logs = $logs;
     }
 
