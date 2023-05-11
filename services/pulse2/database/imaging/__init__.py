@@ -3067,7 +3067,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if entity == None:
             entity = session.query(Entity).\
                     select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).\
-                    filter(and_(self.entity.c.uuid == imaging_server_uuid, self.imaging_server.c.associated == True)).\
+                    filter(and_(self.imaging_server.c.id == imaging_server_uuid.replace("UUID", ""), self.imaging_server.c.associated == True)).\
                     first()
         session.close()
         return entity
