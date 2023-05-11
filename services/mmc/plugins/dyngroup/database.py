@@ -522,6 +522,55 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         self.__createShare(group.id, root_id, visibility, 1)
         return group.id
 
+    @DatabaseHelper._sessionm
+    def getRegisteredMachines(self, session, uuids):
+        query = session.query(Machines).filter(Machines.uuid.in_(uuids)).all()
+
+        result = {}
+        for machine in query:
+            result[machine.uuid] = {
+                "id":machine.id,
+                "uuid":machine.uuid,
+                "hostname":machine.name
+            }
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def addMissingMachines(self, session, machines):
+        tmp = []
+        for uuid in machines:
+            machine = Machines()
+            machine.uuid = uuid
+            machine.name = machines[uuid]["hostname"]
+            tmp.append(machine)
+        try:
+            session.add_all(tmp)
+            session.flush()
+            session.commit()
+            return True
+        except:
+            return False
+
+    @DatabaseHelper._sessionm
+    def associateMachinesToGroup(self, session, id, machines):
+        query = session.query(Machines.id).filter(Machines.uuid.in_(machines)).all()
+
+
+        results = []
+        for element in query:
+            tmp = Results()
+            tmp.FK_groups = id
+            tmp.FK_machines = element.id
+            results.append(tmp)
+        try:
+            session.add_all(results)
+            session.flush()
+            session.commit()
+            return True
+        except:
+            return False
+
     def setname_group(self, ctx, id, name):
         """
         set a new name to the group defined by it's id

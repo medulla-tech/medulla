@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2023 Siveo, http://siveo.net
  *
  * $Id$
  *
@@ -319,6 +320,9 @@ class Group {
     function miniAddMember($uuid){ if($this->can_modify()) {return $this->miniAddMembers(array($uuid)); } return array(False);}
     function delMember($uuid) { if ($this->can_modify()) { return $this->delMembers($uuid); } return False; }
     function importMembers($elt, $values) { if ($this->can_modify()) { return __xmlrpc_importmembers_to_group($this->id, $elt, $values); } return False; }
+    function importCsvColumn($criterion, $values){
+        return xmlCall("dyngroup.importCsvColumn", array($this->id, $criterion, $values));
+    }
     #function removeMachine($uuid) { }
     function addMembers($uuids) { if ($this->can_modify()) { return __xmlrpc_addmembers_to_group($this->id, $uuids); } return array(False); }
     function miniAddMembers($uuids) { if ($this->can_modify()) { return xmlrpc_mini_addmembers_to_group($this->id, $uuids); } return array(False); }
