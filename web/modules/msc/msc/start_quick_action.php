@@ -43,7 +43,7 @@ function action($action, $target, $is_advanced) {
     } else {
         $current_lang = substr($_SESSION["lang"], 0, 2);
     }
-    if (count($_GET["gid"]) > 0) {
+    if (safeCount($_GET["gid"]) > 0) {
         $type = 'group';
     } else {
         $type = '';
@@ -104,7 +104,7 @@ function action($action, $target, $is_advanced) {
         if ($id != -1) {
             scheduler_start_these_commands("", array($id));
             // if on a single computer
-            if (count($_GET["gid"]) > 0) {
+            if (safeCount($_GET["gid"]) > 0) {
                 $actionpage = 'groupmsctabs';
                 $tab = 'grouptablogs';
             } else {

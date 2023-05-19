@@ -146,7 +146,7 @@ class ConvergenceGroup extends Group {
 
         $i = 0;
 
-        for ($i = 0; $i< count($this->package->Qvendor); $i++){
+        for ($i = 0; $i< safeCount($this->package->Qvendor); $i++){
 
             $Qvendor = ($this->package->Qvendor[$i]) ? str_replace(',', '*', $this->package->Qvendor[$i]) : '*';
             $Qsoftware = ($this->package->Qsoftware[$i]) ? str_replace(',', '*', $this->package->Qsoftware[$i]) : '*';
@@ -168,7 +168,7 @@ class ConvergenceGroup extends Group {
     function setBool($bool = null) {
         // If a bool condition is defined in the package level
         // we use it,
-        $criterion_count = count($this->package->Qvendor);
+        $criterion_count = safeCount($this->package->Qvendor);
 
         if (trim($this->package->boolcnd)){
             $subgroup_condition = $this->package->boolcnd;

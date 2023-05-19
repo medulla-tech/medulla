@@ -315,7 +315,7 @@ $orderkey = array( "glpi_owner",
 
 
     $exclud=array('glpi_location_id', 'glpi_entity_id', 'columns_name',"list_reg_columns_name" );
-    for ($index = 0; $index < count($datas['hostname'] ); $index++) {
+    for ($index = 0; $index < safeCount($datas['hostname'] ); $index++) {
         $chainestr ="<table class='ttable'>";
 
 /*

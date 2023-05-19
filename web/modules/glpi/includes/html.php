@@ -207,9 +207,9 @@ if ($this->refresh) {
        $this->checkbox[]=$checkbox;
    }
    function setElements($elt) {
-       if (count($elt) == 0) {
+       if (safeCount($elt) == 0) {
            $this->location = new NoLocationTpl($this->paramname);
-       } else if (count($elt) == 1) {
+       } else if (safeCount($elt) == 1) {
            $loc = array_values($elt);
            $this->location = new SingleLocationTpl($this->paramname, $loc[0]);
        } else {
@@ -218,7 +218,7 @@ if ($this->refresh) {
    }
 
    function setElementsVal($elt) {
-       if (count($elt) >= 1) {
+       if (safeCount($elt) >= 1) {
            $this->location->setElementsVal($elt);
        }
    }
@@ -406,9 +406,9 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
        $this->checkbox[]=$checkbox;
    }
    function setElements($elt) {
-       if (count($elt) == 0) {
+       if (safeCount($elt) == 0) {
            $this->location = new NoLocationTpl($this->paramname);
-       } else if (count($elt) == 1) {
+       } else if (safeCount($elt) == 1) {
            $loc = array_values($elt);
            $this->location = new SingleLocationTpl($this->paramname, $loc[0]);
        } else {
@@ -417,7 +417,7 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
    }
 
     function setfieldsearch($elt){
-        if (count($elt) == 0) {
+        if (safeCount($elt) == 0) {
             $this->fields = [ _T('Hide Windows Updates', "glpi") => "allelt"];
         }
         else {
@@ -426,7 +426,7 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
     }
 
     function setElementsVal($elt) {
-       if (count($elt) >= 1) {
+       if (safeCount($elt) >= 1) {
            $this->location->setElementsVal($elt);
        }
    }

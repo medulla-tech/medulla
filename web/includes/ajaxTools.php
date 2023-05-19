@@ -69,7 +69,7 @@ function print_ajax_nav($curstart,
       echo "<li class=\"previousList\"><a href=\"#\" onClick=\"updateSearchParam('$filter','$start','$end'); return false\";>"._("Previous")."</a></li>\n";
     }
 
-  if (($curend + 1) >= count($items))
+  if (is_countable($items) && ($curend + 1) >= safeCount($items))
     {
       echo "<li class=\"nextListInactive\">"._("Next")."</li>\n";
     }

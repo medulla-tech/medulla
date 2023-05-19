@@ -134,7 +134,7 @@ $f->pop(); // End of the table
 
 //SepTpl came from modules/imaging/includes/class_form.php
 $f->add( new SepTpl());
-$defaultValue = (count($profile['ous']) > 0 && $profile['ous'][0] !="") ? ["value"=>"checked"] : [];
+$defaultValue = (safeCount($profile['ous']) > 0 && $profile['ous'][0] !="") ? ["value"=>"checked"] : [];
 
 // Create a section without table in the form
 $f->add(new TitleElement(_T("Manage packages", "kiosk")));

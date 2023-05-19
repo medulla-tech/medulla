@@ -43,7 +43,7 @@ if ($_POST) {
     $list = getRestrictedComputersList(0, -1, array('gid'=> $gid, 'hostname'=> '', 'location'=> $location), False);
     list($count, $masters) = xmlrpc_getLocationImages($location);
 
-    if (count($list) == 0 )
+    if (safeCount($list) == 0 )
     {
         $msg = _T("Multicast menu has not been created : there are no computers in the group", "imaging");
         new NotifyWidgetFailure($msg);
@@ -100,8 +100,8 @@ if ($_POST) {
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
-    if ( count($list) < intval($numbercomputer)){
-        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),count($list),intval($numbercomputer));
+    if ( safeCount($list) < intval($numbercomputer)){
+        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),safeCount($list),intval($numbercomputer));
         new NotifyWidgetFailure($msg);
         xmlrpc_setfromxmppmasterlogxmpp($msg,
                                     "IMG",
@@ -118,15 +118,15 @@ if ($_POST) {
         exit;
     };
     if (intval($numbercomputer)==0 ){
-        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),count($list),intval($numbercomputer));
+        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),safeCount($list),intval($numbercomputer));
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
     $objval=array();
     $objval['computer']=array();
-    if ( count($list) < intval($numbercomputer)){
-        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),count($list),intval($numbercomputer));
+    if ( safeCount($list) < intval($numbercomputer)){
+        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),safeCount($list),intval($numbercomputer));
         new NotifyWidgetFailure($msg);
         xmlrpc_setfromxmppmasterlogxmpp($msg,
                                     "IMG",
@@ -159,7 +159,7 @@ if ($_POST) {
 
     $mach=array();
     foreach($profileNetworks1 as $net){
-        for ($t=0;$t<count($net[1]['macAddress']);$t++){
+        for ($t=0;$t<safeCount($net[1]['macAddress']);$t++){
             $ip = explode(":", $net[1]['ipHostNumber'][$t]);
             if (filter_var($ip[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {;
                 $mach[$net[1]['macAddress'][$t]]=$ip[0];
@@ -182,7 +182,7 @@ if ($_POST) {
             $machine[]=$net[1]['objectUUID'][0];
         };
     }
-    $nbmachine = count($machine);
+    $nbmachine = safeCount($machine);
     if($nbmachine !=0 ){
         $msg = $nbmachine." "._T("computers have a [IPV6] interfaces address exclusively in the group", "imaging")."\n".
         "list machines : [".implode(" ",$machine)."]";
@@ -232,7 +232,7 @@ if ($_POST) {
         }
     }
 
-    if (count($objval['computer']) == 0 )
+    if (safeCount($objval['computer']) == 0 )
     {
         $msg = _T("Multicast menu has not been created : there are no computers in the group", "imaging");
         new NotifyWidgetFailure($msg);

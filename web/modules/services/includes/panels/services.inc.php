@@ -41,7 +41,7 @@ class ServicesPanel extends Panel {
             $moduleObj = $MMCApp->getModule($module);
             if ($errors) $errors .= "<br/>";
             $errors .= '<strong>' . $moduleObj->getDescription() . ' : <a class="error" href="' . urlStrRedirect('services/control/index') . '">' .
-                sprintf(dngettext("services", "%d inactive service", "%d inactive services", count($services_infos)), count($services_infos)) . '</a></strong>';
+                sprintf(dngettext("services", "%d inactive service", "%d inactive services", safeCount($services_infos)), safeCount($services_infos)) . '</a></strong>';
         }
 
         if ($errors)

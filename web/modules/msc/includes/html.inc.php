@@ -56,14 +56,14 @@ class multicol extends HtmlElement {
           $col->display();
           print '</td></tr></table>';
           return; */
-        if (count($this->cols) == 0)
+        if (safeCount($this->cols) == 0)
             return;
 
         // Table
         print '<table style="border:0"><tr>';
 
         // Display all columns
-        for ($i = 0; $i < count($this->cols); $i++) {
+        for ($i = 0; $i < safeCount($this->cols); $i++) {
 
             $col = $this->cols[$i];
             $width = is_int($this->widths[$i]) ? $this->widths[$i] . 'px' : $this->widths[$i];

@@ -61,12 +61,12 @@ function get_post_install_scripts($f, $post_install_scripts, $post_installs) {
         $a_order[] = $order;
     }
     $l = new MyListInfos($a_label, _T("Name", "imaging"));
-    $l->setPostInstallCount(count($post_installs));
+    $l->setPostInstallCount(safeCount($post_installs));
     $l->addExtraInfo($a_desc, _T("Description", "imaging"));
     $l->addExtraInfo($a_order, _T("Order", "imaging"));
 
     $l->disableFirstColumnActionLink();
-    $l->setRowsPerPage(count($post_installs));
+    $l->setRowsPerPage(safeCount($post_installs));
 
     $f->add($l);
 

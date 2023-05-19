@@ -40,8 +40,8 @@ if (strlen($cmd_id)) {
     if ($bdl[0] == null) {
         print _T("error : the bundle_id given does not exists in the database.", 'msc');
     } else {
-        $cmd_nb = count($bdl[1]);
-        $machines_nb = $status['total'] / count($bdl[1]);
+        $cmd_nb = safeCount($bdl[1]);
+        $machines_nb = $status['total'] / safeCount($bdl[1]);
         if ($cmd_nb == 1) {
             if ($machines_nb == 1) { $title = sprintf(_T("Bundle '%s' state concerning <b>one</b> command on <b>one</b> computer", "msc"), $bdl[0]['title']); }
             else { $title = sprintf(_T("Bundle '%s' state concerning <b>one</b> command on <b>%s</b> computers", "msc"), $bdl[0]['title'], $machines_nb); }
@@ -281,7 +281,7 @@ foreach ($labels as $l) {
         if ($ss[0] != '0') {
             print $sl[1];
         }
-        if (count($sl) == 4 and $ss[0] != '0') {
+        if (safeCount($sl) == 4 and $ss[0] != '0') {
             print " ".sprintf($sl[3], $status[$l[0]][$sl[2]][0]);
         }
         if ($ss[0] == 0) {

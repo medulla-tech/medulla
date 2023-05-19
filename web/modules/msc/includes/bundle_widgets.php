@@ -219,7 +219,7 @@ class RenderedMSCBundleSortParent {
         );
     }
     function initCount() {
-        $this->count_members = count($this->members);
+        $this->count_members = safeCount($this->members);
         $this->c = array();
         $i = 1;
         while ($i < $this->count_members+1) { $this->c[] = $i; $i+=1; }
@@ -291,7 +291,7 @@ class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
         $f->add(new HiddenTpl("start_script"),                          array("value" => 'on',                              "hide" => True));
         $f->add(new HiddenTpl("clean_on_success"),                      array("value" => 'on',                              "hide" => True));
         $f->add(new HiddenTpl("do_reboot"),                             array("value" => web_def_reboot() ? "on" : ""));
-        $f->add(new HiddenTpl("bundle_title"),                          array("value" => get_new_bundle_title(count($this->members)),"hide" => True));
+        $f->add(new HiddenTpl("bundle_title"),                          array("value" => get_new_bundle_title(safeCount($this->members)),"hide" => True));
         $f->add(new HiddenTpl("maxbw"),                                 array("value" => web_def_maxbw(),                   "hide" => True));
 	$f->add(new HiddenTpl("copy_mode"),                             array("value" => web_def_mode(),                    "hide" => True));
 	$f->add(new HiddenTpl("deployment_intervals"),                  array("value" => web_def_deployment_intervals(),    "hide" => True));

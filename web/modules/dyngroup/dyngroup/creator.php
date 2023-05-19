@@ -27,7 +27,7 @@ global $conf;
 $glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? $conf['global']['glpidisplayname'] : 'glpi';
 
 if (
-        count($_POST) == 0 &&
+        safeCount($_POST) == 0 &&
         !isset($_GET['request']) &&
         ($_GET['action'] == 'computersgroupcreator' || $_GET['action'] == 'computersgroupedit')
     ) {
@@ -125,11 +125,11 @@ if (quickGet('req') && quickGet('param')) {
 //TODO put in class
 $modules = getPossiblesModules();
 
-if (count($modules) == 1) {
+if (safeCount($modules) == 1) {
     quickSet('add_req', $modules[0]);
 } else {
     $add_req = quickget('add_req');
-    if (!isset($add_req) || count($add_req) == 0 || $add_req == '') {
+    if (!isset($add_req) || safeCount($add_req) == 0 || $add_req == '') {
         $default = getDefaultModule();
         quickSet('add_req', $default);
     }
@@ -185,7 +185,7 @@ if (count($modules) == 1) {
 if (quickGet('add_req')) {
     $criterion = getPossiblesCriterionsInModule(quickGet('add_req'));
     // If there is only one criterion, we display it directly
-    if (count($criterion) == 1) {
+    if (safeCount($criterion) == 1) {
         quickSet('req', quickGet('add_req'));
         quickSet('add_param', $criterion[0]);
     } else {

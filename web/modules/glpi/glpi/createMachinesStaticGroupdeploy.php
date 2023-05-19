@@ -130,7 +130,7 @@ $names = $getdeployment['datas']['hostname'];
 $tmp = [];
 
 $raw = 0;
-for($i = 0; $i < count($uuids); $i++){
+for($i = 0; $i < safeCount($uuids); $i++){
   $name =  explode('.' , $names[$raw]);
   $name = $name[0];
   $uuid = $uuids[$raw];

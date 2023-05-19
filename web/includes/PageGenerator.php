@@ -503,7 +503,7 @@ class ListInfos extends HtmlElement {
             if (!isset($_POST["start"])) {
                 $this->start = 0;
 
-                if (count($this->arrInfo) > 0) {
+                if (safeCount($this->arrInfo) > 0) {
                     $this->end = $this->maxperpage - 1;
                 } else {
                     $this->end = 0;
@@ -514,7 +514,7 @@ class ListInfos extends HtmlElement {
             $this->end = $_GET["end"];
         }
         /* Set a basic navigation bar */
-        $this->setNavBar(new SimpleNavBar($this->start, $this->end, count($this->arrInfo), $this->extranavbar));
+        $this->setNavBar(new SimpleNavBar($this->start, $this->end, safeCount($this->arrInfo), $this->extranavbar));
     }
 
     /**
@@ -582,19 +582,19 @@ class ListInfos extends HtmlElement {
          * Management of the numbers "start" and "end" to display depending on the maxperpage set in the selector
          * These numbers are more user-friendly and do not begin with 0
          */
-        echo $this->name . " <strong>" . min($this->start + 1, count($this->arrInfo)) . "</strong>\n ";
-        echo _("to") . " <strong>" . min($this->end + 1, count($this->arrInfo)) . "</strong>\n";
+        echo $this->name . " <strong>" . min($this->start + 1, safeCount($this->arrInfo)) . "</strong>\n ";
+        echo _("to") . " <strong>" . min($this->end + 1, safeCount($this->arrInfo)) . "</strong>\n";
 
-        printf(_(" - Total <b>%s </b>") . "\n", count($this->arrInfo));
+        printf(_(" - Total <b>%s </b>") . "\n", safeCount($this->arrInfo));
         /* Display page counter only when useful */
-        if (count($this->arrInfo) > $this->maxperpage) {
+        if (safeCount($this->arrInfo) > $this->maxperpage) {
             echo "(" . _("page") . " ";
             printf("%.0f", ($this->end + 1) / $this->maxperpage);
             echo " / ";
-            $pages = intval((count($this->arrInfo) / $this->maxperpage));
-            if ((count($this->arrInfo) % $this->maxperpage > 0) && (count($this->arrInfo) > $this->maxperpage))
+            $pages = intval((safeCount($this->arrInfo) / $this->maxperpage));
+            if ((safeCount($this->arrInfo) % $this->maxperpage > 0) && (safeCount($this->arrInfo) > $this->maxperpage))
                 $pages++;
-            else if ((count($this->arrInfo) > 0) && ($pages < 1))
+            else if ((safeCount($this->arrInfo) > 0) && ($pages < 1))
                 $pages = 1;
             else if ($pages < 0)
                 $pages = 0;
@@ -658,9 +658,9 @@ class ListInfos extends HtmlElement {
             }
         }
 
-        if (count($this->arrAction) != 0) { //if we have actions
+        if (safeCount($this->arrAction) != 0) { //if we have actions
             if (!empty($this->col_width)) {
-                $width_styl = $this->col_width[count($this->col_width) - 1];
+                $width_styl = $this->col_width[safeCount($this->col_width) - 1];
             }
             $width_styl = isset($width_styl) ? sprintf('width: %s;', $width_styl) : '';
             echo "<td style=\"text-align: center; $width_styl\"><span>Actions</span></td>";
@@ -668,7 +668,7 @@ class ListInfos extends HtmlElement {
 
         echo "</tr></thead>";
 
-        for ($idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
+        for ($idx = $this->start; ($idx < safeCount($this->arrInfo)) && ($idx <= $this->end); $idx++) {
             if (($this->start - $idx) % 2) {
                 echo "<tr";
                 if (!empty($this->cssIds[$idx])) {
@@ -692,7 +692,7 @@ class ListInfos extends HtmlElement {
             
 
             //link to first action (if we have an action)
-            if (count($this->arrAction) && $this->firstColumnActionLink && !in_array($idx, $this->dissociateColumnsActionLink)) {
+            if (safeCount($this->arrAction) && $this->firstColumnActionLink && !in_array($idx, $this->dissociateColumnsActionLink)) {
                 $this->drawMainAction($idx);
             } else {
                 if (!empty($this->cssClass)) {
@@ -720,7 +720,7 @@ class ListInfos extends HtmlElement {
                 }
             }
 
-            if (count($this->arrAction) != 0) {
+            if (safeCount($this->arrAction) != 0) {
                 echo "<td class=\"action\">";
                 echo "<ul class=\"action\">";
                 foreach ($this->arrAction as $objActionItem) {
@@ -794,7 +794,7 @@ class OptimizedListInfos extends ListInfos {
         if (!isset($_GET["start"])) {
             if (!isset($_POST["start"])) {
                 $this->start = 0;
-                if (count($this->arrInfo) > 0) {
+                if (safeCount($this->arrInfo) > 0) {
                     $this->end = (isset($_REQUEST['maxperpage'])) ? ($_REQUEST['maxperpage'] - 1) : ($conf["global"]["maxperpage"] - 1);
                 } else {
                     $this->end = 0;
@@ -805,7 +805,7 @@ class OptimizedListInfos extends ListInfos {
             $this->end = $_GET["end"];
         }
         $this->maxperpage = (isset($_REQUEST['maxperpage'])) ? $_REQUEST['maxperpage'] : $conf["global"]["maxperpage"];
-        $this->setItemCount(count($this->arrInfo));
+        $this->setItemCount(safeCount($this->arrInfo));
         $this->startreal = $this->start;
         $this->endreal = $this->end;
     }
@@ -1415,7 +1415,7 @@ class multifieldTpl extends AbstractTpl {
         if (!isset($this->fields)) return;
         $separator = isset($arrParam['separator'])?$arrParam['separator']:' &nbsp;&nbsp; ';
 
-        for ($i = 0 ; $i < count($this->fields) ; $i++) {
+        for ($i = 0 ; $i < safeCount($this->fields) ; $i++) {
             $params = array();
             foreach($arrParam as $key => $value) {
                 if(isset($value[$i])) {
@@ -1495,9 +1495,9 @@ class AjaxFilterLocation extends AjaxFilter {
         $this->checkbox[]=$checkbox;
     }
     function setElements($elt) {
-        if (count($elt) == 0) {
+        if (safeCount($elt) == 0) {
             $this->location = new NoLocationTpl($this->paramname);
-        } else if (count($elt) == 1) {
+        } else if (safeCount($elt) == 1) {
             $loc = array_values($elt);
             $this->location = new SingleLocationTpl($this->paramname, $loc[0]);
         } else {
@@ -1506,7 +1506,7 @@ class AjaxFilterLocation extends AjaxFilter {
     }
 
     function setElementsVal($elt) {
-        if (count($elt) >= 1) {
+        if (safeCount($elt) >= 1) {
             $this->location->setElementsVal($elt);
         }
     }
@@ -2407,10 +2407,9 @@ function urlStr($link, $param = array(), $ampersandEncode = True) {
     foreach ($param as $key => $value) {
         $enc_param.= "$amp" . "$key=$value";
     }
-
-    if (count($arr) == 3) {
+    if (safeCount($arr) == 3) {
         $ret = "main.php?module=" . $arr[0] . "$amp" . "submod=" . $arr[1] . "$amp" . "action=" . $arr[2] . $enc_param;
-    } else if (count($arr) == 4) {
+    } else if (safeCount($arr) == 4) {
         $ret = "main.php?module=" . $arr[0] . "$amp" . "submod=" . $arr[1] . "$amp" . "action=" . $arr[2] . "$amp" . "tab=" . $arr[3] . $enc_param;
     } else {
         die("Can't build URL");

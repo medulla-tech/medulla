@@ -26,12 +26,12 @@ require("modules/base/includes/groups.inc.php");
 
 $filter = $_GET["filter"];
 $groups = search_groups($filter);
-$groupcount = count($groups);
+$groupcount = safeCount($groups);
 
 $arrGroup = array();
 $arrComment = array();
-
-for ($idx = 0; $idx < count($groups); $idx++) {
+$arrNb = [];
+for ($idx = 0; $idx < safeCount($groups); $idx++) {
     $arrGroup[] = $groups[$idx][0];
     $arrComment[] = $groups[$idx][1];
     $arrNb[] = '<span style="font-weight: normal;">('.$groups[$idx][2].')</span>';

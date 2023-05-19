@@ -93,7 +93,7 @@ $l->addActionItemArray($actionsrm);
 $l->setTableHeaderPadding(1);
 $l->disableFirstColumnActionLink();
 $l->setParamInfo($finodes);
-$l->setNavBar(new AjaxNavBar(count($fnames), $filter));
+$l->setNavBar(new AjaxNavBar(safeCount($fnames), $filter));
 $l->display();
 
 ?>

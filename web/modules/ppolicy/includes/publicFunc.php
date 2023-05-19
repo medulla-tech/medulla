@@ -97,7 +97,7 @@ function _ppolicy_baseEdit($FH, $mode) {
     );
 
     $ppolicyList = listPPolicy();
-    if (count($ppolicyList) > 1) {
+    if (safeCount($ppolicyList) > 1) {
         $ppolicyTpl = new SelectItem("ppolicyname");
         foreach($ppolicyList as $pp) {
             $name = $pp[1]['cn'][0];
@@ -203,7 +203,7 @@ function _ppolicy_baseGroupEdit($ldapArr, $postArr) {
     $f->push(new Table());
 
     $ppolicyList = listPPolicy();
-    if (count($ppolicyList) > 1) {
+    if (safeCount($ppolicyList) > 1) {
         $ppolicyTpl = new SelectItem("ppolicyname");
         foreach($ppolicyList as $pp) {
             $name = $pp[1]['cn'][0];

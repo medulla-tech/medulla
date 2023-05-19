@@ -28,7 +28,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 if(!isset($_SESSION['sharings'])){
   $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
   $_SESSION['sharings']['countWithWRight'] = 0;
-  for($i = 0; $i < count($_SESSION['sharings']['datas']); $i++){
+  for($i = 0; $i < safeCount($_SESSION['sharings']['datas']); $i++){
     $_SESSION['sharings']['countWithWRight'] += ($_SESSION['sharings']['datas'][$i]['permission'] == "w" || $_SESSION['sharings']['datas'][$i]['permission'] == "rw") ? 1 :0;
   }
 }

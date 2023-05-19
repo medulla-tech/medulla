@@ -342,7 +342,7 @@ function list_computers($names,
                 $n->addExtraInfo($columns[$header[0]], _($header[1]));
             }
         }
-        $n->setNavBar(new AjaxNavBar(count($columns[$headers[0][0]]), $filter));
+        $n->setNavBar(new AjaxNavBar(safeCount($columns[$headers[0][0]]), $filter));
     }
 
     $n->setName(_("Computers list"));

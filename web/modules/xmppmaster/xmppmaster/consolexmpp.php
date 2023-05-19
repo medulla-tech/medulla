@@ -55,7 +55,7 @@ textarea {
     $elt = array();
     $elt_values = array();
     $resultrelay = array();
-    foreach (range(0, count($imss)-1) as $i) {
+    foreach (range(0, safeCount($imss)-1) as $i) {
         $elt_values[$i] = $imss[$i]['jid'];
         $elt[$i]  = $imss[$i]['type']." : ".$imss[$i]['hostname'];
         $resultrelay[] = array( 'name' =>  $elt[$i],

@@ -24,7 +24,7 @@
 
 // Check if some notification(s) needs to be shown
 // If yes display the popup
-if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
+if (isset($_SESSION['notify']) && safeCount($_SESSION['notify']) > 0) {
     $_SESSION['notify_render'] = $_SESSION['notify'];
     unset($_SESSION['notify']);
     $content = NotifyWidget::begin();

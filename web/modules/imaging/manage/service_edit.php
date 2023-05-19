@@ -37,7 +37,7 @@ $services = array(
 
 $id = $_GET['itemid'];
 
-if(count($_POST) == 0) {
+if(safeCount($_POST) == 0) {
 
     // get current values
     if($services[$id][2] == true)

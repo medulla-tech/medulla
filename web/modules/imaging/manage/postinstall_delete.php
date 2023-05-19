@@ -57,7 +57,7 @@ if ($_POST) {
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
         exit;
-    } elseif (count($ret) > 1) {
+    } elseif (safeCount($ret) > 1) {
         xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : script deleted", 'Imaging').' '."Script : "."( ".$script_name." ) "."on location : ".$location."[".$label."]",
                                                 "IMG",
                                                 '',

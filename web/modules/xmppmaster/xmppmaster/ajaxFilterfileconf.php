@@ -69,7 +69,7 @@ a.info:hover span{
             }
                 new NotifyWidgetFailure($msg);
         }
-        $count = count($result['result']);
+        $count = safeCount($result['result']);
 
         $param = array(
             "cn" => $_GET['cn'],

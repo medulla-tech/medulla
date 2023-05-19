@@ -83,7 +83,7 @@ function getEntitiesSelectableElements($AllEntitiesValue = False) {
     $locations = getUserLocations();
 
     if ($AllEntitiesValue) {
-        if (count($locations) > 1) {
+        if (safeCount($locations) > 1) {
             $list['Pulse2ALL'] = _T('All my entities', 'medulla_server');
             $values['Pulse2ALL'] = '';
         }

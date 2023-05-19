@@ -64,7 +64,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 // form has been posted
-if (count($_POST) > 0) {
+if (safeCount($_POST) > 0) {
     // get the script values
     $script_id = $_GET["itemid"];
     $script_name = trim($_POST["postinstall_name"]);
@@ -103,7 +103,7 @@ if (count($_POST) > 0) {
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
         exit;
-    } elseif (count($ret) > 1) {
+    } elseif (safeCount($ret) > 1) {
         xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action."[".$ret[1]."]",
                                                 "IMG",
                                                 '',

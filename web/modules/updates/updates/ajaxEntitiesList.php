@@ -98,7 +98,7 @@ $identity=array();
  };
 
 
-$count = count($entities);
+$count = safeCount($entities);
 foreach ($entities as $entity) {
     $id_entity = intval(substr($entity["uuid"],4));
     $actiondetailsByMachs[] = $detailsByMach;

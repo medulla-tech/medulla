@@ -91,7 +91,7 @@ if($loglist) {
             $logcommit[] = $log["commit"];
             $logdate[]   = $log["date"];
             $logplug[]   = $auditManager->getCode($log["plugin"]);
-            if(count($log["objects"]) > 0) {
+            if(safeCount($log["objects"]) > 0) {
                 $logobject[]     = getObjectName($log["objects"][0]["object"]);
                 $logtypeobject[] = $auditManager->getCode($log["objects"][0]["type"]);
                 if(isset($log["objects"][1]["object"]))

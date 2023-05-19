@@ -36,8 +36,8 @@ foreach ($notifications as $update){
 
 
 $n = new OptimizedListInfos($update_titles, _T("Appstream update", "pkgs"));
-$n->setItemCount(count($notifications));
-$n->setNavBar(new AjaxNavBar(count($notifications), ''));
+$n->setItemCount(safeCount($notifications));
+$n->setNavBar(new AjaxNavBar(safeCount($notifications), ''));
 $n->start = 0;
 $n->end = 50;
 

@@ -51,7 +51,7 @@ $logAction =new ActionItem(_("View deployment details"),"viewlogs","audit","comp
 
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 
-for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
+for ($i=0;$i< safeCount( $arraydeploy['tabdeploy']['start']);$i++){
     $param=array();
     $param['uuid']= $arraydeploy['tabdeploy']['inventoryuuid'][$i];
     $param['hostname']=$arraydeploy['tabdeploy']['host'][$i];

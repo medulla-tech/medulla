@@ -180,7 +180,7 @@ class RenderedMSCActions extends HtmlElement {
             $onSubmit = "";
         }
 
-        if (!$this->error && count($this->list) > 0) {
+        if (!$this->error && safeCount($this->list) > 0) {
             $label = new RenderedLabel(3, sprintf(_T('Quick action on %s', 'msc'), $this->qa_on_name));
             $label->display();
             ?>

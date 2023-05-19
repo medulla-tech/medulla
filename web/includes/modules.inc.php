@@ -398,7 +398,7 @@ function handleServicesModule($popup, $services, $mode = "restart") {
             $servicesInfos[] = $serviceInfo;
         }
         $_SESSION['servicesInfos'] = json_encode($servicesInfos);
-        $popup->add('<br /><p>' . ngettext("Restart the service ?", "Restart the services ?", count($services)) . '&nbsp;&nbsp;<button id="restartBtn" class="btn btn-small btn-primary" onclick="restartServices()"> '. _T("Restart") .'</button></p><div id="restartStatus" style="display: none;"></div>');
+        $popup->add('<br /><p>' . ngettext("Restart the service ?", "Restart the services ?", safeCount($services)) . '&nbsp;&nbsp;<button id="restartBtn" class="btn btn-small btn-primary" onclick="restartServices()"> '. _T("Restart") .'</button></p><div id="restartStatus" style="display: none;"></div>');
     }
     return $popup;
 }

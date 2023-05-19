@@ -353,7 +353,7 @@ function displayBreadCrumb() {
 
     $unset = 0;
     // Setting current link
-    for ($i = 0; $i < count($_SESSION['msc_breadcrumb']); $i++) {
+    for ($i = 0; $i < safeCount($_SESSION['msc_breadcrumb']); $i++) {
 
         if ($unset == 1) {
             unset($_SESSION['msc_breadcrumb'][$i]);

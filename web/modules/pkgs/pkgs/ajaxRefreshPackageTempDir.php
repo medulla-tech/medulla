@@ -35,7 +35,7 @@ else {
 $_SESSION['p_api_id'] = $_GET['papi'];
 $files = getTemporaryFiles();//$_GET['papi']
 
-if(count($files)) {
+if(safeCount($files)) {
     $r = new SelectItem("rdo_files");
     $vals = array();
     $keys = array();

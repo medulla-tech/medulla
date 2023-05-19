@@ -56,7 +56,7 @@ function auth_user ($login, $pass)
         if ($subscription['too_much_computers']) {
             $msg[] = _("computers");
         }
-        if (count($msg) > 0) {
+        if (safeCount($msg) > 0) {
             $warn = sprintf(_('WARNING: The number of registered %s is exceeding your license.'), implode($msg, _(' and ')));
             new NotifyWidgetWarning($warn);
         }

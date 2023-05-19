@@ -49,7 +49,7 @@ $hasImaging = false;
 if (!xmlrpc_doesLocationHasImagingServer($location)) {
     // Try to find the first parent imaging server
     $parents = xmlrpc_getLocationParentPath($location);
-    if (is_array($parents) && count($parents) > 0) {
+    if (is_array($parents) && safeCount($parents) > 0) {
         foreach($parents as $parent_uuid) {
             if (xmlrpc_doesLocationHasImagingServer($parent_uuid)) {
                 $location = $parent_uuid;
@@ -114,21 +114,21 @@ foreach ($ret as $r) {
     }
 }
 
-if (count($running_on) > 0) {
+if (safeCount($running_on) > 0) {
     $a_href_open = "<a href=''>";
     print "<p>";
     print sprintf(_T("Boot menu generation is still in progress for the following items : %s. Please wait or reload the page %shere%s.", "imaging"), join($running_on, ', '), $a_href_open, '</a>');
     print "</p>";
 }
 
-if (count($initerror_on) > 0) {
+if (safeCount($initerror_on) > 0) {
     print "<p>";
     print _T("The registering in the imaging server has failed.", "imaging");
     print "</p>";
     exit();
 }
 
-if (count($todo_on) > 0) {
+if (safeCount($todo_on) > 0) {
     # DISPLAY the sync link
 
     print "<table><tr><td><b>";

@@ -127,7 +127,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                         exit;
                     } else {
                         $reason = '';
-                        if (count($ret[1]) > 0) {
+                        if (safeCount($ret[1]) > 0) {
                             $reason = sprintf(" : <br/>%s", $ret[1]);
                         }
                         $str = sprintf(_T("Failed to associate files%s", "pkgs"), $reason);
@@ -169,11 +169,11 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
     if (!isXMLRPCError() and is_array($ret)) {
         $errorexplain = "";
         $successexplain = "";
-        if (count($ret[1]) > 0) {$errorexplain   = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));}
-        if (count($ret[0]) > 0) {$successexplain = sprintf(" : <br/>%s", implode("<br/>", $ret[0]));}
-        if (count($ret[1]) > 0){
+        if (safeCount($ret[1]) > 0) {$errorexplain   = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));}
+        if (safeCount($ret[0]) > 0) {$successexplain = sprintf(" : <br/>%s", implode("<br/>", $ret[0]));}
+        if (safeCount($ret[1]) > 0){
             $str = sprintf(_T("Failed to delete files%s", "pkgs"), $errorexplain);
-            if (count($ret[0]) > 0){
+            if (safeCount($ret[0]) > 0){
                 $str += sprintf(_T("<br/>File successfully deleted. %s", "pkgs"), $successexplain);
             }
             new NotifyWidgetFailure($str);
@@ -192,7 +192,7 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
 }
     $formElt = new HiddenTpl("id");//use in js for createUploader
     $selectpapi = new HiddenTpl('p_api');//use in js for createUploader
-    if (count($package) == 0) {
+    if (safeCount($package) == 0) {
 
         $title = _T("Edit a package", "pkgs");
         $activeItem = "index";
@@ -202,7 +202,7 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
         if ($package['do_reboot']) {
             $package['reboot'] = $package['do_reboot'];
         }
-        //$p_api_number = count(getUserPackageApi());
+        //$p_api_number = safeCount(getUserPackageApi());
     }
 /*
  * Page form
@@ -295,8 +295,8 @@ if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["conf
 
   $f->add(new HiddenTpl("previous_localisation_server"), array("value" => $previous_localisation, "hide" => True));
   if(isset($getShares["config"]["movepackage"]) && $getShares["config"]["movepackage"] == True){
-    if(isset($json["info"]["Dependency"]) && count($json["info"]["Dependency"]) == 0){
-      if(count($shares) == 1){ // Just 1 sharing (no choice)
+    if(isset($json["info"]["Dependency"]) && safeCount($json["info"]["Dependency"]) == 0){
+      if(safeCount($shares) == 1){ // Just 1 sharing (no choice)
         $f->add(new HiddenTpl("localisation_server"), array("value" => $package['localisation_server'], "hide" => True));
       }
       else{ // sharing server > 1
@@ -533,7 +533,7 @@ foreach ($package['files'] as $file) {
 //     $cssClasses[] = 'file';
 }
 
-$count = count($names);
+$count = safeCount($names);
 $n = new OptimizedListInfos($names, _T('File', 'pkgs'));
 $n->disableFirstColumnActionLink();
 //$n->addExtraInfo($sizes, _T("Size", "pkgs"));

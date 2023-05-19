@@ -26,7 +26,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 
 $packages = getActivatedAppstreamPackages();
 $packages_download=getDownloadAppstreamPackages();
-$count = count($packages);
+$count = safeCount($packages);
 
 $expiration_dates = $params = $labels = $actions = array();
 

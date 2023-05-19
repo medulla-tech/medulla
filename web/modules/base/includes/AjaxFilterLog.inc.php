@@ -199,7 +199,7 @@ class LogListInfos extends OptimizedListInfos {
         if (!isset($_GET["start"])) {
             if (!isset($_POST["start"])) {
                $this->start = 0;
-               if (count($this->arrInfo) > 0) {
+               if (safeCount($this->arrInfo) > 0) {
                    $this->end = $conf["global"]["maxperpage"] - 1;
                }
                else {
@@ -213,7 +213,7 @@ class LogListInfos extends OptimizedListInfos {
         }
 
         $this->maxperpage = $conf["global"]["maxperpage"];
-        $this->setItemCount(count($this->arrInfo));
+        $this->setItemCount(safeCount($this->arrInfo));
         $this->startreal = $this->start;
         $this->endreal = $this->end;
     }
@@ -241,13 +241,13 @@ class LogListInfos extends OptimizedListInfos {
             }
         }
 
-        if (count($this->arrAction)!=0) { //if we have actions
+        if (safeCount($this->arrAction)!=0) { //if we have actions
             echo "<td style=\"text-align:right;\"><span style=\"color: #AAA;\" >Actions</span></td>";
         }
 
         echo "</tr></thead>";
 
-        for ($idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
+        for ($idx = $this->start; ($idx < safeCount($this->arrInfo)) && ($idx <= $this->end); $idx++) {
 
             if (($this->start - $idx) % 2) {
                 echo '<tr class="';
@@ -260,7 +260,7 @@ class LogListInfos extends OptimizedListInfos {
             echo '">';
 
             //link to first action (if we have an action)
-            if (count($this->arrAction) && $this->firstColumnActionLink) {
+            if (safeCount($this->arrAction) && $this->firstColumnActionLink) {
                 $this->drawMainAction($idx);
             } else {
                 echo "<td>";
@@ -279,7 +279,7 @@ class LogListInfos extends OptimizedListInfos {
                     }
                     echo "</td>";
                 }
-            if (count($this->arrAction)!=0) {
+            if (safeCount($this->arrAction)!=0) {
                 echo "<td class=\"action\">";
                 echo "<ul class=\"action\">";
                 foreach ($this->arrAction as $objActionItem) {

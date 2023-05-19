@@ -249,7 +249,7 @@ if ($areCommands) { // display several commands
     $n->addExtraInfo($a_enddates, _T("End date", "msc"));
     $n->addExtraInfo($a_percent, _T("Success percent", "msc"));
     // If $a_current is empty, we don't display it
-    if (count(array_filter($a_current, 'strlen')))
+    if (safeCount(array_filter($a_current, 'strlen')))
         $n->addExtraInfo($a_current, _T("Current state", "msc"));
 
     $n->addActionItemArray($a_details);

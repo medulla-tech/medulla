@@ -54,7 +54,7 @@ class CommandOnHost {
         $n->first_elt_padding = 0;
         $n->addExtraInfo(array_map("_values", $this->values), _T('Value', 'msc'));
         //$n->addActionItem($objActionItem)
-        //$n->setRowsPerPage(count($this->values));
+        //$n->setRowsPerPage(safeCount($this->values));
         $n->setRowsPerPage();
         $n->drawTable(0);
         print "<br/>";
@@ -205,7 +205,7 @@ class Command {
         $n = new ListInfos($name, _T('Name', 'msc'));
         $n->first_elt_padding = 0;
         $n->addExtraInfo($value, _T('Value', 'msc'));
-        $n->setRowsPerPage(count($this->values));
+        $n->setRowsPerPage(safeCount($this->values));
 
         $n->drawTable(0);
         print '<br/>';
@@ -372,7 +372,7 @@ class CommandHistory {
 
         function formatLog($hist) {
             $i = 1;
-            if (($hist['state'] == 'upload_in_progress') && ($hist['error_code'] == '0') && (array_key_exists('stderr', $hist)) && ($i != count($this->db_ch)) && (strpos($hist['stderr'], 'is available on mirror') !== False)) {
+            if (($hist['state'] == 'upload_in_progress') && ($hist['error_code'] == '0') && (array_key_exists('stderr', $hist)) && ($i != safeCount($this->db_ch)) && (strpos($hist['stderr'], 'is available on mirror') !== False)) {
                 /*
                   We are displaying which package server was used in push pull
                   mode. We want to keep the led green instead of orange to
@@ -390,8 +390,8 @@ class CommandHistory {
                 $hist["stdout"] = preg_split("\n", $hist["stdout"]);
             if (gettype($hist["stderr"]) != 'array')
                 $hist["stderr"] = preg_split("\n", $hist["stderr"]);
-            if (count($hist["stdout"]) > 0 &&
-                    !(count($hist["stdout"]) == 1 && $hist["stdout"][0] == '')
+            if (safeCount($hist["stdout"]) > 0 &&
+                    !(safeCount($hist["stdout"]) == 1 && $hist["stdout"][0] == '')
             ) {
                 $hist["stderr"] = array_merge($hist["stderr"], $hist["stdout"]);
             }
@@ -473,7 +473,7 @@ class CommandHistory {
 
             $phase_names[] = $phase_labels[$phase['name']];
             $phase_states[] = _plusIcon($phase['state']);
-            if (isset($logs_by_phase[$phase['name']]) && count($logs_by_phase[$phase['name']]))
+            if (isset($logs_by_phase[$phase['name']]) && safeCount($logs_by_phase[$phase['name']]))
                 $formatted_logs = array_map('formatLog', $logs_by_phase[$phase['name']]);
             else {
 
@@ -505,14 +505,14 @@ class CommandHistory {
             printf('<div id="%s" style="display:none">%s</div>', $divid, $f->begin() . $f->content() . $f->end());
             $btn_showfull_log[] = sprintf('<ul class="action"><li class="status"><a title="%s" href="#" onclick="PopupWindow(null, \'\', 300, _centerPlacement,jQuery(\'#%s\').html());return false;"></a></li></ul>', _T('Show log', 'msc'), $divid);
 
-            $last_try = $formatted_logs[count($formatted_logs) - 1][1];
+            $last_try = $formatted_logs[safeCount($formatted_logs) - 1][1];
 
             // If next_launch_date is a later time and this step is failed
             if ($ts_next_launch_time > mktime() && ($phase['state'] == 'failed' || $phase['state'] == 'ready')) {
                 $last_try_time = _toDate($this->db_coh['next_launch_date']) . sprintf(' (%s)', _T('next attempt', 'msc'));
                 $ts_next_launch_time = 0;
             } else
-                $last_try_time = $formatted_logs[count($formatted_logs) - 1][0];
+                $last_try_time = $formatted_logs[safeCount($formatted_logs) - 1][0];
 
             $phase_dates[] = $last_try_time;
 
@@ -520,15 +520,15 @@ class CommandHistory {
             $last_lines_number = 3;
 
             for ($i = $last_lines_number; $i > 0; $i--)
-                if (isset($last_try[count($last_try) - ($i + 1)]))
-                    $log_last_lines .= $last_try[count($last_try) - ($i + 1)];
+                if (isset($last_try[safeCount($last_try) - ($i + 1)]))
+                    $log_last_lines .= $last_try[safeCount($last_try) - ($i + 1)];
 
             // if log_last_lines didnt change (no previous line),
             // we return exit code
             // else ''
             if ($log_last_lines == '...<br/>')
-                if (isset($last_try[count($last_try) - 1]))
-                    $log_last_lines = $last_try[count($last_try) - 1];
+                if (isset($last_try[safeCount($last_try) - 1]))
+                    $log_last_lines = $last_try[safeCount($last_try) - 1];
                 else
                     $log_last_lines = '';
 
@@ -560,7 +560,7 @@ class CommandHistory {
         $n = new ListInfos(array_map("_names", $values), _T('<b>Command Environment</b>', 'msc'));
         $n->addExtraInfo(array_map("_values", $values), '', '400px');
         $n->setTableHeaderPadding(0);
-        $n->setRowsPerPage(count($values));
+        $n->setRowsPerPage(safeCount($values));
         $n->drawTable(0);
         print "<br/>";
 
@@ -632,11 +632,11 @@ function _toTimestamp($a) {
     $never = array(2031, 12, 31, 23, 59, 59);
     $asap = array(1970, 1, 1, 0, 0, 0);
 
-    if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
-        if (count(array_diff(array_slice($a, 0, 6), $never)) == 0)
+    if (is_array($a) && (safeCount($a) == 6 || safeCount($a) == 9)) {
+        if (safeCount(array_diff(array_slice($a, 0, 6), $never)) == 0)
             return _T('Never', 'msc');
 
-        if (count(array_diff(array_slice($a, 0, 6), $asap)) == 0)
+        if (safeCount(array_diff(array_slice($a, 0, 6), $asap)) == 0)
             return _T('As soon as possible', 'msc');
         return mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);
     } else
@@ -647,12 +647,12 @@ function _toDate($a, $noneIsAsap = False) {
     $never = array(2031, 12, 31, 23, 59, 59);
     $asap = array(1970, 1, 1, 0, 0, 0);
 
-    if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
+    if (is_array($a) && (safeCount($a) == 6 || safeCount($a) == 9)) {
 
-        if (count(array_diff(array_slice($a, 0, 6), $never)) == 0)
+        if (safeCount(array_diff(array_slice($a, 0, 6), $never)) == 0)
             return _T('Never', 'msc');
 
-        if (count(array_diff(array_slice($a, 0, 6), $asap)) == 0)
+        if (safeCount(array_diff(array_slice($a, 0, 6), $asap)) == 0)
             return _T('As soon as possible', 'msc');
 
         $parsed_date = mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);

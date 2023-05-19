@@ -46,7 +46,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
     $machinegroup = array();
     $machinegroup = xmlrpc_getMachinefromuuid($uuid);
-    if (count($machinegroup) != 0 ){
+    if (safeCount($machinegroup) != 0 ){
         echo strtoupper($machinegroup['platform']);echo "<br>";
         echo $os;
         if ( strpos(strtoupper($machinegroup['platform']), strtoupper($os)) !== false){

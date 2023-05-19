@@ -64,7 +64,7 @@ $n->addActionItemArray($actionsStop);
 $n->addActionItemArray($actionsRestart);
 $n->addActionItemArray($actionsReload);
 $n->addActionItemArray($actionsLog);
-$n->setNavBar(new AjaxNavBar(count($names), $filter));
+$n->setNavBar(new AjaxNavBar(safeCount($names), $filter));
 $n->display();
 
 ?>

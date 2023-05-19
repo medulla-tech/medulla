@@ -59,7 +59,7 @@ $group->addMembers($groupmembers);
 $truncate_limit = getMaxElementsForStaticList();
 
 //ICI
-if ($truncate_limit == count($groupmembers))
+if ($truncate_limit == safeCount($groupmembers))
 {
     $str = sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit);
     new NotifyWidgetWarning($str);

@@ -46,7 +46,7 @@ $grayActions = [
 ];
 $params_grey = [];
 $count_grey = $grey_list['nb_element_total'];
-$count_partial = count($grey_list['title']);
+$count_partial = safeCount($grey_list['title']);
 
 $kbs_gray = [];
 $updateids_gray = [];

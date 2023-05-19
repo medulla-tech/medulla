@@ -272,7 +272,7 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
 <?php
 // echo "<br><br><br>";
 // echo "<pre>";
-//     echo "Nombre de fichiers de configuration trouver " . count($result)."fichier<br>";
+//     echo "Nombre de fichiers de configuration trouver " . safeCount($result)."fichier<br>";
 //     echo "list fichier de configuration<br>";
 //     print_r($result);
 // echo "</pre>";
@@ -294,7 +294,7 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
 //
 // $result = xmlrpc_listremotefileedit($ma['jid']);
 // echo "<pre>";
-//     echo "Nombre de fichiers de configuration trouver maintenant " . count($result)."fichier<br>";
+//     echo "Nombre de fichiers de configuration trouver maintenant " . safeCount($result)."fichier<br>";
 //     echo "list fichier de configuration<br>";
 //     print_r($result);
 // echo "</pre>";

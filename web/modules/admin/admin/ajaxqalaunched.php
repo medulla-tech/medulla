@@ -35,7 +35,7 @@ $params = [];
 $qaresultaction = new ActionItem(_("Show Result"), "qaresult", 'inventory', "", "admin", "admin");
 $qaresultActions = [];
 
-for($i=0;$i< count($list['datas']['id']); $i++){
+for($i=0;$i< safeCount($list['datas']['id']); $i++){
   $params[] = [
     'command_cluster'=>$list['datas']['command_cluster'][$i],
     'execution_date'=>$list['datas']['command_start'][$i],

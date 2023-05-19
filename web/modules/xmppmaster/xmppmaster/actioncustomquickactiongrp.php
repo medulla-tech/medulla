@@ -48,7 +48,7 @@
         // recuperemachine dans xmpp machine.
         $machinegroup = array();
         $machinegroup = xmlrpc_getMachinefromuuid($key);
-        if (count($machinegroup) != 0 ){
+        if (safeCount($machinegroup) != 0 ){
                 if ( strpos(strtoupper($machinegroup['platform']), $OS) !== false){
                     // machine presente et os correct pour la QA
                     $machineinfos = array();

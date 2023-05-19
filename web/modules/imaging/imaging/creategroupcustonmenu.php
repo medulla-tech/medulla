@@ -66,7 +66,7 @@ xmlrpc_setfromxmppmasterlogxmpp("Creation group Imaging: ".$groupname,
                                     "session user ".$_SESSION["login"],
                                     'Imaging | Image | Group | server | Manual');
 $truncate_limit = getMaxElementsForStaticList();
-if ($truncate_limit == count($groupmembers)) {
+if ($truncate_limit == safeCount($groupmembers)) {
     $str = sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit);
     xmlrpc_setfromxmppmasterlogxmpp($str,
                                     "Group",

@@ -26,7 +26,7 @@ if (!isset($_SESSION[$_GET["uuid"]]['getMachineIp'])) {
 }
 $adresses = $_SESSION[$_GET["uuid"]]['getMachineIp'];
 
-if (count($adresses) > 0)
+if (safeCount($adresses) > 0)
     $adresses[0] = "<b>" . $adresses[0] . "</b>";
 
 print join(', ', $adresses);

@@ -60,7 +60,7 @@ function get_process() {
 
 $arr = get_process();
 
-if (count($arr) == 0) { //if no job in background
+if (is_countable($arr) && safeCount($arr) == 0) { //if no job in background
     print '<div style="text-align: center;">'._("No job.").'</div>';
     return;
 }

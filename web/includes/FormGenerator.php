@@ -716,7 +716,7 @@ class MultipleInputTpl extends AbstractTpl {
             $test->display(array("value" => $param));
         }
         print '<tr><td width="40%" style="text-align:right;">';
-        if (count($arrParam) == 0) {
+        if (safeCount($arrParam) == 0) {
             //if we got a tooltip, we show it
             if ($this->tooltip) {
                 print "<a href=\"#\" class=\"tooltip\">" . $this->desc . "<span>" . $this->tooltip . "</span></a>";
@@ -745,7 +745,7 @@ class MultipleInputTpl extends AbstractTpl {
             $test->setCssError($this->name . $key);
             $test->displayRo(array("value" => $param));
         }
-        if (count($arrParam) == 0) {
+        if (safeCount($arrParam) == 0) {
             print '<tr><td width="40%" style="text-align:right;">';
             print $this->desc;
             print '</td><td>';
@@ -769,7 +769,7 @@ class MultipleInputTpl extends AbstractTpl {
             $test->setCssError($this->name . $key);
             $test->displayHide(array("value" => $param));
         }
-        if (count($arrParam) == 0) {
+        if (safeCount($arrParam) == 0) {
             print '<tr><td width="40%" style="text-align:right;">';
             print $this->desc;
             print '</td><td>';
@@ -1007,7 +1007,7 @@ class SelectMultiTpl extends SelectItem {
     }
 
     function setFullHeight() {
-        $this->height = count($this->elements);
+        $this->height = safeCount($this->elements);
     }
 
     function to_string($paramArray = null) {

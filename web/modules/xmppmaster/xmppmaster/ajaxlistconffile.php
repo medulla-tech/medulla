@@ -93,9 +93,9 @@ foreach($result['result'] as $file){
 }
 
 if ($filter == "")
-  $count = count($result['result']);
+  $count = safeCount($result['result']);
 else
-  $count = count($_result['result']);
+  $count = safeCount($_result['result']);
 
 $n = new OptimizedListInfos($_result, _T("Config file", "xmppmaster"));
 $n->first_elt_padding = 1;

@@ -34,14 +34,15 @@ function parse_subrequest($str) {
 }
 
 class Request {
-
+    protected $subs;
+    
     function _construct() {
         $this->subs = array();
         $this->nextSubId = 1;
     }
 
     function isEmpty() {
-        return (count($this->subs) == 0);
+        return (safeCount($this->subs) == 0);
     }
 
     function addSub($sub) {
@@ -64,7 +65,7 @@ class Request {
     }
 
     function toS() {
-        if (count($this->subs) == 0) {
+        if (safeCount($this->subs) == 0) {
             return 'EMPTY';
         }
         return implode('||', array_map('to_s', $this->subs));
@@ -79,7 +80,7 @@ class Request {
     }
 
     function countPart() {
-        return count($this->subs);
+        return safeCount($this->subs);
     }
 
     function parse($str) {
@@ -200,7 +201,7 @@ class SubRequest {
         $this->crit = $c[0];
         $this->val = explode(', ', rtrim(ltrim($c[1], $this->sep_plural[0]), $this->sep_plural[1]));
         #$this->val = explode(', ', $c[1]);
-        if (is_array($this->val) && count($this->val) == 1) {
+        if (is_array($this->val) && safeCount($this->val) == 1) {
             $this->val = $this->val[0];
         }
     }

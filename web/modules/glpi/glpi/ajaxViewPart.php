@@ -130,7 +130,7 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
          * If there is more than 10 elements, they don't be displayed
          * So setRowsPerPage equal to number of elements to display
          */
-        $n->setRowsPerPage(count($all));
+        $n->setRowsPerPage(safeCount($all));
         $n->drawTable(0);
     }
     // Multi-line table
@@ -139,7 +139,7 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
 
         // If nothing found, display a "nothing found" message
         // except on Hardware tab (identified by $partTitle == null) => display nothing
-        if (count($all) == 0 && $partTitle == null)  {
+        if (safeCount($all) == 0 && $partTitle == null)  {
             switch($part) {
             case 'History':
                 printf('<p>%s</p>', _T('No record found for this period.', 'glpi'));

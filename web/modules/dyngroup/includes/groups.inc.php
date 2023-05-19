@@ -236,7 +236,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 <?php
     if ($type == 1) { // Imaging group
         $warningMessage = False;
-        if (count($machinesInProfile) > 0) {
+        if (safeCount($machinesInProfile) > 0) {
             $warningMessage = True;
             print '<p>';
             print _T('Computers listed below are already part of another imaging group.', 'dyngroup');
@@ -251,7 +251,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
             print '</p>';
         }
         $standAloneImagingRegistered = array_diff($willBeUnregistered, array_keys($machinesInProfile));
-        if (count($standAloneImagingRegistered) > 0) {
+        if (safeCount($standAloneImagingRegistered) > 0) {
             $warningMessage = True;
             print '<p>';
             print _T('Computers listed below are already stand-alone registered in imaging.', 'dyngroup');

@@ -66,7 +66,7 @@ class AuditCodesManager {
 /* transform LDAP user uri to a simple string */
 function getObjectName($ldap_uri) {
     preg_match('/[a-z]{2,3}=([^,]*)/', $ldap_uri, $matches);
-    if(count($matches) > 0) {
+    if(safeCount($matches) > 0) {
         $uid = $matches[1];
         unset($matches);
         return $uid;

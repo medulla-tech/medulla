@@ -52,7 +52,7 @@ foreach(listPPolicy($filter) as $dn => $entry) {
 
 $n = new ListInfos(array_keys($ppolicies), _T("Password policies", "ppolicy"));
 $n->setAdditionalInfo(array_values($ppolicies));
-$n->setNavBar(new AjaxNavBar(count($ppolicies), $filter));
+$n->setNavBar(new AjaxNavBar(safeCount($ppolicies), $filter));
 $n->setCssClass("groupName");
 $n->addActionItemArray($editActions);
 $n->addActionItemArray($delActions);

@@ -124,7 +124,7 @@ foreach ($users as $user) {
         $diff[] = $user;
 }
 
-if (count($forbidden)) {
+if (safeCount($forbidden)) {
     new NotifyWidgetWarning(_("Some users can't be removed from this group because this group is their primary group."));
 }
 

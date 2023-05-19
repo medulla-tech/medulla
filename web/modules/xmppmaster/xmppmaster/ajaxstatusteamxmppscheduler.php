@@ -39,7 +39,7 @@ $login   = array();
 $startdeploy = array();
 
 function convtostringdate($data){
-    if (is_array($data) && count($data) == 9){
+    if (is_array($data) && safeCount($data) == 9){
         return date("Y-m-d H:i:s", mktime( $data[3],
                         $data[4],
                         $data[5],

@@ -73,7 +73,7 @@ function recursiveArrayToList(Array $array = array(), &$result, &$count)
     }
     else
     {
-        if(count($array)> 0)
+        if(safeCount($array)> 0)
         {
             $result.= '<ul>';
             foreach($array as $element)

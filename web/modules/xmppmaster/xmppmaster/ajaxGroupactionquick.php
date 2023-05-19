@@ -70,7 +70,7 @@ $resultmachine = new ActionItem(_T("Os", "xmppmaster"),"QAcustommachgrp","audit"
 
 $listnamegroup=[];
 $params =  array();
-for ($i=0;$i< count( $dd[0] );$i++){
+for ($i=0;$i< safeCount( $dd[0] );$i++){
     $param=array();
     $param['cmd_id'] = $dd[0][$i];
     $param['gid']    = $dd[5][$i];

@@ -36,7 +36,7 @@ foreach ($updates as $update){
 
 
 $n = new OptimizedListInfos($update_titles, _T("Update", "update"));
-$n->setItemCount(count($updates));
+$n->setItemCount(safeCount($updates));
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->start = 0;
 $n->end = 50;

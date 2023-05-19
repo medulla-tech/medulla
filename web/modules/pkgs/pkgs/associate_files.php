@@ -58,7 +58,7 @@ if ($mode == "creation") { $level = 1; }
     if (!isXMLRPCError() and is_array($ret)) {
         if ($ret[0]) {
             $explain = '';
-            if (count($ret) > 1) {
+            if (safeCount($ret) > 1) {
                 $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
             }
             // ICI
@@ -79,7 +79,7 @@ if ($mode == "creation") { $level = 1; }
             exit;
         } else {
             $reason = '';
-            if (count($ret) > 1) {
+            if (safeCount($ret) > 1) {
                 $reason = sprintf(" : <br/>%s", $ret[1]);
             }
             new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));

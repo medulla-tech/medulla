@@ -35,7 +35,7 @@ $id = $_GET['itemid'];
 $location = getCurrentLocation();
 $masters = xmlrpc_getLocationMastersByUUID($location, array($id));
 
-if(count($_POST) == 0) {
+if(safeCount($_POST) == 0) {
 
     // get current values
     $master = $masters[$id];

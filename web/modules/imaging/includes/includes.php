@@ -215,12 +215,12 @@ function _toDate($a, $noneIsAsap = False) {
     $never = array(2031, 12, 31, 23, 59, 59);
     $asap = array(1970, 1, 1, 0, 0, 0);
 
-    if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
+    if (is_array($a) && (safeCount($a) == 6 || safeCount($a) == 9)) {
 
-        if (count(array_diff(array_slice($a, 0, 6), $never)) == 0)
+        if (safeCount(array_diff(array_slice($a, 0, 6), $never)) == 0)
             return _T('Never', 'msc');
 
-        if (count(array_diff(array_slice($a, 0, 6), $asap)) == 0)
+        if (safeCount(array_diff(array_slice($a, 0, 6), $asap)) == 0)
             return _T('As soon as possible', 'msc');
 
         $parsed_date = mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);
@@ -299,7 +299,7 @@ class ImageLogs extends HtmlElement {
 
         $l = new ListInfos($lines, _T("Backup log messages", "imaging"));
         $l->setCssClass("imagelogs");
-        $l->setRowsPerPage(count($lines));
+        $l->setRowsPerPage(safeCount($lines));
         $l->setNavBar(False);
         $l->display(0, 1);
     }

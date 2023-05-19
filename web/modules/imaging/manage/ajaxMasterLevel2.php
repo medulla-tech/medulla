@@ -81,7 +81,7 @@ foreach ($masters as $master) {
     $a_is_in_menu[] = ($master['menu_item']?True:False);
     $l_im[] = array($master['imaging_uuid'], null, null);
 }
-if (count($l_im) != 0) {
+if (safeCount($l_im) != 0) {
     $ret = xmlrpc_areImagesUsed($l_im);
     foreach ($masters as $image) {
         if ($ret[$image['imaging_uuid']]) {
@@ -108,7 +108,7 @@ $l->addActionItem(
     "master_edit", "edit", "master", "imaging", "manage")
 );
 $process  = xmlrpc_checkProcessCloneMasterToLocation("synch-masters");
-if (count($process) > 0){
+if (safeCount($process) > 0){
       $l->addActionItem(
     new ActionItem(_T("copy master In progress", "imaging"),
     "synchromaster", "start", "master", "imaging", "manage")

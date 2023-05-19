@@ -66,7 +66,7 @@ iframe{
     // la function doit renvoyer [count le nbelement,$panels_list]
     $panels_list = xmlrpc_getPanelsForMachine(strtolower($hostname));
 
-    $count = count($panels_list); // nombre total de d'element
+    $count = safeCount($panels_list); // nombre total de d'element
 
     /*
     $debut_de_la_journee = mktime(0, 0, 0, date("m"),date("j"), date("Y"));

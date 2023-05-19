@@ -84,7 +84,7 @@ $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id, $uuid);
 
 $tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
-$contrainte  = count($tab)?$tab[$cmd_id]:"";
+$contrainte  = safeCount($tab)?$tab[$cmd_id]:"";
 
 $pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
 $pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);
@@ -221,7 +221,7 @@ $showText = _T("Show", "xmppmaster");
             echo "<br>";
         }
     }
-    if (count($deploymachine != 0)){
+    if (safeCount($deploymachine != 0)){
         $creation_date = mktime( $deploymachine['creation_date'][3],
                                  $deploymachine['creation_date'][4],
                                  $deploymachine['creation_date'][5],
@@ -496,7 +496,7 @@ $showText = _T("Show", "xmppmaster");
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
-            foreach (range( 0, count($infoslist)-1) as $index){
+            foreach (range( 0, safeCount($infoslist)-1) as $index){
                 $inf=$infoslist[$index];
                 echo "<tbody>";
                     echo "<tr>";
@@ -834,7 +834,7 @@ $showText = _T("Show", "xmppmaster");
         }
         echo $content;
     }
-    if (isset($otherinfos[0]->environ) && count((array)$otherinfos[0]->environ) == 1){
+    if (isset($otherinfos[0]->environ) && safeCount((array)$otherinfos[0]->environ) == 1){
         if ( $info['len'] != 0){
             $res = str_replace ( "{'", "'" ,$otherinfos[0]->environ);
             $res = str_replace ( "'}", "'" ,$res);

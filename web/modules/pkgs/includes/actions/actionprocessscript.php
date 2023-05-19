@@ -324,7 +324,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
             onclick="jQuery(this).parent().find('.goto-on-return-section').append('<div class=\'goto-on-return\'>Return Code <input type=\'text\' name=\'gotoreturncode\'/> Goto Label <input type=\'text\' name=\'gotolabel\'/><input type=\'button\' value=\'Delete\' onclick=\'jQuery(this).parent().remove()\'/></div>')"/>
             <div class="goto-on-return-section">
               <?php
-              if(count($gotoreturncode) > 0){
+              if(safeCount($gotoreturncode) > 0){
                 foreach($gotoreturncode as $row){?>
                   <div class='goto-on-return'>Return Code <input type='text' name='gotoreturncode' value='<?php echo $row['code'];?>'/> Goto Label <input type='text' name='gotolabel' value="<?php echo $row['label'];?>"/><input type='button' value='Delete' onclick='jQuery(this).parent().remove()'/></div>
                 <?php }

@@ -118,7 +118,7 @@ function image_edit($target_uuid, $type, $item_uuid) {
         return $f;
     }
 
-    if (count($_POST) == 0) {
+    if (safeCount($_POST) == 0) {
         $is_master = $image['is_master'];
         $f = create_form(!$is_master, $image, $target_uuid, $label, $image["desc"]);
 

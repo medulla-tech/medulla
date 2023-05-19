@@ -152,7 +152,7 @@ if (isset($params['uuid'])) {
         $t1 = new TitleElement($msg, 3);
         $t1->display();
         # give a link to the profile registering
-        if (count($canReg) == 2 and $canReg[1] != '') {
+        if (safeCount($canReg) == 2 and $canReg[1] != '') {
             $group = new Group($canReg[1], true);
             $params = array("id" => $canReg[1], "gid" => $canReg[1], "groupname" => $group->getName());
             $url = urlStr("imaging/manage/groupimgtabs", $params);

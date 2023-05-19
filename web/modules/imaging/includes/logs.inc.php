@@ -98,13 +98,13 @@ $logMessages = array(
 function translate_details($str) {
     global $logMessages;
     $tmp_splitted_result = explode(":",  $str, 2);
-    if (count($tmp_splitted_result) == 1) {
+    if (safeCount($tmp_splitted_result) == 1) {
         if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
             $details = $logMessages[$tmp_splitted_result[0]];
         } else {
             $details = $tmp_splitted_result[0]; // keep untouched
         }
-    } elseif (count($tmp_splitted_result) == 2) {
+    } elseif (safeCount($tmp_splitted_result) == 2) {
             $tmp_splitted_result[0] = trim($tmp_splitted_result[0]);
             $tmp_splitted_result[1] = trim($tmp_splitted_result[1]);
             if (array_key_exists($tmp_splitted_result[0], $logMessages)) {

@@ -446,7 +446,7 @@ $objprocess['location']=$_GET['location'];
 $objprocess['process'] = $path.$scriptmulticast;
 $objprocess['process'] = $scriptmulticast;
 $informationsparameters = xmlrpc_GetMulticastMultiSessionParameters($_GET['location']);
-if (count($informationsparameters) == 0){
+if (safeCount($informationsparameters) == 0){
     $objprocess['process'] = $scriptmulticast;
     $objprocess['process'] = $scriptmulticast;
     xmlrpc_stop_process_multicast ($objprocess);

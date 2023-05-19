@@ -84,7 +84,7 @@ function display_mod($mod) {
 
 $MMCApp =& MMCApp::getInstance();
 $modules = getSorted($MMCApp->getModules());
-$nb_modules = count($modules);
+$nb_modules = safeCount($modules);
 
 $p = new PageGenerator(_("Home"));
 $p->display();

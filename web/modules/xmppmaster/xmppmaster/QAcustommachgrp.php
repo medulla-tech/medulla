@@ -67,7 +67,7 @@ else{
     $resultAQformachine = [];
 }
 
-if (count($resultAQformachine) != 0){
+if (safeCount($resultAQformachine) != 0){
     foreach($resultAQformachine as $message ){
         if ( $message[3] == "result"){
             $result = base64_decode($message[4]);
@@ -87,7 +87,7 @@ if ($result == ""){
     echo "</div>";
 }
 
-if (count($listmessage)!=0){
+if (safeCount($listmessage)!=0){
     echo "<table>";
         echo "<tr>";
             echo "<th>";

@@ -55,10 +55,10 @@ $grey_list = xmlrpc_get_grey_list($start, $maxperpage, $filter);
 $white_list = xmlrpc_get_white_list($start, $maxperpage, $filter);
 
 $count_grey = $grey_list['nb_element_total'];
-$count_partial_grey = count($grey_list['title']);
+$count_partial_grey = safeCount($grey_list['title']);
 
 $count_white = $white_list['nb_element_total'];
-$count_partial_white = count($white_list['title']);
+$count_partial_white = safeCount($white_list['title']);
 
 $final_partial_count = $count_partial_grey + $count_partial_white;
 

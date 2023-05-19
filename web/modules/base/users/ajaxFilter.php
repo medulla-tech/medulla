@@ -43,7 +43,7 @@ $mails = array();
 $phones = array();
 $css = array();
 
-for ($idx = 0; $idx < count($users); $idx++) {
+for ($idx = 0; $idx < safeCount($users); $idx++) {
     if ($users[$idx]["enabled"]) {
         $css[$idx] = "userName";
     } else $css[$idx] = "userNameDisabled";

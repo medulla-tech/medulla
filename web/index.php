@@ -31,6 +31,7 @@ if (isset($_POST['lang']))
 else if (isset($_GET['lang']))
     $_SESSION['lang'] = $_GET['lang'];
 
+require_once("includes/utils.inc.php");
 require("includes/config.inc.php");
 require("modules/base/includes/users.inc.php");
 require("modules/base/includes/edit.inc.php");
@@ -105,7 +106,7 @@ if (isset($_GET["agentsessionexpired"])) {
         <div id="content">
 
 <?php
-if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
+if (isset($_SESSION['notify']) && safeCount($_SESSION['notify']) > 0) {
     foreach($_SESSION['notify'] as $n) {
         $n = unserialize($n);
         foreach($n->strings as $s)
@@ -187,7 +188,7 @@ if ($error) {
             <?php
             }
 
-            if (count($servDescList) == 1)
+            if (safeCount($servDescList) == 1)
             {
                 printf('<input type="hidden" id="server" name="server" value="%s" />',$servLabelList[0]);
             }

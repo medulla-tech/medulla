@@ -95,7 +95,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
    $sharingQuotas = [];
 
    $countSharingsWithWRight = 0;
-   for($i = 0; $i < count($sharings['datas']); $i++){
+   for($i = 0; $i < safeCount($sharings['datas']); $i++){
      $countSharingsWithWRight += ($sharings['datas'][$i]['permission'] == "w" || $sharings['datas'][$i]['permission'] == "rw") ? 1 :0;
      $quotas[$sharings['datas'][$i]['id_sharing']] = [
        'usedquotas'=>$sharings['datas'][$i]['usedquotas'],
@@ -129,7 +129,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true){
   $_diskUsages = [];
   $_params = [];
 
-    for($i=0; $i< count($_packages['uuid']); $i++){
+    for($i=0; $i< safeCount($_packages['uuid']); $i++){
       $packageSize = $_packages['size'][$i];
       $usedQuotas = $quotas[$_packages['share_id'][$i]]['usedquotas'];
       $totalQuotas = 1048576*$quotas[$_packages['share_id'][$i]]['quotas'];
@@ -340,7 +340,7 @@ else{
   foreach ($packages as $p) {
       $p = $p[0];
       $countfiles = 0;
-      $countfiles = count($p['files']);
+      $countfiles = safeCount($p['files']);
       $listfiles = "";
       foreach($p['files']  as $k){
           // Compose list des fichiers dans le packages

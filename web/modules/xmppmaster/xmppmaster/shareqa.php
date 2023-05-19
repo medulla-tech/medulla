@@ -32,7 +32,7 @@ require("modules/kiosk/graph/packages.css");
 if (isset($_POST['bcreate'])){
   $json = json_decode($_POST['jsonDatas'], true);
   $json["users"] = json_decode($json['users'], true);
-  if(count($json['users']) != 0)
+  if(safeCount($json['users']) != 0)
   {
     $fail_list = [];
     foreach($json['users'] as $user)
@@ -44,7 +44,7 @@ if (isset($_POST['bcreate'])){
           $fail_list[] = $user;
       }
     }
-    if (count($fail_list)){
+    if (safeCount($fail_list)){
       new NotifyWidgetFailure("Error when sharing custom Quick Action");
     }
     else {

@@ -31,7 +31,7 @@ if (!isset($packages['product'])){
 }
 
 $packages = $packages['product'];
-$count = count($packages);
+$count = safeCount($packages);
 
 $params = $labels = $durations = array();
 

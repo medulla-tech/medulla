@@ -35,7 +35,7 @@ class UpdatePanel extends Panel {
 
     function display_content() {
         $updates = getProductUpdates();
-        $update_count = count($updates);
+        $update_count = safeCount($updates);
 
         if ($updates === FALSE){
 

@@ -40,7 +40,7 @@ if ($subscription['is_subsscribed']) {
     if ($subscription['too_much_computers']) {
         $warn[] = _('WARNING: The number of registered computers is exceeding your license.');
     }
-    if (count($warn) > 0) {
+    if (safeCount($warn) > 0) {
         $warn[] = _('Please contact your administrator for more information. If you are an administrator, please go to the license status page for more information.');
         print sprintf("<div id=\"alert\">%s</div><br/>", implode($warn, '<br/>'));
     }

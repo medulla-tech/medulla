@@ -126,7 +126,7 @@ $reloadAction = new ActionPopupItem(_("Restart deployment"),
                                 "xmppmaster");
 
 
-for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
+for ($i=0;$i< safeCount( $arraydeploy['tabdeploy']['start']);$i++){
     //$infomachine = xmlrpc_getdeployfromcommandid($arraydeploy['tabdeploy']['command'][$i], $arraydeploy['tabdeploy']['inventoryuuid'][$i]);
 
     $param=array();

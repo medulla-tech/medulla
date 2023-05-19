@@ -40,7 +40,7 @@ if (isset($item['image'])) {
     $is_image = True;
 }
 
-if(count($_POST) == 0) {
+if(safeCount($_POST) == 0) {
     $is_selected = '';
     $is_displayed = 'CHECKED';
     $is_wol_selected = '';

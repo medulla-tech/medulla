@@ -55,7 +55,7 @@ foreach($list as $module => $services) {
 
 foreach($objList as $moduleObj) {
     $services = $list[$moduleObj->getName()];
-    if ($moduleObj && count($services) > 0) {
+    if ($moduleObj && safeCount($services) > 0) {
         $ids = array();
         $names = array();
         $descs = array();

@@ -74,7 +74,7 @@ function _glpi_baseEdit($FH, $mode) {
     if ($mode == 'edit') {
         $user_locations = getLocationsForUser($username);
         // If not user profile, switching to default
-        if (!count($user_locations))
+        if (!safeCount($user_locations))
             $user_locations = $default_user_locations;
     }
     else{

@@ -75,7 +75,7 @@ if ($IN_GROUP == 1) {
     $params = getParams();
     $uuid = $params['uuid'];
 
-    if (count($group = arePartOfAProfile(array($uuid)))) {
+    if (safeCount($group = arePartOfAProfile(array($uuid)))) {
 
         $groupname = $group[$uuid]['groupname'];
         $groupid = $group[$uuid]['groupid'];

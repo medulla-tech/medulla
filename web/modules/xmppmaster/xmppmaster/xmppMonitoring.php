@@ -217,7 +217,7 @@ switch($_GET['information']){
         $subject = array();
         $subject['subaction'] = 'litlog';
         $r = explode(",", $_GET['args']);
-        if (count($r) != 0 and $r[0] != ""){
+        if (safeCount($r) != 0 and $r[0] != ""){
             $subject['args'] = $r;
         }else{
             $subject['args'] = array();
@@ -236,7 +236,7 @@ switch($_GET['information']){
         $subject = array();
         $subject['subaction'] = 'cputimes';
         $r = explode(",", $_GET['args']);
-        if (count($r) != 0 and $r[0] != ""){
+        if (safeCount($r) != 0 and $r[0] != ""){
             $subject['args'] = $r;
         }else{
             $subject['args'] = array();
@@ -594,7 +594,7 @@ switch($_GET['information']){
                           }
                           else
                             $json_data = [];
-                            if (count($se) != count($json_data)){
+                            if (safeCount($se) != safeCount($json_data)){
                                 array_unshift($se,"Action for program_agent");
                             }
                             foreach($json_data as $val1){

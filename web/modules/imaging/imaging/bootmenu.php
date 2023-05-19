@@ -209,7 +209,7 @@ function item_edit() {
 
     $item = xmlrpc_getMenuItemByUUID($item_uuid);
 
-    if(count($_POST) == 0) {
+    if(safeCount($_POST) == 0) {
 
         $name = (isset($item['boot_service']) ? $item['boot_service']['default_name'] : $item['image']['default_name']);
         printf("<h3>"._T("Edition of item", "imaging")." : <em>%s</em></h3>", $name);

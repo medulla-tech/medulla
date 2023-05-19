@@ -59,7 +59,7 @@ $n->addExtraInfo($uids, _T("UID"), '4em');
 $n->addExtraInfo($gids, _T("GID"), '4em');
 $n->addExtraInfo($pids, _T("PID"), '5em');
 $n->addExtraInfo($messages, _T("Message"));
-$n->setNavBar(new AjaxPaginator(count($messages), $filter, "updateSearchParam",  $maxperpage));
+$n->setNavBar(new AjaxPaginator(safeCount($messages), $filter, "updateSearchParam",  $maxperpage));
 $n->display();
 
 ?>

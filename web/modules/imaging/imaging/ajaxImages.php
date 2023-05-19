@@ -154,7 +154,7 @@ foreach ($images as $image) {
 }
 
 if (!$actions) {
-    if (count($l_im) != 0) {
+    if (safeCount($l_im) != 0) {
         $ret = xmlrpc_areImagesUsed($l_im);
         foreach ($images as $image) {
             if ($ret[$image['imaging_uuid']]) {

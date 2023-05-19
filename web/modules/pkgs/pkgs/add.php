@@ -117,7 +117,7 @@ if (isset($_POST['bconfirm'])){
         if (!isXMLRPCError() and is_array($ret)) {
             if ($ret[0]) {
                 $explain = '';
-                if (count($ret) > 1) {
+                if (safeCount($ret) > 1) {
                     $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
                 }
                 //ICI
@@ -130,7 +130,7 @@ if (isset($_POST['bconfirm'])){
                 exit;
             } else {
                 $reason = '';
-                if (count($ret) > 1) {
+                if (safeCount($ret) > 1) {
                     $reason = sprintf(" : <br/>%s", $ret[1]);
                 }
                 $str = sprintf(_T("Failed to associate files%s", "pkgs"), $reason);
@@ -207,7 +207,7 @@ if (isset($_POST['bconfirm'])){
       }
     }
     if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true ){
-      if(count($shares) == 1){
+      if(safeCount($shares) == 1){
         $f->add(new HiddenTpl("localisation_server"), array("value" => $shares[0]["name"], "hide" => True));
       }
       else{
@@ -553,7 +553,7 @@ if (isset($_POST['bconfirm'])){
     });
 <?php
 // if one package API, hide field
-// if (count($list) < 2) {
+// if (safeCount($list) < 2) {
 //     echo <<< EOT
 //             // Hide package api field
 //             jQuery('#p_api').parents('tr:first').hide();

@@ -151,7 +151,7 @@ function checkBoolEquation($bool, $r, $display_success) {
     if (!$chk[0]) {
         new NotifyWidgetFailure(sprintf(_T("The boolean equation '%s' is not valid", "dyngroup"), $bool));
         return False;
-    } elseif ($chk[1] != -1 and $chk[1] != count($r->subs)) {
+    } elseif ($chk[1] != -1 and $chk[1] != safeCount($r->subs)) {
         new NotifyWidgetFailure(sprintf(_T("The boolean equation '%s' is not valid.<br/>Not the same number of sub-requests", "dyngroup"), $bool));
         return False;
     } elseif ($display_success) {

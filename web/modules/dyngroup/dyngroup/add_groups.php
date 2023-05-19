@@ -100,7 +100,7 @@ if (isset($_POST["bdelmachine_x"])) {
     if ($type == 1) {
         $willBeUnregistered = unserialize(base64_decode($_POST["willBeUnregistered"]));
 
-        if (count($willBeUnregistered) > 0) {
+        if (safeCount($willBeUnregistered) > 0) {
             xmlrpc_delComputersImaging($willBeUnregistered, False);
         }
     }
@@ -188,7 +188,7 @@ if (isset($_POST["bdelmachine_x"])) {
 
                 $ret = xmlrpc_synchroProfile($group->id);
 
-                if (count($dontAddedToProfile) > 0) {
+                if (safeCount($dontAddedToProfile) > 0) {
                     $msg = _T("Imaging group modified, but some machines were not added to existing imaging group, because they have more than one ethernet card:", 'dyngroup');
                     $msg .= "<br /><br />";
                     foreach ($dontAddedToProfile as $member) {
@@ -237,7 +237,7 @@ if (isset($_POST["bdelmachine_x"])) {
         #}
     } else {
         $names = array();
-        if (count($ret_add) == 2) {
+        if (safeCount($ret_add) == 2) {
             foreach ($ret_add[1] as $uuid) {
                 $member = $listOfMembers[$uuid];
                 $names[] = $member['hostname'];
@@ -248,7 +248,7 @@ if (isset($_POST["bdelmachine_x"])) {
         if ($type == 0) { // Simple group
             new NotifyWidgetFailure(_T("Group failed to modify", "dyngroup"));
         } else { // Imaging group
-            if (count($names) > 0) {
+            if (safeCount($names) > 0) {
                 new NotifyWidgetFailure(sprintf(_T("Imaging group failed to modify.<br/>Can't add %s", "dyngroup"), implode(', ', $names)));
             } else {
                 new NotifyWidgetFailure(_T("Imaging group failed to modify", "dyngroup"));
@@ -280,7 +280,7 @@ if (isset($_POST["bdelmachine_x"])) {
     //search entity for serverimaging
     $imss = xmlrpc_getAllImagingServersForProfiles(true);
 
-    if (isset($imss) && count($imss) == 1){
+    if (isset($imss) && safeCount($imss) == 1){
         foreach ($imss as $key => $value){
             $entitieval = $value['fk_entity'];
             $imaging_server = $key;

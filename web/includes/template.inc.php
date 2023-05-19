@@ -759,7 +759,7 @@ class Template
       }
     }
 
-    if (count($result)) {
+    if (safeCount($result)) {
       return $result;
     } else {
       return false;

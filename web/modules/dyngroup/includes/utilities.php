@@ -28,13 +28,13 @@ function to_rpc($obj) { return $obj->toRPC(); }
 function to_xml($obj) { return $obj->toXML(); }
 
 function getCookie($path) { // TODO generic!
-    if (count($path) == 1) {
+    if (safeCount($path) == 1) {
         return $_COOKIE[$path[0]];
-    } elseif (count($path) == 2) {
+    } elseif (safeCount($path) == 2) {
         return $_COOKIE[$path[0]][$path[1]];
-    } elseif (count($path) == 3) {
+    } elseif (safeCount($path) == 3) {
         return $_COOKIE[$path[0]][$path[1]][$path[2]];
-    } elseif (count($path) == 4) {
+    } elseif (safeCount($path) == 4) {
         return $_COOKIE[$path[0]][$path[1]][$path[2]][$path[3]];
     }
     return false;

@@ -65,13 +65,13 @@ $process1['id']= $id;
 $process1['master']= $master;
 //echo http_build_query($process, 'myvar_');
 //exit;
-if (count($process) > 0){
+if (safeCount($process) > 0){
     // afficher progression des copys
     header("Location: " . urlStrRedirect("imaging/manage/synchromaster",$process1));
     exit;
 }
 else{
-    if(count($list) == 0){
+    if(safeCount($list) == 0){
         $msg = sprintf (_T("There is no imaging server available to clone the master", "imaging")."%s",$label );
         xmlrpc_setfromxmppmasterlogxmpp($msg,
                                         "IMG",
@@ -89,7 +89,7 @@ else{
         exit;
     }else
     {// peu cloner
-        if(count($_POST) == 0) {
+        if(safeCount($_POST) == 0) {
             $p = new PageGenerator(_T("Clone master : ", "imaging").$label);
         }else{
             $_SESSION['processclone']=$process1;

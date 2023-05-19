@@ -128,7 +128,7 @@ $operator_select->setElementsVal(array_keys($operators));
 
 $pattern_input = new InputTpl('patterns[]');
 
-for ($i = 0 ; $i < count($rule['criteria']); $i++) {
+for ($i = 0 ; $i < safeCount($rule['criteria']); $i++) {
 
     // Fields
     $fields = array(

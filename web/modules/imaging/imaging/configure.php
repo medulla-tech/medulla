@@ -231,7 +231,7 @@ if (isset($_POST["bvalid"])) {
     $params['target_opt_image'] = $_POST['target_opt_image'];
 
     if ($type == 'group') { // Profile
-        if (count($choose_network_profile) > 0) {
+        if (safeCount($choose_network_profile) > 0) {
             $params["choose_network_profile"] = $choose_network_profile;
         }
     }
@@ -475,7 +475,7 @@ else {
             $profileNetworks = xmlrpc_getProfileNetworks($target_uuid);
             foreach ($profileNetworks as $networks) {
                 $networks = $networks[1];
-                foreach (range(0, count($networks['ipHostNumber']) - 1) as $i) {
+                foreach (range(0, safeCount($networks['ipHostNumber']) - 1) as $i) {
                     $ip=explode(":", $networks['ipHostNumber'][$i] );
                     if(filter_var($ip[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) == ""){
                         unset($networks['ipHostNumber'][$i]);
@@ -512,13 +512,13 @@ else {
                 $networks['domain'] = array_values($networks['domain']);
                 $networks['subnetMask'] = array_values($networks['subnetMask']);
 
-                if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
-                    if (count($networks['macAddress']) > 1) {
+                if (is_array($networks) && safeCount($networks) > 1 and isset($networks['macAddress'])) {
+                    if (safeCount($networks['macAddress']) > 1) {
                         $f->push(new Table());
                         $macs_choice = new MySelectItem("choose_network_" . $networks['objectUUID'][0], 'exclusive_orders');
                         $elements = array();
                         $values = array();
-                        foreach (range(0, count($networks['macAddress']) - 1) as $i) {
+                        foreach (range(0, safeCount($networks['macAddress']) - 1) as $i) {
                             $elements[] = sprintf("%s / %s", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
                             $values[] = $networks['networkUuids'][$i];
                         }
@@ -527,7 +527,7 @@ else {
                         $f->add(new TrFormElement(_T("Computer:"), new SpanElement($networks['fullname'])));
                         $f->add(new TrFormElement(_T("Choose the MAC address you want to use", "imaging"), $macs_choice));
                         $f->pop();
-                    } elseif (count($networks['macAddress']) == 1) {
+                    } elseif (safeCount($networks['macAddress']) == 1) {
                         $f->add(new HiddenTpl("choose_network_" . $networks['objectUUID'][0]),
                             array(
                                 "value" => $networks['networkUuids'][0],
@@ -570,7 +570,7 @@ else {
         else {
             $target = $whose[2];
             if ($whose[1] == 2 && $type == '') { #PROFILE
-                if (count($whose) > 3) {
+                if (safeCount($whose) > 3) {
                     $real_target = $whose[3];
                 }
                 $has_profile = True;
@@ -643,7 +643,7 @@ else {
         if ($is_registering && $type == '') {
             $networks = xmlCall('base.getComputersNetwork', array(array('uuid'=>$_GET["target_uuid"])));
             $networks = $networks[0][1];
-            foreach (range(0, count($networks['ipHostNumber']) - 1) as $i) {
+            foreach (range(0, safeCount($networks['ipHostNumber']) - 1) as $i) {
                 $ip = explode(":", $networks['ipHostNumber'][$i]);
                 if(filter_var($ip[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) == ""){
                     unset($networks['ipHostNumber'][$i]);
@@ -682,13 +682,13 @@ else {
             $networks['domain'] = array_values($networks['domain']);
             $networks['subnetMask'] = array_values($networks['subnetMask']);
 
-            if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
-                if (count($networks['macAddress']) > 1) {
+            if (is_array($networks) && safeCount($networks) > 1 and isset($networks['macAddress'])) {
+                if (safeCount($networks['macAddress']) > 1) {
                     $f->push(new Table());
                     $macs_choice = new MySelectItem("choose_network", 'exclusive_orders');
                     $elements = array();
                     $values = array();
-                    foreach (range(0, count($networks['macAddress']) - 1) as $i) {
+                    foreach (range(0, safeCount($networks['macAddress']) - 1) as $i) {
                         $elements[] = sprintf("%s [%s]", $networks['ipHostNumber'][$i], $networks['macAddress'][$i]);
                         $values[] = $networks['networkUuids'][$i];
                     }
@@ -696,7 +696,7 @@ else {
                     $macs_choice->setElementsVal($values);
                     $f->add(new TrFormElement(_T("Choose the MAC address you want to use", "imaging"), $macs_choice));
                     $f->pop();
-                } elseif (count($networks['macAddress']) == 1) {
+                } elseif (safeCount($networks['macAddress']) == 1) {
                     $f->add(new HiddenTpl("choose_network"),           array("value" => $networks['networkUuids'][0],            "hide" => True));
                 }
             }

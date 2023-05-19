@@ -41,7 +41,7 @@ $group->create($groupname, False);
 $group->addMembers($groupmembers);
 
 $truncate_limit = getMaxElementsForStaticList();
-if ($truncate_limit == count($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers. Use the filter to find specific machines.", "dyngroup"), $truncate_limit));
+if ($truncate_limit == safeCount($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers. Use the filter to find specific machines.", "dyngroup"), $truncate_limit));
 
 header("Location: " . urlStrRedirect("base/computers/display", array('gid'=>$group->id, 'groupname'=>$groupname)));
 exit;

@@ -61,9 +61,9 @@ foreach ($listrelaytotal as $key => $val){
     }
 }
 
-$nbt  = count($listrelaytotal);
-$nbns = count($listsearchnosynchro);
-$nbs  = count($listsearchsynchro);
+$nbt  = safeCount($listrelaytotal);
+$nbns = safeCount($listsearchnosynchro);
+$nbs  = safeCount($listsearchsynchro);
 $nbsp = ($nbs/$nbt)*100;
 $nbnsp = ($nbns/$nbt)*100;
 
