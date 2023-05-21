@@ -106,7 +106,9 @@ class managepackage:
             shared_dir = os.path.abspath(os.path.realpath(shared_dir))
         for x in managepackage.search_list_package():
             if verbose:
-                print(f"symbolic link {x} to {os.path.join(dirpackage, os.path.basename(x))}")
+                print(
+                    f"symbolic link {x} to {os.path.join(dirpackage, os.path.basename(x))}"
+                )
             try:
                 os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
             except OSError:
@@ -449,26 +451,20 @@ if __name__ == "__main__":
                 "postCommandSuccess_command": json_file["commands"][
                     "postCommandSuccess"
                 ]["command"],
-                "postCommandSuccess_name": json_file["commands"][
-                    "postCommandSuccess"
-                ]["name"],
-                "installInit_command": json_file["commands"]["installInit"][
-                    "command"
-                ],
-                "installInit_name": json_file["commands"]["installInit"][
+                "postCommandSuccess_name": json_file["commands"]["postCommandSuccess"][
                     "name"
                 ],
+                "installInit_command": json_file["commands"]["installInit"]["command"],
+                "installInit_name": json_file["commands"]["installInit"]["name"],
                 "postCommandFailure_command": json_file["commands"][
                     "postCommandFailure"
                 ]["command"],
-                "postCommandFailure_name": json_file["commands"][
-                    "postCommandFailure"
-                ]["name"],
+                "postCommandFailure_name": json_file["commands"]["postCommandFailure"][
+                    "name"
+                ],
                 "command_command": json_file["commands"]["command"]["command"],
                 "command_name": json_file["commands"]["command"]["name"],
-                "preCommand_command": json_file["commands"]["preCommand"][
-                    "command"
-                ],
+                "preCommand_command": json_file["commands"]["preCommand"]["command"],
                 "preCommand_name": json_file["commands"]["preCommand"]["name"],
                 "pkgs_share_id": "NULL",
                 "edition_status": 1,

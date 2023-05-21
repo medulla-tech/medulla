@@ -49,7 +49,9 @@ class AuthenticationManager(Singleton):
             else:
                 self.logger.info(f"Authenticator {name} failed to validate")
                 if mandatory:
-                    self.logger.error(f"Authenticator {name} is configured as mandatory, exiting")
+                    self.logger.error(
+                        f"Authenticator {name} is configured as mandatory, exiting"
+                    )
                     ret = False
                 else:
                     self.logger.info(

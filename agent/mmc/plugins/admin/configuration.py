@@ -61,9 +61,7 @@ def loadInventoryConf(module_name):
     """
     inventory_config = PluginConfigFactory.new(InventoryConfig, "inventory")
     glpi_config = PluginConfigFactory.new(GlpiConfig, "glpi")
-    print(
-        f"Instance of inventory config in loadInventoryConf is {inventory_config}"
-    )
+    print(f"Instance of inventory config in loadInventoryConf is {inventory_config}")
 
     # Enable and disable the right modules in their config
     # base_config = PluginConfigFactory.get("base")

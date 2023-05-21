@@ -230,15 +230,10 @@ class PostInstallSystemVHandler(PostInstallPosixHandler):
     ]
 
 
-
-
-
 class PostInstallSysCtlHandler(PostInstallPosixHandler):
     """Sysctl handler"""
 
-    insert_service_cmd = (
-        f"/bin/chkconfig --add  {PostInstallPosixHandler.SCRIPT_NAME}"
-    )
+    insert_service_cmd = f"/bin/chkconfig --add  {PostInstallPosixHandler.SCRIPT_NAME}"
     start_service_cmd = f"/etc/init.d/{PostInstallPosixHandler.SCRIPT_NAME} start"
 
     include_files = [

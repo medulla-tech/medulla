@@ -237,7 +237,9 @@ class ExternalLdapProvisioner(ProvisionerI):
                         if attr in userentry:
                             tmp.extend(userentry[attr])
                         else:
-                            self.logger.info(f"The user '{uid}' doesn't have an attribute '{attr}'")
+                            self.logger.info(
+                                f"The user '{uid}' doesn't have an attribute '{attr}'"
+                            )
 
                     elif entity.startswith("plugin:"):
                         plugin = entity.replace("plugin:", "")
@@ -250,14 +252,22 @@ class ExternalLdapProvisioner(ProvisionerI):
                             klass = mod.PluginEntities
                             found = klass().get(authtoken)
                             if found:
-                                self.logger.info(f"Plugin '{plugin}' found these entities: {found}")
+                                self.logger.info(
+                                    f"Plugin '{plugin}' found these entities: {found}"
+                                )
                             else:
-                                self.logger.info(f"Plugin '{plugin}' found no matching entity")
+                                self.logger.info(
+                                    f"Plugin '{plugin}' found no matching entity"
+                                )
                             tmp.extend(found)
                         except ImportError:
-                            self.logger.error(f"The plugin '{plugin}' can't be imported")
+                            self.logger.error(
+                                f"The plugin '{plugin}' can't be imported"
+                            )
                         except Exception as e:
-                            self.logger.error(f"Error while using the plugin '{plugin}'")
+                            self.logger.error(
+                                f"Error while using the plugin '{plugin}'"
+                            )
                             self.logger.exception(e)
 
                     else:
@@ -296,7 +306,9 @@ class ExternalLdapProvisioner(ProvisionerI):
                         # profile
                         try:
                             l.delUserFromGroup(groupname, uid)
-                            self.logger.debug(f"Deleting user {uid} from group {groupname}")
+                            self.logger.debug(
+                                f"Deleting user {uid} from group {groupname}"
+                            )
                         except ldap.NO_SUCH_OBJECT:
                             # The group does not exist
                             pass

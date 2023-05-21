@@ -180,7 +180,9 @@ class CronSchedule(object):
                         break
 
             if dow_distance is not None and dom_distance is not None:
-                distance = dow_distance if dow_distance <= dom_distance else dom_distance
+                distance = (
+                    dow_distance if dow_distance <= dom_distance else dom_distance
+                )
             if distance is None and dow_distance is not None:
                 distance = dow_distance
 
