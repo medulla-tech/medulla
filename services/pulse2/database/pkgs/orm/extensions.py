@@ -4,6 +4,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
+
 class Extensions(object):
     def getId(self):
         if self.id is not None:
@@ -85,4 +86,3 @@ class Extensions(object):
             "proposition": self.getProposition(),
             "description": self.getDescription(),
         }
-

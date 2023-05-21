@@ -5,7 +5,7 @@
 # PULSE2
 from mmc.database.config import DatabaseConfig
 
+
 class UpdatesDatabaseConfig(DatabaseConfig):
     dbname = "updates"
     dbsection = "database"
-

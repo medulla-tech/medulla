@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2007-2008 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -556,7 +556,6 @@ class Common(pulse2.utils.Singleton):
         # ======= Bundle case : generate files and command
 
         if self.packages[pid].sub_packages:
-
             # Init Bundle command
             bundle_command = []
             package_index = 0
@@ -565,7 +564,6 @@ class Common(pulse2.utils.Singleton):
             self.removeAllFilesFromPackage(pid)
 
             for sub_pkg in self.packages[pid].sub_packages:
-
                 package_index += 1
                 sub_pid = sub_pkg["pid"]
                 condition = sub_pkg["condition"].strip()
@@ -662,7 +660,6 @@ class Common(pulse2.utils.Singleton):
         # Bundle case : generate MD5 and rescan packages
 
         if self.packages[pid].sub_packages:
-
             self._createMD5File(confdir)
 
             # Force new packages detection

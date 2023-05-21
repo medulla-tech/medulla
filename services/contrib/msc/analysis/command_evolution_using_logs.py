@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # SPDX-FileCopyrightText: 2008-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -172,7 +172,6 @@ def read_logs(logfiles, start_date, stop_date):
 
     # Parse all log files in the directory
     for file in logfiles:
-
         try:
             fh = open(file)
         except IOError:
@@ -248,7 +247,6 @@ def read_logs(logfiles, start_date, stop_date):
 
 # Main Loop
 if __name__ == "__main__":
-
     if len(sys.argv) < 4:
         sys.exit(
             "Usage : %s '<start date>' '<end date>' <log1> <log2> ..." % sys.argv[0]

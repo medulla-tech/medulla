@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2008 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 """
 MMC Dyngroup Backend plugin
@@ -306,8 +306,10 @@ class RpcProxy(RpcProxyI):
         uuids = {}
         uuids = ComputerManager().getComputerFilteredByCriterion(ctx, criterion, values)
 
-        registered_machines = DyngroupDatabase().getRegisteredMachines(list(uuids.keys()))
-        unregistered_uuids = list(set(uuids)- set(registered_machines))
+        registered_machines = DyngroupDatabase().getRegisteredMachines(
+            list(uuids.keys())
+        )
+        unregistered_uuids = list(set(uuids) - set(registered_machines))
 
         unregistered_machines = {}
 
@@ -316,7 +318,6 @@ class RpcProxy(RpcProxyI):
 
         DyngroupDatabase().addMissingMachines(unregistered_machines)
         DyngroupDatabase().associateMachinesToGroup(id, list(uuids.keys()))
-
 
     def addmembers_to_group(self, id, uuids):
         ctx = self.currentContext

@@ -891,7 +891,6 @@ def read_conf_assessor_master(objectxmpp):
                 logger.warning("showinfomachine default value is []")
 
             if Config.has_option("parameters", "keyAES32"):
-
                 paramkeyAES32 = Config.get("parameters", "keyAES32")
                 objectxmpp.assessor_agent_keyAES32 = [
                     str(x.strip()) for x in paramkeyAES32.split(",") if x.strip() != ""

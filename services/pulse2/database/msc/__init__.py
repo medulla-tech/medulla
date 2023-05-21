@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -11,6 +11,7 @@ Provides access to MSC database
 # standard modules
 import time
 import re
+
 # SqlAlchemy
 from sqlalchemy import (
     and_,
@@ -385,7 +386,6 @@ class MscDatabase(DatabaseHelper):
         session = create_session()
         session.begin()
         try:
-
             bundle = session.query(Bundle).get(bundle_id)
             if not bundle:
                 self.logger.warn("Unable to find bundle (id=%s)" % bundle_id)
@@ -1023,23 +1023,28 @@ class MscDatabase(DatabaseHelper):
                 False la machine ne peut pas etre deploye.
         """
         datenow = datetime.datetime.now()
-        hactuel = int(datenow.strftime('%H'))
-        query = session.query(Commands.deployment_intervals).filter(Commands.title.like(title))
+        hactuel = int(datenow.strftime("%H"))
+        query = session.query(Commands.deployment_intervals).filter(
+            Commands.title.like(title)
+        )
         nb = query.count()
-        if nb == 0 :
+        if nb == 0:
             return True
         res = query.first()
         if not res:
             return True
         # analyse si deploy true or false
-        tb=[re.sub("[-'*;|@#\"]{1}", "-", x) for x in res.deployment_intervals.split(',') if self.pattern.match(x.strip())]
+        tb = [
+            re.sub("[-'*;|@#\"]{1}", "-", x)
+            for x in res.deployment_intervals.split(",")
+            if self.pattern.match(x.strip())
+        ]
         for c in tb:
-            start, end = c.split('-')
+            start, end = c.split("-")
             if hactuel >= int(start) and hactuel <= int(end):
                 # on a trouver 1 cas on deploy
                 return True
         return False
-
 
     @DatabaseHelper._sessionm
     def deployxmpp(self, session, limitnbr=100):
@@ -1173,16 +1178,28 @@ class MscDatabase(DatabaseHelper):
         return nb_machine_select_for_deploy_cycle, updatemachine
 
     @DatabaseHelper._sessionm
-    def get_conrainte_slot_deployment_commands(self,session, commands):
-        res = session.query(Commands.id, Commands.deployment_intervals).filter(Commands.id.in_(commands)).all()
-        result={}
+    def get_conrainte_slot_deployment_commands(self, session, commands):
+        res = (
+            session.query(Commands.id, Commands.deployment_intervals)
+            .filter(Commands.id.in_(commands))
+            .all()
+        )
+        result = {}
         for element in res:
             result[str(element[0])] = element[1]
         return result
 
     @DatabaseHelper._sessionm
-    def get_deploy_inprogress_by_team_member(self, session, login, intervalsearch,
-                                             minimum, maximum, filt, typedeploy="command"):
+    def get_deploy_inprogress_by_team_member(
+        self,
+        session,
+        login,
+        intervalsearch,
+        minimum,
+        maximum,
+        filt,
+        typedeploy="command",
+    ):
         """
         This function is used to retrieve not yet done deployements of a team.
         This team is found based on the login of a member.
@@ -1207,26 +1224,33 @@ class MscDatabase(DatabaseHelper):
         datenow = datetime.datetime.now()
         delta = datetime.timedelta(seconds=intervalsearch)
         datereduced = datenow - delta
-        query = session.query(Commands.id,
-                              func.count(Commands.id).label('nb_machine'),
-                              Commands.title,
-                              Commands.creator,
-                              Commands.package_id,
-                              Commands.start_date,
-                              Commands.end_date,
-                              CommandsOnHost.id,
-                              Target.target_name,
-                              Target.target_uuid,
-                              Target.id_group,
-                              Target.target_macaddr,
-                              Commands.deployment_intervals)\
-        .join(CommandsOnHost, Commands.id == CommandsOnHost.fk_commands)\
-        .join(Target, Target.id == CommandsOnHost.fk_target)\
-        .join(CommandsOnHostPhase, CommandsOnHostPhase.fk_commands_on_host == CommandsOnHost.id)\
-        .filter(CommandsOnHostPhase.name == 'upload')\
-        .filter(CommandsOnHostPhase.state == 'ready')\
-        .filter(Commands.end_date > datereduced)\
-        .filter(Commands.type != 2)
+        query = (
+            session.query(
+                Commands.id,
+                func.count(Commands.id).label("nb_machine"),
+                Commands.title,
+                Commands.creator,
+                Commands.package_id,
+                Commands.start_date,
+                Commands.end_date,
+                CommandsOnHost.id,
+                Target.target_name,
+                Target.target_uuid,
+                Target.id_group,
+                Target.target_macaddr,
+                Commands.deployment_intervals,
+            )
+            .join(CommandsOnHost, Commands.id == CommandsOnHost.fk_commands)
+            .join(Target, Target.id == CommandsOnHost.fk_target)
+            .join(
+                CommandsOnHostPhase,
+                CommandsOnHostPhase.fk_commands_on_host == CommandsOnHost.id,
+            )
+            .filter(CommandsOnHostPhase.name == "upload")
+            .filter(CommandsOnHostPhase.state == "ready")
+            .filter(Commands.end_date > datereduced)
+            .filter(Commands.type != 2)
+        )
         if typedeploy != "command":
             query = query.filter(Commands.title.like("%%-@upd@%%"))
         else:
@@ -1271,19 +1295,22 @@ class MscDatabase(DatabaseHelper):
 
         result = {"total": nb, "elements": []}
         for element in res:
-
-            result['elements'].append({'cmd_id': element[0],
-                           'nb_machines': element[1],
-                           'package_name': element[2],
-                           'login': element[3],
-                           'package_uuid': element[4],
-                           'date_start': element[5],
-                           'date_end': element[6],
-                           'machine_name':element[8],
-                           'uuid_inventory':element[9],
-                           'gid': element[10],
-                           'mac_address': element[11],
-                            'deployment_intervals' : element[12]})
+            result["elements"].append(
+                {
+                    "cmd_id": element[0],
+                    "nb_machines": element[1],
+                    "package_name": element[2],
+                    "login": element[3],
+                    "package_uuid": element[4],
+                    "date_start": element[5],
+                    "date_end": element[6],
+                    "machine_name": element[8],
+                    "uuid_inventory": element[9],
+                    "gid": element[10],
+                    "mac_address": element[11],
+                    "deployment_intervals": element[12],
+                }
+            )
         return result
 
     def deleteCommand(self, cmd_id):
@@ -2923,13 +2950,18 @@ class MscDatabase(DatabaseHelper):
         ret = []
         listcmd = [x for x in arrayCommandsOnHostdata]
         for x in listcmd:
-            t= {    "fk_target" : x[0],
-                    "startdate" : x[1].strftime('%Y-%m-%d %H:%M:%S'),
-                    "enddate" : x[2].strftime('%Y-%m-%d %H:%M:%S'),
-                    "next_launch_date" : x[3].strftime('%Y-%m-%d %H:%M:%S') if x[3] is not None else "",
-                    "start_dateunixtime" : time.mktime(x[1].timetuple()),
-                    "end_dateunixtime" :time.mktime(x[2].timetuple()),
-                    "next_launch_dateunixtime" :time.mktime(x[3].timetuple()) if x[3] is not None else ""
+            t = {
+                "fk_target": x[0],
+                "startdate": x[1].strftime("%Y-%m-%d %H:%M:%S"),
+                "enddate": x[2].strftime("%Y-%m-%d %H:%M:%S"),
+                "next_launch_date": x[3].strftime("%Y-%m-%d %H:%M:%S")
+                if x[3] is not None
+                else "",
+                "start_dateunixtime": time.mktime(x[1].timetuple()),
+                "end_dateunixtime": time.mktime(x[2].timetuple()),
+                "next_launch_dateunixtime": time.mktime(x[3].timetuple())
+                if x[3] is not None
+                else "",
             }
             ret.append(t)
         return ret

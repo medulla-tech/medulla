@@ -1,5 +1,5 @@
 # -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 import json
 import requests
@@ -108,7 +108,7 @@ class UrApiWrapper:
         response = self.request("add_client", params)
 
         return response
-    
+
     def get_stats(self):
         self.login()
         params = {"ses": self.ses}

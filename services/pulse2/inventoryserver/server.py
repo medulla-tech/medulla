@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2008 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -189,7 +189,6 @@ class InventoryServer:
         try:
             # Light Pull mode and/or decide to forward or not if coming for PXE
             if query == "INVENTORY":
-
                 has_known_os = False
                 macaddresses = InventoryUtils.getMACs(content)
                 # Honestly, 00:00:00:00:00:00 can't be a good mac, trust me I'm
@@ -266,7 +265,6 @@ class InventoryServer:
                             do_forward = True
                 # Machine is not known, forward anyway
                 else:
-
                     if canDoInventory():
                         if InventoryUtils.is_coming_from_pxe(content):
                             self.logger.info(
@@ -287,7 +285,6 @@ class InventoryServer:
 
                 # Let's forward if needed
                 if do_forward:
-
                     # Let's fix the XML using py config scripts
                     invfix = InventoryFix(self.config, content)
                     content = invfix.get()
@@ -332,7 +329,7 @@ class InventoryFix:
         Find and pre-check all .py from xmlfixplugindir.
         Checked module must have a calable function named 'xml_fix'.
         """
-        for (path, dirs, files) in os.walk(self.config.xmlfixplugindir):
+        for path, dirs, files in os.walk(self.config.xmlfixplugindir):
             for filename in sorted(files):
                 pathname = os.path.join(path, filename)
                 if re.match("^.*\\.py$", pathname):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 20145 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import os
@@ -16,7 +16,6 @@ from pulse2agent.control import Dispatcher
 
 class Handler(object):
     def __init__(self):
-
         path = os.path.dirname(os.path.abspath(__file__))
         if "library.zip" in path:
             path = os.path.dirname(path)

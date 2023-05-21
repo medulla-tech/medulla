@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -572,7 +572,6 @@ class PkgsDatabase(DatabaseHelper):
             count = ret_count.first()[0]
 
         else:
-
             query = session.query(Packages).order_by(Packages.label)
             if filter != "":
                 query = query.filter(Packages.conf_json.contains(filter))
@@ -983,7 +982,6 @@ class PkgsDatabase(DatabaseHelper):
         )
         list_server_relay = XmppMasterDatabase().getRelayServerfromid(list_idars[0])
         for relaydata in list_server_relay:
-
             if relaydata["jid"].startswith("rspulse@pulse/"):
                 continue
             self.setSyncthingsync(
@@ -1042,7 +1040,6 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_package_summary(self, session, package_id):
-
         path = os.path.join("/", "var", "lib", "pulse2", "packages", package_id)
         size = 0
         files = []
@@ -1076,15 +1073,16 @@ class PkgsDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         result = {
-            'name' : '',
-            'version': '',
-            'Qsoftware' : '',
-            'Qversion' : '',
-            'Qvendor': '',
-            'description' : '',
-            'files' : files,
-            'size' : str(size),
-            'Size' : '%s %s'%(round(size/(diviser**count), 2), units[count])}
+            "name": "",
+            "version": "",
+            "Qsoftware": "",
+            "Qversion": "",
+            "Qvendor": "",
+            "description": "",
+            "files": files,
+            "size": str(size),
+            "Size": "%s %s" % (round(size / (diviser**count), 2), units[count]),
+        }
 
         if query is not None:
             result["name"] = query.label
@@ -1321,7 +1319,6 @@ class PkgsDatabase(DatabaseHelper):
         share_type=None,
         permission=None,
     ):
-
         sql = """SELECT
                     pkgs.pkgs_shares.id AS id_sharing,
                     pkgs.pkgs_shares.name AS name,
@@ -1589,7 +1586,6 @@ class PkgsDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def nb_package_in_sharing(self, session, share_id=None):
-
         sql = """SELECT
                     COUNT(*)
                 FROM

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -47,7 +47,6 @@ Get the icon of file
 
 # It's can be exe, dll, or already ico
 def windowsIconGetter(path, nIcon=0, exeOrDll=True):
-
     if os.path.isfile(path):
         dst = io.StringIO()
         if exeOrDll:
@@ -91,7 +90,6 @@ Convert the Registry Date in Humain format date DD/MM/YYYY HH:MM:SS
 
 
 def windowsDateConversion(date, displayHour=True):
-
     if len(date) == 8 or len(date) == 25:  # check if it's good windows date system
         finaldate = date[6:8] + "/" + date[4:6] + "/" + date[0:4]
         if displayHour:
@@ -113,7 +111,7 @@ Calculate the size of folder
 
 def sizeFolder(folder):
     size = 0
-    for (current, subFolder, files) in os.walk(folder):
+    for current, subFolder, files in os.walk(folder):
         size = size + sum(
             os.path.getsize(os.path.join(current, file)) for file in files
         )
@@ -241,7 +239,6 @@ Improve the xml File with the Information and another research
 
 
 def xmlUpdate(xmlString, lastInformation):
-
     xmlFile = xml.dom.minidom.parseString(xmlString)
 
     # Check Serial number between Ocs and WMI
@@ -537,7 +534,9 @@ def xmlUpdate(xmlString, lastInformation):
                                         nodeParentId = foundNodeInList(
                                             listSoftXMLDefault, "NAME", parentName
                                         )
-                                    except WindowsError:  # if parent doesn't exist # pyflakes.ignore
+                                    except (
+                                        WindowsError
+                                    ):  # if parent doesn't exist # pyflakes.ignore
                                         parentName = winreg.QueryValueEx(
                                             subkey, "ParentDisplayName"
                                         )[0]
@@ -708,7 +707,6 @@ Search in the list of xml node, the value in tagName
 
 
 def foundNodeInList(listnode, tagName, value):
-
     i = 0
     found = False
 
@@ -734,7 +732,6 @@ Improve the xml File and eventuality, save it on local machine
 
 
 def improveXML(xmlFileString):
-
     xmlFileString = xmlUpdate(xmlFileString, informationSearch())
     if Pulse2InventoryProxyConfig().savexmlmodified:
         filout = open("XmlOutput.xml", "w")
@@ -753,7 +750,6 @@ Add the last log of OCS in xml
 
 
 def getOcsDebugLog(xmlString):
-
     xmlFile = xml.dom.minidom.parseString(xmlString)
     userDomaine = xmlFile.getElementsByTagName("USERDOMAIN")[0].firstChild.nodeValue
     ocsFolder = Pulse2InventoryProxyConfig().command_name

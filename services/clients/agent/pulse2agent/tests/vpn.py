@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2014 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 
@@ -50,7 +50,6 @@ for (out, err) in %s:
     t_file = None
 
     def __init__(self):
-
         self.t_file = tempfile.NamedTemporaryFile()
         with open(self.t_file.name, "w") as f:
             f.write(self.body)
@@ -90,7 +89,6 @@ class Test00_VPNLaunchControl(TestCase):
         queue = queue.Queue()
 
         with ProcessSimulator() as script:
-
             config = ConfigHelper()
             config.vpn.command = "python"
             config.vpn.command_args = script.name
@@ -119,7 +117,6 @@ class Test00_VPNLaunchControl(TestCase):
         queue = queue.Queue()
 
         with ProcessSucceed() as script:
-
             config = ConfigHelper()
             config.vpn.command = "sh"
             config.vpn.command_args = script.name
@@ -140,7 +137,6 @@ class Test00_VPNLaunchControl(TestCase):
         queue = queue.Queue()
 
         with ProcessFailed() as script:
-
             config = ConfigHelper()
             config.vpn.command = "sh"
             config.vpn.command_args = script.name
@@ -197,6 +193,5 @@ class Test00_VPNLaunchControl(TestCase):
 
 
 if __name__ == "__main__":
-
     if TestCase.__module__ != "twisted.trial.unittest":
         main()

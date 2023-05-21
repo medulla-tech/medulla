@@ -1,7 +1,7 @@
 # -*- coding:Utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -226,12 +226,17 @@ class ImagingRpcProxy(RpcProxyI):
             # Adding location default menu entries
             # get computer location
             try:
-                entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
+                entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[
+                    uuid
+                ]["uuid"]
 
             except KeyError:
-                raise Exception("Unable to generate menu for computer %s: deleted but still present in imaging database" % uuid)
+                raise Exception(
+                    "Unable to generate menu for computer %s: deleted but still present in imaging database"
+                    % uuid
+                )
         else:
-            id_menu = old_bootMenu[1][0]['fk_menu'] if old_bootMenu[0] > 0 else 0
+            id_menu = old_bootMenu[1][0]["fk_menu"] if old_bootMenu[0] > 0 else 0
             if id_menu == 0:
                 return False
             entity = ImagingDatabase().getTargetsEntity([uuid])
@@ -2751,7 +2756,6 @@ class ImagingRpcProxy(RpcProxyI):
                 # if uuids == False: # the profile is empty
                 if len(defer_list) == 0:
                     if len(uuids) == 0:  # the profile is empty
-
                         db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.DONE)
                         return [True]
                     else:  # the profile wasn't empty => we fail to treat it
@@ -3198,7 +3202,6 @@ class ImagingRpcProxy(RpcProxyI):
         uuid = None
         db_computer = ComputerManager().getComputerByMac(MACAddress)
         if db_computer:
-
             if isinstance(db_computer, dict):
                 uuid = db_computer["uuid"]
             elif hasattr(db_computer, "getUUID"):

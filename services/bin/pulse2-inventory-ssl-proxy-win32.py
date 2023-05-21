@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2008 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import win32serviceutil
@@ -17,7 +17,6 @@ from pulse2.proxyssl.config import Pulse2InventoryProxyConfig
 
 
 class Pulse2ProxySsl(win32serviceutil.ServiceFramework):
-
     _svc_name_ = "Pulse2ProxySsl"
     _svc_display_name_ = "Pulse 2 Proxy SSL"
 

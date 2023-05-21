@@ -19,7 +19,6 @@ class SupportConfig(PluginConfig):
             self.initdone = True
 
     def setDefault(self):
-
         PluginConfig.setDefault(self)
 
         self.pid_path = "/var/run/pulse2/ssh_support"

@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-import logging 
+import logging
 
 import twisted
 from twisted.internet import ssl
@@ -90,7 +90,6 @@ class Pulse2XMLRPCProxy(Proxy):
         cacert=None,
         localcert=None,
     ):
-
         self._version_reminder()
 
         twisted.web.xmlrpc.Proxy.__init__(self, url, user, password)
@@ -117,7 +116,6 @@ class Pulse2XMLRPCProxy(Proxy):
             return False
 
         if twisted.version.major >= 17 and twisted.version.minor > 5:
-
             logging.getLogger().warn(
                 "Uncompatible Twisted version, must be less than than 17.5"
             )

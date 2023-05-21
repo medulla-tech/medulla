@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 # big modules
@@ -13,7 +13,6 @@ from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 
 
 class PkgsConfig(PluginConfig):
-
     # User/package_api API stuff
     upaa_server = "127.0.0.1"
     upaa_port = "9990"
@@ -142,10 +141,10 @@ class PkgsConfig(PluginConfig):
         if self.has_option("integrity_checks", "generate_hash"):
             self.generate_hash = self.getboolean("integrity_checks", "generate_hash")
 
-        self.hashing_algo = 'SHA256'
+        self.hashing_algo = "SHA256"
         if self.has_option("integrity_checks", "hashing_algo"):
             self.hashing_algo = self.get("integrity_checks", "hashing_algo")
-            
-        self.keyAES32 = 'abcdefghijklnmopqrstuvwxyz012345'
+
+        self.keyAES32 = "abcdefghijklnmopqrstuvwxyz012345"
         if self.has_option("integrity_checks", "keyAES32"):
             self.keyAES32 = self.get("integrity_checks", "keyAES32")

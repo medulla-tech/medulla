@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2008 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -44,7 +44,7 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
         self.sendHeader(b"Content-length", bytes(len(self.factory.payload)))
         if self.factory.user:
             auth = "%s:%s" % (self.factory.user, self.factory.password)
-            auth = base64.b64encode(bytes(auth, 'utf-8'))
+            auth = base64.b64encode(bytes(auth, "utf-8"))
             self.sendHeader(b"Authorization", b"Basic %s" % (auth,))
         try:
             # Put MMC session cookie
@@ -53,7 +53,7 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
                 self.sendHeader(b"Cookie", h.read())
                 h.close()
         except FileNotFoundError as error_opening_cookie:
-            logger.error("An error occured while open the file %s." %  COOKIES_FILE)
+            logger.error("An error occured while open the file %s." % COOKIES_FILE)
             logger.error("The error is \n %s" % error_opening_cookie)
         except IOError as error_ioerror:
             logger.error("An unkown error occured. The message is %s" % error_ioerror)
@@ -79,10 +79,8 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
 
 
 class MMCQueryFactory(xmlrpc.Proxy):
-
     protocol = MMCQueryProtocol
 
 
 class Proxy(xmlrpc.Proxy):
-
     queryFactory = MMCQueryFactory

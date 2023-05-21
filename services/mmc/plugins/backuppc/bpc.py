@@ -2,7 +2,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import os.path
@@ -445,6 +445,7 @@ def restore_file(host, backup_num, share_name, files):
     @returns: Temporary Path to the restored file
     @rtype: str
     """
+
     # Define deferred callback and failure functions
     def _success(result):
         # Set download status to 1 (finished) for this download entry

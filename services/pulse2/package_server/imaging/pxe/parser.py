@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2013 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -74,7 +74,6 @@ def assign(id):
     def wrapper(fnc):
         @wraps(fnc)
         def wrapped_fnc(self, *args, **kwargs):
-
             if self.register_only:
                 # registering step called when RPC proxy created
                 self.methods[id] = fnc

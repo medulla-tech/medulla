@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2013 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """ Network utils module """
@@ -254,7 +254,6 @@ class NetworkDetect:
         TOTAL_BITS = 8
 
         for element in NetUtils.ipv4_to_dec(netmask):
-
             n_bits = SUBNET_BITS.index(element)
             m_bits = TOTAL_BITS - n_bits
 
@@ -288,7 +287,6 @@ class NetworkDetect:
         end = 0
 
         for attempt in range(0, nbr):
-
             end = attempt * last_bit - 1
 
             if value in range(start, end):
@@ -345,7 +343,6 @@ class ResolvingCallable:
     name = None
 
     def __init__(self, networks, **kwargs):
-
         self.networks = networks
 
         for attr, value in list(kwargs.items()):
@@ -397,7 +394,6 @@ class ResolvingCallable:
 
 
 class ChoosePerIP(ResolvingCallable):
-
     name = "ip"
 
     def __call__(self, target):
@@ -423,14 +419,12 @@ class ChoosePerIP(ResolvingCallable):
                     )
                     continue
                 for pref_ip, pref_netmask in self.networks:
-
                     log.debug(
                         "Comparing host '%s'(%s) with my preferred network (%s/%s)"
                         % (hostname, iface_ip, pref_ip, pref_netmask)
                     )
 
                     if NetUtils.on_same_network(iface_ip, pref_ip, pref_netmask):
-
                         return iface_ip
 
                     last_ip = pref_ip
@@ -448,7 +442,6 @@ class ChoosePerIP(ResolvingCallable):
 
 
 class ChoosePerShortname(ResolvingCallable):
-
     name = "shortname"
 
     hosts_path = "/usr/bin/getent"
@@ -492,7 +485,6 @@ class ChoosePerShortname(ResolvingCallable):
 
 
 class ChoosePerFQDN(ResolvingCallable):
-
     name = "fqdn"
 
     hosts_path = "/usr/bin/getent"
@@ -536,7 +528,6 @@ class ChoosePerFQDN(ResolvingCallable):
 
 
 class ChooseFirstComplete(ResolvingCallable):
-
     name = "first"
 
     def __call__(self, target):
@@ -559,7 +550,6 @@ class ChooseFirstComplete(ResolvingCallable):
 
 
 class ChoosePerNMBLookup(ResolvingCallable):
-
     name = "netbios"
 
     netbios_path = "/usr/bin/nmblookup"
@@ -597,11 +587,9 @@ class ChoosePerNMBLookup(ResolvingCallable):
 
         # So, let's go to parse!
         if "\n" in out and len(out.split("\n")) > 1:
-
             second_line = out.split("\n")[1]
 
             if not second_line.startswith("name_query") and " " in second_line:
-
                 ip = second_line.split(" ")[0]
 
                 if NetUtils.is_ipv4_format(ip):
@@ -671,7 +659,6 @@ class IPResolversContainer:
                     resolvers.pop(i)
 
         for name in resolve_order:
-
             for resolver_class in resolvers:
                 resolver = resolver_class(self.networks, **kwargs)
 
@@ -752,7 +739,6 @@ class IPResolve(IPResolversContainer):
             return None
 
         for resolver in self.resolvers:
-
             log.debug("Trying to apply '%s' method ..." % resolver.name)
             result = resolver(target)
             if result:

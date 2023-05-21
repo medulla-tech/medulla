@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # SPDX-FileCopyrightText: 2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import sys
@@ -29,7 +29,6 @@ DELTA = 30
 def create_graph(
     label_x, label_y, data_x, alldata_y, filename, title, start_date, end_date
 ):
-
     # alter file name (linpng do not seems to like spaces in filenames
 
     filename = filename.replace(" ", "_")
@@ -112,34 +111,28 @@ def read_logs(log_dir, start_date, stop_date):
 
     # Parse all log files in the directory
     for file in os.listdir(log_dir):
-
         # If this is a real log file
         # TODO : better test
         if ".log" in file:
-
             print("reading %s" % file)
             fh = open(os.path.join(log_dir, file))
 
             # Parse each line in the log file
             for line in fh:
-
                 # Add the "BALANCE" test to avoid computing regexp if the line doesn't match
                 if ("BALANCE:" in line) and re.search(regexp, line):
-
                     # Extract regexp results
                     res = re.search(regexp, line)
                     date = res.group(1)
                     stamp = int(time.mktime(time.strptime(date, "%Y-%m-%d %H:%M")))
 
                     if stamp > start_date and stamp < stop_date:
-
                         launcher = res.group(2)
                         stats = res.group(3)
                         # Convert str to dict
                         dump = eval(stats)
 
                         if "global" in dump:
-
                             if not launcher in launchers:
                                 launchers[launcher] = {}
                             if stamp in launchers[launcher]:
@@ -152,7 +145,6 @@ def read_logs(log_dir, start_date, stop_date):
                                 )
 
                         if "by_group" in dump:
-
                             # For each group available
                             for group in list(dump["by_group"].keys()):
                                 if not group in groups:
@@ -171,7 +163,6 @@ def read_logs(log_dir, start_date, stop_date):
 
 # Main Loop
 if __name__ == "__main__":
-
     if len(sys.argv) != 4:
         sys.exit(
             "Usage : %s <logs_directory> '<start date>' '<end date>'" % sys.argv[0]
@@ -204,7 +195,6 @@ if __name__ == "__main__":
 
         # Sort groups data for pygraph
         for group in group_list:
-
             for hour in group_hours:
                 if not group in groups_actions:
                     groups_actions[group] = []
@@ -247,7 +237,6 @@ if __name__ == "__main__":
 
         # Sort launchers data for pygraph
         for launch in launcher_list:
-
             for hour in launch_hours:
                 if not launch in launch_actions:
                     launch_actions[launch] = []

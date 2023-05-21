@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2013 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -24,7 +24,6 @@ thread = deferToThread.__get__  # Create an alias for deferred functions
 
 
 class StringFileHandler:
-
     data = ""
 
     def __init__(self, data):

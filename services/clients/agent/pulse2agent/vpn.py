@@ -1,7 +1,7 @@
 # -*- test-case-name: pulse2.msc.client.tests.vpn -*-
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2014 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 from subprocess import Popen, PIPE
@@ -11,11 +11,9 @@ from .connect import probe
 
 
 class VPNLaunchControl(Component):
-
     __component_name__ = "vpn_launch_control"
 
     def start(self):
-
         # if not self.probe():
         #    self.logger.warn("VPN Server unreacheable")
         #    return CC.VPN | CC.REFUSED

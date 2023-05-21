@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 """
 Unit tests for the imaging API of the Pulse 2 Package Server

@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2014 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import os
@@ -113,7 +113,7 @@ class DefaultsFiller(object):
         """
         replaced_items = 0
         for line in fileinput.input(self.config_file, inplace=1):
-            for (old, new) in list(pattern.items()):
+            for old, new in list(pattern.items()):
                 search_exp = "@@%s@@" % old
                 if search_exp in line:
                     line = line.replace(search_exp, new)
@@ -158,8 +158,7 @@ class PostInstallPosixHandler(object):
 
     def copy_files(self):
         """Copy include files"""
-        for (source, destination) in self.include_files:
-
+        for source, destination in self.include_files:
             result = copy_file(source, destination)
             if result[1] != 1:
                 print("WARNING: copy of file %s -> %s failed" % (source, destination))
@@ -263,7 +262,6 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
     ]
 
     def post_copy_tasks(self):
-
         cmd_link = (
             "ln -s /lib/systemd/system/%s.service /etc/systemd/system/%s.service"
             % (self.SCRIPT_NAME, self.SCRIPT_NAME)
@@ -316,7 +314,6 @@ class SystemManagementResolver(object):
 
 
 if sys.platform in ("linux2", "darwin"):
-
     SCRIPT_NAME = "pulse2-agent"
     from distutils.core import setup
     from distutils.command.install import install as _install
@@ -352,7 +349,6 @@ if sys.platform in ("linux2", "darwin"):
 
 
 elif sys.platform == "win32":
-
     from cx_Freeze import setup, Executable
 
     executables = [

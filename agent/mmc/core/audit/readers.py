@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -62,7 +62,6 @@ class AuditReaderDB:
                 .first()
             )
             if plugin != None:
-
                 ql = qlog.filter(self.parent.record_table.c.module_id == plugin.id)
                 qlog = ql
             else:
@@ -265,7 +264,6 @@ class AuditReaderDB:
             llistobj = []
             if listobj != None:
                 for objects in listobj:
-
                     lobject = (
                         self.session.query(Object)
                         .filter(self.parent.object_table.c.id == objects.object_id)

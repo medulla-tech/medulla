@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -279,8 +279,9 @@ class RpcProxy(RpcProxyI):
             ret = -1
         return ret
 
-    def get_deploy_inprogress_by_team_member(self, login, time, minimum,
-                                             maximum, filt, typedeploy="command"):
+    def get_deploy_inprogress_by_team_member(
+        self, login, time, minimum, maximum, filt, typedeploy="command"
+    ):
         """
         This function is used to retrieve not yet done deployements of a team.
         This team is found based on the login of a member.
@@ -295,8 +296,9 @@ class RpcProxy(RpcProxyI):
             It returns all the deployement not yet started of a specific team.
             It can be done by time search too.
         """
-        return MscDatabase().get_deploy_inprogress_by_team_member(login, time, minimum,
-                                                                  maximum, filt, typedeploy)
+        return MscDatabase().get_deploy_inprogress_by_team_member(
+            login, time, minimum, maximum, filt, typedeploy
+        )
 
     def get_conrainte_slot_deployment_commands(self, commands):
         return MscDatabase().get_conrainte_slot_deployment_commands(commands)
@@ -671,9 +673,9 @@ class RpcProxy(RpcProxyI):
     # default WEB values handling
     #
     def get_def_package_label(self, label, version, typedepl=None):
-        """ typedepl="-@upd@" for update """
+        """typedepl="-@upd@" for update"""
         localtime = time.localtime()
-        typepackage=""
+        typepackage = ""
         if typedepl is not None:
             typepackage = typedepl
         return "%s (%s) %s- %04d/%02d/%02d %02d:%02d:%02d" % (
@@ -850,6 +852,7 @@ def restart_command(c_id):
 
 ###
 
+
 # Bundle handling ###
 def stop_bundle(bundle_id):
     action_on_bundle(bundle_id, "stop_bundle", "stopBundle", "stopCommands")
@@ -870,6 +873,7 @@ def restart_bundle(c_id):
 
 
 ###
+
 
 ##
 # common

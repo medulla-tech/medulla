@@ -1,7 +1,7 @@
 # -*- test-case-name: pulse2.msc.client.tests._config -*-
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2014 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """ Declaration of config defaults """
@@ -168,7 +168,6 @@ class ConfigReader(type):
             if hasattr(self, section_name):
                 section = getattr(self, section_name)
                 if inspect.isclass(section):
-
                     setattr(section, "__name__", section_name)
                     self._update_options(config_file, section)
 
@@ -190,7 +189,6 @@ class ConfigReader(type):
         """
         for name, value in list(section.__dict__.items()):
             if not name.startswith("_"):
-
                 yield name, value
 
     @classmethod
@@ -227,7 +225,6 @@ class ConfigReader(type):
         for name, value in self.options(section):
             if config_file.has_option(section.__name__, name):
                 for base, method in self.cast_relations(config_file):
-
                     try:
                         if isinstance(value, base):
                             new_value = method(section.__name__, name)

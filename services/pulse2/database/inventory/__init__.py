@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -524,7 +524,6 @@ class Inventory(DyngroupDatabaseHelper):
         return query
 
     def getUUIDByMachineName(self, ctx, name):
-
         session = create_session()
         query = session.query(Machine).filter(self.machine.c.Name == name)
         result = query.all()
@@ -3537,7 +3536,6 @@ class Inventory(DyngroupDatabaseHelper):
         return ret
 
     def getLastInventoryThresholds(self):
-
         try:
             from mmc.plugins.inventory.config import InventoryConfig
         except BaseException:
@@ -4215,7 +4213,6 @@ class InventoryNetworkComplete:
             network = inventory["Network"][0]
 
             if "SubnetMask" not in network and "Gateway" not in network:
-
                 netmask, gateway = self._get_networking()
                 if netmask and gateway:
                     inventory["Network"][0]["SubnetMask"] = netmask
@@ -4253,7 +4250,6 @@ class InventoryNetworkComplete:
             r_file.close()
 
         except IOError:
-
             logging.getLogger().warn("Cannot read file '%s'" % filename)
             logging.getLogger().warn("Ignore to get the netmask and gateway")
 

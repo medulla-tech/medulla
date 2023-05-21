@@ -5,12 +5,15 @@
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.exc import DBAPIError
+
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
+
 # Imported last
 import logging
 
 logger = logging.getLogger()
+
 
 class AdminDatabase(DatabaseHelper):
     is_activated = False
@@ -29,7 +32,8 @@ class AdminDatabase(DatabaseHelper):
         self.db = create_engine(
             self.makeConnectionPath(),
             pool_recycle=self.config.dbpoolrecycle,
-            pool_size=self.config.dbpoolsize)
+            pool_size=self.config.dbpoolsize,
+        )
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)

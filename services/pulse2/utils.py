@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -417,11 +417,11 @@ def normalizeMACAddressForPXELINUX(mac):
     """
     assert isMACAddress(mac)
     macaddress = "-".join(
-            [
-                x_y[0] + x_y[1]
-                for x_y in zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2])
-                ]
-            )  # any questions ?
+        [
+            x_y[0] + x_y[1]
+            for x_y in zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2])
+        ]
+    )  # any questions ?
 
     return macaddress.lower()
 

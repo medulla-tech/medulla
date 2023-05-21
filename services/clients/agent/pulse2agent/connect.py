@@ -1,7 +1,7 @@
 # -*- test-case-name: pulse2.msc.client.tests.connect -*-
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2014 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import socket
@@ -96,7 +96,6 @@ class Connector(object):
 
                 return ssl_sock
             else:
-
                 sock.connect((self.host, self.port))
                 sock.settimeout(self.timeout)
                 return sock
@@ -122,7 +121,6 @@ class Connector(object):
 
 
 class ClientEndpoint(object):
-
     socket = None
     parser = None
 
@@ -141,7 +139,6 @@ class ClientEndpoint(object):
         self.socket = self.connector.connect()
 
     def request(self, data):
-
         pack = self.parser.encode(data)
 
         try:

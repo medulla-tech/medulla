@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 """
 Class to manage api calls and errors
@@ -13,7 +13,6 @@ from twisted.internet.error import ConnectionRefusedError
 
 
 class Pulse2Api(Pulse2XMLRPCProxy):
-
     name = "pulse2API"
 
     def __init__(

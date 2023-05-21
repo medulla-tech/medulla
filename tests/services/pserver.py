@@ -2,7 +2,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 """
 Test module for the Pulse 2 package server: Mirror's module, Mirror_API's module, Package_API's module and Scheduler's module
@@ -612,5 +612,4 @@ if mode == "debug":
 
     print("Pserver's test has run %s test" % (nb))
 else:
-
     unittest.main()

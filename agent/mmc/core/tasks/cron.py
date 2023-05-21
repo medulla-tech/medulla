@@ -391,7 +391,6 @@ def parseCronEntry(entry, min, max):
             and begin >= min
             and end <= max + 1
         ):
-
             # need to align the start properly
             while begin % step != 0 and begin < end:
                 begin += 1

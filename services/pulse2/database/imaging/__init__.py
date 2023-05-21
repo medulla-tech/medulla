@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -2883,7 +2883,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def editImage(self, item_uuid, params):
-
         session = create_session()
         im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first()
         if im is None:
@@ -4151,7 +4150,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.add(menu_item)
             ret.append(menu_item)
             session.flush()
-            for (counter, elem) in enumerate(mi):
+            for counter, elem in enumerate(mi):
                 # Duplication of menu items will fail if no default bootmenu is set
                 # for WOL or normal boot, so raise an exception if this is not
                 # the case

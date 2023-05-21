@@ -3,14 +3,26 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct, Table
+from sqlalchemy import (
+    create_engine,
+    MetaData,
+    select,
+    func,
+    and_,
+    desc,
+    or_,
+    distinct,
+    Table,
+)
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import update
 from datetime import date, datetime, timedelta
+
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-#from pulse2.database.urbackup.schema import Tests
+
+# from pulse2.database.urbackup.schema import Tests
 # Imported last
 import logging
 import json
@@ -34,7 +46,8 @@ class UrbackupDatabase(DatabaseHelper):
         self.db = create_engine(
             self.makeConnectionPath(),
             pool_recycle=self.config.dbpoolrecycle,
-            pool_size=self.config.dbpoolsize)
+            pool_size=self.config.dbpoolsize,
+        )
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 from sqlalchemy import and_, or_, not_
@@ -25,7 +25,6 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         self.filters = {}
 
     def filter(self, ctx, join_query, filt, query, grpby, filters=None):
-
         # Add filter clause
         filters = [t for t in filters if t is not None]
         if filters is not None:

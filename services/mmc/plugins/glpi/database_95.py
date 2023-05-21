@@ -105,24 +105,22 @@ class Glpi95(DyngroupDatabaseHelper):
             versionresult = (
                 self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
             )
-            self._glpi_version = str(versionresult[0]).replace(
-                " ", ""
-            )
+            self._glpi_version = str(versionresult[0]).replace(" ", "")
         except OperationalError:
             versionresult = (
                 self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
                 .fetchone()
                 .values()
             )
-            self._glpi_version = str(versionresult[0]).replace(
-                " ", ""
-            )
+            self._glpi_version = str(versionresult[0]).replace(" ", "")
         except Exception as e:
             logging.getLogger().error("We are searching for GLPI 9.5.")
             return False
 
-        if LooseVersion(self._glpi_version) >=  LooseVersion("9.5") and LooseVersion(self._glpi_version) <=  LooseVersion("9.5.99"):
-            logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
+        if LooseVersion(self._glpi_version) >= LooseVersion("9.5") and LooseVersion(
+            self._glpi_version
+        ) <= LooseVersion("9.5.99"):
+            logging.getLogger().debug("GLPI version %s found !" % self._glpi_version)
             return True
         else:
             logging.getLogger().debug("GLPI higher than version 9.5 was not detected")
@@ -164,18 +162,14 @@ class Glpi95(DyngroupDatabaseHelper):
             versionresult = (
                 self.db.execute("SELECT version FROM glpi_configs").fetchone().values()
             )
-            self._glpi_version = str(versionresult[0]).replace(
-                " ", ""
-            )
+            self._glpi_version = str(versionresult[0]).replace(" ", "")
         except OperationalError:
             versionresult = (
                 self.db.execute("SELECT value FROM glpi_configs WHERE name = 'version'")
                 .fetchone()
                 .values()
             )
-            self._glpi_version = str(versionresult[0]).replace(
-                " ", ""
-            )
+            self._glpi_version = str(versionresult[0]).replace(" ", "")
         except Exception as e:
             logging.getLogger().error("We are searching for GLPI 9.5")
             return False
@@ -2013,11 +2007,11 @@ class Glpi95(DyngroupDatabaseHelper):
             return [[self.printers.c.name, query[3]]]
         elif query[2] == "Printer serial":
             return [[self.printers.c.serial, query[3]]]
-        elif query[2] == 'Peripheral name':
+        elif query[2] == "Peripheral name":
             return [[self.peripherals.c.name, query[3]]]
-        elif query[2] == 'Peripheral serial':
+        elif query[2] == "Peripheral serial":
             return [[self.peripherals.c.serial, query[3]]]
-        elif query[2] == 'Group': # TODO double join on Entity
+        elif query[2] == "Group":  # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
         elif query[2] == "Network":
             return [[self.net.c.name, query[3]]]
@@ -6088,7 +6082,6 @@ class Glpi95(DyngroupDatabaseHelper):
         # Adding rule criteria
 
         for i in range(len(rule_data["criteria"])):
-
             cr = RuleCriterion()
             cr.rules_id = rule.id
             cr.criteria = rule_data["criteria"][i]
@@ -6145,7 +6138,6 @@ class Glpi95(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def moveEntityRuleUp(self, session, id):
-
         rule = session.query(Rule).filter_by(id=id).one()
         # get previous rule
         previous = (
@@ -6169,7 +6161,6 @@ class Glpi95(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def moveEntityRuleDown(self, session, id):
-
         rule = session.query(Rule).filter_by(id=id).one()
         # get next rule
         next_ = (
@@ -6193,7 +6184,6 @@ class Glpi95(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def editEntityRule(self, session, id, rule_data):
-
         rule = session.query(Rule).filter_by(id=id).one()
         # Delete associated criteria and actions
         session.query(RuleCriterion).filter_by(rules_id=id).delete()
@@ -6213,7 +6203,6 @@ class Glpi95(DyngroupDatabaseHelper):
         # Adding rule criteria
 
         for i in range(len(rule_data["criteria"])):
-
             cr = RuleCriterion()
             cr.rules_id = rule.id
             cr.criteria = rule_data["criteria"][i]
@@ -6249,7 +6238,6 @@ class Glpi95(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getEntityRule(self, session, id):
-
         rule = session.query(Rule).filter_by(id=id).one()
         criteria = session.query(RuleCriterion).filter_by(rules_id=id).all()
         actions = session.query(RuleAction).filter_by(rules_id=id).all()
@@ -6283,7 +6271,6 @@ class Glpi95(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def deleteEntityRule(self, session, id):
-
         # Delete rule
         session.query(Rule).filter_by(id=id).delete()
         # Delete associated criteria and actions
@@ -6316,7 +6303,6 @@ class Glpi95(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def setLocationsForUser(self, session, username, profiles):
-
         user_id = session.query(User).filter_by(name=username).one().id
         # Delete all user entity profiles
         session.query(UserProfile).filter_by(users_id=user_id).delete()
@@ -6571,11 +6557,11 @@ class Glpi95(DyngroupDatabaseHelper):
                 machine["os"] = " ".join(machine["os"])
             elif machine["os"].startswith("Ubuntu"):
                 machine["os"] = "Ubuntu"
-                if machine['version'] is not None:
+                if machine["version"] is not None:
                     # We want just the XX.yy version number
                     machine["version"] = machine["version"].split(" ")[0].split(".")
                 else:
-                    machine['version'] = "00.00"
+                    machine["version"] = "00.00"
                 if len(machine["version"]) >= 2:
                     machine["version"] = machine["version"][0:2]
                 machine["version"] = ".".join(machine["version"])
@@ -6675,7 +6661,7 @@ class Glpi95(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machine_with_update(self, session, kb):
-        sqlrequest ="""
+        sqlrequest = """
             SELECT 
                 glpi.glpi_computers.id AS uuid_inventory,
                 glpi.glpi_computers.name AS hostname,
@@ -6694,24 +6680,26 @@ class Glpi95(DyngroupDatabaseHelper):
                     INNER JOIN
                 glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
             WHERE
-                glpi.glpi_softwares.name LIKE 'Update (KB%s)';"""%(kb)
-        uuid_inventory=[]
-        hostname=[]
-        entity=[]
-        kb=[]
-        numkb=[]
-        dateinstall=[]
-        input_computer=[]
+                glpi.glpi_softwares.name LIKE 'Update (KB%s)';""" % (
+            kb
+        )
+        uuid_inventory = []
+        hostname = []
+        entity = []
+        kb = []
+        numkb = []
+        dateinstall = []
+        input_computer = []
         result = []
         res = self.db.execute(sqlrequest)
         for element in res:
-            uuid_inventory.append( element.uuid_inventory )
-            hostname.append( element.hostname )
-            entity.append( element.entity )
-            kb.append( element.kb )
-            numkb.append( element.numkb )
-            dateinstall.append( element.dateinstall )
-            input_computer.append( element.input_computer )
+            uuid_inventory.append(element.uuid_inventory)
+            hostname.append(element.hostname)
+            entity.append(element.entity)
+            kb.append(element.kb)
+            numkb.append(element.numkb)
+            dateinstall.append(element.dateinstall)
+            input_computer.append(element.input_computer)
         result.append(uuid_inventory)
         result.append(hostname)
         result.append(entity)
@@ -6720,7 +6708,6 @@ class Glpi95(DyngroupDatabaseHelper):
         result.append(dateinstall)
         result.append(input_computer)
         return result
-
 
     @DatabaseHelper._sessionm
     def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
@@ -6796,7 +6783,6 @@ class Glpi95(DyngroupDatabaseHelper):
 
         return result1
 
-
     @DatabaseHelper._sessionm
     def get_ancestors(self, session, uuid):
         id = uuid.split("UUID")[1]
@@ -6829,7 +6815,7 @@ class Glpi95(DyngroupDatabaseHelper):
     def getComputerFilteredByCriterion(self, session, ctx, criterion, values):
         query = session.query(Machine.id, Machine.name)
 
-        if criterion == "Computer name" :
+        if criterion == "Computer name":
             query = query.filter(and_(Machine.name.in_(values)))
 
         elif criterion == "Register key":
@@ -6837,9 +6823,16 @@ class Glpi95(DyngroupDatabaseHelper):
 
         elif criterion == "Peripheral serial":
             query = query.filter(and_(Peripherals.serial.in_(values)))
-            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-            query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
-                                   Computersitems.itemtype == "Peripheral"))
+            query = query.join(
+                Computersitems, Machine.id == Computersitems.computers_id
+            )
+            query = query.join(
+                Peripherals,
+                and_(
+                    Computersitems.items_id == Peripherals.id,
+                    Computersitems.itemtype == "Peripheral",
+                ),
+            )
 
         elif criterion == "State":
             query = query.filter(and_(State.name.in_(values)))
@@ -6851,19 +6844,35 @@ class Glpi95(DyngroupDatabaseHelper):
 
         elif criterion == "Printer serial":
             query = query.filter(and_(Printers.serial.in_(values)))
-            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-            query = query.join(Printers, and_(Computersitems.items_id==Printers.id,
-                Computersitems.itemtype == 'Printer'))
+            query = query.join(
+                Computersitems, Machine.id == Computersitems.computers_id
+            )
+            query = query.join(
+                Printers,
+                and_(
+                    Computersitems.items_id == Printers.id,
+                    Computersitems.itemtype == "Printer",
+                ),
+            )
 
         elif criterion == "Printer name":
             query = query.filter(and_(Printers.name.in_(values)))
-            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-            query = query.join(Printers, and_(Computersitems.items_id==Printers.id,
-                Computersitems.itemtype == 'Printer'))
+            query = query.join(
+                Computersitems, Machine.id == Computersitems.computers_id
+            )
+            query = query.join(
+                Printers,
+                and_(
+                    Computersitems.items_id == Printers.id,
+                    Computersitems.itemtype == "Printer",
+                ),
+            )
 
         elif criterion == "OS Version":
             query = query.filter(and_(OsVersion.name.in_(values)))
-            query = query.join(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)
+            query = query.join(
+                OsVersion, OsVersion.id == Machine.operatingsystemversions_id
+            )
 
         elif criterion == "Installed version":
             pass
@@ -6883,11 +6892,18 @@ class Glpi95(DyngroupDatabaseHelper):
 
         elif criterion == "System type":
             query = query.filter(self.glpi_computertypes.c.name.in_(values))
-            query = query.join(self.glpi_computertypes, Machine.computertypes_id == self.glpi_computertypes.c.id)
+            query = query.join(
+                self.glpi_computertypes,
+                Machine.computertypes_id == self.glpi_computertypes.c.id,
+            )
 
         elif criterion == "Online computer":
             # for csv import that doesn't make any sense
-            online_machines = [int(id) for id in XmppMasterDatabase().getidlistPresenceMachine(presence=True) if id != "UUID" and id != ""]
+            online_machines = [
+                int(id)
+                for id in XmppMasterDatabase().getidlistPresenceMachine(presence=True)
+                if id != "UUID" and id != ""
+            ]
             query = query.filter(and_(Machine.id.in_(online_machines)))
 
         elif criterion == "Operating system":
@@ -6906,7 +6922,9 @@ class Glpi95(DyngroupDatabaseHelper):
 
         elif criterion == "Architecture":
             query = query.filter(and_(OsArch.name.in_(values)))
-            query = query.join(OsArch, OsArch.id == Machine.operatingsystemarchitectures_id)
+            query = query.join(
+                OsArch, OsArch.id == Machine.operatingsystemarchitectures_id
+            )
 
         elif criterion == "Installed software (specific version)":
             pass
@@ -6924,12 +6942,21 @@ class Glpi95(DyngroupDatabaseHelper):
 
         elif criterion == "Peripheral name":
             query = query.filter(and_(Peripherals.name.in_(values)))
-            query = query.join(Computersitems, Machine.id == Computersitems.computers_id)
-            query = query.join(Peripherals, and_(Computersitems.items_id == Peripherals.id,
-                                   Computersitems.itemtype == "Peripheral"))
+            query = query.join(
+                Computersitems, Machine.id == Computersitems.computers_id
+            )
+            query = query.join(
+                Peripherals,
+                and_(
+                    Computersitems.items_id == Peripherals.id,
+                    Computersitems.itemtype == "Peripheral",
+                ),
+            )
 
         elif criterion == "Entity":
-            query = query.filter(or_(Entities.id.in_(values), Entities.completename.in_(values)))
+            query = query.filter(
+                or_(Entities.id.in_(values), Entities.completename.in_(values))
+            )
             query = query.join(Entities, Entities.id == Machine.entities_id)
 
         elif criterion == "Owner of the machine":
@@ -6939,20 +6966,24 @@ class Glpi95(DyngroupDatabaseHelper):
             query = query.filter(and_(SoftwareVersion.name.in_(values)))
             query = query.group_by(Machine.id)
             query.join(InstSoftware, InstSoftware.items_id == Machine.id)
-            query.join(SoftwareVersion, InstSoftware.softwareversions_id == SoftwareVersion.id)
+            query.join(
+                SoftwareVersion, InstSoftware.softwareversions_id == SoftwareVersion.id
+            )
 
         elif criterion == "System manufacturer":
             query = query.filter(and_(Manufacturers.name.in_(values)))
-            query = query.join(Manufacturers, Manufacturers.id == Machine.manufacturers_id)
+            query = query.join(
+                Manufacturers, Manufacturers.id == Machine.manufacturers_id
+            )
 
-        query = query.filter(and_(Machine.is_deleted==0, Machine.is_template==0))
+        query = query.filter(and_(Machine.is_deleted == 0, Machine.is_template == 0))
         response = query.all()
 
         result = {}
         for element in response:
-            uuid = "UUID%i"%element.id
+            uuid = "UUID%i" % element.id
             name = element.name
-            result["UUID%i"%element.id] = {"uuid": uuid, "hostname": name}
+            result["UUID%i" % element.id] = {"uuid": uuid, "hostname": name}
         return result
 
 

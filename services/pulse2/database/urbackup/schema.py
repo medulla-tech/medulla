@@ -2,7 +2,17 @@
 # SPDX-FileCopyrightText: 2020-2023 Siveo <support@siveo.net>uuuuuuu
 # SPDX-License-Identifier: GPL-2.0-or-later
 
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime, Text, LargeBinary, Enum
+from sqlalchemy import (
+    Column,
+    String,
+    Integer,
+    Boolean,
+    ForeignKey,
+    DateTime,
+    Text,
+    LargeBinary,
+    Enum,
+)
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
@@ -20,7 +30,7 @@ class UrbackupDBObj(DBObj):
 
 class Tests(Base, UrbackupDBObj):
     # ====== Table name =========================
-    __tablename__ = 'tests'
+    __tablename__ = "tests"
     # ====== Fields =============================
     # Here we define columns for the table version.
     # Notice that each column is also a normal Python instance attribute.

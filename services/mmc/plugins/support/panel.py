@@ -12,7 +12,6 @@ class RemoteSupportPanel(Panel):
 
 
 class LicensePanel(Panel):
-
     data = None
 
     def data_handler(self, data):

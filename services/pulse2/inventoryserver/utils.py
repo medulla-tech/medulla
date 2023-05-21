@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2012 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """ Common inventory utils """
@@ -38,7 +38,6 @@ class ConfigReader:
         """
         logging.getLogger().debug("Load config file %s" % inifile)
         if not os.path.exists(inifile):
-
             logging.getLogger().warn("Error while reading the config file:")
             logging.getLogger().warn("Not found.")
 
@@ -60,7 +59,6 @@ class MMCProxy:
     """Provider to connect at mmc-agent"""
 
     def __init__(self):
-
         config = ConfigReader()
 
         self.inv_server_config = config.inv_server_config
@@ -87,7 +85,6 @@ class MMCProxy:
         mmc_section = self.inv_server_config["mmc_agent"]
 
         for option in ["username", "password", "host", "port"]:
-
             if option not in mmc_section:
                 logging.getLogger().warn("Error while reading section 'mmc_agent':")
                 logging.getLogger().warn("Option '%s' not exists" % option)

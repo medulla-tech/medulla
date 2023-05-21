@@ -1,5 +1,5 @@
 # -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 """
 Plugin to manage the interface with Kiosk
@@ -68,6 +68,7 @@ def activate():
 # KIOSK DATABASE FUNCTIONS
 # #############################################################
 
+
 def get_profiles_list(start=0, limit=-1, filter=""):
     return KioskDatabase().get_profiles_list(start, limit, filter)
 
@@ -77,7 +78,6 @@ def get_profiles_name_list():
 
 
 def create_profile(name, ous, active, packages):
-
     result = KioskDatabase().create_profile(name, ous, active, packages)
     notify_kiosks()
     return result
@@ -122,15 +122,15 @@ def get_ou_list():
     if kconfig.use_external_ldap is False:
         # read OUs from xmppmaster db
         ous = XmppMasterDatabase().get_ou_list_from_machines()
-    elif config.has_section('authentication_externalldap'):
+    elif config.has_section("authentication_externalldap"):
         id = str(uuid.uuid4())
         file = "/tmp/ous-" + id
 
         # Get the parameters from the config file
-        ldapurl = config.get('authentication_externalldap', 'ldapurl')
-        suffix = config.get('authentication_externalldap', 'suffix_ou')
-        bindname = config.get('authentication_externalldap', 'bindname')
-        bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
+        ldapurl = config.get("authentication_externalldap", "ldapurl")
+        suffix = config.get("authentication_externalldap", "suffix_ou")
+        bindname = config.get("authentication_externalldap", "bindname")
+        bindpasswd = config.get("authentication_externalldap", "bindpasswd")
 
         # Execute the command which get the OU list and write into the specified file
         command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(
@@ -202,46 +202,52 @@ def get_ou_tree():
 
     if kconfig.use_external_ldap is False:
         ous = XmppMasterDatabase().get_ou_list_from_machines()
-    elif config.has_section('authentication_externalldap'):
+    elif config.has_section("authentication_externalldap"):
         id = str(uuid.uuid4())
-        file = '/tmp/ous-'+id
+        file = "/tmp/ous-" + id
 
         # Get the parameters from the config file
-        ldapurl = config.get('authentication_externalldap', 'ldapurl')
-        suffix = config.get('authentication_externalldap', 'suffix_ou')
-        bindname = config.get('authentication_externalldap', 'bindname')
-        bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
+        ldapurl = config.get("authentication_externalldap", "ldapurl")
+        suffix = config.get("authentication_externalldap", "suffix_ou")
+        bindname = config.get("authentication_externalldap", "bindname")
+        bindpasswd = config.get("authentication_externalldap", "bindpasswd")
 
         # Execute the command which get the OU list and write into the specified file
         command = """ldapsearch -o ldif-wrap=no -H %s -x -b "%s" -D "%s" -w %s -LLL "(
-        objectClass=organizationalUnit)" dn > %s""" % (ldapurl, suffix, bindname, bindpasswd, file)
+        objectClass=organizationalUnit)" dn > %s""" % (
+            ldapurl,
+            suffix,
+            bindname,
+            bindpasswd,
+            file,
+        )
 
         os.system(command)
 
         # Parse the file
-        with open(file, 'r') as ou_file:
+        with open(file, "r") as ou_file:
             lines = ou_file.read().splitlines()
             # The lines that don't start by 'dn' are ignored
-            lines = [element for element in lines if element.startswith('dn')]
+            lines = [element for element in lines if element.startswith("dn")]
 
             # Parse the result for each lines
             for element in lines:
                 # Lines starts with dn:: are get in base64 format
-                if element.startswith('dn:: '):
-                    tmp = element.split('::')
+                if element.startswith("dn:: "):
+                    tmp = element.split("::")
                     ou = base64.b64decode(tmp[1])
 
                 else:
-                    tmp = element.split(': ')
+                    tmp = element.split(": ")
                     ou = tmp[1]
                 # Format the result
-                ou = ou.replace(',OU=', ' < ')
-                ou = ou.replace('OU=', '')
-                ou = re.sub(',DC=(.+)', '', ou)
+                ou = ou.replace(",OU=", " < ")
+                ou = ou.replace("OU=", "")
+                ou = re.sub(",DC=(.+)", "", ou)
 
-                ou = ou.split(' < ')
+                ou = ou.split(" < ")
                 ou.reverse()
-                ou = '/'.join(ou)
+                ou = "/".join(ou)
                 # Save the content into a list
                 ous.append(ou)
 
@@ -278,10 +284,9 @@ def get_users_from_ou(ou):
 
     users = []
     if kconfig.use_external_ldap is False:
-        ou = ou.replace('/', '@@')
+        ou = ou.replace("/", "@@")
         users = XmppMasterDatabase().get_users_from_ou_from_machines(ou)
-    elif config.has_section('authentication_externalldap'):
-
+    elif config.has_section("authentication_externalldap"):
         ou = str_to_ou(ou)
 
         id = str(uuid.uuid4())
@@ -331,7 +336,6 @@ def get_users_from_ou(ou):
     return users
 
 
-
 def handlerkioskpresence(
     jid, id, os, hostname, uuid_inventorymachine, agenttype, classutil, fromplugin=False
 ):
@@ -344,11 +348,8 @@ def handlerkioskpresence(
     machine = XmppMasterDatabase().getMachinefromjid(jid)
     structuredatakiosk = get_packages_for_machine(machine)
     datas = {
-    'subaction':'initialisation_kiosk',
-    'data' : {
-        'action': 'packages',
-        'packages_list': structuredatakiosk
-        }
+        "subaction": "initialisation_kiosk",
+        "data": {"action": "packages", "packages_list": structuredatakiosk},
     }
 
     if not fromplugin:
@@ -356,18 +357,32 @@ def handlerkioskpresence(
     return datas
 
 
-def __search_software_in_glpi(list_software_glpi, list_granted_packages, packageprofile, structuredatakiosk):
-    structuredatakioskelement={ 'name': packageprofile[0],
-                                "action" : [],
-                                'uuid':  packageprofile[6],
-                                'description': packageprofile[2],
-                                "version" : packageprofile[3],
-                                "profile" : packageprofile[1]
-                               }
-    patternname = re.compile("(?i)" + packageprofile[4].replace('+', '\+').replace('*', '\*').replace('(', '\(').replace(')', '\)').replace('.', '\.'))
+def __search_software_in_glpi(
+    list_software_glpi, list_granted_packages, packageprofile, structuredatakiosk
+):
+    structuredatakioskelement = {
+        "name": packageprofile[0],
+        "action": [],
+        "uuid": packageprofile[6],
+        "description": packageprofile[2],
+        "version": packageprofile[3],
+        "profile": packageprofile[1],
+    }
+    patternname = re.compile(
+        "(?i)"
+        + packageprofile[4]
+        .replace("+", "\+")
+        .replace("*", "\*")
+        .replace("(", "\(")
+        .replace(")", "\)")
+        .replace(".", "\.")
+    )
     for soft_glpi in list_software_glpi:
-        if patternname.match(str(soft_glpi[0])) or patternname.match(str(soft_glpi[1])) or (soft_glpi[1] == packageprofile[4] and soft_glpi[2] == packageprofile[5]):
-
+        if (
+            patternname.match(str(soft_glpi[0]))
+            or patternname.match(str(soft_glpi[1]))
+            or (soft_glpi[1] == packageprofile[4] and soft_glpi[2] == packageprofile[5])
+        ):
             # Process with this package which is installed on the machine
             # The package could be deleted
             structuredatakioskelement["icon"] = "kiosk.png"
@@ -392,22 +407,21 @@ def __search_software_in_glpi(list_software_glpi, list_granted_packages, package
         else:
             trigger = False
             for ack in list_granted_packages:
-                if ack['package_uuid'] == structuredatakioskelement['uuid']:
-                    if ack['id_package_has_profil'] != packageprofile[9]:
+                if ack["package_uuid"] == structuredatakioskelement["uuid"]:
+                    if ack["id_package_has_profil"] != packageprofile[9]:
                         continue
                     else:
-                        if ack['status'] == 'allowed':
-                            structuredatakioskelement['action'].append('Install')
-                        elif ack['status'] == 'waiting':
+                        if ack["status"] == "allowed":
+                            structuredatakioskelement["action"].append("Install")
+                        elif ack["status"] == "waiting":
                             trigger = True
-                        elif ack['status'] == 'rejected':
+                        elif ack["status"] == "rejected":
                             trigger = True
                 else:
                     continue
 
-            if len(structuredatakioskelement['action']) == 0 and trigger is False:
-                structuredatakioskelement['action'].append('Ask')
-
+            if len(structuredatakioskelement["action"]) == 0 and trigger is False:
+                structuredatakioskelement["action"].append("Ask")
 
     return structuredatakioskelement
 
@@ -452,15 +466,15 @@ def get_ou_for_user(user):
     ous = []
     if kconfig.use_external_ldap is False:
         ous = XmppMasterDatabase().get_ou_for_user_from_machines(user)
-    elif config.has_section('authentication_externalldap'):
+    elif config.has_section("authentication_externalldap"):
         id = str(uuid.uuid4())
         file = "/tmp/ou_user-" + id
 
         # Get the parameters from the config file
-        ldapurl = config.get('authentication_externalldap', 'ldapurl')
-        suffix = config.get('authentication_externalldap', 'suffix_ou')
-        bindname = config.get('authentication_externalldap', 'bindname')
-        bindpasswd = config.get('authentication_externalldap', 'bindpasswd')
+        ldapurl = config.get("authentication_externalldap", "ldapurl")
+        suffix = config.get("authentication_externalldap", "suffix_ou")
+        bindname = config.get("authentication_externalldap", "bindname")
+        bindpasswd = config.get("authentication_externalldap", "bindpasswd")
 
         command = """ldapsearch -o ldif-wrap=no -H "%s" -x -b "%s" -D "%s" -w %s -LLL "(&(objectclass=user)
         (samaccountname=%s))" dn > %s""" % (
@@ -473,7 +487,7 @@ def get_ou_for_user(user):
         )
 
         os.system(command)
-        with open(file, 'r') as user_file:
+        with open(file, "r") as user_file:
             lines = user_file.read().splitlines()
 
             # The lines that don't start by 'dn' are ignored
@@ -506,23 +520,20 @@ def get_ou_for_user(user):
     return ous
 
 
-
 def notify_kiosks():
     """This function send a notification message for all the machine which have a kiosk on it."""
 
     machines_list = XmppMasterDatabase().get_machines_with_kiosk()
 
     for machine in machines_list:
-
         structuredatakiosk = get_packages_for_machine(machine)
         datas = {
-        'subaction':'profiles_updated',
-        'data' : {
-            'action':'packages',
-            'packages_list': structuredatakiosk
-            }
+            "subaction": "profiles_updated",
+            "data": {"action": "packages", "packages_list": structuredatakiosk},
         }
-        send_message_to_machine(datas, machine['jid'], name_random(6, "profiles_updated"))
+        send_message_to_machine(
+            datas, machine["jid"], name_random(6, "profiles_updated")
+        )
 
 
 def notify_kiosk(machine):
@@ -533,13 +544,10 @@ def notify_kiosk(machine):
 
     structuredatakiosk = get_packages_for_machine(machine)
     datas = {
-    'subaction':'profiles_updated',
-    'data' : {
-        'action':'packages',
-        'packages_list': structuredatakiosk
-        }
+        "subaction": "profiles_updated",
+        "data": {"action": "packages", "packages_list": structuredatakiosk},
     }
-    send_message_to_machine(datas, machine['jid'], name_random(6, "profiles_updated"))
+    send_message_to_machine(datas, machine["jid"], name_random(6, "profiles_updated"))
 
 
 def get_packages_for_machine(machine):
@@ -565,7 +573,7 @@ def get_packages_for_machine(machine):
         partial.recursive_parent(tmp)
 
     # search packages for the applied profiles
-    list_profile_packages =  KioskDatabase().get_profile_list_for_OUList(tmp)
+    list_profile_packages = KioskDatabase().get_profile_list_for_OUList(tmp)
     if list_profile_packages is None:
         # TODO
         # linux and mac os does not have an Organization Unit.
@@ -574,7 +582,9 @@ def get_packages_for_machine(machine):
 
     granted_packages = []
     for element in list_profile_packages:
-        granted_packages += KioskDatabase().get_acknowledges_for_package_profile(element[9], element[6], machine['lastuser'])
+        granted_packages += KioskDatabase().get_acknowledges_for_package_profile(
+            element[9], element[6], machine["lastuser"]
+        )
     list_software_glpi = []
     softwareonmachine = Glpi().getLastMachineInventoryPart(
         machine["uuid_inventorymachine"],
@@ -585,21 +595,27 @@ def get_packages_for_machine(machine):
         {"hide_win_updates": True, "history_delta": ""},
     )
     for x in softwareonmachine:
-        list_software_glpi.append([x[0][1],x[1][1], x[2][1]])
+        list_software_glpi.append([x[0][1], x[1][1], x[2][1]])
 
     structuredatakiosk = []
 
     # Create structuredatakiosk for initialization
     for packageprofile in list_profile_packages:
-        structuredatakiosk.append( __search_software_in_glpi(list_software_glpi, granted_packages,
-        packageprofile, structuredatakiosk))
-    logger.debug("initialisation kiosk %s on machine %s"%(structuredatakiosk, machine['hostname']))
+        structuredatakiosk.append(
+            __search_software_in_glpi(
+                list_software_glpi, granted_packages, packageprofile, structuredatakiosk
+            )
+        )
+    logger.debug(
+        "initialisation kiosk %s on machine %s"
+        % (structuredatakiosk, machine["hostname"])
+    )
 
     return structuredatakiosk
 
 
 def update_launcher(uuid, launcher):
-    """ Send the new launcher for the specified package.
+    """Send the new launcher for the specified package.
     Params:
         uuid: str which contains the uuid of the package.
         launcher: str or base64 str of the launcher
@@ -609,14 +625,16 @@ def update_launcher(uuid, launcher):
     """
 
     datas = {
-    'subaction':'update_launcher',
-    'data' : {'uuid':uuid,'launcher':launcher}
+        "subaction": "update_launcher",
+        "data": {"uuid": uuid, "launcher": launcher},
     }
 
     machines_list = XmppMasterDatabase().get_machines_with_kiosk()
     for machine in machines_list:
         # Send the launcher to all the machines
-        send_message_to_machine(datas, machine['jid'], name_random(6, "update_launcher"))
+        send_message_to_machine(
+            datas, machine["jid"], name_random(6, "update_launcher")
+        )
 
         # Update the datas for all the kiosks
         structuredatakiosk = get_packages_for_machine(machine)
@@ -624,12 +642,16 @@ def update_launcher(uuid, launcher):
 
 
 def get_acknowledges_for_sharings(sharings, start=0, limit=-1, filter=""):
-    acknowledges = KioskDatabase().get_acknowledges_for_sharings(sharings, start, limit, filter)
+    acknowledges = KioskDatabase().get_acknowledges_for_sharings(
+        sharings, start, limit, filter
+    )
 
     return acknowledges
 
 
 def update_acknowledgement(id, acknowledgedbyuser, startdate, enddate, status):
-    result = KioskDatabase().update_acknowledgement(id, acknowledgedbyuser, startdate, enddate, status)
+    result = KioskDatabase().update_acknowledgement(
+        id, acknowledgedbyuser, startdate, enddate, status
+    )
 
     return result

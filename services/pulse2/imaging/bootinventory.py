@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -727,7 +727,9 @@ class BootInventory:
                             elif dd.tag == "SMODEL":
                                 self.sys_info["product"] = dd.text
                             elif dd.tag == "SSN":
-                                self.sys_info['serial'] = dd.text if dd.text is not None else ""
+                                self.sys_info["serial"] = (
+                                    dd.text if dd.text is not None else ""
+                                )
                     elif cc.tag == "HARDWARE":
                         for dd in cc:
                             if dd.tag == "IPADDR":

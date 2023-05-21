@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -529,9 +529,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         result = {}
         for machine in query:
             result[machine.uuid] = {
-                "id":machine.id,
-                "uuid":machine.uuid,
-                "hostname":machine.name
+                "id": machine.id,
+                "uuid": machine.uuid,
+                "hostname": machine.name,
             }
 
         return result
@@ -555,7 +555,6 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     @DatabaseHelper._sessionm
     def associateMachinesToGroup(self, session, id, machines):
         query = session.query(Machines.id).filter(Machines.uuid.in_(machines)).all()
-
 
         results = []
         for element in query:

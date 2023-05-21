@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2014 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import os
@@ -64,7 +64,6 @@ class SimpleSocketServer(object):
     """
 
     def __init__(self, host, port):
-
         self.server = socket(AF_INET, SOCK_STREAM)
         self.server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         self.server.bind((host, port))
@@ -78,7 +77,6 @@ class SimpleSocketServer(object):
 
 
 class SSLSocketServer(object):
-
     SHUTDOWN = "SHUTDOWN"
 
     handler = lambda x: x
@@ -255,7 +253,6 @@ class Test00_Connector(TestCase):
         timeout = 2
 
         with SimpleSocketServer(HOST, PORT):
-
             # client connection
             connector = Connector(
                 HOST,
@@ -307,7 +304,6 @@ class Test01_ClientEndpoint(TestCase):
         self.config = ConfigHelper()
 
     def test01_simply_send_receive_ssl(self):
-
         queue = queue.Queue()
         t = threading.Thread(
             target=build_ssl_server,
@@ -332,7 +328,6 @@ class Test01_ClientEndpoint(TestCase):
         time.sleep(1)
 
     def test02_exchange_some_data_ssl(self):
-
         recv_queue = queue.Queue()
         send_queue = queue.Queue()
 
@@ -366,6 +361,5 @@ class Test01_ClientEndpoint(TestCase):
 
 
 if __name__ == "__main__":
-
     if TestCase.__module__ != "twisted.trial.unittest":
         main()

@@ -97,9 +97,9 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                         showinfobool=showinfobool,
                     ):
                         interfaceblacklistdata.append(interface)
-                    elif interface['macaddress'] not in macaddressesadded:
+                    elif interface["macaddress"] not in macaddressesadded:
                         interfacedata.append(interface)
-                        macaddressesadded.append(interface['macaddress'])
+                        macaddressesadded.append(interface["macaddress"])
 
                 data["information"]["listipinfo"] = interfacedata
                 if showinfobool:
@@ -121,32 +121,41 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
                                 % (interface["macaddress"], interface["ipaddress"])
                             )
 
-                logger.info("Registering machine %s" % data['from'])
-                XmppMasterDatabase().setlogxmpp("Registering machine %s" % data['from'],
-                                                "info",
-                                                sessionid,
-                                                -1,
-                                                msg['from'],
-                                                '',
-                                                '',
-                                                'Registration',
-                                                '',
-                                                xmppobject.boundjid.bare,
-                                                xmppobject.boundjid.bare)
-            md5agentversion = data['md5agentversion']  if "md5agentversion" in data else ""
-            agent_version = data['versionagent']  if "versionagent" in data else ""
-            computer_hostname = data['machine']  if "machine" in data else ""
-            arrayhost = computer_hostname.split('.')
+                logger.info("Registering machine %s" % data["from"])
+                XmppMasterDatabase().setlogxmpp(
+                    "Registering machine %s" % data["from"],
+                    "info",
+                    sessionid,
+                    -1,
+                    msg["from"],
+                    "",
+                    "",
+                    "Registration",
+                    "",
+                    xmppobject.boundjid.bare,
+                    xmppobject.boundjid.bare,
+                )
+            md5agentversion = (
+                data["md5agentversion"] if "md5agentversion" in data else ""
+            )
+            agent_version = data["versionagent"] if "versionagent" in data else ""
+            computer_hostname = data["machine"] if "machine" in data else ""
+            arrayhost = computer_hostname.split(".")
             arrayhost.pop()
             if arrayhost:
-                computer_hostname='.'.join(arrayhost)
-                XmppMasterDatabase().Update_version_agent_machine_md5(computer_hostname,
-                                                                      md5agentversion,
-                                                                      agent_version)
-            if 'oldjid' in data:
-                logger.debug("The hostname changed from %s to %s" % (data['oldjid'], data['from']))
-                XmppMasterDatabase().delPresenceMachinebyjiduser(jid.JID(data['oldjid']).user)
-            machine = XmppMasterDatabase().getMachinefromjid(data['from'])
+                computer_hostname = ".".join(arrayhost)
+                XmppMasterDatabase().Update_version_agent_machine_md5(
+                    computer_hostname, md5agentversion, agent_version
+                )
+            if "oldjid" in data:
+                logger.debug(
+                    "The hostname changed from %s to %s"
+                    % (data["oldjid"], data["from"])
+                )
+                XmppMasterDatabase().delPresenceMachinebyjiduser(
+                    jid.JID(data["oldjid"]).user
+                )
+            machine = XmppMasterDatabase().getMachinefromjid(data["from"])
             if machine:
                 if (
                     "regcomplet" in data

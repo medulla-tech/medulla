@@ -1,5 +1,5 @@
 # -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2022-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2022-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import logging
@@ -24,8 +24,10 @@ logger = logging.getLogger()
 
 # PLUGIN GENERAL FUNCTIONS
 
+
 def getApiVersion():
     return APIVERSION
+
 
 def activate():
     logger = logging.getLogger()
@@ -42,8 +44,10 @@ def activate():
         return False
     return True
 
+
 def tests():
     return UrbackupDatabase().tests()
+
 
 def login():
     """
@@ -62,27 +66,39 @@ def login():
 
     return False
 
+
 def check_client(jidmachine, clientid, authkey):
     conf_file = "/var/lib/pulse2/clients/config/updatebackupclient.ini"
 
     urbackup_conf = configparser.ConfigParser()
     urbackup_conf.read(conf_file)
 
-    urbackup_server = urbackup_conf.get('parameters', 'backup_server')
-    urbackup_port = urbackup_conf.get('parameters', 'backup_port')
+    urbackup_server = urbackup_conf.get("parameters", "backup_server")
+    urbackup_port = urbackup_conf.get("parameters", "backup_port")
 
-    command = "(echo [parameters] & echo backup_enabled = 1 & echo client_id = "+str(clientid)+" & echo authkey = "+str(authkey)+" & echo backup_server = "+str(urbackup_server)+" & echo backup_port = "+str(urbackup_port)+") > C:\progra~1\pulse\etc\\updatebackupclient.ini"
+    command = (
+        "(echo [parameters] & echo backup_enabled = 1 & echo client_id = "
+        + str(clientid)
+        + " & echo authkey = "
+        + str(authkey)
+        + " & echo backup_server = "
+        + str(urbackup_server)
+        + " & echo backup_port = "
+        + str(urbackup_port)
+        + ") > C:\progra~1\pulse\etc\\updatebackupclient.ini"
+    )
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
     msg = {
-    "action": "restartbot",
-    "sessionid": sessionid,
-    "data": {},
-    "ret": 0,
-    "base64": False
+        "action": "restartbot",
+        "sessionid": sessionid,
+        "data": {},
+        "ret": 0,
+        "base64": False,
     }
     send_message_json(jidmachine, msg)
+
 
 def remove_client(jidmachine):
     command = "(echo [parameters] & echo backup_enabled = 0 ) > C:\progra~1\pulse\etc\\updatebackupclient.ini"
@@ -90,13 +106,14 @@ def remove_client(jidmachine):
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
     msg = {
-    "action": "restartbot",
-    "sessionid": sessionid,
-    "data": {},
-    "ret": 0,
-    "base64": False
+        "action": "restartbot",
+        "sessionid": sessionid,
+        "data": {},
+        "ret": 0,
+        "base64": False,
     }
     send_message_json(jidmachine, msg)
+
 
 def get_ses():
     """
@@ -113,6 +130,7 @@ def get_ses():
 
     return session
 
+
 def get_logs():
     """
     Get the logs of the server
@@ -128,6 +146,7 @@ def get_logs():
         return logs["content"]
 
     return "No DATA in logs"
+
 
 def add_client(client_name):
     """
@@ -148,6 +167,7 @@ def add_client(client_name):
 
     return "No DATA in newclient"
 
+
 def get_stats():
     """
     Return all stats by client, size of file, size of image and clientname
@@ -164,6 +184,7 @@ def get_stats():
 
     return "No DATA in stats"
 
+
 def add_group(groupname):
     """
     Create groupe
@@ -178,6 +199,7 @@ def add_group(groupname):
         return newgroup["content"]
 
     return "No DATA in newclient"
+
 
 def remove_group(groupid):
     """
@@ -288,8 +310,8 @@ def get_backup_files(client_id, backup_id, path):
     if "content" in files:
         return files["content"]
 
-
     return "No DATA file"
+
 
 def delete_backup(client_id, backup_id):
     """

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """This package parse the packages and generate a rapport with errors found"""
@@ -69,7 +69,6 @@ class Package:
                     content = filestream.read()
                     filestream.close()
                     try:
-
                         json_content = json.loads(content)
                         if file == "xmppdeploy.json":
                             self.info = json_content["info"]
@@ -117,7 +116,6 @@ class PackageParser:
         logfile_exists = os.path.isfile(self.log_file)
         if logfile_exists is True:
             while logfile_exists:
-
                 index += 1
                 self.log_file = "%s.%s" % (log_file, index)
                 logfile_exists = os.path.isfile(self.log_file)

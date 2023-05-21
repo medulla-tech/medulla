@@ -1,13 +1,14 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-20089 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import logging
 
 """ Class to map pkgs.pkgs_shares_ars to SA
 """
+
 
 class Pkgs_shares_ars(object):
     """Mapping between pkgs.pkgs_shares_ars and SA

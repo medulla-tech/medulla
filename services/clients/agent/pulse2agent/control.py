@@ -1,7 +1,7 @@
 # -*- test-case-name: pulse2.msc.client.tests.control -*-
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2014 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import os
@@ -87,7 +87,6 @@ class VPNSetter(Component):
         return False
 
     def get_created_connection(self):
-
         response = self._create_user_on_server()
         self.logger.debug("vpn_setter: received response: %s" % response)
         try:
@@ -130,7 +129,7 @@ class VPNSetter(Component):
         """
         replaced_items = 0
         for line in fileinput.input(in_script, inplace=1):
-            for (old, new) in list(pattern.items()):
+            for old, new in list(pattern.items()):
                 search_exp = "@@%s@@" % old
                 if search_exp in line:
                     line = line.replace(search_exp, new)
@@ -227,7 +226,6 @@ class InitialInstalls(Component):
             command = command.replace("##args##", " ".join(args)).strip()
 
         if "##tmp##" in command:
-
             command = command.replace("##tmp##", "").strip()
             command = os.path.join(self.temp_dir, command)
             self.logger.debug("execute command in temp: %s" % command)
@@ -290,13 +288,11 @@ class InitialInstalls(Component):
             raise  # something
 
     def launch(self, path):
-
         returncode = self.parent.shell.call(path)
         return True if returncode == 0 else False
 
 
 class FirstRunEtap(Component):
-
     __component_name__ = "first_run_etap"
 
     def check_required(self):
@@ -331,7 +327,6 @@ class FirstRunEtap(Component):
                     # raise SoftwareRequestError(sw)
 
             if self.config.vpn.enabled and not vpn_installed:
-
                 if platform.system() == "Windows":
                     if self.config.vpn.common_connection_for_all:
                         result = self.parent.initial_installs.install(["vpnclient"])
@@ -364,7 +359,6 @@ class FirstRunEtap(Component):
 
 
 class Dispatcher(DispatcherFrame):
-
     components = [
         Shell,
         FirstRunEtap,

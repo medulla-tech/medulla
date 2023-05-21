@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2012 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
+
 
 def xml_fix(xml):
     import xml.etree.cElementTree as ET
@@ -15,7 +16,6 @@ def xml_fix(xml):
                 if subelem2.tag == "BIOS":
                     for subelem3 in subelem2:
                         if subelem3.tag == "TYPE":
-
                             if subelem3.text in ["Notebook", "Portable"]:
                                 subelem3.text = "Laptop"
 

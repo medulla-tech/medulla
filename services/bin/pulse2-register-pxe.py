@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2015 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -533,7 +533,6 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print("OPEN event:")
 
     def traitement(self, name):
-
         if os.path.isfile(str(name)):
             file_content = ""
             file_content1 = ""

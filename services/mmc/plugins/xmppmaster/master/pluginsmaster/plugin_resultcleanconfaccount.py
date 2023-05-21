@@ -6,7 +6,7 @@
 import logging
 from mmc.plugins.xmppmaster.master.lib.utils import (
     simplecommandstr,
-    )
+)
 
 logger = logging.getLogger()
 

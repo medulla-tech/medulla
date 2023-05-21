@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 """
 Pulse2 utils
@@ -10,7 +10,6 @@ from uuid import uuid4
 
 
 class notificationManager(Singleton):
-
     notifications = []
 
     def add(self, module, title, content, priority=0):

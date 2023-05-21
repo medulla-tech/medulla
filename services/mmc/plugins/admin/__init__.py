@@ -1,5 +1,5 @@
 # -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2020-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2020-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore

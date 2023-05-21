@@ -1,7 +1,7 @@
 # -*- test-case-name: pulse2.msc.client.tests.inventory -*-
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2014 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """Checking of needed installed software."""
@@ -16,7 +16,6 @@ from tempfile import NamedTemporaryFile
 SYSTEM = platform.system().upper()
 
 if SYSTEM == "WINDOWS":
-
     from winreg import ConnectRegistry  # pyflakes.ignore
     from winreg import OpenKey, CloseKey, EnumKey  # pyflakes.ignore
     from winreg import HKEY_LOCAL_MACHINE  # pyflakes.ignore
@@ -56,7 +55,6 @@ class WindowsRegistry:
         try:
             key = OpenKey(reg, path, 0, KEY_READ | KEY_WOW64_32KEY)
         except WindowsError:  # pyflakes.ignore
-
             logging.getLogger().warn("Unable to get registry path: %s " % path)
             logging.getLogger().warn("Cannot check missing software")
             return []
@@ -77,7 +75,6 @@ class WindowsRegistry:
 
 class WMIQueryManager:
     def __init__(self):
-
         objWMIService = Dispatch("WbemScripting.SWbemLocator")
         self.service = objWMIService.ConnectServer("localhost", "root/cimv2")
 
@@ -96,7 +93,6 @@ class WMIQueryManager:
 
 
 class InventoryChecker(Component):
-
     __component_name__ = "inventory_checker"
 
     def check_missing(self):
@@ -120,11 +116,9 @@ class InventoryChecker(Component):
                 yield name
 
         elif SYSTEM == "LINUX":
-
             distname, version, id = platform.linux_distribution()
 
             if distname.lower() in ("debian", "ubuntu", "mint"):
-
                 software_required = self.config.inventory.debian_software_required
                 base_command = "/usr/bin/dpkg -l"
 

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2012 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
+
 
 def xml_fix(xml):
     import xml.etree.cElementTree as ET

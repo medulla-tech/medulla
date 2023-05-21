@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2012 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
+
 
 def xml_fix(xml):
     import xml.etree.cElementTree as ET
@@ -12,12 +13,9 @@ def xml_fix(xml):
     for subelem1 in root:
         if subelem1.tag == "CONTENT":
             for subelem2 in subelem1:
-
                 if subelem2.tag == "SOFTWARES":
                     for subelem3 in subelem2:
-
                         if subelem3.tag == "NAME":
-
                             # Adobe vendor name should allways be the same
                             if subelem3.text in [
                                 "Adobe Systems Inc.",

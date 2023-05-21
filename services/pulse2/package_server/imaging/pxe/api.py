@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2013 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -85,7 +85,6 @@ class PXEImagingApi(PXEMethodParser):
         )
 
         if self.config.imaging_api["glpi_mode"]:
-
             d = task.deferLater(
                 reactor, 0, self.glpi_register, mac, hostname, ip_address
             )
@@ -95,7 +94,6 @@ class PXEImagingApi(PXEMethodParser):
             return d
 
         else:
-
             return self._computerRegister(None, hostname, mac)
 
     @assign(0xBB)
@@ -524,7 +522,6 @@ class PXEImagingApi(PXEMethodParser):
 
         url = "http://"
         try:
-
             if self.config.imaging_api["inventory_enablessl"]:
                 protocol = "https"
             else:
@@ -692,7 +689,6 @@ class PXEImagingApi(PXEMethodParser):
 
         @d.addErrback
         def _eb(failure):
-
             logging.getLogger().warn(
                 "PXE Proxy: preselected-menu-entry-change failed: %s" % str(failure)
             )

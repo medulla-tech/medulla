@@ -24,37 +24,41 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
     logger.debug("=====================================================")
     logger.debug("call %s from %s" % (plugin, message["from"]))
     logger.debug("=====================================================")
-    #logger.debug("%s " % json.dumps(data,indent=4))
+    # logger.debug("%s " % json.dumps(data,indent=4))
     sessionid = name_random(5, "wakeonlangroup")
     try:
         compteurcallplugin = getattr(xmppobject, "num_call%s" % action)
         logger.debug("compteurcallplugin %s" % compteurcallplugin)
         if compteurcallplugin == 0:
             read_conf_wol(xmppobject)
-            xmppobject.brodcastwol=[]
+            xmppobject.brodcastwol = []
             for ifaceName in interfaces():
                 addrs = ifaddresses(ifaceName)
-                k=addrs[AF_INET]
+                k = addrs[AF_INET]
                 for t in k:
-                    if 'broadcast' not in t:
+                    if "broadcast" not in t:
                         break
-                    if 'netmask' not in t:
+                    if "netmask" not in t:
                         break
-                    if 'addr' not in t:
+                    if "addr" not in t:
                         break
-                    xmppobject.brodcastwol.append(t['broadcast'])
+                    xmppobject.brodcastwol.append(t["broadcast"])
     except:
         logger.error("plugin %s\n%s" % (plugin["NAME"], traceback.format_exc()))
 
-    senddataplugin = {  'action': 'wakeonlangroup',
-                        'sessionid': sessionid,
-                        'data': {'macaddress': ""}}
+    senddataplugin = {
+        "action": "wakeonlangroup",
+        "sessionid": sessionid,
+        "data": {"macaddress": ""},
+    }
 
     try:
-        if 'macadress' in data or 'macaddress' in data:
-            if xmppobject.wakeonlangroupremotelan :
-                serverrelaylist = XmppMasterDatabase().random_list_ars_relay_one_only_in_cluster()
-                senddataplugin['data']['macaddress'] = data['macadress']
+        if "macadress" in data or "macaddress" in data:
+            if xmppobject.wakeonlangroupremotelan:
+                serverrelaylist = (
+                    XmppMasterDatabase().random_list_ars_relay_one_only_in_cluster()
+                )
+                senddataplugin["data"]["macaddress"] = data["macadress"]
                 for serverrelay in serverrelaylist:
                     xmppobject.send_message(
                         mto=serverrelay["jid"],
@@ -70,66 +74,89 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                     logger.debug(msglog)
             else:
                 if xmppobject.wakeonlantargetsubnet:
-                    if 'broadcast' in  data:
-                        key_uniq = list(set( list(data['broadcast'])))
-                        datamac={}
-                        dataars={}
+                    if "broadcast" in data:
+                        key_uniq = list(set(list(data["broadcast"])))
+                        datamac = {}
+                        dataars = {}
                         for t in key_uniq:
-                            datamac[t]=[]
-                            dataars[t]=set()
-                        for (index, ipbroadcast) in enumerate(data['broadcast']):
-                            datamac[ipbroadcast].append (data['macadress'][index] )
-                            dataars[ipbroadcast].add(data['groupdeploy'][index])
+                            datamac[t] = []
+                            dataars[t] = set()
+                        for index, ipbroadcast in enumerate(data["broadcast"]):
+                            datamac[ipbroadcast].append(data["macadress"][index])
+                            dataars[ipbroadcast].add(data["groupdeploy"][index])
                         for ipbroadcast in datamac:
-                            #strdede =",".join(datamac[t])
+                            # strdede =",".join(datamac[t])
                             try:
-                                wol.send_magic_packet(  *datamac[ipbroadcast],
-                                                        ip_address=ipbroadcast,
-                                                        port=xmppobject.wakeonlangroupport)
-                                msglog = "A WOL request has been sent on broacast subnet %s " \
-                                        "to the mac address %s" % ( ipbroadcast,
-                                                                    datamac[ipbroadcast])
+                                wol.send_magic_packet(
+                                    *datamac[ipbroadcast],
+                                    ip_address=ipbroadcast,
+                                    port=xmppobject.wakeonlangroupport
+                                )
+                                msglog = (
+                                    "A WOL request has been sent on broacast subnet %s "
+                                    "to the mac address %s"
+                                    % (ipbroadcast, datamac[ipbroadcast])
+                                )
                             except Exception:
                                 # wol direct from master erreur send vers ars wol.
                                 for ars in dataars[ipbroadcast]:
-                                    senddataplugin['data']['macaddress'] = datamac[ipbroadcast]
-                                    senddataplugin['data']['macaddress'] = datamac[ipbroadcast]
-                                    xmppobject.send_message(mto=ars,
-                                                mbody=json.dumps(senddataplugin,
-                                                                encoding='latin1'))
-                                    msglog = "A WOL request has been dispacher to ARS %s " % (ars)
+                                    senddataplugin["data"]["macaddress"] = datamac[
+                                        ipbroadcast
+                                    ]
+                                    senddataplugin["data"]["macaddress"] = datamac[
+                                        ipbroadcast
+                                    ]
+                                    xmppobject.send_message(
+                                        mto=ars,
+                                        mbody=json.dumps(
+                                            senddataplugin, encoding="latin1"
+                                        ),
+                                    )
+                                    msglog = (
+                                        "A WOL request has been dispacher to ARS %s "
+                                        % (ars)
+                                    )
                             historymessage(xmppobject, sessionid, msglog)
                             logger.debug(msglog)
                     else:
-                        datamac = XmppMasterDatabase().wolbroadcastadressmacaddress(data['macadress'])
+                        datamac = XmppMasterDatabase().wolbroadcastadressmacaddress(
+                            data["macadress"]
+                        )
                         logger.debug("datamac %s" % datamac)
                         for t in datamac:
-                            strdede =",".join(datamac[t])
-                            wol.send_magic_packet(*datamac[t],
-                                                ip_address=t,
-                                                port=xmppobject.wakeonlangroupport)
-                            msglog = "A WOL request has been sent on broacast subnet %s " \
-                                        "to the mac address %s" % ( t,
-                                                                    datamac[t])
+                            strdede = ",".join(datamac[t])
+                            wol.send_magic_packet(
+                                *datamac[t],
+                                ip_address=t,
+                                port=xmppobject.wakeonlangroupport
+                            )
+                            msglog = (
+                                "A WOL request has been sent on broacast subnet %s "
+                                "to the mac address %s" % (t, datamac[t])
+                            )
                             historymessage(xmppobject, sessionid, msglog)
                             logger.debug(msglog)
                 else:
-                    dellist=[]
+                    dellist = []
                     for z in xmppobject.brodcastwol:
                         try:
-                            wol.send_magic_packet(*data['macadress'],
-                                                    ip_address=z,
-                                                    port=xmppobject.wakeonlangroupport)
+                            wol.send_magic_packet(
+                                *data["macadress"],
+                                ip_address=z,
+                                port=xmppobject.wakeonlangroupport
+                            )
                         except Exception as e:
                             if "Connection refused" in str(e):
-                                logger.debug('WOL impossible on broadcast %s' % z)
+                                logger.debug("WOL impossible on broadcast %s" % z)
                                 dellist.append(z)
                     for t in dellist:
                         xmppobject.brodcastwol.remove(t)
 
-                    msglog = "A local lan WOL request have been sent to the" \
-                            "(display only for 10 adress) mac address %s and port %s" % (data['macadress'][:10],
-                                                             xmppobject.wakeonlangroupport)
+                    msglog = (
+                        "A local lan WOL request have been sent to the"
+                        "(display only for 10 adress) mac address %s and port %s"
+                        % (data["macadress"][:10], xmppobject.wakeonlangroupport)
+                    )
                     historymessage(xmppobject, sessionid, msglog)
                     logger.debug(msglog)
         else:

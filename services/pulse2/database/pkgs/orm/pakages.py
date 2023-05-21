@@ -1,8 +1,9 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2013 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
+
 
 class Packages(object):
     def getId(self):
@@ -68,7 +69,7 @@ class Packages(object):
     def getInventory_associateinventory(self):
         if self.inventory_associateinventory is not None:
             return self.inventory_associateinventory
- 
+
         return ""
 
     def getInventory_licenses(self):

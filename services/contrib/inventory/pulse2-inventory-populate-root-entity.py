@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2008 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 import sys
@@ -14,9 +14,7 @@ except ImportError:
 
 
 def usage(argv):
-    print(
-        "Usage: %s db_conn_string [--id entity_id|--name entity_name]" % argv[0]
-    )
+    print("Usage: %s db_conn_string [--id entity_id|--name entity_name]" % argv[0])
     print(
         "Where db_conn_string is a SQLAlchemy connection string, e.g. mysql://user:password@host/database",
     )

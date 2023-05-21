@@ -2,7 +2,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -380,7 +380,9 @@ def getGroupsLdap(searchFilter=""):
     raw = ldapObj.searchGroup(searchFilter)
     result = {}
     for key in raw:
-        result[key.decode("utf-8")] = [val.decode("utf-8") if type(val) is bytes else val for val in raw[key]]
+        result[key.decode("utf-8")] = [
+            val.decode("utf-8") if type(val) is bytes else val for val in raw[key]
+        ]
     return result
 
 
@@ -1863,7 +1865,7 @@ class LdapUserGroupControl:
         if isinstance(uid, xmlrpc.client.Binary):
             _uid = str(uid)
         elif type(uid) is bytes:
-            _uid = uid.decode('utf-8')
+            _uid = uid.decode("utf-8")
         else:
             _uid = uid
 
@@ -2152,7 +2154,6 @@ class LdapUserGroupControl:
 
         for i in range(len(result_set)):
             for entry in result_set[i]:
-
                 try:
                     cn = entry[1]["cn"][0]
 
@@ -2196,7 +2197,6 @@ class LdapUserGroupControl:
         for result_set in ret:
             for i in range(len(result_set)):
                 for entry in result_set[i]:
-
                     try:
                         uidNumber = int(entry[1]["uidNumber"][0])
                     except KeyError:
@@ -2382,7 +2382,13 @@ class LdapUserGroupControl:
         @type ldappath: str
         """
         addrdn = "ou=" + ouname + ", " + ldappath
-        addr_info = {"ou": bytes(ouname, encoding='utf8' ), "objectClass": (bytes("organizationalUnit", encoding='utf8') , bytes("top",encoding='utf8') )}
+        addr_info = {
+            "ou": bytes(ouname, encoding="utf8"),
+            "objectClass": (
+                bytes("organizationalUnit", encoding="utf8"),
+                bytes("top", encoding="utf8"),
+            ),
+        }
         attributes = [(k, v) for k, v in list(addr_info.items())]
         try:
             self.l.add_s(addrdn, attributes)
@@ -2418,7 +2424,6 @@ class LdapUserGroupControl:
         return True
 
     def validateAuthToken(self, user, token):
-
         current_timestamp = time.time()
         try:
             decoded_token = base64.urlsafe_b64decode(token)

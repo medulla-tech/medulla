@@ -46,7 +46,7 @@ class Glpi(DyngroupDatabaseHelper):
         # we choose the good backend for the database
         if Itsm_ng14().try_activation(self.config):
             self.database = Itsm_ng14()
-        elif  Glpi084().try_activation(self.config):
+        elif Glpi084().try_activation(self.config):
             self.database = Glpi084()
         elif Glpi92().try_activation(self.config):
             self.database = Glpi92()

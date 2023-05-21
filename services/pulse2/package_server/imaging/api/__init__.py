@@ -13,7 +13,6 @@ from pulse2.package_server.imaging.api.functions import Imaging
 
 
 class ImagingApi(MyXmlrpc):
-
     myType = "Imaging"
 
     def __init__(self, name, config):

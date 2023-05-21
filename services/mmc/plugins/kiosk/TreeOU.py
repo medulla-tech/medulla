@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
 #
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.base.config import BasePluginConfig
@@ -169,7 +169,7 @@ class TreeOU(object):
         config = PluginConfigFactory.new(BasePluginConfig, "base")
         if config.has_section("authentication_externalldap"):
             # Get the parameters from the config file
-            suffix = config.get('authentication_externalldap', 'suffix_ou')
+            suffix = config.get("authentication_externalldap", "suffix_ou")
 
             ou_list = ou_string.split("/")
             ou_list.reverse()
@@ -205,7 +205,7 @@ class TreeOU(object):
         Returns:
             The list of all the parents in canonical format (/parent1/parent2).
         """
-        if self.parent  is not None:
+        if self.parent is not None:
             list.append("/".join(self.parent.get_path()))
             self.parent.recursive_parent(list)
         return list

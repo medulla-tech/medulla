@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # SPDX-FileCopyrightText: 2008 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """ A XMLRPC Client
@@ -32,7 +32,6 @@ import sys
 
 
 class Options(twisted.python.usage.Options):
-
     optParameters = [
         ["func", None, None, "The XML RPC Function to use"],
         ["args", None, None, "The XML RPC Arguments to use, see below"],

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2013 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -127,7 +127,9 @@ class DBScriptLaunchInterface:
         @param filename: script to execute
         @type filename: str
         """
-        process = Popen(self.cmd, text=True, stdout=PIPE, stdin=PIPE, stderr=PIPE, shell=True)
+        process = Popen(
+            self.cmd, text=True, stdout=PIPE, stdin=PIPE, stderr=PIPE, shell=True
+        )
         try:
             ret, err = process.communicate("source " + filename)
             if err:
@@ -199,7 +201,9 @@ class DDLContentManager:
         @return: list generator of filenames
         @rtype: string
         """
-        sqldir = os.path.join(prefix, "share", "doc", "pulse2", "contrib", module, "sql")
+        sqldir = os.path.join(
+            prefix, "share", "doc", "pulse2", "contrib", module, "sql"
+        )
 
         if not os.path.exists(sqldir):
             raise Exception("SQL schemas not found for module %s" % module)

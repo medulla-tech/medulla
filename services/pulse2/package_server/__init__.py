@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -23,6 +23,7 @@ from threading import Thread
 from twisted.internet import task
 from twisted.internet import utils
 from twisted.internet import defer
+
 
 class ThreadPackageHelper(Thread):
     def __init__(self, config):
