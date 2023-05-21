@@ -126,21 +126,20 @@ class PDFGenerator(object):
                 setattr(self, "_".join([hf, place, "background"]), "")
 
     def h1(self, str):
-        self.content += "<h1>%s</h1>" % str
+        self.content += f"<h1>{str}</h1>"
 
     def h2(self, str):
-        self.content += "<h2>%s</h2>" % str
+        self.content += f"<h2>{str}</h2>"
 
     def h3(self, str):
-        self.content += "<h3>%s</h3>" % str
+        self.content += f"<h3>{str}</h3>"
 
     @property
     def _css_file_content(self):
         string = ""
         try:
-            f = open(os.path.join(reportconfdir, "css", self.config.reportCSS))
-            string = f.read()
-            f.close()
+            with open(os.path.join(reportconfdir, "css", self.config.reportCSS)) as f:
+                string = f.read()
         except IOError as e:
             logging.getLogger().warning(e)
         return string
@@ -323,15 +322,12 @@ class PDFGenerator(object):
 
     def pushSVG(self, svg):
         self.content += '<div class="graph">'
-        self.content += (
-            '<img src="data:image/svg+xml;charset=utf-8;base64,%s" />'
-            % b64encode(svg.encode("utf8"))
-        )
+        self.content += f'<img src="data:image/svg+xml;charset=utf-8;base64,{b64encode(svg.encode("utf8"))}" />'
         self.content += "</div>"
 
     def save(self):
         # PDF report is a list of all documents
-        self.summary = "<h1>%s</h1>" % (self.locale["STR_SUMMARY"])
+        self.summary = f'<h1>{self.locale["STR_SUMMARY"]}</h1>'
 
         # To make one PDF report, we have to get all pages of all documents...
         # First step , we obtain a list of sublists like this :
@@ -504,14 +500,13 @@ class SVGGenerator(object):
         periods_idx = list(range(0, len(datas["dates"])))
         periods_idx.reverse()
         for value_idx in values_idx:
-            remove = True
-            for period_idx in periods_idx:
-                if (
+            remove = not any(
+                (
                     datas["values"][period_idx][value_idx] is not None
                     and datas["values"][period_idx][value_idx] > 0
-                ):
-                    remove = False
-                    break
+                )
+                for period_idx in periods_idx
+            )
             if remove:
                 del datas["titles"][value_idx]
                 for period in datas["values"]:
@@ -570,16 +565,14 @@ class SVGGenerator(object):
         self.chart.config.title_font_size = 16
         self.chart.config.print_values = False
 
-        self.chart.render_to_png(self.path + ".png")
-        chmod(self.path + ".png", 0o644)
+        self.chart.render_to_png(f"{self.path}.png")
+        chmod(f"{self.path}.png", 0o644)
         return True
 
     def save(self):
         # Saving PNG file
         self.toPNG()
-        # Saving SVG file
-        f = open(self.path + ".svg", "w")
-        f.write(self.toXML().encode("utf8"))
-        f.close()
-        chmod(self.path + ".svg", 0o644)
+        with open(f"{self.path}.svg", "w") as f:
+            f.write(self.toXML().encode("utf8"))
+        chmod(f"{self.path}.svg", 0o644)
         return True

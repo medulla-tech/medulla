@@ -89,7 +89,7 @@ def create_method(m):
         # TIME_BTW_CONN_TRY = 0.1 # in seconds, floats are authorized, # pyflakes.ignore
 
         try:  # do a libmysql client call : attempt to perform the old call (_old_<method>)
-            old_m = getattr(self, "_old_%s" % m)
+            old_m = getattr(self, f"_old_{m}")
             ret = old_m()  # success, will send the result back
             return ret  # send the result back
         except DBAPIError as e:  # failure, catch libmysql client error
@@ -146,21 +146,20 @@ def handle_deconnect():
     # create_method then call _old_<method> on demand (see upper)
     for m in ["first", "count", "all", "__iter__"]:
         try:  # check if _old_<method> exists
-            getattr(Query, "_old_%s" % m)
+            getattr(Query, f"_old_{m}")
         except AttributeError:  # and if not, create it
-            setattr(Query, "_old_%s" % m, getattr(Query, m))
+            setattr(Query, f"_old_{m}", getattr(Query, m))
             setattr(Query, m, create_method(m))
 
 
 def toH(w):
-    ret = {}
-    for i in [f for f in dir(w) if not f.startswith("__")]:
-        ret[i] = getattr(w, i)
-    return ret
+    return {
+        i: getattr(w, i) for i in [f for f in dir(w) if not f.startswith("__")]
+    }
 
 
 def toUUID(id):
-    return "UUID%s" % (str(id))
+    return f"UUID{str(id)}"
 
 
 def fromUUID(uuid):
@@ -172,7 +171,7 @@ class DbObject(object):
         ret = {}
         for i in [f for f in dir(self) if not f.startswith("_")]:
             t = type(getattr(self, i))
-            if t == str or t == dict or t == str or t == tuple or t == int or t == int:
+            if t in [str, dict, tuple, int]:
                 ret[i] = getattr(self, i)
         ret["uuid"] = toUUID(getattr(self, "id"))
         return ret

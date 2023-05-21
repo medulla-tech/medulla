@@ -41,9 +41,8 @@ def getUptime():
     """
     Returns the machine uptime
     """
-    f = open("/proc/uptime")
-    data = f.read()
-    f.close()
+    with open("/proc/uptime") as f:
+        data = f.read()
     return data
 
 
@@ -55,7 +54,6 @@ def listProcess():
     psdict = ProcessScheduler().listProcess()
 
     for i in list(psdict.keys()):
-        assoc = []
         if time() - psdict[i].time > 60:
             # Process do not respond for 60 secondes or exited for 60
             # seconds... remove it
@@ -63,9 +61,7 @@ def listProcess():
             # ProcessScheduler()
             del psdict[i]
         else:
-            assoc.append(psdict[i].desc)
-            assoc.append(psdict[i].progress)
-            assoc.append(psdict[i].status)
+            assoc = [psdict[i].desc, psdict[i].progress, psdict[i].status]
             # assoc.append(psdict[i].out)
             ret.append(assoc)
 

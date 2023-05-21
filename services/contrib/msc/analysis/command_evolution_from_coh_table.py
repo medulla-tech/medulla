@@ -243,59 +243,58 @@ commandData = (
 
 
 def getStruct():
-    struct = dict()
-    struct["creator"] = ""
-    struct["creation_date"] = datetime.datetime
-    struct["name"] = ""
-    struct["coh"] = dict()
-    struct["states"] = dict()
-    struct["Scheduled"] = 0
-    struct["Rescheduled"] = 0
-    struct["In Progress"] = {
-        "upload_in_progress": 0,
-        "execution_in_progress": 0,
-        "delete_in_progress": 0,
-        "inventory_in_progress": 0,
-        "wol_done": 0,
+    return {
+        "creator": "",
+        "creation_date": datetime.datetime,
+        "name": "",
+        "coh": {},
+        "states": {},
+        "Scheduled": 0,
+        "Rescheduled": 0,
+        "In Progress": {
+            "upload_in_progress": 0,
+            "execution_in_progress": 0,
+            "delete_in_progress": 0,
+            "inventory_in_progress": 0,
+            "wol_done": 0,
+        },
+        "Stopped": 0,
+        "Neutralized": 0,
+        "Over Timed": 0,
+        "Fatal": {
+            "not_enought_info": 0,
+            "bundle_broken": 0,
+            "package_unavailable": 0,
+            "package_modified": 0,
+            "timeout": 0,
+            "mac_mismatch": 0,
+            "target_broken": 0,
+            "unreachable": 0,
+            "conn_issue": 0,
+            "rebooted": 0,
+            "precheck": 0,
+            "delete": 0,
+            "inventory": 0,
+            "halt": 0,
+            "script": 0,
+            "execution": 0,
+            "other": 0,
+        },
+        "Results": {
+            "To Do": 0,
+            "Doing": 0,
+            "Delayed": 0,
+            "Done": 0,
+            "Target": 0,
+            "Plan": 0,
+            "Infra": 0,
+            "Others": 0,
+        },
+        "Success": 0,
+        "Other": 0,
+        "Domains": [],
+        "Commands": [],
     }
-    struct["Stopped"] = 0
-    struct["Neutralized"] = 0
-    struct["Over Timed"] = 0
-    struct["Fatal"] = {
-        "not_enought_info": 0,
-        "bundle_broken": 0,
-        "package_unavailable": 0,
-        "package_modified": 0,
-        "timeout": 0,
-        "mac_mismatch": 0,
-        "target_broken": 0,
-        "unreachable": 0,
-        "conn_issue": 0,
-        "rebooted": 0,
-        "precheck": 0,
-        "delete": 0,
-        "inventory": 0,
-        "halt": 0,
-        "script": 0,
-        "execution": 0,
-        "other": 0,
-    }
-    struct["Results"] = {
-        "To Do": 0,
-        "Doing": 0,
-        "Delayed": 0,
-        "Done": 0,
-        "Target": 0,
-        "Plan": 0,
-        "Infra": 0,
-        "Others": 0,
-    }
-    struct["Success"] = 0
-    struct["Other"] = 0
-    struct["Domains"] = list()
-    struct["Commands"] = list()
-
-    return struct
 
 
 data = dict()

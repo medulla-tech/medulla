@@ -9,6 +9,7 @@
 Contains the base plugin for the MMC agent.
 """
 
+
 from mmc.support.errorObj import errorMessage
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.base.config import BasePluginConfig
@@ -82,7 +83,7 @@ timecheck = 3600
 
 
 # global definition for ldapUserGroupControl
-INI = mmcconfdir + "/plugins/base.ini"
+INI = f"{mmcconfdir}/plugins/base.ini"
 
 modList = None
 
@@ -147,22 +148,20 @@ def activate():
 
     if not os.path.isdir(ldapObj.skelDir):
         logger.error(
-            "Skeleton directory %s does not exist or is not a directory"
-            % ldapObj.skelDir
+            f"Skeleton directory {ldapObj.skelDir} does not exist or is not a directory"
         )
         return False
 
     config = PluginConfigFactory.new(BasePluginConfig, "base")
     if not os.path.isdir(config.backupdir):
         logger.error(
-            "Backup directory %s does not exist or is not a directory"
-            % config.backupdir
+            f"Backup directory {config.backupdir} does not exist or is not a directory"
         )
         return False
 
     if not os.path.exists(os.path.join(config.backuptools, "backup.sh")):
         logger.error(
-            "Backup tools in directory %s are not available" % config.backuptools
+            f"Backup tools in directory {config.backuptools} are not available"
         )
         return False
 
@@ -175,7 +174,7 @@ def activate():
 
     # Create the default user group
     if not ldapObj.existGroup(ldapObj.defaultUserGroup):
-        if not ldapObj.defaultUserGroup in (
+        if ldapObj.defaultUserGroup not in (
             "Domain Users",
             "Account Operators",
             "Administrators",
@@ -187,15 +186,13 @@ def activate():
             "Replicators",
         ):
             logger.info(
-                "The default user group %s does not exist. Creating..."
-                % ldapObj.defaultUserGroup
+                f"The default user group {ldapObj.defaultUserGroup} does not exist. Creating..."
             )
             ldapObj.addGroup(ldapObj.defaultUserGroup)
         else:
             # Can't create automatically a SAMBA group
             logger.warning(
-                "The default user group %s must be created with the smbldap-populate command"
-                % ldapObj.defaultUserGroup
+                f"The default user group {ldapObj.defaultUserGroup} must be created with the smbldap-populate command"
             )
 
     # Plug the subscription system
@@ -216,10 +213,9 @@ def activate():
         TaskManager().addTask(
             "leakmemory", (leakmemory,), interval=config.leak_memorytime
         ).addErrback(err)
-        fichier = open(config.fileoutresult, "a")
-        date = datetime.datetime.now()
-        fichier.write("\nSTART MMC [%s]\n" % date)
-        fichier.close()
+        with open(config.fileoutresult, "a") as fichier:
+            date = datetime.datetime.now()
+            fichier.write("\nSTART MMC [%s]\n" % date)
         timecheck = config.leak_memorytime
         name_file_log_leak_memory = config.fileoutresult
     return True
@@ -271,25 +267,24 @@ def leakmemory():
         logging.debug("evaluate the memory RSS")
         taillepris = mem_usage[0] - mesuref
         mesuref = mem_usage[0]
-        fichier = open(name_file_log_leak_memory, "a")
-        datetimewrite = strftime("%H:%M:%S")
-        stem = (
-            "\n%s count %s\ntime %ss MT %.2f MiB delta [ %s Mo | %s Ko | %s o | %s o/s]\n"
-            % (
-                datetimewrite,
-                gc.get_count(),
-                countseconde,
-                mem_usage[0],
-                round(taillepris, 2),
-                int(taillepris * 1024),
-                int(taillepris * 1024 * 1024),
-                int((taillepris * 1024 * 1024) / countseconde),
+        with open(name_file_log_leak_memory, "a") as fichier:
+            datetimewrite = strftime("%H:%M:%S")
+            stem = (
+                "\n%s count %s\ntime %ss MT %.2f MiB delta [ %s Mo | %s Ko | %s o | %s o/s]\n"
+                % (
+                    datetimewrite,
+                    gc.get_count(),
+                    countseconde,
+                    mem_usage[0],
+                    round(taillepris, 2),
+                    int(taillepris * 1024),
+                    int(taillepris * 1024 * 1024),
+                    int((taillepris * 1024 * 1024) / countseconde),
+                )
             )
-        )
-        fichier.write(stem)
-        countseconde = 0
-        logging.debug("%s" % stem)
-        fichier.close()
+            fichier.write(stem)
+            countseconde = 0
+            logging.debug(f"{stem}")
         mesure = mesurel
         logging.debug("______________________________")
 
@@ -356,15 +351,12 @@ def searchUserAdvanced(searchFilter="", start=None, end=None):
     """
     ldapObj = ldapUserGroupControl()
     if "=" in searchFilter:
-        terms = ["(%s)" % term for term in searchFilter.split() if "=" in term]
-        searchFilter = "(&%s)" % "".join(terms)
+        terms = [f"({term})" for term in searchFilter.split() if "=" in term]
+        searchFilter = f'(&{"".join(terms)})'
     else:
         searchFilter = cleanFilter(searchFilter)
         if searchFilter:
-            searchFilter = (
-                "(|(uid=%s)(givenName=%s)(sn=%s)(telephoneNumber=%s)(mail=%s))"
-                % (searchFilter, searchFilter, searchFilter, searchFilter, searchFilter)
-            )
+            searchFilter = f"(|(uid={searchFilter})(givenName={searchFilter})(sn={searchFilter})(telephoneNumber={searchFilter})(mail={searchFilter}))"
     return ldapObj.searchUserAdvance(searchFilter, None, start, end)
 
 
@@ -378,12 +370,13 @@ def getGroupsLdap(searchFilter=""):
 
     # Need to cast bytes to str
     raw = ldapObj.searchGroup(searchFilter)
-    result = {}
-    for key in raw:
-        result[key.decode("utf-8")] = [
-            val.decode("utf-8") if type(val) is bytes else val for val in raw[key]
+    return {
+        key.decode("utf-8"): [
+            val.decode("utf-8") if type(val) is bytes else val
+            for val in raw[key]
         ]
-    return result
+        for key in raw
+    }
 
 
 def getDefaultUserGroup():
@@ -398,8 +391,7 @@ def getUserDefaultPrimaryGroup():
 def getUserPrimaryGroup(uid):
     if type(uid) is bytes:
         uid = uid.decode("utf-8")
-    raw = ldapUserGroupControl().getUserPrimaryGroup(uid)
-    return raw
+    return ldapUserGroupControl().getUserPrimaryGroup(uid)
 
 
 def getUserSecondaryGroups(uid):
@@ -494,7 +486,7 @@ def getUserGroups(pattern):
 
 
 # backup fonction
-def backupUser(user, media, login, configFile=mmcconfdir + "/plugins/base.ini"):
+def backupUser(user, media, login, configFile=f"{mmcconfdir}/plugins/base.ini"):
     config = PluginConfigFactory.new(BasePluginConfig, "base")
     cmd = os.path.join(config.backuptools, "backup.sh")
     ldapObj = ldapUserGroupControl()
@@ -513,12 +505,10 @@ def backupUser(user, media, login, configFile=mmcconfdir + "/plugins/base.ini"):
         + media
         + " "
         + config.backuptools,
-        "backup user " + user,
+        f"backup user {user}",
         mmctools.progressBackup,
     )
-    return os.path.join(
-        config.backupdir, "%s-%s-%s" % (login, user, strftime("%Y%m%d"))
-    )
+    return os.path.join(config.backupdir, f'{login}-{user}-{strftime("%Y%m%d")}')
 
 
 # return entire ldap info on uid user
@@ -545,7 +535,7 @@ def getUserAcl(uid):
         return allInfo["lmcACL"][0]
     except:
         # test if contain lmcUserObject
-        if not "lmcUserObject" in allInfo["objectClass"]:
+        if "lmcUserObject" not in allInfo["objectClass"]:
             allInfo["objectClass"].append("lmcUserObject")
             ldapObj.changeUserAttributes(uid, "objectClass", allInfo["objectClass"])
         return ""
@@ -575,9 +565,7 @@ def existUser(uid):
 def changeUserMainAttributes(uid, newuid, name, surname):
     ldapObj = ldapUserGroupControl()
     try:
-        gecos = delete_diacritics(name + " " + surname)
-    # If we failed to build the gecos from the last and firstname
-    # fallback to uid
+        gecos = delete_diacritics(f"{name} {surname}")
     except UnicodeEncodeError:
         gecos = uid
 
@@ -677,10 +665,7 @@ def hasAuditWorking():
     Returns True if the audit module is enabled
     """
     config = PluginConfigFactory.new(BasePluginConfig, "base")
-    if config.auditmethod != "none":
-        return True
-    else:
-        return False
+    return config.auditmethod != "none"
 
 
 def getSubscriptionInformation(is_dynamic=False):
@@ -790,9 +775,7 @@ def delete_diacritics(s):
     if isinstance(s, bytes):
         s = s.decode("utf-8")
 
-    ret = []
-    for c in s:
-        ret.append(_reptable.get(ord(c), c))
+    ret = [_reptable.get(ord(c), c) for c in s]
     return "".join(ret)
 
 
@@ -817,14 +800,9 @@ class LdapUserGroupControl:
         @rtype: str
 
         """
-        if method == "crypt":
-            length = 2
-        else:
-            # Maybe 20 is too much or not enough. I can't find any
-            # documentation about how long the salt should be for SSHA scheme.
-            length = 20
+        length = 2 if method == "crypt" else 20
         ret = ""
-        for i in range(length):
+        for _ in range(length):
             ret = ret + random.choice(string.letters + string.digits)
         return ret
 
@@ -848,18 +826,16 @@ class LdapUserGroupControl:
             password = str(password)
         salt = self._getSalt(scheme)
         if scheme == "crypt":
-            userpassword = "{crypt}" + crypt.crypt(password, salt)
-        else:
-            ctx = _digest(password)
-            ctx.update(salt)
-            userpassword = "{SSHA}" + base64.encodestring(ctx.digest() + salt)
-        return userpassword
+            return "{crypt}" + crypt.crypt(password, salt)
+        ctx = _digest(password)
+        ctx.update(salt)
+        return "{SSHA}" + base64.encodestring(ctx.digest() + salt)
 
     def _setDefaultConfig(self):
         """
         Set default config options.
         """
-        self.gpoDN = "ou=System," + self.baseDN
+        self.gpoDN = f"ou=System,{self.baseDN}"
         self.skelDir = "/etc/skel"
         self.defaultUserGroup = None
         self.defaultHomeDir = "/home"
@@ -874,10 +850,7 @@ class LdapUserGroupControl:
         Create a LDAP connection on self.l with admin right
         Create a ConfigParser on self.config
         """
-        if conffile:
-            configFile = conffile
-        else:
-            configFile = INI
+        configFile = conffile if conffile else INI
         self.conffile = configFile
         self.config = PluginConfigFactory.new(BasePluginConfig, "base", self.conffile)
 
@@ -932,10 +905,9 @@ class LdapUserGroupControl:
         self.hooks = {}
         if self.config.has_section("hooks"):
             for option in self.config.options("hooks"):
-                self.hooks["base." + option] = self.config.get("hooks", option)
+                self.hooks[f"base.{option}"] = self.config.get("hooks", option)
 
-        self.userDefault = {}
-        self.userDefault["base"] = {}
+        self.userDefault = {"base": {}}
         USERDEFAULT = "userdefault"
         if self.config.has_section(USERDEFAULT):
             for option in self.config.options(USERDEFAULT):
@@ -950,28 +922,29 @@ class LdapUserGroupControl:
         """
         Run a hook.
         """
-        if hookName in self.hooks:
-            self.logger.info("Hook " + hookName + " called.")
-            if uid:
-                # Make a temporary ldif file with user entry if an uid is specified
-                fd, tmpname = tempfile.mkstemp()
-                try:
-                    fob = os.fdopen(fd, "wb")
-                    dn = self.searchUserDN(uid)
-                    entry = self.getUserEntry(uid)
-                    if password:
-                        if isinstance(password, xmlrpc.client.Binary):
-                            password = str(password)
-                        # Put user password in clear text in ldif
-                        entry["userPassword"] = [password]
-                    writer = ldif.LDIFWriter(fob)
-                    writer.unparse(dn, entry)
-                    fob.close()
-                    mmctools.shlaunch(self.hooks[hookName] + " " + tmpname)
-                finally:
-                    os.remove(tmpname)
-            else:
-                mmctools.shlaunch(self.hooks[hookName])
+        if hookName not in self.hooks:
+            return
+        self.logger.info(f"Hook {hookName} called.")
+        if uid:
+            # Make a temporary ldif file with user entry if an uid is specified
+            fd, tmpname = tempfile.mkstemp()
+            try:
+                fob = os.fdopen(fd, "wb")
+                dn = self.searchUserDN(uid)
+                entry = self.getUserEntry(uid)
+                if password:
+                    if isinstance(password, xmlrpc.client.Binary):
+                        password = str(password)
+                    # Put user password in clear text in ldif
+                    entry["userPassword"] = [password]
+                writer = ldif.LDIFWriter(fob)
+                writer.unparse(dn, entry)
+                fob.close()
+                mmctools.shlaunch(f"{self.hooks[hookName]} {tmpname}")
+            finally:
+                os.remove(tmpname)
+        else:
+            mmctools.shlaunch(self.hooks[hookName])
 
     def enableUser(self, login):
         """
@@ -1042,9 +1015,7 @@ class LdapUserGroupControl:
         """
         entry = copy.deepcopy(entry)
         for attribute, value in list(default.items()):
-            # Search if modifiers have been specified
-            s = re.search("^\[(.*)\]", value)
-            if s:
+            if s := re.search("^\[(.*)\]", value):
                 modifiers = s.groups()[0]
                 # Remove modifiers from the string
                 value = re.sub("^\[.*\]", "", value)
@@ -1062,7 +1033,7 @@ class LdapUserGroupControl:
                             v = v.lower()
                         if "|" in modifiers:
                             v = v.upper()
-                        value = value.replace("%" + a + "%", v)
+                        value = value.replace(f"%{a}%", v)
             if value == "DELETE":
                 for key in list(entry.keys()):
                     if key.lower() == attribute:
@@ -1122,7 +1093,7 @@ class LdapUserGroupControl:
                               created on the filesystem
         @type createHomeDir: bool
         """
-        ident = "uid=" + uid + "," + self.baseUsersDN
+        ident = f"uid={uid},{self.baseUsersDN}"
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER, [(ident, AT.USER)])
 
         # Get the homeDir path
@@ -1156,9 +1127,7 @@ class LdapUserGroupControl:
         try:
             gecosFirstN = str(delete_diacritics((firstN.encode("UTF-8"))))
             gecosLastN = str(delete_diacritics((lastN.encode("UTF-8"))))
-            gecos = gecosFirstN + " " + gecosLastN
-        # If we failed to build the gecos from the last and firstname
-        # fallback to uid
+            gecos = f"{gecosFirstN} {gecosLastN}"
         except UnicodeEncodeError:
             gecos = uid
 
@@ -1181,12 +1150,12 @@ class LdapUserGroupControl:
             ],
             "uid": uid,
             "gecos": gecos,
-            "cn": firstN + " " + lastN,
-            "displayName": firstN + " " + lastN,
+            "cn": f"{firstN} {lastN}",
+            "displayName": f"{firstN} {lastN}",
             "sn": lastN,
             "givenName": firstN,
             "homeDirectory": homeDir,
-            "shadowExpire": "-1",  # Password never expire
+            "shadowExpire": "-1",
             "shadowInactive": "-1",
             "shadowWarning": "7",
             "shadowMin": "-1",
@@ -1200,8 +1169,8 @@ class LdapUserGroupControl:
         # Search Python unicode string and encode them to UTF-8
         attributes = []
         for k, v in list(user_info.items()):
-            fields = []
             if isinstance(v, list):
+                fields = []
                 for item in v:
                     if isinstance(item, str):
                         item = item.encode("utf-8")
@@ -1251,17 +1220,10 @@ class LdapUserGroupControl:
         self.runHook("base.adduser", uid, password)
         r.commit()
         # password has been changed, user is created
-        if pwd_change:
-            return 0
-        # password change failed, user is created
-        else:
-            return 5
+        return 0 if pwd_change else 5
 
     def isAuthorizedHome(self, home):
-        for ahome in self.authorizedHomeDir:
-            if ahome in home:
-                return True
-        return False
+        return any(ahome in home for ahome in self.authorizedHomeDir)
 
     def getDefaultShells(self):
         return {
@@ -1282,15 +1244,13 @@ class LdapUserGroupControl:
         if not homeDir:
             homeDir = os.path.join(self.defaultHomeDir, uid)
         if not self.isAuthorizedHome(os.path.realpath(homeDir)):
-            raise Exception(homeDir + " is not an authorized home dir.")
-        # Return homedir path
-        if checkExists and self.userHomeAction:
-            if not os.path.exists(homeDir):
-                return homeDir
-            else:
-                raise Exception(homeDir + " already exists.")
-        else:
+            raise Exception(f"{homeDir} is not an authorized home dir.")
+        if not checkExists or not self.userHomeAction:
             return homeDir
+        if not os.path.exists(homeDir):
+            return homeDir
+        else:
+            raise Exception(f"{homeDir} already exists.")
 
     def addGroup(self, cn):
         """
@@ -1301,7 +1261,7 @@ class LdapUserGroupControl:
             in config file.
         @type cn: str
         """
-        entry = "cn=" + cn + "," + self.baseGroupsDN
+        entry = f"cn={cn},{self.baseGroupsDN}"
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_GROUP, [(entry, AT.GROUP)])
         maxgid = self.maxGID()
         gidNumber = maxgid + 1
@@ -1326,7 +1286,7 @@ class LdapUserGroupControl:
                 "objectclass": ("posixGroup", "top"),
             }
 
-        attributes = [(k, v) for k, v in list(group_info.items())]
+        attributes = list(list(group_info.items()))
         self.l.add_s(entry, attributes)
 
         r.commit()
@@ -1347,7 +1307,7 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseGroupsDN
-        ret = self.search("cn=" + str(cn), base)
+        ret = self.search(f"cn={str(cn)}", base)
         newattrs = {}
         if ret:
             for result in ret:
@@ -1372,7 +1332,7 @@ class LdapUserGroupControl:
         if type(uiduser) is bytes:
             uiduser = uiduser.decode("utf-8")
 
-        groupdn = "cn=" + cngroup + "," + self.baseGroupsDN
+        groupdn = f"cn={cngroup},{self.baseGroupsDN}"
         userdn = self.searchUserDN(uiduser)
         r = AF().log(
             PLUGIN_NAME,
@@ -1398,8 +1358,7 @@ class LdapUserGroupControl:
         @param uid: login of the user
         @type uid: unicode
         """
-        ret = self.search("memberUid=" + uid, self.baseGroupsDN)
-        if ret:
+        if ret := self.search(f"memberUid={uid}", self.baseGroupsDN):
             for result in ret:
                 group = result[0][1]["cn"][0]
                 self.delUserFromGroup(group.decode("utf-8"), uid)
@@ -1433,13 +1392,10 @@ class LdapUserGroupControl:
         @param uid: login of the user
         @type uid: unicode
         """
-        ret = self.search("memberUid=" + uid, self.baseGroupsDN)
+        ret = self.search(f"memberUid={uid}", self.baseGroupsDN)
         resArray = []
         if ret:
-            for result in ret:
-                group = result[0][1]["cn"][0]
-                resArray.append(group)
-
+            resArray.extend(result[0][1]["cn"][0] for result in ret)
         return resArray
 
     def getUserPrimaryGroup(self, uid):
@@ -1505,7 +1461,7 @@ class LdapUserGroupControl:
             cngroup = cngroup.decode("utf-8")
         if type(uid) is bytes:
             uid = uid.encode("utf-8")
-        groupdn = "cn=" + cngroup + "," + base
+        groupdn = f"cn={cngroup},{base}"
         userdn = self.searchUserDN(uid)
         r = AF().log(
             PLUGIN_NAME,
@@ -1546,11 +1502,7 @@ class LdapUserGroupControl:
         userdn = self.searchUserDN(uid)
 
         # don't log jpeg values
-        if attr == "jpegPhoto":
-            attrValue = None
-        else:
-            attrValue = attrVal
-
+        attrValue = None if attr == "jpegPhoto" else attrVal
         if attrVal:
             if log:
                 r = AF().log(
@@ -1600,7 +1552,7 @@ class LdapUserGroupControl:
         @type  log: boolean
         """
         group = group.encode("utf-8")
-        groupdn = "cn=" + group + "," + self.baseGroupsDN
+        groupdn = f"cn={group},{self.baseGroupsDN}"
         if attrVal:
             if log:
                 r = AF().log(
@@ -1644,26 +1596,27 @@ class LdapUserGroupControl:
             try:
                 ldapConn.passwd_s(userdn, None, str(passwd))
             except ldap.CONSTRAINT_VIOLATION as e:
-                if not "info" in e.message or (
+                if (
                     "info" in e.message
-                    and e.message["info"] == "Password fails quality checking policy"
+                    and e.message["info"]
+                    != "Password fails quality checking policy"
                 ):
-                    # if the quality test pass, the password was rejected by
-                    # OpenLDAP because it is too short
-                    p = Popen(
-                        ["mmc-password-helper", "-v", "-c"],
-                        stdin=PIPE,
-                        stdout=PIPE,
-                        stderr=PIPE,
-                    )
-                    out, err = p.communicate(input=str(passwd))
-                    if p.returncode != 0:
-                        e.message["info"] = out.strip()
-                    else:
-                        e.message["info"] = "The password is too short"
-                    raise ldap.CONSTRAINT_VIOLATION(e.message)
-                else:
                     raise e
+                # if the quality test pass, the password was rejected by
+                # OpenLDAP because it is too short
+                p = Popen(
+                    ["mmc-password-helper", "-v", "-c"],
+                    stdin=PIPE,
+                    stdout=PIPE,
+                    stderr=PIPE,
+                )
+                out, err = p.communicate(input=str(passwd))
+                e.message["info"] = (
+                    out.strip()
+                    if p.returncode != 0
+                    else "The password is too short"
+                )
+                raise ldap.CONSTRAINT_VIOLATION(e.message)
         else:
             userpassword = self._generatePassword(passwd)
             ldapConn.modify_s(
@@ -1714,7 +1667,7 @@ class LdapUserGroupControl:
             self.l.delete_s(path)
         except ldap.LDAPError as e:
             errObj = errorMessage("ldapUserGroupControl::delRecursiveEntry()")
-            errObj.addMessage("error: deleting " + path)
+            errObj.addMessage(f"error: deleting {path}")
             errObj.addMessage("ldap.LDAPError:")
             errObj.addMessage(e)
             return errObj.errorArray()
@@ -1737,9 +1690,8 @@ class LdapUserGroupControl:
                 result_type, result_data = self.l.result(ldap_result_id, 0)
                 if result_data == []:
                     break
-                else:
-                    if result_type == ldap.RES_SEARCH_ENTRY:
-                        result_set.append(result_data)
+                if result_type == ldap.RES_SEARCH_ENTRY:
+                    result_set.append(result_data)
 
         except ldap.LDAPError as e:
             print(e)
@@ -1747,10 +1699,8 @@ class LdapUserGroupControl:
         # prepare array for processing
         resArr = []
 
-        for i in range(len(result_set)):
-            for entry in result_set[i]:
-                resArr.append(entry[0])
-
+        for item in result_set:
+            resArr.extend(entry[0] for entry in item)
         resArr.sort()
 
         return resArr
@@ -1763,21 +1713,20 @@ class LdapUserGroupControl:
         @param group: group name (not full LDAP path)
         @type group: str
         """
-        groupdn = "cn=" + group + "," + self.baseGroupsDN
+        groupdn = f"cn={group},{self.baseGroupsDN}"
         # get gidNumber for group
         ldapObj = ldapUserGroupControl()
         gid = ldapObj.getDetailedGroup(group)["gidNumber"][0]
         # check if some users have this group as primary group
         result = self.l.search_s(
-            self.baseUsersDN, ldap.SCOPE_SUBTREE, "gidNumber=" + gid
+            self.baseUsersDN, ldap.SCOPE_SUBTREE, f"gidNumber={gid}"
         )
         if len(result) > 0:
             return 2
-        else:
-            r = AF().log(PLUGIN_NAME, AA.BASE_DEL_GROUP, [(groupdn, AT.GROUP)])
-            self.l.delete_s(groupdn)
-            r.commit()
-            return 0
+        r = AF().log(PLUGIN_NAME, AA.BASE_DEL_GROUP, [(groupdn, AT.GROUP)])
+        self.l.delete_s(groupdn)
+        r.commit()
+        return 0
 
     def getEntry(self, dn):
         """
@@ -1786,8 +1735,7 @@ class LdapUserGroupControl:
         attrs = []
         attrib = self.l.search_s(dn, ldap.SCOPE_BASE)
         c, attrs = attrib[0]
-        newattrs = copy.deepcopy(attrs)
-        return newattrs
+        return copy.deepcopy(attrs)
 
     def getUserEntry(self, uid, base=None, operational=False):
         """
@@ -1807,10 +1755,7 @@ class LdapUserGroupControl:
         """
         userdn = self.searchUserDN(uid)
         attrs = []
-        if operational:
-            myattrlist = ["+", "*"]
-        else:
-            myattrlist = None
+        myattrlist = ["+", "*"] if operational else None
         attrib = self.l.search_s(userdn, ldap.SCOPE_BASE, attrlist=myattrlist)
         c, attrs = attrib[0]
         newattrs = copy.deepcopy(attrs)
@@ -1837,7 +1782,7 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseUsersDN
-        ret = self.search("uidNumber=" + str(id), base)
+        ret = self.search(f"uidNumber={str(id)}", base)
         newattrs = {}
         if ret:
             for result in ret:
@@ -1871,14 +1816,12 @@ class LdapUserGroupControl:
 
         if uid == "root":
             ret = self.config.username
+        elif result := self.l.search_s(
+            self.config.baseUsersDN, ldap.SCOPE_SUBTREE, f"uid={_uid}"
+        ):
+            ret, entry = result[0]
         else:
-            result = self.l.search_s(
-                self.config.baseUsersDN, ldap.SCOPE_SUBTREE, "uid=" + _uid
-            )
-            if result:
-                ret, entry = result[0]
-            else:
-                ret = ""
+            ret = ""
         return ret
 
     def getDetailedGroup(self, group, base=None):
@@ -1894,12 +1837,11 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseGroupsDN
-        cn = "cn=" + group + ", " + base
+        cn = f"cn={group}, {base}"
         attrs = []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
         c, attrs = attrib[0]
-        newattrs = copy.deepcopy(attrs)
-        return newattrs
+        return copy.deepcopy(attrs)
 
     def getDetailedGroupById(self, id, base=None):
         """
@@ -1913,7 +1855,7 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseGroupsDN
-        ret = self.search("gidNumber=" + str(id), base)
+        ret = self.search(f"gidNumber={str(id)}", base)
         newattrs = {}
         if ret:
             for result in ret:
@@ -1936,7 +1878,7 @@ class LdapUserGroupControl:
         searchScope = ldap.SCOPE_SUBTREE
         retrieveAttributes = None
 
-        searchFilter = "memberUid=" + pattern
+        searchFilter = f"memberUid={pattern}"
 
         try:
             ldap_result_id = self.l.search(
@@ -1947,9 +1889,8 @@ class LdapUserGroupControl:
                 result_type, result_data = self.l.result(ldap_result_id, 0)
                 if result_data == []:
                     break
-                else:
-                    if result_type == ldap.RES_SEARCH_ENTRY:
-                        result_set.append(result_data)
+                if result_type == ldap.RES_SEARCH_ENTRY:
+                    result_set.append(result_data)
 
         except ldap.LDAPError as e:
             print(e)
@@ -1957,16 +1898,15 @@ class LdapUserGroupControl:
         # prepare array for processing
         resArr = []
 
-        for i in range(len(result_set)):
-            for entry in result_set[i]:
+        for item in result_set:
+            for entry in item:
                 try:
                     cn = entry[1]["cn"][0]
                     resArr.append(cn)
                 except:
                     pass
 
-        resArr = cSort(resArr)
-        return resArr
+        return cSort(resArr)
 
     def search(
         self, searchFilter="", basedn=None, attrs=None, scope=ldap.SCOPE_SUBTREE
@@ -1986,11 +1926,10 @@ class LdapUserGroupControl:
                 result_type, result_data = self.l.result(ldap_result_id, 0)
             except ldap.NO_SUCH_OBJECT:
                 result_data = []
-            if result_data == []:
+            if not result_data:
                 break
-            else:
-                if result_type == ldap.RES_SEARCH_ENTRY:
-                    result_set.append(result_data)
+            if result_type == ldap.RES_SEARCH_ENTRY:
+                result_set.append(result_data)
 
         return result_set
 
@@ -2010,7 +1949,7 @@ class LdapUserGroupControl:
         """
         if pattern == "":
             pattern = "*"
-        return self.searchUserAdvance("uid=" + pattern, base)[1]
+        return self.searchUserAdvance(f"uid={pattern}", base)[1]
 
     def searchUserAdvance(self, pattern="", base=None, start=None, end=None):
         """
@@ -2028,10 +1967,7 @@ class LdapUserGroupControl:
         """
         if not base:
             base = self.baseUsersDN
-        if pattern == "":
-            searchFilter = "uid=*"
-        else:
-            searchFilter = pattern
+        searchFilter = "uid=*" if pattern == "" else pattern
         monoattrs = ["uid", "sn", "givenName", "mail"]
         result_set = self.search(
             searchFilter,
@@ -2078,10 +2014,7 @@ class LdapUserGroupControl:
         total = len(uids)
         if start != None and end != None:
             uids = uids[int(start) : int(end)]
-        ret = []
-        for uid in uids:
-            ret.append(resArr[uid])
-
+        ret = [resArr[uid] for uid in uids]
         return (total, ret)
 
     def getMembers(self, group):
@@ -2095,7 +2028,7 @@ class LdapUserGroupControl:
         @rtype: list
         """
         result_set = self.search(
-            "cn=" + group, self.baseGroupsDN, None, ldap.SCOPE_ONELEVEL
+            f"cn={group}", self.baseGroupsDN, None, ldap.SCOPE_ONELEVEL
         )
 
         # prepare array for processing
@@ -2109,8 +2042,7 @@ class LdapUserGroupControl:
                 except:
                     pass
 
-        resArr = cSort(resArr)
-        return resArr
+        return cSort(resArr)
 
     def existUser(self, uid):
         """
@@ -2123,10 +2055,7 @@ class LdapUserGroupControl:
         @rtype: boolean
         """
         uid = uid.strip()
-        ret = False
-        if len(uid):
-            ret = len(self.searchUser(uid)) == 1
-        return ret
+        return len(self.searchUser(uid)) == 1 if len(uid) else False
 
     def existGroup(self, group):
         """
@@ -2139,15 +2068,12 @@ class LdapUserGroupControl:
         @rtype: boolean
         """
         group = group.strip()
-        ret = False
-        if len(group):
-            ret = len(self.searchGroup(group)) == 1
-        return ret
+        return len(self.searchGroup(group)) == 1 if len(group) else False
 
     def searchGroup(self, pattern="*", base=None, minNumber=0):
         if not base:
             base = self.baseGroupsDN
-        result_set = self.search("cn=%s" % pattern, base, None, ldap.SCOPE_ONELEVEL)
+        result_set = self.search(f"cn={pattern}", base, None, ldap.SCOPE_ONELEVEL)
 
         # prepare array for processing
         resArr = {}
@@ -2155,8 +2081,6 @@ class LdapUserGroupControl:
         for i in range(len(result_set)):
             for entry in result_set[i]:
                 try:
-                    cn = entry[1]["cn"][0]
-
                     try:
                         description = entry[1]["description"][0]
                     except:
@@ -2169,8 +2093,10 @@ class LdapUserGroupControl:
                     except:
                         numbr = 0
 
-                    cell = [cn, description, numbr]
                     if gidNumber >= minNumber:
+                        cn = entry[1]["cn"][0]
+
+                        cell = [cn, description, numbr]
                         resArr[cn.lower()] = cell
 
                 except:
@@ -2202,12 +2128,8 @@ class LdapUserGroupControl:
                     except KeyError:
                         uidNumber = -1
 
-                    if maxuid <= uidNumber:
-                        maxuid = uidNumber
-
-            if maxuid < self.uidStart:
-                maxuid = self.uidStart
-
+                    maxuid = max(maxuid, uidNumber)
+            maxuid = max(maxuid, self.uidStart)
         return maxuid
 
     def freeUID(self):
@@ -2218,9 +2140,7 @@ class LdapUserGroupControl:
         accounts = self.search(
             "objectClass=posixAccount", self.baseDN, ["uidNumber"], ldap.SCOPE_SUBTREE
         )
-        uidNumbers = []
-        for account in accounts:
-            uidNumbers.append(int(account[0][1]["uidNumber"][0]))
+        uidNumbers = [int(account[0][1]["uidNumber"][0]) for account in accounts]
         uid = self.uidStart
         while uid in uidNumbers:
             uid = uid + 1
@@ -2255,7 +2175,7 @@ class LdapUserGroupControl:
     def removeGroupObjectClass(self, group, className):
         # Create LDAP path
         group = group.encode("utf-8")
-        cn = "cn=" + group + ", " + self.baseGroupsDN
+        cn = f"cn={group}, {self.baseGroupsDN}"
         attrs = []
         attrib = self.l.search_s(cn, ldap.SCOPE_BASE)
 
@@ -2311,7 +2231,7 @@ class LdapUserGroupControl:
         """
         subschemasubentry_dn, schema = ldap.schema.urlfetch(self.config.ldapurl)
         schemaAttrObj = schema.get_obj(ldap.schema.ObjectClass, schemaName)
-        if not schemaAttrObj is None:
+        if schemaAttrObj is not None:
             return set(schemaAttrObj.must) | set(schemaAttrObj.may)
         else:
             return set()
@@ -2325,10 +2245,7 @@ class LdapUserGroupControl:
         """
         subschemasubentry_dn, schema = ldap.schema.urlfetch(self.config.ldapurl)
         schemaAttrObj = schema.get_obj(ldap.schema.ObjectClass, "posixGroup")
-        if not schemaAttrObj is None:
-            return schemaAttrObj.kind == 2  # posixGroup kind == AUXILIARY
-        else:
-            return False
+        return schemaAttrObj.kind == 2 if schemaAttrObj is not None else False
 
     def maxGID(self):
         """
@@ -2345,11 +2262,8 @@ class LdapUserGroupControl:
                     gidNumber = int(entry[1]["gidNumber"][0])
                 except KeyError:
                     gidNumber = -1
-                if maxgid <= gidNumber:
-                    maxgid = gidNumber
-        if maxgid < self.gidStart:
-            maxgid = self.gidStart
-        return maxgid
+                maxgid = max(maxgid, gidNumber)
+        return max(maxgid, self.gidStart)
 
     def moveHome(self, uid, newHome):
         """
@@ -2381,7 +2295,7 @@ class LdapUserGroupControl:
         @param ldappath: ldap full path
         @type ldappath: str
         """
-        addrdn = "ou=" + ouname + ", " + ldappath
+        addrdn = f"ou={ouname}, {ldappath}"
         addr_info = {
             "ou": bytes(ouname, encoding="utf8"),
             "objectClass": (
@@ -2389,10 +2303,10 @@ class LdapUserGroupControl:
                 bytes("top", encoding="utf8"),
             ),
         }
-        attributes = [(k, v) for k, v in list(addr_info.items())]
+        attributes = list(list(addr_info.items()))
         try:
             self.l.add_s(addrdn, attributes)
-            self.logger.info("Created OU " + addrdn)
+            self.logger.info(f"Created OU {addrdn}")
         except ldap.ALREADY_EXISTS:
             pass
         else:
@@ -2403,9 +2317,9 @@ class LdapUserGroupControl:
 
     def createAuthToken(self, user, server, lang):
         if "@" in user:
-            ldapUsers = self.searchUserAdvance("mail=%s" % user)
+            ldapUsers = self.searchUserAdvance(f"mail={user}")
         else:
-            ldapUsers = self.searchUserAdvance("uid=%s" % user)
+            ldapUsers = self.searchUserAdvance(f"uid={user}")
 
         if ldapUsers[0] == 1:
             uid = ldapUsers[1][0]["uid"]
@@ -2413,9 +2327,9 @@ class LdapUserGroupControl:
             return False
 
         tokensdb = shelve.open(os.path.join(localstatedir, "lib", "mmc", "tokens.db"))
-        token = "%s#%s#%s#%s#%s" % (str(uuid1()), uid, server, lang, time.time())
+        token = f"{str(uuid1())}#{uid}#{server}#{lang}#{time.time()}"
         encoded_token = base64.urlsafe_b64encode(token)
-        self.logger.debug("Created token for %s : %s" % (uid, encoded_token))
+        self.logger.debug(f"Created token for {uid} : {encoded_token}")
         tokensdb[uid] = encoded_token
         tokensdb.close()
 
@@ -2558,10 +2472,10 @@ class GpoManager:
             self.addServiceOuGPO()
 
     def _getDN(self):
-        return "ou=" + self.service + "," + self.l.gpoDN
+        return f"ou={self.service},{self.l.gpoDN}"
 
     def _getGpoDN(self, gpoName):
-        return "cn=" + gpoName + "," + self._getDN()
+        return f"cn={gpoName},{self._getDN()}"
 
     def addRootGpoOu(self):
         """
@@ -2596,12 +2510,11 @@ class GpoManager:
         @type ACLs: dict
         """
         # creating group skel
-        group_info = {"cn": gpoName, "objectclass": ("GroupPolicy", "top")}
-        group_info["ACL"] = []
+        group_info = {"cn": gpoName, "objectclass": ("GroupPolicy", "top"), "ACL": []}
         for aclname in ACLs:
-            group_info["ACL"].append(aclname + ":" + ACLs[aclname])
-        entry = "cn=" + gpoName + "," + self._getDN()
-        attributes = [(k, v) for k, v in list(group_info.items())]
+            group_info["ACL"].append(f"{aclname}:{ACLs[aclname]}")
+        entry = f"cn={gpoName},{self._getDN()}"
+        attributes = list(list(group_info.items()))
         self.l.l.add_s(entry, attributes)
 
     def delete(self, gpoName):
@@ -2610,7 +2523,7 @@ class GpoManager:
 
         @param gpoName: Name of the GPO
         """
-        entry = "cn=" + gpoName + "," + self._getDN()
+        entry = f"cn={gpoName},{self._getDN()}"
         self.l.l.delete_s(entry)
 
     # User GPO management methods
@@ -2654,15 +2567,17 @@ class GpoManager:
         Return all members of a GPO
         """
         ret = self.l.search(
-            searchFilter="cn=" + gpoName, basedn=self._getDN(), attrs=["member"]
+            searchFilter=f"cn={gpoName}", basedn=self._getDN(), attrs=["member"]
         )
         members = []
         for item in ret:
             attrs = item[0][1]
             try:
-                for member in attrs["member"]:
-                    if member.startswith("uid="):
-                        members.append(member)
+                members.extend(
+                    member
+                    for member in attrs["member"]
+                    if member.startswith("uid=")
+                )
             except KeyError:
                 # There is no member in this group
                 pass
@@ -2679,7 +2594,7 @@ class GpoManager:
         @param group: group name
         @param gpoName: name of the GPO
         """
-        dn = "cn=" + group + "," + self.l.baseGroupsDN
+        dn = f"cn={group},{self.l.baseGroupsDN}"
         try:
             self.l.l.modify_s(self._getGpoDN(gpoName), [(ldap.MOD_ADD, "member", dn)])
         except ldap.TYPE_OR_VALUE_EXISTS:
@@ -2693,7 +2608,7 @@ class GpoManager:
         @param group: group name
         @param gpoName: name of the GPO
         """
-        dn = "cn=" + group + "," + self.l.baseGroupsDN
+        dn = f"cn={group},{self.l.baseGroupsDN}"
         try:
             self.l.l.modify_s(
                 self._getGpoDN(gpoName), [(ldap.MOD_DELETE, "member", dn)]
@@ -2707,15 +2622,17 @@ class GpoManager:
         Return all group members of a GPO
         """
         ret = self.l.search(
-            searchFilter="cn=" + gpoName, basedn=self._getDN(), attrs=["member"]
+            searchFilter=f"cn={gpoName}", basedn=self._getDN(), attrs=["member"]
         )
         members = []
         for item in ret:
             attrs = item[0][1]
             try:
-                for member in attrs["member"]:
-                    if member.startswith("cn="):
-                        members.append(member)
+                members.extend(
+                    member
+                    for member in attrs["member"]
+                    if member.startswith("cn=")
+                )
             except KeyError:
                 # There is no member in this group
                 pass
@@ -2731,7 +2648,7 @@ class GpoManager:
         @param gpoName: name of the GPO to search for
         """
         ret = self.l.search(
-            searchFilter="cn=" + gpoName + "_*", basedn=self._getDN(), attrs=["member"]
+            searchFilter=f"cn={gpoName}_*", basedn=self._getDN(), attrs=["member"]
         )
         resources = []
         for item in ret:
@@ -2777,17 +2694,13 @@ class Computers(ldapUserGroupControl, ComputerI):
         """
         # in ldap we only filter on names for the moment
         filt = filt["name"]
-        if filt:
-            filt = "*" + filt + "*"
-        else:
-            filt = "*"
-        search = self.l.search_s(
+        filt = f"*{filt}*" if filt else "*"
+        return self.l.search_s(
             self.baseComputersDN,
             ldap.SCOPE_SUBTREE,
-            "(&(objectClass=computerObject)(|(cn=%s)(displayName=%s)))" % (filt, filt),
+            f"(&(objectClass=computerObject)(|(cn={filt})(displayName={filt})))",
             None,
         )
-        return search
 
     def getTotalComputerCount(self):
         return 0
@@ -2841,7 +2754,7 @@ class Computers(ldapUserGroupControl, ComputerI):
             "cn": [name],
             "objectClass": ["computerObject"],
         }
-        dn = "objectUUID=" + uuid + "," + self.baseComputersDN
+        dn = f"objectUUID={uuid},{self.baseComputersDN}"
         if comment:
             data["displayName"] = [comment]
         logging.getLogger().info("adding a computer")
@@ -2857,7 +2770,7 @@ class Computers(ldapUserGroupControl, ComputerI):
         """
         Remove a computer, given its uuid
         """
-        dn = "objectUUID=" + uuid + "," + self.baseComputersDN
+        dn = f"objectUUID={uuid},{self.baseComputersDN}"
         return self.l.delete_s(dn)
 
 
@@ -3029,7 +2942,7 @@ class LogView:
     LogView class. Provide accessor to show log content
     """
 
-    def __init__(self, logfile=localstatedir + "/log/ldap.log", pattern=None):
+    def __init__(self, logfile=f"{localstatedir}/log/ldap.log", pattern=None):
         config = PluginConfig("base")
         try:
             self.logfile = config.get("ldap", "logfile")
@@ -3049,7 +2962,7 @@ class LogView:
 
     def isLogViewEnabled(self):
         # Disable logview module if the plugin services is enabled
-        return not "services" in PluginManager().getEnabledPluginNames()
+        return "services" not in PluginManager().getEnabledPluginNames()
 
     def revReadlines(self, arg, bufsize=8192):
         """
@@ -3068,8 +2981,7 @@ class LogView:
             lines = in_memory.split("\n")
             reversed = lines[1:]
             reversed.reverse()
-            for i in reversed:
-                yield i
+            yield from reversed
             leftover = lines[0]
         yield leftover
 
@@ -3082,8 +2994,7 @@ class LogView:
         count = 0
         for line in self.revReadlines(self.logfile):
             if filter in line:
-                parsed = self.parseLine(line)
-                if parsed:
+                if parsed := self.parseLine(line):
                     ret.append(parsed)
                     count = count + 1
                     if count > self.maxElt:
@@ -3095,16 +3006,13 @@ class LogView:
         patternKeys = sorted(self.pattern.keys())
         # We try each pattern until we found one that works
         for pattern in patternKeys:
-            sre = re.search(self.pattern[pattern], line)
-            if sre:
-                res = sre.groupdict()
-                if res:
+            if sre := re.search(self.pattern[pattern], line):
+                if res := sre.groupdict():
                     # Use current year if not set
                     if "Y" not in res:
                         res["Y"] = str(localtime()[0])
                     timed = strptime(
-                        "%s %s %s %s %s %s"
-                        % (res["b"], res["d"], res["Y"], res["H"], res["M"], res["S"]),
+                        f'{res["b"]} {res["d"]} {res["Y"]} {res["H"]} {res["M"]} {res["S"]}',
                         "%b %d %Y %H %M %S",
                     )
                     res["time"] = mktime(timed)

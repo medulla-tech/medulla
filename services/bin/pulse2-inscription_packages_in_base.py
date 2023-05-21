@@ -22,12 +22,11 @@ logger = logging.getLogger()
 
 
 def simplecommand(cmd):
-    obj = {}
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
     result = p.stdout.readlines()
-    obj["code"] = p.wait()
+    obj = {"code": p.wait()}
     obj["result"] = result
     return obj
 
@@ -107,10 +106,7 @@ class managepackage:
             shared_dir = os.path.abspath(os.path.realpath(shared_dir))
         for x in managepackage.search_list_package():
             if verbose:
-                print(
-                    "symbolic link %s to %s"
-                    % (x, os.path.join(dirpackage, os.path.basename(x)))
-                )
+                print(f"symbolic link {x} to {os.path.join(dirpackage, os.path.basename(x))}")
             try:
                 os.symlink(x, os.path.join(dirpackage, os.path.basename(x)))
             except OSError:
@@ -159,11 +155,10 @@ class managepackage:
             with open(filename, "r") as info:
                 jsonFile = info.read()
             try:
-                outputJSONFile = json.loads(jsonFile.decode("utf-8", "ignore"))
-                return outputJSONFile
+                return json.loads(jsonFile.decode("utf-8", "ignore"))
             except Exception as e:
-                logger.error("We failed to decode the file %s" % filename)
-                logger.error("we encountered the error: %s" % str(e))
+                logger.error(f"We failed to decode the file {filename}")
+                logger.error(f"we encountered the error: {str(e)}")
         return None
 
     @staticmethod
@@ -190,7 +185,7 @@ class managepackage:
                     "Please verify the format of the descriptor for"
                     "the package %s." % packagename
                 )
-                logger.error("we are encountering the error: %s" % str(e))
+                logger.error(f"we are encountering the error: {str(e)}")
         return None
 
     @staticmethod
@@ -226,7 +221,7 @@ class managepackage:
                     "Please verify the version for the package %s in the descriptor"
                     "in the xmppdeploy.json file." % package
                 )
-                logger.error("we are encountering the error: %s" % str(e))
+                logger.error(f"we are encountering the error: {str(e)}")
         return None
 
     @staticmethod
@@ -259,7 +254,7 @@ class managepackage:
                     "Please verify the name for the package %s in the descriptor"
                     "in the xmppdeploy.json file." % package
                 )
-                logger.error("we are encountering the error: %s" % str(e))
+                logger.error(f"we are encountering the error: {str(e)}")
         return None
 
     @staticmethod
@@ -280,9 +275,9 @@ class managepackage:
                 if "id" in outputJSONFile and outputJSONFile["id"] == uuidpackage:
                     return package
             except Exception as e:
-                logger.error("The conf.json for the package %s is missing" % package)
-                logger.error("we are encountering the error: %s" % str(e))
-        logger.error("We did not find the package %s" % package)
+                logger.error(f"The conf.json for the package {package} is missing")
+                logger.error(f"we are encountering the error: {str(e)}")
+        logger.error(f"We did not find the package {package}")
         return None
 
     @staticmethod
@@ -309,8 +304,7 @@ class managepackage:
                     return outputJSONFile["version"]
             except Exception as e:
                 logger.error(
-                    "package %s verify format descriptor conf.json [%s]"
-                    % (packageuuid, str(e))
+                    f"package {packageuuid} verify format descriptor conf.json [{str(e)}]"
                 )
         logger.error(
             "package %s verify version" "in descriptor conf.json [%s]" % (packageuuid)
@@ -334,8 +328,7 @@ class managepackage:
         )
         if os.path.isfile(jsonfile):
             try:
-                outputJSONFile = managepackage.loadjsonfile(jsonfile)
-                return outputJSONFile
+                return managepackage.loadjsonfile(jsonfile)
             except Exception:
                 return None
 
@@ -386,15 +379,14 @@ if __name__ == "__main__":
 
     opts, args = optp.parse_args()
 
-    if opts.password != "":
-        Passwordbase = opts.password
-    else:
-        Passwordbase = getpass.getpass(
-            prompt="Password for mysql://"
-            "%s:<password>@%s:%s/%s" % (opts.user, opts.hostname, opts.port, base),
+    Passwordbase = (
+        opts.password
+        if opts.password != ""
+        else getpass.getpass(
+            prompt=f"Password for mysql://{opts.user}:<password>@{opts.hostname}:{opts.port}/{base}",
             stream=None,
         )
-
+    )
     try:
         db = MySQLdb.connect(
             host=opts.hostname,
@@ -409,14 +401,14 @@ if __name__ == "__main__":
                 cursor.execute("DELETE FROM `pkgs`.`packages` WHERE 1;")
                 db.commit()
             except MySQLdb.Error as e:
-                errorstr = "%s" % traceback.format_exc()
+                errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
-                print("%s" % (errorstr))
+                print(f"{errorstr}")
                 sys.exit(255)
             except Exception as e:
-                errorstr = "%s" % traceback.format_exc()
+                errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
-                print("%s" % (errorstr))
+                print(f"{errorstr}")
                 sys.exit(255)
             finally:
                 cursor.close()
@@ -433,10 +425,10 @@ if __name__ == "__main__":
             jsonfilepath = os.path.join(package, "conf.json")
             json_file = managepackage.loadjsonfile(jsonfilepath)
 
-            result = simplecommand("du -b %s" % package)
+            result = simplecommand(f"du -b {package}")
             sizebytefolder = int(result["result"][0].split()[0])
             package_infos = {
-                "size": "%s" % sizebytefolder,
+                "size": f"{sizebytefolder}",
                 "label": json_file["name"],
                 "description": json_file["description"],
                 "version": json_file["version"],
@@ -457,20 +449,26 @@ if __name__ == "__main__":
                 "postCommandSuccess_command": json_file["commands"][
                     "postCommandSuccess"
                 ]["command"],
-                "postCommandSuccess_name": json_file["commands"]["postCommandSuccess"][
+                "postCommandSuccess_name": json_file["commands"][
+                    "postCommandSuccess"
+                ]["name"],
+                "installInit_command": json_file["commands"]["installInit"][
+                    "command"
+                ],
+                "installInit_name": json_file["commands"]["installInit"][
                     "name"
                 ],
-                "installInit_command": json_file["commands"]["installInit"]["command"],
-                "installInit_name": json_file["commands"]["installInit"]["name"],
                 "postCommandFailure_command": json_file["commands"][
                     "postCommandFailure"
                 ]["command"],
-                "postCommandFailure_name": json_file["commands"]["postCommandFailure"][
-                    "name"
-                ],
+                "postCommandFailure_name": json_file["commands"][
+                    "postCommandFailure"
+                ]["name"],
                 "command_command": json_file["commands"]["command"]["command"],
                 "command_name": json_file["commands"]["command"]["name"],
-                "preCommand_command": json_file["commands"]["preCommand"]["command"],
+                "preCommand_command": json_file["commands"]["preCommand"][
+                    "command"
+                ],
                 "preCommand_name": json_file["commands"]["preCommand"]["name"],
                 "pkgs_share_id": "NULL",
                 "edition_status": 1,
@@ -553,21 +551,21 @@ if __name__ == "__main__":
                 cursor = db.cursor()
                 cursor.execute(sql)
                 lastrowid = cursor.lastrowid
-                print("create package id=%s" % lastrowid)
+                print(f"create package id={lastrowid}")
                 db.commit()
             except MySQLdb.Error as e:
-                errorstr = "%s" % traceback.format_exc()
-                print("%s" % (str(e)))
+                errorstr = f"{traceback.format_exc()}"
+                print(f"{str(e)}")
             except Exception as e:
-                errorstr = "%s" % traceback.format_exc()
+                errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
-                print("%s" % (errorstr))
+                print(f"{errorstr}")
             finally:
                 cursor.close()
     except Exception as e:
-        errorstr = "%s" % traceback.format_exc()
+        errorstr = f"{traceback.format_exc()}"
         logger.error("\n%s" % (errorstr))
-        print("%s" % (errorstr))
+        print(f"{errorstr}")
         sys.exit(1)
     finally:
         if db is not None:

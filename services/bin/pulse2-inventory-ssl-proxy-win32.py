@@ -31,7 +31,7 @@ class Pulse2ProxySsl(win32serviceutil.ServiceFramework):
         self.inifile = os.path.join(curdir, "p2ipc.ini")
         os.chdir(curdir)
         if not os.path.exists(self.inifile):
-            print("File '%s' does not exist." % self.inifile)
+            print(f"File '{self.inifile}' does not exist.")
             sys.exit(3)
         servicemanager.LogMsg(
             servicemanager.EVENTLOG_INFORMATION_TYPE,
@@ -68,7 +68,7 @@ class Pulse2ProxySsl(win32serviceutil.ServiceFramework):
 
     def CheckForQuit(self):
         retval = win32event.WaitForSingleObject(self.hWaitStop, 10)
-        if not retval == win32event.WAIT_TIMEOUT:
+        if retval != win32event.WAIT_TIMEOUT:
             # Received Quit from Win32
             twisted.internet.reactor.stop()
         twisted.internet.reactor.callLater(1.0, self.CheckForQuit)

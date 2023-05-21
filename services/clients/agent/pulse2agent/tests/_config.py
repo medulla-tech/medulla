@@ -105,23 +105,16 @@ class Test01_ConfigReader(TestCase):
 
     def test00_options_list(self):
         """Test of presence of all options"""
-        options = {}
-        options["main"] = [
-            "option_str",
-            "option_int",
-            "option_float",
-            "option_bool",
-            "option_list",
-        ]
-        options["database"] = [
-            "name",
-            "host",
-            "port",
-            "user",
-            "password",
-            "timeout",
-        ]
-
+        options = {
+            "main": [
+                "option_str",
+                "option_int",
+                "option_float",
+                "option_bool",
+                "option_list",
+            ],
+            "database": ["name", "host", "port", "user", "password", "timeout"],
+        }
         for section_name in options:
             section = getattr(self.config, section_name)
             for name, value in self.config.options(section):

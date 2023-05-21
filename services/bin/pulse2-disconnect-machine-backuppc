@@ -33,26 +33,22 @@ def conffilename(type):
     else:
         fileconf = conffilenameparamter
 
-    if os.path.isfile(fileconf):
-        return fileconf
-    else:
-        return conffilenameparamter
+    return fileconf if os.path.isfile(fileconf) else conffilenameparamter
 
 def loadconf(type):
-    params = {}
     Config = ConfigParser.ConfigParser()
     Config.read(conffilename(type))
-    params['passwordconnection'] = Config.get('connection', 'password')
+    params = {'passwordconnection': Config.get('connection', 'password')}
     if type in ["relayserver"]:
-        if Config.has_option("connection", "portARSscript"):
-            params['port'] = Config.get('connection', 'portARSscript')
-        else:
-            params['port'] = 5001
+        params['port'] = (
+            Config.get('connection', 'portARSscript')
+            if Config.has_option("connection", "portARSscript")
+            else 5001
+        )
+    elif Config.has_option("connection", "portAMscript"):
+        params['port'] = Config.get('connection', 'portAMscript')
     else:
-        if Config.has_option("connection", "portAMscript"):
-            params['port'] = Config.get('connection', 'portAMscript')
-        else:
-            params['port'] = 5000
+        params['port'] = 5000
     return params
 
 if __name__ == "__main__":

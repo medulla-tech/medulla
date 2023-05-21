@@ -44,11 +44,9 @@ class SendUserToken(ldif.LDIFParser):
     def handle(self, dn, entry):
         uid = entry["uid"][0]
         mail = entry["mail"][0]
-        token = entry["userPassword"][0]
-
-        if token:
+        if token := entry["userPassword"][0]:
             if mail:
-                subject = "Reset your password on %s" % URL
+                subject = f"Reset your password on {URL}"
                 body = """
 To reset your password login with %stoken.php?token=%s and then go to the "Reset your password" page.
 
@@ -62,11 +60,11 @@ Example support
 """ % (URL, token, SUPPORT)
                 dest = mail
             else:
-                subject = "[ERROR] Password reset failed for %s" % uid
+                subject = f"[ERROR] Password reset failed for {uid}"
                 body = "The user has no mail!"
                 dest = ADMIN
         else:
-            subject = "[ERROR] No token for %s" % uid
+            subject = f"[ERROR] No token for {uid}"
             body = "This is not supposed to happen!"
             dest = ADMIN
 

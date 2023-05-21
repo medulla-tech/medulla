@@ -39,7 +39,7 @@ class synch_packages:
             try:
                 os.makedirs(self.path_base)
             except OSError as e:
-                logger.error("%s create directory share'%s'" % (str(e), self.path_base))
+                logger.error(f"{str(e)} create directory share'{self.path_base}'")
 
         self.sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
         self.dirpartageupdate = os.path.join(self.sharing, self.param["partage"])
@@ -48,18 +48,14 @@ class synch_packages:
         )
         self.path_in_base = os.path.join(self.path_base, self.param["uidpackage"])
         self.packagelist = self.search_list_package()
-        if self.param["uidpackage"] in self.packagelist:
-            package_install = True
-        else:
-            package_install = False
-
+        package_install = self.param["uidpackage"] in self.packagelist
         if self.param["forcedelpackage"]:
-            logger.info("completely remove the package %s" % self.param["uidpackage"])
+            logger.info(f'completely remove the package {self.param["uidpackage"]}')
             self.uninstall_full_package()
 
         elif self.param["delpackage"]:
             logger.info(
-                "uninstall package %s but don't remove it" % self.param["uidpackage"]
+                f"""uninstall package {self.param["uidpackage"]} but don't remove it"""
             )
             self.mv_partage_to_base()
             # supprime le package de la base
@@ -67,13 +63,12 @@ class synch_packages:
             return
         elif self.param["forcecreatepackage"]:
             logger.info(
-                "create or completely create the package and install it %s"
-                % self.param["uidpackage"]
+                f'create or completely create the package and install it {self.param["uidpackage"]}'
             )
             self.uninstall_full_package()
             self.install_full_package()
         elif self.param["createpackage"]:
-            logger.info("install package if not install %s" % self.param["uidpackage"])
+            logger.info(f'install package if not install {self.param["uidpackage"]}')
             self.install_full_package()
 
     def install_full_package(self):
@@ -93,31 +88,28 @@ class synch_packages:
 
     def create_directory_in_partage(self):
         logger.debug("function create_directory_in_partage")
-        logger.debug("package create directory '%s'" % (self.path_in_partage))
+        logger.debug(f"package create directory '{self.path_in_partage}'")
         if not os.path.exists(self.path_in_partage):
             try:
                 os.makedirs(self.path_in_partage)
             except OSError as e:
-                logger.error(
-                    "%s : create_directory '%s'" % (str(e), self.path_in_partage)
-                )
+                logger.error(f"{str(e)} : create_directory '{self.path_in_partage}'")
 
     def create_directory_in_base(self):
         logger.debug("function create_directory_in_base")
-        logger.debug("package create directory '%s'" % (self.path_in_base))
+        logger.debug(f"package create directory '{self.path_in_base}'")
         if not os.path.exists(self.path_in_base):
             try:
                 os.makedirs(self.path_in_base)
             except OSError as e:
-                logger.error("%s : create_directory '%s'" % (str(e), self.path_in_base))
+                logger.error(f"{str(e)} : create_directory '{self.path_in_base}'")
 
     def mv_base_to_partage(self):
         # mv base vers partages
         logger.debug("function mv_base_to_partage")
         if os.path.isdir(self.path_in_base):
             logger.debug(
-                "function make transfert %s to %s"
-                % (self.path_in_base, self.path_in_partage)
+                f"function make transfert {self.path_in_base} to {self.path_in_partage}"
             )
             file_names = os.listdir(self.path_in_base)
             self.create_directory_in_partage()
@@ -126,10 +118,9 @@ class synch_packages:
                     os.path.join(self.path_in_base, file_name), self.path_in_partage
                 )
                 logger.debug(
-                    "move %s to %s"
-                    % (os.path.join(self.path_in_base, file_name), self.path_in_partage)
+                    f"move {os.path.join(self.path_in_base, file_name)} to {self.path_in_partage}"
                 )
-            logger.debug("del  %s" % self.path_in_base)
+            logger.debug(f"del  {self.path_in_base}")
             shutil.rmtree(self.path_in_base)
 
     def mv_partage_to_base(self):
@@ -138,8 +129,7 @@ class synch_packages:
         logger.debug("function mv_partage_to_base")
         if os.path.isdir(self.path_in_partage):
             logger.debug(
-                "function make transfert %s to %s"
-                % (self.path_in_partage, self.path_in_base)
+                f"function make transfert {self.path_in_partage} to {self.path_in_base}"
             )
             file_names = os.listdir(self.path_in_partage)
             self.create_directory_in_base()
@@ -154,24 +144,24 @@ class synch_packages:
         supprime completement les fichiers du package de la base fichier
         """
         logger.debug("function del_package")
-        logger.debug("del package '%s'" % (self.path_in_base))
+        logger.debug(f"del package '{self.path_in_base}'")
         if os.path.isdir(self.path_in_base):
             try:
                 shutil.rmtree(self.path_in_base)
-                logger.debug("delete directory '%s'" % self.path_in_base)
+                logger.debug(f"delete directory '{self.path_in_base}'")
             except Exception as e:
-                logger.error("%s : del_package '%s'" % (str(e), self.path_in_base))
+                logger.error(f"{str(e)} : del_package '{self.path_in_base}'")
         else:
-            logger.debug("directory '%s' is not exit" % self.path_in_base)
+            logger.debug(f"directory '{self.path_in_base}' is not exit")
 
         if os.path.isdir(self.path_in_partage):
             try:
                 shutil.rmtree(self.path_in_partage)
-                logger.debug("delete directory '%s'" % self.path_in_partage)
+                logger.debug(f"delete directory '{self.path_in_partage}'")
             except Exception as e:
-                logger.error("%s : del_package '%s'" % (str(e), self.path_in_partage))
+                logger.error(f"{str(e)} : del_package '{self.path_in_partage}'")
         else:
-            logger.debug("directory '%s' is not exit" % self.path_in_partage)
+            logger.debug(f"directory '{self.path_in_partage}' is not exit")
 
     def del_package_pkgs(self):
         """
@@ -186,76 +176,61 @@ class synch_packages:
                         (`uuid` = '%s');"""
                 % self.param["uidpackage"]
             )
-            logger.debug("sql %s" % (sql))
+            logger.debug(f"sql {sql}")
             cursor = self.db.cursor()
             result = cursor.execute(sql)
             self.db.commit()
             if result:
-                logger.debug(
-                    "the package [%s] is uninstalled" % self.param["uidpackage"]
-                )
+                logger.debug(f'the package [{self.param["uidpackage"]}] is uninstalled')
             else:
-                logger.debug(
-                    "the package [%s] is not installed" % self.param["uidpackage"]
-                )
+                logger.debug(f'the package [{self.param["uidpackage"]}] is not installed')
         except Exception as e:
-            logger.error(
-                "%s : del_package_pkgs '%s'" % (str(e), self.param["uidpackage"])
-            )
+            logger.error(f"""{str(e)} : del_package_pkgs '{self.param["uidpackage"]}'""")
 
     def verify_packages_install(self):
-        logger.debug("verify packages install %s" % (self.path_in_partage))
+        logger.debug(f"verify packages install {self.path_in_partage}")
         if os.path.isdir(self.path_in_partage):
             ff = os.listdir(self.path_in_partage)
             if len(ff) >= 3:
                 logger.debug(
-                    "the package %s was successfully created"
-                    % (self.param["uidpackage"])
+                    f'the package {self.param["uidpackage"]} was successfully created'
                 )
             else:
-                logger.error(
-                    "package %s exists but is incomplete" % (self.param["uidpackage"])
-                )
+                logger.error(f'package {self.param["uidpackage"]} exists but is incomplete')
                 return False
         else:
-            logger.error("package file %s does not exist" % (self.param["uidpackage"]))
+            logger.error(f'package file {self.param["uidpackage"]} does not exist')
             return False
 
         if self.check_in_base():
-            logger.debug("package %s is installed in pkgs" % (self.param["uidpackage"]))
+            logger.debug(f'package {self.param["uidpackage"]} is installed in pkgs')
         else:
             logger.error(
-                "the package %s is not installed in pkgs" % (self.param["uidpackage"])
+                f'the package {self.param["uidpackage"]} is not installed in pkgs'
             )
             return False
-        logger.info("package %s is successfully installed" % (self.param["uidpackage"]))
+        logger.info(f'package {self.param["uidpackage"]} is successfully installed')
         return True
 
     def verify_packages_uninstall(self):
-        logger.debug("verify packages uninstall %s" % (self.path_in_partage))
+        logger.debug(f"verify packages uninstall {self.path_in_partage}")
         if os.path.isdir(self.path_in_base):
-            logger.error(
-                "the %s package files still exist" % (self.param["uidpackage"])
-            )
+            logger.error(f'the {self.param["uidpackage"]} package files still exist')
             return False
         else:
-            logger.debug("package %s no longer exists" % (self.param["uidpackage"]))
+            logger.debug(f'package {self.param["uidpackage"]} no longer exists')
 
         if os.path.isdir(self.path_in_base):
-            logger.error(
-                "the %s package files still exist" % (self.param["uidpackage"])
-            )
+            logger.error(f'the {self.param["uidpackage"]} package files still exist')
             return False
         else:
-            logger.debug("package %s no longer exists" % (self.param["uidpackage"]))
+            logger.debug(f'package {self.param["uidpackage"]} no longer exists')
         if self.check_in_base():
-            logger.debug(
-                "package %s is still installed in pkgs" % (self.param["uidpackage"])
-            )
+            logger.debug(f'package {self.param["uidpackage"]} is still installed in pkgs')
             return False
         else:
-            logger.debug("uninstalled package %s in pkgs" % (self.param["uidpackage"]))
-        logger.info("correct uninstalled package %s" % (self.param["uidpackage"]))
+            logger.debug(f'uninstalled package {self.param["uidpackage"]} in pkgs')
+        logger.info(f'correct uninstalled package {self.param["uidpackage"]}')
         return True
 
     # dans /var/lib/pulse2/packages/sharing/winupdates
@@ -266,8 +241,7 @@ class synch_packages:
         list tout les packages in le partages
         """
         logger.debug("function search_list_package")
-        packagelist = [f for f in os.listdir(self.dirpartageupdate) if uuid_validate(f)]
-        return packagelist
+        return [f for f in os.listdir(self.dirpartageupdate) if uuid_validate(f)]
 
     def search_file_update(self):
         logger.debug("function search_file_update")
@@ -281,7 +255,7 @@ class synch_packages:
             self.param["nametable"],
             self.param["uidpackage"],
         )
-        logger.debug("sql %s" % (sql))
+        logger.debug(f"sql {sql}")
         cursor = self.db.cursor()
         record = cursor.execute(sql)
         for i in cursor.fetchall():
@@ -301,7 +275,7 @@ class synch_packages:
                 self.param["nametable"],
                 self.update_file_windows["revisionid"],
             )
-            logger.debug("sql %s" % (sql))
+            logger.debug(f"sql {sql}")
             record = cursor.execute(sql)
             for i in cursor.fetchall():
                 self.update_file_windows["updateid_payloadfiles"] = i[0]
@@ -309,7 +283,7 @@ class synch_packages:
                 self.update_file_windows["supersededby"] = i[2]
                 self.update_file_windows["creationdate"] = i[3]
                 self.update_file_windows["title_short"] = i[4]
-            logger.debug("update_file_windows complet %s " % self.update_file_windows)
+            logger.debug(f"update_file_windows complet {self.update_file_windows} ")
         return self.update_file_windows
 
     def create_package_file(self):
@@ -317,23 +291,23 @@ class synch_packages:
         download file from url urlpath in directory
         """
         logger.debug("function create_package_file")
-        logger.debug("function create_package_file %s" % self.path_in_base)
+        logger.debug(f"function create_package_file {self.path_in_base}")
         if os.path.isdir(self.path_in_base):
             ff = os.listdir(self.path_in_base)
             if len(ff) >= 3:
-                logger.debug("package exists %s already" % (self.param["uidpackage"]))
+                logger.debug(f'package exists {self.param["uidpackage"]} already')
                 return True
         elif os.path.isdir(self.path_in_partage):
             ff = os.listdir(self.path_in_partage)
             if len(ff) >= 3:
-                logger.debug("package exists %s already" % (self.param["uidpackage"]))
+                logger.debug(f'package exists {self.param["uidpackage"]} already')
                 return True
         # logger.debug("download %s" % urlpath)
         # start = datetime.now()
         # search url file update
         if not self.search_file_update():
             logger.error(
-                "not find update file to download for %s" % (self.param["uidpackage"])
+                f'not find update file to download for {self.param["uidpackage"]}'
             )
             return False
 
@@ -345,8 +319,7 @@ class synch_packages:
         ):
             # 1 url trouver on fabrique le package
             logger.debug(
-                "url update file windows package %s is %s"
-                % (self.param["uidpackage"], self.update_file_windows["payloadfiles"])
+                f'url update file windows package {self.param["uidpackage"]} is {self.update_file_windows["payloadfiles"]}'
             )
             namefile = self.update_file_windows["payloadfiles"].split("/")[-1]
             path_file_download = os.path.join(self.path_in_base, namefile)
@@ -387,7 +360,7 @@ class synch_packages:
                 )
         else:
             # terminer avec erreur
-            logger.error("create package %s" % (self.param["uidpackage"]))
+            logger.error(f'create package {self.param["uidpackage"]}')
         # end = datetime.now()
         # total_elapsed_time = end - start
         return True
@@ -407,9 +380,9 @@ class synch_packages:
                     outputJSONFile = json.load(info)
                 return outputJSONFile
             except Exception as e:
-                logger.error("We failed to decode the file %s" % filename)
-                logger.error("we encountered the error: %s" % str(e))
-                errorstr = "%s" % traceback.format_exc()
+                logger.error(f"We failed to decode the file {filename}")
+                logger.error(f"we encountered the error: {str(e)}")
+                errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
         return None
 
@@ -435,7 +408,7 @@ class synch_packages:
         else:
             cmd = """@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s""" % (namefile)
         cmd64 = base64.b64encode(bytes(cmd, "utf-8"))
-        template = """{
+        return """{
         "info": {
             "meta_update_kb" : "%s",
             "meta_update_date_edition_windows_update" : "%s",
@@ -515,7 +488,6 @@ class synch_packages:
             dt_string,
             cmd64.decode("utf-8"),
         )
-        return template
 
     def id_partage(self):
         logger.debug("function id_partage")
@@ -529,13 +501,13 @@ class synch_packages:
                 name = '%s' limit 1;"""
             % self.param["partage"]
         )
-        logger.debug("sql %s" % sql)
+        logger.debug(f"sql {sql}")
         cursor = self.db.cursor()
         record = cursor.execute(sql)
         for i in cursor.fetchall():
             self.partage_id = i[0]
         if self.partage_id:
-            logger.debug("ID partage is  %s" % self.partage_id)
+            logger.debug(f"ID partage is  {self.partage_id}")
             return self.partage_id
         else:
             # creation partage
@@ -547,22 +519,22 @@ class synch_packages:
                 self.param["partage"],
                 self.dirpartageupdate,
             )
-            logger.debug("sql %s" % sql)
+            logger.debug(f"sql {sql}")
             try:
                 logger.debug("creation partage %s %s" % self.param["partage"])
                 cursor = self.db.cursor()
                 cursor.execute(sql)
                 self.partage_id = cursor.lastrowid
                 self.db.commit()
-                logger.debug("ID partage is  %s" % self.partage_id)
+                logger.debug(f"ID partage is  {self.partage_id}")
                 return self.partage_id
             except MySQLdb.Error as e:
-                errorstr = "%s" % traceback.format_exc()
+                errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
                 logger.error("%s : id_partage '%s'" % (str(e)))
                 self.partage_id = None
             except Exception as e:
-                errorstr = "%s" % traceback.format_exc()
+                errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
                 self.partage_id = None
             finally:
@@ -580,10 +552,10 @@ class synch_packages:
                 uuid = '%s' limit 1;"""
             % self.param["uidpackage"]
         )
-        logger.debug("sql %s" % sql)
+        logger.debug(f"sql {sql}")
         cursor = self.db.cursor()
         record = cursor.execute(sql)
-        for i in cursor.fetchall():
+        for _ in cursor.fetchall():
             logger.debug("check_in_base TRUE")
             return True
         logger.debug("package non installer in pkgs")
@@ -612,9 +584,9 @@ class synch_packages:
                 logger.error("decodage json conf.json erreur")
                 return False
             logger.debug("4")
-            if not (
-                "localisation_server" in contenuedejson
-                and contenuedejson["localisation_server"] != ""
+            if (
+                "localisation_server" not in contenuedejson
+                or contenuedejson["localisation_server"] == ""
             ):
                 contenuedejson["localisation_server"] = self.param["partage"]
                 contenuedejson["previous_localisation_server"] = self.param["partage"]
@@ -626,7 +598,7 @@ class synch_packages:
             # contenuedejson['edition'] = "root"
 
             if (
-                not "creation_date" in contenuedejson
+                "creation_date" not in contenuedejson
                 or contenuedejson["creation_date"] == ""
             ):
                 contenuedejson["creation_date"] = datetime.now().strftime(
@@ -634,7 +606,7 @@ class synch_packages:
                 )
 
             if (
-                not "edition_date" in contenuedejson
+                "edition_date" not in contenuedejson
                 or contenuedejson["edition_date"] == ""
             ):
                 contenuedejson["edition_date"] = datetime.now().strftime(
@@ -643,18 +615,15 @@ class synch_packages:
             if "metagenerator" not in contenuedejson:
                 contenuedejson["metagenerator"] = "expert"
 
-            edition_status = 1
-            if contenuedejson["metagenerator"] == "manual":
-                edition_status = 0
-
+            edition_status = 0 if contenuedejson["metagenerator"] == "manual" else 1
             ### print json.dumps(contenuedejson, indent=4)
             # du = simplecommand("du -Lsb")
 
-            result = simplecommand("du -b %s" % dirpackage)
+            result = simplecommand(f"du -b {dirpackage}")
             taillebytefolder = int(result["result"][0].split()[0])
 
             fiche = {
-                "size": "%s" % taillebytefolder,
+                "size": f"{taillebytefolder}",
                 "label": contenuedejson["name"],
                 "description": contenuedejson["description"],
                 "version": contenuedejson["version"],
@@ -681,19 +650,25 @@ class synch_packages:
                 "installInit_command": contenuedejson["commands"]["installInit"][
                     "command"
                 ],
-                "installInit_name": contenuedejson["commands"]["installInit"]["name"],
+                "installInit_name": contenuedejson["commands"]["installInit"][
+                    "name"
+                ],
                 "postCommandFailure_command": contenuedejson["commands"][
                     "postCommandFailure"
                 ]["command"],
                 "postCommandFailure_name": contenuedejson["commands"][
                     "postCommandFailure"
                 ]["name"],
-                "command_command": contenuedejson["commands"]["command"]["command"],
+                "command_command": contenuedejson["commands"]["command"][
+                    "command"
+                ],
                 "command_name": contenuedejson["commands"]["command"]["name"],
                 "preCommand_command": contenuedejson["commands"]["preCommand"][
                     "command"
                 ],
-                "preCommand_name": contenuedejson["commands"]["preCommand"]["name"],
+                "preCommand_name": contenuedejson["commands"]["preCommand"][
+                    "name"
+                ],
                 "pkgs_share_id": self.partage_id,
                 "edition_status": 1,
                 "conf_json": json.dumps(contenuedejson),
@@ -769,28 +744,28 @@ class synch_packages:
                 fiche["conf_json"],
                 fiche["size"],
             )
-            logger.debug("sql %s" % sql)
+            logger.debug(f"sql {sql}")
             try:
                 cursor = self.db.cursor()
                 cursor.execute(sql)
                 self.db.commit()
             except MySQLdb.Error as e:
-                errorstr = "%s" % traceback.format_exc()
+                errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
             except Exception as e:
-                errorstr = "%s" % traceback.format_exc()
+                errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
             finally:
                 cursor.close()
         except Exception as e:
-            errorstr = "%s" % traceback.format_exc()
+            errorstr = f"{traceback.format_exc()}"
             logger.error("\n%s" % (errorstr))
 
     def generate_conf_json(self, name, id, description, urlpath):
         logger.debug("function generate_conf_json")
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
-        template = """{
+        return """{
             "urlpath" : "%s",
             "localisation_server": "%s",
             "sub_packages": [],
@@ -850,27 +825,24 @@ class synch_packages:
             id,
             name,
         )
-        return template
 
 
 def simplecommand(cmd):
-    obj = {}
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
     result = p.stdout.readlines()
-    obj["code"] = p.wait()
+    obj = {"code": p.wait()}
     obj["result"] = result
     return obj
 
 
 def simplecommandstr(cmd):
-    obj = {}
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
     result = p.stdout.readlines()
-    obj["code"] = p.wait()
+    obj = {"code": p.wait()}
     obj["result"] = "\n".join(result)
     return obj
 
@@ -882,10 +854,7 @@ def uuid_validate(uuid):
         "^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$"
     )
     result = re.match(uuid_pattern, uuid)
-    if result is None:
-        return False
-    else:
-        return True
+    return result is not None
 
 
 ## Extract number from a string
@@ -1034,7 +1003,7 @@ if __name__ == "__main__":
                 os.makedirs(os.path.abspath(os.path.dirname(opts.logfile)))
             open(opts.logfile, "w").close()
     except Exception as e:
-        errorstr = "%s" % traceback.format_exc()
+        errorstr = f"{traceback.format_exc()}"
         print("\n%s" % (errorstr))
         sys.exit(1)
 
@@ -1045,8 +1014,8 @@ if __name__ == "__main__":
     else:
         stdout_handler = logging.StreamHandler(stream=sys.stdout)
         handlers = [file_handler, stdout_handler]
-    format = "%(asctime)s - %(levelname)s - %(message)s"
     level = logging.INFO
+    format = "%(asctime)s - %(levelname)s - %(message)s"
     if opts.debugmode:
         # format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s'
         # format='[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s'
@@ -1057,8 +1026,8 @@ if __name__ == "__main__":
 
     logger = logging.getLogger()
     commandline = " ".join(sys.argv)
-    logger.debug("comand line %s" % commandline)
-    print("comand line %s" % " ".join(sys.argv))
+    logger.debug(f"comand line {commandline}")
+    print(f'comand line {" ".join(sys.argv)}')
 
     parametre_display = vars(opts).copy()
     parametre_display["password"] = "xxxxx"
@@ -1075,7 +1044,7 @@ if __name__ == "__main__":
         print(
             "*************************************************************************************************************************"
         )
-        print("your command line : %s" % commandline)
+        print(f"your command line : {commandline}")
         print("Current or default option")
         print(parametre_dis)
         print("exemples")
@@ -1188,8 +1157,7 @@ if __name__ == "__main__":
     else:
         print("key password input ????")
         Passwordbase = getpass.getpass(
-            prompt="Password for mysql://"
-            "%s:<password>@%s:%s/%s" % (opts.user, opts.hostname, opts.port, opts.base),
+            prompt=f"Password for mysql://{opts.user}:<password>@{opts.hostname}:{opts.port}/{opts.base}",
             stream=None,
         )
     if Passwordbase == "":
@@ -1214,7 +1182,7 @@ if __name__ == "__main__":
             print("CORRECT CONNECTION PARAMETER: CONNECT SUCCESS")
             logger.debug("CONECTION SUCCES : TEST TERMINER OK")
         except Exception as e:
-            errorstr = "%s" % traceback.format_exc()
+            errorstr = f"{traceback.format_exc()}"
             print("\n%s" % (errorstr))
         finally:
             db.close()
@@ -1244,7 +1212,7 @@ if __name__ == "__main__":
         logger.debug("you must have the -U option to specify the update uuid")
         sys.exit(1)
 
-    if len(opts.uidpackage) != 36 or uuid_validate(opts.uidpackage) == None:
+    if len(opts.uidpackage) != 36 or uuid_validate(opts.uidpackage) is None:
         print("uuid de l'option U n'est pas conforme")
         # obligatoirement ce parametre avec 1 uuid valable pour option -u")
         print(uuid_validate(opts.uidpackage))
@@ -1281,7 +1249,7 @@ if __name__ == "__main__":
         # generateur = synch_packages(db, opts ).search_file_update()
 
     except Exception as e:
-        errorstr = "%s" % traceback.format_exc()
+        errorstr = f"{traceback.format_exc()}"
         print("ERROR CONNECTION")
         print("\n%s" % (errorstr))
         logger.error("\n%s" % (errorstr))

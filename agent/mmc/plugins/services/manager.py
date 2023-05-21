@@ -26,20 +26,17 @@ class ServiceManager(object, metaclass=SingletonN):
         self.units = []
 
     def get_plugin_services(self, plugin):
-        if plugin in self.config.services:
-            return self.config.services[plugin]
-        else:
-            return []
+        return self.config.services[plugin] if plugin in self.config.services else []
 
     def is_plugin_service(self, service):
         """
         Return true if service is managed by the MMC
         """
         service = service.rstrip(".service")
-        for plugin in self.config.services:
-            if service in self.config.services[plugin]:
-                return True
-        return False
+        return any(
+            service in self.config.services[plugin]
+            for plugin in self.config.services
+        )
 
     def list_plugins_services(self):
         """
@@ -51,10 +48,11 @@ class ServiceManager(object, metaclass=SingletonN):
         for plugin in plugins:
             for plugin_services, services in self.config.services.items():
                 if plugin == plugin_services and services:
-                    list[plugin] = []
-                    for service in services:
-                        if service not in self.config.blacklist:
-                            list[plugin].append(self.get_unit_info(service))
+                    list[plugin] = [
+                        self.get_unit_info(service)
+                        for service in services
+                        if service not in self.config.blacklist
+                    ]
                     list[plugin] = sorted(list[plugin], key=lambda s: s["id"].lower())
         return list
 
@@ -86,8 +84,7 @@ class ServiceManager(object, metaclass=SingletonN):
                     list.append(unit)
                 if not filter:
                     list.append(unit)
-        list = sorted(list, key=lambda s: s["id"].lower())
-        return list
+        return sorted(list, key=lambda s: s["id"].lower())
 
     def list(self):
         if not self.units:
@@ -97,15 +94,18 @@ class ServiceManager(object, metaclass=SingletonN):
             unit = self.serialize_unit(unit)
             if unit["id"].split(".")[0] not in self.config.blacklist:
                 units.append(unit)
-        units = sorted(units, key=lambda u: u["id"].lower())
-        return units
+        return sorted(units, key=lambda u: u["id"].lower())
 
     def get_unit(self, service):
         service = service.replace(".service", "", 1)
-        for unit in self.units:
-            if unit.properties.Id == "%s.service" % service:
-                return unit
-        return False
+        return next(
+            (
+                unit
+                for unit in self.units
+                if unit.properties.Id == f"{service}.service"
+            ),
+            False,
+        )
 
     def get_unit_info(self, service):
         service = service.replace(".service", "", 1)
@@ -125,7 +125,7 @@ class ServiceManager(object, metaclass=SingletonN):
             }
         else:
             return {
-                "id": service + ".service",
+                "id": f"{service}.service",
                 "description": service,
                 "active_state": "unavailable",
                 "can_start": False,
@@ -180,8 +180,7 @@ class ServiceManager(object, metaclass=SingletonN):
             service_filter += service
 
         code, out, err = shlaunch(
-            "%s -n 500 -o json -u %s --no-pager"
-            % (self.config.journalctl_path, service_filter)
+            f"{self.config.journalctl_path} -n 500 -o json -u {service_filter} --no-pager"
         )
         logs = []
         for line in out:
@@ -193,9 +192,7 @@ class ServiceManager(object, metaclass=SingletonN):
         for message in logs:
             if "MESSAGE" in message and isinstance(message["MESSAGE"], str):
                 if "_SOURCE_REALTIME_TIMESTAMP" in message:
-                    message["TIMESTAMP"] = int(
-                        int(message["_SOURCE_REALTIME_TIMESTAMP"]) / 1000000
-                    )
+                    message["TIMESTAMP"] = int(message["_SOURCE_REALTIME_TIMESTAMP"]) // 1000000
                 else:
                     message["TIMESTAMP"] = False
                 # remove unneeded fields

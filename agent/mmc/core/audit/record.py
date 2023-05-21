@@ -147,7 +147,7 @@ class AuditRecordDB(AuditRecord):
                 .first()
             )
             # insert module object in database if it is not available
-            if bdmodule == None:
+            if bdmodule is None:
                 bdmodule = Module()
                 bdmodule.name = module
                 session.add(bdmodule)
@@ -165,7 +165,7 @@ class AuditRecordDB(AuditRecord):
                 .first()
             )
             # insert event object in database if it is not available
-            if bdevent == None:
+            if bdevent is None:
                 bdevent = Event()
                 bdevent.module_id = bdmodule.id
                 bdevent.name = event
@@ -184,7 +184,7 @@ class AuditRecordDB(AuditRecord):
                 .first()
             )
             # put it in database if it is not available
-            if bdinitiator == None:
+            if bdinitiator is None:
                 bdinitiator = Initiator()
                 bdinitiator.application = initiator[1]
                 bdinitiator.hostname = initiator[0]
@@ -198,7 +198,7 @@ class AuditRecordDB(AuditRecord):
                 .first()
             )
             # put it in database if not available
-            if bdsource == None:
+            if bdsource is None:
                 bdsource = Source()
                 bdsource.hostname = source
                 session.add(bdsource)
@@ -210,7 +210,7 @@ class AuditRecordDB(AuditRecord):
                 .filter(parent.type_table.c.type == self.user[1])
                 .first()
             )
-            if utype == None:
+            if utype is None:
                 utype = Type()
                 utype.type = self.user[1]
                 session.add(utype)
@@ -227,7 +227,7 @@ class AuditRecordDB(AuditRecord):
                 )
                 .first()
             )
-            if bduser == None:
+            if bduser is None:
                 bduser = Object()
                 bduser.uri = self.user[0]
                 bduser.type_id = utype.id
@@ -257,7 +257,7 @@ class AuditRecordDB(AuditRecord):
                         .filter(parent.type_table.c.type == j)
                         .first()
                     )
-                    if bdtype == None:
+                    if bdtype is None:
                         bdtype = Type()
                         bdtype.type = j
                         session.add(bdtype)
@@ -275,7 +275,7 @@ class AuditRecordDB(AuditRecord):
                         )
                         .first()
                     )
-                    if obj == None:
+                    if obj is None:
                         obj = Object()
                         obj.uri = i
                         obj.type_id = bdtype.id
@@ -341,18 +341,14 @@ class AuditRecordDB(AuditRecord):
         logging system
         """
 
-        self.log = "ID:%s" % str(uuid.uuid4()).split("-")[0]
-        self.log += " PLUGIN:%s ACTION:%s BY:%s" % (
-            self.module,
-            self.event,
-            self.user[0],
-        )
+        self.log = f'ID:{str(uuid.uuid4()).split("-")[0]}'
+        self.log += f" PLUGIN:{self.module} ACTION:{self.event} BY:{self.user[0]}"
         if len(self.initiator) > 1:
-            self.log += " HOST:%s" % self.initiator[0]
+            self.log += f" HOST:{self.initiator[0]}"
         if len(self.objects) > 0:
-            self.log += " TARGET:%s" % self.objects[0][0]
+            self.log += f" TARGET:{self.objects[0][0]}"
         if len(self.objects) > 1:
-            self.log += " %s:%s" % (self.objects[1][1], self.objects[1][0])
+            self.log += f" {self.objects[1][1]}:{self.objects[1][0]}"
         if self.currentattribute:
             # convert self.log to type <str>
             self.log = str(self.log)
@@ -360,7 +356,7 @@ class AuditRecordDB(AuditRecord):
                 value = self.currentattribute.encode("utf-8")
             else:
                 value = str(self.currentattribute)
-            self.log += " VALUE:%s" % value
+            self.log += f" VALUE:{value}"
         self.log += " STATE:PROGRESS"
 
     def commit(self):

@@ -16,6 +16,7 @@
       - ammount of targets in stage 3 (delete done)
 """
 
+
 import sys
 import time
 
@@ -30,7 +31,7 @@ from sqlalchemy import (
 )
 
 if len(sys.argv) != 3:
-    print("usage: %s <mysql-uri> <command-id-comma-separated>" % sys.argv[0])
+    print(f"usage: {sys.argv[0]} <mysql-uri> <command-id-comma-separated>")
     exit(1)
 
 # create connection
@@ -112,11 +113,11 @@ class deployStats:
 
 
 deploy_stats = deployStats()
+laststates = {}
+
+print(f'date;{";".join(deploy_stats.getkeys())};')
+
 lastepoch = 0
-laststates = dict()
-
-print("date;%s;" % ";".join(deploy_stats.getkeys()))
-
 for d in hist_data:
     # d is like this: (6445L, '1223597787.8313', 'upload_done', 0)
     (fk, epoch, operation, error_code) = d
@@ -124,7 +125,7 @@ for d in hist_data:
     truncated_epoch = int(float(epoch) / 60) * 60
     # truncated_epoch = int(float(epoch)/1)*1
 
-    if not fk in list(laststates.keys()):
+    if fk not in list(laststates.keys()):
         laststates[fk] = None
 
     if operation == "upload_in_progress" and error_code in [
@@ -133,14 +134,14 @@ for d in hist_data:
     ]:  # mirror probe, ignore
         continue
 
-    if operation == None and error_code == 3001:  # broken bundle ?
+    if operation is None and error_code == 3001:  # broken bundle ?
         operation = "bundle_failed"
 
     if operation == "upload_failed" and error_code == 4001:  # package not found ?
         operation = "mirror_failed"
 
     if laststates[fk] == operation:
-        print("ANOMALY: %s for %s " % (operation, fk))
+        print(f"ANOMALY: {operation} for {fk} ")
         continue
     else:
         if operation == "upload_in_progress":
@@ -194,13 +195,7 @@ for d in hist_data:
 
         if truncated_epoch != lastepoch:
             print(
-                "%s;%s;"
-                % (
-                    time.strftime(
-                        "%Y-%m-%d %H:%M:%S", time.localtime(float(truncated_epoch))
-                    ),
-                    ";".join(deploy_stats.getcounts()),
-                )
+                f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(truncated_epoch)))};{";".join(deploy_stats.getcounts())};'
             )
 
     laststates[fk] = operation

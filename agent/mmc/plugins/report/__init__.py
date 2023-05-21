@@ -118,7 +118,7 @@ def translate_attrs(attrs):
 
 def setup_lang(lang):
     global _gettext
-    logger.debug("Using localedir %s" % localedir)
+    logger.debug(f"Using localedir {localedir}")
     bindtextdomain("templates", localedir)
     try:
         lang = gettext.translation("templates", localedir, [lang], fallback=True)
@@ -161,7 +161,7 @@ class RpcProxy(RpcProxyI):
         ).getroot()
         for section in xmltemp.getiterator("section"):
             attr_section = translate_attrs(section.attrib)
-            if not attr_section["module"] in result:
+            if attr_section["module"] not in result:
                 result[attr_section["module"]] = []
             # Adding item to attr
             # attr_section['items'] = _fetchItems(section)
@@ -261,11 +261,11 @@ class RpcProxy(RpcProxyI):
                 # 2nd css_counter is CSS total pages count
                 str = str.replace("###css_counter###", '" counter(pages) "', 1)
                 if not str.startswith("counter(page)"):
-                    str = '"' + str
+                    str = f'"{str}'
                 if not str.endswith("counter(pages)"):
-                    str = str + '"'
+                    str = f'{str}"'
             else:
-                str = '"' + str + '"'
+                str = f'"{str}"'
             return _replace_pdf_vars(str)
 
         def _hf_feeder(tag):
@@ -393,11 +393,11 @@ class RpcProxy(RpcProxyI):
                 values = []
                 for line in f:
                     if headers_fetched:
-                        val = [x for x in line.split(delimiter)]
+                        val = list(line.split(delimiter))
                         title = val.pop(0)
                         values.append(val)
                     else:
-                        headers = [x for x in line.split(delimiter)]
+                        headers = list(line.split(delimiter))
                         headers.pop(0)
                         headers_fetched = True
             csv_name = os.path.splitext(os.path.basename(csv_file))[0]
@@ -461,11 +461,11 @@ class RpcProxy(RpcProxyI):
                 # 2nd css_counter is CSS total pages count
                 str = str.replace("###css_counter###", '" counter(pages) "', 1)
                 if not str.startswith("counter(page)"):
-                    str = '"' + str
+                    str = f'"{str}'
                 if not str.endswith("counter(pages)"):
-                    str = str + '"'
+                    str = f'{str}"'
             else:
-                str = '"' + str + '"'
+                str = f'"{str}"'
             return _replace_pdf_vars(str)
 
         def _hf_feeder(tag):
@@ -611,7 +611,7 @@ class RpcProxy(RpcProxyI):
                             data_dict["values"][i].append(value)
                     # If item is not selected don't add values to arithmetic table list
                     #
-                    if items and not indicator_name in items:
+                    if items and indicator_name not in items:
                         (subCount, childGValues) = _fetchSubs(
                             item, container, level + 1
                         )
@@ -629,9 +629,10 @@ class RpcProxy(RpcProxyI):
                     ):
                         # and (not items or indicator_name in items):
                         data_dict["titles"].append(
-                            indent_str * (level + 1)
-                            + " %s (%s)"
-                            % (_T(item.attrib["title"]), locale["STR_OTHER"])
+                            (
+                                indent_str * (level + 1)
+                                + f' {_T(item.attrib["title"])} ({locale["STR_OTHER"]})'
+                            )
                         )
                         for i in range(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
@@ -691,9 +692,10 @@ class RpcProxy(RpcProxyI):
                     others_value = parent_value - _sum_None(values)
                     data_dict["values"].append(
                         [
-                            indent_str * level
-                            + " %s (%s)"
-                            % (parent.attrib["title"], locale["STR_OTHER"]),
+                            (
+                                indent_str * level
+                                + f' {parent.attrib["title"]} ({locale["STR_OTHER"]})'
+                            ),
                             others_value,
                         ]
                     )
@@ -747,7 +749,7 @@ class RpcProxy(RpcProxyI):
             if level1.tag.lower() == "section":
                 # Checking if section is present in sections
                 # else we skip it
-                if not attr1["name"] in sections:
+                if attr1["name"] not in sections:
                     continue
                 section_data = {"title": attr1["title"], "content": []}
                 # Printing section
@@ -757,7 +759,7 @@ class RpcProxy(RpcProxyI):
                     if level2.tag.lower() == "table":
                         # Checking if table is present in tables
                         # else we skip it
-                        if not attr2["name"] in tables:
+                        if attr2["name"] not in tables:
                             continue
                         # printing table items
                         if attr2["type"] == "period":
@@ -804,8 +806,8 @@ class RpcProxy(RpcProxyI):
                             section_data["content"].append(
                                 {
                                     "type": "chart",
-                                    "svg_path": svg_filepath + ".svg",
-                                    "png_path": svg_filepath + ".png",
+                                    "svg_path": f"{svg_filepath}.svg",
+                                    "png_path": f"{svg_filepath}.png",
                                 }
                             )
                             # Save SVG files (SVG/PNG)

@@ -27,20 +27,17 @@ import os.path
 
 class MediaObject:
     def __init__(self, dest, size):
-        self._dest = dest + "/"
+        self._dest = f"{dest}/"
         self._size = size
-        self._volumes = dict()
-        self._volumes[0] = 0
-        self._filehandle = dict()
-        self._filehandle[0] = open(self._dest + 'list1', 'w')
-        self._errorhandle = open(self._dest + 'error.log', 'w')
+        self._volumes = {0: 0}
+        self._filehandle = {0: open(f'{self._dest}list1', 'w')}
+        self._errorhandle = open(f'{self._dest}error.log', 'w')
 
     def addFile(self, filename):
         try:
             filesize = os.path.getsize(filename)
         except BaseException:  # if we not have correct right or other problem...
-            self._errorhandle.write(
-                "Cannot get filesize for " + filename + "!\n")
+            self._errorhandle.write(f"Cannot get filesize for {filename}" + "!\n")
             return
 
         if (filesize) > self._size:  # if file bigger than media size
@@ -48,30 +45,30 @@ class MediaObject:
                 "Discarding " +
                 filename +
                 ": file too big for media !")
-            print("Discarding " + filename + ": file too big for media !")
+            print(f"Discarding {filename}: file too big for media !")
             return
 
         for number, size in list(self._volumes.items()):
             if (size + filesize) < self._size:
                 self._volumes[number] += filesize
-                self._filehandle[number].write(
-                    str(filesize) + '   ' + filename + "\n")
+                self._filehandle[number].write(f'{str(filesize)}   {filename}' + "\n")
                 # for debug only
                 # print ("Left on media #" +str(number)+": "+str(
                 # self._volumes[number]/1024/1024))+" MB"
                 return
 
-        hd = open(self._dest + 'list' + str(number + 2), 'w')
-        hd.write(str(filesize) + '   ' + filename + "\n")
+        hd = open(f'{self._dest}list{str(number + 2)}', 'w')
+        hd.write(f'{str(filesize)}   {filename}' + "\n")
 
         self._volumes[number + 1] = filesize  # add a volume with filesize
         self._filehandle[number + 1] = hd  # append filehandle
 
     def report(self):
         for number, size in list(self._volumes.items()):
-            print(("Left on media #" + str(number + 1) + ": " + \
-                  str((self._size - self._volumes[number]) / 1024 / 1024)) + " MB")
-        print("Distributed files on " + str(number + 1) + " media")
+            print(
+                f"Left on media #{str(number + 1)}: {str((self._size - self._volumes[number]) / 1024 / 1024)} MB"
+            )
+        print(f"Distributed files on {str(number + 1)} media")
         print(number + 1)
         return 0
 
@@ -91,7 +88,7 @@ def walktree(top=".", depthfirst=True):
     try:
         names = os.listdir(top)
     except BaseException:
-        names = list()
+        names = []
     if not depthfirst:
         yield top, names
     for name in names:
@@ -100,14 +97,7 @@ def walktree(top=".", depthfirst=True):
         except os.error:
             continue
         if stat.S_ISDIR(st.st_mode):
-            for (
-                newtop,
-                children) in walktree(
-                os.path.join(
-                    top,
-                    name),
-                    depthfirst):
-                yield newtop, children
+            yield from walktree(os.path.join(top, name), depthfirst)
     if depthfirst:
         yield top, names
 
@@ -130,7 +120,7 @@ if __name__ == '__main__':
 
     for top, names in walktree(top):
         for name in names:
-            filename = top + "/" + str(name)
+            filename = f"{top}/{str(name)}"
             if not os.path.isdir(filename):
                 mo.addFile(filename)
 

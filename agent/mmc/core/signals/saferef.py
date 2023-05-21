@@ -33,8 +33,7 @@ def safeRef(target, onDelete=None):
                 """safeRef target %r has __self__, but no __func__, don't know how to create reference"""
                 % (target,)
             )
-            reference = get_bound_method_weakref(target=target, onDelete=onDelete)
-            return reference
+            return get_bound_method_weakref(target=target, onDelete=onDelete)
     if callable(onDelete):
         return weakref.ref(target, onDelete)
     else:
@@ -131,12 +130,7 @@ class BoundMethodWeakref(object):
                     try:
                         traceback.print_exc()
                     except AttributeError:
-                        print(
-                            (
-                                "Exception during saferef %s cleanup function %s: %s"
-                                % (self, function, e)
-                            )
-                        )
+                        print(f"Exception during saferef {self} cleanup function {function}: {e}")
 
         self.deletionMethods = [onDelete]
         self.key = self.calculateKey(target)
@@ -145,7 +139,7 @@ class BoundMethodWeakref(object):
         self.selfName = str(target.__self__)
         self.funcName = str(target.__func__.__name__)
 
-    def calculateKey(cls, target):
+    def calculateKey(self, target):
         """Calculate the reference key for this reference
 
         Currently this is a two-tuple of the id()'s of the
@@ -157,11 +151,7 @@ class BoundMethodWeakref(object):
 
     def __str__(self):
         """Give a friendly representation of the object"""
-        return """%s( %s.%s )""" % (
-            self.__class__.__name__,
-            self.selfName,
-            self.funcName,
-        )
+        return f"""{self.__class__.__name__}( {self.selfName}.{self.funcName} )"""
 
     __repr__ = __str__
 
@@ -234,11 +224,7 @@ class BoundNonDescriptorMethodWeakref(BoundMethodWeakref):
         """
         assert (
             getattr(target.__self__, target.__name__) == target
-        ), "method %s isn't available as the attribute %s of %s" % (
-            target,
-            target.__name__,
-            target.__self__,
-        )
+        ), f"method {target} isn't available as the attribute {target.__name__} of {target.__self__}"
         super(BoundNonDescriptorMethodWeakref, self).__init__(target, onDelete)
 
     def __call__(self):

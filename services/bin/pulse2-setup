@@ -64,8 +64,8 @@ def path_lookup(exe):
 
 def read_opt(prompt, default=None):
     if default is not None:
-        prompt += ' (default: %s)' % default
-    prompt = 'INPUT    - ' + prompt + ': '
+        prompt += f' (default: {default})'
+    prompt = f'INPUT    - {prompt}: '
     s = eval(input(prompt))
     if not s and default is not None:
         s = default
@@ -73,11 +73,8 @@ def read_opt(prompt, default=None):
 
 
 def read_bool(prompt, default):
-    if default is True:
-        prompt += ' (Y/n)'
-    else:
-        prompt += ' (y/N)'
-    prompt = 'INPUT    - ' + prompt + ': '
+    prompt += ' (Y/n)' if default is True else ' (y/N)'
+    prompt = f'INPUT    - {prompt}: '
     correct = False
     ret = default
     while not correct:
@@ -101,22 +98,19 @@ def gen_passwd(size=10):
 
 
 def read_passwd(prompt, default, check=False):
-    prompt += ' (default: ' + default + ')'
+    prompt += f' (default: {default})'
     match = False
     while not match:
-        pwd = getpass.getpass('INPUT    - ' + prompt + ': ')
+        pwd = getpass.getpass(f'INPUT    - {prompt}: ')
         if check:
-            pwd2 = getpass.getpass('INPUT    - ' + prompt + ' (confirm): ')
+            pwd2 = getpass.getpass(f'INPUT    - {prompt} (confirm): ')
             match = (pwd == pwd2)
             if not match:
                 log.info('Passwords do not match. Retry.')
         else:
             match = True
 
-    if not pwd:
-        return default
-
-    return pwd
+    return default if not pwd else pwd
 
 re_ip4 = re.compile(r'([0-9]{1,3})(\.([0-9]{1,3})){3}')
 
@@ -124,8 +118,8 @@ re_ip4 = re.compile(r'([0-9]{1,3})(\.([0-9]{1,3})){3}')
 def read_ip(prompt, default):
     """ TODO: IPv6
     """
-    prompt += ' (default: ' + default + ')'
-    prompt = 'INPUT    - ' + prompt + ': '
+    prompt += f' (default: {default})'
+    prompt = f'INPUT    - {prompt}: '
     correct = False
     ret = default
     while not correct:
@@ -214,42 +208,33 @@ class DebianHandler(DistroHandler):
     def enable_srv(self, name):
         default_config = os.path.join(sysconfdir, 'default', name)
         if os.path.exists(default_config):
-            ret = call("sed -i 's/ENABLE=no/ENABLE=yes/' %s" % default_config,
-                       shell=True)
+            ret = call(f"sed -i 's/ENABLE=no/ENABLE=yes/' {default_config}", shell=True)
+        elif self.mode == "classic":
+            ret = call(f"/usr/sbin/update-rc.d {name} defaults", shell=True)
         else:
-            if self.mode == "classic":
-                ret = call("/usr/sbin/update-rc.d %s defaults" % name,
-                           shell=True)
-            else:
-                ret = call("/sbin/insserv %s" % name, shell=True)
+            ret = call(f"/sbin/insserv {name}", shell=True)
         return ret == 0
 
     def disable_srv(self, name):
         default_config = os.path.join(sysconfdir, 'default', name)
         if os.path.exists(default_config):
-            ret = call("sed -i 's/ENABLE=yes/ENABLE=no/' %s" % default_config,
-                       shell=True)
+            ret = call(f"sed -i 's/ENABLE=yes/ENABLE=no/' {default_config}", shell=True)
+        elif self.mode == "classic":
+            ret = call(f"/usr/sbin/update-rc.d -f {name} remove", shell=True)
         else:
-            if self.mode == "classic":
-                ret = call("/usr/sbin/update-rc.d -f %s remove" % name,
-                           shell=True)
-            else:
-                ret = call("/sbin/insserv -r %s" % name, shell=True)
+            ret = call(f"/sbin/insserv -r {name}", shell=True)
         return ret == 0
 
     def start_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %s start" % name,
-                   shell=True)
+        ret = call(f"/usr/sbin/invoke-rc.d {name} start", shell=True)
         return ret == 0
 
     def stop_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %s stop" % name,
-                   shell=True)
+        ret = call(f"/usr/sbin/invoke-rc.d {name} stop", shell=True)
         return ret == 0
 
     def reload_srv(self, name):
-        ret = call("/usr/sbin/invoke-rc.d %s reload" % name,
-                   shell=True)
+        ret = call(f"/usr/sbin/invoke-rc.d {name} reload", shell=True)
         return ret == 0
 
 
@@ -261,15 +246,11 @@ class SystemctlHandler(object):
 
     def enable_srv(self, name):
         ret = call("/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
-        if ret != 0:
-            return False
-        return ret==0
+        return False if ret != 0 else ret==0
 
     def disable_srv(self, name):
         ret = call("/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
-        if ret != 0:
-            return False
-        return ret==0
+        return False if ret != 0 else ret==0
 
     def start_srv(self, name):
         ret = call("/bin/systemctl start %(name)s.service" % {'name': name}, shell=True)
@@ -285,7 +266,10 @@ class SystemctlHandler(object):
 
 
 def get_distro_handler():
-    if os.path.exists('/bin/systemctl') and ( os.path.realpath('/sbin/init') == "/usr/lib/systemd/systemd" or os.path.realpath('/sbin/init') == "/lib/systemd/systemd" ):
+    if os.path.exists('/bin/systemctl') and os.path.realpath('/sbin/init') in [
+        "/usr/lib/systemd/systemd",
+        "/lib/systemd/systemd",
+    ]:
         return SystemctlHandler()
     elif os.path.exists('/usr/sbin/update-rc.d'):
         return DebianHandler()
@@ -312,32 +296,32 @@ class Service(object):
             self.disable_srv()
 
     def enable_srv(self):
-        log.info('Enabling service: %s' % self.name)
+        log.info(f'Enabling service: {self.name}')
         if not self.handler.enable_srv(self.name):
-            log.error('Can not enable service: %s' % self.name)
+            log.error(f'Can not enable service: {self.name}')
             sys.exit(1)
 
     def disable_srv(self):
-        log.info('Disabling service: %s' % self.name)
+        log.info(f'Disabling service: {self.name}')
         if not self.handler.disable_srv(self.name):
-            log.error('Can not disable service: %s' % self.name)
+            log.error(f'Can not disable service: {self.name}')
             sys.exit(1)
 
     def restart(self, fatal=False):
-        log.info('Stopping service: %s' % self.name)
+        log.info(f'Stopping service: {self.name}')
         self.handler.stop_srv(self.name)
         if self.is_enable():
-            log.info('Starting service: %s' % self.name)
+            log.info(f'Starting service: {self.name}')
             if not self.handler.start_srv(self.name):
-                log.warning('Cannot start service: %s' % self.name)
+                log.warning(f'Cannot start service: {self.name}')
                 if fatal:
                     sys.exit(1)
 
     def reload(self, fatal=False):
-        log.info('Reloading service: %s' % self.name)
+        log.info(f'Reloading service: {self.name}')
         if self.is_enable():
             if not self.handler.reload_srv(self.name):
-                log.warning('Cannot reload service: %s' % self.name)
+                log.warning(f'Cannot reload service: {self.name}')
                 if fatal:
                     sys.exit(1)
 
@@ -411,10 +395,7 @@ def apply_conf_diff(origin, current, only_override=False):
                     except MissingInterpolationOption as e:
 
                         origin.interpolation = False
-                        if only_override:
-                            orig_value = value
-                        else:
-                            orig_value = origin[sec_name].get(opt_name)
+                        orig_value = value if only_override else origin[sec_name].get(opt_name)
                         origin.interpolation = True
 
                     if str(value) == str(orig_value):
@@ -428,10 +409,7 @@ def apply_conf_diff(origin, current, only_override=False):
             # empty section remove
             del current[sec_name]
 
-    if only_override:
-        return origin
-    else:
-        return current
+    return origin if only_override else current
 
 
 class Pulse2ConfigFile(object):
@@ -458,57 +436,52 @@ class Pulse2ConfigFile(object):
     def __init__(self, reset=False):
         if self.defaults:
             self._populate(self.__class__.defaults)
+        elif reset:
+            self._load()
+
         else:
-            if not reset:
-                # If not resetting conf, load existing
-                self._load(True)
-            else:
-                self._load()
+            # If not resetting conf, load existing
+            self._load(True)
 
     def _load(self, current=False):
         """ Load config file, if any
         """
         # Use current configuration
-        if current:
-            dir_path = mmcconfdir
-        # Use example configuration
-        else:
-            dir_path = examplesdir
-
+        dir_path = mmcconfdir if current else examplesdir
         fpath = os.path.join(dir_path, self.path)
-        loc_path = os.path.join(dir_path, self.path + ".local")
+        loc_path = os.path.join(dir_path, f"{self.path}.local")
 
         if os.path.exists(loc_path):
-            log.debug("Load config file %s" % loc_path)
+            log.debug(f"Load config file {loc_path}")
             try:
                 self.local_config = ConfigObj(loc_path, list_values=False)
             except Exception as e:
-                log.error("Error while parsing file: %s" % loc_path)
+                log.error(f"Error while parsing file: {loc_path}")
                 log.error(str(e))
                 sys.exit(1)
 
         if os.path.exists(fpath):
-            log.debug("Load config file %s" % fpath)
+            log.debug(f"Load config file {fpath}")
             try:
                 self.config = ConfigObj(fpath, list_values=False)
             except Exception as e:
-                log.error("Error while parsing file: %s" % fpath)
+                log.error(f"Error while parsing file: {fpath}")
                 log.error(str(e))
                 sys.exit(1)
 
-        elif os.path.exists(fpath + '.gz'):
-            fpath = fpath + '.gz'
-            log.debug("Load config file %s" % fpath)
+        elif os.path.exists(f'{fpath}.gz'):
+            fpath = f'{fpath}.gz'
+            log.debug(f"Load config file {fpath}")
             fh = gzip.open(fpath, 'rb')
             config_string = fh.read()
             fh.close()
             self.config = ConfigObj(StringIO(config_string), list_values=False)
             self.config.filename = fpath
         else:
-            log.debug("No such file %s" % fpath)
+            log.debug(f"No such file {fpath}")
             if not current:
                 fpath = os.path.join(mmcconfdir, self.path)
-                log.debug("Fallback on current configuration %s" % fpath)
+                log.debug(f"Fallback on current configuration {fpath}")
             self.config = ConfigObj(fpath, list_values=False)
 
         if self.local_config:
@@ -521,7 +494,7 @@ class Pulse2ConfigFile(object):
             self.config[name] = section
 
     def write_path(self, path):
-        path = "%s.local" % path
+        path = f"{path}.local"
         dirname = os.path.dirname(path)
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
@@ -529,9 +502,9 @@ class Pulse2ConfigFile(object):
             self.config.filename = path
             self.config.write()
             os.chmod(path, self.mode)
-            log.info("Wrote configuration file: %s" % path)
+            log.info(f"Wrote configuration file: {path}")
         except IOError as e:
-            log.error("Can not write file: %s" % path)
+            log.error(f"Can not write file: {path}")
             log.debug(str(e))
             sys.exit(1)
 
@@ -542,7 +515,7 @@ class Pulse2ConfigFile(object):
             return ""
 
     def set(self, section, option, value):
-        if not section in self.config:
+        if section not in self.config:
             self.config[section] = {}
         self.config[section][option] = value
 
@@ -556,10 +529,7 @@ class Pulse2ConfigFile(object):
         return section in self.config
 
     def has_option(self, section, option):
-        if self.has_section(section):
-            return option in self.config[section]
-        else:
-            return False
+        return option in self.config[section] if self.has_section(section) else False
 
     def commit(self):
         self._remove_comments()
@@ -592,16 +562,21 @@ class LoggingConfig(Pulse2ConfigFile):
         Pulse2ConfigFile.__init__(self, *args, **kwargs)
 
         # Add logging module configuration
-        d = {'loggers': {'keys': 'root'},
-             'handlers': {'keys': 'hand01'},
-             'formatters': {'keys': 'form01'},
-             'logger_root': {'level': 'NOTSET',
-                             'handlers': 'hand01'},
-             'handler_hand01': {'class': 'FileHandler',
-                                'level': 'INFO',
-                                'formatter': 'form01',
-                                'args': '("'+os.path.join(self.log_dir, self.log_path)+'",)'},
-             'formatter_form01': {'format': '%(asctime)s %(levelname)s %(message)s'}}
+        d = {
+            'loggers': {'keys': 'root'},
+            'handlers': {'keys': 'hand01'},
+            'formatters': {'keys': 'form01'},
+            'logger_root': {'level': 'NOTSET', 'handlers': 'hand01'},
+            'handler_hand01': {
+                'class': 'FileHandler',
+                'level': 'INFO',
+                'formatter': 'form01',
+                'args': f'("{os.path.join(self.log_dir, self.log_path)}",)',
+            },
+            'formatter_form01': {
+                'format': '%(asctime)s %(levelname)s %(message)s'
+            },
+        }
         self._populate(d)
 
 
@@ -728,33 +703,21 @@ class SetupApp(object):
             self.services.append(cls(self.distro_handler, self.config))
 
     def read_opt(self, name, default):
-        if self.options['batch']:
-            return default
-        else:
-            return read_opt(name, default)
+        return default if self.options['batch'] else read_opt(name, default)
 
     def read_bool(self, name, default):
-        if self.options['batch']:
-            return default
-        else:
-            return read_bool(name, default)
+        return default if self.options['batch'] else read_bool(name, default)
 
     def read_passwd(self, name, default=None):
         if self.options['batch']:
-            if default is not None:
-                return default
-            else:
-                return gen_passwd()
+            return default if default is not None else gen_passwd()
         else:
             return read_passwd(name, default)
 
     def read_ip(self, name, default=None):
         if default is None:
             default = get_default_ip()
-        if self.options['batch']:
-            return default
-        else:
-            return read_ip(name, default)
+        return default if self.options['batch'] else read_ip(name, default)
 
     def find_ip(self):
         for ip_interface in netifaces.interfaces():
@@ -874,7 +837,10 @@ class SetupApp(object):
                 log.info('MMC schema can not be found in LDAP directory.')
                 log.info('Adding the schema...')
                 schema_path = os.path.join(prefix, 'share', 'doc', 'pulse2', 'contrib', 'base', 'mmc.schema')
-                ret = call('mmc-add-schema %s %s' % (schema_path, self.distro_handler.ldap_schemas_dir), shell=True)
+                ret = call(
+                    f'mmc-add-schema {schema_path} {self.distro_handler.ldap_schemas_dir}',
+                    shell=True,
+                )
                 if ret != 0:
                     log.error('Failed to include the mmc schema in the LDAP directory.')
                     log.error('Exiting...')
@@ -921,10 +887,7 @@ class SetupApp(object):
             self.config['dbadminpasswd'] = self.read_passwd('Database admin password', self.defaults['dbadminpasswd'])
 
             # Create connection to DB and check it
-            url = 'mysql://%s:%s@%s:%s/mysql' % (self.config['dbadminuser'],
-                                              self.config['dbadminpasswd'],
-                                              self.config['dbhost'],
-                                              self.config['dbport'])
+            url = f"mysql://{self.config['dbadminuser']}:{self.config['dbadminpasswd']}@{self.config['dbhost']}:{self.config['dbport']}/mysql"
             self.engine = sa.create_engine(url)
             try:
                 conn = self.engine.connect()
@@ -939,8 +902,8 @@ class SetupApp(object):
             for db in self.dbmodules:
                 if db in existing_dbs:
                     try:
-                        conn.execute('DROP DATABASE IF EXISTS `%s`' % db)
-                        log.info("Database '%s' dropped" % db)
+                        conn.execute(f'DROP DATABASE IF EXISTS `{db}`')
+                        log.info(f"Database '{db}' dropped")
                     except sa.exc.OperationalError as e:
                         raise e
             # remove computer boot menus
@@ -948,7 +911,7 @@ class SetupApp(object):
             for file in os.listdir(os.path.join(dir, 'bootmenus')):
                 if re.match('[0-9A-F]{12}', file):
                     os.unlink(os.path.join(dir, 'bootmenus', file))
-                    log.info("Deleted computer menu '%s'" % file)
+                    log.info(f"Deleted computer menu '{file}'")
             # erease the uuid cache
             try:
                 os.unlink(os.path.join(dir, 'uuid-cache.txt'))
@@ -959,11 +922,11 @@ class SetupApp(object):
             for comp_uuid in os.listdir(os.path.join(dir, 'computers')):
                 comp_dir = os.path.join(dir, 'computers', comp_uuid)
                 if re.match('UUID[0-9]+', comp_uuid) and os.path.isdir(comp_dir):
-                    log.info("Removing computer %s data..." % comp_uuid)
+                    log.info(f"Removing computer {comp_uuid} data...")
                     shutil.rmtree(comp_dir)
 
         for module in self.dbmodules:
-            log.info("Update database schema for module %s" % module)
+            log.info(f"Update database schema for module {module}")
             db_control = DBControl(user=self.config['dbadminuser'],
                                    passwd=self.config['dbadminpasswd'],
                                    host=self.config['dbhost'],
@@ -988,11 +951,11 @@ class SetupApp(object):
             try:
                 # Do not know how to check if user exists, then try and catch
                 conn.execute('CREATE USER %s@%s', self.config['dbuser'], host)
-                log.info('Creates user %s@%s' % (self.config['dbuser'], host))
+                log.info(f"Creates user {self.config['dbuser']}@{host}")
             except sa.exc.OperationalError as e:
                 if e.orig[0]==1396:
                     # This error means 'user exists'
-                    log.debug('User already exists: %s@%s' % (self.config['dbuser'], host))
+                    log.debug(f"User already exists: {self.config['dbuser']}@{host}")
                 elif e.orig[0] == 1044:
                     log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (
                         self.config['dbuser'], self.config['dbhost']))
@@ -1008,17 +971,16 @@ class SetupApp(object):
             try:
                 dbs = self.dbmodules
                 for module in dbs:
-                    log.info('Grant rights on db %s' % module)
+                    log.info(f'Grant rights on db {module}')
                     # Put db name without sqlalchemy quoting: it was surrounded by `''
                     conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], host)
             except sa.exc.OperationalError as e:
-                if e.orig[0]==1044:
-                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (
-                        self.config['dbuser'], self.config['dbhost']))
-                    sys.exit(2)
-                else:
+                if e.orig[0] != 1044:
                     raise e
 
+                log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (
+                    self.config['dbuser'], self.config['dbhost']))
+                sys.exit(2)
         conn.execute('FLUSH PRIVILEGES')
         conn.close()
 
@@ -1046,23 +1008,23 @@ class SetupApp(object):
 
         # inventory db (plugin)
         self.confs['plugins/inventory.ini']\
-            .set('inventory', 'dbhost', self.config['dbhost'])
+                .set('inventory', 'dbhost', self.config['dbhost'])
         self.confs['plugins/inventory.ini']\
-            .set('inventory', 'dbport', self.config['dbport'])
+                .set('inventory', 'dbport', self.config['dbport'])
         self.confs['plugins/inventory.ini']\
-            .set('inventory', 'dbuser', self.config['dbuser'])
+                .set('inventory', 'dbuser', self.config['dbuser'])
         self.confs['plugins/inventory.ini']\
-            .set('inventory', 'dbpasswd', self.config['dbpasswd'])
+                .set('inventory', 'dbpasswd', self.config['dbpasswd'])
 
         # inventory db (server)
         self.confs['pulse2/inventory-server/inventory-server.ini']\
-            .set('database', 'dbhost', self.config['dbhost'])
+                .set('database', 'dbhost', self.config['dbhost'])
         self.confs['pulse2/inventory-server/inventory-server.ini']\
-            .set('database', 'dbport', self.config['dbport'])
+                .set('database', 'dbport', self.config['dbport'])
         self.confs['pulse2/inventory-server/inventory-server.ini']\
-            .set('database', 'dbuser', self.config['dbuser'])
+                .set('database', 'dbuser', self.config['dbuser'])
         self.confs['pulse2/inventory-server/inventory-server.ini']\
-            .set('database', 'dbpasswd', self.config['dbpasswd'])
+                .set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # msc db (plugin)
         self.confs['plugins/msc.ini'].set('msc', 'dbhost', self.config['dbhost'])
@@ -1072,13 +1034,13 @@ class SetupApp(object):
 
         # msc db (scheduler)
         self.confs['pulse2/scheduler/scheduler.ini']\
-            .set('database', 'dbhost', self.config['dbhost'])
+                .set('database', 'dbhost', self.config['dbhost'])
         self.confs['pulse2/scheduler/scheduler.ini']\
-            .set('database', 'dbport', self.config['dbport'])
+                .set('database', 'dbport', self.config['dbport'])
         self.confs['pulse2/scheduler/scheduler.ini']\
-            .set('database', 'dbuser', self.config['dbuser'])
+                .set('database', 'dbuser', self.config['dbuser'])
         self.confs['pulse2/scheduler/scheduler.ini']\
-            .set('database', 'dbpasswd', self.config['dbpasswd'])
+                .set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # medulla_server
         self.confs['plugins/medulla_server.ini'].set('database', 'dbhost', self.config['dbhost'])
@@ -1128,16 +1090,16 @@ class SetupApp(object):
         glpi_conf = self.confs["plugins/glpi.ini"]
 
         url = self.read_opt("Glpi URL", self.defaults["glpiurl"])
-        if not url.endswith("/") :
-            url = url + "/"
-        if url.startswith("http") :
-            base_url = "%s/" % url
-            computer_url = "%s/front/computer.form.php?id=" % url
-            fusion_url = "%s/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
-        else :
-            base_url = "http://%s/" % url
-            computer_url = "http://%s/front/computer.form.php?id=" % url
-            fusion_url = "http://%s/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
+        if not url.endswith("/"):
+            url = f"{url}/"
+        if url.startswith("http"):
+            base_url = f"{url}/"
+            computer_url = f"{url}/front/computer.form.php?id="
+            fusion_url = f"{url}/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
+        else:
+            base_url = f"http://{url}/"
+            computer_url = f"http://{url}/front/computer.form.php?id="
+            fusion_url = f"http://{url}/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
 
         glpi_conf.set("main", "glpi_computer_uri", computer_url)
         glpi_conf.set("authentication_glpi", "baseurl", base_url)
@@ -1225,7 +1187,7 @@ class SetupApp(object):
                      self.confs['pulse2/package-server/package-server.ini'].get('main', 'tmp_input_dir'),
                      LoggingConfig.log_dir]:
             if path and not os.path.isdir(path):
-                log.info("Creating directory: %s" % path)
+                log.info(f"Creating directory: {path}")
                 os.makedirs(path)
 
         # Update services
@@ -1237,7 +1199,7 @@ class SetupApp(object):
         key_path = '/root/.ssh/id_rsa'
         if not os.path.exists(key_path):
             log.info('Creating a RSA key pair for user root')
-            ret = call("/usr/bin/ssh-keygen -t rsa -N '' -f %s" % key_path, shell=True)
+            ret = call(f"/usr/bin/ssh-keygen -t rsa -N '' -f {key_path}", shell=True)
             if ret!=0:
                 log.error('Can not create RSA key pair for user root')
                 sys.exit(1)
@@ -1247,10 +1209,10 @@ class SetupApp(object):
         _uuid = None
         if conf.has_option('imaging_api', 'uuid'):
             _uuid = conf.get('imaging_api', 'uuid')
-            log.info('Using current uuid (%s) for package server' % _uuid)
+            log.info(f'Using current uuid ({_uuid}) for package server')
         if not _uuid:
             _uuid = str(uuid.uuid4())
-            log.info('Generated uuid (%s) for package server' % _uuid)
+            log.info(f'Generated uuid ({_uuid}) for package server')
         conf.set('imaging_api', 'uuid', _uuid)
 
         # Install apache configuration if needed
@@ -1274,17 +1236,17 @@ class SetupApp(object):
             :return: return True is the service exist and is started, False otherwise
             :rtype: boolean
         """
-        log.debug('Looking if service %s is started' % service )
+        log.debug(f'Looking if service {service} is started')
         try:
             status = check_output(["systemctl", "is-active", service])
             if status.strip('\n') == 'active':
-                log.debug('The service %s is started' % service)
+                log.debug(f'The service {service} is started')
                 return True
         except CalledProcessError:
-                log.debug('The service %s does not exist' % service)
-                return False
+            log.debug(f'The service {service} does not exist')
+            return False
 
-        log.debug('The service %s is not started' % service)
+        log.debug(f'The service {service} is not started')
         return False
 
     def post_restart(self):
@@ -1297,17 +1259,14 @@ class SetupApp(object):
         if self.config['package.service.enable']:
             binpath = path_lookup('pulse2-package-server-register-imaging')
             ps_conf = self.confs['pulse2/package-server/package-server.ini']
-            basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc_agent', 'username'),
-                                                              ps_conf.get('mmc_agent', 'password'),
-                                                              ps_conf.get('mmc_agent', 'host'),
-                                                              ps_conf.get('mmc_agent', 'port'))
-            cmd = basecmd + '--check'
-            log.debug('Call: %s' % cmd)
+            basecmd = f"{binpath} -m https://{ps_conf.get('mmc_agent', 'username')}:{ps_conf.get('mmc_agent', 'password')}@{ps_conf.get('mmc_agent', 'host')}:{ps_conf.get('mmc_agent', 'port')} "
+            cmd = f'{basecmd}--check'
+            log.debug(f'Call: {cmd}')
             if call(cmd, shell=True) == 0:
                 # This uuid is not registered
                 log.info('Registering imaging server')
                 cmd = basecmd + '--name \'Local imaging server\''
-                log.debug('Call: %s' % cmd)
+                log.debug(f'Call: {cmd}')
                 if call(cmd, shell=True) != 0:
                     log.error('Can not register imaging server')
             else:
@@ -1315,12 +1274,12 @@ class SetupApp(object):
 
         binpath = path_lookup('pulse2-create-group')
         grp_name = self.config['defaultUserGroup']
-        cmd = "%s '%s'" % (binpath, grp_name)
-        log.debug('Call: %s' % cmd)
+        cmd = f"{binpath} '{grp_name}'"
+        log.debug(f'Call: {cmd}')
         if call(cmd, shell=True) != 0:
-            log.error("Unable to create group '%s'" % grp_name)
+            log.error(f"Unable to create group '{grp_name}'")
         else:
-            log.info("Group %s successfully created" % grp_name)
+            log.info(f"Group {grp_name} successfully created")
 
     def commit(self):
         """ Write down all config files
@@ -1430,11 +1389,7 @@ if __name__ == '__main__':
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
-    if options.debug:
-        level = logging.DEBUG
-    else:
-        level = logging.INFO
-
+    level = logging.DEBUG if options.debug else logging.INFO
     # Init logger
     hdlr2 = logging.StreamHandler()
     hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))

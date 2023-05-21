@@ -53,10 +53,10 @@ def running(inifile, daemonize, noconsoledebug = True):
     logging.config.fileConfig(inifile)
     logger = logging.getLogger()
     logger.debug("Logger loaded")
-    logger.info("Pulse 2 Package Server %s starting..." % getVersion())
-    logger.info("Pulse 2 Package server build '%s'" % str(getRevision()))
+    logger.info(f"Pulse 2 Package Server {getVersion()} starting...")
+    logger.info(f"Pulse 2 Package server build '{str(getRevision())}'")
     logger.info("Using Python %s" % sys.version.split("\n")[0])
-    logger.info("Using Python Twisted %s" % twisted.copyright.version)
+    logger.info(f"Using Python Twisted {twisted.copyright.version}")
     init_logger_debug()
 
     config.setup(inifile)

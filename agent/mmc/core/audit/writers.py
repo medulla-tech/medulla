@@ -79,20 +79,8 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Connect to the database.
         """
-        dburl = (
-            self.config.auditdbdriver
-            + "://"
-            + self.config.auditdbuser
-            + ":"
-            + self.config.auditdbpassword
-            + "@"
-            + self.config.auditdbhost
-            + ":"
-            + str(self.config.auditdbport)
-            + "/"
-            + self.config.auditdbname
-        )
         dboptions = {}
+        dburl = f"{self.config.auditdbdriver}://{self.config.auditdbuser}:{self.config.auditdbpassword}@{self.config.auditdbhost}:{str(self.config.auditdbport)}/{self.config.auditdbname}"
         if self.config.auditdbdriver == "mysql":
             dburl += "?charset=utf8&use_unicode=0"
             dboptions = {"pool_recycle": 3600, "convert_unicode": True}
@@ -135,27 +123,25 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Init database tables.
         """
-        if version == None:
+        if version is None:
             version = self.getUptodateVersion()
-        getattr(self, "_initTables" + self.config.auditdbdriver + "V" + str(version))()
+        getattr(self, f"_initTables{self.config.auditdbdriver}V{str(version)}")()
 
     def _initMappers(self, version=None):
         """
         Init database mappers.
         """
-        if version == None:
+        if version is None:
             version = self.getUptodateVersion()
-        getattr(self, "_initMappers" + self.config.auditdbdriver + "V" + str(version))()
+        getattr(self, f"_initMappers{self.config.auditdbdriver}V{str(version)}")()
 
     def _populateTables(self, version=None):
         """
         Populate tables before the first use.
         """
-        if version == None:
+        if version is None:
             version = self.getUptodateVersion()
-        getattr(
-            self, "_populateTables" + self.config.auditdbdriver + "V" + str(version)
-        )()
+        getattr(self, f"_populateTables{self.config.auditdbdriver}V{str(version)}")()
 
     def operation(self, op):
         """
@@ -172,15 +158,13 @@ class AuditWriterDB(Singleton, AuditWriterI):
         if op == "drop":
             if self.config.auditdbdriver == "mysql":
                 print("-- Execute the following lines into the MySQL client")
-                print("DROP DATABASE IF EXISTS %s;" % self.config.auditdbname)
-                print("DROP USER '%s'@localhost;" % self.config.auditdbuser)
+                print(f"DROP DATABASE IF EXISTS {self.config.auditdbname};")
+                print(f"DROP USER '{self.config.auditdbuser}'@localhost;")
             elif self.config.auditdbdriver == "postgres":
                 # FIXME: Do it for PostgreSQL too
                 print("Not yet implemented")
             else:
-                self.logger.error(
-                    "SQL driver '%s' is not supported" % self.config.auditdbdriver
-                )
+                self.logger.error(f"SQL driver '{self.config.auditdbdriver}' is not supported")
                 return False
         elif op == "droptables":
             if not self.databaseExists():
@@ -195,25 +179,16 @@ class AuditWriterDB(Singleton, AuditWriterI):
         elif op == "create":
             if self.config.auditdbdriver == "mysql":
                 print("-- Execute the following lines into the MySQL client")
+                print(f"CREATE DATABASE {self.config.auditdbname} DEFAULT CHARSET utf8;")
                 print(
-                    "CREATE DATABASE %s DEFAULT CHARSET utf8;" % self.config.auditdbname
-                )
-                print(
-                    "GRANT ALL PRIVILEGES ON %s.* TO '%s'@localhost IDENTIFIED BY '%s';"
-                    % (
-                        self.config.auditdbname,
-                        self.config.auditdbuser,
-                        self.config.auditdbpassword,
-                    )
+                    f"GRANT ALL PRIVILEGES ON {self.config.auditdbname}.* TO '{self.config.auditdbuser}'@localhost IDENTIFIED BY '{self.config.auditdbpassword}';"
                 )
                 print("FLUSH PRIVILEGES;")
             elif self.config.auditdbdriver == "postgres":
                 # FIXME: Do it for PostgreSQL too
                 print("Not yet implemented")
             else:
-                self.logger.error(
-                    "SQL driver '%s' is not supported" % self.config.auditdbdriver
-                )
+                self.logger.error(f"SQL driver '{self.config.auditdbdriver}' is not supported")
                 return False
         elif op == "init":
             if self.databaseExists():
@@ -279,9 +254,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
             return True
         elif op == "purge":
             pass
-        elif op == "archive":
-            pass
-        else:
+        elif op != "archive":
             return False
 
         return True
@@ -431,7 +404,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Update database version number in the version table
         """
-        if version == None:
+        if version is None:
             version = self.getUptodateVersion()
         session = create_session()
         session.execute(self.version_table.delete())

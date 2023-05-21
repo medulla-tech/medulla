@@ -24,21 +24,21 @@ class ConnectionRefused(ConnectorException):
     """An exception to raise when connection refused from other side"""
 
     def __repr__(self):
-        return "Connection on server %s:%s refused" % (self.host, self.port)
+        return f"Connection on server {self.host}:{self.port} refused"
 
 
 class UnknownService(ConnectorException):
     """An exception to raise when trying contact unable service"""
 
     def __repr__(self):
-        return "Unknown service %s:%s. Connection refused" % (self.host, self.port)
+        return f"Unknown service {self.host}:{self.port}. Connection refused"
 
 
 class ConnectionTimeout(ConnectorException):
     """An exception to raise when a timeout of connection checked"""
 
     def __repr__(self):
-        return "Timeout of connection to server %s:%s" % (self.host, self.port)
+        return f"Timeout of connection to server {self.host}:{self.port}"
 
 
 class Connector(object):
@@ -111,10 +111,10 @@ class Connector(object):
                 raise ConnectionRefused(self.host, self.port)
 
             else:
-                self.logger.debug("Another connection error: %s %s " % (code, message))
+                self.logger.debug(f"Another connection error: {code} {message} ")
 
         except Exception as e:
-            self.logger.debug("Client connection failed: %s" % str(e))
+            self.logger.debug(f"Client connection failed: {str(e)}")
             import traceback
 
             self.logger.debug("\033[31m%s\033[0m" % str(traceback.format_exc()))
@@ -145,13 +145,13 @@ class ClientEndpoint(object):
             self.socket.sendall(pack)
             response = self.socket.read(1024)
         except Exception as e:
-            self.logger.warn("Request failed: %s" % str(e))
+            self.logger.warn(f"Request failed: {str(e)}")
             raise ConnectionError(self.connector.host)
 
         try:
             return self.parser.decode(response)
         except ValueError as e:
-            self.logger.warn("Decoding of request failed: %s" % str(e))
+            self.logger.warn(f"Decoding of request failed: {str(e)}")
             raise ConnectionError(self.connector.host)
 
     def _recv(self, n=1):
@@ -162,7 +162,7 @@ class ClientEndpoint(object):
                 chunk = self.socket.recv(n - len(data))
                 # chunk = self.socket.read(n - len(data))
             except Exception as e:
-                self.logger.debug("SSL read failed: %s" % str(e))
+                self.logger.debug(f"SSL read failed: {str(e)}")
 
             if len(chunk) == 0:
                 break

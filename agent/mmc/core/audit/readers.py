@@ -58,16 +58,16 @@ class AuditReaderDB:
         if plug != 0:
             plugin = (
                 self.session.query(Module)
-                .filter(self.parent.module_table.c.name.like("%" + plug + "%"))
+                .filter(self.parent.module_table.c.name.like(f"%{plug}%"))
                 .first()
             )
-            if plugin != None:
-                ql = qlog.filter(self.parent.record_table.c.module_id == plugin.id)
-                qlog = ql
-            else:
+            if plugin is None:
                 self.session.close()
                 return None
 
+            else:
+                ql = qlog.filter(self.parent.record_table.c.module_id == plugin.id)
+                qlog = ql
         #
         # Filter by date
         #
@@ -99,12 +99,12 @@ class AuditReaderDB:
                             self.parent.object_table.c.type_id == 1,
                             self.parent.object_table.c.type_id == 2,
                         ),
-                        self.parent.object_table.c.uri.like("%" + user + "%"),
+                        self.parent.object_table.c.uri.like(f"%{user}%"),
                     )
                 )
                 .first()
             )
-            if object_user == None:
+            if object_user is None:
                 self.session.close()
                 return None
             else:
@@ -117,27 +117,26 @@ class AuditReaderDB:
         if action != 0:
             action = (
                 self.session.query(Event)
-                .filter(self.parent.event_table.c.name.like("%" + action + "%"))
+                .filter(self.parent.event_table.c.name.like(f"%{action}%"))
                 .all()
             )
-            if action != []:
-                oraction = or_(self.parent.record_table.c.event_id == action[0].id)
-                for idact in action:
-                    oraction = or_(
-                        oraction, self.parent.record_table.c.event_id == idact.id
-                    )
-                ql = qlog.filter(oraction)
-                qlog = ql
-            else:
+            if action == []:
                 return None
 
+            oraction = or_(self.parent.record_table.c.event_id == action[0].id)
+            for idact in action:
+                oraction = or_(
+                    oraction, self.parent.record_table.c.event_id == idact.id
+                )
+            ql = qlog.filter(oraction)
+            qlog = ql
         #
         # Filter by object
         #
         if object != 0:
             obj = (
                 self.session.query(Object)
-                .filter(self.parent.object_table.c.uri.like("%" + object + "%"))
+                .filter(self.parent.object_table.c.uri.like(f"%{object}%"))
                 .all()
             )
             if obj != []:
@@ -146,8 +145,11 @@ class AuditReaderDB:
                     orobj = or_(
                         orobj, self.parent.object_log_table.c.object_id == idobj.id
                     )
-                object_log = self.session.query(Object_Log).filter(orobj).all()
-                if object_log:
+                if (
+                    object_log := self.session.query(Object_Log)
+                    .filter(orobj)
+                    .all()
+                ):
                     orobjlog = or_(
                         self.parent.record_table.c.id == object_log[0].record_id
                     )
@@ -171,7 +173,7 @@ class AuditReaderDB:
         if type != 0:
             typ = (
                 self.session.query(Type)
-                .filter(self.parent.type_table.c.type.like("%" + type + "%"))
+                .filter(self.parent.type_table.c.type.like(f"%{type}%"))
                 .first()
             )
             if typ != None:
@@ -287,14 +289,7 @@ class AuditReaderDB:
                         )
                         .all()
                     )
-                    #
-                    # Put attr in array !
-                    #
-
-                    pattr = []
-                    for p in lpattr:
-                        pattr.append(p.value)
-
+                    pattr = [p.value for p in lpattr]
                     lcattr = (
                         self.session.query(Current_Value)
                         .filter(
@@ -304,10 +299,7 @@ class AuditReaderDB:
                         .all()
                     )
 
-                    cattr = []
-                    for c in lcattr:
-                        cattr.append(c.value)
-
+                    cattr = [c.value for c in lcattr]
                     llistobj.append(
                         {
                             "object": str(lobject.uri),
@@ -316,9 +308,9 @@ class AuditReaderDB:
                             "current": cattr,
                         }
                     )
-                # else:
-                #   llistobj.append({})
-                # llistobj.append({"object":str(lobject.uri), "type":str(ltype.type)})
+                        # else:
+                        #   llistobj.append({})
+                        # llistobj.append({"object":str(lobject.uri), "type":str(ltype.type)})
             #
             #    Final array
             #

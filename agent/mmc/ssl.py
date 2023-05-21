@@ -19,12 +19,10 @@ def makeSSLContext(verifypeer, cacert, localcert):
     @rtype: twisted.internet.ssl.ContextFactory
     """
     if verifypeer:
-        fd = open(localcert)
-        localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())
-        fd.close()
-        fd = open(cacert)
-        caCertificate = ssl.Certificate.loadPEM(fd.read())
-        fd.close()
+        with open(localcert) as fd:
+            localCertificate = ssl.PrivateCertificate.loadPEM(fd.read())
+        with open(cacert) as fd:
+            caCertificate = ssl.Certificate.loadPEM(fd.read())
         ctx = localCertificate.options(caCertificate)
         ctx.verify = True
         ctx.verifyDepth = 9
@@ -34,9 +32,9 @@ def makeSSLContext(verifypeer, cacert, localcert):
         ctx.enableSessions = True
         ctx.fixBrokenPeers = False
 
-        log.debug("CA certificate informations: %s" % cacert)
+        log.debug(f"CA certificate informations: {cacert}")
         log.debug(caCertificate.inspect())
-        log.debug("MMC agent certificate: %s" % localcert)
+        log.debug(f"MMC agent certificate: {localcert}")
         log.debug(localCertificate.inspect())
     else:
         log.warning("SSL enabled, but peer verification is disabled.")

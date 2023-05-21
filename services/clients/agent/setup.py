@@ -72,17 +72,17 @@ class DefaultsFiller(object):
                                 "WARNING: Unknown format  (file: %s:%d)"
                                 % (self.defaults_file, num)
                             )
-                            print("  --> %s" % line)
+                            print(f"  --> {line}")
                             print("INFO: Ignoring")
                     else:
                         print(
                             "WARNING: Unknown format  (file: %s:%d)"
                             % (self.defaults_file, num)
                         )
-                        print("  --> %s" % line)
+                        print(f"  --> {line}")
                         print("INFO: Ignoring")
         else:
-            print("WARNING: File with defaults (%s) not exists!" % (self.defaults_file))
+            print(f"WARNING: File with defaults ({self.defaults_file}) not exists!")
 
         return pattern
 
@@ -114,7 +114,7 @@ class DefaultsFiller(object):
         replaced_items = 0
         for line in fileinput.input(self.config_file, inplace=1):
             for old, new in list(pattern.items()):
-                search_exp = "@@%s@@" % old
+                search_exp = f"@@{old}@@"
                 if search_exp in line:
                     line = line.replace(search_exp, new)
                     replaced_items += 1
@@ -141,7 +141,7 @@ class PostInstallPosixHandler(object):
     def __init__(self, current_directory):
         self.current_directory = current_directory
 
-        print("Running selected handler: %s" % self.__class__.__name__)
+        print(f"Running selected handler: {self.__class__.__name__}")
 
     def run(self):
         for method in (
@@ -152,7 +152,7 @@ class PostInstallPosixHandler(object):
         ):
             succeed = method()
             if not succeed:
-                print("ERROR: An error occurred during execute %s" % method.__name__)
+                print(f"ERROR: An error occurred during execute {method.__name__}")
                 return False
         return True
 
@@ -161,7 +161,7 @@ class PostInstallPosixHandler(object):
         for source, destination in self.include_files:
             result = copy_file(source, destination)
             if result[1] != 1:
-                print("WARNING: copy of file %s -> %s failed" % (source, destination))
+                print(f"WARNING: copy of file {source} -> {destination} failed")
                 return False
         return True
 
@@ -173,8 +173,7 @@ class PostInstallPosixHandler(object):
         """Config file filled by pre-configured defaults file"""
         df = DefaultsFiller()
         if df.exists:
-            all_replaced = df.fill()
-            if all_replaced:
+            if all_replaced := df.fill():
                 print("INFO: Config file correctly updated")
                 return True
             else:
@@ -197,7 +196,7 @@ class PostInstallPosixHandler(object):
         if self.insert_service_cmd is None:
             return True
 
-        print("Install service %s ..." % self.SCRIPT_NAME)
+        print(f"Install service {self.SCRIPT_NAME} ...")
         result = call(self.insert_service_cmd, shell=True)
         return result == 0
 
@@ -211,7 +210,7 @@ class PostInstallPosixHandler(object):
         if self.start_service_cmd is None:
             return True
 
-        print("Starting service %s ..." % self.SCRIPT_NAME)
+        print(f"Starting service {self.SCRIPT_NAME} ...")
         result = call(self.start_service_cmd, shell=True)
         return result == 0
 
@@ -220,9 +219,9 @@ class PostInstallSystemVHandler(PostInstallPosixHandler):
     """SystemV (based on inittab) handler"""
 
     insert_service_cmd = (
-        "/usr/sbin/update-rc.d %s defaults" % PostInstallPosixHandler.SCRIPT_NAME
+        f"/usr/sbin/update-rc.d {PostInstallPosixHandler.SCRIPT_NAME} defaults"
     )
-    start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
+    start_service_cmd = f"/etc/init.d/{PostInstallPosixHandler.SCRIPT_NAME} start"
 
     include_files = [
         ("linux/pulse2-agent.init.lsb", "/etc/init.d/pulse2-agent"),
@@ -231,13 +230,16 @@ class PostInstallSystemVHandler(PostInstallPosixHandler):
     ]
 
 
+
+
+
 class PostInstallSysCtlHandler(PostInstallPosixHandler):
     """Sysctl handler"""
 
     insert_service_cmd = (
-        "/bin/chkconfig --add  %s" % PostInstallPosixHandler.SCRIPT_NAME
+        f"/bin/chkconfig --add  {PostInstallPosixHandler.SCRIPT_NAME}"
     )
-    start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
+    start_service_cmd = f"/etc/init.d/{PostInstallPosixHandler.SCRIPT_NAME} start"
 
     include_files = [
         ("linux/pulse2-agent.init", "/etc/init.d/pulse2-agent"),
@@ -262,10 +264,7 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
     ]
 
     def post_copy_tasks(self):
-        cmd_link = (
-            "ln -s /lib/systemd/system/%s.service /etc/systemd/system/%s.service"
-            % (self.SCRIPT_NAME, self.SCRIPT_NAME)
-        )
+        cmd_link = f"ln -s /lib/systemd/system/{self.SCRIPT_NAME}.service /etc/systemd/system/{self.SCRIPT_NAME}.service"
         cmd_systemd_reload = " /bin/systemctl daemon-reload"
         for cmd in [cmd_link, cmd_systemd_reload]:
             result = call(cmd, shell=True)

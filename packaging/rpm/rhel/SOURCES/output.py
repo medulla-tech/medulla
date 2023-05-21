@@ -88,9 +88,8 @@ class XLSGenerator(object):
                     try:
                         if isinstance(cell, str):
                             sheet.write(line, column, self._T(cell))
-                        else:
-                            if isinstance(cell[2], str):
-                                sheet.write(line, column, cell[2])
+                        elif isinstance(cell[2], str):
+                            sheet.write(line, column, cell[2])
                     except Exception:
                         pass
                     column += 1

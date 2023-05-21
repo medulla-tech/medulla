@@ -18,7 +18,7 @@ class ServicesPanel(Panel):
         for plugin, services in list(ServiceManager().list_plugins_services().items()):
             for service in services:
                 if service["active_state"] not in ("active", "unavailable"):
-                    if not plugin in data:
+                    if plugin not in data:
                         data[plugin] = []
                     data[plugin].append(service)
         return data

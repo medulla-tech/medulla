@@ -43,22 +43,23 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
         self.sendHeader(b"Content-type", b"text/xml")
         self.sendHeader(b"Content-length", bytes(len(self.factory.payload)))
         if self.factory.user:
-            auth = "%s:%s" % (self.factory.user, self.factory.password)
+            auth = f"{self.factory.user}:{self.factory.password}"
             auth = base64.b64encode(bytes(auth, "utf-8"))
             self.sendHeader(b"Authorization", b"Basic %s" % (auth,))
         try:
             # Put MMC session cookie
-            if not b"<methodName>base.ldapAuth</methodName>" in self.factory.payload:
-                h = open(COOKIES_FILE, "r")
-                self.sendHeader(b"Cookie", h.read())
-                h.close()
+            if (
+                b"<methodName>base.ldapAuth</methodName>"
+                not in self.factory.payload
+            ):
+                with open(COOKIES_FILE, "r") as h:
+                    self.sendHeader(b"Cookie", h.read())
         except FileNotFoundError as error_opening_cookie:
-            logger.error("An error occured while open the file %s." % COOKIES_FILE)
+            logger.error(f"An error occured while open the file {COOKIES_FILE}.")
             logger.error("The error is \n %s" % error_opening_cookie)
         except IOError as error_ioerror:
-            logger.error("An unkown error occured. The message is %s" % error_ioerror)
+            logger.error(f"An unkown error occured. The message is {error_ioerror}")
             logger.error("We hit the backtrace: \n %s" % traceback.format_exc())
-            pass
         self.endHeaders()
         self.transport.write(self.factory.payload)
 
@@ -71,9 +72,8 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
     def handleResponse(self, contents):
         xmlrpc.QueryProtocol.handleResponse(self, contents)
         if "<methodName>base.ldapAuth</methodName>" in self.factory.payload:
-            h = open(COOKIES_FILE, "w+")
-            h.write(self._session)
-            h.close()
+            with open(COOKIES_FILE, "w+") as h:
+                h.write(self._session)
             os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
             self._response = contents
 

@@ -258,16 +258,13 @@ class Signal(object):
         if receivers is None:
             with self.lock:
                 senderkey = _make_id(sender)
-                receivers = []
-                for (receiverkey, r_senderkey), receiver in self.receivers:
-                    if r_senderkey == NONE_ID or r_senderkey == senderkey:
-                        receivers.append(receiver)
+                receivers = [
+                    receiver
+                    for (receiverkey, r_senderkey), receiver in self.receivers
+                    if r_senderkey in [NONE_ID, senderkey]
+                ]
                 if self.use_caching:
-                    if not receivers:
-                        self.sender_receivers_cache[sender] = NO_RECEIVERS
-                    else:
-                        # Note, we must cache the weakref versions.
-                        self.sender_receivers_cache[sender] = receivers
+                    self.sender_receivers_cache[sender] = receivers if receivers else NO_RECEIVERS
         non_weak_receivers = []
         for receiver in receivers:
             if isinstance(receiver, WEAKREF_TYPES):
@@ -285,10 +282,11 @@ class Signal(object):
         """
 
         with self.lock:
-            to_remove = []
-            for key, connected_receiver in self.receivers:
-                if connected_receiver == receiver:
-                    to_remove.append(key)
+            to_remove = [
+                key
+                for key, connected_receiver in self.receivers
+                if connected_receiver == receiver
+            ]
             for key in to_remove:
                 last_idx = len(self.receivers) - 1
                 # enumerate in reverse order so that indexes are valid even

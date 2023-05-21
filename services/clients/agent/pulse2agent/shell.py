@@ -14,7 +14,7 @@ class Shell(Component):
     __component_name__ = "shell"
 
     def call(self, command):
-        self.logger.debug("Shell: command going to execute: %s" % repr(command))
+        self.logger.debug(f"Shell: command going to execute: {repr(command)}")
         process = Popen(
             command,
             stdout=PIPE,
@@ -25,10 +25,10 @@ class Shell(Component):
         out, err = process.communicate()
         returncode = process.returncode
 
-        self.logger.debug("Shell: stdout: %s" % repr(out))
+        self.logger.debug(f"Shell: stdout: {repr(out)}")
         if len(err) > 0:
-            self.logger.warn("Shell: stderr: %s" % repr(err))
+            self.logger.warn(f"Shell: stderr: {repr(err)}")
 
-        self.logger.debug("Shell: return code: %s" % repr(returncode))
+        self.logger.debug(f"Shell: return code: {repr(returncode)}")
 
         return returncode
