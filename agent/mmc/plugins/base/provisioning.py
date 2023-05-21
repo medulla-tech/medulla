@@ -59,7 +59,9 @@ class ProvisioningManager(Singleton):
             else:
                 self.logger.info(f"Provisioner {name} failed to validate")
                 if mandatory:
-                    self.logger.error(f"Provisioner {name} is configured as mandatory, exiting")
+                    self.logger.error(
+                        f"Provisioner {name} is configured as mandatory, exiting"
+                    )
                     ret = False
                 else:
                     self.logger.info(

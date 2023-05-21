@@ -164,7 +164,9 @@ class AuditWriterDB(Singleton, AuditWriterI):
                 # FIXME: Do it for PostgreSQL too
                 print("Not yet implemented")
             else:
-                self.logger.error(f"SQL driver '{self.config.auditdbdriver}' is not supported")
+                self.logger.error(
+                    f"SQL driver '{self.config.auditdbdriver}' is not supported"
+                )
                 return False
         elif op == "droptables":
             if not self.databaseExists():
@@ -179,7 +181,9 @@ class AuditWriterDB(Singleton, AuditWriterI):
         elif op == "create":
             if self.config.auditdbdriver == "mysql":
                 print("-- Execute the following lines into the MySQL client")
-                print(f"CREATE DATABASE {self.config.auditdbname} DEFAULT CHARSET utf8;")
+                print(
+                    f"CREATE DATABASE {self.config.auditdbname} DEFAULT CHARSET utf8;"
+                )
                 print(
                     f"GRANT ALL PRIVILEGES ON {self.config.auditdbname}.* TO '{self.config.auditdbuser}'@localhost IDENTIFIED BY '{self.config.auditdbpassword}';"
                 )
@@ -188,7 +192,9 @@ class AuditWriterDB(Singleton, AuditWriterI):
                 # FIXME: Do it for PostgreSQL too
                 print("Not yet implemented")
             else:
-                self.logger.error(f"SQL driver '{self.config.auditdbdriver}' is not supported")
+                self.logger.error(
+                    f"SQL driver '{self.config.auditdbdriver}' is not supported"
+                )
                 return False
         elif op == "init":
             if self.databaseExists():

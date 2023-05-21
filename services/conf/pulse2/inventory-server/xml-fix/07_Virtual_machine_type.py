@@ -36,8 +36,7 @@ def xml_fix(xml):
                         if (
                             subelem3.tag in ["BMANUFACTURER", "SMANUFACTURER"]
                             and subelem3.text == "innotek GmbH"
-                            or subelem3.tag
-                            not in ["BMANUFACTURER", "SMANUFACTURER"]
+                            or subelem3.tag not in ["BMANUFACTURER", "SMANUFACTURER"]
                             and subelem3.tag in ["BVERSION", "SMODEL"]
                             and subelem3.text == "VirtualBox"
                         ):

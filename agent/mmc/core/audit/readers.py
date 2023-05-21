@@ -145,11 +145,7 @@ class AuditReaderDB:
                     orobj = or_(
                         orobj, self.parent.object_log_table.c.object_id == idobj.id
                     )
-                if (
-                    object_log := self.session.query(Object_Log)
-                    .filter(orobj)
-                    .all()
-                ):
+                if object_log := self.session.query(Object_Log).filter(orobj).all():
                     orobjlog = or_(
                         self.parent.record_table.c.id == object_log[0].record_id
                     )
@@ -308,9 +304,9 @@ class AuditReaderDB:
                             "current": cattr,
                         }
                     )
-                        # else:
-                        #   llistobj.append({})
-                        # llistobj.append({"object":str(lobject.uri), "type":str(ltype.type)})
+                    # else:
+                    #   llistobj.append({})
+                    # llistobj.append({"object":str(lobject.uri), "type":str(ltype.type)})
             #
             #    Final array
             #

@@ -478,9 +478,7 @@ class UserPPolicy(ldapUserGroupControl):
             return self.removePPolicy()
         # get the ppolicy dn
         ppolicyDN = PPolicy().getPPolicy(ppolicyName)[0]
-        r = AF().log(
-            PLUGIN_NAME, AA.PPOLICY_MOD_USER_PPOLICY, [(self.dn, AT.USER)]
-        )
+        r = AF().log(PLUGIN_NAME, AA.PPOLICY_MOD_USER_PPOLICY, [(self.dn, AT.USER)])
         try:
             self.l.modify_s(
                 self.dn, [(ldap.MOD_REPLACE, "pwdPolicySubentry", ppolicyDN)]
@@ -491,7 +489,7 @@ class UserPPolicy(ldapUserGroupControl):
             logger.error("Attribute pwdPolicySubentry isn't defined on ldap")
         except ldap.INVALID_SYNTAX:
             logger.error(
-                'Invalid Syntax from the attribute value of pwdPolicySubentry on ldap'
+                "Invalid Syntax from the attribute value of pwdPolicySubentry on ldap"
             )
         return True
 

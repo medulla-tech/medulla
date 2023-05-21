@@ -240,9 +240,7 @@ class DatabaseHelper(Singleton):
             # Like filters
             if "like_filters" in params and params["like_filters"]:
                 clauses = [
-                    _entity_descriptor(query._mapper_zero(), key).like(
-                        f"%{value}%"
-                    )
+                    _entity_descriptor(query._mapper_zero(), key).like(f"%{value}%")
                     for key, value in list(params["like_filters"].items())
                 ]
                 if clauses:
@@ -332,13 +330,13 @@ class DatabaseHelper(Singleton):
                     bindparam,
                     within_columns_clause=False,
                     literal_binds=False,
-                    **kwargs
+                    **kwargs,
                 ):
                     return super(LiteralCompiler, self).render_literal_bindparam(
                         bindparam,
                         within_columns_clause=within_columns_clause,
                         literal_binds=literal_binds,
-                        **kwargs
+                        **kwargs,
                     )
 
             compiler = LiteralCompiler(dialect, statement)

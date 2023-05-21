@@ -153,9 +153,7 @@ def handle_deconnect():
 
 
 def toH(w):
-    return {
-        i: getattr(w, i) for i in [f for f in dir(w) if not f.startswith("__")]
-    }
+    return {i: getattr(w, i) for i in [f for f in dir(w) if not f.startswith("__")]}
 
 
 def toUUID(id):

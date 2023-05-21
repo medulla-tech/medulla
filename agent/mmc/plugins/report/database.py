@@ -95,9 +95,7 @@ class ReportDatabase(DatabaseHelper):
     def add_indicator(self, session, indicator_attr):
         try:
             if indicator := (
-                session.query(Indicator)
-                .filter_by(name=indicator_attr["name"])
-                .first()
+                session.query(Indicator).filter_by(name=indicator_attr["name"]).first()
             ):
                 indicator.fromDict(indicator_attr)
             else:

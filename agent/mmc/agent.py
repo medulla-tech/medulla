@@ -1491,7 +1491,7 @@ class PluginManager(Singleton):
             logger.error(f"Error while trying to load plugin {name}")
             logger.exception(e)
             plugin = None
-                # We do no exit but go on when another plugin than base fail
+            # We do no exit but go on when another plugin than base fail
 
         # Check that "base" plugin was loaded
         if name == "base" and not plugin:
@@ -1572,7 +1572,9 @@ class PluginManager(Singleton):
                     func = None
                 if func:
                     if not func():
-                        logger.error(f"Error in activation stage 2 for plugin '{plugin}'")
+                        logger.error(
+                            f"Error in activation stage 2 for plugin '{plugin}'"
+                        )
                         logger.error(
                             "Please check your MMC agent configuration and log"
                         )

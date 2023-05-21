@@ -264,7 +264,9 @@ class Signal(object):
                     if r_senderkey in [NONE_ID, senderkey]
                 ]
                 if self.use_caching:
-                    self.sender_receivers_cache[sender] = receivers if receivers else NO_RECEIVERS
+                    self.sender_receivers_cache[sender] = (
+                        receivers if receivers else NO_RECEIVERS
+                    )
         non_weak_receivers = []
         for receiver in receivers:
             if isinstance(receiver, WEAKREF_TYPES):
