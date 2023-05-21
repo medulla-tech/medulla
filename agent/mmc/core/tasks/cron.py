@@ -81,16 +81,10 @@ class CronSchedule(object):
         )
 
     def _getFirstDay(self, current):
-        all_doms = False
-        all_dows = False
         fdom = current.replace(day=1)
 
-        if len(self._doms) == 31:
-            all_doms = True
-
-        if len(self._dows) == 7:
-            all_dows = True
-
+        all_doms = len(self._doms) == 31
+        all_dows = len(self._dows) == 7
         # All days of the week and days of the month, return day = 1
         if all_doms and all_dows:
             return fdom
@@ -111,54 +105,35 @@ class CronSchedule(object):
         current_dow = fdom.isoweekday()
 
         # If the current day of the week is in the days of the week, return
-        if not all_dows and current_dow in dows:
+        if current_dow in dows:
             return fdom
 
         # If the first day of the month is specifically listed, return it
         if not all_doms and self._doms[0] == 1:
             return fdom
 
-        dow_distance = None
-        dom_distance = None
-
         distance = None
 
-        if not all_dows:
-            for dow in dows:
-                if dow > current_dow:
-                    dow_distance = dow - current_dow
-                    break
-
+        dow_distance = next(
+            (dow - current_dow for dow in dows if dow > current_dow), None
+        )
         if dow_distance is None:
             dow_distance = dows[0] + 7 - current_dow
 
-        if not all_doms:
-            dom_distance = self._doms[0] - 1
-
-        if not dow_distance is None and not dom_distance is None:
-            if dow_distance <= dom_distance:
-                distance = dow_distance
-            else:
-                distance = dom_distance
-
-        if distance is None and not dow_distance is None:
+        dom_distance = self._doms[0] - 1 if not all_doms else None
+        if dow_distance is not None and dom_distance is not None:
+            distance = dow_distance if dow_distance <= dom_distance else dom_distance
+        if distance is None and dow_distance is not None:
             distance = dow_distance
 
-        if distance is None and not dom_distance is None:
+        if distance is None and dom_distance is not None:
             distance = dom_distance
 
         return current.replace(day=distance + 1)
 
     def _getNextDay(self, current):
-        all_doms = False
-        all_dows = False
-
-        if len(self._doms) == 31:
-            all_doms = True
-
-        if len(self._dows) == 7:
-            all_dows = True
-
+        all_doms = len(self._doms) == 31
+        all_dows = len(self._dows) == 7
         dows = self._dows
 
         if dows[0] == 0:
@@ -204,12 +179,8 @@ class CronSchedule(object):
                         dom_distance = dom - current.day
                         break
 
-            if not dow_distance is None and dom_distance is not None:
-                if dow_distance <= dom_distance:
-                    distance = dow_distance
-                else:
-                    distance = dom_distance
-
+            if dow_distance is not None and dom_distance is not None:
+                distance = dow_distance if dow_distance <= dom_distance else dom_distance
             if distance is None and dow_distance is not None:
                 distance = dow_distance
 
@@ -297,11 +268,10 @@ def parseCronLine(line):
         raise InvalidCronLine("Cron line must be a string type")
 
     if len(line) != 5:
-        raise InvalidCronLine("Improper number of elements encountered: %s" % len(line))
+        raise InvalidCronLine(f"Improper number of elements encountered: {len(line)}")
 
-    schedule = {}
+    schedule = {"minutes": parseCronEntry(line[0], 0, 59)}
 
-    schedule["minutes"] = parseCronEntry(line[0], 0, 59)
     schedule["hours"] = parseCronEntry(line[1], 0, 23)
     schedule["doms"] = parseCronEntry(line[2], 1, 31)
     schedule["months"] = parseCronEntry(line[3], 1, 12)
@@ -363,7 +333,7 @@ def parseCronEntry(entry, min, max):
             # If this match works, then it is of the form */int
             match = _cronStepRe.search(e)
 
-            if not match is None:
+            if match is not None:
                 begin = min
                 end = max + 1
                 step = int(match.group("step"))
@@ -371,7 +341,7 @@ def parseCronEntry(entry, min, max):
         if begin is None:
             match = _cronRangeRe.search(e)
 
-            if not match is None:
+            if match is not None:
                 begin = int(match.group("begin"))
                 end = int(match.group("end")) + 1
                 step = 1
@@ -379,7 +349,7 @@ def parseCronEntry(entry, min, max):
         if begin is None:
             match = _cronRangeStepRe.search(e)
 
-            if not match is None:
+            if match is not None:
                 begin = int(match.group("begin"))
                 end = int(match.group("end")) + 1
                 step = int(match.group("step"))
@@ -397,24 +367,23 @@ def parseCronEntry(entry, min, max):
 
             if begin == end and begin % step != 0:
                 raise InvalidCronEntry(
-                    "Invalid range or step specified: %s-%s/%s" % (begin, end, step)
+                    f"Invalid range or step specified: {begin}-{end}/{step}"
                 )
 
             total.update(list(range(begin, end, step)))
-        elif not begin is None:
+        elif begin is not None:
             raise InvalidCronEntry(
-                "Invalid range or step specified: %s-%s/%s" % (begin, end, step)
+                f"Invalid range or step specified: {begin}-{end}/{step}"
             )
 
-    if len(total) == 0:
+    if not total:
         raise InvalidCronEntry("Empty cron entry")
 
     total = sorted(total)
 
     if total[0] < min or total[len(total) - 1] > max:
         raise InvalidCronEntry(
-            "Value, %s-%s, out of allowed range: %s-%s"
-            % (total[0], total[len(total) - 1], min, max)
+            f"Value, {total[0]}-{total[len(total) - 1]}, out of allowed range: {min}-{max}"
         )
 
     return total

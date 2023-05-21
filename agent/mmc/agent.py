@@ -81,7 +81,7 @@ class messagefilexmpp:
     def name_random(self, nb, pref=""):
         a = "abcdefghijklnmopqrstuvwxyz0123456789"
         d = pref
-        for t in range(nb):
+        for _ in range(nb):
             d = d + a[random.randint(0, 35)]
         return d
 
@@ -210,16 +210,14 @@ class messagefilexmpp:
             bresult = True
         except posix_ipc.BusyError:
             logger.error(
-                "An error occured while removing the queue %s" % msg["name_iq_queue"]
+                f'An error occured while removing the queue {msg["name_iq_queue"]}'
             )
         try:
             posix_ipc.unlink_message_queue(msg["name_iq_queue"])
         except:
             pass
 
-        if bresult:
-            return msgrep.decode()
-        return bresult
+        return msgrep.decode() if bresult else bresult
 
     def sendiqbytes(self, msg, timeout=None, priority=9):
         self.mpsend.send(msg, priority=9)
@@ -316,7 +314,7 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
         file_names = os.listdir(dir_name)
         result = []
         result1 = []
-        prefix = "{}".format(base_name)
+        prefix = f"{base_name}"
         for file_name in file_names:
             if file_name.startswith(prefix) and not file_name.endswith(".zip"):
                 f = os.path.join(dir_name, file_name)
@@ -338,7 +336,7 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
             dfn = self.get_files_by_date()
         except:
             return
-        dfn_zipped = "{}.zip".format(dfn)
+        dfn_zipped = f"{dfn}.zip"
         if os.path.exists(dfn_zipped):
             os.remove(dfn_zipped)
         with zipfile.ZipFile(dfn_zipped, "w") as f:
@@ -477,10 +475,7 @@ class ExcludeContainsFilter(logging.Filter):
             or
             False if the criterion is found (= don't print the record)
         """
-        if re.search(self.criterion, record.getMessage(), re.I):
-            return False
-        else:
-            return True
+        return not re.search(self.criterion, record.getMessage(), re.I)
 
 
 # include log ending by the criterion
@@ -547,8 +542,8 @@ class MmcServer(XMLRPC, object):
             else:
                 ret = getattr(self, func)
         except AttributeError:
-            logger.error(functionPath + " not found")
-            raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
+            logger.error(f"{functionPath} not found")
+            raise Fault("NO_SUCH_FUNCTION", f"No such function {functionPath}")
         return ret
 
     def _needAuth(self, functionPath):
@@ -612,11 +607,11 @@ class MmcServer(XMLRPC, object):
             s.sessionTimeout = self.config.sessiontimeout
 
         # Check authorization using HTTP Basic
-        cleartext_token = self.config.login + ":" + self.config.password
+        cleartext_token = f"{self.config.login}:{self.config.password}"
         user = str(request.getUser(), "utf-8")
         password = str(request.getPassword(), "utf-8")
 
-        token = user + ":" + password
+        token = f"{user}:{password}"
         if token != cleartext_token:
             logger.error("Invalid login / password for HTTP basic authentication")
             request.setResponseCode(http.UNAUTHORIZED)
@@ -631,20 +626,18 @@ class MmcServer(XMLRPC, object):
 
         if not s.loggedin:
             logger.debug(
-                "RPC method call from unauthenticated user: %s" % functionPath
-                + str(args)
+                f"RPC method call from unauthenticated user: {functionPath}{str(args)}"
             )
             # Save the first sent HTTP headers, as they contain some
             # informations
             s.http_headers = request.requestHeaders.copy()
         else:
             logger.debug(
-                "RPC method call from user %s: %s"
-                % (s.userid, functionPath + str(args))
+                f"RPC method call from user {s.userid}: {functionPath + str(args)}"
             )
         try:
             if not s.loggedin and self._needAuth(functionPath):
-                msg = "Authentication needed: %s" % functionPath
+                msg = f"Authentication needed: {functionPath}"
                 logger.error(msg)
                 raise Fault(8003, msg)
             else:
@@ -699,8 +692,7 @@ class MmcServer(XMLRPC, object):
 
         def _putResult(deferred, f, session, args, kwargs):
             logger.debug(
-                "Using thread #%s for %s"
-                % (threading.currentThread().getName().split("-")[2], f.__name__)
+                f'Using thread #{threading.currentThread().getName().split("-")[2]} for {f.__name__}'
             )
             # Attach current user session to the thread
             threading.currentThread().session = session
@@ -762,8 +754,6 @@ class MmcServer(XMLRPC, object):
                     result[0]["jpegPhoto"] = [
                         xmlrpc.client.Binary(result[0]["jpegPhoto"][0])
                     ]
-        except IndexError:
-            pass
         except Exception:
             pass
         try:
@@ -785,7 +775,7 @@ class MmcServer(XMLRPC, object):
                 )
             s = xmlrpc.client.dumps(result, methodresponse=1)
         except Exception as e:
-            f = Fault(self.FAILURE, "can't serialize output: " + str(e))
+            f = Fault(self.FAILURE, f"can't serialize output: {str(e)}")
             s = xmlrpc.client.dumps(f, methodresponse=1)
         s = bytes(s, encoding="utf-8")
         request.setHeader("content-length", str(len(s)))
@@ -794,15 +784,12 @@ class MmcServer(XMLRPC, object):
         request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
-        logger.error(
-            "Error during render " + functionPath + ": " + failure.getTraceback()
-        )
-        # Prepare a Fault result to return
-        result = {}
-        result["faultString"] = functionPath + " " + str(args)
-        result["faultCode"] = str(failure.type) + ": " + str(failure.value) + " "
-        result["faultTraceback"] = failure.getTraceback()
-        return result
+        logger.error(f"Error during render {functionPath}: {failure.getTraceback()}")
+        return {
+            "faultString": f"{functionPath} {str(args)}",
+            "faultCode": f"{str(failure.type)}: {str(failure.value)} ",
+            "faultTraceback": failure.getTraceback(),
+        }
 
     def _associateContext(self, request, session, userid):
         """
@@ -821,9 +808,8 @@ class MmcServer(XMLRPC, object):
                 # No context provided
                 continue
             cm = contextMaker(request, session, userid)
-            context = cm.getContext()
-            if context:
-                logger.debug("Attaching module '%s' context to user session" % mod)
+            if context := cm.getContext():
+                logger.debug(f"Attaching module '{mod}' context to user session")
                 session.contexts[mod] = context
 
         # Add associated context session to sessions set
@@ -842,9 +828,9 @@ class MmcServer(XMLRPC, object):
                     # Reloading configuration file
                     fid = open(obj.conffile, "r")
                     obj.readfp(fid, obj.conffile)
-                    if os.path.isfile(obj.conffile + ".local"):
-                        fid = open(obj.conffile + ".local", "r")
-                        obj.readfp(fid, obj.conffile + ".local")
+                    if os.path.isfile(f"{obj.conffile}.local"):
+                        fid = open(f"{obj.conffile}.local", "r")
+                        obj.readfp(fid, f"{obj.conffile}.local")
                     # Refresh config attributes
                     obj.readConf()
                 except Exception as e:
@@ -872,49 +858,40 @@ class MmcServer(XMLRPC, object):
                 r = getattr(instance, m)
                 # If attr is callable, we add it to method_list
                 if hasattr(r, "__call__"):
-                    method_list.append(mod + "." + m)
+                    method_list.append(f"{mod}.{m}")
             # Doing same thing for module.RPCProxy if exists
             if hasattr(instance, "RpcProxy"):
                 for m in dir(instance.RpcProxy):
                     r = getattr(instance.RpcProxy, m)
                     # If attr is callable, we add it to method_list
                     if hasattr(r, "__call__"):
-                        method_list.append(mod + "." + m)
+                        method_list.append(f"{mod}.{m}")
 
         return method_list
 
     def __getClassMethod(self, name):
         mod, func = self._splitFunctionPath(name)
 
-        if not mod in self.modules:
+        if mod not in self.modules:
             return None
 
         instance = self.modules[mod]
-        if hasattr(instance, "RpcProxy"):
-            if hasattr(instance.RpcProxy, func):
-                return getattr(instance.RpcProxy, func)
-            elif hasattr(instance, func):
-                return getattr(instance, func)
-            else:
-                return None
+        if hasattr(instance, "RpcProxy") and hasattr(instance.RpcProxy, func):
+            return getattr(instance.RpcProxy, func)
+        elif hasattr(instance, "RpcProxy") and hasattr(instance, func):
+            return getattr(instance, func)
         else:
             return None
 
     def methodSignature(self, name):
         method = self.__getClassMethod(name)
 
-        if method is None:
-            return []
-        else:
-            return getfullargspec(method)[0]
+        return [] if method is None else getfullargspec(method)[0]
 
     def methodHelp(self, name):
         method = self.__getClassMethod(name)
 
-        if method is None:
-            return ""
-        else:
-            return method.__doc__
+        return "" if method is None else method.__doc__
 
     # ===============================================================
 
@@ -929,9 +906,8 @@ class MmcServer(XMLRPC, object):
         @param fileprefix: Write log file in @localstatedir@/log/mmc/mmc-fileprefix.log
         @param content: string to record in log file
         """
-        f = open(localstatedir + "/log/mmc/mmc-" + fileprefix + ".log", "a")
-        f.write(time.asctime() + ": " + content + "\n")
-        f.close()
+        with open(f"{localstatedir}/log/mmc/mmc-{fileprefix}.log", "a") as f:
+            f.write(f"{time.asctime()}: {content}" + "\n")
 
 
 class MMCApp(object):
@@ -1087,11 +1063,7 @@ class MMCApp(object):
                 except OSError:
                     pass
 
-        if hasattr(os, "devnull"):
-            REDIRECT_TO = os.devnull
-        else:
-            REDIRECT_TO = "/dev/null"
-
+        REDIRECT_TO = os.devnull if hasattr(os, "devnull") else "/dev/null"
         os.open(REDIRECT_TO, os.O_RDWR)
         os.dup2(0, 1)
         os.dup2(0, 2)
@@ -1108,32 +1080,21 @@ class MMCApp(object):
         try:
             os.kill(pid, signal.SIGTERM)
         except Exception as e:
-            print("Can not terminate running mmc-agent: %s" % e)
+            print(f"Can not terminate running mmc-agent: {e}")
             return 1
 
         return 0
 
     def reload(self):
-        if self.config.enablessl:
-            protocol = "https"
-        else:
-            protocol = "http"
-
+        protocol = "https" if self.config.enablessl else "http"
         client = xmlrpc.client.ServerProxy(
-            "%s://%s:%s@%s:%s/"
-            % (
-                protocol,
-                self.config.login,
-                self.config.password,
-                self.config.host,
-                self.config.port,
-            )
+            f"{protocol}://{self.config.login}:{self.config.password}@{self.config.host}:{self.config.port}/"
         )
         try:
             client.system.reloadModulesConfiguration()
             return 0
         except Exception as e:
-            print("Unable to reload configuration: %s" % str(e))
+            print(f"Unable to reload configuration: {str(e)}")
             return 1
 
     def readPid(self):
@@ -1198,7 +1159,6 @@ class MMCApp(object):
             )
             logging.config.fileConfig(self.conffile)
 
-            # In foreground mode, log to stderr
             if not self.daemon:
                 if self.daemonlog:
                     hdlr2 = logging.StreamHandler()
@@ -1207,22 +1167,19 @@ class MMCApp(object):
 
             # Create log dir if it doesn't exist
             try:
-                os.mkdir(localstatedir + "/log/mmc")
+                os.mkdir(f"{localstatedir}/log/mmc")
             except OSError as xxx_todo_changeme:
                 # Raise exception if error is not "File exists"
                 (errno, strerror) = xxx_todo_changeme.args
                 # Raise exception if error is not "File exists"
                 if errno != 17:
                     raise
-                else:
-                    pass
-
             # Changing path to probe and load plugins
             os.chdir(os.path.dirname(globals()["__file__"]))
 
-            logger.info("mmc-agent %s starting..." % VERSION)
+            logger.info(f"mmc-agent {VERSION} starting...")
             logger.info("Using Python %s" % sys.version.split("\n")[0])
-            logger.info("Using Python Twisted %s" % twisted.copyright.version)
+            logger.info(f"Using Python Twisted {twisted.copyright.version}")
 
             logger.debug(
                 "Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid())
@@ -1243,11 +1200,9 @@ class MMCApp(object):
 
             # Ask PluginManager to load MMC plugins
             pm = PluginManager()
-            code = pm.loadPlugins()
-            if code:
+            if code := pm.loadPlugins():
                 logger.debug(
-                    "The initialisation of the XMLRPC Server returned the code: %s "
-                    % code
+                    f"The initialisation of the XMLRPC Server returned the code: {code} "
                 )
                 return code
 
@@ -1255,13 +1210,13 @@ class MMCApp(object):
                 self.startService(pm.plugins)
             except Exception as e:
                 # This is a catch all for all the exception that can happened
-                logger.exception("Program exception: " + str(e))
+                logger.exception(f"Program exception: {str(e)}")
                 logger.debug("The initialisation of the XMLRPC Server returned 1")
                 return 1
 
             l.commit()
         except Exception:
-            logger.error("%s" % (traceback.format_exc()))
+            logger.error(f"{traceback.format_exc()}")
         logger.debug("The initialisation of the XMLRPC Server returned 0")
         return 0
 
@@ -1287,8 +1242,7 @@ class MMCApp(object):
         # Add event handler before shutdown
         reactor.addSystemEventTrigger("before", "shutdown", self.cleanUp)
         logger.info(
-            "Listening to XML-RPC requests on %s:%s"
-            % (self.config.host, self.config.port)
+            f"Listening to XML-RPC requests on {self.config.host}:{self.config.port}"
         )
         # Start client XMPP if module xmppmaster enable
         if PluginManager().isEnabled("xmppmaster"):
@@ -1471,7 +1425,7 @@ class PluginManager(Singleton):
         plugins = []
         for path in glob.glob(os.path.join(self.pluginDirectory, "*", "__init__.py*")):
             plugin = path.split("/")[1]
-            if not plugin in plugins:
+            if plugin not in plugins:
                 plugins.append(plugin)
         return plugins
 
@@ -1490,15 +1444,15 @@ class PluginManager(Singleton):
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "plugins")
         )
         try:
-            logger.debug("Trying to load module %s" % name)
+            logger.debug(f"Trying to load module {name}")
             spec = importlib.util.find_spec(name)
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
-            logger.debug("Module %s loaded" % name)
+            logger.debug(f"Module {name} loaded")
         except Exception as e:
             logger.exception(e)
             logger.error(
-                "Module " + name + " raise an exception.\n" + name + " not loaded."
+                f"Module {name}" + " raise an exception.\n" + name + " not loaded."
             )
             return 0
 
@@ -1514,12 +1468,12 @@ class PluginManager(Singleton):
             # logger.debug('Trying to force startup of plugin %s but no "activateForced" method found\nFalling back to the normale activate method' % (name,))
 
             version = "version: " + str(getattr(plugin, "getVersion")())
-            logger.info("Plugin %s loaded, %s" % (name, version))
+            logger.info(f"Plugin {name} loaded, {version}")
 
             func = getattr(plugin, "activate")
 
         except AttributeError as error:
-            logger.error("%s is not a MMC plugin." % name)
+            logger.error(f"{name} is not a MMC plugin.")
             logger.error("We obtained the error \n %s." % error)
             plugin = None
             return 0
@@ -1528,16 +1482,16 @@ class PluginManager(Singleton):
         try:
             if func():
                 version = "version: " + str(getattr(plugin, "getVersion")())
-                logger.info("Plugin %s loaded, %s" % (name, version))
+                logger.info(f"Plugin {name} loaded, {version}")
             else:
                 # If we can't activate it
-                logger.warning("Plugin %s not loaded." % name)
+                logger.warning(f"Plugin {name} not loaded.")
                 plugin = None
         except Exception as e:
-            logger.error("Error while trying to load plugin " + name)
+            logger.error(f"Error while trying to load plugin {name}")
             logger.exception(e)
             plugin = None
-            # We do no exit but go on when another plugin than base fail
+                # We do no exit but go on when another plugin than base fail
 
         # Check that "base" plugin was loaded
         if name == "base" and not plugin:
@@ -1557,16 +1511,14 @@ class PluginManager(Singleton):
         ignore the disable = 1 configuration option)
         """
         if name in self.getEnabledPluginNames() or name in self.plugins:
-            logger.warning("Trying to start an already loaded plugin: %s" % (name,))
+            logger.warning(f"Trying to start an already loaded plugin: {name}")
             return 0
         res = self.loadPlugin(name, force=True)
         if res == 0:
             return 0
         elif res is not None and not isinstance(res, int):
             self.plugins[name] = res
-            getattr(self.plugins["base"], "setModList")(
-                [name for name in list(self.plugins.keys())]
-            )
+            getattr(self.plugins["base"], "setModList")(list(list(self.plugins.keys())))
         elif res == 4:
             return 4
         return res
@@ -1583,7 +1535,7 @@ class PluginManager(Singleton):
         sys.path.append("plugins")
         # self.modList = []
         plugins = self.getAvailablePlugins()
-        if not "base" in plugins:
+        if "base" not in plugins:
             logger.error("Plugin 'base' is not available. Please install it.")
             return 1
         else:
@@ -1620,18 +1572,14 @@ class PluginManager(Singleton):
                     func = None
                 if func:
                     if not func():
-                        logger.error(
-                            "Error in activation stage 2 for plugin '%s'" % plugin
-                        )
+                        logger.error(f"Error in activation stage 2 for plugin '{plugin}'")
                         logger.error(
                             "Please check your MMC agent configuration and log"
                         )
                         return 4
 
         # Set module list
-        getattr(self.plugins["base"], "setModList")(
-            [name for name in list(self.plugins.keys())]
-        )
+        getattr(self.plugins["base"], "setModList")(list(list(self.plugins.keys())))
         return 0
 
     def stopPlugin(self, name):
@@ -1641,18 +1589,16 @@ class PluginManager(Singleton):
         @rtype: boolean
         returns: True on success, False if the module is not loaded.
         """
-        if not name in self.plugins:
+        if name not in self.plugins:
             return False
         plugin = self.plugins[name]
         try:
             deactivate = getattr(plugin, "deactivate")
         except AttributeError:
-            logger.info("Plugin %s has no deactivate function" % (name,))
+            logger.info(f"Plugin {name} has no deactivate function")
         else:
-            logger.info("Deactivating plugin %s" % (name,))
+            logger.info(f"Deactivating plugin {name}")
             deactivate()
         del self.plugins[name]
-        getattr(self.plugins["base"], "setModList")(
-            [name for name in list(self.plugins.keys())]
-        )
+        getattr(self.plugins["base"], "setModList")(list(list(self.plugins.keys())))
         return True

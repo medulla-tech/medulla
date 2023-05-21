@@ -14,7 +14,7 @@ except ImportError:
 
 
 def usage(argv):
-    print("Usage: %s db_conn_string [--id entity_id|--name entity_name]" % argv[0])
+    print(f"Usage: {argv[0]} db_conn_string [--id entity_id|--name entity_name]")
     print(
         "Where db_conn_string is a SQLAlchemy connection string, e.g. mysql://user:password@host/database",
     )
@@ -22,7 +22,7 @@ def usage(argv):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2 and len(sys.argv) != 4:
+    if len(sys.argv) not in [2, 4]:
         sys.exit(usage(sys.argv))
 
     if not __version__.startswith("0.4"):
@@ -39,7 +39,7 @@ if __name__ == "__main__":
             name_entity = sys.argv[3]
             get_entity = True
         else:
-            print("dont know this option : %s" % sys.argv[2])
+            print(f"dont know this option : {sys.argv[2]}")
             sys.exit(1)
 
     mysql_db = create_engine(sys.argv[1])
@@ -80,14 +80,13 @@ if __name__ == "__main__":
                 .execute()
                 .fetchall()
             )
-        if ent == None or len(ent) == 0:
+        if ent is None or len(ent) == 0:
             print("Cant get the required entity")
             sys.exit(1)
         entity_id = ent[0][0]
 
-    into_hasentity = []
-    for computer in computers:
-        into_hasentity.append(
-            {"machine": computer[1], "entity": entity_id, "inventory": computer[0]}
-        )
+    into_hasentity = [
+        {"machine": computer[1], "entity": entity_id, "inventory": computer[0]}
+        for computer in computers
+    ]
     connection.execute(hasentity.insert(), into_hasentity)

@@ -22,12 +22,11 @@ logger = logging.getLogger()
 
 
 def simplecommand(cmd):
-    obj = {}
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
     result = p.stdout.readlines()
-    obj["code"] = p.wait()
+    obj = {"code": p.wait()}
     obj["result"] = result
     return obj
 
@@ -192,8 +191,7 @@ class managepackage:
         for x in managepackage.search_list_package():
             if verbeux:
                 logger.debug(
-                    "symbolic link %s to %s"
-                    % (x, os.path.join(dirpackage, os.path.basename(x)))
+                    f"symbolic link {x} to {os.path.join(dirpackage, os.path.basename(x))}"
                 )
 
             try:
@@ -244,11 +242,10 @@ class managepackage:
             with open(filename, "r") as info:
                 jsonFile = info.read()
             try:
-                outputJSONFile = json.loads(jsonFile)
-                return outputJSONFile
+                return json.loads(jsonFile)
             except Exception as e:
-                logger.error("We failed to decode the file %s" % filename)
-                logger.error("we encountered the error: %s" % str(e))
+                logger.error(f"We failed to decode the file {filename}")
+                logger.error(f"we encountered the error: {str(e)}")
         return None
 
     @staticmethod
@@ -275,7 +272,7 @@ class managepackage:
                     "Please verify the format of the descriptor for"
                     "the package %s." % s
                 )
-                logger.error("we are encountering the error: %s" % str(e))
+                logger.error(f"we are encountering the error: {str(e)}")
         return None
 
     @staticmethod
@@ -312,7 +309,7 @@ class managepackage:
                     "Please verify the version for the package %s in the descriptor"
                     "in the xmppdeploy.json file." % package
                 )
-                logger.error("we are encountering the error: %s" % str(e))
+                logger.error(f"we are encountering the error: {str(e)}")
         return None
 
     @staticmethod
@@ -345,7 +342,7 @@ class managepackage:
                     "Please verify the name for the package %s in the descriptor"
                     "in the xmppdeploy.json file." % package
                 )
-                logger.error("we are encountering the error: %s" % str(e))
+                logger.error(f"we are encountering the error: {str(e)}")
         return None
 
     @staticmethod
@@ -366,9 +363,9 @@ class managepackage:
                 if "id" in outputJSONFile and outputJSONFile["id"] == uuidpackage:
                     return package
             except Exception as e:
-                logger.error("The conf.json for the package %s is missing" % package)
-                logger.error("we are encountering the error: %s" % str(e))
-        logger.error("We did not find the package %s" % package)
+                logger.error(f"The conf.json for the package {package} is missing")
+                logger.error(f"we are encountering the error: {str(e)}")
+        logger.error(f"We did not find the package {package}")
         return None
 
     @staticmethod
@@ -395,8 +392,7 @@ class managepackage:
                     return outputJSONFile["version"]
             except Exception as e:
                 logger.error(
-                    "package %s verify format descriptor conf.json [%s]"
-                    % (packageuuid, str(e))
+                    f"package {packageuuid} verify format descriptor conf.json [{str(e)}]"
                 )
         logger.error(
             "package %s verify version" "in descriptor conf.json [%s]" % (packageuuid)
@@ -420,8 +416,7 @@ class managepackage:
         )
         if os.path.isfile(jsonfile):
             try:
-                outputJSONFile = managepackage.loadjsonfile(jsonfile)
-                return outputJSONFile
+                return managepackage.loadjsonfile(jsonfile)
             except Exception:
                 return None
 

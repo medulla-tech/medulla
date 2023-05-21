@@ -32,7 +32,7 @@ class Parser(object):
 
                 self._backend = pickle
         else:
-            raise TypeError("Unknown parser type: %s" % backend)
+            raise TypeError(f"Unknown parser type: {backend}")
 
     def encode(self, value):
         return self._backend.dumps(value)

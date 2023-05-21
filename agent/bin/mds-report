@@ -100,20 +100,17 @@ class Report:
             print(plugin, end=' ')
         print()
         self.plugins = plugins
-        dlist = []
-        for plugin in plugins:
-            dlist.append(self.getPluginVersion(plugin))
+        dlist = [self.getPluginVersion(plugin) for plugin in plugins]
         dl = defer.DeferredList(dlist)
         dl.addCallback(self.getUsersCount)
 
     def getPluginVersion(self, plugin):
-        return self.proxy.callRemote(
-            "%s.getVersion" %
-            plugin).addCallbacks(
-            self.printPluginVersion, self.receiveError, (plugin,))
+        return self.proxy.callRemote(f"{plugin}.getVersion").addCallbacks(
+            self.printPluginVersion, self.receiveError, (plugin,)
+        )
 
     def printPluginVersion(self, version, *args):
-        print("%s plugin version: %s" % (args[0], version))
+        print(f"{args[0]} plugin version: {version}")
 
     def getUsersCount(self, value):
         self.proxy.callRemote("base.getUsersLdap").addCallbacks(

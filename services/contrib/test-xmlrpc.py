@@ -40,12 +40,12 @@ class Options(twisted.python.usage.Options):
 
 
 def _cb(result):  # server do answer us
-    print("RESULT : %s" % result)
+    print(f"RESULT : {result}")
     twisted.internet.reactor.callLater(0, _end)
 
 
 def _eb(reason):  # can't contact scheduler
-    print("ERROR : %s" % reason)
+    print(f"ERROR : {reason}")
     twisted.internet.reactor.callLater(0, _end)
 
 
@@ -65,11 +65,8 @@ def _end():
 
 # parse cli args
 def parseCliArgs(config):
-    args = []
     method = config["func"]
-    if config["args"]:
-        args = config["args"].split(";")
-
+    args = config["args"].split(";") if config["args"] else []
     parsedargs = []
     for arg in args:  # parse args
         tokenlist = arg.split("|")  # split arrays args
@@ -100,8 +97,6 @@ def parseCliArgs(config):
 
         if isinstance(items, type({})):
             parsedargs.append(items)
-        elif isinstance(items, type([])):
-            parsedargs += items
         else:
             parsedargs += items
         del items
@@ -113,8 +108,8 @@ config = Options()
 try:
     config.parseOptions()
 except twisted.python.usage.UsageError as errortext:
-    print("%s: %s" % (sys.argv[0], errortext))
-    print("%s: Try --help for usage details." % (sys.argv[0]))
+    print(f"{sys.argv[0]}: {errortext}")
+    print(f"{sys.argv[0]}: Try --help for usage details.")
     sys.exit(1)
 
 twisted.internet.reactor.callWhenRunning(_start)

@@ -42,8 +42,7 @@ def subnetForIpMask(ip, netmask):
     try:
         ip = [int(x) for x in ip.split(".")]
         netmask = [int(x) for x in netmask.split(".")]
-        for i in range(4):
-            result.append(str(ip[i] & netmask[i]))
+        result.extend(str(ip[i] & netmask[i]) for i in range(4))
         result = ".".join(result)
         return True, result
     except ValueError:
@@ -52,9 +51,8 @@ def subnetForIpMask(ip, netmask):
 
 def tmpfile(name, string):
     if logging.getLogger().getEffectiveLevel() <= logging.DEBUG:
-        z = open("/tmp/%s" % name, "w")
-        z.write(string)
-        z.close()
+        with open(f"/tmp/{name}", "w") as z:
+            z.write(string)
 
 
 def parsejsoninventory(file, file_content):

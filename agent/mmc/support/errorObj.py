@@ -29,11 +29,7 @@ class errorMessage:
             # No handler defined
             # We create a default handler that writes to stderr
             logger.addHandler(logging.StreamHandler())
-        logger.error("__call " + self.funcName + "\n" + self.message)
+        logger.error(f"__call {self.funcName}" + "\n" + self.message)
 
         self.message = re.sub("\n", "<br />\n", self.message)
-        t = dict()
-        t["errorFuncNameXMLRPC"] = self.funcName
-        t["errorCodeXMLRPC"] = self.message
-
-        return t
+        return {"errorFuncNameXMLRPC": self.funcName, "errorCodeXMLRPC": self.message}

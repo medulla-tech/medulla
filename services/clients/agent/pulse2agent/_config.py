@@ -25,14 +25,14 @@ class InvalidSection(ConfigError):
     """Raised when called section is not declared correctly"""
 
     def __repr__(self):
-        return "Section <%s> must be declared as nested class" % self.name
+        return f"Section <{self.name}> must be declared as nested class"
 
 
 class DefaultsNotFound(ConfigError):
     """Raised when section declared in config file not found in defaults"""
 
     def __repr__(self):
-        return "Section <%s> not found in defaults" % self.name
+        return f"Section <{self.name}> not found in defaults"
 
 
 class ExtendedConfigParser(RawConfigParser):
@@ -145,9 +145,9 @@ class ConfigReader(type):
         @param attrs: dictionnary of attributtes
         @type attrs: dict
         """
-        att_dict = dict(
-            (k, v) for (k, v) in list(cls.__dict__.items()) if not k.startswith("__")
-        )
+        att_dict = {
+            k: v for (k, v) in list(cls.__dict__.items()) if not k.startswith("__")
+        }
 
         attrs.update(att_dict)
 
@@ -202,15 +202,14 @@ class ConfigReader(type):
         @return: datatype bases and related converting method
         @rtype: generator
         """
-        for base, method in [
+        yield from [
             (bool, parser.getboolean),
             (int, parser.getint),
             (float, parser.getfloat),
             (str, parser.get),
             (str, parser.get),
             (list, parser.getlist),
-        ]:
-            yield base, method
+        ]
 
     def _update_options(self, config_file, section):
         """
@@ -235,7 +234,4 @@ class ConfigReader(type):
                             setattr(section, name, new_value)
                     except TypeError as e:
                         print(e)
-                else:
-                    # defalt value stays unchanged
-                    pass
         setattr(self, section.__name__, section)

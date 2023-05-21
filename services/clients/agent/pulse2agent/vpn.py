@@ -23,7 +23,7 @@ class VPNLaunchControl(Component):
 
         cmd = [command] + command_args
 
-        self.logger.info("VPN Server command: %s" % repr(cmd))
+        self.logger.info(f"VPN Server command: {repr(cmd)}")
 
         process = Popen(
             cmd,
@@ -32,17 +32,14 @@ class VPNLaunchControl(Component):
         )
         out, err = process.communicate()
 
-        self.logger.debug("VPN Server stdout: %s" % out)
-        self.logger.debug("VPN Server stderr: %s" % err)
-        self.logger.debug("VPN Server start exitcode: %s" % process.returncode)
+        self.logger.debug(f"VPN Server stdout: {out}")
+        self.logger.debug(f"VPN Server stderr: {err}")
+        self.logger.debug(f"VPN Server start exitcode: {process.returncode}")
 
         # self.queue.put((out, err))
 
         # TODO - do not return directly - return something from CC
-        if process.returncode == 0:
-            return CC.VPN | CC.DONE
-        else:
-            return CC.VPN | CC.FAILED
+        return CC.VPN | CC.DONE if process.returncode == 0 else CC.VPN | CC.FAILED
 
     def probe(self):
         return probe(

@@ -22,9 +22,7 @@ class mmcException(Exception):
             logger.addHandler(logging.StreamHandler())
         f = sys.exc_info()[2].tb_frame
         obj = f.f_locals.get("self", None)
-        self.funcname = obj.__class__.__name__ + "::" + f.f_code.co_name
-        callStr = self.funcname + "::" + str(f.f_lineno)
-        nkargs = []
-        for item in kargs:
-            nkargs.append(str(item))
-        logger.exception(callStr + " " + " ".join(nkargs))
+        self.funcname = f"{obj.__class__.__name__}::{f.f_code.co_name}"
+        callStr = f"{self.funcname}::{str(f.f_lineno)}"
+        nkargs = [str(item) for item in kargs]
+        logger.exception(f"{callStr} " + " ".join(nkargs))

@@ -152,14 +152,14 @@ class SSLSocketServer(object):
             )
             result = ssl_client.read(1024)
 
-            print("result received on SSL server: %s" % result)
+            print(f"result received on SSL server: {result}")
             return result
 
     def send_response(self):
         data = self.send_queue.get()
         if data is not None:
             time.sleep(1)
-            print("sending data: %s" % data)
+            print(f"sending data: {data}")
             self.server.send(data)
 
     def shutdown(self):
@@ -293,7 +293,7 @@ class Test00_Connector(TestCase):
         client_sock.sendall("something")
         # geting the data received on server
         result = queue.get()
-        print("test5 result: %s" % result)
+        print(f"test5 result: {result}")
         self.assertEqual(result, "something")
 
         client_sock.close()

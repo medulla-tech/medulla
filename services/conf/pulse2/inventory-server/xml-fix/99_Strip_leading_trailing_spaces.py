@@ -17,6 +17,6 @@ def xml_fix(xml):
     root = tree.getroot()
     for elem in root.iter():
         # Only existing entries without childs
-        if len(list(elem)) == 0 and elem.text:
+        if not list(elem) and elem.text:
             elem.text = elem.text.strip()
     return ET.tostring(root)

@@ -60,31 +60,28 @@ class BaseAction(object):
 
         if options.inifile:
             if not os.path.exists(options.inifile):
-                log.error('No such file: %s' % options.inifile)
+                log.error(f'No such file: {options.inifile}')
                 sys.exit(ERROR_BAD_CONFIG_PATH)
 
         self.config = P2PServerCP()
         try:
             self.config.setup(options.inifile)
         except Exception as e:
-            log.error('Error parsing conf file: %s' % e)
+            log.error(f'Error parsing conf file: {e}')
             sys.exit(ERROR_BAD_CONFIG)
 
         # Some magic ?
         self.config.imaging_api['mount_point'] = self.config.imaging_api['mount_point'].replace('/', '')
 
-        self.client_url = "%s://%s:%s/%s" % (self.config.proto,
-                                             self.config.public_ip,
-                                             str(self.config.port),
-                                             self.config.imaging_api['mount_point'])
+        self.client_url = f"{self.config.proto}://{self.config.public_ip}:{str(self.config.port)}/{self.config.imaging_api['mount_point']}"
 
         self.uuid = self.config.imaging_api['uuid']
         if not self.uuid:
-            log.error("No uuid in config file: %s" % inifile)
+            log.error(f"No uuid in config file: {inifile}")
             sys.exit(ERROR_NO_UUID)
 
-        log.debug("Connecting from: %s" % self.client_url)
-        log.debug("Connecting to: %s" % options.mmc_url)
+        log.debug(f"Connecting from: {self.client_url}")
+        log.debug(f"Connecting to: {options.mmc_url}")
         self.proxy = async_.Proxy(bytes(options.mmc_url, 'utf-8'))
 
     def _check_options(self, options):
@@ -155,7 +152,7 @@ class RegisterAction(BaseAction):
             log.info('Registration succeeded')
             code = 0
         else:
-            log.error('Registration failed: %s' % msg)
+            log.error(f'Registration failed: {msg}')
             code = ERROR_REGISTRATION_FAILURE
 
         reactor.stop()
@@ -220,11 +217,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     # For the rest, it is handled by *Actions
-    if options.check:
-        action = CheckAction(options)
-    else:
-        action = RegisterAction(options)
-
+    action = CheckAction(options) if options.check else RegisterAction(options)
     action.run()
     reactor.run()
     sys.exit(code)

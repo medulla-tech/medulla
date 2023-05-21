@@ -28,7 +28,7 @@ class AuthenticationManager(Singleton):
         @param name: the name of the authenticator
         @param klass: the class name of the authenticator
         """
-        self.logger.debug("Registering authenticator %s / %s" % (name, str(klass)))
+        self.logger.debug(f"Registering authenticator {name} / {str(klass)}")
         self.components.append((name, klass))
 
     def validate(self):
@@ -44,19 +44,16 @@ class AuthenticationManager(Singleton):
                 self.logger.exception(e)
                 valid = False
             if valid:
-                self.logger.info("Authenticator %s successfully validated" % name)
+                self.logger.info(f"Authenticator {name} successfully validated")
                 tmp.append((name, klass))
             else:
-                self.logger.info("Authenticator %s failed to validate" % name)
+                self.logger.info(f"Authenticator {name} failed to validate")
                 if mandatory:
-                    self.logger.error(
-                        "Authenticator %s is configured as mandatory, exiting" % name
-                    )
+                    self.logger.error(f"Authenticator {name} is configured as mandatory, exiting")
                     ret = False
                 else:
                     self.logger.info(
-                        "Authenticator %s is not configured as mandatory, so going on"
-                        % name
+                        f"Authenticator {name} is not configured as mandatory, so going on"
                     )
         self.components = tmp
         return ret
@@ -67,9 +64,7 @@ class AuthenticationManager(Singleton):
             for name in names.split():
                 for n, k in self.components:
                     if n == name:
-                        self.logger.info(
-                            "Selecting authenticator %s / %s" % (n, str(k))
-                        )
+                        self.logger.info(f"Selecting authenticator {n} / {str(k)}")
                         tmp.append((n, k))
         self.components = tmp
 
@@ -84,21 +79,17 @@ class AuthenticationManager(Singleton):
         token = AuthenticationToken()
         for name, klass in self.components:
             instance = klass()
-            self.logger.debug(
-                "Try to authenticate user with %s / %s" % (name, str(klass))
-            )
+            self.logger.debug(f"Try to authenticate user with {name} / {str(klass)}")
             if instance.config.authonly:
                 if user.lower() not in instance.config.authonly:
                     self.logger.debug(
-                        "User %s is not in the authonly list of this authenticator, so we skip it"
-                        % user
+                        f"User {user} is not in the authonly list of this authenticator, so we skip it"
                     )
                     continue
             if instance.config.exclude:
                 if user.lower() in instance.config.exclude:
                     self.logger.debug(
-                        "User %s is in the exclude list of this authenticator, so we skip it"
-                        % user
+                        f"User {user} is in the exclude list of this authenticator, so we skip it"
                     )
             try:
                 token = instance.authenticate(user, password)
@@ -106,7 +97,7 @@ class AuthenticationManager(Singleton):
                 self.logger.exception(e)
                 raise AuthenticationError
             self.logger.debug(
-                "Authentication result: " + str(token.authenticated) + str(token.infos)
+                f"Authentication result: {str(token.authenticated)}{str(token.infos)}"
             )
             if token.authenticated:
                 # the authentication succeeded
@@ -125,12 +116,11 @@ class AuthenticatorConfig(MMCConfigParser):
         self.conffile = conffile
         self.section = section
         self.setDefault()
-        fp = open(self.conffile, "r")
-        self.readfp(fp, self.conffile)
-        if os.path.isfile(self.conffile + ".local"):
-            self.readfp(open(self.conffile + ".local", "r"))
-        self.readConf()
-        fp.close()
+        with open(self.conffile, "r") as fp:
+            self.readfp(fp, self.conffile)
+            if os.path.isfile(f"{self.conffile}.local"):
+                self.readfp(open(f"{self.conffile}.local", "r"))
+            self.readConf()
 
     def readConf(self):
         for option in ["authonly", "exclude"]:
@@ -168,7 +158,7 @@ class AuthenticatorI:
         @param name: the authenticator name
         """
         self.logger = logging.getLogger()
-        self.config = klass(conffile, "authentication_" + name)
+        self.config = klass(conffile, f"authentication_{name}")
 
     def authenticate(self, user, password):
         """

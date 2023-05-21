@@ -18,23 +18,17 @@ class DashboardManager(object, metaclass=SingletonN):
         self.panel = {}
 
     def register_panel(self, panel):
-        if not panel.id in self.config.disabled_panels:
-            logger.debug("Registering panel %s" % panel)
+        if panel.id not in self.config.disabled_panels:
+            logger.debug(f"Registering panel {panel}")
             self.panel[panel.id] = panel
         else:
-            logger.info("Panel %s disabled by configuration" % panel)
+            logger.info(f"Panel {panel} disabled by configuration")
 
     def get_panels(self):
         return [name for name, panel in list(self.panel.items())]
 
     def get_panel_infos(self, panel):
-        if panel in self.panel:
-            return self.panel[panel].serialize()
-        else:
-            return False
+        return self.panel[panel].serialize() if panel in self.panel else False
 
     def get_panels_infos(self):
-        infos = {}
-        for name, panel in list(self.panel.items()):
-            infos[name] = panel.serialize()
-        return infos
+        return {name: panel.serialize() for name, panel in list(self.panel.items())}

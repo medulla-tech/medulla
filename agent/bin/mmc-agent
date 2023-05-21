@@ -88,16 +88,16 @@ if __name__ == "__main__":
 
     # Check config file
     if not os.path.exists(options.inifile):
-        print("File '%s' does not exist." % options.inifile)
+        print(f"File '{options.inifile}' does not exist.")
         sys.exit(3)
 
     # Load configuration file
     try:
         cp = MMCConfigParser()
         cp.read(options.inifile)
-        cp.read(options.inifile + '.local')
+        cp.read(f'{options.inifile}.local')
     except Exception as e:
-        print(str(e))
+        print(e)
         sys.exit(3)
 
     # Start the application

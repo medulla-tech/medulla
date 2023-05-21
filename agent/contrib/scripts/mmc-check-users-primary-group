@@ -26,6 +26,7 @@ This little tool checks for all directory users that:
  - the user is a member of her/primary group
 """
 
+
 from mmc.plugins.base import ldapUserGroupControl
 
 l = ldapUserGroupControl()
@@ -40,8 +41,8 @@ for user in users:
             pgroup = l.getDetailedGroupById(pgidnumber)
         except UnboundLocalError:
             print(
-                "Warning user %s: Primary group with this GID number doesn't exist: %s" %
-                (uid, pgidnumber))
+                f"Warning user {uid}: Primary group with this GID number doesn't exist: {pgidnumber}"
+            )
             continue
         gname = pgroup['cn'][0]
         try:
@@ -50,8 +51,8 @@ for user in users:
             members = []
         if uid not in members:
             c = input(
-                'User "%s" is not a member of her/his primary group "%s". Fix it ? (y/n) ' %
-                (uid, gname))
+                f'User "{uid}" is not a member of her/his primary group "{gname}". Fix it ? (y/n) '
+            )
             if c in ['y', 'Y']:
                 print('Fixing user entry')
                 l.addUserToGroup(gname, uid)

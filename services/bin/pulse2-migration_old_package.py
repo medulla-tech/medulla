@@ -53,7 +53,7 @@ def packages_list():
 def main():
     for path_packagename in packages_list():
         jsonfile_name = os.path.join(path_packagename, "conf.json")
-        print("We are looking for file %s" % jsonfile_name)
+        print(f"We are looking for file {jsonfile_name}")
         try:
             jsondata = readjsonfile(jsonfile_name)
             modif = False
@@ -62,18 +62,16 @@ def main():
                 jsondata["localisation_server"] = name_of_share
                 print("The localisation_server key is missing")
                 modif = True
-            else:
-                if jsondata["localisation_server"].strip() == "":
-                    jsondata["localisation_server"] = name_of_share
-                    print("The localisation_server key is available but empty")
-                    modif = True
-                elif jsondata["localisation_server"].strip() != name_of_share:
-                    print(
-                        "The localisation_server key is available but with an error. The wrong value is %s"
-                        % jsondata["localisation_server"]
-                    )
-                    jsondata["localisation_server"] = name_of_share
-                    modif = True
+            elif jsondata["localisation_server"].strip() == "":
+                jsondata["localisation_server"] = name_of_share
+                print("The localisation_server key is available but empty")
+                modif = True
+            elif jsondata["localisation_server"].strip() != name_of_share:
+                print(
+                    f'The localisation_server key is available but with an error. The wrong value is {jsondata["localisation_server"]}'
+                )
+                jsondata["localisation_server"] = name_of_share
+                modif = True
             if "previous_localisation_server" not in jsondata:
                 jsondata["previous_localisation_server"] = name_of_share
                 print("The previous_localisation_server key is missing")
@@ -90,15 +88,15 @@ def main():
                 print("The metagenerator key is missing")
                 jsondata["metagenerator"] = "expert"
             if modif:
-                print("save file %s" % jsonfile_name)
+                print(f"save file {jsonfile_name}")
                 writejsonfile(jsonfile_name, jsondata)
                 print("new file \n %s" % json.dumps(jsondata, indent=4))
             else:
                 print("Correct values pour ce packages")
             print("The package is now fixed")
         except:
-            print("VERIFY JSON FILE %s" % jsonfile_name)
-            print("%s" % traceback.format_exc())
+            print(f"VERIFY JSON FILE {jsonfile_name}")
+            print(f"{traceback.format_exc()}")
     return 0
 
 

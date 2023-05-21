@@ -27,17 +27,17 @@ class ProvisioningManager(Singleton):
         @param name: the name of the provisioner
         @param klass: the class name of the provisioner
         """
-        self.logger.debug("Registering provisioner %s / %s" % (name, str(klass)))
+        self.logger.debug(f"Registering provisioner {name} / {str(klass)}")
         self.components.append((name, klass))
 
     def select(self, names):
-        self.logger.debug("Selecting provisioners: " + str(names))
+        self.logger.debug(f"Selecting provisioners: {str(names)}")
         tmp = []
         if names:
             for name in names.split():
                 for n, k in self.components:
                     if n == name:
-                        self.logger.info("Selecting provisioner %s / %s" % (n, str(k)))
+                        self.logger.info(f"Selecting provisioner {n} / {str(k)}")
                         tmp.append((n, k))
         self.components = tmp
 
@@ -54,19 +54,16 @@ class ProvisioningManager(Singleton):
                 self.logger.exception(e)
                 valid = False
             if valid:
-                self.logger.info("Provisioner %s successfully validated" % name)
+                self.logger.info(f"Provisioner {name} successfully validated")
                 tmp.append((name, klass))
             else:
-                self.logger.info("Provisioner %s failed to validate" % name)
+                self.logger.info(f"Provisioner {name} failed to validate")
                 if mandatory:
-                    self.logger.error(
-                        "Provisioner %s is configured as mandatory, exiting" % name
-                    )
+                    self.logger.error(f"Provisioner {name} is configured as mandatory, exiting")
                     ret = False
                 else:
                     self.logger.info(
-                        "Provisioner %s is not configured as mandatory, so going on"
-                        % name
+                        f"Provisioner {name} is not configured as mandatory, so going on"
                     )
         self.components = tmp
         return ret
@@ -89,12 +86,11 @@ class ProvisioningManager(Singleton):
         if authtoken.isAuthenticated():
             login = authtoken.getLogin()
             for name, klass in self.components:
-                self.logger.debug("Provisioning user with %s / %s" % (name, str(klass)))
+                self.logger.debug(f"Provisioning user with {name} / {str(klass)}")
                 instance = klass()
                 if login.lower() in instance.config.exclude:
                     self.logger.debug(
-                        "User %s is in the exclude list of this provisioner, so skipping it"
-                        % login
+                        f"User {login} is in the exclude list of this provisioner, so skipping it"
                     )
                     continue
                 if not d:
@@ -122,12 +118,11 @@ class ProvisionerConfig(ConfigParser):
         self.conffile = conffile
         self.section = section
         self.setDefault()
-        fp = open(self.conffile, "r")
-        self.readfp(fp, self.conffile)
-        if os.path.isfile(self.conffile + ".local"):
-            self.readfp(open(self.conffile + ".local", "r"))
-        self.readConf()
-        fp.close()
+        with open(self.conffile, "r") as fp:
+            self.readfp(fp, self.conffile)
+            if os.path.isfile(f"{self.conffile}.local"):
+                self.readfp(open(f"{self.conffile}.local", "r"))
+            self.readConf()
 
     def readConf(self):
         for option in ["exclude"]:
@@ -164,7 +159,7 @@ class ProvisionerI:
         @param name: the provisioner name
         """
         self.logger = logging.getLogger()
-        self.config = klass(conffile, "provisioning_" + name)
+        self.config = klass(conffile, f"provisioning_{name}")
 
     def doProvisioning(self, authtoken):
         """

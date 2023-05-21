@@ -39,13 +39,12 @@ class MMCConfigParser(ConfigParser):
         except InterpolationError as exc:
             kwargs["raw"] = True
             value = ConfigParser.get(self, section, option, **kwargs)
-            if "%(baseDN)s" in value:
-                from mmc.plugins.base import BasePluginConfig
-
-                config = PluginConfigFactory.new(BasePluginConfig, "base")
-                value = value.replace("%(baseDN)s", config.baseDN)
-            else:
+            if "%(baseDN)s" not in value:
                 raise InterpolationError
+            from mmc.plugins.base import BasePluginConfig
+
+            config = PluginConfigFactory.new(BasePluginConfig, "base")
+            value = value.replace("%(baseDN)s", config.baseDN)
         return value
 
     def safe_get(self, section, option, default=None):
@@ -75,14 +74,11 @@ class MMCConfigParser(ConfigParser):
         For example: passwd = {base64}bWFuL2RyaXZhMjAwOA==
         """
         value = self.get(section, option)
-        match = re.search("^{(\w+)}(.+)$", value)
-        if match:
-            scheme = match.group(1)
-            obfuscated = match.group(2)
-            ret = obfuscated.decode(scheme)
-        else:
-            ret = value
-        return ret
+        if not (match := re.search("^{(\w+)}(.+)$", value)):
+            return value
+        scheme = match[1]
+        obfuscated = match[2]
+        return obfuscated.decode(scheme)
 
 
 class PluginConfig(MMCConfigParser):
@@ -100,15 +96,12 @@ class PluginConfig(MMCConfigParser):
         self.userDefault = {}
         self.hooks = {}
         self.service = {}
-        if not conffile:
-            self.conffile = mmctools.getConfigFile(name)
-        else:
-            self.conffile = conffile
+        self.conffile = mmctools.getConfigFile(name) if not conffile else conffile
         self.setDefault()
         fid = open(self.conffile, "r")
         self.readfp(fid, self.conffile)
-        if isfile(self.conffile + ".local"):
-            fid = open(self.conffile + ".local", "r")
+        if isfile(f"{self.conffile}.local"):
+            fid = open(f"{self.conffile}.local", "r")
             self.readfp(fid, self.conffile)
         self.readConf()
 
@@ -123,7 +116,7 @@ class PluginConfig(MMCConfigParser):
                 self.userDefault[option] = self.get(self.USERDEFAULT, option)
         if self.has_section(self.HOOKS):
             for option in self.options(self.HOOKS):
-                self.hooks[self.name + "." + option] = self.get(self.HOOKS, option)
+                self.hooks[f"{self.name}.{option}"] = self.get(self.HOOKS, option)
         if self.has_section(self.SERVICE):
             for option in self.options(self.SERVICE):
                 self.service[option] = self.get(self.SERVICE, option)
@@ -160,7 +153,7 @@ class PluginConfigFactory(object):
         been created, create it and keep it in the dict.
         If one already exist, just return it.
         """
-        if not name in PluginConfigFactory.instances:
+        if name not in PluginConfigFactory.instances:
             PluginConfigFactory.instances[name] = cls(name, *args, **kwargs)
         return PluginConfigFactory.instances[name]
 

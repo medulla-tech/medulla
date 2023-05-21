@@ -16,9 +16,7 @@ def get_conf_array(name):
     array = {}
     for section in config.sections():
         config.options(section)
-        dic = {}
-        for opt in config.options(section):
-            dic[opt] = config.get(section, opt)
+        dic = {opt: config.get(section, opt) for opt in config.options(section)}
         array[section] = dic
     return array
 
@@ -64,7 +62,7 @@ def loadInventoryConf(module_name):
     inventory_config = PluginConfigFactory.new(InventoryConfig, "inventory")
     glpi_config = PluginConfigFactory.new(GlpiConfig, "glpi")
     print(
-        ("Instance of inventory config in loadInventoryConf is %s" % inventory_config)
+        f"Instance of inventory config in loadInventoryConf is {inventory_config}"
     )
 
     # Enable and disable the right modules in their config

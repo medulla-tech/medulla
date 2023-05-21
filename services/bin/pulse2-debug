@@ -152,10 +152,6 @@ def getwidth():
         return _windows_get_window_size()[0]
     elif os.name == 'posix':
         return _posix_get_window_size()[0]
-    else:
-        # 'mac', 'os2', 'ce', 'java', 'riscos' need implementations
-        pass
-
     return width or 80
 
 def getheight():
@@ -171,10 +167,6 @@ def getheight():
         return _windows_get_window_size()[1]
     elif os.name == 'posix':
         return _posix_get_window_size()[1]
-    else:
-        # 'mac', 'os2', 'ce', 'java', 'riscos' need implementations
-        pass
-
     return height or 25
 
 
@@ -208,10 +200,10 @@ def dumpkey(key):
         if PY3K:
            keyhex = keyhex.decode('utf-8')
         return keyhex
-    if type(key) == str:
-        return hex3fy(key)
-    else:
-        return ' '.join( [hex3fy(s) for s in key] )
+
+    return (
+        hex3fy(key) if type(key) == str else ' '.join([hex3fy(s) for s in key])
+    )
 
 def getch():
     """
@@ -307,7 +299,7 @@ def prompt(pagenum):
 
     It assumes terminal/console understands carriage return \r character.
     """
-    prompt = "Page -%s-. Press any key to continue . . . " % pagenum
+    prompt = f"Page -{pagenum}-. Press any key to continue . . . "
     echo(prompt)
     getch()
     echo('\r' + ' '*(len(prompt)-1) + '\r')
@@ -333,7 +325,7 @@ def page(content, pagecallback=prompt):
         pagecallback(pagenum)
         return
 
-    while True:     # page cycle
+    while True: # page cycle
         linesleft = height-1 # leave the last line for the prompt callback
         while linesleft:
             linelist = [line[i:i+width] for i in range(0, len(line), width)]
@@ -347,9 +339,7 @@ def page(content, pagecallback=prompt):
                 else:
                     print(linelist[i])
             linesleft -= lines2print
-            linelist = linelist[lines2print:]
-
-            if linelist: # prepare symbols left on the line for the next iteration
+            if linelist := linelist[lines2print:]:
                 line = ''.join(linelist)
                 continue
             else:
@@ -378,9 +368,15 @@ def pprinttable(rows):
     """
     if len(rows) > 1:
         headers = rows[0]._fields
-        lens = []
-        for i in range(len(rows[0])):
-            lens.append(len(max([str(x[i]) for x in rows] + [headers[i]],key=lambda x:len(str(x)))))
+        lens = [
+            len(
+                max(
+                    [str(x[i]) for x in rows] + [headers[i]],
+                    key=lambda x: len(str(x)),
+                )
+            )
+            for i in range(len(rows[0]))
+        ]
         formats = []
         hformats = []
         for i in range(len(rows[0])):
@@ -418,7 +414,7 @@ def printListInfo(result):
     try:
         pprinttable([Row(*(line.values())) for line in result['data']])
     except Exception as e:
-        print(str(e))
+        print(e)
 
 
 class bcolors:
@@ -568,8 +564,8 @@ class ConfigReader :
 
         config = ConfigParser()
         config.readfp(open(inifile,'r'))
-        if os.path.isfile(inifile + '.local'):
-            config.readfp(open(inifile + '.local','r'))
+        if os.path.isfile(f'{inifile}.local'):
+            config.readfp(open(f'{inifile}.local', 'r'))
 
         return config
 
@@ -596,9 +592,9 @@ class ConfigReader :
         password = _config.get("global", "password")
 
         url = _config.get("server_01", "url")
-        if not 'https://' in url:
+        if 'https://' not in url:
             print('Error reading mmc-agent URL')
-        self._url = url.replace('https://','https://%s:%s@' % (username,password) )
+        self._url = url.replace('https://', f'https://{username}:{password}@')
         return self._url
 
     @property
@@ -619,8 +615,10 @@ class ConfigReader :
 
 
 def p2d():
-    s  = '=======================================================================\n'
-    s += 'Pulse2 debug\n'
+    s = (
+        '=======================================================================\n'
+        + 'Pulse2 debug\n'
+    )
     s += '=======================================================================\n'
     s += '\n'
     s += 'New in 0.3 :\n'
@@ -641,10 +639,7 @@ def completer(text, state):
     #if module in funcs:
     #    possib += funcs[module]['names']
     options = [i for i in possib if i.startswith(text)]
-    if state < len(options):
-        return options[state]
-    else:
-        return None
+    return options[state] if state < len(options) else None
 
 
 # PROMPT FUNCTION ]>
@@ -731,9 +726,9 @@ class xmlrpcModule():
                     # Calculating delta
                     delta = getheight() - 4
 
-                    if not 'min' in params:
+                    if 'min' not in params:
                         params['min'] = 0
-                    if not 'max' in params:
+                    if 'max' not in params:
                         params['max'] = delta
 
                     if len(result['data']) != 0:
@@ -755,7 +750,7 @@ class xmlrpcModule():
                         params['max'] = min(result['count'], params['max'])
 
                         # If q is pressed, we quit loop => prompt
-                        if not('q' in key or 'Q' in key):
+                        if 'q' not in key and 'Q' not in key:
                             xmlCallfunc(params)
                 else:
                     s = pprint.pformat(result)
@@ -772,8 +767,9 @@ class xmlrpcModule():
         # TODO: better introspection here : func signature
         xmlCallfunc.__name__ = attr_name
         try:
-            xmlCallfunc.__doc__ = self.proxyHandler.proxy\
-                                  .system.methodHelp(self.module_name + '.' + attr_name)
+            xmlCallfunc.__doc__ = self.proxyHandler.proxy.system.methodHelp(
+                f'{self.module_name}.{attr_name}'
+            )
         except:
             pass
         return xmlCallfunc
@@ -792,10 +788,9 @@ def logSniffer():
     while True:
         line = LOGSNIFFER.stdout.readline()
 
-        # Hide debug lines
-        if 'DEBUG' in line and not 'RPC method call from user' in line:
-            continue
         if 'DEBUG' in line:
+            if 'RPC method call from user' not in line:
+                continue
             # Strip it
             line = line.replace('DEBUG', '').strip()+'\n'
         if 'INFO' in line:
@@ -810,7 +805,10 @@ def logSniffer():
         # Info
         line = line.replace('INFO', '%sINFO%s\t' % (BCOLORS.BOLD+BCOLORS.CYAN, BCOLORS.ENDC))
         # RPCCALL
-        line = line.replace('RPC method call from user', '%sRPCCALL%s from' % (BCOLORS.BOLD+BCOLORS.PURPLE, BCOLORS.ENDC))
+        line = line.replace(
+            'RPC method call from user',
+            f'{BCOLORS.BOLD + BCOLORS.PURPLE}RPCCALL{BCOLORS.ENDC} from',
+        )
         # NEWPAGE
         if 'base.canAddComputer()' in line:
             line = '\n%sPAGESWITCH ======================<%s\n' % (BCOLORS.BOLD+BCOLORS.YELLOW, BCOLORS.ENDC) + line
@@ -824,7 +822,7 @@ def logSniffer():
 
 
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
 
     # Setting argparse
     parser = argparse.ArgumentParser()
@@ -846,7 +844,7 @@ if __name__ == "__main__" :
     # init funcs for auto completition
     funcs = p.proxy.system.listMethods()
     # module list
-    modules = list(set([func.split('.')[0] for func in funcs]))
+    modules = list({func.split('.')[0] for func in funcs})
     modules.append('system')
 
     CONSOLE_VARS['PROXYCLASS'] = p
@@ -856,8 +854,8 @@ if __name__ == "__main__" :
 
     # init module vars*
     for module in modules:
-        exec('%s_ = PROXYCLASS.proxy.%s' % (module, module), CONSOLE_VARS)
-        exec('%s = xmlrpcModule(PROXYCLASS, "%s")' % (module, module), CONSOLE_VARS)
+        exec(f'{module}_ = PROXYCLASS.proxy.{module}', CONSOLE_VARS)
+        exec(f'{module} = xmlrpcModule(PROXYCLASS, "{module}")', CONSOLE_VARS)
 
     if args.command:
         try:
@@ -866,7 +864,7 @@ if __name__ == "__main__" :
             exec(args.command, CONSOLE_VARS)
             sys.exit(0)
         except Exception as e:
-            print(str(e))
+            print(e)
             sys.exit(1)
 
     if args.file:
@@ -881,7 +879,7 @@ if __name__ == "__main__" :
         except IOError:
             print('Error while reading script file')
         except Exception as e:
-            print(str(e))
+            print(e)
             sys.exit(1)
 
 

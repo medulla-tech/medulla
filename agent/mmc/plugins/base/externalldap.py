@@ -19,7 +19,7 @@ from mmc.plugins.base.auth import (
 )
 from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
 
-INI = mmcconfdir + "/plugins/base.ini"
+INI = f"{mmcconfdir}/plugins/base.ini"
 
 
 class ExternalLdapAuthenticatorConfig(AuthenticatorConfig, LDAPConnectionConfig):
@@ -93,7 +93,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
         connected = False
         for ldapurl in self.config.ldapurls:
             try:
-                self.logger.debug("Connecting to %s" % ldapurl)
+                self.logger.debug(f"Connecting to {ldapurl}")
                 self.config.ldapurl = ldapurl
                 conn = LDAPConnection(self.config)
                 l = conn.l
@@ -106,7 +106,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
                     l.simple_bind_s()
                 connected = True
             except ldap.LDAPError as e:
-                self.logger.info("Can't connect to LDAP server %s %s" % (ldapurl, e))
+                self.logger.info(f"Can't connect to LDAP server {ldapurl} {e}")
             if connected:
                 # Exit loop, because we found a LDAP server to connect to
                 break
@@ -123,22 +123,21 @@ class ExternalLdapAuthenticator(AuthenticatorI):
         users = l.search_s(
             self.config.suffix,
             ldap.SCOPE_SUBTREE,
-            "(&(%s=%s)(%s))" % (self.config.attr, login, self.config.filter),
+            f"(&({self.config.attr}={login})({self.config.filter}))",
         )
         for user in users:
-            self.logger.debug("Found user dn: %s" % user[0])
+            self.logger.debug(f"Found user dn: {user[0]}")
             self.logger.debug(str(user))
-        # Check that the login string exactly matches LDAP content
-        if users and users[0][1][self.config.attr][0] == login:
-            ret = users[0]
-        else:
-            ret = (None, None)
-        return ret
+        return (
+            users[0]
+            if users and users[0][1][self.config.attr][0] == login
+            else (None, None)
+        )
 
     def ldapBind(self, l, userdn, password):
         if isinstance(password, xmlrpc.client.Binary):
             password = str(password)
-        self.logger.debug("Binding with dn: %s %s" % (userdn, password))
+        self.logger.debug(f"Binding with dn: {userdn} {password}")
         l.simple_bind_s(userdn, password)
 
 
@@ -150,7 +149,7 @@ class ExternalLdapProvisionerConfig(ProvisionerConfig):
     def readConf(self):
         ProvisionerConfig.readConf(self)
         for attr in ["uid", "givenName", "sn"]:
-            option = "ldap_" + attr
+            option = f"ldap_{attr}"
             self.__dict__[option] = self.get(self.section, option)
         if self.has_option(self.section, "profile_attr"):
             self.profileAttr = self.get(self.section, "profile_attr")
@@ -200,9 +199,7 @@ class ExternalLdapProvisioner(ProvisionerI):
         userentry = authtoken.getInfos()[1]
         uid = userentry[self.config.ldap_uid][0]
         if l.existUser(uid):
-            self.logger.debug(
-                "User %s already exists, so this user won't be added" % uid
-            )
+            self.logger.debug(f"User {uid} already exists, so this user won't be added")
         else:
             givenName = userentry[self.config.ldap_givenName][0].decode("utf-8")
             sn = userentry[self.config.ldap_sn][0].decode("utf-8")
@@ -213,15 +210,14 @@ class ExternalLdapProvisioner(ProvisionerI):
                 profile = userentry[self.config.profileAttr][0].lower()
             except KeyError:
                 self.logger.info(
-                    "No profile information for user %s in attribute %s"
-                    % (uid, self.config.profileAttr)
+                    f"No profile information for user {uid} in attribute {self.config.profileAttr}"
                 )
                 profile = ""
             profile = profile.strip()
 
             try:
                 entities = self.config.profilesEntity[profile].split()
-                self.logger.info("*******ENTITE '%s' " % (entities))
+                self.logger.info(f"*******ENTITE '{entities}' ")
             except KeyError:
                 if "default" in self.config.profilesEntity:
                     entities = self.config.profilesEntity["default"].split()
@@ -229,8 +225,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                     profile = "default"
                 else:
                     self.logger.info(
-                        "No entity defined in configuration file for profile '%s'"
-                        % profile
+                        f"No entity defined in configuration file for profile '{profile}'"
                     )
                     self.logger.info("Setting user's entity to empty")
                     entities = []
@@ -242,10 +237,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                         if attr in userentry:
                             tmp.extend(userentry[attr])
                         else:
-                            self.logger.info(
-                                "The user '%s' doesn't have an attribute '%s'"
-                                % (uid, attr)
-                            )
+                            self.logger.info(f"The user '{uid}' doesn't have an attribute '{attr}'")
 
                     elif entity.startswith("plugin:"):
                         plugin = entity.replace("plugin:", "")
@@ -258,31 +250,21 @@ class ExternalLdapProvisioner(ProvisionerI):
                             klass = mod.PluginEntities
                             found = klass().get(authtoken)
                             if found:
-                                self.logger.info(
-                                    "Plugin '%s' found these entities: %s"
-                                    % (plugin, found)
-                                )
+                                self.logger.info(f"Plugin '{plugin}' found these entities: {found}")
                             else:
-                                self.logger.info(
-                                    "Plugin '%s' found no matching entity" % plugin
-                                )
+                                self.logger.info(f"Plugin '{plugin}' found no matching entity")
                             tmp.extend(found)
                         except ImportError:
-                            self.logger.error(
-                                "The plugin '%s' can't be imported" % plugin
-                            )
+                            self.logger.error(f"The plugin '{plugin}' can't be imported")
                         except Exception as e:
-                            self.logger.error(
-                                "Error while using the plugin '%s'" % plugin
-                            )
+                            self.logger.error(f"Error while using the plugin '{plugin}'")
                             self.logger.exception(e)
 
                     else:
                         tmp.append(entity)
                 entities = tmp[:]
                 self.logger.info(
-                    "****Setting user '%s' entities corresponding to user profile '%s': %s"
-                    % (uid, profile, str(entities))
+                    f"****Setting user '{uid}' entities corresponding to user profile '{profile}': {str(entities)}"
                 )
                 from pulse2.database.inventory import Inventory
 
@@ -292,17 +274,16 @@ class ExternalLdapProvisioner(ProvisionerI):
                 acls = self.config.profilesAcl[profile]
             except KeyError:
                 self.logger.info(
-                    "No ACL defined in configuration file for profile '%s'" % profile
+                    f"No ACL defined in configuration file for profile '{profile}'"
                 )
                 self.logger.info("Setting ACL to empty")
                 acls = None
             if profile and acls:
                 self.logger.info(
-                    "Setting MMC ACL corresponding to user profile %s: %s"
-                    % (profile, str(acls))
+                    f"Setting MMC ACL corresponding to user profile {profile}: {str(acls)}"
                 )
             entry = l.getDetailedUser(uid)
-            if not "lmcUserObject" in entry["objectClass"]:
+            if "lmcUserObject" not in entry["objectClass"]:
                 entry["objectClass"].append("lmcUserObject")
                 l.changeUserAttributes(uid, "objectClass", entry["objectClass"])
             l.changeUserAttributes(uid, "lmcAcl", acls)
@@ -315,9 +296,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                         # profile
                         try:
                             l.delUserFromGroup(groupname, uid)
-                            self.logger.debug(
-                                "Deleting user %s from group %s" % (uid, groupname)
-                            )
+                            self.logger.debug(f"Deleting user {uid} from group {groupname}")
                         except ldap.NO_SUCH_OBJECT:
                             # The group does not exist
                             pass
@@ -328,9 +307,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                         except ldap.ALREADY_EXISTS:
                             # This group already exists
                             pass
-                        self.logger.debug(
-                            "Adding user %s to group %s" % (uid, groupname)
-                        )
+                        self.logger.debug(f"Adding user {uid} to group {groupname}")
                         l.addUserToGroup(groupname, uid)
 
     def validate(self):

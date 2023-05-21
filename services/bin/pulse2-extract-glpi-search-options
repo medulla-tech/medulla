@@ -8,7 +8,11 @@ class GlpiSearchOptions(object):
 
     def getLangValues(self, lang):
         # Get $LANG values
-        a = os.popen("grep '$LANG' %s/locales/%s.php" % (self.options.glpi_path, lang)).read().split('\n')
+        a = (
+            os.popen(f"grep '$LANG' {self.options.glpi_path}/locales/{lang}.php")
+            .read()
+            .split('\n')
+        )
         if len(a) == 1:
             # Error while parsing file
             errormsg = "I can't find %s/locales/%s.php\nCheck your Glpi path" % (self.options.glpi_path, lang)
@@ -19,14 +23,12 @@ class GlpiSearchOptions(object):
         # put in a list result and remove PHP's ; end line
         b = []
         for i in a:
-            tmp = [j.replace(';', '').replace('"', '').strip() for j in i if j != '']
-            if tmp:
+            if tmp := [
+                j.replace(';', '').replace('"', '').strip() for j in i if j != ''
+            ]:
                 b.append(tmp)
 
-        lang = {}
-        for i in b:
-            lang[i[0]] = i[1:]
-
+        lang = {i[0]: i[1:] for i in b}
         return lang
 
     def getIdSearchOptionsValues(self, lang = 'en_US'):
@@ -40,9 +42,7 @@ class GlpiSearchOptions(object):
         # put in a list result and remove PHP's ; end line
         b = []
         for i in a:
-            tmp = [j.replace(';', '') for j in i if j != '']
-            # tmp = ['php class file', '$tab', '=', '$LANG']
-            if tmp:
+            if tmp := [j.replace(';', '') for j in i if j != '']:
                 tmp.pop(0) # remove php class file
                 tmp.pop(1) # remove '='
                 b.append(tmp)
@@ -57,9 +57,7 @@ class GlpiSearchOptions(object):
         # put in a list result and remove PHP's ; end line
         c = []
         for i in a:
-            tmp = [j.replace(';', '') for j in i if j != '']
-            # tmp = ['php class file', '$tab', '=', '$LANG']
-            if tmp:
+            if tmp := [j.replace(';', '') for j in i if j != '']:
                 tmp.pop(1) # remove '='
                 c.append(tmp)
 
@@ -71,15 +69,15 @@ class GlpiSearchOptions(object):
             value = []
             for val in i[1:]:
                 val = val \
-                    .replace("\\",'') \
-                    .replace('."', '') \
-                    .replace('".', '') \
-                    .replace(".'", '') \
-                    .replace("'.", '') \
-                    .replace('.', '') \
-                    .replace('(', '') \
-                    .replace(')"', '') \
-                    .replace(',', '')
+                        .replace("\\",'') \
+                        .replace('."', '') \
+                        .replace('".', '') \
+                        .replace(".'", '') \
+                        .replace("'.", '') \
+                        .replace('.', '') \
+                        .replace('(', '') \
+                        .replace(')"', '') \
+                        .replace(',', '')
                 if val.startswith('$LANG'):
                     try:
                         value.append(lang[val])

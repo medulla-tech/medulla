@@ -54,9 +54,9 @@ def cleanFilter(f):
     for char in "()&=":
         f = f.replace(char, "")
     if not f.startswith("*"):
-        f = "*" + f
+        f = f"*{f}"
     if not f.endswith("*"):
-        f = f + "*"
+        f = f"{f}*"
     return f
 
 
@@ -140,35 +140,27 @@ def xmlrpcCleanup(data):
     For example, None is not accepted, and must be converted to False.
     """
     if isinstance(data, dict):
-        ret = {}
-        for key in list(data.keys()):
-            # array keys must be string
-            ret[str(key)] = xmlrpcCleanup(data[key])
+        return {str(key): xmlrpcCleanup(data[key]) for key in list(data.keys())}
     elif isinstance(data, list):
-        ret = []
-        for item in data:
-            ret.append(xmlrpcCleanup(item))
+        return [xmlrpcCleanup(item) for item in data]
     elif type(data) in set_types:
-        ret = []
-        for item in data:
-            ret.append(xmlrpcCleanup(item))
+        return [xmlrpcCleanup(item) for item in data]
     elif isinstance(data, datetime.date):
-        ret = tuple(data.timetuple())
+        return tuple(data.timetuple())
     elif isinstance(data, datetime.datetime):
-        ret = tuple(data.timetuple())
+        return tuple(data.timetuple())
     elif mxDateTime and isinstance(data, mxDateTime.DateTimeType):
-        ret = data.tuple()
+        return data.tuple()
     elif isinstance(data, struct_time):
-        ret = tuple(data)
-    elif data == None:
-        ret = False
+        return tuple(data)
+    elif data is None:
+        return False
     elif isinstance(data, tuple):
-        ret = [xmlrpcCleanup(x) for x in data]
+        return [xmlrpcCleanup(x) for x in data]
     elif isinstance(data, int):
-        ret = str(data)
+        return str(data)
     else:
-        ret = data
-    return ret
+        return data
 
 
 def localifs():
@@ -193,7 +185,7 @@ def localifs():
         var1 = 16
         var2 = 40
     else:
-        raise OSError("Unknown architecture: %s" % arch)
+        raise OSError(f"Unknown architecture: {arch}")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     names = array.array("B", "\0" * MAXBYTES)
@@ -217,21 +209,21 @@ def localifs():
 
 
 class Singleton(object):
-    def __new__(type, *args):
-        if not "_the_instance" in type.__dict__:
-            type._the_instance = object.__new__(type)
-        return type._the_instance
+    def __new__(cls, *args):
+        if "_the_instance" not in cls.__dict__:
+            cls._the_instance = object.__new__(cls)
+        return cls._the_instance
 
 
 class SingletonN(type):
-    def __init__(cls, name, bases, dict):
-        super(SingletonN, cls).__init__(name, bases, dict)
-        cls.instance = None
+    def __init__(self, name, bases, dict):
+        super(SingletonN, self).__init__(name, bases, dict)
+        self.instance = None
 
-    def __call__(cls, *args, **kw):
-        if cls.instance is None:
-            cls.instance = super(SingletonN, cls).__call__(*args, **kw)
-        return cls.instance
+    def __call__(self, *args, **kw):
+        if self.instance is None:
+            self.instance = super(SingletonN, self).__call__(*args, **kw)
+        return self.instance
 
 
 class ProcessScheduler(Singleton):
@@ -286,30 +278,28 @@ class shProcessProtocol(protocol.ProcessProtocol):
 
     def write(self, data):
         self.transport.write(data)
-        self.stdall = self.stdall + "<<" + data
+        self.stdall = f"{self.stdall}<<{data}"
 
     def progressCalc(self, data):
         """
         Try to find a percentage of progression on command output, and put this
         into self.progress and self.status.
         """
-        sre = re.search("([0-9]){1,2}", data)
-        if sre:
-            group = sre.group()
-            if group:
+        if sre := re.search("([0-9]){1,2}", data):
+            if group := sre.group():
                 self.progress = group
                 self.status = data
 
     def outReceived(self, data):
         self.out = self.out + data
-        self.stdall = self.stdall + ">>" + data
+        self.stdall = f"{self.stdall}>>{data}"
         self.lastout = data
         self.time = time()  # update time
         self.progressCalc(data)
 
     def errReceived(self, data):
         self.err = self.err + data
-        self.stdall = self.stdall + ">>" + data
+        self.stdall = f"{self.stdall}>>{data}"
         self.error = True
 
     def processEnded(self, reason):
@@ -346,7 +336,9 @@ class shSharedProcessProtocol(shProcessProtocol):
             self.status = "job successfully finished"
         else:
             self.status = (
-                "Error: exited with code " + str(self.exitCode) + "\n" + self.stdall
+                f"Error: exited with code {str(self.exitCode)}"
+                + "\n"
+                + self.stdall
             )
         self.progress = -1
 
@@ -356,21 +348,21 @@ class shDebugProcessProtocol(shProcessProtocol):
         shProcessProtocol.__init__(self, cmd)
 
     def outReceived(self, data):
-        print("OUT: " + data)
+        print(f"OUT: {data}")
         shProcessProtocol.outReceived(self, data)
 
     def write(self, data):
-        print("IN: " + data)
+        print(f"IN: {data}")
         shProcessProtocol.write(self, data)
 
     def errReceived(self, data):
-        print("ERR: " + data)
+        print(f"ERR: {data}")
         shProcessProtocol.errReceived(self, data)
 
 
 def launch(cmd, param):
     logger = logging.getLogger()
-    logger.debug('support.mmctools.launch("' + str(cmd) + "," + str(param) + '")')
+    logger.debug(f'support.mmctools.launch("{str(cmd)},{str(param)}")')
     shProcess = shProcessProtocol(cmd)
     reactor.spawnProcess(shProcess, cmd, param, os.environ)
     while not shProcess.done:
@@ -438,13 +430,9 @@ def shlaunchBackground(cmd, desc=None, progressFunc=None, endFunc=None):
     @type progressFunc: function
     """
     logger = logging.getLogger()
-    logger.info('support.mmctools.shlaunchBackground("' + str(cmd) + '")')
+    logger.info(f'support.mmctools.shlaunchBackground("{str(cmd)}")')
     shProcess = shSharedProcessProtocol(cmd)
-    if desc == None:
-        shProcess.desc = cmd
-    else:
-        shProcess.desc = desc
-
+    shProcess.desc = cmd if desc is None else desc
     ProcessScheduler().addProcess(shProcess.desc, shProcess)
 
     if progressFunc:
@@ -482,21 +470,21 @@ def generateBackgroundProcess(cmd):
     return shProcess
 
 
-def getConfigParser(module, path=mmcconfdir + "/plugins/"):
+def getConfigParser(module, path=f"{mmcconfdir}/plugins/"):
     """return a configParser for a plugins"""
     config = configparser.ConfigParser()
-    inifile = os.path.join(path, module) + ".ini"
+    inifile = f"{os.path.join(path, module)}.ini"
     with open(inifile, "r") as filepointer:
         config.readfp(filepointer, inifile)
         filepointer.close()
-    if os.path.isfile(inifile + ".local"):
-        config.readfp(open(inifile + ".local", "r"))
+    if os.path.isfile(f"{inifile}.local"):
+        config.readfp(open(f"{inifile}.local", "r"))
     return config
 
 
-def getConfigFile(module, path=mmcconfdir + "/plugins/"):
+def getConfigFile(module, path=f"{mmcconfdir}/plugins/"):
     """Return the path of the default config file for a plugin"""
-    return os.path.join(path, module) + ".ini"
+    return f"{os.path.join(path, module)}.ini"
 
 
 def progressBackup(self, data):
@@ -514,16 +502,14 @@ def progressBackup(self, data):
 
     sre = re.search("Creation volume ([0-9]+)/([0-9]+)", data)
     try:
-        self.volumeNumber = sre.group(2)
-        self.currVolume = sre.group(1)
-        self.status = "volume " + sre.group(1) + "/" + sre.group(2)
+        self.volumeNumber = sre[2]
+        self.currVolume = sre[1]
+        self.status = f"volume {sre[1]}/{sre[2]}"
     except:
         pass
 
-    sre = re.search(pattern, data)
-    if sre:
-        group = sre.group(1)
-        if group:
+    if sre := re.search(pattern, data):
+        if group := sre[1]:
             self.progress = int(group) / int(self.volumeNumber) + (
                 (int(self.currVolume) - 1) * 100 / int(self.volumeNumber)
             )
@@ -538,7 +524,7 @@ def size_format(b):
         return "%.1f" % float(b / 1000000.0) + "MB"
     elif 1000000000 <= b < 1000000000000:
         return "%.1f" % float(b / 1000000000.0) + "GB"
-    elif 1000000000000 <= b:
+    else:
         return "%.1f" % float(b / 1000000000000.0) + "TB"
 
 
@@ -554,23 +540,22 @@ class ServiceManager:
     def isRunning(self):
         ret = False
         if os.path.exists(self.pidfile):
-            f = open(self.pidfile)
-            pid = f.read()
-            f.close()
+            with open(self.pidfile) as f:
+                pid = f.read()
             ret = os.path.isdir(os.path.join("/proc", pid.strip()))
         return ret
 
     def start(self):
-        shLaunch(self.initfile + " start")
+        shLaunch(f"{self.initfile} start")
 
     def stop(self):
-        shLaunch(self.initfile + " stop")
+        shLaunch(f"{self.initfile} stop")
 
     def restart(self):
-        shLaunch(self.initfile + " restart")
+        shLaunch(f"{self.initfile} restart")
 
     def reload(self):
-        shLaunch(self.initfile + " reload")
+        shLaunch(f"{self.initfile} reload")
 
     def command(self, command):
         ret = None

@@ -32,14 +32,14 @@ from mmc.database.ddl import DBControl
 
 log = logging.getLogger("pulse2-dbupdate")
 
-def db_update (options):
+def db_update(options):
     """
     Call of database update engine.
 
     @param options: optparse options container
     @type options: optparse.Option
     """
-    try :
+    try:
         db_control = DBControl(user=options.user,
                                passwd=options.password,
                                host=options.host,
@@ -47,8 +47,8 @@ def db_update (options):
                                module=options.database,
                                log=log)
         db_control.process()
-    except Exception as exc :
-        log.warning("An error occured when running dbupdate : %s" % str(exc))
+    except Exception as exc:
+        log.warning(f"An error occured when running dbupdate : {str(exc)}")
 
 def options_validate(options):
     """
@@ -82,7 +82,7 @@ def options_validate(options):
     return is_complete
 
 
-if __name__ == "__main__" :
+if __name__ == "__main__":
 
     parser = OptionParser()
 
@@ -109,12 +109,7 @@ if __name__ == "__main__" :
 
     (options, args) = parser.parse_args()
 
-    if options.verbose :
-        level = logging.NOTSET
-    else :
-        level = logging.DEBUG
-
-
+    level = logging.NOTSET if options.verbose else logging.DEBUG
     handler = logging.StreamHandler()
     handler.setLevel(level)
     log.addHandler(handler)

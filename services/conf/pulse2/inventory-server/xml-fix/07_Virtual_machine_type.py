@@ -19,38 +19,29 @@ def xml_fix(xml):
             for subelem2 in subelem1:
                 if subelem2.tag == "BIOS":
                     for subelem3 in subelem2:
-                        if subelem3.tag == "BMANUFACTURER":
+                        if subelem3.tag in [
+                            "BMANUFACTURER",
+                            "BVERSION",
+                            "SMANUFACTURER",
+                            "SMODEL",
+                        ]:
                             if subelem3.text == "Bochs":
                                 is_bochs += 1
-                        if subelem3.tag == "BVERSION":
-                            if subelem3.text == "Bochs":
-                                is_bochs += 1
-                        if subelem3.tag == "SMANUFACTURER":
-                            if subelem3.text == "Bochs":
-                                is_bochs += 1
-                        if subelem3.tag == "SMODEL":
-                            if subelem3.text == "Bochs":
-                                is_bochs += 1
-
     # Or Vbox
     for subelem1 in root:
         if subelem1.tag == "CONTENT":
             for subelem2 in subelem1:
                 if subelem2.tag == "BIOS":
                     for subelem3 in subelem2:
-                        if subelem3.tag == "BMANUFACTURER":
-                            if subelem3.text == "innotek GmbH":
-                                is_vbox += 1
-                        if subelem3.tag == "BVERSION":
-                            if subelem3.text == "VirtualBox":
-                                is_vbox += 1
-                        if subelem3.tag == "SMANUFACTURER":
-                            if subelem3.text == "innotek GmbH":
-                                is_vbox += 1
-                        if subelem3.tag == "SMODEL":
-                            if subelem3.text == "VirtualBox":
-                                is_vbox += 1
-
+                        if (
+                            subelem3.tag in ["BMANUFACTURER", "SMANUFACTURER"]
+                            and subelem3.text == "innotek GmbH"
+                            or subelem3.tag
+                            not in ["BMANUFACTURER", "SMANUFACTURER"]
+                            and subelem3.tag in ["BVERSION", "SMODEL"]
+                            and subelem3.text == "VirtualBox"
+                        ):
+                            is_vbox += 1
     # Fix chassis type
     if is_bochs == 4 or is_vbox == 4:
         for subelem1 in root:
