@@ -39,7 +39,9 @@ class download_packages:
                 f"Directory '{self.directory_output_package}' created successfully"
             )
         except OSError as error:
-            logger.debug(f"Directory '{self.directory_output_package}' can not be created")
+            logger.debug(
+                f"Directory '{self.directory_output_package}' can not be created"
+            )
 
         sql = f""" SELECT title, payloadfiles,updateid, kb, description  FROM xmppmaster.{self.name_table_produit};"""
 

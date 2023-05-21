@@ -48,10 +48,7 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
             self.sendHeader(b"Authorization", b"Basic %s" % (auth,))
         try:
             # Put MMC session cookie
-            if (
-                b"<methodName>base.ldapAuth</methodName>"
-                not in self.factory.payload
-            ):
+            if b"<methodName>base.ldapAuth</methodName>" not in self.factory.payload:
                 with open(COOKIES_FILE, "r") as h:
                     self.sendHeader(b"Cookie", h.read())
         except FileNotFoundError as error_opening_cookie:

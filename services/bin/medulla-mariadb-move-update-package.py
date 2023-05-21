@@ -183,9 +183,13 @@ class synch_packages:
             if result:
                 logger.debug(f'the package [{self.param["uidpackage"]}] is uninstalled')
             else:
-                logger.debug(f'the package [{self.param["uidpackage"]}] is not installed')
+                logger.debug(
+                    f'the package [{self.param["uidpackage"]}] is not installed'
+                )
         except Exception as e:
-            logger.error(f"""{str(e)} : del_package_pkgs '{self.param["uidpackage"]}'""")
+            logger.error(
+                f"""{str(e)} : del_package_pkgs '{self.param["uidpackage"]}'"""
+            )
 
     def verify_packages_install(self):
         logger.debug(f"verify packages install {self.path_in_partage}")
@@ -196,7 +200,9 @@ class synch_packages:
                     f'the package {self.param["uidpackage"]} was successfully created'
                 )
             else:
-                logger.error(f'package {self.param["uidpackage"]} exists but is incomplete')
+                logger.error(
+                    f'package {self.param["uidpackage"]} exists but is incomplete'
+                )
                 return False
         else:
             logger.error(f'package file {self.param["uidpackage"]} does not exist')
@@ -226,7 +232,9 @@ class synch_packages:
         else:
             logger.debug(f'package {self.param["uidpackage"]} no longer exists')
         if self.check_in_base():
-            logger.debug(f'package {self.param["uidpackage"]} is still installed in pkgs')
+            logger.debug(
+                f'package {self.param["uidpackage"]} is still installed in pkgs'
+            )
             return False
         else:
             logger.debug(f'uninstalled package {self.param["uidpackage"]} in pkgs')
@@ -650,25 +658,19 @@ class synch_packages:
                 "installInit_command": contenuedejson["commands"]["installInit"][
                     "command"
                 ],
-                "installInit_name": contenuedejson["commands"]["installInit"][
-                    "name"
-                ],
+                "installInit_name": contenuedejson["commands"]["installInit"]["name"],
                 "postCommandFailure_command": contenuedejson["commands"][
                     "postCommandFailure"
                 ]["command"],
                 "postCommandFailure_name": contenuedejson["commands"][
                     "postCommandFailure"
                 ]["name"],
-                "command_command": contenuedejson["commands"]["command"][
-                    "command"
-                ],
+                "command_command": contenuedejson["commands"]["command"]["command"],
                 "command_name": contenuedejson["commands"]["command"]["name"],
                 "preCommand_command": contenuedejson["commands"]["preCommand"][
                     "command"
                 ],
-                "preCommand_name": contenuedejson["commands"]["preCommand"][
-                    "name"
-                ],
+                "preCommand_name": contenuedejson["commands"]["preCommand"]["name"],
                 "pkgs_share_id": self.partage_id,
                 "edition_status": 1,
                 "conf_json": json.dumps(contenuedejson),

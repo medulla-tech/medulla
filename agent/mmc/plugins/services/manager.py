@@ -34,8 +34,7 @@ class ServiceManager(object, metaclass=SingletonN):
         """
         service = service.rstrip(".service")
         return any(
-            service in self.config.services[plugin]
-            for plugin in self.config.services
+            service in self.config.services[plugin] for plugin in self.config.services
         )
 
     def list_plugins_services(self):
@@ -99,11 +98,7 @@ class ServiceManager(object, metaclass=SingletonN):
     def get_unit(self, service):
         service = service.replace(".service", "", 1)
         return next(
-            (
-                unit
-                for unit in self.units
-                if unit.properties.Id == f"{service}.service"
-            ),
+            (unit for unit in self.units if unit.properties.Id == f"{service}.service"),
             False,
         )
 
@@ -192,7 +187,9 @@ class ServiceManager(object, metaclass=SingletonN):
         for message in logs:
             if "MESSAGE" in message and isinstance(message["MESSAGE"], str):
                 if "_SOURCE_REALTIME_TIMESTAMP" in message:
-                    message["TIMESTAMP"] = int(message["_SOURCE_REALTIME_TIMESTAMP"]) // 1000000
+                    message["TIMESTAMP"] = (
+                        int(message["_SOURCE_REALTIME_TIMESTAMP"]) // 1000000
+                    )
                 else:
                     message["TIMESTAMP"] = False
                 # remove unneeded fields

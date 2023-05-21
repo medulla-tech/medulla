@@ -213,7 +213,9 @@ class LinuxMinimalInventory(MinimalInventory):
                 fcntl.ioctl(s.fileno(), 0x8915, struct.pack("256s", ifname[:15]))[20:24]
             )
         except IOError:
-            logging.getLogger().warn(f"Unable to get IP address for interface <{ifname}>")
+            logging.getLogger().warn(
+                f"Unable to get IP address for interface <{ifname}>"
+            )
             ip = ""
 
         try:

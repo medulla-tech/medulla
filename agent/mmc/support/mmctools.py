@@ -336,9 +336,7 @@ class shSharedProcessProtocol(shProcessProtocol):
             self.status = "job successfully finished"
         else:
             self.status = (
-                f"Error: exited with code {str(self.exitCode)}"
-                + "\n"
-                + self.stdall
+                f"Error: exited with code {str(self.exitCode)}" + "\n" + self.stdall
             )
         self.progress = -1
 

@@ -372,8 +372,7 @@ def getGroupsLdap(searchFilter=""):
     raw = ldapObj.searchGroup(searchFilter)
     return {
         key.decode("utf-8"): [
-            val.decode("utf-8") if type(val) is bytes else val
-            for val in raw[key]
+            val.decode("utf-8") if type(val) is bytes else val for val in raw[key]
         ]
         for key in raw
     }
@@ -1598,8 +1597,7 @@ class LdapUserGroupControl:
             except ldap.CONSTRAINT_VIOLATION as e:
                 if (
                     "info" in e.message
-                    and e.message["info"]
-                    != "Password fails quality checking policy"
+                    and e.message["info"] != "Password fails quality checking policy"
                 ):
                     raise e
                 # if the quality test pass, the password was rejected by
@@ -1612,9 +1610,7 @@ class LdapUserGroupControl:
                 )
                 out, err = p.communicate(input=str(passwd))
                 e.message["info"] = (
-                    out.strip()
-                    if p.returncode != 0
-                    else "The password is too short"
+                    out.strip() if p.returncode != 0 else "The password is too short"
                 )
                 raise ldap.CONSTRAINT_VIOLATION(e.message)
         else:
@@ -2574,9 +2570,7 @@ class GpoManager:
             attrs = item[0][1]
             try:
                 members.extend(
-                    member
-                    for member in attrs["member"]
-                    if member.startswith("uid=")
+                    member for member in attrs["member"] if member.startswith("uid=")
                 )
             except KeyError:
                 # There is no member in this group
@@ -2629,9 +2623,7 @@ class GpoManager:
             attrs = item[0][1]
             try:
                 members.extend(
-                    member
-                    for member in attrs["member"]
-                    if member.startswith("cn=")
+                    member for member in attrs["member"] if member.startswith("cn=")
                 )
             except KeyError:
                 # There is no member in this group
