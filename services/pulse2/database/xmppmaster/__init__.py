@@ -7824,7 +7824,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ]
             idx = {}
             for substituteinfo in listconfsubstitute["conflist"]:
-                if "conflist" == substituteinfo:
+                if substituteinfo == "conflist":
                     continue
                 listconfsubstitute[substituteinfo] = []
                 idx[substituteinfo] = []
