@@ -1,5 +1,5 @@
 [main]
-disable = 0
+disable = 1
 journalctl_path = /bin/journalctl
 blacklist = slapd,ldap
 
