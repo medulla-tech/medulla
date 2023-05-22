@@ -6826,6 +6826,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 for row in ret:
                     if row is not None:
                         dictresult = {}
+                        drow = row._asdict()
                         for key, value in list(row.items()):
                             if key in listexclude:
                                 continue
@@ -6854,6 +6855,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         result["data"]["columns_name"] = columns_name
                     for row in ret:
                         if row is not None:
+                            drow = row._asdict()
                             for key, value in list(row.items()):
                                 if key in listexclude:
                                     continue
