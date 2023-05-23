@@ -195,10 +195,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     # ---------------------- function dict from dataset -------------------------
     def _return_dict_from_dataset_mysql(self, resultproxy):
-        return [
-            rowproxy._asdict()
-            for rowproxy in resultproxy
-        ]
+        return [rowproxy._asdict() for rowproxy in resultproxy]
 
     # =====================================================================
     # xmppmaster FUNCTIONS deploy syncthing
@@ -7656,10 +7653,7 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [
-            rowproxy._asdict()
-            for rowproxy in result
-        ]
+        return [rowproxy._asdict() for rowproxy in result]
 
     def jid_to_hostname(self, jid):
         try:
@@ -13038,10 +13032,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result = [
-            rowproxy._asdict()
-            for rowproxy in resultquery
-        ]
+        result = [rowproxy._asdict() for rowproxy in resultquery]
         return result
 
     @DatabaseHelper._sessionm
@@ -13070,10 +13061,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result = [
-            rowproxy._asdict()
-            for rowproxy in resultquery
-        ]
+        result = [rowproxy._asdict() for rowproxy in resultquery]
         return result
 
     @DatabaseHelper._sessionm
@@ -13121,10 +13109,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result = [
-            rowproxy._asdict()
-            for rowproxy in resultquery
-        ]
+        result = [rowproxy._asdict() for rowproxy in resultquery]
         return result
 
     @DatabaseHelper._sessionm
@@ -13148,10 +13133,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result = [
-            rowproxy._asdict()
-            for rowproxy in resultquery
-        ]
+        result = [rowproxy._asdict() for rowproxy in resultquery]
         return result
 
     @DatabaseHelper._sessionm
@@ -13169,10 +13151,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result = [
-            rowproxy._asdict()
-            for rowproxy in resultquery
-        ]
+        result = [rowproxy._asdict() for rowproxy in resultquery]
         return result
 
     @DatabaseHelper._sessionm
@@ -13189,10 +13168,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        return [
-            rowproxy._asdict()
-            for rowproxy in resultquery
-        ]
+        return [rowproxy._asdict() for rowproxy in resultquery]
 
     @DatabaseHelper._sessionm
     def get_conformity_update_for_group(self, session, uuidArray):
@@ -13226,10 +13202,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result = [
-            rowproxy._asdict()
-            for rowproxy in resultquery
-        ]
+        result = [rowproxy._asdict() for rowproxy in resultquery]
         for t in result:
             if t["pending_updates"] == None:
                 t["pending_updates"] = 0
