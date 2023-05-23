@@ -33,6 +33,7 @@ nobase_dist_contrib_DATA = audit/sql/install.sh \
 						  scripts/mmc-check-users-primary-group \
 						  scripts/usertoken-example \
 						  base/mmc.schema \
+						  base/mmc.ldif \
 						  base/nsswitch.conf \
 						  base/pam_ldap.conf \
 						  base/slapd.conf \
