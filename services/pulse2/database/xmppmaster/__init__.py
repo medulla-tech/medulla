@@ -196,7 +196,7 @@ class XmppMasterDatabase(DatabaseHelper):
     # ---------------------- function dict from dataset -------------------------
     def _return_dict_from_dataset_mysql(self, resultproxy):
         return [
-            {column: value for column, value in rowproxy.items()}
+            rowproxy._asdict()
             for rowproxy in resultproxy
         ]
 
@@ -6827,7 +6827,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     if row is not None:
                         dictresult = {}
                         drow = row._asdict()
-                        for key, value in list(row.items()):
+                        for key, value in list(drow.items()):
                             if key in listexclude:
                                 continue
                             logger.warning("value type %s" % type(value))
@@ -6843,7 +6843,6 @@ class XmppMasterDatabase(DatabaseHelper):
                                 dictresult[key] = value
                         logger.warning("value type %s" % type(value))
                         result.append(dictresult)
-
             else:  # by column
                 # create list by name.
                 # initialisation structure result
@@ -6856,7 +6855,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     for row in ret:
                         if row is not None:
                             drow = row._asdict()
-                            for key, value in list(row.items()):
+                            for key, value in list(drow.items()):
                                 if key in listexclude:
                                     continue
                                 if value is None:
@@ -7658,7 +7657,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [
-            {column: value for column, value in list(rowproxy.items())}
+            rowproxy._asdict()
             for rowproxy in result
         ]
 
@@ -7826,7 +7825,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ]
             idx = {}
             for substituteinfo in listconfsubstitute["conflist"]:
-                if substituteinfo == "conflist":
+                if "conflist" == substituteinfo:
                     continue
                 listconfsubstitute[substituteinfo] = []
                 idx[substituteinfo] = []
@@ -13040,7 +13039,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.commit()
         session.flush()
         result = [
-            {column: value for column, value in rowproxy.items()}
+            rowproxy._asdict()
             for rowproxy in resultquery
         ]
         return result
@@ -13072,7 +13071,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.commit()
         session.flush()
         result = [
-            {column: value for column, value in rowproxy.items()}
+            rowproxy._asdict()
             for rowproxy in resultquery
         ]
         return result
@@ -13123,7 +13122,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.commit()
         session.flush()
         result = [
-            {column: value for column, value in rowproxy.items()}
+            rowproxy._asdict()
             for rowproxy in resultquery
         ]
         return result
@@ -13150,7 +13149,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.commit()
         session.flush()
         result = [
-            {column: value for column, value in rowproxy.items()}
+            rowproxy._asdict()
             for rowproxy in resultquery
         ]
         return result
@@ -13171,7 +13170,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.commit()
         session.flush()
         result = [
-            {column: value for column, value in rowproxy.items()}
+            rowproxy._asdict()
             for rowproxy in resultquery
         ]
         return result
@@ -13190,11 +13189,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result = [
-            {column: value for column, value in rowproxy.items()}
+        return [
+            rowproxy._asdict()
             for rowproxy in resultquery
         ]
-        return result
 
     @DatabaseHelper._sessionm
     def get_conformity_update_for_group(self, session, uuidArray):
@@ -13229,7 +13227,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.commit()
         session.flush()
         result = [
-            {column: value for column, value in rowproxy.items()}
+            rowproxy._asdict()
             for rowproxy in resultquery
         ]
         for t in result:
