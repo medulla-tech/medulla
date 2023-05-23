@@ -46,14 +46,13 @@ function auth_user ($login, $pass)
         }
         return false;
     }
-
     $subscription = getSubscriptionInformation(true);
     if ($subscription['is_subsscribed']) {
         $msg = array();
-        if ($subscription['too_much_users']) {
+        if (key_exists("too_much_users", $subscription) && $subscription['too_much_users']) {
             $msg[] = _("users");
         }
-        if ($subscription['too_much_computers']) {
+        if (key_exists("too_much_computers", $subscription) && $subscription['too_much_computers']) {
             $msg[] = _("computers");
         }
         if (safeCount($msg) > 0) {
