@@ -132,9 +132,15 @@ $ctx['maxperpage'] = $maxperpage;
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
     $ctx['computerpresence'] = $_SESSION['computerpresence'];
 
-    $machines1 = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
+    try{
+        $machines1 = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
+    }
+    catch(Exception $e){
+        echo 'error';
+    }
 
-$count = $machines1["count"];
+
+$count = (!empty($machines1["count"])) ? $machines1["count"] : 0;
 $total = $machines1["total"];
 $datas = $machines1["data"];
 
