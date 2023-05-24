@@ -103,7 +103,7 @@ class ImagingDefaultMenuBuilder:
             try:
                 os.mkdir(target_folder)
                 self.logger.debug('Imaging menu : folder %s for client %s was created' % (target_folder,uuid))
-            except Exception, e:
+            except Exception as e:
                 self.logger.error('Imaging menu : I was not able to create folder %s for client %s : %s' % (target_folder, uuid, e))
                 return False
             if name:
@@ -172,7 +172,7 @@ class ImagingMenu:
     hold an imaging menu
     """
 
-    DEFAULT_MENU_FILE = 'default'
+    DEFAULT_MENU_FILE = 'medulla'
     LANG_CODE = {
         1 : 'C',
         2 : 'fr_FR',
@@ -537,14 +537,14 @@ class ImagingMenu:
         def _write(self):
             try:
                 buf = self.buildMenuIpxe()
-            except Exception, e:
+            except Exception as e:
                 logging.getLogger().error(str(e))
 
             backupname = "%s.backup" % filename
             if os.path.exists(filename):
                 try:
                     os.rename(filename, backupname)
-                except Exception, e:  # can make a backup : give up !
+                except Exception as e:  # can make a backup : give up !
                     self.logger.error("While backuping boot menu %s as %s : %s" % (filename, backupname, e))
                     return False
 
@@ -555,13 +555,13 @@ class ImagingMenu:
                 for item in self.menuitems.values():
                     try:
                         item.write(self.config)
-                    except Exception, e:
+                    except Exception as e:
                         self.logger.error('An error occurred while writing boot menu entry "%s": %s' % (str(item), str(e)))
                 if self.mac:
                     self.logger.debug('Successfully wrote boot menu for computer MAC %s into file %s' % (self.mac, filename))
                 else:
                     self.logger.debug('Successfully wrote boot menu for unregistered computers into file %s' % filename)
-            except Exception, e:
+            except Exception as e:
                 if self.mac:
                     self.logger.error("While writing boot menu for %s : %s" % (self.mac, e))
                 else:
@@ -571,7 +571,7 @@ class ImagingMenu:
             if os.path.exists(backupname):
                 try:
                     os.unlink(backupname)
-                except Exception, e:
+                except Exception as e:
                     self.logger.warn("While removing backup %s of %s : %s" % (backupname, filename, e))
         # Retreive PXE Params
         pulse2.package_server.imaging.api.functions.Imaging().refreshPXEParams(_write, self)
@@ -732,13 +732,13 @@ class CleanMenu:
             filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.normalizeMACAddressForPXELINUX(i))
             try:
                 os.unlink(filename)
-            except Exception, e:
+            except Exception as e:
                 pass
             # clear hostnamebymac
             target_file = os.path.join(self.config.imaging_api['base_folder'],self.config.imaging_api['computers_folder'], "hostnamebymac",pulse2.utils.normalizeMACAddressForPXELINUX(i))
             try:
                 os.unlink(target_file)
-            except Exception, e:
+            except Exception as e:
                 pass
         return True
 
@@ -848,7 +848,7 @@ class ImagingBootServiceItem(ImagingItem):
             f.write(script_file[1])
             f.close()
             self.logger.info('File %s successfully created', os.path.join(postinst_scripts_folder, script_file[0]))
-        except Exception, e:
+        except Exception as e:
             self.logger.exception('Error while create sh file: %s', e)
 
         return True
@@ -869,7 +869,7 @@ class ImagingBootServiceItem(ImagingItem):
 
         try:
             os.unlink(os.path.join(postinst_scripts_folder, script_file))
-        except Exception, e:
+        except Exception as e:
             self.logger.exception("Error while delete sh file: %s", e)
 
 
@@ -932,7 +932,7 @@ class ImagingImageItem(ImagingItem):
             self.logger.debug('Deleting previous post-imaging directory: %s' % postinstdir)
             try:
                 shutil.rmtree(postinstdir)
-            except OSError, e:
+            except OSError as e:
                 self.logger.error("Can't delete post-imaging directory %s: %s" % (postinstdir, e))
                 raise
         # Then populate the post-imaging script directory if needed
@@ -940,7 +940,7 @@ class ImagingImageItem(ImagingItem):
             try:
                 os.mkdir(postinstdir)
                 self.logger.debug('Directory successfully created: %s' % postinstdir)
-            except OSError, e:
+            except OSError as e:
                 self.logger.error("Can't create post-imaging script folder %s: %s" % (postinstdir, e))
                 raise
 
@@ -961,10 +961,10 @@ class ImagingImageItem(ImagingItem):
                     f.close()
                     os.chmod(postinst, stat.S_IRUSR | stat.S_IXUSR)
                     self.logger.debug('Successfully wrote script: %s' % postinst)
-                except OSError, e:
+                except OSError as e:
                     self.logger.error("Can't update post-imaging script %s: %s" % (postinst, e))
                     raise
-                except Exception, e:
+                except Exception as e:
                     self.logger.error("Something wrong happened while writing post-imaging script %s: %s" % (postinst, e))
                 order += 1
         else:
@@ -1005,7 +1005,7 @@ def changeDefaultMenuItem(macaddress, value):
                 newlines += 'default %d\n' % value
             else:
                 newlines += line
-    except OSError, e:
+    except OSError as e:
         logger.error('Error while reading computer bootmenu file %s: %s' %
                           (filename, str(e)))
         logger.error('This computer default menu item can\'t be changed')
@@ -1014,7 +1014,7 @@ def changeDefaultMenuItem(macaddress, value):
         backupname = "%s.backup" % filename
         try:
             os.rename(filename, backupname)
-        except OSError, e:  # can make a backup : give up !
+        except OSError as e:  # can make a backup : give up !
             logger.error("While backuping boot menu %s as %s : %s"
                          % (filename, backupname, e))
             return False
@@ -1024,14 +1024,14 @@ def changeDefaultMenuItem(macaddress, value):
             fid.write(newlines)
             fid.close()
             logger.debug('Successfully wrote boot menu for computer MAC %s into file %s' % (macaddress, filename))
-        except IOError, e:
+        except IOError as e:
             logger.error("While writing boot menu for %s : %s"
                          % (macaddress, e))
             return False
         # Remove boot menu backup
         try:
             os.unlink(backupname)
-        except OSError, e:
+        except OSError as e:
             logger.warn("While removing backup %s of %s : %s"
                         % (backupname, filename, e))
         return True
@@ -1129,10 +1129,44 @@ drbl-ocs -sc0 -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8
                                         self.menu['master'] ,
                                         self.disk[0],
                                         self.menu['master'])
-        self.template="""
-UI vesamenu.c32
+        self.template = """#!ipxe
+set loaded-menu MENU
+cpuid --ext 29 && set arch x86_64 || set arch i386
+goto get_console
+:console_set
+colour --rgb 0x00567a 1 ||
+colour --rgb 0x00567a 2 ||
+colour --rgb 0x00567a 4 ||
+cpair --foreground 7 --background 2 2 ||
+goto ${loaded-menu}
+:alt_console
+cpair --background 0 1 ||
+cpair --background 1 2 ||
+goto ${loaded-menu}
+:get_console
+console --picture http://${next-server}/downloads/davos/ipxe.png --left 100 --right 80 && goto console_set || goto alt_console
+:MENU
+menu
+colour --rgb 0xff0000 0 ||
+cpair --foreground 1 1 ||
+cpair --foreground 0 3 ||
+cpair --foreground 4 4 ||
+item --gap Host %s registered!
+item --gap -- -------------------------------------
+item clonezilla Restore Multicast %s
+choose --default clonezilla --timeout 10000 target && goto ${target}
+:clonezilla
+set url_path http://${next-server}/downloads/davos/
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=${url_path}fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
+kernel ${url_path}vmlinuz ${kernel_args}
+initrd ${url_path}initrd.img
+boot || goto MENU
+"""
+        self.template_clonezilla = """UI vesamenu.c32
 TIMEOUT 100
+Fix to paths for bootsplash and use of pxelinux.0
 MENU BACKGROUND bootsplash.png
+Replacement of historic Pulse PXE by PXELINUX
 MENU WIDTH 78
 MENU MARGIN 4
 MENU ROWS 10
@@ -1147,8 +1181,7 @@ LABEL multicast
 MENU LABEL Restore Multicast %s
 KERNEL ../davos/vmlinuz
 APPEND boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=tftp://%s/davos/fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
-INITRD ../davos/initrd.img
-"""
+INITRD ../davos/initrd.img"""
 
     def ipV4toDecimal(self, ipv4):
         d = ipv4.split('.')
@@ -1172,8 +1205,8 @@ INITRD ../davos/initrd.img
                 mac = pulse2.utils.reduceMACAddress(k)
                 filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
                 self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))
-                menuval= self.template%( self.menu['description'],
-                                self.public_ip,
+                menuval= self.template%(k,
+                                self.menu['description'],
                                 k, #mac
                                 self.menu['master']
                                 )
@@ -1182,6 +1215,12 @@ INITRD ../davos/initrd.img
                     rest = False
             else:
                 self.logger.debug("mac [%s] ip [%s] non selected"%(k,v))
+
+        if os.path.isfile(os.path.join(self.pathBootMenu, 'default')) is False:
+            with open(os.path.join(self.pathBootMenu, 'default'), 'w') as default_clonezilla:
+                default_clonezilla.write(self.template_clonezilla)
+                default_clonezilla.close()
+
         return rest
 
     def writeMenuMulticast(self,filename,content):
@@ -1189,7 +1228,7 @@ INITRD ../davos/initrd.img
         fichier = os.path.join(self.pathBootMenu,filename)
         try:
             os.rename(fichier, backupname)
-        except OSError, e:  # can make a backup : give up !
+        except OSError as e:  # can make a backup : give up !
             self.logger.error("While backuping boot menu %s as %s : %s"
                          % (fichier, backupname, e))
 
@@ -1199,14 +1238,14 @@ INITRD ../davos/initrd.img
             fid.write(content)
             fid.close()
             self.logger.debug('Successfully wrote boot menu for computer MAC %s into file %s' % (filename, fichier))
-        except IOError, e:
+        except IOError as e:
             self.logger.error("While writing boot menu for %s : %s"
                          % (filename, e))
             return False
         # Remove boot menu backup
         try:
             os.unlink(backupname)
-        except OSError, e:
+        except OSError as e:
             self.logger.warn("While removing backup %s of %s : %s"
                         % (backupname, filename, e))
         return True
@@ -1229,7 +1268,7 @@ INITRD ../davos/initrd.img
             os.chmod(multicast_file, stat.S_IXUSR| stat.S_IWUSR |stat.S_IRUSR)
             self.logger.debug('Successfully wrote multicast command into file %s' % (multicast_file))
             return True
-        except IOError, e:
+        except IOError as e:
             self.logger.error("Error %s while writing command for multicast command in %s"
                          % (e, multicast_file))
             return False
