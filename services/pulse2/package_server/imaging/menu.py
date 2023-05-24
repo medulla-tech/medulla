@@ -1112,25 +1112,37 @@ drbl-ocs -sc0 -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8
                                         self.menu['master'] ,
                                         self.disk[0],
                                         self.menu['master'])
-        self.template="""
-UI vesamenu.c32
-TIMEOUT 100
-MENU BACKGROUND bootsplash.png
-MENU WIDTH 78
-MENU MARGIN 4
-MENU ROWS 10
-MENU VSHIFT 10
-MENU TIMEOUTROW 18
-MENU TABMSGROW 16
-MENU CMDLINEROW 16
-MENU HELPMSGROW 21
-MENU HELPMSGENDROW 29
-
-LABEL multicast
-MENU LABEL Restore Multicast %s
-KERNEL ../davos/vmlinuz
-APPEND boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=tftp://%s/davos/fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
-INITRD ../davos/initrd.img
+        self.template = """
+#!ipxe
+set loaded-menu MENU
+cpuid --ext 29 && set arch x86_64 || set arch i386
+goto get_console
+:console_set
+colour --rgb 0x00567a 1 ||
+colour --rgb 0x00567a 2 ||
+colour --rgb 0x00567a 4 ||
+cpair --foreground 7 --background 2 2 ||
+goto ${loaded-menu}
+:alt_console
+cpair --background 0 1 ||
+cpair --background 1 2 ||
+goto ${loaded-menu}
+:get_console
+console --picture http://${next-server}/downloads/davos/ipxe.png --left 100 --right 80 && goto console_set || goto alt_console
+:MENU
+menu
+colour --rgb 0xff0000 0 ||
+cpair --foreground 1 1 ||
+cpair --foreground 0 3 ||
+cpair --foreground 4 4 ||
+item multicast Restore Multicast %s
+choose --default multicast --timeout 100 target && goto ${target}
+:multicast
+set url_path http://${next-server}/downloads/davos/
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=${url_path}fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
+kernel ${url_path}vmlinuz ${kernel_args}
+initrd ${url_path}initrd.img
+boot || goto MENU
 """
 
     def ipV4toDecimal(self, ipv4):
@@ -1156,7 +1168,6 @@ INITRD ../davos/initrd.img
                 filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
                 self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))
                 menuval= self.template%( self.menu['description'],
-                                self.public_ip,
                                 k, #mac
                                 self.menu['master']
                                 )
