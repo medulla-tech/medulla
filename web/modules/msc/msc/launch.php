@@ -938,7 +938,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
                 a = parseInt(interval[0]);
                 b = parseInt(interval[1]);
 
-                if(isNaN(a) || isNaN(b) || a >24 || b>24){
+                if(isNaN(a) || isNaN(b) || a >24 || b>24 || a > b){
                     intervals = intervals && false;
                 }
                 else{
