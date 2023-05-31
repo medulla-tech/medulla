@@ -906,58 +906,85 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
 </style>
 
 <script type="text/javascript">
-    submitButton = jQuery(".btnPrimary")
+submitButton = jQuery(".btnPrimary")
 
-    let enableSubmitButton = ()=>{
-        submitButton.prop("disabled", false)
-    }
+let enableSubmitButton = ()=>{
+    submitButton.prop("disabled", false)
+}
 
-    let disableSubmitButton = ()=>{
-        submitButton.prop("disabled", true)
-    }
+let disableSubmitButton = ()=>{
+    submitButton.prop("disabled", true)
+}
+
+let checkIntervals = function(selector){
 
     let intervals = true
-    jQuery("#deployment_intervals").on("change click keyup focus",()=>{
-        value = jQuery("#deployment_intervals").val()
+    let value = selector.val();
+    if(value === "undefined" || value == ""){
+        // We accept empty value, so we quit the test in this case
+        return true;
+    }
 
-        //reset the result
-        intervals = true;
-        if(value === "undefined" || value == ""){
-            // We accept empty value, so we activate the button and quit the test in this case
-            enableSubmitButton();
-            return
-        }
+    value = value.replace(/\,+$/, '')
+    splitted = value.split(',')
+    a = null
+    b = null
+    for(i=0; i< splitted.length; i++){
+        interval = splitted[i].split('-')
+        if(interval.length == 2){
+            a = parseInt(interval[0]);
+            b = parseInt(interval[1]);
 
-        value = value.replace(/\,+$/, '')
-        splitted = value.split(',')
-        a = null
-        b = null
-        for(i=0; i< splitted.length; i++){
-            interval = splitted[i].split('-')
-            if(interval.length == 2){
-                a = parseInt(interval[0]);
-                b = parseInt(interval[1]);
+            if(isNaN(a) || isNaN(b) || a >24 || b>24){
+                intervals = intervals && false;
+            }
+            else if(a > b){
+                tmpCurrent = a+"-24";
+                tmpNew = "0-"+b;
+                splitted[i] = tmpCurrent;
+                splitted.splice(i+1, 0, tmpNew);
 
-                if(isNaN(a) || isNaN(b) || a >24 || b>24 || a > b){
-                    intervals = intervals && false;
-                }
-                else{
-                    intervals = intervals && true
-                }
+                newVal = splitted.join(',')
+
+                // start again the checks, no need to split again, the values are inserted
+                    selector.val(newVal);
+                    i=0;
+                    intervals = true;
             }
             else{
-                intervals = intervals && false
+                intervals = intervals && true
             }
         }
-
-        if(intervals === false){
-            disableSubmitButton();
-            this.focus()
-        }
         else{
-            enableSubmitButton();
+            intervals = intervals && false
         }
-    });
+    }
+
+    if(intervals === false){
+        disableSubmitButton();
+        this.focus()
+    }
+    else{
+        enableSubmitButton();
+    }
+    return intervals;
+}
+
+let intervals = true
+let timer=0;
+let delay=200;
+jQuery("#deployment_intervals").on("keydown change",()=>{
+    clearInterval(timer);
+});
+
+jQuery("#deployment_intervals").on("keyup",()=>{
+    clearInterval(timer);
+    timer = setInterval(()=>{
+        //reset the result
+        intervals = true;
+        intervals= checkIntervals(jQuery("#deployment_intervals"));
+    }, delay);
+});
 
 <?php
     if( isset($gid)){
