@@ -963,7 +963,8 @@ let checkIntervals = function(selector){
     // toggle submitbutton on the fly
     if(intervals === false){
         disableSubmitButton();
-        // No popup here else it's hell to correct the intervals
+        // Finally popup, even if it's hell
+        alert ("<?php echo _T('wrong deployment intervals', 'msc');?>");
         this.focus()
     }
     else{
@@ -974,7 +975,7 @@ let checkIntervals = function(selector){
 
 let intervals = true
 let timer=0;
-let delay=200;
+let delay=700;
 jQuery("#deployment_intervals").on("keydown change",()=>{
     clearInterval(timer);
 });
