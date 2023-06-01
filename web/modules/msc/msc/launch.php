@@ -2,7 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
- * (c) 2015-2016 Siveo, http://www.siveo.net
+ * (c) 2015-2023 Siveo, http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -693,7 +693,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         }
         $deployment_fields = array(
             new InputTpl('deployment_intervals'),
-            new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Example for lunch and night (24h format): 12-14,20-8', 'msc')))
+            new TextTpl(sprintf('<i style="color: #999999">%s</i><div id="interval_mesg"></div>', _T('Example for lunch and night (24h format): 12-14,20-24,0-8', 'msc')))
         );
         $deployment_values = array(
             "value" => array(
@@ -905,8 +905,86 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
 
 </style>
 
-
 <script type="text/javascript">
+submitButton = jQuery(".btnPrimary")
+
+let enableSubmitButton = ()=>{
+    submitButton.prop("disabled", false)
+}
+
+let disableSubmitButton = ()=>{
+    submitButton.prop("disabled", true)
+}
+
+let checkIntervals = function(selector){
+
+    let intervals = true
+    let value = selector.val();
+    if(value === "undefined" || value == ""){
+        // We accept empty value, so we quit the test in this case
+        return true;
+    }
+
+    value = value.replace(/\,+$/, '')
+    splitted = value.split(',')
+    a = null
+    b = null
+    for(i=0; i< splitted.length; i++){
+        interval = splitted[i].split('-')
+        if(interval.length == 2){
+            a = parseInt(interval[0]);
+            b = parseInt(interval[1]);
+
+            if(isNaN(a) || isNaN(b) || a >24 || b>24){
+                intervals = intervals && false;
+            }
+            else if(a > b){
+                tmpCurrent = a+"-24";
+                tmpNew = "0-"+b;
+                splitted[i] = tmpCurrent;
+                splitted.splice(i+1, 0, tmpNew);
+
+                newVal = splitted.join(',')
+
+                // start again the checks, no need to split again, the values are inserted
+                    selector.val(newVal);
+                    i=0;
+                    intervals = true;
+            }
+            else{
+                intervals = intervals && true
+            }
+        }
+        else{
+            intervals = intervals && false
+        }
+    }
+
+    if(intervals === false){
+        disableSubmitButton();
+        this.focus()
+    }
+    else{
+        enableSubmitButton();
+    }
+    return intervals;
+}
+
+let intervals = true
+let timer=0;
+let delay=200;
+jQuery("#deployment_intervals").on("keydown change",()=>{
+    clearInterval(timer);
+});
+
+jQuery("#deployment_intervals").on("keyup",()=>{
+    clearInterval(timer);
+    timer = setInterval(()=>{
+        //reset the result
+        intervals = true;
+        intervals= checkIntervals(jQuery("#deployment_intervals"));
+    }, delay);
+});
 
 <?php
     if( isset($gid)){
@@ -977,17 +1055,23 @@ function updateSyncthing(){
     });
 
     jQuery(".btnPrimary").hover(function(){
-      var start = toTimestamp(jQuery('#start_date').val())
-      var end   = toTimestamp(jQuery('#end_date').val())
-      var exec  = toTimestamp(jQuery('#exec_date').val())
+        var start = toTimestamp(jQuery('#start_date').val())
+        var end   = toTimestamp(jQuery('#end_date').val())
+        var exec  = toTimestamp(jQuery('#exec_date').val())
 
-      if (start > end){
-          alert ("inconsistency within the deployment range");
-          jQuery(this).prop("disabled", true);
-      }
-      else{
-        jQuery(this).prop("disabled", false);
-      }
+        if (start > end){
+            alert ("inconsistency within the deployment range");
+            jQuery(this).prop("disabled", true);
+        }
+        else{
+            if(intervals == true){
+                jQuery(this).prop("disabled", false);
+            }
+            else{
+                alert ("inconsistency within the deployment interval");
+                jQuery(this).prop("disabled", true);
+            }
+        }
     });
 
     jQuery('#exec_date').change( function() {
