@@ -1134,7 +1134,7 @@ colour --rgb 0xff0000 0 ||
 cpair --foreground 1 1 ||
 cpair --foreground 0 3 ||
 cpair --foreground 4 4 ||
-item --gap Host master registered!
+item --gap Host %s registered!
 item --gap -- -------------------------------------
 item clonezilla Restore Multicast %s
 choose --default clonezilla --timeout 10000 target && goto ${target}
@@ -1168,7 +1168,8 @@ boot || goto MENU
                 mac = pulse2.utils.reduceMACAddress(k)
                 filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
                 self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))
-                menuval= self.template%( self.menu['description'],
+                menuval= self.template%(k,
+                                self.menu['description'],
                                 k, #mac
                                 self.menu['master']
                                 )
