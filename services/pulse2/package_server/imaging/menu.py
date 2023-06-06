@@ -1112,8 +1112,7 @@ drbl-ocs -sc0 -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8
                                         self.menu['master'] ,
                                         self.disk[0],
                                         self.menu['master'])
-        self.template = """
-#!ipxe
+        self.template = """#!ipxe
 set loaded-menu MENU
 cpuid --ext 29 && set arch x86_64 || set arch i386
 goto get_console
