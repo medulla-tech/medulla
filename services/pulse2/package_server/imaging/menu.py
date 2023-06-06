@@ -1134,9 +1134,11 @@ colour --rgb 0xff0000 0 ||
 cpair --foreground 1 1 ||
 cpair --foreground 0 3 ||
 cpair --foreground 4 4 ||
-item multicast Restore Multicast %s
-choose --default multicast --timeout 100 target && goto ${target}
-:multicast
+item --gap Host master registered!
+item --gap -- -------------------------------------
+item clonezilla Restore Multicast %s
+choose --default clonezilla --timeout 10000 target && goto ${target}
+:clonezilla
 set url_path http://${next-server}/downloads/davos/
 set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=${url_path}fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
 kernel ${url_path}vmlinuz ${kernel_args}
