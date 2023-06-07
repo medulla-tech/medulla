@@ -615,7 +615,7 @@ def putPackageDetail(package, need_assign=True):
             if share['name'] != localisation_server:
                 continue
             else:
-                logging.getLogger().error("package %s" % share)
+                logging.getLogger().debug("Share information: %s" % share)
                 pkgs_share_id = share['id_sharing']
                 package['shareobject'] = share
 
@@ -649,7 +649,7 @@ def putPackageDetail(package, need_assign=True):
     with open( os.path.join(packages_id_input_dir,"conf.json"), "w" ) as outfile:
         json.dump(confjson, outfile, indent = 4)
 
-    logger.warning(PkgsConfig("pkgs").generate_hash)
+    logger.debug("Hash generation: %s" % PkgsConfig("pkgs").generate_hash)
 
     result = package
     package['postCommandSuccess'] = {"command" : "", "name" : ""}
