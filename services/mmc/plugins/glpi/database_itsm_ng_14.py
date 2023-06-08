@@ -78,7 +78,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
         try:
             self._itsm_ng_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "itsmversion"').fetchone().values()[0].replace(' ', '')
-        except OperationalError, AttributeError:
+        except (OperationalError, AttributeError):
 	        return False
 
         if LooseVersion(self._itsm_ng_version) >=  LooseVersion("1.4") and LooseVersion(self._itsm_ng_version) <=  LooseVersion("1.4.99"):
@@ -1829,11 +1829,11 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         Modify the given query to filter on the machine UUID
         """
         if type(uuid) == list:
-            return query.filter(self.machine.c.id.in_([int(str(a).replace("UUID", "")) for a in uuid]))
+            return query.filter(self.machine.c.id.in_([int(str(a).split("UUID")[-1]) for a in uuid]))
         else:
             if uuid is None:
                 uuid = ""
-            return query.filter(self.machine.c.id == int(str(uuid).replace("UUID", "")))
+            return query.filter(self.machine.c.id == int(str(uuid).split("UUID")[-1]))
 
     ##################### Machine output format (for ldap compatibility)
     def __getAttr(self, machine, get):
