@@ -2318,12 +2318,12 @@ class Glpi95(DyngroupDatabaseHelper):
         """
         if isinstance(uuid, list):
             return query.filter(
-                self.machine.c.id.in_([int(str(a).replace("UUID", "")) for a in uuid])
+                self.machine.c.id.in_([int(str(a).split("UUID")[-1]) for a in uuid])
             )
         else:
             if uuid is None:
                 uuid = ""
-            return query.filter(self.machine.c.id == int(str(uuid).replace("UUID", "")))
+            return query.filter(self.machine.c.id == int(str(uuid).split("UUID")[-1]))
 
     ##################### Machine output format (for ldap compatibility)
     def __getAttr(self, machine, get):

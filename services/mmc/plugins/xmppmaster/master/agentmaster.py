@@ -709,8 +709,6 @@ class MUCBot(slixmpp.ClientXMPP):
                     date=None,
                     fromuser=machine["login"],
                 )
-            # Plan with blocked deployments again
-            XmppMasterDatabase().restart_blocked_deployments()
 
             msglog = []
             machines_wol3 = XmppMasterDatabase().search_machines_from_state("WOL 3")
