@@ -5,7 +5,7 @@
  * (c) 2015-2023 Siveo, http://www.siveo.net
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -960,8 +960,11 @@ let checkIntervals = function(selector){
         }
     }
 
+    // toggle submitbutton on the fly
     if(intervals === false){
         disableSubmitButton();
+        // Finally popup, even if it's hell
+        alert ("<?php echo _T('wrong deployment intervals', 'msc');?>");
         this.focus()
     }
     else{
@@ -972,7 +975,7 @@ let checkIntervals = function(selector){
 
 let intervals = true
 let timer=0;
-let delay=200;
+let delay=700;
 jQuery("#deployment_intervals").on("keydown change",()=>{
     clearInterval(timer);
 });
@@ -1059,18 +1062,16 @@ function updateSyncthing(){
         var end   = toTimestamp(jQuery('#end_date').val())
         var exec  = toTimestamp(jQuery('#exec_date').val())
 
-        if (start > end){
+        if(intervals == false){
+            alert ("<?php echo _T('Wrong deployment intervals', 'msc');?>");
+            jQuery(this).prop("disabled", true);
+        }
+        else if (start > end){
             alert ("inconsistency within the deployment range");
             jQuery(this).prop("disabled", true);
         }
         else{
-            if(intervals == true){
-                jQuery(this).prop("disabled", false);
-            }
-            else{
-                alert ("inconsistency within the deployment interval");
-                jQuery(this).prop("disabled", true);
-            }
+            jQuery(this).prop("disabled", false);
         }
     });
 
