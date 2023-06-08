@@ -87,7 +87,7 @@ $contrainte = array();
 foreach ($arraydeploy['tabdeploy']['command'] as $dd=>$ss)
 {
     if ($tab[$arraydeploy['tabdeploy']['command'][$dd]] != "") {
-        $arraydeploy['tabdeploy']['state'][$dd] = $arraydeploy['tabdeploy']['state'][$dd].'<br><span title="'._T("Deployment Interval Constraint","xmppmaster"). '" style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Contraint :","xmppmaster").$tab[$arraydeploy['tabdeploy']['command'][$dd]]."</span>";
+        $arraydeploy['tabdeploy']['state'][$dd] = $arraydeploy['tabdeploy']['state'][$dd].'<br><span title="'._T("Deployment Interval Constraint","xmppmaster"). '" style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Constraint: ","xmppmaster").$tab[$arraydeploy['tabdeploy']['command'][$dd]]."</span>";
     }
 }
 
@@ -322,7 +322,7 @@ if(isset($arraynotdeploy))
       //TODO
       if ($deploy['deployment_intervals'] != "")
       {
-        $arraystate[] = '<span style="font-weight: bold; color : orange;">Pending<br><span style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Contraint :","xmppmaster").
+        $arraystate[] = '<span style="font-weight: bold; color : orange;">Pending<br><span style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Constraint: ","xmppmaster").
         $deploy['deployment_intervals'].'</span></span>';
       }else{
           $arraystate[] = '<span style="font-weight : bold; color : orange;">Pending</span>';
