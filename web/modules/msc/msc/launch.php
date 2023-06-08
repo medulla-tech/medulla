@@ -965,7 +965,6 @@ let checkIntervals = function(selector){
         disableSubmitButton();
         // Finally popup, even if it's hell
         alert ("<?php echo _T('wrong deployment intervals', 'msc');?>");
-        this.focus()
     }
     else{
         enableSubmitButton();
@@ -976,7 +975,7 @@ let checkIntervals = function(selector){
 let intervals = true
 let timer=0;
 let delay=700;
-jQuery("#deployment_intervals").on("keydown change",()=>{
+jQuery("#deployment_intervals").on("keydown focusout",()=>{
     clearInterval(timer);
 });
 
