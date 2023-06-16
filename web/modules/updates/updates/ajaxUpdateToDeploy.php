@@ -54,7 +54,6 @@ else if(!empty($_GET['id']) || !empty($_GET['glpi_id'])){
     $machineid = (!empty($_GET['id'])) ? htmlentities($_GET['id']) : '';
     $inventoryid = (!empty($_GET['glpi_id'])) ? htmlentities($_GET['glpi_id']) : '';
     $machinename = (!empty($_GET['cn']) )? htmlentities($_GET['cn']) : '';
-    echo 'aaa';
     $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"),"deployUpdate","quick","", "updates", "updates");
     $updates_list = xmlrpc_get_updates_by_uuids([$inventoryid], $start, $end, $filter);
 
