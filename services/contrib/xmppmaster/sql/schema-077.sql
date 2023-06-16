@@ -1,0 +1,114 @@
+--
+-- (c) 2023 Siveo, http://www.siveo.net/
+--
+--
+-- This file is part of Pulse 2, http://www.siveo.net/
+--
+-- Pulse 2 is free software; you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation; either version 2 of the License, or
+-- (at your option) any later version.
+--
+-- Pulse 2 is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with Pulse 2; if not, write to the Free Software
+-- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+-- MA 02110-1301, USA.
+START TRANSACTION;
+
+
+USE `xmppmaster`;
+ALTER TABLE `up_list_produit`
+ADD CONSTRAINT `name_procedure_UNIQUE` 
+    UNIQUE IF NOT EXISTS (`name_procedure`);
+
+
+-- https://www.catalog.update.microsoft.com/Home.aspx for getting product names and versions
+
+-- -------------------------------------------------------
+-- PRODUCT TABLE up_init_packages_Win10_X64_22H2
+-- -------------------------------------------------------
+
+USE `xmppmaster`;
+DROP procedure IF EXISTS `up_init_packages_Win10_X64_22H2`;
+
+USE `xmppmaster`;
+DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win10_X64_22H2`;
+;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE  PROCEDURE `up_init_packages_Win10_X64_22H2`()
+BEGIN
+	DECLARE is_done INTEGER DEFAULT 0;
+	DECLARE c_title varchar(2040)  DEFAULT "";
+    DECLARE c_description varchar(2040)DEFAULT "";
+	DECLARE c_udapeid varchar(2040)  DEFAULT "";
+	DECLARE c_kb varchar(2040)  DEFAULT "";
+	DECLARE c_revisionid varchar(2040)  DEFAULT "";
+  DECLARE client_cursor CURSOR FOR
+	  SELECT
+		updateid, kb, revisionid, title, description
+	FROM
+		xmppmaster.update_data
+	WHERE
+    title LIKE '%Windows 10 Version 22H2%'
+    AND (product LIKE '%Windows 10, version 1903 and later%'
+        OR product LIKE '%Windows 10 and later GDR-DU%')
+		AND title NOT LIKE '%ARM64%'
+		AND title NOT LIKE '%X86%'
+        AND title not like '%Dynamic%';
+
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
+DROP TABLE IF EXISTS `up_packages_Win10_X64_22H2`;
+CREATE TABLE `up_packages_Win10_X64_22H2` (
+  `updateid` varchar(36) NOT NULL,
+  `kb` varchar(16) NOT NULL,
+  `revisionid` varchar(16) NOT NULL,
+  `title` varchar(1024) NOT NULL,
+  `description` varchar(1024) NOT NULL,
+  `updateid_package` varchar(36) NOT NULL,
+  `payloadfiles` varchar(2048) NOT NULL,
+  `supersededby` varchar(2048),
+  `creationdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
+  `title_short` varchar(500),
+  PRIMARY KEY (`updateid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  OPEN client_cursor;
+
+  get_list: LOOP
+  FETCH client_cursor INTO c_udapeid, c_kb,c_revisionid, c_title, c_description;
+
+  IF is_done = 1 THEN
+  LEAVE get_list;
+  END IF;
+SELECT CONCAT('%', c_revisionid, '%') INTO @rev;
+SELECT CONCAT('%', c_kb, '%') INTO @kb;
+
+INSERT IGNORE INTO `xmppmaster`.`up_packages_Win10_X64_22H2`
+SELECT
+    c_udapeid, c_kb,c_revisionid, c_title, c_description,
+    updateid, payloadfiles, supersededby,creationdate,title_short
+FROM
+    xmppmaster.update_data
+WHERE
+    payloadfiles NOT IN ('')
+        AND supersededby LIKE @rev;
+  END LOOP get_list;
+
+  CLOSE client_cursor;
+END$$
+
+DELIMITER ;
+;
+
+-- ----------------------------------------------------------------------
+-- Database version
+-- ----------------------------------------------------------------------
+UPDATE version SET Number = 77;
+
+COMMIT;
