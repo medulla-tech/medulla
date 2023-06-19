@@ -30,6 +30,46 @@ ADD CONSTRAINT `name_procedure_UNIQUE`
 -- https://www.catalog.update.microsoft.com/Home.aspx for getting product names and versions
 
 -- -------------------------------------------------------
+-- Procedure to generate all product tables.
+-- -------------------------------------------------------
+
+USE `xmppmaster`;
+DROP procedure IF EXISTS `xmppmaster`.`up_create_product_tables`;
+;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE  PROCEDURE `up_create_product_tables`()
+BEGIN
+	-- cette procedure stockee genere les tables pour different produit
+    -- list des procedure a appeler pour generer les tables updates
+	call up_init_packages_Win10_X64_1903();
+	call up_init_packages_Win10_X64_21H2();
+	call up_init_packages_Win10_X64_21H1();
+	call up_init_packages_office_2003_64bit();
+	call up_init_packages_office_2007_64bit();
+	call up_init_packages_office_2010_64bit();
+	call up_init_packages_office_2013_64bit();
+	call up_init_packages_office_2016_64bit();
+	call up_init_packages_Vstudio_2005();
+	call up_init_packages_Vstudio_2008();
+	call up_init_packages_Vstudio_2010();
+	call up_init_packages_Vstudio_2012();
+	call up_init_packages_Vstudio_2013();
+	call up_init_packages_Vstudio_2015();
+	call up_init_packages_Vstudio_2017();
+	call up_init_packages_Vstudio_2019();
+	call up_init_packages_Vstudio_2022();
+	call up_init_packages_Win11_X64();
+	call up_init_packages_Win_Malicious_X64();
+	call up_init_packages_Win10_X64_22H2();
+END$$
+
+DELIMITER ;
+;
+
+
+-- -------------------------------------------------------
 -- PRODUCT TABLE up_init_packages_Win10_X64_22H2
 -- -------------------------------------------------------
 
