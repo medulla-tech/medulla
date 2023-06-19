@@ -1145,6 +1145,26 @@ kernel ${url_path}vmlinuz ${kernel_args}
 initrd ${url_path}initrd.img
 boot || goto MENU
 """
+        self.template_clonezilla = """UI vesamenu.c32
+TIMEOUT 100
+Fix to paths for bootsplash and use of pxelinux.0
+MENU BACKGROUND bootsplash.png
+Replacement of historic Pulse PXE by PXELINUX
+MENU WIDTH 78
+MENU MARGIN 4
+MENU ROWS 10
+MENU VSHIFT 10
+MENU TIMEOUTROW 18
+MENU TABMSGROW 16
+MENU CMDLINEROW 16
+MENU HELPMSGROW 21
+MENU HELPMSGENDROW 29
+
+LABEL multicast
+MENU LABEL Restore Multicast %s
+KERNEL ../davos/vmlinuz
+APPEND boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=tftp://%s/davos/fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
+INITRD ../davos/initrd.img"""
 
     def ipV4toDecimal(self, ipv4):
         d = ipv4.split('.')
@@ -1178,6 +1198,12 @@ boot || goto MENU
                     rest = False
             else:
                 self.logger.debug("mac [%s] ip [%s] non selected"%(k,v))
+
+        if os.path.isfile(os.path.join(self.pathBootMenu, 'default')) is False:
+            with open(os.path.join(self.pathBootMenu, 'default'), 'w') as default_clonezilla:
+                default_clonezilla.write(self.template_clonezilla)
+                default_clonezilla.close()
+
         return rest
 
     def writeMenuMulticast(self,filename,content):
