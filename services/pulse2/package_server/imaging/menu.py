@@ -155,7 +155,7 @@ class ImagingMenu:
     hold an imaging menu
     """
 
-    DEFAULT_MENU_FILE = 'default'
+    DEFAULT_MENU_FILE = 'medulla'
     LANG_CODE = {
         1 : 'C',
         2 : 'fr_FR',
