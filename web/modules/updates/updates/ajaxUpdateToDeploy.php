@@ -25,7 +25,6 @@ require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 global $conf;
-
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
@@ -79,8 +78,9 @@ foreach ($updates_list as $update) {
         "kb" => $updates_list[$row]["kb"],
         "entity"=> $entityId,
         "completeName" => $entityCompleteName,
+        "title"=>$updates_list[$row]["title"],
         "ltitle"=>$updates_list[$row]["pkgs_label"],
-        "version"=>$updates_list[$row]['pkgs_version'],
+        "version"=>$updates_list[$row]['pkgs_version']
     ];
     $row++;
 }
