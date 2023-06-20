@@ -27,34 +27,32 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 global $conf;
 
 $maxperpage = $conf["global"]["maxperpage"];
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
-$start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
+$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
+$start = isset($_GET['start']) ? $_GET['start'] : 0;
+$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
 
-if(!empty($_GET['entity'])){
+if(!empty($_GET['entity'])) {
     $entityId = (!empty($_GET['uuid'])) ? htmlentities($_GET['uuid']) : htmlentities($_GET['entity']);
     $entityCompleteName = htmlentities($_GET['completename']);
 
     $updates_list = xmlrpc_get_updates_by_entity($entityId, $start, $end, $filter);
 
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"),"deployUpdate","quick","", "updates", "updates");
-}
-else if(!empty($_GET['group'])){
+    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"), "deployUpdate", "quick", "", "updates", "updates");
+} elseif(!empty($_GET['group'])) {
     $gid = htmlentities($_GET['group']);
     $groupname = htmlentities($_GET['groupname']);
     $group = getPGobject($gid, true);
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"),"deployUpdate","quick","", "updates", "updates");
-    $machinesListGlpi = getRestrictedComputersList(0,-1,['gid'=>$gid]);
+    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"), "deployUpdate", "quick", "", "updates", "updates");
+    $machinesListGlpi = getRestrictedComputersList(0, -1, ['gid'=>$gid]);
     $machinesList = array_keys($machinesListGlpi);
     $updates_list = xmlrpc_get_updates_by_uuids($machinesList, $start, $end, $filter);
 
-}
-else if(!empty($_GET['id']) || !empty($_GET['glpi_id'])){
+} elseif(!empty($_GET['id']) || !empty($_GET['glpi_id'])) {
     $updates_list = ["datas"=>[], "count"=>0];
     $machineid = (!empty($_GET['id'])) ? htmlentities($_GET['id']) : '';
     $inventoryid = (!empty($_GET['glpi_id'])) ? htmlentities($_GET['glpi_id']) : '';
-    $machinename = (!empty($_GET['cn']) )? htmlentities($_GET['cn']) : '';
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"),"deployUpdate","quick","", "updates", "updates");
+    $machinename = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : '';
+    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"), "deployUpdate", "quick", "", "updates", "updates");
     $updates_list = xmlrpc_get_updates_by_uuids([$inventoryid], $start, $end, $filter);
 
 }
@@ -96,4 +94,3 @@ $n->end = $count;
 $n->addActionItemArray($actionspeclistUpds);
 
 $n->display();
-?>

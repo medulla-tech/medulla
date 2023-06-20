@@ -32,12 +32,15 @@ require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 
-class TextlabelTpl extends AbstractTpl {
-    var $name;
-    function __construct($name) {
+class TextlabelTpl extends AbstractTpl
+{
+    public $name;
+    public function __construct($name)
+    {
         $this->name = $name;
     }
-    function display($arrParam = array()) {
+    public function display($arrParam = array())
+    {
         if (!isset($arrParam['disabled'])) {
             $arrParam['disabled'] = '';
         }
@@ -50,24 +53,27 @@ class TextlabelTpl extends AbstractTpl {
 }
 
 
-function quick_get($param, $is_checkbox = False) {
+function quick_get($param, $is_checkbox = false)
+{
     if ($is_checkbox) {
         return (isset($_GET[$param])) ? $_GET[$param] : '';
-    }
-    else if (isset($_POST[$param]) && $_POST[$param] != '') {
+    } elseif (isset($_POST[$param]) && $_POST[$param] != '') {
         return (isset($_POST[$param])) ? $_POST[$param] : '';
+    } else {
+        return (isset($_GET[$param])) ? $_GET[$param] : '';
     }
-    else
-      return (isset($_GET[$param])) ? $_GET[$param]: '';
 }
 
 /*
  * Get all params of POST request prefixed by old_
  */
-function getOldParams($post) {
+function getOldParams($post)
+{
     $old_params = array();
-    foreach ($post as $key => $value){
-        if (startswith($key, 'old_')) $old_params[] = substr($key, 4);
+    foreach ($post as $key => $value) {
+        if (startswith($key, 'old_')) {
+            $old_params[] = substr($key, 4);
+        }
     }
     return $old_params;
 }
@@ -75,29 +81,37 @@ function getOldParams($post) {
 /*
  * Get params who where changed (old_param is different than param)
  */
-function getChangedParams($post) {
+function getChangedParams($post)
+{
     $old_params = getOldParams($post);
     $changed_params = array();
     foreach ($old_params as $param) {
-        if ($post['old_' . $param] != $post[$param]) $changed_params[] = $param;
+        if ($post['old_' . $param] != $post[$param]) {
+            $changed_params[] = $param;
+        }
     }
     return $changed_params;
 }
 
-function _get_command_start_date($cmd_id) {
+function _get_command_start_date($cmd_id)
+{
     $command_details = command_detail($cmd_id);
     list($year, $month, $day, $hour, $minute, $second) = $command_details['start_date'];
     return sprintf("%s-%s-%s %s:%s:%s", $year, $month, $day, $hour, $minute, $second);
 }
 
-function start_a_command($proxy = array(), $activate = true) {
-    if ($activate == false){
+function start_a_command($proxy = array(), $activate = true)
+{
+    if ($activate == false) {
         $active = 0;
-        $_POST['active'] = 'off'; }
+        $_POST['active'] = 'off';
+    }
 
     if ($_POST['editConvergence']) {
         $changed_params = getChangedParams($_POST);
-        if ($changed_params == array('active')) print "We have to edit command....";
+        if ($changed_params == array('active')) {
+            print "We have to edit command....";
+        }
     }
     $error = "";
     if (!check_date($_POST)) {
@@ -111,7 +125,7 @@ function start_a_command($proxy = array(), $activate = true) {
         foreach ($_GET as $k => $v) {
             $url .= "$v=$k";
         }
-        header("Location: " . urlStrRedirect("msc/logs/viewLogs", array_merge($_GET, $_POST, array('failure' => True))));
+        header("Location: " . urlStrRedirect("msc/logs/viewLogs", array_merge($_GET, $_POST, array('failure' => true))));
         exit;
     }
     // Vars seeding
@@ -140,15 +154,13 @@ function start_a_command($proxy = array(), $activate = true) {
                     'launchAction',
                     'spooling',
                     'syncthing') as $param) {
-                        if ( $param != "spooling"){
-                            $params[$param] = $post[$param];
-                        }
-                        else
-                        {
-                            if ( isset($post['Spoolingselect']) && $post['Spoolingselect'] == "on" ){
-                                $params[$param] = $post[$param];
-                            }
-                        }
+        if ($param != "spooling") {
+            $params[$param] = $post[$param];
+        } else {
+            if (isset($post['Spoolingselect']) && $post['Spoolingselect'] == "on") {
+                $params[$param] = $post[$param];
+            }
+        }
     }
     $halt_to = array();
     foreach ($post as $p => $v) {
@@ -186,7 +198,7 @@ function start_a_command($proxy = array(), $activate = true) {
         $tab = 'tablogs';
         /* record new command */
 
-        $id = add_command_api($pid, $target, $params, $mode, NULL);
+        $id = add_command_api($pid, $target, $params, $mode, null);
         if(in_array("xmppmaster", $_SESSION["modulesList"])) {
             $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
             $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
@@ -194,31 +206,32 @@ function start_a_command($proxy = array(), $activate = true) {
             $exec_date    = (quick_get('exec_date')) ? quick_get('exec_date') : '';
             $limit_rate_ko = (quick_get('limit_rate_ko')) ? quick_get('limit_rate_ko') : 0;
 
-            if ($exec_date != "" && $exec_date == $start_date){
+            if ($exec_date != "" && $exec_date == $start_date) {
                 $exec_date = '';
             }
-            xmlrpc_addlogincommand( $_SESSION['login'],
-                                    $id,
-                                    '',
-                                    '',
-                                    '',
-                                    $exec_date,
-                                    $parameterspacquage,
-                                    $rebootrequired,
-                                    $shutdownrequired,
-                                    $limit_rate_ko,
-                                    0, // Syncthing param set to 0 because it is a single machine
-                                    $params);
+            xmlrpc_addlogincommand(
+                $_SESSION['login'],
+                $id,
+                '',
+                '',
+                '',
+                $exec_date,
+                $parameterspacquage,
+                $rebootrequired,
+                $shutdownrequired,
+                $limit_rate_ko,
+                0, // Syncthing param set to 0 because it is a single machine
+                $params
+            );
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                 'uuid' => $uuid,
-                                                                                'hostname' => (isset($_GET['hostname'])) ?$_GET['hostname'] : "",
+                                                                                'hostname' => (isset($_GET['hostname'])) ? $_GET['hostname'] : "",
                                                                                 'gid' => $gid,
                                                                                 'cmd_id' => $id,
                                                                                 "login"=>$_SESSION['login'])));
             exit;
-        }
-        else{
+        } else {
             if (!isXMLRPCError()) {
                 scheduler_start_these_commands('', array($id));
                 /* then redirect to the logs page */
@@ -265,11 +278,11 @@ function start_a_command($proxy = array(), $activate = true) {
                 extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
                 /* Create new command */
                 $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $pid);
-                $command_id = add_command_api($pid, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                $command_id = add_command_api($pid, null, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                    $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
-                    $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0, $syncthing);
+                    $countmachine = getRestrictedComputersListLen(array('gid' => $deploy_group_id));
+                    $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1 : 0;
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id, $countmachine, '', '', '', 0, 0, 0, $syncthing);
                 }
 
                 if (!$active) {
@@ -284,11 +297,10 @@ function start_a_command($proxy = array(), $activate = true) {
                     'cmdPhases' => $params,
                 );
                 xmlrpc_edit_convergence_datas($gid, $pid, $updated_datas);
-            }
-            else {
+            } else {
                 /* Create convergence */
                 // create sub-groups
-                $group = new Group($gid, True);
+                $group = new Group($gid, true);
                 //$package = to_package(getPackageDetails($p_api, $pid));
                 $package = to_package(xmpp_getPackageDetail($pid));
                 $convergence_groups = $group->createConvergenceGroups($package);
@@ -297,10 +309,10 @@ function start_a_command($proxy = array(), $activate = true) {
                 $done_group_id = $convergence_groups['done_group_id'];
 
                 // Add command on sub-group
-                $command_id = add_command_api($pid, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                $command_id = add_command_api($pid, null, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                    $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id, $countmachine );
+                    $countmachine = getRestrictedComputersListLen(array('gid' => $deploy_group_id));
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id, $countmachine);
                 }
 
                 if (!$active) {
@@ -312,37 +324,38 @@ function start_a_command($proxy = array(), $activate = true) {
                 // feed convergence db
                 xmlrpc_add_convergence_datas($gid, $deploy_group_id, $done_group_id, $pid, $p_api, intval($command_id), $active, $params);
             }
-//             if ($activate == false)
+            //             if ($activate == false)
             header("Location: " . urlStrRedirect("base/computers/groupmsctabs", array('gid' => $gid)));
             exit;
-        }
-        else {
+        } else {
             // deploy on group
-            $id = add_command_api($pid, NULL, $params, $mode, $gid, $ordered_proxies);
+            $id = add_command_api($pid, null, $params, $mode, $gid, $ordered_proxies);
             if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
-                $countmachine = getRestrictedComputersListLen( array('gid' => $gid));
+                $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1 : 0;
+                $countmachine = getRestrictedComputersListLen(array('gid' => $gid));
                 $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
                 $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
                 $shutdownrequired = (quick_get('shutdownrequired')) ? quick_get('shutdownrequired') : 0;
                 $limit_rate_ko = (quick_get('limit_rate_ko')) ? quick_get('limit_rate_ko') : 0;
                 $exec_date    = (quick_get('exec_date')) ? quick_get('exec_date') : '';
-                if ($exec_date != "" && $exec_date == $start_date){
+                if ($exec_date != "" && $exec_date == $start_date) {
                     $exec_date = '';
                 }
                 $instructions_nb_machine_for_exec    = (quick_get('instructions_nb_machine_for_exec')) ? quick_get('instructions_nb_machine_for_exec') : '';
 
-                xmlrpc_addlogincommand( $_SESSION['login'],
-                                        $id,
-                                        $gid,
-                                        $countmachine,
-                                        $instructions_nb_machine_for_exec,
-                                        $exec_date,
-                                        $parameterspacquage,
-                                        $rebootrequired,
-                                        $shutdownrequired,
-                                        $limit_rate_ko,
-                                        $syncthing);
+                xmlrpc_addlogincommand(
+                    $_SESSION['login'],
+                    $id,
+                    $gid,
+                    $countmachine,
+                    $instructions_nb_machine_for_exec,
+                    $exec_date,
+                    $parameterspacquage,
+                    $rebootrequired,
+                    $shutdownrequired,
+                    $limit_rate_ko,
+                    $syncthing
+                );
 
                 header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                     'uuid' => $uuid,
@@ -351,19 +364,19 @@ function start_a_command($proxy = array(), $activate = true) {
                                                                                     'cmd_id' => $id,
                                                                                     "login"=>$_SESSION['login'])));
                 exit;
-            }
-            else{
+            } else {
                 scheduler_start_these_commands('', array($id));
 
-            // then redirect to the logs page
-            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
-            exit;
+                // then redirect to the logs page
+                header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
+                exit;
             }
         }
     }
 }
 
-function complete_post() {
+function complete_post()
+{
     foreach (array('start_script', 'clean_on_success', 'do_wol', 'do_inventory', 'issue_halt_to_done') as $mandatory) {
         if (!isset($_POST[$mandatory])) {
             $_POST[$mandatory] = '';
@@ -371,7 +384,8 @@ function complete_post() {
     }
 }
 
-function check_date($post) {
+function check_date($post)
+{
     $start = "0000-00-00 00:00:00";
     $end = "0000-00-00 00:00:00";
     $now = getdate();
@@ -383,36 +397,38 @@ function check_date($post) {
         $end = $post['end_date'];
     }
     if ($end == "0000-00-00 00:00:00") { # never end
-        return True;
+        return true;
     }
     if ($start == "0000-00-00 00:00:00" and $end != "0000-00-00 00:00:00") {
         if (!check_for_real($now, $end)) {
-            return False;
+            return false;
         } # start now, but finish in the past
     }
     return check_for_real($start, $end);
 }
 
-function check_for_real($s, $e) {
+function check_for_real($s, $e)
+{
     $start = preg_split("/[ :-]/", $s);
     $end = preg_split("/[ :-]/", $e);
 
     for ($i = 0; $i < 6; $i++) {
         if ($start[$i] > $end[$i]) {
-            return False;
-        } else if ($start[$i] < $end[$i]) {
-            return True;
+            return false;
+        } elseif ($start[$i] < $end[$i]) {
+            return true;
         }
     }
-    return False;
+    return false;
 }
 
-if(!isset($_GET['actionconvergenceint']))
-  $_GET['actionconvergenceint'] = 0;
+if(!isset($_GET['actionconvergenceint'])) {
+    $_GET['actionconvergenceint'] = 0;
+}
 // if ($_GET['actionconvergence'] != 'Active'){
 //     $_GET['active'] = 'off';
 // }
-if ($_GET['actionconvergenceint'] != 1){
+if ($_GET['actionconvergenceint'] != 1) {
     $_GET['active'] = 'off';
 }
 
@@ -420,7 +436,7 @@ if (isset($_POST["bpdesactiver"])) {
     //deactiver convergence.
     $_GET['active'] = 'off';
     start_a_command(1);
-//     $_POST['bback']="bback";
+    //     $_POST['bback']="bback";
 }
 /* Validation on local proxies selection page */
 if (isset($_POST["bconfirmproxy"])) {
@@ -456,8 +472,8 @@ if (isset($_POST['bback'])) {
     if (isset($_POST["gid"])) {
         echo "$module/$submod/$page";
         echo $_POST["gid"];
-            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => "grouptablaunch", 'gid' => $_POST["gid"])));
-            exit;
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => "grouptablaunch", 'gid' => $_POST["gid"])));
+        exit;
     }
     if (isset($_POST["uuid"])) {
         header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => "msctabs", 'uuid' => $_POST["uuid"])));
@@ -495,42 +511,41 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     if (isset($_GET['uuid']) && $_GET['uuid']) {
         $hostname = $_GET['hostname'];
         $uuid = $_GET['uuid'];
-        $machine = getMachine(array('uuid' => $uuid), True);
+        $machine = getMachine(array('uuid' => $uuid), true);
 
         $hostname = $machine->hostname;
         $label = new RenderedLabel(3, sprintf(_T('Single advanced launch : action "%s" on "%s"', 'msc'), $name, $machine->hostname));
 
         $f->push(new Table());
-        $f->add(new HiddenTpl("uuid"), array("value" => $uuid, "hide" => True));
-        $f->add(new HiddenTpl("name"), array("value" => $hostname, "hide" => True));
+        $f->add(new HiddenTpl("uuid"), array("value" => $uuid, "hide" => true));
+        $f->add(new HiddenTpl("name"), array("value" => $hostname, "hide" => true));
     } else {
         $gid = $_GET['gid'];
         $group = new Group($gid, true);
-        if ($group->exists != False) {
+        if ($group->exists != false) {
             $namegroup = $group->getName();
             if (quick_get('convergence')) {
                 $label = new RenderedLabel(3, sprintf(_T('Software Convergence: action "%s" on "%s"', 'msc'), $name, $group->getName()));
-            }
-            else {
+            } else {
                 $label = new RenderedLabel(3, sprintf(_T('Group Advanced launch : action "%s" on "%s"', 'msc'), $name, $group->getName()));
             }
             $f->push(new Table());
-            $f->add(new HiddenTpl("gid"), array("value" => $gid, "hide" => True));
+            $f->add(new HiddenTpl("gid"), array("value" => $gid, "hide" => true));
         }
     }
     $label->display();
 
-    $f->add(new HiddenTpl("pid"), array("value" => $pid, "hide" => True));
-    $f->add(new HiddenTpl("papi"), array("value" => quick_get("papi"), "hide" => True));
-    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
+    $f->add(new HiddenTpl("pid"), array("value" => $pid, "hide" => true));
+    $f->add(new HiddenTpl("papi"), array("value" => quick_get("papi"), "hide" => true));
+    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => true));
 
     $action = quick_get('launchAction');
     if (isset($action) && $action != '') {
-        $f->add(new HiddenTpl('launchAction'), array("value" => quick_get('launchAction'), "hide" => True));
+        $f->add(new HiddenTpl('launchAction'), array("value" => quick_get('launchAction'), "hide" => true));
     }
 
-    $start_script = quick_get('start_script', True);
-    $clean_on_success = quick_get('clean_on_success', True);
+    $start_script = quick_get('start_script', true);
+    $clean_on_success = quick_get('clean_on_success', true);
     $max_bw = quick_get('maxbw');
     if (!isset($max_bw) || $max_bw == '') {
         $max_bw = web_def_maxbw();
@@ -542,15 +557,16 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     // $coh_life_time is set to 24h for convergence commands
     $coh_life_time = (quick_get('convergence')) ? 24 : web_def_coh_life_time();
     $end_date = (quick_get('end_date')) ? quick_get('end_date') : date("Y-m-d H:i:s", time() + $coh_life_time * 60 * 60);
-//     $exec_date = (quick_get('exec_date')) ? quick_get('exec_date') : date("Y-m-d H:i:s");
+    //     $exec_date = (quick_get('exec_date')) ? quick_get('exec_date') : date("Y-m-d H:i:s");
     $exec_date = (quick_get('exec_date')) ? quick_get('exec_date') : '';
     if (quick_get('launchAction')) { // Advanced Quick Action
-    $ss =  new TrFormElement(
-                _T('The command must start after', 'msc'),
-                new DateTimeTpl('start_date')
-            );
+        $ss =  new TrFormElement(
+            _T('The command must start after', 'msc'),
+            new DateTimeTpl('start_date')
+        );
         $f->add(
-           $ss, array(
+            $ss,
+            array(
                 "value" => $start_date,
                 "ask_for_now" => 0
             )
@@ -558,81 +574,99 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
         $f->add(
             new TrFormElement(
-                _T('The command must stop before', 'msc'), new DateTimeTpl('end_date')
-            ), array(
+                _T('The command must stop before', 'msc'),
+                new DateTimeTpl('end_date')
+            ),
+            array(
                 "value" => $end_date,
                 "ask_for_never" => 0
             )
         );
-        $f->add(new HiddenTpl('ltitle'), array("value" => $name, "hide" => True));
-        $f->add(new HiddenTpl('parameters'), array("value" => quick_get('parameters'), "hide" => True));
-        $f->add(new HiddenTpl('do_wol'), array("value" => quick_get('do_wol', True) == 'on' ? 'checked' : '', "hide" => True));
-        $f->add(new HiddenTpl('start_script'), array("value" => $start_script == 'on' ? 'checked' : '', "hide" => True));
-        $f->add(new HiddenTpl('clean_on_success'), array("value" => $clean_on_success == 'on' ? 'checked' : '', "hide" => True));
-        $f->add(new HiddenTpl('do_inventory'), array("value" => quick_get('do_inventory', True) == 'on' ? 'checked' : '', "hide" => True));
-        $f->add(new HiddenTpl('do_reboot'), array("value" => quick_get('do_reboot', True) == 'on' ? 'checked' : '', "hide" => True));
-        $f->add(new HiddenTpl('issue_halt_to_done'), array("value" => quick_get('issue_halt_to_done', True) == 'on' ? 'checked' : '', "hide" => True));
-        $f->add(new HiddenTpl('maxbw'), array("value" => $max_bw, "hide" => True));
-    }
-    else {
+        $f->add(new HiddenTpl('ltitle'), array("value" => $name, "hide" => true));
+        $f->add(new HiddenTpl('parameters'), array("value" => quick_get('parameters'), "hide" => true));
+        $f->add(new HiddenTpl('do_wol'), array("value" => quick_get('do_wol', true) == 'on' ? 'checked' : '', "hide" => true));
+        $f->add(new HiddenTpl('start_script'), array("value" => $start_script == 'on' ? 'checked' : '', "hide" => true));
+        $f->add(new HiddenTpl('clean_on_success'), array("value" => $clean_on_success == 'on' ? 'checked' : '', "hide" => true));
+        $f->add(new HiddenTpl('do_inventory'), array("value" => quick_get('do_inventory', true) == 'on' ? 'checked' : '', "hide" => true));
+        $f->add(new HiddenTpl('do_reboot'), array("value" => quick_get('do_reboot', true) == 'on' ? 'checked' : '', "hide" => true));
+        $f->add(new HiddenTpl('issue_halt_to_done'), array("value" => quick_get('issue_halt_to_done', true) == 'on' ? 'checked' : '', "hide" => true));
+        $f->add(new HiddenTpl('maxbw'), array("value" => $max_bw, "hide" => true));
+    } else {
         if(! in_array("xmppmaster", $_SESSION["modulesList"])) {
             $f->add(
                 new TrFormElement(
-                    _T('Command name', 'msc'), new InputTpl('ltitle')
-                ), array("value" => $name)
+                    _T('Command name', 'msc'),
+                    new InputTpl('ltitle')
+                ),
+                array("value" => $name)
             );
 
             $f->add(
                 new TrFormElement(
-                    _T('Script parameters', 'msc'), new InputTpl('parameters')
-                ), array("value" => quick_get('parameters'))
+                    _T('Script parameters', 'msc'),
+                    new InputTpl('parameters')
+                ),
+                array("value" => quick_get('parameters'))
             );
 
             $f->add(
                 new TrFormElement(
-                    _T('Start "Wake On Lan" query if connection fails', 'msc'), new CheckboxTpl('do_wol')
-                ), array("value" => quick_get('do_wol', True) == 'on' ? 'checked' : '')
+                    _T('Start "Wake On Lan" query if connection fails', 'msc'),
+                    new CheckboxTpl('do_wol')
+                ),
+                array("value" => quick_get('do_wol', true) == 'on' ? 'checked' : '')
             );
 
             $f->add(
                 new TrFormElement(
-                    _T('Start script', 'msc'), new CheckboxTpl('start_script')
-                ), array("value" => $start_script == 'on' ? 'checked' : '')
+                    _T('Start script', 'msc'),
+                    new CheckboxTpl('start_script')
+                ),
+                array("value" => $start_script == 'on' ? 'checked' : '')
             );
 
             $f->add(
                 new TrFormElement(
-                    _T('Delete files after a successful execution', 'msc'), new CheckboxTpl('clean_on_success')
-                ), array("value" => $clean_on_success == 'on' ? 'checked' : '')
+                    _T('Delete files after a successful execution', 'msc'),
+                    new CheckboxTpl('clean_on_success')
+                ),
+                array("value" => $clean_on_success == 'on' ? 'checked' : '')
             );
 
             $f->add(
                 new TrFormElement(
-                    _T('Do an inventory after a successful execution', 'msc'), new CheckboxTpl('do_inventory')
-                ), array("value" => quick_get('do_inventory', True) == 'on' ? 'checked' : '')
+                    _T('Do an inventory after a successful execution', 'msc'),
+                    new CheckboxTpl('do_inventory')
+                ),
+                array("value" => quick_get('do_inventory', true) == 'on' ? 'checked' : '')
             );
 
             $f->add(
                 new TrFormElement(
-                    _T('Reboot client', 'msc'), new CheckboxTpl('do_reboot')
-                ), array("value" => quick_get('do_reboot', True) == 'on' ? 'checked' : '')
+                    _T('Reboot client', 'msc'),
+                    new CheckboxTpl('do_reboot')
+                ),
+                array("value" => quick_get('do_reboot', true) == 'on' ? 'checked' : '')
             );
 
             $f->add(
                 new TrFormElement(
-                    _T('Halt client', 'msc'), new CheckboxTpl('issue_halt_to_done')
-                ), array("value" => quick_get('issue_halt_to_done', True) == 'on' ? 'checked' : '')
+                    _T('Halt client', 'msc'),
+                    new CheckboxTpl('issue_halt_to_done')
+                ),
+                array("value" => quick_get('issue_halt_to_done', true) == 'on' ? 'checked' : '')
             );
-        }
-        else{
+        } else {
             $f->add(
                 new TrFormElement(
-                    _T('Command name', 'xmppmaster'), new InputTpl('ltitle')
-                ), array("value" => $name)
+                    _T('Command name', 'xmppmaster'),
+                    new InputTpl('ltitle')
+                ),
+                array("value" => $name)
             );
 
-           $f->add(new HiddenTpl('start_script'), array("value" => 'on' , "hide" => True));
-           $f->add(new HiddenTpl('old_start_script'), array("value" => 'on' , "hide" => True));
+            $f->add(new HiddenTpl('start_script'), array("value" => 'on' , "hide" => true));
+            $f->add(new HiddenTpl('old_start_script'), array("value" => 'on' , "hide" => true));
         }
 
         /*
@@ -642,36 +676,45 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         if (quick_get('convergence')) {
 
             $f->add(
-                new HiddenTpl('convergence'), array("value" => quick_get('convergence'), "hide" => True)
+                new HiddenTpl('convergence'),
+                array("value" => quick_get('convergence'), "hide" => true)
             );
 
-            if (quick_get('actionconvergenceint') == 1){
+            if (quick_get('actionconvergenceint') == 1) {
                 $f->add(
                     new TrFormElement(
-                        _T('Convergence', 'msc'), new TextlabelTpl('active1')
-                    ), array("value" => "<span style='font-style: gras;color:green'>"._T('ACTIVE', 'msc')."</span>"));
-                    $f->add(new HiddenTpl('active'), array("value" => 'off' , "hide" => True));
-            }
-            else{
+                        _T('Convergence', 'msc'),
+                        new TextlabelTpl('active1')
+                    ),
+                    array("value" => "<span style='font-style: gras;color:green'>"._T('ACTIVE', 'msc')."</span>")
+                );
+                $f->add(new HiddenTpl('active'), array("value" => 'off' , "hide" => true));
+            } else {
                 $f->add(
                     new TrFormElement(
-                        _T('Convergence', 'msc'), new TextlabelTpl('active1')
-                    ), array("value" => "<span style='font-style: gras; color:blue'>"._T('AVAILABLE', 'msc')."</span>"));
-                    $f->add(new HiddenTpl('active'), array("value" => 'on' , "hide" => True));
+                        _T('Convergence', 'msc'),
+                        new TextlabelTpl('active1')
+                    ),
+                    array("value" => "<span style='font-style: gras; color:blue'>"._T('AVAILABLE', 'msc')."</span>")
+                );
+                $f->add(new HiddenTpl('active'), array("value" => 'on' , "hide" => true));
             };
 
             $f->add(
-                new HiddenTpl('start_date'), array("value" => $start_date, "hide" => True)
+                new HiddenTpl('start_date'),
+                array("value" => $start_date, "hide" => true)
             );
             $f->add(
-                new HiddenTpl('end_date'), array("value" => $end_date, "hide" => True)
+                new HiddenTpl('end_date'),
+                array("value" => $end_date, "hide" => true)
             );
-        }
-        else {
+        } else {
             $f->add(
                 new TrFormElement(
-                    _T('The command must start after', 'msc'), new DateTimeTpl('start_date')
-                ), array(
+                    _T('The command must start after', 'msc'),
+                    new DateTimeTpl('start_date')
+                ),
+                array(
                     "value" => $start_date,
                     "ask_for_now" => 0
                 )
@@ -679,8 +722,10 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
             $f->add(
                 new TrFormElement(
-                    _T('The command must stop before', 'msc'), new DateTimeTpl('end_date')
-                ), array(
+                    _T('The command must stop before', 'msc'),
+                    new DateTimeTpl('end_date')
+                ),
+                array(
                     "value" => $end_date,
                     "ask_for_never" => 0
                 )
@@ -688,7 +733,8 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         }
         if(quick_get('editConvergence')) {
             $f->add(
-                new HiddenTpl('editConvergence'), array("value" => quick_get('editConvergence'), "hide" => True)
+                new HiddenTpl('editConvergence'),
+                array("value" => quick_get('editConvergence'), "hide" => true)
             );
         }
         $deployment_fields = array(
@@ -703,42 +749,53 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         );
         $f->add(
             new TrFormElement(
-                _T('Deployment interval', 'msc'), new multifieldTpl($deployment_fields)
-            ), $deployment_values
+                _T('Deployment interval', 'msc'),
+                new multifieldTpl($deployment_fields)
+            ),
+            $deployment_values
         );
-        if (isExpertMode()){
+        if (isExpertMode()) {
             $bandwidth = new IntegerTpl("limit_rate_ko");
             $bandwidth->setAttributCustom('min = 1  max = 100');
             $f->add(
-                    new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bandwidth), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
-            );
-            $f->add(
-                    new TrFormElement(
-                        _T('Dynamic parameters Packages', 'msc'), new InputTpl('parameterspacquage')
-                    ), array("value" => quick_get('parameterspacquage'))
+                new TrFormElement(_T("bandwidth throttling (ko)", 'pkgs'), $bandwidth),
+                array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
             );
             $f->add(
                 new TrFormElement(
-                    _T('Reboot required', 'msc'), new CheckboxTpl('rebootrequired')
-                ), array("value" => quick_get('rebootrequired', True) == 'on' ? 'checked' : '')
+                    _T('Dynamic parameters Packages', 'msc'),
+                    new InputTpl('parameterspacquage')
+                ),
+                array("value" => quick_get('parameterspacquage'))
             );
             $f->add(
                 new TrFormElement(
-                    _T('Shutdown required', 'msc'), new CheckboxTpl('shutdownrequired')
-                ), array("value" => quick_get('shutdownrequired', True) == 'on' ? 'shutdownrequired' : '')
+                    _T('Reboot required', 'msc'),
+                    new CheckboxTpl('rebootrequired')
+                ),
+                array("value" => quick_get('rebootrequired', true) == 'on' ? 'checked' : '')
             );
             $f->add(
                 new TrFormElement(
-                    _T('Delay install', 'msc'), new CheckboxTpl('Delay_install')
-                ), array("value" => quick_get('Delay_install', True) == 'on' ? 'checked' : ''), array('trid' => "tr_delay_install")
+                    _T('Shutdown required', 'msc'),
+                    new CheckboxTpl('shutdownrequired')
+                ),
+                array("value" => quick_get('shutdownrequired', true) == 'on' ? 'shutdownrequired' : '')
             );
-            if( isset($gid)){
+            $f->add(
+                new TrFormElement(
+                    _T('Delay install', 'msc'),
+                    new CheckboxTpl('Delay_install')
+                ),
+                array("value" => quick_get('Delay_install', true) == 'on' ? 'checked' : ''),
+                array('trid' => "tr_delay_install")
+            );
+            if(isset($gid)) {
                 $rb = new RadioTpl("choix_methode_exec");
                 $rb->setChoices(array(_T('Time constraint', 'msc'), _T('Successful transfer rate', 'msc')));
                 $rb->setvalues(array('timeinstall','nbinstall'));
                 $rb->setSelected('continueinstall');
-            }
-                else{
+            } else {
                 $rb = new RadioTpl("choix_methode_exec");
                 $rb->setChoices(array(_T('Time constraint', 'msc')));
                 $rb->setvalues(array('timeinstall'));
@@ -746,15 +803,20 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             }
             $f->add(
                 new TrFormElement(
-                    _T('Install constraint', 'msc'), $rb,array("trid"=>"choixmethod")
+                    _T('Install constraint', 'msc'),
+                    $rb,
+                    array("trid"=>"choixmethod")
                 )
             );
         }
-        if (isExpertMode()){
+        if (isExpertMode()) {
             $f->add(
                 new TrFormElement(
-                    _T('Run the deployment at the specific time', 'msc'), new DateTimeTpl('exec_date'),array("trid"=>"idexecdate")
-                ), array(
+                    _T('Run the deployment at the specific time', 'msc'),
+                    new DateTimeTpl('exec_date'),
+                    array("trid"=>"idexecdate")
+                ),
+                array(
                     "value" => $exec_date,
                     "ask_for_never" => 0
                 )
@@ -762,30 +824,37 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         }
         // parameter avanced spooling priority
         $f->add(
-                new TrFormElement(
-                    _T('Spooling priority', 'msc'), new CheckboxTpl('Spoolingselect'),
-                    array('trid' => 'tr_spooling')
-                ), array("value" => quick_get('Spoolingselect', True) == 'on' ? 'checked' : '')
-            );
+            new TrFormElement(
+                _T('Spooling priority', 'msc'),
+                new CheckboxTpl('Spoolingselect'),
+                array('trid' => 'tr_spooling')
+            ),
+            array("value" => quick_get('Spoolingselect', true) == 'on' ? 'checked' : '')
+        );
 
-                $rb = new RadioTpl("spooling");
-                $rb->setChoices(array(_T('high priority', 'msc'), _T('ordinary priority', 'msc')));
-                $rb->setvalues(array('high', 'ordinary'));
-                $rb->setSelected('high');
+        $rb = new RadioTpl("spooling");
+        $rb->setChoices(array(_T('high priority', 'msc'), _T('ordinary priority', 'msc')));
+        $rb->setvalues(array('high', 'ordinary'));
+        $rb->setSelected('high');
+        $f->add(
+            new TrFormElement(
+                _T('Install Spooling', 'msc'),
+                $rb,
+                array("trid"=>"choixspooling")
+            )
+        );
+        // parameter syncthing deployment for groups ONLY
+        if($_GET['action'] == 'groupmsctabs') {
             $f->add(
                 new TrFormElement(
-                    _T('Install Spooling', 'msc'), $rb,array("trid"=>"choixspooling")
-                )
+                    _T('Syncthing deployment', 'msc'),
+                    new CheckboxTpl('syncthing')
+                ),
+                array("value" => quick_get('syncthing', true) == 'on' ? 'checked' : '')
             );
-            // parameter syncthing deployment for groups ONLY
-            if($_GET['action'] == 'groupmsctabs')
-              $f->add(
-                      new TrFormElement(
-                          _T('Syncthing deployment', 'msc'), new CheckboxTpl('syncthing')
-                      ), array("value" => quick_get('syncthing', True) == 'on' ? 'checked' : '')
-                  );
-        if (isExpertMode()){
-            if( isset($gid)){
+        }
+        if (isExpertMode()) {
+            if(isset($gid)) {
                 $nbmachineforexec = array(
                     new TextTpl("Number of machines having successfully transferred the package"),
                     new InputTpl('instructions_nb_machine_for_exec'),
@@ -795,30 +864,36 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                 );
                 $f->add(
                     new TrFormElement(
-                        '', new TextTpl(sprintf('<h2>Group "%s" (%s machines)</h2>',$namegroup, getRestrictedComputersListLen( array('gid' => $gid)))),array("trid"=>"idnbmachine1")
+                        '',
+                        new TextTpl(sprintf('<h2>Group "%s" (%s machines)</h2>', $namegroup, getRestrictedComputersListLen(array('gid' => $gid)))),
+                        array("trid"=>"idnbmachine1")
                     )
                 );
                 $f->add(
-                    new TrFormElement(""
-                        , new multifieldTpl($nbmachineforexec),array("trid"=>"idnbmachine")
-                    ), $deployment_values
+                    new TrFormElement(
+                        "",
+                        new multifieldTpl($nbmachineforexec),
+                        array("trid"=>"idnbmachine")
+                    ),
+                    $deployment_values
                 );
             }
         }
         if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
             $f->add(
                 new TrFormElement(
-                    _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw'),
+                    _T('Max bandwidth (kbits/s)', 'msc'),
+                    new NumericInputTpl('maxbw'),
                     array('trid' => 'tr_bandwidth')
-                ), array("value" => $max_bw, "required" => true)
+                ),
+                array("value" => $max_bw, "required" => true)
             );
-        }
-        else{
-            $f->add(new HiddenTpl('maxbw'), array("value" => 0, "hide" => True));
+        } else {
+            $f->add(new HiddenTpl('maxbw'), array("value" => 0, "hide" => true));
         }
         if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
             if (web_force_mode()) {
-                $f->add(new HiddenTpl("copy_mode"), array("value" => web_def_mode(), "hide" => True));
+                $f->add(new HiddenTpl("copy_mode"), array("value" => web_def_mode(), "hide" => true));
             } else {
                 $rb = new RadioTpl("copy_mode");
                 $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
@@ -833,10 +908,10 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         }
     }
     $f->pop();
-    if (quick_get('actionconvergenceint') == 1){
+    if (quick_get('actionconvergenceint') == 1) {
         $f->addButton("bconfirm", _T("Reconfigure", "msc"));
         $f->addButton("bpdesactiver", _T("Disable", "msc"));
-    }else{
+    } else {
         $f->addValidateButton("bconfirm", _T("Enable", "msc"));
     }
     $f->addCancelButton("bback");
@@ -845,7 +920,8 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 ### /Advanced actions handling ###
 /* single target: form display */
 if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction'])) {
-    $machine = new Machine(array(
+    $machine = new Machine(
+        array(
         'uuid' => $_GET['uuid'],
         'hostname' => array('0' => $_GET['hostname']),
         'displayName' => $_GET['hostname'])
@@ -880,7 +956,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
 /* group display */
 if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAction']) && !isset($_GET['uuid'])) {
     $group = new Group($_GET['gid'], true);
-    if ($group->exists != False) {
+    if ($group->exists != false) {
         // Display the actions list
         if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
             $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid" => $_GET['gid']));
@@ -890,8 +966,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         $ajax->display();
         print "<br/>";
         $ajax->displayDivToUpdate();
-    }
-    else {
+    } else {
         $msc_host = new RenderedMSCGroupDontExists();
         $msc_host->headerDisplay();
     }
@@ -989,8 +1064,8 @@ jQuery("#deployment_intervals").on("keyup",()=>{
 });
 
 <?php
-    if( isset($gid)){
-        echo "var Nbgroup = ".getRestrictedComputersListLen( array('gid' => $gid)).";
+    if(isset($gid)) {
+        echo "var Nbgroup = ".getRestrictedComputersListLen(array('gid' => $gid)).";
         ";
     }
 ?>
