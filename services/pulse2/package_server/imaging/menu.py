@@ -181,7 +181,7 @@ class ImagingMenu:
     hold an imaging menu
     """
 
-    DEFAULT_MENU_FILE = "default"
+    DEFAULT_MENU_FILE = "medulla"
     LANG_CODE = {
         1: "C",
         2: "fr_FR",
@@ -1317,10 +1317,44 @@ drbl-ocs -sc0 -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8
                 self.disk[0],
                 self.menu["master"],
             )
-        self.template = """
-UI vesamenu.c32
+        self.template = """#!ipxe
+set loaded-menu MENU
+cpuid --ext 29 && set arch x86_64 || set arch i386
+goto get_console
+:console_set
+colour --rgb 0x00567a 1 ||
+colour --rgb 0x00567a 2 ||
+colour --rgb 0x00567a 4 ||
+cpair --foreground 7 --background 2 2 ||
+goto ${loaded-menu}
+:alt_console
+cpair --background 0 1 ||
+cpair --background 1 2 ||
+goto ${loaded-menu}
+:get_console
+console --picture http://${next-server}/downloads/davos/ipxe.png --left 100 --right 80 && goto console_set || goto alt_console
+:MENU
+menu
+colour --rgb 0xff0000 0 ||
+cpair --foreground 1 1 ||
+cpair --foreground 0 3 ||
+cpair --foreground 4 4 ||
+item --gap Host %s registered!
+item --gap -- -------------------------------------
+item clonezilla Restore Multicast %s
+choose --default clonezilla --timeout 10000 target && goto ${target}
+:clonezilla
+set url_path http://${next-server}/downloads/davos/
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=${url_path}fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
+kernel ${url_path}vmlinuz ${kernel_args}
+initrd ${url_path}initrd.img
+boot || goto MENU
+"""
+        self.template_clonezilla = """UI vesamenu.c32
 TIMEOUT 100
+Fix to paths for bootsplash and use of pxelinux.0
 MENU BACKGROUND bootsplash.png
+Replacement of historic Pulse PXE by PXELINUX
 MENU WIDTH 78
 MENU MARGIN 4
 MENU ROWS 10
@@ -1335,8 +1369,7 @@ LABEL multicast
 MENU LABEL Restore Multicast %s
 KERNEL ../davos/vmlinuz
 APPEND boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=tftp://%s/davos/fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
-INITRD ../davos/initrd.img
-"""
+INITRD ../davos/initrd.img"""
 
     def ipV4toDecimal(self, ipv4):
         d = ipv4.split(".")
@@ -1415,6 +1448,9 @@ INITRD ../davos/initrd.img
             self.logger.warn(
                 "While removing backup %s of %s : %s" % (backupname, filename, e)
             )
+            self.logger.warn(
+                "While removing backup %s of %s : %s" % (backupname, filename, e)
+            )
         return True
 
     def make(self):
@@ -1438,6 +1474,10 @@ INITRD ../davos/initrd.img
             )
             return True
         except IOError as e:
+            self.logger.error(
+                "Error %s while writing command for multicast command in %s"
+                % (e, multicast_file)
+            )
             self.logger.error(
                 "Error %s while writing command for multicast command in %s"
                 % (e, multicast_file)
