@@ -11644,7 +11644,43 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         for rowproxy in resultquery]
         return result
     
-    
+    @DatabaseHelper._sessionm
+    def get_conformity_update_by_machines(self, session, ids):
+        """
+            This function returns value for compliance rate for a list of machines
+            Params: ids is a list of selected machines
+            Return : waiting updates
+        """
+
+        if len(ids) == 0:
+            return {}
+
+        result = {str(id):0 for id in ids}
+        sql="""SELECT machines.id,
+(
+SELECT COUNT(*)
+FROM
+    xmppmaster.up_gray_list
+INNER JOIN
+    xmppmaster.up_machine_windows ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+WHERE
+    up_gray_list.valided = 1
+AND
+    up_machine_windows.id_machine = machines.id) AS update_waiting
+from xmppmaster.machines
+where agenttype="machine"
+and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
+
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        # result= [{column: value for column,
+        #         value in rowproxy.items()}
+        #                 for rowproxy in resultquery]
+
+        result = {str(item.id):item.update_waiting for item in resultquery}
+        return result
+
     @DatabaseHelper._sessionm
     def get_idmachine_from_name(self, session, name):
         """

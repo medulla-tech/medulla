@@ -813,6 +813,10 @@ function xmlrpc_get_conformity_update_by_machine($idmachine){
   return xmlCall("xmppmaster.get_conformity_update_by_machine", [$idmachine]);
 }
 
+function xmlrpc_get_conformity_update_by_machines($ids){
+  return xmlCall("xmppmaster.get_conformity_update_by_machines", [$ids]);
+}
+
 function xmlrpc_get_conformity_update_for_group($uuidArray){
   return xmlCall("xmppmaster.get_conformity_update_for_group", [$uuidArray]);
 }

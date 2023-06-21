@@ -55,6 +55,7 @@ $ctx['maxperpage'] = $maxperpage;
 
 
 $detailsByMach = new ActionItem(_T("View details", "updates"),"deploySpecificUpdate","display","", "updates", "updates");
+$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"),"deploySpecificUpdate","displayg","", "updates", "updates");
 
 $all_grey_enable = xmlrpc_get_count_grey_list_enable();
 $all_grey_enable = $all_grey_enable['0']['enable_grey'];
@@ -136,15 +137,13 @@ else
     $machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
     $count = $machines['count'];
     $machines = $machines['data'];
+    $compliance_computers = xmlrpc_get_conformity_update_by_machines($machines['id']);
 
     for($i=0; $i < $count; $i++){
-        $detailsByMachs[] = $detailsByMach;
         $machineNames[] = $machines['hostname'][$i];
-
-        $compliance_computer = xmlrpc_get_conformity_update_by_machine($machines['id'][$i]);
-
-        $comp = $compliance_computer['0']['update_waiting'];
+        $comp = $compliance_computers[(string)$machines['id'][$i]];
         $missingUpdatesMachine[] = $comp;
+        $detailsByMachs[] = ($comp == 0) ? $detailsByMachEmpty : $detailsByMach;
 
         if ($all_grey_enable != '0' and $comp != '0')
         {

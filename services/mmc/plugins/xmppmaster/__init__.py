@@ -1456,6 +1456,10 @@ def get_conformity_update_by_machine(idmachine):
     result = XmppMasterDatabase().get_conformity_update_by_machine(idmachine)
     return result
 
+def get_conformity_update_by_machines(ids=[]):
+    result = XmppMasterDatabase().get_conformity_update_by_machines(ids)
+    return result
+
 def get_conformity_update_for_group(uuidArray):
     result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
     nbmachinetotal = len(uuidArray)
