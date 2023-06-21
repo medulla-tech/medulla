@@ -12088,21 +12088,17 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
 
     @DatabaseHelper._sessionm
     def get_updates_by_uuids(self, session, uuids, start=0, limit=-1, filter=""):
-        sub = session.query(Machines.id).filter(Machines.uuid_inventorymachine.in_(uuids)).subquery()
-
-        query = session.query(Up_machine_windows).filter(and_(
-            Up_machine_windows.id_machine.in_(sub),
-            Up_machine_windows.required_deploy != 1,
-            Up_machine_windows.curent_deploy != 1)
-        )\
-        .group_by(Up_machine_windows.update_id)
+        query = session.query(Up_machine_windows)\
+            .join(Machines, Machines.id == Up_machine_windows.id_machine)\
+            .filter(and_(Machines.uuid_inventorymachine.in_(uuids),
+                or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
+                or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0)))
 
         if filter != "":
             query = query.filter(or_(
                 Up_machine_windows.kb.contains(filter),
                 Up_machine_windows.update_id.contains(filter)))
         count = query.count()
-
         query = query.offset(start)
         if limit != -1:
             query = query.limit(limit)
@@ -12119,18 +12115,27 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             if element.start_date is not None:
                 startdate = element.start_date
 
+            current_deploy = 0
+            if element.curent_deploy is not None:
+                current_deploy = element.curent_deploy
+
+            required_deploy = 0
+            if element.required_deploy is not None:
+                required_deploy = element.required_deploy
+
             enddate = ""
             if element.end_date is not None:
                 enddate = element.end_date
+
             result['datas'].append({
                 "id_machine": element.id_machine if not None else 0,
                 "update_id": element.update_id if not None else "",
                 "kb": element.kb if not None else "",
-                "current_deploy": element.curent_deploy if not None else "",
-                "required_deploy": element.required_deploy if not None else "",
+                "current_deploy": current_deploy,
+                "required_deploy":  required_deploy,
                 "start_date": startdate,
                 "end_date": enddate,
-                "pkgs_label":"",
+                "pkgs_label":"" if not None else "",
                 "pkgs_version":"",
                 "pkgs_description":""
             })
