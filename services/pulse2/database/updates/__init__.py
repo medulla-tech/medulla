@@ -436,8 +436,13 @@ class UpdatesDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def white_unlist_update(self, session, updateid):
+        sql_add = """INSERT INTO xmppmaster.up_gray_list (updateid, kb, revisionid, title, description, updateid_package, payloadfiles, valided, title_short)
+        (SELECT xmppmaster.up_packages.updateid, xmppmaster.up_packages.kb, xmppmaster.up_packages.revisionid, xmppmaster.up_packages.title, description, updateid_package, payloadfiles, valided, title_short FROM xmppmaster.up_white_list
+            JOIN xmppmaster.up_packages ON xmppmaster.up_packages.updateid = xmppmaster.up_white_list.updateid WHERE xmppmaster.up_packages.updateid='%s')"""%(updateid)
+
         sql = """DELETE FROM xmppmaster.up_white_list WHERE updateid = '%s' or kb='%s'"""%(updateid, updateid)
         try:
+            session.execute(sql_add)
             session.execute(sql)
             session.commit()
             session.flush()
