@@ -26,7 +26,7 @@ $id = htmlentities($_GET['updateid']);
 $title = htmlentities($_GET['title']);
 
 if(isset($_POST['bconfirm'])){
-    $result = xmlrpc_grey_update($updateid, 0);
+    $result = xmlrpc_grey_update($id, 0);
     if($result){
         $str = sprintf(_T("The update %s (%s) has been disabled.", "updates"), $title, $id);
         new NotifyWidgetSuccess($str);
