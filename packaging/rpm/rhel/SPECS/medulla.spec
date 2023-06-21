@@ -167,7 +167,6 @@ This package contains the connection manager plugin for the MMC agent.
 %files -n python-mmc-connection-manager
 %defattr(-,root,root,0755)
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/pulse2/cm
-%python2_sitelib/mmc/plugins/backuppc
 %python2_sitelib/pulse2/cm
 %{_sysconfdir}/init.d/pulse2-cm
 %_sbindir/pulse2-cm
