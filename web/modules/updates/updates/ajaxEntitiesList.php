@@ -104,7 +104,7 @@ foreach ($entities as $entity) {
     $actiondetailsByMachs[] = $detailsByMach;
     $actiondetailsByUpds[] = $detailsByUpd;
     $entityNames[] = $entity["completename"];
-    $params[] = array('uuid' => $entity['uuid'], 'completename'=>$entity['completename']);
+    $params[] = array('entity' => $entity['uuid'], 'completename'=>$entity['completename']);
     $color = colorconf(100);
     if (isset($identity[$id_entity])){
         $conformite = $identity[$id_entity]['conformite'];

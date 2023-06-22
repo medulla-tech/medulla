@@ -40,11 +40,11 @@ else if(!empty($_GET['gid'])){
 
     $p = new PageGenerator(_T(sprintf("Updates on Group %s", $groupname)));
 }
-else if(!empty($_GET['id'])) {
-    $id = htmlentities($_GET['id']);
-    $glpi_id = (!empty($_GET['glpi_id'])) ? htmlentities($_GET['glpi_id']) : "";
+else if(!empty($_GET['machineid'])) {
+    $id = htmlentities($_GET['machineid']);
+    $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : "";
     $cn = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
-    $params = ["id"=>$id, "cn"=>$cn, "glpi_id"=>$glpi_id];
+    $params = ["machineid"=>$id, "cn"=>$cn, "inventoryid"=>$inventoryid];
     $p = new PageGenerator(_T(sprintf("Updates on machine %s", $cn)));
 }
 else{

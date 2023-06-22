@@ -841,6 +841,14 @@ function xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate="", $endd
   return xmlCall("xmppmaster.pending_entity_update_by_pid", [$entity, $pid, $startdate, $enddate]);
 }
 
+function xmlrpc_pending_group_update_by_pid($gid, $pid, $startdate="", $enddate=""){
+  return xmlCall("xmppmaster.pending_group_update_by_pid", [$gid, $pid, $startdate, $enddate]);
+}
+
+function xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $pid, $startdate="", $enddate=""){
+  return xmlCall("xmppmaster.pending_machine_update_by_pid", [$machineid, $inventoryid, $pid, $startdate, $enddate]);
+}
+
 function xmlrpc_get_updates_by_uuids($uuids, $start=0, $limit=-1, $filter=""){
   return xmlCall("xmppmaster.get_updates_by_uuids", [$uuids, $start, $limit, $filter]);
 }
