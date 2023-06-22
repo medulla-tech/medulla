@@ -55,7 +55,7 @@ else{
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdateToDeploy"), "container", $params);
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDeploySpecificUpdate"), "container", $params);
 $ajax->display();
 $ajax->displayDivToUpdate();
 
