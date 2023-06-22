@@ -27,8 +27,8 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 $params = [];
 
-if(!empty($_GET['uuid'])){
-    $entity = htmlentities($_GET['uuid']);
+if(!empty($_GET['entity'])){
+    $entity = htmlentities($_GET['entity']);
     $completename = htmlentities($_GET['completename']);
     $params = ["entity"=>$entity, "completename"=>$completename];
     $p = new PageGenerator(_T(sprintf("Updates on Entity %s", $completename)));
