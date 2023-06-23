@@ -1160,7 +1160,13 @@ MENU CMDLINEROW 16
 MENU HELPMSGROW 21
 MENU HELPMSGENDROW 29
 
-LABEL multicast
+LABEL clonezilla
+MENU LABEL Restore Multicast %s
+KERNEL ../davos/vmlinuz
+APPEND boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=tftp://%s/davos/fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
+INITRD ../davos/initrd.img
+
+LABEL local
 MENU LABEL Restore Multicast %s
 KERNEL ../davos/vmlinuz
 APPEND boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=tftp://%s/davos/fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
