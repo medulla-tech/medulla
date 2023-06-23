@@ -1205,10 +1205,9 @@ INITRD ../davos/initrd.img"""
             else:
                 self.logger.debug("mac [%s] ip [%s] non selected"%(k,v))
 
-        if os.path.isfile(os.path.join(self.pathBootMenu, 'default')) is False:
-            with open(os.path.join(self.pathBootMenu, 'default'), 'w') as default_clonezilla:
-                default_clonezilla.write(self.template_clonezilla)
-                default_clonezilla.close()
+        with open(os.path.join(self.pathBootMenu, 'default'), 'w') as default_clonezilla:
+            default_clonezilla.write(self.template_clonezilla)
+            default_clonezilla.close()
 
         return rest
 
