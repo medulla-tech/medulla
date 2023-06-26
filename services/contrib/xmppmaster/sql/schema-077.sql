@@ -146,6 +146,66 @@ END$$
 DELIMITER ;
 ;
 
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_INSERT`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_black_list_AFTER_INSERT` AFTER INSERT ON `up_black_list` FOR EACH ROW
+BEGIN
+	DELETE FROM `xmppmaster`.`up_gray_list`
+	WHERE
+		`updateid` IN (SELECT
+			updateid_or_kb
+		FROM
+			xmppmaster.up_black_list
+		WHERE
+			userjid_regexp = '.*'
+			AND type_rule = 'id');
+	UPDATE `xmppmaster`.`up_gray_list_flop`
+	SET
+		`updateid` = LEFT(UUID(), 8),
+		`kb` = 'bidon'
+	WHERE
+		`updateid` IN (SELECT
+				updateid_or_kb
+			FROM
+				xmppmaster.up_black_list
+			WHERE
+				userjid_regexp = '.*'
+					AND type_rule = 'id');
+
+	DELETE FROM `xmppmaster`.`up_gray_list`
+	WHERE
+		`kb` IN (SELECT
+			updateid_or_kb
+		FROM
+			xmppmaster.up_black_list
+
+		WHERE
+			userjid_regexp = '.*'
+			AND type_rule = 'kb');
+
+	UPDATE `xmppmaster`.`up_gray_list_flop`
+	SET
+		`kb` = 'bidon'
+	WHERE
+		`updateid` IN (SELECT
+				updateid_or_kb
+			FROM
+				xmppmaster.up_black_list
+			WHERE
+				userjid_regexp = '.*'
+					AND type_rule = 'kb');
+	DELETE FROM `xmppmaster`.`up_gray_list_flop`
+	WHERE
+		(`kb` = 'bidon');
+
+   DELETE FROM `xmppmaster`.`up_white_list` WHERE (`updateid` = new.updateid_or_kb or `kb` = new.updateid_or_kb );
+
+END$$
+DELIMITER ;
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
