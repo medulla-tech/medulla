@@ -57,8 +57,8 @@ $page = new Page("deployAllUpdates", _T('Deploy all Updates', 'updates'));
 $page->setFile("modules/updates/updates/deployAllUpdates.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxPreDeployAll", _T("Deploy all Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxPreDeployAll.php");
+$page = new Page("ajaxDeployAllUpdates", _T("Deploy all Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxDeployAllUpdates.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
