@@ -31,6 +31,7 @@ from mmc.support.mmctools import Singleton
 from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory
 from mmc.core.log import ColoredFormatter
+#from mmc.plugins.xmppmaster.master.lib import convert
 
 import importlib
 import logging
@@ -53,9 +54,12 @@ import sys
 
 import random
 
-import posix_ipc
+#import posix_ipc
+import socket
+import ssl
+import gzip
 
-
+from datetime import datetime
 logger = logging.getLogger()
 
 sys.path.append("plugins")
@@ -64,8 +68,773 @@ Fault = xmlrpc.client.Fault
 ctx = None
 VERSION = "5.0.0"
 
+# decorateur mesure temps d'une fonction
+def measure_time(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        execution_time = end_time - start_time
+        print(f"Temps d'exécution de {func.__name__}: {execution_time} secondes")
+        return result
+    return wrapper
+
+def log_params(func):
+    def wrapper(*args, **kwargs):
+        print(f"Paramètres positionnels : {args}")
+        print(f"Paramètres nommés : {kwargs}")
+        result = func(*args, **kwargs)
+        return result
+    return wrapper
+
+def log_details(func):
+    def wrapper(*args, **kwargs):
+        frame = inspect.currentframe().f_back
+        filename = frame.f_code.co_filename
+        line_number = frame.f_lineno
+        function_name = func.__name__
+        print(f"Nom de la fonction : {function_name}")
+        print(f"Fichier : {filename}, ligne : {line_number}")
+        print(f"Paramètres positionnels : {args}")
+        print(f"Paramètres nommés : {kwargs}")
+        result = func(*args, **kwargs)
+        return result
+    return wrapper
+
+
+def log_details_debug_info(func):
+    def wrapper(*args, **kwargs):
+        frame = inspect.currentframe().f_back
+        filename = frame.f_code.co_filename
+        line_number = frame.f_lineno
+        function_name = func.__name__
+        # Configuration du logger
+        logger = logging.getLogger(function_name)
+        logger.setLevel(logging.INFO)
+        # Configuration du format de log
+        log_format = f"{function_name} - Ligne {line_number} - %(message)s"
+        formatter = logging.Formatter(log_format)
+        # Configuration du handler de log vers la console
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.INFO)
+        console_handler.setFormatter(formatter)
+        logger.addHandler(console_handler)
+        # Log des paramètres passés à la fonction
+        logger.info(f"Paramètres positionnels : {args}")
+        logger.info(f"Paramètres nommés : {kwargs}")
+        result = func(*args, **kwargs)
+        return result
+    return wrapper
+
+def generate_log_line(message):
+    frame = inspect.currentframe().f_back
+    file_name = inspect.getframeinfo(frame).filename
+    line_number = frame.f_lineno
+    log_line = f"[{file_name}:{line_number}] - {message}"
+    return log_line
+
+def display_message(message):
+    frame = inspect.currentframe().f_back
+    file_name = inspect.getframeinfo(frame).filename
+    line_number = frame.f_lineno
+    logger = logging.getLogger(file_name)
+    logger.setLevel(logging.INFO)
+    # Configuration du handler de stream (affichage console)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.INFO)
+    logger.addHandler(stream_handler)
+    log_line = generate_log_line(message)
+    logger.info(log_line)
+
+
+def generer_mot_de_passe(taille):
+    """
+        Cette fonction permet de generer 1 mot de passe aléatoire
+        le parametre taille precise le nombre de caractere du mot de passe
+        renvoi le mot de passe
+
+        eg : mot_de_passe = generer_mot_de_passe(32)
+    """
+    caracteres = string.ascii_letters + string.digits + string.punctuation
+    mot_de_passe = ''.join(random.choice(caracteres) for _ in range(taille))
+    return mot_de_passe
+
+class MotDePasse:
+
+    def __init__(self, taille,  temps_validation=60, caracteres_interdits='''"()[],%:|`.{}'><\\/^'''):
+        self.taille = taille
+        self.caracteres_interdits = [ x for x in caracteres_interdits]
+        self.temps_validation = temps_validation
+        self.mot_de_passe = self.generer_mot_de_passe()
+        self.date_expiration = self.calculer_date_expiration()
+
+    def generer_mot_de_passe(self):
+        caracteres = string.ascii_letters + string.digits + string.punctuation
+        for caractere_interdit in self.caracteres_interdits:
+            caracteres = caracteres.replace(caractere_interdit, '')
+        mot_de_passe = ''.join(random.choice(caracteres) for _ in range(taille))
+        return mot_de_passe
+
+    def calculer_date_expiration(self):
+        return datetime.now() + timedelta(seconds=self.temps_validation)
+
+    def verifier_validite(self):
+        temps_restant = (self.date_expiration - datetime.now()).total_seconds()
+        return temps_restant
+
+    def est_valide(self):
+        return datetime.now() < self.date_expiration
+
+    #def generer_qr_code(self, nom_fichier):
+        #qr = qrcode.QRCode(version=1, box_size=10, border=4)
+        #qr.add_data(self.mot_de_passe)
+        #qr.make(fit=True)
+        #qr_img = qr.make_image(fill="black", back_color="white")
+        #qr_img.save(nom_fichier)
+        #print(f"QR code généré et sauvegardé dans {nom_fichier}.")
+
+
+
+class DateTimebytesEncoderjson(json.JSONEncoder):
+    """
+    Used to handle datetime in json files.
+    """
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            encoded_object = obj.isoformat()
+        elif isinstance(obj, bytes):
+            encoded_object = obj.decode("utf-8")
+        else:
+            encoded_object = json.JSONEncoder.default(self, obj)
+        return encoded_object
+
+class convert:
+    """
+        les packages suivant son obligatoire.
+        python3-xmltodict python3-dicttoxml python3-yaml json2xml
+        pip3 install dict2xml
+        Cette class presente des methodes pour convertir simplement des objects.
+        elle expose les fonction suivante
+            convert_dict_to_yaml(input_dict)
+            convert_yaml_to_dict(yaml_data)
+            yaml_string_to_dict(yaml_string)
+            check_yaml_conformance(yaml_data)
+            compare_yaml(yaml_string1, yaml_string2)
+            convert_dict_to_json(input_dict_json, indent=None, sort_keys=False)
+            check_json_conformance(json_data)
+            convert_json_to_dict(json_str)
+            xml_to_dict(xml_string)
+            compare_xml(xml_file1, xml_file2)
+            convert_xml_to_dict(xml_str)
+            convert_json_to_xml(input_json)
+            convert_xml_to_json(input_xml)
+            convert_dict_to_xml(data_dict)
+            convert_bytes_datetime_to_string(data)
+            compare_dicts(dict1, dict2)
+            compare_json(json1, json2)
+            convert_to_bytes(input_data)
+            compress_and_encode(string)
+            decompress_and_encode(string)
+            convert_datetime_to_string(input_date)
+            encode_to_string_base64(input_data)
+            decode_base64_to_string_(input_data)
+            check_base64_encoding(input_string)
+            taille_string_in_base64(string)
+            string_to_int(s)
+            int_to_string(n)
+            string_to_float(s)
+            float_to_string(f)
+            list_to_string(lst, separator=', ')
+            string_to_list(s, separator=', ')
+            list_to_set(lst)
+            set_to_list(s)
+            dict_to_list(d)
+            list_to_dict(lst)
+            char_to_ascii(c)
+            ascii_to_char(n)
+            convert_rows_to_columns(data)
+            convert_columns_to_rows(data)
+            convert_to_ordered_dict(dictionary)
+            generate_random_text(num_words)
+            capitalize_words(text)
+            compress_data_to_bytes(data)
+            decompress_data_to_bytes(data_bytes_compress
+            compress_dict_to_dictbytes(dict_data)
+            decompress_dictbytes_to_dict(data_bytes_compress)
+            unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress)
+            is_multiple_of(s, multiple=4)
+            is_base64(s)
+            header_body(xml_string)
+            format_xml(xml_string)
+            check_keys_in( dictdata, array_keys)
+    """
+    # YAML
+    @staticmethod
+    def convert_dict_to_yaml(input_dict):
+        """
+            la fonction suivante Python convertit 1 dict python en json.
+        """
+        if isinstance(input_dict, dict):
+            return yaml.dump(convert.convert_bytes_datetime_to_string(input_dict))
+        else:
+            raise TypeError("L'entrée doit être de type dict.")
+
+    @staticmethod
+    def convert_yaml_to_dict(yaml_string):
+        return convert.yaml_string_to_dict(yaml_string)
+
+    @staticmethod
+    def yaml_string_to_dict(yaml_string):
+        try:
+            yaml_data = yaml.safe_load(convert.convert_bytes_datetime_to_string(yaml_string))
+            if isinstance(yaml_data, (dict, list)):
+                return yaml_data
+            else:
+                raise yaml.YAMLError("Erreur lors de la conversion de la chaîne YAML en dictionnaire.")
+        except yaml.YAMLError as e:
+            raise ValueError("Erreur lors de la conversion de la chaîne YAML en dictionnaire.")
+
+    @staticmethod
+    def check_yaml_conformance(yaml_data):
+        try:
+            # Chargement du YAML pour vérifier la conformité
+            yaml.safe_load(convert.convert_bytes_datetime_to_string(yaml_data))
+            return True
+        except yaml.YAMLError:
+            return False
+
+    @staticmethod
+    def compare_yaml(yaml_string1, yaml_string2):
+        """
+        Dans cette fonction compare_yaml, nous appelons la fonction yaml_string_to_dict pour convertir chaque chaîne YAML en dictionnaire.
+        Si une exception ValueError est levée lors de la conversion, nous affichons l'erreur et retournons False.
+        nous utilisons la fonction compare_dicts pour comparer les dictionnaires obtenus.
+        Si les dictionnaires sont égaux, la fonction compare_yaml retourne True, sinon elle retourne False.
+        """
+        try:
+            dict1 = convert.yaml_string_to_dict(yaml_string1)
+            dict2 = convert.yaml_string_to_dict(yaml_string2)
+            return convert.compare_dicts(dict1, dict2)
+        except ValueError as e:
+            print(f"Erreur: {str(e)}")
+            return False
+
+    # JSON
+    @staticmethod
+    def convert_dict_to_json(input_dict_json, indent=None, sort_keys=False):
+        """
+            la fonction suivante Python convertit 1 dict python en json.
+        """
+        if isinstance(input_dict_json, dict):
+            return json.dumps(convert.convert_bytes_datetime_to_string(input_dict_json),indent=indent)
+        else:
+            raise TypeError("L'entrée doit être de type dict.")
+
+    @staticmethod
+    def check_json_conformance(json_data):
+        try:
+            json.loads(json_data)
+            return True
+        except json.JSONDecodeError:
+            return False
+
+
+#json_bytes = json.dumps(dict_data, indent = 4, cls=DateTimebytesEncoderjson).encode('utf-8')
+
+
+    @staticmethod
+    def convert_json_to_dict(json_str):
+        if isinstance(json_str,(dict)):
+            return json_str
+        stringdata = convert.convert_bytes_datetime_to_string(json_str)
+        if isinstance(stringdata,(str)):
+            try:
+                return json.loads(stringdata)
+            except json.decoder.JSONDecodeError as e:
+                raise
+            except Exception as e:
+                # Code de gestion d'autres types d'exceptions
+                logger.error("convert_json_to_dict %s" % (e))
+                raise
+
+
+    @staticmethod
+    def xml_to_dict(xml_string):
+
+        def xml_element_to_dict(element):
+            if len(element) == 0:
+                return element.text
+            result = {}
+            for child in element:
+                child_dict = xml_element_to_dict(child)
+                if child.tag in result:
+                    if not isinstance(result[child.tag], list):
+                        result[child.tag] = [result[child.tag]]
+                    result[child.tag].append(child_dict)
+                else:
+                    result[child.tag] = child_dict
+            return result
+        try:
+            tree = ET.ElementTree(ET.fromstring(convert.convert_bytes_datetime_to_string(xml_string)))
+            root = tree.getroot()
+            return xml_element_to_dict(root)
+        except ET.ParseError:
+            raise ValueError("Erreur lors de la conversion XML en dictionnaire.")
+
+    @staticmethod
+    def compare_xml(xml_file1, xml_file2):
+        try:
+            dict1 = convert.xml_to_dict(xml_file1)
+            dict2 = convert.xml_to_dict(xml_file2)
+            return convert.compare_dicts(dict1, dict2)
+        except ValueError as e:
+            print(f"Erreur: {str(e)}")
+            return False
+
+    @staticmethod
+    def convert_xml_to_dict(xml_string):
+        def _element_to_dict(element):
+            result = {}
+            for child in element:
+                if child.tag not in result:
+                    result[child.tag] = []
+                result[child.tag].append(_element_to_dict(child))
+            if not result:
+                return element.text
+            return result
+
+        root = ET.fromstring(convert.convert_bytes_datetime_to_string(xml_string))
+        return _element_to_dict(root)
+
+
+    @staticmethod
+    def convert_json_to_xml(json_data, root_name='root'):
+        def _convert(element, parent):
+            if isinstance(element, dict):
+                for key, value in element.items():
+                    if isinstance(value, (dict, list)):
+                        sub_element = ET.SubElement(parent, key)
+                        _convert(value, sub_element)
+                    else:
+                        child = ET.SubElement(parent, key)
+                        child.text = str(value)
+            elif isinstance(element, list):
+                for item in element:
+                    sub_element = ET.SubElement(parent, parent.tag[:-1])
+                    _convert(item, sub_element)
+
+        root = ET.Element(root_name)
+        _convert(json.loads(json_data), root)
+
+        xml_data = ET.tostring(root, encoding='unicode', method='xml')
+        return xml_data
+
+    # xml
+    @staticmethod
+    def convert_xml_to_json(input_xml):
+        return json.dumps(xmltodict.parse(input_xml), indent=4)
+
+    @staticmethod
+    def convert_dict_to_xml(data_dict):
+        xml_str = xmltodict.unparse({"root": data_dict}, pretty=True)
+        return xml_str
+
+    @staticmethod
+    def convert_bytes_datetime_to_string(data):
+        """
+            la fonction suivante Python parcourt récursivement un dictionnaire,
+            convertit les types bytes en str,
+            les objets datetime en chaînes de caractères au format "année-mois-jour heure:minute:seconde"
+            si les clés sont de type bytes elles sont convertit en str :
+            encodage ('utf-8') est utilise pour le decode des bytes.
+            Si 1 chaine est utilisée pour definir FALSE ou True alors c'est convertit en boolean True/false
+            Si 1 valeur est None, elle est convertit a ""
+            Si key ou valeur ne peut pas etre convertit en str alors 1 exception est leve
+            renvoi le dictionnaire serializable
+        """
+        if isinstance(data, (str)):
+            compa = data.lower
+            if compa == "true":
+                return True
+            elif compa == "false":
+                return False
+            elif compa == "none":
+                return ""
+            return data
+        if isinstance(data, (int, float, bool)):
+            return data
+        elif isinstance(data, dict):
+            return {convert.convert_bytes_datetime_to_string(key): convert.convert_bytes_datetime_to_string(value) for key, value in data.items()}
+        elif isinstance(data, list):
+            return [convert.convert_bytes_datetime_to_string(item) for item in data]
+        elif isinstance(data, bytes):
+            return data.decode('utf-8')
+        elif isinstance(data, datetime):
+            return data.strftime('%Y-%m-%d %H:%M:%S')
+        elif data is None:
+            return ""
+        else:
+            try:
+                str(data)
+                return data
+            except Exception as e:
+                raise ValueError("Type %s impossible de convertir en string " %
+                                type(data))
+        return data
+
+    @staticmethod
+    def compare_dicts(dict1, dict2):
+        """
+            Dans cette fonction, nous commençons par comparer les ensembles des clés des deux dictionnaires (dict1.keys() et dict2.keys()). Si les ensembles des clés sont différents, nous retournons False immédiatement car les dictionnaires ne peuvent pas être égaux.
+
+            Ensuite, nous itérons sur les clés du premier dictionnaire (dict1.keys()) et comparons les valeurs correspondantes dans les deux dictionnaires (value1 et value2).
+
+            Si une valeur est un autre dictionnaire, nous effectuons un appel récursif à la fonction compare_dicts pour comparer les sous-dictionnaires. Si le résultat de l'appel récursif est False, nous retournons False immédiatement.
+
+            Si les valeurs ne sont pas égales et ne sont pas des dictionnaires, nous retournons également False.
+
+            Si toutes les clés et les valeurs correspondent dans les deux dictionnaires, nous retournons True à la fin de la fonction.
+        """
+        if dict1.keys() != dict2.keys():
+            return False
+
+        for key in dict1.keys():
+            value1 = dict1[key]
+            value2 = dict2[key]
+
+            if isinstance(value1, dict) and isinstance(value2, dict):
+                # Si la valeur est un dictionnaire, appel récursif
+                if not convert.compare_dicts(value1, value2):
+                    return False
+            elif value1 != value2:
+                # Si les valeurs ne sont pas égales, retourne False
+                return False
+        return True
+
+
+    @staticmethod
+    def compare_json(json1, json2):
+        try:
+            dict1 = json.loads(json1)
+            dict2 = json.loads(json2)
+        except json.JSONDecodeError:
+            raise ValueError("Erreur lors de la conversion JSON en dictionnaire.")
+        return convert.compare_dicts(dict1, dict2)
+
+    @staticmethod
+    def convert_to_bytes(input_data):
+        if isinstance(input_data, bytes):
+            return input_data
+        elif isinstance(input_data, str):
+            return input_data.encode('utf-8')
+        else:
+            raise TypeError("L'entrée doit être de type bytes ou string.")
+
+    # COMPRESS
+    @staticmethod
+    def compress_and_encode(string):
+        # Convert string to bytes
+        data = convert.convert_to_bytes(string)
+        # Compress the data using zlib
+        compressed_data = zlib.compress(data, 9)
+        # Encode the compressed data in base64
+        encoded_data = base64.b64encode(compressed_data)
+        return encoded_data.decode('utf-8')
+
+    @staticmethod
+    def decompress_and_encode(string):
+        # Convert string to bytes
+        data = convert.convert_to_bytes(string)
+        decoded_data = base64.b64decode(data)
+        # Decompress the data using zlib
+        decompressed_data = zlib.decompress(decoded_data)
+        # Encode the decompressed data in base64
+        return decompressed_data.decode('utf-8')
+
+    # datetime
+    @staticmethod
+    def convert_datetime_to_string (input_date: datetime):
+        if isinstance(input_date, datetime):
+            return input_date.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            raise TypeError("L'entrée doit être de type datetime.")
+
+    # base64
+    @staticmethod
+    def encode_to_string_base64(input_data):
+        if isinstance(input_data, str):
+            input_data_bytes = input_data.encode('utf-8')
+        elif isinstance(input_data, bytes):
+            input_data_bytes = input_data
+        else:
+            raise TypeError("L'entrée doit être une chaîne ou un objet bytes.")
+        encoded_bytes = base64.b64encode(input_data_bytes)
+        encoded_string = encoded_bytes.decode('utf-8')
+        return encoded_string
+
+
+    @staticmethod
+    def decode_base64_to_string_(input_data):
+        try:
+            decoded_bytes = base64.b64decode(input_data)
+            decoded_string = decoded_bytes.decode('utf-8')
+            return decoded_string
+        except base64.binascii.Error:
+            raise ValueError("L'entrée n'est pas encodée en base64 valide.")
+
+    @staticmethod
+    def check_base64_encoding(input_string):
+        try:
+            # Décode la chaîne en base64 et vérifie si cela génère une erreur
+            base64.b64decode(input_string)
+            return True
+        except base64.binascii.Error:
+            return False
+
+    @staticmethod
+    def taille_string_in_base64(string):
+        """
+        renvoie la taille que prend 1 string en encode en base64.
+        """
+        taille=(len(string))
+        return  (taille + 2 - ((taille + 2) % 3)) * 4 / 3
+
+    @staticmethod
+    def string_to_int(s):
+        """
+        Conversion de chaînes en entiers
+        """
+        try:
+            return int(s)
+        except ValueError:
+            return None
+
+    @staticmethod
+    def int_to_string(n):
+        """
+        Conversion d'entiers en chaînes
+        """
+        return str(n)
+
+
+    @staticmethod
+    def string_to_float(s):
+        """
+        Conversion de chaînes en nombres à virgule flottante
+        """
+        try:
+            return float(s)
+        except ValueError:
+            return None
+
+    @staticmethod
+    def float_to_string(f):
+        """
+        Conversion de nombres à virgule flottante en chaînes
+        """
+        return str(f)
+
+    @staticmethod
+    def list_to_string(lst, separator=', '):
+        """
+        Conversion d'une liste de chaînes en une seule chaîne avec un séparateur
+        """
+        return separator.join(lst)
+
+
+    @staticmethod
+    def string_to_list(s, separator=', '):
+        """
+        Conversion d'une chaîne en une liste en utilisant un séparateur
+        """
+        return s.split(separator)
+
+
+    @staticmethod
+    def list_to_set(lst):
+        """
+        Conversion d'une liste en un ensemble (élimine les doublons)
+        """
+        return set(lst)
+
+    @staticmethod
+    def set_to_list(s):
+        """
+        Conversion d'un ensemble en une liste en conservant l'ordre
+        """
+        return [item for item in s]
+
+    @staticmethod
+    def dict_to_list(d):
+        """
+        Conversion d'un dictionnaire en une liste de tuples clé-valeur
+        """
+        return list(d.items())
+
+    @staticmethod
+    def list_to_dict(lst):
+        """
+        Conversion d'une liste de tuples clé-valeur en un dictionnaire
+        """
+        return dict(lst)
+
+    @staticmethod
+    def char_to_ascii(c):
+        """
+        Conversion de caractères en code ASCII
+        """
+        return ord(c)
+
+    @staticmethod
+    def ascii_to_char(n):
+        """
+        Conversion de code ASCII en caractère :
+        """
+        return chr(n)
+
+    @staticmethod
+    def convert_rows_to_columns(data):
+        """
+            cette fonction fait la convertion depuis 1 list de dict representant des lignes
+            en
+            1 list de colonne
+
+            data = [{"id": 1, "name": "dede", "age": 30},
+                    {"id": 2, "name": "dada", "age": 25}]
+            to
+            [{'age': [30, 25]}, {'name': ['dede', 'dada']}, {'id': [1, 2]}]
+        """
+        # Obtenez les noms de colonnes
+        column_names = set()
+        for row in data:
+            column_names.update(row.keys())
+        # Créez un dictionnaire vide pour chaque colonne
+        columns = {name: [] for name in column_names}
+        # Remplissez les colonnes avec les valeurs correspondantes
+        for row in data:
+            for column, value in row.items():
+                columns[column].append(value)
+        # Convertissez les dictionnaires de colonnes en une liste de colonnes
+        columns_list = [{name: values} for name, values in columns.items()]
+        return columns_list
+
+    @staticmethod
+    def convert_columns_to_rows(data):
+        """
+        Cette fonction fait l'inverse de la conversion réalisée par la fonction convert_rows_to_columns.
+
+        data = [{'age': [30, 25]}, {'name': ['dede', 'dada']}, {'id': [1, 2]}]
+        to
+        [{"id": 1, "name": "dede", "age": 30},
+        {"id": 2, "name": "dada", "age": 25}]
+        """
+        # Obtenez tous les noms de colonnes
+        rows=[]
+        s= [ list(x.keys())[0] for x in data]
+        nbligne = len(data[0][s[0]])
+        for t in range(nbligne):
+            result={}
+            for z in range(len(s)):
+                result[s[z]] = data[z][s[z]][t]
+            rows.append(result)
+        return rows
+
+    @staticmethod
+    def convert_to_ordered_dict(dictionary):
+        ordered_dict = OrderedDict()
+        for key, value in dictionary.items():
+            ordered_dict[key] = value
+        return ordered_dict
+
+
+    @staticmethod
+    def generate_random_text(num_words):
+        words = []
+        for _ in range(num_words):
+            word = ''.join(random.choice(string.ascii_letters) for _ in range(random.randint(3, 8)))
+            words.append(word)
+        return ' '.join(words)
+
+    @staticmethod
+    def capitalize_words(text):
+        """
+        renvoi la chaine avec chaque mot commencant par une majuscule et les autres lettres sont en minuscules
+        """
+        words = text.split()
+        capitalized_words = [word.capitalize() for word in words]
+        capitalized_text = ' '.join(capitalized_words)
+        return capitalized_text
+
+    # Fonction de compression gzip
+    @staticmethod
+    def compress_data_to_bytes(data_string_or_bytes):
+        return gzip.compress(convert.convert_to_bytes(data_string_or_bytes))
+
+    # Fonction de décompression gzip
+    @staticmethod
+    def decompress_data_to_bytes(data_bytes_compress):
+        return convert.convert_to_bytes(gzip.decompress(data_bytes_compress))
+
+    @staticmethod
+    def serialized_dict_to_compressdictbytes(dict_data):
+        json_bytes = json.dumps(dict_data, indent = 4, cls=DateTimebytesEncoderjson).encode('utf-8')
+        return convert.compress_data_to_bytes(json_bytes)
+
+    @staticmethod
+    def unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress):
+        json_bytes = gzip.decompress(convert.convert_to_bytes(serialized_dict_bytes_compress))
+        return json.loads(json_bytes)
+
+    @staticmethod
+    def is_multiple_of(s, multiple=4):
+        return len(s) % multiple == 0
+
+    @staticmethod
+    def is_base64(s):
+        if not convert.is_multiple_of(s, multiple=4):
+            return False
+        decoded=None
+        try:
+            # Tente de décoder la chaîne en base64
+            decoded = base64.b64decode(s)
+            # Vérifie si la chaîne d'origine est égale à la chaîne encodée puis décodée
+            if base64.b64encode(decoded) == s.encode():
+                return decoded
+            else:
+                return False
+        except:
+            return False
+
+    @staticmethod
+    def header_body(xml_string):
+        """
+        on supprime l'entete xml
+        """
+        body= header = ""
+        index = xml_string.find('?>')
+        if index != -1:
+            # Supprimer l'en-tête XML
+            body = xml_string[index + 2:]
+            header=xml_string[:index + 2]
+        return header, body
+
+    @staticmethod
+    def format_xml(xml_string):
+        dom = xml.dom.minidom.parseString(xml_string)
+        formatted_xml = dom.toprettyxml(indent="  ")
+        return formatted_xml
+
+    @staticmethod
+    def check_keys_in( dictdata, array_keys):
+        if all(key in dictdata for key in array_keys):
+            return True
+        return False
 
 class messagefilexmpp:
+    """
+    Cette class est charge de communique avec le substitut master.
+    elle permet d'envoyer des messages et iq sur xmpp
+    """
     # priority : 1 send message remote to
     # dataform jsonstring ({to,action,ret,base64,data,sessionid}
 
@@ -81,179 +850,276 @@ class messagefilexmpp:
     def name_random(self, nb, pref=""):
         a = "abcdefghijklnmopqrstuvwxyz0123456789"
         d = pref
-        for _ in range(nb):
+        for t in range(nb):
             d = d + a[random.randint(0, 35)]
         return d
 
-    def __init__(self):
-        self.name_queue = ["/mysend"]
-        self.mpsend = None
-        self.mprec = None
-        self.create_file_message()
-        self.file_reponse_iq = []
-
-    def create_file_message(self):
-        try:
-            self.mpsend = posix_ipc.MessageQueue("/mysend", posix_ipc.O_CREX)
-        except posix_ipc.ExistentialError:
-            self.mpsend = posix_ipc.MessageQueue("/mysend")
-
-        except OSError as error_creating_queue_oserror:
-            logger.error("An error occured while trying to create the Posix Queue")
-            logger.error("We obtained the error: \n %s" % error_creating_queue_oserror)
-
-            logger.error(
-                "To fix this, please modify/etc/security/limits.conf and /etc/sysctl.conf"
-            )
-            logger.error(
-                "The system limits might have been reached for posix queues. Please review them"
-            )
-        except Exception as error_exception:
-            logger.error("An error occured while trying to create the Posix Queue.")
-            logger.error("We obtained the error: \n %s" % error_exception)
-
-            logger.error("We hit the backtrace \n%s" % (traceback.format_exc()))
-
-    def close_file_message(self):
-        for elt in self.name_queue:
-            try:
-                # destruction message MessageQueue
-                posix_ipc.unlink_message_queue(elt)
-            except:
-                pass
+    def __init__(self, config):
+        # Lit configuration du fichier
+        self.config=config
+        self.message_type = "json"
+        self.config_bool_done = False
 
     def sendstr(self, msg, timeout=0, priority=9):
+        """
+        fonction de bas niveaux qui envoi 1 chaine au substitut master
+        """
+        #logger.error("sendstr %s" % msg)
         try:
-            self.mpsend.send(msg.encode("utf-8"), timeout=timeout, priority=priority)
-        except posix_ipc.BusyError:
-            logger.warning(
-                'msg posix %s "BusyError on send message"'
-                "[timeout is %s] -- VERIFY SUBSTITUTE MASTER IS ON : "
-                % (self.name_queue, timeout)
-            )
-
-    def sendbytes(self, msg, timeout=0, priority=9):
-        try:
-            self.mpsend.send(msg, timeout=timeout, priority=priority)
-        except posix_ipc.BusyError:
-            logger.warning(
-                'msg posix %s "BusyError on send message"'
-                "[timeout is %s] -- VERIFY SUBSTITUTE MASTER IS ON : "
-                % (self.name_queue, timeout)
-            )
-
-    def iqsendpulse(self, mto, mbody, timeout):
-        mbody["mto"] = mto
-        mbody["mtimeout"] = timeout
-        # creation message queue result
-
-        return self.sendiqstr(json.dumps(mbody), timeout)
-
-    def send_message(mto, mbodystr):
-        data = {"mto": mto, "mbodystr": mbodystr}
-        self.sendstr(self, json.dumps(msg), timeout=None, priority=9)
-
-    def clean_message_file(self, deltatime_max=120):
-        deltatime = time.time()
-        listdelqueue = []
-        listqueue = []
-        for queue_elt in self.file_reponse_iq:
-            if (deltatime - queue_elt["time"]) > deltatime_max:
-                try:
-                    posix_ipc.unlink_message_queue(queue_elt["name"])
-                except:
-                    pass
+            try:
+                msg=convert.convert_bytes_datetime_to_string(msg)
+            except ValueError as e:
+                logger.error("messagefilexmpp send error: %s" % str(e))
+                return None
+            if (self.config.submaster_ip_format=='ipv6'):
+                client = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
             else:
-                listqueue.append(queue_elt)
-        self.file_reponse_iq = listqueue
+                client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            # Activation de l'option pour réutiliser l'adresse
+            client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
+            context.check_hostname =  self.config.submaster_check_hostname
+            context.verify_mode = ssl.CERT_NONE
 
-    def sendiqstr(self, msg, timeout=5):
-        """
-        The request is sent via posix message queue.
-        It own a session number which will be the name of the answer's waiting line
-        We wait that the waiting line is created and then we wait for the answer.
-        """
-        bresult = False
-        self.clean_message_file(deltatime_max=120)
+            # test json
+            client.connect((self.config.submaster_host, self.config.submaster_port))
+            ssock=context.wrap_socket(client, server_hostname=self.config.submaster_host)
+            response=None
+            try:
+                message = self.config.submaster_allowed_token + msg
+                ssock.sendall(convert.compress_data_to_bytes(message))
+                response = convert.decompress_data_to_bytes( ssock.recv(2097152))
+                response = convert.convert_bytes_datetime_to_string(response)
+            finally:
+                # Fermeture de la connexion SSL
+                # Fermeture du socket principal
+                ssock.close()
+                if self.config.submaster_allowed_token:
+                    longueur = len(self.config.submaster_allowed_token)
+                    if longueur > 0 and len(response) > longueur:
+                        return response[longueur:]
+                return response
+        except ConnectionRefusedError as e:
+            logger.error("Erreur connection verify substitut master %s:%s" % (self.config.submaster_host,                                                                              self.config.submaster_port))
+            logger.warning("Restart Substitut master")
+        except Exception as e:
+            logger.error("client mmc to submast : %s " % str(e))
+            logger.error("%s" % (traceback.format_exc()))
+            return None
 
-        name_iq_rand = self.name_random(5, "/mmc_recv_iq_data")
-        self.file_reponse_iq.append({"name": name_iq_rand, "time": time.time()})
-        if isinstance(msg, str):
-            msg = json.loads(msg)
-        msg["name_iq_queue"] = name_iq_rand
-        self.mpsend.send(json.dumps(msg).encode("utf-8"), priority=2)
-        time.sleep(1)
+    def send_message(self, mto, msg):
+        logger.debug("---------------------------------------------------------")
+        logger.debug("------------------- SEND MESSAGE-------------------------")
+        logger.debug("---------------------------------------------------------")
+        if not self.config_bool_done:
+            self.init_master_substitut()
         try:
-            mprep = posix_ipc.MessageQueue(msg["name_iq_queue"], posix_ipc.O_CREX)
-        except posix_ipc.ExistentialError:
-            mprep = posix_ipc.MessageQueue(msg["name_iq_queue"])
+            msg = convert.convert_json_to_dict(msg)
+            logger.debug("send_message msg format json")
+        except json.decoder.JSONDecodeError as e:
+            # type n est pas 1 json.
+            logger.debug("msg pas 1 json ")
+            try:
+                msg = convert.yaml_string_to_dict(msg)
+                logger.debug("send_message msg format yam")
+            except:
+                logger.debug("msg pas 1 yam ")
+                try:
+                     msg = convert.xml_to_dict(msg)
+                     logger.debug("send_message msg format xml")
+                except:
+                    logger.debug("msg pas 1 xml")
+        if isinstance(msg, (dict)):
+            # verification message format
+            # verification keys minimuns
+            if not convert.check_keys_in( msg, ['action', 'data']):
+                # il manque des keys obligatoire dans le message
+                return None
+            if "sessionid" not in msg:
+                msg['sessionid'] = self.name_random(10, pref="mmc_message")
+            sessionid = msg['sessionid']
+            if "base64" not in msg:
+                msg['base64'] = False
+            if "ret" not in msg:
+                msg['ret'] = 0
+            if not isinstance(msg['data'], (list)):
+                if not isinstance(msg['data'], (dict)):
+                    if convert.is_base64(msg['data']):
+                        msg['base64'] = True
+                    elif isinstance(msg['data'], (str)):
+                        logger.warning("Message sessionid %s data est 1 simple string" % data['sessionid'])
+                    else:
+                        logger.error("Message data type error : type %s" % type(msg['data']))
+                        return None
 
-        except OSError as error_creating_queue_oserror:
-            logger.error("An error occured while trying to create the Posix Queue")
-            logger.error("We obtained the error: \n %s" % error_creating_queue_oserror)
+            # addition des metadatas de message.
+            msg['metadatas'] = { "type" : "msg",
+                                 "to" : mto,
+                                 "timeout" : 0 }
+            messagesend = json.dumps(msg, indent=4)
+            self.sendstr( messagesend )
+            return sessionid
 
-            logger.error(
-                "To fix this, please modify/etc/security/limits.conf and /etc/sysctl.conf"
-            )
-            logger.error(
-                "The system limits might have been reached for posix queues. Please review them"
-            )
-        except Exception as error_exception:
-            logger.error("An error occured while trying to create the Posix Queue.")
-            logger.error("We obtained the error: \n %s" % error_exception)
+        elif isinstance(msg, (str)):
+            logger.error("Message does not have a valid format")
+            return None
+        else:
+            logger.error("type msg pas compatible %s" % type(msg))
+            return None
 
-            logger.error("We hit the backtrace \n%s" % (traceback.format_exc()))
 
+    def send_iq(self, mto, msg, timeout):
+        logger.debug("---------------------------------------------------------")
+        logger.debug("----------------------- SEND IQ -------------------------")
+        logger.debug("---------------------------------------------------------")
         try:
-            msgrep, priority = mprep.receive(timeout)
+            msg = convert.convert_json_to_dict(msg)
+            logger.debug("msg est 1 json")
+        except json.decoder.JSONDecodeError as e:
+            # type n est pas 1 json.
+            logger.debug("msg pas 1 json ")
+            try:
+                msg = convert.yaml_string_to_dict(msg)
+                logger.debug("msg est 1 yam")
+            except:
+                logger.debug("msg pas 1 yam ")
+                try:
+                     msg = convert.xml_to_dict(msg)
+                     logger.debug("msg est 1 xml")
+                except:
+                    logger.debug("msg pas 1 xml")
 
-            bresult = True
-        except posix_ipc.BusyError:
-            logger.error(
-                f'An error occured while removing the queue {msg["name_iq_queue"]}'
-            )
-        try:
-            posix_ipc.unlink_message_queue(msg["name_iq_queue"])
-        except:
-            pass
+        if isinstance(msg, (dict)):
+            # verification message format
+            # verification keys minimuns
+            if not convert.check_keys_in( msg, ['action', 'data']):
+                # il manque des keys obligatoire dans le message
+                return None
+            if "sessionid" not in msg:
+                msg['sessionid'] = self.name_random(10, pref="mmc_message")
+            sessionid = msg['sessionid']
+            if "base64" not in msg:
+                msg['base64'] = False
+            if "ret" not in msg:
+                msg['ret'] = 0
 
-        return msgrep.decode() if bresult else bresult
+            if not isinstance(msg['data'], (list)):
+                if not isinstance(msg['data'], (dict)):
+                    if convert.is_base64(msg['data']):
+                        msg['base64'] = True
+                    elif isinstance(msg['data'], (str)):
+                        logger.warning("Message sessionid %s data est 1 simple string" % data['sessionid'])
+                    else:
+                        logger.error("Message data type error : type %s" % type(msg['data']))
+                        return None
+            # addition des metadatas de message.
+            msg['metadatas'] = { "type" : "iq",
+                                 "to" : mto,
+                                 "timeout" : timeout }
+            messagesend = json.dumps(msg, indent=4)
+            return self.sendstr( messagesend, timeout )
+            #return sessionid
 
-    def sendiqbytes(self, msg, timeout=None, priority=9):
-        self.mpsend.send(msg, priority=9)
+        elif isinstance(msg, (str)):
+            logger.error("Message does not have a valid format")
+            return None
+        else:
+            logger.error("type msg pas compatible %s" % type(msg))
+            return None
+
+
+    def send_call_plugin(self, msg):
+        logger.debug("---------------------------------------------------------")
+        logger.debug("--------------------- CALL PLUGINS ----------------------")
+        logger.debug("---------------------------------------------------------")
+        if not isinstance(msg,(dict)):
+            try:
+                msg = convert.convert_json_to_dict(msg)
+                logger.debug("msg est 1 json")
+            except json.decoder.JSONDecodeError as e:
+                # type n est pas 1 json.
+                logger.debug("msg pas 1 json ")
+                try:
+                    msg = convert.yaml_string_to_dict(msg)
+                    logger.debug("msg est 1 yam")
+                except:
+                    logger.debug("msg pas 1 yam ")
+                    try:
+                        msg = convert.xml_to_dict(msg)
+                        logger.debug("msg est 1 xml")
+                    except:
+                        logger.debug("msg pas 1 xml")
+
+        if isinstance(msg, (dict)):
+            # verification message format
+            # verification keys minimuns
+            if not convert.check_keys_in( msg, ['action', 'data']):
+                # il manque des keys obligatoire dans le message
+                return None, None
+
+            if "sessionid" not in msg:
+                msg['sessionid'] = self.name_random(10, pref="mmc_message")
+            sessionid = msg['sessionid']
+            if "base64" not in msg:
+                msg['base64'] = False
+            if "ret" not in msg:
+                msg['ret'] = 0
+            if not isinstance(msg['data'], (list)):
+                if not isinstance(msg['data'], (dict)):
+                    if convert.is_base64(msg['data']):
+                        msg['base64'] = True
+                    elif isinstance(msg['data'], (str)):
+                        logger.warning("Message sessionid %s data est 1 simple string" % data['sessionid'])
+                    else:
+                        logger.error("Message data type error : type %s" % type(msg['data']))
+                        return None, None
+            # addition des metadatas de message.
+            msg['metadatas'] = { "type" : "plugin",
+                                 "to" : "master@pulse/MASTER",
+                                 "timeout" : 0 }
+            messagesend = json.dumps(msg, indent=4)
+            res = self.sendstr( messagesend)
+            if res != None:
+                logger.debug("Plugin call executed %s on master " % msg['action'])
+            return sessionid, res
+
+        elif isinstance(msg, (str)):
+            logger.error("Message does not have a valid format")
+            return None, None
+        else:
+            logger.error("type msg pas compatible %s" % type(msg))
+            return None, None
+
 
     def callpluginmasterfrommmc(self, plugin, data, sessionid=None):
         if sessionid is None:
             sessionid = self.name_random(5, plugin)
         msg = {"action": plugin, "ret": 0, "sessionid": sessionid, "data": data}
-        self.sendstr(json.dumps(msg), priority=4)
+        self.send_call_plugin(msg)
 
     def _call_remote_action(self, to, nameaction, sessionname):
         msg = {
-            "to": to,
             "action": nameaction,
             "sessionid": self.name_random(5, sessionname),
             "data": [],
             "ret": 255,
             "base64": False,
         }
-        self.sendstr(json.dumps(msg), priority=1)
+        self.send_message( to, msg)
 
     def send_message_json(to, jsonstring):
-        jsonstring["to"] = to
-        self.sendstr(json.dumps(jsonstring), priority=1)
+        return self.send_message( to, jsonstring)
+        #jsonstring["to"] = to
+        #return self.sendstr(json.dumps(jsonstring), priority=1)
 
     def callrestartbymaster(self, to):
-        self._call_remote_action(to, "restarfrommaster", "restart")
-        return True
+        return self._call_remote_action(to, "restarfrommaster", "restart")
 
     def callinventory(self, to):
-        self._call_remote_action(to, "inventory", "inventory")
-        return True
+        return self._call_remote_action(to, "inventory", "inventory")
 
     def callrestartbotbymaster(to):
-        self._call_remote_action(to, "restartbot", "restartbot")
-        return True
+        return self._call_remote_action(to, "restartbot", "restartbot")
 
     def callshutdownbymaster(self, to, time=0, msg=""):
         shutdownmachine = {
@@ -263,8 +1129,9 @@ class messagefilexmpp:
             "ret": 0,
             "base64": False,
         }
-        self.sendstr(json.dumps(shutdownmachine), priority=1)
-        return True
+        return self.send_message( to, shutdownmachine)
+        #self.sendstr(json.dumps(shutdownmachine), priority=1)
+        #return True
 
     def callvncchangepermsbymaster(self, to, askpermission=1):
         vncchangepermsonmachine = {
@@ -274,18 +1141,9 @@ class messagefilexmpp:
             "ret": 0,
             "base64": False,
         }
-        self.sendstr(json.dumps(vncchangepermsonmachine), priority=1)
-        return True
-
-    def stop(self):
-        for queue_elt in self.file_reponse_iq:
-            try:
-                posix_ipc.unlink_message_queue(queue_elt["name"])
-            except:
-                pass
-        self.file_reponse_iq = []
-        self.close_file_message()
-
+        return self.send_message( to, vncchangepermsonmachine)
+        #self.sendstr(json.dumps(vncchangepermsonmachine), priority=1)
+        #return True
 
 class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
     """
@@ -314,7 +1172,7 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
         file_names = os.listdir(dir_name)
         result = []
         result1 = []
-        prefix = f"{base_name}"
+        prefix = "{}".format(base_name)
         for file_name in file_names:
             if file_name.startswith(prefix) and not file_name.endswith(".zip"):
                 f = os.path.join(dir_name, file_name)
@@ -336,7 +1194,7 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
             dfn = self.get_files_by_date()
         except:
             return
-        dfn_zipped = f"{dfn}.zip"
+        dfn_zipped = "{}.zip".format(dfn)
         if os.path.exists(dfn_zipped):
             os.remove(dfn_zipped)
         with zipfile.ZipFile(dfn_zipped, "w") as f:
@@ -475,7 +1333,10 @@ class ExcludeContainsFilter(logging.Filter):
             or
             False if the criterion is found (= don't print the record)
         """
-        return not re.search(self.criterion, record.getMessage(), re.I)
+        if re.search(self.criterion, record.getMessage(), re.I):
+            return False
+        else:
+            return True
 
 
 # include log ending by the criterion
@@ -542,8 +1403,8 @@ class MmcServer(XMLRPC, object):
             else:
                 ret = getattr(self, func)
         except AttributeError:
-            logger.error(f"{functionPath} not found")
-            raise Fault("NO_SUCH_FUNCTION", f"No such function {functionPath}")
+            logger.error(functionPath + " not found")
+            raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
         return ret
 
     def _needAuth(self, functionPath):
@@ -607,11 +1468,11 @@ class MmcServer(XMLRPC, object):
             s.sessionTimeout = self.config.sessiontimeout
 
         # Check authorization using HTTP Basic
-        cleartext_token = f"{self.config.login}:{self.config.password}"
+        cleartext_token = self.config.login + ":" + self.config.password
         user = str(request.getUser(), "utf-8")
         password = str(request.getPassword(), "utf-8")
 
-        token = f"{user}:{password}"
+        token = user + ":" + password
         if token != cleartext_token:
             logger.error("Invalid login / password for HTTP basic authentication")
             request.setResponseCode(http.UNAUTHORIZED)
@@ -626,18 +1487,20 @@ class MmcServer(XMLRPC, object):
 
         if not s.loggedin:
             logger.debug(
-                f"RPC method call from unauthenticated user: {functionPath}{str(args)}"
+                "RPC method call from unauthenticated user: %s" % functionPath
+                + str(args)
             )
             # Save the first sent HTTP headers, as they contain some
             # informations
             s.http_headers = request.requestHeaders.copy()
         else:
             logger.debug(
-                f"RPC method call from user {s.userid}: {functionPath + str(args)}"
+                "RPC method call from user %s: %s"
+                % (s.userid, functionPath + str(args))
             )
         try:
             if not s.loggedin and self._needAuth(functionPath):
-                msg = f"Authentication needed: {functionPath}"
+                msg = "Authentication needed: %s" % functionPath
                 logger.error(msg)
                 raise Fault(8003, msg)
             else:
@@ -692,7 +1555,8 @@ class MmcServer(XMLRPC, object):
 
         def _putResult(deferred, f, session, args, kwargs):
             logger.debug(
-                f'Using thread #{threading.currentThread().getName().split("-")[2]} for {f.__name__}'
+                "Using thread #%s for %s"
+                % (threading.currentThread().getName().split("-")[2], f.__name__)
             )
             # Attach current user session to the thread
             threading.currentThread().session = session
@@ -754,6 +1618,8 @@ class MmcServer(XMLRPC, object):
                     result[0]["jpegPhoto"] = [
                         xmlrpc.client.Binary(result[0]["jpegPhoto"][0])
                     ]
+        except IndexError:
+            pass
         except Exception:
             pass
         try:
@@ -775,7 +1641,7 @@ class MmcServer(XMLRPC, object):
                 )
             s = xmlrpc.client.dumps(result, methodresponse=1)
         except Exception as e:
-            f = Fault(self.FAILURE, f"can't serialize output: {str(e)}")
+            f = Fault(self.FAILURE, "can't serialize output: " + str(e))
             s = xmlrpc.client.dumps(f, methodresponse=1)
         s = bytes(s, encoding="utf-8")
         request.setHeader("content-length", str(len(s)))
@@ -784,12 +1650,15 @@ class MmcServer(XMLRPC, object):
         request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
-        logger.error(f"Error during render {functionPath}: {failure.getTraceback()}")
-        return {
-            "faultString": f"{functionPath} {str(args)}",
-            "faultCode": f"{str(failure.type)}: {str(failure.value)} ",
-            "faultTraceback": failure.getTraceback(),
-        }
+        logger.error(
+            "Error during render " + functionPath + ": " + failure.getTraceback()
+        )
+        # Prepare a Fault result to return
+        result = {}
+        result["faultString"] = functionPath + " " + str(args)
+        result["faultCode"] = str(failure.type) + ": " + str(failure.value) + " "
+        result["faultTraceback"] = failure.getTraceback()
+        return result
 
     def _associateContext(self, request, session, userid):
         """
@@ -808,8 +1677,9 @@ class MmcServer(XMLRPC, object):
                 # No context provided
                 continue
             cm = contextMaker(request, session, userid)
-            if context := cm.getContext():
-                logger.debug(f"Attaching module '{mod}' context to user session")
+            context = cm.getContext()
+            if context:
+                logger.debug("Attaching module '%s' context to user session" % mod)
                 session.contexts[mod] = context
 
         # Add associated context session to sessions set
@@ -828,9 +1698,9 @@ class MmcServer(XMLRPC, object):
                     # Reloading configuration file
                     fid = open(obj.conffile, "r")
                     obj.readfp(fid, obj.conffile)
-                    if os.path.isfile(f"{obj.conffile}.local"):
-                        fid = open(f"{obj.conffile}.local", "r")
-                        obj.readfp(fid, f"{obj.conffile}.local")
+                    if os.path.isfile(obj.conffile + ".local"):
+                        fid = open(obj.conffile + ".local", "r")
+                        obj.readfp(fid, obj.conffile + ".local")
                     # Refresh config attributes
                     obj.readConf()
                 except Exception as e:
@@ -858,40 +1728,49 @@ class MmcServer(XMLRPC, object):
                 r = getattr(instance, m)
                 # If attr is callable, we add it to method_list
                 if hasattr(r, "__call__"):
-                    method_list.append(f"{mod}.{m}")
+                    method_list.append(mod + "." + m)
             # Doing same thing for module.RPCProxy if exists
             if hasattr(instance, "RpcProxy"):
                 for m in dir(instance.RpcProxy):
                     r = getattr(instance.RpcProxy, m)
                     # If attr is callable, we add it to method_list
                     if hasattr(r, "__call__"):
-                        method_list.append(f"{mod}.{m}")
+                        method_list.append(mod + "." + m)
 
         return method_list
 
     def __getClassMethod(self, name):
         mod, func = self._splitFunctionPath(name)
 
-        if mod not in self.modules:
+        if not mod in self.modules:
             return None
 
         instance = self.modules[mod]
-        if hasattr(instance, "RpcProxy") and hasattr(instance.RpcProxy, func):
-            return getattr(instance.RpcProxy, func)
-        elif hasattr(instance, "RpcProxy") and hasattr(instance, func):
-            return getattr(instance, func)
+        if hasattr(instance, "RpcProxy"):
+            if hasattr(instance.RpcProxy, func):
+                return getattr(instance.RpcProxy, func)
+            elif hasattr(instance, func):
+                return getattr(instance, func)
+            else:
+                return None
         else:
             return None
 
     def methodSignature(self, name):
         method = self.__getClassMethod(name)
 
-        return [] if method is None else getfullargspec(method)[0]
+        if method is None:
+            return []
+        else:
+            return getfullargspec(method)[0]
 
     def methodHelp(self, name):
         method = self.__getClassMethod(name)
 
-        return "" if method is None else method.__doc__
+        if method is None:
+            return ""
+        else:
+            return method.__doc__
 
     # ===============================================================
 
@@ -906,8 +1785,9 @@ class MmcServer(XMLRPC, object):
         @param fileprefix: Write log file in @localstatedir@/log/mmc/mmc-fileprefix.log
         @param content: string to record in log file
         """
-        with open(f"{localstatedir}/log/mmc/mmc-{fileprefix}.log", "a") as f:
-            f.write(f"{time.asctime()}: {content}" + "\n")
+        f = open(localstatedir + "/log/mmc/mmc-" + fileprefix + ".log", "a")
+        f.write(time.asctime() + ": " + content + "\n")
+        f.close()
 
 
 class MMCApp(object):
@@ -918,6 +1798,7 @@ class MMCApp(object):
         self.conffile = options.inifile
         self.daemon = options.daemonize
         self.daemonlog = options.daemonizenolog
+
         if hasattr(options, "exclude") and options.exclude is not None:
             self.exclude = options.exclude.split(",")
 
@@ -1063,7 +1944,11 @@ class MMCApp(object):
                 except OSError:
                     pass
 
-        REDIRECT_TO = os.devnull if hasattr(os, "devnull") else "/dev/null"
+        if hasattr(os, "devnull"):
+            REDIRECT_TO = os.devnull
+        else:
+            REDIRECT_TO = "/dev/null"
+
         os.open(REDIRECT_TO, os.O_RDWR)
         os.dup2(0, 1)
         os.dup2(0, 2)
@@ -1080,21 +1965,32 @@ class MMCApp(object):
         try:
             os.kill(pid, signal.SIGTERM)
         except Exception as e:
-            print(f"Can not terminate running mmc-agent: {e}")
+            print("Can not terminate running mmc-agent: %s" % e)
             return 1
 
         return 0
 
     def reload(self):
-        protocol = "https" if self.config.enablessl else "http"
+        if self.config.enablessl:
+            protocol = "https"
+        else:
+            protocol = "http"
+
         client = xmlrpc.client.ServerProxy(
-            f"{protocol}://{self.config.login}:{self.config.password}@{self.config.host}:{self.config.port}/"
+            "%s://%s:%s@%s:%s/"
+            % (
+                protocol,
+                self.config.login,
+                self.config.password,
+                self.config.host,
+                self.config.port,
+            )
         )
         try:
             client.system.reloadModulesConfiguration()
             return 0
         except Exception as e:
-            print(f"Unable to reload configuration: {str(e)}")
+            print("Unable to reload configuration: %s" % str(e))
             return 1
 
     def readPid(self):
@@ -1159,6 +2055,7 @@ class MMCApp(object):
             )
             logging.config.fileConfig(self.conffile)
 
+            # In foreground mode, log to stderr
             if not self.daemon:
                 if self.daemonlog:
                     hdlr2 = logging.StreamHandler()
@@ -1167,19 +2064,22 @@ class MMCApp(object):
 
             # Create log dir if it doesn't exist
             try:
-                os.mkdir(f"{localstatedir}/log/mmc")
+                os.mkdir(localstatedir + "/log/mmc")
             except OSError as xxx_todo_changeme:
                 # Raise exception if error is not "File exists"
                 (errno, strerror) = xxx_todo_changeme.args
                 # Raise exception if error is not "File exists"
                 if errno != 17:
                     raise
+                else:
+                    pass
+
             # Changing path to probe and load plugins
             os.chdir(os.path.dirname(globals()["__file__"]))
 
-            logger.info(f"mmc-agent {VERSION} starting...")
+            logger.info("mmc-agent %s starting..." % VERSION)
             logger.info("Using Python %s" % sys.version.split("\n")[0])
-            logger.info(f"Using Python Twisted {twisted.copyright.version}")
+            logger.info("Using Python Twisted %s" % twisted.copyright.version)
 
             logger.debug(
                 "Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid())
@@ -1200,9 +2100,11 @@ class MMCApp(object):
 
             # Ask PluginManager to load MMC plugins
             pm = PluginManager()
-            if code := pm.loadPlugins():
+            code = pm.loadPlugins()
+            if code:
                 logger.debug(
-                    f"The initialisation of the XMLRPC Server returned the code: {code} "
+                    "The initialisation of the XMLRPC Server returned the code: %s "
+                    % code
                 )
                 return code
 
@@ -1210,13 +2112,13 @@ class MMCApp(object):
                 self.startService(pm.plugins)
             except Exception as e:
                 # This is a catch all for all the exception that can happened
-                logger.exception(f"Program exception: {str(e)}")
+                logger.exception("Program exception: " + str(e))
                 logger.debug("The initialisation of the XMLRPC Server returned 1")
                 return 1
 
             l.commit()
         except Exception:
-            logger.error(f"{traceback.format_exc()}")
+            logger.error("%s" % (traceback.format_exc()))
         logger.debug("The initialisation of the XMLRPC Server returned 0")
         return 0
 
@@ -1242,30 +2144,90 @@ class MMCApp(object):
         # Add event handler before shutdown
         reactor.addSystemEventTrigger("before", "shutdown", self.cleanUp)
         logger.info(
-            f"Listening to XML-RPC requests on {self.config.host}:{self.config.port}"
+            "Listening to XML-RPC requests on %s:%s"
+            % (self.config.host, self.config.port)
         )
         # Start client XMPP if module xmppmaster enable
         if PluginManager().isEnabled("xmppmaster"):
             # create file  message
             PluginManager().getEnabledPlugins()[
                 "xmppmaster"
-            ].messagefilexmpp = messagefilexmpp()
+            ].messagefilexmpp = messagefilexmpp(self.config)
             self.modulexmppmaster = (
                 PluginManager().getEnabledPlugins()["xmppmaster"].messagefilexmpp
             )
             # MASTER now is a substitute.
-            logger.info("Start/restart MMC creation canal commande xmpp")
-            msg = "Start/restart MMC"
-            self.modulexmppmaster.sendstr(msg, priority=9)
+            self.config_bool_done = False
+            logger.info("Start/restart MMC presence client substitut master")
+            result = self.modulexmppmaster.sendstr("Start/restart MMC")
+            if result is None:
+                logger.info("INITIALISATION MMC (xmppmaster) ERREUR")
+                logger.info("VERIFY SUBSTITUT MASTER START")
+                logger.info("VERIFY PARAMETERS CONNECTION TO SUBSTITUT MASTER")
+                logger.info("Restart SUBSTITUT MASTER")
+                return
+            self.init_master_substitut()
 
+    def init_master_substitut(self):
+        if not PluginManager().getEnabledPlugins()["xmppmaster"].messagefilexmpp.config_bool_done:
+            # important ici sont reunit en exemple mcanisme d'utilisation du serveur substiitut master.
+            logger.info("Start/restart MMC send module On on MMC")
+            # list_mmc_module est appeler au lancement de la mmc.
+            # list_mmc_module n'est pas 1 plugin cet appel est traité dans le plugin
+            # serveur /pluginsmastersubstitute/plugin___server_mmc_master.py
+            # cette list permet de renseigner le substitut master des module active dans mmc.
+            # remarque si mmc est lancer avant le substitut master. celui ci ne recevra pas cette list.
             result = {
                 "action": "list_mmc_module",
                 "data": PluginManager().getEnabledPluginNames(),
             }
+            logger.info("Start/restart MMC send module On on %s  MMC"%PluginManager().getEnabledPluginNames())
 
-            sendstructinfo = json.dumps(result)
+            ree = self.modulexmppmaster.send_call_plugin(result)
+            logger.info("call plugin %s on master directement tcp/ip : sessionid  %s => %s" % (result['action'], ree[0],ree[1]))
 
-            self.modulexmppmaster.sendstr(sendstructinfo, priority=4)
+            PluginManager().getEnabledPlugins()["xmppmaster"].messagefilexmpp.config_bool_done = True
+
+
+            # appel plugin directement sur substitut master.
+            # Cela remplace les plugins master. qui seront transferer sur le substitut master.
+            # remarque on prefixera les plugin par mmc_ quand ceux ci seront uniquement appelable par mmc
+            # exemple appel pluging mmc directement sur substitut master test_plugin_master
+            # remarque on pas de parametre to c'est 1 plugin mmc type
+            # la connection mmc substitut est client/serveur/ mmc est client du substitut.
+            # celui -ci est en mesure de renvoyer 1 resultat ici ree
+            # -----------------------------------------------------------------------------------
+            # --------------------------------- call plugin mmc ---------------------------------
+            #logger.info("MMC start plugin test_plugin_master on substitut master : sessionid  %s => %s" % ( ree[0],ree[1]))
+            #ree = self.modulexmppmaster.send_call_plugin({"action": "test_plugin_master",
+                                                          #"data": { "text" : "message" }} )
+            #logger.info("call plugin test_plugin_master on master : sessionid  %s => %s" % ( ree[0],ree[1]))
+            # -----------------------------------------------------------------------------------
+            # -----------------------------------------------------------------------------------
+
+            # --------------------------------------------------------------------------------------------------
+            # --------------------------------- call plugin sur 1 acteur en xmpp -------------------------------
+            # test envoi mesage to  machine  dev-deb12-2.zb0@pulse/525400944ac7
+            #logger.info("Start/restart MMC creation canal commande xmpp3")
+
+            #ree = self.modulexmppmaster.send_message('dev-deb12-2.zb0@pulse/525400944ac7',
+                                                     #{"action": "ping",
+                                                          #"data": { "text" : "message" }} )
+            # --------------------------------------------------------------------------------------------------
+            # --------------------------------------------------------------------------------------------------
+
+            # --------------------------------------------------------------------------------------------------
+            # --------------------------------- call iq synchrone sur sur 1 acteur en xmpp -------------------------------
+            #test de machinessend_iq(mto, msg, timeout):
+            #ree= self.modulexmppmaster.send_iq('dev-deb12-2.zb0@pulse/525400944ac7',
+            #{ "action": "test",
+                #"data": {
+                    #"listinformation": ["get_ars_key_id_rsa", "keypub"],
+                    #"param": {},
+                #},
+            #}, 30)
+            #logger.debug("RESULTAT is %s" % ree)
+
 
     def cleanUp(self):
         """
@@ -1281,7 +2243,6 @@ class MMCApp(object):
         l.commit()
 
         self.cleanPid()
-
 
 class MMCHTTPChannel(http.HTTPChannel):
     """
@@ -1376,6 +2337,29 @@ def readConfig(config):
     except configparser.NoOptionError:
         pass
 
+    # parametre client submaster
+    config.submaster_host = "::1"
+    config.submaster_check_hostname = False
+    config.submaster_allowed_token = "4O&vHYKG3Cqq3RCUJu!vnQu+dBGwDkpZ"
+    config.submaster_ip_format = "ipv6"
+    config.submaster_port = "57041"
+
+    if config.has_option("submaster", "host"):
+        config.submaster_host = config.get("submaster", "host")
+
+    if config.has_option("submaster", "port"):
+        config.submaster_port = config.getint("submaster", "port")
+
+    if config.has_option("submaster", "ip_format"):
+        config.submaster_ip_format = config.get("submaster", "ip_format")
+
+    if config.has_option("submaster", "allowed_token"):
+        config.submaster_allowed_token = config.get("submaster", "allowed_token")
+
+
+    #if config.has_option("submaster", "check_hostname"):
+        #config.submaster_check_hostname = config.getboolean("submaster", "check_hostname")
+
     return config
 
 
@@ -1425,7 +2409,7 @@ class PluginManager(Singleton):
         plugins = []
         for path in glob.glob(os.path.join(self.pluginDirectory, "*", "__init__.py*")):
             plugin = path.split("/")[1]
-            if plugin not in plugins:
+            if not plugin in plugins:
                 plugins.append(plugin)
         return plugins
 
@@ -1444,15 +2428,15 @@ class PluginManager(Singleton):
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "plugins")
         )
         try:
-            logger.debug(f"Trying to load module {name}")
+            logger.debug("Trying to load module %s" % name)
             spec = importlib.util.find_spec(name)
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
-            logger.debug(f"Module {name} loaded")
+            logger.debug("Module %s loaded" % name)
         except Exception as e:
             logger.exception(e)
             logger.error(
-                f"Module {name}" + " raise an exception.\n" + name + " not loaded."
+                "Module " + name + " raise an exception.\n" + name + " not loaded."
             )
             return 0
 
@@ -1468,12 +2452,12 @@ class PluginManager(Singleton):
             # logger.debug('Trying to force startup of plugin %s but no "activateForced" method found\nFalling back to the normale activate method' % (name,))
 
             version = "version: " + str(getattr(plugin, "getVersion")())
-            logger.info(f"Plugin {name} loaded, {version}")
+            logger.info("Plugin %s loaded, %s" % (name, version))
 
             func = getattr(plugin, "activate")
 
         except AttributeError as error:
-            logger.error(f"{name} is not a MMC plugin.")
+            logger.error("%s is not a MMC plugin." % name)
             logger.error("We obtained the error \n %s." % error)
             plugin = None
             return 0
@@ -1482,13 +2466,13 @@ class PluginManager(Singleton):
         try:
             if func():
                 version = "version: " + str(getattr(plugin, "getVersion")())
-                logger.info(f"Plugin {name} loaded, {version}")
+                logger.info("Plugin %s loaded, %s" % (name, version))
             else:
                 # If we can't activate it
-                logger.warning(f"Plugin {name} not loaded.")
+                logger.warning("Plugin %s not loaded." % name)
                 plugin = None
         except Exception as e:
-            logger.error(f"Error while trying to load plugin {name}")
+            logger.error("Error while trying to load plugin " + name)
             logger.exception(e)
             plugin = None
             # We do no exit but go on when another plugin than base fail
@@ -1511,14 +2495,16 @@ class PluginManager(Singleton):
         ignore the disable = 1 configuration option)
         """
         if name in self.getEnabledPluginNames() or name in self.plugins:
-            logger.warning(f"Trying to start an already loaded plugin: {name}")
+            logger.warning("Trying to start an already loaded plugin: %s" % (name,))
             return 0
         res = self.loadPlugin(name, force=True)
         if res == 0:
             return 0
         elif res is not None and not isinstance(res, int):
             self.plugins[name] = res
-            getattr(self.plugins["base"], "setModList")(list(list(self.plugins.keys())))
+            getattr(self.plugins["base"], "setModList")(
+                [name for name in list(self.plugins.keys())]
+            )
         elif res == 4:
             return 4
         return res
@@ -1535,7 +2521,7 @@ class PluginManager(Singleton):
         sys.path.append("plugins")
         # self.modList = []
         plugins = self.getAvailablePlugins()
-        if "base" not in plugins:
+        if not "base" in plugins:
             logger.error("Plugin 'base' is not available. Please install it.")
             return 1
         else:
@@ -1573,7 +2559,7 @@ class PluginManager(Singleton):
                 if func:
                     if not func():
                         logger.error(
-                            f"Error in activation stage 2 for plugin '{plugin}'"
+                            "Error in activation stage 2 for plugin '%s'" % plugin
                         )
                         logger.error(
                             "Please check your MMC agent configuration and log"
@@ -1581,7 +2567,9 @@ class PluginManager(Singleton):
                         return 4
 
         # Set module list
-        getattr(self.plugins["base"], "setModList")(list(list(self.plugins.keys())))
+        getattr(self.plugins["base"], "setModList")(
+            [name for name in list(self.plugins.keys())]
+        )
         return 0
 
     def stopPlugin(self, name):
@@ -1591,16 +2579,18 @@ class PluginManager(Singleton):
         @rtype: boolean
         returns: True on success, False if the module is not loaded.
         """
-        if name not in self.plugins:
+        if not name in self.plugins:
             return False
         plugin = self.plugins[name]
         try:
             deactivate = getattr(plugin, "deactivate")
         except AttributeError:
-            logger.info(f"Plugin {name} has no deactivate function")
+            logger.info("Plugin %s has no deactivate function" % (name,))
         else:
-            logger.info(f"Deactivating plugin {name}")
+            logger.info("Deactivating plugin %s" % (name,))
             deactivate()
         del self.plugins[name]
-        getattr(self.plugins["base"], "setModList")(list(list(self.plugins.keys())))
+        getattr(self.plugins["base"], "setModList")(
+            [name for name in list(self.plugins.keys())]
+        )
         return True
