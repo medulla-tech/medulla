@@ -33,16 +33,8 @@ CREATE OR REPLACE VIEW glpi_computers_pulse AS
         computers.groups_id_tech,
         computers.comment,
         computers.date_mod,
-        os.operatingsystems_id,
-        os.operatingsystemversions_id,
-        os.operatingsystemservicepacks_id,
-        os.operatingsystemarchitectures_id,
-        os.license_number,
-        os.licenseid,
-        os.operatingsystemkernelversions_id,
         computers.autoupdatesystems_id,
         computers.locations_id,
-        glpi_domains_items.domains_id,
         computers.networks_id,
         computers.computermodels_id,
         computers.computertypes_id,
@@ -57,13 +49,37 @@ CREATE OR REPLACE VIEW glpi_computers_pulse AS
         computers.ticket_tco,
         computers.uuid,
         computers.date_creation,
-        computers.is_recursive 
+        computers.is_recursive,
+        ti.domains_id,
+        os.operatingsystems_id,
+        os.operatingsystemversions_id,
+        os.operatingsystemservicepacks_id,
+        os.operatingsystemarchitectures_id,
+        os.license_number,
+        os.licenseid,
+        os.operatingsystemkernelversions_id
     FROM
-        glpi_computers computers 
-    INNER JOIN
-        glpi_items_operatingsystems os ON computers.id = os.items_id
-    LEFT JOIN
-        glpi_domains_items ON glpi_domains_items.items_id = computers.id;
+        glpi_computers computers
+            LEFT JOIN
+        (SELECT DISTINCT
+            id, items_id, domains_id
+        FROM
+            glpi_domains_items
+        GROUP BY items_id) AS ti ON ti.items_id = computers.id
+            LEFT JOIN
+        (SELECT DISTINCT
+            items_id,
+                id,
+                operatingsystems_id,
+                licenseid,
+                operatingsystemkernelversions_id,
+                operatingsystemservicepacks_id,
+                operatingsystemarchitectures_id,
+                license_number,
+                operatingsystemversions_id
+        FROM
+            glpi_items_operatingsystems
+        GROUP BY (items_id)) AS os ON computers.id = os.items_id;
 
 CREATE OR REPLACE VIEW glpi_view_computers_items_printer AS
     SELECT
