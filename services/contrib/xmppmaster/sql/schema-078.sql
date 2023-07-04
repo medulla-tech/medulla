@@ -145,7 +145,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_INSERT`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_black_list_AFTER_INSERT` AFTER INSERT ON `up_black_list` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`up_black_list_AFTER_INSERT` AFTER INSERT ON `up_black_list` FOR EACH ROW
 BEGIN
 	DELETE FROM `xmppmaster`.`up_gray_list`
 	WHERE
