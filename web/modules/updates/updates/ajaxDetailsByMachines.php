@@ -41,11 +41,11 @@ $start = (isset($_GET['start'])) ? $_GET['start'] : 0;
 $maxperpage = (isset($_GET['maxperpage'])) ? $_GET['maxperpage'] : $config['maxperpage'];
 $end = (isset($_GET['end'])) ? $_GET['end'] : $maxperpage - 1;
 
-$uuid = !empty($_GET['uuid']) ? htmlspecialchars($_GET['uuid']) : "";
+$entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
 $ctx = [];
 // location generates a filter on entity
-$ctx['location'] = !empty($location) ? $location: $uuid;
+$ctx['location'] = !empty($location) ? $location: $entity;
 $ctx['filter'] = $filter;
 $ctx['field'] = $field;
 $ctx['contains'] = $contains;
@@ -55,6 +55,7 @@ $ctx['maxperpage'] = $maxperpage;
 
 
 $detailsByMach = new ActionItem(_T("View details", "updates"),"deploySpecificUpdate","display","", "updates", "updates");
+$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"),"deploySpecificUpdate","displayg","", "updates", "updates");
 
 $all_grey_enable = xmlrpc_get_count_grey_list_enable();
 $all_grey_enable = $all_grey_enable['0']['enable_grey'];
@@ -66,7 +67,7 @@ $detailsByMachs = [];
 $missingUpdatesMachine = [];
 $platform = [];
 $filterOn = [];
-if ($uuid == '')
+if ($entity == '')
 {
     $typeOfDetail = "group";
     $filterOn = array('gid' => $gid);
@@ -115,9 +116,10 @@ if ($uuid == '')
         $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
         $platform[] = $v[1]['os'];
         $params[] = [
-            "id"=>$id_machine,
-            "glpi_id"=>$k,
+            "machineid"=>$id_machine,
+            "inventoryid"=>$k,
             "cn"=>$v[1]['cn'][0],
+            "entity"=>$entity
         ];
     }
 
@@ -125,26 +127,25 @@ if ($uuid == '')
 else
 {
     $typeOfDetail = "entitie";
-    $filterOn = array('entity' => $uuid);
+    $filterOn = array('entity' => $entity);
 
     $tabletitle = sprintf(_T("Computers from entity %s","updates"), $entityName);
     // No usage
-    $match = (int)str_replace('UUID', '', $uuid);
+    $match = (int)str_replace('UUID', '', $entity);
 
     $compliance_bloc = "";
 
     $machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
+
     $count = $machines['count'];
     $machines = $machines['data'];
+    $compliance_computers = xmlrpc_get_conformity_update_by_machines($machines['id']);
 
     for($i=0; $i < $count; $i++){
-        $detailsByMachs[] = $detailsByMach;
         $machineNames[] = $machines['hostname'][$i];
-
-        $compliance_computer = xmlrpc_get_conformity_update_by_machine($machines['id'][$i]);
-
-        $comp = $compliance_computer['0']['update_waiting'];
+        $comp = $compliance_computers[(string)$machines['id'][$i]];
         $missingUpdatesMachine[] = $comp;
+        $detailsByMachs[] = ($comp == 0) ? $detailsByMachEmpty : $detailsByMach;
 
         if ($all_grey_enable != '0' and $comp != '0')
         {
@@ -163,9 +164,10 @@ else
         $platform[] = $machines['platform'][$i];
 
         $params[] = [
-            "id"=>$machines['id'][$i],
-            "glpi_id" => $machines['uuid_inventorymachine'][$i],
+            "machineid"=>$machines['id'][$i],
+            "inventoryid" => $machines['uuid_inventorymachine'][$i],
             "cn"=>$machines['hostname'][$i],
+            "entity"=>$entity
         ];
     }
 }

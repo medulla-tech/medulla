@@ -813,6 +813,10 @@ function xmlrpc_get_conformity_update_by_machine($idmachine){
   return xmlCall("xmppmaster.get_conformity_update_by_machine", [$idmachine]);
 }
 
+function xmlrpc_get_conformity_update_by_machines($ids){
+  return xmlCall("xmppmaster.get_conformity_update_by_machines", [$ids]);
+}
+
 function xmlrpc_get_conformity_update_for_group($uuidArray){
   return xmlCall("xmppmaster.get_conformity_update_for_group", [$uuidArray]);
 }
@@ -835,6 +839,14 @@ function xmlrpc_get_updates_machines_by_entity($entity, $pid, $start=0, $limit=-
 
 function xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate="", $enddate=""){
   return xmlCall("xmppmaster.pending_entity_update_by_pid", [$entity, $pid, $startdate, $enddate]);
+}
+
+function xmlrpc_pending_group_update_by_pid($gid, $pid, $startdate="", $enddate=""){
+  return xmlCall("xmppmaster.pending_group_update_by_pid", [$gid, $pid, $startdate, $enddate]);
+}
+
+function xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $pid, $startdate="", $enddate=""){
+  return xmlCall("xmppmaster.pending_machine_update_by_pid", [$machineid, $inventoryid, $pid, $startdate, $enddate]);
 }
 
 function xmlrpc_get_updates_by_uuids($uuids, $start=0, $limit=-1, $filter=""){

@@ -30,7 +30,7 @@ $p->display();
 
 require_once("modules/updates/includes/xmlrpc.php");
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxListUpdates"));
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdates"));
 $ajax->display();
 $ajax->displayDivToUpdate();
 

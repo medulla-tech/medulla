@@ -1456,6 +1456,10 @@ def get_conformity_update_by_machine(idmachine):
     result = XmppMasterDatabase().get_conformity_update_by_machine(idmachine)
     return result
 
+def get_conformity_update_by_machines(ids=[]):
+    result = XmppMasterDatabase().get_conformity_update_by_machines(ids)
+    return result
+
 def get_conformity_update_for_group(uuidArray):
     result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
     nbmachinetotal = len(uuidArray)
@@ -1539,6 +1543,12 @@ def get_updates_machines_by_entity(entity, pid, start=0, limit=-1, filter=""):
 
 def pending_entity_update_by_pid(entity, pid, startdate="", enddate=""):
     return XmppMasterDatabase().pending_entity_update_by_pid(entity, pid, startdate, enddate)
+
+def pending_group_update_by_pid(gid, pid, startdate="", enddate=""):
+    pass
+
+def pending_machine_update_by_pid(machineid, inventoryid, pid, startdate="", enddate=""):
+    pass
 
 def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)

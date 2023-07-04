@@ -31,12 +31,12 @@ $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
+$updates_list = [];
 if(!empty($_GET['entity'])){
-    $entityId = (!empty($_GET['uuid'])) ? htmlentities($_GET['uuid']) : htmlentities($_GET['entity']);
+    $entityId = (!empty($_GET['entity'])) ? htmlentities($_GET['entity']) : '';
     $entityCompleteName = htmlentities($_GET['completename']);
 
     $updates_list = xmlrpc_get_updates_by_entity($entityId, $start, $end, $filter);
-
     $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"),"deployUpdate","quick","", "updates", "updates");
 }
 else if(!empty($_GET['group'])){
@@ -49,15 +49,15 @@ else if(!empty($_GET['group'])){
     $updates_list = xmlrpc_get_updates_by_uuids($machinesList, $start, $end, $filter);
 
 }
-else if(!empty($_GET['id']) || !empty($_GET['glpi_id'])){
+else if(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])){
     $updates_list = ["datas"=>[], "count"=>0];
-    $machineid = (!empty($_GET['id'])) ? htmlentities($_GET['id']) : '';
-    $inventoryid = (!empty($_GET['glpi_id'])) ? htmlentities($_GET['glpi_id']) : '';
+    $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : '';
+    $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : '';
     $machinename = (!empty($_GET['cn']) )? htmlentities($_GET['cn']) : '';
     $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"),"deployUpdate","quick","", "updates", "updates");
     $updates_list = xmlrpc_get_updates_by_uuids([$inventoryid], $start, $end, $filter);
-
 }
+
 $params = [];
 $names_updates = [];
 $kb_updates = [];
@@ -65,28 +65,54 @@ $actionspeclistUpds = [];
 
 $count = $updates_list['total'];
 $updates_list = $updates_list['datas'];
-
 $row = 0;
+
+$hostnames = [];
+$jids = [];
 
 foreach ($updates_list as $update) {
     $actionspeclistUpds[] = $deployThisUpdate;
     $kb_updates[] = 'KB'.$update['kb'];
     $names_updates[] = $updates_list[$row]["pkgs_label"];
     $version_updates[] = $updates_list[$row]['pkgs_version'];
-    $params[] = [
-        "entity"=>$entityId,
+
+    if(!empty($updates_list[$row]['hostname'])){
+        $hostnames[] = $updates_list[$row]['hostname'];
+    }
+    if(!empty($updates_list[$row]['jid'])){
+        $jids[] =  $updates_list[$row]['jid'];
+    }
+    $tmp = [
         "pid" => $updates_list[$row]["update_id"],
         "kb" => $updates_list[$row]["kb"],
-        "entity"=> $entityId,
-        "completeName" => $entityCompleteName,
+        "title"=>$updates_list[$row]["pkgs_description"],
         "ltitle"=>$updates_list[$row]["pkgs_label"],
         "version"=>$updates_list[$row]['pkgs_version'],
     ];
+    if(!empty($_GET['entity'])){
+        $tmp["entity"] = $entityId;
+        $tmp["completeName"] = $entityCompleteName;
+    }
+    else if(!empty($_GET['group'])){
+        $tmp["gid"] = $gid;
+        $tmp["groupname"] = $groupname;
+    }
+    else if(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])){
+        $tmp["inventoryid"] = $inventoryid;
+        $tmp["machineid"] = $machineid;
+    }
+    $params[] = $tmp;
     $row++;
 }
 
 $n = new OptimizedListInfos($names_updates, _T("Update name", "updates"));
 $n->addExtraInfo($kb_updates, _T("KB", "updates"));
+if($hostnames != []){
+    $n->addExtraInfo($hostnames, _T("Machine", "xmppmaster"));
+}
+if($jids != []){
+    $n->addExtraInfo($jids, _T("Jid", "xmppmaster"));
+}
 $n->disableFirstColumnActionLink();
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));

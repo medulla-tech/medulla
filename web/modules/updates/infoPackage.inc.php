@@ -48,8 +48,8 @@ $page = new Page("detailsByMachines", _T('Details by Machines', 'updates'));
 $page->setFile("modules/updates/updates/detailsByMachines.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxMachineListOnEntities", _T("Details by Machines", "updates"));
-$page->setFile("modules/updates/updates/ajaxMachineListOnEntities.php");
+$page = new Page("ajaxDetailsByMachines", _T("Details by Machines", "updates"));
+$page->setFile("modules/updates/updates/ajaxDetailsByMachines.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
@@ -57,8 +57,8 @@ $page = new Page("deployAllUpdates", _T('Deploy all Updates', 'updates'));
 $page->setFile("modules/updates/updates/deployAllUpdates.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxPreDeployAll", _T("Deploy all Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxPreDeployAll.php");
+$page = new Page("ajaxDeployAllUpdates", _T("Deploy all Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxDeployAllUpdates.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
@@ -83,13 +83,13 @@ $page->setFile("modules/updates/updates/ajaxListMachineDetailSpecificUpdate.php"
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdateToDeploy", _T("Manage deploy specific update", "updates"));
-$page->setFile("modules/updates/updates/ajaxUpdateToDeploy.php");
+$page = new Page("ajaxDeploySpecificUpdate", _T("Manage deploy specific update", "updates"));
+$page->setFile("modules/updates/updates/ajaxDeploySpecificUpdate.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxListUpdates", _T("Manage List Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxListUpdates.php");
+$page = new Page("ajaxDetailsByUpdates", _T("Manage List Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxDetailsByUpdates.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
