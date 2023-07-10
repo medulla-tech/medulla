@@ -165,8 +165,7 @@ else
         $params[] = [
             "machineid"=>$machines['id'][$i],
             "inventoryid" => $machines['uuid_inventorymachine'][$i],
-            "cn"=>$machines['hostname'][$i],
-            "entity"=>$entity
+            "cn"=>$machines['hostname'][$i]
         ];
     }
 }
