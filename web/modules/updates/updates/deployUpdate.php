@@ -94,7 +94,6 @@ foreach($machines as $machine){
 }
 $group = new Group();
 $gid = $group->create($groupName, false);
-$group->setOwner('update');
 $group->addMembers($grp);
 
 // Used to set start and end date
