@@ -11521,7 +11521,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         sql="""SELECT
                     glpi_entity.glpi_id AS entity,
-                    COUNT(*) AS nombre_machine,
+                    COUNT(DISTINCT(xmppmaster.machines.id)) AS nombre_machine,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
                         ELSE 0
@@ -11530,7 +11530,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     xmppmaster.machines
                         JOIN
                     glpi_entity ON machines.glpi_entity_id = glpi_entity.id
-                        LEFT JOIN
+                        INNER JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
                 WHERE
                     platform LIKE 'Mic%'
