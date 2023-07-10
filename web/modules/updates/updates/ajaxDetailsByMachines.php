@@ -103,17 +103,17 @@ if ($entity == '')
 
         if ($all_grey_enable != '0' and $comp != '0')
         {
-            $comp = intval($comp / $all_grey_enable * 100);
+            $complrate = ($all_grey_enable - $comp) / $all_grey_enable * 100;
         }
 
         if ($comp == '0')
         {
-            $comp = '100';
+            $complrate = '100';
         }
 
-        $color = colorconf($comp);
+        $color = colorconf($complrate);
 
-        $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
+        $complRates[] = "<div class='progress' style='width: ".$complrate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$complrate."% </div>";
         $platform[] = $v[1]['os'];
         $params[] = [
             "machineid"=>$id_machine,
@@ -149,17 +149,17 @@ else
 
         if ($all_grey_enable != '0' and $comp != '0')
         {
-            $comp = intval($comp / $all_grey_enable * 100);
+            $complrate = ($all_grey_enable - $comp) / $all_grey_enable * 100;
         }
 
         if ($comp == '0')
         {
-            $comp = '100';
+            $complrate = '100';
         }
 
-        $color = colorconf($comp);
+        $color = colorconf($complrate);
 
-        $complRates[] = "<div class='progress' style='width: ".$comp."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$comp."% </div>";
+        $complRates[] = "<div class='progress' style='width: ".$complrate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$complrate."% </div>";
 
         $platform[] = $machines['platform'][$i];
 
