@@ -103,7 +103,7 @@ if ($entity == '')
 
         if ($all_grey_enable != '0' and $comp != '0')
         {
-            $comp = $comp / $all_grey_enable * 100;
+            $comp = intval($comp / $all_grey_enable * 100);
         }
 
         if ($comp == '0')
@@ -149,7 +149,7 @@ else
 
         if ($all_grey_enable != '0' and $comp != '0')
         {
-            $comp = $comp / $all_grey_enable * 100;
+            $comp = intval($comp / $all_grey_enable * 100);
         }
 
         if ($comp == '0')

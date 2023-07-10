@@ -107,8 +107,8 @@ foreach ($entities as $entity) {
     $params[] = array('entity' => $entity['uuid'], 'completename'=>$entity['completename']);
     $color = colorconf(100);
     if (isset($identity[$id_entity])){
-        $conformite = $identity[$id_entity]['conformite'];
-        $color = colorconf(intval($conformite));
+        $conformite = intval($identity[$id_entity]['conformite']);
+        $color = colorconf($conformite);
         $totalmach=intval($identity[$id_entity]['totalmach']);
         $nbupdateentity=intval($identity[$id_entity]['nbupdate']);
 

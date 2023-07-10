@@ -168,7 +168,7 @@ for($i=0; $i < $count_partial_grey; $i++)
 
         if ($without_Upd['0']['nb_machine_missing_update'] != "0")
         {
-            $compliance_rate = ($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100;
+            $compliance_rate = intval(($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100);
         }
         else
         {
@@ -246,7 +246,7 @@ for($i=0; $i < $count_partial_white; $i++)
 
         if ($without_Upd['0']['nb_machine_missing_update'] != "0")
         {
-            $compliance_rate = ($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100;
+            $compliance_rate = intval(($count_machine / $without_Upd['0']['nb_machine_missing_update']) * 100);
         }
         else
         {
