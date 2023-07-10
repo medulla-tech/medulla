@@ -118,8 +118,7 @@ if ($entity == '')
         $params[] = [
             "machineid"=>$id_machine,
             "inventoryid"=>$k,
-            "cn"=>$v[1]['cn'][0],
-            "entity"=>$entity
+            "cn"=>$v[1]['cn'][0]
         ];
     }
 
