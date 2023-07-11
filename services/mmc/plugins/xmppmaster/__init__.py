@@ -1550,6 +1550,8 @@ def pending_group_update_by_pid(gid, pid, startdate="", enddate=""):
 def pending_machine_update_by_pid(machineid, inventoryid, pid, startdate="", enddate="", interval=""):
     return XmppMasterDatabase().pending_machine_update_by_pid(machineid, inventoryid, pid, startdate, enddate, interval)
 
-
 def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)
+
+def get_tagged_updates_by_machine(machineid, start=0, end=-1, filter=""):
+    return XmppMasterDatabase().get_tagged_updates_by_machine(machineid, start, end, filter)

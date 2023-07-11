@@ -12195,3 +12195,67 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             session.commit()
             session.flush()
             return True
+
+    @DatabaseHelper._sessionm
+    def get_tagged_updates_by_machine(self, session, machineid, start=0, end=-1, filter=""):
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            end = int(end)
+        except:
+            end = -1
+
+        try:
+            machineid = int(machineid)
+        except:
+            machineid = 0
+
+        query = session.query(Up_machine_windows, Up_gray_list).filter(and_(Up_machine_windows.id_machine == machineid,
+                                                              or_(Up_machine_windows.curent_deploy == 1,
+                                                                Up_machine_windows.required_deploy == 1)
+                                                              )
+                                                         )\
+                    .join(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)
+        if filter != "":
+            query = query.filter(or_(
+                Up_gray_list.title.contains(filter),
+                Up_gray_list.kb.contains(filter),
+                Up_gray_list.updateid.contains(filter),
+                Up_gray_list.revisionid.contains(filter),
+                Up_gray_list.payloadfiles.contains(filter),
+                Up_gray_list.description.contains(filter),
+                Up_machine_windows.start_date.contains(filter),
+                Up_machine_windows.end_date.contains(filter),
+                ))
+
+        count = query.count()
+
+        if start != -1:
+            query = query.offset(start)
+        if end != 0:
+            query = query.limit(end)
+
+        query = query.all()
+
+        result = {
+            "count": count,
+            "datas" : []
+        }
+
+        for update, gray in query:
+            tmp = {
+                "title" : gray.title,
+                "description":gray.description if gray.description is not None else "",
+                "update_id": update.update_id,
+                "package_id":gray.updateid_package,
+                "start_date": datetime_handler(update.start_date) if update.start_date is not None else "",
+                "end_date": datetime_handler(update.end_date) if update.end_date is not None else "",
+                "current_deploy": update.curent_deploy if update.curent_deploy is not None else 0,
+            }
+
+            result["datas"].append(tmp)
+
+        return result

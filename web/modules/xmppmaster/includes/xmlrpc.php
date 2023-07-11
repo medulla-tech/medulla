@@ -852,4 +852,8 @@ function xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $pid, $s
 function xmlrpc_get_updates_by_uuids($uuids, $start=0, $limit=-1, $filter=""){
   return xmlCall("xmppmaster.get_updates_by_uuids", [$uuids, $start, $limit, $filter]);
 }
+
+function xmlrpc_get_tagged_updates_by_machine($machineid, $start=0, $end=-1, $filter=""){
+  return xmlCall("xmppmaster.get_tagged_updates_by_machine", [$machineid, $start, $end, $filter]);
+}
 ?>

@@ -162,6 +162,13 @@ $page = new Page("blackUnban", _T('Black Unban', 'updates'));
 $page->setFile("modules/updates/updates/blackUnban.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
+$page = new Page("pendingUpdateByMachine", _T('Pending Updates', 'updates'));
+$submod->addPage($page);
+
+$page = new Page("ajaxPendingUpdateByMachine", _T('Pending Updates', 'updates'));
+$page->setFile("modules/updates/updates/ajaxPendingUpdateByMachine.php", array("noHeader"=>True,"visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

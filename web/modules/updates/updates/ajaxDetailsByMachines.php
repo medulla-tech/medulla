@@ -64,6 +64,7 @@ $params = [];
 $machineNames = [];
 $complRates = [];
 $detailsByMachs = [];
+$actionPendingByMachines = [];
 $missingUpdatesMachine = [];
 $platform = [];
 $filterOn = [];
@@ -145,6 +146,7 @@ else
         $comp = $compliance_computers[(string)$machines['id'][$i]];
         $missingUpdatesMachine[] = $comp;
         $detailsByMachs[] = ($comp == 0) ? $detailsByMachEmpty : $detailsByMach;
+        $actionPendingByMachines[] = $pendingByMach;
 
         if ($all_grey_enable != '0' and $comp != '0')
         {
@@ -185,6 +187,7 @@ $n->addExtraInfo($platform, _T("Platform", "updates"));
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
 $n->addExtraInfo($missingUpdatesMachine, _T("Missing updates", "updates"));
 $n->addActionItemArray($detailsByMachs);
+$n->addActionItemArray($actionPendingByMachines);
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $ctx['filter']));
