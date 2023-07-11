@@ -37,13 +37,13 @@ if(!empty($_GET['entity'])){
     $entityCompleteName = htmlentities($_GET['completename']);
 
     $updates_list = xmlrpc_get_updates_by_entity($entityId, $start, $end, $filter);
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"),"deployUpdate","quick","", "updates", "updates");
+    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"),"deployUpdate","updateone","", "updates", "updates");
 }
 else if(!empty($_GET['group'])){
     $gid = htmlentities($_GET['group']);
     $groupname = htmlentities($_GET['groupname']);
     $group = getPGobject($gid, true);
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"),"deployUpdate","quick","", "updates", "updates");
+    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"),"deployUpdate","updateone","", "updates", "updates");
     $machinesListGlpi = getRestrictedComputersList(0,-1,['gid'=>$gid]);
     $machinesList = array_keys($machinesListGlpi);
     $updates_list = xmlrpc_get_updates_by_uuids($machinesList, $start, $end, $filter);
@@ -54,7 +54,7 @@ else if(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])){
     $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : '';
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : '';
     $machinename = (!empty($_GET['cn']) )? htmlentities($_GET['cn']) : '';
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"),"deployUpdate","quick","", "updates", "updates");
+    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"),"deployUpdate","updateone","", "updates", "updates");
     $updates_list = xmlrpc_get_updates_by_uuids([$inventoryid], $start, $end, $filter);
 }
 
