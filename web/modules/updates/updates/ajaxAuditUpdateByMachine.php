@@ -22,6 +22,7 @@
 
 global $maxperpage;
 
+$hostname = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
 $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : 0;
 $start = (!empty($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (!empty($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage;
@@ -32,13 +33,17 @@ $result = xmlrpc_get_audit_summary_updates_by_machine($machineid, $start, $end, 
 $datas = $result["datas"];
 $count = $result["count"];
 
+$detailAction = new ActionItem(_T("Detail", "xmppmaster"),"viewlogs","display","", "xmppmaster", "xmppmaster");
 $titles = [];
 $states = [];
 $startcmds = [];
-foreach($datas as $deploy){
+$detailActions = [];
+foreach($datas as $key=>$deploy){
     $titles[] = $deploy["title"];
     $states[] = $deploy["state"];
     $startcmds[] = $deploy["startcmd"];
+    $detailActions[] = $detailAction;
+    $datas[$key]['hostname'] = $hostname;
 }
 
 $n = new OptimizedListInfos($titles, _T("Title", "xmppmaster"));
@@ -46,11 +51,7 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo($startcmds, _T("Started at", "updates"));
 
 $n->addExtraInfo($states, _T("Status", "xmppmaster"));
-// $n->addExtraInfo($missingUpdatesMachine, _T("Missing updates", "updates"));
-// $n->addActionItemArray($detailsByMachs);
-// $n->addActionItemArray($actionPendingByMachines);
-// $n->addActionItemArray($actionDoneByMachines);
-
+$n->addActionItemArray($detailActions);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($datas);
