@@ -1555,3 +1555,6 @@ def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
 
 def get_tagged_updates_by_machine(machineid, start=0, end=-1, filter=""):
     return XmppMasterDatabase().get_tagged_updates_by_machine(machineid, start, end, filter)
+
+def get_audit_summary_updates_by_machine(machineid, start=0, end=-1, filter=""):
+    return XmppMasterDatabase().get_audit_summary_updates_by_machine(machineid, start, end, filter)

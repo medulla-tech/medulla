@@ -169,6 +169,13 @@ $page = new Page("ajaxPendingUpdateByMachine", _T('Pending Updates', 'updates'))
 $page->setFile("modules/updates/updates/ajaxPendingUpdateByMachine.php", array("noHeader"=>True,"visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("auditUpdateByMachine", _T('Updates Done', 'updates'));
+$submod->addPage($page);
+
+$page = new Page("ajaxAuditUpdateByMachine", _T('Updates Done', 'updates'));
+$page->setFile("modules/updates/updates/ajaxAuditUpdateByMachine.php", array("noHeader"=>True,"visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

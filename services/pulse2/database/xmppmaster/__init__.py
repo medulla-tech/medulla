@@ -12263,3 +12263,61 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             result["datas"].append(tmp)
 
         return result
+
+    @DatabaseHelper._sessionm
+    def get_audit_summary_updates_by_machine(self, session, machineid, start, end, filter):
+        try:
+            machineid = int(machineid)
+        except:
+            machineid = 0
+
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            end = int(end)
+        except:
+            end = -1
+
+        query = session.query(Deploy)\
+        .join(Machines, Machines.jid == Deploy.jidmachine)\
+        .filter(and_(Deploy.sessionid.contains("update"),
+                     Machines.id== machineid))\
+        .order_by(desc(Deploy.start))
+
+        if filter != "":
+            query = query.filter(or_(Deploy.title.contains(filter),
+                                     Deploy.state.contains(filter),
+                                     Deploy.start.contains(filter),
+                                     Deploy.startcmd.contains(filter),
+                                     Deploy.endcmd.contains(filter)))
+        if start != 0:
+            query = query.offset(start)
+        if end != -1:
+            query = query.limit(end)
+
+        count = query.count()
+        query = query.all()
+
+        result = {
+            "count" : count,
+            "datas" : []
+        }
+
+        for deploy in query:
+            tmp = {
+                "id": deploy.id,
+                "title": deploy.title,
+                "jidmachine": deploy.jidmachine,
+                "state": deploy.state,
+                "sessionid": deploy.sessionid,
+                "start": datetime_handler(deploy.start),
+                "startcmd": datetime_handler(deploy.startcmd),
+                "endcmd": datetime_handler(deploy.endcmd),
+                "group_uuid": deploy.group_uuid,
+                "command": deploy.command,
+            }
+            result["datas"].append(tmp)
+            return result
