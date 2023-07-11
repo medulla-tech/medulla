@@ -1468,7 +1468,7 @@ def get_conformity_update_for_group(uuidArray):
     if result[0]['count_machines'] == 0 or result[0]['pending_updates'] == 0:
         result[0]['compliance'] = 100
     else:
-        result[0]['compliance'] = (float(result[0]['count_machines'])/float(nbmachinetotal)) * 100.
+        result[0]['compliance'] = (float(nbmachinetotal) - float(result[0]['count_machines']))/float(nbmachinetotal) * 100.
     return result
 
 def get_idmachine_from_name(name):

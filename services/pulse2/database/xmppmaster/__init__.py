@@ -11521,7 +11521,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         sql="""SELECT
                     glpi_entity.glpi_id AS entity,
-                    COUNT(*) AS nombre_machine,
+                    COUNT(DISTINCT(xmppmaster.machines.id)) AS total_machine_entity,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
                         ELSE 0
@@ -11550,10 +11550,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         sql="""SELECT
                     glpi_entity.glpi_id AS entity,
+                    COUNT(DISTINCT(xmppmaster.machines.id)) AS machine_a_mettre_a_jour,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
                         ELSE 0
-                    END) AS machine_a_mettre_a_jour
+                    END) AS update_a_mettre_a_jour
                 FROM
                     xmppmaster.machines
                         JOIN
@@ -11581,7 +11582,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         result={}
         for x in self.get_update_by_entity():
-            result[x['entity']] = { 'totalmach' : x['nombre_machine'], 'nbupdate' : x['update_a_mettre_a_jour'], 'nbmachines' : 0 }
+            result[x['entity']] = { 'totalmach' : x['total_machine_entity'], 'nbupdate' : x['update_a_mettre_a_jour'], 'nbmachines' : 0 }
         for x in self.get_machine_by_entity_in_gray_list():
            result[x['entity']]['nbmachines'] =  x['machine_a_mettre_a_jour']
         return result
@@ -11734,7 +11735,7 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             array_GUID = " AND uuid_inventorymachine IN ('')"
         
         sql="""SELECT
-                    COUNT(*) AS count_machines,
+                    COUNT(DISTINCT(xmppmaster.machines.id)) AS count_machines,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
                         ELSE 0
@@ -11743,8 +11744,11 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
                     xmppmaster.machines
                         LEFT JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                        JOIN
+                    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
-                    platform LIKE 'Mic%'"""
+                    platform LIKE 'Mic%'
+                        AND xmppmaster.up_gray_list.valided = 1"""
                     
         sql = sql + array_GUID + ";"
         logging.getLogger().info(sql)
