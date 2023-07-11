@@ -31,7 +31,8 @@ from mmc.support.mmctools import Singleton
 from mmc.core.version import scmRevision
 from mmc.core.audit import AuditFactory
 from mmc.core.log import ColoredFormatter
-#from mmc.plugins.xmppmaster.master.lib import convert
+
+# from mmc.plugins.xmppmaster.master.lib import convert
 
 import importlib
 import logging
@@ -54,12 +55,13 @@ import sys
 
 import random
 
-#import posix_ipc
+# import posix_ipc
 import socket
 import ssl
 import gzip
 
 from datetime import datetime
+
 logger = logging.getLogger()
 
 sys.path.append("plugins")
@@ -67,6 +69,7 @@ sys.path.append("plugins")
 Fault = xmlrpc.client.Fault
 ctx = None
 VERSION = "5.0.0"
+
 
 # decorateur mesure temps d'une fonction
 def measure_time(func):
@@ -77,7 +80,9 @@ def measure_time(func):
         execution_time = end_time - start_time
         print(f"Temps d'exécution de {func.__name__}: {execution_time} secondes")
         return result
+
     return wrapper
+
 
 def log_params(func):
     def wrapper(*args, **kwargs):
@@ -85,7 +90,9 @@ def log_params(func):
         print(f"Paramètres nommés : {kwargs}")
         result = func(*args, **kwargs)
         return result
+
     return wrapper
+
 
 def log_details(func):
     def wrapper(*args, **kwargs):
@@ -99,6 +106,7 @@ def log_details(func):
         print(f"Paramètres nommés : {kwargs}")
         result = func(*args, **kwargs)
         return result
+
     return wrapper
 
 
@@ -124,7 +132,9 @@ def log_details_debug_info(func):
         logger.info(f"Paramètres nommés : {kwargs}")
         result = func(*args, **kwargs)
         return result
+
     return wrapper
+
 
 def generate_log_line(message):
     frame = inspect.currentframe().f_back
@@ -132,6 +142,7 @@ def generate_log_line(message):
     line_number = frame.f_lineno
     log_line = f"[{file_name}:{line_number}] - {message}"
     return log_line
+
 
 def display_message(message):
     frame = inspect.currentframe().f_back
@@ -149,21 +160,26 @@ def display_message(message):
 
 def generer_mot_de_passe(taille):
     """
-        Cette fonction permet de generer 1 mot de passe aléatoire
-        le parametre taille precise le nombre de caractere du mot de passe
-        renvoi le mot de passe
+    Cette fonction permet de generer 1 mot de passe aléatoire
+    le parametre taille precise le nombre de caractere du mot de passe
+    renvoi le mot de passe
 
-        eg : mot_de_passe = generer_mot_de_passe(32)
+    eg : mot_de_passe = generer_mot_de_passe(32)
     """
     caracteres = string.ascii_letters + string.digits + string.punctuation
-    mot_de_passe = ''.join(random.choice(caracteres) for _ in range(taille))
+    mot_de_passe = "".join(random.choice(caracteres) for _ in range(taille))
     return mot_de_passe
 
-class MotDePasse:
 
-    def __init__(self, taille,  temps_validation=60, caracteres_interdits='''"()[],%:|`.{}'><\\/^'''):
+class MotDePasse:
+    def __init__(
+        self,
+        taille,
+        temps_validation=60,
+        caracteres_interdits=""""()[],%:|`.{}'><\\/^""",
+    ):
         self.taille = taille
-        self.caracteres_interdits = [ x for x in caracteres_interdits]
+        self.caracteres_interdits = [x for x in caracteres_interdits]
         self.temps_validation = temps_validation
         self.mot_de_passe = self.generer_mot_de_passe()
         self.date_expiration = self.calculer_date_expiration()
@@ -171,8 +187,8 @@ class MotDePasse:
     def generer_mot_de_passe(self):
         caracteres = string.ascii_letters + string.digits + string.punctuation
         for caractere_interdit in self.caracteres_interdits:
-            caracteres = caracteres.replace(caractere_interdit, '')
-        mot_de_passe = ''.join(random.choice(caracteres) for _ in range(taille))
+            caracteres = caracteres.replace(caractere_interdit, "")
+        mot_de_passe = "".join(random.choice(caracteres) for _ in range(taille))
         return mot_de_passe
 
     def calculer_date_expiration(self):
@@ -185,20 +201,20 @@ class MotDePasse:
     def est_valide(self):
         return datetime.now() < self.date_expiration
 
-    #def generer_qr_code(self, nom_fichier):
-        #qr = qrcode.QRCode(version=1, box_size=10, border=4)
-        #qr.add_data(self.mot_de_passe)
-        #qr.make(fit=True)
-        #qr_img = qr.make_image(fill="black", back_color="white")
-        #qr_img.save(nom_fichier)
-        #print(f"QR code généré et sauvegardé dans {nom_fichier}.")
-
+    # def generer_qr_code(self, nom_fichier):
+    # qr = qrcode.QRCode(version=1, box_size=10, border=4)
+    # qr.add_data(self.mot_de_passe)
+    # qr.make(fit=True)
+    # qr_img = qr.make_image(fill="black", back_color="white")
+    # qr_img.save(nom_fichier)
+    # print(f"QR code généré et sauvegardé dans {nom_fichier}.")
 
 
 class DateTimebytesEncoderjson(json.JSONEncoder):
     """
     Used to handle datetime in json files.
     """
+
     def default(self, obj):
         if isinstance(obj, datetime):
             encoded_object = obj.isoformat()
@@ -208,71 +224,73 @@ class DateTimebytesEncoderjson(json.JSONEncoder):
             encoded_object = json.JSONEncoder.default(self, obj)
         return encoded_object
 
+
 class convert:
     """
-        les packages suivant son obligatoire.
-        python3-xmltodict python3-dicttoxml python3-yaml json2xml
-        pip3 install dict2xml
-        Cette class presente des methodes pour convertir simplement des objects.
-        elle expose les fonction suivante
-            convert_dict_to_yaml(input_dict)
-            convert_yaml_to_dict(yaml_data)
-            yaml_string_to_dict(yaml_string)
-            check_yaml_conformance(yaml_data)
-            compare_yaml(yaml_string1, yaml_string2)
-            convert_dict_to_json(input_dict_json, indent=None, sort_keys=False)
-            check_json_conformance(json_data)
-            convert_json_to_dict(json_str)
-            xml_to_dict(xml_string)
-            compare_xml(xml_file1, xml_file2)
-            convert_xml_to_dict(xml_str)
-            convert_json_to_xml(input_json)
-            convert_xml_to_json(input_xml)
-            convert_dict_to_xml(data_dict)
-            convert_bytes_datetime_to_string(data)
-            compare_dicts(dict1, dict2)
-            compare_json(json1, json2)
-            convert_to_bytes(input_data)
-            compress_and_encode(string)
-            decompress_and_encode(string)
-            convert_datetime_to_string(input_date)
-            encode_to_string_base64(input_data)
-            decode_base64_to_string_(input_data)
-            check_base64_encoding(input_string)
-            taille_string_in_base64(string)
-            string_to_int(s)
-            int_to_string(n)
-            string_to_float(s)
-            float_to_string(f)
-            list_to_string(lst, separator=', ')
-            string_to_list(s, separator=', ')
-            list_to_set(lst)
-            set_to_list(s)
-            dict_to_list(d)
-            list_to_dict(lst)
-            char_to_ascii(c)
-            ascii_to_char(n)
-            convert_rows_to_columns(data)
-            convert_columns_to_rows(data)
-            convert_to_ordered_dict(dictionary)
-            generate_random_text(num_words)
-            capitalize_words(text)
-            compress_data_to_bytes(data)
-            decompress_data_to_bytes(data_bytes_compress
-            compress_dict_to_dictbytes(dict_data)
-            decompress_dictbytes_to_dict(data_bytes_compress)
-            unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress)
-            is_multiple_of(s, multiple=4)
-            is_base64(s)
-            header_body(xml_string)
-            format_xml(xml_string)
-            check_keys_in( dictdata, array_keys)
+    les packages suivant son obligatoire.
+    python3-xmltodict python3-dicttoxml python3-yaml json2xml
+    pip3 install dict2xml
+    Cette class presente des methodes pour convertir simplement des objects.
+    elle expose les fonction suivante
+        convert_dict_to_yaml(input_dict)
+        convert_yaml_to_dict(yaml_data)
+        yaml_string_to_dict(yaml_string)
+        check_yaml_conformance(yaml_data)
+        compare_yaml(yaml_string1, yaml_string2)
+        convert_dict_to_json(input_dict_json, indent=None, sort_keys=False)
+        check_json_conformance(json_data)
+        convert_json_to_dict(json_str)
+        xml_to_dict(xml_string)
+        compare_xml(xml_file1, xml_file2)
+        convert_xml_to_dict(xml_str)
+        convert_json_to_xml(input_json)
+        convert_xml_to_json(input_xml)
+        convert_dict_to_xml(data_dict)
+        convert_bytes_datetime_to_string(data)
+        compare_dicts(dict1, dict2)
+        compare_json(json1, json2)
+        convert_to_bytes(input_data)
+        compress_and_encode(string)
+        decompress_and_encode(string)
+        convert_datetime_to_string(input_date)
+        encode_to_string_base64(input_data)
+        decode_base64_to_string_(input_data)
+        check_base64_encoding(input_string)
+        taille_string_in_base64(string)
+        string_to_int(s)
+        int_to_string(n)
+        string_to_float(s)
+        float_to_string(f)
+        list_to_string(lst, separator=', ')
+        string_to_list(s, separator=', ')
+        list_to_set(lst)
+        set_to_list(s)
+        dict_to_list(d)
+        list_to_dict(lst)
+        char_to_ascii(c)
+        ascii_to_char(n)
+        convert_rows_to_columns(data)
+        convert_columns_to_rows(data)
+        convert_to_ordered_dict(dictionary)
+        generate_random_text(num_words)
+        capitalize_words(text)
+        compress_data_to_bytes(data)
+        decompress_data_to_bytes(data_bytes_compress
+        compress_dict_to_dictbytes(dict_data)
+        decompress_dictbytes_to_dict(data_bytes_compress)
+        unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress)
+        is_multiple_of(s, multiple=4)
+        is_base64(s)
+        header_body(xml_string)
+        format_xml(xml_string)
+        check_keys_in( dictdata, array_keys)
     """
+
     # YAML
     @staticmethod
     def convert_dict_to_yaml(input_dict):
         """
-            la fonction suivante Python convertit 1 dict python en json.
+        la fonction suivante Python convertit 1 dict python en json.
         """
         if isinstance(input_dict, dict):
             return yaml.dump(convert.convert_bytes_datetime_to_string(input_dict))
@@ -286,13 +304,19 @@ class convert:
     @staticmethod
     def yaml_string_to_dict(yaml_string):
         try:
-            yaml_data = yaml.safe_load(convert.convert_bytes_datetime_to_string(yaml_string))
+            yaml_data = yaml.safe_load(
+                convert.convert_bytes_datetime_to_string(yaml_string)
+            )
             if isinstance(yaml_data, (dict, list)):
                 return yaml_data
             else:
-                raise yaml.YAMLError("Erreur lors de la conversion de la chaîne YAML en dictionnaire.")
+                raise yaml.YAMLError(
+                    "Erreur lors de la conversion de la chaîne YAML en dictionnaire."
+                )
         except yaml.YAMLError as e:
-            raise ValueError("Erreur lors de la conversion de la chaîne YAML en dictionnaire.")
+            raise ValueError(
+                "Erreur lors de la conversion de la chaîne YAML en dictionnaire."
+            )
 
     @staticmethod
     def check_yaml_conformance(yaml_data):
@@ -323,10 +347,12 @@ class convert:
     @staticmethod
     def convert_dict_to_json(input_dict_json, indent=None, sort_keys=False):
         """
-            la fonction suivante Python convertit 1 dict python en json.
+        la fonction suivante Python convertit 1 dict python en json.
         """
         if isinstance(input_dict_json, dict):
-            return json.dumps(convert.convert_bytes_datetime_to_string(input_dict_json),indent=indent)
+            return json.dumps(
+                convert.convert_bytes_datetime_to_string(input_dict_json), indent=indent
+            )
         else:
             raise TypeError("L'entrée doit être de type dict.")
 
@@ -338,16 +364,14 @@ class convert:
         except json.JSONDecodeError:
             return False
 
-
-#json_bytes = json.dumps(dict_data, indent = 4, cls=DateTimebytesEncoderjson).encode('utf-8')
-
+    # json_bytes = json.dumps(dict_data, indent = 4, cls=DateTimebytesEncoderjson).encode('utf-8')
 
     @staticmethod
     def convert_json_to_dict(json_str):
-        if isinstance(json_str,(dict)):
+        if isinstance(json_str, (dict)):
             return json_str
         stringdata = convert.convert_bytes_datetime_to_string(json_str)
-        if isinstance(stringdata,(str)):
+        if isinstance(stringdata, (str)):
             try:
                 return json.loads(stringdata)
             except json.decoder.JSONDecodeError as e:
@@ -357,10 +381,8 @@ class convert:
                 logger.error("convert_json_to_dict %s" % (e))
                 raise
 
-
     @staticmethod
     def xml_to_dict(xml_string):
-
         def xml_element_to_dict(element):
             if len(element) == 0:
                 return element.text
@@ -374,8 +396,11 @@ class convert:
                 else:
                     result[child.tag] = child_dict
             return result
+
         try:
-            tree = ET.ElementTree(ET.fromstring(convert.convert_bytes_datetime_to_string(xml_string)))
+            tree = ET.ElementTree(
+                ET.fromstring(convert.convert_bytes_datetime_to_string(xml_string))
+            )
             root = tree.getroot()
             return xml_element_to_dict(root)
         except ET.ParseError:
@@ -406,9 +431,8 @@ class convert:
         root = ET.fromstring(convert.convert_bytes_datetime_to_string(xml_string))
         return _element_to_dict(root)
 
-
     @staticmethod
-    def convert_json_to_xml(json_data, root_name='root'):
+    def convert_json_to_xml(json_data, root_name="root"):
         def _convert(element, parent):
             if isinstance(element, dict):
                 for key, value in element.items():
@@ -426,7 +450,7 @@ class convert:
         root = ET.Element(root_name)
         _convert(json.loads(json_data), root)
 
-        xml_data = ET.tostring(root, encoding='unicode', method='xml')
+        xml_data = ET.tostring(root, encoding="unicode", method="xml")
         return xml_data
 
     # xml
@@ -442,15 +466,15 @@ class convert:
     @staticmethod
     def convert_bytes_datetime_to_string(data):
         """
-            la fonction suivante Python parcourt récursivement un dictionnaire,
-            convertit les types bytes en str,
-            les objets datetime en chaînes de caractères au format "année-mois-jour heure:minute:seconde"
-            si les clés sont de type bytes elles sont convertit en str :
-            encodage ('utf-8') est utilise pour le decode des bytes.
-            Si 1 chaine est utilisée pour definir FALSE ou True alors c'est convertit en boolean True/false
-            Si 1 valeur est None, elle est convertit a ""
-            Si key ou valeur ne peut pas etre convertit en str alors 1 exception est leve
-            renvoi le dictionnaire serializable
+        la fonction suivante Python parcourt récursivement un dictionnaire,
+        convertit les types bytes en str,
+        les objets datetime en chaînes de caractères au format "année-mois-jour heure:minute:seconde"
+        si les clés sont de type bytes elles sont convertit en str :
+        encodage ('utf-8') est utilise pour le decode des bytes.
+        Si 1 chaine est utilisée pour definir FALSE ou True alors c'est convertit en boolean True/false
+        Si 1 valeur est None, elle est convertit a ""
+        Si key ou valeur ne peut pas etre convertit en str alors 1 exception est leve
+        renvoi le dictionnaire serializable
         """
         if isinstance(data, (str)):
             compa = data.lower
@@ -464,13 +488,18 @@ class convert:
         if isinstance(data, (int, float, bool)):
             return data
         elif isinstance(data, dict):
-            return {convert.convert_bytes_datetime_to_string(key): convert.convert_bytes_datetime_to_string(value) for key, value in data.items()}
+            return {
+                convert.convert_bytes_datetime_to_string(
+                    key
+                ): convert.convert_bytes_datetime_to_string(value)
+                for key, value in data.items()
+            }
         elif isinstance(data, list):
             return [convert.convert_bytes_datetime_to_string(item) for item in data]
         elif isinstance(data, bytes):
-            return data.decode('utf-8')
+            return data.decode("utf-8")
         elif isinstance(data, datetime):
-            return data.strftime('%Y-%m-%d %H:%M:%S')
+            return data.strftime("%Y-%m-%d %H:%M:%S")
         elif data is None:
             return ""
         else:
@@ -478,22 +507,23 @@ class convert:
                 str(data)
                 return data
             except Exception as e:
-                raise ValueError("Type %s impossible de convertir en string " %
-                                type(data))
+                raise ValueError(
+                    "Type %s impossible de convertir en string " % type(data)
+                )
         return data
 
     @staticmethod
     def compare_dicts(dict1, dict2):
         """
-            Dans cette fonction, nous commençons par comparer les ensembles des clés des deux dictionnaires (dict1.keys() et dict2.keys()). Si les ensembles des clés sont différents, nous retournons False immédiatement car les dictionnaires ne peuvent pas être égaux.
+        Dans cette fonction, nous commençons par comparer les ensembles des clés des deux dictionnaires (dict1.keys() et dict2.keys()). Si les ensembles des clés sont différents, nous retournons False immédiatement car les dictionnaires ne peuvent pas être égaux.
 
-            Ensuite, nous itérons sur les clés du premier dictionnaire (dict1.keys()) et comparons les valeurs correspondantes dans les deux dictionnaires (value1 et value2).
+        Ensuite, nous itérons sur les clés du premier dictionnaire (dict1.keys()) et comparons les valeurs correspondantes dans les deux dictionnaires (value1 et value2).
 
-            Si une valeur est un autre dictionnaire, nous effectuons un appel récursif à la fonction compare_dicts pour comparer les sous-dictionnaires. Si le résultat de l'appel récursif est False, nous retournons False immédiatement.
+        Si une valeur est un autre dictionnaire, nous effectuons un appel récursif à la fonction compare_dicts pour comparer les sous-dictionnaires. Si le résultat de l'appel récursif est False, nous retournons False immédiatement.
 
-            Si les valeurs ne sont pas égales et ne sont pas des dictionnaires, nous retournons également False.
+        Si les valeurs ne sont pas égales et ne sont pas des dictionnaires, nous retournons également False.
 
-            Si toutes les clés et les valeurs correspondent dans les deux dictionnaires, nous retournons True à la fin de la fonction.
+        Si toutes les clés et les valeurs correspondent dans les deux dictionnaires, nous retournons True à la fin de la fonction.
         """
         if dict1.keys() != dict2.keys():
             return False
@@ -511,7 +541,6 @@ class convert:
                 return False
         return True
 
-
     @staticmethod
     def compare_json(json1, json2):
         try:
@@ -526,7 +555,7 @@ class convert:
         if isinstance(input_data, bytes):
             return input_data
         elif isinstance(input_data, str):
-            return input_data.encode('utf-8')
+            return input_data.encode("utf-8")
         else:
             raise TypeError("L'entrée doit être de type bytes ou string.")
 
@@ -539,7 +568,7 @@ class convert:
         compressed_data = zlib.compress(data, 9)
         # Encode the compressed data in base64
         encoded_data = base64.b64encode(compressed_data)
-        return encoded_data.decode('utf-8')
+        return encoded_data.decode("utf-8")
 
     @staticmethod
     def decompress_and_encode(string):
@@ -549,13 +578,13 @@ class convert:
         # Decompress the data using zlib
         decompressed_data = zlib.decompress(decoded_data)
         # Encode the decompressed data in base64
-        return decompressed_data.decode('utf-8')
+        return decompressed_data.decode("utf-8")
 
     # datetime
     @staticmethod
-    def convert_datetime_to_string (input_date: datetime):
+    def convert_datetime_to_string(input_date: datetime):
         if isinstance(input_date, datetime):
-            return input_date.strftime('%Y-%m-%d %H:%M:%S')
+            return input_date.strftime("%Y-%m-%d %H:%M:%S")
         else:
             raise TypeError("L'entrée doit être de type datetime.")
 
@@ -563,21 +592,20 @@ class convert:
     @staticmethod
     def encode_to_string_base64(input_data):
         if isinstance(input_data, str):
-            input_data_bytes = input_data.encode('utf-8')
+            input_data_bytes = input_data.encode("utf-8")
         elif isinstance(input_data, bytes):
             input_data_bytes = input_data
         else:
             raise TypeError("L'entrée doit être une chaîne ou un objet bytes.")
         encoded_bytes = base64.b64encode(input_data_bytes)
-        encoded_string = encoded_bytes.decode('utf-8')
+        encoded_string = encoded_bytes.decode("utf-8")
         return encoded_string
-
 
     @staticmethod
     def decode_base64_to_string_(input_data):
         try:
             decoded_bytes = base64.b64decode(input_data)
-            decoded_string = decoded_bytes.decode('utf-8')
+            decoded_string = decoded_bytes.decode("utf-8")
             return decoded_string
         except base64.binascii.Error:
             raise ValueError("L'entrée n'est pas encodée en base64 valide.")
@@ -596,8 +624,8 @@ class convert:
         """
         renvoie la taille que prend 1 string en encode en base64.
         """
-        taille=(len(string))
-        return  (taille + 2 - ((taille + 2) % 3)) * 4 / 3
+        taille = len(string)
+        return (taille + 2 - ((taille + 2) % 3)) * 4 / 3
 
     @staticmethod
     def string_to_int(s):
@@ -615,7 +643,6 @@ class convert:
         Conversion d'entiers en chaînes
         """
         return str(n)
-
 
     @staticmethod
     def string_to_float(s):
@@ -635,20 +662,18 @@ class convert:
         return str(f)
 
     @staticmethod
-    def list_to_string(lst, separator=', '):
+    def list_to_string(lst, separator=", "):
         """
         Conversion d'une liste de chaînes en une seule chaîne avec un séparateur
         """
         return separator.join(lst)
 
-
     @staticmethod
-    def string_to_list(s, separator=', '):
+    def string_to_list(s, separator=", "):
         """
         Conversion d'une chaîne en une liste en utilisant un séparateur
         """
         return s.split(separator)
-
 
     @staticmethod
     def list_to_set(lst):
@@ -695,14 +720,14 @@ class convert:
     @staticmethod
     def convert_rows_to_columns(data):
         """
-            cette fonction fait la convertion depuis 1 list de dict representant des lignes
-            en
-            1 list de colonne
+        cette fonction fait la convertion depuis 1 list de dict representant des lignes
+        en
+        1 list de colonne
 
-            data = [{"id": 1, "name": "dede", "age": 30},
-                    {"id": 2, "name": "dada", "age": 25}]
-            to
-            [{'age': [30, 25]}, {'name': ['dede', 'dada']}, {'id': [1, 2]}]
+        data = [{"id": 1, "name": "dede", "age": 30},
+                {"id": 2, "name": "dada", "age": 25}]
+        to
+        [{'age': [30, 25]}, {'name': ['dede', 'dada']}, {'id': [1, 2]}]
         """
         # Obtenez les noms de colonnes
         column_names = set()
@@ -729,11 +754,11 @@ class convert:
         {"id": 2, "name": "dada", "age": 25}]
         """
         # Obtenez tous les noms de colonnes
-        rows=[]
-        s= [ list(x.keys())[0] for x in data]
+        rows = []
+        s = [list(x.keys())[0] for x in data]
         nbligne = len(data[0][s[0]])
         for t in range(nbligne):
-            result={}
+            result = {}
             for z in range(len(s)):
                 result[s[z]] = data[z][s[z]][t]
             rows.append(result)
@@ -746,14 +771,15 @@ class convert:
             ordered_dict[key] = value
         return ordered_dict
 
-
     @staticmethod
     def generate_random_text(num_words):
         words = []
         for _ in range(num_words):
-            word = ''.join(random.choice(string.ascii_letters) for _ in range(random.randint(3, 8)))
+            word = "".join(
+                random.choice(string.ascii_letters) for _ in range(random.randint(3, 8))
+            )
             words.append(word)
-        return ' '.join(words)
+        return " ".join(words)
 
     @staticmethod
     def capitalize_words(text):
@@ -762,7 +788,7 @@ class convert:
         """
         words = text.split()
         capitalized_words = [word.capitalize() for word in words]
-        capitalized_text = ' '.join(capitalized_words)
+        capitalized_text = " ".join(capitalized_words)
         return capitalized_text
 
     # Fonction de compression gzip
@@ -777,12 +803,16 @@ class convert:
 
     @staticmethod
     def serialized_dict_to_compressdictbytes(dict_data):
-        json_bytes = json.dumps(dict_data, indent = 4, cls=DateTimebytesEncoderjson).encode('utf-8')
+        json_bytes = json.dumps(
+            dict_data, indent=4, cls=DateTimebytesEncoderjson
+        ).encode("utf-8")
         return convert.compress_data_to_bytes(json_bytes)
 
     @staticmethod
     def unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress):
-        json_bytes = gzip.decompress(convert.convert_to_bytes(serialized_dict_bytes_compress))
+        json_bytes = gzip.decompress(
+            convert.convert_to_bytes(serialized_dict_bytes_compress)
+        )
         return json.loads(json_bytes)
 
     @staticmethod
@@ -793,7 +823,7 @@ class convert:
     def is_base64(s):
         if not convert.is_multiple_of(s, multiple=4):
             return False
-        decoded=None
+        decoded = None
         try:
             # Tente de décoder la chaîne en base64
             decoded = base64.b64decode(s)
@@ -810,12 +840,12 @@ class convert:
         """
         on supprime l'entete xml
         """
-        body= header = ""
-        index = xml_string.find('?>')
+        body = header = ""
+        index = xml_string.find("?>")
         if index != -1:
             # Supprimer l'en-tête XML
-            body = xml_string[index + 2:]
-            header=xml_string[:index + 2]
+            body = xml_string[index + 2 :]
+            header = xml_string[: index + 2]
         return header, body
 
     @staticmethod
@@ -825,16 +855,18 @@ class convert:
         return formatted_xml
 
     @staticmethod
-    def check_keys_in( dictdata, array_keys):
+    def check_keys_in(dictdata, array_keys):
         if all(key in dictdata for key in array_keys):
             return True
         return False
+
 
 class messagefilexmpp:
     """
     Cette class est charge de communique avec le substitut master.
     elle permet d'envoyer des messages et iq sur xmpp
     """
+
     # priority : 1 send message remote to
     # dataform jsonstring ({to,action,ret,base64,data,sessionid}
 
@@ -856,7 +888,7 @@ class messagefilexmpp:
 
     def __init__(self, config):
         # Lit configuration du fichier
-        self.config=config
+        self.config = config
         self.message_type = "json"
         self.config_bool_done = False
 
@@ -864,31 +896,33 @@ class messagefilexmpp:
         """
         fonction de bas niveaux qui envoi 1 chaine au substitut master
         """
-        #logger.error("sendstr %s" % msg)
+        # logger.error("sendstr %s" % msg)
         try:
             try:
-                msg=convert.convert_bytes_datetime_to_string(msg)
+                msg = convert.convert_bytes_datetime_to_string(msg)
             except ValueError as e:
                 logger.error("messagefilexmpp send error: %s" % str(e))
                 return None
-            if (self.config.submaster_ip_format=='ipv6'):
+            if self.config.submaster_ip_format == "ipv6":
                 client = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
             else:
                 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             # Activation de l'option pour réutiliser l'adresse
             client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
-            context.check_hostname =  self.config.submaster_check_hostname
+            context.check_hostname = self.config.submaster_check_hostname
             context.verify_mode = ssl.CERT_NONE
 
             # test json
             client.connect((self.config.submaster_host, self.config.submaster_port))
-            ssock=context.wrap_socket(client, server_hostname=self.config.submaster_host)
-            response=None
+            ssock = context.wrap_socket(
+                client, server_hostname=self.config.submaster_host
+            )
+            response = None
             try:
                 message = self.config.submaster_allowed_token + msg
                 ssock.sendall(convert.compress_data_to_bytes(message))
-                response = convert.decompress_data_to_bytes( ssock.recv(2097152))
+                response = convert.decompress_data_to_bytes(ssock.recv(2097152))
                 response = convert.convert_bytes_datetime_to_string(response)
             finally:
                 # Fermeture de la connexion SSL
@@ -900,7 +934,10 @@ class messagefilexmpp:
                         return response[longueur:]
                 return response
         except ConnectionRefusedError as e:
-            logger.error("Erreur connection verify substitut master %s:%s" % (self.config.submaster_host,                                                                              self.config.submaster_port))
+            logger.error(
+                "Erreur connection verify substitut master %s:%s"
+                % (self.config.submaster_host, self.config.submaster_port)
+            )
             logger.warning("Restart Substitut master")
         except Exception as e:
             logger.error("client mmc to submast : %s " % str(e))
@@ -925,39 +962,42 @@ class messagefilexmpp:
             except:
                 logger.debug("msg pas 1 yam ")
                 try:
-                     msg = convert.xml_to_dict(msg)
-                     logger.debug("send_message msg format xml")
+                    msg = convert.xml_to_dict(msg)
+                    logger.debug("send_message msg format xml")
                 except:
                     logger.debug("msg pas 1 xml")
         if isinstance(msg, (dict)):
             # verification message format
             # verification keys minimuns
-            if not convert.check_keys_in( msg, ['action', 'data']):
+            if not convert.check_keys_in(msg, ["action", "data"]):
                 # il manque des keys obligatoire dans le message
                 return None
             if "sessionid" not in msg:
-                msg['sessionid'] = self.name_random(10, pref="mmc_message")
-            sessionid = msg['sessionid']
+                msg["sessionid"] = self.name_random(10, pref="mmc_message")
+            sessionid = msg["sessionid"]
             if "base64" not in msg:
-                msg['base64'] = False
+                msg["base64"] = False
             if "ret" not in msg:
-                msg['ret'] = 0
-            if not isinstance(msg['data'], (list)):
-                if not isinstance(msg['data'], (dict)):
-                    if convert.is_base64(msg['data']):
-                        msg['base64'] = True
-                    elif isinstance(msg['data'], (str)):
-                        logger.warning("Message sessionid %s data est 1 simple string" % data['sessionid'])
+                msg["ret"] = 0
+            if not isinstance(msg["data"], (list)):
+                if not isinstance(msg["data"], (dict)):
+                    if convert.is_base64(msg["data"]):
+                        msg["base64"] = True
+                    elif isinstance(msg["data"], (str)):
+                        logger.warning(
+                            "Message sessionid %s data est 1 simple string"
+                            % data["sessionid"]
+                        )
                     else:
-                        logger.error("Message data type error : type %s" % type(msg['data']))
+                        logger.error(
+                            "Message data type error : type %s" % type(msg["data"])
+                        )
                         return None
 
             # addition des metadatas de message.
-            msg['metadatas'] = { "type" : "msg",
-                                 "to" : mto,
-                                 "timeout" : 0 }
+            msg["metadatas"] = {"type": "msg", "to": mto, "timeout": 0}
             messagesend = json.dumps(msg, indent=4)
-            self.sendstr( messagesend )
+            self.sendstr(messagesend)
             return sessionid
 
         elif isinstance(msg, (str)):
@@ -966,7 +1006,6 @@ class messagefilexmpp:
         else:
             logger.error("type msg pas compatible %s" % type(msg))
             return None
-
 
     def send_iq(self, mto, msg, timeout):
         logger.debug("---------------------------------------------------------")
@@ -984,41 +1023,44 @@ class messagefilexmpp:
             except:
                 logger.debug("msg pas 1 yam ")
                 try:
-                     msg = convert.xml_to_dict(msg)
-                     logger.debug("msg est 1 xml")
+                    msg = convert.xml_to_dict(msg)
+                    logger.debug("msg est 1 xml")
                 except:
                     logger.debug("msg pas 1 xml")
 
         if isinstance(msg, (dict)):
             # verification message format
             # verification keys minimuns
-            if not convert.check_keys_in( msg, ['action', 'data']):
+            if not convert.check_keys_in(msg, ["action", "data"]):
                 # il manque des keys obligatoire dans le message
                 return None
             if "sessionid" not in msg:
-                msg['sessionid'] = self.name_random(10, pref="mmc_message")
-            sessionid = msg['sessionid']
+                msg["sessionid"] = self.name_random(10, pref="mmc_message")
+            sessionid = msg["sessionid"]
             if "base64" not in msg:
-                msg['base64'] = False
+                msg["base64"] = False
             if "ret" not in msg:
-                msg['ret'] = 0
+                msg["ret"] = 0
 
-            if not isinstance(msg['data'], (list)):
-                if not isinstance(msg['data'], (dict)):
-                    if convert.is_base64(msg['data']):
-                        msg['base64'] = True
-                    elif isinstance(msg['data'], (str)):
-                        logger.warning("Message sessionid %s data est 1 simple string" % data['sessionid'])
+            if not isinstance(msg["data"], (list)):
+                if not isinstance(msg["data"], (dict)):
+                    if convert.is_base64(msg["data"]):
+                        msg["base64"] = True
+                    elif isinstance(msg["data"], (str)):
+                        logger.warning(
+                            "Message sessionid %s data est 1 simple string"
+                            % data["sessionid"]
+                        )
                     else:
-                        logger.error("Message data type error : type %s" % type(msg['data']))
+                        logger.error(
+                            "Message data type error : type %s" % type(msg["data"])
+                        )
                         return None
             # addition des metadatas de message.
-            msg['metadatas'] = { "type" : "iq",
-                                 "to" : mto,
-                                 "timeout" : timeout }
+            msg["metadatas"] = {"type": "iq", "to": mto, "timeout": timeout}
             messagesend = json.dumps(msg, indent=4)
-            return self.sendstr( messagesend, timeout )
-            #return sessionid
+            return self.sendstr(messagesend, timeout)
+            # return sessionid
 
         elif isinstance(msg, (str)):
             logger.error("Message does not have a valid format")
@@ -1027,12 +1069,11 @@ class messagefilexmpp:
             logger.error("type msg pas compatible %s" % type(msg))
             return None
 
-
     def send_call_plugin(self, msg):
         logger.debug("---------------------------------------------------------")
         logger.debug("--------------------- CALL PLUGINS ----------------------")
         logger.debug("---------------------------------------------------------")
-        if not isinstance(msg,(dict)):
+        if not isinstance(msg, (dict)):
             try:
                 msg = convert.convert_json_to_dict(msg)
                 logger.debug("msg est 1 json")
@@ -1053,34 +1094,41 @@ class messagefilexmpp:
         if isinstance(msg, (dict)):
             # verification message format
             # verification keys minimuns
-            if not convert.check_keys_in( msg, ['action', 'data']):
+            if not convert.check_keys_in(msg, ["action", "data"]):
                 # il manque des keys obligatoire dans le message
                 return None, None
 
             if "sessionid" not in msg:
-                msg['sessionid'] = self.name_random(10, pref="mmc_message")
-            sessionid = msg['sessionid']
+                msg["sessionid"] = self.name_random(10, pref="mmc_message")
+            sessionid = msg["sessionid"]
             if "base64" not in msg:
-                msg['base64'] = False
+                msg["base64"] = False
             if "ret" not in msg:
-                msg['ret'] = 0
-            if not isinstance(msg['data'], (list)):
-                if not isinstance(msg['data'], (dict)):
-                    if convert.is_base64(msg['data']):
-                        msg['base64'] = True
-                    elif isinstance(msg['data'], (str)):
-                        logger.warning("Message sessionid %s data est 1 simple string" % data['sessionid'])
+                msg["ret"] = 0
+            if not isinstance(msg["data"], (list)):
+                if not isinstance(msg["data"], (dict)):
+                    if convert.is_base64(msg["data"]):
+                        msg["base64"] = True
+                    elif isinstance(msg["data"], (str)):
+                        logger.warning(
+                            "Message sessionid %s data est 1 simple string"
+                            % data["sessionid"]
+                        )
                     else:
-                        logger.error("Message data type error : type %s" % type(msg['data']))
+                        logger.error(
+                            "Message data type error : type %s" % type(msg["data"])
+                        )
                         return None, None
             # addition des metadatas de message.
-            msg['metadatas'] = { "type" : "plugin",
-                                 "to" : "master@pulse/MASTER",
-                                 "timeout" : 0 }
+            msg["metadatas"] = {
+                "type": "plugin",
+                "to": "master@pulse/MASTER",
+                "timeout": 0,
+            }
             messagesend = json.dumps(msg, indent=4)
-            res = self.sendstr( messagesend)
+            res = self.sendstr(messagesend)
             if res != None:
-                logger.debug("Plugin call executed %s on master " % msg['action'])
+                logger.debug("Plugin call executed %s on master " % msg["action"])
             return sessionid, res
 
         elif isinstance(msg, (str)):
@@ -1089,7 +1137,6 @@ class messagefilexmpp:
         else:
             logger.error("type msg pas compatible %s" % type(msg))
             return None, None
-
 
     def callpluginmasterfrommmc(self, plugin, data, sessionid=None):
         if sessionid is None:
@@ -1105,12 +1152,12 @@ class messagefilexmpp:
             "ret": 255,
             "base64": False,
         }
-        self.send_message( to, msg)
+        self.send_message(to, msg)
 
     def send_message_json(to, jsonstring):
-        return self.send_message( to, jsonstring)
-        #jsonstring["to"] = to
-        #return self.sendstr(json.dumps(jsonstring), priority=1)
+        return self.send_message(to, jsonstring)
+        # jsonstring["to"] = to
+        # return self.sendstr(json.dumps(jsonstring), priority=1)
 
     def callrestartbymaster(self, to):
         return self._call_remote_action(to, "restarfrommaster", "restart")
@@ -1129,9 +1176,9 @@ class messagefilexmpp:
             "ret": 0,
             "base64": False,
         }
-        return self.send_message( to, shutdownmachine)
-        #self.sendstr(json.dumps(shutdownmachine), priority=1)
-        #return True
+        return self.send_message(to, shutdownmachine)
+        # self.sendstr(json.dumps(shutdownmachine), priority=1)
+        # return True
 
     def callvncchangepermsbymaster(self, to, askpermission=1):
         vncchangepermsonmachine = {
@@ -1141,9 +1188,10 @@ class messagefilexmpp:
             "ret": 0,
             "base64": False,
         }
-        return self.send_message( to, vncchangepermsonmachine)
-        #self.sendstr(json.dumps(vncchangepermsonmachine), priority=1)
-        #return True
+        return self.send_message(to, vncchangepermsonmachine)
+        # self.sendstr(json.dumps(vncchangepermsonmachine), priority=1)
+        # return True
+
 
 class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
     """
@@ -2169,7 +2217,11 @@ class MMCApp(object):
             self.init_master_substitut()
 
     def init_master_substitut(self):
-        if not PluginManager().getEnabledPlugins()["xmppmaster"].messagefilexmpp.config_bool_done:
+        if (
+            not PluginManager()
+            .getEnabledPlugins()["xmppmaster"]
+            .messagefilexmpp.config_bool_done
+        ):
             # important ici sont reunit en exemple mcanisme d'utilisation du serveur substiitut master.
             logger.info("Start/restart MMC send module On on MMC")
             # list_mmc_module est appeler au lancement de la mmc.
@@ -2181,13 +2233,20 @@ class MMCApp(object):
                 "action": "list_mmc_module",
                 "data": PluginManager().getEnabledPluginNames(),
             }
-            logger.info("Start/restart MMC send module On on %s  MMC"%PluginManager().getEnabledPluginNames())
+            logger.info(
+                "Start/restart MMC send module On on %s  MMC"
+                % PluginManager().getEnabledPluginNames()
+            )
 
             ree = self.modulexmppmaster.send_call_plugin(result)
-            logger.info("call plugin %s on master directement tcp/ip : sessionid  %s => %s" % (result['action'], ree[0],ree[1]))
+            logger.info(
+                "call plugin %s on master directement tcp/ip : sessionid  %s => %s"
+                % (result["action"], ree[0], ree[1])
+            )
 
-            PluginManager().getEnabledPlugins()["xmppmaster"].messagefilexmpp.config_bool_done = True
-
+            PluginManager().getEnabledPlugins()[
+                "xmppmaster"
+            ].messagefilexmpp.config_bool_done = True
 
             # appel plugin directement sur substitut master.
             # Cela remplace les plugins master. qui seront transferer sur le substitut master.
@@ -2198,36 +2257,35 @@ class MMCApp(object):
             # celui -ci est en mesure de renvoyer 1 resultat ici ree
             # -----------------------------------------------------------------------------------
             # --------------------------------- call plugin mmc ---------------------------------
-            #logger.info("MMC start plugin test_plugin_master on substitut master : sessionid  %s => %s" % ( ree[0],ree[1]))
-            #ree = self.modulexmppmaster.send_call_plugin({"action": "test_plugin_master",
-                                                          #"data": { "text" : "message" }} )
-            #logger.info("call plugin test_plugin_master on master : sessionid  %s => %s" % ( ree[0],ree[1]))
+            # logger.info("MMC start plugin test_plugin_master on substitut master : sessionid  %s => %s" % ( ree[0],ree[1]))
+            # ree = self.modulexmppmaster.send_call_plugin({"action": "test_plugin_master",
+            # "data": { "text" : "message" }} )
+            # logger.info("call plugin test_plugin_master on master : sessionid  %s => %s" % ( ree[0],ree[1]))
             # -----------------------------------------------------------------------------------
             # -----------------------------------------------------------------------------------
 
             # --------------------------------------------------------------------------------------------------
             # --------------------------------- call plugin sur 1 acteur en xmpp -------------------------------
             # test envoi mesage to  machine  dev-deb12-2.zb0@pulse/525400944ac7
-            #logger.info("Start/restart MMC creation canal commande xmpp3")
+            # logger.info("Start/restart MMC creation canal commande xmpp3")
 
-            #ree = self.modulexmppmaster.send_message('dev-deb12-2.zb0@pulse/525400944ac7',
-                                                     #{"action": "ping",
-                                                          #"data": { "text" : "message" }} )
+            # ree = self.modulexmppmaster.send_message('dev-deb12-2.zb0@pulse/525400944ac7',
+            # {"action": "ping",
+            # "data": { "text" : "message" }} )
             # --------------------------------------------------------------------------------------------------
             # --------------------------------------------------------------------------------------------------
 
             # --------------------------------------------------------------------------------------------------
             # --------------------------------- call iq synchrone sur sur 1 acteur en xmpp -------------------------------
-            #test de machinessend_iq(mto, msg, timeout):
-            #ree= self.modulexmppmaster.send_iq('dev-deb12-2.zb0@pulse/525400944ac7',
-            #{ "action": "test",
-                #"data": {
-                    #"listinformation": ["get_ars_key_id_rsa", "keypub"],
-                    #"param": {},
-                #},
-            #}, 30)
-            #logger.debug("RESULTAT is %s" % ree)
-
+            # test de machinessend_iq(mto, msg, timeout):
+            # ree= self.modulexmppmaster.send_iq('dev-deb12-2.zb0@pulse/525400944ac7',
+            # { "action": "test",
+            # "data": {
+            # "listinformation": ["get_ars_key_id_rsa", "keypub"],
+            # "param": {},
+            # },
+            # }, 30)
+            # logger.debug("RESULTAT is %s" % ree)
 
     def cleanUp(self):
         """
@@ -2243,6 +2301,7 @@ class MMCApp(object):
         l.commit()
 
         self.cleanPid()
+
 
 class MMCHTTPChannel(http.HTTPChannel):
     """
@@ -2356,9 +2415,8 @@ def readConfig(config):
     if config.has_option("submaster", "allowed_token"):
         config.submaster_allowed_token = config.get("submaster", "allowed_token")
 
-
-    #if config.has_option("submaster", "check_hostname"):
-        #config.submaster_check_hostname = config.getboolean("submaster", "check_hostname")
+    # if config.has_option("submaster", "check_hostname"):
+    # config.submaster_check_hostname = config.getboolean("submaster", "check_hostname")
 
     return config
 
