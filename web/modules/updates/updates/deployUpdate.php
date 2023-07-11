@@ -51,17 +51,6 @@ $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
 
-
-$entity="";
-if(isset($_GET['entity'])){
-    $entity = htmlentities($_GET['entity']);
-}
-
-$entityName = "";
-if(isset($_GET['completeName'])){
-    $entityName= htmlentities($_GET['completeName']);
-}
-
 $title = "";
 if(isset($_GET["title"])){
     $title = htmlentities($_GET['title']);
@@ -76,60 +65,136 @@ $kb = "";
 if(!empty($_GET['kb'])){
     $kb = htmlentities($_GET['kb']);
 }
-if($_POST['bconfirm']){
-    // Lance ici le déclancheur
-    xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate, $enddate);
-}
 
 $label = htmlentities($_GET['ltitle']);
 $version = htmlentities($_GET['version']);
-
-$machines = xmlrpc_get_updates_machines_by_entity($entity, $pid, $start, $end, $filter);
 $deployName = get_def_package_label($label, $version, "-@upd@");
 
-$groupName = sprintf(_T("Install %s on entity %s"), $kb, $entityName);
-$grp = [];
-foreach($machines as $machine){
-    $grp[$machine['uuid_inventorymachine'].'##'.$machine['hostname']] = ["hostname"=> $machine['hostname'], 'uuid'=>$machine['uuid_inventorymachine'], 'groupname'=>$groupName];
-}
-$group = new Group();
-$gid = $group->create($groupName, false);
-$group->addMembers($grp);
-
-// Used to set start and end date
 $current = time();
 $start_date = date("Y-m-d h:i:s", $current);
 $end_date = strtotime("+7day", $current);
 $end_date = date("Y-m-d h:i:s", $end_date);
 
-$params = [];
-$familyNames = [];
+if(!empty($_GET["entity"])){
+    $entityid = htmlentities($_GET["entity"]);
+    $completename = htmlentities($_GET["completename"]);
 
-$paramsToSend =[
-    "papi"=>"IyMjIyMj",
-    "name"=>"",
-    "hostname"=>"",
-    "uuid"=>"",
-    "gid"=>$gid,
-    "from"=>"base|computers|groupmsctabs|tablogs",
-    "pid"=>$pid,
-    "ltitle"=> $deployName,
-    "create_directory"=>"on",
-    "start_script"=>"on",
-    "clean_on_success"=>"on",
-    "do_reboot"=>"",
-    "do_wol"=>"",
-    "do_inventory"=>"on",
-    "next_connection_delay"=>60,
-    "max_connection_attempt"=>3,
-    "maxbw"=>0,
-    "copy_mode"=>"push",
-    "deployment_intervals"=>"",
-    "tab"=>"tablaunch",
-    "badvanced"=>1,
-    "start_date"=>$start_date,
-    "end_date"=>$end_date
-];
+    if($_POST['bconfirm']){
+        xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate, $enddate);
+    }
+
+    $machines = xmlrpc_get_updates_machines_by_entity($entity, $pid, $start, $end, $filter);
+    $groupName = sprintf(_T("Install %s on entity %s"), $kb, $entityName);
+    $grp = [];
+    foreach($machines as $machine){
+        $grp[$machine['uuid_inventorymachine'].'##'.$machine['hostname']] = ["hostname"=> $machine['hostname'], 'uuid'=>$machine['uuid_inventorymachine'], 'groupname'=>$groupName];
+    }
+    $group = new Group();
+    $gid = $group->create($groupName, false);
+    $group->addMembers($grp);
+
+    // Used to set start and end date
+    $current = time();
+    $start_date = date("Y-m-d h:i:s", $current);
+    $end_date = strtotime("+7day", $current);
+    $end_date = date("Y-m-d h:i:s", $end_date);
+
+    $params = [];
+    $familyNames = [];
+
+    $paramsToSend =[
+        "papi"=>"IyMjIyMj",
+        "name"=>"",
+        "hostname"=>"",
+        "uuid"=>"",
+        "gid"=>$gid,
+        "from"=>"base|computers|groupmsctabs|tablogs",
+        "pid"=>$pid,
+        "ltitle"=> $deployName,
+        "create_directory"=>"on",
+        "start_script"=>"on",
+        "clean_on_success"=>"on",
+        "do_reboot"=>"",
+        "do_wol"=>"",
+        "do_inventory"=>"on",
+        "next_connection_delay"=>60,
+        "max_connection_attempt"=>3,
+        "maxbw"=>0,
+        "copy_mode"=>"push",
+        "deployment_intervals"=>"",
+        "tab"=>"tablaunch",
+        "badvanced"=>1,
+        "start_date"=>$start_date,
+        "end_date"=>$end_date
+    ];
+}
+else if(!empty($_GET["gid"])){
+    $gid = htmlentities($GET["gid"]);
+    $groupname = htmlentities($_GET["groupname"]);
+
+    if(!empty($_POST['bconfirm'])){
+        xmlrpc_pending_group_update_by_pid($entityid, $pid, $start_date, $end_date);
+    }
+
+    $paramsToSend =[
+        "papi"=>"IyMjIyMj",
+        "name"=>"",
+        "hostname"=>"",
+        "uuid"=>"",
+        "gid"=>$gid,
+        "from"=>"base|computers|groupmsctabs|tablogs",
+        "pid"=>$pid,
+        "ltitle"=> $deployName,
+        "create_directory"=>"on",
+        "start_script"=>"on",
+        "clean_on_success"=>"on",
+        "do_reboot"=>"",
+        "do_wol"=>"",
+        "do_inventory"=>"on",
+        "next_connection_delay"=>60,
+        "max_connection_attempt"=>3,
+        "maxbw"=>0,
+        "copy_mode"=>"push",
+        "deployment_intervals"=>"",
+        "tab"=>"tablaunch",
+        "badvanced"=>1,
+        "start_date"=>$start_date,
+        "end_date"=>$end_date
+    ];
+}
+else if(!empty($_GET["machineid"])){
+    $machineid = htmlentities($_GET["machineid"]);
+    $inventoryid = htmlentities($_GET["inventoryid"]);
+    $machinename = htmlentities($_GET["cn"]);
+    // if(!empty($_POST['bconfirm'])){
+        xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $pid, $start_date, $end_date);
+    // }
+    $paramsToSend =[
+        "papi"=>"IyMjIyMj",
+        "name"=>$machinename,
+        "hostname"=>$machinename,
+        "uuid"=>$inventoryid,
+        "gid"=>"",
+        "from"=>"base|computers|groupmsctabs|tablogs",
+        "pid"=>$pid,
+        "ltitle"=> $deployName,
+        "create_directory"=>"on",
+        "start_script"=>"on",
+        "clean_on_success"=>"on",
+        "do_reboot"=>"",
+        "do_wol"=>"",
+        "do_inventory"=>"on",
+        "next_connection_delay"=>60,
+        "max_connection_attempt"=>3,
+        "maxbw"=>0,
+        "copy_mode"=>"push",
+        "deployment_intervals"=>"",
+        "tab"=>"tablaunch",
+        "badvanced"=>1,
+        "start_date"=>$start_date,
+        "end_date"=>$end_date
+    ];
+}
 header("location:".urlStrRedirect("base/computers/groupmsctabs", $paramsToSend));
 
 ?>

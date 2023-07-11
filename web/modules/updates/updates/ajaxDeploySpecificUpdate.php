@@ -100,6 +100,7 @@ foreach ($updates_list as $update) {
     else if(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])){
         $tmp["inventoryid"] = $inventoryid;
         $tmp["machineid"] = $machineid;
+        $tmp["cn"] = $machinename;
     }
     $params[] = $tmp;
     $row++;

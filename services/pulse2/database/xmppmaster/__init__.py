@@ -12171,3 +12171,27 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
                     element["pkgs_version"] = pkgs_list[element['update_id']]["version"]
                     element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
         return result
+
+    @DatabaseHelper._sessionm
+    def pending_machine_update_by_pid(self, session, machineid, inventoryid, pid, startdate, enddate, interval):
+        try:
+            machineid = int(machineid)
+        except:
+            machineid = 0
+
+        query = session.query(Up_machine_windows).filter(and_(Up_machine_windows.id_machine == machineid,
+                                                              Up_machine_windows.update_id == pid,
+                                                              or_(Up_machine_windows.curent_deploy  == None, Up_machine_windows.curent_deploy  == 0),
+                                                              or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy  == 0))).first()
+        if query is not None:
+            # We need to know if any update is currently started (current_deploy)
+            count = session.query(Up_machine_windows).filter(Up_machine_windows.curent_deploy == 1).count()
+            if count == 0:
+                query.curent_deploy = 1
+            query.start_date = startdate
+            query.end_date = enddate
+            query.required_deploy = 1
+
+            session.commit()
+            session.flush()
+            return True
