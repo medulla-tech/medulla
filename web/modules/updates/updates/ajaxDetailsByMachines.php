@@ -104,7 +104,7 @@ if ($entity == '')
 
         if ($all_grey_enable != '0' and $comp != '0')
         {
-            $complrate = ($all_grey_enable - $comp) / $all_grey_enable * 100;
+            $complrate = intval(($all_grey_enable - $comp) / $all_grey_enable * 100);
         }
 
         if ($comp == '0')
@@ -150,7 +150,7 @@ else
 
         if ($all_grey_enable != '0' and $comp != '0')
         {
-            $complrate = ($all_grey_enable - $comp) / $all_grey_enable * 100;
+            $complrate = intval(($all_grey_enable - $comp) / $all_grey_enable * 100);
         }
 
         if ($comp == '0')
