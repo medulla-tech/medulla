@@ -12311,13 +12311,21 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
                 "id": deploy.id,
                 "title": deploy.title,
                 "jidmachine": deploy.jidmachine,
+                "jid_relay": deploy.jid_relay,
+                "pathpackage" : deploy.pathpackage,
                 "state": deploy.state,
                 "sessionid": deploy.sessionid,
                 "start": datetime_handler(deploy.start),
                 "startcmd": datetime_handler(deploy.startcmd),
                 "endcmd": datetime_handler(deploy.endcmd),
-                "group_uuid": deploy.group_uuid,
-                "command": deploy.command,
+                "uuid":deploy.inventoryuuid,
+                "hostname":deploy.host,
+                "user":deploy.user,
+                "cmd_id": deploy.command,
+                "grp_id": deploy.group_uuid,
+                "login": deploy.login,
+                "macadress": deploy.macadress,
+                "syncthing": deploy.syncthing
             }
             result["datas"].append(tmp)
-            return result
+        return result
