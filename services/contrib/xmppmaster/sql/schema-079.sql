@@ -20,7 +20,10 @@
 -- MA 02110-1301, USA.
 START TRANSACTION;
 
-alter table up_machine_windows add column intervals varchar(256) null default null;
+USE `xmppmaster`;
+
+ALTER TABLE `xmppmaster`.`up_machine_windows` 
+ADD COLUMN IF NOT EXISTS `intervals` varchar(256) NULL DEFAULT NULL AFTER `end_date`;
 
 -- ----------------------------------------------------------------------
 -- Database version
