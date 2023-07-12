@@ -25,7 +25,7 @@ require("localSidebar.php");
 require_once("modules/updates/includes/xmlrpc.php");
 
 $cn = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
-$titlepage = ($cn != "") ? sprintf(_T("Updates done for machine %s", 'updates'), $cn) : _T("Updates Done", 'updates');
+$titlepage = ($cn != "") ? sprintf(_T("Updates history for machine %s", 'updates'), $cn) : _T("Updates History", 'updates');
 
 $p = new PageGenerator($titlepage);
 $p->setSideMenu($sidemenu);

@@ -56,8 +56,8 @@ $ctx['maxperpage'] = $maxperpage;
 
 $detailsByMach = new ActionItem(_T("View details", "updates"),"deploySpecificUpdate","display","", "updates", "updates");
 $detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"),"deploySpecificUpdate","displayg","", "updates", "updates");
-$pendingByMach = new ActionItem(_T("Pending Updates", "updates"),"pendingUpdateByMachine","wait","", "updates", "updates");
-$doneByMach = new ActionItem(_T("Updates Done", "updates"),"auditUpdateByMachine","audit","", "updates", "updates");
+$pendingByMach = new ActionItem(_T("Pending Updates", "updates"),"pendingUpdateByMachine","pending","", "updates", "updates");
+$doneByMach = new ActionItem(_T("Updates History", "updates"),"auditUpdateByMachine","history","", "updates", "updates");
 
 $all_grey_enable = xmlrpc_get_count_grey_list_enable();
 $all_grey_enable = $all_grey_enable['0']['enable_grey'];
