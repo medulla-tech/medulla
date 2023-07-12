@@ -12097,7 +12097,9 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             .join(Machines, Machines.id == Up_machine_windows.id_machine)\
             .filter(and_(Machines.uuid_inventorymachine.in_(uuids),
                 or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
-                or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0)))
+                or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0))
+        )\
+        .group_by(Up_machine_windows.update_id)
 
         if filter != "":
             query = query.filter(or_(
