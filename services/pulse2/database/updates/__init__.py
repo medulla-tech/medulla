@@ -280,6 +280,71 @@ class UpdatesDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
+    def get_enabled_updates_list(self, session, start, limit, filter=""):
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        try:
+            enabled_updates_list={ 'nb_element_total': 0,
+                        'updateid' : [],
+                        'title' : [],
+                        'kb' : [],
+                        'valided' : []}
+            sql="""SELECT SQL_CALC_FOUND_ROWS
+                        updateid, kb, title, description, creationdate, title_short, valided
+                    FROM
+                        xmppmaster.up_gray_list
+                    WHERE
+                        xmppmaster.up_gray_list.valided = 1
+                    UNION
+                    SELECT
+                       updateid, kb, title, description, creationdate, title_short, valided
+                    FROM
+                        xmppmaster.up_white_list
+                    WHERE
+                        xmppmaster.up_white_list.valided = 1 """
+
+            filterlimit= ""
+            if start != -1 and limit != -1:
+                filterlimit= "LIMIT %s, %s"%(start, limit)
+            if filter != "":
+                filterwhere="""WHERE
+                        title LIKE '%%%s%%' """%filter
+                sql += filterwhere
+            sql += filterlimit
+            sql+=";"
+
+            result = session.execute(sql)
+
+            sql_count = "SELECT FOUND_ROWS();"
+            ret_count = session.execute(sql_count)
+            nb_element_total = ret_count.first()[0]
+
+            enabled_updates_list['nb_element_total'] = nb_element_total
+
+            session.commit()
+            session.flush()
+
+            if result:
+                for list_b in result:
+                    enabled_updates_list['updateid'].append(list_b.updateid)
+                    enabled_updates_list['title'].append(list_b.title)
+                    enabled_updates_list['kb'].append(list_b.kb)
+                    enabled_updates_list['valided'].append(list_b.valided)
+
+        except Exception as e:
+            logger.error("error function get_enabled_updates_list")
+
+        return enabled_updates_list
+
+
+    @DatabaseHelper._sessionm
     def approve_update(self, session, updateid):
         try:
             sql = """SELECT updateid,
