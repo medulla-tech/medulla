@@ -11926,8 +11926,8 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         sub = sub.subquery()
         query = session.query(Up_machine_windows).filter(and_(
             Up_machine_windows.id_machine.in_(sub),
-            Up_machine_windows.required_deploy != 1,
-            Up_machine_windows.curent_deploy != 1)
+                or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
+                or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0))
         )\
         .group_by(Up_machine_windows.update_id)
 
