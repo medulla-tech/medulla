@@ -95,6 +95,8 @@ if ($entity == '')
 
     foreach ($machines as $k => $v) {
         $detailsByMachs[] = $detailsByMach;
+        $actionPendingByMachines[] = $pendingByMach;
+        $actionDoneByMachines[] = $doneByMach;
         $machineNames[] = $v[1]['cn'][0];
 
         //FUNCTION TO GET ID
