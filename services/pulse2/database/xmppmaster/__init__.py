@@ -11582,9 +11582,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         result={}
         for x in self.get_update_by_entity():
-            result[x['entity']] = { 'totalmach' : x['total_machine_entity'], 'nbupdate' : x['update_a_mettre_a_jour'], 'nbmachines' : 0 }
+            result[x['entity']] = { 'totalmach' : x['total_machine_entity'], 'nbupdate' : 0, 'nbmachines' : 0 }
         for x in self.get_machine_by_entity_in_gray_list():
            result[x['entity']]['nbmachines'] =  x['machine_a_mettre_a_jour']
+           result[x['entity']]['nbupdate'] =  x['update_a_mettre_a_jour']
         return result
 
     @DatabaseHelper._sessionm
