@@ -3921,7 +3921,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getlinelogssession(self, session, sessionnamexmpp):
-        log = session.query(Logs).filter(and_( Logs.sessionname == sessionnamexmpp, Logs.type == 'deploy')).order_by(Logs.id)
+        log_type = "deploy"
+        if re.search("update", sessionnamexmpp) is not None:
+            log_type ="update"
+        log = session.query(Logs).filter(and_( Logs.sessionname == sessionnamexmpp, Logs.type == log_type)).order_by(Logs.id)
         log = log.all()
         session.commit()
         session.flush()
