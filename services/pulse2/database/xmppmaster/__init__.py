@@ -11544,7 +11544,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_machine_by_entity_in_gray_list(self, session):
+    def get_machine_by_entity_in_grayandwhite_lists(self, session):
         """
             This function returns the machines to update in an entity considering only the updates enabled in gray list
         """
@@ -11561,11 +11561,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     glpi_entity ON machines.glpi_entity_id = glpi_entity.id
                         LEFT JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
-                        JOIN
+                        LEFT JOIN
                     xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                        LEFT JOIN
+                    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
                     platform LIKE 'Mic%'
-                        AND xmppmaster.up_gray_list.valided = 1
+                        AND (xmppmaster.up_gray_list.valided = 1 or xmppmaster.up_white_list.valided = 1)
                 GROUP BY glpi_entity.glpi_id;"""
         resultquery = session.execute(sql)
         session.commit()
@@ -11583,7 +11585,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         result={}
         for x in self.get_update_by_entity():
             result[x['entity']] = { 'totalmach' : x['total_machine_entity'], 'nbupdate' : 0, 'nbmachines' : 0 }
-        for x in self.get_machine_by_entity_in_gray_list():
+        for x in self.get_machine_by_entity_in_grayandwhite_lists():
            result[x['entity']]['nbmachines'] =  x['machine_a_mettre_a_jour']
            result[x['entity']]['nbupdate'] =  x['update_a_mettre_a_jour']
         return result
@@ -11632,11 +11634,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         sql="""SELECT COUNT(*) AS update_waiting
                 FROM
-                    xmppmaster.up_gray_list
-                INNER JOIN
-                    xmppmaster.up_machine_windows ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                    xmppmaster.up_machine_windows
+                LEFT JOIN
+                    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                LEFT JOIN
+                    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
-                    up_gray_list.valided = 1
+                    (up_gray_list.valided = 1 OR up_white_list.valided = 1)
                 AND
                     up_machine_windows.id_machine = '%s';"""%(idmachine)
         resultquery = session.execute(sql)
@@ -11663,11 +11667,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 (
 SELECT COUNT(*)
 FROM
-    xmppmaster.up_gray_list
-INNER JOIN
-    xmppmaster.up_machine_windows ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+    xmppmaster.up_machine_windows
+LEFT JOIN
+    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+LEFT JOIN
+    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
 WHERE
-    up_gray_list.valided = 1
+    (up_gray_list.valided = 1 OR up_white_list.valided = 1)
 AND
     up_machine_windows.id_machine = machines.id) AS update_waiting
 from xmppmaster.machines
@@ -11704,16 +11710,15 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
 
 
     @DatabaseHelper._sessionm
-    def get_count_grey_list_enable(self, session):
+    def get_count_updates_enable(self, session):
         """
             This function returns the the update already done and update enable
         """
-        sql="""SELECT COUNT(*) AS enable_grey
-                FROM
-                    xmppmaster.up_gray_list
-                WHERE
-                    valided = 1;"""
-                
+        sql="""SELECT CAST(SUM( t.enabled_updates )AS INTEGER) as nb_enabled_updates
+                FROM(
+                    SELECT COUNT(*) AS enabled_updates FROM xmppmaster.up_gray_list WHERE valided = 1
+                    UNION ALL
+                    SELECT COUNT(*) AS enabled_updates FROM xmppmaster.up_white_list WHERE valided = 1) t;"""
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
@@ -11745,11 +11750,13 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
                     xmppmaster.machines
                         LEFT JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
-                        JOIN
+                        LEFT JOIN
                     xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                        LEFT JOIN
+                    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
                     platform LIKE 'Mic%'
-                        AND xmppmaster.up_gray_list.valided = 1"""
+                        AND (xmppmaster.up_gray_list.valided = 1 or xmppmaster.up_white_list.valided = 1)"""
                     
         sql = sql + array_GUID + ";"
         logging.getLogger().info(sql)
@@ -11923,7 +11930,9 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
 
         sub = session.query(Machines.id)\
         .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id).filter(Glpi_entity.glpi_id == entity)\
-        .join(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id).filter(Up_gray_list.valided == 1)\
+        .outerjoin(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)\
+        .outerjoin(Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id)\
+        .filter(or_(Up_gray_list.valided == 1, Up_white_list.valided == 1))
 
         sub = sub.subquery()
         query = session.query(Up_machine_windows).filter(and_(
@@ -11955,15 +11964,24 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             if element.start_date is not None:
                 startdate = element.start_date
 
+            current_deploy = 0
+            if element.curent_deploy is not None:
+                current_deploy = element.curent_deploy
+
+            required_deploy = 0
+            if element.required_deploy is not None:
+                required_deploy = element.required_deploy
+
             enddate = ""
             if element.end_date is not None:
                 enddate = element.end_date
+                
             result['datas'].append({
                 "id_machine": element.id_machine if not None else 0,
                 "update_id": element.update_id if not None else "",
                 "kb": element.kb if not None else "",
-                "current_deploy": element.curent_deploy if not None else "",
-                "required_deploy": element.required_deploy if not None else "",
+                "current_deploy": current_deploy,
+                "required_deploy":  required_deploy,
                 "start_date": startdate,
                 "end_date": enddate,
                 "pkgs_label":"",
@@ -12097,9 +12115,10 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
     def get_updates_by_uuids(self, session, uuids, start=0, limit=-1, filter=""):
         query = session.query(Up_machine_windows)\
             .join(Machines, Machines.id == Up_machine_windows.id_machine)\
-            .join(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)\
+            .outerjoin(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)\
+            .outerjoin(Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id)\
             .filter(and_(Machines.uuid_inventorymachine.in_(uuids),
-                Up_gray_list.valided == 1,
+                or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
                 or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
                 or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0))
         )\

@@ -59,8 +59,8 @@ $detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"),"deploy
 $pendingByMach = new ActionItem(_T("Pending Updates", "updates"),"pendingUpdateByMachine","pending","", "updates", "updates");
 $doneByMach = new ActionItem(_T("Updates History", "updates"),"auditUpdateByMachine","history","", "updates", "updates");
 
-$all_grey_enable = xmlrpc_get_count_grey_list_enable();
-$all_grey_enable = $all_grey_enable['0']['enable_grey'];
+$all_enabled_updates = xmlrpc_get_count_updates_enable();
+$all_enabled_updates = $all_enabled_updates['0']['nb_enabled_updates'];
 
 $params = [];
 $machineNames = [];
@@ -107,9 +107,9 @@ if ($entity == '')
         $comp = $compliance_computer['0']['update_waiting'];
         $missingUpdatesMachine[] = $comp;
 
-        if ($all_grey_enable != '0' and $comp != '0')
+        if ($all_enabled_updates != '0' and $comp != '0')
         {
-            $complrate = intval(($all_grey_enable - $comp) / $all_grey_enable * 100);
+            $complrate = intval(($all_enabled_updates - $comp) / $all_enabled_updates * 100);
         }
 
         if ($comp == '0')
@@ -154,9 +154,9 @@ else
         $actionPendingByMachines[] = $pendingByMach;
         $actionDoneByMachines[] = $doneByMach;
 
-        if ($all_grey_enable != '0' and $comp != '0')
+        if ($all_enabled_updates != '0' and $comp != '0')
         {
-            $complrate = intval(($all_grey_enable - $comp) / $all_grey_enable * 100);
+            $complrate = intval(($all_enabled_updates - $comp) / $all_enabled_updates * 100);
         }
 
         if ($comp == '0')
