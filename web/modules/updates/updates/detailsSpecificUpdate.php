@@ -23,8 +23,7 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-
-$p = new PageGenerator(_T("Machine details for update", 'updates'));
+$p = new PageGenerator(_T(sprintf("Machine details for update KB%s", htmlentities($_GET['kb'])), 'updates'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -32,7 +31,7 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 unset($_GET['action']);
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxListMachineDetailSpecificUpdate"), "container", $_GET);
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsSpecificUpdate"), "container", $_GET);
 $ajax->display();
 $ajax->displayDivToUpdate();
 

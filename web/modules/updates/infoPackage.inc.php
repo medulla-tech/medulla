@@ -78,8 +78,8 @@ $page = new Page("detailsSpecificUpdate", _T('Machine details for specific updat
 $page->setFile("modules/updates/updates/detailsSpecificUpdate.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxListMachineDetailSpecificUpdate", _T("Manage machine details for specific update", "updates"));
-$page->setFile("modules/updates/updates/ajaxListMachineDetailSpecificUpdate.php");
+$page = new Page("ajaxDetailsSpecificUpdate", _T("Manage machine details for specific update", "updates"));
+$page->setFile("modules/updates/updates/ajaxDetailsSpecificUpdate.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
