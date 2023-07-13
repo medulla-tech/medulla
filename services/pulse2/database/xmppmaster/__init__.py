@@ -12095,7 +12095,8 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         if pid == "":
             query = query.filter(
                 and_(
-                    Up_machine_windows.required_deploy == 0,
+                    or_(Up_machine_windows.curent_deploy == None,Up_machine_windows.curent_deploy == 0,)
+                    or_(Up_machine_windows.required_deploy == None,Up_machine_windows.required_deploy == 0,)
                     Up_machine_windows.id_machine.in_(sub),
                 )
             )
@@ -12212,22 +12213,42 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         except:
             machineid = 0
 
+        start_date = None
+        end_date = None
+
+        current = datetime.today()
+        a_week_from_current = current + timedelta(days=7)
+
+        if startdate != "":
+            try:
+                start_date = datetime.strptime(startdate, "%Y-%m-%d %H:%M:%S")
+            except:
+                start_date = current
+
+        if enddate != "":
+            try:
+                end_date = datetime.strptime(enddate, "%Y-%m-%d %H:%M:%S")
+            except:
+                end_date = a_week_from_current
+
+        if start_date > end_date:
+            start_date, end_date = end_date, start_date
+
+        if end_date < current:
+            end_date = a_week_from_current
+
         query = session.query(Up_machine_windows).filter(and_(Up_machine_windows.id_machine == machineid,
                                                               Up_machine_windows.update_id == pid,
                                                               or_(Up_machine_windows.curent_deploy  == None, Up_machine_windows.curent_deploy  == 0),
                                                               or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy  == 0))).first()
         if query is not None:
-            # We need to know if any update is currently started (current_deploy)
-            count = session.query(Up_machine_windows).filter(Up_machine_windows.curent_deploy == 1).count()
-            if count == 0:
-                query.curent_deploy = 1
-            query.start_date = startdate
-            query.end_date = enddate
+            query.start_date = start_date
+            query.end_date = end_date
             query.required_deploy = 1
 
             session.commit()
             session.flush()
-            return True
+        return True
 
     @DatabaseHelper._sessionm
     def get_tagged_updates_by_machine(self, session, machineid, start=0, end=-1, filter=""):
