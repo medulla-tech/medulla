@@ -12095,8 +12095,8 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         if pid == "":
             query = query.filter(
                 and_(
-                    or_(Up_machine_windows.curent_deploy == None,Up_machine_windows.curent_deploy == 0,)
-                    or_(Up_machine_windows.required_deploy == None,Up_machine_windows.required_deploy == 0,)
+                    or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
+                    or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0),
                     Up_machine_windows.id_machine.in_(sub),
                 )
             )
