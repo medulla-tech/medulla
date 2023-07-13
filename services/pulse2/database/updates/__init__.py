@@ -507,7 +507,7 @@ JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up
     @DatabaseHelper._sessionm
     def get_machines_needing_update(self, session, updateid):
         """
-            This function returns the the update already done and update enable
+            This function returns the list of machines needing a specific update
         """
         sql="""SELECT xmppmaster.machines.hostname AS hostname
                 FROM
