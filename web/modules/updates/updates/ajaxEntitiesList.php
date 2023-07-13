@@ -153,7 +153,7 @@ $n->setParamInfo($params);
 
 $n->addActionItemArray($actiondetailsByMachs);
 $n->addActionItemArray($actiondetailsByUpds);
-$n->addActionItemArray($actiondeployAlls);
+//$n->addActionItemArray($actiondeployAlls);
 $n->addActionItemArray($actiondeploySpecifics);
 $n->start = 0;
 $n->end = $count;
