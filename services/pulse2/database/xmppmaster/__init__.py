@@ -12043,7 +12043,9 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             .join(Up_machine_windows, Up_machine_windows.id_machine == Machines.id)\
             .filter(
                 and_(Up_machine_windows.update_id == pid,
-                    Glpi_entity.glpi_id == entity
+                    Glpi_entity.glpi_id == entity,
+                    or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
+                    or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0),
                 )
             ).all()
 
