@@ -11762,7 +11762,6 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
                         AND (xmppmaster.up_gray_list.valided = 1 or xmppmaster.up_white_list.valided = 1)"""
                     
         sql = sql + array_GUID + ";"
-        logging.getLogger().info(sql)
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
