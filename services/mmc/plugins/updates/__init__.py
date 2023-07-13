@@ -83,3 +83,6 @@ def white_unlist_update(updateid):
 
 def get_machine_with_update(kb):
     return Glpi().get_machine_with_update(kb)
+
+def get_count_machine_with_update(kb):
+    return Glpi().get_count_machine_with_update(kb)

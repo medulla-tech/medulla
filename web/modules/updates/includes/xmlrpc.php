@@ -71,6 +71,10 @@ function xmlrpc_get_machine_with_update($kb){
     return xmlCall("updates.get_machine_with_update", [$kb]);
 }
 
+function xmlrpc_get_count_machine_with_update($kb){
+    return xmlCall("updates.get_count_machine_with_update", [$kb]);
+}
+
 function xmlrpc_get_count_machine_as_not_upd($updateid){
     return xmlCall("updates.get_count_machine_as_not_upd", [$updateid]);
 }
