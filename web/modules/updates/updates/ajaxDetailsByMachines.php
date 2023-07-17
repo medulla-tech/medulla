@@ -94,7 +94,6 @@ if ($entity == '')
     $tabletitle = sprintf(_T("Computers from group %s","updates"), $groupname);
 
     foreach ($machines as $k => $v) {
-        $detailsByMachs[] = $detailsByMach;
         $actionPendingByMachines[] = $pendingByMach;
         $actionDoneByMachines[] = $doneByMach;
         $machineNames[] = $v[1]['cn'][0];
@@ -106,6 +105,7 @@ if ($entity == '')
 
         $comp = $compliance_computer['0']['update_waiting'];
         $missingUpdatesMachine[] = $comp;
+        $detailsByMachs[] = ($comp == 0) ? $detailsByMachEmpty : $detailsByMach;
 
         if ($all_enabled_updates != '0' and $comp != '0')
         {
