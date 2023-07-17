@@ -83,16 +83,6 @@ if(!empty($_GET["entity"])){
         xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate, $enddate);
     }
 
-    $machines = xmlrpc_get_updates_machines_by_entity($entity, $pid, $start, $end, $filter);
-    $groupName = sprintf(_T("Install %s on entity %s"), $kb, $entityName);
-    $grp = [];
-    foreach($machines as $machine){
-        $grp[$machine['uuid_inventorymachine'].'##'.$machine['hostname']] = ["hostname"=> $machine['hostname'], 'uuid'=>$machine['uuid_inventorymachine'], 'groupname'=>$groupName];
-    }
-    $group = new Group();
-    $gid = $group->create($groupName, false);
-    $group->addMembers($grp);
-
     // Used to set start and end date
     $current = time();
     $start_date = date("Y-m-d h:i:s", $current);
