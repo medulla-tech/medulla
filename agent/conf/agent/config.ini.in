@@ -21,6 +21,21 @@ cacert = @sysconfdir@/mmc/agent/keys/cacert.pem
 # Path to the file containing the local key and certificate (PEM format)
 # localcert =
 
+[submaster]
+# client
+# url pour localhost ::1 , 127.0.0.1
+# host = 127.0.0.1
+host = ::1
+# port 57041 pour ipv6
+# port 57040 pour ipv4
+port = 57041
+# ip_format is 57041ipv' or ipv6
+ip_format = ipv6
+# allowed_token definie tocken communication
+allowed_token = 4O&vHYKG3Cqq3RCUJu!vnQu+dBGwDkpZ
+# verify server certificat
+check_hostname = True
+
 [daemon]
 user = root
 group = root
