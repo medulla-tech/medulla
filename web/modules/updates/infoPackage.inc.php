@@ -31,7 +31,7 @@ $mod->setPriority(2000);
 
 $submod = new SubModule("updates");
 $submod->setDescription(_T("Updates", "updates"));
-$submod->setVisibility(True);
+$submod->setVisibility(true);
 $submod->setImg('modules/updates/graph/navbar/updates');
 $submod->setDefaultPage("updates/updates/index");
 $submod->setPriority(500);
@@ -41,7 +41,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxEntitiesList", _T("Update Deployments", "updates"));
 $page->setFile("modules/updates/updates/ajaxEntitiesList.php");
-$page->setOptions(array("AJAX"=>True, "visible"=>False, "noHeader"=>True));
+$page->setOptions(array("AJAX"=>true, "visible"=>false, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("detailsByMachines", _T('Details by Machines', 'updates'));
@@ -50,7 +50,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxDetailsByMachines", _T("Details by Machines", "updates"));
 $page->setFile("modules/updates/updates/ajaxDetailsByMachines.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("deployAllUpdates", _T('Deploy all Updates', 'updates'));
@@ -59,7 +59,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxDeployAllUpdates", _T("Deploy all Updates", "updates"));
 $page->setFile("modules/updates/updates/ajaxDeployAllUpdates.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("deployUpdate", _T('Deploy Specific Updates On Entity', 'updates'));
@@ -80,17 +80,17 @@ $submod->addPage($page);
 
 $page = new Page("ajaxListMachineDetailSpecificUpdate", _T("Manage machine details for specific update", "updates"));
 $page->setFile("modules/updates/updates/ajaxListMachineDetailSpecificUpdate.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("ajaxDeploySpecificUpdate", _T("Manage deploy specific update", "updates"));
 $page->setFile("modules/updates/updates/ajaxDeploySpecificUpdate.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("ajaxDetailsByUpdates", _T("Manage List Updates", "updates"));
 $page->setFile("modules/updates/updates/ajaxDetailsByUpdates.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("updatesListWin", _T('Manage Windows Updates', 'updates'));
@@ -99,17 +99,17 @@ $submod->addPage($page);
 
 $page = new Page("ajaxUpdatesListWinWhite", _T("Manage Windows Updates", "updates"));
 $page->setFile("modules/updates/updates/ajaxUpdatesListWinWhite.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("ajaxUpdatesListWinGray", _T("Manage Windows Updates", "updates"));
 $page->setFile("modules/updates/updates/ajaxUpdatesListWinGray.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("ajaxUpdatesListWinBlack", _T("Manage Windows Updates", "updates"));
 $page->setFile("modules/updates/updates/ajaxUpdatesListWinBlack.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("enableUpdate", _T('Enable Update', 'updates'));
@@ -117,19 +117,19 @@ $page->setFile("modules/updates/updates/enableUpdate.php");
 $submod->addPage($page);
 
 $page = new Page("disableUpdate", _T('Disable Update', 'updates'));
-$page->setFile("modules/updates/updates/disableUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/disableUpdate.php", array("noHeader"=>true,"visible"=>false));
 $submod->addPage($page);
 
 $page = new Page("whitelistUpdate", _T('Approve Update', 'updates'));
-$page->setFile("modules/updates/updates/whitelistUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/whitelistUpdate.php", array("noHeader"=>true,"visible"=>false));
 $submod->addPage($page);
 
 $page = new Page("blacklistUpdate", _T('Ban Update', 'updates'));
-$page->setFile("modules/updates/updates/blacklistUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/blacklistUpdate.php", array("noHeader"=>true,"visible"=>false));
 $submod->addPage($page);
 
 $page = new Page("greylistUpdate", _T('Unlist Update', 'updates'));
-$page->setFile("modules/updates/updates/greylistUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/greylistUpdate.php", array("noHeader"=>true,"visible"=>false));
 $submod->addPage($page);
 
 $page = new Page("deleteRule", _T('UnBan Update', 'updates'));
@@ -145,38 +145,38 @@ $page->setFile("modules/updates/updates/grayDisable.php", array("noHeader"=>true
 $submod->addPage($page);
 
 $page = new Page("grayApprove", _T('Grey Approve', 'updates'));
-$page->setFile("modules/updates/updates/grayApprove.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/grayApprove.php", array("noHeader"=>true,"visible"=>false));
 $submod->addPage($page);
 
 // Also used for whitelist
 $page = new Page("banUpdate", _T('Ban Update', 'updates'));
-$page->setFile("modules/updates/updates/banUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/banUpdate.php", array("noHeader"=>true,"visible"=>false));
 $submod->addPage($page);
 
 $page = new Page("whiteUnlist", _T('White Unlist', 'updates'));
-$page->setFile("modules/updates/updates/whiteUnlist.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/whiteUnlist.php", array("noHeader"=>true,"visible"=>false));
 $submod->addPage($page);
 
 
 $page = new Page("blackUnban", _T('Black Unban', 'updates'));
-$page->setFile("modules/updates/updates/blackUnban.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/blackUnban.php", array("noHeader"=>true,"visible"=>false));
 $submod->addPage($page);
 
 $page = new Page("pendingUpdateByMachine", _T('Pending Updates', 'updates'));
 $submod->addPage($page);
 
 $page = new Page("ajaxPendingUpdateByMachine", _T('Pending Updates', 'updates'));
-$page->setFile("modules/updates/updates/ajaxPendingUpdateByMachine.php", array("noHeader"=>True,"visible"=>False, "AJAX" =>True));
+$page->setFile("modules/updates/updates/ajaxPendingUpdateByMachine.php", array("noHeader"=>true,"visible"=>false, "AJAX" =>true));
 $submod->addPage($page);
 
 $page = new Page("auditUpdateByMachine", _T('Updates History', 'updates'));
 $submod->addPage($page);
 
 $page = new Page("ajaxAuditUpdateByMachine", _T('Updates History', 'updates'));
-$page->setFile("modules/updates/updates/ajaxAuditUpdateByMachine.php", array("noHeader"=>True,"visible"=>False, "AJAX" =>True));
+$page->setFile("modules/updates/updates/ajaxAuditUpdateByMachine.php", array("noHeader"=>true,"visible"=>false, "AJAX" =>true));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
-$MMCApp->addModule($mod); ?>
+$MMCApp->addModule($mod);

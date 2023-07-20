@@ -36,4 +36,3 @@ unset($_GET['action']);
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxPendingUpdateByMachine"), "container", $_GET);
 $ajax->display();
 $ajax->displayDivToUpdate();
-?>

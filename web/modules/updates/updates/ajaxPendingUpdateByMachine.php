@@ -40,7 +40,7 @@ $end_dates = [];
 $update_ids = [];
 $descriptions = [];
 
-foreach($datas as $update){
+foreach($datas as $update) {
     $titles[] = $update["title"];
     $kbs[] = $update["kb"];
     $kbs[] = $update["update_id"];
@@ -61,4 +61,3 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($datas);
 $n->display();
-?>

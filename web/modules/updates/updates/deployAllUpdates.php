@@ -33,5 +33,3 @@ require_once("modules/updates/includes/xmlrpc.php");
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDeployAllUpdates"));
 $ajax->display();
 $ajax->displayDivToUpdate();
-
-?>

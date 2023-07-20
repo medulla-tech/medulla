@@ -27,9 +27,9 @@ require_once("modules/msc/includes/widgets.inc.php");
 
 global $maxperpage;
 
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
-$start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
+$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
+$start = isset($_GET['start']) ? $_GET['start'] : 0;
+$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
 
 
 
@@ -46,12 +46,9 @@ $familyNames = [];
 
 $f = new ValidatingForm();
 
-if ($nameGroup == '')
-{
+if ($nameGroup == '') {
     $label = new RenderedLabel(3, sprintf(_T('Run all updates on entitie : "%s"', 'updates'), $nameEntitie));
-}
-else
-{
+} else {
     $label = new RenderedLabel(3, sprintf(_T('Run all updates on group : "%s"', 'updates'), $nameGroup));
 }
 $f->push(new Table());
@@ -59,20 +56,20 @@ $label->display();
 
 $f->add(
     new TrFormElement(
-        _T('Deployment interval', 'msc'), new multifieldTpl($deployment_fields)
-    ), $deployment_values
+        _T('Deployment interval', 'msc'),
+        new multifieldTpl($deployment_fields)
+    ),
+    $deployment_values
 );
 
 $bandwidth = new IntegerTpl("limit_rate_ko");
 $bandwidth->setAttributCustom('min = 1  max = 100');
 $f->add(
-        new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bandwidth), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
+    new TrFormElement(_T("bandwidth throttling (ko)", 'pkgs'), $bandwidth),
+    array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
 );
 
 $f->pop();
 
 $f->addCancelButton("bback");
 $f->display();
-
-
-?>

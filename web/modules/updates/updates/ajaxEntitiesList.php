@@ -27,12 +27,13 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
-$start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
+$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
+$start = isset($_GET['start']) ? $_GET['start'] : 0;
+$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
 
-function colorconf($conf){
-    switch($conf){
+function colorconf($conf)
+{
+    switch($conf) {
         case $conf <= 10:
             $color = "#ff0000";
             break;
@@ -70,12 +71,12 @@ function colorconf($conf){
 $entities = getUserLocations();
 $entitycompliances = xmlrpc_get_conformity_update_by_entity();
 
-$detailsByMach = new ActionItem(_T("Details by machines", "updates"),"detailsByMachines","auditbymachine","", "updates", "updates");
-$detailsByUpd = new ActionItem(_T("Details by updates", "updates"),"detailsByUpdates","auditbyupdate","", "updates", "updates");
-$deployAll = new ActionItem(_T("Deploy all updates", "updates"),"deployAllUpdates","updateall","", "updates", "updates");
-$emptyDeployAll = new EmptyActionItem1(_T("Deploy all updates", "updates"),"deployAllUpdates","updateallg","", "updates", "updates");
-$deploySpecific = new ActionItem(_T("Deploy specific updates", "updates"),"deploySpecificUpdate","updateone","", "updates", "updates");
-$emptyDeploySpecific = new EmptyActionItem1(_T("Deploy specific updates", "updates"),"deploySpecificUpdate","updateoneg","", "updates", "updates");
+$detailsByMach = new ActionItem(_T("Details by machines", "updates"), "detailsByMachines", "auditbymachine", "", "updates", "updates");
+$detailsByUpd = new ActionItem(_T("Details by updates", "updates"), "detailsByUpdates", "auditbyupdate", "", "updates", "updates");
+$deployAll = new ActionItem(_T("Deploy all updates", "updates"), "deployAllUpdates", "updateall", "", "updates", "updates");
+$emptyDeployAll = new EmptyActionItem1(_T("Deploy all updates", "updates"), "deployAllUpdates", "updateallg", "", "updates", "updates");
+$deploySpecific = new ActionItem(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateone", "", "updates", "updates");
+$emptyDeploySpecific = new EmptyActionItem1(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateoneg", "", "updates", "updates");
 
 $params = [];
 $actiondetailsByMachs = [];
@@ -88,40 +89,39 @@ $totalMachine = [];
 $nbupadte = [];
 $identity=array();
 
- foreach ($entitycompliances as $entitycompliance) {
-     $identity[$entitycompliance['entity']]=array(
-         "conformite" => $entitycompliance['conformite'],
-         "totalmach" => $entitycompliance['totalmach'],
-         "nbupdate" => $entitycompliance['nbupdate'],
-         "nbmachines" => $entitycompliance['nbmachines'],
-         "entity" => $entitycompliance['entity']);
- };
+foreach ($entitycompliances as $entitycompliance) {
+    $identity[$entitycompliance['entity']]=array(
+        "conformite" => $entitycompliance['conformite'],
+        "totalmach" => $entitycompliance['totalmach'],
+        "nbupdate" => $entitycompliance['nbupdate'],
+        "nbmachines" => $entitycompliance['nbmachines'],
+        "entity" => $entitycompliance['entity']);
+};
 
 
 $count = safeCount($entities);
 foreach ($entities as $entity) {
-    $id_entity = intval(substr($entity["uuid"],4));
+    $id_entity = intval(substr($entity["uuid"], 4));
     $actiondetailsByMachs[] = $detailsByMach;
     $actiondetailsByUpds[] = $detailsByUpd;
     $entityNames[] = $entity["completename"];
     $params[] = array('entity' => $entity['uuid'], 'completename'=>$entity['completename']);
     $color = colorconf(100);
-    if (isset($identity[$id_entity])){
+    if (isset($identity[$id_entity])) {
         $conformite = intval($identity[$id_entity]['conformite']);
         $color = colorconf($conformite);
         $totalmach=intval($identity[$id_entity]['totalmach']);
         $nbupdateentity=intval($identity[$id_entity]['nbupdate']);
 
-        if($conformite == 100){
+        if($conformite == 100) {
             $actiondeployAlls[] = $emptyDeployAll;
             $actiondeploySpecifics[] = $emptyDeploySpecific;
 
-        }
-        else{
+        } else {
             $actiondeployAlls[] = $deployAll;
             $actiondeploySpecifics[] = $deploySpecific;
         }
-    }else{
+    } else {
         $conformite = "100";
         $totalmach=0;
         $nbupdateentity=0;
@@ -135,7 +135,7 @@ foreach ($entities as $entity) {
 
 // Avoiding the CSS selector (tr id) to start with a number
 $ids_entity = [];
-foreach($entityNames as $name_entity){
+foreach($entityNames as $name_entity) {
     $ids_entity[] = 'e_'.$name_entity;
 }
 
@@ -158,4 +158,3 @@ $n->addActionItemArray($actiondeploySpecifics);
 $n->start = 0;
 $n->end = $count;
 $n->display();
-?>

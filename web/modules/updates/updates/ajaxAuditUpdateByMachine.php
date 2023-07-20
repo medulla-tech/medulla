@@ -33,12 +33,12 @@ $result = xmlrpc_get_audit_summary_updates_by_machine($machineid, $start, $end, 
 $datas = $result["datas"];
 $count = $result["count"];
 
-$detailAction = new ActionItem(_T("Detail", "xmppmaster"),"viewlogs","display","", "xmppmaster", "xmppmaster");
+$detailAction = new ActionItem(_T("Detail", "xmppmaster"), "viewlogs", "display", "", "xmppmaster", "xmppmaster");
 $titles = [];
 $states = [];
 $startcmds = [];
 $detailActions = [];
-foreach($datas as $key=>$deploy){
+foreach($datas as $key=>$deploy) {
     $titles[] = $deploy["title"];
     $states[] = $deploy["state"];
     $startcmds[] = $deploy["startcmd"];
@@ -56,4 +56,3 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($datas);
 $n->display();
-?>
