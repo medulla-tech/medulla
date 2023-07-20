@@ -43,7 +43,7 @@ $descriptions = [];
 foreach($datas as $update){
     $titles[] = $update["title"];
     $kbs[] = $update["kb"];
-    $kbs[] = $update["update_id"];
+    $update_ids[] = $update["update_id"];
     $start_dates[] = $update["start_date"];
     $end_dates[] = $update["end_date"];
     $descriptions[] = $update["description"];

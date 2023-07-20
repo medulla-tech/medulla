@@ -64,6 +64,7 @@ $submod->addPage($page);
 
 $page = new Page("deployUpdate", _T('Deploy Specific Updates On Entity', 'updates'));
 $page->setFile("modules/updates/updates/deployUpdate.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
 $page = new Page("deploySpecificUpdate", _T('Deploy specific update', 'updates'));

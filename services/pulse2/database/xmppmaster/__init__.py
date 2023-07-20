@@ -15,6 +15,8 @@ from sqlalchemy.exc import DBAPIError
 from datetime import datetime, timedelta  # date,
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
+from pulse2.database.msc import MscDatabase
+
 from pulse2.database.xmppmaster.schema import Network, Machines,\
     RelayServer, Users, Has_machinesusers, \
     Has_relayserverrules, Regles, Has_guacamole, Base, \
@@ -12207,7 +12209,7 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         return result
 
     @DatabaseHelper._sessionm
-    def pending_machine_update_by_pid(self, session, machineid, inventoryid, pid, startdate, enddate, interval):
+    def pending_machine_update_by_pid(self, session, machineid, inventoryid, pid, deployName, user, startdate, enddate, interval):
         try:
             machineid = int(machineid)
         except:
@@ -12237,18 +12239,108 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         if end_date < current:
             end_date = a_week_from_current
 
-        query = session.query(Up_machine_windows).filter(and_(Up_machine_windows.id_machine == machineid,
+        query, machine = session.query(Up_machine_windows, Machines)\
+            .join(Machines, Machines.id == Up_machine_windows.id_machine)\
+            .filter(and_(Up_machine_windows.id_machine == machineid,
                                                               Up_machine_windows.update_id == pid,
                                                               or_(Up_machine_windows.curent_deploy  == None, Up_machine_windows.curent_deploy  == 0),
                                                               or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy  == 0))).first()
+        result = {}
         if query is not None:
             query.start_date = start_date
             query.end_date = end_date
             query.required_deploy = 1
 
+            folderpackage = os.path.join("/", "var","lib", "pulse2", "packages", pid)
+            exclude_name_package = ["sharing", ".stfolder", ".stignore" ]
+
+            files = []
+            if os.path.isdir(folderpackage):
+                for root, dir, file in os.walk(folderpackage):
+                    if root != folderpackage:
+                        continue
+                    for _file in file:
+                        if _file not in exclude_name_package:
+                            files.append({"path" : os.path.basename(os.path.dirname(root)),
+                                    "name" : _file,
+                                    "id" : str(uuid.uuid4()),
+                                    "size" : str(os.path.getsize(os.path.join(root, _file))) })
+            else:
+                files = []
+
+            files_str = "\n".join([file['id']+'##'+file['path']+'/'+file['name'] for file in files])
+            command = MscDatabase().createcommanddirectxmpp(pid,
+                '',
+                "",#section
+                files_str,
+                'enable',
+                'disable',
+                start_date,
+                end_date,
+                user,
+                user,
+                deployName,
+                0,
+                28,
+                0,
+                '',
+                None,
+                None,
+                None,
+                'none',
+                'active',
+                '1',
+                cmd_type=0)
+
+            commandid = command.id
+            commandstart = command.start_date
+            commandstop = command.end_date
+            jidrelay = machine.groupdeploy
+            uuidmachine = machine.uuid_inventorymachine
+            jidmachine = machine.jid
+
+            try:
+                target = MscDatabase().xmpp_create_Target(machine.uuid_inventorymachine, machine.hostname)
+            except Exception as e:
+                result["success"] = False
+                result["mesg"] = "Unable to create Msc Target"
+                result["detail"] = e
+                return result
+
+            idtarget = target['id']
+
+            MscDatabase().xmpp_create_CommandsOnHost(commandid,
+                idtarget,
+                machine.hostname,
+                commandstop,
+                commandstart)
+
+            XmppMasterDatabase().addlogincommand(
+                user,
+                commandid,
+                "",
+                "",
+                "",
+                "",
+                "",
+                0,
+                0,
+                0,
+                0,
+                {})
+
             session.commit()
             session.flush()
-        return True
+
+            result["success"] = True
+            result["mesg"] = "Update setted up at command %s"
+            result["commandid"] = commandid
+
+        else:
+            result["success"] = False
+            result["mesg"] = "No update to install"
+
+        return result
 
     @DatabaseHelper._sessionm
     def get_tagged_updates_by_machine(self, session, machineid, start=0, end=-1, filter=""):
@@ -12302,9 +12394,10 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         for update, gray in query:
             tmp = {
                 "title" : gray.title,
-                "description":gray.description if gray.description is not None else "",
-                "update_id": update.update_id,
-                "package_id":gray.updateid_package,
+                "description": gray.description if gray.description is not None else "",
+                "update_id": update.update_id if update.update_id is not None else "",
+                "package_id": gray.updateid_package if gray.updateid_package is not None else "",
+                "kb": update.kb if update.kb is not None else "",
                 "start_date": datetime_handler(update.start_date) if update.start_date is not None else "",
                 "end_date": datetime_handler(update.end_date) if update.end_date is not None else "",
                 "current_deploy": update.curent_deploy if update.curent_deploy is not None else 0,
