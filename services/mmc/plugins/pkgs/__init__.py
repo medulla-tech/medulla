@@ -703,8 +703,8 @@ def putPackageDetail(package, need_assign=True):
                 continue
             else:
                 logging.getLogger().debug("Share information: %s" % share)
-                pkgs_share_id = share['id_sharing']
-                package['shareobject'] = share
+                pkgs_share_id = share["id_sharing"]
+                package["shareobject"] = share
 
     # Add the package into the database
     if centralizedmultiplesharing:

@@ -23,8 +23,10 @@
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/msc/includes/widgets.inc.php");
 
-$maxperpage = $conf["global"]["maxperpage"];
+global $maxperpage;
+
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);

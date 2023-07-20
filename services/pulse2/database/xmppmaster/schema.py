@@ -855,6 +855,7 @@ class Up_machine_windows(Base):
     required_deploy = Column(Boolean, unique=False)
     start_date = Column(DateTime, default=None)
     end_date = Column(DateTime, default=None)
+    intervals = Column(String(256), nullable=True, default=None)
 
 
 class Up_white_list(Base):
@@ -879,6 +880,7 @@ class Up_gray_list(Base):
     creationdate = Column(DateTime, default=datetime.datetime.now)
     title = Column(String(1024), default="")
     description = Column(String(3096), default="")
+    updateid_package = Column(String(38))
     kb = Column(String(16), default="")
     supersededby = Column(String(3072), default="")
     payloadfiles = Column(String(2048), default="")
@@ -914,4 +916,16 @@ class Ban_machines(Base, XmppMasterDBObj):
     jid = Column(String(255), nullable=False)
     date  =  Column(DateTime, default=datetime.datetime.now)
     ars_server     = Column(String(255), nullable=False,default="")
+
+class Up_packages(Base):
+    # ====== Table name =========================
+    __tablename__ = "up_packages"
+    # ====== Fields =============================
+    updateid = Column(String(38), primary_key=True)
+    kb = Column(String(45),  default="")
+    revisionid = Column(String(45),  default="")
+    title = Column(String(1024),  default="")
+    id_machine = Column(Integer)
+    updateid_package = Column(String(38))
+    payloadfiles = Column(String(1024),  default="")
 """

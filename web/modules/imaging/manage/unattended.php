@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2018 Siveo, http://www.siveo.net
+ * (c) 2015-2023 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -124,12 +124,14 @@ define ("DIR_SYS_PREP", "/var/lib/pulse2/imaging/postinst/sysprep");
 	}
 
     $span = new SpanElement(_T("Choose package source", 'imaging')." : ", "pkgs-title");
-    $List=array('Windows 7','Windows 8','Windows 8-uefi', 'Windows 10','Windows 10-uefi');
+    $List=array('Windows 7','Windows 8','Windows 8-uefi', 'Windows 10','Windows 10-uefi', 'Windows 11','Windows 11-uefi');
     $list_val=[ 'modules/imaging/manage/ajaxFormWin7.php',
                 'modules/imaging/manage/ajaxFormWin8.php',
                 'modules/imaging/manage/ajaxFormWin8-uefi.php',
                 'modules/imaging/manage/ajaxFormWin10.php',
-                'modules/imaging/manage/ajaxFormWin10-uefi.php'];
+                'modules/imaging/manage/ajaxFormWin10-uefi.php',
+                'modules/imaging/manage/ajaxFormWin11.php',
+                'modules/imaging/manage/ajaxFormWin11-uefi.php'];
 
     $combine = array_combine($List,$list_val);
 

@@ -6290,15 +6290,15 @@ class Glpi084(DyngroupDatabaseHelper):
                 glpi.glpi_entities.completename AS entity,
                 glpi.glpi_softwares.name AS kb, 
                 SUBSTR(glpi.glpi_softwares.name,
-                    LOCATE('KB', glpi.glpi_softwares.name), length(glpi.glpi_softwares.name)-2) as numkb,
-                glpi.glpi_computers_softwareversions.date_install AS dateinstall,
-                glpi.glpi_computers.date_creation AS input_computer
+                    LOCATE('KB', glpi.glpi_softwares.name)+2, 7) as numkb
             FROM
                 glpi.glpi_computers
                     INNER JOIN
                 glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
                     INNER JOIN
-                glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_computers_softwareversions.softwareversions_id
+                glpi.glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
+                    INNER JOIN
+                glpi.glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
                     INNER JOIN
                 glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
             WHERE
@@ -6310,8 +6310,6 @@ class Glpi084(DyngroupDatabaseHelper):
         entity = []
         kb = []
         numkb = []
-        dateinstall = []
-        input_computer = []
         result = []
         res = self.db.execute(sqlrequest)
         for element in res:
@@ -6320,15 +6318,36 @@ class Glpi084(DyngroupDatabaseHelper):
             entity.append(element.entity)
             kb.append(element.kb)
             numkb.append(element.numkb)
-            dateinstall.append(element.dateinstall)
-            input_computer.append(element.input_computer)
         result.append(uuid_inventory)
         result.append(hostname)
         result.append(entity)
         result.append(kb)
         result.append(numkb)
-        result.append(dateinstall)
-        result.append(input_computer)
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_count_machine_with_update(self, session, kb):
+        sqlrequest = """
+            SELECT 
+                COUNT(*) as nb_machines
+            FROM
+                glpi.glpi_computers
+                    INNER JOIN
+                glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.items_id and glpi.glpi_items_softwareversions.itemtype="Computer"
+                    INNER JOIN
+                glpi.glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
+                    INNER JOIN
+                glpi.glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
+                    INNER JOIN
+                glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
+            WHERE
+                glpi.glpi_softwares.name LIKE 'Update (KB%s)';""" % (
+            kb
+        )
+        result = {}
+        res = self.db.execute(sqlrequest)
+        for element in res:
+            result["nb_machines"] = element.nb_machines
         return result
 
     @DatabaseHelper._sessionm

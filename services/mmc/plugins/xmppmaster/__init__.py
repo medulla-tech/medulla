@@ -1698,6 +1698,11 @@ def get_conformity_update_by_machine(idmachine):
     return result
 
 
+def get_conformity_update_by_machines(ids=[]):
+    result = XmppMasterDatabase().get_conformity_update_by_machines(ids)
+    return result
+
+
 def get_conformity_update_for_group(uuidArray):
     result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
     nbmachinetotal = len(uuidArray)
@@ -1707,8 +1712,10 @@ def get_conformity_update_for_group(uuidArray):
         result[0]["compliance"] = 100
     else:
         result[0]["compliance"] = (
-            float(result[0]["count_machines"]) / float(nbmachinetotal)
-        ) * 100.0
+            (float(nbmachinetotal) - float(result[0]["count_machines"]))
+            / float(nbmachinetotal)
+            * 100.0
+        )
     return result
 
 
@@ -1717,8 +1724,8 @@ def get_idmachine_from_name(name):
     return result
 
 
-def get_count_grey_list_enable():
-    result = XmppMasterDatabase().get_count_grey_list_enable()
+def get_count_updates_enable():
+    result = XmppMasterDatabase().get_count_updates_enable()
     return result
 
 
@@ -1804,5 +1811,29 @@ def pending_entity_update_by_pid(entity, pid, startdate="", enddate=""):
     )
 
 
+def pending_group_update_by_pid(gid, pid, startdate="", enddate=""):
+    pass
+
+
+def pending_machine_update_by_pid(
+    machineid, inventoryid, pid, startdate="", enddate="", interval=""
+):
+    return XmppMasterDatabase().pending_machine_update_by_pid(
+        machineid, inventoryid, pid, startdate, enddate, interval
+    )
+
+
 def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)
+
+
+def get_tagged_updates_by_machine(machineid, start=0, end=-1, filter=""):
+    return XmppMasterDatabase().get_tagged_updates_by_machine(
+        machineid, start, end, filter
+    )
+
+
+def get_audit_summary_updates_by_machine(machineid, start=0, end=-1, filter=""):
+    return XmppMasterDatabase().get_audit_summary_updates_by_machine(
+        machineid, start, end, filter
+    )

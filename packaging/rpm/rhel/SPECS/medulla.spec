@@ -160,6 +160,26 @@ This package contains the backuppc plugin for the MMC agent.
 
 #--------------------------------------------------------------------
 
+%package -n python3-mmc-connection-manager
+Summary:    Connection Manager plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   p7zip
+Requires:   python-pyquery
+
+%description -n python3-mmc-connection-manager
+This package contains the connection manager plugin for the MMC agent.
+
+%files -n python3-mmc-connection-manager
+%defattr(-,root,root,0755)
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/pulse2/cm
+%python2_sitelib/pulse2/cm
+%{_sysconfdir}/init.d/pulse2-cm
+%_sbindir/pulse2-cm
+%_sbindir/pulse2-create-group
+
+##--------------------------------------------------------------------
+
 %package -n     mmc-web-backuppc
 Summary:        Backuppc plugin for the MMC web interface
 Group:          System/Servers
