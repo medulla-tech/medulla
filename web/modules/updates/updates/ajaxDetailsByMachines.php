@@ -25,7 +25,8 @@ require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
 
-function colorconf($conf){
+function colorconf($conf)
+{
     $colorDisplay=array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
     return $colorDisplay[intval(($conf-($conf%10))/10)];
 }
@@ -45,7 +46,7 @@ $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
 $ctx = [];
 // location generates a filter on entity
-$ctx['location'] = !empty($location) ? $location: $entity;
+$ctx['location'] = !empty($location) ? $location : $entity;
 $ctx['filter'] = $filter;
 $ctx['field'] = $field;
 $ctx['contains'] = $contains;
@@ -54,10 +55,10 @@ $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
 
-$detailsByMach = new ActionItem(_T("View details", "updates"),"deploySpecificUpdate","display","", "updates", "updates");
-$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"),"deploySpecificUpdate","displayg","", "updates", "updates");
-$pendingByMach = new ActionItem(_T("Pending Updates", "updates"),"pendingUpdateByMachine","pending","", "updates", "updates");
-$doneByMach = new ActionItem(_T("Updates History", "updates"),"auditUpdateByMachine","history","", "updates", "updates");
+$detailsByMach = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
+$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
+$pendingByMach = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
+$doneByMach = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
 
 $all_enabled_updates = xmlrpc_get_count_updates_enable();
 $all_enabled_updates = $all_enabled_updates['0']['nb_enabled_updates'];
@@ -71,8 +72,7 @@ $actionDoneByMachines = [];
 $missingUpdatesMachine = [];
 $platform = [];
 $filterOn = [];
-if ($entity == '')
-{
+if ($entity == '') {
     $typeOfDetail = "group";
     $filterOn = array('gid' => $gid);
 
@@ -90,8 +90,8 @@ if ($entity == '')
 
 
     $machines = getRestrictedComputersList($start, $end, $filterOn, true);
-    $count = getRestrictedComputersListLen($filterOn, True);
-    $tabletitle = sprintf(_T("Computers from group %s","updates"), $groupname);
+    $count = getRestrictedComputersListLen($filterOn, true);
+    $tabletitle = sprintf(_T("Computers from group %s", "updates"), $groupname);
 
     foreach ($machines as $k => $v) {
         $detailsByMachs[] = $detailsByMach;
@@ -107,13 +107,11 @@ if ($entity == '')
         $comp = $compliance_computer['0']['update_waiting'];
         $missingUpdatesMachine[] = $comp;
 
-        if ($all_enabled_updates != '0' and $comp != '0')
-        {
+        if ($all_enabled_updates != '0' and $comp != '0') {
             $complrate = intval(($all_enabled_updates - $comp) / $all_enabled_updates * 100);
         }
 
-        if ($comp == '0')
-        {
+        if ($comp == '0') {
             $complrate = '100';
         }
 
@@ -128,13 +126,11 @@ if ($entity == '')
         ];
     }
 
-}
-else
-{
+} else {
     $typeOfDetail = "entitie";
     $filterOn = array('entity' => $entity);
 
-    $tabletitle = sprintf(_T("Computers from entity %s","updates"), $entityName);
+    $tabletitle = sprintf(_T("Computers from entity %s", "updates"), $entityName);
     // No usage
     $match = (int)str_replace('UUID', '', $entity);
 
@@ -146,7 +142,7 @@ else
     $machines = $machines['data'];
     $compliance_computers = xmlrpc_get_conformity_update_by_machines($machines['id']);
 
-    for($i=0; $i < $count; $i++){
+    for($i=0; $i < $count; $i++) {
         $machineNames[] = $machines['hostname'][$i];
         $comp = $compliance_computers[(string)$machines['id'][$i]];
         $missingUpdatesMachine[] = $comp;
@@ -154,13 +150,11 @@ else
         $actionPendingByMachines[] = $pendingByMach;
         $actionDoneByMachines[] = $doneByMach;
 
-        if ($all_enabled_updates != '0' and $comp != '0')
-        {
+        if ($all_enabled_updates != '0' and $comp != '0') {
             $complrate = intval(($all_enabled_updates - $comp) / $all_enabled_updates * 100);
         }
 
-        if ($comp == '0')
-        {
+        if ($comp == '0') {
             $complrate = '100';
         }
 
@@ -200,4 +194,3 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $ctx['filter']));
 $n->setParamInfo($params);
 $n->display();
-?>

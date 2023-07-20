@@ -33,8 +33,8 @@ $p->display();
 $page = new TabbedPageGenerator();
 
 $tabList = array(
-	'notificationsTab' => _T('Alerts', "xmppmaster"),
-	'notificationsHistoryTab' => _T('Alerts History', "xmppmaster"),
+    'notificationsTab' => _T('Alerts', "xmppmaster"),
+    'notificationsHistoryTab' => _T('Alerts History', "xmppmaster"),
 
 );
 
@@ -43,6 +43,3 @@ foreach ($tabList as $tab => $str) {
     $page->addTab("$tab", $str, "", "modules/xmppmaster/xmppmaster/monitoring/$tab.php");
 }
 $page->display();
-
-
-?>

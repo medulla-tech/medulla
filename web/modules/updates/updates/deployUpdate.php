@@ -27,15 +27,15 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("modules/msc/includes/widgets.inc.php");
 
-function quick_get($param, $is_checkbox = False) {
+function quick_get($param, $is_checkbox = false)
+{
     if ($is_checkbox) {
         return (isset($_GET[$param])) ? $_GET[$param] : '';
-    }
-    else if (isset($_POST[$param]) && $_POST[$param] != '') {
+    } elseif (isset($_POST[$param]) && $_POST[$param] != '') {
         return (isset($_POST[$param])) ? $_POST[$param] : '';
+    } else {
+        return (isset($_GET[$param])) ? $_GET[$param] : '';
     }
-    else
-      return (isset($_GET[$param])) ? $_GET[$param]: '';
 }
 require("graph/navbar.inc.php");
 require("localSidebar.php");
@@ -46,23 +46,23 @@ $p->display();
 
 
 $maxperpage = $conf["global"]["maxperpage"];
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
-$start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
+$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
+$start = isset($_GET['start']) ? $_GET['start'] : 0;
+$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
 
 
 $title = "";
-if(isset($_GET["title"])){
+if(isset($_GET["title"])) {
     $title = htmlentities($_GET['title']);
 }
 
 $pid = "";
-if(isset($_GET["pid"])){
+if(isset($_GET["pid"])) {
     $pid = htmlentities($_GET['pid']);
 }
 
 $kb = "";
-if(!empty($_GET['kb'])){
+if(!empty($_GET['kb'])) {
     $kb = htmlentities($_GET['kb']);
 }
 
@@ -75,18 +75,18 @@ $start_date = date("Y-m-d h:i:s", $current);
 $end_date = strtotime("+7day", $current);
 $end_date = date("Y-m-d h:i:s", $end_date);
 
-if(!empty($_GET["entity"])){
+if(!empty($_GET["entity"])) {
     $entityid = htmlentities($_GET["entity"]);
     $completename = htmlentities($_GET["completename"]);
 
-    if($_POST['bconfirm']){
+    if($_POST['bconfirm']) {
         xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate, $enddate);
     }
 
     $machines = xmlrpc_get_updates_machines_by_entity($entity, $pid, $start, $end, $filter);
     $groupName = sprintf(_T("Install %s on entity %s"), $kb, $entityName);
     $grp = [];
-    foreach($machines as $machine){
+    foreach($machines as $machine) {
         $grp[$machine['uuid_inventorymachine'].'##'.$machine['hostname']] = ["hostname"=> $machine['hostname'], 'uuid'=>$machine['uuid_inventorymachine'], 'groupname'=>$groupName];
     }
     $group = new Group();
@@ -127,12 +127,11 @@ if(!empty($_GET["entity"])){
         "start_date"=>$start_date,
         "end_date"=>$end_date
     ];
-}
-else if(!empty($_GET["gid"])){
+} elseif(!empty($_GET["gid"])) {
     $gid = htmlentities($GET["gid"]);
     $groupname = htmlentities($_GET["groupname"]);
 
-    if(!empty($_POST['bconfirm'])){
+    if(!empty($_POST['bconfirm'])) {
         xmlrpc_pending_group_update_by_pid($entityid, $pid, $start_date, $end_date);
     }
 
@@ -161,13 +160,12 @@ else if(!empty($_GET["gid"])){
         "start_date"=>$start_date,
         "end_date"=>$end_date
     ];
-}
-else if(!empty($_GET["machineid"])){
+} elseif(!empty($_GET["machineid"])) {
     $machineid = htmlentities($_GET["machineid"]);
     $inventoryid = htmlentities($_GET["inventoryid"]);
     $machinename = htmlentities($_GET["cn"]);
     // if(!empty($_POST['bconfirm'])){
-        xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $pid, $start_date, $end_date);
+    xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $pid, $start_date, $end_date);
     // }
     $paramsToSend =[
         "papi"=>"IyMjIyMj",
@@ -196,5 +194,3 @@ else if(!empty($_GET["machineid"])){
     ];
 }
 header("location:".urlStrRedirect("base/computers/groupmsctabs", $paramsToSend));
-
-?>

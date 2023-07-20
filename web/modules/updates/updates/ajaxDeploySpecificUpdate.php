@@ -27,34 +27,32 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 global $conf;
 
 $maxperpage = $conf["global"]["maxperpage"];
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
-$start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
+$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
+$start = isset($_GET['start']) ? $_GET['start'] : 0;
+$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
 
 $updates_list = [];
-if(!empty($_GET['entity'])){
+if(!empty($_GET['entity'])) {
     $entityId = (!empty($_GET['entity'])) ? htmlentities($_GET['entity']) : '';
     $entityCompleteName = htmlentities($_GET['completename']);
 
     $updates_list = xmlrpc_get_updates_by_entity($entityId, $start, $end, $filter);
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"),"deployUpdate","updateone","", "updates", "updates");
-}
-else if(!empty($_GET['group'])){
+    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
+} elseif(!empty($_GET['group'])) {
     $gid = htmlentities($_GET['group']);
     $groupname = htmlentities($_GET['groupname']);
     $group = getPGobject($gid, true);
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"),"deployUpdate","updateone","", "updates", "updates");
-    $machinesListGlpi = getRestrictedComputersList(0,-1,['gid'=>$gid]);
+    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
+    $machinesListGlpi = getRestrictedComputersList(0, -1, ['gid'=>$gid]);
     $machinesList = array_keys($machinesListGlpi);
     $updates_list = xmlrpc_get_updates_by_uuids($machinesList, $start, $end, $filter);
 
-}
-else if(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])){
+} elseif(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])) {
     $updates_list = ["datas"=>[], "count"=>0];
     $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : '';
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : '';
-    $machinename = (!empty($_GET['cn']) )? htmlentities($_GET['cn']) : '';
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"),"deployUpdate","updateone","", "updates", "updates");
+    $machinename = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : '';
+    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
     $updates_list = xmlrpc_get_updates_by_uuids([$inventoryid], $start, $end, $filter);
 }
 
@@ -76,10 +74,10 @@ foreach ($updates_list as $update) {
     $names_updates[] = $updates_list[$row]["pkgs_label"];
     $version_updates[] = $updates_list[$row]['pkgs_version'];
 
-    if(!empty($updates_list[$row]['hostname'])){
+    if(!empty($updates_list[$row]['hostname'])) {
         $hostnames[] = $updates_list[$row]['hostname'];
     }
-    if(!empty($updates_list[$row]['jid'])){
+    if(!empty($updates_list[$row]['jid'])) {
         $jids[] =  $updates_list[$row]['jid'];
     }
     $tmp = [
@@ -89,15 +87,13 @@ foreach ($updates_list as $update) {
         "ltitle"=>$updates_list[$row]["pkgs_label"],
         "version"=>$updates_list[$row]['pkgs_version'],
     ];
-    if(!empty($_GET['entity'])){
+    if(!empty($_GET['entity'])) {
         $tmp["entity"] = $entityId;
         $tmp["completeName"] = $entityCompleteName;
-    }
-    else if(!empty($_GET['group'])){
+    } elseif(!empty($_GET['group'])) {
         $tmp["gid"] = $gid;
         $tmp["groupname"] = $groupname;
-    }
-    else if(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])){
+    } elseif(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])) {
         $tmp["inventoryid"] = $inventoryid;
         $tmp["machineid"] = $machineid;
         $tmp["cn"] = $machinename;
@@ -108,10 +104,10 @@ foreach ($updates_list as $update) {
 
 $n = new OptimizedListInfos($names_updates, _T("Update name", "updates"));
 $n->addExtraInfo($kb_updates, _T("KB", "updates"));
-if($hostnames != []){
+if($hostnames != []) {
     $n->addExtraInfo($hostnames, _T("Machine", "xmppmaster"));
 }
-if($jids != []){
+if($jids != []) {
     $n->addExtraInfo($jids, _T("Jid", "xmppmaster"));
 }
 $n->disableFirstColumnActionLink();
@@ -123,4 +119,3 @@ $n->end = $count;
 $n->addActionItemArray($actionspeclistUpds);
 
 $n->display();
-?>

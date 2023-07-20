@@ -25,26 +25,23 @@ require_once("modules/updates/includes/xmlrpc.php");
 $id = htmlentities($_GET['updateid']);
 $title = htmlentities($_GET['title']);
 
-if(isset($_POST['bconfirm'])){
+if(isset($_POST['bconfirm'])) {
     $result = xmlrpc_grey_update($id, 0);
-    if($result){
+    if($result) {
         $str = sprintf(_T("The update %s (%s) has been disabled.", "updates"), $title, $id);
         new NotifyWidgetSuccess($str);
-    }
-    else{
+    } else {
         $str = sprintf(_T("The update %s (%s) hasn't been disabled", "updates"), $title, $id);
         new NotifyWidgetFailure($str);
     }
     header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
     exit;
-}
-else{
+} else {
     $f = new PopupForm(sprintf(_T("<b>Disable</b> update %s (%s) ?", "update"), $title, $id));
     $hidden = new HiddenTpl("updateid");
-    $f->add($hidden, array("value" =>$id, "hide" => True));
-    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
+    $f->add($hidden, array("value" =>$id, "hide" => true));
+    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => true));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }
-?>
