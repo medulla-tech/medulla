@@ -27,6 +27,42 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("modules/msc/includes/widgets.inc.php");
 
+?>
+
+<script>
+function toTimestamp(strDate){
+    var datum = Date.parse(strDate);
+    return datum/1000;
+}
+
+jQuery('#start_date,#end_date').change( function() {
+    // Disable confirmation button if start date is greater than end date
+    var start = toTimestamp(jQuery('#start_date').val())
+    var end   = toTimestamp(jQuery('#end_date').val())
+    if (start > end){
+        jQuery(".btnPrimary").prop("disabled", true);
+    }
+    else{
+        jQuery(".btnPrimary").prop("disabled", false);
+    }
+});
+
+jQuery(".btnPrimary").hover(function(){
+    var start = toTimestamp(jQuery('#start_date').val())
+    var end   = toTimestamp(jQuery('#end_date').val())
+
+
+    if (start > end){
+        // alert ("inconsistency within the deployment range");
+        jQuery(this).prop("disabled", true);
+    }
+    else{
+        jQuery(this).prop("disabled", false);
+    }
+});
+</script>
+
+<?php
 function quick_get($param, $is_checkbox = False) {
     if ($is_checkbox) {
         return (isset($_GET[$param])) ? $_GET[$param] : '';
