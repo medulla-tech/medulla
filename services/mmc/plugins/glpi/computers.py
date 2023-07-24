@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-3.0-or-later
 """
 Glpi implementation of the interface ComputerI
 Provides functions to get computers informations filtered on criterions

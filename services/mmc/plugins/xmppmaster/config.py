@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 from mmc.support.config import PluginConfig  # , ConfigException
 from pulse2.database.xmppmaster.config import XmppMasterDatabaseConfig
