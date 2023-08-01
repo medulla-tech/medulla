@@ -28,6 +28,7 @@ require_once("modules/base/includes/computers.inc.php");
 global $conf;
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $kb = (isset($_GET['kb'])) ? $_GET['kb'] : "";
+$updateid = (isset($_GET['updateid'])) ? $_GET['updateid'] : "";
 $maxperpage = $conf["global"]["maxperpage"];
 $gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
 $contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
@@ -53,20 +54,6 @@ $ctx['uuid'] = $uuid;
 //$uuidCut = substr($uuid, -1);
 
 $entityMachineList = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
-$filterGid = array('gid' => $gid);
-$groupMachineList = getRestrictedComputersList(0, -1, $filterGid, False);
-
-$count_with_upd = $withUpdArray['nb_element_total'];
-$count_without_upd = $withoutUpdArray['nb_element_total'];
-
-if ($uuid == '')
-{
-    $typeOfDetail = "group";
-}
-else
-{
-    $typeOfDetail = "entitie";
-}
 
 $withUpd = [];
 $withoutUpd = [];
@@ -78,75 +65,49 @@ $titles_without = [];
 $plateform_without = [];
 
 $with_Upd = xmlrpc_get_machine_with_update($kb);
-$without_Upd = xmlrpc_get_count_machine_as_not_upd($kb);
+$without_Upd = xmlrpc_get_machines_needing_update($updateid);
+$count_with_upd = sizeof($with_Upd[1]);
+$count_without_upd = sizeof($without_Upd);
 
-$unique_with_Upd = array_unique($with_Upd);
-$unique_without_Upd = array_unique($without_Upd);
-
-if ($typeOfDetail == "entitie")
+$count = $entityMachineList['count'];
+for($i=0; $i < $count; $i++)
 {
-    $count = $entityMachineList['count'];
-    for($i=0; $i < $count; $i++)
+    if (in_array($entityMachineList['data']['hostname'][$i], $with_Upd[1]))
     {
-        if (in_array($entityMachineList['data']['hostname'][$i], $unique_with_Upd))
-        {
-            $titles_with[] = $entityMachineList['data']['hostname'][$i];
-            $plateform_with[] = $entityMachineList['data']['plateform'][$i];
-        }
-    }
-
-    for($i=0; $i < $count; $i++)
-    {
-        if (in_array($entityMachineList['data']['hostname'][$i], $unique_without_Upd))
-        {
-            $titles_without[] = $entityMachineList['data']['hostname'][$i];
-            $plateform_without[] = $entityMachineList['data']['plateform'][$i];
-        }
+        $titles_with[] = $entityMachineList['data']['hostname'][$i];
+        $plateform_with[] = $entityMachineList['data']['platform'][$i];
     }
 }
-    
 
-if ($typeOfDetail == "group")
+for($i=0; $i < $count; $i++)
 {
-    foreach ($listGroup as $k => $v)
+    if (in_array($entityMachineList['data']['hostname'][$i], $without_Upd))
     {
-        if (in_array($v[1]['cn'][0], $unique_with_Upd))
-        {
-            $titles_with[] = $v[1]['cn'][0];
-            $plateform_with[] = $v[1]['os'][0];
-        }
-    }
-
-    foreach ($listGroup as $k => $v)
-    {
-        if (in_array($v[1]['cn'][0], $unique_without_Upd))
-        {
-            $titles_without[] = $v[1]['cn'][0];
-            $plateform_without[] = $v[1]['os'][0];
-        }
+        $titles_without[] = $entityMachineList['data']['hostname'][$i];
+        $plateform_without[] = $entityMachineList['data']['platform'][$i];
     }
 }
 
 
-echo "<h2>Machine without update</h2>";
-$n = new OptimizedListInfos($titles_without, _T("Update name", "updates"));
+echo "<h2>Machines without update</h2>";
+$n = new OptimizedListInfos($titles_without, _T("Hostname", "updates"));
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($plateform_without, _T("Plateform", "updates"));
+$n->addExtraInfo($plateform_without, _T("Platform", "updates"));
 
-$n->setItemCount($count_count_with);
-$n->setNavBar(new AjaxNavBar($count_count_with, $filter));
+$n->setItemCount($count_with_upd);
+$n->setNavBar(new AjaxNavBar($count_with_upd, $filter));
 
 $n->display();
 
-echo "<h2>Machine with update</h2>";
-$w = new OptimizedListInfos($titles_with, _T("Update name", "updates"));
+echo "<h2>Machines with update</h2>";
+$w = new OptimizedListInfos($titles_with, _T("Hostname", "updates"));
 $w->disableFirstColumnActionLink();
 
-$w->addExtraInfo($plateform_with, _T("Plateform", "updates"));
+$w->addExtraInfo($plateform_with, _T("Platform", "updates"));
 
-$w->setItemCount($count_without);
-$w->setNavBar(new AjaxNavBar($count_without, $filter));
+$w->setItemCount($count_without_upd);
+$w->setNavBar(new AjaxNavBar($count_without_upd, $filter));
 
 $w->display();
 ?>

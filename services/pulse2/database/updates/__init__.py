@@ -505,6 +505,29 @@ JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up
 
 
     @DatabaseHelper._sessionm
+    def get_machines_needing_update(self, session, updateid):
+        """
+            This function returns the list of machines needing a specific update
+        """
+        sql="""SELECT xmppmaster.machines.hostname AS hostname
+                FROM
+                    xmppmaster.up_machine_windows
+                JOIN
+                    xmppmaster.machines ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                WHERE
+                    (update_id = '%s');"""%(updateid)
+
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result = []
+        if resultquery:
+            for row in resultquery:
+                result.append(row.hostname)
+        return result
+
+
+    @DatabaseHelper._sessionm
     def white_unlist_update(self, session, updateid):
         sql_add = """INSERT INTO xmppmaster.up_gray_list (updateid, kb, revisionid, title, description, updateid_package, payloadfiles, valided, title_short)
         (SELECT xmppmaster.up_packages.updateid, xmppmaster.up_packages.kb, xmppmaster.up_packages.revisionid, xmppmaster.up_packages.title, description, updateid_package, payloadfiles, valided, title_short FROM xmppmaster.up_white_list

@@ -27,6 +27,42 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("modules/msc/includes/widgets.inc.php");
 
+?>
+
+<script>
+function toTimestamp(strDate){
+    var datum = Date.parse(strDate);
+    return datum/1000;
+}
+
+jQuery('#start_date,#end_date').change( function() {
+    // Disable confirmation button if start date is greater than end date
+    var start = toTimestamp(jQuery('#start_date').val())
+    var end   = toTimestamp(jQuery('#end_date').val())
+    if (start > end){
+        jQuery(".btnPrimary").prop("disabled", true);
+    }
+    else{
+        jQuery(".btnPrimary").prop("disabled", false);
+    }
+});
+
+jQuery(".btnPrimary").hover(function(){
+    var start = toTimestamp(jQuery('#start_date').val())
+    var end   = toTimestamp(jQuery('#end_date').val())
+
+
+    if (start > end){
+        // alert ("inconsistency within the deployment range");
+        jQuery(this).prop("disabled", true);
+    }
+    else{
+        jQuery(this).prop("disabled", false);
+    }
+});
+</script>
+
+<?php
 function quick_get($param, $is_checkbox = False) {
     if ($is_checkbox) {
         return (isset($_GET[$param])) ? $_GET[$param] : '';
@@ -37,13 +73,6 @@ function quick_get($param, $is_checkbox = False) {
     else
       return (isset($_GET[$param])) ? $_GET[$param]: '';
 }
-require("graph/navbar.inc.php");
-require("localSidebar.php");
-
-$p = new PageGenerator(_T("Deploy specific Update", 'updates'));
-$p->setSideMenu($sidemenu);
-$p->display();
-
 
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
@@ -56,9 +85,9 @@ if(isset($_GET["title"])){
     $title = htmlentities($_GET['title']);
 }
 
-$pid = "";
+$updateid = "";
 if(isset($_GET["pid"])){
-    $pid = htmlentities($_GET['pid']);
+    $updateid = htmlentities($_GET['pid']);
 }
 
 $kb = "";
@@ -76,125 +105,63 @@ $end_date = strtotime("+7day", $current);
 $end_date = date("Y-m-d h:i:s", $end_date);
 
 if(!empty($_GET["entity"])){
-    $entityid = htmlentities($_GET["entity"]);
-    $completename = htmlentities($_GET["completename"]);
-
-    if($_POST['bconfirm']){
-        xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate, $enddate);
-    }
-
-    $machines = xmlrpc_get_updates_machines_by_entity($entity, $pid, $start, $end, $filter);
-    $groupName = sprintf(_T("Install %s on entity %s"), $kb, $entityName);
-    $grp = [];
-    foreach($machines as $machine){
-        $grp[$machine['uuid_inventorymachine'].'##'.$machine['hostname']] = ["hostname"=> $machine['hostname'], 'uuid'=>$machine['uuid_inventorymachine'], 'groupname'=>$groupName];
-    }
-    $group = new Group();
-    $gid = $group->create($groupName, false);
-    $group->addMembers($grp);
-
-    // Used to set start and end date
-    $current = time();
-    $start_date = date("Y-m-d h:i:s", $current);
-    $end_date = strtotime("+7day", $current);
-    $end_date = date("Y-m-d h:i:s", $end_date);
-
-    $params = [];
-    $familyNames = [];
-
-    $paramsToSend =[
-        "papi"=>"IyMjIyMj",
-        "name"=>"",
-        "hostname"=>"",
-        "uuid"=>"",
-        "gid"=>$gid,
-        "from"=>"base|computers|groupmsctabs|tablogs",
-        "pid"=>$pid,
-        "ltitle"=> $deployName,
-        "create_directory"=>"on",
-        "start_script"=>"on",
-        "clean_on_success"=>"on",
-        "do_reboot"=>"",
-        "do_wol"=>"",
-        "do_inventory"=>"on",
-        "next_connection_delay"=>60,
-        "max_connection_attempt"=>3,
-        "maxbw"=>0,
-        "copy_mode"=>"push",
-        "deployment_intervals"=>"",
-        "tab"=>"tablaunch",
-        "badvanced"=>1,
-        "start_date"=>$start_date,
-        "end_date"=>$end_date
-    ];
+    $formtitle = _T("Scedule update deployment on entity", "update");
 }
 else if(!empty($_GET["gid"])){
-    $gid = htmlentities($GET["gid"]);
-    $groupname = htmlentities($_GET["groupname"]);
-
-    if(!empty($_POST['bconfirm'])){
-        xmlrpc_pending_group_update_by_pid($entityid, $pid, $start_date, $end_date);
-    }
-
-    $paramsToSend =[
-        "papi"=>"IyMjIyMj",
-        "name"=>"",
-        "hostname"=>"",
-        "uuid"=>"",
-        "gid"=>$gid,
-        "from"=>"base|computers|groupmsctabs|tablogs",
-        "pid"=>$pid,
-        "ltitle"=> $deployName,
-        "create_directory"=>"on",
-        "start_script"=>"on",
-        "clean_on_success"=>"on",
-        "do_reboot"=>"",
-        "do_wol"=>"",
-        "do_inventory"=>"on",
-        "next_connection_delay"=>60,
-        "max_connection_attempt"=>3,
-        "maxbw"=>0,
-        "copy_mode"=>"push",
-        "deployment_intervals"=>"",
-        "tab"=>"tablaunch",
-        "badvanced"=>1,
-        "start_date"=>$start_date,
-        "end_date"=>$end_date
-    ];
+    $formtitle = _T("Scedule update deployment on group", "update");
 }
 else if(!empty($_GET["machineid"])){
-    $machineid = htmlentities($_GET["machineid"]);
-    $inventoryid = htmlentities($_GET["inventoryid"]);
-    $machinename = htmlentities($_GET["cn"]);
-    // if(!empty($_POST['bconfirm'])){
-        xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $pid, $start_date, $end_date);
-    // }
-    $paramsToSend =[
-        "papi"=>"IyMjIyMj",
-        "name"=>$machinename,
-        "hostname"=>$machinename,
-        "uuid"=>$inventoryid,
-        "gid"=>"",
-        "from"=>"base|computers|groupmsctabs|tablogs",
-        "pid"=>$pid,
-        "ltitle"=> $deployName,
-        "create_directory"=>"on",
-        "start_script"=>"on",
-        "clean_on_success"=>"on",
-        "do_reboot"=>"",
-        "do_wol"=>"",
-        "do_inventory"=>"on",
-        "next_connection_delay"=>60,
-        "max_connection_attempt"=>3,
-        "maxbw"=>0,
-        "copy_mode"=>"push",
-        "deployment_intervals"=>"",
-        "tab"=>"tablaunch",
-        "badvanced"=>1,
-        "start_date"=>$start_date,
-        "end_date"=>$end_date
-    ];
+    $formtitle = _T("Scedule update deployment on machine", "update");
 }
-header("location:".urlStrRedirect("base/computers/groupmsctabs", $paramsToSend));
 
+if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'])){
+
+    $machineid = htmlentities($_GET['machineid']);
+    $inventoryid = htmlentities($_GET["inventoryid"]);
+    $updateid= htmlentities($_POST['updateid']);
+    $startdate = htmlentities($_POST['start_date']);
+    $enddate = htmlentities($_POST['end_date']);
+
+    $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate);
+
+    $mesg = (!empty($result["mesg"])) ? htmlentities($result["mesg"]) : "";
+    if(!empty($result["success"]) && $result["success"] == true){
+        new NotifyWidgetSuccess($mesg);
+    }
+    else{
+        new NotifyWidgetFailure($mesg);
+    }
+    header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["cn"=>htmlentities($_GET['cn']), "inventoryid"=>htmlentities($_GET['inventoryid']), "machineid"=>htmlentities($_GET['machineid'])]));
+    exit;
+}
+else{
+    $f = new PopupForm($formtitle);
+    $f->push(new Table());
+
+    $hiddenpid = new HiddenTpl("updateid");
+    $f->add($hiddenpid, array("value" => $updateid, "hide" => True));
+
+    $ss =  new TrFormElement(
+        _T('The command must start after', 'msc'),
+        new DateTimeTpl('start_date')
+    );
+    $f->add(
+        $ss, array(
+            "value" => $start_date,
+            "start_date" => 0)
+    );
+
+    $f->add(
+        new TrFormElement(
+            _T('The command must stop before', 'msc'), new DateTimeTpl('end_date')
+        ), array(
+            "value" => $end_date,
+            "end_date" => 0)
+    );
+
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
+    exit;
+}
 ?>

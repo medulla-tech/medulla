@@ -690,6 +690,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-migration_old_package.py
 %{_sbindir}/medulla-generate-update-package.py
 %{_sbindir}/medulla-mariadb-move-update-package.py
+%{_sbindir}/medulla_mysql_exec_update.sh
 
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
