@@ -105,13 +105,13 @@ $end_date = strtotime("+7day", $current);
 $end_date = date("Y-m-d h:i:s", $end_date);
 
 if(!empty($_GET["entity"])){
-    $formtitle = _T("Scedule update deployment on entity", "update");
+    $formtitle = _T("Schedule update deployment on entity", "update");
 }
 else if(!empty($_GET["gid"])){
-    $formtitle = _T("Scedule update deployment on group", "update");
+    $formtitle = _T("Schedule update deployment on group", "update");
 }
 else if(!empty($_GET["machineid"])){
-    $formtitle = _T("Scedule update deployment on machine", "update");
+    $formtitle = _T("Schedule update deployment on machine", "update");
 }
 
 if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'])){
