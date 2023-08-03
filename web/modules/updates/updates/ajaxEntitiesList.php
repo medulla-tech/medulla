@@ -104,11 +104,11 @@ foreach ($entities as $entity) {
     $actiondetailsByMachs[] = $detailsByMach;
     $actiondetailsByUpds[] = $detailsByUpd;
     $entityNames[] = $entity["completename"];
-    $params[] = array('uuid' => $entity['uuid'], 'completename'=>$entity['completename']);
+    $params[] = array('entity' => $entity['uuid'], 'completename'=>$entity['completename']);
     $color = colorconf(100);
     if (isset($identity[$id_entity])){
-        $conformite = $identity[$id_entity]['conformite'];
-        $color = colorconf(intval($conformite));
+        $conformite = intval($identity[$id_entity]['conformite']);
+        $color = colorconf($conformite);
         $totalmach=intval($identity[$id_entity]['totalmach']);
         $nbupdateentity=intval($identity[$id_entity]['nbupdate']);
 
@@ -153,7 +153,7 @@ $n->setParamInfo($params);
 
 $n->addActionItemArray($actiondetailsByMachs);
 $n->addActionItemArray($actiondetailsByUpds);
-$n->addActionItemArray($actiondeployAlls);
+//$n->addActionItemArray($actiondeployAlls);
 $n->addActionItemArray($actiondeploySpecifics);
 $n->start = 0;
 $n->end = $count;

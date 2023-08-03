@@ -280,6 +280,71 @@ class UpdatesDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
+    def get_enabled_updates_list(self, session, start, limit, filter=""):
+        try:
+            start = int(start)
+        except:
+            start = -1
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        try:
+            enabled_updates_list={ 'nb_element_total': 0,
+                        'updateid' : [],
+                        'title' : [],
+                        'kb' : [],
+                        'valided' : []}
+            sql="""SELECT SQL_CALC_FOUND_ROWS
+                        updateid, kb, title, description, creationdate, title_short, valided
+                    FROM
+                        xmppmaster.up_gray_list
+                    WHERE
+                        xmppmaster.up_gray_list.valided = 1
+                    UNION
+                    SELECT
+                       updateid, kb, title, description, creationdate, title_short, valided
+                    FROM
+                        xmppmaster.up_white_list
+                    WHERE
+                        xmppmaster.up_white_list.valided = 1 """
+
+            filterlimit= ""
+            if start != -1 and limit != -1:
+                filterlimit= "LIMIT %s, %s"%(start, limit)
+            if filter != "":
+                filterwhere="""WHERE
+                        title LIKE '%%%s%%' """%filter
+                sql += filterwhere
+            sql += filterlimit
+            sql+=";"
+
+            result = session.execute(sql)
+
+            sql_count = "SELECT FOUND_ROWS();"
+            ret_count = session.execute(sql_count)
+            nb_element_total = ret_count.first()[0]
+
+            enabled_updates_list['nb_element_total'] = nb_element_total
+
+            session.commit()
+            session.flush()
+
+            if result:
+                for list_b in result:
+                    enabled_updates_list['updateid'].append(list_b.updateid)
+                    enabled_updates_list['title'].append(list_b.title)
+                    enabled_updates_list['kb'].append(list_b.kb)
+                    enabled_updates_list['valided'].append(list_b.valided)
+
+        except Exception as e:
+            logger.error("error function get_enabled_updates_list")
+
+        return enabled_updates_list
+
+
+    @DatabaseHelper._sessionm
     def approve_update(self, session, updateid):
         try:
             sql = """SELECT updateid,
@@ -360,14 +425,19 @@ class UpdatesDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def delete_rule(self, session, id):
         try:
+            sql_add = """INSERT INTO xmppmaster.up_gray_list (updateid, kb, revisionid, title, updateid_package, payloadfiles)
+        SELECT xmppmaster.up_packages.updateid, xmppmaster.up_packages.kb, xmppmaster.up_packages.revisionid, xmppmaster.up_packages.title, xmppmaster.up_packages.updateid_package, xmppmaster.up_packages.payloadfiles FROM xmppmaster.up_packages
+JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up_black_list.updateid_or_kb or xmppmaster.up_packages.kb = xmppmaster.up_black_list.updateid_or_kb WHERE xmppmaster.up_black_list.id=%s;"""%(id)
+
             sql="""DELETE FROM `xmppmaster`.`up_black_list` WHERE (`id` = '%s');"""%(id)
 
+            result = session.execute(sql_add)
             result = session.execute(sql)
             session.commit()
             session.flush()
             return True
 
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error(str(e))
         return False
 
@@ -435,9 +505,37 @@ class UpdatesDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
+    def get_machines_needing_update(self, session, updateid):
+        """
+            This function returns the list of machines needing a specific update
+        """
+        sql="""SELECT xmppmaster.machines.hostname AS hostname
+                FROM
+                    xmppmaster.up_machine_windows
+                JOIN
+                    xmppmaster.machines ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                WHERE
+                    (update_id = '%s');"""%(updateid)
+
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result = []
+        if resultquery:
+            for row in resultquery:
+                result.append(row.hostname)
+        return result
+
+
+    @DatabaseHelper._sessionm
     def white_unlist_update(self, session, updateid):
+        sql_add = """INSERT INTO xmppmaster.up_gray_list (updateid, kb, revisionid, title, description, updateid_package, payloadfiles, valided, title_short)
+        (SELECT xmppmaster.up_packages.updateid, xmppmaster.up_packages.kb, xmppmaster.up_packages.revisionid, xmppmaster.up_packages.title, description, updateid_package, payloadfiles, valided, title_short FROM xmppmaster.up_white_list
+            JOIN xmppmaster.up_packages ON xmppmaster.up_packages.updateid = xmppmaster.up_white_list.updateid WHERE xmppmaster.up_packages.updateid='%s')"""%(updateid)
+
         sql = """DELETE FROM xmppmaster.up_white_list WHERE updateid = '%s' or kb='%s'"""%(updateid, updateid)
         try:
+            session.execute(sql_add)
             session.execute(sql)
             session.commit()
             session.flush()

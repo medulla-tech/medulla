@@ -1,7 +1,8 @@
 # Change Log
 
 
-## [4.6.12](https://github.com/medulla-tech/medulla/releases/tag/4.6.12) (unreleased)
+## [4.7.0](https://github.com/medulla-tech/medulla/releases/tag/4.7.0) (unreleased)
+- [FEATURE] Add windows 11 sysprep support
 - [BUGFIX]  Fix handling accentuated letters in the script that add packages in the database.
 - [BUGFIX]  Fix importing big groups with csv files
 

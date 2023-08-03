@@ -360,7 +360,7 @@ class synch_packages:
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         if typename == "cab":
-            cmd="""dism /Online /Add-Package /PackagePath:"@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" """%(namefile)
+            cmd="""dism /Online /Add-Package /PackagePath:"@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" /NoRestart /Quiet"""%(namefile)
         else:
             cmd="""@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s"""%(namefile)
         cmd64=base64.b64encode(bytes(cmd,"utf-8"))

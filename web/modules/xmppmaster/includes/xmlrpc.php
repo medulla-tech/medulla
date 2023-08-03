@@ -813,6 +813,10 @@ function xmlrpc_get_conformity_update_by_machine($idmachine){
   return xmlCall("xmppmaster.get_conformity_update_by_machine", [$idmachine]);
 }
 
+function xmlrpc_get_conformity_update_by_machines($ids){
+  return xmlCall("xmppmaster.get_conformity_update_by_machines", [$ids]);
+}
+
 function xmlrpc_get_conformity_update_for_group($uuidArray){
   return xmlCall("xmppmaster.get_conformity_update_for_group", [$uuidArray]);
 }
@@ -821,8 +825,8 @@ function xmlrpc_get_idmachine_from_name($name){
   return xmlCall("xmppmaster.get_idmachine_from_name", [$name]);
 }
 
-function xmlrpc_get_count_grey_list_enable(){
-  return xmlCall("xmppmaster.get_count_grey_list_enable");
+function xmlrpc_get_count_updates_enable(){
+  return xmlCall("xmppmaster.get_count_updates_enable");
 }
 
 function xmlrpc_get_updates_by_entity($entity, $start, $limit, $filter=""){
@@ -837,7 +841,24 @@ function xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate="", $endd
   return xmlCall("xmppmaster.pending_entity_update_by_pid", [$entity, $pid, $startdate, $enddate]);
 }
 
+function xmlrpc_pending_group_update_by_pid($gid, $pid, $startdate="", $enddate=""){
+  return xmlCall("xmppmaster.pending_group_update_by_pid", [$gid, $pid, $startdate, $enddate]);
+}
+
+function xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, $user, $startdate="", $enddate=""){
+  return xmlCall("xmppmaster.pending_machine_update_by_pid", [$machineid, $inventoryid, $updateid, $deployName, $user, $startdate, $enddate]);
+}
+
 function xmlrpc_get_updates_by_uuids($uuids, $start=0, $limit=-1, $filter=""){
   return xmlCall("xmppmaster.get_updates_by_uuids", [$uuids, $start, $limit, $filter]);
 }
+
+function xmlrpc_get_tagged_updates_by_machine($machineid, $start=0, $end=-1, $filter=""){
+  return xmlCall("xmppmaster.get_tagged_updates_by_machine", [$machineid, $start, $end, $filter]);
+}
+
+function xmlrpc_get_audit_summary_updates_by_machine($machineid, $start, $end, $filter){
+  return xmlCall("xmppmaster.get_audit_summary_updates_by_machine", [$machineid, $start, $end, $filter]);
+}
+
 ?>

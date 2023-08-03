@@ -31,7 +31,7 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 unset($_GET['action']);
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMachineListOnEntities"), "container", $_GET);
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByMachines"), "container", $_GET);
 $ajax->display();
 $ajax->displayDivToUpdate();
 ?>

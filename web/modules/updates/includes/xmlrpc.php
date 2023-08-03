@@ -39,6 +39,10 @@ function xmlrpc_get_black_list($start, $end, $filter=""){
     return xmlCall("updates.get_black_list", [$start, $end, $filter]);
 }
 
+function xmlrpc_get_enabled_updates_list($start, $end, $filter=""){
+    return xmlCall("updates.get_enabled_updates_list", [$start, $end, $filter]);
+}
+
 function xmlrpc_get_family_list($start, $end, $filter=""){
     return xmlCall("updates.get_family_list", [$start, $end, $filter]);
 }
@@ -67,7 +71,15 @@ function xmlrpc_get_machine_with_update($kb){
     return xmlCall("updates.get_machine_with_update", [$kb]);
 }
 
+function xmlrpc_get_count_machine_with_update($kb){
+    return xmlCall("updates.get_count_machine_with_update", [$kb]);
+}
+
 function xmlrpc_get_count_machine_as_not_upd($updateid){
     return xmlCall("updates.get_count_machine_as_not_upd", [$updateid]);
+}
+
+function xmlrpc_get_machines_needing_update($updateid){
+    return xmlCall("updates.get_machines_needing_update", [$updateid]);
 }
 ?>

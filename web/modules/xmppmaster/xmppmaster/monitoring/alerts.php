@@ -31,8 +31,6 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $page = new TabbedPageGenerator();
-//Display sidemenu
-$page->setSideMenu($sidemenu);
 
 $tabList = array(
 	'notificationsTab' => _T('Alerts', "xmppmaster"),

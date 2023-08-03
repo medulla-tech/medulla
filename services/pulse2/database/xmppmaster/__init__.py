@@ -15,6 +15,8 @@ from sqlalchemy.exc import DBAPIError
 from datetime import datetime, timedelta  # date,
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
+from pulse2.database.msc import MscDatabase
+
 from pulse2.database.xmppmaster.schema import Network, Machines,\
     RelayServer, Users, Has_machinesusers, \
     Has_relayserverrules, Regles, Has_guacamole, Base, \
@@ -2891,7 +2893,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if not bool(result):
             logger.error("An error occured while checking the broadcast address.")
-            logger.error("Please check that the broadcast information exists for the following macaddresses: %s" % listmacaddress)
+            logger.error("Please check that the broadcast information exists for the following mac addresses: %s" % listmacaddress)
 
         for t in result:
             if t.broadcast not in grp_wol_broadcast_adress:
@@ -3921,7 +3923,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getlinelogssession(self, session, sessionnamexmpp):
-        log = session.query(Logs).filter(and_( Logs.sessionname == sessionnamexmpp, Logs.type == 'deploy')).order_by(Logs.id)
+        log_type = "deploy"
+        if re.search("update", sessionnamexmpp) is not None:
+            log_type ="update"
+        log = session.query(Logs).filter(and_( Logs.sessionname == sessionnamexmpp, Logs.type == log_type)).order_by(Logs.id)
         log = log.all()
         session.commit()
         session.flush()
@@ -6870,67 +6875,64 @@ class XmppMasterDatabase(DatabaseHelper):
                 arsname: The ars where the machine is connected to.
             Returns:
         """
-        excluded_account = 'master@pulse'
-        incrementeiscount = []
+        incrementeiscount=[]
         try:
-            sql = """SELECT
-                        substituteconf.id AS id,
-                        substituteconf.jidsubtitute AS jidsubtitute,
-                        substituteconf.countsub AS countsub,
-                        substituteconf.type AS type,
-                        relayserver.jid AS namerelayser,
-                        SUM(substituteconf.countsub) AS totsub
-                    FROM
-                        substituteconf
-                            JOIN
-                        relayserver ON substituteconf.relayserver_id = relayserver.id
-                    WHERE
-                        substituteconf.jidsubtitute NOT LIKE '%s'
-                            AND (substituteconf.jidsubtitute IN (SELECT
-                                substituteconf.jidsubtitute
-                            FROM
-                                substituteconf
-                            WHERE
-                                substituteconf.relayserver_id = (SELECT
-                                        id
-                                    FROM
-                                        relayserver
-                                    WHERE
-                                        relayserver.jid LIKE '%s')))
-                    GROUP BY substituteconf.jidsubtitute
-                    ORDER BY totsub;
-                    ;""" % (excluded_account, arsname)
-            resultproxy = session.execute(sql)
-            listcommand = []
-            infsub = [{"TYPE" : x[3], "id": x[0], "sub": x[1] , "totalcount": int(x[5])} for x in resultproxy]
-            idx = {}
-            for substituteinfo in listconfsubstitute['conflist']:
-                if 'conflist' ==  substituteinfo: continue
-                listconfsubstitute[substituteinfo] =[]
-                idx[substituteinfo] = []
+            try:
+                sql = """SELECT
+                            `substituteconf`.`id` AS `id`,
+                            `substituteconf`.`jidsubtitute` AS `jidsubtitute`,
+                            `substituteconf`.`type` AS `type`,
+                            SUM(`substituteconf`.`countsub`) AS `totsub`
+                        FROM
+                            `substituteconf`
+                        WHERE
+                            `substituteconf`.`jidsubtitute` IN (SELECT DISTINCT
+                                    `substituteconf`.`jidsubtitute`
+                                FROM
+                                    `substituteconf`
+                                WHERE
+                                    `substituteconf`.`relayserver_id` IN (SELECT
+                                            id
+                                        FROM
+                                            xmppmaster.relayserver
+                                        WHERE
+                                            jid LIKE ('%s')))
+                        GROUP BY `substituteconf`.`jidsubtitute` , type
+                        ORDER BY type , totsub;""" % (arsname)
+                resultproxy = session.execute(sql)
+                session.commit()
+                session.flush()
+                #ret = self._return_dict_from_dataset_mysql(resultproxy)
+                for listconfsubstituteitem in listconfsubstitute["conflist"]:
+                    # reinitialise les lists
+                    listconfsubstitute[listconfsubstituteitem]= []
+                for x in resultproxy:
+                    if str(x[2]).startswith("master@pulse"): continue
+                    if x[2] not in listconfsubstitute:
+                        listconfsubstitute["conflist"].append(x[2])
+                        listconfsubstitute[x[2]]=[]
+                    listconfsubstitute[x[2]].append(x[1])
+                    incrementeiscount.append(x[0])
+                self.logger.debug("listconfsubstitute %s" %listconfsubstitute)
+                self.logger.debug("incrementeiscount %s" %incrementeiscount)
+            except Exception as e:
+                self.logger.error("An error occured while fetching the ordered list of subsitutes.")
+                self.logger.error("We hit the backtrace: \n%s" % (traceback.format_exc()))
 
-            for t in infsub:
-                if t['TYPE'] == "deployment": continue
-                idx[t['TYPE']].append(t['id'])
-                listconfsubstitute[t['TYPE']].append(t['sub'])
-            for t in listconfsubstitute:
-                if t == "deployment": continue
-                listconfsubstitute[t].append(excluded_account)
-            idt=[idx[x].pop(0) for x in idx]
-            idt.sort()
-            xstr=",".join(str(x) for x in idt)
-            sql1=""" UPDATE `xmppmaster`.`substituteconf`
+            if incrementeiscount:
+                sql = """UPDATE `xmppmaster`.`substituteconf`
                     SET
                         `countsub` = `countsub` + '1'
                     WHERE
-                        (`id` IN (%s));""" %(xstr)
-            result = session.execute(sql)
-            session.commit()
-            session.flush()
+                        `id` IN (%s);""" % ",".join(
+                    [str(x) for x in incrementeiscount]
+                )
+                result = session.execute(sql)
+                session.commit()
+                session.flush()
         except Exception as e:
-            self.logger.error("An error occured while fetching the ordered list of subsitutes.")
-            logging.getLogger().error("parameter in : %s %s" % (listconfsubstitute, arsname))
-            logging.getLogger().error("sql information in : %s\n%s" % (sql, sql1))
+            logging.getLogger().error("substituteinfo : %s" % str(e))
+            logging.getLogger().debug("substitute list : %s" % listconfsubstitute)
         return listconfsubstitute
 
     @DatabaseHelper._sessionm
@@ -8007,14 +8009,13 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def algoloadbalancerforcluster(self, session):
         sql = """
-            SELECT
-                COUNT(*) AS nb, `machines`.`groupdeploy`
+            SELECT 
+                COUNT(*) - 1 AS nb, `machines`.`groupdeploy`
             FROM
                 xmppmaster.machines
-            WHERE
-                enabled = '1' and
-                agenttype = 'machine'
             GROUP BY `machines`.`groupdeploy`
+            HAVING nb != 0
+                AND COALESCE(`machines`.`groupdeploy`, '') <> ''
             ORDER BY nb DESC;"""
         result = session.execute(sql)
         session.commit()
@@ -11525,7 +11526,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         sql="""SELECT
                     glpi_entity.glpi_id AS entity,
-                    COUNT(*) AS nombre_machine,
+                    COUNT(DISTINCT(xmppmaster.machines.id)) AS total_machine_entity,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
                         ELSE 0
@@ -11548,27 +11549,30 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_machine_by_entity_in_gray_list(self, session):
+    def get_machine_by_entity_in_grayandwhite_lists(self, session):
         """
             This function returns the machines to update in an entity considering only the updates enabled in gray list
         """
         sql="""SELECT
                     glpi_entity.glpi_id AS entity,
+                    COUNT(DISTINCT(xmppmaster.machines.id)) AS machine_a_mettre_a_jour,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
                         ELSE 0
-                    END) AS machine_a_mettre_a_jour
+                    END) AS update_a_mettre_a_jour
                 FROM
                     xmppmaster.machines
                         JOIN
                     glpi_entity ON machines.glpi_entity_id = glpi_entity.id
                         LEFT JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
-                        JOIN
+                        LEFT JOIN
                     xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                        LEFT JOIN
+                    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
                     platform LIKE 'Mic%'
-                        AND xmppmaster.up_gray_list.valided = 1
+                        AND (xmppmaster.up_gray_list.valided = 1 or xmppmaster.up_white_list.valided = 1)
                 GROUP BY glpi_entity.glpi_id;"""
         resultquery = session.execute(sql)
         session.commit()
@@ -11585,9 +11589,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         result={}
         for x in self.get_update_by_entity():
-            result[x['entity']] = { 'totalmach' : x['nombre_machine'], 'nbupdate' : x['update_a_mettre_a_jour'], 'nbmachines' : 0 }
-        for x in self.get_machine_by_entity_in_gray_list():
+            result[x['entity']] = { 'totalmach' : x['total_machine_entity'], 'nbupdate' : 0, 'nbmachines' : 0 }
+        for x in self.get_machine_by_entity_in_grayandwhite_lists():
            result[x['entity']]['nbmachines'] =  x['machine_a_mettre_a_jour']
+           result[x['entity']]['nbupdate'] =  x['update_a_mettre_a_jour']
         return result
 
     @DatabaseHelper._sessionm
@@ -11634,11 +11639,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         sql="""SELECT COUNT(*) AS update_waiting
                 FROM
-                    xmppmaster.up_gray_list
-                INNER JOIN
-                    xmppmaster.up_machine_windows ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                    xmppmaster.up_machine_windows
+                LEFT JOIN
+                    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                LEFT JOIN
+                    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
-                    up_gray_list.valided = 1
+                    (up_gray_list.valided = 1 OR up_white_list.valided = 1)
                 AND
                     up_machine_windows.id_machine = '%s';"""%(idmachine)
         resultquery = session.execute(sql)
@@ -11649,7 +11656,45 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         for rowproxy in resultquery]
         return result
     
-    
+    @DatabaseHelper._sessionm
+    def get_conformity_update_by_machines(self, session, ids):
+        """
+            This function returns value for compliance rate for a list of machines
+            Params: ids is a list of selected machines
+            Return : waiting updates
+        """
+
+        if len(ids) == 0:
+            return {}
+
+        result = {str(id):0 for id in ids}
+        sql="""SELECT machines.id,
+(
+SELECT COUNT(*)
+FROM
+    xmppmaster.up_machine_windows
+LEFT JOIN
+    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+LEFT JOIN
+    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
+WHERE
+    (up_gray_list.valided = 1 OR up_white_list.valided = 1)
+AND
+    up_machine_windows.id_machine = machines.id) AS update_waiting
+from xmppmaster.machines
+where agenttype="machine"
+and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
+
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        # result= [{column: value for column,
+        #         value in rowproxy.items()}
+        #                 for rowproxy in resultquery]
+
+        result = {str(item.id):item.update_waiting for item in resultquery}
+        return result
+
     @DatabaseHelper._sessionm
     def get_idmachine_from_name(self, session, name):
         """
@@ -11670,16 +11715,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
 
     @DatabaseHelper._sessionm
-    def get_count_grey_list_enable(self, session):
+    def get_count_updates_enable(self, session):
         """
             This function returns the the update already done and update enable
         """
-        sql="""SELECT COUNT(*) AS enable_grey
-                FROM
-                    xmppmaster.up_gray_list
-                WHERE
-                    valided = 1;"""
-                
+        sql="""SELECT CAST(SUM( t.enabled_updates )AS INTEGER) as nb_enabled_updates
+                FROM(
+                    SELECT COUNT(*) AS enabled_updates FROM xmppmaster.up_gray_list WHERE valided = 1
+                    UNION ALL
+                    SELECT COUNT(*) AS enabled_updates FROM xmppmaster.up_white_list WHERE valided = 1) t;"""
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
@@ -11702,7 +11746,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             array_GUID = " AND uuid_inventorymachine IN ('')"
         
         sql="""SELECT
-                    COUNT(*) AS count_machines,
+                    COUNT(DISTINCT(xmppmaster.machines.id)) AS count_machines,
                     SUM(CASE
                         WHEN (COALESCE(update_id, '') != '') THEN 1
                         ELSE 0
@@ -11711,11 +11755,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     xmppmaster.machines
                         LEFT JOIN
                     xmppmaster.up_machine_windows ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                        LEFT JOIN
+                    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
+                        LEFT JOIN
+                    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
                 WHERE
-                    platform LIKE 'Mic%'"""
+                    platform LIKE 'Mic%'
+                        AND (xmppmaster.up_gray_list.valided = 1 or xmppmaster.up_white_list.valided = 1)"""
                     
         sql = sql + array_GUID + ";"
-        logging.getLogger().info(sql)
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
@@ -11885,13 +11933,16 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             limit = -1
 
         sub = session.query(Machines.id)\
-        .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id).filter(Glpi_entity.glpi_id == entity)
+        .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id).filter(Glpi_entity.glpi_id == entity)\
+        .outerjoin(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)\
+        .outerjoin(Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id)\
+        .filter(or_(Up_gray_list.valided == 1, Up_white_list.valided == 1))
 
         sub = sub.subquery()
         query = session.query(Up_machine_windows).filter(and_(
             Up_machine_windows.id_machine.in_(sub),
-            Up_machine_windows.required_deploy != 1,
-            Up_machine_windows.curent_deploy != 1)
+                or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
+                or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0))
         )\
         .group_by(Up_machine_windows.update_id)
 
@@ -11917,15 +11968,24 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             if element.start_date is not None:
                 startdate = element.start_date
 
+            current_deploy = 0
+            if element.curent_deploy is not None:
+                current_deploy = element.curent_deploy
+
+            required_deploy = 0
+            if element.required_deploy is not None:
+                required_deploy = element.required_deploy
+
             enddate = ""
             if element.end_date is not None:
                 enddate = element.end_date
+                
             result['datas'].append({
                 "id_machine": element.id_machine if not None else 0,
                 "update_id": element.update_id if not None else "",
                 "kb": element.kb if not None else "",
-                "current_deploy": element.curent_deploy if not None else "",
-                "required_deploy": element.required_deploy if not None else "",
+                "current_deploy": current_deploy,
+                "required_deploy":  required_deploy,
                 "start_date": startdate,
                 "end_date": enddate,
                 "pkgs_label":"",
@@ -11985,7 +12045,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             .join(Up_machine_windows, Up_machine_windows.id_machine == Machines.id)\
             .filter(
                 and_(Up_machine_windows.update_id == pid,
-                    Glpi_entity.glpi_id == entity
+                    Glpi_entity.glpi_id == entity,
+                    or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
+                    or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0),
                 )
             ).all()
 
@@ -12035,7 +12097,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if pid == "":
             query = query.filter(
                 and_(
-                    Up_machine_windows.required_deploy == 0,
+                    or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
+                    or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0),
                     Up_machine_windows.id_machine.in_(sub),
                 )
             )
@@ -12057,12 +12120,14 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
     @DatabaseHelper._sessionm
     def get_updates_by_uuids(self, session, uuids, start=0, limit=-1, filter=""):
-        sub = session.query(Machines.id).filter(Machines.uuid_inventorymachine.in_(uuids)).subquery()
-
-        query = session.query(Up_machine_windows).filter(and_(
-            Up_machine_windows.id_machine.in_(sub),
-            Up_machine_windows.required_deploy != 1,
-            Up_machine_windows.curent_deploy != 1)
+        query = session.query(Up_machine_windows)\
+            .join(Machines, Machines.id == Up_machine_windows.id_machine)\
+            .outerjoin(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)\
+            .outerjoin(Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id)\
+            .filter(and_(Machines.uuid_inventorymachine.in_(uuids),
+                or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
+                or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
+                or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0))
         )\
         .group_by(Up_machine_windows.update_id)
 
@@ -12071,7 +12136,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 Up_machine_windows.kb.contains(filter),
                 Up_machine_windows.update_id.contains(filter)))
         count = query.count()
-
         query = query.offset(start)
         if limit != -1:
             query = query.limit(limit)
@@ -12088,18 +12152,27 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             if element.start_date is not None:
                 startdate = element.start_date
 
+            current_deploy = 0
+            if element.curent_deploy is not None:
+                current_deploy = element.curent_deploy
+
+            required_deploy = 0
+            if element.required_deploy is not None:
+                required_deploy = element.required_deploy
+
             enddate = ""
             if element.end_date is not None:
                 enddate = element.end_date
+
             result['datas'].append({
                 "id_machine": element.id_machine if not None else 0,
                 "update_id": element.update_id if not None else "",
                 "kb": element.kb if not None else "",
-                "current_deploy": element.curent_deploy if not None else "",
-                "required_deploy": element.required_deploy if not None else "",
+                "current_deploy": current_deploy,
+                "required_deploy":  required_deploy,
                 "start_date": startdate,
                 "end_date": enddate,
-                "pkgs_label":"",
+                "pkgs_label":"" if not None else "",
                 "pkgs_version":"",
                 "pkgs_description":""
             })
@@ -12133,4 +12206,269 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     element["pkgs_label"] = pkgs_list[element['update_id']]["label"]
                     element["pkgs_version"] = pkgs_list[element['update_id']]["version"]
                     element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
+        return result
+
+    @DatabaseHelper._sessionm
+    def pending_machine_update_by_pid(self, session, machineid, inventoryid, pid, deployName, user, startdate, enddate, interval):
+        try:
+            machineid = int(machineid)
+        except:
+            machineid = 0
+
+        start_date = None
+        end_date = None
+
+        current = datetime.today()
+        a_week_from_current = current + timedelta(days=7)
+
+        if startdate != "":
+            try:
+                start_date = datetime.strptime(startdate, "%Y-%m-%d %H:%M:%S")
+            except:
+                start_date = current
+
+        if enddate != "":
+            try:
+                end_date = datetime.strptime(enddate, "%Y-%m-%d %H:%M:%S")
+            except:
+                end_date = a_week_from_current
+
+        if start_date > end_date:
+            start_date, end_date = end_date, start_date
+
+        if end_date < current:
+            end_date = a_week_from_current
+
+        query, machine = session.query(Up_machine_windows, Machines)\
+            .join(Machines, Machines.id == Up_machine_windows.id_machine)\
+            .filter(and_(Up_machine_windows.id_machine == machineid,
+                                                              Up_machine_windows.update_id == pid,
+                                                              or_(Up_machine_windows.curent_deploy  == None, Up_machine_windows.curent_deploy  == 0),
+                                                              or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy  == 0))).first()
+        result = {}
+        if query is not None:
+            query.start_date = start_date
+            query.end_date = end_date
+            query.required_deploy = 1
+
+            folderpackage = os.path.join("/", "var","lib", "pulse2", "packages", pid)
+            exclude_name_package = ["sharing", ".stfolder", ".stignore" ]
+
+            files = []
+            if os.path.isdir(folderpackage):
+                for root, dir, file in os.walk(folderpackage):
+                    if root != folderpackage:
+                        continue
+                    for _file in file:
+                        if _file not in exclude_name_package:
+                            files.append({"path" : os.path.basename(os.path.dirname(root)),
+                                    "name" : _file,
+                                    "id" : str(uuid.uuid4()),
+                                    "size" : str(os.path.getsize(os.path.join(root, _file))) })
+            else:
+                files = []
+
+            files_str = "\n".join([file['id']+'##'+file['path']+'/'+file['name'] for file in files])
+            command = MscDatabase().createcommanddirectxmpp(pid,
+                '',
+                "",#section
+                files_str,
+                'enable',
+                'disable',
+                start_date,
+                end_date,
+                user,
+                user,
+                deployName,
+                0,
+                28,
+                0,
+                '',
+                None,
+                None,
+                None,
+                'none',
+                'active',
+                '1',
+                cmd_type=0)
+
+            commandid = command.id
+            commandstart = command.start_date
+            commandstop = command.end_date
+            jidrelay = machine.groupdeploy
+            uuidmachine = machine.uuid_inventorymachine
+            jidmachine = machine.jid
+
+            try:
+                target = MscDatabase().xmpp_create_Target(machine.uuid_inventorymachine, machine.hostname)
+            except Exception as e:
+                result["success"] = False
+                result["mesg"] = "Unable to create Msc Target"
+                result["detail"] = e
+                return result
+
+            idtarget = target['id']
+
+            MscDatabase().xmpp_create_CommandsOnHost(commandid,
+                idtarget,
+                machine.hostname,
+                commandstop,
+                commandstart)
+
+            XmppMasterDatabase().addlogincommand(
+                user,
+                commandid,
+                "",
+                "",
+                "",
+                "",
+                "",
+                0,
+                0,
+                0,
+                0,
+                {})
+
+            session.commit()
+            session.flush()
+
+            result["success"] = True
+            result["mesg"] = "Update requested"
+            result["commandid"] = commandid
+
+        else:
+            result["success"] = False
+            result["mesg"] = "No update to install"
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_tagged_updates_by_machine(self, session, machineid, start=0, end=-1, filter=""):
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            end = int(end)
+        except:
+            end = -1
+
+        try:
+            machineid = int(machineid)
+        except:
+            machineid = 0
+
+        query = session.query(Up_machine_windows, Up_gray_list).filter(and_(Up_machine_windows.id_machine == machineid,
+                                                              or_(Up_machine_windows.curent_deploy == 1,
+                                                                Up_machine_windows.required_deploy == 1)
+                                                              )
+                                                         )\
+                    .join(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)
+        if filter != "":
+            query = query.filter(or_(
+                Up_gray_list.title.contains(filter),
+                Up_gray_list.kb.contains(filter),
+                Up_gray_list.updateid.contains(filter),
+                Up_gray_list.revisionid.contains(filter),
+                Up_gray_list.payloadfiles.contains(filter),
+                Up_gray_list.description.contains(filter),
+                Up_machine_windows.start_date.contains(filter),
+                Up_machine_windows.end_date.contains(filter),
+                ))
+
+        count = query.count()
+
+        if start != -1:
+            query = query.offset(start)
+        if end != 0:
+            query = query.limit(end)
+
+        query = query.all()
+
+        result = {
+            "count": count,
+            "datas" : []
+        }
+
+        for update, gray in query:
+            tmp = {
+                "title" : gray.title,
+                "description": gray.description if gray.description is not None else "",
+                "update_id": update.update_id if update.update_id is not None else "",
+                "package_id": gray.updateid_package if gray.updateid_package is not None else "",
+                "kb": update.kb if update.kb is not None else "",
+                "start_date": datetime_handler(update.start_date) if update.start_date is not None else "",
+                "end_date": datetime_handler(update.end_date) if update.end_date is not None else "",
+                "current_deploy": update.curent_deploy if update.curent_deploy is not None else 0,
+            }
+
+            result["datas"].append(tmp)
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_audit_summary_updates_by_machine(self, session, machineid, start, end, filter):
+        try:
+            machineid = int(machineid)
+        except:
+            machineid = 0
+
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            end = int(end)
+        except:
+            end = -1
+
+        query = session.query(Deploy)\
+        .join(Machines, Machines.jid == Deploy.jidmachine)\
+        .filter(and_(Deploy.sessionid.contains("update"),
+                     Machines.id== machineid))\
+        .order_by(desc(Deploy.start))
+
+        if filter != "":
+            query = query.filter(or_(Deploy.title.contains(filter),
+                                     Deploy.state.contains(filter),
+                                     Deploy.start.contains(filter),
+                                     Deploy.startcmd.contains(filter),
+                                     Deploy.endcmd.contains(filter)))
+        if start != 0:
+            query = query.offset(start)
+        if end != -1:
+            query = query.limit(end)
+
+        count = query.count()
+        query = query.all()
+
+        result = {
+            "count" : count,
+            "datas" : []
+        }
+
+        for deploy in query:
+            tmp = {
+                "id": deploy.id,
+                "title": deploy.title,
+                "jidmachine": deploy.jidmachine,
+                "jid_relay": deploy.jid_relay,
+                "pathpackage" : deploy.pathpackage,
+                "state": deploy.state,
+                "sessionid": deploy.sessionid,
+                "start": datetime_handler(deploy.start),
+                "startcmd": datetime_handler(deploy.startcmd),
+                "endcmd": datetime_handler(deploy.endcmd),
+                "uuid":deploy.inventoryuuid,
+                "hostname":deploy.host,
+                "user":deploy.user,
+                "cmd_id": deploy.command,
+                "grp_id": deploy.group_uuid,
+                "login": deploy.login,
+                "macadress": deploy.macadress,
+                "syncthing": deploy.syncthing
+            }
+            result["datas"].append(tmp)
         return result

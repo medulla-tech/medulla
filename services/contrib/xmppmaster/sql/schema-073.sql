@@ -1693,7 +1693,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_office_2003_64bit`;
+DROP TABLE IF EXISTS `up_packages_office_2003_64bit`;
 CREATE TABLE `up_packages_office_2003_64bit` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -1767,7 +1767,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_office_2007_64bit`;
+DROP TABLE IF EXISTS `up_packages_office_2007_64bit`;
 CREATE TABLE `up_packages_office_2007_64bit` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -1841,7 +1841,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_office_2010_64bit`;
+DROP TABLE IF EXISTS `up_packages_office_2010_64bit`;
 CREATE TABLE `up_packages_office_2010_64bit` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -1915,7 +1915,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_office_2013_64bit`;
+DROP TABLE IF EXISTS `up_packages_office_2013_64bit`;
 CREATE TABLE `up_packages_office_2013_64bit` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -1990,7 +1990,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_office_2016_64bit`;
+DROP TABLE IF EXISTS `up_packages_office_2016_64bit`;
 CREATE TABLE `up_packages_office_2016_64bit` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2063,7 +2063,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Vstudio_2005`;
+DROP TABLE IF EXISTS `up_packages_Vstudio_2005`;
 CREATE TABLE `up_packages_Vstudio_2005` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2133,7 +2133,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Vstudio_2008`;
+DROP TABLE IF EXISTS `up_packages_Vstudio_2008`;
 CREATE TABLE `up_packages_Vstudio_2008` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2200,7 +2200,7 @@ BEGIN
         product LIKE '%Visual Studio 2010%';
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Vstudio_2010`;
+DROP TABLE IF EXISTS `up_packages_Vstudio_2010`;
 CREATE TABLE `up_packages_Vstudio_2010` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2269,7 +2269,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Vstudio_2012`;
+DROP TABLE IF EXISTS `up_packages_Vstudio_2012`;
 CREATE TABLE `up_packages_Vstudio_2012` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2339,7 +2339,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Vstudio_2013`;
+DROP TABLE IF EXISTS `up_packages_Vstudio_2013`;
 CREATE TABLE `up_packages_Vstudio_2013` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2410,7 +2410,7 @@ BEGIN
         product LIKE '%Visual Studio 2015%';
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Vstudio_2015`;
+DROP TABLE IF EXISTS `up_packages_Vstudio_2015`;
 CREATE TABLE `up_packages_Vstudio_2015` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2480,7 +2480,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Vstudio_2017`;
+DROP TABLE IF EXISTS `up_packages_Vstudio_2017`;
 CREATE TABLE `up_packages_Vstudio_2017` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2549,7 +2549,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Vstudio_2019`;
+DROP TABLE IF EXISTS `up_packages_Vstudio_2019`;
 CREATE TABLE `up_packages_Vstudio_2019` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2615,7 +2615,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Vstudio_2022`;
+DROP TABLE IF EXISTS `up_packages_Vstudio_2022`;
 CREATE TABLE `up_packages_Vstudio_2022` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2688,7 +2688,7 @@ BEGIN
 		AND title NOT LIKE '%X86%'
         AND title not like '%Dynamic%';
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
-drop tables if exists `up_packages_Win10_X64_1903`;
+DROP TABLE IF EXISTS `up_packages_Win10_X64_1903`;
 CREATE TABLE `up_packages_Win10_X64_1903` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2764,7 +2764,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Win10_X64_21H1`;
+DROP TABLE IF EXISTS `up_packages_Win10_X64_21H1`;
 CREATE TABLE `up_packages_Win10_X64_21H1` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2842,7 +2842,7 @@ BEGIN
         AND title not like '%Dynamic%';
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
-drop tables if exists `up_packages_Win10_X64_21H2`;
+DROP TABLE IF EXISTS `up_packages_Win10_X64_21H2`;
 CREATE TABLE `up_packages_Win10_X64_21H2` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2929,7 +2929,7 @@ BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
 
-drop tables if exists `up_packages_Win11_X64`;
+DROP TABLE IF EXISTS `up_packages_Win11_X64`;
 CREATE TABLE `up_packages_Win11_X64` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,
@@ -2997,7 +2997,7 @@ BEGIN
 		and product like '%Windows 1%'
 		ORDER BY revisionid DESC;
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET is_done = 1;
-drop tables if exists `up_packages_Win_Malicious_X64`;
+DROP TABLE IF EXISTS `up_packages_Win_Malicious_X64`;
 CREATE TABLE `up_packages_Win_Malicious_X64` (
   `updateid` varchar(36) NOT NULL,
   `kb` varchar(16) NOT NULL,

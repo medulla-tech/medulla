@@ -57,6 +57,9 @@ def get_white_list(start, end, filter=""):
 def get_black_list(start, end, filter=""):
     return UpdatesDatabase().get_black_list(start, end, filter)
 
+def get_enabled_updates_list(start, end, filter=""):
+    return UpdatesDatabase().get_enabled_updates_list(start, end, filter)
+
 def get_family_list(start, end, filter=""):
     return UpdatesDatabase().get_family_list(start, end, filter)
 
@@ -80,3 +83,9 @@ def white_unlist_update(updateid):
 
 def get_machine_with_update(kb):
     return Glpi().get_machine_with_update(kb)
+
+def get_count_machine_with_update(kb):
+    return Glpi().get_count_machine_with_update(kb)
+
+def get_machines_needing_update(updateid):
+    return UpdatesDatabase().get_machines_needing_update(updateid)

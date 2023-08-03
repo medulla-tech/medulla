@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net
+ * (c) 2023 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -22,16 +22,18 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
+require_once("modules/updates/includes/xmlrpc.php");
 
+$cn = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
+$titlepage = ($cn != "") ? sprintf(_T("Pending Updates for machine %s", 'updates'), $cn) : _T("Pending Updates", 'updates');
 
-$p = new PageGenerator(_T("List Updates", 'updates'));
+$p = new PageGenerator($titlepage);
 $p->setSideMenu($sidemenu);
 $p->display();
 
-require_once("modules/updates/includes/xmlrpc.php");
+unset($_GET['action']);
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdates"));
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxPendingUpdateByMachine"), "container", $_GET);
 $ajax->display();
 $ajax->displayDivToUpdate();
-
 ?>
