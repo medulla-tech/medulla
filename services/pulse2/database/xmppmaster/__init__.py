@@ -12333,7 +12333,7 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             session.flush()
 
             result["success"] = True
-            result["mesg"] = "Update setted up at command %s"
+            result["mesg"] = "Update requested"
             result["commandid"] = commandid
 
         else:
