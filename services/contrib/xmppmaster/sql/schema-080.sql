@@ -66,7 +66,7 @@ CREATE TABLE up_packages_office_2007_64bit AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -120,7 +120,7 @@ CREATE TABLE up_packages_office_2010_64bit AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -174,7 +174,7 @@ CREATE TABLE up_packages_office_2013_64bit AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -228,7 +228,7 @@ CREATE TABLE up_packages_office_2016_64bit AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -282,7 +282,7 @@ CREATE TABLE up_packages_Vstudio_2005 AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -331,7 +331,7 @@ CREATE TABLE up_packages_Vstudio_2008 AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -380,7 +380,7 @@ BEGIN
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -429,7 +429,7 @@ BEGIN
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -478,7 +478,7 @@ DROP TABLE IF EXISTS up_packages_Vstudio_2013;
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -527,7 +527,7 @@ BEGIN
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -576,7 +576,7 @@ BEGIN
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -625,7 +625,7 @@ BEGIN
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -674,7 +674,7 @@ BEGIN
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -723,7 +723,7 @@ DROP TABLE IF EXISTS up_packages_Win10_X64_1903;
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -776,7 +776,7 @@ CREATE TABLE up_packages_Win10_X64_21H1 AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -831,7 +831,7 @@ CREATE TABLE up_packages_Win10_X64_21H2 AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -885,7 +885,7 @@ CREATE TABLE up_packages_Win10_X64_22H2 AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -940,7 +940,7 @@ CREATE TABLE up_packages_Win11_X64 AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
@@ -992,7 +992,7 @@ CREATE TABLE up_packages_Win_Malicious_X64 AS
     aa.deploymentaction,
     aa.title_short
 FROM
-    xmppmaster.up aa
+    xmppmaster.update_data aa
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
