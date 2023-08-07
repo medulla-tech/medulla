@@ -12309,33 +12309,38 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
 
             idtarget = target['id']
 
-            MscDatabase().xmpp_create_CommandsOnHost(commandid,
+            com_on_host = MscDatabase().xmpp_create_CommandsOnHost(commandid,
                 idtarget,
                 machine.hostname,
                 commandstop,
                 commandstart)
 
-            XmppMasterDatabase().addlogincommand(
-                user,
-                commandid,
-                "",
-                "",
-                "",
-                "",
-                "",
-                0,
-                0,
-                0,
-                0,
-                {})
+            if com_on_host is not None or com_on_host is not False:
+                MscDatabase().xmpp_create_CommandsOnHostPhasedeploykiosk(com_on_host.id)
 
-            session.commit()
-            session.flush()
+                XmppMasterDatabase().addlogincommand(
+                    user,
+                    commandid,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    0,
+                    0,
+                    0,
+                    0,
+                    {})
 
-            result["success"] = True
-            result["mesg"] = "Update requested"
-            result["commandid"] = commandid
+                session.commit()
+                session.flush()
 
+                result["commandid"] = commandid
+                result["success"] = True
+                result["mesg"] = "Update %s has been selected between %s and %s"%(deployName, start_date, end_date)
+            else:
+                result["success"] = False
+                result["mesg"] = "Unable to create commandOnHost for command %s"%commandid
         else:
             result["success"] = False
             result["mesg"] = "No update to install"
