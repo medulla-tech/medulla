@@ -361,8 +361,10 @@ class synch_packages:
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         if typename == "cab":
             cmd="""dism /Online /Add-Package /PackagePath:"@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" /NoRestart /Quiet"""%(namefile)
+        elif "kb890830" in namefile:
+            cmd="""copy /y "@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" C:\Windows\System32\MRT.exe"""%(namefile)
         else:
-            cmd="""@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s"""%(namefile)
+            cmd="""Start /wait "@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" """%(namefile)
         cmd64=base64.b64encode(bytes(cmd,"utf-8"))
         template="""{
         "info": {
