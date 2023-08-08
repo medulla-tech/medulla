@@ -12271,9 +12271,10 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
                 files = []
 
             files_str = "\n".join([file['id']+'##'+file['path']+'/'+file['name'] for file in files])
+            section = '"section":"update"'
             command = MscDatabase().createcommanddirectxmpp(pid,
                 '',
-                "",#section
+                section,
                 files_str,
                 'enable',
                 'disable',
