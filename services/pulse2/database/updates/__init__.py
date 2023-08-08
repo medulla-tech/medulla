@@ -196,7 +196,7 @@ class UpdatesDatabase(DatabaseHelper):
                         xmppmaster.update_data.msrcseverity as msrcseverity
                     FROM
                         xmppmaster.up_gray_list
-                    JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_gray_list.updateid"""
+                    JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_gray_list.updateid """
 
             filterlimit= ""
             if start != -1 and limit != -1:
@@ -249,17 +249,21 @@ class UpdatesDatabase(DatabaseHelper):
             white_list={ 'nb_element_total': 0,
                         'updateid' : [],
                         'title' : [],
-                        'kb' : []}
+                        'kb' : [],
+                        "severity": []}
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
-                        *
-                    FROM xmppmaster.up_white_list """
+                        xmppmaster.up_white_list.*,
+                        xmppmaster.update_data.msrcseverity as msrcseverity
+                    FROM xmppmaster.up_white_list
+                    JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_white_list.updateid """
 
             if filter:
                 filterwhere="""AND
                         title LIKE '%%%s%%' """ % filter
                 sql +=filterwhere
 
+            sql += " ORDER BY FIELD(msrcseverity, \"Critical\", \"Important\", \"\") "
             filterlimit= ""
             if start != -1 and limit != -1:
                 filterlimit= "LIMIT %s, %s"%(start, limit)
@@ -278,6 +282,7 @@ class UpdatesDatabase(DatabaseHelper):
                    white_list['updateid'].append(list_w.updateid)
                    white_list['title'].append(list_w.title)
                    white_list['kb'].append(list_w.kb)
+                   white_list['severity'].append(list_w.msrcseverity)
 
         except Exception as e:
             logger.error("error function get_white_list")
