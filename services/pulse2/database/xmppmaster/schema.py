@@ -166,7 +166,7 @@ class Glpi_entity(Base, XmppMasterDBObj):
     glpi_id = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return "<entity('%s','%s', '%s')>" % (self.name, self.complete_name, self.glpi_id)
+        return f"<entity('{self.name}','{self.complete_name}', '{self.glpi_id}')>"
 
     def get_data(self):
         return{ 'id' : self.id,
@@ -187,7 +187,7 @@ class Glpi_location(Base, XmppMasterDBObj):
     glpi_id = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return "<location('%s','%s', '%s')>" % (self.name, self.complete_name, self.glpi_id)
+        return f"<location('{self.name}','{self.complete_name}', '{self.glpi_id}')>"
 
     def get_data(self):
         return{ 'id' : self.id,
@@ -255,7 +255,7 @@ class Glpi_Register_Keys(Base, XmppMasterDBObj):
     machines = relationship(Machines)
 
     def __repr__(self):
-        return "<register_keys('%s','%s', '%s', '%s')>" % (self.name, self.value, self.comment, self.machines_id)
+        return f"<register_keys('{self.name}','{self.value}', '{self.comment}', '{self.machines_id}')>"
 
     def get_data(self):
         return{ 'id' : self.id,
