@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022 Siveo, http://siveo.net/
+ * (c) 2022-2023 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -48,7 +48,8 @@ for($i=0; $i < $count_black; $i++){
     $params_black[] = array(
         'updateid' => $black_list['updateid_or_kb'][$i],
         'title' => $black_list['title'][$i],
-        'id'=>$black_list['id'][$i]
+        'id'=>$black_list['id'][$i],
+        "severity"=>$black_list['severity'][$i]
     );
 
     if(strlen($black_list['updateid_or_kb'][$i]) < 10){
@@ -65,7 +66,7 @@ for($i=0; $i < $count_black; $i++){
 
 $b = new OptimizedListInfos($titles_black, _T("Update name", "updates"));
 $b->addExtraInfo($updateids_black, _T("Update Id", "updates"));
-$b->addExtraInfo($kbs_black, _T("KB", "updates"));
+$b->addExtraInfo($black_list['severity'], _T("Severity", "updates"));
 $b->disableFirstColumnActionLink();
 $b->setItemCount($count_black);
 $b->setNavBar(new AjaxNavBar($count_black, $filter, 'updateSearchParamformBlack'));
