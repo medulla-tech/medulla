@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022 Siveo, http://siveo.net/
+ * (c) 2022-2023 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -69,11 +69,11 @@ for($i=0; $i < $count_white; $i++){
     $params_white[] = $tmp;
 }
 
-$w = new OptimizedListInfos($white_list['severity'], _T("Severity", "updates"));
-$w->addExtraInfo($titles_white, _T("Update name", "updates"));
+$w = new OptimizedListInfos($titles_white, _T("Update name", "updates"));
 $w->disableFirstColumnActionLink();
 $w->addExtraInfo($updateids_white, _T("Update Id", "updates"));
-$w->addExtraInfo($kbs_white, _T("KB", "updates"));
+$w->addExtraInfo($white_list['severity'], _T("Severity", "updates"));
+// $w->addExtraInfo($kbs_white, _T("KB", "updates"));
 $w->setItemCount($count_white);
 $w->setNavBar(new AjaxNavBar($count_white, $filter, 'updateSearchParamformWhite'));
 $w->start = 0;

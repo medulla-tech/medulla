@@ -123,52 +123,60 @@ class UpdatesDatabase(DatabaseHelper):
         except:
             limit= -1
 
-        black_list = {  'nb_element_total': 0,
-                        'id' : [],
-                        'updateid_or_kb' : [],
-                        'title': [] }
+        try:
+            black_list = {  'nb_element_total': 0,
+                            'id' : [],
+                            'updateid_or_kb' : [],
+                            'title': [],
+                            "severity" : []}
 
-        sql="""SELECT SQL_CALC_FOUND_ROWS
-                    up_black_list.updateid_or_kb,
-                    up_packages.title,
-                    up_black_list.id
-                FROM
-                    xmppmaster.up_black_list
-                INNER JOIN
-                    xmppmaster.up_packages 
-                ON
-                    up_black_list.updateid_or_kb = up_packages.kb
-                OR
-                    up_black_list.updateid_or_kb = up_packages.updateid """
+            sql="""SELECT SQL_CALC_FOUND_ROWS
+                        xmppmaster.up_black_list.updateid_or_kb,
+                        xmppmaster.update_data.title,
+                        xmppmaster.up_black_list.id,
+                        xmppmaster.update_data.msrcseverity
+                    FROM
+                        xmppmaster.up_black_list
+                    INNER JOIN
+                        xmppmaster.update_data
+                    ON
+                        up_black_list.updateid_or_kb = update_data.kb
+                    OR
+                        up_black_list.updateid_or_kb = update_data.updateid """
 
-        filterlimit=""
-        if limit != -1 and start != -1:
-            filterlimit= "LIMIT %s, %s"%(start, limit)
-        
-        if filter:
-            filterwhere="""AND
-                    up_packages.title LIKE '%%%s%%' """ % filter
-            sql += filterwhere
-        sql += filterlimit
-        sql+=";"
+            filterlimit=""
+            if limit != -1 and start != -1:
+                filterlimit= "LIMIT %s, %s"%(start, limit)
 
-        result = session.execute(sql)
+            if filter:
+                filterwhere="""AND
+                        update_data.title LIKE '%%%s%%' """ % filter
+                sql += filterwhere
 
-        sql_count = "SELECT FOUND_ROWS();"
-        ret_count = session.execute(sql_count)
-        nb_element_total = ret_count.first()[0]
+            sql += " ORDER BY FIELD(msrcseverity, \"Critical\", \"Important\", \"\") "
+            sql += filterlimit
+            sql+=";"
 
-        black_list['nb_element_total'] = nb_element_total
+            result = session.execute(sql)
 
-        session.commit()
-        session.flush()
+            sql_count = "SELECT FOUND_ROWS();"
+            ret_count = session.execute(sql_count)
+            nb_element_total = ret_count.first()[0]
 
-        if result is not None:
-            for list_b in result:
-                black_list['updateid_or_kb'].append(list_b.updateid_or_kb)
-                black_list['title'].append(list_b.title)
-                black_list['id'].append(list_b.id)
+            black_list['nb_element_total'] = nb_element_total
 
+            session.commit()
+            session.flush()
+
+            if result is not None:
+                for list_b in result:
+                    black_list['updateid_or_kb'].append(list_b.updateid_or_kb)
+                    black_list['title'].append(list_b.title)
+                    black_list['id'].append(list_b.id)
+                    black_list['severity'].append(list_b.msrcseverity)
+
+        except Exception as e:
+            logger.error("error function get_black_list : %s"%e)
         return black_list
 
 
