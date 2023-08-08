@@ -95,7 +95,7 @@ class download_packages:
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         if typename == "cab":
-            cmd="""dism /Online /Add-Package /PackagePath:"@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" /NoRestart /Quiet"""%(namefile)
+            cmd="""dism /Online /Add-Package /PackagePath:"@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" /NoRestart"""%(namefile)
         elif "kb890830" in namefile:
             cmd="""copy /y "@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" C:\Windows\System32\MRT.exe"""%(namefile)
         else:
