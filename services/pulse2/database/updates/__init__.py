@@ -188,12 +188,15 @@ class UpdatesDatabase(DatabaseHelper):
                         'updateid' : [],
                         'title' : [],
                         'kb' : [],
-                        'valided' : []}
+                        'valided' : [],
+                        'severity': []}
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
-                        *
+                        xmppmaster.up_gray_list.*,
+                        xmppmaster.update_data.msrcseverity as msrcseverity
                     FROM
-                        xmppmaster.up_gray_list """
+                        xmppmaster.up_gray_list
+                    JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_gray_list.updateid"""
 
             filterlimit= ""
             if start != -1 and limit != -1:
@@ -202,6 +205,8 @@ class UpdatesDatabase(DatabaseHelper):
                 filterwhere="""WHERE
                         title LIKE '%%%s%%' """%filter
                 sql += filterwhere
+
+            sql += " ORDER BY FIELD(msrcseverity, \"Critical\", \"Important\", \"\") "
             sql += filterlimit
             sql+=";"
 
@@ -222,6 +227,7 @@ class UpdatesDatabase(DatabaseHelper):
                     grey_list['title'].append(list_b.title)
                     grey_list['kb'].append(list_b.kb)
                     grey_list['valided'].append(list_b.valided)
+                    grey_list['severity'].append(list_b.msrcseverity)
 
         except Exception as e:
             logger.error("error function get_grey_list")

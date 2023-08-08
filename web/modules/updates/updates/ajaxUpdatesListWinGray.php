@@ -63,7 +63,8 @@ for($i=0; $i < $count_partial; $i++){
 
     $params_grey[] = array(
         'updateid' => $grey_list['updateid'][$i],
-        'title' => $grey_list['title'][$i]
+        'title' => $grey_list['title'][$i],
+        'severity'=> $grey_list['severity'][$i]
     );
     if(strlen($grey_list['updateid'][$i]) < 10){
         $kbs_gray[] = 'KB'.strtoupper($grey_list['updateid'][$i]);
@@ -80,7 +81,9 @@ foreach($grey_list['updateid'] as $updateid) {
     $ids [] = 'u_'.$updateid;
 }
 // ########## Affichage Tableau GreyList ########## //
-$g = new OptimizedListInfos($titles_grey, _T("Update name", "updates"));
+$g = new OptimizedListInfos($grey_list['severity'], _T("Severity", "updates"));
+$g->addExtraInfo($titles_grey, _T("Update name", "updates"));
+
 $g-> setCssIds($ids);
 $g->disableFirstColumnActionLink();
 $g->addExtraInfo($updateids_gray, _T("Update Id", "updates"));
