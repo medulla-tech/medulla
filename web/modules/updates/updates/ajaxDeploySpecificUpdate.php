@@ -69,6 +69,7 @@ $row = 0;
 
 $hostnames = [];
 $jids = [];
+$severities = [];
 
 foreach ($updates_list as $update) {
     $actionspeclistUpds[] = $deployThisUpdate;
@@ -82,6 +83,11 @@ foreach ($updates_list as $update) {
     if(!empty($updates_list[$row]['jid'])){
         $jids[] =  $updates_list[$row]['jid'];
     }
+
+    if(!empty($updates_list[$row]['severity'])){
+        $severities[] =  $updates_list[$row]['severity'];
+    }
+
     $tmp = [
         "pid" => $updates_list[$row]["update_id"],
         "kb" => $updates_list[$row]["kb"],
@@ -106,7 +112,8 @@ foreach ($updates_list as $update) {
     $row++;
 }
 
-$n = new OptimizedListInfos($names_updates, _T("Update name", "updates"));
+$n = new OptimizedListInfos($severities, _T("Severity", "updates"));
+$n->addExtraInfo($names_updates, _T("Update name", "updates"));
 $n->addExtraInfo($kb_updates, _T("KB", "updates"));
 if($hostnames != []){
     $n->addExtraInfo($hostnames, _T("Machine", "xmppmaster"));
@@ -114,6 +121,7 @@ if($hostnames != []){
 if($jids != []){
     $n->addExtraInfo($jids, _T("Jid", "xmppmaster"));
 }
+
 $n->disableFirstColumnActionLink();
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));

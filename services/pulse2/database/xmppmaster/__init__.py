@@ -12129,7 +12129,8 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
                 or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
                 or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0))
         )\
-        .group_by(Up_machine_windows.update_id)
+        .group_by(Up_machine_windows.update_id)\
+        .order_by(func.field(Up_machine_windows.msrcseverity, "Critical", "Important", ""))
 
         if filter != "":
             query = query.filter(or_(
@@ -12174,7 +12175,8 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
                 "end_date": enddate,
                 "pkgs_label":"" if not None else "",
                 "pkgs_version":"",
-                "pkgs_description":""
+                "pkgs_description":"",
+                "severity": element.msrcseverity if not None else ""
             })
             pkgs_list[element.update_id] = {}
 
