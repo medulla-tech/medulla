@@ -393,7 +393,8 @@ class synch_packages:
             "edition_date": "%s",
             "transferfile": true,
             "methodetransfert": "pushrsync",
-            "software": "templated"
+            "software": "templated",
+            "type_section" : "update"
         },
         "win": {
             "sequence": [
