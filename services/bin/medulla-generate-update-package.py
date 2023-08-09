@@ -31,14 +31,16 @@ class download_packages:
         self.name_table_produit = name_table_produit
         self.directory_output_package  = outputdir
 
-    def  url_to_download(self):
+    def url_to_download(self):
         try:
             os.makedirs(self.directory_output_package)
-            logger.debug("Directory '%s' created successfully" %self.directory_output_package)
+            logger.debug(
+                f"Directory '{self.directory_output_package}' created successfully"
+            )
         except OSError as error:
-            logger.debug("Directory '%s' can not be created" % self.directory_output_package)
+            logger.debug(f"Directory '{self.directory_output_package}' can not be created")
 
-        sql=""" SELECT title, payloadfiles,updateid, kb, description  FROM xmppmaster.%s;""" % self.name_table_produit
+        sql = f""" SELECT title, payloadfiles,updateid, kb, description  FROM xmppmaster.{self.name_table_produit};"""
 
         cursor = self.db.cursor()
         record = cursor.execute(sql)
@@ -48,22 +50,21 @@ class download_packages:
         cursor.close()
 
     def download_url(self, urlpath, dirpackage, updateid, kb, title, description):
-        logger.debug("download %s" % urlpath)
+        logger.debug(f"download {urlpath}")
         start = datetime.now()
         #logger.debug ("download", urlpath, dirpackage )
         namefile = urlpath.split("/")[-1]
         path_file_download = os.path.join(dirpackage, namefile)
         #logger.debug("path_file_download %s " % path_file_download)
         if os.path.isfile(path_file_download):
-            logger.debug("package existe %s" % path_file_download)
+            logger.debug(f"package existe {path_file_download}")
             end = datetime.now()
-            total_elapsed_time = end - start
-            return total_elapsed_time
+            return end - start
         try:
             os.makedirs(dirpackage)
-            logger.debug("Directory '%s' created successfully" % path_file_download)
+            logger.debug(f"Directory '{path_file_download}' created successfully")
         except OSError as error:
-            logger.debug("Directory %s can not be created" % path_file_download)
+            logger.debug(f"Directory {path_file_download} can not be created")
         data = requests.get(urlpath, stream=True)
         with  open(path_file_download, 'wb') as f:
             for chunk in data.iter_content(chunk_size=1024):
@@ -87,8 +88,7 @@ class download_packages:
         # generation
         #Path(dirpackage).write_bytes(data)
         end = datetime.now()
-        total_elapsed_time = end - start
-        return total_elapsed_time
+        return end - start
 
 
     def generate_xmppdeploy_json(self, name, id, description, typename, namefile, urlpath):
@@ -101,7 +101,7 @@ class download_packages:
         else:
             cmd="""Start /wait "@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" """%(namefile)
         cmd64=base64.b64encode(bytes(cmd,"utf-8"))
-        template="""{
+        return """{
         "info": {
             "urlpath" : "%s",
             "creator": "automate_medulla",
@@ -173,14 +173,21 @@ class download_packages:
                 "win"
             ]
         }
-    }"""%(urlpath, dt_string,id,  description, name, dt_string, cmd64.decode("utf-8") )
-        return template
+    }""" % (
+            urlpath,
+            dt_string,
+            id,
+            description,
+            name,
+            dt_string,
+            cmd64.decode("utf-8"),
+        )
 
 
     def generate_conf_json(self, name, id, description, urlpath):
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
-        template="""{
+        return """{
             "urlpath" : "%s",
             "localisation_server": "global",
             "sub_packages": [],
@@ -229,27 +236,30 @@ class download_packages:
             },
             "id": "%s",
             "name": "%s"
-        }"""%(urlpath, description,dt_string,id, name)
-        return template
+        }""" % (
+            urlpath,
+            description,
+            dt_string,
+            id,
+            name,
+        )
 
 
 def simplecommand(cmd):
-    obj = {}
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
     result = p.stdout.readlines()
-    obj["code"] = p.wait()
+    obj = {"code": p.wait()}
     obj["result"] = result
     return obj
 
 def simplecommandstr(cmd):
-    obj = {}
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
     result = p.stdout.readlines()
-    obj["code"] = p.wait()
+    obj = {"code": p.wait()}
     obj["result"] = "\n".join(result)
     return obj
 
@@ -314,7 +324,7 @@ if __name__ == "__main__":
                 os.makedirs(os.path.abspath(os.path.dirname(opts.logfile)))
             open(opts.logfile,"w").close()
     except Exception as e:
-        errorstr = "%s" % traceback.format_exc()
+        errorstr = f"{traceback.format_exc()}"
         print("\n%s" % (errorstr))
         sys.exit(1)
 
@@ -362,8 +372,8 @@ if __name__ == "__main__":
         print ("\t\tpython3 ./medulla-generate-update-package.py -p siveo -Tup_packages_Win10_X64_21H2 -o/var/lib/pulse2/packages/sharing/packages_Win10_X64_21H2 -q -d" )
         sys.exit(1)
 
-    format = "%(asctime)s - %(levelname)s - %(message)s"
     level = logging.INFO
+    format = "%(asctime)s - %(levelname)s - %(message)s"
     if opts.debugmode:
         format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s'
         level = logging.DEBUG
@@ -381,12 +391,10 @@ if __name__ == "__main__":
         Passwordbase = opts.password
     else:
         print("key password input ????")
-        Passwordbase = getpass.getpass(prompt='Password for mysql://' \
-                                       '%s:<password>@%s:%s/%s'%(opts.user,
-                                                                 opts.hostname,
-                                                                 opts.port,
-                                                                 opts.base),
-                                       stream=None)
+        Passwordbase = getpass.getpass(
+            prompt=f'Password for mysql://{opts.user}:<password>@{opts.hostname}:{opts.port}/{opts.base}',
+            stream=None,
+        )
     if Passwordbase == "":
         print("Connecting parameters password missing")
         sys.exit(1)
@@ -408,7 +416,7 @@ if __name__ == "__main__":
                                 db=opts.base)
             print("PARAMETRE CONNECION CORRECT: CONNECT SUCCESS")
         except Exception as e:
-            errorstr = "%s" % traceback.format_exc()
+            errorstr = f"{traceback.format_exc()}"
             print("\n%s" % (errorstr))
         finally:
             db.close()
@@ -425,7 +433,7 @@ if __name__ == "__main__":
         generateur = download_packages(db, opts.table_name, opts.outputdir ).url_to_download()
 
     except Exception as e:
-        errorstr = "%s" % traceback.format_exc()
+        errorstr = f"{traceback.format_exc()}"
         print ("ERROR CONNECTION")
         print ("\n%s" % (errorstr))
         logger.error("\n%s" % (errorstr))
