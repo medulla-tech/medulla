@@ -200,7 +200,25 @@ BEGIN
 END$$
 DELIMITER ;
 
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_white_list_AFTER_DELETE`;
 
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_white_list_AFTER_DELETE` AFTER DELETE ON `up_white_list` FOR EACH ROW
+BEGIN
+	delete from up_gray_list_flop where up_gray_list_flop.updateid = old.updateid;
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_white_list_AFTER_INSERT`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `xmppmaster`.`up_white_list_AFTER_INSERT` AFTER INSERT ON `up_white_list` FOR EACH ROW
+BEGIN
+	delete from xmppmaster.up_gray_list where updateid = new.updateid;
+END$$
+DELIMITER ;
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
