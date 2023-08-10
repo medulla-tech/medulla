@@ -134,7 +134,7 @@ class UpdatesDatabase(DatabaseHelper):
                         xmppmaster.up_black_list.updateid_or_kb,
                         xmppmaster.update_data.title,
                         xmppmaster.up_black_list.id,
-                        xmppmaster.update_data.msrcseverity
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM
                         xmppmaster.up_black_list
                     INNER JOIN
@@ -201,7 +201,7 @@ class UpdatesDatabase(DatabaseHelper):
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         xmppmaster.up_gray_list.*,
-                        xmppmaster.update_data.msrcseverity as msrcseverity
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM
                         xmppmaster.up_gray_list
                     JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_gray_list.updateid """
@@ -262,7 +262,7 @@ class UpdatesDatabase(DatabaseHelper):
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         xmppmaster.up_white_list.*,
-                        xmppmaster.update_data.msrcseverity as msrcseverity
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM xmppmaster.up_white_list
                     JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_white_list.updateid """
 
