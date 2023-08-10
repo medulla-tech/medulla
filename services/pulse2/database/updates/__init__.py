@@ -134,7 +134,7 @@ class UpdatesDatabase(DatabaseHelper):
                         xmppmaster.up_black_list.updateid_or_kb,
                         xmppmaster.update_data.title,
                         xmppmaster.up_black_list.id,
-                        xmppmaster.update_data.msrcseverity
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM
                         xmppmaster.up_black_list
                     INNER JOIN
@@ -201,7 +201,7 @@ class UpdatesDatabase(DatabaseHelper):
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         xmppmaster.up_gray_list.*,
-                        xmppmaster.update_data.msrcseverity as msrcseverity
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM
                         xmppmaster.up_gray_list
                     JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_gray_list.updateid """
@@ -262,7 +262,7 @@ class UpdatesDatabase(DatabaseHelper):
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         xmppmaster.up_white_list.*,
-                        xmppmaster.update_data.msrcseverity as msrcseverity
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM xmppmaster.up_white_list
                     JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_white_list.updateid """
 
@@ -548,13 +548,8 @@ JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up
 
     @DatabaseHelper._sessionm
     def white_unlist_update(self, session, updateid):
-        sql_add = """INSERT INTO xmppmaster.up_gray_list (updateid, kb, revisionid, title, description, updateid_package, payloadfiles, valided, title_short)
-        (SELECT xmppmaster.up_packages.updateid, xmppmaster.up_packages.kb, xmppmaster.up_packages.revisionid, xmppmaster.up_packages.title, description, updateid_package, payloadfiles, valided, title_short FROM xmppmaster.up_white_list
-            JOIN xmppmaster.up_packages ON xmppmaster.up_packages.updateid = xmppmaster.up_white_list.updateid WHERE xmppmaster.up_packages.updateid='%s')"""%(updateid)
-
         sql = """DELETE FROM xmppmaster.up_white_list WHERE updateid = '%s' or kb='%s'"""%(updateid, updateid)
         try:
-            session.execute(sql_add)
             session.execute(sql)
             session.commit()
             session.flush()

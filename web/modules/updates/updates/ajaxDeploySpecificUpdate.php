@@ -60,7 +60,7 @@ else if(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])){
 
 $params = [];
 $names_updates = [];
-$kb_updates = [];
+$id_updates = [];
 $actionspeclistUpds = [];
 
 $count = $updates_list['total'];
@@ -73,7 +73,7 @@ $severities = [];
 
 foreach ($updates_list as $update) {
     $actionspeclistUpds[] = $deployThisUpdate;
-    $kb_updates[] = 'KB'.$update['kb'];
+    $id_updates[] = $update['update_id'];
     $names_updates[] = $updates_list[$row]["pkgs_label"];
     $version_updates[] = $updates_list[$row]['pkgs_version'];
 
@@ -90,7 +90,6 @@ foreach ($updates_list as $update) {
 
     $tmp = [
         "pid" => $updates_list[$row]["update_id"],
-        "kb" => $updates_list[$row]["kb"],
         "title"=>$updates_list[$row]["pkgs_description"],
         "ltitle"=>$updates_list[$row]["pkgs_label"],
         "version"=>$updates_list[$row]['pkgs_version'],
@@ -112,9 +111,9 @@ foreach ($updates_list as $update) {
     $row++;
 }
 
-$n = new OptimizedListInfos($severities, _T("Severity", "updates"));
-$n->addExtraInfo($names_updates, _T("Update name", "updates"));
-$n->addExtraInfo($kb_updates, _T("KB", "updates"));
+$n = new OptimizedListInfos($names_updates, _T("Update name", "updates"));
+$n->addExtraInfo($id_updates, _T("Update Id", "updates"));
+$n->addExtraInfo($severities, _T("Severity", "updates"));
 if($hostnames != []){
     $n->addExtraInfo($hostnames, _T("Machine", "xmppmaster"));
 }
