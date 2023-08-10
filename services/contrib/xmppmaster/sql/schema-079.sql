@@ -24,6 +24,7 @@ USE `xmppmaster`;
 
 ALTER TABLE `xmppmaster`.`up_machine_windows` 
 ADD COLUMN IF NOT EXISTS `intervals` varchar(256) NULL DEFAULT NULL AFTER `end_date`,
+ADD COLUMN IF NOT EXISTS `msrcseverity` VARCHAR(16) NULL AFTER `intervals`,
 ADD UNIQUE INDEX IF NOT EXISTS  `index_uniq_update` (`id_machine` ASC, `update_id` ASC) ,
 ADD UNIQUE INDEX IF NOT EXISTS  `index_uniq_kb` (`id_machine` ASC, `kb` ASC) ;
 

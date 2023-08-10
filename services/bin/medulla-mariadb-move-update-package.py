@@ -360,9 +360,11 @@ class synch_packages:
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         if typename == "cab":
-            cmd="""dism /Online /Add-Package /PackagePath:"@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" /NoRestart /Quiet"""%(namefile)
+            cmd="""dism /Online /Add-Package /PackagePath:"@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" /NoRestart"""%(namefile)
+        elif "kb890830" in namefile:
+            cmd="""copy /y "@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" C:\Windows\System32\MRT.exe"""%(namefile)
         else:
-            cmd="""@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s"""%(namefile)
+            cmd="""Start /wait "@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@\\%s" """%(namefile)
         cmd64=base64.b64encode(bytes(cmd,"utf-8"))
         template="""{
         "info": {
@@ -391,30 +393,37 @@ class synch_packages:
             "edition_date": "%s",
             "transferfile": true,
             "methodetransfert": "pushrsync",
-            "software": "templated"
+            "software": "templated",
+            "type_section" : "update"
         },
         "win": {
             "sequence": [
+                {
+                    "action": "action_section_update", 
+                    "step": 0, 
+                    "actionlabel": "upd_70a70cc9"
+                }, 
                 {
                     "typescript": "Batch",
                     "script": "%s",
                     "30@lastlines": "30@lastlines",
                     "actionlabel": "02d57e96",
                     "codereturn": "",
-                    "step": 0,
-                    "error": 2,
-                    "action": "actionprocessscriptfile"
+                    "step": 1,
+                    "error": 3,
+                    "action": "actionprocessscriptfile",
+                    "timeout": "3600"
                 },
                 {
                     "action": "actionsuccescompletedend",
-                    "step": 1,
+                    "step": 2,
                     "actionlabel": "END_SUCCESS",
                     "clear": "False",
                     "inventory": "False"
                 },
                 {
                     "action": "actionerrorcompletedend",
-                    "step": 2,
+                    "step": 3,
                     "actionlabel": "END_ERROR"
                 }
             ]
@@ -422,9 +431,10 @@ class synch_packages:
         "metaparameter": {
             "win": {
                 "label": {
-                    "END_SUCCESS": 1,
-                    "END_ERROR": 2,
-                    "02d57e96": 0
+                    "END_SUCCESS": 2,
+                    "END_ERROR": 3,
+                    "upd_70a70cc9": 0,
+                    "02d57e96": 1
                 }
             },
             "os": [
