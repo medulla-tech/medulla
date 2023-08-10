@@ -114,7 +114,7 @@ class download_packages:
             "editor": "automate_medulla",
             "metagenerator": "expert",
             "targetrestart": "MA",
-            "inventory": "False",
+            "inventory": "noforced",
             "localisation_server": "global",
             "typescript": "Batch",
             "description": "%s",
@@ -151,7 +151,7 @@ class download_packages:
                     "step": 2,
                     "actionlabel": "END_SUCCESS",
                     "clear": "False",
-                    "inventory": "False"
+                    "inventory": "noforced"
                 },
                 {
                     "action": "actionerrorcompletedend",
