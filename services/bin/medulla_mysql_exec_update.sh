@@ -41,6 +41,39 @@ defaultvalus(){
     }
 
 
+function is_valid_uuid() {
+    uuid="$1"
+    uuid_pattern='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+
+    if [[ "$uuid" =~ $uuid_pattern ]]; then
+        echo "L'UUID est conforme."
+    else
+        echo "L'UUID n'est pas conforme."
+    fi
+}
+
+function log_message() {
+    message="$1"
+    timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+    message_with_date="$timestamp - $message"
+    echo "$message_with_date" >> "$logfile"
+}
+
+function create_directory() {
+    directory_path="$1"
+
+    if [ ! -d "$directory_path" ]; then
+        # Créer le répertoire s'il n'existe pas
+        mkdir -p "$directory_path"
+        if [ $? -eq 0 ]; then
+            log_message "Le répertoire a été créé avec succès."
+        else
+            log_message "Erreur lors de la création du répertoire."
+            exit 1
+        fi
+    fi
+}
+
 Get_parameter_file_section() {
   # $1 conffile
   # $2 section
@@ -54,6 +87,7 @@ fi
 
 defaultvalus
 clear
+create_directory "$baseupdate"
 
 if [[ $# -ne 2 ]]
 then
