@@ -21,7 +21,7 @@
 
 # file : /usr/sbin/medulla_mysql_exec_update.sh
 
-defaultvalus(){
+function defaultvalus(){
     user=mmc
     port=3306
     hostname=lacalhost
@@ -38,17 +38,18 @@ defaultvalus(){
     partage="winupdates"
     logfile="/var/log/mmc/medulla-mariadb-synchro-update-package.log"
     fileconf="/etc/mmc/plugins/xmppmaster.ini"
+    # Récupérer le nom du programme (nom du script en cours d'exécution)
+    # nom_programme="${0##*/}"
+    nom_programme=$(basename "$prog")
     }
 
+function  check_and_exit_if_running() {
+    local parametre_cible="$1"
+    local nom_programme="move-update-package.py"
 
-function is_valid_uuid() {
-    uuid="$1"
-    uuid_pattern='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
-
-    if [[ "$uuid" =~ $uuid_pattern ]]; then
-        echo "L'UUID est conforme."
-    else
-        echo "L'UUID n'est pas conforme."
+    if ps aux | grep -v grep | grep "$nom_programme.*$parametre_cible" >/dev/null 2>&1; then
+        echo "Une instance de $nom_programme avec le paramètre $parametre_cible est déjà en cours d'exécution."
+        exit 1
     fi
 }
 
@@ -58,6 +59,19 @@ function log_message() {
     message_with_date="$timestamp - $message"
     echo "$message_with_date" >> "$logfile"
 }
+
+function is_valid_uuid() {
+    uuid="$1"
+    uuid_pattern='^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+
+    if [[ "$uuid" =~ $uuid_pattern ]]; then
+        log_message "L'UUID est conforme. $uuid"
+    else
+        log_message "L'UUID n'est pas conforme. $uuid"
+        exit 1
+    fi
+}
+
 
 function create_directory() {
     directory_path="$1"
@@ -74,7 +88,7 @@ function create_directory() {
     fi
 }
 
-Get_parameter_file_section() {
+function Get_parameter_file_section() {
   # $1 conffile
   # $2 section
   conffile=$1
@@ -85,17 +99,28 @@ Get_parameter_file_section() {
 fi
 }
 
+# Fonction pour vérifier et quitter le programme si une instance est déjà en cours d'exécution
+function check_and_exit_if_running() {
+    local parametre_cible="$1"
+
+    if ps aux | grep -v grep | grep "$nom_programme.*$parametre_cible" >/dev/null 2>&1; then
+        log_message "Une instance de $nom_programme avec le paramètre $parametre_cible est déjà en cours d'exécution."
+        exit 1
+    fi
+}
+
 defaultvalus
 clear
-create_directory "$baseupdate"
+# pas 2 instance de programme avec le meme uuid
+check_and_exit_if_running $1
 
 if [[ $# -ne 2 ]]
 then
     uuidval=$(uuid)
-    echo "il doit y avoir 2 parametres"
-    echo "argument obligatoire 'uuid' suivi de l'action ['s' | 'S' | 'c' | 'C']"
-    echo "exemple "
-    echo "$pythonexec $prog $uuidval C"
+    log_message "il doit y avoir 2 parametres"
+    log_message "argument obligatoire 'uuid' suivi de l'action ['s' | 'S' | 'c' | 'C']"
+    log_message "exemple "
+    log_message "$pythonexec $prog $uuidval C"
     exit -1
 fi
 uuid_length="${#1}"
@@ -110,12 +135,12 @@ fi
 # option permise
 if [ "${#2}" != '1' ] ||  ! ([ "$2" == "s" ] || [ "$2" == "c" ] )
 then
-    echo "commande non valable"
-    echo "option c ou s"
-    echo "eg : "
-    echo "$pythonexec $prog $option -c"
-    echo "or"
-    echo "$pythonexec $prog $option -s"
+    log_message "commande non valable"
+    log_message "option c ou s"
+    log_message "eg : "
+    log_message "$pythonexec $prog $option -c"
+    log_message "or"
+    log_message "$pythonexec $prog $option -s"
     exit -1
 fi
 
@@ -152,4 +177,9 @@ if [ $debug ]; then
 fi
 
 option+=" -p$password"
-$pythonexec $prog $option
+log_message $pythonexec $prog $option
+
+# nohup $pythonexec $prog $option >> "$logfile" 2>> "$logfile" &
+#     nohup : Cela indique au système de ne pas envoyer le signal SIGHUP (signal de raccrochage) au processus lorsque le terminal est fermé. Cela permet au processus de continuer à s'exécuter en arrière-plan.
+#  & : Cela indique au shell de lancer le processus en arrière-plan. le script present rend la main imediatement
+nohup $pythonexec $prog $option >> "$logfile" 2>&1 &
