@@ -24,9 +24,9 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
-$start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
+$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
+$start = isset($_GET['start']) ? $_GET['start'] : 0;
+$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
 
 $white_list = xmlrpc_get_white_list($start, $maxperpage, $filter);
 // WhiteList Actions
@@ -41,7 +41,7 @@ $count_white = $white_list['nb_element_total'];
 $kbs_white = [];
 $updateids_white = [];
 $titles_white = [];
-for($i=0; $i < $count_white; $i++){
+for($i=0; $i < $count_white; $i++) {
     $tmp = [];
     $whiteActions["unlist"][] = $whiteUnlistAction;
     $whiteActions["ban"][] = $banAction;
@@ -54,13 +54,12 @@ for($i=0; $i < $count_white; $i++){
         'severity' => $white_list['severity'][$i]
     );
 
-    if(strlen($white_list['updateid'][$i]) < 10){
+    if(strlen($white_list['updateid'][$i]) < 10) {
         $kbs_white[] = 'KB'.strtoupper($white_list['updateid'][$i]);
         $updateids_white[] = "";
         $tmp['kb'] = $white_list['updateid'][$i];
         $tmp['uid'] = "";
-    }
-    else{
+    } else {
         $kbs_white[] = "";
         $updateids_white[] = $white_list['updateid'][$i];
         $tmp['kb'] = "";
@@ -83,4 +82,3 @@ echo '</br></br><h2> Whitelisted updates</h2>';
 $w->addActionItemArray($whiteActions["unlist"]);
 $w->addActionItemArray($whiteActions["ban"]);
 $w->display();
-?>

@@ -24,13 +24,13 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
-$start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
+$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
+$start = isset($_GET['start']) ? $_GET['start'] : 0;
+$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
 $black_list = xmlrpc_get_black_list($start, $maxperpage, $filter);
 
 // BlackList Actions
-$blackUnbanAction = new ActionItem(_T("unban Update", "updates"),"blackUnban","unlist","", "updates", "updates");
+$blackUnbanAction = new ActionItem(_T("unban Update", "updates"), "blackUnban", "unlist", "", "updates", "updates");
 $blackActions = ["unban" =>[]];
 
 $params_black = [];
@@ -40,7 +40,7 @@ $updateids_black = [];
 $titles_black = [];
 
 // ########## Set params ########## //
-for($i=0; $i < $count_black; $i++){
+for($i=0; $i < $count_black; $i++) {
     $blackActions["unban"][] = $blackUnbanAction;
 
     $titles_black[] = $black_list['title'][$i];
@@ -52,11 +52,10 @@ for($i=0; $i < $count_black; $i++){
         "severity"=>$black_list['severity'][$i]
     );
 
-    if(strlen($black_list['updateid_or_kb'][$i]) < 10){
+    if(strlen($black_list['updateid_or_kb'][$i]) < 10) {
         $kbs_black[] = 'KB'.strtoupper($black_list['updateid_or_kb'][$i]);
         $updateids_black[] = "";
-    }
-    else{
+    } else {
         $kbs_black[] = "";
         $updateids_black[] = $black_list['updateid_or_kb'][$i];
     }
@@ -77,5 +76,3 @@ $b->setParamInfo($params_black);
 echo '</br></br><h2> Blacklisted updates</h2>';
 $b->addActionItemArray($blackActions["unban"]);
 $b->display();
-
-?>

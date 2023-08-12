@@ -64,7 +64,7 @@ $submod->addPage($page);
 
 $page = new Page("deployUpdate", _T('Deploy Specific Updates On Entity', 'updates'));
 $page->setFile("modules/updates/updates/deployUpdate.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("deploySpecificUpdate", _T('Deploy specific update', 'updates'));
@@ -81,7 +81,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxDetailsSpecificUpdate", _T("Manage machine details for specific update", "updates"));
 $page->setFile("modules/updates/updates/ajaxDetailsSpecificUpdate.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible"=>false, "AJAX" =>true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("ajaxDeploySpecificUpdate", _T("Manage deploy specific update", "updates"));
