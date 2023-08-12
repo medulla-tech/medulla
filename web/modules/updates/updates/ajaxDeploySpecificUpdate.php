@@ -37,13 +37,14 @@ if(!empty($_GET['entity'])) {
     $entityCompleteName = htmlentities($_GET['completename']);
 
     $updates_list = xmlrpc_get_updates_by_entity($entityId, $start, $end, $filter);
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
-} elseif(!empty($_GET['group'])) {
+    $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"),"deployUpdate","updateone","", "updates", "updates");
+}
+else if(!empty($_GET['group'])){
     $gid = htmlentities($_GET['group']);
     $groupname = htmlentities($_GET['groupname']);
     $group = getPGobject($gid, true);
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
-    $machinesListGlpi = getRestrictedComputersList(0, -1, ['gid'=>$gid]);
+    $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"),"deployUpdate","updateone","", "updates", "updates");
+    $machinesListGlpi = getRestrictedComputersList(0,-1,['gid'=>$gid]);
     $machinesList = array_keys($machinesListGlpi);
     $updates_list = xmlrpc_get_updates_by_uuids($machinesList, $start, $end, $filter);
 
@@ -51,14 +52,14 @@ if(!empty($_GET['entity'])) {
     $updates_list = ["datas"=>[], "count"=>0];
     $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : '';
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : '';
-    $machinename = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : '';
-    $deployThisUpdate = new ActionItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
+    $machinename = (!empty($_GET['cn']) )? htmlentities($_GET['cn']) : '';
+    $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"),"deployUpdate","updateone","", "updates", "updates");
     $updates_list = xmlrpc_get_updates_by_uuids([$inventoryid], $start, $end, $filter);
 }
 
 $params = [];
 $names_updates = [];
-$kb_updates = [];
+$id_updates = [];
 $actionspeclistUpds = [];
 
 $count = $updates_list['total'];
@@ -67,10 +68,11 @@ $row = 0;
 
 $hostnames = [];
 $jids = [];
+$severities = [];
 
 foreach ($updates_list as $update) {
     $actionspeclistUpds[] = $deployThisUpdate;
-    $kb_updates[] = 'KB'.$update['kb'];
+    $id_updates[] = $update['update_id'];
     $names_updates[] = $updates_list[$row]["pkgs_label"];
     $version_updates[] = $updates_list[$row]['pkgs_version'];
 
@@ -80,9 +82,13 @@ foreach ($updates_list as $update) {
     if(!empty($updates_list[$row]['jid'])) {
         $jids[] =  $updates_list[$row]['jid'];
     }
+
+    if(!empty($updates_list[$row]['severity'])){
+        $severities[] =  $updates_list[$row]['severity'];
+    }
+
     $tmp = [
         "pid" => $updates_list[$row]["update_id"],
-        "kb" => $updates_list[$row]["kb"],
         "title"=>$updates_list[$row]["pkgs_description"],
         "ltitle"=>$updates_list[$row]["pkgs_label"],
         "version"=>$updates_list[$row]['pkgs_version'],
@@ -103,13 +109,15 @@ foreach ($updates_list as $update) {
 }
 
 $n = new OptimizedListInfos($names_updates, _T("Update name", "updates"));
-$n->addExtraInfo($kb_updates, _T("KB", "updates"));
-if($hostnames != []) {
+$n->addExtraInfo($id_updates, _T("Update Id", "updates"));
+$n->addExtraInfo($severities, _T("Severity", "updates"));
+if($hostnames != []){
     $n->addExtraInfo($hostnames, _T("Machine", "xmppmaster"));
 }
 if($jids != []) {
     $n->addExtraInfo($jids, _T("Jid", "xmppmaster"));
 }
+
 $n->disableFirstColumnActionLink();
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));

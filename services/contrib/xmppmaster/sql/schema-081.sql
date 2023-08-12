@@ -18,19 +18,38 @@
 -- along with Pulse 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
-START TRANSACTION;
 
+START TRANSACTION;
 USE `xmppmaster`;
 
-ALTER TABLE `xmppmaster`.`up_machine_windows` 
-ADD COLUMN IF NOT EXISTS `intervals` varchar(256) NULL DEFAULT NULL AFTER `end_date`,
-ADD COLUMN IF NOT EXISTS `msrcseverity` VARCHAR(16) NULL AFTER `intervals`,
-ADD UNIQUE INDEX IF NOT EXISTS  `index_uniq_update` (`id_machine` ASC, `update_id` ASC) ,
-ADD UNIQUE INDEX IF NOT EXISTS  `index_uniq_kb` (`id_machine` ASC, `kb` ASC) ;
+-- ----------------------------------------------------------------------
+-- Trigger up_white_list_AFTER_DELETE
+-- ----------------------------------------------------------------------
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_white_list_AFTER_DELETE`;
+
+DELIMITER $$
+CREATE TRIGGER `xmppmaster`.`up_white_list_AFTER_DELETE` AFTER DELETE ON `up_white_list` FOR EACH ROW
+BEGIN
+	delete from up_gray_list_flop where up_gray_list_flop.updateid = old.updateid;
+END$$
+DELIMITER ;
+
+-- ----------------------------------------------------------------------
+-- Trigger up_white_list_AFTER_INSERT
+-- ----------------------------------------------------------------------
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_white_list_AFTER_INSERT`;
+
+DELIMITER $$
+CREATE TRIGGER `xmppmaster`.`up_white_list_AFTER_INSERT` AFTER INSERT ON `up_white_list` FOR EACH ROW
+BEGIN
+	delete from xmppmaster.up_gray_list where updateid = new.updateid;
+END$$
+DELIMITER ;
+
 
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 79;
+UPDATE version SET Number = 81;
 
 COMMIT;

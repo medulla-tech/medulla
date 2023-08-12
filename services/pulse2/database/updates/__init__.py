@@ -138,57 +138,65 @@ class UpdatesDatabase(DatabaseHelper):
         except:
             limit = -1
 
-        black_list = {
-            "nb_element_total": 0,
-            "id": [],
-            "updateid_or_kb": [],
-            "title": [],
-        }
+        try:
+            black_list = {
+                "nb_element_total": 0,
+                "id": [],
+                "updateid_or_kb": [],
+                "title": [],
+                "severity": [],
+            }
 
-        sql = """SELECT SQL_CALC_FOUND_ROWS
-                    up_black_list.updateid_or_kb,
-                    up_packages.title,
-                    up_black_list.id
-                FROM
-                    xmppmaster.up_black_list
-                INNER JOIN
-                    xmppmaster.up_packages 
-                ON
-                    up_black_list.updateid_or_kb = up_packages.kb
-                OR
-                    up_black_list.updateid_or_kb = up_packages.updateid """
+            sql = """SELECT SQL_CALC_FOUND_ROWS
+                        xmppmaster.up_black_list.updateid_or_kb,
+                        xmppmaster.update_data.title,
+                        xmppmaster.up_black_list.id,
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
+                    FROM
+                        xmppmaster.up_black_list
+                    INNER JOIN
+                        xmppmaster.update_data
+                    ON
+                        up_black_list.updateid_or_kb = update_data.kb
+                    OR
+                        up_black_list.updateid_or_kb = update_data.updateid """
 
-        filterlimit = ""
-        if limit != -1 and start != -1:
-            filterlimit = "LIMIT %s, %s" % (start, limit)
+            filterlimit = ""
+            if limit != -1 and start != -1:
+                filterlimit = "LIMIT %s, %s" % (start, limit)
 
-        if filter:
-            filterwhere = (
-                """AND
-                    up_packages.title LIKE '%%%s%%' """
-                % filter
-            )
-            sql += filterwhere
-        sql += filterlimit
-        sql += ";"
+            if filter:
+                filterwhere = (
+                    """AND
+                        update_data.title LIKE '%%%s%%' """
+                    % filter
+                )
+                sql += filterwhere
 
-        result = session.execute(sql)
+            sql += ' ORDER BY FIELD(msrcseverity, "Critical", "Important", "") '
+            sql += filterlimit
+            sql += ";"
 
-        sql_count = "SELECT FOUND_ROWS();"
-        ret_count = session.execute(sql_count)
-        nb_element_total = ret_count.first()[0]
+            result = session.execute(sql)
 
-        black_list["nb_element_total"] = nb_element_total
+            sql_count = "SELECT FOUND_ROWS();"
+            ret_count = session.execute(sql_count)
+            nb_element_total = ret_count.first()[0]
 
-        session.commit()
-        session.flush()
+            black_list["nb_element_total"] = nb_element_total
 
-        if result is not None:
-            for list_b in result:
-                black_list["updateid_or_kb"].append(list_b.updateid_or_kb)
-                black_list["title"].append(list_b.title)
-                black_list["id"].append(list_b.id)
+            session.commit()
+            session.flush()
 
+            if result is not None:
+                for list_b in result:
+                    black_list["updateid_or_kb"].append(list_b.updateid_or_kb)
+                    black_list["title"].append(list_b.title)
+                    black_list["id"].append(list_b.id)
+                    black_list["severity"].append(list_b.msrcseverity)
+
+        except Exception as e:
+            logger.error("error function get_black_list : %s" % e)
         return black_list
 
     @DatabaseHelper._sessionm
@@ -209,12 +217,15 @@ class UpdatesDatabase(DatabaseHelper):
                 "title": [],
                 "kb": [],
                 "valided": [],
+                "severity": [],
             }
 
             sql = """SELECT SQL_CALC_FOUND_ROWS
-                        *
+                        xmppmaster.up_gray_list.*,
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM
-                        xmppmaster.up_gray_list """
+                        xmppmaster.up_gray_list
+                    JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_gray_list.updateid """
 
             filterlimit = ""
             if start != -1 and limit != -1:
@@ -226,6 +237,8 @@ class UpdatesDatabase(DatabaseHelper):
                     % filter
                 )
                 sql += filterwhere
+
+            sql += ' ORDER BY FIELD(msrcseverity, "Critical", "Important", "") '
             sql += filterlimit
             sql += ";"
 
@@ -246,6 +259,7 @@ class UpdatesDatabase(DatabaseHelper):
                     grey_list["title"].append(list_b.title)
                     grey_list["kb"].append(list_b.kb)
                     grey_list["valided"].append(list_b.valided)
+                    grey_list["severity"].append(list_b.msrcseverity)
 
         except Exception as e:
             logger.error("error function get_grey_list")
@@ -264,11 +278,19 @@ class UpdatesDatabase(DatabaseHelper):
             limit = -1
 
         try:
-            white_list = {"nb_element_total": 0, "updateid": [], "title": [], "kb": []}
+            white_list = {
+                "nb_element_total": 0,
+                "updateid": [],
+                "title": [],
+                "kb": [],
+                "severity": [],
+            }
 
             sql = """SELECT SQL_CALC_FOUND_ROWS
-                        *
-                    FROM xmppmaster.up_white_list """
+                        xmppmaster.up_white_list.*,
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
+                    FROM xmppmaster.up_white_list
+                    JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_white_list.updateid """
 
             if filter:
                 filterwhere = (
@@ -278,6 +300,7 @@ class UpdatesDatabase(DatabaseHelper):
                 )
                 sql += filterwhere
 
+            sql += ' ORDER BY FIELD(msrcseverity, "Critical", "Important", "") '
             filterlimit = ""
             if start != -1 and limit != -1:
                 filterlimit = "LIMIT %s, %s" % (start, limit)
@@ -296,6 +319,7 @@ class UpdatesDatabase(DatabaseHelper):
                     white_list["updateid"].append(list_w.updateid)
                     white_list["title"].append(list_w.title)
                     white_list["kb"].append(list_w.kb)
+                    white_list["severity"].append(list_w.msrcseverity)
 
         except Exception as e:
             logger.error("error function get_white_list")
@@ -546,19 +570,36 @@ JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up
         return result
 
     @DatabaseHelper._sessionm
-    def white_unlist_update(self, session, updateid):
-        sql_add = """INSERT INTO xmppmaster.up_gray_list (updateid, kb, revisionid, title, description, updateid_package, payloadfiles, valided, title_short)
-        (SELECT xmppmaster.up_packages.updateid, xmppmaster.up_packages.kb, xmppmaster.up_packages.revisionid, xmppmaster.up_packages.title, description, updateid_package, payloadfiles, valided, title_short FROM xmppmaster.up_white_list
-            JOIN xmppmaster.up_packages ON xmppmaster.up_packages.updateid = xmppmaster.up_white_list.updateid WHERE xmppmaster.up_packages.updateid='%s')""" % (
+    def get_machines_needing_update(self, session, updateid):
+        """
+        This function returns the list of machines needing a specific update
+        """
+        sql = """SELECT xmppmaster.machines.hostname AS hostname
+                FROM
+                    xmppmaster.up_machine_windows
+                JOIN
+                    xmppmaster.machines ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
+                WHERE
+                    (update_id = '%s');""" % (
             updateid
         )
 
+        resultquery = session.execute(sql)
+        session.commit()
+        session.flush()
+        result = []
+        if resultquery:
+            for row in resultquery:
+                result.append(row.hostname)
+        return result
+
+    @DatabaseHelper._sessionm
+    def white_unlist_update(self, session, updateid):
         sql = (
             """DELETE FROM xmppmaster.up_white_list WHERE updateid = '%s' or kb='%s'"""
             % (updateid, updateid)
         )
         try:
-            session.execute(sql_add)
             session.execute(sql)
             session.commit()
             session.flush()

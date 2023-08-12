@@ -24,6 +24,8 @@ from datetime import datetime, timedelta  # date,
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
+from pulse2.database.msc import MscDatabase
+
 from pulse2.database.xmppmaster.schema import (
     Network,
     Machines,
@@ -13248,7 +13250,6 @@ and machines.id in (%s);""" % (
                         AND (xmppmaster.up_gray_list.valided = 1 or xmppmaster.up_white_list.valided = 1)"""
 
         sql = sql + array_GUID + ";"
-        logging.getLogger().info(sql)
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
@@ -13605,11 +13606,21 @@ and machines.id in (%s);""" % (
             .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
             .join(Up_machine_windows, Up_machine_windows.id_machine == Machines.id)
             .filter(
-                and_(Up_machine_windows.update_id == pid, Glpi_entity.glpi_id == entity)
+                and_(
+                    Up_machine_windows.update_id == pid,
+                    Glpi_entity.glpi_id == entity,
+                    or_(
+                        Up_machine_windows.curent_deploy == None,
+                        Up_machine_windows.curent_deploy == 0,
+                    ),
+                    or_(
+                        Up_machine_windows.required_deploy == None,
+                        Up_machine_windows.required_deploy == 0,
+                    ),
+                )
             )
             .all()
         )
-
         result = []
 
         for machine in query:
@@ -13663,7 +13674,14 @@ and machines.id in (%s);""" % (
         if pid == "":
             query = query.filter(
                 and_(
-                    Up_machine_windows.required_deploy == 0,
+                    or_(
+                        Up_machine_windows.curent_deploy == None,
+                        Up_machine_windows.curent_deploy == 0,
+                    ),
+                    or_(
+                        Up_machine_windows.required_deploy == None,
+                        Up_machine_windows.required_deploy == 0,
+                    ),
                     Up_machine_windows.id_machine.in_(sub),
                 )
             )
@@ -13705,6 +13723,14 @@ and machines.id in (%s);""" % (
                 )
             )
             .group_by(Up_machine_windows.update_id)
+            .order_by(
+                func.field(
+                    Up_machine_windows.msrcseverity,
+                    "Critical",
+                    "Important",
+                    "Corrective",
+                )
+            )
         )
 
         if filter != "":
@@ -13752,6 +13778,7 @@ and machines.id in (%s);""" % (
                     "pkgs_label": "" if not None else "",
                     "pkgs_version": "",
                     "pkgs_description": "",
+                    "severity": element.msrcseverity if not None else "Corrective",
                 }
             )
             pkgs_list[element.update_id] = {}
@@ -13795,15 +13822,49 @@ and machines.id in (%s);""" % (
 
     @DatabaseHelper._sessionm
     def pending_machine_update_by_pid(
-        self, session, machineid, inventoryid, pid, startdate, enddate, interval
+        self,
+        session,
+        machineid,
+        inventoryid,
+        pid,
+        deployName,
+        user,
+        startdate,
+        enddate,
+        interval,
     ):
         try:
             machineid = int(machineid)
         except:
             machineid = 0
 
-        query = (
-            session.query(Up_machine_windows)
+        start_date = None
+        end_date = None
+
+        current = datetime.today()
+        a_week_from_current = current + timedelta(days=7)
+
+        if startdate != "":
+            try:
+                start_date = datetime.strptime(startdate, "%Y-%m-%d %H:%M:%S")
+            except:
+                start_date = current
+
+        if enddate != "":
+            try:
+                end_date = datetime.strptime(enddate, "%Y-%m-%d %H:%M:%S")
+            except:
+                end_date = a_week_from_current
+
+        if start_date > end_date:
+            start_date, end_date = end_date, start_date
+
+        if end_date < current:
+            end_date = a_week_from_current
+
+        query, machine = (
+            session.query(Up_machine_windows, Machines)
+            .join(Machines, Machines.id == Up_machine_windows.id_machine)
             .filter(
                 and_(
                     Up_machine_windows.id_machine == machineid,
@@ -13820,22 +13881,117 @@ and machines.id in (%s);""" % (
             )
             .first()
         )
+        result = {}
         if query is not None:
-            # We need to know if any update is currently started (current_deploy)
-            count = (
-                session.query(Up_machine_windows)
-                .filter(Up_machine_windows.curent_deploy == 1)
-                .count()
-            )
-            if count == 0:
-                query.curent_deploy = 1
-            query.start_date = startdate
-            query.end_date = enddate
+            query.start_date = start_date
+            query.end_date = end_date
             query.required_deploy = 1
 
-            session.commit()
-            session.flush()
-            return True
+            folderpackage = os.path.join("/", "var", "lib", "pulse2", "packages", pid)
+            exclude_name_package = ["sharing", ".stfolder", ".stignore"]
+
+            files = []
+            if os.path.isdir(folderpackage):
+                for root, dir, file in os.walk(folderpackage):
+                    if root != folderpackage:
+                        continue
+                    for _file in file:
+                        if _file not in exclude_name_package:
+                            files.append(
+                                {
+                                    "path": os.path.basename(os.path.dirname(root)),
+                                    "name": _file,
+                                    "id": str(uuid.uuid4()),
+                                    "size": str(
+                                        os.path.getsize(os.path.join(root, _file))
+                                    ),
+                                }
+                            )
+            else:
+                files = []
+
+            files_str = "\n".join(
+                [
+                    file["id"] + "##" + file["path"] + "/" + file["name"]
+                    for file in files
+                ]
+            )
+            section = '"section":"update"'
+            command = MscDatabase().createcommanddirectxmpp(
+                pid,
+                "",
+                section,
+                files_str,
+                "enable",
+                "disable",
+                start_date,
+                end_date,
+                user,
+                user,
+                deployName,
+                0,
+                28,
+                0,
+                "",
+                None,
+                None,
+                None,
+                "none",
+                "active",
+                "1",
+                cmd_type=0,
+            )
+
+            commandid = command.id
+            commandstart = command.start_date
+            commandstop = command.end_date
+            jidrelay = machine.groupdeploy
+            uuidmachine = machine.uuid_inventorymachine
+            jidmachine = machine.jid
+
+            try:
+                target = MscDatabase().xmpp_create_Target(
+                    machine.uuid_inventorymachine, machine.hostname
+                )
+            except Exception as e:
+                result["success"] = False
+                result["mesg"] = "Unable to create Msc Target"
+                result["detail"] = e
+                return result
+
+            idtarget = target["id"]
+
+            com_on_host = MscDatabase().xmpp_create_CommandsOnHost(
+                commandid, idtarget, machine.hostname, commandstop, commandstart
+            )
+
+            if com_on_host is not None or com_on_host is not False:
+                MscDatabase().xmpp_create_CommandsOnHostPhasedeploykiosk(com_on_host.id)
+
+                XmppMasterDatabase().addlogincommand(
+                    user, commandid, "", "", "", "", "", 0, 0, 0, 0, {}
+                )
+
+                session.commit()
+                session.flush()
+
+                result["commandid"] = commandid
+                result["success"] = True
+                result["mesg"] = "Update %s has been selected between %s and %s" % (
+                    deployName,
+                    start_date,
+                    end_date,
+                )
+            else:
+                result["success"] = False
+                result["mesg"] = (
+                    "Unable to create commandOnHost for command %s" % commandid
+                )
+        else:
+            result["success"] = False
+            result["mesg"] = "No update to install"
+
+        return result
 
     @DatabaseHelper._sessionm
     def get_tagged_updates_by_machine(
@@ -13898,8 +14054,11 @@ and machines.id in (%s);""" % (
             tmp = {
                 "title": gray.title,
                 "description": gray.description if gray.description is not None else "",
-                "update_id": update.update_id,
-                "package_id": gray.updateid_package,
+                "update_id": update.update_id if update.update_id is not None else "",
+                "package_id": gray.updateid_package
+                if gray.updateid_package is not None
+                else "",
+                "kb": update.kb if update.kb is not None else "",
                 "start_date": datetime_handler(update.start_date)
                 if update.start_date is not None
                 else "",

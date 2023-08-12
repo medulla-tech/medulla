@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022 Siveo, http://siveo.net/
+ * (c) 2022-2023 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -51,6 +51,7 @@ $count_partial = safeCount($grey_list['title']);
 $kbs_gray = [];
 $updateids_gray = [];
 $titles_grey = [];
+
 // ########## Boucle greyList ########## //
 for($i=0; $i < $count_partial; $i++){
     $grayActions["enable"][] = ($grey_list['valided'][$i] == 0) ? $grayEnableAction : $grayEnableEmptyAction;
@@ -63,7 +64,8 @@ for($i=0; $i < $count_partial; $i++){
 
     $params_grey[] = array(
         'updateid' => $grey_list['updateid'][$i],
-        'title' => $grey_list['title'][$i]
+        'title' => $grey_list['title'][$i],
+        'severity'=> $grey_list['severity'][$i]
     );
     if(strlen($grey_list['updateid'][$i]) < 10){
         $kbs_gray[] = 'KB'.strtoupper($grey_list['updateid'][$i]);
@@ -81,10 +83,11 @@ foreach($grey_list['updateid'] as $updateid) {
 }
 // ########## Affichage Tableau GreyList ########## //
 $g = new OptimizedListInfos($titles_grey, _T("Update name", "updates"));
+
 $g-> setCssIds($ids);
 $g->disableFirstColumnActionLink();
 $g->addExtraInfo($updateids_gray, _T("Update Id", "updates"));
-$g->addExtraInfo($kbs_gray, _T("KB", "updates"));
+$g->addExtraInfo($grey_list['severity'], _T("Severity", "updates"));
 $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter, 'updateSearchParamformGray'));
 $g->setParamInfo($params_grey);

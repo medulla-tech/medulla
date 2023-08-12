@@ -1816,10 +1816,17 @@ def pending_group_update_by_pid(gid, pid, startdate="", enddate=""):
 
 
 def pending_machine_update_by_pid(
-    machineid, inventoryid, pid, startdate="", enddate="", interval=""
+    machineid,
+    inventoryid,
+    updateid,
+    deployName,
+    user,
+    startdate="",
+    enddate="",
+    interval="",
 ):
     return XmppMasterDatabase().pending_machine_update_by_pid(
-        machineid, inventoryid, pid, startdate, enddate, interval
+        machineid, inventoryid, updateid, deployName, user, startdate, enddate, interval
     )
 
 

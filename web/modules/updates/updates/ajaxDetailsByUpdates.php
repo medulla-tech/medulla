@@ -94,7 +94,7 @@ for($i=0; $i < $count_enabled_updates; $i++) {
     $in_unique_with_Upd = "False";
     $in_unique_without_Upd = "False";
 
-    $params[] = array('kb' => $enabled_updates_list['kb'][$i]);
+    $params[] = array('kb' => $enabled_updates_list['kb'][$i], 'updateid' => $enabled_updates_list['updateid'][$i]);
 
     $with_Upd = xmlrpc_get_count_machine_with_update($enabled_updates_list['kb'][$i]);
     $without_Upd = xmlrpc_get_count_machine_as_not_upd($enabled_updates_list['updateid'][$i]);
