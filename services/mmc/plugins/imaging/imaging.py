@@ -49,6 +49,7 @@ class ComputerImagingImaging(ComputerImagingI):
         ret = {}
         for ims, loc_uuid in r:
             ims = ims.toH()
+            ims["entity_uuid"] = loc_uuid
             ret[ims['imaging_uuid']] = ims
         return ret
 

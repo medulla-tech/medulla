@@ -92,8 +92,8 @@ if ($type == 0) {
         $elt = array();
         $elt_values = array();
         foreach ($imss as $uuid => $imaging_server) {
-            $elt[$uuid] = $imaging_server['name'];
-            $elt_values[$uuid] = $uuid;
+            $elt[$imaging_server['entity_uuid']] = $imaging_server['name'];
+            $elt_values[$imaging_server['entity_uuid']] = $imaging_server['entity_uuid'];
         }
         $imss = new SelectItem("imaging_server");
         $imss->setElements($elt);
