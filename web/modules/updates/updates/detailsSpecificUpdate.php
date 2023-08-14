@@ -34,5 +34,3 @@ unset($_GET['action']);
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsSpecificUpdate"), "container", $_GET);
 $ajax->display();
 $ajax->displayDivToUpdate();
-
-?>

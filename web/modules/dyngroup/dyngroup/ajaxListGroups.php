@@ -34,14 +34,15 @@ if (isset($_GET["start"])) {
     $start = $_GET['start'];
 }
 
-if(isset($_GET['type']))
+if(isset($_GET['type'])) {
     $is_gp = $_GET['type'];
-else
+} else {
     $is_gp = 0;
+}
 
 $params = array('min'=>$start, 'max'=>$start + $maxperpage, 'filter'=>$_GET["filter"]);
 
-if (isset($_GET['favourite'])){
+if (isset($_GET['favourite'])) {
     $params['canShow'] = true;
     $params['localSidebar'] = true;
 }
@@ -68,18 +69,18 @@ if ($is_gp != 1) { // Simple Group
 }
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-       $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquickgroup", "quick", "computer", "xmppmaster", "xmppmaster");
-        $DeployQuickxmpp->setWidth(600);
-    }
+    $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquickgroup", "quick", "computer", "xmppmaster", "xmppmaster");
+    $DeployQuickxmpp->setWidth(600);
+}
 
 
 $empty = new EmptyActionItem();
 
 foreach ($list as $group) {
-    if($is_gp == 1){
+    if($is_gp == 1) {
         $profile = xmlrpc_getProfileLocation($group->id);
         $ids[] =  array("id"=>clean_xss($group->id), "gid"=>clean_xss($group->id), "groupname"=> clean_xss($group->name), 'type'=>clean_xss($is_gp),'profile'=>clean_xss($profile));
-    }else{
+    } else {
         $ids[]=  array("id"=>clean_xss($group->id), "gid"=>clean_xss($group->id), "groupname"=> clean_xss($group->name), 'type'=>clean_xss($is_gp));
     }
     $name[] = clean_xss($group->getName());
@@ -102,9 +103,9 @@ foreach ($list as $group) {
 
 // Avoiding the CSS selector (tr id) to start with a number
 $ids_grp = [];
-foreach($ids as $index => $gid_grp){
+foreach($ids as $index => $gid_grp) {
     $ids_grp[] = 'g_'.$gid_grp['groupname'];
-    }
+}
 
 if ($is_gp != 1) { // Simple Group
     $n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
@@ -128,7 +129,7 @@ $n->setParamInfo($ids);
 if ($is_gp != 1) { // Simple group
     $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "display", "id", "base", "computers"));
     if (in_array("inventory", $_SESSION["supportModList"])) {
-        $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers"));
+        $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"), "groupinvtabs", "inventory", "inventory", "base", "computers"));
     } else {
         # TODO implement the glpi inventory on groups
         #    $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupglpitabs","inventory","inventory", "base", "computers"));
@@ -138,20 +139,20 @@ if ($is_gp != 1) { // Simple group
 
     if (in_array("msc", $_SESSION["supportModList"])) {
         if (!in_array("xmppmaster", $_SESSION["supportModList"])) {
-            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs"));
+            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"), "groupmsctabs", "logfile", "computer", "base", "computers", "grouptablogs"));
         }
-        $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
+        $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"), "groupmsctabs", "install", "computer", "base", "computers"));
     }
     if (in_array("update", $_SESSION["supportModList"])) {
-        $n->addActionItem(new ActionItem(_T("Update on this group", "dyngroup"),"view_updates", "reload", "id","base", "computers"));
+        $n->addActionItem(new ActionItem(_T("Update on this group", "dyngroup"), "view_updates", "reload", "id", "base", "computers"));
     }
-    $n->addActionItem(new ActionItem(_("Updates compliance by machines"),"detailsByMachines", "auditbymachine","updates", "updates", "updates") );
+    $n->addActionItem(new ActionItem(_("Updates compliance by machines"), "detailsByMachines", "auditbymachine", "updates", "updates", "updates"));
     //$n->addActionItem(new ActionItem(_("Deploy all update on this group"),"deployAllUpdates", "updateall","updates", "updates", "updates") );
-    $n->addActionItem(new ActionItem(_("Deploy specific update on this group"),"deploySpecificUpdate", "updateone","updates", "updates", "updates") );
+    $n->addActionItem(new ActionItem(_("Deploy specific update on this group"), "deploySpecificUpdate", "updateone", "updates", "updates", "updates"));
 } else { // Imaging group
     $n->addActionItem(new ActionItem(_T("Display this imaging group's content", 'dyngroup'), "display", "display", "id", "imaging", "manage"));
     if (in_array("inventory", $_SESSION["supportModList"])) {
-        $n->addActionItem(new ActionItem(_T("Inventory on this imaging group", "dyngroup"),"groupinvtabs","inventory","inventory", "imaging", "manage"));
+        $n->addActionItem(new ActionItem(_T("Inventory on this imaging group", "dyngroup"), "groupinvtabs", "inventory", "inventory", "imaging", "manage"));
     } else {
         # TODO implement the glpi inventory on groups
         #    $n->addActionItem(new ActionItem(_T("Inventory on this profile", "dyngroup"),"groupglpitabs","inventory","inventory", "base", "computers"));
@@ -160,26 +161,25 @@ if ($is_gp != 1) { // Simple group
     $n->addActionItem(new ActionItem(_T("Share this imaging group", 'dyngroup'), "edit_share", "groupshare", "id", "imaging", "manage"));
     if (in_array("msc", $_SESSION["supportModList"])) {
         if (!in_array("xmppmaster", $_SESSION["supportModList"])) {
-            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "imaging", "manage", "grouptablogs"));
+            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"), "groupmsctabs", "logfile", "computer", "imaging", "manage", "grouptablogs"));
         }
-        $n->addActionItem(new ActionItem(_T("Software deployment on this imaging group", "dyngroup"),"groupmsctabs","install","computer", "imaging", "manage"));
+        $n->addActionItem(new ActionItem(_T("Software deployment on this imaging group", "dyngroup"), "groupmsctabs", "install", "computer", "imaging", "manage"));
     }
     if (in_array("imaging", $_SESSION["supportModList"])) {
         if (xmlrpc_isImagingInProfilePossible()) {
-            $n->addActionItem(new ActionItem(_("Imaging management"),"groupimgtabs","imaging","computer", "imaging", "manage"));
+            $n->addActionItem(new ActionItem(_("Imaging management"), "groupimgtabs", "imaging", "computer", "imaging", "manage"));
         }
     }
-    $n->addActionItem(new ActionItem(_("Updates compliance by machines"),"detailsByMachines", "auditbymachine","updates", "updates", "updates") );
+    $n->addActionItem(new ActionItem(_("Updates compliance by machines"), "detailsByMachines", "auditbymachine", "updates", "updates", "updates"));
 }
- if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-        // quick action for group with xmppmodule
-        $n->addActionItemArray($actionxmppquickdeploy);
-    }
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+    // quick action for group with xmppmodule
+    $n->addActionItemArray($actionxmppquickdeploy);
+}
 
 $n->addActionItemArray($action_delete);
 
-$n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),"csv","csv","computer", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"), "csv", "csv", "computer", "base", "computers"));
 //$n->disableFirstColumnActionLink();
 
 $n->display();
-?>
