@@ -110,14 +110,14 @@ def get_conformity_update_by_machines(ids=[]):
         "compliance":[]
     }
 
-    result
     for uuid in installed:
+        _missing = missing[uuid]["missing"] if uuid in missing else 0
         result["uuid"].append(uuid)
         result["id"].append(installed[uuid]["id"])
         result["hostname"].append(installed[uuid]["cn"])
         result["installed"].append(installed[uuid]["installed"])
-        result['missing'].append(missing[uuid]["missing"])
-        result["total"].append(installed[uuid]["installed"] + missing[uuid]["missing"])
-        result["compliance"].append(100-(100*missing[uuid]["missing"] / (installed[uuid]["installed"] + missing[uuid]["missing"])))
+        result['missing'].append(_missing)
+        result["total"].append(installed[uuid]["installed"] + _missing)
+        result["compliance"].append(100-(100*_missing / (installed[uuid]["installed"] + _missing)))
 
     return result
