@@ -12585,6 +12585,7 @@ from up_machine_windows
 join machines on machines.id = up_machine_windows.id_machine
 where curent_deploy is NULL
 and required_deploy is NULL
+and (up_gray_list.valided = 1 or up_white_list.valided = 1)
 and id_machine in %s
 group by hostname
 ;"""%ids
