@@ -28,9 +28,6 @@ START TRANSACTION;
 
 SET FOREIGN_KEY_CHECKS=0;
 
-
-SET FOREIGN_KEY_CHECKS=1;
-
 -- ----------------------------------------------------------------------
 -- Database change type champ add index
 -- ----------------------------------------------------------------------
@@ -43,6 +40,7 @@ ADD INDEX `index_id_group` (`id_group` ASC);
 ;
 
 
+SET FOREIGN_KEY_CHECKS=1;
 
 -- ----------------------------------------------------------------------
 -- Database version
