@@ -1553,6 +1553,9 @@ def pending_machine_update_by_pid(machineid, inventoryid, updateid, deployName, 
 def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)
 
+def get_updates_by_machineids(machineids, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_updates_by_machineids(machineids, start, limit, filter)
+
 def get_tagged_updates_by_machine(machineid, start=0, end=-1, filter=""):
     return XmppMasterDatabase().get_tagged_updates_by_machine(machineid, start, end, filter)
 
