@@ -12480,3 +12480,32 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             }
             result["datas"].append(tmp)
         return result
+
+    @DatabaseHelper._sessionm
+    def get_count_missing_updates_by_machines(self, session, ids):
+        ids = "(%s)"%','.join([str(id) for id in ids])
+
+        sql = """select id,
+        uuid_inventorymachine as uuid,
+        hostname,
+        count(update_id) as missing
+from up_machine_windows
+join machines on machines.id = up_machine_windows.id_machine
+where curent_deploy is NULL
+and required_deploy is NULL
+and id_machine in %s
+group by hostname
+;"""%ids
+
+        datas = session.execute(sql)
+        result = {}
+
+        for element in datas:
+            result[element.uuid] = {
+                "id":element.id,
+                "uuid":element.uuid,
+                "hostname":element.hostname,
+                "missing": element.missing
+            }
+
+        return result

@@ -89,3 +89,35 @@ def get_count_machine_with_update(kb):
 
 def get_machines_needing_update(updateid):
     return UpdatesDatabase().get_machines_needing_update(updateid)
+
+def get_conformity_update_by_machines(ids=[]):
+    """ids is formated as :
+    {
+        "uuids": ["UUID4", "UUID3"], // glpi inventory uuids
+        "ids": [4,3]
+    }
+    """
+    installed = Glpi().get_count_installed_updates_by_machines(ids["uuids"])
+    missing = XmppMasterDatabase().get_count_missing_updates_by_machines(ids['ids'])
+
+    result = {
+        "uuid":[],
+        "id":[],
+        "hostname":[],
+        "missing":[],
+        "installed":[],
+        "total":[],
+        "compliance":[]
+    }
+
+    result
+    for uuid in installed:
+        result["uuid"].append(uuid)
+        result["id"].append(installed[uuid]["id"])
+        result["hostname"].append(installed[uuid]["cn"])
+        result["installed"].append(installed[uuid]["installed"])
+        result['missing'].append(missing[uuid]["missing"])
+        result["total"].append(installed[uuid]["installed"] + missing[uuid]["missing"])
+        result["compliance"].append(100-(100*missing[uuid]["missing"] / (installed[uuid]["installed"] + missing[uuid]["missing"])))
+
+    return result
