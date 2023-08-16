@@ -39,7 +39,6 @@ ALTER TABLE  commands_on_host ENGINE=InnoDB;
 ALTER TABLE  phase            ENGINE=InnoDB;
 ALTER TABLE  pull_targets     ENGINE=InnoDB;
 ALTER TABLE  target          ENGINE=InnoDB;
-ALTER TABLE  version  ENGINE=InnoDB;
 
 
 ALTER TABLE `msc`.`phase`
