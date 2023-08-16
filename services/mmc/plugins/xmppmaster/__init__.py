@@ -169,9 +169,9 @@ def syncthingmachineless( grp, cmd):
     return XmppMasterDatabase().syncthingmachineless(grp, cmd)
 
 def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, why, headercolumn):
-    if typelog == "None" and action == "None" and module == "None" and start_date == "":
-        return []
     if typelog == "None":
+        if action == "None" and module == "None" and start_date == "":
+            return []
         typelog == ""
     if module == "None":
         module == ""
@@ -255,9 +255,10 @@ def getGuacamoleRelayServerMachineUuid(uuid):
 
 
 def getGuacamoleRelayServerMachineHostnameProto(hostname):
-    result={"machine" : getGuacamoleRelayServerMachineHostname(hostname),
-            "proto" :  getGuacamoleIdForHostname(hostname)}
-    return result
+    return {
+        "machine": getGuacamoleRelayServerMachineHostname(hostname),
+        "proto": getGuacamoleIdForHostname(hostname),
+    }
 
 def getGuacamoleRelayServerMachineHostname(hostname):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineHostname(hostname)
@@ -378,8 +379,7 @@ def getstatdeployfromcommandidstartdate(command_id, datestart):
     return XmppMasterDatabase().getstatdeployfromcommandidstartdate(command_id, datestart)
 
 def get_machine_stop_deploy(cmdid, uuid):
-    result = XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid)
-    if result:
+    if result := XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid):
         msg_stop_deploy = {
             "action": "enddeploy",
             "sessionid": result['sessionid'],
@@ -546,8 +546,9 @@ def get_deploy_xmpp_teamscheduler(login, minimum=None, maximum=None, filt=None):
         filt = None
 
     pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
-    result = MscDatabase().deployxmppscheduler(pulse_usersidlist, minimum, maximum, filt)
-    return result
+    return MscDatabase().deployxmppscheduler(
+        pulse_usersidlist, minimum, maximum, filt
+    )
 
 def get_deploy_by_team_finished(login, intervalsearch, minimum=None,
                                 maximum=None, filt=None, typedeploy="command"):
@@ -633,10 +634,8 @@ def getdeploybyuser(login, numrow, offset, typedeploy="command"):
 
 def getshowmachinegrouprelayserver():
     def Nonevalue(x):
-        if x == None:
-            return ""
-        else:
-            return x
+        return "" if x is None else x
+
     machinelist = XmppMasterDatabase().showmachinegrouprelayserver()
     array = []
     for t in machinelist:
@@ -700,7 +699,7 @@ def callInventoryinterface(uuid):
         callInventory(jid)
         return jid
     else:
-        logging.getLogger().error("for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger().error(f"for machine {uuid} : jid xmpp missing")
         return "jid missing"
 
 def callrestartbot(uuid):
@@ -709,7 +708,9 @@ def callrestartbot(uuid):
         callrestartbotbymaster(jid)
         return jid
     else:
-        logging.getLogger().error("call restart bot for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger().error(
+            f"call restart bot for machine {uuid} : jid xmpp missing"
+        )
         return "jid missing"
 
 def callrestartbothostname(hostname):
@@ -718,17 +719,19 @@ def callrestartbothostname(hostname):
         Args:
             hostname: The hostname of the machine we want to restart.
     """
-    machine = XmppMasterDatabase().get_machine_from_hostname(hostname)
-    if machine:
+    if machine := XmppMasterDatabase().get_machine_from_hostname(hostname):
         if len(machine) > 1:
-            logging.getLogger().warning("Several Machine have the same hostname %s in the xmppmaster SQL database" % hostname)
+            logging.getLogger().warning(
+                f"Several Machine have the same hostname {hostname} in the xmppmaster SQL database"
+            )
+        elif machine[0]['jid']:
+            logging.getLogger().debug(f"Restarting the agent for the machine {hostname}")
+            callrestartbotbymaster(machine[0]['jid'])
         else:
-            if machine[0]['jid']:
-                logging.getLogger().debug("Restarting the agent for the machine %s" % hostname)
-                callrestartbotbymaster(machine[0]['jid'])
-            else:
-                logging.getLogger().error("The machine %s has not been found in the xmppmaster SQL database." % hostname)
-                logging.getLogger().error("Please check the logs in the client machine")
+            logging.getLogger().error(
+                f"The machine {hostname} has not been found in the xmppmaster SQL database."
+            )
+            logging.getLogger().error("Please check the logs in the client machine")
 
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
@@ -743,7 +746,7 @@ def callInstallKeyAM(jidAM, jidARS):
         callInstallKey(jidAM, jidARS)
         return jidAM
     else:
-        logging.getLogger().error("for machine %s : install key ARS %s" % (jidAM, jidARS))
+        logging.getLogger().error(f"for machine {jidAM} : install key ARS {jidARS}")
         return "jid (AM or ARS) missing"
 
 
@@ -756,7 +759,9 @@ def callrestart(uuid, jid_type=False):
         callrestartbymaster(jid)
         return jid
     else:
-        logging.getLogger().error("callrestartbymaster for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger().error(
+            f"callrestartbymaster for machine {uuid} : jid xmpp missing"
+        )
         return "jid missing"
 
 def callshutdown(uuid, time, msg):
@@ -765,7 +770,9 @@ def callshutdown(uuid, time, msg):
         callshutdownbymaster(jid, time, msg)
         return jid
     else:
-        logging.getLogger().error("callshutdownbymaster for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger().error(
+            f"callshutdownbymaster for machine {uuid} : jid xmpp missing"
+        )
         return "jid missing"
 
 
@@ -775,7 +782,9 @@ def callvncchangeperms(uuid, askpermission):
         callvncchangepermsbymaster(jid, askpermission)
         return jid
     else:
-        logging.getLogger().error("callvncchangepermsbymaster for machine %s : jid xmpp missing" % uuid)
+        logging.getLogger().error(
+            f"callvncchangepermsbymaster for machine {uuid} : jid xmpp missing"
+        )
         return "jid missing"
 
 
@@ -799,9 +808,7 @@ def remotefileeditaction(jidmachine, data):
     if not isinstance(resultjsonstr, basestring):
         return resultjsonstr
     objout = json.loads(resultjsonstr)
-    if 'data' in objout:
-        return objout['data']
-    return objout
+    return objout['data'] if 'data' in objout else objout
 
 def getcontentfile(pathfile, deletefile):
     if os.path.isfile(pathfile):
@@ -821,7 +828,7 @@ def remoteXmppMonitoring(subject, jidmachine, timeout):
     data = callremoteXmppMonitoring(jidmachine,  subject, timeout=timeout)
     result = json.loads(data)
     resultdata = zlib.decompress(base64.b64decode(result['result']))
-    dataresult = [x for x in resultdata.split('\n')]
+    dataresult = list(resultdata.split('\n'))
     result['result'] = dataresult
     return result
 
@@ -842,11 +849,13 @@ def runXmppAsyncCommand(cmd, infomachine):
             "sessionid": sessionid,
             "data": [infomachine['jid'], infomachine, lineplugincalling]
         }
-        XmppMasterDatabase().setCommand_action(infomachine['uuid_inventorymachine'],
-                                               infomachine['cmdid'],
-                                               sessionid,
-                                               "call plugin %s for Quick Action" % (action),
-                                               "log")
+        XmppMasterDatabase().setCommand_action(
+            infomachine['uuid_inventorymachine'],
+            infomachine['cmdid'],
+            sessionid,
+            f"call plugin {action} for Quick Action",
+            "log",
+        )
         callXmppPlugin(action, data)
     else:
         data = {"action": "asynchroremoteQA",
@@ -956,15 +965,15 @@ def get_agent_descriptor_base():
     return  ObjectXmpp().Update_Remote_Agentlist
 
 def get_plugin_lists():
-    pluginlist = {}
-    for t in ObjectXmpp().plugindata:
-        pluginlist[t] = [ ObjectXmpp().plugindata[t],
-                          ObjectXmpp().plugintype[t],
-                          ObjectXmpp().pluginagentmin[t]]
-
-    result = [pluginlist,
-              ObjectXmpp().plugindatascheduler]
-    return result
+    pluginlist = {
+        t: [
+            ObjectXmpp().plugindata[t],
+            ObjectXmpp().plugintype[t],
+            ObjectXmpp().pluginagentmin[t],
+        ]
+        for t in ObjectXmpp().plugindata
+    }
+    return [pluginlist, ObjectXmpp().plugindatascheduler]
 
 def get_conf_master_agent():
     rest={}
@@ -1000,7 +1009,6 @@ def get_xmpprelays_list(start, limit, filter, presence):
     return XmppMasterDatabase().get_xmpprelays_list(start, limit, filter, presence)
 
 def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
-    listidars = []
     arslistextend = []
     objsearch = {}
     if userlogin != "":
@@ -1008,20 +1016,15 @@ def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
         arslistextend = PkgsDatabase().pkgs_search_ars_list_from_cluster_rules(objsearch)
         # on utilise la table rules global pour etendre ou diminuer les droits d'admins sur les ars.
 
-    for share in sharings:
-        if "r" in share['permission'] :
-            listidars.append(share['ars_id'])
+    listidars = [
+        share['ars_id'] for share in sharings if "r" in share['permission']
+    ]
     if arslistextend:
         listidars.extend([x[0] for x in arslistextend])
     ars_list = {}
     ars_list = XmppMasterDatabase().get_ars_list_belongs_cluster(listidars, start, limit, filter)
     if not ars_list or ars_list['count']== 0:
-        res =  { "total" : 0,
-            "datas": {},
-            "partielcount" : 0
-            }
-        return res
-
+        return {"total": 0, "datas": {}, "partielcount": 0}
     stat_ars_machine = XmppMasterDatabase().get_stat_ars_machine(ars_list['jid'])
     ars_list['total_machines'] = []
     ars_list['uninventoried'] = []
@@ -1090,11 +1093,11 @@ def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
             ars_list['nbwindows'].append(0)
             ars_list['nb_ou_user'].append(0)
 
-    res = {"total": ars_list['count'],
-           "datas": ars_list,
-           "partielcount" : len(ars_list['jid'])
-           }
-    return res
+    return {
+        "total": ars_list['count'],
+        "datas": ars_list,
+        "partielcount": len(ars_list['jid']),
+    }
 
 def get_clusters_list(start, limit, filter):
     return XmppMasterDatabase().get_clusters_list(start, limit, filter)
@@ -1122,21 +1125,23 @@ def add_command_relay_qa(qa_relay_id, jid, login):
 
 
 def get_qa_relay_result(result_id):
-    result = XmppMasterDatabase().get_qa_relay_result(result_id)
-    return result
+    return XmppMasterDatabase().get_qa_relay_result(result_id)
 
 
 def add_qa_relay_launched(qa_relay_id, login, cluster_id, jid):
-    result = XmppMasterDatabase().add_qa_relay_launched(qa_relay_id, login, cluster_id, jid)
-    return result
+    return XmppMasterDatabase().add_qa_relay_launched(
+        qa_relay_id, login, cluster_id, jid
+    )
 
 def add_qa_relay_result(jid, exec_date, qa_relay_id, launched_id, session_id=""):
-    result = XmppMasterDatabase().add_qa_relay_result(jid, exec_date, qa_relay_id, launched_id, session_id)
-    return result
+    return XmppMasterDatabase().add_qa_relay_result(
+        jid, exec_date, qa_relay_id, launched_id, session_id
+    )
 
 def get_relay_qa_launched(jid, login, start, maxperpage):
-    result = XmppMasterDatabase().get_relay_qa_launched(jid, login, start, maxperpage)
-    return result
+    return XmppMasterDatabase().get_relay_qa_launched(
+        jid, login, start, maxperpage
+    )
 
 def create_reverse_ssh_from_am_to_ars(jidmachine,
                                       remoteport,
@@ -1165,7 +1170,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
     #logging.getLogger().error("jidARS %s " % machine['groupdeploy'])
     #logging.getLogger().error("jidAM %s " %jidmachine)
     type_reverse = "R"
-    logging.getLogger().debug("proxyport %s " % proxyport)
+    logging.getLogger().debug(f"proxyport {proxyport} ")
     iqcomand = {"action": "information",
                 "data": {"listinformation": ["get_ars_key_id_rsa_pub",
                                             "get_ars_key_id_rsa",
@@ -1174,7 +1179,7 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
                         "param": {}
                         }
                 }
-    logging.getLogger().debug("iq to %s iqcommand is : %s " % (jidARS, iqcomand))
+    logging.getLogger().debug(f"iq to {jidARS} iqcommand is : {iqcomand} ")
     result = ObjectXmpp().iqsendpulse(jidARS,
                                       iqcomand,
                                       timeout)
@@ -1183,7 +1188,9 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
 
     logging.getLogger().debug("result iqcommand : %s" % json.dumps(res, indent = 4))
     if res['numerror'] != 0:
-        logger.error("iq information error to %s on get_ars_key_id_rsa_pub, get_ars_key_id_rsa ,get_free_tcp_port" % jidARS)
+        logger.error(
+            f"iq information error to {jidARS} on get_ars_key_id_rsa_pub, get_ars_key_id_rsa ,get_free_tcp_port"
+        )
         logger.error("abandon reverse ssh")
         return
 
@@ -1198,13 +1205,14 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
                                            "param": {"proxyport": proxyportars}
                                            }
                              }
-        logging.getLogger().debug("send iqcommand to %s : %s" % (jidARS,
-                                                                 uninterruptedstruct))
+        logging.getLogger().debug(
+            f"send iqcommand to {jidARS} : {uninterruptedstruct}"
+        )
         result = ObjectXmpp().iqsendpulse(jidARS,
                                         uninterruptedstruct,
                                         timeout)
 
-        logging.getLogger().debug("result iqcommand : %s" % result)
+        logging.getLogger().debug(f"result iqcommand : {result}")
     structreverse = {"action": "reversesshqa",
                      "sessionid": name_random(8, "reversshiq"),
                      "from": ObjectXmpp().boundjid.bare,
@@ -1220,26 +1228,19 @@ def create_reverse_ssh_from_am_to_ars(jidmachine,
                               "public_key_ars": resultatinformation['get_ars_key_id_rsa_pub']
                               }
                      }
-    logging.getLogger().debug("send iqcommand to %s : %s" % (jidAM,
-                                                             structreverse))
+    logging.getLogger().debug(f"send iqcommand to {jidAM} : {structreverse}")
     result = ObjectXmpp().iqsendpulse(jidAM, structreverse, timeout)
-    logging.getLogger().debug("result iqcommand : %s" % result)
+    logging.getLogger().debug(f"result iqcommand : {result}")
     del structreverse['data']['private_key_ars']
     del structreverse['data']['public_key_ars']
     structreverse['data']['uninterrupted'] = uninterrupted
     return structreverse['data']
 
 def get_packages_list(jid, CGIGET=""):
-    filter = ""
-    maxperpage = 10
-    start = 0
     nb_dataset = 0
-    if "filter" in CGIGET:
-        filter = CGIGET["filter"]
-    if "maxperpage" in CGIGET:
-        maxperpage = int(CGIGET["maxperpage"])
-    if "start" in  CGIGET:
-        start = int(CGIGET["start"])
+    filter = CGIGET["filter"] if "filter" in CGIGET else ""
+    maxperpage = int(CGIGET["maxperpage"]) if "maxperpage" in CGIGET else 10
+    start = int(CGIGET["start"]) if "start" in  CGIGET else 0
     end = start + maxperpage
 
     timeout = 15
@@ -1269,14 +1270,16 @@ def get_packages_list(jid, CGIGET=""):
         _result['datas']['total'] = len(packages['datas']);
         pp=[]
         if filter != "":
-            for package in packages['datas']:
-                if re.search(filter, package['description'], re.IGNORECASE) or\
-                    re.search(filter, package['name'], re.IGNORECASE) or\
-                    re.search(filter, package['version'], re.IGNORECASE) or\
-                    re.search(filter, package['targetos'], re.IGNORECASE) or\
-                    re.search(filter, package['methodtransfer'], re.IGNORECASE) or\
-                    re.search(filter, package['metagenerator'], re.IGNORECASE):
-                    pp.append(package)
+            pp.extend(
+                package
+                for package in packages['datas']
+                if re.search(filter, package['description'], re.IGNORECASE)
+                or re.search(filter, package['name'], re.IGNORECASE)
+                or re.search(filter, package['version'], re.IGNORECASE)
+                or re.search(filter, package['targetos'], re.IGNORECASE)
+                or re.search(filter, package['methodtransfer'], re.IGNORECASE)
+                or re.search(filter, package['metagenerator'], re.IGNORECASE)
+            )
         else:
             pp= packages['datas']
         for package in pp[start:end]:
@@ -1297,8 +1300,6 @@ def get_packages_list(jid, CGIGET=""):
         _result['nb_dataset'] = nb_dataset
     except Exception as e:
         logging.error(e)
-        pass
-
     return _result
 
 
@@ -1324,16 +1325,13 @@ def getLastOnlineStatus(jid):
 
 
 def get_mon_events(start, maxperpage, filter):
-    result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter)
-    return result
+    return XmppMasterDatabase().get_mon_events(start, maxperpage, filter)
 
 def get_mon_events_history(start, maxperpage, filter):
-    result = XmppMasterDatabase().get_mon_events_history(start, maxperpage, filter)
-    return result
+    return XmppMasterDatabase().get_mon_events_history(start, maxperpage, filter)
 
 def acquit_mon_event(id, user):
-    result = XmppMasterDatabase().acquit_mon_event(id, user)
-    return result
+    return XmppMasterDatabase().acquit_mon_event(id, user)
 
 def dir_exists(path):
     return os.path.isdir(path)
@@ -1387,31 +1385,25 @@ def get_computer_count_for_dashboard():
 
 
 def get_count_success_rate_for_dashboard():
-    result = XmppMasterDatabase().get_count_success_rate_for_dashboard()
-    return result
+    return XmppMasterDatabase().get_count_success_rate_for_dashboard()
 
 def get_count_total_deploy_for_dashboard():
-    result = XmppMasterDatabase().get_count_total_deploy_for_dashboard()
-    return result
+    return XmppMasterDatabase().get_count_total_deploy_for_dashboard()
 
 def get_ars_from_cluster(id, filter=""):
-    result = XmppMasterDatabase().get_ars_from_cluster(id, filter)
-    return result
+    return XmppMasterDatabase().get_ars_from_cluster(id, filter)
 
 def update_cluster(id, name, description, relay_ids):
-    result = XmppMasterDatabase().update_cluster(id, name, description, relay_ids)
-    return result
+    return XmppMasterDatabase().update_cluster(id, name, description, relay_ids)
 
 def create_cluster(name, description, relay_ids):
-    result = XmppMasterDatabase().create_cluster(name, description, relay_ids)
-    return result
+    return XmppMasterDatabase().create_cluster(name, description, relay_ids)
 
 def get_rules_list(start, end, filter):
     return XmppMasterDatabase().get_rules_list(start, end, filter)
 
 def order_relay_rule(action, id):
-    result = XmppMasterDatabase().order_relay_rule(action, id)
-    return result
+    return XmppMasterDatabase().order_relay_rule(action, id)
 
 def get_relay_rules(id, start, end, filter):
     return XmppMasterDatabase().get_relay_rules(id, start, end, filter)
@@ -1441,24 +1433,19 @@ def get_minimal_relays_list(mode):
     return XmppMasterDatabase().get_minimal_relays_list(mode)
 
 def get_count_agent_for_dashboard():
-    result = XmppMasterDatabase().get_count_agent_for_dashboard()
-    return result
+    return XmppMasterDatabase().get_count_agent_for_dashboard()
 
 def get_machines_for_ban(jid_ars, start=0, end=-1, filter=""):
-    result = XmppMasterDatabase().get_machines_for_ban(jid_ars, start, end, filter)
-    return result
+    return XmppMasterDatabase().get_machines_for_ban(jid_ars, start, end, filter)
 
 def get_machines_to_unban(jid_ars, start=0, end=-1, filter=""):
-    result = XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
-    return result
+    return XmppMasterDatabase().get_machines_to_unban(jid_ars, start, end, filter)
 
 def get_conformity_update_by_machine(idmachine):
-    result = XmppMasterDatabase().get_conformity_update_by_machine(idmachine)
-    return result
+    return XmppMasterDatabase().get_conformity_update_by_machine(idmachine)
 
 def get_conformity_update_by_machines(ids=[]):
-    result = XmppMasterDatabase().get_conformity_update_by_machines(ids)
-    return result
+    return XmppMasterDatabase().get_conformity_update_by_machines(ids)
 
 def get_conformity_update_for_group(uuidArray):
     result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
@@ -1472,12 +1459,10 @@ def get_conformity_update_for_group(uuidArray):
     return result
 
 def get_idmachine_from_name(name):
-    result = XmppMasterDatabase().get_idmachine_from_name(name)
-    return result
+    return XmppMasterDatabase().get_idmachine_from_name(name)
 
 def get_count_updates_enable():
-    result = XmppMasterDatabase().get_count_updates_enable()
-    return result
+    return XmppMasterDatabase().get_count_updates_enable()
 
 def get_conformity_update_by_entity():
     result = XmppMasterDatabase().get_conformity_update_by_entity()
