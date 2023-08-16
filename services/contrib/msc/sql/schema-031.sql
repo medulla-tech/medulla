@@ -41,6 +41,14 @@ ALTER TABLE  pull_targets     ENGINE=InnoDB;
 ALTER TABLE  target          ENGINE=InnoDB;
 ALTER TABLE  version  ENGINE=InnoDB;
 
+SET FOREIGN_KEY_CHECKS=1;
+
+COMMIT;
+
+
+START TRANSACTION;
+
+SET FOREIGN_KEY_CHECKS=0;
 
 ALTER TABLE `msc`.`phase`
 DROP FOREIGN KEY `fk_phase_1`;
@@ -59,8 +67,6 @@ ADD CONSTRAINT `fkcommand`
   ON UPDATE NO ACTION;
 
 SET FOREIGN_KEY_CHECKS=1;
-
-
 
 -- ----------------------------------------------------------------------
 -- Database version
