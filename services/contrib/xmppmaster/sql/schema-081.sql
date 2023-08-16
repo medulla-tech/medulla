@@ -294,6 +294,36 @@ END$$
 DELIMITER ;
 
 -- ----------------------------------------------------------------------
+-- Trigger up_black_list_BEFORE_INSERT
+-- ----------------------------------------------------------------------
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_BEFORE_INSERT`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE TRIGGER `xmppmaster`.`up_black_list_BEFORE_INSERT` BEFORE INSERT ON `up_black_list` FOR EACH ROW
+BEGIN
+-- on supprime de deploy les enregistrement encore valide qui utilise ce package.
+delete
+from
+	xmppmaster.deploy
+where xmppmaster.deploy.id in (
+				SELECT
+					t1.id as id
+				FROM
+					 xmppmaster.deploy t1
+				join
+                     pkgs.packages t2 on t1.title  like CONCAT(t2.label,'%')
+				WHERE
+				 t2.uuid = new.updateid_or_kb and
+                  t1.endcmd > now() and
+						state REGEXP 'WOL 1|WOL 2|WOL 3|DEPLOYMENT START|WAITING MACHINE ONLINE');
+-- dans msc on supprime aussi les commands utilisant ce package.
+DELETE FROM msc.commands where package_id like new.updateid_or_kb and end_date > now() ;
+END$$
+DELIMITER ;
+
+
+-- ----------------------------------------------------------------------
 -- Trigger up_black_list_AFTER_INSERT
 -- ----------------------------------------------------------------------
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_INSERT`;
