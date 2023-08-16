@@ -853,6 +853,10 @@ function xmlrpc_get_updates_by_uuids($uuids, $start=0, $limit=-1, $filter=""){
   return xmlCall("xmppmaster.get_updates_by_uuids", [$uuids, $start, $limit, $filter]);
 }
 
+function xmlrpc_get_updates_by_machineids($machineids, $start=0, $limit=-1, $filter=""){
+  return xmlCall("xmppmaster.get_updates_by_machineids", [$machineids, $start, $limit, $filter]);
+}
+
 function xmlrpc_get_tagged_updates_by_machine($machineid, $start=0, $end=-1, $filter=""){
   return xmlCall("xmppmaster.get_tagged_updates_by_machine", [$machineid, $start, $end, $filter]);
 }

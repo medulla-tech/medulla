@@ -125,7 +125,10 @@ class synch_packages:
             file_names = os.listdir(self.path_in_partage)
             self.create_directory_in_base()
             for file_name in file_names:
-                shutil.move(os.path.join(self.path_in_partage, file_name), self.path_in_base)
+                try:
+                    shutil.move(os.path.join(self.path_in_partage, file_name), self.path_in_base)
+                except  Exception as e:
+                    pass
             shutil.rmtree(self.path_in_partage)
 
     def del_package(self):
