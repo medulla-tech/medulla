@@ -82,7 +82,8 @@ class MscDatabase(DatabaseHelper):
             self.commands = Table("commands", self.metadata,
                                 Column('dispatched', String(32), default='YES'),
                                 Column('fk_bundle', Integer, ForeignKey('bundle.id')),
-                                autoload = True)
+                                autoload = True,
+                                extend_existing=True)
             # commands_history
             self.commands_history = Table(
                 "commands_history",
@@ -113,7 +114,8 @@ class MscDatabase(DatabaseHelper):
                 "phase",
                 self.metadata,
                 Column('fk_commands_on_host', Integer, ForeignKey('commands_on_host.id')),
-                autoload = True
+                autoload = True,
+                extend_existing=True
             )
             # commands_on_host
             self.commands_on_host = Table(
@@ -121,7 +123,8 @@ class MscDatabase(DatabaseHelper):
                 self.metadata,
                 Column('fk_commands', Integer, ForeignKey('commands.id')),
                 Column('fk_target', Integer, ForeignKey('target.id')),
-                autoload = True
+                autoload = True,
+                extend_existing=True
             )
             # version
             self.version = Table(
