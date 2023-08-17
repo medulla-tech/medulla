@@ -317,8 +317,7 @@ where xmppmaster.deploy.id in (
 				 t2.uuid = new.updateid_or_kb and
                   t1.endcmd > now() and
 						state REGEXP 'WOL 1|WOL 2|WOL 3|DEPLOYMENT START|WAITING MACHINE ONLINE');
--- dans msc on supprime aussi les commands utilisant ce package.
-DELETE FROM msc.commands where package_id like new.updateid_or_kb and end_date > now() ;
+UPDATE `msc`.`commands` SET `end_date` = DATE_SUB(NOW(), INTERVAL 55 MINUTE) WHERE (package_id like new.updateid_or_kb);
 END$$
 DELIMITER ;
 
