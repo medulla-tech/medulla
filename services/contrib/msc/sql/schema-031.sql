@@ -46,7 +46,7 @@ DROP FOREIGN KEY `fk_phase_1`;
 ALTER TABLE `msc`.`phase`
 ADD CONSTRAINT `fk_phase_1`
   FOREIGN KEY (`fk_commands_on_host`)
-  REFERENCES `msc`.`commands` (`id`)
+  REFERENCES `msc`.`commands_on_host` (`id`)
   ON DELETE CASCADE
   ON UPDATE NO ACTION;
 
