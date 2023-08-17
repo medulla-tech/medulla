@@ -41,20 +41,7 @@ ALTER TABLE  pull_targets     ENGINE=InnoDB;
 ALTER TABLE  target          ENGINE=InnoDB;
 
 
-ALTER TABLE `msc`.`phase`
-ADD CONSTRAINT `fk_phase_commands_on_host`
-FOREIGN KEY (`fk_commands_on_host`)
-REFERENCES `msc`.`commands_on_host` (`id`)
-ON DELETE CASCADE;
-
-ALTER TABLE `msc`.`commands_on_host`
-ADD CONSTRAINT `fk_commands`
-FOREIGN KEY (`fk_commands`)
-REFERENCES `msc`.`commands` (`id`)
-ON DELETE CASCADE;
-
 SET FOREIGN_KEY_CHECKS=1;
-
 
 
 -- ----------------------------------------------------------------------
