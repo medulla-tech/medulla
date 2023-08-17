@@ -42,20 +42,16 @@ ALTER TABLE  target          ENGINE=InnoDB;
 
 
 ALTER TABLE `msc`.`phase`
-DROP FOREIGN KEY `fk_phase_1`;
-ALTER TABLE `msc`.`phase`
-ADD CONSTRAINT `fk_phase_1`
-  FOREIGN KEY (`fk_commands_on_host`)
-  REFERENCES `msc`.`commands_on_host` (`id`)
-  ON DELETE CASCADE
-  ON UPDATE NO ACTION;
+ADD CONSTRAINT `fk_phase_commands_on_host`
+FOREIGN KEY (`fk_commands_on_host`)
+REFERENCES `msc`.`commands_on_host` (`id`)
+ON DELETE CASCADE;
 
 ALTER TABLE `msc`.`commands_on_host`
-ADD CONSTRAINT `fkcommand`
-  FOREIGN KEY (`id`)
-  REFERENCES `msc`.`commands` (`id`)
-  ON DELETE CASCADE
-  ON UPDATE NO ACTION;
+ADD CONSTRAINT `fk_commands`
+FOREIGN KEY (`fk_commands`)
+REFERENCES `msc`.`commands` (`id`)
+ON DELETE CASCADE;
 
 SET FOREIGN_KEY_CHECKS=1;
 
