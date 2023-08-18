@@ -24,15 +24,18 @@
 require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
     require("modules/base/computers/localSidebar.php");
-}
-else {
+} else {
     require("modules/imaging/manage/localSidebar.php");
 }
 require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/dyngroup.php");
 
 global $type;
-if ($_GET['action'] == 'computersprofilecreator') { $type = 1; } else { $type = 0; }
+if ($_GET['action'] == 'computersprofilecreator') {
+    $type = 1;
+} else {
+    $type = 0;
+}
 
 if ($type == 0) {
     $p = new TabbedPageGenerator();
@@ -44,7 +47,7 @@ if ($type == 0) {
     $p->addTab("tabfromfile", _T("Static group creation from import", "dyngroup"), "", "modules/dyngroup/dyngroup/import_from_file.php", array('type'=>$type));
     $p->display();
 } else {
-    $assoc = False;
+    $assoc = false;
     $gid = quickGet('id');
     $imaging_server = quickGet('imaging_server');
     if (isset($gid) && $gid != '') {
@@ -85,7 +88,7 @@ if ($type == 0) {
         require_once("modules/medulla_server/includes/profiles_xmlrpc.inc.php");
 
         $f = new ValidatingForm();
-        $f->add(new HiddenTpl("id"), array("value" => $gid, "hide" => True));
+        $f->add(new HiddenTpl("id"), array("value" => $gid, "hide" => true));
         $f->push(new Table());
 
         $imss = xmlrpc_getAllImagingServersForProfiles(true);
