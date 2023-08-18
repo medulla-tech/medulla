@@ -32,7 +32,8 @@ class ComputerImagingImaging(ComputerImagingI):
         ret = {}
         for ims, loc_uuid in r:
             ims = ims.toH()
-            ret[ims["imaging_uuid"]] = ims
+            ims["entity_uuid"] = loc_uuid
+            ret[ims['imaging_uuid']] = ims
         return ret
 
     def getImagingServerEntityUUID(self, imaging_uuid):
