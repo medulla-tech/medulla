@@ -98,7 +98,7 @@ function xmlrpc_get_machines_needing_update($updateid)
     return xmlCall("updates.get_machines_needing_update", [$updateid]);
 }
 
-function xmlrpc_get_conformity_update_by_machines($ids=[]){
+function xmlrpc_get_conformity_update_by_machines($ids=[])
+{
     return xmlCall("updates.get_conformity_update_by_machines", [$ids]);
 }
-?>

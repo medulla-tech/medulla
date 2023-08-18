@@ -51,8 +51,8 @@ if(!empty($_GET['entity'])) {
     $updates_list = ["datas"=>[], "count"=>0];
     $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : '';
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : '';
-    $machinename = (!empty($_GET['cn']) )? htmlentities($_GET['cn']) : '';
-    $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"),"deployUpdate","updateone","", "updates", "updates");
+    $machinename = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : '';
+    $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
     $updates_list = xmlrpc_get_updates_by_machineids([$machineid], $start, $end, $filter);
 }
 
