@@ -13144,47 +13144,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_conformity_update_by_machines(self, session, ids):
-        """
-        This function returns value for compliance rate for a list of machines
-        Params: ids is a list of selected machines
-        Return : waiting updates
-        """
-
-        if len(ids) == 0:
-            return {}
-
-        result = {str(id): 0 for id in ids}
-        sql = """SELECT machines.id,
-(
-SELECT COUNT(*)
-FROM
-    xmppmaster.up_machine_windows
-LEFT JOIN
-    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
-LEFT JOIN
-    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
-WHERE
-    (up_gray_list.valided = 1 OR up_white_list.valided = 1)
-AND
-    up_machine_windows.id_machine = machines.id) AS update_waiting
-from xmppmaster.machines
-where agenttype="machine"
-and machines.id in (%s);""" % (
-            "%s" % ",".join("%d" % i for i in ids)
-        )
-
-        resultquery = session.execute(sql)
-        session.commit()
-        session.flush()
-        # result= [{column: value for column,
-        #         value in rowproxy.items()}
-        #                 for rowproxy in resultquery]
-
-        result = {str(item.id): item.update_waiting for item in resultquery}
-        return result
-
-    @DatabaseHelper._sessionm
     def get_idmachine_from_name(self, session, name):
         """
         This function returns id of machine searched by hostname
@@ -13821,6 +13780,131 @@ and machines.id in (%s);""" % (
         return result
 
     @DatabaseHelper._sessionm
+    def get_updates_by_machineids(
+        self, session, machineids, start=0, limit=-1, filter=""
+    ):
+        query = (
+            session.query(Up_machine_windows)
+            .join(Machines, Machines.id == Up_machine_windows.id_machine)
+            .outerjoin(
+                Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id
+            )
+            .outerjoin(
+                Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id
+            )
+            .filter(
+                and_(
+                    Machines.id.in_(machineids),
+                    or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
+                    or_(
+                        Up_machine_windows.curent_deploy == None,
+                        Up_machine_windows.curent_deploy == 0,
+                    ),
+                    or_(
+                        Up_machine_windows.required_deploy == None,
+                        Up_machine_windows.required_deploy == 0,
+                    ),
+                )
+            )
+            .group_by(Up_machine_windows.update_id)
+            .order_by(
+                func.field(
+                    Up_machine_windows.msrcseverity,
+                    "Critical",
+                    "Important",
+                    "Corrective",
+                )
+            )
+        )
+
+        if filter != "":
+            query = query.filter(
+                or_(
+                    Up_machine_windows.kb.contains(filter),
+                    Up_machine_windows.update_id.contains(filter),
+                )
+            )
+        count = query.count()
+        query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        query = query.all()
+        pkgs_list = {}
+        result = {"total": count, "datas": []}
+
+        for element in query:
+            startdate = ""
+            if element.start_date is not None:
+                startdate = element.start_date
+
+            current_deploy = 0
+            if element.curent_deploy is not None:
+                current_deploy = element.curent_deploy
+
+            required_deploy = 0
+            if element.required_deploy is not None:
+                required_deploy = element.required_deploy
+
+            enddate = ""
+            if element.end_date is not None:
+                enddate = element.end_date
+
+            result["datas"].append(
+                {
+                    "id_machine": element.id_machine if not None else 0,
+                    "update_id": element.update_id if not None else "",
+                    "kb": element.kb if not None else "",
+                    "current_deploy": current_deploy,
+                    "required_deploy": required_deploy,
+                    "start_date": startdate,
+                    "end_date": enddate,
+                    "pkgs_label": "" if not None else "",
+                    "pkgs_version": "",
+                    "pkgs_description": "",
+                    "severity": element.msrcseverity if not None else "Corrective",
+                }
+            )
+            pkgs_list[element.update_id] = {}
+
+        if pkgs_list != {}:
+            if pkgs_list.keys() != []:
+                concat = "in (%s)" % ",".join(
+                    ['"%s"' % uuid for uuid in pkgs_list.keys()]
+                )
+            else:
+                concat = '= ""'
+
+            sql2 = (
+                """SELECT pkgs.packages.uuid,
+            pkgs.packages.label,
+            pkgs.packages.version,
+            pkgs.packages.description
+            FROM pkgs.packages
+            WHERE pkgs.packages.uuid %s
+            """
+                % concat
+            )
+            query2 = session.execute(sql2)
+
+            for element in query2:
+                pkgs_list[element[0]] = {
+                    "label": element[1],
+                    "version": element[2],
+                    "description": element[3],
+                }
+
+            for element in result["datas"]:
+                if element["update_id"] in pkgs_list:
+                    print(pkgs_list[element["update_id"]])
+                    element["pkgs_label"] = pkgs_list[element["update_id"]]["label"]
+                    element["pkgs_version"] = pkgs_list[element["update_id"]]["version"]
+                    element["pkgs_description"] = pkgs_list[element["update_id"]][
+                        "description"
+                    ]
+        return result
+
+    @DatabaseHelper._sessionm
     def pending_machine_update_by_pid(
         self,
         session,
@@ -14142,4 +14226,37 @@ and machines.id in (%s);""" % (
                 "syncthing": deploy.syncthing,
             }
             result["datas"].append(tmp)
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_count_missing_updates_by_machines(self, session, ids):
+        ids = "(%s)" % ",".join([str(id) for id in ids])
+
+        sql = (
+            """select id,
+        uuid_inventorymachine as uuid,
+        hostname,
+        count(update_id) as missing
+from up_machine_windows
+join machines on machines.id = up_machine_windows.id_machine
+where curent_deploy is NULL
+and required_deploy is NULL
+and (up_gray_list.valided = 1 or up_white_list.valided = 1)
+and id_machine in %s
+group by hostname
+;"""
+            % ids
+        )
+
+        datas = session.execute(sql)
+        result = {}
+
+        for element in datas:
+            result[element.uuid] = {
+                "id": element.id,
+                "uuid": element.uuid,
+                "hostname": element.hostname,
+                "missing": element.missing,
+            }
+
         return result

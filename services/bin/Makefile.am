@@ -28,6 +28,6 @@ dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging
 	pulse2-connect-machine-backuppc pulse2-disconnect-machine-backuppc \
 	restart-pulse-services pulse2-inscription_packages_in_base.py pulse2-generation_package.py \
 	medulla-generate-update-package.py medulla-mariadb-move-update-package.py \
-	medulla_mysql_exec_update.sh
+	medulla_mysql_exec_update.sh medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 
 dist_bin_SCRIPTS = pulse2-uuid-resolver pulse2-backup-handler pulse2-synch-masters

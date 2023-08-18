@@ -982,14 +982,8 @@ function xmlrpc_get_conformity_update_by_machine($idmachine)
     return xmlCall("xmppmaster.get_conformity_update_by_machine", [$idmachine]);
 }
 
-function xmlrpc_get_conformity_update_by_machines($ids)
-{
-    return xmlCall("xmppmaster.get_conformity_update_by_machines", [$ids]);
-}
-
-function xmlrpc_get_conformity_update_for_group($uuidArray)
-{
-    return xmlCall("xmppmaster.get_conformity_update_for_group", [$uuidArray]);
+function xmlrpc_get_conformity_update_for_group($uuidArray){
+  return xmlCall("xmppmaster.get_conformity_update_for_group", [$uuidArray]);
 }
 
 function xmlrpc_get_idmachine_from_name($name)
@@ -1032,9 +1026,12 @@ function xmlrpc_get_updates_by_uuids($uuids, $start=0, $limit=-1, $filter="")
     return xmlCall("xmppmaster.get_updates_by_uuids", [$uuids, $start, $limit, $filter]);
 }
 
-function xmlrpc_get_tagged_updates_by_machine($machineid, $start=0, $end=-1, $filter="")
-{
-    return xmlCall("xmppmaster.get_tagged_updates_by_machine", [$machineid, $start, $end, $filter]);
+function xmlrpc_get_updates_by_machineids($machineids, $start=0, $limit=-1, $filter=""){
+  return xmlCall("xmppmaster.get_updates_by_machineids", [$machineids, $start, $limit, $filter]);
+}
+
+function xmlrpc_get_tagged_updates_by_machine($machineid, $start=0, $end=-1, $filter=""){
+  return xmlCall("xmppmaster.get_tagged_updates_by_machine", [$machineid, $start, $end, $filter]);
 }
 
 function xmlrpc_get_audit_summary_updates_by_machine($machineid, $start, $end, $filter)

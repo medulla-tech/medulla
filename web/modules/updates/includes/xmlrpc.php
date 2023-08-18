@@ -3,11 +3,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2015 Siveo, http://http://www.siveo.net
+ * (c) 2022-2023 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,3 +97,8 @@ function xmlrpc_get_machines_needing_update($updateid)
 {
     return xmlCall("updates.get_machines_needing_update", [$updateid]);
 }
+
+function xmlrpc_get_conformity_update_by_machines($ids=[]){
+    return xmlCall("updates.get_conformity_update_by_machines", [$ids]);
+}
+?>

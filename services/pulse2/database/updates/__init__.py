@@ -433,11 +433,6 @@ class UpdatesDatabase(DatabaseHelper):
             )
             session.execute(sql2)
 
-            sql3 = (
-                """DELETE FROM xmppmaster.up_gray_list WHERE updateid = '%s' or kb='%s'"""
-                % (updateid, updateid)
-            )
-            session.execute(sql3)
             session.commit()
             session.flush()
             return True

@@ -706,6 +706,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/medulla-generate-update-package.py
 %{_sbindir}/medulla-mariadb-move-update-package.py
 %{_sbindir}/medulla_mysql_exec_update.sh
+%{_sbindir}/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
