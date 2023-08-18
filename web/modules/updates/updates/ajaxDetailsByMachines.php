@@ -158,7 +158,7 @@ if ($entity == '') {
 
         $complrate = $compliance_computers["compliance"][$i];
 
-        if ($compliance_computers["missing"][$i] == '0'){
+        if ($compliance_computers["missing"][$i] == '0') {
             $complrate = '100';
         }
         $color = colorconf($complrate);
