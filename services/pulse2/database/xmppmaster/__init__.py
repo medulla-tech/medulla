@@ -12536,6 +12536,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
     @DatabaseHelper._sessionm
     def get_count_missing_updates_by_machines(self, session, ids):
+        result = {}
+        if ids == []:
+            return result
+
         ids = "(%s)"%','.join([str(id) for id in ids])
 
         sql = """select id,
@@ -12554,7 +12558,6 @@ group by hostname
 ;"""%ids
 
         datas = session.execute(sql)
-        result = {}
 
         for element in datas:
             result[element.uuid] = {
