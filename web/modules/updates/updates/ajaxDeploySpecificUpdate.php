@@ -74,7 +74,8 @@ $severities = [];
 foreach ($updates_list as $update) {
     $actionspeclistUpds[] = $deployThisUpdate;
     $id_updates[] = $update['update_id'];
-    $names_updates[] = $updates_list[$row]["pkgs_label"];
+    $names_updates[] = (!empty($updates_list[$row]["pkgs_label"])) ? $updates_list[$row]["pkgs_label"] : $updates_list[$row]["title"];
+
     $version_updates[] = $updates_list[$row]['pkgs_version'];
 
     if(!empty($updates_list[$row]['hostname'])){
