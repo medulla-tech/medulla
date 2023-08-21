@@ -12308,6 +12308,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             query.start_date = start_date
             query.end_date = end_date
             query.required_deploy = 1
+            query.intervals = interval
 
             folderpackage = os.path.join("/", "var","lib", "pulse2", "packages", pid)
             exclude_name_package = ["sharing", ".stfolder", ".stignore" ]

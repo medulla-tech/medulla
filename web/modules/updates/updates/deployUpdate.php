@@ -217,15 +217,16 @@ else if(!empty($_GET["machineid"])){
     $formtitle = _T("Schedule update deployment on machine", "update");
 }
 
-if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'])){
+if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'], $_POST['deployment_intervals'])){
 
     $machineid = htmlentities($_GET['machineid']);
     $inventoryid = htmlentities($_GET["inventoryid"]);
     $updateid= htmlentities($_POST['updateid']);
     $startdate = htmlentities($_POST['start_date']);
     $enddate = htmlentities($_POST['end_date']);
+    $deployment_intervals = htmlentities($_POST['deployment_intervals']);
 
-    $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate);
+    $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate, $deployment_intervals);
 
     $mesg = (!empty($result["mesg"])) ? htmlentities($result["mesg"]) : "";
     if(!empty($result["success"]) && $result["success"] == true){
