@@ -12228,6 +12228,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 "required_deploy":  required_deploy,
                 "start_date": startdate,
                 "end_date": enddate,
+                "deployment_intervals" : element.intervals if element.intervals is not None else "",
                 "pkgs_label":"" if not None else "",
                 "pkgs_version":"",
                 "pkgs_description":"",
