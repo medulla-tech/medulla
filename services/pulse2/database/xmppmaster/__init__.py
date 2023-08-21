@@ -12544,6 +12544,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         count(update_id) as missing
 from up_machine_windows
 join machines on machines.id = up_machine_windows.id_machine
+join up_gray_list on up_machine_windows.update_id = up_gray_list.updateid
+join up_white_list on up_machine_windows.update_id = up_white_list.updateid
 where curent_deploy is NULL
 and required_deploy is NULL
 and (up_gray_list.valided = 1 or up_white_list.valided = 1)
