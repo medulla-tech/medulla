@@ -12171,7 +12171,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
         return result
 
-     @DatabaseHelper._sessionm
+    @DatabaseHelper._sessionm
     def get_updates_by_machineids(self, session, machineids, start=0, limit=-1, filter=""):
         query = session.query(Up_machine_windows, Up_gray_list)\
             .join(Machines, Machines.id == Up_machine_windows.id_machine)\
