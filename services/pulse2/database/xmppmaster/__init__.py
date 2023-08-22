@@ -12171,9 +12171,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
         return result
 
-    @DatabaseHelper._sessionm
+     @DatabaseHelper._sessionm
     def get_updates_by_machineids(self, session, machineids, start=0, limit=-1, filter=""):
-        query = session.query(Up_machine_windows)\
+        query = session.query(Up_machine_windows, Up_gray_list)\
             .join(Machines, Machines.id == Up_machine_windows.id_machine)\
             .outerjoin(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)\
             .outerjoin(Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id)\
@@ -12201,7 +12201,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             "datas": []
         }
 
-        for element in query:
+        for element, gray in query:
             startdate = ""
             if element.start_date is not None:
                 startdate = element.start_date
@@ -12221,11 +12221,14 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             result['datas'].append({
                 "id_machine": element.id_machine if not None else 0,
                 "update_id": element.update_id if not None else "",
+                "title" : gray.title if not None else "",
+                "description": gray.description if not None else "",
                 "kb": element.kb if not None else "",
                 "current_deploy": current_deploy,
                 "required_deploy":  required_deploy,
                 "start_date": startdate,
                 "end_date": enddate,
+                "deployment_intervals" : element.intervals if element.intervals is not None else "",
                 "pkgs_label":"" if not None else "",
                 "pkgs_version":"",
                 "pkgs_description":"",
@@ -12258,9 +12261,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             for element in result['datas']:
                 if element['update_id'] in pkgs_list:
                     print(pkgs_list[element['update_id']])
-                    element["pkgs_label"] = pkgs_list[element['update_id']]["label"]
-                    element["pkgs_version"] = pkgs_list[element['update_id']]["version"]
-                    element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
+                    element["pkgs_label"] = pkgs_list[element['update_id']]["label"] if "label" in pkgs_list[element['update_id']] else ""
+                    element["pkgs_version"] = pkgs_list[element['update_id']]["version"] if "version" in pkgs_list[element['update_id']] else ""
+                    element["pkgs_description"] = pkgs_list[element['update_id']]["description"] if "description" in pkgs_list[element['update_id']] else ""
         return result
 
     @DatabaseHelper._sessionm
@@ -12305,6 +12308,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             query.start_date = start_date
             query.end_date = end_date
             query.required_deploy = 1
+            query.intervals = interval
 
             folderpackage = os.path.join("/", "var","lib", "pulse2", "packages", pid)
             exclude_name_package = ["sharing", ".stfolder", ".stignore" ]
@@ -12536,6 +12540,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
     @DatabaseHelper._sessionm
     def get_count_missing_updates_by_machines(self, session, ids):
+        result = {}
+        if ids == []:
+            return result
+
         ids = "(%s)"%','.join([str(id) for id in ids])
 
         sql = """select id,
@@ -12544,15 +12552,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         count(update_id) as missing
 from up_machine_windows
 join machines on machines.id = up_machine_windows.id_machine
+join up_gray_list on up_machine_windows.update_id = up_gray_list.updateid
 where curent_deploy is NULL
 and required_deploy is NULL
-and (up_gray_list.valided = 1 or up_white_list.valided = 1)
+and up_gray_list.valided = 1
 and id_machine in %s
 group by hostname
 ;"""%ids
 
         datas = session.execute(sql)
-        result = {}
 
         for element in datas:
             result[element.uuid] = {
