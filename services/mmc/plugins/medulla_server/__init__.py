@@ -54,24 +54,24 @@ def getApiVersion():
 
 
 def activate():
-    config = Pulse2Config("pulse2")
+    config = Pulse2Config("medulla_server")
     logger = logging.getLogger()
     if config.disable:
-        logger.warning("Plugin pulse2: disabled by configuration.")
+        logger.warning("Plugin medulla_server: disabled by configuration.")
         return False
     if not Pulse2Database().activate(config):
         logger.warning(
-            "Plugin pulse2: an error occurred during the database initialization"
+            "Plugin medulla_server: an error occurred during the database initialization"
         )
         return False
 
-    Pulse2Manager().register("pulse2", Pulse2Pulse2Manager)
+    Pulse2Manager().register("medulla_server", Pulse2Pulse2Manager)
     updateQueryClass()
     return True
 
 
 def activate_2():
-    config = Pulse2Config("pulse2")
+    config = Pulse2Config("medulla_server")
     try:
         ComputerLocationManager().select(config.location)
     except Exception as e:
@@ -136,7 +136,7 @@ def create_method(m):
 class Pulse2Config(PluginConfig, Pulse2DatabaseConfig):
     location = None
 
-    def __init__(self, name="pulse2", conffile=None):
+    def __init__(self, name="medulla_server", conffile=None):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile)
             Pulse2DatabaseConfig.__init__(self)
@@ -389,7 +389,7 @@ def updateDebianSourceList():
 
 def canDoInventory():
     try:
-        from mmc.plugins.pulse2.inventory import canDoInventory
+        from mmc.plugins.medulla_server.inventory import canDoInventory
 
         return canDoInventory()
     except ImportError:
