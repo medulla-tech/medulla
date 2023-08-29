@@ -778,7 +778,7 @@ class Update_data(Base):
     updateid = Column(String(38), primary_key=True)
     revisionid =  Column(String(16), nullable=False, default="")
     creationdate = Column(DateTime, default=datetime.datetime.now)
-    company =  Column(String(36), default="")
+    compagny =  Column(String(36), default="")
     product =  Column(String(512), default="")
     productfamily =  Column(String(100), default="")
     updateclassification =  Column(String(36), default="")

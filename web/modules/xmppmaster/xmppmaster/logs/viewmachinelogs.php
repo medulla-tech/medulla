@@ -81,6 +81,7 @@ include_once('modules/pkgs/includes/xmlrpc.php');
     // Retrieve information deploy. For cmn_id
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+$isUpdate = (substr($info['objectdeploy'][0]['sessionid'], 0, 6) == "update") ? true : false;
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id, $uuid);
 
 $tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
@@ -88,6 +89,11 @@ $contrainte  = count($tab)?$tab[$cmd_id]:"";
 
 $pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
 $pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);
+
+$update_datas = [];
+if($isUpdate){
+    $update_kb = xmlrpc_get_update_kb($deploymachine['package_id']);
+}
 
 $p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$deploymachine['target_name']."]");
 $p->setSideMenu($sidemenu);
@@ -318,6 +324,11 @@ $showText = _T("Show", "xmppmaster");
                             echo '<td style="width: 300px;">';
                                 echo '<span style=" padding-left: 32px;">'._T("Creation Date","xmppmaster").'</span>';
                             echo '</td>';
+                            if($isUpdate){
+                                echo '<td class="action" style="text-align:center;">';
+                                echo '<span>'._T("Actions", "updates").'</span>';
+                                echo '</td>';
+                            }
                         echo "</tr>";
                     echo "</thead>";
                     echo "<tbody>";
@@ -334,6 +345,14 @@ $showText = _T("Show", "xmppmaster");
                             echo "<td>";
                                 echo $creation_date;
                             echo "</td>";
+                            if($isUpdate){
+                                echo '<td class="action" style="text-align:center;">';
+                                echo '<ul class="action">';
+                                echo '<li class="infoupdate"><a href="https://www.catalog.update.microsoft.com/Search.aspx?q='.$deploymachine['package_id'].'"> </a></li>';
+                                echo '<li class="helpupdate"><a href="https://support.microsoft.com/help/'.$update_kb.'"> </a></li>';
+                                echo '</ul>';
+                                echo '</td>';
+                            }
                         echo "</tr>";
                     echo "</tbody>";
                 echo "</table>";

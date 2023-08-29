@@ -861,4 +861,7 @@ function xmlrpc_get_audit_summary_updates_by_machine($machineid, $start, $end, $
   return xmlCall("xmppmaster.get_audit_summary_updates_by_machine", [$machineid, $start, $end, $filter]);
 }
 
+function xmlrpc_get_update_kb($updateid){
+  return xmlCall("xmppmaster.get_update_kb", [$updateid]);
+}
 ?>
