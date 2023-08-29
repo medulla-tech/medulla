@@ -33,7 +33,7 @@ class XLSGenerator(object):
             pass
 
     def _T(self, text):
-        return self._gettext(text).decode("utf8")
+        return self._gettext(text)
 
     def get_summary_sheet(self, datas):
         sheet = self.wbk.add_sheet(self._T("Summary"))
