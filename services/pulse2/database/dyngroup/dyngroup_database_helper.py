@@ -184,9 +184,9 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     "__treatQueryLevelAND  : %s %s" % (str(lq), str(len(res)))
                 )
                 if result_set is not None:
-                    result_set.intersection_update(Set(res))
+                    result_set.intersection_update(set(res))
                 else:
-                    result_set = Set(res)
+                    result_set = set(res)
                 filter_on.append(grpby.in_(res))
 
             else:

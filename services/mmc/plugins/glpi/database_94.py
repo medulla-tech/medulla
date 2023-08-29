@@ -2655,11 +2655,11 @@ class Glpi94(DyngroupDatabaseHelper):
         machines_uuid_size = len(a_machine_uuid)
         all_computers = session.query(Machine)
         all_computers = self.filterOnUUID(all_computers, a_machine_uuid).all()
-        all_computers = Set([toUUID(str(m.id)) for m in all_computers])
+        all_computers = set([toUUID(str(m.id)) for m in all_computers])
         if len(all_computers) != machines_uuid_size:
             self.logger.info(
                 "some machines have been deleted since that list was generated (%s)"
-                % (str(Set(a_machine_uuid) - all_computers))
+                % (str(set(a_machine_uuid) - all_computers))
             )
             machines_uuid_size = len(all_computers)
         size = 1
@@ -2671,9 +2671,9 @@ class Glpi94(DyngroupDatabaseHelper):
             return True
         elif (not all) and len(ret) > 0:
             return True
-        ret = Set([toUUID(str(m.id)) for m in ret])
+        ret = set([toUUID(str(m.id)) for m in ret])
         self.logger.info(
-            "dont have permissions on %s" % (str(Set(a_machine_uuid) - ret))
+            "dont have permissions on %s" % (str(set(a_machine_uuid) - ret))
         )
         return False
 
