@@ -156,7 +156,7 @@ else
 {
     $create_client = xmlrpc_add_client($clientname);
 
-    if ($create_client["already_exists"] == "1") 
+    if ($create_client["already_exists"] == "true") 
     {
         foreach ($clients_settings as $client)
         {
