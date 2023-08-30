@@ -12571,3 +12571,16 @@ group by hostname
             }
 
         return result
+
+    @DatabaseHelper._sessionm
+    def get_update_kb(self, session, updateid):
+        try:
+            query = session.query(Update_data)\
+            .filter(Update_data.updateid == updateid)
+
+            result = query.first()
+            if query is not None:
+                return result.kb
+        except Exception as e:
+            pass
+        return ""
