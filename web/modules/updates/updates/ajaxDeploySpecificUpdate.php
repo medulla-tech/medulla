@@ -29,7 +29,7 @@ global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
-$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
+$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 
 $updates_list = [];
 if(!empty($_GET['entity'])) {
@@ -43,12 +43,12 @@ if(!empty($_GET['entity'])) {
     $groupname = htmlentities($_GET['groupname']);
     $group = getPGobject($gid, true);
     $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
-    $machinesListGlpi = getRestrictedComputersList(0, -1, ['gid'=>$gid]);
+    $machinesListGlpi = getRestrictedComputersList(0, -1, ['gid' => $gid]);
     $machinesList = array_keys($machinesListGlpi);
     $updates_list = xmlrpc_get_updates_by_uuids($machinesList, $start, $end, $filter);
 
 } elseif(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])) {
-    $updates_list = ["datas"=>[], "count"=>0];
+    $updates_list = ["datas" => [], "count" => 0];
     $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : '';
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : '';
     $machinename = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : '';
@@ -89,9 +89,9 @@ foreach ($updates_list as $update) {
 
     $tmp = [
         "pid" => $updates_list[$row]["update_id"],
-        "title"=>$updates_list[$row]["pkgs_description"],
-        "ltitle"=>$updates_list[$row]["pkgs_label"],
-        "version"=>$updates_list[$row]['pkgs_version'],
+        "title" => $updates_list[$row]["pkgs_description"],
+        "ltitle" => $updates_list[$row]["pkgs_label"],
+        "version" => $updates_list[$row]['pkgs_version'],
         "deployment_intervals" => $updates_list[$row]["deployment_intervals"],
     ];
     if(!empty($_GET['entity'])) {
