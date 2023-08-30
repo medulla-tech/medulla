@@ -82,6 +82,7 @@ def check_client(jidmachine, clientid, authkey):
         + " & echo authkey = "
         + str(authkey)
         + " & echo backup_server = "
+        + "urbackup://"
         + str(urbackup_server)
         + " & echo backup_port = "
         + str(urbackup_port)
