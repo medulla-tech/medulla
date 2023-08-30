@@ -68,11 +68,12 @@ $row = 0;
 $hostnames = [];
 $jids = [];
 $severities = [];
+$intervals = [];
 
 foreach ($updates_list as $update) {
     $actionspeclistUpds[] = $deployThisUpdate;
     $id_updates[] = $update['update_id'];
-    $names_updates[] = $updates_list[$row]["pkgs_label"];
+    $names_updates[] = (!empty($updates_list[$row]["pkgs_label"])) ? $updates_list[$row]["pkgs_label"] : $updates_list[$row]["title"];
     $version_updates[] = $updates_list[$row]['pkgs_version'];
 
     if(!empty($updates_list[$row]['hostname'])) {
@@ -91,6 +92,7 @@ foreach ($updates_list as $update) {
         "title"=>$updates_list[$row]["pkgs_description"],
         "ltitle"=>$updates_list[$row]["pkgs_label"],
         "version"=>$updates_list[$row]['pkgs_version'],
+        "deployment_intervals" => $updates_list[$row]["deployment_intervals"],
     ];
     if(!empty($_GET['entity'])) {
         $tmp["entity"] = $entityId;

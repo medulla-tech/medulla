@@ -1845,3 +1845,7 @@ def get_audit_summary_updates_by_machine(machineid, start=0, end=-1, filter=""):
     return XmppMasterDatabase().get_audit_summary_updates_by_machine(
         machineid, start, end, filter
     )
+
+
+def get_update_kb(updateid):
+    return XmppMasterDatabase().get_update_kb(updateid)

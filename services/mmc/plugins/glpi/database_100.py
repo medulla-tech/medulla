@@ -7055,8 +7055,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_count_installed_updates_by_machines(self, session, ids):
-        ids = "(%s)" % ",".join([id for id in ids]).replace("UUID", "")
+        result = {}
+        if ids == []:
+            return result
 
+        ids = "(%s)" % ",".join([id for id in ids]).replace("UUID", "")
         sql = """select
     glpi_computers.id as id,
     glpi_computers.name as name,
@@ -7070,7 +7073,6 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
         )
 
         datas = session.execute(sql)
-        result = {}
         for element in datas:
             logger.debug(element)
             result["UUID%d" % element.id] = {

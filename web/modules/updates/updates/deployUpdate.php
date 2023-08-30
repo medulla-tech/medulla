@@ -34,6 +34,109 @@ function quick_get($param, $is_checkbox = false)
 ?>
 
 <script>
+submitButton = jQuery(".btnPrimary")
+
+let enableSubmitButton = ()=>{
+    submitButton.prop("disabled", false)
+}
+
+let disableSubmitButton = ()=>{
+    submitButton.prop("disabled", true)
+}
+
+let checkIntervals = function(selector){
+    let intervals = true
+    let value = selector.val();
+    if(value === "undefined" || value == ""){
+        // We accept empty value, so we quit the test in this case
+        return true;
+    }
+
+    value = value.replace(/\,+$/, '')
+    splitted = value.split(',')
+    a = null
+    b = null
+    for(i=0; i< splitted.length; i++){
+        interval = splitted[i].split('-')
+        if(interval.length == 2){
+            a = parseInt(interval[0]);
+            b = parseInt(interval[1]);
+
+            if(isNaN(a) || isNaN(b) || a >24 || b>24){
+                intervals = intervals && false;
+            }
+            else if(a > b){
+                tmpCurrent = a+"-24";
+                tmpNew = "0-"+b;
+                splitted[i] = tmpCurrent;
+                splitted.splice(i+1, 0, tmpNew);
+
+                newVal = splitted.join(',')
+
+                // start again the checks, no need to split again, the values are inserted
+                    selector.val(newVal);
+                    i=0;
+                    intervals = true;
+            }
+            else{
+                intervals = intervals && true
+            }
+        }
+        else{
+            intervals = intervals && false
+        }
+    }
+
+    // toggle submitbutton on the fly
+    if(intervals === false){
+        disableSubmitButton();
+        jQuery("#interval_mesg").text("<?php echo _T('Wrong deployment intervals', 'msc');?>");
+    }
+    else{
+        jQuery("#interval_mesg").text("");
+        enableSubmitButton();
+    }
+    return intervals;
+}
+
+let intervals = true
+let timer=0;
+let delay=700;
+jQuery("#deployment_intervals").on("keydown focusout",()=>{
+    clearInterval(timer);
+});
+jQuery("#deployment_intervals").on("keyup",()=>{
+    clearInterval(timer);
+    timer = setInterval(()=>{
+        //reset the result
+        intervals = true;
+        jQuery("#interval_mesg").text("");
+
+        intervals= checkIntervals(jQuery("#deployment_intervals"));
+    }, delay);
+});
+
+jQuery(".btnPrimary").hover(function(){
+    var start = toTimestamp(jQuery('#start_date').val())
+    var end   = toTimestamp(jQuery('#end_date').val())
+    var exec  = toTimestamp(jQuery('#exec_date').val())
+
+    if(intervals == false){
+        jQuery(this).prop("disabled", true);
+        jQuery("#interval_mesg").text("<?php echo _T('Wrong deployment intervals', 'msc');?>");
+    }
+    else if (start > end){
+        // alert ("inconsistency within the deployment range");
+        jQuery(this).prop("disabled", true);
+    }
+    else{
+        jQuery("#interval_mesg").text("");
+        jQuery(this).prop("disabled", false);
+    }
+});
+
+
+
 function toTimestamp(strDate){
     var datum = Date.parse(strDate);
     return datum/1000;
@@ -118,15 +221,16 @@ else if(!empty($_GET["machineid"])){
     $formtitle = _T("Schedule update deployment on machine", "update");
 }
 
-if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'])){
+if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'], $_POST['deployment_intervals'])){
 
     $machineid = htmlentities($_GET['machineid']);
     $inventoryid = htmlentities($_GET["inventoryid"]);
     $updateid= htmlentities($_POST['updateid']);
     $startdate = htmlentities($_POST['start_date']);
     $enddate = htmlentities($_POST['end_date']);
+    $deployment_intervals = htmlentities($_POST['deployment_intervals']);
 
-    $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate);
+    $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate, $deployment_intervals);
 
     $mesg = (!empty($result["mesg"])) ? htmlentities($result["mesg"]) : "";
     if(!empty($result["success"]) && $result["success"] == true){
@@ -161,6 +265,22 @@ else{
         ), array(
             "value" => $end_date,
             "end_date" => 0)
+    );
+
+    $deployment_fields = array(
+        new InputTpl('deployment_intervals'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i><div id="interval_mesg"></div>', _T('Example for lunch and night (24h format): 12-14,20-24,0-8', 'msc')))
+    );
+    $deployment_values = array(
+        "value" => array(
+            quick_get('deployment_intervals'),
+            '',
+        ),
+    );
+    $f->add(
+        new TrFormElement(
+            _T('Deployment interval', 'msc'), new multifieldTpl($deployment_fields)
+        ), $deployment_values
     );
 
     $f->addValidateButton("bconfirm");

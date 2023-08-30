@@ -1017,9 +1017,8 @@ function xmlrpc_pending_group_update_by_pid($gid, $pid, $startdate="", $enddate=
     return xmlCall("xmppmaster.pending_group_update_by_pid", [$gid, $pid, $startdate, $enddate]);
 }
 
-function xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, $user, $startdate="", $enddate="")
-{
-    return xmlCall("xmppmaster.pending_machine_update_by_pid", [$machineid, $inventoryid, $updateid, $deployName, $user, $startdate, $enddate]);
+function xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, $user, $startdate="", $enddate="", $deployment_intervals=""){
+  return xmlCall("xmppmaster.pending_machine_update_by_pid", [$machineid, $inventoryid, $updateid, $deployName, $user, $startdate, $enddate, $deployment_intervals]);
 }
 
 function xmlrpc_get_updates_by_uuids($uuids, $start=0, $limit=-1, $filter="")
@@ -1041,3 +1040,8 @@ function xmlrpc_get_audit_summary_updates_by_machine($machineid, $start, $end, $
 {
     return xmlCall("xmppmaster.get_audit_summary_updates_by_machine", [$machineid, $start, $end, $filter]);
 }
+
+function xmlrpc_get_update_kb($updateid){
+  return xmlCall("xmppmaster.get_update_kb", [$updateid]);
+}
+?>
