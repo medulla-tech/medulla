@@ -119,10 +119,10 @@ def get_conformity_update_by_machines(ids=[]):
     }
     """
     merged = {}
-    range = len(ids['uuids'])
+    range = len(ids["uuids"])
     count = 0
     while count < range:
-        merged[ids['uuids'][count]] = ids['ids'][count]
+        merged[ids["uuids"][count]] = ids["ids"][count]
         count += 1
 
     installed = Glpi().get_count_installed_updates_by_machines(ids["uuids"])
