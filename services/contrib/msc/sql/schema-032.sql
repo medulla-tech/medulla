@@ -28,8 +28,17 @@ START TRANSACTION;
 SET FOREIGN_KEY_CHECKS=0;
 
 -------------------------------------------
+-- Save msc tables
+-------------------------------------------
+
+create table  if not exists save_phase select * from phase;
+create table  if not exists save_commands_on_host select * from commands_on_host;
+create table  if not exists save_commands select * from commands;
+create table  if not exists save_target select * from target;
+
+-------------------------------------------
 -- Clean msc tables
--- ----------------------------------
+-------------------------------------------
 
 delete from phase;
 delete from commands_on_host;
@@ -61,6 +70,24 @@ ADD CONSTRAINT `fk_commands_on_host_target`
   REFERENCES `target` (`id`) 
   ON DELETE NO ACTION 
   ON UPDATE NO ACTION;
+
+
+-------------------------------------------
+-- Clean msc tables
+-------------------------------------------
+insert into commands (select * from save_commands);
+insert into target (select * from save_target);
+insert into commands_on_host (select * from save_commands_on_host);
+insert into phase (select * from save_phase);
+
+-------------------------------------------
+-- Clean msc tables
+-------------------------------------------
+
+drop table if exists save_commands;
+drop table if exists save_target;
+drop table if exists save_commands_on_host;
+drop table if exists save_phase;
 
 SET FOREIGN_KEY_CHECKS=1;
 
