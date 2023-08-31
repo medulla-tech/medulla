@@ -31,19 +31,19 @@ SET FOREIGN_KEY_CHECKS=0;
 -- Save msc tables
 -------------------------------------------
 
-create table  if not exists save_phase select * from phase;
-create table  if not exists save_commands_on_host select * from commands_on_host;
-create table  if not exists save_commands select * from commands;
-create table  if not exists save_target select * from target;
+CREATE TABLE IF NOT EXISTS save_phase SELECT * FROM phase;
+CREATE TABLE IF NOT EXISTS save_commands_on_host SELECT * FROM commands_on_host;
+CREATE TABLE IF NOT EXISTS save_commands SELECT * FROM commands;
+CREATE TABLE IF NOT EXISTS save_target SELECT * FROM target;
 
 -------------------------------------------
 -- Clean msc tables
 -------------------------------------------
 
-delete from phase;
-delete from commands_on_host;
-delete from commands;
-delete from target;
+delete FROM phase;
+delete FROM commands_on_host;
+delete FROM commands;
+delete FROM target;
 
 -- ----------------------------------------------------------------------
 -- Add foreign key on tables
@@ -64,30 +64,30 @@ ADD CONSTRAINT `fk_phase_command_on_host`
   ON UPDATE NO ACTION;
 
 
-ALTER TABLE msc.commands_on_host
+ALTER TABLE `msc`.`commands_on_host`
 ADD CONSTRAINT `fk_commands_on_host_target` 
-  FOREIGN KEY (`fk_target`) 
+  FOREIGN KEY IF NOT EXISTS (`fk_target`) 
   REFERENCES `target` (`id`) 
   ON DELETE NO ACTION 
   ON UPDATE NO ACTION;
 
 
 -------------------------------------------
--- Clean msc tables
+-- Copy data back
 -------------------------------------------
-insert into commands (select * from save_commands);
-insert into target (select * from save_target);
-insert into commands_on_host (select * from save_commands_on_host);
-insert into phase (select * from save_phase);
+INSERT IGNORE INTO commands (SELECT * FROM save_commands);
+INSERT IGNORE INTO target (SELECT * FROM save_target);
+INSERT IGNORE INTO commands_on_host (SELECT * FROM save_commands_on_host);
+INSERT IGNORE INTO phase (SELECT * FROM save_phase);
 
 -------------------------------------------
 -- Clean msc tables
 -------------------------------------------
 
-drop table if exists save_commands;
-drop table if exists save_target;
-drop table if exists save_commands_on_host;
-drop table if exists save_phase;
+DROP TABLE IF EXISTS save_commands;
+DROP TABLE IF EXISTS save_target;
+DROP TABLE IF EXISTS save_commands_on_host;
+DROP TABLE IF EXISTS save_phase;
 
 SET FOREIGN_KEY_CHECKS=1;
 
