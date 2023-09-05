@@ -27,8 +27,8 @@ require_once("modules/base/includes/computers.inc.php");
 
 function colorconf($conf)
 {
-    $colorDisplay=array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
-    return $colorDisplay[intval(($conf-($conf%10))/10)];
+    $colorDisplay = array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
+    return $colorDisplay[intval(($conf - ($conf % 10)) / 10)];
 }
 
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
@@ -76,8 +76,7 @@ $total = [];
 $installed = [];
 $missing = [];
 
-if ($entity == '')
-{
+if ($entity == '') {
     $typeOfDetail = "group";
     $filterOn = array('gid' => $gid);
 
@@ -125,9 +124,9 @@ if ($entity == '')
         $complRates[] = "<div class='progress' style='width: ".$complrate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$complrate."% </div>";
         $platform[] = $v[1]['os'];
         $params[] = [
-            "machineid"=>$id_machine,
-            "inventoryid"=>$k,
-            "cn"=>$v[1]['cn'][0]
+            "machineid" => $id_machine,
+            "inventoryid" => $k,
+            "cn" => $v[1]['cn'][0]
         ];
     }
 
@@ -145,7 +144,7 @@ if ($entity == '')
 
     $count = $machines['count'];
     $machines = $machines['data'];
-    $compliance_computers = xmlrpc_get_conformity_update_by_machines(["uuids"=> $machines['uuid_inventorymachine'], "ids"=> $machines['id']]);
+    $compliance_computers = xmlrpc_get_conformity_update_by_machines(["uuids" => $machines['uuid_inventorymachine'], "ids" => $machines['id']]);
 
     $installed = [];
     $missing = [];
@@ -154,7 +153,7 @@ if ($entity == '')
 
     $countInArray = count($compliance_computers);
 
-    for($i=0; $i < $countInArray; $i++){
+    for($i = 0; $i < $countInArray; $i++) {
         $machineNames[] = $compliance_computers[$i]['hostname'];
         $missing = $compliance_computers[$i]["missing"];
         $installed = $compliance_computers[$i]["installed"];
@@ -166,7 +165,7 @@ if ($entity == '')
         $actionDoneByMachines[] = $doneByMach;
 
 
-        if ($compliance_computers[$i]["missing"]== '0'){
+        if ($compliance_computers[$i]["missing"] == '0') {
             $complrate = '100';
         }
         $color = colorconf($compliance_computers[$i]["compliance"]);
@@ -176,9 +175,9 @@ if ($entity == '')
         $platform[] = $machines['platform'][$i];
 
         $params[] = [
-            "machineid"=>$compliance_computers[$i]['id'],
+            "machineid" => $compliance_computers[$i]['id'],
             "inventoryid" => $compliance_computers[$i]['uuid'],
-            "cn"=>$machines[$i]['hostname']
+            "cn" => $machines[$i]['hostname']
         ];
     }
 }
