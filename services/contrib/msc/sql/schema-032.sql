@@ -49,13 +49,16 @@ delete FROM target;
 -- Add foreign key on tables
 -- ----------------------------------------------------------------------
 ALTER TABLE `msc`.`commands_on_host` 
+  DROP FOREIGN KEY IF EXISTS `fk_commands_on_host_commands`;
+ALTER TABLE `msc`.`commands_on_host` 
 ADD CONSTRAINT `fk_commands_on_host_commands`
   FOREIGN KEY IF NOT EXISTS (`fk_commands`)
   REFERENCES `msc`.`commands` (`id`)
   ON DELETE CASCADE
   ON UPDATE NO ACTION;
 
-
+ALTER TABLE `msc`.`phase` 
+  DROP FOREIGN KEY IF EXISTS `fk_phase_command_on_host`;
 ALTER TABLE `msc`.`phase` 
 ADD CONSTRAINT `fk_phase_command_on_host`
   FOREIGN KEY IF NOT EXISTS (`fk_commands_on_host`)
@@ -63,7 +66,8 @@ ADD CONSTRAINT `fk_phase_command_on_host`
   ON DELETE CASCADE
   ON UPDATE NO ACTION;
 
-
+ALTER TABLE `msc`.`commands_on_host` 
+  DROP FOREIGN KEY IF EXISTS `fk_commands_on_host_target`;
 ALTER TABLE `msc`.`commands_on_host`
 ADD CONSTRAINT `fk_commands_on_host_target` 
   FOREIGN KEY IF NOT EXISTS (`fk_target`) 
