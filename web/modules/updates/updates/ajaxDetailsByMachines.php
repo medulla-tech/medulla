@@ -109,7 +109,7 @@ if ($entity == '')
 
         $comp = $compliance_computer['0']['update_waiting'];
         $missingUpdatesMachine[] = $comp;
-        $detailsByMachs[] = ($comp == 0) ? $detailsByMachEmpty : $detailsByMach;
+        $detailsByMachs[] = $detailsByMach;
 
         if ($all_enabled_updates != '0' and $comp != '0')
         {
@@ -163,7 +163,8 @@ else
         $installed = $compliance_computers[$i]["installed"];
         $total[] = $compliance_computers[$i]['total'];
 
-        $detailsByMachs[] = ($compliance_computers["missing"][$i] == 0) ? $detailsByMachEmpty : $detailsByMach;
+        $detailsByMachs[] = $detailsByMach;
+
         $actionPendingByMachines[] = $pendingByMach;
         $actionDoneByMachines[] = $doneByMach;
 
