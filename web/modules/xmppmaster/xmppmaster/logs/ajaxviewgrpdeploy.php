@@ -136,7 +136,7 @@ $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start,
 
 $infocmd = command_detail($cmd_id);
 
-$title= $infocmd['title'];
+$title= (!empty($_GET['title'])) ? htmlentities($_GET['title']) : $infocmd['title'];
 $creator_user = $infocmd['creator'] ;
 $creation_date = datecmd($infocmd['creation_date']);
 $end_date =  datecmd($infocmd['end_date']);

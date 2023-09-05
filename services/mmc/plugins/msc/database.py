@@ -389,7 +389,7 @@ class MscDatabase(msc.MscDatabase):
 
             if self.config.dbhost and self.config.dbhost == "localhost":
                 session.execute(self.commands_on_host.insert(), coh_to_insert)
-                cohs = cmd.getCohIds()
+                cohs = _getCohIds(session, cmd.getId())
             else:
                 session.execute(self.commands_on_host.insert(), coh_to_insert)
                 cohs = _getCohIds(session, cmd.getId())

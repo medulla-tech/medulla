@@ -72,7 +72,12 @@ $actionDoneByMachines = [];
 $missingUpdatesMachine = [];
 $platform = [];
 $filterOn = [];
-if ($entity == '') {
+$total = [];
+$installed = [];
+$missing = [];
+
+if ($entity == '')
+{
     $typeOfDetail = "group";
     $filterOn = array('gid' => $gid);
 
@@ -105,7 +110,7 @@ if ($entity == '') {
 
         $comp = $compliance_computer['0']['update_waiting'];
         $missingUpdatesMachine[] = $comp;
-        $detailsByMachs[] = ($comp == 0) ? $detailsByMachEmpty : $detailsByMach;
+        $detailsByMachs[] = $detailsByMach;
 
         if ($all_enabled_updates != '0' and $comp != '0') {
             $complrate = intval(($all_enabled_updates - $comp) / $all_enabled_updates * 100);
@@ -144,33 +149,36 @@ if ($entity == '') {
 
     $installed = [];
     $missing = [];
-    $total = [];
     $compliance = [];
-    $cn = [];
 
-    for($i=0; $i < $count; $i++) {
-        $machineNames[] = $machines['hostname'][$i];
-        $comp = $compliance_computers["missing"][$i];
 
-        $detailsByMachs[] = ($compliance_computers["missing"][$i] == 0) ? $detailsByMachEmpty : $detailsByMach;
+    $countInArray = count($compliance_computers);
+
+    for($i=0; $i < $countInArray; $i++){
+        $machineNames[] = $compliance_computers[$i]['hostname'];
+        $missing = $compliance_computers[$i]["missing"];
+        $installed = $compliance_computers[$i]["installed"];
+        $total[] = $compliance_computers[$i]['total'];
+
+        $detailsByMachs[] = $detailsByMach;
+
         $actionPendingByMachines[] = $pendingByMach;
         $actionDoneByMachines[] = $doneByMach;
 
-        $complrate = $compliance_computers["compliance"][$i];
 
-        if ($compliance_computers["missing"][$i] == '0') {
+        if ($compliance_computers[$i]["missing"]== '0'){
             $complrate = '100';
         }
-        $color = colorconf($complrate);
+        $color = colorconf($compliance_computers[$i]["compliance"]);
 
-        $complRates[] = "<div class='progress' style='width: ".$complrate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$complrate."% </div>";
+        $complRates[] = "<div class='progress' style='width: ".$compliance_computers[$i]["compliance"]."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_computers[$i]["compliance"]."% </div>";
 
         $platform[] = $machines['platform'][$i];
 
         $params[] = [
-            "machineid"=>$machines['id'][$i],
-            "inventoryid" => $machines['uuid_inventorymachine'][$i],
-            "cn"=>$machines['hostname'][$i]
+            "machineid"=>$compliance_computers[$i]['id'],
+            "inventoryid" => $compliance_computers[$i]['uuid'],
+            "cn"=>$machines[$i]['hostname']
         ];
     }
 }
@@ -184,13 +192,13 @@ echo "<br>";
 echo '<h2>'.$tabletitle.'</h2>';
 
 
-$n = new OptimizedListInfos($compliance_computers['hostname'], _T("Machine name", "updates"));
+$n = new OptimizedListInfos($machineNames, _T("Machine name", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($platform, _T("Platform", "updates"));
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($compliance_computers["missing"], _T("Missing updates", "updates"));
-$n->addExtraInfo($compliance_computers["installed"], _T("Installed Updated", "updates"));
-$n->addExtraInfo($compliance_computers["total"], _T("Total Updated", "updates"));
+$n->addExtraInfo($missing, _T("Missing updates", "updates"));
+$n->addExtraInfo($installed, _T("Installed Updated", "updates"));
+$n->addExtraInfo($total, _T("Total Updated", "updates"));
 $n->addActionItemArray($detailsByMachs);
 $n->addActionItemArray($actionPendingByMachines);
 $n->addActionItemArray($actionDoneByMachines);
