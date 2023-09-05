@@ -6,7 +6,7 @@
 from multiprocessing.managers import SyncManager
 import sys
 import os
-import ConfigParser
+import configparser
 from optparse import OptionParser
 import time
 
@@ -36,7 +36,7 @@ def conffilename(type):
     return fileconf if os.path.isfile(fileconf) else conffilenameparamter
 
 def loadconf(type):
-    Config = ConfigParser.ConfigParser()
+    Config = configparser.ConfigParser()
     Config.read(conffilename(type))
     params = {'passwordconnection': Config.get('connection', 'password')}
     if type in ["relayserver"]:
