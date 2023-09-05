@@ -95,7 +95,7 @@ def activate_2():
     """
     Check that the MMC pulse2 plugin is enabled
     """
-    if not PluginManager().isEnabled("pulse2"):
+    if not PluginManager().isEnabled("medulla_server"):
         ret = False
         logging.getLogger().error(
             "Plugin imaging: plugin is disabled because the pulse2 plugin is not available"
