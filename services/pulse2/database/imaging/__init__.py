@@ -30,6 +30,9 @@ from sqlalchemy import (
     desc,
     func,
     distinct,
+    Text,
+    UniqueConstraint,
+    ForeignKeyConstraint
 )
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
@@ -200,7 +203,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         Initialize all SQLalchemy tables
         """
-
         self.boot_service = Table("BootService", self.metadata, autoload=True)
 
         self.entity = Table("Entity", self.metadata, autoload=True)
@@ -242,41 +244,49 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "Internationalization",
             self.metadata,
             Column("id", Integer, primary_key=True),
-            # Column('fk_language', Integer, ForeignKey('Language.id'), primary_key=True),
-            Column("fk_language", Integer, primary_key=True),
-            useexisting=True,
-            autoload=True,
+            Column("label", Text, nullable=False),
+            Column("fk_language", Integer, nullable=False),
+            UniqueConstraint('id', 'fk_language', name='uq_id_fk_language'),  # contrainte unique
+            extend_existing=True,  # étendre la définition existante de la table
         )
 
         self.menu = Table(
             "Menu",
             self.metadata,
-            # cant put them for circular dependencies reasons, the join must be explicit
-            # Column('fk_default_item', Integer, ForeignKey('MenuItem.id')),
-            Column("fk_default_item", Integer),
-            # Column('fk_default_item_WOL', Integer, ForeignKey('MenuItem.id')),
-            Column("fk_default_item_WOL", Integer),
-            # fk_name is not an explicit FK, you need to choose the lang before being able to join
-            Column("fk_synchrostate", Integer, ForeignKey("SynchroState.id")),
-            useexisting=True,
-            autoload=True,
+            Column("id", Integer, primary_key=True, autoincrement=True),
+            Column("default_name", Text, nullable=False),
+            Column("fk_name", Integer, ForeignKey("Internationalization.id"), nullable=True),
+            Column("timeout", Integer),
+            Column("mtftp_restore_timeout", Integer, default=10, nullable=False),
+            Column("background_uri", Text, default=""),
+            Column("message", Text, default="", nullable=False),
+            Column("ethercard", Integer, default=0, nullable=False),
+            Column("bootcli", Integer, default=0, nullable=False),
+            Column("disklesscli", Integer, default=0, nullable=False),
+            Column("dont_check_disk_size", Integer, default=0, nullable=False),
+            Column("hidden_menu", Integer, default=0, nullable=False),
+            Column("custom_menu", Integer, default=0, nullable=False),
+            Column("debug", Integer, default=0, nullable=False),
+            Column("update_nt_boot", Integer, default=0, nullable=False),
+            Column("fk_default_item", Integer, ForeignKey("MenuItem.id"), nullable=True),
+            Column("fk_default_item_WOL", Integer, ForeignKey("MenuItem.id"), nullable=True),
+            Column("fk_protocol", Integer, default=1),
+            Column("fk_synchrostate", Integer, default=1),
+            UniqueConstraint("id", "fk_name", name="unique_menu"),
+            extend_existing=True,
         )
 
         self.menu_item = Table(
             "MenuItem",
             self.metadata,
             Column("fk_menu", Integer, ForeignKey("Menu.id")),
-            # fk_name is not an explicit FK, you need to choose the lang before
-            # being able to join
-            useexisting=True,
-            autoload=True,
+            autoload=True,extend_existing=True
         )
 
         self.partition = Table(
             "Partitions",
             self.metadata,
             Column("fk_image", Integer, ForeignKey("Image.id")),
-            useexisting=True,
             autoload=True,
         )
 
@@ -290,7 +300,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 primary_key=True,
             ),
             Column("fk_menuitem", Integer, ForeignKey("MenuItem.id"), primary_key=True),
-            useexisting=True,
             autoload=True,
         )
 
@@ -307,7 +316,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             # cant declare it implicit as a FK else it make circular
             # dependencies
             Column("fk_imaging_server", Integer, primary_key=True),
-            useexisting=True,
             autoload=True,
         )
 
@@ -316,7 +324,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column("fk_image", Integer, ForeignKey("Image.id"), primary_key=True),
             Column("fk_menuitem", Integer, ForeignKey("MenuItem.id"), primary_key=True),
-            useexisting=True,
             autoload=True,
         )
 
@@ -330,7 +337,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ForeignKey("ImagingServer.id"),
                 primary_key=True,
             ),
-            useexisting=True,
             autoload=True,
         )
 
@@ -339,7 +345,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column("fk_entity", Integer, ForeignKey("Entity.id")),
             Column("fk_menu", Integer, ForeignKey("Menu.id")),
-            useexisting=True,
             autoload=True,
         )
 
@@ -354,7 +359,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column("fk_imaging_log_state", Integer, ForeignKey("ImagingLogState.id")),
             Column("fk_target", Integer, ForeignKey("Target.id")),
-            useexisting=True,
             autoload=True,
         )
 
@@ -365,7 +369,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column(
                 "fk_imaging_log", Integer, ForeignKey("ImagingLog.id"), primary_key=True
             ),
-            useexisting=True,
             autoload=True,
         )
 
@@ -379,7 +382,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ForeignKey("PostInstallScript.id"),
                 primary_key=True,
             ),
-            useexisting=True,
             autoload=True,
         )
 
@@ -395,7 +397,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ForeignKey("PostInstallScript.id"),
                 primary_key=True,
             ),
-            useexisting=True,
             autoload=True,
         )
 
