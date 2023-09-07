@@ -32,7 +32,7 @@ from sqlalchemy import (
     distinct,
     Text,
     UniqueConstraint,
-    ForeignKeyConstraint
+    ForeignKeyConstraint,
 )
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
@@ -246,7 +246,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column("id", Integer, primary_key=True),
             Column("label", Text, nullable=False),
             Column("fk_language", Integer, nullable=False),
-            UniqueConstraint('id', 'fk_language', name='uq_id_fk_language'),  # contrainte unique
+            UniqueConstraint(
+                "id", "fk_language", name="uq_id_fk_language"
+            ),  # contrainte unique
             extend_existing=True,  # étendre la définition existante de la table
         )
 
@@ -255,7 +257,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column("id", Integer, primary_key=True, autoincrement=True),
             Column("default_name", Text, nullable=False),
-            Column("fk_name", Integer, ForeignKey("Internationalization.id"), nullable=True),
+            Column(
+                "fk_name", Integer, ForeignKey("Internationalization.id"), nullable=True
+            ),
             Column("timeout", Integer),
             Column("mtftp_restore_timeout", Integer, default=10, nullable=False),
             Column("background_uri", Text, default=""),
@@ -268,8 +272,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column("custom_menu", Integer, default=0, nullable=False),
             Column("debug", Integer, default=0, nullable=False),
             Column("update_nt_boot", Integer, default=0, nullable=False),
-            Column("fk_default_item", Integer, ForeignKey("MenuItem.id"), nullable=True),
-            Column("fk_default_item_WOL", Integer, ForeignKey("MenuItem.id"), nullable=True),
+            Column(
+                "fk_default_item", Integer, ForeignKey("MenuItem.id"), nullable=True
+            ),
+            Column(
+                "fk_default_item_WOL", Integer, ForeignKey("MenuItem.id"), nullable=True
+            ),
             Column("fk_protocol", Integer, default=1),
             Column("fk_synchrostate", Integer, default=1),
             UniqueConstraint("id", "fk_name", name="unique_menu"),
@@ -280,7 +288,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "MenuItem",
             self.metadata,
             Column("fk_menu", Integer, ForeignKey("Menu.id")),
-            autoload=True,extend_existing=True
+            autoload=True,
+            extend_existing=True,
         )
 
         self.partition = Table(
