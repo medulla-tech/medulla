@@ -144,6 +144,11 @@ $array_progress = json_decode(json_encode($progress), true);
 $stats = xmlrpc_get_stats();
 
 ?>
+<script>
+    setTimeout(function(){
+        window.location.reload(1);
+    }, 5000);
+</script>
 <br>
 <br>
 <h2><?php echo _T("Global statistics", 'urbackup'); ?></h2>
@@ -188,6 +193,11 @@ foreach($array_progress as $progress)
         $eta = $progress['eta_ms'];
         $eta = $eta/1000;
 
+        if ($eta < "0")
+        {
+            $eta = "0";
+        }
+
         $progresss = $progress['pcdone'];
 
         if ($progresss == "100")
@@ -210,6 +220,48 @@ foreach($array_progress as $progress)
         {
             $progresss = "0";
         }
+
+        switch(intval($progresss)){
+            case $progresss <= 10:
+                $color = "#ff0000";
+                break;
+            case $progresss <= 20:
+                $color = "#ff3535";
+                break;
+            case $progresss <= 30:
+                $color = "#ff5050";
+                break;
+            case $progresss <= 40:
+                $color = "#ff8080";
+                break;
+            case $progresss <  50:
+                $color = "#ffA0A0";
+                break;
+            case $progresss <=  60:
+                $color = "#c8ffc8";
+                break;
+            case $progresss <= 70:
+                $color = "#97ff97";
+                break;
+            case $progresss <= 80:
+                $color = "#64ff64";
+                break;
+            case $progresss <=  90:
+                $color = "#2eff2e";
+                break;
+            case $progresss >90:
+                $color = "#00ff00";
+                break;
+        }
+
+        $seconds = $eta;
+
+        $secs = $seconds % 60;
+        $hrs = $seconds / 60;
+        $mins = $hrs % 60;
+
+        $hrs = $hrs / 60;
+
         ?>
         <table class="listinfos" border="1px" cellspacing="0" cellpadding="5" >
             <thead>
@@ -218,7 +270,7 @@ foreach($array_progress as $progress)
                 <th> <?php echo _T("Action", 'urbackup'); ?> </th>
                 <th> <?php echo _T("Details", 'urbackup'); ?> </th>
                 <th> <?php echo _T("Progress", 'urbackup'); ?> </th>
-                <th> <?php echo _T("ETA (second(s))", 'urbackup'); ?> </th>
+                <th> <?php echo _T("ETA (approximation)", 'urbackup'); ?> </th>
                 <th> <?php echo _T("Speed (bpms)", 'urbackup'); ?> </th>
                 <th> <?php echo _T("File in queue", 'urbackup'); ?> </th>
                 </tr>
@@ -228,8 +280,8 @@ foreach($array_progress as $progress)
                     <td style='padding-left: 5px;'> <?php echo $progress['name']; ?></td>
                     <td> <?php echo $action; ?></td>
                     <td> <?php echo $progress['details']; ?></td>
-                    <td> <?php echo $progresss."%"; ?></td>
-                    <td> <?php echo $eta; ?></td>
+                    <td> <span style='background-color:<?php echo $color; ?>;'><?php echo $progresss."%"; ?></span> </td>
+                    <td> <?php echo (int)$hrs." heures " .(int)$mins." minutes ".(int)$secs." secondes"; ?></td>
                     <td> <?php echo $progress['speed_bpms']; ?></td>
                     <td> <?php echo $progress['queue']; ?></td>
                 </tr>
