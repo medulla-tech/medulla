@@ -38,7 +38,10 @@ if (in_array('dyngroup', $_SESSION['modulesList'])) {
 $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
-function isExpertMode1(){return 1;}
+function isExpertMode1()
+{
+    return 1;
+}
 // var formating
 $_GET['p_api'] = isset($_GET['p_api']) ? $_GET['p_api'] : "";
 $_GET['p_api'] = "UUID/package_api_get1";
@@ -50,9 +53,9 @@ $package = array();
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
     $p_api_id = $_POST['p_api'];
-    $need_assign = False;
+    $need_assign = false;
     if ($_GET["action"] == "add") {
-        $need_assign = True;
+        $need_assign = true;
     }
 
     foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion', 'mode',
@@ -66,10 +69,10 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
 
-        // Package command
-        $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
-        // Simple package: not a bundle
-        $package['sub_packages'] = array();
+    // Package command
+    $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
+    // Simple package: not a bundle
+    $package['sub_packages'] = array();
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($package, $need_assign);
@@ -84,8 +87,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     }
 
     $package_uuid = "";
-    if(isset($_POST['saveList']))
-    {
+    if(isset($_POST['saveList'])) {
         $package_uuid = $ret[2];
         $saveList = $_POST['saveList'];
         $saveList1 = clean_json($saveList);
@@ -103,7 +105,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                     exit;
                 }
             } else {//ICI
-                $str= _T("Package successfully edited", "pkgs");
+                $str = _T("Package successfully edited", "pkgs");
                 new NotifyWidgetSuccess($str);
                 $package = $ret[3];
             }
@@ -130,7 +132,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                         new NotifyWidgetFailure($str);
                     }
                 } else {
-                    $str= _T("Failed to associate files", "pkgs");
+                    $str = _T("Failed to associate files", "pkgs");
                     new NotifyWidgetFailure($str);
                 }
                 // === END ASSOCIATING FILES ==========================
@@ -139,12 +141,12 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
             new NotifyWidgetFailure($ret[1]);
         }
     } else {
-        $str =_T("Package failed to save", "pkgs");
+        $str = _T("Package failed to save", "pkgs");
         new NotifyWidgetFailure($str);
     }
-    if($package_uuid != ""){
-      xmlrpc_update_package_size($pid);
-      xmlrpc_chown($package_uuid);
+    if($package_uuid != "") {
+        xmlrpc_update_package_size($pid);
+        xmlrpc_chown($package_uuid);
     }
 }
 
@@ -157,7 +159,7 @@ $p_api_id = "UUID/package_api_get1";
 $pid = base64_decode($_GET['pid']);
 //Result for root, pkgs.removeFilesFromPackage: ([['Administratif.zip'], []],)
 
-if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
+if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'])) {
     //$ret = removeFilesFromPackage($p_api_id, $pid, array($_GET['filename']));
     // RPC method call from user root: pkgs.removeFilesFromPackage(['firefox-64.0.tar.bz2'], '')
 
@@ -165,53 +167,55 @@ if (isset($_GET['delete_file'], $_GET['filename'],$_GET['packageUuid'] )) {
     if (!isXMLRPCError() and is_array($ret)) {
         $errorexplain = "";
         $successexplain = "";
-        if (safeCount($ret[1]) > 0) {$errorexplain   = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));}
-        if (safeCount($ret[0]) > 0) {$successexplain = sprintf(" : <br/>%s", implode("<br/>", $ret[0]));}
-        if (safeCount($ret[1]) > 0){
+        if (safeCount($ret[1]) > 0) {
+            $errorexplain   = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
+        }
+        if (safeCount($ret[0]) > 0) {
+            $successexplain = sprintf(" : <br/>%s", implode("<br/>", $ret[0]));
+        }
+        if (safeCount($ret[1]) > 0) {
             $str = sprintf(_T("Failed to delete files%s", "pkgs"), $errorexplain);
-            if (safeCount($ret[0]) > 0){
+            if (safeCount($ret[0]) > 0) {
                 $str += sprintf(_T("<br/>File successfully deleted. %s", "pkgs"), $successexplain);
             }
             new NotifyWidgetFailure($str);
-        }
-        else{
+        } else {
             $str = sprintf(_T("<br/>File successfully deleted. %s", "pkgs"), $successexplain);
             new NotifyWidgetSuccess($str);
         }
-    }
-    else {
+    } else {
         $str = _T("Failed to delete files", "pkgs");
         new NotifyWidgetFailure($str);
     }
     header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
     exit(0);
 }
-    $formElt = new HiddenTpl("id");//use in js for createUploader
-    $selectpapi = new HiddenTpl('p_api');//use in js for createUploader
-    if (safeCount($package) == 0) {
+$formElt = new HiddenTpl("id");//use in js for createUploader
+$selectpapi = new HiddenTpl('p_api');//use in js for createUploader
+if (safeCount($package) == 0) {
 
-        $title = _T("Edit a package", "pkgs");
-        $activeItem = "index";
-        # get existing package
-        $pid = base64_decode($_GET['pid']);
-        $package = xmpp_getPackageDetail($pid);
-        if ($package['do_reboot']) {
-            $package['reboot'] = $package['do_reboot'];
-        }
-        //$p_api_number = safeCount(getUserPackageApi());
+    $title = _T("Edit a package", "pkgs");
+    $activeItem = "index";
+    # get existing package
+    $pid = base64_decode($_GET['pid']);
+    $package = xmpp_getPackageDetail($pid);
+    if ($package['do_reboot']) {
+        $package['reboot'] = $package['do_reboot'];
     }
+    //$p_api_number = safeCount(getUserPackageApi());
+}
 /*
  * Page form
  */
 
-$json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
+$json = json_decode(get_xmpp_package($_GET['packageUuid']), true);
 
-if(!isset($json['info']['creator']) || $json['info']['creator'] == ""){
-  $json['info']['creator'] = 'root';
+if(!isset($json['info']['creator']) || $json['info']['creator'] == "") {
+    $json['info']['creator'] = 'root';
 }
 
 // display an edit package form (description, version, ...)
-$f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
+$f = new ValidatingForm(array("onchange" => "getJSON()","onclick" => "getJSON()"));
 $f->push(new Table());
 
 
@@ -223,35 +227,35 @@ $f->push(new Table());
 //             new TrFormElement(_T("Package API", "pkgs"), $formElt), array("value" => $p_api_id, "hide" => $hide)
 //     );
 // } else {
-    $f->add(
-            $selectpapi, array("value" => $p_api_id, "hide" => True)
-    );
-    $f->add(
-            $formElt, array("value" => $pid, "hide" => True)
-    );
+$f->add(
+    $selectpapi,
+    array("value" => $p_api_id, "hide" => true)
+);
+$f->add(
+    $formElt,
+    array("value" => $pid, "hide" => true)
+);
 // }
 
 
-$f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => True));
+$f->add(new HiddenTpl("id"), array("value" => $package['id'], "hide" => true));
 // Uploaded field,
-$f->add(new HiddenTpl("files_uploaded"), array("value" => 0, "hide" => True));
+$f->add(new HiddenTpl("files_uploaded"), array("value" => 0, "hide" => true));
 if ($_GET["action"] == "add") {
-    $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => True));
-}
-else{
-    $f->add(new HiddenTpl("mode"), array("value" => "edition", "hide" => True));
+    $f->add(new HiddenTpl("mode"), array("value" => "creation", "hide" => true));
+} else {
+    $f->add(new HiddenTpl("mode"), array("value" => "edition", "hide" => true));
 }
 
 
 $fields = array(
-    array("label", _T("Package label", "pkgs"), array("required" => True)),
-    array("version", _T("Package version", "pkgs"), array("required" => True)),
+    array("label", _T("Package label", "pkgs"), array("required" => true)),
+    array("version", _T("Package version", "pkgs"), array("required" => true)),
     array('description', _T("Description", "pkgs"), array()),
 );
 $cmds = array();
 $options = array();
-if(!isExpertMode1())
-{
+if(!isExpertMode1()) {
 
     $cmds = array(
         array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')),
@@ -268,68 +272,67 @@ $os = array(
     array(_T('Windows'), _T('Linux'), _T('Mac OS'))
 );
 
-$f->add(new HiddenTpl("editor"), array("value" => $_SESSION['login'], "hide" => True));
-$f->add(new HiddenTpl("edition_date"), array("value" => date("Y-m-d H:i:s"), "hide" => True));
-$f->add(new HiddenTpl("creator"), array("value" => $json['info']['creator'], "hide" => True));
-$f->add(new HiddenTpl("creation_date"), array("value" => $json['info']["creation_date"], "hide" => True));
+$f->add(new HiddenTpl("editor"), array("value" => $_SESSION['login'], "hide" => true));
+$f->add(new HiddenTpl("edition_date"), array("value" => date("Y-m-d H:i:s"), "hide" => true));
+$f->add(new HiddenTpl("creator"), array("value" => $json['info']['creator'], "hide" => true));
+$f->add(new HiddenTpl("creation_date"), array("value" => $json['info']["creation_date"], "hide" => true));
 
-if(isset($_SESSION['sharings'])){
-  $getShares = $_SESSION['sharings'];
+if(isset($_SESSION['sharings'])) {
+    $getShares = $_SESSION['sharings'];
+} else {
+    $getShares = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login" => $_SESSION["login"]]);
 }
-else{
-  $getShares = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
-}
-$shares =[];
-foreach($getShares['datas'] as $share){
-  if(preg_match("#w#i", $share['permission'])){
-    $shares[] = $share;
-  }
+$shares = [];
+foreach($getShares['datas'] as $share) {
+    if(preg_match("#w#i", $share['permission'])) {
+        $shares[] = $share;
+    }
 }
 
-if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true){
-  $previous_localisation = (isset($package['previous_localisation_server']) && $package['previous_localisation_server'] != "") ? $package['previous_localisation_server'] : $json['info']['localisation_server'];
+if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["config"]["centralizedmultiplesharing"] == true) {
+    $previous_localisation = (isset($package['previous_localisation_server']) && $package['previous_localisation_server'] != "") ? $package['previous_localisation_server'] : $json['info']['localisation_server'];
 
-  $f->add(new HiddenTpl("previous_localisation_server"), array("value" => $previous_localisation, "hide" => True));
-  if(isset($getShares["config"]["movepackage"]) && $getShares["config"]["movepackage"] == True){
-    if(isset($json["info"]["Dependency"]) && safeCount($json["info"]["Dependency"]) == 0){
-      if(safeCount($shares) == 1){ // Just 1 sharing (no choice)
-        $f->add(new HiddenTpl("localisation_server"), array("value" => $package['localisation_server'], "hide" => True));
-      }
-      else{ // sharing server > 1
-        $sharesNames = [];
-        $sharesPaths = [];
-        foreach($shares as $key=>$value){
-          $sharesNames[] = (isset($value['comments']) && $value['comments'] != "") ? $value['comments'] : $value['name'];
-          $sharesPaths[] = $value['name'];
+    $f->add(new HiddenTpl("previous_localisation_server"), array("value" => $previous_localisation, "hide" => true));
+    if(isset($getShares["config"]["movepackage"]) && $getShares["config"]["movepackage"] == true) {
+        if(isset($json["info"]["Dependency"]) && safeCount($json["info"]["Dependency"]) == 0) {
+            if(safeCount($shares) == 1) { // Just 1 sharing (no choice)
+                $f->add(new HiddenTpl("localisation_server"), array("value" => $package['localisation_server'], "hide" => true));
+            } else { // sharing server > 1
+                $sharesNames = [];
+                $sharesPaths = [];
+                foreach($shares as $key => $value) {
+                    $sharesNames[] = (isset($value['comments']) && $value['comments'] != "") ? $value['comments'] : $value['name'];
+                    $sharesPaths[] = $value['name'];
+                }
+                $location_servers = new SelectItem('localisation_server');
+                $location_servers->setElements($sharesNames);
+                $location_servers->setElementsVal($sharesPaths);
+                $location_servers->setSelected($json['info']["localisation_server"]);
+
+                $f->add(
+                    new TrFormElement(_T('Share', 'pkgs'), $location_servers),
+                    array()
+                );
+            }
+        } else { // Dependencies > 0
+            $f->add(new HiddenTpl("localisation_server"), array("value" => $package["localisation_server"], "hide" => true));
         }
-        $location_servers = new SelectItem('localisation_server');
-        $location_servers->setElements($sharesNames);
-        $location_servers->setElementsVal($sharesPaths);
-        $location_servers->setSelected($json['info']["localisation_server"]);
-
-        $f->add(
-                new TrFormElement(_T('Share', 'pkgs'), $location_servers), array()
-        );
-      }
+    } else { // movepackage == false
+        $f->add(new HiddenTpl("localisation_server"), array("value" => $json['info']["localisation_server"], "hide" => true));
     }
-    else{ // Dependencies > 0
-      $f->add(new HiddenTpl("localisation_server"), array("value" => $package["localisation_server"], "hide" => True));
-    }
-  }
-  else{ // movepackage == false
-    $f->add(new HiddenTpl("localisation_server"), array("value" => $json['info']["localisation_server"], "hide" => True));
-  }
 }
 foreach ($fields as $p) {
     $f->add(
-            new TrFormElement($p[1], new AsciiInputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
+        new TrFormElement($p[1], new AsciiInputTpl($p[0])),
+        array_merge(array("value" => $package[$p[0]]), $p[2])
     );
 }
 
 foreach ($options as $p) {
     $op = ($package[$p[0]] == 1 || $package[$p[0]] == '1' || $package[$p[0]] === 'enable');
     $f->add(
-            new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => ($op ? 'checked' : ''))
+        new TrFormElement($p[1], new CheckboxTpl($p[0])),
+        array("value" => ($op ? 'checked' : ''))
     );
 }
 
@@ -337,28 +340,23 @@ $oslist = new SelectItem('targetos');
 $oslist->setElements($os[1]);
 $oslist->setElementsVal($os[0]);
 $f->add(
-        new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => $package['targetos'])
+    new TrFormElement(_T('Operating System', 'pkgs'), $oslist),
+    array("value" => $package['targetos'])
 );
 
-if(isExpertMode1())
-{
-  $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => True));
-}
-else {
-  $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => True));
+if(isExpertMode1()) {
+    $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => true));
+} else {
+    $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => true));
 }
 
-if(isExpertMode1())
-{
+if(isExpertMode1()) {
     //$f->add(new HiddenTpl("last_editor"), array("value" => $_SESSION['login'], "hide" => True));
     $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
 
-    if(isset($json['info']['methodetransfert']))
-    {
+    if(isset($json['info']['methodetransfert'])) {
         $setmethodetransfert = $json['info']['methodetransfert'];
-    }
-    else
-    {
+    } else {
         $setmethodetransfert = 'pushrsync';
     }
     $methodtransfer = new SelectItem('methodetransfert');
@@ -367,28 +365,23 @@ if(isExpertMode1())
     $methodtransfer->setElementsVal(['pushrsync', 'pullrsync', 'pulldirect']);
     $methodtransfer->setSelected($setmethodetransfert);
 
-    $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer, ['trid'=>'trTransfermethod']),['value'=>'']);
+    $f->add(new TrFormElement(_T('Transfer method', 'pkgs'), $methodtransfer, ['trid' => 'trTransfermethod']), ['value' => '']);
 
-    if(isset($json['info']['limit_rate_ko']))
-    {
+    if(isset($json['info']['limit_rate_ko'])) {
         $setlimit_rate_ko = $json['info']['limit_rate_ko'];
-    }
-    else
-    {
+    } else {
         $setlimit_rate_ko = '';
     }
     $bpuploaddownload = new IntegerTpl("limit_rate_ko");
     $bpuploaddownload->setAttributCustom('min = 0');
     $f->add(
-        new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => $setlimit_rate_ko), array('placeholder' => _T('<in ko>', 'pkgs')))
+        new TrFormElement(_T("bandwidth throttling (ko)", 'pkgs'), $bpuploaddownload),
+        array_merge(array("value" => $setlimit_rate_ko), array('placeholder' => _T('<in ko>', 'pkgs')))
     );
 
-    if(isset($json['info']['spooling']))
-    {
+    if(isset($json['info']['spooling'])) {
         $spooling = $json['info']['spooling'];
-    }
-    else
-    {
+    } else {
         $spooling = 'ordinary';
     }
     $rb = new RadioTpl("spooling");
@@ -397,24 +390,22 @@ if(isExpertMode1())
     $rb->setSelected($spooling);
     $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
 
-    if(isset($json["info"]["launcher"]) && $json["info"]["launcher"] != "")
-    {
-        $launcher = (base64_decode($json["info"]["launcher"], true) != false)? $launcher = base64_decode($json["info"]["launcher"]) : $json["info"]["launcher"];
-    }
-    else{
-    $launcher = "";
+    if(isset($json["info"]["launcher"]) && $json["info"]["launcher"] != "") {
+        $launcher = (base64_decode($json["info"]["launcher"], true) != false) ? $launcher = base64_decode($json["info"]["launcher"]) : $json["info"]["launcher"];
+    } else {
+        $launcher = "";
     }
     $f->add(
-            new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")), ["value"=>$launcher,"placeholder"=>"C:\Program Files\my_app\app.exe"]
+        new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")),
+        ["value" => $launcher,"placeholder" => "C:\Program Files\my_app\app.exe"]
     );
 
     // Get the sorted list of dependencies
-    if(isset($json['info']['Dependency']))
-    {
+    if(isset($json['info']['Dependency'])) {
         $dependencies = $json['info']['Dependency'];
-    }
-    else
+    } else {
         $dependencies = [];
+    }
 
     //Get all the dependencies as uuid => name
     $allPackagesList = get_dependencies_list_from_permissions($_SESSION["login"]);
@@ -422,38 +413,36 @@ if(isExpertMode1())
     $packagesInOptionAdded = '';
     $packagesInOptionNotAdded = '';
     $dependenciesArray = [];
-    foreach($dependencies as $dependency){
-      $dependenciesArray[] = [
-        "uuid"=>$dependency,
-        "version"=>"",
-        "name"=>""
-      ];
+    foreach($dependencies as $dependency) {
+        $dependenciesArray[] = [
+          "uuid" => $dependency,
+          "version" => "",
+          "name" => ""
+        ];
     }
     foreach($allPackagesList as $xmpp_package) {
-      if(is_array($xmpp_package)){
-        if($_GET['packageUuid'] != $xmpp_package['uuid']){
-          $uuid = $xmpp_package['uuid'];
-          $name = $xmpp_package['name'];
-          $version = $xmpp_package['version'];
+        if(is_array($xmpp_package)) {
+            if($_GET['packageUuid'] != $xmpp_package['uuid']) {
+                $uuid = $xmpp_package['uuid'];
+                $name = $xmpp_package['name'];
+                $version = $xmpp_package['version'];
 
-          if(in_array($uuid, $dependencies))
-          {
-            $id = array_search($uuid, $dependencies);
-            $dependenciesArray[$id]["name"] = $name;
-            $dependenciesArray[$id]["version"] = $version;
-          }
-          else{
-            $packagesInOptionNotAdded .= '<option title="'.$name.' v.'.$version.'" value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
-            $allDependenciesList[] = $xmpp_package;
-          }
+                if(in_array($uuid, $dependencies)) {
+                    $id = array_search($uuid, $dependencies);
+                    $dependenciesArray[$id]["name"] = $name;
+                    $dependenciesArray[$id]["version"] = $version;
+                } else {
+                    $packagesInOptionNotAdded .= '<option title="'.$name.' v.'.$version.'" value="'.$uuid.'">'.$name.' v.'.$version.'</option>';
+                    $allDependenciesList[] = $xmpp_package;
+                }
+            }
         }
-      }
     }
 
-    foreach($dependenciesArray as $dep){
-      $packagesInOptionAdded .= '<option title="'.$dep["name"].' v.'.$dep["version"].'" value="'.$dep["uuid"].'">'.$dep["name"].' v.'.$dep["version"].'</option>';
+    foreach($dependenciesArray as $dep) {
+        $packagesInOptionAdded .= '<option title="'.$dep["name"].' v.'.$dep["version"].'" value="'.$dep["uuid"].'">'.$dep["name"].' v.'.$dep["version"].'</option>';
     }
-    $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
+    $f->add(new TrFormElement(_T("Dependencies", "pkgs"), new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
         <tr>
             <td style="border: none;">
@@ -491,15 +480,16 @@ if(isExpertMode1())
             </td>
         </tr>
     </table>
-</div>',"pkgs")));
+</div>', "pkgs")));
 }
 
 foreach ($cmds as $p) {
     $f->add(
-            new HiddenTpl($p[0] . 'name'), array("value" => $package[$p[0]]['name'], "hide" => True)
+        new HiddenTpl($p[0] . 'name'),
+        array("value" => $package[$p[0]]['name'], "hide" => true)
     );
     $f->add(
-      new TrFormElement($p[2], new TextareaTplArray(['name'=>$p[0] . 'cmd', "required"=>"required","value" => htmlspecialchars($package[$p[0]]['command'])]))
+        new TrFormElement($p[2], new TextareaTplArray(['name' => $p[0] . 'cmd', "required" => "required","value" => htmlspecialchars($package[$p[0]]['command'])]))
     );
 }
 
@@ -515,8 +505,9 @@ $params = array();
 $pserver_base_url = '';
 
 foreach ($package['files'] as $file) {
-    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json")
+    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json") {
         continue;
+    }
     $names[] = $file['name'];
     $params[] = array(
         'p_api' => $_GET['p_api'],
@@ -525,8 +516,8 @@ foreach ($package['files'] as $file) {
         'filename' => $file['name'],
         'delete_file' => 1
     );
-//     $viewVersionsActions[] = $viewVersionsAction;
-//     $cssClasses[] = 'file';
+    //     $viewVersionsActions[] = $viewVersionsAction;
+    //     $cssClasses[] = 'file';
 }
 
 $count = safeCount($names);
@@ -561,19 +552,18 @@ _T("Upload Queued Files", "pkgs");
 // =========================================================================
 
 $f->add(
-        new TrFormElement("Files", $n, array())
+    new TrFormElement("Files", $n, array())
 );
 
 $f->add(
-        new TrFormElement("", $m, array())
+    new TrFormElement("", $m, array())
 );
 
 // =========================================================================
 
 $f->pop();
-if(isExpertMode1())
-{
-    $f->add(new HiddenTpl('saveList'), array('id'=>'saveList','name'=>'saveList',"value" => '', "hide" => True));
+if(isExpertMode1()) {
+    $f->add(new HiddenTpl('saveList'), array('id' => 'saveList','name' => 'saveList',"value" => '', "hide" => true));
     include('addXMPP.php');
 }
 
