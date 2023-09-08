@@ -12343,7 +12343,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 0,
                 28,
                 0,
-                '',
+                interval,
                 None,
                 None,
                 None,
