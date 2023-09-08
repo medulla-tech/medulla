@@ -240,7 +240,7 @@ if ($disableClient == "true")
     <thead>
         <tr style='text-align: left;'>
           <th> <?php echo _T("Id", 'urbackup'); ?> </th>
-          <th> <?php echo _T("Incremental", 'urbackup'); ?> </th>
+          <th> <?php echo _T("Type", 'urbackup'); ?> </th>
           <th> <?php echo _T("Archived ?", 'urbackup'); ?> </th>
           <th> <?php echo _T("Time", 'urbackup'); ?> </th>
           <th> <?php echo _T("Size", 'urbackup'); ?> </th>
@@ -273,9 +273,9 @@ foreach ($backups as $backup) {
     $size = formatBytes($backup['size_bytes']);
 
     if ($backup['incremental'] == "0")
-        $incremental = _T("No", 'urbackup');
+        $incremental = _T("Full backup", 'urbackup');
     else
-        $incremental = _T("Yes", 'urbackup');
+        $incremental = _T("Incremental backup", 'urbackup');
 
     if ($backup['archived'] == "0")
         $archive = _T("No", 'urbackup');
