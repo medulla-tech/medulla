@@ -58,6 +58,13 @@ END$$
 DELIMITER ;
 
 
+-- ----------------------------------------------------------------------
+-- Quick actions to disable rescue agent
+-- ----------------------------------------------------------------------
+INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Disable rescue agent','plugin_disable_rescue@_@','Disable the rescue agent');
+INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Disable rescue agent','plugin_disable_rescue@_@','Disable the rescue agent');
+INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Disable rescue agent','plugin_disable_rescue@_@','Disable the rescue agent');
+
 
 -- ----------------------------------------------------------------------
 -- Database version
