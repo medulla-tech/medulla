@@ -4,7 +4,7 @@ require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 
 $group_id = htmlspecialchars($_GET["groupid"]);
-$groupname = htmlspecialchars($_GET["groupname"]);
+$groupname = htmlspecialchars($_GET["groupename"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
 $clientid = htmlspecialchars($_GET["clientid"]);
 $clientname = htmlspecialchars($_GET["clientname"]);
@@ -19,7 +19,7 @@ $client_remove = xmlrpc_remove_client($jidMachine);
 <br>
 <?php
 
-$url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$clientid.'&clientname='.$clientname.'&groupename='.$groupename.'&jidmachine='.$jidmachine.'&disableclient=true';
+$url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$clientid.'&clientname='.$clientname.'&groupename='.$groupname.'&jidmachine='.$jidmachine.'&disableclient=true';
 
 header("Location: ".$url);
 ?>
