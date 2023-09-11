@@ -62,13 +62,18 @@ function xmlrpc_remove_group($groupid){
 }
 
 function xmlrpc_check_client($jidmachine, $clientid, $authkey){
-    // Call agent to send command
+    // Call agent to send command, enable client
     return xmlCall("urbackup.check_client", [$jidmachine, $clientid, $authkey]);
 }
 
 function xmlrpc_remove_client($jidmachine){
-    // Call agent to send command
+    // Call agent to send command, to disable client
     return xmlCall("urbackup.remove_client", [$jidmachine]);
+}
+
+function xmlrpc_get_client_status($jidmachine){
+    // Call agent to send command, get client backup enabled status
+    return xmlCall("urbackup.get_client_status", [$jidmachine]);
 }
 
 function xmlrpc_get_settings_global(){
