@@ -102,7 +102,21 @@ def check_client(jidmachine, clientid, authkey):
 
 
 def remove_client(jidmachine):
-    command = "(echo [parameters] & echo backup_enabled = 0 ) > C:\progra~1\pulse\etc\\updatebackupclient.ini"
+    command = "(echo [parameters] & echo backup_enabled = 0) > C:\progra~1\pulse\etc\updatebackupclient.ini"
+
+    callremotecommandshell(jidmachine, command)
+    sessionid = name_random(8, "update_")
+    msg = {
+    "action": "restartbot",
+    "sessionid": sessionid,
+    "data": {},
+    "ret": 0,
+    "base64": False
+    }
+    send_message_json(jidmachine, msg)
+
+def get_client_status(jidmachine):
+    command = "(awk -F '=' '/backup_enabled/ {print $2}' C:\progra~1\pulse\etc\updatebackupclient.ini)"
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
