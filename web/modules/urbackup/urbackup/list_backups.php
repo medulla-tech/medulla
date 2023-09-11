@@ -41,7 +41,7 @@ $client_id = htmlspecialchars($_GET["clientid"]);
 $backupstate = htmlspecialchars($_GET["backupstate"]);
 $backuptype = htmlspecialchars($_GET["backuptype"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
-$disableClient = htmlspecialchars($_GET["disableclient"]);
+$editStateClient = htmlspecialchars($_GET["editStateClient"]);
 
 //-----------------------------------START LOGIN FUNCTION
 $url = $url_urbackup."?a=login";
@@ -133,6 +133,8 @@ else
 
 $backups = $array['backups'];
 
+//-----------------------------------END GET_BACKUPS
+
 //Formatage de date
 function secs2date($secs,$date)
 {
@@ -160,6 +162,8 @@ function formatBytes($bytes, $precision = 2)
 }
 
 $stats = xmlrpc_get_stats();
+
+$client_enable = xmlrpc_get_client_status($jidMachine);
 
 ?>
 <h2><?php echo _T("Statistics by client", 'urbackup'); ?></h2>
@@ -197,7 +201,8 @@ $stats = xmlrpc_get_stats();
 
 <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start incremental backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=incremental&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Start incremental backup</a>
 <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=full&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Start full backup</a>
-<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Disable backup for this client</a>
+<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=enable">Enable backup for this client</a>
+<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=disable">Disable backup for this client</a>
 <br>
 <br>
 <?php echo _T("Profile name: ", 'urbackup'); ?><a href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_ongroup&amp;groupid=<?php echo $groupid ?>&groupname=<?php echo $groupname ?>"><?php echo $groupname; ?></a>
@@ -225,11 +230,19 @@ if ($backupstate == "false")
     }
 }
 
-if ($disableClient == "true")
+if ($editStateClient == "disable")
 {
     ?>
     <script>
         alert("The backups for this client has been disabled successfully.");
+    </script>
+    <?php
+}
+if ($editStateClient == "enable")
+{
+    ?>
+    <script>
+        alert("The backups for this client has been enabled successfully.");
     </script>
     <?php
 }
