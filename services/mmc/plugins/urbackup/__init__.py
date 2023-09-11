@@ -63,6 +63,12 @@ def login():
     return False
 
 def enable_client(jidmachine, clientid, authkey):
+    """
+    Write backup_enabled to 1 on updatebackupclient.ini file to enable backup for windows client
+
+    Returns:
+        1 or 0, state of function execution
+    """
     conf_file = "/var/lib/pulse2/clients/config/updatebackupclient.ini"
 
     urbackup_conf = configparser.ConfigParser()
@@ -85,6 +91,12 @@ def enable_client(jidmachine, clientid, authkey):
     send_message_json(jidmachine, msg)
 
 def remove_client(jidmachine):
+    """
+    Write backup_enabled to 0 on updatebackupclient.ini file to disable backup for windows client
+
+    Returns:
+        1 or 0, state of function execution
+    """
     command = "(echo [parameters] & echo backup_enabled = 0) > C:\progra~1\pulse\etc\updatebackupclient.ini"
 
     callremotecommandshell(jidmachine, command)
@@ -99,6 +111,12 @@ def remove_client(jidmachine):
     send_message_json(jidmachine, msg)
     
 def get_client_status(jidmachine):
+    """
+    Get client status if enable or not in updatebackupclient.ini file, check value from backup_enabled attribute
+
+    Returns:
+        1 or 0, backup_enabled value
+    """
     command = "(awk -F '=' '/backup_enabled/ {print $2}' C:\progra~1\pulse\etc\updatebackupclient.ini)"
 
     callremotecommandshell(jidmachine, command)
