@@ -31,16 +31,16 @@ function colorconf($conf)
     return $colorDisplay[intval(($conf - ($conf % 10)) / 10)];
 }
 
-$location = (isset($_GET['location'])) ? $_GET['location'] : "";
-$gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
-$groupname = (isset($_GET['groupname'])) ? $_GET['groupname'] : "";
-$filter = "Microsoft";
-$field = "platform";
-$contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
+$location = (isset($_GET['location'])) ? htmlentities($_GET['location']) : "";
+$gid = (isset($_GET['gid'])) ? htmlentities($_GET['gid']) : "";
+$groupname = (isset($_GET['groupname'])) ? htmlentities($_GET['groupname']) : "";
+$filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
+$field = "allchamp";
+$contains = (isset($_GET['contains'])) ? htmlentities($_GET['contains']) : "";
 
 $start = (isset($_GET['start'])) ? $_GET['start'] : 0;
-$maxperpage = (isset($_GET['maxperpage'])) ? $_GET['maxperpage'] : $config['maxperpage'];
-$end = (isset($_GET['end'])) ? $_GET['end'] : $maxperpage - 1;
+$maxperpage = (isset($_GET['maxperpage'])) ? htmlentities($_GET['maxperpage']) : htmlentities($config['maxperpage']);
+$end = (isset($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage - 1;
 
 $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
@@ -54,11 +54,10 @@ $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
-
-$detailsByMach = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
-$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
-$pendingByMach = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
-$doneByMach = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
+$detailsByMach = new ActionItem(_T("View details", "updates"),"deploySpecificUpdate","display","", "updates", "updates");
+$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"),"deploySpecificUpdate","displayg","", "updates", "updates");
+$pendingByMach = new ActionItem(_T("Pending Updates", "updates"),"pendingUpdateByMachine","pending","", "updates", "updates");
+$doneByMach = new ActionItem(_T("Updates History", "updates"),"auditUpdateByMachine","history","", "updates", "updates");
 
 $all_enabled_updates = xmlrpc_get_count_updates_enable();
 $all_enabled_updates = $all_enabled_updates['0']['nb_enabled_updates'];
