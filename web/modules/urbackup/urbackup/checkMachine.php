@@ -164,7 +164,7 @@ else
             {
                 if ($client['groupname'] == "")
                 {
-                    $check_client = xmlrpc_check_client($jidMachine, $create_client["new_clientid"], $create_client["new_authkey"]);
+                    $check_client = xmlrpc_enable_client($jidMachine, $create_client["id"], $create_client["new_authkey"]);
                     ?>
                         <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=add_member_togroup_aftercheck&amp;clientid=<?php echo $client["id"]; ?>&amp;clientname=<?php echo $clientname; ?>&amp;groupname=<?php echo $group['name']; ?>&amp;jidmachine=<?php echo $jidMachine; ?>" method="post">
                             <div>
@@ -200,7 +200,7 @@ else
     }
     else
     {
-        $check_client = xmlrpc_check_client($jidMachine, $create_client["new_clientid"], $create_client["new_authkey"]);
+        $check_client = xmlrpc_enable_client($jidMachine, $create_client["new_clientid"], $create_client["new_authkey"]);
         ?>
             <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=add_member_togroup_aftercheck&amp;clientid=<?php echo $create_client["new_clientid"]; ?>&amp;clientname=<?php echo $clientname; ?>&amp;groupname=<?php echo $group['name']; ?>&amp;jidmachine=<?php echo $jidMachine; ?>" method="post">
                 <div>

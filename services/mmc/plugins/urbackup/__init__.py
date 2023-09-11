@@ -62,7 +62,7 @@ def login():
 
     return False
 
-def check_client(jidmachine, clientid, authkey):
+def enable_client(jidmachine, clientid, authkey):
     conf_file = "/var/lib/pulse2/clients/config/updatebackupclient.ini"
 
     urbackup_conf = configparser.ConfigParser()
