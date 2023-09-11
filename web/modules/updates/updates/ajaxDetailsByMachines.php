@@ -54,10 +54,10 @@ $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
-$detailsByMach = new ActionItem(_T("View details", "updates"),"deploySpecificUpdate","display","", "updates", "updates");
-$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"),"deploySpecificUpdate","displayg","", "updates", "updates");
-$pendingByMach = new ActionItem(_T("Pending Updates", "updates"),"pendingUpdateByMachine","pending","", "updates", "updates");
-$doneByMach = new ActionItem(_T("Updates History", "updates"),"auditUpdateByMachine","history","", "updates", "updates");
+$detailsByMach = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
+$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
+$pendingByMach = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
+$doneByMach = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
 
 $all_enabled_updates = xmlrpc_get_count_updates_enable();
 $all_enabled_updates = $all_enabled_updates['0']['nb_enabled_updates'];
