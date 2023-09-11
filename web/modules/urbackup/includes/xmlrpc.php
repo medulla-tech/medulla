@@ -61,9 +61,9 @@ function xmlrpc_remove_group($groupid){
     return xmlCall("urbackup.remove_group", [$groupid]);
 }
 
-function xmlrpc_check_client($jidmachine, $clientid, $authkey){
+function xmlrpc_enable_client($jidmachine, $clientid, $authkey){
     // Call agent to send command, enable client
-    return xmlCall("urbackup.check_client", [$jidmachine, $clientid, $authkey]);
+    return xmlCall("urbackup.enable_client", [$jidmachine, $clientid, $authkey]);
 }
 
 function xmlrpc_remove_client($jidmachine){
