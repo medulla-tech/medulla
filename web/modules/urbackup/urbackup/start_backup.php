@@ -27,7 +27,7 @@ require_once("modules/urbackup/includes/xmlrpc.php");
 $type_backup = htmlspecialchars($_GET["backuptype"]);
 $client_id = htmlspecialchars($_GET["clientid"]);
 $client_name = htmlspecialchars($_GET["clientname"]);
-$groupe_name = htmlspecialchars($_GET["groupename"]);
+$groupe_name = htmlspecialchars($_GET["groupname"]);
 $jid_machine = htmlspecialchars($_GET["jidmachine"]);
 
 $p = new PageGenerator(_T("Start ".$type_backup." backup", 'urbackup'));
