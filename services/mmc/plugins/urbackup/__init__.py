@@ -140,6 +140,15 @@ def get_client_status(client_id):
     """
     return UrbackupDatabase().getClientStatus(client_id)
 
+def insertNewClient(client_id, authkey):
+    """
+    Insert new client in database
+
+    Returns:
+        True or False
+    """
+    return UrbackupDatabase().insertNewClient(client_id, authkey)
+
 def enable_client_database(client_id):
     """
     Get client status if enable or not from the database
