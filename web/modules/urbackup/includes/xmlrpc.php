@@ -66,14 +66,14 @@ function xmlrpc_enable_client($jidmachine, $clientid, $authkey){
     return xmlCall("urbackup.enable_client", [$jidmachine, $clientid, $authkey]);
 }
 
-function xmlrpc_remove_client($jidmachine){
+function xmlrpc_remove_client($jidmachine, $client_id){
     // Call agent to send command, to disable client
-    return xmlCall("urbackup.remove_client", [$jidmachine]);
+    return xmlCall("urbackup.remove_client", [$jidmachine, $client_id]);
 }
 
-function xmlrpc_get_client_status($jidmachine){
-    // Call agent to send command, get client backup enabled status
-    return xmlCall("urbackup.get_client_status", [$jidmachine]);
+function xmlrpc_get_client_status($client_id){
+    // Database request to get client status
+    return xmlCall("urbackup.get_client_status", [$client_id]);
 }
 
 function xmlrpc_get_settings_global(){
