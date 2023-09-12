@@ -155,6 +155,7 @@ if ($exist == "true")
 else
 {
     $create_client = xmlrpc_add_client($clientname);
+    $insertClientDatabase = xmlrpc_insertNewClient($create_client["id"], $create_client["new_authkey"]);
 
     if ($create_client["already_exists"] == "true") 
     {
