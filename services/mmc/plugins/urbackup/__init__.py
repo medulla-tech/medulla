@@ -99,6 +99,8 @@ def remove_client(jidmachine, clientid):
     Returns:
         1 or 0, state of function execution
     """
+    disable_client_database(clientid)
+    
     command = "(echo [parameters] & echo backup_enabled = 0) > C:\progra~1\pulse\etc\updatebackupclient.ini"
 
     callremotecommandshell(jidmachine, command)
