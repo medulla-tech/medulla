@@ -76,6 +76,11 @@ function xmlrpc_get_client_status($client_id){
     return xmlCall("urbackup.get_client_status", [$client_id]);
 }
 
+function xmlrpc_insertNewClient($client_id, $authkey){
+    // Database request to insert new client
+    return xmlCall("urbackup.insertNewClient", [$client_id, $authkey]);
+}
+
 function xmlrpc_get_settings_global(){
     // Return all settings
     return xmlCall("urbackup.get_settings_general", []);
