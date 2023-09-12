@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net
+ * (c) 2022-2023 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -23,14 +23,14 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-
 $p = new PageGenerator(_T("List Updates", 'updates'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 require_once("modules/updates/includes/xmlrpc.php");
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdates"));
+$params = ['entity'=>$_GET['entity'], 'completename'=>$_GET['completename']];
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdates", $params));
 $ajax->display();
 $ajax->displayDivToUpdate();
 

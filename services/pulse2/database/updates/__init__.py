@@ -299,7 +299,8 @@ class UpdatesDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def get_enabled_updates_list(self, session, start, limit, filter=""):
+    def get_enabled_updates_list(self, session, entity, start, limit, filter=""):
+
         try:
             start = int(start)
         except:
@@ -314,35 +315,57 @@ class UpdatesDatabase(DatabaseHelper):
                         'updateid' : [],
                         'title' : [],
                         'kb' : [],
-                        'valided' : []}
+                        'valided' : [],
+                        'missing' : []}
             sql="""SELECT SQL_CALC_FOUND_ROWS
-                        updateid, kb, title, description, creationdate, title_short, valided
-                    FROM
-                        xmppmaster.up_gray_list
-                    WHERE
-                        xmppmaster.up_gray_list.valided = 1
-                    UNION
-                    SELECT
-                       updateid, kb, title, description, creationdate, title_short, valided
-                    FROM
-                        xmppmaster.up_white_list
-                    WHERE
-                        xmppmaster.up_white_list.valided = 1 """
+    umw.update_id AS updateid,
+    ud.kb AS kb,
+    ud.title AS title,
+    ud.description AS description,
+    ud.creationdate AS creationdate,
+    ud.title_short AS title_short,
+    ugl.valided as valided,
+    count(umw.update_id) as missing
+FROM
+    xmppmaster.up_machine_windows umw
+LEFT JOIN xmppmaster.up_gray_list ugl ON ugl.updateid = umw.update_id
+LEFT JOIN xmppmaster.up_white_list uwl ON uwl.updateid = umw.update_id
+JOIN xmppmaster.update_data ud ON umw.update_id = ud.updateid
+JOIN xmppmaster.machines ma ON umw.id_machine = ma.id
+JOIN xmppmaster.glpi_entity ge ON ge.id = ma.glpi_entity_id
+WHERE
+    ugl.valided = 1
+AND
+    ge.glpi_id = %s
+AND
+    uwl.updateid is NULL
+AND (umw.curent_deploy is NULL or umw.curent_deploy = 0)
+AND (umw.required_deploy is NULL or umw.required_deploy = 0) """%(entity.replace("UUID", ""))
 
+            if filter != "":
+                filterwhere="""AND
+                        (ud.title LIKE '%%%s%%'
+                        OR ud.updateid LIKE '%%%s%%'
+                        OR ud.kb LIKE '%%%s%%'
+                        OR ud.description LIKE '%%%s%%'
+                        OR ud.creationdate LIKE '%%%s%%'
+                        OR ud.title_short LIKE '%%%s%%')"""%tuple(filter for x in range(0,6))
+                sql += filterwhere
+
+            sql += "group by umw.update_id "
             filterlimit= ""
             if start != -1 and limit != -1:
                 filterlimit= "LIMIT %s, %s"%(start, limit)
-            if filter != "":
-                filterwhere="""WHERE
-                        title LIKE '%%%s%%' """%filter
-                sql += filterwhere
             sql += filterlimit
             sql+=";"
 
             result = session.execute(sql)
 
             sql_count = "SELECT FOUND_ROWS();"
-            ret_count = session.execute(sql_count)
+            try:
+                ret_count = session.execute(sql_count)
+            except Exception as e:
+                logging.getLogger().error(e)
             nb_element_total = ret_count.first()[0]
 
             enabled_updates_list['nb_element_total'] = nb_element_total
@@ -352,16 +375,17 @@ class UpdatesDatabase(DatabaseHelper):
 
             if result:
                 for list_b in result:
+                    print(list_b)
                     enabled_updates_list['updateid'].append(list_b.updateid)
                     enabled_updates_list['title'].append(list_b.title)
                     enabled_updates_list['kb'].append(list_b.kb)
                     enabled_updates_list['valided'].append(list_b.valided)
+                    enabled_updates_list['missing'].append(list_b.missing)
 
         except Exception as e:
-            logger.error("error function get_enabled_updates_list")
+            logger.error("error function get_enabled_updates_list %s"%e)
 
         return enabled_updates_list
-
 
     @DatabaseHelper._sessionm
     def approve_update(self, session, updateid):

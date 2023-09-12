@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022 Siveo, http://siveo.net/
+ * (c) 2022-2023 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -46,14 +46,24 @@ $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
-$uuid = htmlspecialchars($_GET['uuid']);
+$uuid = htmlspecialchars($_GET['entity']);
+
 $ctx['uuid'] = $uuid;
 
 //$uuidCut = substr($uuid, -1);
 
-$enabled_updates_list = xmlrpc_get_enabled_updates_list($start, $maxperpage, $filter);
+
+$titles = [];
+$complRates = [];
+$machineWithUpd = [];
+$machineWithoutUpd = [];
+$count_enabled_updates = 0;
+$params = [];
+
+$enabled_updates_list = xmlrpc_get_enabled_updates_list($uuid, $start, $maxperpage, $filter);
 
 $count_enabled_updates = $enabled_updates_list['nb_element_total'];
+
 
 if ($uuid == '')
 {
@@ -86,12 +96,16 @@ $machineWithUpd = [];
 $machineWithoutUpd = [];
 $actionDetails = [];
 
+$machineWithoutUpd = $enabled_updates_list['missing'];
+
+
 foreach($groupMachineList[UUID1][1][cn] as $member)
 {
     $id_machine = xmlrpc_get_idmachine_from_name($member);
 
     array_push($groupMachineList[UUID1][1], $id_machine[0]);
 }
+
 
 for($i=0; $i < $count_enabled_updates; $i++)
 {
@@ -100,28 +114,25 @@ for($i=0; $i < $count_enabled_updates; $i++)
 
     $params[] = array('kb' => $enabled_updates_list['kb'][$i], 'updateid' => $enabled_updates_list['updateid'][$i]);
 
+    //$compliances = xmlrpc_get_count_machines_by_update($enabled_updates_list['updateid'][$i]);
     $with_Upd = xmlrpc_get_count_machine_with_update($enabled_updates_list['kb'][$i]);
-    $without_Upd = xmlrpc_get_count_machine_as_not_upd($enabled_updates_list['updateid'][$i]);
 
     $titles[] = $enabled_updates_list['title'][$i];
     $actionDetails[] = $detailsUpd;
 
     $machineWithUpd[] = $with_Upd['nb_machines'];
-    $machineWithoutUpd[] = $without_Upd['0']['nb_machine_missing_update'];
+    $totalMachines = $machineWithoutUpd[$i] + $with_Upd['nb_machines'];
 
-    if ($without_Upd['0']['nb_machine_missing_update'] != "0")
-    {
-        $compliance_rate = intval(($with_Upd['nb_machines'] / ($without_Upd['0']['nb_machine_missing_update'] + $with_Upd['nb_machines'])) * 100);
+    if($totalMachines > 0){
+        $compliance_rate = intval(($with_Upd['nb_machines'] / $totalMachines)*100);
     }
-    else
-    {
-        $compliance_rate = '100';
+    else{
+        $compliance_rate = 100;
     }
 
     $color = colorconf($compliance_rate);
     $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
 }
-
 
 $n = new OptimizedListInfos($titles, _T("Update name", "updates"));
 $n->disableFirstColumnActionLink();

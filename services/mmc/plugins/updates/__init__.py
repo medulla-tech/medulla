@@ -57,8 +57,8 @@ def get_white_list(start, end, filter=""):
 def get_black_list(start, end, filter=""):
     return UpdatesDatabase().get_black_list(start, end, filter)
 
-def get_enabled_updates_list(start, end, filter=""):
-    return UpdatesDatabase().get_enabled_updates_list(start, end, filter)
+def get_enabled_updates_list(entity, start, end, filter=""):
+    return UpdatesDatabase().get_enabled_updates_list(entity, start, end, filter)
 
 def get_family_list(start, end, filter=""):
     return UpdatesDatabase().get_family_list(start, end, filter)
