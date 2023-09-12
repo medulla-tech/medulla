@@ -100,6 +100,22 @@ class UrbackupDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             
             return False
+        
+    @DatabaseHelper._sessionm
+    def insertNewClient(self, session, client_id, authkey):
+        try:
+            sql="""INSERT INTO client_state VALUES ('%s', '1', '%s');"""%(client_id, authkey)
+
+            session.execute(sql)
+            session.commit()
+            session.flush()
+            
+            return True
+            
+        except Exception as e:
+            logging.getLogger().error(str(e))
+            
+            return False
 
     # =====================================================================
     # urbackup FUNCTIONS
