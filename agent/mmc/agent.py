@@ -10,7 +10,15 @@ XML-RPC server implementation of the MMC agent.
 from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
 import signal
 import multiprocessing as mp
-from inspect import getfullargspec
+from inspect import getfullargspec, currentframe, getframeinfo
+import base64
+import zlib
+import string
+import yaml
+from collections import OrderedDict
+import xml.etree.ElementTree as ET
+from xml.dom.minidom import parseString
+import xmltodict
 
 import twisted.internet.error
 import twisted.copyright
@@ -60,7 +68,7 @@ import socket
 import ssl
 import gzip
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 logger = logging.getLogger()
 
@@ -96,7 +104,7 @@ def log_params(func):
 
 def log_details(func):
     def wrapper(*args, **kwargs):
-        frame = inspect.currentframe().f_back
+        frame = currentframe().f_back
         filename = frame.f_code.co_filename
         line_number = frame.f_lineno
         function_name = func.__name__
@@ -112,7 +120,7 @@ def log_details(func):
 
 def log_details_debug_info(func):
     def wrapper(*args, **kwargs):
-        frame = inspect.currentframe().f_back
+        frame = currentframe().f_back
         filename = frame.f_code.co_filename
         line_number = frame.f_lineno
         function_name = func.__name__
@@ -137,16 +145,16 @@ def log_details_debug_info(func):
 
 
 def generate_log_line(message):
-    frame = inspect.currentframe().f_back
-    file_name = inspect.getframeinfo(frame).filename
+    frame = currentframe().f_back
+    file_name = getframeinfo(frame).filename
     line_number = frame.f_lineno
     log_line = f"[{file_name}:{line_number}] - {message}"
     return log_line
 
 
 def display_message(message):
-    frame = inspect.currentframe().f_back
-    file_name = inspect.getframeinfo(frame).filename
+    frame = currentframe().f_back
+    file_name = getframeinfo(frame).filename
     line_number = frame.f_lineno
     logger = logging.getLogger(file_name)
     logger.setLevel(logging.INFO)
@@ -188,7 +196,7 @@ class MotDePasse:
         caracteres = string.ascii_letters + string.digits + string.punctuation
         for caractere_interdit in self.caracteres_interdits:
             caracteres = caracteres.replace(caractere_interdit, "")
-        mot_de_passe = "".join(random.choice(caracteres) for _ in range(taille))
+        mot_de_passe = "".join(random.choice(caracteres) for _ in range(self.taille))
         return mot_de_passe
 
     def calculer_date_expiration(self):
@@ -850,7 +858,7 @@ class convert:
 
     @staticmethod
     def format_xml(xml_string):
-        dom = xml.dom.minidom.parseString(xml_string)
+        dom = parseString(xml_string)
         formatted_xml = dom.toprettyxml(indent="  ")
         return formatted_xml
 
@@ -986,7 +994,7 @@ class messagefilexmpp:
                     elif isinstance(msg["data"], (str)):
                         logger.warning(
                             "Message sessionid %s data est 1 simple string"
-                            % data["sessionid"]
+                            % msg["sessionid"]
                         )
                     else:
                         logger.error(
@@ -1049,7 +1057,7 @@ class messagefilexmpp:
                     elif isinstance(msg["data"], (str)):
                         logger.warning(
                             "Message sessionid %s data est 1 simple string"
-                            % data["sessionid"]
+                            % msg["sessionid"]
                         )
                     else:
                         logger.error(
@@ -1112,7 +1120,7 @@ class messagefilexmpp:
                     elif isinstance(msg["data"], (str)):
                         logger.warning(
                             "Message sessionid %s data est 1 simple string"
-                            % data["sessionid"]
+                            % msg["sessionid"]
                         )
                     else:
                         logger.error(
@@ -1154,7 +1162,7 @@ class messagefilexmpp:
         }
         self.send_message(to, msg)
 
-    def send_message_json(to, jsonstring):
+    def send_message_json(self, to, jsonstring):
         return self.send_message(to, jsonstring)
         # jsonstring["to"] = to
         # return self.sendstr(json.dumps(jsonstring), priority=1)
@@ -1165,7 +1173,7 @@ class messagefilexmpp:
     def callinventory(self, to):
         return self._call_remote_action(to, "inventory", "inventory")
 
-    def callrestartbotbymaster(to):
+    def callrestartbotbymaster(self, to):
         return self._call_remote_action(to, "restartbot", "restartbot")
 
     def callshutdownbymaster(self, to, time=0, msg=""):
