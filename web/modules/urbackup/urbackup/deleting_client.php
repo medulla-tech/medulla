@@ -9,6 +9,7 @@ $jidMachine = htmlspecialchars($_GET["jidmachine"]);
 $clientid = htmlspecialchars($_GET["clientid"]);
 $clientname = htmlspecialchars($_GET["clientname"]);
 $editclient = htmlspecialchars($_GET["editclient"]);
+$authkey = htmlspecialchars($_GET["authkey"]);
 
 $p = new PageGenerator(_T("Delete group", 'urbackup'));
 $p->setSideMenu($sidemenu);
@@ -16,13 +17,13 @@ $p->display();
 
 if ($editclient == "disable")
 {
-    $clientRemove = xmlrpc_remove_client($jidMachine);
+    $clientRemove = xmlrpc_remove_client($jidMachine, $clientid);
     $editStateClient = "enable";
 }
 
 if ($editclient == "enable")
 {
-    $clientAdd = xmlrpc_enable_client($jidMachine);
+    $clientAdd = xmlrpc_enable_client($jidMachine, $clientid, $authkey);
     $editStateClient = "disable";
 }
 
