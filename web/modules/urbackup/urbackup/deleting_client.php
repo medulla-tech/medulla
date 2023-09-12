@@ -18,7 +18,7 @@ $p->display();
 if ($editclient == "disable")
 {
     $clientRemove = xmlrpc_remove_client($jidMachine, $clientid);
-    $editStateClient = "enable";
+    $editStateClient = "disable";
 }
 
 if ($editclient == "enable")
@@ -27,7 +27,7 @@ if ($editclient == "enable")
     $client_authkey = $client["0"]["authkey"];
 
     $clientAdd = xmlrpc_enable_client($jidMachine, $clientid, $client_authkey);
-    $editStateClient = "disable";
+    $editStateClient = "enable";
 }
 
 
