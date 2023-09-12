@@ -5919,6 +5919,8 @@ class Glpi95(DyngroupDatabaseHelper):
         except NoResultFound:
             self.addUser(username, password)
             return
+        if type(password) is str:
+            password = bytes(password, "utf-8")
         user.password = hashlib.sha1(password).hexdigest()
         session.commit()
         session.flush()
