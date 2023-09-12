@@ -299,7 +299,7 @@ class UpdatesDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def get_enabled_updates_list(self, session, entity, start, limit, filter=""):
+    def get_enabled_updates_list(self, session, entity, upd_list="gray", start=0, limit=-1, filter=""):
 
         try:
             start = int(start)
@@ -311,6 +311,8 @@ class UpdatesDatabase(DatabaseHelper):
             limit = -1
 
         try:
+            list_name = "up_%s_list"%upd_list
+
             enabled_updates_list={ 'nb_element_total': 0,
                         'updateid' : [],
                         'title' : [],
@@ -324,23 +326,23 @@ class UpdatesDatabase(DatabaseHelper):
     ud.description AS description,
     ud.creationdate AS creationdate,
     ud.title_short AS title_short,
-    ugl.valided as valided,
+    tbl.valided as valided,
     count(umw.update_id) as missing
 FROM
     xmppmaster.up_machine_windows umw
-LEFT JOIN xmppmaster.up_gray_list ugl ON ugl.updateid = umw.update_id
-LEFT JOIN xmppmaster.up_white_list uwl ON uwl.updateid = umw.update_id
+LEFT JOIN xmppmaster.%s tbl ON tbl.updateid = umw.update_id
 JOIN xmppmaster.update_data ud ON umw.update_id = ud.updateid
 JOIN xmppmaster.machines ma ON umw.id_machine = ma.id
 JOIN xmppmaster.glpi_entity ge ON ge.id = ma.glpi_entity_id
 WHERE
-    ugl.valided = 1
+    tbl.valided = 1
 AND
     ge.glpi_id = %s
 AND
-    uwl.updateid is NULL
+    tbl.updateid is not NULL
 AND (umw.curent_deploy is NULL or umw.curent_deploy = 0)
-AND (umw.required_deploy is NULL or umw.required_deploy = 0) """%(entity.replace("UUID", ""))
+AND (umw.required_deploy is NULL or umw.required_deploy = 0)
+ """%(list_name, entity.replace("UUID", ""))
 
             if filter != "":
                 filterwhere="""AND

@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022-2023 Siveo, http://siveo.net/
+ * (c) 2023 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -26,6 +26,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
 
 global $conf;
+$p = new PageGenerator(_T("Details by White Updates", 'updates'));
+$p->setSideMenu($sidemenu);
+$p->display();
+
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $maxperpage = $conf["global"]["maxperpage"];
 $gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
@@ -60,7 +64,7 @@ $machineWithoutUpd = [];
 $count_enabled_updates = 0;
 $params = [];
 
-$enabled_updates_list = xmlrpc_get_enabled_updates_list($uuid, $start, $maxperpage, $filter);
+$enabled_updates_list = xmlrpc_get_enabled_updates_list($uuid, 'white', $start, $maxperpage, $filter);
 
 $count_enabled_updates = $enabled_updates_list['nb_element_total'];
 
@@ -123,12 +127,15 @@ for($i=0; $i < $count_enabled_updates; $i++)
     $machineWithUpd[] = $with_Upd['nb_machines'];
     $totalMachines = $machineWithoutUpd[$i] + $with_Upd['nb_machines'];
 
-    if($totalMachines > 0){
-        $compliance_rate = intval(($with_Upd['nb_machines'] / $totalMachines)*100);
+    $compliance_rate = intval(($with_Upd['nb_machines'] / $totalMachines)*100);
+    /*if ($without_Upd['0']['nb_machine_missing_update'] != "0")
+    {
+        $compliance_rate = intval(($with_Upd['nb_machines'] / ($without_Upd['0']['nb_machine_missing_update'] + $with_Upd['nb_machines'])) * 100);
     }
-    else{
-        $compliance_rate = 100;
-    }
+    else
+    {
+        $compliance_rate = '100';
+    }*/
 
     $color = colorconf($compliance_rate);
     $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
