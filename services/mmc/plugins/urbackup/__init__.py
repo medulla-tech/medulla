@@ -82,6 +82,8 @@ def enable_client(jidmachine, clientid, authkey):
     urbackup_server = urbackup_conf.get("parameters", "backup_server")
     urbackup_port = urbackup_conf.get("parameters", "backup_port")
 
+    enable_client_database(clientid)
+
     command = (
         "(echo [parameters] & echo backup_enabled = 1 & echo client_id = "
         + str(clientid)
@@ -107,7 +109,7 @@ def enable_client(jidmachine, clientid, authkey):
     send_message_json(jidmachine, msg)
 
 
-def remove_client(jidmachine):
+def remove_client(jidmachine, clientid):
     """
     Write backup_enabled to 0 on updatebackupclient.ini file to disable backup for windows client
 
@@ -127,26 +129,32 @@ def remove_client(jidmachine):
     }
     send_message_json(jidmachine, msg)
 
-def get_client_status(jidmachine):
+def get_client_status(client_id):
     """
-    Get client status if enable or not in updatebackupclient.ini file, check value from backup_enabled attribute
+    Get client status if enable or not from the database
 
     Returns:
         1 or 0, backup_enabled value
     """
-    command = "(awk -F '=' '/backup_enabled/ {print $2}' C:\progra~1\pulse\etc\updatebackupclient.ini)"
+    return UrbackupDatabase().getClientStatus(client_id)
 
-    callremotecommandshell(jidmachine, command)
-    sessionid = name_random(8, "update_")
-    msg = {
-        "action": "restartbot",
-        "sessionid": sessionid,
-        "data": {},
-        "ret": 0,
-        "base64": False,
-    }
-    send_message_json(jidmachine, msg)
+def enable_client_database(client_id):
+    """
+    Get client status if enable or not from the database
 
+    Returns:
+        1 or 0, backup_enabled value
+    """
+    return UrbackupDatabase().editClientState("1", client_id)
+
+def disable_client_database(client_id):
+    """
+    Get client status if enable or not from the database
+
+    Returns:
+        1 or 0, backup_enabled value
+    """
+    return UrbackupDatabase().editClientState("0", client_id)
 
 def get_ses():
     """
