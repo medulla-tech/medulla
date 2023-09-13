@@ -31,6 +31,8 @@ $jidMachine = htmlspecialchars($_GET["jidmachine"]);
 
 $group_id_new = "-".$group_id;
 
+print_r($group_id_new);
+
 $p = new PageGenerator(_T("Assign member to profile", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -123,10 +125,20 @@ $array = json_decode(json_encode($reviews), true);
 
 $addgroup = $result;
 $array_progress = json_decode(json_encode($addgroup), true);
+
+$clients = $array_progress['navitems']['clients'];
 //-----------------------------------END ADD MEMBER TO GROUP
 ?>
 <br>
 <?php
+
+foreach($clients as $client)
+{
+    if ($client['name'] == $clientname)
+    {
+        $groupname = $client['groupname'];
+    }
+}
 
 $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$client_id.'&clientname='.$clientname.'&groupname='.$groupname.'&jidmachine='.$jidMachine;
 
