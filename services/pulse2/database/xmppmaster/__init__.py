@@ -75,6 +75,7 @@ from pulse2.database.xmppmaster.schema import (
     Up_black_list,
     Up_white_list,
     Up_gray_list,
+    Mmc_module_actif
 )
 
 # Imported last
@@ -14301,3 +14302,63 @@ group by hostname
         except Exception as e:
             pass
         return ""
+
+    @DatabaseHelper._sessionm
+    def initialisation_module_list_mmc(self, session, listmodules):
+        """
+        Initialise la table 'mmc_module_actif' en tronquant d'abord son contenu, puis insère de nouveaux modules.
+
+        Args:
+            session (sqlalchemy.orm.Session): La session SQLAlchemy active.
+            listmodules (list): Une liste de noms de modules à insérer.
+
+        Note:
+            Cette méthode va tronquer la table 'mmc_module_actif', supprimant tous les enregistrements.
+            Ensuite, elle insérera de nouveaux enregistrements avec 'enable' à 1 et 'informations' à une chaîne vide.
+
+        Example:
+            Pour initialiser avec une liste de modules ['module1', 'module2']:
+
+            >>> mmc_module = Mmc_module_actif()
+            >>> mmc_module.initialisation_module_list_mmc(session, ['module1', 'module2'])
+
+        """
+
+        session.execute("TRUNCATE TABLE mmc_module_actif")
+
+        if listmodules:
+            # Pour chaque nom de module dans la liste, insérer avec enable à 1 et informations à null
+            for module in listmodules:
+                new_module = Mmc_module_actif(name_module=module, enable=True, informations="")
+                session.add(new_module)
+            # Commit pour valider les changements
+        session.commit()
+
+    @DatabaseHelper._sessionm
+    def get_module_list_mmc(self, session, enable=1):
+        """
+        Renvoie une liste de 'name_module' depuis la table 'mmc_module_actif' selon la valeur de 'enable'.
+
+        Args:
+            session (sqlalchemy.orm.Session): La session SQLAlchemy active.
+            enable (int, optional): La valeur de 'enable' à considérer (par défaut à 1).
+
+        Returns:
+            list: Une liste de 'name_module' correspondant aux critères spécifiés.
+
+        Example:
+            Pour obtenir la liste de 'name_module' avec 'enable' à 1:
+
+            >>> mmc_module = Mmc_module_actif()
+            >>> modules_actifs = mmc_module.get_module_list_mmc(session)
+
+            Pour obtenir la liste de 'name_module' avec 'enable' à 0:
+
+            >>> modules_inactifs = mmc_module.get_module_list_mmc(session, enable=0)
+
+        """
+        if enable not in (0, 1):
+            raise ValueError("La valeur de 'enable' doit être soit 0 ou 1.")
+
+        modules = session.query(Mmc_module_actif.name_module).filter(Mmc_module_actif.enable == enable).all()
+        return [module[0] for module in modules]
