@@ -42,6 +42,7 @@ $backupstate = htmlspecialchars($_GET["backupstate"]);
 $backuptype = htmlspecialchars($_GET["backuptype"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
 $editStateClient = htmlspecialchars($_GET["editStateClient"]);
+$errorEditStateClient = htmlspecialchars($_GET["error"]);
 
 //-----------------------------------START LOGIN FUNCTION
 $url = $url_urbackup."?a=login";
@@ -254,8 +255,14 @@ if ($editStateClient == "enable")
 {
     $str= _T("This client has been successfully enabled.", "urbackup");
     new NotifyWidgetSuccess($str);
-    
 }
+
+if ($errorEditStateClient == "true")
+{
+    $str= _T("This client was offline, please wait until it is online and try again.", "urbackup");
+    new NotifyWidgetFailure($str);
+}
+
 ?>
 <h2> <?php echo _T("File save", 'urbackup'); ?> </h2>
 
