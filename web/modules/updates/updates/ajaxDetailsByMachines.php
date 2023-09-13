@@ -158,8 +158,8 @@ else
 
     for($i=0; $i < $countInArray; $i++){
         $machineNames[] = $compliance_computers[$i]['hostname'];
-        $missing = $compliance_computers[$i]["missing"];
-        $installed = $compliance_computers[$i]["installed"];
+        $missing[] = $compliance_computers[$i]["missing"];
+        $installed[] = $compliance_computers[$i]["installed"];
         $total[] = $compliance_computers[$i]['total'];
 
         $detailsByMachs[] = $detailsByMach;

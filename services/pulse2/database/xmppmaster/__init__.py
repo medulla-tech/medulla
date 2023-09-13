@@ -11573,6 +11573,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 WHERE
                     platform LIKE 'Mic%'
                         AND (xmppmaster.up_gray_list.valided = 1 or xmppmaster.up_white_list.valided = 1)
+                        AND xmppmaster.up_machine_windows.curent_deploy is NULL AND xmppmaster.up_machine_windows.required_deploy is NULL
                 GROUP BY glpi_entity.glpi_id;"""
         resultquery = session.execute(sql)
         session.commit()
