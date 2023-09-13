@@ -167,6 +167,15 @@ def disable_client_database(client_id):
     """
     return UrbackupDatabase().editClientState("0", client_id)
 
+def getComputersEnableValue(jid):
+    """
+    Get enable status from xmppmaster.machines table
+
+    Returns:
+        id, jid and enabled from database xmppmaster.machines
+    """
+    return UrbackupDatabase().getComputersEnableValue(jid)
+
 def get_ses():
     """
     Get value of session

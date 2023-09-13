@@ -81,6 +81,11 @@ function xmlrpc_insertNewClient($client_id, $authkey){
     return xmlCall("urbackup.insertNewClient", [$client_id, $authkey]);
 }
 
+function xmlrpc_getComputersEnableValue($jid){
+    // Database request get enabled info from xmppmaster.machines
+    return xmlCall("urbackup.getComputersEnableValue", [$jid]);
+}
+
 function xmlrpc_get_settings_global(){
     // Return all settings
     return xmlCall("urbackup.get_settings_general", []);
