@@ -117,6 +117,24 @@ class UrbackupDatabase(DatabaseHelper):
             
             return False
 
+    @DatabaseHelper._sessionm
+    def getComputersEnableValue(self, session, jid):
+        try:
+            sql="""SELECT id, jid, enabled FROM xmppmaster.machines WHERE jid = '%s';"""%(jid)
+
+            resultquery = session.execute(sql)
+            session.commit()
+            session.flush()
+            
+            result = [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+            
+        except Exception as e:
+            logging.getLogger().error(str(e))
+            
+        return result
+
     # =====================================================================
     # urbackup FUNCTIONS
     # =====================================================================
