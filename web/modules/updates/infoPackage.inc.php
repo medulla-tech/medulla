@@ -89,8 +89,13 @@ $page->setFile("modules/updates/updates/ajaxDeploySpecificUpdate.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxDetailsByUpdates", _T("Manage List Updates", "updates"));
-$page->setFile("modules/updates/updates/ajaxDetailsByUpdates.php");
+$page = new Page("ajaxDetailsByUpdatesGray", _T("Manage Gray List Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxDetailsByUpdatesGray.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxDetailsByUpdatesWhite", _T("Manage White List Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxDetailsByUpdatesWhite.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
