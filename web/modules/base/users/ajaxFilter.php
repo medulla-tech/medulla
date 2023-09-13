@@ -31,8 +31,11 @@ if(isset($_REQUEST['maxperpage'])) {
 }
 
 $filter = $_GET["filter"];
-if (isset($_GET["start"])) $start = $_GET["start"];
-else $start = 0;
+if (isset($_GET["start"])) {
+    $start = $_GET["start"];
+} else {
+    $start = 0;
+}
 
 list($usercount, $users) = get_users_detailed($error, $filter, $start, $start + $maxperpage);
 
@@ -46,12 +49,14 @@ $css = array();
 for ($idx = 0; $idx < safeCount($users); $idx++) {
     if ($users[$idx]["enabled"]) {
         $css[$idx] = "userName";
-    } else $css[$idx] = "userNameDisabled";
-    $arrUser[]=is_object($users[$idx]['uid']) ? $users[$idx]['uid']->scalar : $users[$idx]['uid'];
+    } else {
+        $css[$idx] = "userNameDisabled";
+    }
+    $arrUser[] = is_object($users[$idx]['uid']) ? $users[$idx]['uid']->scalar : $users[$idx]['uid'];
 
     $givenName = is_object($users[$idx]['givenName']) ? $users[$idx]['givenName']->scalar : $users[$idx]['givenName'];
     $sn = is_object($users[$idx]['sn']) ? $users[$idx]['sn']->scalar : $users[$idx]['sn'];
-    $arrSnUser[]=$givenName.' '.$sn;
+    $arrSnUser[] = $givenName.' '.$sn;
 
     if (strlen($users[$idx]["mail"]) > 0) {
         $mails[] = is_object($users[$idx]["mail"]) ? '<a href="mailto:' . $users[$idx]["mail"]->scalar . '">' . $users[$idx]["mail"]->scalar . "</a>" : '<a href="mailto:' . $users[$idx]["mail"] . '">' . $users[$idx]["mail"] . "</a>";
@@ -62,15 +67,18 @@ for ($idx = 0; $idx < safeCount($users); $idx++) {
     $num = null;
     foreach($users[$idx]["telephoneNumber"] as $_number) {
         $number = is_object($_number) ? $_number->scalar : $_number;
-        if ($num == null) $num = is_object($number)? $number->scalar: $number;
-        else if (strlen($number) < strlen($num)) $num = $number;
+        if ($num == null) {
+            $num = is_object($number) ? $number->scalar : $number;
+        } elseif (strlen($number) < strlen($num)) {
+            $num = $number;
+        }
     }
     $phones[] = $num;
 }
 
 // Avoiding the CSS selector (tr id) to start with a number
 $ids_users = [];
-foreach($users as $index => $user){
+foreach($users as $index => $user) {
     $ids_users[] = 'u_' . $user['uid']->scalar;
 }
 
@@ -78,7 +86,7 @@ foreach($users as $index => $user){
 $n = new UserInfos($arrUser, _("Login"));
 $n->setcssIds($ids_users);
 $n->setItemCount($usercount);
-$n->setNavBar(new AjaxPaginator($usercount, $filter, "updateSearchParam",  $maxperpage));
+$n->setNavBar(new AjaxPaginator($usercount, $filter, "updateSearchParam", $maxperpage));
 
 $n->start = 0;
 $n->end = $usercount - 1;
@@ -87,21 +95,19 @@ $n->setCssClass("userName");
 
 $n->css = $css;
 
-$n->addExtraInfo($arrSnUser,_("Name"));
-$n->addExtraInfo($mails,_("Mail"));
-$n->addExtraInfo($phones,_("Telephone"));
+$n->addExtraInfo($arrSnUser, _("Name"));
+$n->addExtraInfo($mails, _("Mail"));
+$n->addExtraInfo($phones, _("Telephone"));
 
-$n->addActionItem(new ActionItem(_("Edit"),"edit","edit","user"));
+$n->addActionItem(new ActionItem(_("Edit"), "edit", "edit", "user"));
 if (in_array("extticket", $_SESSION["supportModList"])) {
     $n->addActionItem(new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "user"));
 }
-$n->addActionItem(new ActionItem(_("MMC rights"),"editacl","editacl","user") );
-$n->addActionItem(new ActionPopupItem(_("Delete"),"delete","delete","user") );
-$n->addActionItem(new ActionPopupItem(_("Backup"),"backup","backup","user") );
+$n->addActionItem(new ActionItem(_("MMC rights"), "editacl", "editacl", "user"));
+$n->addActionItem(new ActionPopupItem(_("Delete"), "delete", "delete", "user"));
+$n->addActionItem(new ActionPopupItem(_("Backup"), "backup", "backup", "user"));
 if (has_audit_working()) {
-    $n->addActionItem(new ActionItem(_("Logged Actions"),"loguser","audit","user") );
+    $n->addActionItem(new ActionItem(_("Logged Actions"), "loguser", "audit", "user"));
 }
 $n->setName(_("Users"));
 $n->display();
-
-?>
