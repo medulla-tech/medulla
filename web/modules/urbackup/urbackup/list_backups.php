@@ -234,38 +234,27 @@ if ($backupstate == "false")
 {
     if ($backuptype == "incremental") 
     {
-        ?>
-        <script>
-            alert("Incremental backup failed, be sure client urbackup is installed on computer or is online.");
-        </script>
-        <?php
+        $str = _T("Incremental backup failed, be sure client urbackup is installed on computer or is online.", "urbackup");
+        new NotifyWidgetFailure($str);
     }
     
     if ($backuptype == "full")
     {
-        ?>
-        <script>
-            alert("Full backup failed, be sure client urbackup is installed on computer or is online.");
-        </script>
-        <?php
+        $str = _T("Full backup failed, be sure client urbackup is installed on computer or is online.", "urbackup");
+        new NotifyWidgetFailure($str);
     }
 }
 
 if ($editStateClient == "disable")
 {
-    ?>
-    <script>
-        alert("The backups for this client has been disabled successfully.");
-    </script>
-    <?php
+    $str = _T("This client has been successfully disabled.", "urbackup");
+    new NotifyWidgetSuccess($str);
 }
 if ($editStateClient == "enable")
 {
-    ?>
-    <script>
-        alert("The backups for this client has been enabled successfully.");
-    </script>
-    <?php
+    $str= _T("This client has been successfully enabled.", "urbackup");
+    new NotifyWidgetSuccess($str);
+    
 }
 ?>
 <h2> <?php echo _T("File save", 'urbackup'); ?> </h2>
