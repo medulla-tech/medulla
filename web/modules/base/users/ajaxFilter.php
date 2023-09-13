@@ -70,8 +70,8 @@ for ($idx = 0; $idx < safeCount($users); $idx++) {
 
 // Avoiding the CSS selector (tr id) to start with a number
 $ids_users = [];
-foreach($users as $index => $uid_users){
-    $ids_users[] = 'u_'.$uid_users['uid'];
+foreach($users as $index => $user){
+    $ids_users[] = 'u_' . $user['uid']->scalar;
 }
 
 // $arrUser is the list of all Users
