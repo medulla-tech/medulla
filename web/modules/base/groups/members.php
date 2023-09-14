@@ -25,6 +25,20 @@
 require("modules/base/includes/groups.inc.php");
 require("modules/base/includes/users.inc.php");
 
+function transform_users($users) {
+    return array_map(function($user) {
+        foreach ($user as $key => $value) {
+            if (is_object($value) && property_exists($value, 'scalar')) {
+                $user[$key] = $value->scalar;
+            } elseif (is_array($value)) {
+                $user[$key] = array_map(function($item) {
+                    return is_object($item) && property_exists($item, 'scalar') ? $item->scalar : $item;
+                }, $value);
+            }
+        }
+        return $user;
+    }, $users);
+}
 ?>
 
 <style type="text/css">
@@ -76,7 +90,7 @@ $forbidden = array();
 if (isset($_POST["bdeluser_x"])) {
     if (isset($_POST["members"])) {
         foreach ($_POST["members"] as $member) {
-            if ($group == getUserPrimaryGroup($member)) {
+            if ($group == getUserPrimaryGroup($member)->scalar) {
                 /* A user can't be removed from his/her primary group */
                 $forbidden[] = $member;
                 continue;
@@ -98,6 +112,10 @@ if (isset($_POST["bdeluser_x"])) {
     reset($members);
 } else if (isset($_POST["bconfirm"])) {
     $curmem = get_members($group);
+    $curmem = array_map(function($member) {
+        return is_object($member) && property_exists($member, 'scalar') ? $member->scalar : $member;
+    }, $curmem);
+
     $newmem = array_diff($members, $curmem);
     $delmem = array_diff($curmem, $members);
 
@@ -112,10 +130,17 @@ if (isset($_POST["bdeluser_x"])) {
     if (!isXMLRPCError()) new NotifyWidgetSuccess(_("Group successfully modified"));
 
     $members = get_members($group);
+    $members = array_map(function($member) {
+        return is_object($member) && property_exists($member, 'scalar') ? $member->scalar : $member;
+    }, $members);
 } else {
     $members = get_members($group);
+    $members = array_map(function($member) {
+        return is_object($member) && property_exists($member, 'scalar') ? $member->scalar : $member;
+    }, $members);
     # get an array with all user's attributes
     $users = get_users(true);
+    $users = transform_users($users);
 }
 
 $diff = array();
