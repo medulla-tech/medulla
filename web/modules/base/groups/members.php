@@ -25,13 +25,14 @@
 require("modules/base/includes/groups.inc.php");
 require("modules/base/includes/users.inc.php");
 
-function transform_users($users) {
-    return array_map(function($user) {
+function transform_users($users)
+{
+    return array_map(function ($user) {
         foreach ($user as $key => $value) {
             if (is_object($value) && property_exists($value, 'scalar')) {
                 $user[$key] = $value->scalar;
             } elseif (is_array($value)) {
-                $user[$key] = array_map(function($item) {
+                $user[$key] = array_map(function ($item) {
                     return is_object($item) && property_exists($item, 'scalar') ? $item->scalar : $item;
                 }, $value);
             }
@@ -70,20 +71,20 @@ select.list
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-if (isset($_GET["group"]))
+if (isset($_GET["group"])) {
     $group = urldecode($_GET["group"]);
-else
+} else {
     $group = $_POST["group"];
+}
 
 if (isset($_POST)) {
-  if(isset($_POST['lmembers'], $_POST['lusers'])){
-    $members = unserialize(base64_decode($_POST["lmembers"]));
-    $users = unserialize(base64_decode($_POST["lusers"]));
-  }
-  else{
-    $members = [];
-    $users = [];
-  }
+    if(isset($_POST['lmembers'], $_POST['lusers'])) {
+        $members = unserialize(base64_decode($_POST["lmembers"]));
+        $users = unserialize(base64_decode($_POST["lusers"]));
+    } else {
+        $members = [];
+        $users = [];
+    }
 }
 $forbidden = array();
 
@@ -96,10 +97,12 @@ if (isset($_POST["bdeluser_x"])) {
                 continue;
             }
             $idx = array_search($member, $members);
-            if ($idx !== false) unset($members[$idx]);
+            if ($idx !== false) {
+                unset($members[$idx]);
+            }
         }
     }
-} else if (isset($_POST["badduser_x"])) {
+} elseif (isset($_POST["badduser_x"])) {
     if (isset($_POST["users"])) {
         foreach ($_POST["users"] as $user) {
             $idx = array_search($user, $members);
@@ -110,9 +113,9 @@ if (isset($_POST["bdeluser_x"])) {
     }
     sort($members);
     reset($members);
-} else if (isset($_POST["bconfirm"])) {
+} elseif (isset($_POST["bconfirm"])) {
     $curmem = get_members($group);
-    $curmem = array_map(function($member) {
+    $curmem = array_map(function ($member) {
         return is_object($member) && property_exists($member, 'scalar') ? $member->scalar : $member;
     }, $curmem);
 
@@ -127,15 +130,17 @@ if (isset($_POST["bdeluser_x"])) {
         del_member($group, $del);
         callPluginFunction("delUserFromGroup", array($del, $group));
     }
-    if (!isXMLRPCError()) new NotifyWidgetSuccess(_("Group successfully modified"));
+    if (!isXMLRPCError()) {
+        new NotifyWidgetSuccess(_("Group successfully modified"));
+    }
 
     $members = get_members($group);
-    $members = array_map(function($member) {
+    $members = array_map(function ($member) {
         return is_object($member) && property_exists($member, 'scalar') ? $member->scalar : $member;
     }, $members);
 } else {
     $members = get_members($group);
-    $members = array_map(function($member) {
+    $members = array_map(function ($member) {
         return is_object($member) && property_exists($member, 'scalar') ? $member->scalar : $member;
     }, $members);
     # get an array with all user's attributes
@@ -145,8 +150,9 @@ if (isset($_POST["bdeluser_x"])) {
 
 $diff = array();
 foreach ($users as $user) {
-    if (!in_array($user['uid'], $members))
+    if (!in_array($user['uid'], $members)) {
         $diff[] = $user;
+    }
 }
 
 if (safeCount($forbidden)) {
@@ -219,11 +225,13 @@ foreach ($members as $member) {
 
 <?php
 
-function formatUsername($user) {
-    if ($user['givenName'] != $user['uid'])
+function formatUsername($user)
+{
+    if ($user['givenName'] != $user['uid']) {
         return $user['givenName'] . " " . $user['sn'] . " (" . $user['uid'] . ")";
-    else
+    } else {
         return $user['uid'];
+    }
 }
 
 ?>
