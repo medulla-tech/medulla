@@ -75,7 +75,7 @@ from pulse2.database.xmppmaster.schema import (
     Up_black_list,
     Up_white_list,
     Up_gray_list,
-    Mmc_module_actif
+    Mmc_module_actif,
 )
 
 # Imported last
@@ -14329,7 +14329,9 @@ group by hostname
         if listmodules:
             # Pour chaque nom de module dans la liste, insérer avec enable à 1 et informations à null
             for module in listmodules:
-                new_module = Mmc_module_actif(name_module=module, enable=True, informations="")
+                new_module = Mmc_module_actif(
+                    name_module=module, enable=True, informations=""
+                )
                 session.add(new_module)
             # Commit pour valider les changements
         session.commit()
@@ -14360,5 +14362,9 @@ group by hostname
         if enable not in (0, 1):
             raise ValueError("La valeur de 'enable' doit être soit 0 ou 1.")
 
-        modules = session.query(Mmc_module_actif.name_module).filter(Mmc_module_actif.enable == enable).all()
+        modules = (
+            session.query(Mmc_module_actif.name_module)
+            .filter(Mmc_module_actif.enable == enable)
+            .all()
+        )
         return [module[0] for module in modules]
