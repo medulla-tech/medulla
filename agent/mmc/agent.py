@@ -2214,7 +2214,9 @@ class MMCApp(object):
                 PluginManager().getEnabledPlugins()["xmppmaster"].messagefilexmpp
             )
             # on a besoin de savoir les modules de mmc initialise
-            XmppMasterDatabase().initialisation_module_list_mmc(PluginManager().getEnabledPluginNames())
+            XmppMasterDatabase().initialisation_module_list_mmc(
+                PluginManager().getEnabledPluginNames()
+            )
             # MASTER now is a substitute.
             self.config_bool_done = False
             logger.info("Start/restart MMC presence client substitut master")

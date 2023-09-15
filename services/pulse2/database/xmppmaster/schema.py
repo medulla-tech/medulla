@@ -889,9 +889,10 @@ class Up_gray_list(Base):
     valided = Column(Boolean, unique=False)
     validity_date = Column(DateTime, default=datetime.datetime.now)
 
+
 class Mmc_module_actif(Base):
     # ====== Table name =========================
-    __tablename__ = 'mmc_module_actif'
+    __tablename__ = "mmc_module_actif"
     # ====== Fields =============================
     # Here we define columns for the table update_machine.
     # Notice that each column is also a normal Python instance attribute.
