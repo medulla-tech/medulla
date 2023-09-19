@@ -26,70 +26,77 @@
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("includes/xmlrpc.inc.php");
 
-class EmptyActionItem1 extends ActionItem {
-
-    function __construct($desc, $action, $classCss) {
-        $this->desc=$desc;
+class EmptyActionItem1 extends ActionItem
+{
+    public function __construct($desc, $action, $classCss)
+    {
+        $this->desc = $desc;
         $this->action = $action;
         $this->classCss = $classCss;
         $this->paramString = "";
         $this->mod = "";
     }
 
-    function display($param = null, $extraParams = Array()) {
+    public function display($param = null, $extraParams = array())
+    {
         echo "<li class=\"" . $this->classCss . "\">";
         echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
         echo "onclick=\"return false;\">&nbsp;</a>";
         print "</li>";
     }
-    function setClassCss($name) {
+    public function setClassCss($name)
+    {
         $this->classCss = $name;
     }
-    function setDescription($name) {
+    public function setDescription($name)
+    {
         $this->desc = $name;
     }
-    function getDescription() {
+    public function getDescription()
+    {
         echo '$this->desc';
     }
 }
 
 // $name data  tab
-function list_computers($names,
-                        $filter,
-                        $count = 0,
-                        $delete_computer = false,
-                        $remove_from_result = false,
-                        $is_group = false,
-                        $msc_can_download_file = false,
-                        $msc_vnc_show_icon = false,
-                        $groupinfodeploy = -1,
-                        $login = "",
-                        $listidmachinedeploy = "",
-                        $listhostmachinedeploy = "",
-                        $listsessionmachinedeploy = "",
-                        $liststatemachinedeploy = "") {
-    if ($listidmachinedeploy != ""){
-        $array_id_machine_deploy = explode("@@",$listidmachinedeploy );
-        array_pop ($array_id_machine_deploy );
+function list_computers(
+    $names,
+    $filter,
+    $count = 0,
+    $delete_computer = false,
+    $remove_from_result = false,
+    $is_group = false,
+    $msc_can_download_file = false,
+    $msc_vnc_show_icon = false,
+    $groupinfodeploy = -1,
+    $login = "",
+    $listidmachinedeploy = "",
+    $listhostmachinedeploy = "",
+    $listsessionmachinedeploy = "",
+    $liststatemachinedeploy = ""
+) {
+    if ($listidmachinedeploy != "") {
+        $array_id_machine_deploy = explode("@@", $listidmachinedeploy);
+        array_pop($array_id_machine_deploy);
 
-        $array_host_machinedeploy = explode("@@",$listhostmachinedeploy );
-        array_pop ($array_host_machinedeploy );
+        $array_host_machinedeploy = explode("@@", $listhostmachinedeploy);
+        array_pop($array_host_machinedeploy);
 
-        $array_session_machine_deploy = explode("@@",$listsessionmachinedeploy );
-        array_pop ($array_session_machine_deploy );
+        $array_session_machine_deploy = explode("@@", $listsessionmachinedeploy);
+        array_pop($array_session_machine_deploy);
 
-        $array_state_machine_deploy = explode("@@",$liststatemachinedeploy );
-        array_pop ($array_state_machine_deploy );
+        $array_state_machine_deploy = explode("@@", $liststatemachinedeploy);
+        array_pop($array_state_machine_deploy);
 
-        $indexarray = array_flip ($array_host_machinedeploy );
+        $indexarray = array_flip($array_host_machinedeploy);
 
-        foreach ( $names as &$dd){
-            foreach($array_id_machine_deploy as $key=>$val){
-                if (isset($dd['objectUUID']) &&  $val == $dd['objectUUID']){
+        foreach ($names as &$dd) {
+            foreach($array_id_machine_deploy as $key => $val) {
+                if (isset($dd['objectUUID']) &&  $val == $dd['objectUUID']) {
                     $dd['status'] = $array_state_machine_deploy[$key];
                 }
             }
-            if (!isset($dd['status'])){
+            if (!isset($dd['status'])) {
                 $dd['status'] = "Wol";
             }
         }
@@ -100,43 +107,43 @@ function list_computers($names,
 
     $emptyAction = new EmptyActionItem();
 
-    $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
-    $monitoringAction = new ActionItem(_("Monitoring"),"monitoringview","monit","computers", "xmppmaster", "xmppmaster");
-    $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
-    $logAction = new ActionItem(_("View deployment details"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
-    $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
+    $inventAction = new ActionItem(_("Inventory"), "invtabs", "inventory", "inventory", "base", "computers");
+    $monitoringAction = new ActionItem(_("Monitoring"), "monitoringview", "monit", "computers", "xmppmaster", "xmppmaster");
+    $glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inventory", "base", "computers");
+    $logAction = new ActionItem(_("View deployment details"), "viewlogs", "logfile", "computer", "xmppmaster", "xmppmaster");
+    $mscAction = new ActionItem(_("Software deployment"), "msctabs", "install", "computer", "base", "computers");
     if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-        $logNoAction = new EmptyActionItem1(_("Read log"),"msctabs","logfileg","computer", "base", "computers", "tablogs");
-        $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
+        $logNoAction = new EmptyActionItem1(_("Read log"), "msctabs", "logfileg", "computer", "base", "computers", "tablogs");
+        $mscNoAction = new EmptyActionItem1(_("Software deployment"), "msctabs", "installg", "computer", "base", "computers");
 
-        $inventconsole   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
-        $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
+        $inventconsole   = new ActionItem(_("xmppconsole"), "consolecomputerxmpp", "console", "computers", "xmppmaster", "xmppmaster");
+        $inventnoconsole = new EmptyActionItem1(_("xmppconsole"), "consolecomputerxmpp", "consoleg", "computers", "xmppmaster", "xmppmaster");
         $actionConsole = array();
-        $inventxmppbrowsingne   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
-        $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsingne","folderg","computers","xmppmaster", "xmppmaster");
+        $inventxmppbrowsingne   = new ActionItem(_("files browsing"), "xmppfilesbrowsingne", "folder", "computers", "xmppmaster", "xmppmaster");
+        $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"), "xmppfilesbrowsingne", "folderg", "computers", "xmppmaster", "xmppmaster");
 
         //version avec un select pour choisir les fichier
         //$editremoteconfiguration  = new ActionItem(_("Edit config files"),"remoteeditorconfiguration","folder","computers", "xmppmaster", "xmppmaster");
         //ou
         // version avec tableau pour les fichier de conf
-        $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
+        $editremoteconfiguration    = new ActionItem(_("Edit config files"), "listfichierconf", "config", "computers", "xmppmaster", "xmppmaster");
 
-        $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
+        $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"), "remoteeditorconfiguration", "configg", "computers", "xmppmaster", "xmppmaster");
 
 
 
-        $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
-        $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
+        $inventxmppbrowsing = new ActionItem(_("files browsing"), "xmppfilesbrowsing", "folder", "computers", "xmppmaster", "xmppmaster");
+        $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"), "xmppfilesbrowsing", "folderg", "computers", "xmppmaster", "xmppmaster");
         //$inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
         $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
-    }else{
+    } else {
         $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
     }
-    $imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
+    $imgAction = new ActionItem(_("Imaging management"), "imgtabs", "imaging", "computer", "base", "computers");
     $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
     $extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
 
-    $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers");
+    $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile", "computer", "base", "computers");
 
     $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
     $DeployQuickxmpp->setWidth(600);
@@ -161,12 +168,12 @@ function list_computers($names,
 
     $headers = getComputersListHeaders();
 
-    if ($listidmachinedeploy != ""){
+    if ($listidmachinedeploy != "") {
         $headers1 = array();
         $i = 0;
         foreach ($headers as $header) {
-            if( $i == 3){
-            $headers1[] = array('status','status');
+            if($i == 3) {
+                $headers1[] = array('status','status');
             }
             $headers1[] = $header;
             $i++;
@@ -179,19 +186,22 @@ function list_computers($names,
         $columns[$header[0]] = array();
     }
 
-    function getUUID($machine) { return $machine['objectUUID']; }
+    function getUUID($machine)
+    {
+        return $machine['objectUUID'];
+    }
 
     $uuids = array_map("getUUID", $names);
-    $presencemachinexmpplist = xmlrpc_getPresenceuuids( $uuids);
+    $presencemachinexmpplist = xmlrpc_getPresenceuuids($uuids);
     $countmachine = 0;
     foreach($names as $value) {
         $presencemachinexmpp = $presencemachinexmpplist[$uuids[$countmachine]];
         $countmachine++;
         $presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
         $value['presencemachinexmpp'] = $presencemachinexmpp;
-        if ($value['presencemachinexmpp'] == "1"){
+        if ($value['presencemachinexmpp'] == "1") {
             $cssClasses[] = 'machineNamepresente';
-        }else{
+        } else {
             $cssClasses[] = 'machineName';
         }
 
@@ -201,10 +211,11 @@ function list_computers($names,
             } else {
                 $v = '';
             }
-            $columns[$header[0]][]= $v;
+            $columns[$header[0]][] = $v;
         }
-        if (isset($filter['gid']))
-	        $value['gid'] = $filter['gid'];
+        if (isset($filter['gid'])) {
+            $value['gid'] = $filter['gid'];
+        }
 
         if (in_array("inventory", $_SESSION["supportModList"])) {
             $actionInventory[] = $inventAction;
@@ -212,45 +223,40 @@ function list_computers($names,
             $actionInventory[] = $glpiAction;
         }
 
-        if ( in_array("xmppmaster", $_SESSION["supportModList"])  ) {
+        if (in_array("xmppmaster", $_SESSION["supportModList"])) {
             $actionMonitoring[] = $monitoringAction;
             $action_deploy_msc[] = $mscAction;
-            if ($groupinfodeploy == -1  ){
+            if ($groupinfodeploy == -1) {
                 $action_logs_msc[]   = $logNoAction;
-            }
-            else{
+            } else {
                 $action_logs_msc[]   = $logAction;
             }
-            if ( $presencemachinexmpp ){
+            if ($presencemachinexmpp) {
                 //$action_deploy_msc[] = $mscAction;
-                if (isExpertMode()){
+                if (isExpertMode()) {
                     $actionConsole[] = $inventconsole;
                     $actionxmppbrowsing[] = $inventxmppbrowsing;
                     $actioneditremoteconfiguration[] = $editremoteconfiguration;
-                }
-                else{
+                } else {
                     $actionxmppbrowsingne[] = $inventxmppbrowsingne;
                 }
-            }
-            else{
+            } else {
                 //$action_deploy_msc[] = $mscNoAction;
                 //$actionConsole[] = $emptyAction; // action no console xmpp (icone or not icone)
-                if (isExpertMode()){
+                if (isExpertMode()) {
                     $actionConsole[] = $inventnoconsole;
                     $actionxmppbrowsing[] = $inventnoxmppbrowsing;
                     $actioneditremoteconfiguration[] = $editnoremoteconfiguration;
-                }
-                else{
+                } else {
                     $actionxmppbrowsingne[] = $inventnoxmppbrowsingne;
                 }
             }
-        }
-        else{
-            if ( in_array("msc", $_SESSION["supportModList"])  ) {
+        } else {
+            if (in_array("msc", $_SESSION["supportModList"])) {
                 $action_deploy_msc[] = $mscAction;
                 $action_logs_msc[]   = $logAction;
             }
-         }
+        }
 
 
         if (in_array("imaging", $_SESSION["supportModList"])) {
@@ -265,43 +271,39 @@ function list_computers($names,
             $actionDownload[] = $downloadFileAction;
         }
         if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
-            if ($presencemachinexmpp){
+            if ($presencemachinexmpp) {
                 $actionVncClient[] = $vncClientAction;
-            }else
-            {//show icone vnc griser
+            } else {//show icone vnc griser
                 $actionVncClient[] = $vncClientActiongriser;
             }
-        }else
-        if ($msc_vnc_show_icon) {
+        } elseif ($msc_vnc_show_icon) {
             $actionVncClient[] = $vncClientAction;
         }
 
         if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-            $actionxmppquickdeoloy[]=$DeployQuickxmpp;
+            $actionxmppquickdeoloy[] = $DeployQuickxmpp;
         }
 
 
         $params[] = $value;
     }
 
-    foreach($params as &$element ){
+    foreach($params as &$element) {
 
-    if ( $groupinfodeploy != -1){
-        $element['gr_cmd_id']= $groupinfodeploy;
-    }
-    if ( $login != ""){
-        $element['gr_login']= $login;
-    }
+        if ($groupinfodeploy != -1) {
+            $element['gr_cmd_id'] = $groupinfodeploy;
+        }
+        if ($login != "") {
+            $element['gr_login'] = $login;
+        }
 
         if (in_array("guacamole", $_SESSION["supportModList"])) {
             $element['vnctype'] = "guacamole";
-        }
-        else{
-            if (web_def_use_no_vnc()==1){
-                $element['vnctype']="novnc";
-            }
-            else{
-                $element['vnctype']="appletjava";
+        } else {
+            if (web_def_use_no_vnc() == 1) {
+                $element['vnctype'] = "novnc";
+            } else {
+                $element['vnctype'] = "appletjava";
             }
         }
     }
@@ -313,21 +315,19 @@ function list_computers($names,
 
     $n = null;
     if ($count) {
-   // print_r( $headers);
+        // print_r( $headers);
         foreach ($headers as $header) {
 
             if ($n == null) {
                 if (in_array("glpi", $_SESSION["modulesList"])) {
                     $n = new OptimizedListInfos($columns[$header[0]], _T($header[1], 'glpi'));
-                }
-                else {
+                } else {
                     $n = new OptimizedListInfos($columns[$header[0]], _($header[1]));
                 }
             } else {
                 if (in_array("glpi", $_SESSION["modulesList"])) {
                     $n->addExtraInfo($columns[$header[0]], _T($header[1], 'glpi'));
-                }
-                else {
+                } else {
                     $n->addExtraInfo($columns[$header[0]], _($header[1]));
                 }
             }
@@ -353,11 +353,11 @@ function list_computers($names,
     //$n->setCssClass("machineName");
     $n->setMainActionClasses($cssClasses);
 
-    if(in_array("xmppmaster", $_SESSION['supportModList'])){
-      if ($groupinfodeploy == -1  ){
-          $n->addActionItemArray($actionInventory);
-      }
-      $n->addActionItemArray($actionMonitoring);
+    if(in_array("xmppmaster", $_SESSION['supportModList'])) {
+        if ($groupinfodeploy == -1) {
+            $n->addActionItemArray($actionInventory);
+        }
+        $n->addActionItemArray($actionMonitoring);
     }
 
     if ($msc_can_download_file) {
@@ -366,9 +366,10 @@ function list_computers($names,
     if (in_array("extticket", $_SESSION["supportModList"])) {
         $n->addActionItemArray($actionExtTicket);
     }
-    if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
-        if (in_array("backuppc", $_SESSION["supportModList"]))
-            $n->addActionItem(new ActionItem(_("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc"));
+    if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1) {
+        if (in_array("backuppc", $_SESSION["supportModList"])) {
+            $n->addActionItem(new ActionItem(_("Backup status"), "hostStatus", "backuppc", "backuppc", "backuppc", "backuppc"));
+        }
 
         if ($msc_vnc_show_icon) {
             $n->addActionItemArray($actionVncClient);
@@ -378,42 +379,40 @@ function list_computers($names,
         $n->addActionItemArray($actionProfile);
     }*/
 
-    if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SESSION["supportModList"]) ) {
-        if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
+    if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SESSION["supportModList"])) {
+        if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1) {
             $n->addActionItemArray($action_deploy_msc);
-        }else{
+        } else {
             $n->addActionItemArray($action_logs_msc);
         }
     }
 
     if (in_array("imaging", $_SESSION["supportModList"])) {
-        if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
+        if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1) {
             $n->addActionItemArray($actionImaging);
         }
     }
-    if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
-        if (isExpertMode()){
+    if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+        if (isExpertMode()) {
             $n->addActionItemArray($actionConsole);
             $n->addActionItemArray($actionxmppbrowsing);
-            if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")){
+            if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")) {
                 $n->addActionItemArray($actioneditremoteconfiguration);
             }
             $n->addActionItemArray($actionxmppquickdeoloy);
-        }
-        else{
+        } else {
             $n->addActionItemArray($actionxmppquickdeoloy);
             $n->addActionItemArray($actionxmppbrowsingne);
         }
     }
-    if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
+    if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1) {
         if ($delete_computer && canDelComputer()) {
             // set popup window to 400px width
-            $n->addActionItem(new ActionPopupItem(_("Delete computer"),"delete","delete","computer", "base", "computers", null, 400));
+            $n->addActionItem(new ActionPopupItem(_("Delete computer"), "delete", "delete", "computer", "base", "computers", null, 400));
         }
         if ($remove_from_result) {
-            $n->addActionItem(new ActionPopupItem(_("Remove machine from group"),"remove_machine","remove_machine","name", "base", "computers"));
+            $n->addActionItem(new ActionPopupItem(_("Remove machine from group"), "remove_machine", "remove_machine", "name", "base", "computers"));
         }
     }
     $n->display();
 }
-?>
