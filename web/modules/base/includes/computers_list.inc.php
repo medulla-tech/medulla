@@ -2,10 +2,10 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
- * (c) 2015-2017 Siveo, http://http://www.siveo.net
+ * (c) 2015-2023 Siveo, http://http://www.siveo.net
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,9 +28,12 @@ require_once("includes/xmlrpc.inc.php");
 
 class EmptyActionItem1 extends ActionItem {
 
-    function __construct() {
-        //$this->classCss='empty';
-        $this->desc='';
+    function __construct($desc, $action, $classCss) {
+        $this->desc=$desc;
+        $this->action = $action;
+        $this->classCss = $classCss;
+        $this->paramString = "";
+        $this->mod = "";
     }
 
     function display($param = null, $extraParams = Array()) {
