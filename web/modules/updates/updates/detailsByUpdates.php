@@ -23,13 +23,15 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-
-$p = new PageGenerator(_T("List Updates", 'updates'));
-$p->setSideMenu($sidemenu);
-$p->display();
-
 require_once("modules/updates/includes/xmlrpc.php");
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdates"));
-$ajax->display();
-$ajax->displayDivToUpdate();
+$params = ['entity'=>$_GET['entity'], 'completename'=>$_GET['completename']];
+$ajaxGray = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesGray"), "container-gray", $params, 'formGray');
+$ajaxGray->display();
+$ajaxGray->displayDivToUpdate();
+
+$ajaxWhite = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesWhite"), "container-white", $params, 'formWhite');
+$ajaxWhite->display();
+$ajaxWhite->displayDivToUpdate();
+
+?>

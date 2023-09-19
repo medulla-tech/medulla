@@ -104,23 +104,20 @@ if ($entity == '') {
         //FUNCTION TO GET ID
         $id_machine = xmlrpc_get_idmachine_from_name($v[1]['cn'][0]);
         $id_machine = $id_machine[0]['id_machine'];
-        $compliance_computer = xmlrpc_get_conformity_update_by_machine($id_machine);
+        $compliance_computer = xmlrpc_get_conformity_update_by_machines(['ids'=>[$id_machine], 'uuids'=>[$k]]);
 
-        $comp = $compliance_computer['0']['update_waiting'];
+        $compliance = $compliance_computer['0']['compliance'];
+        $missing[] = $compliance_computer['0']['missing'];
+        $installed[] = $compliance_computer['0']['installed'];
+        $total[] = $compliance_computer['0']['total'];
+
+        $comp = $compliance_computer['0']['compliance'];
         $missingUpdatesMachine[] = $comp;
         $detailsByMachs[] = $detailsByMach;
 
-        if ($all_enabled_updates != '0' and $comp != '0') {
-            $complrate = intval(($all_enabled_updates - $comp) / $all_enabled_updates * 100);
-        }
+        $color = colorconf($compliance);
 
-        if ($comp == '0') {
-            $complrate = '100';
-        }
-
-        $color = colorconf($complrate);
-
-        $complRates[] = "<div class='progress' style='width: ".$complrate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$complrate."% </div>";
+        $complRates[] = "<div class='progress' style='width: ".$compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance."% </div>";
         $platform[] = $v[1]['os'];
         $params[] = [
             "machineid" => $id_machine,
@@ -143,8 +140,7 @@ if ($entity == '') {
 
     $count = $machines['count'];
     $machines = $machines['data'];
-    $compliance_computers = xmlrpc_get_conformity_update_by_machines(["uuids" => $machines['uuid_inventorymachine'], "ids" => $machines['id']]);
-
+    $compliance_computers = xmlrpc_get_conformity_update_by_machines(["uuids"=> $machines['uuid_inventorymachine'], "ids"=> $machines['id']]);
     $installed = [];
     $missing = [];
     $compliance = [];
@@ -154,8 +150,8 @@ if ($entity == '') {
 
     for($i = 0; $i < $countInArray; $i++) {
         $machineNames[] = $compliance_computers[$i]['hostname'];
-        $missing = $compliance_computers[$i]["missing"];
-        $installed = $compliance_computers[$i]["installed"];
+        $missing[] = $compliance_computers[$i]["missing"];
+        $installed[] = $compliance_computers[$i]["installed"];
         $total[] = $compliance_computers[$i]['total'];
 
         $detailsByMachs[] = $detailsByMach;
@@ -163,12 +159,7 @@ if ($entity == '') {
         $actionPendingByMachines[] = $pendingByMach;
         $actionDoneByMachines[] = $doneByMach;
 
-
-        if ($compliance_computers[$i]["missing"] == '0') {
-            $complrate = '100';
-        }
         $color = colorconf($compliance_computers[$i]["compliance"]);
-
         $complRates[] = "<div class='progress' style='width: ".$compliance_computers[$i]["compliance"]."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_computers[$i]["compliance"]."% </div>";
 
         $platform[] = $machines['platform'][$i];

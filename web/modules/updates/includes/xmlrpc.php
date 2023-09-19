@@ -1,5 +1,4 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
@@ -43,9 +42,8 @@ function xmlrpc_get_black_list($start, $end, $filter="")
     return xmlCall("updates.get_black_list", [$start, $end, $filter]);
 }
 
-function xmlrpc_get_enabled_updates_list($start, $end, $filter="")
-{
-    return xmlCall("updates.get_enabled_updates_list", [$start, $end, $filter]);
+function xmlrpc_get_enabled_updates_list($entity, $upd_list="gray", $start=0, $end=-1, $filter=""){
+    return xmlCall("updates.get_enabled_updates_list", [$entity, $upd_list, $start, $end, $filter]);
 }
 
 function xmlrpc_get_family_list($start, $end, $filter="")

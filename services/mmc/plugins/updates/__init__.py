@@ -67,8 +67,12 @@ def get_black_list(start, end, filter=""):
     return UpdatesDatabase().get_black_list(start, end, filter)
 
 
-def get_enabled_updates_list(start, end, filter=""):
-    return UpdatesDatabase().get_enabled_updates_list(start, end, filter)
+def get_enabled_updates_list(entity, upd_list="gray", start=0, end=-1, filter=""):
+    if upd_list not in ["gray", "white"]:
+        upd_list = "gray"
+    return UpdatesDatabase().get_enabled_updates_list(
+        entity, upd_list, start, end, filter
+    )
 
 
 def get_family_list(start, end, filter=""):

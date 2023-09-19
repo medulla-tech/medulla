@@ -6733,6 +6733,10 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                     INNER JOIN
                 glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
             WHERE
+                glpi.glpi_computers.is_deleted = 0
+            AND
+                glpi.glpi_computers.is_template = 0
+            AND
                 glpi.glpi_softwares.name LIKE 'Update (KB%s)';""" % (
             kb
         )

@@ -13062,6 +13062,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 WHERE
                     platform LIKE 'Mic%'
                         AND (xmppmaster.up_gray_list.valided = 1 or xmppmaster.up_white_list.valided = 1)
+                        AND xmppmaster.up_machine_windows.curent_deploy is NULL AND xmppmaster.up_machine_windows.required_deploy is NULL
                 GROUP BY glpi_entity.glpi_id;"""
         resultquery = session.execute(sql)
         session.commit()
@@ -13996,107 +13997,14 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             query.end_date = end_date
             query.required_deploy = 1
             query.intervals = interval
+            session.commit()
+            session.flush()
 
-            folderpackage = os.path.join("/", "var", "lib", "pulse2", "packages", pid)
-            exclude_name_package = ["sharing", ".stfolder", ".stignore"]
-
-            files = []
-            if os.path.isdir(folderpackage):
-                for root, dir, file in os.walk(folderpackage):
-                    if root != folderpackage:
-                        continue
-                    for _file in file:
-                        if _file not in exclude_name_package:
-                            files.append(
-                                {
-                                    "path": os.path.basename(os.path.dirname(root)),
-                                    "name": _file,
-                                    "id": str(uuid.uuid4()),
-                                    "size": str(
-                                        os.path.getsize(os.path.join(root, _file))
-                                    ),
-                                }
-                            )
-            else:
-                files = []
-
-            files_str = "\n".join(
-                [
-                    file["id"] + "##" + file["path"] + "/" + file["name"]
-                    for file in files
-                ]
+            result["success"] = True
+            result["mesg"] = "Update %s required to deploy on machine %s" % (
+                query.update_id,
+                query.id_machine,
             )
-            section = '"section":"update"'
-            command = MscDatabase().createcommanddirectxmpp(
-                pid,
-                "",
-                section,
-                files_str,
-                "enable",
-                "disable",
-                start_date,
-                end_date,
-                user,
-                user,
-                deployName,
-                0,
-                28,
-                0,
-                interval,
-                None,
-                None,
-                None,
-                "none",
-                "active",
-                "1",
-                cmd_type=0,
-            )
-
-            commandid = command.id
-            commandstart = command.start_date
-            commandstop = command.end_date
-            jidrelay = machine.groupdeploy
-            uuidmachine = machine.uuid_inventorymachine
-            jidmachine = machine.jid
-
-            try:
-                target = MscDatabase().xmpp_create_Target(
-                    machine.uuid_inventorymachine, machine.hostname
-                )
-            except Exception as e:
-                result["success"] = False
-                result["mesg"] = "Unable to create Msc Target"
-                result["detail"] = e
-                return result
-
-            idtarget = target["id"]
-
-            com_on_host = MscDatabase().xmpp_create_CommandsOnHost(
-                commandid, idtarget, machine.hostname, commandstop, commandstart
-            )
-
-            if com_on_host is not None or com_on_host is not False:
-                MscDatabase().xmpp_create_CommandsOnHostPhasedeploykiosk(com_on_host.id)
-
-                XmppMasterDatabase().addlogincommand(
-                    user, commandid, "", "", "", "", "", 0, 0, 0, 0, {}
-                )
-
-                session.commit()
-                session.flush()
-
-                result["commandid"] = commandid
-                result["success"] = True
-                result["mesg"] = "Update %s has been selected between %s and %s" % (
-                    deployName,
-                    start_date,
-                    end_date,
-                )
-            else:
-                result["success"] = False
-                result["mesg"] = (
-                    "Unable to create commandOnHost for command %s" % commandid
-                )
         else:
             result["success"] = False
             result["mesg"] = "No update to install"
