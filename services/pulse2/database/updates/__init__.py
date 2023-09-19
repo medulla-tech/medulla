@@ -149,8 +149,12 @@ class UpdatesDatabase(DatabaseHelper):
                 filterlimit= "LIMIT %s, %s"%(start, limit)
 
             if filter:
-                filterwhere="""AND
-                        update_data.title LIKE '%%%s%%' """ % filter
+                ffilterwhere="""WHERE
+                    (update_data.title LIKE '%%%s%%' OR
+                    concat("KB", update_data.kb) LIKE '%%%s%%' OR
+                    update_data.description LIKE '%%%s%%' OR
+                    update_data.updateid LIKE '%%%s%%' OR
+                    coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") LIKE '%%%s%%') """ % (filter, filter, filter, filter, filter)
                 sql += filterwhere
 
             sql += " ORDER BY FIELD(msrcseverity, \"Critical\", \"Important\", \"\") "
@@ -211,7 +215,11 @@ class UpdatesDatabase(DatabaseHelper):
                 filterlimit= "LIMIT %s, %s"%(start, limit)
             if filter != "":
                 filterwhere="""WHERE
-                        title LIKE '%%%s%%' """%filter
+                    (update_data.title LIKE '%%%s%%' OR
+                    concat("KB", update_data.kb) LIKE '%%%s%%' OR
+                    update_data.description LIKE '%%%s%%' OR
+                    update_data.updateid LIKE '%%%s%%' OR
+                    coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") LIKE '%%%s%%') """ % (filter, filter, filter, filter, filter)
                 sql += filterwhere
 
             sql += " ORDER BY FIELD(msrcseverity, \"Critical\", \"Important\", \"\") "
@@ -267,8 +275,12 @@ class UpdatesDatabase(DatabaseHelper):
                     JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_white_list.updateid """
 
             if filter:
-                filterwhere="""AND
-                        title LIKE '%%%s%%' """ % filter
+                filterwhere="""WHERE
+                    (update_data.title LIKE '%%%s%%' OR
+                    concat("KB", update_data.kb) LIKE '%%%s%%' OR
+                    update_data.description LIKE '%%%s%%' OR
+                    update_data.updateid LIKE '%%%s%%' OR
+                    coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") LIKE '%%%s%%') """ % (filter, filter, filter, filter, filter)
                 sql +=filterwhere
 
             sql += " ORDER BY FIELD(msrcseverity, \"Critical\", \"Important\", \"\") "
