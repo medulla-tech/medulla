@@ -104,7 +104,7 @@ if ($entity == '') {
         //FUNCTION TO GET ID
         $id_machine = xmlrpc_get_idmachine_from_name($v[1]['cn'][0]);
         $id_machine = $id_machine[0]['id_machine'];
-        $compliance_computer = xmlrpc_get_conformity_update_by_machines(['ids'=>[$id_machine], 'uuids'=>[$k]]);
+        $compliance_computer = xmlrpc_get_conformity_update_by_machines(['ids' => [$id_machine], 'uuids' => [$k]]);
 
         $compliance = $compliance_computer['0']['compliance'];
         $missing[] = $compliance_computer['0']['missing'];
@@ -140,7 +140,7 @@ if ($entity == '') {
 
     $count = $machines['count'];
     $machines = $machines['data'];
-    $compliance_computers = xmlrpc_get_conformity_update_by_machines(["uuids"=> $machines['uuid_inventorymachine'], "ids"=> $machines['id']]);
+    $compliance_computers = xmlrpc_get_conformity_update_by_machines(["uuids" => $machines['uuid_inventorymachine'], "ids" => $machines['id']]);
     $installed = [];
     $missing = [];
     $compliance = [];
