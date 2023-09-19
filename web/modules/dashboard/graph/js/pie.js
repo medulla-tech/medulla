@@ -91,7 +91,7 @@ function customPie(selector, datas){
         .attr("class", selector+"tooltip");
       canvas.select("."+selector+"tooltip")
         .append("text")
-        .attr("y", d.clientY+80)
+        .attr("y", height-10)
         .attr("text-anchor", "start")
         .text(function(data,id){
           if(i.data.version != "")
@@ -114,7 +114,7 @@ function customPie(selector, datas){
         .attr("opacity", 0.6)
         .attr("fill", "black")
         .attr("x", offset)
-        .attr("y", d.clientY+80-15).lower();
+        .attr("y",height-25).lower();
 
       var offset = ((width-tooltiptextwidth)/2 >0) ? (width-tooltiptextwidth)/2 : 5;
       canvas.select("."+selector+"tooltip")

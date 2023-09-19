@@ -1,5 +1,5 @@
 /*
- * (c) 2019 siveo, http://www.siveo.net/
+ * (c) 2019-2023 siveo, http://www.siveo.net/
  *
  * This file is part of Management Console (MMC).
  *
@@ -108,21 +108,21 @@ function donut(selector, datas, title, subtitle){
     // Actions executed when the mouse is over the section
     .on("mouseover", function(d,i){
       canvas.attr("width", 300);
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index)
       .style("font-weight","bold");
 
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index).select("a")
       .style("font-weight","bold");
       // Add the tooltip text
       canvas.append("g")
         .attr("class", selector+"tooltip");
 
       canvas.select("."+selector+"tooltip")
+        .style("position","relative")
         .append("text")
-        //.attr("x", d3.mouse(this)[0]+1*outerRadius)
-        .attr("y", d3.mouse(this)[1]+2*innerRadius)
+        .attr("y", height-10)
         .attr("text-anchor", "start")
-        .text(d.data.label+" "+ d.data.value+d.data.unit+" ("+((d.data.value/total)*100).toFixed(0)+"%)")
+        .text(i.data.label+" "+ i.data.value+i.data.unit+" ("+((i.data.value/total)*100).toFixed(0)+"%)")
         .attr("fill","white");
 
       var tooltiptextwidth = jQuery("#"+selector+" svg ."+selector+"tooltip text")[0].getComputedTextLength();
@@ -138,7 +138,7 @@ function donut(selector, datas, title, subtitle){
         .attr("opacity", 0.6)
         .attr("fill", "black")
         .attr("x", offset)
-        .attr("y", d3.mouse(this)[1]+2*innerRadius-15).lower();
+        .attr("y", height-25).lower();
 
       var offset = ((width-tooltiptextwidth)/2 >0) ? (width-tooltiptextwidth)/2 : 5;
       canvas.select("."+selector+"tooltip")
@@ -153,19 +153,18 @@ function donut(selector, datas, title, subtitle){
         .outerRadius(outerRadius+5)
         .padAngle(.20)
         .padRadius(5);
-
-      d3.select(this).attr("d", s(d));
-      return segments(d);
+      d3.select(this).attr("d", s(i));
+      return segments(i);
     })
 
     // Action executed when the mouse is over the section
     .on("mouseout", function(d,i){
       canvas.attr("width", width);
 
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index)
       .style("font-size", "2em")
       .style("line-height","0.5em");
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index).select("a")
       .style("font-size", "1em")
       .style("line-height","0.5em")
       .style("font-weight", "normal");
@@ -177,11 +176,11 @@ function donut(selector, datas, title, subtitle){
         .outerRadius(outerRadius)
         .padAngle(.20)
         .padRadius(5);
-      d3.select(this).attr("d", s(d));
-      return segments(d);
+      d3.select(this).attr("d", s(i));
+      return segments(i);
     })
-    .on("click", function(d){
-      if(typeof(d.data.href) != "undefined")
+    .on("click", function(i, d){
+      if(typeof(d.data.href) != "undefined" && d.data.href != "")
         window.location.replace(d.data.href)
     });
 
