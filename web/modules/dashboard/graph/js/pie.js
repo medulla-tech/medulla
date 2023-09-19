@@ -1,5 +1,5 @@
 /*
- * (c) 2019 siveo, http://www.siveo.net/
+ * (c) 2019-2023 siveo, http://www.siveo.net/
  *
  * This file is part of Management Console (MMC).
  *
@@ -80,26 +80,24 @@ function customPie(selector, datas){
     // Actions executed when the mouse is over the section
     .on("mouseover", function(d,i){
       canvas.attr("width", 2*width);
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index)
         .style("font-size", "2.3em")
         .style("line-height","0.5em");
-
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index).select("a")
       .style("font-size", "1.1em")
       .style("font-weight","bold");
       // Add the tooltip text
       canvas.append("g")
         .attr("class", selector+"tooltip");
-
       canvas.select("."+selector+"tooltip")
         .append("text")
-        .attr("y", d3.mouse(this)[1]+80)
+        .attr("y", d.clientY+80)
         .attr("text-anchor", "start")
         .text(function(data,id){
-          if(d.data.version != "")
-            return d.data.label + " (" + d.data.version + ") : " + d.data.value + " (" + ((d.data.value/total)*100).toFixed(0) + "%)";
+          if(i.data.version != "")
+            return i.data.label + " (" + i.data.version + ") : " + i.data.value + " (" + ((i.data.value/total)*100).toFixed(0) + "%)";
           else
-            return d.data.label + " : " + d.data.value + " (" + ((d.data.value/total)*100).toFixed(0) + "%)";
+            return i.data.label + " : " + i.data.value + " (" + ((i.data.value/total)*100).toFixed(0) + "%)";
           })
         .attr("fill","white");
 
@@ -116,7 +114,7 @@ function customPie(selector, datas){
         .attr("opacity", 0.6)
         .attr("fill", "black")
         .attr("x", offset)
-        .attr("y", d3.mouse(this)[1]+80-15).lower();
+        .attr("y", d.clientY+80-15).lower();
 
       var offset = ((width-tooltiptextwidth)/2 >0) ? (width-tooltiptextwidth)/2 : 5;
       canvas.select("."+selector+"tooltip")
@@ -124,26 +122,24 @@ function customPie(selector, datas){
         .attr("x", offset);
 
       d3.select(this).attr("cursor","pointer")
-
       // Create a new arc path to replace the old
       var s = d3.arc()
         .innerRadius(innerRadius)
         .outerRadius(outerRadius+5)
         .padAngle(.20)
         .padRadius(5);
-
-      d3.select(this).attr("d", s(d));
-      return segments(d);
+        d3.select(this).attr("d", s(i));
+      return segments(i);
     })
 
     // Action executed when the mouse is over the section
     .on("mouseout", function(d,i){
       canvas.attr("width", width);
 
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i)
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index)
       .style("font-size", "2em")
       .style("line-height","0.5em");
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i).select("a")
+      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index).select("a")
       .style("font-size", "1em")
       .style("line-height","0.5em")
       .style("font-weight", "normal");
@@ -155,17 +151,16 @@ function customPie(selector, datas){
         .outerRadius(outerRadius)
         .padAngle(.20)
         .padRadius(5);
-      d3.select(this).attr("d", s(d));
+      d3.select(this).attr("d", s(i));
       return segments(d);
     })
-    .on("click", function(d){
-      if(typeof(d.data.href) != "undefined")
-        window.location.replace(d.data.href)
+    .on("click", function(d,i){
+      if(typeof(i.data.href) != "undefined" && i.data.href != "")
+        window.location.replace(i.data.href)
     });
 
-
   //Add label text
-    d3.select("#"+selector).append("ul")
+    d3.select('#'+selector).append("ul")
     .selectAll("li")
     .data(dataset, function(d,i){return d;})
     .enter()
@@ -173,7 +168,6 @@ function customPie(selector, datas){
     .style("font-size", "2em")
     .style("line-height","0.5em")
     .attr("class",function(d,i){
-
       return selector+'Label'+i})
     .style("color",function(d,i){
       var tmp = segments(d);
