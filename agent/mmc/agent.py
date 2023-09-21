@@ -1017,7 +1017,7 @@ class messagefilexmpp:
             return None
 
     def iqsendpulse(self, mto, msg, timeout):
-        return self.send_iq( mto, msg, timeout)
+        return self.send_iq(mto, msg, timeout)
 
     def send_iq(self, mto, msg, timeout):
         logger.debug("---------------------------------------------------------")
