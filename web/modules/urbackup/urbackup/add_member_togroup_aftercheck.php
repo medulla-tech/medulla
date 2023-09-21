@@ -140,7 +140,7 @@ foreach($clients as $client)
     }
 }
 
-$url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$client_id.'&clientname='.$clientname.'&groupname='.$groupname.'&jidmachine='.$jidMachine;
+$url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$client_id.'&clientname='.$clientname.'&groupname='.$groupname.'&jidmachine='.$jidMachine.'&newClient=true';
 
 header("Location: ".$url);
 ?>
