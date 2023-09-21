@@ -248,7 +248,7 @@ if ($backupstate == "false")
 }
 if ($newClient == "true")
 {
-    $str = _T("The installation and configuration of the urbackup client on computers can take up to 10 minutes. This is required to have a fully operational client and enable the backups.", "urbackup");
+    $str = _T("The installation and configuration of the urbackup client on computers can take up to 10 minutes. This is required to have a fully operational client and enable the backups. After that, fully backup will be automatically created.", "urbackup");
     new NotifyWidgetSuccess($str);
     $newClient = "false";
 }
