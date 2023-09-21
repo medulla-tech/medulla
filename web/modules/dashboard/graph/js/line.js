@@ -153,15 +153,13 @@ function lineChart(selector, rawdatas){
     .on("mouseover", function(d,i){
       svg.append("g")
         .attr("class", selector+"tooltip");
-
       svg.select("."+selector+"tooltip")
         .append("text")
-        .attr("x", d3.mouse(this)[0]+2)
-        .attr("y", d3.mouse(this)[1]-10)
+        .attr("x", 0)
+        .attr("y", 15)
         .attr("text-anchor", "start")
         .text(d.y+" "+config.unit)
         .attr("fill","white");
-
         var tooltiptextwidth = jQuery("#"+selector+" svg ."+selector+"tooltip text")[0].getComputedTextLength();
         var tooltipwidth = tooltiptextwidth +5;
 
@@ -174,8 +172,8 @@ function lineChart(selector, rawdatas){
           .attr("height", 22)
           .attr("opacity", 0.6)
           .attr("fill", "black")
-          .attr("x", d3.mouse(this)[0])
-          .attr("y", d3.mouse(this)[1]-25).lower();
+          .attr("x", 0)
+          .attr("y", 0).lower();
 
         svg.select("."+selector+"tooltip")
           .select("text");
