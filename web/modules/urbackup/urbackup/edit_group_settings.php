@@ -117,8 +117,11 @@ $settings = $array['settings'];
 
 //-----------------------------------END SAVE SETTINGS
 
-$interval_incremental_backup = $settings['update_freq_incr']/3600;
-$interval_full_backup = $settings['update_freq_full']/86400;
+$frequence_incremental_backup = (int)$settings['update_freq_incr']['value_group'];
+$frequence_full_backup = (int)$settings['update_freq_full']['value_group'];
+
+$interval_incremental_backup = $frequence_incremental_backup/3600;
+$interval_full_backup = $frequence_full_backup/86400;
 
 $current_value_exclude_files = "";
 $current_value_include_files = "";
