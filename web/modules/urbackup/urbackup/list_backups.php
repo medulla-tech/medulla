@@ -43,6 +43,7 @@ $backuptype = htmlspecialchars($_GET["backuptype"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
 $editStateClient = htmlspecialchars($_GET["editStateClient"]);
 $errorEditStateClient = htmlspecialchars($_GET["error"]);
+$newClient = htmlspecialchars($_GET["newClient"]);
 
 //-----------------------------------START LOGIN FUNCTION
 $url = $url_urbackup."?a=login";
@@ -245,7 +246,12 @@ if ($backupstate == "false")
         new NotifyWidgetFailure($str);
     }
 }
-
+if ($newClient == "true")
+{
+    $str = _T("The installation and configuration of the urbackup client on computers can take up to 10 minutes. This is required to have a fully operational client and enable the backups.", "urbackup");
+    new NotifyWidgetSuccess($str);
+    $newClient = "false";
+}
 if ($editStateClient == "disable")
 {
     $str = _T("This client has been successfully disabled.", "urbackup");
