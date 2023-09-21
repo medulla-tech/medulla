@@ -1016,6 +1016,9 @@ class messagefilexmpp:
             logger.error("type msg pas compatible %s" % type(msg))
             return None
 
+    def iqsendpulse(self, mto, msg, timeout):
+        return self.send_iq( mto, msg, timeout)
+
     def send_iq(self, mto, msg, timeout):
         logger.debug("---------------------------------------------------------")
         logger.debug("----------------------- SEND IQ -------------------------")
