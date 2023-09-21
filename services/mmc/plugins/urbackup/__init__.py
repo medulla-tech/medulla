@@ -114,6 +114,27 @@ def remove_client(jidmachine, clientid):
     }
     send_message_json(jidmachine, msg)
     
+def restart_urbackup_service(jidmachine):
+    """
+    Restart Urbackup service on client
+
+    Returns:
+        1 or 0, state of function execution
+    """
+    
+    command = "sc stop UrbackupClientBackend && sc start UrbackupClientBackend"
+
+    callremotecommandshell(jidmachine, command)
+    sessionid = name_random(8, "update_")
+    msg = {
+    "action": "restartbot",
+    "sessionid": sessionid,
+    "data": {},
+    "ret": 0,
+    "base64": False
+    }
+    send_message_json(jidmachine, msg)
+    
 def get_client_status(client_id):
     """
     Get client status if enable or not from the database
