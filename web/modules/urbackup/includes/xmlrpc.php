@@ -71,6 +71,11 @@ function xmlrpc_remove_client($jidmachine, $client_id){
     return xmlCall("urbackup.remove_client", [$jidmachine, $client_id]);
 }
 
+function xmlrpc_restart_urbackup_service($jidmachine){
+    // Call agent to send command, to restart urbackup service
+    return xmlCall("urbackup.restart_urbackup_service", [$jidmachine]);
+}
+
 function xmlrpc_get_client_status($client_id){
     // Database request to get client status
     return xmlCall("urbackup.get_client_status", [$client_id]);
