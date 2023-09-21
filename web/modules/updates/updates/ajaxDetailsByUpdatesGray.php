@@ -34,9 +34,9 @@ $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $maxperpage = $conf["global"]["maxperpage"];
 $gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
 $contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
-$start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
-$filter  = isset($_GET['filter'])?$_GET['filter']:"";
+$start = isset($_GET['start']) ? $_GET['start'] : 0;
+$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
+$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $filterCTX = "Microsoft";
 $field = "platform";
 
@@ -69,28 +69,26 @@ $enabled_updates_list = xmlrpc_get_enabled_updates_list($uuid, 'gray', $start, $
 $count_enabled_updates = $enabled_updates_list['nb_element_total'];
 
 
-if ($uuid == '')
-{
+if ($uuid == '') {
     $typeOfDetail = "group";
-}
-else
-{
+} else {
     $typeOfDetail = "entitie";
 }
 
 $entityMachineList = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
 $filterGid = array('gid' => $gid);
-$groupMachineList = getRestrictedComputersList(0, -1, $filterGid, False);
+$groupMachineList = getRestrictedComputersList(0, -1, $filterGid, false);
 
-function colorconf($conf){
-    $colorDisplay=array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
-    return $colorDisplay[intval(($conf-($conf%10))/10)];
+function colorconf($conf)
+{
+    $colorDisplay = array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
+    return $colorDisplay[intval(($conf - ($conf % 10)) / 10)];
 }
 
 
 $any_n = "/\d+? \d+? .*$/";
 
-$detailsUpd = new ActionItem(_T("Details", "updates"),"detailsSpecificUpdate","auditbymachine","", "updates", "updates");
+$detailsUpd = new ActionItem(_T("Details", "updates"), "detailsSpecificUpdate", "auditbymachine", "", "updates", "updates");
 
 $kbs_gray = [];
 $updateids_gray = [];
@@ -103,16 +101,14 @@ $actionDetails = [];
 $machineWithoutUpd = $enabled_updates_list['missing'];
 
 
-foreach($groupMachineList[UUID1][1][cn] as $member)
-{
+foreach($groupMachineList[UUID1][1][cn] as $member) {
     $id_machine = xmlrpc_get_idmachine_from_name($member);
 
     array_push($groupMachineList[UUID1][1], $id_machine[0]);
 }
 
 
-for($i=0; $i < $count_enabled_updates; $i++)
-{
+for($i = 0; $i < $count_enabled_updates; $i++) {
     $in_unique_with_Upd = "False";
     $in_unique_without_Upd = "False";
 
@@ -127,7 +123,7 @@ for($i=0; $i < $count_enabled_updates; $i++)
     $machineWithUpd[] = $with_Upd['nb_machines'];
     $totalMachines = $machineWithoutUpd[$i] + $with_Upd['nb_machines'];
 
-    $compliance_rate = intval(($with_Upd['nb_machines'] / $totalMachines)*100);
+    $compliance_rate = intval(($with_Upd['nb_machines'] / $totalMachines) * 100);
     /*if ($without_Upd['0']['nb_machine_missing_update'] != "0")
     {
         $compliance_rate = intval(($with_Upd['nb_machines'] / ($without_Upd['0']['nb_machine_missing_update'] + $with_Upd['nb_machines'])) * 100);
@@ -138,7 +134,7 @@ for($i=0; $i < $count_enabled_updates; $i++)
     }*/
 
     $color = colorconf($compliance_rate);
-    $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
+    $complRates[] = "<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
 }
 
 $n = new OptimizedListInfos($titles, _T("Update name", "updates"));
@@ -155,4 +151,3 @@ $n->setParamInfo($params);
 $n->addActionItemArray($actionDetails);
 
 $n->display();
-?>

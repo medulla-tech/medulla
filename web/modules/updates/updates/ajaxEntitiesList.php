@@ -29,7 +29,7 @@ global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
-$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
+$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 
 function colorconf($conf)
 {
@@ -61,7 +61,7 @@ function colorconf($conf)
         case $conf <=  90:
             $color = "#2eff2e";
             break;
-        case $conf >90:
+        case $conf > 90:
             $color = "#00ff00";
             break;
     }
@@ -70,8 +70,8 @@ function colorconf($conf)
 
 $_entities = getUserLocations();
 $filtered_entities = [];
-foreach($_entities as $entity){
-    if(preg_match("#".$filter."#i", $entity['name']) || preg_match("#".$filter."#i", $entity['completename'])){
+foreach($_entities as $entity) {
+    if(preg_match("#".$filter."#i", $entity['name']) || preg_match("#".$filter."#i", $entity['completename'])) {
         $filtered_entities[] = $entity;
     }
 }
@@ -96,10 +96,10 @@ $entityNames = [];
 $complRates = [];
 $totalMachine = [];
 $nbupadte = [];
-$identity=array();
+$identity = array();
 
 foreach ($entitycompliances as $entitycompliance) {
-    $identity[$entitycompliance['entity']]=array(
+    $identity[$entitycompliance['entity']] = array(
         "conformite" => $entitycompliance['conformite'],
         "totalmach" => $entitycompliance['totalmach'],
         "nbupdate" => $entitycompliance['nbupdate'],
@@ -108,19 +108,19 @@ foreach ($entitycompliances as $entitycompliance) {
 };
 
 foreach ($entities as $entity) {
-    $nbmachines=0;
-    $id_entity = intval(substr($entity["uuid"],4));
+    $nbmachines = 0;
+    $id_entity = intval(substr($entity["uuid"], 4));
     $actiondetailsByMachs[] = $detailsByMach;
     $actiondetailsByUpds[] = $detailsByUpd;
     $entityNames[] = $entity["completename"];
-    $params[] = array('entity' => $entity['uuid'], 'completename'=>$entity['completename']);
+    $params[] = array('entity' => $entity['uuid'], 'completename' => $entity['completename']);
     $color = colorconf(100);
     if (isset($identity[$id_entity])) {
         $conformite = intval($identity[$id_entity]['conformite']);
         $color = colorconf($conformite);
-        $totalmach=intval($identity[$id_entity]['totalmach']);
-        $nbupdateentity=intval($identity[$id_entity]['nbupdate']);
-        $nbmachines=intval($identity[$id_entity]['nbmachines']);
+        $totalmach = intval($identity[$id_entity]['totalmach']);
+        $nbupdateentity = intval($identity[$id_entity]['nbupdate']);
+        $nbmachines = intval($identity[$id_entity]['nbmachines']);
 
         if($conformite == 100) {
             $actiondeployAlls[] = $emptyDeployAll;
@@ -132,12 +132,12 @@ foreach ($entities as $entity) {
         }
     } else {
         $conformite = "100";
-        $totalmach=0;
-        $nbupdateentity=0;
+        $totalmach = 0;
+        $nbupdateentity = 0;
         $actiondeployAlls[] = $emptyDeployAll;
         $actiondeploySpecifics[] = $emptyDeploySpecific;
     }
-    $complRates[] ="<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$conformite."% </div>";
+    $complRates[] = "<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$conformite."% </div>";
     $totalMachine[] = $totalmach;
     $nbupdate[] = $nbupdateentity ;
     $nbMachines[] = $nbmachines;

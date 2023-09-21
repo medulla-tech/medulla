@@ -27,26 +27,27 @@ function xmlrpc_tests()
     return xmlCall("updates.tests");
 }
 
-function xmlrpc_get_grey_list($start, $end, $filter="")
+function xmlrpc_get_grey_list($start, $end, $filter = "")
 {
     return xmlCall("updates.get_grey_list", [$start, $end, $filter]);
 }
 
-function xmlrpc_get_white_list($start, $end, $filter="")
+function xmlrpc_get_white_list($start, $end, $filter = "")
 {
     return xmlCall("updates.get_white_list", [$start, $end, $filter]);
 }
 
-function xmlrpc_get_black_list($start, $end, $filter="")
+function xmlrpc_get_black_list($start, $end, $filter = "")
 {
     return xmlCall("updates.get_black_list", [$start, $end, $filter]);
 }
 
-function xmlrpc_get_enabled_updates_list($entity, $upd_list="gray", $start=0, $end=-1, $filter=""){
+function xmlrpc_get_enabled_updates_list($entity, $upd_list = "gray", $start = 0, $end = -1, $filter = "")
+{
     return xmlCall("updates.get_enabled_updates_list", [$entity, $upd_list, $start, $end, $filter]);
 }
 
-function xmlrpc_get_family_list($start, $end, $filter="")
+function xmlrpc_get_family_list($start, $end, $filter = "")
 {
     return xmlCall("updates.get_family_list", [$start, $end, $filter]);
 }
@@ -56,7 +57,7 @@ function xmlrpc_approve_update($updateid)
     return xmlCall("updates.approve_update", [$updateid]);
 }
 
-function xmlrpc_grey_update($updateid, $enabled=0)
+function xmlrpc_grey_update($updateid, $enabled = 0)
 {
     return xmlCall("updates.grey_update", [$updateid, $enabled]);
 }
@@ -96,7 +97,7 @@ function xmlrpc_get_machines_needing_update($updateid)
     return xmlCall("updates.get_machines_needing_update", [$updateid]);
 }
 
-function xmlrpc_get_conformity_update_by_machines($ids=[])
+function xmlrpc_get_conformity_update_by_machines($ids = [])
 {
     return xmlCall("updates.get_conformity_update_by_machines", [$ids]);
 }

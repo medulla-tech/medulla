@@ -25,7 +25,7 @@ require("localSidebar.php");
 
 require_once("modules/updates/includes/xmlrpc.php");
 
-$params = ['entity'=>$_GET['entity'], 'completename'=>$_GET['completename']];
+$params = ['entity' => $_GET['entity'], 'completename' => $_GET['completename']];
 $ajaxGray = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesGray"), "container-gray", $params, 'formGray');
 $ajaxGray->display();
 $ajaxGray->displayDivToUpdate();
@@ -33,5 +33,3 @@ $ajaxGray->displayDivToUpdate();
 $ajaxWhite = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesWhite"), "container-white", $params, 'formWhite');
 $ajaxWhite->display();
 $ajaxWhite->displayDivToUpdate();
-
-?>
