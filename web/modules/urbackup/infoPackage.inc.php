@@ -75,6 +75,10 @@ $page = new Page("result_search_file", _T('File research by name', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/result_search_file.php");
 $submod->addPage($page);
 
+$page = new Page("restart_service", _T('Restart Service', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/restart_service.php");
+$submod->addPage($page);
+
 $page = new Page("validate_edit_group", _T('Validate save settings', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/validate_edit_group.php");
 $submod->addPage($page);
