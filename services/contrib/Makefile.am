@@ -267,6 +267,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	pkgs/sql/schema-004.sql \
 	pkgs/sql/schema-005.sql \
 	pkgs/sql/schema-006.sql \
+	pkgs/sql/schema-007.sql \
 	updates/sql/schema-001.sql \
 	urbackup/sql/schema-001.sql \
 	monit/pulse2 \
