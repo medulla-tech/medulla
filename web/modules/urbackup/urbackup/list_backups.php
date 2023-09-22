@@ -44,6 +44,7 @@ $jidMachine = htmlspecialchars($_GET["jidmachine"]);
 $editStateClient = htmlspecialchars($_GET["editStateClient"]);
 $errorEditStateClient = htmlspecialchars($_GET["error"]);
 $newClient = htmlspecialchars($_GET["newClient"]);
+$restart_service = htmlspecialchars($_GET["restart_service"]);
 
 //-----------------------------------START LOGIN FUNCTION
 $url = $url_urbackup."?a=login";
@@ -226,12 +227,15 @@ if ($client_enable == "true")
 <?php
 }
 ?>
+<a class='btn btn-small btn-primary' href="main.php?module=urbackup&amp;submod=urbackup&amp;action=restart_service&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Restart Urbackup Service on client</a>
 <br>
 <br>
 <?php echo _T("Profile name: ", 'urbackup'); ?><a href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_ongroup&amp;groupid=<?php echo $groupid ?>&groupname=<?php echo $groupname ?>"><?php echo $groupname; ?></a>
 <br>
 <br>
 <?php
+
+// Differents alert for users informations
 if ($backupstate == "false")
 {
     if ($backuptype == "incremental") 
@@ -267,6 +271,12 @@ if ($errorEditStateClient == "true")
 {
     $str= _T("This client was offline, please wait until it is online and try again.", "urbackup");
     new NotifyWidgetFailure($str);
+}
+
+if ($restart_service == "true")
+{
+    $str= _T("Restart can take up to 5 seconds, please wait before taking any action.", "urbackup");
+    new NotifyWidgetSuccess($str);
 }
 
 ?>
