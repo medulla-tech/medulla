@@ -766,7 +766,9 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
     }
     suggestedCommand = []
     file_size = simplecommand("du -b %s" % os.path.join(tmp_input_dir, tempdir))
-    file_size["result"] = [line.decode('utf-8') for line in file_size["result"]]  # Convertit en UTF-8
+    file_size["result"] = [
+        line.decode("utf-8") for line in file_size["result"]
+    ]  # Convertit en UTF-8
     sizebytefolder = file_size["result"][0].split("\t")[0]
     sizebytefolder = int(sizebytefolder)
 
