@@ -28,13 +28,17 @@
 START TRANSACTION;
 
 INSERT INTO extensions VALUES(NULL, 20, "Unknown exe Rule", "", "exe", "", "", "", "", '"%s"', "Rule for unknown exes");
-INSERT INTO extensions VALUES(NULL, 21, "Python Rule", "", "py", "", "python", "", "", '@@@PYTHON_PATH@@@ "%s"', "Rule for python scripts");
+INSERT INTO extensions VALUES(NULL, 21, "Python Rule", "", "py", "", "python", "", "", '@@@PYTHON_PATH@@@ "%s"', "Rule for Python scripts");
 INSERT INTO extensions VALUES(NULL, 22, "Korn Shell Rule", "", "ksh", "", "ksh", "", "", '/bin/ksh "%s"', "Rule for ksh scripts");
 INSERT INTO extensions VALUES(NULL, 23, "C Shell Rule", "", "csh", "", "csh", "", "", '/bin/csh "%s"', "Rule for csh scripts");
-INSERT INTO extensions VALUES(NULL, 24, "Powershell Rule", "", "ps1", "", "", "", "", 'powershell.exe -ExecutionPolicy Bypass -File "%s"', "Rule for powershell scripts");
+INSERT INTO extensions VALUES(NULL, 24, "PowerShell Rule", "", "ps1", "", "", "", "", 'powershell.exe -ExecutionPolicy Bypass -File "%s"', "Rule for PowerShell scripts");
 INSERT INTO extensions VALUES(NULL, 25, "VBS Rule", "", "vbs", "", "", "", "", 'cscript "%s"', "Rule for VB scripts");
 INSERT INTO extensions VALUES(NULL, 26, "Batch Rule", "", "bat", "", "", "", "", '"%s"', "Rule for batch scripts");
-INSERT INTO extensions VALUES(NULL, 27, "Perl Rule", "", "pl", "", "", "", "", 'perl "%s"', "Rule for perl scripts");
+INSERT INTO extensions VALUES(NULL, 27, "Perl Rule", "", "pl", "", "perl", "", "", 'perl "%s"', "Rule for perl scripts");
+INSERT INTO extensions VALUES(NULL, 28, "AppleScript Rule", "", "scpt", "", "", "", "", 'osascript "%s"', "Rule for AppleScript scripts");
+INSERT INTO extensions VALUES(NULL, 29, "Z Shell Rule", "", "zsh", "", "zsh", "", "", 'zsh "%s"', "Rule for zsh scripts");
+INSERT INTO extensions VALUES(NULL, 30, "Swift Rule", "", "swift", "", "", "", "", './"%s"', "Rule for Swift scripts");
+INSERT INTO extensions VALUES(NULL, 31, "R-Script Rule", "", "r", "", "Rscript", "", "", 'Rscript "%s"', "Rule for R scripts");
 UPDATE extensions SET rule_order = 100 WHERE rule_order = 3;
 
 UPDATE version SET Number = 7;
