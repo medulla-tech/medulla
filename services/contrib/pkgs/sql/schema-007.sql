@@ -34,6 +34,7 @@ INSERT INTO extensions VALUES(NULL, 23, "C Shell Rule", "", "csh", "", "csh", ""
 INSERT INTO extensions VALUES(NULL, 24, "Powershell Rule", "", "ps1", "", "", "", "", 'powershell.exe -ExecutionPolicy Bypass -File "%s"', "Rule for powershell scripts");
 INSERT INTO extensions VALUES(NULL, 25, "VBS Rule", "", "vbs", "", "", "", "", 'cscript "%s"', "Rule for VB scripts");
 INSERT INTO extensions VALUES(NULL, 26, "Batch Rule", "", "bat", "", "", "", "", '"%s"', "Rule for batch scripts");
+INSERT INTO extensions VALUES(NULL, 27, "Perl Rule", "", "pl", "", "", "", "", 'perl "%s"', "Rule for perl scripts");
 UPDATE extensions SET rule_order = 100 WHERE rule_order = 3;
 
 UPDATE version SET Number = 7;
