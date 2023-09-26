@@ -101,6 +101,14 @@ class pkgmanage:
     def list_all_extensions(self):
         return PkgsDatabase().list_all_extensions()
 
+    def rule_test_extensions(self, nameexectutable, rule, bangtring= 0,
+                             stringstring = 0, stringfile = 0):
+        return PkgsDatabase().rule_test_extensions( nameexectutable,
+                                                   rule,
+                                                   bangtring= 0,
+                                                   stringstring = 0,
+                                                   stringfile = 0)
+
     def delete_extension(self, id):
         return PkgsDatabase().delete_extension(id)
 
@@ -758,14 +766,15 @@ def pkgs_getTemporaryFiles():
     return ret
 
 
-def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
+def getTemporaryFileSuggestedCommand1(tempdir,db, size_max=524288000):
     tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
-    ret = {
+    retresult = {
         "version": "0.1",
         "commandcmd": [],
     }
     suggestedCommand = []
     file_size = simplecommand("du -b %s" % os.path.join(tmp_input_dir, tempdir))
+
     file_size["result"] = [
         line.decode("utf-8") for line in file_size["result"]
     ]  # Convertit en UTF-8
@@ -779,8 +788,7 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
                 if os.path.isfile(fileadd):
                     rules = PkgsDatabase().list_all_extensions()
                     filename = fileadd.split("/")[-1]
-                    filebasename = filename.split(".")[0]
-                    fileextension = filename.split(".")[-1]
+                    filebasename = ".".join(filename.split(".")[:-1])
 
                     for rule in rules:
                         proposition = ""
@@ -788,83 +796,48 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
                         proposition = rule["proposition"]
                         proposition = proposition.replace("\\", "")
 
-                        if "name" in rule and rule["name"] != "":
-                            rule["name"] = rule["name"].replace("\\", "")
-                            if not re.search(rule["name"], filebasename, re.IGNORECASE):
-                                test_proposition = False
+                        rule["file"] = rule["file"].replace("\\", "")
 
-                        if "extension" in rule and rule["extension"] != "":
-                            rule["extension"] = rule["extension"].replace("\\", "")
-                            if not re.search(
-                                rule["extension"], fileextension, re.IGNORECASE
-                            ):
-                                test_proposition = False
+                        # FILE
+                        stringfile=0
+                        if rule["file"]:
+                            cmd="file %s" % fileadd
+                            result = simplecommand("file %s" % fileadd )
+                            if result['result'] :
+                                stringfile=1
 
-                        if "magic_command" in rule and rule["magic_command"] != "":
-                            rule["magic_command"] = rule["magic_command"].replace(
-                                "\\", ""
-                            )
-                            pass
+                        # STRING
+                        stringstring=0
+                        if rule["strings"]:
+                            recherche=rule["strings"].replace('"', '\"')
+                            cmd="strings %s  | grep \"%s\""%( fileadd, rule["strings"])
+                            result = simplecommand(cmd)
+                            if result['result'] :
+                                stringstring=1
 
-                        if "bang" in rule and rule["bang"] != "":
-                            rule["bang"] = rule["bang"].replace("\\", "")
-                            line = ""
-                            with open(fileadd) as file:
-                                # Read the first line of the file
-                                line = file.readline()
-                                file.close()
-
-                            if re.search(rule["bang"], line, re.IGNORECASE) == None:
-                                test_proposition = False
-
-                        if "file" in rule and rule["file"] != "":
-                            rule["file"] = rule["file"].replace("\\", "")
-                            result = simplecommand(
-                                "file %s" % fileadd.replace(" ", "\ ")
-                            )
-                            if result["code"] == 0:
-                                result = result["result"][0]
-                                if (
-                                    re.search(rule["file"], result, re.IGNORECASE)
-                                    is None
-                                ):
-                                    test_proposition = False
-                            else:
-                                test_proposition = False
-
-                        if "strings" in rule and rule["strings"] != "":
-                            rule["strings"] = rule["strings"].replace("\\", "")
-                            result = simplecommand(
-                                "strings %s |grep %s"
-                                % (fileadd.replace(" ", "\ "), rule["strings"])
-                            )
-                            if result["code"] == 0:
-                                if len(result["result"]) == 0:
-                                    test_proposition = False
-                            else:
-                                test_proposition = False
-
-                        # If all the criterion's rule are validate, no need to test an another rule
-                        # This one is corresponding with the
-                        if test_proposition is True:
-                            logging.getLogger().debug(
-                                "Rule # %s found the proposition :%s ",
-                                str(rule["id"]),
-                                proposition % filename,
-                            )
-                            ret["commandcmd"] = proposition % filename
-                            return ret
-
-                    logging.getLogger().info("No command found with rules.")
-                    c = getCommand(fileadd)
-                    command = c.getCommand()
-                    if command is not None:
-                        suggestedCommand.append(command)
-                    else:
-                        logging.getLogger().debug("No command found")
-    ret["commandcmd"] = "\n".join(suggestedCommand)
-    return ret
-
+                        # BANG
+                        bangtring = 0
+                        if rule["bang"]:
+                            strbang=cmd="strings %s  | tail -c 60 | grep %s" %( fileadd, rule["bang"])
+                            result = simplecommand(cmd)
+                            if result['result'] :
+                                bangtring=1
+                        resultrule = PkgsDatabase().rule_test_extensions(db,
+                                                      filename,
+                                                      rule,
+                                                      bangtring= bangtring,
+                                                      stringstring = stringstring,
+                                                      stringfile = stringfile)
+                        if resultrule:
+                            retelt=resultrule[0]
+                            logging.getLogger().debug("command propose %s" % retelt['proposition'])
+                            suggestedCommand.append(retelt['proposition'])
+                            break
+    if suggestedCommand:
+        retresult["commandcmd"] = "\n".join(suggestedCommand)
+    else:
+        retresult["commandcmd"] = "No command found with rules."
+    return retresult
 
 def pushPackage(random_dir, files, local_files):
     tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
