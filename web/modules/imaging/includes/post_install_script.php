@@ -104,7 +104,7 @@ class MyListInfos extends ListInfos {
         $this->post_install_count = $value;
     }
 
-    function display() {
+    function display($navbar = 1, $header = 1) {
         if (isset($this->post_install_count)) {
             $maxperpage = $conf["global"]["maxperpage"];
             $conf["global"]["maxperpage"] = $this->post_install_count;
