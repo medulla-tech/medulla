@@ -2467,7 +2467,7 @@ class MUCBot(slixmpp.ClientXMPP):
                 mto=msg["from"], mbody=json.dumps(fichierdata), mtype="chat"
             )
         except:
-            traceback.print_exc(file=sys.stdout)
+            logger.error("\n%s" % (traceback.format_exc()))
 
     def callrestartbymaster(self, to):
         restartmachine = {
