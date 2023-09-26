@@ -279,7 +279,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 "fk_default_item_WOL", Integer, ForeignKey("MenuItem.id"), nullable=True
             ),
             Column("fk_protocol", Integer, ForeignKey("Protocol.id"), default=1),
-            Column("fk_synchrostate", Integer, ForeignKey("SynchroState.id"), default=1),
+            Column(
+                "fk_synchrostate", Integer, ForeignKey("SynchroState.id"), default=1
+            ),
             UniqueConstraint("id", "fk_name", name="unique_menu"),
             extend_existing=True,
         )
