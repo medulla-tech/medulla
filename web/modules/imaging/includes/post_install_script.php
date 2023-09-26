@@ -23,14 +23,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function get_post_install_scripts($f, $post_install_scripts, $post_installs) {
+function get_post_install_scripts($f, $post_install_scripts, $post_installs)
+{
     $already_orders = array();
     $elt = array("id_None" => _T("Not selected", "imaging"));
-    $elt_values = array("id_None"=> "None");
+    $elt_values = array("id_None" => "None");
     $h_pis = array();
     foreach ($post_install_scripts as $lpis) {
         $h_pis[$lpis['imaging_uuid']] = $lpis;
-        $already_orders[$lpis['order']] = True;
+        $already_orders[$lpis['order']] = true;
     }
     $i = 0;
     foreach ($post_installs as $pis) {
@@ -73,8 +74,9 @@ function get_post_install_scripts($f, $post_install_scripts, $post_installs) {
     print_exclusive_orders_js($a_pis_id);
     return $f;
 }
-function print_exclusive_orders_js($a_pis_id) {
-?>
+function print_exclusive_orders_js($a_pis_id)
+{
+    ?>
     <script type='text/javascript'>
     <!--
         function exclusive_orders(self_element) {
@@ -99,12 +101,15 @@ function print_exclusive_orders_js($a_pis_id) {
 }
 
 global $conf;
-class MyListInfos extends ListInfos {
-    function setPostInstallCount($value) {
+class MyListInfos extends ListInfos
+{
+    public function setPostInstallCount($value)
+    {
         $this->post_install_count = $value;
     }
 
-    function display($navbar = 1, $header = 1) {
+    public function display($navbar = 1, $header = 1)
+    {
         if (isset($this->post_install_count)) {
             $maxperpage = $conf["global"]["maxperpage"];
             $conf["global"]["maxperpage"] = $this->post_install_count;
@@ -117,8 +122,10 @@ class MyListInfos extends ListInfos {
     }
 }
 
-class MySelectItem extends SelectItem {
-    function __toString() {
+class MySelectItem extends SelectItem
+{
+    public function __toString()
+    {
         return $this->to_string();
     }
 }
