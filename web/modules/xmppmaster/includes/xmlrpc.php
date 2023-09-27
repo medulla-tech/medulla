@@ -864,4 +864,8 @@ function xmlrpc_get_audit_summary_updates_by_machine($machineid, $start, $end, $
 function xmlrpc_get_update_kb($updateid){
   return xmlCall("xmppmaster.get_update_kb", [$updateid]);
 }
+
+function xmlrpc_cancel_update($machineid, $updateid){
+  return xmlCall("xmppmaster.cancel_update", [$machineid, $updateid]);
+}
 ?>

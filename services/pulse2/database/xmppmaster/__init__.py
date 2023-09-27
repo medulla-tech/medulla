@@ -12521,3 +12521,30 @@ group by hostname
         except Exception as e:
             pass
         return ""
+
+    @DatabaseHelper._sessionm
+    def cancel_update(self, session, machineid, updateid):
+        try:
+            machineid = int(machineid)
+        except:
+            machineid = machineid
+
+        try:
+            update = session.query(Up_machine_windows).filter(and_(
+                Up_machine_windows.id_machine == machineid,
+                Up_machine_windows.update_id == updateid,
+                Up_machine_windows.required_deploy==1)).first()
+
+            update.required_deploy=None
+            update.start_date = None
+            update.end_date = None
+
+            history = session.query(Up_history).filter(and_(Up_history.id_machine == machineid, Up_history.update_id)).delete()
+
+            session.commit()
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return False
+
+        return True

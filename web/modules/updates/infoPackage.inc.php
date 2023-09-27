@@ -182,6 +182,10 @@ $page = new Page("ajaxAuditUpdateByMachine", _T('Updates History', 'updates'));
 $page->setFile("modules/updates/updates/ajaxAuditUpdateByMachine.php", array("noHeader"=>True,"visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("cancelUpdate", _T('Cancel Update', 'updates'));
+$page->setFile("modules/updates/updates/cancelUpdate.php", array("noHeader"=>True,"visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

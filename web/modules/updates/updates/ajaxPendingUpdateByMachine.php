@@ -27,6 +27,10 @@ $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET["machineid"]) : "
 $start = (!empty($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (!empty($_GET['start'])) ? htmlentities($_GET['end']) : $maxperpage;
 $filter = (!empty($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
+$unselectAction = new ActionPopupItem(_T("Cancel Update", "updates"), "cancelUpdate", "delete","", "updates", "updates");
+$unselectActionEmpty = new EmptyActionItem(_("Cancel Update", "updates"), "cancelUpdate", "delete", "", "updates", "updates");
+$unselectActions = [];
+
 // Get selected updates
 $result = xmlrpc_get_tagged_updates_by_machine($machineid, $start, $end, $filter);
 
@@ -39,6 +43,8 @@ $start_dates = [];
 $end_dates = [];
 $update_ids = [];
 $descriptions = [];
+$idmachines = [];
+$row = 0;
 
 foreach($datas as $update){
     $titles[] = $update["title"];
@@ -47,6 +53,14 @@ foreach($datas as $update){
     $start_dates[] = $update["start_date"];
     $end_dates[] = $update["end_date"];
     $descriptions[] = $update["description"];
+    if($update['required_deploy'] == 1){
+        $unselectActions[] = $unselectAction;
+    }
+    else{
+        $unselectActions[] = $unselectActionEmpty;
+    }
+    $datas[$row]["id_machine"] = $machineid;
+    $row++;
 }
 
 
@@ -60,5 +74,6 @@ $n->addExtraInfo($end_dates, _T("End Date", "updates"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($datas);
+$n->addActionItemArray($unselectActions);
 $n->display();
 ?>
