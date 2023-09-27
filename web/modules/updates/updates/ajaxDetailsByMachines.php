@@ -78,10 +78,10 @@ if ($entity == '')
 {
     $typeOfDetail = "group";
     $filterOn = array('gid' => $gid);
+    $ctx['gid'] = $gid;
 
     // Needed all machines of the group to calculate the compliance rate
-    $listGroup = getRestrictedComputersList(0, -1, $filterOn, true, true);
-
+    $listGroup = getRestrictedComputersList(0, -1, $ctx, true, true);
     $group_compliance = xmlrpc_get_conformity_update_for_group(array_keys($listGroup));
     $group_compliance = $group_compliance['0'];
 
@@ -92,8 +92,8 @@ if ($entity == '')
     $compliance_bloc .= "<div class='progress' style='max-width: 25%; width: ".$group_compliance['compliance']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".intval($group_compliance['compliance'])."% </div>";
 
 
-    $machines = getRestrictedComputersList($start, $end, $filterOn, true);
-    $count = getRestrictedComputersListLen($filterOn, True);
+    $machines = getRestrictedComputersList($start, $end, $ctx, true);
+    $count = getRestrictedComputersListLen($ctx, True);
     $tabletitle = sprintf(_T("Computers from group %s","updates"), $groupname);
 
     foreach ($machines as $k => $v) {
