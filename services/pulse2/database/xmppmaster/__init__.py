@@ -1850,9 +1850,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return result_organization.id
         except Exception as e:
             logger.error(str(e))
-            logger.debug(
-                "organization name : %s does not exists" % name_organization
-            )
+            logger.debug("organization name : %s does not exists" % name_organization)
             return -1
 
     @DatabaseHelper._sessionm
@@ -2002,9 +2000,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if result_entity:
                 return result_entity.get_data()
             else:
-                logger.debug(
-                    "Glpi_entity id : %s does not exists" % glpi_id
-                )
+                logger.debug("Glpi_entity id : %s does not exists" % glpi_id)
         except Exception as e:
             logger.error("Glpi_entity id : %s does not exists" % glpi_id)
         return None
@@ -2026,9 +2022,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if result_location:
                 return result_location.get_data()
             else:
-                logger.debug(
-                    "Glpi_location id : %s des not exists" % glpi_id
-                )
+                logger.debug("Glpi_location id : %s des not exists" % glpi_id)
         except Exception as e:
             logger.error("Glpi_location id : %s does not exists" % glpi_id)
         return None
@@ -2276,9 +2270,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
             return 1
         except Exception as e:
-            logger.debug(
-                "updateName_Qa_custom_command error %s->" % str(e)
-            )
+            logger.debug("updateName_Qa_custom_command error %s->" % str(e))
             return -1
 
     @DatabaseHelper._sessionm
@@ -3602,9 +3594,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     if "spooling" in params_json:
                         obj["spooling"] = params_json["spooling"]
                 except Exception as e:
-                    logger.error(
-                        "[the avanced parameters from msc] : " + str(e)
-                    )
+                    logger.error("[the avanced parameters from msc] : " + str(e))
 
             if result.parameters_deploy is not None:
                 try:
@@ -6765,9 +6755,7 @@ class XmppMasterDatabase(DatabaseHelper):
             logger.error(str(e))
         result = [x for x in listMacAdress][0]
         if infomac:
-            logger.debug(
-                "Result list MacAdress for Machine : %s" % result[0]
-            )
+            logger.debug("Result list MacAdress for Machine : %s" % result[0])
         return result
 
     @DatabaseHelper._sessionm
@@ -7399,9 +7387,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
             return [x[0] for x in presencelist]
         except Exception as e:
-            logger.error(
-                "Error debug for the getidlistPresenceMachine function!"
-            )
+            logger.error("Error debug for the getidlistPresenceMachine function!")
             logger.error("The presence of the machine is:  %s" % presence)
             logger.error("The sql error is: %s" % sql)
             logger.error("the Exception catched is %s" % str(e))
@@ -7711,9 +7697,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
             return True
         except Exception as error_presence:
-            logger.error(
-                "An error occured while setting the new presence."
-            )
+            logger.error("An error occured while setting the new presence.")
             logger.error("We got the error:\n %s" % str(error_presence))
             return False
 
@@ -7981,9 +7965,7 @@ class XmppMasterDatabase(DatabaseHelper):
             logger.error(
                 "Function : update_Presence_Relay, we got the error: " % str(e)
             )
-            logger.error(
-                "We encountered the backtrace: \n%s" % traceback.format_exc()
-            )
+            logger.error("We encountered the backtrace: \n%s" % traceback.format_exc())
 
     @DatabaseHelper._sessionm
     def update_reconf_mach_of_Relay_down(self, session, jid, reconf=1):
@@ -8623,9 +8605,7 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except Exception as e:
-            logger.error(
-                "We failed to search the computers having %s as uuid" % uuid
-            )
+            logger.error("We failed to search the computers having %s as uuid" % uuid)
             logger.error("The backtrace we trapped is: \n %s" % str(e))
         return resultdata
 
@@ -8690,24 +8670,18 @@ class XmppMasterDatabase(DatabaseHelper):
         except NoResultFound as e:
             result["error"] = "NoResultFound"
             if enable is None:
-                logger.error(
-                    "We found no machines with the UUID %s" % uuid
-                )
+                logger.error("We found no machines with the UUID %s" % uuid)
             else:
                 logger.error(
                     "We found no machines with the UUID %s, and with enabled: %s"
                     % (uuid, enable)
                 )
 
-            logger.error(
-                "We encountered the following error:\n %s" % str(e)
-            )
+            logger.error("We encountered the following error:\n %s" % str(e))
         except MultipleResultsFound as e:
             result["error"] = "MultipleResultsFound"
             if enable is None:
-                logger.error(
-                    "We found multiple machines with the UUID %s" % uuid
-                )
+                logger.error("We found multiple machines with the UUID %s" % uuid)
             else:
                 logger.error(
                     "We found multiple machines with the UUID %s, and with enabled: %s"
@@ -8715,16 +8689,12 @@ class XmppMasterDatabase(DatabaseHelper):
                     enable,
                 )
 
-            logger.error(
-                "We encountered the following error:\n %s" % str(e)
-            )
+            logger.error("We encountered the following error:\n %s" % str(e))
 
         except Exception as e:
             result["error"] = str(e)
             if enable is None:
-                logger.error(
-                    "We were searching for machines with the UUID %s" % uuid
-                )
+                logger.error("We were searching for machines with the UUID %s" % uuid)
             else:
                 logger.error(
                     "We were searching for machines with the UUID %s, and with enabled: %s"
@@ -8732,9 +8702,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     enable,
                 )
 
-            logger.error(
-                "We encountered the following error:\n %s" % str(e)
-            )
+            logger.error("We encountered the following error:\n %s" % str(e))
 
         return result
 
@@ -9117,9 +9085,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     return result2
             else:
                 # there are no clusters configured for this ARS.
-                logger.warning(
-                    "Cluster ARS [%s] no configured" % relayserver.jid
-                )
+                logger.warning("Cluster ARS [%s] no configured" % relayserver.jid)
                 return notconfars
         else:
             logger.warning("Relay server no present")
@@ -12880,9 +12846,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.flush()
             return self.__updatemachine(query)
         except Exception as e:
-            logger.error(
-                "We failed to update the informations on the SQL Table"
-            )
+            logger.error("We failed to update the informations on the SQL Table")
             logger.error("We got the error %s " % str(e))
             self.logger.error("We hit the backtrace \n%s" % (traceback.format_exc()))
             return None
@@ -13342,9 +13306,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 session.commit()
                 session.flush()
         except Exception as e:
-            logger.error(
-                "An error occured on update_Up_machine_windows function."
-            )
+            logger.error("An error occured on update_Up_machine_windows function.")
             logger.error("We obtained the error: \n %s" % str(e))
             return False
         return True
@@ -13392,9 +13354,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     session.commit()
                     session.flush()
         except Exception as e:
-            logger.error(
-                "An error occured on update_Up_machine_windows function."
-            )
+            logger.error("An error occured on update_Up_machine_windows function.")
             logger.error("We obtained the error: \n %s" % str(e))
             return False
         return True
