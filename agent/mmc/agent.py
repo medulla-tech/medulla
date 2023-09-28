@@ -79,6 +79,88 @@ Fault = xmlrpc.client.Fault
 ctx = None
 VERSION = "5.0.0"
 
+PYTHON_VERSION = sys.version_info.major
+
+
+class xmppbrowsing:
+    """ """
+
+    def __init__(self, defaultdir=None, rootfilesystem=None):
+        """
+        :param type: Uses this parameter to give a path abs
+        :type defaultdir: string
+        :type rootfilesystem :string
+        :return: Function init has no return
+        """
+        self.defaultdir = None
+        self.rootfilesystem = None
+        self.dirinfos = {}
+
+        if defaultdir is not None:
+            self.defaultdir = defaultdir
+        if rootfilesystem is not None:
+            self.rootfilesystem = rootfilesystem
+        self.listfileindir()
+
+    def listfileindir1(self, path_abs_current=None):
+        if path_abs_current is None or path_abs_current == "":
+            if self.defaultdir is None:
+                pathabs = os.getcwd()
+            else:
+                pathabs = self.defaultdir
+        else:
+            if self.rootfilesystem in path_abs_current:
+                pathabs = os.path.abspath(path_abs_current)
+            else:
+                pathabs = self.rootfilesystem
+        # TODO: Remove MIGRATION3
+        self.dirinfos = {
+            "path_abs_current": pathabs,
+            "list_dirs_current": os.walk(pathabs).next()[1]
+            if PYTHON_VERSION == 2
+            else next(os.walk(pathabs))[1],
+            "list_files_current": os.walk(pathabs).next()[2]
+            if PYTHON_VERSION == 2
+            else next(os.walk(pathabs))[2],
+            "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
+            "rootfilesystem": self.rootfilesystem,
+            "defaultdir": self.defaultdir,
+        }
+        return self.dirinfos
+
+    def listfileindir(self, path_abs_current=None):
+        if path_abs_current is None or path_abs_current == "":
+            if self.defaultdir is None:
+                pathabs = os.getcwd()
+            else:
+                pathabs = self.defaultdir
+        else:
+            if self.rootfilesystem in path_abs_current:
+                pathabs = os.path.abspath(path_abs_current)
+            else:
+                pathabs = self.rootfilesystem
+        # TODO: Remove MIGRATION3
+        list_files_current = (
+            os.walk(pathabs).next()[2]
+            if PYTHON_VERSION == 2
+            else next(os.walk(pathabs))[2]
+        )
+        ff = []
+        for t in list_files_current:
+            fii = os.path.join(pathabs, t)
+            ff.append((t, os.path.getsize(fii)))
+        # TODO: Remove MIGRATION3
+        self.dirinfos = {
+            "path_abs_current": pathabs,
+            "list_dirs_current": os.walk(pathabs).next()[1]
+            if PYTHON_VERSION == 2
+            else next(os.walk(pathabs))[1],
+            "list_files_current": ff,
+            "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
+            "rootfilesystem": self.rootfilesystem,
+            "defaultdir": self.defaultdir,
+        }
+        return self.dirinfos
 
 # decorateur mesure temps d'une fonction
 def measure_time(func):
@@ -895,11 +977,17 @@ class messagefilexmpp:
             d = d + a[random.randint(0, 35)]
         return d
 
-    def __init__(self, config):
+    def __init__(self, config_mcc_agent, config_xmpp):
         # Lit configuration du fichier
-        self.config = config
+        self.config_mcc_agent = config_mcc_agent
+        self.config_xmpp = config_xmpp
+        # self.config = config
         self.message_type = "json"
         self.config_bool_done = False
+
+        self.xmppbrowsingpath = xmppbrowsing(
+            defaultdir=self.config_xmpp.defaultdir, rootfilesystem=self.config_xmpp.rootfilesystem
+        )
 
     def sendstr(self, msg, timeout=0, priority=9):
         """
@@ -912,24 +1000,24 @@ class messagefilexmpp:
             except ValueError as e:
                 logger.error("messagefilexmpp send error: %s" % str(e))
                 return None
-            if self.config.submaster_ip_format == "ipv6":
+            if self.config_mcc_agent.submaster_ip_format == "ipv6":
                 client = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
             else:
                 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             # Activation de l'option pour réutiliser l'adresse
             client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
-            context.check_hostname = self.config.submaster_check_hostname
+            context.check_hostname = self.config_mcc_agent.submaster_check_hostname
             context.verify_mode = ssl.CERT_NONE
 
             # test json
-            client.connect((self.config.submaster_host, self.config.submaster_port))
+            client.connect((self.config_mcc_agent.submaster_host, self.config_mcc_agent.submaster_port))
             ssock = context.wrap_socket(
-                client, server_hostname=self.config.submaster_host
+                client, server_hostname=self.config_mcc_agent.submaster_host
             )
             response = None
             try:
-                message = self.config.submaster_allowed_token + msg
+                message = self.config_mcc_agent.submaster_allowed_token + msg
                 ssock.sendall(convert.compress_data_to_bytes(message))
                 response = convert.decompress_data_to_bytes(ssock.recv(2097152))
                 response = convert.convert_bytes_datetime_to_string(response)
@@ -937,15 +1025,15 @@ class messagefilexmpp:
                 # Fermeture de la connexion SSL
                 # Fermeture du socket principal
                 ssock.close()
-                if self.config.submaster_allowed_token:
-                    longueur = len(self.config.submaster_allowed_token)
+                if self.config_mcc_agent.submaster_allowed_token:
+                    longueur = len(self.config_mcc_agent.submaster_allowed_token)
                     if longueur > 0 and len(response) > longueur:
                         return response[longueur:]
                 return response
         except ConnectionRefusedError as e:
             logger.error(
                 "Erreur connection verify substitut master %s:%s"
-                % (self.config.submaster_host, self.config.submaster_port)
+                % (self.config_mcc_agent.submaster_host, self.config_mcc_agent.submaster_port)
             )
             logger.warning("Restart Substitut master")
         except Exception as e:
@@ -2212,9 +2300,9 @@ class MMCApp(object):
             # create file  message
             PluginManager().getEnabledPlugins()[
                 "xmppmaster"
-            ].messagefilexmpp = messagefilexmpp(self.config)
+            ].modulemessagefilexmpp = messagefilexmpp(self.config)
             self.modulexmppmaster = (
-                PluginManager().getEnabledPlugins()["xmppmaster"].messagefilexmpp
+                PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp
             )
             # on a besoin de savoir les modules de mmc initialise
             XmppMasterDatabase().initialisation_module_list_mmc(
@@ -2236,7 +2324,7 @@ class MMCApp(object):
         if (
             not PluginManager()
             .getEnabledPlugins()["xmppmaster"]
-            .messagefilexmpp.config_bool_done
+            .modulemessagefilexmpp.config_bool_done
         ):
             # important ici sont reunit en exemple mcanisme d'utilisation du serveur substiitut master.
             logger.info("Start/restart MMC send module On on MMC")
@@ -2262,7 +2350,7 @@ class MMCApp(object):
 
             PluginManager().getEnabledPlugins()[
                 "xmppmaster"
-            ].messagefilexmpp.config_bool_done = True
+            ].modulemessagefilexmpp.config_bool_done = True
 
             # appel plugin directement sur substitut master.
             # Cela remplace les plugins master. qui seront transferer sur le substitut master.

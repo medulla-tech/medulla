@@ -27,7 +27,7 @@ xmpp = None
 
 
 def ObjectXmpp():
-    return PluginManager().getEnabledPlugins()["xmppmaster"].messagefilexmpp
+    return PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp
 
 
 def getXmppstrConfiguration():
