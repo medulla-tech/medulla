@@ -162,6 +162,7 @@ class xmppbrowsing:
         }
         return self.dirinfos
 
+
 # decorateur mesure temps d'une fonction
 def measure_time(func):
     def wrapper(*args, **kwargs):
@@ -986,7 +987,8 @@ class messagefilexmpp:
         self.config_bool_done = False
 
         self.xmppbrowsingpath = xmppbrowsing(
-            defaultdir=self.config_xmpp.defaultdir, rootfilesystem=self.config_xmpp.rootfilesystem
+            defaultdir=self.config_xmpp.defaultdir,
+            rootfilesystem=self.config_xmpp.rootfilesystem,
         )
 
     def sendstr(self, msg, timeout=0, priority=9):
@@ -1011,7 +1013,12 @@ class messagefilexmpp:
             context.verify_mode = ssl.CERT_NONE
 
             # test json
-            client.connect((self.config_mcc_agent.submaster_host, self.config_mcc_agent.submaster_port))
+            client.connect(
+                (
+                    self.config_mcc_agent.submaster_host,
+                    self.config_mcc_agent.submaster_port,
+                )
+            )
             ssock = context.wrap_socket(
                 client, server_hostname=self.config_mcc_agent.submaster_host
             )
@@ -1033,7 +1040,10 @@ class messagefilexmpp:
         except ConnectionRefusedError as e:
             logger.error(
                 "Erreur connection verify substitut master %s:%s"
-                % (self.config_mcc_agent.submaster_host, self.config_mcc_agent.submaster_port)
+                % (
+                    self.config_mcc_agent.submaster_host,
+                    self.config_mcc_agent.submaster_port,
+                )
             )
             logger.warning("Restart Substitut master")
         except Exception as e:
