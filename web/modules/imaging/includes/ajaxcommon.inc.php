@@ -33,10 +33,11 @@ require("../../base/includes/edit.inc.php");
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
 $location = getCurrentLocation();
-if ($location == "UUID1")
+if ($location == "UUID1") {
     $location_name = _T("root", "pulse2");
-else
+} else {
     $location_name = xmlrpc_getLocationName($location);
+}
 
 // Store the location in the session
 $_SESSION['imaging_location'] = array(
@@ -53,17 +54,17 @@ if (!xmlrpc_doesLocationHasImagingServer($location)) {
         foreach($parents as $parent_uuid) {
             if (xmlrpc_doesLocationHasImagingServer($parent_uuid)) {
                 $location = $parent_uuid;
-                if ($location == "UUID1")
+                if ($location == "UUID1") {
                     $location_name = _T("root", "pulse2");
-                else
+                } else {
                     $location_name = xmlrpc_getLocationName($location);
+                }
                 $hasImaging = true;
                 break;
             }
         }
     }
-}
-else {
+} else {
     $hasImaging = true;
 }
 
@@ -71,8 +72,7 @@ if ($hasImaging) {
     // Store the imaging server used for this location
     $_SESSION['imaging_location']['used'] = $location;
     $_SESSION['imaging_location']['used_name'] = $location_name;
-}
-else {
+} else {
     // No imaging server associated
     // Display the association list
     $_SESSION['imaging_location']['used'] = -1;
@@ -136,7 +136,7 @@ if (safeCount($todo_on) > 0) {
     print "</b></font></td><td>";
 
     $f = new ValidatingForm();
-    $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+    $f->add(new HiddenTpl("location_uuid"), array("value" => $location,  "hide" => true));
 
     $f->addButton("bsync", _T("Generate Menu", "imaging"));
     $f->display();
@@ -147,11 +147,9 @@ if (safeCount($todo_on) > 0) {
     print "</td><td>";
 
     $f = new ValidatingForm();
-    $f->add(new HiddenTpl("location_uuid"),                        array("value" => $location,  "hide" => True));
+    $f->add(new HiddenTpl("location_uuid"), array("value" => $location,  "hide" => true));
 
     $f->addButton("bsync", _T("Force Generation", "imaging"));
     $f->display();
     print "</td></tr></table>";
 }
-
-?>
