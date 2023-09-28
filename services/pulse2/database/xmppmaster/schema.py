@@ -901,6 +901,23 @@ class Mmc_module_actif(Base):
     informations = Column(String(1024), default="")
 
 
+class Up_history(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = "up_history"
+    # ====== Fields =============================
+    update_id = Column(String(38))
+    id_machine = Column(Integer)
+    jid = Column(String(255), nullable=False)
+    update_list = Column(Enum("white", "gray"))
+    required_date = Column(DateTime, default=None)
+    curent_date = Column(DateTime, default=None)
+    deploy_date = Column(DateTime, default=None)
+    delete_date = Column(DateTime, default=None)
+    command = Column(Integer)
+    id_deploy = Column(Integer)
+    deploy_title = Column(String(255))
+
+
 """
 This code is kept here as a comment, "if" we need to use it
 and not use the automatic table anymore.

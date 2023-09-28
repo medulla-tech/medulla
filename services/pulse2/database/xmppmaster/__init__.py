@@ -75,6 +75,7 @@ from pulse2.database.xmppmaster.schema import (
     Up_black_list,
     Up_white_list,
     Up_gray_list,
+    Up_history,
     Mmc_module_actif,
 )
 
@@ -13932,9 +13933,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if end_date < current:
             end_date = a_week_from_current
 
-        query, machine = (
-            session.query(Up_machine_windows, Machines)
+        query, machine, update_data = (
+            session.query(Up_machine_windows, Machines, Update_data)
             .join(Machines, Machines.id == Up_machine_windows.id_machine)
+            .join(Update_data, Update_data.updateid == Up_machine_windows.update_id)
             .filter(
                 and_(
                     Up_machine_windows.id_machine == machineid,
@@ -13953,6 +13955,16 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         )
         result = {}
         if query is not None:
+            deployName = "%s -@upd@- %s" % (update_data.title, start_date)
+            history = Up_history()
+            history.update_id = query.update_id
+            history.id_machine = query.id_machine
+            history.jid = machine.jid
+            history.update_list = "gray"
+            history.required_date = datetime.strftime(start_date, "%Y-%m-%d %H:%M:%S")
+            history.deploy_title = deployName
+            session.add(history)
+
             query.start_date = start_date
             query.end_date = end_date
             query.required_deploy = 1
