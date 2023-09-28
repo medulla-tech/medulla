@@ -101,13 +101,12 @@ class pkgmanage:
     def list_all_extensions(self):
         return PkgsDatabase().list_all_extensions()
 
-    def rule_test_extensions(self, nameexectutable, rule, bangtring= 0,
-                             stringstring = 0, stringfile = 0):
-        return PkgsDatabase().rule_test_extensions( nameexectutable,
-                                                   rule,
-                                                   bangtring= 0,
-                                                   stringstring = 0,
-                                                   stringfile = 0)
+    def rule_test_extensions(
+        self, nameexectutable, rule, bangtring=0, stringstring=0, stringfile=0
+    ):
+        return PkgsDatabase().rule_test_extensions(
+            nameexectutable, rule, bangtring=0, stringstring=0, stringfile=0
+        )
 
     def delete_extension(self, id):
         return PkgsDatabase().delete_extension(id)
@@ -766,7 +765,7 @@ def pkgs_getTemporaryFiles():
     return ret
 
 
-def getTemporaryFileSuggestedCommand1(tempdir,db, size_max=524288000):
+def getTemporaryFileSuggestedCommand1(tempdir, db, size_max=524288000):
     tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
     retresult = {
         "version": "0.1",
@@ -799,45 +798,53 @@ def getTemporaryFileSuggestedCommand1(tempdir,db, size_max=524288000):
                         rule["file"] = rule["file"].replace("\\", "")
 
                         # FILE
-                        stringfile=0
+                        stringfile = 0
                         if rule["file"]:
-                            cmd="file %s" % fileadd
-                            result = simplecommand("file %s" % fileadd )
-                            if result['result'] :
-                                stringfile=1
+                            cmd = "file %s" % fileadd
+                            result = simplecommand("file %s" % fileadd)
+                            if result["result"]:
+                                stringfile = 1
 
                         # STRING
-                        stringstring=0
+                        stringstring = 0
                         if rule["strings"]:
-                            recherche=rule["strings"].replace('"', '\"')
-                            cmd="strings %s  | grep \"%s\""%( fileadd, rule["strings"])
+                            recherche = rule["strings"].replace('"', '"')
+                            cmd = 'strings %s  | grep "%s"' % (fileadd, rule["strings"])
                             result = simplecommand(cmd)
-                            if result['result'] :
-                                stringstring=1
+                            if result["result"]:
+                                stringstring = 1
 
                         # BANG
                         bangtring = 0
                         if rule["bang"]:
-                            strbang=cmd="strings %s  | tail -c 60 | grep %s" %( fileadd, rule["bang"])
+                            strbang = cmd = "strings %s  | tail -c 60 | grep %s" % (
+                                fileadd,
+                                rule["bang"],
+                            )
                             result = simplecommand(cmd)
-                            if result['result'] :
-                                bangtring=1
-                        resultrule = PkgsDatabase().rule_test_extensions(db,
-                                                      filename,
-                                                      rule,
-                                                      bangtring= bangtring,
-                                                      stringstring = stringstring,
-                                                      stringfile = stringfile)
+                            if result["result"]:
+                                bangtring = 1
+                        resultrule = PkgsDatabase().rule_test_extensions(
+                            db,
+                            filename,
+                            rule,
+                            bangtring=bangtring,
+                            stringstring=stringstring,
+                            stringfile=stringfile,
+                        )
                         if resultrule:
-                            retelt=resultrule[0]
-                            logging.getLogger().debug("command propose %s" % retelt['proposition'])
-                            suggestedCommand.append(retelt['proposition'])
+                            retelt = resultrule[0]
+                            logging.getLogger().debug(
+                                "command propose %s" % retelt["proposition"]
+                            )
+                            suggestedCommand.append(retelt["proposition"])
                             break
     if suggestedCommand:
         retresult["commandcmd"] = "\n".join(suggestedCommand)
     else:
         retresult["commandcmd"] = "No command found with rules."
     return retresult
+
 
 def pushPackage(random_dir, files, local_files):
     tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")

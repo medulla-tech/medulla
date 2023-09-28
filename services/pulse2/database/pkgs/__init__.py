@@ -762,13 +762,13 @@ class PkgsDatabase(DatabaseHelper):
             extensions.append(extension.to_array())
         return extensions
 
-
     @DatabaseHelper._sessionm
-    def rule_test_extensions(self, session, nameexectutable, rule, bangtring= 0,
-                             stringstring = 0, stringfile = 0):
-        extensions_dictlist=[]
+    def rule_test_extensions(
+        self, session, nameexectutable, rule, bangtring=0, stringstring=0, stringfile=0
+    ):
+        extensions_dictlist = []
         try:
-            sql="""SELECT
+            sql = """SELECT
                     id,
                     REPLACE('%s', '"%%s"',  "%s"),
                     (IF(name IS NULL OR name = '', 0, 1) and  (SUBSTRING_INDEX("%s", '/', - 1) REGEXP name)) as rulename,
@@ -784,31 +784,34 @@ class PkgsDatabase(DatabaseHelper):
                     ( extension = ''  or SUBSTRING_INDEX("%s", '.', - 1) REGEXP extension ) and
                     ( strings = '' or %s) and
                     ( file = '' or %s) and
-                    ( bang = '' or %s) ;""" %( rule['proposition'],
-                                            nameexectutable,
-                                            nameexectutable,
-                                            nameexectutable,
-                                            bangtring,
-                                            stringstring,
-                                            stringfile,
-                                            rule['id'],
-                                            nameexectutable,
-                                            nameexectutable,
-                                            stringstring,
-                                            stringfile,
-                                            bangtring)
+                    ( bang = '' or %s) ;""" % (
+                rule["proposition"],
+                nameexectutable,
+                nameexectutable,
+                nameexectutable,
+                bangtring,
+                stringstring,
+                stringfile,
+                rule["id"],
+                nameexectutable,
+                nameexectutable,
+                stringstring,
+                stringfile,
+                bangtring,
+            )
             result = session.execute(sql)
             session.commit()
             session.flush()
             for extension in result:
-                extensions_dict =  {
-                                    'id': extension[0],
-                                    'proposition': extension[1],
-                                    'rulename': extension[2],
-                                    'ruleext': extension[3],
-                                    'rulestring': extension[4],
-                                    'rulefile': extension[5],
-                                    'rulesbang': extension[6]}
+                extensions_dict = {
+                    "id": extension[0],
+                    "proposition": extension[1],
+                    "rulename": extension[2],
+                    "ruleext": extension[3],
+                    "rulestring": extension[4],
+                    "rulefile": extension[5],
+                    "rulesbang": extension[6],
+                }
                 extensions_dictlist.append(extensions_dict)
             logger.info(extensions_dictlist)
         except Exception as e:
