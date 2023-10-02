@@ -93,8 +93,8 @@ if ($entity == '') {
 
 
     $machines = getRestrictedComputersList($start, $end, $ctx, true);
-    $count = getRestrictedComputersListLen($ctx, True);
-    $tabletitle = sprintf(_T("Computers from group %s","updates"), $groupname);
+    $count = getRestrictedComputersListLen($ctx, true);
+    $tabletitle = sprintf(_T("Computers from group %s", "updates"), $groupname);
 
     foreach ($machines as $k => $v) {
         $actionPendingByMachines[] = $pendingByMach;

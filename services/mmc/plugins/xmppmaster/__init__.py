@@ -1430,23 +1430,23 @@ def create_reverse_ssh_from_am_to_ars(
             "public_key_ars": resultatinformation["get_ars_key_id_rsa_pub"],
         },
     }
-    #structreverse = {
-        #"action": "reversesshqa",
-        #"sessionid": name_random(8, "reversshiq"),
-        #"from": ObjectXmpp().boundjid.bare,
-        #"data": {
-            #"ipARS": ipARS,
-            #"jidARS": jidARS,
-            #"jidAM": jidAM,
-            #"ipAM": ipAM,
-            #"remoteport": remoteport,
-            #"portproxy": proxyportars,
-            #"type_reverse": type_reverse,
-            #"port_ssh_ars": ssh_port_machine,
-            #"private_key_ars": resultatinformation["get_ars_key_id_rsa"],
-            #"public_key_ars": resultatinformation["get_ars_key_id_rsa_pub"],
-        #},
-    #}
+    # structreverse = {
+    # "action": "reversesshqa",
+    # "sessionid": name_random(8, "reversshiq"),
+    # "from": ObjectXmpp().boundjid.bare,
+    # "data": {
+    # "ipARS": ipARS,
+    # "jidARS": jidARS,
+    # "jidAM": jidAM,
+    # "ipAM": ipAM,
+    # "remoteport": remoteport,
+    # "portproxy": proxyportars,
+    # "type_reverse": type_reverse,
+    # "port_ssh_ars": ssh_port_machine,
+    # "private_key_ars": resultatinformation["get_ars_key_id_rsa"],
+    # "public_key_ars": resultatinformation["get_ars_key_id_rsa_pub"],
+    # },
+    # }
     logging.getLogger().debug("send iqcommand to %s : %s" % (jidAM, structreverse))
     result = ObjectXmpp().iqsendpulse(jidAM, structreverse, timeout)
     logging.getLogger().debug("result iqcommand : %s" % result)
@@ -1768,13 +1768,13 @@ def get_conformity_update_by_entity():
 def ban_machines(subaction, jid_ars, machines):
     sessionid = name_random(8, "banmachines")
     boundjidbare = "master@pulse/MASTER"
-    #datasend = {
-        #"action": "banmachines",
-        #"from": ObjectXmpp().boundjid.bare,
-        #"sessionid": sessionid,
-        #"data": {"subaction": subaction, "jid_ars": jid_ars, "jid_machines": machines},
-        #"base64": False,
-    #}
+    # datasend = {
+    # "action": "banmachines",
+    # "from": ObjectXmpp().boundjid.bare,
+    # "sessionid": sessionid,
+    # "data": {"subaction": subaction, "jid_ars": jid_ars, "jid_machines": machines},
+    # "base64": False,
+    # }
     datasend = {
         "action": "banmachines",
         "from": boundjidbare,
