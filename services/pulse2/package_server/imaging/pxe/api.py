@@ -17,7 +17,8 @@ import logging
 
 from twisted.internet import reactor, task
 from twisted.internet.defer import succeed, Deferred
-from twisted.web.client import getPage
+
+from twisted.web.client import Agent
 
 from pulse2.package_server.imaging.pxe.parser import PXEMethodParser, assign
 from pulse2.package_server.imaging.pxe.parser import LOG_LEVEL, LOG_STATE
@@ -541,7 +542,7 @@ class PXEImagingApi(PXEMethodParser):
                 "POST the inventory to the inventory server \nINVENTORY\n %s"
                 % inventory
             )
-            d = getPage(
+            d = Agent(
                 url,
                 method="POST",
                 postdata=inventory,

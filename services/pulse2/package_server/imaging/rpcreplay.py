@@ -57,12 +57,35 @@ class RPCStore(Singleton):
         self._updateStateFile(data)
 
     def _updateStateFile(self, data):
+    """
+    Update the RPC state file content.
+    """
+        try:
+            assert isinstance(data, dict)  # Vérifie que data est un dictionnaire
+            self.logger.debug("Updating RPC replay file: %s" % self.filename)
+            with open(self.filename, "wb") as fobj:
+                self.logger.debug("Dumping and writing data")
+                pickle.dump(data, fobj)
+            self.logger.debug(
+                "RPC replay file successfully updated with %d items" % len(data)
+            )
+        except AssertionError as e:
+            self.logger.error("Assertion error: %s" % e)
+        except IOError as e:
+            self.logger.error("Error updating state file: %s" % e)
+        except pickle.PicklingError as e:
+            self.logger.error("Error pickling data: %s" % e)
+        except Exception as e:
+            self.logger.error("An unexpected error occurred: %s" % e)
+
+
+    def _updateStateFile(self, data):
         """
         Update the RPC state file content.
         """
-        assert isinstance(data, dict)
+        assert isinstance(data, dict)  # Vérifie que data est un dictionnaire
         self.logger.debug("Updating RPC replay file: %s" % self.filename)
-        fobj = open(self.filename, "w")
+        fobj = open(self.filename, "wb")
         self.logger.debug("Dumping and writing data")
         pickle.dump(data, fobj)
         fobj.close()
@@ -77,8 +100,12 @@ class RPCStore(Singleton):
         if not os.path.exists(self.filename):
             ret = {}
         else:
-            fobj = open(self.filename, "r")
-            ret = pickle.load(fobj)
+            try:#jfkjfk
+                with open(self.filename, "rb") as fobj:
+                    ret = pickle.load(fobj)
+            except EOFError:
+                print("Le fichier est vide.")
+                ret = {}
             fobj.close()
         assert isinstance(ret, dict)
         return ret
