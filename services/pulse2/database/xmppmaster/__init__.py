@@ -12098,8 +12098,17 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         if filter != "":
             query = query.filter(or_(
-                Up_machine_windows.kb.contains(filter),
-                Up_machine_windows.update_id.contains(filter)))
+                Up_machine_windows.update_id.contains(filter),
+                Up_machine_windows.msrcseverity.contains(filter),
+                Up_gray_list.kb.contains(filter),
+                Up_white_list.kb.contains(filter),
+                Up_gray_list.title.contains(filter),
+                Up_white_list.title.contains(filter),
+                Machines.hostname.contains(filter),
+                Up_gray_list.description.contains(filter),
+                Up_white_list.description.contains(filter)
+            ))
+
         count = query.count()
         query = query.offset(start)
         if limit != -1:
