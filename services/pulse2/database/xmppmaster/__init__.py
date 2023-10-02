@@ -13658,10 +13658,18 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if filter != "":
             query = query.filter(
                 or_(
-                    Up_machine_windows.kb.contains(filter),
                     Up_machine_windows.update_id.contains(filter),
+                    Up_machine_windows.msrcseverity.contains(filter),
+                    Up_gray_list.kb.contains(filter),
+                    Up_white_list.kb.contains(filter),
+                    Up_gray_list.title.contains(filter),
+                    Up_white_list.title.contains(filter),
+                    Machines.hostname.contains(filter),
+                    Up_gray_list.description.contains(filter),
+                    Up_white_list.description.contains(filter),
                 )
             )
+
         count = query.count()
         query = query.offset(start)
         if limit != -1:
@@ -14003,7 +14011,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             machineid = 0
 
         query = (
-            session.query(Up_machine_windows, Up_gray_list)
+            session.query(Up_machine_windows, Update_data)
             .filter(
                 and_(
                     Up_machine_windows.id_machine == machineid,
@@ -14013,17 +14021,17 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     ),
                 )
             )
-            .join(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)
+            .join(Update_data, Update_data.updateid == Up_machine_windows.update_id)
         )
         if filter != "":
             query = query.filter(
                 or_(
-                    Up_gray_list.title.contains(filter),
-                    Up_gray_list.kb.contains(filter),
-                    Up_gray_list.updateid.contains(filter),
-                    Up_gray_list.revisionid.contains(filter),
-                    Up_gray_list.payloadfiles.contains(filter),
-                    Up_gray_list.description.contains(filter),
+                    Update_data.title.contains(filter),
+                    Update_data.kb.contains(filter),
+                    Update_data.updateid.contains(filter),
+                    Update_data.revisionid.contains(filter),
+                    Update_data.payloadfiles.contains(filter),
+                    Update_data.description.contains(filter),
                     Up_machine_windows.start_date.contains(filter),
                     Up_machine_windows.end_date.contains(filter),
                 )
@@ -14040,14 +14048,12 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         result = {"count": count, "datas": []}
 
-        for update, gray in query:
+        for update, data in query:
             tmp = {
-                "title": gray.title,
-                "description": gray.description if gray.description is not None else "",
+                "title": data.title,
+                "description": data.description if data.description is not None else "",
                 "update_id": update.update_id if update.update_id is not None else "",
-                "package_id": gray.updateid_package
-                if gray.updateid_package is not None
-                else "",
+                "package_id": update.update_id if update.update_id is not None else "",
                 "kb": update.kb if update.kb is not None else "",
                 "start_date": datetime_handler(update.start_date)
                 if update.start_date is not None
@@ -14057,6 +14063,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 else "",
                 "current_deploy": update.curent_deploy
                 if update.curent_deploy is not None
+                else 0,
+                "required_deploy": update.required_deploy
+                if update.required_deploy is not None
                 else 0,
             }
 
@@ -14248,3 +14257,40 @@ group by hostname
             .all()
         )
         return [module[0] for module in modules]
+
+    def cancel_update(self, session, machineid, updateid):
+        try:
+            machineid = int(machineid)
+        except:
+            machineid = machineid
+
+        try:
+            update = (
+                session.query(Up_machine_windows)
+                .filter(
+                    and_(
+                        Up_machine_windows.id_machine == machineid,
+                        Up_machine_windows.update_id == updateid,
+                        Up_machine_windows.required_deploy == 1,
+                    )
+                )
+                .first()
+            )
+
+            update.required_deploy = None
+            update.start_date = None
+            update.end_date = None
+
+            history = (
+                session.query(Up_history)
+                .filter(and_(Up_history.id_machine == machineid, Up_history.update_id))
+                .delete()
+            )
+
+            session.commit()
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return False
+
+        return True

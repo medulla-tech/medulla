@@ -129,8 +129,15 @@ def get_conformity_update_by_machines(ids=[]):
         merged[ids["uuids"][count]] = ids["ids"][count]
         count += 1
 
-    installed = Glpi().get_count_installed_updates_by_machines(ids["uuids"])
-    missing = XmppMasterDatabase().get_count_missing_updates_by_machines(ids["ids"])
+    if ids["uuids"] == "" or ids["uuids"] == []:
+        installed = {}
+    else:
+        installed = Glpi().get_count_installed_updates_by_machines(ids["uuids"])
+
+    if ids["ids"] == "" or ids["ids"] == []:
+        missing = {}
+    else:
+        missing = XmppMasterDatabase().get_count_missing_updates_by_machines(ids["ids"])
 
     result = []
     for uuid in installed:
