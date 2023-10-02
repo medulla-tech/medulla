@@ -183,7 +183,7 @@ $page->setFile("modules/updates/updates/ajaxAuditUpdateByMachine.php", array("no
 $submod->addPage($page);
 
 $page = new Page("cancelUpdate", _T('Cancel Update', 'updates'));
-$page->setFile("modules/updates/updates/cancelUpdate.php", array("noHeader"=>True,"visible"=>False, "AJAX" =>True));
+$page->setFile("modules/updates/updates/cancelUpdate.php", array("noHeader" => true,"visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);

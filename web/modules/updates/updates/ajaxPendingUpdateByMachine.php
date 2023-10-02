@@ -27,7 +27,7 @@ $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET["machineid"]) : "
 $start = (!empty($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (!empty($_GET['start'])) ? htmlentities($_GET['end']) : $maxperpage;
 $filter = (!empty($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
-$unselectAction = new ActionPopupItem(_T("Cancel Update", "updates"), "cancelUpdate", "delete","", "updates", "updates");
+$unselectAction = new ActionPopupItem(_T("Cancel Update", "updates"), "cancelUpdate", "delete", "", "updates", "updates");
 $unselectActionEmpty = new EmptyActionItem(_("Cancel Update", "updates"), "cancelUpdate", "delete", "", "updates", "updates");
 $unselectActions = [];
 
@@ -53,10 +53,9 @@ foreach($datas as $update) {
     $start_dates[] = $update["start_date"];
     $end_dates[] = $update["end_date"];
     $descriptions[] = $update["description"];
-    if($update['required_deploy'] == 1){
+    if($update['required_deploy'] == 1) {
         $unselectActions[] = $unselectAction;
-    }
-    else{
+    } else {
         $unselectActions[] = $unselectActionEmpty;
     }
     $datas[$row]["id_machine"] = $machineid;
