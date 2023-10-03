@@ -92,7 +92,7 @@ class Pulse2XMLRPCProxy(Proxy):
     ):
         self._version_reminder()
 
-        twisted.web.xmlrpc.Proxy.__init__(self, url, user, password)
+        twisted.web.xmlrpc.Proxy.__init__(self, url.encode('utf-8'), user, password)
 
         self.SSLClientContext = None
 
