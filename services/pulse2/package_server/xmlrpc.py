@@ -8,11 +8,12 @@ from twisted.web import server, xmlrpc
 import xmlrpc.client
 import time
 from twisted.internet import defer
+from twisted.web.xmlrpc import XMLRPC
 
 Fault = xmlrpc.client.Fault
 
 
-class MyXmlrpc(xmlrpc.XMLRPC):
+class MyXmlrpc(XMLRPC):
     def __init__(self):
         self.mp = ""
         xmlrpc.XMLRPC.__init__(self)
