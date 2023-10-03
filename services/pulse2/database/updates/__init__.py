@@ -353,7 +353,6 @@ AND
 AND
     tbl.updateid is not NULL
 AND (umw.curent_deploy is NULL or umw.curent_deploy = 0)
-AND (umw.required_deploy is NULL or umw.required_deploy = 0)
  """%(list_name, entity.replace("UUID", ""))
 
             if filter != "":
