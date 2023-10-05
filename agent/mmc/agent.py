@@ -2307,10 +2307,11 @@ class MMCApp(object):
         )
         # Start client XMPP if module xmppmaster enable
         if PluginManager().isEnabled("xmppmaster"):
+            configxmppmaster = XmppMasterDatabase().config
             # create file  message
             PluginManager().getEnabledPlugins()[
                 "xmppmaster"
-            ].modulemessagefilexmpp = messagefilexmpp(self.config)
+            ].modulemessagefilexmpp = messagefilexmpp(self.config, configxmppmaster)
             self.modulexmppmaster = (
                 PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp
             )
