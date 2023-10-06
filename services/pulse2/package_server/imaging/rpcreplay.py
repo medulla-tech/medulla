@@ -78,7 +78,6 @@ class RPCStore(Singleton):
         except Exception as e:
             self.logger.error("An unexpected error occurred: %s" % e)
 
-
     def _updateStateFile(self, data):
         """
         Update the RPC state file content.
@@ -100,7 +99,7 @@ class RPCStore(Singleton):
         if not os.path.exists(self.filename):
             ret = {}
         else:
-            try:#jfkjfk
+            try:  # jfkjfk
                 with open(self.filename, "rb") as fobj:
                     ret = pickle.load(fobj)
             except EOFError:
