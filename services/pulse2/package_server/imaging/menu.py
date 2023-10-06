@@ -393,7 +393,8 @@ class ImagingMenu:
         """
         _reptable = self._fill_reptable()
         if isinstance(s, str):
-            s = str(s, "utf8", "replace")
+            s_encoded = s.encode("utf-8")
+            s = s_encoded.decode("utf-8")
         ret = []
         for c in s:
             ret.append(_reptable.get(ord(c), c))
@@ -439,7 +440,7 @@ class ImagingMenu:
         buf += "cpair --foreground 4 4 ||\n"
         buf += menu_title
         buf += "item --gap -- -------------------------------------\n"
-        indices = self.menuitems.keys()
+        indices = list(self.menuitems.keys())
         indices.sort()
         has_continue_bootservice = False
         for i in indices:
@@ -479,7 +480,7 @@ class ImagingMenu:
         buf += "item --gap -- -------------------------------------\n"
 
         # write items
-        indices = self.menuitems.keys()
+        indices = list(self.menuitems.keys())
         indices.sort()
         for i in indices:
             if hasattr(self.menuitems[i], "value"):
@@ -540,7 +541,7 @@ class ImagingMenu:
                         self.menuitems[i]._applyReplacement(self.menuitems[i].CMDLINE)
                     ),
                 )
-        assert type(buf) == unicode
+        #assert type(buf) == unicode
         # Clean brazilian characters who are not compatible
         # with MS-DOS encoding by delete accent marks
         buf = self.delete_diacritics(buf)
@@ -652,7 +653,8 @@ class ImagingMenu:
                 buf = self.buildMenuIpxe()
             except Exception as e:
                 logging.getLogger().error(str(e))
-
+                self.logger.error('An error occurred char'))
+                return
             backupname = "%s.backup" % filename
             if os.path.exists(filename):
                 try:
