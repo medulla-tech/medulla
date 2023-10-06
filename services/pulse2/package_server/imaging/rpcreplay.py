@@ -100,7 +100,7 @@ class RPCStore(Singleton):
         if not os.path.exists(self.filename):
             ret = {}
         else:
-            try:#jfkjfk
+            try:
                 with open(self.filename, "rb") as fobj:
                     ret = pickle.load(fobj)
             except EOFError:
