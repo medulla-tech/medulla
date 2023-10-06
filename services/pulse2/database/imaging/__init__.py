@@ -924,7 +924,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         elif loc_id is not None and menu_id == 2:  # this is the suscribe menu
             lang = self.__getLocLanguage(session, loc_id)
 
-        q = []
+        qd = []
         if type == P2IM.ALL or type == P2IM.BOOTSERVICE:
             # we don't need the i18n trick for the menu name here
             I18n1 = sa_exp_alias(self.internationalization)
@@ -974,7 +974,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             )
             q1 = q1.order_by(self.menu_item.c.order).all()
             q1 = self.__mergeBootServiceInMenuItem(q1)
-            q.extend(q1)
+            qd.extend(q1)
         if type == P2IM.ALL or type == P2IM.IMAGE:
             # we don't need the i18n trick for the menu name here
             q2 = (
@@ -993,11 +993,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .all()
             )
             q2 = self.__mergeImageInMenuItem(q2)
-            q.extend(q2)
+            qd.extend(q2)
         if session_need_close:
             session.close()
-        q.sort(lambda x, y: cmp(x.order, y.order))
-        return q
+        if qd:
+            qd.sort(lambda x, y: cmp(x.order, y.order))
+        return qd
 
     def getLastMenuItemOrder(self, menu_id):
         session = create_session()
