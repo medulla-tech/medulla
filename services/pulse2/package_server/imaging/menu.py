@@ -805,7 +805,7 @@ class ImagingMenu:
         Set the background image
         """
         if isinstance(value, str):
-            value = value.decode("utf-8")
+            value = value
         assert isinstance(value, str)
         self.splashimage = value
 
@@ -814,7 +814,7 @@ class ImagingMenu:
         Set the warn message
         """
         if isinstance(value, str):
-            value = value.decode("utf-8")
+            value = value
         assert isinstance(value, str)
         self.message = value
 
