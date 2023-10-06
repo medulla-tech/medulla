@@ -57,9 +57,9 @@ class RPCStore(Singleton):
         self._updateStateFile(data)
 
     def _updateStateFile(self, data):
-    """
-    Update the RPC state file content.
-    """
+        """
+        Update the RPC state file content.
+        """
         try:
             assert isinstance(data, dict)  # Vérifie que data est un dictionnaire
             self.logger.debug("Updating RPC replay file: %s" % self.filename)
@@ -100,7 +100,7 @@ class RPCStore(Singleton):
         if not os.path.exists(self.filename):
             ret = {}
         else:
-            try:#jfkjfk
+            try:
                 with open(self.filename, "rb") as fobj:
                     ret = pickle.load(fobj)
             except EOFError:

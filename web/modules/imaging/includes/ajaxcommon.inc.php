@@ -27,6 +27,7 @@ require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
+require("../../../includes/utils.inc.php");
 require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
 require("../../base/includes/edit.inc.php");
