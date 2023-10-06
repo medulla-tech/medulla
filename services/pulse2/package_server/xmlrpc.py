@@ -16,7 +16,7 @@ Fault = xmlrpc.client.Fault
 class MyXmlrpc(XMLRPC):
     def __init__(self):
         self.mp = ""
-        xmlrpc.XMLRPC.__init__(self)
+        XMLRPC.__init__(self)
 
     def render(self, request):
         """
