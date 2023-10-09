@@ -5880,7 +5880,8 @@ class Glpi100(DyngroupDatabaseHelper):
         if ids == []:
             return result
 
-        ids = "(%s)"%','.join([id for id in ids]).replace("UUID" , "")
+        ids = "(%s)"%','.join([id for id in ids if id != ""]).replace("UUID" , "")
+
         sql = """select
     glpi_computers.id as id,
     glpi_computers.name as name,

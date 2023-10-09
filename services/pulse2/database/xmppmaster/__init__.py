@@ -11590,12 +11590,75 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
             This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
         """
-        result={}
-        for x in self.get_update_by_entity():
-            result[x['entity']] = { 'totalmach' : x['total_machine_entity'], 'nbupdate' : 0, 'nbmachines' : 0 }
-        for x in self.get_machine_by_entity_in_grayandwhite_lists():
-           result[x['entity']]['nbmachines'] =  x['machine_a_mettre_a_jour']
-           result[x['entity']]['nbupdate'] =  x['update_a_mettre_a_jour']
+        result = {}
+        sql = """select ge.glpi_id as id,
+        count(m.id) as count
+        from machines m
+join glpi_entity ge on m.glpi_entity_id = ge.id
+where m.platform like "%Windows%" and m.agenttype="machine";"""
+        datas = session.execute(sql)
+
+        for entity in datas:
+            result[str(entity.id)] = {
+                "entity": str(entity.id),
+                "nbmachines":0,
+                "nbupdates" : 0,
+                "totalmach" : entity.count,
+                "conformite" : 0
+            }
+
+        sql1="""select ge.glpi_id as id, count(distinct m.id) as count from up_machine_windows umw
+join machines m on umw.id_machine = m.id
+join glpi_entity ge on m.glpi_entity_id = ge.id
+left join up_gray_list  ugl on ugl.updateid = umw.update_id
+where
+    m.platform like "%Windows%"
+    and m.agenttype="machine"
+    and concat("UUID",ge.glpi_id) = "UUID0"
+    and ugl.valided=1;"""
+
+        machines_non_compliant = session.execute(sql1)
+        for non_compliant in machines_non_compliant:
+            if str(non_compliant.id) in result:
+                result[str(non_compliant.id)]['nbmachines'] = non_compliant.count
+
+        sql2 = """select ge.glpi_id as id,
+        count(update_id) count
+        from up_machine_windows umw
+        join machines m on umw.id_machine = m.id
+        join glpi_entity ge on m.glpi_entity_id = ge.id
+        left join up_gray_list  ugl on ugl.updateid = umw.update_id
+        where
+        m.platform like "%Windows%"
+        and m.agenttype="machine"
+        and ugl.valided = 1
+        group by ge.glpi_id, id_machine;"""
+        missing_updates = session.execute(sql2)
+        for missing_update in missing_updates:
+            if str(missing_update.id) in result:
+                result[str(missing_update.id)]["nbupdates"] += missing_update.count
+
+        sql3 = """select ge.glpi_id as id,
+        count(update_id) count
+        from up_machine_windows umw
+        join machines m on umw.id_machine = m.id
+        join glpi_entity ge on m.glpi_entity_id = ge.id
+        left join up_white_list  uwl on uwl.updateid = umw.update_id
+        where
+        m.platform like "%Windows%"
+        and m.agenttype="machine"
+        and uwl.valided = 1
+        group by ge.glpi_id, id_machine;"""
+        missing_updates = session.execute(sql3)
+        for missing_update in missing_updates:
+            if str(missing_update.id) in result:
+                result[str(missing_update.id)]["nbupdates"] += missing_update.count
+
+        for entity in result:
+            if result[entity]['totalmach'] > 0:
+                result[entity]["conformite"] = int(100*(result[entity]['totalmach']-result[entity]['nbmachines'])/result[entity]['totalmach'])
+            else:
+                result[entity]["conformite"] = 100
         return result
 
     @DatabaseHelper._sessionm

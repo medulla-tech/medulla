@@ -1481,13 +1481,10 @@ def get_conformity_update_by_entity():
     for t in  result:
         r={'entity' : t,
            'nbmachines' : int( result[t]['nbmachines']),
-           'nbupdate' : int(result[t]['nbupdate']),
-           'totalmach' : int(result[t]['totalmach'])
+           'nbupdate' : int(result[t]['nbupdates']),
+           'totalmach' : int(result[t]['totalmach']),
+           'conformite' : int(result[t]['conformite'])
            }
-        if int(result[t]['totalmach']) != 0:
-            r['conformite']=(float(result[t]['totalmach'])-float(result[t]['nbmachines']))/float(result[t]['totalmach'])*100.
-        else:
-            r['totalmach'] = 100.
         resultarray.append(r)
     return resultarray
 

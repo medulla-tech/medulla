@@ -94,17 +94,17 @@ $actiondeploySpecifics = [];
 $entityNames = [];
 $complRates = [];
 $totalMachine = [];
-$nbupadte = [];
+$nbupdate = [];
 $identity=array();
 
- foreach ($entitycompliances as $entitycompliance) {
-     $identity[$entitycompliance['entity']]=array(
-         "conformite" => $entitycompliance['conformite'],
-         "totalmach" => $entitycompliance['totalmach'],
-         "nbupdate" => $entitycompliance['nbupdate'],
-         "nbmachines" => $entitycompliance['nbmachines'],
-         "entity" => $entitycompliance['entity']);
- };
+foreach ($entitycompliances as $entitycompliance) {
+    $identity[$entitycompliance['entity']]=array(
+        "conformite" => $entitycompliance['conformite'],
+        "totalmach" => $entitycompliance['totalmach'],
+        "nbupdate" => $entitycompliance['nbupdate'],
+        "nbmachines" => $entitycompliance['nbmachines'],
+        "entity" => $entitycompliance['entity']);
+    }
 
 foreach ($entities as $entity) {
     $nbmachines=0;
