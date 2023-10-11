@@ -12248,14 +12248,12 @@ where
 
     @DatabaseHelper._sessionm
     def get_updates_by_machineids(self, session, machineids, start=0, limit=-1, filter=""):
-        query = session.query(Up_machine_windows, Up_gray_list)\
+        query = session.query(Up_machine_windows, Up_gray_list, Up_white_list)\
             .join(Machines, Machines.id == Up_machine_windows.id_machine)\
             .outerjoin(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)\
             .outerjoin(Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id)\
             .filter(and_(Machines.id.in_(machineids),
-                or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
-                or_(Up_machine_windows.curent_deploy == None, Up_machine_windows.curent_deploy == 0),
-                or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy == 0))
+                or_(Up_gray_list.valided == 1, Up_white_list.valided == 1))
         )\
         .group_by(Up_machine_windows.update_id)\
         .order_by(func.field(Up_machine_windows.msrcseverity, "Critical", "Important", "Corrective"))
@@ -12285,7 +12283,7 @@ where
             "datas": []
         }
 
-        for element, gray in query:
+        for element, gray, white in query:
             startdate = ""
             if element.start_date is not None:
                 startdate = element.start_date
@@ -12302,21 +12300,32 @@ where
             if element.end_date is not None:
                 enddate = element.end_date
 
+            title = ""
+            description = ""
+            update_list = ""
+            if gray is None:
+                title = white.title
+                description = white.description if white is not None else ""
+                update_list = "white"
+            else:
+                title = gray.title
+                description = gray.description if gray is not None else ""
+                update_list = "white"
             result['datas'].append({
-                "id_machine": element.id_machine if not None else 0,
+                "id_machine": element.id_machine if element.id_machine is not None else 0,
                 "update_id": element.update_id if not None else "",
-                "title" : gray.title if not None else "",
-                "description": gray.description if not None else "",
-                "kb": element.kb if not None else "",
+                "title" : title if title is not None else "",
+                "description": description if description is not None else "",
+                "kb": element.kb if element.kb is not None else "",
                 "current_deploy": current_deploy,
                 "required_deploy":  required_deploy,
                 "start_date": startdate,
                 "end_date": enddate,
                 "deployment_intervals" : element.intervals if element.intervals is not None else "",
-                "pkgs_label":"" if not None else "",
                 "pkgs_version":"",
                 "pkgs_description":"",
-                "severity": element.msrcseverity if not None else "Corrective"
+                "severity": element.msrcseverity if element.msrcseverity is not None else "Corrective",
+                "list" : update_list
             })
             pkgs_list[element.update_id] = {}
 
@@ -12562,9 +12571,7 @@ where
 from up_machine_windows
 join machines on machines.id = up_machine_windows.id_machine
 join up_gray_list on up_machine_windows.update_id = up_gray_list.updateid
-where curent_deploy is NULL
-and required_deploy is NULL
-and up_gray_list.valided = 1
+where up_gray_list.valided = 1
 and id_machine in %s
 group by hostname
 ;"""%ids
@@ -12578,6 +12585,31 @@ group by hostname
                 "hostname":element.hostname,
                 "missing": element.missing
             }
+
+        sql2 = """select id,
+        uuid_inventorymachine as uuid,
+        hostname,
+        count(update_id) as missing
+from up_machine_windows
+join machines on machines.id = up_machine_windows.id_machine
+join up_white_list on up_machine_windows.update_id = up_white_list.updateid
+where up_white_list.valided = 1
+and id_machine in %s
+group by hostname
+;"""%ids
+
+        datas = session.execute(sql2)
+
+        for element in datas:
+            if element.uuid not in result:
+                result[element.uuid] = {
+                    "id":element.id,
+                    "uuid":element.uuid,
+                    "hostname":element.hostname,
+                    "missing": element.missing
+                }
+            else:
+                result[element.uuid]["missing"] += element.missing
 
         return result
 
@@ -12620,3 +12652,28 @@ group by hostname
             return False
 
         return True
+
+    @DatabaseHelper._sessionm
+    def get_update_history_by_machines(self, session, idmachines):
+
+        if idmachines == []:
+            return {}
+        query = session.query(Up_history).add_column(Update_data.kb).add_column(Machines.uuid_inventorymachine)\
+        .filter(and_(Up_history.id_machine.in_(idmachines),
+                     Up_history.delete_date != None,
+                     Deploy.state.op('regexp')("(SUCCESS)|(ABORT)|(ERROR)")))\
+        .join(Update_data, Up_history.update_id == Update_data.updateid)\
+        .join(Machines, Up_history.id_machine == Machines.id)\
+        .outerjoin(Deploy, Up_history.id_deploy == Deploy.id)
+        query = query.all()
+        result = {}
+        for element, kb, uuid in query:
+            if element.id_machine not in result:
+                result[element.id_machine] = [{
+                    "updateid": element.update_id,
+                    "kb":kb
+                }]
+            else:
+                result[element.id_machine].append(element.update_id)
+
+        return result
