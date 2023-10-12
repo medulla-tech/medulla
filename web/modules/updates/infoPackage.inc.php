@@ -84,6 +84,11 @@ $page->setFile("modules/updates/updates/ajaxDetailsSpecificUpdate.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxDetailsSpecificUpdateWithout", _T("Manage machine details for specific update", "updates"));
+$page->setFile("modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("ajaxDeploySpecificUpdate", _T("Manage deploy specific update", "updates"));
 $page->setFile("modules/updates/updates/ajaxDeploySpecificUpdate.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
