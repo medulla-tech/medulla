@@ -48,9 +48,6 @@ def tests():
 def login():
     """
     Create a connection with urbackup.
-    
-    Args:
-        Null
 
     Returns:
        It returns a session value
@@ -210,9 +207,6 @@ def getComputersEnableValue(jid):
 def get_ses():
     """
     Get value of session
-    
-    Args:
-        Null
 
     Returns:
         Session key
@@ -228,9 +222,6 @@ def get_ses():
 def get_logs():
     """
     Get the logs of the server
-    
-    Args:
-        Null
 
     Returns:
         It returns the server logs.
@@ -269,9 +260,6 @@ def add_client(client_name):
 def get_stats():
     """
     Return all stats by client, size of file, size of image and clientname
-    
-    Args:
-        Null
 
     Returns:
         Image size,
@@ -325,9 +313,6 @@ def remove_group(groupid):
 def get_settings_general():
     """
     Get multiples settings value of server
-    
-    Args:
-        Null
 
     Returns:
         Array of every settings value of server
@@ -382,9 +367,6 @@ def get_settings_clientsettings(id_client):
 def get_settings_clients():
     """
     Get clients groups and user on urbackup
-    
-    Args:
-        Null
 
     Returns:
         Array of every client informations
@@ -401,9 +383,6 @@ def get_settings_clients():
 def get_backups_all_client():
     """
     Get every backups for each client
-    
-    Args:
-        Null
 
     Returns:
         Array of every backup for each client
@@ -498,9 +477,6 @@ def client_download_backup_file_shahash(clientid, backupid, path, shahash):
 def get_status():
     """
     Get server and all client status
-    
-    Args:
-        Null
 
     Returns:
         Array of server and all client status and parameters
@@ -517,9 +493,6 @@ def get_status():
 def get_progress():
     """
     Get progress for every backups
-    
-    Args:
-        Null
 
     Returns:
         Array of progress review for backups
