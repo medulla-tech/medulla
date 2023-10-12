@@ -48,6 +48,9 @@ def tests():
 def login():
     """
     Create a connection with urbackup.
+    
+    Args:
+        Null
 
     Returns:
        It returns a session value
@@ -65,6 +68,9 @@ def login():
 def enable_client(jidmachine, clientid, authkey):
     """
     Write backup_enabled to 1 on updatebackupclient.ini file to enable backup for windows client
+    
+    Args:
+        JID Machine, client id and authkey of client
 
     Returns:
         1 or 0, state of function execution
@@ -95,6 +101,9 @@ def enable_client(jidmachine, clientid, authkey):
 def remove_client(jidmachine, clientid):
     """
     Write backup_enabled to 0 on updatebackupclient.ini file to disable backup for windows client
+    
+    Args:
+        JID Machine and client id
 
     Returns:
         1 or 0, state of function execution
@@ -117,6 +126,9 @@ def remove_client(jidmachine, clientid):
 def restart_urbackup_service(jidmachine):
     """
     Restart Urbackup service on client
+    
+    Args:
+        JID Machine
 
     Returns:
         1 or 0, state of function execution
@@ -138,6 +150,9 @@ def restart_urbackup_service(jidmachine):
 def get_client_status(client_id):
     """
     Get client status if enable or not from the database
+    
+    Args:
+        Client id
 
     Returns:
         1 or 0, backup_enabled value
@@ -147,6 +162,9 @@ def get_client_status(client_id):
 def insertNewClient(client_id, authkey):
     """
     Insert new client in database
+    
+    Args:
+        client id and auth key of client
 
     Returns:
         True or False
@@ -156,6 +174,9 @@ def insertNewClient(client_id, authkey):
 def enable_client_database(client_id):
     """
     Get client status if enable or not from the database
+    
+    Args:
+        Client id
 
     Returns:
         1 or 0, backup_enabled value
@@ -165,6 +186,9 @@ def enable_client_database(client_id):
 def disable_client_database(client_id):
     """
     Get client status if enable or not from the database
+    
+    Args:
+        Client id
 
     Returns:
         1 or 0, backup_enabled value
@@ -174,6 +198,9 @@ def disable_client_database(client_id):
 def getComputersEnableValue(jid):
     """
     Get enable status from xmppmaster.machines table
+    
+    Args:
+        JID Machine
 
     Returns:
         id, jid and enabled from database xmppmaster.machines
@@ -183,6 +210,9 @@ def getComputersEnableValue(jid):
 def get_ses():
     """
     Get value of session
+    
+    Args:
+        Null
 
     Returns:
         Session key
@@ -198,6 +228,9 @@ def get_ses():
 def get_logs():
     """
     Get the logs of the server
+    
+    Args:
+        Null
 
     Returns:
         It returns the server logs.
@@ -214,6 +247,9 @@ def get_logs():
 def add_client(client_name):
     """
     Create client with new id and authkey
+    
+    Args:
+        Client id
 
     Returns:
         Server,
@@ -233,6 +269,9 @@ def add_client(client_name):
 def get_stats():
     """
     Return all stats by client, size of file, size of image and clientname
+    
+    Args:
+        Null
 
     Returns:
         Image size,
@@ -249,9 +288,12 @@ def get_stats():
 def add_group(groupname):
     """
     Create groupe
+    
+    Args:
+        New groupe name
 
     Returns:
-        Settings
+        All Settings of server
     """
     api = UrApiWrapper()
     newgroup = api.add_group(groupname)
@@ -264,9 +306,12 @@ def add_group(groupname):
 def remove_group(groupid):
     """
     Remove groupe
+    
+    Args:
+        Group id
 
     Returns:
-        Settings
+        All Settings of server
     """
     api = UrApiWrapper()
     removegroup = api.remove_group(groupid)
@@ -280,6 +325,9 @@ def remove_group(groupid):
 def get_settings_general():
     """
     Get multiples settings value of server
+    
+    Args:
+        Null
 
     Returns:
         Array of every settings value of server
@@ -296,6 +344,9 @@ def get_settings_general():
 def save_settings(clientid, name_data, value_data):
     """
     Save settings for client of group
+    
+    Args:
+        Client id, settings name to change and new value for this settings
 
     Returns:
         Settings saved for group
@@ -312,6 +363,9 @@ def save_settings(clientid, name_data, value_data):
 def get_settings_clientsettings(id_client):
     """
     Get multiples settings for one client
+    
+    Args:
+        Client id
 
     Returns:
         Array of client settings
@@ -328,6 +382,9 @@ def get_settings_clientsettings(id_client):
 def get_settings_clients():
     """
     Get clients groups and user on urbackup
+    
+    Args:
+        Null
 
     Returns:
         Array of every client informations
@@ -344,6 +401,9 @@ def get_settings_clients():
 def get_backups_all_client():
     """
     Get every backups for each client
+    
+    Args:
+        Null
 
     Returns:
         Array of every backup for each client
@@ -360,6 +420,9 @@ def get_backups_all_client():
 def get_backup_files(client_id, backup_id, path):
     """
     Get every files on backup
+    
+    Args:
+        Client id, backup id and path of file
 
     Returns:
         Array of info from backup
@@ -376,6 +439,9 @@ def get_backup_files(client_id, backup_id, path):
 def delete_backup(client_id, backup_id):
     """
     Delete backup
+    
+    Args:
+        Client id and backup id
 
     Returns:
         Array of info from backup deleted
@@ -390,7 +456,15 @@ def delete_backup(client_id, backup_id):
 
 
 def client_download_backup_file(clientid, backupid, path, filter_path):
-    """ """
+    """
+    Restore directory for one client
+
+    Args:
+        Client id, backup id, path of directory, filter
+
+    Returns:
+        State of restoration
+    """
     api = UrApiWrapper()
     download = api.client_download_backup_file(clientid, backupid, path, filter_path)
     download = api.response(download)
@@ -401,7 +475,15 @@ def client_download_backup_file(clientid, backupid, path, filter_path):
 
 
 def client_download_backup_file_shahash(clientid, backupid, path, shahash):
-    """ """
+    """
+    Restore file for one client
+
+    Args:
+        Client id, backup id, path of directory, shahash of file
+
+    Returns:
+        State of restoration
+    """
     api = UrApiWrapper()
     download = api.client_download_backup_file_shahash(
         clientid, backupid, path, shahash
@@ -416,9 +498,12 @@ def client_download_backup_file_shahash(clientid, backupid, path, shahash):
 def get_status():
     """
     Get server and all client status
+    
+    Args:
+        Null
 
     Returns:
-        Array of server and all client status
+        Array of server and all client status and parameters
     """
     api = UrApiWrapper()
     status = api.get_status()
@@ -432,6 +517,9 @@ def get_status():
 def get_progress():
     """
     Get progress for every backups
+    
+    Args:
+        Null
 
     Returns:
         Array of progress review for backups
@@ -450,10 +538,10 @@ def get_status_client(clientname):
     Get status for one client
 
     Args:
-        Clientname
+        Client name
 
     Returns:
-        Array status for one client
+        Array status, and parameters for one client
     """
     api = UrApiWrapper()
     status = api.get_status()
@@ -467,7 +555,15 @@ def get_status_client(clientname):
 
 
 def create_backup_incremental_file(client_id):
-    """ """
+    """
+    Run incremental backup for one client
+
+    Args:
+        Client id
+
+    Returns:
+        State of this backup, ok or failed
+    """
     api = UrApiWrapper()
     backup = api.create_backup("incr_file", client_id)
     backup = api.response(backup)
@@ -479,7 +575,15 @@ def create_backup_incremental_file(client_id):
 
 
 def create_backup_full_file(client_id):
-    """ """
+    """
+    Run full backup for one client
+
+    Args:
+        Client id
+
+    Returns:
+        State of this backup, ok or failed
+    """
     api = UrApiWrapper()
     backup = api.create_backup("full_file", client_id)
     backup = api.response(backup)
