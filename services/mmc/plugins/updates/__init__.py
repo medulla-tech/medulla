@@ -90,9 +90,10 @@ def get_machine_with_update(kb, updateid):
         history = XmppMasterDatabase().get_history_by_update(updateid)
 
     for machine in glpi:
-        uuid = "UUID%s"%machine[0]
-        if uuid in history:
-            del history[uuid]
+        if machine != []:
+            uuid = "UUID%s"%machine[0]
+            if uuid in history:
+                del history[uuid]
 
     for uuid in history:
         glpi.append(history[uuid]["id"])
