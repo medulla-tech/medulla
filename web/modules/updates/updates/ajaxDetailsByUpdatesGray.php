@@ -102,15 +102,6 @@ $actionDetails = [];
 
 $machineWithoutUpd = $enabled_updates_list['missing'];
 
-
-foreach($groupMachineList[UUID1][1][cn] as $member)
-{
-    $id_machine = xmlrpc_get_idmachine_from_name($member);
-
-    array_push($groupMachineList[UUID1][1], $id_machine[0]);
-}
-
-
 for($i=0; $i < $count_enabled_updates; $i++)
 {
     $in_unique_with_Upd = "False";
@@ -124,7 +115,7 @@ for($i=0; $i < $count_enabled_updates; $i++)
     $titles[] = $enabled_updates_list['title'][$i];
     $actionDetails[] = $detailsUpd;
 
-    $machineWithUpd[] = $with_Upd['nb_machines'];
+    $machineWithUpd[] = $with_Upd['nb_machines']+$enabled_updates_list['installed'][$i];
     $totalMachines = $machineWithoutUpd[$i] + $with_Upd['nb_machines'];
 
     $compliance_rate = intval(($with_Upd['nb_machines'] / $totalMachines)*100);
