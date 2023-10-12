@@ -12677,3 +12677,25 @@ group by hostname
                 result[element.id_machine].append(element.update_id)
 
         return result
+
+    @DatabaseHelper._sessionm
+    def get_history_by_update(self, session, updateid):
+        query = session.query(Up_history, Update_data, Machines, Glpi_entity)\
+            .join(Update_data, Update_data.updateid == Up_history.update_id)\
+            .join(Machines, Up_history.id_machine == Machines.id)\
+            .join(Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id)\
+            .filter(Up_history.delete_date is not None).all()
+
+        result = {}
+
+        for hist, data, mach, entity in query:
+            result[mach.uuid_inventorymachine] = {
+                "id":int(mach.uuid_inventorymachine.replace("UUID", "")) if mach.uuid_inventorymachine is not None else "",
+                "hostname":mach.hostname,
+                "eid": entity.glpi_id if entity.glpi_id is not None else 0,
+                "entity": entity.complete_name if entity.complete_name is not None else "",
+                "kb" : "Update(KB%s)"%data.kb,
+                "numkb": data.kb
+            }
+
+        return result
