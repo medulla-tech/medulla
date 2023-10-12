@@ -158,8 +158,8 @@ $all_size = 0;
 <table class="listinfos" border="1px" cellspacing="0" cellpadding="5" >
     <thead>
         <tr style='text-align: left;'>
-        <th> <?php echo _T("Computer name", 'urbackup'); ?> </th>
-        <th> <?php echo _T("File size", 'urbackup'); ?> </th>
+        <th> <?php echo _T("Space on disk used by all client", 'urbackup'); ?> </th>
+        <th> <?php echo _T("Size", 'urbackup'); ?> </th>
         </tr>
     </thead>
     <tbody>
@@ -171,8 +171,8 @@ $all_size = 0;
     }
     ?>
         <tr>
-            <td style='padding-left: 5px;'> Space on disk used by all client</td>
-            <td> <?php echo $files_size; ?></td>
+            <td style='padding-left: 5px;'>All computers</td>
+            <td><?php echo $files_size; ?></td>
         </tr>
     </tbody>
 </table>
