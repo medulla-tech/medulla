@@ -51,16 +51,15 @@ class Machines(Base, TestenvDBObj):
     # Here we define columns for the table version.
     # Notice that each column is also a normal Python instance attribute.
     id = Column('id_machines', Integer, primary_key=True)
-    uuid_machine = Column(String(100), nullable=False, default="") # UUID de la machine
-    nom = Column(String(100), nullable=False, default="") # Nom de la machine
-    plateform = Column(String(60), nullable=False, default="") # Plateforme
-    architecture = Column(String(45),  nullable=False, default="") # Os Type
-    cpu = Column(Integer, nullable=False, default=0) # Nombre de CPU
-    ram = Column(Integer, nullable=False, default=0) # RAM
-    state = Column(String(50), nullable=False, default="") # Etat de la machine
-    persistent = Column(String(50), nullable=False, default="") # Persistant
+    uuid_machine = Column(String(100), nullable=False, default="")
+    nom = Column(String(100), nullable=False, default="")
+    plateform = Column(String(60), nullable=False, default="")
+    architecture = Column(String(45),  nullable=False, default="")
+    cpu = Column(Integer, nullable=False, default=0)
+    ram = Column(Integer, nullable=False, default=0)
+    state = Column(String(50), nullable=False, default="")
+    persistent = Column(String(50), nullable=False, default="")
     has_guacamole = relationship('Has_guacamole', cascade='all, delete')
-    # port_vnc = Column(String(50), nullable=False, default="") # Port VNC
 
 class Has_guacamole(Base, TestenvDBObj):
     # ====== Table name =========================
@@ -69,8 +68,8 @@ class Has_guacamole(Base, TestenvDBObj):
     # Here we define columns for the table version.
     # Notice that each column is also a normal Python instance attribute.
     id = Column('id_guac', Integer, primary_key=True)
-    idguacamole = Column(String(100), nullable=False, default="") # Id de connexion guacamole
-    protocol = Column(String(10), nullable=False, default="") # Protocol de connexion guacamole
-    port = Column(Integer, nullable=False, default=0) # Port de connexion guacamole
-    machine_name = Column(String(50), nullable=False, default="") # Nom de la machine
-    id_machines = Column(Integer, ForeignKey('machines.id_machines'), nullable=False, default=0) # Id de la machine
+    idguacamole = Column(String(100), nullable=False, default="")
+    protocol = Column(String(10), nullable=False, default="")
+    port = Column(Integer, nullable=False, default=0)
+    machine_name = Column(String(50), nullable=False, default="")
+    id_machines = Column(Integer, ForeignKey('machines.id_machines'), nullable=False, default=0)

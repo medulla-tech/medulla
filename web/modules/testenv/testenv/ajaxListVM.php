@@ -25,8 +25,6 @@ require("modules/testenv/includes/tools.php");
 require_once("modules/testenv/includes/xmlrpc.php");
 require_once("includes/xmlrpc.inc.php");
 
-
-// Récupère la liste de toutes les machines virtuelles à partir de libvirt
 $result = xmlrpc_getAllVMList();
 
 foreach ($result as $key => $value) {
@@ -34,14 +32,14 @@ foreach ($result as $key => $value) {
     $name[] = $value['name'];
     $name_clean[] = remove_underscore($value['name']);
     if($value['status'] == "Shutoff"){
-        // Mettre des icones si poste éteint ordi grisé
+        // Put icons if deemed to be grayed computer
         $presencesClass[] = "machineName";
         $actionGuac[] = new EmptyActionItem1(_T("VNC", "testenv"), "launch", "guacag", "name", "testenv", "testenv", null, 800);
         $actionStart[] = new ActionItem(_T("Start", "testenv"), "start", "start", "name", "testenv", "testenv");
         $actionStop[] = new EmptyActionItem1(_T("Stop", "testenv"), "stop", "stopg", "name", "testenv");
     }
     else{
-        // Mettre des icones si poste allumé ordi bleu
+        // Put icons if blue computer on
         $presencesClass[] = "machineNamepresente";
         $actionGuac[] = new ActionPopupItem(_T("VNC", "testenv"), "launch", "guaca", "name", "testenv", "testenv", null, 800);
         $actionStart[] = new EmptyActionItem1(_T("Start", "testenv"), "start", "startg", "name", "testenv", "testenv");
@@ -49,30 +47,24 @@ foreach ($result as $key => $value) {
     }
 }
 
-// On récupère les infos de toute les VM et la stocke dans un tableau
 foreach($name as $value){
     $info = xmlrpc_getVMInfo($value);
     $info_all_vm[] = $info;
-    // echo "<pre>";
-    // print_r($info);
-    // echo "</pre>";
 }
 
 foreach($info_all_vm as $key => $value){
-    $architecture[] = $value['architecture']; // Os Type
+    $architecture[] = $value['architecture'];
     $uuid[] = $value['uuid'];
-    $cpu[] = $value['currentCpu']; // Nombre de CPU
-    $ram[] = $value['maxMemory'] . " Mo"; // RAM
-    $port_vnc[] = ($value['port_vnc'] != -1) ? $value['port_vnc'] : 'Pas de port'; // Port VNC
+    $cpu[] = $value['currentCpu'];
+    $ram[] = $value['maxMemory'] . " Mo";
+    $port_vnc[] = ($value['port_vnc'] != -1) ? $value['port_vnc'] : 'No port';
 }
 
-// Je crée un id unique pour chaque item du tableau
 foreach($uuid as $value){
     $ids[] = 'guacamole_'.$value;
 }
 
-// On affiche le tableau
-$n = new OptimizedListInfos($name_clean, _T("Statut", "testenv"));
+$n = new OptimizedListInfos($name_clean, _T("Status", "testenv"));
 $n->setNavBar(new AjaxNavBar(count($name_clean), $filter));
 $n->setTableHeaderPadding(1);
 $n->setCssIds($ids);
@@ -83,28 +75,19 @@ $n->setNavBar(new AjaxNavBar(count($name), $filter));
 $n->setParamInfo($params);
 $n->setMainActionClasses($presencesClass);
 
-// Ajout des icones d'action
 $n->addActionItem(new ActionItem(_T("Edit", "testenv"), "edit", "edit", "name", "testenv"));
-
 $n->addActionItem($actionGuac);
 $n->addActionItem($actionStart, "name", "testenv");
 $n->addActionItem($actionStop, "name", "testenv");
-// $n->addActionItem(new ActionItem(_T("Start", "testenv"), "start", "start", "name", "testenv", "testenv"));
-// $n->addActionItem(new ActionItem(_T("Stop", "testenv"), "stop", "stop", "name", "testenv"));
-
-// $n->addActionItem(new ActionItem(_T("Restart", "testenv"), "restart", "restart", "testenv", "testenv"));
 $n->addActionItem(new ActionItem(_T("Delete", "testenv"), "delete", "delete", "name", "testenv"));
 
-// $n->addExtraInfo($uuid, _T("UUID", "testenv"));
 $n->addExtraInfo($architecture, _T("Architecture", "testenv"));
 $n->addExtraInfo($cpu, _T("CPU", "testenv"));
 $n->addExtraInfo($ram, _T("RAM", "testenv"));
-$n->addExtraInfo($port_vnc, _T("Port VNC", "testenv"));
+$n->addExtraInfo($port_vnc, _T("portVnc", "testenv"));
 
 $n->display();
-
 ?>
-
 <style>
     li.startg a {
         padding: 5px 0px 5px 22px;

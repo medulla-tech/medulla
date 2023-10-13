@@ -22,8 +22,8 @@
 $sidemenu= new SideMenu();
 $sidemenu->setClass("testenv");
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Liste des Machines Virtuelles", 'testenv'), "testenv", "testenv", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("List of virtual machines", 'testenv'), "testenv", "testenv", "index"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Créer une Machine Virtuelle", 'testenv'), "testenv", "testenv", "create"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Create a virtual machine", 'testenv'), "testenv", "testenv", "create"));
 
 ?>

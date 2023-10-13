@@ -26,13 +26,11 @@ require("localSidebar.php");
 
 require_once("modules/testenv/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T("Liste des Machines Virtuelles", 'testenv'));
+$p = new PageGenerator(_T("List of virtual machines", 'testenv'));
 $p->setSideMenu($sidemenu);
 $p->display();
-
 
 $ajax = new AjaxFilter(urlStrRedirect("testenv/testenv/ajaxListVM"));
 $ajax->display();
 $ajax->displayDivToUpdate();
-
 ?>

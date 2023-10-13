@@ -49,6 +49,7 @@ class TestenvConfig(PluginConfig,TestenvDatabaseConfig):
         self.guacamole_username = self.get("guacamole", "username") if self.has_option("guacamole", "username") else ""
         self.guacamole_password = self.get("guacamole", "password") if self.has_option("guacamole", "password") else ""
         self.guacamole_url = self.get("guacamole", "url") if self.has_option("guacamole", "url") else ""
+        self.guacamole_url_client = self.get("guacamole", "url_client") if self.has_option("guacamole", "url_client") else ""
         # ...
 
     def check(self):

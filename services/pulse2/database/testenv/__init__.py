@@ -19,17 +19,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# SqlAlchemy
+
 from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct, Table
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import update
 from datetime import date, datetime, timedelta
-# PULSE2 modules
+
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.testenv.schema import Tests
 from pulse2.database.testenv.schema import Tests, Machines, Has_guacamole
-# Imported last
+
 import logging
 import json
 import time
@@ -50,8 +50,8 @@ class TestenvDatabase(DatabaseHelper):
             return None
         self.config = config
 
-        self.db = create_engine(self.makeConnectionPath(), 
-                                pool_recycle = self.config.dbpoolrecycle, 
+        self.db = create_engine(self.makeConnectionPath(),
+                                pool_recycle = self.config.dbpoolrecycle,
                                 pool_size = self.config.dbpoolsize)
         print(self.makeConnectionPath())
         if not self.db_check():
@@ -96,8 +96,6 @@ class TestenvDatabase(DatabaseHelper):
 
         return lines
 
-    # Testenv est un objet qui contient les informations de la table testenv
-    # # Path : /usr/lib/python2.7/dist-packages/pulse2/database/testenv/schema.py
     @DatabaseHelper._sessionm
     def createVM(self, session, dict):
         try:
@@ -110,7 +108,6 @@ class TestenvDatabase(DatabaseHelper):
                 ram=int(dict['memory']),
                 state=dict['state'],
                 persistent=dict['persistent'])
-                # port_vnc=dict['port_vnc'])
 
             session.add(new_vm)
             session.commit()
@@ -124,7 +121,6 @@ class TestenvDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getVMs(self, session):
         try:
-            # Effectuer un select dans la base de données
             results = session.query(Machines).all()
             if results:
                 vm_list = []
@@ -152,7 +148,6 @@ class TestenvDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getVMByName(self, session, name):
         try:
-            # Effectuer un select dans la base de données
             result = session.query(Machines).filter(Machines.nom == name).first()
             if result:
                 vm_data = {
@@ -183,7 +178,7 @@ class TestenvDatabase(DatabaseHelper):
                 session.close()
                 return True
             else:
-                logger.error("La machine virtuelle '%s' n'existe pas.", name)
+                logger.error("The virtual machine '%s' does not exist.", name)
                 return False
 
         except Exception as e:
@@ -192,7 +187,6 @@ class TestenvDatabase(DatabaseHelper):
             return False
 
 
-## GUACAMOLE ##
     @DatabaseHelper._sessionm
     def setInfoGuac(self, session, dict):
         try:
@@ -210,13 +204,12 @@ class TestenvDatabase(DatabaseHelper):
 
         except Exception as e:
             logger.error(str(e))
-            session.rollback() # En cas d'erreur, annuler les modifications
+            session.rollback()
             return False
 
     @DatabaseHelper._sessionm
     def updateInfoGuac(self, session, dict):
         try:
-            # Effectuer la mise à jour dans la base de données
             session.query(Has_guacamole).filter(Has_guacamole.id_machines == dict['id_machines']).update({
                 Has_guacamole.idguacamole: dict['idguacamole'],
                 Has_guacamole.protocol: dict['protocol'],
@@ -230,14 +223,10 @@ class TestenvDatabase(DatabaseHelper):
             logger.error(str(e))
             session.rollback()
             return False
-## ./GUACAMOLE ##
 
-
-    # Fonctions autres
     @DatabaseHelper._sessionm
     def checkExistVM(self, session, name):
         try:
-            # Effectuer un select dans la base de données
             result = session.query(Machines).filter(Machines.nom == name).first()
             if result:
                 return True
@@ -251,7 +240,6 @@ class TestenvDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updateStatutVM(self, session, name, statut):
         try:
-            # Effectuer la mise à jour dans la base de données
             session.query(Machines).filter(Machines.nom == name).update({Machines.state: statut})
             session.commit()
             session.close()
@@ -259,13 +247,12 @@ class TestenvDatabase(DatabaseHelper):
 
         except Exception as e:
             logger.error(str(e))
-            session.rollback()  # En cas d'erreur, annuler les modifications
+            session.rollback()
             return False
 
     @DatabaseHelper._sessionm
     def updateVM(self, session, dict):
         try:
-            # Effectuer la mise à jour dans la base de données
             session.query(Machines).filter(Machines.nom == dict['old_name']).update({
                 Machines.nom: dict['new_name'],
                 Machines.uuid_machine: dict['uuid'],
@@ -286,7 +273,6 @@ class TestenvDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def updateRessourcesVM(self, session, dict):
         try:
-            # Effectuer la mise à jour dans la base de données
             session.query(Machines).filter(Machines.nom == dict['name']).update({
                 Machines.cpu: dict['cpu'],
                 Machines.ram: dict['memory']})

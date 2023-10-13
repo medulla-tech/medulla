@@ -13,19 +13,18 @@ if(xmlrpc_forceshutdown_vm($name)){
     print_r($console);
     echo "</pre>";
 
-    // Je supprime la connexion
     if($console[0]['Finished'] == 'FAILURE'){
-        new NotifyWidgetFailure(_T("La machine virtuelle n'a pas pu être éteinte <br>".$console_output[0]['ERROR'], "testenv"));
+        new NotifyWidgetFailure(_T("The virtual machine could not be extinguished <br>".$console_output[0]['ERROR'], "testenv"));
         header("Location: " . urlStrRedirect("testenv/testenv/index"));
         exit;
         } else {
             $vm_info_creation = parse_console_output($console_output);
-            new NotifyWidgetSuccess(_T("La machine virtuelle a été éteinte avec succès", "testenv"));
+            new NotifyWidgetSuccess(_T("The virtual machine has been successfully extinguished", "testenv"));
             header("Location: " . urlStrRedirect("testenv/testenv/index"));
             exit;
         }
     } else {
-        new NotifyWidgetFailure(_T("La machine virtuelle n'a pas pu être éteinte <br>".$console_output[0]['ERROR'], "testenv"));
+        new NotifyWidgetFailure(_T("The virtual machine could not be extinguished <br>".$console_output[0]['ERROR'], "testenv"));
         header("Location: " . urlStrRedirect("testenv/testenv/index"));
         exit;
     }
