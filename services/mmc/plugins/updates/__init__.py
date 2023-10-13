@@ -145,7 +145,7 @@ def get_conformity_update_by_machines(ids=[]):
         count_installed = (installed[uuid]["installed"]+count_historic)
         count_total = count_installed + _missing
         try:
-            compliance = (int(count_installed) / int(count_total))*100
+            compliance = ((1.0*count_installed) / (1.0*count_total))*100
         except:
             compliance = 100
         result.append({
