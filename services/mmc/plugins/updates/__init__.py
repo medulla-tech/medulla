@@ -138,11 +138,16 @@ def get_conformity_update_by_machines(ids=[]):
     for uuid in installed:
         _missing = missing[uuid]["missing"] if uuid in missing else 0
         count_historic = 0
-        if uuid in history:
+        try:
             count_historic = len(history[uuid])
+        except:
+            pass
         count_installed = (installed[uuid]["installed"]+count_historic)
         count_total = count_installed + _missing
-        compliance = (count_installed / count_total)*100 if count_total != 0 else 100
+        try:
+            compliance = (int(count_installed) / int(count_total))*100
+        except:
+            compliance = 100
         result.append({
             "uuid":uuid,
             "id": merged[uuid],

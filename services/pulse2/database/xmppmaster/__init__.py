@@ -12660,17 +12660,17 @@ group by hostname
             return {}
         query = session.query(Up_history).add_column(Update_data.kb).add_column(Machines.uuid_inventorymachine)\
         .filter(and_(Up_history.id_machine.in_(idmachines),
-                     Up_history.delete_date != None,
-                     Deploy.state.op('regexp')("(SUCCESS)|(ABORT)|(ERROR)")))\
+                     or_(Up_history.delete_date is not None, Up_history.delete_date != 0)))\
         .join(Update_data, Up_history.update_id == Update_data.updateid)\
         .join(Machines, Up_history.id_machine == Machines.id)\
         .outerjoin(Deploy, Up_history.id_deploy == Deploy.id)
         query = query.all()
         result = {}
         for element, kb, uuid in query:
-            if element.id_machine not in result:
-                result[element.id_machine] = [{
+            if uuid not in result:
+                result[uuid] = [{
                     "updateid": element.update_id,
+                    "id_machine":element.id_machine,
                     "kb":kb
                 }]
             else:
