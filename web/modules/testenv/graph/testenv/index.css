@@ -1,0 +1,21 @@
+.testenv-title {
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+li.startg a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    /* background-image: url("../img/actions/play.svg"); */
+    background-image: url("../img/actions/play.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
