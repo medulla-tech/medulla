@@ -482,7 +482,7 @@ def start_vm(vm_name):
 
     try:
         # Build the URL to start a VM
-        url = "{jenkins_url}/job/{job_name}/buildWithParameters?token={job_name}&VM_NAME={name}".format(
+        url = "{jenkins_url}/job/{job_name}/buildWithParameters?token={job_name}&NAME={name}".format(
             jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=vm_name)
 
         if buildJenkinsUrl(username, token, url):
@@ -525,11 +525,11 @@ def forceshutdown_vm(vm_name):
     username = config.jenkins_username
     token = config.jenkins_token
     jenkins_url = config.jenkins_url
-    job_name = 'forceshut-vm'
+    job_name = 'forceshutdown-vm'
 
     try:
         # Build the URL to force the extinction of a VM
-        url = "{jenkins_url}/job/{job_name}/buildWithParameters?token={job_name}&VM_NAME={name}".format(
+        url = "{jenkins_url}/job/{job_name}/buildWithParameters?token={job_name}&NAME={name}".format(
             jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=vm_name)
 
         if buildJenkinsUrl(username, token, url):
@@ -557,8 +557,8 @@ def forceshutdown_vm(vm_name):
         logger.error("Failure to build the Jenkins URL, Error message: '%s'", e)
         return False
 
-# TO DO
-def shutdown_vm(url):
+# Usable that if there is a bone from the machine
+def shutdown_vm(vm_name):
     """
     This function makes it possible to extinguish a VM to envoanr a post post to the url
     Args:
@@ -566,19 +566,31 @@ def shutdown_vm(url):
     Returns:
         bool: True If the post request has been sent, false otherwise
     """
-    try:
-        username = config.jenkins_username
-        token = config.jenkins_token
-        url2 = config.jenkins_url + url
+    username = config.jenkins_username
+    token = config.jenkins_token
+    jenkins_url = config.jenkins_url
+    job_name = 'stop-vm'
 
-        buildJenkinsUrl(username, token, url2)
+    url = "{jenkins_url}/job/{job_name}/buildWithParameters?token={job_name}&NAME={name}".format(
+        jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=vm_name)
 
-        logger.debug("Successful virtual machine with the URL: '%s'", url)
-        return True
-
-    except requests.exceptions.RequestException as e:
-        logger.error("An error occurred during the extinction of the virtual machine, Error message: '%s'", e)
-        return False
+    if buildJenkinsUrl(username, token, url):
+        if checkStatusJobPending(job_name):
+            logger.debug("The virtual machine '%s' is being extinction.", vm_name)
+            try:
+                logger.debug("Database update: 'Shutoff' status for the virtual machine '%s'.", vm_name)
+                if TestenvDatabase().updateStatutVM(vm_name, "Shutoff"):
+                    logger.debug("Successful database update for the virtual machine '%s'.", vm_name)
+                    return True
+                else:
+                    logger.error("Failure of updating the database for the virtual machine '%s'.", vm_name)
+                    return False
+            except Exception as e:
+                logger.error("Error when updating the database, Error message: '%s'", e)
+                return False
+        else:
+            logger.error("The virtual machine '%s' is not being extinction.", vm_name)
+            return False
 
 
 def createConnectionGuac(name):
