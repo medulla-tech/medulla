@@ -12674,7 +12674,11 @@ group by hostname
                     "kb":kb
                 }]
             else:
-                result[element.id_machine].append(element.update_id)
+                result[uuid].append({
+                    "updateid": element.update_id,
+                    "id_machine":element.id_machine,
+                    "kb":kb
+                })
 
         return result
 
