@@ -88,6 +88,63 @@ $n->addExtraInfo($port_vnc, _T("portVnc", "testenv"));
 
 $n->display();
 ?>
+<script>
+    function createPopup(message) {
+        var popup = document.createElement("div");
+        popup.setAttribute("id", "popup");
+        popup.setAttribute("class", "popup");
+        popup.innerHTML = message;
+
+        popup.style.width = "300px";
+        popup.style.height = "100px";
+        popup.style.top = "50%";
+        popup.style.left = "50%";
+        popup.style.transform = "translate(-50%, -50%)";
+
+        popup.style.display = "flex";
+        popup.style.justifyContent = "center";
+        popup.style.alignItems = "center";
+        popup.style.flexDirection = "column";
+
+        var loader = document.createElement("div");
+        loader.style.border = "5px solid #f3f3f3";
+        loader.style.borderTop = "5px solid #3498db";
+        loader.style.borderRadius = "50%";
+        loader.style.width = "30px";
+        loader.style.height = "30px";
+        loader.style.animation = "spin 2s linear infinite";
+        loader.style.marginTop = "20px";
+
+        var keyframes = `@keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }`;
+
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = keyframes;
+        document.getElementsByTagName('head')[0].appendChild(style);
+
+        popup.appendChild(loader);
+
+        document.body.appendChild(popup);
+    }
+
+    var btnStop = document.querySelector(".stop");
+    var btnStart = document.querySelector(".start");
+
+    if (btnStop) {
+        btnStop.addEventListener("click", function(){
+            createPopup("Stop the current virtual machine ...");
+        });
+    }
+
+    if (btnStart) {
+        btnStart.addEventListener("click", function(){
+            createPopup("Start of the current virtual machine ...");
+        });
+    }
+</script>
 <style>
     li.startg a {
         padding: 5px 0px 5px 22px;
