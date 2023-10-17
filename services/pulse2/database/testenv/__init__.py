@@ -104,8 +104,8 @@ class TestenvDatabase(DatabaseHelper):
                 nom=dict['name'],
                 plateform=dict['plateform'],
                 architecture=dict['architecture'],
-                cpu=int(dict['vcpu']),
-                ram=int(dict['memory']),
+                cpu=int(dict['currentCpu']),
+                ram=int(dict['currentMemory']),
                 state=dict['state'],
                 persistent=dict['persistent'])
 
