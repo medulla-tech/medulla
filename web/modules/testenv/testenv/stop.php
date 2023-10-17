@@ -8,7 +8,7 @@ require_once("modules/testenv/includes/xmlrpc.php");
 $name = add_underscore_for_url($_GET['name']);
 
 if(xmlrpc_forceshutdown_vm($name)){
-    $console = getLastBuildOutput('forceshut-vm');
+    $console = getLastBuildOutput('forceshutdown-vm');
     echo "<pre>";
     print_r($console);
     echo "</pre>";
