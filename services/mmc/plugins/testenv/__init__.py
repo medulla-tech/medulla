@@ -589,7 +589,7 @@ def createConnectionGuac(name):
     Returns:
         bool: True if the Guacamole connection has been created, False otherwise
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole')
     try:
     # Automatic port when creating the VM of the blow once the VM creates we recover the port to put it in the connection
         port = getVMInfo(name)['port_vnc']
@@ -634,7 +634,7 @@ def urlGuac(name):
     Returns:
         string: Guacamole URL
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole')
     try:
         identifier = guacapi.get_connection_by_name(name)['identifier']
 
@@ -657,7 +657,7 @@ def deleteGuac(name):
     Returns:
         bool: True if the Guacamole connection has been deleted, False otherwise
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole')
     try:
         identifier = guacapi.get_connection_by_name(name)['identifier']
 
@@ -676,7 +676,7 @@ def updateGuac(name, port):
     Returns:
         bool: True if the Guacamole connection has been edited, False otherwise
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole')
     try:
         identifier = guacapi.get_connection_by_name(name)['identifier']
         port = getVMInfo(name)['port_vnc']
@@ -715,7 +715,7 @@ def updateGuac(name, port):
         return False
 
 def editNameGuac(old_name, new_name):
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole')
 
     try:
         identifier = guacapi.get_connection_by_name(old_name)['identifier']
@@ -781,7 +781,7 @@ def dictGuac(name):
     Returns:
         dict: Dictionary containing the information of the VM
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole')
 
     identifier = guacapi.get_connection_by_name(name)['identifier']
     protocol = guacapi.get_connection_full(identifier)['protocol']
