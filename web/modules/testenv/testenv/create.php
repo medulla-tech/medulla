@@ -111,6 +111,7 @@ if(isset($_POST['bconfirm'])){
             } else {
                 $vm_info_creation = parse_console_output($console_output);
                 new NotifyWidgetSuccess(_T("The virtual machine was successfully created", "testenv"));
+                header("Location: " . urlStrRedirect("testenv/testenv/index"));
             }
         } else {
             new NotifyWidgetFailure(_T("The virtual machine could not be created", "testenv"));
