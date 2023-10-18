@@ -23,14 +23,15 @@
  */
 
 // return all dyngroups with matching params (for exemple : show = true)
-function countAllGroups($params = array()) {
+function countAllGroups($params = array())
+{
     $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
     $count = __xmlrpc_countallgroups($params);
     return $count;
 }
 
-function getAllGroups($params = array()) { # canShow
-    # xmlrpc call to get all groups
+function getAllGroups($params = array()) # canShow
+{# xmlrpc call to get all groups
     $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
     $groups = __xmlrpc_getallgroups($params);
 
@@ -45,13 +46,15 @@ function getAllGroups($params = array()) { # canShow
     return $ret;
 }
 
-function countAllProfiles($params = array()) {
+function countAllProfiles($params = array())
+{
     $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
     $count = __xmlrpc_countallprofiles($params);
     return $count;
 }
 
-function getAllProfiles($params = array()) {
+function getAllProfiles($params = array())
+{
     # xmlrpc call to get all groups
     $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
     $profiles = __xmlrpc_getallprofiles($params);
@@ -67,7 +70,8 @@ function getAllProfiles($params = array()) {
     return $ret;
 }
 
-function getPGobject($id, $load = false) {
+function getPGobject($id, $load = false)
+{
     $is_profile = xmlrpc_isprofile($id);
     if ($is_profile) {
         return new Profile($id, $load);
@@ -77,36 +81,42 @@ function getPGobject($id, $load = false) {
 }
 
 
-class ConvergenceGroup extends Group {
-
-    function __construct($id = null, $load = false, $ro = False, $root_context = false) {
+class ConvergenceGroup extends Group
+{
+    public function __construct($id = null, $load = false, $ro = false, $root_context = false)
+    {
         parent::__construct($id, $load, $ro, $root_context);
         $this->type = 2;
-        $this->isDeployGroup = True;
-        $this->isDoneGroup = False;
-        $this->parentGroup = Null;
+        $this->isDeployGroup = true;
+        $this->isDoneGroup = false;
+        $this->parentGroup = null;
     }
 
-    function setDoneGroup() {
-        $this->isDeployGroup = False;
-        $this->isDoneGroup = True;
+    public function setDoneGroup()
+    {
+        $this->isDeployGroup = false;
+        $this->isDoneGroup = true;
     }
 
-    function setPackage($package) {
+    public function setPackage($package)
+    {
         $this->package = $package;
     }
 
-    function setParentGroup($group_object) {
+    public function setParentGroup($group_object)
+    {
         $this->parentGroup = $group_object;
         $this->parent_id = $this->parentGroup->id;
     }
 
-    function create($name = null, $visibility = null) {
+    public function create($name = null, $visibility = null)
+    {
         $group_name = ($this->isDeployGroup) ? 'deploy' : 'done';
-        parent::create($group_name . '-' . time(), False);
+        parent::create($group_name . '-' . time(), false);
     }
 
-    function getParentRequestAndBool() {
+    public function getParentRequestAndBool()
+    {
         /* Get parent group request and bool */
         $this->parentRequest = parse_request($this->parentGroup->getRequest());
         $this->parentBool = $this->parentGroup->getBool();
@@ -119,12 +129,13 @@ class ConvergenceGroup extends Group {
         }
     }
 
-    function setRequest($request = null, $root_context = null) {
-        if ($this->parentGroup == Null) {
+    public function setRequest($request = null, $root_context = null)
+    {
+        if ($this->parentGroup == null) {
             $parent_gid = xmlrpc_get_convergence_parent_group_id($this->id);
             /* Get parent group with root context @see #2240
                Needed to get parent name for package edition */
-            $parent_group = new Group($parent_gid, True, False, True);
+            $parent_group = new Group($parent_gid, true, false, true);
             $this->setParentGroup($parent_group);
         }
 
@@ -138,7 +149,7 @@ class ConvergenceGroup extends Group {
         }
 
         // Arrays are for bundles (multiple convergence criterions)
-        if (!is_array($this->package->Qvendor)){
+        if (!is_array($this->package->Qvendor)) {
             $this->package->Qvendor = array($this->package->Qvendor);
             $this->package->Qsoftware = array($this->package->Qsoftware);
             $this->package->Qversion = array($this->package->Qversion);
@@ -146,34 +157,34 @@ class ConvergenceGroup extends Group {
 
         $i = 0;
 
-        for ($i = 0; $i< safeCount($this->package->Qvendor); $i++){
+        for ($i = 0; $i < safeCount($this->package->Qvendor); $i++) {
 
             $Qvendor = ($this->package->Qvendor[$i]) ? str_replace(',', '*', $this->package->Qvendor[$i]) : '*';
             $Qsoftware = ($this->package->Qsoftware[$i]) ? str_replace(',', '*', $this->package->Qsoftware[$i]) : '*';
             $Qversion = ($this->package->Qversion[$i]) ? str_replace(',', '*', $this->package->Qversion[$i]) : '*';
 
-            $request[] = sprintf("%d==%s::%s==>%s, %s, %s<", $i+1, $subReqModule, $subReqCriterion, $Qvendor, $Qsoftware, $Qversion);
+            $request[] = sprintf("%d==%s::%s==>%s, %s, %s<", $i + 1, $subReqModule, $subReqCriterion, $Qvendor, $Qsoftware, $Qversion);
         }
 
 
         // Adding parent group condition in last
-        $request[] = ($i+1) . '==dyngroup::groupname==' . $this->parentGroup->name;
+        $request[] = ($i + 1) . '==dyngroup::groupname==' . $this->parentGroup->name;
 
 
         $request = implode('||', $request);
 
-        parent::setRequest($request, True);
+        parent::setRequest($request, true);
     }
 
-    function setBool($bool = null) {
+    public function setBool($bool = null)
+    {
         // If a bool condition is defined in the package level
         // we use it,
         $criterion_count = safeCount($this->package->Qvendor);
 
-        if (trim($this->package->boolcnd)){
+        if (trim($this->package->boolcnd)) {
             $subgroup_condition = $this->package->boolcnd;
-        }
-        else{
+        } else {
             // If the bool condition is not defined, we generate
             // the defaut one
             $subgroup_condition = 'AND(' . implode(',', range(1, $criterion_count)) . ')';
@@ -182,19 +193,19 @@ class ConvergenceGroup extends Group {
 
         // From 1 to $criterion_count => software criteria
         // $criterion_count +1 => parent group criterion
-        $pgroup_cnumber = $criterion_count +1;
+        $pgroup_cnumber = $criterion_count + 1;
 
         /* create convergence groups bools */
         if ($this->isDeployGroup) {
             $this->bool = "AND($pgroup_cnumber, NOT($subgroup_condition))";
-        }
-        else {
+        } else {
             $this->bool = "AND($pgroup_cnumber, $subgroup_condition)";
         }
         parent::setBool($this->bool);
     }
 
-    function setRequestAndBool() {
+    public function setRequestAndBool()
+    {
         $this->setRequest();
         $this->setBool();
     }
@@ -202,47 +213,75 @@ class ConvergenceGroup extends Group {
     /*
      * Get deploy sub-group id for given group
      */
-    function getDeployGroupId($package = null) {
+    public function getDeployGroupId($package = null)
+    {
         return xmlrpc_getDeployGroupId($this->parentGroup->id, $this->package->id);
     }
 }
 
-class Profile extends Group {
+class Profile extends Group
+{
     # use the same methods as Group except for the creation
-    function __construct($id = null, $load = false) {
+    public function __construct($id = null, $load = false)
+    {
         parent::__construct($id, $load);
         $this->type = 1;
     }
-    function create($name, $visibility) { $this->id =  __xmlrpc_create_profile($name, $visibility); return $this->id; }
-    function setEntity($entity_uuid) { return __xmlrpc_set_profile_entity($this->id, $entity_uuid); }
-    function getEntity() { return __xmlrpc_get_profile_entity($this->id); }
-    function setImagingServer($imaging_server_uuid) { return xmlrpc_set_profile_imaging_server($this->id, $imaging_server_uuid); }
-    function getImagingServer() { return xmlrpc_get_profile_imaging_server($this->id); }
-    function isProfile() { return True; }
-    function isGroup() { return False; }
+    public function create($name, $visibility)
+    {
+        $this->id =  __xmlrpc_create_profile($name, $visibility);
+        return $this->id;
+    }
+    public function setEntity($entity_uuid)
+    {
+        return __xmlrpc_set_profile_entity($this->id, $entity_uuid);
+    }
+    public function getEntity()
+    {
+        return __xmlrpc_get_profile_entity($this->id);
+    }
+    public function setImagingServer($imaging_server_uuid)
+    {
+        return xmlrpc_set_profile_imaging_server($this->id, $imaging_server_uuid);
+    }
+    public function getImagingServer()
+    {
+        return xmlrpc_get_profile_imaging_server($this->id);
+    }
+    public function isProfile()
+    {
+        return true;
+    }
+    public function isGroup()
+    {
+        return false;
+    }
 }
-class Group {
-    function __construct($id = null, $load = false, $ro = false, $root_context = false) {
+class Group
+{
+    public function __construct($id = null, $load = false, $ro = false, $root_context = false)
+    {
         if ($id && $load) {
             $params = __xmlrpc_get_group($id, $ro, $root_context);
-            if ($params == False) {
-                $this->exists = False;
+            if ($params == false) {
+                $this->exists = false;
             } else {
                 $this->id = $params['id'];
                 $this->name = $params['name'];
-                $this->exists = True;
+                $this->exists = true;
             }
             $this->all_params = $params;
         } elseif ($id) {
             $this->id = $id;
-            $this->exists = True;
+            $this->exists = true;
             $this->all_params = array();
         }
         $this->type = 0;
         $this->parent_id = null;
     }
 
-    function createConvergenceGroups($package) {
+    public function createConvergenceGroups($package)
+    {
         $deployGroup = new ConvergenceGroup();
         $doneGroup = new ConvergenceGroup();
 
@@ -265,26 +304,76 @@ class Group {
         );
     }
 
-    function getDeployGroupId($package) {
+    public function getDeployGroupId($package)
+    {
         return xmlrpc_getDeployGroupId($this->id, $package->id);
     }
 
-    function can_modify() { if (isset($this->all_params['ro']) && $this->all_params['ro']) { return False; } return True; }
-    function delete() { if ($this->can_modify()) { return __xmlrpc_delete_group($this->id); } return False; }
-    function create($name, $visibility) { $this->id =  __xmlrpc_create_group($name, $visibility, $this->type, $this->parent_id); return $this->id; }
-    function toS() { return __xmlrpc_tos_group($this->id); }
+    public function can_modify()
+    {
+        if (isset($this->all_params['ro']) && $this->all_params['ro']) {
+            return false;
+        } return true;
+    }
+    public function delete()
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_delete_group($this->id);
+        } return false;
+    }
+    public function create($name, $visibility)
+    {
+        $this->id =  __xmlrpc_create_group($name, $visibility, $this->type, $this->parent_id);
+        return $this->id;
+    }
+    public function toS()
+    {
+        return __xmlrpc_tos_group($this->id);
+    }
 
-    function getName() { return $this->name; }
-    function setName($name) { if ($this->can_modify()) { $this->name = $name; return __xmlrpc_setname_group($this->id, $name); } return False; }
-    function getRequest() { return __xmlrpc_request_group($this->id); }
-    function setRequest($request, $root_context) { if ($this->can_modify()) { return __xmlrpc_setrequest_group($this->id, $request, $root_context); } return False; }
-    function getBool() { return __xmlrpc_bool_group($this->id); }
-    function setBool($bool) { if ($this->can_modify()) { return __xmlrpc_setbool_group($this->id, $bool, $this->type, $this->parent_id); } return False; }
+    public function getName()
+    {
+        return $this->name;
+    }
+    public function setName($name)
+    {
+        if ($this->can_modify()) {
+            $this->name = $name;
+            return __xmlrpc_setname_group($this->id, $name);
+        } return false;
+    }
+    public function getRequest()
+    {
+        return __xmlrpc_request_group($this->id);
+    }
+    public function setRequest($request, $root_context)
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_setrequest_group($this->id, $request, $root_context);
+        } return false;
+    }
+    public function getBool()
+    {
+        return __xmlrpc_bool_group($this->id);
+    }
+    public function setBool($bool)
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_setbool_group($this->id, $bool, $this->type, $this->parent_id);
+        } return false;
+    }
 
-    function reply($start = 0, $end = 10, $filter = '') { return __xmlrpc_requestresult_group($this->id, $start, $end, $filter); }
-    function countReply($filter = '') { return __xmlrpc_countrequestresult_group($this->id, $filter); }
+    public function reply($start = 0, $end = 10, $filter = '')
+    {
+        return __xmlrpc_requestresult_group($this->id, $start, $end, $filter);
+    }
+    public function countReply($filter = '')
+    {
+        return __xmlrpc_countrequestresult_group($this->id, $filter);
+    }
 
-    function getResult($start = 0, $end = 10, $filter = '') {
+    public function getResult($start = 0, $end = 10, $filter = '')
+    {
         if ($this->isDyn()) {
             if (!$this->isRequest()) { # dynamic group with static results
                 return __xmlrpc_result_group($this->id, $start, $end, $filter);
@@ -292,47 +381,136 @@ class Group {
                 return $this->reply($start, $end, $filter);
             }
         } else { # static group with static result
-            $idgrp = isset($this->id ) ? $this->id : NULL;
+            $idgrp = isset($this->id) ? $this->id : null;
             return __xmlrpc_result_group($idgrp, $start, $end, $filter);
         }
     }
 
-    function members() { return $this->getResult(0, -1, ''); }
-    function countResult($filter = '') { return __xmlrpc_countresult_group($this->id, $filter); }
+    public function members()
+    {
+        return $this->getResult(0, -1, '');
+    }
+    public function countResult($filter = '')
+    {
+        return __xmlrpc_countresult_group($this->id, $filter);
+    }
 
-    function setVisibility($visibility) { if ($this->can_modify()) { return __xmlrpc_setvisibility_group($this->id, $visibility); } return False; }
-    function canShow() { return __xmlrpc_canshow_group($this->id); }
-    function show() { if ($this->can_modify()) { return __xmlrpc_show_group($this->id); } return False; }
-    function hide() { if ($this->can_modify()) { return __xmlrpc_hide_group($this->id); } return False; }
+    public function setVisibility($visibility)
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_setvisibility_group($this->id, $visibility);
+        } return false;
+    }
+    public function canShow()
+    {
+        return __xmlrpc_canshow_group($this->id);
+    }
+    public function show()
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_show_group($this->id);
+        } return false;
+    }
+    public function hide()
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_hide_group($this->id);
+        } return false;
+    }
 
-    function isProfile() { return False; }
-    function isGroup() { return True; }
-    function isDyn() {
-        $idgrp = isset($this->id) ? $this->id : NULL;
+    public function isProfile()
+    {
+        return false;
+    }
+    public function isGroup()
+    {
+        return true;
+    }
+    public function isDyn()
+    {
+        $idgrp = isset($this->id) ? $this->id : null;
         $result = __xmlrpc_isdyn_group($idgrp);
         return ($result == "True" || $result === true) ? true : false;
     }
-    function toDyn() { if ($this->can_modify()) { return __xmlrpc_todyn_group($this->id); } return False; }
-    function isRequest() { return __xmlrpc_isrequest_group($this->id); }
-    function reload() {  if ($this->can_modify()) { return __xmlrpc_reload_group($this->id); } return False; }
+    public function toDyn()
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_todyn_group($this->id);
+        } return false;
+    }
+    public function isRequest()
+    {
+        return __xmlrpc_isrequest_group($this->id);
+    }
+    public function reload()
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_reload_group($this->id);
+        } return false;
+    }
 
-    function removeRequest() { return __xmlrpc_setrequest_group($this->id, ''); }
+    public function removeRequest()
+    {
+        return __xmlrpc_setrequest_group($this->id, '');
+    }
 
-    function addMember($uuid) { if ($this->can_modify()) { return $this->addMembers(array($uuid)); } return array(False); }
-    function miniAddMember($uuid){ if($this->can_modify()) {return $this->miniAddMembers(array($uuid)); } return array(False);}
-    function delMember($uuid) { if ($this->can_modify()) { return $this->delMembers($uuid); } return False; }
-    function importMembers($elt, $values) { if ($this->can_modify()) { return __xmlrpc_importmembers_to_group($this->id, $elt, $values); } return False; }
-    function importCsvColumn($criterion, $values){
+    public function addMember($uuid)
+    {
+        if ($this->can_modify()) {
+            return $this->addMembers(array($uuid));
+        } return array(false);
+    }
+    public function miniAddMember($uuid)
+    {
+        if($this->can_modify()) {
+            return $this->miniAddMembers(array($uuid));
+        } return array(false);
+    }
+    public function delMember($uuid)
+    {
+        if ($this->can_modify()) {
+            return $this->delMembers($uuid);
+        } return false;
+    }
+    public function importMembers($elt, $values)
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_importmembers_to_group($this->id, $elt, $values);
+        } return false;
+    }
+    public function importCsvColumn($criterion, $values)
+    {
         return xmlCall("dyngroup.importCsvColumn", array($this->id, $criterion, $values));
     }
     #function removeMachine($uuid) { }
-    function addMembers($uuids) { if ($this->can_modify()) { return __xmlrpc_addmembers_to_group($this->id, $uuids); } return array(False); }
-    function miniAddMembers($uuids) { if ($this->can_modify()) { return xmlrpc_mini_addmembers_to_group($this->id, $uuids); } return array(False); }
+    public function addMembers($uuids)
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_addmembers_to_group($this->id, $uuids);
+        } return array(false);
+    }
+    public function miniAddMembers($uuids)
+    {
+        if ($this->can_modify()) {
+            return xmlrpc_mini_addmembers_to_group($this->id, $uuids);
+        } return array(false);
+    }
     #function addMachines($a_uuids) { }
-    function delMembers($uuids) { if ($this->can_modify()) { return __xmlrpc_delmembers_to_group($this->id, $uuids); } return False; }
+    public function delMembers($uuids)
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_delmembers_to_group($this->id, $uuids);
+        } return false;
+    }
 
-    function shareWith() { if ($this->can_modify()) { return __xmlrpc_share_with($this->id); } return False; }
-    function addShares($share) {
+    public function shareWith()
+    {
+        if ($this->can_modify()) {
+            return __xmlrpc_share_with($this->id);
+        } return false;
+    }
+    public function addShares($share)
+    {
         $sha = array();
         if ($this->can_modify()) {
             $sha = array();
@@ -341,9 +519,10 @@ class Group {
             }
             return __xmlrpc_add_share($this->id, $sha);
         }
-        return False;
+        return false;
     }
-    function delShares($share) {
+    public function delShares($share)
+    {
         if ($this->can_modify()) {
             $sha = array();
             foreach (array_values($share) as $s) {
@@ -351,98 +530,234 @@ class Group {
             }
             return __xmlrpc_del_share($this->id, $sha);
         }
-        return False;
+        return false;
     }
-    function canEdit() {
+    public function canEdit()
+    {
         if ($this->can_modify()) {
             return __xmlrpc_can_edit($this->id);
         }
-        return False;
+        return false;
     }
-    function prettyDisplay($canbedeleted = false, $default_params = array()) {
+    public function prettyDisplay($canbedeleted = false, $default_params = array())
+    {
         include("modules/medulla_server/medulla_server/computers_list.php");
     }
 
-    function getId(){return $this->id;}
+    public function getId()
+    {
+        return $this->id;
+    }
 }
 
-function __xmlrpc_countallgroups($params) { return xmlCall("dyngroup.countallgroups", array($params)); }
-function __xmlrpc_getallgroups($params) { return xmlCall("dyngroup.getallgroups", array($params)); }
-function __xmlrpc_countallprofiles($params) { return xmlCall("dyngroup.countallprofiles", array($params)); }
-function __xmlrpc_getallprofiles($params) { return xmlCall("dyngroup.getallprofiles", array($params)); }
-function __xmlrpc_get_group($id, $ro, $root_context) { return xmlCall("dyngroup.get_group", array($id, $ro, $root_context)); }
+function __xmlrpc_countallgroups($params)
+{
+    return xmlCall("dyngroup.countallgroups", array($params));
+}
+function __xmlrpc_getallgroups($params)
+{
+    return xmlCall("dyngroup.getallgroups", array($params));
+}
+function __xmlrpc_countallprofiles($params)
+{
+    return xmlCall("dyngroup.countallprofiles", array($params));
+}
+function __xmlrpc_getallprofiles($params)
+{
+    return xmlCall("dyngroup.getallprofiles", array($params));
+}
+function __xmlrpc_get_group($id, $ro, $root_context)
+{
+    return xmlCall("dyngroup.get_group", array($id, $ro, $root_context));
+}
 
-function __xmlrpc_delete_group($id) { return xmlCall("dyngroup.delete_group", array($id)); }
-function __xmlrpc_create_group($name, $visibility, $type = 0, $parent_id = null) { return xmlCall("dyngroup.create_group", array($name, $visibility, $type, $parent_id)); }
-function __xmlrpc_create_profile($name, $visibility) { return xmlCall("dyngroup.create_profile", array($name, $visibility)); }
-function __xmlrpc_tos_group($id) { return xmlCall("dyngroup.tos_group", array($id)); }
-function __xmlrpc_setname_group($id, $name) { return xmlCall("dyngroup.setname_group", array($id, $name)); }
-function __xmlrpc_setvisibility_group($id, $visibility) { return xmlCall("dyngroup.setvisibility_group", array($id, $visibility)); }
-function __xmlrpc_request_group($id) { return xmlCall("dyngroup.request_group", array($id)); }
-function __xmlrpc_setrequest_group($id, $request, $root_context) { return xmlCall("dyngroup.setrequest_group", array($id, $request, $root_context)); }
-function __xmlrpc_bool_group($id) { return xmlCall("dyngroup.bool_group", array($id)); }
-function __xmlrpc_setbool_group($id, $bool, $type=0, $parent_id=null) { return xmlCall("dyngroup.setbool_group", array($id, $bool, $type, $parent_id)); }
-function __xmlrpc_requestresult_group($id, $start, $end, $filter) { return xmlCall("dyngroup.requestresult_group", array($id, $start, $end, $filter)); }
-function __xmlrpc_countrequestresult_group($id, $filter) { return xmlCall("dyngroup.countrequestresult_group", array($id, $filter)); }
-function convertComputer($e) {$e = array('hostname'=>$e[1]['cn'][0], 'uuid'=>$e[1]['objectUUID'][0]); return $e;}
-function __xmlrpc_result_group($id, $start, $end, $filter) {
+function __xmlrpc_delete_group($id)
+{
+    return xmlCall("dyngroup.delete_group", array($id));
+}
+function __xmlrpc_create_group($name, $visibility, $type = 0, $parent_id = null)
+{
+    return xmlCall("dyngroup.create_group", array($name, $visibility, $type, $parent_id));
+}
+function __xmlrpc_create_profile($name, $visibility)
+{
+    return xmlCall("dyngroup.create_profile", array($name, $visibility));
+}
+function __xmlrpc_tos_group($id)
+{
+    return xmlCall("dyngroup.tos_group", array($id));
+}
+function __xmlrpc_setname_group($id, $name)
+{
+    return xmlCall("dyngroup.setname_group", array($id, $name));
+}
+function __xmlrpc_setvisibility_group($id, $visibility)
+{
+    return xmlCall("dyngroup.setvisibility_group", array($id, $visibility));
+}
+function __xmlrpc_request_group($id)
+{
+    return xmlCall("dyngroup.request_group", array($id));
+}
+function __xmlrpc_setrequest_group($id, $request, $root_context)
+{
+    return xmlCall("dyngroup.setrequest_group", array($id, $request, $root_context));
+}
+function __xmlrpc_bool_group($id)
+{
+    return xmlCall("dyngroup.bool_group", array($id));
+}
+function __xmlrpc_setbool_group($id, $bool, $type = 0, $parent_id = null)
+{
+    return xmlCall("dyngroup.setbool_group", array($id, $bool, $type, $parent_id));
+}
+function __xmlrpc_requestresult_group($id, $start, $end, $filter)
+{
+    return xmlCall("dyngroup.requestresult_group", array($id, $start, $end, $filter));
+}
+function __xmlrpc_countrequestresult_group($id, $filter)
+{
+    return xmlCall("dyngroup.countrequestresult_group", array($id, $filter));
+}
+function convertComputer($e)
+{
+    $e = array('hostname' => $e[1]['cn'][0], 'uuid' => $e[1]['objectUUID'][0]);
+    return $e;
+}
+function __xmlrpc_result_group($id, $start, $end, $filter)
+{
     $filter = array('gid' => $id, 'filter' => $filter);
-    $ret = xmlCall("base.getRestrictedComputersList", array($start, $end, $filter, False));
+    $ret = xmlCall("base.getRestrictedComputersList", array($start, $end, $filter, false));
     $ret1 = array_map("convertComputer", array_values($ret));
     return $ret1;
 }
-function __xmlrpc_countresult_group($id, $filter) { return xmlCall("dyngroup.countresult_group", array($id, $filter)); }
-function __xmlrpc_canshow_group($id) { return xmlCall("dyngroup.canshow_group", array($id)); }
-function __xmlrpc_show_group($id) { return xmlCall("dyngroup.show_group", array($id)); }
-function __xmlrpc_hide_group($id) { return xmlCall("dyngroup.hide_group", array($id)); }
-function __xmlrpc_isdyn_group($id) { return xmlCall("dyngroup.isdyn_group", array($id)); }
-function __xmlrpc_todyn_group($id) { return xmlCall("dyngroup.todyn_group", array($id)); }
-function __xmlrpc_isrequest_group($id) { return xmlCall("dyngroup.isrequest_group", array($id)); }
-function __xmlrpc_reload_group($id) { return xmlCall("dyngroup.reload_group", array($id)); }
-function __xmlrpc_addmembers_to_group($id, $uuids) {
-    if (!empty($uuids))
+function __xmlrpc_countresult_group($id, $filter)
+{
+    return xmlCall("dyngroup.countresult_group", array($id, $filter));
+}
+function __xmlrpc_canshow_group($id)
+{
+    return xmlCall("dyngroup.canshow_group", array($id));
+}
+function __xmlrpc_show_group($id)
+{
+    return xmlCall("dyngroup.show_group", array($id));
+}
+function __xmlrpc_hide_group($id)
+{
+    return xmlCall("dyngroup.hide_group", array($id));
+}
+function __xmlrpc_isdyn_group($id)
+{
+    return xmlCall("dyngroup.isdyn_group", array($id));
+}
+function __xmlrpc_todyn_group($id)
+{
+    return xmlCall("dyngroup.todyn_group", array($id));
+}
+function __xmlrpc_isrequest_group($id)
+{
+    return xmlCall("dyngroup.isrequest_group", array($id));
+}
+function __xmlrpc_reload_group($id)
+{
+    return xmlCall("dyngroup.reload_group", array($id));
+}
+function __xmlrpc_addmembers_to_group($id, $uuids)
+{
+    if (!empty($uuids)) {
         $ret = xmlCall("dyngroup.addmembers_to_group", array($id, $uuids));
-    else
-        $ret = array(True);
+    } else {
+        $ret = array(true);
+    }
     return $ret;
 }
-function __xmlrpc_delmembers_to_group($id, $uuids) {
-    if (!empty($uuids))
+function __xmlrpc_delmembers_to_group($id, $uuids)
+{
+    if (!empty($uuids)) {
         $ret = xmlCall("dyngroup.delmembers_to_group", array($id, $uuids));
-    else
-        $ret = True;
+    } else {
+        $ret = true;
+    }
     return $ret;
 }
-function __xmlrpc_importmembers_to_group($id, $elt, $values) { return xmlCall("dyngroup.importmembers_to_group", array($id, $elt, $values)); }
+function __xmlrpc_importmembers_to_group($id, $elt, $values)
+{
+    return xmlCall("dyngroup.importmembers_to_group", array($id, $elt, $values));
+}
 
-function __xmlrpc_share_with($id) { return xmlCall("dyngroup.share_with", array($id)); }
-function __xmlrpc_add_share($id, $share) { return xmlCall("dyngroup.add_share", array($id, $share)); }
-function __xmlrpc_del_share($id, $share) { return xmlCall("dyngroup.del_share", array($id, $share)); }
-function __xmlrpc_can_edit($id) { return xmlCall("dyngroup.can_edit", array($id)); }
-function xmlrpc_group_name_exists($name, $gid = null) { return xmlCall("dyngroup.group_name_exists", array($name, $gid)); }
-function xmlrpc_profile_name_exists($name, $gid = null) { return xmlCall("dyngroup.profile_name_exists", array($name, $gid)); }
-function xmlrpc_isprofile($gid) { return xmlCall("dyngroup.isprofile", array($gid)); }
+function __xmlrpc_share_with($id)
+{
+    return xmlCall("dyngroup.share_with", array($id));
+}
+function __xmlrpc_add_share($id, $share)
+{
+    return xmlCall("dyngroup.add_share", array($id, $share));
+}
+function __xmlrpc_del_share($id, $share)
+{
+    return xmlCall("dyngroup.del_share", array($id, $share));
+}
+function __xmlrpc_can_edit($id)
+{
+    return xmlCall("dyngroup.can_edit", array($id));
+}
+function xmlrpc_group_name_exists($name, $gid = null)
+{
+    return xmlCall("dyngroup.group_name_exists", array($name, $gid));
+}
+function xmlrpc_profile_name_exists($name, $gid = null)
+{
+    return xmlCall("dyngroup.profile_name_exists", array($name, $gid));
+}
+function xmlrpc_isprofile($gid)
+{
+    return xmlCall("dyngroup.isprofile", array($gid));
+}
 
-function xmlrpc_getmachineprofile($id) { return xmlCall("dyngroup.getmachineprofile", array($id)); }
-function xmlrpc_getmachinesprofiles($ids) { return xmlCall("dyngroup.getmachinesprofiles", array($ids)); }
+function xmlrpc_getmachineprofile($id)
+{
+    return xmlCall("dyngroup.getmachineprofile", array($id));
+}
+function xmlrpc_getmachinesprofiles($ids)
+{
+    return xmlCall("dyngroup.getmachinesprofiles", array($ids));
+}
 
-function xmlrpc_set_profile_imaging_server($gid, $imaging_server_uuid) { return xmlCall("dyngroup.set_profile_imaging_server", array($gid, $imaging_server_uuid)); }
-function xmlrpc_get_profile_imaging_server($gid) { return xmlCall("dyngroup.get_profile_imaging_server", array($gid)); }
-function __xmlrpc_set_profile_entity($gid, $entity_uuid) { return xmlCall("dyngroup.set_profile_entity", array($gid, $entity_uuid)); }
-function __xmlrpc_get_profile_entity($gid) { return xmlCall("dyngroup.get_profile_entity", array($gid)); }
+function xmlrpc_set_profile_imaging_server($gid, $imaging_server_uuid)
+{
+    return xmlCall("dyngroup.set_profile_imaging_server", array($gid, $imaging_server_uuid));
+}
+function xmlrpc_get_profile_imaging_server($gid)
+{
+    return xmlCall("dyngroup.get_profile_imaging_server", array($gid));
+}
+function __xmlrpc_set_profile_entity($gid, $entity_uuid)
+{
+    return xmlCall("dyngroup.set_profile_entity", array($gid, $entity_uuid));
+}
+function __xmlrpc_get_profile_entity($gid)
+{
+    return xmlCall("dyngroup.get_profile_entity", array($gid));
+}
 
-function xmlrpc_isProfileAssociatedToImagingServer($gid) { return xmlCall("dyngroup.isProfileAssociatedToImagingServer", array($gid)); }
+function xmlrpc_isProfileAssociatedToImagingServer($gid)
+{
+    return xmlCall("dyngroup.isProfileAssociatedToImagingServer", array($gid));
+}
 
 /*
  * Get deploy sub-group id for given group
  */
 
 
-function xmlrpc_add_convergence_datas($parent_group_id, $deploy_group_id, $done_group_id, $pid, $p_api, $command_id, $active, $params) {
+function xmlrpc_add_convergence_datas($parent_group_id, $deploy_group_id, $done_group_id, $pid, $p_api, $command_id, $active, $params)
+{
     return xmlCall("dyngroup.add_convergence_datas", array($parent_group_id, $deploy_group_id, $done_group_id, $pid, $p_api, $command_id, $active, $params));
 }
 
-function xmlrpc_getConvergenceStatus($gid) {
+function xmlrpc_getConvergenceStatus($gid)
+{
     return xmlCall("dyngroup.getConvergenceStatus", array($gid));
 }
 
@@ -450,11 +765,13 @@ function xmlrpc_getConvergenceStatus($gid) {
 //     return xmlCall("dyngroup.get_convergence_groups_to_update", array($papi_id, $package));
 // }
 
-function xmlrpc_get_convergence_groups_to_update($package) {
+function xmlrpc_get_convergence_groups_to_update($package)
+{
     return xmlCall("dyngroup.get_convergence_groups_to_update", array($package));
 }
 
-function xmlrpc_get_active_convergence_commands($package) {
+function xmlrpc_get_active_convergence_commands($package)
+{
     return xmlCall("dyngroup.get_active_convergence_commands", array($package));
 }
 
@@ -462,7 +779,8 @@ function xmlrpc_get_active_convergence_commands($package) {
  * When a package is edited, we have to stop current convergence command
  * then start a new command with new package params
  */
-function restart_active_convergence_commands($papi_id, $package) {
+function restart_active_convergence_commands($papi_id, $package)
+{
     $package = (object) $package;
 
     // Get convergence commands to restart
@@ -471,17 +789,15 @@ function restart_active_convergence_commands($papi_id, $package) {
         // WTF, this dyngroup function needs pkgs and msc....
         if (in_array('pkgs', $_SESSION['modulesList'])) {
             require_once('modules/pkgs/includes/xmlrpc.php');
-        }
-        else {
+        } else {
             new NotifyWidgetWarn(_T("Failed to load some pkgs module", "pkgs"));
-            return False;
+            return false;
         }
         if (in_array('msc', $_SESSION['modulesList'])) {
             require_once('modules/msc/includes/commands_xmlrpc.inc.php');
-        }
-        else {
+        } else {
             new NotifyWidgetWarn(_T("Failed to load some msc module", "pkgs"));
-            return False;
+            return false;
         }
 
         // We need ServerAPI for some convergence methods...
@@ -493,7 +809,8 @@ function restart_active_convergence_commands($papi_id, $package) {
         $active = 1;
         $ordered_proxies = array();
         $mode = 'push';
-        function __get_command_start_date($cmd_id) {
+        function __get_command_start_date($cmd_id)
+        {
             $command_details = command_detail($cmd_id);
             list($year, $month, $day, $hour, $minute, $second) = $command_details['start_date'];
             return sprintf("%s-%s-%s %s:%s:%s", $year, $month, $day, $hour, $minute, $second);
@@ -510,7 +827,7 @@ function restart_active_convergence_commands($papi_id, $package) {
             /* Create new command */
             $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $package->id);
             $params = xmlrpc_get_convergence_phases($gid, $package->id);
-            $command_id = add_command_api($package->id, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+            $command_id = add_command_api($package->id, null, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
             /* Update convergence DB */
             $updated_datas = array(
                 'active' => $active,
@@ -522,10 +839,11 @@ function restart_active_convergence_commands($papi_id, $package) {
     }
 }
 
-function update_convergence_groups_request($package) {
+function update_convergence_groups_request($package)
+{
     $package = (object) $package;
     // Get convergence groups to update
-    $group_ids = xmlrpc_get_convergence_groups_to_update( $package->id);
+    $group_ids = xmlrpc_get_convergence_groups_to_update($package->id);
     foreach ($group_ids as $gid) {
         $convergence_group = new ConvergenceGroup($gid);
         $convergence_group->setPackage($package);
@@ -533,35 +851,42 @@ function update_convergence_groups_request($package) {
     }
 }
 
-function xmlrpc_get_convergence_command_id($gid,$pid) {
+function xmlrpc_get_convergence_command_id($gid, $pid)
+{
     return xmlCall("dyngroup.get_convergence_command_id", array($gid, $pid));
 }
 
-function xmlrpc_get_convergence_phases($gid, $pid) {
+function xmlrpc_get_convergence_phases($gid, $pid)
+{
     return xmlCall("dyngroup.get_convergence_phases", array($gid, $pid));
 }
 
-function xmlrpc_is_convergence_active($gid,  $pid) {
+function xmlrpc_is_convergence_active($gid, $pid)
+{
     return xmlCall("dyngroup.is_convergence_active", array($gid, $pid));
 }
 
-function xmlrpc_get_deploy_group_id($gid, $pid) {
+function xmlrpc_get_deploy_group_id($gid, $pid)
+{
     return xmlCall("dyngroup.get_deploy_group_id", array($gid, $pid));
 }
 
-function xmlrpc_getDeployGroupId($gid, $package_id) {
+function xmlrpc_getDeployGroupId($gid, $package_id)
+{
     return xmlCall("dyngroup.get_deploy_group_id", array($gid, $package_id));
 }
 
-function xmlrpc_edit_convergence_datas($gid, $pid, $datas) {
+function xmlrpc_edit_convergence_datas($gid, $pid, $datas)
+{
     return xmlCall("dyngroup.edit_convergence_datas", array($gid, $pid, $datas));
 }
 
-function xmlrpc_get_convergence_parent_group_id($gid) {
+function xmlrpc_get_convergence_parent_group_id($gid)
+{
     return xmlCall("dyngroup.get_convergence_group_parent_id", array($gid));
 }
 
-function xmlrpc_mini_addmembers_to_group($id, $uuids) {
+function xmlrpc_mini_addmembers_to_group($id, $uuids)
+{
     return xmlCall("dyngroup.mini_addmembers_to_group", array($id, $uuids));
 }
-?>
