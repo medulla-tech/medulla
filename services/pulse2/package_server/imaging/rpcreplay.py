@@ -78,7 +78,6 @@ class RPCStore(Singleton):
         except Exception as e:
             self.logger.error("An unexpected error occurred: %s" % e)
 
-
     def _updateStateFile(self, data):
         """
         Update the RPC state file content.
