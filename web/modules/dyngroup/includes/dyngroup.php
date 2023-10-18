@@ -308,8 +308,10 @@ class Group {
     function isProfile() { return False; }
     function isGroup() { return True; }
     function isDyn() {
-                        $idgrp = isset($this->id) ? $this->id : NULL;
-                        return __xmlrpc_isdyn_group($idgrp); }
+        $idgrp = isset($this->id) ? $this->id : NULL;
+        $result = __xmlrpc_isdyn_group($idgrp);
+        return ($result == "True" || $result === true) ? true : false;
+    }
     function toDyn() { if ($this->can_modify()) { return __xmlrpc_todyn_group($this->id); } return False; }
     function isRequest() { return __xmlrpc_isrequest_group($this->id); }
     function reload() {  if ($this->can_modify()) { return __xmlrpc_reload_group($this->id); } return False; }
