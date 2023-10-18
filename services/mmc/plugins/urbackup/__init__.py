@@ -79,10 +79,13 @@ def enable_client(jidmachine, clientid, authkey):
 
     urbackup_server = urbackup_conf.get('parameters', 'backup_server')
     urbackup_port = urbackup_conf.get('parameters', 'backup_port')
-    
+
     enable_client_database(clientid)
 
-    command = "(echo [parameters] & echo backup_enabled = 1 & echo client_id = "+str(clientid)+" & echo authkey = "+str(authkey)+" & echo backup_server = urbackup://"+str(urbackup_server)+" & echo backup_port = "+str(urbackup_port)+") > C:\progra~1\pulse\etc\updatebackupclient.ini"
+    command = (
+        f"(echo [parameters] & echo backup_enabled = 1 & echo client_id = {str(clientid)} & echo authkey = {str(authkey)} & echo backup_server = urbackup://{str(urbackup_server)} & echo backup_port = {str(urbackup_port)}"
+        + ") > C:\progra~1\pulse\etc\updatebackupclient.ini"
+    )
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
@@ -214,10 +217,7 @@ def get_ses():
     api = UrApiWrapper()
     session = api.get_session()
 
-    if session == "":
-        return "No DATA in session"
-
-    return session
+    return "No DATA in session" if session == "" else session
 
 def get_logs():
     """
@@ -230,10 +230,7 @@ def get_logs():
     api = UrApiWrapper()
     _logs = api.get_logs()
     logs = api.response(_logs)
-    if "content" in logs:
-        return logs["content"]
-
-    return "No DATA in logs"
+    return logs["content"] if "content" in logs else "No DATA in logs"
 
 def add_client(client_name):
     """
@@ -268,10 +265,7 @@ def get_stats():
     api = UrApiWrapper()
     stats = api.get_stats()
     stats = api.response(stats)
-    if "content" in stats:
-        return stats["content"]
-
-    return "No DATA in stats"
+    return stats["content"] if "content" in stats else "No DATA in stats"
 
 def add_group(groupname):
     """
@@ -286,10 +280,7 @@ def add_group(groupname):
     api = UrApiWrapper()
     newgroup = api.add_group(groupname)
     newgroup = api.response(newgroup)
-    if "content" in newgroup:
-        return newgroup["content"]
-
-    return "No DATA in newclient"
+    return newgroup["content"] if "content" in newgroup else "No DATA in newclient"
 
 def remove_group(groupid):
     """
@@ -390,10 +381,7 @@ def get_backups_all_client():
     api = UrApiWrapper()
     backups = api.get_backups("0")
     backups = api.response(backups)
-    if "content" in backups:
-        return backups["content"]
-
-    return "No DATA backups"
+    return backups["content"] if "content" in backups else "No DATA backups"
 
 
 def get_backup_files(client_id, backup_id, path):
@@ -409,11 +397,7 @@ def get_backup_files(client_id, backup_id, path):
     api = UrApiWrapper()
     files = api.get_backup_files(client_id, backup_id, path)
     files = api.response(files)
-    if "content" in files:
-        return files["content"]
-
-
-    return "No DATA file"
+    return files["content"] if "content" in files else "No DATA file"
 
 def delete_backup(client_id, backup_id):
     """
@@ -428,10 +412,7 @@ def delete_backup(client_id, backup_id):
     api = UrApiWrapper()
     delete = api.delete_backup(client_id, backup_id)
     delete = api.response(delete)
-    if "content" in delete:
-        return delete["content"]
-
-    return "No DATA file"
+    return delete["content"] if "content" in delete else "No DATA file"
 
 
 def client_download_backup_file(clientid, backupid, path, filter_path):
@@ -447,10 +428,7 @@ def client_download_backup_file(clientid, backupid, path, filter_path):
     api = UrApiWrapper()
     download = api.client_download_backup_file(clientid, backupid, path, filter_path)
     download = api.response(download)
-    if "content" in download:
-        return download["content"]
-
-    return "No DATA file"
+    return download["content"] if "content" in download else "No DATA file"
 
 
 def client_download_backup_file_shahash(clientid, backupid, path, shahash):
@@ -468,10 +446,7 @@ def client_download_backup_file_shahash(clientid, backupid, path, shahash):
         clientid, backupid, path, shahash
     )
     download = api.response(download)
-    if "content" in download:
-        return download["content"]
-
-    return "No DATA file"
+    return download["content"] if "content" in download else "No DATA file"
 
 
 def get_status():
@@ -484,10 +459,7 @@ def get_status():
     api = UrApiWrapper()
     status = api.get_status()
     status = api.response(status)
-    if "content" in status:
-        return status["content"]
-
-    return "No DATA status"
+    return status["content"] if "content" in status else "No DATA status"
 
 
 def get_progress():
@@ -500,10 +472,7 @@ def get_progress():
     api = UrApiWrapper()
     progress = api.get_progress()
     progress = api.response(progress)
-    if "content" in progress:
-        return progress["content"]
-
-    return "No DATA progress"
+    return progress["content"] if "content" in progress else "No DATA progress"
 
 
 def get_status_client(clientname):
@@ -521,10 +490,7 @@ def get_status_client(clientname):
     status = api.response(status)
 
     for client in status["status"]:
-        if client["name"] == clientname:
-            return client
-
-        return "No DATA client"
+        return client if client["name"] == clientname else "No DATA client"
 
 
 def create_backup_incremental_file(client_id):
@@ -561,7 +527,4 @@ def create_backup_full_file(client_id):
     backup = api.create_backup("full_file", client_id)
     backup = api.response(backup)
 
-    if "content" in backup:
-        return backup["content"]
-
-    return "No DATA full backup file"
+    return backup["content"] if "content" in backup else "No DATA full backup file"

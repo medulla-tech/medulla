@@ -54,12 +54,10 @@ class UrbackupDatabase(DatabaseHelper):
     def getDbConnection(self):
         NB_DB_CONN_TRY = 2
         ret = None
-        for i in range(NB_DB_CONN_TRY):
+        for _ in range(NB_DB_CONN_TRY):
             try:
                 ret = self.db.connect()
-            except DBAPIError as e:
-                logging.getLogger().error(e)
-            except Exception as e:
+            except (DBAPIError, Exception) as e:
                 logging.getLogger().error(e)
             if ret:
                 break
@@ -70,69 +68,65 @@ class UrbackupDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getClientStatus(self, session, client_id):
         try:
-            sql="""SELECT * FROM urbackup.client_state WHERE client_id = '%s';"""%(client_id)
+            sql = f"""SELECT * FROM urbackup.client_state WHERE client_id = '{client_id}';"""
 
             resultquery = session.execute(sql)
             session.commit()
             session.flush()
-            
-            result = [{column: value for column,
-                value in rowproxy.items()}
-                        for rowproxy in resultquery]
-            
+
+            result = [dict(rowproxy.items()) for rowproxy in resultquery]
+
         except Exception as e:
             logging.getLogger().error(str(e))
-            
+
         return result
     
     @DatabaseHelper._sessionm
     def editClientState(self, session, state, client_id):
         try:
-            sql="""UPDATE client_state SET state = '%s' WHERE client_id = '%s';"""%(state, client_id)
+            sql = f"""UPDATE client_state SET state = '{state}' WHERE client_id = '{client_id}';"""
 
             session.execute(sql)
             session.commit()
             session.flush()
-            
+
             return True
-            
+
         except Exception as e:
             logging.getLogger().error(str(e))
-            
+
             return False
         
     @DatabaseHelper._sessionm
     def insertNewClient(self, session, client_id, authkey):
         try:
-            sql="""INSERT INTO client_state VALUES ('%s', '1', '%s');"""%(client_id, authkey)
+            sql = f"""INSERT INTO client_state VALUES ('{client_id}', '1', '{authkey}');"""
 
             session.execute(sql)
             session.commit()
             session.flush()
-            
+
             return True
-            
+
         except Exception as e:
             logging.getLogger().error(str(e))
-            
+
             return False
 
     @DatabaseHelper._sessionm
     def getComputersEnableValue(self, session, jid):
         try:
-            sql="""SELECT id, jid, enabled FROM xmppmaster.machines WHERE jid = '%s';"""%(jid)
+            sql = f"""SELECT id, jid, enabled FROM xmppmaster.machines WHERE jid = '{jid}';"""
 
             resultquery = session.execute(sql)
             session.commit()
             session.flush()
-            
-            result = [{column: value for column,
-                value in rowproxy.items()}
-                        for rowproxy in resultquery]
-            
+
+            result = [dict(rowproxy.items()) for rowproxy in resultquery]
+
         except Exception as e:
             logging.getLogger().error(str(e))
-            
+
         return result
 
     # =====================================================================
