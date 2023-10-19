@@ -55,8 +55,13 @@ function endsWith($haystack, $needle) {
     return (substr($haystack, -$length) === $needle);
 }
 
-
-function safeCount($toCount){
-    return (is_countable($toCount)) ? count($toCount) : 0;
+function safeCount($toCount) {
+    if (is_countable($toCount)) {
+        return count($toCount);
+    } elseif (is_string($toCount)) {
+        return strlen($toCount);
+    } else {
+        return 0;
+    }
 }
 ?>

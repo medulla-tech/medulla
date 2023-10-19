@@ -73,7 +73,7 @@ function getAllProfiles($params = array())
 function getPGobject($id, $load = false)
 {
     $is_profile = xmlrpc_isprofile($id);
-    if ($is_profile) {
+    if ((is_string($is_profile) && strtolower($is_profile) == "true") || (is_bool($is_profile) && $is_profile == true) ) {
         return new Profile($id, $load);
     } else {
         return new Group($id, $load);
