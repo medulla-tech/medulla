@@ -129,15 +129,15 @@ for($i=0; $i < $count_enabled_updates; $i++)
     }*/
 
     $color = colorconf($compliance_rate);
-    $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$compliance_rate."% </div>";
+    $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_rate."% </div>";
 }
 
 $n = new OptimizedListInfos($titles, _T("Update name", "updates"));
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($machineWithUpd, _T("Machine with this update", "updates"));
-$n->addExtraInfo($machineWithoutUpd, _T("Machine without this update (waiting)", "updates"));
+$n->addExtraInfo($machineWithUpd, _T("Machines with this update", "updates"));
+$n->addExtraInfo($machineWithoutUpd, _T("Machines without this update (waiting)", "updates"));
 
 $n->setItemCount($count_enabled_updates);
 $n->setNavBar(new AjaxNavBar($count_enabled_updates, $filter));

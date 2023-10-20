@@ -36,10 +36,10 @@ $submod->setImg('modules/updates/graph/navbar/updates');
 $submod->setDefaultPage("updates/updates/index");
 $submod->setPriority(500);
 
-$page = new Page("index", _T('Update Deployments', 'updates'));
+$page = new Page("index", _T('Entities Compliance', 'updates'));
 $submod->addPage($page);
 
-$page = new Page("ajaxEntitiesList", _T("Update Deployments", "updates"));
+$page = new Page("ajaxEntitiesList", _T("Entities Compliance", "updates"));
 $page->setFile("modules/updates/updates/ajaxEntitiesList.php");
 $page->setOptions(array("AJAX"=>True, "visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
@@ -104,46 +104,46 @@ $page->setFile("modules/updates/updates/ajaxDetailsByUpdatesWhite.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("updatesListWin", _T('Manage Windows Updates', 'updates'));
+$page = new Page("updatesListWin", _T('Manage Updates Lists', 'updates'));
 $page->setFile("modules/updates/updates/updatesListWin.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdatesListWinWhite", _T("Manage Windows Updates", "updates"));
+$page = new Page("ajaxUpdatesListWinWhite", _T("Manage Updates Lists", "updates"));
 $page->setFile("modules/updates/updates/ajaxUpdatesListWinWhite.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdatesListWinGray", _T("Manage Windows Updates", "updates"));
+$page = new Page("ajaxUpdatesListWinGray", _T("Manage Updates Lists", "updates"));
 $page->setFile("modules/updates/updates/ajaxUpdatesListWinGray.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdatesListWinBlack", _T("Manage Windows Updates", "updates"));
+$page = new Page("ajaxUpdatesListWinBlack", _T("Manage Updates Lists", "updates"));
 $page->setFile("modules/updates/updates/ajaxUpdatesListWinBlack.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
 $submod->addPage($page);
 
-$page = new Page("enableUpdate", _T('Enable Update', 'updates'));
+$page = new Page("enableUpdate", _T('Enable for manual update', 'updates'));
 $page->setFile("modules/updates/updates/enableUpdate.php");
 $submod->addPage($page);
 
-$page = new Page("disableUpdate", _T('Disable Update', 'updates'));
+$page = new Page("disableUpdate", _T('Disable for manual update', 'updates'));
 $page->setFile("modules/updates/updates/disableUpdate.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("whitelistUpdate", _T('Approve Update', 'updates'));
+$page = new Page("whitelistUpdate", _T('Approve for automatic update', 'updates'));
 $page->setFile("modules/updates/updates/whitelistUpdate.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("blacklistUpdate", _T('Ban Update', 'updates'));
+$page = new Page("blacklistUpdate", _T('Ban update', 'updates'));
 $page->setFile("modules/updates/updates/blacklistUpdate.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("greylistUpdate", _T('Unlist Update', 'updates'));
+$page = new Page("greylistUpdate", _T('Unlist update', 'updates'));
 $page->setFile("modules/updates/updates/greylistUpdate.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("deleteRule", _T('UnBan Update', 'updates'));
+$page = new Page("deleteRule", _T('UnBan update', 'updates'));
 $page->setFile("modules/updates/updates/deleteRule.php");
 $submod->addPage($page);
 
@@ -160,7 +160,7 @@ $page->setFile("modules/updates/updates/grayApprove.php", array("noHeader"=>True
 $submod->addPage($page);
 
 // Also used for whitelist
-$page = new Page("banUpdate", _T('Ban Update', 'updates'));
+$page = new Page("banUpdate", _T('Ban update', 'updates'));
 $page->setFile("modules/updates/updates/banUpdate.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 

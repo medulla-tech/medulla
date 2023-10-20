@@ -32,12 +32,12 @@ $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 $grey_list = xmlrpc_get_grey_list($start, $maxperpage, $filter);
 
 // GrayList Actions
-$grayEnableAction = new ActionItem(_T("Enable Update", "updates"),"grayEnable","enableupdate","", "updates", "updates");
-$grayEnableEmptyAction = new EmptyActionItem1(_("Enable Update"),"grayEnable", "enableupdateg","","updates", "updates");
-$grayDisableAction = new ActionPopupItem(_T("Disable Update", "updates"), "grayDisable", "disableupdate", "updates", "updates");
-$grayDisableEmptyAction = new EmptyActionItem1(_T("Disable Update", "updates"),"grayDisable", "disableupdateg","","updates", "updates");
-$grayApproveAction = new ActionPopupItem(_T("Approve Update", "updates"), "grayApprove", "approveupdate", "updates", "updates");
-$banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "banupdate", "updates", "updates");
+$grayEnableAction = new ActionItem(_T("Enable for manual update", "updates"),"grayEnable","enableupdate","", "updates", "updates");
+$grayEnableEmptyAction = new EmptyActionItem1(_("Enable for manual update"),"grayEnable", "enableupdateg","","updates", "updates");
+$grayDisableAction = new ActionPopupItem(_T("Disable for manual update", "updates"), "grayDisable", "disableupdate", "updates", "updates");
+$grayDisableEmptyAction = new EmptyActionItem1(_T("Disable for manual update", "updates"),"grayDisable", "disableupdateg","","updates", "updates");
+$grayApproveAction = new ActionPopupItem(_T("Approve for automatic update", "updates"), "grayApprove", "approveupdate", "updates", "updates");
+$banAction = new ActionPopupItem(_T("Ban update", "updates"), "banUpdate", "banupdate", "updates", "updates");
 $grayActions = [
     "enable"=>[],
     "disable"=>[],
@@ -73,7 +73,7 @@ for($i=0; $i < $count_partial; $i++){
     }
     else{
         $kbs_gray[] = "";
-        $updateids_gray[] = $grey_list['updateid'][$i];
+        $updateids_gray[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $grey_list['updateid'][$i] . "'\">" . $grey_list['updateid'][$i] . "</a>";
     }
 }
 
@@ -91,7 +91,7 @@ $g->addExtraInfo($grey_list['severity'], _T("Severity", "updates"));
 $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter, 'updateSearchParamformGray'));
 $g->setParamInfo($params_grey);
-echo '<h2> Grey list</h2>';
+echo '<h2> Grey list (manual updates)</h2>';
 $g->addActionItemArray($grayActions['enable']);
 $g->addActionItemArray($grayActions['disable']);
 $g->addActionItemArray($grayActions['approve']);

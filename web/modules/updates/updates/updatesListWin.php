@@ -23,7 +23,7 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-$p = new PageGenerator(_T("Manage Windows Updates", 'updates'));
+$p = new PageGenerator(_T("Manage Updates Lists", 'updates'));
 $p->setSideMenu($sidemenu);
 $p->display();
 

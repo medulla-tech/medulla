@@ -41,7 +41,7 @@ if(isset($_POST['bconfirm'])){
 } else {
     $updateid = $_GET['updateid'];
     // Creation et affichage de la modal
-    $f = new PopupForm(_T("Approve Update"));
+    $f = new PopupForm(_T("Approve for automatic update"));
     $hidden = new HiddenTpl("updateid");
     $f->add($hidden, array("value" => $updateid, "hide" => True));
     $f->addValidateButton("bconfirm");
