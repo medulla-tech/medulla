@@ -1275,17 +1275,17 @@ class LdapUserGroupControl:
         # this allow to use memberOf ldap overlay
         if self.posixGroupIsRFC2307bis():
             group_info = {
-                "cn": cn,
-                "gidnumber": str(gidNumber),
-                "objectclass": ("groupOfUniqueNames", "posixGroup", "top"),
+                "cn": cn.encode("utf-8"),
+                "gidnumber": str(gidNumber).encode("utf-8"),
+                "objectclass": (b"groupOfUniqueNames", b"posixGroup", b"top"),
                 "uniqueMember": "",
             }
         # regular posixGroup
         else:
             group_info = {
-                "cn": cn,
-                "gidnumber": str(gidNumber),
-                "objectclass": ("posixGroup", "top"),
+                "cn": cn.encode("utf-8"),
+                "gidnumber": str(gidNumber).encode("utf-8"),
+                "objectclass": (b"posixGroup", b"top"),
             }
 
         attributes = list(list(group_info.items()))
@@ -1543,22 +1543,15 @@ class LdapUserGroupControl:
 
     def changeGroupAttributes(self, group, attr, attrVal, log=True):
         """
-         change a group attributes
+        Change a group's attributes
 
-         @param group: group name
-         @type  group: str
-
-         @param attr: attribute name
-         @type  attr: str
-
-         @param attrVal: attribute value
-         @type  attrVal: object
-
-        @param log: log action or not
-        @type  log: boolean
+        @param group: group name (str)
+        @param attr: attribute name (str)
+        @param attrVal: attribute value
+        @param log: log action or not (boolean)
         """
-        group = group.encode("utf-8")
         groupdn = f"cn={group},{self.baseGroupsDN}"
+
         if attrVal:
             if log:
                 r = AF().log(
@@ -1567,7 +1560,10 @@ class LdapUserGroupControl:
                     [(groupdn, AT.GROUP), (attr, AT.ATTRIBUTE)],
                     attrVal,
                 )
-            attrVal = str(attrVal.encode("utf-8"))
+            # Convert attrVal to bytes if it's not already
+            if isinstance(attrVal, str):
+                attrVal = attrVal.encode("utf-8")
+
             self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, attrVal)])
             if log:
                 r.commit()

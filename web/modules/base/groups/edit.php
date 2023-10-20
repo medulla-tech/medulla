@@ -63,8 +63,11 @@ if ($_GET["action"] == "add") {
     $title = _("Edit group");
     $groupname = $_GET["group"];
     $detailArr = get_detailed_group($groupname);
-    if (isset($detailArr["description"])) $groupdesc = htmlspecialchars($detailArr["description"][0]);
-    else $groupdesc = "";
+    if (isset($detailArr["description"]) && is_string($detailArr["description"][0])) {
+        $groupdesc = htmlspecialchars($detailArr["description"][0]);
+    } else {
+        $groupdesc = "";
+    }
 }
 
 $p = new PageGenerator($title);
