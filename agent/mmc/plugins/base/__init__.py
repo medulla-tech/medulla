@@ -529,13 +529,16 @@ def getUserAcl(uid):
     if uid == "root":
         return ""
     ldapObj = ldapUserGroupControl()
-    allInfo = ldapObj.getDetailedUser(uid)
     try:
-        return allInfo["lmcACL"][0]
+        allInfo = ldapObj.getDetailedUser(uid)
+        result = allInfo["lmcACL"][0]
+        if isinstance(result, bytes):
+            result = result.decode("utf-8")
+        return result
     except:
         # test if contain lmcUserObject
         if "lmcUserObject" not in allInfo["objectClass"]:
-            allInfo["objectClass"].append("lmcUserObject")
+            allInfo["objectClass"].append(b"lmcUserObject")
             ldapObj.changeUserAttributes(uid, "objectClass", allInfo["objectClass"])
         return ""
 
@@ -1515,7 +1518,11 @@ class LdapUserGroupControl:
             elif isinstance(attrVal, xmlrpc.client.Binary):
                 # Needed for binary string coming from XMLRPC
                 attrVal = str(attrVal)
-            self.l.modify_s(userdn, [(ldap.MOD_REPLACE, attr, attrVal)])
+            try:
+                self.l.modify_s(userdn, [(ldap.MOD_REPLACE, attr, attrVal)])
+            except Exception as e:
+                logging.getLogger().error(e)
+                pass
             if log:
                 r.commit()
         else:
