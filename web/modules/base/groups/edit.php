@@ -35,7 +35,7 @@ if (isset($_POST["badd"])) {
         new NotifyWidgetSuccess(sprintf(_("Group %s successfully added"), $groupname));
         redirectTo(urlStrRedirect("base/groups/index"));
     }
-} else if (isset($_POST["bmodify"])) {
+} elseif (isset($_POST["bmodify"])) {
     $groupname = $_POST["groupname"];
     $groupdesc = stripslashes($_POST["groupdesc"]);
     change_group_desc($groupname, $groupdesc);
@@ -47,8 +47,9 @@ if (isset($_POST["badd"])) {
             break;
         }
     }
-    if (!$error && !isXMLRPCError())
+    if (!$error && !isXMLRPCError()) {
         new NotifyWidgetSuccess(sprintf(_("Group %s successfully modified"), $groupname));
+    }
     redirectTo(urlStrRedirect("base/groups/edit", array("group" => $groupname)));
 }
 
@@ -92,14 +93,14 @@ $p->display();
 <table cellspacing="0">
 
 <?php
-if ($_GET["action"]=="add") {
+if ($_GET["action"] == "add") {
     $formElt = new InputTpl("groupname", "/^[a-zA-Z][0-9_a-zA-Z-]*$/");
 } else {
     $formElt = new HiddenTpl("groupname");
 }
 
 $tr = new TrFormElement(_("Group name"), $formElt);
-$tr->display(array("value" => $groupname, "required" => True));
+$tr->display(array("value" => $groupname, "required" => true));
 
 $tr = new TrFormElement(_("Description"), new InputTpl("groupdesc"));
 $tr->display(array("value" => $groupdesc));
@@ -112,7 +113,7 @@ $tr->display(array("value" => $groupdesc));
 callPluginFunction("baseGroupEdit", array($detailArr, $_POST));
 ?>
 
-<?php if ($_GET["action"] == "add")  { ?>
+<?php if ($_GET["action"] == "add") { ?>
 <input name="badd" type="submit" class="btnPrimary" value="<?php echo  _("Create"); ?>" />
 <?php } else { ?>
 <input name="groupname" type="hidden" value="<?php echo  $groupname; ?>" />
