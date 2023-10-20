@@ -41,7 +41,6 @@ if (isset($_POST["badd"])) {
     change_group_desc($groupname, $groupdesc);
     $error = false;
     $ret = callPluginFunction("changeGroup", array($_POST));
-    var_dump($err);
     foreach($ret as $plugin => $result) {
         if ($result === false) {
             $error = true;
