@@ -653,7 +653,7 @@ class ImagingMenu:
                 buf = self.buildMenuIpxe()
             except Exception as e:
                 logging.getLogger().error(str(e))
-                self.logger.error('An error occurred char'))
+                self.logger.error('An error occurred char')
                 return
             backupname = "%s.backup" % filename
             if os.path.exists(filename):
