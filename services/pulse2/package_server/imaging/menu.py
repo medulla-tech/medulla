@@ -541,7 +541,7 @@ class ImagingMenu:
                         self.menuitems[i]._applyReplacement(self.menuitems[i].CMDLINE)
                     ),
                 )
-        #assert type(buf) == unicode
+        # assert type(buf) == unicode
         # Clean brazilian characters who are not compatible
         # with MS-DOS encoding by delete accent marks
         buf = self.delete_diacritics(buf)
@@ -653,7 +653,7 @@ class ImagingMenu:
                 buf = self.buildMenuIpxe()
             except Exception as e:
                 logging.getLogger().error(str(e))
-                self.logger.error('An error occurred char')
+                self.logger.error("An error occurred char")
                 return
             backupname = "%s.backup" % filename
             if os.path.exists(filename):
