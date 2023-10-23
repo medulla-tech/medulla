@@ -1187,34 +1187,20 @@ INITRD ../davos/initrd.img"""
         d = ipv4.split('.')
         return (int(d[0])*256*256*256) + (int(d[1])*256*256) + (int(d[2])*256) +int(d[3])
 
-    def isValidIPv4Address(self, adressmachine):
-        self.logger.info("controle of the machine address %s in network %s"%(adressmachine,self.networkserver))
-        adressmachine = adressmachine.split(":")[0]
-        reseaumachine = self.ipV4toDecimal(adressmachine) &  self.mask_server
-        if self.networkserver == reseaumachine :
-            self.logger.info("machine address %s in network %s"%(adressmachine,self.networkserver))
-            return True
-        else :
-            self.logger.error("machine %s in not in network %s. Please check your public_mask setting."%(adressmachine,self.networkserver))
-        return False
-
     def chooseMacAddress(self):
         rest = True
         for k, v in self.menu['computer'].iteritems():
-            if self.isValidIPv4Address(v):
-                mac = pulse2.utils.reduceMACAddress(k)
-                filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
-                self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))
-                menuval= self.template%(k,
-                                self.menu['description'],
-                                k, #mac
-                                self.menu['master']
-                                )
-                self.logger.debug("bootMenu [%s]\n%s"%(mac, menuval))
-                if self.writeMenuMulticast( filename, menuval) == False:
-                    rest = False
-            else:
-                self.logger.debug("mac [%s] ip [%s] non selected"%(k,v))
+            mac = pulse2.utils.reduceMACAddress(k)
+            filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
+            self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))
+            menuval= self.template%(k,
+                            self.menu['description'],
+                            k, #mac
+                            self.menu['master']
+                            )
+            self.logger.debug("bootMenu [%s]\n%s"%(mac, menuval))
+            if self.writeMenuMulticast( filename, menuval) == False:
+                rest = False
 
         if os.path.isfile(os.path.join(self.pathBootMenu, 'default')) is False:
             with open(os.path.join(self.pathBootMenu, 'default'), 'w') as default_clonezilla:
