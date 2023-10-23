@@ -813,10 +813,6 @@ function xmlrpc_get_conformity_update_by_machine($idmachine){
   return xmlCall("xmppmaster.get_conformity_update_by_machine", [$idmachine]);
 }
 
-function xmlrpc_get_conformity_update_by_machines($ids){
-  return xmlCall("xmppmaster.get_conformity_update_by_machines", [$ids]);
-}
-
 function xmlrpc_get_conformity_update_for_group($uuidArray){
   return xmlCall("xmppmaster.get_conformity_update_for_group", [$uuidArray]);
 }
@@ -845,12 +841,16 @@ function xmlrpc_pending_group_update_by_pid($gid, $pid, $startdate="", $enddate=
   return xmlCall("xmppmaster.pending_group_update_by_pid", [$gid, $pid, $startdate, $enddate]);
 }
 
-function xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, $user, $startdate="", $enddate=""){
-  return xmlCall("xmppmaster.pending_machine_update_by_pid", [$machineid, $inventoryid, $updateid, $deployName, $user, $startdate, $enddate]);
+function xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, $user, $startdate="", $enddate="", $deployment_intervals=""){
+  return xmlCall("xmppmaster.pending_machine_update_by_pid", [$machineid, $inventoryid, $updateid, $deployName, $user, $startdate, $enddate, $deployment_intervals]);
 }
 
 function xmlrpc_get_updates_by_uuids($uuids, $start=0, $limit=-1, $filter=""){
   return xmlCall("xmppmaster.get_updates_by_uuids", [$uuids, $start, $limit, $filter]);
+}
+
+function xmlrpc_get_updates_by_machineids($machineids, $start=0, $limit=-1, $filter=""){
+  return xmlCall("xmppmaster.get_updates_by_machineids", [$machineids, $start, $limit, $filter]);
 }
 
 function xmlrpc_get_tagged_updates_by_machine($machineid, $start=0, $end=-1, $filter=""){
@@ -861,4 +861,11 @@ function xmlrpc_get_audit_summary_updates_by_machine($machineid, $start, $end, $
   return xmlCall("xmppmaster.get_audit_summary_updates_by_machine", [$machineid, $start, $end, $filter]);
 }
 
+function xmlrpc_get_update_kb($updateid){
+  return xmlCall("xmppmaster.get_update_kb", [$updateid]);
+}
+
+function xmlrpc_cancel_update($machineid, $updateid){
+  return xmlCall("xmppmaster.cancel_update", [$machineid, $updateid]);
+}
 ?>

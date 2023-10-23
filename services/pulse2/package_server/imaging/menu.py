@@ -1140,7 +1140,7 @@ item clonezilla Restore Multicast %s
 choose --default clonezilla --timeout 10000 target && goto ${target}
 :clonezilla
 set url_path http://${next-server}/downloads/davos/
-set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=${url_path}fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=${url_path}fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST initrd=initrd.img
 kernel ${url_path}vmlinuz ${kernel_args}
 initrd ${url_path}initrd.img
 boot || goto MENU
@@ -1163,7 +1163,7 @@ MENU HELPMSGENDROW 29
 LABEL multicast
 MENU LABEL Restore Multicast %s
 KERNEL ../davos/vmlinuz
-APPEND boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=tftp://%s/davos/fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
+APPEND boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=tftp://%s/davos/fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST initrd=initrd.img
 INITRD ../davos/initrd.img"""
 
     def ipV4toDecimal(self, ipv4):

@@ -5590,6 +5590,10 @@ class Glpi94(DyngroupDatabaseHelper):
                     INNER JOIN
                 glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
             WHERE
+                glpi.glpi_computers.is_deleted = 0
+            AND
+                glpi.glpi_computers.is_template = 0
+            AND
                 glpi.glpi_softwares.name LIKE 'Update (KB%s)';"""%(kb)
         result = {}
         res = self.db.execute(sqlrequest)
@@ -5824,6 +5828,33 @@ class Glpi94(DyngroupDatabaseHelper):
             uuid = "UUID%i"%element.id
             name = element.name
             result["UUID%i"%element.id] = {"uuid": uuid, "hostname": name}
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_count_installed_updates_by_machines(self, session, ids):
+        ids = "(%s)"%','.join([id for id in ids]).replace("UUID" , "")
+
+        sql = """select
+    glpi_computers.id as id,
+    glpi_computers.name as name,
+    count(glpi_softwares.id) as installed
+from glpi_computers
+join glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
+join glpi.glpi_softwareversions on glpi.glpi_computers_softwareversions.softwareversions_id = glpi.glpi_softwareversions.id
+join glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_softwareversions.softwares_id
+WHERE glpi.glpi_softwares.name LIKE "Update (KB%%"
+and glpi_computers.id in %s group by glpi_computers.id;"""%(ids)
+
+        datas = session.execute(sql)
+        result = {}
+        for element in datas:
+            logger.debug(element)
+            result["UUID%d"%element.id] = {
+                "id": element.id,
+                "cn" : element.name,
+                "installed": element.installed
+            }
+
         return result
 
 

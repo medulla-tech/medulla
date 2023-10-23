@@ -5680,6 +5680,32 @@ class Glpi95(DyngroupDatabaseHelper):
         result.append(input_computer)
         return result
 
+    @DatabaseHelper._sessionm
+    def get_count_machine_with_update(self, session, kb):
+        sqlrequest ="""
+            SELECT
+                COUNT(*) as nb_machines
+            FROM
+                glpi.glpi_computers
+                    INNER JOIN
+                glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.items_id and glpi.glpi_items_softwareversions.itemtype="Computer"
+                    INNER JOIN
+                glpi.glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
+                    INNER JOIN
+                glpi.glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
+                    INNER JOIN
+                glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
+            WHERE
+                glpi.glpi_computers.is_deleted = 0
+            AND
+                glpi.glpi_computers.is_template = 0
+            AND
+                glpi.glpi_softwares.name LIKE 'Update (KB%s)';"""%(kb)
+        result = {}
+        res = self.db.execute(sqlrequest)
+        for element in res:
+            result['nb_machines'] = element.nb_machines
+        return result
 
     @DatabaseHelper._sessionm
     def get_machine_for_id(self, session, strlistuuid, filter, start, limit):
@@ -5776,6 +5802,33 @@ class Glpi95(DyngroupDatabaseHelper):
         else:
             result = [int(id) for id in query]
         return result
+
+    @DatabaseHelper._sessionm
+    def get_count_installed_updates_by_machines(self, session, ids):
+        ids = "(%s)"%','.join([id for id in ids]).replace("UUID" , "")
+
+        sql = """select
+    glpi_computers.id as id,
+    glpi_computers.name as name,
+    count(glpi_softwares.id) as installed
+from glpi_computers
+join glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.items_id
+join glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_items_softwareversions.softwareversions_id
+WHERE glpi.glpi_softwares.name LIKE "Update (KB%%"
+and glpi_computers.id in %s group by glpi_computers.id;"""%(ids)
+
+        datas = session.execute(sql)
+        result = {}
+        for element in datas:
+            logger.debug(element)
+            result["UUID%d"%element.id] = {
+                "id": element.id,
+                "cn" : element.name,
+                "installed": element.installed
+            }
+
+        return result
+
 
 # Class for SQLalchemy mapping
 class Machine(object):

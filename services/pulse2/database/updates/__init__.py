@@ -134,7 +134,7 @@ class UpdatesDatabase(DatabaseHelper):
                         xmppmaster.up_black_list.updateid_or_kb,
                         xmppmaster.update_data.title,
                         xmppmaster.up_black_list.id,
-                        xmppmaster.update_data.msrcseverity
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM
                         xmppmaster.up_black_list
                     INNER JOIN
@@ -149,8 +149,12 @@ class UpdatesDatabase(DatabaseHelper):
                 filterlimit= "LIMIT %s, %s"%(start, limit)
 
             if filter:
-                filterwhere="""AND
-                        update_data.title LIKE '%%%s%%' """ % filter
+                ffilterwhere="""WHERE
+                    (update_data.title LIKE '%%%s%%' OR
+                    concat("KB", update_data.kb) LIKE '%%%s%%' OR
+                    update_data.description LIKE '%%%s%%' OR
+                    update_data.updateid LIKE '%%%s%%' OR
+                    coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") LIKE '%%%s%%') """ % (filter, filter, filter, filter, filter)
                 sql += filterwhere
 
             sql += " ORDER BY FIELD(msrcseverity, \"Critical\", \"Important\", \"\") "
@@ -201,7 +205,7 @@ class UpdatesDatabase(DatabaseHelper):
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         xmppmaster.up_gray_list.*,
-                        xmppmaster.update_data.msrcseverity as msrcseverity
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM
                         xmppmaster.up_gray_list
                     JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_gray_list.updateid """
@@ -211,7 +215,11 @@ class UpdatesDatabase(DatabaseHelper):
                 filterlimit= "LIMIT %s, %s"%(start, limit)
             if filter != "":
                 filterwhere="""WHERE
-                        title LIKE '%%%s%%' """%filter
+                    (update_data.title LIKE '%%%s%%' OR
+                    concat("KB", update_data.kb) LIKE '%%%s%%' OR
+                    update_data.description LIKE '%%%s%%' OR
+                    update_data.updateid LIKE '%%%s%%' OR
+                    coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") LIKE '%%%s%%') """ % (filter, filter, filter, filter, filter)
                 sql += filterwhere
 
             sql += " ORDER BY FIELD(msrcseverity, \"Critical\", \"Important\", \"\") "
@@ -262,13 +270,17 @@ class UpdatesDatabase(DatabaseHelper):
 
             sql="""SELECT SQL_CALC_FOUND_ROWS
                         xmppmaster.up_white_list.*,
-                        xmppmaster.update_data.msrcseverity as msrcseverity
+                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
                     FROM xmppmaster.up_white_list
                     JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_white_list.updateid """
 
             if filter:
-                filterwhere="""AND
-                        title LIKE '%%%s%%' """ % filter
+                filterwhere="""WHERE
+                    (update_data.title LIKE '%%%s%%' OR
+                    concat("KB", update_data.kb) LIKE '%%%s%%' OR
+                    update_data.description LIKE '%%%s%%' OR
+                    update_data.updateid LIKE '%%%s%%' OR
+                    coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") LIKE '%%%s%%') """ % (filter, filter, filter, filter, filter)
                 sql +=filterwhere
 
             sql += " ORDER BY FIELD(msrcseverity, \"Critical\", \"Important\", \"\") "
@@ -299,7 +311,8 @@ class UpdatesDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def get_enabled_updates_list(self, session, start, limit, filter=""):
+    def get_enabled_updates_list(self, session, entity, upd_list="gray", start=0, limit=-1, filter=""):
+
         try:
             start = int(start)
         except:
@@ -310,39 +323,62 @@ class UpdatesDatabase(DatabaseHelper):
             limit = -1
 
         try:
+            list_name = "up_%s_list"%upd_list
+
             enabled_updates_list={ 'nb_element_total': 0,
                         'updateid' : [],
                         'title' : [],
                         'kb' : [],
-                        'valided' : []}
-            sql="""SELECT SQL_CALC_FOUND_ROWS
-                        updateid, kb, title, description, creationdate, title_short, valided
-                    FROM
-                        xmppmaster.up_gray_list
-                    WHERE
-                        xmppmaster.up_gray_list.valided = 1
-                    UNION
-                    SELECT
-                       updateid, kb, title, description, creationdate, title_short, valided
-                    FROM
-                        xmppmaster.up_white_list
-                    WHERE
-                        xmppmaster.up_white_list.valided = 1 """
+                        'valided' : [],
+                        'missing' : [],
+                        "installed": []}
 
+            sql="""SELECT SQL_CALC_FOUND_ROWS
+    umw.update_id AS updateid,
+    ud.kb AS kb,
+    ud.title AS title,
+    ud.description AS description,
+    ud.creationdate AS creationdate,
+    ud.title_short AS title_short,
+    tbl.valided as valided,
+    count(umw.update_id) as missing
+FROM
+    xmppmaster.up_machine_windows umw
+LEFT JOIN xmppmaster.%s tbl ON tbl.updateid = umw.update_id
+JOIN xmppmaster.update_data ud ON umw.update_id = ud.updateid
+JOIN xmppmaster.machines ma ON umw.id_machine = ma.id
+JOIN xmppmaster.glpi_entity ge ON ge.id = ma.glpi_entity_id
+WHERE
+    tbl.valided = 1
+AND
+    ge.glpi_id = %s
+AND
+    tbl.updateid is not NULL """%(list_name, entity.replace("UUID", ""))
+
+            if filter != "":
+                filterwhere="""AND
+                        (ud.title LIKE '%%%s%%'
+                        OR ud.updateid LIKE '%%%s%%'
+                        OR ud.kb LIKE '%%%s%%'
+                        OR ud.description LIKE '%%%s%%'
+                        OR ud.creationdate LIKE '%%%s%%'
+                        OR ud.title_short LIKE '%%%s%%')"""%tuple(filter for x in range(0,6))
+                sql += filterwhere
+
+            sql += "group by umw.update_id "
             filterlimit= ""
             if start != -1 and limit != -1:
                 filterlimit= "LIMIT %s, %s"%(start, limit)
-            if filter != "":
-                filterwhere="""WHERE
-                        title LIKE '%%%s%%' """%filter
-                sql += filterwhere
             sql += filterlimit
             sql+=";"
 
             result = session.execute(sql)
 
             sql_count = "SELECT FOUND_ROWS();"
-            ret_count = session.execute(sql_count)
+            try:
+                ret_count = session.execute(sql_count)
+            except Exception as e:
+                logging.getLogger().error(e)
             nb_element_total = ret_count.first()[0]
 
             enabled_updates_list['nb_element_total'] = nb_element_total
@@ -352,16 +388,31 @@ class UpdatesDatabase(DatabaseHelper):
 
             if result:
                 for list_b in result:
+                    sql2 = """select count(ma.id) as count
+        from xmppmaster.machines ma
+        join xmppmaster.up_history uh on uh.id_machine = ma.id
+        join xmppmaster.glpi_entity ge on ma.glpi_entity_id = ge.id
+    where uh.update_id='%s' and ge.glpi_id=%s and uh.delete_date is not NULL"""%(list_b.updateid, entity.replace("UUID", ""))
+                    print(list_b)
+                    try:
+                        res = session.execute(sql2)
+                    except Exception as e:
+                        logger.error(e)
+                    installed = 0
+                    if res is not None:
+                        for _res in res:
+                            installed = _res.count
                     enabled_updates_list['updateid'].append(list_b.updateid)
                     enabled_updates_list['title'].append(list_b.title)
                     enabled_updates_list['kb'].append(list_b.kb)
                     enabled_updates_list['valided'].append(list_b.valided)
+                    enabled_updates_list['missing'].append(list_b.missing)
+                    enabled_updates_list['installed'].append(installed)
 
         except Exception as e:
-            logger.error("error function get_enabled_updates_list")
+            logger.error("error function get_enabled_updates_list %s"%e)
 
         return enabled_updates_list
-
 
     @DatabaseHelper._sessionm
     def approve_update(self, session, updateid):
@@ -400,8 +451,6 @@ class UpdatesDatabase(DatabaseHelper):
                         )
             session.execute(sql2)
 
-            sql3 = """DELETE FROM xmppmaster.up_gray_list WHERE updateid = '%s' or kb='%s'"""%(updateid, updateid)
-            session.execute(sql3)
             session.commit()
             session.flush()
             return True
@@ -548,13 +597,8 @@ JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up
 
     @DatabaseHelper._sessionm
     def white_unlist_update(self, session, updateid):
-        sql_add = """INSERT INTO xmppmaster.up_gray_list (updateid, kb, revisionid, title, description, updateid_package, payloadfiles, valided, title_short)
-        (SELECT xmppmaster.up_packages.updateid, xmppmaster.up_packages.kb, xmppmaster.up_packages.revisionid, xmppmaster.up_packages.title, description, updateid_package, payloadfiles, valided, title_short FROM xmppmaster.up_white_list
-            JOIN xmppmaster.up_packages ON xmppmaster.up_packages.updateid = xmppmaster.up_white_list.updateid WHERE xmppmaster.up_packages.updateid='%s')"""%(updateid)
-
         sql = """DELETE FROM xmppmaster.up_white_list WHERE updateid = '%s' or kb='%s'"""%(updateid, updateid)
         try:
-            session.execute(sql_add)
             session.execute(sql)
             session.commit()
             session.flush()

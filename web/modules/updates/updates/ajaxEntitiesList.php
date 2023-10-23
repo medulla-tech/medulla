@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022 Siveo, http://siveo.net/
+ * (c) 2022-2023 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -67,7 +67,16 @@ function colorconf($conf){
     return $color;
 }
 
-$entities = getUserLocations();
+$_entities = getUserLocations();
+$filtered_entities = [];
+foreach($_entities as $entity){
+    if(preg_match("#".$filter."#i", $entity['name']) || preg_match("#".$filter."#i", $entity['completename'])){
+        $filtered_entities[] = $entity;
+    }
+}
+$count = count($filtered_entities);
+$entities = array_slice($filtered_entities, $start, $maxperpage, false);
+
 $entitycompliances = xmlrpc_get_conformity_update_by_entity();
 
 $detailsByMach = new ActionItem(_T("Details by machines", "updates"),"detailsByMachines","auditbymachine","", "updates", "updates");
@@ -85,21 +94,20 @@ $actiondeploySpecifics = [];
 $entityNames = [];
 $complRates = [];
 $totalMachine = [];
-$nbupadte = [];
+$nbupdate = [];
 $identity=array();
 
- foreach ($entitycompliances as $entitycompliance) {
-     $identity[$entitycompliance['entity']]=array(
-         "conformite" => $entitycompliance['conformite'],
-         "totalmach" => $entitycompliance['totalmach'],
-         "nbupdate" => $entitycompliance['nbupdate'],
-         "nbmachines" => $entitycompliance['nbmachines'],
-         "entity" => $entitycompliance['entity']);
- };
+foreach ($entitycompliances as $entitycompliance) {
+    $identity[$entitycompliance['entity']]=array(
+        "conformite" => $entitycompliance['conformite'],
+        "totalmach" => $entitycompliance['totalmach'],
+        "nbupdate" => $entitycompliance['nbupdate'],
+        "nbmachines" => $entitycompliance['nbmachines'],
+        "entity" => $entitycompliance['entity']);
+    }
 
-
-$count = count($entities);
 foreach ($entities as $entity) {
+    $nbmachines=0;
     $id_entity = intval(substr($entity["uuid"],4));
     $actiondetailsByMachs[] = $detailsByMach;
     $actiondetailsByUpds[] = $detailsByUpd;
@@ -111,6 +119,7 @@ foreach ($entities as $entity) {
         $color = colorconf($conformite);
         $totalmach=intval($identity[$id_entity]['totalmach']);
         $nbupdateentity=intval($identity[$id_entity]['nbupdate']);
+        $nbmachines=intval($identity[$id_entity]['nbmachines']);
 
         if($conformite == 100){
             $actiondeployAlls[] = $emptyDeployAll;
@@ -128,9 +137,10 @@ foreach ($entities as $entity) {
         $actiondeployAlls[] = $emptyDeployAll;
         $actiondeploySpecifics[] = $emptyDeploySpecific;
     }
-    $complRates[] ="<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$conformite."% </div>";
+    $complRates[] ="<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$conformite."% </div>";
     $totalMachine[] = $totalmach;
     $nbupdate[] = $nbupdateentity ;
+    $nbMachines[] = $nbmachines;
 }
 
 // Avoiding the CSS selector (tr id) to start with a number
@@ -144,8 +154,9 @@ $n->setcssIds($ids_entity);
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($nbupdate, _T("Missing Updates", "updates"));
-$n->addExtraInfo($totalMachine, _T("Total Machines", "updates"));
+$n->addExtraInfo($nbupdate, _T("Missing updates", "updates"));
+$n->addExtraInfo($nbMachines, _T("Non-compliant machines", "updates"));
+$n->addExtraInfo($totalMachine, _T("Total machines", "updates"));
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));

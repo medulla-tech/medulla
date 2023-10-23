@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022-2023 Siveo, http://siveo.net/
+ * (c) 2023 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -20,7 +20,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
@@ -90,14 +89,15 @@ for($i=0; $i < $count; $i++)
 }
 
 
-echo "<h2>Machines with update</h2>";
-$w = new OptimizedListInfos($titles_with, _T("Hostname", "updates"));
-$w->disableFirstColumnActionLink();
+echo "<h2>Machines without update</h2>";
+$n = new OptimizedListInfos($titles_without, _T("Hostname", "updates"));
+$n->disableFirstColumnActionLink();
 
-$w->addExtraInfo($plateform_with, _T("Platform", "updates"));
+$n->addExtraInfo($plateform_without, _T("Platform", "updates"));
 
-$w->setItemCount($count_with_upd);
-$w->setNavBar(new AjaxNavBar($count_with_upd, $filter));
+$n->setItemCount($count_with_upd);
+$n->setNavBar(new AjaxNavBar($count_with_upd, $filter));
 
-$w->display();
+$n->display();
+
 ?>

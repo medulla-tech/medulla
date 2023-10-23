@@ -1,7 +1,8 @@
 --
--- (c) 2013 Mandriva, http://www.mandriva.com/
+-- (c) 2023 Siveo, http://www.siveo.net/
 --
--- This file is part of Pulse 2, http://pulse2.mandriva.org
+--
+-- This file is part of Pulse 2, http://www.siveo.net/
 --
 -- Pulse 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -18,34 +19,30 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
-
--- check exist index before creation
-
-
-
-
 START TRANSACTION;
-
-SET FOREIGN_KEY_CHECKS=0;
-
+USE `xmppmaster`;
 -- ----------------------------------------------------------------------
--- Database change type champ add index
+-- Crée la table `up_history` s'il n'existe pas déjà.
+-- Cette table permet de garder une trace des updates effectuées sur les machines
 -- ----------------------------------------------------------------------
 
-ALTER TABLE `msc`.`target`
-CHANGE COLUMN `id_group` `id_group` VARCHAR(12) NULL DEFAULT NULL ;
-
-ALTER TABLE `msc`.`target`
-ADD INDEX `index_id_group` (`id_group` ASC);
-;
-
-
-SET FOREIGN_KEY_CHECKS=1;
-
+create table if not exists up_history(
+    id int not null auto_increment, primary key(id),
+    update_id varchar(255) not null,
+    id_machine int not null,
+    jid varchar(255),
+    update_list enum("white", "gray"),
+    required_date datetime,
+    curent_date datetime,
+    deploy_date datetime,
+    delete_date datetime,
+    command int null,
+    id_deploy int,
+    deploy_title varchar(255)
+);
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 30;
+UPDATE version SET Number = 84;
 
 COMMIT;
-

@@ -55,12 +55,12 @@ else if(!empty($_GET['machineid']) || !empty($_GET['inventoryid'])){
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : '';
     $machinename = (!empty($_GET['cn']) )? htmlentities($_GET['cn']) : '';
     $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"),"deployUpdate","updateone","", "updates", "updates");
-    $updates_list = xmlrpc_get_updates_by_uuids([$inventoryid], $start, $end, $filter);
+    $updates_list = xmlrpc_get_updates_by_machineids([$machineid], $start, $end, $filter);
 }
 
 $params = [];
 $names_updates = [];
-$kb_updates = [];
+$id_updates = [];
 $actionspeclistUpds = [];
 
 $count = $updates_list['total'];
@@ -70,13 +70,13 @@ $row = 0;
 $hostnames = [];
 $jids = [];
 $severities = [];
+$intervals = [];
 
 foreach ($updates_list as $update) {
     $actionspeclistUpds[] = $deployThisUpdate;
-    $kb_updates[] = 'KB'.$update['kb'];
-    $names_updates[] = $updates_list[$row]["pkgs_label"];
+    $id_updates[] = $update['update_id'];
+    $names_updates[] = (!empty($updates_list[$row]["pkgs_label"])) ? $updates_list[$row]["pkgs_label"] : $updates_list[$row]["title"];
     $version_updates[] = $updates_list[$row]['pkgs_version'];
-
     if(!empty($updates_list[$row]['hostname'])){
         $hostnames[] = $updates_list[$row]['hostname'];
     }
@@ -90,10 +90,10 @@ foreach ($updates_list as $update) {
 
     $tmp = [
         "pid" => $updates_list[$row]["update_id"],
-        "kb" => $updates_list[$row]["kb"],
         "title"=>$updates_list[$row]["pkgs_description"],
         "ltitle"=>$updates_list[$row]["pkgs_label"],
         "version"=>$updates_list[$row]['pkgs_version'],
+        "deployment_intervals" => $updates_list[$row]["deployment_intervals"],
     ];
     if(!empty($_GET['entity'])){
         $tmp["entity"] = $entityId;
@@ -112,9 +112,9 @@ foreach ($updates_list as $update) {
     $row++;
 }
 
-$n = new OptimizedListInfos($severities, _T("Severity", "updates"));
-$n->addExtraInfo($names_updates, _T("Update name", "updates"));
-$n->addExtraInfo($kb_updates, _T("KB", "updates"));
+$n = new OptimizedListInfos($names_updates, _T("Update name", "updates"));
+$n->addExtraInfo($id_updates, _T("Update Id", "updates"));
+$n->addExtraInfo($severities, _T("Severity", "updates"));
 if($hostnames != []){
     $n->addExtraInfo($hostnames, _T("Machine", "xmppmaster"));
 }

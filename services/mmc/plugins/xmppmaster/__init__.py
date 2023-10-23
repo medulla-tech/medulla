@@ -1456,10 +1456,6 @@ def get_conformity_update_by_machine(idmachine):
     result = XmppMasterDatabase().get_conformity_update_by_machine(idmachine)
     return result
 
-def get_conformity_update_by_machines(ids=[]):
-    result = XmppMasterDatabase().get_conformity_update_by_machines(ids)
-    return result
-
 def get_conformity_update_for_group(uuidArray):
     result = XmppMasterDatabase().get_conformity_update_for_group(uuidArray)
     nbmachinetotal = len(uuidArray)
@@ -1485,13 +1481,10 @@ def get_conformity_update_by_entity():
     for t in  result:
         r={'entity' : t,
            'nbmachines' : int( result[t]['nbmachines']),
-           'nbupdate' : int(result[t]['nbupdate']),
-           'totalmach' : int(result[t]['totalmach'])
+           'nbupdate' : int(result[t]['nbupdates']),
+           'totalmach' : int(result[t]['totalmach']),
+           'conformite' : int(result[t]['conformite'])
            }
-        if int(result[t]['totalmach']) != 0:
-            r['conformite']=(float(result[t]['totalmach'])-float(result[t]['nbmachines']))/float(result[t]['totalmach'])*100.
-        else:
-            r['totalmach'] = 100.
         resultarray.append(r)
     return resultarray
 
@@ -1553,8 +1546,18 @@ def pending_machine_update_by_pid(machineid, inventoryid, updateid, deployName, 
 def get_updates_by_uuids(uuids, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_updates_by_uuids(uuids, start, limit, filter)
 
+def get_updates_by_machineids(machineids, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_updates_by_machineids(machineids, start, limit, filter)
+
 def get_tagged_updates_by_machine(machineid, start=0, end=-1, filter=""):
     return XmppMasterDatabase().get_tagged_updates_by_machine(machineid, start, end, filter)
 
 def get_audit_summary_updates_by_machine(machineid, start=0, end=-1, filter=""):
     return XmppMasterDatabase().get_audit_summary_updates_by_machine(machineid, start, end, filter)
+
+def get_update_kb(updateid):
+    return XmppMasterDatabase().get_update_kb(updateid)
+
+
+def cancel_update(machineid, updateid):
+    return XmppMasterDatabase().cancel_update(machineid, updateid)

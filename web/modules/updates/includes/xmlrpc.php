@@ -3,11 +3,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2015 Siveo, http://http://www.siveo.net
+ * (c) 2022-2023 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,8 +39,8 @@ function xmlrpc_get_black_list($start, $end, $filter=""){
     return xmlCall("updates.get_black_list", [$start, $end, $filter]);
 }
 
-function xmlrpc_get_enabled_updates_list($start, $end, $filter=""){
-    return xmlCall("updates.get_enabled_updates_list", [$start, $end, $filter]);
+function xmlrpc_get_enabled_updates_list($entity, $upd_list="gray", $start=0, $end=-1, $filter=""){
+    return xmlCall("updates.get_enabled_updates_list", [$entity, $upd_list, $start, $end, $filter]);
 }
 
 function xmlrpc_get_family_list($start, $end, $filter=""){
@@ -67,8 +67,8 @@ function xmlrpc_white_unlist_update($updateid){
     return xmlCall("updates.white_unlist_update", [$updateid]);
 }
 
-function xmlrpc_get_machine_with_update($kb){
-    return xmlCall("updates.get_machine_with_update", [$kb]);
+function xmlrpc_get_machine_with_update($kb, $updateid=""){
+    return xmlCall("updates.get_machine_with_update", [$kb, $updateid]);
 }
 
 function xmlrpc_get_count_machine_with_update($kb){
@@ -81,5 +81,9 @@ function xmlrpc_get_count_machine_as_not_upd($updateid){
 
 function xmlrpc_get_machines_needing_update($updateid){
     return xmlCall("updates.get_machines_needing_update", [$updateid]);
+}
+
+function xmlrpc_get_conformity_update_by_machines($ids=[]){
+    return xmlCall("updates.get_conformity_update_by_machines", [$ids]);
 }
 ?>

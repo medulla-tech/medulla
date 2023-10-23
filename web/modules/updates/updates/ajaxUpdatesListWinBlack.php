@@ -30,7 +30,7 @@ $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 $black_list = xmlrpc_get_black_list($start, $maxperpage, $filter);
 
 // BlackList Actions
-$blackUnbanAction = new ActionItem(_T("unban Update", "updates"),"blackUnban","unlist","", "updates", "updates");
+$blackUnbanAction = new ActionItem(_T("Unban update", "updates"),"blackUnban","unlist","", "updates", "updates");
 $blackActions = ["unban" =>[]];
 
 $params_black = [];
@@ -58,7 +58,7 @@ for($i=0; $i < $count_black; $i++){
     }
     else{
         $kbs_black[] = "";
-        $updateids_black[] = $black_list['updateid_or_kb'][$i];
+        $updateids_black[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $black_list['updateid_or_kb'][$i] . "'\">" . $black_list['updateid_or_kb'][$i] . "</a>";
     }
 }
 
@@ -74,7 +74,7 @@ $b->setItemCount($count_black);
 $b->start = 0;
 $b->end = $count_black;
 $b->setParamInfo($params_black);
-echo '</br></br><h2> Blacklisted updates</h2>';
+echo '</br></br><h2> Black list (banned updates)</h2>';
 $b->addActionItemArray($blackActions["unban"]);
 $b->display();
 

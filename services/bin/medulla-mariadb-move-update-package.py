@@ -125,7 +125,10 @@ class synch_packages:
             file_names = os.listdir(self.path_in_partage)
             self.create_directory_in_base()
             for file_name in file_names:
-                shutil.move(os.path.join(self.path_in_partage, file_name), self.path_in_base)
+                try:
+                    shutil.move(os.path.join(self.path_in_partage, file_name), self.path_in_base)
+                except  Exception as e:
+                    pass
             shutil.rmtree(self.path_in_partage)
 
     def del_package(self):
@@ -382,7 +385,7 @@ class synch_packages:
             "editor": "automate_medulla",
             "metagenerator": "expert",
             "targetrestart": "MA",
-            "inventory": "False",
+            "inventory": "noforced",
             "localisation_server": "%s",
             "typescript": "Batch",
             "description": "%s",
@@ -419,7 +422,7 @@ class synch_packages:
                     "step": 2,
                     "actionlabel": "END_SUCCESS",
                     "clear": "False",
-                    "inventory": "False"
+                    "inventory": "noforced"
                 },
                 {
                     "action": "actionerrorcompletedend",

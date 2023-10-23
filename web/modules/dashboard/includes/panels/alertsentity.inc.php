@@ -1,7 +1,7 @@
 <?php
 
 /*
- * (c) 2021 Siveo, http://siveo.net
+ * (c) 2021-2023 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -31,6 +31,7 @@ $options = array(
 class AlertsEntityPanel extends Panel {
 
     function display_content() {
+      return "";
       $result = xmlrpc_get_mon_events_entity(0, 5, "");
       if($result["total"] > 0){
         echo '<div id="alertsentityaccordion">';

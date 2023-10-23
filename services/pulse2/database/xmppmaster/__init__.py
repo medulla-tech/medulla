@@ -52,7 +52,9 @@ from pulse2.database.xmppmaster.schema import Network, Machines,\
     Update_data, \
     Up_black_list, \
     Up_white_list, \
-    Up_gray_list
+    Up_gray_list, \
+    Up_history
+
 # Imported last
 import logging
 import json
@@ -11573,6 +11575,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 WHERE
                     platform LIKE 'Mic%'
                         AND (xmppmaster.up_gray_list.valided = 1 or xmppmaster.up_white_list.valided = 1)
+                        AND xmppmaster.up_machine_windows.curent_deploy is NULL AND xmppmaster.up_machine_windows.required_deploy is NULL
                 GROUP BY glpi_entity.glpi_id;"""
         resultquery = session.execute(sql)
         session.commit()
@@ -11587,12 +11590,75 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
             This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
         """
-        result={}
-        for x in self.get_update_by_entity():
-            result[x['entity']] = { 'totalmach' : x['total_machine_entity'], 'nbupdate' : 0, 'nbmachines' : 0 }
-        for x in self.get_machine_by_entity_in_grayandwhite_lists():
-           result[x['entity']]['nbmachines'] =  x['machine_a_mettre_a_jour']
-           result[x['entity']]['nbupdate'] =  x['update_a_mettre_a_jour']
+        result = {}
+        sql = """select ge.glpi_id as id,
+        count(m.id) as count
+        from machines m
+join glpi_entity ge on m.glpi_entity_id = ge.id
+where m.platform like "%Windows%" and m.agenttype="machine";"""
+        datas = session.execute(sql)
+
+        for entity in datas:
+            result[str(entity.id)] = {
+                "entity": str(entity.id),
+                "nbmachines":0,
+                "nbupdates" : 0,
+                "totalmach" : entity.count,
+                "conformite" : 0
+            }
+
+        sql1="""select ge.glpi_id as id, count(distinct m.id) as count from up_machine_windows umw
+join machines m on umw.id_machine = m.id
+join glpi_entity ge on m.glpi_entity_id = ge.id
+left join up_gray_list  ugl on ugl.updateid = umw.update_id
+where
+    m.platform like "%Windows%"
+    and m.agenttype="machine"
+    and concat("UUID",ge.glpi_id) = "UUID0"
+    and ugl.valided=1;"""
+
+        machines_non_compliant = session.execute(sql1)
+        for non_compliant in machines_non_compliant:
+            if str(non_compliant.id) in result:
+                result[str(non_compliant.id)]['nbmachines'] = non_compliant.count
+
+        sql2 = """select ge.glpi_id as id,
+        count(update_id) count
+        from up_machine_windows umw
+        join machines m on umw.id_machine = m.id
+        join glpi_entity ge on m.glpi_entity_id = ge.id
+        left join up_gray_list  ugl on ugl.updateid = umw.update_id
+        where
+        m.platform like "%Windows%"
+        and m.agenttype="machine"
+        and ugl.valided = 1
+        group by ge.glpi_id, id_machine;"""
+        missing_updates = session.execute(sql2)
+        for missing_update in missing_updates:
+            if str(missing_update.id) in result:
+                result[str(missing_update.id)]["nbupdates"] += missing_update.count
+
+        sql3 = """select ge.glpi_id as id,
+        count(update_id) count
+        from up_machine_windows umw
+        join machines m on umw.id_machine = m.id
+        join glpi_entity ge on m.glpi_entity_id = ge.id
+        left join up_white_list  uwl on uwl.updateid = umw.update_id
+        where
+        m.platform like "%Windows%"
+        and m.agenttype="machine"
+        and uwl.valided = 1
+        group by ge.glpi_id, id_machine;"""
+        missing_updates = session.execute(sql3)
+        for missing_update in missing_updates:
+            if str(missing_update.id) in result:
+                result[str(missing_update.id)]["nbupdates"] += missing_update.count
+
+        for entity in result:
+            if result[entity]['totalmach'] > 0:
+                result[entity]["conformite"] = int(100*(result[entity]['totalmach']-result[entity]['nbmachines'])/result[entity]['totalmach'])
+            else:
+                result[entity]["conformite"] = 100
         return result
 
     @DatabaseHelper._sessionm
@@ -11654,45 +11720,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         result= [{column: value for column,
                 value in rowproxy.items()}
                         for rowproxy in resultquery]
-        return result
-    
-    @DatabaseHelper._sessionm
-    def get_conformity_update_by_machines(self, session, ids):
-        """
-            This function returns value for compliance rate for a list of machines
-            Params: ids is a list of selected machines
-            Return : waiting updates
-        """
-
-        if len(ids) == 0:
-            return {}
-
-        result = {str(id):0 for id in ids}
-        sql="""SELECT machines.id,
-(
-SELECT COUNT(*)
-FROM
-    xmppmaster.up_machine_windows
-LEFT JOIN
-    xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = xmppmaster.up_machine_windows.update_id
-LEFT JOIN
-    xmppmaster.up_white_list ON xmppmaster.up_white_list.updateid = xmppmaster.up_machine_windows.update_id
-WHERE
-    (up_gray_list.valided = 1 OR up_white_list.valided = 1)
-AND
-    up_machine_windows.id_machine = machines.id) AS update_waiting
-from xmppmaster.machines
-where agenttype="machine"
-and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
-
-        resultquery = session.execute(sql)
-        session.commit()
-        session.flush()
-        # result= [{column: value for column,
-        #         value in rowproxy.items()}
-        #                 for rowproxy in resultquery]
-
-        result = {str(item.id):item.update_waiting for item in resultquery}
         return result
 
     @DatabaseHelper._sessionm
@@ -12134,8 +12161,17 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
 
         if filter != "":
             query = query.filter(or_(
-                Up_machine_windows.kb.contains(filter),
-                Up_machine_windows.update_id.contains(filter)))
+                Up_machine_windows.update_id.contains(filter),
+                Up_machine_windows.msrcseverity.contains(filter),
+                Up_gray_list.kb.contains(filter),
+                Up_white_list.kb.contains(filter),
+                Up_gray_list.title.contains(filter),
+                Up_white_list.title.contains(filter),
+                Machines.hostname.contains(filter),
+                Up_gray_list.description.contains(filter),
+                Up_white_list.description.contains(filter)
+            ))
+
         count = query.count()
         query = query.offset(start)
         if limit != -1:
@@ -12211,6 +12247,119 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         return result
 
     @DatabaseHelper._sessionm
+    def get_updates_by_machineids(self, session, machineids, start=0, limit=-1, filter=""):
+        query = session.query(Up_machine_windows, Up_gray_list, Up_white_list)\
+            .join(Machines, Machines.id == Up_machine_windows.id_machine)\
+            .outerjoin(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)\
+            .outerjoin(Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id)\
+            .filter(and_(Machines.id.in_(machineids),
+                or_(Up_gray_list.valided == 1, Up_white_list.valided == 1))
+        )\
+        .group_by(Up_machine_windows.update_id)\
+        .order_by(func.field(Up_machine_windows.msrcseverity, "Critical", "Important", "Corrective"))
+
+        if filter != "":
+            query = query.filter(or_(
+                Up_machine_windows.kb.contains(filter),
+                Up_machine_windows.update_id.contains(filter),
+                Up_gray_list.title.contains(filter),
+                Up_gray_list.description.contains(filter),
+                Up_gray_list.kb.contains(filter),
+                Up_gray_list.creationdate.contains(filter),
+                Up_white_list.title.contains(filter),
+                Up_white_list.description.contains(filter),
+                Up_white_list.kb.contains(filter),
+                Up_white_list.creationdate.contains(filter)))
+
+        count = query.count()
+        query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        query = query.all()
+        pkgs_list = {}
+        result = {
+            "total" : count,
+            "datas": []
+        }
+
+        for element, gray, white in query:
+            startdate = ""
+            if element.start_date is not None:
+                startdate = element.start_date
+
+            current_deploy = 0
+            if element.curent_deploy is not None:
+                current_deploy = element.curent_deploy
+
+            required_deploy = 0
+            if element.required_deploy is not None:
+                required_deploy = element.required_deploy
+
+            enddate = ""
+            if element.end_date is not None:
+                enddate = element.end_date
+
+            title = ""
+            description = ""
+            update_list = ""
+            if gray is None:
+                title = white.title
+                description = white.description if white is not None else ""
+                update_list = "white"
+            else:
+                title = gray.title
+                description = gray.description if gray is not None else ""
+                update_list = "white"
+            result['datas'].append({
+                "id_machine": element.id_machine if element.id_machine is not None else 0,
+                "update_id": element.update_id if not None else "",
+                "title" : title if title is not None else "",
+                "description": description if description is not None else "",
+                "kb": element.kb if element.kb is not None else "",
+                "current_deploy": current_deploy,
+                "required_deploy":  required_deploy,
+                "start_date": startdate,
+                "end_date": enddate,
+                "deployment_intervals" : element.intervals if element.intervals is not None else "",
+                "pkgs_version":"",
+                "pkgs_description":"",
+                "severity": element.msrcseverity if element.msrcseverity is not None else "Corrective",
+                "list" : update_list
+            })
+            pkgs_list[element.update_id] = {}
+
+        if pkgs_list != {}:
+            if pkgs_list.keys() != []:
+                concat = "in (%s)"%','.join(['"%s"'%uuid for uuid in pkgs_list.keys()])
+            else:
+                concat = '= ""'
+
+            sql2 = """SELECT pkgs.packages.uuid,
+            pkgs.packages.label,
+            pkgs.packages.version,
+            pkgs.packages.description
+            FROM pkgs.packages
+            WHERE pkgs.packages.uuid %s
+            """%concat
+            query2 = session.execute(sql2)
+
+            for element in query2:
+                pkgs_list[element[0]] = {
+                    "label": element[1],
+                    "version": element[2],
+                    "description": element[3]
+                }
+
+            for element in result['datas']:
+                if element['update_id'] in pkgs_list:
+                    print(pkgs_list[element['update_id']])
+                    element["pkgs_label"] = pkgs_list[element['update_id']]["label"] if "label" in pkgs_list[element['update_id']] else ""
+                    element["pkgs_version"] = pkgs_list[element['update_id']]["version"] if "version" in pkgs_list[element['update_id']] else ""
+                    element["pkgs_description"] = pkgs_list[element['update_id']]["description"] if "description" in pkgs_list[element['update_id']] else ""
+        return result
+
+    @DatabaseHelper._sessionm
     def pending_machine_update_by_pid(self, session, machineid, inventoryid, pid, deployName, user, startdate, enddate, interval):
         try:
             machineid = int(machineid)
@@ -12241,109 +12390,34 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         if end_date < current:
             end_date = a_week_from_current
 
-        query, machine = session.query(Up_machine_windows, Machines)\
+        query, machine,update_data = session.query(Up_machine_windows, Machines, Update_data)\
             .join(Machines, Machines.id == Up_machine_windows.id_machine)\
+            .join(Update_data, Update_data.updateid == Up_machine_windows.update_id)\
             .filter(and_(Up_machine_windows.id_machine == machineid,
                                                               Up_machine_windows.update_id == pid,
                                                               or_(Up_machine_windows.curent_deploy  == None, Up_machine_windows.curent_deploy  == 0),
                                                               or_(Up_machine_windows.required_deploy == None, Up_machine_windows.required_deploy  == 0))).first()
         result = {}
         if query is not None:
+            deployName = "%s -@upd@- %s"%(update_data.title,start_date)
+            history = Up_history()
+            history.update_id = query.update_id
+            history.id_machine = query.id_machine
+            history.jid = machine.jid
+            history.update_list = "gray"
+            history.required_date = datetime.strftime(start_date, "%Y-%m-%d %H:%M:%S")
+            history.deploy_title = deployName
+            session.add(history)
+
             query.start_date = start_date
             query.end_date = end_date
             query.required_deploy = 1
+            query.intervals = interval
+            session.commit()
+            session.flush()
 
-            folderpackage = os.path.join("/", "var","lib", "pulse2", "packages", pid)
-            exclude_name_package = ["sharing", ".stfolder", ".stignore" ]
-
-            files = []
-            if os.path.isdir(folderpackage):
-                for root, dir, file in os.walk(folderpackage):
-                    if root != folderpackage:
-                        continue
-                    for _file in file:
-                        if _file not in exclude_name_package:
-                            files.append({"path" : os.path.basename(os.path.dirname(root)),
-                                    "name" : _file,
-                                    "id" : str(uuid.uuid4()),
-                                    "size" : str(os.path.getsize(os.path.join(root, _file))) })
-            else:
-                files = []
-
-            files_str = "\n".join([file['id']+'##'+file['path']+'/'+file['name'] for file in files])
-            section = '"section":"update"'
-            command = MscDatabase().createcommanddirectxmpp(pid,
-                '',
-                section,
-                files_str,
-                'enable',
-                'disable',
-                start_date,
-                end_date,
-                user,
-                user,
-                deployName,
-                0,
-                28,
-                0,
-                '',
-                None,
-                None,
-                None,
-                'none',
-                'active',
-                '1',
-                cmd_type=0)
-
-            commandid = command.id
-            commandstart = command.start_date
-            commandstop = command.end_date
-            jidrelay = machine.groupdeploy
-            uuidmachine = machine.uuid_inventorymachine
-            jidmachine = machine.jid
-
-            try:
-                target = MscDatabase().xmpp_create_Target(machine.uuid_inventorymachine, machine.hostname)
-            except Exception as e:
-                result["success"] = False
-                result["mesg"] = "Unable to create Msc Target"
-                result["detail"] = e
-                return result
-
-            idtarget = target['id']
-
-            com_on_host = MscDatabase().xmpp_create_CommandsOnHost(commandid,
-                idtarget,
-                machine.hostname,
-                commandstop,
-                commandstart)
-
-            if com_on_host is not None or com_on_host is not False:
-                MscDatabase().xmpp_create_CommandsOnHostPhasedeploykiosk(com_on_host.id)
-
-                XmppMasterDatabase().addlogincommand(
-                    user,
-                    commandid,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    0,
-                    0,
-                    0,
-                    0,
-                    {})
-
-                session.commit()
-                session.flush()
-
-                result["commandid"] = commandid
-                result["success"] = True
-                result["mesg"] = "Update %s has been selected between %s and %s"%(deployName, start_date, end_date)
-            else:
-                result["success"] = False
-                result["mesg"] = "Unable to create commandOnHost for command %s"%commandid
+            result["success"] = True
+            result["mesg"] = "Update %s required to deploy on machine %s"%(query.update_id, query.id_machine)
         else:
             result["success"] = False
             result["mesg"] = "No update to install"
@@ -12367,20 +12441,20 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
         except:
             machineid = 0
 
-        query = session.query(Up_machine_windows, Up_gray_list).filter(and_(Up_machine_windows.id_machine == machineid,
+        query = session.query(Up_machine_windows, Update_data).filter(and_(Up_machine_windows.id_machine == machineid,
                                                               or_(Up_machine_windows.curent_deploy == 1,
                                                                 Up_machine_windows.required_deploy == 1)
                                                               )
                                                          )\
-                    .join(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)
+                    .join(Update_data, Update_data.updateid == Up_machine_windows.update_id)
         if filter != "":
             query = query.filter(or_(
-                Up_gray_list.title.contains(filter),
-                Up_gray_list.kb.contains(filter),
-                Up_gray_list.updateid.contains(filter),
-                Up_gray_list.revisionid.contains(filter),
-                Up_gray_list.payloadfiles.contains(filter),
-                Up_gray_list.description.contains(filter),
+                Update_data.title.contains(filter),
+                Update_data.kb.contains(filter),
+                Update_data.updateid.contains(filter),
+                Update_data.revisionid.contains(filter),
+                Update_data.payloadfiles.contains(filter),
+                Update_data.description.contains(filter),
                 Up_machine_windows.start_date.contains(filter),
                 Up_machine_windows.end_date.contains(filter),
                 ))
@@ -12399,16 +12473,17 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
             "datas" : []
         }
 
-        for update, gray in query:
+        for update, data in query:
             tmp = {
-                "title" : gray.title,
-                "description": gray.description if gray.description is not None else "",
+                "title" : data.title,
+                "description": data.description if data.description is not None else "",
                 "update_id": update.update_id if update.update_id is not None else "",
-                "package_id": gray.updateid_package if gray.updateid_package is not None else "",
+                "package_id": update.update_id if update.update_id is not None else "",
                 "kb": update.kb if update.kb is not None else "",
                 "start_date": datetime_handler(update.start_date) if update.start_date is not None else "",
                 "end_date": datetime_handler(update.end_date) if update.end_date is not None else "",
                 "current_deploy": update.curent_deploy if update.curent_deploy is not None else 0,
+                "required_deploy": update.required_deploy if update.required_deploy is not None else 0
             }
 
             result["datas"].append(tmp)
@@ -12479,4 +12554,152 @@ and machines.id in (%s);"""%("%s"%",".join('%d'%i for i in ids))
                 "syncthing": deploy.syncthing
             }
             result["datas"].append(tmp)
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_count_missing_updates_by_machines(self, session, ids):
+        result = {}
+        if ids == []:
+            return result
+
+        ids = "(%s)"%','.join([str(id) for id in ids])
+
+        sql = """select id,
+        uuid_inventorymachine as uuid,
+        hostname,
+        count(update_id) as missing
+from up_machine_windows
+join machines on machines.id = up_machine_windows.id_machine
+join up_gray_list on up_machine_windows.update_id = up_gray_list.updateid
+where up_gray_list.valided = 1
+and id_machine in %s
+group by hostname
+;"""%ids
+
+        datas = session.execute(sql)
+
+        for element in datas:
+            result[element.uuid] = {
+                "id":element.id,
+                "uuid":element.uuid,
+                "hostname":element.hostname,
+                "missing": element.missing
+            }
+
+        sql2 = """select id,
+        uuid_inventorymachine as uuid,
+        hostname,
+        count(update_id) as missing
+from up_machine_windows
+join machines on machines.id = up_machine_windows.id_machine
+join up_white_list on up_machine_windows.update_id = up_white_list.updateid
+where up_white_list.valided = 1
+and id_machine in %s
+group by hostname
+;"""%ids
+
+        datas = session.execute(sql2)
+
+        for element in datas:
+            if element.uuid not in result:
+                result[element.uuid] = {
+                    "id":element.id,
+                    "uuid":element.uuid,
+                    "hostname":element.hostname,
+                    "missing": element.missing
+                }
+            else:
+                result[element.uuid]["missing"] += element.missing
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_update_kb(self, session, updateid):
+        try:
+            query = session.query(Update_data)\
+            .filter(Update_data.updateid == updateid)
+
+            result = query.first()
+            if query is not None:
+                return result.kb
+        except Exception as e:
+            pass
+        return ""
+
+    @DatabaseHelper._sessionm
+    def cancel_update(self, session, machineid, updateid):
+        try:
+            machineid = int(machineid)
+        except:
+            machineid = machineid
+
+        try:
+            update = session.query(Up_machine_windows).filter(and_(
+                Up_machine_windows.id_machine == machineid,
+                Up_machine_windows.update_id == updateid,
+                Up_machine_windows.required_deploy==1)).first()
+
+            update.required_deploy=None
+            update.start_date = None
+            update.end_date = None
+
+            history = session.query(Up_history).filter(and_(Up_history.id_machine == machineid, Up_history.update_id)).delete()
+
+            session.commit()
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return False
+
+        return True
+
+    @DatabaseHelper._sessionm
+    def get_update_history_by_machines(self, session, idmachines):
+
+        if idmachines == []:
+            return {}
+        query = session.query(Up_history).add_column(Update_data.kb).add_column(Machines.uuid_inventorymachine)\
+        .filter(and_(Up_history.id_machine.in_(idmachines),
+                     or_(Up_history.delete_date is not None, Up_history.delete_date != 0)))\
+        .join(Update_data, Up_history.update_id == Update_data.updateid)\
+        .join(Machines, Up_history.id_machine == Machines.id)\
+        .outerjoin(Deploy, Up_history.id_deploy == Deploy.id)
+        query = query.all()
+        result = {}
+        for element, kb, uuid in query:
+            if uuid not in result:
+                result[uuid] = [{
+                    "updateid": element.update_id,
+                    "id_machine":element.id_machine,
+                    "kb":kb
+                }]
+            else:
+                result[uuid].append({
+                    "updateid": element.update_id,
+                    "id_machine":element.id_machine,
+                    "kb":kb
+                })
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_history_by_update(self, session, updateid):
+        query = session.query(Up_history, Update_data, Machines, Glpi_entity)\
+            .join(Update_data, Update_data.updateid == Up_history.update_id)\
+            .join(Machines, Up_history.id_machine == Machines.id)\
+            .join(Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id)\
+            .filter(Up_history.delete_date is not None).all()
+
+        result = {}
+
+        for hist, data, mach, entity in query:
+            result[mach.uuid_inventorymachine] = {
+                "id":int(mach.uuid_inventorymachine.replace("UUID", "")) if mach.uuid_inventorymachine is not None else "",
+                "hostname":mach.hostname,
+                "eid": entity.glpi_id if entity.glpi_id is not None else 0,
+                "entity": entity.complete_name if entity.complete_name is not None else "",
+                "kb" : "Update(KB%s)"%data.kb,
+                "numkb": data.kb
+            }
+
         return result

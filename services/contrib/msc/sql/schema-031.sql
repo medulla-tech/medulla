@@ -29,23 +29,25 @@ START TRANSACTION;
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------------------------------------------------
--- Database change type champ add index
+-- Database converti to Innodb Myisam table
 -- ----------------------------------------------------------------------
-
-ALTER TABLE `msc`.`target`
-CHANGE COLUMN `id_group` `id_group` VARCHAR(12) NULL DEFAULT NULL ;
-
-ALTER TABLE `msc`.`target`
-ADD INDEX `index_id_group` (`id_group` ASC);
-;
+ALTER TABLE commands_history ENGINE=InnoDB;
+ALTER TABLE  bundle  ENGINE=InnoDB;
+ALTER TABLE  commands  ENGINE=InnoDB;
+ALTER TABLE  commands_history ENGINE=InnoDB;
+ALTER TABLE  commands_on_host ENGINE=InnoDB;
+ALTER TABLE  phase            ENGINE=InnoDB;
+ALTER TABLE  pull_targets     ENGINE=InnoDB;
+ALTER TABLE  target          ENGINE=InnoDB;
 
 
 SET FOREIGN_KEY_CHECKS=1;
 
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
-UPDATE version SET Number = 30;
+UPDATE version SET Number = 31;
 
 COMMIT;
 

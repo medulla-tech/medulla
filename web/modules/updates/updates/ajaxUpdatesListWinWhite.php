@@ -30,8 +30,8 @@ $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
 $white_list = xmlrpc_get_white_list($start, $maxperpage, $filter);
 // WhiteList Actions
-$whiteUnlistAction = new ActionPopupItem(_T("Unlist Update", "updates"), "whiteUnlist", "unlist", "updates", "updates");
-$banAction = new ActionPopupItem(_T("Ban Update", "updates"), "banUpdate", "banupdate", "updates", "updates");
+$whiteUnlistAction = new ActionPopupItem(_T("Unlist update", "updates"), "whiteUnlist", "unlist", "updates", "updates");
+$banAction = new ActionPopupItem(_T("Ban update", "updates"), "banUpdate", "banupdate", "updates", "updates");
 $whiteActions = [
     "unlist"=>[],
     "ban"=>[]
@@ -62,7 +62,7 @@ for($i=0; $i < $count_white; $i++){
     }
     else{
         $kbs_white[] = "";
-        $updateids_white[] = $white_list['updateid'][$i];
+        $updateids_white[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $white_list['updateid'][$i] . "'\">" . $white_list['updateid'][$i] . "</a>";
         $tmp['kb'] = "";
         $tmp['uid'] = $white_list['updateid'][$i];
     }
@@ -79,7 +79,7 @@ $w->setNavBar(new AjaxNavBar($count_white, $filter, 'updateSearchParamformWhite'
 $w->start = 0;
 $w->end = $count_white;
 $w->setParamInfo($params_white);
-echo '</br></br><h2> Whitelisted updates</h2>';
+echo '</br></br><h2> White list (automatic updates)</h2>';
 $w->addActionItemArray($whiteActions["unlist"]);
 $w->addActionItemArray($whiteActions["ban"]);
 $w->display();

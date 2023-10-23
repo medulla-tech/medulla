@@ -30,16 +30,16 @@ function colorconf($conf){
     return $colorDisplay[intval(($conf-($conf%10))/10)];
 }
 
-$location = (isset($_GET['location'])) ? $_GET['location'] : "";
-$gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
-$groupname = (isset($_GET['groupname'])) ? $_GET['groupname'] : "";
-$filter = "Microsoft";
-$field = "platform";
-$contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
+$location = (isset($_GET['location'])) ? htmlentities($_GET['location']) : "";
+$gid = (isset($_GET['gid'])) ? htmlentities($_GET['gid']) : "";
+$groupname = (isset($_GET['groupname'])) ? htmlentities($_GET['groupname']) : "";
+$filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
+$field = "allchamp";
+$contains = (isset($_GET['contains'])) ? htmlentities($_GET['contains']) : "";
 
 $start = (isset($_GET['start'])) ? $_GET['start'] : 0;
-$maxperpage = (isset($_GET['maxperpage'])) ? $_GET['maxperpage'] : $config['maxperpage'];
-$end = (isset($_GET['end'])) ? $_GET['end'] : $maxperpage - 1;
+$maxperpage = (isset($_GET['maxperpage'])) ? htmlentities($_GET['maxperpage']) : htmlentities($config['maxperpage']);
+$end = (isset($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage - 1;
 
 $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
@@ -52,7 +52,6 @@ $ctx['contains'] = $contains;
 $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
-
 
 $detailsByMach = new ActionItem(_T("View details", "updates"),"deploySpecificUpdate","display","", "updates", "updates");
 $detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"),"deploySpecificUpdate","displayg","", "updates", "updates");
@@ -71,14 +70,18 @@ $actionDoneByMachines = [];
 $missingUpdatesMachine = [];
 $platform = [];
 $filterOn = [];
+$total = [];
+$installed = [];
+$missing = [];
+
 if ($entity == '')
 {
     $typeOfDetail = "group";
     $filterOn = array('gid' => $gid);
+    $ctx['gid'] = $gid;
 
     // Needed all machines of the group to calculate the compliance rate
-    $listGroup = getRestrictedComputersList(0, -1, $filterOn, true, true);
-
+    $listGroup = getRestrictedComputersList(0, -1, $ctx, true, true);
     $group_compliance = xmlrpc_get_conformity_update_for_group(array_keys($listGroup));
     $group_compliance = $group_compliance['0'];
 
@@ -89,8 +92,8 @@ if ($entity == '')
     $compliance_bloc .= "<div class='progress' style='max-width: 25%; width: ".$group_compliance['compliance']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".intval($group_compliance['compliance'])."% </div>";
 
 
-    $machines = getRestrictedComputersList($start, $end, $filterOn, true);
-    $count = getRestrictedComputersListLen($filterOn, True);
+    $machines = getRestrictedComputersList($start, $end, $ctx, true);
+    $count = getRestrictedComputersListLen($ctx, True);
     $tabletitle = sprintf(_T("Computers from group %s","updates"), $groupname);
 
     foreach ($machines as $k => $v) {
@@ -101,25 +104,20 @@ if ($entity == '')
         //FUNCTION TO GET ID
         $id_machine = xmlrpc_get_idmachine_from_name($v[1]['cn'][0]);
         $id_machine = $id_machine[0]['id_machine'];
-        $compliance_computer = xmlrpc_get_conformity_update_by_machine($id_machine);
+        $compliance_computer = xmlrpc_get_conformity_update_by_machines(['ids'=>[$id_machine], 'uuids'=>[$k]]);
 
-        $comp = $compliance_computer['0']['update_waiting'];
+        $compliance = round($compliance_computer['0']['compliance']);
+        $missing[] = $compliance_computer['0']['missing'];
+        $installed[] = $compliance_computer['0']['installed'];
+        $total[] = $compliance_computer['0']['total'];
+
+        $comp = $compliance_computer['0']['compliance'];
         $missingUpdatesMachine[] = $comp;
-        $detailsByMachs[] = ($comp == 0) ? $detailsByMachEmpty : $detailsByMach;
+        $detailsByMachs[] = $detailsByMach;
 
-        if ($all_enabled_updates != '0' and $comp != '0')
-        {
-            $complrate = intval(($all_enabled_updates - $comp) / $all_enabled_updates * 100);
-        }
+        $color = colorconf($compliance);
 
-        if ($comp == '0')
-        {
-            $complrate = '100';
-        }
-
-        $color = colorconf($complrate);
-
-        $complRates[] = "<div class='progress' style='width: ".$complrate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$complrate."% </div>";
+        $complRates[] = "<div class='progress' style='width: ".$compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance."% </div>";
         $platform[] = $v[1]['os'];
         $params[] = [
             "machineid"=>$id_machine,
@@ -144,36 +142,34 @@ else
 
     $count = $machines['count'];
     $machines = $machines['data'];
-    $compliance_computers = xmlrpc_get_conformity_update_by_machines($machines['id']);
+    $compliance_computers = xmlrpc_get_conformity_update_by_machines(["uuids"=> $machines['uuid_inventorymachine'], "ids"=> $machines['id']]);
+    $installed = [];
+    $missing = [];
+    $compliance = [];
 
-    for($i=0; $i < $count; $i++){
-        $machineNames[] = $machines['hostname'][$i];
-        $comp = $compliance_computers[(string)$machines['id'][$i]];
-        $missingUpdatesMachine[] = $comp;
-        $detailsByMachs[] = ($comp == 0) ? $detailsByMachEmpty : $detailsByMach;
+
+    $countInArray = count($compliance_computers);
+
+    for($i=0; $i < $countInArray; $i++){
+        $machineNames[] = $compliance_computers[$i]['hostname'];
+        $missing[] = $compliance_computers[$i]["missing"];
+        $installed[] = $compliance_computers[$i]["installed"];
+        $total[] = $compliance_computers[$i]['total'];
+
+        $detailsByMachs[] = $detailsByMach;
+
         $actionPendingByMachines[] = $pendingByMach;
         $actionDoneByMachines[] = $doneByMach;
-
-        if ($all_enabled_updates != '0' and $comp != '0')
-        {
-            $complrate = intval(($all_enabled_updates - $comp) / $all_enabled_updates * 100);
-        }
-
-        if ($comp == '0')
-        {
-            $complrate = '100';
-        }
-
-        $color = colorconf($complrate);
-
-        $complRates[] = "<div class='progress' style='width: ".$complrate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$complrate."% </div>";
+        $compliance_computers[$i]["compliance"] = round($compliance_computers[$i]["compliance"]);
+        $color = colorconf($compliance_computers[$i]["compliance"]);
+        $complRates[] = "<div class='progress' style='width: ".$compliance_computers[$i]["compliance"]."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_computers[$i]["compliance"]."% </div>";
 
         $platform[] = $machines['platform'][$i];
 
         $params[] = [
-            "machineid"=>$machines['id'][$i],
-            "inventoryid" => $machines['uuid_inventorymachine'][$i],
-            "cn"=>$machines['hostname'][$i]
+            "machineid"=>$compliance_computers[$i]['id'],
+            "inventoryid" => $compliance_computers[$i]['uuid'],
+            "cn"=>$machines[$i]['hostname']
         ];
     }
 }
@@ -191,7 +187,9 @@ $n = new OptimizedListInfos($machineNames, _T("Machine name", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($platform, _T("Platform", "updates"));
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($missingUpdatesMachine, _T("Missing updates", "updates"));
+$n->addExtraInfo($missing, _T("Missing updates", "updates"));
+$n->addExtraInfo($installed, _T("Installed updates", "updates"));
+$n->addExtraInfo($total, _T("Total updates", "updates"));
 $n->addActionItemArray($detailsByMachs);
 $n->addActionItemArray($actionPendingByMachines);
 $n->addActionItemArray($actionDoneByMachines);
