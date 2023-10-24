@@ -2392,7 +2392,8 @@ class Glpi100(DyngroupDatabaseHelper):
         ret = {}
         if get != None:
             for m in machines:
-                m = tuple(m)
+                if not isinstance(m, Machine):
+                    m = tuple(m)
                 if isinstance(m, tuple):
                     m = m[0]
                 ret[m.getUUID()] = self.__getAttr(m, get)
@@ -2401,7 +2402,8 @@ class Glpi100(DyngroupDatabaseHelper):
         names = {}
         for m in machines:
             displayList = False
-            m = tuple(m)
+            if not isinstance(m, Machine):
+                m = tuple(m)
             if isinstance(m, tuple):
                 displayList = True
                 # List of fields defined around line 439
@@ -2486,7 +2488,8 @@ class Glpi100(DyngroupDatabaseHelper):
         if advanced:
             uuids = []
             for m in machines:
-                m = tuple(m)
+                if not isinstance(m, Machine):
+                    m = tuple(m)
                 if isinstance(m, tuple):
                     m = m[0]
                 uuids.append(m.getUUID())
