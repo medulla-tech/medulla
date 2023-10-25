@@ -98,8 +98,8 @@ def daemon(config, inifile):
 
     # Test if pulse2-inventory-server has been already launched in daemon mode
     if os.path.isfile(pidfile):
-        print pidfile+" pid already exist. Maybe pulse2-inventory-server is already running\n"
-        print "use /etc/init.d script to stop and relaunch it"
+        print(pidfile+" pid already exist. Maybe pulse2-inventory-server is already running\n")
+        print("use /etc/init.d script to stop and relaunch it")
         sys.exit(0)
 
     # do the UNIX double-fork magic, see Stevens' "Advanced
@@ -110,8 +110,8 @@ def daemon(config, inifile):
             _lock.acquire()
             # exit first parent
             sys.exit(_shared_state.value)
-    except OSError, e:
-        print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+    except OSError as e:
+        print(sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror))
         sys.exit(1)
 
     # decouple from parent environment
@@ -152,8 +152,8 @@ def daemon(config, inifile):
             os.setegid(0)
             os.system("echo " + str(pid) + " > " + pidfile)
             sys.exit(0)
-    except OSError, e:
-        print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
+    except OSError as e:
+        print(sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror))
         _shared_state.value = 1
         _lock.release()
         sys.exit(1)
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     try:
         opts, suivarg = getopt.getopt(sys.argv[1:], "f:ds")
     except getopt.GetoptError:
-        print "Error while trying to get options."
+        print("Error while trying to get options.")
         sys.exit(2)
     daemonize = True
     debugtoconsole = True
@@ -179,7 +179,7 @@ if __name__ == "__main__":
             debugtoconsole = False
 
     if not os.path.exists(inifile):
-        print "File '%s' does not exist." % inifile
+        print("File '%s' does not exist." % inifile)
         sys.exit(3)
 
     # Start the daemon main loop
