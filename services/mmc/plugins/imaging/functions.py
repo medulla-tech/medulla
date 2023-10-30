@@ -1,7 +1,7 @@
-# -*- coding:Utf-8; -*-
+# -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -433,7 +433,11 @@ class ImagingRpcProxy(RpcProxyI):
             a.start()
         location=objmenu['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
+
         if i != None:
             deferred = i.imagingServermenuMulticast(objmenu)
             deferred.addCallback(lambda x: x)
@@ -460,13 +464,14 @@ class ImagingRpcProxy(RpcProxyI):
     def imagingClearMenuforLocation(self, obj, location):
         try:
             i = ImagingApi(location.encode('utf8'))
+        except:
+            i = None
+
             if i != None:
                 deferred = i.imagingClearMenu(obj)
                 deferred.addCallback(lambda x: x)
             else:
                 deferred = []
-        except :
-            deferred = []
         return deferred
 
     def imagingClearMenuFromUuid(self, uuid):
@@ -478,7 +483,11 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             location = db.getTargetsEntity([uuid])[0]
             url = chooseImagingApiUrl(location[0].uuid)
-            i = ImagingApi(url.encode('utf8'))
+            try:
+                i = ImagingApi(url.encode('utf8'))
+            except:
+                i = None
+
             if i != None:
                 deferred = i.imagingClearMenu(obj)
                 deferred.addCallback(lambda x: x)
@@ -493,7 +502,11 @@ class ImagingRpcProxy(RpcProxyI):
         # controle execution process multicast
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
+
         if i != None:
             deferred = i.check_process_multicast(process)
             deferred.addCallback(lambda x: x)
@@ -505,7 +518,11 @@ class ImagingRpcProxy(RpcProxyI):
         # controle execution process multicast finish
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
+
         if i != None:
             deferred = i.check_process_multicast_finish(process)
             deferred.addCallback(lambda x: x)
@@ -517,7 +534,11 @@ class ImagingRpcProxy(RpcProxyI):
         # controle existance multicast script
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server_encoded)
+        except:
+            i = None
+
         if i != None:
             deferred = i.muticast_script_exist(process)
             deferred.addCallback(lambda x: x)
@@ -528,7 +549,11 @@ class ImagingRpcProxy(RpcProxyI):
 
     def SetMulticastMultiSessionParameters(self, parameters):
         imaging_server = ImagingDatabase().getEntityUrl(parameters['location'])
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
+
         if i != None:
             deferred = i.SetMulticastMultiSessionParameters(parameters)
             deferred.addCallback(lambda x: x)
@@ -538,7 +563,11 @@ class ImagingRpcProxy(RpcProxyI):
 
     def GetMulticastMultiSessionParameters(self, location):
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
+
         if i != None:
             deferred = i.GetMulticastMultiSessionParameters(location)
             deferred.addCallback(lambda x: x)
@@ -548,7 +577,11 @@ class ImagingRpcProxy(RpcProxyI):
 
     def ClearMulticastMultiSessionParameters(self, location):
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
+
         if i != None:
             deferred = i.ClearMulticastMultiSessionParameters(location)
             deferred.addCallback(lambda x: x)
@@ -565,7 +598,11 @@ class ImagingRpcProxy(RpcProxyI):
             ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
+
         if i != None:
             deferred = i.clear_script_multicast(process)
             deferred.addCallback(lambda x: x)
@@ -577,7 +614,11 @@ class ImagingRpcProxy(RpcProxyI):
         # Multicast start
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
+
         if i != None:
             deferred = i.start_process_multicast(process)
             deferred.addCallback(lambda x: x)
