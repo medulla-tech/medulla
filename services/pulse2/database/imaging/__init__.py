@@ -1,7 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net> 
+# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 """
@@ -3062,7 +3062,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         entity = session.query(Entity).\
                  select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).\
-                 filter(and_(self.imaging_server.c.packageserver_uuid == imaging_server_uuid, self.imaging_server.c.associated == True)).\
+                 filter(and_(or_(self.imaging_server.c.id == imaging_server_uuid.replace("UUID", ""),self.imaging_server.c.packageserver_uuid == imaging_server_uuid), self.imaging_server.c.associated == True)).\
                  first()
         if entity == None:
             entity = session.query(Entity).\
@@ -3668,9 +3668,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             location_id = location[uuid]['uuid']
             menu = self.getEntityDefaultMenu(location_id, session)
             mis = self.__getDefaultMenuItem(session, menu.id)
-            target = self.getTargetsByUUID([uuid])[0]
+            target = self.getTargetsByUUID([uuid])
+            target_name = ""
+            if type(target) is list and len(target) > 0:
+                target_name = target[0].name
+            else:
+                target_name = target.name
             params = menu.toH()
-            params["target_name"] = target.name
+            params["target_name"] = target_name
             menus.append((uuid, params, mis))
 
         self.unregisterTargets(uuids)
@@ -3699,7 +3704,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __copyMenuInto(self, menu_from, menu_into, session):
         for i in ('default_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot'):
-            setattr(menu_into, i, getattr(menu_from, i))
+            try:
+                setattr(menu_into, i, getattr(menu_from, i))
+            except:
+                continue
         session.add(menu_into)
 
     def __copyMenuItemInto(self, mi_from, mi_into, session):
@@ -3720,7 +3728,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         h_tid2target = {}
         for target, tuuid in session.query(Target).add_column(self.target.c.uuid).filter(self.target.c.uuid.in_(computers_UUID)).all():
-            h_tid2target[tuuid] = target
+            try:
+                h_tid2target[tuuid] = target
+            except:
+                pass
 
         for mi, target, bsim, iim in mis:
             mi.order += pnb_element
@@ -3733,6 +3744,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         a_target2default_item = []
         a_target2default_item_WOL = []
         for tuuid in computers_UUID:
+            if tuuid not in h_tid2target:
+                continue
             target = h_tid2target[tuuid]
 
             # put the parameter of the profile's menu in the computer menu
@@ -3802,12 +3815,21 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.fk_default_item_WOL = None
         session.add(menu)
         session.flush()
-
+        mi_list = []
         for mi, target, bsim, iim in pmis:
+            mi_list.append(mi.id)
             if bsim != None:
                 session.delete(bsim)
             if iim != None:
                 session.delete(iim)
+        session.flush()
+
+        menus_refs = session.query(Menu).filter(or_(Menu.fk_default_item.in_(mi_list)),Menu.fk_default_item_WOL.in_(mi_list)).all()
+        menus_ids = []
+        for menu in menus_refs:
+            menus_ids.append(menu.id)
+            menu.fk_default_item = None
+            menu.fk_default_item_WOL = None
         session.flush()
 
         for mi, target, bsim, iim in pmis:
@@ -3818,6 +3840,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
 
         session.delete(menu)
+        session.query(Target).filter(Target.fk_menu == menu.id).delete()
         session.flush()
         session.close()
         return True
