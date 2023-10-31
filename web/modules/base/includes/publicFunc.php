@@ -287,7 +287,7 @@ function _base_baseEdit($FH, $mode) {
     $f->push(new Table());
 
     if ($mode == "add") {
-        $loginTpl = new InputTpl("uid",'/^[a-zA-Z0-9][A-Za-z0-9_.\-]*$/');
+        $loginTpl = new InputTpl("uid",'/^(?!root)[a-zA-Z0-9][A-Za-z0-9_.\-]*$/');
     } else {
         $loginTpl = new HiddenTpl("uid");
     }
