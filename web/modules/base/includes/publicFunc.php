@@ -24,34 +24,39 @@
 require("modules/base/includes/users.inc.php");
 require("includes/languages.php");
 
-function _base_enableUser($paramsArr) {
+function _base_enableUser($paramsArr)
+{
     return xmlCall("base.enableUser", $paramsArr);
 }
 
-function _base_disableUser($paramsArr) {
+function _base_disableUser($paramsArr)
+{
     return xmlCall("base.disableUser", $paramsArr);
 }
 
-function _base_changeUserPasswd($paramsArr) {
+function _base_changeUserPasswd($paramsArr)
+{
     return xmlCall("base.changeUserPasswd", $paramsArr);
 }
 
-function _base_changeUserPrimaryGroup($uid, $group) {
+function _base_changeUserPrimaryGroup($uid, $group)
+{
     return xmlCall("base.changeUserPrimaryGroup", array($uid, $group));
 }
 
-function _base_delGroup($group) {
+function _base_delGroup($group)
+{
     $ret = xmlCall("base.delGroup", $group);
     if($ret == 2) {
         $msg = sprintf(_("Group %s can't be deleted.<br/>%s is the primary group of some users."), $group, $group);
-    }
-    else {
+    } else {
         $msg = sprintf(_("Group %s successfully deleted."), $group);
     }
     return array("code" => $ret, "info" => $msg);
 }
 
-function _base_completeUserEntry(&$entry) {
+function _base_completeUserEntry(&$entry)
+{
     $attrs = array("title", "mail", "mobile", "facsimileTelephoneNumber", "homePhone");
     foreach($attrs as $attr) {
         if (!isset($entry[$attr])) {
@@ -65,7 +70,8 @@ function _base_completeUserEntry(&$entry) {
  * @param $FH FormHandler of the page
  * @param $mode add or edit mode
  */
-function _base_verifInfo($FH, $mode) {
+function _base_verifInfo($FH, $mode)
+{
 
     global $error;
 
@@ -114,8 +120,7 @@ function _base_verifInfo($FH, $mode) {
     if (!strlen($primary)) {
         $base_errors .= _("The primary group field can't be empty.")."<br />";
         setFormError("primary");
-    }
-    else if (!existGroup($primary)) {
+    } elseif (!existGroup($primary)) {
         $base_errors .= sprintf(_("The group %s does not exist, and so can't be set as primary group."), $primary) . "<br />";
         setFormError("primary");
     }
@@ -125,11 +130,11 @@ function _base_verifInfo($FH, $mode) {
         if ($FH->getPostValue("createHomeDir") == "on" && $FH->getPostValue("ownHomeDir") != "on" && $uid) {
             getHomeDir($uid, $FH->getValue("homeDirectory"));
         }
-    }
-    else {
+    } else {
         /* If we want to move the userdir check the destination */
-        if ($FH->isUpdated("homeDirectory"))
+        if ($FH->isUpdated("homeDirectory")) {
             getHomeDir($uid, $FH->getValue("homeDirectory"));
+        }
     }
 
     $error .= $base_errors;
@@ -143,7 +148,8 @@ function _base_verifInfo($FH, $mode) {
  * @param $FH FormHandler of the page
  * @param $mode add or edit mode
  */
-function _base_changeUser($FH, $mode) {
+function _base_changeUser($FH, $mode)
+{
 
     global $result;
     global $error;
@@ -154,23 +160,27 @@ function _base_changeUser($FH, $mode) {
 
     if ($mode == "add") {
         // add mode
-        if($FH->getPostValue("createHomeDir") == "on")
+        if($FH->getPostValue("createHomeDir") == "on") {
             $createHomeDir = true;
-        else
+        } else {
             $createHomeDir = false;
+        }
 
-        if($FH->getPostValue("ownHomeDir") == "on")
+        if($FH->getPostValue("ownHomeDir") == "on") {
             $ownHomeDir = true;
-        else
+        } else {
             $ownHomeDir = false;
+        }
 
         # create the user
-        $ret = add_user($uid,
+        $ret = add_user(
+            $uid,
             $FH->getPostValue("pass"),
             $FH->getPostValue("givenName"),
             $FH->getPostValue("sn"),
             $FH->getPostValue("homeDirectory"),
-            $createHomeDir, $ownHomeDir,
+            $createHomeDir,
+            $ownHomeDir,
             $FH->getPostValue("primary")
         );
         $result .= $ret["info"];
@@ -182,14 +192,18 @@ function _base_changeUser($FH, $mode) {
             $FH->setValue("pass", $randomPass);
         }
         # add mail attribute
-        if ($FH->getPostValue('mail'))
+        if ($FH->getPostValue('mail')) {
             changeUserAttributes($uid, "mail", $FH->getPostValue("mail"));
-        if ($FH->getPostValue('loginShell'))
-            changeUserAttributes($uid, "loginShell",
-                $FH->getPostValue('loginShell'));
+        }
+        if ($FH->getPostValue('loginShell')) {
+            changeUserAttributes(
+                $uid,
+                "loginShell",
+                $FH->getPostValue('loginShell')
+            );
+        }
 
-    }
-    else {
+    } else {
         // edit mode
         if ($FH->getPostValue("deletephoto")) {
             changeUserAttributes($uid, "jpegPhoto", null);
@@ -197,8 +211,10 @@ function _base_changeUser($FH, $mode) {
         }
         if ($FH->isUpdated("homeDirectory")) {
             move_home($uid, $FH->getValue("homeDirectory"));
-            $result .= _(sprintf("Home user directory moved to %s",
-                $FH->getValue("homeDirectory"))) . "<br />";
+            $result .= _(sprintf(
+                "Home user directory moved to %s",
+                $FH->getValue("homeDirectory")
+            )) . "<br />";
         }
     }
 
@@ -208,8 +224,7 @@ function _base_changeUser($FH, $mode) {
         if ($FH->getValue('isBaseDesactive') == "on") {
             changeUserAttributes($uid, 'loginShell', $shells['disabledShell']);
             $result .= _("User disabled")."<br />";
-        }
-        else {
+        } else {
             changeUserAttributes($uid, 'loginShell', $shells['enabledShell']);
             $result .= _("User enabled")."<br />";
         }
@@ -242,8 +257,11 @@ function _base_changeUser($FH, $mode) {
             $maxheight = 320;
             if (in_array("gd", get_loaded_extensions())) {
                 /* Resize file if GD extension is installed */
-                $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"],
-                        $maxwidth, $maxheight);
+                $pfile = resizeJpg(
+                    $_FILES["photofilename"]["tmp_name"],
+                    $maxwidth,
+                    $maxheight
+                );
             }
             list($width, $height) = getimagesize($pfile);
             if (($width <= $maxwidth) && ($height <= $maxheight)) {
@@ -251,23 +269,29 @@ function _base_changeUser($FH, $mode) {
                 $obj->scalar = "";
                 $obj->xmlrpc_type = "base64";
                 $f = fopen($pfile, "r");
-                while (!feof($f)) $obj->scalar .= fread($f, 4096);
+                while (!feof($f)) {
+                    $obj->scalar .= fread($f, 4096);
+                }
                 fclose($f);
                 unlink($pfile);
-                changeUserAttributes($uid, "jpegPhoto", $obj, False);
+                changeUserAttributes($uid, "jpegPhoto", $obj, false);
 
-            }
-            else {
-                $base_errors .= sprintf(_("The photo is too big. The max size is %s x %s.
+            } else {
+                $base_errors .= sprintf(
+                    _("The photo is too big. The max size is %s x %s.
                     Install php gd extension to resize the photo automatically"),
-                    $maxwidth, $maxheight) . "<br/>";
+                    $maxwidth,
+                    $maxheight
+                ) . "<br/>";
             }
+        } else {
+            $base_errors .= _("The photo is not a JPG file") . "<br/>";
         }
-        else $base_errors .= _("The photo is not a JPG file") . "<br/>";
     }
 
-    if ($mode == "edit" && $update)
+    if ($mode == "edit" && $update) {
         $result .= _("User attributes updated") . "<br />";
+    }
 
     $error .= $base_errors;
 
@@ -279,7 +303,8 @@ function _base_changeUser($FH, $mode) {
  * @param $FH FormHandler of the page
  * @param $mode add or edit mode
  */
-function _base_baseEdit($FH, $mode) {
+function _base_baseEdit($FH, $mode)
+{
 
     $uid = $FH->getArrayOrPostValue("uid");
 
@@ -287,7 +312,7 @@ function _base_baseEdit($FH, $mode) {
     $f->push(new Table());
 
     if ($mode == "add") {
-        $loginTpl = new InputTpl("uid",'/^(?!root)[a-zA-Z0-9][A-Za-z0-9_.\-]*$/');
+        $loginTpl = new InputTpl("uid", '/^(?!root)[a-zA-Z0-9][A-Za-z0-9_.\-]*$/');
     } else {
         $loginTpl = new HiddenTpl("uid");
     }
@@ -322,29 +347,29 @@ function _base_baseEdit($FH, $mode) {
 
     $f->add(
         new TrFormElement(_("Last name")."*", new InputTpl("sn")),
-        array("value"=> $FH->getArrayOrPostValue("sn"))
+        array("value" => $FH->getArrayOrPostValue("sn"))
     );
 
     $f->add(
         new TrFormElement(_("First name")."*", new InputTpl("givenName")),
-        array("value"=> $FH->getArrayOrPostValue("givenName"))
+        array("value" => $FH->getArrayOrPostValue("givenName"))
     );
 
     $f->add(
         new TrFormElement(_("Title")."*", new InputTpl("title")),
-        array("value"=> $FH->getArrayOrPostValue("title"))
+        array("value" => $FH->getArrayOrPostValue("title"))
     );
 
     $f->add(
         new TrFormElement(_("Email address"), new MailInputTpl("mail")),
-        array("value"=> $FH->getArrayOrPostValue("mail"))
+        array("value" => $FH->getArrayOrPostValue("mail"))
     );
 
     $f->pop();
 
     $phoneregexp = "/^[a-zA-Z0-9(/ +\-]*$/";
 
-    $tn = new MultipleInputTpl("telephoneNumber",_("Telephone number"));
+    $tn = new MultipleInputTpl("telephoneNumber", _("Telephone number"));
     $tn->setRegexp($phoneregexp);
     $f->add(
         new FormElement(_("Telephone number"), $tn),
@@ -379,13 +404,16 @@ function _base_baseEdit($FH, $mode) {
     );
 
     $checked = "checked";
-    if ($FH->getArrayOrPostValue("loginShell") != '/bin/false')
+    if ($FH->getArrayOrPostValue("loginShell") != '/bin/false') {
         $checked = "";
+    }
     $f->add(
-        new TrFormElement(_("Disable user's shell"), new CheckboxTpl("isBaseDesactive"),
+        new TrFormElement(
+            _("Disable user's shell"),
+            new CheckboxTpl("isBaseDesactive"),
             array("tooltip" => _("A disabled user can't log in any UNIX services.<br/>
                                   His login shell command is replaced by /bin/false"))
-            ),
+        ),
         array("value" => $checked)
     );
 
@@ -399,12 +427,11 @@ function _base_baseEdit($FH, $mode) {
     $groupsTpl->setElements($groups);
     if ($mode == "add") {
         $primary = getUserDefaultPrimaryGroup();
-    }
-    else if($mode == "edit") {
+    } elseif($mode == "edit") {
         /* In case of error, display the POST values */
-        if ($FH->isUpdated("primary"))
+        if ($FH->isUpdated("primary")) {
             $primary = $FH->getValue("primary");
-        else {
+        } else {
             $primary = getUserPrimaryGroup($uid);
             /* If the group is not an LDAP group */
             if (!in_array($primary, $groups)) {
@@ -424,13 +451,14 @@ function _base_baseEdit($FH, $mode) {
     $groupsTpl->setTitle(_("User's groups"), _("All groups"));
     // get the user's groups
     /* In case of error, display the POST values */
-    if ($FH->getPostValue("secondary"))
-            $user_groups = $FH->getPostValue("secondary");
-    else {
-        if ($mode == 'edit')
+    if ($FH->getPostValue("secondary")) {
+        $user_groups = $FH->getPostValue("secondary");
+    } else {
+        if ($mode == 'edit') {
             $user_groups = getUserSecondaryGroups($uid);
-        else
+        } else {
             $user_groups = array();
+        }
     }
     $member = array();
     foreach($user_groups as $group) {
@@ -439,8 +467,9 @@ function _base_baseEdit($FH, $mode) {
     // get all groups
     $available = array();
     foreach($groups as $group) {
-        if (!in_array($group, $member))
+        if (!in_array($group, $member)) {
             $available[$group] = $group;
+        }
     }
 
     $f->add(
@@ -463,8 +492,11 @@ function _base_baseEdit($FH, $mode) {
             array("value" => "checked")
         );
         $f->add(
-            new TrFormElement(_("Force to use the home directory if it exists"), new CheckboxTpl("ownHomeDir"),
-                array("tooltip" => _("Warning: an existing directory may belong to another user !"))),
+            new TrFormElement(
+                _("Force to use the home directory if it exists"),
+                new CheckboxTpl("ownHomeDir"),
+                array("tooltip" => _("Warning: an existing directory may belong to another user !"))
+            ),
             array("value" => "")
         );
     }
@@ -475,26 +507,32 @@ function _base_baseEdit($FH, $mode) {
     );
 
     $f->add(
-        new TrFormElement(_("Common name"), new InputTpl("cn"),
-            array("tooltip" => _("This field is used by some LDAP clients (for example Thunderbird address book) to display user entries."))),
-        array("value"=> $FH->getArrayOrPostValue("cn"))
-	);
+        new TrFormElement(
+            _("Common name"),
+            new InputTpl("cn"),
+            array("tooltip" => _("This field is used by some LDAP clients (for example Thunderbird address book) to display user entries."))
+        ),
+        array("value" => $FH->getArrayOrPostValue("cn"))
+    );
 
     $f->add(
-        new TrFormElement(_("Preferred name to be used"), new InputTpl("displayName"),
-            array("tooltip" => _("This field is used by SAMBA (and other LDAP clients) to display user name."))),
-        array("value"=> $FH->getArrayOrPostValue("displayName"))
+        new TrFormElement(
+            _("Preferred name to be used"),
+            new InputTpl("displayName"),
+            array("tooltip" => _("This field is used by SAMBA (and other LDAP clients) to display user name."))
+        ),
+        array("value" => $FH->getArrayOrPostValue("displayName"))
     );
 
     if ($mode == "edit") {
         $f->add(
             new TrFormElement(_("UID"), new HiddenTpl("uidNumber")),
-            array("value"=> $FH->getArrayOrPostValue("uidNumber"))
+            array("value" => $FH->getArrayOrPostValue("uidNumber"))
         );
 
         $f->add(
             new TrFormElement(_("GID"), new HiddenTpl("gidNumber")),
-            array("value"=> $FH->getArrayOrPostValue("gidNumber"))
+            array("value" => $FH->getArrayOrPostValue("gidNumber"))
         );
     }
 
@@ -509,7 +547,8 @@ function _base_baseEdit($FH, $mode) {
  *
  * @returns: the file name of the resized JPG file
  */
-function resizeJpg($source, $maxwidth, $maxheight) {
+function resizeJpg($source, $maxwidth, $maxheight)
+{
     list($width, $height) = getimagesize($source);
     if (($width > $maxwidth) || ($height > $maxheight)) {
         if ($width > $height) {
@@ -532,5 +571,3 @@ function resizeJpg($source, $maxwidth, $maxheight) {
     }
     return $ret;
 }
-
-?>
