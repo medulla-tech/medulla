@@ -27,15 +27,15 @@ global $conf;
 $glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? $conf['global']['glpidisplayname'] : 'glpi';
 
 if (
-        safeCount($_POST) == 0 &&
-        !isset($_GET['request']) &&
-        ($_GET['action'] == 'computersgroupcreator' || $_GET['action'] == 'computersgroupedit')
-    ) {
+    safeCount($_POST) == 0 &&
+    !isset($_GET['request']) &&
+    ($_GET['action'] == 'computersgroupcreator' || $_GET['action'] == 'computersgroupedit')
+) {
     unset($_SESSION['request']);
 }
-$groupedit = True;
+$groupedit = true;
 if (strpos($_GET['action'], 'profile') !== false) {
-    $groupedit = False;
+    $groupedit = false;
 }
 if (isset($edition)) {
     if ($groupedit) {
@@ -63,7 +63,7 @@ $id = idGet();
 $imaging_server = quickGet('imaging_server');
 $group = new Group($id, true);
 $request = isset($_SESSION['request']) ? $_SESSION['request'] : null;
-if(isset($_SESSION['request'])){
+if(isset($_SESSION['request'])) {
     unset($_SESSION['request']);
 }
 
@@ -116,8 +116,9 @@ if (quickGet('req') && quickGet('param')) {
         if (quickGet('sub_id') != '') {
             $sub->id = quickGet('sub_id');
             $request->editSub($sub);
-        } else
+        } else {
             $request->addSub($sub);
+        }
     }
 }
 
@@ -140,14 +141,12 @@ if (safeCount($modules) == 1) {
 
     foreach ($modules as $name) {
         if ($name == quickGet('add_req')) {
-            if($name === "glpi"){
-              print "<td style=\"width:80px;border:0\">$glpidisplayname</td>";
-            }
-            else if($name == "dyngroup"){
-              print "<td style=\"width:80px;border:0\">"._T("Existing group", "dyngroup")."</td>";
-            }
-            else{
-              print "<td style=\"width:80px;border:0\">$name</td>";
+            if($name === "glpi") {
+                print "<td style=\"width:80px;border:0\">$glpidisplayname</td>";
+            } elseif($name == "dyngroup") {
+                print "<td style=\"width:80px;border:0\">"._T("Existing group", "dyngroup")."</td>";
+            } else {
+                print "<td style=\"width:80px;border:0\">$name</td>";
             }
         } else {
             $_SESSION['request'] = $request->toS();
@@ -158,24 +157,23 @@ if (safeCount($modules) == 1) {
                 'imaging_server' => $imaging_server
             );
             // When sub_id is transmitted add it to params
-            if (quickGet('sub_id') != '')
+            if (quickGet('sub_id') != '') {
                 $url_params['sub_id'] = quickGet('sub_id');
+            }
 
-                if($name == "glpi"){
-                  print "<td style=\"width:80px;border:0\"><a href='" .
-                          urlStr("base/computers/$target", $url_params) .
-                          "' id='glpi'>$glpidisplayname</a></td>";
-                }
-                else if($name == "dyngroup"){
-                  print "<td style=\"width:80px;border:0\"><a href='" .
-                          urlStr("base/computers/$target", $url_params) .
-                          "' id='dyngroup'>"._T("Existing group", "dyngroup")."</a></td>";
-                }
-                else{
-                  print "<td style=\"width:80px;border:0\"><a href='" .
-                          urlStr("base/computers/$target", $url_params) .
-                          "' id='$name'>$name</a></td>";
-                }
+            if($name == "glpi") {
+                print "<td style=\"width:80px;border:0\"><a href='" .
+                        urlStr("base/computers/$target", $url_params) .
+                        "' id='glpi'>$glpidisplayname</a></td>";
+            } elseif($name == "dyngroup") {
+                print "<td style=\"width:80px;border:0\"><a href='" .
+                        urlStr("base/computers/$target", $url_params) .
+                        "' id='dyngroup'>"._T("Existing group", "dyngroup")."</a></td>";
+            } else {
+                print "<td style=\"width:80px;border:0\"><a href='" .
+                        urlStr("base/computers/$target", $url_params) .
+                        "' id='$name'>$name</a></td>";
+            }
 
         }
     }
@@ -217,12 +215,13 @@ if (quickGet('add_req')) {
                         'id' => $id,
                         'imaging_server' => $imaging_server
                     );
-                    if (quickGet('sub_id') != '')
+                    if (quickGet('sub_id') != '') {
                         $url_params['sub_id'] = quickGet('sub_id');
+                    }
                     print "<tr><td style=\"padding-left:20px;\"><a href='" .
                             urlStr("base/computers/$target", $url_params) .
                             "' id='".$nameStripped . "'>" . _T($param_name, 'dyngroup') . "</a></td>" .
-                            "<td>" . ($description == '' ? '' : _T($description, 'dyngroup') ) . "</td>" .
+                            "<td>" . ($description == '' ? '' : _T($description, 'dyngroup')) . "</td>" .
                             "</tr>";
                 }
             }
@@ -235,8 +234,9 @@ if (quickGet('add_req')) {
 //TODO put in class
 if (quickGet('add_param')) {
     print "<form action = '" . urlStr("base/computers/$target", array()) . "' method = 'POST'><table>";
-    if (quickGet('sub_id') != '')
+    if (quickGet('sub_id') != '') {
         print "<input type = 'hidden' name ='sub_id' value = '" . quickGet('sub_id') . "'/>";
+    }
     print "<input type = 'hidden' name = 'imaging_server' value = '$imaging_server'/>";
     // need to be changed in getCriterionType (we don't use the second part of the array...
     $type = getTypeForCriterionInModule(quickGet('req'), quickGet('add_param'));
@@ -263,7 +263,7 @@ if (quickGet('add_param')) {
             case 'int':
                 // Nothing to do for the moment.
                 break;
-            // Display a calendar widget instead of an input
+                // Display a calendar widget instead of an input
             case 'date':
                 include("modules/base/includes/AjaxFilterLog.inc.php");
                 $dateWidget = new LogDynamicDateTpl("value", _("Date"));
@@ -346,7 +346,7 @@ if (!$request->isEmpty()) {  # TODO check ACLs....
     print "<tr><td>";
     $b = new Button('base', 'computers', 'creator_step2');
     $_SESSION['request'] = $request->toS();
-    $url = urlStr("base/computers/creator_step2", array('id' => $id, 'request' => 'stored_in_session', 'imaging_server' => $imaging_server, 'is_group' => ( $groupedit ? '1' : 0)));
+    $url = urlStr("base/computers/creator_step2", array('id' => $id, 'request' => 'stored_in_session', 'imaging_server' => $imaging_server, 'is_group' => ($groupedit ? '1' : 0)));
     print $b->getOnClickButton(_T("Go to save step", "dyngroup"), $url);
 
     print "</td><td>";
@@ -381,4 +381,3 @@ _T('Installed software', 'dyngroup');
 _T('Mozilla Firefox, LibreOffice, Microsoft Office 2003 ...', 'dyngroup');
 _T('Installed software (specific version)', 'dyngroup');
 _T('Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ...', 'dyngroup');
-?>

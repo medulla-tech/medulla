@@ -21,69 +21,83 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-function parse_request($str) {
+function parse_request($str)
+{
     $req = new Request();
     $req->parse($str);
     return $req;
 }
 
-function parse_subrequest($str) {
+function parse_subrequest($str)
+{
     $sub = new SubRequest();
     $sub->parse($str);
     return $sub;
 }
 
-class Request {
+class Request
+{
     protected $subs;
-    
-    function __construct() {
+
+    public function __construct()
+    {
         $this->subs = array();
         $this->nextSubId = 1;
     }
 
-    function isEmpty() {
+    public function isEmpty()
+    {
         return (safeCount($this->subs) == 0);
     }
 
-    function addSub($sub) {
+    public function addSub($sub)
+    {
         $sub->id = $this->nextSubId++;
         $this->subs[$sub->id] = $sub;
         return $sub->id;
     }
 
-    function editSub($sub) {
+    public function editSub($sub)
+    {
         $this->subs[$sub->id] = $sub;
         return $sub->id;
     }
 
-    function removeSub($id) {
+    public function removeSub($id)
+    {
         unset($this->subs[$id]);
     }
 
-    function getSub($id) {
+    public function getSub($id)
+    {
         return $this->subs[$id];
     }
 
-    function toS() {
+    public function toS()
+    {
         if (safeCount($this->subs) == 0) {
             return 'EMPTY';
         }
         return implode('||', array_map('to_s', $this->subs));
     }
 
-    function toURL() {
+    public function toURL()
+    {
         return urlencode($this->toS());
     }
 
-    function toRPC() {
+    public function toRPC()
+    {
         return array_map('to_rpc', $this->subs);
     }
 
-    function countPart() {
+    public function countPart()
+    {
         return safeCount($this->subs);
     }
 
-    function parse($str) {
+    public function parse($str)
+    {
         if ($str == 'EMPTY') {
             $this->subs = array();
         } else {
@@ -97,7 +111,8 @@ class Request {
         }
     }
 
-    function display() {
+    public function display()
+    {
         $ret = array();
         foreach ($this->subs as $id => $sub) {
             $ret[] = $sub->display();
@@ -105,7 +120,8 @@ class Request {
         return $ret;
     }
 
-    function displayReqListInfos($canbedeleted = false, $default_params = array()) {
+    public function displayReqListInfos($canbedeleted = false, $default_params = array())
+    {
         if (!$default_params['target']) {
             $default_params['target'] = 'creator';
         }
@@ -137,9 +153,10 @@ class Request {
 
 }
 
-class SubRequest {
-
-    function __construct($module = null, $criterion = null, $value = null, $value2 = null, $operator = null) {
+class SubRequest
+{
+    public function __construct($module = null, $criterion = null, $value = null, $value2 = null, $operator = null)
+    {
         $this->sep_plural = array('>', '<');
         $this->module = $module;
         $this->crit = $criterion;
@@ -151,12 +168,14 @@ class SubRequest {
         $this->id = null;
     }
 
-    function toS() {
+    public function toS()
+    {
         // Set the right comparison operator depending on the attribute of the subrequest
         // The operator has to follow the good syntax, else the QueryManager won't work
         $comparison_operator = "=="; // '==' is the comparison operator by default
-        if ($this->operator != '=')
+        if ($this->operator != '=') {
             $comparison_operator .= $this->operator;
+        }
 
         if (is_array($this->val)) {
             return $this->id . "==" . $this->module . "::" . $this->crit . $comparison_operator . $this->sep_plural[0] . implode(', ', $this->val) . $this->sep_plural[1];
@@ -165,15 +184,18 @@ class SubRequest {
         }
     }
 
-    function toURL() {
+    public function toURL()
+    {
         return urlencode($this->toS());
     }
 
-    function toRPC() {
+    public function toRPC()
+    {
         return array($this->id, $this->module, $this->crit, $this->val);
     }
 
-    function display() {
+    public function display()
+    {
         if (is_array($this->val)) {
             return sprintf(_T("%s) Search %s %s (%s) in module %s", "dyngroup"), $this->id, $this->operator, $this->crit, implode(', ', $this->val), $this->module);
         } else {
@@ -181,7 +203,8 @@ class SubRequest {
         }
     }
 
-    function parse($str) {
+    public function parse($str)
+    {
         $a = explode('::', $str);
         $b = explode('==', $a[0]);
 
@@ -207,5 +230,3 @@ class SubRequest {
     }
 
 }
-
-?>
