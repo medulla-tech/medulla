@@ -21,41 +21,48 @@
  */
 
 /* Returns the first logo found in img/logo */
-function getMMCLogo() {
+function getMMCLogo()
+{
     $basedir = "img/logo/";
     $logos = scandir($basedir);
     // remove . and .. entries
     $logos = array_slice($logos, 2);
-    if (!is_file($basedir . $logos[0]))
+    if (!is_file($basedir . $logos[0])) {
         return false;
+    }
     return $basedir . $logos[0];
 }
 
-function _startsWith($haystack, $needle) {
+function _startsWith($haystack, $needle)
+{
     return !strncmp($haystack, $needle, strlen($needle));
 }
 
-function startsWith($haystack, $needle) {
+function startsWith($haystack, $needle)
+{
     if (is_array($needle)) {
         foreach($needle as $item) {
-            if (_startsWith($haystack, $item))
-                return True;
+            if (_startsWith($haystack, $item)) {
+                return true;
+            }
         }
-        return False;
+        return false;
     }
     return _startsWith($haystack, $needle);
 }
 
-function endsWith($haystack, $needle) {
+function endsWith($haystack, $needle)
+{
     $length = strlen($needle);
     if ($length == 0) {
-            return true;
-        }
+        return true;
+    }
 
     return (substr($haystack, -$length) === $needle);
 }
 
-function safeCount($toCount) {
+function safeCount($toCount)
+{
     if (is_countable($toCount)) {
         return count($toCount);
     } elseif (is_string($toCount)) {
@@ -64,4 +71,3 @@ function safeCount($toCount) {
         return 0;
     }
 }
-?>
