@@ -136,6 +136,8 @@ if (safeCount($modules) == 1) {
 
     print "<table><tr><td style=\"width:300px;border:0\">" . _T("Choose the module you want to query : ", "dyngroup") . "</td>";
 
+    $modules = array("glpi", "xmppmaster", "dyngroup");
+
     foreach ($modules as $name) {
         if ($name == quickGet('add_req')) {
             if($name === "glpi"){
