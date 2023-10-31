@@ -36,7 +36,7 @@ function parse_subrequest($str) {
 class Request {
     protected $subs;
     
-    function _construct() {
+    function __construct() {
         $this->subs = array();
         $this->nextSubId = 1;
     }
