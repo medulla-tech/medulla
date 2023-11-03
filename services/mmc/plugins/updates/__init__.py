@@ -103,8 +103,25 @@ def white_unlist_update(updateid):
     return UpdatesDatabase().white_unlist_update(updateid)
 
 
-def get_machine_with_update(kb):
-    return Glpi().get_machine_with_update(kb)
+def get_machine_with_update(kb, updateid):
+    glpi = Glpi().get_machine_with_update(kb)
+    history = []
+    if updateid != "":
+        history = XmppMasterDatabase().get_history_by_update(updateid)
+
+    for machine in glpi:
+        if machine != []:
+            uuid = "UUID%s" % machine[0]
+            if uuid in history:
+                del history[uuid]
+
+    for uuid in history:
+        glpi.append(history[uuid]["id"])
+        glpi.append(history[uuid]["hostname"])
+        glpi.append(history[uuid]["entity"])
+        glpi.append(history[uuid]["kb"])
+        glpi.append(history[uuid]["numkb"])
+    return glpi
 
 
 def get_count_machine_with_update(kb):
@@ -129,6 +146,7 @@ def get_conformity_update_by_machines(ids=[]):
         merged[ids["uuids"][count]] = ids["ids"][count]
         count += 1
 
+    history = XmppMasterDatabase().get_update_history_by_machines(ids["ids"])
     if ids["uuids"] == "" or ids["uuids"] == []:
         installed = {}
     else:
@@ -142,16 +160,26 @@ def get_conformity_update_by_machines(ids=[]):
     result = []
     for uuid in installed:
         _missing = missing[uuid]["missing"] if uuid in missing else 0
+        count_historic = 0
+        try:
+            count_historic = len(history[uuid])
+        except:
+            pass
+        count_installed = installed[uuid]["installed"] + count_historic
+        count_total = count_installed + _missing
+        try:
+            compliance = ((1.0 * count_installed) / (1.0 * count_total)) * 100
+        except:
+            compliance = 100
         result.append(
             {
                 "uuid": uuid,
                 "id": merged[uuid],
                 "missing": _missing,
                 "hostname": installed[uuid]["cn"],
-                "installed": installed[uuid]["installed"],
-                "total": installed[uuid]["installed"] + _missing,
-                "compliance": 100
-                - (100 * _missing / (installed[uuid]["installed"] + _missing)),
+                "installed": count_installed,
+                "total": count_total,
+                "compliance": compliance,
             }
         )
 

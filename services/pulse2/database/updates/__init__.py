@@ -370,7 +370,9 @@ class UpdatesDatabase(DatabaseHelper):
                 "kb": [],
                 "valided": [],
                 "missing": [],
+                "installed": [],
             }
+
             sql = """SELECT SQL_CALC_FOUND_ROWS
     umw.update_id AS updateid,
     ud.kb AS kb,
@@ -391,10 +393,7 @@ WHERE
 AND
     ge.glpi_id = %s
 AND
-    tbl.updateid is not NULL
-AND (umw.curent_deploy is NULL or umw.curent_deploy = 0)
-AND (umw.required_deploy is NULL or umw.required_deploy = 0)
- """ % (
+    tbl.updateid is not NULL """ % (
                 list_name,
                 entity.replace("UUID", ""),
             )
@@ -434,12 +433,28 @@ AND (umw.required_deploy is NULL or umw.required_deploy = 0)
 
             if result:
                 for list_b in result:
-                    print(list_b)
+                    sql2 = """select count(ma.id) as count
+        from xmppmaster.machines ma
+        join xmppmaster.up_history uh on uh.id_machine = ma.id
+        join xmppmaster.glpi_entity ge on ma.glpi_entity_id = ge.id
+    where uh.update_id='%s' and ge.glpi_id=%s and uh.delete_date is not NULL""" % (
+                        list_b.updateid,
+                        entity.replace("UUID", ""),
+                    )
+                    try:
+                        res = session.execute(sql2)
+                    except Exception as e:
+                        logger.error(e)
+                    installed = 0
+                    if res is not None:
+                        for _res in res:
+                            installed = _res.count
                     enabled_updates_list["updateid"].append(list_b.updateid)
                     enabled_updates_list["title"].append(list_b.title)
                     enabled_updates_list["kb"].append(list_b.kb)
                     enabled_updates_list["valided"].append(list_b.valided)
                     enabled_updates_list["missing"].append(list_b.missing)
+                    enabled_updates_list["installed"].append(installed)
 
         except Exception as e:
             logger.error("error function get_enabled_updates_list %s" % e)

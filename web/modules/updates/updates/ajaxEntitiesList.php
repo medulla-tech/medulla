@@ -95,17 +95,17 @@ $actiondeploySpecifics = [];
 $entityNames = [];
 $complRates = [];
 $totalMachine = [];
-$nbupadte = [];
-$identity = array();
+$nbupdate = [];
+$identity=array();
 
 foreach ($entitycompliances as $entitycompliance) {
-    $identity[$entitycompliance['entity']] = array(
+    $identity[$entitycompliance['entity']]=array(
         "conformite" => $entitycompliance['conformite'],
         "totalmach" => $entitycompliance['totalmach'],
         "nbupdate" => $entitycompliance['nbupdate'],
         "nbmachines" => $entitycompliance['nbmachines'],
         "entity" => $entitycompliance['entity']);
-};
+    }
 
 foreach ($entities as $entity) {
     $nbmachines = 0;
@@ -137,7 +137,7 @@ foreach ($entities as $entity) {
         $actiondeployAlls[] = $emptyDeployAll;
         $actiondeploySpecifics[] = $emptyDeploySpecific;
     }
-    $complRates[] = "<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : white; text-align: right;'> ".$conformite."% </div>";
+    $complRates[] ="<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$conformite."% </div>";
     $totalMachine[] = $totalmach;
     $nbupdate[] = $nbupdateentity ;
     $nbMachines[] = $nbmachines;
@@ -154,9 +154,9 @@ $n->setcssIds($ids_entity);
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($nbupdate, _T("Missing Updates", "updates"));
+$n->addExtraInfo($nbupdate, _T("Missing updates", "updates"));
 $n->addExtraInfo($nbMachines, _T("Non-compliant machines", "updates"));
-$n->addExtraInfo($totalMachine, _T("Total Machines", "updates"));
+$n->addExtraInfo($totalMachine, _T("Total machines", "updates"));
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));

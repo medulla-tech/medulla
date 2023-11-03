@@ -13041,15 +13041,78 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
         """
         result = {}
-        for x in self.get_update_by_entity():
-            result[x["entity"]] = {
-                "totalmach": x["total_machine_entity"],
-                "nbupdate": 0,
+        sql = """select ge.glpi_id as id,
+        count(m.id) as count
+        from machines m
+join glpi_entity ge on m.glpi_entity_id = ge.id
+where m.platform like "%Windows%" and m.agenttype="machine";"""
+        datas = session.execute(sql)
+
+        for entity in datas:
+            result[str(entity.id)] = {
+                "entity": str(entity.id),
                 "nbmachines": 0,
+                "nbupdates": 0,
+                "totalmach": entity.count,
+                "conformite": 0,
             }
-        for x in self.get_machine_by_entity_in_grayandwhite_lists():
-            result[x["entity"]]["nbmachines"] = x["machine_a_mettre_a_jour"]
-            result[x["entity"]]["nbupdate"] = x["update_a_mettre_a_jour"]
+
+        sql1 = """select ge.glpi_id as id, count(distinct m.id) as count from up_machine_windows umw
+join machines m on umw.id_machine = m.id
+join glpi_entity ge on m.glpi_entity_id = ge.id
+left join up_gray_list  ugl on ugl.updateid = umw.update_id
+where
+    m.platform like "%Windows%"
+    and m.agenttype="machine"
+    and concat("UUID",ge.glpi_id) = "UUID0"
+    and ugl.valided=1;"""
+
+        machines_non_compliant = session.execute(sql1)
+        for non_compliant in machines_non_compliant:
+            if str(non_compliant.id) in result:
+                result[str(non_compliant.id)]["nbmachines"] = non_compliant.count
+
+        sql2 = """select ge.glpi_id as id,
+        count(update_id) count
+        from up_machine_windows umw
+        join machines m on umw.id_machine = m.id
+        join glpi_entity ge on m.glpi_entity_id = ge.id
+        left join up_gray_list  ugl on ugl.updateid = umw.update_id
+        where
+        m.platform like "%Windows%"
+        and m.agenttype="machine"
+        and ugl.valided = 1
+        group by ge.glpi_id, id_machine;"""
+        missing_updates = session.execute(sql2)
+        for missing_update in missing_updates:
+            if str(missing_update.id) in result:
+                result[str(missing_update.id)]["nbupdates"] += missing_update.count
+
+        sql3 = """select ge.glpi_id as id,
+        count(update_id) count
+        from up_machine_windows umw
+        join machines m on umw.id_machine = m.id
+        join glpi_entity ge on m.glpi_entity_id = ge.id
+        left join up_white_list  uwl on uwl.updateid = umw.update_id
+        where
+        m.platform like "%Windows%"
+        and m.agenttype="machine"
+        and uwl.valided = 1
+        group by ge.glpi_id, id_machine;"""
+        missing_updates = session.execute(sql3)
+        for missing_update in missing_updates:
+            if str(missing_update.id) in result:
+                result[str(missing_update.id)]["nbupdates"] += missing_update.count
+
+        for entity in result:
+            if result[entity]["totalmach"] > 0:
+                result[entity]["conformite"] = int(
+                    100
+                    * (result[entity]["totalmach"] - result[entity]["nbmachines"])
+                    / result[entity]["totalmach"]
+                )
+            else:
+                result[entity]["conformite"] = 100
         return result
 
     @DatabaseHelper._sessionm
@@ -13755,7 +13818,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         self, session, machineids, start=0, limit=-1, filter=""
     ):
         query = (
-            session.query(Up_machine_windows, Up_gray_list)
+            session.query(Up_machine_windows, Up_gray_list, Up_white_list)
             .join(Machines, Machines.id == Up_machine_windows.id_machine)
             .outerjoin(
                 Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id
@@ -13767,14 +13830,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 and_(
                     Machines.id.in_(machineids),
                     or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
-                    or_(
-                        Up_machine_windows.curent_deploy == None,
-                        Up_machine_windows.curent_deploy == 0,
-                    ),
-                    or_(
-                        Up_machine_windows.required_deploy == None,
-                        Up_machine_windows.required_deploy == 0,
-                    ),
                 )
             )
             .group_by(Up_machine_windows.update_id)
@@ -13813,7 +13868,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         pkgs_list = {}
         result = {"total": count, "datas": []}
 
-        for element, gray in query:
+        for element, gray, white in query:
             startdate = ""
             if element.start_date is not None:
                 startdate = element.start_date
@@ -13830,13 +13885,26 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             if element.end_date is not None:
                 enddate = element.end_date
 
+            title = ""
+            description = ""
+            update_list = ""
+            if gray is None:
+                title = white.title
+                description = white.description if white is not None else ""
+                update_list = "white"
+            else:
+                title = gray.title
+                description = gray.description if gray is not None else ""
+                update_list = "white"
             result["datas"].append(
                 {
-                    "id_machine": element.id_machine if not None else 0,
+                    "id_machine": element.id_machine
+                    if element.id_machine is not None
+                    else 0,
                     "update_id": element.update_id if not None else "",
-                    "title": gray.title if not None else "",
-                    "description": gray.description if not None else "",
-                    "kb": element.kb if not None else "",
+                    "title": title if title is not None else "",
+                    "description": description if description is not None else "",
+                    "kb": element.kb if element.kb is not None else "",
                     "current_deploy": current_deploy,
                     "required_deploy": required_deploy,
                     "start_date": startdate,
@@ -13844,10 +13912,12 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     "deployment_intervals": element.intervals
                     if element.intervals is not None
                     else "",
-                    "pkgs_label": "" if not None else "",
                     "pkgs_version": "",
                     "pkgs_description": "",
-                    "severity": element.msrcseverity if not None else "Corrective",
+                    "severity": element.msrcseverity
+                    if element.msrcseverity is not None
+                    else "Corrective",
+                    "list": update_list,
                 }
             )
             pkgs_list[element.update_id] = {}
@@ -14159,9 +14229,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 from up_machine_windows
 join machines on machines.id = up_machine_windows.id_machine
 join up_gray_list on up_machine_windows.update_id = up_gray_list.updateid
-where curent_deploy is NULL
-and required_deploy is NULL
-and up_gray_list.valided = 1
+where up_gray_list.valided = 1
 and id_machine in %s
 group by hostname
 ;"""
@@ -14177,6 +14245,34 @@ group by hostname
                 "hostname": element.hostname,
                 "missing": element.missing,
             }
+
+        sql2 = (
+            """select id,
+        uuid_inventorymachine as uuid,
+        hostname,
+        count(update_id) as missing
+from up_machine_windows
+join machines on machines.id = up_machine_windows.id_machine
+join up_white_list on up_machine_windows.update_id = up_white_list.updateid
+where up_white_list.valided = 1
+and id_machine in %s
+group by hostname
+;"""
+            % ids
+        )
+
+        datas = session.execute(sql2)
+
+        for element in datas:
+            if element.uuid not in result:
+                result[element.uuid] = {
+                    "id": element.id,
+                    "uuid": element.uuid,
+                    "hostname": element.hostname,
+                    "missing": element.missing,
+                }
+            else:
+                result[element.uuid]["missing"] += element.missing
 
         return result
 
@@ -14294,3 +14390,74 @@ group by hostname
             return False
 
         return True
+
+    @DatabaseHelper._sessionm
+    def get_update_history_by_machines(self, session, idmachines):
+        if idmachines == []:
+            return {}
+        query = (
+            session.query(Up_history)
+            .add_column(Update_data.kb)
+            .add_column(Machines.uuid_inventorymachine)
+            .filter(
+                and_(
+                    Up_history.id_machine.in_(idmachines),
+                    or_(
+                        Up_history.delete_date is not None, Up_history.delete_date != 0
+                    ),
+                )
+            )
+            .join(Update_data, Up_history.update_id == Update_data.updateid)
+            .join(Machines, Up_history.id_machine == Machines.id)
+            .outerjoin(Deploy, Up_history.id_deploy == Deploy.id)
+        )
+        query = query.all()
+        result = {}
+        for element, kb, uuid in query:
+            if uuid not in result:
+                result[uuid] = [
+                    {
+                        "updateid": element.update_id,
+                        "id_machine": element.id_machine,
+                        "kb": kb,
+                    }
+                ]
+            else:
+                result[uuid].append(
+                    {
+                        "updateid": element.update_id,
+                        "id_machine": element.id_machine,
+                        "kb": kb,
+                    }
+                )
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_history_by_update(self, session, updateid):
+        query = (
+            session.query(Up_history, Update_data, Machines, Glpi_entity)
+            .join(Update_data, Update_data.updateid == Up_history.update_id)
+            .join(Machines, Up_history.id_machine == Machines.id)
+            .join(Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id)
+            .filter(Up_history.delete_date is not None)
+            .all()
+        )
+
+        result = {}
+
+        for hist, data, mach, entity in query:
+            result[mach.uuid_inventorymachine] = {
+                "id": int(mach.uuid_inventorymachine.replace("UUID", ""))
+                if mach.uuid_inventorymachine is not None
+                else "",
+                "hostname": mach.hostname,
+                "eid": entity.glpi_id if entity.glpi_id is not None else 0,
+                "entity": entity.complete_name
+                if entity.complete_name is not None
+                else "",
+                "kb": "Update(KB%s)" % data.kb,
+                "numkb": data.kb,
+            }
+
+        return result

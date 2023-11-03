@@ -106,7 +106,7 @@ if ($entity == '') {
         $id_machine = $id_machine[0]['id_machine'];
         $compliance_computer = xmlrpc_get_conformity_update_by_machines(['ids' => [$id_machine], 'uuids' => [$k]]);
 
-        $compliance = $compliance_computer['0']['compliance'];
+        $compliance = round($compliance_computer['0']['compliance']);
         $missing[] = $compliance_computer['0']['missing'];
         $installed[] = $compliance_computer['0']['installed'];
         $total[] = $compliance_computer['0']['total'];
@@ -158,7 +158,7 @@ if ($entity == '') {
 
         $actionPendingByMachines[] = $pendingByMach;
         $actionDoneByMachines[] = $doneByMach;
-
+        $compliance_computers[$i]["compliance"] = round($compliance_computers[$i]["compliance"]);
         $color = colorconf($compliance_computers[$i]["compliance"]);
         $complRates[] = "<div class='progress' style='width: ".$compliance_computers[$i]["compliance"]."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_computers[$i]["compliance"]."% </div>";
 
@@ -186,8 +186,8 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo($platform, _T("Platform", "updates"));
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
 $n->addExtraInfo($missing, _T("Missing updates", "updates"));
-$n->addExtraInfo($installed, _T("Installed Updated", "updates"));
-$n->addExtraInfo($total, _T("Total Updated", "updates"));
+$n->addExtraInfo($installed, _T("Installed updates", "updates"));
+$n->addExtraInfo($total, _T("Total updates", "updates"));
 $n->addActionItemArray($detailsByMachs);
 $n->addActionItemArray($actionPendingByMachines);
 $n->addActionItemArray($actionDoneByMachines);

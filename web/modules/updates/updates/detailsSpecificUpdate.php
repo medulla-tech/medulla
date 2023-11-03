@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net
+ * (c) 2022-2023 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -31,6 +31,10 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 unset($_GET['action']);
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsSpecificUpdate"), "container", $_GET);
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsSpecificUpdate"), "container-with", $_GET, 'formWith');
+$ajax->display();
+$ajax->displayDivToUpdate();
+
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsSpecificUpdateWithout"), "container-without", $_GET, 'formWithout');
 $ajax->display();
 $ajax->displayDivToUpdate();

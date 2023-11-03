@@ -25,7 +25,7 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-$p = new PageGenerator(_T("Update Deployments", 'updates'));
+$p = new PageGenerator(_T("Entities Compliance", 'updates'));
 $p->setSideMenu($sidemenu);
 $p->display();
 

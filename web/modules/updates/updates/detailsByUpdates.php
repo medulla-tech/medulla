@@ -25,7 +25,12 @@ require("localSidebar.php");
 
 require_once("modules/updates/includes/xmlrpc.php");
 
-$params = ['entity' => $_GET['entity'], 'completename' => $_GET['completename']];
+$p = new PageGenerator(_T("Details by Updates", 'updates'));
+$p->setSideMenu($sidemenu);
+
+$p->display();
+
+$params = ['entity'=>$_GET['entity'], 'completename'=>$_GET['completename']];
 $ajaxGray = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesGray"), "container-gray", $params, 'formGray');
 $ajaxGray->display();
 $ajaxGray->displayDivToUpdate();

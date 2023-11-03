@@ -1651,6 +1651,7 @@ def save_xmpp_json(folder, json_content):
     uuid = folder_list[-1]
 
     structpackage["metaparameter"]["uuid"] = uuid
+    structpackage["info"]["packageUuid"] = uuid
     json_content = json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
     # Refresh the dependencies list
