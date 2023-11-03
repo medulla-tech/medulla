@@ -96,16 +96,16 @@ $entityNames = [];
 $complRates = [];
 $totalMachine = [];
 $nbupdate = [];
-$identity=array();
+$identity = array();
 
 foreach ($entitycompliances as $entitycompliance) {
-    $identity[$entitycompliance['entity']]=array(
+    $identity[$entitycompliance['entity']] = array(
         "conformite" => $entitycompliance['conformite'],
         "totalmach" => $entitycompliance['totalmach'],
         "nbupdate" => $entitycompliance['nbupdate'],
         "nbmachines" => $entitycompliance['nbmachines'],
         "entity" => $entitycompliance['entity']);
-    }
+}
 
 foreach ($entities as $entity) {
     $nbmachines = 0;
@@ -137,7 +137,7 @@ foreach ($entities as $entity) {
         $actiondeployAlls[] = $emptyDeployAll;
         $actiondeploySpecifics[] = $emptyDeploySpecific;
     }
-    $complRates[] ="<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$conformite."% </div>";
+    $complRates[] = "<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$conformite."% </div>";
     $totalMachine[] = $totalmach;
     $nbupdate[] = $nbupdateentity ;
     $nbMachines[] = $nbmachines;

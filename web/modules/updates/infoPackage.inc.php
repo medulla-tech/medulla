@@ -86,7 +86,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxDetailsSpecificUpdateWithout", _T("Manage machine details for specific update", "updates"));
 $page->setFile("modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, "noHeader"=>True));
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("ajaxDeploySpecificUpdate", _T("Manage deploy specific update", "updates"));
@@ -128,19 +128,19 @@ $page->setFile("modules/updates/updates/enableUpdate.php");
 $submod->addPage($page);
 
 $page = new Page("disableUpdate", _T('Disable for manual update', 'updates'));
-$page->setFile("modules/updates/updates/disableUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/disableUpdate.php", array("noHeader" => true,"visible" => false));
 $submod->addPage($page);
 
 $page = new Page("whitelistUpdate", _T('Approve for automatic update', 'updates'));
-$page->setFile("modules/updates/updates/whitelistUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/whitelistUpdate.php", array("noHeader" => true,"visible" => false));
 $submod->addPage($page);
 
 $page = new Page("blacklistUpdate", _T('Ban update', 'updates'));
-$page->setFile("modules/updates/updates/blacklistUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/blacklistUpdate.php", array("noHeader" => true,"visible" => false));
 $submod->addPage($page);
 
 $page = new Page("greylistUpdate", _T('Unlist update', 'updates'));
-$page->setFile("modules/updates/updates/greylistUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/greylistUpdate.php", array("noHeader" => true,"visible" => false));
 $submod->addPage($page);
 
 $page = new Page("deleteRule", _T('UnBan update', 'updates'));
@@ -161,7 +161,7 @@ $submod->addPage($page);
 
 // Also used for whitelist
 $page = new Page("banUpdate", _T('Ban update', 'updates'));
-$page->setFile("modules/updates/updates/banUpdate.php", array("noHeader"=>True,"visible"=>False));
+$page->setFile("modules/updates/updates/banUpdate.php", array("noHeader" => true,"visible" => false));
 $submod->addPage($page);
 
 $page = new Page("whiteUnlist", _T('White Unlist', 'updates'));
@@ -193,5 +193,5 @@ $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-$MMCApp = & MMCApp::getInstance();
+$MMCApp = &MMCApp::getInstance();
 $MMCApp->addModule($mod);

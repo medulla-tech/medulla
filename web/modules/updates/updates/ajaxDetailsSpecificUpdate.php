@@ -34,7 +34,7 @@ $maxperpage = $conf["global"]["maxperpage"];
 $gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
 $contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
-$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
+$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $filterCTX = "Microsoft";
 $field = "platform";
@@ -71,14 +71,14 @@ $count_with_upd = sizeof($with_Upd[1]);
 $count_without_upd = sizeof($without_Upd);
 
 $count = $entityMachineList['count'];
-for($i=0; $i < $count; $i++) {
+for($i = 0; $i < $count; $i++) {
     if (in_array($entityMachineList['data']['hostname'][$i], $with_Upd[1])) {
         $titles_with[] = $entityMachineList['data']['hostname'][$i];
         $plateform_with[] = $entityMachineList['data']['platform'][$i];
     }
 }
 
-for($i=0; $i < $count; $i++) {
+for($i = 0; $i < $count; $i++) {
     if (in_array($entityMachineList['data']['hostname'][$i], $without_Upd)) {
         $titles_without[] = $entityMachineList['data']['hostname'][$i];
         $plateform_without[] = $entityMachineList['data']['platform'][$i];

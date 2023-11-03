@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * (c) 2020 Siveo, http://siveo.net
  *
@@ -19,10 +19,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$sidemenu= new SideMenu();
+$sidemenu = new SideMenu();
 $sidemenu->setClass("updates");
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Compliance", 'updates'), "updates", "updates", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Updates Lists", 'updates'), "updates", "updates", "updatesListWin"));
-
-?>
