@@ -26,22 +26,22 @@ global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
-$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
+$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 
 $white_list = xmlrpc_get_white_list($start, $maxperpage, $filter);
 // WhiteList Actions
 $whiteUnlistAction = new ActionPopupItem(_T("Unlist update", "updates"), "whiteUnlist", "unlist", "updates", "updates");
 $banAction = new ActionPopupItem(_T("Ban update", "updates"), "banUpdate", "banupdate", "updates", "updates");
 $whiteActions = [
-    "unlist"=>[],
-    "ban"=>[]
+    "unlist" => [],
+    "ban" => []
 ];
 $params_white = [];
 $count_white = $white_list['nb_element_total'];
 $kbs_white = [];
 $updateids_white = [];
 $titles_white = [];
-for($i=0; $i < $count_white; $i++) {
+for($i = 0; $i < $count_white; $i++) {
     $tmp = [];
     $whiteActions["unlist"][] = $whiteUnlistAction;
     $whiteActions["ban"][] = $banAction;

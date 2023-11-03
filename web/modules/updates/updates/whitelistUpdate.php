@@ -25,14 +25,14 @@ require_once("modules/updates/includes/xmlrpc.php");
 // var_dump(xmlrpc_approve_update($updateid));
 // exit;
 
-if(isset($_POST['bconfirm'])){
+if(isset($_POST['bconfirm'])) {
     $updateid = $_GET['updateid'];
     $retour = xmlrpc_approve_update($updateid);
     // Si retour est True, cela signifie que le packet a bien change de liste
-    if($retour == True){
+    if($retour == true) {
         $str = _T("Package moved successfully to white list", "updates");
         new NotifyWidgetSuccess($str);
-        // Sinon j'affiche un message d'erreur
+    // Sinon j'affiche un message d'erreur
     } else {
         new NotifyWidgetFailure(_T("Error moving package to white list", "updates"));
     }
@@ -43,11 +43,8 @@ if(isset($_POST['bconfirm'])){
     // Creation et affichage de la modal
     $f = new PopupForm(_T("Approve for automatic update"));
     $hidden = new HiddenTpl("updateid");
-    $f->add($hidden, array("value" => $updateid, "hide" => True));
+    $f->add($hidden, array("value" => $updateid, "hide" => true));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }
-
-
-?>

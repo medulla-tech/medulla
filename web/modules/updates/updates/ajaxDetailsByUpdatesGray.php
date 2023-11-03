@@ -100,8 +100,7 @@ $actionDetails = [];
 
 $machineWithoutUpd = $enabled_updates_list['missing'];
 
-for($i=0; $i < $count_enabled_updates; $i++)
-{
+for($i = 0; $i < $count_enabled_updates; $i++) {
     $in_unique_with_Upd = "False";
     $in_unique_without_Upd = "False";
 
@@ -113,7 +112,7 @@ for($i=0; $i < $count_enabled_updates; $i++)
     $titles[] = $enabled_updates_list['title'][$i];
     $actionDetails[] = $detailsUpd;
 
-    $machineWithUpd[] = $with_Upd['nb_machines']+$enabled_updates_list['installed'][$i];
+    $machineWithUpd[] = $with_Upd['nb_machines'] + $enabled_updates_list['installed'][$i];
     $totalMachines = $machineWithoutUpd[$i] + $with_Upd['nb_machines'];
 
     $compliance_rate = intval(($with_Upd['nb_machines'] / $totalMachines) * 100);
@@ -127,7 +126,7 @@ for($i=0; $i < $count_enabled_updates; $i++)
     }*/
 
     $color = colorconf($compliance_rate);
-    $complRates[] ="<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_rate."% </div>";
+    $complRates[] = "<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_rate."% </div>";
 }
 
 $n = new OptimizedListInfos($titles, _T("Update name", "updates"));

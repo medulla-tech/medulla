@@ -30,7 +30,7 @@ $p->setSideMenu($sidemenu);
 
 $p->display();
 
-$params = ['entity'=>$_GET['entity'], 'completename'=>$_GET['completename']];
+$params = ['entity' => $_GET['entity'], 'completename' => $_GET['completename']];
 $ajaxGray = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesGray"), "container-gray", $params, 'formGray');
 $ajaxGray->display();
 $ajaxGray->displayDivToUpdate();
