@@ -535,7 +535,7 @@ class ImagingRpcProxy(RpcProxyI):
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         try:
-            i = ImagingApi(imaging_server_encoded)
+            i = ImagingApi(imaging_server)
         except:
             i = None
 
@@ -749,7 +749,11 @@ class ImagingRpcProxy(RpcProxyI):
         logging.getLogger().debug("checkDeploymentUDPSender %s"%process)
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
+
         if i == None:
             logger.error("couldn't initialize the ImagingApi to %s"%(location))
             return [False, "couldn't initialize the ImagingApi to %s"%( location)]
@@ -776,7 +780,10 @@ class ImagingRpcProxy(RpcProxyI):
             ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        i = ImagingApi(imaging_server.encode('utf8'))
+        try:
+            i = ImagingApi(imaging_server.encode('utf8'))
+        except:
+            i = None
         if i != None:
             deferred = i.stop_process_multicast(process)
             deferred.addCallback(lambda x: x)
@@ -804,8 +811,11 @@ class ImagingRpcProxy(RpcProxyI):
         db = ImagingDatabase()
         logger = logging.getLogger()
         image, imaging_server = db.getImageAndImagingServer(image_uuid)
+        try:
+            i = ImagingApi(imaging_server.url.encode('utf8'))
+        except:
+            i = None
 
-        i = ImagingApi(imaging_server.url.encode('utf8'))
         if i == None:
             logger.error("couldn't initialize the ImagingApi to %s"%(imaging_server.url))
             return [False, "couldn't initialize the ImagingApi to %s"%(imaging_server.url)]
@@ -1132,7 +1142,11 @@ class ImagingRpcProxy(RpcProxyI):
         """
         db = ImagingDatabase()
         image, ims = db.getImageAndImagingServer(itemUUID)
-        api = ImagingApi(ims.url.encode('utf8'))
+        try:
+            api = ImagingApi(ims.url.encode('utf8'))
+        except:
+            api = None
+
         if api != None:
             deferred = api.imageGetLogs(image.uuid)
             deferred.addCallback(lambda x: x)
@@ -1204,7 +1218,11 @@ class ImagingRpcProxy(RpcProxyI):
 
             # remove from the imaging server
             im, ims = db.getImageAndImagingServer(image_uuid)
-            i = ImagingApi(ims.url.encode('utf8'))
+            try:
+                i = ImagingApi(ims.url.encode('utf8'))
+            except:
+                i = None
+
             if i == None:
                 logger.error("couldn't initialize the ImagingApi to %s" % (ims.url))
                 return [False, "couldn't initialize the ImagingApi to %s" % (ims.url)]
@@ -2222,7 +2240,11 @@ class ImagingRpcProxy(RpcProxyI):
                 return result
 
             url = chooseImagingApiUrl(loc_uuid)
-            i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+            try:
+                i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+            except:
+                i = None
+
             if i == None: # do fail
                 db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
                 logger.error("couldn't initialize the ImagingApi to %s"%(url))
@@ -2481,7 +2503,11 @@ class ImagingRpcProxy(RpcProxyI):
                 location = db.getTargetsEntity([uuid])[0]
 
                 url = chooseImagingApiUrl(location[0].uuid)
-                i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+                try:
+                    i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+                except:
+                    i = None
+
                 if i != None:
                     # Current computer's menu is in distinct_loc dictionnary
                     # We're treating a computer, so distinct_loc contains one loc_uuid
@@ -2562,7 +2588,11 @@ class ImagingRpcProxy(RpcProxyI):
                     url = distinct_loc[loc_uuid][0]
                     menus = distinct_loc[loc_uuid][1]
                     # to do again when computerRegister is plural
-                    i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+                    try:
+                        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+                    except:
+                        i = None
+
                     if i != None:
                         computers = []
                         for uuid in menus:
@@ -3804,7 +3834,11 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
     if len(h_computers.keys()) != 0:
         for url in h_computers:
             computers = h_computers[url]
-            i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+            try:
+                i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+            except:
+                i = None
+
             if i != None:
                 def treatRegister(results, uuids = to_register.keys(), logger = logger, url = url):
                     if type(results) == list and len(results) > 0 and  results[0] == 'PULSE2_ERR':
@@ -3872,7 +3906,11 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
     dl = []
     for location_uuid in distinct_loc:
         url = distinct_loc[location_uuid][0]
-        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+        try:
+            i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+        except:
+            i = None
+
         if i == None:
             # do fail
             logger.error("couldn't initialize the ImagingApi to %s"%(url))
@@ -4066,8 +4104,10 @@ def computersUnregister(computers_UUID, backup):
         (en, targets) = h_location[en_uuid]
 
         url = chooseImagingApiUrl(en_uuid)
-        i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-
+        try:
+            i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
+        except:
+            i = None
         db = ImagingDatabase()
 
         if i != None:
