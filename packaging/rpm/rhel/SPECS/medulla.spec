@@ -43,7 +43,6 @@ Group:		System/Servers
 URL:		https://github.com/pulse-project/pulse
 Source0:        %{name}_%{real_version}.orig.tar.gz
 #TODO: Adapt for Mageia
-Source2:        pulse2-inventory-server.service
 Source3:        pulse2-imaging-server.service
 Source4:        pulse2-register-pxe.service
 Source5:        output.py
@@ -83,7 +82,6 @@ Requires:       mmc-web-updates
 Requires:       python3-mmc-updates
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
-Requires:       pulse2-inventory-server
 Requires:       pulse2-package-server
 Requires:       python3-pulse2-common-database-dyngroup
 Requires:       pulse-mmc-web-computers-inventory-backend
@@ -742,7 +740,6 @@ service pulse2-inventory-server stop >/dev/null 2>&1 || :
 
 %files -n pulse2-inventory-server
 %exclude %{_sysconfdir}/init.d/pulse2-inventory-server
-%_prefix/lib/systemd/system/pulse2-inventory-server.service
 %config(noreplace) %{_sysconfdir}/mmc/pulse2/inventory-server/inventory-server.ini
 %{_sysconfdir}/mmc/pulse2/inventory-server/OcsNGMap.xml
 %{_sysconfdir}/mmc/pulse2/inventory-server/keys/

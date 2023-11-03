@@ -20,7 +20,6 @@
 # MA 02110-1301, USA.
 
 SERVICES='mmc-agent \
-          pulse2-inventory-server \
           pulse2-package-server \
           pulse-xmpp-agent-relay \
           pulse-xmpp-agent-log \
