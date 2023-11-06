@@ -340,10 +340,11 @@ class File:
         self.path = path
         self.checksum = checksum
         self.size = size
+        _chksum = "%s%s" % (self.toS().replace("\\", "/"), str(self.checksum))
+        _chksum = bytes(_chksum, "utf-8")
+
         if id is None:
-            self.id = md5sum(
-                "%s%s" % (self.toS().replace("\\", "/"), str(self.checksum))
-            )
+            self.id = md5sum(_chksum)
         else:
             self.id = id
 
