@@ -474,8 +474,8 @@ class ImagingApi(Imaging):
     def __init__(self, url=None):
         self.logger = logging.getLogger()
         credit = ""
-        if isinstance(url, str):
-            url = url.encode("utf-8")
+        if isinstance(url, bytes):
+            url = url.decode("utf-8")
         if isinstance(url, str):
             self.server_addr = url
             if url.find("@") != -1:
