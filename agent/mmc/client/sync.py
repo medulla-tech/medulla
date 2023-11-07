@@ -35,7 +35,7 @@ import logging
 import xmlrpc.client
 import http.client
 from urllib.parse import urlparse
-from base64 import encodestring
+from base64 import b64encode
 from http.cookiejar import LWPCookieJar, LoadError
 from urllib.request import Request as CookieRequest
 
@@ -104,7 +104,7 @@ class MMCBaseTransport(object):
 
     def send_basic_auth(self, connection):
         """Include HTTPS Basic Authentication data in a header"""
-        auth = encodestring("%s:%s" % self.credentials).strip()
+        auth = b64encode("%s:%s" % self.credentials).strip()
         auth = f"Basic {auth}"
         connection.putheader("Authorization", auth)
 
