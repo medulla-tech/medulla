@@ -21,35 +21,33 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-if (isExpertMode()){
+if (isExpertMode()) {
     $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
+        new SideMenuItem(_T("Wake on LAN", "xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
     );
 }
 
 
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("List of Uninventoried Machines","xmppmaster"), "base", "computers", "xmppMachinesList")
+    new SideMenuItem(_T("List of Uninventoried Machines", "xmppmaster"), "base", "computers", "xmppMachinesList")
 );
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Monitoring Alerts","xmppmaster"), "xmppmaster", "xmppmaster", "alerts")
+    new SideMenuItem(_T("Monitoring Alerts", "xmppmaster"), "xmppmaster", "xmppmaster", "alerts")
 );
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Monitoring Configuration","xmppmaster"), "xmppmaster", "xmppmaster", "monconfig")
+    new SideMenuItem(_T("Monitoring Configuration", "xmppmaster"), "xmppmaster", "xmppmaster", "monconfig")
 );
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Custom Quick Actions","xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
+    new SideMenuItem(_T("Custom Quick Actions", "xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Quick Action results","xmppmaster"), "xmppmaster", "xmppmaster", "ActionQuickGroup")
+    new SideMenuItem(_T("Quick Action results", "xmppmaster"), "xmppmaster", "xmppmaster", "ActionQuickGroup")
 );
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("File Manager","xmppmaster"), "xmppmaster", "xmppmaster", "filesmanagers")
+    new SideMenuItem(_T("File Manager", "xmppmaster"), "xmppmaster", "xmppmaster", "filesmanagers")
 );
-
-?>
