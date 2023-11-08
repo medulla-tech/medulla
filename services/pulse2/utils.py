@@ -595,6 +595,8 @@ def start_process(processname):
     """ """
     import subprocess
 
+    if isinstance(processname, bytes):
+        processname = processname.decode('utf-8')
     subprocess.Popen([processname], shell=True)
     return check_process(processname)
 
@@ -604,9 +606,13 @@ def stop_process(processname):
     import subprocess
     import signal
 
+    if isinstance(processname, bytes):
+        processname = processname.decode('utf-8')
     # Kill process.
     proc = subprocess.Popen(["pgrep", processname], stdout=subprocess.PIPE)
     for pid in proc.stdout:
+        if isinstance(pid, bytes):
+            pid = pid.decode('utf-8')
         logging.getLogger().debug("kill pid %d " % int(pid))
         os.kill(int(pid), signal.SIGTERM)
         # Check if the process that we killed is alive.
@@ -624,15 +630,18 @@ def stop_process(processname):
             )
     return not check_process(processname)
 
-
 def check_process(processname):
     """ """
     import re
     import subprocess
 
+    if isinstance(processname, bytes):
+        processname = processname.decode('utf-8')
     returnprocess = False
     s = subprocess.Popen(["ps", "ax"], stdout=subprocess.PIPE)
     for x in s.stdout:
+        if isinstance(x, bytes):
+            x = x.decode('utf-8')
         if re.search(processname, x):
             returnprocess = True
     return returnprocess

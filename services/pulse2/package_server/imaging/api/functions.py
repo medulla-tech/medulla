@@ -1279,7 +1279,8 @@ class Imaging(object, metaclass=SingletonN):
         )
         output, err = s.communicate()
         returnprocess = False
-        logging.getLogger()
+        if isinstance(output, bytes):
+            output = output.decode('utf-8')
         if re.search("/usr/sbin/drbl-ocs", output):
             returnprocess = True
         s.stdout.close()
