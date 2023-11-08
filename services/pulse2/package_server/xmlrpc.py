@@ -55,6 +55,8 @@ class MyXmlrpc(XMLRPC):
                 f = Fault(self.FAILURE, "can't serialize output: " + str(e))
                 s = xmlrpc.client.dumps(f, methodresponse=1)
             request.setHeader("content-length", str(len(s)))
+            if isinstance(s, str):
+                s= s.encode('utf-8')
             request.write(s)
             request.finish()
 
