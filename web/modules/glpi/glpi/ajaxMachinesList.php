@@ -129,15 +129,15 @@ $ctx['maxperpage'] = $maxperpage;
 
 
 
-if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
+if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer") {
     $ctx['computerpresence'] = $_SESSION['computerpresence'];
+}
 
-    try{
-        $machines1 = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
-    }
-    catch(Exception $e){
-        echo 'error';
-    }
+try {
+    $machines1 = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
+} catch(Exception $e) {
+    echo 'error';
+}
 
 
 $count = (!empty($machines1["count"])) ? $machines1["count"] : 0;
@@ -145,12 +145,12 @@ $total = $machines1["total"];
 $datas = $machines1["data"];
 
 $br = array("<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;");
-foreach ($datas as $nametableau => $tableau){
-    foreach($datas[$nametableau] as  $key => &$value){
-        $value = str_ireplace( array("\\r\\n"), "\r\n", $value);
-        $value = str_ireplace( array("\\n"), "\r\n", $value);
+foreach ($datas as $nametableau => $tableau) {
+    foreach($datas[$nametableau] as  $key => &$value) {
+        $value = str_ireplace(array("\\r\\n"), "\r\n", $value);
+        $value = str_ireplace(array("\\n"), "\r\n", $value);
         $value = str_ireplace($br, "\r\n", $value);
-        if(stripos ($value, "script") !== false){
+        if(stripos($value, "script") !== false) {
             $value  = htmlspecialchars($value);
         }
         $value =  htmlentities($value);
@@ -162,34 +162,33 @@ $params = [];
 
 $msc_vnc_show_icon = web_vnc_show_icon();
 
-$glpinoAction = new EmptyActionItem1(_("GLPI Inventory"),"glpitabs","inventoryg","inventory", "base", "computers");
+$glpinoAction = new EmptyActionItem1(_("GLPI Inventory"), "glpitabs", "inventoryg", "inventory", "base", "computers");
 
 // Actions for each machines
-$glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
+$glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inventory", "base", "computers");
 
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-  $monitoring = new ActionItem(_("Monitoring"),"monitoringview","monit","computers", "xmppmaster", "xmppmaster");
-  $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
+    $monitoring = new ActionItem(_("Monitoring"), "monitoringview", "monit", "computers", "xmppmaster", "xmppmaster");
+    $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
 
 
-  $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
-  $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
+    $mscAction = new ActionItem(_("Software deployment"), "msctabs", "install", "computer", "base", "computers");
+    $mscNoAction = new EmptyActionItem1(_("Software deployment"), "msctabs", "installg", "computer", "base", "computers");
 
-  $inventconsole   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
-  $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
+    $inventconsole   = new ActionItem(_("xmppconsole"), "consolecomputerxmpp", "console", "computers", "xmppmaster", "xmppmaster");
+    $inventnoconsole = new EmptyActionItem1(_("xmppconsole"), "consolecomputerxmpp", "consoleg", "computers", "xmppmaster", "xmppmaster");
 
-  $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
-  $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
+    $editremoteconfiguration    = new ActionItem(_("Edit config files"), "listfichierconf", "config", "computers", "xmppmaster", "xmppmaster");
+    $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"), "remoteeditorconfiguration", "configg", "computers", "xmppmaster", "xmppmaster");
 
-  $fileviewer = new ActionItem(_("files viewer"),"fileviewer","fileviewer","computers", "xmppmaster", "xmppmaster");
-  $filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","fileviewerg","computers","xmppmaster", "xmppmaster");
+    $fileviewer = new ActionItem(_("files viewer"), "fileviewer", "fileviewer", "computers", "xmppmaster", "xmppmaster");
+    $filenoviewer = new EmptyActionItem1(_("files viewer"), "fileviewer", "fileviewerg", "computers", "xmppmaster", "xmppmaster");
+} else {
+    $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
 }
-else{
-  $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
-}
 
-$imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
+$imgAction = new ActionItem(_("Imaging management"), "imgtabs", "imaging", "computer", "base", "computers");
 
 $extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
 
@@ -222,45 +221,45 @@ $cn = [];
 $chaine = array(
         'hostname'              => _T("Hostname", 'xmppmaster'),
         'jid'                   => _T("Jabber ID", 'xmppmaster'),
-        'platform'              => _T("Platform" , 'xmppmaster'),
-        'archi'                 => _T("Architecture" , 'xmppmaster'),
-        'uuid_serial_machine'   => _T("Machine UUID" , 'xmppmaster'),
-        'need_reconf'           => _T("Reconf. requested" , 'xmppmaster'),
-        'enabled'               => _T("Online" , 'xmppmaster'),
+        'platform'              => _T("Platform", 'xmppmaster'),
+        'archi'                 => _T("Architecture", 'xmppmaster'),
+        'uuid_serial_machine'   => _T("Machine UUID", 'xmppmaster'),
+        'need_reconf'           => _T("Reconf. requested", 'xmppmaster'),
+        'enabled'               => _T("Online", 'xmppmaster'),
         'ip_xmpp'               => _T("IP address", 'xmppmaster'),
-        'subnetxmpp'            => _T("Subnet" , 'xmppmaster'),
+        'subnetxmpp'            => _T("Subnet", 'xmppmaster'),
         'ippublic'              => _T("Public IP", 'xmppmaster'),
-        'macaddress'            => _T("Mac address" , 'xmppmaster'),
-        'agenttype'             => _T("Agent type" , 'xmppmaster'),
+        'macaddress'            => _T("Mac address", 'xmppmaster'),
+        'agenttype'             => _T("Agent type", 'xmppmaster'),
         'classutil'             => _T("Usage class", 'xmppmaster'),
         'groupdeploy'           => _T("Relay JID", 'xmppmaster'),
-        'ad_ou_machine'         => _T("AD machine OU" , 'xmppmaster'),
-        'ad_ou_user'            => _T("AD user OU" , 'xmppmaster'),
-        'kiosk_presence'        => _T("Kiosk enabled" , 'xmppmaster'),
-        'lastuser'              => _T("Last user connected" , 'xmppmaster'),
-        'keysyncthing'          => _T("Syncthing ID" , 'xmppmaster'),
-        'regedit'               => _T("Registry keys"  , 'xmppmaster'),
+        'ad_ou_machine'         => _T("AD machine OU", 'xmppmaster'),
+        'ad_ou_user'            => _T("AD user OU", 'xmppmaster'),
+        'kiosk_presence'        => _T("Kiosk enabled", 'xmppmaster'),
+        'lastuser'              => _T("Last user connected", 'xmppmaster'),
+        'keysyncthing'          => _T("Syncthing ID", 'xmppmaster'),
+        'regedit'               => _T("Registry keys", 'xmppmaster'),
         'id'                    => _T("Machine ID", 'xmppmaster'),
-        'uuid_inventorymachine' => _T("GLPI ID" , 'xmppmaster'),
-        'glpi_description'      => _T("GLPI description"  , 'xmppmaster'),
-        'glpi_owner_firstname'  => _T("Owner firstname" , 'xmppmaster'),
+        'uuid_inventorymachine' => _T("GLPI ID", 'xmppmaster'),
+        'glpi_description'      => _T("GLPI description", 'xmppmaster'),
+        'glpi_owner_firstname'  => _T("Owner firstname", 'xmppmaster'),
         'glpi_owner_realname'   => _T("Owner lastname", 'xmppmaster'),
-        'glpi_owner'            => _T("Owner" , 'xmppmaster'),
+        'glpi_owner'            => _T("Owner", 'xmppmaster'),
         'model'                 => _T("Model", 'xmppmaster'),
         'manufacturer'          => _T("Manufacturer", 'xmppmaster'),
-        'entityname'            => _T("Short entity name" , 'xmppmaster'),
+        'entityname'            => _T("Short entity name", 'xmppmaster'),
         'entitypath'            => _T("Full entity name", 'Xmppmaster'),
         'entityid'              => _T("Entity ID", 'xmppmaster'),
-        'locationname'          => _T("Short location name" , 'xmppmaster'),
+        'locationname'          => _T("Short location name", 'xmppmaster'),
         'locationpath'          => _T("Full location name", 'Xmppmaster'),
         'locationid'            => _T("Location ID", 'xmppmaster'),
-        'listipadress'          => _T("IP addresses" , 'xmppmaster'),
-        'mask'                  => _T("Network mask" , 'xmppmaster'),
+        'listipadress'          => _T("IP addresses", 'xmppmaster'),
+        'mask'                  => _T("Network mask", 'xmppmaster'),
         'broadcast'             => _T("Broadcast address", 'xmppmaster'),
-        'gateway'               => _T("Gateway address" , 'xmppmaster'));
+        'gateway'               => _T("Gateway address", 'xmppmaster'));
 
 
-foreach ($machines1['list_reg_columns_name'] as $columns_name){
+foreach ($machines1['list_reg_columns_name'] as $columns_name) {
     $chaine[$columns_name] = $columns_name;
 }
 
@@ -310,169 +309,187 @@ $orderkey = array( "glpi_owner",
             "glpi_location_id");
 
 
-    $exclud=array('glpi_location_id', 'glpi_entity_id', 'columns_name',"list_reg_columns_name" );
-    for ($index = 0; $index < safeCount($datas['hostname'] ); $index++) {
-        $chainestr ="<table class='ttable'>";
+$exclud = array('glpi_location_id', 'glpi_entity_id', 'columns_name',"list_reg_columns_name" );
+for ($index = 0; $index < safeCount($datas['hostname']); $index++) {
+    $chainestr = "<table class='ttable'>";
 
-/*
- *      FIXME: Do not remove, will be oised to order the entries on the menu
-        foreach($orderkey as $key_in_order){
-            $data_order=$datas[$key_in_order];
-            if(in_array($mach,$exclude ) ||  $data_order[$index] == ""){
-                continue;
+    /*
+     *      FIXME: Do not remove, will be oised to order the entries on the menu
+            foreach($orderkey as $key_in_order){
+                $data_order=$datas[$key_in_order];
+                if(in_array($mach,$exclude ) ||  $data_order[$index] == ""){
+                    continue;
+                }
+             $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$key_in_order] ."</td><td class='ttabletd'>".$data_order[$index]."</td></tr>";
             }
-         $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$key_in_order] ."</td><td class='ttabletd'>".$data_order[$index]."</td></tr>";
-        }
-*/
+    */
 
-        foreach($datas as $mach => $value ){
-            if(in_array($mach,$exclud ) ||  $value[$index] =="" || gettype($value[$index]) == "array"){
-                continue;
-            }
-            $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";
+    foreach($datas as $mach => $value) {
+        if(in_array($mach, $exclud) ||  $value[$index] == "" || gettype($value[$index]) == "array") {
+            continue;
         }
-        $chainestr .= "</table>";
-        $cn[] = sprintf('<span class="infomach" mydata="%s">%s</pan>', $chainestr, $datas['hostname'][$index]);
+        $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";
+    }
+    $chainestr .= "</table>";
+    $cn[] = sprintf('<span class="infomach" mydata="%s">%s</pan>', $chainestr, $datas['hostname'][$index]);
+}
+
+$index = 0;
+foreach($datas['enabled'] as $valeue) {
+
+    if ($datas['uuid_inventorymachine'][$index] == "") {
+        $actionInventory[] = $glpinoAction;
+        $dissociatedFirstColumns[] = $index;
+        $action_deploy_msc[] = $mscNoAction; //deployement
+    } else {
+        $actionInventory[] = $glpiAction;
+        $action_deploy_msc[] = $mscAction; //deployement
+    }
+    $actionxmppquickdeoloy[] = $DeployQuickxmpp; //Quick action presence ou non presence.
+    $actionMonitoring[] = $monitoring;
+    if ($valeue == 1) {
+        $presencesClass[] = "machineNamepresente";
+        if (isExpertMode()) {
+            $actionConsole[] = $inventconsole;
+            $actionfilebrowser[] = $fileviewer;
+            $actioneditremoteconfiguration[] = $editremoteconfiguration;
+        }
+    } else {
+        $presencesClass[] = "machineName";
+        if (isExpertMode()) {
+            $actionConsole[] = $inventnoconsole;
+            $actionfilebrowser[] = $filenoviewer;
+            $actioneditremoteconfiguration[] = $editnoremoteconfiguration;
+        }
     }
 
-    $index=0;
-    foreach(  $datas['enabled'] as $valeue){
+    if (in_array("imaging", $_SESSION["supportModList"])) {
+        $actionImaging[] = $imgAction;
+    }
 
-        if ($datas['uuid_inventorymachine'][$index] =="" ){
-            $actionInventory[] = $glpinoAction;
-            $dissociatedFirstColumns[] = $index;
-            $action_deploy_msc[] = $mscNoAction; //deployement
-        }else{
-            $actionInventory[] = $glpiAction;
-            $action_deploy_msc[] = $mscAction; //deployement
-        }
-        $actionxmppquickdeoloy[]=$DeployQuickxmpp; //Quick action presence ou non presence.
-        $actionMonitoring[] = $monitoring;
-        if ($valeue == 1){
-            $presencesClass[] = "machineNamepresente";
-            if (isExpertMode()){
-                $actionConsole[] = $inventconsole;
-                $actionfilebrowser[] = $fileviewer;
-                $actioneditremoteconfiguration[] = $editremoteconfiguration;
-            }
-        }
-        else {
-            $presencesClass[] = "machineName";
-            if (isExpertMode()){
-                $actionConsole[] = $inventnoconsole;
-                $actionfilebrowser[] = $filenoviewer;
-                $actioneditremoteconfiguration[] = $editnoremoteconfiguration;
-            }
-         }
+    if (in_array("extticket", $_SESSION["supportModList"])) {
+        $actionExtTicket[] = $extticketAction;
+    }
 
-        if (in_array("imaging", $_SESSION["supportModList"])) {
-            $actionImaging[] = $imgAction;
-        }
-
-        if (in_array("extticket", $_SESSION["supportModList"])) {
-            $actionExtTicket[] = $extticketAction;
-        }
-
-        if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
-            if ($datas['enabled'][$index]){
-                $actionVncClient[] = $vncClientAction;
-            }else
-            {//show icone vnc griser
-                $actionVncClient[] = $vncClientActiongriser;
-            }
-        }else
-        if ($msc_vnc_show_icon) {
+    if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
+        if ($datas['enabled'][$index]) {
             $actionVncClient[] = $vncClientAction;
+        } else {//show icone vnc griser
+            $actionVncClient[] = $vncClientActiongriser;
         }
-        $params[] = [
-            'objectUUID'=>$datas['uuid_inventorymachine'][$index],
-            'UUID'=>str_replace("UUID", "", $datas['uuid_inventorymachine'][$index]),
-            'cn'=>$datas['hostname'][$index],
-            'os'=>$datas['platform'][$index],
-            'type'=>$datas['model'][$index],
-            'presencemachinexmpp'=>$datas['enabled'][$index],
-            'entity' => $datas['entityname'][$index],
-            'user' => $datas['glpi_owner'][$index],
-						'jid' => $datas['jid'][$index],
-        'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
-        ];
-
-        $index++;
+    } elseif ($msc_vnc_show_icon) {
+        $actionVncClient[] = $vncClientAction;
     }
+    $params[] = [
+        'objectUUID' => $datas['uuid_inventorymachine'][$index],
+        'UUID' => str_replace("UUID", "", $datas['uuid_inventorymachine'][$index]),
+        'cn' => $datas['hostname'][$index],
+        'os' => $datas['platform'][$index],
+        'type' => $datas['model'][$index],
+        'presencemachinexmpp' => $datas['enabled'][$index],
+        'entity' => $datas['entityname'][$index],
+        'user' => $datas['glpi_owner'][$index],
+                    'jid' => $datas['jid'][$index],
+    'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc() == 1) ? "novnc" : "appletjava"),
+    ];
+
+    $index++;
+}
 
 // Avoiding the CSS selector (tr id) to start with a number
 $ids = [];
-foreach($datas['uuid_serial_machine'] as $uuid_machine){
+foreach($datas['uuid_serial_machine'] as $uuid_machine) {
     $ids[] = 'm_'.$uuid_machine;
-    }
+}
 
 $n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
 $n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 $n->dissociateColumnActionLink($dissociatedFirstColumns);
-if(in_array ("description", $machines1["column"])) $n->addExtraInfo($datas["glpi_description"], _T("Description", "glpi"));
-if(in_array("os", $machines1["column"])) $n->addExtraInfo($datas["platform"], _T("Operating System", "glpi"));
-if(in_array("type",  $machines1["column"])) $n->addExtraInfo($datas["model"], _T("Computer Type", "glpi"));
-if(in_array('user', $machines1["column"])) $n->addExtraInfo($datas["lastuser"], _T("Last Logged User", "glpi"));
-if(in_array('owner',  $machines1["column"]))  $n->addExtraInfo($datas["glpi_owner"], _T("Owner", "glpi"));
-if(in_array("entity",  $machines1["column"])) $n->addExtraInfo($datas["entityname"], _T("Entity", "glpi"));
-if(in_array("location", $machines1["column"])) $n->addExtraInfo($datas["locationname"], _T("Localization", "glpi"));
-if(in_array("owner_firstname",  $machines1["column"]))  $n->addExtraInfo($datas["glpi_owner_firstname"], _T("Owner Firstname", "glpi"));
-if(in_array("owner_realname", $machines1["column"]))  $n->addExtraInfo($datas["glpi_owner_realname"], _T("Owner Real Name", "glpi"));
-if(in_array("manufacturer", $machines1["column"])) $n->addExtraInfo($datas["manufacturer"], _T("Manufacturer", "glpi"));
+if(in_array("description", $machines1["column"])) {
+    $n->addExtraInfo($datas["glpi_description"], _T("Description", "glpi"));
+}
+if(in_array("os", $machines1["column"])) {
+    $n->addExtraInfo($datas["platform"], _T("Operating System", "glpi"));
+}
+if(in_array("type", $machines1["column"])) {
+    $n->addExtraInfo($datas["model"], _T("Computer Type", "glpi"));
+}
+if(in_array('user', $machines1["column"])) {
+    $n->addExtraInfo($datas["lastuser"], _T("Last Logged User", "glpi"));
+}
+if(in_array('owner', $machines1["column"])) {
+    $n->addExtraInfo($datas["glpi_owner"], _T("Owner", "glpi"));
+}
+if(in_array("entity", $machines1["column"])) {
+    $n->addExtraInfo($datas["entityname"], _T("Entity", "glpi"));
+}
+if(in_array("location", $machines1["column"])) {
+    $n->addExtraInfo($datas["locationname"], _T("Localization", "glpi"));
+}
+if(in_array("owner_firstname", $machines1["column"])) {
+    $n->addExtraInfo($datas["glpi_owner_firstname"], _T("Owner Firstname", "glpi"));
+}
+if(in_array("owner_realname", $machines1["column"])) {
+    $n->addExtraInfo($datas["glpi_owner_realname"], _T("Owner Real Name", "glpi"));
+}
+if(in_array("manufacturer", $machines1["column"])) {
+    $n->addExtraInfo($datas["manufacturer"], _T("Manufacturer", "glpi"));
+}
 
-foreach($machines1['list_reg_columns_name'] as $columnamekey){
+foreach($machines1['list_reg_columns_name'] as $columnamekey) {
     $n->addExtraInfo($datas[$columnamekey], $columnamekey);
 }
 
-if (in_array("xmppmaster", $_SESSION["supportModList"])){
-  $n->addActionItemArray($actionInventory);
-  $n->addActionItemArray($actionMonitoring);
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+    $n->addActionItemArray($actionInventory);
+    $n->addActionItemArray($actionMonitoring);
 }
 
 if (in_array("extticket", $_SESSION["supportModList"])) {
     $n->addActionItemArray($actionExtTicket);
 }
-if (in_array("xmppmaster", $_SESSION["supportModList"])){
-  if (in_array("backuppc", $_SESSION["supportModList"]))
-    $n->addActionItem(new ActionItem(_("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc"));
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+    if (in_array("backuppc", $_SESSION["supportModList"])) {
+        $n->addActionItem(new ActionItem(_("Backup status"), "hostStatus", "backuppc", "backuppc", "backuppc", "backuppc"));
+    }
 
-  if ($msc_vnc_show_icon) {
-    $n->addActionItemArray($actionVncClient);
-  };
+    if ($msc_vnc_show_icon) {
+        $n->addActionItemArray($actionVncClient);
+    };
 }
 
-if (in_array("xmppmaster", $_SESSION["supportModList"])){
-  if (in_array("urbackup", $_SESSION["supportModList"]))
-    $n->addActionItem(new ActionItem(_("Urbackup"),"checkMachine","urbackup","urbackup", "urbackup", "urbackup"));
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+    if (in_array("urbackup", $_SESSION["supportModList"])) {
+        $n->addActionItem(new ActionItem(_("Urbackup"), "checkMachine", "urbackup", "urbackup", "urbackup", "urbackup"));
+    }
 }
 
 
- if (in_array("xmppmaster", $_SESSION["supportModList"])){
-     $n->addActionItemArray($action_deploy_msc);
- }
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+    $n->addActionItemArray($action_deploy_msc);
+}
 
 if (in_array("imaging", $_SESSION["supportModList"])) {
-  if (in_array("xmppmaster", $_SESSION["supportModList"])){
-    $n->addActionItemArray($actionImaging);
-  }
-}
-if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
-  if (isExpertMode()){
-    $n->addActionItemArray($actionConsole);
-	$n->addActionItemArray($actionfilebrowser);
-    if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")){
-      $n->addActionItemArray($actioneditremoteconfiguration);
+    if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+        $n->addActionItemArray($actionImaging);
     }
-    $n->addActionItemArray($actionxmppquickdeoloy);
-  }
-  else{
-    $n->addActionItemArray($actionxmppquickdeoloy);
-  }
+}
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+    if (isExpertMode()) {
+        $n->addActionItemArray($actionConsole);
+        $n->addActionItemArray($actionfilebrowser);
+        if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")) {
+            $n->addActionItemArray($actioneditremoteconfiguration);
+        }
+        $n->addActionItemArray($actionxmppquickdeoloy);
+    } else {
+        $n->addActionItemArray($actionxmppquickdeoloy);
+    }
 }
 
-if(canDelComputer()){
-  $n->addActionItem(new ActionPopupItem(_("Delete computer"),"delete","delete","computer", "base", "computers", null, 400));
+if(canDelComputer()) {
+    $n->addActionItem(new ActionPopupItem(_("Delete computer"), "delete", "delete", "computer", "base", "computers", null, 400));
 }
 
 
