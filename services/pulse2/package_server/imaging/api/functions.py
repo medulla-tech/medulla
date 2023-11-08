@@ -1280,7 +1280,7 @@ class Imaging(object, metaclass=SingletonN):
         output, err = s.communicate()
         returnprocess = False
         if isinstance(output, bytes):
-            output = output.decode('utf-8')
+            output = output.decode("utf-8")
         if re.search("/usr/sbin/drbl-ocs", output):
             returnprocess = True
         s.stdout.close()

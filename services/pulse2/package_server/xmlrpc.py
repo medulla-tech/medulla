@@ -56,7 +56,7 @@ class MyXmlrpc(XMLRPC):
                 s = xmlrpc.client.dumps(f, methodresponse=1)
             request.setHeader("content-length", str(len(s)))
             if isinstance(s, str):
-                s= s.encode('utf-8')
+                s = s.encode("utf-8")
             request.write(s)
             request.finish()
 

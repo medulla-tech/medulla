@@ -34,7 +34,7 @@ class MyServer(resource.Resource):
     def register(self, klass, mp):
         mp = re.compile("^/").sub("", mp)
         if isinstance(mp, str):
-            mp = mp.encode('utf-8')
+            mp = mp.encode("utf-8")
         return self.putChild(mp, klass)
 
 
