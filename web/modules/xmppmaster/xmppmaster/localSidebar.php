@@ -52,8 +52,4 @@ $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("File Manager","xmppmaster"), "xmppmaster", "xmppmaster", "filesmanagers")
 );
 
-//topology
-$sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Machines Topology","xmppmaster"), "xmppmaster", "xmppmaster", "topology")
-);
 ?>
