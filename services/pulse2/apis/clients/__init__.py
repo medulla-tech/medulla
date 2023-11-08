@@ -59,7 +59,7 @@ class Pulse2Api(Pulse2XMLRPCProxy):
         if error.type == ConnectionRefusedError:
             self.logger.error("%s %s has failed: connection refused" % (funcname, args))
             ret = ["PULSE2_ERR", PULSE2_ERR_CONN_REF, self.server_addr, default_return]
-        elif error.type == exceptions.ValueError:
+        elif error.type == ValueError:
             self.logger.error(
                 "%s %s has failed: the mountpoint don't exists" % (funcname, args)
             )
