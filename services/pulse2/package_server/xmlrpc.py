@@ -8,7 +8,7 @@ from twisted.web import server, xmlrpc
 import xmlrpc.client
 import time
 from twisted.internet import defer
-from twisted.web.xmlrpc import XMLRPC
+from twisted.web.xmlrpc import XMLRPC, Handler
 
 Fault = xmlrpc.client.Fault
 
@@ -42,7 +42,7 @@ class MyXmlrpc(XMLRPC):
             s = request.getSession()
             if result is None:
                 result = 0
-            if isinstance(result, xmlrpc.Handler):
+            if isinstance(result, Handler):
                 result = result.result
             if not isinstance(result, Fault):
                 result = (result,)
