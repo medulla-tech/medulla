@@ -77,17 +77,14 @@ $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imagin
         $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
         if (isExpertMode()){
             $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
-            $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
             $editconfiguration = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
-        }else{
-            $inventxmppbrowsing   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
         }
     }
 
         if (isExpertMode()){
-            $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing,$inventconsole, $editconfiguration, $DeployQuickxmpp);
+            $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventconsole, $editconfiguration, $DeployQuickxmpp);
         }else{
-            $actions = array($inventAction, $backupAction, $urbackupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing, $DeployQuickxmpp);
+            $actions = array($inventAction, $backupAction, $urbackupAction, $vncClientAction, $mscAction, $imgAction, $DeployQuickxmpp);
         }
 
 

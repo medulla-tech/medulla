@@ -68,8 +68,6 @@ else{
     $vncClientAction = new ActionItem(_T("Remote control", "pulse2"), "vnc_client", "vncclient", "computer", "base", "computers");
 }
 
-$inventxmppbrowsing = new EmptyActionItem(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
-
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
 
     $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
@@ -81,11 +79,6 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     }
     else{
         $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
-        if (isExpertMode()){
-            $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
-        }else{
-            $inventxmppbrowsing   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
-        }
     }
 }
 else{
@@ -101,7 +94,7 @@ else{
     if (in_array("xmppmaster", $_SESSION["supportModList"])){
         $actions = array($inventAction, $extticketAction, $backupAction, $urbackupAction,
                             $vncClientAction, $mscAction,
-                            $imgAction,$inventxmppbrowsing,$inventconsole,
+                            $imgAction,$inventconsole,
                             $DeployQuickxmpp);
     }
     else{

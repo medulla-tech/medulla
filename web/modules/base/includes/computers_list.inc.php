@@ -119,8 +119,6 @@ function list_computers(
         $inventconsole   = new ActionItem(_("xmppconsole"), "consolecomputerxmpp", "console", "computers", "xmppmaster", "xmppmaster");
         $inventnoconsole = new EmptyActionItem1(_("xmppconsole"), "consolecomputerxmpp", "consoleg", "computers", "xmppmaster", "xmppmaster");
         $actionConsole = array();
-        $inventxmppbrowsingne   = new ActionItem(_("files browsing"), "xmppfilesbrowsingne", "folder", "computers", "xmppmaster", "xmppmaster");
-        $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"), "xmppfilesbrowsingne", "folderg", "computers", "xmppmaster", "xmppmaster");
 
         //version avec un select pour choisir les fichier
         //$editremoteconfiguration  = new ActionItem(_("Edit config files"),"remoteeditorconfiguration","folder","computers", "xmppmaster", "xmppmaster");
@@ -132,9 +130,6 @@ function list_computers(
 
 
 
-        $inventxmppbrowsing = new ActionItem(_("files browsing"), "xmppfilesbrowsing", "folder", "computers", "xmppmaster", "xmppmaster");
-        $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"), "xmppfilesbrowsing", "folderg", "computers", "xmppmaster", "xmppmaster");
-        //$inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
         $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
     } else {
         $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
@@ -163,8 +158,6 @@ function list_computers(
     $params = array();
     $cssClasses = array();
     $actioneditremoteconfiguration = array();
-    $actionxmppbrowsing = array();
-    $actionxmppbrowsingne = array();
 
     $headers = getComputersListHeaders();
 
@@ -235,21 +228,13 @@ function list_computers(
                 //$action_deploy_msc[] = $mscAction;
                 if (isExpertMode()) {
                     $actionConsole[] = $inventconsole;
-                    $actionxmppbrowsing[] = $inventxmppbrowsing;
                     $actioneditremoteconfiguration[] = $editremoteconfiguration;
-                } else {
-                    $actionxmppbrowsingne[] = $inventxmppbrowsingne;
-                }
             } else {
                 //$action_deploy_msc[] = $mscNoAction;
                 //$actionConsole[] = $emptyAction; // action no console xmpp (icone or not icone)
                 if (isExpertMode()) {
                     $actionConsole[] = $inventnoconsole;
-                    $actionxmppbrowsing[] = $inventnoxmppbrowsing;
                     $actioneditremoteconfiguration[] = $editnoremoteconfiguration;
-                } else {
-                    $actionxmppbrowsingne[] = $inventnoxmppbrowsingne;
-                }
             }
         } else {
             if (in_array("msc", $_SESSION["supportModList"])) {
@@ -395,14 +380,12 @@ function list_computers(
     if (in_array("xmppmaster", $_SESSION["supportModList"])) {
         if (isExpertMode()) {
             $n->addActionItemArray($actionConsole);
-            $n->addActionItemArray($actionxmppbrowsing);
             if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")) {
                 $n->addActionItemArray($actioneditremoteconfiguration);
             }
             $n->addActionItemArray($actionxmppquickdeoloy);
         } else {
             $n->addActionItemArray($actionxmppquickdeoloy);
-            $n->addActionItemArray($actionxmppbrowsingne);
         }
     }
     if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1) {

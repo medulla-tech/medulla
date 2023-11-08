@@ -85,14 +85,10 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
   $inventconsole   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
   $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
   $actionConsole = array();
-  $inventxmppbrowsingne   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
-  $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsingne","folderg","computers","xmppmaster", "xmppmaster");
-  $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
   $editremoteconfiguration    = new ActionItem(_("Edit config files"),"listfichierconf","config","computers", "xmppmaster", "xmppmaster");
   $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"),"remoteeditorconfiguration","configg","computers", "xmppmaster", "xmppmaster");
-  $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
-	$fileviewer = new ActionItem(_("files viewer"),"fileviewer","fileviewer","computers", "xmppmaster", "xmppmaster");
-	$filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","fileviewerg","computers","xmppmaster", "xmppmaster");
+  $fileviewer = new ActionItem(_("files viewer"),"fileviewer","fileviewer","computers", "xmppmaster", "xmppmaster");
+  $filenoviewer = new EmptyActionItem1(_("files viewer"),"fileviewer","fileviewerg","computers","xmppmaster", "xmppmaster");
 }else{
   $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
 }
@@ -117,9 +113,7 @@ $actionProfile = array();
 $actionxmppquickdeoloy = array();
 $cssClasses = array();
 $actioneditremoteconfiguration = array();
-$actionxmppbrowsing = array();
 $actionfilebrowser = array();
-$actionxmppbrowsingne = array();
 
 $raw = 0;
 // Do not modify directly $datas['cn'] it is reused later for $params
@@ -165,23 +159,15 @@ foreach($datas['uuid'] as $uuid)
 			if ( $datas['presence'][$raw] ){
 				if (isExpertMode()){
 					$actionConsole[] = $inventconsole;
-					$actionxmppbrowsing[] = $inventxmppbrowsing;
 					$actionfilebrowser[] = $fileviewer;
 					$actioneditremoteconfiguration[] = $editremoteconfiguration;
-				}
-				else{
-					$actionxmppbrowsingne[] = $inventxmppbrowsingne;
 				}
 			}
 			else{
 				if (isExpertMode()){
 					$actionConsole[] = $inventnoconsole;
-					$actionxmppbrowsing[] = $inventnoxmppbrowsing;
 					$actionfilebrowser[] = $filenoviewer;
 					$actioneditremoteconfiguration[] = $editnoremoteconfiguration;
-				}
-				else{
-					$actionxmppbrowsingne[] = $inventnoxmppbrowsingne;
 				}
 			}
 	}
@@ -341,8 +327,7 @@ if (in_array("imaging", $_SESSION["supportModList"])) {
 if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
   if (isExpertMode()){
     $n->addActionItemArray($actionConsole);
-    $n->addActionItemArray($actionxmppbrowsing);
-		$n->addActionItemArray($actionfilebrowser);
+	$n->addActionItemArray($actionfilebrowser);
     if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")){
       $n->addActionItemArray($actioneditremoteconfiguration);
     }
@@ -350,7 +335,6 @@ if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
   }
   else{
     $n->addActionItemArray($actionxmppquickdeoloy);
-    $n->addActionItemArray($actionxmppbrowsingne);
   }
 }
 
