@@ -229,13 +229,15 @@ function list_computers(
                 if (isExpertMode()) {
                     $actionConsole[] = $inventconsole;
                     $actioneditremoteconfiguration[] = $editremoteconfiguration;
+                                    }
             } else {
                 //$action_deploy_msc[] = $mscNoAction;
                 //$actionConsole[] = $emptyAction; // action no console xmpp (icone or not icone)
                 if (isExpertMode()) {
                     $actionConsole[] = $inventnoconsole;
                     $actioneditremoteconfiguration[] = $editnoremoteconfiguration;
-            }
+                                    }
+                   }
         } else {
             if (in_array("msc", $_SESSION["supportModList"])) {
                 $action_deploy_msc[] = $mscAction;
