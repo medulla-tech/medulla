@@ -48,8 +48,4 @@ $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Quick Action results","xmppmaster"), "xmppmaster", "xmppmaster", "ActionQuickGroup")
 );
 
-$sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("File Manager","xmppmaster"), "xmppmaster", "xmppmaster", "filesmanagers")
-);
-
 ?>
