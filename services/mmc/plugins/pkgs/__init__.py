@@ -765,7 +765,7 @@ def pkgs_getTemporaryFiles():
     return ret
 
 
-def getTemporaryFileSuggestedCommand1(tempdir, db, size_max=524288000):
+def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
     tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
     retresult = {
         "version": "0.1",
@@ -825,7 +825,6 @@ def getTemporaryFileSuggestedCommand1(tempdir, db, size_max=524288000):
                             if result["result"]:
                                 bangtring = 1
                         resultrule = PkgsDatabase().rule_test_extensions(
-                            db,
                             filename,
                             rule,
                             bangtring=bangtring,
