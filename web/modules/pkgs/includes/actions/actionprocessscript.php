@@ -26,6 +26,7 @@ require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
 require_once("../../../../includes/i18n.inc.php");
+require_once("../../../../includes/utils.inc.php");
 
 extract($_POST);
 $gotoreturncode = [];
