@@ -2137,7 +2137,8 @@ class Glpi100(DyngroupDatabaseHelper):
 
         date_mod = self.machine.c.date_mod
         if self.fusionagents is not None:
-            date_mod = FusionAgents.last_contact
+            last_contact_date = session.query(self.fusionagents.c.last_contact).first()
+            date_mod = last_contact_date[0]
 
         for value in ["green", "orange", "red"]:
             # This loop instanciate self.filt_green,
