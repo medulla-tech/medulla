@@ -80,7 +80,7 @@ class AntivirusPanel extends Panel {
             'href':"#",
           }
         ];
-      donut("antivirus-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]+uninventorized);
+        donut("antivirus-graphs", datas, "Total", parseInt(machineCount["green"])+parseInt(machineCount["red"])+parseInt(machineCount["orange"])+parseInt(uninventorized));
     </script>
 ANTIVIRUS;
     }
