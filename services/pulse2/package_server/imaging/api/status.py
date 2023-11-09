@@ -31,6 +31,8 @@ class Status:
         return d
 
     def getAvailableSpaceOk(self, result):
+        if isinstance(result, bytes):
+            result = result.decode('utf-8')
         for line in result.split("\n"):
             words = line.split()
             # Last column should contain the mounted on part
@@ -59,11 +61,13 @@ class Status:
         self.getMemoryInformations()
 
     def getMemoryInformations(self):
-        d = getProcessOutput("free", {"LANG": "C", "LANGUAGE": "C"})
+        d = getProcessOutput("free", [], {"LANG": "C", "LANGUAGE": "C"})
         d.addCallback(self.getMemoryInformationsOk)
         d.addErrback(self.getMemoryInformationsErr)
 
     def getMemoryInformationsOk(self, result):
+        if isinstance(result, bytes):
+            result = result.decode('utf-8')
         self.ret["mem_info"] = result.split("\n")
         self.getDiskInformations()
 
@@ -78,6 +82,8 @@ class Status:
         d.addErrback(self.getDiskInformationsErr)
 
     def getDiskInformationsOk(self, result):
+        if isinstance(result, bytes):
+            result = result.decode('utf-8')
         self.ret["disk_info"] = result.split("\n")
         self.getUptime()
 
@@ -90,6 +96,7 @@ class Status:
         try:
             f = open("/proc/uptime")
             data = f.read()
+            data = data.split("\n")[0]
             f.close()
         except Exception as e:
             self.logging.error(e)
