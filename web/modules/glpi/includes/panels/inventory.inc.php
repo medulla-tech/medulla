@@ -31,16 +31,17 @@ $options = array(
     "title" => _T("Inventories", "glpi"),
 );
 
-class GlpiPanel extends Panel {
-
-    function display_content() {
+class GlpiPanel extends Panel
+{
+    public function display_content()
+    {
         // TODO : check this function
         $result = getMachineNumberByState();
         $count = $result['count'];
         $days = $result['days'];
 
         $jsonCount = json_encode($count);
-        $jsonDays= json_encode($days);
+        $jsonDays = json_encode($days);
         $total = get_computer_count_for_dashboard();
         $unregistered = json_encode($total['total_uninventoried']);
         $createGroupText = json_encode(_T("Create a group", "glpi"));
@@ -88,5 +89,3 @@ class GlpiPanel extends Panel {
 INVENTORY;
     }
 }
-
-?>

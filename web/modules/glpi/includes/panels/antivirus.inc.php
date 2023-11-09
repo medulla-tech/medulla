@@ -32,9 +32,10 @@ $options = array(
     "title" => _T("Antivirus", "glpi"),
 );
 
-class AntivirusPanel extends Panel {
-
-    function display_content() {
+class AntivirusPanel extends Panel
+{
+    public function display_content()
+    {
 
         $count = getAntivirusStatus();
         $uninventorized_text = _T("Uninventoried Machines", "dashboard");
@@ -85,5 +86,3 @@ class AntivirusPanel extends Panel {
 ANTIVIRUS;
     }
 }
-
-?>
