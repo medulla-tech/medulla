@@ -32,7 +32,7 @@ class Status:
 
     def getAvailableSpaceOk(self, result):
         if isinstance(result, bytes):
-            result = result.decode('utf-8')
+            result = result.decode("utf-8")
         for line in result.split("\n"):
             words = line.split()
             # Last column should contain the mounted on part
@@ -67,7 +67,7 @@ class Status:
 
     def getMemoryInformationsOk(self, result):
         if isinstance(result, bytes):
-            result = result.decode('utf-8')
+            result = result.decode("utf-8")
         self.ret["mem_info"] = result.split("\n")
         self.getDiskInformations()
 
@@ -83,7 +83,7 @@ class Status:
 
     def getDiskInformationsOk(self, result):
         if isinstance(result, bytes):
-            result = result.decode('utf-8')
+            result = result.decode("utf-8")
         self.ret["disk_info"] = result.split("\n")
         self.getUptime()
 
