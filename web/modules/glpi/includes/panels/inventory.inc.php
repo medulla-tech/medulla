@@ -83,7 +83,7 @@ class GlpiPanel extends Panel {
         'href':'#',
       }
     ];
-    donut("inventory-graphs", datas, "Total", machineCount["green"]+machineCount["red"]+machineCount["orange"]+unregistered)
+    donut("inventory-graphs", datas, "Total", parseInt(machineCount["green"])+parseInt(machineCount["red"])+parseInt(machineCount["orange"])+parseInt(unregistered))
     </script>
 INVENTORY;
     }
