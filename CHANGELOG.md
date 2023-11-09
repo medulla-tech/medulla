@@ -5,6 +5,8 @@
 - [FEATURE] Add windows 11 sysprep support
 - [BUGFIX]  Fix handling accentuated letters in the script that add packages in the database.
 - [BUGFIX]  Fix importing big groups with csv files
+- [BUGFIX]  Fix counting of inventory machines in the dashboard
+- [BUGFIX]  Fix counting of antivirus in the dashboard
 
 ## [4.6.11](https://github.com/medulla-tech/medulla/releases/tag/4.6.11) (2023-04-14)
 - [FEATURE] Packaging feature allows to define return codes different to 0 and 1 for branching to other steps
