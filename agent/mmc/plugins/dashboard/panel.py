@@ -65,10 +65,8 @@ class SpacePanel(Panel):
         parts = psutil.disk_partitions()
         partitions = []
 
-        exitcode, stdout, stderr = shlaunch("findmnt -nr | fgrep [ | cut -d' ' -f1")
-        bind_mounts = stdout if exitcode == 0 else []
         for part in parts:
-            if "loop" not in part.device and part.mountpoint not in bind_mounts:
+            if "loop" not in part.device and "boot" not in part.mountpoint:
                 try:
                     usage = psutil.disk_usage(part.mountpoint)
                     partitions.append(
