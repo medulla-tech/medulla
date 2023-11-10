@@ -32,9 +32,10 @@ $options = array(
     "enable" => true,
 );
 
-class ComputersOnlinePanel extends Panel {
-
-    function display_content() {
+class ComputersOnlinePanel extends Panel
+{
+    public function display_content()
+    {
         $urlRedirect = urlStrRedirect("base/computers/createMachinesStaticGroup");
         $counts = get_computer_count_for_dashboard();
 
@@ -42,10 +43,10 @@ class ComputersOnlinePanel extends Panel {
         $machines_online = $counts['total_online'];
         $machines_offline = $counts['total_offline'];
 
-        $online_text = _T("Machines online","dashboard")." : ";
-        $offline_text = _T("Machines offline","dashboard")." : ";
+        $online_text = _T("Machines online", "dashboard")." : ";
+        $offline_text = _T("Machines offline", "dashboard")." : ";
 
-          echo <<< ONLINE
+        echo <<< ONLINE
           <div id="computersonline-graph"></div>
           <script>
             var onlineDatas = [
@@ -59,4 +60,3 @@ class ComputersOnlinePanel extends Panel {
 ONLINE;
     }
 }
-?>
