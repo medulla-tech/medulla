@@ -41,11 +41,9 @@ class ComputersOnlinePanel extends Panel {
         $total_machines = $counts['total'];
         $machines_online = $counts['total_online'];
         $machines_offline = $counts['total_offline'];
-        $uninventorized = $counts["total_uninventoried"];
 
         $online_text = _T("Machines online","dashboard")." : ";
         $offline_text = _T("Machines offline","dashboard")." : ";
-        $uninventorized_text = _T("Uninventoried Machines","dashboard")." : ";
 
           echo <<< ONLINE
           <div id="computersonline-graph"></div>
@@ -54,7 +52,6 @@ class ComputersOnlinePanel extends Panel {
               {"label": "$online_text", "value":$machines_online, "href":"$urlRedirect&machines=online"},
               {'label': '$offline_text', 'value': $machines_offline, "href": "$urlRedirect&machines=offline"},
               {'label': '', 'value': 0, "href": ""},
-              {'label': '$uninventorized_text', 'value': $uninventorized, "href": "#"},
             ];
 
             donut("computersonline-graph",onlineDatas, "Total", $total_machines);
