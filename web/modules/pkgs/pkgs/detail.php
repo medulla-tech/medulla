@@ -192,10 +192,10 @@ $page->display();
 echo '<h2 id="toggle-context" onclick="_toggle(\'#context\')">'._T("Context", "pkgs").'</h2>';
 echo '<div id="context">';
 $context = new OptimizedListInfos([$json['info']['name']], _T("Package Name", "pkgs"));
-$context->addExtraInfo([$json['info']['creator']], _T("Creator", "pkgs"));
+$context->addExtraInfo([isset($json['info']['creator']) ? $json['info']['creator'] : ''], _T("Creator", "pkgs"));
 if(isset($json['info']['editor']) && $json['info']['editor'] != "")
   $context->addExtraInfo([$json['info']['editor']], _T("Edited By", "pkgs"));
-$context->addExtraInfo([$json['info']['creation_date']], _T("Creation Date", "pkgs"));
+  $context->addExtraInfo([isset($json['info']['creation_date']) ? $json['info']['creation_date'] : ''], _T("Creation Date", "pkgs"));
 if(isset($json['info']['edition_date']))
   $context->addExtraInfo([$json['info']['edition_date']], _T("Last Modification Date", "pkgs"));
 if(isset($json['info']['localisation_server']))
@@ -220,7 +220,7 @@ $transfer->addExtraInfo([prettyOctetDisplay($totalSize)], _T("Size", "pkgs"));
 $transfer->addExtraInfo([$json['info']['transferfile']], _T("Transferfile", "pkgs"));
 if(isset($json['info']['limit_rate_ko']) && $json['info']['limit_rate_ko'] != "")
   $transfer->addExtraInfo([$json['info']['limit_rate_ko']], _T("bandwidth throttling (ko)", "pkgs"));
-$transfer->addExtraInfo([$json['info']['spooling']], _T("Spooling", "pkgs").' ('._T("Priority", "pkgs").')');
+  $transfer->addExtraInfo([isset($json['info']['spooling']) ? $json['info']['spooling'] : ''], _T("Spooling", "pkgs").' ('._T("Priority", "pkgs").')');
 $transfer->addExtraInfo([$json['info']['inventory']], _T("Inventory", "pkgs"));
 $transfer->addExtraInfo([$package['do_reboot']], _T("Restart", "pkgs"));
 $transfer->setNavBar(new AjaxNavBar(0, ""));
@@ -237,22 +237,21 @@ echo '<div id="files">';
 echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
 echo '<thead>';
 echo '<tr>';
-  echo '<th>'._T("File", "pkgs").'</th>';
-  echo '<th>'._T("Size", "pkgs").'</th>';
-  echo '<th>'._T("Ratio Size/Total", "pkgs").'</th>';
-  echo '<th>'._T("Mime", "pkgs").'</th>';
-  echo '<th>'._T("Mime Type", "pkgs").'</th>';
-  echo '<th>'._T("Action", "pkgs").'</th>';
+  echo '<th style="text-align: left;">'._T("File", "pkgs").'</th>';
+  echo '<th style="text-align: left;">'._T("Size", "pkgs").'</th>';
+  echo '<th style="text-align: left;">'._T("Ratio Size/Total", "pkgs").'</th>';
+  echo '<th style="text-align: left;">'._T("Mime Type", "pkgs").'</th>';
+  echo '<th style="text-align: left;">'._T("Action", "pkgs").'</th>';
 echo '</tr>';
 echo '</thead>';
+echo '<tbody>';
 foreach($filesInfos['files'] as $id=>$file){
   echo '<tr class="alternate">';
-    echo '<td>'.$file['name'].'</td>';
-    echo '<td>'.prettyOctetDisplay((int)$file['size']).'</td>';
-    echo '<td>'.round(((int)$file['size'] / $totalSize)*100, 2).' %</td>';
-    echo '<td>'.$file["mime"][0].'</td>';
-    echo '<td>'.$file["mime"][1].'</td>';
-    echo '<td class="action">';
+    echo '<td style="text-align: left;">'.$file['name'].'</td>';
+    echo '<td style="text-align: left;">'.prettyOctetDisplay((int)$file['size']).'</td>';
+    echo '<td style="text-align: left;">'.round(((int)$file['size']/$totalSize)*100, 2).'%</td>';
+    echo '<td style="text-align: left;">'.$file["mime"][0].'</td>';
+    echo '<td style="text-align: left;" class="action">';
     if(preg_match("#text/(.*)#i", $file['mime'][0])){
       echo '<ul class="action">';
       $fileViewerAction->display("", ["uuid"=>$_GET['packageUuid'], "name"=>$file["name"]]);
@@ -261,6 +260,7 @@ foreach($filesInfos['files'] as $id=>$file){
     echo '</td>';
   echo '</tr>';
 }
+echo '</tbody>';
 echo '</table>';
 echo '</div>';
 

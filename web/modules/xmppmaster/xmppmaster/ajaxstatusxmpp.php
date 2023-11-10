@@ -72,7 +72,7 @@ $successmach=array();
 $errormach=array();
 $abortmachuser = array();
 $processmachr = array();
-
+$reloads = array();
 
 $contrainte = array();
 
