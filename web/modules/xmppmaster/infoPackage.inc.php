@@ -91,19 +91,19 @@ $page->addTab($tab);
 $submod->addPage($page);
 
 $page = new Page("ajaxalerts");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxalertshistory");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php");
 $submod->addPage($page);
 
 
 $page = new Page("acquit");
 $page->setFile("modules/xmppmaster/xmppmaster/monitoring/acquit.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("machine_xmpp_detail", _T('XMPP Machine details', 'xmppmaster'));
@@ -111,12 +111,12 @@ $submod->addPage($page);
 
 $page = new Page("ajaxGroupactionquick");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("ajaxFiltercustom");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxFiltercustom.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("editqa", _T('Edit Custom Quick Action', 'xmppmaster'));
@@ -124,7 +124,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxFilterfileconf");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("listconffile", _T('List config files', 'xmppmaster'));
@@ -133,11 +133,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxlistconffile");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxlistconffile.php");
-$page->setOptions(array("noHeader"=>True, "visible"=>False, "AJAX" =>True));
+$page->setOptions(array("noHeader" => true, "visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("deleteqa",_T("Delete Custom Quick Action", 'pkgs'));
-$page->setFile("modules/xmppmaster/xmppmaster/removeqa.php", array("noHeader"=>True,"visible"=>False));
+$page = new Page("deleteqa", _T("Delete Custom Quick Action", 'pkgs'));
+$page->setFile("modules/xmppmaster/xmppmaster/removeqa.php", array("noHeader" => true,"visible" => false));
 $submod->addPage($page);
 
 $page = new Page("logbymachine", _T('XMPP logs', 'xmppmaster'));
@@ -178,62 +178,62 @@ $submod->addPage($page);
 
 $page = new Page("ajaxdeploylog");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxdeploylog.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("remoteaction");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("actioncustomquickactiongrp", _T("Custom quick action", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actioncustomquickactiongrp.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("ajax_refresh_files_remote", _T("ajax refresh files remote", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajax_refresh_files_remote.php.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("ajax_refresh_files_local", _T("ajax refresh files local", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajax_refresh_files_local.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("xmppplugindownloadexpert");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("xmpprefreshfilesremote");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremote.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("xmpprefreshfilesremotene");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefreshfilesremotene.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("xmppplugindownload");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("xmpprefreshfileslocal");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefreshfileslocal.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("xmpprefreshfileslocalne");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefreshfileslocalne.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("xmppremotecmd");
 $page->setFile("modules/xmppmaster/xmppmaster/xmppremotecmdshell.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 // $tab = new Tab("tablaunch", _T("MSC launch tab for a machine", "msc"));
@@ -242,130 +242,130 @@ $submod->addPage($page);
 
 $page = new Page("deployquick", _T("action deploy quick", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/deployquick.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("deployquickgroup", _T("quick action deploy group", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/deployquickgroup.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("actionwakeonlan", _T("quick action Wol", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionwakeonlan.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("actioninventory", _T("quick action Inventory", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actioninventory.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("actionrestart", _T("quick action Restart", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionrestart.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("actionshutdown", _T("quick action shutdown", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionshutdown.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("actionvncchangeperms", _T("quick action change vnc settings", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionvncchangeperms.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("actionrestart", _T("quick action Install key", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionkeyinstall.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 // --------------END QUICK ACTION--------------------
 
 // ajax procedure to start a reversessh on client machine for guacamole
 $page = new Page("actionreversessh", _T("quick action reversessh for guacamole", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 // ajax procedure read and send result from log
-$page = new Page("viewlogs",_T('Audit deployment', 'xmppmaster'));
+$page = new Page("viewlogs", _T('Audit deployment', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/viewlogs.php");
-$page->setOptions(array("visible" => True, "noHeader" => False));
+$page->setOptions(array("visible" => true, "noHeader" => false));
 $submod->addPage($page);
 
 $page = new Page("logbymachine", _T('XMPP log', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/logbymachine.php");
-$page->setOptions(array("visible" => True, "noHeader" => True));
+$page->setOptions(array("visible" => true, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("loglistgrpmachine", _T('XMPP group logs', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php");
-$page->setOptions(array("visible" => True, "noHeader" => true));
+$page->setOptions(array("visible" => true, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("logbygrpmachine", _T('XMPP group logs', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/logbygrpmachine");
-$page->setOptions(array("visible" => False, 'AJAX'=>True));
+$page->setOptions(array("visible" => false, 'AJAX' => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxstatusxmpp",_T("List all groups of computers","xmppmaster"));
+$page = new Page("ajaxstatusxmpp", _T("List all groups of computers", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxstatusteamxmpp",_T("List all groups of computers by teams","xmppmaster"));
+$page = new Page("ajaxstatusteamxmpp", _T("List all groups of computers by teams", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxviewgrpdeploy",_T("ajax view grp deploy","xmppmaster"));
+$page = new Page("ajaxviewgrpdeploy", _T("ajax view grp deploy", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxlogsxmpp",_T("List computers deploy","xmppmaster"));
+$page = new Page("ajaxlogsxmpp", _T("List computers deploy", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxlogsgrpxmpp",_T("List computers deploy by group","xmppmaster"));
+$page = new Page("ajaxlogsgrpxmpp", _T("List computers deploy by group", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxstatusxmppscheduler",_T("List computer deploy","xmppmaster"));
+$page = new Page("ajaxstatusxmppscheduler", _T("List computer deploy", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxstatusteamxmppscheduler",_T("List computer deploy by team","xmppmaster"));
+$page = new Page("ajaxstatusteamxmppscheduler", _T("List computer deploy by team", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxstatusnotlaunched",_T("List of not launched deployments","xmppmaster"));
+$page = new Page("ajaxstatusnotlaunched", _T("List of not launched deployments", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxsyncthingmachineless",_T("Transfert syncthing list no transfered","xmppmaster"));
+$page = new Page("ajaxsyncthingmachineless", _T("Transfert syncthing list no transfered", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxsyncthingmachineless.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-$page = new Page("switchrelay",_T("Switch Relay","xmppmaster"));
+$page = new Page("switchrelay", _T("Switch Relay", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/relays/switchrelay.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("reconfiguremachines",_T("Reconfigure Machines","xmppmaster"));
+$page = new Page("reconfiguremachines", _T("Reconfigure Machines", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("detailactions", _T("Relays Detail Actions", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/relays/detailactions.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("qalaunched", _T("Qa launched on Relays", "xmppmaster"));
@@ -375,7 +375,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxqalaunched", _T("Qa launched on Relays", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("qaresult", _T("Qa result on Relays", "xmppmaster"));
@@ -404,16 +404,15 @@ $submod->addPage($page);
 
 $page = new Page("popupReloadDeploy", _T("Reload Deploy", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/popupReloadDeploy.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("reloaddeploy",_T('Reload Deploy', 'xmppmaster'));
+$page = new Page("reloaddeploy", _T('Reload Deploy', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/reloaddeploy.php");
 //$page->setOptions(array("visible" => True, "noHeader" => False));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = &MMCApp::getInstance();
 $MMCApp->addModule($mod);
-?>
