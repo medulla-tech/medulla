@@ -568,16 +568,6 @@ printf ('
                                     jQuery( this ).dialog( "close" );
                                     window.location.href = "/mmc/main.php?module=base&submod=logview&action=logsdownload";
                                 }
-                            },
-                            {
-                                id: "my-buttonfilemanager",
-                                text: "<?php echo sprintf(_T('File Manager', 'xmppmaster')); ?>",
-                                'class':'btnPrimary',
-                                style:"color:#FFFFFF;background-color: #000000;",
-                                click:function() {
-                                    jQuery( this ).dialog( "close" );
-                                    window.location.href = "/mmc/main.php?module=xmppmaster&submod=xmppmaster&action=filesmanagers";
-                                }
                             }
                         ]
                         });
