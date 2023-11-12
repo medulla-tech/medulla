@@ -23,8 +23,8 @@
  */
 ?>
 <?php
-    echo '<link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />'."\n".
-    '<script src="jsframework/lib/pluginjqueryjtree/jstree.min.js"></script>'."\n";
+echo '<link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />'."\n".
+'<script src="jsframework/lib/pluginjqueryjtree/jstree.min.js"></script>'."\n";
 ?>
 
 <style type='text/css'>
@@ -227,29 +227,28 @@ ul.leftfile, ul.rightfile {
 }
 </style>
 
-<?
+<?php
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-if(!isexpertmode())
-{
-  $url = "xmppmaster/xmppmaster/xmppfilesbrowsingne";
-  $get = [];
-  foreach($_GET as $key=>$value)
-  {
-    if(!in_array($key, ["module","submod", "action"]))
-      $get[$key] = $value;
-  }
-  header("Location: " . urlStrRedirect($url, $get));
+if(!isexpertmode()) {
+    $url = "xmppmaster/xmppmaster/xmppfilesbrowsingne";
+    $get = [];
+    foreach($_GET as $key => $value) {
+        if(!in_array($key, ["module","submod", "action"])) {
+            $get[$key] = $value;
+        }
+    }
+    header("Location: " . urlStrRedirect($url, $get));
 }
 
-$uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-$jid  = isset($_GET['jid']) ? $_GET['jid'] : ( isset($_POST['jid']) ? $_POST['jid'] : "");
-$machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ?  xmlrpc_getjidMachinefromuuid( $uuid ) : $jid);
+$uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : (isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
+$jid  = isset($_GET['jid']) ? $_GET['jid'] : (isset($_POST['jid']) ? $_POST['jid'] : "");
+$machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ? xmlrpc_getjidMachinefromuuid($uuid) : $jid);
 $ma = xmlrpc_getMachinefromjid($machine);
 
-$tab = explode("/",$machine);
+$tab = explode("/", $machine);
 $p = new PageGenerator(_T("File manager", 'xmppmaster')." on ". $ma['hostname']);
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -272,13 +271,11 @@ if (stristr($ma['platform'], "win")) {
 
     echo 'var seperator = "\\\\";';
     echo 'var os = "win";';
-}
-else{
+} else {
     echo 'var seperator = "/";';
-    if (stristr($ma['platform'], "darwin")){
+    if (stristr($ma['platform'], "darwin")) {
         echo 'var os = "darwin";';
-    }
-    else{
+    } else {
         echo 'var os = "linux";';
     }
 }
@@ -287,47 +284,49 @@ echo '</script>';
 
 <?php
     $lifdirstr = xmlrpc_remotefilesystem("@0@", $machine);
-    $lifdirremote = json_decode($lifdirstr, true);
-    if (isset($lifdirremote['err'])){
-        if ( $lifdirremote['err'] == 'Timeout Error'){
-            $msg = sprintf(_T("Sorry, the remote machine [%s] takes too long to answer.", "xmppmaster"), $machine);
-        }else{
-            $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
-        }
-            echo '<h2 style="color : red;">';
-            echo "$msg";
-            echo "</h2>";
-            exit;
+$lifdirremote = json_decode($lifdirstr, true);
+if (isset($lifdirremote['err'])) {
+    if ($lifdirremote['err'] == 'Timeout Error') {
+        $msg = sprintf(_T("Sorry, the remote machine [%s] takes too long to answer.", "xmppmaster"), $machine);
+    } else {
+        $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
     }
-    $searchchar = array(':', '/', );// repect order
-    $replacechar   = array( '", "children" : [', '{"text" : "');// repect order
-    $datatree = str_replace ( $searchchar, $replacechar, $lifdirremote['data']['strjsonhierarchy'] );
-    unset ($lifdirremote['data']['strjsonhierarchy']);
-    // cherche local directory
+    echo '<h2 style="color : red;">';
+    echo "$msg";
+    echo "</h2>";
+    exit;
+}
+$searchchar = array(':', '/', );// repect order
+$replacechar   = array( '", "children" : [', '{"text" : "');// repect order
+$datatree = str_replace($searchchar, $replacechar, $lifdirremote['data']['strjsonhierarchy']);
+unset($lifdirremote['data']['strjsonhierarchy']);
+// cherche local directory
 
-printf ('
+printf('
 <form>
     <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
     <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
-</form>' ,$lifdirlocal['path_abs_current'],$lifdirlocal['parentdir']);
+</form>', $lifdirlocal['path_abs_current'], $lifdirlocal['parentdir']);
 $rootfilesystem = $lifdirremote['data']['rootfilesystem'];
 
 $rootfilesystempath = $rootfilesystem;
-if ($rootfilesystem[1] == ":"){
-    $rootfilesystempath =substr($lifdirremote['data']['rootfilesystem'],2);
+if ($rootfilesystem[1] == ":") {
+    $rootfilesystempath = substr($lifdirremote['data']['rootfilesystem'], 2);
 }
 
-printf ('
+printf(
+    '
 <form>
     <input id ="path_abs_current_remote" type="hidden" name="path_abs_current_remote" value="%s">
     <input id ="parentdirremote" type="hidden" name="parentdirremote" value="%s">
     <input id ="rootfilesystem" type="hidden" name="rootfilesystem" value="%s">
     <input id ="rootfilesystempath" type="hidden" name="rootfilesystempath" value="%s">
-</form>' ,
-            $lifdirremote['data']['path_abs_current'],
-            $lifdirremote['data']['parentdir'],
-            $lifdirremote['data']['rootfilesystem'],
-            $rootfilesystempath);
+</form>',
+    $lifdirremote['data']['path_abs_current'],
+    $lifdirremote['data']['parentdir'],
+    $lifdirremote['data']['rootfilesystem'],
+    $rootfilesystempath
+);
 ?>
 
 <div id="messageaction">
@@ -386,9 +385,9 @@ printf ('
                                                                                Font-size : 15px;"
                         id=\'localcurrrent\'>'.$lifdirlocal['path_abs_current'] ."</span></div>";
 
-                        echo '<ul id="leftdirdata" class="leftdir">';
-                        echo '</ul>';
-                        ?>
+echo '<ul id="leftdirdata" class="leftdir">';
+echo '</ul>';
+?>
                     </div>
                 </td>
             </tr>
@@ -414,7 +413,7 @@ printf ('
                 <td class="currentdircss ombremultiple" style="Font-Weight : Bold; font-size : 15px;">
                 <?php echo sprintf(_T('Current path: ', 'xmppmaster')); ?>
                     <span id="cur" style="Font-Weight : Bold ;font-size : 15px;">
-                            <? echo $lifdir['data']['path_abs_current']; ?>
+                            <?php echo $lifdir['data']['path_abs_current']; ?>
                     </span>
                 </td>
             </tr>
