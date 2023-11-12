@@ -182,8 +182,6 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     $editremoteconfiguration    = new ActionItem(_("Edit config files"), "listfichierconf", "config", "computers", "xmppmaster", "xmppmaster");
     $editnoremoteconfiguration  = new EmptyActionItem1(_("Edit config files"), "remoteeditorconfiguration", "configg", "computers", "xmppmaster", "xmppmaster");
 
-    $fileviewer = new ActionItem(_("files viewer"), "fileviewer", "fileviewer", "computers", "xmppmaster", "xmppmaster");
-    $filenoviewer = new EmptyActionItem1(_("files viewer"), "fileviewer", "fileviewerg", "computers", "xmppmaster", "xmppmaster");
 } else {
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
 }
@@ -210,7 +208,6 @@ $actionProfile = array();
 $actionxmppquickdeoloy = array();
 $cssClasses = array();
 $actioneditremoteconfiguration = array();
-$actionfilebrowser = array();
 
 $dissociatedFirstColumns = [];
 
@@ -351,14 +348,12 @@ foreach($datas['enabled'] as $valeue) {
         $presencesClass[] = "machineNamepresente";
         if (isExpertMode()) {
             $actionConsole[] = $inventconsole;
-            $actionfilebrowser[] = $fileviewer;
             $actioneditremoteconfiguration[] = $editremoteconfiguration;
         }
     } else {
         $presencesClass[] = "machineName";
         if (isExpertMode()) {
             $actionConsole[] = $inventnoconsole;
-            $actionfilebrowser[] = $filenoviewer;
             $actioneditremoteconfiguration[] = $editnoremoteconfiguration;
         }
     }
@@ -478,7 +473,6 @@ if (in_array("imaging", $_SESSION["supportModList"])) {
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     if (isExpertMode()) {
         $n->addActionItemArray($actionConsole);
-        $n->addActionItemArray($actionfilebrowser);
         if (!(isset($_GET['logview']) &&  $_GET['logview'] == "viewlogs")) {
             $n->addActionItemArray($actioneditremoteconfiguration);
         }
