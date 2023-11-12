@@ -152,17 +152,6 @@ $submod->addPage($page);
 $page = new Page("monitoringview", _T('XMPP Monitoring view', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("fileviewer", _T('File Viewer', 'xmppmaster'));
-$page->setFile("modules/xmppmaster/xmppmaster/filebrowser.php");
-$submod->addPage($page);
-
-$page = new Page("xmppfilesbrowsing", _T('File Browser', 'xmppmaster'));
-$submod->addPage($page);
-
-//ne non expert mode
-$page = new Page("xmppfilesbrowsingne", _T('File Browser', 'xmppmaster'));
-$submod->addPage($page);
-
 $page = new Page("remoteeditorconfiguration", _T('Remote edit configuration file', 'xmppmaster'));
 $submod->addPage($page);
 
