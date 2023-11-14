@@ -2882,7 +2882,7 @@ class RpcProxy(RpcProxyI):
             ret = [ret[x][1]["cn"][0] for x in ret]
         else:
             raise Exception("Error when parsing ComputerList result")
-        ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
+        # ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
         return xmlrpcCleanup(ret)
 
     def getComputersOS(self, uuids):
@@ -2896,7 +2896,7 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         ret = ComputerManager().getRestrictedComputersList(ctx, min, max, filt)
         ret = [ret[x][1]["cn"][0] for x in ret]
-        ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
+        # ret.sort(lambda x, y: cmp(x.lower(), y.lower()))
         return xmlrpcCleanup(ret)
 
     def getRestrictedComputersListLen(self, filt=None):
