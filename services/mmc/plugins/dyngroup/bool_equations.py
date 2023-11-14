@@ -109,10 +109,10 @@ class BoolOperatorAnd(BoolOperator):
     def toS(self, list):
         return "AND (" + (", ".join(map(to_s, list(list.values())))) + ")"
 
-    def toXML(self, list):
+    def toXML(self, _list):
         return (
             "<b t='AND'><p>"
-            + ("</p><p>".join(map(to_xml, list(list.values()))))
+            + ("</p><p>".join(map(to_xml, list(_list.values()))))
             + "</p></b>"
         )
 
@@ -141,10 +141,10 @@ class BoolOperatorOr(BoolOperator):
     def toS(self, list):
         return "OR (" + (", ".join(map(to_s, list(list.values())))) + ")"
 
-    def toXML(self, list):
+    def toXML(self, _list):
         return (
             "<b t='OR'><p>"
-            + ("</p><p>".join(map(to_xml, list(list.values()))))
+            + ("</p><p>".join(map(to_xml, list(_list.values()))))
             + "</p></b>"
         )
 
@@ -176,10 +176,10 @@ class BoolOperatorNot(BoolOperator):
     def toS(self, list):
         return "NOT (" + (", ".join(map(to_s, list(list.values())))) + ")"
 
-    def toXML(self, list):
+    def toXML(self, _list):
         return (
             "<b t='NOT'><p>"
-            + ("</p><p>".join(map(to_xml, list(list.values()))))
+            + ("</p><p>".join(map(to_xml, list(_list.values()))))
             + "</p></b>"
         )
 
