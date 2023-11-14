@@ -86,13 +86,13 @@ class BoolRequest(object):
 
 # Operators ####################################
 class BoolOperator(object):  # abstract
-    def toH(self, list):
+    def toH(self, _list):
         pass
 
-    def toS(self, list):
+    def toS(self, _list):
         pass
 
-    def toXML(self, list):
+    def toXML(self, _list):
         pass
 
     def merge(self, lists):
@@ -103,11 +103,11 @@ class BoolOperator(object):  # abstract
 
 
 class BoolOperatorAnd(BoolOperator):
-    def toH(self, list):
-        return ["AND", list(map(to_h, list(list.values())))]
+    def toH(self, _list):
+        return ["AND", list(map(to_h, list(_list.values())))]
 
-    def toS(self, list):
-        return "AND (" + (", ".join(map(to_s, list(list.values())))) + ")"
+    def toS(self, _list):
+        return "AND (" + (", ".join(map(to_s, list(_list.values())))) + ")"
 
     def toXML(self, _list):
         return (
@@ -135,11 +135,11 @@ class BoolOperatorAnd(BoolOperator):
 
 
 class BoolOperatorOr(BoolOperator):
-    def toH(self, list):
-        return ["OR", list(map(to_h, list(list.values())))]
+    def toH(self, _list):
+        return ["OR", list(map(to_h, list(_list.values())))]
 
-    def toS(self, list):
-        return "OR (" + (", ".join(map(to_s, list(list.values())))) + ")"
+    def toS(self, _list):
+        return "OR (" + (", ".join(map(to_s, list(_list.values())))) + ")"
 
     def toXML(self, _list):
         return (
