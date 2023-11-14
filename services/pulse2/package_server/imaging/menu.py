@@ -929,7 +929,7 @@ class ImagingItem:
         Convert dictionary value of type str to unicode.
         """
         for key, value in list(array.items()):
-            if isinstance(value, str):
+            if isinstance(value, bytes):
                 value = value.decode("utf-8")
             array[key] = value
 
