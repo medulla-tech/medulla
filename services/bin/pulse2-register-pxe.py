@@ -435,7 +435,7 @@ def macadressclear(file_content, interface_mac_clear):
     if boolremoveelement:
         logging.getLogger().debug("Clear interface with macadress %s "%interface_mac_clear)
         xml_str =  ET.tostring(root).encode("ASCII", 'ignore')
-        logging.getLogger().debug("New xml netwrok : %s"%xml_str)
+        logging.getLogger().debug("New xml network : %s"%xml_str)
         xml_str = xml_str.replace('\n', '')
         return xml_str
         pass
@@ -534,8 +534,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
                     logging.getLogger().error("MAC address error %s"%str(e))
             except Exception as e:
                 traceback.print_exc(file=logoutput)
-                logging.getLogger().error("Error traitement file %s"%str(name))
-                logging.getLogger().error("Error traitement %s"%str(e))
+                logging.getLogger().error("Error extract file name %s"%str(name))
+                logging.getLogger().error("Error extract code error %s"%str(e))
 
 class watchInventory:
     def __init__(self):
