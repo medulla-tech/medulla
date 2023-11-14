@@ -21,6 +21,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 require ("FormGenerator.php");
+require_once("utils.inc.php");
 
 /**
  * return an uniqId (use full for javascript auto generation

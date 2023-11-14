@@ -449,6 +449,15 @@ else {
      * whose is a list who come from python imaging database code: [uuid, type, target[0].toH]
      * menu is the target boot menu
      */
+
+     // For some reason boolean from xmlrpc are converted to str
+    if(is_string($whose) && strtolower($whose) == 'false'){
+        $whose = false;
+    }
+    else if(is_string($whose) && strtolower($whose) == 'true'){
+        $whose = true;
+    }
+
     if (!$whose && !$menu) {
         if ($type == '') {
             $msg = _T("To register, you must first set a default menu to the imaging server that manages the entity of this computer.", "imaging");

@@ -723,26 +723,29 @@ class ImagingMenu:
         """
         set the default item number
         """
-        self.default_item = value.replace(" ", "-")
+        if isinstance(value, str):
+            self.default_item = value.replace(" ", "-")
+        else:
+            self.default_item = value
 
     def addImageEntry(self, position, entry):
         """
         Add the ImagingEntry entry to our menu
         """
-        assert isinstance(position, int) and position >= 0
-        if position in self.menuitems:
-            raise ValueError("Position %d in menu already taken" % position)
-        item = ImagingImageItem(entry)
-        self.menuitems[position] = item
+        if isinstance(position, int) and position >= 0:
+            if position in self.menuitems:
+                raise ValueError("Position %d in menu already taken" % position)
+            item = ImagingImageItem(entry)
+            self.menuitems[position] = item
 
     def addBootServiceEntry(self, position, entry):
         """
         Add the ImagingEntry entry to our menu
         """
-        assert isinstance(position, int) and position >= 0
-        if position in self.menuitems:
-            raise ValueError("Position %d in menu already taken" % position)
-        self.menuitems[position] = ImagingBootServiceItem(entry)
+        if isinstance(position, int) and position >= 0:
+            if position in self.menuitems:
+                raise ValueError("Position %d in menu already taken" % position)
+            self.menuitems[position] = ImagingBootServiceItem(entry)
 
     def setKeyboard(self, mapping=None):
         """
