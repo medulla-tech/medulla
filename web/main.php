@@ -35,7 +35,7 @@ require("includes/session.inc.php");
 require("includes/config.inc.php");
 require_once("includes/i18n.inc.php");
 require("includes/acl.inc.php");
-require("includes/utils.inc.php");
+require_once("includes/utils.inc.php");
 require("includes/PageGenerator.php");
 require("modules/base/includes/edit.inc.php");
 
