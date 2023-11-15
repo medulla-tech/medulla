@@ -172,7 +172,7 @@ class GlpiComputers(ComputerI):
             if not filt[0]:
                 return 0
             filt = filt[1]
-        except exceptions.AttributeError:
+        except AttributeError:
             pass
         return self.glpi.getRestrictedComputersListLen(ctx, filt)
 
@@ -194,7 +194,7 @@ class GlpiComputers(ComputerI):
             if not filt[0]:
                 return {}
             filt = filt[1]
-        except exceptions.AttributeError:
+        except AttributeError:
             pass
         if "imaging_entities" in filt:  # imaging group creation
             computersList = self.glpi.getRestrictedComputersList(
