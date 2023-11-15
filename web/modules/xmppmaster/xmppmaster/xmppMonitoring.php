@@ -95,7 +95,7 @@ switch($_GET['information']){
             }
     echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
     echo _T('PROCESSES LIST', 'xmppmaster')."\n";
-        foreach( $re[result] as $datareseau){
+        foreach( $re["result"] as $datareseau){
             echo $datareseau;
             echo "\n";
         }

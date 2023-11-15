@@ -968,7 +968,8 @@ def remoteXmppMonitoring(subject, jidmachine, timeout):
     data = callremoteXmppMonitoring(jidmachine, subject, timeout=timeout)
     result = json.loads(data)
     resultdata = zlib.decompress(base64.b64decode(result["result"]))
-    dataresult = [x for x in resultdata.split("\n")]
+    resultdata_str = resultdata.decode('utf-8')
+    dataresult = [x for x in resultdata_str.split("\n")]
     result["result"] = dataresult
     return result
 
