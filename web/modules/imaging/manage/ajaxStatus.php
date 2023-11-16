@@ -2,7 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
- * (c) 2015 Siveo, http://http://www.siveo.net
+ * (c) 2015-2023 Siveo, http://http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -41,7 +41,7 @@ $gg = xmlrpc_getCustomMenubylocation($location);
 
 if (in_array("glpi", $_SESSION['supportModList'])) {
     foreach ($gg as &$entry){
-        $computersummary=getLastMachineGlpiPart($entry[0], 'Summary');
+        $computersummary=getLastMachineGlpiPart($entry[0], 'Summary', 0, -1, "", []);
         foreach ($computersummary[0] as $val){
             switch($val[0]){
                 case "Computer Name":
