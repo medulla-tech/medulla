@@ -1273,7 +1273,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.filter(
             or_(
                 self.target.c.uuid == target_uuid,
-                self.boot_service_on_imaging_server.c.fk_boot_service is None,
+                self.boot_service_on_imaging_server.c.fk_boot_service == None,
             )
         )
         if filter != "":
@@ -1351,7 +1351,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.filter(
             or_(
                 self.entity.c.uuid == loc_id,
-                self.boot_service_on_imaging_server.c.fk_boot_service is None,
+                self.boot_service_on_imaging_server.c.fk_boot_service == None,
             )
         )
         if filter != "":
@@ -1377,7 +1377,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             .filter(
                 and_(
                     self.post_install_script.c.id == uuid2id(script_id),
-                    self.post_install_script.c.fk_boot_service is not None,
+                    self.post_install_script.c.fk_boot_service != None,
                 )
             )
             .first()
@@ -3576,7 +3576,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             )
         )
         mi = mi.filter(
-            and_(self.menu_item.c.id == uuid2id(mi_uuid), self.entity.c.id is not None)
+            and_(self.menu_item.c.id == uuid2id(mi_uuid), self.entity.c.id != None)
         ).first()
         loc_id = mi[1].uuid
 
@@ -3598,7 +3598,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
         q = q.filter(
             or_(
-                self.boot_service_on_imaging_server.c.fk_boot_service is None,
+                self.boot_service_on_imaging_server.c.fk_boot_service == None,
                 self.entity.c.uuid == loc_id,
             )
         )
@@ -5530,8 +5530,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
         q = q.filter(
             or_(
-                self.post_install_script_on_imaging_server.c.fk_post_install_script
-                is None,
+                self.post_install_script_on_imaging_server.c.fk_post_install_script == None,
                 self.entity.c.uuid == pis_uuid,
             )
         )
@@ -5586,8 +5585,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             )
             q = q.filter(
                 or_(
-                    self.post_install_script_on_imaging_server.c.fk_post_install_script
-                    is None,
+                    self.post_install_script_on_imaging_server.c.fk_post_install_script == None,
                     self.entity.c.uuid == location,
                 )
             )
