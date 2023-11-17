@@ -752,7 +752,7 @@ AND kiosk.profiles.active = 1
                 Acknowledgements.startdate <= today.strftime("%Y-%m-%d %H:%M:%S"),
                 or_(
                     Acknowledgements.enddate > today.strftime("%Y-%m-%d %H:%M:%S"),
-                    Acknowledgements.enddate is None,
+                    Acknowledgements.enddate == None,
                     Acknowledgements.enddate == "",
                 ),
             )

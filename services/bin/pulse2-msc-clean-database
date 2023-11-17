@@ -100,7 +100,7 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
                     not_(
                         commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)
                     ),
-                    commands.c.fk_bundle is None,
+                    commands.c.fk_bundle == None,
                     commands.c.creation_date < creation_timestamp,
                 ),
                 distinct=True,
@@ -109,7 +109,7 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
                 [commands.c.id],
                 and_(
                     not_(commands.c.id.in_(not_finished_commands)),
-                    commands.c.fk_bundle is None,
+                    commands.c.fk_bundle == None,
                     commands.c.creation_date < creation_timestamp,
                 ),
                 distinct=True,
@@ -122,7 +122,7 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
                     not_(
                         commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)
                     ),
-                    commands.c.bundle_id is None,
+                    commands.c.bundle_id == None,
                     commands.c.creation_date < creation_timestamp,
                 ),
                 distinct=True,
@@ -131,7 +131,7 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
                 [commands.c.id],
                 and_(
                     not_(commands.c.id.in_(not_finished_commands)),
-                    commands.c.bundle_id is None,
+                    commands.c.bundle_id == None,
                     commands.c.creation_date < creation_timestamp,
                 ),
                 distinct=True,
@@ -145,7 +145,7 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
                     not_(
                         commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)
                     ),
-                    commands.c.fk_bundle is None,
+                    commands.c.fk_bundle == None,
                     commands.c.creation_date < creation_timestamp,
                 )
             )
@@ -156,7 +156,7 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
             .where(
                 and_(
                     not_(commands.c.id.in_(not_finished_commands)),
-                    commands.c.fk_bundle is None,
+                    commands.c.fk_bundle == None,
                     commands.c.creation_date < creation_timestamp,
                 )
             )
@@ -171,7 +171,7 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
                     not_(
                         commands_on_host.c.current_state.in_(STATES_TO_CLEANUP)
                     ),
-                    commands.c.bundle_id is None,
+                    commands.c.bundle_id == None,
                     commands.c.creation_date < creation_timestamp,
                 )
             )
@@ -182,7 +182,7 @@ def query_commands_to_delete(commands, commands_on_host, creation_timestamp):
             .where(
                 and_(
                     not_(commands.c.id.in_(not_finished_commands)),
-                    commands.c.bundle_id is None,
+                    commands.c.bundle_id == None,
                     commands.c.creation_date < creation_timestamp,
                 )
             )

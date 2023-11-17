@@ -14403,7 +14403,7 @@ group by hostname
                 and_(
                     Up_history.id_machine.in_(idmachines),
                     or_(
-                        Up_history.delete_date is not None, Up_history.delete_date != 0
+                        Up_history.delete_date != None, Up_history.delete_date != 0
                     ),
                 )
             )
