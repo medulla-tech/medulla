@@ -966,7 +966,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 and_(
                     self.menu_item.c.id.in_(mi_ids),
                     or_(
-                        self.boot_service_on_imaging_server.c.fk_boot_service is None,
+                        self.boot_service_on_imaging_server.c.fk_boot_service == None,
                         self.boot_service_on_imaging_server.c.fk_imaging_server
                         == is_id,
                     ),
