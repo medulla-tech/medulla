@@ -794,9 +794,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __mergeBootServiceInMenuItem(self, my_list):
         ret = []
-        for mi, bs, menu, name_i18n, desc_i18n in my_list:
+        for mi, bs, menu, bsois, name_i18n, desc_i18n in my_list:
             if bs is not None:
                 setattr(mi, "boot_service", bs)
+            setattr(mi, "is_local", (bsois is not None))
             if menu is not None:
                 setattr(mi, "default", (menu.fk_default_item == mi.id))
                 setattr(mi, "default_WOL", (menu.fk_default_item_WOL == mi.id))
@@ -874,7 +875,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getMenuContent(
         self,
         menu_id,
-        _type=P2IM.ALL,
+        type=P2IM.ALL,
         start=0,
         end=-1,
         filter="",
@@ -910,6 +911,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         else:
             mi_ids = mi_ids.all()
         mi_ids = [x[1] for x in mi_ids]
+
         if loc_id is not None:
             imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
         else:
@@ -923,7 +925,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             lang = self.__getLocLanguage(session, loc_id)
 
         q = []
-        if _type == P2IM.ALL or _type == P2IM.BOOTSERVICE:
+        if type == P2IM.ALL or type == P2IM.BOOTSERVICE:
             # we don't need the i18n trick for the menu name here
             I18n1 = sa_exp_alias(self.internationalization)
             I18n2 = sa_exp_alias(self.internationalization)
@@ -931,6 +933,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = (
                 q1.add_entity(BootService)
                 .add_entity(Menu)
+                .add_entity(BootServiceOnImagingServer)
                 .add_entity(Internationalization, alias=I18n1)
                 .add_entity(Internationalization, alias=I18n2)
             )
@@ -957,16 +960,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                         I18n2.c.id != 1,
                     ),
                 )
+                .outerjoin(self.boot_service_on_imaging_server)
             )
             q1 = q1.filter(
                 and_(
                     self.menu_item.c.id.in_(mi_ids),
+                    or_(
+                        self.boot_service_on_imaging_server.c.fk_boot_service is None,
+                        self.boot_service_on_imaging_server.c.fk_imaging_server
+                        == is_id,
+                    ),
                 )
             )
             q1 = q1.order_by(self.menu_item.c.order).all()
             q1 = self.__mergeBootServiceInMenuItem(q1)
             q.extend(q1)
-        if _type == P2IM.ALL or _type == P2IM.IMAGE:
+        if type == P2IM.ALL or type == P2IM.IMAGE:
             # we don't need the i18n trick for the menu name here
             q2 = (
                 session.query(MenuItem)
@@ -987,6 +996,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q.extend(q2)
         if session_need_close:
             session.close()
+        q.sort(lambda x, y: cmp(x.order, y.order))
         return q
 
     def getLastMenuItemOrder(self, menu_id):
@@ -3602,9 +3612,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     ######################
-    def getBootMenu(self, target_id, _type, start, end, filter):
+    def getBootMenu(self, target_id, type, start, end, filter):
         menu_items = []
-        if _type == P2IT.COMPUTER:
+        if type == P2IT.COMPUTER:
             profile = ComputerProfileManager().getComputersProfile(target_id)
             if profile is not None:
                 # this should be the profile uuid!
@@ -3612,6 +3622,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 menu_items = self.getMenuContent(
                     menu_root.id, P2IM.ALL, start, end, filter
                 )
+
         menu = self.getTargetsMenuTUUID(target_id)
 
         if menu is None:
@@ -3641,9 +3652,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         return menu_items
 
-    def countBootMenu(self, target_id, _type, filter):
+    def countBootMenu(self, target_id, type, filter):
         count_items = 0
-        if _type == P2IT.COMPUTER:
+        if type == P2IT.COMPUTER:
             profile = ComputerProfileManager().getComputersProfile(target_id)
             if profile is not None:
                 # this should be the profile uuid!
@@ -4242,11 +4253,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         entity.
         """
         session = create_session()
-        try:
-            ims_id = imaging_server_uuid.replace("UUID", "")
-        except:
-            ims_id = None
-
         entity = (
             session.query(Entity)
             .select_from(
@@ -4258,7 +4264,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             .filter(
                 and_(
                     or_(
-                        self.imaging_server.c.id == ims_id,
+                        self.imaging_server.c.id
+                        == imaging_server_uuid.replace("UUID", ""),
                         self.imaging_server.c.packageserver_uuid == imaging_server_uuid,
                     ),
                     self.imaging_server.c.associated == True,
