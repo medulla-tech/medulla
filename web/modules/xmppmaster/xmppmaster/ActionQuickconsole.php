@@ -30,11 +30,11 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     //$machine      = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
     $jid  = isset($_GET['jid']) ? $_GET['jid'] : ( isset($_POST['jid']) ? $_POST['jid'] : "");
     $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ?  xmlrpc_getjidMachinefromuuid( $uuid ) : $jid);
-    $cmdsend      = isset($_GET['customcmd']) ? $_GET['customcmd'] : $_POST['customcmd'];
-    $namecmd      = isset($_GET['namecmd']) ? $_GET['namecmd'] : $_POST['namecmd'];
-    $os           = isset($_GET['os']) ? $_GET['os'] : $_POST['os'];
-    $user         = isset($_GET['user']) ? $_GET['user'] : $_POST['user'];
-    $description  = isset($_GET['$description']) ? $_GET['$description'] : $_POST['$description'];
+    $cmdsend      = empty($_GET['customcmd']) ? $_GET['customcmd'] : $_POST['customcmd'];
+    $namecmd      = empty($_GET['namecmd']) ? $_GET['namecmd'] : $_POST['namecmd'];
+    $os           = empty($_GET['os']) ? $_GET['os'] : $_POST['os'];
+    $user         = empty($_GET['user']) ? $_GET['user'] : $_POST['user'];
+    $description  = empty($_GET['$description']) ? $_GET['$description'] : $_POST['$description'];
     $COMMANDID = xmlrpc_setCommand_qa($namecmd, $cmdsend, $user, "", $uuid, $os, $jid);
 
     $customqa = array();
@@ -43,7 +43,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     $customqa['os'] = $os;
     $customqa['description'] = $description;
     $customqa['namecmd'] = $namecmd;
-
+    $result = [];
     $machinegroup = array();
     $machinegroup = xmlrpc_getMachinefromuuid($uuid);
     if (safeCount($machinegroup) != 0 ){
@@ -51,6 +51,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         echo $os;
         if ( strpos(strtoupper($machinegroup['platform']), strtoupper($os)) !== false){
             // machine presente et os correct pour la QA
+
             $machineinfos = array_merge($_GET, $machinegroup,$customqa,$result);
             unset($machineinfos['picklekeypublic']);
             unset($machineinfos['urlguacamole']);
