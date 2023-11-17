@@ -735,7 +735,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         return q[0]
 
-    def getTargetMenu(self, uuid, type, session=None):
+    def getTargetMenu(self, uuid, _type, session=None):
         need_to_close_session = False
         if session is None:
             need_to_close_session = True
@@ -758,7 +758,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     ),
                 )
             )
-            .filter(and_(self.target.c.uuid == uuid, self.target.c.type == type))
+            .filter(and_(self.target.c.uuid == uuid, self.target.c.type == _type))
             .first()
         )  # there should always be only one!
         if need_to_close_session:
@@ -875,7 +875,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getMenuContent(
         self,
         menu_id,
-        type=P2IM.ALL,
+        _type=P2IM.ALL,
         start=0,
         end=-1,
         filter="",
@@ -925,7 +925,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             lang = self.__getLocLanguage(session, loc_id)
 
         q = []
-        if type == P2IM.ALL or type == P2IM.BOOTSERVICE:
+        if _type == P2IM.ALL or _type == P2IM.BOOTSERVICE:
             # we don't need the i18n trick for the menu name here
             I18n1 = sa_exp_alias(self.internationalization)
             I18n2 = sa_exp_alias(self.internationalization)
@@ -975,7 +975,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q1 = q1.order_by(self.menu_item.c.order).all()
             q1 = self.__mergeBootServiceInMenuItem(q1)
             q.extend(q1)
-        if type == P2IM.ALL or type == P2IM.IMAGE:
+        if _type == P2IM.ALL or _type == P2IM.IMAGE:
             # we don't need the i18n trick for the menu name here
             q2 = (
                 session.query(MenuItem)
@@ -996,7 +996,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q.extend(q2)
         if session_need_close:
             session.close()
-        q.sort(lambda x, y: cmp(x.order, y.order))
+        # q.sort(lambda x, y: cmp(x.order, y.order))
         return q
 
     def getLastMenuItemOrder(self, menu_id):
@@ -1017,13 +1017,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return q
 
-    def countMenuContent(self, menu_id, type=P2IM.ALL, filter=""):
-        if type == P2IM.ALL and filter == "":
+    def countMenuContent(self, menu_id, _type=P2IM.ALL, filter=""):
+        if _type == P2IM.ALL and filter == "":
             return self.countMenuContentFast(menu_id)
 
         session = create_session()
         q = 0
-        if type == P2IM.ALL or type == P2IM.BOOTSERVICE:
+        if _type == P2IM.ALL or _type == P2IM.BOOTSERVICE:
             q1 = (
                 session.query(MenuItem)
                 .add_entity(BootService)
@@ -1040,7 +1040,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 )
             ).count()
             q += q1
-        if type == P2IM.ALL or type == P2IM.IMAGE:
+        if _type == P2IM.ALL or _type == P2IM.IMAGE:
             q2 = (
                 session.query(MenuItem)
                 .add_entity(Image)
@@ -1102,17 +1102,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return n
 
     #####################
-    def __ImagingLogsOnTargetByIdAndType(self, session, target_id, type, filter):
+    def __ImagingLogsOnTargetByIdAndType(self, session, target_id, _type, filter):
         q = (
             session.query(ImagingLog)
             .add_entity(Target)
             .select_from(self.imaging_log.join(self.target))
         )
-        if type in [P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE]:
-            q = q.filter(self.target.c.type == type).filter(
+        if _type in [P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE]:
+            q = q.filter(self.target.c.type == _type).filter(
                 self.target.c.uuid == target_id
             )
-        elif type == P2IT.PROFILE:
+        elif _type == P2IT.PROFILE:
             # Need to get all computers UUID of the profile
             uuids = [
                 c.uuid for c in ComputerProfileManager().getProfileContent(target_id)
@@ -1121,7 +1121,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 self.target.c.uuid.in_(uuids)
             )
         else:
-            self.logger.error("type %s does not exists!" % type)
+            self.logger.error("type %s does not exists!" % _type)
             # to be sure we don't get anything, this is an error case!
             q = q.filter(self.target.c.type == 0)
         if filter != "":
@@ -1133,9 +1133,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             )
         return q
 
-    def getImagingLogsOnTargetByIdAndType(self, target_id, type, start, end, filter):
+    def getImagingLogsOnTargetByIdAndType(self, target_id, _type, start, end, filter):
         session = create_session()
-        q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, type, filter)
+        q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, _type, filter)
         q = q.order_by(desc(self.imaging_log.c.timestamp))
         if end != -1:
             q = q.offset(int(start)).limit(int(end) - int(start))
@@ -1145,9 +1145,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = self.__mergeTargetInImagingLog(q)
         return q
 
-    def countImagingLogsOnTargetByIdAndType(self, target_id, type, filter):
+    def countImagingLogsOnTargetByIdAndType(self, target_id, _type, filter):
         session = create_session()
-        q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, type, filter)
+        q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, _type, filter)
         q = q.count()
         session.close()
         return q
@@ -2345,9 +2345,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     #        iois = session.query(ImageOnImagingServer).filter(self.image_on_imaging_server.c.fk_image == image_id).first()
     #        image = session.query(Image).filter(self.image.c.id == image_id).first()
 
-    def countPossibleImagesOrMaster(self, target_uuid, type, filt):
+    def countPossibleImagesOrMaster(self, target_uuid, _type, filt):
         session = create_session()
-        q = self.__PossibleImages(session, target_uuid, type, filt)
+        q = self.__PossibleImages(session, target_uuid, _type, filt)
         q = q.count()
         session.close()
         return q
@@ -3200,7 +3200,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     ######################
 
-    def __TargetImagesQuery(self, session, target_uuid, type, filter):
+    def __TargetImagesQuery(self, session, target_uuid, _type, filter):
         q = session.query(Image).add_entity(MenuItem)
         q = q.select_from(
             self.image.join(self.image_on_imaging_server)
@@ -3221,13 +3221,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
         return q
 
-    def __TargetImagesNoMaster(self, session, target_uuid, type, filter):
-        q = self.__TargetImagesQuery(session, target_uuid, type, filter)
+    def __TargetImagesNoMaster(self, session, target_uuid, _type, filter):
+        q = self.__TargetImagesQuery(session, target_uuid, _type, filter)
         q.filter(self.image.c.is_master == False)
         return q
 
-    def __TargetImagesIsMaster(self, session, target_uuid, type, filter):
-        q = self.__TargetImagesQuery(session, target_uuid, type, filter)
+    def __TargetImagesIsMaster(self, session, target_uuid, _type, filter):
+        q = self.__TargetImagesQuery(session, target_uuid, _type, filter)
         q.filter(self.image.c.is_master)
         return q
 
@@ -3252,13 +3252,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
         return q
 
-    def __ImagesInEntityNoMaster(self, session, target_uuid, type, filter):
-        q = self.__ImagesInEntityQuery(session, target_uuid, type, filter)
+    def __ImagesInEntityNoMaster(self, session, target_uuid, _type, filter):
+        q = self.__ImagesInEntityQuery(session, target_uuid, _type, filter)
         q.filter(self.image.c.is_master == False)
         return q
 
-    def __ImagesInEntityIsMaster(self, session, target_uuid, type, filt):
-        q = self.__ImagesInEntityQuery(session, target_uuid, type, filt)
+    def __ImagesInEntityIsMaster(self, session, target_uuid, _type, filt):
+        q = self.__ImagesInEntityQuery(session, target_uuid, _type, filt)
         q.filter(self.image.c.is_master == False)
         return q
 
@@ -3612,9 +3612,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     ######################
-    def getBootMenu(self, target_id, type, start, end, filter):
+    def getBootMenu(self, target_id, _type, start, end, filter):
         menu_items = []
-        if type == P2IT.COMPUTER:
+        if _type == P2IT.COMPUTER:
             profile = ComputerProfileManager().getComputersProfile(target_id)
             if profile is not None:
                 # this should be the profile uuid!
@@ -3652,9 +3652,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         return menu_items
 
-    def countBootMenu(self, target_id, type, filter):
+    def countBootMenu(self, target_id, _type, filter):
         count_items = 0
-        if type == P2IT.COMPUTER:
+        if _type == P2IT.COMPUTER:
             profile = ComputerProfileManager().getComputersProfile(target_id)
             if profile is not None:
                 # this should be the profile uuid!
@@ -3687,8 +3687,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __moveItemInMenu(self, menu, mi_uuid, reverse=False):
         session = create_session()
         mis = self.getMenuContent(menu.id, P2IM.ALL, 0, -1, "", session)
-        if reverse:
-            mis.sort(lambda x, y: cmp(y.order, x.order))
+        # if reverse:
+        #     mis.sort(lambda x, y: cmp(y.order, x.order))
         move = False
         mod_mi = [None, None]
         for mi in mis:
@@ -4548,11 +4548,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return ret
 
-    def __createTarget(self, session, uuid, name, type, entity_id, menu_id, params):
+    def __createTarget(self, session, uuid, name, _type, entity_id, menu_id, params):
         target = Target()
         target.uuid = uuid
         target.name = name
-        target.type = type
+        target.type = _type
         if "choose_network" in params:
             target.nic_uuid = params["choose_network"]
         if "choose_network_profile" in params:
@@ -5354,14 +5354,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         return True
 
-    def setMyMenuTarget(self, uuid, params, type):
+    def setMyMenuTarget(self, uuid, params, _type):
         session = create_session()
-        menu = self.getTargetMenu(uuid, type, session)
+        menu = self.getTargetMenu(uuid, _type, session)
         location_id = None
         p_id = None
 
         if not menu:
-            if type == P2IT.COMPUTER:
+            if _type == P2IT.COMPUTER:
                 profile = ComputerProfileManager().getComputersProfile(uuid)
                 default_menu = None
                 if profile:
@@ -5373,7 +5373,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 else:
                     p_id = profile.id
                     location_id = None
-            elif type == P2IT.PROFILE:
+            elif _type == P2IT.PROFILE:
                 imaging_server = ComputerProfileManager().getProfileImagingServerUUID(
                     uuid
                 )
@@ -5393,7 +5393,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             else:
                 raise "%s:Don't know that type of target : %s" % (
                     P2ERR.ERR_DEFAULT,
-                    type,
+                    _type,
                 )
             menu = self.__duplicateMenu(session, default_menu, location_id, p_id)
             menu = self.__modifyMenu(id2uuid(menu.id), params, session)
@@ -5402,16 +5402,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             menu = self.__modifyMenu(id2uuid(menu.id), params, session)
 
         target = None
-        if not self.isTargetRegister(uuid, type, session):
+        if not self.isTargetRegister(uuid, _type, session):
             if location_id is None:
                 location = ComputerLocationManager().getMachinesLocations([uuid])
                 location_id = location[uuid]["uuid"]
             loc = self.getLinkedEntityByEntityUUID(location_id)
             target = self.__createTarget(
-                session, uuid, params["target_name"], type, loc.id, menu.id, params
+                session, uuid, params["target_name"], _type, loc.id, menu.id, params
             )
             # TODO : what do we do with target ?
-            if type == P2IT.PROFILE:
+            if _type == P2IT.PROFILE:
                 # need to create the targets for all the computers inside the profile
                 # and then create them an "empty" menu
                 # (ie : a menu with only the default_item* part)
