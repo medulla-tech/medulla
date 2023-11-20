@@ -63,7 +63,7 @@ if(isset($_GET['jid'])) {
     if(isset($_GET['agenttype']) && $_GET['agenttype'] != '') {
         echo "<h2>".$_GET['agenttype']." : ". $jidmachine."</h2>";
     } else {
-        echo "<h2>".$_GET['agenttype']." : ". $jidmachine."</h2>";
+        echo "<h2>". $jidmachine."</h2>";
     }
 } else {
     echo "<h2>"._T('Machine : ', 'xmppmaster'). $_GET['cn']." ( ".$_GET['os']." )"."</h2>";
