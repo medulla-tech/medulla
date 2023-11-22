@@ -3,6 +3,7 @@ Medulla 4.7.0
 * [FEATURE] Improved backup management using urbackup
 * [FEATURE] New OS Updates feature
 * [FEATURE] New Kiosk feature
+* [BUGFIX] Resize target.target_bcast field
 
 Medulla 4.6.11
 =============
