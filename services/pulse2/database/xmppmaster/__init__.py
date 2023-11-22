@@ -14402,9 +14402,7 @@ group by hostname
             .filter(
                 and_(
                     Up_history.id_machine.in_(idmachines),
-                    or_(
-                        Up_history.delete_date != None, Up_history.delete_date != 0
-                    ),
+                    or_(Up_history.delete_date != None, Up_history.delete_date != 0),
                 )
             )
             .join(Update_data, Up_history.update_id == Update_data.updateid)
