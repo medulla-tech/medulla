@@ -5530,7 +5530,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
         q = q.filter(
             or_(
-                self.post_install_script_on_imaging_server.c.fk_post_install_script == None,
+                self.post_install_script_on_imaging_server.c.fk_post_install_script
+                == None,
                 self.entity.c.uuid == pis_uuid,
             )
         )
@@ -5585,7 +5586,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             )
             q = q.filter(
                 or_(
-                    self.post_install_script_on_imaging_server.c.fk_post_install_script == None,
+                    self.post_install_script_on_imaging_server.c.fk_post_install_script
+                    == None,
                     self.entity.c.uuid == location,
                 )
             )
