@@ -482,15 +482,26 @@ class MscDatabase(msc.MscDatabase):
             if not targets and cmd_type == 2:
                 return cmd.getId()
             for atarget, target_name, ascheduler in targets_to_insert :
+                _target_macaddr = list(set([element for element in atarget["target_macaddr"].split("||") if element != ""]))
+                _target_bcast = list(set([element for element in atarget["target_bcast"].split("||") if element != ""]))
+                _target_ipaddr = list(set([element for element in atarget["target_ipaddr"].split("||") if element != ""]))
+                _target_network = list(set([element for element in atarget["target_network"].split("||") if element != ""]))
+
+                target_macaddr = "||".join(_target_macaddr)
+                target_bcast = "||".join(_target_bcast)
+                target_ipaddr = "||".join(_target_ipaddr)
+                target_network = "||".join(_target_network)
+
                 target = Target()
-                target.target_macaddr = atarget["target_macaddr"]
+                target.target_macaddr = target_macaddr
                 target.id_group = atarget["id_group"]
                 target.target_uuid = atarget["target_uuid"]
-                target.target_bcast = atarget["target_bcast"]
+                target.target_bcast = target_bcast
                 target.target_name = atarget["target_name"]
-                target.target_ipaddr = atarget["target_ipaddr"]
+                target.target_ipaddr = target_ipaddr
                 target.mirrors = atarget["mirrors"]
-                target.target_network = atarget["target_network"]
+                target.target_network = target_network
+
                 session.add(target)
                 session.flush()
                 if hasattr(session, "refresh") :
@@ -890,15 +901,25 @@ class MscDatabase(msc.MscDatabase):
             session.begin()
 
             for atarget, target_name, ascheduler in targets_to_insert :
+                _target_macaddr = list(set([element for element in atarget["target_macaddr"].split("||") if element != ""]))
+                _target_bcast = list(set([element for element in atarget["target_bcast"].split("||") if element != ""]))
+                _target_ipaddr = list(set([element for element in atarget["target_ipaddr"].split("||") if element != ""]))
+                _target_network = list(set([element for element in atarget["target_network"].split("||") if element != ""]))
+
+                target_macaddr = "||".join(_target_macaddr)
+                target_bcast = "||".join(_target_bcast)
+                target_ipaddr = "||".join(_target_ipaddr)
+                target_network = "||".join(_target_network)
+
                 target = Target()
-                target.target_macaddr = atarget["target_macaddr"]
+                target.target_macaddr = target_macaddr
                 target.id_group = atarget["id_group"]
                 target.target_uuid = atarget["target_uuid"]
-                target.target_bcast = atarget["target_bcast"]
+                target.target_bcast = target_bcast
                 target.target_name = atarget["target_name"]
-                target.target_ipaddr = atarget["target_ipaddr"]
+                target.target_ipaddr = target_ipaddr
                 target.mirrors = atarget["mirrors"]
-                target.target_network = atarget["target_network"]
+                target.target_network = target_network
 
                 session.add(target)
                 session.flush()
