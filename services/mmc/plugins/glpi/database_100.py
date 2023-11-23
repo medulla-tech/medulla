@@ -1741,14 +1741,17 @@ class Glpi100(DyngroupDatabaseHelper):
                 date_mod = filt["date"]["date_mod"]
                 value = filt["date"]["value"]
 
-                if "green" in value:
-                    query = query.filter(date_mod > state["orange"])
-                if "orange" in value:
-                    query = query.filter(
-                        and_(date_mod < state["orange"], date_mod > state["red"])
-                    )
-                if "red" in value:
-                    query = query.filter(date_mod < state["red"])
+                if date_mod is not None:
+                    if "green" in value:
+                        query = query.filter(date_mod > state["orange"])
+                    if "orange" in value:
+                        query = query.filter(
+                            and_(date_mod < state["orange"], date_mod > state["red"])
+                        )
+                    if "red" in value:
+                        query = query.filter(date_mod < state["red"])
+                else:
+                    pass
 
             if "antivirus" in filt:
                 if filt["antivirus"] == "green":
@@ -2138,7 +2141,7 @@ class Glpi100(DyngroupDatabaseHelper):
         date_mod = self.machine.c.date_mod
         if self.fusionagents is not None:
             last_contact_date = session.query(self.fusionagents.c.last_contact).first()
-            date_mod = last_contact_date[0]
+            date_mod = last_contact_date[0] if last_contact_date is not None else None
 
         for value in ["green", "orange", "red"]:
             # This loop instanciate self.filt_green,
