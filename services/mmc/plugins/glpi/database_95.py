@@ -5805,7 +5805,7 @@ class Glpi95(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_count_installed_updates_by_machines(self, session, ids):
-        ids = "(%s)"%','.join([id for id in ids]).replace("UUID" , "")
+        ids = "(%s)"%','.join([id for id in ids if id != ""]).replace("UUID" , "")
 
         sql = """select
     glpi_computers.id as id,
