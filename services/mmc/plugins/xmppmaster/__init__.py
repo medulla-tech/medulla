@@ -1124,20 +1124,100 @@ def xmpp_get_info_synchro_packageid(uuidpackage):
 
 
 def get_agent_descriptor_base():
-    return ObjectXmpp().Update_Remote_Agentlist
+    # Sending IQ request and data reception
+    data = ObjectXmpp().iqsendpulse('rspulse@pulse/mainrelay',
+        {"action": "remotexmppmonitoring", "data": "agentinfos"}, 300)
+
+    result = json.loads(data)
+
+    if 'result' in result:
+        resultdata = zlib.decompress(base64.b64decode(result["result"]))
+        resultdata_str = resultdata.decode('utf-8')
+        resultdata = json.loads(resultdata_str)
+
+        logger.error("Voilà resultdata dans get_agent_descriptor_base %s" % str(resultdata))
+
+        agent_descriptor = resultdata.get("agentdescriptor", "{}")
+        pathagent = resultdata.get("pathagent", "")
+
+        if isinstance(agent_descriptor, str):
+            agent_descriptor = json.loads(agent_descriptor)
+
+        lib_agent_sorted = {k: agent_descriptor['lib_agent'][k] for k in sorted(agent_descriptor.get("lib_agent", {}), key=lambda x: (x.startswith('__'), x))}
+
+        new_structure = {
+            "autoupdate": True,
+            "directory": {
+                "program_agent": agent_descriptor.get("program_agent", {}),
+                "version": agent_descriptor.get("version", ""),
+                "version_agent": agent_descriptor.get("version_agent", ""),
+                "lib_agent": lib_agent_sorted,
+                "script_agent": agent_descriptor.get("script_agent", {}),
+                "fingerprint": agent_descriptor.get("fingerprint", ""),
+            },
+            "dir_agent_base": pathagent
+        }
+
+        return new_structure
+    else:
+        logger.error("The 'Result' key is missing in the result. Check the logs of the agent.")
+        return {}
 
 
 def get_plugin_lists():
-    pluginlist = {}
-    for t in ObjectXmpp().plugindata:
-        pluginlist[t] = [
-            ObjectXmpp().plugindata[t],
-            ObjectXmpp().plugintype[t],
-            ObjectXmpp().pluginagentmin[t],
-        ]
+    base_plugin_path = os.path.join("/","var","lib","pulse2","xmpp_baseplugin")
+    files = []
+    _files = []
+    plugins = {}
+    for _, dir, _files in os.walk(base_plugin_path):
+        if dir != "__pycache__":
+            # remove "plugin_" and ".py" from the name
+            files = [file[7:-3] for file in _files if file.endswith('.py')]
+            break
 
-    result = [pluginlist, ObjectXmpp().plugindatascheduler]
-    return result
+    for file in files:
+        meta = {}
+
+        with open(os.path.join(base_plugin_path, "plugin_%s.py"%file), 'r') as plugin_fb:
+            line = ""
+            while line.startswith("plugin = ") is False:
+                line = plugin_fb.readline()
+                line = line.split('#')[0]
+            try:
+                meta = json.loads(line.replace("plugin =", ""))
+            except:
+                pass
+            plugins[file] = [meta['VERSION'], meta['TYPE'], meta['VERSIONAGENT'] if 'VERSIONAGENT' in meta else "0.0.0"]
+            plugin_fb.close()
+
+    base_pluginscheduler_path = os.path.join("/","var","lib","pulse2","xmpp_basepluginscheduler")
+    pluginsscheduled = {}
+    for _, dir, _files in os.walk(base_pluginscheduler_path):
+        if dir != "__pycache__":
+            # remove "plugin_" and ".py" from the name
+            files = [file[0:-3] for file in _files if file.endswith('.py')]
+            break
+
+    for file in files:
+        meta = {}
+        with open(os.path.join(base_pluginscheduler_path, "%s.py"%file), 'r') as plugin_fb:
+            line = ""
+            while line.startswith("plugin = ") is False:
+                line = plugin_fb.readline()
+                line = line.split('#')[0]
+            try:
+                meta = json.loads(line.replace("plugin = ", ""))
+            except Exception as e:
+                meta = eval(line.replace("plugin = ", ""))
+
+            pluginsscheduled[file] = meta['VERSION']
+            plugin_fb.close()
+
+    # Sorting of plugins in alphabetical order
+    sorted_base_plugins = {k: plugins[k] for k in sorted(plugins, key=lambda x: (x.startswith('__'), x))}
+    sorted_pluginsscheduled = {k: pluginsscheduled[k] for k in sorted(pluginsscheduled)}
+
+    return [sorted_base_plugins, sorted_pluginsscheduled, base_plugin_path]
 
 
 def get_conf_master_agent():

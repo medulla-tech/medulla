@@ -30,6 +30,20 @@ textarea {
     margin:auto;   /* exemple pour centrer */
     display:block; /* pour effectivement centrer ! */
 }
+table {
+  width: 100%;
+}
+td, th {
+    vertical-align: top;
+    width: 33.33%;
+    padding: 5px;
+}
+td li {
+  margin-bottom: 2px;
+}
+td ul {
+  padding-left: 10px;
+}
 </style>
 
 
@@ -63,7 +77,7 @@ switch($_GET['information']) {
         }
         echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
         echo _T('BATTERY', 'xmppmaster')."\n";
-        foreach($re[result] as $datareseau) {
+        foreach($re["result"] as $datareseau) {
             echo $datareseau;
             echo "\n";
         }
@@ -78,7 +92,7 @@ switch($_GET['information']) {
 
         echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
         echo _T('WIN SERVICES', 'xmppmaster')."\n";
-        foreach($re[result] as $datareseau) {
+        foreach($re["result"] as $datareseau) {
             echo $datareseau;
             echo "\n";
         }
@@ -120,7 +134,7 @@ switch($_GET['information']) {
         }
         echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
         echo _T('SENSORS FANS', 'xmppmaster')."\n";
-        foreach($re[result] as $datareseau) {
+        foreach($re["result"] as $datareseau) {
             echo $datareseau;
             echo "\n";
         }
@@ -134,7 +148,7 @@ switch($_GET['information']) {
         }
         echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
         echo _T('MEMORY USAGE', 'xmppmaster')."\n";
-        foreach($re[result] as $datareseau) {
+        foreach($re["result"] as $datareseau) {
             echo $datareseau;
             echo "\n";
         }
@@ -148,7 +162,7 @@ switch($_GET['information']) {
         }
         echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
         echo _T('NETWORK INTERFACE', 'xmppmaster')."\n";
-        foreach($re[result] as $datareseau) {
+        foreach($re["result"] as $datareseau) {
             echo $datareseau;
             echo "\n";
         }
@@ -162,7 +176,7 @@ switch($_GET['information']) {
         }
         echo "<pre style='font-family: Consolas, \"Liberation Mono\", Courier, monospace, sans-serif; font-size: 12px; '>";
         echo _T('CPU NUM', 'xmppmaster')."\n";
-        foreach($re[result] as $datareseau) {
+        foreach($re["result"] as $datareseau) {
             echo $datareseau;
             echo "\n";
         }
@@ -273,8 +287,8 @@ switch($_GET['information']) {
     case 'agentinfos':
         $lp = xmlrpc_get_plugin_lists();
         $descriptor_base = xmlrpc_get_agent_descriptor_base();// search descriptor agent local
-        $confx = xmlrpc_get_conf_master_agent();//search configuration of agent master local
-        $confxmppmaster = json_decode($confx, true);
+        // $confx = xmlrpc_get_conf_master_agent();//search configuration of agent master local
+        // $confxmppmaster = json_decode($confx, true);
         #### self.diragentbase
         $re =  xmlrpc_remoteXmppMonitoring("agentinfos", $jidmachine, 15);//search information machine distante.
         if ($re == "") {
@@ -285,13 +299,6 @@ switch($_GET['information']) {
             $re = json_decode($re, true);
         }
 
-        //                 echo "<pre>";
-        //                     //print_r($descriptor_base);
-        //                     // print_r($confxmppmaster);
-        //                     //print_r($re);
-        //                     //print_r($lp);
-        //                 echo "</pre>";
-        //print_r($re);
         echo "<table>";
         echo "<tr>";
         echo "<td>";
@@ -404,7 +411,7 @@ switch($_GET['information']) {
         echo "</tr>";
         echo "<tr>";
         echo "<td>";
-        echo $confxmppmaster['diragentbase'];
+        echo (isset($lp[2])) ? $lp[2] : '';
         echo "</td>";
         echo "<td>";
         echo (isset($re['pathagent'])) ? $re['pathagent'] : '';
