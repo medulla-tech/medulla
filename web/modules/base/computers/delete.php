@@ -91,7 +91,7 @@ if (isset($_POST["bconfirm"])) {
         exit;
         }
     }
-} else {
+else {
     $uuid = urldecode($_GET["objectUUID"]);
     $f = new PopupForm(_("Delete this computer"));
     $f->push(new Table());
