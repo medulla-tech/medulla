@@ -4736,6 +4736,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         # q1 =  [[z.uuid, z.name,z.nic_uuid] for z in q]
         return q1
 
+    def getMenubylocation(self, location):
+        session = create_session()
+        ret = session.query(self.target.c.uuid)\
+                            .select_from(
+                                    self.target.join(self.menu,
+                                                     self.menu.c.id == self.target.c.fk_menu)\
+                                    .join(self.entity, self.target.c.fk_entity == self.entity.c.id))\
+                .filter(and_(not_(self.target.c.uuid.contains("DELETED")),
+                             self.entity.c.uuid == location)).distinct().all()
+
+        result=[]
+        for element in ret:
+            result.append(element.uuid)
+        session.close()
+        return result
+
     def __getSynchroStates(self, uuids, target_type, session):
         q = session.query(SynchroState).add_entity(Menu)
         q = q.select_from(

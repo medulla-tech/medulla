@@ -188,6 +188,10 @@ function xmlrpc_resetComputerBootMenu($uuid) {
     return xmlCall("imaging.resetComputerBootMenu", array($uuid));
 }
 
+function xmlrpc_resetComputerBootMenus($uuid) {
+    return xmlCall("imaging.resetComputerBootMenus", array($uuid));
+}
+
 function xmlrpc_getProfileNetworks($uuid) {
     return xmlCall("imaging.getProfileNetworks", array($uuid));
 }
@@ -222,6 +226,10 @@ function xmlrpc_getCustomMenuCountdashboard($location) {
 
 function xmlrpc_getCustomMenubylocation($location) {
     return xmlCall("imaging.getCustomMenubylocation", array($location));
+}
+
+function xmlrpc_getMenusbylocation($location){
+    return xmlCall("imaging.getMenubylocation", [$location]);
 }
 
 function xmlrpc_getTargetsByCustomMenuInEntity($location, $custom_menu = 1) {
