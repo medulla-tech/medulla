@@ -47,10 +47,6 @@ else if(!empty($_GET['machineid'])) {
     $params = ["machineid"=>$id, "cn"=>$cn, "inventoryid"=>$inventoryid];
     $p = new PageGenerator(_T(sprintf("Updates on machine %s", $cn)));
 }
-else{
-    $p = new PageGenerator(_T(sprintf("Updates ", )));
-
-}
 
 $p->setSideMenu($sidemenu);
 $p->display();
