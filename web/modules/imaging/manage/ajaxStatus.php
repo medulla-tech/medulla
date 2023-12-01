@@ -285,6 +285,8 @@ padding:5px;
                 </p>
                 </div>
             </p>
+            <?php $url = urlStrRedirect("imaging/manage/groupimgtabs",["location"=>$location, "reset_defaultMenu"=>1, "target"=>"all"]);?>
+            <p><a href="<?php echo $url ;?>"><?php echo _T("Reset all menu imaging from this entity", "imaging");?></a></p>
         </div>
     </div>
 

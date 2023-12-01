@@ -205,6 +205,13 @@ class ImagingRpcProxy(RpcProxyI):
         """
         return ImagingDatabase().getTargetsByCustomMenuInEntity(loc_uuid, custom_menu)
 
+    def resetComputerBootMenus(self, uuids):
+        result = True
+        for uuid in uuids:
+            result = result and self.resetComputerBootMenu(uuid)
+
+        return result
+
     def resetComputerBootMenu(self, uuid):
         """
         restore default location boot menu for a host
@@ -2111,6 +2118,9 @@ class ImagingRpcProxy(RpcProxyI):
 
     def getCustomMenubylocation(self, location):
         return ImagingDatabase().getCustomMenubylocation(location)
+
+    def getMenubylocation(self, location):
+        return ImagingDatabase().getMenubylocation(location)
 
     def getComputerSynchroState(self, uuid):
         """ see getTargetSynchroState """
