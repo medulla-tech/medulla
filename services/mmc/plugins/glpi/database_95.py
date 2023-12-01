@@ -5814,7 +5814,7 @@ class Glpi95(DyngroupDatabaseHelper):
 from glpi_computers
 join glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.items_id
 join glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_items_softwareversions.softwareversions_id
-WHERE glpi.glpi_softwares.name LIKE "Update (KB%%"
+WHERE glpi.glpi_softwares.name LIKE "%%KB%%"
 and glpi_computers.id in %s group by glpi_computers.id;"""%(ids)
 
         datas = session.execute(sql)
