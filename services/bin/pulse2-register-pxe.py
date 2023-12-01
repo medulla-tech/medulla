@@ -571,8 +571,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
                     logging.getLogger().error("MAC address error %s" % str(e))
             except Exception as e:
                 traceback.print_exc(file=logoutput)
-                logging.getLogger().error("Error traitement file %s" % str(name))
-                logging.getLogger().error("Error traitement %s" % str(e))
+                logging.getLogger().error("Error extract file name %s" % str(name))
+                logging.getLogger().error("Error extract code error %s" % str(e))
 
 
 class watchInventory:

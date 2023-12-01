@@ -43,8 +43,8 @@ class ComputersOnlinePanel extends Panel
         $machines_online = $counts['total_online'];
         $machines_offline = $counts['total_offline'];
 
-        $online_text = _T("Machines online", "dashboard")." : ";
-        $offline_text = _T("Machines offline", "dashboard")." : ";
+        $online_text = _T("Machines online","dashboard")." : ";
+        $offline_text = _T("Machines offline","dashboard")." : ";
 
         echo <<< ONLINE
           <div id="computersonline-graph"></div>

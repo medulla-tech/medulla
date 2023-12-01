@@ -6838,7 +6838,7 @@ class Glpi95(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_count_installed_updates_by_machines(self, session, ids):
-        ids = "(%s)" % ",".join([id for id in ids]).replace("UUID", "")
+        ids = "(%s)" % ",".join([id for id in ids if id != ""]).replace("UUID", "")
 
         sql = """select
     glpi_computers.id as id,
@@ -6847,7 +6847,7 @@ class Glpi95(DyngroupDatabaseHelper):
 from glpi_computers
 join glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.items_id
 join glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_items_softwareversions.softwareversions_id
-WHERE glpi.glpi_softwares.name LIKE "Update (KB%%"
+WHERE glpi.glpi_softwares.name LIKE "%%KB%%"
 and glpi_computers.id in %s group by glpi_computers.id;""" % (
             ids
         )
