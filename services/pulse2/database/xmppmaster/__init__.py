@@ -11961,6 +11961,7 @@ where
 
         sub = session.query(Machines.id)\
         .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id).filter(Glpi_entity.glpi_id == entity)\
+        .join(Up_machine_windows, Up_machine_windows.id_machine == Machines.id)\
         .outerjoin(Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id)\
         .outerjoin(Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id)\
         .filter(or_(Up_gray_list.valided == 1, Up_white_list.valided == 1))
@@ -12045,9 +12046,9 @@ where
 
             for element in result['datas']:
                 if element['update_id'] in pkgs_list:
-                    element["pkgs_label"] = pkgs_list[element['update_id']]["label"]
-                    element["pkgs_version"] = pkgs_list[element['update_id']]["version"]
-                    element["pkgs_description"] = pkgs_list[element['update_id']]["description"]
+                    element["pkgs_label"] = pkgs_list[element['update_id']]["label"] if "label" in pkgs_list[element['update_id']] else ""
+                    element["pkgs_version"] = pkgs_list[element['update_id']]["version"] if "version" in pkgs_list[element['update_id']] else ""
+                    element["pkgs_description"] = pkgs_list[element['update_id']]["description"] if "description" in pkgs_list[element['update_id']] else ""
         return result
 
     @DatabaseHelper._sessionm
