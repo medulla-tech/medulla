@@ -40,19 +40,19 @@ $namelocation = xmlrpc_getLocationName(getCurrentLocation());
 $gg = xmlrpc_getCustomMenubylocation($location);
 
 if (in_array("glpi", $_SESSION['supportModList'])) {
-    foreach ($gg as &$entry){
-        $computersummary=getLastMachineGlpiPart($entry[0], 'Summary', 0, -1, "", []);
-        foreach ($computersummary[0] as $val){
-            switch($val[0]){
+    foreach ($gg as &$entry) {
+        $computersummary = getLastMachineGlpiPart($entry[0], 'Summary', 0, -1, "", []);
+        foreach ($computersummary[0] as $val) {
+            switch($val[0]) {
                 case "Computer Name":
-                    $entry['realname']=$val[1][2];
+                    $entry['realname'] = $val[1][2];
                     break;
                 case "Entity (Location)":
-                        $entry['newlocation']=$val[1];
-                        break;
+                    $entry['newlocation'] = $val[1];
+                    break;
                 case "os image":
-                        $entry['OS'] = $val[1];
-                        break;
+                    $entry['OS'] = $val[1];
+                    break;
                 case "Domain":
                     $entry['Domain']  = $val[1];
                     break;
@@ -61,7 +61,7 @@ if (in_array("glpi", $_SESSION['supportModList'])) {
                     $entry['ServicePack']  = $val[1];
                     break;
                 case "Model / Type":
-                    $part = explode("/",$val[1] );
+                    $part = explode("/", $val[1]);
                     $entry['Model']  = $part[0];
                     $entry['type']  = $part[0];
                     break;
@@ -72,7 +72,7 @@ if (in_array("glpi", $_SESSION['supportModList'])) {
 }
 
 
-$dede= xmlrpc_getComputersWithImageInEntity(getCurrentLocation());
+$dede = xmlrpc_getComputersWithImageInEntity(getCurrentLocation());
 
 
 //$ffffff = xmlrpc_getMyMenuProfile(58);
@@ -129,50 +129,47 @@ padding:5px;
             <h3 style="display: inline"><?php echo _T('Synchronization state', 'imaging') ?> : </h3>
         <?php
         $led = new LedElement('green');
-        $led->display();
-        echo "&nbsp;" . _T("Up-to-date", "imaging");
-        ?>
+    $led->display();
+    echo "&nbsp;" . _T("Up-to-date", "imaging");
+    ?>
 
         </div>-->
         <div class="status_block">
-            <?php //<a href=" echo urlStrRedirect("imaging/imaging/createCustomMenuStaticGroup"); &location=UUID1">ZZZ</a> ?>
+            <?php //<a href=" echo urlStrRedirect("imaging/imaging/createCustomMenuStaticGroup"); &location=UUID1">ZZZ</a>?>
             <h3><?php echo _T('Stats', 'imaging') ?> <?php echo _T('Entity', 'imaging') ?> <?php echo $namelocation; ?>  </h3>
 
             <p class="stat">
-            <? $urlRedirect = urlStrRedirect("imaging/manage/creategroupcustonmenu")."&location=".$location; ?>
-            <? $urlRedirectgroupimaging = urlStrRedirect("imaging/manage/creategroupcustonmenuimaging")."&location=".$location; ?>
+            <?php $urlRedirect = urlStrRedirect("imaging/manage/creategroupcustonmenu")."&location=".$location; ?>
+            <?php $urlRedirectgroupimaging = urlStrRedirect("imaging/manage/creategroupcustonmenuimaging")."&location=".$location; ?>
                 <img src="img/other/machine_down.svg" width="25" height="25" /> <strong>
                 <?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?>
                 <?php
-                    if (intval($customMenu_count) > 0){
-                        echo "(".$customMenu_count;
-                        echo' <a class="info" href="#" id="boutoninformation1" class="lienstylebouton">';
-                        echo _T("with custom menu", "imaging");
-                        echo '
+                if (intval($customMenu_count) > 0) {
+                    echo "(".$customMenu_count;
+                    echo' <a class="info" href="#" id="boutoninformation1" class="lienstylebouton">';
+                    echo _T("with custom menu", "imaging");
+                    echo '
                         <span>Computer list with custom menu for entity '. $namelocation.'<br>';
-                            $i=0;
-                            foreach ($gg as $entry){
-                                if (in_array("glpi", $_SESSION['supportModList'])) {
-                                    if ($entry[1] != $entry['realname']){
-                                        echo "[ ". $entry[1]."(".$entry['realname'].") ]";
-                                    }
-                                    else{
-                                        echo "[". $entry[1]."]";
-                                    }
-                                }
-                                else{
-                                    echo "[". $entry[1]."]";
-                                }
-                                    if ($i == 5){
-                                            echo "<br>";
-                                            $i=0;
-                                        }
-                                        else {
-                                            echo " ";
-                                        }
-                                        $i++;
+                    $i = 0;
+                    foreach ($gg as $entry) {
+                        if (in_array("glpi", $_SESSION['supportModList'])) {
+                            if ($entry[1] != $entry['realname']) {
+                                echo "[ ". $entry[1]."(".$entry['realname'].") ]";
+                            } else {
+                                echo "[". $entry[1]."]";
                             }
-                            echo '
+                        } else {
+                            echo "[". $entry[1]."]";
+                        }
+                        if ($i == 5) {
+                            echo "<br>";
+                            $i = 0;
+                        } else {
+                            echo " ";
+                        }
+                        $i++;
+                    }
+                    echo '
                         </span>
                     </a>';
                     echo '<a  href="'. $urlRedirect .'">';
@@ -184,74 +181,69 @@ padding:5px;
 
                     echo '<div id="popupinformation1" title="Custom Menu">';
                     echo '<p>';
-                            foreach ($gg as $entry){
-                                if (in_array("glpi", $_SESSION['supportModList'])) {
-                                    $param  = array();
-                                    $param['tab']='tabbootmenu';
-                                    $param['hostname']=$entry['realname'];
-                                    $param['uuid']=$entry[0];
-                                    $param['type']='';
-                                    $param['target_uuid']=$entry[0];
-                                    $param['target_name']=$entry['realname'];
+                    foreach ($gg as $entry) {
+                        if (in_array("glpi", $_SESSION['supportModList'])) {
+                            $param  = array();
+                            $param['tab'] = 'tabbootmenu';
+                            $param['hostname'] = $entry['realname'];
+                            $param['uuid'] = $entry[0];
+                            $param['type'] = '';
+                            $param['target_uuid'] = $entry[0];
+                            $param['target_name'] = $entry['realname'];
 
-                                    $urlRedirect = urlStrRedirect("base/computers/imgtabs",$param);
-                                    if ( $entry['newlocation'] == $entry['creationEntity']){
-                                        echo '<a href="'.$urlRedirect.'">'.'Boot menu '.$entry['realname'].'</a>';
-                                    }
-                                    else
-                                    {
-                                    echo  '<a href="'.$urlRedirect.'">'.'Warning Name ('. $entry['1'].' to '.$entry['realname'].') and entity ('.$entry['creationEntity'].' to '.$entry['newlocation'].')'.'</a>';
-                                    }
-                                }
-                                else
-                                {
-                                    $param  = array();
-                                    $param['tab']='tabbootmenu';
-                                    $param['hostname']=$entry[1];
-                                    $param['uuid']=$entry[0];
-                                    $param['type']='';
-                                    $param['target_uuid']=$entry[0];
-                                    $param['target_name']=$entry[1];
-                                    $urlRedirect = urlStrRedirect("base/computers/imgtabs",$param);
-                                    echo '<a href="'.$urlRedirect.'">'.'Boot menu '.$entry['realname'].'</a>';
-                                }
+                            $urlRedirect = urlStrRedirect("base/computers/imgtabs", $param);
+                            if ($entry['newlocation'] == $entry['creationEntity']) {
+                                echo '<a href="'.$urlRedirect.'">'.'Boot menu '.$entry['realname'].'</a>';
+                            } else {
+                                echo  '<a href="'.$urlRedirect.'">'.'Warning Name ('. $entry['1'].' to '.$entry['realname'].') and entity ('.$entry['creationEntity'].' to '.$entry['newlocation'].')'.'</a>';
+                            }
+                        } else {
+                            $param  = array();
+                            $param['tab'] = 'tabbootmenu';
+                            $param['hostname'] = $entry[1];
+                            $param['uuid'] = $entry[0];
+                            $param['type'] = '';
+                            $param['target_uuid'] = $entry[0];
+                            $param['target_name'] = $entry[1];
+                            $urlRedirect = urlStrRedirect("base/computers/imgtabs", $param);
+                            echo '<a href="'.$urlRedirect.'">'.'Boot menu '.$entry['realname'].'</a>';
                         }
+                    }
                     echo '</p>';
                     echo '</div>';
                     echo '<div id="popupconfirmationgroup" title="Attention !">
                         <p>The creation of an imaging group will reset the boot menus of all the machines in the group?</p>
                     </div>  ';
-                echo '</p>';
-            }
-            ?>
+                    echo '</p>';
+                }
+    ?>
             <p class="stat">
                 <img src="img/other/machine_down.svg" width="25" height="25" />
                 <strong>
                     <?php echo $short_status['rescue']; ?>
                 </strong>/<?php echo $short_status['total']; ?>
                     <?php
-                        if (intval($short_status['rescue']) <= 0){
-                            $text = _T("client have rescue image", "imaging");
-                            echo $text;
+                if (intval($short_status['rescue']) <= 0) {
+                    $text = _T("client have rescue image", "imaging");
+                    echo $text;
+                } else {
+                    $text = _T("client(s) have rescue image(s)", "imaging");
+                    echo '<a  class="info" href="#" id="boutoninformation" class="lienstylebouton">'.$text;
+                    echo '<span>';
+                    echo '<strong>Clients with rescue images:</strong><br>';
+                    foreach ($dede as $val) {
+                        if (intval($val[3]) == 0) {
+                            echo 'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."<br>";
                         }
-                        else{
-                            $text = _T("client(s) have rescue image(s)", "imaging");
-                            echo '<a  class="info" href="#" id="boutoninformation" class="lienstylebouton">'.$text;
-                            echo '<span>';
-                            echo '<strong>Clients with rescue images:</strong><br>';
-                            foreach ( $dede as $val){
-                                if ( intval($val[3]) == 0){
-                                    echo 'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."<br>";
-                                }
-                            }
-                            echo '</span>';
-                            echo '</a>';
-                        }
-                    ?>
+                    }
+                    echo '</span>';
+                    echo '</a>';
+                }
+    ?>
             </p>
             <p class="stat">
                 <img src="img/other/diskimage.svg" width="25" height="25" />
-                <? echo '<a href="'.'main.php?module=imaging&submod=manage&action=master'.'"'; ?>
+                <?php echo '<a href="'.'main.php?module=imaging&submod=manage&action=master'.'"'; ?>
                 <strong><?php echo $short_status['master']." "; ?></strong>
                 <?php echo _T("masters are available", "imaging").'</a>'; ?>
                 <!--
@@ -266,22 +258,22 @@ padding:5px;
                 <div id="popupinformation" title="client(s) have rescue image(s)">
                 <p>
 
-                <?
-                    foreach ( $dede as $val){
-                        if ( intval($val[3]) == 0){
-                            $parm=array();
-                            $parm['tab'] = 'tabimages';
-                            $parm['hostname'] = $val[1];
-                            $parm['uuid'] = $val[0];
-                            $parm['type'] = "";
-                            $parm['target_uuid'] = $val[0];
-                            $parm['target_name'] = $val[1];
-                            $parm['namee'] = "llllllllll";
-                            $urlRedirect = urlStrRedirect("base/computers/imgtabs",$parm);
-                            echo '<a href="'.$urlRedirect.'">'.'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."</a><br>";
-                        }
-                    }
-                ?>
+                <?php
+    foreach ($dede as $val) {
+        if (intval($val[3]) == 0) {
+            $parm = array();
+            $parm['tab'] = 'tabimages';
+            $parm['hostname'] = $val[1];
+            $parm['uuid'] = $val[0];
+            $parm['type'] = "";
+            $parm['target_uuid'] = $val[0];
+            $parm['target_name'] = $val[1];
+            $parm['namee'] = "llllllllll";
+            $urlRedirect = urlStrRedirect("base/computers/imgtabs", $parm);
+            echo '<a href="'.$urlRedirect.'">'.'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."</a><br>";
+        }
+    }
+    ?>
                 </p>
                 </div>
             </p>
@@ -438,55 +430,54 @@ padding:5px;
  -->
  <?php
  $resultdisplay1 = array();
-$scriptmulticast = 'multicast.sh';
-$path="/tmp/";
-$objprocess=array();
-$objprocess['location']=$_GET['location'];
+    $scriptmulticast = 'multicast.sh';
+    $path = "/tmp/";
+    $objprocess = array();
+    $objprocess['location'] = $_GET['location'];
 
-$objprocess['process'] = $path.$scriptmulticast;
-$objprocess['process'] = $scriptmulticast;
-$informationsparameters = xmlrpc_GetMulticastMultiSessionParameters($_GET['location']);
-if (safeCount($informationsparameters) == 0){
-    $objprocess['process'] = $scriptmulticast;
-    $objprocess['process'] = $scriptmulticast;
-    xmlrpc_stop_process_multicast ($objprocess);
     $objprocess['process'] = $path.$scriptmulticast;
-    xmlrpc_clear_script_multicast($objprocess);
-}
-else{
-    $tailleimagedisk=array();
-    $objprocess['gid'] = $informationsparameters['gid'];
-    $objprocess['uuidmaster'] = $informationsparameters['uuidmaster'];
-    $objprocess['itemlabel'] = $informationsparameters['itemlabel'];
-    $objprocess['path'] = $path;
-    $objprocess['scriptmulticast'] = $scriptmulticast;
-    $resultdisplay = get_object_vars(json_decode(xmlrpc_check_process_multicast_finish($objprocess)));
+    $objprocess['process'] = $scriptmulticast;
+    $informationsparameters = xmlrpc_GetMulticastMultiSessionParameters($_GET['location']);
+    if (safeCount($informationsparameters) == 0) {
+        $objprocess['process'] = $scriptmulticast;
+        $objprocess['process'] = $scriptmulticast;
+        xmlrpc_stop_process_multicast($objprocess);
+        $objprocess['process'] = $path.$scriptmulticast;
+        xmlrpc_clear_script_multicast($objprocess);
+    } else {
+        $tailleimagedisk = array();
+        $objprocess['gid'] = $informationsparameters['gid'];
+        $objprocess['uuidmaster'] = $informationsparameters['uuidmaster'];
+        $objprocess['itemlabel'] = $informationsparameters['itemlabel'];
+        $objprocess['path'] = $path;
+        $objprocess['scriptmulticast'] = $scriptmulticast;
+        $resultdisplay = get_object_vars(json_decode(xmlrpc_check_process_multicast_finish($objprocess)));
 
-    $arraytaille = get_object_vars($resultdisplay['sizeuser']);
-    foreach($resultdisplay['partitionlist'] as $dd){
-        $tailleimagedisk[]=$arraytaille[$dd];
-    }
-    $informationdisk = $resultdisplay['informations'];
-    foreach ( $resultdisplay['partitionlist'] as $partition ){
-        foreach($informationdisk as $valeur ){
-            $pos = strpos($valeur, $partition);
-            if  ($pos !== False && $pos == 0 ){
-                $resultdisplay1[$partition] =  explode(" ",$valeur);
+        $arraytaille = get_object_vars($resultdisplay['sizeuser']);
+        foreach($resultdisplay['partitionlist'] as $dd) {
+            $tailleimagedisk[] = $arraytaille[$dd];
+        }
+        $informationdisk = $resultdisplay['informations'];
+        foreach ($resultdisplay['partitionlist'] as $partition) {
+            foreach($informationdisk as $valeur) {
+                $pos = strpos($valeur, $partition);
+                if  ($pos !== false && $pos == 0) {
+                    $resultdisplay1[$partition] =  explode(" ", $valeur);
+                }
             }
         }
     }
-}
-$objprocess['process'] = $path.$scriptmulticast;
-if (xmlrpc_muticast_script_exist($objprocess)){
-echo '<script type="text/javascript">';
-echo 'var locations = "'.$_GET['location'].'";';
-echo 'var uuidmaster = "'.$informationsparameters['uuidmaster'].'";';
-echo 'var itemlabel = "'.$informationsparameters['itemlabel'].'";';
-echo 'var gid = "'.$informationsparameters['gid'].'";';
-echo 'var path = "'.$path.'";';
-echo 'var scriptmulticast = "'.$scriptmulticast.'";';
-echo 'var transfertbloctaille = 1024;';
-echo '
+    $objprocess['process'] = $path.$scriptmulticast;
+    if (xmlrpc_muticast_script_exist($objprocess)) {
+        echo '<script type="text/javascript">';
+        echo 'var locations = "'.$_GET['location'].'";';
+        echo 'var uuidmaster = "'.$informationsparameters['uuidmaster'].'";';
+        echo 'var itemlabel = "'.$informationsparameters['itemlabel'].'";';
+        echo 'var gid = "'.$informationsparameters['gid'].'";';
+        echo 'var path = "'.$path.'";';
+        echo 'var scriptmulticast = "'.$scriptmulticast.'";';
+        echo 'var transfertbloctaille = 1024;';
+        echo '
 function barprogress() {
         var request = jQuery.ajax({
             url: "modules/imaging/manage/ajaxcheckstatusmulticast.php",
@@ -520,104 +511,107 @@ function barprogress() {
         }
     });
 }';
-echo 'barprogress();';
+        echo 'barprogress();';
 
-echo'
+        echo'
 var interval = setInterval(barprogress,6000);
  </script>';
-    $charvaleur = array("+");//liste de caracteres remplacés dans le nom du  master
-    echo '
+        $charvaleur = array("+");//liste de caracteres remplacés dans le nom du  master
+        echo '
         <div class="status" id="checkprocess">
         <div class="status_block">  ';
-    // fichier /tmp/multicast.sh n'existe pas "ne pas afficher cadre Multicast Current Location"
-    $objprocess['process'] = $scriptmulticast;
-    if (xmlrpc_check_process_multicast($objprocess)){
-        // "affichage bouton arrêt"
-        // voir apres pour bar de progression
-        $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
+        // fichier /tmp/multicast.sh n'existe pas "ne pas afficher cadre Multicast Current Location"
+        $objprocess['process'] = $scriptmulticast;
+        if (xmlrpc_check_process_multicast($objprocess)) {
+            // "affichage bouton arrêt"
+            // voir apres pour bar de progression
+            $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
 
-        echo'<h3>'._T('Multicast Current Location', 'imaging').'</h3>';
-        echo  "Master : ".$nom_master."<br>";
-        echo '<form action="';
-        echo urlStr("imaging/manage/multicastaction/");
-        echo '" method="POST">';
-        echo '<input name="multicast"  type="hidden" value="stop" />';
-        echo '<input name="location"  type="hidden" value="'.$objprocess['location'].'" />';
-        echo '<input name="process"  type="hidden" value="'.$scriptmulticast.'" />';
-        echo '<input name="path" type="hidden" value="'.$path.'" />';
-        echo '<span style="display:none;" id="completespan">Complete</span>';
-        echo '<div id="complete">';
-        echo '<input name="bgo" type="submit" class="btnPrimary"
+            echo'<h3>'._T('Multicast Current Location', 'imaging').'</h3>';
+            echo  "Master : ".$nom_master."<br>";
+            echo '<form action="';
+            echo urlStr("imaging/manage/multicastaction/");
+            echo '" method="POST">';
+            echo '<input name="multicast"  type="hidden" value="stop" />';
+            echo '<input name="location"  type="hidden" value="'.$objprocess['location'].'" />';
+            echo '<input name="process"  type="hidden" value="'.$scriptmulticast.'" />';
+            echo '<input name="path" type="hidden" value="'.$path.'" />';
+            echo '<span style="display:none;" id="completespan">Complete</span>';
+            echo '<div id="complete">';
+            echo '<input name="bgo" type="submit" class="btnPrimary"
         value="';
-        echo _T("Stop multicast deploy", "imaging");
-        echo '" /> ';
-        echo '</div>';
-        echo '</form>';
-    }
-    else{
-        $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
-        echo "<h3>"._T('Multicast Current Location', 'imaging').'</h3>';
-        echo  "Master : ".$nom_master."<br>";
-        echo '<form action="';
-        echo urlStr("imaging/manage/multicastaction/"); echo '" method="POST">';
-        echo '<input name="multicast"  type="hidden" value="start" />';
-        echo '<input name="location"  type="hidden" value="'.$objprocess['location'].'" />';
-        echo '<input name="process"  type="hidden" value="'.$scriptmulticast.'" />';
-        echo '<input name="path" type="hidden" value="'.$path.'" />
+            echo _T("Stop multicast deploy", "imaging");
+            echo '" /> ';
+            echo '</div>';
+            echo '</form>';
+        } else {
+            $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
+            echo "<h3>"._T('Multicast Current Location', 'imaging').'</h3>';
+            echo  "Master : ".$nom_master."<br>";
+            echo '<form action="';
+            echo urlStr("imaging/manage/multicastaction/");
+            echo '" method="POST">';
+            echo '<input name="multicast"  type="hidden" value="start" />';
+            echo '<input name="location"  type="hidden" value="'.$objprocess['location'].'" />';
+            echo '<input name="process"  type="hidden" value="'.$scriptmulticast.'" />';
+            echo '<input name="path" type="hidden" value="'.$path.'" />
         <input name="bgo" type="submit" class="btnPrimary"
         value="';
-        echo _T("Start multicast deploy", "imaging");
-        echo '" />
+            echo _T("Start multicast deploy", "imaging");
+            echo '" />
         </form>';
-        echo "<br>";
-        echo '<form action="';
-        echo urlStr("imaging/manage/multicastaction/"); echo '" method="POST">';
-        echo '<input name="multicast"  type="hidden" value="clear" />';
-        echo '<input name="location"  type="hidden" value="'.$objprocess['location'].'" />';
-        echo '<input name="process"  type="hidden" value="'.$scriptmulticast.'" />';
-        echo '<input name="path" type="hidden" value="'.$path.'" />
+            echo "<br>";
+            echo '<form action="';
+            echo urlStr("imaging/manage/multicastaction/");
+            echo '" method="POST">';
+            echo '<input name="multicast"  type="hidden" value="clear" />';
+            echo '<input name="location"  type="hidden" value="'.$objprocess['location'].'" />';
+            echo '<input name="process"  type="hidden" value="'.$scriptmulticast.'" />';
+            echo '<input name="path" type="hidden" value="'.$path.'" />
         <input name="bgo" type="submit" class="btnPrimary"
         value="';
-        echo _T("Clear multicast deploy", "imaging");
-        echo '" />
+            echo _T("Clear multicast deploy", "imaging");
+            echo '" />
         </form>';
-            }
-        $index=0;
-        foreach ( $resultdisplay['partitionlist'] as $partition ){
-            echo "<p>";
-                $tailledisk = intval($resultdisplay1[$partition][1]) * 512;
-                $taillediskfMo =  round ($tailledisk /(1024*1024),2);
-                echo '<strong>'.$resultdisplay1[$partition][0].'</strong>'.
-                " Size [".$taillediskfMo." MB] ".
-                " Type [".$resultdisplay1[$partition][2] ."] ";
-                if (strcmp($resultdisplay1[$partition][3], "yes") == 1) echo "Bootable";
-                echo " Space in use [".round ($tailleimagedisk[$index] /(1024*1024),2)." MB]";
-                // Tranfer [";
-                //echo '<span id='. $partition  .'span>'.' 0</span> bytes]';
-                echo '<progress id="'.$partition.'" max="'.$tailleimagedisk[$index].'" value="0" form="form-id">0%</progress>';
-            echo "</p>";
-            $index=$index+1;
         }
-    echo'
+        $index = 0;
+        foreach ($resultdisplay['partitionlist'] as $partition) {
+            echo "<p>";
+            $tailledisk = intval($resultdisplay1[$partition][1]) * 512;
+            $taillediskfMo =  round($tailledisk / (1024 * 1024), 2);
+            echo '<strong>'.$resultdisplay1[$partition][0].'</strong>'.
+            " Size [".$taillediskfMo." MB] ".
+            " Type [".$resultdisplay1[$partition][2] ."] ";
+            if (strcmp($resultdisplay1[$partition][3], "yes") == 1) {
+                echo "Bootable";
+            }
+            echo " Space in use [".round($tailleimagedisk[$index] / (1024 * 1024), 2)." MB]";
+            // Tranfer [";
+            //echo '<span id='. $partition  .'span>'.' 0</span> bytes]';
+            echo '<progress id="'.$partition.'" max="'.$tailleimagedisk[$index].'" value="0" form="form-id">0%</progress>';
+            echo "</p>";
+            $index = $index + 1;
+        }
+        echo'
             </div>
         </div>';
-}else{
-    $objprocess['process'] = $scriptmulticast;
-    if (xmlrpc_check_process_multicast($objprocess)){
-        // if /tmp/multicast.sh is running then stoping
+    } else {
         $objprocess['process'] = $scriptmulticast;
-        xmlrpc_stop_process_multicast ($objprocess);
-        $objprocess['process'] = $path.$scriptmulticast;
-        xmlrpc_clear_script_multicast($objprocess);
+        if (xmlrpc_check_process_multicast($objprocess)) {
+            // if /tmp/multicast.sh is running then stoping
+            $objprocess['process'] = $scriptmulticast;
+            xmlrpc_stop_process_multicast($objprocess);
+            $objprocess['process'] = $path.$scriptmulticast;
+            xmlrpc_clear_script_multicast($objprocess);
+        }
     }
-}
-?>
+    ?>
     <div class="spacer"></div>
 
     <h3 class="activity"><?php echo _T('Recent activity', 'imaging') ?></h3>
 
     <?php
-    $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
+        $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
     //$ajax->setRefresh(10000);
     $ajax->display();
     echo "<br/><br/><br/>";
