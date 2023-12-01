@@ -5941,7 +5941,7 @@ from glpi_computers
 join glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
 join glpi.glpi_softwareversions on glpi.glpi_computers_softwareversions.softwareversions_id = glpi.glpi_softwareversions.id
 join glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_softwareversions.softwares_id
-WHERE glpi.glpi_softwares.name LIKE "Update (KB%%"
+WHERE glpi.glpi_softwares.name LIKE "%%KB%%"
 and glpi_computers.id in %s group by glpi_computers.id;"""%(ids)
 
         datas = session.execute(sql)
