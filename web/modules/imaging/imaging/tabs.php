@@ -56,27 +56,30 @@ right_top_shortcuts_display();
 // Restore default location boot menu
 //  ===============================================================
 
-function resetDefaultMenu($uuid) {
+function resetDefaultMenu($uuid)
+{
     $ret = xmlrpc_resetComputerBootMenu($uuid);
-    if (!isXMLRPCError() && $ret)
+    if (!isXMLRPCError() && $ret) {
         new NotifyWidgetSuccess(sprintf(_T("Default menu has been successfully restored.", "imaging")));
+    }
 }
 
-function resetDefaultMenus($uuids) {
+function resetDefaultMenus($uuids)
+{
     $ret = xmlrpc_resetComputerBootMenus($uuids);
-    if (!isXMLRPCError() && $ret)
+    if (!isXMLRPCError() && $ret) {
         new NotifyWidgetSuccess(sprintf(_T("Default menu has been successfully restored.", "imaging")));
+    }
 }
 
 if (isset($_GET['reset_defaultMenu']) && $_GET['reset_defaultMenu'] == 1) {
-    if(isset($_GET['target']) && $_GET['target'] == "all"){
+    if(isset($_GET['target']) && $_GET['target'] == "all") {
         $location = htmlentities($_GET['location']);
         $menusIds = xmlrpc_getMenusbylocation($location);
         resetDefaultMenus($menusIds);
         header("Location: " . urlStrRedirect("imaging/manage/index"));
         exit;
-    }
-    else{
+    } else {
         resetDefaultMenu($params['uuid']);
     }
 }
@@ -98,27 +101,26 @@ if (isset($_GET['leave_group'], $_GET['group_uuid'], $params['uuid'])) {
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {
         $ret = xmlrpc_synchroComputer($params['uuid']);
-    }
-    else {
+    } else {
         $location = getCurrentLocation();
-        if ($location == "UUID1")
+        if ($location == "UUID1") {
             $location_name = _T("root", "pulse2");
-        else
+        } else {
             $location_name = xmlrpc_getLocationName($location);
-        $objprocess=array();
+        }
+        $objprocess = array();
         $scriptmulticast = 'multicast.sh';
-        $path="/tmp/";
-        $objprocess['location']=$location;
+        $path = "/tmp/";
+        $objprocess['location'] = $location;
         $objprocess['process'] = $path.$scriptmulticast;
         //if (xmlrpc_muticast_script_exist($objprocess)){
 
-        if (xmlrpc_check_process_multicast($objprocess)){
+        if (xmlrpc_check_process_multicast($objprocess)) {
             $msg = _T("The bootmenus cannot be generated as a multicast deployment is currently running.", "imaging");
             new NotifyWidgetFailure($msg);
             header("Location: " . urlStrRedirect("imaging/manage/index"));
             exit;
-        }
-        else{
+        } else {
             $ret = xmlrpc_synchroProfile($params['gid']);
             xmlrpc_clear_script_multicast($objprocess);
         }
@@ -200,9 +202,9 @@ if (isset($params['uuid'])) {
             $t2->display();
 
             $f = new ValidatingForm();
-            $f->add(new HiddenTpl("target_uuid"), array("value" => $target_uuid, "hide" => True));
-            $f->add(new HiddenTpl("target_name"), array("value" => $target_name, "hide" => True));
-            $f->add(new HiddenTpl("type"), array("value" => $type, "hide" => True));
+            $f->add(new HiddenTpl("target_uuid"), array("value" => $target_uuid, "hide" => true));
+            $f->add(new HiddenTpl("target_name"), array("value" => $target_name, "hide" => true));
+            $f->add(new HiddenTpl("type"), array("value" => $type, "hide" => true));
             $f->addButton("bresetsynchrostate", _T("Reset Synchro state", "imaging"));
             $f->display();
         } elseif ($ret['id'] == $SYNCHROSTATE_INIT_ERROR) {
@@ -231,7 +233,7 @@ if (isset($params['uuid'])) {
             }
 
             $p->addTab("tabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), "modules/imaging/imaging/bootmenu.php", $params);
-            $ddd=$params;
+            $ddd = $params;
             // $ddd['namee'] = "llllllllll";
             $p->addTab("tabimages", _T("Images and Masters", 'imaging'), "", "modules/imaging/imaging/images.php", $ddd);
             $p->addTab("tabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"), "modules/imaging/imaging/services.php", $params);
@@ -252,7 +254,7 @@ if (isset($params['uuid'])) {
     require("modules/dyngroup/includes/includes.php");
     $group = new Group($_GET['gid'], true);
 
-    if ($group->exists == False) {
+    if ($group->exists == false) {
         require("modules/msc/includes/widgets.inc.php");
         # TODO need to use a generic widget!
 
@@ -286,9 +288,9 @@ if (isset($params['uuid'])) {
             $t2->display();
 
             $f = new ValidatingForm();
-            $f->add(new HiddenTpl("gid"), array("value" => $params['target_uuid'], "hide" => True));
-            $f->add(new HiddenTpl("groupname"), array("value" => $params['target_name'], "hide" => True));
-            $f->add(new HiddenTpl("type"), array("value" => $params['type'], "hide" => True));
+            $f->add(new HiddenTpl("gid"), array("value" => $params['target_uuid'], "hide" => true));
+            $f->add(new HiddenTpl("groupname"), array("value" => $params['target_name'], "hide" => true));
+            $f->add(new HiddenTpl("type"), array("value" => $params['type'], "hide" => true));
             $f->addButton("bresetsynchrostate", _T("Reset Synchro state", "imaging"));
             $f->display();
         } else {
@@ -316,4 +318,3 @@ if (isset($params['uuid'])) {
     $p->display();
     print _T("Not enough information", "imaging");
 }
-?>

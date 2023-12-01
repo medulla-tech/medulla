@@ -4738,15 +4738,24 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getMenubylocation(self, location):
         session = create_session()
-        ret = session.query(self.target.c.uuid)\
-                            .select_from(
-                                    self.target.join(self.menu,
-                                                     self.menu.c.id == self.target.c.fk_menu)\
-                                    .join(self.entity, self.target.c.fk_entity == self.entity.c.id))\
-                .filter(and_(not_(self.target.c.uuid.contains("DELETED")),
-                             self.entity.c.uuid == location)).distinct().all()
+        ret = (
+            session.query(self.target.c.uuid)
+            .select_from(
+                self.target.join(
+                    self.menu, self.menu.c.id == self.target.c.fk_menu
+                ).join(self.entity, self.target.c.fk_entity == self.entity.c.id)
+            )
+            .filter(
+                and_(
+                    not_(self.target.c.uuid.contains("DELETED")),
+                    self.entity.c.uuid == location,
+                )
+            )
+            .distinct()
+            .all()
+        )
 
-        result=[]
+        result = []
         for element in ret:
             result.append(element.uuid)
         session.close()
