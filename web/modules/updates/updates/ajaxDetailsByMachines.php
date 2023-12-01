@@ -169,7 +169,7 @@ else
         $params[] = [
             "machineid"=>$compliance_computers[$i]['id'],
             "inventoryid" => $compliance_computers[$i]['uuid'],
-            "cn"=>$machines[$i]['hostname']
+            "cn" => $compliance_computers[$i]['hostname'],
         ];
     }
 }
