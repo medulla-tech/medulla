@@ -72,10 +72,12 @@ function resetDefaultMenus($uuids)
     }
 }
 
-function resetDefaultMenus($uuids) {
+function resetDefaultMenus($uuids)
+{
     $ret = xmlrpc_resetComputerBootMenus($uuids);
-    if (!isXMLRPCError() && $ret)
+    if (!isXMLRPCError() && $ret) {
         new NotifyWidgetSuccess(sprintf(_T("Default menu has been successfully restored.", "imaging")));
+    }
 }
 
 if (isset($_GET['reset_defaultMenu']) && $_GET['reset_defaultMenu'] == 1) {
