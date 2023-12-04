@@ -28,4 +28,4 @@ UPDATE `imaging`.`Entity`
 SET
     `clonezilla_restorer_params` = '-scr -icrc -icds -g auto -e1 auto -e2 -c -r -j2 -p true';
 
-UPDATE version set Number = 17;
+UPDATE version set Number = 25;
