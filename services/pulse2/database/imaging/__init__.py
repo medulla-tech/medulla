@@ -37,7 +37,7 @@ from pulse2.database.imaging.types import P2ISS, P2IT, P2IM, P2IIK, P2ERR, P2ILL
 from mmc.database import database_helper
 from mmc.database.utilities import toUUID, fromUUID
 
-from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc, func, distinct
+from sqlalchemy import create_engine, ForeignKey, Integer, MetaData, Table, Column, and_, or_, desc, func, distinct, not_
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
 from sqlalchemy.exc import InvalidRequestError
