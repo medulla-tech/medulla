@@ -61,7 +61,7 @@ def callrestartbymaster(to):
 
 
 def callrestartbotbymaster(to):
-    return ObjectXmpp().restartAgent(to)
+    return ObjectXmpp().callrestartbotbymaster(to)
 
 
 def callshutdownbymaster(to, time, msg):
