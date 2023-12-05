@@ -154,9 +154,6 @@ function xmlCall($method, $params = null) {
 
     list($sock, $errNo, $errString) = openSocket($prot, $conf);
     if (!$sock) {
-        echo "prototype";
-
-
         /* Connection failure */
         $errObj = new ErrorHandlingItem('');echo "prototype";
         $errObj->setMsg(_("Can't connect to MMC agent"));
@@ -165,10 +162,6 @@ function xmlCall($method, $params = null) {
         $errObj->setSize(400);
         $errObj->process('');
         $errorStatus = 1;
-        echo "<pre>";
-        print_r($errObj);
-        echo "</pre>";
-//         exit(0);
         return FALSE;
     }
 
