@@ -37,6 +37,7 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
+$groupewol=array();
 $typewol = "";
 if (isset($_GET['wol']) && $_GET['wol']){
     $typewol = "imaging";

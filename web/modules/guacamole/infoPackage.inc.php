@@ -45,7 +45,7 @@
 require_once("modules/pulse2/version.php");
 
 $mod = new Module("guacamole");
-$mod->setVersion(VERSION);
+$mod->setVersion("4.6.10");
 $mod->setRevision(REVISION);
 $mod->setDescription(_T("guacamole", "guacamole"));
 $mod->setAPIVersion("0:0:0");

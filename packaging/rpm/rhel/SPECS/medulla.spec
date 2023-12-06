@@ -38,7 +38,7 @@ Release:        0.%git.1%{?dist}
 %endif
 License:	GPL
 Group:		System/Servers
-URL:		https://github.com/pulse-project/pulse
+URL:		https://github.com/medulla-tech/medulla
 Source0:        %{name}_%{real_version}.orig.tar.gz
 #TODO: Adapt for Mageia
 Source1:        pulse2-dlp-server.init
@@ -1354,7 +1354,6 @@ cp %{SOURCE5}   agent/mmc/plugins/base
 cp %{SOURCE6}   web/modules/base/computers
 
 %build
-
 %configure2_5x --disable-python-check
 
 %make_build
@@ -1420,6 +1419,9 @@ cp %{buildroot}%{_sysconfdir}/mmc/apache/mmc.conf %{buildroot}%_webappconfdir/mm
 
 mkdir -p %buildroot%_prefix/lib/systemd/system/
 cp services/systemd/mmc-agent.service %buildroot%_prefix/lib/systemd/system/
+
+# For compatibility
+mv %buildroot%_datadir/doc/medulla %buildroot%_datadir/doc/pulse2
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete

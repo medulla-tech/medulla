@@ -4,7 +4,7 @@ export VERSION = 2.3.1
 export RPMBUILD = rpmbuild -ba
 export BUILD = $(CURDIR)/build
 
-export TARBALL = $(PROJECT_NAME)-$(VERSION)
+export TARBALL = medulla-$(VERSION)
 export RELEASES_DIR = releases
 export TARBALL_BZ = $(TARBALL).tar.bz2
 export TARBALL_GZ = $(TARBALL).tar.gz

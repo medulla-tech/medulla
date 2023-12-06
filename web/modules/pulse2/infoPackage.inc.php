@@ -29,7 +29,7 @@
 require_once("modules/pulse2/version.php");
 
 $mod = new Module("pulse2");
-$mod->setVersion(VERSION);
+$mod->setVersion("4.6.10");
 $mod->setRevision(REVISION);
 $mod->setDescription(_T("Pulse2", "pulse2"));
 $mod->setAPIVersion("0:0:0");
