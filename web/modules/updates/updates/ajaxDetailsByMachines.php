@@ -26,8 +26,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
 
 function colorconf($conf){
-    $colorDisplay=array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
-    return $colorDisplay[intval(($conf-($conf%10))/10)];
+    $colorDisplay = array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
+    return $colorDisplay[intval(($conf - ($conf % 10)) / 10)];
 }
 
 $location = (isset($_GET['location'])) ? htmlentities($_GET['location']) : "";
@@ -45,7 +45,7 @@ $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
 $ctx = [];
 // location generates a filter on entity
-$ctx['location'] = !empty($location) ? $location: $entity;
+$ctx['location'] = !empty($location) ? $location : $entity;
 $ctx['filter'] = $filter;
 $ctx['field'] = $field;
 $ctx['contains'] = $contains;
@@ -53,13 +53,14 @@ $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
-$detailsByMach = new ActionItem(_T("View details", "updates"),"deploySpecificUpdate","display","", "updates", "updates");
-$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"),"deploySpecificUpdate","displayg","", "updates", "updates");
-$pendingByMach = new ActionItem(_T("Pending Updates", "updates"),"pendingUpdateByMachine","pending","", "updates", "updates");
-$doneByMach = new ActionItem(_T("Updates History", "updates"),"auditUpdateByMachine","history","", "updates", "updates");
+$detailsByMach = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
+$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
+$pendingByMach = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
+$doneByMach = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
 
 $all_enabled_updates = xmlrpc_get_count_updates_enable();
 $all_enabled_updates = $all_enabled_updates['0']['nb_enabled_updates'];
+$compliance_bloc = "";
 
 $params = [];
 $machineNames = [];
@@ -93,8 +94,8 @@ if ($entity == '')
 
 
     $machines = getRestrictedComputersList($start, $end, $ctx, true);
-    $count = getRestrictedComputersListLen($ctx, True);
-    $tabletitle = sprintf(_T("Computers from group %s","updates"), $groupname);
+    $count = getRestrictedComputersListLen($ctx, true);
+    $tabletitle = sprintf(_T("Computers from group %s", "updates"), $groupname);
 
     foreach ($machines as $k => $v) {
         $actionPendingByMachines[] = $pendingByMach;
@@ -104,7 +105,7 @@ if ($entity == '')
         //FUNCTION TO GET ID
         $id_machine = xmlrpc_get_idmachine_from_name($v[1]['cn'][0]);
         $id_machine = $id_machine[0]['id_machine'];
-        $compliance_computer = xmlrpc_get_conformity_update_by_machines(['ids'=>[$id_machine], 'uuids'=>[$k]]);
+        $compliance_computer = xmlrpc_get_conformity_update_by_machines(['ids' => [$id_machine], 'uuids' => [$k]]);
 
         $compliance = round($compliance_computer['0']['compliance']);
         $missing[] = $compliance_computer['0']['missing'];
@@ -120,58 +121,67 @@ if ($entity == '')
         $complRates[] = "<div class='progress' style='width: ".$compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance."% </div>";
         $platform[] = $v[1]['os'];
         $params[] = [
-            "machineid"=>$id_machine,
-            "inventoryid"=>$k,
-            "cn"=>$v[1]['cn'][0]
+            "machineid" => $id_machine,
+            "inventoryid" => $k,
+            "cn" => $v[1]['cn'][0]
         ];
     }
 
-}
-else
-{
+} else {
     $typeOfDetail = "entitie";
     $filterOn = array('entity' => $entity);
 
-    $tabletitle = sprintf(_T("Computers from entity %s","updates"), $entityName);
-    // No usage
-    $match = (int)str_replace('UUID', '', $entity);
+    $tabletitle = sprintf(_T("Computers from entity %s", "updates"), $entityName);
+    $machines = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
 
-    $compliance_bloc = "";
-
-    $machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
-
-    $count = $machines['count'];
+    $countPartial = $machines['count'];
+    $count = $machines['total'];
     $machines = $machines['data'];
-    $compliance_computers = xmlrpc_get_conformity_update_by_machines(["uuids"=> $machines['uuid_inventorymachine'], "ids"=> $machines['id']]);
+    $compliance_computers = xmlrpc_get_conformity_update_by_machines(["uuids" => $machines['uuid_inventorymachine'], "ids" => $machines['id']]);
     $installed = [];
     $missing = [];
     $compliance = [];
 
+    $machines["missing"] = array_fill(0, $countPartial, 0);
+    $machines["installed"] = array_fill(0, $countPartial, 0);
+    $machines["total"] = array_fill(0, $countPartial, 0);
+    $machines["compliance"] = array_fill(0, $countPartial, 0);
 
-    $countInArray = count($compliance_computers);
-
-    for($i=0; $i < $countInArray; $i++){
-        $machineNames[] = $compliance_computers[$i]['hostname'];
-        $missing[] = $compliance_computers[$i]["missing"];
-        $installed[] = $compliance_computers[$i]["installed"];
-        $total[] = $compliance_computers[$i]['total'];
-
-        $detailsByMachs[] = $detailsByMach;
-
-        $actionPendingByMachines[] = $pendingByMach;
-        $actionDoneByMachines[] = $doneByMach;
-        $compliance_computers[$i]["compliance"] = round($compliance_computers[$i]["compliance"]);
-        $color = colorconf($compliance_computers[$i]["compliance"]);
-        $complRates[] = "<div class='progress' style='width: ".$compliance_computers[$i]["compliance"]."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_computers[$i]["compliance"]."% </div>";
-
-        $platform[] = $machines['platform'][$i];
+    for($i=0; $i< $countPartial; $i++){
+        foreach($compliance_computers as $compliance){
+            if($compliance["id"] == $machines["id"][$i]){
+                $machines["missing"][$i] = $compliance["missing"];
+                $machines["installed"][$i] = $compliance["installed"];
+                $machines["total"][$i] = $compliance["total"];
+                break;
+            }
+        }
+        if($machines["missing"][$i] == 0){
+            $color = colorconf(100);
+            $machines["compliance"][$i] = "<div class='progress' style='width: 100%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> 100% </div>";
+        }
+        else{
+            $color = colorconf($compliance["compliance"]);
+            $machines["compliance"][$i] = "<div class='progress' style='width: ".$compliance["compliance"]."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance["compliance"]."% </div>";
+        }
 
         $params[] = [
-            "machineid"=>$compliance_computers[$i]['id'],
-            "inventoryid" => $compliance_computers[$i]['uuid'],
-            "cn" => $compliance_computers[$i]['hostname'],
+            "machineid" => $machines['id'][$i],
+            "inventoryid" => $machines['uuid_inventorymachine'][$i],
+            "cn" => $machines['hostname'][$i],
         ];
+
+        $detailsByMachs[] = $detailsByMach;
+        $actionPendingByMachines[] = $pendingByMach;
+        $actionDoneByMachines[] = $doneByMach;
     }
+
+    $machineNames = $machines['hostname'];
+    $platform = $machines["platform"];
+    $complRates = $machines["compliance"];
+    $missing = $machines["missing"];
+    $installed = $machines["installed"];
+    $total = $machines["total"];
 }
 
 // Display group compliance, for entity, compliance_bloc == ""
@@ -197,5 +207,7 @@ $n->addActionItemArray($actionDoneByMachines);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $ctx['filter']));
 $n->setParamInfo($params);
+$n->start = 0;
+$n->end = $count;
 $n->display();
 ?>
