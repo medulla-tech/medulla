@@ -287,6 +287,8 @@ switch($_GET['information']) {
     case 'agentinfos':
         $lp = xmlrpc_get_plugin_lists();
         $descriptor_base = xmlrpc_get_agent_descriptor_base();// search descriptor agent local
+        # Add a delay to delay IQ queries
+        sleep(5);
         // $confx = xmlrpc_get_conf_master_agent();//search configuration of agent master local
         // $confxmppmaster = json_decode($confx, true);
         #### self.diragentbase
@@ -312,7 +314,7 @@ switch($_GET['information']) {
         //----------------------- PLUGIN INFORMATIONS -----------------------
         echo "<tr>";
         echo "<td>";
-        echo "<h2  colspan=\"3\" style=\"font-size: 12px; font-weight: bold;\">"._T("PLUGINS", "xmppmaster")."</h2>";
+        echo "<h2 colspan=\"4\" style=\"font-size: 12px; font-weight: bold;\">"._T("PLUGINS", "xmppmaster")."</h2>";
         echo "</td>";
         echo "</tr>";
 
@@ -356,6 +358,8 @@ switch($_GET['information']) {
                 echo "$key   =>  $val";
                 echo "</li>";
             }
+        } else {
+            new NotifyWidgetFailure(_("Trouble to get the distant plugins"));
         }
         echo "</ul>";
         echo "<Hn>"._T("Remote scheduler plugins", "xmppmaster")."</Hn>";
@@ -388,12 +392,13 @@ switch($_GET['information']) {
         echo "</tr>";
 
         echo "<tr>";
-        echo "<td>";
-        echo "[global]<br>";
-        $autoupdate = (isset($confxmppmaster['_sections']['global']['autoupdate'])) ? $confxmppmaster['_sections']['global']['autoupdate'] : '';
-        echo "autoupdate=".$autoupdate."<br>";
-        echo "autoupdatebyrelay=".$confxmppmaster['_sections']['global']['autoupdatebyrelay'];
-        echo "</td>";
+                echo "<td>";
+                echo "[global]<br>";
+                $autoupdate = isset($confxmppmaster['_sections']['global']['autoupdate']) ? $confxmppmaster['_sections']['global']['autoupdate'] : '';
+                echo "autoupdate=".$autoupdate."<br>";
+                $autoupdatebyrelay = isset($confxmppmaster['_sections']['global']['autoupdatebyrelay']) ? $confxmppmaster['_sections']['global']['autoupdatebyrelay'] : '';
+                echo "autoupdatebyrelay=".$autoupdatebyrelay;
+                echo "</td>";
         echo "<td>";
         echo "[updateagent]<br>";
         $updating = (isset($re['conf'])) ? $re['conf'] : '';
@@ -555,63 +560,68 @@ switch($_GET['information']) {
         echo "</td>";
         echo "</tr>";
         echo "<tr>";
-        echo "<td>";
-        echo "</td>";
+
         echo "<td colspan=\"2\">";
         printf("<h2 style=\"font-weight: bold;\">%s</h2>", _T("Diff information", "xmppmaster"));
         if(isset($re['information'])) {
-            $re['information'] = str_replace("imagethe", "image. The", $re['information']);
-            echo "<p>".$re['information']."</p>";
+            $re['information'] = str_replace(",", "<br>", $re['information']);
+            echo "<p>" . $re['information'] . "</p>";
         }
         echo "</td>";
         echo "</tr>";
         echo "<tr>";
-        echo "<td>";
-        echo "</td>";
         echo "<td colspan=\"2\">";
-        printf("<h2 style=\"font-weight: bold;\">%s</h2>", _T("Action", "xmppmaster"));
-        $txtsearch = array( "Replace or add agent files",
-                "Action for program_agent",
-                "Action for lib_agent",
-                "Action for script_agent");
+        printf("<h2 style=\"font-weight: bold;\">%s</h2>",_T("Action", "xmppmaster"));
+        $txtsearch = array("Replace or add agent files", "Action for program_agent", "Action for lib_agent", "Action for script_agent", "Unused agent file");
         $se = array();
-        foreach($txtsearch as $tx) {
-            if($tx == "Replace or add agent files") {
-                continue;
-            }
-            $actiontxt = (isset($re['actiontxt'])) ? $re['actiontxt'] : '';
-            $pos1 = stripos($actiontxt, $tx);
-            if ($pos1 !== false) {
-                $se[] = $tx;
-            }
-        }
-        if(isset($re['actiontxt'])) {
 
-            $re['actiontxt'] = str_replace($txtsearch, "", $re['actiontxt']);
-            $re['actiontxt'] = str_replace("][", "],[", $re['actiontxt']);
-            $re['actiontxt'] = str_replace(",,", ",", $re['actiontxt']);
-            $re['actiontxt'] = str_replace(",[,", "[", $re['actiontxt']);
-            $re['actiontxt'] = str_replace(",]", "]", $re['actiontxt']);
+        foreach($txtsearch as $tx ) {
+            if (strpos($re['actiontxt'], "No UPDATING, no diff between agent and agentimage, Agent up to date") !== false) {
+                $cleanedText = trim($re['actiontxt'], ", ");
+                echo "<br><p>" . $cleanedText . "</p>";
+                break;
+            } else {
+                if($tx == "Replace or add agent files" || $tx == "Unused agent file") continue;
+                    $actiontxt = (isset($re['actiontxt'])) ? $re['actiontxt']: '';
+                    $pos1 = stripos($actiontxt, $tx);
+                    if ($pos1 !== false) {
+                        $se[] = $tx;
+                    }
+                }
 
-            $json_data = json_decode('[' . $re['actiontxt'] . ']', true);
-        } else {
-            $json_data = [];
-        }
-        if (safeCount($se) != safeCount($json_data)) {
-            array_unshift($se, "Action for program_agent");
-        }
-        foreach($json_data as $val1) {
-            $i = 0;
-            echo "<Hn>$se[$i]</Hn>";
-            echo "<ul>";
-            foreach($val1 as $b) {
-                echo "<li>";
-                echo $b;
-                echo "</li>";
-            }
-            echo "</ul>";
-            $i++;
-        }
+                if(isset($re['actiontxt'])){
+                    $re['actiontxt'] = str_replace($txtsearch,"", $re['actiontxt']);
+                    $re['actiontxt'] = preg_replace('/^,\s*,/', '', $re['actiontxt']);
+                    $re['actiontxt'] = preg_replace('/\s*\[/', '[', $re['actiontxt']);
+                    $re['actiontxt'] = preg_replace('/\[\s*,/', '[', $re['actiontxt']);
+                    $re['actiontxt'] = preg_replace('/\[\s*/', '[', $re['actiontxt']);
+                    $re['actiontxt'] = preg_replace('/,\s*\[/', '[', $re['actiontxt']);
+                    $re['actiontxt'] = preg_replace('/,\s*\]/', ']', $re['actiontxt']);
+                    $re['actiontxt'] = preg_replace('/\s*\]/', ']', $re['actiontxt']);
+                    $re['actiontxt'] = preg_replace('/\s*,\s*,/', ',', $re['actiontxt']);
+                    $re['actiontxt'] = preg_replace('/\\\\\\\\/', '\\', $re['actiontxt']);
+                    $re['actiontxt'] = str_replace("\\", "\\\\", $re['actiontxt']);
+                    $json_data = json_decode('[' . $re['actiontxt'] . ']', true);
+                } else
+                    $json_data = [];
+
+                    if (safeCount($se) != safeCount($json_data)) {
+                        array_unshift($se,"Action for program_agent");
+                    }
+
+                    $i=0;
+                    foreach($json_data as $val1) {
+                        echo "<Hn>$se[$i]</Hn>";
+                        echo "<ul>";
+                            foreach($val1 as $b){
+                                echo "<li>";
+                                echo $b;
+                                echo "</li>";
+                            }
+                        echo "</ul>";
+                        $i++;
+                    }
+                }
         echo "</td>";
         echo "</tr>";
         echo "</table>";
