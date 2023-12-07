@@ -10,6 +10,7 @@
 - [BUGFIX]  Fix display of the inventory of a machine when it is offline
 - [BUGFIX]  Fix creating group from a boolean
 - [BUGFIX]  Remove some visible debugs
+- [BUGFIX]  Fix displaying Agent details QA
 
 [Full Changelog](https://github.com/medulla-tech/medulla/compare/5.0.0...5.0.1)
 
