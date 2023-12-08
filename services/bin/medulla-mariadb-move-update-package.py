@@ -514,6 +514,7 @@ class synch_packages:
             dt_string,
             cmd64.decode("utf-8"),
         )
+        return template
 
     def id_partage(self):
         logger.debug("function id_partage")
