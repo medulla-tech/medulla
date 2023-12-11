@@ -278,4 +278,5 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	samba/smb.conf \
 	test-xmlrpc.php \
 	test-xmlrpc.examples \
-	test-xmlrpc.py
+	test-xmlrpc.py \
+	greenit/sql/schema-001.sql
