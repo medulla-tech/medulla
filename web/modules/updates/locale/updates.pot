@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2023-12-12 12:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,72 +17,191 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: modules/updates/updates/ajaxUpdateToDeploy.php:69
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:83
+#: modules/updates/updates/ajaxPendingUpdateByMachine.php:30
+#: modules/updates/updates/ajaxPendingUpdateByMachine.php:31
+#: modules/updates/infoPackage.inc.php:190
+msgid "Cancel Update"
+msgstr ""
+
+#: modules/updates/updates/ajaxPendingUpdateByMachine.php:66
+#: modules/updates/updates/pendingUpdateByMachine.php:28
+#: modules/updates/updates/ajaxDetailsByMachines.php:59
+#: modules/updates/infoPackage.inc.php:176
+#: modules/updates/infoPackage.inc.php:179
+msgid "Pending Updates"
+msgstr ""
+
+#: modules/updates/updates/ajaxPendingUpdateByMachine.php:68
+msgid "Description"
+msgstr ""
+
+#: modules/updates/updates/ajaxPendingUpdateByMachine.php:69
+msgid "Kb"
+msgstr ""
+
+#: modules/updates/updates/ajaxPendingUpdateByMachine.php:70
+msgid "Update"
+msgstr ""
+
+#: modules/updates/updates/ajaxPendingUpdateByMachine.php:71
+msgid "Start Date"
+msgstr ""
+
+#: modules/updates/updates/ajaxPendingUpdateByMachine.php:72
+msgid "End Date"
+msgstr ""
+
+#: modules/updates/updates/ajaxAuditUpdateByMachine.php:36
+msgid "Detail"
+msgstr ""
+
+#: modules/updates/updates/ajaxAuditUpdateByMachine.php:49
+msgid "Title"
+msgstr ""
+
+#: modules/updates/updates/ajaxAuditUpdateByMachine.php:51
+msgid "Started at"
+msgstr ""
+
+#: modules/updates/updates/ajaxAuditUpdateByMachine.php:53
+msgid "Status"
+msgstr ""
+
+#: modules/updates/updates/ajaxDeploySpecificUpdate.php:112
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:84
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:71
-#: modules/updates/updates/ajaxListUpdates.php:261
-#: modules/updates/updates/ajaxListMachineDetailSpecificUpdate.php:132
-#: modules/updates/updates/ajaxListMachineDetailSpecificUpdate.php:143
+#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:132
+#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:130
 #: modules/updates/updates/ajaxUpdatesListWinBlack.php:66
 msgid "Update name"
 msgstr ""
 
-#: modules/updates/updates/ajaxUpdateToDeploy.php:70
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:87
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:74
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:68
-msgid "KB"
-msgstr ""
-
-#: modules/updates/updates/index.php:28 modules/updates/infoPackage.inc.php:39
-#: modules/updates/infoPackage.inc.php:42
-msgid "Update Deployments"
-msgstr ""
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:35
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:36
-#: modules/updates/infoPackage.inc.php:115
-msgid "Enable Update"
-msgstr ""
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:37
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:38
-#: modules/updates/infoPackage.inc.php:119
-msgid "Disable Update"
-msgstr ""
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:39
-#: modules/updates/updates/whitelistUpdate.php:44
-#: modules/updates/infoPackage.inc.php:123
-msgid "Approve Update"
-msgstr ""
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:40
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:34
-#: modules/updates/infoPackage.inc.php:127
-#: modules/updates/infoPackage.inc.php:152
-msgid "Ban Update"
-msgstr ""
-
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:86
+#: modules/updates/updates/ajaxDeploySpecificUpdate.php:113
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:88
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:73
 #: modules/updates/updates/ajaxUpdatesListWinBlack.php:67
 msgid "Update Id"
 msgstr ""
 
-#: modules/updates/updates/deployUpdate.php:43
-msgid "Deploy specific Update"
+#: modules/updates/updates/ajaxDeploySpecificUpdate.php:114
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:89
+#: modules/updates/updates/ajaxUpdatesListWinWhite.php:74
+#: modules/updates/updates/ajaxUpdatesListWinBlack.php:68
+msgid "Severity"
 msgstr ""
 
-#: modules/updates/updates/deployUpdate.php:90
+#: modules/updates/updates/ajaxDeploySpecificUpdate.php:116
+msgid "Machine"
+msgstr ""
+
+#: modules/updates/updates/ajaxDeploySpecificUpdate.php:119
+msgid "Jid"
+msgstr ""
+
+#: modules/updates/updates/index.php:28
+#: modules/updates/updates/localSidebar.php:25
+#: modules/updates/infoPackage.inc.php:39
+#: modules/updates/infoPackage.inc.php:42
+msgid "Entities Compliance"
+msgstr ""
+
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:35
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:36
+#: modules/updates/infoPackage.inc.php:126
+msgid "Enable for manual update"
+msgstr ""
+
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:37
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:38
+#: modules/updates/infoPackage.inc.php:130
+msgid "Disable for manual update"
+msgstr ""
+
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:39
+#: modules/updates/updates/whitelistUpdate.php:44
+#: modules/updates/infoPackage.inc.php:134
+msgid "Approve for automatic update"
+msgstr ""
+
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:40
+#: modules/updates/updates/ajaxUpdatesListWinWhite.php:34
+#: modules/updates/infoPackage.inc.php:138
+#: modules/updates/infoPackage.inc.php:163
+msgid "Ban update"
+msgstr ""
+
+#: modules/updates/updates/deployUpdate.php:89
+#: modules/updates/updates/deployUpdate.php:122
+msgid "Wrong deployment intervals"
+msgstr ""
+
+#: modules/updates/updates/deployUpdate.php:210
+msgid "Schedule update deployment on entity"
+msgstr ""
+
+#: modules/updates/updates/deployUpdate.php:213
+msgid "Schedule update deployment on group"
+msgstr ""
+
+#: modules/updates/updates/deployUpdate.php:216
+msgid "Schedule update deployment on machine"
+msgstr ""
+
+#: modules/updates/updates/deployUpdate.php:248
+msgid "The command must start after"
+msgstr ""
+
+#: modules/updates/updates/deployUpdate.php:259
+msgid "The command must stop before"
+msgstr ""
+
+#: modules/updates/updates/deployUpdate.php:267
+msgid "Example for lunch and night (24h format): 12-14,20-24,0-8"
+msgstr ""
+
+#: modules/updates/updates/deployUpdate.php:277
+#: modules/updates/updates/ajaxDeployAllUpdates.php:59
+msgid "Deployment interval"
+msgstr ""
+
+#: modules/updates/updates/pendingUpdateByMachine.php:28
 #, php-format
-msgid "Install %s on entity %s"
+msgid "Pending Updates for machine %s"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsSpecificUpdate.php:90
+#: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:89
+msgid "Hostname"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsSpecificUpdate.php:93
+#: modules/updates/updates/ajaxDetailsByMachines.php:186
+#: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:92
+msgid "Platform"
 msgstr ""
 
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:33
-#: modules/updates/updates/greylistUpdate.php:44
-#: modules/updates/infoPackage.inc.php:131
-msgid "Unlist Update"
+#: modules/updates/infoPackage.inc.php:142
+msgid "Unlist update"
+msgstr ""
+
+#: modules/updates/updates/cancelUpdate.php:12
+#, php-format
+msgid "The update %s has been removed from pending"
+msgstr ""
+
+#: modules/updates/updates/cancelUpdate.php:14
+#, php-format
+msgid "A problem occurs, impossible to remove %s from pending"
+msgstr ""
+
+#: modules/updates/updates/cancelUpdate.php:20
+msgid "Cancel pending update"
+msgstr ""
+
+#: modules/updates/updates/cancelUpdate.php:21
+#, php-format
+msgid "You will cancel update <b>%s</b>."
 msgstr ""
 
 #: modules/updates/updates/whiteUnlist.php:31
@@ -100,26 +219,8 @@ msgstr ""
 msgid "<b>Unlist</b> update %s (%s) ?"
 msgstr ""
 
-#: modules/updates/updates/ajaxListUpdates.php:89
-msgid "Details"
-msgstr ""
-
-#: modules/updates/updates/ajaxListUpdates.php:264
-#: modules/updates/updates/ajaxEntitiesList.php:146
-#: modules/updates/updates/ajaxMachineListOnEntities.php:175
-msgid "Compliance rate"
-msgstr ""
-
-#: modules/updates/updates/ajaxListUpdates.php:265
-msgid "Machine with this updates"
-msgstr ""
-
-#: modules/updates/updates/ajaxListUpdates.php:266
-msgid "Machine without this updates (waiting)"
-msgstr ""
-
-#: modules/updates/updates/detailsByUpdates.php:27
-msgid "List Updates"
+#: modules/updates/updates/detailsByUpdates.php:28
+msgid "Details by Updates"
 msgstr ""
 
 #: modules/updates/updates/grayApprove.php:31
@@ -143,8 +244,42 @@ msgstr ""
 msgid "Details by Machines"
 msgstr ""
 
-#: modules/updates/updates/detailsSpecificUpdate.php:27
-msgid "Machine details for update"
+#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:29
+msgid "Details by Gray Updates"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:91
+#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:91
+msgid "Details"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:135
+#: modules/updates/updates/ajaxDetailsByMachines.php:187
+#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:133
+#: modules/updates/updates/ajaxEntitiesList.php:156
+msgid "Compliance rate"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:136
+#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:134
+msgid "Machines with this update"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByUpdatesGray.php:137
+#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:135
+msgid "Machines without this update (waiting)"
+msgstr ""
+
+#: modules/updates/updates/auditUpdateByMachine.php:28
+#, php-format
+msgid "Updates history for machine %s"
+msgstr ""
+
+#: modules/updates/updates/auditUpdateByMachine.php:28
+#: modules/updates/updates/ajaxDetailsByMachines.php:60
+#: modules/updates/infoPackage.inc.php:183
+#: modules/updates/infoPackage.inc.php:186
+msgid "Updates History"
 msgstr ""
 
 #: modules/updates/updates/whitelistUpdate.php:33
@@ -160,54 +295,82 @@ msgstr ""
 msgid "The update %s (%s) has been disabled."
 msgstr ""
 
-#: modules/updates/updates/grayDisable.php:35
+#: modules/updates/updates/grayDisable.php:34
 #, php-format
 msgid "The update %s (%s) hasn't been disabled"
 msgstr ""
 
-#: modules/updates/updates/grayDisable.php:42
+#: modules/updates/updates/grayDisable.php:40
 #, php-format
 msgid "<b>Disable</b> update %s (%s) ?"
 msgstr ""
 
-#: modules/updates/updates/ajaxListMachineDetailSpecificUpdate.php:135
-#: modules/updates/updates/ajaxListMachineDetailSpecificUpdate.php:146
-msgid "Plateform"
+#: modules/updates/updates/ajaxDetailsByMachines.php:57
+#: modules/updates/updates/ajaxDetailsByMachines.php:58
+msgid "View details"
 msgstr ""
 
-#: modules/updates/updates/ajaxPreDeployAll.php:49
+#: modules/updates/updates/ajaxDetailsByMachines.php:90
+#, php-format
+msgid "<h2>Global compliance rate for %s</h2>"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:97
+#, php-format
+msgid "Computers from group %s"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:133
+#, php-format
+msgid "Computers from entity %s"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:184
+msgid "Machine name"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:188
+#: modules/updates/updates/ajaxEntitiesList.php:157
+msgid "Missing updates"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:189
+msgid "Installed updates"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:190
+msgid "Total updates"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:29
+msgid "Details by White Updates"
+msgstr ""
+
+#: modules/updates/updates/ajaxDeployAllUpdates.php:50
 #, php-format
 msgid "Run all updates on entitie : \"%s\""
 msgstr ""
 
-#: modules/updates/updates/ajaxPreDeployAll.php:53
+#: modules/updates/updates/ajaxDeployAllUpdates.php:52
 #, php-format
 msgid "Run all updates on group : \"%s\""
 msgstr ""
 
-#: modules/updates/updates/ajaxPreDeployAll.php:60
-msgid "Deployment interval"
-msgstr ""
-
-#: modules/updates/updates/ajaxPreDeployAll.php:67
+#: modules/updates/updates/ajaxDeployAllUpdates.php:68
 msgid "bandwidth throttling (ko)"
 msgstr ""
 
-#: modules/updates/updates/ajaxPreDeployAll.php:67
+#: modules/updates/updates/ajaxDeployAllUpdates.php:69
 msgid "<in ko>"
-msgstr ""
-
-#: modules/updates/updates/localSidebar.php:25
-msgid "Update Deployements"
 msgstr ""
 
 #: modules/updates/updates/localSidebar.php:26
 #: modules/updates/updates/updatesListWin.php:26
-#: modules/updates/infoPackage.inc.php:96
-#: modules/updates/infoPackage.inc.php:100
-#: modules/updates/infoPackage.inc.php:105
-#: modules/updates/infoPackage.inc.php:110
-msgid "Manage Windows Updates"
+#: modules/updates/infoPackage.inc.php:107
+#: modules/updates/infoPackage.inc.php:111
+#: modules/updates/infoPackage.inc.php:116
+#: modules/updates/infoPackage.inc.php:121
+msgid "Manage Updates Lists"
 msgstr ""
 
 #: modules/updates/updates/grayEnable.php:30
@@ -221,7 +384,7 @@ msgid "The update %s (%s) hasn't been enabled."
 msgstr ""
 
 #: modules/updates/updates/ajaxUpdatesListWinBlack.php:33
-msgid "unban Update"
+msgid "Unban update"
 msgstr ""
 
 #: modules/updates/updates/blackUnban.php:32
@@ -234,65 +397,34 @@ msgstr ""
 msgid "The package %s (%s) hasn't been unbanned."
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:73
+#: modules/updates/updates/ajaxEntitiesList.php:83
 msgid "Details by machines"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:74
+#: modules/updates/updates/ajaxEntitiesList.php:84
 msgid "Details by updates"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:75
-#: modules/updates/updates/ajaxEntitiesList.php:76
+#: modules/updates/updates/ajaxEntitiesList.php:85
+#: modules/updates/updates/ajaxEntitiesList.php:86
 msgid "Deploy all updates"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:77
-#: modules/updates/updates/ajaxEntitiesList.php:78
+#: modules/updates/updates/ajaxEntitiesList.php:87
+#: modules/updates/updates/ajaxEntitiesList.php:88
 msgid "Deploy specific updates"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:142
+#: modules/updates/updates/ajaxEntitiesList.php:152
 msgid "Entity name"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:147
-msgid "Missing Updates"
+#: modules/updates/updates/ajaxEntitiesList.php:158
+msgid "Non-compliant machines"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:148
-msgid "Total Machines"
-msgstr ""
-
-#: modules/updates/updates/ajaxMachineListOnEntities.php:57
-msgid "View details"
-msgstr ""
-
-#: modules/updates/updates/ajaxMachineListOnEntities.php:82
-#, php-format
-msgid "<h2>Global compliance rate for %s</h2>"
-msgstr ""
-
-#: modules/updates/updates/ajaxMachineListOnEntities.php:89
-#, php-format
-msgid "Computers from group %s"
-msgstr ""
-
-#: modules/updates/updates/ajaxMachineListOnEntities.php:125
-#, php-format
-msgid "Computers from entity %s"
-msgstr ""
-
-#: modules/updates/updates/ajaxMachineListOnEntities.php:172
-msgid "Machine name"
-msgstr ""
-
-#: modules/updates/updates/ajaxMachineListOnEntities.php:174
-msgid "Platform"
-msgstr ""
-
-#: modules/updates/updates/ajaxMachineListOnEntities.php:176
-msgid "Missing updates"
+#: modules/updates/updates/ajaxEntitiesList.php:159
+msgid "Total machines"
 msgstr ""
 
 #: modules/updates/updates/banUpdate.php:31
@@ -324,6 +456,10 @@ msgstr ""
 msgid "Error moving package to grey list"
 msgstr ""
 
+#: modules/updates/updates/greylistUpdate.php:44
+msgid "Unlist Update"
+msgstr ""
+
 #: modules/updates/infoPackage.inc.php:28
 #: modules/updates/infoPackage.inc.php:33
 msgid "Updates"
@@ -333,50 +469,55 @@ msgstr ""
 msgid "Deploy Specific Updates On Entity"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:69
+#: modules/updates/infoPackage.inc.php:70
 msgid "Deploy specific update"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:73
+#: modules/updates/infoPackage.inc.php:74
 msgid "List updates"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:77
+#: modules/updates/infoPackage.inc.php:78
 msgid "Machine details for specific update"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:81
+#: modules/updates/infoPackage.inc.php:82
+#: modules/updates/infoPackage.inc.php:87
 msgid "Manage machine details for specific update"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:86
+#: modules/updates/infoPackage.inc.php:92
 msgid "Manage deploy specific update"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:91
-msgid "Manage List Updates"
+#: modules/updates/infoPackage.inc.php:97
+msgid "Manage Gray List Updates"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:135
-msgid "UnBan Update"
+#: modules/updates/infoPackage.inc.php:102
+msgid "Manage White List Updates"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:139
+#: modules/updates/infoPackage.inc.php:146
+msgid "UnBan update"
+msgstr ""
+
+#: modules/updates/infoPackage.inc.php:150
 msgid "Gray Enable"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:143
+#: modules/updates/infoPackage.inc.php:154
 msgid "Grey Disable"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:147
+#: modules/updates/infoPackage.inc.php:158
 msgid "Grey Approve"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:156
+#: modules/updates/infoPackage.inc.php:167
 msgid "White Unlist"
 msgstr ""
 
-#: modules/updates/infoPackage.inc.php:161
+#: modules/updates/infoPackage.inc.php:172
 msgid "Black Unban"
 msgstr ""
