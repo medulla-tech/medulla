@@ -369,7 +369,7 @@ msgstr "Limitation de la bande passante (ko)"
 
 #: modules/updates/updates/ajaxDeployAllUpdates.php:69
 msgid "<in ko>"
-msgstr "<in ko>"
+msgstr "<en ko>"
 
 #: modules/updates/updates/localSidebar.php:26
 #: modules/updates/updates/updatesListWin.php:26
