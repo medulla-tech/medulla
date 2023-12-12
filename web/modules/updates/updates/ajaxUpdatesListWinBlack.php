@@ -73,6 +73,7 @@ $b->setItemCount($count_black);
 $b->start = 0;
 $b->end = $count_black;
 $b->setParamInfo($params_black);
-echo '</br></br><h2> Black list (banned updates)</h2>';
+echo '</br></br>';
+echo '<h2>'._T("Black list (banned updates)", "updates").'</h2>';
 $b->addActionItemArray($blackActions["unban"]);
 $b->display();

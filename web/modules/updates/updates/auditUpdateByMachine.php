@@ -20,9 +20,8 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("graph/navbar.inc.php");
 require("localSidebar.php");
-require_once("modules/updates/includes/xmlrpc.php");
+require("graph/navbar.inc.php");
 
 $cn = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
 $titlepage = ($cn != "") ? sprintf(_T("Updates history for machine %s", 'updates'), $cn) : _T("Updates History", 'updates');
@@ -30,6 +29,8 @@ $titlepage = ($cn != "") ? sprintf(_T("Updates history for machine %s", 'updates
 $p = new PageGenerator($titlepage);
 $p->setSideMenu($sidemenu);
 $p->display();
+
+require_once("modules/updates/includes/xmlrpc.php");
 
 unset($_GET['action']);
 

@@ -87,7 +87,7 @@ if ($entity == '') {
 
     $color_group_compliance = colorconf($group_compliance['compliance']);
 
-    $compliance_bloc = sprintf(_T("<h2>Global compliance rate for %s</h2>", "updates"), $groupname);
+    $compliance_bloc = "<h2>".sprintf(_T("Global compliance rate for %s", "updates"), $groupname)."</h2>";
     $compliance_bloc .= "<br>";
     $compliance_bloc .= "<div class='progress' style='max-width: 25%; width: ".$group_compliance['compliance']."%; background : ".$color_group_compliance."; font-weight: bold; color : black; text-align: right;'> ".intval($group_compliance['compliance'])."% </div>";
 

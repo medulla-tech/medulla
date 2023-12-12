@@ -90,7 +90,7 @@ $g->addExtraInfo($grey_list['severity'], _T("Severity", "updates"));
 $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter, 'updateSearchParamformGray'));
 $g->setParamInfo($params_grey);
-echo '<h2> Grey list (manual updates)</h2>';
+echo '<h2>'._T("Grey list (manual updates)", "updates").'</h2>';
 $g->addActionItemArray($grayActions['enable']);
 $g->addActionItemArray($grayActions['disable']);
 $g->addActionItemArray($grayActions['approve']);

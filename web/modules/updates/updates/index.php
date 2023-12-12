@@ -22,8 +22,8 @@
  */
 
 
-require("graph/navbar.inc.php");
 require("localSidebar.php");
+require("graph/navbar.inc.php");
 
 $p = new PageGenerator(_T("Entities Compliance", 'updates'));
 $p->setSideMenu($sidemenu);

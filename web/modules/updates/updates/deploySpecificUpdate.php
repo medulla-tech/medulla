@@ -20,9 +20,8 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("graph/navbar.inc.php");
 require("localSidebar.php");
-require_once("modules/updates/includes/xmlrpc.php");
+require("graph/navbar.inc.php");
 
 
 $params = [];
@@ -44,13 +43,12 @@ if(!empty($_GET['entity'])) {
     $cn = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
     $params = ["machineid"=>$id, "cn"=>$cn, "inventoryid"=>$inventoryid];
     $p = new PageGenerator(_T(sprintf("Updates on machine %s", $cn)));
-} else {
-    $p = new PageGenerator(_T(sprintf("Updates ", )));
-
 }
 
 $p->setSideMenu($sidemenu);
 $p->display();
+
+require_once("modules/updates/includes/xmlrpc.php");
 
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDeploySpecificUpdate"), "container", $params);
 $ajax->display();

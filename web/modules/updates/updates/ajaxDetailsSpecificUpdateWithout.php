@@ -85,7 +85,7 @@ for($i = 0; $i < $count; $i++) {
 }
 
 
-echo "<h2>Machines without update</h2>";
+echo "<h2>"._T("Machines without update", "updates")."</h2>";
 $n = new OptimizedListInfos($titles_without, _T("Hostname", "updates"));
 $n->disableFirstColumnActionLink();
 

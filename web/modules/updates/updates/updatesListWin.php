@@ -20,8 +20,8 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require("graph/navbar.inc.php");
 require("localSidebar.php");
+require("graph/navbar.inc.php");
 
 $p = new PageGenerator(_T("Manage Updates Lists", 'updates'));
 $p->setSideMenu($sidemenu);

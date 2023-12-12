@@ -31,13 +31,6 @@ $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
 $end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
 
-
-
-echo "<pre>";
-//print_r($entities);
-//print_r($compliancerate);
-echo "</pre>";
-
 $nameEntitie = "TEST_ENTITIE";
 $nameGroup = "";
 
