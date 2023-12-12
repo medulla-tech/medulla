@@ -27,10 +27,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("modules/msc/includes/widgets.inc.php");
 
-<<<<<<< HEAD
-function quick_get($param, $is_checkbox = false)
-{
-=======
 ?>
 
 <script>
@@ -171,7 +167,6 @@ jQuery(".btnPrimary").hover(function(){
 
 <?php
 function quick_get($param, $is_checkbox = False) {
->>>>>>> integration
     if ($is_checkbox) {
         return (isset($_GET[$param])) ? $_GET[$param] : '';
     } elseif (isset($_POST[$param]) && $_POST[$param] != '') {
