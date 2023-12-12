@@ -228,6 +228,7 @@ class MultiFileTpl3 extends AbstractTpl {
         <script type="text/javascript">
         var selectedPapi = jQuery("[name=p_api]").val();
         var packageUuid = jQuery("[name=packageUuid]").val();
+        var filesInQueue = 0;
         function createUploader(){
             var uploader = new qq.FileUploader({
                 element: document.getElementById(\'file-uploader\'),
@@ -240,7 +241,14 @@ class MultiFileTpl3 extends AbstractTpl {
                 autoUpload: false,
                 uploadButtonText: "' . _T('Add files', "pkgs") . '",
                 cancelButtonText: "' . _T('Cancel', "pkgs") . '",
+                onCancel: function(id, fileName){
+                    filesInQueue--;
+                    checkFilesInQueue();
+                },
                 onComplete: function(id, file, responseJson){
+                    filesInQueue--;
+                    checkFilesInQueue();
+
                     // queue
                     if(uploader.getInProgress() > 0){
                         return;
@@ -249,6 +257,8 @@ class MultiFileTpl3 extends AbstractTpl {
 
                     // Set files_uploaded to 1
                     jQuery(\'[name=files_uploaded]\').val(1);
+
+                    jQuery(\'[name=bcreate]\').prop(\'disabled\', false);
 
                     url = \'' . urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand1") . '&papiid=\' + selectedPapi;
                     url += \'&tempdir=' . $random_dir . '\';
@@ -279,12 +289,31 @@ class MultiFileTpl3 extends AbstractTpl {
                 }
             });
 
-            jQuery("<div class=\"uploadFiles btnPrimary\">' . _T('Upload selected files', 'pkgs') . '</div>").css("margin","0 0 0 10px").insertAfter(jQuery(".qq-upload-button"));
-            jQuery(".qq-upload-button").addClass("btnPrimary").removeClass("qq-upload-button").css("margin","0 0 0 0");
+            var uploadButton = jQuery("<div class=\"uploadFiles btnPrimary\">" + "' . _T('Upload selected files', 'pkgs') . '" + "</div>")
+                                    .css("margin", "0 0 0 10px")
+                                    .insertAfter(jQuery(".qq-upload-button"))
+                                    .click(function() {
+                                        jQuery(this).css("background-color", "black");
+                                        uploadButton.text("' . _T('Upload selected files', 'pkgs') . '");
+                                        uploader.uploadStoredFiles();
+                                });
 
-            jQuery(\'.uploadFiles\').click(function() {
-                uploader.uploadStoredFiles();
+            jQuery(document).on(\'change\', \':file\', function() {
+                var numberOfFilesAdded = this.files.length;
+                if (numberOfFilesAdded > 0) {
+                    filesInQueue += numberOfFilesAdded;
+                    console.log(filesInQueue);
+                    uploadButton.css("background-color", "#2295D2");
+                    jQuery(\'[name=bcreate]\').prop(\'disabled\', true);
+                }
             });
+
+            jQuery(".qq-upload-button").addClass("btnPrimary").removeClass("qq-upload-button").css("margin","0 0 0 0");
+        }
+        function checkFilesInQueue() {
+            if (filesInQueue === 0) {
+                jQuery(\'[name=bcreate]\').prop(\'disabled\', false);
+            }
         }
         createUploader();
     </script>';

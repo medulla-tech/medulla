@@ -1,5 +1,6 @@
 # Change Log
 ## [5.1.0](https://github.com/medulla-tech/medulla/releases/tag/5.1.0) (unreleased)
+- [BUGFIX]  Fix adding files on existing packages
 
 [Full Changelog](https://github.com/medulla-tech/medulla/compare/5.0.1...5.1.0)
 
