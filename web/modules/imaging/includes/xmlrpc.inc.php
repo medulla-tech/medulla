@@ -270,11 +270,13 @@ function xmlrpc_getCustomMenubylocation($location)
     return xmlCall("imaging.getCustomMenubylocation", array($location));
 }
 
-function xmlrpc_getMenusbylocation($location){
+function xmlrpc_getMenusbylocation($location)
+{
     return xmlCall("imaging.getMenubylocation", [$location]);
 }
 
-function xmlrpc_getTargetsByCustomMenuInEntity($location, $custom_menu = 1) {
+function xmlrpc_getTargetsByCustomMenuInEntity($location, $custom_menu = 1)
+{
     return xmlCall("imaging.getTargetsByCustomMenuInEntity", array($location, $custom_menu));
 }
 

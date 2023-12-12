@@ -166,7 +166,8 @@ jQuery(".btnPrimary").hover(function(){
 </script>
 
 <?php
-function quick_get($param, $is_checkbox = False) {
+function quick_get($param, $is_checkbox = false)
+{
     if ($is_checkbox) {
         return (isset($_GET[$param])) ? $_GET[$param] : '';
     } elseif (isset($_POST[$param]) && $_POST[$param] != '') {
@@ -179,7 +180,7 @@ function quick_get($param, $is_checkbox = False) {
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
-$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
+$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 
 
 $title = "";
@@ -188,7 +189,7 @@ if(isset($_GET["title"])) {
 }
 
 $updateid = "";
-if(isset($_GET["pid"])){
+if(isset($_GET["pid"])) {
     $updateid = htmlentities($_GET['pid']);
 }
 
@@ -206,21 +207,19 @@ $start_date = date("Y-m-d h:i:s", $current);
 $end_date = strtotime("+7day", $current);
 $end_date = date("Y-m-d h:i:s", $end_date);
 
-if(!empty($_GET["entity"])){
+if(!empty($_GET["entity"])) {
     $formtitle = _T("Schedule update deployment on entity", "update");
-}
-else if(!empty($_GET["gid"])){
+} elseif(!empty($_GET["gid"])) {
     $formtitle = _T("Schedule update deployment on group", "update");
-}
-else if(!empty($_GET["machineid"])){
+} elseif(!empty($_GET["machineid"])) {
     $formtitle = _T("Schedule update deployment on machine", "update");
 }
 
-if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'], $_POST['deployment_intervals'])){
+if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'], $_POST['deployment_intervals'])) {
 
     $machineid = htmlentities($_GET['machineid']);
     $inventoryid = htmlentities($_GET["inventoryid"]);
-    $updateid= htmlentities($_POST['updateid']);
+    $updateid = htmlentities($_POST['updateid']);
     $startdate = htmlentities($_POST['start_date']);
     $enddate = htmlentities($_POST['end_date']);
     $deployment_intervals = htmlentities($_POST['deployment_intervals']);
@@ -228,36 +227,37 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
     $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate, $deployment_intervals);
 
     $mesg = (!empty($result["mesg"])) ? htmlentities($result["mesg"]) : "";
-    if(!empty($result["success"]) && $result["success"] == true){
+    if(!empty($result["success"]) && $result["success"] == true) {
         new NotifyWidgetSuccess($mesg);
-    }
-    else{
+    } else {
         new NotifyWidgetFailure($mesg);
     }
-    header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["cn"=>htmlentities($_GET['cn']), "inventoryid"=>htmlentities($_GET['inventoryid']), "machineid"=>htmlentities($_GET['machineid'])]));
+    header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["cn" => htmlentities($_GET['cn']), "inventoryid" => htmlentities($_GET['inventoryid']), "machineid" => htmlentities($_GET['machineid'])]));
     exit;
-}
-else{
+} else {
     $f = new PopupForm($formtitle);
     $f->push(new Table());
 
     $hiddenpid = new HiddenTpl("updateid");
-    $f->add($hiddenpid, array("value" => $updateid, "hide" => True));
+    $f->add($hiddenpid, array("value" => $updateid, "hide" => true));
 
     $ss =  new TrFormElement(
         _T('The command must start after', 'msc'),
         new DateTimeTpl('start_date')
     );
     $f->add(
-        $ss, array(
+        $ss,
+        array(
             "value" => $start_date,
             "start_date" => 0)
     );
 
     $f->add(
         new TrFormElement(
-            _T('The command must stop before', 'msc'), new DateTimeTpl('end_date')
-        ), array(
+            _T('The command must stop before', 'msc'),
+            new DateTimeTpl('end_date')
+        ),
+        array(
             "value" => $end_date,
             "end_date" => 0)
     );
@@ -274,8 +274,10 @@ else{
     );
     $f->add(
         new TrFormElement(
-            _T('Deployment interval', 'msc'), new multifieldTpl($deployment_fields)
-        ), $deployment_values
+            _T('Deployment interval', 'msc'),
+            new multifieldTpl($deployment_fields)
+        ),
+        $deployment_values
     );
 
     $f->addValidateButton("bconfirm");
