@@ -29,19 +29,19 @@ $params = [];
 if(!empty($_GET['entity'])) {
     $entity = htmlentities($_GET['entity']);
     $completename = htmlentities($_GET['completename']);
-    $params = ["entity"=>$entity, "completename"=>$completename];
+    $params = ["entity" => $entity, "completename" => $completename];
     $p = new PageGenerator(_T(sprintf("Updates on Entity %s", $completename)));
 } elseif(!empty($_GET['gid'])) {
     $gid = htmlentities($_GET['gid']);
     $groupname = htmlentities($_GET['groupname']);
-    $params = ["group"=>$gid, "groupname"=>$groupname];
+    $params = ["group" => $gid, "groupname" => $groupname];
 
     $p = new PageGenerator(_T(sprintf("Updates on Group %s", $groupname)));
 } elseif(!empty($_GET['machineid'])) {
     $id = htmlentities($_GET['machineid']);
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : "";
     $cn = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
-    $params = ["machineid"=>$id, "cn"=>$cn, "inventoryid"=>$inventoryid];
+    $params = ["machineid" => $id, "cn" => $cn, "inventoryid" => $inventoryid];
     $p = new PageGenerator(_T(sprintf("Updates on machine %s", $cn)));
 }
 
