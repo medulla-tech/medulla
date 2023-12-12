@@ -1,8 +1,11 @@
 # Change Log
 
 
-## [4.7.0](https://github.com/medulla-tech/medulla/releases/tag/4.7.0) (unreleased)
+## [5.0.0](https://github.com/medulla-tech/medulla/releases/tag/4.7.0) (unreleased)
 - [FEATURE] Add windows 11 sysprep support
+- [FEATURE] Port Medulla to php 8.2
+- [FEATURE] Port Medulla to python 3.11
+- [FEATURE] Add new Updates module to handle microsoft updates in Medulla
 - [BUGFIX]  Fix handling accentuated letters in the script that add packages in the database.
 - [BUGFIX]  Fix importing big groups with csv files
 - [BUGFIX]  Fix counting of inventory machines in the dashboard
