@@ -66,6 +66,74 @@ class UrbackupDatabase(DatabaseHelper):
         if not ret:
             raise "Database urbackup connection error"
         return ret
+    
+    @DatabaseHelper._sessionm
+    def getClientStatus(self, session, client_id):
+        try:
+            sql="""SELECT * FROM urbackup.client_state WHERE client_id = '%s';"""%(client_id)
+
+            resultquery = session.execute(sql)
+            session.commit()
+            session.flush()
+            
+            result = [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+            
+        except Exception as e:
+            logging.getLogger().error(str(e))
+            
+        return result
+    
+    @DatabaseHelper._sessionm
+    def editClientState(self, session, state, client_id):
+        try:
+            sql="""UPDATE client_state SET state = '%s' WHERE client_id = '%s';"""%(state, client_id)
+
+            session.execute(sql)
+            session.commit()
+            session.flush()
+            
+            return True
+            
+        except Exception as e:
+            logging.getLogger().error(str(e))
+            
+            return False
+        
+    @DatabaseHelper._sessionm
+    def insertNewClient(self, session, client_id, authkey):
+        try:
+            sql="""INSERT INTO client_state VALUES ('%s', '1', '%s');"""%(client_id, authkey)
+
+            session.execute(sql)
+            session.commit()
+            session.flush()
+            
+            return True
+            
+        except Exception as e:
+            logging.getLogger().error(str(e))
+            
+            return False
+
+    @DatabaseHelper._sessionm
+    def getComputersEnableValue(self, session, jid):
+        try:
+            sql="""SELECT id, jid, enabled FROM xmppmaster.machines WHERE jid = '%s';"""%(jid)
+
+            resultquery = session.execute(sql)
+            session.commit()
+            session.flush()
+            
+            result = [{column: value for column,
+                value in rowproxy.items()}
+                        for rowproxy in resultquery]
+            
+        except Exception as e:
+            logging.getLogger().error(str(e))
+            
+        return result
 
     # =====================================================================
     # urbackup FUNCTIONS

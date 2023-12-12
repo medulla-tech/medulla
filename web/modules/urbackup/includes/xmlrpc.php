@@ -61,14 +61,34 @@ function xmlrpc_remove_group($groupid){
     return xmlCall("urbackup.remove_group", [$groupid]);
 }
 
-function xmlrpc_check_client($jidmachine, $clientid, $authkey){
-    // Call agent to send command
-    return xmlCall("urbackup.check_client", [$jidmachine, $clientid, $authkey]);
+function xmlrpc_enable_client($jidmachine, $clientid, $authkey){
+    // Call agent to send command, enable client
+    return xmlCall("urbackup.enable_client", [$jidmachine, $clientid, $authkey]);
 }
 
-function xmlrpc_remove_client($jidmachine){
-    // Call agent to send command
-    return xmlCall("urbackup.remove_client", [$jidmachine]);
+function xmlrpc_remove_client($jidmachine, $client_id){
+    // Call agent to send command, to disable client
+    return xmlCall("urbackup.remove_client", [$jidmachine, $client_id]);
+}
+
+function xmlrpc_restart_urbackup_service($jidmachine){
+    // Call agent to send command, to restart urbackup service
+    return xmlCall("urbackup.restart_urbackup_service", [$jidmachine]);
+}
+
+function xmlrpc_get_client_status($client_id){
+    // Database request to get client status
+    return xmlCall("urbackup.get_client_status", [$client_id]);
+}
+
+function xmlrpc_insertNewClient($client_id, $authkey){
+    // Database request to insert new client
+    return xmlCall("urbackup.insertNewClient", [$client_id, $authkey]);
+}
+
+function xmlrpc_getComputersEnableValue($jid){
+    // Database request get enabled info from xmppmaster.machines
+    return xmlCall("urbackup.getComputersEnableValue", [$jid]);
 }
 
 function xmlrpc_get_settings_global(){
