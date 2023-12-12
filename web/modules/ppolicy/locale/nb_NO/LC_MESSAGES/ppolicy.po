@@ -12,47 +12,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-14 15:37+0100\n"
+"POT-Creation-Date: 2023-01-24 10:40+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
-"Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
+"Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: modules/ppolicy/infoPackage.inc.php:36
-msgid "Password Policy"
-msgstr "Passordpolicy"
-
-#: modules/ppolicy/infoPackage.inc.php:46
-#: modules/ppolicy/includes/localSidebar.php:27
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
-msgid "Password policies"
-msgstr "Passordpolicier"
-
-#: modules/ppolicy/infoPackage.inc.php:52
-#: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/default/edit.php:44
-msgid "Add a password policy"
-msgstr "Legg til en Passordpolicy"
-
-#: modules/ppolicy/infoPackage.inc.php:58
-msgid "Edit a password policy"
-msgstr "Reddiger en Passordpolicy"
-
-#: modules/ppolicy/infoPackage.inc.php:63
-msgid "Delete a password policy"
-msgstr "Slett en Passordpolicy"
-
-#: modules/ppolicy/infoPackage.inc.php:79
-msgid "Default "
-msgstr "Standard"
-
-#: modules/ppolicy/infoPackage.inc.php:82
-msgid "Enable user specific password policy"
-msgstr "Aktiver brukerspesifikk passordpolicy"
 
 #: modules/ppolicy/includes/auditCodes.php:4
 #: modules/ppolicy/includes/auditCodes.php:9
@@ -80,90 +48,6 @@ msgstr "Slett ppolicy for en bruker"
 #: modules/ppolicy/includes/auditCodes.php:12
 msgid "ppolicy"
 msgstr "ppolicy"
-
-#: modules/ppolicy/includes/publicFunc.php:37
-#: modules/ppolicy/includes/publicFunc.php:63
-#: modules/ppolicy/includes/publicFunc.php:71
-#: modules/ppolicy/includes/publicFunc.php:78
-#: modules/ppolicy/includes/publicFunc.php:83
-#: modules/ppolicy/includes/publicFunc.php:201
-msgid "Password policy management"
-msgstr "Passordpolicy styring"
-
-#: modules/ppolicy/includes/publicFunc.php:64
-msgid "This account is locked by the LDAP directory."
-msgstr "Denne kontoen er låst av LDAP-katalogen."
-
-#: modules/ppolicy/includes/publicFunc.php:72
-msgid ""
-"The password of this account has expired. The user cannot change his "
-"password."
-msgstr ""
-"Passordet til denne kontoen er utløpt. Brukeren kan ikke endre passordet "
-"sitt."
-
-#: modules/ppolicy/includes/publicFunc.php:79
-#, php-format
-msgid ""
-"The password of this account has expired. The user has %s login(s) left to "
-"change his password."
-msgstr ""
-"Passordet til denne kontoen er utløpt. Brukeren har %sinnlogging (er) igjen "
-"for å endre passordet."
-
-#: modules/ppolicy/includes/publicFunc.php:84
-msgid ""
-"The password of this account has expired. The user can change his password."
-msgstr ""
-"Passordet til denne kontoen er utløpt. Brukeren kan endre passordet sitt."
-
-#: modules/ppolicy/includes/publicFunc.php:88
-msgid "Lock account"
-msgstr "Lås konto"
-
-#: modules/ppolicy/includes/publicFunc.php:89
-msgid "If checked, permanently lock the user account"
-msgstr "Hvis markert, låser du brukerkontoen permanent"
-
-#: modules/ppolicy/includes/publicFunc.php:94
-msgid "Password reset flag"
-msgstr "Flagg for tilbakestilling av passord"
-
-#: modules/ppolicy/includes/publicFunc.php:95
-msgid ""
-"If checked, the user must change her password when she first binds to the "
-"LDAP directory after password is set or reset by a password administrator"
-msgstr ""
-"Hvis avkrysset, må brukeren endre passordet sitt når brukeren først binder "
-"seg til LDAP-katalogen hvis passordet er satt eller tilbakestilt av en "
-"passordadministrator"
-
-#: modules/ppolicy/includes/publicFunc.php:117
-msgid "Enable a specific password policy for this user"
-msgstr "Aktiver en spesifikk passordpolicy for denne brukeren"
-
-#: modules/ppolicy/includes/publicFunc.php:118
-#: modules/ppolicy/includes/publicFunc.php:224
-msgid "If not set the default password policy is enforced."
-msgstr "Hvis ikke angitt, blir standard passordpolicy brukt."
-
-#: modules/ppolicy/includes/publicFunc.php:170
-#, php-format
-msgid "Password policy %s applied."
-msgstr "Passordpolicy %sbrukes."
-
-#: modules/ppolicy/includes/publicFunc.php:174
-#, php-format
-msgid "Password policy %s removed."
-msgstr "Passordpolicy %s fjernet"
-
-#: modules/ppolicy/includes/publicFunc.php:186
-msgid "Password policy attributes updated."
-msgstr "Attributter for passordpolitikken er oppdatert."
-
-#: modules/ppolicy/includes/publicFunc.php:223
-msgid "Apply a password policy for all group users"
-msgstr "Bruk en passordpolicy for alle gruppebrukere"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:37
 #: modules/ppolicy/default/edit.php:138
@@ -340,29 +224,100 @@ msgstr ""
 "sjekke kvaliteten, og hvis serveren ikke kan bekrefte den, vil den returnere"
 " en feil ved å nekte passordet."
 
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-"Advarsel: du er logget inn ved hjelp av en spesiell innloggingsmodus. Endre "
-"passordet ditt så raskt som mulig ved å bruke siden for endring av passord, "
-"ellers blir kontoen din låst."
+#: modules/ppolicy/includes/localSidebar.php:27
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
+#: modules/ppolicy/infoPackage.inc.php:46
+msgid "Password policies"
+msgstr "Passordpolicier"
 
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account"
-" is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-"Advarsel: passordet ditt er tilbakestilt av en administrator. LDAP-kontoen "
-"din er begrenset. Endre passordet ditt så raskt som mulig ved å bruke siden "
-"for endring av passord."
+#: modules/ppolicy/includes/localSidebar.php:28
+#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
+msgid "Add a password policy"
+msgstr "Legg til en Passordpolicy"
 
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Liste over Passordpolicier."
+#: modules/ppolicy/includes/publicFunc.php:37
+#: modules/ppolicy/includes/publicFunc.php:63
+#: modules/ppolicy/includes/publicFunc.php:71
+#: modules/ppolicy/includes/publicFunc.php:78
+#: modules/ppolicy/includes/publicFunc.php:83
+#: modules/ppolicy/includes/publicFunc.php:201
+msgid "Password policy management"
+msgstr "Passordpolicy styring"
+
+#: modules/ppolicy/includes/publicFunc.php:64
+msgid "This account is locked by the LDAP directory."
+msgstr "Denne kontoen er låst av LDAP-katalogen."
+
+#: modules/ppolicy/includes/publicFunc.php:72
+msgid ""
+"The password of this account has expired. The user cannot change his "
+"password."
+msgstr ""
+"Passordet til denne kontoen er utløpt. Brukeren kan ikke endre passordet "
+"sitt."
+
+#: modules/ppolicy/includes/publicFunc.php:79
+#, php-format
+msgid ""
+"The password of this account has expired. The user has %s login(s) left to "
+"change his password."
+msgstr ""
+"Passordet til denne kontoen er utløpt. Brukeren har %sinnlogging (er) igjen "
+"for å endre passordet."
+
+#: modules/ppolicy/includes/publicFunc.php:84
+msgid ""
+"The password of this account has expired. The user can change his password."
+msgstr ""
+"Passordet til denne kontoen er utløpt. Brukeren kan endre passordet sitt."
+
+#: modules/ppolicy/includes/publicFunc.php:88
+msgid "Lock account"
+msgstr "Lås konto"
+
+#: modules/ppolicy/includes/publicFunc.php:89
+msgid "If checked, permanently lock the user account"
+msgstr "Hvis markert, låser du brukerkontoen permanent"
+
+#: modules/ppolicy/includes/publicFunc.php:94
+msgid "Password reset flag"
+msgstr "Flagg for tilbakestilling av passord"
+
+#: modules/ppolicy/includes/publicFunc.php:95
+msgid ""
+"If checked, the user must change her password when she first binds to the "
+"LDAP directory after password is set or reset by a password administrator"
+msgstr ""
+"Hvis avkrysset, må brukeren endre passordet sitt når brukeren først binder "
+"seg til LDAP-katalogen hvis passordet er satt eller tilbakestilt av en "
+"passordadministrator"
+
+#: modules/ppolicy/includes/publicFunc.php:117
+msgid "Enable a specific password policy for this user"
+msgstr "Aktiver en spesifikk passordpolicy for denne brukeren"
+
+#: modules/ppolicy/includes/publicFunc.php:118
+#: modules/ppolicy/includes/publicFunc.php:224
+msgid "If not set the default password policy is enforced."
+msgstr "Hvis ikke angitt, blir standard passordpolicy brukt."
+
+#: modules/ppolicy/includes/publicFunc.php:170
+#, php-format
+msgid "Password policy %s applied."
+msgstr "Passordpolicy %sbrukes."
+
+#: modules/ppolicy/includes/publicFunc.php:174
+#, php-format
+msgid "Password policy %s removed."
+msgstr "Passordpolicy %s fjernet"
+
+#: modules/ppolicy/includes/publicFunc.php:186
+msgid "Password policy attributes updated."
+msgstr "Attributter for passordpolitikken er oppdatert."
+
+#: modules/ppolicy/includes/publicFunc.php:223
+msgid "Apply a password policy for all group users"
+msgstr "Bruk en passordpolicy for alle gruppebrukere"
 
 #: modules/ppolicy/default/delete.php:29
 msgid "The password policy has been deleted."
@@ -384,6 +339,10 @@ msgstr "Slett"
 #: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Avbryt"
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Liste over Passordpolicier."
 
 #: modules/ppolicy/default/edit.php:48
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
@@ -435,6 +394,46 @@ msgstr "Maksimal feil for passord"
 msgid "Lockout duration (seconds)"
 msgstr "Lock-outvarighet (sekunder)"
 
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Advarsel: du er logget inn ved hjelp av en spesiell innloggingsmodus. Endre "
+"passordet ditt så raskt som mulig ved å bruke siden for endring av passord, "
+"ellers blir kontoen din låst."
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Advarsel: passordet ditt er tilbakestilt av en administrator. LDAP-kontoen "
+"din er begrenset. Endre passordet ditt så raskt som mulig ved å bruke siden "
+"for endring av passord."
+
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
 msgid "Delete password policy"
 msgstr "Slett passordpolicy"
+
+#: modules/ppolicy/infoPackage.inc.php:36
+msgid "Password Policy"
+msgstr "Passordpolicy"
+
+#: modules/ppolicy/infoPackage.inc.php:58
+msgid "Edit a password policy"
+msgstr "Reddiger en Passordpolicy"
+
+#: modules/ppolicy/infoPackage.inc.php:63
+msgid "Delete a password policy"
+msgstr "Slett en Passordpolicy"
+
+#: modules/ppolicy/infoPackage.inc.php:79
+msgid "Default "
+msgstr "Standard"
+
+#: modules/ppolicy/infoPackage.inc.php:82
+msgid "Enable user specific password policy"
+msgstr "Aktiver brukerspesifikk passordpolicy"

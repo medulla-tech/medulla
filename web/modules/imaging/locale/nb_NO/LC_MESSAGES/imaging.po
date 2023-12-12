@@ -12,561 +12,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-14 15:37+0100\n"
+"POT-Creation-Date: 2023-01-24 10:40+0100\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
-"Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
+"Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: modules/imaging/infoPackage.inc.php:33
-msgid "Imaging service"
-msgstr "Avbildingstjenester"
-
-#: modules/imaging/infoPackage.inc.php:38
-msgid "Imaging"
-msgstr "Avbilding"
-
-#: modules/imaging/infoPackage.inc.php:43
-msgid "System Image Manager"
-msgstr "Systembilde Håndterer"
-
-#: modules/imaging/infoPackage.inc.php:48
-msgid "Imaging Unattended"
-msgstr "Avbilding uten tilsyn"
-
-#: modules/imaging/infoPackage.inc.php:51
-msgid "Sysprep List"
-msgstr "Sysprep Liste"
-
-#: modules/imaging/infoPackage.inc.php:56
-msgid "Imaging sysprepView"
-msgstr "Avbilding  sysprepView"
-
-#: modules/imaging/infoPackage.inc.php:86
-#: modules/imaging/infoPackage.inc.php:91
-msgid "Create static group from menu set"
-msgstr "Opprett statisk gruppe fra menysettet"
-
-#: modules/imaging/infoPackage.inc.php:96
-msgid "Server status"
-msgstr "Serverstatus"
-
-#: modules/imaging/infoPackage.inc.php:99
-#: modules/imaging/manage/localSidebar.php:31
-msgid "Manage masters"
-msgstr "Administrer mastere"
-
-#: modules/imaging/infoPackage.inc.php:101
-#: modules/imaging/manage/master_remove.php:89
-msgid "Remove master"
-msgstr "Fjern master"
-
-#: modules/imaging/infoPackage.inc.php:104
-#: modules/imaging/manage/master_delete.php:76
-msgid "Delete master"
-msgstr "Fjern master"
-
-#: modules/imaging/infoPackage.inc.php:107
-msgid "Edit master"
-msgstr "Rediger master"
-
-#: modules/imaging/infoPackage.inc.php:111
-#: modules/imaging/infoPackage.inc.php:114
-msgid "master clone"
-msgstr "master klone"
-
-#: modules/imaging/infoPackage.inc.php:118
-msgid "Add master"
-msgstr "Legg til master"
-
-#: modules/imaging/infoPackage.inc.php:121
-#: modules/imaging/manage/master_iso.php:44
-msgid "Create iso from master"
-msgstr "Skap iso fra master"
-
-#: modules/imaging/infoPackage.inc.php:125
-#: modules/imaging/manage/localSidebar.php:34
-msgid "Manage boot services"
-msgstr "Administrer oppstartstjeneser"
-
-#: modules/imaging/infoPackage.inc.php:127
-msgid "Edit service"
-msgstr "Rediger tjeneste"
-
-#: modules/imaging/infoPackage.inc.php:130
-#: modules/imaging/infoPackage.inc.php:136
-msgid "Remove service"
-msgstr "Fjern tjeneste"
-
-#: modules/imaging/infoPackage.inc.php:133
-msgid "Add service"
-msgstr "Legg til tjeneste"
-
-#: modules/imaging/infoPackage.inc.php:139
-msgid "Show used services"
-msgstr "Vis brukte tjenester"
-
-#: modules/imaging/infoPackage.inc.php:143
-#: modules/imaging/manage/localSidebar.php:37
-msgid "Default boot menu"
-msgstr "Standard boot meny"
-
-#: modules/imaging/infoPackage.inc.php:145
-msgid "Up service"
-msgstr "Ta opp tjeneste"
-
-#: modules/imaging/infoPackage.inc.php:148
-#: modules/imaging/infoPackage.inc.php:151
-msgid "Down service"
-msgstr "Ta ned tjeneste"
-
-#: modules/imaging/infoPackage.inc.php:155
-#: modules/imaging/manage/localSidebar.php:40
-msgid "Post-imaging scripts"
-msgstr "Post-Avbildingsskript"
-
-#: modules/imaging/infoPackage.inc.php:157
-#: modules/imaging/infoPackage.inc.php:160
-msgid "Edit post-imaging script"
-msgstr "Rediger post-avbildingsskript"
-
-#: modules/imaging/infoPackage.inc.php:163
-msgid "Create boot service from postinstall script"
-msgstr "Opprettboottjeneste fra postinstallasjonsskript"
-
-#: modules/imaging/infoPackage.inc.php:166
-msgid "Redirect to Boot Services page"
-msgstr "Viderekobling til Boot Tjeneste-siden"
-
-#: modules/imaging/infoPackage.inc.php:169
-#: modules/imaging/manage/postinstall_delete.php:97
-msgid "Delete post-imaging script"
-msgstr "Slett postinstallasjonsskript"
-
-#: modules/imaging/infoPackage.inc.php:173
-msgid "Imaging configuration"
-msgstr "Avbildingskonfigurasjon"
-
-#: modules/imaging/infoPackage.inc.php:175
-msgid "Save an Imaging Server configuration"
-msgstr "Lagre konfigurasjonen til en avbildingsserver"
-
-#: modules/imaging/infoPackage.inc.php:179
-msgid "Available Imaging Server"
-msgstr "Tilgjengelig avbildingsserver"
-
-#: modules/imaging/infoPackage.inc.php:182
-msgid "Link an Imaging Server"
-msgstr "Koble en avbildingsserver"
-
-#: modules/imaging/infoPackage.inc.php:190
-#: modules/imaging/infoPackage.inc.php:250
-msgid "Computers Profile Creator"
-msgstr "Skape en maskinprofil"
-
-#: modules/imaging/infoPackage.inc.php:193
-#: modules/imaging/infoPackage.inc.php:207
-#: modules/imaging/infoPackage.inc.php:221
-msgid "Profile creation's tab from dynamic request"
-msgstr "Profilskapingsfane fra dynamisk forespørsel"
-
-#: modules/imaging/infoPackage.inc.php:196
-#: modules/imaging/infoPackage.inc.php:210
-#: modules/imaging/infoPackage.inc.php:224
-msgid "Profile creation's tab from machine list"
-msgstr "Profilskapingsfane fra maskinliste"
-
-#: modules/imaging/infoPackage.inc.php:199
-#: modules/imaging/infoPackage.inc.php:213
-#: modules/imaging/infoPackage.inc.php:227
-msgid "Profile creation's tab from file import"
-msgstr "Profilskapingsfane fra filimport"
-
-#: modules/imaging/infoPackage.inc.php:203
-msgid "Computers Profile Creator Sub Request Editor"
-msgstr "Skape maskinprofiler fra underanmodning"
-
-#: modules/imaging/infoPackage.inc.php:217
-msgid "Computers Profile Creator Sub Request Delete"
-msgstr "Slett maskinprofiler fra underanmodning"
-
-#: modules/imaging/infoPackage.inc.php:231
-#: modules/imaging/infoPackage.inc.php:254
-msgid "Computers Profile Editor"
-msgstr "Rediger maskinprofil"
-
-#: modules/imaging/infoPackage.inc.php:236
-msgid "Computers Profile Sub Request Editor"
-msgstr "Skape underanmodning for maskinprofiler "
-
-#: modules/imaging/infoPackage.inc.php:241
-msgid "Computers Profile Sub Request Delete"
-msgstr "Slett underanmodning for maskinprofiler "
-
-#: modules/imaging/infoPackage.inc.php:246
-#: modules/imaging/infoPackage.inc.php:259
-msgid "List all profiles of computers"
-msgstr "List alle maskinprofiler"
-
-#: modules/imaging/infoPackage.inc.php:265
-msgid "Register a profile in the imaging module"
-msgstr "Registrer en profil i avbildingsmodulen"
-
-#: modules/imaging/infoPackage.inc.php:271
-msgid "Imaging on group"
-msgstr "Avbilding på en gruppe"
-
-#: modules/imaging/infoPackage.inc.php:274
-#: modules/imaging/infoPackage.inc.php:353
-#: modules/imaging/imaging/tabs.php:217 modules/imaging/imaging/tabs.php:289
-msgid "Boot menu"
-msgstr "Boot meny"
-
-#: modules/imaging/infoPackage.inc.php:276
-#: modules/imaging/infoPackage.inc.php:355
-#: modules/imaging/imaging/tabs.php:220
-msgid "Images and Masters"
-msgstr "Bilder og Mastere"
-
-#: modules/imaging/infoPackage.inc.php:278
-#: modules/imaging/infoPackage.inc.php:357
-#: modules/imaging/imaging/tabs.php:221 modules/imaging/imaging/tabs.php:291
-msgid "Boot services"
-msgstr "Oppstartstjenester"
-
-#: modules/imaging/infoPackage.inc.php:280
-#: modules/imaging/infoPackage.inc.php:359
-msgid "Imaging Log"
-msgstr "Avbildingslogg"
-
-#: modules/imaging/infoPackage.inc.php:282
-#: modules/imaging/infoPackage.inc.php:361
-#: modules/imaging/imaging/tabs.php:223 modules/imaging/imaging/tabs.php:293
-msgid "Menu configuration"
-msgstr "Meny konfigurasjon"
-
-#: modules/imaging/infoPackage.inc.php:285
-#: modules/imaging/infoPackage.inc.php:366
-#: modules/imaging/manage/ajaxMasterLevel2.php:53
-#: modules/imaging/imaging/bootmenu_remove.php:156
-#: modules/imaging/imaging/ajaxImages.php:79
-msgid "Remove from boot menu"
-msgstr "Fjern fra boot meny"
-
-#: modules/imaging/infoPackage.inc.php:289
-msgid "Display computers group content"
-msgstr "Vis maskingruppers innehold"
-
-#: modules/imaging/infoPackage.inc.php:293
-msgid "Delete a group of computers"
-msgstr "Slett en gruppe av maskiner"
-
-#: modules/imaging/infoPackage.inc.php:297
-msgid "Computers Group Editor"
-msgstr "Editor for maskingruppe"
-
-#: modules/imaging/infoPackage.inc.php:301
-msgid "Share a group of computers"
-msgstr "Del en maskingruppe"
-
-#: modules/imaging/infoPackage.inc.php:307
-msgid "Secure control on a group of computers"
-msgstr "Sikker kontroll på en gruppe datamaskiner"
-
-#: modules/imaging/infoPackage.inc.php:311
-msgid "MSC launch tab for a group"
-msgstr "MSC-startfanen for en gruppe"
-
-#: modules/imaging/infoPackage.inc.php:314
-msgid "MSC bundle tab for a group"
-msgstr "MSC-pakkefane for en gruppe"
-
-#: modules/imaging/infoPackage.inc.php:317
-msgid "MSC logs tab for a group"
-msgstr "MSC-loggfanen for en gruppe"
-
-#: modules/imaging/infoPackage.inc.php:320
-msgid "MSC history tab for a group"
-msgstr "MSC-historiefanen for en gruppe"
-
-#: modules/imaging/infoPackage.inc.php:340
-msgid "Register a computer in the imaging module"
-msgstr "Registrer en maskin i avbildingsmodulen"
-
-#: modules/imaging/infoPackage.inc.php:345
-msgid "Create a static group containing computers with custom imaging menu"
-msgstr ""
-"Opprett en statisk gruppe som inneholder datamaskiner med tilpasset "
-"bavildingsmeny"
-
-#: modules/imaging/infoPackage.inc.php:350
-msgid "Imaging on computer"
-msgstr "Kjør avbilding på en maskin"
-
-#: modules/imaging/infoPackage.inc.php:370
-msgid "Show target that use that image"
-msgstr "Vis målene som bruker dette bildet"
-
-#: modules/imaging/infoPackage.inc.php:374
-msgid "Show sync status"
-msgstr "Vis synk status"
-
-#: modules/imaging/infoPackage.inc.php:416
-msgid "Add a service to a target"
-msgstr "Legg til tjeneste til et mål"
-
-#: modules/imaging/infoPackage.inc.php:420
-msgid "Edit parameters of a service on a target"
-msgstr "Rediger parametere for en tjeneste for et mål"
-
-#: modules/imaging/infoPackage.inc.php:424
-msgid "Remove a service from a target"
-msgstr "Fjern en tjeneste for et mål"
-
-#: modules/imaging/infoPackage.inc.php:429
-msgid "Add a image to a target"
-msgstr "Legg til et bilde til et mål"
-
-#: modules/imaging/infoPackage.inc.php:433
-msgid "Edit parameters of a image on a target"
-msgstr "Rediger bildeparametere for et mål"
-
-#: modules/imaging/infoPackage.inc.php:437
-#: modules/imaging/imaging/images_delete.php:68
-msgid "Delete image"
-msgstr "Slett bildefil"
-
-#: modules/imaging/infoPackage.inc.php:441
-msgid "Create iso image"
-msgstr "Lag iso bilde"
-
-#: modules/imaging/infoPackage.inc.php:445
-msgid "init multicast"
-msgstr "initsier multicast"
-
-#: modules/imaging/includes/logs.inc.php:25
-#: modules/imaging/manage/ajaxLogs.php:53
-msgid "Menu"
-msgstr "Meny"
-
-#: modules/imaging/includes/logs.inc.php:26
-#: modules/imaging/manage/ajaxLogs.php:59
-msgid "Inventory"
-msgstr "Inventar"
-
-#: modules/imaging/includes/logs.inc.php:27
-#: modules/imaging/manage/ajaxLogs.php:55
-msgid "Backup"
-msgstr "Sikkerhetskopi"
-
-#: modules/imaging/includes/logs.inc.php:28
-#: modules/imaging/manage/ajaxLogs.php:52
-msgid "Boot"
-msgstr "Boot"
-
-#: modules/imaging/includes/logs.inc.php:29
-#: modules/imaging/manage/ajaxLogs.php:54
-msgid "Restoration"
-msgstr "Gjenopprett"
-
-#: modules/imaging/includes/logs.inc.php:30
-#: modules/imaging/manage/ajaxLogs.php:56
-msgid "Post-imaging"
-msgstr "Post-imaging"
-
-#: modules/imaging/includes/logs.inc.php:31
-#: modules/imaging/manage/ajaxLogs.php:57
-msgid "Error"
-msgstr "Feil"
-
-#: modules/imaging/includes/logs.inc.php:33
-#: modules/imaging/manage/ajaxLogs.php:51
-#: modules/imaging/manage/ajaxLogs.php:67
-msgid "Status unknown"
-msgstr "Ukjent status"
-
-#: modules/imaging/includes/logs.inc.php:34
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
-#: modules/imaging/manage/ajaxLogs.php:58
-#: modules/imaging/manage/postinstall_delete.php:101
-#: modules/imaging/manage/ajaxMasterLevel2.php:63
-#: modules/imaging/imaging/bootmenu.php:367
-msgid "Delete"
-msgstr "Slett"
-
-#: modules/imaging/includes/logs.inc.php:35
-#: modules/imaging/manage/ajaxLogs.php:61
-msgid "Restore in progress"
-msgstr "Gjenoppretting pågår"
-
-#: modules/imaging/includes/logs.inc.php:36
-#: modules/imaging/manage/ajaxLogs.php:62
-msgid "Restore done"
-msgstr "Gjenoppretting gjennomført"
-
-#: modules/imaging/includes/logs.inc.php:37
-#: modules/imaging/manage/ajaxLogs.php:63
-msgid "Restore failed"
-msgstr "Gjenoppretting mislyktes"
-
-#: modules/imaging/includes/logs.inc.php:38
-#: modules/imaging/manage/ajaxLogs.php:64
-msgid "Backup in progress"
-msgstr "Sikkerhetskopiering pågår"
-
-#: modules/imaging/includes/logs.inc.php:39
-#: modules/imaging/manage/ajaxLogs.php:65
-msgid "Backup done"
-msgstr "Sikkerhetskopiering ferdig"
-
-#: modules/imaging/includes/logs.inc.php:40
-#: modules/imaging/manage/ajaxLogs.php:66
-msgid "Backup failed"
-msgstr "Sikkerhetskopieringen mislyktes"
-
-#: modules/imaging/includes/logs.inc.php:45
-msgid "Boot menu shown"
-msgstr "Vist boot meny"
-
-#: modules/imaging/includes/logs.inc.php:47
-msgid "Hardware Inventory received"
-msgstr "Maskinvareinventar mottatt"
-
-#: modules/imaging/includes/logs.inc.php:48
-msgid "Hardware Inventory not stored"
-msgstr "Maskinvareinventar ikke lagret"
-
-#: modules/imaging/includes/logs.inc.php:49
-msgid "Hardware Inventory not updated"
-msgstr "Hardware-inventar ikke oppdatert"
-
-#: modules/imaging/includes/logs.inc.php:50
-msgid "Hardware Inventory updated"
-msgstr "Hardware-inventar oppdatert"
-
-#: modules/imaging/includes/logs.inc.php:52
-msgid "Identification Request"
-msgstr "Identifikasjonsforespørsel"
-
-#: modules/imaging/includes/logs.inc.php:53
-msgid "Identification Success"
-msgstr "Identifikasjon Suksess"
-
-#: modules/imaging/includes/logs.inc.php:54
-msgid "Identification Failure"
-msgstr "Identifikasjon feilet"
-
-#: modules/imaging/includes/logs.inc.php:56
-msgid "Image UUID Request"
-msgstr "UUID anmodning for et bilde"
-
-#: modules/imaging/includes/logs.inc.php:57
-msgid "Failed to summon an Image UUID"
-msgstr "Kunne ikke opprette en bilde-UUID"
-
-#: modules/imaging/includes/logs.inc.php:58
-msgid "Image UUID sent"
-msgstr "Bilde UUID sendt"
-
-#: modules/imaging/includes/logs.inc.php:59
-msgid "Failed to send an Image UUID"
-msgstr "Kunne ikke sende  UUID-bilde"
-
-#: modules/imaging/includes/logs.inc.php:61
-msgid "End of Backup Request"
-msgstr "Slutt på forespørsel om sikkerhetskopiering"
-
-#: modules/imaging/includes/logs.inc.php:62
-msgid "End of Backup Failure"
-msgstr "Slutt på sikkerhetskopieringsfeil"
-
-#: modules/imaging/includes/logs.inc.php:63
-msgid "End of Backup Success"
-msgstr "Slutt på sikkerhetskopieringssuksess"
-
-#: modules/imaging/includes/logs.inc.php:65
-msgid "Preselected Menu Entry Change Request"
-msgstr "Forhåndsvalgt forespørsel om endring av menyinngang"
-
-#: modules/imaging/includes/logs.inc.php:66
-msgid "Preselected Menu Entry Change Success"
-msgstr "Vellykket endring av forhåndsvalgt menyoppføring"
-
-#: modules/imaging/includes/logs.inc.php:67
-msgid "Preselected Menu Entry Change Failure"
-msgstr "Misllykket endring av forhåndsvalgt menyoppføring"
-
-#: modules/imaging/includes/logs.inc.php:69
-msgid "Booted"
-msgstr "Bootet"
-
-#: modules/imaging/includes/logs.inc.php:70
-msgid "Chosen Menu Entry"
-msgstr "Valgt menypunkt"
-
-#: modules/imaging/includes/logs.inc.php:71
-msgid "Restoration Started"
-msgstr "Gjenoppretting started"
-
-#: modules/imaging/includes/logs.inc.php:72
-msgid "Restoration Finished"
-msgstr "Gjenoppretting ferdig"
-
-#: modules/imaging/includes/logs.inc.php:73
-msgid "Backup Started"
-msgstr "Sikkerhetskopiering startet"
-
-#: modules/imaging/includes/logs.inc.php:74
-msgid "Backup Finished"
-msgstr "Sikkerhetskopiering avsluttet"
-
-#: modules/imaging/includes/logs.inc.php:75
-msgid "Postinstall Started"
-msgstr "Etterinstallering startet"
-
-#: modules/imaging/includes/logs.inc.php:76
-msgid "Postinstall Finished"
-msgstr "Etterinstallering avsluttet"
-
-#: modules/imaging/includes/logs.inc.php:77
-msgid "Critical error"
-msgstr "Kritisk feil"
-
-#: modules/imaging/includes/logs.inc.php:79
-msgid "Hostname Request"
-msgstr "Vertsnavnforespørsel"
-
-#: modules/imaging/includes/logs.inc.php:80
-msgid "Failed to obtain a Hostname"
-msgstr "Kunne ikke hente vertsnavn"
-
-#: modules/imaging/includes/logs.inc.php:81
-msgid "Hostname sent"
-msgstr "Vertsnavn sendt"
-
-#: modules/imaging/includes/logs.inc.php:82
-msgid "Failed to send a Hostname"
-msgstr "Kunne ikke sende vertsnavn"
-
-#: modules/imaging/includes/logs.inc.php:84
-msgid "Computer UUID Request"
-msgstr "UUID-forespørsel for datamaskiner"
-
-#: modules/imaging/includes/logs.inc.php:85
-msgid "Failed to obtain a Computer UUID"
-msgstr "Kunne ikke hente en UUID til datamaskin"
-
-#: modules/imaging/includes/logs.inc.php:86
-msgid "Computer UUID Sent"
-msgstr "Datamaskin UUID sendt"
-
-#: modules/imaging/includes/logs.inc.php:87
-msgid "Failed to send a Computer UUID"
-msgstr "Kunne ikke sende en datamaskin-UUID "
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:49
 msgid "File"
@@ -1470,6 +924,128 @@ msgstr ""
 "som datakontoen opprettes i. Denne kontoen er i Active Directory på en "
 "domenekontroller i domenet som datamaskinen kobles til."
 
+#: modules/imaging/includes/xmlrpc.inc.php:249
+#, php-format
+msgid "Boot menu generation For machine %s"
+msgstr "Generering av oppstartsmeny for maskin %s"
+
+#: modules/imaging/includes/xmlrpc.inc.php:272
+#, php-format
+msgid "Boot menu generation For Imaging Group %s"
+msgstr "Startmenygenerering for avbildingsgruppe %s"
+
+#: modules/imaging/includes/xmlrpc.inc.php:293
+#, php-format
+msgid "Boot menu generation Success for Package Server on location %s"
+msgstr "Oppstartsmenygenerering. Suksess for Pakkeeserver på lokasjon %s"
+
+#: modules/imaging/includes/xmlrpc.inc.php:306
+#: modules/imaging/includes/xmlrpc.inc.php:320
+#, php-format
+msgid "Boot menu generation failed for package server on location %s [%s]"
+msgstr ""
+"Generering av oppstartsmenyen mislyktes for pakkeserver på lokasjon %s [%s]"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:37
+#: modules/imaging/includes/ajaxcommon.inc.php:57
+#: modules/imaging/imaging/bootmenu_remove.php:93
+#: modules/imaging/imaging/addimage.php:72 modules/imaging/imaging/tabs.php:92
+#: modules/imaging/imaging/addservice.php:69
+#: modules/imaging/imaging/ajaxImages.php:189
+msgid "root"
+msgstr "root"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:84
+#, php-format
+msgid "Imaging server of entity %s"
+msgstr "Avbildingsserver for enhet %s"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:103
+msgid "the entity itself"
+msgstr "Selve enheten"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:120
+#, php-format
+msgid ""
+"Boot menu generation is still in progress for the following items : %s. "
+"Please wait or reload the page %shere%s."
+msgstr ""
+"Generering av oppstartsmenyen pågår fremdeles for følgende elementer: "
+"%s.Vent eller last inn siden%s på nytt her%s."
+
+#: modules/imaging/includes/ajaxcommon.inc.php:126
+#: modules/imaging/imaging/tabs.php:200
+msgid "The registering in the imaging server has failed."
+msgstr "Registreringen på avbildingsserveren mislyktes."
+
+#: modules/imaging/includes/ajaxcommon.inc.php:135
+#, php-format
+msgid ""
+"You have modified the boot menu for the following items : %s. If you are "
+"done please click on \"Generate Menu\" to update the computer boot menu."
+msgstr ""
+"Du har endret oppstartsmenyen for følgende elementer: %s. Hvis du er ferdig,"
+" kan du klikke på \"Generer meny\" for å oppdatere datamaskinens "
+"oppstartsmeny."
+
+#: modules/imaging/includes/ajaxcommon.inc.php:141
+#: modules/imaging/imaging/header.php:38
+msgid "Generate Menu"
+msgstr "Generer meny"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:146
+#: modules/imaging/imaging/header.php:43
+msgid ""
+"Click on \"Force Generation\" if you want to force the update of the boot "
+"menu"
+msgstr ""
+"Klikk på \"Tving Generering\" hvis du vil tvinge oppdateringen av "
+"oppstartsmenyen"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:152
+#: modules/imaging/imaging/header.php:46
+msgid "Force Generation"
+msgstr "Tvungen Generering"
+
+#: modules/imaging/includes/post_install_script.php:28
+msgid "Not selected"
+msgstr "Ikke valgt"
+
+#: modules/imaging/includes/post_install_script.php:63
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:89
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:74
+msgid "Name"
+msgstr "Etternavn"
+
+#: modules/imaging/includes/post_install_script.php:65
+#: modules/imaging/manage/ajaxFormWin10.php:815
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:674
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:677
+#: modules/imaging/manage/ajaxBootmenu.php:99
+#: modules/imaging/manage/master_edit.php:59
+#: modules/imaging/manage/ajaxServiceLevel2.php:93
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
+#: modules/imaging/manage/service_edit.php:61
+#: modules/imaging/manage/ajaxFormWin7.php:726
+#: modules/imaging/manage/sysprepList.php:87
+#: modules/imaging/manage/ajaxMasterLevel2.php:97
+#: modules/imaging/manage/ajaxFormWin8.php:808
+#: modules/imaging/imaging/ajaxServices.php:99
+#: modules/imaging/imaging/images.php:109
+#: modules/imaging/imaging/bootmenu.php:459
+#: modules/imaging/imaging/ajaxImages.php:171
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: modules/imaging/includes/post_install_script.php:66
+msgid "Order"
+msgstr "Ordning"
+
+#: modules/imaging/includes/post_install_script.php:88
+msgid "This value is already used."
+msgstr "Denne verdien er allerede brukt"
+
 #: modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
 msgstr "Det oppstod en feil (dette er en standardmelding)."
@@ -1554,950 +1130,230 @@ msgstr "<i>udefinert</i>"
 msgid "Backup log messages"
 msgstr "Sikkerhetskopier loggmeldinger"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:37
-#: modules/imaging/includes/ajaxcommon.inc.php:57
-#: modules/imaging/imaging/addimage.php:72 modules/imaging/imaging/tabs.php:89
-#: modules/imaging/imaging/bootmenu_remove.php:93
-#: modules/imaging/imaging/addservice.php:69
-#: modules/imaging/imaging/ajaxImages.php:189
-msgid "root"
-msgstr "root"
+#: modules/imaging/includes/logs.inc.php:25
+#: modules/imaging/manage/ajaxLogs.php:53
+msgid "Menu"
+msgstr "Meny"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:84
-#, php-format
-msgid "Imaging server of entity %s"
-msgstr "Avbildingsserver for enhet %s"
+#: modules/imaging/includes/logs.inc.php:26
+#: modules/imaging/manage/ajaxLogs.php:59
+msgid "Inventory"
+msgstr "Inventar"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:103
-msgid "the entity itself"
-msgstr "Selve enheten"
+#: modules/imaging/includes/logs.inc.php:27
+#: modules/imaging/manage/ajaxLogs.php:55
+msgid "Backup"
+msgstr "Sikkerhetskopi"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:120
-#, php-format
-msgid ""
-"Boot menu generation is still in progress for the following items : %s. "
-"Please wait or reload the page %shere%s."
-msgstr ""
-"Generering av oppstartsmenyen pågår fremdeles for følgende elementer: "
-"%s.Vent eller last inn siden%s på nytt her%s."
+#: modules/imaging/includes/logs.inc.php:28
+#: modules/imaging/manage/ajaxLogs.php:52
+msgid "Boot"
+msgstr "Boot"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:126
-#: modules/imaging/imaging/tabs.php:197
-msgid "The registering in the imaging server has failed."
-msgstr "Registreringen på avbildingsserveren mislyktes."
+#: modules/imaging/includes/logs.inc.php:29
+#: modules/imaging/manage/ajaxLogs.php:54
+msgid "Restoration"
+msgstr "Gjenopprett"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:135
-#, php-format
-msgid ""
-"You have modified the boot menu for the following items : %s. If you are "
-"done please click on \"Generate Menu\" to update the computer boot menu."
-msgstr ""
-"Du har endret oppstartsmenyen for følgende elementer: %s. Hvis du er ferdig,"
-" kan du klikke på \"Generer meny\" for å oppdatere datamaskinens "
-"oppstartsmeny."
+#: modules/imaging/includes/logs.inc.php:30
+#: modules/imaging/manage/ajaxLogs.php:56
+msgid "Post-imaging"
+msgstr "Post-imaging"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:141
-#: modules/imaging/imaging/header.php:38
-msgid "Generate Menu"
-msgstr "Generer meny"
+#: modules/imaging/includes/logs.inc.php:31
+#: modules/imaging/manage/ajaxLogs.php:57
+msgid "Error"
+msgstr "Feil"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:146
-#: modules/imaging/imaging/header.php:43
-msgid ""
-"Click on \"Force Generation\" if you want to force the update of the boot "
-"menu"
-msgstr ""
-"Klikk på \"Tving Generering\" hvis du vil tvinge oppdateringen av "
-"oppstartsmenyen"
+#: modules/imaging/includes/logs.inc.php:33
+#: modules/imaging/manage/ajaxLogs.php:51
+#: modules/imaging/manage/ajaxLogs.php:67
+msgid "Status unknown"
+msgstr "Ukjent status"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:152
-#: modules/imaging/imaging/header.php:46
-msgid "Force Generation"
-msgstr "Tvungen Generering"
+#: modules/imaging/includes/logs.inc.php:34
+#: modules/imaging/manage/postinstall_delete.php:101
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
+#: modules/imaging/manage/ajaxLogs.php:58
+#: modules/imaging/manage/ajaxMasterLevel2.php:63
+#: modules/imaging/imaging/bootmenu.php:367
+msgid "Delete"
+msgstr "Slett"
 
-#: modules/imaging/includes/xmlrpc.inc.php:249
-#, php-format
-msgid "Boot menu generation For machine %s"
-msgstr "Generering av oppstartsmeny for maskin %s"
+#: modules/imaging/includes/logs.inc.php:35
+#: modules/imaging/manage/ajaxLogs.php:61
+msgid "Restore in progress"
+msgstr "Gjenoppretting pågår"
 
-#: modules/imaging/includes/xmlrpc.inc.php:272
-#, php-format
-msgid "Boot menu generation For Imaging Group %s"
-msgstr "Startmenygenerering for avbildingsgruppe %s"
+#: modules/imaging/includes/logs.inc.php:36
+#: modules/imaging/manage/ajaxLogs.php:62
+msgid "Restore done"
+msgstr "Gjenoppretting gjennomført"
 
-#: modules/imaging/includes/xmlrpc.inc.php:293
-#, php-format
-msgid "Boot menu generation Success for Package Server on location %s"
-msgstr "Oppstartsmenygenerering. Suksess for Pakkeeserver på lokasjon %s"
+#: modules/imaging/includes/logs.inc.php:37
+#: modules/imaging/manage/ajaxLogs.php:63
+msgid "Restore failed"
+msgstr "Gjenoppretting mislyktes"
 
-#: modules/imaging/includes/xmlrpc.inc.php:306
-#: modules/imaging/includes/xmlrpc.inc.php:320
-#, php-format
-msgid "Boot menu generation failed for package server on location %s [%s]"
-msgstr ""
-"Generering av oppstartsmenyen mislyktes for pakkeserver på lokasjon %s [%s]"
+#: modules/imaging/includes/logs.inc.php:38
+#: modules/imaging/manage/ajaxLogs.php:64
+msgid "Backup in progress"
+msgstr "Sikkerhetskopiering pågår"
 
-#: modules/imaging/includes/post_install_script.php:28
-msgid "Not selected"
-msgstr "Ikke valgt"
+#: modules/imaging/includes/logs.inc.php:39
+#: modules/imaging/manage/ajaxLogs.php:65
+msgid "Backup done"
+msgstr "Sikkerhetskopiering ferdig"
 
-#: modules/imaging/includes/post_install_script.php:63
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:89
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:74
-msgid "Name"
-msgstr "Etternavn"
+#: modules/imaging/includes/logs.inc.php:40
+#: modules/imaging/manage/ajaxLogs.php:66
+msgid "Backup failed"
+msgstr "Sikkerhetskopieringen mislyktes"
 
-#: modules/imaging/includes/post_install_script.php:65
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
-#: modules/imaging/manage/ajaxFormWin10.php:815
-#: modules/imaging/manage/ajaxFormWin8.php:808
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:674
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
-#: modules/imaging/manage/ajaxBootmenu.php:99
-#: modules/imaging/manage/sysprepList.php:87
-#: modules/imaging/manage/ajaxFormWin7.php:726
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:677
-#: modules/imaging/manage/service_edit.php:61
-#: modules/imaging/manage/ajaxServiceLevel2.php:93
-#: modules/imaging/manage/master_edit.php:59
-#: modules/imaging/manage/ajaxMasterLevel2.php:97
-#: modules/imaging/imaging/bootmenu.php:459
-#: modules/imaging/imaging/ajaxServices.php:99
-#: modules/imaging/imaging/images.php:109
-#: modules/imaging/imaging/ajaxImages.php:171
-msgid "Description"
-msgstr "Beskrivelse"
+#: modules/imaging/includes/logs.inc.php:45
+msgid "Boot menu shown"
+msgstr "Vist boot meny"
 
-#: modules/imaging/includes/post_install_script.php:66
-msgid "Order"
-msgstr "Ordning"
+#: modules/imaging/includes/logs.inc.php:47
+msgid "Hardware Inventory received"
+msgstr "Maskinvareinventar mottatt"
 
-#: modules/imaging/includes/post_install_script.php:88
-msgid "This value is already used."
-msgstr "Denne verdien er allerede brukt"
+#: modules/imaging/includes/logs.inc.php:48
+msgid "Hardware Inventory not stored"
+msgstr "Maskinvareinventar ikke lagret"
+
+#: modules/imaging/includes/logs.inc.php:49
+msgid "Hardware Inventory not updated"
+msgstr "Hardware-inventar ikke oppdatert"
+
+#: modules/imaging/includes/logs.inc.php:50
+msgid "Hardware Inventory updated"
+msgstr "Hardware-inventar oppdatert"
+
+#: modules/imaging/includes/logs.inc.php:52
+msgid "Identification Request"
+msgstr "Identifikasjonsforespørsel"
+
+#: modules/imaging/includes/logs.inc.php:53
+msgid "Identification Success"
+msgstr "Identifikasjon Suksess"
+
+#: modules/imaging/includes/logs.inc.php:54
+msgid "Identification Failure"
+msgstr "Identifikasjon feilet"
+
+#: modules/imaging/includes/logs.inc.php:56
+msgid "Image UUID Request"
+msgstr "UUID anmodning for et bilde"
+
+#: modules/imaging/includes/logs.inc.php:57
+msgid "Failed to summon an Image UUID"
+msgstr "Kunne ikke opprette en bilde-UUID"
+
+#: modules/imaging/includes/logs.inc.php:58
+msgid "Image UUID sent"
+msgstr "Bilde UUID sendt"
+
+#: modules/imaging/includes/logs.inc.php:59
+msgid "Failed to send an Image UUID"
+msgstr "Kunne ikke sende  UUID-bilde"
+
+#: modules/imaging/includes/logs.inc.php:61
+msgid "End of Backup Request"
+msgstr "Slutt på forespørsel om sikkerhetskopiering"
+
+#: modules/imaging/includes/logs.inc.php:62
+msgid "End of Backup Failure"
+msgstr "Slutt på sikkerhetskopieringsfeil"
+
+#: modules/imaging/includes/logs.inc.php:63
+msgid "End of Backup Success"
+msgstr "Slutt på sikkerhetskopieringssuksess"
+
+#: modules/imaging/includes/logs.inc.php:65
+msgid "Preselected Menu Entry Change Request"
+msgstr "Forhåndsvalgt forespørsel om endring av menyinngang"
+
+#: modules/imaging/includes/logs.inc.php:66
+msgid "Preselected Menu Entry Change Success"
+msgstr "Vellykket endring av forhåndsvalgt menyoppføring"
+
+#: modules/imaging/includes/logs.inc.php:67
+msgid "Preselected Menu Entry Change Failure"
+msgstr "Misllykket endring av forhåndsvalgt menyoppføring"
+
+#: modules/imaging/includes/logs.inc.php:69
+msgid "Booted"
+msgstr "Bootet"
+
+#: modules/imaging/includes/logs.inc.php:70
+msgid "Chosen Menu Entry"
+msgstr "Valgt menypunkt"
+
+#: modules/imaging/includes/logs.inc.php:71
+msgid "Restoration Started"
+msgstr "Gjenoppretting started"
+
+#: modules/imaging/includes/logs.inc.php:72
+msgid "Restoration Finished"
+msgstr "Gjenoppretting ferdig"
+
+#: modules/imaging/includes/logs.inc.php:73
+msgid "Backup Started"
+msgstr "Sikkerhetskopiering startet"
+
+#: modules/imaging/includes/logs.inc.php:74
+msgid "Backup Finished"
+msgstr "Sikkerhetskopiering avsluttet"
+
+#: modules/imaging/includes/logs.inc.php:75
+msgid "Postinstall Started"
+msgstr "Etterinstallering startet"
+
+#: modules/imaging/includes/logs.inc.php:76
+msgid "Postinstall Finished"
+msgstr "Etterinstallering avsluttet"
+
+#: modules/imaging/includes/logs.inc.php:77
+msgid "Critical error"
+msgstr "Kritisk feil"
+
+#: modules/imaging/includes/logs.inc.php:79
+msgid "Hostname Request"
+msgstr "Vertsnavnforespørsel"
+
+#: modules/imaging/includes/logs.inc.php:80
+msgid "Failed to obtain a Hostname"
+msgstr "Kunne ikke hente vertsnavn"
+
+#: modules/imaging/includes/logs.inc.php:81
+msgid "Hostname sent"
+msgstr "Vertsnavn sendt"
+
+#: modules/imaging/includes/logs.inc.php:82
+msgid "Failed to send a Hostname"
+msgstr "Kunne ikke sende vertsnavn"
+
+#: modules/imaging/includes/logs.inc.php:84
+msgid "Computer UUID Request"
+msgstr "UUID-forespørsel for datamaskiner"
+
+#: modules/imaging/includes/logs.inc.php:85
+msgid "Failed to obtain a Computer UUID"
+msgstr "Kunne ikke hente en UUID til datamaskin"
+
+#: modules/imaging/includes/logs.inc.php:86
+msgid "Computer UUID Sent"
+msgstr "Datamaskin UUID sendt"
+
+#: modules/imaging/includes/logs.inc.php:87
+msgid "Failed to send a Computer UUID"
+msgstr "Kunne ikke sende en datamaskin-UUID "
 
 #: modules/imaging/includes/ajaxcommon_bottom.inc.php:24
 #, php-format
 msgid "Available imaging servers for entity %s"
 msgstr "Tilgjengelige avbildingsservere for enhet %s"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:51
-msgid "Create Boot Service"
-msgstr "Skap oppstartstjeneste"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:52
-msgid "Edit script"
-msgstr "Rediger skript"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:54
-msgid "Boot Service already created"
-msgstr "Oppstartstjeneste allerede opprettet"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:95
-msgid "Duplicate"
-msgstr "Dupliser"
-
-#: modules/imaging/manage/postinstall_redirect_to_boot_service.php:38
-#, php-format
-msgid "<b>%s</b> was already added to Boot Services"
-msgstr "<b>%s</b> var allerede lagt til i oppstartstjenestene"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:38
-msgid "Boot service successfully created"
-msgstr "Oppstartstjeneste ble opprettet"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:39
-msgid "Notify Success : Boot service successfully created"
-msgstr "Suksess: Oppstartstjeneste ble opprettet"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:55
-msgid "Error while creating Boot Service"
-msgstr "Feil under opprettelse av oppstartstjeneste"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:56
-msgid "Notify Error : Error while creating Boot Service"
-msgstr "Varsel: Feil under opprettelse av oppstartstjeneste"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:77
-#, php-format
-msgid "Add <b>%s</b> to available Boot Services ?"
-msgstr "Legg til <b>%s</b> i tilgjengelig oppstartstjeneste?"
-
-#: modules/imaging/manage/ajaxFormWin10.php:448
-#: modules/imaging/manage/ajaxFormWin8.php:422
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:307
-#: modules/imaging/manage/ajaxFormWin7.php:347
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:291
-msgid "Installation Notes"
-msgstr "Installasjonsnotater"
-
-#: modules/imaging/manage/ajaxFormWin10.php:454
-#: modules/imaging/manage/ajaxFormWin8.php:428
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:313
-#: modules/imaging/manage/master_iso.php:90
-#: modules/imaging/manage/ajaxFormWin7.php:353
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:297
-#: modules/imaging/imaging/images_iso.php:93
-msgid "Title"
-msgstr "Tittel"
-
-#: modules/imaging/manage/ajaxFormWin10.php:458
-#: modules/imaging/manage/ajaxFormWin8.php:432
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:317
-#: modules/imaging/manage/ajaxFormWin7.php:357
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:301
-msgid "Enter your comments here..."
-msgstr "Skriv inn kommentarene dine her..."
-
-#: modules/imaging/manage/ajaxFormWin10.php:467
-#: modules/imaging/manage/ajaxFormWin8.php:441
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:326
-#: modules/imaging/manage/ajaxFormWin7.php:365
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:310
-msgid "Os Settings"
-msgstr "OS innstillinger"
-
-#: modules/imaging/manage/ajaxFormWin10.php:498
-#: modules/imaging/manage/ajaxFormWin8.php:472
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:357
-#: modules/imaging/manage/ajaxFormWin7.php:396
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:341
-msgid "Product Key"
-msgstr "Produktnøkkel"
-
-#: modules/imaging/manage/ajaxFormWin10.php:503
-#: modules/imaging/manage/ajaxFormWin8.php:477
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:362
-#: modules/imaging/manage/ajaxFormWin7.php:401
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:346
-msgid "Organization Name"
-msgstr "Organisasjonsnavn"
-
-#: modules/imaging/manage/ajaxFormWin10.php:511
-#: modules/imaging/manage/ajaxFormWin8.php:485
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:370
-#: modules/imaging/manage/ajaxFormWin7.php:409
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:354
-msgid "Accept EULA"
-msgstr "Godta EULA"
-
-#: modules/imaging/manage/ajaxFormWin10.php:519
-#: modules/imaging/manage/ajaxFormWin8.php:493
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:378
-#: modules/imaging/manage/ajaxFormWin7.php:417
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:362
-msgid "Skip automatic activation"
-msgstr "Hopp over automatisk aktivering"
-
-#: modules/imaging/manage/ajaxFormWin10.php:527
-#: modules/imaging/manage/ajaxFormWin8.php:501
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:386
-#: modules/imaging/manage/ajaxFormWin7.php:425
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:370
-msgid "Skip License Rearm"
-msgstr "Hopp over lisensoppdatering"
-
-#: modules/imaging/manage/ajaxFormWin10.php:536
-#: modules/imaging/manage/ajaxFormWin8.php:510
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:395
-#: modules/imaging/manage/ajaxFormWin7.php:434
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:379
-msgid "Setup Language"
-msgstr "Installasjonsspråk"
-
-#: modules/imaging/manage/ajaxFormWin10.php:541
-#: modules/imaging/manage/ajaxFormWin8.php:515
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:400
-#: modules/imaging/manage/ajaxFormWin7.php:439
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:384
-msgid "Computer Name"
-msgstr "Maskinnavn"
-
-#: modules/imaging/manage/ajaxFormWin10.php:549
-#: modules/imaging/manage/ajaxFormWin8.php:531
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:408
-#: modules/imaging/manage/ajaxFormWin7.php:455
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:400
-msgid "Keyboard or input method"
-msgstr "Tastatur eller inndatametode"
-
-#: modules/imaging/manage/ajaxFormWin10.php:557
-#: modules/imaging/manage/ajaxFormWin8.php:539
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:416
-#: modules/imaging/manage/ajaxFormWin7.php:463
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:408
-msgid "Currency and Date format"
-msgstr "Valuta og dato format"
-
-#: modules/imaging/manage/ajaxFormWin10.php:565
-#: modules/imaging/manage/ajaxFormWin8.php:547
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:424
-#: modules/imaging/manage/ajaxFormWin7.php:471
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:416
-msgid "Time Zone"
-msgstr "Tidssone"
-
-#: modules/imaging/manage/ajaxFormWin10.php:573
-#: modules/imaging/manage/ajaxFormWin8.php:555
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:432
-#: modules/imaging/manage/ajaxFormWin7.php:479
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:424
-msgid "UI Language"
-msgstr "Språk på grensesnitt"
-
-#: modules/imaging/manage/ajaxFormWin10.php:584
-#: modules/imaging/manage/ajaxFormWin8.php:566
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:443
-#: modules/imaging/manage/ajaxFormWin7.php:490
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:435
-msgid "Partition Settings"
-msgstr "Partisjonsinnstillinger"
-
-#: modules/imaging/manage/ajaxFormWin10.php:593
-#: modules/imaging/manage/ajaxFormWin8.php:575
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:452
-#: modules/imaging/manage/ajaxFormWin7.php:499
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:444
-msgid "Wipe Disk"
-msgstr "Slett disken"
-
-#: modules/imaging/manage/ajaxFormWin10.php:601
-#: modules/imaging/manage/ajaxFormWin8.php:583
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:460
-#: modules/imaging/manage/ajaxFormWin7.php:507
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:452
-msgid "Install to disk"
-msgstr "Innstaller på disken"
-
-#: modules/imaging/manage/ajaxFormWin10.php:609
-#: modules/imaging/manage/ajaxFormWin8.php:591
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:468
-#: modules/imaging/manage/ajaxFormWin7.php:515
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:460
-msgid "Partition Order"
-msgstr "Partisjonsrekkefølge"
-
-#: modules/imaging/manage/ajaxFormWin10.php:617
-#: modules/imaging/manage/ajaxFormWin8.php:599
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:476
-#: modules/imaging/manage/ajaxFormWin7.php:523
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:468
-msgid "Extend OS Partition"
-msgstr "Utvid OS partisjonen"
-
-#: modules/imaging/manage/ajaxFormWin10.php:625
-#: modules/imaging/manage/ajaxFormWin8.php:607
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:484
-#: modules/imaging/manage/ajaxFormWin7.php:531
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:476
-msgid "Main Partition Format"
-msgstr "Hovedpartisjonsformat"
-
-#: modules/imaging/manage/ajaxFormWin10.php:638
-#: modules/imaging/manage/ajaxFormWin8.php:620
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:497
-#: modules/imaging/manage/ajaxFormWin7.php:544
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:489
-msgid "Main Partition Letter"
-msgstr "Hovedpartisjonsbokstav"
-
-#: modules/imaging/manage/ajaxFormWin10.php:649
-#: modules/imaging/manage/ajaxFormWin8.php:631
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:508
-#: modules/imaging/manage/ajaxFormWin7.php:555
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:500
-msgid "Security Settings"
-msgstr "Sikkerhetsinnstillinger"
-
-#: modules/imaging/manage/ajaxFormWin10.php:658
-#: modules/imaging/manage/ajaxFormWin8.php:640
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:517
-#: modules/imaging/manage/ajaxFormWin7.php:564
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:509
-msgid "Protect Your Computer"
-msgstr "Beskytt din datamaskin"
-
-#: modules/imaging/manage/ajaxFormWin10.php:674
-#: modules/imaging/manage/ajaxFormWin8.php:656
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:533
-#: modules/imaging/manage/ajaxFormWin7.php:580
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:525
-msgid "Network Location"
-msgstr "Nettverkslokasjon"
-
-#: modules/imaging/manage/ajaxFormWin10.php:682
-#: modules/imaging/manage/ajaxFormWin8.php:664
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:541
-#: modules/imaging/manage/ajaxFormWin7.php:588
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:533
-msgid "Hide EULA page"
-msgstr "Skjul ELUA side"
-
-#: modules/imaging/manage/ajaxFormWin10.php:690
-#: modules/imaging/manage/ajaxFormWin8.php:672
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:549
-#: modules/imaging/manage/ajaxFormWin7.php:596
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:541
-msgid "Enable Firewall"
-msgstr "Aktiver brannmur"
-
-#: modules/imaging/manage/ajaxFormWin10.php:698
-#: modules/imaging/manage/ajaxFormWin8.php:680
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:557
-#: modules/imaging/manage/ajaxFormWin7.php:604
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:549
-msgid "Disable auto daylight timeset"
-msgstr "Deaktiver automatisk sommertid"
-
-#: modules/imaging/manage/ajaxFormWin10.php:706
-#: modules/imaging/manage/ajaxFormWin8.php:688
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:565
-#: modules/imaging/manage/ajaxFormWin7.php:612
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:557
-msgid "Hide wireless setup in OOBE"
-msgstr "Skjul trådløst oppsett i OOBE"
-
-#: modules/imaging/manage/ajaxFormWin10.php:711
-#: modules/imaging/manage/ajaxFormWin8.php:693
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
-#: modules/imaging/manage/ajaxFormWin7.php:617
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
-msgid "Category View"
-msgstr "Kategorivisning"
-
-#: modules/imaging/manage/ajaxFormWin10.php:711
-#: modules/imaging/manage/ajaxFormWin8.php:693
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
-#: modules/imaging/manage/ajaxFormWin7.php:617
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
-msgid "Classic View"
-msgstr "Klassisk visning"
-
-#: modules/imaging/manage/ajaxFormWin10.php:714
-#: modules/imaging/manage/ajaxFormWin8.php:696
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:573
-#: modules/imaging/manage/ajaxFormWin7.php:620
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:565
-msgid "Control Panel View"
-msgstr "Kontrollpanelvisning"
-
-#: modules/imaging/manage/ajaxFormWin10.php:719
-#: modules/imaging/manage/ajaxFormWin8.php:701
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
-#: modules/imaging/manage/ajaxFormWin7.php:625
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
-msgid "Large"
-msgstr "Stor"
-
-#: modules/imaging/manage/ajaxFormWin10.php:719
-#: modules/imaging/manage/ajaxFormWin8.php:701
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
-#: modules/imaging/manage/ajaxFormWin7.php:625
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
-msgid "Small"
-msgstr "Liten"
-
-#: modules/imaging/manage/ajaxFormWin10.php:722
-#: modules/imaging/manage/ajaxFormWin8.php:704
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:581
-#: modules/imaging/manage/ajaxFormWin7.php:628
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:573
-msgid "Control Panel Icon Size"
-msgstr "Kontrollpanelets ikonstørrelse"
-
-#: modules/imaging/manage/ajaxFormWin10.php:732
-#: modules/imaging/manage/ajaxFormWin8.php:715
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:591
-#: modules/imaging/manage/ajaxFormWin7.php:639
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:584
-msgid "Domain Settings"
-msgstr "Domeneinstillinger"
-
-#: modules/imaging/manage/ajaxFormWin10.php:736
-#: modules/imaging/manage/ajaxFormWin8.php:719
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:595
-#: modules/imaging/manage/ajaxFormWin7.php:643
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:588
-msgid "Domain"
-msgstr "Domene"
-
-#: modules/imaging/manage/ajaxFormWin10.php:740
-#: modules/imaging/manage/ajaxFormWin8.php:724
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:599
-#: modules/imaging/manage/ajaxFormWin7.php:648
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:593
-msgid "Domain User"
-msgstr "Domenebruker"
-
-#: modules/imaging/manage/ajaxFormWin10.php:744
-#: modules/imaging/manage/ajaxFormWin8.php:729
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:603
-#: modules/imaging/manage/ajaxFormWin7.php:653
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:598
-msgid "Domain Password"
-msgstr "Domenepassord"
-
-#: modules/imaging/manage/ajaxFormWin10.php:748
-#: modules/imaging/manage/ajaxFormWin8.php:734
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:607
-#: modules/imaging/manage/ajaxFormWin7.php:658
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:603
-msgid "Join Domain"
-msgstr "Bli med i domenet"
-
-#: modules/imaging/manage/ajaxFormWin10.php:752
-#: modules/imaging/manage/ajaxFormWin8.php:739
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:611
-#: modules/imaging/manage/ajaxFormWin7.php:663
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:608
-msgid "MachineObjectOU"
-msgstr "Maskin Objekt OU"
-
-#: modules/imaging/manage/ajaxFormWin10.php:763
-#: modules/imaging/manage/ajaxFormWin8.php:750
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:622
-#: modules/imaging/manage/ajaxFormWin7.php:674
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:619
-msgid "Administrator Account"
-msgstr "Administratorkonto"
-
-#: modules/imaging/manage/ajaxFormWin10.php:768
-#: modules/imaging/manage/ajaxFormWin8.php:755
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:627
-#: modules/imaging/manage/ajaxFormWin7.php:679
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:624
-msgid "Password"
-msgstr "Passord"
-
-#: modules/imaging/manage/ajaxFormWin10.php:780
-#: modules/imaging/manage/ajaxFormWin8.php:767
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:639
-#: modules/imaging/manage/ajaxFormWin7.php:691
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:636
-msgid "User Account"
-msgstr "Brukerkonto"
-
-#: modules/imaging/manage/ajaxFormWin10.php:789
-#: modules/imaging/manage/ajaxFormWin8.php:776
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:648
-#: modules/imaging/manage/ajaxFormWin7.php:700
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:645
-msgid "Customer Experience Improvement Program (CEIP)"
-msgstr "Program for forbedring av kundeopplevelse (CEIP)"
-
-#: modules/imaging/manage/ajaxFormWin10.php:797
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:656
-#: modules/imaging/manage/ajaxFormWin7.php:708
-msgid "Copy Profile"
-msgstr "Kopier  Profil"
-
-#: modules/imaging/manage/ajaxFormWin10.php:802
-#: modules/imaging/manage/ajaxFormWin8.php:795
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:661
-#: modules/imaging/manage/ajaxFormWin7.php:713
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:664
-msgid "User Name"
-msgstr "Brukernavn"
-
-#: modules/imaging/manage/ajaxFormWin10.php:810
-#: modules/imaging/manage/ajaxFormWin8.php:803
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:669
-#: modules/imaging/manage/ajaxFormWin7.php:721
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:672
-msgid "Group"
-msgstr "Gruppe"
-
-#: modules/imaging/manage/ajaxFormWin10.php:820
-#: modules/imaging/manage/ajaxFormWin8.php:813
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:679
-#: modules/imaging/manage/ajaxFormWin7.php:731
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:682
-msgid "Password: (Optional)"
-msgstr "Passord: (valgfritt)"
-
-#: modules/imaging/manage/ajaxFormWin10.php:827
-#: modules/imaging/manage/ajaxFormWin8.php:820
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:686
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:689
-msgid "UAC"
-msgstr "UAC"
-
-#: modules/imaging/manage/ajaxFormWin10.php:832
-#: modules/imaging/manage/ajaxFormWin8.php:825
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
-#: modules/imaging/manage/postinstall_edit.php:161
-#: modules/imaging/manage/ajaxConfiguration.php:130
-#: modules/imaging/manage/master_clone.php:121
-#: modules/imaging/manage/ajaxFormWin7.php:735
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
-#: modules/imaging/manage/service_edit.php:71
-#: modules/imaging/manage/master_edit.php:72
-#: modules/imaging/manage/bootmenu_edit.php:101
-#: modules/imaging/imaging/bootmenu.php:260
-msgid "Validate"
-msgstr "Valider"
-
-#: modules/imaging/manage/ajaxFormWin10.php:832
-#: modules/imaging/manage/ajaxFormWin8.php:825
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
-#: modules/imaging/manage/ajaxFormWin7.php:735
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
-msgid "Create Xml Windows Answer File Generator"
-msgstr "Lag Xml Windows Answer File Generator"
-
-#: modules/imaging/manage/ajaxFormWin10.php:840
-#: modules/imaging/manage/ajaxFormWin8.php:833
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:699
-#: modules/imaging/manage/ajaxFormWin7.php:743
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:702
-msgid "Xml Windows Answer File Generator"
-msgstr "Xml Windows Answer File Generator"
-
-#: modules/imaging/manage/unattended.php:76
-msgid "form not found"
-msgstr "formulær ikke funnet"
-
-#: modules/imaging/manage/unattended.php:89
-msgid "Windows Answer File Generator"
-msgstr "Windows Answer File Generator"
-
-#: modules/imaging/manage/unattended.php:104
-msgid "error create file"
-msgstr "feil under opprettelse av fil"
-
-#: modules/imaging/manage/unattended.php:126
-msgid "Choose package source"
-msgstr "Velg kilde for pakken"
-
-#: modules/imaging/manage/imaging_server_link.php:60
-#, php-format
-msgid ""
-"Link between package server <strong>%s</strong> and the entity "
-"<strong>%s</strong> succeeded."
-msgstr ""
-"Koblingen mellom pakkeserveren  <strong>%s</strong>og "
-"enheten<strong>%s</strong> lyktes."
-
-#: modules/imaging/manage/imaging_server_link.php:77
-#: modules/imaging/manage/service_del.php:61
-#: modules/imaging/manage/master_remove.php:65
-#: modules/imaging/manage/service_add.php:64
-#: modules/imaging/manage/service_add.php:66
-#: modules/imaging/manage/service_remove.php:62
-#: modules/imaging/imaging/showtarget.php:90
-#, php-format
-msgid "Boot menu generation failed for package server: %s"
-msgstr "Generering av oppstartsmenyen mislyktes for pakkeserver:%s"
-
-#: modules/imaging/manage/imaging_server_link.php:106
-#, php-format
-msgid ""
-"Do you really want to link the Imaging Server '<b>%s</b>' to the entity "
-"'<b>%s</b>'"
-msgstr ""
-"Vil du virkelig koble avbildingsserveren '<b>%s</b>' til enheten '<b>%s</b>'"
-
-#: modules/imaging/manage/service_del.php:44
-#: modules/imaging/manage/service_show_used.php:93
-#, php-format
-msgid "Service <strong>%s</strong> removed from default boot menu"
-msgstr "Tjeneste <strong>%s</strong> fjernet fra standard oppstartsmeny"
-
-#: modules/imaging/manage/service_del.php:78
-#, php-format
-msgid "Remove the boot service <b>%s</b> from the default boot menu"
-msgstr "Fjern starttjenesten <b>%s</b> fra standard oppstartsmeny"
-
-#: modules/imaging/manage/ajaxLogs.php:45
-msgid "No log available."
-msgstr "Ingen logg er tilgjengelig"
-
-#: modules/imaging/manage/ajaxLogs.php:109
-#: modules/imaging/imaging/ajaxLogs.php:90
-msgid "Timestamp"
-msgstr "Tidsstempel"
-
-#: modules/imaging/manage/ajaxLogs.php:111
-#: modules/imaging/imaging/ajaxLogs.php:94
-msgid "Target"
-msgstr "Mål"
-
-#: modules/imaging/manage/ajaxLogs.php:112
-#: modules/imaging/imaging/ajaxLogs.php:95
-msgid "Message"
-msgstr "Melding"
-
-#: modules/imaging/manage/bootmenu_up.php:37
-#, php-format
-msgid "Success to move <strong>%s</strong> in the default boot menu"
-msgstr "Lykkes med å flytte <strong>%s</strong> i standard oppstartsmeny"
-
-#: modules/imaging/manage/bootmenu_up.php:50
-#, php-format
-msgid "Failed to move <strong>%s</strong> in the default boot menu"
-msgstr "MisLykkts med å flytte <strong>%s</strong>i standard oppstartsmeny"
-
-#: modules/imaging/manage/ajaxFormWin8.php:523
-#: modules/imaging/manage/ajaxFormWin7.php:447
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:392
-msgid "Show Windows Live"
-msgstr "Vis Windows Live"
-
-#: modules/imaging/manage/ajaxFormWin8.php:648
-#: modules/imaging/manage/ajaxFormWin7.php:572
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:517
-msgid "System Updates"
-msgstr "Systemoppdateringer"
-
-#: modules/imaging/manage/ajaxFormWin8.php:784
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:653
-msgid "System Background Colour"
-msgstr "Bakgrunnsfarge for systemet"
-
-#: modules/imaging/manage/ajaxFormWin8.php:791
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:660
-msgid "For Windows 8"
-msgstr "For Windows 8"
-
-#: modules/imaging/manage/ajaxFormWin8.php:792
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:661
-msgid "For Windows 8.1"
-msgstr "For Windows 8.1"
-
-#: modules/imaging/manage/master_remove.php:37
-#, php-format
-msgid "Image <strong>%s</strong> removed from default boot menu."
-msgstr "Bilde <strong>%s</strong> fjernet fra standard oppstartsmeny."
-
-#: modules/imaging/manage/master_remove.php:38
-msgid "Notify Success : removed from default boot menu."
-msgstr "Varsel:  fjernet fra standard oppstartsmeny."
-
-#: modules/imaging/manage/master_remove.php:91
-#, php-format
-msgid "Are you sure you want to remove <b>%s</b> master ?"
-msgstr "Er du sikker på at du vil fjerne <b>%s</b>master?"
-
-#: modules/imaging/manage/master_remove.php:93
-#: modules/imaging/manage/master_delete.php:80
-#: modules/imaging/manage/service_show_used.php:199
-#: modules/imaging/imaging/images_delete.php:72
-#: modules/imaging/imaging/bootmenu_remove.php:160
-#: modules/imaging/imaging/showtarget.php:130
-msgid "Remove"
-msgstr "Fjern"
-
-#: modules/imaging/manage/master_remove.php:94
-#: modules/imaging/manage/master_iso.php:109
-#: modules/imaging/manage/master_delete.php:81
-#: modules/imaging/manage/postinstall_delete.php:102
-#: modules/imaging/manage/service_show_used.php:200
-#: modules/imaging/imaging/images_delete.php:73
-#: modules/imaging/imaging/bootmenu_remove.php:161
-#: modules/imaging/imaging/configure.php:365
-#: modules/imaging/imaging/images_iso.php:112
-#: modules/imaging/imaging/multicast.php:390
-#: modules/imaging/imaging/showtarget.php:131
-msgid "Cancel"
-msgstr "Avbryt"
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:40
-msgid "No imaging server available for association."
-msgstr "Ingen avbildningsserver tilgjengelig for tilknytning."
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:47
-#, php-format
-msgid "Link this Imaging Server to the '%s' entity."
-msgstr "Koble denne avbildingsserveren til ' %s' enheten"
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:70
-msgid "Associate an entity to an imaging server"
-msgstr "Tildel en enhet til en avbildingsserver"
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:77
-msgid "Identifier"
-msgstr "Identifikator"
-
-#: modules/imaging/manage/ajaxPostInstall.php:27
-msgid "Available post-imaging scripts"
-msgstr "Tilgjengelige post-avbildingsskript"
-
-#: modules/imaging/manage/save_configuration.php:68
-#, php-format
-msgid "Imaging server <strong>%s</strong> configuration saved."
-msgstr "Avbildningsserver <strong>%s</strong>konfigurasjon er lagret"
-
-#: modules/imaging/manage/save_configuration.php:84
-#: modules/imaging/manage/location.php:61
-#: modules/imaging/manage/location.php:65
-#: modules/imaging/manage/master_add.php:71
-#: modules/imaging/manage/master_add.php:75
-#: modules/imaging/manage/service_show_used.php:128
-#: modules/imaging/manage/service_show_used.php:132
-#, php-format
-msgid ""
-"Boot menu generation failed for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
-msgstr ""
-"Generering av oppstartsmenyen mislyktes for pakkeserver: %s<br /><br /> "
-"kontroller /var/log/mmc/pulse2-package-server.log"
-
-#: modules/imaging/manage/systemImageManager.php:38
-msgid "Sysprep generator"
-msgstr "Sysprep generator"
-
-#: modules/imaging/manage/systemImageManager.php:39
-msgid "Sysprep list"
-msgstr "Sysprep liste"
-
-#: modules/imaging/manage/postinstall_edit.php:90
-#, php-format
-msgid "<strong>%s</strong> script %s"
-msgstr "<strong>%s</strong> skript %s"
-
-#: modules/imaging/manage/postinstall_edit.php:91
-msgid "Notify Success : "
-msgstr "Suksess:"
-
-#: modules/imaging/manage/postinstall_edit.php:107
-#: modules/imaging/manage/postinstall_edit.php:122
-msgid "Notify Error : "
-msgstr "Feil:"
-
-#: modules/imaging/manage/postinstall_edit.php:121
-#, php-format
-msgid "<strong>%s</strong> script wasn't %s"
-msgstr "<strong>%s</strong> skript var ikket %s"
-
-#: modules/imaging/manage/postinstall_edit.php:157
-msgid "Script value"
-msgstr "Skript verdi"
-
-#: modules/imaging/manage/ajaxConfiguration.php:29
-msgid "Imaging server configuration"
-msgstr "Avbildingsserverkonfigurasjon"
-
-#: modules/imaging/manage/ajaxConfiguration.php:60
-msgid "Menu language"
-msgstr "Menyspråk"
-
-#: modules/imaging/manage/ajaxConfiguration.php:63
-msgid "PXE Login"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:64
-#: modules/imaging/manage/ajaxConfiguration.php:66
-msgid "Leave this field empty to unset PXE Password"
-msgstr "La dette feltet være tomt for å deaktivere PXE-passord"
-
-#: modules/imaging/manage/ajaxConfiguration.php:65
-msgid "PXE Password"
-msgstr "PXE Passord"
-
-#: modules/imaging/manage/ajaxConfiguration.php:86
-msgid "Clonezilla parameters for saving images"
-msgstr "Clonezilla-parametere for lagring av bildefiler"
-
-#: modules/imaging/manage/ajaxConfiguration.php:89
-msgid "Clonezilla parameters for restoring images"
-msgstr "Clonezilla-parametere for å gjenopprette bildefiler"
-
-#: modules/imaging/manage/ajaxConfiguration.php:97
-msgid "Default menu parameters"
-msgstr "Standard menyparametere"
-
-#: modules/imaging/manage/ajaxConfiguration.php:101
-#: modules/imaging/imaging/configure.php:43
-msgid "Default menu label"
-msgstr "Standard menyetikett"
-
-#: modules/imaging/manage/ajaxConfiguration.php:104
-msgid "Default menu timeout"
-msgstr "Standard menytimeout"
-
-#: modules/imaging/manage/ajaxConfiguration.php:112
-msgid "Hide menu"
-msgstr "Skjul meny"
-
-#: modules/imaging/manage/ajaxConfiguration.php:116
-#: modules/imaging/imaging/configure.php:62
-msgid "Boot options"
-msgstr "Oppstartsalternativer"
-
-#: modules/imaging/manage/ajaxConfiguration.php:119
-#: modules/imaging/imaging/configure.php:65
-msgid "Full path to the XPM displayed at boot"
-msgstr "Full sti til XPM vist ved oppstart"
-
-#: modules/imaging/manage/ajaxConfiguration.php:122
-#: modules/imaging/imaging/configure.php:69
-msgid "Message displayed during backup/restoration"
-msgstr "Melding vises under sikkerhetskopiering/gjennoppretting"
-
-#: modules/imaging/manage/sysprepView.php:33
-msgid "View "
-msgstr "Visning"
-
-#: modules/imaging/manage/ajaxBootmenu.php:30
-#: modules/imaging/imaging/bootmenu.php:364
-msgid "Move Up"
-msgstr "Flytt opp"
-
-#: modules/imaging/manage/ajaxBootmenu.php:31
-#: modules/imaging/imaging/bootmenu.php:365
-msgid "Move down"
-msgstr "Flytt ned"
-
-#: modules/imaging/manage/ajaxBootmenu.php:94
-msgid "Default boot menu configuration"
-msgstr "Standard konfigurasjon av oppstartsmenyen"
-
-#: modules/imaging/manage/ajaxBootmenu.php:97
-#: modules/imaging/manage/service_edit.php:56
-#: modules/imaging/manage/ajaxServiceLevel2.php:91
-#: modules/imaging/manage/master_edit.php:55
-#: modules/imaging/manage/ajaxMasterLevel2.php:95
-#: modules/imaging/imaging/bootmenu.php:457
-#: modules/imaging/imaging/ajaxServices.php:98
-#: modules/imaging/imaging/images.php:105
-#: modules/imaging/imaging/ajaxImages.php:169
-msgid "Label"
-msgstr "Etikett"
-
-#: modules/imaging/manage/ajaxBootmenu.php:100
-msgid "Default"
-msgstr "Standard"
-
-#: modules/imaging/manage/ajaxBootmenu.php:101
-#: modules/imaging/manage/master_add.php:149
-#: modules/imaging/manage/bootmenu_edit.php:86
-#: modules/imaging/manage/service_add.php:116
-#: modules/imaging/imaging/addimage.php:179
-#: modules/imaging/imaging/bootmenu.php:245
-#: modules/imaging/imaging/bootmenu.php:462
-#: modules/imaging/imaging/addservice.php:160
-msgid "Displayed"
-msgstr "Vist"
-
-#: modules/imaging/manage/ajaxBootmenu.php:102
-msgid "Default on WOL"
-msgstr "Standard for WOL"
-
-#: modules/imaging/manage/ajaxBootmenu.php:103
-#: modules/imaging/manage/master_add.php:153
-#: modules/imaging/manage/bootmenu_edit.php:96
-#: modules/imaging/manage/service_add.php:120
-#: modules/imaging/imaging/addimage.php:183
-#: modules/imaging/imaging/bootmenu.php:255
-#: modules/imaging/imaging/bootmenu.php:465
-#: modules/imaging/imaging/addservice.php:164
-msgid "Displayed on WOL"
-msgstr "Vist på WOL"
-
-#: modules/imaging/manage/ajaxBootmenu.php:106
-#: modules/imaging/imaging/bootmenu.php:366
-msgid "Edit"
-msgstr "Rediger"
 
 #: modules/imaging/manage/master_clone.php:75
 msgid "There is no imaging server available to clone the master"
@@ -2515,137 +1371,20 @@ msgstr "Master"
 msgid "Imaging Server"
 msgstr "Avbildingsserver"
 
-#: modules/imaging/manage/ajaxMaster.php:27
-#: modules/imaging/imaging/images.php:70
-msgid "Available masters"
-msgstr "Tilgjengelige mastere"
-
-#: modules/imaging/manage/bootmenu_down.php:36
-#, php-format
-msgid "Success : to move down <strong>%s</strong> in the default boot menu"
-msgstr ""
-"Suksess: for å flytte ned <strong>%s</strong> i standard oppstartsmenyen"
-
-#: modules/imaging/manage/bootmenu_down.php:49
-#, php-format
-msgid ""
-"Error : Failed to move down <strong>%s</strong> in the default boot menu"
-msgstr ""
-"Feil: Kunne ikke flytte ned <strong>%s</strong> i standardoppstartsmenyen"
-
-#: modules/imaging/manage/master_iso.php:46
-#, php-format
-msgid "Iso of master <strong>%s</strong> has been launched in background."
-msgstr "ISO til master <strong>%s</strong> har blitt startet i bakgrunnen"
-
-#: modules/imaging/manage/master_iso.php:48
-#, php-format
-msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
-msgstr ""
-"Filene blir lagret i katalogen %s til serveren på slutten av "
-"sikkerhetskopien."
-
-#: modules/imaging/manage/master_iso.php:50
-msgid "Please go to the status page to check the iso creation status."
-msgstr "Gå til statussiden for å sjekke status for iso-opprettelsen."
-
-#: modules/imaging/manage/master_iso.php:52
-msgid ""
-"This operation will last according to the amount of data of the master."
-msgstr "Denne operasjonen vil kjøre i henhold til datamengden til masteren."
-
-#: modules/imaging/manage/master_iso.php:88
-#, php-format
-msgid "Create iso for <strong>%s</strong>"
-msgstr "Opprett ISO for <strong>%s</strong>"
-
-#: modules/imaging/manage/master_iso.php:95
-#: modules/imaging/imaging/images_iso.php:98
-msgid "Media size"
-msgstr "Mediestørrelse"
-
-#: modules/imaging/manage/master_iso.php:108
-msgid "Launch backup"
-msgstr "Start sikkerhetskopiering"
-
-#: modules/imaging/manage/master_delete.php:38
-#, php-format
-msgid "Image <strong>%s</strong> deleted from the imaging server."
-msgstr "Bilde <strong>%s</strong> er slettet fra avbildningserveren."
-
-#: modules/imaging/manage/master_delete.php:57
-#, php-format
-msgid "Error : Image %s deleted from the imaging server."
-msgstr "Feil: Bilde %s er slettet fra avbildningserveren."
-
-#: modules/imaging/manage/master_delete.php:78
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> master ?"
-msgstr "Er du sikker på at du vil slette <b>%s</b> master?"
-
-#: modules/imaging/manage/synchromaster.php:47
-#, php-format
-msgid "Master copy: %s ( %s )"
-msgstr "Master kopiering: %s (%s)"
-
-#: modules/imaging/manage/synchromaster.php:60
-msgid "Copy of master Not Started"
-msgstr "Kopiering av master ikke startet"
-
-#: modules/imaging/manage/synchromaster.php:66
-msgid "Copy of master"
-msgstr "Kopiering av master"
-
-#: modules/imaging/manage/synchromaster.php:119
-msgid "Complete"
-msgstr "Ferdig"
-
-#: modules/imaging/manage/synchromaster.php:122
-msgid "In progress"
-msgstr "Pågående"
-
-#: modules/imaging/manage/synchromaster.php:135
-msgid "Copy of master complete"
-msgstr "Kopiering av master er ferdig"
-
-#: modules/imaging/manage/synchromaster.php:139
-msgid "Copy of master In progress"
-msgstr "Kopiering av master pågår"
-
-#: modules/imaging/manage/sysprepList.php:38
-#, php-format
-msgid "The sysprep answer file %s has been removed from the imaging system."
-msgstr "Sysprep-svarfilen %s er fjernet fra bildesystemet."
-
-#: modules/imaging/manage/sysprepList.php:78
-msgid "All Windows Answer Files"
-msgstr "Alle svarfiler i Windows"
-
-#: modules/imaging/manage/sysprepList.php:83
-msgid "File name"
-msgstr "Filnavn"
-
-#: modules/imaging/manage/sysprepList.php:86
-msgid "OS"
-msgstr "OS"
-
-#: modules/imaging/manage/sysprepList.php:90
-msgid "Display sysprep file"
-msgstr "Vis sysprep filen"
-
-#: modules/imaging/manage/sysprepList.php:91
-msgid "Edit sysprep file"
-msgstr "Rediger sysprep filen"
-
-#: modules/imaging/manage/sysprepList.php:92
-msgid "Delete sysprep file"
-msgstr "Slett sysprep fil"
-
-#: modules/imaging/manage/sysprepList.php:92
-msgid "Are you sure you want to unset this sysrep answer file?"
-msgstr "Er du sikker på at du vil deaktivere denne sysrep-svarfilen?"
+#: modules/imaging/manage/master_clone.php:121
+#: modules/imaging/manage/ajaxFormWin10.php:832
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
+#: modules/imaging/manage/postinstall_edit.php:161
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
+#: modules/imaging/manage/master_edit.php:72
+#: modules/imaging/manage/service_edit.php:71
+#: modules/imaging/manage/ajaxFormWin7.php:735
+#: modules/imaging/manage/ajaxFormWin8.php:825
+#: modules/imaging/manage/ajaxConfiguration.php:130
+#: modules/imaging/manage/bootmenu_edit.php:101
+#: modules/imaging/imaging/bootmenu.php:260
+msgid "Validate"
+msgstr "Valider"
 
 #: modules/imaging/manage/postinstall_delete.php:45
 #, php-format
@@ -2674,10 +1413,444 @@ msgid "Can't delete this post-imaging script, it's a global script."
 msgstr ""
 "Kan ikke slette dette post-avbildingsskripte, det er et globalt skript."
 
+#: modules/imaging/manage/postinstall_delete.php:97
+#: modules/imaging/infoPackage.inc.php:169
+msgid "Delete post-imaging script"
+msgstr "Slett postinstallasjonsskript"
+
 #: modules/imaging/manage/postinstall_delete.php:99
 #, php-format
 msgid "Are you sure you want to delete the <b>%s</b> script ?"
 msgstr "Er du sikker på at du vil slette <b>%s</b> skriptet?"
+
+#: modules/imaging/manage/postinstall_delete.php:102
+#: modules/imaging/manage/master_iso.php:109
+#: modules/imaging/manage/service_show_used.php:200
+#: modules/imaging/manage/master_delete.php:81
+#: modules/imaging/manage/master_remove.php:94
+#: modules/imaging/imaging/bootmenu_remove.php:161
+#: modules/imaging/imaging/showtarget.php:131
+#: modules/imaging/imaging/images_delete.php:73
+#: modules/imaging/imaging/configure.php:365
+#: modules/imaging/imaging/multicast.php:390
+#: modules/imaging/imaging/images_iso.php:112
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: modules/imaging/manage/ajaxFormWin10.php:448
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:307
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:291
+#: modules/imaging/manage/ajaxFormWin7.php:347
+#: modules/imaging/manage/ajaxFormWin8.php:422
+msgid "Installation Notes"
+msgstr "Installasjonsnotater"
+
+#: modules/imaging/manage/ajaxFormWin10.php:454
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:313
+#: modules/imaging/manage/master_iso.php:90
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:297
+#: modules/imaging/manage/ajaxFormWin7.php:353
+#: modules/imaging/manage/ajaxFormWin8.php:428
+#: modules/imaging/imaging/images_iso.php:93
+msgid "Title"
+msgstr "Tittel"
+
+#: modules/imaging/manage/ajaxFormWin10.php:458
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:317
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:301
+#: modules/imaging/manage/ajaxFormWin7.php:357
+#: modules/imaging/manage/ajaxFormWin8.php:432
+msgid "Enter your comments here..."
+msgstr "Skriv inn kommentarene dine her..."
+
+#: modules/imaging/manage/ajaxFormWin10.php:467
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:326
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:310
+#: modules/imaging/manage/ajaxFormWin7.php:365
+#: modules/imaging/manage/ajaxFormWin8.php:441
+msgid "Os Settings"
+msgstr "OS innstillinger"
+
+#: modules/imaging/manage/ajaxFormWin10.php:498
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:357
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:341
+#: modules/imaging/manage/ajaxFormWin7.php:396
+#: modules/imaging/manage/ajaxFormWin8.php:472
+msgid "Product Key"
+msgstr "Produktnøkkel"
+
+#: modules/imaging/manage/ajaxFormWin10.php:503
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:362
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:346
+#: modules/imaging/manage/ajaxFormWin7.php:401
+#: modules/imaging/manage/ajaxFormWin8.php:477
+msgid "Organization Name"
+msgstr "Organisasjonsnavn"
+
+#: modules/imaging/manage/ajaxFormWin10.php:511
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:370
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:354
+#: modules/imaging/manage/ajaxFormWin7.php:409
+#: modules/imaging/manage/ajaxFormWin8.php:485
+msgid "Accept EULA"
+msgstr "Godta EULA"
+
+#: modules/imaging/manage/ajaxFormWin10.php:519
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:378
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:362
+#: modules/imaging/manage/ajaxFormWin7.php:417
+#: modules/imaging/manage/ajaxFormWin8.php:493
+msgid "Skip automatic activation"
+msgstr "Hopp over automatisk aktivering"
+
+#: modules/imaging/manage/ajaxFormWin10.php:527
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:386
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:370
+#: modules/imaging/manage/ajaxFormWin7.php:425
+#: modules/imaging/manage/ajaxFormWin8.php:501
+msgid "Skip License Rearm"
+msgstr "Hopp over lisensoppdatering"
+
+#: modules/imaging/manage/ajaxFormWin10.php:536
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:395
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:379
+#: modules/imaging/manage/ajaxFormWin7.php:434
+#: modules/imaging/manage/ajaxFormWin8.php:510
+msgid "Setup Language"
+msgstr "Installasjonsspråk"
+
+#: modules/imaging/manage/ajaxFormWin10.php:541
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:400
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:384
+#: modules/imaging/manage/ajaxFormWin7.php:439
+#: modules/imaging/manage/ajaxFormWin8.php:515
+msgid "Computer Name"
+msgstr "Maskinnavn"
+
+#: modules/imaging/manage/ajaxFormWin10.php:549
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:408
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:400
+#: modules/imaging/manage/ajaxFormWin7.php:455
+#: modules/imaging/manage/ajaxFormWin8.php:531
+msgid "Keyboard or input method"
+msgstr "Tastatur eller inndatametode"
+
+#: modules/imaging/manage/ajaxFormWin10.php:557
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:416
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:408
+#: modules/imaging/manage/ajaxFormWin7.php:463
+#: modules/imaging/manage/ajaxFormWin8.php:539
+msgid "Currency and Date format"
+msgstr "Valuta og dato format"
+
+#: modules/imaging/manage/ajaxFormWin10.php:565
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:424
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:416
+#: modules/imaging/manage/ajaxFormWin7.php:471
+#: modules/imaging/manage/ajaxFormWin8.php:547
+msgid "Time Zone"
+msgstr "Tidssone"
+
+#: modules/imaging/manage/ajaxFormWin10.php:573
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:432
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:424
+#: modules/imaging/manage/ajaxFormWin7.php:479
+#: modules/imaging/manage/ajaxFormWin8.php:555
+msgid "UI Language"
+msgstr "Språk på grensesnitt"
+
+#: modules/imaging/manage/ajaxFormWin10.php:584
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:443
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:435
+#: modules/imaging/manage/ajaxFormWin7.php:490
+#: modules/imaging/manage/ajaxFormWin8.php:566
+msgid "Partition Settings"
+msgstr "Partisjonsinnstillinger"
+
+#: modules/imaging/manage/ajaxFormWin10.php:593
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:452
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:444
+#: modules/imaging/manage/ajaxFormWin7.php:499
+#: modules/imaging/manage/ajaxFormWin8.php:575
+msgid "Wipe Disk"
+msgstr "Slett disken"
+
+#: modules/imaging/manage/ajaxFormWin10.php:601
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:460
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:452
+#: modules/imaging/manage/ajaxFormWin7.php:507
+#: modules/imaging/manage/ajaxFormWin8.php:583
+msgid "Install to disk"
+msgstr "Innstaller på disken"
+
+#: modules/imaging/manage/ajaxFormWin10.php:609
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:468
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:460
+#: modules/imaging/manage/ajaxFormWin7.php:515
+#: modules/imaging/manage/ajaxFormWin8.php:591
+msgid "Partition Order"
+msgstr "Partisjonsrekkefølge"
+
+#: modules/imaging/manage/ajaxFormWin10.php:617
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:476
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:468
+#: modules/imaging/manage/ajaxFormWin7.php:523
+#: modules/imaging/manage/ajaxFormWin8.php:599
+msgid "Extend OS Partition"
+msgstr "Utvid OS partisjonen"
+
+#: modules/imaging/manage/ajaxFormWin10.php:625
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:484
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:476
+#: modules/imaging/manage/ajaxFormWin7.php:531
+#: modules/imaging/manage/ajaxFormWin8.php:607
+msgid "Main Partition Format"
+msgstr "Hovedpartisjonsformat"
+
+#: modules/imaging/manage/ajaxFormWin10.php:638
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:497
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:489
+#: modules/imaging/manage/ajaxFormWin7.php:544
+#: modules/imaging/manage/ajaxFormWin8.php:620
+msgid "Main Partition Letter"
+msgstr "Hovedpartisjonsbokstav"
+
+#: modules/imaging/manage/ajaxFormWin10.php:649
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:508
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:500
+#: modules/imaging/manage/ajaxFormWin7.php:555
+#: modules/imaging/manage/ajaxFormWin8.php:631
+msgid "Security Settings"
+msgstr "Sikkerhetsinnstillinger"
+
+#: modules/imaging/manage/ajaxFormWin10.php:658
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:517
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:509
+#: modules/imaging/manage/ajaxFormWin7.php:564
+#: modules/imaging/manage/ajaxFormWin8.php:640
+msgid "Protect Your Computer"
+msgstr "Beskytt din datamaskin"
+
+#: modules/imaging/manage/ajaxFormWin10.php:674
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:533
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:525
+#: modules/imaging/manage/ajaxFormWin7.php:580
+#: modules/imaging/manage/ajaxFormWin8.php:656
+msgid "Network Location"
+msgstr "Nettverkslokasjon"
+
+#: modules/imaging/manage/ajaxFormWin10.php:682
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:541
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:533
+#: modules/imaging/manage/ajaxFormWin7.php:588
+#: modules/imaging/manage/ajaxFormWin8.php:664
+msgid "Hide EULA page"
+msgstr "Skjul ELUA side"
+
+#: modules/imaging/manage/ajaxFormWin10.php:690
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:549
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:541
+#: modules/imaging/manage/ajaxFormWin7.php:596
+#: modules/imaging/manage/ajaxFormWin8.php:672
+msgid "Enable Firewall"
+msgstr "Aktiver brannmur"
+
+#: modules/imaging/manage/ajaxFormWin10.php:698
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:557
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:549
+#: modules/imaging/manage/ajaxFormWin7.php:604
+#: modules/imaging/manage/ajaxFormWin8.php:680
+msgid "Disable auto daylight timeset"
+msgstr "Deaktiver automatisk sommertid"
+
+#: modules/imaging/manage/ajaxFormWin10.php:706
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:565
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:557
+#: modules/imaging/manage/ajaxFormWin7.php:612
+#: modules/imaging/manage/ajaxFormWin8.php:688
+msgid "Hide wireless setup in OOBE"
+msgstr "Skjul trådløst oppsett i OOBE"
+
+#: modules/imaging/manage/ajaxFormWin10.php:711
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
+#: modules/imaging/manage/ajaxFormWin7.php:617
+#: modules/imaging/manage/ajaxFormWin8.php:693
+msgid "Category View"
+msgstr "Kategorivisning"
+
+#: modules/imaging/manage/ajaxFormWin10.php:711
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
+#: modules/imaging/manage/ajaxFormWin7.php:617
+#: modules/imaging/manage/ajaxFormWin8.php:693
+msgid "Classic View"
+msgstr "Klassisk visning"
+
+#: modules/imaging/manage/ajaxFormWin10.php:714
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:573
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:565
+#: modules/imaging/manage/ajaxFormWin7.php:620
+#: modules/imaging/manage/ajaxFormWin8.php:696
+msgid "Control Panel View"
+msgstr "Kontrollpanelvisning"
+
+#: modules/imaging/manage/ajaxFormWin10.php:719
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin7.php:625
+#: modules/imaging/manage/ajaxFormWin8.php:701
+msgid "Large"
+msgstr "Stor"
+
+#: modules/imaging/manage/ajaxFormWin10.php:719
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin7.php:625
+#: modules/imaging/manage/ajaxFormWin8.php:701
+msgid "Small"
+msgstr "Liten"
+
+#: modules/imaging/manage/ajaxFormWin10.php:722
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:581
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:573
+#: modules/imaging/manage/ajaxFormWin7.php:628
+#: modules/imaging/manage/ajaxFormWin8.php:704
+msgid "Control Panel Icon Size"
+msgstr "Kontrollpanelets ikonstørrelse"
+
+#: modules/imaging/manage/ajaxFormWin10.php:732
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:591
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:584
+#: modules/imaging/manage/ajaxFormWin7.php:639
+#: modules/imaging/manage/ajaxFormWin8.php:715
+msgid "Domain Settings"
+msgstr "Domeneinstillinger"
+
+#: modules/imaging/manage/ajaxFormWin10.php:736
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:595
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:588
+#: modules/imaging/manage/ajaxFormWin7.php:643
+#: modules/imaging/manage/ajaxFormWin8.php:719
+msgid "Domain"
+msgstr "Domene"
+
+#: modules/imaging/manage/ajaxFormWin10.php:740
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:599
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:593
+#: modules/imaging/manage/ajaxFormWin7.php:648
+#: modules/imaging/manage/ajaxFormWin8.php:724
+msgid "Domain User"
+msgstr "Domenebruker"
+
+#: modules/imaging/manage/ajaxFormWin10.php:744
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:603
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:598
+#: modules/imaging/manage/ajaxFormWin7.php:653
+#: modules/imaging/manage/ajaxFormWin8.php:729
+msgid "Domain Password"
+msgstr "Domenepassord"
+
+#: modules/imaging/manage/ajaxFormWin10.php:748
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:607
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:603
+#: modules/imaging/manage/ajaxFormWin7.php:658
+#: modules/imaging/manage/ajaxFormWin8.php:734
+msgid "Join Domain"
+msgstr "Bli med i domenet"
+
+#: modules/imaging/manage/ajaxFormWin10.php:752
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:611
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:608
+#: modules/imaging/manage/ajaxFormWin7.php:663
+#: modules/imaging/manage/ajaxFormWin8.php:739
+msgid "MachineObjectOU"
+msgstr "Maskin Objekt OU"
+
+#: modules/imaging/manage/ajaxFormWin10.php:763
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:622
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:619
+#: modules/imaging/manage/ajaxFormWin7.php:674
+#: modules/imaging/manage/ajaxFormWin8.php:750
+msgid "Administrator Account"
+msgstr "Administratorkonto"
+
+#: modules/imaging/manage/ajaxFormWin10.php:768
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:627
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:624
+#: modules/imaging/manage/ajaxFormWin7.php:679
+#: modules/imaging/manage/ajaxFormWin8.php:755
+msgid "Password"
+msgstr "Passord"
+
+#: modules/imaging/manage/ajaxFormWin10.php:780
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:639
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:636
+#: modules/imaging/manage/ajaxFormWin7.php:691
+#: modules/imaging/manage/ajaxFormWin8.php:767
+msgid "User Account"
+msgstr "Brukerkonto"
+
+#: modules/imaging/manage/ajaxFormWin10.php:789
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:648
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:645
+#: modules/imaging/manage/ajaxFormWin7.php:700
+#: modules/imaging/manage/ajaxFormWin8.php:776
+msgid "Customer Experience Improvement Program (CEIP)"
+msgstr "Program for forbedring av kundeopplevelse (CEIP)"
+
+#: modules/imaging/manage/ajaxFormWin10.php:797
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:656
+#: modules/imaging/manage/ajaxFormWin7.php:708
+msgid "Copy Profile"
+msgstr "Kopier  Profil"
+
+#: modules/imaging/manage/ajaxFormWin10.php:802
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:661
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:664
+#: modules/imaging/manage/ajaxFormWin7.php:713
+#: modules/imaging/manage/ajaxFormWin8.php:795
+msgid "User Name"
+msgstr "Brukernavn"
+
+#: modules/imaging/manage/ajaxFormWin10.php:810
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:669
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:672
+#: modules/imaging/manage/ajaxFormWin7.php:721
+#: modules/imaging/manage/ajaxFormWin8.php:803
+msgid "Group"
+msgstr "Gruppe"
+
+#: modules/imaging/manage/ajaxFormWin10.php:820
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:679
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:682
+#: modules/imaging/manage/ajaxFormWin7.php:731
+#: modules/imaging/manage/ajaxFormWin8.php:813
+msgid "Password: (Optional)"
+msgstr "Passord: (valgfritt)"
+
+#: modules/imaging/manage/ajaxFormWin10.php:827
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:686
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:689
+#: modules/imaging/manage/ajaxFormWin8.php:820
+msgid "UAC"
+msgstr "UAC"
+
+#: modules/imaging/manage/ajaxFormWin10.php:832
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
+#: modules/imaging/manage/ajaxFormWin7.php:735
+#: modules/imaging/manage/ajaxFormWin8.php:825
+msgid "Create Xml Windows Answer File Generator"
+msgstr "Lag Xml Windows Answer File Generator"
+
+#: modules/imaging/manage/ajaxFormWin10.php:840
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:699
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:702
+#: modules/imaging/manage/ajaxFormWin7.php:743
+#: modules/imaging/manage/ajaxFormWin8.php:833
+msgid "Xml Windows Answer File Generator"
+msgstr "Xml Windows Answer File Generator"
 
 #: modules/imaging/manage/ajaxService.php:27
 msgid "Manage services"
@@ -2697,6 +1870,21 @@ msgstr ""
 "Generering av oppstartsmeny lyktes for pakkeserver: %s<br /><br />kontroller"
 " /var/log/mmc/pulse2-package-server.log"
 
+#: modules/imaging/manage/master_add.php:71
+#: modules/imaging/manage/master_add.php:75
+#: modules/imaging/manage/save_configuration.php:84
+#: modules/imaging/manage/location.php:61
+#: modules/imaging/manage/location.php:65
+#: modules/imaging/manage/service_show_used.php:128
+#: modules/imaging/manage/service_show_used.php:132
+#, php-format
+msgid ""
+"Boot menu generation failed for package server: %s<br /><br />Check "
+"/var/log/mmc/pulse2-package-server.log"
+msgstr ""
+"Generering av oppstartsmenyen mislyktes for pakkeserver: %s<br /><br /> "
+"kontroller /var/log/mmc/pulse2-package-server.log"
+
 #: modules/imaging/manage/master_add.php:81
 #, php-format
 msgid "Error : Image <strong>%s</strong> added to default boot menu"
@@ -2713,140 +1901,74 @@ msgstr "Legg til bildet <b>%s</b> i <b>%s</b>"
 #: modules/imaging/manage/bootmenu_edit.php:81
 #: modules/imaging/manage/service_add.php:114
 #: modules/imaging/imaging/addimage.php:177
-#: modules/imaging/imaging/bootmenu.php:240
 #: modules/imaging/imaging/addservice.php:158
+#: modules/imaging/imaging/bootmenu.php:240
 msgid "Selected by default"
 msgstr "Valgt som standard "
+
+#: modules/imaging/manage/master_add.php:149
+#: modules/imaging/manage/ajaxBootmenu.php:101
+#: modules/imaging/manage/bootmenu_edit.php:86
+#: modules/imaging/manage/service_add.php:116
+#: modules/imaging/imaging/addimage.php:179
+#: modules/imaging/imaging/addservice.php:160
+#: modules/imaging/imaging/bootmenu.php:245
+#: modules/imaging/imaging/bootmenu.php:462
+msgid "Displayed"
+msgstr "Vist"
 
 #: modules/imaging/manage/master_add.php:151
 #: modules/imaging/manage/bootmenu_edit.php:91
 #: modules/imaging/manage/service_add.php:118
 #: modules/imaging/imaging/addimage.php:181
-#: modules/imaging/imaging/bootmenu.php:250
 #: modules/imaging/imaging/addservice.php:162
+#: modules/imaging/imaging/bootmenu.php:250
 msgid "Selected by default on WOL"
 msgstr "Valgt som standard på WOL"
 
-#: modules/imaging/manage/service_edit.php:48
-msgid "Edit service : "
-msgstr "Rediger tjeneste:"
+#: modules/imaging/manage/master_add.php:153
+#: modules/imaging/manage/ajaxBootmenu.php:103
+#: modules/imaging/manage/bootmenu_edit.php:96
+#: modules/imaging/manage/service_add.php:120
+#: modules/imaging/imaging/addimage.php:183
+#: modules/imaging/imaging/addservice.php:164
+#: modules/imaging/imaging/bootmenu.php:255
+#: modules/imaging/imaging/bootmenu.php:465
+msgid "Displayed on WOL"
+msgstr "Vist på WOL"
 
-#: modules/imaging/manage/service_edit.php:66
-msgid "In default bootmenu"
-msgstr "I standard oppstartsmeny"
+#: modules/imaging/manage/multicastaction.php:68
+msgid "Start Multicast of ( Master :"
+msgstr "Start Multicast av  Master :"
 
-#: modules/imaging/manage/service_edit.php:81
-#, php-format
-msgid "Service <strong>%s</strong> modified with success"
-msgstr "Tjeneste <strong>%s</strong> suksessfullt endret"
+#: modules/imaging/manage/multicastaction.php:69
+#: modules/imaging/manage/multicastaction.php:89
+#: modules/imaging/manage/multicastaction.php:136
+msgid "on (group :"
+msgstr "på gruppe:"
 
-#: modules/imaging/manage/service_show_used.php:67
-#: modules/imaging/manage/service_show_used.php:108
-msgid "Removal of boot service failed"
-msgstr "Fjerning av oppstarttjenesten mislyktes"
+#: modules/imaging/manage/multicastaction.php:70
+#: modules/imaging/manage/multicastaction.php:90
+#: modules/imaging/manage/multicastaction.php:137
+msgid "to (location : "
+msgstr "til lokasjon"
 
-#: modules/imaging/manage/service_show_used.php:85
-#: modules/imaging/imaging/addimage.php:106
-#: modules/imaging/imaging/bootmenu_remove.php:127
-#: modules/imaging/imaging/addservice.php:103
-#: modules/imaging/imaging/showtarget.php:78
-#, php-format
-msgid "Boot menu generation failed for computer: %s"
-msgstr "Generering av oppstartsmenyen mislyktes for datamaskinen: %s"
+#: modules/imaging/manage/multicastaction.php:88
+msgid "Stop Multicast of ( Master :"
+msgstr "Stopp Multicast av  Master :"
 
-#: modules/imaging/manage/service_show_used.php:163
-#: modules/imaging/imaging/showtarget.php:123
-msgid "Show all targets that use that image in their boot menu"
-msgstr "Vis alle målene som bruker dette bildet i startmenyen"
+#: modules/imaging/manage/multicastaction.php:102
+#: modules/imaging/manage/multicastaction.php:121
+msgid "Synchro Profile Menu group : "
+msgstr "Synkro Profil Meny gruppe : "
 
-#: modules/imaging/manage/service_show_used.php:170
-#, php-format
-msgid "Remove this boot service from imaging server %s"
-msgstr "Fjern denne starttjenesten fra bildeserver%s"
+#: modules/imaging/manage/multicastaction.php:121
+msgid "location : "
+msgstr "lokasjon:"
 
-#: modules/imaging/manage/service_show_used.php:171
-#: modules/imaging/imaging/showtarget.php:150
-msgid "Imaging server"
-msgstr "Avbildingsserver"
-
-#: modules/imaging/manage/service_show_used.php:178
-#: modules/imaging/imaging/showtarget.php:157
-#, php-format
-msgid "Remove this master from computer %s"
-msgstr "Fjern denne masteren fra datamaskinen %s"
-
-#: modules/imaging/manage/service_show_used.php:179
-#: modules/imaging/imaging/showtarget.php:158
-msgid "Imaging group"
-msgstr "Avbildingsgruppe"
-
-#: modules/imaging/manage/service_show_used.php:179
-#: modules/imaging/imaging/configure.php:39
-#: modules/imaging/imaging/showtarget.php:158
-msgid "Computer"
-msgstr "Datamaskin"
-
-#: modules/imaging/manage/service_show_used.php:194
-msgid ""
-"If you want to remove this boot service from one or more targets, check "
-"these targets and click on the remove button"
-msgstr ""
-"Hvis du vil fjerne denne oppstarttjenesten fra ett eller flere mål, sjekk "
-"disse målene og klikk på fjern-knappen"
-
-#: modules/imaging/manage/service_show_used.php:196
-#: modules/imaging/imaging/showtarget.php:127
-msgid "Select all"
-msgstr "Velg alt"
-
-#: modules/imaging/manage/service_show_used.php:198
-#: modules/imaging/imaging/showtarget.php:129
-msgid "Unselect all"
-msgstr "Avmarker alt"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:49
-msgid "Add service to default boot menu"
-msgstr "Legg til tjeneste i standard oppstartsmeny"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:50
-msgid "Remove service from default boot menu"
-msgstr "Fjern tjenesten fra standard oppstartsmeny"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:51
-msgid "Delete service"
-msgstr "Slette tjeneste"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:52
-msgid "Show where service is used"
-msgstr "Vis hvor tjenesten brukes"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:94
-#: modules/imaging/imaging/ajaxImages.php:174
-msgid "In boot menu"
-msgstr "I startmenyen"
-
-#: modules/imaging/manage/master_edit.php:45
-msgid "Edit master : "
-msgstr "Rediger master:"
-
-#: modules/imaging/manage/master_edit.php:96
-#, php-format
-msgid "Master <strong>%s</strong> modified with success"
-msgstr "Master <strong>%s</strong> ble suksessfullt endret "
-
-#: modules/imaging/manage/master_edit.php:116
-#, php-format
-msgid "Master %s modified with error"
-msgstr "Endring av Master%s feilet"
-
-#: modules/imaging/manage/bootmenu_edit.php:68
-#, php-format
-msgid "Edit : %s"
-msgstr "Rediger: %s"
-
-#: modules/imaging/manage/bootmenu_edit.php:77
-msgid "Default menu item label"
-msgstr "Standard menyelementetikett"
+#: modules/imaging/manage/multicastaction.php:135
+msgid "Clear Multicast of ( Master :"
+msgstr "Fjern Multicast av  Master :"
 
 #: modules/imaging/manage/ajaxStatus.php:33
 msgid "Status"
@@ -2923,6 +2045,449 @@ msgid "Can't connect to the imaging server linked to the selected entity."
 msgstr ""
 "Kan ikke koble til avbildingsserveren som er koblet til den valgte enheten."
 
+#: modules/imaging/manage/service_remove.php:44
+#, php-format
+msgid "Service <strong>%s</strong> successfully removed"
+msgstr "Tjenste <strong>%s</strong>ble fjernet"
+
+#: modules/imaging/manage/service_remove.php:62
+#: modules/imaging/manage/imaging_server_link.php:77
+#: modules/imaging/manage/master_remove.php:65
+#: modules/imaging/manage/service_del.php:61
+#: modules/imaging/manage/service_add.php:64
+#: modules/imaging/manage/service_add.php:66
+#: modules/imaging/imaging/showtarget.php:90
+#, php-format
+msgid "Boot menu generation failed for package server: %s"
+msgstr "Generering av oppstartsmenyen mislyktes for pakkeserver:%s"
+
+#: modules/imaging/manage/service_remove.php:79
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
+msgstr "Er du sikker på at du vil slette <b>%s</b> oppstartstjenesten"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:51
+msgid "Create Boot Service"
+msgstr "Skap oppstartstjeneste"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:52
+msgid "Edit script"
+msgstr "Rediger skript"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:54
+msgid "Boot Service already created"
+msgstr "Oppstartstjeneste allerede opprettet"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:95
+msgid "Duplicate"
+msgstr "Dupliser"
+
+#: modules/imaging/manage/save_configuration.php:68
+#, php-format
+msgid "Imaging server <strong>%s</strong> configuration saved."
+msgstr "Avbildningsserver <strong>%s</strong>konfigurasjon er lagret"
+
+#: modules/imaging/manage/systemImageManager.php:38
+msgid "Sysprep generator"
+msgstr "Sysprep generator"
+
+#: modules/imaging/manage/systemImageManager.php:39
+msgid "Sysprep list"
+msgstr "Sysprep liste"
+
+#: modules/imaging/manage/postinstall_edit.php:90
+#, php-format
+msgid "<strong>%s</strong> script %s"
+msgstr "<strong>%s</strong> skript %s"
+
+#: modules/imaging/manage/postinstall_edit.php:91
+msgid "Notify Success : "
+msgstr "Suksess:"
+
+#: modules/imaging/manage/postinstall_edit.php:107
+#: modules/imaging/manage/postinstall_edit.php:122
+msgid "Notify Error : "
+msgstr "Feil:"
+
+#: modules/imaging/manage/postinstall_edit.php:121
+#, php-format
+msgid "<strong>%s</strong> script wasn't %s"
+msgstr "<strong>%s</strong> skript var ikket %s"
+
+#: modules/imaging/manage/postinstall_edit.php:157
+msgid "Script value"
+msgstr "Skript verdi"
+
+#: modules/imaging/manage/unattended.php:76
+msgid "form not found"
+msgstr "formulær ikke funnet"
+
+#: modules/imaging/manage/unattended.php:89
+msgid "Windows Answer File Generator"
+msgstr "Windows Answer File Generator"
+
+#: modules/imaging/manage/unattended.php:104
+msgid "error create file"
+msgstr "feil under opprettelse av fil"
+
+#: modules/imaging/manage/unattended.php:126
+msgid "Choose package source"
+msgstr "Velg kilde for pakken"
+
+#: modules/imaging/manage/master_iso.php:44
+#: modules/imaging/infoPackage.inc.php:121
+msgid "Create iso from master"
+msgstr "Skap iso fra master"
+
+#: modules/imaging/manage/master_iso.php:46
+#, php-format
+msgid "Iso of master <strong>%s</strong> has been launched in background."
+msgstr "ISO til master <strong>%s</strong> har blitt startet i bakgrunnen"
+
+#: modules/imaging/manage/master_iso.php:48
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the"
+" backup."
+msgstr ""
+"Filene blir lagret i katalogen %s til serveren på slutten av "
+"sikkerhetskopien."
+
+#: modules/imaging/manage/master_iso.php:50
+msgid "Please go to the status page to check the iso creation status."
+msgstr "Gå til statussiden for å sjekke status for iso-opprettelsen."
+
+#: modules/imaging/manage/master_iso.php:52
+msgid ""
+"This operation will last according to the amount of data of the master."
+msgstr "Denne operasjonen vil kjøre i henhold til datamengden til masteren."
+
+#: modules/imaging/manage/master_iso.php:88
+#, php-format
+msgid "Create iso for <strong>%s</strong>"
+msgstr "Opprett ISO for <strong>%s</strong>"
+
+#: modules/imaging/manage/master_iso.php:95
+#: modules/imaging/imaging/images_iso.php:98
+msgid "Media size"
+msgstr "Mediestørrelse"
+
+#: modules/imaging/manage/master_iso.php:108
+msgid "Launch backup"
+msgstr "Start sikkerhetskopiering"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:392
+#: modules/imaging/manage/ajaxFormWin7.php:447
+#: modules/imaging/manage/ajaxFormWin8.php:523
+msgid "Show Windows Live"
+msgstr "Vis Windows Live"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:517
+#: modules/imaging/manage/ajaxFormWin7.php:572
+#: modules/imaging/manage/ajaxFormWin8.php:648
+msgid "System Updates"
+msgstr "Systemoppdateringer"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:653
+#: modules/imaging/manage/ajaxFormWin8.php:784
+msgid "System Background Colour"
+msgstr "Bakgrunnsfarge for systemet"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:660
+#: modules/imaging/manage/ajaxFormWin8.php:791
+msgid "For Windows 8"
+msgstr "For Windows 8"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:661
+#: modules/imaging/manage/ajaxFormWin8.php:792
+msgid "For Windows 8.1"
+msgstr "For Windows 8.1"
+
+#: modules/imaging/manage/bootmenu_up.php:37
+#, php-format
+msgid "Success to move <strong>%s</strong> in the default boot menu"
+msgstr "Lykkes med å flytte <strong>%s</strong> i standard oppstartsmeny"
+
+#: modules/imaging/manage/bootmenu_up.php:50
+#, php-format
+msgid "Failed to move <strong>%s</strong> in the default boot menu"
+msgstr "MisLykkts med å flytte <strong>%s</strong>i standard oppstartsmeny"
+
+#: modules/imaging/manage/ajaxBootmenu.php:30
+#: modules/imaging/imaging/bootmenu.php:364
+msgid "Move Up"
+msgstr "Flytt opp"
+
+#: modules/imaging/manage/ajaxBootmenu.php:31
+#: modules/imaging/imaging/bootmenu.php:365
+msgid "Move down"
+msgstr "Flytt ned"
+
+#: modules/imaging/manage/ajaxBootmenu.php:94
+msgid "Default boot menu configuration"
+msgstr "Standard konfigurasjon av oppstartsmenyen"
+
+#: modules/imaging/manage/ajaxBootmenu.php:97
+#: modules/imaging/manage/master_edit.php:55
+#: modules/imaging/manage/ajaxServiceLevel2.php:91
+#: modules/imaging/manage/service_edit.php:56
+#: modules/imaging/manage/ajaxMasterLevel2.php:95
+#: modules/imaging/imaging/ajaxServices.php:98
+#: modules/imaging/imaging/images.php:105
+#: modules/imaging/imaging/bootmenu.php:457
+#: modules/imaging/imaging/ajaxImages.php:169
+msgid "Label"
+msgstr "Etikett"
+
+#: modules/imaging/manage/ajaxBootmenu.php:100
+msgid "Default"
+msgstr "Standard"
+
+#: modules/imaging/manage/ajaxBootmenu.php:102
+msgid "Default on WOL"
+msgstr "Standard for WOL"
+
+#: modules/imaging/manage/ajaxBootmenu.php:106
+#: modules/imaging/imaging/bootmenu.php:366
+msgid "Edit"
+msgstr "Rediger"
+
+#: modules/imaging/manage/sysprepView.php:33
+msgid "View "
+msgstr "Visning"
+
+#: modules/imaging/manage/ajaxLogs.php:45
+msgid "No log available."
+msgstr "Ingen logg er tilgjengelig"
+
+#: modules/imaging/manage/ajaxLogs.php:109
+#: modules/imaging/imaging/ajaxLogs.php:90
+msgid "Timestamp"
+msgstr "Tidsstempel"
+
+#: modules/imaging/manage/ajaxLogs.php:111
+#: modules/imaging/imaging/ajaxLogs.php:94
+msgid "Target"
+msgstr "Mål"
+
+#: modules/imaging/manage/ajaxLogs.php:112
+#: modules/imaging/imaging/ajaxLogs.php:95
+msgid "Message"
+msgstr "Melding"
+
+#: modules/imaging/manage/service_show_used.php:67
+#: modules/imaging/manage/service_show_used.php:108
+msgid "Removal of boot service failed"
+msgstr "Fjerning av oppstarttjenesten mislyktes"
+
+#: modules/imaging/manage/service_show_used.php:85
+#: modules/imaging/imaging/bootmenu_remove.php:127
+#: modules/imaging/imaging/addimage.php:106
+#: modules/imaging/imaging/showtarget.php:78
+#: modules/imaging/imaging/addservice.php:103
+#, php-format
+msgid "Boot menu generation failed for computer: %s"
+msgstr "Generering av oppstartsmenyen mislyktes for datamaskinen: %s"
+
+#: modules/imaging/manage/service_show_used.php:93
+#: modules/imaging/manage/service_del.php:44
+#, php-format
+msgid "Service <strong>%s</strong> removed from default boot menu"
+msgstr "Tjeneste <strong>%s</strong> fjernet fra standard oppstartsmeny"
+
+#: modules/imaging/manage/service_show_used.php:163
+#: modules/imaging/imaging/showtarget.php:123
+msgid "Show all targets that use that image in their boot menu"
+msgstr "Vis alle målene som bruker dette bildet i startmenyen"
+
+#: modules/imaging/manage/service_show_used.php:170
+#, php-format
+msgid "Remove this boot service from imaging server %s"
+msgstr "Fjern denne starttjenesten fra bildeserver%s"
+
+#: modules/imaging/manage/service_show_used.php:171
+#: modules/imaging/imaging/showtarget.php:150
+msgid "Imaging server"
+msgstr "Avbildingsserver"
+
+#: modules/imaging/manage/service_show_used.php:178
+#: modules/imaging/imaging/showtarget.php:157
+#, php-format
+msgid "Remove this master from computer %s"
+msgstr "Fjern denne masteren fra datamaskinen %s"
+
+#: modules/imaging/manage/service_show_used.php:179
+#: modules/imaging/imaging/showtarget.php:158
+msgid "Imaging group"
+msgstr "Avbildingsgruppe"
+
+#: modules/imaging/manage/service_show_used.php:179
+#: modules/imaging/imaging/showtarget.php:158
+#: modules/imaging/imaging/configure.php:39
+msgid "Computer"
+msgstr "Datamaskin"
+
+#: modules/imaging/manage/service_show_used.php:194
+msgid ""
+"If you want to remove this boot service from one or more targets, check "
+"these targets and click on the remove button"
+msgstr ""
+"Hvis du vil fjerne denne oppstarttjenesten fra ett eller flere mål, sjekk "
+"disse målene og klikk på fjern-knappen"
+
+#: modules/imaging/manage/service_show_used.php:196
+#: modules/imaging/imaging/showtarget.php:127
+msgid "Select all"
+msgstr "Velg alt"
+
+#: modules/imaging/manage/service_show_used.php:198
+#: modules/imaging/imaging/showtarget.php:129
+msgid "Unselect all"
+msgstr "Avmarker alt"
+
+#: modules/imaging/manage/service_show_used.php:199
+#: modules/imaging/manage/master_delete.php:80
+#: modules/imaging/manage/master_remove.php:93
+#: modules/imaging/imaging/bootmenu_remove.php:160
+#: modules/imaging/imaging/showtarget.php:130
+#: modules/imaging/imaging/images_delete.php:72
+msgid "Remove"
+msgstr "Fjern"
+
+#: modules/imaging/manage/master_edit.php:45
+msgid "Edit master : "
+msgstr "Rediger master:"
+
+#: modules/imaging/manage/master_edit.php:96
+#, php-format
+msgid "Master <strong>%s</strong> modified with success"
+msgstr "Master <strong>%s</strong> ble suksessfullt endret "
+
+#: modules/imaging/manage/master_edit.php:116
+#, php-format
+msgid "Master %s modified with error"
+msgstr "Endring av Master%s feilet"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:49
+msgid "Add service to default boot menu"
+msgstr "Legg til tjeneste i standard oppstartsmeny"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:50
+msgid "Remove service from default boot menu"
+msgstr "Fjern tjenesten fra standard oppstartsmeny"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:51
+msgid "Delete service"
+msgstr "Slette tjeneste"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:52
+msgid "Show where service is used"
+msgstr "Vis hvor tjenesten brukes"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:94
+#: modules/imaging/imaging/ajaxImages.php:174
+msgid "In boot menu"
+msgstr "I startmenyen"
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:40
+msgid "No imaging server available for association."
+msgstr "Ingen avbildningsserver tilgjengelig for tilknytning."
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:47
+#, php-format
+msgid "Link this Imaging Server to the '%s' entity."
+msgstr "Koble denne avbildingsserveren til ' %s' enheten"
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:70
+msgid "Associate an entity to an imaging server"
+msgstr "Tildel en enhet til en avbildingsserver"
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:77
+msgid "Identifier"
+msgstr "Identifikator"
+
+#: modules/imaging/manage/service_edit.php:48
+msgid "Edit service : "
+msgstr "Rediger tjeneste:"
+
+#: modules/imaging/manage/service_edit.php:66
+msgid "In default bootmenu"
+msgstr "I standard oppstartsmeny"
+
+#: modules/imaging/manage/service_edit.php:81
+#, php-format
+msgid "Service <strong>%s</strong> modified with success"
+msgstr "Tjeneste <strong>%s</strong> suksessfullt endret"
+
+#: modules/imaging/manage/ajaxPostInstall.php:27
+msgid "Available post-imaging scripts"
+msgstr "Tilgjengelige post-avbildingsskript"
+
+#: modules/imaging/manage/sysprepList.php:38
+#, php-format
+msgid "The sysprep answer file %s has been removed from the imaging system."
+msgstr "Sysprep-svarfilen %s er fjernet fra bildesystemet."
+
+#: modules/imaging/manage/sysprepList.php:78
+msgid "All Windows Answer Files"
+msgstr "Alle svarfiler i Windows"
+
+#: modules/imaging/manage/sysprepList.php:83
+msgid "File name"
+msgstr "Filnavn"
+
+#: modules/imaging/manage/sysprepList.php:86
+msgid "OS"
+msgstr "OS"
+
+#: modules/imaging/manage/sysprepList.php:90
+msgid "Display sysprep file"
+msgstr "Vis sysprep filen"
+
+#: modules/imaging/manage/sysprepList.php:91
+msgid "Edit sysprep file"
+msgstr "Rediger sysprep filen"
+
+#: modules/imaging/manage/sysprepList.php:92
+msgid "Delete sysprep file"
+msgstr "Slett sysprep fil"
+
+#: modules/imaging/manage/sysprepList.php:92
+msgid "Are you sure you want to unset this sysrep answer file?"
+msgstr "Er du sikker på at du vil deaktivere denne sysrep-svarfilen?"
+
+#: modules/imaging/manage/localSidebar.php:28
+msgid "Imaging server status"
+msgstr "Status på avbildingsserver"
+
+#: modules/imaging/manage/localSidebar.php:31
+#: modules/imaging/infoPackage.inc.php:99
+msgid "Manage masters"
+msgstr "Administrer mastere"
+
+#: modules/imaging/manage/localSidebar.php:34
+#: modules/imaging/infoPackage.inc.php:125
+msgid "Manage boot services"
+msgstr "Administrer oppstartstjeneser"
+
+#: modules/imaging/manage/localSidebar.php:37
+#: modules/imaging/infoPackage.inc.php:143
+msgid "Default boot menu"
+msgstr "Standard boot meny"
+
+#: modules/imaging/manage/localSidebar.php:40
+#: modules/imaging/infoPackage.inc.php:155
+msgid "Post-imaging scripts"
+msgstr "Post-Avbildingsskript"
+
+#: modules/imaging/manage/localSidebar.php:43
+msgid "Imaging Configuration"
+msgstr "Avbildingskonfigurasjon"
+
+#: modules/imaging/manage/localSidebar.php:46
+msgid "Windows System Image Manager"
+msgstr "Windows System Image Manager"
+
 #: modules/imaging/manage/ajaxMasterLevel2.php:44
 msgid "No master available."
 msgstr "Ingen master tilgjengelig."
@@ -2942,6 +2507,14 @@ msgstr ""
 #: modules/imaging/manage/ajaxMasterLevel2.php:52
 msgid "Add image to default boot menu"
 msgstr "Legg til bilde i standard oppstartsmeny"
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:53
+#: modules/imaging/infoPackage.inc.php:285
+#: modules/imaging/infoPackage.inc.php:366
+#: modules/imaging/imaging/bootmenu_remove.php:156
+#: modules/imaging/imaging/ajaxImages.php:79
+msgid "Remove from boot menu"
+msgstr "Fjern fra boot meny"
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:64
 #: modules/imaging/imaging/ajaxImages.php:86
@@ -2981,6 +2554,210 @@ msgstr "kopiering av master pågår"
 msgid "Master Clone"
 msgstr "Master Klone"
 
+#: modules/imaging/manage/master_delete.php:38
+#, php-format
+msgid "Image <strong>%s</strong> deleted from the imaging server."
+msgstr "Bilde <strong>%s</strong> er slettet fra avbildningserveren."
+
+#: modules/imaging/manage/master_delete.php:57
+#, php-format
+msgid "Error : Image %s deleted from the imaging server."
+msgstr "Feil: Bilde %s er slettet fra avbildningserveren."
+
+#: modules/imaging/manage/master_delete.php:76
+#: modules/imaging/infoPackage.inc.php:104
+msgid "Delete master"
+msgstr "Fjern master"
+
+#: modules/imaging/manage/master_delete.php:78
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> master ?"
+msgstr "Er du sikker på at du vil slette <b>%s</b> master?"
+
+#: modules/imaging/manage/ajaxConfiguration.php:29
+msgid "Imaging server configuration"
+msgstr "Avbildingsserverkonfigurasjon"
+
+#: modules/imaging/manage/ajaxConfiguration.php:60
+msgid "Menu language"
+msgstr "Menyspråk"
+
+#: modules/imaging/manage/ajaxConfiguration.php:63
+msgid "PXE Login"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:64
+#: modules/imaging/manage/ajaxConfiguration.php:66
+msgid "Leave this field empty to unset PXE Password"
+msgstr "La dette feltet være tomt for å deaktivere PXE-passord"
+
+#: modules/imaging/manage/ajaxConfiguration.php:65
+msgid "PXE Password"
+msgstr "PXE Passord"
+
+#: modules/imaging/manage/ajaxConfiguration.php:86
+msgid "Clonezilla parameters for saving images"
+msgstr "Clonezilla-parametere for lagring av bildefiler"
+
+#: modules/imaging/manage/ajaxConfiguration.php:89
+msgid "Clonezilla parameters for restoring images"
+msgstr "Clonezilla-parametere for å gjenopprette bildefiler"
+
+#: modules/imaging/manage/ajaxConfiguration.php:97
+msgid "Default menu parameters"
+msgstr "Standard menyparametere"
+
+#: modules/imaging/manage/ajaxConfiguration.php:101
+#: modules/imaging/imaging/configure.php:43
+msgid "Default menu label"
+msgstr "Standard menyetikett"
+
+#: modules/imaging/manage/ajaxConfiguration.php:104
+msgid "Default menu timeout"
+msgstr "Standard menytimeout"
+
+#: modules/imaging/manage/ajaxConfiguration.php:112
+msgid "Hide menu"
+msgstr "Skjul meny"
+
+#: modules/imaging/manage/ajaxConfiguration.php:116
+#: modules/imaging/imaging/configure.php:62
+msgid "Boot options"
+msgstr "Oppstartsalternativer"
+
+#: modules/imaging/manage/ajaxConfiguration.php:119
+#: modules/imaging/imaging/configure.php:65
+msgid "Full path to the XPM displayed at boot"
+msgstr "Full sti til XPM vist ved oppstart"
+
+#: modules/imaging/manage/ajaxConfiguration.php:122
+#: modules/imaging/imaging/configure.php:69
+msgid "Message displayed during backup/restoration"
+msgstr "Melding vises under sikkerhetskopiering/gjennoppretting"
+
+#: modules/imaging/manage/bootmenu_edit.php:68
+#, php-format
+msgid "Edit : %s"
+msgstr "Rediger: %s"
+
+#: modules/imaging/manage/bootmenu_edit.php:77
+msgid "Default menu item label"
+msgstr "Standard menyelementetikett"
+
+#: modules/imaging/manage/imaging_server_link.php:60
+#, php-format
+msgid ""
+"Link between package server <strong>%s</strong> and the entity "
+"<strong>%s</strong> succeeded."
+msgstr ""
+"Koblingen mellom pakkeserveren  <strong>%s</strong>og "
+"enheten<strong>%s</strong> lyktes."
+
+#: modules/imaging/manage/imaging_server_link.php:106
+#, php-format
+msgid ""
+"Do you really want to link the Imaging Server '<b>%s</b>' to the entity "
+"'<b>%s</b>'"
+msgstr ""
+"Vil du virkelig koble avbildingsserveren '<b>%s</b>' til enheten '<b>%s</b>'"
+
+#: modules/imaging/manage/master_remove.php:37
+#, php-format
+msgid "Image <strong>%s</strong> removed from default boot menu."
+msgstr "Bilde <strong>%s</strong> fjernet fra standard oppstartsmeny."
+
+#: modules/imaging/manage/master_remove.php:38
+msgid "Notify Success : removed from default boot menu."
+msgstr "Varsel:  fjernet fra standard oppstartsmeny."
+
+#: modules/imaging/manage/master_remove.php:89
+#: modules/imaging/infoPackage.inc.php:101
+msgid "Remove master"
+msgstr "Fjern master"
+
+#: modules/imaging/manage/master_remove.php:91
+#, php-format
+msgid "Are you sure you want to remove <b>%s</b> master ?"
+msgstr "Er du sikker på at du vil fjerne <b>%s</b>master?"
+
+#: modules/imaging/manage/ajaxMaster.php:27
+#: modules/imaging/imaging/images.php:70
+msgid "Available masters"
+msgstr "Tilgjengelige mastere"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:38
+msgid "Boot service successfully created"
+msgstr "Oppstartstjeneste ble opprettet"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:39
+msgid "Notify Success : Boot service successfully created"
+msgstr "Suksess: Oppstartstjeneste ble opprettet"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:55
+msgid "Error while creating Boot Service"
+msgstr "Feil under opprettelse av oppstartstjeneste"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:56
+msgid "Notify Error : Error while creating Boot Service"
+msgstr "Varsel: Feil under opprettelse av oppstartstjeneste"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:77
+#, php-format
+msgid "Add <b>%s</b> to available Boot Services ?"
+msgstr "Legg til <b>%s</b> i tilgjengelig oppstartstjeneste?"
+
+#: modules/imaging/manage/postinstall_redirect_to_boot_service.php:38
+#, php-format
+msgid "<b>%s</b> was already added to Boot Services"
+msgstr "<b>%s</b> var allerede lagt til i oppstartstjenestene"
+
+#: modules/imaging/manage/bootmenu_down.php:36
+#, php-format
+msgid "Success : to move down <strong>%s</strong> in the default boot menu"
+msgstr ""
+"Suksess: for å flytte ned <strong>%s</strong> i standard oppstartsmenyen"
+
+#: modules/imaging/manage/bootmenu_down.php:49
+#, php-format
+msgid ""
+"Error : Failed to move down <strong>%s</strong> in the default boot menu"
+msgstr ""
+"Feil: Kunne ikke flytte ned <strong>%s</strong> i standardoppstartsmenyen"
+
+#: modules/imaging/manage/synchromaster.php:47
+#, php-format
+msgid "Master copy: %s ( %s )"
+msgstr "Master kopiering: %s (%s)"
+
+#: modules/imaging/manage/synchromaster.php:60
+msgid "Copy of master Not Started"
+msgstr "Kopiering av master ikke startet"
+
+#: modules/imaging/manage/synchromaster.php:66
+msgid "Copy of master"
+msgstr "Kopiering av master"
+
+#: modules/imaging/manage/synchromaster.php:119
+msgid "Complete"
+msgstr "Ferdig"
+
+#: modules/imaging/manage/synchromaster.php:122
+msgid "In progress"
+msgstr "Pågående"
+
+#: modules/imaging/manage/synchromaster.php:135
+msgid "Copy of master complete"
+msgstr "Kopiering av master er ferdig"
+
+#: modules/imaging/manage/synchromaster.php:139
+msgid "Copy of master In progress"
+msgstr "Kopiering av master pågår"
+
+#: modules/imaging/manage/service_del.php:78
+#, php-format
+msgid "Remove the boot service <b>%s</b> from the default boot menu"
+msgstr "Fjern starttjenesten <b>%s</b> fra standard oppstartsmeny"
+
 #: modules/imaging/manage/service_add.php:49
 #, php-format
 msgid "Service <strong>%s</strong> added to default boot menu"
@@ -2991,171 +2768,283 @@ msgstr "Tjeneste <strong>%s</strong> lagt til i standard oppstartsmeny"
 msgid "Add the boot service <b>%s</b> to the default boot menu"
 msgstr "Legg til oppstartstjeneste <b>%s</b> til standard oppstartsmeny"
 
-#: modules/imaging/manage/service_remove.php:44
-#, php-format
-msgid "Service <strong>%s</strong> successfully removed"
-msgstr "Tjenste <strong>%s</strong>ble fjernet"
+#: modules/imaging/infoPackage.inc.php:33
+msgid "Imaging service"
+msgstr "Avbildingstjenester"
 
-#: modules/imaging/manage/service_remove.php:79
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
-msgstr "Er du sikker på at du vil slette <b>%s</b> oppstartstjenesten"
+#: modules/imaging/infoPackage.inc.php:38
+msgid "Imaging"
+msgstr "Avbilding"
 
-#: modules/imaging/manage/localSidebar.php:28
-msgid "Imaging server status"
-msgstr "Status på avbildingsserver"
+#: modules/imaging/infoPackage.inc.php:43
+msgid "System Image Manager"
+msgstr "Systembilde Håndterer"
 
-#: modules/imaging/manage/localSidebar.php:43
-msgid "Imaging Configuration"
+#: modules/imaging/infoPackage.inc.php:48
+msgid "Imaging Unattended"
+msgstr "Avbilding uten tilsyn"
+
+#: modules/imaging/infoPackage.inc.php:51
+msgid "Sysprep List"
+msgstr "Sysprep Liste"
+
+#: modules/imaging/infoPackage.inc.php:56
+msgid "Imaging sysprepView"
+msgstr "Avbilding  sysprepView"
+
+#: modules/imaging/infoPackage.inc.php:86
+#: modules/imaging/infoPackage.inc.php:91
+msgid "Create static group from menu set"
+msgstr "Opprett statisk gruppe fra menysettet"
+
+#: modules/imaging/infoPackage.inc.php:96
+msgid "Server status"
+msgstr "Serverstatus"
+
+#: modules/imaging/infoPackage.inc.php:107
+msgid "Edit master"
+msgstr "Rediger master"
+
+#: modules/imaging/infoPackage.inc.php:111
+#: modules/imaging/infoPackage.inc.php:114
+msgid "master clone"
+msgstr "master klone"
+
+#: modules/imaging/infoPackage.inc.php:118
+msgid "Add master"
+msgstr "Legg til master"
+
+#: modules/imaging/infoPackage.inc.php:127
+msgid "Edit service"
+msgstr "Rediger tjeneste"
+
+#: modules/imaging/infoPackage.inc.php:130
+#: modules/imaging/infoPackage.inc.php:136
+msgid "Remove service"
+msgstr "Fjern tjeneste"
+
+#: modules/imaging/infoPackage.inc.php:133
+msgid "Add service"
+msgstr "Legg til tjeneste"
+
+#: modules/imaging/infoPackage.inc.php:139
+msgid "Show used services"
+msgstr "Vis brukte tjenester"
+
+#: modules/imaging/infoPackage.inc.php:145
+msgid "Up service"
+msgstr "Ta opp tjeneste"
+
+#: modules/imaging/infoPackage.inc.php:148
+#: modules/imaging/infoPackage.inc.php:151
+msgid "Down service"
+msgstr "Ta ned tjeneste"
+
+#: modules/imaging/infoPackage.inc.php:157
+#: modules/imaging/infoPackage.inc.php:160
+msgid "Edit post-imaging script"
+msgstr "Rediger post-avbildingsskript"
+
+#: modules/imaging/infoPackage.inc.php:163
+msgid "Create boot service from postinstall script"
+msgstr "Opprettboottjeneste fra postinstallasjonsskript"
+
+#: modules/imaging/infoPackage.inc.php:166
+msgid "Redirect to Boot Services page"
+msgstr "Viderekobling til Boot Tjeneste-siden"
+
+#: modules/imaging/infoPackage.inc.php:173
+msgid "Imaging configuration"
 msgstr "Avbildingskonfigurasjon"
 
-#: modules/imaging/manage/localSidebar.php:46
-msgid "Windows System Image Manager"
-msgstr "Windows System Image Manager"
+#: modules/imaging/infoPackage.inc.php:175
+msgid "Save an Imaging Server configuration"
+msgstr "Lagre konfigurasjonen til en avbildingsserver"
 
-#: modules/imaging/manage/multicastaction.php:68
-msgid "Start Multicast of ( Master :"
-msgstr "Start Multicast av  Master :"
+#: modules/imaging/infoPackage.inc.php:179
+msgid "Available Imaging Server"
+msgstr "Tilgjengelig avbildingsserver"
 
-#: modules/imaging/manage/multicastaction.php:69
-#: modules/imaging/manage/multicastaction.php:89
-#: modules/imaging/manage/multicastaction.php:136
-msgid "on (group :"
-msgstr "på gruppe:"
+#: modules/imaging/infoPackage.inc.php:182
+msgid "Link an Imaging Server"
+msgstr "Koble en avbildingsserver"
 
-#: modules/imaging/manage/multicastaction.php:70
-#: modules/imaging/manage/multicastaction.php:90
-#: modules/imaging/manage/multicastaction.php:137
-msgid "to (location : "
-msgstr "til lokasjon"
+#: modules/imaging/infoPackage.inc.php:190
+#: modules/imaging/infoPackage.inc.php:250
+msgid "Computers Profile Creator"
+msgstr "Skape en maskinprofil"
 
-#: modules/imaging/manage/multicastaction.php:88
-msgid "Stop Multicast of ( Master :"
-msgstr "Stopp Multicast av  Master :"
+#: modules/imaging/infoPackage.inc.php:193
+#: modules/imaging/infoPackage.inc.php:207
+#: modules/imaging/infoPackage.inc.php:221
+msgid "Profile creation's tab from dynamic request"
+msgstr "Profilskapingsfane fra dynamisk forespørsel"
 
-#: modules/imaging/manage/multicastaction.php:102
-#: modules/imaging/manage/multicastaction.php:121
-msgid "Synchro Profile Menu group : "
-msgstr "Synkro Profil Meny gruppe : "
+#: modules/imaging/infoPackage.inc.php:196
+#: modules/imaging/infoPackage.inc.php:210
+#: modules/imaging/infoPackage.inc.php:224
+msgid "Profile creation's tab from machine list"
+msgstr "Profilskapingsfane fra maskinliste"
 
-#: modules/imaging/manage/multicastaction.php:121
-msgid "location : "
-msgstr "lokasjon:"
+#: modules/imaging/infoPackage.inc.php:199
+#: modules/imaging/infoPackage.inc.php:213
+#: modules/imaging/infoPackage.inc.php:227
+msgid "Profile creation's tab from file import"
+msgstr "Profilskapingsfane fra filimport"
 
-#: modules/imaging/manage/multicastaction.php:135
-msgid "Clear Multicast of ( Master :"
-msgstr "Fjern Multicast av  Master :"
+#: modules/imaging/infoPackage.inc.php:203
+msgid "Computers Profile Creator Sub Request Editor"
+msgstr "Skape maskinprofiler fra underanmodning"
 
-#: modules/imaging/imaging/images_delete.php:70
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> image ?"
-msgstr "Er du sikker på at du vil slette <b>%s</b>bildet?"
+#: modules/imaging/infoPackage.inc.php:217
+msgid "Computers Profile Creator Sub Request Delete"
+msgstr "Slett maskinprofiler fra underanmodning"
 
-#: modules/imaging/imaging/addimage.php:81
-#: modules/imaging/imaging/tabs.php:100
-#: modules/imaging/imaging/bootmenu_remove.php:103
-#: modules/imaging/imaging/addservice.php:78
-msgid ""
-"The bootmenus cannot be generated as a multicast deployment is currently "
-"running."
+#: modules/imaging/infoPackage.inc.php:231
+#: modules/imaging/infoPackage.inc.php:254
+msgid "Computers Profile Editor"
+msgstr "Rediger maskinprofil"
+
+#: modules/imaging/infoPackage.inc.php:236
+msgid "Computers Profile Sub Request Editor"
+msgstr "Skape underanmodning for maskinprofiler "
+
+#: modules/imaging/infoPackage.inc.php:241
+msgid "Computers Profile Sub Request Delete"
+msgstr "Slett underanmodning for maskinprofiler "
+
+#: modules/imaging/infoPackage.inc.php:246
+#: modules/imaging/infoPackage.inc.php:259
+msgid "List all profiles of computers"
+msgstr "List alle maskinprofiler"
+
+#: modules/imaging/infoPackage.inc.php:265
+msgid "Register a profile in the imaging module"
+msgstr "Registrer en profil i avbildingsmodulen"
+
+#: modules/imaging/infoPackage.inc.php:271
+msgid "Imaging on group"
+msgstr "Avbilding på en gruppe"
+
+#: modules/imaging/infoPackage.inc.php:274
+#: modules/imaging/infoPackage.inc.php:353
+#: modules/imaging/imaging/tabs.php:220 modules/imaging/imaging/tabs.php:292
+msgid "Boot menu"
+msgstr "Boot meny"
+
+#: modules/imaging/infoPackage.inc.php:276
+#: modules/imaging/infoPackage.inc.php:355
+#: modules/imaging/imaging/tabs.php:223
+msgid "Images and Masters"
+msgstr "Bilder og Mastere"
+
+#: modules/imaging/infoPackage.inc.php:278
+#: modules/imaging/infoPackage.inc.php:357
+#: modules/imaging/imaging/tabs.php:224 modules/imaging/imaging/tabs.php:294
+msgid "Boot services"
+msgstr "Oppstartstjenester"
+
+#: modules/imaging/infoPackage.inc.php:280
+#: modules/imaging/infoPackage.inc.php:359
+msgid "Imaging Log"
+msgstr "Avbildingslogg"
+
+#: modules/imaging/infoPackage.inc.php:282
+#: modules/imaging/infoPackage.inc.php:361
+#: modules/imaging/imaging/tabs.php:226 modules/imaging/imaging/tabs.php:296
+msgid "Menu configuration"
+msgstr "Meny konfigurasjon"
+
+#: modules/imaging/infoPackage.inc.php:289
+msgid "Display computers group content"
+msgstr "Vis maskingruppers innehold"
+
+#: modules/imaging/infoPackage.inc.php:293
+msgid "Delete a group of computers"
+msgstr "Slett en gruppe av maskiner"
+
+#: modules/imaging/infoPackage.inc.php:297
+msgid "Computers Group Editor"
+msgstr "Editor for maskingruppe"
+
+#: modules/imaging/infoPackage.inc.php:301
+msgid "Share a group of computers"
+msgstr "Del en maskingruppe"
+
+#: modules/imaging/infoPackage.inc.php:307
+msgid "Secure control on a group of computers"
+msgstr "Sikker kontroll på en gruppe datamaskiner"
+
+#: modules/imaging/infoPackage.inc.php:311
+msgid "MSC launch tab for a group"
+msgstr "MSC-startfanen for en gruppe"
+
+#: modules/imaging/infoPackage.inc.php:314
+msgid "MSC bundle tab for a group"
+msgstr "MSC-pakkefane for en gruppe"
+
+#: modules/imaging/infoPackage.inc.php:317
+msgid "MSC logs tab for a group"
+msgstr "MSC-loggfanen for en gruppe"
+
+#: modules/imaging/infoPackage.inc.php:320
+msgid "MSC history tab for a group"
+msgstr "MSC-historiefanen for en gruppe"
+
+#: modules/imaging/infoPackage.inc.php:340
+msgid "Register a computer in the imaging module"
+msgstr "Registrer en maskin i avbildingsmodulen"
+
+#: modules/imaging/infoPackage.inc.php:345
+msgid "Create a static group containing computers with custom imaging menu"
 msgstr ""
-"Oppstartsmenyene kan ikke genereres ettersom det en multicast-distribusjon "
-"rulles ut for øyeblikket."
+"Opprett en statisk gruppe som inneholder datamaskiner med tilpasset "
+"bavildingsmeny"
 
-#: modules/imaging/imaging/tabs.php:61
-msgid "Default menu has been successfully restored."
-msgstr "Standardmenyen er gjenopprettet."
+#: modules/imaging/infoPackage.inc.php:350
+msgid "Imaging on computer"
+msgstr "Kjør avbilding på en maskin"
 
-#: modules/imaging/imaging/tabs.php:117
-#, php-format
-msgid "This computer is no longer registered : %s"
-msgstr "Denne datamaskinen er ikke lenger registrert: %s"
+#: modules/imaging/infoPackage.inc.php:370
+msgid "Show target that use that image"
+msgstr "Vis målene som bruker dette bildet"
 
-#: modules/imaging/imaging/tabs.php:121
-#, php-format
-msgid "Boot Menu Generation failed for : %s"
-msgstr "Generering av oppstartsmenyen mislyktes for:%s"
+#: modules/imaging/infoPackage.inc.php:374
+msgid "Show sync status"
+msgstr "Vis synk status"
 
-#: modules/imaging/imaging/tabs.php:142 modules/imaging/imaging/tabs.php:173
-#: modules/imaging/imaging/tabs.php:193 modules/imaging/imaging/tabs.php:213
-#, php-format
-msgid "%s's computer imaging"
-msgstr "%ss datamaskinavbildning"
+#: modules/imaging/infoPackage.inc.php:416
+msgid "Add a service to a target"
+msgstr "Legg til tjeneste til et mål"
 
-#: modules/imaging/imaging/tabs.php:148
-msgid ""
-"This computer can't be declared in the imaging module: it's already part of "
-"a broken imaging group."
-msgstr ""
-"Denne datamaskinen kan ikke deklareres i avbildingsmodulen: den er allerede "
-"en del av en ødelagt bildegruppe."
+#: modules/imaging/infoPackage.inc.php:420
+msgid "Edit parameters of a service on a target"
+msgstr "Rediger parametere for en tjeneste for et mål"
 
-#: modules/imaging/imaging/tabs.php:156
-#, php-format
-msgid "Please declare the imaging group first %shere%s."
-msgstr "Vennligst opprett bildegruppen først %s her %s."
+#: modules/imaging/infoPackage.inc.php:424
+msgid "Remove a service from a target"
+msgstr "Fjern en tjeneste for et mål"
 
-#: modules/imaging/imaging/tabs.php:164 modules/imaging/imaging/tabs.php:250
-#, php-format
-msgid "Reset synchronisation state for %s (%s) succeed"
-msgstr "Tilbakestill synkroniseringsstatus for %s (%s) lyktes"
+#: modules/imaging/infoPackage.inc.php:429
+msgid "Add a image to a target"
+msgstr "Legg til et bilde til et mål"
 
-#: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:254
-msgid "Failed to reset synchronise state."
-msgstr "Kunne ikke tilbakestille synkroniseringsstatusen."
+#: modules/imaging/infoPackage.inc.php:433
+msgid "Edit parameters of a image on a target"
+msgstr "Rediger bildeparametere for et mål"
 
-#: modules/imaging/imaging/tabs.php:179 modules/imaging/imaging/tabs.php:265
-#, php-format
-msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
-msgstr ""
-"Genererer oppstartsmeny ... Vent eller last inn siden på nytt %sher%s.<br/>"
+#: modules/imaging/infoPackage.inc.php:437
+#: modules/imaging/imaging/images_delete.php:68
+msgid "Delete image"
+msgstr "Slett bildefil"
 
-#: modules/imaging/imaging/tabs.php:182 modules/imaging/imaging/tabs.php:268
-msgid ""
-"If the processing exceeds 5 minutes, please reset the synchro state of this "
-"computer."
-msgstr ""
-"Hvis behandlingen går over 5 minutter, må du tilbakestille synkronstatusen "
-"til denne datamaskinen."
+#: modules/imaging/infoPackage.inc.php:441
+msgid "Create iso image"
+msgstr "Lag iso bilde"
 
-#: modules/imaging/imaging/tabs.php:190 modules/imaging/imaging/tabs.php:276
-msgid "Reset Synchro state"
-msgstr "Gjenopprett Synkro status"
-
-#: modules/imaging/imaging/tabs.php:209
-#, php-format
-msgid "%s's computer imaging (in group)"
-msgstr "%sdatamaskinavbildning (i gruppe)"
-
-#: modules/imaging/imaging/tabs.php:217 modules/imaging/imaging/tabs.php:289
-msgid "Current boot menu"
-msgstr "Gjeldende oppstartsmeny"
-
-#: modules/imaging/imaging/tabs.php:221 modules/imaging/imaging/tabs.php:291
-msgid "Available boot menu services"
-msgstr "Tilgjengelige oppstartsmenytjenester"
-
-#: modules/imaging/imaging/tabs.php:222 modules/imaging/imaging/tabs.php:292
-msgid "Imaging log"
-msgstr "Logg over avbildninger"
-
-#: modules/imaging/imaging/tabs.php:259
-#, php-format
-msgid "%s's profile imaging"
-msgstr "%ss profil avbilding"
-
-#: modules/imaging/imaging/tabs.php:288
-#, php-format
-msgid "%s's imaging group"
-msgstr "%ss avbildingsgruppe"
-
-#: modules/imaging/imaging/tabs.php:290
-msgid "Masters"
-msgstr "Masters"
-
-#: modules/imaging/imaging/tabs.php:301
-msgid "Not enough information"
-msgstr "Ikke nok informasjon"
+#: modules/imaging/infoPackage.inc.php:445
+msgid "init multicast"
+msgstr "initsier multicast"
 
 #: modules/imaging/imaging/bootmenu_remove.php:61
 #, php-format
@@ -3167,116 +3056,38 @@ msgstr "Fjern tjeneste %s"
 msgid "Remove Image %s"
 msgstr "Fjern bildefil %s"
 
+#: modules/imaging/imaging/bootmenu_remove.php:103
+#: modules/imaging/imaging/addimage.php:81
+#: modules/imaging/imaging/tabs.php:103
+#: modules/imaging/imaging/addservice.php:78
+msgid ""
+"The bootmenus cannot be generated as a multicast deployment is currently "
+"running."
+msgstr ""
+"Oppstartsmenyene kan ikke genereres ettersom det en multicast-distribusjon "
+"rulles ut for øyeblikket."
+
 #: modules/imaging/imaging/bootmenu_remove.php:159
 #, php-format
 msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
 msgstr "Er du sikker på at du vil fjerne <b>%s</b> fra oppstartsmenyen?"
 
-#: modules/imaging/imaging/ajaxLogs.php:96
-msgid "State"
-msgstr "Tilstand"
-
-#: modules/imaging/imaging/creategroupcustonmenuimaging.php:59
 #: modules/imaging/imaging/creategroupcustonmenu.php:49
+#: modules/imaging/imaging/creategroupcustonmenuimaging.php:59
 #, php-format
 msgid "Machine with custom menu on entity [%s] at %s"
 msgstr "Maskin med tilpasset meny på enhet [%s] på %s"
 
-#: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
 #: modules/imaging/imaging/creategroupcustonmenu.php:70
+#: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "Datamaskinlisten er avkortet ved %d datamaskiner"
 
-#: modules/imaging/imaging/bootmenu.php:63
+#: modules/imaging/imaging/services.php:61
 #, php-format
-msgid "Item Menu %s for group up %s"
-msgstr "Elementmeny  %s for gruppe opp %s"
-
-#: modules/imaging/imaging/bootmenu.php:77
-#, php-format
-msgid "Item Menu %s for machine up %s"
-msgstr "Elementmeny %s for maskingruppe %s"
-
-#: modules/imaging/imaging/bootmenu.php:101
-#: modules/imaging/imaging/bootmenu.php:180
-#, php-format
-msgid "Failed to move item <strong>%s</strong> in the boot menu"
-msgstr "Kunne ikke flytte elementet <strong>%s</strong>i oppstartsmenyen"
-
-#: modules/imaging/imaging/bootmenu.php:130
-#, php-format
-msgid "Item Menu %s%s"
-msgstr "Elementmeny %s%s"
-
-#: modules/imaging/imaging/bootmenu.php:144
-#, php-format
-msgid "Item Menu %s for machine down %s"
-msgstr "Elementmeny %s for maskin ned %s"
-
-#: modules/imaging/imaging/bootmenu.php:158
-#, php-format
-msgid "Success to move item <strong>%s</strong> in the boot menu [ %s ]"
-msgstr "Lyktes med å flytte element <strong>%s</strong>i startmenyen [%s]"
-
-#: modules/imaging/imaging/bootmenu.php:215
-msgid "Edition of item"
-msgstr "Redigering av element"
-
-#: modules/imaging/imaging/bootmenu.php:291
-#: modules/imaging/imaging/bootmenu.php:305
-#, php-format
-msgid "Edit item <strong>%s</strong> in the boot Menu [ %s ]"
-msgstr "Rediger element %s<strong> i oppstartsmenyen [ %s]"
-
-#: modules/imaging/imaging/bootmenu.php:399
-msgid "master from the profile"
-msgstr "master fra profilen"
-
-#: modules/imaging/imaging/bootmenu.php:401
-msgid "master"
-msgstr "master"
-
-#: modules/imaging/imaging/bootmenu.php:408
-msgid "boot service from profile"
-msgstr "oppstarttjeneste fra profilen"
-
-#: modules/imaging/imaging/bootmenu.php:410
-msgid "boot service"
-msgstr "oppstarttjeneste"
-
-#: modules/imaging/imaging/bootmenu.php:450
-msgid ""
-"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
-"default boot entry."
-msgstr ""
-"Bruk \"Forhåndsvalgt\" eller \"Forhåndsvalgt på WOL\" for å definere "
-"standardoppstartsoppføringen."
-
-#: modules/imaging/imaging/bootmenu.php:453
-#: modules/imaging/imaging/bootmenu.php:455
-msgid ""
-"If the default entry is an image creation or restore, the following network "
-"boots will fall back to the first menu entry."
-msgstr ""
-"Hvis standardoppføringen er en bildeoppretting eller gjenoppretting, går "
-"følgende nettverksoppstarter tilbake til den første menyposten."
-
-#: modules/imaging/imaging/bootmenu.php:455
-msgid ""
-"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry,"
-" this value will be set on all the computers in this group."
-msgstr ""
-"Når du endrer \"Forhåndsvalgt\" eller \"Forhåndsvalgt på WOL\", settes denne"
-" verdien på alle datamaskiner i denne gruppen."
-
-#: modules/imaging/imaging/bootmenu.php:460
-msgid "Preselected choice"
-msgstr "Forhåndsvalgte valg"
-
-#: modules/imaging/imaging/bootmenu.php:463
-msgid "Preselected choice on WOL"
-msgstr "Forhåndsvalgte valg for WOL"
+msgid "Add service %s"
+msgstr "Legg til tjeneste%s"
 
 #: modules/imaging/imaging/ajaxServices.php:51
 msgid "Add service to boot menu"
@@ -3294,6 +3105,198 @@ msgstr "I oppstartsmenyen"
 #: modules/imaging/imaging/ajaxImages.php:176
 msgid "From profile"
 msgstr "Fra profil"
+
+#: modules/imaging/imaging/tabs.php:61
+msgid "Default menu has been successfully restored."
+msgstr "Standardmenyen er gjenopprettet."
+
+#: modules/imaging/imaging/tabs.php:120
+#, php-format
+msgid "This computer is no longer registered : %s"
+msgstr "Denne datamaskinen er ikke lenger registrert: %s"
+
+#: modules/imaging/imaging/tabs.php:124
+#, php-format
+msgid "Boot Menu Generation failed for : %s"
+msgstr "Generering av oppstartsmenyen mislyktes for:%s"
+
+#: modules/imaging/imaging/tabs.php:145 modules/imaging/imaging/tabs.php:176
+#: modules/imaging/imaging/tabs.php:196 modules/imaging/imaging/tabs.php:216
+#, php-format
+msgid "%s's computer imaging"
+msgstr "%ss datamaskinavbildning"
+
+#: modules/imaging/imaging/tabs.php:151
+msgid ""
+"This computer can't be declared in the imaging module: it's already part of "
+"a broken imaging group."
+msgstr ""
+"Denne datamaskinen kan ikke deklareres i avbildingsmodulen: den er allerede "
+"en del av en ødelagt bildegruppe."
+
+#: modules/imaging/imaging/tabs.php:159
+#, php-format
+msgid "Please declare the imaging group first %shere%s."
+msgstr "Vennligst opprett bildegruppen først %s her %s."
+
+#: modules/imaging/imaging/tabs.php:167 modules/imaging/imaging/tabs.php:253
+#, php-format
+msgid "Reset synchronisation state for %s (%s) succeed"
+msgstr "Tilbakestill synkroniseringsstatus for %s (%s) lyktes"
+
+#: modules/imaging/imaging/tabs.php:171 modules/imaging/imaging/tabs.php:257
+msgid "Failed to reset synchronise state."
+msgstr "Kunne ikke tilbakestille synkroniseringsstatusen."
+
+#: modules/imaging/imaging/tabs.php:182 modules/imaging/imaging/tabs.php:268
+#, php-format
+msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
+msgstr ""
+"Genererer oppstartsmeny ... Vent eller last inn siden på nytt %sher%s.<br/>"
+
+#: modules/imaging/imaging/tabs.php:185 modules/imaging/imaging/tabs.php:271
+msgid ""
+"If the processing exceeds 5 minutes, please reset the synchro state of this "
+"computer."
+msgstr ""
+"Hvis behandlingen går over 5 minutter, må du tilbakestille synkronstatusen "
+"til denne datamaskinen."
+
+#: modules/imaging/imaging/tabs.php:193 modules/imaging/imaging/tabs.php:279
+msgid "Reset Synchro state"
+msgstr "Gjenopprett Synkro status"
+
+#: modules/imaging/imaging/tabs.php:212
+#, php-format
+msgid "%s's computer imaging (in group)"
+msgstr "%sdatamaskinavbildning (i gruppe)"
+
+#: modules/imaging/imaging/tabs.php:220 modules/imaging/imaging/tabs.php:292
+msgid "Current boot menu"
+msgstr "Gjeldende oppstartsmeny"
+
+#: modules/imaging/imaging/tabs.php:224 modules/imaging/imaging/tabs.php:294
+msgid "Available boot menu services"
+msgstr "Tilgjengelige oppstartsmenytjenester"
+
+#: modules/imaging/imaging/tabs.php:225 modules/imaging/imaging/tabs.php:295
+msgid "Imaging log"
+msgstr "Logg over avbildninger"
+
+#: modules/imaging/imaging/tabs.php:262
+#, php-format
+msgid "%s's profile imaging"
+msgstr "%ss profil avbilding"
+
+#: modules/imaging/imaging/tabs.php:291
+#, php-format
+msgid "%s's imaging group"
+msgstr "%ss avbildingsgruppe"
+
+#: modules/imaging/imaging/tabs.php:293
+msgid "Masters"
+msgstr "Masters"
+
+#: modules/imaging/imaging/tabs.php:304
+msgid "Not enough information"
+msgstr "Ikke nok informasjon"
+
+#: modules/imaging/imaging/showtarget.php:72
+#: modules/imaging/imaging/showtarget.php:84
+msgid "Removal of master failed"
+msgstr "Fjerning av master mislyktes"
+
+#: modules/imaging/imaging/showtarget.php:125
+msgid ""
+"If you want to remove this master from one or more targets, check these "
+"targets and click on the remove button"
+msgstr ""
+"Hvis du vil fjerne denne masteren fra ett eller flere mål, sjekk disse "
+"målene og klikk på fjern-knappen"
+
+#: modules/imaging/imaging/showtarget.php:149
+#, php-format
+msgid "Remove this master from imaging server %s"
+msgstr "Fjern denne masteren fra avbildingsserveren %s"
+
+#: modules/imaging/imaging/header.php:34
+msgid ""
+"You have modified this target's boot menu, if you are done please click on "
+"\"Generate Menu\" to update the computer boot menu."
+msgstr ""
+"Du har endret oppstartsmenyen til dette målet. Hvis du er ferdig, kan du "
+"klikke på \"Generer meny\" for å oppdatere datamaskinens oppstartsmeny."
+
+#: modules/imaging/imaging/header.php:51
+msgid "This target's boot menu is up-to-date."
+msgstr "Oppstartsmenyen for dette målet er oppdatert."
+
+#: modules/imaging/imaging/header.php:60
+#, php-format
+msgid ""
+"This computer has a <u>custom boot menu</u>. <a href=\"%s\">Click here</a> "
+"to get back the default one."
+msgstr ""
+"Denne datamaskinen har en<u> tilpasset oppstartsmeny</u>. <a "
+"href=\"%s\">Klikk her </a>for å få tilbake standardinnstillingen."
+
+#: modules/imaging/imaging/header.php:69
+#, php-format
+msgid "<a href=\"%s\">Click here</a> to get back the default menu."
+msgstr ""
+
+#: modules/imaging/imaging/header.php:83
+#, php-format
+msgid ""
+"This computer is currently member of \"%s\". <a href=\"%s\">Click here</a> "
+"to leave the group and customize the boot menu."
+msgstr ""
+"Denne datamaskinen er for øyeblikket medlem av \"%s\". <a href=\"%s\">Klikk "
+"her </a>for å forlate gruppen og tilpasse oppstartsmenyen."
+
+#: modules/imaging/imaging/images.php:68
+msgid "Available images"
+msgstr "Tilgjengelige bildefiler"
+
+#: modules/imaging/imaging/images.php:94
+msgid "Edition of image"
+msgstr "Redigering av Bilde"
+
+#: modules/imaging/imaging/images.php:96
+msgid "Edition of master"
+msgstr "Redigering av Master"
+
+#: modules/imaging/imaging/images.php:125
+#: modules/imaging/imaging/images.php:152
+msgid "Save"
+msgstr "Lagre"
+
+#: modules/imaging/imaging/images.php:127
+msgid "Save (converting to image)"
+msgstr "Lagre, (konverter til bilde)"
+
+#: modules/imaging/imaging/images.php:129
+msgid "Convert to master"
+msgstr "Konverter til Master"
+
+#: modules/imaging/imaging/images.php:193
+msgid "Image backup logs"
+msgstr "Sikkerhetskopierningslogg for bilde"
+
+#: modules/imaging/imaging/ajaxLogs.php:96
+msgid "State"
+msgstr "Tilstand"
+
+#: modules/imaging/imaging/images_delete.php:70
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> image ?"
+msgstr "Er du sikker på at du vil slette <b>%s</b>bildet?"
+
+#: modules/imaging/imaging/addservice.php:51
+#: modules/imaging/imaging/addservice.php:146
+#, php-format
+msgid "Add the boot service <b>%s</b> to <b>%s</b>"
+msgstr "Legg til oppstartstjeneste<b>%s</b>i<b>%s</b>"
 
 #: modules/imaging/imaging/configure.php:39
 #, php-format
@@ -3496,86 +3499,6 @@ msgstr "Velg denne disken"
 msgid "Partition number: %d"
 msgstr "Partisjon nummer: %d"
 
-#: modules/imaging/imaging/images_iso.php:45
-msgid "Please specify a title for the ISO image file."
-msgstr "Angi en tittel for ISO bildefilen."
-
-#: modules/imaging/imaging/images_iso.php:54
-msgid "Create ISO image from master"
-msgstr "Skap ISO bildefil fra master"
-
-#: modules/imaging/imaging/images_iso.php:56
-#, php-format
-msgid ""
-"The ISO image generation of master <strong>%s</strong> has been launched in "
-"background."
-msgstr ""
-"ISO-bildegenerering av master<strong>%s</strong> er startet i bakgrunnen."
-
-#: modules/imaging/imaging/images_iso.php:58
-msgid ""
-"The ISO image file will be stored into the imaging server at the end of the "
-"backup."
-msgstr ""
-"ISO-bildefilen blir lagret på avbildingsserveren til sist av "
-"sikkerhetskopien."
-
-#: modules/imaging/imaging/images_iso.php:65
-msgid "This operation will last according to the master size."
-msgstr "Denne operasjonen vil vare i henhold til Masterstørrelsen."
-
-#: modules/imaging/imaging/images_iso.php:90
-#, php-format
-msgid "Generate ISO for <strong>%s</strong>"
-msgstr "Generer ISO for <strong>%s</strong>"
-
-#: modules/imaging/imaging/images_iso.php:95
-msgid ""
-"Please select media size. If your data exceeds the volume size, several "
-"files of your media size will be created."
-msgstr ""
-"Vennligst velg størrelsen på media. Hvis datamengden overstiger "
-"volumstørreslen, vil flere filer på størrelse med valgt medie opprettes."
-
-#: modules/imaging/imaging/images_iso.php:111
-msgid "Start ISO generation"
-msgstr "Start ISO generering"
-
-#: modules/imaging/imaging/addservice.php:51
-#: modules/imaging/imaging/addservice.php:146
-#, php-format
-msgid "Add the boot service <b>%s</b> to <b>%s</b>"
-msgstr "Legg til oppstartstjeneste<b>%s</b>i<b>%s</b>"
-
-#: modules/imaging/imaging/images.php:68
-msgid "Available images"
-msgstr "Tilgjengelige bildefiler"
-
-#: modules/imaging/imaging/images.php:94
-msgid "Edition of image"
-msgstr "Redigering av Bilde"
-
-#: modules/imaging/imaging/images.php:96
-msgid "Edition of master"
-msgstr "Redigering av Master"
-
-#: modules/imaging/imaging/images.php:125
-#: modules/imaging/imaging/images.php:152
-msgid "Save"
-msgstr "Lagre"
-
-#: modules/imaging/imaging/images.php:127
-msgid "Save (converting to image)"
-msgstr "Lagre, (konverter til bilde)"
-
-#: modules/imaging/imaging/images.php:129
-msgid "Convert to master"
-msgstr "Konverter til Master"
-
-#: modules/imaging/imaging/images.php:193
-msgid "Image backup logs"
-msgstr "Sikkerhetskopierningslogg for bilde"
-
 #: modules/imaging/imaging/multicast.php:48
 #: modules/imaging/imaging/multicast.php:237
 msgid ""
@@ -3646,58 +3569,95 @@ msgid ""
 msgstr ""
 "start uansett når t sekunder siden den første mottakerforbindelsen har gått"
 
-#: modules/imaging/imaging/header.php:34
-msgid ""
-"You have modified this target's boot menu, if you are done please click on "
-"\"Generate Menu\" to update the computer boot menu."
-msgstr ""
-"Du har endret oppstartsmenyen til dette målet. Hvis du er ferdig, kan du "
-"klikke på \"Generer meny\" for å oppdatere datamaskinens oppstartsmeny."
-
-#: modules/imaging/imaging/header.php:51
-msgid "This target's boot menu is up-to-date."
-msgstr "Oppstartsmenyen for dette målet er oppdatert."
-
-#: modules/imaging/imaging/header.php:60
+#: modules/imaging/imaging/bootmenu.php:63
 #, php-format
-msgid ""
-"This computer has a <u>custom boot menu</u>. <a href=\"%s\">Click here</a> "
-"to get back the default one."
-msgstr ""
-"Denne datamaskinen har en<u> tilpasset oppstartsmeny</u>. <a "
-"href=\"%s\">Klikk her </a>for å få tilbake standardinnstillingen."
+msgid "Item Menu %s for group up %s"
+msgstr "Elementmeny  %s for gruppe opp %s"
 
-#: modules/imaging/imaging/header.php:75
+#: modules/imaging/imaging/bootmenu.php:77
 #, php-format
-msgid ""
-"This computer is currently member of \"%s\". <a href=\"%s\">Click here</a> "
-"to leave the group and customize the boot menu."
-msgstr ""
-"Denne datamaskinen er for øyeblikket medlem av \"%s\". <a href=\"%s\">Klikk "
-"her </a>for å forlate gruppen og tilpasse oppstartsmenyen."
+msgid "Item Menu %s for machine up %s"
+msgstr "Elementmeny %s for maskingruppe %s"
 
-#: modules/imaging/imaging/showtarget.php:72
-#: modules/imaging/imaging/showtarget.php:84
-msgid "Removal of master failed"
-msgstr "Fjerning av master mislyktes"
-
-#: modules/imaging/imaging/showtarget.php:125
-msgid ""
-"If you want to remove this master from one or more targets, check these "
-"targets and click on the remove button"
-msgstr ""
-"Hvis du vil fjerne denne masteren fra ett eller flere mål, sjekk disse "
-"målene og klikk på fjern-knappen"
-
-#: modules/imaging/imaging/showtarget.php:149
+#: modules/imaging/imaging/bootmenu.php:101
+#: modules/imaging/imaging/bootmenu.php:180
 #, php-format
-msgid "Remove this master from imaging server %s"
-msgstr "Fjern denne masteren fra avbildingsserveren %s"
+msgid "Failed to move item <strong>%s</strong> in the boot menu"
+msgstr "Kunne ikke flytte elementet <strong>%s</strong>i oppstartsmenyen"
 
-#: modules/imaging/imaging/services.php:61
+#: modules/imaging/imaging/bootmenu.php:130
 #, php-format
-msgid "Add service %s"
-msgstr "Legg til tjeneste%s"
+msgid "Item Menu %s%s"
+msgstr "Elementmeny %s%s"
+
+#: modules/imaging/imaging/bootmenu.php:144
+#, php-format
+msgid "Item Menu %s for machine down %s"
+msgstr "Elementmeny %s for maskin ned %s"
+
+#: modules/imaging/imaging/bootmenu.php:158
+#, php-format
+msgid "Success to move item <strong>%s</strong> in the boot menu [ %s ]"
+msgstr "Lyktes med å flytte element <strong>%s</strong>i startmenyen [%s]"
+
+#: modules/imaging/imaging/bootmenu.php:215
+msgid "Edition of item"
+msgstr "Redigering av element"
+
+#: modules/imaging/imaging/bootmenu.php:291
+#: modules/imaging/imaging/bootmenu.php:305
+#, php-format
+msgid "Edit item <strong>%s</strong> in the boot Menu [ %s ]"
+msgstr "Rediger element %s<strong> i oppstartsmenyen [ %s]"
+
+#: modules/imaging/imaging/bootmenu.php:399
+msgid "master from the profile"
+msgstr "master fra profilen"
+
+#: modules/imaging/imaging/bootmenu.php:401
+msgid "master"
+msgstr "master"
+
+#: modules/imaging/imaging/bootmenu.php:408
+msgid "boot service from profile"
+msgstr "oppstarttjeneste fra profilen"
+
+#: modules/imaging/imaging/bootmenu.php:410
+msgid "boot service"
+msgstr "oppstarttjeneste"
+
+#: modules/imaging/imaging/bootmenu.php:450
+msgid ""
+"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
+"default boot entry."
+msgstr ""
+"Bruk \"Forhåndsvalgt\" eller \"Forhåndsvalgt på WOL\" for å definere "
+"standardoppstartsoppføringen."
+
+#: modules/imaging/imaging/bootmenu.php:453
+#: modules/imaging/imaging/bootmenu.php:455
+msgid ""
+"If the default entry is an image creation or restore, the following network "
+"boots will fall back to the first menu entry."
+msgstr ""
+"Hvis standardoppføringen er en bildeoppretting eller gjenoppretting, går "
+"følgende nettverksoppstarter tilbake til den første menyposten."
+
+#: modules/imaging/imaging/bootmenu.php:455
+msgid ""
+"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry,"
+" this value will be set on all the computers in this group."
+msgstr ""
+"Når du endrer \"Forhåndsvalgt\" eller \"Forhåndsvalgt på WOL\", settes denne"
+" verdien på alle datamaskiner i denne gruppen."
+
+#: modules/imaging/imaging/bootmenu.php:460
+msgid "Preselected choice"
+msgstr "Forhåndsvalgte valg"
+
+#: modules/imaging/imaging/bootmenu.php:463
+msgid "Preselected choice on WOL"
+msgstr "Forhåndsvalgte valg for WOL"
 
 #: modules/imaging/imaging/ajaxImages.php:78
 msgid "Add image to boot menu"
@@ -3714,3 +3674,48 @@ msgstr "Vis bildelogg"
 #: modules/imaging/imaging/ajaxImages.php:200
 msgid "Multicast init"
 msgstr "Multicast init"
+
+#: modules/imaging/imaging/images_iso.php:45
+msgid "Please specify a title for the ISO image file."
+msgstr "Angi en tittel for ISO bildefilen."
+
+#: modules/imaging/imaging/images_iso.php:54
+msgid "Create ISO image from master"
+msgstr "Skap ISO bildefil fra master"
+
+#: modules/imaging/imaging/images_iso.php:56
+#, php-format
+msgid ""
+"The ISO image generation of master <strong>%s</strong> has been launched in "
+"background."
+msgstr ""
+"ISO-bildegenerering av master<strong>%s</strong> er startet i bakgrunnen."
+
+#: modules/imaging/imaging/images_iso.php:58
+msgid ""
+"The ISO image file will be stored into the imaging server at the end of the "
+"backup."
+msgstr ""
+"ISO-bildefilen blir lagret på avbildingsserveren til sist av "
+"sikkerhetskopien."
+
+#: modules/imaging/imaging/images_iso.php:65
+msgid "This operation will last according to the master size."
+msgstr "Denne operasjonen vil vare i henhold til Masterstørrelsen."
+
+#: modules/imaging/imaging/images_iso.php:90
+#, php-format
+msgid "Generate ISO for <strong>%s</strong>"
+msgstr "Generer ISO for <strong>%s</strong>"
+
+#: modules/imaging/imaging/images_iso.php:95
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+"Vennligst velg størrelsen på media. Hvis datamengden overstiger "
+"volumstørreslen, vil flere filer på størrelse med valgt medie opprettes."
+
+#: modules/imaging/imaging/images_iso.php:111
+msgid "Start ISO generation"
+msgstr "Start ISO generering"

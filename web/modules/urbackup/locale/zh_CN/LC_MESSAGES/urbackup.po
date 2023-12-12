@@ -11,239 +11,177 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-14 15:37+0100\n"
+"POT-Creation-Date: 2023-01-24 10:40+0100\n"
 "PO-Revision-Date: 2022-11-14 14:44+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2022\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/siveo/teams/72118/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: modules/urbackup/infoPackage.inc.php:27
-#: modules/urbackup/infoPackage.inc.php:32
-msgid "Backup"
-msgstr "备份"
-
-#: modules/urbackup/infoPackage.inc.php:38
-#: modules/urbackup/urbackup/localSidebar.php:24
-msgid "Review"
+#: modules/urbackup/urbackup/list_backups.php:31
+msgid "Backups List "
 msgstr ""
 
-#: modules/urbackup/infoPackage.inc.php:42
-msgid "List Backups by Client"
+#: modules/urbackup/urbackup/list_backups.php:165
+msgid "Statistics by client"
 msgstr ""
 
-#: modules/urbackup/infoPackage.inc.php:46
-msgid "Start backup"
+#: modules/urbackup/urbackup/list_backups.php:172
+#: modules/urbackup/urbackup/index.php:156
+#: modules/urbackup/urbackup/index.php:217
+#: modules/urbackup/urbackup/checkMachine.php:171
+#: modules/urbackup/urbackup/checkMachine.php:207
+msgid "Computer name"
+msgstr "电脑名称"
+
+#: modules/urbackup/urbackup/list_backups.php:173
+#: modules/urbackup/urbackup/index.php:157
+msgid "File size"
+msgstr "档案大小"
+
+#: modules/urbackup/urbackup/list_backups.php:198
+msgid "Start incremental backup"
 msgstr ""
 
-#: modules/urbackup/infoPackage.inc.php:50
-msgid "Check machine if exist"
+#: modules/urbackup/urbackup/list_backups.php:199
+msgid "Start full backup"
 msgstr ""
 
-#: modules/urbackup/infoPackage.inc.php:54
-msgid "Create group"
+#: modules/urbackup/urbackup/list_backups.php:200
+msgid "Disable backup for this client"
 msgstr ""
 
-#: modules/urbackup/infoPackage.inc.php:58
-msgid "Assign member to group"
+#: modules/urbackup/urbackup/list_backups.php:203
+msgid "Profile name: "
 msgstr ""
 
-#: modules/urbackup/infoPackage.inc.php:62
-msgid "Assign member to group after add client"
-msgstr ""
-
-#: modules/urbackup/infoPackage.inc.php:66
-msgid "Edit group"
-msgstr "编辑群组"
-
-#: modules/urbackup/infoPackage.inc.php:70
-msgid "List computer on group"
-msgstr ""
-
-#: modules/urbackup/infoPackage.inc.php:74
-#: modules/urbackup/urbackup/result_search_file.php:27
-msgid "File research by name"
-msgstr ""
-
-#: modules/urbackup/infoPackage.inc.php:78
-msgid "Validate save settings"
-msgstr ""
-
-#: modules/urbackup/infoPackage.inc.php:82
-#: modules/urbackup/urbackup/deleting_backup.php:30
-msgid "Delete backup"
-msgstr ""
-
-#: modules/urbackup/infoPackage.inc.php:86
-#: modules/urbackup/urbackup/deleting_group.php:29
-#: modules/urbackup/urbackup/deleting_client.php:9
-msgid "Delete group"
-msgstr "删除群组"
-
-#: modules/urbackup/infoPackage.inc.php:90
-msgid "Delete client"
-msgstr ""
-
-#: modules/urbackup/infoPackage.inc.php:94
-msgid "List of files from on backup"
-msgstr ""
-
-#: modules/urbackup/infoPackage.inc.php:98
-#: modules/urbackup/urbackup/restore_file.php:27
-msgid "Restore file"
-msgstr ""
-
-#: modules/urbackup/infoPackage.inc.php:102
-#: modules/urbackup/urbackup/download_file.php:27
-msgid "Download file"
-msgstr "下载档案"
-
-#: modules/urbackup/infoPackage.inc.php:106
-#: modules/urbackup/urbackup/usersgroups.php:27
-#: modules/urbackup/urbackup/localSidebar.php:25
-msgid "Profiles"
-msgstr "设定档"
-
-#: modules/urbackup/infoPackage.inc.php:110
-#: modules/urbackup/urbackup/logs.php:27
-msgid "Logs"
-msgstr "记录档"
-
-#: modules/urbackup/urbackup/result_search_file.php:45
-msgid "File"
-msgstr "档案"
-
-#: modules/urbackup/urbackup/result_search_file.php:46
-msgid "Path"
-msgstr ""
-
-#: modules/urbackup/urbackup/result_search_file.php:47
-msgid "Creation date"
-msgstr ""
-
-#: modules/urbackup/urbackup/result_search_file.php:48
-#: modules/urbackup/urbackup/index.php:258
-#: modules/urbackup/urbackup/all_files_backup.php:110
-#: modules/urbackup/urbackup/list_backups.php:236
-msgid "Size"
-msgstr "大小"
-
-#: modules/urbackup/urbackup/result_search_file.php:49
-#: modules/urbackup/urbackup/index.php:218
-#: modules/urbackup/urbackup/all_files_backup.php:114
 #: modules/urbackup/urbackup/list_backups.php:237
-msgid "Action"
-msgstr "动作"
-
-#: modules/urbackup/urbackup/result_search_file.php:124
-#: modules/urbackup/urbackup/result_search_file.php:152
-#: modules/urbackup/urbackup/all_files_backup.php:193
-msgid "DOWNLOAD"
+msgid "File save"
 msgstr ""
 
-#: modules/urbackup/urbackup/result_search_file.php:125
-#: modules/urbackup/urbackup/result_search_file.php:153
-#: modules/urbackup/urbackup/all_files_backup.php:194
-msgid "RESTORE"
-msgstr ""
-
-#: modules/urbackup/urbackup/create_group.php:27
-msgid "Group creation"
-msgstr "群组建立"
-
-#: modules/urbackup/urbackup/logs.php:51
+#: modules/urbackup/urbackup/list_backups.php:242
 #: modules/urbackup/urbackup/index.php:252
 #: modules/urbackup/urbackup/index.php:370
-#: modules/urbackup/urbackup/list_backups.php:232
+#: modules/urbackup/urbackup/logs.php:51
 msgid "Id"
 msgstr ""
 
-#: modules/urbackup/urbackup/logs.php:52
-#: modules/urbackup/urbackup/index.php:371
-msgid "Message"
-msgstr "讯息"
+#: modules/urbackup/urbackup/list_backups.php:243
+msgid "Incremental"
+msgstr ""
 
-#: modules/urbackup/urbackup/logs.php:53
+#: modules/urbackup/urbackup/list_backups.php:244
+msgid "Archived ?"
+msgstr ""
+
+#: modules/urbackup/urbackup/list_backups.php:245
 #: modules/urbackup/urbackup/index.php:372
-#: modules/urbackup/urbackup/list_backups.php:235
+#: modules/urbackup/urbackup/logs.php:53
 msgid "Time"
 msgstr "时间"
 
-#: modules/urbackup/urbackup/logs.php:82
-#: modules/urbackup/urbackup/index.php:410
-msgid ""
-"Backup failed because of disk problems, no space left on disk (see previous "
-"messages)"
-msgstr ""
+#: modules/urbackup/urbackup/list_backups.php:246
+#: modules/urbackup/urbackup/all_files_backup.php:110
+#: modules/urbackup/urbackup/index.php:258
+#: modules/urbackup/urbackup/result_search_file.php:48
+msgid "Size"
+msgstr "大小"
 
-#: modules/urbackup/urbackup/edit_group_settings.php:30
-msgid "Settings for "
-msgstr ""
-
-#: modules/urbackup/urbackup/edit_group_settings.php:146
-msgid "Info : Separate path with ';', you can put '*' to every character"
-msgstr ""
-
-#: modules/urbackup/urbackup/edit_group_settings.php:151
-msgid "Interval for incremental file backups (hour)"
-msgstr ""
-
-#: modules/urbackup/urbackup/edit_group_settings.php:152
-msgid "Interval for full file backups (day)"
-msgstr ""
-
-#: modules/urbackup/urbackup/edit_group_settings.php:153
-msgid "Excluded files"
-msgstr "排除的档案"
-
-#: modules/urbackup/urbackup/edit_group_settings.php:154
-msgid "Included files "
-msgstr ""
-
-#: modules/urbackup/urbackup/edit_group_settings.php:155
-msgid "Default directories to backup"
-msgstr ""
-
-#: modules/urbackup/urbackup/edit_group_settings.php:163
-msgid "By default, excluded files is :"
-msgstr ""
-
-#: modules/urbackup/urbackup/usersgroups.php:61
-msgid "Profile name :"
-msgstr ""
-
-#: modules/urbackup/urbackup/usersgroups.php:72
-msgid "Profile list :"
-msgstr ""
-
-#: modules/urbackup/urbackup/usersgroups.php:77
-#: modules/urbackup/urbackup/index.php:253
-msgid "Name"
-msgstr "名称"
-
-#: modules/urbackup/urbackup/usersgroups.php:78
-msgid "Actions"
+#: modules/urbackup/urbackup/list_backups.php:247
+#: modules/urbackup/urbackup/all_files_backup.php:114
+#: modules/urbackup/urbackup/index.php:218
+#: modules/urbackup/urbackup/result_search_file.php:49
+msgid "Action"
 msgstr "动作"
 
+#: modules/urbackup/urbackup/list_backups.php:256
+msgid "No backup"
+msgstr ""
+
+#: modules/urbackup/urbackup/list_backups.php:276
+#: modules/urbackup/urbackup/list_backups.php:281
+msgid "No"
+msgstr "否"
+
+#: modules/urbackup/urbackup/list_backups.php:278
+#: modules/urbackup/urbackup/list_backups.php:283
+msgid "Yes"
+msgstr "是"
+
+#: modules/urbackup/urbackup/list_backups.php:296
+#: modules/urbackup/urbackup/all_files_backup.php:189
 #: modules/urbackup/urbackup/usersgroups.php:88
 #: modules/urbackup/urbackup/usersgroups.php:93
-#: modules/urbackup/urbackup/all_files_backup.php:189
-#: modules/urbackup/urbackup/list_backups.php:286
 msgid "Browse"
 msgstr "浏览"
 
-#: modules/urbackup/urbackup/usersgroups.php:96
-msgid "Edit"
-msgstr "编辑"
-
+#: modules/urbackup/urbackup/list_backups.php:306
+#: modules/urbackup/urbackup/list_backups.php:313
 #: modules/urbackup/urbackup/usersgroups.php:99
-#: modules/urbackup/urbackup/list_backups.php:296
-#: modules/urbackup/urbackup/list_backups.php:303
 msgid "Delete"
 msgstr "删除"
+
+#: modules/urbackup/urbackup/deleting_group.php:29
+#: modules/urbackup/urbackup/deleting_client.php:12
+#: modules/urbackup/infoPackage.inc.php:86
+msgid "Delete group"
+msgstr "删除群组"
+
+#: modules/urbackup/urbackup/add_member_togroup_aftercheck.php:34
+msgid "Assign member to profile"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:59
+msgid "Backups list for "
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:89
+msgid " Path: "
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:94
+msgid "Back to previous path"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:98
+#: modules/urbackup/urbackup/restore_file.php:59
+msgid "Back to backup list"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:109
+msgid "File/Folder"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:111
+msgid "Create date"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:112
+msgid "Last modification"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:113
+msgid "Last access"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:123
+msgid "No file"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:193
+#: modules/urbackup/urbackup/result_search_file.php:124
+#: modules/urbackup/urbackup/result_search_file.php:152
+msgid "DOWNLOAD"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:194
+#: modules/urbackup/urbackup/result_search_file.php:125
+#: modules/urbackup/urbackup/result_search_file.php:153
+msgid "RESTORE"
+msgstr ""
 
 #: modules/urbackup/urbackup/index.php:27
 msgid "Reviews"
@@ -252,19 +190,6 @@ msgstr ""
 #: modules/urbackup/urbackup/index.php:149
 msgid "Global statistics"
 msgstr ""
-
-#: modules/urbackup/urbackup/index.php:156
-#: modules/urbackup/urbackup/index.php:217
-#: modules/urbackup/urbackup/list_backups.php:171
-#: modules/urbackup/urbackup/checkMachine.php:171
-#: modules/urbackup/urbackup/checkMachine.php:207
-msgid "Computer name"
-msgstr "电脑名称"
-
-#: modules/urbackup/urbackup/index.php:157
-#: modules/urbackup/urbackup/list_backups.php:172
-msgid "File size"
-msgstr "档案大小"
 
 #: modules/urbackup/urbackup/index.php:186
 #: modules/urbackup/urbackup/index.php:220
@@ -291,6 +216,11 @@ msgstr ""
 #: modules/urbackup/urbackup/index.php:245
 msgid "Last activities"
 msgstr ""
+
+#: modules/urbackup/urbackup/index.php:253
+#: modules/urbackup/urbackup/usersgroups.php:77
+msgid "Name"
+msgstr "名称"
 
 #: modules/urbackup/urbackup/index.php:254
 msgid "Backuptime"
@@ -333,57 +263,96 @@ msgstr ""
 msgid "Full files image"
 msgstr ""
 
-#: modules/urbackup/urbackup/add_member_togroup_aftercheck.php:34
-msgid "Assign member to profile"
+#: modules/urbackup/urbackup/index.php:371
+#: modules/urbackup/urbackup/logs.php:52
+msgid "Message"
+msgstr "讯息"
+
+#: modules/urbackup/urbackup/index.php:410
+#: modules/urbackup/urbackup/logs.php:82
+msgid ""
+"Backup failed because of disk problems, no space left on disk (see previous "
+"messages)"
 msgstr ""
 
-#: modules/urbackup/urbackup/add_member_togroup.php:37
-msgid "Assign member to profil"
+#: modules/urbackup/urbackup/logs.php:27
+#: modules/urbackup/infoPackage.inc.php:110
+msgid "Logs"
+msgstr "记录档"
+
+#: modules/urbackup/urbackup/edit_group_settings.php:30
+msgid "Settings for "
+msgstr ""
+
+#: modules/urbackup/urbackup/edit_group_settings.php:146
+msgid "Info : Separate path with ';', you can put '*' to every character"
+msgstr ""
+
+#: modules/urbackup/urbackup/edit_group_settings.php:151
+msgid "Interval for incremental file backups (hour)"
+msgstr ""
+
+#: modules/urbackup/urbackup/edit_group_settings.php:152
+msgid "Interval for full file backups (day)"
+msgstr ""
+
+#: modules/urbackup/urbackup/edit_group_settings.php:153
+msgid "Excluded files"
+msgstr "排除的档案"
+
+#: modules/urbackup/urbackup/edit_group_settings.php:154
+msgid "Included files "
+msgstr ""
+
+#: modules/urbackup/urbackup/edit_group_settings.php:155
+msgid "Default directories to backup"
+msgstr ""
+
+#: modules/urbackup/urbackup/edit_group_settings.php:163
+msgid "By default, excluded files is :"
+msgstr ""
+
+#: modules/urbackup/urbackup/checkMachine.php:30
+msgid "Assign profile to computer "
+msgstr ""
+
+#: modules/urbackup/urbackup/checkMachine.php:177
+#: modules/urbackup/urbackup/checkMachine.php:213
+msgid "Choose profile to computer"
+msgstr ""
+
+#: modules/urbackup/urbackup/checkMachine.php:193
+msgid "User already exists"
 msgstr ""
 
 #: modules/urbackup/urbackup/validate_edit_group.php:29
 msgid "Settings saved for "
 msgstr ""
 
-#: modules/urbackup/urbackup/all_files_backup.php:59
-msgid "Backups list for "
+#: modules/urbackup/urbackup/usersgroups.php:27
+#: modules/urbackup/urbackup/localSidebar.php:25
+#: modules/urbackup/infoPackage.inc.php:106
+msgid "Profiles"
+msgstr "设定档"
+
+#: modules/urbackup/urbackup/usersgroups.php:61
+msgid "Profile name :"
 msgstr ""
 
-#: modules/urbackup/urbackup/all_files_backup.php:89
-msgid " Path: "
+#: modules/urbackup/urbackup/usersgroups.php:72
+msgid "Profile list :"
 msgstr ""
 
-#: modules/urbackup/urbackup/all_files_backup.php:94
-msgid "Back to previous path"
-msgstr ""
+#: modules/urbackup/urbackup/usersgroups.php:78
+msgid "Actions"
+msgstr "动作"
 
-#: modules/urbackup/urbackup/all_files_backup.php:98
-#: modules/urbackup/urbackup/restore_file.php:59
-msgid "Back to backup list"
-msgstr ""
+#: modules/urbackup/urbackup/usersgroups.php:96
+msgid "Edit"
+msgstr "编辑"
 
-#: modules/urbackup/urbackup/all_files_backup.php:109
-msgid "File/Folder"
-msgstr ""
-
-#: modules/urbackup/urbackup/all_files_backup.php:111
-msgid "Create date"
-msgstr ""
-
-#: modules/urbackup/urbackup/all_files_backup.php:112
-msgid "Last modification"
-msgstr ""
-
-#: modules/urbackup/urbackup/all_files_backup.php:113
-msgid "Last access"
-msgstr ""
-
-#: modules/urbackup/urbackup/all_files_backup.php:123
-msgid "No file"
-msgstr ""
-
-#: modules/urbackup/urbackup/start_backup.php:30
-msgid "Start "
+#: modules/urbackup/urbackup/add_member_togroup.php:37
+msgid "Assign member to profil"
 msgstr ""
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:30
@@ -391,7 +360,7 @@ msgid "List user on profil "
 msgstr ""
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:119
-msgid "Add member to this profil"
+msgid "Add member to this profile"
 msgstr ""
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:139
@@ -400,6 +369,25 @@ msgstr ""
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:161
 msgid "Computer <b>inside</b> the profile"
+msgstr ""
+
+#: modules/urbackup/urbackup/download_file.php:27
+#: modules/urbackup/infoPackage.inc.php:102
+msgid "Download file"
+msgstr "下载档案"
+
+#: modules/urbackup/urbackup/start_backup.php:30
+msgid "Start "
+msgstr ""
+
+#: modules/urbackup/urbackup/localSidebar.php:24
+#: modules/urbackup/infoPackage.inc.php:38
+msgid "Review"
+msgstr ""
+
+#: modules/urbackup/urbackup/restore_file.php:27
+#: modules/urbackup/infoPackage.inc.php:98
+msgid "Restore file"
 msgstr ""
 
 #: modules/urbackup/urbackup/restore_file.php:44
@@ -415,62 +403,77 @@ msgstr ""
 msgid "Backup file(s) request successfully asked to client."
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:31
-msgid "Backups List "
+#: modules/urbackup/urbackup/deleting_backup.php:30
+#: modules/urbackup/infoPackage.inc.php:82
+msgid "Delete backup"
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:164
-msgid "Statistics by client"
+#: modules/urbackup/urbackup/result_search_file.php:27
+#: modules/urbackup/infoPackage.inc.php:74
+msgid "File research by name"
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:197
-msgid "Start incremental backup"
+#: modules/urbackup/urbackup/result_search_file.php:45
+msgid "File"
+msgstr "档案"
+
+#: modules/urbackup/urbackup/result_search_file.php:46
+msgid "Path"
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:198
-#: modules/urbackup/urbackup/list_backups.php:199
-msgid "Start full backup"
+#: modules/urbackup/urbackup/result_search_file.php:47
+msgid "Creation date"
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:202
-msgid "Profile name: "
+#: modules/urbackup/urbackup/create_group.php:27
+msgid "Group creation"
+msgstr "群组建立"
+
+#: modules/urbackup/infoPackage.inc.php:27
+#: modules/urbackup/infoPackage.inc.php:32
+msgid "Backup"
+msgstr "备份"
+
+#: modules/urbackup/infoPackage.inc.php:42
+msgid "List Backups by Client"
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:227
-msgid "File save"
+#: modules/urbackup/infoPackage.inc.php:46
+msgid "Start backup"
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:233
-msgid "Incremental"
+#: modules/urbackup/infoPackage.inc.php:50
+msgid "Check machine if exist"
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:234
-msgid "Archived ?"
+#: modules/urbackup/infoPackage.inc.php:54
+msgid "Create group"
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:246
-msgid "No backup"
+#: modules/urbackup/infoPackage.inc.php:58
+msgid "Assign member to group"
 msgstr ""
 
-#: modules/urbackup/urbackup/list_backups.php:266
-#: modules/urbackup/urbackup/list_backups.php:271
-msgid "No"
-msgstr "否"
-
-#: modules/urbackup/urbackup/list_backups.php:268
-#: modules/urbackup/urbackup/list_backups.php:273
-msgid "Yes"
-msgstr "是"
-
-#: modules/urbackup/urbackup/checkMachine.php:30
-msgid "Assign profile to computer "
+#: modules/urbackup/infoPackage.inc.php:62
+msgid "Assign member to group after add client"
 msgstr ""
 
-#: modules/urbackup/urbackup/checkMachine.php:177
-#: modules/urbackup/urbackup/checkMachine.php:213
-msgid "Choose profile to computer"
+#: modules/urbackup/infoPackage.inc.php:66
+msgid "Edit group"
+msgstr "编辑群组"
+
+#: modules/urbackup/infoPackage.inc.php:70
+msgid "List computer on group"
 msgstr ""
 
-#: modules/urbackup/urbackup/checkMachine.php:193
-msgid "User already exists"
+#: modules/urbackup/infoPackage.inc.php:78
+msgid "Validate save settings"
+msgstr ""
+
+#: modules/urbackup/infoPackage.inc.php:90
+msgid "Delete client"
+msgstr ""
+
+#: modules/urbackup/infoPackage.inc.php:94
+msgid "List of files from on backup"
 msgstr ""

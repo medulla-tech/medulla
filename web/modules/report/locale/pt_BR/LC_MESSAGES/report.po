@@ -11,32 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-14 15:37+0100\n"
+"POT-Creation-Date: 2023-01-24 10:40+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/siveo/teams/72118/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
-
-#: modules/report/infoPackage.inc.php:32
-msgid "Reporting"
-msgstr "Relatório"
-
-#: modules/report/infoPackage.inc.php:36
-msgid "Report"
-msgstr "Relatar"
-
-#: modules/report/infoPackage.inc.php:41 modules/report/report/index.php:44
-#: modules/report/report/localSidebar.php:27
-msgid "Report creation"
-msgstr "Criação de relatórios"
-
-#: modules/report/infoPackage.inc.php:44
-msgid "Download a file from report module (report or PNG)"
-msgstr "Baixar um arquivo do módulo de relatórios (relatório ou PNG)"
 
 #: modules/report/includes/report.inc.php:36
 #: modules/report/includes/report.inc.php:80
@@ -228,6 +211,23 @@ msgstr "Sábados"
 #: modules/report/includes/html.inc.php:141
 msgid "Wk"
 msgstr "Semanal"
+
+#: modules/report/infoPackage.inc.php:32
+msgid "Reporting"
+msgstr "Relatório"
+
+#: modules/report/infoPackage.inc.php:36
+msgid "Report"
+msgstr "Relatar"
+
+#: modules/report/infoPackage.inc.php:41 modules/report/report/index.php:44
+#: modules/report/report/localSidebar.php:27
+msgid "Report creation"
+msgstr "Criação de relatórios"
+
+#: modules/report/infoPackage.inc.php:44
+msgid "Download a file from report module (report or PNG)"
+msgstr "Baixar um arquivo do módulo de relatórios (relatório ou PNG)"
 
 #: modules/report/report/index.php:62
 msgid "Period"

@@ -12,44 +12,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-14 15:37+0100\n"
+"POT-Creation-Date: 2023-01-24 10:40+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
-"Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
+"Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/support/infoPackage.inc.php:31
-#: modules/support/includes/panels/license.inc.php:54
-msgid "Support"
-msgstr "Support"
-
-#: modules/support/infoPackage.inc.php:35
-msgid "Remote support"
-msgstr "Fjernsupport"
-
-#: modules/support/infoPackage.inc.php:40
-msgid "Collect"
-msgstr "Samle"
-
-#: modules/support/infoPackage.inc.php:42
-msgid "Connect"
-msgstr "Koble til"
-
-#: modules/support/infoPackage.inc.php:44
-msgid "Disconnect"
-msgstr "Koble fra"
-
-#: modules/support/infoPackage.inc.php:46
-msgid "Download an archive including logs and config files"
-msgstr "Last ned et arkiv med logger og konfigurasjonsfiler"
-
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
 msgstr "Abonnementsinfo"
+
+#: modules/support/includes/panels/license.inc.php:54
+#: modules/support/infoPackage.inc.php:31
+msgid "Support"
+msgstr "Support"
 
 #: modules/support/includes/panels/license.inc.php:57
 msgid "Phone"
@@ -94,3 +74,23 @@ msgstr "Last ned arkiv"
 #: modules/support/includes/panels/remotesupport.inc.php:45
 msgid "Extract log and config files"
 msgstr "Hent ut logger og konfig filer"
+
+#: modules/support/infoPackage.inc.php:35
+msgid "Remote support"
+msgstr "Fjernsupport"
+
+#: modules/support/infoPackage.inc.php:40
+msgid "Collect"
+msgstr "Samle"
+
+#: modules/support/infoPackage.inc.php:42
+msgid "Connect"
+msgstr "Koble til"
+
+#: modules/support/infoPackage.inc.php:44
+msgid "Disconnect"
+msgstr "Koble fra"
+
+#: modules/support/infoPackage.inc.php:46
+msgid "Download an archive including logs and config files"
+msgstr "Last ned et arkiv med logger og konfigurasjonsfiler"

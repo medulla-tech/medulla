@@ -12,15 +12,76 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-14 15:37+0100\n"
+"POT-Creation-Date: 2023-01-24 10:40+0100\n"
 "PO-Revision-Date: 2017-10-11 08:07+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
-"Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
+"Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/inventory/includes/html.php:65
+#: modules/inventory/inventory/i18n_labels.php:53
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:609
+msgid "Date"
+msgstr "Dato"
+
+#: modules/inventory/includes/html.php:98
+msgid "Filter software"
+msgstr "Filtrer programvare"
+
+#: modules/inventory/includes/html.php:103
+msgid "Hide Windows Updates"
+msgstr "Skjul Windows-oppdateringer"
+
+#: modules/inventory/includes/html.php:117
+msgid "Refresh"
+msgstr "Oppdater"
+
+#: modules/inventory/includes/panels/inventory.inc.php:30
+msgid "Computers"
+msgstr "Datamaskiner"
+
+#: modules/inventory/includes/panels/inventory.inc.php:43
+msgid "Create a group"
+msgstr "Lag gruppe"
+
+#: modules/inventory/includes/panels/inventory.inc.php:44
+msgid "< %s days: %percent% (%d)"
+msgstr "< %s dager: %prosent% (%d)"
+
+#: modules/inventory/includes/panels/inventory.inc.php:45
+msgid "> %s days: %percent% (%d)"
+msgstr "> %s dager: %prosent% (%d)"
+
+#: modules/inventory/includes/panels/inventory.inc.php:48
+msgid "Latest Inventory Date"
+msgstr "Siste inventeringsdato"
+
+#: modules/inventory/includes/publicFunc.php:57
+#: modules/inventory/includes/publicFunc.php:90
+msgid "Entity right"
+msgstr "Enhetsrettigheter"
+
+#: modules/inventory/includes/publicFunc.php:83
+#: modules/inventory/inventory/addEntityRule.php:180
+msgid "Remove"
+msgstr "Fjern"
+
+#: modules/inventory/includes/publicFunc.php:83
+msgid "Remove entity for user"
+msgstr "Fjern enhet for bruker"
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right"
+msgstr "Legg til Enhetsrettigheter"
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right for user"
+msgstr "Legg til entitetsrettigheter for brukeren"
 
 #: modules/inventory/infoPackage.inc.php:31
 #: modules/inventory/infoPackage.inc.php:36
@@ -75,9 +136,9 @@ msgid "Input"
 msgstr "Innputt"
 
 #: modules/inventory/infoPackage.inc.php:57
+#: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/ajaxViewPart.php:227
 #: modules/inventory/inventory/ajaxViewPart.php:607
-#: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/localSidebar.php:39
 msgid "Memory"
 msgstr "Minne"
@@ -107,8 +168,8 @@ msgid "Sound"
 msgstr "Lyd"
 
 #: modules/inventory/infoPackage.inc.php:67
-#: modules/inventory/inventory/ajaxViewPart.php:228
 #: modules/inventory/inventory/i18n_labels.php:148
+#: modules/inventory/inventory/ajaxViewPart.php:228
 #: modules/inventory/inventory/localSidebar.php:44
 msgid "Storage"
 msgstr "Lagring"
@@ -274,66 +335,70 @@ msgstr "Endre enhetenregel-ordning (opp)"
 msgid "Change entity rule order (down)"
 msgstr "Endre enhetenregel-ordning (ned)"
 
-#: modules/inventory/includes/html.php:65
-#: modules/inventory/inventory/ajaxViewPart.php:188
-#: modules/inventory/inventory/ajaxViewPart.php:609
-#: modules/inventory/inventory/i18n_labels.php:53
-msgid "Date"
-msgstr "Dato"
+#: modules/inventory/inventory/body.php:40
+msgid "Bios list"
+msgstr "Bios liste"
 
-#: modules/inventory/includes/html.php:98
-msgid "Filter software"
-msgstr "Filtrer programvare"
+#: modules/inventory/inventory/body.php:42
+msgid "Hardware and OS information list"
+msgstr "Informasjon om maskinvare og operativsystem"
 
-#: modules/inventory/includes/html.php:103
-msgid "Hide Windows Updates"
-msgstr "Skjul Windows-oppdateringer"
+#: modules/inventory/inventory/body.php:43
+msgid "Software list"
+msgstr "Software liste"
 
-#: modules/inventory/includes/html.php:117
-msgid "Refresh"
-msgstr "Oppdater"
+#: modules/inventory/inventory/body.php:44
+msgid "Network card and configuration list"
+msgstr "Nettverkskort og konfigurasjonsliste"
 
-#: modules/inventory/includes/publicFunc.php:57
-#: modules/inventory/includes/publicFunc.php:90
-msgid "Entity right"
-msgstr "Enhetsrettigheter"
+#: modules/inventory/inventory/body.php:45
+msgid "Controller list"
+msgstr "Kontrollerliste"
 
-#: modules/inventory/includes/publicFunc.php:83
-#: modules/inventory/inventory/addEntityRule.php:180
-msgid "Remove"
-msgstr "Fjern"
+#: modules/inventory/inventory/body.php:46
+msgid "Registry keys/values list"
+msgstr "Registernøkler/verdiliste"
 
-#: modules/inventory/includes/publicFunc.php:83
-msgid "Remove entity for user"
-msgstr "Fjern enhet for bruker"
+#: modules/inventory/inventory/body.php:47
+msgid "Drive list"
+msgstr "Diskstasjonsliste"
 
-#: modules/inventory/includes/publicFunc.php:95
-msgid "Add entity right"
-msgstr "Legg til Enhetsrettigheter"
+#: modules/inventory/inventory/body.php:48
+msgid "Input device list"
+msgstr "Liste over inndataenheter"
 
-#: modules/inventory/includes/publicFunc.php:95
-msgid "Add entity right for user"
-msgstr "Legg til entitetsrettigheter for brukeren"
+#: modules/inventory/inventory/body.php:49
+msgid "Memory module list"
+msgstr "Minnemodulliste"
 
-#: modules/inventory/includes/panels/inventory.inc.php:30
-msgid "Computers"
-msgstr "Datamaskiner"
+#: modules/inventory/inventory/body.php:50
+msgid "Monitor list"
+msgstr "Skjermliste"
 
-#: modules/inventory/includes/panels/inventory.inc.php:43
-msgid "Create a group"
-msgstr "Lag gruppe"
+#: modules/inventory/inventory/body.php:51
+msgid "Port list"
+msgstr "Portliste"
 
-#: modules/inventory/includes/panels/inventory.inc.php:44
-msgid "< %s days: %percent% (%d)"
-msgstr "< %s dager: %prosent% (%d)"
+#: modules/inventory/inventory/body.php:52
+msgid "Printer list"
+msgstr "Skriverliste"
 
-#: modules/inventory/includes/panels/inventory.inc.php:45
-msgid "> %s days: %percent% (%d)"
-msgstr "> %s dager: %prosent% (%d)"
+#: modules/inventory/inventory/body.php:53
+msgid "Sound list"
+msgstr "Lydliste"
 
-#: modules/inventory/includes/panels/inventory.inc.php:48
-msgid "Latest Inventory Date"
-msgstr "Siste inventeringsdato"
+#: modules/inventory/inventory/body.php:54
+msgid "Storage medium list"
+msgstr "Liste over lagringsmedia"
+
+#: modules/inventory/inventory/body.php:55
+msgid "Video card list"
+msgstr "Liste over videokort"
+
+#: modules/inventory/inventory/pci.php:27
+#: modules/inventory/inventory/i18n_labels.php:115
+msgid "Pci"
+msgstr "Pci"
 
 #: modules/inventory/inventory/EditEntity.php:45
 msgid "The entity has not been updated."
@@ -344,18 +409,63 @@ msgid "Edit entity"
 msgstr "Rediger enhet"
 
 #: modules/inventory/inventory/EditEntity.php:55
-#: modules/inventory/inventory/addEntity.php:50
+#: modules/inventory/inventory/i18n_labels.php:106
 #: modules/inventory/inventory/ajaxViewPart.php:571
 #: modules/inventory/inventory/ajaxViewPart.php:587
-#: modules/inventory/inventory/i18n_labels.php:106
+#: modules/inventory/inventory/addEntity.php:50
 #: modules/inventory/inventory/deleteEntity.php:64
 msgid "Name"
 msgstr "Etternavn"
 
-#: modules/inventory/inventory/slot.php:27
-#: modules/inventory/inventory/i18n_labels.php:134
-msgid "Slot"
-msgstr "Slot"
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "Computer name"
+msgstr "Maskinnavn"
+
+#: modules/inventory/inventory/ajaxIncoming.php:80
+msgid "Inventory date"
+msgstr "Inventeringsdato"
+
+#: modules/inventory/inventory/ajaxIncoming.php:82
+msgid "New computer"
+msgstr "Ny datamaskin"
+
+#: modules/inventory/inventory/ajaxIncoming.php:91
+msgid "Elements"
+msgstr "Elementer"
+
+#: modules/inventory/inventory/deleteEntityRule.php:30
+msgid "The entity rule has been deleted successfully."
+msgstr "Enhetsregelen er slettet."
+
+#: modules/inventory/inventory/deleteEntityRule.php:33
+msgid "Delete this rule?"
+msgstr "Slett denne regelen?"
+
+#: modules/inventory/inventory/entityList.php:27
+msgid "Entity list"
+msgstr "Enhetsliste"
+
+#: modules/inventory/inventory/entityList.php:33
+msgid "All entities"
+msgstr "Alle enheter"
+
+#: modules/inventory/inventory/view.php:44
+#, php-format
+msgid "Inventory of %s"
+msgstr "Inventar på %s"
+
+#: modules/inventory/inventory/view.php:74
+#: modules/inventory/inventory/ajaxViewPart.php:121
+msgid "Properties"
+msgstr "Egenskaper"
+
+#: modules/inventory/inventory/view.php:75
+#: modules/inventory/inventory/i18n_labels.php:161
+#: modules/inventory/inventory/ajaxViewPart.php:122
+#: modules/inventory/inventory/inventory_diff.php:76
+#: modules/inventory/inventory/inventory_diff.php:101
+msgid "Value"
+msgstr "Verdi"
 
 #: modules/inventory/inventory/tabs.php:63
 #: modules/inventory/inventory/tabs.php:71
@@ -384,27 +494,22 @@ msgstr "Historikk"
 msgid "Get XLS Report"
 msgstr "Hent XLS Rapport"
 
-#: modules/inventory/inventory/entityRules.php:28
-#: modules/inventory/inventory/localComputersSidebar.php:29
-msgid "Entity rules"
-msgstr "Regler for enhet"
+#: modules/inventory/inventory/slot.php:27
+#: modules/inventory/inventory/i18n_labels.php:134
+msgid "Slot"
+msgstr "Slot"
 
-#: modules/inventory/inventory/entityRules.php:35
-msgid "All rules"
-msgstr "Alle regler"
+#: modules/inventory/inventory/graphs.php:47
+msgid "back"
+msgstr "forrige"
 
-#: modules/inventory/inventory/entityList.php:27
-msgid "Entity list"
-msgstr "Enhetsliste"
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "Se forskjeller siden forrige inventering"
 
-#: modules/inventory/inventory/entityList.php:33
-msgid "All entities"
-msgstr "Alle enheter"
-
-#: modules/inventory/inventory/pci.php:27
-#: modules/inventory/inventory/i18n_labels.php:115
-msgid "Pci"
-msgstr "Pci"
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr "Inventeringsdato"
 
 #: modules/inventory/inventory/incoming.php:46
 msgid "Incoming Inventories"
@@ -491,29 +596,513 @@ msgstr "Flytt regel ned"
 msgid "Delete rule"
 msgstr "Slett regel"
 
-#: modules/inventory/inventory/addEntity.php:42
-msgid "Add entity"
-msgstr "Legg til enhet"
+#: modules/inventory/inventory/i18n_labels.php:26
+msgid "Application"
+msgstr "Applikasjon"
 
-#: modules/inventory/inventory/addEntity.php:64
-msgid "Parent entity"
-msgstr "Overordnet enhet"
+#: modules/inventory/inventory/i18n_labels.php:27
+msgid "Availability"
+msgstr "Tilgjengelighet"
 
-#: modules/inventory/inventory/ajaxIncoming.php:78
-msgid "Computer name"
-msgstr "Maskinnavn"
+#: modules/inventory/inventory/i18n_labels.php:29
+msgid "Bios Vendor"
+msgstr "Bios Leverandør"
 
-#: modules/inventory/inventory/ajaxIncoming.php:80
-msgid "Inventory date"
-msgstr "Inventeringsdato"
+#: modules/inventory/inventory/i18n_labels.php:30
+msgid "Bios Version"
+msgstr "Bios Versjon"
 
-#: modules/inventory/inventory/ajaxIncoming.php:82
-msgid "New computer"
-msgstr "Ny datamaskin"
+#: modules/inventory/inventory/i18n_labels.php:31
+msgid "Build"
+msgstr "Bygg"
 
-#: modules/inventory/inventory/ajaxIncoming.php:91
-msgid "Elements"
-msgstr "Elementer"
+#: modules/inventory/inventory/i18n_labels.php:32
+msgid "Bus"
+msgstr "Buss"
+
+#: modules/inventory/inventory/i18n_labels.php:33
+msgid "Buy Date"
+msgstr "Kjøpsdato"
+
+#: modules/inventory/inventory/i18n_labels.php:34
+msgid "Buy Value"
+msgstr "Kjøpsverdi"
+
+#: modules/inventory/inventory/i18n_labels.php:35
+msgid "Capacity"
+msgstr "Kapasitet"
+
+#: modules/inventory/inventory/i18n_labels.php:36
+msgid "Caption"
+msgstr "Bildetekst"
+
+#: modules/inventory/inventory/i18n_labels.php:37
+msgid "Card Type"
+msgstr "Korttype"
+
+#: modules/inventory/inventory/i18n_labels.php:38
+msgid "Chassis"
+msgstr "Chassis"
+
+#: modules/inventory/inventory/i18n_labels.php:39
+msgid "Chip Serial"
+msgstr "Chip Serienummer"
+
+#: modules/inventory/inventory/i18n_labels.php:40
+msgid "Chip Vendor"
+msgstr "Chip Leverandør"
+
+#: modules/inventory/inventory/i18n_labels.php:41
+msgid "Chipset"
+msgstr "Chipset"
+
+#: modules/inventory/inventory/i18n_labels.php:42
+msgid "Chipset Type"
+msgstr "Chipset Type"
+
+#: modules/inventory/inventory/i18n_labels.php:43
+msgid "Class"
+msgstr "Klasse"
+
+#: modules/inventory/inventory/i18n_labels.php:44
+msgid "Comments"
+msgstr "Kommentarer"
+
+#: modules/inventory/inventory/i18n_labels.php:45
+msgid "Company"
+msgstr "Bedrift"
+
+#: modules/inventory/inventory/i18n_labels.php:46
+msgid "Connector"
+msgstr "Konnektor"
+
+#: modules/inventory/inventory/i18n_labels.php:48
+msgid "Cpu Num"
+msgstr "Cpu Num"
+
+#: modules/inventory/inventory/i18n_labels.php:49
+msgid "Cpu Vendor"
+msgstr "Cpu Leverandør"
+
+#: modules/inventory/inventory/i18n_labels.php:50
+msgid "Custom Field"
+msgstr "Egendefinert felt"
+
+#: modules/inventory/inventory/i18n_labels.php:51
+msgid "Cyl"
+msgstr "Sylinder"
+
+#: modules/inventory/inventory/i18n_labels.php:52
+msgid "DNS"
+msgstr "DNS"
+
+#: modules/inventory/inventory/i18n_labels.php:54
+msgid "Date Last Switch On"
+msgstr "Dato sist slått på"
+
+#: modules/inventory/inventory/i18n_labels.php:57
+msgid "Default Gateway"
+msgstr "Standard Gateway"
+
+#: modules/inventory/inventory/i18n_labels.php:58
+msgid "Delivery Date"
+msgstr "Leveransdato"
+
+#: modules/inventory/inventory/i18n_labels.php:59
+msgid "Department"
+msgstr "Avdeling"
+
+#: modules/inventory/inventory/i18n_labels.php:60
+#: modules/inventory/inventory/ajaxViewPart.php:590
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: modules/inventory/inventory/i18n_labels.php:61
+#: modules/inventory/inventory/ajaxViewPart.php:577
+msgid "Device"
+msgstr "Enhet"
+
+#: modules/inventory/inventory/i18n_labels.php:62
+msgid "Disk"
+msgstr "Disk"
+
+#: modules/inventory/inventory/i18n_labels.php:63
+msgid "Disk Size"
+msgstr "Diskstørrelse"
+
+#: modules/inventory/inventory/i18n_labels.php:65
+msgid "Drive Letter"
+msgstr "Diskbokstav"
+
+#: modules/inventory/inventory/i18n_labels.php:66
+msgid "Drive Type"
+msgstr "Disktype"
+
+#: modules/inventory/inventory/i18n_labels.php:67
+msgid "Driver"
+msgstr "Driver"
+
+#: modules/inventory/inventory/i18n_labels.php:68
+msgid "Executable Size"
+msgstr "Kjørbar størrelse"
+
+#: modules/inventory/inventory/i18n_labels.php:69
+msgid "Expanded Description"
+msgstr "Ekspandert beskrivelse"
+
+#: modules/inventory/inventory/i18n_labels.php:70
+msgid "Expanded Type"
+msgstr "Ekspandert type"
+
+#: modules/inventory/inventory/i18n_labels.php:71
+msgid "Extended Description"
+msgstr "Utvidet beskrivelse"
+
+#: modules/inventory/inventory/i18n_labels.php:72
+msgid "Field"
+msgstr "Felt"
+
+#: modules/inventory/inventory/i18n_labels.php:73
+msgid "File Count"
+msgstr "Antall filer"
+
+#: modules/inventory/inventory/i18n_labels.php:74
+msgid "File System"
+msgstr "Filsystem"
+
+#: modules/inventory/inventory/i18n_labels.php:75
+msgid "Flag"
+msgstr "Flagg"
+
+#: modules/inventory/inventory/i18n_labels.php:76
+msgid "Form"
+msgstr "Formulær"
+
+#: modules/inventory/inventory/i18n_labels.php:77
+msgid "Free Space"
+msgstr "Ledig plass"
+
+#: modules/inventory/inventory/i18n_labels.php:78
+msgid "Freq"
+msgstr "Frekv"
+
+#: modules/inventory/inventory/i18n_labels.php:79
+#: modules/inventory/inventory/ajaxViewPart.php:602
+msgid "Frequency"
+msgstr "Frekvens"
+
+#: modules/inventory/inventory/i18n_labels.php:80
+msgid "Func"
+msgstr "Funksj"
+
+#: modules/inventory/inventory/i18n_labels.php:81
+#: modules/inventory/inventory/ajaxViewPart.php:576
+msgid "Gateway"
+msgstr "Gateway"
+
+#: modules/inventory/inventory/i18n_labels.php:83
+msgid "Hardware Version"
+msgstr "Maskinvareversjon"
+
+#: modules/inventory/inventory/i18n_labels.php:84
+msgid "Head"
+msgstr "Hode"
+
+#: modules/inventory/inventory/i18n_labels.php:85
+msgid "High Mem"
+msgstr "High Mem"
+
+#: modules/inventory/inventory/i18n_labels.php:86
+#: modules/inventory/inventory/ajaxViewPart.php:574
+msgid "IP"
+msgstr "IP"
+
+#: modules/inventory/inventory/i18n_labels.php:88
+msgid "Ip Address"
+msgstr "Ip Adresse"
+
+#: modules/inventory/inventory/i18n_labels.php:89
+msgid "KEY"
+msgstr "Nøkkel"
+
+#: modules/inventory/inventory/i18n_labels.php:90
+msgid "Length"
+msgstr "Lengde"
+
+#: modules/inventory/inventory/i18n_labels.php:91
+#: modules/inventory/inventory/ajaxViewPart.php:593
+msgid "Location"
+msgstr "Plassering"
+
+#: modules/inventory/inventory/i18n_labels.php:92
+msgid "Low Mem"
+msgstr "Low Mem"
+
+#: modules/inventory/inventory/i18n_labels.php:93
+#: modules/inventory/inventory/ajaxViewPart.php:573
+msgid "MAC Address"
+msgstr "MAC Adresse"
+
+#: modules/inventory/inventory/i18n_labels.php:94
+msgid "MIB"
+msgstr "MIB"
+
+#: modules/inventory/inventory/i18n_labels.php:95
+msgid "Mac Addr"
+msgstr "Mac Adr"
+
+#: modules/inventory/inventory/i18n_labels.php:96
+#: modules/inventory/inventory/csv.php:67
+#: modules/inventory/inventory/csv.php:107
+msgid "Computer"
+msgstr "Datamaskin"
+
+#: modules/inventory/inventory/i18n_labels.php:97
+msgid "Manuf"
+msgstr "Produsent"
+
+#: modules/inventory/inventory/i18n_labels.php:98
+#: modules/inventory/inventory/ajaxViewPart.php:600
+msgid "Manufacturer"
+msgstr "Produsent"
+
+#: modules/inventory/inventory/i18n_labels.php:99
+msgid "Media"
+msgstr "Media"
+
+#: modules/inventory/inventory/i18n_labels.php:101
+msgid "Misc Mem"
+msgstr "Øvr Minne"
+
+#: modules/inventory/inventory/i18n_labels.php:102
+msgid "Misc SMB"
+msgstr "Øvr SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:103
+#: modules/inventory/inventory/ajaxViewPart.php:599
+msgid "Model"
+msgstr "Modell"
+
+#: modules/inventory/inventory/i18n_labels.php:104
+msgid "Modem"
+msgstr "Modem"
+
+#: modules/inventory/inventory/i18n_labels.php:108
+#: modules/inventory/inventory/ajaxViewPart.php:572
+msgid "Network Type"
+msgstr "Nettverkstype"
+
+#: modules/inventory/inventory/i18n_labels.php:109
+msgid "Num"
+msgstr "Num"
+
+#: modules/inventory/inventory/i18n_labels.php:110
+msgid "Number"
+msgstr "Tall"
+
+#: modules/inventory/inventory/i18n_labels.php:111
+msgid "OS Serial Number"
+msgstr "OS Serienummer"
+
+#: modules/inventory/inventory/i18n_labels.php:112
+msgid "Os Installation Date"
+msgstr "Os InstallasjonsdDato"
+
+#: modules/inventory/inventory/i18n_labels.php:113
+msgid "Os Architecture"
+msgstr "OS arkitektur"
+
+#: modules/inventory/inventory/i18n_labels.php:114
+#: modules/inventory/inventory/ajaxViewPart.php:596
+msgid "Operating System"
+msgstr "Operativsystem"
+
+#: modules/inventory/inventory/i18n_labels.php:116
+msgid "Phone"
+msgstr "Telefon"
+
+#: modules/inventory/inventory/i18n_labels.php:117
+msgid "Point Type"
+msgstr "Punkt Type"
+
+#: modules/inventory/inventory/i18n_labels.php:119
+msgid "Port Type"
+msgstr "Port Type"
+
+#: modules/inventory/inventory/i18n_labels.php:121
+msgid "Processor Count"
+msgstr "Antall prosessorer"
+
+#: modules/inventory/inventory/i18n_labels.php:122
+msgid "Processor Frequency"
+msgstr "Prosessorhastighet"
+
+#: modules/inventory/inventory/i18n_labels.php:123
+msgid "Processor Type"
+msgstr "Prosessor Type"
+
+#: modules/inventory/inventory/i18n_labels.php:124
+msgid "Product Name"
+msgstr "Produktnavn"
+
+#: modules/inventory/inventory/i18n_labels.php:125
+msgid "Product Path"
+msgstr "Produktsti"
+
+#: modules/inventory/inventory/i18n_labels.php:126
+msgid "Product Version"
+msgstr "Produkt Versjon"
+
+#: modules/inventory/inventory/i18n_labels.php:127
+msgid "Ram Total"
+msgstr "Ram Total"
+
+#: modules/inventory/inventory/i18n_labels.php:128
+msgid "Registered Company"
+msgstr "Registrert Virksomhet"
+
+#: modules/inventory/inventory/i18n_labels.php:129
+msgid "Registered Name"
+msgstr "Registrert navn"
+
+#: modules/inventory/inventory/i18n_labels.php:130
+msgid "Resolution"
+msgstr "Oppløsning"
+
+#: modules/inventory/inventory/i18n_labels.php:131
+msgid "Sector"
+msgstr "Sektor"
+
+#: modules/inventory/inventory/i18n_labels.php:132
+msgid "Serial"
+msgstr "Serie"
+
+#: modules/inventory/inventory/i18n_labels.php:133
+#: modules/inventory/inventory/ajaxViewPart.php:580
+#: modules/inventory/inventory/ajaxViewPart.php:604
+msgid "Size"
+msgstr "Størrelse"
+
+#: modules/inventory/inventory/i18n_labels.php:135
+msgid "Slot Count"
+msgstr "Antall plasser"
+
+#: modules/inventory/inventory/i18n_labels.php:136
+msgid "Smb Manufacturer"
+msgstr "Smb Produsent"
+
+#: modules/inventory/inventory/i18n_labels.php:137
+msgid "Smb Product"
+msgstr "Smb Produkt"
+
+#: modules/inventory/inventory/i18n_labels.php:138
+msgid "Smb Serial"
+msgstr "Smb Serienummer"
+
+#: modules/inventory/inventory/i18n_labels.php:139
+msgid "Smb Type"
+msgstr "Smb Type"
+
+#: modules/inventory/inventory/i18n_labels.php:140
+msgid "Smb Version"
+msgstr "Smb Versjon"
+
+#: modules/inventory/inventory/i18n_labels.php:143
+msgid "Speed"
+msgstr "Hastighet"
+
+#: modules/inventory/inventory/i18n_labels.php:144
+msgid "Stamp"
+msgstr "Stempel"
+
+#: modules/inventory/inventory/i18n_labels.php:145
+msgid "Standard Description"
+msgstr "Standard Beskrivelse"
+
+#: modules/inventory/inventory/i18n_labels.php:146
+msgid "Standard Type"
+msgstr "Standard Type"
+
+#: modules/inventory/inventory/i18n_labels.php:147
+#: modules/inventory/inventory/ajaxViewPart.php:620
+msgid "State"
+msgstr "Tilstand"
+
+#: modules/inventory/inventory/i18n_labels.php:149
+msgid "Subnet Mask"
+msgstr "Subnett Maske"
+
+#: modules/inventory/inventory/i18n_labels.php:150
+msgid "Support End"
+msgstr "Slutt på support"
+
+#: modules/inventory/inventory/i18n_labels.php:151
+msgid "Swap Space"
+msgstr "Vekselminne"
+
+#: modules/inventory/inventory/i18n_labels.php:152
+msgid "System"
+msgstr "System"
+
+#: modules/inventory/inventory/i18n_labels.php:153
+msgid "Time"
+msgstr "Tid"
+
+#: modules/inventory/inventory/i18n_labels.php:154
+msgid "Total Mem"
+msgstr "Totalt minne"
+
+#: modules/inventory/inventory/i18n_labels.php:155
+msgid "Total Space"
+msgstr "Total plass"
+
+#: modules/inventory/inventory/i18n_labels.php:156
+#: modules/inventory/inventory/ajaxViewPart.php:603
+msgid "Type"
+msgstr "Type"
+
+#: modules/inventory/inventory/i18n_labels.php:157
+msgid "Type Machine"
+msgstr "Maskintype"
+
+#: modules/inventory/inventory/i18n_labels.php:158
+msgid "Used"
+msgstr "Brukt"
+
+#: modules/inventory/inventory/i18n_labels.php:159
+#: modules/inventory/inventory/ajaxViewPart.php:610
+msgid "User"
+msgstr "Bruker"
+
+#: modules/inventory/inventory/i18n_labels.php:160
+msgid "VRAM Size"
+msgstr "VRAM størrelse"
+
+#: modules/inventory/inventory/i18n_labels.php:162
+#: modules/inventory/inventory/ajaxViewPart.php:586
+msgid "Vendor"
+msgstr "Leverandør"
+
+#: modules/inventory/inventory/i18n_labels.php:163
+#: modules/inventory/inventory/ajaxViewPart.php:588
+msgid "Version"
+msgstr "Versjon"
+
+#: modules/inventory/inventory/i18n_labels.php:164
+msgid "VolumeName"
+msgstr "Volumnavn"
+
+#: modules/inventory/inventory/i18n_labels.php:165
+msgid "WarrantyEnd"
+msgstr "Slutt på garanti"
+
+#: modules/inventory/inventory/i18n_labels.php:166
+msgid "Workgroup"
+msgstr "Arbeidsgruppe"
+
+#: modules/inventory/inventory/i18n_labels.php:167
+msgid "WorkingDate"
+msgstr "Arbeidsdato"
 
 #: modules/inventory/inventory/addEntityRule.php:64
 msgid "The entity rule has been added successfully."
@@ -659,24 +1248,6 @@ msgstr "Kriteria"
 msgid "Add criterion"
 msgstr "legg til kriteria"
 
-#: modules/inventory/inventory/view.php:44
-#, php-format
-msgid "Inventory of %s"
-msgstr "Inventar på %s"
-
-#: modules/inventory/inventory/view.php:74
-#: modules/inventory/inventory/ajaxViewPart.php:121
-msgid "Properties"
-msgstr "Egenskaper"
-
-#: modules/inventory/inventory/view.php:75
-#: modules/inventory/inventory/ajaxViewPart.php:122
-#: modules/inventory/inventory/i18n_labels.php:161
-#: modules/inventory/inventory/inventory_diff.php:76
-#: modules/inventory/inventory/inventory_diff.php:101
-msgid "Value"
-msgstr "Verdi"
-
 #: modules/inventory/inventory/localComputersSidebar.php:27
 msgid "Entities"
 msgstr "Forekomster"
@@ -685,13 +1256,14 @@ msgstr "Forekomster"
 msgid "Add an entity"
 msgstr "Legg til en enhet"
 
+#: modules/inventory/inventory/localComputersSidebar.php:29
+#: modules/inventory/inventory/entityRules.php:28
+msgid "Entity rules"
+msgstr "Regler for enhet"
+
 #: modules/inventory/inventory/localComputersSidebar.php:30
 msgid "Add entity rule"
 msgstr "Legg til Enhetsregl"
-
-#: modules/inventory/inventory/graphs.php:47
-msgid "back"
-msgstr "forrige"
 
 #: modules/inventory/inventory/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
@@ -757,34 +1329,9 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nei"
 
-#: modules/inventory/inventory/ajaxViewPart.php:572
-#: modules/inventory/inventory/i18n_labels.php:108
-msgid "Network Type"
-msgstr "Nettverkstype"
-
-#: modules/inventory/inventory/ajaxViewPart.php:573
-#: modules/inventory/inventory/i18n_labels.php:93
-msgid "MAC Address"
-msgstr "MAC Adresse"
-
-#: modules/inventory/inventory/ajaxViewPart.php:574
-#: modules/inventory/inventory/i18n_labels.php:86
-msgid "IP"
-msgstr "IP"
-
 #: modules/inventory/inventory/ajaxViewPart.php:575
 msgid "Netmask"
 msgstr "Nettmaske"
-
-#: modules/inventory/inventory/ajaxViewPart.php:576
-#: modules/inventory/inventory/i18n_labels.php:81
-msgid "Gateway"
-msgstr "Gateway"
-
-#: modules/inventory/inventory/ajaxViewPart.php:577
-#: modules/inventory/inventory/i18n_labels.php:61
-msgid "Device"
-msgstr "Enhet"
 
 #: modules/inventory/inventory/ajaxViewPart.php:578
 msgid "Mount Point"
@@ -793,12 +1340,6 @@ msgstr "Monteringspunkt"
 #: modules/inventory/inventory/ajaxViewPart.php:579
 msgid "Filesystem"
 msgstr "Filsystem"
-
-#: modules/inventory/inventory/ajaxViewPart.php:580
-#: modules/inventory/inventory/ajaxViewPart.php:604
-#: modules/inventory/inventory/i18n_labels.php:133
-msgid "Size"
-msgstr "Størrelse"
 
 #: modules/inventory/inventory/ajaxViewPart.php:581
 msgid "Free Size"
@@ -820,24 +1361,9 @@ msgstr "Kjøpsdato"
 msgid "Warranty End Date"
 msgstr "Sluttdato for garanti"
 
-#: modules/inventory/inventory/ajaxViewPart.php:586
-#: modules/inventory/inventory/i18n_labels.php:162
-msgid "Vendor"
-msgstr "Leverandør"
-
-#: modules/inventory/inventory/ajaxViewPart.php:588
-#: modules/inventory/inventory/i18n_labels.php:163
-msgid "Version"
-msgstr "Versjon"
-
 #: modules/inventory/inventory/ajaxViewPart.php:589
 msgid "Computer Name"
 msgstr "Maskinnavn"
-
-#: modules/inventory/inventory/ajaxViewPart.php:590
-#: modules/inventory/inventory/i18n_labels.php:60
-msgid "Description"
-msgstr "Beskrivelse"
 
 #: modules/inventory/inventory/ajaxViewPart.php:591
 msgid "Entity (Location)"
@@ -847,11 +1373,6 @@ msgstr "Enhet (Lokasjon)"
 msgid "Entity"
 msgstr "Enhet"
 
-#: modules/inventory/inventory/ajaxViewPart.php:593
-#: modules/inventory/inventory/i18n_labels.php:91
-msgid "Location"
-msgstr "Plassering"
-
 #: modules/inventory/inventory/ajaxViewPart.php:594
 msgid "Last Logged User"
 msgstr "Sist logget bruker"
@@ -859,11 +1380,6 @@ msgstr "Sist logget bruker"
 #: modules/inventory/inventory/ajaxViewPart.php:595
 msgid "OS"
 msgstr "OS"
-
-#: modules/inventory/inventory/ajaxViewPart.php:596
-#: modules/inventory/inventory/i18n_labels.php:114
-msgid "Operating System"
-msgstr "Operativsystem"
 
 #: modules/inventory/inventory/ajaxViewPart.php:597
 msgid "Computer Type"
@@ -873,29 +1389,9 @@ msgstr "Datamaskin Type"
 msgid "Model / Type"
 msgstr "Modell / Type"
 
-#: modules/inventory/inventory/ajaxViewPart.php:599
-#: modules/inventory/inventory/i18n_labels.php:103
-msgid "Model"
-msgstr "Modell"
-
-#: modules/inventory/inventory/ajaxViewPart.php:600
-#: modules/inventory/inventory/i18n_labels.php:98
-msgid "Manufacturer"
-msgstr "Produsent"
-
 #: modules/inventory/inventory/ajaxViewPart.php:601
 msgid "Serial Number"
 msgstr "Serienummer"
-
-#: modules/inventory/inventory/ajaxViewPart.php:602
-#: modules/inventory/inventory/i18n_labels.php:79
-msgid "Frequency"
-msgstr "Frekvens"
-
-#: modules/inventory/inventory/ajaxViewPart.php:603
-#: modules/inventory/inventory/i18n_labels.php:156
-msgid "Type"
-msgstr "Type"
 
 #: modules/inventory/inventory/ajaxViewPart.php:605
 msgid "Bandwidth"
@@ -908,11 +1404,6 @@ msgstr "Writer"
 #: modules/inventory/inventory/ajaxViewPart.php:608
 msgid "Comment"
 msgstr "Kommentar"
-
-#: modules/inventory/inventory/ajaxViewPart.php:610
-#: modules/inventory/inventory/i18n_labels.php:159
-msgid "User"
-msgstr "Bruker"
 
 #: modules/inventory/inventory/ajaxViewPart.php:611
 msgid "Category"
@@ -950,11 +1441,6 @@ msgstr "Windows Nøkkel"
 msgid "Domain"
 msgstr "Domene"
 
-#: modules/inventory/inventory/ajaxViewPart.php:620
-#: modules/inventory/inventory/i18n_labels.php:147
-msgid "State"
-msgstr "Tilstand"
-
 #: modules/inventory/inventory/ajaxViewPart.php:621
 msgid "Unknown"
 msgstr "Ukjent"
@@ -971,427 +1457,53 @@ msgstr "Aktivert"
 msgid "Up-to-date"
 msgstr "Oppdatert"
 
-#: modules/inventory/inventory/i18n_labels.php:26
-msgid "Application"
-msgstr "Applikasjon"
-
-#: modules/inventory/inventory/i18n_labels.php:27
-msgid "Availability"
-msgstr "Tilgjengelighet"
-
-#: modules/inventory/inventory/i18n_labels.php:29
-msgid "Bios Vendor"
-msgstr "Bios Leverandør"
-
-#: modules/inventory/inventory/i18n_labels.php:30
-msgid "Bios Version"
-msgstr "Bios Versjon"
-
-#: modules/inventory/inventory/i18n_labels.php:31
-msgid "Build"
-msgstr "Bygg"
-
-#: modules/inventory/inventory/i18n_labels.php:32
-msgid "Bus"
-msgstr "Buss"
-
-#: modules/inventory/inventory/i18n_labels.php:33
-msgid "Buy Date"
-msgstr "Kjøpsdato"
-
-#: modules/inventory/inventory/i18n_labels.php:34
-msgid "Buy Value"
-msgstr "Kjøpsverdi"
-
-#: modules/inventory/inventory/i18n_labels.php:35
-msgid "Capacity"
-msgstr "Kapasitet"
-
-#: modules/inventory/inventory/i18n_labels.php:36
-msgid "Caption"
-msgstr "Bildetekst"
-
-#: modules/inventory/inventory/i18n_labels.php:37
-msgid "Card Type"
-msgstr "Korttype"
-
-#: modules/inventory/inventory/i18n_labels.php:38
-msgid "Chassis"
-msgstr "Chassis"
-
-#: modules/inventory/inventory/i18n_labels.php:39
-msgid "Chip Serial"
-msgstr "Chip Serienummer"
-
-#: modules/inventory/inventory/i18n_labels.php:40
-msgid "Chip Vendor"
-msgstr "Chip Leverandør"
-
-#: modules/inventory/inventory/i18n_labels.php:41
-msgid "Chipset"
-msgstr "Chipset"
-
-#: modules/inventory/inventory/i18n_labels.php:42
-msgid "Chipset Type"
-msgstr "Chipset Type"
-
-#: modules/inventory/inventory/i18n_labels.php:43
-msgid "Class"
-msgstr "Klasse"
-
-#: modules/inventory/inventory/i18n_labels.php:44
-msgid "Comments"
-msgstr "Kommentarer"
-
-#: modules/inventory/inventory/i18n_labels.php:45
-msgid "Company"
-msgstr "Bedrift"
-
-#: modules/inventory/inventory/i18n_labels.php:46
-msgid "Connector"
-msgstr "Konnektor"
-
-#: modules/inventory/inventory/i18n_labels.php:48
-msgid "Cpu Num"
-msgstr "Cpu Num"
-
-#: modules/inventory/inventory/i18n_labels.php:49
-msgid "Cpu Vendor"
-msgstr "Cpu Leverandør"
-
-#: modules/inventory/inventory/i18n_labels.php:50
-msgid "Custom Field"
-msgstr "Egendefinert felt"
-
-#: modules/inventory/inventory/i18n_labels.php:51
-msgid "Cyl"
-msgstr "Sylinder"
-
-#: modules/inventory/inventory/i18n_labels.php:52
-msgid "DNS"
-msgstr "DNS"
-
-#: modules/inventory/inventory/i18n_labels.php:54
-msgid "Date Last Switch On"
-msgstr "Dato sist slått på"
-
-#: modules/inventory/inventory/i18n_labels.php:57
-msgid "Default Gateway"
-msgstr "Standard Gateway"
-
-#: modules/inventory/inventory/i18n_labels.php:58
-msgid "Delivery Date"
-msgstr "Leveransdato"
-
-#: modules/inventory/inventory/i18n_labels.php:59
-msgid "Department"
-msgstr "Avdeling"
-
-#: modules/inventory/inventory/i18n_labels.php:62
-msgid "Disk"
-msgstr "Disk"
-
-#: modules/inventory/inventory/i18n_labels.php:63
-msgid "Disk Size"
-msgstr "Diskstørrelse"
-
-#: modules/inventory/inventory/i18n_labels.php:65
-msgid "Drive Letter"
-msgstr "Diskbokstav"
-
-#: modules/inventory/inventory/i18n_labels.php:66
-msgid "Drive Type"
-msgstr "Disktype"
-
-#: modules/inventory/inventory/i18n_labels.php:67
-msgid "Driver"
-msgstr "Driver"
-
-#: modules/inventory/inventory/i18n_labels.php:68
-msgid "Executable Size"
-msgstr "Kjørbar størrelse"
-
-#: modules/inventory/inventory/i18n_labels.php:69
-msgid "Expanded Description"
-msgstr "Ekspandert beskrivelse"
-
-#: modules/inventory/inventory/i18n_labels.php:70
-msgid "Expanded Type"
-msgstr "Ekspandert type"
-
-#: modules/inventory/inventory/i18n_labels.php:71
-msgid "Extended Description"
-msgstr "Utvidet beskrivelse"
-
-#: modules/inventory/inventory/i18n_labels.php:72
-msgid "Field"
-msgstr "Felt"
-
-#: modules/inventory/inventory/i18n_labels.php:73
-msgid "File Count"
-msgstr "Antall filer"
-
-#: modules/inventory/inventory/i18n_labels.php:74
-msgid "File System"
-msgstr "Filsystem"
-
-#: modules/inventory/inventory/i18n_labels.php:75
-msgid "Flag"
-msgstr "Flagg"
-
-#: modules/inventory/inventory/i18n_labels.php:76
-msgid "Form"
-msgstr "Formulær"
-
-#: modules/inventory/inventory/i18n_labels.php:77
-msgid "Free Space"
-msgstr "Ledig plass"
-
-#: modules/inventory/inventory/i18n_labels.php:78
-msgid "Freq"
-msgstr "Frekv"
-
-#: modules/inventory/inventory/i18n_labels.php:80
-msgid "Func"
-msgstr "Funksj"
-
-#: modules/inventory/inventory/i18n_labels.php:83
-msgid "Hardware Version"
-msgstr "Maskinvareversjon"
-
-#: modules/inventory/inventory/i18n_labels.php:84
-msgid "Head"
-msgstr "Hode"
-
-#: modules/inventory/inventory/i18n_labels.php:85
-msgid "High Mem"
-msgstr "High Mem"
-
-#: modules/inventory/inventory/i18n_labels.php:88
-msgid "Ip Address"
-msgstr "Ip Adresse"
-
-#: modules/inventory/inventory/i18n_labels.php:89
-msgid "KEY"
-msgstr "Nøkkel"
-
-#: modules/inventory/inventory/i18n_labels.php:90
-msgid "Length"
-msgstr "Lengde"
-
-#: modules/inventory/inventory/i18n_labels.php:92
-msgid "Low Mem"
-msgstr "Low Mem"
-
-#: modules/inventory/inventory/i18n_labels.php:94
-msgid "MIB"
-msgstr "MIB"
-
-#: modules/inventory/inventory/i18n_labels.php:95
-msgid "Mac Addr"
-msgstr "Mac Adr"
-
-#: modules/inventory/inventory/i18n_labels.php:96
-#: modules/inventory/inventory/csv.php:67
-#: modules/inventory/inventory/csv.php:107
-msgid "Computer"
-msgstr "Datamaskin"
-
-#: modules/inventory/inventory/i18n_labels.php:97
-msgid "Manuf"
-msgstr "Produsent"
-
-#: modules/inventory/inventory/i18n_labels.php:99
-msgid "Media"
-msgstr "Media"
-
-#: modules/inventory/inventory/i18n_labels.php:101
-msgid "Misc Mem"
-msgstr "Øvr Minne"
-
-#: modules/inventory/inventory/i18n_labels.php:102
-msgid "Misc SMB"
-msgstr "Øvr SMB"
-
-#: modules/inventory/inventory/i18n_labels.php:104
-msgid "Modem"
-msgstr "Modem"
-
-#: modules/inventory/inventory/i18n_labels.php:109
-msgid "Num"
-msgstr "Num"
-
-#: modules/inventory/inventory/i18n_labels.php:110
-msgid "Number"
-msgstr "Tall"
-
-#: modules/inventory/inventory/i18n_labels.php:111
-msgid "OS Serial Number"
-msgstr "OS Serienummer"
-
-#: modules/inventory/inventory/i18n_labels.php:112
-msgid "Os Installation Date"
-msgstr "Os InstallasjonsdDato"
-
-#: modules/inventory/inventory/i18n_labels.php:113
-msgid "Os Architecture"
-msgstr "OS arkitektur"
-
-#: modules/inventory/inventory/i18n_labels.php:116
-msgid "Phone"
-msgstr "Telefon"
-
-#: modules/inventory/inventory/i18n_labels.php:117
-msgid "Point Type"
-msgstr "Punkt Type"
-
-#: modules/inventory/inventory/i18n_labels.php:119
-msgid "Port Type"
-msgstr "Port Type"
-
-#: modules/inventory/inventory/i18n_labels.php:121
-msgid "Processor Count"
-msgstr "Antall prosessorer"
-
-#: modules/inventory/inventory/i18n_labels.php:122
-msgid "Processor Frequency"
-msgstr "Prosessorhastighet"
-
-#: modules/inventory/inventory/i18n_labels.php:123
-msgid "Processor Type"
-msgstr "Prosessor Type"
-
-#: modules/inventory/inventory/i18n_labels.php:124
-msgid "Product Name"
-msgstr "Produktnavn"
-
-#: modules/inventory/inventory/i18n_labels.php:125
-msgid "Product Path"
-msgstr "Produktsti"
-
-#: modules/inventory/inventory/i18n_labels.php:126
-msgid "Product Version"
-msgstr "Produkt Versjon"
-
-#: modules/inventory/inventory/i18n_labels.php:127
-msgid "Ram Total"
-msgstr "Ram Total"
-
-#: modules/inventory/inventory/i18n_labels.php:128
-msgid "Registered Company"
-msgstr "Registrert Virksomhet"
-
-#: modules/inventory/inventory/i18n_labels.php:129
-msgid "Registered Name"
-msgstr "Registrert navn"
-
-#: modules/inventory/inventory/i18n_labels.php:130
-msgid "Resolution"
-msgstr "Oppløsning"
-
-#: modules/inventory/inventory/i18n_labels.php:131
-msgid "Sector"
-msgstr "Sektor"
-
-#: modules/inventory/inventory/i18n_labels.php:132
-msgid "Serial"
-msgstr "Serie"
-
-#: modules/inventory/inventory/i18n_labels.php:135
-msgid "Slot Count"
-msgstr "Antall plasser"
-
-#: modules/inventory/inventory/i18n_labels.php:136
-msgid "Smb Manufacturer"
-msgstr "Smb Produsent"
-
-#: modules/inventory/inventory/i18n_labels.php:137
-msgid "Smb Product"
-msgstr "Smb Produkt"
-
-#: modules/inventory/inventory/i18n_labels.php:138
-msgid "Smb Serial"
-msgstr "Smb Serienummer"
-
-#: modules/inventory/inventory/i18n_labels.php:139
-msgid "Smb Type"
-msgstr "Smb Type"
-
-#: modules/inventory/inventory/i18n_labels.php:140
-msgid "Smb Version"
-msgstr "Smb Versjon"
-
-#: modules/inventory/inventory/i18n_labels.php:143
-msgid "Speed"
-msgstr "Hastighet"
-
-#: modules/inventory/inventory/i18n_labels.php:144
-msgid "Stamp"
-msgstr "Stempel"
-
-#: modules/inventory/inventory/i18n_labels.php:145
-msgid "Standard Description"
-msgstr "Standard Beskrivelse"
-
-#: modules/inventory/inventory/i18n_labels.php:146
-msgid "Standard Type"
-msgstr "Standard Type"
-
-#: modules/inventory/inventory/i18n_labels.php:149
-msgid "Subnet Mask"
-msgstr "Subnett Maske"
-
-#: modules/inventory/inventory/i18n_labels.php:150
-msgid "Support End"
-msgstr "Slutt på support"
-
-#: modules/inventory/inventory/i18n_labels.php:151
-msgid "Swap Space"
-msgstr "Vekselminne"
-
-#: modules/inventory/inventory/i18n_labels.php:152
-msgid "System"
-msgstr "System"
-
-#: modules/inventory/inventory/i18n_labels.php:153
-msgid "Time"
-msgstr "Tid"
-
-#: modules/inventory/inventory/i18n_labels.php:154
-msgid "Total Mem"
-msgstr "Totalt minne"
-
-#: modules/inventory/inventory/i18n_labels.php:155
-msgid "Total Space"
-msgstr "Total plass"
-
-#: modules/inventory/inventory/i18n_labels.php:157
-msgid "Type Machine"
-msgstr "Maskintype"
-
-#: modules/inventory/inventory/i18n_labels.php:158
-msgid "Used"
-msgstr "Brukt"
-
-#: modules/inventory/inventory/i18n_labels.php:160
-msgid "VRAM Size"
-msgstr "VRAM størrelse"
-
-#: modules/inventory/inventory/i18n_labels.php:164
-msgid "VolumeName"
-msgstr "Volumnavn"
-
-#: modules/inventory/inventory/i18n_labels.php:165
-msgid "WarrantyEnd"
-msgstr "Slutt på garanti"
-
-#: modules/inventory/inventory/i18n_labels.php:166
-msgid "Workgroup"
-msgstr "Arbeidsgruppe"
-
-#: modules/inventory/inventory/i18n_labels.php:167
-msgid "WorkingDate"
-msgstr "Arbeidsdato"
+#: modules/inventory/inventory/ajaxEntityList.php:56
+msgid "Entity name"
+msgstr "Navn på enhet"
+
+#: modules/inventory/inventory/ajaxEntityList.php:63
+#: modules/inventory/inventory/ajaxEntityList.php:64
+msgid "Edit Entity"
+msgstr "Rediger enhet"
+
+#: modules/inventory/inventory/infos.php:33
+msgid "Additionnal informations"
+msgstr "Ytterligere informasjon"
+
+#: modules/inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr "Første tilsyn"
+
+#: modules/inventory/inventory/addEntity.php:42
+msgid "Add entity"
+msgstr "Legg til enhet"
+
+#: modules/inventory/inventory/addEntity.php:64
+msgid "Parent entity"
+msgstr "Overordnet enhet"
+
+#: modules/inventory/inventory/entityRules.php:35
+msgid "All rules"
+msgstr "Alle regler"
+
+#: modules/inventory/inventory/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "Siste inventeringsdato er yngre enn %s dager på %s"
+
+#: modules/inventory/inventory/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "Siste inventeringsdato er eldre enn %s dager på %s"
+
+#: modules/inventory/inventory/createStaticGroup.php:43
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
+msgstr ""
+"Datamaskinlisten er avkortet ved %ddatamaskiner. Bruk filteret til å finne "
+"spesifikke maskiner."
 
 #: modules/inventory/inventory/inventory_diff.php:48
 msgid "Inventory changes"
@@ -1417,115 +1529,3 @@ msgstr "Enheten har ikke blitt slettet"
 #: modules/inventory/inventory/deleteEntity.php:52
 msgid "Delete entity"
 msgstr "Slett enhet"
-
-#: modules/inventory/inventory/infos.php:33
-msgid "Additionnal informations"
-msgstr "Ytterligere informasjon"
-
-#: modules/inventory/inventory/infos.php:43
-msgid "First apparition"
-msgstr "Første tilsyn"
-
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
-msgstr "Se forskjeller siden forrige inventering"
-
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
-msgstr "Inventeringsdato"
-
-#: modules/inventory/inventory/deleteEntityRule.php:30
-msgid "The entity rule has been deleted successfully."
-msgstr "Enhetsregelen er slettet."
-
-#: modules/inventory/inventory/deleteEntityRule.php:33
-msgid "Delete this rule?"
-msgstr "Slett denne regelen?"
-
-#: modules/inventory/inventory/ajaxEntityList.php:56
-msgid "Entity name"
-msgstr "Navn på enhet"
-
-#: modules/inventory/inventory/ajaxEntityList.php:63
-#: modules/inventory/inventory/ajaxEntityList.php:64
-msgid "Edit Entity"
-msgstr "Rediger enhet"
-
-#: modules/inventory/inventory/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "Siste inventeringsdato er yngre enn %s dager på %s"
-
-#: modules/inventory/inventory/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "Siste inventeringsdato er eldre enn %s dager på %s"
-
-#: modules/inventory/inventory/createStaticGroup.php:43
-#, php-format
-msgid ""
-"Computers list has been truncated at %d computers. Use the filter to find "
-"specific machines."
-msgstr ""
-"Datamaskinlisten er avkortet ved %ddatamaskiner. Bruk filteret til å finne "
-"spesifikke maskiner."
-
-#: modules/inventory/inventory/body.php:40
-msgid "Bios list"
-msgstr "Bios liste"
-
-#: modules/inventory/inventory/body.php:42
-msgid "Hardware and OS information list"
-msgstr "Informasjon om maskinvare og operativsystem"
-
-#: modules/inventory/inventory/body.php:43
-msgid "Software list"
-msgstr "Software liste"
-
-#: modules/inventory/inventory/body.php:44
-msgid "Network card and configuration list"
-msgstr "Nettverkskort og konfigurasjonsliste"
-
-#: modules/inventory/inventory/body.php:45
-msgid "Controller list"
-msgstr "Kontrollerliste"
-
-#: modules/inventory/inventory/body.php:46
-msgid "Registry keys/values list"
-msgstr "Registernøkler/verdiliste"
-
-#: modules/inventory/inventory/body.php:47
-msgid "Drive list"
-msgstr "Diskstasjonsliste"
-
-#: modules/inventory/inventory/body.php:48
-msgid "Input device list"
-msgstr "Liste over inndataenheter"
-
-#: modules/inventory/inventory/body.php:49
-msgid "Memory module list"
-msgstr "Minnemodulliste"
-
-#: modules/inventory/inventory/body.php:50
-msgid "Monitor list"
-msgstr "Skjermliste"
-
-#: modules/inventory/inventory/body.php:51
-msgid "Port list"
-msgstr "Portliste"
-
-#: modules/inventory/inventory/body.php:52
-msgid "Printer list"
-msgstr "Skriverliste"
-
-#: modules/inventory/inventory/body.php:53
-msgid "Sound list"
-msgstr "Lydliste"
-
-#: modules/inventory/inventory/body.php:54
-msgid "Storage medium list"
-msgstr "Liste over lagringsmedia"
-
-#: modules/inventory/inventory/body.php:55
-msgid "Video card list"
-msgstr "Liste over videokort"

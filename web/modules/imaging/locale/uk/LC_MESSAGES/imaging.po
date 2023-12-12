@@ -4,567 +4,22 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2018
+# Yuri Chornoivan <yurchor@ukr.net>, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-14 15:37+0100\n"
+"POT-Creation-Date: 2023-01-24 10:40+0100\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
-"Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-
-#: modules/imaging/infoPackage.inc.php:33
-msgid "Imaging service"
-msgstr "Служба образів"
-
-#: modules/imaging/infoPackage.inc.php:38
-msgid "Imaging"
-msgstr "Образи"
-
-#: modules/imaging/infoPackage.inc.php:43
-msgid "System Image Manager"
-msgstr "Керування образами системи"
-
-#: modules/imaging/infoPackage.inc.php:48
-msgid "Imaging Unattended"
-msgstr "Образи без втручання"
-
-#: modules/imaging/infoPackage.inc.php:51
-msgid "Sysprep List"
-msgstr "Список sysprep"
-
-#: modules/imaging/infoPackage.inc.php:56
-msgid "Imaging sysprepView"
-msgstr "sysprepView образів"
-
-#: modules/imaging/infoPackage.inc.php:86
-#: modules/imaging/infoPackage.inc.php:91
-msgid "Create static group from menu set"
-msgstr "Створити статичну групу з набору меню"
-
-#: modules/imaging/infoPackage.inc.php:96
-msgid "Server status"
-msgstr "Стан сервера"
-
-#: modules/imaging/infoPackage.inc.php:99
-#: modules/imaging/manage/localSidebar.php:31
-msgid "Manage masters"
-msgstr "Керування основними"
-
-#: modules/imaging/infoPackage.inc.php:101
-#: modules/imaging/manage/master_remove.php:89
-msgid "Remove master"
-msgstr "Вилучити основу"
-
-#: modules/imaging/infoPackage.inc.php:104
-#: modules/imaging/manage/master_delete.php:76
-msgid "Delete master"
-msgstr "Вилучити основу"
-
-#: modules/imaging/infoPackage.inc.php:107
-msgid "Edit master"
-msgstr "Редагувати основу"
-
-#: modules/imaging/infoPackage.inc.php:111
-#: modules/imaging/infoPackage.inc.php:114
-msgid "master clone"
-msgstr "клон основи"
-
-#: modules/imaging/infoPackage.inc.php:118
-msgid "Add master"
-msgstr "Додати основу"
-
-#: modules/imaging/infoPackage.inc.php:121
-#: modules/imaging/manage/master_iso.php:44
-msgid "Create iso from master"
-msgstr "Створити ISO з основної системи"
-
-#: modules/imaging/infoPackage.inc.php:125
-#: modules/imaging/manage/localSidebar.php:34
-msgid "Manage boot services"
-msgstr "Керування службами завантаження"
-
-#: modules/imaging/infoPackage.inc.php:127
-msgid "Edit service"
-msgstr "Редагувати службу"
-
-#: modules/imaging/infoPackage.inc.php:130
-#: modules/imaging/infoPackage.inc.php:136
-msgid "Remove service"
-msgstr "Вилучити службу"
-
-#: modules/imaging/infoPackage.inc.php:133
-msgid "Add service"
-msgstr "Додати службу"
-
-#: modules/imaging/infoPackage.inc.php:139
-msgid "Show used services"
-msgstr "Показати використані служби"
-
-#: modules/imaging/infoPackage.inc.php:143
-#: modules/imaging/manage/localSidebar.php:37
-msgid "Default boot menu"
-msgstr "Типове меню завантаження"
-
-#: modules/imaging/infoPackage.inc.php:145
-msgid "Up service"
-msgstr "Службу вище"
-
-#: modules/imaging/infoPackage.inc.php:148
-#: modules/imaging/infoPackage.inc.php:151
-msgid "Down service"
-msgstr "Службу нижче"
-
-#: modules/imaging/infoPackage.inc.php:155
-#: modules/imaging/manage/localSidebar.php:40
-msgid "Post-imaging scripts"
-msgstr "Скрипти після створення образів"
-
-#: modules/imaging/infoPackage.inc.php:157
-#: modules/imaging/infoPackage.inc.php:160
-msgid "Edit post-imaging script"
-msgstr "Редагувати скрипт обробки після створення образу"
-
-#: modules/imaging/infoPackage.inc.php:163
-msgid "Create boot service from postinstall script"
-msgstr "Створити службу завантаження на основі скрипту після встановлення"
-
-#: modules/imaging/infoPackage.inc.php:166
-msgid "Redirect to Boot Services page"
-msgstr "Переспрямування на сторінку служб завантаження"
-
-#: modules/imaging/infoPackage.inc.php:169
-#: modules/imaging/manage/postinstall_delete.php:97
-msgid "Delete post-imaging script"
-msgstr "Вилучити скрипт обробки після створення образу"
-
-#: modules/imaging/infoPackage.inc.php:173
-msgid "Imaging configuration"
-msgstr "Налаштування роботи з образами"
-
-#: modules/imaging/infoPackage.inc.php:175
-msgid "Save an Imaging Server configuration"
-msgstr "Зберегти налаштування сервера образів"
-
-#: modules/imaging/infoPackage.inc.php:179
-msgid "Available Imaging Server"
-msgstr "Доступний сервер образів"
-
-#: modules/imaging/infoPackage.inc.php:182
-msgid "Link an Imaging Server"
-msgstr "Посилання на сервер образів"
-
-#: modules/imaging/infoPackage.inc.php:190
-#: modules/imaging/infoPackage.inc.php:250
-msgid "Computers Profile Creator"
-msgstr "Засіб створення профілів комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:193
-#: modules/imaging/infoPackage.inc.php:207
-#: modules/imaging/infoPackage.inc.php:221
-msgid "Profile creation's tab from dynamic request"
-msgstr "Вкладка створення профілів на основі динамічних запитів"
-
-#: modules/imaging/infoPackage.inc.php:196
-#: modules/imaging/infoPackage.inc.php:210
-#: modules/imaging/infoPackage.inc.php:224
-msgid "Profile creation's tab from machine list"
-msgstr "Вкладка створення профілів на основі списку машин"
-
-#: modules/imaging/infoPackage.inc.php:199
-#: modules/imaging/infoPackage.inc.php:213
-#: modules/imaging/infoPackage.inc.php:227
-msgid "Profile creation's tab from file import"
-msgstr "Вкладка створення профілів на основі імпортування файлів"
-
-#: modules/imaging/infoPackage.inc.php:203
-msgid "Computers Profile Creator Sub Request Editor"
-msgstr "Редактор підзапитів засобу створення профілів комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:217
-msgid "Computers Profile Creator Sub Request Delete"
-msgstr "Вилучення підзапитів засобу створення профілів комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:231
-#: modules/imaging/infoPackage.inc.php:254
-msgid "Computers Profile Editor"
-msgstr "Редактор профілів комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:236
-msgid "Computers Profile Sub Request Editor"
-msgstr "Редактор підзапитів профілів комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:241
-msgid "Computers Profile Sub Request Delete"
-msgstr "Вилучення підзапитів профілів комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:246
-#: modules/imaging/infoPackage.inc.php:259
-msgid "List all profiles of computers"
-msgstr "Показати список усіх профілів комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:265
-msgid "Register a profile in the imaging module"
-msgstr "Зареєструвати профіль у модулі образів"
-
-#: modules/imaging/infoPackage.inc.php:271
-msgid "Imaging on group"
-msgstr "Образи у групі"
-
-#: modules/imaging/infoPackage.inc.php:274
-#: modules/imaging/infoPackage.inc.php:353
-#: modules/imaging/imaging/tabs.php:217 modules/imaging/imaging/tabs.php:289
-msgid "Boot menu"
-msgstr "Меню завантаження"
-
-#: modules/imaging/infoPackage.inc.php:276
-#: modules/imaging/infoPackage.inc.php:355
-#: modules/imaging/imaging/tabs.php:220
-msgid "Images and Masters"
-msgstr "Образи і основні системи"
-
-#: modules/imaging/infoPackage.inc.php:278
-#: modules/imaging/infoPackage.inc.php:357
-#: modules/imaging/imaging/tabs.php:221 modules/imaging/imaging/tabs.php:291
-msgid "Boot services"
-msgstr "Служби завантаження"
-
-#: modules/imaging/infoPackage.inc.php:280
-#: modules/imaging/infoPackage.inc.php:359
-msgid "Imaging Log"
-msgstr "Журнал образів"
-
-#: modules/imaging/infoPackage.inc.php:282
-#: modules/imaging/infoPackage.inc.php:361
-#: modules/imaging/imaging/tabs.php:223 modules/imaging/imaging/tabs.php:293
-msgid "Menu configuration"
-msgstr "Налаштування меню"
-
-#: modules/imaging/infoPackage.inc.php:285
-#: modules/imaging/infoPackage.inc.php:366
-#: modules/imaging/manage/ajaxMasterLevel2.php:53
-#: modules/imaging/imaging/bootmenu_remove.php:156
-#: modules/imaging/imaging/ajaxImages.php:79
-msgid "Remove from boot menu"
-msgstr "Вилучити з меню завантаження"
-
-#: modules/imaging/infoPackage.inc.php:289
-msgid "Display computers group content"
-msgstr "Показати вміст групи комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:293
-msgid "Delete a group of computers"
-msgstr "Вилучити групу комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:297
-msgid "Computers Group Editor"
-msgstr "Редактор груп комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:301
-msgid "Share a group of computers"
-msgstr "Поділитися групою комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:307
-msgid "Secure control on a group of computers"
-msgstr "Керування захистом групи комп'ютерів"
-
-#: modules/imaging/infoPackage.inc.php:311
-msgid "MSC launch tab for a group"
-msgstr "Вкладка запуску MSC для групи"
-
-#: modules/imaging/infoPackage.inc.php:314
-msgid "MSC bundle tab for a group"
-msgstr "Вкладка в'язок MSC для групи"
-
-#: modules/imaging/infoPackage.inc.php:317
-msgid "MSC logs tab for a group"
-msgstr "Вкладка журналів MSC для групи"
-
-#: modules/imaging/infoPackage.inc.php:320
-msgid "MSC history tab for a group"
-msgstr "Вкладка «Журнал MSC» для групи"
-
-#: modules/imaging/infoPackage.inc.php:340
-msgid "Register a computer in the imaging module"
-msgstr "Зареєструвати комп'ютер у модулі образів"
-
-#: modules/imaging/infoPackage.inc.php:345
-msgid "Create a static group containing computers with custom imaging menu"
-msgstr ""
-"Створити статичну групу, що містить комп'ютери з нетиповим меню образів"
-
-#: modules/imaging/infoPackage.inc.php:350
-msgid "Imaging on computer"
-msgstr "Образи на комп'ютері"
-
-#: modules/imaging/infoPackage.inc.php:370
-msgid "Show target that use that image"
-msgstr "Показати ціль, яка використовує цей образ"
-
-#: modules/imaging/infoPackage.inc.php:374
-msgid "Show sync status"
-msgstr "Показати стан синхронізації"
-
-#: modules/imaging/infoPackage.inc.php:416
-msgid "Add a service to a target"
-msgstr "Додати службу до цілі"
-
-#: modules/imaging/infoPackage.inc.php:420
-msgid "Edit parameters of a service on a target"
-msgstr "Редагувати параметри служби на цілі"
-
-#: modules/imaging/infoPackage.inc.php:424
-msgid "Remove a service from a target"
-msgstr "Вилучити службу з цілі"
-
-#: modules/imaging/infoPackage.inc.php:429
-msgid "Add a image to a target"
-msgstr "Додати образ до цілі"
-
-#: modules/imaging/infoPackage.inc.php:433
-msgid "Edit parameters of a image on a target"
-msgstr "Редагувати параметри образу на цілі"
-
-#: modules/imaging/infoPackage.inc.php:437
-#: modules/imaging/imaging/images_delete.php:68
-msgid "Delete image"
-msgstr "Вилучити зображення"
-
-#: modules/imaging/infoPackage.inc.php:441
-msgid "Create iso image"
-msgstr "Створити образ ISO"
-
-#: modules/imaging/infoPackage.inc.php:445
-msgid "init multicast"
-msgstr "ініціалізувати трансляцію"
-
-#: modules/imaging/includes/logs.inc.php:25
-#: modules/imaging/manage/ajaxLogs.php:53
-msgid "Menu"
-msgstr "Меню"
-
-#: modules/imaging/includes/logs.inc.php:26
-#: modules/imaging/manage/ajaxLogs.php:59
-msgid "Inventory"
-msgstr "Облік"
-
-#: modules/imaging/includes/logs.inc.php:27
-#: modules/imaging/manage/ajaxLogs.php:55
-msgid "Backup"
-msgstr "Резервування"
-
-#: modules/imaging/includes/logs.inc.php:28
-#: modules/imaging/manage/ajaxLogs.php:52
-msgid "Boot"
-msgstr "Завантаження"
-
-#: modules/imaging/includes/logs.inc.php:29
-#: modules/imaging/manage/ajaxLogs.php:54
-msgid "Restoration"
-msgstr "Відновлення"
-
-#: modules/imaging/includes/logs.inc.php:30
-#: modules/imaging/manage/ajaxLogs.php:56
-msgid "Post-imaging"
-msgstr "Після створення образу"
-
-#: modules/imaging/includes/logs.inc.php:31
-#: modules/imaging/manage/ajaxLogs.php:57
-msgid "Error"
-msgstr "Помилка"
-
-#: modules/imaging/includes/logs.inc.php:33
-#: modules/imaging/manage/ajaxLogs.php:51
-#: modules/imaging/manage/ajaxLogs.php:67
-msgid "Status unknown"
-msgstr "Невідомий стан"
-
-#: modules/imaging/includes/logs.inc.php:34
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
-#: modules/imaging/manage/ajaxLogs.php:58
-#: modules/imaging/manage/postinstall_delete.php:101
-#: modules/imaging/manage/ajaxMasterLevel2.php:63
-#: modules/imaging/imaging/bootmenu.php:367
-msgid "Delete"
-msgstr "Вилучити"
-
-#: modules/imaging/includes/logs.inc.php:35
-#: modules/imaging/manage/ajaxLogs.php:61
-msgid "Restore in progress"
-msgstr "Виконуємо відновлення"
-
-#: modules/imaging/includes/logs.inc.php:36
-#: modules/imaging/manage/ajaxLogs.php:62
-msgid "Restore done"
-msgstr "Відновлення виконано"
-
-#: modules/imaging/includes/logs.inc.php:37
-#: modules/imaging/manage/ajaxLogs.php:63
-msgid "Restore failed"
-msgstr "Не вдалося виконати відновлення"
-
-#: modules/imaging/includes/logs.inc.php:38
-#: modules/imaging/manage/ajaxLogs.php:64
-msgid "Backup in progress"
-msgstr "Виконуємо резервне копіювання"
-
-#: modules/imaging/includes/logs.inc.php:39
-#: modules/imaging/manage/ajaxLogs.php:65
-msgid "Backup done"
-msgstr "Створено резервну копію"
-
-#: modules/imaging/includes/logs.inc.php:40
-#: modules/imaging/manage/ajaxLogs.php:66
-msgid "Backup failed"
-msgstr "Не вдалося виконати резервне копіювання"
-
-#: modules/imaging/includes/logs.inc.php:45
-msgid "Boot menu shown"
-msgstr "Показано меню завантаження"
-
-#: modules/imaging/includes/logs.inc.php:47
-msgid "Hardware Inventory received"
-msgstr "Отримано облік обладнання"
-
-#: modules/imaging/includes/logs.inc.php:48
-msgid "Hardware Inventory not stored"
-msgstr "Облік обладнання не збережено"
-
-#: modules/imaging/includes/logs.inc.php:49
-msgid "Hardware Inventory not updated"
-msgstr "Облік обладнання не оновлено"
-
-#: modules/imaging/includes/logs.inc.php:50
-msgid "Hardware Inventory updated"
-msgstr "Облік обладнання оновлено"
-
-#: modules/imaging/includes/logs.inc.php:52
-msgid "Identification Request"
-msgstr "Запит щодо ідентифікації"
-
-#: modules/imaging/includes/logs.inc.php:53
-msgid "Identification Success"
-msgstr "Успішна ідентифікація"
-
-#: modules/imaging/includes/logs.inc.php:54
-msgid "Identification Failure"
-msgstr "Помилка ідентифікації"
-
-#: modules/imaging/includes/logs.inc.php:56
-msgid "Image UUID Request"
-msgstr "Запит щодо UUID образу"
-
-#: modules/imaging/includes/logs.inc.php:57
-msgid "Failed to summon an Image UUID"
-msgstr "Не вдалося визначити UUID образу"
-
-#: modules/imaging/includes/logs.inc.php:58
-msgid "Image UUID sent"
-msgstr "Надіслано UUID образу"
-
-#: modules/imaging/includes/logs.inc.php:59
-msgid "Failed to send an Image UUID"
-msgstr "Не вдалося надіслати UUID образу"
-
-#: modules/imaging/includes/logs.inc.php:61
-msgid "End of Backup Request"
-msgstr "Запит щодо завершення резервного копіювання"
-
-#: modules/imaging/includes/logs.inc.php:62
-msgid "End of Backup Failure"
-msgstr "Не вдалося завершити резервне копіювання"
-
-#: modules/imaging/includes/logs.inc.php:63
-msgid "End of Backup Success"
-msgstr "Резервне копіювання успішно завершено"
-
-#: modules/imaging/includes/logs.inc.php:65
-msgid "Preselected Menu Entry Change Request"
-msgstr "Запит щодо зміни попередньо позначеного пункту меню"
-
-#: modules/imaging/includes/logs.inc.php:66
-msgid "Preselected Menu Entry Change Success"
-msgstr "Попередньо позначений пункт меню успішно змінено"
-
-#: modules/imaging/includes/logs.inc.php:67
-msgid "Preselected Menu Entry Change Failure"
-msgstr "Не вдалося змінити попередньо позначений пункт меню"
-
-#: modules/imaging/includes/logs.inc.php:69
-msgid "Booted"
-msgstr "Завантажено"
-
-#: modules/imaging/includes/logs.inc.php:70
-msgid "Chosen Menu Entry"
-msgstr "Вибраний пункт меню"
-
-#: modules/imaging/includes/logs.inc.php:71
-msgid "Restoration Started"
-msgstr "Розпочато відновлення"
-
-#: modules/imaging/includes/logs.inc.php:72
-msgid "Restoration Finished"
-msgstr "Відновлення завершено"
-
-#: modules/imaging/includes/logs.inc.php:73
-msgid "Backup Started"
-msgstr "Розпочато резервне копіювання"
-
-#: modules/imaging/includes/logs.inc.php:74
-msgid "Backup Finished"
-msgstr "Резервне копіювання завершено"
-
-#: modules/imaging/includes/logs.inc.php:75
-msgid "Postinstall Started"
-msgstr "Розпочато процедуру після встановлення"
-
-#: modules/imaging/includes/logs.inc.php:76
-msgid "Postinstall Finished"
-msgstr "Процедуру після встановлення завершено"
-
-#: modules/imaging/includes/logs.inc.php:77
-msgid "Critical error"
-msgstr "Критична помилка"
-
-#: modules/imaging/includes/logs.inc.php:79
-msgid "Hostname Request"
-msgstr "Запит щодо назви вузла"
-
-#: modules/imaging/includes/logs.inc.php:80
-msgid "Failed to obtain a Hostname"
-msgstr "Не вдалося отримати назву вузла"
-
-#: modules/imaging/includes/logs.inc.php:81
-msgid "Hostname sent"
-msgstr "Надіслано назву вузла"
-
-#: modules/imaging/includes/logs.inc.php:82
-msgid "Failed to send a Hostname"
-msgstr "Не вдалося надіслати назву вузла"
-
-#: modules/imaging/includes/logs.inc.php:84
-msgid "Computer UUID Request"
-msgstr "Запит щодо UUID комп'ютера"
-
-#: modules/imaging/includes/logs.inc.php:85
-msgid "Failed to obtain a Computer UUID"
-msgstr "Не вдалося отримати UUID комп'ютера"
-
-#: modules/imaging/includes/logs.inc.php:86
-msgid "Computer UUID Sent"
-msgstr "Надіслано UUID комп'ютера"
-
-#: modules/imaging/includes/logs.inc.php:87
-msgid "Failed to send a Computer UUID"
-msgstr "Не вдалося надіслати UUID комп'ютера"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:49
 msgid "File"
@@ -1474,6 +929,130 @@ msgstr ""
 "Active Directory контролера домену у домені, до якого буде долучено "
 "комп'ютер."
 
+#: modules/imaging/includes/xmlrpc.inc.php:249
+#, php-format
+msgid "Boot menu generation For machine %s"
+msgstr "Створення меню завантаження для машини %s"
+
+#: modules/imaging/includes/xmlrpc.inc.php:272
+#, php-format
+msgid "Boot menu generation For Imaging Group %s"
+msgstr "Створення меню завантаження для групи образів %s"
+
+#: modules/imaging/includes/xmlrpc.inc.php:293
+#, php-format
+msgid "Boot menu generation Success for Package Server on location %s"
+msgstr ""
+"Успішно створено меню завантаження для сервера пакунків з розташуванням %s"
+
+#: modules/imaging/includes/xmlrpc.inc.php:306
+#: modules/imaging/includes/xmlrpc.inc.php:320
+#, php-format
+msgid "Boot menu generation failed for package server on location %s [%s]"
+msgstr ""
+"Не вдалося створити меню завантаження для сервера пакунків з розташуванням "
+"%s [%s]"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:37
+#: modules/imaging/includes/ajaxcommon.inc.php:57
+#: modules/imaging/imaging/bootmenu_remove.php:93
+#: modules/imaging/imaging/addimage.php:72 modules/imaging/imaging/tabs.php:92
+#: modules/imaging/imaging/addservice.php:69
+#: modules/imaging/imaging/ajaxImages.php:189
+msgid "root"
+msgstr "корінь"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:84
+#, php-format
+msgid "Imaging server of entity %s"
+msgstr "Сервер образів для запису %s"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:103
+msgid "the entity itself"
+msgstr "сам запис"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:120
+#, php-format
+msgid ""
+"Boot menu generation is still in progress for the following items : %s. "
+"Please wait or reload the page %shere%s."
+msgstr ""
+"Створення меню завантаження не завершено для таких записів: %s. Будь ласка, "
+"зачекайте або перезавантажте сторінку %sтут%s."
+
+#: modules/imaging/includes/ajaxcommon.inc.php:126
+#: modules/imaging/imaging/tabs.php:200
+msgid "The registering in the imaging server has failed."
+msgstr "Не вдалося зареєструватися на сервері образів."
+
+#: modules/imaging/includes/ajaxcommon.inc.php:135
+#, php-format
+msgid ""
+"You have modified the boot menu for the following items : %s. If you are "
+"done please click on \"Generate Menu\" to update the computer boot menu."
+msgstr ""
+"Вами було змінено меню завантаження для таких записів: %s. Якщо внесення "
+"змін завершено, будь ласка, натисніть кнопку «Створити меню», щоб оновити "
+"меню завантаження комп'ютера."
+
+#: modules/imaging/includes/ajaxcommon.inc.php:141
+#: modules/imaging/imaging/header.php:38
+msgid "Generate Menu"
+msgstr "Створити меню"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:146
+#: modules/imaging/imaging/header.php:43
+msgid ""
+"Click on \"Force Generation\" if you want to force the update of the boot "
+"menu"
+msgstr ""
+"Натисніть пункт «Примусове створення», якщо ви хочете примусити систему до "
+"оновлення меню завантаження"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:152
+#: modules/imaging/imaging/header.php:46
+msgid "Force Generation"
+msgstr "Примусове створення"
+
+#: modules/imaging/includes/post_install_script.php:28
+msgid "Not selected"
+msgstr "Не позначено"
+
+#: modules/imaging/includes/post_install_script.php:63
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:89
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:74
+msgid "Name"
+msgstr "Назва"
+
+#: modules/imaging/includes/post_install_script.php:65
+#: modules/imaging/manage/ajaxFormWin10.php:815
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:674
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:677
+#: modules/imaging/manage/ajaxBootmenu.php:99
+#: modules/imaging/manage/master_edit.php:59
+#: modules/imaging/manage/ajaxServiceLevel2.php:93
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
+#: modules/imaging/manage/service_edit.php:61
+#: modules/imaging/manage/ajaxFormWin7.php:726
+#: modules/imaging/manage/sysprepList.php:87
+#: modules/imaging/manage/ajaxMasterLevel2.php:97
+#: modules/imaging/manage/ajaxFormWin8.php:808
+#: modules/imaging/imaging/ajaxServices.php:99
+#: modules/imaging/imaging/images.php:109
+#: modules/imaging/imaging/bootmenu.php:459
+#: modules/imaging/imaging/ajaxImages.php:171
+msgid "Description"
+msgstr "Опис"
+
+#: modules/imaging/includes/post_install_script.php:66
+msgid "Order"
+msgstr "Порядок"
+
+#: modules/imaging/includes/post_install_script.php:88
+msgid "This value is already used."
+msgstr "Цей значення вже використано."
+
 #: modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
 msgstr "Сталася помилка (це типове повідомлення)."
@@ -1559,955 +1138,230 @@ msgstr "<i>не визначено</i>"
 msgid "Backup log messages"
 msgstr "Повідомлення журналу резервного копіювання"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:37
-#: modules/imaging/includes/ajaxcommon.inc.php:57
-#: modules/imaging/imaging/addimage.php:72 modules/imaging/imaging/tabs.php:89
-#: modules/imaging/imaging/bootmenu_remove.php:93
-#: modules/imaging/imaging/addservice.php:69
-#: modules/imaging/imaging/ajaxImages.php:189
-msgid "root"
-msgstr "корінь"
+#: modules/imaging/includes/logs.inc.php:25
+#: modules/imaging/manage/ajaxLogs.php:53
+msgid "Menu"
+msgstr "Меню"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:84
-#, php-format
-msgid "Imaging server of entity %s"
-msgstr "Сервер образів для запису %s"
+#: modules/imaging/includes/logs.inc.php:26
+#: modules/imaging/manage/ajaxLogs.php:59
+msgid "Inventory"
+msgstr "Облік"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:103
-msgid "the entity itself"
-msgstr "сам запис"
+#: modules/imaging/includes/logs.inc.php:27
+#: modules/imaging/manage/ajaxLogs.php:55
+msgid "Backup"
+msgstr "Резервування"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:120
-#, php-format
-msgid ""
-"Boot menu generation is still in progress for the following items : %s. "
-"Please wait or reload the page %shere%s."
-msgstr ""
-"Створення меню завантаження не завершено для таких записів: %s. Будь ласка, "
-"зачекайте або перезавантажте сторінку %sтут%s."
+#: modules/imaging/includes/logs.inc.php:28
+#: modules/imaging/manage/ajaxLogs.php:52
+msgid "Boot"
+msgstr "Завантаження"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:126
-#: modules/imaging/imaging/tabs.php:197
-msgid "The registering in the imaging server has failed."
-msgstr "Не вдалося зареєструватися на сервері образів."
+#: modules/imaging/includes/logs.inc.php:29
+#: modules/imaging/manage/ajaxLogs.php:54
+msgid "Restoration"
+msgstr "Відновлення"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:135
-#, php-format
-msgid ""
-"You have modified the boot menu for the following items : %s. If you are "
-"done please click on \"Generate Menu\" to update the computer boot menu."
-msgstr ""
-"Вами було змінено меню завантаження для таких записів: %s. Якщо внесення "
-"змін завершено, будь ласка, натисніть кнопку «Створити меню», щоб оновити "
-"меню завантаження комп'ютера."
+#: modules/imaging/includes/logs.inc.php:30
+#: modules/imaging/manage/ajaxLogs.php:56
+msgid "Post-imaging"
+msgstr "Після створення образу"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:141
-#: modules/imaging/imaging/header.php:38
-msgid "Generate Menu"
-msgstr "Створити меню"
+#: modules/imaging/includes/logs.inc.php:31
+#: modules/imaging/manage/ajaxLogs.php:57
+msgid "Error"
+msgstr "Помилка"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:146
-#: modules/imaging/imaging/header.php:43
-msgid ""
-"Click on \"Force Generation\" if you want to force the update of the boot "
-"menu"
-msgstr ""
-"Натисніть пункт «Примусове створення», якщо ви хочете примусити систему до "
-"оновлення меню завантаження"
+#: modules/imaging/includes/logs.inc.php:33
+#: modules/imaging/manage/ajaxLogs.php:51
+#: modules/imaging/manage/ajaxLogs.php:67
+msgid "Status unknown"
+msgstr "Невідомий стан"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:152
-#: modules/imaging/imaging/header.php:46
-msgid "Force Generation"
-msgstr "Примусове створення"
+#: modules/imaging/includes/logs.inc.php:34
+#: modules/imaging/manage/postinstall_delete.php:101
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
+#: modules/imaging/manage/ajaxLogs.php:58
+#: modules/imaging/manage/ajaxMasterLevel2.php:63
+#: modules/imaging/imaging/bootmenu.php:367
+msgid "Delete"
+msgstr "Вилучити"
 
-#: modules/imaging/includes/xmlrpc.inc.php:249
-#, php-format
-msgid "Boot menu generation For machine %s"
-msgstr "Створення меню завантаження для машини %s"
+#: modules/imaging/includes/logs.inc.php:35
+#: modules/imaging/manage/ajaxLogs.php:61
+msgid "Restore in progress"
+msgstr "Виконуємо відновлення"
 
-#: modules/imaging/includes/xmlrpc.inc.php:272
-#, php-format
-msgid "Boot menu generation For Imaging Group %s"
-msgstr "Створення меню завантаження для групи образів %s"
+#: modules/imaging/includes/logs.inc.php:36
+#: modules/imaging/manage/ajaxLogs.php:62
+msgid "Restore done"
+msgstr "Відновлення виконано"
 
-#: modules/imaging/includes/xmlrpc.inc.php:293
-#, php-format
-msgid "Boot menu generation Success for Package Server on location %s"
-msgstr ""
-"Успішно створено меню завантаження для сервера пакунків з розташуванням %s"
+#: modules/imaging/includes/logs.inc.php:37
+#: modules/imaging/manage/ajaxLogs.php:63
+msgid "Restore failed"
+msgstr "Не вдалося виконати відновлення"
 
-#: modules/imaging/includes/xmlrpc.inc.php:306
-#: modules/imaging/includes/xmlrpc.inc.php:320
-#, php-format
-msgid "Boot menu generation failed for package server on location %s [%s]"
-msgstr ""
-"Не вдалося створити меню завантаження для сервера пакунків з розташуванням "
-"%s [%s]"
+#: modules/imaging/includes/logs.inc.php:38
+#: modules/imaging/manage/ajaxLogs.php:64
+msgid "Backup in progress"
+msgstr "Виконуємо резервне копіювання"
 
-#: modules/imaging/includes/post_install_script.php:28
-msgid "Not selected"
-msgstr "Не позначено"
+#: modules/imaging/includes/logs.inc.php:39
+#: modules/imaging/manage/ajaxLogs.php:65
+msgid "Backup done"
+msgstr "Створено резервну копію"
 
-#: modules/imaging/includes/post_install_script.php:63
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:89
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:74
-msgid "Name"
-msgstr "Назва"
+#: modules/imaging/includes/logs.inc.php:40
+#: modules/imaging/manage/ajaxLogs.php:66
+msgid "Backup failed"
+msgstr "Не вдалося виконати резервне копіювання"
 
-#: modules/imaging/includes/post_install_script.php:65
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
-#: modules/imaging/manage/ajaxFormWin10.php:815
-#: modules/imaging/manage/ajaxFormWin8.php:808
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:674
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
-#: modules/imaging/manage/ajaxBootmenu.php:99
-#: modules/imaging/manage/sysprepList.php:87
-#: modules/imaging/manage/ajaxFormWin7.php:726
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:677
-#: modules/imaging/manage/service_edit.php:61
-#: modules/imaging/manage/ajaxServiceLevel2.php:93
-#: modules/imaging/manage/master_edit.php:59
-#: modules/imaging/manage/ajaxMasterLevel2.php:97
-#: modules/imaging/imaging/bootmenu.php:459
-#: modules/imaging/imaging/ajaxServices.php:99
-#: modules/imaging/imaging/images.php:109
-#: modules/imaging/imaging/ajaxImages.php:171
-msgid "Description"
-msgstr "Опис"
+#: modules/imaging/includes/logs.inc.php:45
+msgid "Boot menu shown"
+msgstr "Показано меню завантаження"
 
-#: modules/imaging/includes/post_install_script.php:66
-msgid "Order"
-msgstr "Порядок"
+#: modules/imaging/includes/logs.inc.php:47
+msgid "Hardware Inventory received"
+msgstr "Отримано облік обладнання"
 
-#: modules/imaging/includes/post_install_script.php:88
-msgid "This value is already used."
-msgstr "Цей значення вже використано."
+#: modules/imaging/includes/logs.inc.php:48
+msgid "Hardware Inventory not stored"
+msgstr "Облік обладнання не збережено"
+
+#: modules/imaging/includes/logs.inc.php:49
+msgid "Hardware Inventory not updated"
+msgstr "Облік обладнання не оновлено"
+
+#: modules/imaging/includes/logs.inc.php:50
+msgid "Hardware Inventory updated"
+msgstr "Облік обладнання оновлено"
+
+#: modules/imaging/includes/logs.inc.php:52
+msgid "Identification Request"
+msgstr "Запит щодо ідентифікації"
+
+#: modules/imaging/includes/logs.inc.php:53
+msgid "Identification Success"
+msgstr "Успішна ідентифікація"
+
+#: modules/imaging/includes/logs.inc.php:54
+msgid "Identification Failure"
+msgstr "Помилка ідентифікації"
+
+#: modules/imaging/includes/logs.inc.php:56
+msgid "Image UUID Request"
+msgstr "Запит щодо UUID образу"
+
+#: modules/imaging/includes/logs.inc.php:57
+msgid "Failed to summon an Image UUID"
+msgstr "Не вдалося визначити UUID образу"
+
+#: modules/imaging/includes/logs.inc.php:58
+msgid "Image UUID sent"
+msgstr "Надіслано UUID образу"
+
+#: modules/imaging/includes/logs.inc.php:59
+msgid "Failed to send an Image UUID"
+msgstr "Не вдалося надіслати UUID образу"
+
+#: modules/imaging/includes/logs.inc.php:61
+msgid "End of Backup Request"
+msgstr "Запит щодо завершення резервного копіювання"
+
+#: modules/imaging/includes/logs.inc.php:62
+msgid "End of Backup Failure"
+msgstr "Не вдалося завершити резервне копіювання"
+
+#: modules/imaging/includes/logs.inc.php:63
+msgid "End of Backup Success"
+msgstr "Резервне копіювання успішно завершено"
+
+#: modules/imaging/includes/logs.inc.php:65
+msgid "Preselected Menu Entry Change Request"
+msgstr "Запит щодо зміни попередньо позначеного пункту меню"
+
+#: modules/imaging/includes/logs.inc.php:66
+msgid "Preselected Menu Entry Change Success"
+msgstr "Попередньо позначений пункт меню успішно змінено"
+
+#: modules/imaging/includes/logs.inc.php:67
+msgid "Preselected Menu Entry Change Failure"
+msgstr "Не вдалося змінити попередньо позначений пункт меню"
+
+#: modules/imaging/includes/logs.inc.php:69
+msgid "Booted"
+msgstr "Завантажено"
+
+#: modules/imaging/includes/logs.inc.php:70
+msgid "Chosen Menu Entry"
+msgstr "Вибраний пункт меню"
+
+#: modules/imaging/includes/logs.inc.php:71
+msgid "Restoration Started"
+msgstr "Розпочато відновлення"
+
+#: modules/imaging/includes/logs.inc.php:72
+msgid "Restoration Finished"
+msgstr "Відновлення завершено"
+
+#: modules/imaging/includes/logs.inc.php:73
+msgid "Backup Started"
+msgstr "Розпочато резервне копіювання"
+
+#: modules/imaging/includes/logs.inc.php:74
+msgid "Backup Finished"
+msgstr "Резервне копіювання завершено"
+
+#: modules/imaging/includes/logs.inc.php:75
+msgid "Postinstall Started"
+msgstr "Розпочато процедуру після встановлення"
+
+#: modules/imaging/includes/logs.inc.php:76
+msgid "Postinstall Finished"
+msgstr "Процедуру після встановлення завершено"
+
+#: modules/imaging/includes/logs.inc.php:77
+msgid "Critical error"
+msgstr "Критична помилка"
+
+#: modules/imaging/includes/logs.inc.php:79
+msgid "Hostname Request"
+msgstr "Запит щодо назви вузла"
+
+#: modules/imaging/includes/logs.inc.php:80
+msgid "Failed to obtain a Hostname"
+msgstr "Не вдалося отримати назву вузла"
+
+#: modules/imaging/includes/logs.inc.php:81
+msgid "Hostname sent"
+msgstr "Надіслано назву вузла"
+
+#: modules/imaging/includes/logs.inc.php:82
+msgid "Failed to send a Hostname"
+msgstr "Не вдалося надіслати назву вузла"
+
+#: modules/imaging/includes/logs.inc.php:84
+msgid "Computer UUID Request"
+msgstr "Запит щодо UUID комп'ютера"
+
+#: modules/imaging/includes/logs.inc.php:85
+msgid "Failed to obtain a Computer UUID"
+msgstr "Не вдалося отримати UUID комп'ютера"
+
+#: modules/imaging/includes/logs.inc.php:86
+msgid "Computer UUID Sent"
+msgstr "Надіслано UUID комп'ютера"
+
+#: modules/imaging/includes/logs.inc.php:87
+msgid "Failed to send a Computer UUID"
+msgstr "Не вдалося надіслати UUID комп'ютера"
 
 #: modules/imaging/includes/ajaxcommon_bottom.inc.php:24
 #, php-format
 msgid "Available imaging servers for entity %s"
 msgstr "Доступні сервери образів для запису %s"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:51
-msgid "Create Boot Service"
-msgstr "Створити службу завантаження"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:52
-msgid "Edit script"
-msgstr "Змінити скрипт"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:54
-msgid "Boot Service already created"
-msgstr "Службу завантаження вже створено"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:95
-msgid "Duplicate"
-msgstr "Здублювати"
-
-#: modules/imaging/manage/postinstall_redirect_to_boot_service.php:38
-#, php-format
-msgid "<b>%s</b> was already added to Boot Services"
-msgstr "<b>%s</b> вже додано до служб завантаження"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:38
-msgid "Boot service successfully created"
-msgstr "Службу завантаження успішно створено"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:39
-msgid "Notify Success : Boot service successfully created"
-msgstr "Сповіщення щодо успіху: службу завантаження успішно створено"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:55
-msgid "Error while creating Boot Service"
-msgstr "Помилка під час створення служби завантаження"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:56
-msgid "Notify Error : Error while creating Boot Service"
-msgstr ""
-"Сповіщення щодо помилки: помилка під час створення служби завантаження"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:77
-#, php-format
-msgid "Add <b>%s</b> to available Boot Services ?"
-msgstr "Додати <b>%s</b> до доступних служб завантаження?"
-
-#: modules/imaging/manage/ajaxFormWin10.php:448
-#: modules/imaging/manage/ajaxFormWin8.php:422
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:307
-#: modules/imaging/manage/ajaxFormWin7.php:347
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:291
-msgid "Installation Notes"
-msgstr "Нотатки щодо встановлення"
-
-#: modules/imaging/manage/ajaxFormWin10.php:454
-#: modules/imaging/manage/ajaxFormWin8.php:428
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:313
-#: modules/imaging/manage/master_iso.php:90
-#: modules/imaging/manage/ajaxFormWin7.php:353
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:297
-#: modules/imaging/imaging/images_iso.php:93
-msgid "Title"
-msgstr "Заголовок"
-
-#: modules/imaging/manage/ajaxFormWin10.php:458
-#: modules/imaging/manage/ajaxFormWin8.php:432
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:317
-#: modules/imaging/manage/ajaxFormWin7.php:357
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:301
-msgid "Enter your comments here..."
-msgstr "Тут ви можете ввести свої коментарі…"
-
-#: modules/imaging/manage/ajaxFormWin10.php:467
-#: modules/imaging/manage/ajaxFormWin8.php:441
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:326
-#: modules/imaging/manage/ajaxFormWin7.php:365
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:310
-msgid "Os Settings"
-msgstr "Параметри ОС"
-
-#: modules/imaging/manage/ajaxFormWin10.php:498
-#: modules/imaging/manage/ajaxFormWin8.php:472
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:357
-#: modules/imaging/manage/ajaxFormWin7.php:396
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:341
-msgid "Product Key"
-msgstr "Ключ продукту"
-
-#: modules/imaging/manage/ajaxFormWin10.php:503
-#: modules/imaging/manage/ajaxFormWin8.php:477
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:362
-#: modules/imaging/manage/ajaxFormWin7.php:401
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:346
-msgid "Organization Name"
-msgstr "Назва організації"
-
-#: modules/imaging/manage/ajaxFormWin10.php:511
-#: modules/imaging/manage/ajaxFormWin8.php:485
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:370
-#: modules/imaging/manage/ajaxFormWin7.php:409
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:354
-msgid "Accept EULA"
-msgstr "Погодитися з EULA"
-
-#: modules/imaging/manage/ajaxFormWin10.php:519
-#: modules/imaging/manage/ajaxFormWin8.php:493
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:378
-#: modules/imaging/manage/ajaxFormWin7.php:417
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:362
-msgid "Skip automatic activation"
-msgstr "Пропустити автоматичну активацію"
-
-#: modules/imaging/manage/ajaxFormWin10.php:527
-#: modules/imaging/manage/ajaxFormWin8.php:501
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:386
-#: modules/imaging/manage/ajaxFormWin7.php:425
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:370
-msgid "Skip License Rearm"
-msgstr "Пропустити ліцензування"
-
-#: modules/imaging/manage/ajaxFormWin10.php:536
-#: modules/imaging/manage/ajaxFormWin8.php:510
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:395
-#: modules/imaging/manage/ajaxFormWin7.php:434
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:379
-msgid "Setup Language"
-msgstr "Налаштувати мову"
-
-#: modules/imaging/manage/ajaxFormWin10.php:541
-#: modules/imaging/manage/ajaxFormWin8.php:515
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:400
-#: modules/imaging/manage/ajaxFormWin7.php:439
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:384
-msgid "Computer Name"
-msgstr "Назва комп'ютера"
-
-#: modules/imaging/manage/ajaxFormWin10.php:549
-#: modules/imaging/manage/ajaxFormWin8.php:531
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:408
-#: modules/imaging/manage/ajaxFormWin7.php:455
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:400
-msgid "Keyboard or input method"
-msgstr "Клавіатура або метод введення"
-
-#: modules/imaging/manage/ajaxFormWin10.php:557
-#: modules/imaging/manage/ajaxFormWin8.php:539
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:416
-#: modules/imaging/manage/ajaxFormWin7.php:463
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:408
-msgid "Currency and Date format"
-msgstr "Валюта і формат дати"
-
-#: modules/imaging/manage/ajaxFormWin10.php:565
-#: modules/imaging/manage/ajaxFormWin8.php:547
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:424
-#: modules/imaging/manage/ajaxFormWin7.php:471
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:416
-msgid "Time Zone"
-msgstr "Часовий пояс"
-
-#: modules/imaging/manage/ajaxFormWin10.php:573
-#: modules/imaging/manage/ajaxFormWin8.php:555
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:432
-#: modules/imaging/manage/ajaxFormWin7.php:479
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:424
-msgid "UI Language"
-msgstr "Мова інтерфейсу"
-
-#: modules/imaging/manage/ajaxFormWin10.php:584
-#: modules/imaging/manage/ajaxFormWin8.php:566
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:443
-#: modules/imaging/manage/ajaxFormWin7.php:490
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:435
-msgid "Partition Settings"
-msgstr "Параметри поділу на розділи"
-
-#: modules/imaging/manage/ajaxFormWin10.php:593
-#: modules/imaging/manage/ajaxFormWin8.php:575
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:452
-#: modules/imaging/manage/ajaxFormWin7.php:499
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:444
-msgid "Wipe Disk"
-msgstr "Витерти диск"
-
-#: modules/imaging/manage/ajaxFormWin10.php:601
-#: modules/imaging/manage/ajaxFormWin8.php:583
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:460
-#: modules/imaging/manage/ajaxFormWin7.php:507
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:452
-msgid "Install to disk"
-msgstr "Встановити на диск"
-
-#: modules/imaging/manage/ajaxFormWin10.php:609
-#: modules/imaging/manage/ajaxFormWin8.php:591
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:468
-#: modules/imaging/manage/ajaxFormWin7.php:515
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:460
-msgid "Partition Order"
-msgstr "Порядок розділів"
-
-#: modules/imaging/manage/ajaxFormWin10.php:617
-#: modules/imaging/manage/ajaxFormWin8.php:599
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:476
-#: modules/imaging/manage/ajaxFormWin7.php:523
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:468
-msgid "Extend OS Partition"
-msgstr "Розширити розділ ОС"
-
-#: modules/imaging/manage/ajaxFormWin10.php:625
-#: modules/imaging/manage/ajaxFormWin8.php:607
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:484
-#: modules/imaging/manage/ajaxFormWin7.php:531
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:476
-msgid "Main Partition Format"
-msgstr "Формат основного розділу"
-
-#: modules/imaging/manage/ajaxFormWin10.php:638
-#: modules/imaging/manage/ajaxFormWin8.php:620
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:497
-#: modules/imaging/manage/ajaxFormWin7.php:544
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:489
-msgid "Main Partition Letter"
-msgstr "Літера основного розділу"
-
-#: modules/imaging/manage/ajaxFormWin10.php:649
-#: modules/imaging/manage/ajaxFormWin8.php:631
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:508
-#: modules/imaging/manage/ajaxFormWin7.php:555
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:500
-msgid "Security Settings"
-msgstr "Параметри безпеки"
-
-#: modules/imaging/manage/ajaxFormWin10.php:658
-#: modules/imaging/manage/ajaxFormWin8.php:640
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:517
-#: modules/imaging/manage/ajaxFormWin7.php:564
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:509
-msgid "Protect Your Computer"
-msgstr "Захист вашого комп'ютера"
-
-#: modules/imaging/manage/ajaxFormWin10.php:674
-#: modules/imaging/manage/ajaxFormWin8.php:656
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:533
-#: modules/imaging/manage/ajaxFormWin7.php:580
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:525
-msgid "Network Location"
-msgstr "Розташування у мережі"
-
-#: modules/imaging/manage/ajaxFormWin10.php:682
-#: modules/imaging/manage/ajaxFormWin8.php:664
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:541
-#: modules/imaging/manage/ajaxFormWin7.php:588
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:533
-msgid "Hide EULA page"
-msgstr "Приховати сторінку EULA"
-
-#: modules/imaging/manage/ajaxFormWin10.php:690
-#: modules/imaging/manage/ajaxFormWin8.php:672
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:549
-#: modules/imaging/manage/ajaxFormWin7.php:596
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:541
-msgid "Enable Firewall"
-msgstr "Увімкнути брандмауер"
-
-#: modules/imaging/manage/ajaxFormWin10.php:698
-#: modules/imaging/manage/ajaxFormWin8.php:680
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:557
-#: modules/imaging/manage/ajaxFormWin7.php:604
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:549
-msgid "Disable auto daylight timeset"
-msgstr "Вимкнути автоматичне встановлення літнього часу"
-
-#: modules/imaging/manage/ajaxFormWin10.php:706
-#: modules/imaging/manage/ajaxFormWin8.php:688
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:565
-#: modules/imaging/manage/ajaxFormWin7.php:612
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:557
-msgid "Hide wireless setup in OOBE"
-msgstr "Приховати налаштування бездротової мережі у OOBE"
-
-#: modules/imaging/manage/ajaxFormWin10.php:711
-#: modules/imaging/manage/ajaxFormWin8.php:693
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
-#: modules/imaging/manage/ajaxFormWin7.php:617
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
-msgid "Category View"
-msgstr "Перегляд категорій"
-
-#: modules/imaging/manage/ajaxFormWin10.php:711
-#: modules/imaging/manage/ajaxFormWin8.php:693
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
-#: modules/imaging/manage/ajaxFormWin7.php:617
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
-msgid "Classic View"
-msgstr "Класичний перегляд"
-
-#: modules/imaging/manage/ajaxFormWin10.php:714
-#: modules/imaging/manage/ajaxFormWin8.php:696
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:573
-#: modules/imaging/manage/ajaxFormWin7.php:620
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:565
-msgid "Control Panel View"
-msgstr "Перегляд панелі керування"
-
-#: modules/imaging/manage/ajaxFormWin10.php:719
-#: modules/imaging/manage/ajaxFormWin8.php:701
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
-#: modules/imaging/manage/ajaxFormWin7.php:625
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
-msgid "Large"
-msgstr "Великий"
-
-#: modules/imaging/manage/ajaxFormWin10.php:719
-#: modules/imaging/manage/ajaxFormWin8.php:701
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
-#: modules/imaging/manage/ajaxFormWin7.php:625
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
-msgid "Small"
-msgstr "Малий"
-
-#: modules/imaging/manage/ajaxFormWin10.php:722
-#: modules/imaging/manage/ajaxFormWin8.php:704
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:581
-#: modules/imaging/manage/ajaxFormWin7.php:628
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:573
-msgid "Control Panel Icon Size"
-msgstr "Розмір піктограм панелі керування"
-
-#: modules/imaging/manage/ajaxFormWin10.php:732
-#: modules/imaging/manage/ajaxFormWin8.php:715
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:591
-#: modules/imaging/manage/ajaxFormWin7.php:639
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:584
-msgid "Domain Settings"
-msgstr "Параметри домену"
-
-#: modules/imaging/manage/ajaxFormWin10.php:736
-#: modules/imaging/manage/ajaxFormWin8.php:719
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:595
-#: modules/imaging/manage/ajaxFormWin7.php:643
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:588
-msgid "Domain"
-msgstr "Домен"
-
-#: modules/imaging/manage/ajaxFormWin10.php:740
-#: modules/imaging/manage/ajaxFormWin8.php:724
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:599
-#: modules/imaging/manage/ajaxFormWin7.php:648
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:593
-msgid "Domain User"
-msgstr "Користувач домену"
-
-#: modules/imaging/manage/ajaxFormWin10.php:744
-#: modules/imaging/manage/ajaxFormWin8.php:729
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:603
-#: modules/imaging/manage/ajaxFormWin7.php:653
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:598
-msgid "Domain Password"
-msgstr "Пароль домену"
-
-#: modules/imaging/manage/ajaxFormWin10.php:748
-#: modules/imaging/manage/ajaxFormWin8.php:734
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:607
-#: modules/imaging/manage/ajaxFormWin7.php:658
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:603
-msgid "Join Domain"
-msgstr "Долучитися до домену"
-
-#: modules/imaging/manage/ajaxFormWin10.php:752
-#: modules/imaging/manage/ajaxFormWin8.php:739
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:611
-#: modules/imaging/manage/ajaxFormWin7.php:663
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:608
-msgid "MachineObjectOU"
-msgstr "MachineObjectOU"
-
-#: modules/imaging/manage/ajaxFormWin10.php:763
-#: modules/imaging/manage/ajaxFormWin8.php:750
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:622
-#: modules/imaging/manage/ajaxFormWin7.php:674
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:619
-msgid "Administrator Account"
-msgstr "Обліковий запис адміністратора"
-
-#: modules/imaging/manage/ajaxFormWin10.php:768
-#: modules/imaging/manage/ajaxFormWin8.php:755
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:627
-#: modules/imaging/manage/ajaxFormWin7.php:679
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:624
-msgid "Password"
-msgstr "Пароль"
-
-#: modules/imaging/manage/ajaxFormWin10.php:780
-#: modules/imaging/manage/ajaxFormWin8.php:767
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:639
-#: modules/imaging/manage/ajaxFormWin7.php:691
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:636
-msgid "User Account"
-msgstr "Обліковий запис"
-
-#: modules/imaging/manage/ajaxFormWin10.php:789
-#: modules/imaging/manage/ajaxFormWin8.php:776
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:648
-#: modules/imaging/manage/ajaxFormWin7.php:700
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:645
-msgid "Customer Experience Improvement Program (CEIP)"
-msgstr "Програма поліпшення за враженнями споживачів (CEIP)"
-
-#: modules/imaging/manage/ajaxFormWin10.php:797
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:656
-#: modules/imaging/manage/ajaxFormWin7.php:708
-msgid "Copy Profile"
-msgstr "Копіювати профіль"
-
-#: modules/imaging/manage/ajaxFormWin10.php:802
-#: modules/imaging/manage/ajaxFormWin8.php:795
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:661
-#: modules/imaging/manage/ajaxFormWin7.php:713
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:664
-msgid "User Name"
-msgstr "Ім'я користувача"
-
-#: modules/imaging/manage/ajaxFormWin10.php:810
-#: modules/imaging/manage/ajaxFormWin8.php:803
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:669
-#: modules/imaging/manage/ajaxFormWin7.php:721
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:672
-msgid "Group"
-msgstr "Група"
-
-#: modules/imaging/manage/ajaxFormWin10.php:820
-#: modules/imaging/manage/ajaxFormWin8.php:813
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:679
-#: modules/imaging/manage/ajaxFormWin7.php:731
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:682
-msgid "Password: (Optional)"
-msgstr "Пароль: (необов'язковий)"
-
-#: modules/imaging/manage/ajaxFormWin10.php:827
-#: modules/imaging/manage/ajaxFormWin8.php:820
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:686
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:689
-msgid "UAC"
-msgstr "UAC"
-
-#: modules/imaging/manage/ajaxFormWin10.php:832
-#: modules/imaging/manage/ajaxFormWin8.php:825
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
-#: modules/imaging/manage/postinstall_edit.php:161
-#: modules/imaging/manage/ajaxConfiguration.php:130
-#: modules/imaging/manage/master_clone.php:121
-#: modules/imaging/manage/ajaxFormWin7.php:735
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
-#: modules/imaging/manage/service_edit.php:71
-#: modules/imaging/manage/master_edit.php:72
-#: modules/imaging/manage/bootmenu_edit.php:101
-#: modules/imaging/imaging/bootmenu.php:260
-msgid "Validate"
-msgstr "Перевірити"
-
-#: modules/imaging/manage/ajaxFormWin10.php:832
-#: modules/imaging/manage/ajaxFormWin8.php:825
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
-#: modules/imaging/manage/ajaxFormWin7.php:735
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
-msgid "Create Xml Windows Answer File Generator"
-msgstr "Створити породжувач файла відповідей Windows у XML"
-
-#: modules/imaging/manage/ajaxFormWin10.php:840
-#: modules/imaging/manage/ajaxFormWin8.php:833
-#: modules/imaging/manage/ajaxFormWin10-uefi.php:699
-#: modules/imaging/manage/ajaxFormWin7.php:743
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:702
-msgid "Xml Windows Answer File Generator"
-msgstr "Породжувач файла відповідей Windows у XML"
-
-#: modules/imaging/manage/unattended.php:76
-msgid "form not found"
-msgstr "форми не знайдено"
-
-#: modules/imaging/manage/unattended.php:89
-msgid "Windows Answer File Generator"
-msgstr "Породжувач файла відповідей Windows"
-
-#: modules/imaging/manage/unattended.php:104
-msgid "error create file"
-msgstr "помилка під час спроби створити файл"
-
-#: modules/imaging/manage/unattended.php:126
-msgid "Choose package source"
-msgstr "Виберіть джерело пакунка"
-
-#: modules/imaging/manage/imaging_server_link.php:60
-#, php-format
-msgid ""
-"Link between package server <strong>%s</strong> and the entity "
-"<strong>%s</strong> succeeded."
-msgstr ""
-"Успішна прив'язка між сервером пакунків <strong>%s</strong> і записом "
-"<strong>%s</strong>."
-
-#: modules/imaging/manage/imaging_server_link.php:77
-#: modules/imaging/manage/service_del.php:61
-#: modules/imaging/manage/master_remove.php:65
-#: modules/imaging/manage/service_add.php:64
-#: modules/imaging/manage/service_add.php:66
-#: modules/imaging/manage/service_remove.php:62
-#: modules/imaging/imaging/showtarget.php:90
-#, php-format
-msgid "Boot menu generation failed for package server: %s"
-msgstr "Не вдалося створити меню завантаження для сервера пакунків: %s"
-
-#: modules/imaging/manage/imaging_server_link.php:106
-#, php-format
-msgid ""
-"Do you really want to link the Imaging Server '<b>%s</b>' to the entity "
-"'<b>%s</b>'"
-msgstr ""
-"Ви справді хочете пов'язати сервер образів «<b>%s</b>» із записом "
-"«<b>%s</b>»?"
-
-#: modules/imaging/manage/service_del.php:44
-#: modules/imaging/manage/service_show_used.php:93
-#, php-format
-msgid "Service <strong>%s</strong> removed from default boot menu"
-msgstr "Службу <strong>%s</strong> вилучено з типового меню завантаження"
-
-#: modules/imaging/manage/service_del.php:78
-#, php-format
-msgid "Remove the boot service <b>%s</b> from the default boot menu"
-msgstr "Вилучити службу завантаження <b>%s</b> з типового меню завантаження"
-
-#: modules/imaging/manage/ajaxLogs.php:45
-msgid "No log available."
-msgstr "Немає доступних журналів."
-
-#: modules/imaging/manage/ajaxLogs.php:109
-#: modules/imaging/imaging/ajaxLogs.php:90
-msgid "Timestamp"
-msgstr "Часова позначка"
-
-#: modules/imaging/manage/ajaxLogs.php:111
-#: modules/imaging/imaging/ajaxLogs.php:94
-msgid "Target"
-msgstr "Призначення"
-
-#: modules/imaging/manage/ajaxLogs.php:112
-#: modules/imaging/imaging/ajaxLogs.php:95
-msgid "Message"
-msgstr "Повідомлення"
-
-#: modules/imaging/manage/bootmenu_up.php:37
-#, php-format
-msgid "Success to move <strong>%s</strong> in the default boot menu"
-msgstr "Успішно пересунуто <strong>%s</strong> у типовому меню завантаження"
-
-#: modules/imaging/manage/bootmenu_up.php:50
-#, php-format
-msgid "Failed to move <strong>%s</strong> in the default boot menu"
-msgstr ""
-"Не вдалося пересунути <strong>%s</strong> у типовому меню завантаження"
-
-#: modules/imaging/manage/ajaxFormWin8.php:523
-#: modules/imaging/manage/ajaxFormWin7.php:447
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:392
-msgid "Show Windows Live"
-msgstr "Показати Windows Live"
-
-#: modules/imaging/manage/ajaxFormWin8.php:648
-#: modules/imaging/manage/ajaxFormWin7.php:572
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:517
-msgid "System Updates"
-msgstr "Оновлення системи"
-
-#: modules/imaging/manage/ajaxFormWin8.php:784
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:653
-msgid "System Background Colour"
-msgstr "Колір тла системи"
-
-#: modules/imaging/manage/ajaxFormWin8.php:791
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:660
-msgid "For Windows 8"
-msgstr "Для Windows 8"
-
-#: modules/imaging/manage/ajaxFormWin8.php:792
-#: modules/imaging/manage/ajaxFormWin8-uefi.php:661
-msgid "For Windows 8.1"
-msgstr "Для Windows 8.1"
-
-#: modules/imaging/manage/master_remove.php:37
-#, php-format
-msgid "Image <strong>%s</strong> removed from default boot menu."
-msgstr "Образ <strong>%s</strong> вилучено з типового меню завантаження."
-
-#: modules/imaging/manage/master_remove.php:38
-msgid "Notify Success : removed from default boot menu."
-msgstr "Сповіщення щодо успіху: вилучено з типового меню завантаження."
-
-#: modules/imaging/manage/master_remove.php:91
-#, php-format
-msgid "Are you sure you want to remove <b>%s</b> master ?"
-msgstr "Ви справді хочете вилучити основу <b>%s</b>?"
-
-#: modules/imaging/manage/master_remove.php:93
-#: modules/imaging/manage/master_delete.php:80
-#: modules/imaging/manage/service_show_used.php:199
-#: modules/imaging/imaging/images_delete.php:72
-#: modules/imaging/imaging/bootmenu_remove.php:160
-#: modules/imaging/imaging/showtarget.php:130
-msgid "Remove"
-msgstr "Вилучити"
-
-#: modules/imaging/manage/master_remove.php:94
-#: modules/imaging/manage/master_iso.php:109
-#: modules/imaging/manage/master_delete.php:81
-#: modules/imaging/manage/postinstall_delete.php:102
-#: modules/imaging/manage/service_show_used.php:200
-#: modules/imaging/imaging/images_delete.php:73
-#: modules/imaging/imaging/bootmenu_remove.php:161
-#: modules/imaging/imaging/configure.php:365
-#: modules/imaging/imaging/images_iso.php:112
-#: modules/imaging/imaging/multicast.php:390
-#: modules/imaging/imaging/showtarget.php:131
-msgid "Cancel"
-msgstr "Скасувати"
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:40
-msgid "No imaging server available for association."
-msgstr "Немає доступних серверів образів для прив'язування."
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:47
-#, php-format
-msgid "Link this Imaging Server to the '%s' entity."
-msgstr "Пов'язати цей сервер образів із записом «%s»."
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:70
-msgid "Associate an entity to an imaging server"
-msgstr "Пов'язати запис із сервером образів"
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:77
-msgid "Identifier"
-msgstr "Ідентифікатор"
-
-#: modules/imaging/manage/ajaxPostInstall.php:27
-msgid "Available post-imaging scripts"
-msgstr "Доступні скрипти після створення образу"
-
-#: modules/imaging/manage/save_configuration.php:68
-#, php-format
-msgid "Imaging server <strong>%s</strong> configuration saved."
-msgstr "Налаштування сервера образів <strong>%s</strong> збережено."
-
-#: modules/imaging/manage/save_configuration.php:84
-#: modules/imaging/manage/location.php:61
-#: modules/imaging/manage/location.php:65
-#: modules/imaging/manage/master_add.php:71
-#: modules/imaging/manage/master_add.php:75
-#: modules/imaging/manage/service_show_used.php:128
-#: modules/imaging/manage/service_show_used.php:132
-#, php-format
-msgid ""
-"Boot menu generation failed for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
-msgstr ""
-"Помилка під час створення меню завантаження для сервера пакунків: %s<br "
-"/><br />Ознайомтеся із /var/log/mmc/pulse2-package-server.log"
-
-#: modules/imaging/manage/systemImageManager.php:38
-msgid "Sysprep generator"
-msgstr "Засіб створення sysprep"
-
-#: modules/imaging/manage/systemImageManager.php:39
-msgid "Sysprep list"
-msgstr "Список sysprep"
-
-#: modules/imaging/manage/postinstall_edit.php:90
-#, php-format
-msgid "<strong>%s</strong> script %s"
-msgstr "Скрипт <strong>%s</strong> %s"
-
-#: modules/imaging/manage/postinstall_edit.php:91
-msgid "Notify Success : "
-msgstr "Сповіщення щодо успіху: "
-
-#: modules/imaging/manage/postinstall_edit.php:107
-#: modules/imaging/manage/postinstall_edit.php:122
-msgid "Notify Error : "
-msgstr "Сповіщення щодо помилки: "
-
-#: modules/imaging/manage/postinstall_edit.php:121
-#, php-format
-msgid "<strong>%s</strong> script wasn't %s"
-msgstr "Скрипт <strong>%s</strong> не був %s"
-
-#: modules/imaging/manage/postinstall_edit.php:157
-msgid "Script value"
-msgstr "Значення скрипту"
-
-#: modules/imaging/manage/ajaxConfiguration.php:29
-msgid "Imaging server configuration"
-msgstr "Налаштування сервера образів"
-
-#: modules/imaging/manage/ajaxConfiguration.php:60
-msgid "Menu language"
-msgstr "Мова меню"
-
-#: modules/imaging/manage/ajaxConfiguration.php:63
-msgid "PXE Login"
-msgstr ""
-
-#: modules/imaging/manage/ajaxConfiguration.php:64
-#: modules/imaging/manage/ajaxConfiguration.php:66
-msgid "Leave this field empty to unset PXE Password"
-msgstr "Не заповнюйте це поле, щоб не встановлювати пароль PXE"
-
-#: modules/imaging/manage/ajaxConfiguration.php:65
-msgid "PXE Password"
-msgstr "Пароль PXE"
-
-#: modules/imaging/manage/ajaxConfiguration.php:86
-msgid "Clonezilla parameters for saving images"
-msgstr "Параметри Clonezilla для збереження образів"
-
-#: modules/imaging/manage/ajaxConfiguration.php:89
-msgid "Clonezilla parameters for restoring images"
-msgstr "Параметри Clonezilla для відновлення образів"
-
-#: modules/imaging/manage/ajaxConfiguration.php:97
-msgid "Default menu parameters"
-msgstr "Параметри типового меню"
-
-#: modules/imaging/manage/ajaxConfiguration.php:101
-#: modules/imaging/imaging/configure.php:43
-msgid "Default menu label"
-msgstr "Типова мітка меню"
-
-#: modules/imaging/manage/ajaxConfiguration.php:104
-msgid "Default menu timeout"
-msgstr "Час очікування типового меню"
-
-#: modules/imaging/manage/ajaxConfiguration.php:112
-msgid "Hide menu"
-msgstr "Приховати меню"
-
-#: modules/imaging/manage/ajaxConfiguration.php:116
-#: modules/imaging/imaging/configure.php:62
-msgid "Boot options"
-msgstr "Параметри завантаження"
-
-#: modules/imaging/manage/ajaxConfiguration.php:119
-#: modules/imaging/imaging/configure.php:65
-msgid "Full path to the XPM displayed at boot"
-msgstr "Повний шлях до XPM, показаний при завантаженні"
-
-#: modules/imaging/manage/ajaxConfiguration.php:122
-#: modules/imaging/imaging/configure.php:69
-msgid "Message displayed during backup/restoration"
-msgstr "Повідомлення, показане при резервному копіюванні та відновленні"
-
-#: modules/imaging/manage/sysprepView.php:33
-msgid "View "
-msgstr "Перегляд"
-
-#: modules/imaging/manage/ajaxBootmenu.php:30
-#: modules/imaging/imaging/bootmenu.php:364
-msgid "Move Up"
-msgstr "Пересунути вище"
-
-#: modules/imaging/manage/ajaxBootmenu.php:31
-#: modules/imaging/imaging/bootmenu.php:365
-msgid "Move down"
-msgstr "Пересунути нижче"
-
-#: modules/imaging/manage/ajaxBootmenu.php:94
-msgid "Default boot menu configuration"
-msgstr "Типові налаштування меню завантаження"
-
-#: modules/imaging/manage/ajaxBootmenu.php:97
-#: modules/imaging/manage/service_edit.php:56
-#: modules/imaging/manage/ajaxServiceLevel2.php:91
-#: modules/imaging/manage/master_edit.php:55
-#: modules/imaging/manage/ajaxMasterLevel2.php:95
-#: modules/imaging/imaging/bootmenu.php:457
-#: modules/imaging/imaging/ajaxServices.php:98
-#: modules/imaging/imaging/images.php:105
-#: modules/imaging/imaging/ajaxImages.php:169
-msgid "Label"
-msgstr "Мітка"
-
-#: modules/imaging/manage/ajaxBootmenu.php:100
-msgid "Default"
-msgstr "Типове"
-
-#: modules/imaging/manage/ajaxBootmenu.php:101
-#: modules/imaging/manage/master_add.php:149
-#: modules/imaging/manage/bootmenu_edit.php:86
-#: modules/imaging/manage/service_add.php:116
-#: modules/imaging/imaging/addimage.php:179
-#: modules/imaging/imaging/bootmenu.php:245
-#: modules/imaging/imaging/bootmenu.php:462
-#: modules/imaging/imaging/addservice.php:160
-msgid "Displayed"
-msgstr "Показано"
-
-#: modules/imaging/manage/ajaxBootmenu.php:102
-msgid "Default on WOL"
-msgstr "Типове на WOL"
-
-#: modules/imaging/manage/ajaxBootmenu.php:103
-#: modules/imaging/manage/master_add.php:153
-#: modules/imaging/manage/bootmenu_edit.php:96
-#: modules/imaging/manage/service_add.php:120
-#: modules/imaging/imaging/addimage.php:183
-#: modules/imaging/imaging/bootmenu.php:255
-#: modules/imaging/imaging/bootmenu.php:465
-#: modules/imaging/imaging/addservice.php:164
-msgid "Displayed on WOL"
-msgstr "Показано на WOL"
-
-#: modules/imaging/manage/ajaxBootmenu.php:106
-#: modules/imaging/imaging/bootmenu.php:366
-msgid "Edit"
-msgstr "Змінити"
 
 #: modules/imaging/manage/master_clone.php:75
 msgid "There is no imaging server available to clone the master"
@@ -2525,143 +1379,20 @@ msgstr "Основа"
 msgid "Imaging Server"
 msgstr "Сервер образів"
 
-#: modules/imaging/manage/ajaxMaster.php:27
-#: modules/imaging/imaging/images.php:70
-msgid "Available masters"
-msgstr "Доступні основні"
-
-#: modules/imaging/manage/bootmenu_down.php:36
-#, php-format
-msgid "Success : to move down <strong>%s</strong> in the default boot menu"
-msgstr ""
-"<strong>%s</strong> успішно пересунуто нижче у типовому меню завантаження"
-
-#: modules/imaging/manage/bootmenu_down.php:49
-#, php-format
-msgid ""
-"Error : Failed to move down <strong>%s</strong> in the default boot menu"
-msgstr ""
-"Помилка: не вдалося пересунути <strong>%s</strong> нижче у типовому меню "
-"завантаження"
-
-#: modules/imaging/manage/master_iso.php:46
-#, php-format
-msgid "Iso of master <strong>%s</strong> has been launched in background."
-msgstr ""
-"Було запущено фонове створення образу ISO з основної системи "
-"<strong>%s</strong>."
-
-#: modules/imaging/manage/master_iso.php:48
-#, php-format
-msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
-msgstr ""
-"Файли буде збережено до каталогу %s сервера наприкінці резервного "
-"копіювання."
-
-#: modules/imaging/manage/master_iso.php:50
-msgid "Please go to the status page to check the iso creation status."
-msgstr ""
-"Будь ласка, перейдіть на сторінку стану, щоб ознайомитися зі станом "
-"створення ISO."
-
-#: modules/imaging/manage/master_iso.php:52
-msgid ""
-"This operation will last according to the amount of data of the master."
-msgstr ""
-"Тривалість виконання цієї дії залежить від об'єму даних у основній системі."
-
-#: modules/imaging/manage/master_iso.php:88
-#, php-format
-msgid "Create iso for <strong>%s</strong>"
-msgstr "Створити ISO з <strong>%s</strong>"
-
-#: modules/imaging/manage/master_iso.php:95
-#: modules/imaging/imaging/images_iso.php:98
-msgid "Media size"
-msgstr "Розмір носія"
-
-#: modules/imaging/manage/master_iso.php:108
-msgid "Launch backup"
-msgstr "Запустити резервне копіювання"
-
-#: modules/imaging/manage/master_delete.php:38
-#, php-format
-msgid "Image <strong>%s</strong> deleted from the imaging server."
-msgstr "Образ <strong>%s</strong> вилучено із сервера образів."
-
-#: modules/imaging/manage/master_delete.php:57
-#, php-format
-msgid "Error : Image %s deleted from the imaging server."
-msgstr "Помилка: образ %s вилучено з сервера образів."
-
-#: modules/imaging/manage/master_delete.php:78
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> master ?"
-msgstr "Ви справді хочете вилучити основу <b>%s</b>?"
-
-#: modules/imaging/manage/synchromaster.php:47
-#, php-format
-msgid "Master copy: %s ( %s )"
-msgstr "Основна копія: %s ( %s )"
-
-#: modules/imaging/manage/synchromaster.php:60
-msgid "Copy of master Not Started"
-msgstr "Копіювання основи не розпочато"
-
-#: modules/imaging/manage/synchromaster.php:66
-msgid "Copy of master"
-msgstr "Копіювати основу"
-
-#: modules/imaging/manage/synchromaster.php:119
-msgid "Complete"
-msgstr "Завершено"
-
-#: modules/imaging/manage/synchromaster.php:122
-msgid "In progress"
-msgstr "Виконується"
-
-#: modules/imaging/manage/synchromaster.php:135
-msgid "Copy of master complete"
-msgstr "Копіювання основної системи завершено"
-
-#: modules/imaging/manage/synchromaster.php:139
-msgid "Copy of master In progress"
-msgstr "Відбувається копіювання основної системи"
-
-#: modules/imaging/manage/sysprepList.php:38
-#, php-format
-msgid "The sysprep answer file %s has been removed from the imaging system."
-msgstr "Файл відповідей sysprep %s вилучено із системи образів."
-
-#: modules/imaging/manage/sysprepList.php:78
-msgid "All Windows Answer Files"
-msgstr "Усі файли відповідей Windows"
-
-#: modules/imaging/manage/sysprepList.php:83
-msgid "File name"
-msgstr "Назва файла"
-
-#: modules/imaging/manage/sysprepList.php:86
-msgid "OS"
-msgstr "ОС"
-
-#: modules/imaging/manage/sysprepList.php:90
-msgid "Display sysprep file"
-msgstr "Показати файл sysprep"
-
-#: modules/imaging/manage/sysprepList.php:91
-msgid "Edit sysprep file"
-msgstr "Редагувати файл sysprep"
-
-#: modules/imaging/manage/sysprepList.php:92
-msgid "Delete sysprep file"
-msgstr "Вилучити файл sysprep"
-
-#: modules/imaging/manage/sysprepList.php:92
-msgid "Are you sure you want to unset this sysrep answer file?"
-msgstr "Ви справді хочете вимкнути цей файл відповідей sysrep?"
+#: modules/imaging/manage/master_clone.php:121
+#: modules/imaging/manage/ajaxFormWin10.php:832
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
+#: modules/imaging/manage/postinstall_edit.php:161
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
+#: modules/imaging/manage/master_edit.php:72
+#: modules/imaging/manage/service_edit.php:71
+#: modules/imaging/manage/ajaxFormWin7.php:735
+#: modules/imaging/manage/ajaxFormWin8.php:825
+#: modules/imaging/manage/ajaxConfiguration.php:130
+#: modules/imaging/manage/bootmenu_edit.php:101
+#: modules/imaging/imaging/bootmenu.php:260
+msgid "Validate"
+msgstr "Перевірити"
 
 #: modules/imaging/manage/postinstall_delete.php:45
 #, php-format
@@ -2691,10 +1422,444 @@ msgstr ""
 "Не вдалося вилучити цей скрипт обробки після створення образу, оскільки цей "
 "скрипт є загальним."
 
+#: modules/imaging/manage/postinstall_delete.php:97
+#: modules/imaging/infoPackage.inc.php:169
+msgid "Delete post-imaging script"
+msgstr "Вилучити скрипт обробки після створення образу"
+
 #: modules/imaging/manage/postinstall_delete.php:99
 #, php-format
 msgid "Are you sure you want to delete the <b>%s</b> script ?"
 msgstr "Ви справді хочете вилучити скрипт <b>%s</b>?"
+
+#: modules/imaging/manage/postinstall_delete.php:102
+#: modules/imaging/manage/master_iso.php:109
+#: modules/imaging/manage/service_show_used.php:200
+#: modules/imaging/manage/master_delete.php:81
+#: modules/imaging/manage/master_remove.php:94
+#: modules/imaging/imaging/bootmenu_remove.php:161
+#: modules/imaging/imaging/showtarget.php:131
+#: modules/imaging/imaging/images_delete.php:73
+#: modules/imaging/imaging/configure.php:365
+#: modules/imaging/imaging/multicast.php:390
+#: modules/imaging/imaging/images_iso.php:112
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: modules/imaging/manage/ajaxFormWin10.php:448
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:307
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:291
+#: modules/imaging/manage/ajaxFormWin7.php:347
+#: modules/imaging/manage/ajaxFormWin8.php:422
+msgid "Installation Notes"
+msgstr "Нотатки щодо встановлення"
+
+#: modules/imaging/manage/ajaxFormWin10.php:454
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:313
+#: modules/imaging/manage/master_iso.php:90
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:297
+#: modules/imaging/manage/ajaxFormWin7.php:353
+#: modules/imaging/manage/ajaxFormWin8.php:428
+#: modules/imaging/imaging/images_iso.php:93
+msgid "Title"
+msgstr "Заголовок"
+
+#: modules/imaging/manage/ajaxFormWin10.php:458
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:317
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:301
+#: modules/imaging/manage/ajaxFormWin7.php:357
+#: modules/imaging/manage/ajaxFormWin8.php:432
+msgid "Enter your comments here..."
+msgstr "Тут ви можете ввести свої коментарі…"
+
+#: modules/imaging/manage/ajaxFormWin10.php:467
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:326
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:310
+#: modules/imaging/manage/ajaxFormWin7.php:365
+#: modules/imaging/manage/ajaxFormWin8.php:441
+msgid "Os Settings"
+msgstr "Параметри ОС"
+
+#: modules/imaging/manage/ajaxFormWin10.php:498
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:357
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:341
+#: modules/imaging/manage/ajaxFormWin7.php:396
+#: modules/imaging/manage/ajaxFormWin8.php:472
+msgid "Product Key"
+msgstr "Ключ продукту"
+
+#: modules/imaging/manage/ajaxFormWin10.php:503
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:362
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:346
+#: modules/imaging/manage/ajaxFormWin7.php:401
+#: modules/imaging/manage/ajaxFormWin8.php:477
+msgid "Organization Name"
+msgstr "Назва організації"
+
+#: modules/imaging/manage/ajaxFormWin10.php:511
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:370
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:354
+#: modules/imaging/manage/ajaxFormWin7.php:409
+#: modules/imaging/manage/ajaxFormWin8.php:485
+msgid "Accept EULA"
+msgstr "Погодитися з EULA"
+
+#: modules/imaging/manage/ajaxFormWin10.php:519
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:378
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:362
+#: modules/imaging/manage/ajaxFormWin7.php:417
+#: modules/imaging/manage/ajaxFormWin8.php:493
+msgid "Skip automatic activation"
+msgstr "Пропустити автоматичну активацію"
+
+#: modules/imaging/manage/ajaxFormWin10.php:527
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:386
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:370
+#: modules/imaging/manage/ajaxFormWin7.php:425
+#: modules/imaging/manage/ajaxFormWin8.php:501
+msgid "Skip License Rearm"
+msgstr "Пропустити ліцензування"
+
+#: modules/imaging/manage/ajaxFormWin10.php:536
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:395
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:379
+#: modules/imaging/manage/ajaxFormWin7.php:434
+#: modules/imaging/manage/ajaxFormWin8.php:510
+msgid "Setup Language"
+msgstr "Налаштувати мову"
+
+#: modules/imaging/manage/ajaxFormWin10.php:541
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:400
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:384
+#: modules/imaging/manage/ajaxFormWin7.php:439
+#: modules/imaging/manage/ajaxFormWin8.php:515
+msgid "Computer Name"
+msgstr "Назва комп'ютера"
+
+#: modules/imaging/manage/ajaxFormWin10.php:549
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:408
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:400
+#: modules/imaging/manage/ajaxFormWin7.php:455
+#: modules/imaging/manage/ajaxFormWin8.php:531
+msgid "Keyboard or input method"
+msgstr "Клавіатура або метод введення"
+
+#: modules/imaging/manage/ajaxFormWin10.php:557
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:416
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:408
+#: modules/imaging/manage/ajaxFormWin7.php:463
+#: modules/imaging/manage/ajaxFormWin8.php:539
+msgid "Currency and Date format"
+msgstr "Валюта і формат дати"
+
+#: modules/imaging/manage/ajaxFormWin10.php:565
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:424
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:416
+#: modules/imaging/manage/ajaxFormWin7.php:471
+#: modules/imaging/manage/ajaxFormWin8.php:547
+msgid "Time Zone"
+msgstr "Часовий пояс"
+
+#: modules/imaging/manage/ajaxFormWin10.php:573
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:432
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:424
+#: modules/imaging/manage/ajaxFormWin7.php:479
+#: modules/imaging/manage/ajaxFormWin8.php:555
+msgid "UI Language"
+msgstr "Мова інтерфейсу"
+
+#: modules/imaging/manage/ajaxFormWin10.php:584
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:443
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:435
+#: modules/imaging/manage/ajaxFormWin7.php:490
+#: modules/imaging/manage/ajaxFormWin8.php:566
+msgid "Partition Settings"
+msgstr "Параметри поділу на розділи"
+
+#: modules/imaging/manage/ajaxFormWin10.php:593
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:452
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:444
+#: modules/imaging/manage/ajaxFormWin7.php:499
+#: modules/imaging/manage/ajaxFormWin8.php:575
+msgid "Wipe Disk"
+msgstr "Витерти диск"
+
+#: modules/imaging/manage/ajaxFormWin10.php:601
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:460
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:452
+#: modules/imaging/manage/ajaxFormWin7.php:507
+#: modules/imaging/manage/ajaxFormWin8.php:583
+msgid "Install to disk"
+msgstr "Встановити на диск"
+
+#: modules/imaging/manage/ajaxFormWin10.php:609
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:468
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:460
+#: modules/imaging/manage/ajaxFormWin7.php:515
+#: modules/imaging/manage/ajaxFormWin8.php:591
+msgid "Partition Order"
+msgstr "Порядок розділів"
+
+#: modules/imaging/manage/ajaxFormWin10.php:617
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:476
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:468
+#: modules/imaging/manage/ajaxFormWin7.php:523
+#: modules/imaging/manage/ajaxFormWin8.php:599
+msgid "Extend OS Partition"
+msgstr "Розширити розділ ОС"
+
+#: modules/imaging/manage/ajaxFormWin10.php:625
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:484
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:476
+#: modules/imaging/manage/ajaxFormWin7.php:531
+#: modules/imaging/manage/ajaxFormWin8.php:607
+msgid "Main Partition Format"
+msgstr "Формат основного розділу"
+
+#: modules/imaging/manage/ajaxFormWin10.php:638
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:497
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:489
+#: modules/imaging/manage/ajaxFormWin7.php:544
+#: modules/imaging/manage/ajaxFormWin8.php:620
+msgid "Main Partition Letter"
+msgstr "Літера основного розділу"
+
+#: modules/imaging/manage/ajaxFormWin10.php:649
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:508
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:500
+#: modules/imaging/manage/ajaxFormWin7.php:555
+#: modules/imaging/manage/ajaxFormWin8.php:631
+msgid "Security Settings"
+msgstr "Параметри безпеки"
+
+#: modules/imaging/manage/ajaxFormWin10.php:658
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:517
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:509
+#: modules/imaging/manage/ajaxFormWin7.php:564
+#: modules/imaging/manage/ajaxFormWin8.php:640
+msgid "Protect Your Computer"
+msgstr "Захист вашого комп'ютера"
+
+#: modules/imaging/manage/ajaxFormWin10.php:674
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:533
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:525
+#: modules/imaging/manage/ajaxFormWin7.php:580
+#: modules/imaging/manage/ajaxFormWin8.php:656
+msgid "Network Location"
+msgstr "Розташування у мережі"
+
+#: modules/imaging/manage/ajaxFormWin10.php:682
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:541
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:533
+#: modules/imaging/manage/ajaxFormWin7.php:588
+#: modules/imaging/manage/ajaxFormWin8.php:664
+msgid "Hide EULA page"
+msgstr "Приховати сторінку EULA"
+
+#: modules/imaging/manage/ajaxFormWin10.php:690
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:549
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:541
+#: modules/imaging/manage/ajaxFormWin7.php:596
+#: modules/imaging/manage/ajaxFormWin8.php:672
+msgid "Enable Firewall"
+msgstr "Увімкнути брандмауер"
+
+#: modules/imaging/manage/ajaxFormWin10.php:698
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:557
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:549
+#: modules/imaging/manage/ajaxFormWin7.php:604
+#: modules/imaging/manage/ajaxFormWin8.php:680
+msgid "Disable auto daylight timeset"
+msgstr "Вимкнути автоматичне встановлення літнього часу"
+
+#: modules/imaging/manage/ajaxFormWin10.php:706
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:565
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:557
+#: modules/imaging/manage/ajaxFormWin7.php:612
+#: modules/imaging/manage/ajaxFormWin8.php:688
+msgid "Hide wireless setup in OOBE"
+msgstr "Приховати налаштування бездротової мережі у OOBE"
+
+#: modules/imaging/manage/ajaxFormWin10.php:711
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
+#: modules/imaging/manage/ajaxFormWin7.php:617
+#: modules/imaging/manage/ajaxFormWin8.php:693
+msgid "Category View"
+msgstr "Перегляд категорій"
+
+#: modules/imaging/manage/ajaxFormWin10.php:711
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:562
+#: modules/imaging/manage/ajaxFormWin7.php:617
+#: modules/imaging/manage/ajaxFormWin8.php:693
+msgid "Classic View"
+msgstr "Класичний перегляд"
+
+#: modules/imaging/manage/ajaxFormWin10.php:714
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:573
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:565
+#: modules/imaging/manage/ajaxFormWin7.php:620
+#: modules/imaging/manage/ajaxFormWin8.php:696
+msgid "Control Panel View"
+msgstr "Перегляд панелі керування"
+
+#: modules/imaging/manage/ajaxFormWin10.php:719
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin7.php:625
+#: modules/imaging/manage/ajaxFormWin8.php:701
+msgid "Large"
+msgstr "Великий"
+
+#: modules/imaging/manage/ajaxFormWin10.php:719
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:578
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin7.php:625
+#: modules/imaging/manage/ajaxFormWin8.php:701
+msgid "Small"
+msgstr "Малий"
+
+#: modules/imaging/manage/ajaxFormWin10.php:722
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:581
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:573
+#: modules/imaging/manage/ajaxFormWin7.php:628
+#: modules/imaging/manage/ajaxFormWin8.php:704
+msgid "Control Panel Icon Size"
+msgstr "Розмір піктограм панелі керування"
+
+#: modules/imaging/manage/ajaxFormWin10.php:732
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:591
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:584
+#: modules/imaging/manage/ajaxFormWin7.php:639
+#: modules/imaging/manage/ajaxFormWin8.php:715
+msgid "Domain Settings"
+msgstr "Параметри домену"
+
+#: modules/imaging/manage/ajaxFormWin10.php:736
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:595
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:588
+#: modules/imaging/manage/ajaxFormWin7.php:643
+#: modules/imaging/manage/ajaxFormWin8.php:719
+msgid "Domain"
+msgstr "Домен"
+
+#: modules/imaging/manage/ajaxFormWin10.php:740
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:599
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:593
+#: modules/imaging/manage/ajaxFormWin7.php:648
+#: modules/imaging/manage/ajaxFormWin8.php:724
+msgid "Domain User"
+msgstr "Користувач домену"
+
+#: modules/imaging/manage/ajaxFormWin10.php:744
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:603
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:598
+#: modules/imaging/manage/ajaxFormWin7.php:653
+#: modules/imaging/manage/ajaxFormWin8.php:729
+msgid "Domain Password"
+msgstr "Пароль домену"
+
+#: modules/imaging/manage/ajaxFormWin10.php:748
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:607
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:603
+#: modules/imaging/manage/ajaxFormWin7.php:658
+#: modules/imaging/manage/ajaxFormWin8.php:734
+msgid "Join Domain"
+msgstr "Долучитися до домену"
+
+#: modules/imaging/manage/ajaxFormWin10.php:752
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:611
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:608
+#: modules/imaging/manage/ajaxFormWin7.php:663
+#: modules/imaging/manage/ajaxFormWin8.php:739
+msgid "MachineObjectOU"
+msgstr "MachineObjectOU"
+
+#: modules/imaging/manage/ajaxFormWin10.php:763
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:622
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:619
+#: modules/imaging/manage/ajaxFormWin7.php:674
+#: modules/imaging/manage/ajaxFormWin8.php:750
+msgid "Administrator Account"
+msgstr "Обліковий запис адміністратора"
+
+#: modules/imaging/manage/ajaxFormWin10.php:768
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:627
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:624
+#: modules/imaging/manage/ajaxFormWin7.php:679
+#: modules/imaging/manage/ajaxFormWin8.php:755
+msgid "Password"
+msgstr "Пароль"
+
+#: modules/imaging/manage/ajaxFormWin10.php:780
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:639
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:636
+#: modules/imaging/manage/ajaxFormWin7.php:691
+#: modules/imaging/manage/ajaxFormWin8.php:767
+msgid "User Account"
+msgstr "Обліковий запис"
+
+#: modules/imaging/manage/ajaxFormWin10.php:789
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:648
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:645
+#: modules/imaging/manage/ajaxFormWin7.php:700
+#: modules/imaging/manage/ajaxFormWin8.php:776
+msgid "Customer Experience Improvement Program (CEIP)"
+msgstr "Програма поліпшення за враженнями споживачів (CEIP)"
+
+#: modules/imaging/manage/ajaxFormWin10.php:797
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:656
+#: modules/imaging/manage/ajaxFormWin7.php:708
+msgid "Copy Profile"
+msgstr "Копіювати профіль"
+
+#: modules/imaging/manage/ajaxFormWin10.php:802
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:661
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:664
+#: modules/imaging/manage/ajaxFormWin7.php:713
+#: modules/imaging/manage/ajaxFormWin8.php:795
+msgid "User Name"
+msgstr "Ім'я користувача"
+
+#: modules/imaging/manage/ajaxFormWin10.php:810
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:669
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:672
+#: modules/imaging/manage/ajaxFormWin7.php:721
+#: modules/imaging/manage/ajaxFormWin8.php:803
+msgid "Group"
+msgstr "Група"
+
+#: modules/imaging/manage/ajaxFormWin10.php:820
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:679
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:682
+#: modules/imaging/manage/ajaxFormWin7.php:731
+#: modules/imaging/manage/ajaxFormWin8.php:813
+msgid "Password: (Optional)"
+msgstr "Пароль: (необов'язковий)"
+
+#: modules/imaging/manage/ajaxFormWin10.php:827
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:686
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:689
+#: modules/imaging/manage/ajaxFormWin8.php:820
+msgid "UAC"
+msgstr "UAC"
+
+#: modules/imaging/manage/ajaxFormWin10.php:832
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:691
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:694
+#: modules/imaging/manage/ajaxFormWin7.php:735
+#: modules/imaging/manage/ajaxFormWin8.php:825
+msgid "Create Xml Windows Answer File Generator"
+msgstr "Створити породжувач файла відповідей Windows у XML"
+
+#: modules/imaging/manage/ajaxFormWin10.php:840
+#: modules/imaging/manage/ajaxFormWin10-uefi.php:699
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:702
+#: modules/imaging/manage/ajaxFormWin7.php:743
+#: modules/imaging/manage/ajaxFormWin8.php:833
+msgid "Xml Windows Answer File Generator"
+msgstr "Породжувач файла відповідей Windows у XML"
 
 #: modules/imaging/manage/ajaxService.php:27
 msgid "Manage services"
@@ -2714,6 +1879,21 @@ msgstr ""
 "Успішно створено меню завантаження для сервера пакунків: %s<br /><br "
 "/>Ознайомтеся із /var/log/mmc/pulse2-package-server.log"
 
+#: modules/imaging/manage/master_add.php:71
+#: modules/imaging/manage/master_add.php:75
+#: modules/imaging/manage/save_configuration.php:84
+#: modules/imaging/manage/location.php:61
+#: modules/imaging/manage/location.php:65
+#: modules/imaging/manage/service_show_used.php:128
+#: modules/imaging/manage/service_show_used.php:132
+#, php-format
+msgid ""
+"Boot menu generation failed for package server: %s<br /><br />Check "
+"/var/log/mmc/pulse2-package-server.log"
+msgstr ""
+"Помилка під час створення меню завантаження для сервера пакунків: %s<br "
+"/><br />Ознайомтеся із /var/log/mmc/pulse2-package-server.log"
+
 #: modules/imaging/manage/master_add.php:81
 #, php-format
 msgid "Error : Image <strong>%s</strong> added to default boot menu"
@@ -2731,140 +1911,74 @@ msgstr "Додати образ <b>%s</b> до <b>%s</b>"
 #: modules/imaging/manage/bootmenu_edit.php:81
 #: modules/imaging/manage/service_add.php:114
 #: modules/imaging/imaging/addimage.php:177
-#: modules/imaging/imaging/bootmenu.php:240
 #: modules/imaging/imaging/addservice.php:158
+#: modules/imaging/imaging/bootmenu.php:240
 msgid "Selected by default"
 msgstr "Типово позначено"
+
+#: modules/imaging/manage/master_add.php:149
+#: modules/imaging/manage/ajaxBootmenu.php:101
+#: modules/imaging/manage/bootmenu_edit.php:86
+#: modules/imaging/manage/service_add.php:116
+#: modules/imaging/imaging/addimage.php:179
+#: modules/imaging/imaging/addservice.php:160
+#: modules/imaging/imaging/bootmenu.php:245
+#: modules/imaging/imaging/bootmenu.php:462
+msgid "Displayed"
+msgstr "Показано"
 
 #: modules/imaging/manage/master_add.php:151
 #: modules/imaging/manage/bootmenu_edit.php:91
 #: modules/imaging/manage/service_add.php:118
 #: modules/imaging/imaging/addimage.php:181
-#: modules/imaging/imaging/bootmenu.php:250
 #: modules/imaging/imaging/addservice.php:162
+#: modules/imaging/imaging/bootmenu.php:250
 msgid "Selected by default on WOL"
 msgstr "Типово позначено на WOL"
 
-#: modules/imaging/manage/service_edit.php:48
-msgid "Edit service : "
-msgstr "Редагування служби: "
+#: modules/imaging/manage/master_add.php:153
+#: modules/imaging/manage/ajaxBootmenu.php:103
+#: modules/imaging/manage/bootmenu_edit.php:96
+#: modules/imaging/manage/service_add.php:120
+#: modules/imaging/imaging/addimage.php:183
+#: modules/imaging/imaging/addservice.php:164
+#: modules/imaging/imaging/bootmenu.php:255
+#: modules/imaging/imaging/bootmenu.php:465
+msgid "Displayed on WOL"
+msgstr "Показано на WOL"
 
-#: modules/imaging/manage/service_edit.php:66
-msgid "In default bootmenu"
-msgstr "У типовому меню завантаження"
+#: modules/imaging/manage/multicastaction.php:68
+msgid "Start Multicast of ( Master :"
+msgstr "Розпочати трансляцію ( основа:"
 
-#: modules/imaging/manage/service_edit.php:81
-#, php-format
-msgid "Service <strong>%s</strong> modified with success"
-msgstr "Службу <strong>%s</strong> успішно змінено"
+#: modules/imaging/manage/multicastaction.php:69
+#: modules/imaging/manage/multicastaction.php:89
+#: modules/imaging/manage/multicastaction.php:136
+msgid "on (group :"
+msgstr "на (група:"
 
-#: modules/imaging/manage/service_show_used.php:67
-#: modules/imaging/manage/service_show_used.php:108
-msgid "Removal of boot service failed"
-msgstr "Не вдалося вилучити службу завантаження"
+#: modules/imaging/manage/multicastaction.php:70
+#: modules/imaging/manage/multicastaction.php:90
+#: modules/imaging/manage/multicastaction.php:137
+msgid "to (location : "
+msgstr "до (місце: "
 
-#: modules/imaging/manage/service_show_used.php:85
-#: modules/imaging/imaging/addimage.php:106
-#: modules/imaging/imaging/bootmenu_remove.php:127
-#: modules/imaging/imaging/addservice.php:103
-#: modules/imaging/imaging/showtarget.php:78
-#, php-format
-msgid "Boot menu generation failed for computer: %s"
-msgstr "Не вдалося створити меню завантаження для комп'ютера: %s"
+#: modules/imaging/manage/multicastaction.php:88
+msgid "Stop Multicast of ( Master :"
+msgstr "Припинити трансляцію (основа:"
 
-#: modules/imaging/manage/service_show_used.php:163
-#: modules/imaging/imaging/showtarget.php:123
-msgid "Show all targets that use that image in their boot menu"
-msgstr "Показати усі цілі, які використовують цей образ у меню завантаження"
+#: modules/imaging/manage/multicastaction.php:102
+#: modules/imaging/manage/multicastaction.php:121
+msgid "Synchro Profile Menu group : "
+msgstr "Група меню профілю синхронізації: "
 
-#: modules/imaging/manage/service_show_used.php:170
-#, php-format
-msgid "Remove this boot service from imaging server %s"
-msgstr "Вилучити цю службу завантаження з сервера образів %s"
+#: modules/imaging/manage/multicastaction.php:121
+msgid "location : "
+msgstr "розташування: "
 
-#: modules/imaging/manage/service_show_used.php:171
-#: modules/imaging/imaging/showtarget.php:150
-msgid "Imaging server"
-msgstr "Сервер образів"
-
-#: modules/imaging/manage/service_show_used.php:178
-#: modules/imaging/imaging/showtarget.php:157
-#, php-format
-msgid "Remove this master from computer %s"
-msgstr "Вилучити цю основну систему з комп'ютера %s"
-
-#: modules/imaging/manage/service_show_used.php:179
-#: modules/imaging/imaging/showtarget.php:158
-msgid "Imaging group"
-msgstr "Група образів"
-
-#: modules/imaging/manage/service_show_used.php:179
-#: modules/imaging/imaging/configure.php:39
-#: modules/imaging/imaging/showtarget.php:158
-msgid "Computer"
-msgstr "Комп'ютер"
-
-#: modules/imaging/manage/service_show_used.php:194
-msgid ""
-"If you want to remove this boot service from one or more targets, check "
-"these targets and click on the remove button"
-msgstr ""
-"Якщо ви хочете вилучити цю службу завантаження з однієї або декількох цілей,"
-" позначте пункти цих цілей і натисніть кнопку «Вилучити»."
-
-#: modules/imaging/manage/service_show_used.php:196
-#: modules/imaging/imaging/showtarget.php:127
-msgid "Select all"
-msgstr "Позначити всі"
-
-#: modules/imaging/manage/service_show_used.php:198
-#: modules/imaging/imaging/showtarget.php:129
-msgid "Unselect all"
-msgstr "Зняти позначення з усього"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:49
-msgid "Add service to default boot menu"
-msgstr "Додати службу до типового меню завантаження"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:50
-msgid "Remove service from default boot menu"
-msgstr "Вилучити службу з типового меню завантаження"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:51
-msgid "Delete service"
-msgstr "Вилучити службу"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:52
-msgid "Show where service is used"
-msgstr "Показати, де використовується служба"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:94
-#: modules/imaging/imaging/ajaxImages.php:174
-msgid "In boot menu"
-msgstr "У меню завантаження"
-
-#: modules/imaging/manage/master_edit.php:45
-msgid "Edit master : "
-msgstr "Редагування основи: "
-
-#: modules/imaging/manage/master_edit.php:96
-#, php-format
-msgid "Master <strong>%s</strong> modified with success"
-msgstr "Основу <strong>%s</strong> успішно змінено"
-
-#: modules/imaging/manage/master_edit.php:116
-#, php-format
-msgid "Master %s modified with error"
-msgstr "Основу %s змінено із помилкою"
-
-#: modules/imaging/manage/bootmenu_edit.php:68
-#, php-format
-msgid "Edit : %s"
-msgstr "Редагування: %s"
-
-#: modules/imaging/manage/bootmenu_edit.php:77
-msgid "Default menu item label"
-msgstr "Мітка запису у типовому меню"
+#: modules/imaging/manage/multicastaction.php:135
+msgid "Clear Multicast of ( Master :"
+msgstr "Вилучити трансляцію (основа:"
 
 #: modules/imaging/manage/ajaxStatus.php:33
 msgid "Status"
@@ -2941,6 +2055,455 @@ msgid "Can't connect to the imaging server linked to the selected entity."
 msgstr ""
 "Не вдалося з'єднатися із сервером образів, пов'язаним із позначеним записом."
 
+#: modules/imaging/manage/service_remove.php:44
+#, php-format
+msgid "Service <strong>%s</strong> successfully removed"
+msgstr "Службу <strong>%s</strong> успішно вилучено"
+
+#: modules/imaging/manage/service_remove.php:62
+#: modules/imaging/manage/imaging_server_link.php:77
+#: modules/imaging/manage/master_remove.php:65
+#: modules/imaging/manage/service_del.php:61
+#: modules/imaging/manage/service_add.php:64
+#: modules/imaging/manage/service_add.php:66
+#: modules/imaging/imaging/showtarget.php:90
+#, php-format
+msgid "Boot menu generation failed for package server: %s"
+msgstr "Не вдалося створити меню завантаження для сервера пакунків: %s"
+
+#: modules/imaging/manage/service_remove.php:79
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
+msgstr "Ви справді хочете вилучити службу завантаження <b>%s</b>?"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:51
+msgid "Create Boot Service"
+msgstr "Створити службу завантаження"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:52
+msgid "Edit script"
+msgstr "Змінити скрипт"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:54
+msgid "Boot Service already created"
+msgstr "Службу завантаження вже створено"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:95
+msgid "Duplicate"
+msgstr "Здублювати"
+
+#: modules/imaging/manage/save_configuration.php:68
+#, php-format
+msgid "Imaging server <strong>%s</strong> configuration saved."
+msgstr "Налаштування сервера образів <strong>%s</strong> збережено."
+
+#: modules/imaging/manage/systemImageManager.php:38
+msgid "Sysprep generator"
+msgstr "Засіб створення sysprep"
+
+#: modules/imaging/manage/systemImageManager.php:39
+msgid "Sysprep list"
+msgstr "Список sysprep"
+
+#: modules/imaging/manage/postinstall_edit.php:90
+#, php-format
+msgid "<strong>%s</strong> script %s"
+msgstr "Скрипт <strong>%s</strong> %s"
+
+#: modules/imaging/manage/postinstall_edit.php:91
+msgid "Notify Success : "
+msgstr "Сповіщення щодо успіху: "
+
+#: modules/imaging/manage/postinstall_edit.php:107
+#: modules/imaging/manage/postinstall_edit.php:122
+msgid "Notify Error : "
+msgstr "Сповіщення щодо помилки: "
+
+#: modules/imaging/manage/postinstall_edit.php:121
+#, php-format
+msgid "<strong>%s</strong> script wasn't %s"
+msgstr "Скрипт <strong>%s</strong> не був %s"
+
+#: modules/imaging/manage/postinstall_edit.php:157
+msgid "Script value"
+msgstr "Значення скрипту"
+
+#: modules/imaging/manage/unattended.php:76
+msgid "form not found"
+msgstr "форми не знайдено"
+
+#: modules/imaging/manage/unattended.php:89
+msgid "Windows Answer File Generator"
+msgstr "Породжувач файла відповідей Windows"
+
+#: modules/imaging/manage/unattended.php:104
+msgid "error create file"
+msgstr "помилка під час спроби створити файл"
+
+#: modules/imaging/manage/unattended.php:126
+msgid "Choose package source"
+msgstr "Виберіть джерело пакунка"
+
+#: modules/imaging/manage/master_iso.php:44
+#: modules/imaging/infoPackage.inc.php:121
+msgid "Create iso from master"
+msgstr "Створити ISO з основної системи"
+
+#: modules/imaging/manage/master_iso.php:46
+#, php-format
+msgid "Iso of master <strong>%s</strong> has been launched in background."
+msgstr ""
+"Було запущено фонове створення образу ISO з основної системи "
+"<strong>%s</strong>."
+
+#: modules/imaging/manage/master_iso.php:48
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the"
+" backup."
+msgstr ""
+"Файли буде збережено до каталогу %s сервера наприкінці резервного "
+"копіювання."
+
+#: modules/imaging/manage/master_iso.php:50
+msgid "Please go to the status page to check the iso creation status."
+msgstr ""
+"Будь ласка, перейдіть на сторінку стану, щоб ознайомитися зі станом "
+"створення ISO."
+
+#: modules/imaging/manage/master_iso.php:52
+msgid ""
+"This operation will last according to the amount of data of the master."
+msgstr ""
+"Тривалість виконання цієї дії залежить від об'єму даних у основній системі."
+
+#: modules/imaging/manage/master_iso.php:88
+#, php-format
+msgid "Create iso for <strong>%s</strong>"
+msgstr "Створити ISO з <strong>%s</strong>"
+
+#: modules/imaging/manage/master_iso.php:95
+#: modules/imaging/imaging/images_iso.php:98
+msgid "Media size"
+msgstr "Розмір носія"
+
+#: modules/imaging/manage/master_iso.php:108
+msgid "Launch backup"
+msgstr "Запустити резервне копіювання"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:392
+#: modules/imaging/manage/ajaxFormWin7.php:447
+#: modules/imaging/manage/ajaxFormWin8.php:523
+msgid "Show Windows Live"
+msgstr "Показати Windows Live"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:517
+#: modules/imaging/manage/ajaxFormWin7.php:572
+#: modules/imaging/manage/ajaxFormWin8.php:648
+msgid "System Updates"
+msgstr "Оновлення системи"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:653
+#: modules/imaging/manage/ajaxFormWin8.php:784
+msgid "System Background Colour"
+msgstr "Колір тла системи"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:660
+#: modules/imaging/manage/ajaxFormWin8.php:791
+msgid "For Windows 8"
+msgstr "Для Windows 8"
+
+#: modules/imaging/manage/ajaxFormWin8-uefi.php:661
+#: modules/imaging/manage/ajaxFormWin8.php:792
+msgid "For Windows 8.1"
+msgstr "Для Windows 8.1"
+
+#: modules/imaging/manage/bootmenu_up.php:37
+#, php-format
+msgid "Success to move <strong>%s</strong> in the default boot menu"
+msgstr "Успішно пересунуто <strong>%s</strong> у типовому меню завантаження"
+
+#: modules/imaging/manage/bootmenu_up.php:50
+#, php-format
+msgid "Failed to move <strong>%s</strong> in the default boot menu"
+msgstr ""
+"Не вдалося пересунути <strong>%s</strong> у типовому меню завантаження"
+
+#: modules/imaging/manage/ajaxBootmenu.php:30
+#: modules/imaging/imaging/bootmenu.php:364
+msgid "Move Up"
+msgstr "Пересунути вище"
+
+#: modules/imaging/manage/ajaxBootmenu.php:31
+#: modules/imaging/imaging/bootmenu.php:365
+msgid "Move down"
+msgstr "Пересунути нижче"
+
+#: modules/imaging/manage/ajaxBootmenu.php:94
+msgid "Default boot menu configuration"
+msgstr "Типові налаштування меню завантаження"
+
+#: modules/imaging/manage/ajaxBootmenu.php:97
+#: modules/imaging/manage/master_edit.php:55
+#: modules/imaging/manage/ajaxServiceLevel2.php:91
+#: modules/imaging/manage/service_edit.php:56
+#: modules/imaging/manage/ajaxMasterLevel2.php:95
+#: modules/imaging/imaging/ajaxServices.php:98
+#: modules/imaging/imaging/images.php:105
+#: modules/imaging/imaging/bootmenu.php:457
+#: modules/imaging/imaging/ajaxImages.php:169
+msgid "Label"
+msgstr "Мітка"
+
+#: modules/imaging/manage/ajaxBootmenu.php:100
+msgid "Default"
+msgstr "Типове"
+
+#: modules/imaging/manage/ajaxBootmenu.php:102
+msgid "Default on WOL"
+msgstr "Типове на WOL"
+
+#: modules/imaging/manage/ajaxBootmenu.php:106
+#: modules/imaging/imaging/bootmenu.php:366
+msgid "Edit"
+msgstr "Змінити"
+
+#: modules/imaging/manage/sysprepView.php:33
+msgid "View "
+msgstr "Перегляд"
+
+#: modules/imaging/manage/ajaxLogs.php:45
+msgid "No log available."
+msgstr "Немає доступних журналів."
+
+#: modules/imaging/manage/ajaxLogs.php:109
+#: modules/imaging/imaging/ajaxLogs.php:90
+msgid "Timestamp"
+msgstr "Часова позначка"
+
+#: modules/imaging/manage/ajaxLogs.php:111
+#: modules/imaging/imaging/ajaxLogs.php:94
+msgid "Target"
+msgstr "Призначення"
+
+#: modules/imaging/manage/ajaxLogs.php:112
+#: modules/imaging/imaging/ajaxLogs.php:95
+msgid "Message"
+msgstr "Повідомлення"
+
+#: modules/imaging/manage/service_show_used.php:67
+#: modules/imaging/manage/service_show_used.php:108
+msgid "Removal of boot service failed"
+msgstr "Не вдалося вилучити службу завантаження"
+
+#: modules/imaging/manage/service_show_used.php:85
+#: modules/imaging/imaging/bootmenu_remove.php:127
+#: modules/imaging/imaging/addimage.php:106
+#: modules/imaging/imaging/showtarget.php:78
+#: modules/imaging/imaging/addservice.php:103
+#, php-format
+msgid "Boot menu generation failed for computer: %s"
+msgstr "Не вдалося створити меню завантаження для комп'ютера: %s"
+
+#: modules/imaging/manage/service_show_used.php:93
+#: modules/imaging/manage/service_del.php:44
+#, php-format
+msgid "Service <strong>%s</strong> removed from default boot menu"
+msgstr "Службу <strong>%s</strong> вилучено з типового меню завантаження"
+
+#: modules/imaging/manage/service_show_used.php:163
+#: modules/imaging/imaging/showtarget.php:123
+msgid "Show all targets that use that image in their boot menu"
+msgstr "Показати усі цілі, які використовують цей образ у меню завантаження"
+
+#: modules/imaging/manage/service_show_used.php:170
+#, php-format
+msgid "Remove this boot service from imaging server %s"
+msgstr "Вилучити цю службу завантаження з сервера образів %s"
+
+#: modules/imaging/manage/service_show_used.php:171
+#: modules/imaging/imaging/showtarget.php:150
+msgid "Imaging server"
+msgstr "Сервер образів"
+
+#: modules/imaging/manage/service_show_used.php:178
+#: modules/imaging/imaging/showtarget.php:157
+#, php-format
+msgid "Remove this master from computer %s"
+msgstr "Вилучити цю основну систему з комп'ютера %s"
+
+#: modules/imaging/manage/service_show_used.php:179
+#: modules/imaging/imaging/showtarget.php:158
+msgid "Imaging group"
+msgstr "Група образів"
+
+#: modules/imaging/manage/service_show_used.php:179
+#: modules/imaging/imaging/showtarget.php:158
+#: modules/imaging/imaging/configure.php:39
+msgid "Computer"
+msgstr "Комп'ютер"
+
+#: modules/imaging/manage/service_show_used.php:194
+msgid ""
+"If you want to remove this boot service from one or more targets, check "
+"these targets and click on the remove button"
+msgstr ""
+"Якщо ви хочете вилучити цю службу завантаження з однієї або декількох цілей,"
+" позначте пункти цих цілей і натисніть кнопку «Вилучити»."
+
+#: modules/imaging/manage/service_show_used.php:196
+#: modules/imaging/imaging/showtarget.php:127
+msgid "Select all"
+msgstr "Позначити всі"
+
+#: modules/imaging/manage/service_show_used.php:198
+#: modules/imaging/imaging/showtarget.php:129
+msgid "Unselect all"
+msgstr "Зняти позначення з усього"
+
+#: modules/imaging/manage/service_show_used.php:199
+#: modules/imaging/manage/master_delete.php:80
+#: modules/imaging/manage/master_remove.php:93
+#: modules/imaging/imaging/bootmenu_remove.php:160
+#: modules/imaging/imaging/showtarget.php:130
+#: modules/imaging/imaging/images_delete.php:72
+msgid "Remove"
+msgstr "Вилучити"
+
+#: modules/imaging/manage/master_edit.php:45
+msgid "Edit master : "
+msgstr "Редагування основи: "
+
+#: modules/imaging/manage/master_edit.php:96
+#, php-format
+msgid "Master <strong>%s</strong> modified with success"
+msgstr "Основу <strong>%s</strong> успішно змінено"
+
+#: modules/imaging/manage/master_edit.php:116
+#, php-format
+msgid "Master %s modified with error"
+msgstr "Основу %s змінено із помилкою"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:49
+msgid "Add service to default boot menu"
+msgstr "Додати службу до типового меню завантаження"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:50
+msgid "Remove service from default boot menu"
+msgstr "Вилучити службу з типового меню завантаження"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:51
+msgid "Delete service"
+msgstr "Вилучити службу"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:52
+msgid "Show where service is used"
+msgstr "Показати, де використовується служба"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:94
+#: modules/imaging/imaging/ajaxImages.php:174
+msgid "In boot menu"
+msgstr "У меню завантаження"
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:40
+msgid "No imaging server available for association."
+msgstr "Немає доступних серверів образів для прив'язування."
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:47
+#, php-format
+msgid "Link this Imaging Server to the '%s' entity."
+msgstr "Пов'язати цей сервер образів із записом «%s»."
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:70
+msgid "Associate an entity to an imaging server"
+msgstr "Пов'язати запис із сервером образів"
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:77
+msgid "Identifier"
+msgstr "Ідентифікатор"
+
+#: modules/imaging/manage/service_edit.php:48
+msgid "Edit service : "
+msgstr "Редагування служби: "
+
+#: modules/imaging/manage/service_edit.php:66
+msgid "In default bootmenu"
+msgstr "У типовому меню завантаження"
+
+#: modules/imaging/manage/service_edit.php:81
+#, php-format
+msgid "Service <strong>%s</strong> modified with success"
+msgstr "Службу <strong>%s</strong> успішно змінено"
+
+#: modules/imaging/manage/ajaxPostInstall.php:27
+msgid "Available post-imaging scripts"
+msgstr "Доступні скрипти після створення образу"
+
+#: modules/imaging/manage/sysprepList.php:38
+#, php-format
+msgid "The sysprep answer file %s has been removed from the imaging system."
+msgstr "Файл відповідей sysprep %s вилучено із системи образів."
+
+#: modules/imaging/manage/sysprepList.php:78
+msgid "All Windows Answer Files"
+msgstr "Усі файли відповідей Windows"
+
+#: modules/imaging/manage/sysprepList.php:83
+msgid "File name"
+msgstr "Назва файла"
+
+#: modules/imaging/manage/sysprepList.php:86
+msgid "OS"
+msgstr "ОС"
+
+#: modules/imaging/manage/sysprepList.php:90
+msgid "Display sysprep file"
+msgstr "Показати файл sysprep"
+
+#: modules/imaging/manage/sysprepList.php:91
+msgid "Edit sysprep file"
+msgstr "Редагувати файл sysprep"
+
+#: modules/imaging/manage/sysprepList.php:92
+msgid "Delete sysprep file"
+msgstr "Вилучити файл sysprep"
+
+#: modules/imaging/manage/sysprepList.php:92
+msgid "Are you sure you want to unset this sysrep answer file?"
+msgstr "Ви справді хочете вимкнути цей файл відповідей sysrep?"
+
+#: modules/imaging/manage/localSidebar.php:28
+msgid "Imaging server status"
+msgstr "Стан сервера образів"
+
+#: modules/imaging/manage/localSidebar.php:31
+#: modules/imaging/infoPackage.inc.php:99
+msgid "Manage masters"
+msgstr "Керування основними"
+
+#: modules/imaging/manage/localSidebar.php:34
+#: modules/imaging/infoPackage.inc.php:125
+msgid "Manage boot services"
+msgstr "Керування службами завантаження"
+
+#: modules/imaging/manage/localSidebar.php:37
+#: modules/imaging/infoPackage.inc.php:143
+msgid "Default boot menu"
+msgstr "Типове меню завантаження"
+
+#: modules/imaging/manage/localSidebar.php:40
+#: modules/imaging/infoPackage.inc.php:155
+msgid "Post-imaging scripts"
+msgstr "Скрипти після створення образів"
+
+#: modules/imaging/manage/localSidebar.php:43
+msgid "Imaging Configuration"
+msgstr "Налаштування роботи з образами"
+
+#: modules/imaging/manage/localSidebar.php:46
+msgid "Windows System Image Manager"
+msgstr "Керування образами системи Windows"
+
 #: modules/imaging/manage/ajaxMasterLevel2.php:44
 msgid "No master available."
 msgstr "Немає основної системи."
@@ -2960,6 +2523,14 @@ msgstr ""
 #: modules/imaging/manage/ajaxMasterLevel2.php:52
 msgid "Add image to default boot menu"
 msgstr "Додати образ до типового меню завантаження"
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:53
+#: modules/imaging/infoPackage.inc.php:285
+#: modules/imaging/infoPackage.inc.php:366
+#: modules/imaging/imaging/bootmenu_remove.php:156
+#: modules/imaging/imaging/ajaxImages.php:79
+msgid "Remove from boot menu"
+msgstr "Вилучити з меню завантаження"
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:64
 #: modules/imaging/imaging/ajaxImages.php:86
@@ -2999,6 +2570,213 @@ msgstr "Відбувається копіювання основної сист�
 msgid "Master Clone"
 msgstr "Клон основи"
 
+#: modules/imaging/manage/master_delete.php:38
+#, php-format
+msgid "Image <strong>%s</strong> deleted from the imaging server."
+msgstr "Образ <strong>%s</strong> вилучено із сервера образів."
+
+#: modules/imaging/manage/master_delete.php:57
+#, php-format
+msgid "Error : Image %s deleted from the imaging server."
+msgstr "Помилка: образ %s вилучено з сервера образів."
+
+#: modules/imaging/manage/master_delete.php:76
+#: modules/imaging/infoPackage.inc.php:104
+msgid "Delete master"
+msgstr "Вилучити основу"
+
+#: modules/imaging/manage/master_delete.php:78
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> master ?"
+msgstr "Ви справді хочете вилучити основу <b>%s</b>?"
+
+#: modules/imaging/manage/ajaxConfiguration.php:29
+msgid "Imaging server configuration"
+msgstr "Налаштування сервера образів"
+
+#: modules/imaging/manage/ajaxConfiguration.php:60
+msgid "Menu language"
+msgstr "Мова меню"
+
+#: modules/imaging/manage/ajaxConfiguration.php:63
+msgid "PXE Login"
+msgstr "Вхід до PXE"
+
+#: modules/imaging/manage/ajaxConfiguration.php:64
+#: modules/imaging/manage/ajaxConfiguration.php:66
+msgid "Leave this field empty to unset PXE Password"
+msgstr "Не заповнюйте це поле, щоб не встановлювати пароль PXE"
+
+#: modules/imaging/manage/ajaxConfiguration.php:65
+msgid "PXE Password"
+msgstr "Пароль PXE"
+
+#: modules/imaging/manage/ajaxConfiguration.php:86
+msgid "Clonezilla parameters for saving images"
+msgstr "Параметри Clonezilla для збереження образів"
+
+#: modules/imaging/manage/ajaxConfiguration.php:89
+msgid "Clonezilla parameters for restoring images"
+msgstr "Параметри Clonezilla для відновлення образів"
+
+#: modules/imaging/manage/ajaxConfiguration.php:97
+msgid "Default menu parameters"
+msgstr "Параметри типового меню"
+
+#: modules/imaging/manage/ajaxConfiguration.php:101
+#: modules/imaging/imaging/configure.php:43
+msgid "Default menu label"
+msgstr "Типова мітка меню"
+
+#: modules/imaging/manage/ajaxConfiguration.php:104
+msgid "Default menu timeout"
+msgstr "Час очікування типового меню"
+
+#: modules/imaging/manage/ajaxConfiguration.php:112
+msgid "Hide menu"
+msgstr "Приховати меню"
+
+#: modules/imaging/manage/ajaxConfiguration.php:116
+#: modules/imaging/imaging/configure.php:62
+msgid "Boot options"
+msgstr "Параметри завантаження"
+
+#: modules/imaging/manage/ajaxConfiguration.php:119
+#: modules/imaging/imaging/configure.php:65
+msgid "Full path to the XPM displayed at boot"
+msgstr "Повний шлях до XPM, показаний при завантаженні"
+
+#: modules/imaging/manage/ajaxConfiguration.php:122
+#: modules/imaging/imaging/configure.php:69
+msgid "Message displayed during backup/restoration"
+msgstr "Повідомлення, показане при резервному копіюванні та відновленні"
+
+#: modules/imaging/manage/bootmenu_edit.php:68
+#, php-format
+msgid "Edit : %s"
+msgstr "Редагування: %s"
+
+#: modules/imaging/manage/bootmenu_edit.php:77
+msgid "Default menu item label"
+msgstr "Мітка запису у типовому меню"
+
+#: modules/imaging/manage/imaging_server_link.php:60
+#, php-format
+msgid ""
+"Link between package server <strong>%s</strong> and the entity "
+"<strong>%s</strong> succeeded."
+msgstr ""
+"Успішна прив'язка між сервером пакунків <strong>%s</strong> і записом "
+"<strong>%s</strong>."
+
+#: modules/imaging/manage/imaging_server_link.php:106
+#, php-format
+msgid ""
+"Do you really want to link the Imaging Server '<b>%s</b>' to the entity "
+"'<b>%s</b>'"
+msgstr ""
+"Ви справді хочете пов'язати сервер образів «<b>%s</b>» із записом "
+"«<b>%s</b>»?"
+
+#: modules/imaging/manage/master_remove.php:37
+#, php-format
+msgid "Image <strong>%s</strong> removed from default boot menu."
+msgstr "Образ <strong>%s</strong> вилучено з типового меню завантаження."
+
+#: modules/imaging/manage/master_remove.php:38
+msgid "Notify Success : removed from default boot menu."
+msgstr "Сповіщення щодо успіху: вилучено з типового меню завантаження."
+
+#: modules/imaging/manage/master_remove.php:89
+#: modules/imaging/infoPackage.inc.php:101
+msgid "Remove master"
+msgstr "Вилучити основу"
+
+#: modules/imaging/manage/master_remove.php:91
+#, php-format
+msgid "Are you sure you want to remove <b>%s</b> master ?"
+msgstr "Ви справді хочете вилучити основу <b>%s</b>?"
+
+#: modules/imaging/manage/ajaxMaster.php:27
+#: modules/imaging/imaging/images.php:70
+msgid "Available masters"
+msgstr "Доступні основні"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:38
+msgid "Boot service successfully created"
+msgstr "Службу завантаження успішно створено"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:39
+msgid "Notify Success : Boot service successfully created"
+msgstr "Сповіщення щодо успіху: службу завантаження успішно створено"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:55
+msgid "Error while creating Boot Service"
+msgstr "Помилка під час створення служби завантаження"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:56
+msgid "Notify Error : Error while creating Boot Service"
+msgstr ""
+"Сповіщення щодо помилки: помилка під час створення служби завантаження"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:77
+#, php-format
+msgid "Add <b>%s</b> to available Boot Services ?"
+msgstr "Додати <b>%s</b> до доступних служб завантаження?"
+
+#: modules/imaging/manage/postinstall_redirect_to_boot_service.php:38
+#, php-format
+msgid "<b>%s</b> was already added to Boot Services"
+msgstr "<b>%s</b> вже додано до служб завантаження"
+
+#: modules/imaging/manage/bootmenu_down.php:36
+#, php-format
+msgid "Success : to move down <strong>%s</strong> in the default boot menu"
+msgstr ""
+"<strong>%s</strong> успішно пересунуто нижче у типовому меню завантаження"
+
+#: modules/imaging/manage/bootmenu_down.php:49
+#, php-format
+msgid ""
+"Error : Failed to move down <strong>%s</strong> in the default boot menu"
+msgstr ""
+"Помилка: не вдалося пересунути <strong>%s</strong> нижче у типовому меню "
+"завантаження"
+
+#: modules/imaging/manage/synchromaster.php:47
+#, php-format
+msgid "Master copy: %s ( %s )"
+msgstr "Основна копія: %s ( %s )"
+
+#: modules/imaging/manage/synchromaster.php:60
+msgid "Copy of master Not Started"
+msgstr "Копіювання основи не розпочато"
+
+#: modules/imaging/manage/synchromaster.php:66
+msgid "Copy of master"
+msgstr "Копіювати основу"
+
+#: modules/imaging/manage/synchromaster.php:119
+msgid "Complete"
+msgstr "Завершено"
+
+#: modules/imaging/manage/synchromaster.php:122
+msgid "In progress"
+msgstr "Виконується"
+
+#: modules/imaging/manage/synchromaster.php:135
+msgid "Copy of master complete"
+msgstr "Копіювання основної системи завершено"
+
+#: modules/imaging/manage/synchromaster.php:139
+msgid "Copy of master In progress"
+msgstr "Відбувається копіювання основної системи"
+
+#: modules/imaging/manage/service_del.php:78
+#, php-format
+msgid "Remove the boot service <b>%s</b> from the default boot menu"
+msgstr "Вилучити службу завантаження <b>%s</b> з типового меню завантаження"
+
 #: modules/imaging/manage/service_add.php:49
 #, php-format
 msgid "Service <strong>%s</strong> added to default boot menu"
@@ -3009,172 +2787,282 @@ msgstr "Службу <strong>%s</strong> додано до типового ме
 msgid "Add the boot service <b>%s</b> to the default boot menu"
 msgstr "Додати службу завантаження <b>%s</b> до типового меню завантаження"
 
-#: modules/imaging/manage/service_remove.php:44
-#, php-format
-msgid "Service <strong>%s</strong> successfully removed"
-msgstr "Службу <strong>%s</strong> успішно вилучено"
+#: modules/imaging/infoPackage.inc.php:33
+msgid "Imaging service"
+msgstr "Служба образів"
 
-#: modules/imaging/manage/service_remove.php:79
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
-msgstr "Ви справді хочете вилучити службу завантаження <b>%s</b>?"
+#: modules/imaging/infoPackage.inc.php:38
+msgid "Imaging"
+msgstr "Образи"
 
-#: modules/imaging/manage/localSidebar.php:28
-msgid "Imaging server status"
-msgstr "Стан сервера образів"
+#: modules/imaging/infoPackage.inc.php:43
+msgid "System Image Manager"
+msgstr "Керування образами системи"
 
-#: modules/imaging/manage/localSidebar.php:43
-msgid "Imaging Configuration"
+#: modules/imaging/infoPackage.inc.php:48
+msgid "Imaging Unattended"
+msgstr "Образи без втручання"
+
+#: modules/imaging/infoPackage.inc.php:51
+msgid "Sysprep List"
+msgstr "Список sysprep"
+
+#: modules/imaging/infoPackage.inc.php:56
+msgid "Imaging sysprepView"
+msgstr "sysprepView образів"
+
+#: modules/imaging/infoPackage.inc.php:86
+#: modules/imaging/infoPackage.inc.php:91
+msgid "Create static group from menu set"
+msgstr "Створити статичну групу з набору меню"
+
+#: modules/imaging/infoPackage.inc.php:96
+msgid "Server status"
+msgstr "Стан сервера"
+
+#: modules/imaging/infoPackage.inc.php:107
+msgid "Edit master"
+msgstr "Редагувати основу"
+
+#: modules/imaging/infoPackage.inc.php:111
+#: modules/imaging/infoPackage.inc.php:114
+msgid "master clone"
+msgstr "клон основи"
+
+#: modules/imaging/infoPackage.inc.php:118
+msgid "Add master"
+msgstr "Додати основу"
+
+#: modules/imaging/infoPackage.inc.php:127
+msgid "Edit service"
+msgstr "Редагувати службу"
+
+#: modules/imaging/infoPackage.inc.php:130
+#: modules/imaging/infoPackage.inc.php:136
+msgid "Remove service"
+msgstr "Вилучити службу"
+
+#: modules/imaging/infoPackage.inc.php:133
+msgid "Add service"
+msgstr "Додати службу"
+
+#: modules/imaging/infoPackage.inc.php:139
+msgid "Show used services"
+msgstr "Показати використані служби"
+
+#: modules/imaging/infoPackage.inc.php:145
+msgid "Up service"
+msgstr "Службу вище"
+
+#: modules/imaging/infoPackage.inc.php:148
+#: modules/imaging/infoPackage.inc.php:151
+msgid "Down service"
+msgstr "Службу нижче"
+
+#: modules/imaging/infoPackage.inc.php:157
+#: modules/imaging/infoPackage.inc.php:160
+msgid "Edit post-imaging script"
+msgstr "Редагувати скрипт обробки після створення образу"
+
+#: modules/imaging/infoPackage.inc.php:163
+msgid "Create boot service from postinstall script"
+msgstr "Створити службу завантаження на основі скрипту після встановлення"
+
+#: modules/imaging/infoPackage.inc.php:166
+msgid "Redirect to Boot Services page"
+msgstr "Переспрямування на сторінку служб завантаження"
+
+#: modules/imaging/infoPackage.inc.php:173
+msgid "Imaging configuration"
 msgstr "Налаштування роботи з образами"
 
-#: modules/imaging/manage/localSidebar.php:46
-msgid "Windows System Image Manager"
-msgstr "Керування образами системи Windows"
+#: modules/imaging/infoPackage.inc.php:175
+msgid "Save an Imaging Server configuration"
+msgstr "Зберегти налаштування сервера образів"
 
-#: modules/imaging/manage/multicastaction.php:68
-msgid "Start Multicast of ( Master :"
-msgstr "Розпочати трансляцію ( основа:"
+#: modules/imaging/infoPackage.inc.php:179
+msgid "Available Imaging Server"
+msgstr "Доступний сервер образів"
 
-#: modules/imaging/manage/multicastaction.php:69
-#: modules/imaging/manage/multicastaction.php:89
-#: modules/imaging/manage/multicastaction.php:136
-msgid "on (group :"
-msgstr "на (група:"
+#: modules/imaging/infoPackage.inc.php:182
+msgid "Link an Imaging Server"
+msgstr "Посилання на сервер образів"
 
-#: modules/imaging/manage/multicastaction.php:70
-#: modules/imaging/manage/multicastaction.php:90
-#: modules/imaging/manage/multicastaction.php:137
-msgid "to (location : "
-msgstr "до (місце: "
+#: modules/imaging/infoPackage.inc.php:190
+#: modules/imaging/infoPackage.inc.php:250
+msgid "Computers Profile Creator"
+msgstr "Засіб створення профілів комп'ютерів"
 
-#: modules/imaging/manage/multicastaction.php:88
-msgid "Stop Multicast of ( Master :"
-msgstr "Припинити трансляцію (основа:"
+#: modules/imaging/infoPackage.inc.php:193
+#: modules/imaging/infoPackage.inc.php:207
+#: modules/imaging/infoPackage.inc.php:221
+msgid "Profile creation's tab from dynamic request"
+msgstr "Вкладка створення профілів на основі динамічних запитів"
 
-#: modules/imaging/manage/multicastaction.php:102
-#: modules/imaging/manage/multicastaction.php:121
-msgid "Synchro Profile Menu group : "
-msgstr "Група меню профілю синхронізації: "
+#: modules/imaging/infoPackage.inc.php:196
+#: modules/imaging/infoPackage.inc.php:210
+#: modules/imaging/infoPackage.inc.php:224
+msgid "Profile creation's tab from machine list"
+msgstr "Вкладка створення профілів на основі списку машин"
 
-#: modules/imaging/manage/multicastaction.php:121
-msgid "location : "
-msgstr "розташування: "
+#: modules/imaging/infoPackage.inc.php:199
+#: modules/imaging/infoPackage.inc.php:213
+#: modules/imaging/infoPackage.inc.php:227
+msgid "Profile creation's tab from file import"
+msgstr "Вкладка створення профілів на основі імпортування файлів"
 
-#: modules/imaging/manage/multicastaction.php:135
-msgid "Clear Multicast of ( Master :"
-msgstr "Вилучити трансляцію (основа:"
+#: modules/imaging/infoPackage.inc.php:203
+msgid "Computers Profile Creator Sub Request Editor"
+msgstr "Редактор підзапитів засобу створення профілів комп'ютерів"
 
-#: modules/imaging/imaging/images_delete.php:70
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> image ?"
-msgstr "Ви справді хочете вилучити образ <b>%s</b>?"
+#: modules/imaging/infoPackage.inc.php:217
+msgid "Computers Profile Creator Sub Request Delete"
+msgstr "Вилучення підзапитів засобу створення профілів комп'ютерів"
 
-#: modules/imaging/imaging/addimage.php:81
-#: modules/imaging/imaging/tabs.php:100
-#: modules/imaging/imaging/bootmenu_remove.php:103
-#: modules/imaging/imaging/addservice.php:78
-msgid ""
-"The bootmenus cannot be generated as a multicast deployment is currently "
-"running."
-msgstr ""
-"Не вдалося створити меню завантаження, оскільки зараз виконується "
-"трансляційне розгортання."
+#: modules/imaging/infoPackage.inc.php:231
+#: modules/imaging/infoPackage.inc.php:254
+msgid "Computers Profile Editor"
+msgstr "Редактор профілів комп'ютерів"
 
-#: modules/imaging/imaging/tabs.php:61
-msgid "Default menu has been successfully restored."
-msgstr "Типове меню було успішно відновлено."
+#: modules/imaging/infoPackage.inc.php:236
+msgid "Computers Profile Sub Request Editor"
+msgstr "Редактор підзапитів профілів комп'ютерів"
 
-#: modules/imaging/imaging/tabs.php:117
-#, php-format
-msgid "This computer is no longer registered : %s"
-msgstr "Цей комп'ютер вже не є зареєстрованим: %s"
+#: modules/imaging/infoPackage.inc.php:241
+msgid "Computers Profile Sub Request Delete"
+msgstr "Вилучення підзапитів профілів комп'ютерів"
 
-#: modules/imaging/imaging/tabs.php:121
-#, php-format
-msgid "Boot Menu Generation failed for : %s"
-msgstr "Не вдалося створити меню завантаження для: %s"
+#: modules/imaging/infoPackage.inc.php:246
+#: modules/imaging/infoPackage.inc.php:259
+msgid "List all profiles of computers"
+msgstr "Показати список усіх профілів комп'ютерів"
 
-#: modules/imaging/imaging/tabs.php:142 modules/imaging/imaging/tabs.php:173
-#: modules/imaging/imaging/tabs.php:193 modules/imaging/imaging/tabs.php:213
-#, php-format
-msgid "%s's computer imaging"
-msgstr "Образи комп'ютера %s"
+#: modules/imaging/infoPackage.inc.php:265
+msgid "Register a profile in the imaging module"
+msgstr "Зареєструвати профіль у модулі образів"
 
-#: modules/imaging/imaging/tabs.php:148
-msgid ""
-"This computer can't be declared in the imaging module: it's already part of "
-"a broken imaging group."
-msgstr ""
-"Цей комп'ютер не можна оголошувати у модулі образів: він вже є частиною "
-"помилкової групи образів."
+#: modules/imaging/infoPackage.inc.php:271
+msgid "Imaging on group"
+msgstr "Образи у групі"
 
-#: modules/imaging/imaging/tabs.php:156
-#, php-format
-msgid "Please declare the imaging group first %shere%s."
-msgstr "Будь ласка, спочатку оголосіть групу образів %sтут%s."
+#: modules/imaging/infoPackage.inc.php:274
+#: modules/imaging/infoPackage.inc.php:353
+#: modules/imaging/imaging/tabs.php:220 modules/imaging/imaging/tabs.php:292
+msgid "Boot menu"
+msgstr "Меню завантаження"
 
-#: modules/imaging/imaging/tabs.php:164 modules/imaging/imaging/tabs.php:250
-#, php-format
-msgid "Reset synchronisation state for %s (%s) succeed"
-msgstr "Успішно скинуто стан синхронізації для %s (%s)"
+#: modules/imaging/infoPackage.inc.php:276
+#: modules/imaging/infoPackage.inc.php:355
+#: modules/imaging/imaging/tabs.php:223
+msgid "Images and Masters"
+msgstr "Образи і основні системи"
 
-#: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:254
-msgid "Failed to reset synchronise state."
-msgstr "Не вдалося скинути стан синхронізації."
+#: modules/imaging/infoPackage.inc.php:278
+#: modules/imaging/infoPackage.inc.php:357
+#: modules/imaging/imaging/tabs.php:224 modules/imaging/imaging/tabs.php:294
+msgid "Boot services"
+msgstr "Служби завантаження"
 
-#: modules/imaging/imaging/tabs.php:179 modules/imaging/imaging/tabs.php:265
-#, php-format
-msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
-msgstr ""
-"Створюємо меню завантаження… Будь ласка, зачекайте або перезавантажте "
-"сторінку %sтут%s.<br/>"
-
-#: modules/imaging/imaging/tabs.php:182 modules/imaging/imaging/tabs.php:268
-msgid ""
-"If the processing exceeds 5 minutes, please reset the synchro state of this "
-"computer."
-msgstr ""
-"Якщо обробка триває понад 5 хвилин, будь ласка, скиньте стан синхронізації "
-"цього комп'ютера."
-
-#: modules/imaging/imaging/tabs.php:190 modules/imaging/imaging/tabs.php:276
-msgid "Reset Synchro state"
-msgstr "Скинути стан синхронізації"
-
-#: modules/imaging/imaging/tabs.php:209
-#, php-format
-msgid "%s's computer imaging (in group)"
-msgstr "Образи комп'ютера %s (у групі)"
-
-#: modules/imaging/imaging/tabs.php:217 modules/imaging/imaging/tabs.php:289
-msgid "Current boot menu"
-msgstr "Поточне меню завантаження"
-
-#: modules/imaging/imaging/tabs.php:221 modules/imaging/imaging/tabs.php:291
-msgid "Available boot menu services"
-msgstr "Доступні служби меню завантаження"
-
-#: modules/imaging/imaging/tabs.php:222 modules/imaging/imaging/tabs.php:292
-msgid "Imaging log"
+#: modules/imaging/infoPackage.inc.php:280
+#: modules/imaging/infoPackage.inc.php:359
+msgid "Imaging Log"
 msgstr "Журнал образів"
 
-#: modules/imaging/imaging/tabs.php:259
-#, php-format
-msgid "%s's profile imaging"
-msgstr "Профіль образів %s"
+#: modules/imaging/infoPackage.inc.php:282
+#: modules/imaging/infoPackage.inc.php:361
+#: modules/imaging/imaging/tabs.php:226 modules/imaging/imaging/tabs.php:296
+msgid "Menu configuration"
+msgstr "Налаштування меню"
 
-#: modules/imaging/imaging/tabs.php:288
-#, php-format
-msgid "%s's imaging group"
-msgstr "Група образів %s"
+#: modules/imaging/infoPackage.inc.php:289
+msgid "Display computers group content"
+msgstr "Показати вміст групи комп'ютерів"
 
-#: modules/imaging/imaging/tabs.php:290
-msgid "Masters"
-msgstr "Основні"
+#: modules/imaging/infoPackage.inc.php:293
+msgid "Delete a group of computers"
+msgstr "Вилучити групу комп'ютерів"
 
-#: modules/imaging/imaging/tabs.php:301
-msgid "Not enough information"
-msgstr "Недостатньо даних"
+#: modules/imaging/infoPackage.inc.php:297
+msgid "Computers Group Editor"
+msgstr "Редактор груп комп'ютерів"
+
+#: modules/imaging/infoPackage.inc.php:301
+msgid "Share a group of computers"
+msgstr "Поділитися групою комп'ютерів"
+
+#: modules/imaging/infoPackage.inc.php:307
+msgid "Secure control on a group of computers"
+msgstr "Керування захистом групи комп'ютерів"
+
+#: modules/imaging/infoPackage.inc.php:311
+msgid "MSC launch tab for a group"
+msgstr "Вкладка запуску MSC для групи"
+
+#: modules/imaging/infoPackage.inc.php:314
+msgid "MSC bundle tab for a group"
+msgstr "Вкладка в'язок MSC для групи"
+
+#: modules/imaging/infoPackage.inc.php:317
+msgid "MSC logs tab for a group"
+msgstr "Вкладка журналів MSC для групи"
+
+#: modules/imaging/infoPackage.inc.php:320
+msgid "MSC history tab for a group"
+msgstr "Вкладка «Журнал MSC» для групи"
+
+#: modules/imaging/infoPackage.inc.php:340
+msgid "Register a computer in the imaging module"
+msgstr "Зареєструвати комп'ютер у модулі образів"
+
+#: modules/imaging/infoPackage.inc.php:345
+msgid "Create a static group containing computers with custom imaging menu"
+msgstr ""
+"Створити статичну групу, що містить комп'ютери з нетиповим меню образів"
+
+#: modules/imaging/infoPackage.inc.php:350
+msgid "Imaging on computer"
+msgstr "Образи на комп'ютері"
+
+#: modules/imaging/infoPackage.inc.php:370
+msgid "Show target that use that image"
+msgstr "Показати ціль, яка використовує цей образ"
+
+#: modules/imaging/infoPackage.inc.php:374
+msgid "Show sync status"
+msgstr "Показати стан синхронізації"
+
+#: modules/imaging/infoPackage.inc.php:416
+msgid "Add a service to a target"
+msgstr "Додати службу до цілі"
+
+#: modules/imaging/infoPackage.inc.php:420
+msgid "Edit parameters of a service on a target"
+msgstr "Редагувати параметри служби на цілі"
+
+#: modules/imaging/infoPackage.inc.php:424
+msgid "Remove a service from a target"
+msgstr "Вилучити службу з цілі"
+
+#: modules/imaging/infoPackage.inc.php:429
+msgid "Add a image to a target"
+msgstr "Додати образ до цілі"
+
+#: modules/imaging/infoPackage.inc.php:433
+msgid "Edit parameters of a image on a target"
+msgstr "Редагувати параметри образу на цілі"
+
+#: modules/imaging/infoPackage.inc.php:437
+#: modules/imaging/imaging/images_delete.php:68
+msgid "Delete image"
+msgstr "Вилучити зображення"
+
+#: modules/imaging/infoPackage.inc.php:441
+msgid "Create iso image"
+msgstr "Створити образ ISO"
+
+#: modules/imaging/infoPackage.inc.php:445
+msgid "init multicast"
+msgstr "ініціалізувати трансляцію"
 
 #: modules/imaging/imaging/bootmenu_remove.php:61
 #, php-format
@@ -3186,117 +3074,38 @@ msgstr "Вилучити службу %s"
 msgid "Remove Image %s"
 msgstr "Вилучити образ %s"
 
+#: modules/imaging/imaging/bootmenu_remove.php:103
+#: modules/imaging/imaging/addimage.php:81
+#: modules/imaging/imaging/tabs.php:103
+#: modules/imaging/imaging/addservice.php:78
+msgid ""
+"The bootmenus cannot be generated as a multicast deployment is currently "
+"running."
+msgstr ""
+"Не вдалося створити меню завантаження, оскільки зараз виконується "
+"трансляційне розгортання."
+
 #: modules/imaging/imaging/bootmenu_remove.php:159
 #, php-format
 msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
 msgstr "Ви справді хочете вилучити <b>%s</b> з меню завантаження?"
 
-#: modules/imaging/imaging/ajaxLogs.php:96
-msgid "State"
-msgstr "Стан"
-
-#: modules/imaging/imaging/creategroupcustonmenuimaging.php:59
 #: modules/imaging/imaging/creategroupcustonmenu.php:49
+#: modules/imaging/imaging/creategroupcustonmenuimaging.php:59
 #, php-format
 msgid "Machine with custom menu on entity [%s] at %s"
 msgstr "Машина з нетиповим меню у записі [%s] на %s"
 
-#: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
 #: modules/imaging/imaging/creategroupcustonmenu.php:70
+#: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "Список комп'ютерів обрізано до %d записів"
 
-#: modules/imaging/imaging/bootmenu.php:63
+#: modules/imaging/imaging/services.php:61
 #, php-format
-msgid "Item Menu %s for group up %s"
-msgstr "Пункт меню %s для групи піднято %s"
-
-#: modules/imaging/imaging/bootmenu.php:77
-#, php-format
-msgid "Item Menu %s for machine up %s"
-msgstr "Пункт меню для машини %s піднято %s"
-
-#: modules/imaging/imaging/bootmenu.php:101
-#: modules/imaging/imaging/bootmenu.php:180
-#, php-format
-msgid "Failed to move item <strong>%s</strong> in the boot menu"
-msgstr "Не вдалося пересунути пункт <strong>%s</strong> у меню завантаження"
-
-#: modules/imaging/imaging/bootmenu.php:130
-#, php-format
-msgid "Item Menu %s%s"
-msgstr "Пункт меню %s%s"
-
-#: modules/imaging/imaging/bootmenu.php:144
-#, php-format
-msgid "Item Menu %s for machine down %s"
-msgstr "Пункт меню %s для машини опущено %s"
-
-#: modules/imaging/imaging/bootmenu.php:158
-#, php-format
-msgid "Success to move item <strong>%s</strong> in the boot menu [ %s ]"
-msgstr ""
-"Успішно пересунуто пункт меню <strong>%s</strong> у меню завантаження [ %s ]"
-
-#: modules/imaging/imaging/bootmenu.php:215
-msgid "Edition of item"
-msgstr "Редагування пункту"
-
-#: modules/imaging/imaging/bootmenu.php:291
-#: modules/imaging/imaging/bootmenu.php:305
-#, php-format
-msgid "Edit item <strong>%s</strong> in the boot Menu [ %s ]"
-msgstr "Редагувати пункт меню <strong>%s</strong> у меню завантаження [ %s ]"
-
-#: modules/imaging/imaging/bootmenu.php:399
-msgid "master from the profile"
-msgstr "основний з профілю"
-
-#: modules/imaging/imaging/bootmenu.php:401
-msgid "master"
-msgstr "основний"
-
-#: modules/imaging/imaging/bootmenu.php:408
-msgid "boot service from profile"
-msgstr "служба завантаження з профілю"
-
-#: modules/imaging/imaging/bootmenu.php:410
-msgid "boot service"
-msgstr "служба завантаження"
-
-#: modules/imaging/imaging/bootmenu.php:450
-msgid ""
-"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
-"default boot entry."
-msgstr ""
-"Скористайтеся пунктом «Позначений варіант» або «Позначений варіант на WOL», "
-"щоб визначити типовий пункт завантаження."
-
-#: modules/imaging/imaging/bootmenu.php:453
-#: modules/imaging/imaging/bootmenu.php:455
-msgid ""
-"If the default entry is an image creation or restore, the following network "
-"boots will fall back to the first menu entry."
-msgstr ""
-"Якщо типовим записом є створення образів або відновлення, під час наступних "
-"завантажень з мережі система повертатиметься до першого запису у меню."
-
-#: modules/imaging/imaging/bootmenu.php:455
-msgid ""
-"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry,"
-" this value will be set on all the computers in this group."
-msgstr ""
-"У відповідь на зміну пункту «Позначений варіант» або «Позначений варіант на "
-"WOL», це значення буде встановлено на всіх комп'ютерах цієї групи."
-
-#: modules/imaging/imaging/bootmenu.php:460
-msgid "Preselected choice"
-msgstr "Позначений варіант"
-
-#: modules/imaging/imaging/bootmenu.php:463
-msgid "Preselected choice on WOL"
-msgstr "Позначений варіант на WOL"
+msgid "Add service %s"
+msgstr "Додати службу %s"
 
 #: modules/imaging/imaging/ajaxServices.php:51
 msgid "Add service to boot menu"
@@ -3314,6 +3123,200 @@ msgstr "У меню завантаження"
 #: modules/imaging/imaging/ajaxImages.php:176
 msgid "From profile"
 msgstr "З профілю"
+
+#: modules/imaging/imaging/tabs.php:61
+msgid "Default menu has been successfully restored."
+msgstr "Типове меню було успішно відновлено."
+
+#: modules/imaging/imaging/tabs.php:120
+#, php-format
+msgid "This computer is no longer registered : %s"
+msgstr "Цей комп'ютер вже не є зареєстрованим: %s"
+
+#: modules/imaging/imaging/tabs.php:124
+#, php-format
+msgid "Boot Menu Generation failed for : %s"
+msgstr "Не вдалося створити меню завантаження для: %s"
+
+#: modules/imaging/imaging/tabs.php:145 modules/imaging/imaging/tabs.php:176
+#: modules/imaging/imaging/tabs.php:196 modules/imaging/imaging/tabs.php:216
+#, php-format
+msgid "%s's computer imaging"
+msgstr "Образи комп'ютера %s"
+
+#: modules/imaging/imaging/tabs.php:151
+msgid ""
+"This computer can't be declared in the imaging module: it's already part of "
+"a broken imaging group."
+msgstr ""
+"Цей комп'ютер не можна оголошувати у модулі образів: він вже є частиною "
+"помилкової групи образів."
+
+#: modules/imaging/imaging/tabs.php:159
+#, php-format
+msgid "Please declare the imaging group first %shere%s."
+msgstr "Будь ласка, спочатку оголосіть групу образів %sтут%s."
+
+#: modules/imaging/imaging/tabs.php:167 modules/imaging/imaging/tabs.php:253
+#, php-format
+msgid "Reset synchronisation state for %s (%s) succeed"
+msgstr "Успішно скинуто стан синхронізації для %s (%s)"
+
+#: modules/imaging/imaging/tabs.php:171 modules/imaging/imaging/tabs.php:257
+msgid "Failed to reset synchronise state."
+msgstr "Не вдалося скинути стан синхронізації."
+
+#: modules/imaging/imaging/tabs.php:182 modules/imaging/imaging/tabs.php:268
+#, php-format
+msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
+msgstr ""
+"Створюємо меню завантаження… Будь ласка, зачекайте або перезавантажте "
+"сторінку %sтут%s.<br/>"
+
+#: modules/imaging/imaging/tabs.php:185 modules/imaging/imaging/tabs.php:271
+msgid ""
+"If the processing exceeds 5 minutes, please reset the synchro state of this "
+"computer."
+msgstr ""
+"Якщо обробка триває понад 5 хвилин, будь ласка, скиньте стан синхронізації "
+"цього комп'ютера."
+
+#: modules/imaging/imaging/tabs.php:193 modules/imaging/imaging/tabs.php:279
+msgid "Reset Synchro state"
+msgstr "Скинути стан синхронізації"
+
+#: modules/imaging/imaging/tabs.php:212
+#, php-format
+msgid "%s's computer imaging (in group)"
+msgstr "Образи комп'ютера %s (у групі)"
+
+#: modules/imaging/imaging/tabs.php:220 modules/imaging/imaging/tabs.php:292
+msgid "Current boot menu"
+msgstr "Поточне меню завантаження"
+
+#: modules/imaging/imaging/tabs.php:224 modules/imaging/imaging/tabs.php:294
+msgid "Available boot menu services"
+msgstr "Доступні служби меню завантаження"
+
+#: modules/imaging/imaging/tabs.php:225 modules/imaging/imaging/tabs.php:295
+msgid "Imaging log"
+msgstr "Журнал образів"
+
+#: modules/imaging/imaging/tabs.php:262
+#, php-format
+msgid "%s's profile imaging"
+msgstr "Профіль образів %s"
+
+#: modules/imaging/imaging/tabs.php:291
+#, php-format
+msgid "%s's imaging group"
+msgstr "Група образів %s"
+
+#: modules/imaging/imaging/tabs.php:293
+msgid "Masters"
+msgstr "Основні"
+
+#: modules/imaging/imaging/tabs.php:304
+msgid "Not enough information"
+msgstr "Недостатньо даних"
+
+#: modules/imaging/imaging/showtarget.php:72
+#: modules/imaging/imaging/showtarget.php:84
+msgid "Removal of master failed"
+msgstr "Не вдалося вилучити основну систему"
+
+#: modules/imaging/imaging/showtarget.php:125
+msgid ""
+"If you want to remove this master from one or more targets, check these "
+"targets and click on the remove button"
+msgstr ""
+"Якщо ви хочете вилучити цю основу з однієї або декількох цілей, позначте "
+"пункти цих цілей і натисніть кнопку «Вилучити»."
+
+#: modules/imaging/imaging/showtarget.php:149
+#, php-format
+msgid "Remove this master from imaging server %s"
+msgstr "Вилучити цю основну систему із сервера образів %s"
+
+#: modules/imaging/imaging/header.php:34
+msgid ""
+"You have modified this target's boot menu, if you are done please click on "
+"\"Generate Menu\" to update the computer boot menu."
+msgstr ""
+"Вами було змінено меню завантаження цієї цілі. Якщо внесення змін завершено,"
+" будь ласка, натисніть кнопку «Створити меню», щоб оновити меню завантаження"
+" комп'ютера."
+
+#: modules/imaging/imaging/header.php:51
+msgid "This target's boot menu is up-to-date."
+msgstr "Меню завантаження цієї цілі не потребує оновлення."
+
+#: modules/imaging/imaging/header.php:60
+#, php-format
+msgid ""
+"This computer has a <u>custom boot menu</u>. <a href=\"%s\">Click here</a> "
+"to get back the default one."
+msgstr ""
+"У цього комп'ютера <u>нетипове меню завантаження</u>. <a "
+"href=\"%s\">Натисніть тут</a>, щоб повернутися до типового."
+
+#: modules/imaging/imaging/header.php:69
+#, php-format
+msgid "<a href=\"%s\">Click here</a> to get back the default menu."
+msgstr ""
+
+#: modules/imaging/imaging/header.php:83
+#, php-format
+msgid ""
+"This computer is currently member of \"%s\". <a href=\"%s\">Click here</a> "
+"to leave the group and customize the boot menu."
+msgstr ""
+"Зараз цей комп'ютер є учасником «%s». <a href=\"%s\">Натисніть тут</a>, щоб "
+"полишити групу і налаштувати меню завантаження."
+
+#: modules/imaging/imaging/images.php:68
+msgid "Available images"
+msgstr "Доступні образи"
+
+#: modules/imaging/imaging/images.php:94
+msgid "Edition of image"
+msgstr "Редакція образу"
+
+#: modules/imaging/imaging/images.php:96
+msgid "Edition of master"
+msgstr "Редакція основної системи"
+
+#: modules/imaging/imaging/images.php:125
+#: modules/imaging/imaging/images.php:152
+msgid "Save"
+msgstr "Зберегти"
+
+#: modules/imaging/imaging/images.php:127
+msgid "Save (converting to image)"
+msgstr "Зберегти (з перетворенням на образ)"
+
+#: modules/imaging/imaging/images.php:129
+msgid "Convert to master"
+msgstr "Перетворити на основну"
+
+#: modules/imaging/imaging/images.php:193
+msgid "Image backup logs"
+msgstr "Журнали резервного копіювання образу"
+
+#: modules/imaging/imaging/ajaxLogs.php:96
+msgid "State"
+msgstr "Стан"
+
+#: modules/imaging/imaging/images_delete.php:70
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> image ?"
+msgstr "Ви справді хочете вилучити образ <b>%s</b>?"
+
+#: modules/imaging/imaging/addservice.php:51
+#: modules/imaging/imaging/addservice.php:146
+#, php-format
+msgid "Add the boot service <b>%s</b> to <b>%s</b>"
+msgstr "Додати службу завантаження <b>%s</b> до <b>%s</b>"
 
 #: modules/imaging/imaging/configure.php:39
 #, php-format
@@ -3387,7 +3390,7 @@ msgstr "Змінено меню завантаження для <strong>%s</stro
 #: modules/imaging/imaging/configure.php:322
 #, php-format
 msgid "Error generating the menu : %s"
-msgstr ""
+msgstr "Помилка при створенні меню: %s"
 
 #: modules/imaging/imaging/configure.php:351
 msgid ""
@@ -3520,87 +3523,6 @@ msgstr "Вибрати цей жорсткий диск"
 msgid "Partition number: %d"
 msgstr "Номер розділу: %d"
 
-#: modules/imaging/imaging/images_iso.php:45
-msgid "Please specify a title for the ISO image file."
-msgstr "Будь ласка, вкажіть заголовок файла образу ISO."
-
-#: modules/imaging/imaging/images_iso.php:54
-msgid "Create ISO image from master"
-msgstr "Створити образ ISO з основної системи"
-
-#: modules/imaging/imaging/images_iso.php:56
-#, php-format
-msgid ""
-"The ISO image generation of master <strong>%s</strong> has been launched in "
-"background."
-msgstr ""
-"Було запущено фонове створення образу ISO з основної системи "
-"<strong>%s</strong>."
-
-#: modules/imaging/imaging/images_iso.php:58
-msgid ""
-"The ISO image file will be stored into the imaging server at the end of the "
-"backup."
-msgstr ""
-"Файл образу ISO буде збережено на сервері образів наприкінці процедури "
-"резервного копіювання."
-
-#: modules/imaging/imaging/images_iso.php:65
-msgid "This operation will last according to the master size."
-msgstr "Тривалість цієї дії залежить від розміру основної системи."
-
-#: modules/imaging/imaging/images_iso.php:90
-#, php-format
-msgid "Generate ISO for <strong>%s</strong>"
-msgstr "Створити ISO для <strong>%s</strong>"
-
-#: modules/imaging/imaging/images_iso.php:95
-msgid ""
-"Please select media size. If your data exceeds the volume size, several "
-"files of your media size will be created."
-msgstr ""
-"Будь ласка, виберіть розмір носія. Якщо обсяг ваших даних перевищить розмір "
-"тому, буде створено декілька файлів із вказаним розміром носія."
-
-#: modules/imaging/imaging/images_iso.php:111
-msgid "Start ISO generation"
-msgstr "Розпочати створення ISO"
-
-#: modules/imaging/imaging/addservice.php:51
-#: modules/imaging/imaging/addservice.php:146
-#, php-format
-msgid "Add the boot service <b>%s</b> to <b>%s</b>"
-msgstr "Додати службу завантаження <b>%s</b> до <b>%s</b>"
-
-#: modules/imaging/imaging/images.php:68
-msgid "Available images"
-msgstr "Доступні образи"
-
-#: modules/imaging/imaging/images.php:94
-msgid "Edition of image"
-msgstr "Редакція образу"
-
-#: modules/imaging/imaging/images.php:96
-msgid "Edition of master"
-msgstr "Редакція основної системи"
-
-#: modules/imaging/imaging/images.php:125
-#: modules/imaging/imaging/images.php:152
-msgid "Save"
-msgstr "Зберегти"
-
-#: modules/imaging/imaging/images.php:127
-msgid "Save (converting to image)"
-msgstr "Зберегти (з перетворенням на образ)"
-
-#: modules/imaging/imaging/images.php:129
-msgid "Convert to master"
-msgstr "Перетворити на основну"
-
-#: modules/imaging/imaging/images.php:193
-msgid "Image backup logs"
-msgstr "Журнали резервного копіювання образу"
-
 #: modules/imaging/imaging/multicast.php:48
 #: modules/imaging/imaging/multicast.php:237
 msgid ""
@@ -3670,59 +3592,96 @@ msgid ""
 "start anyways when t seconds since first receiver connection have passed"
 msgstr "запустити попри це, якщо мине t секунд з першого отриманого з'єднання"
 
-#: modules/imaging/imaging/header.php:34
-msgid ""
-"You have modified this target's boot menu, if you are done please click on "
-"\"Generate Menu\" to update the computer boot menu."
-msgstr ""
-"Вами було змінено меню завантаження цієї цілі. Якщо внесення змін завершено,"
-" будь ласка, натисніть кнопку «Створити меню», щоб оновити меню завантаження"
-" комп'ютера."
-
-#: modules/imaging/imaging/header.php:51
-msgid "This target's boot menu is up-to-date."
-msgstr "Меню завантаження цієї цілі не потребує оновлення."
-
-#: modules/imaging/imaging/header.php:60
+#: modules/imaging/imaging/bootmenu.php:63
 #, php-format
-msgid ""
-"This computer has a <u>custom boot menu</u>. <a href=\"%s\">Click here</a> "
-"to get back the default one."
-msgstr ""
-"У цього комп'ютера <u>нетипове меню завантаження</u>. <a "
-"href=\"%s\">Натисніть тут</a>, щоб повернутися до типового."
+msgid "Item Menu %s for group up %s"
+msgstr "Пункт меню %s для групи піднято %s"
 
-#: modules/imaging/imaging/header.php:75
+#: modules/imaging/imaging/bootmenu.php:77
 #, php-format
-msgid ""
-"This computer is currently member of \"%s\". <a href=\"%s\">Click here</a> "
-"to leave the group and customize the boot menu."
-msgstr ""
-"Зараз цей комп'ютер є учасником «%s». <a href=\"%s\">Натисніть тут</a>, щоб "
-"полишити групу і налаштувати меню завантаження."
+msgid "Item Menu %s for machine up %s"
+msgstr "Пункт меню для машини %s піднято %s"
 
-#: modules/imaging/imaging/showtarget.php:72
-#: modules/imaging/imaging/showtarget.php:84
-msgid "Removal of master failed"
-msgstr "Не вдалося вилучити основну систему"
-
-#: modules/imaging/imaging/showtarget.php:125
-msgid ""
-"If you want to remove this master from one or more targets, check these "
-"targets and click on the remove button"
-msgstr ""
-"Якщо ви хочете вилучити цю основу з однієї або декількох цілей, позначте "
-"пункти цих цілей і натисніть кнопку «Вилучити»."
-
-#: modules/imaging/imaging/showtarget.php:149
+#: modules/imaging/imaging/bootmenu.php:101
+#: modules/imaging/imaging/bootmenu.php:180
 #, php-format
-msgid "Remove this master from imaging server %s"
-msgstr "Вилучити цю основну систему із сервера образів %s"
+msgid "Failed to move item <strong>%s</strong> in the boot menu"
+msgstr "Не вдалося пересунути пункт <strong>%s</strong> у меню завантаження"
 
-#: modules/imaging/imaging/services.php:61
+#: modules/imaging/imaging/bootmenu.php:130
 #, php-format
-msgid "Add service %s"
-msgstr "Додати службу %s"
+msgid "Item Menu %s%s"
+msgstr "Пункт меню %s%s"
+
+#: modules/imaging/imaging/bootmenu.php:144
+#, php-format
+msgid "Item Menu %s for machine down %s"
+msgstr "Пункт меню %s для машини опущено %s"
+
+#: modules/imaging/imaging/bootmenu.php:158
+#, php-format
+msgid "Success to move item <strong>%s</strong> in the boot menu [ %s ]"
+msgstr ""
+"Успішно пересунуто пункт меню <strong>%s</strong> у меню завантаження [ %s ]"
+
+#: modules/imaging/imaging/bootmenu.php:215
+msgid "Edition of item"
+msgstr "Редагування пункту"
+
+#: modules/imaging/imaging/bootmenu.php:291
+#: modules/imaging/imaging/bootmenu.php:305
+#, php-format
+msgid "Edit item <strong>%s</strong> in the boot Menu [ %s ]"
+msgstr "Редагувати пункт меню <strong>%s</strong> у меню завантаження [ %s ]"
+
+#: modules/imaging/imaging/bootmenu.php:399
+msgid "master from the profile"
+msgstr "основний з профілю"
+
+#: modules/imaging/imaging/bootmenu.php:401
+msgid "master"
+msgstr "основний"
+
+#: modules/imaging/imaging/bootmenu.php:408
+msgid "boot service from profile"
+msgstr "служба завантаження з профілю"
+
+#: modules/imaging/imaging/bootmenu.php:410
+msgid "boot service"
+msgstr "служба завантаження"
+
+#: modules/imaging/imaging/bootmenu.php:450
+msgid ""
+"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
+"default boot entry."
+msgstr ""
+"Скористайтеся пунктом «Позначений варіант» або «Позначений варіант на WOL», "
+"щоб визначити типовий пункт завантаження."
+
+#: modules/imaging/imaging/bootmenu.php:453
+#: modules/imaging/imaging/bootmenu.php:455
+msgid ""
+"If the default entry is an image creation or restore, the following network "
+"boots will fall back to the first menu entry."
+msgstr ""
+"Якщо типовим записом є створення образів або відновлення, під час наступних "
+"завантажень з мережі система повертатиметься до першого запису у меню."
+
+#: modules/imaging/imaging/bootmenu.php:455
+msgid ""
+"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry,"
+" this value will be set on all the computers in this group."
+msgstr ""
+"У відповідь на зміну пункту «Позначений варіант» або «Позначений варіант на "
+"WOL», це значення буде встановлено на всіх комп'ютерах цієї групи."
+
+#: modules/imaging/imaging/bootmenu.php:460
+msgid "Preselected choice"
+msgstr "Позначений варіант"
+
+#: modules/imaging/imaging/bootmenu.php:463
+msgid "Preselected choice on WOL"
+msgstr "Позначений варіант на WOL"
 
 #: modules/imaging/imaging/ajaxImages.php:78
 msgid "Add image to boot menu"
@@ -3739,3 +3698,49 @@ msgstr "Переглянути журнал образу"
 #: modules/imaging/imaging/ajaxImages.php:200
 msgid "Multicast init"
 msgstr "Ініціалізація трансляції"
+
+#: modules/imaging/imaging/images_iso.php:45
+msgid "Please specify a title for the ISO image file."
+msgstr "Будь ласка, вкажіть заголовок файла образу ISO."
+
+#: modules/imaging/imaging/images_iso.php:54
+msgid "Create ISO image from master"
+msgstr "Створити образ ISO з основної системи"
+
+#: modules/imaging/imaging/images_iso.php:56
+#, php-format
+msgid ""
+"The ISO image generation of master <strong>%s</strong> has been launched in "
+"background."
+msgstr ""
+"Було запущено фонове створення образу ISO з основної системи "
+"<strong>%s</strong>."
+
+#: modules/imaging/imaging/images_iso.php:58
+msgid ""
+"The ISO image file will be stored into the imaging server at the end of the "
+"backup."
+msgstr ""
+"Файл образу ISO буде збережено на сервері образів наприкінці процедури "
+"резервного копіювання."
+
+#: modules/imaging/imaging/images_iso.php:65
+msgid "This operation will last according to the master size."
+msgstr "Тривалість цієї дії залежить від розміру основної системи."
+
+#: modules/imaging/imaging/images_iso.php:90
+#, php-format
+msgid "Generate ISO for <strong>%s</strong>"
+msgstr "Створити ISO для <strong>%s</strong>"
+
+#: modules/imaging/imaging/images_iso.php:95
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr ""
+"Будь ласка, виберіть розмір носія. Якщо обсяг ваших даних перевищить розмір "
+"тому, буде створено декілька файлів із вказаним розміром носія."
+
+#: modules/imaging/imaging/images_iso.php:111
+msgid "Start ISO generation"
+msgstr "Розпочати створення ISO"

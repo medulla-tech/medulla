@@ -11,47 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-14 15:37+0100\n"
+"POT-Creation-Date: 2023-01-24 10:40+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
-"Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
+"Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-
-#: modules/ppolicy/infoPackage.inc.php:36
-msgid "Password Policy"
-msgstr "Правило паролів"
-
-#: modules/ppolicy/infoPackage.inc.php:46
-#: modules/ppolicy/includes/localSidebar.php:27
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
-msgid "Password policies"
-msgstr "Правила паролів"
-
-#: modules/ppolicy/infoPackage.inc.php:52
-#: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/default/edit.php:44
-msgid "Add a password policy"
-msgstr "Додати правило паролів"
-
-#: modules/ppolicy/infoPackage.inc.php:58
-msgid "Edit a password policy"
-msgstr "Змінити правило паролів"
-
-#: modules/ppolicy/infoPackage.inc.php:63
-msgid "Delete a password policy"
-msgstr "Вилучити правило паролів"
-
-#: modules/ppolicy/infoPackage.inc.php:79
-msgid "Default "
-msgstr "Типовий "
-
-#: modules/ppolicy/infoPackage.inc.php:82
-msgid "Enable user specific password policy"
-msgstr "Увімкнути специфічне для користувача правило паролів"
 
 #: modules/ppolicy/includes/auditCodes.php:4
 #: modules/ppolicy/includes/auditCodes.php:9
@@ -79,91 +47,6 @@ msgstr "Вилучити ppolicy для користувача"
 #: modules/ppolicy/includes/auditCodes.php:12
 msgid "ppolicy"
 msgstr "ppolicy"
-
-#: modules/ppolicy/includes/publicFunc.php:37
-#: modules/ppolicy/includes/publicFunc.php:63
-#: modules/ppolicy/includes/publicFunc.php:71
-#: modules/ppolicy/includes/publicFunc.php:78
-#: modules/ppolicy/includes/publicFunc.php:83
-#: modules/ppolicy/includes/publicFunc.php:201
-msgid "Password policy management"
-msgstr "Керування правилами паролів"
-
-#: modules/ppolicy/includes/publicFunc.php:64
-msgid "This account is locked by the LDAP directory."
-msgstr "Цей обліковий запис заблоковано каталогом LDAP."
-
-#: modules/ppolicy/includes/publicFunc.php:72
-msgid ""
-"The password of this account has expired. The user cannot change his "
-"password."
-msgstr ""
-"Строк дії пароля для цього облікового запису вичерпано. Користувач не має "
-"змоги змінити свій пароль."
-
-#: modules/ppolicy/includes/publicFunc.php:79
-#, php-format
-msgid ""
-"The password of this account has expired. The user has %s login(s) left to "
-"change his password."
-msgstr ""
-"Строк дії пароля для цього облікового запису вичерпано. У користувача "
-"лишилося %s можливостей входу до системи для зміни свого пароля."
-
-#: modules/ppolicy/includes/publicFunc.php:84
-msgid ""
-"The password of this account has expired. The user can change his password."
-msgstr ""
-"Строк дії пароля для цього облікового запису вичерпано. Користувач може "
-"змінити свій пароль."
-
-#: modules/ppolicy/includes/publicFunc.php:88
-msgid "Lock account"
-msgstr "Заблокувати обліковий запис"
-
-#: modules/ppolicy/includes/publicFunc.php:89
-msgid "If checked, permanently lock the user account"
-msgstr "Якщо позначено, остаточно блокувати обліковий запис користувача"
-
-#: modules/ppolicy/includes/publicFunc.php:94
-msgid "Password reset flag"
-msgstr "Прапорець скидання пароля"
-
-#: modules/ppolicy/includes/publicFunc.php:95
-msgid ""
-"If checked, the user must change her password when she first binds to the "
-"LDAP directory after password is set or reset by a password administrator"
-msgstr ""
-"Якщо позначено, користувач має змінити пароль під час першого прив'язування "
-"до каталогу LDAP після встановлення або скидання пароля адміністратором "
-"паролів"
-
-#: modules/ppolicy/includes/publicFunc.php:117
-msgid "Enable a specific password policy for this user"
-msgstr "Увімкнути специфічне правило паролів для цього користувача"
-
-#: modules/ppolicy/includes/publicFunc.php:118
-#: modules/ppolicy/includes/publicFunc.php:224
-msgid "If not set the default password policy is enforced."
-msgstr "Якщо не встановлено, буде використано типове правило паролів."
-
-#: modules/ppolicy/includes/publicFunc.php:170
-#, php-format
-msgid "Password policy %s applied."
-msgstr "Застосовано правило паролів %s."
-
-#: modules/ppolicy/includes/publicFunc.php:174
-#, php-format
-msgid "Password policy %s removed."
-msgstr "Вилучено правило паролів %s."
-
-#: modules/ppolicy/includes/publicFunc.php:186
-msgid "Password policy attributes updated."
-msgstr "Оновлено атрибути правила паролів."
-
-#: modules/ppolicy/includes/publicFunc.php:223
-msgid "Apply a password policy for all group users"
-msgstr "Застосувати правило паролів до усіх користувачів групи"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:37
 #: modules/ppolicy/default/edit.php:138
@@ -345,29 +228,101 @@ msgstr ""
 "якості виконуватиме сервер, а якщо сервер не зможе перевірити пароль, буде "
 "повернуто повідомлення про помилку, а використання пароля буде заборонено."
 
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-"Увага! Ви увійшли до системи з використанням режиму входу за лояльністю. "
-"Будь ласка, якнайшвидше змініть ваш пароль за допомогою сторінки зміни "
-"паролів, інакше ваш обліковий запис буде заблоковано."
+#: modules/ppolicy/includes/localSidebar.php:27
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
+#: modules/ppolicy/infoPackage.inc.php:46
+msgid "Password policies"
+msgstr "Правила паролів"
 
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account"
-" is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-"Увага! Ваш пароль було скинуто адміністратором. Права доступу вашого "
-"облікового запису LDAP обмежено. Будь ласка, якнайшвидше змініть ваш пароль "
-"за допомогою сторінки зміни пароля."
+#: modules/ppolicy/includes/localSidebar.php:28
+#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
+msgid "Add a password policy"
+msgstr "Додати правило паролів"
 
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Список правил паролів"
+#: modules/ppolicy/includes/publicFunc.php:37
+#: modules/ppolicy/includes/publicFunc.php:63
+#: modules/ppolicy/includes/publicFunc.php:71
+#: modules/ppolicy/includes/publicFunc.php:78
+#: modules/ppolicy/includes/publicFunc.php:83
+#: modules/ppolicy/includes/publicFunc.php:201
+msgid "Password policy management"
+msgstr "Керування правилами паролів"
+
+#: modules/ppolicy/includes/publicFunc.php:64
+msgid "This account is locked by the LDAP directory."
+msgstr "Цей обліковий запис заблоковано каталогом LDAP."
+
+#: modules/ppolicy/includes/publicFunc.php:72
+msgid ""
+"The password of this account has expired. The user cannot change his "
+"password."
+msgstr ""
+"Строк дії пароля для цього облікового запису вичерпано. Користувач не має "
+"змоги змінити свій пароль."
+
+#: modules/ppolicy/includes/publicFunc.php:79
+#, php-format
+msgid ""
+"The password of this account has expired. The user has %s login(s) left to "
+"change his password."
+msgstr ""
+"Строк дії пароля для цього облікового запису вичерпано. У користувача "
+"лишилося %s можливостей входу до системи для зміни свого пароля."
+
+#: modules/ppolicy/includes/publicFunc.php:84
+msgid ""
+"The password of this account has expired. The user can change his password."
+msgstr ""
+"Строк дії пароля для цього облікового запису вичерпано. Користувач може "
+"змінити свій пароль."
+
+#: modules/ppolicy/includes/publicFunc.php:88
+msgid "Lock account"
+msgstr "Заблокувати обліковий запис"
+
+#: modules/ppolicy/includes/publicFunc.php:89
+msgid "If checked, permanently lock the user account"
+msgstr "Якщо позначено, остаточно блокувати обліковий запис користувача"
+
+#: modules/ppolicy/includes/publicFunc.php:94
+msgid "Password reset flag"
+msgstr "Прапорець скидання пароля"
+
+#: modules/ppolicy/includes/publicFunc.php:95
+msgid ""
+"If checked, the user must change her password when she first binds to the "
+"LDAP directory after password is set or reset by a password administrator"
+msgstr ""
+"Якщо позначено, користувач має змінити пароль під час першого прив'язування "
+"до каталогу LDAP після встановлення або скидання пароля адміністратором "
+"паролів"
+
+#: modules/ppolicy/includes/publicFunc.php:117
+msgid "Enable a specific password policy for this user"
+msgstr "Увімкнути специфічне правило паролів для цього користувача"
+
+#: modules/ppolicy/includes/publicFunc.php:118
+#: modules/ppolicy/includes/publicFunc.php:224
+msgid "If not set the default password policy is enforced."
+msgstr "Якщо не встановлено, буде використано типове правило паролів."
+
+#: modules/ppolicy/includes/publicFunc.php:170
+#, php-format
+msgid "Password policy %s applied."
+msgstr "Застосовано правило паролів %s."
+
+#: modules/ppolicy/includes/publicFunc.php:174
+#, php-format
+msgid "Password policy %s removed."
+msgstr "Вилучено правило паролів %s."
+
+#: modules/ppolicy/includes/publicFunc.php:186
+msgid "Password policy attributes updated."
+msgstr "Оновлено атрибути правила паролів."
+
+#: modules/ppolicy/includes/publicFunc.php:223
+msgid "Apply a password policy for all group users"
+msgstr "Застосувати правило паролів до усіх користувачів групи"
 
 #: modules/ppolicy/default/delete.php:29
 msgid "The password policy has been deleted."
@@ -390,6 +345,10 @@ msgstr "Вилучити"
 #: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Скасувати"
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Список правил паролів"
 
 #: modules/ppolicy/default/edit.php:48
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
@@ -441,6 +400,46 @@ msgstr "Максимальна кількість помилок у паролі
 msgid "Lockout duration (seconds)"
 msgstr "Тривалість блокування (у секундах)"
 
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Увага! Ви увійшли до системи з використанням режиму входу за лояльністю. "
+"Будь ласка, якнайшвидше змініть ваш пароль за допомогою сторінки зміни "
+"паролів, інакше ваш обліковий запис буде заблоковано."
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Увага! Ваш пароль було скинуто адміністратором. Права доступу вашого "
+"облікового запису LDAP обмежено. Будь ласка, якнайшвидше змініть ваш пароль "
+"за допомогою сторінки зміни пароля."
+
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
 msgid "Delete password policy"
 msgstr "Вилучити правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:36
+msgid "Password Policy"
+msgstr "Правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:58
+msgid "Edit a password policy"
+msgstr "Змінити правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:63
+msgid "Delete a password policy"
+msgstr "Вилучити правило паролів"
+
+#: modules/ppolicy/infoPackage.inc.php:79
+msgid "Default "
+msgstr "Типовий "
+
+#: modules/ppolicy/infoPackage.inc.php:82
+msgid "Enable user specific password policy"
+msgstr "Увімкнути специфічне для користувача правило паролів"
