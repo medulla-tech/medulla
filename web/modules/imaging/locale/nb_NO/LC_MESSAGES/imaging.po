@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2023-12-12 12:45+0100\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -924,47 +924,48 @@ msgstr ""
 "som datakontoen opprettes i. Denne kontoen er i Active Directory på en "
 "domenekontroller i domenet som datamaskinen kobles til."
 
-#: modules/imaging/includes/xmlrpc.inc.php:249
+#: modules/imaging/includes/xmlrpc.inc.php:303
 #, php-format
 msgid "Boot menu generation For machine %s"
 msgstr "Generering av oppstartsmeny for maskin %s"
 
-#: modules/imaging/includes/xmlrpc.inc.php:272
+#: modules/imaging/includes/xmlrpc.inc.php:329
 #, php-format
 msgid "Boot menu generation For Imaging Group %s"
 msgstr "Startmenygenerering for avbildingsgruppe %s"
 
-#: modules/imaging/includes/xmlrpc.inc.php:293
+#: modules/imaging/includes/xmlrpc.inc.php:353
 #, php-format
 msgid "Boot menu generation Success for Package Server on location %s"
 msgstr "Oppstartsmenygenerering. Suksess for Pakkeeserver på lokasjon %s"
 
-#: modules/imaging/includes/xmlrpc.inc.php:306
-#: modules/imaging/includes/xmlrpc.inc.php:320
+#: modules/imaging/includes/xmlrpc.inc.php:368
+#: modules/imaging/includes/xmlrpc.inc.php:383
 #, php-format
 msgid "Boot menu generation failed for package server on location %s [%s]"
 msgstr ""
 "Generering av oppstartsmenyen mislyktes for pakkeserver på lokasjon %s [%s]"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:37
-#: modules/imaging/includes/ajaxcommon.inc.php:57
+#: modules/imaging/includes/ajaxcommon.inc.php:38
+#: modules/imaging/includes/ajaxcommon.inc.php:59
 #: modules/imaging/imaging/bootmenu_remove.php:93
-#: modules/imaging/imaging/addimage.php:72 modules/imaging/imaging/tabs.php:92
+#: modules/imaging/imaging/addimage.php:72
+#: modules/imaging/imaging/tabs.php:115
 #: modules/imaging/imaging/addservice.php:69
 #: modules/imaging/imaging/ajaxImages.php:189
 msgid "root"
 msgstr "root"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:84
+#: modules/imaging/includes/ajaxcommon.inc.php:85
 #, php-format
 msgid "Imaging server of entity %s"
 msgstr "Avbildingsserver for enhet %s"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:103
+#: modules/imaging/includes/ajaxcommon.inc.php:104
 msgid "the entity itself"
 msgstr "Selve enheten"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:120
+#: modules/imaging/includes/ajaxcommon.inc.php:121
 #, php-format
 msgid ""
 "Boot menu generation is still in progress for the following items : %s. "
@@ -973,12 +974,12 @@ msgstr ""
 "Generering av oppstartsmenyen pågår fremdeles for følgende elementer: "
 "%s.Vent eller last inn siden%s på nytt her%s."
 
-#: modules/imaging/includes/ajaxcommon.inc.php:126
-#: modules/imaging/imaging/tabs.php:200
+#: modules/imaging/includes/ajaxcommon.inc.php:127
+#: modules/imaging/imaging/tabs.php:223
 msgid "The registering in the imaging server has failed."
 msgstr "Registreringen på avbildingsserveren mislyktes."
 
-#: modules/imaging/includes/ajaxcommon.inc.php:135
+#: modules/imaging/includes/ajaxcommon.inc.php:136
 #, php-format
 msgid ""
 "You have modified the boot menu for the following items : %s. If you are "
@@ -988,12 +989,12 @@ msgstr ""
 " kan du klikke på \"Generer meny\" for å oppdatere datamaskinens "
 "oppstartsmeny."
 
-#: modules/imaging/includes/ajaxcommon.inc.php:141
+#: modules/imaging/includes/ajaxcommon.inc.php:142
 #: modules/imaging/imaging/header.php:38
 msgid "Generate Menu"
 msgstr "Generer meny"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:146
+#: modules/imaging/includes/ajaxcommon.inc.php:147
 #: modules/imaging/imaging/header.php:43
 msgid ""
 "Click on \"Force Generation\" if you want to force the update of the boot "
@@ -1002,22 +1003,22 @@ msgstr ""
 "Klikk på \"Tving Generering\" hvis du vil tvinge oppdateringen av "
 "oppstartsmenyen"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:152
+#: modules/imaging/includes/ajaxcommon.inc.php:153
 #: modules/imaging/imaging/header.php:46
 msgid "Force Generation"
 msgstr "Tvungen Generering"
 
-#: modules/imaging/includes/post_install_script.php:28
+#: modules/imaging/includes/post_install_script.php:29
 msgid "Not selected"
 msgstr "Ikke valgt"
 
-#: modules/imaging/includes/post_install_script.php:63
+#: modules/imaging/includes/post_install_script.php:64
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:89
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:74
 msgid "Name"
 msgstr "Etternavn"
 
-#: modules/imaging/includes/post_install_script.php:65
+#: modules/imaging/includes/post_install_script.php:66
 #: modules/imaging/manage/ajaxFormWin10.php:815
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:674
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:90
@@ -1027,8 +1028,10 @@ msgstr "Etternavn"
 #: modules/imaging/manage/ajaxServiceLevel2.php:93
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:76
 #: modules/imaging/manage/service_edit.php:61
+#: modules/imaging/manage/ajaxFormWin11.php:814
 #: modules/imaging/manage/ajaxFormWin7.php:726
 #: modules/imaging/manage/sysprepList.php:87
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:673
 #: modules/imaging/manage/ajaxMasterLevel2.php:97
 #: modules/imaging/manage/ajaxFormWin8.php:808
 #: modules/imaging/imaging/ajaxServices.php:99
@@ -1038,11 +1041,11 @@ msgstr "Etternavn"
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: modules/imaging/includes/post_install_script.php:66
+#: modules/imaging/includes/post_install_script.php:67
 msgid "Order"
 msgstr "Ordning"
 
-#: modules/imaging/includes/post_install_script.php:88
+#: modules/imaging/includes/post_install_script.php:90
 msgid "This value is already used."
 msgstr "Denne verdien er allerede brukt"
 
@@ -1126,7 +1129,7 @@ msgstr "Så fort som mulig"
 msgid "<i>undefined</i>"
 msgstr "<i>udefinert</i>"
 
-#: modules/imaging/includes/includes.php:301
+#: modules/imaging/includes/includes.php:300
 msgid "Backup log messages"
 msgstr "Sikkerhetskopier loggmeldinger"
 
@@ -1378,7 +1381,9 @@ msgstr "Avbildingsserver"
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:694
 #: modules/imaging/manage/master_edit.php:72
 #: modules/imaging/manage/service_edit.php:71
+#: modules/imaging/manage/ajaxFormWin11.php:832
 #: modules/imaging/manage/ajaxFormWin7.php:735
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:691
 #: modules/imaging/manage/ajaxFormWin8.php:825
 #: modules/imaging/manage/ajaxConfiguration.php:130
 #: modules/imaging/manage/bootmenu_edit.php:101
@@ -1431,7 +1436,7 @@ msgstr "Er du sikker på at du vil slette <b>%s</b> skriptet?"
 #: modules/imaging/imaging/bootmenu_remove.php:161
 #: modules/imaging/imaging/showtarget.php:131
 #: modules/imaging/imaging/images_delete.php:73
-#: modules/imaging/imaging/configure.php:365
+#: modules/imaging/imaging/configure.php:392
 #: modules/imaging/imaging/multicast.php:390
 #: modules/imaging/imaging/images_iso.php:112
 msgid "Cancel"
@@ -1440,7 +1445,9 @@ msgstr "Avbryt"
 #: modules/imaging/manage/ajaxFormWin10.php:448
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:307
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:291
+#: modules/imaging/manage/ajaxFormWin11.php:447
 #: modules/imaging/manage/ajaxFormWin7.php:347
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:306
 #: modules/imaging/manage/ajaxFormWin8.php:422
 msgid "Installation Notes"
 msgstr "Installasjonsnotater"
@@ -1449,7 +1456,9 @@ msgstr "Installasjonsnotater"
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:313
 #: modules/imaging/manage/master_iso.php:90
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:297
+#: modules/imaging/manage/ajaxFormWin11.php:453
 #: modules/imaging/manage/ajaxFormWin7.php:353
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:312
 #: modules/imaging/manage/ajaxFormWin8.php:428
 #: modules/imaging/imaging/images_iso.php:93
 msgid "Title"
@@ -1458,7 +1467,9 @@ msgstr "Tittel"
 #: modules/imaging/manage/ajaxFormWin10.php:458
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:317
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:301
+#: modules/imaging/manage/ajaxFormWin11.php:457
 #: modules/imaging/manage/ajaxFormWin7.php:357
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:316
 #: modules/imaging/manage/ajaxFormWin8.php:432
 msgid "Enter your comments here..."
 msgstr "Skriv inn kommentarene dine her..."
@@ -1466,7 +1477,9 @@ msgstr "Skriv inn kommentarene dine her..."
 #: modules/imaging/manage/ajaxFormWin10.php:467
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:326
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:310
+#: modules/imaging/manage/ajaxFormWin11.php:466
 #: modules/imaging/manage/ajaxFormWin7.php:365
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:325
 #: modules/imaging/manage/ajaxFormWin8.php:441
 msgid "Os Settings"
 msgstr "OS innstillinger"
@@ -1474,7 +1487,9 @@ msgstr "OS innstillinger"
 #: modules/imaging/manage/ajaxFormWin10.php:498
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:357
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:341
+#: modules/imaging/manage/ajaxFormWin11.php:497
 #: modules/imaging/manage/ajaxFormWin7.php:396
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:356
 #: modules/imaging/manage/ajaxFormWin8.php:472
 msgid "Product Key"
 msgstr "Produktnøkkel"
@@ -1482,7 +1497,9 @@ msgstr "Produktnøkkel"
 #: modules/imaging/manage/ajaxFormWin10.php:503
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:362
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:346
+#: modules/imaging/manage/ajaxFormWin11.php:502
 #: modules/imaging/manage/ajaxFormWin7.php:401
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:361
 #: modules/imaging/manage/ajaxFormWin8.php:477
 msgid "Organization Name"
 msgstr "Organisasjonsnavn"
@@ -1490,7 +1507,9 @@ msgstr "Organisasjonsnavn"
 #: modules/imaging/manage/ajaxFormWin10.php:511
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:370
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:354
+#: modules/imaging/manage/ajaxFormWin11.php:510
 #: modules/imaging/manage/ajaxFormWin7.php:409
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:369
 #: modules/imaging/manage/ajaxFormWin8.php:485
 msgid "Accept EULA"
 msgstr "Godta EULA"
@@ -1498,7 +1517,9 @@ msgstr "Godta EULA"
 #: modules/imaging/manage/ajaxFormWin10.php:519
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:378
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:362
+#: modules/imaging/manage/ajaxFormWin11.php:518
 #: modules/imaging/manage/ajaxFormWin7.php:417
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:377
 #: modules/imaging/manage/ajaxFormWin8.php:493
 msgid "Skip automatic activation"
 msgstr "Hopp over automatisk aktivering"
@@ -1506,7 +1527,9 @@ msgstr "Hopp over automatisk aktivering"
 #: modules/imaging/manage/ajaxFormWin10.php:527
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:386
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:370
+#: modules/imaging/manage/ajaxFormWin11.php:526
 #: modules/imaging/manage/ajaxFormWin7.php:425
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:385
 #: modules/imaging/manage/ajaxFormWin8.php:501
 msgid "Skip License Rearm"
 msgstr "Hopp over lisensoppdatering"
@@ -1514,7 +1537,9 @@ msgstr "Hopp over lisensoppdatering"
 #: modules/imaging/manage/ajaxFormWin10.php:536
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:395
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:379
+#: modules/imaging/manage/ajaxFormWin11.php:535
 #: modules/imaging/manage/ajaxFormWin7.php:434
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:394
 #: modules/imaging/manage/ajaxFormWin8.php:510
 msgid "Setup Language"
 msgstr "Installasjonsspråk"
@@ -1522,7 +1547,9 @@ msgstr "Installasjonsspråk"
 #: modules/imaging/manage/ajaxFormWin10.php:541
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:400
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:384
+#: modules/imaging/manage/ajaxFormWin11.php:540
 #: modules/imaging/manage/ajaxFormWin7.php:439
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:399
 #: modules/imaging/manage/ajaxFormWin8.php:515
 msgid "Computer Name"
 msgstr "Maskinnavn"
@@ -1530,7 +1557,9 @@ msgstr "Maskinnavn"
 #: modules/imaging/manage/ajaxFormWin10.php:549
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:408
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:400
+#: modules/imaging/manage/ajaxFormWin11.php:548
 #: modules/imaging/manage/ajaxFormWin7.php:455
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:407
 #: modules/imaging/manage/ajaxFormWin8.php:531
 msgid "Keyboard or input method"
 msgstr "Tastatur eller inndatametode"
@@ -1538,7 +1567,9 @@ msgstr "Tastatur eller inndatametode"
 #: modules/imaging/manage/ajaxFormWin10.php:557
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:416
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:408
+#: modules/imaging/manage/ajaxFormWin11.php:556
 #: modules/imaging/manage/ajaxFormWin7.php:463
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:415
 #: modules/imaging/manage/ajaxFormWin8.php:539
 msgid "Currency and Date format"
 msgstr "Valuta og dato format"
@@ -1546,7 +1577,9 @@ msgstr "Valuta og dato format"
 #: modules/imaging/manage/ajaxFormWin10.php:565
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:424
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:416
+#: modules/imaging/manage/ajaxFormWin11.php:564
 #: modules/imaging/manage/ajaxFormWin7.php:471
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:423
 #: modules/imaging/manage/ajaxFormWin8.php:547
 msgid "Time Zone"
 msgstr "Tidssone"
@@ -1554,7 +1587,9 @@ msgstr "Tidssone"
 #: modules/imaging/manage/ajaxFormWin10.php:573
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:432
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:424
+#: modules/imaging/manage/ajaxFormWin11.php:572
 #: modules/imaging/manage/ajaxFormWin7.php:479
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:431
 #: modules/imaging/manage/ajaxFormWin8.php:555
 msgid "UI Language"
 msgstr "Språk på grensesnitt"
@@ -1562,7 +1597,9 @@ msgstr "Språk på grensesnitt"
 #: modules/imaging/manage/ajaxFormWin10.php:584
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:443
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:435
+#: modules/imaging/manage/ajaxFormWin11.php:583
 #: modules/imaging/manage/ajaxFormWin7.php:490
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:442
 #: modules/imaging/manage/ajaxFormWin8.php:566
 msgid "Partition Settings"
 msgstr "Partisjonsinnstillinger"
@@ -1570,7 +1607,9 @@ msgstr "Partisjonsinnstillinger"
 #: modules/imaging/manage/ajaxFormWin10.php:593
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:452
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:444
+#: modules/imaging/manage/ajaxFormWin11.php:592
 #: modules/imaging/manage/ajaxFormWin7.php:499
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:451
 #: modules/imaging/manage/ajaxFormWin8.php:575
 msgid "Wipe Disk"
 msgstr "Slett disken"
@@ -1578,7 +1617,9 @@ msgstr "Slett disken"
 #: modules/imaging/manage/ajaxFormWin10.php:601
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:460
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:452
+#: modules/imaging/manage/ajaxFormWin11.php:600
 #: modules/imaging/manage/ajaxFormWin7.php:507
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:459
 #: modules/imaging/manage/ajaxFormWin8.php:583
 msgid "Install to disk"
 msgstr "Innstaller på disken"
@@ -1586,7 +1627,9 @@ msgstr "Innstaller på disken"
 #: modules/imaging/manage/ajaxFormWin10.php:609
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:468
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:460
+#: modules/imaging/manage/ajaxFormWin11.php:608
 #: modules/imaging/manage/ajaxFormWin7.php:515
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:467
 #: modules/imaging/manage/ajaxFormWin8.php:591
 msgid "Partition Order"
 msgstr "Partisjonsrekkefølge"
@@ -1594,7 +1637,9 @@ msgstr "Partisjonsrekkefølge"
 #: modules/imaging/manage/ajaxFormWin10.php:617
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:476
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:468
+#: modules/imaging/manage/ajaxFormWin11.php:616
 #: modules/imaging/manage/ajaxFormWin7.php:523
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:475
 #: modules/imaging/manage/ajaxFormWin8.php:599
 msgid "Extend OS Partition"
 msgstr "Utvid OS partisjonen"
@@ -1602,7 +1647,9 @@ msgstr "Utvid OS partisjonen"
 #: modules/imaging/manage/ajaxFormWin10.php:625
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:484
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:476
+#: modules/imaging/manage/ajaxFormWin11.php:624
 #: modules/imaging/manage/ajaxFormWin7.php:531
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:483
 #: modules/imaging/manage/ajaxFormWin8.php:607
 msgid "Main Partition Format"
 msgstr "Hovedpartisjonsformat"
@@ -1610,7 +1657,9 @@ msgstr "Hovedpartisjonsformat"
 #: modules/imaging/manage/ajaxFormWin10.php:638
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:497
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:489
+#: modules/imaging/manage/ajaxFormWin11.php:637
 #: modules/imaging/manage/ajaxFormWin7.php:544
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:496
 #: modules/imaging/manage/ajaxFormWin8.php:620
 msgid "Main Partition Letter"
 msgstr "Hovedpartisjonsbokstav"
@@ -1618,7 +1667,9 @@ msgstr "Hovedpartisjonsbokstav"
 #: modules/imaging/manage/ajaxFormWin10.php:649
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:508
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:500
+#: modules/imaging/manage/ajaxFormWin11.php:648
 #: modules/imaging/manage/ajaxFormWin7.php:555
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:507
 #: modules/imaging/manage/ajaxFormWin8.php:631
 msgid "Security Settings"
 msgstr "Sikkerhetsinnstillinger"
@@ -1626,7 +1677,9 @@ msgstr "Sikkerhetsinnstillinger"
 #: modules/imaging/manage/ajaxFormWin10.php:658
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:517
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:509
+#: modules/imaging/manage/ajaxFormWin11.php:657
 #: modules/imaging/manage/ajaxFormWin7.php:564
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:516
 #: modules/imaging/manage/ajaxFormWin8.php:640
 msgid "Protect Your Computer"
 msgstr "Beskytt din datamaskin"
@@ -1634,7 +1687,9 @@ msgstr "Beskytt din datamaskin"
 #: modules/imaging/manage/ajaxFormWin10.php:674
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:533
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:525
+#: modules/imaging/manage/ajaxFormWin11.php:673
 #: modules/imaging/manage/ajaxFormWin7.php:580
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:532
 #: modules/imaging/manage/ajaxFormWin8.php:656
 msgid "Network Location"
 msgstr "Nettverkslokasjon"
@@ -1642,7 +1697,9 @@ msgstr "Nettverkslokasjon"
 #: modules/imaging/manage/ajaxFormWin10.php:682
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:541
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:533
+#: modules/imaging/manage/ajaxFormWin11.php:681
 #: modules/imaging/manage/ajaxFormWin7.php:588
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:540
 #: modules/imaging/manage/ajaxFormWin8.php:664
 msgid "Hide EULA page"
 msgstr "Skjul ELUA side"
@@ -1650,7 +1707,9 @@ msgstr "Skjul ELUA side"
 #: modules/imaging/manage/ajaxFormWin10.php:690
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:549
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:541
+#: modules/imaging/manage/ajaxFormWin11.php:689
 #: modules/imaging/manage/ajaxFormWin7.php:596
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:548
 #: modules/imaging/manage/ajaxFormWin8.php:672
 msgid "Enable Firewall"
 msgstr "Aktiver brannmur"
@@ -1658,7 +1717,9 @@ msgstr "Aktiver brannmur"
 #: modules/imaging/manage/ajaxFormWin10.php:698
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:557
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:549
+#: modules/imaging/manage/ajaxFormWin11.php:697
 #: modules/imaging/manage/ajaxFormWin7.php:604
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:556
 #: modules/imaging/manage/ajaxFormWin8.php:680
 msgid "Disable auto daylight timeset"
 msgstr "Deaktiver automatisk sommertid"
@@ -1666,7 +1727,9 @@ msgstr "Deaktiver automatisk sommertid"
 #: modules/imaging/manage/ajaxFormWin10.php:706
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:565
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:557
+#: modules/imaging/manage/ajaxFormWin11.php:705
 #: modules/imaging/manage/ajaxFormWin7.php:612
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:564
 #: modules/imaging/manage/ajaxFormWin8.php:688
 msgid "Hide wireless setup in OOBE"
 msgstr "Skjul trådløst oppsett i OOBE"
@@ -1674,7 +1737,9 @@ msgstr "Skjul trådløst oppsett i OOBE"
 #: modules/imaging/manage/ajaxFormWin10.php:711
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:570
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:562
+#: modules/imaging/manage/ajaxFormWin11.php:710
 #: modules/imaging/manage/ajaxFormWin7.php:617
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:569
 #: modules/imaging/manage/ajaxFormWin8.php:693
 msgid "Category View"
 msgstr "Kategorivisning"
@@ -1682,7 +1747,9 @@ msgstr "Kategorivisning"
 #: modules/imaging/manage/ajaxFormWin10.php:711
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:570
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:562
+#: modules/imaging/manage/ajaxFormWin11.php:710
 #: modules/imaging/manage/ajaxFormWin7.php:617
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:569
 #: modules/imaging/manage/ajaxFormWin8.php:693
 msgid "Classic View"
 msgstr "Klassisk visning"
@@ -1690,7 +1757,9 @@ msgstr "Klassisk visning"
 #: modules/imaging/manage/ajaxFormWin10.php:714
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:573
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:565
+#: modules/imaging/manage/ajaxFormWin11.php:713
 #: modules/imaging/manage/ajaxFormWin7.php:620
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:572
 #: modules/imaging/manage/ajaxFormWin8.php:696
 msgid "Control Panel View"
 msgstr "Kontrollpanelvisning"
@@ -1698,7 +1767,9 @@ msgstr "Kontrollpanelvisning"
 #: modules/imaging/manage/ajaxFormWin10.php:719
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:578
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin11.php:718
 #: modules/imaging/manage/ajaxFormWin7.php:625
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:577
 #: modules/imaging/manage/ajaxFormWin8.php:701
 msgid "Large"
 msgstr "Stor"
@@ -1706,7 +1777,9 @@ msgstr "Stor"
 #: modules/imaging/manage/ajaxFormWin10.php:719
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:578
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:570
+#: modules/imaging/manage/ajaxFormWin11.php:718
 #: modules/imaging/manage/ajaxFormWin7.php:625
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:577
 #: modules/imaging/manage/ajaxFormWin8.php:701
 msgid "Small"
 msgstr "Liten"
@@ -1714,7 +1787,9 @@ msgstr "Liten"
 #: modules/imaging/manage/ajaxFormWin10.php:722
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:581
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:573
+#: modules/imaging/manage/ajaxFormWin11.php:721
 #: modules/imaging/manage/ajaxFormWin7.php:628
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:580
 #: modules/imaging/manage/ajaxFormWin8.php:704
 msgid "Control Panel Icon Size"
 msgstr "Kontrollpanelets ikonstørrelse"
@@ -1722,7 +1797,9 @@ msgstr "Kontrollpanelets ikonstørrelse"
 #: modules/imaging/manage/ajaxFormWin10.php:732
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:591
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:584
+#: modules/imaging/manage/ajaxFormWin11.php:731
 #: modules/imaging/manage/ajaxFormWin7.php:639
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:590
 #: modules/imaging/manage/ajaxFormWin8.php:715
 msgid "Domain Settings"
 msgstr "Domeneinstillinger"
@@ -1730,7 +1807,9 @@ msgstr "Domeneinstillinger"
 #: modules/imaging/manage/ajaxFormWin10.php:736
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:595
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:588
+#: modules/imaging/manage/ajaxFormWin11.php:735
 #: modules/imaging/manage/ajaxFormWin7.php:643
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:594
 #: modules/imaging/manage/ajaxFormWin8.php:719
 msgid "Domain"
 msgstr "Domene"
@@ -1738,7 +1817,9 @@ msgstr "Domene"
 #: modules/imaging/manage/ajaxFormWin10.php:740
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:599
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:593
+#: modules/imaging/manage/ajaxFormWin11.php:739
 #: modules/imaging/manage/ajaxFormWin7.php:648
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:598
 #: modules/imaging/manage/ajaxFormWin8.php:724
 msgid "Domain User"
 msgstr "Domenebruker"
@@ -1746,7 +1827,9 @@ msgstr "Domenebruker"
 #: modules/imaging/manage/ajaxFormWin10.php:744
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:603
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:598
+#: modules/imaging/manage/ajaxFormWin11.php:743
 #: modules/imaging/manage/ajaxFormWin7.php:653
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:602
 #: modules/imaging/manage/ajaxFormWin8.php:729
 msgid "Domain Password"
 msgstr "Domenepassord"
@@ -1754,7 +1837,9 @@ msgstr "Domenepassord"
 #: modules/imaging/manage/ajaxFormWin10.php:748
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:607
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:603
+#: modules/imaging/manage/ajaxFormWin11.php:747
 #: modules/imaging/manage/ajaxFormWin7.php:658
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:606
 #: modules/imaging/manage/ajaxFormWin8.php:734
 msgid "Join Domain"
 msgstr "Bli med i domenet"
@@ -1762,7 +1847,9 @@ msgstr "Bli med i domenet"
 #: modules/imaging/manage/ajaxFormWin10.php:752
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:611
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:608
+#: modules/imaging/manage/ajaxFormWin11.php:751
 #: modules/imaging/manage/ajaxFormWin7.php:663
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:610
 #: modules/imaging/manage/ajaxFormWin8.php:739
 msgid "MachineObjectOU"
 msgstr "Maskin Objekt OU"
@@ -1770,7 +1857,9 @@ msgstr "Maskin Objekt OU"
 #: modules/imaging/manage/ajaxFormWin10.php:763
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:622
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:619
+#: modules/imaging/manage/ajaxFormWin11.php:762
 #: modules/imaging/manage/ajaxFormWin7.php:674
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:621
 #: modules/imaging/manage/ajaxFormWin8.php:750
 msgid "Administrator Account"
 msgstr "Administratorkonto"
@@ -1778,7 +1867,9 @@ msgstr "Administratorkonto"
 #: modules/imaging/manage/ajaxFormWin10.php:768
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:627
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:624
+#: modules/imaging/manage/ajaxFormWin11.php:767
 #: modules/imaging/manage/ajaxFormWin7.php:679
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:626
 #: modules/imaging/manage/ajaxFormWin8.php:755
 msgid "Password"
 msgstr "Passord"
@@ -1786,7 +1877,9 @@ msgstr "Passord"
 #: modules/imaging/manage/ajaxFormWin10.php:780
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:639
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:636
+#: modules/imaging/manage/ajaxFormWin11.php:779
 #: modules/imaging/manage/ajaxFormWin7.php:691
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:638
 #: modules/imaging/manage/ajaxFormWin8.php:767
 msgid "User Account"
 msgstr "Brukerkonto"
@@ -1794,21 +1887,27 @@ msgstr "Brukerkonto"
 #: modules/imaging/manage/ajaxFormWin10.php:789
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:648
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:645
+#: modules/imaging/manage/ajaxFormWin11.php:788
 #: modules/imaging/manage/ajaxFormWin7.php:700
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:647
 #: modules/imaging/manage/ajaxFormWin8.php:776
 msgid "Customer Experience Improvement Program (CEIP)"
 msgstr "Program for forbedring av kundeopplevelse (CEIP)"
 
 #: modules/imaging/manage/ajaxFormWin10.php:797
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:656
+#: modules/imaging/manage/ajaxFormWin11.php:796
 #: modules/imaging/manage/ajaxFormWin7.php:708
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:655
 msgid "Copy Profile"
 msgstr "Kopier  Profil"
 
 #: modules/imaging/manage/ajaxFormWin10.php:802
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:661
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:664
+#: modules/imaging/manage/ajaxFormWin11.php:801
 #: modules/imaging/manage/ajaxFormWin7.php:713
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:660
 #: modules/imaging/manage/ajaxFormWin8.php:795
 msgid "User Name"
 msgstr "Brukernavn"
@@ -1816,7 +1915,9 @@ msgstr "Brukernavn"
 #: modules/imaging/manage/ajaxFormWin10.php:810
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:669
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:672
+#: modules/imaging/manage/ajaxFormWin11.php:809
 #: modules/imaging/manage/ajaxFormWin7.php:721
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:668
 #: modules/imaging/manage/ajaxFormWin8.php:803
 msgid "Group"
 msgstr "Gruppe"
@@ -1824,7 +1925,9 @@ msgstr "Gruppe"
 #: modules/imaging/manage/ajaxFormWin10.php:820
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:679
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:682
+#: modules/imaging/manage/ajaxFormWin11.php:819
 #: modules/imaging/manage/ajaxFormWin7.php:731
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:678
 #: modules/imaging/manage/ajaxFormWin8.php:813
 msgid "Password: (Optional)"
 msgstr "Passord: (valgfritt)"
@@ -1832,6 +1935,8 @@ msgstr "Passord: (valgfritt)"
 #: modules/imaging/manage/ajaxFormWin10.php:827
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:686
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:689
+#: modules/imaging/manage/ajaxFormWin11.php:827
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:686
 #: modules/imaging/manage/ajaxFormWin8.php:820
 msgid "UAC"
 msgstr "UAC"
@@ -1839,7 +1944,9 @@ msgstr "UAC"
 #: modules/imaging/manage/ajaxFormWin10.php:832
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:691
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:694
+#: modules/imaging/manage/ajaxFormWin11.php:832
 #: modules/imaging/manage/ajaxFormWin7.php:735
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:691
 #: modules/imaging/manage/ajaxFormWin8.php:825
 msgid "Create Xml Windows Answer File Generator"
 msgstr "Lag Xml Windows Answer File Generator"
@@ -1847,7 +1954,9 @@ msgstr "Lag Xml Windows Answer File Generator"
 #: modules/imaging/manage/ajaxFormWin10.php:840
 #: modules/imaging/manage/ajaxFormWin10-uefi.php:699
 #: modules/imaging/manage/ajaxFormWin8-uefi.php:702
+#: modules/imaging/manage/ajaxFormWin11.php:842
 #: modules/imaging/manage/ajaxFormWin7.php:743
+#: modules/imaging/manage/ajaxFormWin11-uefi.php:701
 #: modules/imaging/manage/ajaxFormWin8.php:833
 msgid "Xml Windows Answer File Generator"
 msgstr "Xml Windows Answer File Generator"
@@ -2006,41 +2115,45 @@ msgstr "registrerte klienter"
 msgid "with custom menu"
 msgstr "med tilpasset meny"
 
-#: modules/imaging/manage/ajaxStatus.php:234
+#: modules/imaging/manage/ajaxStatus.php:227
 msgid "client have rescue image"
 msgstr "klienten har gjennomrettingsbilde"
 
-#: modules/imaging/manage/ajaxStatus.php:238
+#: modules/imaging/manage/ajaxStatus.php:230
 msgid "client(s) have rescue image(s)"
 msgstr "klientene har gjennopprettingsbilder"
 
-#: modules/imaging/manage/ajaxStatus.php:256
+#: modules/imaging/manage/ajaxStatus.php:248
 msgid "masters are available"
 msgstr "mastere er tilgjengelig"
 
-#: modules/imaging/manage/ajaxStatus.php:539
-#: modules/imaging/manage/ajaxStatus.php:559
+#: modules/imaging/manage/ajaxStatus.php:281
+msgid "Reset all menu imaging from this entity"
+msgstr ""
+
+#: modules/imaging/manage/ajaxStatus.php:532
+#: modules/imaging/manage/ajaxStatus.php:551
 msgid "Multicast Current Location"
 msgstr "Multicast nåværende lokasjon"
 
-#: modules/imaging/manage/ajaxStatus.php:552
+#: modules/imaging/manage/ajaxStatus.php:545
 msgid "Stop multicast deploy"
 msgstr "Stopp multicast utrulling"
 
-#: modules/imaging/manage/ajaxStatus.php:569
+#: modules/imaging/manage/ajaxStatus.php:562
 #: modules/imaging/imaging/multicast.php:389
 msgid "Start multicast deploy"
 msgstr "Start multicast utrulling"
 
-#: modules/imaging/manage/ajaxStatus.php:581
+#: modules/imaging/manage/ajaxStatus.php:575
 msgid "Clear multicast deploy"
 msgstr "Fjern multicast utrulling"
 
-#: modules/imaging/manage/ajaxStatus.php:617
+#: modules/imaging/manage/ajaxStatus.php:613
 msgid "Recent activity"
 msgstr "Nylig aktivitet"
 
-#: modules/imaging/manage/ajaxStatus.php:626
+#: modules/imaging/manage/ajaxStatus.php:622
 msgid "Can't connect to the imaging server linked to the selected entity."
 msgstr ""
 "Kan ikke koble til avbildingsserveren som er koblet til den valgte enheten."
@@ -2118,19 +2231,19 @@ msgstr "<strong>%s</strong> skript var ikket %s"
 msgid "Script value"
 msgstr "Skript verdi"
 
-#: modules/imaging/manage/unattended.php:76
+#: modules/imaging/manage/unattended.php:82
 msgid "form not found"
 msgstr "formulær ikke funnet"
 
-#: modules/imaging/manage/unattended.php:89
+#: modules/imaging/manage/unattended.php:95
 msgid "Windows Answer File Generator"
 msgstr "Windows Answer File Generator"
 
-#: modules/imaging/manage/unattended.php:104
+#: modules/imaging/manage/unattended.php:109
 msgid "error create file"
 msgstr "feil under opprettelse av fil"
 
-#: modules/imaging/manage/unattended.php:126
+#: modules/imaging/manage/unattended.php:129
 msgid "Choose package source"
 msgstr "Velg kilde for pakken"
 
@@ -2323,7 +2436,7 @@ msgstr "Avbildingsgruppe"
 
 #: modules/imaging/manage/service_show_used.php:179
 #: modules/imaging/imaging/showtarget.php:158
-#: modules/imaging/imaging/configure.php:39
+#: modules/imaging/imaging/configure.php:40
 msgid "Computer"
 msgstr "Datamaskin"
 
@@ -2608,7 +2721,7 @@ msgid "Default menu parameters"
 msgstr "Standard menyparametere"
 
 #: modules/imaging/manage/ajaxConfiguration.php:101
-#: modules/imaging/imaging/configure.php:43
+#: modules/imaging/imaging/configure.php:45
 msgid "Default menu label"
 msgstr "Standard menyetikett"
 
@@ -2621,17 +2734,17 @@ msgid "Hide menu"
 msgstr "Skjul meny"
 
 #: modules/imaging/manage/ajaxConfiguration.php:116
-#: modules/imaging/imaging/configure.php:62
+#: modules/imaging/imaging/configure.php:71
 msgid "Boot options"
 msgstr "Oppstartsalternativer"
 
 #: modules/imaging/manage/ajaxConfiguration.php:119
-#: modules/imaging/imaging/configure.php:65
+#: modules/imaging/imaging/configure.php:75
 msgid "Full path to the XPM displayed at boot"
 msgstr "Full sti til XPM vist ved oppstart"
 
 #: modules/imaging/manage/ajaxConfiguration.php:122
-#: modules/imaging/imaging/configure.php:69
+#: modules/imaging/imaging/configure.php:82
 msgid "Message displayed during backup/restoration"
 msgstr "Melding vises under sikkerhetskopiering/gjennoppretting"
 
@@ -2928,19 +3041,19 @@ msgstr "Avbilding på en gruppe"
 
 #: modules/imaging/infoPackage.inc.php:274
 #: modules/imaging/infoPackage.inc.php:353
-#: modules/imaging/imaging/tabs.php:220 modules/imaging/imaging/tabs.php:292
+#: modules/imaging/imaging/tabs.php:243 modules/imaging/imaging/tabs.php:315
 msgid "Boot menu"
 msgstr "Boot meny"
 
 #: modules/imaging/infoPackage.inc.php:276
 #: modules/imaging/infoPackage.inc.php:355
-#: modules/imaging/imaging/tabs.php:223
+#: modules/imaging/imaging/tabs.php:246
 msgid "Images and Masters"
 msgstr "Bilder og Mastere"
 
 #: modules/imaging/infoPackage.inc.php:278
 #: modules/imaging/infoPackage.inc.php:357
-#: modules/imaging/imaging/tabs.php:224 modules/imaging/imaging/tabs.php:294
+#: modules/imaging/imaging/tabs.php:247 modules/imaging/imaging/tabs.php:317
 msgid "Boot services"
 msgstr "Oppstartstjenester"
 
@@ -2951,7 +3064,7 @@ msgstr "Avbildingslogg"
 
 #: modules/imaging/infoPackage.inc.php:282
 #: modules/imaging/infoPackage.inc.php:361
-#: modules/imaging/imaging/tabs.php:226 modules/imaging/imaging/tabs.php:296
+#: modules/imaging/imaging/tabs.php:249 modules/imaging/imaging/tabs.php:319
 msgid "Menu configuration"
 msgstr "Meny konfigurasjon"
 
@@ -3058,7 +3171,7 @@ msgstr "Fjern bildefil %s"
 
 #: modules/imaging/imaging/bootmenu_remove.php:103
 #: modules/imaging/imaging/addimage.php:81
-#: modules/imaging/imaging/tabs.php:103
+#: modules/imaging/imaging/tabs.php:127
 #: modules/imaging/imaging/addservice.php:78
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
@@ -3106,27 +3219,28 @@ msgstr "I oppstartsmenyen"
 msgid "From profile"
 msgstr "Fra profil"
 
-#: modules/imaging/imaging/tabs.php:61
+#: modules/imaging/imaging/tabs.php:63 modules/imaging/imaging/tabs.php:71
+#: modules/imaging/imaging/tabs.php:79
 msgid "Default menu has been successfully restored."
 msgstr "Standardmenyen er gjenopprettet."
 
-#: modules/imaging/imaging/tabs.php:120
+#: modules/imaging/imaging/tabs.php:143
 #, php-format
 msgid "This computer is no longer registered : %s"
 msgstr "Denne datamaskinen er ikke lenger registrert: %s"
 
-#: modules/imaging/imaging/tabs.php:124
+#: modules/imaging/imaging/tabs.php:147
 #, php-format
 msgid "Boot Menu Generation failed for : %s"
 msgstr "Generering av oppstartsmenyen mislyktes for:%s"
 
-#: modules/imaging/imaging/tabs.php:145 modules/imaging/imaging/tabs.php:176
-#: modules/imaging/imaging/tabs.php:196 modules/imaging/imaging/tabs.php:216
+#: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:199
+#: modules/imaging/imaging/tabs.php:219 modules/imaging/imaging/tabs.php:239
 #, php-format
 msgid "%s's computer imaging"
 msgstr "%ss datamaskinavbildning"
 
-#: modules/imaging/imaging/tabs.php:151
+#: modules/imaging/imaging/tabs.php:174
 msgid ""
 "This computer can't be declared in the imaging module: it's already part of "
 "a broken imaging group."
@@ -3134,27 +3248,27 @@ msgstr ""
 "Denne datamaskinen kan ikke deklareres i avbildingsmodulen: den er allerede "
 "en del av en ødelagt bildegruppe."
 
-#: modules/imaging/imaging/tabs.php:159
+#: modules/imaging/imaging/tabs.php:182
 #, php-format
 msgid "Please declare the imaging group first %shere%s."
 msgstr "Vennligst opprett bildegruppen først %s her %s."
 
-#: modules/imaging/imaging/tabs.php:167 modules/imaging/imaging/tabs.php:253
+#: modules/imaging/imaging/tabs.php:190 modules/imaging/imaging/tabs.php:276
 #, php-format
 msgid "Reset synchronisation state for %s (%s) succeed"
 msgstr "Tilbakestill synkroniseringsstatus for %s (%s) lyktes"
 
-#: modules/imaging/imaging/tabs.php:171 modules/imaging/imaging/tabs.php:257
+#: modules/imaging/imaging/tabs.php:194 modules/imaging/imaging/tabs.php:280
 msgid "Failed to reset synchronise state."
 msgstr "Kunne ikke tilbakestille synkroniseringsstatusen."
 
-#: modules/imaging/imaging/tabs.php:182 modules/imaging/imaging/tabs.php:268
+#: modules/imaging/imaging/tabs.php:205 modules/imaging/imaging/tabs.php:291
 #, php-format
 msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
 msgstr ""
 "Genererer oppstartsmeny ... Vent eller last inn siden på nytt %sher%s.<br/>"
 
-#: modules/imaging/imaging/tabs.php:185 modules/imaging/imaging/tabs.php:271
+#: modules/imaging/imaging/tabs.php:208 modules/imaging/imaging/tabs.php:294
 msgid ""
 "If the processing exceeds 5 minutes, please reset the synchro state of this "
 "computer."
@@ -3162,42 +3276,42 @@ msgstr ""
 "Hvis behandlingen går over 5 minutter, må du tilbakestille synkronstatusen "
 "til denne datamaskinen."
 
-#: modules/imaging/imaging/tabs.php:193 modules/imaging/imaging/tabs.php:279
+#: modules/imaging/imaging/tabs.php:216 modules/imaging/imaging/tabs.php:302
 msgid "Reset Synchro state"
 msgstr "Gjenopprett Synkro status"
 
-#: modules/imaging/imaging/tabs.php:212
+#: modules/imaging/imaging/tabs.php:235
 #, php-format
 msgid "%s's computer imaging (in group)"
 msgstr "%sdatamaskinavbildning (i gruppe)"
 
-#: modules/imaging/imaging/tabs.php:220 modules/imaging/imaging/tabs.php:292
+#: modules/imaging/imaging/tabs.php:243 modules/imaging/imaging/tabs.php:315
 msgid "Current boot menu"
 msgstr "Gjeldende oppstartsmeny"
 
-#: modules/imaging/imaging/tabs.php:224 modules/imaging/imaging/tabs.php:294
+#: modules/imaging/imaging/tabs.php:247 modules/imaging/imaging/tabs.php:317
 msgid "Available boot menu services"
 msgstr "Tilgjengelige oppstartsmenytjenester"
 
-#: modules/imaging/imaging/tabs.php:225 modules/imaging/imaging/tabs.php:295
+#: modules/imaging/imaging/tabs.php:248 modules/imaging/imaging/tabs.php:318
 msgid "Imaging log"
 msgstr "Logg over avbildninger"
 
-#: modules/imaging/imaging/tabs.php:262
+#: modules/imaging/imaging/tabs.php:285
 #, php-format
 msgid "%s's profile imaging"
 msgstr "%ss profil avbilding"
 
-#: modules/imaging/imaging/tabs.php:291
+#: modules/imaging/imaging/tabs.php:314
 #, php-format
 msgid "%s's imaging group"
 msgstr "%ss avbildingsgruppe"
 
-#: modules/imaging/imaging/tabs.php:293
+#: modules/imaging/imaging/tabs.php:316
 msgid "Masters"
 msgstr "Masters"
 
-#: modules/imaging/imaging/tabs.php:304
+#: modules/imaging/imaging/tabs.php:327
 msgid "Not enough information"
 msgstr "Ikke nok informasjon"
 
@@ -3298,81 +3412,81 @@ msgstr "Er du sikker på at du vil slette <b>%s</b>bildet?"
 msgid "Add the boot service <b>%s</b> to <b>%s</b>"
 msgstr "Legg til oppstartstjeneste<b>%s</b>i<b>%s</b>"
 
-#: modules/imaging/imaging/configure.php:39
+#: modules/imaging/imaging/configure.php:40
 #, php-format
 msgid "%s menu parameters"
 msgstr "%s menyparametre"
 
-#: modules/imaging/imaging/configure.php:39
+#: modules/imaging/imaging/configure.php:40
 msgid "Profile"
 msgstr "Profil"
 
-#: modules/imaging/imaging/configure.php:47
+#: modules/imaging/imaging/configure.php:52
 msgid "Menu timeout"
 msgstr "Meny timeout"
 
-#: modules/imaging/imaging/configure.php:98
+#: modules/imaging/imaging/configure.php:113
 msgid "Target options"
 msgstr "Målalternativer"
 
-#: modules/imaging/imaging/configure.php:127
+#: modules/imaging/imaging/configure.php:143
 msgid "Kernel parameters"
 msgstr "Kjerneparametre"
 
-#: modules/imaging/imaging/configure.php:131
+#: modules/imaging/imaging/configure.php:150
 msgid "Image parameters"
 msgstr "Bildeparametre"
 
-#: modules/imaging/imaging/configure.php:136
+#: modules/imaging/imaging/configure.php:158
 msgid "Force raw backup mode"
 msgstr "Tvinge rå sikkerhetskopimodus"
 
-#: modules/imaging/imaging/configure.php:155
+#: modules/imaging/imaging/configure.php:178
 msgid "Hide menu (shortcut to show it : Shift - Alt - Shift)"
 msgstr "Skjul meny (snarvei for å vise den: Skift - Alt - Skift)"
 
-#: modules/imaging/imaging/configure.php:156
+#: modules/imaging/imaging/configure.php:179
 msgid "GRUB command line access"
 msgstr "GRUB kommandolinjeadgang"
 
-#: modules/imaging/imaging/configure.php:157
+#: modules/imaging/imaging/configure.php:180
 msgid "Do not check hard disk size"
 msgstr "Ikke sjekk harddiskstørrelse"
 
-#: modules/imaging/imaging/configure.php:158
+#: modules/imaging/imaging/configure.php:181
 msgid "Update the NT boot loader if the hard disk has changed"
 msgstr "Oppdater NT oppstartslasteren hvis harddisken har endret seg"
 
-#: modules/imaging/imaging/configure.php:159
+#: modules/imaging/imaging/configure.php:182
 msgid "Diskless Linux command line access"
 msgstr "Diskløs Linux kommandolinjeadgang"
 
-#: modules/imaging/imaging/configure.php:174
+#: modules/imaging/imaging/configure.php:198
 #, php-format
 msgid "choose network profile for group %s"
 msgstr "Velg nettverksprofil for gruppe %s"
 
-#: modules/imaging/imaging/configure.php:200
+#: modules/imaging/imaging/configure.php:226
 #, php-format
 msgid "choose network profile for machine %s"
 msgstr "Velg nettverksprofil for maskin %s"
 
-#: modules/imaging/imaging/configure.php:277
+#: modules/imaging/imaging/configure.php:303
 #, php-format
 msgid "Boot menu is created for <strong>%s</strong>."
 msgstr "Boot-menyen opprettes for <strong>%s</strong>."
 
-#: modules/imaging/imaging/configure.php:279
+#: modules/imaging/imaging/configure.php:305
 #, php-format
 msgid "Boot menu modified for <strong>%s</strong>."
 msgstr "Oppstartmenyen endret for <strong>%s</strong>."
 
-#: modules/imaging/imaging/configure.php:322
+#: modules/imaging/imaging/configure.php:347
 #, php-format
 msgid "Error generating the menu : %s"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:351
+#: modules/imaging/imaging/configure.php:378
 msgid ""
 "You are going to unregister this computer from the imaging module, are you "
 "sure you want to do that?"
@@ -3380,36 +3494,36 @@ msgstr ""
 "Du kommer til å avregistrere denne datamaskinen fra avbildingsmodulen, er du"
 " sikker på at du vil gjøre det?"
 
-#: modules/imaging/imaging/configure.php:357
+#: modules/imaging/imaging/configure.php:384
 msgid "Do you want a backup to be done ?"
 msgstr "Vil du gjøre en sikkerhetskopi?"
 
-#: modules/imaging/imaging/configure.php:364
-#: modules/imaging/imaging/configure.php:718
+#: modules/imaging/imaging/configure.php:391
+#: modules/imaging/imaging/configure.php:757
 msgid "Unregister this computer"
 msgstr "Avregistrer denne datamaskinen"
 
-#: modules/imaging/imaging/configure.php:379
+#: modules/imaging/imaging/configure.php:406
 #, php-format
 msgid "The computer %s has correctly been unregistered from imaging"
 msgstr "Datamaskinen %s er korrekt avregistrert fora vbildning."
 
-#: modules/imaging/imaging/configure.php:398
+#: modules/imaging/imaging/configure.php:426
 #, php-format
 msgid "Failed to unregister the computer %s"
 msgstr "Feilet i å avregistrere maskinen %s"
 
-#: modules/imaging/imaging/configure.php:428
+#: modules/imaging/imaging/configure.php:458
 #, php-format
 msgid "Register computer '%s'"
 msgstr "Registrer datamaskin '%s'"
 
-#: modules/imaging/imaging/configure.php:432
+#: modules/imaging/imaging/configure.php:462
 #, php-format
 msgid "Imaging activation for group '%s'"
 msgstr "Avbildingsaktivering for grupper '%s'"
 
-#: modules/imaging/imaging/configure.php:454
+#: modules/imaging/imaging/configure.php:492
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entity of this computer."
@@ -3417,7 +3531,7 @@ msgstr ""
 "For å registrere deg, må du først sette en standardmeny til bildeserveren "
 "som administrerer enheten til denne datamaskinen."
 
-#: modules/imaging/imaging/configure.php:456
+#: modules/imaging/imaging/configure.php:494
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entities of the computers that belongs to this profile."
@@ -3425,7 +3539,7 @@ msgstr ""
 "For å registrere deg, må du først sette en standardmeny til bildeserveren "
 "som administrerer enhetene til datamaskinene som tilhører denne profilen."
 
-#: modules/imaging/imaging/configure.php:461
+#: modules/imaging/imaging/configure.php:499
 msgid ""
 "The computer either doesn't have a MAC address, either has more than one MAC"
 " address or the only NIC doesn't have any network mask. It can't be "
@@ -3435,31 +3549,31 @@ msgstr ""
 "adresse, eller den eneste NIC-en har ikke noen nettverksmaske. Det kan ikke "
 "registreres i avbildningsmodulen."
 
-#: modules/imaging/imaging/configure.php:466
+#: modules/imaging/imaging/configure.php:504
 msgid "The profile can't be registered into the imaging module."
 msgstr "Profilen kan ikke registreres i avbildingsmodulen"
 
-#: modules/imaging/imaging/configure.php:527
+#: modules/imaging/imaging/configure.php:562
 msgid "Computer:"
 msgstr "Datamaskin"
 
-#: modules/imaging/imaging/configure.php:528
-#: modules/imaging/imaging/configure.php:697
+#: modules/imaging/imaging/configure.php:563
+#: modules/imaging/imaging/configure.php:736
 msgid "Choose the MAC address you want to use"
 msgstr "Velg MAC-adressen du vil bruke"
 
-#: modules/imaging/imaging/configure.php:541
-#: modules/imaging/imaging/configure.php:706
+#: modules/imaging/imaging/configure.php:577
+#: modules/imaging/imaging/configure.php:745
 msgid ""
 "Please switch to expert mode now if you want to change more parameters."
 msgstr "Bytt til ekspertmodus hvis du vil endre flere parametere."
 
-#: modules/imaging/imaging/configure.php:543
-#: modules/imaging/imaging/configure.php:708
+#: modules/imaging/imaging/configure.php:579
+#: modules/imaging/imaging/configure.php:747
 msgid "You can switch to standard mode now if you want less parameters."
 msgstr "Du kan bytte til standardmodus nå hvis du vil ha mindre parametere."
 
-#: modules/imaging/imaging/configure.php:562
+#: modules/imaging/imaging/configure.php:597
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entity that owns this computer."
@@ -3467,7 +3581,7 @@ msgstr ""
 "Standardverdiene for bildebehandlingsparametrene blir arvet fra "
 "bildeserveren som administrerer enheten som eier denne datamaskinen."
 
-#: modules/imaging/imaging/configure.php:565
+#: modules/imaging/imaging/configure.php:599
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entities of the computers that belongs to "
@@ -3476,25 +3590,25 @@ msgstr ""
 "Standardverdiene for avbildingsparameterne blir arvet fra bildeserveren som "
 "administrerer enhetene til datamaskinene som tilhører denne profilen."
 
-#: modules/imaging/imaging/configure.php:577
+#: modules/imaging/imaging/configure.php:610
 #, php-format
 msgid "The default values displayed here come from this %s's profile menu."
 msgstr "Standardverdiene som vises her kommer fra denne %s profilmenyen."
 
-#: modules/imaging/imaging/configure.php:591
+#: modules/imaging/imaging/configure.php:624
 msgid "Hard disks and partitions selection to backup"
 msgstr "Valg av harddisk og partisjoner for sikkerhetskopiering"
 
-#: modules/imaging/imaging/configure.php:596
+#: modules/imaging/imaging/configure.php:629
 #, php-format
 msgid "Hard disk number: %d"
 msgstr "Disk nummer:%d"
 
-#: modules/imaging/imaging/configure.php:607
+#: modules/imaging/imaging/configure.php:641
 msgid "Select this hard disk"
 msgstr "Velg denne disken"
 
-#: modules/imaging/imaging/configure.php:620
+#: modules/imaging/imaging/configure.php:656
 #, php-format
 msgid "Partition number: %d"
 msgstr "Partisjon nummer: %d"

@@ -4,18 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# SPO <spointu@gmail.com>, 2018
 # tekmans <yvan.manon@siveo.net>, 2019
 # Nicolas Lécureuil <neoclust@mageia.org>, 2020
+# SPO <spointu@gmail.com>, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2023-12-12 12:45+0100\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
+"Last-Translator: SPO <spointu@gmail.com>, 2023\n"
 "Language-Team: French (https://app.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1952,8 +1952,8 @@ msgid "AVAILABLE"
 msgstr "Disponible"
 
 #: modules/msc/msc/launch.php:696
-msgid "Example for lunch and night (24h format): 12-14,20-8"
-msgstr "Exemple: pendant le repas et la nuit (12-14,20-8)"
+msgid "Example for lunch and night (24h format): 12-14,20-24,0-8"
+msgstr "Exemple: pendant le repas et la nuit (format 24h): 12-14,20-24,0-8"
 
 #: modules/msc/msc/launch.php:713
 msgid "bandwidth throttling (ko)"
@@ -2030,6 +2030,14 @@ msgstr "Activer"
 #: modules/msc/msc/launch.php:860
 msgid "Probe status"
 msgstr "Vérifier l'état"
+
+#: modules/msc/msc/launch.php:967
+msgid "wrong deployment intervals"
+msgstr "mauvaises intervalles de déploiement"
+
+#: modules/msc/msc/launch.php:1065
+msgid "Wrong deployment intervals"
+msgstr "Mauvaises intervalles de déploiement"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:136
 #, php-format

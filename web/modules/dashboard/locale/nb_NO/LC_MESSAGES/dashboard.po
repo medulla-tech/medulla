@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2023-12-12 12:45+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -87,10 +87,6 @@ msgstr "Online maskiner"
 msgid "Machines offline"
 msgstr "Offline maskiner"
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:48
-msgid "Uninventoried Machines"
-msgstr "Maskiner som ikke er i inventaret"
-
 #: modules/dashboard/includes/panels/general.inc.php:29
 msgid "General"
 msgstr "Generell"
@@ -115,37 +111,37 @@ msgstr "RAM"
 msgid "Alerts by Entity"
 msgstr "Varsler etter enheter"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:49
+#: modules/dashboard/includes/panels/alertsentity.inc.php:50
 #: modules/dashboard/includes/panels/alerts.inc.php:49
 msgid "Detail"
 msgstr "Detalj"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:50
+#: modules/dashboard/includes/panels/alertsentity.inc.php:51
 #: modules/dashboard/includes/panels/alerts.inc.php:50
 msgid "Acknowledge"
 msgstr "Anerkjenne"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:54
+#: modules/dashboard/includes/panels/alertsentity.inc.php:55
 #: modules/dashboard/includes/panels/alerts.inc.php:54
 msgid "Status"
 msgstr "Status"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:55
+#: modules/dashboard/includes/panels/alertsentity.inc.php:56
 #: modules/dashboard/includes/panels/alerts.inc.php:55
 msgid "Date"
 msgstr "Dato"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:56
+#: modules/dashboard/includes/panels/alertsentity.inc.php:57
 #: modules/dashboard/includes/panels/alerts.inc.php:56
 msgid "Evenement"
 msgstr "Begivenhet"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:57
+#: modules/dashboard/includes/panels/alertsentity.inc.php:58
 #: modules/dashboard/includes/panels/alerts.inc.php:57
 msgid "Machine"
 msgstr "Maskin"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:70
+#: modules/dashboard/includes/panels/alertsentity.inc.php:71
 #: modules/dashboard/includes/panels/alerts.inc.php:70
 msgid "No alerts"
 msgstr "Ingen varsler"
@@ -214,44 +210,44 @@ msgstr "Pulse prosesser"
 msgid "Alerts"
 msgstr "Varsler"
 
-#: modules/dashboard/infoPackage.inc.php:37
-#: modules/dashboard/infoPackage.inc.php:41
-#: modules/dashboard/infoPackage.inc.php:47
+#: modules/dashboard/infoPackage.inc.php:38
+#: modules/dashboard/infoPackage.inc.php:42
+#: modules/dashboard/infoPackage.inc.php:48
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: modules/dashboard/infoPackage.inc.php:52
+#: modules/dashboard/infoPackage.inc.php:53
 msgid "Panels"
 msgstr "Paneler"
 
-#: modules/dashboard/infoPackage.inc.php:56
+#: modules/dashboard/infoPackage.inc.php:57
 msgid "Session Panels"
 msgstr "Øktpanel"
 
-#: modules/dashboard/infoPackage.inc.php:61
+#: modules/dashboard/infoPackage.inc.php:62
 msgid "Computers Online Panel"
 msgstr "Panel for aktive maskiner"
 
-#: modules/dashboard/infoPackage.inc.php:64
+#: modules/dashboard/infoPackage.inc.php:65
 msgid "Space Panel"
 msgstr "Mellomromspanel"
 
-#: modules/dashboard/infoPackage.inc.php:67
+#: modules/dashboard/infoPackage.inc.php:68
 msgid "General Panel"
 msgstr "Generelt panel"
 
-#: modules/dashboard/infoPackage.inc.php:70
+#: modules/dashboard/infoPackage.inc.php:71
 msgid "Backup Panel"
 msgstr "Sikkerhetskopieringspanel"
 
-#: modules/dashboard/infoPackage.inc.php:73
+#: modules/dashboard/infoPackage.inc.php:74
 msgid "Update Panel"
 msgstr "Oppdateringspanel"
 
-#: modules/dashboard/infoPackage.inc.php:76
+#: modules/dashboard/infoPackage.inc.php:77
 msgid "Alerts Panel"
 msgstr "Varslingspanel"
 
-#: modules/dashboard/infoPackage.inc.php:79
+#: modules/dashboard/infoPackage.inc.php:80
 msgid "Alerts by Entity Panel"
 msgstr "Varslingspanel for enheter"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2023-12-12 12:45+0100\n"
 "PO-Revision-Date: 2018-02-13 20:53+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2022\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
@@ -86,10 +86,6 @@ msgstr "Робочі машини"
 msgid "Machines offline"
 msgstr "Неробочі машини"
 
-#: modules/dashboard/includes/panels/computersOnline.inc.php:48
-msgid "Uninventoried Machines"
-msgstr "Машин без обліку"
-
 #: modules/dashboard/includes/panels/general.inc.php:29
 msgid "General"
 msgstr "Загальне"
@@ -114,37 +110,37 @@ msgstr "Пам’ять"
 msgid "Alerts by Entity"
 msgstr "Попередження за елементами"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:49
+#: modules/dashboard/includes/panels/alertsentity.inc.php:50
 #: modules/dashboard/includes/panels/alerts.inc.php:49
 msgid "Detail"
 msgstr "Подробиці"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:50
+#: modules/dashboard/includes/panels/alertsentity.inc.php:51
 #: modules/dashboard/includes/panels/alerts.inc.php:50
 msgid "Acknowledge"
 msgstr "Оповіщення"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:54
+#: modules/dashboard/includes/panels/alertsentity.inc.php:55
 #: modules/dashboard/includes/panels/alerts.inc.php:54
 msgid "Status"
 msgstr "Стан"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:55
+#: modules/dashboard/includes/panels/alertsentity.inc.php:56
 #: modules/dashboard/includes/panels/alerts.inc.php:55
 msgid "Date"
 msgstr "Дата"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:56
+#: modules/dashboard/includes/panels/alertsentity.inc.php:57
 #: modules/dashboard/includes/panels/alerts.inc.php:56
 msgid "Evenement"
 msgstr "Події"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:57
+#: modules/dashboard/includes/panels/alertsentity.inc.php:58
 #: modules/dashboard/includes/panels/alerts.inc.php:57
 msgid "Machine"
 msgstr "Комп’ютер"
 
-#: modules/dashboard/includes/panels/alertsentity.inc.php:70
+#: modules/dashboard/includes/panels/alertsentity.inc.php:71
 #: modules/dashboard/includes/panels/alerts.inc.php:70
 msgid "No alerts"
 msgstr "Немає попереджень"
@@ -213,44 +209,44 @@ msgstr "Процеси Pulse"
 msgid "Alerts"
 msgstr "Попередження"
 
-#: modules/dashboard/infoPackage.inc.php:37
-#: modules/dashboard/infoPackage.inc.php:41
-#: modules/dashboard/infoPackage.inc.php:47
+#: modules/dashboard/infoPackage.inc.php:38
+#: modules/dashboard/infoPackage.inc.php:42
+#: modules/dashboard/infoPackage.inc.php:48
 msgid "Dashboard"
 msgstr "Панель приладів"
 
-#: modules/dashboard/infoPackage.inc.php:52
+#: modules/dashboard/infoPackage.inc.php:53
 msgid "Panels"
 msgstr "Панелі"
 
-#: modules/dashboard/infoPackage.inc.php:56
+#: modules/dashboard/infoPackage.inc.php:57
 msgid "Session Panels"
 msgstr "Панелі сеансів"
 
-#: modules/dashboard/infoPackage.inc.php:61
+#: modules/dashboard/infoPackage.inc.php:62
 msgid "Computers Online Panel"
 msgstr "Панель активних комп'ютерів"
 
-#: modules/dashboard/infoPackage.inc.php:64
+#: modules/dashboard/infoPackage.inc.php:65
 msgid "Space Panel"
 msgstr "Панель простору"
 
-#: modules/dashboard/infoPackage.inc.php:67
+#: modules/dashboard/infoPackage.inc.php:68
 msgid "General Panel"
 msgstr "Загальна панель"
 
-#: modules/dashboard/infoPackage.inc.php:70
+#: modules/dashboard/infoPackage.inc.php:71
 msgid "Backup Panel"
 msgstr "Панель резервного копіювання"
 
-#: modules/dashboard/infoPackage.inc.php:73
+#: modules/dashboard/infoPackage.inc.php:74
 msgid "Update Panel"
 msgstr "Панель оновлень"
 
-#: modules/dashboard/infoPackage.inc.php:76
+#: modules/dashboard/infoPackage.inc.php:77
 msgid "Alerts Panel"
 msgstr "Панель попереджень"
 
-#: modules/dashboard/infoPackage.inc.php:79
+#: modules/dashboard/infoPackage.inc.php:80
 msgid "Alerts by Entity Panel"
 msgstr "Попередження від панелі елементів"

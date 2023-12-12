@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2023-12-12 12:45+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
@@ -40,13 +40,13 @@ msgstr "Мітка кроку:"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:62
 #: modules/pkgs/includes/actions/action_loop_question.php:302
-#: modules/pkgs/includes/actions/actionprocessscript.php:345
+#: modules/pkgs/includes/actions/actionprocessscript.php:346
 #: modules/pkgs/includes/actions/action_set_config_file.php:84
 #: modules/pkgs/includes/actions/action_section_update.php:49
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:243
 #: modules/pkgs/includes/actions/actionrestart.php:96
 #: modules/pkgs/includes/actions/action_section_uninstall.php:50
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:509
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:510
 #: modules/pkgs/includes/actions/action_download.php:138
 #: modules/pkgs/includes/actions/action_unzip_file.php:372
 #: modules/pkgs/includes/actions/action_question.php:294
@@ -63,10 +63,10 @@ msgstr "Вилучити"
 #: modules/pkgs/includes/actions/actioncleaning.php:63
 #: modules/pkgs/includes/actions/action_loop_question.php:306
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:140
-#: modules/pkgs/includes/actions/actionprocessscript.php:346
+#: modules/pkgs/includes/actions/actionprocessscript.php:347
 #: modules/pkgs/includes/actions/action_set_config_file.php:89
 #: modules/pkgs/includes/actions/actionrestart.php:97
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:510
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:511
 #: modules/pkgs/includes/actions/action_download.php:139
 #: modules/pkgs/includes/actions/action_unzip_file.php:373
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:58
@@ -89,7 +89,7 @@ msgid "Allow the connected user to postpone an action"
 msgstr ""
 
 #: modules/pkgs/includes/actions/action_loop_question.php:112
-#: modules/pkgs/includes/actions/actionprocessscript.php:70
+#: modules/pkgs/includes/actions/actionprocessscript.php:71
 #: modules/pkgs/includes/actions/action_question.php:116
 #: modules/pkgs/includes/actions/action_kiosknotification.php:109
 #: modules/pkgs/includes/actions/action_notification.php:115
@@ -206,11 +206,11 @@ msgstr ""
 
 #: modules/pkgs/includes/actions/action_loop_question.php:249
 #: modules/pkgs/includes/actions/action_loop_question.php:264
-#: modules/pkgs/includes/actions/actionprocessscript.php:129
-#: modules/pkgs/includes/actions/actionprocessscript.php:144
+#: modules/pkgs/includes/actions/actionprocessscript.php:130
+#: modules/pkgs/includes/actions/actionprocessscript.php:145
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:64
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:79
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:291
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:292
 #: modules/pkgs/includes/actions/action_question.php:267
 #: modules/pkgs/includes/actions/action_question.php:282
 #: modules/pkgs/includes/actions/action_notification.php:183
@@ -257,7 +257,7 @@ msgid "Delete package"
 msgstr "Вилучити пакунок"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:108
-#: modules/pkgs/pkgs/detail.php:224
+#: modules/pkgs/pkgs/detail.php:230
 msgid "Inventory"
 msgstr "Облік"
 
@@ -279,18 +279,18 @@ msgstr "Без обліку"
 msgid "Inventory on change"
 msgstr "Облік при зміні"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:60
+#: modules/pkgs/includes/actions/actionprocessscript.php:61
 msgid "Run command"
 msgstr "Виконати команду"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:74
+#: modules/pkgs/includes/actions/actionprocessscript.php:75
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:47
 msgid "Command"
 msgstr "Команда"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:91
-#: modules/pkgs/includes/actions/actionprocessscript.php:105
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:169
+#: modules/pkgs/includes/actions/actionprocessscript.php:92
+#: modules/pkgs/includes/actions/actionprocessscript.php:106
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:170
 #: modules/pkgs/includes/actions/action_download.php:106
 #: modules/pkgs/includes/actions/action_download.php:120
 #: modules/pkgs/includes/actions/action_unzip_file.php:116
@@ -300,83 +300,83 @@ msgstr "Команда"
 msgid "Alternate package"
 msgstr "Альтернативний пакунок"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:155
+#: modules/pkgs/includes/actions/actionprocessscript.php:156
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:91
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:318
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:319
 #: modules/pkgs/includes/actions/action_unzip_file.php:145
 msgid "10 first lines of result"
 msgstr "10 перших рядків результату"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:156
+#: modules/pkgs/includes/actions/actionprocessscript.php:157
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:92
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:319
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:320
 #: modules/pkgs/includes/actions/action_unzip_file.php:146
 msgid "20 first lines of result"
 msgstr "20 перших рядків результату"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:157
+#: modules/pkgs/includes/actions/actionprocessscript.php:158
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:93
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:320
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:321
 #: modules/pkgs/includes/actions/action_unzip_file.php:147
 msgid "30 first lines of result"
 msgstr "30 перших рядків результату"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:158
+#: modules/pkgs/includes/actions/actionprocessscript.php:159
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:94
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:321
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:322
 #: modules/pkgs/includes/actions/action_unzip_file.php:148
 msgid "Complete results"
 msgstr "Результати повністю"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:159
+#: modules/pkgs/includes/actions/actionprocessscript.php:160
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:95
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:322
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:323
 #: modules/pkgs/includes/actions/action_unzip_file.php:149
 msgid "10 last lines of result"
 msgstr "10 останніх рядків результату"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:160
-#: modules/pkgs/includes/actions/actionprocessscript.php:162
+#: modules/pkgs/includes/actions/actionprocessscript.php:161
+#: modules/pkgs/includes/actions/actionprocessscript.php:163
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:96
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:98
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:323
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:325
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:324
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:326
 #: modules/pkgs/includes/actions/action_unzip_file.php:150
 #: modules/pkgs/includes/actions/action_unzip_file.php:152
 msgid "20 last lines of result"
 msgstr "20 останніх рядків результату"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:161
+#: modules/pkgs/includes/actions/actionprocessscript.php:162
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:97
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:324
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:325
 #: modules/pkgs/includes/actions/action_unzip_file.php:151
 msgid "30 last lines of result"
 msgstr "30 останніх рядків результату"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:163
+#: modules/pkgs/includes/actions/actionprocessscript.php:164
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:99
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:326
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:327
 #: modules/pkgs/includes/actions/action_unzip_file.php:153
 msgid "The last line of result"
 msgstr "Останній рядок результату"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:209
-#: modules/pkgs/includes/actions/actionprocessscript.php:224
+#: modules/pkgs/includes/actions/actionprocessscript.php:210
+#: modules/pkgs/includes/actions/actionprocessscript.php:225
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:145
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:160
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:372
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:387
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:373
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:388
 #: modules/pkgs/includes/actions/action_unzip_file.php:199
 msgid "Return result"
 msgstr "Повернути результат"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:322
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:486
+#: modules/pkgs/includes/actions/actionprocessscript.php:323
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:487
 msgid "On return code, goto "
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:323
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:487
+#: modules/pkgs/includes/actions/actionprocessscript.php:324
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:488
 msgid "Add goto"
 msgstr ""
 
@@ -419,7 +419,7 @@ msgid "Restart Agent Machine"
 msgstr "Перезапустити комп'ютер агента"
 
 #: modules/pkgs/includes/actions/actionrestart.php:60
-#: modules/pkgs/pkgs/detail.php:144 modules/pkgs/pkgs/detail.php:225
+#: modules/pkgs/pkgs/detail.php:145 modules/pkgs/pkgs/detail.php:231
 msgid "Restart"
 msgstr "Перезапустити"
 
@@ -431,49 +431,49 @@ msgstr "Перезапуск призначення"
 msgid "Uninstall Section"
 msgstr "Вилучити розділ"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:70
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:71
 msgid "Execute script"
 msgstr "Виконати скрипт"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:89
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:90
 msgid "Native (Windows batch, Linux bash and macOS bash)"
 msgstr "Вбудований (пакетний файл Windows, скрипт bash у Linux та macOS)"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:92
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
 msgid "Python (Windows, Linux and macOS)"
 msgstr "Python (Windows, Linux та macOS)"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:95
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:96
 msgid "Visual Basic Script (Windows)"
 msgstr "Скрипт Visual Basic (Windows)"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:98
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:99
 msgid "Power Shell (Windows)"
 msgstr "Power Shell (Windows)"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:101
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:102
 msgid "Korn Shell (Linux & macOS)"
 msgstr "Оболонка Korn (Linux і macOS)"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:104
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:105
 msgid "C Shell (Linux & macOS)"
 msgstr "C Shell (Linux і macOS)"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:119
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:120
 msgid "Script language"
 msgstr "Скриптова мова"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:128
-#: modules/pkgs/pkgs/detail.php:51
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:129
+#: modules/pkgs/pkgs/detail.php:52
 msgid "Script"
 msgstr "Скрипт"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:193
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:212
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:194
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:213
 msgid "Force suffix"
 msgstr "Примусовий суфікс"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:197
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:198
 msgid ""
 "The \"Script language\" property above applies a suffix to the script by default.\n"
 "However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
@@ -481,7 +481,7 @@ msgstr ""
 "Типово, використання властивості «Скриптова мова» призводить до встановлення суфікса назви скрипту.\n"
 "Втім, якщо встановлено властивість «Примусовий суфікс», завжди використовуватиметься суфікс'"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:216
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:217
 msgid ""
 "The \"Script language\" property above applies a suffix to the script by default.\n"
 " However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
@@ -489,8 +489,8 @@ msgstr ""
 "Типово, використання властивості «Скриптова мова» призводить до встановлення суфікса назви скрипту.\n"
 "Втім, якщо встановлено властивість «Примусовий суфікс», завжди використовуватиметься суфікс'"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:246
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:265
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:247
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:266
 msgid ""
 "The \"Script language\" property above applies a hash-bang to the script by default.\n"
 " However, if the \"Force hash-bang\" property is set, the imposed hash-bang will be this one'"
@@ -498,16 +498,16 @@ msgstr ""
 "Типово, використання властивості «Скриптова мова» призводить до встановлення шебанґа у скрипті.\n"
 "Втім, якщо встановлено властивість «Примусовий шебанґ», завжди використовуватиметься шебанґ'"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:261
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:262
 msgid "Force hash-bang"
 msgstr "Примусовий шебанґ"
 
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:306
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:307
 msgid "Set timeout  (in seconds)"
 msgstr "Встановити час очікування (у секундах)"
 
 #: modules/pkgs/includes/actions/action_download.php:76
-#: modules/pkgs/pkgs/detail.php:92
+#: modules/pkgs/pkgs/detail.php:93
 msgid "Download File"
 msgstr "Отримати файл"
 
@@ -666,8 +666,8 @@ msgid "Software"
 msgstr "Програмне забезпечення"
 
 #: modules/pkgs/includes/query.php:88 modules/pkgs/pkgs/add.php:231
-#: modules/pkgs/pkgs/ajaxPackageList.php:303
-#: modules/pkgs/pkgs/ajaxPackageList.php:449 modules/pkgs/pkgs/detail.php:205
+#: modules/pkgs/pkgs/ajaxPackageList.php:292
+#: modules/pkgs/pkgs/ajaxPackageList.php:431 modules/pkgs/pkgs/detail.php:209
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Version"
 msgstr "Версія"
@@ -692,12 +692,12 @@ msgstr "_X_ AppStream доступні для передплати"
 msgid "No featured appstream found."
 msgstr "Не знайдено рекомендованого appstream."
 
-#: modules/pkgs/includes/html.inc.php:42 modules/pkgs/pkgs/edit.php:563
+#: modules/pkgs/includes/html.inc.php:42 modules/pkgs/pkgs/edit.php:550
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 msgid "Upload Queued Files"
 msgstr "Вивантажити файли з черги"
 
-#: modules/pkgs/includes/html.inc.php:59 modules/pkgs/pkgs/edit.php:562
+#: modules/pkgs/includes/html.inc.php:59 modules/pkgs/pkgs/edit.php:549
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 msgid "Click here to select files"
 msgstr "Натисніть, щоб вибрати файли"
@@ -735,13 +735,13 @@ msgstr "Список пакунків"
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Файли успішно пов'язано із пакунком <b>%s (%s)</b>%s"
 
-#: modules/pkgs/pkgs/associate_files.php:85 modules/pkgs/pkgs/edit.php:133
+#: modules/pkgs/pkgs/associate_files.php:85 modules/pkgs/pkgs/edit.php:131
 #: modules/pkgs/pkgs/add.php:136
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "Не вдалося пов'язати файли%s"
 
-#: modules/pkgs/pkgs/associate_files.php:88 modules/pkgs/pkgs/edit.php:137
+#: modules/pkgs/pkgs/associate_files.php:88 modules/pkgs/pkgs/edit.php:135
 #: modules/pkgs/pkgs/add.php:142
 msgid "Failed to associate files"
 msgstr "Не вдалося пов'язати файли"
@@ -766,9 +766,9 @@ msgid "Rule Name"
 msgstr "Назва правила"
 
 #: modules/pkgs/pkgs/addRule.php:60 modules/pkgs/pkgs/editRule.php:65
-#: modules/pkgs/pkgs/edit.php:253 modules/pkgs/pkgs/add.php:232
-#: modules/pkgs/pkgs/ajaxPackageList.php:302
-#: modules/pkgs/pkgs/ajaxPackageList.php:448 modules/pkgs/pkgs/detail.php:204
+#: modules/pkgs/pkgs/edit.php:254 modules/pkgs/pkgs/add.php:232
+#: modules/pkgs/pkgs/ajaxPackageList.php:291
+#: modules/pkgs/pkgs/ajaxPackageList.php:430 modules/pkgs/pkgs/detail.php:208
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
 msgid "Description"
 msgstr "Опис"
@@ -840,8 +840,8 @@ msgstr "Тимчасовий каталог програмного інтерф�
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
-#: modules/pkgs/pkgs/ajaxPackageList.php:296
-#: modules/pkgs/pkgs/ajaxPackageList.php:445
+#: modules/pkgs/pkgs/ajaxPackageList.php:285
+#: modules/pkgs/pkgs/ajaxPackageList.php:427
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
 msgid "Package name"
 msgstr "Назва пакунка"
@@ -988,30 +988,30 @@ msgstr "Дата завершення строку дії"
 msgid "Edit package"
 msgstr "Редагувати пакунок"
 
-#: modules/pkgs/pkgs/edit.php:99
+#: modules/pkgs/pkgs/edit.php:101
 #, php-format
 msgid "Package successfully added in %s"
 msgstr "Пакунок успішно додано до %s"
 
-#: modules/pkgs/pkgs/edit.php:106
+#: modules/pkgs/pkgs/edit.php:108
 msgid "Package successfully edited"
 msgstr "Пакунок успішно змінено"
 
-#: modules/pkgs/pkgs/edit.php:124
+#: modules/pkgs/pkgs/edit.php:122
 #, php-format
 msgid "Files successfully added to the package <b>%s (%s)</b>"
 msgstr "Файли успішно додано до пакунка <b>%s (%s)</b>"
 
-#: modules/pkgs/pkgs/edit.php:146
+#: modules/pkgs/pkgs/edit.php:144
 msgid "Package failed to save"
 msgstr "Не вдалося зберегти пакунок"
 
-#: modules/pkgs/pkgs/edit.php:175
+#: modules/pkgs/pkgs/edit.php:177
 #, php-format
 msgid "Failed to delete files%s"
 msgstr "Не вдалося вилучити файли%s"
 
-#: modules/pkgs/pkgs/edit.php:177 modules/pkgs/pkgs/edit.php:182
+#: modules/pkgs/pkgs/edit.php:179 modules/pkgs/pkgs/edit.php:183
 #, php-format
 msgid "<br/>File successfully deleted. %s"
 msgstr "<br/>Файл успішно вилучено. %s"
@@ -1020,16 +1020,16 @@ msgstr "<br/>Файл успішно вилучено. %s"
 msgid "Failed to delete files"
 msgstr "Не вдалося вилучити файли"
 
-#: modules/pkgs/pkgs/edit.php:197 modules/pkgs/pkgs/ajaxPackageList.php:73
+#: modules/pkgs/pkgs/edit.php:197 modules/pkgs/pkgs/ajaxPackageList.php:76
 #: modules/pkgs/infoPackage.inc.php:72
 msgid "Edit a package"
 msgstr "Редагувати пакунок"
 
-#: modules/pkgs/pkgs/edit.php:251
+#: modules/pkgs/pkgs/edit.php:252
 msgid "Package label"
 msgstr "Мітка пакунка"
 
-#: modules/pkgs/pkgs/edit.php:252
+#: modules/pkgs/pkgs/edit.php:253
 msgid "Package version"
 msgstr "Версія пакунка"
 
@@ -1057,77 +1057,77 @@ msgstr "Linux"
 msgid "Mac OS"
 msgstr "Mac OS"
 
-#: modules/pkgs/pkgs/edit.php:315 modules/pkgs/pkgs/add.php:224
-#: modules/pkgs/pkgs/ajaxPackageList.php:299
+#: modules/pkgs/pkgs/edit.php:313 modules/pkgs/pkgs/add.php:224
+#: modules/pkgs/pkgs/ajaxPackageList.php:288
 msgid "Share"
 msgstr "Спільний"
 
-#: modules/pkgs/pkgs/edit.php:344 modules/pkgs/pkgs/add.php:275
+#: modules/pkgs/pkgs/edit.php:343 modules/pkgs/pkgs/add.php:275
 msgid "Operating System"
 msgstr "Операційна система"
 
-#: modules/pkgs/pkgs/edit.php:374 modules/pkgs/pkgs/add.php:295
-#: modules/pkgs/pkgs/detail.php:218
+#: modules/pkgs/pkgs/edit.php:368 modules/pkgs/pkgs/add.php:295
+#: modules/pkgs/pkgs/detail.php:223
 msgid "Transfer method"
 msgstr "Спосіб передавання"
 
-#: modules/pkgs/pkgs/edit.php:387 modules/pkgs/pkgs/add.php:301
-#: modules/pkgs/pkgs/detail.php:222
+#: modules/pkgs/pkgs/edit.php:378 modules/pkgs/pkgs/add.php:301
+#: modules/pkgs/pkgs/detail.php:227
 msgid "bandwidth throttling (ko)"
 msgstr "звуження каналу (кілооктети)"
 
-#: modules/pkgs/pkgs/edit.php:387 modules/pkgs/pkgs/add.php:302
+#: modules/pkgs/pkgs/edit.php:379 modules/pkgs/pkgs/add.php:302
 msgid "<in ko>"
 msgstr "<у ko>"
 
-#: modules/pkgs/pkgs/edit.php:399 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:306
 msgid "high priority"
 msgstr "висока пріоритетність"
 
-#: modules/pkgs/pkgs/edit.php:399 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:306
 msgid "ordinary priority"
 msgstr "звичайна пріоритетність"
 
-#: modules/pkgs/pkgs/edit.php:402 modules/pkgs/pkgs/add.php:309
-#: modules/pkgs/pkgs/detail.php:223
+#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/detail.php:229
 msgid "Spooling"
 msgstr "Буферизація"
 
-#: modules/pkgs/pkgs/edit.php:412 modules/pkgs/pkgs/add.php:312
+#: modules/pkgs/pkgs/edit.php:399 modules/pkgs/pkgs/add.php:312
 msgid "Launcher (kiosk)"
 msgstr "Засіб запуску (kiosk)"
 
-#: modules/pkgs/pkgs/edit.php:460 modules/pkgs/pkgs/add.php:321
-#: modules/pkgs/pkgs/detail.php:284
+#: modules/pkgs/pkgs/edit.php:445 modules/pkgs/pkgs/add.php:321
+#: modules/pkgs/pkgs/detail.php:290
 msgid "Dependencies"
 msgstr "Залежності"
 
-#: modules/pkgs/pkgs/edit.php:470 modules/pkgs/pkgs/add.php:331
+#: modules/pkgs/pkgs/edit.php:455 modules/pkgs/pkgs/add.php:331
 msgid "Added dependencies"
 msgstr "Додані залежності"
 
-#: modules/pkgs/pkgs/edit.php:486 modules/pkgs/pkgs/add.php:347
+#: modules/pkgs/pkgs/edit.php:471 modules/pkgs/pkgs/add.php:347
 msgid "Available dependencies"
 msgstr "Доступні залежності"
 
-#: modules/pkgs/pkgs/edit.php:487 modules/pkgs/pkgs/add.php:348
+#: modules/pkgs/pkgs/edit.php:472 modules/pkgs/pkgs/add.php:348
 msgid "search by name ..."
 msgstr "шукати за назвою…"
 
-#: modules/pkgs/pkgs/edit.php:537 modules/pkgs/pkgs/detail.php:81
-#: modules/pkgs/pkgs/detail.php:240
+#: modules/pkgs/pkgs/edit.php:524 modules/pkgs/pkgs/detail.php:82
+#: modules/pkgs/pkgs/detail.php:246
 msgid "File"
 msgstr "Файл"
 
-#: modules/pkgs/pkgs/edit.php:546
+#: modules/pkgs/pkgs/edit.php:533
 msgid "Delete file"
 msgstr "Вилучити файл"
 
-#: modules/pkgs/pkgs/edit.php:546
+#: modules/pkgs/pkgs/edit.php:533
 msgid "Are you sure you want to delete this file?"
 msgstr "Ви справді хочете вилучити цей файл?"
 
-#: modules/pkgs/pkgs/edit.php:639 modules/pkgs/pkgs/add.php:448
+#: modules/pkgs/pkgs/edit.php:625 modules/pkgs/pkgs/add.php:448
 msgid "Accentuated and special chars are not allowed"
 msgstr "Не можна використовувати символи з акцентами або спеціальні символи"
 
@@ -1206,248 +1206,244 @@ msgstr ""
 "Щоб збільшити розмір вивантажуваних даних, змініть значення у командах "
 "post_max_size і upload_max_filesize у файлі php.ini."
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:72 modules/pkgs/pkgs/detail.php:268
+#: modules/pkgs/pkgs/ajaxPackageList.php:75 modules/pkgs/pkgs/detail.php:274
 msgid "Package Detail"
 msgstr "Подробиці щодо пакунка"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:74
+#: modules/pkgs/pkgs/ajaxPackageList.php:77
 msgid "Please switch to Expert mode to edit this package"
 msgstr ""
 "Будь ласка, перемкніться на режим досвідченого користувача, щоб редагувати "
 "цей пакунок"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:75
+#: modules/pkgs/pkgs/ajaxPackageList.php:78
 msgid "You must have write rights to edit this package"
 msgstr "Для редагування цього пакунка вам потрібні права доступу до запису"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:77
+#: modules/pkgs/pkgs/ajaxPackageList.php:80
 #: modules/pkgs/infoPackage.inc.php:127
 msgid "Delete a package"
 msgstr "Вилучити пакунок"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:78
+#: modules/pkgs/pkgs/ajaxPackageList.php:81
 msgid "You must have write rights to delete this package"
 msgstr "Для вилучення цього пакунка вам потрібні права доступу до запису"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:142
-#: modules/pkgs/pkgs/ajaxPackageList.php:146
+#: modules/pkgs/pkgs/ajaxPackageList.php:144
+#: modules/pkgs/pkgs/ajaxPackageList.php:147
 msgid "Sharing disk usage"
 msgstr "Спільне використання диска"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:142
+#: modules/pkgs/pkgs/ajaxPackageList.php:144
 msgid "Package occupation"
 msgstr "Місце пакунка"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:145
+#: modules/pkgs/pkgs/ajaxPackageList.php:146
 msgid "Not limited"
 msgstr "Не обмежено"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:146
-#: modules/pkgs/pkgs/ajaxPackageList.php:162
+#: modules/pkgs/pkgs/ajaxPackageList.php:147
+#: modules/pkgs/pkgs/ajaxPackageList.php:160
 msgid "not limited"
 msgstr "не обмежено"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:176
+#: modules/pkgs/pkgs/ajaxPackageList.php:174
 msgid "Non precised"
 msgstr "Не вказано"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:300
+#: modules/pkgs/pkgs/ajaxPackageList.php:289
 msgid "Permissions"
 msgstr "Права доступу"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:304
-#: modules/pkgs/pkgs/ajaxPackageList.php:450 modules/pkgs/pkgs/detail.php:208
+#: modules/pkgs/pkgs/ajaxPackageList.php:293
+#: modules/pkgs/pkgs/ajaxPackageList.php:432 modules/pkgs/pkgs/detail.php:212
 msgid "Licenses"
 msgstr "Ліцензії"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:305
-#: modules/pkgs/pkgs/ajaxPackageList.php:451
+#: modules/pkgs/pkgs/ajaxPackageList.php:294
+#: modules/pkgs/pkgs/ajaxPackageList.php:433
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:71
 msgid "Os"
 msgstr "ОС"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:306
-#: modules/pkgs/pkgs/ajaxPackageList.php:452
+#: modules/pkgs/pkgs/ajaxPackageList.php:295
+#: modules/pkgs/pkgs/ajaxPackageList.php:434
 msgid "Package size"
 msgstr "Розмір пакунка"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:307
+#: modules/pkgs/pkgs/ajaxPackageList.php:296
 msgid "Share usage"
 msgstr "Спільне використання"
 
-#: modules/pkgs/pkgs/detail.php:35
+#: modules/pkgs/pkgs/detail.php:36
 msgid "Executed Command"
 msgstr "Виконана команда"
 
-#: modules/pkgs/pkgs/detail.php:40
+#: modules/pkgs/pkgs/detail.php:41
 msgid "Type Script"
 msgstr "Ввести скрипт"
 
-#: modules/pkgs/pkgs/detail.php:45
+#: modules/pkgs/pkgs/detail.php:46
 msgid "Shebang"
 msgstr "Шебанг"
 
-#: modules/pkgs/pkgs/detail.php:56
+#: modules/pkgs/pkgs/detail.php:57
 msgid "Timeout"
 msgstr "Час очікування"
 
-#: modules/pkgs/pkgs/detail.php:61
+#: modules/pkgs/pkgs/detail.php:62
 msgid "Code Return"
 msgstr "Повернення коду"
 
-#: modules/pkgs/pkgs/detail.php:66
+#: modules/pkgs/pkgs/detail.php:67
 msgid "Alternate Package"
 msgstr "Альтернативний пакунок"
 
-#: modules/pkgs/pkgs/detail.php:71
+#: modules/pkgs/pkgs/detail.php:72
 msgid "Set Environ Variable"
 msgstr "Встановити змінну середовища"
 
-#: modules/pkgs/pkgs/detail.php:87
+#: modules/pkgs/pkgs/detail.php:88
 msgid "Set"
 msgstr "Встановити"
 
-#: modules/pkgs/pkgs/detail.php:97 modules/pkgs/pkgs/detail.php:102
-#: modules/pkgs/pkgs/detail.php:107 modules/pkgs/pkgs/detail.php:112
-#: modules/pkgs/pkgs/detail.php:117 modules/pkgs/pkgs/detail.php:123
-#: modules/pkgs/pkgs/detail.php:128 modules/pkgs/pkgs/detail.php:133
-#: modules/pkgs/pkgs/detail.php:138
+#: modules/pkgs/pkgs/detail.php:98 modules/pkgs/pkgs/detail.php:103
+#: modules/pkgs/pkgs/detail.php:108 modules/pkgs/pkgs/detail.php:113
+#: modules/pkgs/pkgs/detail.php:118 modules/pkgs/pkgs/detail.php:124
+#: modules/pkgs/pkgs/detail.php:129 modules/pkgs/pkgs/detail.php:134
+#: modules/pkgs/pkgs/detail.php:139
 msgid "Result Command"
 msgstr "Команда-результат"
 
-#: modules/pkgs/pkgs/detail.php:144
+#: modules/pkgs/pkgs/detail.php:145
 msgid "Agent Machine"
 msgstr "Машина агента"
 
-#: modules/pkgs/pkgs/detail.php:144
+#: modules/pkgs/pkgs/detail.php:145
 msgid "Machine"
 msgstr "Комп’ютер"
 
-#: modules/pkgs/pkgs/detail.php:149
+#: modules/pkgs/pkgs/detail.php:150
 msgid "Waiting"
 msgstr "Очікування"
 
-#: modules/pkgs/pkgs/detail.php:149
+#: modules/pkgs/pkgs/detail.php:150
 msgid "secs."
 msgstr "сек."
 
-#: modules/pkgs/pkgs/detail.php:150
+#: modules/pkgs/pkgs/detail.php:151
 msgid "Go to"
 msgstr "Перейти"
 
-#: modules/pkgs/pkgs/detail.php:156
+#: modules/pkgs/pkgs/detail.php:157
 msgid "Comment"
 msgstr "Коментар"
 
-#: modules/pkgs/pkgs/detail.php:161
+#: modules/pkgs/pkgs/detail.php:162
 msgid "Inventory Activated"
 msgstr "Облік активовано"
 
-#: modules/pkgs/pkgs/detail.php:166
+#: modules/pkgs/pkgs/detail.php:167
 msgid "Clear package after install"
 msgstr "Вилучити пакунок після встановлення"
 
-#: modules/pkgs/pkgs/detail.php:171
+#: modules/pkgs/pkgs/detail.php:172
 msgid "If error go to"
 msgstr "Якщо помилка, перейти до"
 
-#: modules/pkgs/pkgs/detail.php:174
+#: modules/pkgs/pkgs/detail.php:175
 msgid "If success go to"
 msgstr "Якщо успіх, перейти до"
 
-#: modules/pkgs/pkgs/detail.php:187
+#: modules/pkgs/pkgs/detail.php:188
 msgid "Detail of Package "
 msgstr "Подробиці щодо пакунка"
 
-#: modules/pkgs/pkgs/detail.php:192
+#: modules/pkgs/pkgs/detail.php:193
 msgid "Context"
 msgstr "Контекст"
 
-#: modules/pkgs/pkgs/detail.php:194
+#: modules/pkgs/pkgs/detail.php:195
 msgid "Package Name"
 msgstr "Назва пакунка"
 
-#: modules/pkgs/pkgs/detail.php:195
+#: modules/pkgs/pkgs/detail.php:196
 msgid "Creator"
 msgstr "Творець"
 
-#: modules/pkgs/pkgs/detail.php:197
+#: modules/pkgs/pkgs/detail.php:198
 msgid "Edited By"
 msgstr "Автор редагування"
 
-#: modules/pkgs/pkgs/detail.php:198
+#: modules/pkgs/pkgs/detail.php:200
 msgid "Creation Date"
 msgstr "Дата створення"
 
-#: modules/pkgs/pkgs/detail.php:200
+#: modules/pkgs/pkgs/detail.php:202
 msgid "Last Modification Date"
 msgstr "Дата останньої зміни"
 
-#: modules/pkgs/pkgs/detail.php:202
+#: modules/pkgs/pkgs/detail.php:205
 msgid "Sharing Location"
 msgstr "Адреса спільного ресурсу"
 
-#: modules/pkgs/pkgs/detail.php:203
+#: modules/pkgs/pkgs/detail.php:207
 msgid "Package Uuid"
 msgstr "UUID пакунка"
 
-#: modules/pkgs/pkgs/detail.php:206
+#: modules/pkgs/pkgs/detail.php:210
 msgid "Type"
 msgstr "Тип"
 
-#: modules/pkgs/pkgs/detail.php:216
+#: modules/pkgs/pkgs/detail.php:221
 msgid "Transfer Method"
 msgstr "Спосіб передавання"
 
-#: modules/pkgs/pkgs/detail.php:219 modules/pkgs/pkgs/detail.php:241
+#: modules/pkgs/pkgs/detail.php:224 modules/pkgs/pkgs/detail.php:247
 msgid "Size"
 msgstr "Розмір"
 
-#: modules/pkgs/pkgs/detail.php:220
+#: modules/pkgs/pkgs/detail.php:225
 msgid "Transferfile"
 msgstr "Передавання файла"
 
-#: modules/pkgs/pkgs/detail.php:223
+#: modules/pkgs/pkgs/detail.php:229
 msgid "Priority"
 msgstr "Пріоритетність"
 
-#: modules/pkgs/pkgs/detail.php:232
+#: modules/pkgs/pkgs/detail.php:238
 msgid "View File Content"
 msgstr "Переглянути вміст файла"
 
-#: modules/pkgs/pkgs/detail.php:235
+#: modules/pkgs/pkgs/detail.php:241
 msgid "Files"
 msgstr "Файли"
 
-#: modules/pkgs/pkgs/detail.php:235
+#: modules/pkgs/pkgs/detail.php:241
 msgid "Total"
 msgstr "Загалом"
 
-#: modules/pkgs/pkgs/detail.php:242
+#: modules/pkgs/pkgs/detail.php:248
 msgid "Ratio Size/Total"
 msgstr "Відношення розмір/загалом"
 
-#: modules/pkgs/pkgs/detail.php:243
-msgid "Mime"
-msgstr "MIME"
-
-#: modules/pkgs/pkgs/detail.php:244
+#: modules/pkgs/pkgs/detail.php:249
 msgid "Mime Type"
 msgstr "Тип MIME"
 
-#: modules/pkgs/pkgs/detail.php:245 modules/pkgs/pkgs/detail.php:293
+#: modules/pkgs/pkgs/detail.php:250 modules/pkgs/pkgs/detail.php:299
 msgid "Action"
 msgstr "Дія"
 
-#: modules/pkgs/pkgs/detail.php:291
+#: modules/pkgs/pkgs/detail.php:297
 msgid "Package"
 msgstr "Пакунок"
 
-#: modules/pkgs/pkgs/detail.php:292
+#: modules/pkgs/pkgs/detail.php:298
 msgid "Uuid"
 msgstr "UUID"
 
-#: modules/pkgs/pkgs/detail.php:321
+#: modules/pkgs/pkgs/detail.php:328
 msgid "Sequences"
 msgstr "Послідовності"
 

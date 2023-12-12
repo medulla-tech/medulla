@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2023-12-12 12:45+0100\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Italian (Italy) (https://app.transifex.com/siveo/teams/72118/it_IT/)\n"
@@ -1900,7 +1900,7 @@ msgid "AVAILABLE"
 msgstr ""
 
 #: modules/msc/msc/launch.php:696
-msgid "Example for lunch and night (24h format): 12-14,20-8"
+msgid "Example for lunch and night (24h format): 12-14,20-24,0-8"
 msgstr ""
 
 #: modules/msc/msc/launch.php:713
@@ -1977,6 +1977,14 @@ msgstr ""
 
 #: modules/msc/msc/launch.php:860
 msgid "Probe status"
+msgstr ""
+
+#: modules/msc/msc/launch.php:967
+msgid "wrong deployment intervals"
+msgstr ""
+
+#: modules/msc/msc/launch.php:1065
+msgid "Wrong deployment intervals"
 msgstr ""
 
 #: modules/msc/msc/vnc_client_no_vnc.php:136

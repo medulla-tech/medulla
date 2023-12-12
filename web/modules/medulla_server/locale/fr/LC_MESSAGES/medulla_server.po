@@ -1,0 +1,181 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# SPO <spointu@gmail.com>, 2023
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-12 12:45+0100\n"
+"PO-Revision-Date: 2017-10-11 08:13+0000\n"
+"Last-Translator: SPO <spointu@gmail.com>, 2023\n"
+"Language-Team: French (https://app.transifex.com/siveo/teams/72118/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#: modules/medulla_server/includes/menu_group_action.php:47
+msgid "Delete this group"
+msgstr "Supprimer ce groupe"
+
+#: modules/medulla_server/includes/menu_group_action.php:49
+msgid "Delete this profile"
+msgstr "Supprimer ce profil"
+
+#: modules/medulla_server/includes/menu_group_action.php:52
+msgid "Display this group's content"
+msgstr "Afficher le contenu du groupe"
+
+#: modules/medulla_server/includes/menu_group_action.php:53
+msgid "Edit this group"
+msgstr "Modifier ce groupe"
+
+#: modules/medulla_server/includes/menu_group_action.php:54
+msgid "Share this group"
+msgstr "Partager ce groupe"
+
+#: modules/medulla_server/includes/menu_group_action.php:56
+msgid "Software deployment on this group"
+msgstr "Télé-déploiement sur ce groupe"
+
+#: modules/medulla_server/includes/menu_group_action.php:59
+msgid "Update on this group"
+msgstr "Mettre à jour sur ce groupe"
+
+#: modules/medulla_server/includes/menu_group_action.php:63
+msgid "Inventory on this profile"
+msgstr "Inventaires de ce profil"
+
+#: modules/medulla_server/includes/menu_group_action.php:67
+msgid "Display this imaging group's content"
+msgstr "Afficher le contenu du groupe d'imaging"
+
+#: modules/medulla_server/includes/menu_group_action.php:69
+msgid "Edit this imaging group"
+msgstr "Modifier ce groupe d'imaging"
+
+#: modules/medulla_server/includes/menu_group_action.php:70
+msgid "Share this imaging group"
+msgstr "Partager ce groupe d'imaging"
+
+#: modules/medulla_server/includes/menu_group_action.php:72
+msgid "Software deployment on this imaging group"
+msgstr "Déploiement sur ce groupe d'imaging"
+
+#: modules/medulla_server/includes/menu_group_action.php:76
+#: modules/medulla_server/includes/menu_action.php:64
+#: modules/medulla_server/includes/menu_actionaudit.php:70
+msgid "Imaging management"
+msgstr "Gestion de l'imaging"
+
+#: modules/medulla_server/includes/menu_group_action.php:82
+msgid "Group Quick action"
+msgstr "Groupe Action rapide"
+
+#: modules/medulla_server/includes/menu_group_action.php:95
+msgid "Csv export"
+msgstr "Export CSV"
+
+#: modules/medulla_server/includes/utilities.php:87
+msgid "All my entities"
+msgstr "Toutes mes entités"
+
+#: modules/medulla_server/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr "Entité racine"
+
+#: modules/medulla_server/includes/menu_action.php:60
+#: modules/medulla_server/includes/menu_actionaudit.php:66
+msgid "Inventory"
+msgstr "Inventaire"
+
+#: modules/medulla_server/includes/menu_action.php:61
+msgid "extTicket issue"
+msgstr "question extTicket"
+
+#: modules/medulla_server/includes/menu_action.php:62
+#: modules/medulla_server/includes/menu_actionaudit.php:68
+msgid "Backup status"
+msgstr "Statut de la sauvegarde"
+
+#: modules/medulla_server/includes/menu_action.php:63
+#: modules/medulla_server/includes/menu_actionaudit.php:69
+msgid "Urbackup"
+msgstr "Urbackup"
+
+#: modules/medulla_server/includes/menu_action.php:67
+#: modules/medulla_server/includes/menu_action.php:69
+#: modules/medulla_server/includes/menu_actionaudit.php:77
+msgid "Remote control"
+msgstr "Prise en main à distance"
+
+#: modules/medulla_server/includes/menu_action.php:74
+#: modules/medulla_server/includes/menu_actionaudit.php:80
+msgid "xmppconsole"
+msgstr "Console XMPP"
+
+#: modules/medulla_server/includes/menu_action.php:75
+#: modules/medulla_server/includes/menu_actionaudit.php:71
+msgid "Quick action"
+msgstr "Action rapide"
+
+#: modules/medulla_server/includes/menu_action.php:79
+#: modules/medulla_server/includes/menu_action.php:81
+#: modules/medulla_server/includes/menu_action.php:84
+#: modules/medulla_server/includes/menu_actionaudit.php:74
+#: modules/medulla_server/includes/menu_actionaudit.php:78
+msgid "Software deployment"
+msgstr "Déploiement logiciel"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:81
+msgid "Edit config files"
+msgstr "Éditer les fichiers de configuration"
+
+#: modules/medulla_server/update/viewProductUpdates.php:25
+#: modules/medulla_server/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr "Mise à jour disponibles"
+
+#: modules/medulla_server/update/viewProductUpdates.php:38
+msgid "Update"
+msgstr "Mise à jour"
+
+#: modules/medulla_server/update/installProductUpdates.php:41
+msgid "Installing updates ..."
+msgstr "Mise à jour en cours d'installation"
+
+#: modules/medulla_server/infoPackage.inc.php:34
+msgid "Medulla"
+msgstr "Medulla"
+
+#: modules/medulla_server/infoPackage.inc.php:45
+msgid "Computers list"
+msgstr "Liste des ordinateurs"
+
+#: modules/medulla_server/infoPackage.inc.php:50
+msgid "Location selection in computer edit"
+msgstr "Sélection de l'entité d'un ordinateur"
+
+#: modules/medulla_server/infoPackage.inc.php:60
+msgid "update"
+msgstr "Mise à jour"
+
+#: modules/medulla_server/infoPackage.inc.php:66
+msgid "viewProductUpdates"
+msgstr "voir les mise à jour disponibles "
+
+#: modules/medulla_server/infoPackage.inc.php:72
+msgid "install Product Updates"
+msgstr "Installer les mises à jour"
+
+#: modules/medulla_server/infoPackage.inc.php:78
+msgid "Product Updates installation (ajax)"
+msgstr "Installation des maj du produit (ajax)"

@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# SPO <spointu@gmail.com>, 2023
 # Nicolas Lécureuil <neoclust@mageia.org>, 2023
+# SPO <spointu@gmail.com>, 2023
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2023-12-12 12:45+0100\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2023\n"
+"Last-Translator: SPO <spointu@gmail.com>, 2023\n"
 "Language-Team: French (https://app.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,13 +92,13 @@ msgstr "Modifier le profil"
 #: modules/kiosk/kiosk/ajaxProfilesList.php:38
 #: modules/kiosk/infoPackage.inc.php:75
 msgid "Delete Profile"
-msgstr ""
+msgstr "Supprimer profil"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:46
 #: modules/kiosk/kiosk/modifyAcknowledge.php:69
 #: modules/kiosk/infoPackage.inc.php:89
 msgid "Modify Installation Authorisations"
-msgstr ""
+msgstr "Modifier les autorisations d'installation"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:73
 msgid "Package Name"
@@ -106,19 +106,19 @@ msgstr "Nom du package"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:77
 msgid "Asked by User"
-msgstr ""
+msgstr "Demandé par l'utilisateur"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:78
 msgid "Asked On"
-msgstr ""
+msgstr "Date de demande"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:79
 msgid "Starts On"
-msgstr ""
+msgstr "Date de début"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:80
 msgid "Ends On"
-msgstr ""
+msgstr "Date de fin"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:81
 #: modules/kiosk/kiosk/modifyAcknowledge.php:95
@@ -139,7 +139,7 @@ msgstr "Ajouter un profil"
 #: modules/kiosk/kiosk/acknowledges.php:7 modules/kiosk/infoPackage.inc.php:80
 #: modules/kiosk/infoPackage.inc.php:84
 msgid "Installation Requests"
-msgstr ""
+msgstr "Demandes d'installations"
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:43
 #, php-format
@@ -181,39 +181,39 @@ msgstr ""
 
 #: modules/kiosk/kiosk/deleteProfile.php:34
 msgid "Missing parameter name"
-msgstr ""
+msgstr "Nom de paramètre manquant"
 
 #: modules/kiosk/kiosk/deleteProfile.php:43
 msgid "Missing parameter id"
-msgstr ""
+msgstr "Id de paramètre manquant"
 
 #: modules/kiosk/kiosk/deleteProfile.php:53
 #, php-format
 msgid "Profile %s successfully deleted"
-msgstr ""
+msgstr "Profil %s supprimé avec succès"
 
 #: modules/kiosk/kiosk/deleteProfile.php:58
 #, php-format
 msgid "Impossible to delete profile %s"
-msgstr ""
+msgstr "Impossible de supprimer le profil %s"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:43
 #, php-format
 msgid "%s has been granted the rights %s on package %s (%s) from %s to %s."
-msgstr ""
+msgstr "%s a eu les droits %s sur le package %s (%s) de %s à %s."
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:47
 msgid "Error while changing the authorisations"
-msgstr ""
+msgstr "Erreur de modification des autorisations"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:70
 msgid "This authorisation can't be edited (missing parameter)"
-msgstr ""
+msgstr "Cette autorisation ne peut être modifiée (paramètre manquant)"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:75
 #, php-format
 msgid "%s requested installation authorisation for package %s (profile %s)"
-msgstr ""
+msgstr "%s demande l'autorisation d'installer le package %s (profil %s)"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:82
 msgid "Start Date"
