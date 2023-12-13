@@ -2,6 +2,7 @@
 
 
 ## [5.0.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (unreleased)
+- [FEATURE] Add auto-refresh on the deployment page
 - [FEATURE] Add windows 11 sysprep support
 - [FEATURE] Port Medulla to php 8.2
 - [FEATURE] Port Medulla to python 3.11
