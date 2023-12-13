@@ -81,6 +81,16 @@ include_once('modules/pkgs/includes/xmlrpc.php');
 // Retrieve information deploy. For cmn_id
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+
+if($info["len"] == 0){?>
+    <script>
+    function refresh(){
+        location.reload();
+    }
+    window.setTimeout(refresh, 10000);
+    </script>
+<?php }
+
 $isUpdate = (substr($info['objectdeploy'][0]['sessionid'], 0, 6) == "update") ? true : false;
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id, $uuid);
 
