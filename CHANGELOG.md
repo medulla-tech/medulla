@@ -6,10 +6,17 @@
 - [FEATURE] Port Medulla to php 8.2
 - [FEATURE] Port Medulla to python 3.11
 - [FEATURE] Add new Updates module to handle microsoft updates in Medulla
+- [FEATURE] Add link to reset all entity menus
 - [BUGFIX]  Fix handling accentuated letters in the script that add packages in the database.
 - [BUGFIX]  Fix importing big groups with csv files
 - [BUGFIX]  Fix counting of inventory machines in the dashboard
 - [BUGFIX]  Fix counting of antivirus in the dashboard
+- [BUGFIX]  Fix multicast support
+- [BUGFIX]  Fix ipxe support
+- [BUGFIX]  Adapt to new Sqlalchemy syntax
+- [BUGFIX]  Fix support to glpi 10
+
+[Full Changelog](https://github.com/medulla-tech/medulla/compare/4.6.11...5.0.0)
 
 ## [4.6.11](https://github.com/medulla-tech/medulla/releases/tag/4.6.11) (2023-04-14)
 - [FEATURE] Packaging feature allows to define return codes different to 0 and 1 for branching to other steps
