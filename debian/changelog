@@ -1,3 +1,9 @@
+medulla (5.1.0-1) unstable; urgency=low
+
+ * New version for 5.1.0
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Dec 2023 22:00:11 +0100
+
 medulla (5.0.0-1) unstable; urgency=low
 
  * New preversion for 5.0.0
