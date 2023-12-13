@@ -1,8 +1,12 @@
 # Change Log
 
+## [5.0.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.1) (unreleased)
 - [BUGFIX]  Fix Translations
+- [BUGFIX]  Fix display of the inventory of a machine when it is offline
 
-## [5.0.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (unreleased)
+[Full Changelog](https://github.com/medulla-tech/medulla/compare/5.0.0...5.0.1)
+
+## [5.0.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (2023-13-12)
 - [FEATURE] Add windows 11 sysprep support
 - [FEATURE] Port Medulla to php 8.2
 - [FEATURE] Port Medulla to python 3.11
