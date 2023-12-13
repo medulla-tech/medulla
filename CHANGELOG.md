@@ -1,6 +1,7 @@
 # Change Log
 ## [5.1.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (unreleased)
 - [FEATURE] Add auto-refresh on the deployment page
+- [BUGFIX]  Fix diplaying the detail of a computer when it is offline
 
 ## [5.0.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (2023-12-13)
 - [FEATURE] Add windows 11 sysprep support
