@@ -1,5 +1,5 @@
 # Change Log
-## [5.0.1](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (unreleased)
+## [5.1.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (unreleased)
 - [FEATURE] Add auto-refresh on the deployment page
 
 ## [5.0.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (2023-12-13)
