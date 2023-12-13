@@ -148,7 +148,11 @@ class ActionItem
     public $action;
     public $classCss;
     public $paramString;
+    public $module;
+    public $submod;
     public $mod;
+    public $path;
+    public $tab;
 
     /**
      *  Constructor

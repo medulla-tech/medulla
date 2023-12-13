@@ -30,11 +30,7 @@ class EmptyActionItem1 extends ActionItem
 {
     public function __construct($desc, $action, $classCss)
     {
-        $this->desc = $desc;
-        $this->action = $action;
-        $this->classCss = $classCss;
-        $this->paramString = "";
-        $this->mod = "";
+        parent::__construct($desc, $action, $classCss, "");
     }
 
     public function display($param = null, $extraParams = array())
