@@ -29,7 +29,7 @@ global $maxperpage;
 
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
-$end   = (isset($_GET['end']) ? $_GET['start']+$maxperpage : $maxperpage);
+$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 
 $nameEntitie = "TEST_ENTITIE";
 $nameGroup = "";
