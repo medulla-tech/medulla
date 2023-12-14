@@ -1,5 +1,6 @@
 # Change Log
 
+- [BUGFIX]  Fix Translations
 
 ## [5.0.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (unreleased)
 - [FEATURE] Add windows 11 sysprep support
