@@ -28,7 +28,7 @@ $start = (!empty($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (!empty($_GET['start'])) ? htmlentities($_GET['end']) : $maxperpage;
 $filter = (!empty($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 $unselectAction = new ActionPopupItem(_T("Cancel Update", "updates"), "cancelUpdate", "delete", "", "updates", "updates");
-$unselectActionEmpty = new EmptyActionItem(_("Cancel Update", "updates"), "cancelUpdate", "delete", "", "updates", "updates");
+$unselectActionEmpty = new EmptyActionItem(_T("Cancel Update", "updates"), "cancelUpdate", "delete", "", "updates", "updates");
 $unselectActions = [];
 
 // Get selected updates
