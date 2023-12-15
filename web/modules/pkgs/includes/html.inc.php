@@ -20,13 +20,15 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-class MultiFileTpl extends AbstractTpl {
-
-    function __construct($name) {
+class MultiFileTpl extends AbstractTpl
+{
+    public function __construct($name)
+    {
         $this->name = $name;
     }
 
-    function display($arrParam = array()) {
+    public function display($arrParam = array())
+    {
         // FIXME use session or not ?
         $random_dir = "pulse_rdir_" . uniqid();
         $_SESSION['random_dir'] = $random_dir;
@@ -113,13 +115,15 @@ class MultiFileTpl extends AbstractTpl {
 
 }
 
-class MultiFileTpl2 extends AbstractTpl {
-
-    function __construct($name) {
+class MultiFileTpl2 extends AbstractTpl
+{
+    public function __construct($name)
+    {
         $this->name = $name;
     }
 
-    function display($arrParam = array()) {
+    public function display($arrParam = array())
+    {
 
         $random_dir = "pulse_rdir_" . uniqid();
         print '<div id="file-uploader">
@@ -204,13 +208,15 @@ class MultiFileTpl2 extends AbstractTpl {
 }
 
 
-class MultiFileTpl3 extends AbstractTpl {
-
-    function __construct($name) {
+class MultiFileTpl3 extends AbstractTpl
+{
+    public function __construct($name)
+    {
         $this->name = $name;
     }
 
-    function display($arrParam = array()) {
+    public function display($arrParam = array())
+    {
 
         $random_dir = "pulse_rdir_" . uniqid();
         print '<div id="file-uploader">
@@ -321,24 +327,28 @@ class MultiFileTpl3 extends AbstractTpl {
 }
 
 
-class buttonTpl extends AbstractTpl {
-    var $class = '';
-    var $cssClass = 'btn btn-small';
+class buttonTpl extends AbstractTpl
+{
+    public $class = '';
+    public $cssClass = 'btn btn-small';
 
-    function __construct($id,$text,$class='') {
+    public function __construct($id, $text, $class = '')
+    {
         $this->id = $id;
         $this->text = $text;
         $this->class = $class;
     }
 
 
-    function setClass($class) {
+    public function setClass($class)
+    {
         $this->cssClass = $class;
     }
 
-    function display($arrParam = array()) {
-        if (isset($this->id,$this->text))
-            printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
+    public function display($arrParam = array())
+    {
+        if (isset($this->id,$this->text)) {
+            printf('<input id="%s" type="button" value="%s" class="%s %s" />', $this->id, $this->text, $this->cssClass, $this->class);
+        }
     }
 }
-?>

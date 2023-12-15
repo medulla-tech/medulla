@@ -135,11 +135,11 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                     $str = _T("Failed to associate files", "pkgs");
                     new NotifyWidgetFailure($str);
                 }
-                // === END ASSOCIATING FILES ==========================
-                } else {
-                    header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
-                    exit;
-                }
+            // === END ASSOCIATING FILES ==========================
+            } else {
+                header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
+                exit;
+            }
         } else {
             new NotifyWidgetFailure($ret[1]);
         }
