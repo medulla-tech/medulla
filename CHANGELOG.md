@@ -1,6 +1,7 @@
 # Change Log
 
 ## [5.0.1](https://github.com/medulla-tech/medulla/releases/tag/5.0.1) (unreleased)
+- [FEATURE] Add auto-refresh on the deployment page
 - [BUGFIX]  Fix Translations
 - [BUGFIX]  Fix display of the inventory of a machine when it is offline
 - [BUGFIX]  Fix creating group from a boolean
