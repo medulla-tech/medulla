@@ -29,7 +29,8 @@ require_once("ErrorHandling.php");
  * into the XML-RPC stream.
  * e.g. a password can contains the & character, so the password string must be encoded.
  */
-function prepare_string($pass) {
+function prepare_string($pass)
+{
     xmlrpc_set_type($pass, 'base64');
     return $pass;
 }
@@ -41,44 +42,46 @@ function prepare_string($pass) {
  * need because XMLRPC server doest not like this sort
  * of encoding
  */
-function decode_entities($text) {
-    $text = html_entity_decode($text,ENT_QUOTES,"ISO-8859-1"); /* NOTE: UTF-8 does not work! */
-    $text= preg_replace('/&#(\d+);/me',"chr(\\1)",$text); /* decimal notation */
-    $text= preg_replace('/&#x([a-f0-9]+);/mei',"chr(0x\\1)",$text);  /* hex notation */
+function decode_entities($text)
+{
+    $text = html_entity_decode($text, ENT_QUOTES, "ISO-8859-1"); /* NOTE: UTF-8 does not work! */
+    $text = preg_replace('/&#(\d+);/me', "chr(\\1)", $text); /* decimal notation */
+    $text = preg_replace('/&#x([a-f0-9]+);/mei', "chr(0x\\1)", $text);  /* hex notation */
     return $text;
 }
 
 /**
  * Return a socket object
  */
-function openSocket($proto, $conf) {
+function openSocket($proto, $conf)
+{
     $errLevel = error_reporting();
     error_reporting(0);
     if (($proto != "ssl://")
         || ($conf[$_SESSION["agent"]]["verifypeer"] != 1)
         || !function_exists("stream_socket_client")) {
 
- $context = stream_context_create();
-       stream_context_set_option($context, "ssl", "allow_self_signed", true);
-         stream_context_set_option($context, "ssl", "verify_peer", false);
+        $context = stream_context_create();
+        stream_context_set_option($context, "ssl", "allow_self_signed", true);
+        stream_context_set_option($context, "ssl", "verify_peer", false);
         stream_context_set_option($context, "ssl", "peer_name", $_SESSION["XMLRPC_agent"]["host"]);
-    $sock = stream_socket_client("tls://".$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
+        $sock = stream_socket_client("tls://".$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
 
-$ret = array($sock, $errNo, $errString);
+        $ret = array($sock, $errNo, $errString);
 
     } else {
         $context = stream_context_create();
-        stream_context_set_option($context, "ssl", "allow_self_signed", False);
-        stream_context_set_option($context, "ssl", "verify_peer", True);
+        stream_context_set_option($context, "ssl", "allow_self_signed", false);
+        stream_context_set_option($context, "ssl", "verify_peer", true);
         stream_context_set_option($context, "ssl", "cafile", $conf[$_SESSION["agent"]]["cacert"]);
         stream_context_set_option($context, "ssl", "local_cert", $conf[$_SESSION["agent"]]["localcert"]);
         $sock = stream_socket_client('$proto://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
         $ret = array($sock, $errNo, $errString);
     }
-    error_reporting(E_ERROR | E_WARNING );
-    if ($sock !== False) {
+    error_reporting(E_ERROR | E_WARNING);
+    if ($sock !== false) {
         /* Setting timeout on a SSL socket only works with PHP >= 5.2.1 */
-        stream_set_timeout($sock, $conf[$_SESSION["agent"]]["timeout"] );
+        stream_set_timeout($sock, $conf[$_SESSION["agent"]]["timeout"]);
     }
     error_reporting($errLevel);
     return $ret;
@@ -87,7 +90,8 @@ $ret = array($sock, $errNo, $errString);
 /**
  *  @return 1 if an XMLRPC exception has been raised, else 0
  */
-function isXMLRPCError() {
+function isXMLRPCError()
+{
     global $errorStatus;
     return $errorStatus;
 }
@@ -101,7 +105,8 @@ function isXMLRPCError() {
  * @param $params array with param
  * @return the XML-RPC call result
  */
-function xmlCall($method, $params = null) {
+function xmlCall($method, $params = null)
+{
     global $errorStatus;
     global $errorDesc;
     global $conf;
@@ -126,7 +131,7 @@ function xmlCall($method, $params = null) {
     $request = xmlrpc_encode_request($method, $params, $output_options);
 
     /* We build the HTTP POST that will be sent */
-    $host= $_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"];
+    $host = $_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"];
     $url = "/";
     $httpQuery = "POST ". $url ." HTTP/1.0\r\n";
     $httpQuery .= "User-Agent: MMC web interface\r\n";
@@ -155,18 +160,19 @@ function xmlCall($method, $params = null) {
     list($sock, $errNo, $errString) = openSocket($prot, $conf);
     if (!$sock) {
         /* Connection failure */
-        $errObj = new ErrorHandlingItem('');echo "prototype";
+        $errObj = new ErrorHandlingItem('');
+        echo "prototype";
         $errObj->setMsg(_("Can't connect to MMC agent"));
         $errObj->setAdvice(_("MMC agent seems to be down or not correctly configured.") . '<br/> Error: '. $errNo . ' - '. $errString);
         $errObj->setTraceBackDisplay(false);
         $errObj->setSize(400);
         $errObj->process('');
         $errorStatus = 1;
-        return FALSE;
+        return false;
     }
 
     /* Send the HTTP POST */
-    if ( !fwrite($sock, $httpQuery, strlen($httpQuery)) ) {
+    if (!fwrite($sock, $httpQuery, strlen($httpQuery))) {
         /* Failure */
         $errObj = new ErrorHandlingItem('');
         $errObj->setMsg(_("Can't send XML-RPC request to MMC agent"));
@@ -175,7 +181,7 @@ function xmlCall($method, $params = null) {
         $errObj->setSize(400);
         $errObj->process('');
         $errorStatus = 1;
-        return FALSE;
+        return false;
     }
     fflush($sock);
 
@@ -192,9 +198,9 @@ function xmlCall($method, $params = null) {
             $errObj->setSize(400);
             $errObj->process('');
             $errorStatus = 1;
-            return FALSE;
+            return false;
         }
-        if ($ret === False) {
+        if ($ret === false) {
             $errObj = new ErrorHandlingItem('');
             $errObj->setMsg(_("Error while reading MMC agent XML-RPC response."));
             $errObj->setAdvice(_("Please check network connectivity."));
@@ -202,7 +208,7 @@ function xmlCall($method, $params = null) {
             $errObj->setSize(400);
             $errObj->process('');
             $errorStatus = 1;
-            return FALSE;
+            return false;
         }
         $xmlResponse .= $ret;
     }
@@ -217,19 +223,20 @@ function xmlCall($method, $params = null) {
         $errObj->setSize(400);
         $errObj->process('');
         $errorStatus = 1;
-        return FALSE;
+        return false;
     }
 
     /* Process the received HTTP header */
     $pos = strpos($xmlResponse, "\r\n\r\n");
     $httpHeader = substr($xmlResponse, 0, $pos);
     if ($method == "base.ldapAuth" || $method == "base.tokenAuthenticate") {
-        if ($method == "base.tokenAuthenticate")
+        if ($method == "base.tokenAuthenticate") {
             $_SESSION["AUTH_METHOD"] = "token";
-        else
+        } else {
             $_SESSION["AUTH_METHOD"] = "login";
+        }
         /* The RPC server must send us a session cookie */
-	if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0 || preg_match("/(TWISTED_SECURE_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
+        if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0 || preg_match("/(TWISTED_SECURE_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
             $_SESSION["RPCSESSION"] = $match[1];
         } else {
             /* Can't get a session from the Twisted XML-RPC server */
@@ -240,7 +247,7 @@ function xmlCall($method, $params = null) {
             $errObj->setSize(400);
             $errObj->process('');
             $errorStatus = 1;
-            return False;
+            return false;
         }
     }
 
@@ -255,8 +262,9 @@ function xmlCall($method, $params = null) {
        with PHP 5.2.0.
     */
     $booleanFalse = "<?xml version='1.0' ?>\n<methodResponse>\n<params>\n<param>\n<value><boolean>0</boolean></value>\n</param>\n</params>\n</methodResponse>\n";
-    if ($xmlResponse == $booleanFalse) $xmlResponse = False;
-    else {
+    if ($xmlResponse == $booleanFalse) {
+        $xmlResponse = false;
+    } else {
         $xmlResponseTmp = xmlrpc_decode($xmlResponse, "UTF-8");
         /* if we cannot decode in UTF-8 */
         if (!$xmlResponseTmp) {
@@ -270,50 +278,50 @@ function xmlCall($method, $params = null) {
     }
 
     /* If debug is on, print the XML-RPC call and result */
-    if (isset($conf["debug"]) && $conf["debug"]["level"]!=0) {
+    if (isset($conf["debug"]) && $conf["debug"]["level"] != 0) {
         $str1 = '<div class="alert alert-info">';
         $str = "XML RPC CALL FUNCTION: $method(";
         if (!$params) {
             $params = "null";
-        } else if (is_array($params)) {
-            $str .= var_export($params, True);
+        } elseif (is_array($params)) {
+            $str .= var_export($params, true);
         } else {
             $str .= $params;
         }
-        $str .=')';
+        $str .= ')';
         if (is_array($xmlResponse)) {
-            if ($conf["debug"]["level"]==1){
+            if ($conf["debug"]["level"] == 1) {
                 $str .= "<pre>";
             }
-            if ($conf["debug"]["level"]==2){
-                $temp=time() - $input;
+            if ($conf["debug"]["level"] == 2) {
+                $temp = time() - $input;
                 $str .= "\n---RESULT---".$method." in ".$temp."s\n";
-            }else{
+            } else {
                 $str .= "result : ";
             }
-            $str .= var_export($xmlResponse, True);
-            if ($conf["debug"]["level"]==1){
+            $str .= var_export($xmlResponse, true);
+            if ($conf["debug"]["level"] == 1) {
                 $str .= "</pre>";
             }
         } else {
-        
-            if ($conf["debug"]["level"]==2){
-                $temp=time() - $input;
+
+            if ($conf["debug"]["level"] == 2) {
+                $temp = time() - $input;
                 $str .= "\n---RESULT---".$method."  in ".$temp."s\n";
                 $str .= $xmlResponse;
-                }else{
-                    $str .= "result : ".$xmlResponse;
-                }
+            } else {
+                $str .= "result : ".$xmlResponse;
+            }
         }
-        $str2= '</div>';
-        if ($conf["debug"]["level"] == 1){
-                echo $str1.$str.$str2;
+        $str2 = '</div>';
+        if ($conf["debug"]["level"] == 1) {
+            echo $str1.$str.$str2;
+        }
+        if ($conf["debug"]["level"] == 2) {
+            if ($method != "base.canAddComputer") {
+                error_log("\n------------------------------\n".$date." ".$str, 3, "/tmp/logxmlrpc.log");
             }
-        if ($conf["debug"]["level"] == 2){
-                if ($method != "base.canAddComputer"){
-                    error_log("\n------------------------------\n".$date." ".$str, 3, "/tmp/logxmlrpc.log");
-                }
-            }
+        }
     }
     /* If the XML-RPC server sent a fault, display an error */
     if ((is_array($xmlResponse) && (isset($xmlResponse["faultCode"])))) {
@@ -334,9 +342,11 @@ function xmlCall($method, $params = null) {
                           );
 
             // Saving session params
-            foreach ($keys as $key)
-                if (isset($_SESSION[$key]))
+            foreach ($keys as $key) {
+                if (isset($_SESSION[$key])) {
                     $temp[$key] = $_SESSION[$key];
+                }
+            }
 
             // Destroy and recreate session to eliminate
             // modules session params
@@ -345,15 +355,16 @@ function xmlCall($method, $params = null) {
             session_start();
 
             // Restoring session params
-            foreach ($keys as $key)
-                if (isset($temp[$key]))
+            foreach ($keys as $key) {
+                if (isset($temp[$key])) {
                     $_SESSION[$key] = $temp[$key];
+                }
+            }
 
-            if (auth_user($temp['login'], $temp['pass']) ){
+            if (auth_user($temp['login'], $temp['pass'])) {
                 // If login succeed, retry call after relogin
                 return xmlCall($method, $params);
-            }
-            else{
+            } else {
                 // Logout and request a new login
                 unset($_SESSION["expire"]);
                 $_SESSION["agentsessionexpired"] = 1;
@@ -373,7 +384,7 @@ function xmlCall($method, $params = null) {
         $result->process($xmlResponse);
         $errorStatus = 1;
         $errorDesc = $xmlResponse["faultCode"];
-        return False;
+        return false;
     }
 
     /* Return the result of the remote procedure call */
@@ -385,7 +396,8 @@ function xmlCall($method, $params = null) {
  * @see ErrorHandlingObject
  * @see ErrorHandlingItem
  */
-function findErrorHandling($errorFaultCode) {
+function findErrorHandling($errorFaultCode)
+{
     require("commonErrorHandling.php");
 
     if (!empty($_GET["module"])) {
@@ -401,5 +413,3 @@ function findErrorHandling($errorFaultCode) {
         return -1;
     }
 }
-
-?>
