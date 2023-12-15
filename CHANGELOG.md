@@ -1,10 +1,16 @@
 # Change Log
 ## [5.1.0](https://github.com/medulla-tech/medulla/releases/tag/5.1.0) (unreleased)
-- [FEATURE] Add auto-refresh on the deployment page
-- [BUGFIX]  Fix diplaying the detail of a computer when it is offline
-- [BUGFIX]  Fix translations
 
-[Full Changelog](https://github.com/medulla-tech/medulla/compare/5.0.0...5.1.0)
+[Full Changelog](https://github.com/medulla-tech/medulla/compare/5.0.1...5.1.0)
+
+## [5.0.1](https://github.com/medulla-tech/medulla/releases/tag/5.0.1) (unreleased)
+- [FEATURE] Add auto-refresh on the deployment page
+- [BUGFIX]  Fix Translations
+- [BUGFIX]  Fix display of the inventory of a machine when it is offline
+- [BUGFIX]  Fix creating group from a boolean
+
+[Full Changelog](https://github.com/medulla-tech/medulla/compare/5.0.0...5.0.1)
+
 
 ## [5.0.0](https://github.com/medulla-tech/medulla/releases/tag/5.0.0) (2023-12-13)
 - [FEATURE] Add windows 11 sysprep support
