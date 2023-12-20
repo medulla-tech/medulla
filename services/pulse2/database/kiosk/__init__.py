@@ -287,9 +287,23 @@ AND kiosk.profiles.active = 1
         import time
         now = time.strftime('%Y-%m-%d %H:%M:%S')
 
-        sql = """INSERT INTO `kiosk`.`profiles` VALUES('%s','%s','%s', '%s', '%s', '%s');""" % ('0', name, login, source, active, now)
+        sql = """INSERT INTO `kiosk`.`profiles` VALUES('%s','%s','%s', '%s', '%s', '%s');""" % (
+            "0",
+            name,
+            login,
+            source,
+            active,
+            now)
 
-        session.execute(sql)
+        profile = Profiles()
+        profile.name = name
+        profile.owner = login
+        profile.source = source
+        profile.active = active
+        profile.creation_date = now
+
+        session.add(profile)
+
         session.commit()
         session.flush()
 
