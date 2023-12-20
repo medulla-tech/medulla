@@ -74,4 +74,8 @@ function xmlrpc_get_acknowledges_for_sharings($sharings, $start, $limit, $filter
 function xmlrpc_update_acknowledgement($id, $acknowledgedbyuser, $startdate, $enddate, $status){
     return xmlcall("kiosk.update_acknowledgement", [$id, $acknowledgedbyuser, $startdate, $enddate, $status]);
 }
+
+function xmlrpc_get_conf_kiosk(){
+    return xmlCall("kiosk.get_conf_kiosk", []);
+}
 ?>
