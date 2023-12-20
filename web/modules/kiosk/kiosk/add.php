@@ -70,6 +70,7 @@ if(is_array($ou_list))
     $f->push(new Table());
 
     $f->add(new HiddenTpl("action"), array("value" => $_GET['action'], "hide" => True));
+    $f->add(new HiddenTpl("login"), array("value" => $_SESSION['login'], "hide" => True));
     $f->add(new SpanElement('',"packages"));
 
     // -------
