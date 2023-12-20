@@ -1,5 +1,5 @@
 /**
- * (c) 2018 Siveo, http://siveo.net
+ * (c) 2018-2023 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -42,6 +42,8 @@ function sendForm(){
     var datas = {};
     datas['name'] = jQuery("#name").val();
     datas['active'] = jQuery("#status").val();
+    datas['owner'] = jQuery("[name='owner']").val();
+    datas['source'] = jQuery("#source").val();
     datas['id'] = jQuery("[name='id']").val();
     datas['ous'] = ous;
     datas['packages'] = generate_json();
