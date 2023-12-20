@@ -655,3 +655,14 @@ def update_acknowledgement(id, acknowledgedbyuser, startdate, enddate, status):
     )
 
     return result
+
+def get_conf_kiosk():
+    config = PluginConfigFactory.new(BasePluginConfig, "base")
+    kconfig = KioskConfig("kiosk")
+
+    result = {
+        "use_external_ldap": kconfig.use_external_ldap,
+        "enable_acknowledgements": kconfig.enable_acknowledgements
+    }
+
+    return result
