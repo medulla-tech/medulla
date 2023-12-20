@@ -1,7 +1,7 @@
 <?php
 
 /**
- * (c) 2018-2022 Siveo, http://siveo.net
+ * (c) 2018-2023 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *

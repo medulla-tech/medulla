@@ -30,19 +30,19 @@ require_once("../../../includes/acl.inc.php");
 
 if(isset($_POST['name'], $_POST['active']))
 {
-    $login = (!empty($_POST['login'])) ? htmlentities($_POST['login']) : $_SESSION['login'];
-
+    $owner = (!empty($_POST['owner'])) ? htmlentities($_POST['owner']) : $_SESSION['login'];
     $name = rename_profile(htmlentities($_POST['name']));
     if(is_string($_POST['ous']) && $_POST['ous'] == "none")
         $ous = "";
     else
         $ous = $_POST['ous'];
 
+    $packages =(!empty($_POST['packages'])) ? $_POST['packages'] : [];
+
+    $source = htmlentities($_POST['source']);
+
     // Add the profile to the database
-    if(isset($_POST['packages']))
-        $result = xmlrpc_create_profile($name, $login, $ous, htmlentities($_POST['active']), $_POST['packages']);
-    else
-        $result = xmlrpc_create_profile($name, $login, $ous, htmlentities($_POST['active']));
+        $result = xmlrpc_create_profile($name, $owner, $ous, htmlentities($_POST['active']), $packages, $source);
 
     new NotifyWidgetSuccess(sprintf(_T("Profile %s successfully added", "kiosk"),$name));
 }

@@ -310,29 +310,21 @@ AND kiosk.profiles.active = 1
 
         now = time.strftime("%Y-%m-%d %H:%M:%S")
 
-        sql = """INSERT INTO `kiosk`.`profiles` VALUES('%s','%s','%s', '%s', '%s', '%s');""" % (
-            "0",
-            name,
-            login,
-            source,
-            active,
-            now,
-        )
+        profile = Profiles()
+        profile.name = name
+        profile.owner = login
+        profile.source = source
+        profile.active = active
+        profile.creation_date = now
 
-        session.execute(sql)
+        session.add(profile)
+
         session.commit()
         session.flush()
 
-        # Search the id of this new profile
-        result = session.query(Profiles.id).filter(Profiles.name == name)
-        result = result.first()
-        id = 0
-        for row in result:
-            id = str(row)
-
         # Remove all packages associations concerning this profile
         session.query(Profile_has_package).filter(
-            Profile_has_package.profil_id == id
+            Profile_has_package.profil_id == profile.id
         ).delete()
 
         # The profile is now created, but the packages are not linked to it nor added into database.
@@ -341,18 +333,18 @@ AND kiosk.profiles.active = 1
         if len(packages) > 0:
             for status in list(packages.keys()):
                 for uuid in packages[status]:
-                    profile = Profile_has_package()
-                    profile.profil_id = id
-                    profile.package_uuid = uuid
-                    profile.package_status = status
+                    profile_package = Profile_has_package()
+                    profile_package.profil_id = profile.id
+                    profile_package.package_uuid = uuid
+                    profile_package.package_status = status
 
-                    session.add(profile)
+                    session.add(profile_package)
                     session.commit()
                     session.flush()
             # Finally we associate the OUs with the profile.
             if isinstance(ous, str) and ous == "":
                 profile_ou = Profile_has_ou()
-                profile_ou.profile_id = id
+                profile_ou.profile_id = profile.id
                 profile_ou.ou = ous
 
                 session.add(profile_ou)
@@ -362,13 +354,13 @@ AND kiosk.profiles.active = 1
             else:
                 for ou in ous:
                     profile_ou = Profile_has_ou()
-                    profile_ou.profile_id = id
+                    profile_ou.profile_id = profile.id
                     profile_ou.ou = ou
 
                     session.add(profile_ou)
                     session.commit()
                     session.flush()
-        return id
+        return profile.id
 
     @DatabaseHelper._sessionm
     def refresh_package_list(self, session):

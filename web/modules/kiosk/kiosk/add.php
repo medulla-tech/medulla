@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2018-2022 Siveo, http://siveo.net
+ * (c) 2018-2023 Siveo, http://siveo.net
  * $Id$
  *
  * This file is part of Management Console (MMC).
@@ -70,7 +70,7 @@ if(is_array($ou_list))
     $f->push(new Table());
 
     $f->add(new HiddenTpl("action"), array("value" => $_GET['action'], "hide" => True));
-    $f->add(new HiddenTpl("login"), array("value" => $_SESSION['login'], "hide" => True));
+    $f->add(new HiddenTpl("owner"), array("value" => $_SESSION['login'], "hide" => True));
     $f->add(new SpanElement('',"packages"));
 
     // -------
@@ -110,7 +110,6 @@ if(is_array($ou_list))
         $row++;
     }
 
-
     $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packages">
         <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
         <div style="width:100%">
@@ -131,6 +130,14 @@ if(is_array($ou_list))
         </div>
     </div>',"packages"));
 
+    $sources = ["ldap", "ou", "group", "entity"];
+    $select = new SelectItemtitle("source","Source provider");
+    $select->setElements($sources);
+    $select->setElementsVal($sources);
+    $f->add(
+        new TrFormElement(_T('Source','kiosk').":", $select),
+        array("value" => (!empty($profile['source'])) ? $profile['source'] : "1")
+    );
     $f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => True));
 
     // -------
