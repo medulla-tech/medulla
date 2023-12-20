@@ -139,19 +139,24 @@ $defaultValue = (safeCount($profile['ous']) > 0 && $profile['ous'][0] !="") ? ["
 // Create a section without table in the form
 $f->add(new TitleElement(_T("Manage packages", "kiosk")));
 
+if(xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true){
+    $restricted_area = '<div style="width:100%">
+    <h1>'._T("Restricted packages","kiosk").'</h1>
+    <ol data-draggable="target" id="restricted-packages">'.$restricted_packages_str.'</ol>
+    </div>';
+}
+else{
+    $restricted_area = '';
+
+    $allowed_packages_str .= $restricted_packages_str;
+}
+
 $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packages">
         <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
         <div style="width:100%">
             <h1>'._T("Available packages","kiosk").'</h1>
             <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
-        </div>
-
-        <div style="width:100%">
-            <h1>'._T("Restricted packages","kiosk").'</h1>
-            <ol data-draggable="target" id="restricted-packages">'.$restricted_packages_str.'</ol>
-        </div>
-
-        <div style="width:100%">
+        </div>'.$restricted_area.'<div style="width:100%">
             <h1>'._T("Allowed packages","kiosk").'</h1>
             <ol data-draggable="target" id="allowed-packages">'.$allowed_packages_str.'</ol>
         </div>

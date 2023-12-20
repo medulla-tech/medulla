@@ -110,20 +110,18 @@ if(is_array($ou_list))
         $row++;
     }
 
+    $restricted_area = (xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true) ? '<div style="width:100%">
+            <h1>'._T("Restricted packages","kiosk").'</h1>
+            <ol data-draggable="target" id="restricted-packages">
+            </ol>
+        </div>' : '';
+
     $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packages">
         <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
         <div style="width:100%">
             <h1>'._T("Available packages","kiosk").'</h1>
             <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
-        </div>
-
-        <div style="width:100%">
-            <h1>'._T("Restricted packages","kiosk").'</h1>
-            <ol data-draggable="target" id="restricted-packages">
-            </ol>
-        </div>
-
-        <div style="width:100%">
+        </div>'.$restricted_area.'<div style="width:100%">
             <h1>'._T("Allowed packages","kiosk").'</h1>
             <ol data-draggable="target" id="allowed-packages">
             </ol>

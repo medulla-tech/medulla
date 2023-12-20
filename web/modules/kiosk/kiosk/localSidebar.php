@@ -1,6 +1,6 @@
 <?
 /**
- * (c) 2018-2022 Siveo, http://siveo.net
+ * (c) 2018-2023 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -19,9 +19,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+ require_once("modules/kiosk/includes/xmlrpc.php");
+
 $sidemenu= new SideMenu();
 $sidemenu->setClass("kiosk");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Profile List", 'kiosk'), "kiosk", "kiosk", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Profile", 'kiosk'), "kiosk", "kiosk", "add"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Installation Requests", "kiosk"), "kiosk", "kiosk", "acknowledges"));
+if(xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true){
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Installation Requests", "kiosk"), "kiosk", "kiosk", "acknowledges"));
+}
 ?>
