@@ -30,6 +30,8 @@ class Profiles(Base, KioskDBObj):
     # Here we define columns for the table version.
     # Notice that each column is also a normal Python instance attribute.
     name = Column(String(50))
+    owner = Column(String(255))
+    source = Column(String(50))
     active = Column(TINYINT)
     creation_date = Column(DateTime)
 

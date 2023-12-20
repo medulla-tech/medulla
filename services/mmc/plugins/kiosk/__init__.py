@@ -77,8 +77,8 @@ def get_profiles_name_list():
     return KioskDatabase().get_profiles_name_list()
 
 
-def create_profile(name, ous, active, packages):
-    result = KioskDatabase().create_profile(name, ous, active, packages)
+def create_profile(name, login,  ous, active, packages, source):
+    result = KioskDatabase().create_profile(name, login, ous, active, packages, source)
     notify_kiosks()
     return result
 
