@@ -162,6 +162,18 @@ $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packag
         </div>
     </div>',"packages"));
 
+$sources = ["ou", "group", "entity"];
+if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true){
+    $sources[] ='ldap';
+}
+$select = new SelectItemtitle("source","Source provider");
+$select->setElements($sources);
+$select->setElementsVal($sources);
+$f->add(
+    new TrFormElement(_T('Source','kiosk').":", $select),
+    array("value" => (!empty($profile['source'])) ? $profile['source'] : "1")
+);
+
 $f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => True));
 
 $f->add(
