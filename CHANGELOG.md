@@ -11,6 +11,7 @@
 - [BUGFIX]  Fix creating group from a boolean
 - [BUGFIX]  Remove some visible debugs
 - [BUGFIX]  Fix displaying Agent details QA
+- [BUGFIX]  Fix logging with a local user
 
 [Full Changelog](https://github.com/medulla-tech/medulla/compare/5.0.0...5.0.1)
 

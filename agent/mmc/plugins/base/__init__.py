@@ -2379,7 +2379,10 @@ class BaseLdapAuthenticator(AuthenticatorI):
             userentry = ldapObj.getUserEntry()
             # Check that the login string exactly matches LDAP content
             if userentry and user != "root":
-                if userentry[0][1]["uid"][0] == user:
+                _user = userentry[0][1]["uid"][0]
+                if isinstance(_user, bytes):
+                    _user = _user.decode("utf-8")
+                if _user == user:
                     ret = AuthenticationToken(True, user, password, userentry[0])
             else:
                 ret = AuthenticationToken(True, user, password, None)
