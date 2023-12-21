@@ -128,7 +128,10 @@ if(is_array($ou_list))
         </div>
     </div>',"packages"));
 
-    $sources = ["ldap", "ou", "group", "entity"];
+    $sources = ["ou", "group", "entity"];
+    if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true){
+        $sources[] ='ldap';
+    }
     $select = new SelectItemtitle("source","Source provider");
     $select->setElements($sources);
     $select->setElementsVal($sources);
