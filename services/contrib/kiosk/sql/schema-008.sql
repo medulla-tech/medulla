@@ -28,5 +28,17 @@ ALTER TABLE profiles add column owner VARCHAR(255) NOT NULL default "root" AFTER
 ALTER TABLE profiles add column if not exists source VARCHAR(50) NOT NULL default "ou" AFTER owner;
 ALTER TABLE profile_has_ous change column ou ou VARCHAR(512);
 
+drop table if exists groups;
+create table if not exists groups(
+    id int not null auto_increment not null,
+    primary key(id), name varchar(512) not null
+);
+
+drop table if exists has_machine_groups;
+create table if not exists has_machine_groups(
+    id int not null auto_increment not null, primary key(id),
+    id_machine int not null, id_group int not null
+);
+
 UPDATE version SET Number = 8;
 COMMIT;
