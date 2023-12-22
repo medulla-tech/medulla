@@ -24,9 +24,9 @@
 //======================================================================
 
 
-function xmlrpc_get_profiles_list($start, $limit, $filter){
+function xmlrpc_get_profiles_list($login, $start, $limit, $filter){
     // Return all the detail of all profiles.
-    return xmlCall("kiosk.get_profiles_list", array($start, $limit, $filter));
+    return xmlCall("kiosk.get_profiles_list", array($login, $start, $limit, $filter));
 }
 
 // Used by kiosk/kiosk/ajaxAddProfile.php

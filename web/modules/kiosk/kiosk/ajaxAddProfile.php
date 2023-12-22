@@ -30,7 +30,7 @@ require_once("../../../includes/acl.inc.php");
 
 if(isset($_POST['name'], $_POST['active']))
 {
-    $owner = (!empty($_POST['owner'])) ? htmlentities($_POST['owner']) : $_SESSION['login'];
+    $owner = $_SESSION['login'];
     $name = rename_profile(htmlentities($_POST['name']));
     if(is_string($_POST['ous']) && $_POST['ous'] == "none")
         $ous = "";

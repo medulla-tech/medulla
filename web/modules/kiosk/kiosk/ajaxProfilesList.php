@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022 Siveo, http://siveo.net
+ * (c) 2022-2023 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -30,7 +30,9 @@ $start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $maxperpage = $conf['global']['maxperpage'];
 $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 
-$profiles = xmlrpc_get_profiles_list($start, $maxperpage, $filter);
+$login = $_SESSION['login'];
+
+$profiles = xmlrpc_get_profiles_list($login, $start, $maxperpage, $filter);
 $count = $profiles['total'];
 $profiles = $profiles['datas'];
 
