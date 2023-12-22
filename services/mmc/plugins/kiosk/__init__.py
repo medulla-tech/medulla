@@ -69,9 +69,14 @@ def activate():
 # KIOSK DATABASE FUNCTIONS
 # #############################################################
 
-def get_profiles_list(start=0, limit=-1, filter=""):
-    return KioskDatabase().get_profiles_list(start, limit, filter)
-
+def get_profiles_list(login, start=0, limit=-1, filter=""):
+    teammates = XmppMasterDatabase().get_teammembers_from_login(login)
+    if login == "root":
+        return KioskDatabase().get_profiles_list(start, limit, filter)
+    else:
+        if teammates == []:
+            teammates.append(login)
+        return KioskDatabase().get_profiles_list_team(teammates, start, limit, filter)
 
 def get_profiles_name_list():
     return KioskDatabase().get_profiles_name_list()

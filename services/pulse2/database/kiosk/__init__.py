@@ -120,6 +120,44 @@ class KioskDatabase(DatabaseHelper):
         return {"total": count, "datas": lines}
 
     @DatabaseHelper._sessionm
+    def get_profiles_list_team(self, session, teammates, start=0, limit=-1, filter=""):
+        """
+        Return a list of all the existing profiles.
+        The list contains all the elements of the profile.
+
+        Returns:
+            A list of all the founded entities.
+        """
+
+        try:
+            start = int(start)
+        except:
+            start = 0
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        ret = session.query(Profiles).filter(and_(Profiles.owner.in_(teammates)))
+        if filter != "":
+            ret = ret.filter(
+                or_(
+                    Profiles.name.contains(filter),
+                    Profiles.active.contains(filter),
+                    Profiles.creation_date.contains(filter),
+                )
+            )
+        count = ret.count()
+        if limit != -1:
+            ret = ret.limit(limit).offset(start)
+        ret = ret.all()
+        lines = []
+        for row in ret:
+            lines.append(row.toDict())
+
+        return {"total": count, "datas": lines}
+
+    @DatabaseHelper._sessionm
     def get_profile_list_for_OUList(self, session, OU):
         if len(OU) == 0:
             # return le profils par default
