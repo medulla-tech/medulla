@@ -99,8 +99,8 @@ def get_profile_by_id(id):
     return KioskDatabase().get_profile_by_id(id)
 
 
-def update_profile(id, name, ous, active, packages):
-    result = KioskDatabase().update_profile(id, name, ous, active, packages)
+def update_profile(id, name, ous, active, packages, source):
+    result = KioskDatabase().update_profile(id, name, ous, active, packages, source)
     notify_kiosks()
     return result
 
@@ -108,9 +108,7 @@ def update_profile(id, name, ous, active, packages):
 # #############################################################
 # KIOSK GENERAL FUNCTIONS
 # #############################################################
-
-
-def get_ou_list():
+def get_ou_list(source, *args, **kwargs):
     """This function returns the list of OUs
 
     Returns:
@@ -118,7 +116,25 @@ def get_ou_list():
         or
         returns False for some issues
     """
+    funcname = "get_ou_list_%s"%(source.lower())
+    try:
+        func = globals()[funcname]
+        return func(*args, **kwargs)
+    except:
+        return []
 
+def get_ou_list_ou():
+    # STEP 1 : Generates OU list
+    ous = XmppMasterDatabase().get_ou_list_from_machines()
+
+    # Step 2 - Recreate OUs tree
+    tree = TreeOU()
+    for line in ous:
+        tree.create_recursively(line)
+
+    return tree.recursive_json()
+
+def get_ou_list_ldap():
     # Check the ldap config
     config = PluginConfigFactory.new(BasePluginConfig, "base")
     kconfig = KioskConfig("kiosk")
@@ -128,6 +144,8 @@ def get_ou_list():
     if kconfig.use_external_ldap is False:
         # read OUs from xmppmaster db
         ous = XmppMasterDatabase().get_ou_list_from_machines()
+
+    # get_ou_list_ou
     elif config.has_section("authentication_externalldap"):
         id = str(uuid.uuid4())
         file = "/tmp/ous-" + id
@@ -190,6 +208,19 @@ def get_ou_list():
 
     return tree.recursive_json()
 
+def get_ou_list_group():
+    return []
+
+def get_ou_list_entity():
+    ous = []
+    ous = XmppMasterDatabase().get_ou_list_from_entity()
+
+    # Step 2 - Recreate OUs tree
+    tree = TreeOU()
+    for line in ous:
+        tree.create_recursively(line)
+
+    return tree.recursive_json()
 
 def get_ou_tree():
     """This function returns the list of OUs
@@ -290,7 +321,7 @@ def get_users_from_ou(ou):
 
     users = []
     if kconfig.use_external_ldap is False:
-        ou = ou.replace("/", "@@")
+        # ou = ou.replace("/", "@@")
         users = XmppMasterDatabase().get_users_from_ou_from_machines(ou)
     elif config.has_section("authentication_externalldap"):
         ou = str_to_ou(ou)
