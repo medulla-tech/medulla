@@ -36,9 +36,9 @@ if(isset($_POST['id'], $_POST['name'], $_POST['active']))
         $ous = $_POST['ous'];
     // Update the profile
     if(isset($_POST['packages']))
-        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $_POST['packages']);
+        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $_POST['packages'], $_POST['source']);
     else
-        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active']);
+        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $_POST['source']);
 
     new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated','kiosk'),htmlentities($_POST['name'])));
 }

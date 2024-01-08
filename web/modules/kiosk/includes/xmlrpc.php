@@ -52,9 +52,9 @@ function xmlrpc_get_profile_by_id($id){
     return xmlCall("kiosk.get_profile_by_id", array($id));
 }
 
-function xmlrpc_update_profile($id, $name, $ous, $active, $packages=[]){
+function xmlrpc_update_profile($id, $name, $ous, $active, $packages=[], $source){
     // Edit the profile identified by the id
-    return xmlcall('kiosk.update_profile', [$id, $name, $ous, $active, $packages]);
+    return xmlcall('kiosk.update_profile', [$id, $name, $ous, $active, $packages, $source]);
 }
 
 function xmlrpc_get_ou_list($source){
