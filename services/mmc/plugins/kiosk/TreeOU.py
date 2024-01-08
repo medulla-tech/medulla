@@ -106,19 +106,19 @@ class TreeOU(object):
         Params:
             string this string contains the OUs name separated by /, like "my_first/my_sub/my_subsub"
         """
-        string = string.split("/")
         temp = self
 
-        for element in string:
-            # If the element exists
-            if temp.search_direct_child(element):
-                # The next element is analysed
-                temp = temp.search_direct_child(element)
-
-            else:
-                new = TreeOU(element)
-                temp.add_child(new)
-                temp = new
+        string = string.replace(' > ', '/')
+        elements = string.split('/')
+        for element in elements:
+            element = element.strip()
+            if element:
+                if temp.search_direct_child(element):
+                    temp = temp.search_direct_child(element)
+                else:
+                    new_node = TreeOU(element)
+                    temp.add_child(new_node)
+                    temp = new_node
 
     def recursive_json(self):
         """
