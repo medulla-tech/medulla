@@ -1,7 +1,7 @@
 <?php
 
 /**
- * (c) 2018-2022 Siveo, http://siveo.net
+ * (c) 2018-2023 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -24,9 +24,9 @@
 //======================================================================
 
 
-function xmlrpc_get_profiles_list($start, $limit, $filter){
+function xmlrpc_get_profiles_list($login, $start, $limit, $filter){
     // Return all the detail of all profiles.
-    return xmlCall("kiosk.get_profiles_list", array($start, $limit, $filter));
+    return xmlCall("kiosk.get_profiles_list", array($login, $start, $limit, $filter));
 }
 
 // Used by kiosk/kiosk/ajaxAddProfile.php
@@ -36,10 +36,10 @@ function xmlrpc_get_profiles_name_list(){
 }
 
 
-function xmlrpc_create_profile($name, $ou, $active, $packages=[]){
+function xmlrpc_create_profile($name, $login, $ou, $active, $packages=[], $source=""){
     // Insert $name into profile table with the $active status.
     // If success return the id of the new profile.
-    return xmlCall("kiosk.create_profile", [$name, $ou, $active, $packages]);
+    return xmlCall("kiosk.create_profile", [$name, $login, $ou, $active, $packages, $source]);
 }
 
 function xmlrpc_delete_profile($id){
@@ -57,9 +57,9 @@ function xmlrpc_update_profile($id, $name, $ous, $active, $packages=[]){
     return xmlcall('kiosk.update_profile', [$id, $name, $ous, $active, $packages]);
 }
 
-function xmlrpc_get_ou_list(){
+function xmlrpc_get_ou_list($source){
     // Returns the list of all founded OUs
-    return xmlcall('kiosk.get_ou_list', []);
+    return xmlcall('kiosk.get_ou_list', [$source]);
 }
 
 function xmlrpc_get_users_from_ou($ou){
@@ -73,5 +73,9 @@ function xmlrpc_get_acknowledges_for_sharings($sharings, $start, $limit, $filter
 
 function xmlrpc_update_acknowledgement($id, $acknowledgedbyuser, $startdate, $enddate, $status){
     return xmlcall("kiosk.update_acknowledgement", [$id, $acknowledgedbyuser, $startdate, $enddate, $status]);
+}
+
+function xmlrpc_get_conf_kiosk(){
+    return xmlCall("kiosk.get_conf_kiosk", []);
 }
 ?>
