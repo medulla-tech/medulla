@@ -59,7 +59,12 @@ $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
 $page = new Page("ajaxGetUsersForOu");
-$page->setFile("modules/imaging/manage/ajaxGetUsersForOu.php");
+$page->setFile("modules/kiosk/kiosk/ajaxGetUsersForOu.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("ajaxSources");
+$page->setFile("modules/kiosk/kiosk/ajaxSources.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
