@@ -341,7 +341,6 @@ AND kiosk.profiles.active = 1
         profile.creation_date = now
 
         session.add(profile)
-
         session.commit()
         session.flush()
 
@@ -540,7 +539,7 @@ AND kiosk.profiles.active = 1
         return dict
 
     @DatabaseHelper._sessionm
-    def update_profile(self, session, id, name, ous, active, packages):
+    def update_profile(self, session, id, name, ous, active, packages, source):
         """
         Update the specified profile
         id:
@@ -580,7 +579,8 @@ AND kiosk.profiles.active = 1
         # Update the profile
         now = time.strftime('%Y-%m-%d %H:%M:%S')
 
-        sql = """UPDATE profiles SET name='%s',active='%s' WHERE id='%s';""" % (name, active, id)
+        sql = """UPDATE profiles SET name='%s',active='%s',source='%s' WHERE id='%s';""" % (name, active, source, id)
+
 
         session.execute(sql)
         session.commit()

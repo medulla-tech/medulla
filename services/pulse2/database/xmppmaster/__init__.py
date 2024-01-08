@@ -12684,6 +12684,20 @@ group by hostname
         return result
 
     @DatabaseHelper._sessionm
+    def get_ou_list_from_entity(self, session):
+        result = []
+        query = (
+            session.query(Glpi_entity.complete_name)
+            .join(Machines, Machines.glpi_entity_id == Glpi_entity.id)
+            .all()
+        )
+
+        if query is not None:
+            result = [user[0] for user in query]
+
+        return result
+
+    @DatabaseHelper._sessionm
     def get_history_by_update(self, session, updateid):
         query = session.query(Up_history, Update_data, Machines, Glpi_entity)\
             .join(Update_data, Update_data.updateid == Up_history.update_id)\

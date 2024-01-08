@@ -61,7 +61,7 @@ if(isset($_SESSION['sharings'])){
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ou_list = xmlrpc_get_ou_list();
+$ou_list = xmlrpc_get_ou_list('');
 
 if(is_array($ou_list))
 {
@@ -128,7 +128,7 @@ if(is_array($ou_list))
         </div>
     </div>',"packages"));
 
-    $sources = ["ou", "group", "entity"];
+    $sources = ["No Ou", "LDAP", "Ou", "Group", "Entity"];
     if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true){
         $sources[] ='ldap';
     }
@@ -136,26 +136,25 @@ if(is_array($ou_list))
     $select->setElements($sources);
     $select->setElementsVal($sources);
     $f->add(
-        new TrFormElement(_T('Source','kiosk').":", $select),
+        new TrFormElement(_T('Source','kiosk').": ", $select),
         array("value" => (!empty($profile['source'])) ? $profile['source'] : "1")
     );
-    $f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => True));
 
     // -------
     // Add the OUs tree
     // -------
-    $f->add(
-        new TrFormElement("", new CheckBoxTpl("no_ou")), array("value" => "checked")
-    );
     $result = "";
-    $number = 0;
-    recursiveArrayToList(xmlrpc_get_ou_list(), $result, $number);
+    $f->add(new SpanElement('
+    <div id="source-container" class="user-list" style="display:inline"></div>
+        <div id="ou-container" style="display:flex; max-height:350px;">
+            <br>
+            <input type="button" id="treeToggler" value="+" />
+            <div id="jstree" role="tree" style="width:40%;overflow:scroll;">'.$result.'</div>
+            <div id="users" class="user-list" style="display:inline"></div>
+        </div>',
+    "kiosk"));
 
-    $f->add(new TrFormElement(_T("Select OUs",'kiosk'),new SpanElement('<div id="ou-container" style="display:flex; max-height:350px;">
-        <input type="button" id="treeToggler" value="+" />
-        <div id="jstree" role="tree" style="width:40%;overflow:scroll;">'.$result.'</div>
-        <div id="users" class="user-list" style="display:inline"></div>
-    </div>',"kiosk")));
+    $f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => True));
 
     $bo = new ValidateButtonTpl('bvalid', _T("Create",'kiosk'),'btnPrimary',_T("Create the profile", "kiosk"));
     //$rr = new TrFormElementcollapse($bo);
@@ -172,11 +171,8 @@ else
 }
 ?>
 
-<script src="modules/kiosk/graph/js/packages.js">
-    // Manage drag&drop for the packages boxes
-    // Generate a json with the packages
-</script>
-<script src="modules/kiosk/graph/js/tree.js"></script>
-<script src="modules/kiosk/graph/js/validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script src="modules/kiosk/graph/js/packages.js"></script>
+<script src="modules/kiosk/graph/js/sources.js"></script>
+<script src="modules/kiosk/graph/js/validate.js"></script>
