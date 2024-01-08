@@ -13291,6 +13291,20 @@ where
         return result
 
     @DatabaseHelper._sessionm
+    def get_ou_list_from_entity(self, session):
+        result = []
+        query = (
+            session.query(Glpi_entity.complete_name)
+            .join(Machines, Machines.glpi_entity_id == Glpi_entity.id)
+            .all()
+        )
+
+        if query is not None:
+            result = [user[0] for user in query]
+
+        return result
+
+    @DatabaseHelper._sessionm
     def get_ou_for_user_from_machines(self, session, user):
         """Get user's ous listed in machines table corresponding to lastuser = user
         Params:
