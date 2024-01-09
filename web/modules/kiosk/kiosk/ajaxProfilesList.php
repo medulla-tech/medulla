@@ -56,7 +56,7 @@ foreach($profiles as $element)
     $profiles_status[] = ($element['active'] == 1) ? _T("Active","kiosk") : _T("Inactive","kiosk");
     $params[] = ['id'=>$element['id'], 'name'=>$element['name']];
 
-    if($login != $element['owner'])
+    if($login != $element['owner'] && $login != "root")
     {
         $action_edit[] = $action_disablededitProfiles;
         $action_delete[] = $action_disableddeleteProfile;

@@ -33,7 +33,7 @@ $login = $_SESSION['login'];
 $profileData = xmlrpc_get_profile_by_id($_POST['id']);
 $owner = $profileData['owner'];
 
-if ($login != $owner) {
+if ($login != $owner && $login != "root") {
     new NotifyWidgetWarning(_T('You are not authorized to edit this profile', 'kiosk'));
     exit;
 } else {
