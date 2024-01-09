@@ -43,6 +43,7 @@ function sendForm(){
     datas['name'] = jQuery("#name").val();
     datas['active'] = jQuery("#status").val();
     datas['id'] = jQuery("[name='id']").val();
+    datas['source'] = jQuery("#source").val();
     datas['ous'] = ous;
     datas['packages'] = generate_json();
 
