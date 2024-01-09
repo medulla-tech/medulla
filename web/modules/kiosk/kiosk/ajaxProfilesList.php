@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022 Siveo, http://siveo.net
+ * (c) 2022-2023 Siveo, http://siveo.net
  *
  * This file is part of Management Console (MMC).
  *
@@ -30,12 +30,16 @@ $start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $maxperpage = $conf['global']['maxperpage'];
 $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 
-$profiles = xmlrpc_get_profiles_list($start, $maxperpage, $filter);
+$login = $_SESSION['login'];
+$profiles = xmlrpc_get_profiles_list($login, $start, $maxperpage, $filter);
 $count = $profiles['total'];
 $profiles = $profiles['datas'];
 
 $action_editProfiles = new ActionItem(_T("Edit Profile",'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
 $action_deleteProfile = new ActionItem(_T("Delete Profile",'kiosk'), "deleteProfile", "delete", "profile", "kiosk", "kiosk");
+
+$action_disablededitProfiles = new EmptyActionItem1(_T("Edit Profile",'kiosk'), "edit", "editg", "profile", "kiosk", "kiosk");
+$action_disableddeleteProfile = new EmptyActionItem1(_T("Delete Profile",'kiosk'), "deleteProfile", "deleteg", "profile", "kiosk", "kiosk");
 
 $profiles_name = [];
 $profiles_date = [];
@@ -52,8 +56,16 @@ foreach($profiles as $element)
     $profiles_status[] = ($element['active'] == 1) ? _T("Active","kiosk") : _T("Inactive","kiosk");
     $params[] = ['id'=>$element['id'], 'name'=>$element['name']];
 
-    $action_edit[] = $action_editProfiles;
-    $action_delete[] = $action_deleteProfile;
+    if($login != $element['owner'])
+    {
+        $action_edit[] = $action_disablededitProfiles;
+        $action_delete[] = $action_disableddeleteProfile;
+    }
+    else
+    {
+        $action_edit[] = $action_editProfiles;
+        $action_delete[] = $action_deleteProfile;
+    }
 }
 
 // Avoiding the CSS selector (tr id) to start with a number

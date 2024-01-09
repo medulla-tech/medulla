@@ -28,20 +28,25 @@ require_once("../../../includes/PageGenerator.php");
 require_once("../../../includes/acl.inc.php");
 
 
-if(isset($_POST['id'], $_POST['name'], $_POST['active']))
-{
-    if(is_string($_POST['ous']) && $_POST['ous'] == "none")
-        $ous = "";
-    else
-        $ous = $_POST['ous'];
-    // Update the profile
-    if(isset($_POST['packages']))
-        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $_POST['packages'], $_POST['source']);
-    else
-        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $_POST['source']);
+$login = $_SESSION['login'];
 
-    new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated','kiosk'),htmlentities($_POST['name'])));
+$profileData = xmlrpc_get_profile_by_id($_POST['id']);
+$owner = $profileData['owner'];
+
+if ($login != $owner) {
+    new NotifyWidgetWarning(_T('You are not authorized to edit this profile', 'kiosk'));
+    exit;
+} else {
+    if (isset($_POST['id'], $_POST['name'], $_POST['active'])) {
+        $ous = is_string($_POST['ous']) && $_POST['ous'] == "none" ? "" : $_POST['ous'];
+        $packages = isset($_POST['packages']) ? $_POST['packages'] : [];
+        $source = isset($_POST['source']) ? htmlentities($_POST['source']) : "";
+
+        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $packages, $source);
+
+        new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated', 'kiosk'), htmlentities($_POST['name'])));
+    } else {
+        new NotifyWidgetFailure(sprintf(_T('Unable to update the profile %s', 'kiosk'), htmlentities($_POST['name'])));
+    }
 }
-else
-    new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile %s','kiosk'),htmlentities($_POST['name'])));
 ?>
