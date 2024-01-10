@@ -29,9 +29,10 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $ini_array = parse_ini_file("/etc/mmc/plugins/urbackup.ini");
-$username_urbackup = $ini_array['username'];
-$password_urbackup = $ini_array['password'];
-$url_urbackup = $ini_array['url'];
+$ini_array_local = parse_ini_file("/etc/mmc/plugins/urbackup.ini.local");
+$username_urbackup = isset($ini_array_local["usernameapi"]) ? $ini_array_local["usernameapi"] : $ini_array["usernameapi"];
+$password_urbackup = isset($ini_array_local["passwordapi"]) ? $ini_array_local["passwordapi"] : $ini_array["passwordapi"];
+$url_urbackup = isset($ini_array_local["url"]) ? $ini_array_local["url"] : $ini_array["url"];
 
 function formatBytes($bytes, $precision = 2)
 { 
