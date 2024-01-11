@@ -28,19 +28,16 @@ require_once("../../../includes/PageGenerator.php");
 require_once("../../../includes/acl.inc.php");
 
 
-if(isset($_POST['id'], $_POST['name'], $_POST['active']))
-{
-    if(is_string($_POST['ous']) && $_POST['ous'] == "none")
-        $ous = "";
-    else
-        $ous = $_POST['ous'];
-    // Update the profile
-    if(isset($_POST['packages']))
-        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $_POST['packages']);
-    else
-        xmlrpc_update_profile($_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active']);
+if(isset($_POST['id'], $_POST['name'], $_POST['active'])) {
+    $login = $_SESSION['login'];
+    $ous = (is_string($_POST['ous']) && $_POST['ous'] == "none") ? "" : $_POST['ous'];
+    $packages = isset($_POST['packages']) ? $_POST['packages'] : $_POST['sources'];
 
-    new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated','kiosk'),htmlentities($_POST['name'])));
+    xmlrpc_update_profile($login, $_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $packages, $_POST['source']);
+    new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated','kiosk'), htmlentities($_POST['name'])));
+
+} else {
+    new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile','kiosk')));
 }
 else
     new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile %s','kiosk'),htmlentities($_POST['name'])));
