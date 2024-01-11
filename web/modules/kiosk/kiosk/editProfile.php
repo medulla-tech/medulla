@@ -36,6 +36,11 @@ require("modules/kiosk/kiosk/localSidebar.php");
 
 <style type="text/css">
     @import url(modules/kiosk/graph/style.min.css);
+
+    #availableFilter, #allowedFilter {
+        width: 80%;
+        margin-bottom: 2px;
+    }
 </style>
 <?php
 
@@ -155,24 +160,27 @@ $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packag
         <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
         <div style="width:100%">
             <h1>'._T("Available packages","kiosk").'</h1>
+            <input type="text" id="availableFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'"><br/>
             <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
         </div>'.$restricted_area.'<div style="width:100%">
             <h1>'._T("Allowed packages","kiosk").'</h1>
+            <input type="text" id="allowedFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'"><br/>
             <ol data-draggable="target" id="allowed-packages">'.$allowed_packages_str.'</ol>
+            </ol>
         </div>
     </div>',"packages"));
 
-$sources = ["ou", "group", "entity"];
-if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true){
-    $sources[] ='ldap';
-}
-$select = new SelectItemtitle("source","Source provider");
-$select->setElements($sources);
-$select->setElementsVal($sources);
-$f->add(
-    new TrFormElement(_T('Source','kiosk').":", $select),
-    array("value" => (!empty($profile['source'])) ? $profile['source'] : "1")
-);
+    $sources = ["No Ou", "LDAP", "Ou", "Group", "Entity"];
+    if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true){
+        $sources[] = 'ldap';
+    }
+    $select = new SelectItemtitle("source","Source provider");
+    $select->setElements($sources);
+    $select->setElementsVal($sources);
+    $f->add(
+        new TrFormElement(_T('Source','kiosk').": ", $select),
+        array("value" => (!empty($profile['source'])) ? $profile['source'] : "1")
+    );
 
 $f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => True));
 
@@ -209,5 +217,26 @@ $f->display(); // display the form
 </script>
 <script src="modules/kiosk/graph/js/tree.js"></script>
 <script src="modules/kiosk/graph/js/validate.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+<script src="jsframework/lib/jquery-3.2.1.min.js"></script>
+<script src="jsframework/lib/pluginjqueryjtree/jstree.min.js"></script>
+<script src="modules/kiosk/graph/js/packages.js"></script>
+<script src="modules/kiosk/graph/js/sources.js"></script>
+<script src="modules/kiosk/graph/js/validate.js"></script>
+<script>
+jQuery(document).ready(function(){
+    function applyFilter(filterSelector, targetSelector) {
+        let value = jQuery(filterSelector).val().toLowerCase();
+        jQuery(targetSelector).each(function() {
+            jQuery(this).toggle(jQuery(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    }
+
+    jQuery("#availableFilter").on("keyup", function() {
+        applyFilter("#availableFilter", "#available-packages li");
+    });
+
+    jQuery("#allowedFilter").on("keyup", function() {
+        applyFilter("#allowedFilter", "#allowed-packages li");
+    });
+});
+</script>

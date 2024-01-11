@@ -36,7 +36,7 @@ function xmlrpc_get_profiles_name_list(){
 }
 
 
-function xmlrpc_create_profile($name, $login, $ou, $active, $packages=[], $source="ou"){
+function xmlrpc_create_profile($name, $login, $ou, $active, $packages=[], $source=""){
     // Insert $name into profile table with the $active status.
     // If success return the id of the new profile.
     return xmlCall("kiosk.create_profile", [$name, $login, $ou, $active, $packages, $source]);
@@ -52,14 +52,14 @@ function xmlrpc_get_profile_by_id($id){
     return xmlCall("kiosk.get_profile_by_id", array($id));
 }
 
-function xmlrpc_update_profile($id, $name, $ous, $active, $packages=[]){
+function xmlrpc_update_profile($login, $id, $name, $ous, $active, $packages=[], $source){
     // Edit the profile identified by the id
-    return xmlcall('kiosk.update_profile', [$id, $name, $ous, $active, $packages]);
+    return xmlcall('kiosk.update_profile', [$login, $id, $name, $ous, $active, $packages, $source]);
 }
 
-function xmlrpc_get_ou_list(){
+function xmlrpc_get_ou_list($source){
     // Returns the list of all founded OUs
-    return xmlcall('kiosk.get_ou_list', []);
+    return xmlcall('kiosk.get_ou_list', [$source]);
 }
 
 function xmlrpc_get_users_from_ou($ou){
