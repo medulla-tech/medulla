@@ -32,17 +32,18 @@ if(isset($_POST['name'], $_POST['active']))
 {
     $owner = $_SESSION['login'];
     $name = rename_profile(htmlentities($_POST['name']));
-    if(is_string($_POST['ous']) && $_POST['ous'] == "none")
+    if(is_string($_POST['ous']) && $_POST['ous'] == "none") {
         $ous = "";
-    else
+    } else {
         $ous = $_POST['ous'];
+    }
 
     $packages =(!empty($_POST['packages'])) ? $_POST['packages'] : [];
 
     $source = htmlentities($_POST['source']);
 
     // Add the profile to the database
-        $result = xmlrpc_create_profile($name, $owner, $ous, htmlentities($_POST['active']), $packages, $source);
+    $result = xmlrpc_create_profile($name, $owner, $ous, htmlentities($_POST['active']), $packages, $source);
 
     new NotifyWidgetSuccess(sprintf(_T("Profile %s successfully added", "kiosk"),$name));
 }
