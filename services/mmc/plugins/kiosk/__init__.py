@@ -99,8 +99,8 @@ def get_profile_by_id(id):
     return KioskDatabase().get_profile_by_id(id)
 
 
-def update_profile(id, name, ous, active, packages, source):
-    result = KioskDatabase().update_profile(id, name, ous, active, packages, source)
+def update_profile(login, id, name, ous, active, packages, source):
+    result = KioskDatabase().update_profile(login, id, name, ous, active, packages, source)
     notify_kiosks()
     return result
 

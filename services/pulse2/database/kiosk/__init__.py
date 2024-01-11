@@ -16,7 +16,7 @@ from datetime import date, datetime, timedelta
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists
+from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists, get_all_packages
 from pulse2.database.kiosk.schema import (
     Profiles,
     Profile_has_package,
@@ -357,7 +357,7 @@ AND kiosk.profiles.active = 1
 
         session.add(profile)
         session.commit()
-        session.flush()
+        session.refresh(profile)
 
         # Remove all packages associations concerning this profile
         session.query(Profile_has_package).filter(
@@ -367,36 +367,33 @@ AND kiosk.profiles.active = 1
         # The profile is now created, but the packages are not linked to it nor added into database.
         # If the package list is not empty, then firstly we get the status and
         # the uuid for each packages
-        if len(packages) > 0:
-            for status in list(packages.keys()):
-                for uuid in packages[status]:
+        if packages:
+            for status, package_list in packages.items():
+                for uuid in package_list:
                     profile_package = Profile_has_package()
                     profile_package.profil_id = profile.id
                     profile_package.package_uuid = uuid
                     profile_package.package_status = status
 
                     session.add(profile_package)
-                    session.commit()
-                    session.flush()
-            # Finally we associate the OUs with the profile.
-            if isinstance(ous, str) and ous == "":
+            session.commit()
+
+        # Finally we associate the OUs with the profile.
+        if isinstance(ous, str) and ous == "":
+            profile_ou = Profile_has_ou()
+            profile_ou.profile_id = profile.id
+            profile_ou.ou = ous
+
+            session.add(profile_ou)
+        else:
+            for ou in ous:
                 profile_ou = Profile_has_ou()
                 profile_ou.profile_id = profile.id
-                profile_ou.ou = ous
+                profile_ou.ou = ou
 
                 session.add(profile_ou)
-                session.commit()
-                session.flush()
+        session.commit()
 
-            else:
-                for ou in ous:
-                    profile_ou = Profile_has_ou()
-                    profile_ou.profile_id = profile.id
-                    profile_ou.ou = ou
-
-                    session.add(profile_ou)
-                    session.commit()
-                    session.flush()
         return profile.id
 
     @DatabaseHelper._sessionm
@@ -575,9 +572,11 @@ AND kiosk.profiles.active = 1
         return dict
 
     @DatabaseHelper._sessionm
-    def update_profile(self, session, id, name, ous, active, packages, source):
+    def update_profile(self, session, login, id, name, ous, active, packages, source):
         """
         Update the specified profile
+        login:
+            String which contains the login of the user who wants to update the profile
         id:
             Int is the id of the profile which will be updated
         name:
@@ -613,62 +612,62 @@ AND kiosk.profiles.active = 1
         """
 
         # Update the profile
-        now = time.strftime("%Y-%m-%d %H:%M:%S")
-
-        sql = """UPDATE profiles SET name='%s',active='%s',source='%s' WHERE id='%s';""" % (
-            name,
-            active,
-            source,
-            id,
-        )
-
+        sql = "UPDATE profiles SET name='%s', active='%s', source='%s' WHERE id='%s';" % (name, active, source, id)
         session.execute(sql)
         session.commit()
         session.flush()
 
         # Remove all packages associations concerning this profile
-        session.query(Profile_has_package).filter(
-            Profile_has_package.profil_id == id
-        ).delete()
-        session.query(Profile_has_ou).filter(Profile_has_ou.profile_id == id).delete()
+        sql = "SELECT package_uuid FROM package_has_profil WHERE profil_id = %s" % id
+        current_packages = {pkg[0] for pkg in session.execute(sql).fetchall()}
+
+        # Retrieve the packages visible to the user
+        visible_packages = get_all_packages(login, True) # TODO: use dynamic sharing_activated
+        visible_uuids = {pkg for pkg in visible_packages['datas']['uuid']}
+
+        updated_packages = set()
+        for status, package_list in packages.items():
+            for uuid in package_list:
+                updated_packages.add(uuid)
+                if uuid in visible_uuids and uuid not in current_packages:
+                    sql = "INSERT INTO package_has_profil (profil_id, package_uuid, package_status) VALUES (%s, '%s', '%s')" % (id, uuid, status)
+                    session.execute(sql)
+                elif uuid in visible_uuids and uuid in current_packages:
+                    sql = "UPDATE package_has_profil SET package_status = '%s' WHERE profil_id = %s AND package_uuid = '%s'" % (status, id, uuid)
+                    session.execute(sql)
 
         session.commit()
         session.flush()
 
+        # Remove packages that are no longer associated
+        packages_to_remove = current_packages - updated_packages
+        for uuid in packages_to_remove:
+            if uuid in visible_uuids:
+                sql = "DELETE FROM package_has_profil WHERE profil_id = %s AND package_uuid = '%s'" % (id, uuid)
+                session.execute(sql)
+
+        session.commit()
+        session.flush()
+
+        # Update OUs associations
+        # First, remove existing OUs for the profile
+        session.query(Profile_has_ou).filter(Profile_has_ou.profile_id == id).delete()
+        session.commit()
+        session.flush()
+
         # Finally we associate the OUs with the profile.
-        if isinstance(ous, str) and ous == "":
-            profile_ou = Profile_has_ou()
-            profile_ou.profile_id = id
-            profile_ou.ou = ous
-
-            session.add(profile_ou)
-            session.commit()
-            session.flush()
-
-        else:
-            for ou in ous:
+        if isinstance(ous, str):
+            ous = [ous]
+        for ou in ous:
+            if ou:  # Avoid empty strings
                 profile_ou = Profile_has_ou()
                 profile_ou.profile_id = id
                 profile_ou.ou = ou
 
                 session.add(profile_ou)
-                session.commit()
-                session.flush()
 
-        # The profile is now created, but the packages are not linked to it nor added into database.
-        # If the package list is not empty, then firstly we get the status and
-        # the uuid for each packages
-        if len(packages) > 0:
-            for status in list(packages.keys()):
-                for uuid in packages[status]:
-                    profile = Profile_has_package()
-                    profile.profil_id = id
-                    profile.package_uuid = uuid
-                    profile.package_status = status
-
-                    session.add(profile)
-                    session.commit()
-                    session.flush()
+        session.commit()
+        session.flush()
 
     @DatabaseHelper._sessionm
     def get_acknowledges_for_sharings(
