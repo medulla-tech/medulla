@@ -35,26 +35,29 @@ require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
 
 // Need the user sharing groups
-if(isset($_SESSION['sharings'])){
+if(isset($_SESSION['sharings']))
+{
     $sharings = $_SESSION['sharings'];
-  }
-  else{
+} else {
     $sharings = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
-  }
+}
 
-  // Get all packages for this sharings
-  if($sharings['config']['centralizedmultiplesharing'] == true){
+// Get all packages for this sharings
+if($sharings['config']['centralizedmultiplesharing'] == true)
+{
     $packages = xmlrpc_get_all_packages($_SESSION['login'], $sharings['config']['centralizedmultiplesharing'], -1, -1, $filter);
-
-  }
-
-  else{
+} else {
     $packages = xmlrpc_xmppGetAllPackages($filter, -1, -1);
-  }
+}
 ?>
 
 <style type="text/css">
     @import url(modules/kiosk/graph/style.min.css);
+
+    #availableFilter, #allowedFilter {
+        width: 80%;
+        margin-bottom: 2px;
+    }
 </style>
 
 <?php $p = new PageGenerator(_T("Add New Profile",'kiosk'));
@@ -120,9 +123,11 @@ if(is_array($ou_list))
         <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
         <div style="width:100%">
             <h1>'._T("Available packages","kiosk").'</h1>
+            <input type="text" id="availableFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'"><br/>
             <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
         </div>'.$restricted_area.'<div style="width:100%">
             <h1>'._T("Allowed packages","kiosk").'</h1>
+            <input type="text" id="allowedFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'"><br/>
             <ol data-draggable="target" id="allowed-packages">
             </ol>
         </div>
@@ -176,3 +181,21 @@ else
 <script src="modules/kiosk/graph/js/packages.js"></script>
 <script src="modules/kiosk/graph/js/sources.js"></script>
 <script src="modules/kiosk/graph/js/validate.js"></script>
+<script>
+jQuery(document).ready(function(){
+    function applyFilter(filterSelector, targetSelector) {
+        let value = jQuery(filterSelector).val().toLowerCase();
+        jQuery(targetSelector).each(function() {
+            jQuery(this).toggle(jQuery(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    }
+
+    jQuery("#availableFilter").on("keyup", function() {
+        applyFilter("#availableFilter", "#available-packages li");
+    });
+
+    jQuery("#allowedFilter").on("keyup", function() {
+        applyFilter("#allowedFilter", "#allowed-packages li");
+    });
+});
+</script>
