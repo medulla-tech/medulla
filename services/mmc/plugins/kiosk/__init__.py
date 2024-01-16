@@ -590,27 +590,48 @@ def notify_kiosk(machine):
 def get_packages_for_machine(machine):
     """Get a list of the packages for the concerned machine.
     Param:
-        machine : tuple of the machine datas
+        machine : dict of the machine datas.
+        Data structure:
+        { "ad_ou_machine":"somethine", "ad_ou_user": "something", "hostname":"machine-name", "uuid_inventorymachine":"UUID1"}
     Returns:
         list of the packages"""
-    OUmachine = [
-        machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", "/")
-    ]
-    OUuser = [
-        machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", "/")
-    ]
+    sources = {
+        "oumachine":None,
+        "ouuser":None,
+        "ldap": None,
+        "group":None,
+        "entity":None
+    }
 
-    tree = get_ou_tree()
+    machine_entity = XmppMasterDatabase().getmachineentityfromjid(machine['jid'])
+    machine_entity = machine_entity.complete_name.replace(" > ", "/") if machine_entity is not None else None
+    # son ad_ou_machine et ad_ou_user
+    OUmachine = machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", "/")
+    OUuser = machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", "/")
+    group = None
+    if OUmachine == "":
+        OUmachine = None
+    if OUuser == "":
+        OUuser == None
 
-    OU = list(set(OUmachine + OUuser))
+    ldap = get_ou_for_user(machine["lastuser"])
+    ldap = None if ldap is False else ldap
 
-    for ou in OU:
-        tmp = [ou]
-        partial = tree.search(ou)
-        partial.recursive_parent(tmp)
+    _sources = {
+        "oumacihne": OUmachine,
+        "ouuser": OUuser,
+        "ldap": ldap,
+        "group": group,
+        "entity":machine_entity
+    }
+    # remove empty values and delete the temp _sources variable
+    sources = {key: _sources[key] for key in _sources if _sources[key] != None}
+
+    # we find all profiles with the specified sources
+    profiles = KioskDatabase().get_profiles_by_sources(sources)
 
     # search packages for the applied profiles
-    list_profile_packages = KioskDatabase().get_profile_list_for_OUList(tmp)
+    list_profile_packages = KioskDatabase().get_profile_list_for_profiles_list(profiles)
     if list_profile_packages is None:
         # TODO
         # linux and mac os does not have an Organization Unit.
