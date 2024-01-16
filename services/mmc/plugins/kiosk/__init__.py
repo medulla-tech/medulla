@@ -547,13 +547,6 @@ def get_packages_for_machine(machine):
     Returns:
         list of the packages"""
 
-    sources = {
-        "oumachine":None,
-        "ouuser":None,
-        "ldap": None,
-        "group":None,
-        "entity":None
-    }
 
     machine_entity = XmppMasterDatabase().getmachineentityfromjid(machine['jid'])
     machine_entity = machine_entity.complete_name.replace(" > ", "/") if machine_entity is not None else None
