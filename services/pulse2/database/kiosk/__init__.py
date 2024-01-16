@@ -846,3 +846,77 @@ AND kiosk.profiles.active = 1
         session.flush()
 
         return True
+
+    @DatabaseHelper._sessionm
+    def get_profiles_by_sources(self, session, sources):
+        """get the list of profiles concerned by the specified sources
+            - params: sources dict with the form {"source_name": [list of ous]}
+        """
+        profiles = []
+        profile_ids = []
+
+        for source in sources:
+            sql = """select * from profiles p
+            join profile_has_ous on po on po.profile_id = p.id
+            where p.source = %s
+            and po"""
+
+            query = session.query(Profiles)\
+                .join(Profile_has_ou, Profile_has_ou.profile_id == Profiles.id)\
+                .filter(and_(Profiles.source ==source,
+                             Profiles.active == 1,
+                             Profile_has_ou.ou.contains(sources[source]) ))\
+                .group_by(Profiles.id)
+            query=query.all()
+
+            if query is not None:
+                for row in query:
+                    profiles.append({
+                        "id": row.id,
+                        "name": row.name,
+                        "owner": row.owner,
+                        "source": row.source,
+                        "active": row.active if row.active is not None else False
+                        })
+        return profiles
+
+    @DatabaseHelper._sessionm
+    def get_profile_list_for_profiles_list(self, session, profiles):
+        profiles_ids = [profile['id'] for profile in profiles]
+        if len(profiles_ids) == 0:
+            # return le profils par default
+            return
+
+        profiles_ids_str = ",".join(["%s"%profile['id'] for profile in profiles])
+        sql = """
+            SELECT
+                distinct
+                pkgs.packages.label as 'name_package',
+                kiosk.profiles.name as 'name_profile',
+                pkgs.packages.description,
+                pkgs.packages.version version_package,
+                pkgs.packages.Qsoftware as software,
+                pkgs.packages.Qversion version_software,
+                pkgs.packages.uuid as package_uuid,
+                pkgs.packages.os,
+                kiosk.package_has_profil.package_status,
+                kiosk.package_has_profil.id as id_package_has_profil
+            FROM
+                pkgs.packages
+                  inner join
+                kiosk.package_has_profil on pkgs.packages.uuid = kiosk.package_has_profil.package_uuid
+                  inner join
+                kiosk.profiles on profiles.id = kiosk.package_has_profil.profil_id
+            WHERE
+                kiosk.package_has_profil.profil_id in (%s)
+                    """ % profiles_ids_str
+        try:
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            l = [x for x in result]
+            return l
+        except Exception, e:
+            logging.getLogger().error("get_profile_list_for_profiles_list")
+            logging.getLogger().error(str(e))
+            return ""
