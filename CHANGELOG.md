@@ -12,6 +12,7 @@
 - [BUGFIX]  Remove some visible debugs
 - [BUGFIX]  Fix displaying Agent details QA
 - [BUGFIX]  Fix logging with a local user
+- [BUGFIX]  Fix special character in creation of groups
 
 [Full Changelog](https://github.com/medulla-tech/medulla/compare/5.0.0...5.0.1)
 

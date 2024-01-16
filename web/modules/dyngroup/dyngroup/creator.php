@@ -112,7 +112,7 @@ if (quickGet('req') && quickGet('param')) {
         }
     }
     if ($correct) {
-        $sub = new SubRequest(quickGet('req'), quickGet('param'), quickGet('value'), quickGet('value2'), quickGet('operator'));
+        $sub = new SubRequest(quickGet('req'), quickGet('param'), quickGet('value', false, false), quickGet('value2'), quickGet('operator'));
         if (quickGet('sub_id') != '') {
             $sub->id = quickGet('sub_id');
             $request->editSub($sub);
