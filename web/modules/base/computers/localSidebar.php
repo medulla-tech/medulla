@@ -1,6 +1,6 @@
 <?php
 global $conf;
-$displayname = $conf['global']['glpidisplayname'];
+$displayname = (!empty($conf['global']['glpidisplayname'])) ? $conf['global']['glpidisplayname'] : "glpi";
 $sidemenu = new SideMenu();
 $sidemenu->setClass("computers");
 $sidemenu->addSideMenuItem(new SideMenuItem(_("All computers"), "base", "computers", "machinesList"));
