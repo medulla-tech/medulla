@@ -11804,22 +11804,40 @@ where
     
 
     @DatabaseHelper._sessionm
-    def get_ou_list_from_machines(self, session):
+    def get_oumachine_list_from_machines(self, session):
         """Get all ous listed in machines table (in ad_ou_machine and ad_ou_user fields)
         Returns list: all unique OUs found in the table
         """
-        query = session.query(Machines.ad_ou_machine, Machines.ad_ou_user).group_by(Machines.ad_ou_machine, Machines.ad_ou_user).all()
+        query = (
+           session.query(Machines.ad_ou_machine)
+           .group_by(Machines.ad_ou_machine)
+           .all()
+        )
+
         result = []
         if query is not None:
             for ou in query:
                 if ou[0] != '':
                     if ou[0] not in result:
                         result.append(ou[0].replace('@@','/'))
+        return result
 
-                if ou[1] != '':
-                    if ou[1] not in result:
-                        result.append(ou[1].replace('@@','/'))
-
+    @DatabaseHelper._sessionm
+    def get_ouuser_list_from_machines(self, session):
+        """Get all ous listed in machines table (in ad_ou_machine and ad_ou_user fields)
+        Returns list: all unique OUs found in the table
+        """
+        query = (
+            session.query(Machines.ad_ou_user)
+            .group_by(Machines.ad_ou_user)
+            .all()
+        )
+        result = []
+        if query is not None:
+            for ou in query:
+                if ou[0] != "":
+                    if ou[0] not in result:
+                        result.append(ou[0].replace("@@", "/"))
         return result
 
     @DatabaseHelper._sessionm

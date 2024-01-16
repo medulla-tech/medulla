@@ -118,20 +118,24 @@ def get_ou_list(source, *args, **kwargs):
     funcname = "get_ou_list_%s"%(source.lower())
     try:
         func = globals()[funcname]
-        return func(*args, **kwargs)
+        # Step 1 - Get datas
+        datas = func(*args, **kwargs)
+        # Step 2 - Recreate OUs tree
+        tree = TreeOU()
+        for line in datas:
+            tree.create_recursively(line)
+
+        return tree.recursive_json()
     except:
         return []
 
-def get_ou_list_ou():
-    # STEP 1 : Generates OU list
-    ous = XmppMasterDatabase().get_ou_list_from_machines()
+def get_ou_list_ou_machine():
+    ous = XmppMasterDatabase().get_oumachine_list_from_machines()
+    return ous
 
-    # Step 2 - Recreate OUs tree
-    tree = TreeOU()
-    for line in ous:
-        tree.create_recursively(line)
-
-    return tree.recursive_json()
+def get_ou_list_ou_user():
+    ous = XmppMasterDatabase().get_ouuser_list_from_machines()
+    return ous
 
 def get_ou_list_ldap():
     # Check the ldap config
@@ -192,26 +196,13 @@ def get_ou_list_ldap():
     else:
         return False
 
-    # Step 2 - Recreate OUs tree
-    tree = TreeOU()
-    for line in ous:
-        tree.create_recursively(line)
-
-    return tree.recursive_json()
-
 def get_ou_list_group():
     return []
 
 def get_ou_list_entity():
     ous = []
     ous = XmppMasterDatabase().get_ou_list_from_entity()
-
-    # Step 2 - Recreate OUs tree
-    tree = TreeOU()
-    for line in ous:
-        tree.create_recursively(line)
-
-    return tree.recursive_json()
+    return ous
 
 def get_ou_tree():
     """This function returns the list of OUs
@@ -277,12 +268,7 @@ def get_ou_tree():
         os.remove(file)
     else:
         return False
-
-    tree = TreeOU()
-    for line in ous:
-        tree.create_recursively(line)
-
-    return tree
+    return ous
 
 
 def str_to_ou(string):
