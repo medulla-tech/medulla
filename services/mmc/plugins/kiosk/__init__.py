@@ -591,8 +591,8 @@ def get_packages_for_machine(machine):
     ldap = None if ldap is False else ldap
 
     _sources = {
-        "oumacihne": OUmachine,
-        "ouuser": OUuser,
+        "ou_macihne": OUmachine,
+        "ou_user": OUuser,
         "ldap": ldap,
         "group": group,
         "entity":machine_entity
@@ -606,10 +606,7 @@ def get_packages_for_machine(machine):
     # search packages for the applied profiles
     list_profile_packages = KioskDatabase().get_profile_list_for_profiles_list(profiles)
     if list_profile_packages is None:
-        # TODO
-        # linux and mac os does not have an Organization Unit.
-        # For mac os and linux, profile association will be done on the login name.
-        return
+        return []
 
     granted_packages = []
     for element in list_profile_packages:
