@@ -16,7 +16,7 @@ from datetime import date, datetime, timedelta
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists, get_all_packages
+from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists, get_all_packages, pkgs_search_share
 from pulse2.database.kiosk.schema import (
     Profiles,
     Profile_has_package,
@@ -622,22 +622,26 @@ AND kiosk.profiles.active = 1
         current_packages = {pkg[0] for pkg in session.execute(sql).fetchall()}
 
         # Retrieve the packages visible to the user
-        visible_packages = get_all_packages(login, True) # TODO: use dynamic sharing_activated
+        sharing = pkgs_search_share({'login': login})
+        visible_packages = get_all_packages(login, sharing['config']['centralizedmultiplesharing'])
         visible_uuids = {pkg for pkg in visible_packages['datas']['uuid']}
 
         updated_packages = set()
-        for status, package_list in packages.items():
-            for uuid in package_list:
-                updated_packages.add(uuid)
-                if uuid in visible_uuids and uuid not in current_packages:
-                    sql = "INSERT INTO package_has_profil (profil_id, package_uuid, package_status) VALUES (%s, '%s', '%s')" % (id, uuid, status)
-                    session.execute(sql)
-                elif uuid in visible_uuids and uuid in current_packages:
-                    sql = "UPDATE package_has_profil SET package_status = '%s' WHERE profil_id = %s AND package_uuid = '%s'" % (status, id, uuid)
-                    session.execute(sql)
+        if packages and isinstance(packages, dict):
+            for status, package_list in packages.items():
+                for uuid in package_list:
+                    updated_packages.add(uuid)
+                    if uuid in visible_uuids and uuid not in current_packages:
+                        sql = "INSERT INTO package_has_profil (profil_id, package_uuid, package_status) VALUES (%s, '%s', '%s')" % (id, uuid, status)
+                        session.execute(sql)
+                    elif uuid in visible_uuids and uuid in current_packages:
+                        sql = "UPDATE package_has_profil SET package_status = '%s' WHERE profil_id = %s AND package_uuid = '%s'" % (status, id, uuid)
+                        session.execute(sql)
 
-        session.commit()
-        session.flush()
+            session.commit()
+            session.flush()
+        else:
+            pass
 
         # Remove packages that are no longer associated
         packages_to_remove = current_packages - updated_packages
