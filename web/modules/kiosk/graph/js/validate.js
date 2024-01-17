@@ -22,7 +22,7 @@ jQuery("#bvalid").click(function() {
     if(jQuery("#name").val() == "")
         jQuery("#name").focus();
 
-    else if(ous.length == 0 && jQuery("#no_ou").is(":checked"))
+    else if(ous.length == 0)
         alert("Please select the concerned OUs")
     else
         sendForm();
