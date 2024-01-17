@@ -42,9 +42,15 @@ jQuery(document).ready(function(){
             jstree.hide();
             treeToggler.hide();
         } else {
-            var ous = [];
-            var selectedId = [];
             loadAndShowTree(selectedOU);
+        }
+
+        var originalSource = jQuery("input[name='original_source']").val();
+        if (selectedOU.toLowerCase().replace(/ /g, "_") !== originalSource) {
+            ous = [];
+            selectedId = [];
+            jQuery("#jstree").jstree("deselect_all");
+            jQuery("input[name='ous']").val("");
         }
     }
 
