@@ -853,7 +853,7 @@ AND kiosk.profiles.active = 1
             session.flush()
             l = [x for x in result]
             return l
-        except Exception, e:
+        except Exception as e:
             logging.getLogger().error("get_profile_list_for_profiles_list")
             logging.getLogger().error(str(e))
             return ""
