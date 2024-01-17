@@ -43,7 +43,7 @@ if(isset($_POST['name'], $_POST['active']))
     $source = htmlentities($_POST['source']);
 
     // Add the profile to the database
-    $result = xmlrpc_create_profile($name, $owner, $ous, htmlentities($_POST['active']), $packages, $source);
+    $result = xmlrpc_create_profile($name, $owner, $ous, htmlentities($_POST['active']), $packages, strtolower(str_replace(" ", "_", $source)));
 
     new NotifyWidgetSuccess(sprintf(_T("Profile %s successfully added", "kiosk"),$name));
 }
