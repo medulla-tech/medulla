@@ -113,6 +113,8 @@ $ous = join(';', $profile['ous']);
 
 $f->add(new HiddenTpl("ous"), array("value" => $ous, "hide" => True));
 $f->add(new HiddenTpl("action"), array("value" => $_GET['action'], "hide" => True));
+$f->add(new HiddenTpl("original_source"), array("value" => $profile['source'], "hide" => True));
+$f->add(new HiddenTpl("owner"), array("value" => $_SESSION['login'], "hide" => True));
 $f->add(new SpanElement('',"packages"));
 
 
@@ -151,7 +153,11 @@ if(xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true){
     </div>';
 }
 else{
-    $restricted_area = '';
+    $restricted_area = (xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true) ? '<div style="width:100%">
+    <h1>'._T("Restricted packages","kiosk").'</h1>
+    <ol data-draggable="target" id="restricted-packages">
+    </ol>
+</div>' : '';
 
     $allowed_packages_str .= $restricted_packages_str;
 }
@@ -170,35 +176,31 @@ $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packag
         </div>
     </div>',"packages"));
 
-    $sources = ["No Ou", "LDAP", "Ou", "Group", "Entity"];
+    $sources = ["Entity", "Group", "LDAP", "Ou User", "Ou Machine"];
     if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true){
         $sources[] = 'ldap';
     }
     $select = new SelectItemtitle("source","Source provider");
     $select->setElements($sources);
     $select->setElementsVal($sources);
-    $f->add(
-        new TrFormElement(_T('Source','kiosk').": ", $select),
-        array("value" => (!empty($profile['source'])) ? $profile['source'] : "1")
-    );
-
-$f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => True));
-
+    $formatedSource = ucwords(str_replace("_", " ", $profile['source']));
 $f->add(
-    new TrFormElement("", new CheckBoxTpl("no_ou")), $defaultValue
+    new TrFormElement(_T('Source','kiosk').": ", $select),
+    array("value" => (!empty($profile['source'])) ? $formatedSource : "1")
 );
 // -------
 // Add the OUs tree
 // -------
 $result = "";
-$number = 0;
-recursiveArrayToList(xmlrpc_get_ou_list(), $result, $number);
-
-$f->add(new TrFormElement(_T("Select OUs",'kiosk'),new SpanElement('<div id="ou-container" style="display:flex; max-height:350px;">
-<input type="button" id="treeToggler" value="+" />
-<div id="jstree" role="tree" style="width:40%;overflow:scroll;">'.$result.'</div>
-<div id="users" class="user-list" style="display:inline"></div>
-</div>',"kiosk")));
+$f->add(new SpanElement('
+    <div id="source-container" class="user-list" style="display:inline"></div>
+    <div id="ou-container" style="display:flex; max-height:350px;">
+        <br>
+        <input type="button" id="treeToggler" value="+" />
+        <div id="jstree" role="tree" style="width:40%;overflow:scroll;">'.$result.'</div>
+        <div id="users" class="user-list" style="display:inline"></div>
+    </div>',
+"kiosk"));
 
 $bo = new ValidateButtonTpl('bvalid', _T("modify",'kiosk'),'btnPrimary',_T("Modify the profile", "kiosk"));
 //$rr = new TrFormElementcollapse($bo);
@@ -211,16 +213,8 @@ $f->display(); // display the form
 ?>
 
 
-<script src="modules/kiosk/graph/js/packages.js">
-    // Manage drag&drop for the packages boxes
-    // Generate a json with the packages
-</script>
-<script src="modules/kiosk/graph/js/tree.js"></script>
-<script src="modules/kiosk/graph/js/validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-<<<<<<< HEAD
-=======
 <script src="modules/kiosk/graph/js/packages.js"></script>
 <script src="modules/kiosk/graph/js/sources.js"></script>
 <script src="modules/kiosk/graph/js/validate.js"></script>
@@ -242,4 +236,3 @@ jQuery(document).ready(function(){
     });
 });
 </script>
->>>>>>> 95d4ff24be ((KIOSK) Fix Editing Profile)
