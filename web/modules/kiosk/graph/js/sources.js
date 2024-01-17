@@ -56,7 +56,7 @@ jQuery(document).ready(function(){
 
         treeToggler.val("+");
 
-        jstree.load('/mmc/modules/kiosk/kiosk/ajaxSourceOu.php', {'ou': selectedOU}, function(result){
+        jstree.load('/mmc/modules/kiosk/kiosk/ajaxSourceOu.php', {'ou': selectedOU.toLowerCase().replace(/ /g,"_")}, function(result){
             jstree.show();
             treeToggler.show();
 

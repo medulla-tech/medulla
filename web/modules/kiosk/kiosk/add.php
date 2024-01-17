@@ -133,7 +133,7 @@ if(is_array($ou_list))
         </div>
     </div>',"packages"));
 
-    $sources = ["No Ou", "LDAP", "Ou", "Group", "Entity"];
+    $sources = ["Entity", "Group", "LDAP", "Ou User", "Ou Machine"];
     if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true){
         $sources[] ='ldap';
     }
