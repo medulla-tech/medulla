@@ -77,6 +77,7 @@ from pulse2.database.xmppmaster.schema import (
     Up_gray_list,
     Up_history,
     Mmc_module_actif,
+    Users_adgroups
 )
 
 # Imported last
@@ -14485,4 +14486,30 @@ group by hostname
                 "numkb": data.kb,
             }
 
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_ad_group_for_lastuser(self, session, login):
+        query = session.query(Users_adgroups).filter(Users_adgroups.lastuser == login).all()
+
+        result = [element.adname for element in query] if query != None else []
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_all_ad_groups(self, session):
+        query = session.query(Users_adgroups)\
+            .group_by(Users_adgroups.adname)\
+            .all()
+
+        result = [element.adname for element in query] if query != None else []
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_all_ad_groups_team(self, session, logins):
+        query = session.query(Users_adgroups)\
+            .filter(Users_adgroups.lastuser.in_(logins))\
+            .group_by(Users_adgroups.adname)\
+            .all()
+
+        result = [element.adname for element in query] if query != None else []
         return result

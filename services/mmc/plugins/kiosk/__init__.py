@@ -130,15 +130,15 @@ def get_ou_list(source, *args, **kwargs):
     except:
         return []
 
-def get_ou_list_ou_machine():
+def get_ou_list_ou_machine(*args, **kwargs):
     ous = XmppMasterDatabase().get_oumachine_list_from_machines()
     return ous
 
-def get_ou_list_ou_user():
+def get_ou_list_ou_user(*args, **kwargs):
     ous = XmppMasterDatabase().get_ouuser_list_from_machines()
     return ous
 
-def get_ou_list_ldap():
+def get_ou_list_ldap(*args, **kwargs):
     # Check the ldap config
     config = PluginConfigFactory.new(BasePluginConfig, "base")
     kconfig = KioskConfig("kiosk")
@@ -199,10 +199,16 @@ def get_ou_list_ldap():
     else:
         return False
 
-def get_ou_list_group():
-    return []
+def get_ou_list_group(login, *args, **kwargs):
+    teammates = XmppMasterDatabase().get_teammembers_from_login(login)
+    if login == "root":
+        return XmppMasterDatabase().get_all_ad_groups()
+    else:
+        if teammates == []:
+            teammates.append(login)
+        return XmppMasterDatabase().get_all_ad_groups_team(teammates)
 
-def get_ou_list_entity():
+def get_ou_list_entity(*args, **kwargs):
     ous = []
     ous = XmppMasterDatabase().get_ou_list_from_entity()
     return ous
@@ -578,10 +584,9 @@ def get_packages_for_machine(machine):
 
     machine_entity = XmppMasterDatabase().getmachineentityfromjid(machine['jid'])
     machine_entity = machine_entity.complete_name.replace(" > ", "/") if machine_entity is not None else None
-    # son ad_ou_machine et ad_ou_user
     OUmachine = machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", "/")
     OUuser = machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", "/")
-    group = None
+    group = XmppMasterDatabase().get_ad_group_for_lastuser(machine['lastuser'])
     if OUmachine == "":
         OUmachine = None
     if OUuser == "":
@@ -591,7 +596,7 @@ def get_packages_for_machine(machine):
     ldap = None if ldap is False else ldap
 
     _sources = {
-        "ou_macihne": OUmachine,
+        "ou_machine": OUmachine,
         "ou_user": OUuser,
         "ldap": ldap,
         "group": group,
