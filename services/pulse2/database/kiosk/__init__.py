@@ -790,19 +790,12 @@ AND kiosk.profiles.active = 1
             - params: sources dict with the form {"source_name": [list of ous]}
         """
         profiles = []
-        profile_ids = []
-
         for source in sources:
-            sql = """select * from profiles p
-            join profile_has_ous on po on po.profile_id = p.id
-            where p.source = %s
-            and po"""
-
             query = session.query(Profiles)\
                 .join(Profile_has_ou, Profile_has_ou.profile_id == Profiles.id)\
                 .filter(and_(Profiles.source ==source,
                              Profiles.active == 1,
-                             Profile_has_ou.ou.contains(sources[source]) ))\
+                             Profile_has_ou.ou.like("%s%%"%sources[source]) ))\
                 .group_by(Profiles.id)
             query=query.all()
 

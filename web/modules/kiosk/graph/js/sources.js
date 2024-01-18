@@ -61,8 +61,9 @@ jQuery(document).ready(function(){
         }
 
         treeToggler.val("+");
+        owner = jQuery("input[name='owner']").val() ;
 
-        jstree.load('/mmc/modules/kiosk/kiosk/ajaxSourceOu.php', {'ou': selectedOU.toLowerCase().replace(/ /g,"_")}, function(result){
+        jstree.load('/mmc/modules/kiosk/kiosk/ajaxSources.php', {'owner': owner, 'ou': selectedOU.toLowerCase().replace(/ /g,"_")}, function(result){
             jstree.show();
             treeToggler.show();
 

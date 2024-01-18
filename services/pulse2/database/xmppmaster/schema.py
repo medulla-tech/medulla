@@ -868,6 +868,15 @@ class Up_history(Base, XmppMasterDBObj):
     command = Column(Integer)
     id_deploy = Column(Integer)
     deploy_title = Column(String(255))
+
+
+class Users_adgroups(Base):
+    # ====== Table name =========================
+    __tablename__ = "users_adgroups"
+    # ====== Fields =============================
+    lastuser = Column(String(255), nullable=False, primary_key=True)
+    adname = Column(String(255), nullable=False, primary_key=True)
+
 """
 This code is kept here as a comment, "if" we need to use it
 and not use the automatic table anymore.
