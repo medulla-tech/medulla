@@ -57,9 +57,9 @@ function xmlrpc_update_profile($login, $id, $name, $ous, $active, $packages=[], 
     return xmlcall('kiosk.update_profile', [$login, $id, $name, $ous, $active, $packages, $source]);
 }
 
-function xmlrpc_get_ou_list($source){
+function xmlrpc_get_ou_list($source, $owner){
     // Returns the list of all founded OUs
-    return xmlcall('kiosk.get_ou_list', [$source]);
+    return xmlcall('kiosk.get_ou_list', [$source, $owner]);
 }
 
 function xmlrpc_get_users_from_ou($ou){
