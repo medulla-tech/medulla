@@ -1,4 +1,5 @@
 <?php
+
 require_once("../includes/xmlrpc.php");
 require_once("../includes/functions.php");
 require_once("../../../includes/config.inc.php");
@@ -15,5 +16,3 @@ $data = xmlrpc_get_ou_list($ou, $owner);
 recursiveArrayToList($data, $result, $number);
 
 echo $result;
-
-?>

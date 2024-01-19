@@ -77,7 +77,7 @@ from pulse2.database.xmppmaster.schema import (
     Up_gray_list,
     Up_history,
     Mmc_module_actif,
-    Users_adgroups
+    Users_adgroups,
 )
 
 # Imported last
@@ -13255,9 +13255,7 @@ where
         Returns list: all unique OUs found in the table
         """
         query = (
-            session.query(Machines.ad_ou_machine)
-            .group_by(Machines.ad_ou_machine)
-            .all()
+            session.query(Machines.ad_ou_machine).group_by(Machines.ad_ou_machine).all()
         )
         result = []
         if query is not None:
@@ -13272,11 +13270,7 @@ where
         """Get all ous listed in machines table (in ad_ou_machine and ad_ou_user fields)
         Returns list: all unique OUs found in the table
         """
-        query = (
-            session.query(Machines.ad_ou_user)
-            .group_by(Machines.ad_ou_user)
-            .all()
-        )
+        query = session.query(Machines.ad_ou_user).group_by(Machines.ad_ou_user).all()
         result = []
         if query is not None:
             for ou in query:
@@ -14490,26 +14484,28 @@ group by hostname
 
     @DatabaseHelper._sessionm
     def get_ad_group_for_lastuser(self, session, login):
-        query = session.query(Users_adgroups).filter(Users_adgroups.lastuser == login).all()
+        query = (
+            session.query(Users_adgroups).filter(Users_adgroups.lastuser == login).all()
+        )
 
         result = [element.adname for element in query] if query != None else []
         return result
 
     @DatabaseHelper._sessionm
     def get_all_ad_groups(self, session):
-        query = session.query(Users_adgroups)\
-            .group_by(Users_adgroups.adname)\
-            .all()
+        query = session.query(Users_adgroups).group_by(Users_adgroups.adname).all()
 
         result = [element.adname for element in query] if query != None else []
         return result
 
     @DatabaseHelper._sessionm
     def get_all_ad_groups_team(self, session, logins):
-        query = session.query(Users_adgroups)\
-            .filter(Users_adgroups.lastuser.in_(logins))\
-            .group_by(Users_adgroups.adname)\
+        query = (
+            session.query(Users_adgroups)
+            .filter(Users_adgroups.lastuser.in_(logins))
+            .group_by(Users_adgroups.adname)
             .all()
+        )
 
         result = [element.adname for element in query] if query != None else []
         return result

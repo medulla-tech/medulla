@@ -34,9 +34,8 @@ if(isset($_POST['id'], $_POST['name'], $_POST['active'])) {
     $packages = isset($_POST['packages']) ? $_POST['packages'] : $_POST['sources'];
 
     xmlrpc_update_profile($login, $_POST['id'], htmlentities($_POST['name']), $ous, $_POST['active'], $packages, strtolower(str_replace(" ", "_", $_POST['source'])));
-    new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated','kiosk'), htmlentities($_POST['name'])));
+    new NotifyWidgetSuccess(sprintf(_T('The profile %s has been updated', 'kiosk'), htmlentities($_POST['name'])));
 
 } else {
-    new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile','kiosk')));
+    new NotifyWidgetSuccess(sprintf(_T('Unable to update the profile', 'kiosk')));
 }
-?>

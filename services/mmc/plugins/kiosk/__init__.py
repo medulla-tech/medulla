@@ -83,7 +83,7 @@ def get_profiles_name_list():
     return KioskDatabase().get_profiles_name_list()
 
 
-def create_profile(name, login,  ous, active, packages, source):
+def create_profile(name, login, ous, active, packages, source):
     result = KioskDatabase().create_profile(name, login, ous, active, packages, source)
     notify_kiosks()
     return result
@@ -100,7 +100,9 @@ def get_profile_by_id(id):
 
 
 def update_profile(login, id, name, ous, active, packages, source):
-    result = KioskDatabase().update_profile(login, id, name, ous, active, packages, source)
+    result = KioskDatabase().update_profile(
+        login, id, name, ous, active, packages, source
+    )
     notify_kiosks()
     return result
 
@@ -116,7 +118,7 @@ def get_ou_list(source, *args, **kwargs):
         or
         returns False for some issues
     """
-    funcname = "get_ou_list_%s"%(source.lower())
+    funcname = "get_ou_list_%s" % (source.lower())
     try:
         func = globals()[funcname]
         # Step 1 - Get datas
@@ -130,13 +132,16 @@ def get_ou_list(source, *args, **kwargs):
     except:
         return []
 
+
 def get_ou_list_ou_machine(*args, **kwargs):
     ous = XmppMasterDatabase().get_oumachine_list_from_machines()
     return ous
 
+
 def get_ou_list_ou_user(*args, **kwargs):
     ous = XmppMasterDatabase().get_ouuser_list_from_machines()
     return ous
+
 
 def get_ou_list_ldap(*args, **kwargs):
     # Check the ldap config
@@ -199,6 +204,7 @@ def get_ou_list_ldap(*args, **kwargs):
     else:
         return False
 
+
 def get_ou_list_group(login, *args, **kwargs):
     teammates = XmppMasterDatabase().get_teammembers_from_login(login)
     if login == "root":
@@ -208,10 +214,12 @@ def get_ou_list_group(login, *args, **kwargs):
             teammates.append(login)
         return XmppMasterDatabase().get_all_ad_groups_team(teammates)
 
+
 def get_ou_list_entity(*args, **kwargs):
     ous = []
     ous = XmppMasterDatabase().get_ou_list_from_entity()
     return ous
+
 
 def get_ou_tree():
     """This function returns the list of OUs
@@ -582,11 +590,19 @@ def get_packages_for_machine(machine):
     Returns:
         list of the packages"""
 
-    machine_entity = XmppMasterDatabase().getmachineentityfromjid(machine['jid'])
-    machine_entity = machine_entity.complete_name.replace(" > ", "/") if machine_entity is not None else None
-    OUmachine = machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", "/")
-    OUuser = machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", "/")
-    group = XmppMasterDatabase().get_ad_group_for_lastuser(machine['lastuser'])
+    machine_entity = XmppMasterDatabase().getmachineentityfromjid(machine["jid"])
+    machine_entity = (
+        machine_entity.complete_name.replace(" > ", "/")
+        if machine_entity is not None
+        else None
+    )
+    OUmachine = (
+        machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", "/")
+    )
+    OUuser = (
+        machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", "/")
+    )
+    group = XmppMasterDatabase().get_ad_group_for_lastuser(machine["lastuser"])
     if OUmachine == "":
         OUmachine = None
     if OUuser == "":
@@ -600,7 +616,7 @@ def get_packages_for_machine(machine):
         "ou_user": OUuser,
         "ldap": ldap,
         "group": group,
-        "entity":machine_entity
+        "entity": machine_entity,
     }
     # remove empty values and delete the temp _sources variable
     sources = {key: _sources[key] for key in _sources if _sources[key] != None}
@@ -689,13 +705,14 @@ def update_acknowledgement(id, acknowledgedbyuser, startdate, enddate, status):
 
     return result
 
+
 def get_conf_kiosk():
     config = PluginConfigFactory.new(BasePluginConfig, "base")
     kconfig = KioskConfig("kiosk")
 
     result = {
         "use_external_ldap": kconfig.use_external_ldap,
-        "enable_acknowledgements": kconfig.enable_acknowledgements
+        "enable_acknowledgements": kconfig.enable_acknowledgements,
     }
 
     return result

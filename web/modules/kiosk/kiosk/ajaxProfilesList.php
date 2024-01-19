@@ -36,8 +36,8 @@ $profiles = xmlrpc_get_profiles_list($login, $start, $maxperpage, $filter);
 $count = $profiles['total'];
 $profiles = $profiles['datas'];
 
-$action_editProfiles = new ActionItem(_T("Edit Profile",'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
-$action_deleteProfile = new ActionItem(_T("Delete Profile",'kiosk'), "deleteProfile", "delete", "profile", "kiosk", "kiosk");
+$action_editProfiles = new ActionItem(_T("Edit Profile", 'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
+$action_deleteProfile = new ActionItem(_T("Delete Profile", 'kiosk'), "deleteProfile", "delete", "profile", "kiosk", "kiosk");
 
 $profiles_name = [];
 $profiles_date = [];
@@ -48,11 +48,10 @@ $action_acknowledge = [];
 
 $params = [];
 
-foreach($profiles as $element)
-{
+foreach($profiles as $element) {
     $profiles_name[] = $element['name'];
-    $profiles_status[] = ($element['active'] == 1) ? _T("Active","kiosk") : _T("Inactive","kiosk");
-    $params[] = ['id'=>$element['id'], 'name'=>$element['name']];
+    $profiles_status[] = ($element['active'] == 1) ? _T("Active", "kiosk") : _T("Inactive", "kiosk");
+    $params[] = ['id' => $element['id'], 'name' => $element['name']];
 
     $action_edit[] = $action_editProfiles;
     $action_delete[] = $action_deleteProfile;
@@ -60,7 +59,7 @@ foreach($profiles as $element)
 
 // Avoiding the CSS selector (tr id) to start with a number
 $ids_kiosk = [];
-foreach($profiles as $index => $name_kiosk){
+foreach($profiles as $index => $name_kiosk) {
     $ids_kiosk[] = 'k_'.$name_kiosk['name'];
 }
 
@@ -83,4 +82,3 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
 $n->end = $count;
 $n->display();
-?>
