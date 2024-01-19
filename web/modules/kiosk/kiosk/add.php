@@ -176,7 +176,6 @@ else
 }
 ?>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 <script src="modules/kiosk/graph/js/packages.js"></script>
 <script src="modules/kiosk/graph/js/sources.js"></script>
