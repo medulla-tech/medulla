@@ -33,7 +33,7 @@ $mod->setPriority(10);
 
 $submod = new SubModule("kiosk");
 $submod->setDescription(_T("kiosk", "kiosk"));
-$submod->setVisibility(True);
+$submod->setVisibility(true);
 $submod->setImg('modules/kiosk/graph/navbar/kiosk');
 $submod->setDefaultPage("kiosk/kiosk/index");
 $submod->setPriority(-10);
@@ -46,7 +46,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxProfilesList", _T('Profile List', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/ajaxProfilesList.php");//, array("expert" => True)
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("add", _T('Add Profile', 'kiosk'));
@@ -55,22 +55,22 @@ $submod->addPage($page);
 
 $page = new Page("ajaxAddProfile");
 $page->setFile("modules/kiosk/kiosk/ajaxAddProfile.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("ajaxGetUsersForOu");
 $page->setFile("modules/kiosk/kiosk/ajaxGetUsersForOu.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("ajaxSources");
 $page->setFile("modules/kiosk/kiosk/ajaxSources.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("ajaxEditProfile");
 $page->setFile("modules/kiosk/kiosk/ajaxEditProfile.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("edit", _T('Edit Profile', 'kiosk'));
@@ -79,7 +79,7 @@ $submod->addPage($page);
 
 $page = new Page("deleteProfile", _T('Delete Profile', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/deleteProfile.php");//, array("expert" => True)
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 $page = new Page("acknowledges", _T('Installation Requests', 'kiosk'));
@@ -88,17 +88,15 @@ $submod->addPage($page);
 
 $page = new Page("ajaxAcknowledges", _T('Installation Requests', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/ajaxAcknowledges.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, 'noHeader'=>false));
+$page->setOptions(array("visible" => false, "AJAX" => true, 'noHeader' => false));
 $submod->addPage($page);
 
 $page = new Page("modifyAcknowledge", _T('Modify Installation Authorisations', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/modifyAcknowledge.php");
-$page->setOptions(array("visible"=>False, "AJAX" =>True, 'noHeader'=>false));
+$page->setOptions(array("visible" => false, "AJAX" => true, 'noHeader' => false));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = &MMCApp::getInstance();
 $MMCApp->addModule($mod);
-
-?>

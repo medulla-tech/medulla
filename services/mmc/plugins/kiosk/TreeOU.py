@@ -108,8 +108,8 @@ class TreeOU(object):
         """
         temp = self
 
-        string = string.replace(' > ', '/')
-        elements = string.split('/')
+        string = string.replace(" > ", "/")
+        elements = string.split("/")
         for element in elements:
             element = element.strip()
             if element:

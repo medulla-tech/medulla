@@ -16,7 +16,13 @@ from datetime import date, datetime, timedelta
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list, package_exists, get_all_packages, pkgs_search_share
+from mmc.plugins.pkgs import (
+    get_xmpp_package,
+    xmpp_packages_list,
+    package_exists,
+    get_all_packages,
+    pkgs_search_share,
+)
 from pulse2.database.kiosk.schema import (
     Profiles,
     Profile_has_package,
@@ -612,7 +618,10 @@ AND kiosk.profiles.active = 1
         """
 
         # Update the profile
-        sql = "UPDATE profiles SET name='%s', active='%s', source='%s' WHERE id='%s';" % (name, active, source, id)
+        sql = (
+            "UPDATE profiles SET name='%s', active='%s', source='%s' WHERE id='%s';"
+            % (name, active, source, id)
+        )
         session.execute(sql)
         session.commit()
         session.flush()
@@ -622,9 +631,11 @@ AND kiosk.profiles.active = 1
         current_packages = {pkg[0] for pkg in session.execute(sql).fetchall()}
 
         # Retrieve the packages visible to the user
-        sharing = pkgs_search_share({'login': login})
-        visible_packages = get_all_packages(login, sharing['config']['centralizedmultiplesharing'])
-        visible_uuids = {pkg for pkg in visible_packages['datas']['uuid']}
+        sharing = pkgs_search_share({"login": login})
+        visible_packages = get_all_packages(
+            login, sharing["config"]["centralizedmultiplesharing"]
+        )
+        visible_uuids = {pkg for pkg in visible_packages["datas"]["uuid"]}
 
         updated_packages = set()
         if packages and isinstance(packages, dict):
@@ -632,10 +643,16 @@ AND kiosk.profiles.active = 1
                 for uuid in package_list:
                     updated_packages.add(uuid)
                     if uuid in visible_uuids and uuid not in current_packages:
-                        sql = "INSERT INTO package_has_profil (profil_id, package_uuid, package_status) VALUES (%s, '%s', '%s')" % (id, uuid, status)
+                        sql = (
+                            "INSERT INTO package_has_profil (profil_id, package_uuid, package_status) VALUES (%s, '%s', '%s')"
+                            % (id, uuid, status)
+                        )
                         session.execute(sql)
                     elif uuid in visible_uuids and uuid in current_packages:
-                        sql = "UPDATE package_has_profil SET package_status = '%s' WHERE profil_id = %s AND package_uuid = '%s'" % (status, id, uuid)
+                        sql = (
+                            "UPDATE package_has_profil SET package_status = '%s' WHERE profil_id = %s AND package_uuid = '%s'"
+                            % (status, id, uuid)
+                        )
                         session.execute(sql)
 
             session.commit()
@@ -647,7 +664,10 @@ AND kiosk.profiles.active = 1
         packages_to_remove = current_packages - updated_packages
         for uuid in packages_to_remove:
             if uuid in visible_uuids:
-                sql = "DELETE FROM package_has_profil WHERE profil_id = %s AND package_uuid = '%s'" % (id, uuid)
+                sql = (
+                    "DELETE FROM package_has_profil WHERE profil_id = %s AND package_uuid = '%s'"
+                    % (id, uuid)
+                )
                 session.execute(sql)
 
         session.commit()
@@ -854,38 +874,47 @@ AND kiosk.profiles.active = 1
     @DatabaseHelper._sessionm
     def get_profiles_by_sources(self, session, sources):
         """get the list of profiles concerned by the specified sources
-            - params: sources dict with the form {"source_name": [list of ous]}
+        - params: sources dict with the form {"source_name": [list of ous]}
         """
         profiles = []
         for source in sources:
-            query = session.query(Profiles)\
-                .join(Profile_has_ou, Profile_has_ou.profile_id == Profiles.id)\
-                .filter(and_(Profiles.source ==source,
-                             Profiles.active == 1,
-                             Profile_has_ou.ou.like("%s%%"%sources[source]) ))\
+            query = (
+                session.query(Profiles)
+                .join(Profile_has_ou, Profile_has_ou.profile_id == Profiles.id)
+                .filter(
+                    and_(
+                        Profiles.source == source,
+                        Profiles.active == 1,
+                        Profile_has_ou.ou.like("%s%%" % sources[source]),
+                    )
+                )
                 .group_by(Profiles.id)
-            query=query.all()
+            )
+            query = query.all()
 
             if query is not None:
                 for row in query:
-                    profiles.append({
-                        "id": row.id,
-                        "name": row.name,
-                        "owner": row.owner,
-                        "source": row.source,
-                        "active": row.active if row.active is not None else False
-                        })
+                    profiles.append(
+                        {
+                            "id": row.id,
+                            "name": row.name,
+                            "owner": row.owner,
+                            "source": row.source,
+                            "active": row.active if row.active is not None else False,
+                        }
+                    )
         return profiles
 
     @DatabaseHelper._sessionm
     def get_profile_list_for_profiles_list(self, session, profiles):
-        profiles_ids = [profile['id'] for profile in profiles]
+        profiles_ids = [profile["id"] for profile in profiles]
         if len(profiles_ids) == 0:
             # return le profils par default
             return
 
-        profiles_ids_str = ",".join(["%s"%profile['id'] for profile in profiles])
-        sql = """
+        profiles_ids_str = ",".join(["%s" % profile["id"] for profile in profiles])
+        sql = (
+            """
             SELECT
                 distinct
                 pkgs.packages.label as 'name_package',
@@ -906,7 +935,9 @@ AND kiosk.profiles.active = 1
                 kiosk.profiles on profiles.id = kiosk.package_has_profil.profil_id
             WHERE
                 kiosk.package_has_profil.profil_id in (%s)
-                    """ % profiles_ids_str
+                    """
+            % profiles_ids_str
+        )
         try:
             result = session.execute(sql)
             session.commit()

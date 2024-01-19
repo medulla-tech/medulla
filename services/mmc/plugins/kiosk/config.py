@@ -41,7 +41,9 @@ class KioskConfig(PluginConfig, KioskDatabaseConfig):
 
         self.enable_acknowledgements = False
         if self.has_option("display", "enable_acknowledgements"):
-            self.enable_acknowledgements = self.getboolean("display", "enable_acknowledgements")
+            self.enable_acknowledgements = self.getboolean(
+                "display", "enable_acknowledgements"
+            )
         # ...
 
     def check(self):
