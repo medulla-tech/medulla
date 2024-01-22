@@ -302,8 +302,24 @@ class synch_packages:
             path_file_download = os.path.join(self.path_in_base, namefile)
             # creation repertoire du package si non exist
             self.create_directory_in_base()
-            data = requests.get(self.update_file_windows['payloadfiles'], stream=True)
-            with  open(path_file_download, 'wb') as f:
+            try:
+                data = requests.get(self.update_file_windows["payloadfiles"], stream=True)
+            except Exception as e:
+                logger.error("Error trying to download %s: %s" % (self.update_file_windows['payloadfiles'], e))
+                try:
+                    # Try with proxy parameters as defined on the system
+                    proxy_url = os.environ.get('HTTP_PROXY') or os.environ.get('HTTPS_PROXY')
+                    if proxy_url:
+                        proxies = {
+                            'http': proxy_url,
+                            'https': proxy_url
+                        }
+                        data = requests.get(self.update_file_windows['payloadfiles'], stream=True, proxies=proxies)
+                    else:
+                        logger.error("No proxies defined")
+                except Exception as e:
+                    logger.error("Error downloading update file: %s" % str(e))
+            with open(path_file_download, "wb") as f:
                 for chunk in data.iter_content(chunk_size=1024):
                     if chunk: # filter out keep-alive new chunks
                         f.write(chunk)
