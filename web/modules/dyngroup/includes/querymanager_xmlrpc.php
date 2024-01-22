@@ -46,11 +46,11 @@ function getPossiblesValuesForCriterionInModule($moduleName, $criterion) {
 }
 
 function getPossiblesValuesForCriterionInModuleFuzzy($moduleName, $criterion, $search) {
-    return myXmlCall("dyngroup.getPossiblesValuesForCriterionInModuleFuzzy", array(urldecode($moduleName), urldecode($criterion), urldecode($search)));
+    return myXmlCall("dyngroup.getPossiblesValuesForCriterionInModuleFuzzy", array(urldecode($moduleName), urldecode($criterion), $search));
 }
 
 function getPossiblesValuesForCriterionInModuleFuzzyWhere($moduleName, $criterion, $search, $value2) {
-    return myXmlCall("dyngroup.getPossiblesValuesForCriterionInModuleFuzzyWhere", array(urldecode($moduleName), urldecode($criterion), urldecode($search), urldecode($value2)));
+    return myXmlCall("dyngroup.getPossiblesValuesForCriterionInModuleFuzzyWhere", array(urldecode($moduleName), urldecode($criterion), $search, urldecode($value2)));
 }
 
 function getTypeForCriterionInModule($moduleName, $criterion) {
