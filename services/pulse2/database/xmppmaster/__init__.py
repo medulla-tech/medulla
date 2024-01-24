@@ -5045,7 +5045,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 or start LIKE "%%%s%%"
                 or login LIKE "%%%s%%"
                 or host LIKE "%%%s%%"
-                ) """( filt,filt,filt,filt,filt)
+                ) """ % (filt,filt,filt,filt,filt)
 
 
         deploylog = deploylog.filter( or_(  Deploy.state == 'DEPLOYMENT SUCCESS',
