@@ -129,6 +129,17 @@ def get_ou_list(source, *args, **kwargs):
     except:
         return []
 
+def get_ou_list_ou():
+    # STEP 1 : Generates OU list
+    ous = XmppMasterDatabase().get_ou_list_from_machines()
+
+    # Step 2 - Recreate OUs tree
+    tree = TreeOU()
+    for line in ous:
+        tree.create_recursively(line)
+
+    return tree.recursive_json()
+
 def get_ou_list_ou_machine(*args, **kwargs):
     ous = XmppMasterDatabase().get_oumachine_list_from_machines()
     return ous
