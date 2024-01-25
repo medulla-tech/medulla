@@ -114,9 +114,10 @@ class TreeOU(object):
                 if temp.search_direct_child(element):
                     temp = temp.search_direct_child(element)
                 else:
-                    new_node = TreeOU(element)
-                    temp.add_child(new_node)
-                    temp = new_nod
+                    new = TreeOU(element)
+                    temp.add_child(new)
+                    temp = new
+
 
     def recursive_json(self):
         """
