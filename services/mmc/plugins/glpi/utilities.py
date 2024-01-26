@@ -84,11 +84,13 @@ def complete_ctx(ctx):
                 __convert, mmc.plugins.glpi.database.Glpi().getUserLocations(ctx.userid)
             )
         )
-        if isinstance(ctx.locations, list):
+        if isinstance(ctx.locations, list) and len(ctx.locations) > 0:
             if hasattr(ctx.locations[0], "id"):  # GLPI 0.8
                 ctx.locationsid = [e.id for e in ctx.locations]
             elif hasattr(ctx.locations[0], "ID"):  # GLPI 0.7x
                 ctx.locationsid = [e.ID for e in ctx.locations]
+        else:
+            ctx.locationsid = []
     if not hasattr(ctx, "profile"):
         logging.getLogger().debug(
             "adding profiles in context for user %s" % (ctx.userid)
