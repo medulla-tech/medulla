@@ -71,7 +71,7 @@ if (isset($_POST["bConnect"])) {
         exit;
     } else {
         if (!isXMLRPCError())
-            $error = _("Login failed");
+            $error = _("Login failed. Please make sure that you entered the right username and password. Both fields are case sensitive.");
     }
 }
 
