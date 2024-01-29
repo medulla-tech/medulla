@@ -5647,7 +5647,7 @@ class Glpi95(DyngroupDatabaseHelper):
             FROM
                 glpi.glpi_computers
                     INNER JOIN
-                glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.computers_id
+                glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.items_id and glpi.glpi_items_softwareversions.itemtype="Computer"
                     INNER JOIN
                 glpi.glpi_softwares ON glpi.glpi_softwares.id = glpi.glpi_items_softwareversions.softwareversions_id
                     INNER JOIN
