@@ -14469,7 +14469,7 @@ group by hostname
         for hist, data, mach, entity in query:
             result[mach.uuid_inventorymachine] = {
                 "id": int(mach.uuid_inventorymachine.replace("UUID", ""))
-                if mach.uuid_inventorymachine is not None
+                if mach.uuid_inventorymachine and mach.uuid_inventorymachine.strip()
                 else "",
                 "hostname": mach.hostname,
                 "eid": entity.glpi_id if entity.glpi_id is not None else 0,
