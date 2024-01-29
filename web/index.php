@@ -26,10 +26,11 @@ ob_start();
 session_name("PULSESESSION");
 session_start();
 
-if (isset($_POST['lang']))
+if (isset($_POST['lang'])) {
     $_SESSION['lang'] = $_POST['lang'];
-else if (isset($_GET['lang']))
+} elseif (isset($_GET['lang'])) {
     $_SESSION['lang'] = $_GET['lang'];
+}
 
 require_once("includes/utils.inc.php");
 require("includes/config.inc.php");
@@ -47,8 +48,8 @@ if (isset($_POST["bConnect"])) {
     $pass = $_POST["password"];
 
     /* Session creation */
-    $ip = preg_replace('@\.@','',$_SERVER["REMOTE_ADDR"]);
-    $sessionid = md5 (time() . $ip . mt_rand());
+    $ip = preg_replace('@\.@', '', $_SERVER["REMOTE_ADDR"]);
+    $sessionid = md5(time() . $ip . mt_rand());
 
     session_destroy();
     session_id($sessionid);
@@ -70,12 +71,15 @@ if (isset($_POST["bConnect"])) {
         header("Location: main.php");
         exit;
     } else {
-        if (!isXMLRPCError())
+        if (!isXMLRPCError()) {
             $error = _("Login failed. Please make sure that you entered the right username and password. Both fields are case sensitive.");
+        }
     }
 }
 
-if (!empty($_GET["error"])) $error = urldecode($_GET["error"]) . "<br/>" . $error;
+if (!empty($_GET["error"])) {
+    $error = urldecode($_GET["error"]) . "<br/>" . $error;
+}
 if (isset($_GET["agentsessionexpired"])) {
     $error = _("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
 }
@@ -109,9 +113,12 @@ if (isset($_GET["agentsessionexpired"])) {
 if (isset($_SESSION['notify']) && safeCount($_SESSION['notify']) > 0) {
     foreach($_SESSION['notify'] as $n) {
         $n = unserialize($n);
-        foreach($n->strings as $s)
-            if ($error) $error .= '<br/>';
-            $error .= $s;
+        foreach($n->strings as $s) {
+            if ($error) {
+                $error .= '<br/>';
+            }
+        }
+        $error .= $s;
         $n->flush();
     }
 }
@@ -127,73 +134,76 @@ if ($error) {
             		<?php
 
             $servLabelList = array();
-            $servDescList = array();
-            foreach ($conf as $key => $value) {
-                if (strstr($key,"server_")) {
-                    $servDescList[] = $conf[$key]["description"];
-                    $servLabelList[] = $key;
-                }
+$servDescList = array();
+foreach ($conf as $key => $value) {
+    if (strstr($key, "server_")) {
+        $servDescList[] = $conf[$key]["description"];
+        $servLabelList[] = $key;
+    }
+}
+$servList = new SelectItem("server", "changeServerLang");
+$servList->setElements($servDescList);
+$servList->setElementsVal($servLabelList);
+if (isset($_GET['server'])) {
+    $servList->setSelected($_GET['server']);
+} else {
+    $servList->setSelected($servLabelList[0]);
+}
+
+$langLabelList = array();
+$langDescList = array();
+$languages = list_system_locales(realpath("modules/base/locale/"));
+$langDesc = getArrLocale();
+foreach ($languages as $value) {
+    if ($langDesc[$value]) {
+        $langDescList[] = $langDesc[$value];
+    } else {
+        $langDescList[] = $value;
+    }
+    $langLabelList[] = $value;
+}
+$langList = new SelectItem("lang", "changeServerLang");
+$langList->setElements($langDescList);
+$langList->setElementsVal($langLabelList);
+
+if (!isset($_GET['lang'])) {
+    // Get browser lang
+    $lang_1 = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    $lang_2 = str_replace('-', '_', substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5));
+
+    // If lang1 = en => LANG =  C
+    if ($lang_1 == 'en') {
+        $_SESSION['lang'] = 'C';
+    } elseif// We check other languages
+    // Searching with xx_XX pattern
+    (in_array($lang_2, $languages)) {
+        $_SESSION['lang'] = $lang_2;
+    } else {
+        // Searching with xx pattern
+        foreach ($languages as $lang) {
+            if (substr($lang, 0, 2) == $lang_1) {
+                $_SESSION['lang'] = $lang;
             }
-            $servList = new SelectItem("server", "changeServerLang");
-            $servList->setElements($servDescList);
-            $servList->setElementsVal($servLabelList);
-            if (isset($_GET['server']))
-                $servList->setSelected($_GET['server']);
-            else
-                $servList->setSelected($servLabelList[0]);
+        }
+    }
+}
 
-            $langLabelList = array();
-            $langDescList = array();
-            $languages = list_system_locales(realpath("modules/base/locale/"));
-            $langDesc = getArrLocale();
-            foreach ($languages as $value) {
-                if ($langDesc[$value]) {
-                    $langDescList[] = $langDesc[$value];
-                } else {
-                    $langDescList[] = $value;
-                }
-                $langLabelList[] = $value;
-            }
-            $langList = new SelectItem("lang", "changeServerLang");
-            $langList->setElements($langDescList);
-            $langList->setElementsVal($langLabelList);
+if (isset($_SESSION['lang'])) {
+    $langList->setSelected($_SESSION['lang']);
+} else {
+    $langList->setSelected($langDescList[0]);
+}
 
-            if (!isset($_GET['lang'])) {
-                // Get browser lang
-                $lang_1 = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-                $lang_2 = str_replace('-','_',substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5));
-
-                // If lang1 = en => LANG =  C
-                if ($lang_1 == 'en')
-                    $_SESSION['lang'] = 'C';
-                else // We check other languages
-                    // Searching with xx_XX pattern
-                    if (in_array($lang_2, $languages))
-                        $_SESSION['lang'] = $lang_2;
-                    else
-                        // Searching with xx pattern
-                        foreach ($languages as $lang)
-                            if (substr($lang, 0, 2) == $lang_1)
-                                $_SESSION['lang'] = $lang;
-            }
-
-            if (isset($_SESSION['lang']))
-                $langList->setSelected($_SESSION['lang']);
-            else
-                $langList->setSelected($langDescList[0]);
-
-            if ($conf[$servList->selected]['forgotPassword']) {
-            ?>
+if ($conf[$servList->selected]['forgotPassword']) {
+    ?>
                 <p><a href="forgotpassword.php?server=<?=$servList->selected?>&lang=<?=$langList->selected?>"><?=_("Forgot password ?")?></a></p>
             <?php
-            }
+}
 
-            if (safeCount($servDescList) == 1)
-            {
-                printf('<input type="hidden" id="server" name="server" value="%s" />',$servLabelList[0]);
-            }
-            else {
-            ?>
+if (safeCount($servDescList) == 1) {
+    printf('<input type="hidden" id="server" name="server" value="%s" />', $servLabelList[0]);
+} else {
+    ?>
             <div class="control-group">
                 <label class="control-label" for="server"><?php echo  _("Server"); ?></label>
                 <div class="controls">
@@ -241,10 +251,12 @@ if ($error) {
 
 </div>
 <?php
-if (isCommunityVersion() && is_file("license.php"))
+if (isCommunityVersion() && is_file("license.php")) {
     require("license.php");
-if ($error)
+}
+if ($error) {
     print '<script type="text/javascript">$("#alert").effect("shake");</script>';
+}
 ?>
 </body>
 </html>
