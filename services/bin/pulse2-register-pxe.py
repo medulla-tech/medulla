@@ -418,11 +418,10 @@ def senddata(query, ip="127.0.0.1", port=1001):
     adresse = (ip, port)
     monSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     logging.getLogger().debug("Send PXE xml for registration :%s" % query)
-    monSocket.sendto("\xBB%s" % query, adresse)
+    monSocket.sendto(bytes("\xBB%s" % query, 'utf-8'), adresse)
     time.sleep(conf["pxe_timesenddata"])
-    monSocket.sendto("\xBA%s" % query, adresse)
+    monSocket.sendto(bytes("\xBA%s" %query, "utf-8"), adresse)
     time.sleep(conf["pxe_timesenddata"])
-    monSocket.sendto("\xBA%s" % query, adresse)
     monSocket.close()
 
 
@@ -462,11 +461,11 @@ def macadressclear(file_content, interface_mac_clear):
         logging.getLogger().debug(
             "Clear interface with macadress %s " % interface_mac_clear
         )
-        xml_str = ET.tostring(root).encode("ASCII", "ignore")
-        logging.getLogger().debug("New xml netwrok : %s" % xml_str)
+        xml_str = ET.tostring(root)
+        logging.getLogger().debug("New xml network : %s" % xml_str)
+        xml_str = xml_str.decode("utf-8")
         xml_str = xml_str.replace("\n", "")
         return xml_str
-        pass
     return file_content
 
 

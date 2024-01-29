@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2013 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2018-2024 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -29,6 +29,50 @@ import re
 import xml.etree.ElementTree as ET  # form XML Building
 import time
 
+import asyncio
+from asyncio.exceptions import TimeoutError
+from slixmpp import ClientXMPP
+from slixmpp.exceptions import IqTimeout
+
+import zlib
+import base64
+import os
+import random
+import time
+import sys
+import json
+
+logger = logging.getLogger()
+
+class MyClient(ClientXMPP):
+    def __init__(self, jid, password, recipient, message, server, port=5222, timeout=10, hotname=""):
+        super().__init__(jid, password)
+        self.server = server
+        self.port = port
+        self.timeout = timeout
+        self.recipient = recipient
+        self.message = message
+        self.hotname = hotname
+        self.add_event_handler("session_start", self.start)
+        self.add_event_handler("connection_failed", self.connection_failed)
+
+    async def start(self, event):
+        self.send_presence()
+        await self.get_roster()
+        try:
+            self.send_message(mto=self.recipient, mbody=self.message, mtype='chat')
+        except IqTimeout:
+            logger.debug("Timeout when sending message %s." % self.hotname)
+            self.disconnect()
+        self.disconnect()
+
+    def disconnect(self):
+        logger.debug("Disconnect...")
+        super().disconnect()
+
+    def connection_failed(self, event):
+        logger.debug("The connection failed.")
+        self.disconnect()
 
 class PXEImagingApi(PXEMethodParser):
     """
@@ -111,8 +155,8 @@ class PXEImagingApi(PXEMethodParser):
         @rtype: deferred
         """
         logging.getLogger().debug("FIRST REGISTRATION TO ALLOW INVENTORY")
-        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = str(m.group(0))
+        m = re.search(b"<REQUEST>.*<\\/REQUEST>", inventory)
+        file_content = m.group(0).decode("utf-8")
         ipadress = self.ip_adressexml(file_content)
         mac1 = self.mac_adressexml(file_content)
         hostnamexml = self.hostname_xml(file_content)
@@ -282,8 +326,8 @@ class PXEImagingApi(PXEMethodParser):
         @rtype: deferred
         """
         logging.getLogger().debug("INJECT INVENTORY NEXT HOSTNAME AND ENTITY")
-        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = str(m.group(0))
+        m = re.search(b"<REQUEST>.*<\\/REQUEST>", inventory)
+        file_content = m.group(0).decode("utf-8")
 
         ipadress = self.ip_adressexml(file_content)
         mac1 = self.mac_adressexml(file_content)
@@ -468,8 +512,8 @@ class PXEImagingApi(PXEMethodParser):
             return
         hostname = computer["shortname"]
         entity = computer["entity"]
-        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = str(m.group(0))
+        m = re.search(b"<REQUEST>.*<\\/REQUEST>", inventory)
+        file_content = m.group(0).decode("utf-8")
         # inventory = parsed_inventory1.changEntityAndHostName(file_content,entity,hostname)
         file_content = self.changEntityAndHostName(file_content, entity, hostname)
         inventory = self.changdeviceid(file_content, hostname)
@@ -496,8 +540,8 @@ class PXEImagingApi(PXEMethodParser):
             mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "menu identification"
         )
 
-        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = str(m.group(0))
+        m = re.search(b"<REQUEST>.*<\\/REQUEST>", inventory)
+        file_content = m.group(0).decode("utf-8")
         ipadress = self.ip_adressexml(file_content)
         ip_address = ipadress
         if self.config.imaging_api["glpi_mode"]:
@@ -510,9 +554,55 @@ class PXEImagingApi(PXEMethodParser):
         else:
             return self._computerRegister(None, hostname, mac)
 
+    def file_get_binarycontents(self,filename, offset=-1, maxlen=-1):
+        fp = open(filename, "rb")
+        try:
+            if offset > 0:
+                fp.seek(offset)
+            return fp.read(maxlen)
+        finally:
+            fp.close()
+
+    def file_put_contents(self,filename, data):
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+        with open(filename, "w") as f:
+            f.write(data)
+
+    def file_put_contents_w_a(self,filename, data, option="w"):
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+        if option in ["a", "w"]:
+            with open(filename, option) as f:
+                f.write(data)
+
+    def getRandomName(self, nb, pref=""):
+        a = "abcdefghijklnmopqrstuvwxyz0123456789"
+        d = pref
+        for _ in range(nb):
+            d = d + a[random.randint(0, 35)]
+        return d
+
+    def convert_to_bytes(self, input_data):
+        if isinstance(input_data, bytes):
+            return input_data
+        elif isinstance(input_data, str):
+            return input_data.encode("utf-8")
+        else:
+            raise TypeError("L'entrée doit être de type bytes ou string.")
+
+    def compress_and_encode(self, string):
+        # Convert string to bytes
+        data = self.convert_to_bytes(string)
+        # Compress the data using zlib
+        compressed_data = zlib.compress(data, 9)
+        # Encode the compressed data in base64
+        encoded_data = base64.b64encode(compressed_data)
+        return encoded_data.decode("utf-8")
+
     def send_inventory(self, inventory, hostname):
         """
-        Sending the inventory on FusionInventory (XML) format.
+        Sending the inventory on sub inventory (XML) format.
 
         @param inventory: inventory to send
         @type inventory: str
@@ -520,57 +610,33 @@ class PXEImagingApi(PXEMethodParser):
         @param hostname: hostname of inventoried machine
         @type hostname: str
         """
+        jid=self.config.connection_jid
+        password=self.config.connection_password
+        recipient=self.config.connection_recipient
+        server = self.config.connection_server
+        port = self.config.connection_port
+        timeout = self.config.connection_timeout
+        result = {}
+        result["action"] = "resultinventory"
+        result["ret"] = 0
+        result["sessionid"] =  self.getRandomName(6, "inventory")
+        result["base64"] = False
+        result["data"]={}
+        if not inventory.startswith("<?xml version"):
+            strinventorysave = '<?xml version="1.0" encoding="UTF-8" ?>' + inventory
+        else:
+            strinventorysave = inventory
 
-        url = "http://"
+        result["data"]["inventory"] = self.compress_and_encode(strinventorysave)
+
+        xmpp = MyClient(jid, password, recipient, json.dumps(result), server, port=port, timeout=timeout, hotname=hostname)
+        xmpp.connect()
         try:
-            if self.config.imaging_api["inventory_enablessl"]:
-                protocol = "https"
-            else:
-                protocol = "http"
-
-            url = "%s://%s:%d/" % (
-                protocol,
-                self.config.imaging_api["inventory_host"],
-                self.config.imaging_api["inventory_port"],
-            )
-
-            # POST the inventory to the inventory server
-            logging.getLogger().debug(
-                "PXE Proxy: PXE inventory forwarded to inventory server at %s" % url
-            )
-            logging.getLogger().debug(
-                "POST the inventory to the inventory server \nINVENTORY\n %s"
-                % inventory
-            )
-            d = Agent(
-                url,
-                method="POST",
-                postdata=inventory,
-                headers={
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Content-Length": str(len(inventory)),
-                    "User-Agent": "Pulse2 Imaging server inventory hook",
-                },
-            )
-
-            @d.addCallback
-            def _cb(result):
-                if result:
-                    logging.getLogger().debug(
-                        "PXE Proxy: PXE inventory from client %s successfully injected"
-                        % hostname
-                    )
-                return result
-
-            return d
-
-        except Exception as e:
-            logging.getLogger().error(
-                "PXE Proxy: Unable to forward PXE inventory to inventory server at %s: %s"
-                % (url, str(e))
-            )
-            # This method must return a Deferred
-            return Deferred()
+            asyncio.run(xmpp.process(forever=False))
+        except KeyboardInterrupt:
+            xmpp.disconnect()
+        logger.debug("PXE Proxy: PXE inventory from client %s successfully injected" % hostname)
+        return 200
 
     # ----------------------- backup -------------------------------
 
