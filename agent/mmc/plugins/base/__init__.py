@@ -1568,8 +1568,8 @@ class LdapUserGroupControl:
             if log:
                 r.commit()
         else:
-            self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, "none")])
-            self.l.modify_s(groupdn, [(ldap.MOD_DELETE, attr, "none")])
+            self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, b"none")])
+            self.l.modify_s(groupdn, [(ldap.MOD_DELETE, attr)])
         return 0
 
     def changeUserPasswd(self, uid, passwd, oldpasswd=None, bind=False):
