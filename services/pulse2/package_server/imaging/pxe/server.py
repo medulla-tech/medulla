@@ -57,6 +57,42 @@ class ProcessPacket:
         """
         return method(imaging, *args)
 
+    def xmpp_process(self, data, client=None):
+        """
+        Processus XMPP.
+
+        Cette fonction traite les données reçues via XMPP.
+
+        @param data: Les données reçues.
+        @type data: str
+
+        @param client: Tuple représentant l'adresse du client (hôte, port).
+        @type client: tuple
+
+        @return: False si la chaîne est vide ou si le premier octet est 0xBB ou 0xBA, True sinon.
+        @rtype: bool
+        """
+        dataf=data[:]
+         # Vérifier que la chaîne n'est pas vide
+        if not data:
+            # La chaîne est vide.
+            return False
+        # Récupérer le premier octet de la chaîne
+        first_byte = ord(dataf.decode('utf-8')[0])
+        # data = data[1:]
+        # Convertir la valeur hexadécimale de l'octet
+        #hex_value = hex(first_byte)
+        if first_byte == 0xBB  : #or hex_value == '0xBA'
+            # appel fonction sans reponse
+            imaging = PXEImagingApi(self.config)
+            imaging.set_api(self.api)
+            fnc, args = imaging.get_method(data)
+            result = self.method_exec(imaging, fnc, args)
+            # pas de reponse
+            #self.send_response(None, fnc, client)
+            return False
+        return True
+
     def process_data(self, data, client=None):
         """
         Called when a packet received.
@@ -68,14 +104,17 @@ class ProcessPacket:
         @type client: tuple
         """
         # For each session a new instance of PXEImagingApi created
+        if not self.xmpp_process(data, client):
+            return False
 
         imaging = PXEImagingApi(self.config)
         imaging.set_api(self.api)
+        # if isinstance(data, bytes):
+        #    data = data.decode("utf-8")
 
         fnc, args = imaging.get_method(data)
 
         d = self.method_exec(imaging, fnc, args)
-
         d.addCallback(self.send_response, fnc, client)
         d.addErrback(self.on_exec_error)
 

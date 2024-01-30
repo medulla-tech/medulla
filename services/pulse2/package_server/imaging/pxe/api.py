@@ -25,15 +25,14 @@ from pulse2.package_server.imaging.pxe.parser import LOG_LEVEL, LOG_STATE
 from pulse2.package_server.imaging.pxe.tracking import EntryTracking
 from pulse2.package_server.config import P2PServerCP
 from pulse2.imaging.bootinventory import BootInventory
+
+import subprocess
 import re
 import xml.etree.ElementTree as ET  # form XML Building
 import time
 
 import asyncio
-from asyncio.exceptions import TimeoutError
 from slixmpp import ClientXMPP
-from slixmpp.exceptions import IqTimeout
-
 import zlib
 import base64
 import os
@@ -41,38 +40,35 @@ import random
 import time
 import sys
 import json
+import platform
+from subprocess import Popen, DEVNULL
 
 logger = logging.getLogger()
 
-class MyClient(ClientXMPP):
-    def __init__(self, jid, password, recipient, message, server, port=5222, timeout=10, hotname=""):
-        super().__init__(jid, password)
-        self.server = server
-        self.port = port
-        self.timeout = timeout
-        self.recipient = recipient
-        self.message = message
-        self.hotname = hotname
-        self.add_event_handler("session_start", self.start)
-        self.add_event_handler("connection_failed", self.connection_failed)
 
-    async def start(self, event):
-        self.send_presence()
-        await self.get_roster()
-        try:
-            self.send_message(mto=self.recipient, mbody=self.message, mtype='chat')
-        except IqTimeout:
-            logger.debug("Timeout when sending message %s." % self.hotname)
-            self.disconnect()
-        self.disconnect()
+class DetachedProcess:
+    def __init__(self, command=[]):
+        self.command = command
+        self.system = platform.system()
+        self.creationflags = self._get_creationflags()
 
-    def disconnect(self):
-        logger.debug("Disconnect...")
-        super().disconnect()
+    def _get_creationflags(self):
+        if self.system == 'Windows':
+            from subprocess import DETACHED_PROCESS, CREATE_NEW_PROCESS_GROUP, CREATE_BREAKAWAY_FROM_JOB
+            return DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_BREAKAWAY_FROM_JOB
+        else:
+            return 0
 
-    def connection_failed(self, event):
-        logger.debug("The connection failed.")
-        self.disconnect()
+    def add_option(self, option):
+        self.command.append(option)
+
+    def run(self):
+        self.command = [str(element) if (isinstance(element, int) or isinstance(element, float)) else element for element in self.command]
+        if self.system == 'Windows':
+            Popen(self.command , creationflags=self.creationflags, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+        else:
+            Popen(self.command , stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+
 
 class PXEImagingApi(PXEMethodParser):
     """
@@ -155,8 +151,8 @@ class PXEImagingApi(PXEMethodParser):
         @rtype: deferred
         """
         logging.getLogger().debug("FIRST REGISTRATION TO ALLOW INVENTORY")
-        m = re.search(b"<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = m.group(0).decode("utf-8")
+        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
+        file_content = m.group(0)
         ipadress = self.ip_adressexml(file_content)
         mac1 = self.mac_adressexml(file_content)
         hostnamexml = self.hostname_xml(file_content)
@@ -326,8 +322,8 @@ class PXEImagingApi(PXEMethodParser):
         @rtype: deferred
         """
         logging.getLogger().debug("INJECT INVENTORY NEXT HOSTNAME AND ENTITY")
-        m = re.search(b"<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = m.group(0).decode("utf-8")
+        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
+        file_content = m.group(0)
 
         ipadress = self.ip_adressexml(file_content)
         mac1 = self.mac_adressexml(file_content)
@@ -512,8 +508,8 @@ class PXEImagingApi(PXEMethodParser):
             return
         hostname = computer["shortname"]
         entity = computer["entity"]
-        m = re.search(b"<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = m.group(0).decode("utf-8")
+        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
+        file_content = m.group(0)
         # inventory = parsed_inventory1.changEntityAndHostName(file_content,entity,hostname)
         file_content = self.changEntityAndHostName(file_content, entity, hostname)
         inventory = self.changdeviceid(file_content, hostname)
@@ -540,8 +536,8 @@ class PXEImagingApi(PXEMethodParser):
             mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "menu identification"
         )
 
-        m = re.search(b"<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = m.group(0).decode("utf-8")
+        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
+        file_content = m.group(0)
         ipadress = self.ip_adressexml(file_content)
         ip_address = ipadress
         if self.config.imaging_api["glpi_mode"]:
@@ -610,8 +606,9 @@ class PXEImagingApi(PXEMethodParser):
         @param hostname: hostname of inventoried machine
         @type hostname: str
         """
-        jid=self.config.connection_jid
-        password=self.config.connection_password
+        domain=self.config.connection_domain
+        password=self.getRandomName(6, "messagesenderpxe")
+        jid = f"{password}@{domain}"
         recipient=self.config.connection_recipient
         server = self.config.connection_server
         port = self.config.connection_port
@@ -627,14 +624,35 @@ class PXEImagingApi(PXEMethodParser):
         else:
             strinventorysave = inventory
 
-        result["data"]["inventory"] = self.compress_and_encode(strinventorysave)
-
-        xmpp = MyClient(jid, password, recipient, json.dumps(result), server, port=port, timeout=timeout, hotname=hostname)
-        xmpp.connect()
+        datainventory = self.compress_and_encode(strinventorysave)
+        result["data"]["inventory"] = datainventory
+        if sys.platform.startswith("win"):
+            detached_process = DetachedProcess(["python3",
+                                                "/usr/sbin/message-sender.py",
+                                                "-j", jid,
+                                            "-P", port,
+                                            "-p", password,
+                                            "-I", server,
+                                            "-m", json.dumps(result),
+                                            "-t", recipient]).run()
+        else:
+            python3_path = subprocess.check_output(['which', 'python3']).decode('utf-8').strip()
+            detached_process = DetachedProcess([python3_path,
+                                    "/usr/sbin/message-sender.py",
+                                    "-j", jid,
+                                    "-P", port,
+                                    "-p", password,
+                                    "-I", server,
+                                    "-m", json.dumps(result),
+                                    "-t", recipient]).run()
+        time.sleep(15)
+        command = ["ejabberdctl", "unregister", password , domain]
         try:
-            asyncio.run(xmpp.process(forever=False))
-        except KeyboardInterrupt:
-            xmpp.disconnect()
+            subprocess.run(command, check=True)
+            logging.getLogger().debug("Command executed successfully.")
+        except subprocess.CalledProcessError as e:
+            logging.getLogger().debug("Error:", e)
+
         logger.debug("PXE Proxy: PXE inventory from client %s successfully injected" % hostname)
         return 200
 

@@ -661,6 +661,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             self.up_assign_algo = self.cp.get("main", "up_assign_algo")
 
         self.connection_jid = ""
+        self.connection_domain = ""
         self.connection_password = ""
         self.connection_recipient = ""
         self.connection_server = "" #ip
@@ -668,6 +669,8 @@ class P2PServerCP(pulse2.utils.Singleton):
         self.connection_timeout = 40
         if self.cp.has_section("connection") and self.cp.has_option("connection", "jid"):
             self.connection_jid = self.cp.get("connection", "jid")
+        if self.cp.has_section("connection") and self.cp.has_option("connection", "domain"):
+            self.connection_domain = self.cp.get("connection", "domain")
 
         if self.cp.has_section("connection") and self.cp.has_option("connection", "password"):
             self.connection_password = self.cp.get("connection", "password")

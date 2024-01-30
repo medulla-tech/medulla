@@ -115,8 +115,6 @@ class ArgumentContainer:
     @property
     def mac(self):
         """Common argument for all PXE methods"""
-        if isinstance(self.MAC_FLAG, str):
-            self.MAC_FLAG = self.MAC_FLAG.encode("utf-8")
         if self.MAC_FLAG in self.packet:
             start = self.packet.index(self.MAC_FLAG) + len(self.MAC_FLAG)
 
@@ -141,8 +139,6 @@ class ArgumentContainer:
     @property
     def ip_address(self):
         """Special case for GLPI"""
-        if isinstance(self.IPADDR_FLAG, str):
-            self.IPADDR_FLAG = self.IPADDR_FLAG.encode("utf-8")
         if self.IPADDR_FLAG in self.packet:
             start = self.packet.index(self.IPADDR_FLAG) + len(self.IPADDR_FLAG)
             return self.packet[start:]
@@ -339,9 +335,14 @@ class PXEMethodParser:
         @return: method to execute
         @rtype: func
         """
-        if packet[0] == 194:
+        if isinstance(packet, bytes):
+            packet = packet.decode('utf-8')
+
+        if ord(packet[0]) == 194:
+            # 0xC2 tag has to be ignored
             packet = packet[1:]
-        marker = packet[0]
+
+        marker = ord(packet[0])
 
         if marker not in self.methods:
             raise KeyError
