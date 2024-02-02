@@ -14509,3 +14509,26 @@ group by hostname
 
         result = [element.adname for element in query] if query != None else []
         return result
+
+    @DatabaseHelper._sessionm
+    def getmachineentityfromjid(self, session, jid):
+        """
+        Retrieves the machine entity from the specified jid identifier.
+
+        Args:
+            session: An active SQLAlchemy session to interact with the database.
+            jid (str): The jid identifier of the machine.
+
+        Returns:
+            Glpi_entity: The machine entity corresponding to the specified jid identifier, or None if no entity is found.
+
+        Raises:
+            None
+        """
+        query = (
+            session.query(Glpi_entity)
+            .join(Machines, Glpi_entity.id == Machines.glpi_entity_id)
+            .filter(Machines.jid == jid)
+            .first()
+        )
+        return query
