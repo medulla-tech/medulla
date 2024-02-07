@@ -4,6 +4,8 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# file database/database_helper.py
+
 """
 Define classes to help implementing the database access in all the
 pulse2 modules.
@@ -129,6 +131,8 @@ class DatabaseHelper(Singleton):
                 url += "&use_unicode=0"
             else:
                 url += "&use_unicode=1"
+            if self.config.dbqueryecho:
+                url += "&echo=True"
             if self.config.dbsslenable:
                 url += f"&ssl_ca={self.config.dbsslca}&ssl_key={self.config.dbsslkey}&ssl_cert={self.config.dbsslcert}"
         return url

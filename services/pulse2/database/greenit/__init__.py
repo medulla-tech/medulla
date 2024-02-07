@@ -2,6 +2,8 @@
 # SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# file : pulse2/database/greenit/__init__.py
+
 """
 greenit database handler
 """
@@ -9,26 +11,44 @@ greenit database handler
 from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
 from sqlalchemy.orm import sessionmaker
 
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+import types
+
 Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import update
 from datetime import date, datetime, timedelta
 
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.greenit.schema import (
-    Tests,
-)
+#from pulse2.database.greenit.schema import (
+    #Tests,
+#)
 # Imported last
 import logging
 import json
 import time
 from datetime import datetime
 
-
 class GreenitDatabase(DatabaseHelper):
     """
     Singleton Class to query the greenit database.
+    1 convention de nommage est utilisé pour mapper les tables d'une base de données relationnelle dans cette class Python utilisant SQLAlchemy.
 
+    Dans notre  modèle de convention :
+
+    Nom des tables de la base de données : Les noms des tables dans la base de données greenit  sont écrits en minuscules et généralement au pluriel.
+    Par exemple, tests, utilisateurs, produits, etc.
+
+    Nom des classes Python : Les tables sont mappées sur des classes Python, où le nom de la classe correspond au nom de la table, mais avec la première lettre en majuscule. Par exemple, si nous avons une table tests dans la base de données greenit, elle sera mappée sur une classe Python nommée Tests.
+
+    En utilisation dans les requêtes SQLAlchemy de la class GreenitDatabase:
+    A la redaction des requêtes SQLAlchemy dans notre class, on utilise les noms de classe Python mappés pour accéder aux données de la table correspondante.
+    Par exemple, Récupéreration de toutes les lignes de la table tests, on utilise result = session.query(self.Tests).all()
+
+    Cette convention de nommage permet une correspondance simple et directe entre les tables de la base de données et les classes Python de notre class, cela facilite la compréhension et la maintenance du code.
+    Pour mettre en oeuvre 1 nouvelle table il suffit de la créer juste dans mysql.
+    On peut les utiliser directement dans les methodes de notre class en respectant la convention.
     """
 
     is_activated = False
@@ -47,19 +67,52 @@ class GreenitDatabase(DatabaseHelper):
             self.makeConnectionPath(),
             pool_recycle=self.config.dbpoolrecycle,
             pool_size=self.config.dbpoolsize,
+            pool_timeout=self.config.dbpooltimeout,
         )
-        print(self.makeConnectionPath())
+
         if not self.db_check():
             return False
+
         self.metadata = MetaData(self.db)
+
+        # Créer une instance de AutomapBase
+        # oncree tout les mapper automatiquement dynamiquement
+        Base = automap_base()
+
         if not self.initMappersCatchException():
             self.session = None
             return False
+        self.metadata.reflect()
         self.metadata.create_all()
+
         self.is_activated = True
-        result = self.db.execute("SELECT * FROM greenit.version limit 1;")
+        result = self.db.execute("SELECT * FROM %s.version limit 1;" % self.my_name)
         re = [element.Number for element in result]
-        # logging.getLogger().debug("xmppmaster database connected (version:%s)"%(re[0]))
+        logging.getLogger().debug("%s database connected (version:%s)"% (self.my_name, re[0]))
+
+        result = self.db.execute("""SELECT
+                                        table_name
+                                    FROM
+                                        INFORMATION_SCHEMA.TABLES
+                                    WHERE
+                                        TABLE_TYPE = 'BASE TABLE'
+                                            AND table_schema = '%s';""" % self.my_name)
+        table_names = [row[0] for row in result.fetchall()]
+
+        logging.getLogger().debug(f"list des Tables {table_names}")
+        # Vous pouvez ensuite mapper ces tables si nécessaire
+        for table_name in table_names:
+            # Mapper la table dynamiquement
+            table = self.metadata.tables.get(table_name)
+            if table is not None:
+                setattr(self, table_name.capitalize(), table)
+                # Maintenant, vous pouvez utiliser les tables mappées
+                logging.getLogger().debug(f"Table {table_name} a été mappée dans la class sqlalchemy {table_name.capitalize()}.")
+            else:
+                logging.getLogger().warning(f"La table {table_name} n'a pas été trouvée dans la base de données.")
+
+        #if hasattr(self, 'Tests'):
+            #self.getTests()
         return True
 
     def initMappers(self):
@@ -89,9 +142,10 @@ class GreenitDatabase(DatabaseHelper):
     # greenit FUNCTIONS
     # =====================================================================
 
+
     @DatabaseHelper._sessionm
-    def tests(self, session):
-        query = session.query(Tests)
+    def getTests(self, session):
+        query = session.query(self.Tests)
         count = query.count()
         query = query.all()
         result = {
@@ -105,5 +159,5 @@ class GreenitDatabase(DatabaseHelper):
                 "name": element.name,
                 "message": element.message if element.message is not None else ""
             })
-        
+        logging.getLogger().debug(f"result test {result}")
         return result

@@ -1,6 +1,9 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
+
+# file mmc/plugins/greenit/__init__.py
+
 """
 Plugin to manage the interface with Greenit
 """

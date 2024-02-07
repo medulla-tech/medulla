@@ -1,6 +1,9 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
+
+# file mmc/plugins/greenit/config.py
+
 from mmc.support.config import PluginConfig
 from pulse2.database.greenit.config import GreenitDatabaseConfig
 
@@ -8,7 +11,7 @@ from pulse2.database.greenit.config import GreenitDatabaseConfig
 class GreenitConfig(PluginConfig, GreenitDatabaseConfig):
     """This class is called by the __init__ of the Greenit module."""
 
-    def __init__(self, name="kiosk", conffile=None):
+    def __init__(self, name="greenit", conffile=None):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile)
             GreenitDatabaseConfig.__init__(self)
@@ -52,7 +55,7 @@ class GreenitConfig(PluginConfig, GreenitDatabaseConfig):
         GreenitConfig("greenit")
 
         if config.disable:
-            logger.warning("Plugin kiosk: disabled by configuration.")
+            logger.warning("Plugin greenit: disabled by configuration.")
             return False
 
         return True
