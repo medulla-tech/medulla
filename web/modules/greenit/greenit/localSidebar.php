@@ -18,7 +18,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+// file : /mmc/modules/greenit/greenit/localSidebar.php
 $sidemenu= new SideMenu();
 $sidemenu->setClass("greenit");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Tests List", 'greenit'), "greenit", "greenit", "index"));

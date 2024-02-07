@@ -21,6 +21,7 @@
  */
 
 
+// file : mmc/modules/greenit/includes/xmlrpc.php
 function xmlrpc_tests(){
     // Return the element of the greenit.tests table.
     return xmlCall("greenit.tests", array());

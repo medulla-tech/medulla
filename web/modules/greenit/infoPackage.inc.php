@@ -19,6 +19,8 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+// file : mmc/modules/greenit/infoPackage.inc.php
+
 
 require_once("modules/medulla_server/version.php");
 
