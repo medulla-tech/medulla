@@ -41,6 +41,10 @@ class PkgsConfig(PluginConfig):
             self.dbport = self.getint("database", "dbport")
         else:
             self.dbport = 3306
+        if self.has_option("database", "dbqueryecho"):
+            self.dbqueryecho = self.getboolean("database", "dbqueryecho")
+        else:
+            self.dbqueryecho = False
 
         self.max_size_stanza_xmpp = 1048576
         if self.has_option("quick_deploy", "max_size_stanza_xmpp"):
