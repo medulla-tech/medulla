@@ -17,7 +17,7 @@ class DatabaseConfig(Singleton):
     dbport = None
     dbuser = "mmc"
     dbpasswd = "mmc"
-
+    dbqueryecho = False
     dbdebug = "ERROR"
     dbpoolrecycle = 60
     dbpoolsize = 5
@@ -50,6 +50,10 @@ class DatabaseConfig(Singleton):
 
             if self.cp.has_option(self.dbsection, "dbdebug"):
                 self.dbdebug = self.cp.get(self.dbsection, "dbdebug")
+
+
+            if self.cp.has_option(self.dbsection, "dbqueryecho"):
+                self.dbqueryecho = self.cp.getboolean(self.dbsection, "dbqueryecho")
 
             if self.cp.has_option(self.dbsection, "dbpoolrecycle"):
                 self.dbpoolrecycle = self.cp.getint(self.dbsection, "dbpoolrecycle")
