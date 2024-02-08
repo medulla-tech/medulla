@@ -36,8 +36,8 @@ if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
 require_once('graph/navbar.inc.php');
 require_once("modules/medulla_server/includes/utilities.php");
 
-$_GET['hostname'] = isset($_GET['hostname'] ) ? $_GET['hostname'] : (isset($_GET['cn'])?$_GET['cn'] : "" );
-$_GET['uuid'] = isset($_GET['uuid'] ) ? $_GET['uuid'] : (isset($_GET['objectUUID']) ? $_GET['objectUUID'] : null );
+$_GET['hostname'] = isset($_GET['hostname']) ? $_GET['hostname'] : (isset($_GET['cn']) ? $_GET['cn'] : "");
+$_GET['uuid'] = isset($_GET['uuid']) ? $_GET['uuid'] : (isset($_GET['objectUUID']) ? $_GET['objectUUID'] : null);
 /*
  * Display right top shortcuts menu
  */
@@ -50,8 +50,9 @@ if ($_GET['uuid']) {
         $p->display();
         include('modules/msc/msc/header.php');
     } else {
-        if (empty($_GET['hostname']))
+        if (empty($_GET['hostname'])) {
             $_GET['hostname'] = $machine->hostname;
+        }
         $p = new TabbedPageGenerator();
         $p->setSideMenu($sidemenu);
         $p->addTop(sprintf(_T("%s's computer secure control", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
@@ -64,16 +65,16 @@ if ($_GET['uuid']) {
     $p->setSideMenu($sidemenu);
     require("modules/dyngroup/includes/includes.php");
     $group = new Group($_GET['gid'], true, true);
-    if ($group->exists == False) {
+    if ($group->exists == false) {
         $msc_host = new RenderedMSCGroupDontExists($_GET['gid']);
         $msc_host->headerDisplay();
     } else {
         $p->addTop(sprintf(_T("%s's group secure control", 'msc'), $group->getName()), "modules/msc/msc/header.php");
         if (!$group->all_params['ro'] || strtolower($group->all_params['ro']) === "false") {
-                $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid' => $_GET['gid']));
-//             if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
-//                 $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid' => $_GET['gid']));
-//             }
+            $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid' => $_GET['gid']));
+            //             if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+            //                 $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid' => $_GET['gid']));
+            //             }
         }
     }
     $p->display();
