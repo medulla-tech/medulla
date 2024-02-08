@@ -529,7 +529,7 @@ msgstr "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:368
 msgid "Location"
-msgstr "Emplacement"
+msgstr "Lieu"
 
 #: modules/dyngroup/dyngroup/creator.php:369
 msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
