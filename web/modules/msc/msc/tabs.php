@@ -69,7 +69,7 @@ if ($_GET['uuid']) {
         $msc_host->headerDisplay();
     } else {
         $p->addTop(sprintf(_T("%s's group secure control", 'msc'), $group->getName()), "modules/msc/msc/header.php");
-        if (!$group->all_params['ro']) {
+        if (!$group->all_params['ro'] || strtolower($group->all_params['ro']) === "false") {
                 $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid' => $_GET['gid']));
 //             if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
 //                 $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid' => $_GET['gid']));
