@@ -1,8 +1,9 @@
 # Change Log
 ## [5.1.0](https://github.com/medulla-tech/medulla/releases/tag/5.1.0) (unreleased)
-- [BUGFIX]       Fix adding files on existing packages
-- [BUGFIX]       Fix download of updates when a proxy is defined
-- [ENHANCEMENT]  Fix ordering machines, done alphabetically now.
+- [BUGFIX]  Fix adding files on existing packages
+- [BUGFIX]  Fix download of updates when a proxy is defined
+- [BUGFIX]  Fix ordering machines, done alphabetically now.
+- [BUGFIX]  Fix displaying the audit webpage after starting a deploiement.
 
 [Full Changelog](https://github.com/medulla-tech/medulla/compare/5.0.1...5.1.0)
 
