@@ -6783,6 +6783,7 @@ class Glpi95(DyngroupDatabaseHelper):
         else:
             nb = 0
 
+        query = query.order_by(Machine.name)
         res = query.all()
         session.commit()
         session.flush()
