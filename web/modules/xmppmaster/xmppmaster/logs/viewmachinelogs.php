@@ -82,7 +82,7 @@ include_once('modules/pkgs/includes/xmlrpc.php');
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
 
-if($info["len"] == 0){?>
+if($info["len"] == 0) {?>
     <script>
     function refresh(){
         location.reload();
