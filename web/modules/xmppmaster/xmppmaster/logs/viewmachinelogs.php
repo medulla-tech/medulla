@@ -244,7 +244,7 @@ if ($info['len'] == 0 || $boolterminate == false) {
         echo "<br>";
     }
 }
-if (safeCount($deploymachine != 0)) {
+if (safeCount($deploymachine) != 0) {
     $creation_date = mktime(
         $deploymachine['creation_date'][3],
         $deploymachine['creation_date'][4],
