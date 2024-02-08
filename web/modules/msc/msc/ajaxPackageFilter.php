@@ -83,7 +83,7 @@ function prettyConvergenceStatusDisplay($status) {
 $a_convergence_status = array();
 if ($group != null) {
     $group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
-    $group_convergence_status1 = $group_convergence_status['/package_api_get1'];
+    $group_convergence_status1 = $group_convergence_status['/package_api_get1'] ?? [];
 }
 $emptyAction = new EmptyActionItem();
 $convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");

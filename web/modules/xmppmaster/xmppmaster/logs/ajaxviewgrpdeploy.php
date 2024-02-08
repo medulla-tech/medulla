@@ -246,7 +246,7 @@ if($totalmachinedeploy) {
 $start_deploy = false;
 $end_deploy   = false;
 
-if ($timestampnow > $start_date) {
+if ($timestampnow > strtotime($start_date)) {
     $start_deploy = true;
 }
 
@@ -412,11 +412,11 @@ if ($start_deploy) {
         $terminate = true;
     } else {
         echo "<h2>"._T("Deployment in progress", "xmppmaster")."</h2>";
-        echo _T("Started since", "xmppmaster")." <span>".($timestampnow - $start_date)."</span> s";
+        echo _T("Started since", "xmppmaster")." <span>".($timestampnow - strtotime($start_date))."</span> s";
         $terminate = false;
     }
 } else {
-    echo _T("WAITING FOR START ", "xmppmaster").date("Y-m-d H:i:s", $start_date);
+    echo _T("WAITING FOR START ", "xmppmaster").date("Y-m-d H:i:s", strtotime($start_date));
 }
 
 
