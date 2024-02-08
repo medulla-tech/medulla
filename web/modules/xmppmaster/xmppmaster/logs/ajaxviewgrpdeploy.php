@@ -406,13 +406,13 @@ $_GET['sta'] = isset($_GET['sta']) ? $_GET['sta'] : "";
 //start deployement status
 echo "<div>";
 if ($start_deploy) {
-
+    $since = gmdate("H:i:s", ($timestampnow - strtotime($start_date)));
     if ($end_deploy || $terminate) {
         echo "<h2>"._T("Deployment complete", "xmppmaster")."</h2>";
         $terminate = true;
     } else {
         echo "<h2>"._T("Deployment in progress", "xmppmaster")."</h2>";
-        echo _T("Started since", "xmppmaster")." <span>".($timestampnow - strtotime($start_date))."</span> s";
+        echo _T("Started since", "xmppmaster")." <span>".$since."</span> s";
         $terminate = false;
     }
 } else {
