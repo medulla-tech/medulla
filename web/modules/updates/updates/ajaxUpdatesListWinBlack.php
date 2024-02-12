@@ -38,9 +38,10 @@ $count_black = $black_list['nb_element_total'];
 $kbs_black = [];
 $updateids_black = [];
 $titles_black = [];
+$count = count($black_list['title']);
 
 // ########## Set params ########## //
-for($i=0; $i < $count_black; $i++){
+for($i=0; $i < $count; $i++){
     $blackActions["unban"][] = $blackUnbanAction;
 
     $titles_black[] = $black_list['title'][$i];
