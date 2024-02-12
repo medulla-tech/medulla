@@ -41,7 +41,7 @@ $titles_black = [];
 $count = count($black_list['title']);
 
 // ########## Set params ########## //
-for($i = 0; $i < $count; $i++){
+for($i = 0; $i < $count; $i++) {
     $blackActions["unban"][] = $blackUnbanAction;
 
     $titles_black[] = $black_list['title'][$i];
