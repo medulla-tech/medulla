@@ -62,7 +62,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ou_list = xmlrpc_get_ou_list('');
+$ou = $_POST['ou'];
+$owner = (!empty($_POST['owner'])) ? htmlentities($_POST['owner']) : $_SESSION['login'];
+
+$ou_list = xmlrpc_get_ou_list($ou, $owner);
 
 if(is_array($ou_list)) {
     $f = new ValidatingForm(array("id" => "profile-form"));
