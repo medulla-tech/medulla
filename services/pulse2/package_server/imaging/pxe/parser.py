@@ -169,7 +169,7 @@ class ArgumentContainer:
 
         complement = None
         if self.level == 1:
-            complement = ord(self.packet[2])
+            complement = self.packet[2]
         if self.level in [2, 3, 4, 5]:
             if self.packet[2] == "-":
                 complement = self.packet[3:]
@@ -225,7 +225,7 @@ class ArgumentContainer:
     def num(self):
         """Menu item number"""
         if len(self.packet) > 1:
-            return ord(self.packet[1])
+            return self.packet[1]
         else:
             return 0
 
@@ -236,7 +236,7 @@ class ArgumentContainer:
         try:
             if ";" in self.packet and self.packet.count(";") == 2:
                 idx = self.packet.index(";") + 1
-                return ord(self.packet[idx])
+                return self.packet[idx]
         except Exception as e:
             logging.getLogger().warn(
                 "An eror occured while parsing pnum argument: %s" % str(e)
@@ -321,8 +321,8 @@ class PXEMethodParser:
                 continue
 
             if fnc.is_proxy_fnc:
-                args, vargs, kwds, defaults = inspect.getargspec(fnc)
-                fnc(self, *args)
+                argspecs = inspect.getfullargspec(fnc)
+                fnc(self, *argspecs.args)
         self.register_only = False
 
     def get_method(self, packet):
@@ -335,6 +335,12 @@ class PXEMethodParser:
         @return: method to execute
         @rtype: func
         """
+        if isinstance(packet, bytes):
+            packet = packet.decode('utf-8')
+
+        if ord(packet[0]) == 194:
+            packet = packet[1:]
+
         marker = ord(packet[0])
 
         if marker not in self.methods:
@@ -367,6 +373,6 @@ class PXEMethodParser:
         @return: list of names of arguments
         @rtype: list
         """
-        args, vargs, kwds, defaults = inspect.getargspec(method)
+        argspecs = inspect.getfullargspec(method)
 
-        return [a for a in args if a != "self"]
+        return [a for a in argspecs.args if a != "self"]

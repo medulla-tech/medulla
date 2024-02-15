@@ -1535,7 +1535,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __addMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
         # if 'default' in params and params['default']:
-        if "default" in params and "default" in params and params["default"]:
+        if "default" in params and params["default"]:
             is_menu_modified = True
             menu.fk_default_item = mi.id
         # if 'default_WOL' in params and params['default_WOL']:
@@ -5896,17 +5896,33 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         Inject a computer inventory into the dabatase.
         For now only the ComputerDisk and ComputerPartition tables are used.
         """
+
         if not isUUID(imaging_server_uuid):
             raise TypeError("Bad imaging server UUID: %s" % imaging_server_uuid)
         if not isUUID(computer_uuid):
             raise TypeError("Bad computer UUID: %s" % computer_uuid)
         session = create_session()
         session.begin()
+
+        locationServerImaging = self.getLocationImagingServerByServerUUID(
+            imaging_server_uuid
+        )
+        target = None
+        session.query(Target).filter_by(uuid=computer_uuid).delete()
+        menu = self.getEntityDefaultMenu("UUID%s" % locationServerImaging)
+        new_menu = self.__duplicateMenu(
+            session, menu, "UUID%s" % locationServerImaging, None, False
+        )
+        target = Target()
+        target.fk_menu = new_menu.id
+        target.is_registered_in_package_server = 1
+        new_menu.fk_synchrostate = 1
+        target.name = inventory["shortname"]
+        target.uuid = computer_uuid
+        target.type = 1
+        target.fk_entity = locationServerImaging
+
         try:
-            # First remove old computer inventory
-            target = session.query(Target).filter_by(uuid=computer_uuid).one()
-            for current_disk in target.disks:
-                session.delete(current_disk)
             # Then push a new inventory
             if "disk" in inventory:
                 for disknum in inventory["disk"]:
@@ -5926,44 +5942,25 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                         cp.start = int(part["start"])
                         cd.partitions.append(cp)
                         target.disks.append(cd)
-            locationServerImaging = self.getLocationImagingServerByServerUUID(
-                imaging_server_uuid
-            )
-            target.fk_entity = locationServerImaging
+
             self.logger.debug(
                 "Attribution location %s for computer  %s"
                 % (target.fk_entity, target.name)
             )
             session.add(target)
             session.commit()
-        except InvalidRequestError as e:
+        # except InvalidRequestError as e:
+        except Exception as e:
             session.rollback()
-            if hasattr(e, "message"):
-                if e.message == "No rows returned for one()":
-                    self.logger.warn(
-                        "Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."
-                        % (computer_uuid)
-                    )
-                    return [
-                        False,
-                        "Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."
-                        % (computer_uuid),
-                    ]
-            elif e == "No rows returned for one()":
-                self.logger.warn(
-                    "Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."
-                    % (computer_uuid)
-                )
-                return [
-                    False,
-                    "Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."
-                    % (computer_uuid),
-                ]
-            else:
-                raise
-        except BaseException:
-            session.rollback()
-            raise
+            self.logger.warn(
+                "Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."
+                % (computer_uuid)
+            )
+            return [
+                False,
+                "Can't get the computer %s, we can't inject an inventory. This happen when the computer exists in the backend but is not declared in the imaging."
+                % (computer_uuid),
+            ]
         session.close()
         return [True, True]
 

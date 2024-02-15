@@ -417,12 +417,11 @@ def parsejsoninventory(file, file_content):
 def senddata(query, ip="127.0.0.1", port=1001):
     adresse = (ip, port)
     monSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    logging.getLogger().debug("Send PXE xml for registration :%s" % query)
-    monSocket.sendto("\xBB%s" % query, adresse)
+    logging.getLogger().error("Send PXE xml for registration :%s" % query.encode('utf-8'))
+    monSocket.sendto(bytes("\xBB%s"%query, "utf-8"), adresse)
     time.sleep(conf["pxe_timesenddata"])
-    monSocket.sendto("\xBA%s" % query, adresse)
+    monSocket.sendto(bytes("\xBA%s"%query, "utf-8"), adresse)
     time.sleep(conf["pxe_timesenddata"])
-    monSocket.sendto("\xBA%s" % query, adresse)
     monSocket.close()
 
 
@@ -462,11 +461,12 @@ def macadressclear(file_content, interface_mac_clear):
         logging.getLogger().debug(
             "Clear interface with macadress %s " % interface_mac_clear
         )
-        xml_str = ET.tostring(root).encode("ASCII", "ignore")
-        logging.getLogger().debug("New xml netwrok : %s" % xml_str)
+        xml_str = ET.tostring(root)
+        logging.getLogger().debug("New xml network : %s" % xml_str)
+        xml_str = xml_str.decode("utf-8")
         xml_str = xml_str.replace("\n", "")
+
         return xml_str
-        pass
     return file_content
 
 
@@ -524,7 +524,6 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
     def process_IN_MODIFY(self, event):
         logging.getLogger().debug("MODIFY event: %s" % event.pathname)
-        time.sleep(0.025)
         self.traitement(event.pathname)
 
     def process_IN_OPEN(self, event):
@@ -555,6 +554,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
                         header = '<?xml version="1.0" encoding="utf-8"?>'
                         file_content = file_content[:-10]
                         xmldata = "%s%sMc:%s</REQUEST>" % (header, file_content, mac)
+
                         logging.getLogger().debug(
                             "XML recv from pxe client %s" % xmldata
                         )

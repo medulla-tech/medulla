@@ -13,7 +13,7 @@ def runOnHost(hostIP, script):
     return out.strip(), err.strip(), process.returncode
 
 def main():
-    # Retreive Command line params
+    # Retrieve Command line params
     try:
         bin, host, hostIP, type, cmdType = sys.argv
     except:

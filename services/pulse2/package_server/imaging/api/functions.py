@@ -606,7 +606,6 @@ class Imaging(object, metaclass=SingletonN):
                  successful, else 0.
         @rtype: int
         """
-
         def _onSuccess(result):
             shortname = self.getClientShortname(MACAddress)
             if result and isinstance(result, list) and len(result) == 2:
@@ -649,13 +648,14 @@ class Imaging(object, metaclass=SingletonN):
 
         def _getmacCB(result):
             if result and isinstance(result, dict):
+                inventory['shortname'] = result['shortname']
                 client = self._getXMLRPCClient()
                 func = "imaging.injectInventory"
                 args = (self.config.imaging_api["uuid"], result["uuid"], inventory)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
                 return d
-            return False
+            return Falstype(MACAddretype(MACAddress), ss), e
 
         if not isMACAddress(MACAddress):
             raise TypeError
@@ -682,15 +682,15 @@ class Imaging(object, metaclass=SingletonN):
         def _onSuccess(result):
             if isinstance(result, dict) and "faultCode" in result:
                 self.logger.warning(
-                    "Imaging: While processing result for %s : %s"
-                    % (MACAddress, result["faultTraceback"])
+                    "Imaging: While processing result for %s %s : %s"
+                    % (type(MACAddress), MACAddress, result["faultTraceback"])
                 )
                 return False
             try:
                 if result[0]:
                     self.myUUIDCache.set(
                         result[1]["uuid"],
-                        MACAddress,
+                        MACAddress.encode("utf-8"),
                         result[1]["shortname"].encode("utf-8"),
                         result[1]["fqdn"].encode("utf-8"),
                         result[1]["entity"].encode("utf-8"),
@@ -705,8 +705,8 @@ class Imaging(object, metaclass=SingletonN):
                     return False
             except Exception as e:
                 self.logger.error(
-                    "Imaging: While processing result %s for %s : %s"
-                    % (result, MACAddress, e)
+                    "Imaging: While processing result %s for %s %s: %s"
+                    % (result, type(MACAddress), MACAddress, e)
                 )
 
         if not isMACAddress(MACAddress):
@@ -828,7 +828,9 @@ class Imaging(object, metaclass=SingletonN):
         """
         ret = []
         if not isUUID(imageUUID):
-            self.logger.error("Bad image UUID %s" % str(imageUUID))
+            if isinstance(imageUUID, bytes):
+                imageUUID = imageUUID.decode("utf-8")
+            self.logger.error("Bad image UUID %s" % imageUUID)
         else:
             path = os.path.join(
                 self.config.imaging_api["base_folder"],
