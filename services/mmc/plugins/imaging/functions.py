@@ -3935,6 +3935,9 @@ class ImagingRpcProxy(RpcProxyI):
         except Exception as e:
             logging.getLogger().exception(e)
             ret = [False, str(e)]
+
+        self.synchroComputer(computer_uuid)
+
         return ret
 
     def getPartitionsToBackupRestore(self, computer_uuid):
@@ -4286,7 +4289,6 @@ def synchroTargets(ctx, uuids, target_type, macs={}, wol=False):
                 logger.error("couldn't initialize the ImagingApi to %s" % (url))
 
     distinct_loc = xmlrpcCleanup(distinct_loc)
-    # if defer_list == False:
     if len(defer_list) == 0:
         distinct_locs = distinct_loc
         keyvaleur = list(distinct_loc.keys())

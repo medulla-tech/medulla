@@ -57,6 +57,37 @@ class ProcessPacket:
         """
         return method(imaging, *args)
 
+    def xmpp_process(self, data, client=None):
+        """
+        Processus XMPP.
+
+        Cette fonction traite les données reçues via XMPP.
+
+        @param data: Les données reçues.
+        @type data: str
+
+        @param client: Tuple représentant l'adresse du client (hôte, port).
+        @type client: tuple
+
+        @return: False si la chaîne est vide ou si le premier octet est 0xBB ou 0xBA, True sinon.
+        @rtype: bool
+        """
+        logging.getLogger().debug("PXE Proxy: self.config: %s "% self.config)
+        logging.getLogger().debug("PXE Proxy: method: %s "% data)
+        if not data:
+            return False
+        first_byte = ord(data[0])
+        hex_value = hex(first_byte)
+        if hex_value == '0xBB'  : #or hex_value == '0xBA'
+            imaging = PXEImagingApi(self.config)
+            imaging.set_api(self.api)
+            fnc, args = imaging.get_method(data)
+            result = self.method_exec(imaging, fnc, args)
+            # pas de reponse
+            self.send_response(None, fnc, client)
+            return False
+        return True
+
     def process_data(self, data, client=None):
         """
         Called when a packet received.
@@ -67,8 +98,6 @@ class ProcessPacket:
         @param client: client (host, port) tuple
         @type client: tuple
         """
-        # For each session a new instance of PXEImagingApi created
-
         imaging = PXEImagingApi(self.config)
         imaging.set_api(self.api)
 
