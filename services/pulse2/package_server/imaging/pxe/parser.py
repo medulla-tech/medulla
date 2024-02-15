@@ -115,6 +115,9 @@ class ArgumentContainer:
     @property
     def mac(self):
         """Common argument for all PXE methods"""
+       if isinstance(self.MAC_FLAG, str):
+            self.MAC_FLAG = self.MAC_FLAG.encode("utf-8")
+
         if self.MAC_FLAG in self.packet:
             start = self.packet.index(self.MAC_FLAG) + len(self.MAC_FLAG)
 
@@ -169,7 +172,7 @@ class ArgumentContainer:
 
         complement = None
         if self.level == 1:
-            complement = ord(self.packet[2])
+            complement = self.packet[2]
         if self.level in [2, 3, 4, 5]:
             if self.packet[2] == "-":
                 complement = self.packet[3:]
@@ -225,7 +228,7 @@ class ArgumentContainer:
     def num(self):
         """Menu item number"""
         if len(self.packet) > 1:
-            return ord(self.packet[1])
+            return self.packet[1]
         else:
             return 0
 

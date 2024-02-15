@@ -25,18 +25,18 @@
 
 
 if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
-    require("modules/base/computers/localSidebar.php");
+    require_once("modules/base/computers/localSidebar.php");
 }
 else {
-    require("modules/imaging/manage/localSidebar.php");
+    require_once("modules/imaging/manage/localSidebar.php");
 }
-require("graph/navbar.inc.php");
+require_once("graph/navbar.inc.php");
 
 $p = new PageGenerator();
 $p->setSideMenu($sidemenu);
 $p->display();
 
 $is_registering = True;
-include("configure.php");
+require_once("configure.php");
 
 ?>
