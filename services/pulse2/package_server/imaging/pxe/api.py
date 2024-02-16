@@ -25,9 +25,52 @@ from pulse2.package_server.imaging.pxe.parser import LOG_LEVEL, LOG_STATE
 from pulse2.package_server.imaging.pxe.tracking import EntryTracking
 from pulse2.package_server.config import P2PServerCP
 from pulse2.imaging.bootinventory import BootInventory
+import subprocess
 import re
 import xml.etree.ElementTree as ET  # form XML Building
 import time
+
+import asyncio
+from asyncio.exceptions import TimeoutError
+from slixmpp import ClientXMPP
+import zlib
+import base64
+import os
+import random
+import time
+import sys
+import json
+import platform
+from subprocess import Popen, DEVNULL
+
+logger = logging.getLogger()
+
+
+class DetachedProcess:
+    def __init__(self, command=[]):
+        self.command = command
+        self.system = platform.system()
+        self.creationflags = self._get_creationflags()
+
+    def _get_creationflags(self):
+        if self.system == 'Windows':
+            from subprocess import DETACHED_PROCESS, CREATE_NEW_PROCESS_GROUP, CREATE_BREAKAWAY_FROM_JOB
+            return DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_BREAKAWAY_FROM_JOB
+        else:
+            return 0
+
+    def add_option(self, option):
+        self.command.append(option)
+
+    def run(self):
+        self.command = [str(element) if (isinstance(element, int) or isinstance(element, float)) else element for element in self.command]
+        if self.system == 'Windows':
+            Popen(self.command , creationflags=self.creationflags, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+        else:
+            # Pour Linux et macOS, la gestion de processus détachés est différente
+            # Vous pouvez adapter cela selon les besoins spécifiques du système d'exploitation
+            Popen(self.command , stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+
 
 
 class PXEImagingApi(PXEMethodParser):
@@ -112,13 +155,14 @@ class PXEImagingApi(PXEMethodParser):
         """
         logging.getLogger().debug("FIRST REGISTRATION TO ALLOW INVENTORY")
         m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = str(m.group(0))
+        file_content = m.group(0)
         ipadress = self.ip_adressexml(file_content)
         mac1 = self.mac_adressexml(file_content)
         hostnamexml = self.hostname_xml(file_content)
         inventory = '<?xml version="1.0" encoding="utf-8"?>\n%s' % (file_content)
         ip_address = ipadress
         mac = mac1
+
         return self.send_inventory(inventory, hostnamexml)
 
     def _computerRegister(self, result, hostname, mac, delay=0):
@@ -283,8 +327,7 @@ class PXEImagingApi(PXEMethodParser):
         """
         logging.getLogger().debug("INJECT INVENTORY NEXT HOSTNAME AND ENTITY")
         m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = str(m.group(0))
-
+        file_content = m.group(0)
         ipadress = self.ip_adressexml(file_content)
         mac1 = self.mac_adressexml(file_content)
         hostnamexml = self.hostname_xml(file_content)
@@ -303,15 +346,16 @@ class PXEImagingApi(PXEMethodParser):
         parsed_inventory1 = BootInventory()
         parsed_inventory1.initialise(file_content)
         parsed_inventory = parsed_inventory1.dump()
+        logging.getLogger().error("parsed inventory : %s %s"%(type(parsed_inventory), parsed_inventory))
         self.api.logClientAction(
             mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "boot menu shown"
         )
-        d = self.api.injectInventory(mac, parsed_inventory)
 
         # 2nd step - send inventory by HTTP POST to inventory server
+        d = self.api.injectInventory(mac, parsed_inventory)
+
         d.addCallback(self._injectedInventoryOk, mac, inventory)
         d.addErrback(self._injectedInventoryError)
-        # self.send_inventory(parsed_inventory1., hostname)
         return d
 
     #  ------------------------ process inventory ---------------------------
@@ -466,30 +510,30 @@ class PXEImagingApi(PXEMethodParser):
                 "PXE Proxy: Unknown client, ignore received inventory"
             )
             return
+
         hostname = computer["shortname"]
         entity = computer["entity"]
         m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = str(m.group(0))
-        # inventory = parsed_inventory1.changEntityAndHostName(file_content,entity,hostname)
+        file_content = m.group(0)
         file_content = self.changEntityAndHostName(file_content, entity, hostname)
         inventory = self.changdeviceid(file_content, hostname)
+        if isinstance(inventory, bytes):
+            inventory = inventory.decode('utf-8')
+
         inventory = '<?xml version="1.0" encoding="utf-8"?>' + inventory
         logging.getLogger().debug("send invotory depuis _injectedInventorySend")
-        d = self.send_inventory(inventory, hostname)
 
-        @d.addCallback
-        def _cb(result):
+        try:
+            self.send_inventory(inventory, hostname)
             self.api.logClientAction(
                 mac, LOG_LEVEL.INFO, LOG_STATE.INVENTORY, "hardware inventory updated"
             )
-
-        @d.addErrback
-        def _eb(failure):
+        except Exception as e:
             self.api.logClientAction(
                 mac,
                 LOG_LEVEL.WARNING,
                 LOG_STATE.INVENTORY,
-                "hardware inventory not updated",
+                "hardware inventory not updated: " + str(e),
             )
 
         self.api.logClientAction(
@@ -497,22 +541,68 @@ class PXEImagingApi(PXEMethodParser):
         )
 
         m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
-        file_content = str(m.group(0))
+        file_content = m.group(0)
         ipadress = self.ip_adressexml(file_content)
         ip_address = ipadress
+
         if self.config.imaging_api["glpi_mode"]:
-            d = task.deferLater(
-                reactor, 0, self.glpi_register, mac, hostname, ip_address
-            )
-            d.addCallback(self._computerRegister, hostname, mac, 2)
-            d.addErrback(self._ebRegisterError, mac)
-            return d
+            try:
+                self.glpi_register(mac, hostname, ip_address)
+                self._computerRegister(None, hostname, mac)
+            except Exception as e:
+                self._ebRegisterError(e, mac)
         else:
-            return self._computerRegister(None, hostname, mac)
+            self._computerRegister(None, hostname, mac)
+
+    def file_get_binarycontents(self,filename, offset=-1, maxlen=-1):
+        fp = open(filename, "rb")
+        try:
+            if offset > 0:
+                fp.seek(offset)
+            return fp.read(maxlen)
+        finally:
+            fp.close()
+
+    def file_put_contents(self,filename, data):
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+        with open(filename, "w") as f:
+            f.write(data)
+
+    def file_put_contents_w_a(self,filename, data, option="w"):
+        if not os.path.exists(os.path.dirname(filename)):
+            os.makedirs(os.path.dirname(filename))
+        if option in ["a", "w"]:
+            with open(filename, option) as f:
+                f.write(data)
+
+    def getRandomName(self, nb, pref=""):
+        a = "abcdefghijklnmopqrstuvwxyz0123456789"
+        d = pref
+        for _ in range(nb):
+            d = d + a[random.randint(0, 35)]
+        return d
+
+    def convert_to_bytes(self, input_data):
+        if isinstance(input_data, bytes):
+            return input_data
+        elif isinstance(input_data, str):
+            return input_data.encode("utf-8")
+        else:
+            raise TypeError("L'entrée doit être de type bytes ou string.")
+
+    def compress_and_encode(self, string):
+        # Convert string to bytes
+        data = self.convert_to_bytes(string)
+        # Compress the data using zlib
+        compressed_data = zlib.compress(data, 9)
+        # Encode the compressed data in base64
+        encoded_data = base64.b64encode(compressed_data)
+        return encoded_data.decode("utf-8")
 
     def send_inventory(self, inventory, hostname):
         """
-        Sending the inventory on FusionInventory (XML) format.
+        Sending the inventory on substitut inventory (XML) format.
 
         @param inventory: inventory to send
         @type inventory: str
@@ -521,56 +611,66 @@ class PXEImagingApi(PXEMethodParser):
         @type hostname: str
         """
 
-        url = "http://"
+        retour = False
+
+        domain=self.config.connection_domain
+        password=self.getRandomName(6, "messagesenderpxe")
+        jid = f"{password}@{domain}"
+        recipient=self.config.connection_recipient
+        server = self.config.connection_server
+        port = self.config.connection_port
+        timeout = self.config.connection_timeout
+        result = {}
+        result["action"] = "resultinventory"
+        result["ret"] = 0
+        result["sessionid"] =  self.getRandomName(6, "inventory")
+        result["base64"] = False
+        result["data"]={}
+        if not inventory.startswith("<?xml version"):
+            strinventorysave = '<?xml version="1.0" encoding="UTF-8" ?>' + inventory
+        else:
+            strinventorysave = inventory
+
+            # cette fonction compress_and_encode
+            # prend une chaîne de caractères,
+            # la compresse, encode le résultat compressé en base64,
+            #  et retourne le résultat encodé sous forme de chaîne de caractères.
+        datainventory = self.compress_and_encode(strinventorysave)
+        result["data"]["inventory"] = datainventory
+
+        if sys.platform.startswith("win"):
+            detached_process = DetachedProcess(["python3",
+                                                "/usr/sbin/message-sender.py",
+                                                "-j", jid,
+                                            "-P", port,
+                                            "-p", password,
+                                            "-I", server,
+                                            "-m", json.dumps(result),
+                                            "-t", recipient]).run()
+        else:
+            python3_path = subprocess.check_output(['which', 'python3']).decode('utf-8').strip()
+            detached_process = DetachedProcess([python3_path,
+                                    "/usr/sbin/message-sender.py",
+                                    "-j", jid,
+                                    "-P", port,
+                                    "-p", password,
+                                    "-I", server,
+                                    "-m", json.dumps(result),
+                                    "-t", recipient]).run()
+        time.sleep(12)
+        command = ["ejabberdctl", "unregister", password , domain]
         try:
-            if self.config.imaging_api["inventory_enablessl"]:
-                protocol = "https"
-            else:
-                protocol = "http"
+            subprocess.run(command, check=True)
+            logging.getLogger().debug("Command executed successfully.")
+            retour = True
+        except subprocess.CalledProcessError as e:
+            logging.getLogger().debug("Error: %s", e)
 
-            url = "%s://%s:%d/" % (
-                protocol,
-                self.config.imaging_api["inventory_host"],
-                self.config.imaging_api["inventory_port"],
-            )
 
-            # POST the inventory to the inventory server
-            logging.getLogger().debug(
-                "PXE Proxy: PXE inventory forwarded to inventory server at %s" % url
-            )
-            logging.getLogger().debug(
-                "POST the inventory to the inventory server \nINVENTORY\n %s"
-                % inventory
-            )
-            d = Agent(
-                url,
-                method="POST",
-                postdata=inventory,
-                headers={
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "Content-Length": str(len(inventory)),
-                    "User-Agent": "Pulse2 Imaging server inventory hook",
-                },
-            )
+        logger.debug("PXE Proxy: PXE inventory from client %s successfully injected" % hostname)
 
-            @d.addCallback
-            def _cb(result):
-                if result:
-                    logging.getLogger().debug(
-                        "PXE Proxy: PXE inventory from client %s successfully injected"
-                        % hostname
-                    )
-                return result
 
-            return d
-
-        except Exception as e:
-            logging.getLogger().error(
-                "PXE Proxy: Unable to forward PXE inventory to inventory server at %s: %s"
-                % (url, str(e))
-            )
-            # This method must return a Deferred
-            return Deferred()
+        return retour
 
     # ----------------------- backup -------------------------------
 

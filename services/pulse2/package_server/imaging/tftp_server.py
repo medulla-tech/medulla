@@ -46,7 +46,7 @@ class StringFileHandler:
 
 
 class ImagingTFTPServer(object):
-    iface = "eth0"
+    iface = "enp1s0"
     root = "/var/lib/pulse2/imaging"
     port = 69
     strict_rfc1350 = False

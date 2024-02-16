@@ -39,7 +39,6 @@ function expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real
     if (!$has_profile) {
         $f->add(new TitleElement(sprintf(_T("%s menu parameters", "imaging"), ($type == '' ? _T('Computer', 'imaging') : _T('Profile', 'imaging')))));
         $f->push(new Table());
-
         $f->add(
             new TrFormElement(
                 _T('Default menu label', 'imaging'),
@@ -47,6 +46,7 @@ function expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real
             ),
             array("value" => $menu['default_name'])
         );
+
         $f->add(
             new TrFormElement(
                 _T('Menu timeout', 'imaging'),
@@ -84,13 +84,9 @@ function expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real
             ),
             array("value" => $menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
         );
-        /* $f->add(
-            new TrFormElement(_T("Keyboard mapping (empty/fr)", "imaging"),
-            new InputTpl("boot_keyboard")), array("value" => "")
-        ); */
         $f->pop();
-
-    } else {
+    }
+    else {
         $f->add(new HiddenTpl("default_m_label"), array("value" => $menu['default_name'],            "hide" => true));
         $f->add(new HiddenTpl("default_m_timeout"), array("value" => $menu['timeout'],            "hide" => true));
 
@@ -471,10 +467,12 @@ else {
     }
     if (!$ret[0] && $ret[1] == 'ERROR') {
         $err_msg = getPulse2ErrorString($ret[2], $ret[3]);
+        $errno = $ret[1];
+        $errmsg = $ret[2];
+
     } else {
         list($whose, $menu) = $ret;
     }
-
     /*
      * whose is a list who come from python imaging database code: [uuid, type, target[0].toH]
      * menu is the target boot menu

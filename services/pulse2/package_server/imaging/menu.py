@@ -706,7 +706,7 @@ class ImagingMenu:
                         % (backupname, filename, e)
                     )
 
-        # Retreive PXE Params
+        # Retrieve PXE Params
         pulse2.package_server.imaging.api.functions.Imaging().refreshPXEParams(
             _write, self
         )
