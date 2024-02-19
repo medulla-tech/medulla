@@ -26,8 +26,7 @@
 
 if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
     require_once("modules/base/computers/localSidebar.php");
-}
-else {
+} else {
     require_once("modules/imaging/manage/localSidebar.php");
 }
 require_once("graph/navbar.inc.php");
@@ -36,7 +35,5 @@ $p = new PageGenerator();
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$is_registering = True;
+$is_registering = true;
 require_once("configure.php");
-
-?>

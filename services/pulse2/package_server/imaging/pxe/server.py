@@ -72,13 +72,13 @@ class ProcessPacket:
         @return: False si la chaîne est vide ou si le premier octet est 0xBB ou 0xBA, True sinon.
         @rtype: bool
         """
-        logging.getLogger().debug("PXE Proxy: self.config: %s "% self.config)
-        logging.getLogger().debug("PXE Proxy: method: %s "% data)
+        logging.getLogger().debug("PXE Proxy: self.config: %s " % self.config)
+        logging.getLogger().debug("PXE Proxy: method: %s " % data)
         if not data:
             return False
         first_byte = ord(data[0])
         hex_value = hex(first_byte)
-        if hex_value == '0xBB'  : #or hex_value == '0xBA'
+        if hex_value == "0xBB":  # or hex_value == '0xBA'
             imaging = PXEImagingApi(self.config)
             imaging.set_api(self.api)
             fnc, args = imaging.get_method(data)

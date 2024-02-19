@@ -85,8 +85,7 @@ function expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real
             array("value" => $menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
         );
         $f->pop();
-    }
-    else {
+    } else {
         $f->add(new HiddenTpl("default_m_label"), array("value" => $menu['default_name'],            "hide" => true));
         $f->add(new HiddenTpl("default_m_timeout"), array("value" => $menu['timeout'],            "hide" => true));
 
