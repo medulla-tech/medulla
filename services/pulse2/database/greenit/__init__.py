@@ -29,7 +29,6 @@ import logging
 import json
 import time
 from datetime import datetime
-
 class GreenitDatabase(DatabaseHelper):
     """
     Singleton Class to query the greenit database.
@@ -113,6 +112,7 @@ class GreenitDatabase(DatabaseHelper):
 
         #if hasattr(self, 'Tests'):
             #self.getTests()
+        self.init_const()
         return True
 
     def initMappers(self):
@@ -122,6 +122,19 @@ class GreenitDatabase(DatabaseHelper):
         # No mapping is needed, all is done on schema file
         return
 
+    def init_const(self):
+        self.mois= ['January',
+                    'February',
+                    'March',
+                    'April',
+                    'May',
+                    'June',
+                    'July',
+                    'August',
+                    'September',
+                    'October',
+                    'November',
+                    'December']
     def getDbConnection(self):
         NB_DB_CONN_TRY = 2
         ret = None
@@ -140,9 +153,12 @@ class GreenitDatabase(DatabaseHelper):
 
     # =====================================================================
     # greenit FUNCTIONS
+
+
+    # ---------------------- function dict from dataset ----------------------
+    def _return_dict_from_dataset_mysql(self, resultproxy):
+        return [rowproxy._asdict() for rowproxy in resultproxy]
     # =====================================================================
-
-
     @DatabaseHelper._sessionm
     def getTests(self, session):
         query = session.query(self.Tests)
@@ -161,3 +177,51 @@ class GreenitDatabase(DatabaseHelper):
             })
         logging.getLogger().debug(f"result test {result}")
         return result
+
+
+    @DatabaseHelper._sessionm
+    def getDatasyear(self, session, annee=None):
+        if annee is None:
+            annee = datetime.now().year
+        sql = """SELECT
+                    annee,
+                    mois,
+                    sum(Energie) as "energie(W)",
+                    AVG(moyenne_charge) as "charge(%%)"
+                FROM
+                    greenit.conso_annee
+                WHERE
+                    annee = :annee
+                GROUP BY
+                    annee,
+                    mois
+                ORDER BY
+                    FIELD(mois,
+                        'January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',
+                        'July',
+                        'August',
+                        'September',
+                        'October',
+                        'November',
+                        'December');
+                        ;"""
+
+        ret = session.execute(sql, {"annee": annee})
+        result_set = ret.fetchall()
+        result = [dict(row) for row in result_set]
+        record_count = len(result)
+        resultatannee={ "annee" : result[0][0]}
+        moisdata={}
+        # prepare structure les 12 mois avec des valeurs null
+        for t in range(12):
+            moisdata[ self.mois[t]] ={ {"E" :  "null", "C" : "null"} }
+        # suivant less mesures en remplis le dict des mois
+        for t in result:
+            moisdata[t[0][1]]["E"]= t[0][1]]
+            moisdata[t[0][1]]["C"]= t[0][2]]
+        return moisdata

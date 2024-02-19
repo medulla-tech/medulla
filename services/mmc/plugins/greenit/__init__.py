@@ -65,5 +65,10 @@ def activate():
 # GREENIT DATABASE FUNCTIONS
 # #############################################################
 
-def tests():
-    return GreenitDatabase().tests()
+def getTests():
+    return GreenitDatabase().getTests()
+
+
+def getDatasyear( annee=None):
+    return GreenitDatabase().getDatasyear(annee=annee)
+

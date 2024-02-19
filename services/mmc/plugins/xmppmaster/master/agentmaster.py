@@ -960,6 +960,7 @@ class MUCBot(slixmpp.ClientXMPP):
             ) = MscDatabase().deployxmpp(limitnbr=100)
         except Exception:
             logger.error("%s" % (traceback.format_exc()))
+            return
         if nb_machine_select_for_deploy_cycle == 0:
             return
 
