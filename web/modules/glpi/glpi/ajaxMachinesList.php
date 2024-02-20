@@ -386,6 +386,7 @@ foreach($datas['enabled'] as $valeue) {
         'user' => $datas['glpi_owner'][$index],
                     'jid' => $datas['jid'][$index],
     'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc() == 1) ? "novnc" : "appletjava"),
+        'from' => "machinesList",
     ];
 
     $index++;
