@@ -665,7 +665,7 @@ def __addCtxFilters(ctx, filt=None):
             if not isinstance(location, list):
                 location = [location]
             filt["ctxlocation"] = [l.toH() for l in location]
-    except exceptions.AttributeError:
+    except AttributeError:
         pass
     return filt
 
