@@ -157,6 +157,8 @@ def xmlrpcCleanup(data):
         return False
     elif isinstance(data, tuple):
         return [xmlrpcCleanup(x) for x in data]
+    elif isinstance(data, bool):
+        return bool(data)
     elif isinstance(data, int):
         return str(data)
     else:
