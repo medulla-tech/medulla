@@ -198,6 +198,7 @@ foreach($datas['uuid'] as $uuid) {
         'entity' => $datas['entity'][$raw],
         'user' => $datas['user'][$raw],
     'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc() == 1) ? "novnc" : "appletjava"),
+        'from' => "machinesListglpi",
     ];
 
     foreach($datas as $field => $table) {

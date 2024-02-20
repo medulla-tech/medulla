@@ -25,6 +25,7 @@
  * file delete.php
  */
 
+$page = (!empty($_GET['from']) && $_GET['from'] != "") ? htmlentities($_GET['from']) : "index";
 require_once("modules/base/includes/computers.inc.php");
 if (in_array("imaging", $_SESSION["modulesList"])) {
         require_once('modules/imaging/includes/xmlrpc.inc.php');
@@ -41,7 +42,7 @@ if (isset($_POST["bconfirm"])) {
     // if checkbox is not checked, don't delete computer
     if (!isset($_POST["imageWarning"])) {
         new NotifyWidgetFailure(_("You have to check the box <b>\"I am aware that all related images (non-master) will be deleted\"</b> if you want to remove this computer."));
-        header("Location: " . urlStrRedirect("base/computers/index"));
+        header("Location: " . urlStrRedirect("base/computers/".$page));
         exit;
     }
     else {
@@ -53,9 +54,7 @@ if (isset($_POST["bconfirm"])) {
         }
         if (in_array("xmppmaster", $_SESSION["supportModList"])){
             xmppmaster_delcomputer($uuid, $_GET['cn']);
-        }
-
-        if (in_array("xmppmaster", $_SESSION["supportModList"])){
+        
             // send message agent machine pour quel se réinscrive.
             if(xmlrpc_getPresenceuuid($uuid)){
                  $jid = xmlrpc_callInventoryinterface($uuid);
@@ -73,6 +72,7 @@ if (isset($_POST["bconfirm"])) {
             }
         }
         $Bollreadonly = getdbreadonly();
+
         if ($Bollreadonly){
             new NotifyWidgetSuccess(_("GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"));
         }else{
@@ -87,7 +87,7 @@ if (isset($_POST["bconfirm"])) {
                     }
             }
         }
-        header("Location: " . urlStrRedirect("base/computers/machinesList"));
+        header("Location: " . urlStrRedirect("base/computers/".$page));
         exit;
     }
 } else {
