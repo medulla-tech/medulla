@@ -5901,13 +5901,12 @@ class Glpi100(DyngroupDatabaseHelper):
         @rtype: bool
         """
         authtoken = base64.b64encode(
-            GlpiConfig.webservices["glpi_username"]
-            + ":"
-            + GlpiConfig.webservices["glpi_password"]
-        )
+            bytes("%s:%s"%(GlpiConfig.webservices["glpi_username"],
+                           GlpiConfig.webservices["glpi_password"]), "utf-8"))
+
         headers = {
             "content-type": "application/json",
-            "Authorization": "Basic " + authtoken,
+            "Authorization": "Basic " + authtoken.decode("utf-8"),
         }
         url = GlpiConfig.webservices["glpi_base_url"] + "initSession"
         self.logger.debug("Create session REST")
