@@ -28,13 +28,13 @@
 $page = (!empty($_GET['from']) && $_GET['from'] != "") ? htmlentities($_GET['from']) : "index";
 require_once("modules/base/includes/computers.inc.php");
 if (in_array("imaging", $_SESSION["modulesList"])) {
-        require_once('modules/imaging/includes/xmlrpc.inc.php');
+    require_once('modules/imaging/includes/xmlrpc.inc.php');
 }
 
-if (in_array("xmppmaster", $_SESSION["supportModList"])){
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     require_once('modules/xmppmaster/includes/xmlrpc.php');
 }
-if (in_array("xmppmaster", $_SESSION["supportModList"])){
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     require_once('modules/xmppmaster/includes/xmlrpc.php');
 }
 
@@ -44,47 +44,48 @@ if (isset($_POST["bconfirm"])) {
         new NotifyWidgetFailure(_("You have to check the box <b>\"I am aware that all related images (non-master) will be deleted\"</b> if you want to remove this computer."));
         header("Location: " . urlStrRedirect("base/computers/".$page));
         exit;
-    }
-    else {
+    } else {
         $uuid = $_POST["objectUUID"];
-        $backup = ($_POST["backup"]?True:False);
+        $backup = ($_POST["backup"] ? true : false);
         if (in_array("imaging", $_SESSION["modulesList"])) {
             //$dede = xmlrpc_imagingClearMenuFromUuid($uuid);
             $dede = xmlrpc_imagingClearMenuFromUuidAllLocation($uuid);
         }
-        if (in_array("xmppmaster", $_SESSION["supportModList"])){
+        if (in_array("xmppmaster", $_SESSION["supportModList"])) {
             xmppmaster_delcomputer($uuid, $_GET['cn']);
-        
+
             // send message agent machine pour quel se réinscrive.
-            if(xmlrpc_getPresenceuuid($uuid)){
-                 $jid = xmlrpc_callInventoryinterface($uuid);
-                xmlrpc_setfromxmppmasterlogxmpp("QA : Master ask a inventory to ".$jid." after delete machine of glpi [".$_SESSION["login"] ."]",
-                                                "infouser",
-                                                '' ,
-                                                0,
-                                                $jid,
-                                                'auto',
-                                                '',
-                                                '',
-                                                '',
-                                                "master",
-                                                'QuickAction | Inventory | Inventory requested');
+            if(xmlrpc_getPresenceuuid($uuid)) {
+                $jid = xmlrpc_callInventoryinterface($uuid);
+                xmlrpc_setfromxmppmasterlogxmpp(
+                    "QA : Master ask a inventory to ".$jid." after delete machine of glpi [".$_SESSION["login"] ."]",
+                    "infouser",
+                    '',
+                    0,
+                    $jid,
+                    'auto',
+                    '',
+                    '',
+                    '',
+                    "master",
+                    'QuickAction | Inventory | Inventory requested'
+                );
             }
         }
         $Bollreadonly = getdbreadonly();
 
-        if ($Bollreadonly){
+        if ($Bollreadonly) {
             new NotifyWidgetSuccess(_("GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"));
-        }else{
-            if(empty($uuid)){
+        } else {
+            if(empty($uuid)) {
                 new NotifyWidgetSuccess(_("The computer has been deleted."));
-            }else{
+            } else {
                 delComputer($uuid, $backup);
                 if (!isXMLRPCError()) {
                     new NotifyWidgetSuccess(_("The computer has been deleted."));
-                    }else{
-                        new NotifyWidgetFailure(_("The computer has not been deleted."));
-                    }
+                } else {
+                    new NotifyWidgetFailure(_("The computer has not been deleted."));
+                }
             }
         }
         header("Location: " . urlStrRedirect("base/computers/".$page));
@@ -106,10 +107,9 @@ if (isset($_POST["bconfirm"])) {
     $f->add($tr);
 
     $hidden = new HiddenTpl("objectUUID");
-    $f->add($hidden, array("value" => $uuid, "hide" => True));
+    $f->add($hidden, array("value" => $uuid, "hide" => true));
     $f->pop();
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }
-?>
