@@ -43,9 +43,9 @@ $sidemenu->forceActiveItem($item->action);
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$members = unserialize(base64_decode($_POST["lmembers"]));
-$nonmemb = unserialize(base64_decode($_POST["lnonmemb"]));
-$listOfMembers = unserialize(base64_decode($_POST["lsmembers"]));
+$members = isset($_POST["lmembers"]) ? unserialize(base64_decode($_POST["lmembers"])) : array();
+$nonmemb = isset($_POST["lnonmemb"]) ? unserialize(base64_decode($_POST["lnonmemb"])) : array();
+$listOfMembers = isset($_POST["lsmembers"]) ? unserialize(base64_decode($_POST["lsmembers"])) : array();
 
 if (isset($_POST["bdeluser_x"])) {
     if (isset($_POST["members"])) {
@@ -106,7 +106,7 @@ if (isset($_POST["bdeluser_x"])) {
     list($count, $users) = get_users_detailed($error, '', 0, 10000);
     $listOfUsers = array();
     foreach ($users as $u) {
-        $listOfUsers[$u['uid']] = array('user'=>array('login'=>$u['uid'], 'type'=>0));
+        $listOfUsers[$u['uid']->scalar] = array('user' => array('login' => $u['uid']->scalar, 'type' => 0));
     }
     $listOfUsers['root'] = array('user'=>array('login'=>'root', 'type'=>0));
     $groups = search_groups('');
