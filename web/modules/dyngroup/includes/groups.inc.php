@@ -40,6 +40,7 @@ function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) 
     <?php
     foreach ($diff as $idx => $user) {
         if ($user == "") { unset($nonmemb[$idx]); continue; }
+        if ($user == "root") continue;
         $style = '';
         $ma = preg_split("/##/", $idx);
         if ($ma[0] == 1) { $style = ' style="background-color: #eedd00;"'; }
@@ -63,6 +64,7 @@ function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) 
     <?php
     foreach ($members as $idx => $member) {
         if ($member == "") { unset($members[$idx]); continue; }
+        if ($member == "root") continue;
         $style = '';
         $ma = preg_split("/##/", $idx);
         if ($ma[0] == 1) { $style = ' style="background-color: #eedd00;"'; }
