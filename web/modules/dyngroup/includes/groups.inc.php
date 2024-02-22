@@ -21,13 +21,15 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if(in_array("imaging", $_SESSION["modulesList"]))
+if(in_array("imaging", $_SESSION["modulesList"])) {
     require_once('modules/imaging/includes/xmlrpc.inc.php');
+}
 
 require_once('modules/dyngroup/includes/dyngroup.php'); // for getPGobject method
 
-function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) {
-?>
+function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name)
+{
+    ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <input name="name" value="<?php echo  $name ?>" type="hidden" />
 <div id="grouplist">
@@ -38,14 +40,21 @@ function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) 
     <h3><?php echo  _T("All share entities", "dyngroup"); ?></h3>
     <select multiple size="15" class="list" name="nonmemb[]">
     <?php
-    foreach ($diff as $idx => $user) {
-        if ($user == "") { unset($nonmemb[$idx]); continue; }
-        if ($user == "root") continue;
-        $style = '';
-        $ma = preg_split("/##/", $idx);
-        if ($ma[0] == 1) { $style = ' style="background-color: #eedd00;"'; }
-        echo "<option$style value=\"".$idx."\">".$user."</option>\n";
-    }
+        foreach ($diff as $idx => $user) {
+            if ($user == "") {
+                unset($nonmemb[$idx]);
+                continue;
+            }
+            if ($user == "root") {
+                continue;
+            }
+            $style = '';
+            $ma = preg_split("/##/", $idx);
+            if ($ma[0] == 1) {
+                $style = ' style="background-color: #eedd00;"';
+            }
+            echo "<option$style value=\"".$idx."\">".$user."</option>\n";
+        }
     ?>
     </select>
     <br/>
@@ -63,11 +72,18 @@ function drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $gid, $name) 
     <select multiple size="15" class="list" name="members[]">
     <?php
     foreach ($members as $idx => $member) {
-        if ($member == "") { unset($members[$idx]); continue; }
-        if ($member == "root") continue;
+        if ($member == "") {
+            unset($members[$idx]);
+            continue;
+        }
+        if ($member == "root") {
+            continue;
+        }
         $style = '';
         $ma = preg_split("/##/", $idx);
-        if ($ma[0] == 1) { $style = ' style="background-color: #eedd00;"'; }
+        if ($ma[0] == 1) {
+            $style = ' style="background-color: #eedd00;"';
+        }
         echo "<option$style value=\"".$idx."\">".$member."</option>\n";
     }
     ?>
@@ -115,7 +131,8 @@ select.list
 <?php
 }
 
-function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $gid, $name, $filter = '', $type = 0) {
+function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $gid, $name, $filter = '', $type = 0)
+{
     if ($type == 0) {
         $label_name = _T('Group name', 'dyngroup');
         $label_visible = _T('Make favourite', 'dyngroup');
@@ -132,8 +149,7 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
             $ret = xmlrpc_canIRegisterThisComputer($target_uuid);
             if (!$ret[0]) {
                 $willBeUnregistered[] = $target_uuid;
-            }
-            elseif ($ret[0] && isset($ret[1]) && $ret[1] != False) {
+            } elseif ($ret[0] && isset($ret[1]) && $ret[1] != false) {
                 $willBeUnregistered[] = $target_uuid;
             }
         }
@@ -160,14 +176,18 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
         }
     }
 
-?>
+    ?>
 
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <table style="border: none;" cellspacing="0">
 <tr><td><?php echo  $label_name; ?></td><td></td><td><input name="name" value="<?php echo  $name ?>" type="text"/></td></tr>
 <tr><td><?php echo  $label_visible; ?></td><td></td><td>
-    <input name='visible' value='show' <?php if ($visibility == 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('Yes', 'dyngroup') ?>
-    <input name='visible' value='hide' <?php if ($visibility != 'show') { echo 'checked'; } ?> type='radio'/><?php echo  _T('No', 'dyngroup') ?>
+    <input name='visible' value='show' <?php if ($visibility == 'show') {
+        echo 'checked';
+    } ?> type='radio'/><?php echo  _T('Yes', 'dyngroup') ?>
+    <input name='visible' value='hide' <?php if ($visibility != 'show') {
+        echo 'checked';
+    } ?> type='radio'/><?php echo  _T('No', 'dyngroup') ?>
 </td></tr>
 <!-- add all group inupts -->
 </table>
@@ -184,7 +204,10 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
     <select multiple size="13" class="list" name="machines[]">
     <?php
     foreach ($diff as $idx => $machine) {
-        if ($machine == "") { unset($machines[$idx]); continue; }
+        if ($machine == "") {
+            unset($machines[$idx]);
+            continue;
+        }
         echo "<option value=\"".$idx."\">".$machine."</option>\n";
     }
     ?>
@@ -237,24 +260,26 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
 
 <?php
     if ($type == 1) { // Imaging group
-        $warningMessage = False;
+        $warningMessage = false;
         if (safeCount($machinesInProfile) > 0) {
-            $warningMessage = True;
+            $warningMessage = true;
             print '<p>';
             print _T('Computers listed below are already part of another imaging group.', 'dyngroup');
             echo '<ul>';
             foreach($machinesInProfile as $machineUuid => $group) {
-                printf(_T('<li>%s is part of <a href="%s">%s</a></li>'),
+                printf(
+                    _T('<li>%s is part of <a href="%s">%s</a></li>'),
                     $listOfMembers[$machineUuid]['hostname'],
                     urlStrRedirect('imaging/manage/display', array('gid' => $group['groupid'], 'groupname' => $group['groupname'])),
-                    $group['groupname']);
+                    $group['groupname']
+                );
             }
             echo '</ul>';
             print '</p>';
         }
         $standAloneImagingRegistered = array_diff($willBeUnregistered, array_keys($machinesInProfile));
         if (safeCount($standAloneImagingRegistered) > 0) {
-            $warningMessage = True;
+            $warningMessage = true;
             print '<p>';
             print _T('Computers listed below are already stand-alone registered in imaging.', 'dyngroup');
             echo '<ul>';
@@ -270,16 +295,16 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
             echo '<p>' . _T('All related images to these computers will be <strong>DELETED</strong>', 'dyngroup') . '</p>';
         }
     }
-?>
+    ?>
 
 <input type="hidden" name="type" value="<?php echo  $type; ?>" />
 <input type="hidden" name="lmachines" value="<?php echo base64_encode(serialize($machines)); ?>" />
 <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
 <input type="hidden" name="lsmembers" value="<?php echo base64_encode(serialize($listOfMembers)); ?>" />
 <input type="hidden" name="willBeUnregistered" value="<?php echo base64_encode(serialize($willBeUnregistered)); ?>" />
-<?
-$computersgroupedittmp = isset($computersgroupedit) ? $computersgroupedit : "";
-?>
+<?php
+    $computersgroupedittmp = isset($computersgroupedit) ? $computersgroupedit : "";
+    ?>
 <input type="hidden" name="computersgroupedit" value="<?php echo $computersgroupedittmp; ?>" />
 <input type="hidden" name="id" value="<?php echo  $gid ?>" />
 <input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
