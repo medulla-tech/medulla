@@ -45,13 +45,14 @@ if (isset($_GET['gid']) && $_GET['gid'] != '') {
 }
 $itemid = $_GET['itemid'];
 
-if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isComputerInProfileRegistered($target_uuid))) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid)))  {
+if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isComputerInProfileRegistered($target_uuid))) || ($type == 'group' && xmlrpc_isProfileRegistered($target_uuid))) {
 
 
-    if(isset($_GET['mod']))
+    if(isset($_GET['mod'])) {
         $mod = $_GET['mod'];
-    else
+    } else {
         $mod = "none";
+    }
 
     switch($mod) {
         case 'log':
@@ -72,24 +73,25 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
     }
 } else {
     /* register the target (computer or profile) */
-    $params = array('target_uuid'=>$target_uuid, 'type'=>$type, 'from'=>"services", "target_name"=>$target_name);
+    $params = array('target_uuid' => $target_uuid, 'type' => $type, 'from' => "services", "target_name" => $target_name);
     if ($type == 'group') {
         header("Location: " . urlStrRedirect("imaging/manage/".$type."register_target", $params));
-    }
-    else {
+    } else {
         header("Location: " . urlStrRedirect("base/computers/".$type."register_target", $params));
     }
     exit;
 }
 
-function image_edit($target_uuid, $type, $item_uuid) {
+function image_edit($target_uuid, $type, $item_uuid)
+{
     $params = getParams();
     $target_uuid = $_GET['target_uuid'];
     $label = urldecode($_GET['itemlabel']);
 
     list($succed, $image) = xmlrpc_getTargetImage($target_uuid, $type, $item_uuid);
 
-    function create_form($is_image, $image, $target_uuid, $label, $desc) {
+    function create_form($is_image, $image, $target_uuid, $label, $desc)
+    {
         if ($is_image) {
             printf("<h3>"._T("Edition of image", "imaging")." : <em>%s</em></h3>", $label);
         } else {
@@ -97,9 +99,9 @@ function image_edit($target_uuid, $type, $item_uuid) {
         }
 
         $f = new ValidatingForm();
-        $f->add(new HiddenTpl('target_uuid'),                   array("value" => $target_uuid,                   "hide" => True));
-        $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
-        $f->add(new HiddenTpl('target_uuid'),                   array("value" => $target_uuid,                   "hide" => True));
+        $f->add(new HiddenTpl('target_uuid'), array("value" => $target_uuid,                   "hide" => true));
+        $f->add(new HiddenTpl("itemlabel"), array("value" => $label,                         "hide" => true));
+        $f->add(new HiddenTpl('target_uuid'), array("value" => $target_uuid,                   "hide" => true));
         $f->push(new Table());
         $f->add(
             new TrFormElement(_T("Label", "imaging"), new InputTpl("image_label")),
@@ -148,17 +150,17 @@ function image_edit($target_uuid, $type, $item_uuid) {
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
             exit;
         } elseif (isset($_POST['bconvert_master'])) {
-            $f = create_form(False, $image, $target_uuid, $_POST['image_label'], $_POST['image_description']);
+            $f = create_form(false, $image, $target_uuid, $_POST['image_label'], $_POST['image_description']);
             $f->addButton("bvalid_master", _T("Save", "imaging"));
             $f->display();
         } elseif (isset($_POST['bvalid_master'])) {
             $params['post_install_scripts'] = $p_order;
-            $params['is_master'] = True;
+            $params['is_master'] = true;
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
             exit;
         } elseif (isset($_POST['bconvert_image'])) {
-            $params['is_master'] = False;
+            $params['is_master'] = false;
             $ret = xmlrpc_editImage($item_uuid, $target_uuid, $params, $type);
             header("Location: " . urlStrRedirect("base/computers/imgtabs/".$type."tabimages", $params));
             exit;
@@ -166,20 +168,22 @@ function image_edit($target_uuid, $type, $item_uuid) {
     }
 }
 
-function image_list($type, $title, $actions=true) {
+function image_list($type, $title, $actions = true)
+{
     $params = getParams();
     $params['target_uuid'] = $_GET['target_uuid'];
     if (!$actions) {
-        $params['master'] = True;
+        $params['master'] = true;
     }
 
+    $params["target_name"] = (!empty($_GET['target_name'])) ? htmlentities($_GET['target_name']) : "";
     // show title
     if($title) {
         $t = new TitleElement($title);
         $t->display();
     }
 
-    $ajax = new AjaxFilter("modules/imaging/imaging/ajaxImages.php", "container".($actions?'image':'master'), $params, "form".($actions?'image':'master'));
+    $ajax = new AjaxFilter("modules/imaging/imaging/ajaxImages.php", "container".($actions ? 'image' : 'master'), $params, "form".($actions ? 'image' : 'master'));
     //$ajax->setRefresh(10000);
     $ajax->display();
     echo '<br/><br/><br/>';
@@ -189,7 +193,8 @@ function image_list($type, $title, $actions=true) {
 /**
  * Display backup log of a Pulse 2 image
  */
-function image_logs($itemid) {
+function image_logs($itemid)
+{
     $t = new TitleElement(_T("Image backup logs", "imaging"));
     $t->display();
     $logs = xmlrpc_imageGetLogs($itemid);

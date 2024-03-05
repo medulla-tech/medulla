@@ -53,7 +53,6 @@ def isMenuStructure(menu):
 
 
 class ImagingDefaultMenuBuilder:
-
     """
     Class that builds an imaging menu according to its dict structure.
     """
@@ -155,7 +154,6 @@ class ImagingDefaultMenuBuilder:
 
 
 class ImagingComputerMenuBuilder(ImagingDefaultMenuBuilder):
-
     """
     Class that builds an imaging menu for a computer according to its dict
     structure.
@@ -176,7 +174,6 @@ class ImagingComputerMenuBuilder(ImagingDefaultMenuBuilder):
 
 
 class ImagingMenu:
-
     """
     hold an imaging menu
     """
@@ -891,7 +888,6 @@ class CleanMenu:
 
 
 class ImagingItem:
-
     """
     Common class to hold an imaging menu item
     """
@@ -947,7 +943,6 @@ class ImagingItem:
 
 
 class ImagingBootServiceItem(ImagingItem):
-
     """
     hold an imaging menu item for a boot service
     """
@@ -1036,7 +1031,6 @@ class ImagingBootServiceItem(ImagingItem):
 
 
 class ImagingImageItem(ImagingItem):
-
     """
     Hold an imaging menu item for a image to restore
     """
@@ -1387,7 +1381,7 @@ INITRD ../davos/initrd.img"""
 
     def chooseMacAddress(self):
         rest = True
-        for k, v in self.menu["computer"].iteritems():
+        for k, v in self.menu["computer"].items():
             mac = pulse2.utils.reduceMACAddress(k)
             filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
             self.logger.debug("create bootMenu [%s] Computer ip [%s]" % (k, v))
@@ -1421,6 +1415,8 @@ INITRD ../davos/initrd.img"""
             )
 
         # Write new boot menu
+        if isinstance(content, str):
+            content = content.encode("utf-8")
         try:
             fid = open(fichier, "w+b")
             fid.write(content)

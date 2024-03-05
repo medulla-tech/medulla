@@ -801,3 +801,8 @@ function xmlrpc_setimaginglogxmpp(
                                                     $touser,
                                                     $fromuser));
 }
+
+function xmlrpc_delete_multicast_from_db($infoparameters)
+{
+    return xmlCall("imaging.delete_multicast_from_db", $infoparameters);
+}

@@ -35,7 +35,7 @@ $default_menu = $config[1];
 
 $f = new ValidatingForm(array("action" => urlStrRedirect("imaging/manage/save_configuration"),));
 
-$f->add(new HiddenTpl("is_uuid"), array("value" => $imaging_server['imaging_uuid'], "hide" => True));
+$f->add(new HiddenTpl("is_uuid"), array("value" => $imaging_server['imaging_uuid'], "hide" => true));
 
 $lang = xmlrpc_getAllKnownLanguages();
 $lang_choices = array();
@@ -57,7 +57,7 @@ if ($imaging_server['fk_language']) {
 }
 $f->push(new Table());
 $f->add(
-        new TrFormElement(_T("Menu language", "imaging"), $language)
+    new TrFormElement(_T("Menu language", "imaging"), $language)
 );
 
 $pxe_login_label = _T("PXE Login", "imaging");
@@ -75,18 +75,22 @@ $pxe_password_label = <<<EOS
 EOS;
 
 $f->add(
-        new TrFormElement($pxe_login_label, new InputTpl('pxe_login')), array("value" => xmlrpc_getPXELogin($location) == '' ? '' : xmlrpc_getPXELogin($location))
+    new TrFormElement($pxe_login_label, new InputTpl('pxe_login')),
+    array("value" => xmlrpc_getPXELogin($location) == '' ? '' : xmlrpc_getPXELogin($location))
 );
 
 $f->add(
-        new TrFormElement($pxe_password_label, new PasswordTpl('pxe_password')), array("value" => xmlrpc_getPXEPasswordHash($location) == '' ? '' : '.......')
+    new TrFormElement($pxe_password_label, new PasswordTpl('pxe_password')),
+    array("value" => xmlrpc_getPXEPasswordHash($location) == '' ? '' : '.......')
 );
 
 $f->add(
-        new TrFormElement(_T('Clonezilla parameters for saving images', 'imaging'), new InputTpl('clonezilla_saver_params')), array("value" => xmlrpc_getClonezillaSaverParams($location))
+    new TrFormElement(_T('Clonezilla parameters for saving images', 'imaging'), new InputTpl('clonezilla_saver_params')),
+    array("value" => xmlrpc_getClonezillaSaverParams($location))
 );
 $f->add(
-        new TrFormElement(_T('Clonezilla parameters for restoring images', 'imaging'), new InputTpl('clonezilla_restorer_params')), array("value" => xmlrpc_getClonezillaRestorerParams($location))
+    new TrFormElement(_T('Clonezilla parameters for restoring images', 'imaging'), new InputTpl('clonezilla_restorer_params')),
+    array("value" => xmlrpc_getClonezillaRestorerParams($location))
 );
 
 $f->pop();
@@ -98,10 +102,12 @@ $f->add(new TitleElement(_T("Default menu parameters", "imaging")));
 $f->push(new Table());
 
 $f->add(
-        new TrFormElement(_T('Default menu label', 'imaging'), new InputTpl("default_m_label")), array("value" => $default_menu['default_name'])
+    new TrFormElement(_T('Default menu label', 'imaging'), new InputTpl("default_m_label")),
+    array("value" => $default_menu['default_name'])
 );
 $f->add(
-        new TrFormElement(_T('Default menu timeout', 'imaging')." (s.)", new InputTpl("default_m_timeout")), array("value" => $default_menu['timeout'])
+    new TrFormElement(_T('Default menu timeout', 'imaging')." (s.)", new InputTpl("default_m_timeout")),
+    array("value" => $default_menu['timeout'])
 );
 if ($default_menu["hidden_menu"]) {
     $hidden_menu_value = 'CHECKED';
@@ -109,17 +115,63 @@ if ($default_menu["hidden_menu"]) {
     $hidden_menu_value = '';
 }
 $f->add(
-        new TrFormElement(_T('Hide menu', 'imaging'), new CheckBoxTpl("default_m_hidden_menu")), array("value" => $hidden_menu_value)
+    new TrFormElement(_T('Hide menu', 'imaging'), new CheckBoxTpl("default_m_hidden_menu")),
+    array("value" => $hidden_menu_value)
 );
 $f->pop();
 
 $f->add(new TitleElement(_T("Boot options", "imaging")));
 $f->push(new Table());
 $f->add(
-        new TrFormElement(_T("Full path to the XPM displayed at boot", "imaging"), new InputTpl("boot_xpm")), array("value" => $default_menu['background_uri'])
+    new TrFormElement(_T("Full path to the XPM displayed at boot", "imaging"), new InputTpl("boot_xpm")),
+    array("value" => $default_menu['background_uri'])
 );
 $f->add(
-        new TrFormElement(_T("Message displayed during backup/restoration", "imaging"), new TextareaTpl("boot_msg")), array("value" => $default_menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
+    new TrFormElement(_T("Message displayed during backup/restoration", "imaging"), new TextareaTpl("boot_msg")),
+    array("value" => $default_menu['message']) //"Warning ! Your PC is being backed up or restored. Do not reboot !")
+);
+
+$diskless_dir = _T("Diskless Dir", "imaging");
+$f->add(
+    new TrFormElement($diskless_dir, new InputTpl('diskless_dir')),
+    array("value" => (empty($imaging_server["diskless_dir"])) ? '' : htmlentities($imaging_server["diskless_dir"]))
+);
+
+$diskless_kernel = _T("Diskless Kernel", "imaging");
+$f->add(
+    new TrFormElement($diskless_kernel, new InputTpl('diskless_kernel')),
+    array("value" => (empty($imaging_server["diskless_kernel"])) ? '' : htmlentities($imaging_server["diskless_kernel"]))
+);
+
+$inventories_dir = _T("Inventories Dir", "imaging");
+$f->add(
+    new TrFormElement($inventories_dir, new InputTpl('inventories_dir')),
+    array("value" => (empty($imaging_server["inventories_dir"])) ? '' : htmlentities($imaging_server["inventories_dir"]))
+);
+
+$pxe_time_reboot = _T("PXE time Reboot", "imaging");
+$f->add(
+    new TrFormElement($pxe_time_reboot, new InputTpl('pxe_time_reboot')),
+    array("value" => (empty($imaging_server["pxe_time_reboot"])) ? '' : htmlentities($imaging_server["pxe_time_reboot"]))
+);
+
+$diskless_initrd = _T("Diskless Initrd", "imaging");
+$f->add(
+    new TrFormElement($diskless_initrd, new InputTpl('diskless_initrd')),
+    array("value" => (empty($imaging_server["diskless_initrd"])) ? '' : htmlentities($imaging_server["diskless_initrd"]))
+);
+
+
+$tools_dir = _T("Tools Dir", "imaging");
+$f->add(
+    new TrFormElement($tools_dir, new InputTpl('tools_dir')),
+    array("value" => (empty($imaging_server["tools_dir"])) ? '' : htmlentities($imaging_server["tools_dir"]))
+);
+
+$davos_opts = _T("Davos Opts", "imaging");
+$f->add(
+    new TrFormElement($davos_opts, new InputTpl('davos_opts')),
+    array("value" => (empty($imaging_server["davos_opts"])) ? '' : htmlentities($imaging_server["davos_opts"]))
 );
 
 $f->pop();
@@ -132,4 +184,3 @@ $f->pop();
 $f->display();
 
 require("../includes/ajaxcommon_bottom.inc.php");
-?>

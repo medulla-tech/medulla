@@ -199,6 +199,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
         mapper(TargetType, self.target_type)
         mapper(User, self.user)
+        mapper(Multicast, self.multicast)
 
     def initTables(self):
         """
@@ -409,6 +410,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ForeignKey("PostInstallScript.id"),
                 primary_key=True,
             ),
+            autoload=True,
+        )
+
+        self.multicast = Table(
+            "Multicast",
+            self.metadata,
+            Column("location", Text),
+            Column("target_uuid", Text, nullable=False),
+            Column("image_uuid", Text, nullable=False),
+            Column("image_name", Text, nullable=False),
             autoload=True,
         )
 
@@ -1203,9 +1214,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 # the true one! self.imagingServer_entity[id2uuid(ims.id)] = en.uuid
                 # the working one in our context :
                 self.imagingServer_entity[en.uuid] = id2uuid(ims.id)
-                self.imagingServer_lang[
-                    self.imagingServer_entity[loc_id]
-                ] = ims.fk_language
+                self.imagingServer_lang[self.imagingServer_entity[loc_id]] = (
+                    ims.fk_language
+                )
             else:
                 return 1  # default to english
         if loc_id in self.imagingServer_lang:
@@ -2569,6 +2580,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         image.uuid = params["uuid"]
         image.checksum = params["checksum"]
         image.size = params["size"]
+
+        if isinstance(params["creation_date"], list):
+            params["creation_date"] = tuple(params["creation_date"])
+
         image.creation_date = datetime.datetime.fromtimestamp(
             time.mktime(params["creation_date"])
         )
@@ -4430,7 +4445,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             .filter(self.entity.c.uuid == loc_id)
             .count()
         )
-        return q == 1
+        return q != 0
 
     def checkLanguage(self, location, language):
         session = create_session()
@@ -6078,6 +6093,57 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getImageUUIDFromImageUUID(self, image_uuid):
         return id2uuid(self.getImageIDFromImageUUID(image_uuid))
 
+    def add_multicast(self, parameters):
+        session = create_session()
+
+        multicast = Multicast()
+        multicast.location = parameters["location"]
+        multicast.target_uuid = parameters["target_uuid"]
+        multicast.image_uuid = parameters["uuidmaster"]
+        multicast.image_name = parameters["itemlabel"]
+
+        session.add(multicast)
+        session.flush()
+        session.close()
+
+    def remove_multicast(self, parameters):
+
+        session = create_session()
+
+        session.query(Multicast).filter(
+            and_(
+                Multicast.image_uuid == parameters["uuidmaster"],
+                Multicast.target_uuid == parameters["target_uuid"],
+            )
+        ).delete()
+
+        session.flush()
+        session.close()
+
+    def set_diskless_infos(self, location, config):
+        session = create_session()
+        entity = session.query(Entity).filter(Entity.uuid == location).one()
+
+        if entity is not None:
+            ims = (
+                session.query(ImagingServer)
+                .filter(ImagingServer.fk_entity == entity.id)
+                .update(
+                    {
+                        "diskless_dir": config["diskless_dir"],
+                        "diskless_kernel": config["diskless_kernel"],
+                        "inventories_dir": config["inventories_dir"],
+                        "pxe_time_reboot": config["pxe_time_reboot"],
+                        "diskless_initrd": config["diskless_initrd"],
+                        "tools_dir": config["tools_dir"],
+                        "davos_opts": config["davos_opts"],
+                    }
+                )
+            )
+
+        session.flush()
+        session.close()
+
 
 def id2uuid(id):
     return "UUID%d" % id
@@ -6194,6 +6260,13 @@ class ImagingServer(DBObject):
         "fk_default_menu",
         "fk_language",
         "language",
+        "diskless_dir",
+        "diskless_kernel",
+        "inventories_dir",
+        "pxe_time_reboot",
+        "diskless_initrd",
+        "tools_dir",
+        "davos_opts",
     ]
 
 
@@ -6300,3 +6373,7 @@ class TargetType(DBObject):
 
 class User(DBObject):
     to_be_exported = ["id", "login"]
+
+
+class Multicast(DBObject):
+    to_be_exported = ["id", "location", "target_uuid", "image_uuid", "image_name"]

@@ -14,7 +14,6 @@ import os.path
 
 
 class ImagingComputerConfiguration:
-
     """
     Class that handles computer configuration
     """
@@ -46,7 +45,8 @@ class ImagingComputerConfiguration:
         @param value: string of disk:part
         @type value: str
         """
-        assert isinstance(value, str)
+        if isinstance(value, bytes):
+            value = value.decode("utf-8")
         self.exclude_opts = value
 
     def setHostname(self, value):

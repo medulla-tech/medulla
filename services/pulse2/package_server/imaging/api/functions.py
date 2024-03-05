@@ -606,6 +606,7 @@ class Imaging(object, metaclass=SingletonN):
                  successful, else 0.
         @rtype: int
         """
+
         def _onSuccess(result):
             shortname = self.getClientShortname(MACAddress)
             if result and isinstance(result, list) and len(result) == 2:
@@ -648,14 +649,14 @@ class Imaging(object, metaclass=SingletonN):
 
         def _getmacCB(result):
             if result and isinstance(result, dict):
-                inventory['shortname'] = result['shortname']
+                inventory["shortname"] = result["shortname"]
                 client = self._getXMLRPCClient()
                 func = "imaging.injectInventory"
                 args = (self.config.imaging_api["uuid"], result["uuid"], inventory)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
                 return d
-            return Falstype(MACAddretype(MACAddress), ss), e
+            return False
 
         if not isMACAddress(MACAddress):
             raise TypeError
@@ -1428,10 +1429,10 @@ class Imaging(object, metaclass=SingletonN):
             % (pathfiles, device)
         )
         r = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        line = [x.strip(" \t\n\r") for x in r.stdout]
+        line = [x.strip(" \t\n\r".encode("utf-8")) for x in r.stdout]
         r.wait()
         r.stdout.close()
-        return line[0]
+        return line[0].decode("utf-8")
 
     def start_process_multicast(self, objprocess):
         # start execution process multicast
