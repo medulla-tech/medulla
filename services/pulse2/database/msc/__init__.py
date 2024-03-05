@@ -723,7 +723,8 @@ class MscDatabase(DatabaseHelper):
         )
         return ""
 
-    def deployxmppscheduler(self, login, minimum, maximum, filt):
+    @DatabaseHelper._sessionm
+    def deployxmppscheduler(self, session, login, minimum, maximum, filt):
         """
         This function isued to retrieve all the scheduled deployments on msc
 
@@ -738,7 +739,7 @@ class MscDatabase(DatabaseHelper):
         listuser = []
         if isinstance(login, list):
             listuser = ['"%s"' % x.strip() for x in login if x.strip() != ""]
-        datenow = datetime.datetime.now()
+        datenow = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sqlselect = """
             SELECT
                 COUNT(*) as nbmachine,
@@ -771,9 +772,7 @@ class MscDatabase(DatabaseHelper):
             WHERE
             commands.start_date > '%s'
             AND
-            """ % datenow.strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
+            """ % datenow
         sqlfilter = """
             phase.name = 'execute'
                 AND
@@ -802,11 +801,11 @@ class MscDatabase(DatabaseHelper):
                 sqlfilter
                 + """
             AND
-            (commands.title like %%%s%%
+            (commands.title like '%%%s%%'
             OR
-            commands.creator like %%%s%%
+            commands.creator like '%%%s%%'
             OR
-            commands.start_date like %%%s%%)"""
+            commands.start_date like '%%%s%%')"""
                 % (filt, filt, filt)
             )
 
@@ -847,14 +846,12 @@ class MscDatabase(DatabaseHelper):
                 WHERE
                     commands.start_date > '%s'
             AND
-            """ % datenow.strftime(
-            "%Y-%m-%d %H:%M:%S"
-        )
+            """ % datenow
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;"
 
         result = {}
-        resulta = self.db.execute(reqsql)
-        resultb = self.db.execute(reqsql1)
+        resulta = session.execute(reqsql)
+        resultb = session.execute(reqsql1)
         sizereq = [x for x in resultb][0][0]
         result["lentotal"] = sizereq
         result["min"] = int(minimum)
