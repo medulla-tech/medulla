@@ -20,7 +20,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- ?>
+?>
 
 
 
@@ -29,9 +29,10 @@ include('modules/imaging/includes/includes.php');
 include('modules/imaging/includes/xmlrpc.inc.php');
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-if (isset($_GET['gid'])){
+
+if (isset($_GET['gid'])) {
     $nb = extract($_GET);
-}else{
+} else {
     header("Location: " . urlStrRedirect("imaging/manage/index"));
     exit;
 }
@@ -40,287 +41,306 @@ $params = getParams();
 if ($_POST) {
     $nb = extract($_POST);
     $location = getCurrentLocation();
-    $list = getRestrictedComputersList(0, -1, array('gid'=> $gid, 'hostname'=> '', 'location'=> $location), False);
+    $list = getRestrictedComputersList(0, -1, array('gid' => $gid, 'hostname' => '', 'location' => $location), false);
     list($count, $masters) = xmlrpc_getLocationImages($location);
 
-    if (safeCount($list) == 0 )
-    {
+    if (safeCount($list) == 0) {
         $msg = _T("Multicast menu has not been created : there are no computers in the group", "imaging");
         new NotifyWidgetFailure($msg);
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
 
-    if (!isset($numbercomputer)){
-        $msg = sprintf( _T("Multicast menu has not been created : number of computers missing"));
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+    if (!isset($numbercomputer)) {
+        $msg = sprintf(_T("Multicast menu has not been created : number of computers missing"));
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
-    } else
-    {
+    } else {
         $numbercomputer = intval($numbercomputer);
     }
 
-    if (!(gettype ( $numbercomputer ) == "integer")){
-        $msg = sprintf( _T("Multicast menu has not been created : number of computers missing"));
+    if (!(gettype($numbercomputer) == "integer")) {
+        $msg = sprintf(_T("Multicast menu has not been created : number of computers missing"));
         new NotifyWidgetFailure($msg);
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
-    if ( safeCount($list) < intval($numbercomputer)){
-        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),safeCount($list),intval($numbercomputer));
+    if (safeCount($list) < intval($numbercomputer)) {
+        $msg = sprintf(_T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"), safeCount($list), intval($numbercomputer));
         new NotifyWidgetFailure($msg);
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     };
-    if (intval($numbercomputer)==0 ){
-        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),safeCount($list),intval($numbercomputer));
+    if (intval($numbercomputer) == 0) {
+        $msg = sprintf(_T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"), safeCount($list), intval($numbercomputer));
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
-    $objval=array();
-    $objval['computer']=array();
-    if ( safeCount($list) < intval($numbercomputer)){
-        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),safeCount($list),intval($numbercomputer));
+    $objval = array();
+    $objval['computer'] = array();
+    if (safeCount($list) < intval($numbercomputer)) {
+        $msg = sprintf(_T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"), safeCount($list), intval($numbercomputer));
         new NotifyWidgetFailure($msg);
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     };
 
-    $objval['location']=$location;
+    $objval['location'] = $location;
     $objval['nbcomputer'] = intval($numbercomputer);
-    foreach($masters as $val){
-        if ($val['uuid'] == $_POST['uuidmaster']){
+    foreach($masters as $val) {
+        if ($val['uuid'] == $_POST['uuidmaster']) {
             $objval['size'] = $val['size'];
-            $objval['description'] =$val['name'];
-            $objval['path'] =$val['path'];
-            $objval['master'] =$_POST['uuidmaster'];
+            $objval['description'] = $val['name'];
+            $objval['path'] = $val['path'];
+            $objval['master'] = $_POST['uuidmaster'];
         }
     }
 
     $objval['group'] = $target_uuid;
     $profileNetworks1 = xmlrpc_getProfileNetworks($target_uuid);
 
-    $mach=array();
-    foreach($profileNetworks1 as $net){
-        for ($t=0;$t<safeCount($net[1]['macAddress']);$t++){
+    $mach = array();
+    foreach($profileNetworks1 as $net) {
+        for ($t = 0;$t < safeCount($net[1]['macAddress']);$t++) {
             $ip = explode(":", $net[1]['ipHostNumber'][$t]);
-            if (filter_var($ip[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {;
-                $mach[$net[1]['macAddress'][$t]]=$ip[0];
-                printf ("%s :: %s<br>",$net[1]['macAddress'][$t],$ip[0]);
+            if (filter_var($ip[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                ;
+                $mach[$net[1]['macAddress'][$t]] = $ip[0];
+                printf("%s :: %s<br>", $net[1]['macAddress'][$t], $ip[0]);
             }
         }
     }
     // list machine sans ipv4
     $machine = array();
-    foreach($profileNetworks1 as $net){
-        $recherche = False;
-        foreach($net[1]['ipHostNumber'] as $ip){
+    foreach($profileNetworks1 as $net) {
+        $recherche = false;
+        foreach($net[1]['ipHostNumber'] as $ip) {
             $ip1 = explode(":", $ip);
             if (filter_var($ip1[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-                $recherche = True;
+                $recherche = true;
                 break;
             }
         }
-        if ($recherche == False ){
-            $machine[]=$net[1]['objectUUID'][0];
+        if ($recherche == false) {
+            $machine[] = $net[1]['objectUUID'][0];
         };
     }
     $nbmachine = safeCount($machine);
-    if($nbmachine !=0 ){
+    if($nbmachine != 0) {
         $msg = $nbmachine." "._T("computers have a [IPV6] interfaces address exclusively in the group", "imaging")."\n".
-        "list machines : [".implode(" ",$machine)."]";
+        "list machines : [".implode(" ", $machine)."]";
         new NotifyWidgetFailure($msg);
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
 
-    $objval['computer']= $mach;
+    $objval['computer'] = $mach;
 
-    if ( $maxwaittime != "NONE" ){
+    if ($maxwaittime != "NONE") {
         //$maxwaittime=intval($maxwaittime);
-        if (!is_numeric($maxwaittime)){
-            $msg = sprintf( _T("Multicast menu has not been created : --max-time-to-wait missing"));
+        if (!is_numeric($maxwaittime)) {
+            $msg = sprintf(_T("Multicast menu has not been created : --max-time-to-wait missing"));
             new NotifyWidgetFailure($msg);
-            xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+            xmlrpc_setfromxmppmasterlogxmpp(
+                $msg,
+                "IMG",
+                '',
+                0,
+                $label,
+                'Manuel',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Imaging | Image | Multicast | server | Manual'
+            );
             header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
             exit;
         }
-        $objval['maxwaittime']=$maxwaittime;
+        $objval['maxwaittime'] = $maxwaittime;
         if (intval($maxwaittime) < 60) {
-            $msg = sprintf( _T("Multicast menu has not been created : --max-time-to-wait < 60"));
+            $msg = sprintf(_T("Multicast menu has not been created : --max-time-to-wait < 60"));
             new NotifyWidgetFailure($msg);
             header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
             exit;
         }
     }
 
-    if (safeCount($objval['computer']) == 0 )
-    {
+    if (safeCount($objval['computer']) == 0) {
         $msg = _T("Multicast menu has not been created : there are no computers in the group", "imaging");
         new NotifyWidgetFailure($msg);
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
-    if (!isset($objval['path']) || $objval['path']=="" ){
+    if (!isset($objval['path']) || $objval['path'] == "") {
         $msg = _T("Multicast menu has not been created : the selected master is missing on disk", "imaging");
         new NotifyWidgetFailure($msg);
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
 
     $locationparameter = getCurrentLocation();
     $list =  xmlrpc_imagingServermenuMulticast($objval);
-    if($list[0] == 1){
-        $Paramsmulticast=array(
-            "gid"=>$gid,
-            "from"=>$from,
-            "is_master"=>$is_master,
-            "uuidmaster"=>$uuidmaster,
-            "itemid"=>$itemid,
-            "itemlabel"=>$itemlabel,
-            "target_uuid"=>$target_uuid,
-            "target_name"=>$target_name,
+    if($list[0] == 1) {
+        $Paramsmulticast = array(
+            "gid" => $gid,
+            "from" => $from,
+            "is_master" => $is_master,
+            "uuidmaster" => $uuidmaster,
+            "itemid" => $itemid,
+            "itemlabel" => $itemlabel,
+            "target_uuid" => $target_uuid,
+            "target_name" => $target_name,
             "location" => $locationparameter,
         );
 
         xmlrpc_SetMulticastMultiSessionParameters($Paramsmulticast);
-//         echo "<pre>";
-//             print_r ($Paramsmulticast);
-//         //     print_r ($objval);
-//         //     print_r ($_SESSION['PARAMMULTICAST']);
-//         echo "</pre>";
+        //         echo "<pre>";
+        //             print_r ($Paramsmulticast);
+        //         //     print_r ($objval);
+        //         //     print_r ($_SESSION['PARAMMULTICAST']);
+        //         echo "</pre>";
 
         $msg = _T("Multicast menu has been successfully created.", "imaging");
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         new NotifyWidgetSuccess($msg);
 
         header("Location: " . urlStrRedirect("imaging/manage/index"));
         exit;
-    }
-    else{
+    } else {
         $msg = _T("Multicast menu has not been created : check that the imaging server is running", "imaging");
         new NotifyWidgetFailure($msg);
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Multicast | server | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | Multicast | server | Manual'
+        );
         header("Location: " . urlStrRedirect("imaging/manage/index"));
         exit;
     }
@@ -345,7 +365,7 @@ jQuery('#checkbox1').click(function() {
 </script>
 
 <h2>
-<?php echo sprintf(_T("deploy the master <strong>%s</strong> to this group <strong>%s</strong> in multicast", "imaging"), $label,$_GET[target_name]) ?>
+<?php echo sprintf(_T("deploy the master <strong>%s</strong> to this group <strong>%s</strong> in multicast", "imaging"), $label, $_GET["target_name"]) ?>
 </h2>
 <form action="<?php echo urlStr("base/computers/multicast", $params) ?>" method="post">
 

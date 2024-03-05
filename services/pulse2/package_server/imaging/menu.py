@@ -1381,7 +1381,7 @@ INITRD ../davos/initrd.img"""
 
     def chooseMacAddress(self):
         rest = True
-        for k, v in self.menu["computer"].iteritems():
+        for k, v in self.menu["computer"].items():
             mac = pulse2.utils.reduceMACAddress(k)
             filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
             self.logger.debug("create bootMenu [%s] Computer ip [%s]" % (k, v))
@@ -1415,6 +1415,8 @@ INITRD ../davos/initrd.img"""
             )
 
         # Write new boot menu
+        if isinstance(content, str):
+            content = content.encode("utf-8")
         try:
             fid = open(fichier, "w+b")
             fid.write(content)
