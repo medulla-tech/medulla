@@ -60,17 +60,23 @@ if (isset($_POST["bdeluser_x"])) {
         foreach ($_POST["nonmemb"] as $user) {
             $ma = preg_split("/##/", $user);
             $members[$user] = $ma[1];
-            $listOfMembers[$ma[1]] = array('user'=>array('login'=>$ma[1], 'type'=>$ma[0]));
+            $listOfMembers[$ma[1]] = array('user' => array('login' => $ma[1], 'type' => $ma[0]));
         }
     }
 } elseif (isset($_POST["bconfirm"])) {
     $listOfCurMembers = $group->shareWith();
-    if (!$listOfCurMembers) { $listOfCurMembers = array(); }
+    if (!$listOfCurMembers) {
+        $listOfCurMembers = array();
+    }
 
     $listN = array();
     $listC = array();
-    foreach ($listOfMembers as $login => $member) { $listN[$member['user']['login']] = $member; }
-    foreach ($listOfCurMembers as $member) { $listC[$member['user']['login']] = $member; }
+    foreach ($listOfMembers as $login => $member) {
+        $listN[$member['user']['login']] = $member;
+    }
+    foreach ($listOfCurMembers as $member) {
+        $listC[$member['user']['login']] = $member;
+    }
 
     $newmem = array_diff_assoc($listN, $listC);
     $delmem = array_diff_assoc($listC, $listN);
@@ -99,8 +105,12 @@ if (isset($_POST["bdeluser_x"])) {
         $listOfMembers[$member['user']['login']] = $member;
     }
 
-    if (!$members) { $members = array(); }
-    if (!$listOfMembers) { $listOfMembers = array(); }
+    if (!$members) {
+        $members = array();
+    }
+    if (!$listOfMembers) {
+        $listOfMembers = array();
+    }
 
 
     list($count, $users) = get_users_detailed($error, '', 0, 10000);
@@ -108,10 +118,10 @@ if (isset($_POST["bdeluser_x"])) {
     foreach ($users as $u) {
         $listOfUsers[$u['uid']->scalar] = array('user' => array('login' => $u['uid']->scalar, 'type' => 0));
     }
-    $listOfUsers['root'] = array('user'=>array('login'=>'root', 'type'=>0));
+    $listOfUsers['root'] = array('user' => array('login' => 'root', 'type' => 0));
     $groups = search_groups('');
     foreach ($groups as $u) {
-        $listOfUsers[$u[0]] = array('user'=>array('login'=>$u[0], 'type'=>1));
+        $listOfUsers[$u[0]] = array('user' => array('login' => $u[0], 'type' => 1));
     }
     $nonmemb = array();
     foreach ($listOfUsers as $user) {
@@ -126,5 +136,3 @@ $diff = array_diff_assoc($nonmemb, $members);
 natcasesort($diff);
 
 drawGroupShare($nonmemb, $members, $listOfMembers, $diff, $group->id, htmlspecialchars($name));
-
-?>
