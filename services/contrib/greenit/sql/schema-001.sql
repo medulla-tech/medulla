@@ -247,7 +247,7 @@ INSERT INTO `cpu_complete_base` VALUES
 (289,'03th Gen Intel(R) Core(TM) i5-3210M CPU @ 2.50GHz',2500,2,4,35,3,'Win10','INTEL','i5'),
 (290,'03th Gen Intel(R) Core(TM) i7-3770 CPU @ 3.40GHz',3400,4,6,77,3,'Win10','INTEL','i7'),
 (292,'Intel(R) Pentium(R) Dual-Core CPU E5500 @ 2.80GHz',2800,1,1,65,NULL,'Win10','INTEL','Pentium'),
-(293,'Intel(R) Core(TM) i5 CPUU 470 @ 1.33GHz',1330,1,1,80,4,'win10','INTEL','i5'),
+(293,'Intel(R) Core(TM) i5 CPU U 470 @ 1.33GHz',1330,1,1,80,4,'win10','INTEL','i5'),
 (294,'Intel(R) Core(TM)2 Quad CPUQ9400 @ 2.66GHz',2660,1,1,80,NULL,'Win10','INTEL','Core(TM)2'),
 (295,'Intel(R) Celeron(R) CPU B810 @ 1.60GHz',1600,1,1,35,0,'Win7','INTEL','Celeron'),
 (296,'Genuine Intel(R) CPU T1600 @ 1.66GHz',1660,1,1,80,NULL,'Win7','INTEL','Genuine'),
