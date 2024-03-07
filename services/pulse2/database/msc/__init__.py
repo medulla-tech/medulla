@@ -739,8 +739,9 @@ class MscDatabase(DatabaseHelper):
         listuser = []
         if isinstance(login, list):
             listuser = ['"%s"' % x.strip() for x in login if x.strip() != ""]
-        datenow = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        sqlselect = """
+        datenow = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        sqlselect = (
+            """
             SELECT
                 COUNT(*) as nbmachine,
                 target.id_group AS GRP,
@@ -772,7 +773,9 @@ class MscDatabase(DatabaseHelper):
             WHERE
             commands.start_date > '%s'
             AND
-            """ % datenow
+            """
+            % datenow
+        )
         sqlfilter = """
             phase.name = 'execute'
                 AND
@@ -826,7 +829,8 @@ class MscDatabase(DatabaseHelper):
 
         reqsql = reqsql + sqlgroupby + ";"
 
-        sqlselect = """
+        sqlselect = (
+            """
             Select COUNT(nb) AS TotalRecords from(
                 SELECT
                     COUNT(*) AS nb,
@@ -846,7 +850,9 @@ class MscDatabase(DatabaseHelper):
                 WHERE
                     commands.start_date > '%s'
             AND
-            """ % datenow
+            """
+            % datenow
+        )
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;"
 
         result = {}
