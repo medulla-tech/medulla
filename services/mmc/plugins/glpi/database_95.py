@@ -5854,8 +5854,15 @@ class Glpi95(DyngroupDatabaseHelper):
         @rtype: bool
         """
         authtoken = base64.b64encode(
-            bytes("%s:%s"%(GlpiConfig.webservices["glpi_username"],
-                           GlpiConfig.webservices["glpi_password"]), "utf-8"))
+            bytes(
+                "%s:%s"
+                % (
+                    GlpiConfig.webservices["glpi_username"],
+                    GlpiConfig.webservices["glpi_password"],
+                ),
+                "utf-8",
+            )
+        )
 
         headers = {
             "content-type": "application/json",
