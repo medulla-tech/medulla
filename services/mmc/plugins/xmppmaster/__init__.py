@@ -118,6 +118,9 @@ def set_simple_log(textinfo, sessionxmppmessage, typelog, priority, who):
     )
 
 
+def get_Glpi_entity(glpi_id):
+    return XmppMasterDatabase().get_Glpi_entity(glpi_id)
+
 def updatedeploystate(sessionxmppmessage, status):
     return XmppMasterDatabase().updatedeploystate(sessionxmppmessage, status)
 

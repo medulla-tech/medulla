@@ -26,6 +26,11 @@
 //======================================================================
 //require_once("modules/xmppmaster/includes/xmlrpc.php");
 
+function xmlrpc_get_Glpi_entity($glpi_id)
+{
+    return xmlCall("xmppmaster.get_Glpi_entity",  array($glpi_id));
+}
+
 //topology
 function xmlrpc_topology_pulse()
 {
