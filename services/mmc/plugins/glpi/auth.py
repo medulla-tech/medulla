@@ -1,25 +1,20 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# SPDX-FileCopyrightText:2007-2014 Mandriva, http://www.mandriva.com
+# SPDX-FileCopyrightText: 2007-2008 Mandriva, http://www.mandriva.com/
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
-# SPDX-License-Identifier: GPL-3.0-or-later
 
 import urllib.parse
 import re
+import io
 
 from twisted.internet import reactor, defer
 from twisted.web import client
+from twisted.internet import interfaces, protocol
+from zope.interface import implementer
 
-try:
-    from twisted.web.client import _parse
+import logging
 
-    parseAvailable = True
-except ImportError:
-    try:
-        from twisted.web.client import _URI as URI
-    except ImportError:
-        from twisted.web.client import URI
-    parseAvailable = False
+logger = logging.getLogger()
 
 from mmc.plugins.base.auth import AuthenticatorConfig, AuthenticatorI
 from mmc.support.mmctools import getConfigFile
@@ -45,45 +40,73 @@ class GlpiAuthenticator(AuthenticatorI):
     This is useful to create and to provision her/his account in GLPI database.
     """
 
+    login_namename = b"medulladefault"
+    login_passwordname = b"password"
+    glpi_csrf_token = b"your_csrf_token_value"
+
     def __init__(self, conffile=None, name="glpi"):
         if not conffile:
             conffile = getConfigFile(name)
         AuthenticatorI.__init__(self, conffile, name, GlpiAuthenticatorConfig)
 
-    def _cbIndexPage(self, value):
+    def _cbIndexPage(self, response):
         self.logger.debug("GlpiAuthenticator: on index page")
-        phpsessid = value.response_headers["set-cookie"][0].split("=")
-        params = {
-            "method": "POST",
-            "cookies": {phpsessid[0]: phpsessid[1]},
-            "headers": {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Referer": urllib.parse.urljoin(
-                    self.config.baseurl, self.config.loginpage
-                ),
-            },
-            "postdata": urllib.parse.urlencode(
-                {
-                    value.login_namename: self.user,
-                    value.login_passwordname: self.password,
-                    "_glpi_csrf_token": value.glpi_csrf_token,
-                }
-            ),
-        }
-        return params
+        set_cookie_header = response.headers.getRawHeaders(b"set-cookie")
+        if set_cookie_header:
+            phpsessid = set_cookie_header[0].split(b"=")
+            params = {
+                "method": b"POST",
+                "cookies": {phpsessid[0]: phpsessid[1]},
+                "headers": {
+                    b"Content-Type": b"application/x-www-form-urlencoded",
+                    b"Referer": urllib.parse.urljoin(
+                        self.config.baseurl, self.config.loginpage
+                    ),
+                },
+                "postdata": urllib.parse.urlencode(
+                    {
+                        self.login_namename: self.user,
+                        self.login_passwordname: self.password,
+                        b"_glpi_csrf_token": self.glpi_csrf_token,
+                    }
+                ).encode("utf-8"),
+            }
+            return params
+        else:
+            # Gérer le cas où l'en-tête "set-cookie" est manquant
+            # Peut-être qu'il y a une autre logique à appliquer ici, selon vos besoins
+            raise ValueError("Missing 'set-cookie' header in response")
 
     def _cbLoginPost(self, params):
         self.logger.debug("GlpiAuthenticator: posting on login page")
-        d = agent.request(
-            urllib.parse.urljoin(self.config.baseurl, self.config.loginpost),
-            None,
-            **params
+        d = self.agent.request(
+            b"POST",
+            urllib.parse.urljoin(self.config.baseurl.encode('utf-8'), self.config.loginpost.encode('utf-8')),
+            headers=client.Headers({b"User-Agent": [b"Twisted Client"]}),
+            bodyProducer = client.FileBodyProducer(io.BytesIO(params["postdata"]))
         )
         d.addCallback(self._cbCheckOutput)
         return d
 
-    def _cbCheckOutput(self, value):
-        return re.search(self.config.match, value) is not None
+    def _cbCheckOutput(self, response):
+        deferred = defer.Deferred()
+        response.deliverBody(GlpiAuthenticator._ResponseReader(deferred))
+        return deferred
+
+    class _ResponseReader(protocol.Protocol):
+        def __init__(self, deferred):
+            self.deferred = deferred
+            self.data = b""
+
+        def dataReceived(self, chunk):
+            self.data += chunk
+
+        def connectionLost(self, reason):
+            self.deferred.callback(self.data)
+
+    def _cbReadResponseBody(self, body):
+        content = body.read()
+        return re.search(self.config.match, content.decode("utf-8")) is not None
 
     def authenticate(self, user, password):
         """
@@ -94,11 +117,16 @@ class GlpiAuthenticator(AuthenticatorI):
                 "GlpiAuthenticator: do not authenticate user %s (doauth = False)" % user
             )
             return defer.succeed(True)
+
         self.user = user
         self.password = password
-        d = getPageWithHeader(
-            urllib.parse.urljoin(self.config.baseurl, self.config.loginpage)
-        ).addCallback(self._cbIndexPage)
+        self.agent = client.Agent(reactor)
+        d = self.agent.request(
+            b"GET",
+            urllib.parse.urljoin(self.config.baseurl, self.config.loginpage).encode('utf-8'),
+            headers=client.Headers({b"User-Agent": [b"Twisted Client"]})
+        )
+        d.addCallback(self._cbIndexPage)
         d.addCallback(self._cbLoginPost)
         return d
 
@@ -106,63 +134,23 @@ class GlpiAuthenticator(AuthenticatorI):
         return True
 
 
-class HTTPClientFactoryWithHeader(client.Agent):
-    """
-    HTTPClientFactory don't allow to get the HTTP header.
-    So we subclass the page() method and modify it to get the HTTP payload
-    header
-    """
+@implementer(interfaces.IPushProducer)
+class StringProducer:
+    def __init__(self, body):
+        self.body = body
+        self.paused = False
 
-    # the GLPI anti-csrf token (GLPI 0.83.3+)
-    glpi_csrf_token = ""
+    def pauseProducing(self):
+        self.paused = True
 
-    def page(self, page):
-        # grabbing the GLPI anti-csrf token (GLPI 0.83.3+) by
-        # looking for such patterns :
-        # <input type='hidden' name='_glpi_csrf_token' value='82d37af7f30d76f2238d49c28167654f'>
-        m = re.search(
-            'input type="hidden" name="_glpi_csrf_token" value="([0-9a-z]{32})">', page
-        )
-        if m is not None:
-            self.glpi_csrf_token = m.group(1)
+    def resumeProducing(self):
+        if self.paused:
+            self.paused = False
+            self.consumer.write(self.body)
 
-        m = re.search(
-            'input type="password" name="([0-9a-z]{19})" id="login_password"', page
-        )
-        if m is not None:
-            self.login_passwordname = m.group(1)
+    def stopProducing(self):
+        pass
 
-        m = re.search('input type="text" name="([0-9a-z]{19})" id="login_name"', page)
-        if m is not None:
-            self.login_namename = m.group(1)
-
-        if self.waiting:
-            self.waiting = 0
-            self.deferred.callback(self)
-
-
-def getPageWithHeader(url, contextFactory=None, *args, **kwargs):
-    """
-    Same as twisted.web.client.getPage, but we keep the HTTP header in the
-    result thanks to the HTTPClientFactoryWithHeader class
-    """
-    if parseAvailable:
-        scheme, host, port, path = _parse(url)
-    else:
-        uri = URI.fromBytes(url)
-        scheme = uri.scheme
-        host = uri.host
-        port = uri.port
-
-    factory = HTTPClientFactoryWithHeader(url, *args, **kwargs)
-    d = factory.deferred
-
-    if scheme == "https":
-        from twisted.internet import ssl
-
-        if contextFactory is None:
-            contextFactory = ssl.ClientContextFactory()
-        reactor.connectSSL(host, port, factory, contextFactory)
-    else:
-        reactor.connectTCP(host, port, factory)
-    return d
+    def startProducing(self, consumer):
+        self.consumer = consumer
+        self.consumer.write(self.body)
