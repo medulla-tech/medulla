@@ -114,6 +114,48 @@ class ExternalLdapAuthenticator(AuthenticatorI):
             raise Exception("Can't find an external LDAP server to connect to")
         return l
 
+    def convert(self, data):
+        """Convert recursively the incoming datas from bytes to string when it's possible.
+            @param self : instance of the object
+            @type self : ExternalLdapAuthenticator instance
+
+            @param data: the data we want to convert
+            @param type: mixed
+        """
+        # If data is type bytes, try to convert it or let it as bytes if any problem occurs
+        if isinstance(data, bytes):
+            try:
+                return data.decode("utf-8")
+            except:
+                return data
+
+        # if data is a list
+        if isinstance(data, list):
+            root = []
+            # try convert all the elements of the list
+            for element in data:
+                root.append(self.convert(element))
+
+        # if data is a tuple, convert all elements as list and cast it as tuple
+        elif isinstance(data, tuple):
+            root = []
+            # 1 - convert all element from the tuple and save them in root
+            for element in data:
+                root.append(self.convert(element))
+            # 2 - cast root (which is a list) as tuple
+            root = tuple(root)
+
+        # if data is a dict
+        elif isinstance(data, dict):
+            root = {}
+            # convert all associated values
+            for key in data:
+                root[key] = self.convert(data[key])
+        else:
+            # in others cases (i.e. str, int, None, bool ...) leave as it
+            root = data
+        return root
+
     def searchUser(self, l, login):
         """
         Search the user dn into the LDAP
@@ -125,9 +167,11 @@ class ExternalLdapAuthenticator(AuthenticatorI):
             ldap.SCOPE_SUBTREE,
             f"(&({self.config.attr}={login})({self.config.filter}))",
         )
+        users = self.convert(users)
         for user in users:
             self.logger.debug(f"Found user dn: {user[0]}")
             self.logger.debug(str(user))
+
         return (
             users[0]
             if users and users[0][1][self.config.attr][0] == login
@@ -201,8 +245,12 @@ class ExternalLdapProvisioner(ProvisionerI):
         if l.existUser(uid):
             self.logger.debug(f"User {uid} already exists, so this user won't be added")
         else:
-            givenName = userentry[self.config.ldap_givenName][0].decode("utf-8")
-            sn = userentry[self.config.ldap_sn][0].decode("utf-8")
+            givenName = userentry[self.config.ldap_givenName][0]
+            if isinstance(givenName, bytes):
+                givenName = givenName.decode("utf-8")
+            sn = userentry[self.config.ldap_sn][0]
+            if isinstance(sn, bytes):
+                sn = sn.decode("utf-8")
             l.addUser(uid, authtoken.getPassword(), givenName, sn)
         if self.config.profileAttr and self.config.profilesAcl:
             # Set or update the user right
