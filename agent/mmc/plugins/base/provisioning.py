@@ -181,7 +181,7 @@ class ProvisionerI:
         return False
 
 
-class ProvisioningError:
+class ProvisioningError(BaseException):
     """
     Raised by the ProvisioningManager if the provisioning process failed
     """
