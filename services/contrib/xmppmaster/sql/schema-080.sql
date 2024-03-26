@@ -1017,7 +1017,7 @@ BEGIN
       CASE 
       WHEN tablesearch IN ( 'up_packages_Win10_X64_21H1',
 							'up_packages_Win10_X64_21H2',
-						    'up_packages_Win10_X64_221H2',
+						    'up_packages_Win10_X64_22H2',
 						    'up_packages_Win11_X64', 
                             'up_packages_Win10_X64_1903') THEN
 		SET @query = concat("
