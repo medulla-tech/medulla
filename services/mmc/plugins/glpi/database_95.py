@@ -824,13 +824,14 @@ class Glpi95(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         return self.machine.c.entities_id.in_(ctx.locationsid + other_locids)
 
-    def mini_computers_count(self):
+    @DatabaseHelper._sessionm
+    def mini_computers_count(self, session):
         """Count all the GLPI machines
         Returns:
             int count of machines"""
 
         sql = """select count(id) as count_machines from glpi_computers;"""
-        res = self.db.execute(sql)
+        res = session.execute(sql)
         for element in res:
             result = element[0]
         return result
@@ -6643,7 +6644,7 @@ class Glpi95(DyngroupDatabaseHelper):
         contact = []
         entity = []
         result = []
-        res = self.db.execute(sqlrequest)
+        res = session.execute(sqlrequest)
         for element in res:
             id.append(element.id)
             name.append(element.name)
@@ -6693,7 +6694,7 @@ class Glpi95(DyngroupDatabaseHelper):
         dateinstall = []
         input_computer = []
         result = []
-        res = self.db.execute(sqlrequest)
+        res = session.execute(sqlrequest)
         for element in res:
             uuid_inventory.append(element.uuid_inventory)
             hostname.append(element.hostname)
@@ -6735,7 +6736,7 @@ class Glpi95(DyngroupDatabaseHelper):
             kb
         )
         result = {}
-        res = self.db.execute(sqlrequest)
+        res = session.execute(sqlrequest)
         for element in res:
             result["nb_machines"] = element.nb_machines
         return result

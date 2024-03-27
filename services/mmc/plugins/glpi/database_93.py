@@ -837,13 +837,14 @@ class Glpi93(DyngroupDatabaseHelper):
             complete_ctx(ctx)
         return self.machine.c.entities_id.in_(ctx.locationsid + other_locids)
 
-    def mini_computers_count(self):
+    @DatabaseHelper._sessionm
+    def mini_computers_count(self, session):
         """Count all the GLPI machines
         Returns:
             int count of machines"""
 
         sql = """select count(id) as count_machines from glpi_computers;"""
-        res = self.db.execute(sql)
+        res = session.execute(sql)
         for element in res:
             result = element[0]
         return result
@@ -6634,7 +6635,7 @@ ON
   operatingsystemversions_id = glpi_operatingsystemversions.id
 ORDER BY
  glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
-        res = self.db.execute(sql)
+        res = session.execute(sql)
         result = [{"os": os, "version": version, "count": 1} for os, version in res]
 
         def _add_element(element, list):
@@ -6765,7 +6766,7 @@ ORDER BY
         contact = []
         entity = []
         result = []
-        res = self.db.execute(sqlrequest)
+        res = session.execute(sqlrequest)
         for element in res:
             id.append(element.id)
             name.append(element.name)
@@ -6813,7 +6814,7 @@ ORDER BY
         kb = []
         numkb = []
         result = []
-        res = self.db.execute(sqlrequest)
+        res = session.execute(sqlrequest)
         for element in res:
             uuid_inventory.append(element.uuid_inventory)
             hostname.append(element.hostname)
@@ -6851,7 +6852,7 @@ ORDER BY
             kb
         )
         result = {}
-        res = self.db.execute(sqlrequest)
+        res = session.execute(sqlrequest)
         for element in res:
             result["nb_machines"] = element.nb_machines
         return result
