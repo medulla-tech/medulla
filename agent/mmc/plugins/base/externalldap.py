@@ -116,11 +116,11 @@ class ExternalLdapAuthenticator(AuthenticatorI):
 
     def convert(self, data):
         """Convert recursively the incoming datas from bytes to string when it's possible.
-            @param self : instance of the object
-            @type self : ExternalLdapAuthenticator instance
+        @param self : instance of the object
+        @type self : ExternalLdapAuthenticator instance
 
-            @param data: the data we want to convert
-            @param type: mixed
+        @param data: the data we want to convert
+        @param type: mixed
         """
         # If data is type bytes, try to convert it or let it as bytes if any problem occurs
         if isinstance(data, bytes):
@@ -213,9 +213,9 @@ class ExternalLdapProvisionerConfig(ProvisionerConfig):
             PROFILEENTITY = "profile_entity_"
             for option in self.options(self.section):
                 if option.startswith(PROFILEENTITY):
-                    self.profilesEntity[
-                        option.replace(PROFILEENTITY, "").lower()
-                    ] = self.get(self.section, option)
+                    self.profilesEntity[option.replace(PROFILEENTITY, "").lower()] = (
+                        self.get(self.section, option)
+                    )
 
     def setDefault(self):
         ProvisionerConfig.setDefault(self)

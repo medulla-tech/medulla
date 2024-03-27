@@ -81,9 +81,12 @@ class GlpiAuthenticator(AuthenticatorI):
         self.logger.debug("GlpiAuthenticator: posting on login page")
         d = self.agent.request(
             b"POST",
-            urllib.parse.urljoin(self.config.baseurl.encode('utf-8'), self.config.loginpost.encode('utf-8')),
+            urllib.parse.urljoin(
+                self.config.baseurl.encode("utf-8"),
+                self.config.loginpost.encode("utf-8"),
+            ),
             headers=client.Headers({b"User-Agent": [b"Twisted Client"]}),
-            bodyProducer = client.FileBodyProducer(io.BytesIO(params["postdata"]))
+            bodyProducer=client.FileBodyProducer(io.BytesIO(params["postdata"])),
         )
         d.addCallback(self._cbCheckOutput)
         return d
@@ -123,8 +126,10 @@ class GlpiAuthenticator(AuthenticatorI):
         self.agent = client.Agent(reactor)
         d = self.agent.request(
             b"GET",
-            urllib.parse.urljoin(self.config.baseurl, self.config.loginpage).encode('utf-8'),
-            headers=client.Headers({b"User-Agent": [b"Twisted Client"]})
+            urllib.parse.urljoin(self.config.baseurl, self.config.loginpage).encode(
+                "utf-8"
+            ),
+            headers=client.Headers({b"User-Agent": [b"Twisted Client"]}),
         )
         d.addCallback(self._cbIndexPage)
         d.addCallback(self._cbLoginPost)
