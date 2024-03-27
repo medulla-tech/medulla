@@ -1,7 +1,5 @@
 # Medulla
 
-[![Build Status](https://buildnew.siveo.net/buildStatus/icon?job=medulla_master)](null-referer)
-
 Medulla is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are. 
 
 Medulla provides a real-time management solution for complex and distributed environments.
