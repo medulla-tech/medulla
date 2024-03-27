@@ -35,6 +35,7 @@ SERVICES='mmc-agent \
           pulse-xmpp-master-substitute-logger \
           pulse-xmpp-master-substitute-reconfigurator \
           pulse-xmpp-master-substitute-monitoring \
+          pulse-xmpp-master-substitute-master \
           pulse-xmpp-master-substitute-updates \
           pulse-xmpp-master-substitute-all'
 
