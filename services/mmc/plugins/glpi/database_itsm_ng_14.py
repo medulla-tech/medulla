@@ -105,7 +105,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             pool_size=self.config.dbpoolsize,
         )
         logging.getLogger().debug(
-            "Trying to detect if ITSM-NG version is higher than 1.4 %s" % dburi
+            "Trying to detect if ITSM-NG version is higher than 1.4"
         )
 
         try:
