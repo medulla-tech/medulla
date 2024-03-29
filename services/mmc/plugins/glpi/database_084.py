@@ -6290,24 +6290,24 @@ class Glpi084(DyngroupDatabaseHelper):
     def get_machine_with_update(self, session, kb):
         sqlrequest = """
             SELECT 
-                glpi.glpi_computers.id AS uuid_inventory,
-                glpi.glpi_computers.name AS hostname,
-                glpi.glpi_entities.completename AS entity,
-                glpi.glpi_softwares.name AS kb, 
-                SUBSTR(glpi.glpi_softwares.name,
-                    LOCATE('KB', glpi.glpi_softwares.name)+2, 7) as numkb
+                glpi_computers.id AS uuid_inventory,
+                glpi_computers.name AS hostname,
+                glpi_entities.completename AS entity,
+                glpi_softwares.name AS kb, 
+                SUBSTR(glpi_softwares.name,
+                    LOCATE('KB', glpi_softwares.name)+2, 7) as numkb
             FROM
-                glpi.glpi_computers
+                glpi_computers
                     INNER JOIN
-                glpi.glpi_computers_softwareversions ON glpi_computers.id = glpi.glpi_computers_softwareversions.computers_id
+                glpi_computers_softwareversions ON glpi_computers.id = glpi_computers_softwareversions.computers_id
                     INNER JOIN
-                glpi.glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
+                glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
                     INNER JOIN
-                glpi.glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
+                glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
                     INNER JOIN
-                glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
+                glpi_entities ON glpi_entities.id = glpi_computers.entities_id
             WHERE
-                glpi.glpi_softwares.name LIKE 'Update (KB%s)';""" % (
+                glpi_softwares.name LIKE 'Update (KB%s)';""" % (
             kb
         )
         uuid_inventory = []
@@ -6336,21 +6336,21 @@ class Glpi084(DyngroupDatabaseHelper):
             SELECT 
                 COUNT(*) as nb_machines
             FROM
-                glpi.glpi_computers
+                glpi_computers
                     INNER JOIN
-                glpi.glpi_items_softwareversions ON glpi_computers.id = glpi.glpi_items_softwareversions.items_id and glpi.glpi_items_softwareversions.itemtype="Computer"
+                glpi_items_softwareversions ON glpi_computers.id = glpi_items_softwareversions.items_id and glpi_items_softwareversions.itemtype="Computer"
                     INNER JOIN
-                glpi.glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
+                glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
                     INNER JOIN
-                glpi.glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
+                glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
                     INNER JOIN
-                glpi.glpi_entities ON glpi.glpi_entities.id = glpi.glpi_computers.entities_id
+                glpi_entities ON glpi_entities.id = glpi_computers.entities_id
             WHERE
-                glpi.glpi_computers.is_deleted = 0
+                glpi_computers.is_deleted = 0
             AND
-                glpi.glpi_computers.is_template = 0
+                glpi_computers.is_template = 0
             AND
-                glpi.glpi_softwares.name LIKE 'Update (KB%s)';""" % (
+                glpi_softwares.name LIKE 'Update (KB%s)';""" % (
             kb
         )
         result = {}
