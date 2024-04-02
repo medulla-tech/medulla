@@ -229,7 +229,9 @@ def associatePackages(pid, fs, level=0):
             try:
                 os.rmdir(source)
             except OSError as error_removing:
-                logger.error(f"The removal of the folder {source} has failed with the error \n {str(e)}")
+                logger.error(
+                    f"The removal of the folder {source} has failed with the error \n {str(e)}"
+                )
 
     chown(destination)
     return [boolsucess, errortransfert]
@@ -642,12 +644,16 @@ def putPackageDetail(package, need_assign=True):
         "description": package["description"],
         "entity_id": "0",
         "id": package["id"],
-        "localisation_server": package["localisation_server"]
-        if "localisation_server" in package
-        else "global",
-        "previous_localisation_server": package["previous_localisation_server"]
-        if "previous_localisation_server" in package
-        else package["localisation_server"],
+        "localisation_server": (
+            package["localisation_server"]
+            if "localisation_server" in package
+            else "global"
+        ),
+        "previous_localisation_server": (
+            package["previous_localisation_server"]
+            if "previous_localisation_server" in package
+            else package["localisation_server"]
+        ),
         "creator": package["creator"],
         "creation_date": package["creation_date"],
         "editor": package["editor"] if "editor" in package else "",
