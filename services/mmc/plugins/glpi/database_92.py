@@ -7174,7 +7174,9 @@ ORDER BY
                 }
             return result
         except Exception as e:
-            self.logger.error("\n erreur with the backtrace \n%s" % (traceback.format_exc()))
+            self.logger.error(
+                "\n erreur with the backtrace \n%s" % (traceback.format_exc())
+            )
             return {}
 
 
