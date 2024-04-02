@@ -125,10 +125,10 @@ class apimanagepackagemsc:
         return size
 
     @staticmethod
-    def getPackageDetail(pid):
+    def getPackageDetail(package_uuid):
         result = {}
         package = os.path.join(
-            "/", "var", "lib", "pulse2", "packages", pid, "conf.json"
+            "/", "var", "lib", "pulse2", "packages", package_uuid, "conf.json"
         )
         datapacquage = apimanagepackagemsc.readjsonfile(package)
         result["postCommandSuccess"] = datapacquage["commands"]["postCommandSuccess"]
