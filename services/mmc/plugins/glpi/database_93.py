@@ -7019,7 +7019,7 @@ ORDER BY
                     WHERE
                         gc.id IN %s
                             AND gsv.name REGEXP '^[0-9]{7}$'
-                            AND (gsv.comment LIKE '%Update%'
+                            AND (gsv.comment LIKE '%%Update%%'
                             OR COALESCE(gsv.comment, '') = '')
                     GROUP BY gc.id;""" % (
                 ids
