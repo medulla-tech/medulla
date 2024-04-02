@@ -1058,7 +1058,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         convergence.parentGroupId = parent_group_id
         convergence.deployGroupId = deploy_group_id
         convergence.doneGroupId = done_group_id
-        convergence.papi = pickle.dumps(p_api)  # cPickle.loads() to read datas
+        convergence.papi = pickle.dumps(p_api)
         convergence.packageUUID = pid
         convergence.commandId = command_id
         convergence.active = active
@@ -1118,7 +1118,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         query = session.query(Convergence).filter_by(parentGroupId=gid).all()
         ret = {}
         for line in query:
-            papi = cPickle.loads(line.papi)
+            papi = pickle.loads(line.papi)
             if "mountpoint" not in papi:
                 papi["mountpoint"] = "/package_api_get1"
             if not papi["mountpoint"] in ret:
