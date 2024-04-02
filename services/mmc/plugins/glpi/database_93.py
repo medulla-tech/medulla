@@ -6962,32 +6962,56 @@ ORDER BY
 
     @DatabaseHelper._sessionm
     def get_count_installed_updates_by_machines(self, session, ids):
-        ids = "(%s)" % ",".join([id for id in ids if id != ""]).replace("UUID", "")
+        """
+        Récupère le nombre de mises à jour installées par machine pour une liste d'identifiants de machine donnée.
 
-        sql = """select
-    glpi_computers.id as id,
-    glpi_computers.name as name,
-    count(glpi_softwares.id) as installed
-from glpi_computers
-join glpi_computers_softwareversions ON glpi_computers.id = glpi_computers_softwareversions.computers_id
-join glpi_softwareversions on glpi_computers_softwareversions.softwareversions_id = glpi_softwareversions.id
-join glpi_softwares ON glpi_softwares.id = glpi_softwareversions.softwares_id
-WHERE glpi_softwares.name LIKE "%%KB%%"
-and glpi_computers.id in %s group by glpi_computers.id;""" % (
-            ids
-        )
+        Args:
+            session (Session): Session SQLAlchemy pour interagir avec la base de données.
+            ids (list[str]): Liste d'identifiants de machines.
 
-        datas = session.execute(sql)
-        result = {}
-        for element in datas:
-            logger.debug(element)
-            result["UUID%d" % element.id] = {
-                "id": element.id,
-                "cn": element.name,
-                "installed": element.installed,
-            }
-
-        return result
+        Returns:
+            dict: Un dictionnaire contenant les informations sur les mises à jour installées par machine.
+                Les clés du dictionnaire sont des identifiants de machine (au format "UUID{id}").
+                Chaque valeur est un autre dictionnaire contenant les détails suivants :
+                    - "id": L'identifiant de la machine.
+                    - "cn": Le nom de la machine.
+                    - "installed": Le nombre de mises à jour installées sur la machine.
+        """
+        try:
+            ids = "(%s)" % ",".join([id for id in ids if id != ""]).replace("UUID", "")
+            sql = """SELECT
+                        gc.id AS id,
+                        gc.name AS name,
+                        COUNT(gs.id) AS installed
+                    FROM
+                        glpi_computers gc
+                            JOIN
+                        glpi_computers_softwareversions gcs ON gc.id = gcs.computers_id
+                            JOIN
+                        glpi_softwareversions gsv ON gcs.softwareversions_id = gsv.id
+                            JOIN
+                        glpi_softwares gs ON gs.id = gsv.softwares_id
+                    WHERE
+                        gc.id IN %s
+                            AND gsv.name REGEXP '^[0-9]{7}$'
+                            AND (gsv.comment LIKE '%Update%'
+                            OR COALESCE(gsv.comment, '') = '')
+                    GROUP BY gc.id;""" % (
+                ids
+            )
+            engine_of_session = session.bind
+            datas = session.execute(sql)
+            result = {}
+            for element in datas:
+                result["UUID%d" % element.id] = {
+                    "id": element.id,
+                    "cn": element.name,
+                    "installed": element.installed,
+                }
+            return result
+        except Exception as e:
+            self.logger.error(f"We failed with the error \n {traceback.format_exc()}")
+            return {}
 
 
 # Class for SQLalchemy mapping
