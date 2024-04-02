@@ -6845,25 +6845,35 @@ ORDER BY
 
     @DatabaseHelper._sessionm
     def get_count_machine_with_update(self, session, kb):
+        """
+        Récupère le nombre de machines ayant une mise à jour spécifiée par son KB (Knowledge Base).
+
+        Args:
+            session (Session): Session SQLAlchemy pour interagir avec la base de données.
+            kb (str): Le KB (Knowledge Base) de la mise à jour à rechercher.
+
+        Returns:
+            dict: Un dictionnaire contenant le nombre de machines avec la mise à jour spécifiée.
+            La clé "nb_machines" contient le nombre de machines.
+        """
         sqlrequest = """
-            SELECT 
-                COUNT(*) as nb_machines
+            SELECT
+                COUNT(*) AS nb_machines
             FROM
-                glpi_computers
+                glpi_computers gc
+                    JOIN
+                glpi_computers_softwareversions gcs ON gc.id = gcs.computers_id
+                    JOIN
+                glpi_softwareversions gsv ON gcs.softwareversions_id = gsv.id
+                    JOIN
+                glpi_softwares gs ON gs.id = gsv.softwares_id
                     INNER JOIN
-                glpi_items_softwareversions ON glpi_computers.id = glpi_items_softwareversions.items_id and glpi_items_softwareversions.itemtype="Computer"
-                    INNER JOIN
-                glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
-                    INNER JOIN
-                glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
-                    INNER JOIN
-                glpi_entities ON glpi_entities.id = glpi_computers.entities_id
+                glpi_entities AS ge ON ge.id = gc.entities_id
             WHERE
-                glpi_computers.is_deleted = 0
-            AND
-                glpi_computers.is_template = 0
-            AND
-                glpi_softwares.name LIKE 'Update (KB%s)';""" % (
+                gc.is_deleted = 0 AND gc.is_template = 0
+                    AND gsv.name LIKE '%s'
+                    AND (gsv.comment LIKE '%%Update%%'
+        OR COALESCE(gsv.comment, '') = '');""" % (
             kb
         )
         result = {}
