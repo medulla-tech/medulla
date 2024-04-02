@@ -219,7 +219,6 @@ def associatePackages(pid, fs, level=0):
     result = []
     boolsucess = True
     if len(fs) > 0:
-        # file a associe
         for repfiles in fs:
             source = os.path.join(tmp_input_dir, repfiles)
             cmd = "rsync -a %s/ %s/" % (source, destination)
@@ -227,8 +226,11 @@ def associatePackages(pid, fs, level=0):
             if rest["code"] != 0:
                 boolsucess = False
                 errortransfert.append(rest["code"])
-            # efface repertoire
-            simplecommand("rm -rf %s" % source)
+            try:
+                os.rmdir(source)
+            except OSError as error_removing:
+                logger.error(f"The removal of the folder {source} has failed with the error \n {str(e)}")
+
     chown(destination)
     return [boolsucess, errortransfert]
 
