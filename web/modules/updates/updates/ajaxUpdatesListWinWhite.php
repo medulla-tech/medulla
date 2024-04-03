@@ -78,7 +78,7 @@ $w->setNavBar(new AjaxNavBar($count_white, $filter, 'updateSearchParamformWhite'
 $w->start = 0;
 $w->end = $count_white;
 $w->setParamInfo($params_white);
-echo '</br></br>'
+echo '</br></br>';
 echo '<h2>'._T("White list (automatic updates)", "updates").'</h2>';
 $w->addActionItemArray($whiteActions["unlist"]);
 $w->addActionItemArray($whiteActions["ban"]);
