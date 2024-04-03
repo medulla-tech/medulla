@@ -13483,6 +13483,12 @@ where
         sub = sub.subquery()
         query = (
             session.query(Up_machine_windows)
+            .outerjoin(
+                Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id
+            )
+            .outerjoin(
+                Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id
+            )
             .filter(
                 and_(
                     Up_machine_windows.id_machine.in_(sub),
@@ -13494,6 +13500,7 @@ where
                         Up_machine_windows.required_deploy == None,
                         Up_machine_windows.required_deploy == 0,
                     ),
+                    or_(Up_gray_list.valided == 1, Up_white_list.valided == 1)
                 )
             )
             .group_by(Up_machine_windows.update_id)
