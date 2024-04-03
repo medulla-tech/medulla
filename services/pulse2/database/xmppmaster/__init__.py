@@ -6837,9 +6837,9 @@ class XmppMasterDatabase(DatabaseHelper):
                             elif isinstance(value, datetime):
                                 dictresult[key] = value.strftime("%Y-%m-%d %H:%M:%S")
                                 if timestmp:
-                                    dictresult[
-                                        "%s_stmp" % key
-                                    ] = self.datetimetotimestamp(value)
+                                    dictresult["%s_stmp" % key] = (
+                                        self.datetimetotimestamp(value)
+                                    )
                             else:
                                 dictresult[key] = value
                         logger.warning("value type %s" % type(value))
@@ -11594,54 +11594,64 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             for event, device, rule, mon_machine, machine in query:
                 tmp = {
                     "event_id": event.id,
-                    "event_status": event.status_event
-                    if event.status_event is not None
-                    else "",
-                    "event_type_event": event.type_event
-                    if event.type_event is not None
-                    else "",
+                    "event_status": (
+                        event.status_event if event.status_event is not None else ""
+                    ),
+                    "event_type_event": (
+                        event.type_event if event.type_event is not None else ""
+                    ),
                     "event_cmd": event.cmd if event.cmd is not None else "",
                     "rule_id": rule.id,
                     "rule_hostname": rule.hostname if rule.hostname is not None else "",
-                    "rule_device_type": rule.device_type
-                    if rule.device_type is not None
-                    else "",
+                    "rule_device_type": (
+                        rule.device_type if rule.device_type is not None else ""
+                    ),
                     "rule_binding": rule.binding if rule.binding is not None else "",
-                    "rule_succes_binding_cmd": rule.succes_binding_cmd
-                    if rule.succes_binding_cmd is not None
-                    else "",
-                    "rule_error_on_binding": rule.error_on_binding
-                    if rule.error_on_binding is not None
-                    else "",
+                    "rule_succes_binding_cmd": (
+                        rule.succes_binding_cmd
+                        if rule.succes_binding_cmd is not None
+                        else ""
+                    ),
+                    "rule_error_on_binding": (
+                        rule.error_on_binding
+                        if rule.error_on_binding is not None
+                        else ""
+                    ),
                     "rule_user": rule.user if rule.user is not None else "",
                     "rule_comment": rule.comment if rule.comment is not None else "",
-                    "mon_machine_date": mon_machine.date.strftime("%m-%d-%Y %H:%M:%S")
-                    if mon_machine.date is not None
-                    else "",
-                    "machine_hostname": machine.hostname
-                    if machine.hostname is not None
-                    else "",
+                    "mon_machine_date": (
+                        mon_machine.date.strftime("%m-%d-%Y %H:%M:%S")
+                        if mon_machine.date is not None
+                        else ""
+                    ),
+                    "machine_hostname": (
+                        machine.hostname if machine.hostname is not None else ""
+                    ),
                     "machine_jid": machine.jid if machine.jid is not None else "",
-                    "machine_enabled": machine.enabled
-                    if machine.enabled is not None
-                    else "",
-                    "machine_uuid": machine.uuid_inventorymachine
-                    if machine.uuid_inventorymachine is not None
-                    else "",
-                    "mon_machine_statusmsg": mon_machine.statusmsg
-                    if mon_machine.statusmsg is not None
-                    else "",
-                    "device_type": device.device_type
-                    if device.device_type is not None
-                    else "",
+                    "machine_enabled": (
+                        machine.enabled if machine.enabled is not None else ""
+                    ),
+                    "machine_uuid": (
+                        machine.uuid_inventorymachine
+                        if machine.uuid_inventorymachine is not None
+                        else ""
+                    ),
+                    "mon_machine_statusmsg": (
+                        mon_machine.statusmsg
+                        if mon_machine.statusmsg is not None
+                        else ""
+                    ),
+                    "device_type": (
+                        device.device_type if device.device_type is not None else ""
+                    ),
                     "device_serial": device.serial if device.serial is not None else "",
-                    "device_firmware": device.firmware
-                    if device.firmware is not None
-                    else "",
+                    "device_firmware": (
+                        device.firmware if device.firmware is not None else ""
+                    ),
                     "device_status": device.status if device.status is not None else "",
-                    "device_alarm_msg": device.alarm_msg
-                    if device.alarm_msg is not None
-                    else "",
+                    "device_alarm_msg": (
+                        device.alarm_msg if device.alarm_msg is not None else ""
+                    ),
                     "device_doc": device.doc if device.doc is not None else "",
                 }
                 result["datas"].append(tmp)
@@ -11725,58 +11735,70 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             for event, device, rule, mon_machine, machine in query:
                 tmp = {
                     "event_id": event.id,
-                    "event_status": event.status_event
-                    if event.status_event is not None
-                    else "",
-                    "event_type_event": event.type_event
-                    if event.type_event is not None
-                    else "",
+                    "event_status": (
+                        event.status_event if event.status_event is not None else ""
+                    ),
+                    "event_type_event": (
+                        event.type_event if event.type_event is not None else ""
+                    ),
                     "event_cmd": event.cmd if event.cmd is not None else "",
                     "ack_user": event.ack_user if event.ack_user is not None else "",
-                    "ack_date": event.ack_date.strftime("%m-%d-%Y %H:%M:%S")
-                    if event.ack_date is not None
-                    else "",
+                    "ack_date": (
+                        event.ack_date.strftime("%m-%d-%Y %H:%M:%S")
+                        if event.ack_date is not None
+                        else ""
+                    ),
                     "rule_id": rule.id,
                     "rule_hostname": rule.hostname if rule.hostname is not None else "",
-                    "rule_device_type": rule.device_type
-                    if rule.device_type is not None
-                    else "",
+                    "rule_device_type": (
+                        rule.device_type if rule.device_type is not None else ""
+                    ),
                     "rule_binding": rule.binding if rule.binding is not None else "",
-                    "rule_succes_binding_cmd": rule.succes_binding_cmd
-                    if rule.succes_binding_cmd is not None
-                    else "",
-                    "rule_error_on_binding": rule.error_on_binding
-                    if rule.error_on_binding is not None
-                    else "",
+                    "rule_succes_binding_cmd": (
+                        rule.succes_binding_cmd
+                        if rule.succes_binding_cmd is not None
+                        else ""
+                    ),
+                    "rule_error_on_binding": (
+                        rule.error_on_binding
+                        if rule.error_on_binding is not None
+                        else ""
+                    ),
                     "rule_user": rule.user if rule.user is not None else "",
                     "rule_comment": rule.comment if rule.comment is not None else "",
-                    "mon_machine_date": mon_machine.date.strftime("%m-%d-%Y %H:%M:%S")
-                    if mon_machine.date is not None
-                    else "",
-                    "machine_hostname": machine.hostname
-                    if machine.hostname is not None
-                    else "",
+                    "mon_machine_date": (
+                        mon_machine.date.strftime("%m-%d-%Y %H:%M:%S")
+                        if mon_machine.date is not None
+                        else ""
+                    ),
+                    "machine_hostname": (
+                        machine.hostname if machine.hostname is not None else ""
+                    ),
                     "machine_jid": machine.jid if machine.jid is not None else "",
-                    "machine_enabled": machine.enabled
-                    if machine.enabled is not None
-                    else "",
-                    "machine_uuid": machine.uuid_inventorymachine
-                    if machine.uuid_inventorymachine is not None
-                    else "",
-                    "mon_machine_statusmsg": mon_machine.statusmsg
-                    if mon_machine.statusmsg is not None
-                    else "",
-                    "device_type": device.device_type
-                    if device.device_type is not None
-                    else "",
+                    "machine_enabled": (
+                        machine.enabled if machine.enabled is not None else ""
+                    ),
+                    "machine_uuid": (
+                        machine.uuid_inventorymachine
+                        if machine.uuid_inventorymachine is not None
+                        else ""
+                    ),
+                    "mon_machine_statusmsg": (
+                        mon_machine.statusmsg
+                        if mon_machine.statusmsg is not None
+                        else ""
+                    ),
+                    "device_type": (
+                        device.device_type if device.device_type is not None else ""
+                    ),
                     "device_serial": device.serial if device.serial is not None else "",
-                    "device_firmware": device.firmware
-                    if device.firmware is not None
-                    else "",
+                    "device_firmware": (
+                        device.firmware if device.firmware is not None else ""
+                    ),
                     "device_status": device.status if device.status is not None else "",
-                    "device_alarm_msg": device.alarm_msg
-                    if device.alarm_msg is not None
-                    else "",
+                    "device_alarm_msg": (
+                        device.alarm_msg if device.alarm_msg is not None else ""
+                    ),
                     "device_doc": device.doc if device.doc is not None else "",
                 }
                 result["datas"].append(tmp)
@@ -13500,7 +13522,7 @@ where
                         Up_machine_windows.required_deploy == None,
                         Up_machine_windows.required_deploy == 0,
                     ),
-                    or_(Up_gray_list.valided == 1, Up_white_list.valided == 1)
+                    or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
                 )
             )
             .group_by(Up_machine_windows.update_id)
@@ -13938,9 +13960,9 @@ where
                 update_list = "white"
             result["datas"].append(
                 {
-                    "id_machine": element.id_machine
-                    if element.id_machine is not None
-                    else 0,
+                    "id_machine": (
+                        element.id_machine if element.id_machine is not None else 0
+                    ),
                     "update_id": element.update_id if not None else "",
                     "title": title if title is not None else "",
                     "description": description if description is not None else "",
@@ -13949,14 +13971,16 @@ where
                     "required_deploy": required_deploy,
                     "start_date": startdate,
                     "end_date": enddate,
-                    "deployment_intervals": element.intervals
-                    if element.intervals is not None
-                    else "",
+                    "deployment_intervals": (
+                        element.intervals if element.intervals is not None else ""
+                    ),
                     "pkgs_version": "",
                     "pkgs_description": "",
-                    "severity": element.msrcseverity
-                    if element.msrcseverity is not None
-                    else "Corrective",
+                    "severity": (
+                        element.msrcseverity
+                        if element.msrcseverity is not None
+                        else "Corrective"
+                    ),
                     "list": update_list,
                 }
             )
@@ -14165,18 +14189,22 @@ where
                 "update_id": update.update_id if update.update_id is not None else "",
                 "package_id": update.update_id if update.update_id is not None else "",
                 "kb": update.kb if update.kb is not None else "",
-                "start_date": datetime_handler(update.start_date)
-                if update.start_date is not None
-                else "",
-                "end_date": datetime_handler(update.end_date)
-                if update.end_date is not None
-                else "",
-                "current_deploy": update.curent_deploy
-                if update.curent_deploy is not None
-                else 0,
-                "required_deploy": update.required_deploy
-                if update.required_deploy is not None
-                else 0,
+                "start_date": (
+                    datetime_handler(update.start_date)
+                    if update.start_date is not None
+                    else ""
+                ),
+                "end_date": (
+                    datetime_handler(update.end_date)
+                    if update.end_date is not None
+                    else ""
+                ),
+                "current_deploy": (
+                    update.curent_deploy if update.curent_deploy is not None else 0
+                ),
+                "required_deploy": (
+                    update.required_deploy if update.required_deploy is not None else 0
+                ),
             }
 
             result["datas"].append(tmp)
@@ -14486,14 +14514,16 @@ group by hostname
 
         for hist, data, mach, entity in query:
             result[mach.uuid_inventorymachine] = {
-                "id": int(mach.uuid_inventorymachine.replace("UUID", ""))
-                if mach.uuid_inventorymachine and mach.uuid_inventorymachine.strip()
-                else "",
+                "id": (
+                    int(mach.uuid_inventorymachine.replace("UUID", ""))
+                    if mach.uuid_inventorymachine and mach.uuid_inventorymachine.strip()
+                    else ""
+                ),
                 "hostname": mach.hostname,
                 "eid": entity.glpi_id if entity.glpi_id is not None else 0,
-                "entity": entity.complete_name
-                if entity.complete_name is not None
-                else "",
+                "entity": (
+                    entity.complete_name if entity.complete_name is not None else ""
+                ),
                 "kb": "Update(KB%s)" % data.kb,
                 "numkb": data.kb,
             }
