@@ -6784,49 +6784,62 @@ ORDER BY
         result.append(entity)
         return result
 
+
+
     @DatabaseHelper._sessionm
     def get_machine_with_update(self, session, kb):
-        sqlrequest = """
-            SELECT 
-                glpi_computers.id AS uuid_inventory,
-                glpi_computers.name AS hostname,
-                glpi_entities.completename AS entity,
-                glpi_softwares.name AS kb, 
-                SUBSTR(glpi_softwares.name,
-                    LOCATE('KB', glpi_softwares.name)+2, 7) as numkb
-            FROM
-                glpi_computers
+        """
+        Get machines with a specific update.
+
+        Args:
+            session: Database session object.
+            kb (str): The update code (KB code).
+
+        Returns:
+            List: A list containing UUIDs, hostnames, entities, update names, and update codes.
+        """
+        try:
+            sqlrequest = """
+                SELECT
+                    gc.id AS uuid_inventory,
+                    gc.name AS hostname,
+                    ge.completename AS entity,
+                    gs.name AS kb,
+                    SUBSTR(gs.name, LOCATE('KB', gs.name)+2, 7) AS numkb
+                FROM
+                    glpi_computers gc
                     INNER JOIN
-                glpi_computers_softwareversions ON glpi_computers.id = glpi_computers_softwareversions.computers_id
+                    glpi_computers_softwareversions gcs ON gc.id = gcs.computers_id
                     INNER JOIN
-                glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
+                    glpi_softwareversions gsv ON gcs.softwareversions_id = gsv.id
                     INNER JOIN
-                glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
+                    glpi_softwares gs ON gsv.softwares_id = gs.id
                     INNER JOIN
-                glpi_entities ON glpi_entities.id = glpi_computers.entities_id
-            WHERE
-                glpi_softwares.name LIKE 'Update (KB%s)';""" % (
-            kb
-        )
-        uuid_inventory = []
-        hostname = []
-        entity = []
-        kb = []
-        numkb = []
-        result = []
-        res = session.execute(sqlrequest)
-        for element in res:
-            uuid_inventory.append(element.uuid_inventory)
-            hostname.append(element.hostname)
-            entity.append(element.entity)
-            kb.append(element.kb)
-            numkb.append(element.numkb)
-        result.append(uuid_inventory)
-        result.append(hostname)
-        result.append(entity)
-        result.append(kb)
-        result.append(numkb)
-        return result
+                    glpi_entities ge ON gc.entities_id = ge.id
+                WHERE
+                    gs.name LIKE '%%Update (KB%s)%%';""" % (kb )
+            uuid_inventory = []
+            hostname = []
+            entity = []
+            kb = []
+            numkb = []
+            result = []
+            res = session.execute(sqlrequest)
+            for element in res:
+                uuid_inventory.append(element.uuid_inventory)
+                hostname.append(element.hostname)
+                entity.append(element.entity)
+                kb.append(element.kb)
+                numkb.append(element.numkb)
+            result.append(uuid_inventory)
+            result.append(hostname)
+            result.append(entity)
+            result.append(kb)
+            result.append(numkb)
+            return result
+        except Exception as e:
+            self.logger.error("\n erreur with the backtrace \n%s" % (traceback.format_exc()))
+            return  []
 
     @DatabaseHelper._sessionm
     def get_count_machine_with_update(self, session, kb):
