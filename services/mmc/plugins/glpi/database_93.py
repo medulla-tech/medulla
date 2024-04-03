@@ -6784,8 +6784,6 @@ ORDER BY
         result.append(entity)
         return result
 
-
-
     @DatabaseHelper._sessionm
     def get_machine_with_update(self, session, kb):
         """
@@ -6817,7 +6815,9 @@ ORDER BY
                     INNER JOIN
                     glpi_entities ge ON gc.entities_id = ge.id
                 WHERE
-                    gs.name LIKE '%%Update (KB%s)%%';""" % (kb )
+                    gs.name LIKE '%%Update (KB%s)%%';""" % (
+                kb
+            )
             uuid_inventory = []
             hostname = []
             entity = []
@@ -6838,8 +6838,10 @@ ORDER BY
             result.append(numkb)
             return result
         except Exception as e:
-            self.logger.error("\n erreur with the backtrace \n%s" % (traceback.format_exc()))
-            return  []
+            self.logger.error(
+                "\n erreur with the backtrace \n%s" % (traceback.format_exc())
+            )
+            return []
 
     @DatabaseHelper._sessionm
     def get_count_machine_with_update(self, session, kb):
