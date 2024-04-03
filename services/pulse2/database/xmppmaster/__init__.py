@@ -13522,7 +13522,7 @@ where
                         Up_machine_windows.required_deploy == None,
                         Up_machine_windows.required_deploy == 0,
                     ),
-                    or_(Up_gray_list.valided == 1, Up_white_list.valided == 1)
+                    or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
                 )
             )
             .group_by(Up_machine_windows.update_id)
