@@ -82,7 +82,7 @@ def enable_client(jidmachine, clientid, authkey):
     
     enable_client_database(clientid)
 
-    command = "(echo [parameters] & echo backup_enabled = 1 & echo client_id = "+str(clientid)+" & echo authkey = "+str(authkey)+" & echo backup_server = urbackup://"+str(urbackup_server)+" & echo backup_port = "+str(urbackup_port)+") > C:\progra~1\pulse\etc\updatebackupclient.ini"
+    command = "(echo [parameters] & echo backup_enabled = 1 & echo client_id = "+str(clientid)+" & echo authkey = "+str(authkey)+" & echo backup_server = urbackup://"+str(urbackup_server)+" & echo backup_port = "+str(urbackup_port)+") > C:\\progra~1\\pulse\\etc\\updatebackupclient.ini"
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
@@ -107,7 +107,7 @@ def remove_client(jidmachine, clientid):
     """
     disable_client_database(clientid)
     
-    command = "(echo [parameters] & echo backup_enabled = 0) > C:\progra~1\pulse\etc\updatebackupclient.ini"
+    command = "(echo [parameters] & echo backup_enabled = 0) > C:\\progra~1\\pulse\\etc\\updatebackupclient.ini"
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
