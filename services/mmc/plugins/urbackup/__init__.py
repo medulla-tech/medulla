@@ -70,7 +70,7 @@ def login():
 def enable_client(jidmachine, clientid, authkey):
     """
     Write backup_enabled to 1 on updatebackupclient.ini file to enable backup for windows client
-    
+
     Args:
         JID Machine, client id and authkey of client
 
@@ -97,7 +97,7 @@ def enable_client(jidmachine, clientid, authkey):
         + str(urbackup_server)
         + " & echo backup_port = "
         + str(urbackup_port)
-        + ") > C:\progra~1\pulse\etc\\updatebackupclient.ini"
+        + ") > C:\\progra~1\\pulse\etc\\updatebackupclient.ini"
     )
 
     callremotecommandshell(jidmachine, command)
@@ -115,7 +115,7 @@ def enable_client(jidmachine, clientid, authkey):
 def remove_client(jidmachine, clientid):
     """
     Write backup_enabled to 0 on updatebackupclient.ini file to disable backup for windows client
-    
+
     Args:
         JID Machine and client id
 
@@ -123,24 +123,25 @@ def remove_client(jidmachine, clientid):
         1 or 0, state of function execution
     """
     disable_client_database(clientid)
-    
-    command = "(echo [parameters] & echo backup_enabled = 0) > C:\progra~1\pulse\etc\updatebackupclient.ini"
+
+    command = "(echo [parameters] & echo backup_enabled = 0) > C:\\progra~1\\pulse\\etc\\updatebackupclient.ini"
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
     msg = {
-    "action": "restartbot",
-    "sessionid": sessionid,
-    "data": {},
-    "ret": 0,
-    "base64": False
+        "action": "restartbot",
+        "sessionid": sessionid,
+        "data": {},
+        "ret": 0,
+        "base64": False,
     }
     send_message_json(jidmachine, msg)
+
 
 def restart_urbackup_service(jidmachine):
     """
     Restart Urbackup service on client
-    
+
     Args:
         JID Machine
 
@@ -148,23 +149,24 @@ def restart_urbackup_service(jidmachine):
         1 or 0, state of function execution
     """
 
-    command = "sc query UrBackupClientBackend | find \"RUNNING\" && sc stop UrBackupClientBackend && sc start UrBackupClientBackend"
+    command = 'sc query UrBackupClientBackend | find "RUNNING" && sc stop UrBackupClientBackend && sc start UrBackupClientBackend'
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
     msg = {
-    "action": "restartbot",
-    "sessionid": sessionid,
-    "data": {},
-    "ret": 0,
-    "base64": False
+        "action": "restartbot",
+        "sessionid": sessionid,
+        "data": {},
+        "ret": 0,
+        "base64": False,
     }
     send_message_json(jidmachine, msg)
+
 
 def get_client_status(client_id):
     """
     Get client status if enable or not from the database
-    
+
     Args:
         Client id
 
@@ -173,10 +175,11 @@ def get_client_status(client_id):
     """
     return UrbackupDatabase().getClientStatus(client_id)
 
+
 def insertNewClient(client_id, authkey):
     """
     Insert new client in database
-    
+
     Args:
         client id and auth key of client
 
@@ -185,10 +188,11 @@ def insertNewClient(client_id, authkey):
     """
     return UrbackupDatabase().insertNewClient(client_id, authkey)
 
+
 def enable_client_database(client_id):
     """
     Get client status if enable or not from the database
-    
+
     Args:
         Client id
 
@@ -197,10 +201,11 @@ def enable_client_database(client_id):
     """
     return UrbackupDatabase().editClientState("1", client_id)
 
+
 def disable_client_database(client_id):
     """
     Get client status if enable or not from the database
-    
+
     Args:
         Client id
 
@@ -209,10 +214,11 @@ def disable_client_database(client_id):
     """
     return UrbackupDatabase().editClientState("0", client_id)
 
+
 def getComputersEnableValue(jid):
     """
     Get enable status from xmppmaster.machines table
-    
+
     Args:
         JID Machine
 
@@ -220,6 +226,7 @@ def getComputersEnableValue(jid):
         id, jid and enabled from database xmppmaster.machines
     """
     return UrbackupDatabase().getComputersEnableValue(jid)
+
 
 def get_ses():
     """
@@ -257,7 +264,7 @@ def get_logs():
 def add_client(client_name):
     """
     Create client with new id and authkey
-    
+
     Args:
         Client id
 
@@ -297,7 +304,7 @@ def get_stats():
 def add_group(groupname):
     """
     Create groupe
-    
+
     Args:
         New groupe name
 
@@ -316,7 +323,7 @@ def add_group(groupname):
 def remove_group(groupid):
     """
     Remove groupe
-    
+
     Args:
         Group id
 
@@ -351,7 +358,7 @@ def get_settings_general():
 def save_settings(clientid, name_data, value_data):
     """
     Save settings for client of group
-    
+
     Args:
         Client id, settings name to change and new value for this settings
 
@@ -370,7 +377,7 @@ def save_settings(clientid, name_data, value_data):
 def get_settings_clientsettings(id_client):
     """
     Get multiples settings for one client
-    
+
     Args:
         Client id
 
@@ -421,7 +428,7 @@ def get_backups_all_client():
 def get_backup_files(client_id, backup_id, path):
     """
     Get every files on backup
-    
+
     Args:
         Client id, backup id and path of file
 
@@ -440,7 +447,7 @@ def get_backup_files(client_id, backup_id, path):
 def delete_backup(client_id, backup_id):
     """
     Delete backup
-    
+
     Args:
         Client id and backup id
 
