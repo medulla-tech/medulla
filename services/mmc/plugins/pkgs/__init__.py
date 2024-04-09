@@ -230,7 +230,7 @@ def associatePackages(pid, fs, level=0):
                 os.rmdir(source)
             except OSError as error_removing:
                 logger.error(
-                    f"The removal of the folder {source} has failed with the error \n {str(e)}"
+                    f"The removal of the folder {source} has failed with the error \n {str(error_removing)}"
                 )
 
     chown(destination)
