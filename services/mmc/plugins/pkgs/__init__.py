@@ -674,10 +674,10 @@ def putPackageDetail(package, need_assign=True):
             "associateinventory": str(package["associateinventory"]),
             "licenses": package["licenses"],
             "queries": {
-                "Qversion": package["Qversion"],
-                "Qvendor": package["Qvendor"],
+                "Qversion": package["Qversion"].decode("utf-8") if isinstance(package["Qversion"], bytes) else package["Qversion"],
+                "Qvendor": package["Qvendor"].decode("utf-8") if isinstance(package["Qvendor"], bytes) else package["Qvendor"],
                 "boolcnd": package["boolcnd"],
-                "Qsoftware": package["Qsoftware"],
+                "Qsoftware": package["Qsoftware"].decode("utf-8") if isinstance(package["Qsoftware"], bytes) else package["Qsoftware"],
             },
         },
     }
