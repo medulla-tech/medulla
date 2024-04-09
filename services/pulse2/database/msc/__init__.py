@@ -2922,14 +2922,14 @@ class MscDatabase(DatabaseHelper):
                 "fk_target": x[0],
                 "startdate": x[1].strftime("%Y-%m-%d %H:%M:%S"),
                 "enddate": x[2].strftime("%Y-%m-%d %H:%M:%S"),
-                "next_launch_date": x[3].strftime("%Y-%m-%d %H:%M:%S")
-                if x[3] is not None
-                else "",
+                "next_launch_date": (
+                    x[3].strftime("%Y-%m-%d %H:%M:%S") if x[3] is not None else ""
+                ),
                 "start_dateunixtime": time.mktime(x[1].timetuple()),
                 "end_dateunixtime": time.mktime(x[2].timetuple()),
-                "next_launch_dateunixtime": time.mktime(x[3].timetuple())
-                if x[3] is not None
-                else "",
+                "next_launch_dateunixtime": (
+                    time.mktime(x[3].timetuple()) if x[3] is not None else ""
+                ),
             }
             ret.append(t)
         return ret

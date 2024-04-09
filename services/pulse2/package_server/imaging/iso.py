@@ -25,7 +25,6 @@ PULSE2_IMAGING_ISO_INITRDFILE = "initrd.gz"
 
 
 class ISOImage:
-
     """
     Allows to prepare and create an ISO image
     """

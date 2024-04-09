@@ -10,7 +10,6 @@ from pulse2.utils import checkEntityName
 
 
 class EntitiesRules:
-
     """
     Class for object that computes an inventory entity list according to a
     computer inventory and rules.

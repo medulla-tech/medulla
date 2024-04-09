@@ -4,7 +4,6 @@
 
 
 class PluginEntitiesI:
-
     """
     Interface declaration to implement classes that compute a entities list
     according to user informations.

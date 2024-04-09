@@ -116,12 +116,16 @@ class xmppbrowsing:
         # TODO: Remove MIGRATION3
         self.dirinfos = {
             "path_abs_current": pathabs,
-            "list_dirs_current": os.walk(pathabs).next()[1]
-            if PYTHON_VERSION == 2
-            else next(os.walk(pathabs))[1],
-            "list_files_current": os.walk(pathabs).next()[2]
-            if PYTHON_VERSION == 2
-            else next(os.walk(pathabs))[2],
+            "list_dirs_current": (
+                os.walk(pathabs).next()[1]
+                if PYTHON_VERSION == 2
+                else next(os.walk(pathabs))[1]
+            ),
+            "list_files_current": (
+                os.walk(pathabs).next()[2]
+                if PYTHON_VERSION == 2
+                else next(os.walk(pathabs))[2]
+            ),
             "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
             "rootfilesystem": self.rootfilesystem,
             "defaultdir": self.defaultdir,
@@ -152,9 +156,11 @@ class xmppbrowsing:
         # TODO: Remove MIGRATION3
         self.dirinfos = {
             "path_abs_current": pathabs,
-            "list_dirs_current": os.walk(pathabs).next()[1]
-            if PYTHON_VERSION == 2
-            else next(os.walk(pathabs))[1],
+            "list_dirs_current": (
+                os.walk(pathabs).next()[1]
+                if PYTHON_VERSION == 2
+                else next(os.walk(pathabs))[1]
+            ),
             "list_files_current": ff,
             "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
             "rootfilesystem": self.rootfilesystem,
@@ -2309,9 +2315,9 @@ class MMCApp(object):
         if PluginManager().isEnabled("xmppmaster"):
             configxmppmaster = XmppMasterDatabase().config
             # create file  message
-            PluginManager().getEnabledPlugins()[
-                "xmppmaster"
-            ].modulemessagefilexmpp = messagefilexmpp(self.config, configxmppmaster)
+            PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp = (
+                messagefilexmpp(self.config, configxmppmaster)
+            )
             self.modulexmppmaster = (
                 PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp
             )

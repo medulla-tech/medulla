@@ -25,7 +25,6 @@ class ConfigException(Exception):
 
 
 class MMCConfigParser(ConfigParser):
-
     """
     Class to read and parse a MMC agent plugin configuration file.
     """

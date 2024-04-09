@@ -606,6 +606,7 @@ class Imaging(object, metaclass=SingletonN):
                  successful, else 0.
         @rtype: int
         """
+
         def _onSuccess(result):
             shortname = self.getClientShortname(MACAddress)
             if result and isinstance(result, list) and len(result) == 2:
@@ -648,7 +649,7 @@ class Imaging(object, metaclass=SingletonN):
 
         def _getmacCB(result):
             if result and isinstance(result, dict):
-                inventory['shortname'] = result['shortname']
+                inventory["shortname"] = result["shortname"]
                 client = self._getXMLRPCClient()
                 func = "imaging.injectInventory"
                 args = (self.config.imaging_api["uuid"], result["uuid"], inventory)

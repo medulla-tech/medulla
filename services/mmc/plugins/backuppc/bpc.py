@@ -746,28 +746,28 @@ def set_backup_for_host(uuid):
             "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost $rsyncPath $argList+"
             % port
         )
-    config[
-        "DumpPreUserCmd"
-    ] = "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s" % (uuid, port)
-    config[
-        "DumpPostUserCmd"
-    ] = "/usr/sbin/pulse2-disconnect-machine-backuppc -m %s -p %s" % (uuid, port)
-    config[
-        "RestorePreUserCmd"
-    ] = "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s" % (uuid, port)
-    config[
-        "RestorePostUserCmd"
-    ] = "/usr/sbin/pulse2-disconnect-machine-backuppc -m %s -p %s" % (uuid, port)
+    config["DumpPreUserCmd"] = (
+        "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s" % (uuid, port)
+    )
+    config["DumpPostUserCmd"] = (
+        "/usr/sbin/pulse2-disconnect-machine-backuppc -m %s -p %s" % (uuid, port)
+    )
+    config["RestorePreUserCmd"] = (
+        "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s" % (uuid, port)
+    )
+    config["RestorePostUserCmd"] = (
+        "/usr/sbin/pulse2-disconnect-machine-backuppc -m %s -p %s" % (uuid, port)
+    )
     config["ClientNameAlias"] = "localhost"
     config["NmbLookupCmd"] = "/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host"
-    config[
-        "NmbLookupFindHostCmd"
-    ] = "/usr/bin/python /usr/bin/pulse2-uuid-resolver $host"
+    config["NmbLookupFindHostCmd"] = (
+        "/usr/bin/python /usr/bin/pulse2-uuid-resolver $host"
+    )
     config["XferMethod"] = "rsync"
-    config[
-        "RsyncRestoreArgs"
-    ] = "--numeric-ids --perms --owner --group -D --links --hard-links --times --block-size=2048 --relative --ignore-times --recursive --super".split(
-        " "
+    config["RsyncRestoreArgs"] = (
+        "--numeric-ids --perms --owner --group -D --links --hard-links --times --block-size=2048 --relative --ignore-times --recursive --super".split(
+            " "
+        )
     )
     config["PingCmd"] = "/bin/true"
     print("***", config, "****")

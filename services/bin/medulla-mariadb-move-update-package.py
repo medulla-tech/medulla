@@ -337,18 +337,26 @@ class synch_packages:
             # creation repertoire du package si non exist
             self.create_directory_in_base()
             try:
-                data = requests.get(self.update_file_windows["payloadfiles"], stream=True)
+                data = requests.get(
+                    self.update_file_windows["payloadfiles"], stream=True
+                )
             except Exception as e:
-                logger.error("Error trying to download %s: %s" % (self.update_file_windows['payloadfiles'], e))
+                logger.error(
+                    "Error trying to download %s: %s"
+                    % (self.update_file_windows["payloadfiles"], e)
+                )
                 try:
                     # Try with proxy parameters as defined on the system
-                    proxy_url = os.environ.get('HTTP_PROXY') or os.environ.get('HTTPS_PROXY')
+                    proxy_url = os.environ.get("HTTP_PROXY") or os.environ.get(
+                        "HTTPS_PROXY"
+                    )
                     if proxy_url:
-                        proxies = {
-                            'http': proxy_url,
-                            'https': proxy_url
-                        }
-                        data = requests.get(self.update_file_windows['payloadfiles'], stream=True, proxies=proxies)
+                        proxies = {"http": proxy_url, "https": proxy_url}
+                        data = requests.get(
+                            self.update_file_windows["payloadfiles"],
+                            stream=True,
+                            proxies=proxies,
+                        )
                     else:
                         logger.error("No proxies defined")
                 except Exception as e:

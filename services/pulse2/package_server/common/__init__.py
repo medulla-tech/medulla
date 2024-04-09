@@ -1149,9 +1149,9 @@ class Common(pulse2.utils.Singleton):
                     # put the new date/size
                     self.packageDetectionDate[pid] = self.__getDate(file)
                     self.__subHasChangedGetGlobalSize(l_package.root, pid)
-                    self.temp_check_changes["LAST"][pid][
-                        "###DATE###"
-                    ] = self.packageDetectionDate[pid]
+                    self.temp_check_changes["LAST"][pid]["###DATE###"] = (
+                        self.packageDetectionDate[pid]
+                    )
 
                     if self.config.package_mirror_activate:
                         Common().rsyncPackageOnMirrors(pid)

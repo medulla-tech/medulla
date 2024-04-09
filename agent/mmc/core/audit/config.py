@@ -10,7 +10,6 @@ Configuration classes for the audit module.
 
 
 class AuditConfig:
-
     """
     Parse the audit system configuration file.
     """

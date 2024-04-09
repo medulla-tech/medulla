@@ -22,7 +22,6 @@ from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 
 
 class RPCStore(Singleton):
-
     """
     Singleton class that stores RPC into a state file.
     """
@@ -199,7 +198,6 @@ class RPCStore(Singleton):
 
 
 class RPCReplay(Singleton):
-
     """
     This singleton class tries periodically to re-play the RPCs that were not
     sent to the MMC agent and saved into the RPCStore object.

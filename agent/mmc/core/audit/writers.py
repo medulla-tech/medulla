@@ -53,7 +53,6 @@ from mmc.support.mmctools import Singleton
 
 
 class AuditWriterDB(Singleton, AuditWriterI):
-
     """
     Singleton class for an object that writes audit data to a database.
 

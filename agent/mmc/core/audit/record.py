@@ -31,7 +31,6 @@ logger = logging.getLogger("audit")
 
 
 class AuditRecord:
-
     """
     Base class for a audit record object
     """
@@ -88,7 +87,6 @@ class AuditRecord:
 
 
 class AuditRecordDB(AuditRecord):
-
     """
     Class for objects that store an audit record into a database
     """

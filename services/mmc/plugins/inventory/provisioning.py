@@ -22,9 +22,9 @@ class InventoryProvisionerConfig(ProvisionerConfig):
             PROFILEENTITY = "profile_entity_"
             for option in self.options(self.section):
                 if option.startswith(PROFILEENTITY):
-                    self.profilesEntity[
-                        option.replace(PROFILEENTITY, "").lower()
-                    ] = self.get(self.section, option)
+                    self.profilesEntity[option.replace(PROFILEENTITY, "").lower()] = (
+                        self.get(self.section, option)
+                    )
 
     def setDefault(self):
         ProvisionerConfig.setDefault(self)
@@ -33,7 +33,6 @@ class InventoryProvisionerConfig(ProvisionerConfig):
 
 
 class InventoryProvisioner(ProvisionerI):
-
     """
     This provisionner updates user / entities mapping in the inventory
     database.

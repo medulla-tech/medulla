@@ -75,7 +75,6 @@ IMAGE_UUID = None
 
 
 class Imaging(unittest.TestCase):
-
     """
     Tests for the Imaging API of the package server.
     """

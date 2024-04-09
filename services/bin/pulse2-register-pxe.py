@@ -333,9 +333,9 @@ def parsejsoninventory(file, file_content):
     ]
     NAME = ET.SubElement(HARDWARE, "NAME").text = hostname["hostname.hostname"]
     UUID = ET.SubElement(HARDWARE, "UUID").text = dmi[2]["dmi.system.uuid"]
-    OSNAME = ET.SubElement(
-        HARDWARE, "OSNAME"
-    ).text = "Unknown operating system (PXE network boot inventory)"
+    OSNAME = ET.SubElement(HARDWARE, "OSNAME").text = (
+        "Unknown operating system (PXE network boot inventory)"
+    )
     listcpu_model = cpu["cpu.model"].split()
     freqcpu_info = str(listcpu_model.pop())
     PROCESSORS = ET.SubElement(HARDWARE, "PROCESSORS").text = freqcpu_info
@@ -417,10 +417,12 @@ def parsejsoninventory(file, file_content):
 def senddata(query, ip="127.0.0.1", port=1001):
     adresse = (ip, port)
     monSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    logging.getLogger().error("Send PXE xml for registration :%s" % query.encode('utf-8'))
-    monSocket.sendto(bytes("\xBB%s"%query, "utf-8"), adresse)
+    logging.getLogger().error(
+        "Send PXE xml for registration :%s" % query.encode("utf-8")
+    )
+    monSocket.sendto(bytes("\xBB%s" % query, "utf-8"), adresse)
     time.sleep(conf["pxe_timesenddata"])
-    monSocket.sendto(bytes("\xBA%s"%query, "utf-8"), adresse)
+    monSocket.sendto(bytes("\xBA%s" % query, "utf-8"), adresse)
     time.sleep(conf["pxe_timesenddata"])
     monSocket.close()
 

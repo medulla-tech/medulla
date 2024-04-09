@@ -1203,9 +1203,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 # the true one! self.imagingServer_entity[id2uuid(ims.id)] = en.uuid
                 # the working one in our context :
                 self.imagingServer_entity[en.uuid] = id2uuid(ims.id)
-                self.imagingServer_lang[
-                    self.imagingServer_entity[loc_id]
-                ] = ims.fk_language
+                self.imagingServer_lang[self.imagingServer_entity[loc_id]] = (
+                    ims.fk_language
+                )
             else:
                 return 1  # default to english
         if loc_id in self.imagingServer_lang:

@@ -11,7 +11,6 @@ from pulse2.proxyssl.utilities import Singleton
 
 
 class RunInventory(Singleton):
-
     """
     Little helper class that runs the inventory agent
     """

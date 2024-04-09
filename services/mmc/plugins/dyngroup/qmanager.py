@@ -46,9 +46,9 @@ class QueryManager(Singleton):
                 module
             )
             self.queryGroups[pluginName] = self._getPluginQueryGroups(module)
-            self.extendedPossibilities[
-                pluginName
-            ] = self._getPluginExtendedPossibilities(module)
+            self.extendedPossibilities[pluginName] = (
+                self._getPluginExtendedPossibilities(module)
+            )
 
     def _getQueryablePlugins(self):
         """

@@ -14,7 +14,6 @@ import os.path
 
 
 class ImagingComputerConfiguration:
-
     """
     Class that handles computer configuration
     """

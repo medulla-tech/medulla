@@ -18,7 +18,6 @@ from pulse2.package_server.imaging.cache import UUIDCache
 
 
 class Archiver:
-
     """
     Class for objects that archives computer imaging data.
     Also handles the case when archiving is not wanted !

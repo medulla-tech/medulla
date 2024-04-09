@@ -53,9 +53,16 @@ class DetachedProcess:
         self.creationflags = self._get_creationflags()
 
     def _get_creationflags(self):
-        if self.system == 'Windows':
-            from subprocess import DETACHED_PROCESS, CREATE_NEW_PROCESS_GROUP, CREATE_BREAKAWAY_FROM_JOB
-            return DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_BREAKAWAY_FROM_JOB
+        if self.system == "Windows":
+            from subprocess import (
+                DETACHED_PROCESS,
+                CREATE_NEW_PROCESS_GROUP,
+                CREATE_BREAKAWAY_FROM_JOB,
+            )
+
+            return (
+                DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_BREAKAWAY_FROM_JOB
+            )
         else:
             return 0
 
@@ -63,14 +70,26 @@ class DetachedProcess:
         self.command.append(option)
 
     def run(self):
-        self.command = [str(element) if (isinstance(element, int) or isinstance(element, float)) else element for element in self.command]
-        if self.system == 'Windows':
-            Popen(self.command , creationflags=self.creationflags, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+        self.command = [
+            (
+                str(element)
+                if (isinstance(element, int) or isinstance(element, float))
+                else element
+            )
+            for element in self.command
+        ]
+        if self.system == "Windows":
+            Popen(
+                self.command,
+                creationflags=self.creationflags,
+                stdin=DEVNULL,
+                stdout=DEVNULL,
+                stderr=DEVNULL,
+            )
         else:
             # Pour Linux et macOS, la gestion de processus détachés est différente
             # Vous pouvez adapter cela selon les besoins spécifiques du système d'exploitation
-            Popen(self.command , stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
-
+            Popen(self.command, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
 
 
 class PXEImagingApi(PXEMethodParser):
@@ -346,7 +365,9 @@ class PXEImagingApi(PXEMethodParser):
         parsed_inventory1 = BootInventory()
         parsed_inventory1.initialise(file_content)
         parsed_inventory = parsed_inventory1.dump()
-        logging.getLogger().error("parsed inventory : %s %s"%(type(parsed_inventory), parsed_inventory))
+        logging.getLogger().error(
+            "parsed inventory : %s %s" % (type(parsed_inventory), parsed_inventory)
+        )
         self.api.logClientAction(
             mac, LOG_LEVEL.DEBUG, LOG_STATE.MENU, "boot menu shown"
         )
@@ -518,7 +539,7 @@ class PXEImagingApi(PXEMethodParser):
         file_content = self.changEntityAndHostName(file_content, entity, hostname)
         inventory = self.changdeviceid(file_content, hostname)
         if isinstance(inventory, bytes):
-            inventory = inventory.decode('utf-8')
+            inventory = inventory.decode("utf-8")
 
         inventory = '<?xml version="1.0" encoding="utf-8"?>' + inventory
         logging.getLogger().debug("send invotory depuis _injectedInventorySend")
@@ -554,7 +575,7 @@ class PXEImagingApi(PXEMethodParser):
         else:
             self._computerRegister(None, hostname, mac)
 
-    def file_get_binarycontents(self,filename, offset=-1, maxlen=-1):
+    def file_get_binarycontents(self, filename, offset=-1, maxlen=-1):
         fp = open(filename, "rb")
         try:
             if offset > 0:
@@ -563,13 +584,13 @@ class PXEImagingApi(PXEMethodParser):
         finally:
             fp.close()
 
-    def file_put_contents(self,filename, data):
+    def file_put_contents(self, filename, data):
         if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
         with open(filename, "w") as f:
             f.write(data)
 
-    def file_put_contents_w_a(self,filename, data, option="w"):
+    def file_put_contents_w_a(self, filename, data, option="w"):
         if not os.path.exists(os.path.dirname(filename)):
             os.makedirs(os.path.dirname(filename))
         if option in ["a", "w"]:
@@ -613,19 +634,19 @@ class PXEImagingApi(PXEMethodParser):
 
         retour = False
 
-        domain=self.config.connection_domain
-        password=self.getRandomName(6, "messagesenderpxe")
+        domain = self.config.connection_domain
+        password = self.getRandomName(6, "messagesenderpxe")
         jid = f"{password}@{domain}"
-        recipient=self.config.connection_recipient
+        recipient = self.config.connection_recipient
         server = self.config.connection_server
         port = self.config.connection_port
         timeout = self.config.connection_timeout
         result = {}
         result["action"] = "resultinventory"
         result["ret"] = 0
-        result["sessionid"] =  self.getRandomName(6, "inventory")
+        result["sessionid"] = self.getRandomName(6, "inventory")
         result["base64"] = False
-        result["data"]={}
+        result["data"] = {}
         if not inventory.startswith("<?xml version"):
             strinventorysave = '<?xml version="1.0" encoding="UTF-8" ?>' + inventory
         else:
@@ -639,26 +660,48 @@ class PXEImagingApi(PXEMethodParser):
         result["data"]["inventory"] = datainventory
 
         if sys.platform.startswith("win"):
-            detached_process = DetachedProcess(["python3",
-                                                "/usr/sbin/message-sender.py",
-                                                "-j", jid,
-                                            "-P", port,
-                                            "-p", password,
-                                            "-I", server,
-                                            "-m", json.dumps(result),
-                                            "-t", recipient]).run()
+            detached_process = DetachedProcess(
+                [
+                    "python3",
+                    "/usr/sbin/message-sender.py",
+                    "-j",
+                    jid,
+                    "-P",
+                    port,
+                    "-p",
+                    password,
+                    "-I",
+                    server,
+                    "-m",
+                    json.dumps(result),
+                    "-t",
+                    recipient,
+                ]
+            ).run()
         else:
-            python3_path = subprocess.check_output(['which', 'python3']).decode('utf-8').strip()
-            detached_process = DetachedProcess([python3_path,
-                                    "/usr/sbin/message-sender.py",
-                                    "-j", jid,
-                                    "-P", port,
-                                    "-p", password,
-                                    "-I", server,
-                                    "-m", json.dumps(result),
-                                    "-t", recipient]).run()
+            python3_path = (
+                subprocess.check_output(["which", "python3"]).decode("utf-8").strip()
+            )
+            detached_process = DetachedProcess(
+                [
+                    python3_path,
+                    "/usr/sbin/message-sender.py",
+                    "-j",
+                    jid,
+                    "-P",
+                    port,
+                    "-p",
+                    password,
+                    "-I",
+                    server,
+                    "-m",
+                    json.dumps(result),
+                    "-t",
+                    recipient,
+                ]
+            ).run()
         time.sleep(12)
-        command = ["ejabberdctl", "unregister", password , domain]
+        command = ["ejabberdctl", "unregister", password, domain]
         try:
             subprocess.run(command, check=True)
             logging.getLogger().debug("Command executed successfully.")
@@ -666,9 +709,9 @@ class PXEImagingApi(PXEMethodParser):
         except subprocess.CalledProcessError as e:
             logging.getLogger().debug("Error: %s", e)
 
-
-        logger.debug("PXE Proxy: PXE inventory from client %s successfully injected" % hostname)
-
+        logger.debug(
+            "PXE Proxy: PXE inventory from client %s successfully injected" % hostname
+        )
 
         return retour
 

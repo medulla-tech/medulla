@@ -779,9 +779,9 @@ AND kiosk.profiles.active = 1
                         "profile_name": element[2] if element[2] is not None else "",
                         "askuser": element[3] if element[3] is not None else "",
                         "askdate": askdate,
-                        "acknowledgedbyuser": element[5]
-                        if element[5] is not None
-                        else "",
+                        "acknowledgedbyuser": (
+                            element[5] if element[5] is not None else ""
+                        ),
                         "startdate": startdate,
                         "enddate": enddate,
                         "status": element[8] if element[8] is not None else "",
@@ -834,13 +834,15 @@ AND kiosk.profiles.active = 1
 
                 result.append(
                     {
-                        "askuser": element.askuser
-                        if element.askuser is not None
-                        else "",
+                        "askuser": (
+                            element.askuser if element.askuser is not None else ""
+                        ),
                         "askdate": askdate,
-                        "acknowledgedbyuser": element.acknowledgedbyuser
-                        if element.acknowledgedbyuser is not None
-                        else "",
+                        "acknowledgedbyuser": (
+                            element.acknowledgedbyuser
+                            if element.acknowledgedbyuser is not None
+                            else ""
+                        ),
                         "startdate": startdate,
                         "enddate": enddate,
                         "status": element.status if element.status is not None else "",

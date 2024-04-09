@@ -60,7 +60,6 @@ class AuditWriterI:
 
 
 class AuditWriterNull(Singleton, AuditWriterI):
-
     """
     Singleton class for an object that don't record any audit data.
     It is used when audit has not been configured.

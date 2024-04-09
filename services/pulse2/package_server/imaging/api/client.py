@@ -11,7 +11,6 @@ from pulse2.apis.clients import Pulse2Api
 
 
 class ImagingXMLRPCClient(Pulse2Api):
-
     """
     Imaging API XML-RPC client to connect to the MMC agent.
     """

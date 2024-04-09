@@ -336,7 +336,7 @@ class PXEMethodParser:
         @rtype: func
         """
         if isinstance(packet, bytes):
-            packet = packet.decode('utf-8')
+            packet = packet.decode("utf-8")
 
         if ord(packet[0]) == 194:
             packet = packet[1:]

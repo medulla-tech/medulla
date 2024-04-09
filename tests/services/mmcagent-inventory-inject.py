@@ -42,7 +42,6 @@ client.base.ldapAuth("root", "secret")
 
 
 class class01inventoryReportTest(TestCase):
-
     """
     Inventory test class
     """

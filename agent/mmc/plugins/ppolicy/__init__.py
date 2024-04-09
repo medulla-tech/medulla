@@ -76,7 +76,6 @@ def activate():
 
 
 class PPolicyConfig(PluginConfig):
-
     """
     Class for objects that read the ppolicy plugin configuration file.
     """
@@ -325,7 +324,6 @@ class PPolicy(ldapUserGroupControl):
 
 
 class UserPPolicy(ldapUserGroupControl):
-
     """
     Class for objects that manage user password policies attributes.
     """

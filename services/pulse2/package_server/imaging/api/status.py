@@ -14,7 +14,6 @@ from twisted.internet.utils import getProcessOutput
 
 
 class Status:
-
     """
     Class that allows to get the status of the imaging service.
     """

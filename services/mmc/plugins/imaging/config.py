@@ -12,7 +12,6 @@ from configparser import NoOptionError, NoSectionError
 
 
 class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
-
     """
     Read and hold MMC agent imaging plugin configuration
     """

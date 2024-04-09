@@ -58,9 +58,9 @@ class MMUserAssignAlgo(MMAssignAlgo):
             ]
             for api in range(len(self.assign[machine.uuid]["getMachinePackageApi"])):
                 if "server" in m and m["server"] != "":
-                    self.assign[machine.uuid]["getMachinePackageApi"][api][
-                        "server"
-                    ] = m["server"]
+                    self.assign[machine.uuid]["getMachinePackageApi"][api]["server"] = (
+                        m["server"]
+                    )
             if "servernane" and "entity_uuid" and "uuid" and "Entity_Name" in m:
                 logging.getLogger().info(
                     "getMachinePackageApi algo multi_site { machine id [%s] } { pserver ip [%s], name [%s] } { Entity id [%s], entity Name [%s] }"

@@ -42,12 +42,16 @@ class xmppbrowsing:
         # TODO: Remove MIGRATION3
         self.dirinfos = {
             "path_abs_current": pathabs,
-            "list_dirs_current": os.walk(pathabs).next()[1]
-            if PYTHON_VERSION == 2
-            else next(os.walk(pathabs))[1],
-            "list_files_current": os.walk(pathabs).next()[2]
-            if PYTHON_VERSION == 2
-            else next(os.walk(pathabs))[2],
+            "list_dirs_current": (
+                os.walk(pathabs).next()[1]
+                if PYTHON_VERSION == 2
+                else next(os.walk(pathabs))[1]
+            ),
+            "list_files_current": (
+                os.walk(pathabs).next()[2]
+                if PYTHON_VERSION == 2
+                else next(os.walk(pathabs))[2]
+            ),
             "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
             "rootfilesystem": self.rootfilesystem,
             "defaultdir": self.defaultdir,

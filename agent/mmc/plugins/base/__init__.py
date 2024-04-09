@@ -2773,7 +2773,6 @@ class Computers(ldapUserGroupControl, ComputerI):
 
 
 class ContextMaker(ContextMakerI):
-
     """
     Create security context for the base plugin.
     """

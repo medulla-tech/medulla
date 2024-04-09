@@ -18,7 +18,6 @@ from pulse2.utils import Singleton
 
 
 class EncodingSafeParser(ExpatBuilderNS):
-
     """
     Class that returns an Expat parser which parsing encoding option can be
     enforced.
