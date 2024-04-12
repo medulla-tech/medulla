@@ -121,7 +121,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         if LooseVersion(self._glpi_version) >= LooseVersion("10.0") and LooseVersion(
             self._glpi_version
-        ) <= LooseVersion("10.0.12"):
+        ) <= LooseVersion("10.0.99"):
             logging.getLogger().debug("GLPI version %s found !" % self._glpi_version)
             return True
         else:
