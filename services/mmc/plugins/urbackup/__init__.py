@@ -408,6 +408,21 @@ def get_settings_clients():
 
     return "No DATA listusers"
 
+def get_auth_client(clientid):
+    """
+    Get auth key for one client
+
+    Returns:
+        Array of internet_authkey informations
+    """
+    api = UrApiWrapper()
+    setting_client = api.get_settings_client(clientid)
+    setting_client = api.response(setting_client)
+    if "content" in setting_client:
+        return setting_client["content"]["settings"]["internet_authkey"]
+
+    return "No DATA listusers"
+
 
 def get_backups_all_client():
     """
