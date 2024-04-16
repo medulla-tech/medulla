@@ -106,6 +106,11 @@ function xmlrpc_get_clients(){
     return xmlCall("urbackup.get_settings_clients", []);
 }
 
+function xmlrpc_get_auth_client($clientid){
+    // Return auth key for one client
+    return xmlCall("urbackup.get_auth_client", [$clientid]);
+}
+
 function xmlrpc_get_backups_all_client(){
     // Return backups of all clients with date last backup
     return xmlCall("urbackup.get_backups_all_client", []);
