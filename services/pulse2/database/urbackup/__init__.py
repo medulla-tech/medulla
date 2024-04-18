@@ -81,18 +81,19 @@ class UrbackupDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getClientStatus(self, session, client_id):
+
+        result = 0
         try:
-            sql="""SELECT * FROM urbackup.client_state WHERE client_id = '%s';"""%(client_id)
+            sql="""SELECT state FROM urbackup.client_state WHERE client_id = '%s';"""%(client_id)
 
             resultquery = session.execute(sql)
             session.commit()
             session.flush()
 
-            result = [{column: value for column,
-                value in rowproxy.items()}
-                        for rowproxy in resultquery]
+            result = resultquery.first()[0]
 
         except Exception as e:
+            logging.getLogger().error("We failed to retrieve the status of the client")
             logging.getLogger().error(str(e))
 
         return result
