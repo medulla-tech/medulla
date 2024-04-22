@@ -77,7 +77,7 @@ def enable_client(jidmachine, clientid, authkey):
     Returns:
         1 or 0, state of function execution
     """
-    conf_file = "/var/lib/pulse2/clients/config/updatebackupclient.ini"
+    conf_file = "/var/lib/medulla/clients/config/updatebackupclient.ini"
 
     urbackup_conf = configparser.ConfigParser()
     urbackup_conf.read(conf_file)
@@ -97,7 +97,7 @@ def enable_client(jidmachine, clientid, authkey):
         + str(urbackup_server)
         + " & echo backup_port = "
         + str(urbackup_port)
-        + ") > C:\\progra~1\\pulse\etc\\updatebackupclient.ini"
+        + ") > C:\\progra~1\\Medulla\\etc\\updatebackupclient.ini"
     )
 
     callremotecommandshell(jidmachine, command)
@@ -124,7 +124,7 @@ def remove_client(jidmachine, clientid):
     """
     disable_client_database(clientid)
 
-    command = "(echo [parameters] & echo backup_enabled = 0) > C:\\progra~1\\pulse\\etc\\updatebackupclient.ini"
+    command = "(echo [parameters] & echo backup_enabled = 0) > C:\\progra~1\\Medulla\\etc\\updatebackupclient.ini"
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
