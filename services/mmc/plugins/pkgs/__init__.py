@@ -547,6 +547,9 @@ def putPackageDetail(package, need_assign=True):
     if bool(PkgsConfig("pkgs").generate_hash):
         generate_hash(package['localisation_server'], package["id"])
 
+    for key in package:
+        package[key] = package[key].decode("utf-8") if isinstance(package[key], bytes) else package[key]
+
     confjson = {
         "sub_packages" : [],
         "description" : package['description'],
@@ -576,10 +579,10 @@ def putPackageDetail(package, need_assign=True):
             "associateinventory" : str(package['associateinventory']),
             "licenses": package['licenses'],
             "queries": {
-                "Qversion": package["Qversion"].decode("utf-8") if isinstance(package["Qversion"], bytes) else package["Qversion"],
-                "Qvendor": package["Qvendor"].decode("utf-8") if isinstance(package["Qvendor"], bytes) else package["Qvendor"],
+                "Qversion": package["Qversion"],
+                "Qvendor": package["Qvendor"],
                 "boolcnd": package['boolcnd'],
-                "Qsoftware": package["Qsoftware"].decode("utf-8") if isinstance(package["Qsoftware"], bytes) else package["Qsoftware"],
+                "Qsoftware": package["Qsoftware"],
             }
         }
     }
