@@ -640,7 +640,11 @@ def putPackageDetail(package, need_assign=True):
         generate_hash(package["localisation_server"], package["id"])
 
     for key in package:
-        package[key] = package[key].decode("utf-8") if isinstance(package[key], bytes) else package[key]
+        package[key] = (
+            package[key].decode("utf-8")
+            if isinstance(package[key], bytes)
+            else package[key]
+        )
 
     confjson = {
         "sub_packages": [],
