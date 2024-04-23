@@ -1,9 +1,9 @@
 <?php
 /*
- * (c) 2017 Siveo, http://http://www.siveo.net
+ * (c) 2017-2024 Siveo, http://http://www.siveo.net
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
