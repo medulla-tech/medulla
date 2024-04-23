@@ -28,6 +28,7 @@ require_once("modules/medulla_server/includes/utilities.php");
 class AjaxFilterAudit extends AjaxFilter {
   function __construct($url, $divid = "container", $params = array(), $formid = "") {
     parent::__construct($url, $divid, $params, $formid);
+    $this->setRefresh(0);
   }
 
   function display($arrParam = array()) {
@@ -39,23 +40,21 @@ class AjaxFilterAudit extends AjaxFilter {
           <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
       </div>
       <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
-
-      <!-- Hide Windows Updates checkbox -->
-      <select style="position: relative; float: left"
-        class="searchfieldreal"
-        name="filter-type"
-        id="filter-type" onchange="pushSearch<?php echo $this->formid ?>(); return false;" >
-
-        <option value="status"><?php echo _T("Deployment Status", "xmppmaster");?></option>
-        <option value="infos"><?php echo _T("Machine Inventory", "xmppmaster");?></option>
-        <option value="relays"><?php echo _T("Relays", "xmppmaster");?></option>
-      </select>
-
-      <span class="searchfield">
-      <input type="text" class="searchfiel" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>(); return false;" />
-      <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;"
-      onclick="document.getElementById('param<?php echo $this->formid ?>').value =''; pushSearch<?php echo $this->formid ?>(); return false;" />
-      </span>
+        <div id="searchBest">
+          <span class="searchfield">
+            <!-- Hide Windows Updates checkbox -->
+            <select style="position: relative; float: left" class="searchfieldreal" name="filter-type" id="filter-type" onchange="pushSearch<?php echo $this->formid ?>(); return false;" >
+              <option value="status"><?php echo _T("Deployment Status", "xmppmaster");?></option>
+              <option value="infos"><?php echo _T("Machine Inventory", "xmppmaster");?></option>
+              <option value="relays"><?php echo _T("Relays", "xmppmaster");?></option>
+            </select>
+          </span>
+          <span >
+            <input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>"  />
+            <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;" onclick="document.getElementById('param<?php echo $this->formid ?>').value =''; pushSearch<?php echo $this->formid ?>(); return false;" />
+          </span>
+          <button style="margin-left:20px;" onclick="pushSearch<?php echo $this->formid ?>(); return false;"><?php echo _T("Search", "glpi");?></button>
+        </div>
       </div>
       <br /><br /><br />
 
