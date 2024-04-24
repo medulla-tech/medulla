@@ -11,6 +11,7 @@ import time
 
 from mmc.plugins.msc import MscConfig
 from mmc.plugins.msc.database import MscDatabase
+from pulse2.database.xmppmaster import XmppMasterDatabase
 import pulse2.apis.clients.package_get_api
 
 
@@ -158,6 +159,7 @@ class SendPackageCommand:
         order_in_bundle=None,
         proxies=[],
         cmd_type=0,
+        login=None
     ):
         self.ctx = ctx
         self.pid = pid
@@ -169,6 +171,7 @@ class SendPackageCommand:
         self.order_in_bundle = order_in_bundle
         self.proxies = proxies
         self.cmd_type = cmd_type
+        self.login = login
 
     def send(self):
         from mmc.plugins.xmppmaster.master.lib.managepackage import apimanagepackagemsc
@@ -235,6 +238,11 @@ class SendPackageCommand:
             cmd["state"],
             cmd_type=self.cmd_type,
         )
+
+        if self.login:
+            XmppMasterDatabase().addlogincommand(self.login, addCmd, self.gid, "", "", "", "", 0, 0, 0, 0, {}
+        )
+
         return addCmd
 
 
