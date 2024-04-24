@@ -39,6 +39,7 @@ from mmc.plugins.msc.database import MscDatabase
 #from mmc.plugins.msc.qaction import qa_list_files
 
 from pulse2.managers.group import ComputerGroupManager
+from pulse2.database.xmppmaster import XmppMasterDatabase
 import pulse2.apis.clients.package_get_api
 
 class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
@@ -283,7 +284,7 @@ def prepareCommand(pinfos, params):
     return ret
 
 class SendPackageCommand:
-    def __init__(self, ctx, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = [], cmd_type = 0):
+    def __init__(self, ctx, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = [], cmd_type = 0, login=None):
         self.ctx = ctx
         self.pid = pid
         self.targets = targets
@@ -294,6 +295,7 @@ class SendPackageCommand:
         self.order_in_bundle = order_in_bundle
         self.proxies = proxies
         self.cmd_type = cmd_type
+        self.login = login
 
     def send(self):
         from mmc.plugins.xmppmaster.master.lib.managepackage import apimanagepackagemsc
@@ -356,6 +358,11 @@ class SendPackageCommand:
             cmd['state'],
             cmd_type = self.cmd_type
         )
+
+        if self.login:
+            XmppMasterDatabase().addlogincommand(self.login, addCmd, self.gid, "", "", "", "", 0, 0, 0, 0, {}
+        )
+
         return addCmd
 
 def convert_date(date = '0000-00-00 00:00:00'):

@@ -112,11 +112,8 @@ $cible = array($uuid);
 
 // TODO: activate this  : msc_command_set_pause($cmd_id);
 
-$id_command = add_command_api($pid, $cible, $params, $mode, $gid);
-
-if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-    xmlrpc_addlogincommand($_SESSION['login'], $id_command);
-}
+$login = $_SESSION['login'];
+$id_command = add_command_api($pid, $cible, $params, $mode, $gid, '', 0, $login);
 
 if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
     if (!isXMLRPCError()) {

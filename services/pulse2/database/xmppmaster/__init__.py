@@ -3836,57 +3836,93 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self,
-                        session,
-                        login,
-                        commandid,
-                        grpid,
-                        nb_machine_in_grp,
-                        instructions_nb_machine_for_exec,
-                        instructions_datetime_for_exec,
-                        parameterspackage,
-                        rebootrequired,
-                        shutdownrequired,
-                        bandwidth,
-                        syncthing,
-                        params):
-        try:
-            new_logincommand = Has_login_command()
-            new_logincommand.login = login
-            new_logincommand.command = commandid
-            new_logincommand.count_deploy_progress = 0
-            new_logincommand.bandwidth = int(bandwidth)
-            if grpid != "":
-                new_logincommand.grpid = grpid
-            if instructions_datetime_for_exec != "":
-                new_logincommand.start_exec_on_time = instructions_datetime_for_exec
-            if nb_machine_in_grp != "":
-                new_logincommand.nb_machine_for_deploy = nb_machine_in_grp
-            if instructions_nb_machine_for_exec != "":
-                new_logincommand.start_exec_on_nb_deploy =instructions_nb_machine_for_exec
-            if parameterspackage != "":
-                new_logincommand.parameters_deploy = parameterspackage
-            if rebootrequired == 0:
-                new_logincommand.rebootrequired = False
-            else:
-                new_logincommand.rebootrequired = True
-            if shutdownrequired == 0:
-                new_logincommand.shutdownrequired = False
-            else:
-                new_logincommand.shutdownrequired = True
-            if syncthing == 0:
-                new_logincommand.syncthing = False
-            else:
-                new_logincommand.syncthing = True
-            if (type(params) is list or type(params) is dict) and len(params) != 0:
-                new_logincommand.params_json = json.dumps(params)
+    def addlogincommand(
+        self,
+        session,
+        login,
+        commandid,
+        grpid,
+        nb_machine_in_grp,
+        instructions_nb_machine_for_exec,
+        instructions_datetime_for_exec,
+        parameterspackage,
+        rebootrequired,
+        shutdownrequired,
+        bandwidth,
+        syncthing,
+        params,
+    ):
+        """
+        Inserts a new login command into the database.If an order with the same ID already exists,
+        Updates his file with the new values provided.
 
-            session.add(new_logincommand)
+        Args:
+            Session: Sqlalchemy session to interact with the database.
+            Login (Str): The login username.
+            Commandid (int): the order identifier.
+            Grpid (Str): the group's identifier, if there is one.
+            nb_machine_in_grp (Str): the number of machines in the group.
+            instructions_nb_machine_for_exec (STR): Instructions for the number of machines to execute the command.
+            instructions_datetime_for_exec (STR): Instructions for the time of execution of the order.
+            ParametersPackage (STR): the deployment settings for the command.
+            Reborootired (int): indicates if a restart is required (0 for False, 1 for True).
+            ShutdownRequired (int): indicates if a stop is required (0 for False, 1 for True).
+            Bandwidth (int): the bandwidth of the command.
+            SYNCTHING (INT): Indicates if SYNCTHING is required (0 for FALSE, 1 for True).
+            Params (List or Dict): additional control parameters.
+
+        Returns:
+            INT: The identifier of the inserted command or update in the database.
+        """
+
+        try:
+            # Check if an entry with the same commandid already exists
+            existing_logincommand = session.query(Has_login_command).filter_by(command=commandid).first()
+
+            if existing_logincommand:
+                # Update existing values
+                existing_logincommand.login = login
+                existing_logincommand.count_deploy_progress = 0
+                existing_logincommand.bandwidth = int(bandwidth)
+                if grpid != "":
+                    existing_logincommand.grpid = grpid
+                if instructions_datetime_for_exec != "":
+                    existing_logincommand.start_exec_on_time = instructions_datetime_for_exec
+                if nb_machine_in_grp != "":
+                    existing_logincommand.nb_machine_for_deploy = nb_machine_in_grp
+                if instructions_nb_machine_for_exec != "":
+                    existing_logincommand.start_exec_on_nb_deploy = instructions_nb_machine_for_exec
+                if parameterspackage != "":
+                    existing_logincommand.parameters_deploy = parameterspackage
+                existing_logincommand.rebootrequired = bool(rebootrequired)
+                existing_logincommand.shutdownrequired = bool(shutdownrequired)
+                existing_logincommand.syncthing = bool(syncthing)
+                if isinstance(params, (list, dict)) and len(params) != 0:
+                    existing_logincommand.params_json = json.dumps(params)
+            else:
+                # Create a new entry if a empty control field
+                new_logincommand = Has_login_command(
+                    login=login,
+                    command=commandid,
+                    count_deploy_progress=0,
+                    bandwidth=int(bandwidth),
+                    grpid=grpid if grpid != "" else None,
+                    start_exec_on_time=instructions_datetime_for_exec if instructions_datetime_for_exec != "" else None,
+                    nb_machine_for_deploy=nb_machine_in_grp if nb_machine_in_grp != "" else None,
+                    start_exec_on_nb_deploy=instructions_nb_machine_for_exec if instructions_nb_machine_for_exec != "" else None,
+                    parameters_deploy=parameterspackage if parameterspackage != "" else None,
+                    rebootrequired=bool(rebootrequired),
+                    shutdownrequired=bool(shutdownrequired),
+                    syncthing=bool(syncthing),
+                    params_json=json.dumps(params) if isinstance(params, (list, dict)) and len(params) != 0 else None
+                )
+                session.add(new_logincommand)
+
             session.commit()
             session.flush()
         except Exception, e:
             logging.getLogger().error(str(e))
-        return new_logincommand.id
+        return new_logincommand.id if existing_logincommand else new_logincommand.id if new_logincommand else None
 
     @DatabaseHelper._sessionm
     def getListPresenceRelay(self, session):

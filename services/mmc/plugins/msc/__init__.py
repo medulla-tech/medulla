@@ -281,7 +281,7 @@ class RpcProxy(RpcProxyI):
         s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
         return s
 
-    def add_command_api(self, pid, target, params, mode, gid = None, proxy = [], cmd_type = 0):
+    def add_command_api(self, pid, target, params, mode, gid = None, proxy = [], cmd_type = 0, login=None):
         """
         @param target: must be list of UUID
         @type target: list
@@ -294,7 +294,7 @@ class RpcProxy(RpcProxyI):
                 _group_user = DyngroupDatabase()._get_group_user(grp.parent_id)
                 ctx = self.getContext(user=_group_user)
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
-        return mmc.plugins.msc.package_api.SendPackageCommand(ctx, pid, target, params, mode, gid, proxies = proxy, cmd_type = cmd_type).send()
+        return mmc.plugins.msc.package_api.SendPackageCommand(ctx, pid, target, params, mode, gid, proxies = proxy, cmd_type = cmd_type, login=login).send()
 
     def get_id_command_on_host(self, id_command):
         ctx = self.currentContext
