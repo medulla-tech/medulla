@@ -25,16 +25,19 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("modules/medulla_server/includes/utilities.php");
-class AjaxFilterAudit extends AjaxFilter {
-  function __construct($url, $divid = "container", $params = array(), $formid = "") {
-    parent::__construct($url, $divid, $params, $formid);
-    $this->setRefresh(0);
-  }
+class AjaxFilterAudit extends AjaxFilter
+{
+    public function __construct($url, $divid = "container", $params = array(), $formid = "")
+    {
+        parent::__construct($url, $divid, $params, $formid);
+        $this->setRefresh(0);
+    }
 
-  function display($arrParam = array()) {
-    global $conf;
-    $root = $conf["global"]["root"];
-    $maxperpage = $conf["global"]["maxperpage"];?>
+    public function display($arrParam = array())
+    {
+        global $conf;
+        $root = $conf["global"]["root"];
+        $maxperpage = $conf["global"]["maxperpage"];?>
     <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;">
       <div id="loader<?php echo $this->formid ?>">
           <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
@@ -104,7 +107,7 @@ pushSearch<?php echo $this->formid ?>();
   </script>
 
   <?php
-  }
+    }
 }
 
 
@@ -114,11 +117,11 @@ $ajax = new AjaxFilterAudit(urlStrRedirect("xmppmaster/xmppmaster/ajaxviewgrpdep
   'gid' => $_GET['gid'],
   'hostname' => $_GET['hostname'],
   'uuid' => $_GET['uuid'],
-  'title' => urlencode ( $_GET['title']),
-  'startdeploy' => urlencode ( $_GET['start']),
-  'endcmd' => urlencode ( $_GET['endcmd']),
-  'startcmd' => urlencode ( $_GET['startcmd']),
-  'previous'=>'viewlogs',
+  'title' => urlencode($_GET['title']),
+  'startdeploy' => urlencode($_GET['start']),
+  'endcmd' => urlencode($_GET['endcmd']),
+  'startcmd' => urlencode($_GET['startcmd']),
+  'previous' => 'viewlogs',
 ));
 
 $sidemenu->display();
