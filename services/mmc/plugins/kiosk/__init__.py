@@ -651,25 +651,34 @@ def get_packages_for_machine(machine):
     indexed = {}
     # Create structuredatakiosk for initialization
     for packageprofile in list_profile_packages:
-        spkg = __search_software_in_glpi(list_software_glpi, granted_packages, packageprofile)
+        spkg = __search_software_in_glpi(
+            list_software_glpi, granted_packages, packageprofile
+        )
 
-        if spkg['name'] not in indexed:
+        if spkg["name"] not in indexed:
             structuredatakiosk.append(spkg)
-            indexed[spkg['name']] = {
-                "action": spkg['action'],
-                "id": len(structuredatakiosk)-1
+            indexed[spkg["name"]] = {
+                "action": spkg["action"],
+                "id": len(structuredatakiosk) - 1,
             }
         else:
-            #ask < install < delete
+            # ask < install < delete
             # check if indexed has more rights than spkg
-            if "Delete" in indexed[spkg['name']]["action"] and "Delete" not in spkg["action"]:
+            if (
+                "Delete" in indexed[spkg["name"]]["action"]
+                and "Delete" not in spkg["action"]
+            ):
                 # spkg["name"]][id] = id of spkg in structuredatakiosk
-                #change the action of the package stored in structuredatakiosk
+                # change the action of the package stored in structuredatakiosk
                 structuredatakiosk[indexed[spkg["name"]][id]]["action"] = ["Delete"]
                 if "Launch" in indexed[spkg["name"]]["action"]:
-                    structuredatakiosk[indexed[spkg["name"]][id]]["action"].append("Launch")
+                    structuredatakiosk[indexed[spkg["name"]][id]]["action"].append(
+                        "Launch"
+                    )
 
-            elif "Install" in indexed[spkg["name"]] and "Ask" in indexed[spkg["action"]]:
+            elif (
+                "Install" in indexed[spkg["name"]] and "Ask" in indexed[spkg["action"]]
+            ):
                 continue
     logger.debug(
         "initialisation kiosk %s on machine %s"
