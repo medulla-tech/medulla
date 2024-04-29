@@ -36,7 +36,7 @@ if (isset($_POST["bconfirm"])) {
     $item_uuid = $_POST['itemid'];
     $label = urldecode($_POST['itemlabel']);
 
-//    $params['name'] = $_POST['default_mi_label'];
+    //    $params['name'] = $_POST['default_mi_label'];
     $params['hidden'] = ($_POST['do_display'] != 'on');
     $params['hidden_WOL'] = ($_POST['do_display_WOL'] != 'on');
     $params['default'] = ($_POST['do_default'] == 'on');
@@ -47,17 +47,19 @@ if (isset($_POST["bconfirm"])) {
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Image <strong>%s</strong> added to default boot menu", "imaging"), $label);
-        xmlrpc_setfromxmppmasterlogxmpp($str,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Master | Menu | Add | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $str,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Master | Menu | Add | Manual'
+        );
         new NotifyWidgetSuccess($str);
 
         // Synchronize boot menu
@@ -70,8 +72,7 @@ if (isset($_POST["bconfirm"])) {
         } elseif (!$ret[0] and !isXMLRPCError()) {
             $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
             new NotifyWidgetFailure($str);
-        }
-        elseif (isXMLRPCError()) {
+        } elseif (isXMLRPCError()) {
             $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
             new NotifyWidgetFailure($str);
         }
@@ -79,39 +80,44 @@ if (isset($_POST["bconfirm"])) {
         exit;
     } elseif ($ret[0]) {
         $str = sprintf(_T("Error : Image <strong>%s</strong> added to default boot menu", "imaging"), $label);
-        xmlrpc_setfromxmppmasterlogxmpp($str,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Master | Menu | Add | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $str,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Master | Menu | Add | Manual'
+        );
         header("Location: " . urlStrRedirect("imaging/manage/master", $params));
         exit;
     } else {
-        xmlrpc_setfromxmppmasterlogxmpp($ret[1],
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Master | Menu | Add | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $ret[1],
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Master | Menu | Add | Manual'
+        );
         new NotifyWidgetFailure($ret[1]);
     }
 }
 
-if(isset($_GET['mod']))
+if(isset($_GET['mod'])) {
     $mod = $_GET['mod'];
-else
+} else {
     $mod = "none";
+}
 
 switch($mod) {
     case 'add':
@@ -125,7 +131,8 @@ switch($mod) {
         break;
 }
 
-function image_add($type, $target_uuid) {
+function image_add($type, $target_uuid)
+{
     $params = getParams();
     $item_uuid = $_GET['itemid'];
     $label = urldecode($_GET['itemlabel']);
@@ -135,28 +142,26 @@ function image_add($type, $target_uuid) {
     $f->push(new Table());
 
     // form preseeding
-    $f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
-    $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
-    $f->add(new HiddenTpl("gid"),                           array("value" => $_GET['gid'],                   "hide" => True));
-    $f->add(new HiddenTpl("uuid"),                          array("value" => $_GET['uuid'],                  "hide" => True));
+    $f->add(new HiddenTpl("itemid"), array("value" => $item_uuid,                     "hide" => true));
+    $f->add(new HiddenTpl("itemlabel"), array("value" => $label,                         "hide" => true));
+    $f->add(new HiddenTpl("gid"), array("value" => $_GET['gid'],                   "hide" => true));
+    $f->add(new HiddenTpl("uuid"), array("value" => $_GET['uuid'],                  "hide" => true));
 
     /*$input = new TrFormElement(_T('Default menu item label', 'imaging'),        new InputTpl("default_mi_label"));
     $f->add($input,                                         array("value" => ''));
      */
 
     $check = new TrFormElement(_T('Selected by default', 'imaging'), new CheckboxTpl("do_default"));
-    $f->add($check,                                         array("value" => web_def_image_default() ? "checked" : ""));
+    $f->add($check, array("value" => web_def_image_default() ? "checked" : ""));
     $check = new TrFormElement(_T('Displayed', 'imaging'), new CheckboxTpl("do_display"));
-    $f->add($check,                                         array("value" => web_def_image_hidden() ? "checked" : ""));
+    $f->add($check, array("value" => web_def_image_hidden() ? "checked" : ""));
     $check = new TrFormElement(_T('Selected by default on WOL', 'imaging'), new CheckboxTpl("do_default_WOL"));
-    $f->add($check,                                         array("value" => web_def_image_default_WOL() ? "checked" : ""));
+    $f->add($check, array("value" => web_def_image_default_WOL() ? "checked" : ""));
     $check = new TrFormElement(_T('Displayed on WOL', 'imaging'), new CheckboxTpl("do_display_WOL"));
-    $f->add($check,                                         array("value" => web_def_image_hidden_WOL() ? "checked" : ""));
+    $f->add($check, array("value" => web_def_image_hidden_WOL() ? "checked" : ""));
 
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 
 }
-
-?>

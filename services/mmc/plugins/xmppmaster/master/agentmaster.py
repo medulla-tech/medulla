@@ -1280,7 +1280,9 @@ class MUCBot(slixmpp.ClientXMPP):
             fromuser=fromuser,
         )
 
-    def logtomedulla(self, text, type="noset", sessionname="", priority=0, who="", ret=0):
+    def logtomedulla(
+        self, text, type="noset", sessionname="", priority=0, who="", ret=0
+    ):
         if who == "":
             who = self.boundjid.bare
         XmppMasterDatabase().setlogxmpp(

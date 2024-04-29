@@ -27,33 +27,33 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
- // fichier /tmp/multicast.sh existe
- // multicast lancer "affichage seulement bouton arrêt" voir aprés pour bar de progression
- // multicast non lancer "affichage seulement bouton stop"
+// fichier /tmp/multicast.sh existe
+// multicast lancer "affichage seulement bouton arrêt" voir aprés pour bar de progression
+// multicast non lancer "affichage seulement bouton stop"
 
- // cas extreme
- // cas si  fichier /tmp/multicast.sh n'existe plus et /tmp/multicast.sh lancer normalement possible
- // stoper /tmp/multicast.sh
+// cas extreme
+// cas si  fichier /tmp/multicast.sh n'existe plus et /tmp/multicast.sh lancer normalement possible
+// stoper /tmp/multicast.sh
 
- // action bouton arret
- // 1)  stoper /tmp/multicast.sh
- // 2)  supprimer le fichier /tmp/multicast.sh
- // 3) regénéré les menus  unicast
+// action bouton arret
+// 1)  stoper /tmp/multicast.sh
+// 2)  supprimer le fichier /tmp/multicast.sh
+// 3) regénéré les menus  unicast
 
- // action bouton marche
- // 1) start /tmp/multicast.sh
+// action bouton marche
+// 1) start /tmp/multicast.sh
 
 extract($_POST);
 
-$objprocess=array();
-if (    isset($multicast) &&
+$objprocess = array();
+if (isset($multicast) &&
         isset($location) &&
-        isset($process)&&
+        isset($process) &&
         isset($path) &&
-        $location !="" &&
-        $process !=""){
+        $location != "" &&
+        $process != "") {
 
-    $objprocess['location']=$location;
+    $objprocess['location'] = $location;
 
     $informationsparameters = xmlrpc_GetMulticastMultiSessionParameters($location);
 
@@ -65,19 +65,21 @@ if (    isset($multicast) &&
             $objprocess['path'] = "/var/lib/medulla/imaging/masters/".$informationsparameters['uuidmaster'];
             $objprocess['process'] = $path.$process;
             xmlrpc_start_process_multicast($objprocess);
-            xmlrpc_setfromxmppmasterlogxmpp(_T("Start Multicast of ( Master :", 'Imaging').' '.$informationsparameters['uuidmaster'].") ".
+            xmlrpc_setfromxmppmasterlogxmpp(
+                _T("Start Multicast of ( Master :", 'Imaging').' '.$informationsparameters['uuidmaster'].") ".
                                                     _T("on (group :", 'Imaging')." ".$informationsparameters['gid'].") ".
                                                     _T("to (location : ", 'Imaging').$location ."):( ".$informationsparameters['itemlabel'].")",
-                                                "IMG",
-                                                '',
-                                                0,
-                                                $informationsparameters['gid'] ,
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Imaging | Multicast | Start  | Manual');
+                "IMG",
+                '',
+                0,
+                $informationsparameters['gid'],
+                'Manuel',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Imaging | Multicast | Start  | Manual'
+            );
             break;
         case "stop":
             $objprocess['process'] = $process;
@@ -85,31 +87,35 @@ if (    isset($multicast) &&
             $objprocess['process'] = $path.$process;
             $gr = xmlrpc_clear_script_multicast($objprocess);
             xmlrpc_ClearMulticastMultiSessionParameters($location);
-            xmlrpc_setfromxmppmasterlogxmpp(_T("Stop Multicast of ( Master :", 'Imaging').' '.$informationsparameters['uuidmaster'].") ".
+            xmlrpc_setfromxmppmasterlogxmpp(
+                _T("Stop Multicast of ( Master :", 'Imaging').' '.$informationsparameters['uuidmaster'].") ".
                                                     _T("on (group :", 'Imaging')." ".$informationsparameters['gid'].") ".
                                                     _T("to (location : ", 'Imaging').$location ."):( ".$informationsparameters['itemlabel'].")",
-                                                "IMG",
-                                                '',
-                                                0,
-                                                $informationsparameters['gid'] ,
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Imaging | Multicast | Start  | Manual');
+                "IMG",
+                '',
+                0,
+                $informationsparameters['gid'],
+                'Manuel',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Imaging | Multicast | Start  | Manual'
+            );
             if ($gr != -1) {
-                xmlrpc_setfromxmppmasterlogxmpp(_T("Synchro Profile Menu group : ", 'Imaging').' '.$informationsparameters['gid'].") ",
-                                                "IMG",
-                                                '',
-                                                0,
-                                                $informationsparameters['gid'] ,
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Imaging | Menu | Start | Manual');
+                xmlrpc_setfromxmppmasterlogxmpp(
+                    _T("Synchro Profile Menu group : ", 'Imaging').' '.$informationsparameters['gid'].") ",
+                    "IMG",
+                    '',
+                    0,
+                    $informationsparameters['gid'],
+                    'Manuel',
+                    '',
+                    '',
+                    '',
+                    "session user ".$_SESSION["login"],
+                    'Imaging | Menu | Start | Manual'
+                );
                 xmlrpc_synchroProfile($gr);
             }
             break;
@@ -118,35 +124,38 @@ if (    isset($multicast) &&
             $gr = xmlrpc_clear_script_multicast($objprocess);
             if ($gr != -1) {
                 xmlrpc_synchroProfile($gr);
-                xmlrpc_setfromxmppmasterlogxmpp(_T("Synchro Profile Menu group : ", 'Imaging').' '.$informationsparameters['gid'].") ("._T("location : ",'Imaging').$location.")",
-                                                    "IMG",
-                                                    '',
-                                                    0,
-                                                    $informationsparameters['gid'] ,
-                                                    'Manuel',
-                                                    '',
-                                                    '',
-                                                    '',
-                                                    "session user ".$_SESSION["login"],
-                                                    'Imaging | Menu | Start | Manual');
+                xmlrpc_setfromxmppmasterlogxmpp(
+                    _T("Synchro Profile Menu group : ", 'Imaging').' '.$informationsparameters['gid'].") ("._T("location : ", 'Imaging').$location.")",
+                    "IMG",
+                    '',
+                    0,
+                    $informationsparameters['gid'],
+                    'Manuel',
+                    '',
+                    '',
+                    '',
+                    "session user ".$_SESSION["login"],
+                    'Imaging | Menu | Start | Manual'
+                );
             }
             //unset($_SESSION['PARAMMULTICAST']);
             xmlrpc_ClearMulticastMultiSessionParameters($location);
-            xmlrpc_setfromxmppmasterlogxmpp(_T("Clear Multicast of ( Master :", 'Imaging').' '.$informationsparameters['uuidmaster'].") ".
+            xmlrpc_setfromxmppmasterlogxmpp(
+                _T("Clear Multicast of ( Master :", 'Imaging').' '.$informationsparameters['uuidmaster'].") ".
                                                     _T("on (group :", 'Imaging')." ".$informationsparameters['gid'].") ".
                                                     _T("to (location : ", 'Imaging').$location ."):( ".$informationsparameters['itemlabel'].")",
-                                                "IMG",
-                                                '',
-                                                0,
-                                                $informationsparameters['gid'] ,
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Imaging | Multicast | Start  | Manual');
+                "IMG",
+                '',
+                0,
+                $informationsparameters['gid'],
+                'Manuel',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Imaging | Multicast | Start  | Manual'
+            );
             break;
     }
 }
 redirectTo(urlStrRedirect("imaging/manage/index/"));
-?>

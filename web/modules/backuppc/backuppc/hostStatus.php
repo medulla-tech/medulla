@@ -42,31 +42,34 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
     // Checking reponse
     if (isset($response)) {
         if (isXMLRPCError() || $response['err']) {
-            xmlrpc_setfromxmppmasterlogxmpp(_T('Notify Error : Backup configuration Computer', 'backuppc')." ". $computer_name." ".$response['err'],
-                                                "BPC",
-                                                '',
-                                                0,
-                                                $computer_name ,
-                                                'Manual',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Backup | Configuration | Error | Manual | auto');
+            xmlrpc_setfromxmppmasterlogxmpp(
+                _T('Notify Error : Backup configuration Computer', 'backuppc')." ". $computer_name." ".$response['err'],
+                "BPC",
+                '',
+                0,
+                $computer_name,
+                'Manual',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Backup | Configuration | Error | Manual | auto'
+            );
             new NotifyWidgetFailure(nl2br($response['errtext']));
-        }
-        else {
-            xmlrpc_setfromxmppmasterlogxmpp(_T('Notify Computer :', 'backuppc')." ". $computer_name." "._T('has been added to backup system successfully.', 'backuppc'),
-                                                "BPC",
-                                                '',
-                                                0,
-                                                $computer_name ,
-                                                'Manual',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Backup | Configuration | Manual | auto');
+        } else {
+            xmlrpc_setfromxmppmasterlogxmpp(
+                _T('Notify Computer :', 'backuppc')." ". $computer_name." "._T('has been added to backup system successfully.', 'backuppc'),
+                "BPC",
+                '',
+                0,
+                $computer_name,
+                'Manual',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Backup | Configuration | Manual | auto'
+            );
             new NotifyWidgetSuccess(sprintf(_T('Computer %s has been added to backup system successfully.<br />You can now configure its filesets and scheduling.', 'backuppc'), $computer_name));
             $_GET['tab'] = 'tab2';
         }
@@ -77,20 +80,20 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
     $rep = getComputersOS($_POST['host']);
     $os = $rep[0]['OSName'];
     // Init best profile
-    $bestProfile = NULL;
+    $bestProfile = null;
     $bestSim = 0;
 
     $backup_profiles = get_backup_profiles();
-    foreach ($backup_profiles as $profile){
+    foreach ($backup_profiles as $profile) {
         $profilename = $profile['profilename'];
-        similar_text($os, $profilename,$perc);//
-        if ($perc > $bestSim){
+        similar_text($os, $profilename, $perc);//
+        if ($perc > $bestSim) {
             $bestSim = $perc;
             $bestProfile = $profile;
         }
         // Windows 7 special case
-        similar_text($os, str_replace('/Vista','',$profilename),$perc);//
-        if ($perc > $bestSim){
+        similar_text($os, str_replace('/Vista', '', $profilename), $perc);//
+        if ($perc > $bestSim) {
             $bestSim = $perc;
             $bestProfile = $profile;
         }
@@ -106,7 +109,7 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
 // Receiving POST DATA
 // ==========================================================
 
-if (isset($_POST['bconfirm'],$_POST['host'])){
+if (isset($_POST['bconfirm'],$_POST['host'])) {
 
     $backup_port_reverse_ssh = get_host_backup_reverse_port($_POST['host']);
     $rsync_path = get_host_rsync_path($_POST['host']);
@@ -123,17 +126,18 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
 
     // Splitting excludes by \n
     foreach ($_POST['excludes'] as $key => $value) {
-        $_POST['excludes'][$key] = explode("\n",trim($value));
-        for ($j = 0 ; $j< count($_POST['excludes'][$key]); $j++)
-            $_POST['excludes'][$key][$j] = trim ($_POST['excludes'][$key][$j]);
+        $_POST['excludes'][$key] = explode("\n", trim($value));
+        for ($j = 0 ; $j < count($_POST['excludes'][$key]); $j++) {
+            $_POST['excludes'][$key][$j] = trim($_POST['excludes'][$key][$j]);
+        }
     }
 
-    $cfg['BackupFilesExclude'] = array_combine($_POST['sharenames'],$_POST['excludes']);
+    $cfg['BackupFilesExclude'] = array_combine($_POST['sharenames'], $_POST['excludes']);
 
     // 2 -Backup Period settings
 
-    $cfg['FullPeriod'] = fmtFloat(fmtfloat($_POST['full'])-0.03);
-    $cfg['IncrPeriod'] = fmtFloat(fmtfloat($_POST['incr'])-0.03);
+    $cfg['FullPeriod'] = fmtFloat(fmtfloat($_POST['full']) - 0.03);
+    $cfg['IncrPeriod'] = fmtFloat(fmtfloat($_POST['incr']) - 0.03);
 
     // Blackout periods
     $starthours = $_POST['starthour'];
@@ -141,8 +145,8 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
 
     $cfg['BlackoutPeriods'] = array();
 
-    for ($i = 0 ; $i<count($starthours); $i++) {
-        $daystring = implode(', ',$_POST['days'.$i]);
+    for ($i = 0 ; $i < count($starthours); $i++) {
+        $daystring = implode(', ', $_POST['days'.$i]);
         $cfg['BlackoutPeriods'][] = array(
             'hourBegin' => hhmm2float($starthours[$i]),
             'hourEnd'   => hhmm2float($endhours[$i]),
@@ -152,27 +156,27 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     // Rsync and NmbLookup command lines
     $rep = getComputersOS($_POST['host']);
     $os = strtolower($rep[0]['OSName']);
-    
+
     $backup_manager_cmd  = "/usr/sbin/medulla-connect-machine-backuppc -m ".$_POST['host']." -p ".$backup_port_reverse_ssh;
     $backup_manager_cmd1 = "/usr/sbin/medulla-disconnect-machine-backuppc -m ".$_POST['host']." -p ".$backup_port_reverse_ssh;
     $cfg['DumpPreUserCmd']  = $cfg['RestorePreUserCmd']  = $backup_manager_cmd;
     $cfg['DumpPostUserCmd'] = $cfg['RestorePostUserCmd'] = $backup_manager_cmd1;
     $cfg['ClientNameAlias'] = "localhost";
-    
+
 
     $cfg['RsyncClientPath'] = $rsync_path;
-    if (strpos($os, 'ubuntu') !== false || strpos($os, 'linux') !== false ){
+    if (strpos($os, 'ubuntu') !== false || strpos($os, 'linux') !== false) {
         $cfg['RsyncClientPath'] = " sudo '".$rsync_path."' ";
     }
     $username = "medulla";
-    $sudo="";
-    if (strtolower($os) == 'macos' || strpos($os, 'ubuntu') || strpos($os, 'linux') ) {
-        $sudo="sudo";
-     }
+    $sudo = "";
+    if (strtolower($os) == 'macos' || strpos($os, 'ubuntu') || strpos($os, 'linux')) {
+        $sudo = "sudo";
+    }
 
     $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l '.$username.' -p '.$backup_port_reverse_ssh.' localhost  $rsyncPath $argList+';
     $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l '.$username.' -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
-    
+
     $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/medulla-uuid-resolver -A $host';
     $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/medulla-uuid-resolver $host';
     $cfg['XferMethod'] = 'rsync';
@@ -182,20 +186,22 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg['UserCmdCheckStatus'] = 1;
 
     // Enable or disable backup
-    $cfg['BackupsDisable'] = isset($_POST['active'])?'0':'1';
+    $cfg['BackupsDisable'] = isset($_POST['active']) ? '0' : '1';
 
     set_host_config($_POST['host'], $cfg);
-    xmlrpc_setfromxmppmasterlogxmpp(_T('Notify Computer :', 'backuppc')." ". $computer_name." "._T('Save configure host ', 'backuppc'),
-                                                "BPC",
-                                                '',
-                                                0,
-                                                $computer_name ,
-                                                'Manual',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Backup | Configuration | Manual | auto');
+    xmlrpc_setfromxmppmasterlogxmpp(
+        _T('Notify Computer :', 'backuppc')." ". $computer_name." "._T('Save configure host ', 'backuppc'),
+        "BPC",
+        '',
+        0,
+        $computer_name,
+        'Manual',
+        '',
+        '',
+        '',
+        "session user ".$_SESSION["login"],
+        'Backup | Configuration | Manual | auto'
+    );
     new NotifyWidgetSuccess(_T('Configuration saved', 'backuppc'));
 }
 
@@ -210,19 +216,16 @@ right_top_shortcuts_display();
 // ==========================================================
 
 $p = new TabbedPageGenerator();
-$p->addTop(sprintf(_T("%s's backup status", 'backuppc'),$computer_name), "modules/backuppc/backuppc/header.php");
+$p->addTop(sprintf(_T("%s's backup status", 'backuppc'), $computer_name), "modules/backuppc/backuppc/header.php");
 
 // Adding tabs
-$p->addTab("tab1", _T('Summary', 'backuppc'), "", "modules/backuppc/backuppc/hostSummary.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
+$p->addTab("tab1", _T('Summary', 'backuppc'), "", "modules/backuppc/backuppc/hostSummary.php", array('objectUUID' => $uuid, 'cn' => $computer_name));
 
-if (host_exists($uuid))
-{
-    $p->addTab("tab2", _T('Configuration', 'backuppc'), "", "modules/backuppc/backuppc/edit.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
-    $p->addTab("tab3", _T('Advanced scripts', 'backuppc'), "", "modules/backuppc/backuppc/advScripts.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
-    $p->addTab("tab4", _T('File search', 'backuppc'), "", "modules/backuppc/backuppc/fileSearch.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
+if (host_exists($uuid)) {
+    $p->addTab("tab2", _T('Configuration', 'backuppc'), "", "modules/backuppc/backuppc/edit.php", array('objectUUID' => $uuid, 'cn' => $computer_name));
+    $p->addTab("tab3", _T('Advanced scripts', 'backuppc'), "", "modules/backuppc/backuppc/advScripts.php", array('objectUUID' => $uuid, 'cn' => $computer_name));
+    $p->addTab("tab4", _T('File search', 'backuppc'), "", "modules/backuppc/backuppc/fileSearch.php", array('objectUUID' => $uuid, 'cn' => $computer_name));
 }
 
 $p->setSideMenu($sidemenu);
 $p->display();
-
-?>

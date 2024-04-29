@@ -24,8 +24,7 @@
 
 // These entries are on computers page, loaded from base/computers/localSidebar.php
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities", "inventory"), "base", "computers",  "entityList", "", ""));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities", "inventory"), "base", "computers", "entityList", "", ""));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add an entity", "inventory"), "base", "computers", "addEntity", "", ""));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entity rules", "inventory"), "base", "computers", "entityRules", "", ""));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add entity rule", "inventory"), "base", "computers", "addEntityRule", "", ""));
-?>

@@ -95,9 +95,10 @@ $logMessages = array(
  * message will be i18n using logMessages
  * info will be changed (add <a > ...)
  */
-function translate_details($str) {
+function translate_details($str)
+{
     global $logMessages;
-    $tmp_splitted_result = explode(":",  $str, 2);
+    $tmp_splitted_result = explode(":", $str, 2);
     if (safeCount($tmp_splitted_result) == 1) {
         if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
             $details = $logMessages[$tmp_splitted_result[0]];
@@ -105,22 +106,18 @@ function translate_details($str) {
             $details = $tmp_splitted_result[0]; // keep untouched
         }
     } elseif (safeCount($tmp_splitted_result) == 2) {
-            $tmp_splitted_result[0] = trim($tmp_splitted_result[0]);
-            $tmp_splitted_result[1] = trim($tmp_splitted_result[1]);
-            if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
-                $details = $logMessages[$tmp_splitted_result[0]];
-                $details .= ' : ';
-                // FIXME : this will be enhanced
-                $details .= $tmp_splitted_result[1];
-            } else {
-                $details = $tmp_splitted_result[0] . ' : ' . $tmp_splitted_result[1]; // keep untouched
+        $tmp_splitted_result[0] = trim($tmp_splitted_result[0]);
+        $tmp_splitted_result[1] = trim($tmp_splitted_result[1]);
+        if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
+            $details = $logMessages[$tmp_splitted_result[0]];
+            $details .= ' : ';
+            // FIXME : this will be enhanced
+            $details .= $tmp_splitted_result[1];
+        } else {
+            $details = $tmp_splitted_result[0] . ' : ' . $tmp_splitted_result[1]; // keep untouched
         }
     } else { # keeps untranslated
         $details = $log['detail'];
     }
     return $details;
 }
-
-
-
-?>

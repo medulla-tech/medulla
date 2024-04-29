@@ -36,7 +36,7 @@ $p = new PageGenerator(_T("Chart", 'inventory'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$img = new RenderedImage(urlStr("inventory/inventory/graph", array("gid"=>$_GET['gid'], 'uuid'=>$_GET['uuid'], "type"=>$type, "field"=>$field, "filter"=>$filter)), 'graph', 'center');
+$img = new RenderedImage(urlStr("inventory/inventory/graph", array("gid" => $_GET['gid'], 'uuid' => $_GET['uuid'], "type" => $type, "field" => $field, "filter" => $filter)), 'graph', 'center');
 $img->display();
 
 $params = array();
@@ -46,5 +46,3 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') 
 
 $lnk = new RenderedLink(urlStr($from, $params), _T('back', 'inventory')); //array('tab'=>$_GET['tab'], 'filter'=>$filter));
 $lnk->display();
-
-?>

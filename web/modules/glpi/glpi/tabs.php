@@ -36,21 +36,30 @@ $glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? htmlentities($
  */
 right_top_shortcuts_display();
 
-if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
-if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
-if (!isset($_GET['part'])) { $_GET['part'] = 'Summary'; }
+if (!isset($_GET['hostname'])) {
+    $_GET['hostname'] = $_GET['cn'];
+}
+if (!isset($_GET['uuid'])) {
+    $_GET['uuid'] = $_GET['objectUUID'];
+}
+if (!isset($_GET['part'])) {
+    $_GET['part'] = 'Summary';
+}
 
 $uuid = '';
 $hostname = '';
-if (isset($_GET['uuid'])) { $uuid = $_GET['uuid']; }
+if (isset($_GET['uuid'])) {
+    $uuid = $_GET['uuid'];
+}
 //clean_xss function is located in medulla/includes/utilities.php
-if (isset($_GET['hostname'])) { $hostname = clean_xss($_GET['hostname']); }
+if (isset($_GET['hostname'])) {
+    $hostname = clean_xss($_GET['hostname']);
+}
 
 $uri = getGlpiMachineUri();
 if ($uri) {
     $glpi_link = sprintf('<a href="%s" target="new">%s</a>', $uri.str_replace('UUID', '', clean_xss($uuid)), $glpidisplayname);
-}
-else {
+} else {
     $glpi_link = $glpidisplayname;
 }
 
@@ -61,14 +70,14 @@ if (isset($_SESSION['pull_targets']) && in_array($uuid, $_SESSION['pull_targets'
         $remove_pull_id = uniqid();
         $_SESSION['remove_pull_id'] = $remove_pull_id;
         $p->setDescription(
-            sprintf('%s <a class="btn btn-primary" href="%s">%s</a>',
+            sprintf(
+                '%s <a class="btn btn-primary" href="%s">%s</a>',
                 _T('This client has been registered in pull mode', 'glpi'),
                 urlStrRedirect('base/computers/remove_from_pull', array('uuid' => clean_xss($uuid), 'remove_pull_id' => $remove_pull_id)),
                 _T('Leave pull mode', 'glpi')
             )
         );
-    }
-    else {
+    } else {
         $p->setDescription(
             sprintf('%s', _T('This client has been registered in pull mode', 'glpi'))
         );
@@ -94,25 +103,26 @@ $tabList = array(
 );
 
 // Compatibility for glpi 8.4
-if (!preg_match('/^0\.84(.+)/', $version))
+if (!preg_match('/^0\.84(.+)/', $version)) {
     $tabList['Registry'] = _T('Registry', "glpi");
+}
 
 
 foreach ($tabList as $tab => $str) {
-    $p->addTab("tab$i", $str, "", "modules/glpi/glpi/view_part.php", array('hostname'=>$hostname, 'uuid'=>$uuid, 'part' => $tab));
+    $p->addTab("tab$i", $str, "", "modules/glpi/glpi/view_part.php", array('hostname' => $hostname, 'uuid' => $uuid, 'part' => $tab));
     $i++;
 }
 $p->display();
-if (isset ($uuid))
-{
+if (isset($uuid)) {
     $f = new ValidatingForm();
     print("<br><br>");
-    $result['xls_path']=getReport($uuid,$_SESSION['lang']);
-   $link = new SpanElement(sprintf('<br /><a class="btn btn-primary" href="%s">%s</a>&nbsp;&nbsp;',
-     urlStrRedirect("base/computers/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "glpi")));
+    $result['xls_path'] = getReport($uuid, $_SESSION['lang']);
+    $link = new SpanElement(sprintf(
+        '<br /><a class="btn btn-primary" href="%s">%s</a>&nbsp;&nbsp;',
+        urlStrRedirect("base/computers/get_file", array('path' => $result['xls_path'])),
+        _T("Get XLS Report", "glpi")
+    ));
     $f->add($link);
     $f->pop();
     $f->display();
 }
-
-?>

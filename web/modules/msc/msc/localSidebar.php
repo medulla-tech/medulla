@@ -22,8 +22,6 @@
  * MA 02110-1301, USA
  */
 
-$sidemenu= new SideMenu();
+$sidemenu = new SideMenu();
 $sidemenu->setClass("msc");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Repository", 'msc'), "msc", "msc", "repository"));
-
-?>

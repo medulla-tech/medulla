@@ -49,8 +49,7 @@ if (!$gid) { // TODO !!
     $group = getPGobject($gid, true);
     if ($group->type == 0) {
         require("modules/base/computers/localSidebar.php");
-    }
-    else {
+    } else {
         require("modules/imaging/manage/localSidebar.php");
     }
     // FIXME
@@ -68,19 +67,25 @@ if (!$gid) { // TODO !!
         $name = clean_xss($group->getName());
         __my_header(sprintf(_T("Group '%s' content", "dyngroup"), $name), $sidemenu, $item, $group);
         if (in_array("medulla", $_SESSION["modulesList"])) {
-          //Radiobox Mode
-          echo '<input type="radio" ';
-          if ($computerpresence == "all_computer") echo "checked";
-          echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
-          echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
-          echo '<input type="radio" ';
-          if ($computerpresence == "presence") echo "checked";
-          echo ' id="namepresence2" name="namepresence" value="presence"/> ';
-          echo '<label for="namepresence2" style="display:initial;">'._T('Online computers', 'base').'</label>';
-          echo '<input type="radio" ';
-          if ($computerpresence == "no_presence") echo "checked";
-          echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
-          echo '<label for="namepresence3" style="display:initial;">'._T('Offline computers', 'base').'</label>';
+            //Radiobox Mode
+            echo '<input type="radio" ';
+            if ($computerpresence == "all_computer") {
+                echo "checked";
+            }
+            echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
+            echo '<label for="namepresence1" style="display:initial;">'._T('All computers', 'base').'</label>';
+            echo '<input type="radio" ';
+            if ($computerpresence == "presence") {
+                echo "checked";
+            }
+            echo ' id="namepresence2" name="namepresence" value="presence"/> ';
+            echo '<label for="namepresence2" style="display:initial;">'._T('Online computers', 'base').'</label>';
+            echo '<input type="radio" ';
+            if ($computerpresence == "no_presence") {
+                echo "checked";
+            }
+            echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
+            echo '<label for="namepresence3" style="display:initial;">'._T('Offline computers', 'base').'</label>';
         }
     } else {
         __my_header(sprintf(_T("Imaging group '%s' content", "dyngroup"), $group->getName()), $sidemenu, $item, $group);
@@ -88,7 +93,8 @@ if (!$gid) { // TODO !!
     $group->prettyDisplay();
 }
 
-function __my_header($label, $sidemenu, $item, $group) {
+function __my_header($label, $sidemenu, $item, $group)
+{
     $p = new PageGenerator($label);
     if (!empty($item)) {
         $sidemenu->forceActiveItem($item->action);

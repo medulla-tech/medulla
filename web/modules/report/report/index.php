@@ -34,7 +34,7 @@ require_once("modules/report/includes/html.inc.php");
 require_once("modules/report/includes/report.inc.php");
 require_once("modules/medulla/includes/utilities.php");
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = & MMCApp::getInstance();
 $report = get_report_sections($_SESSION['lang']);
 
 $p = new PageGenerator();
@@ -51,38 +51,46 @@ $f = new ValidatingForm();
  * Used to store datas for PDF/XLS reports
  * $_SESSION['report_files'][mmc_plugin_name][report_name]
  */
-if (!isset($_SESSION['report_files']))
+if (!isset($_SESSION['report_files'])) {
     $_SESSION['report_files'] = array();
+}
 
 // first step, display selectors
 if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '', 'get_pdf' => ''))) {
     $f->push(new Table());
     /* Period */
     $f->add(
-        new TrFormElement(_T('Period', 'report'),
-                          new periodInputTpl(_T('from', 'report'), 'period_from', _T('to', 'report'), 'period_to')),
-        array("value" => $values, "required" => True)
+        new TrFormElement(
+            _T('Period', 'report'),
+            new periodInputTpl(_T('from', 'report'), 'period_from', _T('to', 'report'), 'period_to')
+        ),
+        array("value" => $values, "required" => true)
     );
     /* Entities */
     $entities = new SelectMultiTpl('entities[]');
     list($list, $values) = getEntitiesSelectableElements();
     $entities->setElements($list);
     $entities->setElementsVal($values);
-    if (count($list) > 15)
+    if (count($list) > 15) {
         $entities->setHeight(15);
-    else
+    } else {
         $entities->setFullHeight();
+    }
     $f->add(
         new TrFormElement(_T('Entities', 'report'), $entities),
-        array("required" => true));
+        array("required" => true)
+    );
     /* Modules indicators */
     foreach($report as $module_name => $sections) {
         $moduleObj = $MMCApp->getModule($module_name);
         if ($moduleObj) {
             $f->add(
-                new TrFormElement($moduleObj->getDescription(),
-                                  new ReportModule($module_name, $sections)),
-                array());
+                new TrFormElement(
+                    $moduleObj->getDescription(),
+                    new ReportModule($module_name, $sections)
+                ),
+                array()
+            );
         }
     }
 
@@ -90,12 +98,12 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
     $f->addButton("generate_report", _T('Generate Report', 'report'));
 }
 // second step, display results
-else if (isset($_POST['generate_report'])) {
+elseif (isset($_POST['generate_report'])) {
     $ts_from = intval($_POST['period_from_timestamp']);
     $ts_to = intval($_POST['period_to_timestamp']);
 
     $datediff = $ts_to + 86400 - $ts_from;
-    $nb_days = floor($datediff/(60*60*24));
+    $nb_days = floor($datediff / (60 * 60 * 24));
 
     $nb_periods = min($nb_days, 7);
 
@@ -114,18 +122,21 @@ else if (isset($_POST['generate_report'])) {
     }
     $sections = array();
     foreach($_POST['sections'] as $section) {
-        if ($section)
+        if ($section) {
             $sections[] = $section;
+        }
     }
     $tables = array();
     foreach($_POST['tables'] as $table) {
-        if ($table)
+        if ($table) {
             $tables[] = $table;
+        }
     }
     $entities = array();
     foreach($_POST['entities'] as $uuid) {
-        if ($uuid)
+        if ($uuid) {
             $entities[] = $uuid;
+        }
     }
 
     if (empty($items)) {
@@ -147,8 +158,8 @@ else if (isset($_POST['generate_report'])) {
         $report_objects = array();
         $report_types = array();
         foreach ($section['content'] as $content) {
-            $table = False;
-            $svg = False;
+            $table = false;
+            $svg = false;
             if ($content['type'] == 'table') {
                 $title = new SpanElement(sprintf('<h3>%s</h3>', $content['title']));
                 $report_objects[] = $title;
@@ -164,8 +175,7 @@ else if (isset($_POST['generate_report'])) {
                         $table->addExtraInfo($values[$i], $dates[$i]);
                     }
                     $table->end = count($titles);
-                }
-                else if (in_array('headers', array_keys($content['data']))) {
+                } elseif (in_array('headers', array_keys($content['data']))) {
                     // key_value table
                     $headers = $content['data']['headers'];
                     $values = $content['data']['values'];
@@ -182,16 +192,17 @@ else if (isset($_POST['generate_report'])) {
                         }
                     }
                 }
-            }
-            else if ($content['type'] == 'chart') {
+            } elseif ($content['type'] == 'chart') {
                 $filename = $content['svg_path'];
                 $handle = fopen($filename, 'r');
                 $svg_content = fread($handle, filesize($filename));
                 fclose($handle);
-                $svg = new SpanElement(sprintf('<div align="center">%s<br /><a align="center" class="btn" href="%s">%s</a></div>',
-                                       $svg_content,
-                                       urlStrRedirect("report/report/get_file", array('path' => $content['png_path'])),
-                                       _T('Download image', 'report')));
+                $svg = new SpanElement(sprintf(
+                    '<div align="center">%s<br /><a align="center" class="btn" href="%s">%s</a></div>',
+                    $svg_content,
+                    urlStrRedirect("report/report/get_file", array('path' => $content['png_path'])),
+                    _T('Download image', 'report')
+                ));
             }
             if ($table) {
                 $report_objects[] = $table;
@@ -210,20 +221,20 @@ else if (isset($_POST['generate_report'])) {
                 $f->push(new Div());
                 if ($report_types[$i] == 'table' && $report_types[$i + 1] == 'svg') {
                     $multicol = new multicol();
-                    $f->add($multicol
+                    $f->add(
+                        $multicol
                                     ->add($report_objects[$i], '60%', '0 2% 0 0')
                                     ->add($report_objects[$i + 1], '40%')
-                                );
+                    );
                     $i++;
-                }
-                else {
+                } else {
                     $f->add($report_objects[$i]);
                 }
-                if ($report_types[$i] != 'title')
+                if ($report_types[$i] != 'title') {
                     $f->add(new SpanElement('<br /><hr style="border-top: 1px solid #DDDDDD"/><br />'));
+                }
                 $f->pop();
-            }
-            else {
+            } else {
                 $f->add($report_objects[$i]);
             }
         }

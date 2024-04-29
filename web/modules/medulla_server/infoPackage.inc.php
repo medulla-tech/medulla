@@ -43,12 +43,12 @@ $base = &$MMCApp->getModule('base');
 $submod = & $base->getSubmod('computers');
 
 $page = new Page("computers_list", _T("Computers list", "medulla"));
-$page->setOptions(array("visible"=>False));
+$page->setOptions(array("visible" => false));
 $page->setFile("modules/medulla_server/medulla_server/computers_list.php");
 $submod->addPage($page);
 
 $page = new Page("select_location", _T("Location selection in computer edit", "medulla"));
-$page->setOptions(array("visible"=>False));
+$page->setOptions(array("visible" => false));
 $page->setFile("modules/medulla_server/includes/select_location.php");
 $submod->addPage($page);
 
@@ -58,25 +58,25 @@ unset($submod);
 $submod = new SubModule("update");
 $submod->setImg('modules/xmppmaster/img/navbar/xmppmaster');
 $submod->setDescription(_T("update", "medulla"));
-$submod->setVisibility(False);
+$submod->setVisibility(false);
 // $submod->setDefaultPage("xmppmaster/update/viewProductUpdates.php");
 
 
 
 $page = new Page("viewProductUpdates", _T("viewProductUpdates", "medulla"));
 $page->setFile("modules/medulla_server/update/viewProductUpdates.php");
- $page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 //$page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("installProductUpdates",_T('install Product Updates', 'medulla'));
+$page = new Page("installProductUpdates", _T('install Product Updates', 'medulla'));
 $page->setFile("modules/medulla_server/update/installProductUpdates.php");
 // $page->setOptions(array("visible" => True, "noHeader" => False));
 $submod->addPage($page);
 
 
 $page = new Page("ajaxInstallProductUpdates", _T("Product Updates installation (ajax)", "update"));
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 
@@ -84,8 +84,5 @@ $submod->addPage($page);
 $mod->addSubmod($submod);
 
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = & MMCApp::getInstance();
 $MMCApp->addModule($mod);
-
-
-?>

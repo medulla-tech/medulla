@@ -21,7 +21,8 @@
  * along with LMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-function getStatusTable() {
+function getStatusTable()
+{
     return array("upload_in_progress" => _T("Upload in progress", "msc"),
         "upload_done" => _T("Upload done", "msc"),
         "upload_failed" => _T("Upload failed", "msc"),
@@ -63,7 +64,8 @@ function getStatusTable() {
 
 $statusTable = getStatusTable();
 
-function return_icon($state) {
+function return_icon($state)
+{
     switch ($state) {
         case "TODO":
         case "scheduled":
@@ -92,10 +94,11 @@ function return_icon($state) {
     }
 }
 
-function state2icon($current_state) {
+function state2icon($current_state)
+{
     switch ($current_state) {
-        case "wol_in_progress";
-        case "upload_in_progress" :
+        case "wol_in_progress":
+        case "upload_in_progress":
         case "execution_in_progress":
         case "delete_in_progress":
         case "inventory_in_progress":
@@ -103,8 +106,8 @@ function state2icon($current_state) {
         case "halt_in_progress":
             return "led_circle_orange.png";
 
-        case "wol_done";
-        case "upload_done" :
+        case "wol_done":
+        case "upload_done":
         case "execution_done":
         case "delete_done":
         case "inventory_done":
@@ -114,8 +117,8 @@ function state2icon($current_state) {
             return "led_circle_green.png";
 
         case "not_reachable":
-        case "wol_failed";
-        case "upload_failed" :
+        case "wol_failed":
+        case "upload_failed":
         case "execution_failed":
         case "delete_failed":
         case "inventory_failed":
@@ -132,10 +135,11 @@ function state2icon($current_state) {
     }
 }
 
-function history_stat2icon($state) {
+function history_stat2icon($state)
+{
     switch ($state) {
-        case "wol_done";
-        case "upload_done" :
+        case "wol_done":
+        case "upload_done":
         case "delete_done":
         case "execution_done":
         case "inventory_done":
@@ -145,8 +149,8 @@ function history_stat2icon($state) {
             return "led_circle_green.png";
 
         case "not_reachable":
-        case "wol_failed";
-        case "upload_failed" :
+        case "wol_failed":
+        case "upload_failed":
         case "execution_failed":
         case "delete_failed":
         case "inventory_failed":
@@ -154,11 +158,11 @@ function history_stat2icon($state) {
         case "halt_failed":
             return "led_circle_red.png";
 
-        case "wol_in_progress";
-        case "upload_in_progress" :
+        case "wol_in_progress":
+        case "upload_in_progress":
         case "execution_in_progress":
         case "delete_in_progress":
-        case "inventory_in_progress";
+        case "inventory_in_progress":
         case "reboot_in_progress":
         case "halt_in_progress":
             return "led_circle_orange.png";
@@ -173,7 +177,8 @@ function history_stat2icon($state) {
     }
 }
 
-function state_tmpl_macro($status) {
+function state_tmpl_macro($status)
+{
     # based on http://medulla.mandriva.org/ticket/473
     $ret = array(
         'play' => 'BUTTON_START',
@@ -204,51 +209,59 @@ function state_tmpl_macro($status) {
     return $ret;
 }
 
-function state_tmpl($current_state) {
+function state_tmpl($current_state)
+{
     # based on http://medulla.mandriva.org/ticket/29
     # and http://medulla.mandriva.org/ticket/473
     # task is completed
     if (in_array(
-                    $current_state, array(
+        $current_state,
+        array(
                 'over_timed',
                 'failed',
                 'done'
                     )
-            ))
+    )) {
         return array(
             'play' => '',
             'stop' => '',
             'pause' => ''
         );
+    }
 
     if (in_array(
-                    $current_state, array(
+        $current_state,
+        array(
                 'stop',
                 'stopped'
                     )
-            ))
+    )) {
         return array(
             'play' => 'BUTTON_START',
             'stop' => '',
             'pause' => ''
         );
+    }
 
 
     # task is paused
     if (in_array(
-                    $current_state, array(
+        $current_state,
+        array(
                 'pause',
                     )
-            ))
+    )) {
         return array(
             'play' => 'BUTTON_START',
             'stop' => 'BUTTON_STOP',
             'pause' => ''
         );
+    }
 
     # task is running
     if (in_array(
-                    $current_state, array(
+        $current_state,
+        array(
                 'upload_in_progress',
                 'execution_in_progress',
                 'delete_in_progress',
@@ -257,12 +270,13 @@ function state_tmpl($current_state) {
                 'wol_in_progress',
                 'halt_in_progress',
                     )
-            ))
+    )) {
         return array(
             'play' => '',
             'stop' => 'BUTTON_STOP',
             'pause' => 'BUTTON_PAUSE'
         );
+    }
 
     # task is scheduled
     return array(
@@ -272,7 +286,8 @@ function state_tmpl($current_state) {
     );
 }
 
-function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_page) {
+function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_page)
+{
 
     /**
      * Number command by page display item selected
@@ -310,7 +325,8 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
     }
 }
 
-function getPhaseLabels() {
+function getPhaseLabels()
+{
     return array(
         'wol' => _T('Wake on LAN', 'msc'),
         'upload' => _T('Upload', 'msc'),
@@ -326,7 +342,8 @@ function getPhaseLabels() {
     );
 }
 
-function getPhaseStatesLabels() {
+function getPhaseStatesLabels()
+{
     return array(
         'ready' => _T('Ready', 'msc'),
         'running' => _T('Running', 'msc'),
@@ -335,21 +352,24 @@ function getPhaseStatesLabels() {
     );
 }
 
-function addtoBreadcrumb($title, $link = '') {
+function addtoBreadcrumb($title, $link = '')
+{
 
     if ($link == '') {
         $link = $_SERVER['QUERY_STRING'];
     }
     // If the item already exists, exit
-    foreach ($_SESSION['msc_breadcrumb'] as $item)
+    foreach ($_SESSION['msc_breadcrumb'] as $item) {
         if ($title == $item[0]) {
             return;
         }
+    }
 
     $_SESSION['msc_breadcrumb'][] = array($title, $link, 1);
 }
 
-function displayBreadCrumb() {
+function displayBreadCrumb()
+{
 
     $unset = 0;
     // Setting current link
@@ -396,5 +416,3 @@ function displayBreadCrumb() {
     </script>
 EOS;
 }
-
-?>

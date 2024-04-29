@@ -31,37 +31,39 @@ sleep(3);
 $process  = xmlrpc_checkProcessCloneMasterToLocation("/bin/bash /usr/bin/medulla-synch-masters");
 $nbprocess = safeCount($process);
 $processsinfos = array();
-$z=xmlrpc_statusReadFile ("/tmp/medulla-synch-masters.out");
+$z = xmlrpc_statusReadFile("/tmp/medulla-synch-masters.out");
 $location = getCurrentLocation();
 list($list, $values) = getEntitiesSelectableElements();
-    foreach($z as $line ){
-        $dede = explode(" ",$line);
-        $startpointlocation[$list[$dede[1]]];
-        $processsinfos[$dede[0]]['startpoint']=array_pop(explode('>',$list['UUID'.$dede[1]]));
-        $processsinfos[$dede[0]]['endpoint']=array_pop(explode('>',$list['UUID'.$dede[2]]));
-    }
-if( $nbprocess == 0){
+foreach($z as $line) {
+    $dede = explode(" ", $line);
+    $startpointlocation[$list[$dede[1]]];
+    $processsinfos[$dede[0]]['startpoint'] = array_pop(explode('>', $list['UUID'.$dede[1]]));
+    $processsinfos[$dede[0]]['endpoint'] = array_pop(explode('>', $list['UUID'.$dede[2]]));
+}
+if($nbprocess == 0) {
     header("Location: " . urlStrRedirect("imaging/manage/master"));
     exit;
 }
-$p = new PageGenerator(sprintf(_T("Master copy: %s ( %s )", "imaging"),  $_SESSION['processclone']['label'] ,$_SESSION['processclone']['desc']));
+$p = new PageGenerator(sprintf(_T("Master copy: %s ( %s )", "imaging"), $_SESSION['processclone']['label'], $_SESSION['processclone']['desc']));
 $sidemenu->forceActiveItem("master");
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$tab=array();
-$tabjavascript="var ArrayProcesslog = '";
-foreach($process as $log){
+$tab = array();
+$tabjavascript = "var ArrayProcesslog = '";
+foreach($process as $log) {
     $tab[] = "synch_masters_".$log.".log";
 }
-$str=implode(",", $tab) ;
-$tabjavascript.=$str."';";
+$str = implode(",", $tab) ;
+$tabjavascript .= $str."';";
 echo '<div style="font-weight : bolder;" id="msg">';
 echo _T("Copy of master Not Started", "imaging");
 echo '</div>';
 echo '<br>';
-for ($i=0;$i<$nbprocess;$i++){
-    if ($processsinfos[$process[$i]]['startpoint'] == "" || $processsinfos[$process[$i]]['endpoint'] == ""){break;}
+for ($i = 0;$i < $nbprocess;$i++) {
+    if ($processsinfos[$process[$i]]['startpoint'] == "" || $processsinfos[$process[$i]]['endpoint'] == "") {
+        break;
+    }
     echo '<div id="ab'.$process[$i].'">';
     echo _T("Copy of master", "imaging")." ". $_SESSION['processclone']['label']. " from ".$processsinfos[$process[$i]]['startpoint']." to ".$processsinfos[$process[$i]]['endpoint'];
     echo '</div>';
@@ -141,4 +143,3 @@ var interval = setInterval(function() {
   });
 },3000);';
 echo '</script>';
-?>

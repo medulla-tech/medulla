@@ -24,8 +24,8 @@ setup(
     ],
     keywords="medulla",
     name="medulla",
-    version='5.1.0', # fmt: skip
-    debian_distro='stretch',  # fmt: skip
+    version="5.1.0",  # fmt: skip
+    debian_distro="stretch",  # fmt: skip
     description="medulla",
     url="https://www.siveo.net/",
     packages=["medulla"],

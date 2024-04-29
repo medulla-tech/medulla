@@ -245,7 +245,9 @@ class Glpi100(DyngroupDatabaseHelper):
                 Table(
                     "glpi_items_%s" % i,
                     self.metadata,
-                    Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
+                    Column(
+                        "items_id", Integer, ForeignKey("glpi_computers_medulla.id")
+                    ),
                     Column("%s_id" % i, Integer, ForeignKey("glpi_%s.id" % i)),
                     autoload=True,
                 ),
@@ -373,7 +375,9 @@ class Glpi100(DyngroupDatabaseHelper):
             self.fusionantivirus = Table(
                 "glpi_computerantiviruses",
                 self.metadata,
-                Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
+                Column(
+                    "computers_id", Integer, ForeignKey("glpi_computers_medulla.id")
+                ),
                 Column(
                     "manufacturers_id", Integer, ForeignKey("glpi_manufacturers.id")
                 ),
@@ -399,7 +403,9 @@ class Glpi100(DyngroupDatabaseHelper):
                 self.fusionlocks = Table(
                     "glpi_plugin_fusioninventory_locks",
                     self.metadata,
-                    Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
+                    Column(
+                        "items_id", Integer, ForeignKey("glpi_computers_medulla.id")
+                    ),
                     autoload=True,
                 )
                 mapper(FusionLocks, self.fusionlocks)
@@ -721,7 +727,9 @@ class Glpi100(DyngroupDatabaseHelper):
             self.regcontents = Table(
                 "glpi_plugin_fusioninventory_collects_registries_contents",
                 self.metadata,
-                Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
+                Column(
+                    "computers_id", Integer, ForeignKey("glpi_computers_medulla.id")
+                ),
                 Column(
                     "plugin_fusioninventory_collects_registries_id",
                     Integer,
@@ -734,7 +742,9 @@ class Glpi100(DyngroupDatabaseHelper):
             self.regcontents = Table(
                 "glpi_plugin_glpiinventory_collects_registries_contents",
                 self.metadata,
-                Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
+                Column(
+                    "computers_id", Integer, ForeignKey("glpi_computers_medulla.id")
+                ),
                 Column(
                     "plugin_glpiinventory_collects_registries_id",
                     Integer,

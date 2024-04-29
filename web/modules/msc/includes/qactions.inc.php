@@ -22,12 +22,12 @@
  * MA 02110-1301, USA
  */
 
-function msc_script_list_file() {
+function msc_script_list_file()
+{
     return xmlCall('msc.msc_script_list_file');
 }
 
-function msc_script_detailled_info($filename) {
+function msc_script_detailled_info($filename)
+{
     return xmlCall("msc.msc_script_detailled_info", array($filename));
 }
-
-?>

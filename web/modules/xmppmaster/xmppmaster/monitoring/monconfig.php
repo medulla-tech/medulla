@@ -38,20 +38,19 @@ $file = "/var/lib/medulla/xmpp_monitoring/confagent/monitoring_config.ini";
 $name = "mon_conf";
 
 
-$editor = new Editor($file, $name, $name, $css=[], $scripts=[], $mode='out', $language='ini');
+$editor = new Editor($file, $name, $name, $css = [], $scripts = [], $mode = 'out', $language = 'ini');
 $ajax = urlStrRedirect("xmppmaster/xmppmaster/ajaxmonconfig");
 $editor->setAjax($ajax);
 
 //If the path and file doesn't exist, both are created
-if(!$editor->dir_exists()){
-  $editor->create_dir();
+if(!$editor->dir_exists()) {
+    $editor->create_dir();
 }
 
-if(!$editor->file_exists()){
-  $editor->create_file();
+if(!$editor->file_exists()) {
+    $editor->create_file();
 }
 
 $content = $editor->get_content();
 //$editor->setFontSize(8);
 $editor->display();
-?>

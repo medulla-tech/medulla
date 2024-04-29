@@ -30,9 +30,9 @@ require_once("modules/medulla/includes/utilities.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $cn = "";
-if (isset( $_GET['objectUUID'])) {
+if (isset($_GET['objectUUID'])) {
     $filter = array('hostname' => $_POST["uuid"]);
-    $cl = getRestrictedComputersList(0, -1, $filter, False);
+    $cl = getRestrictedComputersList(0, -1, $filter, false);
     foreach ($cl as $k => $v) {
         $cn = $v[1]['cn'][0];
     }
@@ -41,20 +41,22 @@ if (isset( $_GET['objectUUID'])) {
 }
 
 // Unset backup for selected host
-if (isset($_GET['objectUUID'])){
+if (isset($_GET['objectUUID'])) {
     unset_backup_for_host($_GET['objectUUID']);
     if (!isXMLRPCError()) {
-    xmlrpc_setfromxmppmasterlogxmpp("Notify : The computer $cn has been removed from the backup system.",
-                                    "BPC",
-                                    '',
-                                    0,
-                                    $cn ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Backup | Full Removed Starting | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            "Notify : The computer $cn has been removed from the backup system.",
+            "BPC",
+            '',
+            0,
+            $cn,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Backup | Full Removed Starting | Manual'
+        );
         new NotifyWidgetSuccess(_("The computer has been removed from the backup system."));
     }
 }

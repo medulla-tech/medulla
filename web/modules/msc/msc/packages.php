@@ -40,8 +40,8 @@ foreach (getAllPackages() as $package) {
 $n = new ListInfos($a_packages, _T("Package", 'msc'));
 $n->addExtraInfo($a_pversions, _T("Version", 'msc'));
 
-$n->addActionItem(new ActionItem(_T("Launch", "msc"),"start_command", "start", "msc", "base", "computers"));
-$n->addActionItem(new ActionItem(_T("Details", "msc"),"package_detail", "detail", "msc", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Launch", "msc"), "start_command", "start", "msc", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
 
 $n->drawTable(0);
 

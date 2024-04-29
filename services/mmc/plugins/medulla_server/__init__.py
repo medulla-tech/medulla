@@ -353,7 +353,9 @@ def getSSHPublicKey():
 
 def updateDebianSourceList():
     try:
-        installation_uuid = open("/etc/medulla-licensing/installation_id").read().strip()
+        installation_uuid = (
+            open("/etc/medulla-licensing/installation_id").read().strip()
+        )
     except IOError:
         logging.getLogger().error("Error while reading installation_id file")
     try:

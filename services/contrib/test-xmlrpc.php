@@ -26,9 +26,9 @@
 
 function decode_entities($text)
 {
-    $text = html_entity_decode($text,ENT_QUOTES,"ISO-8859-1"); /* NOTE: UTF-8 does not work! */
-    $text= preg_replace('/&#(\d+);/me',"chr(\\1)",$text); /* decimal notation */
-    $text= preg_replace('/&#x([a-f0-9]+);/mei',"chr(0x\\1)",$text);  /* hex notation */
+    $text = html_entity_decode($text, ENT_QUOTES, "ISO-8859-1"); /* NOTE: UTF-8 does not work! */
+    $text = preg_replace('/&#(\d+);/me', "chr(\\1)", $text); /* decimal notation */
+    $text = preg_replace('/&#x([a-f0-9]+);/mei', "chr(0x\\1)", $text);  /* hex notation */
     return $text;
 }
 
@@ -38,7 +38,7 @@ if (!isset($conf["global"]["login"])) {
     $conf["host"] = "127.0.0.1";
     $conf["port"] = "8001";
     $conf["scheme"] = "http";
-    $conf["debug"]["level"]="0";
+    $conf["debug"]["level"] = "0";
 }
 
 $params = $_SERVER["argv"];
@@ -47,13 +47,13 @@ $method = array_shift($params);
 
 $output_options = array( "output_type" => "xml", "verbosity" => "pretty", "escaping" => array("markup", "non-ascii", "non-print"), "version" => "xmlrpc", "encoding" => "UTF-8" );
 
-$method="sync_remote_exec";
-$params=array(
+$method = "sync_remote_exec";
+$params = array(
     1,
     "cd /tmp; more.com OOo2.log.txt",
     array(
-        'host'=> 'medulla-win2k',
-        'protocol'=> 'ssh'
+        'host' => 'medulla-win2k',
+        'protocol' => 'ssh'
     )
     );
 
@@ -67,7 +67,7 @@ if ($params == null) {
 }
 */
 /* We build the HTTP POST that will be sent */
-$host= $conf["host"].":".$conf["port"];
+$host = $conf["host"].":".$conf["port"];
 $url = "/";
 $httpQuery = "POST ". $url ." HTTP/1.0\r\n";
 $httpQuery .= "User-Agent: xmlrpc\r\n";
@@ -94,7 +94,7 @@ if (!$sock) {
 }
 
 /* Send the HTTP POST */
-if ( !fwrite($sock, $httpQuery, strlen($httpQuery)) ) {
+if (!fwrite($sock, $httpQuery, strlen($httpQuery))) {
     print("Can't send XML-RPC request to MMC agent");
     exit(-1);
 }
@@ -134,8 +134,9 @@ $xmlResponse = substr($xmlResponse, $pos + 4);
    So we need to test this special case.
 */
 $booleanFalse = "<?xml version='1.0'?>\n<methodResponse>\n<params>\n<param>\n<value><boolean>0</boolean></value>\n</param>\n</params>\n</methodResponse>\n";
-if ($xmlResponse == $booleanFalse) $xmlResponse = "0";
-else {
+if ($xmlResponse == $booleanFalse) {
+    $xmlResponse = "0";
+} else {
     $xmlResponseTmp = xmlrpc_decode($xmlResponse, "UTF-8");
     /* if we cannot decode in UTF-8 */
     if (!$xmlResponseTmp) {
@@ -149,19 +150,19 @@ else {
 }
 
 /* If debug is on, print the XML-RPC call and result */
-if ($conf["debug"]["level"]!=0) {
+if ($conf["debug"]["level"] != 0) {
     $str = '<div id="debugCode">';
     $str .= "&nbsp;&nbsp;debuginfo";
-    $str.= '<div id="debugCodeHeader">';
+    $str .= '<div id="debugCodeHeader">';
     $str .= "XML RPC CALL FUNCTION: $method(";
     if (!$params) {
         $params = "null";
     } elseif (is_array($params)) {
-        $str .= implode(',',$params);
+        $str .= implode(',', $params);
     } else {
         $str .= $params;
     }
-    $str .=')';
+    $str .= ')';
     $str .= "</div>";
     if (is_array($xmlResponse)) {
         $str .= "<pre>";
@@ -176,7 +177,7 @@ if ($conf["debug"]["level"]!=0) {
 }
 
 /* If the XML-RPC server sent a fault, display an error */
-if (($xmlResponse["faultCode"])&&(is_array($xmlResponse))) {
+if (($xmlResponse["faultCode"]) && (is_array($xmlResponse))) {
     print($xmlResponse["faultCode"].":".$xmlResponse["faultString"]."\n");
     exit -1;
 }
