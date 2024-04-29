@@ -5,34 +5,34 @@
 #
 # $Id$
 #
-# This file is part of Pulse 2, http://www.siveo.net
+# This file is part of Medulla 2, http://www.siveo.net
 #
-# Pulse 2 is free software; you can redistribute it and/or modify
+# Medulla 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# Pulse 2 is distributed in the hope that it will be useful,
+# Medulla 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
+# along with Medulla 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
 set -e
 
-PKI_PATH=/var/lib/pulse2/pki
-PKI_CNF=$PKI_PATH/conf/pulse.cnf
+PKI_PATH=/var/lib/medulla/pki
+PKI_CNF=$PKI_PATH/conf/medulla.cnf
 PKI_KEYS_PATH=$PKI_PATH/private
 PKI_CERTS_PATH=$PKI_PATH/newcerts
 PKI_REQS_PATH=$PKI_PATH/req
 PKI_CRLS_PATH=$PKI_PATH/crl
 PASSPHRASE=
-PKI_CN_CA_ROOT="PulseRootCA"
-PKI_CN_CA_INTERMEDIATE="PulseIntermediateCA"
+PKI_CN_CA_ROOT="MedullaRootCA"
+PKI_CN_CA_INTERMEDIATE="MedullaIntermediateCA"
 PKI_COUNTRY=FR
 PKI_ORGANIZATION=SIVEO
 PKI_SUBJ=/countryName=$PKI_COUNTRY/organizationName=$PKI_ORGANIZATION
@@ -59,7 +59,7 @@ chmod 700 $PKI_PATH/conf
 
 # Prepare configuration file
 cd "`dirname $0`"
-sed "s/@@CRL_SERVER_ADDRESS@@/$CRL_SERVER_ADDRESS/" /usr/share/doc/pulse2-common/install/pki/pulse.cnf.in > $PKI_CNF
+sed "s/@@CRL_SERVER_ADDRESS@@/$CRL_SERVER_ADDRESS/" /usr/share/doc/medulla-common/install/pki/medulla.cnf.in > $PKI_CNF
 chmod 400 $PKI_CNF
 
 # initialise PKI

@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ install-data-hook:
 	@echo '### If using dynamic backend (from OpenLDAP 2.3), schema must be converted'
 	@echo '### in LDIF format.'
 	@echo '### You can use "mmc-add-schema" to convert and add the schema.'
-	@echo '### Schema file is available in: $(datadir)/doc/pulse2/contrib/base/mmc.schema'
+	@echo '### Schema file is available in: $(datadir)/doc/medulla/contrib/base/mmc.schema'
 	@echo '###'
 
 prereqs:

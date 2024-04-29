@@ -6,7 +6,7 @@
 
 """
 Define classes to help implementing the database access in all the
-pulse2 modules.
+medulla modules.
 """
 import functools
 import logging
@@ -53,7 +53,7 @@ class DatabaseHelper(Singleton):
             return False
 
         if conn := self.connected():
-            # Glpi is an external DB, its version is not managed by Pulse
+            # Glpi is an external DB, its version is not managed by Medulla
 
             if self.my_name == "Glpi":
                 return True

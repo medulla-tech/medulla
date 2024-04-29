@@ -1,11 +1,11 @@
 #!/bin/sh
 set -e
 
-if [ ! -d  "/var/lib/pulse2/imaging/inventories" ]; then
-	mkdir -p /var/lib/pulse2/imaging/inventories
+if [ ! -d  "/var/lib/medulla/imaging/inventories" ]; then
+	mkdir -p /var/lib/medulla/imaging/inventories
 fi
 
-chmod -Rv 777 /var/lib/pulse2/imaging/inventories
+chmod -Rv 777 /var/lib/medulla/imaging/inventories
 
 
 systemctl daemon-reload

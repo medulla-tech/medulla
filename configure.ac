@@ -1,4 +1,4 @@
-dnl configure.in for Pulse2 project.
+dnl configure.in for Medulla2 project.
 dnl (c) 2011 mandriva, http://www.mandriva.com
 dnl
 dnl This file is part of Mandriva Management Console (MMC).
@@ -195,12 +195,12 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([services/Makefile])
 AC_CONFIG_FILES([services/bin/Makefile])
 AC_CONFIG_FILES([services/mmc/Makefile])
-AC_CONFIG_FILES([services/pulse2/Makefile])
-AC_CONFIG_FILES([services/pulse2/version.py])
+AC_CONFIG_FILES([services/medulla/Makefile])
+AC_CONFIG_FILES([services/medulla/version.py])
 AC_CONFIG_FILES([services/contrib/Makefile])
 AC_CONFIG_FILES([services/conf/Makefile])
 AC_CONFIG_FILES([services/conf/plugins/Makefile])
-AC_CONFIG_FILES([services/conf/pulse2/Makefile])
+AC_CONFIG_FILES([services/conf/medulla/Makefile])
 AC_CONFIG_FILES([services/init.d/Makefile])
 AC_CONFIG_FILES([web/Makefile])
 AC_CONFIG_FILES([web/modules/medulla_server/version.php])
@@ -226,5 +226,5 @@ dnl Warn user sysconfdir is not /etc, if necessary.
 make confwarning
 
 echo "###"
-echo "### End of pulse2 configuration"
+echo "### End of medulla configuration"
 echo "###"

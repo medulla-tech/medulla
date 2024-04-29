@@ -93,7 +93,7 @@ class SpacePanel(Panel):
 class ProcessPanel(Panel):
     def serialize(self):
         exitcode, stdout, stderr = shlaunch(
-            "ps aux | grep 'pulse\|mmc' | grep -v 'defunct' | grep -v 'grep' | awk '{ if ($11 == \"/usr/bin/python\" || $11 == \"python\" || $11 == \"/bin/sh\") print $12; else print $11 }'"
+            "ps aux | grep 'medulla\|mmc' | grep -v 'defunct' | grep -v 'grep' | awk '{ if ($11 == \"/usr/bin/python\" || $11 == \"python\" || $11 == \"/bin/sh\") print $12; else print $11 }'"
         )
         return (
             {
@@ -113,7 +113,7 @@ class ComputersOnlinePanel(Panel):
 
 
 class UpdatePanel(Panel):
-    """This class is called by the Pulse Update widget from the dashboard"""
+    """This class is called by the Medulla Update widget from the dashboard"""
 
     pass
 

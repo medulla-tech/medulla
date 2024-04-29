@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,6 +50,6 @@ DocumentConverter.py:
 
 tar:
 	$(MAKE) distdir distdir=build
-	cd build && tar czf ../pulse2-doc.tar.gz .
+	cd build && tar czf ../medulla-doc.tar.gz .
 
 .PHONY: start_lo kill_lo

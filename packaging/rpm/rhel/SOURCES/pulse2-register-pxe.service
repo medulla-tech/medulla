@@ -1,13 +1,13 @@
 [Unit]
-Description=Pulse2 Register PXE
+Description=Medulla2 Register PXE
 After=samba.service slapd.service
 
 [Service]
-PIDFile=/var/run/pulse2-register-pxe.pid
-#User=pulse
-#Group=pulse
+PIDFile=/var/run/medulla-register-pxe.pid
+#User=medulla
+#Group=medulla
 Type=simple
-ExecStart=/usr/sbin/pulse2-register-pxe.py
+ExecStart=/usr/sbin/medulla-register-pxe.py
 Restart=always
 RestartSec=1
 

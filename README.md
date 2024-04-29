@@ -1,10 +1,10 @@
-# Pulse
+# Medulla
 
-[![Build Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=master)](https://travis-ci.org/pulse-project/pulse2/branches)
+[![Build Status](https://travis-ci.org/medulla-tech/medulla.svg?branch=master)](https://travis-ci.org/medulla-tech/medulla/branches)
 
-Pulse is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are. 
+Medulla is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are. 
 
-Pulse provides a real-time management solution for complex and distributed environments.
+Medulla provides a real-time management solution for complex and distributed environments.
 
 ## Main feature :
 
@@ -25,29 +25,29 @@ Pulse provides a real-time management solution for complex and distributed envir
 
 * Stable branch and previous tagged version
 
-Read INSTALL files of each project (first mmc-core and pulse2) 
+Read INSTALL files of each project (first mmc-core and medulla) 
 
 * Devel branch
 
 Installation process had been simplified to easily install all differents components from one command line.
 
-[Easy install process](https://github.com/pulse-project/tools/tree/master/install)
+[Easy install process](https://github.com/medulla-tech/tools/tree/master/install)
 
 
 ## Supported clients
 
-Pulse manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX 
+Medulla manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX 
 
 ## Documentation
 
-Read [documentation](http://pulse-user-manual.readthedocs.org/) 
+Read [documentation](http://medulla-user-manual.readthedocs.org/) 
 
 Read [code documentation](http://doc.siveo.net/)
 
 ## Community
 
-* Access community [Pulse forum](https://forum.pulse2.fr/)
+* Access community [Medulla forum](https://forum.medulla.fr/)
 * Discuss on IRC chanel [irc.freenode.net](irc.freenode.net)
-  * Channel : #pulse-fr
-  * Channel : #pulse-en
+  * Channel : #medulla-fr
+  * Channel : #medulla-en
 * Discord Channel: https://discord.gg/NfTeZkgZ

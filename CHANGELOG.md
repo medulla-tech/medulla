@@ -50,7 +50,7 @@
 - [FEATURE] Allow to display the name of the used ITSM
 - [FEATURE] Add user notification 
 - [FEATURE] Use new Medulla branding
-- [FEATURE] Add systemctl support in pulse2-setup
+- [FEATURE] Add systemctl support in medulla-setup
 - [BUGFIX]  Fix diplay of config files
 - [BUGFIX]  Support Optiplex 3050 in iPXE
 - [BUGFIX]  Fix display of the Master list page when there is a lot of
@@ -64,7 +64,7 @@ computers listed.
 - [BUGFIX]  Fix displaying actions depending of the ACLs
 - [BUGFIX]  Fix GLPI 9.3 Compatibility
 - [BUGFIX]  Fix multicast menu synchronisation
-- [BUGFIX]  Fix pulse2-setup where glpi is on a different port than 3306
+- [BUGFIX]  Fix medulla-setup where glpi is on a different port than 3306
 - [BUGFIX]  Fix GLPI 9.4 Compatibility
 - [BUGFIX]  Fix registration of relay servers
 - [BUGFIX]  Fix inventory for machines from a PXE inventory
@@ -133,7 +133,7 @@ popup, etc.)
 - [BUGFIX]  Fix backtrace during deployment
 - [BUGFIX]  Fixes listing of packages for deployment
 - [BUGFIX]  Add acl for relays actions
-- [BUGFIX]  Fix rendering of accentuated letters from glpi to pulse.
+- [BUGFIX]  Fix rendering of accentuated letters from glpi to medulla.
 - [BUGFIX]  Fix detection of online/offline machine in the Glpi view
 - [BUGFIX]  Add back addMachinesToCommand function ( fixing restarting
 convergences)
@@ -273,14 +273,14 @@ convergences)
 [Full Changelog](https://github.com/medulla-tech/medulla/compare/4.6.3...4.6.4)
 
 ## [4.6.3](https://github.com/medulla-tech/medulla/releases/tag/4.6.3) (2020-05-19)
-- [FEATURE] Manage relay servers from Pulse console
+- [FEATURE] Manage relay servers from Medulla console
 - [FEATURE] Ask reconfiguration of all machines connected to a relay
 - [FEATURE] List uninventoried machines
 - [BUGFIX]  Fix count of machines in audit view based on deployment statuses
 
 [Full Changelog](https://github.com/medulla-tech/medulla/compare/4.6.1...4.6.3)
 
-Pulse 2 4.6.1
+Medulla 2 4.6.1
 =============
 - [FEATURE] Improve translations
 - [FEATURE] Allow to use remote database for msc
@@ -297,7 +297,7 @@ Pulse 2 4.6.1
 - [BUGFIX]  Fix systemd service files to automatically restart the services
 - [BUGFIX]  Fix status of convergences ( available, used, etc.)
 
-Pulse 2 4.6.0
+Medulla 2 4.6.0
 =============
 - [FEATURE] Improve translations
 - [FEATURE] Add glpi 9.4 support
@@ -314,7 +314,7 @@ Pulse 2 4.6.0
 - [BUGFIX]  Modify the sql request for topology functions
 - [BUGFIX]  Modify the default value when a new machine is added to xmppmaster.machines
 
-Pulse 2 4.5.2
+Medulla 2 4.5.2
 =============
 - [FEATURE] Allow install of plugin if a specific version of client is met
 - [FEATURE] Switch from RaphaelJS to d3.js
@@ -327,7 +327,7 @@ Pulse 2 4.5.2
 - [BUGFIX]  Fix reconnection of master agent to xmpp server
 
 
-Pulse 2 4.5.1
+Medulla 2 4.5.1
 =============
 - [FEATURE] Expert file download allows download of several files and folders
 - [FEATURE] File download shows a tree view of the remote filesystem
@@ -341,10 +341,10 @@ Pulse 2 4.5.1
 - [BUGFIX]  Check package format before doing a deployment
 - [BUGFIX]  Do not log machines info and plugins by default
 - [BUGFIX]  Fix abort of deployments on groups in cases where the machines are offline
-- [BUGFIX]  Fix copy of files when machine is connected to a relay server that is not on main Pulse server
+- [BUGFIX]  Fix copy of files when machine is connected to a relay server that is not on main Medulla server
 
 
-Pulse 2 4.5
+Medulla 2 4.5
 ===========
 - [FEATURE] Add glpi 9.2 support
 - [FEATURE] Add glpi 9.3 support
@@ -379,7 +379,7 @@ Pulse 2 4.5
 - [BUGFIX]  Fix abort of deployments in cases where jidmachine and jidrelay are fake
 
 
-Pulse 2 4.4.1
+Medulla 2 4.4.1
 ===========
 - [BUGFIX]Fix displaying OSes in 'Operating system' dashboard widget
 - [BUGFIX] Fix the display of the command executed
@@ -395,25 +395,25 @@ Pulse 2 4.4.1
 - [BUGFIX] use one database access instead of two
 - [BUGFIX] Add the config button in the xmpp console page
 
-Pulse 2 4.4
+Medulla 2 4.4
 ===========
 - [FEATURE] Improve registry settings description in config files
 - [FEATURE] Improve execution of commands by using synchronous operations
-- [FEATURE] First version of Pulse Kiosk
+- [FEATURE] First version of Medulla Kiosk
 - [FEATURE] Addition of an inventory step after deployment
 - [FEATURE] Ability to run a custom quick action on a group
 - [FEATURE] Creation of sysprep response files for UEFI systems
 - [BUGFIX] Fix detection of MSI command for 64bit Windows
 - [BUGFIX] Fix Ajax call for run backup command
 - [BUGFIX] Fix researching of machine and user OUs
-- [BUGFIX] Review dependencies in Pulse packaging
+- [BUGFIX] Review dependencies in Medulla packaging
 - [BUGFIX] Fix calling a plugin from a quick action
 - [BUGFIX] Fix encoding for deployment stuck in START DEPLOY step
 - [BUGFIX] Fix downloadfile plugin for launch as a quickaction on groups
 - [BUGFIX] Fix the saving of registry keys after the inventory
 - [BUGFIX] Fix the display of machines when registry keys inventories are present
 
-Pulse 2 4.3
+Medulla 2 4.3
 =============
 - [FEATURE] Enable browsing and download of files from client machines
 - [FEATURE] Add new logs for dump in support script
@@ -424,7 +424,7 @@ Pulse 2 4.3
 - [BUGFIX] Fix the problem of editing package when we switch from standard to expert mode
 - [BUGFIX] Fix restoring of files to macOS clients
 
-Pulse 2 4.2
+Medulla 2 4.2
 =============
 - [FEATURE] Quick action to install ARS SSH key to Machines
 - [FEATURE] Allow deployment of python scripts
@@ -443,20 +443,20 @@ Pulse 2 4.2
 - [BUGFIX] Fix user detection if no user logged in
 - [BUGFIX] Update translations
 
-Pulse 2 4.1
+Medulla 2 4.1
 =============
 - [FEATURE] New interface for building complex packages and workflows with dependencies
 - [FEATURE] New history view that captures all operations
-- [FEATURE] Pulse update module widget is now a standalone widget
+- [FEATURE] Medulla update module widget is now a standalone widget
 - [FEATURE] Create and run custom quick actions
 - [FEATURE] Ability to delay the execution step of deployments based on time, percentage or number of machines having received the package
-- [FEATURE] Add support for UEFI in the DHCP server configuration for Pulse imaging
+- [FEATURE] Add support for UEFI in the DHCP server configuration for Medulla imaging
 - [BUGFIX] Fix saving of sysprep answer files
 - [BUGFIX] Fix the abortion of deployments
 - [BUGFIX] Fix authentication to GLPI for user provisioning
 - [BUGFIX] Fix multicast imaging in Debian Stretch
 
-Pulse 2 4.0
+Medulla 2 4.0
 =============
  * [FEATURE] Use xmpp to deliver messages, orders, etc
  * [FEATURE] Add glpi 9.1 Support
@@ -467,9 +467,9 @@ Pulse 2 4.0
  * [BUGFIX]  Fix user creation with latest glpi
  * [BUGFIX]  Fix port to php7
 
-Pulse 2 3.6.0
+Medulla 2 3.6.0
 =============
- * [FEATURE] Replacement of historic Pulse PXE by PXELINUX
+ * [FEATURE] Replacement of historic Medulla PXE by PXELINUX
  * [FEATURE] Ability to define Clonezilla options for imaging
  * [FEATURE] Ability to define NFS mounts for imaging client
  * [BUGFIX]  Fix database schemas and format
@@ -507,18 +507,18 @@ Pulse 2 3.6.0
  * [BUGFIX]  Fix mmc webpage layout ( issue #5 )
  * [BUGFIX]  Associate inventory to a package ( issue #92 )
 
-Pulse 2 3.3.0
+Medulla 2 3.3.0
 =============
  * [BUGFIX]  Allow to disable backuppc
- * [BUGFIX]  Enhance systemd support in pulse2-setup
+ * [BUGFIX]  Enhance systemd support in medulla-setup
  * [FEATURE] Add Multicast support
  * [BUGFIX]  Fix support for new sqlalchemy
  * [BUGFIX]  Fix support for new python-twisted
- * [BUGFIX]  Fix pulse2-cm initscipt for debian
- * [BUGFIX]  Removal of pulse2-cm
+ * [BUGFIX]  Fix medulla-cm initscipt for debian
+ * [BUGFIX]  Removal of medulla-cm
  * [FEATURE] Management of multiple entities in Imaging
  * [BUGFIX]  Fix restore of a specific version of a file
- * [FEATURE] Replacement of historic Pulse PXE by PXELINUX
+ * [FEATURE] Replacement of historic Medulla PXE by PXELINUX
 
 
 
@@ -605,7 +605,7 @@ mmc-core 4.4
 mmc-core 4.3
 --------------
 
- * [FEATURE] Allow edition of clients config files from Pulse
+ * [FEATURE] Allow edition of clients config files from Medulla
  * [FEATURE] Filter computers list on presence status
  * [BUGFIX] Update translations
 
@@ -630,7 +630,7 @@ mmc-core 4.1
 --------------
 
 - [FEATURE] New history view that captures all operations
-- [FEATURE] Pulse update module widget is now a standalone widget
+- [FEATURE] Medulla update module widget is now a standalone widget
 - [FEATURE] Create and run custom quick actions
 - [BUGFIX]  Fix authentication to GLPI for user provisioning
 - [BUGFIX]  Fix service module with new systemd
@@ -676,7 +676,7 @@ mmc-core 3.0.4
  * Bug #1558: Broken user / group lists under IE7
  * Bug #1691: Bad mmc-agent PID file handling
  * Bug #1706: Previous - Next listing behavior
- * Bug #1739: pulse2-package-server-register-imaging on python 2.7
+ * Bug #1739: medulla-package-server-register-imaging on python 2.7
  * Feature #1594: Use localized languages labels on MMC login page
  * Feature #1671: Man pages for mmc-agent, mmc-helper and mmc-password-helper
 

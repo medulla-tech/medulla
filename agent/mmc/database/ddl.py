@@ -22,7 +22,7 @@ SCHEMA_MASK = "schema-xxx.sql"
 
 # This logger is created only for the case when this module
 # is called as standallone.
-# (usualy is called by pulse2-setup with a passed logger)
+# (usualy is called by medulla-setup with a passed logger)
 def myLogger():
     """Default logging instance"""
     log = logging.getLogger("DDL")
@@ -198,7 +198,7 @@ class DDLContentManager:
         @rtype: string
         """
         sqldir = os.path.join(
-            prefix, "share", "doc", "pulse2", "contrib", module, "sql"
+            prefix, "share", "doc", "medulla", "contrib", module, "sql"
         )
 
         if not os.path.exists(sqldir):

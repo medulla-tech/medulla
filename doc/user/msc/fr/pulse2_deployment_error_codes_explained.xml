@@ -2,7 +2,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-  <title>Codes d'erreur de diffusion dans Pulse 2</title>
+  <title>Codes d'erreur de diffusion dans Medulla 2</title>
   <articleinfo>
     <author>
       <firstname>Nicolas Rueff</firstname>
@@ -36,13 +36,13 @@
       </revision>
     </revhistory>
     <abstract>
-      <para>Les codes d'erreur utilisés en déploiement d'application via Pulse 2.</para>
+      <para>Les codes d'erreur utilisés en déploiement d'application via Medulla 2.</para>
     </abstract>
     <releaseinfo>$Id$</releaseinfo>
   </articleinfo>
   <section>
     <title>Introduction</title>
-    <para>À partir de la version 1.2.3, les plages de codes d'erreur ont été rationalisées pour réduire le risque de collision entre les codes d'erreur utilisés par les scripts et les codes d'erreur utilisés de manière interne par Pulse 2.</para>
+    <para>À partir de la version 1.2.3, les plages de codes d'erreur ont été rationalisées pour réduire le risque de collision entre les codes d'erreur utilisés par les scripts et les codes d'erreur utilisés de manière interne par Medulla 2.</para>
     <para>Prenons l'exemple d'un script "foobar" lançant une simple commande sur la cible:</para>
     <itemizedlist>
       <listitem>
@@ -52,9 +52,9 @@
         <para>en cas d'échec, la valeur renvoyée est 137.</para>
       </listitem>
     </itemizedlist>
-    <para>pre-1.2.3, Pulse 2 utilisait également le code d'erreur 137 pour savoir qu'un script avait été terminé par SIGTERM, généralement quand il dépassait le temps imparti.</para>
-    <para>Dans notre exemple, si Pulse 2 reçoit ce code de sortie de 137, il n'est pas capable de savoir si c'était dû à une erreur de script, ou si c'était dû à l'arrêt du script.</para>
-    <para>De plus, pre-1.2.3, la plage de codes d'erreur utilisée par la fonctionnalité de "pré-check" de Pulse 2 n'était pas établie.</para>
+    <para>pre-1.2.3, Medulla 2 utilisait également le code d'erreur 137 pour savoir qu'un script avait été terminé par SIGTERM, généralement quand il dépassait le temps imparti.</para>
+    <para>Dans notre exemple, si Medulla 2 reçoit ce code de sortie de 137, il n'est pas capable de savoir si c'était dû à une erreur de script, ou si c'était dû à l'arrêt du script.</para>
+    <para>De plus, pre-1.2.3, la plage de codes d'erreur utilisée par la fonctionnalité de "pré-check" de Medulla 2 n'était pas établie.</para>
   </section>
   <section>
     <title>Les plages de code d'erreur, version courte</title>

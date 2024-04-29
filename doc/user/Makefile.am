@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,10 +21,10 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 doc_DATA = \
-	Pulse2-User-Manual-EN.pdf
+	Medulla2-User-Manual-EN.pdf
 
 MAINTAINERCLEANFILES = \
-	Pulse2-User-Manual-EN.pdf
+	Medulla2-User-Manual-EN.pdf
 
 EXTRA_DIST = $(doc_DATA)
 

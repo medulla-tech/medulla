@@ -39,7 +39,7 @@
 	</xsl:call-template>
 	
 	<style type="text/css">
-	  @import url("http://pulse2.mandriva.org/custom/css/linbox.css");
+	  @import url("http://medulla.mandriva.org/custom/css/linbox.css");
 
 	  .screen {
 	    background-color: #FFEEDD;
@@ -73,7 +73,7 @@
       <body>
 	<xsl:call-template name="body.attributes"/>
 	<div id="logolinbox" >
-	  <img src="http://pulse2.mandriva.org/custom/mandriva.png" alt="mandriva" />
+	  <img src="http://medulla.mandriva.org/custom/mandriva.png" alt="mandriva" />
 	</div>
 	
 	<div id="metanav" class="nav">

@@ -28,4 +28,4 @@ for file in $AUTOGEN_FILES; do
     ( cd $(dirname $0) && rm -rfv $file )
 done
 
-rm -fv pulse*tar.*
+rm -fv medulla*tar.*

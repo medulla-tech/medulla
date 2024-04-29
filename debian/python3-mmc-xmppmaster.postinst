@@ -3,13 +3,13 @@ set -e
 
 case "$1" in
     configure)
-        if ! getent passwd | grep -q "^pulsetransfert:"; then
-            echo -n "Adding user pulsetransfert..."
+        if ! getent passwd | grep -q "^medullatransfert:"; then
+            echo -n "Adding user medullatransfert..."
             adduser --system --quiet \
-                    --home /var/lib/pulse2/file-transfer \
+                    --home /var/lib/medulla/file-transfer \
                     --shell /bin/rbash \
                     --disabled-password \
-                    pulsetransfert
+                    medullatransfert
             echo "..done"
         fi
         ;;

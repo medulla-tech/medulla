@@ -19,9 +19,9 @@ from functools import wraps
 logger = logging.getLogger()
 
 # try:
-# from pulse2.managers.location import ComputerLocationManager
+# from medulla.managers.location import ComputerLocationManager
 # except ImportError:
-# logger.warn("report: I can't load Pulse ComputerLocationManager")
+# logger.warn("report: I can't load Medulla ComputerLocationManager")
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
 from mmc.core.version import scmRevision
@@ -241,7 +241,7 @@ class RpcProxy(RpcProxyI):
             "__USERNAME__": self.currentContext.userid,
             "__COMPANY__": self.config.company,
             "__COMPANY_LOGO_PATH__": self.config.company_logo_path,
-            "__PULSE_LOGO_PATH__": self.config.pulse_logo_path,
+            "__PULSE_LOGO_PATH__": self.config.medulla_logo_path,
         }
 
         pdf = PDFGenerator(path=pdf_path, locale=locale)
@@ -420,7 +420,7 @@ class RpcProxy(RpcProxyI):
         # getLocationName = ComputerLocationManager().getLocationName
         # entity_names = dict([(location, getLocationName([location]).decode('utf-8')) for location in entities])
         # except NameError:
-        # logger.warn("Pulse ComputerLocationManager() not loaded")
+        # logger.warn("Medulla ComputerLocationManager() not loaded")
         # entity_names = {}
         # Parsing report XML
         xmltemp = ET.parse(
@@ -440,7 +440,7 @@ class RpcProxy(RpcProxyI):
             "__USERNAME__": self.currentContext.userid,
             "__COMPANY__": self.config.company,
             "__COMPANY_LOGO_PATH__": self.config.company_logo_path,
-            "__PULSE_LOGO_PATH__": self.config.pulse_logo_path,
+            "__PULSE_LOGO_PATH__": self.config.medulla_logo_path,
         }
 
         xls = XLSGenerator(path=xls_path)

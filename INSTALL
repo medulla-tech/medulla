@@ -11,7 +11,7 @@ without warranty of any kind.
 Pre-requisites
 ============
 
-The following tools are needed in order for Pulse2 to install and run
+The following tools are needed in order for Medulla2 to install and run
 properly:
 - mmc-core framework
 - python >= 2.5, with the following modules:
@@ -31,7 +31,7 @@ machine or through the network:
 - MySQL
 - DHCP server (for imaging purpose)
 
-If you build Pulse2 from scm repository, you will also need the following tools
+If you build Medulla2 from scm repository, you will also need the following tools
 (not needed if you use the .tar.gz archive):
 - autoconf
 - automake
@@ -49,9 +49,9 @@ $ ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
 $ make
 $ sudo make install
 
-The `pulse2-setup' tool can then be used to provision databases,
+The `medulla-setup' tool can then be used to provision databases,
 setup and check configuration files, etc. If you plan to use imaging
-service, please read the following section, as pulse2-setup does not
+service, please read the following section, as medulla-setup does not
 handle with its configuration.
 
 Quick imaging client installation
@@ -63,10 +63,10 @@ For your convenience, prebuilt binaries are available, so that you can
 install it on a server which is not i386.
 
 Once you have downloaded prebuilt binaries as
-pulse2-imaging-client-<version>_i386.tar.gz, simply run the following, as root:
-$ tar xfC pulse2-imaging-client-<version>_i386.tar.gz /
+medulla-imaging-client-<version>_i386.tar.gz, simply run the following, as root:
+$ tar xfC medulla-imaging-client-<version>_i386.tar.gz /
 
-All files are extracted in /var/lib/pulse2/imaging/ dir.
+All files are extracted in /var/lib/medulla/imaging/ dir.
 
 As to serve the imaging client to the machines, you must then configure the
 following network services.
@@ -75,9 +75,9 @@ NFS
 ---
 
 In `/etc/exports' file, add the following lines:
-/var/lib/pulse2/imaging/computers *(async,rw,no_root_squash,subtree_check)
-/var/lib/pulse2/imaging/masters *(async,rw,no_root_squash,subtree_check)
-/var/lib/pulse2/imaging/postinst *(async,ro,no_root_squash,subtree_check)
+/var/lib/medulla/imaging/computers *(async,rw,no_root_squash,subtree_check)
+/var/lib/medulla/imaging/masters *(async,rw,no_root_squash,subtree_check)
+/var/lib/medulla/imaging/postinst *(async,ro,no_root_squash,subtree_check)
 
 Then reload the new NFS configuration, as root:
 $ exportfs -r -a
@@ -87,7 +87,7 @@ DHCP
 
 The DHCP server on your network must be configured to serve bootload through
 PXE protocol. You can find an example file for dhcp3 server in
-`/usr/share/doc/pulse2/contrib/dhcp/dhcpd.conf'.
+`/usr/share/doc/medulla/contrib/dhcp/dhcpd.conf'.
 
 TFTP
 ----
@@ -96,7 +96,7 @@ Bootloader and kernel are served to the client with TFTP protocol.
 We recommend using the atftpd server.
 
 You must configure the TFTP server to use as base directory:
-`/var/lib/pulse2/imaging'.
+`/var/lib/medulla/imaging'.
 
 `configure' Invocation
 ======================
@@ -163,19 +163,19 @@ operates.
 
 Quick installation : devel branch
 ============================
-In tools repository, 'install-pulse-git' allow a quick setup.
-./install-pulse-git \
-	--pulse-repo-url=<pulse repo url> \
+In tools repository, 'install-medulla-git' allow a quick setup.
+./install-medulla-git \
+	--medulla-repo-url=<medulla repo url> \
 	--root-password=<root password> \
 	--org-name=<organization name> \
 	--interface-to-clients=<interface> \
-	--enable-pulse-main=[g]lpi[d]hcp|[p]xe | --enable-multisite=[d]hcp|[p]xe|[b]ackuppc \
+	--enable-medulla-main=[g]lpi[d]hcp|[p]xe | --enable-multisite=[d]hcp|[p]xe|[b]ackuppc \
 	--create-entity \
 	--entity=<entity name> \
 	--dhcp-dns-server=<dns server for DHCP clients> \
 	--dhcp-gateway-address=<gateway address for DHCP clients> \
-	--interface-to-main-pulse=<interface> \
-	--main-pulse-ip=<IP address> \
+	--interface-to-main-medulla=<interface> \
+	--main-medulla-ip=<IP address> \
 	--glpi-url=<GLPI URL> \
 	--glpi-dbhost=<IP address> \
 	--glpi-dbname=<database name> \

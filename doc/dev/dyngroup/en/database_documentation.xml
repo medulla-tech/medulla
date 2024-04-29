@@ -42,7 +42,7 @@
   </articleinfo>
   <section>
     <title>The dyngroup database design</title>
-    <para>In Pulse2 a group is a way to launch an action on several machines at the same time, it contains machines and has a name. A group is associated to an user, this user can share the group with others users if wanted.</para>
+    <para>In Medulla2 a group is a way to launch an action on several machines at the same time, it contains machines and has a name. A group is associated to an user, this user can share the group with others users if wanted.</para>
     <para>There are 3 kinds of groups:</para>
     <itemizedlist>
       <listitem>
@@ -81,7 +81,7 @@
       <varlistentry>
         <term>uuid</term>
         <listitem>
-          <para>The machine's UUID, used by Pulse2 to handle a machine.</para>
+          <para>The machine's UUID, used by Medulla2 to handle a machine.</para>
         </listitem>
       </varlistentry>
       <varlistentry>

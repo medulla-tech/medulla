@@ -1,2 +1,2 @@
-usr/sbin/pulse2-register-pxe.py
-usr/lib/systemd/system/pulse2-register-pxe.service
+usr/sbin/medulla-register-pxe.py
+usr/lib/systemd/system/medulla-register-pxe.service

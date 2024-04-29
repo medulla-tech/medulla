@@ -68,7 +68,7 @@ import socket
 import ssl
 import gzip
 
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 from datetime import datetime, timedelta
 
 logger = logging.getLogger()
@@ -1120,7 +1120,7 @@ class messagefilexmpp:
             logger.error("type msg pas compatible %s" % type(msg))
             return None
 
-    def iqsendpulse(self, mto, msg, timeout):
+    def iqsendmedulla(self, mto, msg, timeout):
         return self.send_iq(mto, msg, timeout)
 
     def send_iq(self, mto, msg, timeout):
@@ -1238,7 +1238,7 @@ class messagefilexmpp:
             # addition des metadatas de message.
             msg["metadatas"] = {
                 "type": "plugin",
-                "to": "master@pulse/MASTER",
+                "to": "master@medulla/MASTER",
                 "timeout": 0,
             }
             messagesend = json.dumps(msg, indent=4)
@@ -2387,10 +2387,10 @@ class MMCApp(object):
 
             # --------------------------------------------------------------------------------------------------
             # --------------------------------- call plugin sur 1 acteur en xmpp -------------------------------
-            # test envoi mesage to  machine  dev-deb12-2.zb0@pulse/525400944ac7
+            # test envoi mesage to  machine  dev-deb12-2.zb0@medulla/525400944ac7
             # logger.info("Start/restart MMC creation canal commande xmpp3")
 
-            # ree = self.modulexmppmaster.send_message('dev-deb12-2.zb0@pulse/525400944ac7',
+            # ree = self.modulexmppmaster.send_message('dev-deb12-2.zb0@medulla/525400944ac7',
             # {"action": "ping",
             # "data": { "text" : "message" }} )
             # --------------------------------------------------------------------------------------------------
@@ -2399,7 +2399,7 @@ class MMCApp(object):
             # --------------------------------------------------------------------------------------------------
             # --------------------------------- call iq synchrone sur sur 1 acteur en xmpp -------------------------------
             # test de machinessend_iq(mto, msg, timeout):
-            # ree= self.modulexmppmaster.send_iq('dev-deb12-2.zb0@pulse/525400944ac7',
+            # ree= self.modulexmppmaster.send_iq('dev-deb12-2.zb0@medulla/525400944ac7',
             # { "action": "test",
             # "data": {
             # "listinformation": ["get_ars_key_id_rsa", "keypub"],
@@ -2708,11 +2708,11 @@ class PluginManager(Singleton):
             plugins.remove("base")
             plugins.insert(0, "base")
 
-        # Put pulse2 plugins as the last to be imported, else we may get a mix
-        # up with pulse2 module available in the main python path
-        if "pulse2" in plugins:
-            plugins.remove("pulse2")
-            plugins.append("pulse2")
+        # Put medulla plugins as the last to be imported, else we may get a mix
+        # up with medulla module available in the main python path
+        if "medulla" in plugins:
+            plugins.remove("medulla")
+            plugins.append("medulla")
 
         # Load plugins
         logger.info("Importing available MMC plugins")

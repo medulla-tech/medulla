@@ -2,7 +2,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-  <title>Pulse 2 client content</title>
+  <title>Medulla 2 client content</title>
   <articleinfo>
     <author>
       <firstname>Nicolas</firstname>
@@ -29,13 +29,13 @@
       </revision>
     </revhistory>
     <abstract>
-      <para>Description of a Pulse 2 client folder</para>
+      <para>Description of a Medulla 2 client folder</para>
     </abstract>
     <releaseinfo>$Id: database_documentation.xml 4145 2009-05-12 16:29:28Z nrueff $</releaseinfo>
   </articleinfo>
   <section>
     <title>Overall organization</title>
-    <para>A Pulse 2 client folder contains information of two kind :</para>
+    <para>A Medulla 2 client folder contains information of two kind :</para>
     <para></para>
     <itemizedlist>
       <listitem>
@@ -52,7 +52,7 @@
   </section>
   <section>
     <title>exclude</title>
-    <para>The Pulse 2 backup binaries use this file to learn which partitions to backup (more precisely, which to exclude). This one contains exclusion patterns, one per line, using the following syntax : &lt;disk name&gt;:&lt;partition name&gt; :</para>
+    <para>The Medulla 2 backup binaries use this file to learn which partitions to backup (more precisely, which to exclude). This one contains exclusion patterns, one per line, using the following syntax : &lt;disk name&gt;:&lt;partition name&gt; :</para>
     <itemizedlist>
       <listitem>
         <para>To prevent backuping the P partition from D disk : <emphasis role="bold">D:P</emphasis></para>

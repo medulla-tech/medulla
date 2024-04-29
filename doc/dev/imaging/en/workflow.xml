@@ -2,7 +2,7 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
 <article class="whitepaper">
-  <title>Pulse 2 image content</title>
+  <title>Medulla 2 image content</title>
   <articleinfo>
     <author>
       <firstname>Nicolas</firstname>
@@ -29,13 +29,13 @@
       </revision>
     </revhistory>
     <abstract>
-      <para>Description of a Pulse 2 image</para>
+      <para>Description of a Medulla 2 image</para>
     </abstract>
     <releaseinfo>$Id: database_documentation.xml 4145 2009-05-12 16:29:28Z nrueff $</releaseinfo>
   </articleinfo>
   <section>
     <title>Overall organization</title>
-    <para>A Pulse 2 image is contained in a folder, with files containing information, and files containing meta-information.</para>
+    <para>A Medulla 2 image is contained in a folder, with files containing information, and files containing meta-information.</para>
   </section>
   <section>
     <title>Files containing information</title>
@@ -119,7 +119,7 @@ desc  &lt;the image description&gt;
     </section>
     <section>
       <title>exclude</title>
-      <para>The Pulse 2 backup binaries uses this file to learn which partitions to backup (more precisely, which to exclude). This one contains exclusion patterns, one per line, using the following syntax : &lt;disk name&gt;:&lt;partition name&gt; :</para>
+      <para>The Medulla 2 backup binaries uses this file to learn which partitions to backup (more precisely, which to exclude). This one contains exclusion patterns, one per line, using the following syntax : &lt;disk name&gt;:&lt;partition name&gt; :</para>
       <itemizedlist>
         <listitem>
           <para>To prevent backuping the P partition from D disk : <emphasis role="bold">D:P</emphasis></para>

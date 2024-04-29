@@ -40,11 +40,11 @@ Release:        0.%git.1%{?dist}
 %endif
 License:	GPL
 Group:		System/Servers
-URL:		https://github.com/pulse-project/pulse
+URL:		https://github.com/medulla-tech/medulla
 Source0:        %{name}_%{real_version}.orig.tar.gz
 #TODO: Adapt for Mageia
-Source3:        pulse2-imaging-server.service
-Source4:        pulse2-register-pxe.service
+Source3:        medulla-imaging-server.service
+Source4:        medulla-register-pxe.service
 Source5:        output.py
 Source6:        get_file.php
 
@@ -70,8 +70,8 @@ Requires:       mmc-web-msc
 Requires:       python3-mmc-msc
 Requires:       mmc-web-pkgs
 Requires:       python3-mmc-pkgs
-Requires:       mmc-web-pulse2
-Requires:       python3-mmc-pulse2
+Requires:       mmc-web-medulla
+Requires:       python3-mmc-medulla
 Requires:       mmc-web-kiosk
 Requires:       python3-mmc-kiosk
 Requires:       mmc-web-admin
@@ -80,13 +80,13 @@ Requires:       mmc-web-urbackup
 Requires:       python3-mmc-urbackup
 Requires:       mmc-web-updates
 Requires:       python3-mmc-updates
-Requires:       pulse2-common
-Requires:       pulse2-davos-client
-Requires:       pulse2-package-server
-Requires:       python3-pulse2-common-database-dyngroup
-Requires:       pulse-mmc-web-computers-inventory-backend
-Requires:       pulse-python3-mmc-computers-inventory-backend
-Requires:       pulse2-homepage
+Requires:       medulla-common
+Requires:       medulla-davos-client
+Requires:       medulla-package-server
+Requires:       python3-medulla-common-database-dyngroup
+Requires:       medulla-mmc-web-computers-inventory-backend
+Requires:       medulla-python3-mmc-computers-inventory-backend
+Requires:       medulla-homepage
 
 %description
 Management Console agent & web interface with
@@ -99,8 +99,8 @@ base and password policies modules.
 %package -n python3-mmc-dyngroup
 Summary:    Dynamic computer group plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Requires:   python3-pulse2-common-database-dyngroup = %version-%release
+Requires:   medulla-common = %version-%release
+Requires:   python3-medulla-common-database-dyngroup = %version-%release
 
 Obsoletes:  python-mmc-dyngroup < 4.7.0
 Provides:   python-mmc-dyngroup = %version-%release
@@ -120,7 +120,7 @@ software deployment.
 %package -n     mmc-web-dyngroup
 Summary:        Dynamic computer group plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-dyngroup
@@ -136,7 +136,7 @@ ease massive software deployment.
 %package -n python3-mmc-backuppc
 Summary:    Backuppc plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   p7zip
 Requires:   python3-pyquery
 
@@ -150,18 +150,18 @@ This package contains the backuppc plugin for the MMC agent.
 %defattr(-,root,root,0755)
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/backuppc.ini
 %python3_sitelib/mmc/plugins/backuppc
-%python3_sitelib/pulse2/database/backuppc
-%_sbindir/pulse2-backup-servers
-%_bindir/pulse2-backup-handler
-%_sbindir/pulse2-connect-machine-backuppc
-%_sbindir/pulse2-disconnect-machine-backuppc
+%python3_sitelib/medulla/database/backuppc
+%_sbindir/medulla-backup-servers
+%_bindir/medulla-backup-handler
+%_sbindir/medulla-connect-machine-backuppc
+%_sbindir/medulla-disconnect-machine-backuppc
 
 #--------------------------------------------------------------------
 
 %package -n python3-mmc-connection-manager
 Summary:    Connection Manager plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   p7zip
 Requires:   python-pyquery
 
@@ -170,18 +170,18 @@ This package contains the connection manager plugin for the MMC agent.
 
 %files -n python3-mmc-connection-manager
 %defattr(-,root,root,0755)
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/pulse2/cm
-%python2_sitelib/pulse2/cm
-%{_sysconfdir}/init.d/pulse2-cm
-%_sbindir/pulse2-cm
-%_sbindir/pulse2-create-group
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/medulla/cm
+%python2_sitelib/medulla/cm
+%{_sysconfdir}/init.d/medulla-cm
+%_sbindir/medulla-cm
+%_sbindir/medulla-create-group
 
 ##--------------------------------------------------------------------
 
 %package -n     mmc-web-backuppc
 Summary:        Backuppc plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-backuppc
@@ -195,13 +195,13 @@ This package contains the backuppc plugin for the MMC web interface.
 %package -n python3-mmc-glpi
 Summary:    GLPI plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   python3-mmc-base >= %mmc_version
 Requires:   python3-sqlalchemy >= 0.6.3
 Requires:   MySQL-python >= 1.2.1
-Requires:   python3-pulse2-common = %version-%release
+Requires:   python3-medulla-common = %version-%release
 
-Provides:   pulse-python3-mmc-computers-inventory-backend = %version-%release
+Provides:   medulla-python3-mmc-computers-inventory-backend = %version-%release
 
 Obsoletes:  python-mmc-glpi < 4.7.0
 Provides:   python-mmc-glpi = %version-%release
@@ -216,17 +216,17 @@ inventory plugin for the MMC agent.
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/glpi.ini
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/glpi_search_options.ini
 %python3_sitelib/mmc/plugins/glpi
-%_sbindir/pulse2-extract-glpi-search-options
+%_sbindir/medulla-extract-glpi-search-options
 
 #--------------------------------------------------------------------
 
 %package -n     mmc-web-glpi
 Summary:        GLPI plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
-Provides:       pulse-mmc-web-computers-inventory-backend = %version-%release
+Provides:       medulla-mmc-web-computers-inventory-backend = %version-%release
 
 %description -n mmc-web-glpi
 This package contains the GLPI plugin for the MMC web interface. It
@@ -238,14 +238,14 @@ allows one to query a GLPI database to display computer inventory.
 #--------------------------------------------------------------------
 
 %package -n python3-mmc-msc
-Summary:    Pulse 2 MSC plugin for MMC agent
+Summary:    Medulla 2 MSC plugin for MMC agent
 Group:      System/Servers
 %if "%_vendor" == "redhat"
 Requires:   python3-libs
 %endif
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   python3-mmc-base >= %mmc_version
-Requires:   python3-pulse2-common-database-msc = %version-%release
+Requires:   python3-medulla-common-database-msc = %version-%release
 Requires:   python3-xlwt
 
 Obsoletes:  python-mmc-msc < 4.7.0
@@ -259,16 +259,16 @@ process.
 %files -n python3-mmc-msc
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/msc.ini
 %python3_sitelib/mmc/plugins/msc
-%{_var}/lib/pulse2/qactions
-%_sbindir/pulse2-msc-clean-database
-%_mandir/man1/pulse2-msc-clean-database.1.*
+%{_var}/lib/medulla/qactions
+%_sbindir/medulla-msc-clean-database
+%_mandir/man1/medulla-msc-clean-database.1.*
 
 #--------------------------------------------------------------------
 
 %package -n     mmc-web-msc
 Summary:        MSC plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-msc
@@ -284,8 +284,8 @@ deployment process.
 %package -n python3-mmc-imaging
 Summary:    Imaging plugin for MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Requires:   python3-pulse2-common-database-imaging = %version-%release
+Requires:   medulla-common = %version-%release
+Requires:   python3-medulla-common-database-imaging = %version-%release
 # Needed for ImportError: No module named tasks
 Requires:   python3-mmc-core >= 3.1.1
 
@@ -305,7 +305,7 @@ This package contains the imaging plugin for MMC agent.
 %package -n	mmc-web-imaging
 Summary:	Imaging plugin for the MMC web interface
 Group:		System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       python3-mmc-base >= %mmc_version
 
 %description -n mmc-web-imaging
@@ -320,8 +320,8 @@ This package contains the imaging plugin for the MMC web interface.
 %package -n python3-mmc-support
 Summary:    Imaging plugin for MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Requires:   python3-pulse2-common-database-imaging = %version-%release
+Requires:   medulla-common = %version-%release
+Requires:   python3-medulla-common-database-imaging = %version-%release
 # Needed for ImportError: No module named tasks
 Requires:   python3-mmc-core >= 3.1.1
 
@@ -340,7 +340,7 @@ This package contains the imaging plugin for MMC agent.
 %package -n     mmc-web-support
 Summary:        Imaging plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       python3-mmc-base >= %mmc_version
 
 %description -n mmc-web-support
@@ -355,8 +355,8 @@ This package contains the imaging plugin for the MMC web interface.
 %package -n python3-mmc-urbackup
 Summary:    Urbackup plugin for MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Obsoletes:  python-pulse2-common-database-urbackup
+Requires:   medulla-common = %version-%release
+Obsoletes:  python-medulla-common-database-urbackup
 
 %description -n python3-mmc-urbackup
 This package contains the urbackup plugin for MMC agent.
@@ -364,14 +364,14 @@ This package contains the urbackup plugin for MMC agent.
 %files -n python3-mmc-urbackup
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/urbackup.ini
 %python2_sitelib/mmc/plugins/urbackup
-%python2_sitelib/pulse2/database/urbackup
+%python2_sitelib/medulla/database/urbackup
 
 #--------------------------------------------------------------------
 
 %package -n     mmc-web-urbackup
 Summary:        Urbackup plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       python-mmc-base >= %mmc_version
 
 %description -n mmc-web-urbackup
@@ -386,13 +386,13 @@ This package contains the urbackup plugin for the MMC web interface.
 %package -n python3-mmc-inventory
 Summary:    Inventory plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   python3-mmc-base >= %mmc_version
-Requires:   python3-pulse2-common-database-inventory = %version-%release
+Requires:   python3-medulla-common-database-inventory = %version-%release
 Requires:   python3-magic
 Requires:   python3-inotify
 
-Provides:   pulse-python3-mmc-computers-inventory-backend = %version-%release
+Provides:   medulla-python3-mmc-computers-inventory-backend = %version-%release
 
 Obsoletes:  python-mmc-inventory < 4.7.0
 Provides:   python-mmc-inventory = %version-%release
@@ -403,40 +403,40 @@ This package contains the inventory plugin for the MMC agent
 %files -n python3-mmc-inventory
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/inventory.ini
 %python3_sitelib/mmc/plugins/inventory
-%_sbindir/pulse2-inventory-clean-database
-%exclude %_sysconfdir/init.d/pulse2-register-pxe
-%_mandir/man1/pulse2-inventory-clean-database.1.*
+%_sbindir/medulla-inventory-clean-database
+%exclude %_sysconfdir/init.d/medulla-register-pxe
+%_mandir/man1/medulla-inventory-clean-database.1.*
 
 #--------------------------------------------------------------------
 
-%package -n pulse2-register-pxe
-Summary:    Pulse 2 Register PXE Servic/
+%package -n medulla-register-pxe
+Summary:    Medulla 2 Register PXE Servic/
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   python3-mmc-base >= %mmc_version
-Requires:   python3-pulse2-common-database-inventory = %version-%release
+Requires:   python3-medulla-common-database-inventory = %version-%release
 Requires:   python3-magic
 Requires:   python3-inotify
 
 Conflicts:  python3-mmc-inventory < 4.6.1
 
-%description -n pulse2-register-pxe
-Pulse 2 Register PXE Service
+%description -n medulla-register-pxe
+Medulla 2 Register PXE Service
 
-%files -n pulse2-register-pxe
-%exclude %_sysconfdir/init.d/pulse2-register-pxe
-%_prefix/lib/systemd/system/pulse2-register-pxe.service
-%_sbindir/pulse2-register-pxe.py
+%files -n medulla-register-pxe
+%exclude %_sysconfdir/init.d/medulla-register-pxe
+%_prefix/lib/systemd/system/medulla-register-pxe.service
+%_sbindir/medulla-register-pxe.py
 
 #--------------------------------------------------------------------
 
 %package -n     mmc-web-inventory
 Summary:        Inventory plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
-Provides:       pulse-mmc-web-computers-inventory-backend = %version-%release
+Provides:       medulla-mmc-web-computers-inventory-backend = %version-%release
 
 %description -n mmc-web-inventory
 This package contains the inventory plugin for the MMC web interface.
@@ -449,7 +449,7 @@ This package contains the inventory plugin for the MMC web interface.
 %package -n python3-mmc-pkgs
 Summary:    Pkgs plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   python3-mmc-msc = %version-%release
 Requires:   python3-requests
 Requires:   python3-unidecode
@@ -464,14 +464,14 @@ This package contains the pkgs plugin for the MMC agent.
 %files -n python3-mmc-pkgs
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/pkgs.ini
 %python3_sitelib/mmc/plugins/pkgs
-%python3_sitelib/pulse2/database/pkgs
+%python3_sitelib/medulla/database/pkgs
 
 #--------------------------------------------------------------------
 
 %package -n python3-mmc-kiosk
 Summary:    Kiosk plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 
 Obsoletes:  python-mmc-kiosk < 4.7.0
 Provides:   python-mmc-kiosk = %version-%release
@@ -482,14 +482,14 @@ This package contains the pkgs plugin for the MMC agent.
 %files -n python3-mmc-kiosk
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/kiosk.ini
 %python3_sitelib/mmc/plugins/kiosk
-%python3_sitelib/pulse2/database/kiosk
+%python3_sitelib/medulla/database/kiosk
 
 #--------------------------------------------------------------------
 
 %package -n python-mmc-updates
 Summary:    OS Updates plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 
 %description -n python-mmc-updates
 This package contains the updates plugin for the MMC agent.
@@ -497,7 +497,7 @@ This package contains the updates plugin for the MMC agent.
 %files -n python-mmc-updates
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/updates.ini
 %python2_sitelib/mmc/plugins/updates
-%python2_sitelib/pulse2/database/updates
+%python2_sitelib/medulla/database/updates
 
 
 #--------------------------------------------------------------------
@@ -505,8 +505,8 @@ This package contains the updates plugin for the MMC agent.
 %package -n python3-mmc-admin
 Summary:    Kiosk plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Requires:   python3-pulse2-common-database-admin = %version-%release
+Requires:   medulla-common = %version-%release
+Requires:   python3-medulla-common-database-admin = %version-%release
 
 Obsoletes:  python-mmc-admin < 4.7.0
 Provides:   python-mmc-admin = %version-%release
@@ -517,14 +517,14 @@ This package contains the admin plugin for the MMC agent.
 %files -n python3-mmc-admin
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/admin.ini
 %python3_sitelib/mmc/plugins/admin
-%{_docdir}/pulse2/contrib/admin
+%{_docdir}/medulla/contrib/admin
 
 #--------------------------------------------------------------------
 
 %package -n python3-mmc-xmppmaster
 Summary:    Xmppmaster plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   python3-mmc-msc = %version-%release
 Requires:   python3-GeoIP
 Requires:   GeoIP-data
@@ -537,12 +537,12 @@ Provides:   python-mmc-xmppmaster = %version-%release
 This package contains the xmppmaster plugin for the MMC agent.
 
 %pre -n     python3-mmc-xmppmaster
-if ! getent passwd | grep -q "^pulsetransfert:"; then
-    echo -n "Adding user pulsetransfert..."
+if ! getent passwd | grep -q "^medullatransfert:"; then
+    echo -n "Adding user medullatransfert..."
     adduser --system \
-        -d /var/lib/pulse2/file-transfer \
+        -d /var/lib/medulla/file-transfer \
         -s /bin/rbash \
-        pulsetransfert
+        medullatransfert
     echo "..done"
 fi
 
@@ -561,14 +561,14 @@ fi
 %{_sysconfdir}/mmc/plugins/wakeonlangroup.ini
 %{_sysconfdir}/mmc/plugins/wakeonlan.ini
 %python3_sitelib/mmc/plugins/xmppmaster
-%python3_sitelib/pulse2/database/xmppmaster
+%python3_sitelib/medulla/database/xmppmaster
 
 #--------------------------------------------------------------------
 
 %package -n python3-mmc-guacamole
 Summary:    Guacamole plugin for the MMC agent
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   python3-mmc-msc = %version-%release
 
 Obsoletes:  python-mmc-guacamole < 4.7.0
@@ -587,7 +587,7 @@ This package contains the guacamole plugin for the MMC agent.
 %package -n     mmc-web-pkgs
 Summary:        Package management plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-pkgs
@@ -602,7 +602,7 @@ interface.
 %package -n     mmc-web-kiosk
 Summary:        Kiosk plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 %description -n mmc-web-kiosk
@@ -617,7 +617,7 @@ interface.
 %package -n     mmc-web-updates
 Summary:        OS Updates plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 
 
@@ -630,50 +630,50 @@ interface.
 
 #--------------------------------------------------------------------
 
-%package -n python3-mmc-pulse2
-Summary:    Pulse 2 MMC agent interface plugins
+%package -n python3-mmc-medulla
+Summary:    Medulla 2 MMC agent interface plugins
 Group:      System/Servers
-Requires:   pulse2-common = %version-%release
+Requires:   medulla-common = %version-%release
 Requires:   python3-mmc-base >= %mmc_version
 Requires:   python3-mmc-msc = %version-%release
 Requires:   python3-mmc-dyngroup = %version-%release
 Requires:   python3-mmc-pkgs = %version-%release
 Requires:   python3-mmc-kiosk = %version-%release
 Requires:   python3-mmc-updates = %version-%release
-Requires:   python3-pulse2-common = %version-%release
+Requires:   python3-medulla-common = %version-%release
 Requires:   python3-sqlalchemy >= 0.6.3
-Requires:   pulse-python-mmc-computers-inventory-backend = %version-%release
+Requires:   medulla-python-mmc-computers-inventory-backend = %version-%release
 Requires:   python-service-identity
 
-Obsoletes:  python-mmc-pulse2 < 4.7.0
-Provides:   python-mmc-pulse2 = %version-%release
+Obsoletes:  python-mmc-medulla < 4.7.0
+Provides:   python-mmc-medulla = %version-%release
 
-%description -n python3-mmc-pulse2
-This package will install all the Pulse 2 MMC agent interface plugins
+%description -n python3-mmc-medulla
+This package will install all the Medulla 2 MMC agent interface plugins
 
-%files -n python3-mmc-pulse2
+%files -n python3-mmc-medulla
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/medulla_server.ini
 %python3_sitelib/mmc/plugins/medulla_server
 
 #--------------------------------------------------------------------
 
-%package -n     mmc-web-pulse2
+%package -n     mmc-web-medulla
 Summary:        Base plugin for the MMC web interface
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
 Requires:       mmc-web-base >= %mmc_version
 Requires:       mmc-web-imaging
 
-%description -n mmc-web-pulse2
+%description -n mmc-web-medulla
 This package contains the base plugin for the MMC web interface.
 
-%files -n mmc-web-pulse2
+%files -n mmc-web-medulla
 %{_datadir}/mmc/modules/medulla_server
 
 #--------------------------------------------------------------------
 
-%package -n     pulse2-common
-Summary:        Pulse2 common files
+%package -n     medulla-common
+Summary:        Medulla2 common files
 Group:          System/Servers
 Requires:       p7zip
 Requires:       python3-configobj
@@ -684,276 +684,276 @@ Requires:       python3-psutil >= 0.6.1
 Requires:       python3-netaddr
 Requires:       python3-netifaces
 
-Provides:       /usr/sbin/pulse2-debug
+Provides:       /usr/sbin/medulla-debug
 
-%description -n pulse2-common
-This package contains Pulse 2 common files like documentation.
+%description -n medulla-common
+This package contains Medulla 2 common files like documentation.
 
-%files -n pulse2-common
-%{_sbindir}/pulse2-setup
-%{_sbindir}/pulse2-load-defaults
-%{_sbindir}/pulse2-dbupdate
-%{_sbindir}/pulse2-debug
-%{_sbindir}/pulse2-collect-info
-%{_sbindir}/restart-pulse-services
-%{_sbindir}/pulse2-packageparser.py
-%{_sbindir}/pulse2-inscription_packages_in_base.py
-%{_sbindir}/pulse2-generation_package.py
-%{_sbindir}/pulse2-migration_old_package.py
-%{_sbindir}/pulse2-create-group
+%files -n medulla-common
+%{_sbindir}/medulla-setup
+%{_sbindir}/medulla-load-defaults
+%{_sbindir}/medulla-dbupdate
+%{_sbindir}/medulla-debug
+%{_sbindir}/medulla-collect-info
+%{_sbindir}/restart-medulla-services
+%{_sbindir}/medulla-packageparser.py
+%{_sbindir}/medulla-inscription_packages_in_base.py
+%{_sbindir}/medulla-generation_package.py
+%{_sbindir}/medulla-migration_old_package.py
+%{_sbindir}/medulla-create-group
 %{_sbindir}/medulla-generate-update-package.py
 %{_sbindir}/medulla-mariadb-move-update-package.py
 %{_sbindir}/medulla_mysql_exec_update.sh
 %{_sbindir}/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 
 %_docdir/mmc/contrib/
-%_datadir/mmc/conf/apache/pulse.conf
-%config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
-%_var/lib/pulse2/file-transfer
+%_datadir/mmc/conf/apache/medulla.conf
+%config(noreplace) %_sysconfdir/httpd/conf.d/medulla.conf
+%_var/lib/medulla/file-transfer
 #FIXME: Move on the correct package later
 # Does not belong to here, lefover file.
-%exclude %_sysconfdir/mmc/pulse2/atftpd/pcre.conf
+%exclude %_sysconfdir/mmc/medulla/atftpd/pcre.conf
 
 # Split later in its own rpm
-%python3_sitelib/pulse2/tests/test_utils.py
-%python3_sitelib/pulse2/tests/__pycache__/test_utils.*
+%python3_sitelib/medulla/tests/test_utils.py
+%python3_sitelib/medulla/tests/__pycache__/test_utils.*
 #--------------------------------------------------------------------
 
-%package -n     pulse2-inventory-server
-Summary:        Pulse 2 inventory server
+%package -n     medulla-inventory-server
+Summary:        Medulla 2 inventory server
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python3-pulse2-common = %version-%release
-Requires:       python3-pulse2-common-database-inventory = %version-%release
+Requires:       medulla-common = %version-%release
+Requires:       python3-medulla-common = %version-%release
+Requires:       python3-medulla-common-database-inventory = %version-%release
 Requires:       python3-mmc-base >= %mmc_version
 Requires:       pyOpenSSL
 
-%description -n pulse2-inventory-server
-This package contains Pulse 2 inventory server. It collects computers
+%description -n medulla-inventory-server
+This package contains Medulla 2 inventory server. It collects computers
 inventories and insert them into the database.
 
-%post -n pulse2-inventory-server
-service pulse2-inventory-server start >/dev/null 2>&1 || :
+%post -n medulla-inventory-server
+service medulla-inventory-server start >/dev/null 2>&1 || :
 
-%preun -n pulse2-inventory-server
-service pulse2-inventory-server stop >/dev/null 2>&1 || :
+%preun -n medulla-inventory-server
+service medulla-inventory-server stop >/dev/null 2>&1 || :
 
-%files -n pulse2-inventory-server
-%exclude %{_sysconfdir}/init.d/pulse2-inventory-server
-%config(noreplace) %{_sysconfdir}/mmc/pulse2/inventory-server/inventory-server.ini
-%{_sysconfdir}/mmc/pulse2/inventory-server/OcsNGMap.xml
-%{_sysconfdir}/mmc/pulse2/inventory-server/keys/
-%{_sysconfdir}/mmc/pulse2/inventory-server/xml-fix/
-%{_sbindir}/pulse2-inventory-server
-%_mandir/man1/pulse2-inventory-server.1*
-%python3_sitelib/pulse2/inventoryserver
+%files -n medulla-inventory-server
+%exclude %{_sysconfdir}/init.d/medulla-inventory-server
+%config(noreplace) %{_sysconfdir}/mmc/medulla/inventory-server/inventory-server.ini
+%{_sysconfdir}/mmc/medulla/inventory-server/OcsNGMap.xml
+%{_sysconfdir}/mmc/medulla/inventory-server/keys/
+%{_sysconfdir}/mmc/medulla/inventory-server/xml-fix/
+%{_sbindir}/medulla-inventory-server
+%_mandir/man1/medulla-inventory-server.1*
+%python3_sitelib/medulla/inventoryserver
 
 #--------------------------------------------------------------------
 
-%package -n     pulse2-package-server
-Summary:        Pulse 2 package server
+%package -n     medulla-package-server
+Summary:        Medulla 2 package server
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python3-pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
+Requires:       python3-medulla-common = %version-%release
 Requires:       python3-mmc-core
 Requires:       genisoimage
 Requires:       pyOpenSSL
 
-Provides:       pulse2-imaging-server = %version-%release
-Obsoletes:      pulse2-imaging-server < %version-%release
+Provides:       medulla-imaging-server = %version-%release
+Obsoletes:      medulla-imaging-server < %version-%release
 
-%description -n pulse2-package-server
-This package contains the Pulse 2 package server. The package server manages
+%description -n medulla-package-server
+This package contains the Medulla 2 package server. The package server manages
 the packages and the images repository.
 
-%post -n pulse2-package-server
-service pulse2-package-server start >/dev/null 2>&1 || :
+%post -n medulla-package-server
+service medulla-package-server start >/dev/null 2>&1 || :
 
-%preun -n pulse2-package-server
-service pulse2-package-server start >/dev/null 2>&1 || :
+%preun -n medulla-package-server
+service medulla-package-server start >/dev/null 2>&1 || :
 
-%files -n pulse2-package-server
-%_prefix/lib/systemd/system/pulse2-imaging-server.service
-%{_sysconfdir}/init.d/pulse2-package-server
-%{_bindir}/pulse2-synch-masters
-%config(noreplace) %_sysconfdir/mmc/pulse2/package-server/package-server.ini
-%{_sysconfdir}/mmc/pulse2/package-server/keys
-%{_sbindir}/pulse2-package-server
-%{_sbindir}/pulse2-package-server-register-imaging
-%_mandir/man1/pulse2-package-server.1*
-%_mandir/man1/pulse2-package-server-register-imaging.1.*
-%python3_sitelib/pulse2/package_server
-
-#--------------------------------------------------------------------
-
-%package -n     python3-pulse2-common-database-dyngroup
-Summary:        Pulse 2 common dynamic groups database files
-Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python3-pulse2-common-database = %version-%release
-
-Obsoletes:  python-pulse2-common-database-dyngroup < 4.7.0
-Provides:   python-pulse2-common-database-dyngroup = %version-%release
-
-%description -n python3-pulse2-common-database-dyngroup
-This package contains Pulse 2 common dynamic groups database files.
-
-%files -n python3-pulse2-common-database-dyngroup
-%python3_sitelib/pulse2/database/dyngroup
+%files -n medulla-package-server
+%_prefix/lib/systemd/system/medulla-imaging-server.service
+%{_sysconfdir}/init.d/medulla-package-server
+%{_bindir}/medulla-synch-masters
+%config(noreplace) %_sysconfdir/mmc/medulla/package-server/package-server.ini
+%{_sysconfdir}/mmc/medulla/package-server/keys
+%{_sbindir}/medulla-package-server
+%{_sbindir}/medulla-package-server-register-imaging
+%_mandir/man1/medulla-package-server.1*
+%_mandir/man1/medulla-package-server-register-imaging.1.*
+%python3_sitelib/medulla/package_server
 
 #--------------------------------------------------------------------
 
-%package -n     python3-pulse2-common-database-imaging
-Summary:        Pulse 2 common imaging database files
+%package -n     python3-medulla-common-database-dyngroup
+Summary:        Medulla 2 common dynamic groups database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python3-pulse2-common-database = %version-%release
+Requires:       medulla-common = %version-%release
+Requires:       python3-medulla-common-database = %version-%release
 
-Obsoletes:  python-pulse2-common-database-imaging < 4.7.0
-Provides:   python-pulse2-common-database-imaging= %version-%release
+Obsoletes:  python-medulla-common-database-dyngroup < 4.7.0
+Provides:   python-medulla-common-database-dyngroup = %version-%release
 
-%description -n python3-pulse2-common-database-imaging
-This package contains Pulse 2 common imaging database files
+%description -n python3-medulla-common-database-dyngroup
+This package contains Medulla 2 common dynamic groups database files.
 
-%files -n python3-pulse2-common-database-imaging
-%python3_sitelib/pulse2/database/imaging
+%files -n python3-medulla-common-database-dyngroup
+%python3_sitelib/medulla/database/dyngroup
 
 #--------------------------------------------------------------------
 
-%package -n     python3-pulse2-common-database-inventory
-Summary:        Pulse 2 common inventory database files
+%package -n     python3-medulla-common-database-imaging
+Summary:        Medulla 2 common imaging database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python3-pulse2-common-database = %version-%release
+Requires:       medulla-common = %version-%release
+Requires:       python3-medulla-common-database = %version-%release
 
-Obsoletes:  python-pulse2-common-database-inventory < 4.7.0
-Provides:   python-pulse2-common-database-inventory = %version-%release
+Obsoletes:  python-medulla-common-database-imaging < 4.7.0
+Provides:   python-medulla-common-database-imaging= %version-%release
 
-%description -n python3-pulse2-common-database-inventory
-This package contains Pulse 2 common inventory database files
+%description -n python3-medulla-common-database-imaging
+This package contains Medulla 2 common imaging database files
 
-%files -n python3-pulse2-common-database-inventory
-%python3_sitelib/pulse2/database/inventory
+%files -n python3-medulla-common-database-imaging
+%python3_sitelib/medulla/database/imaging
 
 #--------------------------------------------------------------------
 
-%package -n     python3-pulse2-common-database-msc
-Summary:        Pulse 2 common MSC database files
+%package -n     python3-medulla-common-database-inventory
+Summary:        Medulla 2 common inventory database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python3-pulse2-common-database = %version-%release
+Requires:       medulla-common = %version-%release
+Requires:       python3-medulla-common-database = %version-%release
 
-Obsoletes:  python-pulse2-common-database-msc < 4.7.0
-Provides:   python-pulse2-common-database-msc = %version-%release
+Obsoletes:  python-medulla-common-database-inventory < 4.7.0
+Provides:   python-medulla-common-database-inventory = %version-%release
 
-%description -n python3-pulse2-common-database-msc
-This package contains Pulse 2 common MSC database files
+%description -n python3-medulla-common-database-inventory
+This package contains Medulla 2 common inventory database files
 
-%files -n python3-pulse2-common-database-msc
-%python3_sitelib/pulse2/database/msc
+%files -n python3-medulla-common-database-inventory
+%python3_sitelib/medulla/database/inventory
 
 #--------------------------------------------------------------------
 
-%package -n     python3-pulse2-common-database-admin
-Summary:        Pulse 2 common admin database files
+%package -n     python3-medulla-common-database-msc
+Summary:        Medulla 2 common MSC database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python3-pulse2-common-database = %version-%release
+Requires:       medulla-common = %version-%release
+Requires:       python3-medulla-common-database = %version-%release
 
-Obsoletes:  python-pulse2-common-database-admin < 4.7.0
-Provides:   python-pulse2-common-database-admin = %version-%release
+Obsoletes:  python-medulla-common-database-msc < 4.7.0
+Provides:   python-medulla-common-database-msc = %version-%release
 
-%description -n python3-pulse2-common-database-admin
-This package contains Pulse 2 common admin database files
+%description -n python3-medulla-common-database-msc
+This package contains Medulla 2 common MSC database files
 
-%files -n python3-pulse2-common-database-admin
-%python3_sitelib/pulse2/database/admin
+%files -n python3-medulla-common-database-msc
+%python3_sitelib/medulla/database/msc
 
 #--------------------------------------------------------------------
 
-%package -n     python3-pulse2-common-database
-Summary:        Pulse 2 common database files
+%package -n     python3-medulla-common-database-admin
+Summary:        Medulla 2 common admin database files
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       python3-pulse2-common = %version-%release
+Requires:       medulla-common = %version-%release
+Requires:       python3-medulla-common-database = %version-%release
+
+Obsoletes:  python-medulla-common-database-admin < 4.7.0
+Provides:   python-medulla-common-database-admin = %version-%release
+
+%description -n python3-medulla-common-database-admin
+This package contains Medulla 2 common admin database files
+
+%files -n python3-medulla-common-database-admin
+%python3_sitelib/medulla/database/admin
+
+#--------------------------------------------------------------------
+
+%package -n     python3-medulla-common-database
+Summary:        Medulla 2 common database files
+Group:          System/Servers
+Requires:       medulla-common = %version-%release
+Requires:       python3-medulla-common = %version-%release
 Requires:       python3-sqlalchemy >= 0.6.3
 Requires:       MySQL-python
 
-Obsoletes:  python-pulse2-common-database < 4.7.0
-Provides:   python-pulse2-common-database = %version-%release
+Obsoletes:  python-medulla-common-database < 4.7.0
+Provides:   python-medulla-common-database = %version-%release
 
-%description -n python3-pulse2-common-database
-This package contains Pulse 2 common database files.
+%description -n python3-medulla-common-database
+This package contains Medulla 2 common database files.
 
-%files -n python3-pulse2-common-database
-%python3_sitelib/pulse2/database/__init__.py
-%python3_sitelib/pulse2/database/pulse/__init__.py
-%python3_sitelib/pulse2/database/pulse/config.py
-%python3_sitelib/pulse2/database/__pycache__/__init__.*
-%python3_sitelib/pulse2/database/pulse/__pycache__/__init__.*
-%python3_sitelib/pulse2/database/pulse/__pycache__/config.*
-
-#--------------------------------------------------------------------
-
-%package -n     pulse2-uuid-resolver
-Summary:        Helper to resolve Pulse's UUID into IP address
-Group:          System/Servers
-Requires:       python3-pulse2-common = %version-%release
-
-%description -n pulse2-uuid-resolver
-This package contains a helper to resolve Pulse's UUID into IP address.
-
-%files -n pulse2-uuid-resolver
-%dir %{_sysconfdir}/mmc/pulse2/uuid-resolver
-%attr(0644,root,root) %config(noreplace) %_sysconfdir/mmc/pulse2/uuid-resolver/uuid-resolver.ini
-%_bindir/pulse2-uuid-resolver
+%files -n python3-medulla-common-database
+%python3_sitelib/medulla/database/__init__.py
+%python3_sitelib/medulla/database/medulla/__init__.py
+%python3_sitelib/medulla/database/medulla/config.py
+%python3_sitelib/medulla/database/__pycache__/__init__.*
+%python3_sitelib/medulla/database/medulla/__pycache__/__init__.*
+%python3_sitelib/medulla/database/medulla/__pycache__/config.*
 
 #--------------------------------------------------------------------
 
-%package -n     python3-pulse2-common
-Summary:        Pulse 2 common files
+%package -n     medulla-uuid-resolver
+Summary:        Helper to resolve Medulla's UUID into IP address
 Group:          System/Servers
-Requires:       pulse2-common = %version-%release
+Requires:       python3-medulla-common = %version-%release
+
+%description -n medulla-uuid-resolver
+This package contains a helper to resolve Medulla's UUID into IP address.
+
+%files -n medulla-uuid-resolver
+%dir %{_sysconfdir}/mmc/medulla/uuid-resolver
+%attr(0644,root,root) %config(noreplace) %_sysconfdir/mmc/medulla/uuid-resolver/uuid-resolver.ini
+%_bindir/medulla-uuid-resolver
+
+#--------------------------------------------------------------------
+
+%package -n     python3-medulla-common
+Summary:        Medulla 2 common files
+Group:          System/Servers
+Requires:       medulla-common = %version-%release
 Requires:       python3-twisted >= 2.4.0
 
-Provides:       python3-pulse2-meta < 1.5.0
-Obsoletes:      python3-pulse2-meta = %version-%release
+Provides:       python3-medulla-meta < 1.5.0
+Obsoletes:      python3-medulla-meta = %version-%release
 
-Provides:       pulse2-common-client-apis < 1.5.0
-Obsoletes:      pulse2-common-client-apis = %version-%release
+Provides:       medulla-common-client-apis < 1.5.0
+Obsoletes:      medulla-common-client-apis = %version-%release
 
-Obsoletes:      python-pulse2-common < 4.7.0
-Provides:       python-pulse2-common = %version-%release
+Obsoletes:      python-medulla-common < 4.7.0
+Provides:       python-medulla-common = %version-%release
 
-%description -n python3-pulse2-common
-This package contains Pulse 2 common files.
+%description -n python3-medulla-common
+This package contains Medulla 2 common files.
 
-%files -n python3-pulse2-common
-%python3_sitelib/pulse2/apis
-%python3_sitelib/pulse2/imaging
-%python3_sitelib/pulse2/managers
-%python3_sitelib/pulse2/__init__.py
-%python3_sitelib/pulse2/cache.py
-%python3_sitelib/pulse2/consts.py
-%python3_sitelib/pulse2/health.py
-%python3_sitelib/pulse2/site.py
-%python3_sitelib/pulse2/time_intervals.py
-%python3_sitelib/pulse2/utils.py
-%python3_sitelib/pulse2/version.py
-%python3_sitelib/pulse2/xmlrpc.py
-%python3_sitelib/pulse2/network.py
-%python3_sitelib/pulse2/__pycache__/cache.*
-%python3_sitelib/pulse2/__pycache__/consts.*
-%python3_sitelib/pulse2/__pycache__/health.*
-%python3_sitelib/pulse2/__pycache__/network.*
-%python3_sitelib/pulse2/__pycache__/site.*
-%python3_sitelib/pulse2/__pycache__/utils.*
-%python3_sitelib/pulse2/__pycache__/version.*
-%python3_sitelib/pulse2/__pycache__/xmlrpc.*
-%python3_sitelib/pulse2/__pycache__/__init__.*
-%python3_sitelib/pulse2/__pycache__/time_intervals.*
+%files -n python3-medulla-common
+%python3_sitelib/medulla/apis
+%python3_sitelib/medulla/imaging
+%python3_sitelib/medulla/managers
+%python3_sitelib/medulla/__init__.py
+%python3_sitelib/medulla/cache.py
+%python3_sitelib/medulla/consts.py
+%python3_sitelib/medulla/health.py
+%python3_sitelib/medulla/site.py
+%python3_sitelib/medulla/time_intervals.py
+%python3_sitelib/medulla/utils.py
+%python3_sitelib/medulla/version.py
+%python3_sitelib/medulla/xmlrpc.py
+%python3_sitelib/medulla/network.py
+%python3_sitelib/medulla/__pycache__/cache.*
+%python3_sitelib/medulla/__pycache__/consts.*
+%python3_sitelib/medulla/__pycache__/health.*
+%python3_sitelib/medulla/__pycache__/network.*
+%python3_sitelib/medulla/__pycache__/site.*
+%python3_sitelib/medulla/__pycache__/utils.*
+%python3_sitelib/medulla/__pycache__/version.*
+%python3_sitelib/medulla/__pycache__/xmlrpc.*
+%python3_sitelib/medulla/__pycache__/__init__.*
+%python3_sitelib/medulla/__pycache__/time_intervals.*
 
-%doc %_docdir/pulse2
+%doc %_docdir/medulla
 
 #--------------------------------------------------------------------
 
@@ -1005,7 +1005,7 @@ This is the underlying service used by the MMC web interface.
 %dir %{python3_sitelib}/mmc
 %{python3_sitelib}/mmc/agent.py*
 %{python3_sitelib}/mmc/__pycache__/agent.*
-%{_docdir}/pulse2/contrib/monit/mmc-agent
+%{_docdir}/medulla/contrib/monit/mmc-agent
 
 #--------------------------------------------------------------------
 
@@ -1039,7 +1039,7 @@ modules.
 %{python3_sitelib}/mmc/plugins/__init__.py*
 %{python3_sitelib}/mmc/plugins/__pycache__/__init__.*
 
-%{_docdir}/pulse2/contrib/audit
+%{_docdir}/medulla/contrib/audit
 %{python3_sitelib}/mmc/__pycache__/__init__.*
 %{python3_sitelib}/mmc/__pycache__/site.*
 %{python3_sitelib}/mmc/__pycache__/ssl.*
@@ -1078,9 +1078,9 @@ sed -i 's!%%(basedn)s!%%(baseDN)s!g' %{_sysconfdir}/mmc/plugins/base.ini
 %dir %{python3_sitelib}/mmc
 %dir %{python3_sitelib}/mmc/plugins
 %{python3_sitelib}/mmc/plugins/base
-%{_docdir}/pulse2/contrib/base
-%{_docdir}/pulse2/contrib/scripts/usertoken-example
-%{_docdir}/pulse2/contrib/scripts/mmc-check-users-primary-group
+%{_docdir}/medulla/contrib/base
+%{_docdir}/medulla/contrib/scripts/usertoken-example
+%{_docdir}/medulla/contrib/scripts/mmc-check-users-primary-group
 %exclude %{python3_sitelib}/mmc/plugins/report
 
 #--------------------------------------------------------------------
@@ -1109,8 +1109,8 @@ password policies in LDAP.
 %dir %{python3_sitelib}/mmc
 %dir %{python3_sitelib}/mmc/plugins
 %{python3_sitelib}/mmc/plugins/ppolicy
-%{_docdir}/pulse2/contrib/ppolicy
-%{_docdir}/pulse2/contrib/scripts/mmc-check-expired-passwords-example
+%{_docdir}/medulla/contrib/ppolicy
+%{_docdir}/medulla/contrib/scripts/mmc-check-expired-passwords-example
 
 #--------------------------------------------------------------------
 
@@ -1308,7 +1308,7 @@ Console report plugin
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/report.ini
 %{_sysconfdir}/mmc/plugins/report
 %{python3_sitelib}/mmc/plugins/report
-%{_docdir}/pulse2/contrib/report
+%{_docdir}/medulla/contrib/report
 
 #--------------------------------------------------------------------
 
@@ -1379,9 +1379,9 @@ sed -e 's/python python2 //' -i configure
 
 mkdir -p %buildroot%{_sbindir}
 
-mkdir -p %buildroot%_var/lib/pulse2/packages
+mkdir -p %buildroot%_var/lib/medulla/packages
 
-rm -rf %buildroot%{_sysconfdir}/init.d/pulse2-imaging-server
+rm -rf %buildroot%{_sysconfdir}/init.d/medulla-imaging-server
 
 mkdir -p %buildroot%_prefix/lib/systemd/system
 
@@ -1390,19 +1390,19 @@ cp %{SOURCE3} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE4} %buildroot%_prefix/lib/systemd/system
 
 mkdir -p %buildroot%_sysconfdir/httpd/conf.d/
-cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/httpd/conf.d/
+cp -fv %buildroot%_datadir/mmc/conf/apache/medulla.conf %buildroot%_sysconfdir/httpd/conf.d/
 
-mkdir -p %buildroot%_var/lib/pulse2/file-transfer
+mkdir -p %buildroot%_var/lib/medulla/file-transfer
 
 cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/mmc/contrib/
 cp services/contrib/glpi-94.sql %buildroot%_datadir/doc/mmc/contrib/
 cp services/contrib/glpi-95.sql %buildroot%_datadir/doc/mmc/contrib/
 
-rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
-mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
+rm -f %buildroot%python2_sitelib/medulla/apis/clients/mirror.py
+mv %buildroot%python2_sitelib/medulla/apis/clients/mirror1.py %buildroot%python2_sitelib/medulla/apis/clients/mirror.py
 
-rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
-mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
+rm -f %buildroot%python2_sitelib/medulla/apis/clients/mirror_api.py
+mv %buildroot%python2_sitelib/medulla/apis/clients/mirror_api1.py %buildroot%python2_sitelib/medulla/apis/clients/mirror_api.py
 
 # install log rotation stuff
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
@@ -1436,5 +1436,5 @@ cp services/systemd/mmc-agent.service %buildroot%_prefix/lib/systemd/system/
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
-rm -fv %buildroot%_sysconfdir/init.d/pulse2-cm
-rm -fv %buildroot%_sysconfdir/init.d/pulse2-scheduler
+rm -fv %buildroot%_sysconfdir/init.d/medulla-cm
+rm -fv %buildroot%_sysconfdir/init.d/medulla-scheduler

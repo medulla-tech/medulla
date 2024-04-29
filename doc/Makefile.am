@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,12 +30,12 @@ docsrc = \
 	dev/inventory/en/database_documentation.xml \
 	dev/msc/en/database_documentation.xml \
 	dev/dyngroup/en/database_documentation.xml \
-	user/msc/en/pulse2_client_check_explained.xml \
-	user/msc/en/pulse2_deployment_error_codes_explained.xml \
-	user/msc/fr/pulse2_deployment_error_codes_explained.xml \
+	user/msc/en/medulla_client_check_explained.xml \
+	user/msc/en/medulla_deployment_error_codes_explained.xml \
+	user/msc/fr/medulla_deployment_error_codes_explained.xml \
 	install/pki/create-pki.README \
 	install/pki/create-pki.sh \
-	install/pki/pulse.cnf.in
+	install/pki/medulla.cnf.in
 
 
 docpng = \

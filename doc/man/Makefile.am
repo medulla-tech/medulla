@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,10 +21,10 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 man_MANS = \
-	pulse2-inventory-clean-database.1 \
-	pulse2-inventory-server.1 \
-	pulse2-msc-clean-database.1 \
-	pulse2-package-server.1 \
-	pulse2-package-server-register-imaging.1
+	medulla-inventory-clean-database.1 \
+	medulla-inventory-server.1 \
+	medulla-msc-clean-database.1 \
+	medulla-package-server.1 \
+	medulla-package-server-register-imaging.1
 
 EXTRA_DIST = $(man_MANS)

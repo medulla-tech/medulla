@@ -61,8 +61,8 @@ class ReportConfig(PluginConfig, DatabaseConfig):
         except (NoOptionError, NoSectionError):
             self.company_logo_path = f"{report_img_path}mandriva.png"
         try:
-            self.pulse_logo_path = report_img_path + self.get(
-                "pdfvars", "pulse_logo_path"
+            self.medulla_logo_path = report_img_path + self.get(
+                "pdfvars", "medulla_logo_path"
             )
         except (NoOptionError, NoSectionError):
-            self.pulse_logo_path = f"{report_img_path}pulse.png"
+            self.medulla_logo_path = f"{report_img_path}medulla.png"

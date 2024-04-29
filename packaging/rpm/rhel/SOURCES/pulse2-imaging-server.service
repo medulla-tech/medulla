@@ -1,13 +1,13 @@
 [Unit]
-Description=Pulse 2 Imaging Server
+Description=Medulla 2 Imaging Server
 After=samba.service slapd.service
 
 [Service]
-PIDFile=/var/run/pulse2-imaging-server.pid
-#User=pulse
-#Group=pulse
+PIDFile=/var/run/medulla-imaging-server.pid
+#User=medulla
+#Group=medulla
 Type=simple
-ExecStart=/usr/sbin/pulse2-imaging-server -s
+ExecStart=/usr/sbin/medulla-imaging-server -s
 #Restart=always
 #RestartSec=1
 

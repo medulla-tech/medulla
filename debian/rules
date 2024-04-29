@@ -4,26 +4,26 @@
 #
 # $Id: rules 7790 2010-12-02 14:21:28Z cdelfosse $
 #
-# This file is part of Pulse 2.
+# This file is part of Medulla 2.
 #
-# Pulse 2 is free software; you can redistribute it and/or modify
+# Medulla 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# Pulse 2 is distributed in the hope that it will be useful,
+# Medulla 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+# along with Medulla 2.  If not, see <http://www.gnu.org/licenses/>.
 
-# We'll symlink /usr/share/doc/<package> to the pulse2-common one
+# We'll symlink /usr/share/doc/<package> to the medulla-common one
 # So we need a list of available packages
-PKG_LIST = $(shell cat debian/control  | grep Package | awk '{ print $$2 }' | grep -v '^pulse2-common$$' | grep -v '^pulse2$$' | grep -v '^pulse2-uuid-resolver$$' | grep -v '^pulse2-imaging-server$$' | tr "\n" " ")
+PKG_LIST = $(shell cat debian/control  | grep Package | awk '{ print $$2 }' | grep -v '^medulla-common$$' | grep -v '^medulla$$' | grep -v '^medulla-uuid-resolver$$' | grep -v '^medulla-imaging-server$$' | tr "\n" " ")
 
-PACKAGE=pulse2
+PACKAGE=medulla
 DESTDIR=$(CURDIR)/debian/tmp
 
 # Define *FLAGS
@@ -80,25 +80,25 @@ install: build
 	rm -rf $(DESTDIR)/etc/init.d
 	mkdir -p $(DESTDIR)/usr/lib/systemd/system
 	cp $(CURDIR)/services/systemd/*.service $(DESTDIR)/usr/lib/systemd/system
-	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-scheduler.service
+	rm -fv $(DESTDIR)/usr/lib/systemd/system/medulla-scheduler.service
 	# Autotools won't listen to me...
-	rm -f $(DESTDIR)/var/lib/pulse2/clients/win32/generate-agent-pack.sh.in
+	rm -f $(DESTDIR)/var/lib/medulla/clients/win32/generate-agent-pack.sh.in
 	# Useless files
-	rm -f $(DESTDIR)/usr/share/doc/pulse2/README.win32
+	rm -f $(DESTDIR)/usr/share/doc/medulla/README.win32
 	rm -f $(DESTDIR)/usr/share/mmc/modules/inventory/includes/libchart/doc/DEJAVU_LICENSE
 	mkdir -p $(DESTDIR)/etc/apache2/conf-available/
-	cp $(CURDIR)/web/conf/apache/pulse.conf $(DESTDIR)/etc/apache2/conf-available/
-	mkdir -p $(DESTDIR)/var/lib/pulse2/file-transfer
+	cp $(CURDIR)/web/conf/apache/medulla.conf $(DESTDIR)/etc/apache2/conf-available/
+	mkdir -p $(DESTDIR)/var/lib/medulla/file-transfer
 	#(workaround) Remove schema-018.sql
-	rm -fv $(DESTDIR)/usr/share/doc/pulse2/contrib/imaging/sql/schema-018.sql
+	rm -fv $(DESTDIR)/usr/share/doc/medulla/contrib/imaging/sql/schema-018.sql
 	# Remove opencliparts files
 	rm -frv $(DESTDIR)/usr/share/mmc/media/images/msc/opencliparts_0.18
 	cp  $(DESTDIR)/etc/mmc/apache/mmc.conf $(DESTDIR)/etc/apache2/conf-available/
 	# Workaround install issue
 	mkdir -p $(DESTDIR)/usr/lib/python3/dist-packages/
 	mv -f $(DESTDIR)/usr/local/lib/python3.11/dist-packages/* $(DESTDIR)/usr/lib/python3/dist-packages/
-	# Manually copy custom SQL views into /usr/share/doc/pulse2/
-	cp services/contrib/glpi-*.sql  $(DESTDIR)/usr/share/doc/pulse2/contrib/
+	# Manually copy custom SQL views into /usr/share/doc/medulla/
+	cp services/contrib/glpi-*.sql  $(DESTDIR)/usr/share/doc/medulla/contrib/
 
 binary-indep: build install
 	dh_testdir
@@ -122,21 +122,21 @@ binary-indep: build install
 binary-arch: build install
 	dh_installdirs
 	# Must be readable by backuppc
-	chmod 0644 $(DESTDIR)/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini
+	chmod 0644 $(DESTDIR)/etc/mmc/medulla/uuid-resolver/uuid-resolver.ini
 	# Must be writable by web-server
 	dh_install --sourcedir=$(DESTDIR) --fail-missing
 	# This directory must be writable for www-data (first run)
 	chown www-data:root debian/python3-mmc-support/etc/mmc/plugins/support
 	chmod 750 debian/python3-mmc-support/etc/mmc/plugins/support
 	dh_fixperms -Xetc/mmc \
-                    -Xusr/share/doc/pulse2/contrib/ \
+                    -Xusr/share/doc/medulla/contrib/ \
 		    -Xvar/log/mmc
-	dh_installchangelogs -Npulse2 ChangeLog
-	dh_installdocs -Npulse2
-	find debian/pulse2-common/usr/share/doc/pulse2/contrib/ -path '*/imaging/lrsgznbd/*' -prune -o -name 'Makefile*' -exec rm {} \;
+	dh_installchangelogs -Nmedulla ChangeLog
+	dh_installdocs -Nmedulla
+	find debian/medulla-common/usr/share/doc/medulla/contrib/ -path '*/imaging/lrsgznbd/*' -prune -o -name 'Makefile*' -exec rm {} \;
 	for PKG in $(PKG_LIST); do \
 		rm -r debian/$$PKG/usr/share/doc/$$PKG; \
-		ln -sf pulse2 debian/$$PKG/usr/share/doc/$$PKG; \
+		ln -sf medulla debian/$$PKG/usr/share/doc/$$PKG; \
 	done
 	dh_shlibdeps
 

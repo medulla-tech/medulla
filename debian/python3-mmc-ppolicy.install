@@ -1,5 +1,5 @@
 usr/lib/python3/*-packages/mmc/plugins/ppolicy
 etc/mmc/plugins/ppolicy.ini
-usr/share/doc/pulse2/contrib/ppolicy
-usr/share/doc/pulse2/contrib/scripts/mmc-check-expired-passwords-example
-usr/share/doc/pulse2/contrib/ppolicy
+usr/share/doc/medulla/contrib/ppolicy
+usr/share/doc/medulla/contrib/scripts/mmc-check-expired-passwords-example
+usr/share/doc/medulla/contrib/ppolicy

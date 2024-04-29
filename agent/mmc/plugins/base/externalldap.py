@@ -324,7 +324,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                 self.logger.info(
                     f"****Setting user '{uid}' entities corresponding to user profile '{profile}': {str(entities)}"
                 )
-                from pulse2.database.inventory import Inventory
+                from medulla.database.inventory import Inventory
 
                 Inventory().setUserEntities(uid, entities)
 

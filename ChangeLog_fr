@@ -1,4 +1,4 @@
-Pulse 2 4.6.9
+Medulla 2 4.6.9
 =============
 * [FONCTIONNALITE]    Ajout du support des Equipe dans la page Audit
 * [FONCTIONNALITE]    Ajout de nouvelles options de configuration dans le
@@ -31,7 +31,7 @@ l'AD Bug#1238
 Glpi 0.84
 
 
-Pulse 2 4.6.8
+Medulla 2 4.6.8
 =============
 * [FONCTIONNALITE]     Suppresion de la liste des relays dans la page Ordinateurs.
 * [FONCTIONNALITE]     Ajout d'un utilitaire afin de migrer vers le nouveau systeme de

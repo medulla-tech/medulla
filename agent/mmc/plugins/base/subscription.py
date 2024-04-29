@@ -21,8 +21,8 @@ class SubscriptionConfig:
 
     is_subscribe_done = False
     subs_possible_product_names = [
-        "Pulse 2",
-        "CloudPulse",
+        "Medulla 2",
+        "CloudMedulla",
         "MDS",
         "Mandriva Directory Server",
         "Mandriva Business Server Soho",

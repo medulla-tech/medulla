@@ -43,7 +43,7 @@
   </articleinfo>
   <section>
     <title>The inventory database design</title>
-    <para>The inventory database holds data on the computers managed by Pulse 2, namely their hardware (available storage, memory, connected printers/modems etc.) and software (installed software packages, registry keys etc.) configuration.</para>
+    <para>The inventory database holds data on the computers managed by Medulla 2, namely their hardware (available storage, memory, connected printers/modems etc.) and software (installed software packages, registry keys etc.) configuration.</para>
     <para>The inventory database has a number of hardware/software element tables, each describing a given computer part in detail, with fields specific to the part (e.g. the available space, in the Drive table).</para>
     <para>Every table is linked to the Inventory and Machine tables using a table dedicated to this linking feature. For example, the Modem table is linked to the Inventory and Machine tables using the hasModem table.</para>
     <screenshot>

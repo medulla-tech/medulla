@@ -1,4 +1,4 @@
-/usr/lib/python3/*-packages/pulse2/*.py
-/usr/lib/python3/*-packages/pulse2/managers
-/usr/lib/python3/*-packages/pulse2/apis
-/usr/lib/python3/*-packages/pulse2/imaging
+/usr/lib/python3/*-packages/medulla/*.py
+/usr/lib/python3/*-packages/medulla/managers
+/usr/lib/python3/*-packages/medulla/apis
+/usr/lib/python3/*-packages/medulla/imaging

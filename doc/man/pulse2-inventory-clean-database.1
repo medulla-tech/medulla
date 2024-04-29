@@ -1,11 +1,11 @@
 .TH PULSE2-INVENTORY-CLEAN-DATABASE 1
 .SH NAME
-pulse2-inventory-clean-database \- Clean up Pulse2 inventory database
+medulla-inventory-clean-database \- Clean up Medulla2 inventory database
 .SH SYNOPSIS
-.B pulse2-inventory-clean-database
+.B medulla-inventory-clean-database
 .RI " "db_conn_string
 .SH DESCRIPTION
-pulse2-inventory-clean-database is a tool of Pulse2. This command cleans up the Pulse2 inventory database.
+medulla-inventory-clean-database is a tool of Medulla2. This command cleans up the Medulla2 inventory database.
 .TP
 The inventory tables we wish to purge are organized like this:
  - peripheral tables: Network, Bios etc ...
@@ -31,13 +31,13 @@ Purge is done like this:
 .B db_conn_string
 SQLAlchemy connection string, e.g. mysql://user:password@host/database
 .SH AUTHOR
-Pulse2 was written by Mandriva-Linbox
+Medulla2 was written by Mandriva-Linbox
 .SH COPYRIGHT
 .TP
 (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 .TP
 (c) 2007-2008 Mandriva, http://www.mandriva.com
 .TP
-Pulse2 is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+Medulla2 is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 .SH SEE ALSO
-.BR pulse2-msc-clean-database (1).
+.BR medulla-msc-clean-database (1).
