@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# (c) 2017 siveo, http://www.siveo.net
+#
+# This file is part of Medulla 2, http://www.siveo.net
+#
+# Medulla 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Medulla 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Medulla 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+SERVICES='mmc-agent \
+          medulla-package-server \
+          medulla-agent-relay \
+          medulla-agent-log \
+          medulla-register-pxe \
+          isc-dhcp-server \
+          tftpd-hpa \
+          medulla-master-substitute-inventory \
+          medulla-master-substitute-registration \
+          medulla-package-watching \
+          medulla-master-substitute-assessor \
+          medulla-master-substitute-deployment \
+          medulla-master-substitute-subscription \
+          medulla-master-substitute-logger \
+          medulla-master-substitute-reconfigurator \
+          medulla-master-substitute-monitoring \
+          medulla-master-substitute-master \
+          medulla-master-substitute-updates \
+          medulla-master-substitute-all'
+
+systemctl daemon-reload
+
+for service in ${SERVICES}; do
+  if systemctl is-enabled ${service} &>/dev/null ; then
+    if [ -z $1 ]; then
+        echo "Restarting ${service}"
+        systemctl restart ${service}
+    elif [ $1 = "--stop" ] || [ $1 = "stop" ]; then
+      echo "Stopping ${service}"
+      systemctl stop ${service}
+  elif [ $1 = "--restart" ] || [ $1 = "restart" ] || [ $1 = "--start" ] || [ $1 = "start" ]; then
+    echo "Restarting ${service}"
+    systemctl restart ${service}
+    else
+      echo "Usage: $0 [--stop]"
+      exit 1
+    fi
+  fi
+done

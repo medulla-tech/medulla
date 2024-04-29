@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from mmc.support.config import PluginConfig
-from pulse2.database.updates.config import UpdatesDatabaseConfig
+from medulla.database.updates.config import UpdatesDatabaseConfig
 
 
 class UpdatesConfig(PluginConfig, UpdatesDatabaseConfig):

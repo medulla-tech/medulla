@@ -10,8 +10,8 @@ import logging.config
 import cx_Logging
 import cx_Threads
 
-from pulse2agent.config import Config
-from pulse2agent.control import Dispatcher
+from medullaagent.config import Config
+from medullaagent.control import Dispatcher
 
 
 class Handler(object):
@@ -19,7 +19,7 @@ class Handler(object):
         path = os.path.dirname(os.path.abspath(__file__))
         if "library.zip" in path:
             path = os.path.dirname(path)
-        cfg_path = os.path.join(path, "pulse2agent.ini")
+        cfg_path = os.path.join(path, "medullaagent.ini")
         logging.config.fileConfig(cfg_path)
 
         self.stopEvent = cx_Threads.Event()
@@ -32,13 +32,13 @@ class Handler(object):
 
     def Run(self):
         logger = logging.getLogger()
-        cx_Logging.Info("Pulse2 Agent starting...")
+        cx_Logging.Info("Medulla2 Agent starting...")
         self.dp.mainloop()
-        logger.info("Pulse2 Agent started.")
+        logger.info("Medulla2 Agent started.")
         self.stopEvent.Wait()
 
     def Stop(self):
         logger = logging.getLogger()
-        cx_Logging.Info("Pulse2 Agent stopping...")
-        logger.info("Pulse2 Agent stopped.")
+        cx_Logging.Info("Medulla2 Agent stopping...")
+        logger.info("Medulla2 Agent stopped.")
         self.stopEvent.Set()

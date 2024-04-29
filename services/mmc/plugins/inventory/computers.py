@@ -9,9 +9,9 @@ Used by the ComputerManager
 
 from mmc.plugins.base import ComputerI
 from mmc.plugins.inventory.config import InventoryConfig
-from pulse2.database.inventory import Inventory
-from pulse2.managers.imaging import ComputerImagingManager
-import pulse2.utils
+from medulla.database.inventory import Inventory
+from medulla.managers.imaging import ComputerImagingManager
+import medulla.utils
 import logging
 
 
@@ -226,7 +226,7 @@ class InventoryComputers(ComputerI):
         ]
 
     def checkComputerName(self, name):
-        return pulse2.utils.checkComputerName(name)
+        return medulla.utils.checkComputerName(name)
 
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         return self.inventory.isComputerNameAvailable(ctx, locationUUID, name)

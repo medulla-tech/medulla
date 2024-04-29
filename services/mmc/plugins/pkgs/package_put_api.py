@@ -8,10 +8,10 @@ This module define the package put API
 It provides methods to modify the content of packages.
 """
 import logging
-import pulse2.apis.clients.package_put_api
+import medulla.apis.clients.package_put_api
 
 
-class PackagePutA(pulse2.apis.clients.package_put_api.PackagePutA):
+class PackagePutA(medulla.apis.clients.package_put_api.PackagePutA):
     def __init__(self, server, port=None, mountpoint=None, proto="http", login=""):
         self.logger = logging.getLogger()
         credentials = ""
@@ -40,7 +40,7 @@ class PackagePutA(pulse2.apis.clients.package_put_api.PackagePutA):
 
         self.config = mmc.plugins.pkgs.PkgsConfig("pkgs")
         if self.config.upaa_verifypeer:
-            pulse2.apis.clients.package_put_api.PackagePutA.__init__(
+            medulla.apis.clients.package_put_api.PackagePutA.__init__(
                 self,
                 credentials,
                 self.server_addr,
@@ -49,6 +49,6 @@ class PackagePutA(pulse2.apis.clients.package_put_api.PackagePutA):
                 self.config.upaa_localcert,
             )
         else:
-            pulse2.apis.clients.package_put_api.PackagePutA.__init__(
+            medulla.apis.clients.package_put_api.PackagePutA.__init__(
                 self, credentials, self.server_addr
             )

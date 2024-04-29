@@ -16,7 +16,7 @@ from twisted.trial.unittest import TestCase
 
 from mmc.plugins.support.process import PIDControl
 
-PID_PATH = "/var/run/pulse2_ssh_support_test.pid"
+PID_PATH = "/var/run/medulla_ssh_support_test.pid"
 
 logging.basicConfig()
 

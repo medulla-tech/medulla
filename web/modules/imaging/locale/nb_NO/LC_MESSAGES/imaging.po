@@ -1974,10 +1974,10 @@ msgstr "Bilde <strong>%s</strong> ble lagt til i standard oppstartsmeny"
 #, php-format
 msgid ""
 "Boot menu generation Success for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
+"/var/log/mmc/medulla-package-server.log"
 msgstr ""
 "Generering av oppstartsmeny lyktes for pakkeserver: %s<br /><br />kontroller"
-" /var/log/mmc/pulse2-package-server.log"
+" /var/log/mmc/medulla-package-server.log"
 
 #: modules/imaging/manage/master_add.php:71
 #: modules/imaging/manage/master_add.php:75
@@ -1989,10 +1989,10 @@ msgstr ""
 #, php-format
 msgid ""
 "Boot menu generation failed for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
+"/var/log/mmc/medulla-package-server.log"
 msgstr ""
 "Generering av oppstartsmenyen mislyktes for pakkeserver: %s<br /><br /> "
-"kontroller /var/log/mmc/pulse2-package-server.log"
+"kontroller /var/log/mmc/medulla-package-server.log"
 
 #: modules/imaging/manage/master_add.php:81
 #, php-format

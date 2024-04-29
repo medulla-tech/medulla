@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
-Test module for the Pulse 2 scheduler
+Test module for the Medulla 2 scheduler
 """
 
 import sys
@@ -17,11 +17,11 @@ from tempfile import mkdtemp
 from testutils import generation_Launcher, generation_Commands
 from os import removedirs, remove, getcwd, system
 
-ipserver = "localhost"  # Address of pulse2 scheduler
+ipserver = "localhost"  # Address of medulla scheduler
 uuid = "UUID1"  # Client UUID
 fqdn = "localhost.localdomain"
 protocol = "https"
-directory = mkdtemp(suffix="launcher", prefix="pulse2", dir="/tmp")
+directory = mkdtemp(suffix="launcher", prefix="medulla", dir="/tmp")
 dbdriver = "mysql"
 dbhost = "localhost"
 dbport = "3306"
@@ -216,7 +216,7 @@ class class03supressionTest(unittest.TestCase):
         c.close()
 
 
-system("/etc/init.d/pulse2-scheduler restart")
+system("/etc/init.d/medulla-scheduler restart")
 
 if mode == "debug":
     success = []

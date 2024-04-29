@@ -2011,10 +2011,10 @@ msgstr ""
 #, php-format
 msgid ""
 "Boot menu generation Success for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
+"/var/log/mmc/medulla-package-server.log"
 msgstr ""
 "Menu de démarrage généré avec succès sur le package server: %s<br /><br "
-"/>Vérifier /var/log/mmc/pulse2-package-server.log"
+"/>Vérifier /var/log/mmc/medulla-package-server.log"
 
 #: modules/imaging/manage/master_add.php:71
 #: modules/imaging/manage/master_add.php:75
@@ -2026,10 +2026,10 @@ msgstr ""
 #, php-format
 msgid ""
 "Boot menu generation failed for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
+"/var/log/mmc/medulla-package-server.log"
 msgstr ""
 "La génération du menu de démarrage sur le package server %s a échoué.<br "
-"/><br />Vérifiez /var/log/mmc/pulse2-package-server.log"
+"/><br />Vérifiez /var/log/mmc/medulla-package-server.log"
 
 #: modules/imaging/manage/master_add.php:81
 #, php-format

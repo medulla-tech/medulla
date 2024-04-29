@@ -1,0 +1,125 @@
+#!/usr/bin/python3
+# -*- coding: utf-8; -*-
+#
+# (c) 2008 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Medulla 2, http://medulla.mandriva.org
+#
+# Medulla 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Medulla 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Medulla 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+import os
+import os.path
+import sys
+import getopt
+import logging
+import logging.config
+from mmc.site import mmcconfdir
+from medulla.proxyssl.config import Medulla2InventoryProxyConfig
+from medulla.proxyssl import initialise, run
+
+
+def running(daemonize, inifile):
+    config = Medulla2InventoryProxyConfig()
+    config.setup(inifile)
+
+    # Set umask and effective UID and GID values
+    os.umask(config.umask)
+    os.setegid(config.daemon_group)
+    os.seteuid(config.daemon_user)
+
+    # Create log dir if it doesn't exist
+    os.system('mkdir -p /var/log/mmc')
+
+    logging.config.fileConfig(inifile)
+    logger = logging.getLogger()
+    logger.debug("Logger loaded")
+
+    initialise(config)
+
+    if daemonize: daemon(config)
+    run()
+
+
+def daemon(config):
+    """
+    daemonize medulla-inventory-server
+
+    @param pidfile: path to pid file
+    @type pidfile: str
+    """
+    pidfile = config.pidfile
+
+    # Test if mmcagent has been already launched in daemon mode
+    if os.path.isfile(pidfile):
+        print pidfile+" pid already exist. Maybe medulla-inventory-server is already running\n"
+        print "use /etc/init.d script to stop and relaunch it"
+        sys.exit(0)
+
+    # do the UNIX double-fork magic, see Stevens' "Advanced
+    # Programming in the UNIX Environment" for details (ISBN 0201563177)
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # exit first parent
+            sys.exit(0)
+    except OSError, e:
+        print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
+
+    # decouple from parent environment
+    os.close(sys.stdin.fileno())
+    os.close(sys.stdout.fileno())
+    os.close(sys.stderr.fileno())
+    os.chdir("/")
+    os.setsid()
+
+    # do second fork
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # exit from second parent, print eventual PID before
+            print "Daemon PID %d" % pid
+            os.seteuid(0)
+            os.setegid(0)
+            os.system("echo " + str(pid) + " > " + pidfile)
+            sys.exit(0)
+    except OSError, e:
+        print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
+
+
+
+if __name__ == "__main__":
+    inifile = mmcconfdir + "/medulla/inventoryserver.ini"
+    try:
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
+    except getopt.GetoptError:
+        sys.exit(2)
+    daemonize = True
+    for option, argument in opts:
+        if option == "-f":
+            inifile = argument
+        elif option == "-d":
+            daemonize = False
+
+    if not os.path.exists(inifile):
+        print "File '%s' does not exist." % inifile
+        sys.exit(3)
+
+    # Start the daemon main loop
+    sys.exit(running(daemonize, inifile))

@@ -76,7 +76,7 @@ def callvncchangepermsbymaster(to, askpermission):
 
 
 def callremotefile(jidmachine, currentdir="", timeout=40):
-    strctfilestrcompress = ObjectXmpp().iqsendpulse(
+    strctfilestrcompress = ObjectXmpp().iqsendmedulla(
         jidmachine, {"action": "remotefile", "data": currentdir}, timeout
     )
     try:
@@ -88,19 +88,19 @@ def callremotefile(jidmachine, currentdir="", timeout=40):
 
 
 def calllistremotefileedit(jidmachine):
-    return ObjectXmpp().iqsendpulse(
+    return ObjectXmpp().iqsendmedulla(
         jidmachine, {"action": "listremotefileedit", "data": ""}, 10
     )
 
 
 def callremotefileeditaction(jidmachine, data, timeout=10):
-    return ObjectXmpp().iqsendpulse(
+    return ObjectXmpp().iqsendmedulla(
         jidmachine, {"action": "remotefileeditaction", "data": data}, timeout
     )
 
 
 def callremotecommandshell(jidmachine, command="", timeout=20):
-    return ObjectXmpp().iqsendpulse(
+    return ObjectXmpp().iqsendmedulla(
         jidmachine,
         {"action": "remotecommandshell", "data": command, "timeout": timeout},
         timeout,
@@ -108,7 +108,7 @@ def callremotecommandshell(jidmachine, command="", timeout=20):
 
 
 def callremoteXmppMonitoring(jidmachine, subject, timeout=15):
-    return ObjectXmpp().iqsendpulse(
+    return ObjectXmpp().iqsendmedulla(
         jidmachine,
         {"action": "remotexmppmonitoring", "data": subject, "timeout": timeout},
         timeout,
@@ -246,7 +246,7 @@ class MUCBot(slixmpp.ClientXMPP):
         self.listmodulemmc = PluginManager().getEnabledPluginNames()
         self.config = conf
         self.session = session()
-        self.domaindefault = "pulse"
+        self.domaindefault = "medulla"
         self.file_deploy_plugin = []
         self.wolglobal_set = set()  # use group wol
         self.confaccount = []  # list des account for clear
@@ -384,7 +384,7 @@ class MUCBot(slixmpp.ClientXMPP):
                     sessionid=name_randomplus(25, pref="deploysyncthing"),
                 )
 
-    def iqsendpulse(self, to, datain, timeout):
+    def iqsendmedulla(self, to, datain, timeout):
         # send iq synchronous message cf. https://xmpp.org/extensions/xep-0099.html
         ref_time = max(2, timeout - 1)
         start_iq = time.time()
@@ -392,7 +392,7 @@ class MUCBot(slixmpp.ClientXMPP):
             try:
                 data = json.dumps(datain)
             except Exception as e:
-                logging.error("iqsendpulse : encode json : %s" % str(e))
+                logging.error("iqsendmedulla : encode json : %s" % str(e))
                 return '{"err" : "%s"}' % str(e).replace('"', "'")
         elif type(datain) == unicode:
             data = str(datain)
@@ -410,7 +410,7 @@ class MUCBot(slixmpp.ClientXMPP):
                 pass
             data = data.encode("base64")
         except Exception as e:
-            logging.error("iqsendpulse : encode base64 : %s" % str(e))
+            logging.error("iqsendmedulla : encode base64 : %s" % str(e))
             return '{"err" : "%s"}' % error_text
         try:
             iq = self.make_iq_get(queryxmlns="custom_xep", ito=to)
@@ -430,7 +430,7 @@ class MUCBot(slixmpp.ClientXMPP):
                                         data = base64.b64decode(z.tag[1:-5])
                                         return data
                                     except Exception as e:
-                                        logging.error("iqsendpulse : %s" % str(e))
+                                        logging.error("iqsendmedulla : %s" % str(e))
                                         logger.error("%s" % (traceback.format_exc()))
                                         return '{"err" : "%s"}' % error_text
                                     return "{}"
@@ -495,7 +495,7 @@ class MUCBot(slixmpp.ClientXMPP):
                     XmppMasterDatabase().changStatusPresenceMachine(to, enable="0")
                 return '{"err" : "%s"}' % error_text
         except Exception as e:
-            logging.error("iqsendpulse : error %s" % str(e).replace('"', "'"))
+            logging.error("iqsendmedulla : error %s" % str(e).replace('"', "'"))
             logger.error("%s" % (traceback.format_exc()))
             return '{"err" : "%s"}' % str(e).replace('"', "'")
         return "{}"
@@ -1168,7 +1168,7 @@ class MUCBot(slixmpp.ClientXMPP):
             self.plugin["xep_0045"].joinMUC(
                 chatroom, self.config.NickName, password=passwordchatroom, wait=True
             )
-        self.logtopulse("Start agent Master", type="MASTER", who=self.boundjid.bare)
+        self.logtomedulla("Start agent Master", type="MASTER", who=self.boundjid.bare)
         listplugins = [
             re.sub("plugin_", "", ".".join(f.split(".")[:-1]))
             for f in os.listdir(
@@ -1280,7 +1280,7 @@ class MUCBot(slixmpp.ClientXMPP):
             fromuser=fromuser,
         )
 
-    def logtopulse(self, text, type="noset", sessionname="", priority=0, who="", ret=0):
+    def logtomedulla(self, text, type="noset", sessionname="", priority=0, who="", ret=0):
         if who == "":
             who = self.boundjid.bare
         XmppMasterDatabase().setlogxmpp(
@@ -1425,7 +1425,7 @@ class MUCBot(slixmpp.ClientXMPP):
             if "type" in result and result["type"] == "machine":
                 try:
                     if "reconf" in result and result["reconf"] == 1:
-                        result1 = self.iqsendpulse(
+                        result1 = self.iqsendmedulla(
                             msg_changed_status["from"],
                             {
                                 "action": "information",
@@ -2990,7 +2990,7 @@ class MUCBot(slixmpp.ClientXMPP):
                 return
             z = [listars[x] for x in listars]
             z1 = sorted(z, key=operator.itemgetter(4))
-            arsjid = XmppMasterDatabase().getRelayServerfromjid("rspulse@pulse")
+            arsjid = XmppMasterDatabase().getRelayServerfromjid("rsmedulla@medulla")
             # Start relay server agent configuration
             # we order the ARS from the least used to the most used.
             reponse = {

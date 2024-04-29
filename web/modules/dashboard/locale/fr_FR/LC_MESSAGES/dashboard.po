@@ -44,8 +44,8 @@ msgid "Shortcuts"
 msgstr "Raccourcis"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
-msgid "Pulse Updates"
-msgstr "Mises à jour de Pulse"
+msgid "Medulla Updates"
+msgstr "Mises à jour de Medulla"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:43
 #: modules/dashboard/includes/panels/clients_updates.inc.php:42
@@ -202,12 +202,12 @@ msgid "Agents"
 msgstr "Agents"
 
 #: modules/dashboard/includes/panels/agents.inc.php:52
-msgid "Machines in Pulse from "
-msgstr "Machines dans Pulse depuis "
+msgid "Machines in Medulla from "
+msgstr "Machines dans Medulla depuis "
 
 #: modules/dashboard/includes/panels/process.inc.php:28
-msgid "Pulse processes"
-msgstr "Processus pulse"
+msgid "Medulla processes"
+msgstr "Processus medulla"
 
 #: modules/dashboard/includes/panels/alerts.inc.php:28
 msgid "Alerts"

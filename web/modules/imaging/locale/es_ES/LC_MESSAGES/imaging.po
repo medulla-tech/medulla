@@ -1835,7 +1835,7 @@ msgstr ""
 #, php-format
 msgid ""
 "Boot menu generation Success for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
+"/var/log/mmc/medulla-package-server.log"
 msgstr ""
 
 #: modules/imaging/manage/master_add.php:71
@@ -1848,7 +1848,7 @@ msgstr ""
 #, php-format
 msgid ""
 "Boot menu generation failed for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
+"/var/log/mmc/medulla-package-server.log"
 msgstr ""
 
 #: modules/imaging/manage/master_add.php:81

@@ -3,20 +3,20 @@
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://www.siveo.net/
+-- This file is part of Medulla 2, http://www.siveo.net/
 --
--- Pulse 2 is free software; you can redistribute it and/or modify
+-- Medulla 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation; either version 2 of the License, or
 -- (at your option) any later version.
 --
--- Pulse 2 is distributed in the hope that it will be useful,
+-- Medulla 2 is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
+-- along with Medulla 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
@@ -42,9 +42,9 @@ INSERT INTO `qa_custom_command` VALUES ('allusers','macos','List Network Connect
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Show routing table','route print','View the IP routing table');
 INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Show routing table','netstat -rn','View the IP routing table');
 INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Show routing table','netstat -rn','View the IP routing table');
-INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Show last 100 lines of agent logs','powershell.exe Get-Content  \'C:\\Program Files\\Pulse\\var\\log\\xmpp-agent.log\' -Tail 100','Get the 100 last lines of XMPP agent logs');
-INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Show last 100 lines of agent logs','tail -n100 /var/log/pulse/xmpp-agent.log','Get the 100 last lines of XMPP agent logs');
-INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Show last 100 lines of agent logs','tail -n100 \'/Library/Application Support/Pulse/var/log/xmpp-agent.log\'','Get the 100 last lines of XMPP agent logs');
+INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Show last 100 lines of agent logs','powershell.exe Get-Content  \'C:\\Program Files\\Medulla\\var\\log\\xmpp-agent.log\' -Tail 100','Get the 100 last lines of XMPP agent logs');
+INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Show last 100 lines of agent logs','tail -n100 /var/log/medulla/xmpp-agent.log','Get the 100 last lines of XMPP agent logs');
+INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Show last 100 lines of agent logs','tail -n100 \'/Library/Application Support/Medulla/var/log/xmpp-agent.log\'','Get the 100 last lines of XMPP agent logs');
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Reconfigure machine agent','plugin_force_setup_agent@_@','Force the machine agent to reconfigure itself');
 INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Reconfigure machine agent','plugin_force_setup_agent@_@','Force the machine agent to reconfigure itself');
 INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Reconfigure machine agent','plugin_force_setup_agent@_@','Force the machine agent to reconfigure itself');
@@ -53,9 +53,9 @@ INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Enable fast startu
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Restart machine agent','plugin_restartbot@_@','Restart the machine agent');
 INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Restart machine agent','plugin_restartbot@_@','Restart the machine agent');
 INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Restart machine agent','plugin_restartbot@_@','Restart the machine agent');
-INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Download agent log to file-transfer folder','plugin_downloadfile@_@C:\\Program Files\\Pulse\\var\\log\\xmpp-agent.log','Download agent log to file-transfer folder');
-INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Download agent log to file-transfer folder','plugin_downloadfile@_@/var/log/pulse/xmpp-agent.log','Download agent log to file-transfer folder');
-INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Download agent log to file-transfer folder','plugin_downloadfile@_@/Library/Application Support/Pulse/var/log/xmpp-agent.log','Download agent log to file-transfer folder');
+INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Download agent log to file-transfer folder','plugin_downloadfile@_@C:\\Program Files\\Medulla\\var\\log\\xmpp-agent.log','Download agent log to file-transfer folder');
+INSERT INTO `qa_custom_command` VALUES ('allusers','linux','Download agent log to file-transfer folder','plugin_downloadfile@_@/var/log/medulla/xmpp-agent.log','Download agent log to file-transfer folder');
+INSERT INTO `qa_custom_command` VALUES ('allusers','macos','Download agent log to file-transfer folder','plugin_downloadfile@_@/Library/Application Support/Medulla/var/log/xmpp-agent.log','Download agent log to file-transfer folder');
 UNLOCK TABLES;
 
 

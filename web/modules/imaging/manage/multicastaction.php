@@ -62,7 +62,7 @@ if (    isset($multicast) &&
             $objprocess['group'] = $informationsparameters['gid'];
             $objprocess['description'] = $informationsparameters['itemlabel'];
             $objprocess['master'] = $informationsparameters['uuidmaster'];
-            $objprocess['path'] = "/var/lib/pulse2/imaging/masters/".$informationsparameters['uuidmaster'];
+            $objprocess['path'] = "/var/lib/medulla/imaging/masters/".$informationsparameters['uuidmaster'];
             $objprocess['process'] = $path.$process;
             xmlrpc_start_process_multicast($objprocess);
             xmlrpc_setfromxmppmasterlogxmpp(_T("Start Multicast of ( Master :", 'Imaging').' '.$informationsparameters['uuidmaster'].") ".

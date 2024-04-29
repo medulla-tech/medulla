@@ -21,10 +21,10 @@ from mmc.ssl import makeSSLContext
 from mmc.plugins.msc.config import MscConfig
 from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.plugins.msc.database import MscDatabase
-from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
-from pulse2.database.msc.orm.target import Target
-from pulse2.apis import makeURL
-from pulse2.utils import noNoneList
+from medulla.database.msc.orm.commands_on_host import CommandsOnHost
+from medulla.database.msc.orm.target import Target
+from medulla.apis import makeURL
+from medulla.utils import noNoneList
 
 
 def getProxy(schedulerConfig):

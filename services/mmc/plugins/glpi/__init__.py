@@ -20,10 +20,10 @@ from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.computers import GlpiComputers
 from mmc.plugins.glpi.provisioning import GlpiProvisioner
-from pulse2.managers.location import ComputerLocationManager
+from medulla.managers.location import ComputerLocationManager
 from mmc.plugins.glpi.location import GlpiLocation
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 
 # health check
 from mmc.plugins.glpi.health import scheduleCheckStatus

@@ -17,16 +17,16 @@ from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.imaging.profile import ImagingProfile
 from mmc.plugins.imaging.computer import InventoryComputers
 from mmc.plugins.imaging.imaging import ComputerImagingImaging
-from mmc.plugins.imaging.pulse import ImagingPulse2Manager
+from mmc.plugins.imaging.medulla import ImagingMedulla2Manager
 from mmc.plugins.imaging.functions import ImagingRpcProxy, computersUnregister
 from mmc.core.tasks import TaskManager
-from pulse2.managers.profile import ComputerProfileManager
+from medulla.managers.profile import ComputerProfileManager
 from mmc.plugins.base.computers import ComputerManager
-from pulse2.managers.imaging import ComputerImagingManager
-from pulse2.managers.pulse import Pulse2Manager
-from pulse2.database.imaging import ImagingDatabase
+from medulla.managers.imaging import ComputerImagingManager
+from medulla.managers.medulla import Medulla2Manager
+from medulla.database.imaging import ImagingDatabase
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 
 APIVERSION = "0:0:0"
 
@@ -78,7 +78,7 @@ def activate():
 
     ComputerImagingManager().register("imaging", ComputerImagingImaging)
 
-    Pulse2Manager().register("imaging", ImagingPulse2Manager)
+    Medulla2Manager().register("imaging", ImagingMedulla2Manager)
 
     ComputerManager().register("imaging", InventoryComputers)
 
@@ -93,12 +93,12 @@ def activate():
 
 def activate_2():
     """
-    Check that the MMC pulse2 plugin is enabled
+    Check that the MMC medulla plugin is enabled
     """
     if not PluginManager().isEnabled("medulla_server"):
         ret = False
         logging.getLogger().error(
-            "Plugin imaging: plugin is disabled because the pulse2 plugin is not available"
+            "Plugin imaging: plugin is disabled because the medulla plugin is not available"
         )
     else:
         ret = True

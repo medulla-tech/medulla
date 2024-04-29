@@ -65,14 +65,14 @@ if (isset($_POST["bconfirm"])) {
         $ret = xmlrpc_synchroLocation($location);
         // goto images list
         if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
-            $str = sprintf(_T("Boot menu generation Success for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"));
+            $str = sprintf(_T("Boot menu generation Success for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"));
             /* insert notification code here if needed */
         } elseif (!$ret[0] and !isXMLRPCError()) {
-            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
             new NotifyWidgetFailure($str);
         }
         elseif (isXMLRPCError()) {
-            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
             new NotifyWidgetFailure($str);
         }
         header("Location: " . urlStrRedirect("imaging/manage/master", $params));

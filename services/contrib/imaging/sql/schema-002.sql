@@ -3,20 +3,20 @@
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://pulse2.mandriva.org
+-- This file is part of Medulla 2, http://medulla.mandriva.org
 --
--- Pulse 2 is free software; you can redistribute it and/or modify
+-- Medulla 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation; either version 2 of the License, or
 -- (at your option) any later version.
 --
--- Pulse 2 is distributed in the hope that it will be useful,
+-- Medulla 2 is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
+-- along with Medulla 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
@@ -29,7 +29,7 @@ UPDATE PostInstallScript SET value = "MountSystem\nCopySysprepInf /revoinfo/sysp
 UPDATE PostInstallScript SET value = "MountSystem\nChangeSIDAndName" WHERE default_name LIKE "SID";
 UPDATE PostInstallScript SET value = "DeployAgents" WHERE default_name LIKE "Agent Pack";
 UPDATE PostInstallScript SET default_desc = "The first partition will be extend across the whole disk" WHERE default_name LIKE "Partition extension";
-UPDATE PostInstallScript SET default_desc = "Install the Pulse 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key)" WHERE default_desc LIKE "Install the Pulse 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key).";
+UPDATE PostInstallScript SET default_desc = "Install the Medulla 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key)" WHERE default_desc LIKE "Install the Medulla 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key).";
 UPDATE Internationalization SET label = "La première partition sera étendue à l'intégralité du disque dur" WHERE id = 18;
 DELETE FROM Internationalization WHERE id = 19;
 

@@ -5,7 +5,7 @@
 
 import json
 import logging
-from pulse2.database.pkgs import PkgsDatabase
+from medulla.database.pkgs import PkgsDatabase
 
 logger = logging.getLogger()
 

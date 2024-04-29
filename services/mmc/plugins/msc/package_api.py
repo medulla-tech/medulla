@@ -11,14 +11,14 @@ import time
 
 from mmc.plugins.msc import MscConfig
 from mmc.plugins.msc.database import MscDatabase
-import pulse2.apis.clients.package_get_api
+import medulla.apis.clients.package_get_api
 
 
 def cmp(a, b):
     return (a > b) - (a < b)
 
 
-class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
+class PackageGetA(medulla.apis.clients.package_get_api.PackageGetA):
     def __init__(self, server, port=None, mountpoint=None, proto="http", login=""):
         self.logger = logging.getLogger()
         bind = server
@@ -45,7 +45,7 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
         )
         self.config = MscConfig()
         if self.config.ma_verifypeer:
-            pulse2.apis.clients.package_get_api.PackageGetA.__init__(
+            medulla.apis.clients.package_get_api.PackageGetA.__init__(
                 self,
                 credentials,
                 self.server_addr,
@@ -54,7 +54,7 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
                 self.config.ma_localcert,
             )
         else:
-            pulse2.apis.clients.package_get_api.PackageGetA.__init__(
+            medulla.apis.clients.package_get_api.PackageGetA.__init__(
                 self, credentials, self.server_addr
             )
 
@@ -174,7 +174,7 @@ class SendPackageCommand:
         from mmc.plugins.xmppmaster.master.lib.managepackage import apimanagepackagemsc
 
         self.pinfos = apimanagepackagemsc.getPackageDetail(self.pid)
-        return self.setRoot("/var/lib/pulse2/packages")
+        return self.setRoot("/var/lib/medulla/packages")
 
     def setRoot(self, root):
         logging.getLogger().debug(root)

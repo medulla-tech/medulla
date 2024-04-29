@@ -3,20 +3,20 @@
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://pulse2.mandriva.org
+-- This file is part of Medulla 2, http://medulla.mandriva.org
 --
--- Pulse 2 is free software; you can redistribute it and/or modify
+-- Medulla 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation; either version 2 of the License, or
 -- (at your option) any later version.
 --
--- Pulse 2 is distributed in the hope that it will be useful,
+-- Medulla 2 is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
+-- along with Medulla 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `pkgs`.`pkgs_shares` (
   `uri` VARCHAR(255) NOT NULL,
   `ars_name` VARCHAR(255) NULL,
   `ars_id` INT NOT NULL,
-  `share_path` VARCHAR(255) NOT NULL DEFAULT '\"/var/lib/pulse/packages/sharing/local\"',
+  `share_path` VARCHAR(255) NOT NULL DEFAULT '\"/var/lib/medulla/packages/sharing/local\"',
   `usedquotas` INT NULL DEFAULT 0,
   `quotas` INT NULL DEFAULT 0,
   PRIMARY KEY (`id`),

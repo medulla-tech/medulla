@@ -95,8 +95,8 @@ Calendar._TT["ABOUT"] =
 "- Mantenga pulsado el rat�n en cualquiera de estos botones para una selecci�n r�pida.";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "Selecci�n de hora:\n" +
-"- Pulse en cualquiera de las partes de la hora para incrementarla\n" +
-"- o pulse las may�sculas mientras hace clic para decrementarla\n" +
+"- Medulla en cualquiera de las partes de la hora para incrementarla\n" +
+"- o medulla las may�sculas mientras hace clic para decrementarla\n" +
 "- o haga clic y arrastre el rat�n para una selecci�n m�s r�pida.";
 
 Calendar._TT["PREV_YEAR"] = "A�o anterior (mantener para men�)";

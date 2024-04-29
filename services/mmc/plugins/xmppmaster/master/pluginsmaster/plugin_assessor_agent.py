@@ -7,7 +7,7 @@ import base64
 import json
 from mmc.plugins.xmppmaster.master.lib.utils import AESCipher, subnetnetwork, ipfromdns
 import logging
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 import traceback
 from random import randint
 from localisation import Point
@@ -732,7 +732,7 @@ def MessagesAgentFromChatroomConfig(
             return
         z = [listars[x] for x in listars]
         z1 = sorted(z, key=operator.itemgetter(4))
-        # arsjid = XmppMasterDatabase().getRelayServerfromjid("rspulse@pulse")
+        # arsjid = XmppMasterDatabase().getRelayServerfromjid("rsmedulla@medulla")
         # Start relay server agent configuration
         # we order the ARS from the least used to the most used.
         response = {
@@ -768,7 +768,7 @@ def MessagesAgentFromChatroomConfig(
             sendErrorConnectionConf(objectxmpp, sessionid, msg)
             return
 
-        agentsubscription = "master@pulse"
+        agentsubscription = "master@medulla"
         if (
             "substitute" in data
             and "conflist" in data["substitute"]

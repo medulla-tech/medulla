@@ -67,7 +67,7 @@ if (!$gid) { // TODO !!
     if ($group->type == 0) {
         $name = clean_xss($group->getName());
         __my_header(sprintf(_T("Group '%s' content", "dyngroup"), $name), $sidemenu, $item, $group);
-        if (in_array("pulse2", $_SESSION["modulesList"])) {
+        if (in_array("medulla", $_SESSION["modulesList"])) {
           //Radiobox Mode
           echo '<input type="radio" ';
           if ($computerpresence == "all_computer") echo "checked";

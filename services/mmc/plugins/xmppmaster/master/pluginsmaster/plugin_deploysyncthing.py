@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.master.lib.utils import name_randomplus
 from sleekxmpp import jid
 

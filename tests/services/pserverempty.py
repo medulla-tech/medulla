@@ -33,7 +33,7 @@ else:
 del sys.argv[1:]
 
 # Remove if exist the package test
-system("rm -rf /var/lib/pulse2/packages/test")
+system("rm -rf /var/lib/medulla/packages/test")
 
 serverM = xmlrpc.client.ServerProxy("%s://%s:9990/mirror1" % (protocol, ipserver))
 serverMA = xmlrpc.client.ServerProxy("%s://%s:9990/rpc" % (protocol, ipserver))
@@ -346,7 +346,7 @@ class class04testScheduler(unittest.TestCase):
         self.assertEqual(result, sresult)
 
 
-system("/etc/init.d/pulse2-package-server restart")
+system("/etc/init.d/medulla-package-server restart")
 sleep(10)
 
 if mode == "debug":

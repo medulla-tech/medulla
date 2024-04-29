@@ -2,12 +2,12 @@
 # SPDX-FileCopyrightText: 2020-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 
 from mmc.plugins.admin.config import AdminConfig
 
 # import pour la database
-from pulse2.database.admin import AdminDatabase
+from medulla.database.admin import AdminDatabase
 import logging
 
 VERSION = "1.0.0"

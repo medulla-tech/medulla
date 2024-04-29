@@ -40,7 +40,7 @@ $logStates = array(
     "backup_failed" => array(_T("Backup failed", "imaging"), "red"),
 );
 
-// Should be keepd syn with services/src/pulse2-imaging-server.c !!!
+// Should be keepd syn with services/src/medulla-imaging-server.c !!!
 $logMessages = array(
    "boot menu shown" => _T("Boot menu shown", "imaging"),
 

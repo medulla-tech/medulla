@@ -6,7 +6,7 @@
 Configuration class for the inventory MMC agent plugin.
 """
 
-from pulse2.database.inventory.config import InventoryDatabaseConfig
+from medulla.database.inventory.config import InventoryDatabaseConfig
 from mmc.plugins.inventory.utilities import getInventoryParts
 from mmc.support import mmctools
 

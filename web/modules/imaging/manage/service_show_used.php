@@ -125,11 +125,11 @@ if (isset($_POST['removeServices'])) {
         // goto images list
         if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
         } elseif (!$ret[0] and !isXMLRPCError()) {
-            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
             new NotifyWidgetFailure($str);
         }
         elseif (isXMLRPCError()) {
-            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
             new NotifyWidgetFailure($str);
         }
 //        // Synchronize boot menu

@@ -3,20 +3,20 @@
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://www.siveo.net/
+-- This file is part of Medulla 2, http://www.siveo.net/
 --
--- Pulse 2 is free software; you can redistribute it and/or modify
+-- Medulla 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation; either version 2 of the License, or
 -- (at your option) any later version.
 --
--- Pulse 2 is distributed in the hope that it will be useful,
+-- Medulla 2 is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
+-- along with Medulla 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
@@ -36,15 +36,15 @@ create table if not exists qa_relay_command(
 -- DEFAULT QA FOR RELAYS
 insert into qa_relay_command(user, name, script, description) VALUES
 ('allusers', 'ejabberd connected infos', 'ejabberdctl connected_users_info', 'Get the connected users infos'),
-('allusers', 'ejabberd registered user pulse', 'ejabberdctl registered_users pulse', 'Get registered users in pulse'),
+('allusers', 'ejabberd registered user medulla', 'ejabberdctl registered_users medulla', 'Get registered users in medulla'),
 ('allusers', 'ejabberd status', 'ejabberdctl status', 'Get ejabberd status'),
-('allusers', 'ejabberd get_offline master', 'ejabberdctl get_offline_count master pulse', 'Get the count of offline in master'),
-('allusers', 'ejabberd get_offline master_asse', 'ejabberdctl get_offline_count master_asse pulse', 'Get the count of offline in master_asse'),
-('allusers', 'ejabberd get_offline master_depl', 'ejabberdctl get_offline_count master_depl pulse', 'Get the count of offline in master_depl'),
-('allusers', 'ejabberd get_offline master_inv', 'ejabberdctl get_offline_count master_inv pulse', 'Get the count of offline in master_inv'),
-('allusers', 'ejabberd get_offline master_log', 'ejabberdctl get_offline_count master_log pulse', 'Get the count of offline in master_log'),
-('allusers', 'ejabberd get_offline master_reg', 'ejabberdctl get_offline_count master_reg pulse', 'Get the count of offline in master_reg'),
-('allusers', 'ejabberd get_offline master_subs', 'ejabberdctl get_offline_count master_subs pulse', 'Get the count of offline in master_subs');
+('allusers', 'ejabberd get_offline master', 'ejabberdctl get_offline_count master medulla', 'Get the count of offline in master'),
+('allusers', 'ejabberd get_offline master_asse', 'ejabberdctl get_offline_count master_asse medulla', 'Get the count of offline in master_asse'),
+('allusers', 'ejabberd get_offline master_depl', 'ejabberdctl get_offline_count master_depl medulla', 'Get the count of offline in master_depl'),
+('allusers', 'ejabberd get_offline master_inv', 'ejabberdctl get_offline_count master_inv medulla', 'Get the count of offline in master_inv'),
+('allusers', 'ejabberd get_offline master_log', 'ejabberdctl get_offline_count master_log medulla', 'Get the count of offline in master_log'),
+('allusers', 'ejabberd get_offline master_reg', 'ejabberdctl get_offline_count master_reg medulla', 'Get the count of offline in master_reg'),
+('allusers', 'ejabberd get_offline master_subs', 'ejabberdctl get_offline_count master_subs medulla', 'Get the count of offline in master_subs');
 
 -- qa_relay_launched => QA LAUNCHED BY USERS
 drop table if exists qa_relay_launched;

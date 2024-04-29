@@ -5,7 +5,7 @@ import logging
 
 from mmc.site import mmcconfdir
 from mmc.plugins.inventory.provisioning_plugins import PluginEntitiesI
-from pulse2.database.inventory.entitiesrules import EntitiesRules
+from medulla.database.inventory.entitiesrules import EntitiesRules
 
 
 class PluginEntities(PluginEntitiesI):

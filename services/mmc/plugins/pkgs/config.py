@@ -9,7 +9,7 @@ import logging
 import os.path  # for SSL cert files checking
 
 from mmc.support.config import PluginConfig
-from pulse2.xmlrpc import isTwistedEnoughForLoginPass
+from medulla.xmlrpc import isTwistedEnoughForLoginPass
 
 
 class PkgsConfig(PluginConfig):

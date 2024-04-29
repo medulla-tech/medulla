@@ -26,7 +26,7 @@
 // Prevent any error message to corrupt this output
 ob_clean();
 //print rand(10,5000);
-$command = "bash -c \"ps aux|grep 'pulse-update-manager'|grep -v 'grep'\"";
+$command = "bash -c \"ps aux|grep 'medulla-update-manager'|grep -v 'grep'\"";
 //$return = 0;
 
 exec($command, $output, $return);

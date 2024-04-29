@@ -2,20 +2,20 @@
 #
 # (c) 2014 Mandriva, http://www.mandriva.com/
 #
-# This file is part of Pulse 2
+# This file is part of Medulla 2
 #
-# Pulse 2 is free software; you can redistribute it and/or modify
+# Medulla 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# Pulse 2 is distributed in the hope that it will be useful,
+# Medulla 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
+# along with Medulla 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -29,10 +29,10 @@ NAME="Siveo Support"
 EMAIL="support@siveo.net"
 HOME="/root"
 GPG_KEY_CONF=$HOME/gpg-key-conf
-GPG_KEY_FILE="pulse2-agents.gpg.key"
+GPG_KEY_FILE="medulla-agents.gpg.key"
 MACROS=$HOME/.rpmmacros
 ID="$NAME <$EMAIL>"
-RPM_REPO_NAME="pulse2-agents"
+RPM_REPO_NAME="medulla-agents"
 RPM_REPO_FILE="${RPM_REPO_NAME}.repo"
 MY_URL=$(hostname -I | cut -d' ' -f1) 
 
@@ -107,8 +107,8 @@ if [ -d deb ]; then
     options=$REPO_SUBDIR/conf/options    
 
 
-    echo "Origin: Pulse2 Agents" > $distributions 
-    echo "Label: Pulse2 Agents - Common Debian Repository" >> $distributions
+    echo "Origin: Medulla2 Agents" > $distributions 
+    echo "Label: Medulla2 Agents - Common Debian Repository" >> $distributions
     echo "Codename: $DIST" >> $distributions
     echo "Architectures: i386 amd64" >> $distributions
     echo "Components: main" >> $distributions
@@ -200,7 +200,7 @@ if [ -d rpm ]; then
     
     echo "INFO: Creating .repo file"
     echo "[$RPM_REPO_NAME]" > rpm/$RPM_REPO_FILE
-    echo "name = Pulse2 Agents" >> rpm/$RPM_REPO_FILE
+    echo "name = Medulla2 Agents" >> rpm/$RPM_REPO_FILE
     echo "baseurl = http://$MY_URL/downloads/rpm" >> rpm/$RPM_REPO_FILE
     echo "gpgkey = http://$MY_URL/downloads/$GPG_KEY_FILE" >> rpm/$RPM_REPO_FILE
     echo "enabled=1" >> rpm/$RPM_REPO_FILE

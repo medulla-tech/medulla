@@ -5,9 +5,9 @@
  *
  * $Id$
  *
- * This file is part of Pulse 2, http://siveo.net
+ * This file is part of Medulla 2, http://siveo.net
  *
- * Pulse 2 is free software; you can redistribute it and/or modify
+ * Medulla 2 is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
@@ -43,7 +43,7 @@ if (!isset($_GET['part'])) { $_GET['part'] = 'Summary'; }
 $uuid = '';
 $hostname = '';
 if (isset($_GET['uuid'])) { $uuid = $_GET['uuid']; }
-//clean_xss function is located in pulse2/includes/utilities.php
+//clean_xss function is located in medulla/includes/utilities.php
 if (isset($_GET['hostname'])) { $hostname = clean_xss($_GET['hostname']); }
 
 $uri = getGlpiMachineUri();

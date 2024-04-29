@@ -1,6 +1,6 @@
 # (c) 2013 Mandriva, http://www.mandriva.com
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
-contribdir = $(datadir)/doc/pulse2/contrib
-qactionsdir = $(localstatedir)/lib/pulse2/qactions
+contribdir = $(datadir)/doc/medulla/contrib
+qactionsdir = $(localstatedir)/lib/medulla/qactions
 
 dist_qactions_DATA = msc/qactions/001reboot.msc \
 	msc/qactions/002shutdown.msc \
@@ -86,8 +86,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	imaging/template/header.lst \
 	imaging/template/utilities.menu.in \
 	inventory/README \
-	inventory/lrs-to-pulse2-inventory \
-	inventory/pulse2-inventory-clean-database.README \
+	inventory/lrs-to-medulla-inventory \
+	inventory/medulla-inventory-clean-database.README \
 	inventory/sql/schema-001.sql \
 	inventory/sql/schema-002.sql \
 	inventory/sql/schema-003.sql \
@@ -103,15 +103,15 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	inventory/sql/schema-013.sql \
 	inventory/sql/schema-014.sql \
 	inventory/sql/schema-015.sql \
-	inventory/pulse2-inventory-manage-entities \
-	inventory/pulse2-inventory-populate-root-entity.py \
-	inventory/pulse2-inventory-purge-from-date \
+	inventory/medulla-inventory-manage-entities \
+	inventory/medulla-inventory-populate-root-entity.py \
+	inventory/medulla-inventory-purge-from-date \
 	msc/analysis/command_evolution_using_logs.py \
 	msc/analysis/scheduler_health_using_logs.py \
 	msc/analysis/command_evolution_from_coh_table.py \
 	msc/analysis/command_evolution_from_history_table.py \
-	msc/analysis/pulse2_stats.py \
-	msc/pulse2-msc-clean-database.README \
+	msc/analysis/medulla_stats.py \
+	msc/medulla-msc-clean-database.README \
 	msc/sql/README \
 	msc/sql/clean-db.sql \
 	msc/sql/purge-old-rows.sql \
@@ -156,8 +156,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	package-server/tests/pserver-max-dl \
 	package-server/tests/pserver-max-tcp-conn \
 	package-server/tests/pserver-plist \
-	pulse2/sql/README \
-	pulse2/sql/schema-001.sql \
+	medulla/sql/README \
+	medulla/sql/schema-001.sql \
 	backuppc/sql/README \
 	backuppc/sql/schema-001.sql \
 	backuppc/sql/schema-002.sql \
@@ -276,7 +276,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	pkgs/sql/schema-007.sql \
 	updates/sql/schema-001.sql \
 	urbackup/sql/schema-001.sql \
-	monit/pulse2 \
+	monit/medulla \
 	samba/smb.conf \
 	test-xmlrpc.php \
 	test-xmlrpc.examples \

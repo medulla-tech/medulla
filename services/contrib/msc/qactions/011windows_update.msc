@@ -1,4 +1,4 @@
-title=Pulse Update Manager
-titlefr=Pulse Update Manager
-titlede=Pulse Update Manager
-command=@@do_windows_update@@/usr/share/pulse-update-manager/pulse-update-manager -l --json
+title=Medulla Update Manager
+titlefr=Medulla Update Manager
+titlede=Medulla Update Manager
+command=@@do_windows_update@@/usr/share/medulla-update-manager/medulla-update-manager -l --json

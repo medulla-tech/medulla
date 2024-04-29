@@ -1,0 +1,10 @@
+[Unit]
+Description=Medulla2 Agent
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/medulla-agent
+
+[Install]
+WantedBy=multi-user.target

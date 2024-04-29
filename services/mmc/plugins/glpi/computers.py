@@ -9,7 +9,7 @@ from mmc.plugins.base import ComputerI
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.utilities import complete_ctx
-from pulse2.managers.imaging import ComputerImagingManager
+from medulla.managers.imaging import ComputerImagingManager
 import logging
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig

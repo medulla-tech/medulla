@@ -21,7 +21,7 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 
-xmpp_baseplugindir = $(localstatedir)/lib/pulse2/xmpp_baseplugin
+xmpp_baseplugindir = $(localstatedir)/lib/medulla/xmpp_baseplugin
 
 
 pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \

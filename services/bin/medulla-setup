@@ -1,0 +1,1431 @@
+#!/usr/bin/python3
+# -*- coding: utf-8; -*-
+#
+# (c) 2011-2012 Mandriva, http://www.mandriva.com/
+#
+# Author(s):
+#   Jean Parpaillon <jparpaillon@mandriva.com>
+#   Jean-Philippe Braun <jpbraun@mandriva.com>
+#
+# This file is part of Medulla 2, http://medulla.mandriva.org
+#
+# Medulla 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Medulla 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Medulla 2.  If not, see <http://www.gnu.org/licenses/>.
+import os
+import sys
+import stat
+import re
+import getpass
+import string
+import uuid
+import readline   # pyflakes.ignore
+import shutil
+import netifaces
+import netaddr
+import hashlib
+import time
+from copy import deepcopy
+from random import choice
+from subprocess import call
+from optparse import OptionParser
+from configobj import ConfigObj, MissingInterpolationOption
+import gzip
+from io import StringIO
+import sqlalchemy as sa
+import logging
+import ldap
+from medulla.utils import get_default_ip
+from medulla.site import examplesdir
+from mmc.database.ddl import DBControl
+from mmc.site import sysconfdir, mmcconfdir, prefix
+from mmc.core.log import ColoredFormatter
+from subprocess import check_output, CalledProcessError
+
+log = logging.getLogger('medulla-setup')
+
+
+def path_lookup(exe):
+    for d in os.environ['PATH'].split(':'):
+        fullpath = os.path.join(d, exe)
+        if os.path.exists(fullpath):
+            return fullpath
+    return None
+
+
+def read_opt(prompt, default=None):
+    if default is not None:
+        prompt += f' (default: {default})'
+    prompt = f'INPUT    - {prompt}: '
+    s = eval(input(prompt))
+    if not s and default is not None:
+        s = default
+    return s
+
+
+def read_bool(prompt, default):
+    prompt += ' (Y/n)' if default is True else ' (y/N)'
+    prompt = f'INPUT    - {prompt}: '
+    correct = False
+    ret = default
+    while not correct:
+        s = eval(input(prompt))
+        if len(s) == 0:
+            break
+
+        if s in ['y', 'Y']:
+            correct = True
+            ret = True
+        elif s in ['n', 'N']:
+            correct = True
+            ret = False
+        else:
+            log.info('Incorrect value. Retry.')
+    return ret
+
+
+def gen_passwd(size=10):
+    return ''.join([choice(string.letters + string.digits) for _ in range(size)])
+
+
+def read_passwd(prompt, default, check=False):
+    prompt += f' (default: {default})'
+    match = False
+    while not match:
+        pwd = getpass.getpass(f'INPUT    - {prompt}: ')
+        if check:
+            pwd2 = getpass.getpass(f'INPUT    - {prompt} (confirm): ')
+            match = (pwd == pwd2)
+            if not match:
+                log.info('Passwords do not match. Retry.')
+        else:
+            match = True
+
+    return default if not pwd else pwd
+
+re_ip4 = re.compile(r'([0-9]{1,3})(\.([0-9]{1,3})){3}')
+
+
+def read_ip(prompt, default):
+    """ TODO: IPv6
+    """
+    prompt += f' (default: {default})'
+    prompt = f'INPUT    - {prompt}: '
+    correct = False
+    ret = default
+    while not correct:
+        s = eval(input(prompt))
+        if len(s) == 0:
+            break
+
+        if re_ip4.match(s):
+            correct = True
+            ret = s
+        else:
+            log.info('Incorrect value. Retry.')
+    return ret
+
+
+class DistroHandler(object):
+
+    ldap_schemas_dir = None
+    ldap_config = False
+    apache_service = None
+    apache_dir = None
+
+    def enable_srv(self, name):
+        # Start scripts
+        for runlevel in (2, 3, 4, 5):
+            ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/S20%(name)s" % \
+                       {'name': name, 'runlevel': runlevel},
+                       shell=True)
+            if ret != 0:
+                return False
+        # Stop scripts
+        for runlevel in (0, 1, 6):
+            ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/K01%(name)s" % \
+                       {'name': name, 'runlevel': runlevel},
+                       shell=True)
+            if ret != 0:
+                return False
+        return True
+
+    def disable_srv(self, name):
+        # Start scripts
+        for runlevel in (2, 3, 4, 5):
+            ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/S20%(name)s" % \
+                       {'name': name, 'runlevel': runlevel},
+                       shell=True)
+            if ret != 0:
+                return False
+        # Stop scripts
+        for runlevel in (0, 1, 6):
+            ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/K01%(name)s" % \
+                       {'name': name, 'runlevel': runlevel},
+                       shell=True)
+            if ret != 0:
+                return False
+        return True
+
+    def start_srv(self, name):
+        ret = call("/etc/rc2.d/S20%(name)s start" % {'name': name}, shell=True)
+        return ret == 0
+
+    def stop_srv(self, name):
+        ret = call("/etc/rc2.d/S20%(name)s stop" % {'name': name}, shell=True)
+        return ret == 0
+
+    def reload_srv(self, name):
+        ret = call("/etc/rc2.d/S20%(name)s reload" % {'name': name}, shell=True)
+        return ret == 0
+
+
+class DebianHandler(DistroHandler):
+    ldap_schemas_dir = "/etc/ldap/schema/"
+    ldap_config = True
+    apache_service = "apache2"
+    apache_dir = "/etc/apache2/conf-available/"
+
+    def __init__(self):
+        DistroHandler.__init__(self)
+        # Try to determine sys-v mode (dependency mode or classic mode)
+        self.mode = "classic"
+        ret = call('LC_ALL=C update-rc.d 2>/dev/null | grep -q "dependency based boot"',
+                   shell=True)
+        if ret == 0:
+            self.mode = "dependency"
+            log.debug("Using dependency based boot sequencing")
+
+    def enable_srv(self, name):
+        default_config = os.path.join(sysconfdir, 'default', name)
+        if os.path.exists(default_config):
+            ret = call(f"sed -i 's/ENABLE=no/ENABLE=yes/' {default_config}", shell=True)
+        elif self.mode == "classic":
+            ret = call(f"/usr/sbin/update-rc.d {name} defaults", shell=True)
+        else:
+            ret = call(f"/sbin/insserv {name}", shell=True)
+        return ret == 0
+
+    def disable_srv(self, name):
+        default_config = os.path.join(sysconfdir, 'default', name)
+        if os.path.exists(default_config):
+            ret = call(f"sed -i 's/ENABLE=yes/ENABLE=no/' {default_config}", shell=True)
+        elif self.mode == "classic":
+            ret = call(f"/usr/sbin/update-rc.d -f {name} remove", shell=True)
+        else:
+            ret = call(f"/sbin/insserv -r {name}", shell=True)
+        return ret == 0
+
+    def start_srv(self, name):
+        ret = call(f"/usr/sbin/invoke-rc.d {name} start", shell=True)
+        return ret == 0
+
+    def stop_srv(self, name):
+        ret = call(f"/usr/sbin/invoke-rc.d {name} stop", shell=True)
+        return ret == 0
+
+    def reload_srv(self, name):
+        ret = call(f"/usr/sbin/invoke-rc.d {name} reload", shell=True)
+        return ret == 0
+
+
+class SystemctlHandler(object):
+    ldap_schemas_dir = None
+    ldap_config = False
+    apache_service = None
+    apache_dir = None
+
+    def enable_srv(self, name):
+        ret = call("/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
+        return False if ret != 0 else ret==0
+
+    def disable_srv(self, name):
+        ret = call("/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
+        return False if ret != 0 else ret==0
+
+    def start_srv(self, name):
+        ret = call("/bin/systemctl start %(name)s.service" % {'name': name}, shell=True)
+        return ret==0
+
+    def stop_srv(self, name):
+        ret = call("/bin/systemctl stop %(name)s.service" % {'name': name}, shell=True)
+        return ret==0
+
+    def reload_srv(self, name):
+        ret = call("/bin/systemctl reload %(name)s.service" % {'name': name}, shell=True)
+        return ret==0
+
+
+def get_distro_handler():
+    if os.path.exists('/bin/systemctl') and os.path.realpath('/sbin/init') in [
+        "/usr/lib/systemd/systemd",
+        "/lib/systemd/systemd",
+    ]:
+        return SystemctlHandler()
+    elif os.path.exists('/usr/sbin/update-rc.d'):
+        return DebianHandler()
+    else:
+        return DistroHandler()
+
+
+class Service(object):
+    name = None
+    clsnames = ['SrvMmcAgent',
+                'SrvInventoryserver', 'SrvPkgServer']
+
+    def __init__(self, handler, config):
+        self.config = config
+        self.handler = handler
+
+    def is_enable(self):
+        return True
+
+    def update_rc(self):
+        if self.is_enable():
+            self.enable_srv()
+        else:
+            self.disable_srv()
+
+    def enable_srv(self):
+        log.info(f'Enabling service: {self.name}')
+        if not self.handler.enable_srv(self.name):
+            log.error(f'Can not enable service: {self.name}')
+            sys.exit(1)
+
+    def disable_srv(self):
+        log.info(f'Disabling service: {self.name}')
+        if not self.handler.disable_srv(self.name):
+            log.error(f'Can not disable service: {self.name}')
+            sys.exit(1)
+
+    def restart(self, fatal=False):
+        log.info(f'Stopping service: {self.name}')
+        self.handler.stop_srv(self.name)
+        if self.is_enable():
+            log.info(f'Starting service: {self.name}')
+            if not self.handler.start_srv(self.name):
+                log.warning(f'Cannot start service: {self.name}')
+                if fatal:
+                    sys.exit(1)
+
+    def reload(self, fatal=False):
+        log.info(f'Reloading service: {self.name}')
+        if self.is_enable():
+            if not self.handler.reload_srv(self.name):
+                log.warning(f'Cannot reload service: {self.name}')
+                if fatal:
+                    sys.exit(1)
+
+
+class SrvMmcAgent(Service):
+    name = 'mmc-agent'
+
+    def is_enable(self):
+        return self.config['inventory.service.enable']
+
+    def restart(self, *args, **kwargs):
+        super(SrvMmcAgent, self).restart(fatal=True)
+
+
+class SrvApache(Service):
+    name = None
+
+    def __init__(self, handler, config):
+        Service.__init__(self, handler, config)
+        if handler.apache_service:
+            self.__class__.name = handler.apache_service
+
+
+class SrvInventoryserver(Service):
+    name = 'medulla-inventory-server'
+
+    def is_enable(self):
+        return self.config['inventory.service.enable']
+
+
+class SrvPkgServer(Service):
+    name = 'medulla-package-server'
+
+    def is_enable(self):
+        return self.config['package.service.enable']
+
+
+def apply_conf_diff(origin, current, only_override=False):
+    """
+    Removes or overrides the default values and remaining options.
+
+    @param origin: original config instance
+    @type origin: ConfigObj
+
+    @param current: current or local config instance
+    @type current: ConfigObj
+
+    @param only_override: if True, returns the origin overriden by current;
+                          if False, returns a diff overriden by current
+    @type only_override: bool
+
+    @return: overriden conf instance (complete or diff)
+    @rtype: ConfigObj
+    """
+
+    for (sec_name, section) in list(current.items()):
+        if sec_name in origin:
+            options_to_delete = []
+            for opt_name in section:
+                try:
+                    value = current[sec_name].get(opt_name)
+
+                except MissingInterpolationOption as e:
+                    current.interpolation = False
+                    value = current[sec_name].get(opt_name)
+                    current.interpolation = True
+
+                if opt_name in origin[sec_name]:
+                    try:
+                        orig_value = origin[sec_name].get(opt_name)
+                    except MissingInterpolationOption as e:
+
+                        origin.interpolation = False
+                        orig_value = value if only_override else origin[sec_name].get(opt_name)
+                        origin.interpolation = True
+
+                    if str(value) == str(orig_value):
+                        if not only_override:
+                            options_to_delete.append(opt_name)
+            if not only_override:
+                for opt_name in options_to_delete:
+                    del current[sec_name][opt_name]
+
+        if len(current[sec_name]) == 0:
+            # empty section remove
+            del current[sec_name]
+
+    return origin if only_override else current
+
+
+class Medulla2ConfigFile(object):
+    """ Values are setted that way:
+    - load the config file
+    - then populate with default values if not set from the file
+    """
+    clsnames = ['PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
+                'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
+                'PluginsMedulla2Config', 'PluginsMscConfig', 'PluginsUrbackupConfig',
+                'InventoryServerConfig', 'PackageServerConfig', 'SchedulerConfig',
+                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig',
+                'PluginsKioskConfig', 'PluginsXmppmasterConfig', 'PluginsAdminConfig',
+                'PluginsUpdatesConfig']
+    path = None
+    # If defaults is None, try to read default values from config file in
+    # examplesdir
+    defaults = None
+    mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
+    # ConfigObj object
+    config = None
+    local_config = None
+
+    def __init__(self, reset=False):
+        if self.defaults:
+            self._populate(self.__class__.defaults)
+        elif reset:
+            self._load()
+
+        else:
+            # If not resetting conf, load existing
+            self._load(True)
+
+    def _load(self, current=False):
+        """ Load config file, if any
+        """
+        # Use current configuration
+        dir_path = mmcconfdir if current else examplesdir
+        fpath = os.path.join(dir_path, self.path)
+        loc_path = os.path.join(dir_path, f"{self.path}.local")
+
+        if os.path.exists(loc_path):
+            log.debug(f"Load config file {loc_path}")
+            try:
+                self.local_config = ConfigObj(loc_path, list_values=False)
+            except Exception as e:
+                log.error(f"Error while parsing file: {loc_path}")
+                log.error(str(e))
+                sys.exit(1)
+
+        if os.path.exists(fpath):
+            log.debug(f"Load config file {fpath}")
+            try:
+                self.config = ConfigObj(fpath, list_values=False)
+            except Exception as e:
+                log.error(f"Error while parsing file: {fpath}")
+                log.error(str(e))
+                sys.exit(1)
+
+        elif os.path.exists(f'{fpath}.gz'):
+            fpath = f'{fpath}.gz'
+            log.debug(f"Load config file {fpath}")
+            fh = gzip.open(fpath, 'rb')
+            config_string = fh.read()
+            fh.close()
+            self.config = ConfigObj(StringIO(config_string), list_values=False)
+            self.config.filename = fpath
+        else:
+            log.debug(f"No such file {fpath}")
+            if not current:
+                fpath = os.path.join(mmcconfdir, self.path)
+                log.debug(f"Fallback on current configuration {fpath}")
+            self.config = ConfigObj(fpath, list_values=False)
+
+        if self.local_config:
+            self.config = apply_conf_diff(self.config, self.local_config, True)
+
+    def _populate(self, d):
+        if not self.config:
+            self.config = ConfigObj(list_values=False)
+        for name, section in list(d.items()):
+            self.config[name] = section
+
+    def write_path(self, path):
+        path = f"{path}.local"
+        dirname = os.path.dirname(path)
+        if not os.path.isdir(dirname):
+            os.makedirs(dirname)
+        try:
+            self.config.filename = path
+            self.config.write()
+            os.chmod(path, self.mode)
+            log.info(f"Wrote configuration file: {path}")
+        except IOError as e:
+            log.error(f"Can not write file: {path}")
+            log.debug(str(e))
+            sys.exit(1)
+
+    def get(self, section, option):
+        try:
+            return self.config[section][option]
+        except KeyError:
+            return ""
+
+    def set(self, section, option, value):
+        if section not in self.config:
+            self.config[section] = {}
+        self.config[section][option] = value
+
+    def remove_section(self, section):
+        try:
+            del self.config[section]
+        except KeyError:
+            pass
+
+    def has_section(self, section):
+        return section in self.config
+
+    def has_option(self, section, option):
+        return option in self.config[section] if self.has_section(section) else False
+
+    def commit(self):
+        self._remove_comments()
+        self.write_path(os.path.join(mmcconfdir, self.path))
+
+    def _remove_comments(self):
+        """ Removes all the comments from config """
+
+        for entry in self.config.comments:
+            self.config.comments[entry] = []
+        for entry in self.config.inline_comments :
+            self.config.inline_comments[entry] = ""
+
+        for sec_name in self.config:
+
+            for entry in self.config[sec_name].comments:
+                self.config[sec_name].comments[entry] = []
+            for entry in self.config[sec_name].inline_comments:
+                self.config[sec_name].inline_comments[entry] = ""
+
+        self.config.initial_comment = []
+        self.config.final_comment = []
+
+
+class LoggingConfig(Medulla2ConfigFile):
+    log_dir = '/var/log/mmc'
+    log_path = None
+
+    def __init__(self, *args, **kwargs):
+        Medulla2ConfigFile.__init__(self, *args, **kwargs)
+
+        # Add logging module configuration
+        d = {
+            'loggers': {'keys': 'root'},
+            'handlers': {'keys': 'hand01'},
+            'formatters': {'keys': 'form01'},
+            'logger_root': {'level': 'NOTSET', 'handlers': 'hand01'},
+            'handler_hand01': {
+                'class': 'FileHandler',
+                'level': 'INFO',
+                'formatter': 'form01',
+                'args': f'("{os.path.join(self.log_dir, self.log_path)}",)',
+            },
+            'formatter_form01': {
+                'format': '%(asctime)s %(levelname)s %(message)s'
+            },
+        }
+        self._populate(d)
+
+
+class MMCAgentConfig(Medulla2ConfigFile):
+    path = 'agent/config.ini'
+
+
+class PluginsPkgConfig(Medulla2ConfigFile):
+    path = 'plugins/pkgs.ini'
+
+
+class PluginsImagingConfig(Medulla2ConfigFile):
+    path = 'plugins/imaging.ini'
+
+
+class PluginsGlpiConfig(Medulla2ConfigFile):
+    path = 'plugins/glpi.ini'
+
+
+class PluginsBaseConfig(Medulla2ConfigFile):
+    path = 'plugins/base.ini'
+
+
+class PluginsDyngroupConfig(Medulla2ConfigFile):
+    path = 'plugins/dyngroup.ini'
+
+
+class PluginsUpdateConfig(Medulla2ConfigFile):
+    path = 'plugins/update.ini'
+
+
+class PluginsInventoryConfig(Medulla2ConfigFile):
+    path = 'plugins/inventory.ini'
+
+
+class PluginsMedulla2Config(Medulla2ConfigFile):
+    path = 'plugins/medulla_server.ini'
+
+
+class PluginsMscConfig(Medulla2ConfigFile):
+    path = 'plugins/msc.ini'
+
+
+class PluginsUrbackupConfig(Medulla2ConfigFile):
+    path = 'plugins/urbackup.ini'
+
+
+
+class InventoryServerConfig(LoggingConfig):
+    path = 'medulla/inventory-server/inventory-server.ini'
+    log_path = 'medulla-inventory-server.log'
+
+
+class PackageServerConfig(LoggingConfig):
+    path = 'medulla/package-server/package-server.ini'
+    log_path = 'medulla-package-server.log'
+
+
+class SchedulerConfig(LoggingConfig):
+    path = 'medulla/scheduler/scheduler.ini'
+    log_path = 'medulla-scheduler.log'
+
+
+class UUIDResolverConfig(Medulla2ConfigFile):
+    path = 'medulla/uuid-resolver/uuid-resolver.ini'
+
+
+class PluginsKioskConfig(Medulla2ConfigFile):
+    path = 'plugins/kiosk.ini'
+
+
+class PluginsXmppmasterConfig(Medulla2ConfigFile):
+    path = 'plugins/xmppmaster.ini'
+
+class PluginsAdminConfig(Medulla2ConfigFile):
+    path = 'plugins/admin.ini'
+
+
+class PluginsUpdatesConfig(Medulla2ConfigFile):
+    path = 'plugins/updates.ini'
+
+
+class SetupApp(object):
+    defaults = {}
+    confs = {}
+    orig_confs = {}
+
+    def __init__(self, options):
+        self.config = {}
+        self.options = options
+        self.distro_handler = get_distro_handler()
+
+        # Check if we run as root
+        if os.getuid() != 0:
+            log.error("Please run this application as root")
+            sys.exit(2)
+
+        # Warn the user about --reset-db
+        if self.options['reset_db']:
+            log.warning("I will delete all Medulla2 databases and existing computers data (images, bootmenus)")
+            log.warning("Existing masters will be kept")
+            if not self.read_bool('Are you sure ?', True):
+                log.info("OK. Exiting")
+                sys.exit(0)
+
+        # Get db modules list
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'medulla_server', 'urbackup', 'update', 'kiosk', 'pkgs', 'xmppmaster', 'admin', 'updates']
+
+        # Load conf files, if existing
+        # self.confs will contain path->ConfigParser objects dictionary
+        # path is relative to mmcconfdir, as in confpaths list above
+        self.confs = {}
+        for clsname in Medulla2ConfigFile.clsnames:
+            cls = globals()[clsname]
+            self.confs[cls.path] = cls(self.options['reset_conf'])
+
+        self.orig_confs = deepcopy(self.confs)
+
+
+        # Creates Services objects
+        self.services = []
+        for clsname in Service.clsnames:
+            cls = globals()[clsname]
+            self.services.append(cls(self.distro_handler, self.config))
+
+    def read_opt(self, name, default):
+        return default if self.options['batch'] else read_opt(name, default)
+
+    def read_bool(self, name, default):
+        return default if self.options['batch'] else read_bool(name, default)
+
+    def read_passwd(self, name, default=None):
+        if self.options['batch']:
+            return default if default is not None else gen_passwd()
+        else:
+            return read_passwd(name, default)
+
+    def read_ip(self, name, default=None):
+        if default is None:
+            default = get_default_ip()
+        return default if self.options['batch'] else read_ip(name, default)
+
+    def find_ip(self):
+        for ip_interface in netifaces.interfaces():
+            if ip_interface == "lo":
+                continue
+            try:
+                return netifaces.ifaddresses(ip_interface)[2][0]['addr']
+            except:
+                pass
+        return "127.0.0.1"
+
+    def net_mask_ip(self, adr):
+        interfacedeclare = netifaces.interfaces()
+        for ip_interface in interfacedeclare:
+            try:
+                ip4_adresse = netifaces.ifaddresses(ip_interface)[2][0]['addr']
+                if ip4_adresse == adr :
+                    return netifaces.ifaddresses(ip_interface)[2][0]['netmask']
+            except:
+                pass
+        return "255.255.255.0"
+
+    def load_defaults(self):
+        """ Load default values from config files objects
+        Values are set from existing config files or default values in *Config classes.
+
+        Note 1: db admin credentials are not stored in any file, except host.
+        Note 2: current version does not support diffenriated db host or credentials. All
+          db must be on the same host. Default value are taken from plugins/medulla_server.ini file.
+        """
+        self.defaults['inventory.service.enable'] = self.options["server_inventory"]
+        self.defaults['package.service.enable'] = self.options["server_package"]
+        self.defaults['glpi.plugin.enable'] = self.options["glpi_enable"]
+        self.defaults['backup.service.enable'] = self.options["server_backup"]
+
+        self.defaults['ldapurl'] = self.options['ldapurl'] or self.confs['plugins/base.ini'].get('ldap', 'ldapurl')
+        self.defaults['ldapbasedn'] = self.options['ldapbasedn'] or self.confs['plugins/base.ini'].get('ldap', 'baseDN')
+        self.defaults['ldapadmindn'] = self.options['ldapadmindn'] or self.confs['plugins/base.ini'].get('ldap', 'rootName')
+        self.defaults['ldappasswd'] = self.options['ldappasswd'] or self.confs['plugins/base.ini'].get('ldap', 'password')
+        self.defaults['defaultUserGroup'] = self.confs['plugins/base.ini'].get('ldap', 'defaultUserGroup')
+
+        self.defaults['dbhost'] = self.options['dbhost'] or self.confs['plugins/medulla_server.ini'].get('database', 'dbhost')
+        self.defaults['dbport'] = self.options['dbport'] or self.confs['plugins/medulla_server.ini'].get('database', 'dbport')
+        self.defaults['dbadminuser'] = self.options['dbadminuser'] or 'root'
+        self.defaults['dbadminpasswd'] = self.options['dbadminpasswd'] or ''
+
+        self.defaults['dbuser'] = self.confs['plugins/medulla_server.ini'].get('database', 'dbuser')
+        passwd = self.confs['plugins/medulla_server.ini'].get('database', 'dbpasswd')
+        if passwd == 'mmc':
+            # If passwd in config file is the default (weak) one, prefer generating a random one
+            self.defaults['dbpasswd'] = gen_passwd()
+        else:
+            self.defaults['dbpasswd'] = self.confs['plugins/medulla_server.ini'].get('database', 'dbpasswd')
+
+        self.defaults['glpiurl'] = self.options["glpi_url"] or "http://127.0.0.1"
+        self.defaults['glpidbuser'] = self.options["glpi_dbuser"]
+        self.defaults['glpidbpassword'] = self.options["glpi_dbpassword"] or ""
+        self.defaults['glpidbname'] = self.options["glpi_dbname"] or "glpi"
+        self.defaults['glpidbhost'] = self.options["glpi_dbhost"] or "127.0.0.1"
+        self.defaults['glpidbport'] = self.options["glpi_dbport"] or "3306"
+        self.defaults['glpi_purge_machines'] = self.options["glpi_purge_machines"]
+        self.defaults['glpi_webservices_user'] = self.options["glpi_webservices_user"]
+        self.defaults['glpi_webservices_passwd'] = self.options["glpi_webservices_passwd"]
+        self.defaults['ipexternal'] = self.options["ipexternal"] or self.find_ip()
+
+    def read_config(self):
+        """ Read some global config values
+        """
+        self.config['inventory.service.enable'] = self.read_bool('Enable inventory server',
+                                                                 self.defaults['inventory.service.enable'])
+        self.config["glpi.plugin.enable"] = self.read_bool('Enable GLPI plugin',
+                                                           self.defaults['glpi.plugin.enable'])
+        self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)',
+                                                               self.defaults['package.service.enable'])
+        self.config['server.ip.external'] = self.read_ip('Server external IP address',
+                                                         self.defaults['ipexternal'])
+
+    def init_ldap(self):
+        invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
+        while len(invalids):
+            if 'ldapurl' in invalids:
+                self.config['ldapurl'] = self.read_opt('LDAP uri', self.defaults['ldapurl'])
+            if 'ldapbasedn' in invalids:
+                self.config['ldapbasedn'] = self.read_opt('LDAP base DN', self.defaults['ldapbasedn'])
+            if 'ldapadmindn' in invalids:
+                self.config['ldapadmindn'] = self.read_opt('LDAP admin DN', self.defaults['ldapadmindn'])
+            if 'ldappasswd' in invalids:
+                self.config['ldappasswd'] = self.read_passwd('LDAP admin password', self.defaults['ldappasswd'])
+
+            # Check parameters
+            conn = ldap.initialize(self.config['ldapurl'])
+            try:
+                invalids = []
+                conn.simple_bind_s(self.config['ldapadmindn'], self.config['ldappasswd'])
+            except ldap.INVALID_CREDENTIALS as e:
+                invalids += ['ldapbasedn', 'ldapadmindn', 'ldappasswd']
+                log.error("Invalid credentials, check base DN, admin DN and password.")
+                log.debug(str(e))
+                sys.exit()
+            except ldap.SERVER_DOWN as e:
+                invalids += ['ldapurl']
+                log.error("Incorrect server")
+                log.debug(str(e))
+                sys.exit()
+            except ldap.UNWILLING_TO_PERFORM as e:
+                invalids += ['ldappasswd']
+                log.error("Empty password not supported")
+                log.debug(str(e))
+                sys.exit()
+        log.info("Connection to LDAP succesfull.")
+
+        # Check mmc schema is installed
+        log.info("Check for MMC schema")
+        (dn, schema) = ldap.schema.urlfetch(self.config['ldapurl'])
+        if schema.get_obj(ldap.schema.ObjectClass, 'lmcUserObject') is None:
+            if self.distro_handler.ldap_schemas_dir and self.distro_handler.ldap_config:
+                log.info('MMC schema can not be found in LDAP directory.')
+                log.info('Adding the schema...')
+                schema_path = os.path.join(prefix, 'share', 'doc', 'medulla', 'contrib', 'base', 'mmc.schema')
+                ret = call(
+                    f'mmc-add-schema {schema_path} {self.distro_handler.ldap_schemas_dir}',
+                    shell=True,
+                )
+                if ret != 0:
+                    log.error('Failed to include the mmc schema in the LDAP directory.')
+                    log.error('Exiting...')
+                    sys.exit(1)
+            else:
+                log.error('MMC schema can not be found in LDAP directory.')
+                log.error('Exiting...')
+                sys.exit(1)
+
+        self.config['defaultUserGroup'] = self.read_opt('Default user group', self.defaults['defaultUserGroup'])
+
+        # Populate base plugin conf file
+        self.confs['plugins/base.ini'].set('ldap', 'ldapurl', self.config['ldapurl'])
+        self.confs['plugins/base.ini'].set('ldap', 'baseDN', self.config['ldapbasedn'])
+        self.confs['plugins/base.ini'].set('ldap', 'rootName', self.config['ldapadmindn'])
+        self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
+        self.confs['plugins/base.ini'].set('ldap', 'defaultUserGroup', self.config['defaultUserGroup'])
+
+        # LDAP password for UUID resolver
+        self.confs['medulla/uuid-resolver/uuid-resolver.ini'].set('ldap', 'password', self.config['ldappasswd'])
+
+    def get_existing_databases(self, conn):
+        """ Get a list of existing databases
+        """
+        databases = []
+
+        try:
+            crs = conn.execute("SELECT schema_name FROM information_schema.schemata;")
+            databases = [line[0] for line in crs.fetchall()]
+        except sa.exc.OperationalError as e:
+            raise e
+
+        return databases
+
+    def init_db(self):
+        """ Create databases and associated schemas
+        """
+        invalid = True
+        while invalid:
+            # Get DB connection informations
+            self.config['dbhost'] = self.read_opt('Database host', self.defaults['dbhost'])
+            self.config['dbport'] = self.read_opt('Database port', self.defaults['dbport'])
+            self.config['dbadminuser'] = self.read_opt('Database admin user', self.defaults['dbadminuser'])
+            self.config['dbadminpasswd'] = self.read_passwd('Database admin password', self.defaults['dbadminpasswd'])
+
+            # Create connection to DB and check it
+            url = f"mysql://{self.config['dbadminuser']}:{self.config['dbadminpasswd']}@{self.config['dbhost']}:{self.config['dbport']}/mysql"
+            self.engine = sa.create_engine(url)
+            try:
+                conn = self.engine.connect()
+                invalid = False
+            except sa.exc.OperationalError as e:
+                log.error("Can't connect to the database")
+                log.debug(str(e))
+
+        # Drop databases
+        if self.options['reset_db']:
+            existing_dbs = self.get_existing_databases(conn)
+            for db in self.dbmodules:
+                if db in existing_dbs:
+                    try:
+                        conn.execute(f'DROP DATABASE IF EXISTS `{db}`')
+                        log.info(f"Database '{db}' dropped")
+                    except sa.exc.OperationalError as e:
+                        raise e
+            # remove computer boot menus
+            dir = "/var/lib/medulla/imaging/"
+            for file in os.listdir(os.path.join(dir, 'bootmenus')):
+                if re.match('[0-9A-F]{12}', file):
+                    os.unlink(os.path.join(dir, 'bootmenus', file))
+                    log.info(f"Deleted computer menu '{file}'")
+            # erease the uuid cache
+            try:
+                os.unlink(os.path.join(dir, 'uuid-cache.txt'))
+                log.debug("UUID cache removed")
+            except OSError:
+                pass
+            # remove computers data
+            for comp_uuid in os.listdir(os.path.join(dir, 'computers')):
+                comp_dir = os.path.join(dir, 'computers', comp_uuid)
+                if re.match('UUID[0-9]+', comp_uuid) and os.path.isdir(comp_dir):
+                    log.info(f"Removing computer {comp_uuid} data...")
+                    shutil.rmtree(comp_dir)
+
+        for module in self.dbmodules:
+            log.info(f"Update database schema for module {module}")
+            db_control = DBControl(user=self.config['dbadminuser'],
+                                   passwd=self.config['dbadminpasswd'],
+                                   host=self.config['dbhost'],
+                                   port=int(self.config['dbport']),
+                                   module=module,
+                                   log=log)
+            db_control.process()
+
+        # Get DB user and password for all modules
+        log.info("Setup db credentials")
+        self.config['dbuser'] = self.defaults['dbuser']
+        self.config['dbpasswd'] = self.defaults['dbpasswd']
+
+        conn = self.engine.connect()
+
+        hosts = ['localhost', '127.0.0.1']
+        if self.config['dbhost'] not in hosts:
+            # Distant DB, we don't know from where it is accessed...
+            hosts.append('%')
+
+        for host in hosts:
+            try:
+                # Do not know how to check if user exists, then try and catch
+                conn.execute('CREATE USER %s@%s', self.config['dbuser'], host)
+                log.info(f"Creates user {self.config['dbuser']}@{host}")
+            except sa.exc.OperationalError as e:
+                if e.orig[0]==1396:
+                    # This error means 'user exists'
+                    log.debug(f"User already exists: {self.config['dbuser']}@{host}")
+                elif e.orig[0] == 1044:
+                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (
+                        self.config['dbuser'], self.config['dbhost']))
+                    sys.exit(2)
+                else:
+                    raise e
+
+            # Set password in DB
+            log.info('Updating user password: \'%s\'@\'%s\'' % (self.config['dbuser'], host))
+            conn.execute('SET PASSWORD FOR %s@%s = PASSWORD(%s)', self.config['dbuser'], host, self.config['dbpasswd'])
+
+            # Grant rights in DB
+            try:
+                dbs = self.dbmodules
+                for module in dbs:
+                    log.info(f'Grant rights on db {module}')
+                    # Put db name without sqlalchemy quoting: it was surrounded by `''
+                    conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], host)
+            except sa.exc.OperationalError as e:
+                if e.orig[0] != 1044:
+                    raise e
+
+                log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (
+                    self.config['dbuser'], self.config['dbhost']))
+                sys.exit(2)
+        conn.execute('FLUSH PRIVILEGES')
+        conn.close()
+
+        #
+        # Set db user and password in conf files
+        #
+
+        # dyngroup db
+        self.confs['plugins/dyngroup.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/dyngroup.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/dyngroup.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/dyngroup.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # update db
+        self.confs['plugins/update.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/update.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/update.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/update.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # imaging db
+        self.confs['plugins/imaging.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/imaging.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/imaging.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/imaging.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # inventory db (plugin)
+        self.confs['plugins/inventory.ini']\
+                .set('inventory', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/inventory.ini']\
+                .set('inventory', 'dbport', self.config['dbport'])
+        self.confs['plugins/inventory.ini']\
+                .set('inventory', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/inventory.ini']\
+                .set('inventory', 'dbpasswd', self.config['dbpasswd'])
+
+        # inventory db (server)
+        self.confs['medulla/inventory-server/inventory-server.ini']\
+                .set('database', 'dbhost', self.config['dbhost'])
+        self.confs['medulla/inventory-server/inventory-server.ini']\
+                .set('database', 'dbport', self.config['dbport'])
+        self.confs['medulla/inventory-server/inventory-server.ini']\
+                .set('database', 'dbuser', self.config['dbuser'])
+        self.confs['medulla/inventory-server/inventory-server.ini']\
+                .set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # msc db (plugin)
+        self.confs['plugins/msc.ini'].set('msc', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/msc.ini'].set('msc', 'dbport', self.config['dbport'])
+        self.confs['plugins/msc.ini'].set('msc', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/msc.ini'].set('msc', 'dbpasswd', self.config['dbpasswd'])
+
+        # msc db (scheduler)
+        self.confs['medulla/scheduler/scheduler.ini']\
+                .set('database', 'dbhost', self.config['dbhost'])
+        self.confs['medulla/scheduler/scheduler.ini']\
+                .set('database', 'dbport', self.config['dbport'])
+        self.confs['medulla/scheduler/scheduler.ini']\
+                .set('database', 'dbuser', self.config['dbuser'])
+        self.confs['medulla/scheduler/scheduler.ini']\
+                .set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # medulla_server
+        self.confs['plugins/medulla_server.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/medulla_server.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/medulla_server.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/medulla_server.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # kiosk
+        self.confs['plugins/kiosk.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/kiosk.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/kiosk.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/kiosk.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # pkgs db
+        self.confs['plugins/pkgs.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/pkgs.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/pkgs.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/pkgs.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # xmppmaster db
+        self.confs['plugins/xmppmaster.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/xmppmaster.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/xmppmaster.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/xmppmaster.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # admin db
+        self.confs['plugins/admin.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/admin.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/admin.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/admin.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # urbackup
+        self.confs['plugins/urbackup.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/urbackup.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/urbackup.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/urbackup.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # updates
+        self.confs['plugins/updates.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/updates.ini'].set('database', 'dbport', self.config['dbport'])
+        self.confs['plugins/updates.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/updates.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+    def init_glpi(self):
+        """GLPI coupling"""
+
+        glpi_conf = self.confs["plugins/glpi.ini"]
+
+        url = self.read_opt("Glpi URL", self.defaults["glpiurl"])
+        if not url.endswith("/"):
+            url = f"{url}/"
+        if url.startswith("http"):
+            base_url = f"{url}/"
+            computer_url = f"{url}/front/computer.form.php?id="
+            fusion_url = f"{url}/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
+        else:
+            base_url = f"http://{url}/"
+            computer_url = f"http://{url}/front/computer.form.php?id="
+            fusion_url = f"http://{url}/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
+
+        glpi_conf.set("main", "glpi_computer_uri", computer_url)
+        glpi_conf.set("authentication_glpi", "baseurl", base_url)
+        glpi_conf.set("authentication_glpi", "doauth", 1)
+        glpi_conf.set("provisioning_glpi", "profiles_order", "profile1 profile2 profile3")
+        glpi_conf.set("provisioning_glpi", "exclude", "root")
+
+        db_user = self.read_opt("GLPI database user", self.defaults["glpidbuser"])
+        glpi_conf.set("main", "dbuser", db_user)
+        db_password = self.read_passwd("GLPI database password", self.defaults["glpidbpassword"])
+        glpi_conf.set("main", "dbpasswd", db_password)
+        db_host = self.read_opt("GLPI database host", self.defaults["glpidbhost"])
+        glpi_conf.set("main", "dbhost", db_host)
+        db_port = self.read_opt("GLPI database port", self.defaults["glpidbport"])
+        glpi_conf.set("main", "dbport", db_port)
+        db_name = self.read_opt("GLPI database name", self.defaults["glpidbname"])
+        glpi_conf.set("main", "dbname", db_name)
+        glpi_purge_machines = self.read_opt("Purge machines from GLPI dustbin", self.defaults['glpi_purge_machines'])
+        glpi_webservices_user = self.read_opt("GLPI Webservices Username", self.defaults['glpi_webservices_user'])
+        glpi_webservices_passwd = self.read_opt("GLPI Webservices password", self.defaults['glpi_webservices_passwd'])
+        if glpi_purge_machines:
+            glpi_conf.set("webservices", "purge_machine", 1)
+            glpi_conf.set("webservices", "glpi_base_url", url)
+            glpi_conf.set("webservices", "glpi_username", glpi_webservices_user)
+            glpi_conf.set("webservices", "glpi_password", glpi_webservices_passwd)
+
+        if self.defaults['inventory.service.enable']:
+            invsvr_conf = self.confs["medulla/inventory-server/inventory-server.ini"]
+            invsvr_conf.set("main", "url_to_forward", fusion_url)
+
+    def init_misc(self):
+        # Setup server IP address
+        conf = self.confs['medulla/package-server/package-server.ini']
+        conf.set('main', 'public_ip', self.config['server.ip.external'])
+
+        # Base GLPI configuration
+        if self.config["glpi.plugin.enable"]:
+            self.confs['plugins/glpi.ini'].set('main', 'disable', 0)
+            self.confs['plugins/inventory.ini'].set('main', 'disable', 1)
+            self.confs['plugins/base.ini'].set('computers', 'method', 'glpi')
+            if self.defaults['package.service.enable']:
+                pkg_conf = self.confs["medulla/package-server/package-server.ini"]
+                pkg_conf.set("imaging_api", "glpi_mode", True)
+
+            if self.defaults['inventory.service.enable']:
+                invsvr_conf = self.confs["medulla/inventory-server/inventory-server.ini"]
+                invsvr_conf.set("main", "enable_forward", True)
+
+        else:
+            self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
+            self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
+            self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
+
+            if self.defaults['package.service.enable'] :
+                pkg_conf = self.confs["medulla/package-server/package-server.ini"]
+                pkg_conf.set("imaging_api", "glpi_mode", False)
+
+            if self.defaults['inventory.service.enable']:
+                invsvr_conf = self.confs["medulla/inventory-server/inventory-server.ini"]
+                invsvr_conf.set("main", "enable_forward", False)
+
+        #Enable xmppmaster module
+        self.confs['plugins/xmppmaster.ini'].set('main', 'disable', 0)
+
+        #Enable Urbackup module
+        self.confs['plugins/urbackup.ini'].set('main', 'disable', 0)
+
+        #Enable Kiosk module
+        self.confs['plugins/kiosk.ini'].set('main', 'disable', 0)
+
+        #Enable pkgs module
+        self.confs['plugins/pkgs.ini'].set('main', 'disable', 0)
+
+        #Enable admin module
+        self.confs['plugins/admin.ini'].set('main', 'disable', 0)
+
+        #Enable updates module
+        self.confs['plugins/updates.ini'].set('main', 'disable', 0)
+
+        # Ensure various dirs are created
+        for path in [self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
+                     self.confs['plugins/msc.ini'].get('msc', 'repopath'),
+                     self.confs['plugins/msc.ini'].get('msc', 'qactionspath'),
+                     self.confs['plugins/msc.ini'].get('msc', 'download_directory_path'),
+                     self.confs['medulla/package-server/package-server.ini'].get('main', 'tmp_input_dir'),
+                     LoggingConfig.log_dir]:
+            if path and not os.path.isdir(path):
+                log.info(f"Creating directory: {path}")
+                os.makedirs(path)
+
+        # Update services
+        for srv in self.services:
+            srv.update_rc()
+
+        # Check root user has an RSA key
+        log.info('Check for root user RSA key pair')
+        key_path = '/root/.ssh/id_rsa'
+        if not os.path.exists(key_path):
+            log.info('Creating a RSA key pair for user root')
+            ret = call(f"/usr/bin/ssh-keygen -t rsa -N '' -f {key_path}", shell=True)
+            if ret!=0:
+                log.error('Can not create RSA key pair for user root')
+                sys.exit(1)
+
+        # Setup package server
+        conf = self.confs['medulla/package-server/package-server.ini']
+        _uuid = None
+        if conf.has_option('imaging_api', 'uuid'):
+            _uuid = conf.get('imaging_api', 'uuid')
+            log.info(f'Using current uuid ({_uuid}) for package server')
+        if not _uuid:
+            _uuid = str(uuid.uuid4())
+            log.info(f'Generated uuid ({_uuid}) for package server')
+        conf.set('imaging_api', 'uuid', _uuid)
+
+        # Install apache configuration if needed
+        if self.distro_handler.apache_service:
+            if not os.path.exists(os.path.join(self.distro_handler.apache_dir, 'mmc.conf')):
+                shutil.copy(os.path.join(mmcconfdir, 'apache', 'mmc.conf'), self.distro_handler.apache_dir)
+            apache_srv = SrvApache(self.distro_handler, self.config)
+            apache_srv.reload()
+
+    def restart_services(self):
+        for srv in self.services:
+            if srv.is_enable:
+                srv.restart()
+
+    def is_service_started(self, service):
+
+        """
+            Check if a service is started.
+
+            :param service: This is the name of the service
+            :return: return True is the service exist and is started, False otherwise
+            :rtype: boolean
+        """
+        log.debug(f'Looking if service {service} is started')
+        try:
+            status = check_output(["systemctl", "is-active", service])
+            if status.strip('\n') == 'active':
+                log.debug(f'The service {service} is started')
+                return True
+        except CalledProcessError:
+            log.debug(f'The service {service} does not exist')
+            return False
+
+        log.debug(f'The service {service} is not started')
+        return False
+
+    def post_restart(self):
+
+        self.is_service_started('mmc-agent')
+        self.is_service_started('medulla-package-server')
+        time.sleep(10)
+
+        # Register imaging server, if necessary
+        if self.config['package.service.enable']:
+            binpath = path_lookup('medulla-package-server-register-imaging')
+            ps_conf = self.confs['medulla/package-server/package-server.ini']
+            basecmd = f"{binpath} -m https://{ps_conf.get('mmc_agent', 'username')}:{ps_conf.get('mmc_agent', 'password')}@{ps_conf.get('mmc_agent', 'host')}:{ps_conf.get('mmc_agent', 'port')} "
+            cmd = f'{basecmd}--check'
+            log.debug(f'Call: {cmd}')
+            if call(cmd, shell=True) == 0:
+                # This uuid is not registered
+                log.info('Registering imaging server')
+                cmd = basecmd + '--name \'Local imaging server\''
+                log.debug(f'Call: {cmd}')
+                if call(cmd, shell=True) != 0:
+                    log.error('Can not register imaging server')
+            else:
+                log.info('Imaging server already registered')
+
+        binpath = path_lookup('medulla-create-group')
+        grp_name = self.config['defaultUserGroup']
+        cmd = f"{binpath} '{grp_name}'"
+        log.debug(f'Call: {cmd}')
+        if call(cmd, shell=True) != 0:
+            log.error(f"Unable to create group '{grp_name}'")
+        else:
+            log.info(f"Group {grp_name} successfully created")
+
+    def commit(self):
+        """ Write down all config files
+        """
+        for (path, conf) in list(self.confs.items()):
+            conf.config = apply_conf_diff(self.orig_confs[path].config, conf.config)
+            if len(conf.config) == 0:
+                # if empty local config do not generate
+                continue
+
+            conf.commit()
+            # config restore
+            self.confs[path].config = apply_conf_diff(self.orig_confs[path].config,
+                                                      conf.config,
+                                                      only_override=True)
+
+    def run(self):
+        """ Run setup
+        """
+        log.info("Load values from config")
+        self.load_defaults()
+        self.read_config()
+
+        log.info("Run setup")
+        self.init_db()
+        if self.config["glpi.plugin.enable"] :
+            self.init_glpi()
+        self.init_ldap()
+        self.init_misc()
+
+        # FIXME
+        # Workaround timeout calls to the mmc agent when
+        # medulla-package-server-register-imaging is run
+        self.confs['agent/config.ini'].set('main', 'multithreading', '0')
+
+        self.commit()
+        self.restart_services()
+        self.post_restart()
+
+        # End Workaround
+        self.confs['agent/config.ini'].set('main', 'multithreading', '1')
+        self.confs['agent/config.ini'].commit()
+        for srv in self.services:
+            if srv.name == "mmc-agent":
+                srv.restart()
+
+
+if __name__ == '__main__':
+    parser = OptionParser()
+    parser.add_option("-d", "--debug", action="store_true", dest="debug", default=False,
+                      help="Print debug messages")
+    parser.add_option("-b", "--batch", action="store_true", dest="batch", default=False,
+                      help="Do not ask any question. Uses the default config files.")
+    parser.add_option("-R", "--reset-conf", action="store_true", dest="reset_conf", default=False,
+                      help="Reset configuration")
+    parser.add_option("--reset-db", action="store_true", dest="reset_db", default=False,
+                      help="Reset all databases (imaging, inventory, dyngroup...)")
+    parser.add_option("--mysql-host", dest="dbhost",
+                      help="MySQL server hostname")
+    parser.add_option("--mysql-port", dest="dbport",
+                      help="MySQL server port number")
+    parser.add_option("--mysql-user", dest="dbadminuser",
+                      help="MySQL administrator username")
+    parser.add_option("--mysql-passwd", dest="dbadminpasswd",
+                      help="MySQL administrator password")
+    parser.add_option("--ldap-uri", dest="ldapurl",
+                      help="LDAP uri")
+    parser.add_option("--ldap-basedn", dest="ldapbasedn",
+                      help="LDAP base DN")
+    parser.add_option("--ldap-admindn", dest="ldapadmindn",
+                      help="LDAP admin DN")
+    parser.add_option("--ldap-passwd", dest="ldappasswd",
+                      help="LDAP administrator password")
+    parser.add_option("--disable-inventory", dest="disable_inventory",
+                      default=False, action="store_true",
+                      help="Disable inventory server")
+    parser.add_option("--disable-package", dest="disable_package",
+                      default=False, action="store_true",
+                      help="Disable package server")
+    parser.add_option("--disable-backup", dest="disable_backup",
+                      default=False, action="store_true",
+                      help="Disable backup server")
+    parser.add_option("--glpi-enable", dest="enable_glpi",
+                      default=False, action="store_true",
+                      help="Enable GLPI plugin")
+    parser.add_option("--glpi-purge-machines", dest="glpi_purge_machines",
+                      default=False, action="store_true",
+                      help="Purge machines from dustbin in GLPI when they are deleted in Medulla")
+    parser.add_option("--glpi-webservices-user", dest="glpi_webservices_user",
+                      help="GLPI Webservices user")
+    parser.add_option("--glpi-webservices-passwd", dest="glpi_webservices_passwd",
+                      help="GLPI Webservices password")
+    parser.add_option("--glpi-url", dest="glpiurl",
+                      help="GLPI url")
+    parser.add_option("--glpi-dbhost", dest="glpidbhost",
+                      help="MySQL server hostname")
+    parser.add_option("--glpi-dbport", dest="glpidbport",
+                      help="MySQL server port number")
+    parser.add_option("--glpi-dbname", dest="glpidbname",
+                      help="MySQL server database name")
+    parser.add_option("--glpi-dbuser", dest="glpidbuser",
+                      help="MySQL administrator username")
+    parser.add_option("--glpi-dbpasswd", dest="glpidbpasswd",
+                      help="MySQL administrator password")
+    parser.add_option("--external-ip-address", dest="ipexternal",
+                      help="Set an external IP Address used in package-server.ini")
+
+    # Parse and analyse args
+    (options, args) = parser.parse_args()
+    level = logging.DEBUG if options.debug else logging.INFO
+    # Init logger
+    hdlr2 = logging.StreamHandler()
+    hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
+    hdlr2.setLevel(level)
+    log.addHandler(hdlr2)
+    log.setLevel(level)
+
+    # Runtime options
+    config = {
+        'batch': options.batch,
+        'reset_conf': options.reset_conf,
+        'reset_db': options.reset_db,
+        'dbhost': options.dbhost,
+        'dbport': options.dbport,
+        'dbadminuser': options.dbadminuser,
+        'dbadminpasswd': options.dbadminpasswd,
+        'ldapurl': options.ldapurl,
+        'ldapbasedn': options.ldapbasedn,
+        'ldapadmindn': options.ldapadmindn,
+        'ldappasswd': options.ldappasswd,
+        'server_inventory': not options.disable_inventory,
+        'server_package': not options.disable_package,
+        'server_backup': not options.disable_backup,
+        'glpi_enable': options.enable_glpi,
+        'glpi_purge_machines': options.glpi_purge_machines,
+        'glpi_webservices_user': options.glpi_webservices_user,
+        'glpi_webservices_passwd': options.glpi_webservices_passwd,
+        'glpi_url': options.glpiurl,
+        'glpi_dbuser': options.glpidbuser,
+        'glpi_dbpassword': options.glpidbpasswd,
+        'glpi_dbname': options.glpidbname,
+        'glpi_dbhost': options.glpidbhost,
+        'glpi_dbport': options.glpidbport,
+        'ipexternal': options.ipexternal,
+    }
+
+    # Run the setup app
+    app = SetupApp(config)
+    app.run()

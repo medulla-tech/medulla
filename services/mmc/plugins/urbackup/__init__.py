@@ -7,8 +7,8 @@ import base64
 import json
 import configparser
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
-from pulse2.database.urbackup import UrbackupDatabase
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.database.urbackup import UrbackupDatabase
 
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.urbackup.config import UrbackupConfig
@@ -68,7 +68,7 @@ def login():
 
 
 def check_client(jidmachine, clientid, authkey):
-    conf_file = "/var/lib/pulse2/clients/config/updatebackupclient.ini"
+    conf_file = "/var/lib/medulla/clients/config/updatebackupclient.ini"
 
     urbackup_conf = configparser.ConfigParser()
     urbackup_conf.read(conf_file)
@@ -85,7 +85,7 @@ def check_client(jidmachine, clientid, authkey):
         + str(urbackup_server)
         + " & echo backup_port = "
         + str(urbackup_port)
-        + ") > C:\progra~1\pulse\etc\\updatebackupclient.ini"
+        + ") > C:\progra~1\medulla\etc\\updatebackupclient.ini"
     )
 
     callremotecommandshell(jidmachine, command)
@@ -101,7 +101,7 @@ def check_client(jidmachine, clientid, authkey):
 
 
 def remove_client(jidmachine):
-    command = "(echo [parameters] & echo backup_enabled = 0 ) > C:\progra~1\pulse\etc\\updatebackupclient.ini"
+    command = "(echo [parameters] & echo backup_enabled = 0 ) > C:\progra~1\medulla\etc\\updatebackupclient.ini"
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")

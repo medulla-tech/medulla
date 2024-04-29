@@ -1,6 +1,6 @@
 The client part can (and will) access the following folders
- * <pulse 2 var>/computers/<computer_uuid>, Read/Write
- * <pulse 2 var>/masters/<image_uuid>, Read/Write
- * <pulse 2 var>/postinstall, Read Only
+ * <medulla 2 var>/computers/<computer_uuid>, Read/Write
+ * <medulla 2 var>/masters/<image_uuid>, Read/Write
+ * <medulla 2 var>/postinstall, Read Only
 
 Just append the sample on your /etc/exports

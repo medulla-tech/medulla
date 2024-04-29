@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2022-2023 Siveo <support@siveo.net>uuuuuuu
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# This script is used to generate update packages in /var/lib/pulse2/packages
+# This script is used to generate update packages in /var/lib/medulla/packages
 
 from datetime import datetime
 
@@ -321,7 +321,7 @@ if __name__ == "__main__":
         "-o",
         "--outputdir",
         dest="outputdir",
-        default="/var/lib/pulse2/packages/sharing/",
+        default="/var/lib/medulla/packages/sharing/",
         help="path directory generation package",
     )
 
@@ -377,7 +377,7 @@ if __name__ == "__main__":
         if not opts.show_parametre:
             sys.exit(1)
 
-    if opts.outputdir == "/var/lib/pulse2/packages/sharing/":
+    if opts.outputdir == "/var/lib/medulla/packages/sharing/":
         opts.outputdir = os.path.join(opts.outputdir, opts.table_name)
 
     file_handler = logging.FileHandler(filename=opts.logfile)
@@ -421,10 +421,10 @@ if __name__ == "__main__":
             "\t Creation des packages depuis la table xmppmaster.up_packages_Win10_X64_21H2"
         )
         print(
-            "\t dans repertoire /var/lib/pulse2/packages/sharing/up_packages_Win10_X64_21H2"
+            "\t dans repertoire /var/lib/medulla/packages/sharing/up_packages_Win10_X64_21H2"
         )
         print(
-            "\t\tpython3 ./medulla-generate-update-package.py -p siveo -Tup_packages_Win10_X64_21H2 -o/var/lib/pulse2/packages/sharing/packages_Win10_X64_21H2 -q -d"
+            "\t\tpython3 ./medulla-generate-update-package.py -p siveo -Tup_packages_Win10_X64_21H2 -o/var/lib/medulla/packages/sharing/packages_Win10_X64_21H2 -q -d"
         )
         sys.exit(1)
 

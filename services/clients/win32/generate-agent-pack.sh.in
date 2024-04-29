@@ -3,7 +3,7 @@
 # Copyright (C) 2012 Mandriva S.A
 # http://www.mandriva.com
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 #
-# Build a self-extractible Pulse2 agent pack for win32
+# Build a self-extractible Medulla2 agent pack for win32
 #
 # Includes:
 #  - secure agent
@@ -38,8 +38,8 @@ vnc_ver=2.7.10
 inv_ver=2.3.18
 
 # Compute filenames
-ssh_file=pulse2-secure-agent-${ssh_ver}.exe
-vnc_file=pulse2-rda-agent-${vnc_ver}.msi
+ssh_file=medulla-secure-agent-${ssh_ver}.exe
+vnc_file=medulla-rda-agent-${vnc_ver}.msi
 inv_file=inventory-agent-${inv_ver}.exe
 sfx_file=7zsd.sfx
 
@@ -57,7 +57,7 @@ sfx_url=https://agents.siveo.net/win/${sfx_file}
 
 
 # Unfortunately, MSI agent service is no more alive :-(
-# the idea was to provide a service to generate MSI version of Pulse's agents
+# the idea was to provide a service to generate MSI version of Medulla's agents
 # Maybe it will rebirth later...
 #msi_webservice_url=http://msi-agents.mandriva.com/
 
@@ -120,22 +120,22 @@ else
 fi
 
 # Common cleaning
-rm -f pulse2-win32-agents-installer.exe \
-      pulse2-win32-agents-installer.nsi \
+rm -f medulla-win32-agents-installer.exe \
+      medulla-win32-agents-installer.nsi \
       sfx.conf.silent \
       sfx.conf \
       base.7z
 
 # Theses old files may exists as well
-rm -rf pulse2-win32-agents-pack
+rm -rf medulla-win32-agents-pack
 
 # Are we cleaning the directory ?
 if [ ${clean} -eq 1 ]; then
 
   # Clean agents and pack
-  rm -f pulse2-secure-agent-*.exe \
-        pulse2-rda-agent-*.exe \
-        pulse2-rda-agent-*.msi \
+  rm -f medulla-secure-agent-*.exe \
+        medulla-rda-agent-*.exe \
+        medulla-rda-agent-*.msi \
         inventory-agent-*.exe \
         7zsd.sfx
 
@@ -225,18 +225,18 @@ if [ ! ${download_only} -eq 1 ]; then
     my_fqdn=""
     echo "Trying to guess an IP address instead..."
     echo
-    if [ ! -e "@sysconfdir@/mmc/pulse2/package-server/package-server.ini" ]; then
-      echo "Cannot find @sysconfdir@/mmc/pulse2/package-server/package-server.ini"
-      echo "Is Pulse2 really installed ?"
+    if [ ! -e "@sysconfdir@/mmc/medulla/package-server/package-server.ini" ]; then
+      echo "Cannot find @sysconfdir@/mmc/medulla/package-server/package-server.ini"
+      echo "Is Medulla2 really installed ?"
       echo
       exit 1
     else
       # Read public_ip parameters
-      test -f /etc/mmc/pulse2/package-server/package-server.ini.local && \
-        my_fqdn=`grep -E '^public_ip[[:space:]]*=' /etc/mmc/pulse2/package-server/package-server.ini.local | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
+      test -f /etc/mmc/medulla/package-server/package-server.ini.local && \
+        my_fqdn=`grep -E '^public_ip[[:space:]]*=' /etc/mmc/medulla/package-server/package-server.ini.local | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
       if [ -z ${my_fqdn} ]; then
-        test -f /etc/mmc/pulse2/package-server/package-server.ini && \
-        my_fqdn=`grep -E '^public_ip[[:space:]]*=' /etc/mmc/pulse2/package-server/package-server.ini | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
+        test -f /etc/mmc/medulla/package-server/package-server.ini && \
+        my_fqdn=`grep -E '^public_ip[[:space:]]*=' /etc/mmc/medulla/package-server/package-server.ini | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
       fi
       # Still empty ?!?!?
       if [ -z ${my_fqdn} ]; then
@@ -252,7 +252,7 @@ if [ ! ${download_only} -eq 1 ]; then
   fi
 fi
 
-# pulse2-secure-agent download
+# medulla-secure-agent download
 if [ -e "${ssh_file}" ]; then
   echo
   echo "${ssh_file} already available. Skipping download."
@@ -270,7 +270,7 @@ else
   fi
 fi
 
-# pulse2-rda-agent download
+# medulla-rda-agent download
 if [ -e "${vnc_file}" ]; then
   echo
   echo "${vnc_file} already available. Skipping download."
@@ -325,29 +325,29 @@ else
 fi
 
 if [ ! ${download_only} -eq 1 ]; then
-  # Generate pulse2-win32-agents-installer.exe
+  # Generate medulla-win32-agents-installer.exe
   sed -e "s/@@ssh_file@@/${ssh_file}/" \
       -e "s/@@vnc_file@@/${vnc_file}/" \
       -e "s/@@inv_file@@/${inv_file}/" \
       -e "s/@@inv_tag@@/${inv_tag}/" \
-      pulse2-win32-agents-installer.nsi.in \
-      > pulse2-win32-agents-installer.nsi
+      medulla-win32-agents-installer.nsi.in \
+      > medulla-win32-agents-installer.nsi
 
   # Compile NSIS
   echo
   echo "Compiling NSIS installer..."
   echo
-  makensis -V1 pulse2-win32-agents-installer.nsi
+  makensis -V1 medulla-win32-agents-installer.nsi
 
   # Creating base.7z archive
   echo "Creating base 7z archive..."
-  7z a base.7z ${ssh_file} ${vnc_file} ${inv_file} pulse2-win32-agents-installer.exe /root/.ssh/id_rsa.pub
+  7z a base.7z ${ssh_file} ${vnc_file} ${inv_file} medulla-win32-agents-installer.exe /root/.ssh/id_rsa.pub
 
   # Create agents pack exe
   if [ -n "${tag}" ]; then
-    generated_file=pulse2-win32-agents-pack-${tag}.exe
+    generated_file=medulla-win32-agents-pack-${tag}.exe
   else
-    generated_file=pulse2-win32-agents-pack.exe
+    generated_file=medulla-win32-agents-pack.exe
   fi
   sed -e "s/@@inv_server@@/${my_fqdn}/" \
       -e "s/@@inv_server_port@@/9999/" \
@@ -359,9 +359,9 @@ if [ ! ${download_only} -eq 1 ]; then
 
   # Create agents pack exe (silent)
   if [ -n "${tag}" ]; then
-    generated_file=pulse2-win32-agents-pack-silent-${tag}.exe
+    generated_file=medulla-win32-agents-pack-silent-${tag}.exe
   else
-    generated_file=pulse2-win32-agents-pack-silent.exe
+    generated_file=medulla-win32-agents-pack-silent.exe
   fi
   sed -e "s/@@inv_server@@/${my_fqdn}/" \
       -e "s/@@inv_server_port@@/9999/" \
@@ -374,9 +374,9 @@ if [ ! ${download_only} -eq 1 ]; then
 
   # Create agents pack exe (no prompt)
   if [ -n "${tag}" ]; then
-    generated_file=pulse2-win32-agents-pack-noprompt-${tag}.exe
+    generated_file=medulla-win32-agents-pack-noprompt-${tag}.exe
   else
-    generated_file=pulse2-win32-agents-pack-noprompt.exe
+    generated_file=medulla-win32-agents-pack-noprompt.exe
   fi
   sed -e "s/@@inv_server@@/${my_fqdn}/" \
       -e "s/@@inv_server_port@@/9999/" \
@@ -391,9 +391,9 @@ if [ ! ${download_only} -eq 1 ]; then
   if [ -z "${tag}" ]; then
     postinstall_dir="../../imaging/postinst"
     if [ -d ${postinstall_dir} ]; then
-      cp pulse2-win32-agents-pack.exe \
-         pulse2-win32-agents-pack-silent.exe \
-         pulse2-win32-agents-pack-noprompt.exe \
+      cp medulla-win32-agents-pack.exe \
+         medulla-win32-agents-pack-silent.exe \
+         medulla-win32-agents-pack-noprompt.exe \
          ${postinstall_dir}/winutils/
       cp /root/.ssh/id_rsa.pub ${postinstall_dir}/winutils/
       cp /root/.ssh/id_rsa.pub ${postinstall_dir}/macutils/
@@ -407,6 +407,6 @@ if [ ! ${download_only} -eq 1 ]; then
 
   # Generating msi agents
   # echo " Generating MSI silent agents ..."
-  # curl --progress-bar -o pulse2_agents_silent.msi --data-urlencode "ip=$my_fqdn" --data-urlencode "tag=$tag" --data-urlencode "key@/root/.ssh/id_rsa.pub" $msi_webservice_url
+  # curl --progress-bar -o medulla_agents_silent.msi --data-urlencode "ip=$my_fqdn" --data-urlencode "tag=$tag" --data-urlencode "key@/root/.ssh/id_rsa.pub" $msi_webservice_url
 
 fi

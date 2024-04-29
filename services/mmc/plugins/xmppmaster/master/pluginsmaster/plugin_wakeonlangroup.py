@@ -5,7 +5,7 @@
 
 # file pluginsmaster/plugin_wakeonlangroup.py
 import json
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 import traceback
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
 import logging

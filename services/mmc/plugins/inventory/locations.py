@@ -7,8 +7,8 @@ Contains location related classes and methods.
 """
 
 import logging
-from pulse2.managers.location import ComputerLocationI
-from pulse2.database.inventory import Inventory
+from medulla.managers.location import ComputerLocationI
+from medulla.database.inventory import Inventory
 
 
 class InventoryLocation(ComputerLocationI):

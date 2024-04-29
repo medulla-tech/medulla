@@ -3,20 +3,20 @@
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://www.siveo.net/
+-- This file is part of Medulla 2, http://www.siveo.net/
 --
--- Pulse 2 is free software; you can redistribute it and/or modify
+-- Medulla 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation; either version 2 of the License, or
 -- (at your option) any later version.
 --
--- Pulse 2 is distributed in the hope that it will be useful,
+-- Medulla 2 is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
+-- along with Medulla 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`syncthing_deploy_group` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
--- "path": "/var/lib/pulse2/packages/66836348-85c7-11e9-950b-000c292ae18d",
+-- "path": "/var/lib/medulla/packages/66836348-85c7-11e9-950b-000c292ae18d",
 -- -----------------------------------------------------
 -- Table `xmppmaster`.`syncthing_ars_cluster`
 -- -----------------------------------------------------

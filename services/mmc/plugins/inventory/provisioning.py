@@ -10,7 +10,7 @@ import os.path
 import imp
 
 from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
-from pulse2.database.inventory import Inventory
+from medulla.database.inventory import Inventory
 from mmc.support.mmctools import getConfigFile
 
 

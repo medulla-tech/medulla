@@ -2,27 +2,27 @@
 #
 # (c) 20118 Siveo, http://www.siveo.net
 #
-# This file is part of Pulse 2
+# This file is part of Medulla 2
 #
-# Pulse 2 is free software; you can redistribute it and/or modify
+# Medulla 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# Pulse 2 is distributed in the hope that it will be useful,
+# Medulla 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
+# along with Medulla 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
 # file :  /usr/sbin/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 # ce programme deinsctalle les packages qui ne sont plus en gray list ou white list.
 # ces paquages sont considérés comme plus utile
-# Il sont en attente en base fichier dans directory  /var/lib/pulse2/base_update_package
+# Il sont en attente en base fichier dans directory  /var/lib/medulla/base_update_package
 
 defaultvalus(){
     user=root
@@ -37,7 +37,7 @@ defaultvalus(){
     BASENAME=$(basename "$0")
     prog="/usr/sbin/medulla-mariadb-move-update-package.py"
     pythonexec=$(which python3)
-    baseupdate="/var/lib/pulse2/base_update_package"
+    baseupdate="/var/lib/medulla/base_update_package"
     partage="winupdates"
     logfile="/var/log/mmc/medulla_mysql_exec_uninstall_unnecessary_update_package.log"
     fileconf="/etc/mmc/plugins/xmppmaster.ini"

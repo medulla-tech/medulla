@@ -10,7 +10,7 @@ from subprocess import call
 from distutils.file_util import copy_file
 
 VERSION = "0.1"
-NAME = "Pulse2 Agent"
+NAME = "Medulla2 Agent"
 
 
 class DefaultsFiller(object):
@@ -29,8 +29,8 @@ class DefaultsFiller(object):
     param2 = @@PARAM2@@
     """
 
-    config_file = "/etc/pulse2agent.ini"
-    defaults_file = "pulse2agent.defaults"
+    config_file = "/etc/medullaagent.ini"
+    defaults_file = "medullaagent.defaults"
 
     DELIMITER = "="
 
@@ -96,7 +96,7 @@ class DefaultsFiller(object):
         # pattern = {"PULSE2_CM_SERVER": "192.168.127.10",
         #            "PULSE2_CM_PORT": "8443",
         #            "VPNCMD_PATH": "/opt/vpnclient/vpncmd",
-        #            "PULSE2_CM_LOG_PATH": "/var/log/pulse2agent.log",
+        #            "PULSE2_CM_LOG_PATH": "/var/log/medullaagent.log",
         #            }
         pattern = self.get_defaults()
         return self.replace(pattern)
@@ -126,7 +126,7 @@ class DefaultsFiller(object):
 class PostInstallPosixHandler(object):
     """Abstract class to generalize different startup systems"""
 
-    SCRIPT_NAME = "pulse2-agent"
+    SCRIPT_NAME = "medulla-agent"
     current_directory = None
 
     system_management = None
@@ -224,9 +224,9 @@ class PostInstallSystemVHandler(PostInstallPosixHandler):
     start_service_cmd = f"/etc/init.d/{PostInstallPosixHandler.SCRIPT_NAME} start"
 
     include_files = [
-        ("linux/pulse2-agent.init.lsb", "/etc/init.d/pulse2-agent"),
-        ("linux/pulse2-agent.default", "/etc/default/pulse2-agent"),
-        ("pulse2agent.ini", "/etc/pulse2agent.ini"),
+        ("linux/medulla-agent.init.lsb", "/etc/init.d/medulla-agent"),
+        ("linux/medulla-agent.default", "/etc/default/medulla-agent"),
+        ("medullaagent.ini", "/etc/medullaagent.ini"),
     ]
 
 
@@ -237,9 +237,9 @@ class PostInstallSysCtlHandler(PostInstallPosixHandler):
     start_service_cmd = f"/etc/init.d/{PostInstallPosixHandler.SCRIPT_NAME} start"
 
     include_files = [
-        ("linux/pulse2-agent.init", "/etc/init.d/pulse2-agent"),
-        ("linux/pulse2-agent.default", "/etc/default/pulse2-agent"),
-        ("pulse2agent.ini", "/etc/pulse2agent.ini"),
+        ("linux/medulla-agent.init", "/etc/init.d/medulla-agent"),
+        ("linux/medulla-agent.default", "/etc/default/medulla-agent"),
+        ("medullaagent.ini", "/etc/medullaagent.ini"),
     ]
 
 
@@ -254,8 +254,8 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
     )
 
     include_files = [
-        ("linux/pulse2-agent.service", "/lib/systemd/system/"),
-        ("pulse2agent.ini", "/etc/pulse2agent.ini"),
+        ("linux/medulla-agent.service", "/lib/systemd/system/"),
+        ("medullaagent.ini", "/etc/medullaagent.ini"),
     ]
 
     def post_copy_tasks(self):
@@ -271,11 +271,11 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
 class PostInstallOSXHandler(PostInstallPosixHandler):
     """Mac OS X handler"""
 
-    insert_service_cmd = "/bin/launchd load com.pulse2.agent"
+    insert_service_cmd = "/bin/launchd load com.medulla.agent"
 
     include_files = [
-        ("mac/com.pulse2.agent.plist", "/Library/LaunchDaemons"),
-        ("pulse2agent.ini", "/etc/pulse2agent.ini"),
+        ("mac/com.medulla.agent.plist", "/Library/LaunchDaemons"),
+        ("medullaagent.ini", "/etc/medullaagent.ini"),
     ]
 
 
@@ -308,7 +308,7 @@ class SystemManagementResolver(object):
 
 
 if sys.platform in ("linux2", "darwin"):
-    SCRIPT_NAME = "pulse2-agent"
+    SCRIPT_NAME = "medulla-agent"
     from distutils.core import setup
     from distutils.command.install import install as _install
 
@@ -336,8 +336,8 @@ if sys.platform in ("linux2", "darwin"):
         name=NAME,
         version=VERSION,
         description=NAME,
-        packages=["pulse2agent"],
-        scripts=["pulse2-agent"],
+        packages=["medullaagent"],
+        scripts=["medulla-agent"],
         cmdclass={"install": Install},
     )
 
@@ -347,9 +347,9 @@ elif sys.platform == "win32":
 
     executables = [
         Executable(
-            "pulse2agent/config.py",
+            "medullaagent/config.py",
             base="Win32Service",
-            packages=["pulse2agent"],
+            packages=["medullaagent"],
             targetName="service.exe",
         )
     ]
@@ -357,7 +357,7 @@ elif sys.platform == "win32":
         "service",
     ]
     include_files = [
-        "pulse2agent.ini",
+        "medullaagent.ini",
     ]
     build_options = dict(
         includes=include_modules, include_files=include_files, include_msvcr=1

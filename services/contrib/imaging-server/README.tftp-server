@@ -13,9 +13,9 @@ We uses it because :
 
 Some words about which configuration to use :
  * mandatory options :
-   * serve files from /var/lib/pulse2/imaging
-   * --pcre /etc/mmc/pulse2/atftp/pcre.conf
-   * --logfile /var/log/mmc/atftpd.log : another a pulse 2 convention, to keep log files in a unique folder
+   * serve files from /var/lib/medulla/imaging
+   * --pcre /etc/mmc/medulla/atftp/pcre.conf
+   * --logfile /var/log/mmc/atftpd.log : another a medulla 2 convention, to keep log files in a unique folder
 
 Don't forget to set up the multicast routes, f.e. by adding "up route add -net 224.0.0.0 netmask 240.0.0.0 dev eth0" (debian systems).
 

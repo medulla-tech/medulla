@@ -9,7 +9,7 @@ import logging
 import traceback
 import types
 import configparser
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 
 logger = logging.getLogger()
 DEBUGPULSEPLUGIN = 25

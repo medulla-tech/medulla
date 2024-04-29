@@ -9,7 +9,7 @@ It provides methods to know which scheduler to contact for a computer.
 import logging
 from mmc.plugins.msc.config import MscConfig
 from mmc.support.mmctools import Singleton
-import pulse2.apis.clients.scheduler_api
+import medulla.apis.clients.scheduler_api
 
 
 class SchedulerApi(Singleton):
@@ -46,7 +46,7 @@ class SchedulerApi(Singleton):
             self.logger.debug("SchedulerApi will connect to %s" % (self.server_addr))
 
             if self.config.sa_verifypeer:
-                self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(
+                self.internal = medulla.apis.clients.scheduler_api.SchedulerApi(
                     MscConfig().default_scheduler,
                     credentials,
                     self.server_addr,
@@ -55,7 +55,7 @@ class SchedulerApi(Singleton):
                     self.config.sa_localcert,
                 )
             else:
-                self.internal = pulse2.apis.clients.scheduler_api.SchedulerApi(
+                self.internal = medulla.apis.clients.scheduler_api.SchedulerApi(
                     MscConfig().default_scheduler, credentials, self.server_addr
                 )
 

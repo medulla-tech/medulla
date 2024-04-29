@@ -74,7 +74,7 @@ if (safeCount($_POST) > 0) {
     if ($task == "edit"){
         /*
          * First step, we edit postinstall script on database
-         * Second step, we must edit postinstall script on /var/lib/pulse2/imaging/master/postinst.d/
+         * Second step, we must edit postinstall script on /var/lib/medulla/imaging/master/postinst.d/
          * To do this, we have to check if a machine have a linked master with this postinstall script
          * If True, synchronize bootmenu of this computer will update postinstall script
          * We do this for each master who have postinstall script attached

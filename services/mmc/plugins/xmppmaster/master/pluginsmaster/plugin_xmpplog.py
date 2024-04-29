@@ -5,7 +5,7 @@
 
 import json
 import logging
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 import traceback
 import re
 

@@ -24,7 +24,7 @@
 export LANG=C
 export LC_ALL=C
 
-echo "Pulse2 auto-installation script"
+echo "Medulla2 auto-installation script"
 echo
 
 if [ ! -f "/etc/init.d/mmc-agent" ];
@@ -152,13 +152,13 @@ if [ -z $TMPCO ];
     TMPCO=`mktemp -d`
     TMPREMOVE=1
     pushd $TMPCO
-    # Check out Pulse 2 source
-    svn co https://mds.mandriva.org/svn/mmc-projects/pulse2/server/trunk pulse2
+    # Check out Medulla 2 source
+    svn co https://mds.mandriva.org/svn/mmc-projects/medulla/server/trunk medulla
 else
     pushd $TMPCO
 fi
 
-pushd pulse2
+pushd medulla
 make install PREFIX=/usr
 popd
 
@@ -171,14 +171,14 @@ export MYSQL_HOST=localhost
 export MYSQL_USER=root
 export MYSQL_PWD=
 
-# Create database pulse2
-pushd $TMPCO/pulse2/services/contrib/pulse2/sql/
-export MYSQL_BASE=pulse2
+# Create database medulla
+pushd $TMPCO/medulla/services/contrib/medulla/sql/
+export MYSQL_BASE=medulla
 ./install.sh
 popd
 
 # Create database msc and configure msc.ini
-pushd $TMPCO/pulse2/services/contrib/msc/sql/
+pushd $TMPCO/medulla/services/contrib/msc/sql/
 export MYSQL_BASE=msc
 ./install.sh
 sed -i "s/#\[main\]/\[main\]/" /etc/mmc/plugins/msc.ini
@@ -188,7 +188,7 @@ sed -i "/\[scheduler_api\]/{n; s/host = 127.0.0.1/host = $IPADDRESS/}" /etc/mmc/
 popd
 
 # Create database dyngroup and configure dyngroup.ini
-pushd $TMPCO/pulse2/services/contrib/dyngroup/sql/
+pushd $TMPCO/medulla/services/contrib/dyngroup/sql/
 export MYSQL_BASE=dyngroup
 ./install.sh
 sed -i "s/# default_module = /default_module = inventory/" /etc/mmc/plugins/dyngroup.ini
@@ -196,7 +196,7 @@ sed -i "s/activate = 0/activate = 1/" /etc/mmc/plugins/dyngroup.ini
 popd
 
 # Create database inventory and configure inventory.ini
-pushd $TMPCO/pulse2/services/contrib/inventory/sql/
+pushd $TMPCO/medulla/services/contrib/inventory/sql/
 export MYSQL_BASE=inventory
 ./install.sh
 sed -i "s/disable = 1/disable = 0/" /etc/mmc/plugins/inventory.ini
@@ -207,7 +207,7 @@ sed -i "s/# halfstatic =/halfstatic =/" /etc/mmc/plugins/inventory.ini
 popd
 
 # Create database imaging and configure imaging.ini
-pushd $TMPCO/pulse2/services/contrib/imaging/sql/
+pushd $TMPCO/medulla/services/contrib/imaging/sql/
 export MYSQL_BASE=imaging
 ./install.sh
 popd
@@ -221,7 +221,7 @@ GRANT ALL PRIVILEGES ON inventory.* TO 'mmc'@'localhost'
 IDENTIFIED BY 'mmc' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON imaging.* TO 'mmc'@'localhost'
 IDENTIFIED BY 'mmc' WITH GRANT OPTION;
-GRANT ALL PRIVILEGES ON pulse2.* TO 'mmc'@'localhost'
+GRANT ALL PRIVILEGES ON medulla.* TO 'mmc'@'localhost'
 IDENTIFIED BY 'mmc' WITH GRANT OPTION;
 FLUSH PRIVILEGES
 EOF
@@ -251,22 +251,22 @@ mkdir -p /tmp/package_tmp/put1/test1
 mkdir -p /tmp/package_tmp/put1/test2
 
 # Package server configuration
-sed -i "6s/^# host =/host = $IPADDRESS/" /etc/mmc/pulse2/package-server/package-server.ini
-sed -i "s/# \[imaging_api\]/\[imaging_api\]/" /etc/mmc/pulse2/package-server/package-server.ini
+sed -i "6s/^# host =/host = $IPADDRESS/" /etc/mmc/medulla/package-server/package-server.ini
+sed -i "s/# \[imaging_api\]/\[imaging_api\]/" /etc/mmc/medulla/package-server/package-server.ini
 UUID=`uuidgen`
-sed -i "s/# uuid = PLEASE_PUT_A_UUID_FOR_THAT_SERVER/uuid = $UUID/" /etc/mmc/pulse2/package-server/package-server.ini
+sed -i "s/# uuid = PLEASE_PUT_A_UUID_FOR_THAT_SERVER/uuid = $UUID/" /etc/mmc/medulla/package-server/package-server.ini
 # Copy quick actions
-mkdir -p /var/lib/pulse2/qactions
-cp $TMPCO/pulse2/services/contrib/msc/quick_actions/* /var/lib/pulse2/qactions/
+mkdir -p /var/lib/medulla/qactions
+cp $TMPCO/medulla/services/contrib/msc/quick_actions/* /var/lib/medulla/qactions/
 
 # Config pkgs.ini
 sed -i "s/server = localhost/server = $IPADDRESS/" /etc/mmc/plugins/pkgs.ini
 
 # Imaging server configuration
 # Hooks directory
-sed -i "s|# hooks_dir = /usr/local|hooks_dir = /usr|" /etc/mmc/pulse2/imaging-server/imaging-server.ini
+sed -i "s|# hooks_dir = /usr/local|hooks_dir = /usr|" /etc/mmc/medulla/imaging-server/imaging-server.ini
 # Package Server IP address
-sed -i "s/# host = 127.0.0.1/host = $IPADDRESS/" /etc/mmc/pulse2/imaging-server/imaging-server.ini
+sed -i "s/# host = 127.0.0.1/host = $IPADDRESS/" /etc/mmc/medulla/imaging-server/imaging-server.ini
 
 # Generate SSH key if not available
 if [ ! -f /root/.ssh/id_dsa ];
@@ -277,7 +277,7 @@ then
 fi
 
 # Set NFS exports, and restart NFS services
-cp $TMPCO/pulse2/services/contrib/imaging-server/exports /etc/exports
+cp $TMPCO/medulla/services/contrib/imaging-server/exports /etc/exports
 if [ $DISTRIBUTION == "MandrivaLinux" ]; then
     if [ $RELEASE != "2006.0" ];
     then
@@ -291,7 +291,7 @@ if [ $DISTRIBUTION == "MandrivaLinux" ]; then
     if [ $RELEASE != "2006.0" ];
     then
     # Set ATFTPD root directory
-	sed -i "s|ATFTPD_DIRECTORY=\"/var/lib/tftpboot\"|ATFTPD_DIRECTORY=\"/var/lib/pulse2/imaging\"|" /etc/sysconfig/atftpd
+	sed -i "s|ATFTPD_DIRECTORY=\"/var/lib/tftpboot\"|ATFTPD_DIRECTORY=\"/var/lib/medulla/imaging\"|" /etc/sysconfig/atftpd
 	/etc/init.d/atftpd restart
     fi
 fi
@@ -301,13 +301,13 @@ fi
 rm -f /var/run/mmc-agent.pid
 /etc/init.d/mmc-agent start
 
-# Launch all service of Pulse 2
-echo "Launch Pulse 2's services"
-/etc/init.d/pulse2-package-server restart
-/etc/init.d/pulse2-launchers restart
-/etc/init.d/pulse2-scheduler restart
-/etc/init.d/pulse2-imaging-server restart
-/etc/init.d/pulse2-inventory-server restart
+# Launch all service of Medulla 2
+echo "Launch Medulla 2's services"
+/etc/init.d/medulla-package-server restart
+/etc/init.d/medulla-launchers restart
+/etc/init.d/medulla-scheduler restart
+/etc/init.d/medulla-imaging-server restart
+/etc/init.d/medulla-inventory-server restart
 
 =======
 if [ $DISTRIBUTION == "Debian" ]; then
@@ -448,7 +448,7 @@ mmc-helper audit check
 # Start MMC agent
 /etc/init.d/mmc-agent start
 
->>>>>>> old-project/merge_into_pulse
+>>>>>>> old-project/merge_into_medulla
 if [ ! -z $TMPREMOVE ];
     then
     rm -fr $TMPCO

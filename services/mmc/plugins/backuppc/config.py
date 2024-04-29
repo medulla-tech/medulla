@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from mmc.support.config import PluginConfig
-from pulse2.database.backuppc.config import BackuppcDatabaseConfig
+from medulla.database.backuppc.config import BackuppcDatabaseConfig
 
 
 class BackuppcConfig(PluginConfig, BackuppcDatabaseConfig):

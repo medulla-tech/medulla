@@ -21,7 +21,7 @@ def action(xmppobject, action, sessionid, data, msg, ret, dataobj):
         recipient = str(msg["from"].user)
         if data["useraccount"].startswith("conf"):
             logger.debug("Clear MUC conf account")
-            cmd = "ejabberdctl unregister %s pulse" % recipient
+            cmd = "ejabberdctl unregister %s medulla" % recipient
             unregister_command = simplecommandstr(cmd)
             logger.debug(unregister_command["result"])
             logger.info(

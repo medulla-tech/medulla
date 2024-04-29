@@ -1,5 +1,5 @@
 #!/bin/sh
-workdir=/tmp/pulse_agents_$(date +%N)/
+workdir=/tmp/medulla_agents_$(date +%N)/
 mkdir -p $workdir
 cd $workdir
 wget http://__SERVER__/downloads/linux/deb/deb_agent.tar.gz

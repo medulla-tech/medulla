@@ -7,7 +7,7 @@ import sys
 import json
 import logging
 import traceback
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 
 logger = logging.getLogger()
 

@@ -259,8 +259,8 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
 echo "<br><br><br>";
 
 // creation repertoire namemachine si non existe.
-// et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles
-// /machine25pulse
+// et recuperation pathcurent pour cette machine eg /var/lib/medulla/transfertfiles
+// /machine25medulla
 $lifdirlocal = xmlrpc_localfilesystem("");
 $filecurentdir = xmlrpc_create_local_dir_transfert($lifdirlocal['path_abs_current'], $ma['hostname']);
 $curentdir = $filecurentdir['path_abs_current'];

@@ -16,18 +16,18 @@ import re
 import os.path
 
 from mmc.support import mmctools
-from pulse2.database.msc.config import MscDatabaseConfig
-from pulse2.xmlrpc import isTwistedEnoughForLoginPass
-from pulse2.apis import makeURL
+from medulla.database.msc.config import MscDatabaseConfig
+from medulla.xmlrpc import isTwistedEnoughForLoginPass
+from medulla.apis import makeURL
 
 
 class MscConfig(MscDatabaseConfig):
     disable = True
 
     # default folder values
-    qactionspath = "/var/lib/pulse2/qactions"
-    repopath = "/var/lib/pulse2/packages"
-    download_directory_path = "/var/lib/pulse2/downloads"
+    qactionspath = "/var/lib/medulla/qactions"
+    repopath = "/var/lib/medulla/packages"
+    download_directory_path = "/var/lib/medulla/downloads"
 
     # Mirror API stuff
     ma_server = "127.0.0.1"
@@ -133,7 +133,7 @@ class MscConfig(MscDatabaseConfig):
     check_db_interval = 300
 
     # Windows Update command
-    wu_command = "/usr/share/pulse-update-manager/pulse-update-manager"
+    wu_command = "/usr/share/medulla-update-manager/medulla-update-manager"
 
     def init(self, name, conffile=None):
         self.name = name

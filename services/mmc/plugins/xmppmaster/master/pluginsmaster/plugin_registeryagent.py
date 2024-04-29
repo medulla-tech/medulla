@@ -16,8 +16,8 @@ import os
 import base64
 import json
 import logging
-from pulse2.database.kiosk import KioskDatabase
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.kiosk import KioskDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 import traceback
 
@@ -1163,7 +1163,7 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
     patternname = re.compile("(?i)" + packageprofile[0])
     for soft_glpi in list_software_glpi:
         # TODO
-        # Into the pulse package provide Vendor information for the software name
+        # Into the medulla package provide Vendor information for the software name
         # For now we use the package name which must match with glpi name
         if patternname.match(str(soft_glpi[0])) or patternname.match(str(soft_glpi[1])):
             # Process with this package which is installed on the machine
@@ -1175,7 +1175,7 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
             # compare the version
             # TODO
             # For now we use the package version.
-            # Later the software version will be needed into the pulse package
+            # Later the software version will be needed into the medulla package
             if LooseVersion(soft_glpi[2]) < LooseVersion(packageprofile[3]):
                 structuredatakioskelement["action"].append("Update")
                 logger.debug(

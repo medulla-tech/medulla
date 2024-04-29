@@ -20,9 +20,9 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-clientsdir = $(localstatedir)/lib/pulse2/clients/win32
+clientsdir = $(localstatedir)/lib/medulla/clients/win32
 
-installernsi = pulse2-win32-agents-installer.nsi.in
+installernsi = medulla-win32-agents-installer.nsi.in
 installerdata = \
 	artwork/header.bmp \
 	artwork/uninstall.ico \

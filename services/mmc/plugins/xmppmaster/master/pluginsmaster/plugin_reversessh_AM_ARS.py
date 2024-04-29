@@ -10,7 +10,7 @@ eg : plugin_reversessh_AM_ARS@_@{ "proxyport" : 5225", "remoteport" : 9091 }
 import json
 import logging
 
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 
 logger = logging.getLogger()
 plugin = {"VERSION": "1.0", "NAME": "reversessh_AM_ARS", "TYPE": "master"}
@@ -62,9 +62,9 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             logger.debug("jidAM %s" % jidAM)
             logger.debug("remoteport %s" % remoteport)
             ## il faut inscrire la clef publique de la machine distante dans
-            ## /var/lib/pulse2/clients/reversessh/.ssh/authorized_keys
+            ## /var/lib/medulla/clients/reversessh/.ssh/authorized_keys
 
-            result = xmppobject.iqsendpulse(
+            result = xmppobject.iqsendmedulla(
                 jidARS,
                 {
                     "action": "information",
@@ -93,7 +93,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
             else:
                 proxyportars = proxyport
 
-            result = xmppobject.iqsendpulse(
+            result = xmppobject.iqsendmedulla(
                 jidARS,
                 {
                     "action": "information",
@@ -120,7 +120,7 @@ def action(xmppobject, action, sessionid, data, message, ret, dataobj):
                     "public_key_ars": resultatinformation["get_ars_key_id_rsa_pub"],
                 },
             }
-            result = xmppobject.iqsendpulse(jidAM, structreverse, timeout)
+            result = xmppobject.iqsendmedulla(jidAM, structreverse, timeout)
 
             del structreverse["data"]["private_key_ars"]
             del structreverse["data"]["public_key_ars"]

@@ -1,0 +1,223 @@
+#!/usr/bin/python3
+# -*- coding: utf-8; -*-
+#
+# (c) 2008-2010 Mandriva, http://www.mandriva.com/
+#
+# $Id: medulla-package-server 5210 2010-02-04 17:45:08Z cdelfosse $
+#
+# This file is part of Medulla 2, http://medulla.mandriva.org
+#
+# Medulla 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Medulla 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Medulla 2.  If not, see <http://www.gnu.org/licenses/>.
+
+"""
+Medulla 2 Package Server Imaging module registration.
+PULSE_DEPRECATED
+"""
+
+import os
+import sys
+import uuid
+from optparse import OptionParser
+import logging
+from twisted.internet import reactor
+
+from mmc.site import mmcconfdir
+from mmc.client import async_
+from medulla.package_server.config import P2PServerCP
+
+# Return codes
+ERROR_NO_UUID = 1
+ERROR_BAD_ARGUMENT = 2
+ERROR_BAD_CONFIG_PATH = 3
+ERROR_BAD_CONFIG = 4
+ERROR_REGISTRATION_FAILURE = 5
+ERROR_ALREADY_REGISTERED = 6
+
+inifile = os.path.join(mmcconfdir, "medulla", "package-server", "package-server.ini")
+code = ERROR_REGISTRATION_FAILURE
+log = logging.getLogger()
+
+class BaseAction(object):
+    """ Generic methods for an xmlrpc based action
+    """
+    def __init__(self, options):
+        self.cacert = None
+        self.localcert = None
+
+        if self._check_options(options) is False:
+            sys.exit(ERROR_BAD_ARGUMENT)
+
+        if options.inifile:
+            if not os.path.exists(options.inifile):
+                log.error(f'No such file: {options.inifile}')
+                sys.exit(ERROR_BAD_CONFIG_PATH)
+
+        self.config = P2PServerCP()
+        try:
+            self.config.setup(options.inifile)
+        except Exception as e:
+            log.error(f'Error parsing conf file: {e}')
+            sys.exit(ERROR_BAD_CONFIG)
+
+        # Some magic ?
+        self.config.imaging_api['mount_point'] = self.config.imaging_api['mount_point'].replace('/', '')
+
+        self.client_url = f"{self.config.proto}://{self.config.public_ip}:{str(self.config.port)}/{self.config.imaging_api['mount_point']}"
+
+        self.uuid = self.config.imaging_api['uuid']
+        if not self.uuid:
+            log.error(f"No uuid in config file: {inifile}")
+            sys.exit(ERROR_NO_UUID)
+
+        log.debug(f"Connecting from: {self.client_url}")
+        log.debug(f"Connecting to: {options.mmc_url}")
+        self.proxy = async_.Proxy(bytes(options.mmc_url, 'utf-8'))
+
+    def _check_options(self, options):
+        ret = True
+        if not options.mmc_url:
+            log.error('Missing option: --mmc-agent-url')
+            ret = False
+        if options.certificates:
+            certs = options.certificates.split(':')
+            if len(certs) != 2:
+                log.error('Bad option: --certificates argument must be \'cacert:localcert\'')
+                ret = False
+            else:
+                self.cacert = certs[0]
+                self.localcert = certs[1]
+        return ret
+
+    def run(self):
+        raise NotImplemented
+
+
+class CheckAction(BaseAction):
+    def run(self):
+        d = self.proxy.callRemote('imaging.isImagingServerRegistered', self.uuid)
+        d.addCallback(self.resultOk)
+        d.addErrback(self.resultError)
+
+    def resultOk(self, result):
+        global code
+
+        if result is True:
+            log.info('Imaging server already registered')
+            code = ERROR_ALREADY_REGISTERED
+        else:
+            log.info('Imaging server not registered')
+            code = 0
+        reactor.stop()
+
+    def resultError(self, error):
+        log.error(error)
+        reactor.stop()
+
+
+class RegisterAction(BaseAction):
+    def __init__(self, options):
+        super(RegisterAction, self).__init__(options)
+        self.name = options.name
+
+    def _check_options(self, options):
+        ret = super(RegisterAction, self)._check_options(options)
+        if not options.name:
+            log.error('Missing option: --name')
+            ret = False
+        return ret
+
+    def run(self):
+        d = self.proxy.callRemote('imaging.imagingServerRegister',
+                                  self.name, self.client_url, self.uuid)
+        d.addCallback(self.resultOk)
+        d.addErrback(self.resultError)
+
+    def resultOk(self, result):
+        global code
+
+        code, msg = result
+
+        if code is True:
+            log.info('Registration succeeded')
+            code = 0
+        else:
+            log.error(f'Registration failed: {msg}')
+            code = ERROR_REGISTRATION_FAILURE
+
+        reactor.stop()
+
+    def resultError(self, error):
+        global code
+
+        log.error(error)
+        code = ERROR_REGISTRATION_FAILURE
+        reactor.stop()
+
+
+def generate_uuid():
+    """
+    Generate an uuid
+    """
+    print(uuid.uuid1())
+
+if __name__ == '__main__':
+    code = 0
+
+    # Declare options
+    parser = OptionParser()
+    parser.add_option("-m", "--mmc-agent-url", dest="mmc_url", metavar="URL",
+                      help="MMC Agent URL")
+    parser.add_option("-n", "--name", dest="name", metavar="NAME",
+                      help="Imaging server name (mandatory)")
+    parser.add_option("-c", "--certificates", dest="certificates", metavar="cacert:localcert",
+                      help="Verify peer with those certs")
+    parser.add_option("-i", "--inifile", dest="inifile", metavar="FILE", default=inifile,
+                      help="Alternate configuration file")
+    parser.add_option("-u", "--uuid", dest="generate", default=False, action="store_true",
+                      help="Generate an UUID")
+    parser.add_option("-C", "--check", dest="check", default=False, action="store_true",
+                      help="Check if UUID is already registered")
+    parser.add_option("-q", "--quiet", dest="quiet", default=False, action="store_true",
+                      help="Be quiet")
+    parser.add_option("-V", "--verbose", dest="verbose", default=False, action="store_true",
+                      help="Be more verbose")
+    (options, args) = parser.parse_args()
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(0)
+
+    if options.check and options.generate:
+        parser.error('Options -C and -u are mutually exclusive')
+    if options.quiet and options.verbose:
+        parser.error('Options -V and -q are mutually exclusive')
+
+    # Logging options
+    loglevel = logging.INFO
+    if options.quiet:
+        loglevel = logging.ERROR
+    if options.verbose:
+        loglevel = logging.DEBUG
+    logging.basicConfig(format='%(levelname)s - %(message)s', level=loglevel)
+
+    # Handle generate action
+    if options.generate:
+        generate_uuid()
+        sys.exit(0)
+
+    # For the rest, it is handled by *Actions
+    action = CheckAction(options) if options.check else RegisterAction(options)
+    action.run()
+    reactor.run()
+    sys.exit(code)

@@ -15,10 +15,10 @@ echo 'Installing fusion inventory agent ...'
 # Fusion configuration
 
 if [ -f $fusion_cfg ]; then
-    sed -i "/^server/c\server=$pulse_url" $fusion_cfg
+    sed -i "/^server/c\server=$medulla_url" $fusion_cfg
     grep '^server' /etc/fusioninventory/agent.cfg > /dev/null
     if [ ! $?  -eq 0 ]; then
-        echo "server=$pulse_url" >> $fusion_cfg
+        echo "server=$medulla_url" >> $fusion_cfg
     fi
 else
     echo "Unable to find FusionInventory configuration file, aborting."

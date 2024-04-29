@@ -1,0 +1,914 @@
+#!/usr/bin/python3
+# -*- coding: utf-8; -*-
+#
+# (c) 2011-2012 Mandriva, http://www.mandriva.com/
+#
+# This file is part of Medulla 2, http://medulla.mandriva.org
+#
+# Medulla 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Medulla 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Medulla 2.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import sys, traceback
+import re
+import types
+#from syslog import syslog
+import subprocess
+import pprint
+import readline
+import atexit
+import xmlrpc.client
+import urllib.parse
+import argparse
+from collections import namedtuple
+from pydoc import pager as textpager
+from configparser import ConfigParser
+from http.client import CannotSendRequest
+
+from twisted.internet import task, reactor
+from twisted.python import threadable; threadable.init(1)
+from twisted.internet.threads import deferToThread
+from twisted.web import xmlrpc
+deferred = deferToThread.__get__ #Create a decorator for deferred functions
+
+HISTFILE = os.path.join(os.path.expanduser("~"), ".medulladebughist")
+COOKIES_FILE = '/tmp/medulla-debug-cookies'
+host = ''
+funcs = []
+modules = []
+
+commands = ['cd ','use ','ls','pwd','exit']
+CONSOLE_VARS = {}
+DEFER = None
+rpc_proxy = None
+transport = None
+LOGSNIFFER = None
+SCRIPT_MODE = False
+
+# ====================================================================================
+
+
+import os,sys
+
+WINDOWS = os.name == 'nt'
+PY3K = sys.version_info >= (3,)
+
+# Windows constants
+# http://msdn.microsoft.com/en-us/library/ms683231%28v=VS.85%29.aspx
+
+STD_INPUT_HANDLE  = -10
+STD_OUTPUT_HANDLE = -11
+STD_ERROR_HANDLE  = -12
+
+
+if WINDOWS:
+    # get console handle
+    from ctypes import windll, Structure, byref
+    try:
+        from ctypes.wintypes import SHORT, WORD, DWORD
+    # workaround for missing types in Python 2.5
+    except ImportError:
+        from ctypes import (
+            c_short as SHORT, c_ushort as WORD, c_ulong as DWORD)
+    console_handle = windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
+
+    # CONSOLE_SCREEN_BUFFER_INFO Structure
+    class COORD(Structure):
+        _fields_ = [("X", SHORT), ("Y", SHORT)]
+
+    class SMALL_RECT(Structure):
+        _fields_ = [("Left", SHORT), ("Top", SHORT),
+                    ("Right", SHORT), ("Bottom", SHORT)]
+
+    class CONSOLE_SCREEN_BUFFER_INFO(Structure):
+        _fields_ = [("dwSize", COORD),
+                    ("dwCursorPosition", COORD),
+                    ("wAttributes", WORD),
+                    ("srWindow", SMALL_RECT),
+                    ("dwMaximumWindowSize", DWORD)]
+
+
+def _windows_get_window_size():
+    """Return (width, height) of available window area on Windows.
+       (0, 0) if no console is allocated.
+    """
+    sbi = CONSOLE_SCREEN_BUFFER_INFO()
+    ret = windll.kernel32.GetConsoleScreenBufferInfo(console_handle, byref(sbi))
+    if ret == 0:
+        return (0, 0)
+    return (sbi.srWindow.Right - sbi.srWindow.Left + 1,
+            sbi.srWindow.Bottom - sbi.srWindow.Top + 1)
+
+def _posix_get_window_size():
+    """Return (width, height) of console terminal on POSIX system.
+       (0, 0) on IOError, i.e. when no console is allocated.
+    """
+    # see README.txt for reference information
+    # http://www.kernel.org/doc/man-pages/online/pages/man4/tty_ioctl.4.html
+
+    from fcntl import ioctl
+    from termios import TIOCGWINSZ
+    from array import array
+
+    """
+    struct winsize {
+        unsigned short ws_row;
+        unsigned short ws_col;
+        unsigned short ws_xpixel;   /* unused */
+        unsigned short ws_ypixel;   /* unused */
+    };
+    """
+    winsize = array("H", [0] * 4)
+    try:
+        ioctl(sys.stdout.fileno(), TIOCGWINSZ, winsize)
+    except IOError:
+        # for example IOError: [Errno 25] Inappropriate ioctl for device
+        # when output is redirected
+        # [ ] TODO: check fd with os.isatty
+        pass
+    return (winsize[1], winsize[0])
+
+def getwidth():
+    """
+    Return width of available window in characters.  If detection fails,
+    return value of standard width 80.  Coordinate of the last character
+    on a line is -1 from returned value.
+
+    Windows part uses console API through ctypes module.
+    *nix part uses termios ioctl TIOCGWINSZ call.
+    """
+    width = None
+    if WINDOWS:
+        return _windows_get_window_size()[0]
+    elif os.name == 'posix':
+        return _posix_get_window_size()[0]
+    return width or 80
+
+def getheight():
+    """
+    Return available window height in characters or 25 if detection fails.
+    Coordinate of the last line is -1 from returned value.
+
+    Windows part uses console API through ctypes module.
+    *nix part uses termios ioctl TIOCGWINSZ call.
+    """
+    height = None
+    if WINDOWS:
+        return _windows_get_window_size()[1]
+    elif os.name == 'posix':
+        return _posix_get_window_size()[1]
+    return height or 25
+
+
+# --- keyboard constants and input logic ---
+
+if WINDOWS:
+    ENTER = ['\x0d']
+    LEFT =  ['\xe0', 'K']
+    UP =    ['\xe0', 'H']
+    RIGHT = ['\xe0', 'M']
+    DOWN =  ['\xe0', 'P']
+else:
+    ENTER = ['\n']
+    LEFT =  ['\x1b', '[', 'D']
+    UP =    ['\x1b', '[', 'A']
+    RIGHT = ['\x1b', '[', 'C']
+    DOWN =  ['\x1b', '[', 'B']
+ESC = ['\x1b']
+
+def dumpkey(key):
+    """
+    Helper to convert a list (returned from getch()) or string to hex string.
+    """
+    def hex3fy(key):
+        """Helper to convert string into hex string (Python 3 compatible)"""
+        from binascii import hexlify
+        # Python 3 strings are no longer binary, encode them for hexlify()
+        if PY3K:
+           key = key.encode('utf-8')
+        keyhex = hexlify(key).upper()
+        if PY3K:
+           keyhex = keyhex.decode('utf-8')
+        return keyhex
+
+    return (
+        hex3fy(key) if type(key) == str else ' '.join([hex3fy(s) for s in key])
+    )
+
+def getch():
+    """
+    Wait for keypress(es), return list of chars generated as a result.
+
+    Arrows and special keys generate such sequence after a single
+    keypress. Sequences may differ between platforms, so make sure to
+    use constants defined in this module to recognize keys back.
+    """
+
+    # check that Ctrl-C and Ctrl-Break break this function
+    #
+    # Ctrl-C       [n] Windows  [y] Linux  [ ] OSX
+    # Ctrl-Break   [y] Windows  [n] Linux  [ ] OSX
+
+    chars = []
+    try:
+        if PY3K:
+            from msvcrt import kbhit, getwch as _getch
+        else:
+            from msvcrt import kbhit, getch as _getch
+        chars = [_getch()]  # wait for the keypress
+        while kbhit():      # deplete input buffer
+            chars.append(_getch())
+    except ImportError:
+        ''' we're not on Windows, try Unix-like approach '''
+
+        # --- current algorithm ---
+        # 1. switch to char-by-char input mode
+        # 2. turn off echo
+        # 3. wait for at least one char to appear
+        # 4. read the rest of the character buffer
+        # 5. return list of characters
+        import sys, termios
+
+        fd = sys.stdin.fileno()
+        # save old terminal settings
+        old_settings = termios.tcgetattr(fd)
+        try:
+            # change terminal settings - turn off canonical mode and echo
+            # in canonical mode read from stdin returns one line at a time
+            # and we need one char at a time (see DESIGN.rst for more info)
+            newattr = list(old_settings)
+            newattr[3] &= ~termios.ICANON
+            newattr[3] &= ~termios.ECHO
+            newattr[6][termios.VMIN] = 1   # block until one char received
+            newattr[6][termios.VTIME] = 0
+            # TCSANOW below means apply settings immediately
+            termios.tcsetattr(fd, termios.TCSANOW, newattr)
+
+            # [ ] this fails when stdin is redirected, like
+            #       ls -la | pager.py
+            #   [ ] also check on Windows
+            ch = sys.stdin.read(1)
+            chars = [ch]
+
+            # move rest of chars (if any) from input buffer
+            # change terminal settings - enable non-blocking read
+            newattr = termios.tcgetattr(fd)
+            newattr[6][termios.VMIN] = 0      # CC structure
+            newattr[6][termios.VTIME] = 0
+            termios.tcsetattr(fd, termios.TCSANOW, newattr)
+
+            while True:
+                ch = sys.stdin.read(1)
+                if ch != '':
+                    chars.append(ch)
+                else:
+                    break
+        finally:
+            # restore terminal settings. Do this when all output is
+            # finished - TCSADRAIN flag
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
+    return chars
+
+# --- /getch() stuff ---
+
+
+def echo(msg):
+    """
+    Print msg to the screen without linefeed and flush the output.
+
+    Standard print() function doesn't flush, see:
+    https://groups.google.com/forum/#!topic/python-ideas/8vLtBO4rzBU
+    """
+    sys.stdout.write(msg)
+    sys.stdout.flush()
+
+def prompt(pagenum):
+    """
+    Show default prompt to continue and process keypress.
+
+    It assumes terminal/console understands carriage return \r character.
+    """
+    prompt = f"Page -{pagenum}-. Press any key to continue . . . "
+    echo(prompt)
+    getch()
+    echo('\r' + ' '*(len(prompt)-1) + '\r')
+
+def page(content, pagecallback=prompt):
+    """
+    Output content, call `pagecallback` after every page with page number as
+    a parameter.
+
+    Default callback just shows prompt and waits for keypress.
+    """
+    width = getwidth()
+    height = getheight()
+    pagenum = 1
+
+    try:
+        try:
+            line = content.next().rstrip("\r\n")
+        except AttributeError:
+            # Python 3 compatibility
+            line = content.__next__().rstrip("\r\n")
+    except StopIteration:
+        pagecallback(pagenum)
+        return
+
+    while True: # page cycle
+        linesleft = height-1 # leave the last line for the prompt callback
+        while linesleft:
+            linelist = [line[i:i+width] for i in range(0, len(line), width)]
+            if not linelist:
+                linelist = ['']
+            lines2print = min(len(linelist), linesleft)
+            for i in range(lines2print):
+                if WINDOWS and len(line) == width:
+                    # avoid extra blank line by skipping linefeed print
+                    echo(linelist[i])
+                else:
+                    print(linelist[i])
+            linesleft -= lines2print
+            if linelist := linelist[lines2print:]:
+                line = ''.join(linelist)
+                continue
+            else:
+                try:
+                    try:
+                        line = content.next().rstrip("\r\n")
+                    except AttributeError:
+                        # Python 3 compatibility
+                        line = content.__next__().rstrip("\r\n")
+                except StopIteration:
+                    pagecallback(pagenum)
+                    return
+        pagecallback(pagenum)
+        pagenum += 1
+
+
+# ====================================================================================
+# PRINTING FUNCTIONS
+# ====================================================================================
+
+def pprinttable(rows):
+    """
+    function to pretty print tables
+    @param rows list of namedtuples
+    @type list
+    """
+    if len(rows) > 1:
+        headers = rows[0]._fields
+        lens = [
+            len(
+                max(
+                    [str(x[i]) for x in rows] + [headers[i]],
+                    key=lambda x: len(str(x)),
+                )
+            )
+            for i in range(len(rows[0]))
+        ]
+        formats = []
+        hformats = []
+        for i in range(len(rows[0])):
+            if isinstance(rows[0][i], int):
+                formats.append("%%%dd" % lens[i])
+            else:
+                formats.append("%%-%ds" % lens[i])
+            hformats.append("%%-%ds" % lens[i])
+        pattern = " | ".join(formats)
+        hpattern = " | ".join(hformats)
+        separator = "-+-".join(['-' * n for n in lens])
+        print(separator)
+        print(hpattern % tuple(headers))
+        print(separator)
+        for line in rows:
+            print(pattern % tuple(line))
+    elif len(rows) == 1:
+        row = rows[0]
+        hwidth = len(max(row._fields,key=lambda x: len(x)))
+        for i in range(len(row)):
+            print("%*s = %s" % (hwidth,row._fields[i],row[i]))
+
+
+def printListInfo(result):
+    """
+    prettyprint listinfo result using pprinttable
+    @param result @_listinfo function result
+    @type dict
+    """
+    if len(result['data']) == 0:
+        return
+
+    header = result['data'][0].keys()
+    Row = namedtuple('Row', header)
+    try:
+        pprinttable([Row(*(line.values())) for line in result['data']])
+    except Exception as e:
+        print(e)
+
+
+class bcolors:
+    """
+    static class to handle output colouring
+    """
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    PURPLE = '\033[95m'
+    CYAN = '\033[96m'
+    DARKCYAN = '\033[36m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    UNDERLINE = '\033[4m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    NORMAL = '\033[0m'
+
+    def disable(self):
+        self.HEADER = ''
+        self.OKBLUE = ''
+        self.OKGREEN = ''
+        self.YELLOW = ''
+        self.RED = ''
+        self.ENDC = ''
+
+BCOLORS = bcolors()
+
+
+# ====================================================================================
+# XMLRPC Client classes
+# ====================================================================================
+
+class cookietransportrequest:
+    """A Transport request method that retains cookies over its lifetime.
+
+    The regular xmlrpclib transports ignore cookies. Which causes
+    a bit of a problem when you need a cookie-based login, as with
+    the Bugzilla XMLRPC interface.
+
+    So this is a helper for defining a Transport which looks for
+    cookies being set in responses and saves them to add to all future
+    requests.
+    """
+
+    # Inspiration drawn from
+    # http://blog.godson.in/2010/09/how-to-make-python-xmlrpclib-client.html
+    # http://www.itkovian.net/base/transport-class-for-pythons-xml-rpc-lib/
+    #
+    # Note this must be an old-style class so that __init__ handling works
+    # correctly with the old-style Transport class. If you make this class
+    # a new-style class, Transport.__init__() won't be called.
+
+    cookies = []
+    def send_cookies(self, connection):
+        if self.cookies:
+            for cookie in self.cookies:
+                connection.putheader("Cookie", cookie)
+
+    def request(self, host, handler, request_body, verbose=0):
+        self.verbose = verbose
+
+        # issue XML-RPC request
+        h = self.make_connection(host)
+        if verbose:
+            h.set_debuglevel(1)
+
+        self.send_request(h, handler, request_body)
+        self.send_host(h, host)
+        self.send_cookies(h)
+        self.send_user_agent(h)
+        self.send_content(h, request_body)
+
+        # Deal with differences between Python 2.4-2.6 and 2.7.
+        # In the former h is a HTTP(S). In the latter it's a
+        # HTTP(S)Connection. Luckily, the 2.4-2.6 implementation of
+        # HTTP(S) has an underlying HTTP(S)Connection, so extract
+        # that and use it.
+        try:
+            response = h.getresponse()
+        except AttributeError:
+            response = h._conn.getresponse()
+
+        # Add any cookie definitions to our list.
+        for header in response.msg.getallmatchingheaders("Set-Cookie"):
+            val = header.split(": ", 1)[1]
+            cookie = val.split(";", 1)[0]
+            self.cookies.append(cookie)
+
+        if response.status != 200:
+            raise xmlrpc.client.ProtocolError(host + handler, response.status,
+                                          response.reason, response.msg.headers)
+
+        payload = response.read()
+        parser, unmarshaller = self.getparser()
+        parser.feed(payload)
+        parser.close()
+
+        return unmarshaller.close()
+
+    def transport(self, uri):
+        """Return an appropriate Transport for the URI.
+
+        If the URI type is https, return a CookieSafeTransport.
+        If the type is http, return a CookieTransport.
+        """
+        if urllib.parse.urlparse(uri, "http")[0] == "https":
+            return cookiesafetransport()
+        else:
+            return cookietransport()
+
+
+class cookietransport(cookietransportrequest, xmlrpc.client.Transport):
+    pass
+
+class cookiesafetransport(cookietransportrequest, xmlrpc.client.SafeTransport):
+    pass
+
+
+# ====================================================================================
+# ConfigReader class to read config files
+# ====================================================================================
+
+class ConfigReader :
+    """Read and parse config files"""
+    def __init__(self):
+       self._config  = self.get_config('/etc/mmc/mmc.ini')
+       self._config2 = self.get_config('/etc/mmc/plugins/base.ini')
+
+
+    @classmethod
+    def get_config(cls, inifile):
+        """
+        Get the configuration from config file
+
+        @param inifile: path to config file
+        @type inifile: string
+
+        @return: ConfigParser.ConfigParser instance
+        """
+        if not os.path.exists(inifile):
+            print("Error while reading the config file: Not found.")
+            sys.exit(2)
+
+        config = ConfigParser()
+        config.readfp(open(inifile,'r'))
+        if os.path.isfile(f'{inifile}.local'):
+            config.readfp(open(f'{inifile}.local', 'r'))
+
+        return config
+
+    @property
+    def config(self):
+        """
+        Get the configuration instance
+
+        @return: ConfigParser.ConfigParser instance
+        """
+        return [self._config,self._config2]
+
+    @property
+    def mmc_agent_url(self):
+        """
+        get full URL to pass to XMLRPC proxy
+        """
+        _config = self._config
+        if not _config.has_section("global") or not _config.has_section("server_01") :
+            print("Error while reading the config file: Section 'login' not exists")
+            sys.exit(2)
+
+        username = _config.get("global", "login")
+        password = _config.get("global", "password")
+
+        url = _config.get("server_01", "url")
+        if 'https://' not in url:
+            print('Error reading mmc-agent URL')
+        self._url = url.replace('https://', f'https://{username}:{password}@')
+        return self._url
+
+    @property
+    def ldap_password(self):
+        """
+        Password for LDAP authentification
+
+        @return: string
+        """
+        # Reading LDAP Config (MMC base plugin base.ini]
+        _config = self._config2
+        if not _config.has_section("ldap") :
+            print("Error while reading the config file: Section 'ldap'")
+            sys.exit(2)
+
+        return _config.get("ldap","password")
+
+
+
+def p2d():
+    s = (
+        '=======================================================================\n'
+        + 'Medulla2 debug\n'
+    )
+    s += '=======================================================================\n'
+    s += '\n'
+    s += 'New in 0.3 :\n'
+    s += '\tBetter threading\n'
+    s += '\tFull python console (try importing modules)\n'
+    s += '\tXMLRPC methods introspection (try help)\n'
+    s += '\tPagination feature for listinfo methods (try update.get_updates({})\n'
+    s += '\n'
+    s += '=======================================================================\n'
+
+    textpager(s)
+
+
+def completer(text, state):
+    CONSOLE_VARS.keys()
+    #
+    possib = funcs
+    #if module in funcs:
+    #    possib += funcs[module]['names']
+    options = [i for i in possib if i.startswith(text)]
+    return options[state] if state < len(options) else None
+
+
+# PROMPT FUNCTION ]>
+@deferred
+def prompt():
+    while 1:
+        input = ''
+        while not input:
+            try:
+                input = raw_input("]> ").strip()
+            except (KeyboardInterrupt, EOFError) as e:
+                # Receive pipe-signal or EOFError
+                print('')
+                # Kill logsniffer
+                if LOGSNIFFER:
+                    LOGSNIFFER.kill()
+                reactor.stop()
+                return
+        try:
+            exec(input, CONSOLE_VARS)
+        except Exception:
+            ex_type, ex, tb = sys.exc_info()
+            #print ex_type
+            print(ex)
+            #traceback.print_tb(tb)
+            del tb
+
+
+class RpcProxy:
+    proxy = None
+    url = ''
+    ldap_password = ''
+    config = None
+
+    def __init__(self, config):
+        self.config = config
+        tr = cookietransportrequest()
+        self.url = config.mmc_agent_url
+        self.proxy = xmlrpc.client.ServerProxy(self.url, tr.transport(self.url))
+        self.ldap_password = config.ldap_password
+        self.auth()
+
+
+    def auth(self):
+        self.proxy.base.ldapAuth('root', self.ldap_password)
+
+
+
+# ====================================================================================
+# XMLRPC Module caller class
+# ====================================================================================
+
+class xmlrpcModule():
+    min = 0
+    max = 10
+
+    def __init__(self, proxyHandler, module_name):
+        self.proxyHandler = proxyHandler
+        self.module_name = module_name
+
+    def __str__(self):
+        return self.label
+
+    def __getattr__(self, attr_name):
+
+        def xmlCallfunc(*args, **kw):
+            try:
+                module = getattr(self.proxyHandler.proxy, self.module_name)
+                result = getattr(module, attr_name)(*args, **kw)
+            except CannotSendRequest:
+                # Try reconnect
+                config = self.proxyHandler.config
+                self.proxyHandler = RpcProxy(config)
+                print("Lost connection, reconnecting ...")
+                return
+
+            # ============= PRINTING RESULT ======================
+
+            # If SCRIPT_MODE is activated, skip printing
+            if not SCRIPT_MODE:
+                if isinstance(result, dict) and 'listinfo' in result:
+                    params = args[0]
+
+                    # Calculating delta
+                    delta = getheight() - 4
+
+                    if 'min' not in params:
+                        params['min'] = 0
+                    if 'max' not in params:
+                        params['max'] = delta
+
+                    if len(result['data']) != 0:
+                        # Resetting min and max et loop
+                        printListInfo(result)
+                        key = getch()
+                        # TODO: r refresh , f filter
+                        if key == LEFT:
+                            params['min'] -= delta
+                            params['max'] -= delta
+                        if key == RIGHT:
+                            params['min'] += delta
+                            params['max'] += delta
+                        # Ensure that min, max are in limits
+                        params['min'] = min(result['count']-delta, params['min'])
+                        params['min'] = max(0, params['min'])
+
+                        params['max'] = max(delta, params['max'])
+                        params['max'] = min(result['count'], params['max'])
+
+                        # If q is pressed, we quit loop => prompt
+                        if 'q' not in key and 'Q' not in key:
+                            xmlCallfunc(params)
+                else:
+                    s = pprint.pformat(result)
+                    # If result is too larger paginate it
+                    if len(s.split('\n')) > (getheight() - 4):
+                        textpager(s)
+                    else:
+                        print(s)
+
+            # =======================================================
+
+            return result
+
+        # TODO: better introspection here : func signature
+        xmlCallfunc.__name__ = attr_name
+        try:
+            xmlCallfunc.__doc__ = self.proxyHandler.proxy.system.methodHelp(
+                f'{self.module_name}.{attr_name}'
+            )
+        except:
+            pass
+        return xmlCallfunc
+
+
+@deferred
+def logSniffer():
+    #'tail -f /var/log/mmc/mmc-agent.log|grep "RPC method call from user\|WARNING\|ERROR"',\
+    #print "sniff"
+    global LOGSNIFFER
+    LOGSNIFFER = subprocess.Popen(\
+                         'tail -f /var/log/mmc/mmc-agent.log',\
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,\
+                         shell=True)
+
+    while True:
+        line = LOGSNIFFER.stdout.readline()
+
+        if 'DEBUG' in line:
+            if 'RPC method call from user' not in line:
+                continue
+            # Strip it
+            line = line.replace('DEBUG', '').strip()+'\n'
+        if 'INFO' in line:
+            continue
+
+        # Errors
+        line = line.replace('ERROR', '%sERROR%s\t' % (BCOLORS.BOLD+BCOLORS.RED, BCOLORS.ENDC))
+        # Warnings
+        line = line.replace('WARNING', '%sWARNING%s\t' % (BCOLORS.BOLD + BCOLORS.YELLOW, BCOLORS.ENDC))
+        # Debugs
+        line = line.replace('DEBUG', '%sDEBUG%s\t' % (BCOLORS.BOLD+ BCOLORS.OKBLUE, BCOLORS.ENDC))
+        # Info
+        line = line.replace('INFO', '%sINFO%s\t' % (BCOLORS.BOLD+BCOLORS.CYAN, BCOLORS.ENDC))
+        # RPCCALL
+        line = line.replace(
+            'RPC method call from user',
+            f'{BCOLORS.BOLD + BCOLORS.PURPLE}RPCCALL{BCOLORS.ENDC} from',
+        )
+        # NEWPAGE
+        if 'base.canAddComputer()' in line:
+            line = '\n%sPAGESWITCH ======================<%s\n' % (BCOLORS.BOLD+BCOLORS.YELLOW, BCOLORS.ENDC) + line
+
+
+        sys.stdout.write(line)
+        if line == '' and LOGSNIFFER.poll() != None:
+            break
+    return True
+
+
+
+
+if __name__ == "__main__":
+
+    # Setting argparse
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("-c", "--command", help="Run the specified code")
+    #parser.add_argument("-f", "--file", help="Load an run a script file")
+    parser.add_argument('file', type=str, nargs='*',
+                         help='Load and run a script file')
+
+    # Parsing args
+    args = parser.parse_args()
+
+    # Loading config
+    config = ConfigReader()
+
+    # Init proxy
+
+    p = RpcProxy(config)
+    # init funcs for auto completition
+    funcs = p.proxy.system.listMethods()
+    # module list
+    modules = list({func.split('.')[0] for func in funcs})
+    modules.append('system')
+
+    CONSOLE_VARS['PROXYCLASS'] = p
+    CONSOLE_VARS['xmlrpcModule'] = xmlrpcModule
+    CONSOLE_VARS['pprint'] = pprint
+    CONSOLE_VARS['p2d'] = p2d
+
+    # init module vars*
+    for module in modules:
+        exec(f'{module}_ = PROXYCLASS.proxy.{module}', CONSOLE_VARS)
+        exec(f'{module} = xmlrpcModule(PROXYCLASS, "{module}")', CONSOLE_VARS)
+
+    if args.command:
+        try:
+	    # Enabling script mode
+            SCRIPT_MODE = True
+            exec(args.command, CONSOLE_VARS)
+            sys.exit(0)
+        except Exception as e:
+            print(e)
+            sys.exit(1)
+
+    if args.file:
+        sys.argv = args.file
+        try:
+            # Enabling script mode
+            SCRIPT_MODE = True
+            # Reading and executing script file
+            f = open(args.file[0], 'r')
+            exec(f.read(), CONSOLE_VARS)
+            sys.exit(0)
+        except IOError:
+            print('Error while reading script file')
+        except Exception as e:
+            print(e)
+            sys.exit(1)
+
+
+    print("Medulla2 console 0.3.1 (Fev 12 2014)")
+    print("Type p2d() for more information")
+
+    # Setting command completer
+    readline.parse_and_bind("tab: complete")
+    readline.set_completer(completer)
+
+    try:
+        readline.read_history_file(HISTFILE)
+    except IOError:
+        pass
+
+    # Saving history file
+    atexit.register(readline.write_history_file, HISTFILE)
+
+    # Activating log sniffer
+    prompt()
+
+    logSniffer()
+
+    #DEFER =
+
+
+
+    #task.deferLater(reactor, 1, prompt)
+    try:
+        reactor.run()
+    except:
+        print('Unknown error occured')

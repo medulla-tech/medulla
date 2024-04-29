@@ -10,7 +10,7 @@ import logging
 import operator
 
 from mmc.support.mmctools import SecurityContext
-from pulse2.database.inventory import Inventory
+from medulla.database.inventory import Inventory
 
 logger = logging.getLogger()
 

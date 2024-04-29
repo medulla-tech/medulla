@@ -128,7 +128,7 @@ if(isset($info['objectdeploy'][0]['sessionid'])) {
             $info['objectdeploy'][0]['sessionid'],
             "deploy",
             "-1",
-            "pulse_mmc"
+            "medulla_mmc"
         );
         xmlrpc_updatedeploy_states_start_and_process($info['objectdeploy'][0]['sessionid'], "ABORT DEPLOYMENT CANCELLED BY USER");
     }

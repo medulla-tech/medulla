@@ -68,7 +68,7 @@ class PIDControl(object):
     """
 
     daemon_proc = None
-    pid_path = "/var/run/pulse2/ssh_support"
+    pid_path = "/var/run/medulla/ssh_support"
 
     def __init__(self, pid_path):
         """

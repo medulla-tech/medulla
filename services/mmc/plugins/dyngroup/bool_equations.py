@@ -10,7 +10,7 @@ objects.
 import re
 import logging
 from random import randint
-from pulse2.utils import unique
+from medulla.utils import unique
 from xml.dom import minidom
 
 p1 = re.compile(" ")

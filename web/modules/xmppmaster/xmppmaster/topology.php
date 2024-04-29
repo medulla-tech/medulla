@@ -27,7 +27,7 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$response = xmlrpc_topology_pulse();
+$response = xmlrpc_topology_medulla();
 ?>
 
 <script src="jsframework/d3/d3.js"></script>
@@ -56,7 +56,7 @@ $response = xmlrpc_topology_pulse();
 </style>
 
 <?
-    $p = new PageGenerator(sprintf (_T("Topology Pulse", 'xmppmaster')));
+    $p = new PageGenerator(sprintf (_T("Topology Medulla", 'xmppmaster')));
     $p->setSideMenu($sidemenu);
     $p->display();
     echo '<div id="body"></div>';

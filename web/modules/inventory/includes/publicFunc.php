@@ -27,7 +27,7 @@
  * @param $mode add or edit mode
  */
 require_once "modules/inventory/includes/xmlrpc.php";
-require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
+require_once("modules/medulla/includes/locations_xmlrpc.inc.php");
 
 
 class inventorybuttonTpl2 extends AbstractTpl {

@@ -3,13 +3,13 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-""" Test module for Pulse2 network utils """
+""" Test module for Medulla2 network utils """
 
 import unittest
 import subprocess
 import logging
 
-from pulse2.network import NetUtils, IPResolve, NetworkDetect
+from medulla.network import NetUtils, IPResolve, NetworkDetect
 
 
 def myLogger():

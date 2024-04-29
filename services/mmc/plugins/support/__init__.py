@@ -7,7 +7,7 @@
 """ Product manager plugin base """
 
 import logging
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 from mmc.support.mmctools import SingletonN
 
 from mmc.plugins.dashboard.manager import DashboardManager
@@ -64,7 +64,7 @@ class LicenseChecker(object, metaclass=SingletonN):
         """
 
         logging.getLogger().info(
-            "Plugin Support: checking the license info on %s/%s/pulse/?country=%s"
+            "Plugin Support: checking the license info on %s/%s/medulla/?country=%s"
             % (config.license_server_url, config.install_uuid, config.country)
         )
 
@@ -248,7 +248,7 @@ def get_port():
 
 def get_subscription_info():
     try:
-        from mmc.plugins.pulse2.inventory import getSubscriptionInfo
+        from mmc.plugins.medulla.inventory import getSubscriptionInfo
 
         return getSubscriptionInfo()
     except ImportError:

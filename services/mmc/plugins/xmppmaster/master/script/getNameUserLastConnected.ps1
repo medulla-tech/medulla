@@ -7,4 +7,4 @@ get-wmiobject Win32_UserProfile -computername $computerName | foreach-object {
     "Name" = $userName
     "LastUseTime" = $_.LastUseTime
   }
-} | sort-object LastUseTime -descending | ?{!($_ | select-string "NT AUTHORITY")} | ?{!($_ | select-string "NT SERVICE")} | ?{!($_ | select-string "Administrator")} | ?{!($_ | select-string "Administrateur")} | ?{!($_ | select-string "default")} | ?{!($_ | select-string "pulse")} | Select-Object -first 1
+} | sort-object LastUseTime -descending | ?{!($_ | select-string "NT AUTHORITY")} | ?{!($_ | select-string "NT SERVICE")} | ?{!($_ | select-string "Administrator")} | ?{!($_ | select-string "Administrateur")} | ?{!($_ | select-string "default")} | ?{!($_ | select-string "medulla")} | Select-Object -first 1

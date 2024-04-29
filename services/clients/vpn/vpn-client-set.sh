@@ -21,7 +21,7 @@ PWD=$( pwd )
 PREFIX_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # VPN global variables
 . $PREFIX_DIR/vpn-variables
-account_name="pulse2connection"
+account_name="medullaconnection"
 
 if [ $VPN_OS == "osx" ]; then
         # need to install tun/tap driver

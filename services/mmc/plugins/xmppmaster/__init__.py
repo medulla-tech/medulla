@@ -11,15 +11,15 @@ import os
 import re
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from .master.lib.managepackage import apimanagepackagemsc
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 import hashlib
 import json
 
 # Database
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
-from pulse2.database.pkgs import PkgsDatabase
-from pulse2.utils import xmlrpcCleanup
+from medulla.database.pkgs import PkgsDatabase
+from medulla.utils import xmlrpcCleanup
 
 import zlib
 import base64
@@ -94,14 +94,14 @@ def getListPackages():
     resultnamepackage = []
     FichList = [
         f
-        for f in os.listdir("/var/lib/pulse2/packages/")
+        for f in os.listdir("/var/lib/medulla/packages/")
         if os.path.isfile(
-            os.path.join("/var/lib/pulse2/packages/", f, "xmppdeploy.json")
+            os.path.join("/var/lib/medulla/packages/", f, "xmppdeploy.json")
         )
     ]
     for package in FichList:
         with open(
-            os.path.join("/var/lib/pulse2/packages/", package, "xmppdeploy.json"), "r"
+            os.path.join("/var/lib/medulla/packages/", package, "xmppdeploy.json"), "r"
         ) as fichier:
             session = json.load(fichier)
             resultnamepackage.append(session["info"]["name"])
@@ -243,8 +243,8 @@ def getPresenceuuids(uuids):
 # topology
 
 
-def topologypulse():
-    return XmppMasterDatabase().topologypulse()
+def topologymedulla():
+    return XmppMasterDatabase().topologymedulla()
 
 
 def getMachinefromjid(jid):
@@ -597,10 +597,10 @@ def get_deploy_inprogress_by_team_member(
     if filt == "":
         filt = None
     # call xmppmaster search users list of team
-    pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
+    medulla_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
     # call msc search no deploy
     return MscDatabase().get_deploy_inprogress_by_team_member(
-        pulse_usersidlist, intervalsearch, minimum, maximum, filt, typedeploy
+        medulla_usersidlist, intervalsearch, minimum, maximum, filt, typedeploy
     )
 
 
@@ -623,9 +623,9 @@ def get_deploy_xmpp_teamscheduler(login, minimum=None, maximum=None, filt=None):
     if filt == "":
         filt = None
 
-    pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
+    medulla_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
     result = MscDatabase().deployxmppscheduler(
-        pulse_usersidlist, minimum, maximum, filt
+        medulla_usersidlist, minimum, maximum, filt
     )
     return result
 
@@ -648,9 +648,9 @@ def get_deploy_by_team_finished(
         minimum = None
     if maximum == "":
         maximum = None
-    pulse_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
+    medulla_usersidlist = XmppMasterDatabase().get_teammembers_from_login(login)
     return XmppMasterDatabase().get_deploy_by_user_finished(
-        pulse_usersidlist, intervalsearch, minimum, maximum, filt, typedeploy
+        medulla_usersidlist, intervalsearch, minimum, maximum, filt, typedeploy
     )
 
 
@@ -1125,8 +1125,8 @@ def xmpp_get_info_synchro_packageid(uuidpackage):
 
 def get_agent_descriptor_base():
     # Sending IQ request and data reception
-    data = ObjectXmpp().iqsendpulse(
-        "rspulse@pulse/mainrelay",
+    data = ObjectXmpp().iqsendmedulla(
+        "rsmedulla@medulla/mainrelay",
         {"action": "remotexmppmonitoring", "data": "agentinfos"},
         300,
     )
@@ -1178,7 +1178,7 @@ def get_agent_descriptor_base():
 
 
 def get_plugin_lists():
-    base_plugin_path = os.path.join("/", "var", "lib", "pulse2", "xmpp_baseplugin")
+    base_plugin_path = os.path.join("/", "var", "lib", "medulla", "xmpp_baseplugin")
     files = []
     _files = []
     plugins = {}
@@ -1210,7 +1210,7 @@ def get_plugin_lists():
             plugin_fb.close()
 
     base_pluginscheduler_path = os.path.join(
-        "/", "var", "lib", "pulse2", "xmpp_basepluginscheduler"
+        "/", "var", "lib", "medulla", "xmpp_basepluginscheduler"
     )
     pluginsscheduled = {}
     for _, dir, _files in os.walk(base_pluginscheduler_path):
@@ -1485,7 +1485,7 @@ def create_reverse_ssh_from_am_to_ars(
         },
     }
     logging.getLogger().debug("iq to %s iqcommand is : %s " % (jidARS, iqcomand))
-    result = ObjectXmpp().iqsendpulse(jidARS, iqcomand, timeout)
+    result = ObjectXmpp().iqsendmedulla(jidARS, iqcomand, timeout)
 
     res = json.loads(result)
 
@@ -1514,11 +1514,11 @@ def create_reverse_ssh_from_am_to_ars(
         logging.getLogger().debug(
             "send iqcommand to %s : %s" % (jidARS, uninterruptedstruct)
         )
-        result = ObjectXmpp().iqsendpulse(jidARS, uninterruptedstruct, timeout)
+        result = ObjectXmpp().iqsendmedulla(jidARS, uninterruptedstruct, timeout)
 
         logging.getLogger().debug("result iqcommand : %s" % result)
 
-    boundjidbare = "master@pulse/MASTER"
+    boundjidbare = "master@medulla/MASTER"
     structreverse = {
         "action": "reversesshqa",
         "sessionid": name_random(8, "reversshiq"),
@@ -1554,7 +1554,7 @@ def create_reverse_ssh_from_am_to_ars(
     # },
     # }
     logging.getLogger().debug("send iqcommand to %s : %s" % (jidAM, structreverse))
-    result = ObjectXmpp().iqsendpulse(jidAM, structreverse, timeout)
+    result = ObjectXmpp().iqsendmedulla(jidAM, structreverse, timeout)
     logging.getLogger().debug("result iqcommand : %s" % result)
     del structreverse["data"]["private_key_ars"]
     del structreverse["data"]["public_key_ars"]
@@ -1576,8 +1576,8 @@ def get_packages_list(jid, CGIGET=""):
     end = start + maxperpage
 
     timeout = 15
-    result = ObjectXmpp().iqsendpulse(
-        jid, {"action": "packageslist", "data": "/var/lib/pulse2/packages"}, timeout
+    result = ObjectXmpp().iqsendmedulla(
+        jid, {"action": "packageslist", "data": "/var/lib/medulla/packages"}, timeout
     )
 
     _result = {
@@ -1866,7 +1866,7 @@ def get_conformity_update_by_entity():
 
 def ban_machines(subaction, jid_ars, machines):
     sessionid = name_random(8, "banmachines")
-    boundjidbare = "master@pulse/MASTER"
+    boundjidbare = "master@medulla/MASTER"
     # datasend = {
     # "action": "banmachines",
     # "from": ObjectXmpp().boundjid.bare,

@@ -1,13 +1,13 @@
 [Unit]
 Description=Machines Management Console
-After=smbd.service slapd.service ejabberd.service pulse-xmpp-master-substitute-master.service
-Requires=ejabberd.service pulse-xmpp-master-substitute-master.service
+After=smbd.service slapd.service ejabberd.service medulla-master-substitute-master.service
+Requires=ejabberd.service medulla-master-substitute-master.service
 ConditionPathExists=/etc/mmc/plugins/base.ini.local
 
 [Service]
 PIDFile=/var/run/mmc-agent.pid
-#User=pulse
-#Group=pulse
+#User=medulla
+#Group=medulla
 Type=forking
 ExecStart=/usr/sbin/mmc-agent
 Restart=always

@@ -80,7 +80,7 @@ class Query(object):
         @param clock: used reactor (for utittests)
         @type clock: reactor
         """
-        self.url = "%s/%s/pulse/?country=%s" % (url, client_uuid, country)
+        self.url = "%s/%s/medulla/?country=%s" % (url, client_uuid, country)
         self.clock = clock
         self.license_tmp_file = license_tmp_file
         self.logger = logging.getLogger()

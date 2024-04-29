@@ -7,9 +7,9 @@ import time
 import pytz
 import json
 import os
-from pulse2.database.xmppmaster import XmppMasterDatabase
-from pulse2.database.kiosk import KioskDatabase
-from pulse2.database.msc import MscDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
+from medulla.database.kiosk import KioskDatabase
+from medulla.database.msc import MscDatabase
 from managepackage import managepackage
 import logging
 from mmc.plugins.xmppmaster.master.lib.utils import (

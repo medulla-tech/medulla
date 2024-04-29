@@ -4,7 +4,7 @@
 Glpi utilities
 """
 
-from pulse2.managers.location import ComputerLocationManager
+from medulla.managers.location import ComputerLocationManager
 import mmc.plugins.glpi.database
 import logging
 

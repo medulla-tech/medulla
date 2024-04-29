@@ -4,20 +4,20 @@
 # (c) 2014 Mandriva, http://www.mandriva.com/
 # (c) 2017 Siveo,  http://www.siveo.net/
 #
-# This file is part of Pulse 2
+# This file is part of Medulla 2
 #
-# Pulse 2 is free software; you can redistribute it and/or modify
+# Medulla 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# Pulse 2 is distributed in the hope that it will be useful,
+# Medulla 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Pulse 2; if not, write to the Free Software
+# along with Medulla 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
@@ -86,7 +86,7 @@ class Config(object):
     version = 2.3.5
     ..
     [deb]
-    package_name = pulse2-agents-installer
+    package_name = medulla-agents-installer
     ..
     ..
     ..
@@ -158,13 +158,13 @@ class InventoryURLGen(object):
     inv_ini_path = os.path.join("/",
                                "etc",
                                "mmc",
-                               "pulse2",
+                               "medulla",
                                "inventory-server",
                                "inventory-server.ini")
     pkg_ini_path = os.path.join("/",
                                "etc",
                                "mmc",
-                               "pulse2",
+                               "medulla",
                                "package-server",
                                "package-server.ini")
 
@@ -197,11 +197,11 @@ class InventoryURLGen(object):
     def inv_check(self):
 
         try:
-            from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
+            from medulla.inventoryserver.config import Medulla2OcsserverConfigParser
         except ImportError:
             self.port = 9999
         else:
-            config = Pulse2OcsserverConfigParser()
+            config = Medulla2OcsserverConfigParser()
             config.setup(self.inv_ini_path)
             self.port = config.port
             self.enablessl = config.enablessl
@@ -209,7 +209,7 @@ class InventoryURLGen(object):
     def pkg_check(self):
 
         try:
-            from pulse2.package_server.config import P2PServerCP
+            from medulla.package_server.config import P2PServerCP
         except ImportError:
             self.host = self.probe_fqdn()
         else:
@@ -382,8 +382,8 @@ class MacCreator(AbsCreator):
     """ Creates a package for OS X"""
 
     platform_directory = "mac"
-    package_name = "Pulse2AgentsInstaller"
-    package_dir_name = "Pulse2AgentsInstaller.pkg"
+    package_name = "Medulla2AgentsInstaller"
+    package_dir_name = "Medulla2AgentsInstaller.pkg"
     dependencies = ["fusioninventory-agent"]
     resources_path_list = ["Contents",
                            "Resources",
@@ -407,7 +407,7 @@ class MacCreator(AbsCreator):
 
         product_info = {
             "CFBundleDevelopmentRegion": "English",
-            "CFBundleGetInfoString": f"Pulse2 Agents Installer for OS X {self.config.mac.version}",
+            "CFBundleGetInfoString": f"Medulla2 Agents Installer for OS X {self.config.mac.version}",
             "CFBundleIdentifier": self.config.mac.package_id,
             "CFBundleName": self.package_name,
             "CFBundleIconFile": "header.png",
@@ -480,7 +480,7 @@ class DebCreator(AbsCreator):
     """ Creates a package for debian based platforms"""
 
     platform_directory = "deb"
-    package_name = "pulse2-agents-installer"
+    package_name = "medulla-agents-installer"
     package_dir_name = package_name
     dependencies = ["fusioninventory-agent",
                      "openssh-server",
@@ -499,7 +499,7 @@ Architecture: all
 Installed-Size: 0
 Maintainer: %s
 Depends: %s
-Description: A metapackage to install and configure Pulse2 agents
+Description: A metapackage to install and configure Medulla2 agents
 """ % (
                self.config.homepage,
                self.package_name,
@@ -538,7 +538,7 @@ Description: A metapackage to install and configure Pulse2 agents
 class RpmCreator(AbsCreator):
 
     platform_directory = "rpm"
-    package_name = "pulse2-agents-installer"
+    package_name = "medulla-agents-installer"
     package_dir_name = package_name
     dependencies = ["fusioninventory-agent",
                      "openssh-server",
@@ -560,7 +560,7 @@ class RpmCreator(AbsCreator):
 
         specs = """
 %define _topdir %(echo $PWD)/
-Summary: A meta-package to install and configure Pulse2 agents
+Summary: A meta-package to install and configure Medulla2 agents
 Name: %{name}
 Version: %{version}
 Release: %{release}
@@ -571,7 +571,7 @@ BuildArch: noarch
 Requires: %{requires}
 
 %description
- A meta-package to install and configure Pulse2 agents
+ A meta-package to install and configure Medulla2 agents
 
 %prep
 %setup -q
@@ -580,14 +580,14 @@ Requires: %{requires}
 
 %install
 install -d $RPM_BUILD_ROOT/%{opt_dir}/%{name}
-mkdir -p %buildroot/var/lib/pulse2/.ssh/
-install /root/.ssh/id_rsa.pub %buildroot/var/lib/pulse2/.ssh/id_rsa.pub.pulse
-mkdir -p %buildroot%_prefix/pulse-xmpp-agent
-install /var/lib/pulse2/clients/config/agentconf.ini %buildroot%_prefix/pulse-xmpp-agent/
+mkdir -p %buildroot/var/lib/medulla/.ssh/
+install /root/.ssh/id_rsa.pub %buildroot/var/lib/medulla/.ssh/id_rsa.pub.medulla
+mkdir -p %buildroot%_prefix/medulla-agent
+install /var/lib/medulla/clients/config/agentconf.ini %buildroot%_prefix/medulla-agent/
 
 %files
-%_prefix/pulse-xmpp-agent/agentconf.ini
-/var/lib/pulse2/.ssh//id_rsa.pub.pulse
+%_prefix/medulla-agent/agentconf.ini
+/var/lib/medulla/.ssh//id_rsa.pub.medulla
 
         """
         content = "\n".join(var_header) + "\n" + specs
@@ -670,8 +670,8 @@ install /var/lib/pulse2/clients/config/agentconf.ini %buildroot%_prefix/pulse-xm
 
 class DebServerCreator(DebCreator):
     platform_directory = "deb"
-    package_name = "pulse2-agents-installer-nordp"
-    package_dir_name = "pulse2-agents-installer-nordp"
+    package_name = "medulla-agents-installer-nordp"
+    package_dir_name = "medulla-agents-installer-nordp"
     dependencies = ["fusioninventory-agent",
                     "openssh-server",
                     "linuxvnc",
@@ -680,16 +680,16 @@ class DebServerCreator(DebCreator):
 class RpmServerCreator(RpmCreator):
 
     platform_directory = "rpm"
-    package_name = "pulse2-agents-installer-nordp"
-    package_dir_name = "pulse2-agents-installer-nordp"
+    package_name = "medulla-agents-installer-nordp"
+    package_dir_name = "medulla-agents-installer-nordp"
     dependencies = ["fusioninventory-agent",
                     "openssh-server",
                     ]
 class SuseCreator(RpmCreator):
 
     platform_directory = "rpm"
-    package_name = "pulse2-agents-installer-suse"
-    package_dir_name = "pulse2-agents-installer-suse"
+    package_name = "medulla-agents-installer-suse"
+    package_dir_name = "medulla-agents-installer-suse"
     dependencies = ["fusioninventory-agent",
                     "openssh",
                     "tigervnc-server"]
@@ -697,8 +697,8 @@ class SuseCreator(RpmCreator):
 class SuseServerCreator(RpmCreator):
 
     platform_directory = "rpm"
-    package_name = "pulse2-agents-installer-suse-nordp"
-    package_dir_name = "pulse2-agents-installer-suse-nordp"
+    package_name = "medulla-agents-installer-suse-nordp"
+    package_dir_name = "medulla-agents-installer-suse-nordp"
     dependencies = ["fusioninventory-agent",
                     "openssh",
                     ]
@@ -775,7 +775,7 @@ class SmartAgentPrepare(object):
 
     AGENT_FOLDER = "agent"
     INSTALLER = "installer.sh"
-    DEFAULTS_FILE = "pulse2agent.defaults"
+    DEFAULTS_FILE = "medullaagent.defaults"
     VPN_INSTALLER_FOLDER = "vpn"
     VPN_VARIABLES_FILE = "vpn-variables"
 
@@ -819,7 +819,7 @@ class SmartAgentPrepare(object):
                    "PULSE2_CM_PORT": self.port,
                    "VPN_SERVER_PUBLIC_IP" : self.vpn_variables_pattern["VPN_SERVER_PUBLIC_IP"],
                    "VPNCMD_PATH": "/opt/vpnclient/vpncmd",
-                   "PULSE2_CM_LOG_PATH": "/var/log/pulse2agent.log",
+                   "PULSE2_CM_LOG_PATH": "/var/log/medullaagent.log",
                    }
 
         file_util.copy_file("%s.in" % defaults, defaults)

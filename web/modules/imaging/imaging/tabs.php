@@ -104,7 +104,7 @@ if (isset($_POST['bsync'])) {
     } else {
         $location = getCurrentLocation();
         if ($location == "UUID1") {
-            $location_name = _T("root", "pulse2");
+            $location_name = _T("root", "medulla");
         } else {
             $location_name = xmlrpc_getLocationName($location);
         }

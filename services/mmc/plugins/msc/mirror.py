@@ -10,18 +10,18 @@ PULSE2_DEPRECATED
 import logging
 
 import mmc.plugins.msc
-import pulse2.apis.clients.mirror
+import medulla.apis.clients.mirror
 
 ## need to get a PackageApiManager, it will manage a PackageApi for each mirror
 ## defined in the conf file.
-# class Mirror(pulse2.apis.clients.mirror_api.Mirror):
+# class Mirror(medulla.apis.clients.mirror_api.Mirror):
 # def __init__(self, url = None):
 # self.logger = logging.getLogger()
 # credit = ''
 # if url:
 # self.server_addr = url
 ## TODO check if that's a possibility... credit will always be empty...
-# pulse2.apis.clients.mirror_api.Mirror.__init__(self, credit, url)
+# medulla.apis.clients.mirror_api.Mirror.__init__(self, credit, url)
 # else:
 # self.config = mmc.plugins.msc.MscConfig()
 
@@ -41,6 +41,6 @@ import pulse2.apis.clients.mirror
 # self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
 
 # if self.config.ma_verifypeer:
-# pulse2.apis.clients.mirror_api.Mirror.__init__(self, credit, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
+# medulla.apis.clients.mirror_api.Mirror.__init__(self, credit, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
 # else:
-# pulse2.apis.clients.mirror_api.Mirror.__init__(self, credit, self.server_addr)
+# medulla.apis.clients.mirror_api.Mirror.__init__(self, credit, self.server_addr)

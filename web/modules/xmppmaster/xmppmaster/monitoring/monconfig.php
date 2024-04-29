@@ -34,7 +34,7 @@ $p = new PageGenerator(_T("Monitoring Configurator", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$file = "/var/lib/pulse2/xmpp_monitoring/confagent/monitoring_config.ini";
+$file = "/var/lib/medulla/xmpp_monitoring/confagent/monitoring_config.ini";
 $name = "mon_conf";
 
 

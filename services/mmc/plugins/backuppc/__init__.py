@@ -11,12 +11,12 @@ import logging
 
 from mmc.plugins.backuppc.config import BackuppcConfig
 from mmc.plugins.backuppc import bpc
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 from mmc.plugins.base import ComputerI
 from mmc.plugins.base.computers import ComputerManager
 
 # Database
-from pulse2.database.backuppc import BackuppcDatabase
+from medulla.database.backuppc import BackuppcDatabase
 
 
 VERSION = "2.0.0"

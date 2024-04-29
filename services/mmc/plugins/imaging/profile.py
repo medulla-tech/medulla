@@ -8,10 +8,10 @@ it only implement the client part
 """
 
 from mmc.plugins.imaging.functions import synchroComputers
-from pulse2.managers.profile import ComputerProfileI
-from pulse2.database.imaging import ImagingDatabase
-from pulse2.database.imaging.types import P2IT, P2ISS
-from pulse2.managers.profile import ComputerProfileManager
+from medulla.managers.profile import ComputerProfileI
+from medulla.database.imaging import ImagingDatabase
+from medulla.database.imaging.types import P2IT, P2ISS
+from medulla.managers.profile import ComputerProfileManager
 
 
 class ImagingProfile(ComputerProfileI):

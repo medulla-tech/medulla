@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from mmc.support.config import PluginConfig  # , ConfigException
-from pulse2.database.xmppmaster.config import XmppMasterDatabaseConfig
+from medulla.database.xmppmaster.config import XmppMasterDatabaseConfig
 import platform
 from mmc.plugins.xmppmaster.master.lib import utils
 import logging
@@ -63,8 +63,8 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.passwordconnexionmuc = self.get("chatroom", "password")
 
         #######configuration browserfile#######
-        self.defaultdir = os.path.join("/", "var", "lib", "pulse2", "file-transfer")
-        self.rootfilesystem = os.path.join("/", "var", "lib", "pulse2", "file-transfer")
+        self.defaultdir = os.path.join("/", "var", "lib", "medulla", "file-transfer")
+        self.rootfilesystem = os.path.join("/", "var", "lib", "medulla", "file-transfer")
         if self.has_option("browserfile", "defaultdir"):
             self.defaultdir = self.get("browserfile", "defaultdir")
         if self.has_option("bowserfile", "rootfilesystem"):
@@ -264,7 +264,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         if self.has_option("global", "diragentbase"):
             self.diragentbase = self.get("global", "diragentbase")
         else:
-            self.diragentbase = "/var/lib/pulse2/xmpp_baseremoteagent/"
+            self.diragentbase = "/var/lib/medulla/xmpp_baseremoteagent/"
         if self.has_option("global", "autoupdate"):
             self.autoupdate = self.getboolean("global", "autoupdate")
         else:

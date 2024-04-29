@@ -27,9 +27,9 @@
 //require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 //topology
-function xmlrpc_topology_pulse()
+function xmlrpc_topology_medulla()
 {
-    return xmlCall("xmppmaster.topologypulse", array());
+    return xmlCall("xmppmaster.topologymedulla", array());
 }
 
 function xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx)

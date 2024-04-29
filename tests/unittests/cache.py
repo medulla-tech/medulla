@@ -5,12 +5,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
-Test module for the Pulse 2 cache
+Test module for the Medulla 2 cache
 """
 import unittest
 import time.sleep
 
-from pulse2.cache import (
+from medulla.cache import (
     CacheManager,
     getCache,
     CacheFault,
@@ -20,7 +20,7 @@ from pulse2.cache import (
 
 
 class CacheTest(unittest.TestCase):
-    """Test Generic Pulse2 cache"""
+    """Test Generic Medulla2 cache"""
 
     def setUp(self):
         CacheManager().reset()

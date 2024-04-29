@@ -21,8 +21,8 @@ from mmc.database.database_helper import DatabaseHelper
 from mmc.support.mmctools import SecurityContext
 
 # PULSE2 modules
-import pulse2.database.dyngroup
-from pulse2.database.dyngroup import (
+import medulla.database.dyngroup
+from medulla.database.dyngroup import (
     Groups,
     Machines,
     Results,
@@ -40,7 +40,7 @@ import pickle
 logger = logging.getLogger()
 
 
-class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
+class DyngroupDatabase(medulla.database.dyngroup.DyngroupDatabase):
     """
     The function defined here are only to use in the mmc because
     they need ctx objet to work and sometime some mmc helpers

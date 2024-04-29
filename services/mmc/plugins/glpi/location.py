@@ -9,7 +9,7 @@ Provide functions to get all user profiles and user locations informations
 """
 
 import logging
-from pulse2.managers.location import ComputerLocationI
+from medulla.managers.location import ComputerLocationI
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.utilities import complete_ctx
 

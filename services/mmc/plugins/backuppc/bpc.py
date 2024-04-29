@@ -27,7 +27,7 @@ from twisted.internet.threads import deferToThread
 deferred = deferToThread.__get__  # Create an alias for deferred functions
 
 # BackupPC DB
-from pulse2.database.backuppc import BackuppcDatabase
+from medulla.database.backuppc import BackuppcDatabase
 
 # BackupPC Config
 from mmc.plugins.backuppc.config import BackuppcConfig
@@ -67,7 +67,7 @@ def getBackupServerByUUID(uuid):
     @rtype: str
     """
     # return 'localhost/backuppc/index.cgi'
-    from pulse2.managers.location import ComputerLocationManager
+    from medulla.managers.location import ComputerLocationManager
 
     try:
         entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid][
@@ -733,35 +733,35 @@ def set_backup_for_host(uuid):
     port = randint(49152, 65535)
     config["RsyncClientPath"] = "%s" % rsync_path
     config["RsyncClientCmd"] = (
-        "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s $rsyncPath $argList+"
+        "$sshPath -q -x -o StrictHostKeyChecking=no -l medulla -p %s $rsyncPath $argList+"
         % port
     )
     if machine["os"].lower() == "macos":
         config["RsyncClientRestoreCmd"] = (
-            "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost sudo $rsyncPath $argList+"
+            "$sshPath -q -x -o StrictHostKeyChecking=no -l medulla -p %s localhost sudo $rsyncPath $argList+"
             % port
         )
     else:
         config["RsyncClientRestoreCmd"] = (
-            "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost $rsyncPath $argList+"
+            "$sshPath -q -x -o StrictHostKeyChecking=no -l medulla -p %s localhost $rsyncPath $argList+"
             % port
         )
     config["DumpPreUserCmd"] = (
-        "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s" % (uuid, port)
+        "/usr/sbin/medulla-connect-machine-backuppc -m %s -p %s" % (uuid, port)
     )
     config["DumpPostUserCmd"] = (
-        "/usr/sbin/pulse2-disconnect-machine-backuppc -m %s -p %s" % (uuid, port)
+        "/usr/sbin/medulla-disconnect-machine-backuppc -m %s -p %s" % (uuid, port)
     )
     config["RestorePreUserCmd"] = (
-        "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s" % (uuid, port)
+        "/usr/sbin/medulla-connect-machine-backuppc -m %s -p %s" % (uuid, port)
     )
     config["RestorePostUserCmd"] = (
-        "/usr/sbin/pulse2-disconnect-machine-backuppc -m %s -p %s" % (uuid, port)
+        "/usr/sbin/medulla-disconnect-machine-backuppc -m %s -p %s" % (uuid, port)
     )
     config["ClientNameAlias"] = "localhost"
-    config["NmbLookupCmd"] = "/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host"
+    config["NmbLookupCmd"] = "/usr/bin/python /usr/bin/medulla-uuid-resolver -A $host"
     config["NmbLookupFindHostCmd"] = (
-        "/usr/bin/python /usr/bin/pulse2-uuid-resolver $host"
+        "/usr/bin/python /usr/bin/medulla-uuid-resolver $host"
     )
     config["XferMethod"] = "rsync"
     config["RsyncRestoreArgs"] = (

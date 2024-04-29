@@ -31,10 +31,10 @@ from mmc.plugins.pkgs.config import PkgsConfig
 import uuid
 import json
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 
-from pulse2.database.pkgs import PkgsDatabase
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.pkgs import PkgsDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 import traceback
 from mmc.plugins.xmppmaster.master.lib.utils import (
     simplecommand,
@@ -212,8 +212,8 @@ def chown(uuid):
 
 
 def associatePackages(pid, fs, level=0):
-    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
-    packages_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
+    tmp_input_dir = os.path.join("/", "var", "lib", "medulla", "package-server-tmpdir")
+    packages_input_dir = os.path.join("/", "var", "lib", "medulla", "packages")
     destination = os.path.join(packages_input_dir, pid)
     errortransfert = []
     result = []
@@ -243,7 +243,7 @@ def update_package_size(uuid):
     Args:
         uuid: The uuid of the package
     """
-    package_root = os.path.join("/", "var", "lib", "pulse2", "packages", uuid)
+    package_root = os.path.join("/", "var", "lib", "medulla", "packages", uuid)
     size = simplecommand("du -Lab %s" % package_root)["result"][-1]
     if type(size) is bytes:
         size = size.decode("utf-8")
@@ -371,7 +371,7 @@ def prepare_shared_folder():
     It creates folders if missing.
     """
     packages_input_dir_sharing = os.path.join(
-        "/", "var", "lib", "pulse2", "packages", "sharing"
+        "/", "var", "lib", "medulla", "packages", "sharing"
     )
     if not os.path.isdir(packages_input_dir_sharing):
         os.mkdir(packages_input_dir_sharing, 0o755)
@@ -391,7 +391,7 @@ def get_share_from_descriptor(package_descriptor):
         package_descriptor: This provide informations as localisation_server.
     """
     packages_input_dir_sharing = os.path.join(
-        "/", "var", "lib", "pulse2", "packages", "sharing"
+        "/", "var", "lib", "medulla", "packages", "sharing"
     )
     if not "localisation_server" in package_descriptor:
         logging.getLogger().warning(
@@ -464,8 +464,8 @@ def parsexmppjsonfile(path):
 
 def generate_hash(path, package_id):
     logger = logging.getLogger()
-    source = "/var/lib/pulse2/packages/sharing/" + path + "/" + package_id
-    dest = "/var/lib/pulse2/packages/hash/" + path + "/" + package_id
+    source = "/var/lib/medulla/packages/sharing/" + path + "/" + package_id
+    dest = "/var/lib/medulla/packages/hash/" + path + "/" + package_id
     BLOCK_SIZE = 65535
 
     if os.path.exists(dest):
@@ -569,10 +569,10 @@ def putPackageDetail(package, need_assign=True):
     # -------------------------------------------
 
     packages_id_input_dir = os.path.join(
-        "/", "var", "lib", "pulse2", "packages", package["id"]
+        "/", "var", "lib", "medulla", "packages", package["id"]
     )
     packages_input_dir_sharing = os.path.join(
-        "/", "var", "lib", "pulse2", "packages", "sharing"
+        "/", "var", "lib", "medulla", "packages", "sharing"
     )
 
     prepare_shared_folder()
@@ -769,7 +769,7 @@ def putPackageDetail(package, need_assign=True):
 def pkgs_getTemporaryFiles():
     logging.getLogger().debug("getTemporaryFiles")
     ret = []
-    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
+    tmp_input_dir = os.path.join("/", "var", "lib", "medulla", "package-server-tmpdir")
     if os.path.exists(tmp_input_dir):
         for f in os.listdir(tmp_input_dir):
             ret.append([f, os.path.isdir(os.path.join(tmp_input_dir, f))])
@@ -777,7 +777,7 @@ def pkgs_getTemporaryFiles():
 
 
 def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
-    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
+    tmp_input_dir = os.path.join("/", "var", "lib", "medulla", "package-server-tmpdir")
     retresult = {
         "version": "0.1",
         "commandcmd": [],
@@ -857,7 +857,7 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
 
 
 def pushPackage(random_dir, files, local_files):
-    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
+    tmp_input_dir = os.path.join("/", "var", "lib", "medulla", "package-server-tmpdir")
     logging.getLogger().info("pushing package from a local mmc-agent")
     if not os.path.exists(tmp_input_dir):
         os.makedirs(tmp_input_dir)
@@ -885,7 +885,7 @@ def pushPackage(random_dir, files, local_files):
 
 
 def removeFilesFromPackage(pid, files):
-    tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "packages")
+    tmp_input_dir = os.path.join("/", "var", "lib", "medulla", "packages")
     ret = []
     success = []
     error = []
@@ -1244,7 +1244,7 @@ class DownloadAppstreamPackageList(object):
                 # If package is already downloaded, skip
                 logger.debug("Got UUID %s, checking if it already exists ..." % uuid)
                 if not uuid or os.path.exists(
-                    "/var/lib/pulse2/appstream_packages/%s/" % uuid
+                    "/var/lib/medulla/appstream_packages/%s/" % uuid
                 ):
                     continue
                 # add package to download package list
@@ -1280,7 +1280,7 @@ class DownloadAppstreamPackageList(object):
                 self._start_appstream(pkg)
                 # Creating package directory
                 logger.debug("New package version, creating %s directory" % uuid)
-                package_dir = "/var/lib/pulse2/appstream_packages/%s/" % uuid
+                package_dir = "/var/lib/medulla/appstream_packages/%s/" % uuid
                 os.mkdir(package_dir)
 
                 # Downloading third party binaries
@@ -1351,7 +1351,7 @@ dapl = DownloadAppstreamPackageList()
 
 
 def get_installation_uuid():
-    return open("/etc/pulse-licensing/installation_id").read().strip()
+    return open("/etc/medulla-licensing/installation_id").read().strip()
 
 
 def lserv_query(cmd, options):
@@ -1476,11 +1476,11 @@ def getAppstreamNotifications():
 
 
 def _path_package():
-    return os.path.join("/", "var", "lib", "pulse2", "packages")
+    return os.path.join("/", "var", "lib", "medulla", "packages")
 
 
 def _path_packagequickaction():
-    pathqd = os.path.join("/", "var", "lib", "pulse2", "qpackages")
+    pathqd = os.path.join("/", "var", "lib", "medulla", "qpackages")
     if not os.path.isdir(pathqd):
         try:
             os.makedirs(pathqd)
@@ -2065,9 +2065,9 @@ esac""" % (
             elif installer == "Nullsoft.NSIS.exehead":
                 self.logger.debug("NSIS detected")
                 if re.match(
-                    "^pulse2-secure-agent-.*\.exe$", basename(self.file)
+                    "^medulla-secure-agent-.*\.exe$", basename(self.file)
                 ) and not re.search("plugin", basename(self.file)):
-                    self.logger.debug("Pulse Secure Agent detected, add /UPDATE flag")
+                    self.logger.debug("Medulla Secure Agent detected, add /UPDATE flag")
                     return self.getNSISUpdateCommand()
                 return self.getNSISCommand()
             elif installer == "7zS.sfx.exe":

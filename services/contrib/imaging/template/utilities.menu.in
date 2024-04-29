@@ -12,8 +12,8 @@ MENU CMDLINEROW 16
 MENU HELPMSGROW 21
 MENU HELPMSGENDROW 29
 
-LABEL pulse_main_menu
-MENU LABEL Back to Pulse Main Menu
+LABEL medulla_main_menu
+MENU LABEL Back to Medulla Main Menu
 KERNEL vesamenu.c32
 
 LABEL memtest

@@ -10,7 +10,7 @@ from update_remote_agent import Update_Remote_Agent
 import types
 import configparser
 from sleekxmpp import jid
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 
 logger = logging.getLogger()
 DEBUGPULSEPLUGIN = 25
@@ -64,15 +64,15 @@ def read_conf_remote_update(objectxmpp):
             "plugin %s\nConfiguration file :"
             "\n\t%s missing"
             "\neg conf:\n[parameters]\n"
-            "diragentbase = /var/lib/pulse2/xmpp_baseremoteagent/\n"
+            "diragentbase = /var/lib/medulla/xmpp_baseremoteagent/\n"
             "autoupdate = True" % (plugin["NAME"], pathfileconf)
         )
         logger.warning(
             "default value for diragentbase "
-            "is /var/lib/pulse2/xmpp_baseremoteagent/"
+            "is /var/lib/medulla/xmpp_baseremoteagent/"
             "\ndefault value for autoupdate is True"
         )
-        objectxmpp.diragentbase = "/var/lib/pulse2/xmpp_baseremoteagent/"
+        objectxmpp.diragentbase = "/var/lib/medulla/xmpp_baseremoteagent/"
         objectxmpp.loadautoupdate = True
         objectxmpp.generate_baseagent_fingerprint_interval = 900
     else:
@@ -85,7 +85,7 @@ def read_conf_remote_update(objectxmpp):
         if Config.has_option("parameters", "diragentbase"):
             objectxmpp.diragentbase = Config.get("parameters", "diragentbase")
         else:
-            objectxmpp.diragentbase = "/var/lib/pulse2/xmpp_baseremoteagent/"
+            objectxmpp.diragentbase = "/var/lib/medulla/xmpp_baseremoteagent/"
         if Config.has_option("parameters", "autoupdate"):
             objectxmpp.loadautoupdate = Config.getboolean("parameters", "autoupdate")
         else:

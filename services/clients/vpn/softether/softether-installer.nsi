@@ -97,7 +97,7 @@ Function .onInit
   ${GetOptions} $R0 "/VPN_CONNECTION=" $0
   StrCpy $VPN_CONNECTION $0
   ${If} $VPN_CONNECTION == ""
-    StrCpy $VPN_CONNECTION "pulse2connection"
+    StrCpy $VPN_CONNECTION "medullaconnection"
   ${EndIf}
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; Handle /VPN_LOGIN option ;
@@ -167,7 +167,7 @@ Section "SoftEther VPN Client" SEC01
  ExecWait 'sc start SEVPNCLIENT'
  Sleep 10000
 
- FileOpen $4 "$INSTDIR\pulse2connection.vpncmd" w
+ FileOpen $4 "$INSTDIR\medullaconnection.vpncmd" w
  FileWrite $4 "NicCreate VPN$\r$\n"
  FileWrite $4 "AccountCreate $VPN_CONNECTION /SERVER:$VPN_SERVER:$VPN_PORT /HUB:$VPN_HUB /USERNAME:$VPN_LOGIN /NICNAME:VPN$\r$\n"
  FileWrite $4 "AccountPasswordSet $VPN_CONNECTION /PASSWORD:$VPN_PASSWORD /TYPE:standard$\r$\n"
@@ -176,9 +176,9 @@ Section "SoftEther VPN Client" SEC01
  FileClose $4
  Exec '"$INSTDIR\vpncmgr.exe"'
  Sleep 10000
- ExecWait '"$INSTDIR\vpncmd.exe" localhost /CLIENT /IN:"$INSTDIR\pulse2connection.vpncmd"'
+ ExecWait '"$INSTDIR\vpncmd.exe" localhost /CLIENT /IN:"$INSTDIR\medullaconnection.vpncmd"'
  Sleep 10000
- Delete "$INSTDIR\pulse2connection.vpncmd"
+ Delete "$INSTDIR\medullaconnection.vpncmd"
 
 SectionEnd
 

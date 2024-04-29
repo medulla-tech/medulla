@@ -26,7 +26,7 @@
 
 * Change Effect.Base#render not to use eval(), so certain JavaScript runtime environments (like Adobe AIR) that do not support eval() work.  [King Maxemilian, John-David Dalton]
 
-* Fixed a calculation error in Effect.Transitions.pulse that could lead to flickering, add easing and change it to be a normal 0 to 1 transition that can be used with any effects; Effect.Pulsate now uses its own implementation.  [Thomas Fuchs]
+* Fixed a calculation error in Effect.Transitions.medulla that could lead to flickering, add easing and change it to be a normal 0 to 1 transition that can be used with any effects; Effect.Pulsate now uses its own implementation.  [Thomas Fuchs]
 
 * Fixed Effect.ScrollTo. Changeset 8686 had a typo, document.viewport.getScrollOffsets[0] is always undefined. Removed the max check as it is not a cross-browser way to get scroll height and breaks the effect. Depending on scrollTo to do the right thing.  Closes #11306.  [Nick Stakenburg]
 
@@ -313,9 +313,9 @@
 
     var node = Builder.build("<p>this is <b>neat!</b></p>");
 
-* Add a pulses parameter to Effect.Pulsate to control the amount of pulses, fixes #6245 [leeo]
+* Add a medullas parameter to Effect.Pulsate to control the amount of medullas, fixes #6245 [leeo]
 
-    For example, Effect.Pulsate('d8', {pulses: 2}) would pulsate twice. If the option is not given, it defaults to five pulses.
+    For example, Effect.Pulsate('d8', {medullas: 2}) would pulsate twice. If the option is not given, it defaults to five medullas.
 
 * Fix an issue with clicking on a slider span resulting in an exception, fixes #4707 [thx sergeykojin]
 
@@ -1156,7 +1156,7 @@
 
 * Moved Event, Position and Element.Class to prototype-ext.js in preparation to Rails 0.13
 
-* Added Effect.Transitions.pulse
+* Added Effect.Transitions.medulla
 
 * Added Effect.Pulsate and Effect.Fold effect by Justin Palmer
 

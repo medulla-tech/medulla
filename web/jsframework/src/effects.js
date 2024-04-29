@@ -84,8 +84,8 @@ var Effect = {
     wobble: function(pos) {
       return (-Math.cos(pos*Math.PI*(9*pos))/2) + .5;
     },
-    pulse: function(pos, pulses) {
-      return (-Math.cos((pos*((pulses||5)-.5)*2)*Math.PI)/2) + .5;
+    medulla: function(pos, medullas) {
+      return (-Math.cos((pos*((medullas||5)-.5)*2)*Math.PI)/2) + .5;
     },
     spring: function(pos) {
       return 1 - (Math.cos(pos * 4.5 * Math.PI) * Math.exp(-pos * 6));
@@ -882,7 +882,7 @@ Effect.Pulsate = function(element) {
     oldOpacity = element.getInlineOpacity(),
     transition = options.transition || Effect.Transitions.linear,
     reverser   = function(pos){
-      return 1 - transition((-Math.cos((pos*(options.pulses||5)*2)*Math.PI)/2) + .5);
+      return 1 - transition((-Math.cos((pos*(options.medullas||5)*2)*Math.PI)/2) + .5);
     };
 
   return new Effect.Opacity(element,

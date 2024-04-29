@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2022-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# This script is used to generate update packages in /var/lib/pulse2/packages
+# This script is used to generate update packages in /var/lib/medulla/packages
 
 from datetime import datetime
 import re
@@ -33,7 +33,7 @@ class synch_packages:
         # logger.info("File parmetre %s" % self.param)
         self.update_file_windows = {}
         self.path_base = os.path.join(
-            "/", "var", "lib", "pulse2", "base_update_package"
+            "/", "var", "lib", "medulla", "base_update_package"
         )
         if not os.path.exists(self.path_base):
             try:
@@ -41,7 +41,7 @@ class synch_packages:
             except OSError as e:
                 logger.error(f"{str(e)} create directory share'{self.path_base}'")
 
-        self.sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
+        self.sharing = os.path.join("/", "var", "lib", "medulla", "packages", "sharing")
         self.dirpartageupdate = os.path.join(self.sharing, self.param["partage"])
         self.path_in_partage = os.path.join(
             self.dirpartageupdate, self.param["uidpackage"]
@@ -244,8 +244,8 @@ class synch_packages:
         logger.info(f'correct uninstalled package {self.param["uidpackage"]}')
         return True
 
-    # dans /var/lib/pulse2/packages/sharing/winupdates
-    # ln -s /var/lib/pulse2/base_update_package/fcc60465-497b-4395-b714-4699cef797ca fcc60465-497b-4395-b714-4699cef797ca
+    # dans /var/lib/medulla/packages/sharing/winupdates
+    # ln -s /var/lib/medulla/base_update_package/fcc60465-497b-4395-b714-4699cef797ca fcc60465-497b-4395-b714-4699cef797ca
 
     def search_list_package(self):
         """
@@ -566,7 +566,7 @@ class synch_packages:
                                                     `enabled`, `type`,
                                                     `uri`, `ars_name`,
                                                     `ars_id`, `share_path`,
-                                                    `usedquotas`, `quotas`) VALUES ('%s', 'partage update', '1', 'update', 'pulse', 'pulse', '1', '%s', '0', '0');""" % (
+                                                    `usedquotas`, `quotas`) VALUES ('%s', 'partage update', '1', 'update', 'medulla', 'medulla', '1', '%s', '0', '0');""" % (
                 self.param["partage"],
                 self.dirpartageupdate,
             )
@@ -993,7 +993,7 @@ if __name__ == "__main__":
         "-o",
         "--outputdir",
         dest="outputdir",
-        default="/var/lib/pulse2/base_update_package",
+        default="/var/lib/medulla/base_update_package",
         help="path base directory generation package",
     )
 
@@ -1136,7 +1136,7 @@ if __name__ == "__main__":
         print("+--------------------------------------+")
         print("| c9240667-c3d9-4ba0-8a4e-e258473f7b73 |    <<--- package installer  ")
         print("+--------------------------------------+")
-        print("ls -al  /var/lib/pulse2/packages/sharing/winupdates/")
+        print("ls -al  /var/lib/medulla/packages/sharing/winupdates/")
         print("c9240667-c3d9-4ba0-8a4e-e258473f7b73")
 
         print(
@@ -1155,9 +1155,9 @@ if __name__ == "__main__":
             % os.path.basename(sys.argv[0])
         )
         print("\t\tpackage move to base update : the package still exists")
-        print("ls /var/lib/pulse2/base_update_package")
+        print("ls /var/lib/medulla/base_update_package")
         print("c9240667-c3d9-4ba0-8a4e-e258473f7b73     <---the package still exists")
-        print("ls  /var/lib/pulse2/packages/sharing/winupdates/    uninstall")
+        print("ls  /var/lib/medulla/packages/sharing/winupdates/    uninstall")
         print("uninstall pkgs")
         print(
             "SELECT * FROM pkgs.packages where uuid='c9240667-c3d9-4ba0-8a4e-e258473f7b73';"
@@ -1172,10 +1172,10 @@ if __name__ == "__main__":
         print("\t\tRemove package")
         print("\t\tthe package no longer exists")
         print(
-            "ls /var/lib/pulse2/base_update_package    <---  the package no longer exists"
+            "ls /var/lib/medulla/base_update_package    <---  the package no longer exists"
         )
         print(
-            "ls  /var/lib/pulse2/packages/sharing/winupdates/    <---  the package no longer exists"
+            "ls  /var/lib/medulla/packages/sharing/winupdates/    <---  the package no longer exists"
         )
         print("uninstall pkgs")
         print(
@@ -1189,9 +1189,9 @@ if __name__ == "__main__":
 
     if opts.partage == "":
         print("name partage missing")
-    path_partage = os.path.join("/var/lib/pulse2/packages/sharing/", opts.partage)
+    path_partage = os.path.join("/var/lib/medulla/packages/sharing/", opts.partage)
 
-    # if opts.outputdir == "/var/lib/pulse2/packages/base_update_package":
+    # if opts.outputdir == "/var/lib/medulla/packages/base_update_package":
     # opts.outputdir=os.path.join(opts.outputdir, opts.table_name)
 
     # print ( "path_partage %s " % path_partage)

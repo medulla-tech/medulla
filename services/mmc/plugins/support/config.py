@@ -21,7 +21,7 @@ class SupportConfig(PluginConfig):
     def setDefault(self):
         PluginConfig.setDefault(self)
 
-        self.pid_path = "/var/run/pulse2/ssh_support"
+        self.pid_path = "/var/run/medulla/ssh_support"
         self.ssh_path = "/usr/bin/ssh"
         self.support_url = ""
         self.support_user = "support"
@@ -30,15 +30,15 @@ class SupportConfig(PluginConfig):
         self.session_timeout = 7200
 
         self.license_server_url = ""
-        self.install_id_path = "/etc/pulse-licensing/installation_id"
+        self.install_id_path = "/etc/medulla-licensing/installation_id"
         self.install_uuid = None
 
         self.cron_search_for_updates = "0 6 * * *"
-        self.license_tmp_file = "/var/lib/mmc/pulse_license_info"
+        self.license_tmp_file = "/var/lib/mmc/medulla_license_info"
         self.country = "FR"
 
-        self.collector_script_path = "/usr/sbin/pulse2-collect-info"
-        self.collector_archive_path = "/tmp/pulse2-collect-info.7z"
+        self.collector_script_path = "/usr/sbin/medulla-collect-info"
+        self.collector_archive_path = "/tmp/medulla-collect-info.7z"
 
     def readConf(self):
         PluginConfig.readConf(self)

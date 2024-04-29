@@ -30,7 +30,7 @@ export VPN_SERVER_PASSWORD="@@VPN_SERVER_PASSWORD@@"
 # logging when run a command in the expect block
 export VPN_LOG_EXPECT=1
 # URL to download install pack archive
-export VPN_URL_ROOT="http://pulse2.mandriva.org/pub/pulse2/misc"
+export VPN_URL_ROOT="http://medulla.mandriva.org/pub/medulla/misc"
 export VPN_URL="$VPN_URL_ROOT"
 
 # service side { server | client }
@@ -56,7 +56,7 @@ export VPN_START_UP="/etc/init.d/$VPN_SERVICE_NAME"
 # name of virtual hub
 export VPN_PULSE_HUB="PULSE"
 # name of user group
-export VPN_PULSE_GROUP="pulse"
+export VPN_PULSE_GROUP="medulla"
 # TODO - temp variables:
 export VPN_ADMIN_PASSWORD="@@VPN_ADMIN_PASSWORD@@"
 export VPN_PRE_SHARED_KEY="@@VPN_PRE_SHARED_KEY@@"

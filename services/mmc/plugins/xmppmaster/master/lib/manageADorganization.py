@@ -13,14 +13,14 @@ logger = logging.getLogger()
 class manage_fqdn_window_activedirectory:
     @staticmethod
     def basedirmachineAD():
-        bd = os.path.join("/", "var", "lib", "pulse2", "organizationADmachines")
+        bd = os.path.join("/", "var", "lib", "medulla", "organizationADmachines")
         if not os.path.isdir(bd):
             os.makedirs(bd, mode=0o700)
         return bd
 
     @staticmethod
     def basediruserAD():
-        bd = os.path.join("/", "var", "lib", "pulse2", "organizationADusers")
+        bd = os.path.join("/", "var", "lib", "medulla", "organizationADusers")
         if not os.path.isdir(bd):
             os.makedirs(bd, mode=0o700)
         return bd

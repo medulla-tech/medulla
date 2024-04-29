@@ -22,9 +22,9 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
 # bootstrap.sh [target]
-# Main entry point to automatically perform a basic Pulse setup using code
+# Main entry point to automatically perform a basic Medulla setup using code
 # from the SVN.
-# If target is specified, the Pulse 2 main Makefile will be called with this
+# If target is specified, the Medulla 2 main Makefile will be called with this
 # target.
 
 # Set more permissive umask
@@ -40,9 +40,9 @@ export TMPCO=`mktemp -d`
 
 pushd $TMPCO
 
-# Uninstall Pulse 2
-svn co http://mds.mandriva.org/svn/mmc-projects/pulse2/server/trunk pulse2
-export PULSE2="$TMPCO/pulse2"
+# Uninstall Medulla 2
+svn co http://mds.mandriva.org/svn/mmc-projects/medulla/server/trunk medulla
+export PULSE2="$TMPCO/medulla"
 pushd $PULSE2/tests/scripts
 ./uninstall.sh
 popd
@@ -58,9 +58,9 @@ pushd $PULSE2/tests/scripts
 ./install.sh
 popd
 
-# Install Pulse 2 imaging client
-svn co http://mds.mandriva.org/svn/mmc-projects/pulse2/client/imaging/trunk pulse2-client-imaging
-export PULSE2IMAGINGCLIENT="$TMPCO/pulse2-client-imaging"
+# Install Medulla 2 imaging client
+svn co http://mds.mandriva.org/svn/mmc-projects/medulla/client/imaging/trunk medulla-client-imaging
+export PULSE2IMAGINGCLIENT="$TMPCO/medulla-client-imaging"
 pushd $PULSE2IMAGINGCLIENT/tests/scripts
 ./install.sh
 popd
@@ -73,7 +73,7 @@ if [ ! -z "$1" ];
     set +e
     make "$1"
     RET=$?
-    # Print Pulse 2 logs on stdout
+    # Print Medulla 2 logs on stdout
     $MMCCORE/tests/scripts/print-mmc-log.sh
     set -e
     popd

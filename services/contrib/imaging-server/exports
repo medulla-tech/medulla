@@ -1,6 +1,6 @@
 ################################
-# The Pulse 2 exported folders #
+# The Medulla 2 exported folders #
 ################################
-/var/lib/pulse2/imaging/computers       *(async,rw,no_root_squash,subtree_check)
-/var/lib/pulse2/imaging/masters         *(async,rw,no_root_squash,subtree_check)
-/var/lib/pulse2/imaging/postinst        *(async,ro,no_root_squash,subtree_check)
+/var/lib/medulla/imaging/computers       *(async,rw,no_root_squash,subtree_check)
+/var/lib/medulla/imaging/masters         *(async,rw,no_root_squash,subtree_check)
+/var/lib/medulla/imaging/postinst        *(async,ro,no_root_squash,subtree_check)

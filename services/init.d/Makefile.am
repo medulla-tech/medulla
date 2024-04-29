@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-initscripts = pulse2-package-server pulse2-scheduler \
-	pulse2-imaging-server pulse2-cm pulse2-register-pxe
+initscripts = medulla-package-server medulla-scheduler \
+	medulla-imaging-server medulla-cm medulla-register-pxe
 
 initsysdir = $(sysconfdir)/init.d/
 initsys_SCRIPTS = $(initscripts)
@@ -44,8 +44,8 @@ $(initscripts): Makefile
 	  $(edit) $${srcdir}$@.in >$@.tmp
 	mv $@.tmp $@
 
-pulse2-package-server: pulse2-package-server.in
-pulse2-scheduler: pulse2-scheduler.in
-pulse2-imaging-server: pulse2-imaging-server.in
-pulse2-cm: pulse2-cm.in
-pulse2-register-pxe: pulse2-register-pxe.in
+medulla-package-server: medulla-package-server.in
+medulla-scheduler: medulla-scheduler.in
+medulla-imaging-server: medulla-imaging-server.in
+medulla-cm: medulla-cm.in
+medulla-register-pxe: medulla-register-pxe.in

@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@
 #
 SUBDIRS =
 if ENABLE_CONF
-SUBDIRS += pulse2 plugins
+SUBDIRS += medulla plugins
 endif
 
-imagingstatedir = $(localstatedir)/lib/pulse2/imaging
+imagingstatedir = $(localstatedir)/lib/medulla/imaging
 imagingdirs = bootmenus computers tools inventories masters isos archives
 
 examplesdir = @examplesdir@
@@ -35,14 +35,14 @@ install-data-local:
 	  $(MKDIR_P) $(DESTDIR)$(imagingstatedir)/$$dir; \
 	done
 	$(MKDIR_P) $(DESTDIR)$(examplesdir)
-	for path in `find $(srcdir)/pulse2 $(srcdir)/plugins -name '*.ini'`; do \
+	for path in `find $(srcdir)/medulla $(srcdir)/plugins -name '*.ini'`; do \
 	  destpath=`echo $$path | sed 's#'$(srcdir)'/##'`; \
 	  $(MKDIR_P) $(DESTDIR)$(examplesdir)/`dirname $$destpath`; \
 	  $(INSTALL_DATA) $$path $(DESTDIR)$(examplesdir)/$$destpath; \
 	done
 
 uninstall-local:
-	for path in `find $(srcdir)/pulse2 $(srcdir)/plugins -name '*.ini'`; do \
+	for path in `find $(srcdir)/medulla $(srcdir)/plugins -name '*.ini'`; do \
 	  destpath=`echo $$path | sed 's#'$(srcdir)'/##'`; \
 	  rm -f $(DESTDIR)$(examplesdir)/$$destpath; \
 	done

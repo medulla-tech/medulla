@@ -30,7 +30,7 @@ class MultiFileTpl extends AbstractTpl
     public function display($arrParam = array())
     {
         // FIXME use session or not ?
-        $random_dir = "pulse_rdir_" . uniqid();
+        $random_dir = "medulla_rdir_" . uniqid();
         $_SESSION['random_dir'] = $random_dir;
         print '<div id="file-uploader">
                 <noscript>
@@ -125,7 +125,7 @@ class MultiFileTpl2 extends AbstractTpl
     public function display($arrParam = array())
     {
 
-        $random_dir = "pulse_rdir_" . uniqid();
+        $random_dir = "medulla_rdir_" . uniqid();
         print '<div id="file-uploader">
                 <noscript>
                         <p>Please enable JavaScript to use file uploader.</p>
@@ -218,7 +218,7 @@ class MultiFileTpl3 extends AbstractTpl
     public function display($arrParam = array())
     {
 
-        $random_dir = "pulse_rdir_" . uniqid();
+        $random_dir = "medulla_rdir_" . uniqid();
         print '<div id="file-uploader">
                 <noscript>
                         <p>Please enable JavaScript to use file uploader.</p>

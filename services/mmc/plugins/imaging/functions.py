@@ -17,13 +17,13 @@ from mmc.support.mmctools import RpcProxyI  # , ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
 from mmc.plugins.imaging.config import ImagingConfig
 from mmc.plugins.base.computers import ComputerManager
-from pulse2.managers.profile import ComputerProfileManager
-from pulse2.managers.location import ComputerLocationManager
-from pulse2.managers.pulse import Pulse2Manager
-from pulse2.database.imaging import ImagingDatabase, NoImagingServerError
-from pulse2.database.imaging.types import P2IT, P2ISS, P2IM, P2ERR
-from pulse2.apis.clients.imaging import ImagingApi
-import pulse2.utils
+from medulla.managers.profile import ComputerProfileManager
+from medulla.managers.location import ComputerLocationManager
+from medulla.managers.medulla import Medulla2Manager
+from medulla.database.imaging import ImagingDatabase, NoImagingServerError
+from medulla.database.imaging.types import P2IT, P2ISS, P2IM, P2ERR
+from medulla.apis.clients.imaging import ImagingApi
+import medulla.utils
 import threading
 from os import path, makedirs, listdir, remove, rename
 import subprocess
@@ -69,7 +69,7 @@ class ImagingRpcProxy(RpcProxyI):
         return xmlrpcCleanup(menu)
 
     def check_process(self, process):
-        return xmlrpcCleanup(pulse2.utils.check_process(process))
+        return xmlrpcCleanup(medulla.utils.check_process(process))
 
     """ XML/RPC Bindings """
     ################################################### web def
@@ -663,7 +663,7 @@ class ImagingRpcProxy(RpcProxyI):
     def ClearFileStatusProcess(self):
         logger = logging.getLogger()
         logger.debug("ClearFileStatusProcess")
-        fichier = open("/tmp/pulse2-synch-masters.out", "w")
+        fichier = open("/tmp/medulla-synch-masters.out", "w")
         fichier.close()
         return True
 
@@ -696,7 +696,7 @@ class ImagingRpcProxy(RpcProxyI):
 
     def startProcessClone(self, objetclone):
         test = self.checkProcessCloneMasterToLocation(
-            "/bin/bash /usr/bin/pulse2-synch-masters"
+            "/bin/bash /usr/bin/medulla-synch-masters"
         )
         # if test: return
         if len(test) > 0:
@@ -704,15 +704,15 @@ class ImagingRpcProxy(RpcProxyI):
         self.ClearFileStatusProcess()
         logger = logging.getLogger()
         logger.debug("startProcessClone %s" % objetclone)
-        if not path.isfile("/usr/bin/pulse2-synch-masters"):
-            logger.debug("script /usr/bin/pulse2-synch-masters missing")
+        if not path.isfile("/usr/bin/medulla-synch-masters"):
+            logger.debug("script /usr/bin/medulla-synch-masters missing")
             return
         if len(objetclone["server_imaging"]) == 0:
             # if objetclone['server_imaging'] == False:
             return
         for k, v in list(objetclone["server_imaging"].items()):
             logger.debug(
-                "/usr/bin/pulse2-synch-masters %s %s %s\n"
+                "/usr/bin/medulla-synch-masters %s %s %s\n"
                 % (
                     fromUUID(objetclone["location"]),
                     fromUUID(k),
@@ -722,7 +722,7 @@ class ImagingRpcProxy(RpcProxyI):
             args = [
                 "nohup",
                 "/bin/bash",
-                "/usr/bin/pulse2-synch-masters",
+                "/usr/bin/medulla-synch-masters",
                 str(fromUUID(objetclone["location"])),
                 str(fromUUID(k)),
                 str(objetclone["masteruuid"]),
@@ -857,12 +857,12 @@ class ImagingRpcProxy(RpcProxyI):
     ###### IMAGES
     def imagingServerISOCreate(self, image_uuid, size, title):
         """
-        Call the pserver to create an ISO image corresponding to a Pulse 2 image.
-        The ISO image is bootable and allows to auto-restore the Pulse 2 image
+        Call the pserver to create an ISO image corresponding to a Medulla 2 image.
+        The ISO image is bootable and allows to auto-restore the Medulla 2 image
         to a computer hard disk.
         For now, the creation process is started as a background process.
 
-        @param image_uuid: UUID of the Pulse 2 image to convert to an ISO
+        @param image_uuid: UUID of the Medulla 2 image to convert to an ISO
         @type image_uuid: str
         @param size: media size, in bytes
         @type size: int
@@ -1842,7 +1842,7 @@ class ImagingRpcProxy(RpcProxyI):
             logging.getLogger().debug(
                 "getImagingServerByUUID : is_uuid %s " % (is_uuid)
             )
-            Pulse2Manager().putPackageServerEntity(my_is.packageserver_uuid, loc_id)
+            Medulla2Manager().putPackageServerEntity(my_is.packageserver_uuid, loc_id)
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
         except Exception as e:
             logging.getLogger().warn("Imaging.linkImagingServerToEntity : %s" % e)
@@ -1872,7 +1872,7 @@ class ImagingRpcProxy(RpcProxyI):
         success1 = success2 = False
         try:
             success1 = db.unlinkImagingServerToEntity(is_uuid)
-            success2 = Pulse2Manager().delPackageServerEntity(loc_id)
+            success2 = Medulla2Manager().delPackageServerEntity(loc_id)
         except Exception as e:
             logging.getLogger().warn("Imaging.unlinkImagingServerToEntity : %s" % e)
 
@@ -2081,7 +2081,7 @@ class ImagingRpcProxy(RpcProxyI):
         if len(macaddress) < 1:
             # No MAC address
             ret = 1
-        elif pulse2.utils.isLinuxMacAddress(macaddress[0]):
+        elif medulla.utils.isLinuxMacAddress(macaddress[0]):
             # Valid MAC address
             ret = 0
         else:
@@ -2145,7 +2145,7 @@ class ImagingRpcProxy(RpcProxyI):
                 # Check all MAC addresses
                 i = 0
                 for uuid, mac in list(h_macaddresses.items()):
-                    if not pulse2.utils.isLinuxMacAddress(mac):
+                    if not medulla.utils.isLinuxMacAddress(mac):
                         logger.info(
                             "The computer %s don't have a valid MAC address" % uuid
                         )
@@ -2856,7 +2856,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         returns a list of names (with extension, without full path) of all files
         """
-        filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = "/var/lib/medulla/imaging/postinst/sysprep/"
         if not path.exists(filexml):
             makedirs(filexml, 0o722)
         files = []
@@ -2898,7 +2898,7 @@ class ImagingRpcProxy(RpcProxyI):
         return result
 
     def Windows_Answer_File_Generator(self, xmlWAFG, title):
-        filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = "/var/lib/medulla/imaging/postinst/sysprep/"
         filetmp = "/tmp/"
 
         if not path.exists(filexml):
@@ -2945,7 +2945,7 @@ class ImagingRpcProxy(RpcProxyI):
                 return True
 
     def editWindowsAnswerFile(self, xmlWAFG, title):
-        filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = "/var/lib/medulla/imaging/postinst/sysprep/"
 
         # test if file already exists
         if path.isfile(filexml + title):
@@ -2963,7 +2963,7 @@ class ImagingRpcProxy(RpcProxyI):
         return the parameters list of sysprep answer file
         """
 
-        filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = "/var/lib/medulla/imaging/postinst/sysprep/"
         filexml = filexml + filename
 
         parameters = ""
@@ -3002,7 +3002,7 @@ class ImagingRpcProxy(RpcProxyI):
             return parameters
 
     def deleteWindowsAnswerFile(self, title):
-        filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = "/var/lib/medulla/imaging/postinst/sysprep/"
         filexml = filexml + title
 
         if path.isfile(filexml):
@@ -3015,7 +3015,7 @@ class ImagingRpcProxy(RpcProxyI):
         # """
         # Return all the content of sysprep answer file named title if exists.
         # """
-        filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = "/var/lib/medulla/imaging/postinst/sysprep/"
         filexml = filexml + title
         content, content2 = [], []
 
@@ -3155,7 +3155,7 @@ class ImagingRpcProxy(RpcProxyI):
     def getComputersWithThisPostInstallScript(self, pis_uuid):
         """
         Get a computer who have a master attached with this postinstall script
-        Used to update postinstall script on /var/lib/pulse2/imaging/master/postinst.d/
+        Used to update postinstall script on /var/lib/medulla/imaging/master/postinst.d/
 
         @param pis_uuid: postinstall script UUID
         @type pis_uuid: str
@@ -3630,7 +3630,7 @@ class ImagingRpcProxy(RpcProxyI):
             * the error in case of failure else the computer as a dict
         @rtype: list
         """
-        assert pulse2.utils.isMACAddress(mac)
+        assert medulla.utils.isMACAddress(mac)
         db_computer = ComputerManager().getComputerByMac(mac)
         if not db_computer:
             return [
@@ -3694,7 +3694,7 @@ class ImagingRpcProxy(RpcProxyI):
             * the error in case of failure else the computer as a dict
         @rtype: list
         """
-        assert pulse2.utils.isUUID(uuid)
+        assert medulla.utils.isUUID(uuid)
         ctx = self.currentContext
         db_computer = ComputerManager().getComputer(ctx, {"uuid": uuid})
         if not db_computer:
@@ -4143,7 +4143,7 @@ def synchroTargets(ctx, uuids, target_type, macs={}, wol=False):
     @param uuids: list of computers UUIDS
     @type uuids: list
 
-    @param target_type: Pulse imaging type (P2IT COMPUTER, PROFILE, ...)
+    @param target_type: Medulla imaging type (P2IT COMPUTER, PROFILE, ...)
     @type target_type: int
 
     @param macs: Dict with computer UUID as key, imaging MAC as value ({'UUIDXXX': 'xx:xx:xx:xx:xx:xx'})

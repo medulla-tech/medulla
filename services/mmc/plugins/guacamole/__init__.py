@@ -10,7 +10,7 @@ Plugin to manage the interface with xmppmaster
 import logging
 from mmc.plugins.guacamole.config import guacamoleConfig
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"

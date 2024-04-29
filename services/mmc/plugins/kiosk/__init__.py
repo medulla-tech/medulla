@@ -10,7 +10,7 @@ import os
 import base64
 import re
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 
 from mmc.support.config import PluginConfigFactory
 from mmc.plugins.kiosk.config import KioskConfig
@@ -20,8 +20,8 @@ from mmc.plugins.xmppmaster.master.lib.utils import name_random
 
 
 # Database
-from pulse2.database.kiosk import KioskDatabase
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.kiosk import KioskDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 from distutils.version import LooseVersion, StrictVersion
 
@@ -422,7 +422,7 @@ def __search_software_in_glpi(
             # verification if update
             # compare the version
             # TODO
-            # For now we use the package version. Later the software version will be needed into the pulse package
+            # For now we use the package version. Later the software version will be needed into the medulla package
             if LooseVersion(soft_glpi[2]) < LooseVersion(packageprofile[3]):
                 structuredatakioskelement["action"].append("Update")
                 logger.debug(

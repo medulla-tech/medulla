@@ -81,7 +81,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
             // Synchronize boot menu
             $ret = xmlrpc_synchroLocation($location);
             if (isXMLRPCError()) {
-                $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+                $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
                 new NotifyWidgetFailure($str);
             }
         } else {

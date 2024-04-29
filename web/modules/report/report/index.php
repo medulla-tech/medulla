@@ -32,7 +32,7 @@ require("localSidebar.php");
 require_once("modules/report/includes/xmlrpc.inc.php");
 require_once("modules/report/includes/html.inc.php");
 require_once("modules/report/includes/report.inc.php");
-require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/medulla/includes/utilities.php");
 
 $MMCApp =& MMCApp::getInstance();
 $report = get_report_sections($_SESSION['lang']);

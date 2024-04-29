@@ -25,7 +25,7 @@
 /*
 require("graph/navbar.inc.php");
 require("localSidebar.php");
-require_once("modules/pulse2/includes/utilities.php");*/
+require_once("modules/medulla/includes/utilities.php");*/
 
 
 ?>

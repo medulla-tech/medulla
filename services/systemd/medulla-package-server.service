@@ -1,0 +1,15 @@
+[Unit]
+Description=Medulla2 Package Server : medulla-package-server
+After=smbd.service slapd.service mmc-agent.service
+
+[Service]
+PIDFile=/var/run/medulla-package-server.pid
+#User=medulla
+#Group=medulla
+Type=simple
+ExecStart=/usr/sbin/medulla-package-server
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target

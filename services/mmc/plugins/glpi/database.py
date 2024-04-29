@@ -19,7 +19,7 @@ from mmc.plugins.glpi.database_94 import Glpi94
 from mmc.plugins.glpi.database_95 import Glpi95
 from mmc.plugins.glpi.database_100 import Glpi100
 
-from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+from medulla.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 
 import logging
 

@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,4 +20,4 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = init.d bin contrib mmc pulse2 conf
+SUBDIRS = init.d bin contrib mmc medulla conf

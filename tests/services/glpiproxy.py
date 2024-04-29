@@ -9,8 +9,8 @@ Test module for the scheduler balance module - part of advanced scheduling
 
 import unittest
 
-from pulse2.inventoryserver.glpiproxy import GlpiProxy
-from pulse2.inventoryserver.glpiproxy import _ErrorHandler, FusionErrorHandler
+from medulla.inventoryserver.glpiproxy import GlpiProxy
+from medulla.inventoryserver.glpiproxy import _ErrorHandler, FusionErrorHandler
 
 
 class class01ErrorHandler(unittest.TestCase):
@@ -1084,7 +1084,7 @@ def xml_inventory():
       <VIRTUALMEMORY>3816</VIRTUALMEMORY>
     </PROCESSES>
     <PROCESSES>
-      <CMD>/usr/sbin/pulse</CMD>
+      <CMD>/usr/sbin/medulla</CMD>
       <CPUUSAGE>0.0</CPUUSAGE>
       <MEM>0.1</MEM>
       <PID>1277</PID>

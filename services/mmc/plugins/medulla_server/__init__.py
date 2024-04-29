@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
-Pulse2 mmc-agent plugin
-give a central access to the Managers that can be needed by pulse2 modules
+Medulla2 mmc-agent plugin
+give a central access to the Managers that can be needed by medulla modules
 """
 
 # SqlAlchemy
@@ -20,15 +20,15 @@ from mmc.support.mmctools import (
     xmlrpcCleanup,
 )
 from mmc.agent import PluginManager
-from pulse2.managers.group import ComputerGroupManager
-from pulse2.managers.location import ComputerLocationManager
-from pulse2.managers.imaging import ComputerImagingManager
-from pulse2.database.pulse.config import Pulse2DatabaseConfig
-from pulse2.database.pulse import Pulse2Database
-from pulse2.managers.pulse import Pulse2Manager
-from mmc.plugins.medulla_server.medulla_server import Pulse2Pulse2Manager
+from medulla.managers.group import ComputerGroupManager
+from medulla.managers.location import ComputerLocationManager
+from medulla.managers.imaging import ComputerImagingManager
+from medulla.database.medulla.config import Medulla2DatabaseConfig
+from medulla.database.medulla import Medulla2Database
+from medulla.managers.medulla import Medulla2Manager
+from mmc.plugins.medulla_server.medulla_server import Medulla2Medulla2Manager
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 
 import logging
 import subprocess
@@ -54,24 +54,24 @@ def getApiVersion():
 
 
 def activate():
-    config = Pulse2Config("medulla_server")
+    config = Medulla2Config("medulla_server")
     logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin medulla_server: disabled by configuration.")
         return False
-    if not Pulse2Database().activate(config):
+    if not Medulla2Database().activate(config):
         logger.warning(
             "Plugin medulla_server: an error occurred during the database initialization"
         )
         return False
 
-    Pulse2Manager().register("medulla_server", Pulse2Pulse2Manager)
+    Medulla2Manager().register("medulla_server", Medulla2Medulla2Manager)
     updateQueryClass()
     return True
 
 
 def activate_2():
-    config = Pulse2Config("medulla_server")
+    config = Medulla2Config("medulla_server")
     try:
         ComputerLocationManager().select(config.location)
     except Exception as e:
@@ -133,13 +133,13 @@ def create_method(m):
     return method
 
 
-class Pulse2Config(PluginConfig, Pulse2DatabaseConfig):
+class Medulla2Config(PluginConfig, Medulla2DatabaseConfig):
     location = None
 
     def __init__(self, name="medulla_server", conffile=None):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile)
-            Pulse2DatabaseConfig.__init__(self)
+            Medulla2DatabaseConfig.__init__(self)
             self.initdone = True
 
     def readConf(self):
@@ -148,7 +148,7 @@ class Pulse2Config(PluginConfig, Pulse2DatabaseConfig):
         """
         PluginConfig.readConf(self)
         self.disable = self.getboolean("main", "disable")
-        Pulse2DatabaseConfig.setup(self, self.conffile)
+        Medulla2DatabaseConfig.setup(self, self.conffile)
 
         if self.has_option("main", "location"):
             self.location = self.get("main", "location")
@@ -253,7 +253,7 @@ class RpcProxy(RpcProxyI):
     def getProductUpdates(self):
         @deferred
         def _getProductUpdates():
-            updMgrPath = "/usr/share/pulse-update-manager/pulse-update-manager"
+            updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager"
 
             if not os.path.exists(updMgrPath):
                 return False
@@ -275,16 +275,16 @@ class RpcProxy(RpcProxyI):
             result = []
 
             for pkg in packages:
-                pulse_filters = (
+                medulla_filters = (
                     "python-mmc",
-                    "python-pulse2",
+                    "python-medulla",
                     "mmc-web",
-                    "pulse",
+                    "medulla",
                     "mmc-agent",
                 )
 
-                # Skip non-Pulse packages
-                if not pkg[2].startswith(pulse_filters):
+                # Skip non-Medulla packages
+                if not pkg[2].startswith(medulla_filters):
                     continue
 
                 result.append({"name": pkg[2], "title": pkg[1]})
@@ -302,37 +302,37 @@ class RpcProxy(RpcProxyI):
 
     def installProductUpdates(self):
         """
-        This function update packages used for pulse ( pulse, mmc, etc.)
+        This function update packages used for medulla ( medulla, mmc, etc.)
         """
 
         # Reset update cache
         global last_update_check_ts, available_updates
         last_update_check_ts = None
         available_updates = []
-        updMgrPath = "/usr/share/pulse-update-manager/pulse-update-manager"
+        updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager"
 
-        pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$' -e '^pulse-xmpp-agent$'"
+        medulla_packages_filter = "|grep -e '^python-mmc' -e '^python-medulla' -e '^mmc-web' -e '^medulla' -e '^mmc-agent$' -e '^medulla-agent$'"
         install_cmd = (
             "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install"
-            % pulse_packages_filter
+            % medulla_packages_filter
         )
         install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (
             updMgrPath,
-            pulse_packages_filter,
+            medulla_packages_filter,
             updMgrPath,
         )
 
         @deferred
         def _runInstall():
             try:
-                os.utime("/tmp/pulse-update-manager", None)
+                os.utime("/tmp/medulla-update-manager", None)
             except Exception:
-                open("/tmp/pulse-update-manager", "a").close()
+                open("/tmp/medulla-update-manager", "a").close()
 
             # Running install command with no pipe
             subprocess.call(install_cmd, shell=True)
 
-            os.remove("/tmp/pulse-update-manager", None)
+            os.remove("/tmp/medulla-update-manager", None)
 
         _runInstall()
 
@@ -353,23 +353,23 @@ def getSSHPublicKey():
 
 def updateDebianSourceList():
     try:
-        installation_uuid = open("/etc/pulse-licensing/installation_id").read().strip()
+        installation_uuid = open("/etc/medulla-licensing/installation_id").read().strip()
     except IOError:
         logging.getLogger().error("Error while reading installation_id file")
     try:
-        pulse_version = getVersion().split(".")[0]
-        # Pulse repository line
+        medulla_version = getVersion().split(".")[0]
+        # Medulla repository line
         repo_line = (
-            "deb http://%s:a0@pulse.mandriva.org/pub/pulse2/server/debian wheezy %s.0\n"
-            % (installation_uuid, pulse_version)
+            "deb http://%s:a0@medulla.mandriva.org/pub/medulla/server/debian wheezy %s.0\n"
+            % (installation_uuid, medulla_version)
         )
 
         lines = open("/etc/apt/sources.list", "r").readlines()
         for i in range(len(lines)):
             line = lines[i]
-            # If there is already a pulse line, we overwrite it (skip comment line)
+            # If there is already a medulla line, we overwrite it (skip comment line)
             if (
-                "pulse.mandriva.org/pub/pulse2/server/debian" in line
+                "medulla.mandriva.org/pub/medulla/server/debian" in line
                 and not "#" in line
             ):
                 lines[i] = repo_line

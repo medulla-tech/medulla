@@ -34,14 +34,14 @@ class manageschedulerdeploy:
 
     def bddir(self):
         if sys.platform.startswith("linux"):
-            return os.path.join("/", "var", "lib", "pulse2", "BDDeploy")
+            return os.path.join("/", "var", "lib", "medulla", "BDDeploy")
         elif sys.platform.startswith("win"):
             return os.path.join(
-                os.environ["ProgramFiles"], "Pulse", "var", "tmp", "BDDeploy"
+                os.environ["ProgramFiles"], "Medulla", "var", "tmp", "BDDeploy"
             )
         elif sys.platform.startswith("darwin"):
             return os.path.join(
-                "/", "Library", "Application Support", "Pulse", "BDDeploy"
+                "/", "Library", "Application Support", "Medulla", "BDDeploy"
             )
         else:
             return None

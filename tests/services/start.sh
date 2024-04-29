@@ -4,10 +4,10 @@ ERROR=0
 ERRORLOG=""
 
 RPCPSERVER=`mktemp`
-cat /usr/lib/python2.*/dist-packages/pulse2/package_server/mirror/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/mirror_api/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/package_api_put/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/package_api_get/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/scheduler_api/__init__.py /usr/lib/python2.*/dist-packages/pulse2/package_server/user_package_api/__init__.py > $RPCPSERVER
+cat /usr/lib/python2.*/dist-packages/medulla/package_server/mirror/__init__.py /usr/lib/python2.*/dist-packages/medulla/package_server/mirror_api/__init__.py /usr/lib/python2.*/dist-packages/medulla/package_server/package_api_put/__init__.py /usr/lib/python2.*/dist-packages/medulla/package_server/package_api_get/__init__.py /usr/lib/python2.*/dist-packages/medulla/package_server/scheduler_api/__init__.py /usr/lib/python2.*/dist-packages/medulla/package_server/user_package_api/__init__.py > $RPCPSERVER
 
 echo ""
-echo "Statistics of Pulse 2 unittest"
+echo "Statistics of Medulla 2 unittest"
 echo ""
 echo ""
 echo "Statistics of package-server unittest pserverempty.py"
@@ -28,14 +28,14 @@ echo ""
 echo "Statistics of launcher unittest"
 echo ""
 echo ""
-python statistics.py /usr/sbin/pulse2-launcher launcher.py
+python statistics.py /usr/sbin/medulla-launcher launcher.py
 
 echo ""
 echo ""
 echo "Statistics of scheduler unittest"
 echo ""
 echo ""
-python statistics.py /usr/sbin/pulse2-scheduler scheduler.py
+python statistics.py /usr/sbin/medulla-scheduler scheduler.py
 
 echo ""
 echo ""
@@ -60,13 +60,13 @@ python statistics.py /usr/lib/python2.*/dist-packages/mmc/plugins/pkgs/__init__.
 
 echo ""
 echo ""
-echo "`date` - Starting Python Pulse 2 tests."
+echo "`date` - Starting Python Medulla 2 tests."
 echo ""
 echo ""
 
 echo ""
 echo ""
-echo "Testing MMC agent plugins on a clean Pulse 2 setup"
+echo "Testing MMC agent plugins on a clean Medulla 2 setup"
 echo ""
 echo ""
 echo "Inventory plugin"
@@ -145,7 +145,7 @@ fi
 
 echo ""
 echo ""
-echo "`date` - Ending Python Pulse2 tests."
+echo "`date` - Ending Python Medulla2 tests."
 
 echo
 echo

@@ -29,12 +29,12 @@ from mmc.database.database_helper import DatabaseHelper
 # blacklists
 from mmc.plugins.msc import blacklist
 
-# Pulse 2 stuff
-from pulse2.database import msc
-from pulse2.database.msc.orm.target import Target
-from pulse2.database.msc.orm.commands import Commands
-from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
-from pulse2.database.msc import CommandsOnHost
+# Medulla 2 stuff
+from medulla.database import msc
+from medulla.database.msc.orm.target import Target
+from medulla.database.msc.orm.commands import Commands
+from medulla.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
+from medulla.database.msc import CommandsOnHost
 
 
 class MscDatabase(msc.MscDatabase):

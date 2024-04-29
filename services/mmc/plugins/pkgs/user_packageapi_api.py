@@ -8,7 +8,7 @@ It provide methods to tell which package_api a user can use to modify packages.
 """
 import logging
 from mmc.support.mmctools import Singleton
-import pulse2.apis.clients.user_packageapi_api
+import medulla.apis.clients.user_packageapi_api
 
 
 class UserPackageApiApi(Singleton):
@@ -44,7 +44,7 @@ class UserPackageApiApi(Singleton):
         self.logger.debug("UserPackageApiApi will connect to %s" % (self.server_addr))
 
         if self.config.upaa_verifypeer:
-            self.internal = pulse2.apis.clients.user_packageapi_api.UserPackageApiApi(
+            self.internal = medulla.apis.clients.user_packageapi_api.UserPackageApiApi(
                 credentials,
                 self.server_addr,
                 self.config.upaa_verifypeer,
@@ -52,7 +52,7 @@ class UserPackageApiApi(Singleton):
                 self.config.upaa_localcert,
             )
         else:
-            self.internal = pulse2.apis.clients.user_packageapi_api.UserPackageApiApi(
+            self.internal = medulla.apis.clients.user_packageapi_api.UserPackageApiApi(
                 credentials, self.server_addr
             )
 

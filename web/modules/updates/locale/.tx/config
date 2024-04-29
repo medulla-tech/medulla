@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[o:siveo:p:pulse-1:r:updates]
+[o:siveo:p:medulla-1:r:updates]
 file_filter = <lang>/LC_MESSAGES/updates.po
 source_file = updates.pot
 source_lang = en_US

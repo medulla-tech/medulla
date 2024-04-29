@@ -21,7 +21,7 @@ import traceback
 
 import datetime
 
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 plugin = {"VERSION": "1.4", "NAME": "downloadfile", "TYPE": "master"}
@@ -30,7 +30,7 @@ plugin = {"VERSION": "1.4", "NAME": "downloadfile", "TYPE": "master"}
 def create_path(type="windows", host="", ipordomain="", path=""):
     """
     warning you must enter a raw string for parameter path
-    eg ( a= create_path(host="pulse", ipordomain="192.168.56.103", path=r"C:\Program Files (x86)\Pulse\var\tmp\packages\a170890e-d060-11e7-ade3-0800278dc04d")
+    eg ( a= create_path(host="medulla", ipordomain="192.168.56.103", path=r"C:\Program Files (x86)\Medulla\var\tmp\packages\a170890e-d060-11e7-ade3-0800278dc04d")
     """
     if path == "":
         return ""

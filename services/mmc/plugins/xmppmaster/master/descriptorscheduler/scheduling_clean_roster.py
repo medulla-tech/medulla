@@ -29,11 +29,11 @@ def schedule_main(objectxmpp):
     logging.getLogger().debug("============================================")
     try:
         result = simplecommand(
-            "ejabberdctl process_rosteritems delete none:to none master@pulse any"
+            "ejabberdctl process_rosteritems delete none:to none master@medulla any"
         )
 
         logging.getLogger().debug(
-            "cmd = ejabberdctl process_rosteritems delete none:to none master@pulse any"
+            "cmd = ejabberdctl process_rosteritems delete none:to none master@medulla any"
         )
         logging.getLogger().debug("code return command = %s" % result["code"])
         logging.getLogger().debug("code return command = %s" % result["result"][0])

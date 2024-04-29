@@ -4,7 +4,7 @@
 
 from mmc.support import mmctools
 from mmc.support.config import PluginConfig
-from pulse2.database.dyngroup.config import DyngroupDatabaseConfig
+from medulla.database.dyngroup.config import DyngroupDatabaseConfig
 
 
 class DGConfig(DyngroupDatabaseConfig):

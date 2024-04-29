@@ -1983,10 +1983,10 @@ msgstr "Образ <strong>%s</strong> додано до типового мен
 #, php-format
 msgid ""
 "Boot menu generation Success for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
+"/var/log/mmc/medulla-package-server.log"
 msgstr ""
 "Успішно створено меню завантаження для сервера пакунків: %s<br /><br "
-"/>Ознайомтеся із /var/log/mmc/pulse2-package-server.log"
+"/>Ознайомтеся із /var/log/mmc/medulla-package-server.log"
 
 #: modules/imaging/manage/master_add.php:71
 #: modules/imaging/manage/master_add.php:75
@@ -1998,10 +1998,10 @@ msgstr ""
 #, php-format
 msgid ""
 "Boot menu generation failed for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
+"/var/log/mmc/medulla-package-server.log"
 msgstr ""
 "Помилка під час створення меню завантаження для сервера пакунків: %s<br "
-"/><br />Ознайомтеся із /var/log/mmc/pulse2-package-server.log"
+"/><br />Ознайомтеся із /var/log/mmc/medulla-package-server.log"
 
 #: modules/imaging/manage/master_add.php:81
 #, php-format

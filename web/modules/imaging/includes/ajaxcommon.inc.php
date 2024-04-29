@@ -35,7 +35,7 @@ require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
 $location = getCurrentLocation();
 if ($location == "UUID1") {
-    $location_name = _T("root", "pulse2");
+    $location_name = _T("root", "medulla");
 } else {
     $location_name = xmlrpc_getLocationName($location);
 }
@@ -56,7 +56,7 @@ if (!xmlrpc_doesLocationHasImagingServer($location)) {
             if (xmlrpc_doesLocationHasImagingServer($parent_uuid)) {
                 $location = $parent_uuid;
                 if ($location == "UUID1") {
-                    $location_name = _T("root", "pulse2");
+                    $location_name = _T("root", "medulla");
                 } else {
                     $location_name = xmlrpc_getLocationName($location);
                 }

@@ -63,19 +63,19 @@ $element = "guacamole";
 
 $paramArray = array('cn' => (isset($_SESSION['cn'])) ? $_SESSION['cn'] : $cn, 'objectUUID' => $_SESSION['objectUUID'],'vnctype' => $element, "presencemachinexmpp" => $presencemachinexmpp);
 
-$inventAction = new ActionItem(_T("Inventory", "pulse2"), "invtabs", "inventory", "inventory", "base", "computers");
+$inventAction = new ActionItem(_T("Inventory", "medulla"), "invtabs", "inventory", "inventory", "base", "computers");
 //$extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
 $backupAction = new ActionItem(_("Backup status"), "hostStatus", "backuppc", "backuppc", "backuppc", "backuppc");
 $urbackupAction = new ActionItem(_("Urbackup"), "checkMachine", "urbackup", "urbackup", "urbackup", "urbackup");
-$imgAction = new ActionItem(_T("Imaging management", "pulse2"), "imgtabs", "imaging", "computer", "base", "computers");
+$imgAction = new ActionItem(_T("Imaging management", "medulla"), "imgtabs", "imaging", "computer", "base", "computers");
 $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
 $DeployQuickxmpp->setWidth(600);
 if ($presencemachinexmpp != 1) {
-    $mscAction = new EmptyActionItem1(_T("Software deployment", "pulse2"), "msctabs", "install", "computer", "base", "computers");
+    $mscAction = new EmptyActionItem1(_T("Software deployment", "medulla"), "msctabs", "install", "computer", "base", "computers");
 } else {
 
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
-    $mscAction = new ActionItem(_T("Software deployment", "pulse2"), "msctabs", "install", "computer", "base", "computers");
+    $mscAction = new ActionItem(_T("Software deployment", "medulla"), "msctabs", "install", "computer", "base", "computers");
     if (isExpertMode()) {
         $inventconsole = new ActionItem(_("xmppconsole"), "consolecomputerxmpp", "console", "computers", "xmppmaster", "xmppmaster");
         $editconfiguration = new ActionItem(_("Edit config files"), "listfichierconf", "config", "computers", "xmppmaster", "xmppmaster");
@@ -90,7 +90,7 @@ if (isExpertMode()) {
 
 
 /*
- * This function return True if action param is in enabled pulse modules
+ * This function return True if action param is in enabled medulla modules
  *
  * @param string $action an action
  * @return bool

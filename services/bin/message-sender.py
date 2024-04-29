@@ -27,7 +27,7 @@ class MyXMPPClient(ClientXMPP):
         password,
         message,
         timeout=20,
-        toagent="master@pulse",
+        toagent="master@medulla",
         ipv4="127.0.0.1",
         port=5222,
     ):
@@ -152,7 +152,7 @@ async def main():
         "-t",
         "--toagent",
         dest="toagent",
-        default="master@pulse",
+        default="master@medulla",
         help="agent destinataire du message)",
     )
     parser.add_argument(
@@ -166,8 +166,8 @@ async def main():
         "-F",
         "--filelog",
         dest="filelog",
-        default="/var/log/pulse2/message-sender.log",
-        help="fichier de journal (par défaut: /var/log/pulse2/message-sender.log)",
+        default="/var/log/medulla/message-sender.log",
+        help="fichier de journal (par défaut: /var/log/medulla/message-sender.log)",
     )
     args = parser.parse_args()
 

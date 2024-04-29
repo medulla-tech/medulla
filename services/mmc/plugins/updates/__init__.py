@@ -2,16 +2,16 @@
 # SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 
 # Au cas où on souhaite appeler des configs d'autres modules
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.updates.config import UpdatesConfig
 
 # import pour la database
-from pulse2.database.updates import UpdatesDatabase
+from medulla.database.updates import UpdatesDatabase
 
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 import logging
 

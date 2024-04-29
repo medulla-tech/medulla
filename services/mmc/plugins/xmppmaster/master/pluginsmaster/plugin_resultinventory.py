@@ -13,7 +13,7 @@ import time
 import json
 import logging
 from mmc.plugins.glpi.database import Glpi
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.xmppmaster.master.lib.utils import file_put_contents
 
 
@@ -25,7 +25,7 @@ plugin = {"VERSION": "1.11", "NAME": "resultinventory", "TYPE": "master"}
 def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
     HEADER = {
         "Pragma": "no-cache",
-        "User-Agent": "Proxy:FusionInventory/Pulse2/GLPI",
+        "User-Agent": "Proxy:FusionInventory/Medulla2/GLPI",
         "Content-Type": "application/x-compress",
     }
     try:
@@ -79,7 +79,7 @@ def action(xmppobject, action, sessionid, data, message, ret, objsessiondata):
                 )
             except urllib.error.URLError:
                 logger.error(
-                    "The inventory server is not reachable. Please check pulse2-inventory-server service"
+                    "The inventory server is not reachable. Please check medulla-inventory-server service"
                 )
                 return
 

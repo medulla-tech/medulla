@@ -3,20 +3,20 @@
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://pulse2.mandriva.org
+-- This file is part of Medulla 2, http://medulla.mandriva.org
 --
--- Pulse 2 is free software; you can redistribute it and/or modify
+-- Medulla 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation; either version 2 of the License, or
 -- (at your option) any later version.
 --
--- Pulse 2 is distributed in the hope that it will be useful,
+-- Medulla 2 is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
+-- along with Medulla 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
@@ -25,8 +25,8 @@ SET NAMES 'utf8';
 
 -- Fix some texts
 
-UPDATE BootService SET default_name = "Register as Pulse Client" WHERE default_name LIKE "Register as Pulse 2 Client";
-UPDATE BootService SET default_desc = "Record this computer in a Pulse server" WHERE default_desc LIKE "Record this computer in Pulse 2 Server";
+UPDATE BootService SET default_name = "Register as Medulla Client" WHERE default_name LIKE "Register as Medulla 2 Client";
+UPDATE BootService SET default_desc = "Record this computer in a Medulla server" WHERE default_desc LIKE "Record this computer in Medulla 2 Server";
 UPDATE BootService SET default_name = "Create a Backup" WHERE default_name LIKE "Create a backup";
 UPDATE BootService SET default_name = "Memory Test" WHERE default_name LIKE "Memory test";
 
@@ -38,13 +38,13 @@ UPDATE PostInstallScript SET default_name = "Debug Shell" WHERE default_name LIK
 UPDATE PostInstallScript SET default_desc = "Launch a debug shell" WHERE default_desc LIKE "Debug Shell";
 UPDATE PostInstallScript SET default_name = "Single Partition Extension" WHERE default_name LIKE "Partition extension";
 UPDATE PostInstallScript SET default_desc = "The first partition (and the only one) will be extended across the whole disk" WHERE default_desc LIKE "The first partition will be extend across the whole disk";
-UPDATE PostInstallScript SET default_desc = "Deploy Pulse agents (SSH, OCS, VNC) on next reboot" WHERE default_desc LIKE "Deploy Pulse agents (SSH, OCS, VNC)";
+UPDATE PostInstallScript SET default_desc = "Deploy Medulla agents (SSH, OCS, VNC) on next reboot" WHERE default_desc LIKE "Deploy Medulla agents (SSH, OCS, VNC)";
 UPDATE PostInstallScript SET default_name = "ICH5 Sync" WHERE default_name LIKE "ICH 5 sync";
 UPDATE PostInstallScript SET default_desc = "Halt client after operations" WHERE default_desc LIKE "Halt client";
 
 UPDATE Internationalization SET label = "Continuer le Démarrage Normalement" WHERE id = 2 AND fk_language = 2;
-UPDATE Internationalization SET label = "Enregistrement Pulse" WHERE id = 4 AND fk_language = 2;
-UPDATE Internationalization SET label = "Enregistrer ce poste auprès du serveur Pulse" WHERE id = 5 and fk_language = 2;
+UPDATE Internationalization SET label = "Enregistrement Medulla" WHERE id = 4 AND fk_language = 2;
+UPDATE Internationalization SET label = "Enregistrer ce poste auprès du serveur Medulla" WHERE id = 5 and fk_language = 2;
 UPDATE Internationalization SET label = "Créer Une Image" WHERE id = 6 AND fk_language = 2;
 UPDATE Internationalization SET label = "Démarrage Sans Disque" WHERE id = 8 AND fk_language = 2;
 UPDATE Internationalization SET label = "Test Mémoire" WHERE id = 10 AND fk_language = 2;
@@ -54,7 +54,7 @@ UPDATE Internationalization SET label = "Menu Par Défaut" WHERE id = 22 AND fk_
 UPDATE Internationalization SET label = "Effacement de Disque Sécurisé" WHERE id = 23 AND fk_language = 2;
 UPDATE Internationalization SET label = "Eteindre le client après les opérations" WHERE id = 16 AND fk_language = 2;
 UPDATE Internationalization SET label = "Lancer une invite de commande de débogage" WHERE id = 17 AND fk_language = 2;
-UPDATE Internationalization SET label = "Déployer les agents Pulse (SSH, OCS, VNC) au prochain redémarrage" WHERE id = 20 AND fk_language = 2;
+UPDATE Internationalization SET label = "Déployer les agents Medulla (SSH, OCS, VNC) au prochain redémarrage" WHERE id = 20 AND fk_language = 2;
 UPDATE Internationalization SET label = "Synchronisation RAID1 pour chipsets ICH5, duplique le 1er disque sur le second" WHERE id = 21 AND fk_language = 2;
 UPDATE Internationalization SET label = "Changement du SID et du nom Netbios" WHERE id = 15 AND fk_language = 2;
 UPDATE Internationalization SET label = "La première partition (et uniquement celle-ci) sera étendue à l'intégralité du disque dur" WHERE id = 18 AND fk_language = 2;
@@ -67,7 +67,7 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (26, 2, "Change
 INSERT INTO Internationalization (id, fk_language, label) VALUES (27, 2, "Eteindre");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (28, 2, "Invite de Commande de Débogage");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (29, 2, "Extension d'une partition unique");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (30, 2, "Déployer les Agents Pulse");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (30, 2, "Déployer les Agents Medulla");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (31, 2, "Synchronisation Chipset ICH5");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (32, 2, "Date");
 
@@ -90,10 +90,10 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (26, 3, "Mudar 
 INSERT INTO Internationalization (id, fk_language, label) VALUES (27, 3, "Desligar");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (28, 3, "Shell de Depuração");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (29, 3, "Estender partição em todo disco");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (30, 3, "Implantar Agentes do Pulse");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (30, 3, "Implantar Agentes do Medulla");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (31, 3, "Sincronização ICH5");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (2, 3, "Iniciar normalmente");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (4, 3, "Registrar Cliente Pulse");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (4, 3, "Registrar Cliente Medulla");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (6, 3, "Criar um Backup");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (8, 3, "Iniciar sem disco");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (10, 3, "Teste de Memória");
@@ -104,10 +104,10 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (15, 3, "Altera
 INSERT INTO Internationalization (id, fk_language, label) VALUES (16, 3, "Desligar o cliente após operação");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (17, 3, "Iniciar um Shell de depuração");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (18, 3, "A primeira partição apenas uma será estendida por todo o disco");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (20, 3, "Implantar Agentes Pulse (SSH, OCS e VNC) na proxima inicialização");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (20, 3, "Implantar Agentes Medulla (SSH, OCS e VNC) na proxima inicialização");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (21, 3, "Sincronização RAID1 para Chipsets ICH5, Duplica o primeiro disco no segundo");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (3, 3, "Inicialização normal do sistema");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (5, 3, "Gravar este computador no Servidor Pulse");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (5, 3, "Gravar este computador no Servidor Medulla");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (7, 3, "Criar um backup desse computador");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (9, 3, "Carregar ambiente sem disco e obter um prompt");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (11, 3, "Rodar um teste de memória completo");

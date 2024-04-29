@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 import logging
 
 plugin = {"VERSION": "1.11", "NAME": "resultguacamoleconf", "TYPE": "master"}

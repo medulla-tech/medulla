@@ -11,7 +11,7 @@ import types
 import configparser
 import hashlib
 from mmc.plugins.xmppmaster.master.lib.utils import file_get_contents, name_random
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 from manage_grafana import manage_grafana
 
 logger = logging.getLogger()
@@ -39,7 +39,7 @@ def read_conf_load_plugin_monitoring_version_config(objectxmpp):
     conffilename = plugin["NAME"] + ".ini"
     pathfileconf = os.path.join(objectxmpp.config.pathdirconffile, conffilename)
 
-    defautconf = "/var/lib/pulse2/xmpp_monitoring/confagent/monitoring_config.ini"
+    defautconf = "/var/lib/medulla/xmpp_monitoring/confagent/monitoring_config.ini"
     if not os.path.isfile(pathfileconf):
         logger.error(
             "plugin %s\nConfiguration file missing\n  %s\neg conf:"

@@ -9,7 +9,7 @@ if deploy is pause, run, abandonned
 """
 import json
 import sys
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 import traceback
 import logging
 

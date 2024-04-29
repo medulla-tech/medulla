@@ -1,9 +1,9 @@
 ; Basic variables
-!define PRODUCT_NAME "Mandriva Pulse2 Agent"
+!define PRODUCT_NAME "Mandriva Medulla2 Agent"
 !define PRODUCT_VERSION "0.0.2"
 !define PRODUCT_PUBLISHER "Mandriva S.A."
 !define PRODUCT_WEB_SITE "http://www.mandriva.com"
-!define PRODUCT_DIR_REGKEY "Software\Mandriva\Pulse2Agent"
+!define PRODUCT_DIR_REGKEY "Software\Mandriva\Medulla2Agent"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
@@ -37,7 +37,7 @@
 ; A global variable containing version of the currently installed agent
 Var /GLOBAL PREVIOUSVERSION
 
-; Pulse PULSE2_CM address
+; Medulla PULSE2_CM address
 Var /GLOBAL PULSE2_CM_SERVER
 Var /GLOBAL PULSE2_CM_PORT
 Var /GLOBAL PULSE2_VPN_FQDN
@@ -49,7 +49,7 @@ Var /GLOBAL SOFTETHER_FOLDER_NAME
 !define DEFAULT_PULSE2_VPN_FQDN "@@PULSE_PUBLIC_FQDN@@"
 
 ; Service name (from the Windows view)
-!define WINSVCNAME "pulse2-agent"
+!define WINSVCNAME "medulla-agent"
 
 ; MUI Settings
 !define MUI_ABORTWARNING
@@ -75,8 +75,8 @@ Page custom CustomOptions
 !insertmacro MUI_LANGUAGE "English"
 
 Name "${PRODUCT_NAME} (${PRODUCT_VERSION})"
-OutFile "pulse2-agent-${PRODUCT_VERSION}.exe"
-InstallDir "$PROGRAMFILES32\Mandriva\Pulse2-Agent"
+OutFile "medulla-agent-${PRODUCT_VERSION}.exe"
+InstallDir "$PROGRAMFILES32\Mandriva\Medulla2-Agent"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -87,7 +87,7 @@ ReserveFile "customoptions.ini"
 
 ; Custom options page pre-setting
 Function CustomOptions
-  !insertmacro MUI_HEADER_TEXT "Configure Pulse Connection Manager host" "This should be pre-filled correctly"
+  !insertmacro MUI_HEADER_TEXT "Configure Medulla Connection Manager host" "This should be pre-filled correctly"
   !insertmacro INSTALLOPTIONS_INITDIALOG "customoptions.ini"
   ; Try to pre-fill fileds with command line parameters
   ${IfNot} $PULSE2_CM_SERVER == ""
@@ -118,7 +118,7 @@ Function .onInit
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; ReadRegStr will set the Errors flag if the key doesn't exist
   ClearErrors
-  ReadRegStr $0 HKLM "Software\Mandriva\Pulse2Agent" "CurrentVersion"
+  ReadRegStr $0 HKLM "Software\Mandriva\Medulla2Agent" "CurrentVersion"
   ${If} ${Errors}
     ; No previously installed agent
     StrCpy $PREVIOUSVERSION "0.1"
@@ -187,7 +187,7 @@ Section "Clean" Clean
   ; $0 now contains either 'Yes', 'No' or an error description
   ${If} $0 == 'Yes'
     ; This will stop and remove the service if it is running.
-    DetailPrint "Previously installed Pulse Agent service found. Trying to stop and remove it."
+    DetailPrint "Previously installed Medulla Agent service found. Trying to stop and remove it."
     push '${WINSVCNAME}'
     push 'Stop'
     Services::SendServiceCommand
@@ -196,7 +196,7 @@ Section "Clean" Clean
     Services::SendServiceCommand
     Pop $0
     ${If} $0 != 'Ok'
-      MessageBox MB_OK|MB_ICONSTOP 'The installer found a previously installed Pulse Agent service, but was unable to remove it.$\r$\n$\r$\nPlease stop it and manually remove it. Then try installing again.'
+      MessageBox MB_OK|MB_ICONSTOP 'The installer found a previously installed Medulla Agent service, but was unable to remove it.$\r$\n$\r$\nPlease stop it and manually remove it. Then try installing again.'
       Abort
     ${EndIf}
     ; Wait one second for the service to be really stopped
@@ -242,27 +242,27 @@ Section "Core" Core
 
   SetOutPath "$INSTDIR"
   SetOverwrite on
-  File bin\pulse2agent.ini
+  File bin\medullaagent.ini
 
   ; Read from custom page
   ${IfNot} ${Silent}
     ReadINIStr $0 "$PLUGINSDIR\customoptions.ini" "Field 3" "State"
     ${If} $0 == ""
-      MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 Connection Manager address is empty! $\n\
+      MessageBox MB_OK|MB_ICONEXCLAMATION "Medulla2 Connection Manager address is empty! $\n\
 Please fill the field with the right DNS name or IP address."
       Abort
     ${EndIf}
     StrCpy $PULSE2_CM_SERVER $0
     ReadINIStr $1 "$PLUGINSDIR\customoptions.ini" "Field 5" "State"
     ${If} $1 == ""
-      MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 Connection Manager port is empty! $\n\
+      MessageBox MB_OK|MB_ICONEXCLAMATION "Medulla2 Connection Manager port is empty! $\n\
 Please fill the field with the right port."
       Abort
     ${EndIf}
     StrCpy $PULSE2_CM_PORT $1
     ReadINIStr $2 "$PLUGINSDIR\customoptions.ini" "Field 7" "State"
     ${If} $2 == ""
-      MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 FQDN of VPN is empty! $\n\
+      MessageBox MB_OK|MB_ICONEXCLAMATION "Medulla2 FQDN of VPN is empty! $\n\
 Please fill the field with the right DNS name or IP address."
       Abort
     ${EndIf}
@@ -272,21 +272,21 @@ Please fill the field with the right DNS name or IP address."
   StrCpy $SOFTETHER_FOLDER_NAME "C:\Program Files\SoftEther VPN Client\vpncmd.exe"
   ; Fix conf file
   DetailPrint "Using $PULSE2_CM_SERVER:$PULSE2_CM_PORT as Connection Manager."
-  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER
-  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@VPN_SERVER_PUBLIC_IP@@" $PULSE2_VPN_FQDN
-  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_PORT@@" $PULSE2_CM_PORT
-  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_LOG_PATH@@" $INSTDIR\pulse2-agent.log.txt
-  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@VPNCMD_PATH@@" $SOFTETHER_FOLDER_NAME
+  !insertmacro _ReplaceInFile "$INSTDIR\medullaagent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER
+  !insertmacro _ReplaceInFile "$INSTDIR\medullaagent.ini" "@@VPN_SERVER_PUBLIC_IP@@" $PULSE2_VPN_FQDN
+  !insertmacro _ReplaceInFile "$INSTDIR\medullaagent.ini" "@@PULSE2_CM_PORT@@" $PULSE2_CM_PORT
+  !insertmacro _ReplaceInFile "$INSTDIR\medullaagent.ini" "@@PULSE2_CM_LOG_PATH@@" $INSTDIR\medulla-agent.log.txt
+  !insertmacro _ReplaceInFile "$INSTDIR\medullaagent.ini" "@@VPNCMD_PATH@@" $SOFTETHER_FOLDER_NAME
 
   ;;;;;;;;;;;;;;;;;;;;
   ; Register service ;
   ;;;;;;;;;;;;;;;;;;;;
-  DetailPrint "Running $INSTDIR\service.exe --install pulse2-agent"
-  nsExec::ExecToLog "$INSTDIR\service.exe --install pulse2-agent"
+  DetailPrint "Running $INSTDIR\service.exe --install medulla-agent"
+  nsExec::ExecToLog "$INSTDIR\service.exe --install medulla-agent"
   Pop $0
   ; May return "error" in $0 if something goes wrong
   ${If} $0 == 'error'
-    MessageBox MB_OK|MB_ICONEXCLAMATION '1:Something went wrong when trying to register Pulse2 Agent service.$\r$\n$\r$\nYou may try to run the following command manually to have more information:$\r$\n  "$INSTDIR\service.exe" --install'
+    MessageBox MB_OK|MB_ICONEXCLAMATION '1:Something went wrong when trying to register Medulla2 Agent service.$\r$\n$\r$\nYou may try to run the following command manually to have more information:$\r$\n  "$INSTDIR\service.exe" --install'
     Abort
   ${EndIf}
   ; Well is it REALLY installed ? Let's figure out.
@@ -295,7 +295,7 @@ Please fill the field with the right DNS name or IP address."
   Pop $0
   ; $0 now contains either 'Yes', 'No' or an error description
   ${If} $0 != 'Yes'
-    MessageBox MB_OK|MB_ICONEXCLAMATION '2:Something went wrong when trying to register Pulse2 Agent service.$\r$\n$\r$\nYou may try to run the following command manually to have more information:$\r$\n  "$INSTDIR\service.exe" --install'
+    MessageBox MB_OK|MB_ICONEXCLAMATION '2:Something went wrong when trying to register Medulla2 Agent service.$\r$\n$\r$\nYou may try to run the following command manually to have more information:$\r$\n  "$INSTDIR\service.exe" --install'
     Abort
   ${EndIf}
 
@@ -313,14 +313,14 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
   ; Write a CurrentVersion variable
   ; This must be done after installation, otherwise it would overwrite previous version number
-  WriteRegStr HKLM "Software\Mandriva\Pulse2-Agent" "CurrentVersion" "${PRODUCT_VERSION}"
-  WriteRegStr HKLM "Software\Mandriva\Pulse2-Agent" "InstallPath" "$INSTDIR"
+  WriteRegStr HKLM "Software\Mandriva\Medulla2-Agent" "CurrentVersion" "${PRODUCT_VERSION}"
+  WriteRegStr HKLM "Software\Mandriva\Medulla2-Agent" "InstallPath" "$INSTDIR"
 SectionEnd
 
 ; Section descriptions
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 !insertmacro MUI_DESCRIPTION_TEXT ${Clean} "Pre-installation step"
-!insertmacro MUI_DESCRIPTION_TEXT ${Core} "Mandriva Pulse2 Agent"
+!insertmacro MUI_DESCRIPTION_TEXT ${Core} "Mandriva Medulla2 Agent"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ; Postuninstall function
@@ -349,7 +349,7 @@ Section Uninstall
   ; $0 now contains either 'Yes', 'No' or an error description
   ${If} $0 == 'Yes'
     ; This will stop and remove the service if it is running.
-    DetailPrint "Previously installed Pulse2 Agent service found. Trying to stop and remove it."
+    DetailPrint "Previously installed Medulla2 Agent service found. Trying to stop and remove it."
     push '${WINSVCNAME}'
     push 'Stop'
     Services::SendServiceCommand
@@ -358,7 +358,7 @@ Section Uninstall
     Services::SendServiceCommand
     Pop $0
     ${If} $0 != 'Ok'
-      MessageBox MB_OK|MB_ICONSTOP 'The installer found a previously installed Pulse2 Agent service, but was unable to remove it.$\r$\n$\r$\nPlease stop it and manually remove it. Then try installing again.'
+      MessageBox MB_OK|MB_ICONSTOP 'The installer found a previously installed Medulla2 Agent service, but was unable to remove it.$\r$\n$\r$\nPlease stop it and manually remove it. Then try installing again.'
       Abort
     ${EndIf}
     ; Wait one second for the service to be really stopped

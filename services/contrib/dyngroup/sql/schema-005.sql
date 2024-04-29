@@ -3,20 +3,20 @@
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://pulse2.mandriva.org
+-- This file is part of Medulla 2, http://medulla.mandriva.org
 --
--- Pulse 2 is free software; you can redistribute it and/or modify
+-- Medulla 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation; either version 2 of the License, or
 -- (at your option) any later version.
 --
--- Pulse 2 is distributed in the hope that it will be useful,
+-- Medulla 2 is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
+-- along with Medulla 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
@@ -30,7 +30,7 @@ INSERT IGNORE INTO Users (`login`, `type`) VALUES ('root', 0);
 -- Add Update GroupType
 INSERT INTO GroupType values (4, 'Update');
 
--- Insert pulse internal update groups ids start at 2147483000
+-- Insert medulla internal update groups ids start at 2147483000
 SET @root_id = (SELECT id FROM Users WHERE login = 'root' AND type = 0);
 INSERT INTO Groups (`name`, `query`, `FK_users`, `type`, `parent_id`) VALUES ('PULSE_INTERNAL_UPDATE_GROUP||Windows XP', '1==glpi::Operating system==*Windows XP*', @root_id, 4, 0);
 INSERT INTO Groups (`name`, `query`, `FK_users`, `type`, `parent_id`) VALUES ('PULSE_INTERNAL_UPDATE_GROUP||Windows Vista', '1==glpi::Operating system==*Windows Vista*', @root_id, 4, 0);

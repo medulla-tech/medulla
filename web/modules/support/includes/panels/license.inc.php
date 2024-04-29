@@ -129,7 +129,7 @@ class LicensePanel extends Panel {
                 }
             }
             if ($display_renew_links) {
-                echo '<p><b><a href="http://' . $_SERVER['HTTP_HOST'] . '/pulse-first-run/?reactivate=1" target="_blank">' . _T('Activate again / Use another subscription', 'support') . '</a></b></p>';
+                echo '<p><b><a href="http://' . $_SERVER['HTTP_HOST'] . '/medulla-first-run/?reactivate=1" target="_blank">' . _T('Activate again / Use another subscription', 'support') . '</a></b></p>';
             }
             echo '</div>';
         }

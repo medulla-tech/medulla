@@ -5,7 +5,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 """
-Test module for the Pulse 2 package server: Mirror's module, Mirror_API's module, Package_API's module and Scheduler's module
+Test module for the Medulla 2 package server: Mirror's module, Mirror_API's module, Package_API's module and Scheduler's module
 """
 
 import xmlrpc.client
@@ -562,13 +562,13 @@ class class06removedirTest(unittest.TestCase):
 
 
 if makefile:
-    test = popen('ps ax|grep "bin/pulse2-package-server"')
+    test = popen('ps ax|grep "bin/medulla-package-server"')
     t = test.read()
     ts = t.split()
     process = int(ts[0])
     test.close()
     system("kill %i" % (process))
-    directory_temp = mkdtemp(suffix="Pserver", prefix="pulse2", dir="/tmp")
+    directory_temp = mkdtemp(suffix="Pserver", prefix="medulla", dir="/tmp")
     generation_Pserver(directory)
     direct = directory_temp + "/test"
     chdir("%s/config/" % (directory))
@@ -578,14 +578,14 @@ if makefile:
     )
     system("sed -i 's/host = /host = %s/' package-server.conf" % (ipserver))
     system(
-        "PYTHONPATH=%s/services/ %s/services/bin/pulse2-package-server -f %s/config/package-server.conf"
+        "PYTHONPATH=%s/services/ %s/services/bin/medulla-package-server -f %s/config/package-server.conf"
         % (directory, directory, directory)
     )
 else:
-    directory_temp = "/var/lib/pulse2/packages"
+    directory_temp = "/var/lib/medulla/packages"
     generation_Pserver(directory_temp)
-    direct = "/var/lib/pulse2/packages/test"
-    system("/etc/init.d/pulse2-package-server restart")
+    direct = "/var/lib/medulla/packages/test"
+    system("/etc/init.d/medulla-package-server restart")
 
 sleep(10)
 

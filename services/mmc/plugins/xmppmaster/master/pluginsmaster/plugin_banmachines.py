@@ -5,7 +5,7 @@
 
 import json
 import logging
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 
 plugin = {"VERSION": "1.0", "NAME": "banmachines", "TYPE": "master"}
 

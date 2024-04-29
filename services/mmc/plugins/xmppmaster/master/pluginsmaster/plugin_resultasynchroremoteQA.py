@@ -5,7 +5,7 @@ import logging
 import traceback
 import sys
 import json
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 
 plugin = {"VERSION": "1.0", "NAME": "resultasynchroremoteQA", "TYPE": "master"}
 

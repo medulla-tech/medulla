@@ -37,14 +37,14 @@ from mmc.plugins.msc.package_api import PackageGetA
 # XMLRPC client functions
 import mmc.plugins.msc.client.scheduler
 
-from pulse2.managers.group import ComputerGroupManager
-from pulse2.managers.location import ComputerLocationManager
+from medulla.managers.group import ComputerGroupManager
+from medulla.managers.location import ComputerLocationManager
 
 # ORM mappings
-import pulse2.database.msc.orm.commands_on_host
-from pulse2.utils import noNoneList
+import medulla.database.msc.orm.commands_on_host
+from medulla.utils import noNoneList
 
-from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+from medulla.version import getVersion, getRevision  # pyflakes.ignore
 
 APIVERSION = "0:0:0"
 
@@ -789,7 +789,7 @@ def pingMachine(uuid):
 # Commands on host handling ###
 # FIXME: we should realy rationalize this stuff !
 def start_command_on_host(coh_id):
-    if pulse2.database.msc.orm.commands_on_host.startCommandOnHost(coh_id):
+    if medulla.database.msc.orm.commands_on_host.startCommandOnHost(coh_id):
         mmc.plugins.msc.client.scheduler.startCommand(None, coh_id)
         return xmlrpcCleanup(True)
     else:
@@ -797,17 +797,17 @@ def start_command_on_host(coh_id):
 
 
 def pause_command_on_host(coh_id):
-    pulse2.database.msc.orm.commands_on_host.togglePauseCommandOnHost(coh_id)
+    medulla.database.msc.orm.commands_on_host.togglePauseCommandOnHost(coh_id)
     return xmlrpcCleanup(True)
 
 
 def restart_command_on_host(coh_id):
-    pulse2.database.msc.orm.commands_on_host.restartCommandOnHost(coh_id)
+    medulla.database.msc.orm.commands_on_host.restartCommandOnHost(coh_id)
     return xmlrpcCleanup(True)
 
 
 def stop_command_on_host(coh_id):
-    pulse2.database.msc.orm.commands_on_host.stopCommandOnHost(coh_id)
+    medulla.database.msc.orm.commands_on_host.stopCommandOnHost(coh_id)
     mmc.plugins.msc.client.scheduler.stopCommand(None, coh_id)
     return xmlrpcCleanup(True)
 

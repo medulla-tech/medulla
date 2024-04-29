@@ -26,7 +26,7 @@ export LC_ALL=C
 
 PREFIX=/usr
 
-echo "Pulse 2 auto-uninstallation script"
+echo "Medulla 2 auto-uninstallation script"
 
 if [ -z $FORCE ];
     then
@@ -37,16 +37,16 @@ if [ -z $FORCE ];
     read
 fi
 
-[ -f /etc/init.d/pulse2-scheduler ] && /etc/init.d/pulse2-scheduler stop || true
-[ -f /etc/init.d/pulse2-launchers ] && /etc/init.d/pulse2-launchers stop || true
-[ -f /etc/init.d/pulse2-package-server ] && /etc/init.d/pulse2-package-server stop || true
-[ -f /etc/init.d/pulse2-imaging-server ] && /etc/init.d/pulse2-imaging-server stop || true
-[ -f /etc/init.d/pulse2-inventory-server ] && /etc/init.d/pulse2-inventory-server stop || true
+[ -f /etc/init.d/medulla-scheduler ] && /etc/init.d/medulla-scheduler stop || true
+[ -f /etc/init.d/medulla-launchers ] && /etc/init.d/medulla-launchers stop || true
+[ -f /etc/init.d/medulla-package-server ] && /etc/init.d/medulla-package-server stop || true
+[ -f /etc/init.d/medulla-imaging-server ] && /etc/init.d/medulla-imaging-server stop || true
+[ -f /etc/init.d/medulla-inventory-server ] && /etc/init.d/medulla-inventory-server stop || true
 
 # DROP databases
 if [ -f /usr/bin/mysql ];
     then
-    echo "drop database if exists pulse2" | mysql
+    echo "drop database if exists medulla" | mysql
     echo "drop database if exists msc" | mysql
     echo "drop database if exists dyngroup" | mysql
     echo "drop database if exists inventory" | mysql
@@ -54,11 +54,11 @@ if [ -f /usr/bin/mysql ];
     echo "drop user mmc@localhost" | mysql || true
 fi
 
-rm -fr $PREFIX/lib/python2.*/site-packages/pulse2
-rm -f /etc/init.d/pulse2-*
-rm -f $PREFIX/sbin/pulse2-*
-rm -fr /var/lib/pulse2/packages/*-*-*-*-* /var/lib/pulse2/imaging
-rm -fr /var/lib/pulse2/qactions
+rm -fr $PREFIX/lib/python2.*/site-packages/medulla
+rm -f /etc/init.d/medulla-*
+rm -f $PREFIX/sbin/medulla-*
+rm -fr /var/lib/medulla/packages/*-*-*-*-* /var/lib/medulla/imaging
+rm -fr /var/lib/medulla/qactions
 rm -fr /tmp/package_tmp
 
 # GLPI

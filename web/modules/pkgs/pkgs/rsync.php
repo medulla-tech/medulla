@@ -40,7 +40,7 @@ $listsearchsynchro=array();
 $listsearchnosynchro = array();
 
 foreach ($nosynchrolist as $rel){
-        $pos = strpos($rel['relayserver_jid'], "rspulse@pulse");
+        $pos = strpos($rel['relayserver_jid'], "rsmedulla@medulla");
         if ($pos === false){
             $listnosync[] =  $rel['relayserver_jid'];
         }

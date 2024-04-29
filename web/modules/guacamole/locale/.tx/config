@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[o:siveo:p:pulse-1:r:guacamole]
+[o:siveo:p:medulla-1:r:guacamole]
 file_filter = <lang>/LC_MESSAGES/guacamole.po
 source_file = guacamole.pot
 source_lang = en_US

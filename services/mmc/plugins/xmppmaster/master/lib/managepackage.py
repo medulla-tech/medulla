@@ -9,7 +9,7 @@ import sys, os
 import os.path
 import json
 import logging
-from pulse2.database.pkgs import PkgsDatabase
+from medulla.database.pkgs import PkgsDatabase
 import traceback
 
 logger = logging.getLogger()
@@ -31,7 +31,7 @@ class apimanagepackagemsc:
         local shares.
         """
         packagelist = []
-        dirpackage = os.path.join("/", "var", "lib", "pulse2", "packages")
+        dirpackage = os.path.join("/", "var", "lib", "medulla", "packages")
         global_package_folder = os.path.join(dirpackage, "sharing", "global")
         packagelist = [
             os.path.join(global_package_folder, f)
@@ -55,7 +55,7 @@ class apimanagepackagemsc:
         This function creates symlinks in the packages directory
         to the target in the local/global share
         """
-        dirpackage = os.path.join("/", "var", "lib", "pulse2", "packages")
+        dirpackage = os.path.join("/", "var", "lib", "medulla", "packages")
         for package in search_list_package():
             os.symlink(package, os.path.join(dirpackage, os.path.basename(package)))
 
@@ -64,7 +64,7 @@ class apimanagepackagemsc:
         """
         This function remove symlinks
         """
-        dirpackage = os.path.join("/", "var", "lib", "pulse2", "packages")
+        dirpackage = os.path.join("/", "var", "lib", "medulla", "packages")
         packagelist = [
             os.path.join(dirpackage, package)
             for package in os.listdir(dirpackage)
@@ -76,7 +76,7 @@ class apimanagepackagemsc:
 
     @staticmethod
     def packagelistmsc():
-        folderpackages = os.path.join("/", "var", "lib", "pulse2", "packages")
+        folderpackages = os.path.join("/", "var", "lib", "medulla", "packages")
         return [
             os.path.join(folderpackages, x)
             for x in os.listdir(folderpackages)
@@ -95,7 +95,7 @@ class apimanagepackagemsc:
 
     @staticmethod
     def packagelistmscconfjson(pending=False):
-        folderpackages = os.path.join("/", "var", "lib", "pulse2", "packages")
+        folderpackages = os.path.join("/", "var", "lib", "medulla", "packages")
         listfichierconf = [
             os.path.join(folderpackages, x, "conf.json")
             for x in os.listdir(folderpackages)
@@ -128,7 +128,7 @@ class apimanagepackagemsc:
     def getPackageDetail(package_uuid):
         result = {}
         package = os.path.join(
-            "/", "var", "lib", "pulse2", "packages", package_uuid, "conf.json"
+            "/", "var", "lib", "medulla", "packages", package_uuid, "conf.json"
         )
         datapacquage = apimanagepackagemsc.readjsonfile(package)
         result["postCommandSuccess"] = datapacquage["commands"]["postCommandSuccess"]
@@ -177,7 +177,7 @@ class apimanagepackagemsc:
     @staticmethod
     def load_packagelist_dependencies(listuuidpackag):
         xmpp_list = []
-        folderpackages = os.path.join("/", "var", "lib", "pulse2", "packages")
+        folderpackages = os.path.join("/", "var", "lib", "medulla", "packages")
         for x in listuuidpackag["uuid"]:
             packagefiles = os.path.join(folderpackages, x, "xmppdeploy.json")
             if not os.path.exists(packagefiles):
@@ -190,7 +190,7 @@ class apimanagepackagemsc:
 
     @staticmethod
     def loadpackagelistmsc_on_select_package(listuuidpackag):
-        folderpackages = os.path.join("/", "var", "lib", "pulse2", "packages")
+        folderpackages = os.path.join("/", "var", "lib", "medulla", "packages")
         pending = False
         tab = [
             "description",
@@ -308,7 +308,7 @@ class apimanagepackagemsc:
                     ):
                         continue
                 if "filter1" in filter and not data_file_conf_json["name"].startswith(
-                    "Pulse Agent v"
+                    "Medulla Agent v"
                 ):
                     if not (
                         re.search(
@@ -368,14 +368,14 @@ class managepackage:
     @staticmethod
     def packagedir():
         if sys.platform.startswith("linux"):
-            return os.path.join("/", "var", "lib", "pulse2", "packages")
+            return os.path.join("/", "var", "lib", "medulla", "packages")
         elif sys.platform.startswith("win"):
             return os.path.join(
-                os.environ["ProgramFiles"], "Pulse", "var", "tmp", "packages"
+                os.environ["ProgramFiles"], "Medulla", "var", "tmp", "packages"
             )
         elif sys.platform.startswith("darwin"):
             return os.path.join(
-                "/", "Library", "Application Support", "Pulse", "packages"
+                "/", "Library", "Application Support", "Medulla", "packages"
             )
         else:
             return None

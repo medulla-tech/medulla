@@ -1,0 +1,9 @@
+# Defaults for medulla-agent initscript
+# sourced by /etc/init.d/medulla-agent
+# installed at /etc/default/medulla-agent by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+ENABLE=yes

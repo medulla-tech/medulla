@@ -37,9 +37,9 @@ PULSE2_DEPRECATED
 # self.server_addr += self.config.ma_server+':'+str(self.config.ma_port) + self.config.ma_mountpoint
 
 # if self.config.ma_verifypeer:
-# self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
+# self.internal = medulla.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr, self.config.ma_verifypeer, self.config.ma_cacert, self.config.ma_localcert)
 # else:
-# self.internal = pulse2.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr)
+# self.internal = medulla.apis.clients.mirror_api.MirrorApi(credentials, self.server_addr)
 
 # for method in ('getMirror', 'getMirrors', 'getFallbackMirror', 'getFallbackMirrors', 'getApiPackage', 'getApiPackages', ):
 # setattr(self, method, getattr(self.internal, method))

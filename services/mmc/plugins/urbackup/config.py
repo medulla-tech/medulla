@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from mmc.support.config import PluginConfig
-from pulse2.database.urbackup.config import UrbackupDatabaseConfig
+from medulla.database.urbackup.config import UrbackupDatabaseConfig
 
 
 class UrbackupConfig(PluginConfig, UrbackupDatabaseConfig):

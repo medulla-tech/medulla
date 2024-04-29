@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+# (c) 20118 Siveo, http://www.siveo.net
+#
+# This file is part of Medulla 2
+#
+# Medulla 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Medulla 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Medulla 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+ARCHIVE_PATH=$1
+
+PULSE2_COLLECT_INFO_DIR="/tmp/medulla-collect-info"
+
+# Creates a work directory
+if [ ! -d "$PULSE2_COLLECT_INFO_DIR" ];then
+    mkdir $PULSE2_COLLECT_INFO_DIR
+fi
+
+cd $PULSE2_COLLECT_INFO_DIR
+
+if [ "$(ls -A $DIR)" ]; then
+    rm -rf *
+fi
+# Several info placed in text files
+[ -x /usr/bin/lsb_release ] && lsb_release -a  > os-info || cat /etc/redhat-release > os-info
+[ -x /usr/bin/dpkg ] && /usr/bin/dpkg -l | egrep '(mmc|medulla)' > medulla-packages || /usr/bin/rpm -qa | egrep '(mmc|medulla)' > medulla-packages
+[ -x /usr/bin/dpkg ] && /usr/bin/dpkg -l > all-packages || /usr/bin/rpm -qa > all-packages
+lsmod > loaded-modules
+sysctl -a > kernel-parameters
+cp /etc/hosts .
+cp /etc/fstab .
+
+# Configuration file
+[ -f /var/lib/medulla/install_manifest ] && ln -s /var/lib/medulla/install_manifest install_manifest
+[ -d /etc/ufw/ ] && ln -s /etc/ufw conf-ufw
+[ -f /var/lib/syncthing-depl/.config/syncthing/config.xml ] && ln -s /var/lib/syncthing-depl/.config/syncthing/config.xml conf-syncthing-depl.xml
+[ -f /var/lib/syncthing/.config/syncthing/config.xml ] && ln -s /var/lib/syncthing/.config/syncthing/config.xml conf-syncthing.xml
+[ -d /etc/my.cnf.d/ ] && ln -s /etc/my.cnf.d conf-mariadb
+[ -d /etc/shorewall/ ] && ln -s /etc/shorewall conf-shorewall
+[ -d /etc/samba/ ] && ln -s /etc/samba conf-samba
+[ -d /etc/grafana/ ] && ln -s /etc/grafana conf-grafana
+ln -s /etc/medulla-agent-substitute conf-relay-agent-substitute
+ln -s /etc/mmc conf-mmc
+ln -s /etc/medulla-agent conf-relay-agent
+ln -s /etc/ejabberd conf-ejabberd
+[ -d /etc/glpi ] && ln -s /etc/glpi conf-glpi
+[ -x /sbin/guacd ] && ln -s /etc/guacamole conf-guacamole
+[ -x /usr/sbin/apache2 ] && ln -s /etc/apache2 conf-apache2 || ln -s /etc/httpd conf-httpd
+mkdir conf-php
+[ -x /usr/sbin/apache2 ] && cp -a /etc/php/7.0/apache2/* conf-php/ || cp -a /etc/php.* conf-php/
+[ -x /etc/init.d/tomcat8 ] && ln -s /etc/tomcat8 conf-tomcat8 || ln -s /etc/tomcat conf-tomcat
+ln -s /var/lib/medulla/clients/config conf-client-agent
+
+# Logs file
+ln -s /var/log/ejabberd logs-ejabberd
+ln -s /var/log/mmc logs-mmc
+ln -s /var/log/medulla logs-medulla-agent
+[ -f /var/log/ldap.log  ] && ln -s /var/log/ldap.log logs-ldap
+[ -d /var/log/grafana/ ] && ln -s /var/log/grafana logs-grafana
+[ -d /var/log/mariadb/ ] && ln -s /var/log/mariadb logs-mariadb
+[ -d /var/log/mysql/ ] && ln -s /var/log/mysql logs-mysql
+[ -x /usr/sbin/apache2 ] && ln -s /var/log/apache2 logs-apache2 || ln -s /var/log/httpd logs-httpd
+[ -x /etc/init.d/tomcat8 ] && ln -s /var/log/tomcat8 logs-tomcat8 || ln -s /var/log/tomcat logs-tomcat
+
+name="isc-dhcp-server tftpd-hpa guacd ejabberd"
+for serv in $name
+do
+        systemctl is-active --quiet $serv.service
+        if [ $? == 0 ]; then
+                journalctl -u $serv.service > $serv.log
+        fi
+done
+
+7za -mx=9 -m0=lzma -l a $ARCHIVE_PATH *
+
+rm -rf $PULSE2_COLLECT_INFO_DIR
+
+chmod 644 $ARCHIVE_PATH
+

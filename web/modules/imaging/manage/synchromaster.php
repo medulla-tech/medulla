@@ -28,10 +28,10 @@ require_once('modules/imaging/includes/post_install_script.php');
 
 // recuperation pid des process
 sleep(3);
-$process  = xmlrpc_checkProcessCloneMasterToLocation("/bin/bash /usr/bin/pulse2-synch-masters");
+$process  = xmlrpc_checkProcessCloneMasterToLocation("/bin/bash /usr/bin/medulla-synch-masters");
 $nbprocess = safeCount($process);
 $processsinfos = array();
-$z=xmlrpc_statusReadFile ("/tmp/pulse2-synch-masters.out");
+$z=xmlrpc_statusReadFile ("/tmp/medulla-synch-masters.out");
 $location = getCurrentLocation();
 list($list, $values) = getEntitiesSelectableElements();
     foreach($z as $line ){

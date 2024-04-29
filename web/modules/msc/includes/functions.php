@@ -174,7 +174,7 @@ function history_stat2icon($state) {
 }
 
 function state_tmpl_macro($status) {
-    # based on http://pulse2.mandriva.org/ticket/473
+    # based on http://medulla.mandriva.org/ticket/473
     $ret = array(
         'play' => 'BUTTON_START',
         'stop' => 'BUTTON_STOP',
@@ -205,8 +205,8 @@ function state_tmpl_macro($status) {
 }
 
 function state_tmpl($current_state) {
-    # based on http://pulse2.mandriva.org/ticket/29
-    # and http://pulse2.mandriva.org/ticket/473
+    # based on http://medulla.mandriva.org/ticket/29
+    # and http://medulla.mandriva.org/ticket/473
     # task is completed
     if (in_array(
                     $current_state, array(

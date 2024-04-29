@@ -8,9 +8,9 @@
 Imaging implementation of the imaging in profile manager interface
 """
 
-from pulse2.managers.imaging import ComputerImagingI
-from pulse2.managers.location import ComputerLocationManager
-from pulse2.database.imaging import ImagingDatabase
+from medulla.managers.imaging import ComputerImagingI
+from medulla.managers.location import ComputerLocationManager
+from medulla.database.imaging import ImagingDatabase
 
 
 class ComputerImagingImaging(ComputerImagingI):

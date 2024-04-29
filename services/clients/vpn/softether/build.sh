@@ -2,7 +2,7 @@
 # Copyright (C) 2015 Mandriva S.A
 # http://www.mandriva.com
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
 VPN_ARCHIVE="SoftEtherVPNClient.zip"
-VPN_URL="http://pulse2.mandriva.org/pub/pulse2/misc/${VPN_ARCHIVE}"
+VPN_URL="http://medulla.mandriva.org/pub/medulla/misc/${VPN_ARCHIVE}"
 
 if [ -e ${VPN_ARCHIVE} ]; then
     echo "Erasing previous SoftEther Installer archive..."

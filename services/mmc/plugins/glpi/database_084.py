@@ -46,9 +46,9 @@ from mmc.site import mmcconfdir
 from mmc.database.database_helper import DatabaseHelper
 
 # TODO rename location into entity (and locations in location)
-from pulse2.utils import same_network, unique, noNone
-from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.managers.group import ComputerGroupManager
+from medulla.utils import same_network, unique, noNone
+from medulla.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+from medulla.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.utilities import complete_ctx, literalquery
 from mmc.plugins.glpi.database_utils import (
@@ -65,7 +65,7 @@ from mmc.plugins.dyngroup.config import DGConfig
 from distutils.version import LooseVersion
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback, sys

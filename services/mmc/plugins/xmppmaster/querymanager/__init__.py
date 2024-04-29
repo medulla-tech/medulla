@@ -12,10 +12,10 @@ import logging
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.config import GlpiQueryManagerConfig
 
-from pulse2.utils import unique
+from medulla.utils import unique
 
 
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 
 # from mmc.plugins.xmppmaster.config import xmppMasterConfig
 

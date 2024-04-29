@@ -11,7 +11,7 @@ import logging
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.config import GlpiQueryManagerConfig
 
-from pulse2.utils import unique
+from medulla.utils import unique
 
 
 def activate():

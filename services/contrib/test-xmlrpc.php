@@ -4,9 +4,9 @@
  *
  * $Id$
  *
- * This file is part of Pulse 2, http://pulse2.mandriva.org
+ * This file is part of Medulla 2, http://medulla.mandriva.org
  *
- * Pulse 2 is free software; you can redistribute it and/or modify
+ * Medulla 2 is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
@@ -52,7 +52,7 @@ $params=array(
     1,
     "cd /tmp; more.com OOo2.log.txt",
     array(
-        'host'=> 'pulse2-win2k',
+        'host'=> 'medulla-win2k',
         'protocol'=> 'ssh'
     )
     );

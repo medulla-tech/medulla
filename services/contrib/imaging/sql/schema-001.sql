@@ -3,20 +3,20 @@
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://pulse2.mandriva.org
+-- This file is part of Medulla 2, http://medulla.mandriva.org
 --
--- Pulse 2 is free software; you can redistribute it and/or modify
+-- Medulla 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation; either version 2 of the License, or
 -- (at your option) any later version.
 --
--- Pulse 2 is distributed in the hope that it will be useful,
+-- Medulla 2 is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
 --
 -- You should have received a copy of the GNU General Public License
--- along with Pulse 2; if not, write to the Free Software
+-- along with Medulla 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
@@ -478,8 +478,8 @@ INSERT INTO SynchroState (label) VALUES ("INIT_ERROR");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (01, 2, "NOTTRANSLATED");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (02, 2, "Continuer le démarrage normalement");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (03, 2, "Démarrer comme d\'habitude");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (04, 2, "Ajouter comme client Pulse 2");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (05, 2, "Enregistrer ce poste auprès du server Pulse 2");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (04, 2, "Ajouter comme client Medulla 2");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (05, 2, "Enregistrer ce poste auprès du server Medulla 2");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (06, 2, "Créer une image");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (07, 2, "Réaliser une image de ce poste");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (08, 2, "Démarrage sans disque");
@@ -494,12 +494,12 @@ INSERT INTO Internationalization (id, fk_language, label) VALUES (16, 2, "Étein
 INSERT INTO Internationalization (id, fk_language, label) VALUES (17, 2, "Shell de debug");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (18, 2, "La seule et unique partition FAT ou EXT2 sera étendue à l\'intégralité du disque dur");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (19, 2, "La seule et unique partition NTFS sera étendue à l\'intégralité du disque dur");
-INSERT INTO Internationalization (id, fk_language, label) VALUES (20, 2, "Installer le Pack d\'agents Pulse 2");
+INSERT INTO Internationalization (id, fk_language, label) VALUES (20, 2, "Installer le Pack d\'agents Medulla 2");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (21, 2, "RAID1 synchro pour chipset ICH5 du 1er disque vers le 2ème");
 INSERT INTO Internationalization (id, fk_language, label) VALUES (22, 2, "Menu par défaut");
 
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (1, "Continue Usual Startup", "Start as usual", 2, 3, "root (hd0)\nchainloader +1");
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, "Register as Pulse 2 Client", "Record this computer in Pulse 2 Server", 4, 5, "identify L=##PULSE2_LANG## P=none\nreboot");
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (2, "Register as Medulla 2 Client", "Record this computer in Medulla 2 Server", 4, 5, "identify L=##PULSE2_LANG## P=none\nreboot");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (3, "Create a backup", "Create a backup of this computer", 6, 7, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_REVO_RAW## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revobase=##PULSE2_BASE_DIR## ##PULSE2_DISKLESS_OPTS##\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (4, "Diskless Boot", "Load diskless environment then get a prompt", 8, 9, "kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## revobase=##PULSE2_BASE_DIR## ##PULSE2_DISKLESS_OPTS## revodebug\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##");
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, `value`) VALUES (5, "Memory test", "Run a full memory check", 10, 11, "kernel --type=openbsd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_MEMTEST##");
@@ -514,7 +514,7 @@ INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc,
 INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (05, "Debug",                "Debug Shell",                                                                          1, 17, "sh </dev/console >/dev/console\n");
 INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (06, "Partition extension",  "The first (and only) FAT or EXT2 partition will be extend across the whole disk.",     1, 18, "ResizeMax 1\n");
 INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (07, "NTFS Resize",          "The first (and only) NTFS partition will be extend across the whole disk.",            1, 19, "NtfsResizeMax 1\n");
-INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (08, "Agent Pack",           "Install the Pulse 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key).",        1, 20, "Mount 1\n\nmkdir -p /mnt/tmp\n\ncp /opt/winutils/setupssh.exe /mnt/tmp\ncp /opt/winutils/tightvncssh.exe /mnt/tmp\ncp /revoinfo/data/id_dsa.pub /mnt\n\necho -en 'cd c:\\tmp\\nsetupssh.exe /S\\ntightvncssh.exe /sp- /silent /norestart\\ndel c:\\tmp\\setupssh.exe' | unix2dos > /mnt/tmp/setup.bat\n\nRegistryAddRunOnce 'c:\tmp\setup.bat'\n");
+INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (08, "Agent Pack",           "Install the Medulla 2 Agent Pack (VNC, OpenSSH, OCS Inventory and the SSH key).",        1, 20, "Mount 1\n\nmkdir -p /mnt/tmp\n\ncp /opt/winutils/setupssh.exe /mnt/tmp\ncp /opt/winutils/tightvncssh.exe /mnt/tmp\ncp /revoinfo/data/id_dsa.pub /mnt\n\necho -en 'cd c:\\tmp\\nsetupssh.exe /S\\ntightvncssh.exe /sp- /silent /norestart\\ndel c:\\tmp\\setupssh.exe' | unix2dos > /mnt/tmp/setup.bat\n\nRegistryAddRunOnce 'c:\tmp\setup.bat'\n");
 INSERT INTO PostInstallScript (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (09, "ICH 5 sync",           "RAID1 synchronization for ICH5 chipsets, duplicate the first disk on the second one",  1, 21, "/opt/bin/dd_rescue -b 10485760 /dev/sda /dev/sdb\n");
 
 INSERT INTO MenuItem (id, `order`, hidden, hidden_WOL, fk_menu) VALUES (1, 0, 0, 0, 1);

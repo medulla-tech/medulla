@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 """
-Unit tests for the imaging API of the Pulse 2 Package Server
+Unit tests for the imaging API of the Medulla 2 Package Server
 """
 
 import os
@@ -13,7 +13,7 @@ import copy
 
 from time import sleep
 
-from pulse2.utils import reduceMACAddress, isUUID
+from medulla.utils import reduceMACAddress, isUUID
 from testutils import ipconfig
 
 IPSERVER = ipconfig()
@@ -39,8 +39,8 @@ MENU = {
             "hidden_WOL": 0,
         },
         "2": {
-            "name": "Register a Pulse 2 Client",
-            "desc": "Record this computer in Pulse 2 Server",
+            "name": "Register a Medulla 2 Client",
+            "desc": "Record this computer in Medulla 2 Server",
             "value": "identify L=##PULSE2_LANG## P=none\nreboot",
         },
     },
@@ -85,10 +85,10 @@ class Imaging(unittest.TestCase):
         """
         # We shouldn't have a default boot menu, because the package server is
         # not registered
-        default = "/var/lib/pulse2/imaging/bootmenus/default"
+        default = "/var/lib/medulla/imaging/bootmenus/default"
         self.assertFalse(os.path.exists(default))
         ret = os.system(
-            'pulse2-package-server-register-imaging  -n "Pulse 2 imaging" -m https://mmc:s3cr3t@localhost:7080'
+            'medulla-package-server-register-imaging  -n "Medulla 2 imaging" -m https://mmc:s3cr3t@localhost:7080'
         )
         self.assertEqual(0, ret)
         self.assertEqual(
@@ -96,7 +96,7 @@ class Imaging(unittest.TestCase):
             MMCAGENT.imaging.linkImagingServerToLocation("UUID1", "UUID1", "root"),
         )
         # Restart package server and wait a bit
-        os.system("/etc/init.d/pulse2-package-server restart")
+        os.system("/etc/init.d/medulla-package-server restart")
         sleep(5)
         # We should have a default boot menu
         self.assertTrue(os.path.exists(default))
@@ -112,18 +112,18 @@ class Imaging(unittest.TestCase):
         self.assertFalse(result)
         result = SERVER.computerRegister("foobar", mac)
         self.assertTrue(result)
-        self.assertTrue(os.path.exists("/var/lib/pulse2/imaging/uuid-cache.txt"))
-        self.assertTrue(os.path.isdir("/var/lib/pulse2/imaging/computers/%s" % "UUID2"))
+        self.assertTrue(os.path.exists("/var/lib/medulla/imaging/uuid-cache.txt"))
+        self.assertTrue(os.path.isdir("/var/lib/medulla/imaging/computers/%s" % "UUID2"))
         # Wait a bit for the menu to be generated asynchronously
         sleep(5)
         self.assertTrue(
             os.path.exists(
-                "/var/lib/pulse2/imaging/bootmenus/%s" % reduceMACAddress(mac)
+                "/var/lib/medulla/imaging/bootmenus/%s" % reduceMACAddress(mac)
             )
         )
         # No exclude file should be there
         self.assertFalse(
-            os.path.exists("/var/lib/pulse2/imaging/computers/%s/exclude" % "UUID2")
+            os.path.exists("/var/lib/medulla/imaging/computers/%s/exclude" % "UUID2")
         )
 
     def test_03registerComputers(self):
@@ -151,7 +151,7 @@ class Imaging(unittest.TestCase):
         sleep(5)
         # Exclude file should be there for UUID3
         self.assertTrue(
-            os.path.exists("/var/lib/pulse2/imaging/computers/%s/exclude" % "UUID3")
+            os.path.exists("/var/lib/medulla/imaging/computers/%s/exclude" % "UUID3")
         )
 
     def test_04inventory(self):
@@ -247,11 +247,11 @@ class Imaging(unittest.TestCase):
 
     def test_06computerCreateImageDirectory(self):
         """
-        Create a directory to store a Pulse 2 image
+        Create a directory to store a Medulla 2 image
         """
         result = SERVER.computerCreateImageDirectory("00:11:22:33:44:ff")
         self.assertTrue(isUUID(result))
-        self.assertTrue(os.path.exists("/var/lib/pulse2/imaging/masters/%s" % result))
+        self.assertTrue(os.path.exists("/var/lib/medulla/imaging/masters/%s" % result))
         global IMAGE_UUID
         IMAGE_UUID = result
 
@@ -261,7 +261,7 @@ class Imaging(unittest.TestCase):
         """
         # Put a sample image
         os.system(
-            "tar xzf ../data/pulse2-image-sample.tar.gz -C /var/lib/pulse2/imaging/masters/"
+            "tar xzf ../data/medulla-image-sample.tar.gz -C /var/lib/medulla/imaging/masters/"
             + IMAGE_UUID
         )
         result = SERVER.imageDone("00:11:22:33:44:ff", IMAGE_UUID)
@@ -278,7 +278,7 @@ class Imaging(unittest.TestCase):
         ret = False
         for _ in range(10):
             if os.path.exists(
-                os.path.join("/var/lib/pulse2/imaging/isos", title + "-1.iso")
+                os.path.join("/var/lib/medulla/imaging/isos", title + "-1.iso")
             ):
                 ret = True
                 break
@@ -294,18 +294,18 @@ class Imaging(unittest.TestCase):
         # Wait for the archival background process to be done
         sleep(5)
         # No archival done
-        self.assertFalse(os.path.exists("/var/lib/pulse2/imaging/archives/UUID4-1"))
+        self.assertFalse(os.path.exists("/var/lib/medulla/imaging/archives/UUID4-1"))
         # Computer directory no more exists
-        self.assertFalse(os.path.exists("/var/lib/pulse2/imaging/computers/UUID4"))
+        self.assertFalse(os.path.exists("/var/lib/medulla/imaging/computers/UUID4"))
         # Unregister with archival
         result = SERVER.computerUnregister("UUID2", [IMAGE_UUID], True)
         self.assertTrue(result)
         # Wait for the archival background process to be done
         sleep(5)
         # archival done
-        self.assertTrue(os.path.isdir("/var/lib/pulse2/imaging/archives/UUID2-1"))
+        self.assertTrue(os.path.isdir("/var/lib/medulla/imaging/archives/UUID2-1"))
         # Computer directory no more exists
-        self.assertFalse(os.path.exists("/var/lib/pulse2/imaging/computers/UUID2"))
+        self.assertFalse(os.path.exists("/var/lib/medulla/imaging/computers/UUID2"))
 
     def test_20imagingServerStatus(self):
         """

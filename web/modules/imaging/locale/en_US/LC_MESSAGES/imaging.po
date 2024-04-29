@@ -5,7 +5,7 @@
 # # Translators:
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2\n"
+"Project-Id-Version: Medulla 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-27 14:06+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
@@ -327,7 +327,7 @@ msgstr ""
 #, php-format
 msgid ""
 "Boot menu generation Success for package server: %s<br /><br />Check /var/"
-"log/mmc/pulse2-package-server.log"
+"log/mmc/medulla-package-server.log"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:78
@@ -366,7 +366,7 @@ msgstr ""
 #, php-format
 msgid ""
 "Boot menu generation failed for package server: %s<br /><br />Check /var/log/"
-"mmc/pulse2-package-server.log"
+"mmc/medulla-package-server.log"
 msgstr ""
 
 #: modules/imaging/includes/ajaxcommon.inc.php:120

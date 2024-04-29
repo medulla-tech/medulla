@@ -50,9 +50,9 @@ from mmc.site import mmcconfdir
 from mmc.database.database_helper import DatabaseHelper
 
 # TODO rename location into entity (and locations in location)
-from pulse2.utils import same_network, unique, noNone
-from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
-from pulse2.managers.group import ComputerGroupManager
+from medulla.utils import same_network, unique, noNone
+from medulla.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+from medulla.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.GLPIClient import XMLRPCClient
 from mmc.plugins.glpi.utilities import complete_ctx, literalquery
@@ -70,7 +70,7 @@ from mmc.plugins.dyngroup.config import DGConfig
 from distutils.version import LooseVersion, StrictVersion
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 
 from mmc.agent import PluginManager
 import traceback, sys
@@ -251,7 +251,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 Table(
                     "glpi_items_%s" % i,
                     self.metadata,
-                    Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+                    Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
                     Column("%s_id" % i, Integer, ForeignKey("glpi_%s.id" % i)),
                     autoload=True,
                 ),
@@ -283,7 +283,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         self.logs = Table(
             "glpi_logs",
             self.metadata,
-            Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             autoload=True,
         )
         mapper(Logs, self.logs)
@@ -295,7 +295,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         self.computerProcessor = Table(
             "glpi_items_deviceprocessors",
             self.metadata,
-            Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             Column(
                 "deviceprocessors_id", Integer, ForeignKey("glpi_deviceprocessors.id")
             ),
@@ -320,7 +320,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         self.computerMemory = Table(
             "glpi_items_devicememories",
             self.metadata,
-            Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             Column("devicememories_id", Integer, ForeignKey("glpi_devicememories.id")),
             autoload=True,
         )
@@ -352,7 +352,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             "glpi_infocoms",
             self.metadata,
             Column("suppliers_id", Integer, ForeignKey("glpi_suppliers.id")),
-            Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             autoload=True,
         )
         mapper(Infocoms, self.infocoms)
@@ -379,7 +379,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             self.fusionantivirus = Table(
                 "glpi_computerantiviruses",
                 self.metadata,
-                Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+                Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
                 Column(
                     "manufacturers_id", Integer, ForeignKey("glpi_manufacturers.id")
                 ),
@@ -404,7 +404,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             self.fusionlocks = Table(
                 "glpi_plugin_fusioninventory_locks",
                 self.metadata,
-                Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+                Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
                 autoload=True,
             )
             mapper(FusionLocks, self.fusionlocks)
@@ -412,7 +412,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             self.fusionagents = Table(
                 "glpi_plugin_fusioninventory_agents",
                 self.metadata,
-                Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+                Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
                 autoload=True,
             )
             mapper(FusionAgents, self.fusionagents)
@@ -421,7 +421,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         self.disk = Table(
             "glpi_items_disks",
             self.metadata,
-            Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             Column("filesystems_id", Integer, ForeignKey("glpi_filesystems.id")),
             autoload=True,
         )
@@ -512,7 +512,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         # machine (we need the foreign key, so we need to declare the table by hand ...
         #          as we don't need all columns, we don't declare them all)
         self.machine = Table(
-            "glpi_computers_pulse",
+            "glpi_computers_medulla",
             self.metadata,
             Column("id", Integer, primary_key=True),
             Column("entities_id", Integer, ForeignKey("glpi_entities.id")),
@@ -630,7 +630,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         self.inst_software = Table(
             "glpi_items_softwareversions",
             self.metadata,
-            Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             Column(
                 "softwareversions_id", Integer, ForeignKey("glpi_softwareversions.id")
             ),
@@ -690,7 +690,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         self.regcontents = Table(
             "glpi_plugin_fusioninventory_collects_registries_contents",
             self.metadata,
-            Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             Column(
                 "plugin_fusioninventory_collects_registries_id",
                 Integer,
@@ -704,7 +704,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         self.computersitems = Table(
             "glpi_computers_items",
             self.metadata,
-            Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             autoload=True,
         )
         mapper(Computersitems, self.computersitems)
@@ -715,7 +715,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             self.metadata,
             Column("id", Integer, primary_key=True),
             Column("items_id", Integer, ForeignKey("glpi_printers.id")),
-            Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             autoload=True,
         )
         mapper(Computersviewitemsprinter, self.view_computers_items_printer)
@@ -725,7 +725,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             self.metadata,
             Column("id", Integer, primary_key=True),
             Column("items_id", Integer, ForeignKey("glpi_peripherals.id")),
-            Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+            Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
             autoload=True,
         )
         mapper(Computersviewitemsperipheral, self.view_computers_items_peripheral)
@@ -2139,7 +2139,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
         # When search field is used on main computer's list page,
         # Pagination PHP Widget must know total machine result
-        # So, set displayList to True to count on glpi_computers_pulse
+        # So, set displayList to True to count on glpi_computers_medulla
         # and all needed joined tables
         if "hostname" in filt:
             if len(filt["hostname"]) > 0:
@@ -2515,7 +2515,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         @param machine: computer's instance
         @type machine: Machine
 
-        @return: owner (glpi_computers_pulse.user_id -> name)
+        @return: owner (glpi_computers_medulla.user_id -> name)
         @rtype: str
         """
 
@@ -5157,7 +5157,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         return resultrecord
 
     def _machineobject(self, ret):
-        """result view glpi_computers_pulse"""
+        """result view glpi_computers_medulla"""
         if ret:
             try:
                 return {
@@ -6292,7 +6292,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
     def moveComputerToEntity(self, uuid, entity_id):
         pass
-        # UPDATE `glpi_computers_pulse`
+        # UPDATE `glpi_computers_medulla`
         # SET `entities_id` = '5' WHERE `id` ='3'
 
     @DatabaseHelper._sessionm
@@ -6389,7 +6389,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         try:
             collects_id = (
                 session.query(Collects)
-                .filter_by(name="PulseRegistryCollects")
+                .filter_by(name="MedullaRegistryCollects")
                 .first()
                 .id
             )
@@ -6449,7 +6449,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         """
         Add registry collect content
 
-        @param computers_id: the computer_id from glpi_computers_pulse
+        @param computers_id: the computer_id from glpi_computers_medulla
         @type computers_id: str
 
         @param registry_id: the registry_id from plugin_fusioninventory_collects_registries
@@ -6882,7 +6882,7 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
 # Class for SQLalchemy mapping
 class Machine(object):
-    __tablename__ = "glpi_computers_pulse"
+    __tablename__ = "glpi_computers_medulla"
 
     def getUUID(self):
         return toUUID(self.id)

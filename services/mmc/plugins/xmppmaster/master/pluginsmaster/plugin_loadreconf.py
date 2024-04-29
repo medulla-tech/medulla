@@ -8,7 +8,7 @@ import logging
 from mmc.plugins.xmppmaster.master.lib.utils import getRandomName
 import types
 import configparser
-from pulse2.database.xmppmaster import XmppMasterDatabase
+from medulla.database.xmppmaster import XmppMasterDatabase
 import time
 
 logger = logging.getLogger()

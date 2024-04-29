@@ -7,7 +7,7 @@ Configuration reader for imaging
 """
 
 from mmc.support.config import PluginConfig
-from pulse2.database.imaging.config import ImagingDatabaseConfig
+from medulla.database.imaging.config import ImagingDatabaseConfig
 from configparser import NoOptionError, NoSectionError
 
 

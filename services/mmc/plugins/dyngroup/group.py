@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pulse2.managers.group import ComputerGroupI
+from medulla.managers.group import ComputerGroupI
 from mmc.plugins.dyngroup.database import DyngroupDatabase
 from mmc.plugins.dyngroup.qmanager import QueryManager
 

@@ -6,11 +6,11 @@ import os
 import sys
 
 if sys.platform.startswith("linux"):
-    fileconf = os.path.join("/", "etc", "pulse")
+    fileconf = os.path.join("/", "etc", "medulla")
 elif sys.platform.startswith("win"):
-    fileconf = os.path.join(os.environ["ProgramFiles"], "Pulse", "etc")
+    fileconf = os.path.join(os.environ["ProgramFiles"], "Medulla", "etc")
 elif sys.platform.startswith("darwin"):
-    fileconf = os.path.join("/", "Library", "Application Support", "Pulse", "etc")
+    fileconf = os.path.join("/", "Library", "Application Support", "Medulla", "etc")
 
 setup(
     classifiers=[
@@ -22,13 +22,13 @@ setup(
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
     ],
-    keywords="pulse2",
-    name="pulse2",
+    keywords="medulla",
+    name="medulla",
     version='5.1.0', # fmt: skip
     debian_distro='stretch',  # fmt: skip
-    description="pulse2",
+    description="medulla",
     url="https://www.siveo.net/",
-    packages=["pulse2"],
+    packages=["medulla"],
     test_suite="",
     package_data={},
     entry_points={},

@@ -1,6 +1,6 @@
 # (c) 2011-2012 Mandriva, http://www.mandriva.com
 #
-# This file is part of Mandriva Pulse2 project.
+# This file is part of Mandriva Medulla2 project.
 #
 # This software is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,16 +18,16 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging \
-	pulse2-inventory-server \
-	pulse2-packageparser.py pulse2-setup pulse2-load-defaults \
-	pulse2-extract-glpi-search-options \
-	pulse2-backup-servers pulse2-debug pulse2-dbupdate pulse2-migration_old_package.py\
-	pulse2-msc-clean-database pulse2-inventory-clean-database message-sender.py\
-	pulse2-collect-info pulse2-create-group pulse2-register-pxe.py \
-	pulse2-connect-machine-backuppc pulse2-disconnect-machine-backuppc \
-	restart-pulse-services pulse2-inscription_packages_in_base.py pulse2-generation_package.py \
+dist_sbin_SCRIPTS = medulla-package-server medulla-package-server-register-imaging \
+	medulla-inventory-server \
+	medulla-packageparser.py medulla-setup medulla-load-defaults \
+	medulla-extract-glpi-search-options \
+	medulla-backup-servers medulla-debug medulla-dbupdate medulla-migration_old_package.py\
+	medulla-msc-clean-database medulla-inventory-clean-database message-sender.py\
+	medulla-collect-info medulla-create-group medulla-register-pxe.py \
+	medulla-connect-machine-backuppc medulla-disconnect-machine-backuppc \
+	restart-medulla-services medulla-inscription_packages_in_base.py medulla-generation_package.py \
 	medulla-generate-update-package.py medulla-mariadb-move-update-package.py \
 	medulla_mysql_exec_update.sh medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 
-dist_bin_SCRIPTS = pulse2-uuid-resolver pulse2-backup-handler pulse2-synch-masters
+dist_bin_SCRIPTS = medulla-uuid-resolver medulla-backup-handler medulla-synch-masters

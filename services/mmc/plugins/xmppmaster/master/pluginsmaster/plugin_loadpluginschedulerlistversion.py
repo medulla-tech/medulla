@@ -47,20 +47,20 @@ def read_conf_load_plugin_scheduler_list_version(objectxmpp):
     if not os.path.isfile(pathfileconf):
         logger.error(
             "plugin %s\nConfiguration file missing\n  %s\neg conf:"
-            "\n[parameters]\ndirschedulerplugins = /var/lib/pulse2/xmpp_basepluginscheduler/"
+            "\n[parameters]\ndirschedulerplugins = /var/lib/medulla/xmpp_basepluginscheduler/"
             % (plugin["NAME"], pathfileconf)
         )
         logger.warning(
-            "default value for dirplugins is /var/lib/pulse2/xmpp_basepluginscheduler"
+            "default value for dirplugins is /var/lib/medulla/xmpp_basepluginscheduler"
         )
-        objectxmpp.dirschedulerplugins = "/var/lib/pulse2/xmpp_basepluginscheduler"
+        objectxmpp.dirschedulerplugins = "/var/lib/medulla/xmpp_basepluginscheduler"
         objectxmpp.reload_schedulerplugins_interval = 2000
     else:
         Config = configparser.ConfigParser()
         Config.read(pathfileconf)
         if os.path.exists(pathfileconf + ".local"):
             Config.read(pathfileconf + ".local")
-        objectxmpp.dirschedulerplugins = "/var/lib/pulse2/xmpp_basepluginscheduler"
+        objectxmpp.dirschedulerplugins = "/var/lib/medulla/xmpp_basepluginscheduler"
         if Config.has_option("parameters", "dirschedulerplugins"):
             objectxmpp.dirschedulerplugins = Config.get(
                 "parameters", "dirschedulerplugins"
