@@ -21,10 +21,10 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 doc_DATA = \
-	Medulla2-User-Manual-EN.pdf
+	Medulla-User-Manual-EN.pdf
 
 MAINTAINERCLEANFILES = \
-	Medulla2-User-Manual-EN.pdf
+	Medulla-User-Manual-EN.pdf
 
 EXTRA_DIST = $(doc_DATA)
 
