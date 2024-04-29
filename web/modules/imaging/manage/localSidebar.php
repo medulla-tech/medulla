@@ -22,31 +22,30 @@
  * MA 02110-1301, USA
  */
 
-$sidemenu= new SideMenu();
+$sidemenu = new SideMenu();
 $sidemenu->setClass("manage computers");
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Imaging server status","imaging"), "imaging", "manage", "index")
+    new SideMenuItem(_T("Imaging server status", "imaging"), "imaging", "manage", "index")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Manage masters","imaging"), "imaging", "manage", "master")
+    new SideMenuItem(_T("Manage masters", "imaging"), "imaging", "manage", "master")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Manage boot services","imaging"), "imaging", "manage", "service")
+    new SideMenuItem(_T("Manage boot services", "imaging"), "imaging", "manage", "service")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Default boot menu","imaging"), "imaging", "manage", "bootmenu")
+    new SideMenuItem(_T("Default boot menu", "imaging"), "imaging", "manage", "bootmenu")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Post-imaging scripts","imaging"), "imaging", "manage", "postinstall")
+    new SideMenuItem(_T("Post-imaging scripts", "imaging"), "imaging", "manage", "postinstall")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Imaging Configuration","imaging"), "imaging", "manage", "configuration")
+    new SideMenuItem(_T("Imaging Configuration", "imaging"), "imaging", "manage", "configuration")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Windows System Image Manager","imaging"), "imaging", "manage", "systemImageManager")
+    new SideMenuItem(_T("Windows System Image Manager", "imaging"), "imaging", "manage", "systemImageManager")
 );
 
 if (in_array("dyngroup", $_SESSION["modulesList"])) {
     require("modules/dyngroup/dyngroup/localImagingSidebar.php");
 }
-?>

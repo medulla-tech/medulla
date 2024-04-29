@@ -29,20 +29,20 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $location = getCurrentLocation();
 list($list, $values) = getEntitiesSelectableElements();
-foreach($list as $key => $value ){
+foreach($list as $key => $value) {
     if (xmlrpc_doesLocationHasImagingServer($key) != 1) {
         unset($list[$key]);
         unset($values[$key]);
     }
-    if($key == $location){
+    if($key == $location) {
         unset($list[$key]);
         unset($values[$key]);
     }
 }
 
-isset($_GET['itemid'])?$id = $_GET['itemid']:$id = $_POST['itemid'];
+isset($_GET['itemid']) ? $id = $_GET['itemid'] : $id = $_POST['itemid'];
 
-isset($_GET['itemlabel'])?$itemlabel = $_GET['itemlabel']:$itemlabel = $_POST['itemlabel'];
+isset($_GET['itemlabel']) ? $itemlabel = $_GET['itemlabel'] : $itemlabel = $_POST['itemlabel'];
 
 $masters = xmlrpc_getLocationMastersByUUID($location, array($id));
 $id = $_GET['itemid'];
@@ -54,47 +54,47 @@ $process1 = array();
 $process  = xmlrpc_checkProcessCloneMasterToLocation("medulla-synch-masters");
 
 $index = 0;
-foreach($process as $d ){
-    $process1['my_var'.$index]= $d;
+foreach($process as $d) {
+    $process1['my_var'.$index] = $d;
     $index++;
 }
-$process1['label']= $label;
-$process1['desc']= $desc;
-$process1['master_uuid']= $master_uuid;
-$process1['id']= $id;
-$process1['master']= $master;
+$process1['label'] = $label;
+$process1['desc'] = $desc;
+$process1['master_uuid'] = $master_uuid;
+$process1['id'] = $id;
+$process1['master'] = $master;
 //echo http_build_query($process, 'myvar_');
 //exit;
-if (safeCount($process) > 0){
+if (safeCount($process) > 0) {
     // afficher progression des copys
-    header("Location: " . urlStrRedirect("imaging/manage/synchromaster",$process1));
+    header("Location: " . urlStrRedirect("imaging/manage/synchromaster", $process1));
     exit;
-}
-else{
-    if(safeCount($list) == 0){
-        $msg = sprintf (_T("There is no imaging server available to clone the master", "imaging")."%s",$label );
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                        "IMG",
-                                        '',
-                                        0,
-                                        $label ,
-                                        'Manuel',
-                                        '',
-                                        '',
-                                        '',
-                                        "session user ".$_SESSION["login"],
-                                        'Imaging | Master | Menu | Clone | Manual');
+} else {
+    if(safeCount($list) == 0) {
+        $msg = sprintf(_T("There is no imaging server available to clone the master", "imaging")."%s", $label);
+        xmlrpc_setfromxmppmasterlogxmpp(
+            $msg,
+            "IMG",
+            '',
+            0,
+            $label,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Master | Menu | Clone | Manual'
+        );
         new NotifyWidgetWarning($msg);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
         exit;
-    }else
-    {// peu cloner
+    } else {// peu cloner
         if(safeCount($_POST) == 0) {
             $p = new PageGenerator(_T("Clone master : ", "imaging").$label);
-        }else{
-            $_SESSION['processclone']=$process1;
+        } else {
+            $_SESSION['processclone'] = $process1;
             xmlrpc_startProcessClone($_POST);
-            header("Location: " . urlStrRedirect("imaging/manage/synchromaster",$process1));
+            header("Location: " . urlStrRedirect("imaging/manage/synchromaster", $process1));
             exit;
             //$p = new PageGenerator(_T("Clone master progression : ", "imaging").$label);
         }
@@ -104,18 +104,18 @@ else{
         echo "$desc";
         $f = new ValidatingForm();//array("action" => urlStrRedirect("imaging/manage/clone_master_action"),));
         $f->add(new TitleElement(_T("Master", "imaging")));
-        $f->add(new HiddenTpl("id"), array("value" => $id, "hide" => True));
-        $f->add(new HiddenTpl("itemlabel"), array("value" => $itemlabel, "hide" => True));
-        $f->add(new HiddenTpl("location"), array("value" => $location, "hide" => True));
-        $f->add(new HiddenTpl("masteruuid"), array("value" => $master_uuid, "hide" => True));
+        $f->add(new HiddenTpl("id"), array("value" => $id, "hide" => true));
+        $f->add(new HiddenTpl("itemlabel"), array("value" => $itemlabel, "hide" => true));
+        $f->add(new HiddenTpl("location"), array("value" => $location, "hide" => true));
+        $f->add(new HiddenTpl("masteruuid"), array("value" => $master_uuid, "hide" => true));
         $f->push(new Table());
-        $index=0;
-        foreach($list as $key => $value ){
-            $val=array_pop(explode('>',$value));
+        $index = 0;
+        foreach($list as $key => $value) {
+            $val = array_pop(explode('>', $value));
             $f->add(
                 new TrFormElement("clone Master [<strong>" . $label . "</strong>]  to "._T('Imaging Server', 'imaging').' : [<strong>'.$val.'</strong>]', new CheckBoxTpl('server_imaging['.$key.']')),
                 array("value" => 1)
-        );
+            );
         }
         $f->pop();
         $f->addButton("bvalid", _T("Validate"));
@@ -123,4 +123,3 @@ else{
         $f->display();
     }
 }
-?>

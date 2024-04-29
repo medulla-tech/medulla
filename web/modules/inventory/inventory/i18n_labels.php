@@ -166,5 +166,3 @@ $tabTitles = array(
     'Workgroup' => _T('Workgroup', 'inventory'),
     'WorkingDate' => _T('WorkingDate', 'inventory'),
 );
-
-?>

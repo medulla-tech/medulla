@@ -48,55 +48,58 @@ if (isset($_POST["bconfirm"])) {
 
     $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $params, $type);
     $ret = xmlrpc_editServiceToTarget($item_uuid, $target_uuid, $params, $type);
-    xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Add the boot service <b>%s</b> to <b>%s</b>", "imaging"), $label, $params['name']),
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $params['name'] ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Menu | server | Manual');
+    xmlrpc_setfromxmppmasterlogxmpp(
+        sprintf(_T("Add the boot service <b>%s</b> to <b>%s</b>", "imaging"), $label, $params['name']),
+        "IMG",
+        '',
+        0,
+        $params['name'],
+        'Manuel',
+        '',
+        '',
+        '',
+        "session user ".$_SESSION["login"],
+        'Imaging | Image | Menu | server | Manual'
+    );
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         /* insert notification code here if needed */
         // Synchronize boot menu
         if ($type == 'group') {
             $location = getCurrentLocation();
-            if ($location == "UUID1")
+            if ($location == "UUID1") {
                 $location_name = _T("root", "medulla");
-            else
+            } else {
                 $location_name = xmlrpc_getLocationName($location);
-            $objprocess=array();
+            }
+            $objprocess = array();
             $scriptmulticast = 'multicast.sh';
-            $path="/tmp/";
-            $objprocess['location']=$location;
+            $path = "/tmp/";
+            $objprocess['location'] = $location;
             $objprocess['process'] = $path.$scriptmulticast;
-            if (xmlrpc_check_process_multicast($objprocess)){
+            if (xmlrpc_check_process_multicast($objprocess)) {
                 $msg = _T("The bootmenus cannot be generated as a multicast deployment is currently running.", "imaging");
-                xmlrpc_setfromxmppmasterlogxmpp($msg." [ ".$label." , ".$params['name']." ]",
-                                    "IMG",
-                                    '',
-                                    0,
-                                    $params['name'] ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Menu | server | Manual');
+                xmlrpc_setfromxmppmasterlogxmpp(
+                    $msg." [ ".$label." , ".$params['name']." ]",
+                    "IMG",
+                    '',
+                    0,
+                    $params['name'],
+                    'Manuel',
+                    '',
+                    '',
+                    '',
+                    "session user ".$_SESSION["login"],
+                    'Imaging | Image | Menu | server | Manual'
+                );
                 new NotifyWidgetFailure($msg);
                 header("Location: " . urlStrRedirect("imaging/manage/index"));
                 exit;
-            }
-            else{
+            } else {
                 $ret = xmlrpc_synchroProfile($target_uuid);
                 xmlrpc_clear_script_multicast($objprocess);
             }
-        }
-        else {
+        } else {
             $ret = xmlrpc_synchroComputer($target_uuid);
         }
         if (isXMLRPCError()) {
@@ -121,10 +124,11 @@ if(isset($_GET['gid'])) {
     $target_uuid = $_GET['uuid'];
 }
 
-if(isset($_GET['mod']))
+if(isset($_GET['mod'])) {
     $mod = $_GET['mod'];
-else
+} else {
     $mod = "none";
+}
 
 switch($mod) {
     case 'add':
@@ -138,7 +142,8 @@ switch($mod) {
         break;
 }
 
-function service_add($type, $target_uuid) {
+function service_add($type, $target_uuid)
+{
     $params = getParams();
     $item_uuid = $_GET['itemid'];
     $label = urldecode($_GET['itemlabel']);
@@ -148,26 +153,24 @@ function service_add($type, $target_uuid) {
     $f->push(new Table());
 
     // form preseeding
-    $f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
-    $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,                         "hide" => True));
-    $f->add(new HiddenTpl("gid"),                           array("value" => $_GET['gid'],                   "hide" => True));
-    $f->add(new HiddenTpl("uuid"),                          array("value" => $_GET['uuid'],                  "hide" => True));
-    $f->add(new HiddenTpl("default_mi_label"),              array("value" => $label,                         "hide" => True));
+    $f->add(new HiddenTpl("itemid"), array("value" => $item_uuid,                     "hide" => true));
+    $f->add(new HiddenTpl("itemlabel"), array("value" => $label,                         "hide" => true));
+    $f->add(new HiddenTpl("gid"), array("value" => $_GET['gid'],                   "hide" => true));
+    $f->add(new HiddenTpl("uuid"), array("value" => $_GET['uuid'],                  "hide" => true));
+    $f->add(new HiddenTpl("default_mi_label"), array("value" => $label,                         "hide" => true));
 
 
     $check = new TrFormElement(_T('Selected by default', 'imaging'), new CheckboxTpl("do_default"));
-    $f->add($check,                                         array("value" => web_def_service_default() ? "checked" : ""));
+    $f->add($check, array("value" => web_def_service_default() ? "checked" : ""));
     $check = new TrFormElement(_T('Displayed', 'imaging'), new CheckboxTpl("do_display"));
-    $f->add($check,                                         array("value" => web_def_service_hidden() ? "checked" : ""));
+    $f->add($check, array("value" => web_def_service_hidden() ? "checked" : ""));
     $check = new TrFormElement(_T('Selected by default on WOL', 'imaging'), new CheckboxTpl("do_default_WOL"));
-    $f->add($check,                                         array("value" => web_def_service_default_WOL() ? "checked" : ""));
+    $f->add($check, array("value" => web_def_service_default_WOL() ? "checked" : ""));
     $check = new TrFormElement(_T('Displayed on WOL', 'imaging'), new CheckboxTpl("do_display_WOL"));
-    $f->add($check,                                         array("value" => web_def_service_hidden_WOL() ? "checked" : ""));
+    $f->add($check, array("value" => web_def_service_hidden_WOL() ? "checked" : ""));
 
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 
 }
-
-?>

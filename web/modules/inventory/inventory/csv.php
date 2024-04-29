@@ -44,18 +44,19 @@ $tables = explode('|', $table);
 if (count($tables) == 1) { # FIXME: only one table handled for now for CVS splitting :/
 
     $split = 1000; # results will be splitted by 1000 to reduce memory usage
-    $count = countLastMachineInventoryPart($table, array('gid'=>$gid, 'uuid'=>$get_uuid, 'filter' => $filter));
+    $count = countLastMachineInventoryPart($table, array('gid' => $gid, 'uuid' => $get_uuid, 'filter' => $filter));
 
-    if ($count <= $split)
+    if ($count <= $split) {
         $range = array(0);
-    else
-        $range = range(0, $count-1, $split);
+    } else {
+        $range = range(0, $count - 1, $split);
+    }
 
     $firstline = true;
     foreach ($range as $lower) {
         $upper = $lower + $split ;
 
-        foreach (getLastMachineInventoryPart($table, array('gid'=>$gid, 'uuid'=>$get_uuid, 'filter' => $filter, 'min' => $lower, 'max' => $upper )) as $machine) {
+        foreach (getLastMachineInventoryPart($table, array('gid' => $gid, 'uuid' => $get_uuid, 'filter' => $filter, 'min' => $lower, 'max' => $upper )) as $machine) {
             $name = $machine[0];
             $uuid = $machine[2];
             $content = $machine[1];
@@ -68,8 +69,9 @@ if (count($tables) == 1) { # FIXME: only one table handled for now for CVS split
                 $firstline = false;
             }
             foreach ($content as $line) { # iterate over results
-                if (in_array('timestamp', array_keys($line)))
+                if (in_array('timestamp', array_keys($line))) {
                     $line['timestamp'] = _toDate($line['timestamp']);
+                }
                 print "\"$name\",\"".implode('","', array_values($line))."\"\n";
             }
         }
@@ -77,10 +79,10 @@ if (count($tables) == 1) { # FIXME: only one table handled for now for CVS split
 } else { # more than one table to display, show them as usual (ie no split)
     $datum = array();
 
-    getLastMachineInventoryPart($tables, array('gid'=>$gid, 'uuid'=>$get_uuid, 'filter' => $filter));
+    getLastMachineInventoryPart($tables, array('gid' => $gid, 'uuid' => $get_uuid, 'filter' => $filter));
 
     foreach ($tables as $table) {
-        $machines = getLastMachineInventoryPart($table, array('gid'=>$gid, 'uuid'=>$get_uuid, 'filter' => $filter));
+        $machines = getLastMachineInventoryPart($table, array('gid' => $gid, 'uuid' => $get_uuid, 'filter' => $filter));
         foreach ($machines as $machine) {
             $name = $machine[0];
             $uuid = $machine[2];
@@ -88,7 +90,7 @@ if (count($tables) == 1) { # FIXME: only one table handled for now for CVS split
             if ($datum[$uuid] == null) {
                 $datum[$uuid] = array($name, array(), $uuid);
             }
-            foreach ($content as $k=>$v) {
+            foreach ($content as $k => $v) {
                 $datum[$uuid][1][$k] = $v; // = $datum[$uuid][1] + $content;
             }
         }
@@ -108,13 +110,12 @@ if (count($tables) == 1) { # FIXME: only one table handled for now for CVS split
             $firstline = false;
         }
         foreach ($content as $line) { # iterate over results
-            if (in_array('timestamp', array_keys($line)))
+            if (in_array('timestamp', array_keys($line))) {
                 $line['timestamp'] = _toDate($line['timestamp']);
+            }
             print "\"$name\",\"".implode('","', array_values($line))."\"\n";
         }
     }
 }
 
 exit;
-
-?>

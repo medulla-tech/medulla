@@ -5201,7 +5201,11 @@ class XmppMasterDatabase(DatabaseHelper):
             Deploy.sessionid.like("%s%%" % typedeploy)
         )
 
-        if not medulla_usersid or len(medulla_usersid) == 1 and medulla_usersid[0] == "root":
+        if (
+            not medulla_usersid
+            or len(medulla_usersid) == 1
+            and medulla_usersid[0] == "root"
+        ):
             return self.get_deploy_by_user_with_interval(
                 login,
                 state,
@@ -7270,7 +7274,12 @@ class XmppMasterDatabase(DatabaseHelper):
         # creation topology file.
         filename = "topology.json"
         pathfile = os.path.join(directoryjson, filename)
-        builddatajson = {"name": "Medulla", "type": "AMR", "parent": None, "children": []}
+        builddatajson = {
+            "name": "Medulla",
+            "type": "AMR",
+            "parent": None,
+            "children": [],
+        }
         for i in topology:
             listmachines = topology[i]
 

@@ -64,7 +64,9 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
         #######configuration browserfile#######
         self.defaultdir = os.path.join("/", "var", "lib", "medulla", "file-transfer")
-        self.rootfilesystem = os.path.join("/", "var", "lib", "medulla", "file-transfer")
+        self.rootfilesystem = os.path.join(
+            "/", "var", "lib", "medulla", "file-transfer"
+        )
         if self.has_option("browserfile", "defaultdir"):
             self.defaultdir = self.get("browserfile", "defaultdir")
         if self.has_option("bowserfile", "rootfilesystem"):

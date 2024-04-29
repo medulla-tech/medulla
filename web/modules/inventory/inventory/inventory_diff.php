@@ -28,12 +28,30 @@ require_once("modules/inventory/includes/utils.php");
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 
-if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
-if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
-if (!isset($_GET['part'])) { $_GET['part'] = 'Hardware'; }
-if (isset($_GET['groupname'])) { $groupname = $_GET['groupname']; } else { $groupname = ""; }
-if (isset($_GET['gid'])) { $gid = $_GET['gid']; } else { $gid = ""; }
-if (isset($_GET['inventoryId'])) { $inv = $_GET['inventoryId']; } else { $inv = ""; }
+if (!isset($_GET['hostname'])) {
+    $_GET['hostname'] = $_GET['cn'];
+}
+if (!isset($_GET['uuid'])) {
+    $_GET['uuid'] = $_GET['objectUUID'];
+}
+if (!isset($_GET['part'])) {
+    $_GET['part'] = 'Hardware';
+}
+if (isset($_GET['groupname'])) {
+    $groupname = $_GET['groupname'];
+} else {
+    $groupname = "";
+}
+if (isset($_GET['gid'])) {
+    $gid = $_GET['gid'];
+} else {
+    $gid = "";
+}
+if (isset($_GET['inventoryId'])) {
+    $inv = $_GET['inventoryId'];
+} else {
+    $inv = "";
+}
 
 // Load all parameters into an array
 $params = array("from" => 'base%2computers%2Finvtabs');
@@ -58,14 +76,14 @@ $added_part_lists = array();
 $removed_part_lists = array();
 
 // Loop through the added elements parts to display it
-foreach($added_elems as $part=>$added_part) {
+foreach($added_elems as $part => $added_part) {
 
     if(!empty($added_part)) {
         // Loop through each element of the part
         foreach($added_part as $elem) {
 
             // Loop through elems to change arrays into dates
-            foreach($elem as $k=>$v) {
+            foreach($elem as $k => $v) {
                 if(is_array($v)) {
                     $elem[$k] = _toDate($v);
                 }
@@ -84,13 +102,13 @@ foreach($added_elems as $part=>$added_part) {
 }
 
 // Loop through the added elements parts to display it
-foreach($removed_elems as $part=>$removed_part) {
+foreach($removed_elems as $part => $removed_part) {
     if(!empty($removed_part)) {
         // Loop through each element of the part
         foreach($removed_part as $elem) {
 
             // Loop through elems to change arrays into dates
-            foreach($elem as $k=>$v) {
+            foreach($elem as $k => $v) {
                 if(is_array($v)) {
                     $elem[$k] = _toDate($v);
                 }
@@ -125,4 +143,3 @@ foreach($removed_part_lists as $list) {
     print('<h4>' . $list->name . '</h4>');
     $list->display($navbar = 0, $header = 0);
 }
-?>

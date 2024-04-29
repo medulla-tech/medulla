@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * (c) 2008 Mandriva, http://www.mandriva.com
  *
@@ -22,7 +22,6 @@
  * MA 02110-1301, USA
  */
 
-$sidemenu= new SideMenu();
+$sidemenu = new SideMenu();
 $sidemenu->setClass("report");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Report creation", 'report'), "report", "report", "index"));
-?>

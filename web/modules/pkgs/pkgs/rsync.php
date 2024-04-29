@@ -25,7 +25,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
 
-$uuidpackage =  base64_decode ( $_GET['pid']);
+$uuidpackage =  base64_decode($_GET['pid']);
 //interoge la table syncthingsync
 $infopackage = xmlrpc_pkgs_get_info_synchro_packageid($uuidpackage);
 
@@ -36,27 +36,27 @@ $relayserverlist =  $infopackage[1];
 $listnosync = array();
 $listrelaytotal  = array();
 
-$listsearchsynchro=array();
+$listsearchsynchro = array();
 $listsearchnosynchro = array();
 
-foreach ($nosynchrolist as $rel){
-        $pos = strpos($rel['relayserver_jid'], "rsmedulla@medulla");
-        if ($pos === false){
-            $listnosync[] =  $rel['relayserver_jid'];
-        }
+foreach ($nosynchrolist as $rel) {
+    $pos = strpos($rel['relayserver_jid'], "rsmedulla@medulla");
+    if ($pos === false) {
+        $listnosync[] =  $rel['relayserver_jid'];
+    }
 }
 
 
-foreach ($relayserverlist as $rel){
+foreach ($relayserverlist as $rel) {
 
-        $listrelaytotal[$rel['jid'] ] = $rel['nameserver'];
+    $listrelaytotal[$rel['jid'] ] = $rel['nameserver'];
 }
 
 
-foreach ($listrelaytotal as $key => $val){
-    if(in_array($key, $listnosync)){
+foreach ($listrelaytotal as $key => $val) {
+    if(in_array($key, $listnosync)) {
         $listsearchnosynchro[$key] = $val;
-    }else{
+    } else {
         $listsearchsynchro[$key] = $val;
     }
 }
@@ -64,45 +64,43 @@ foreach ($listrelaytotal as $key => $val){
 $nbt  = safeCount($listrelaytotal);
 $nbns = safeCount($listsearchnosynchro);
 $nbs  = safeCount($listsearchsynchro);
-$nbsp = ($nbs/$nbt)*100;
-$nbnsp = ($nbns/$nbt)*100;
+$nbsp = ($nbs / $nbt) * 100;
+$nbnsp = ($nbns / $nbt) * 100;
 
 
 echo "<table class='listinfos'>";
-    echo "<thead>";
-    echo "<tr>";
-    echo '<th headers="resultnosync" colspan="1" >'._T("Relay servers not yet synchronized : ", 'pkgs').$nbns.'/'.$nbt.' ('.$nbnsp .'%)</th>';
-    echo "</tr>";
-    echo "</thead>";
-    echo "<tbody>";
+echo "<thead>";
+echo "<tr>";
+echo '<th headers="resultnosync" colspan="1" >'._T("Relay servers not yet synchronized : ", 'pkgs').$nbns.'/'.$nbt.' ('.$nbnsp .'%)</th>';
+echo "</tr>";
+echo "</thead>";
+echo "<tbody>";
 
-    foreach($listsearchnosynchro as $key=>$val){
-        echo "<tr>";
-            echo "<td>";
-            echo $val;
-            echo "</td>";
-        echo "</tr>";
-    }
-    echo "</tbody>";
+foreach($listsearchnosynchro as $key => $val) {
+    echo "<tr>";
+    echo "<td>";
+    echo $val;
+    echo "</td>";
+    echo "</tr>";
+}
+echo "</tbody>";
 echo "</table>";
 
 
 echo "<table class='listinfos'>";
-    echo "<thead>";
+echo "<thead>";
+echo "<tr>";
+echo '<th headers="resultsync" colspan="1" >'._T("Relay servers already synchronized : ", 'pkgs').$nbs.'/'.$nbt.' ('.$nbsp .'%)</th>';
+echo "</tr>";
+echo "</thead>";
+
+echo "<tbody>";
+foreach($listsearchsynchro as $key => $val) {
     echo "<tr>";
-    echo '<th headers="resultsync" colspan="1" >'._T("Relay servers already synchronized : ", 'pkgs').$nbs.'/'.$nbt.' ('.$nbsp .'%)</th>';
+    echo "<td>";
+    echo $val;
+    echo "</td>";
     echo "</tr>";
-    echo "</thead>";
-
-    echo "<tbody>";
-    foreach($listsearchsynchro as $key=>$val){
-        echo "<tr>";
-            echo "<td>";
-            echo $val;
-            echo "</td>";
-        echo "</tr>";
-    }
-    echo "</tbody>";
+}
+echo "</tbody>";
 echo "</table>";
-
-?>

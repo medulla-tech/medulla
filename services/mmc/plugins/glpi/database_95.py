@@ -250,7 +250,9 @@ class Glpi95(DyngroupDatabaseHelper):
                 Table(
                     "glpi_items_%s" % i,
                     self.metadata,
-                    Column("items_id", Integer, ForeignKey("glpi_computers_medulla.id")),
+                    Column(
+                        "items_id", Integer, ForeignKey("glpi_computers_medulla.id")
+                    ),
                     Column("%s_id" % i, Integer, ForeignKey("glpi_%s.id" % i)),
                     autoload=True,
                 ),
@@ -391,7 +393,9 @@ class Glpi95(DyngroupDatabaseHelper):
             self.fusionantivirus = Table(
                 "glpi_computerantiviruses",
                 self.metadata,
-                Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
+                Column(
+                    "computers_id", Integer, ForeignKey("glpi_computers_medulla.id")
+                ),
                 Column(
                     "manufacturers_id", Integer, ForeignKey("glpi_manufacturers.id")
                 ),
@@ -424,7 +428,9 @@ class Glpi95(DyngroupDatabaseHelper):
             self.fusionagents = Table(
                 "glpi_plugin_fusioninventory_agents",
                 self.metadata,
-                Column("computers_id", Integer, ForeignKey("glpi_computers_medulla.id")),
+                Column(
+                    "computers_id", Integer, ForeignKey("glpi_computers_medulla.id")
+                ),
                 autoload=True,
             )
             mapper(FusionAgents, self.fusionagents)

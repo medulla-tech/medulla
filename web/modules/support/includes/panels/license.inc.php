@@ -28,12 +28,13 @@ $options = array(
     "id" => "license",
     "refresh" => 3600,
     "title" => _T("Subscription info", "support"),
-    "enable" => FALSE
+    "enable" => false
 );
 
-class LicensePanel extends Panel {
-
-    function __construct($id, $title) {
+class LicensePanel extends Panel
+{
+    public function __construct($id, $title)
+    {
         parent::__construct($id, $title);
         $this->data = array_merge(array(
             'name' => '',
@@ -47,9 +48,10 @@ class LicensePanel extends Panel {
         ), $this->data);
     }
 
-    function display_content() {
+    public function display_content()
+    {
 
-        if ($this->data['name'] != ''||$this->data['phone'] != ''||$this->data['email'] != ''||$this->data['hours'] != ''){
+        if ($this->data['name'] != '' || $this->data['phone'] != '' || $this->data['email'] != '' || $this->data['hours'] != '') {
             echo '<div class="subpanel">';
             echo '<p><b>' . _T('Support', 'support') . '</b></p>';
 
@@ -61,7 +63,7 @@ class LicensePanel extends Panel {
                 echo '<p>' . _T("Email", "support") . ':</p>';
                 echo '<p><b><a href="'. $this->data["email_uri"] . '">' . $this->data['email'] . '</a></b></p>';
             }
-            if ($this->data['hours'] != ''){
+            if ($this->data['hours'] != '') {
                 echo '<p>' . _T("Hours", "support") . ':</p>';
                 echo '<p><b>' . $this->data['hours'] . '</b></p>';
             }
@@ -69,7 +71,7 @@ class LicensePanel extends Panel {
         }
 
         $subscription_info = xmlCall("support.get_subscription_info");
-        $display_renew_links = False;
+        $display_renew_links = false;
         if ($subscription_info) {
             echo '<div class="subpanel">';
             echo '<p>' . _T("Your subscription", "support") . ':</p>';
@@ -81,11 +83,10 @@ class LicensePanel extends Panel {
             $machine_alert = 'alert-success';
 
             if ($max_machines == 5) { // If demo, alert is always success
-                $display_renew_links = True;
-            }
-            elseif ($max_machines - $used_machines <= 10) {
+                $display_renew_links = true;
+            } elseif ($max_machines - $used_machines <= 10) {
                 $machine_alert = ''; // warning alert
-                $display_renew_links = True;
+                $display_renew_links = true;
             }
 
             echo '<p class="alert ' . $machine_alert  . '">' . _T('Computers', 'support') . ': <b>' . $used_machines. " " . '/' .' '. $max_machines .' ' . '</b></p>';
@@ -93,13 +94,12 @@ class LicensePanel extends Panel {
             /* end support */
             $support_alert = 'alert-success';
 
-            if (time() > $ts_expiration - (86400*30)) { // support is about to expire
+            if (time() > $ts_expiration - (86400 * 30)) { // support is about to expire
                 $support_alert = ''; // warning alert
-                $display_renew_links = True;
-            }
-            elseif (time() >= $ts_expiration) { // support is expired
+                $display_renew_links = true;
+            } elseif (time() >= $ts_expiration) { // support is expired
                 $support_alert = 'alert-error';
-                $display_renew_links = True;
+                $display_renew_links = true;
             }
 
             if ($ts_expiration != 0) { // do not display end of support in case of demo
@@ -116,14 +116,13 @@ class LicensePanel extends Panel {
         if ($this->data['links'] != '') {
             echo '<div class="subpanel">';
             echo '<p>' . _T("Links", "support") . ':</p>';
-            foreach($this->data['links'] as $key => $linkgrp){
+            foreach($this->data['links'] as $key => $linkgrp) {
                 if ($linkgrp['url'] != '' && $linkgrp['text'] != '') {
                     if (in_array($key, array('buy_link', 'renew_link'))) {
                         if ($display_renew_links) {
                             echo '<p><b><a href="' . $linkgrp["url"] . '" target="_blank">' . $linkgrp["text"] . '</a></b></p>';
                         }
-                    }
-                    else {
+                    } else {
                         echo '<p><b><a href="' . $linkgrp["url"] . '" target="_blank">' . $linkgrp["text"] . '</a></b></p>';
                     }
                 }
@@ -135,4 +134,3 @@ class LicensePanel extends Panel {
         }
     }
 }
-?>

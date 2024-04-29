@@ -55,11 +55,11 @@ $response = xmlrpc_topology_medulla();
 	}
 </style>
 
-<?
-    $p = new PageGenerator(sprintf (_T("Topology Medulla", 'xmppmaster')));
-    $p->setSideMenu($sidemenu);
-    $p->display();
-    echo '<div id="body"></div>';
+<?php
+    $p = new PageGenerator(sprintf(_T("Topology Medulla", 'xmppmaster')));
+$p->setSideMenu($sidemenu);
+$p->display();
+echo '<div id="body"></div>';
 ?>
 
 <svg width="200" height="200">

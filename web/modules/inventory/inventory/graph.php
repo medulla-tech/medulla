@@ -30,12 +30,10 @@ $field = $_GET['field'];
 $filter = $_GET['filter'];
 $uuid = $_GET['uuid'];
 $gid = $_GET['gid'];
-$machines = getAllMachinesInventoryColumn($type, $field, array('filter'=>$filter, 'uuid'=>$uuid, 'gid'=>$gid));
+$machines = getAllMachinesInventoryColumn($type, $field, array('filter' => $filter, 'uuid' => $uuid, 'gid' => $gid));
 
 ob_end_clean();
 
 renderGraph($machines, $type, $field, $filter);
 
 exit;
-
-?>

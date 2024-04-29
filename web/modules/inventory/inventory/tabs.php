@@ -59,14 +59,14 @@ if (isset($_SESSION['pull_targets']) && in_array($_GET['uuid'], $_SESSION['pull_
         $remove_pull_id = uniqid();
         $_SESSION['remove_pull_id'] = $remove_pull_id;
         $p->setDescription(
-            sprintf('%s <a class="btn btn-primary" href="%s">%s</a>',
+            sprintf(
+                '%s <a class="btn btn-primary" href="%s">%s</a>',
                 _T('This client has been registered in pull mode', 'inventory'),
                 urlStrRedirect('base/computers/remove_from_pull', array('uuid' => $_GET['uuid'], 'remove_pull_id' => $remove_pull_id)),
                 _T('Leave pull mode', 'inventory')
             )
         );
-    }
-    else {
+    } else {
         $p->setDescription(
             sprintf('%s', _T('This client has been registered in pull mode', 'inventory'))
         );
@@ -107,16 +107,17 @@ $p->addTab($prefix . "tab$i", _T('History', 'inventory'), "", "modules/inventory
 
 $p->display();
 
-$uuid=$_GET['uuid'];
-if (isset ($uuid))
-{
+$uuid = $_GET['uuid'];
+if (isset($uuid)) {
     $f = new ValidatingForm();
     print("<br><br>");
-    $result['xls_path']=getReport($uuid,$_SESSION['lang']);
-    $link = new SpanElement(sprintf('<br /><a class="btn btn-primary" href="%s">%s</a>&nbsp;&nbsp;',
-    urlStrRedirect("base/computers/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "inventory")));
+    $result['xls_path'] = getReport($uuid, $_SESSION['lang']);
+    $link = new SpanElement(sprintf(
+        '<br /><a class="btn btn-primary" href="%s">%s</a>&nbsp;&nbsp;',
+        urlStrRedirect("base/computers/get_file", array('path' => $result['xls_path'])),
+        _T("Get XLS Report", "inventory")
+    ));
     $f->add($link);
     $f->pop();
     $f->display();
 }
-?>

@@ -31,10 +31,10 @@ $command = "bash -c \"ps aux|grep 'medulla-update-manager'|grep -v 'grep'\"";
 
 exec($command, $output, $return);
 
-if ($return != 0)
+if ($return != 0) {
     print '<script type="text/javascript">window.location.href=\'index.php\'</script>';
-else
+} else {
     print '<img src="modules/medulla_server/graph/loader.gif" alt="" />';
+}
 
 die();
-?>

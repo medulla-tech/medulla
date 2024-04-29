@@ -34,8 +34,9 @@ require("modules/medulla_server/includes/xmlrpc.inc.php");
 require_once("modules/medulla_server/includes/utilities.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-if(!isset($params))
+if(!isset($params)) {
     $params = array();
+}
 
 $p = new PageGenerator();
 $p->setSideMenu($sidemenu);
@@ -60,8 +61,7 @@ if (isset($_POST['bsync'])) {
     } elseif (!$ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
         new NotifyWidgetFailure($str);
-    }
-    elseif (isXMLRPCError()) {
+    } elseif (isXMLRPCError()) {
         $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
         new NotifyWidgetFailure($str);
     }
@@ -80,10 +80,9 @@ if (displayLocalisationBar()) {
     list($list, $values) = getEntitiesSelectableElements();
     $ajax->setElements($list);
     $ajax->setElementsVal($values);
-    if($location)
+    if($location) {
         $ajax->setSelected($location);
+    }
     $ajax->display();
     $ajax->displayDivToUpdate();
 }
-
-?>

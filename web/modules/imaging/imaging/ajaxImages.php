@@ -48,11 +48,11 @@ if (isset($_GET['gid']) && $_GET['gid'] != '') {
 }
 
 $displayMaster = isset($_GET['master']);
-$start = empty($_GET["start"])              ? 0              : $_GET["start"];
-$end = empty($_GET["end"])                  ? $maxperpage    : $_GET["end"];
-$filter = empty($_GET["filter"])            ? ''             : $_GET['filter'];
+$start = empty($_GET["start"]) ? 0 : $_GET["start"];
+$end = empty($_GET["end"]) ? $maxperpage : $_GET["end"];
+$filter = empty($_GET["filter"]) ? '' : $_GET['filter'];
 $actions = !$displayMaster;
-$is_in_profile = False;
+$is_in_profile = false;
 
 if ($type == 'group') {
     $all = xmlrpc_getProfileImages($_GET['gid'], $start, $end, $filter);
@@ -114,13 +114,17 @@ foreach ($images as $image) {
     $l_params["itemlabel"] = urlencode($name);
     $l_params["target_uuid"] = $_GET['target_uuid'];
     $l_params["target_name"] = $_GET['target_name'];
-    if (isset($image['read_only']) && $image['read_only']) $is_in_profile = True;
+    if (isset($image['read_only']) && $image['read_only']) {
+        $is_in_profile = true;
+    }
 
     if (in_array("dyngroup", $_SESSION["modulesList"])) {
         require_once("../../../modules/dyngroup/includes/xmlrpc.php");
         if (isProfilesEnable()) {
             $machinesInProfile = arePartOfAProfile(array($_GET['target_uuid']));
-            if (in_array($_GET['target_uuid'], array_keys($machinesInProfile))) $is_in_profile = True;
+            if (in_array($_GET['target_uuid'], array_keys($machinesInProfile))) {
+                $is_in_profile = true;
+            }
         }
     }
     if ($is_in_profile) {
@@ -129,8 +133,7 @@ foreach ($images as $image) {
     // don't show action if image is in bootmenu
     elseif (!isset($image['menu_item'])) {
         $addActions[] = $addAction;
-    }
-    else {
+    } else {
         $addActions[] = $delAction;
         $l_params['mi_itemid'] = $image['menu_item']['imaging_uuid'];
     }
@@ -147,9 +150,9 @@ foreach ($images as $image) {
     $a_desc[] = $image['desc'];
     $a_date[] = _toDate($image['creation_date']);
     $a_size[] = humanReadable($image['size']);
-    $a_inbootmenu[] = (isset($image['menu_item']) ? True : False);
-    $a_fromprofile[] = ($image['read_only'] ? True : False);
-    $a_info []= sprintf("Plop: %s", $image['fk_status']);
+    $a_inbootmenu[] = (isset($image['menu_item']) ? true : false);
+    $a_fromprofile[] = ($image['read_only'] ? true : false);
+    $a_info [] = sprintf("Plop: %s", $image['fk_status']);
     $l_im[] = array($image['imaging_uuid'], $_GET['target_uuid'], $type);
 }
 
@@ -178,34 +181,55 @@ if ($is_in_profile) {
 $l->addActionItemArray($addActions);
 
 $l->addActionItem(
-        new ActionPopupItem(_T("Create bootable iso", "imaging"),
-        "images_iso", "backup", "image", "base", "computers")
+    new ActionPopupItem(
+        _T("Create bootable iso", "imaging"),
+        "images_iso",
+        "backup",
+        "image",
+        "base",
+        "computers"
+    )
 );
 
 // if not in boot menu
 if ($type == 'group') {
- $location = getCurrentLocation();
- if ($location == "UUID1")
-    $location_name = _T("root", "medulla");
-        else
-    $location_name = xmlrpc_getLocationName($location);
-        $objprocess=array();
-        $scriptmulticast = 'multicast.sh';
-        $path="/tmp/";
-        $objprocess['location']=$location;
-        $objprocess['process'] = $path.$scriptmulticast;
+    $location = getCurrentLocation();
+    if ($location == "UUID1") {
+        $location_name = _T("root", "medulla");
+    } else {
+        $location_name = xmlrpc_getLocationName($location);
+    }
+    $objprocess = array();
+    $scriptmulticast = 'multicast.sh';
+    $path = "/tmp/";
+    $objprocess['location'] = $location;
+    $objprocess['process'] = $path.$scriptmulticast;
 
- if (!xmlrpc_muticast_script_exist($objprocess)){
-    $l->addActionItem(
-    new ActionPopupItem(_T("Multicast init", "imaging")." ".$location_name,
-            "multicast", "imaging", "image", "base", "computers")
+    if (!xmlrpc_muticast_script_exist($objprocess)) {
+        $l->addActionItem(
+            new ActionPopupItem(
+                _T("Multicast init", "imaging")." ".$location_name,
+                "multicast",
+                "imaging",
+                "image",
+                "base",
+                "computers"
+            )
         );
     }
 }
 if ($actions) {
     $l->addActionItem(
-        new ActionItem(_T("Edit image", "imaging"),
-        "imgtabs", "edit", "image", "base", "computers", $type."tabimages", "edit")
+        new ActionItem(
+            _T("Edit image", "imaging"),
+            "imgtabs",
+            "edit",
+            "image",
+            "base",
+            "computers",
+            $type."tabimages",
+            "edit"
+        )
     );
     $l->addActionItem($logAction);
     $l->addActionItem($destroyAction);
@@ -217,7 +241,7 @@ if ($actions) {
 
 $l->disableFirstColumnActionLink();
 $l->setItemCount($count);
-$l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
+$l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions ? 'image' : 'master')));
 $l->start = 0;
 $l->end = $maxperpage;
 $l->setTableHeaderPadding(19);

@@ -136,29 +136,28 @@ ul.leftfile, ul.rightfile {
 }
 </style>
 
-<?
+<?php
     require("modules/base/computers/localSidebar.php");
-    require("graph/navbar.inc.php");
-    require_once("modules/xmppmaster/includes/xmlrpc.php");
+require("graph/navbar.inc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-    if(isexpertmode())
-    {
-      $url = "xmppmaster/xmppmaster/xmppfilesbrowsing";
-      $get = [];
-      foreach($_GET as $key=>$value)
-      {
-        if(!in_array($key, ["module","submod", "action"]))
-          $get[$key] = $value;
-      }
-      header("Location: " . urlStrRedirect($url, $get));
+if(isexpertmode()) {
+    $url = "xmppmaster/xmppmaster/xmppfilesbrowsing";
+    $get = [];
+    foreach($_GET as $key => $value) {
+        if(!in_array($key, ["module","submod", "action"])) {
+            $get[$key] = $value;
+        }
     }
+    header("Location: " . urlStrRedirect($url, $get));
+}
 
-$uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-$jid  = isset($_GET['jid']) ? $_GET['jid'] : ( isset($_POST['jid']) ? $_POST['jid'] : "");
-$machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ?  xmlrpc_getjidMachinefromuuid( $uuid ) : $jid);
+$uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : (isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
+$jid  = isset($_GET['jid']) ? $_GET['jid'] : (isset($_POST['jid']) ? $_POST['jid'] : "");
+$machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ? xmlrpc_getjidMachinefromuuid($uuid) : $jid);
 $ma = xmlrpc_getMachinefromjid($machine);
 
-$tab = explode("/",$machine);
+$tab = explode("/", $machine);
 $p = new PageGenerator(_T("File manager", 'xmppmaster')." on ". $ma['hostname']);
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -180,13 +179,11 @@ if (stristr($ma['platform'], "win")) {
 
     echo 'var seperator = "\\\\";';
     echo 'var os = "win";';
-}
-else{
+} else {
     echo 'var seperator = "/";';
-    if (stristr($ma['platform'], "darwin")){
+    if (stristr($ma['platform'], "darwin")) {
         echo 'var os = "darwin";';
-    }
-    else{
+    } else {
         echo 'var os = "linux";';
     }
 }
@@ -195,32 +192,32 @@ echo '</script>';
 
   <?php
     $lifdirstr = xmlrpc_remotefilesystem("@0@", $machine);
-    $lifdir = json_decode($lifdirstr, true);
+$lifdir = json_decode($lifdirstr, true);
 
 
-    $rootfilesystem = $lifdir['data']['rootfilesystem'];
+$rootfilesystem = $lifdir['data']['rootfilesystem'];
 
-    $rootfilesystempath = $rootfilesystem;
+$rootfilesystempath = $rootfilesystem;
 
-    if ($rootfilesystem[1] == ":"){
-        $rootfilesystempath =substr($lifdir['data']['rootfilesystem'],2);
+if ($rootfilesystem[1] == ":") {
+    $rootfilesystempath = substr($lifdir['data']['rootfilesystem'], 2);
+}
+if (isset($lifdir['err'])) {
+    if ($lifdir['err'] == 'Timeout Error') {
+        $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
+    } else {
+        $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
     }
-    if (isset($lifdir['err'])){
-        if ( $lifdir['err'] == 'Timeout Error'){
-            $msg = sprintf(_T("Sorry, the remote machine [%s] takes too much time to answer.", "xmppmaster"), $machine);
-        }else{
-            $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
-        }
-            echo '<h2 style="color : red;">';
-            echo "$msg";
-            echo "</h2>";
-            exit;
-    }
-    $searchchar = array(':', '/', );
-    $replacechar   = array( '", "children" : [', '{"text" : "');
-    $datatree = str_replace ( $searchchar, $replacechar, $lifdir['data']['strjsonhierarchy'] );
-    unset ($lifdir['data']['strjsonhierarchy']);
-    //$datatree = $lifdir['data']['strjsonhierarchy'];
+    echo '<h2 style="color : red;">';
+    echo "$msg";
+    echo "</h2>";
+    exit;
+}
+$searchchar = array(':', '/', );
+$replacechar   = array( '", "children" : [', '{"text" : "');
+$datatree = str_replace($searchchar, $replacechar, $lifdir['data']['strjsonhierarchy']);
+unset($lifdir['data']['strjsonhierarchy']);
+//$datatree = $lifdir['data']['strjsonhierarchy'];
 ?>
 
 <div id="messageaction">
@@ -230,12 +227,12 @@ echo '</script>';
 <div id="global">
 
     <?php
-    printf ('
+    printf('
     <form>
         <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
         <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
-    </form>' ,$curentdir, $filecurentdir['parentdir']);
-    ?>
+    </form>', $curentdir, $filecurentdir['parentdir']);
+?>
        <div class ="piedbrowser"><h2></h2></div>
 
     <div id="droite">
@@ -295,8 +292,8 @@ echo '</script>';
         filenamelocal = "";
         timetmp = "";
         taillefile ="";
-        rootfilesystem     = ""; // "<?php echo str_replace ('\\' ,'\\\\',$rootfilesystem); ?>";
-        rootfilesystempath = ""; //"<?php echo str_replace ('\\' ,'\\\\',$rootfilesystempath); ?>";
+        rootfilesystem     = ""; // "<?php echo str_replace('\\', '\\\\', $rootfilesystem); ?>";
+        rootfilesystempath = ""; //"<?php echo str_replace('\\', '\\\\', $rootfilesystempath); ?>";
         jid = "<?php echo $ma['jid']; ?>";
         user = "<?php echo $_SESSION['login']; ?>";
         nameremotepath = "";

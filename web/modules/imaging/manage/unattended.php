@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-if(!isset($_GET['tab']) && $_GET['action']=='unattended') {
+if(!isset($_GET['tab']) && $_GET['action'] == 'unattended') {
     require("modules/imaging/manage/localSidebar.php");
     require("graph/navbar.inc.php");
     require_once('modules/imaging/includes/includes.php');
@@ -37,11 +37,11 @@ define("DIR_SYS_PREP", "/var/lib/medulla/imaging/postinst/sysprep");
         public function __construct($idElt, $style = null)
         {
             $options = array();
-            $this->idElt=$idElt;
-            $this->idselect="select_$idElt";
-            $this->idform="form_$idElt";
-            $this->idchoixform="afficheform_$idElt";
-            $options["id"]=$this->idform;
+            $this->idElt = $idElt;
+            $this->idselect = "select_$idElt";
+            $this->idform = "form_$idElt";
+            $this->idchoixform = "afficheform_$idElt";
+            $options["id"] = $this->idform;
             $options["method"] = "";
             parent::__construct($options);
             $this->select = new SelectItem($this->idselect, "change".$idElt, $style);
@@ -92,7 +92,7 @@ define("DIR_SYS_PREP", "/var/lib/medulla/imaging/postinst/sysprep");
             return $str;
         }
     }
-    $p = new PageGenerator(_T("Windows Answer File Generator", 'imaging'));
+$p = new PageGenerator(_T("Windows Answer File Generator", 'imaging'));
 $p->setSideMenu($sidemenu);
 $p->display();
 if (isset($_POST['bvalid'])) {
@@ -101,7 +101,7 @@ if (isset($_POST['bvalid'])) {
     $dom->preserveWhiteSpace = false;
     $dom->loadXML($gg);
     $dom->formatOutput = true;
-    $t=$dom->saveXML();
+    $t = $dom->saveXML();
     $t1 = str_replace("\r", '', $t);
     $new = htmlspecialchars($t1, ENT_QUOTES);
     if(! xmlrpc_Windows_Answer_File_Generator($t, $_POST['Location'])) {
@@ -127,8 +127,8 @@ if(isset($_GET['edit'])) {
 }
 
 $span = new SpanElement(_T("Choose package source", 'imaging')." : ", "pkgs-title");
-$List=array('Windows 7','Windows 8','Windows 8-uefi', 'Windows 10','Windows 10-uefi', 'Windows 11','Windows 11-uefi');
-$list_val=[ 'modules/imaging/manage/ajaxFormWin7.php',
+$List = array('Windows 7','Windows 8','Windows 8-uefi', 'Windows 10','Windows 10-uefi', 'Windows 11','Windows 11-uefi');
+$list_val = [ 'modules/imaging/manage/ajaxFormWin7.php',
             'modules/imaging/manage/ajaxFormWin8.php',
             'modules/imaging/manage/ajaxFormWin8-uefi.php',
             'modules/imaging/manage/ajaxFormWin10.php',
@@ -138,7 +138,7 @@ $list_val=[ 'modules/imaging/manage/ajaxFormWin7.php',
 
 $combine = array_combine($List, $list_val);
 
-$default_value= (isset($_GET['edit'])) ? $_SESSION['parameters']['os'] : '\'Windows 7\'';
+$default_value = (isset($_GET['edit'])) ? $_SESSION['parameters']['os'] : '\'Windows 7\'';
 $selectpapi = new ajaxSelectItem('unattended');
 $selectpapi->push($span);
 $selectpapi->setElements((isset($_GET['edit'])) ? [$_SESSION['parameters']['Os']] : $List);

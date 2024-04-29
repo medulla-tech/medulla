@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * (c) 2008 Mandriva, http://www.mandriva.com
  *
@@ -22,11 +22,9 @@
  * MA 02110-1301, USA
  */
 
-$sidemenu= new SideMenu();
+$sidemenu = new SideMenu();
 $sidemenu->setClass("backuppc");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Status", 'backuppc'), "backuppc", "backuppc", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Profiles", 'backuppc'), "backuppc", "backuppc", "ViewProfiles"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add fileset", 'backuppc'), "backuppc", "backuppc", "EditBackupProfile"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add schedule", 'backuppc'), "backuppc", "backuppc", "EditPeriodProfile"));
-
-?>

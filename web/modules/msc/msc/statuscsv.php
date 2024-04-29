@@ -25,21 +25,22 @@
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/command_history.php');
 
-$specific_state = False;
+$specific_state = false;
 if (strlen($_GET['state'])) {
-    $specific_state = True;
+    $specific_state = true;
     $state = $_GET['state'];
 }
 
 $cmd_id = isset($_GET['cmd_id']) ? $_GET['cmd_id'] : '';
 
-function get_command_by_state($kind, $id, $state, $count) {
+function get_command_by_state($kind, $id, $state, $count)
+{
     $split = 250; # results will be splitted by 250 to reduce memory usage
 
     if ($count <= $split) {
         $range = array(0);
     } else {
-        $range = range(0, $count-1, $split);
+        $range = range(0, $count - 1, $split);
     }
     $firstline = true;
     $ret = array();
@@ -76,9 +77,14 @@ if (strlen($cmd_id)) {
 ob_end_clean();
 
 $filename = "command_status_";
-if (strlen($cmd_id)) { $filename .= "C".$cmd_id; }
-elseif (strlen($_GET['bundle_id'])) { $filename .= "B".$_GET['bundle_id']; }
-if ($specific_state) { $filename .= "_$state"; }
+if (strlen($cmd_id)) {
+    $filename .= "C".$cmd_id;
+} elseif (strlen($_GET['bundle_id'])) {
+    $filename .= "B".$_GET['bundle_id'];
+}
+if ($specific_state) {
+    $filename .= "_$state";
+}
 /* The two following lines make the CSV export works for IE 7.x */
 header("Pragma: ");
 header("Cache-Control: ");
@@ -125,7 +131,7 @@ if ($specific_state) {
                 _T('unreachable during suppression', 'msc')
             );
 
-    $content = array(array($title, $s['total'], $s['success']['total'][0], $s['stopped']['total'][0], $s['paused']['total'][0], $s['failure']['over_timed'][0], $s['running']['total'][0], ($s['running']['wait_up'][0]-$s['running']['sec_up'][0]), $s['running']['sec_up'][0], $s['running']['run_up'][0], ($s['running']['wait_ex'][0]-$s['running']['sec_ex'][0]), $s['running']['sec_ex'][0], $s['running']['run_ex'][0], ($s['running']['wait_rm'][0]-$s['running']['sec_rm'][0]), $s['running']['sec_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]));
+    $content = array(array($title, $s['total'], $s['success']['total'][0], $s['stopped']['total'][0], $s['paused']['total'][0], $s['failure']['over_timed'][0], $s['running']['total'][0], ($s['running']['wait_up'][0] - $s['running']['sec_up'][0]), $s['running']['sec_up'][0], $s['running']['run_up'][0], ($s['running']['wait_ex'][0] - $s['running']['sec_ex'][0]), $s['running']['sec_ex'][0], $s['running']['run_ex'][0], ($s['running']['wait_rm'][0] - $s['running']['sec_rm'][0]), $s['running']['sec_rm'][0], $s['running']['run_rm'][0], $s['failure']['total'][0], $s['failure']['fail_up'][0], $s['failure']['conn_up'][0], $s['failure']['fail_ex'][0], $s['failure']['conn_ex'][0], $s['failure']['fail_rm'][0], $s['failure']['conn_rm'][0]));
 }
 
 
@@ -136,5 +142,3 @@ foreach ($content as $line) {
 
 
 exit;
-
-?>

@@ -16,7 +16,9 @@ class EntitiesRules:
     It allows the inventory server to assign a computer to an entity.
     """
 
-    def __init__(self, conffile=mmcconfdir + "/medulla/inventory-server/entities-rules"):
+    def __init__(
+        self, conffile=mmcconfdir + "/medulla/inventory-server/entities-rules"
+    ):
         self.logger = logging.getLogger()
         self.conf = conffile
         self.rules = []

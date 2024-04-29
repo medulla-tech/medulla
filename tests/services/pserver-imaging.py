@@ -113,7 +113,9 @@ class Imaging(unittest.TestCase):
         result = SERVER.computerRegister("foobar", mac)
         self.assertTrue(result)
         self.assertTrue(os.path.exists("/var/lib/medulla/imaging/uuid-cache.txt"))
-        self.assertTrue(os.path.isdir("/var/lib/medulla/imaging/computers/%s" % "UUID2"))
+        self.assertTrue(
+            os.path.isdir("/var/lib/medulla/imaging/computers/%s" % "UUID2")
+        )
         # Wait a bit for the menu to be generated asynchronously
         sleep(5)
         self.assertTrue(

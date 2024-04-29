@@ -65,17 +65,19 @@ if (isset($_POST['removeServices'])) {
         $ret = xmlrpc_delServiceToTarget($boot_service['bs_uuid'], $boot_service['target_uuid'], $boot_service['type']);
         if (isXMLRPCError()) {
             $str = sprintf(_T("Removal of boot service failed", "imaging"));
-            xmlrpc_setfromxmppmasterlogxmpp("Error : ".$str,
-                                            "IMG",
-                                            '',
-                                            0,
-                                            $boot_service['target_uuid'] ,
-                                            'Manuel',
-                                            '',
-                                            '',
-                                            '',
-                                            "session user ".$_SESSION["login"],
-                                            'Imaging | Postinstall | Menu | Configuration | Manual');
+            xmlrpc_setfromxmppmasterlogxmpp(
+                "Error : ".$str,
+                "IMG",
+                '',
+                0,
+                $boot_service['target_uuid'],
+                'Manuel',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Imaging | Postinstall | Menu | Configuration | Manual'
+            );
             new NotifyWidgetFailure($str);
         }
 
@@ -91,32 +93,36 @@ if (isset($_POST['removeServices'])) {
         $ret = xmlrpc_delServiceToLocation($boot_service['bs_uuid'], $boot_service['location']);
         if ($ret[0] and !isXMLRPCError()) {
             $str = sprintf(_T("Service <strong>%s</strong> removed from default boot menu", "imaging"), $label);
-            xmlrpc_setfromxmppmasterlogxmpp($str,
-                                                "IMG",
-                                                '',
-                                                0,
-                                                $boot_service['bs_uuid'] ,
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Imaging | Postinstall | Menu | Configuration | Manual');
-                new NotifyWidgetSuccess($str);
+            xmlrpc_setfromxmppmasterlogxmpp(
+                $str,
+                "IMG",
+                '',
+                0,
+                $boot_service['bs_uuid'],
+                'Manuel',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Imaging | Postinstall | Menu | Configuration | Manual'
+            );
+            new NotifyWidgetSuccess($str);
         }
         if (isXMLRPCError()) {
             $str = sprintf(_T("Removal of boot service failed", "imaging"));
-            xmlrpc_setfromxmppmasterlogxmpp("Error : ".$str,
-                                            "IMG",
-                                            '',
-                                            0,
-                                            $boot_service['bs_uuid'] ,
-                                            'Manuel',
-                                            '',
-                                            '',
-                                            '',
-                                            "session user ".$_SESSION["login"],
-                                            'Imaging | Postinstall | Menu | Configuration | Manual');
+            xmlrpc_setfromxmppmasterlogxmpp(
+                "Error : ".$str,
+                "IMG",
+                '',
+                0,
+                $boot_service['bs_uuid'],
+                'Manuel',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Imaging | Postinstall | Menu | Configuration | Manual'
+            );
             new NotifyWidgetFailure($str);
         }
 
@@ -127,16 +133,15 @@ if (isset($_POST['removeServices'])) {
         } elseif (!$ret[0] and !isXMLRPCError()) {
             $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
             new NotifyWidgetFailure($str);
-        }
-        elseif (isXMLRPCError()) {
+        } elseif (isXMLRPCError()) {
             $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/medulla-package-server.log", "imaging"), implode(', ', $ret[1]));
             new NotifyWidgetFailure($str);
         }
-//        // Synchronize boot menu
-//         $ret = xmlrpc_synchroLocation($boot_service['location']);
-//         if (isXMLRPCError()) {
-//             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
-//         }
+        //        // Synchronize boot menu
+        //         $ret = xmlrpc_synchroLocation($boot_service['location']);
+        //         if (isXMLRPCError()) {
+        //             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+        //         }
     }
     if (isset($_POST['uuid']) and isset($_POST['hostname'])) {
         // Come from a computer page

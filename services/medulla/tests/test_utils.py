@@ -207,7 +207,10 @@ class TestUnique(object):
     def test_with_dict(self):
         """Test with dict
         Test 22"""
-        assert medulla.utils.unique({"c": ["a", "b"], "b": (0, 0), "c": 4}) == ["c", "b"]
+        assert medulla.utils.unique({"c": ["a", "b"], "b": (0, 0), "c": 4}) == [
+            "c",
+            "b",
+        ]
 
     def test_without_parameters(self):
         """Test without parameters

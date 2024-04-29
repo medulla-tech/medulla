@@ -71,7 +71,7 @@ if (safeCount($_POST) > 0) {
     $script_value = $_POST["postinstall_value"];
     $script_desc = $_POST["postinstall_desc"];
 
-    if ($task == "edit"){
+    if ($task == "edit") {
         /*
          * First step, we edit postinstall script on database
          * Second step, we must edit postinstall script on /var/lib/medulla/imaging/master/postinst.d/
@@ -80,56 +80,62 @@ if (safeCount($_POST) > 0) {
          * We do this for each master who have postinstall script attached
          */
         // store new values for script
-        $ret = xmlrpc_editPostInstallScript($script_id, array('default_name'=>$script_name, 'default_desc'=>$script_desc, 'value'=>$script_value));
+        $ret = xmlrpc_editPostInstallScript($script_id, array('default_name' => $script_name, 'default_desc' => $script_desc, 'value' => $script_value));
     } elseif ($task == "duplicate") {
         // create new script
-        $ret = xmlrpc_addPostInstallScript($location, array('default_name'=>$script_name, 'default_desc'=>$script_desc, 'value'=>$script_value));
+        $ret = xmlrpc_addPostInstallScript($location, array('default_name' => $script_name, 'default_desc' => $script_desc, 'value' => $script_value));
     }
     // check result
     if ((is_array($ret) && $ret[0]) || $ret) {
         $str = sprintf(_T("<strong>%s</strong> script %s", "imaging"), $script_name, $action);
-        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Success : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action,
-                                                "IMG",
-                                                '',
-                                                0,
-                                                $script_name ,
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Imaging | Postinstall | Menu | Start | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            _T("Notify Success : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action,
+            "IMG",
+            '',
+            0,
+            $script_name,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Postinstall | Menu | Start | Manual'
+        );
 
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
         exit;
     } elseif (safeCount($ret) > 1) {
-        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action."[".$ret[1]."]",
-                                                "IMG",
-                                                '',
-                                                0,
-                                                $script_name ,
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Imaging | Postinstall | Menu | Start | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            _T("Notify Error : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action."[".$ret[1]."]",
+            "IMG",
+            '',
+            0,
+            $script_name,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Postinstall | Menu | Start | Manual'
+        );
 
         new NotifyWidgetFailure($ret[1]);
     } else {
         $str = sprintf(_T("<strong>%s</strong> script wasn't %s", "imaging"), $script_name, $action);
-        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action,
-                                                "IMG",
-                                                '',
-                                                0,
-                                                $script_name ,
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Imaging | Postinstall | Menu | Start | Manual');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            _T("Notify Error : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action,
+            "IMG",
+            '',
+            0,
+            $script_name,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Postinstall | Menu | Start | Manual'
+        );
         new NotifyWidgetFailure($str);
     }
 }
@@ -147,18 +153,16 @@ $f->push(new Table());
 $disabled = (!$script['is_local'] && $task == 'edit');
 $f->add(
     new TrFormElement("Script name", new InputTpl("postinstall_name")),
-    array("value" => $name, "required" => True, 'disabled' => ($disabled?'disabled':''))
+    array("value" => $name, "required" => true, 'disabled' => ($disabled ? 'disabled' : ''))
 );
 $f->add(
     new TrFormElement("Script description", $textareadesc),
-    array("value" => $desc, "required" => True, 'disabled' => ($disabled?'disabled':''))
+    array("value" => $desc, "required" => true, 'disabled' => ($disabled ? 'disabled' : ''))
 );
 $f->add(
     new TrFormElement(_T("Script value"), $textarea),
-    array("value" => $script['value'], "required" => True, 'disabled' => ($disabled?'disabled':''))
+    array("value" => $script['value'], "required" => true, 'disabled' => ($disabled ? 'disabled' : ''))
 );
 $f->pop();
 $f->addButton("bvalid", _T("Validate"));
 $f->display();
-
-?>
