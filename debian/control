@@ -40,11 +40,12 @@ Package: medulla-common
 Architecture: all
 Section: python
 Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python3-configobj, curl, nsis, dnsutils, python3-psutil (>= 0.6.1), rpm (>= 4.8), python3-netifaces, python3-netaddr
+Conflicts: pulse2-common
 Description: Medulla 2 common files (doc)
  Medulla 2 is Open Source computer system management for medium and large
  organizations.
  .
- This package contains Medulla 2 common files like documentation.
+ This package contains Medulla common files like documentation.
 
 Package: medulla-tests
 Architecture: all
