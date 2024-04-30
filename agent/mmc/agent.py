@@ -79,6 +79,7 @@ Fault = xmlrpc.client.Fault
 ctx = None
 VERSION = "5.1.0"
 
+
 class xmppbrowsing:
     """ """
 
@@ -113,12 +114,8 @@ class xmppbrowsing:
         # TODO: Remove MIGRATION3
         self.dirinfos = {
             "path_abs_current": pathabs,
-            "list_dirs_current": (
-                next(os.walk(pathabs))[1]
-            ),
-            "list_files_current": (
-                next(os.walk(pathabs))[2]
-            ),
+            "list_dirs_current": (next(os.walk(pathabs))[1]),
+            "list_files_current": (next(os.walk(pathabs))[2]),
             "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
             "rootfilesystem": self.rootfilesystem,
             "defaultdir": self.defaultdir,
@@ -137,9 +134,7 @@ class xmppbrowsing:
             else:
                 pathabs = self.rootfilesystem
         # TODO: Remove MIGRATION3
-        list_files_current = (
-            next(os.walk(pathabs))[2]
-        )
+        list_files_current = next(os.walk(pathabs))[2]
         ff = []
         for t in list_files_current:
             fii = os.path.join(pathabs, t)
@@ -147,9 +142,7 @@ class xmppbrowsing:
         # TODO: Remove MIGRATION3
         self.dirinfos = {
             "path_abs_current": pathabs,
-            "list_dirs_current": (
-                next(os.walk(pathabs))[1]
-            ),
+            "list_dirs_current": (next(os.walk(pathabs))[1]),
             "list_files_current": ff,
             "parentdir": os.path.abspath(os.path.join(pathabs, os.pardir)),
             "rootfilesystem": self.rootfilesystem,
