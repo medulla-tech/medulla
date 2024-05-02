@@ -92,7 +92,7 @@ if ($groupname == "")
     $insertClientDatabase = xmlrpc_insertNewClient($id, $auth);
 
     ?>
-    <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=add_member_togroup_aftercheck&amp;clientid=<?php echo $id; ?>&amp;clientname=<?php echo $clientname; ?>&amp;auth=<?php echo $auth; ?>&amp;groupname=<?php echo $group['name']; ?>&amp;jidmachine=<?php echo $jidMachine; ?>" method="post">
+    <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=add_member_togroup_aftercheck&amp;clientid=<?php echo $id; ?>&amp;clientname=<?php echo $clientname; ?>&amp;auth=<?php echo $auth; ?>&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>&amp;jidmachine=<?php echo $jidMachine; ?>" method="post">
         <div>
             <h3><?php echo _T("Computer name", "urbackup"); ?></h3>
             <br>
@@ -118,7 +118,7 @@ if ($groupname == "")
 else
 {
     //User exist and have a profile
-    $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$id.'&clientname='.$clientname.'&groupname='.$groupname.'&jidmachine='.$jidMachine;
+    $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$id.'&clientname='.$clientname.'&groupid='.$groupid.'&groupname='.$groupname.'&jidmachine='.$jidMachine;
     header("Location: ".$url);
 }
 
