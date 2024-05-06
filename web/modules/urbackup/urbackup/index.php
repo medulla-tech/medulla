@@ -145,11 +145,6 @@ $array_progress = json_decode(json_encode($progress), true);
 $stats = xmlrpc_get_stats();
 
 ?>
-<script>
-    setTimeout(function(){
-        window.location.reload(1);
-    }, 5000);
-</script>
 <br>
 <br>
 <h2><?php echo _T("Global statistics", 'urbackup'); ?></h2>
