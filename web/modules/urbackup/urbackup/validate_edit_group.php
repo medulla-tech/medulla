@@ -25,6 +25,7 @@ require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 
 $group_name = htmlspecialchars($_GET["groupname"]);
+$group_id = htmlspecialchars($_GET["groupid"]);
 
 $p = new PageGenerator(_T("Settings saved for ".$group_name, 'urbackup'));
 $p->setSideMenu($sidemenu);
@@ -36,16 +37,26 @@ $username_urbackup = isset($ini_array_local["usernameapi"]) ? $ini_array_local["
 $password_urbackup = isset($ini_array_local["passwordapi"]) ? $ini_array_local["passwordapi"] : $ini_array["passwordapi"];
 $url_urbackup = isset($ini_array_local["url"]) ? $ini_array_local["url"] : $ini_array["url"];
 
+$errorFormat = "";
+
 $interval_frequence_incremental_save = $_POST['update_freq_incr'];
 if ($interval_frequence_incremental_save == "")
 {
     $interval_frequence_incremental_save = htmlspecialchars($_GET["current_inter_incr_backup"]);
+}
+if ($interval_frequence_incremental_save == "")
+{
+    $errorFormat = "true";
 }
 
 $interval_frequence_full_save = $_POST['update_freq_full'];
 if ($interval_frequence_full_save == "")
 {
     $interval_frequence_full_save = htmlspecialchars($_GET["current_inter_full_backup"]);
+}
+if ($interval_frequence_full_save == "")
+{
+    $errorFormat = "true";
 }
 
 $exclude_files = $_POST['exclude_files'];
@@ -65,11 +76,19 @@ if ($default_dirs == "")
 {
     $default_dirs = htmlspecialchars($_GET["current_default_dirs"]);
 }
+if ($default_dirs == "")
+{
+    $errorFormat = "true";
+}
+
+if ($errorFormat == "true")
+{
+    $url = "main.php?module=urbackup&submod=urbackup&action=edit_group_settings&groupid=".$group_id."&groupname=".$group_name."&error=true";
+    header("Location: ".$url);
+}
 
 $interval_frequence_incremental_save_hour_seconds = $interval_frequence_incremental_save*3600;
 $interval_frequence_full_save_day_seconds = $interval_frequence_full_save*86400;
-
-$group_id = htmlspecialchars($_GET["groupid"]);
 
 
 $settings_saver = array (
@@ -165,7 +184,7 @@ foreach ($settings_saver as $value => $item) {
     $array = json_decode(json_encode($saving), true);
 
     $settings = $array['settings'];
-}   
+}
 
 //-----------------------------------END SAVE SETTINGS
 
