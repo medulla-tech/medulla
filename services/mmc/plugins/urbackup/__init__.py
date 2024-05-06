@@ -77,7 +77,7 @@ def enable_client(jidmachine, clientid, authkey):
     Returns:
         1 or 0, state of function execution
     """
-    conf_file = "/var/lib/medulla/clients/config/updatebackupclient.ini"
+    conf_file = "/var/lib/pulse2/clients/config/updatebackupclient.ini"
 
     urbackup_conf = configparser.ConfigParser()
     urbackup_conf.read(conf_file)
