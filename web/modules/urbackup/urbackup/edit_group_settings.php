@@ -119,15 +119,15 @@ $settings = $array['settings'];
 
 //-----------------------------------END SAVE SETTINGS
 
-$frequence_incremental_backup = (int)$settings['update_freq_incr']['value_group'];
-$frequence_full_backup = (int)$settings['update_freq_full']['value_group'];
+$frequence_incremental_backup = (int)$settings['update_freq_incr']['value'];
+$frequence_full_backup = (int)$settings['update_freq_full']['value'];
 
 $interval_incremental_backup = $frequence_incremental_backup/3600;
 $interval_full_backup = $frequence_full_backup/86400;
 
-$current_value_exclude_files = $settings['exclude_files']['value_group'];
-$current_value_include_files = $settings['include_files']['value_group'];
-$current_value_default_dirs = $settings['default_dirs']['value_group'];
+$current_value_exclude_files = $settings['exclude_files']['value'];
+$current_value_include_files = $settings['include_files']['value'];
+$current_value_default_dirs = $settings['default_dirs']['value'];
 
 if ($errorFormat == "true")
 {
