@@ -40,44 +40,26 @@ $url_urbackup = isset($ini_array_local["url"]) ? $ini_array_local["url"] : $ini_
 $errorFormat = "";
 
 $interval_frequence_incremental_save = $_POST['update_freq_incr'];
+$interval_frequence_full_save = $_POST['update_freq_full'];
+$exclude_files = $_POST['exclude_files'];
+$include_files = $_POST['include_files'];
+$default_dirs = $_POST['default_dirs'];
+
 if ($interval_frequence_incremental_save == "")
 {
     $interval_frequence_incremental_save = htmlspecialchars($_GET["current_inter_incr_backup"]);
-}
-if ($interval_frequence_incremental_save == "")
-{
     $errorFormat = "true";
 }
 
-$interval_frequence_full_save = $_POST['update_freq_full'];
 if ($interval_frequence_full_save == "")
 {
     $interval_frequence_full_save = htmlspecialchars($_GET["current_inter_full_backup"]);
-}
-if ($interval_frequence_full_save == "")
-{
     $errorFormat = "true";
 }
 
-$exclude_files = $_POST['exclude_files'];
-if ($exclude_files == "")
-{
-    $exclude_files = htmlspecialchars($_GET["current_exclude_files"]);
-}
-
-$include_files = $_POST['include_files'];
-if ($include_files == "")
-{
-    $include_files = htmlspecialchars($_GET["current_include_files"]);
-}
-
-$default_dirs = $_POST['default_dirs'];
 if ($default_dirs == "")
 {
     $default_dirs = htmlspecialchars($_GET["current_default_dirs"]);
-}
-if ($default_dirs == "")
-{
     $errorFormat = "true";
 }
 
@@ -89,7 +71,6 @@ if ($errorFormat == "true")
 
 $interval_frequence_incremental_save_hour_seconds = $interval_frequence_incremental_save*3600;
 $interval_frequence_full_save_day_seconds = $interval_frequence_full_save*86400;
-
 
 $settings_saver = array (
     "update_freq_incr" => $interval_frequence_incremental_save_hour_seconds,
@@ -144,7 +125,6 @@ if(isset($result['session'], $result['success']) && $result['success'] == 1){
 //-----------------------------------END LOGIN
 
 //-----------------------------------START SAVE SETTINGS FUNCTION
-
 
 foreach ($settings_saver as $value => $item) {
     $name_data = $value;
