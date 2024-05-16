@@ -22,7 +22,6 @@
  *
  * file : xmppmaster/QAcustommachgrp.php
  */
-
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
@@ -51,7 +50,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $custom_command = xmlrpc_getCommand_qa_by_cmdid($_GET['cmd_id']);
-$startdate = timestamp_to_datetime($custom_command['command_start']->timestamp);
+$startdate = $custom_command['command_start'];
 
 echo "<h3>". _T("Name of Quick Action  :", 'xmppmaster')." ". $custom_command['command_name']."</h3>";
 
@@ -70,7 +69,7 @@ else{
 if (safeCount($resultAQformachine) != 0){
     foreach($resultAQformachine as $message ){
         if ( $message[3] == "result"){
-            $result = base64_decode($message[4]);
+            $result = base64_decode($message[4]->scalar);
         }
         else{
             $listmessage[] = $message;
