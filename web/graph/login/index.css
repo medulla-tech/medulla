@@ -239,5 +239,28 @@ select {
 }
 
 /*ADD*/
+.provider-btn {
+    background-color: #fafafa;
+    color: rgb(0, 0, 0);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin: 5px;
+}
+
+.provider-btn:hover {
+    background-color: #e0e0e0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.provider-btn img {
+    height: 20px;
+    margin-right: 10px;
+}
 
 .controls{margin: auto;}
