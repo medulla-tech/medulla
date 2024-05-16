@@ -6,10 +6,10 @@
 import logging
 import json
 
-plugin = {"VERSION": "1.0", "NAME": "asynchroremoteQA", "TYPE": "master"}
+plugin = {"VERSION": "1.1", "NAME": "asynchroremoteQA", "TYPE": "master"}
 
 
-def action(xmppobject, action, sessionid, data, message, ret, dataobj):
+def action(xmppobject, action, sessionid, data, message, dataerreur):
     logging.getLogger().debug("=====================================================")
     logging.getLogger().debug(plugin)
     logging.getLogger().debug("=====================================================")

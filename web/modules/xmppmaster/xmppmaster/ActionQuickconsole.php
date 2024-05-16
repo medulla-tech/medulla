@@ -26,15 +26,15 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$uuid         = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : (isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-//$machine      = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
-$jid  = isset($_GET['jid']) ? $_GET['jid'] : (isset($_POST['jid']) ? $_POST['jid'] : "");
-$machine  = isset($_POST['Machine']) ? $_POST['Machine'] : ($uuid != '' ? xmlrpc_getjidMachinefromuuid($uuid) : $jid);
-$cmdsend      = empty($_GET['customcmd']) ? $_GET['customcmd'] : $_POST['customcmd'];
-$namecmd      = empty($_GET['namecmd']) ? $_GET['namecmd'] : $_POST['namecmd'];
-$os           = empty($_GET['os']) ? $_GET['os'] : $_POST['os'];
-$user         = empty($_GET['user']) ? $_GET['user'] : $_POST['user'];
-$description  = empty($_GET['$description']) ? $_GET['$description'] : $_POST['$description'];
+extract($_GET);
+$uuid         = isset($objectUUID) ? $objectUUID : (isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
+$jid  = isset($jid) ? $jid : (isset($_POST['jid']) ? $_POST['jid'] : "");
+$machine = isset($Machine) ? $_POST['Machine'] : ($uuid != '' ? xmlrpc_getjidMachinefromuuid($uuid) : $jid);
+$cmdsend      = !empty($customcmd) ? $customcmd : $_POST['customcmd'];
+$namecmd      = !empty($namecmd) ? $namecmd : $_POST['namecmd'];
+$os           = !empty($os) ? $os : $_POST['os'];
+$user         = !empty($user) ? $user : $_POST['user'];
+$description  = !empty($description) ? $description : $_POST['description'];
 $COMMANDID = xmlrpc_setCommand_qa($namecmd, $cmdsend, $user, "", $uuid, $os, $jid);
 
 $customqa = array();
