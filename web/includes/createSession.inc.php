@@ -35,4 +35,5 @@ $_SESSION["modListVersion"]['rev'] = xmlCall("getRevision", null);
 $_SESSION["modListVersion"]['ver'] = xmlCall("getVersion", null);
 
 /* Make the comnpany logo effect */
-$_SESSION["doeffect"] = true;
+$_SESSION["doeffect"] = True;
+?>
