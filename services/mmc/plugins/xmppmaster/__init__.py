@@ -794,7 +794,7 @@ def getQAforMachine(cmd_id, uuidmachine):
     resultdata = XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
     if resultdata[0][3] == "result":
         # encode 64 str? to transfer xmlrpc if string with sequence escape
-        resultdata[0][4] = base64.b64encode(resultdata[0][4].encode('utf-8'))
+        resultdata[0][4] = base64.b64encode(resultdata[0][4].encode("utf-8"))
     return resultdata
 
 

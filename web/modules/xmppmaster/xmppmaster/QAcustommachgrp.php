@@ -29,18 +29,16 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 include_once('modules/medulla_server/includes/menu_actionaudit.php');
 echo "<br><br><br>";
 
-if($_GET['uuid'] != ''){
-    $machinelist = getRestrictedComputersList(0, -1, array('uuid' => $_GET['uuid']), False);
+if($_GET['uuid'] != '') {
+    $machinelist = getRestrictedComputersList(0, -1, array('uuid' => $_GET['uuid']), false);
     $machine = $machinelist[$_GET['uuid']][1];
     $namemachine = $machine['cn'][0];
     $usermachine = $machine['user'][0];
-}
-else if(isset($_GET['jid']) && $_GET['jid'] != ""){
+} elseif(isset($_GET['jid']) && $_GET['jid'] != "") {
     $xmppmachine = xmlrpc_getMachinefromjid(htmlentities($_GET['jid']));
     $namemachine = $xmppmachine["hostname"];
     $usermachine = "";
-}
-else{
+} else {
     $namemachine = _T("Undefined", "xmppmaster");
     $usermachine = _T("Undefined", "xmppmaster");
 }
@@ -56,73 +54,70 @@ echo "<h3>". _T("Name of Quick Action  :", 'xmppmaster')." ". $custom_command['c
 
 $result = "";
 $listmessage = array();
-if($_GET['uuid'] != ''){
-    $resultAQformachine = xmlrpc_getQAforMachine($_GET['cmd_id'], $_GET['uuid'] );
-}
-else if(isset($_GET['jid']) && $_GET['jid'] != ""){
-    $resultAQformachine = xmlrpc_getQAforMachineByJid($_GET['cmd_id'], $_GET['jid'] );
-}
-else{
+if($_GET['uuid'] != '') {
+    $resultAQformachine = xmlrpc_getQAforMachine($_GET['cmd_id'], $_GET['uuid']);
+} elseif(isset($_GET['jid']) && $_GET['jid'] != "") {
+    $resultAQformachine = xmlrpc_getQAforMachineByJid($_GET['cmd_id'], $_GET['jid']);
+} else {
     $resultAQformachine = [];
 }
 
-if (safeCount($resultAQformachine) != 0){
-    foreach($resultAQformachine as $message ){
-        if ( $message[3] == "result"){
+if (safeCount($resultAQformachine) != 0) {
+    foreach($resultAQformachine as $message) {
+        if ($message[3] == "result") {
             $result = base64_decode($message[4]->scalar);
-        }
-        else{
+        } else {
             $listmessage[] = $message;
         }
     }
 }
 
-if ($result == ""){
+if ($result == "") {
     echo "<div style=\"text-align: left;\">";
-        echo "<h3>Command :</h3>";
-        echo "<pre>";
-        echo  $custom_command['command_action'];
-        echo "</pre>";
+    echo "<h3>Command :</h3>";
+    echo "<pre>";
+    echo  $custom_command['command_action'];
+    echo "</pre>";
     echo "</div>";
 }
 
-if (safeCount($listmessage)!=0){
+if (safeCount($listmessage) != 0) {
     echo "<table>";
-        echo "<tr>";
-            echo "<th>";
-                echo "Date";
-            echo "</th>";
-            echo "<th>";
-                echo "Type";
-            echo "</th>";
-            echo "<th>";
-                echo "Message";
-            echo "</th>";
-        echo "</tr>";
+    echo "<tr>";
+    echo "<th>";
+    echo "Date";
+    echo "</th>";
+    echo "<th>";
+    echo "Type";
+    echo "</th>";
+    echo "<th>";
+    echo "Message";
+    echo "</th>";
+    echo "</tr>";
 
-    foreach($listmessage as $message ){
+    foreach($listmessage as $message) {
         echo "<tr>";
-            echo "<td>";
-                echo $message[1];
-            echo "</td>";
-            echo "<td>";
-                echo $message[3];
-            echo "</td>";
-            echo "<td>";
-                echo $message[4];
-            echo "</td>";
+        echo "<td>";
+        echo $message[1];
+        echo "</td>";
+        echo "<td>";
+        echo $message[3];
+        echo "</td>";
+        echo "<td>";
+        echo $message[4];
+        echo "</td>";
         echo "</tr>";
-    echo "</table>";
+        echo "</table>";
     }
 }
 echo "<div style=\"text-align: center;\">";
 
-if ($result != ""){
+if ($result != "") {
     echo "<h3>command :</h3>";
     echo "<pre>";
     echo  $custom_command['command_action'];
     echo "</pre>";
-        echo '<textarea rows="25"
+    echo '<textarea rows="25"
                         id="resultat"
                         spellcheck="false"
                         style = "height : 500px;
@@ -137,11 +132,11 @@ if ($result != ""){
                                 border-radius: 25px;
                                 border-color:#FFFF00;
                                 box-shadow: 6px 6px 0px #6E6E6E;" >';
-            echo $result;
-        echo '</textarea>';
+    echo $result;
+    echo '</textarea>';
 }
 echo "</div>";
- ?>
+?>
 
 <form>
   <input class="btnPrimary"  type="button" value="Back" onclick="history.go(-1)">
