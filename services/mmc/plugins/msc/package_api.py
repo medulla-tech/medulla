@@ -159,7 +159,7 @@ class SendPackageCommand:
         order_in_bundle=None,
         proxies=[],
         cmd_type=0,
-        login=None
+        login=None,
     ):
         self.ctx = ctx
         self.pid = pid
@@ -240,8 +240,9 @@ class SendPackageCommand:
         )
 
         if self.login:
-            XmppMasterDatabase().addlogincommand(self.login, addCmd, self.gid, "", "", "", "", 0, 0, 0, 0, {}
-        )
+            XmppMasterDatabase().addlogincommand(
+                self.login, addCmd, self.gid, "", "", "", "", 0, 0, 0, 0, {}
+            )
 
         return addCmd
 

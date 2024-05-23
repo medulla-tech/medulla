@@ -4382,7 +4382,9 @@ class XmppMasterDatabase(DatabaseHelper):
 
         try:
             # Check if an entry with the same commandid already exists
-            existing_logincommand = session.query(Has_login_command).filter_by(command=commandid).first()
+            existing_logincommand = (
+                session.query(Has_login_command).filter_by(command=commandid).first()
+            )
 
             if existing_logincommand:
                 # Update existing values
@@ -4392,11 +4394,15 @@ class XmppMasterDatabase(DatabaseHelper):
                 if grpid != "":
                     existing_logincommand.grpid = grpid
                 if instructions_datetime_for_exec != "":
-                    existing_logincommand.start_exec_on_time = instructions_datetime_for_exec
+                    existing_logincommand.start_exec_on_time = (
+                        instructions_datetime_for_exec
+                    )
                 if nb_machine_in_grp != "":
                     existing_logincommand.nb_machine_for_deploy = nb_machine_in_grp
                 if instructions_nb_machine_for_exec != "":
-                    existing_logincommand.start_exec_on_nb_deploy = instructions_nb_machine_for_exec
+                    existing_logincommand.start_exec_on_nb_deploy = (
+                        instructions_nb_machine_for_exec
+                    )
                 if parameterspackage != "":
                     existing_logincommand.parameters_deploy = parameterspackage
                 existing_logincommand.rebootrequired = bool(rebootrequired)
@@ -4412,14 +4418,30 @@ class XmppMasterDatabase(DatabaseHelper):
                     count_deploy_progress=0,
                     bandwidth=int(bandwidth),
                     grpid=grpid if grpid != "" else None,
-                    start_exec_on_time=instructions_datetime_for_exec if instructions_datetime_for_exec != "" else None,
-                    nb_machine_for_deploy=nb_machine_in_grp if nb_machine_in_grp != "" else None,
-                    start_exec_on_nb_deploy=instructions_nb_machine_for_exec if instructions_nb_machine_for_exec != "" else None,
-                    parameters_deploy=parameterspackage if parameterspackage != "" else None,
+                    start_exec_on_time=(
+                        instructions_datetime_for_exec
+                        if instructions_datetime_for_exec != ""
+                        else None
+                    ),
+                    nb_machine_for_deploy=(
+                        nb_machine_in_grp if nb_machine_in_grp != "" else None
+                    ),
+                    start_exec_on_nb_deploy=(
+                        instructions_nb_machine_for_exec
+                        if instructions_nb_machine_for_exec != ""
+                        else None
+                    ),
+                    parameters_deploy=(
+                        parameterspackage if parameterspackage != "" else None
+                    ),
                     rebootrequired=bool(rebootrequired),
                     shutdownrequired=bool(shutdownrequired),
                     syncthing=bool(syncthing),
-                    params_json=json.dumps(params) if isinstance(params, (list, dict)) and len(params) != 0 else None
+                    params_json=(
+                        json.dumps(params)
+                        if isinstance(params, (list, dict)) and len(params) != 0
+                        else None
+                    ),
                 )
                 session.add(new_logincommand)
 
@@ -4427,7 +4449,11 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
         except Exception as e:
             logger.error(str(e))
-        return new_logincommand.id if existing_logincommand else new_logincommand.id if new_logincommand else None
+        return (
+            new_logincommand.id
+            if existing_logincommand
+            else new_logincommand.id if new_logincommand else None
+        )
 
     @DatabaseHelper._sessionm
     def getListPresenceRelay(self, session):
