@@ -1,4 +1,7 @@
 # Change Log
+## [5.2.0](https://github.com/medulla-tech/medulla/releases/tag/5.1.0) (unreleased)
+- [BUGFIX]  Fix a crash when in the dashboard when no ubuntu version is provided
+ 
 ## [5.1.0](https://github.com/medulla-tech/medulla/releases/tag/5.1.0) (unreleased)
 - [BUGFIX]  Fix adding files on existing packages
 - [BUGFIX]  Fix download of updates when a proxy is defined
