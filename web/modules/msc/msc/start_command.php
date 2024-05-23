@@ -125,17 +125,17 @@ if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
         header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
         exit;
     }
-}
-else{
+} else {
     //if(!isset($uuid) || $uuid=""){
-        if($gid) $uuid = "ND";
+    if($gid) {
+        $uuid = "ND";
+    }
     //}
     header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array(
                                                                                 'uuid' => $uuid,
                                                                                 'hostname' => $hostname,
                                                                                 'gid' => $gid,
                                                                                 'cmd_id' => $id_command,
-                                                                                "login"=>$_SESSION['login'])));
+                                                                                "login" => $_SESSION['login'])));
     exit;
 }
-?>

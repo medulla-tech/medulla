@@ -325,7 +325,15 @@ class RpcProxy(RpcProxyI):
                 ctx = self.getContext(user=_group_user)
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, "", True)
         return mmc.plugins.msc.package_api.SendPackageCommand(
-            ctx, pid, target, params, mode, gid, proxies=proxy, cmd_type=cmd_type, login=login
+            ctx,
+            pid,
+            target,
+            params,
+            mode,
+            gid,
+            proxies=proxy,
+            cmd_type=cmd_type,
+            login=login,
         ).send()
 
     def get_id_command_on_host(self, id_command):
