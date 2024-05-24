@@ -415,7 +415,6 @@ $logs = $logs_global['logdata'];
 <table class="listinfos" border="1px" cellspacing="0" cellpadding="5" >
     <thead>
         <tr style='text-align: left;'>
-          <th> <?php echo _T("Id", 'urbackup'); ?> </th>
           <th> <?php echo _T("Message", 'urbackup'); ?> </th>
           <th> <?php echo _T("Time", 'urbackup'); ?> </th>
         </tr>
@@ -466,7 +465,6 @@ foreach ($logs as $log)
         {
     ?>
             <tr >
-                <td> <?php echo $log['id']; ?></td>
                 <?php echo $msg; ?>
                 <td> <?php echo $dt; ?></td>
             </tr>
