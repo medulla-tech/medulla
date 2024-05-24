@@ -169,16 +169,6 @@ $stats = xmlrpc_get_stats();
 
 $client_enable = xmlrpc_get_client_status($client_id);
 
-if ($client_enable["0"]["state"] == "0")
-{
-    $client_enable = "false";
-}
-
-if ($client_enable["0"]["state"] == "1")
-{
-    $client_enable = "true";
-}
-
 ?>
 <h2><?php echo _T("Statistics by client", 'urbackup'); ?></h2>
 <br>
@@ -214,14 +204,14 @@ if ($client_enable["0"]["state"] == "1")
 <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start incremental backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=incremental&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Start incremental backup</a>
 <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=full&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Start full backup</a>
 <?php 
-if ($client_enable == "false")
+if ($client_enable == 0)
 {
 ?>
     <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Enable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=enable">Enable backup for this client</a>
 <?php
 }
 
-if ($client_enable == "true")
+if ($client_enable == 1)
 { 
 ?>
     <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=disable">Disable backup for this client</a>
@@ -297,7 +287,7 @@ if ($restart_service == "true")
     <tbody>
 <?php
 
-if (empty($backups) && $client_enable == "true")
+if (empty($backups) && $client_enable == 1)
 {
     echo "<tr style='text-align: center;'>";
         echo '<td colspan="6">'._T("No backup", 'urbackup').'</td>';
@@ -305,7 +295,7 @@ if (empty($backups) && $client_enable == "true")
 }
 
 
-if ($client_enable == "true")
+if ($client_enable == 1)
 {
     foreach ($backups as $backup) {
         $id_backup = $backup['id'];
@@ -372,7 +362,7 @@ if ($client_enable == "true")
     }
 }
 
-if ($client_enable == "false")
+if ($client_enable == 0)
 {
     echo "<tr style='text-align: center;'>";
     echo '<td colspan="6">'._T("Client disabled", 'urbackup').'</td>';
