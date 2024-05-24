@@ -47,6 +47,8 @@ $auth = "";
 $groupid = "";
 $groupname = "";
 
+$clientExist = "";
+
 if (count($clients) != 0)
 {
     foreach ($clients as $client)
