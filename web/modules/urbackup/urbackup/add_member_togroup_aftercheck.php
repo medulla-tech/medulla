@@ -28,6 +28,7 @@ $group_id = $_POST['group'];
 $client_id = htmlspecialchars($_GET["clientid"]);
 $clientname = htmlspecialchars($_GET["clientname"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
+$auth = htmlspecialchars($_GET["auth"]);
 
 $group_id_new = "-".$group_id;
 
@@ -141,6 +142,7 @@ foreach($clients as $client)
     }
 }
 
+$enable_client = xmlrpc_enable_client($jidMachine, $client_id, $auth);
 $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$client_id.'&clientname='.$clientname.'&groupname='.$groupname.'&jidmachine='.$jidMachine.'&newClient=true';
 
 header("Location: ".$url);
