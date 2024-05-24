@@ -149,7 +149,7 @@ def restart_urbackup_service(jidmachine):
         1 or 0, state of function execution
     """
 
-    command = 'sc query UrBackupClientBackend | find "RUNNING" && sc stop UrBackupClientBackend && sc start UrBackupClientBackend'
+    command = 'powershell.exe -command \"Restart-Service -Name UrBackupClientBackend\"'
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
