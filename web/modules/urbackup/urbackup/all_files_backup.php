@@ -174,6 +174,10 @@ foreach ($files as $file)
                 {
                     echo '<a href="main.php?module=urbackup&amp;submod=urbackup&amp;action=all_files_backup&amp;clientid='.$client_id.'&amp;backupid='.$backup_id.'&amp;filename='.$file['name'].'&amp;beforepath='.$before_path.'&amp;volumename='.$final_path.'">'.$file['name'].'</a>';
                 }
+                else
+                {
+                    echo $file['name'];
+                }
                 ?>
             </td>
             <td> <?php echo $size; ?></td>
