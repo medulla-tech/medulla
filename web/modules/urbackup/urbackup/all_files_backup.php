@@ -29,6 +29,7 @@ $backup_id = htmlspecialchars($_GET["backupid"]);
 $volume_name = htmlspecialchars($_GET["volumename"]);
 $groupname = htmlspecialchars($_GET["groupname"]);
 $jidmachine = htmlspecialchars($_GET["jidmachine"]);
+$restore = htmlspecialchars($_GET["restore"]);
 
 $files = xmlrpc_get_backup_files($client_id, $backup_id, $volume_name);
 $path = $files['path'];
@@ -77,6 +78,19 @@ function formatBytes($bytes, $precision = 2) {
 
     return round($bytes, $precision) . ' ' . $units[$pow]; 
 }
+
+if ($restore == "ok")
+{
+    $str= _T("Restoring request successfully asked to client.", "urbackup");
+    new NotifyWidgetSuccess($str);
+}
+
+if ($restore == "ko")
+{
+    $str= _T("Restoring error, please try again, check if client exist or is online.", "urbackup");
+    new NotifyWidgetFailure($str);
+}
+
 ?>
 
 <br>
