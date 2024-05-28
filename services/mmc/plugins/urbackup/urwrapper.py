@@ -402,7 +402,7 @@ class UrApiWrapper:
             client_id (str): ID of the client.
             backup_id (str): ID of the backup.
             path (str): Path to the file in the backup.
-            filter_path (str): Filter path.
+            filter_path (str): Directory name.
 
         Returns:
             Response: HTTP response object.
@@ -420,7 +420,7 @@ class UrApiWrapper:
 
         return response
 
-    def client_download_backup_file_shahash(self, client_id, backup_id, path, shahash):
+    def client_download_backup_file_shahash(self, client_id, backup_id, path, shahash, filter_path):
         """
         Download a file by SHA hash from a backup.
 
@@ -429,6 +429,7 @@ class UrApiWrapper:
             backup_id (str): ID of the backup.
             path (str): Path to the file in the backup.
             shahash (str): SHA hash of the file.
+            filter_path (str): Directory name.
 
         Returns:
             Response: HTTP response object.
@@ -439,6 +440,7 @@ class UrApiWrapper:
             "clientid": client_id,
             "backupid": backup_id,
             "path": path,
+            "filter": filter_path,
             "ses": self.ses,
             "shahash": shahash,
         }
