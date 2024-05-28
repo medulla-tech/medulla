@@ -1278,6 +1278,35 @@ class messagefilexmpp:
     def callrestartbymaster(self, to):
         return self._call_remote_action(to, "restarfrommaster", "restart")
 
+    def callInstallKey(self, jidAM, jidARS):
+        """
+        Envoie une requête pour installer une clé SSH d'un ars sur 1 machine
+        cette fonction est 1 client qui envoi le message XMPP en utilisant le serveur substitut master.
+        substitut master fait la requette xmpp
+
+        Cette méthode crée un message de requête pour l'installation d'une clé SSH,
+        ARS qui recoit se message install sa clef sur la machine jidAM.
+
+        Args:
+            jidAM (str): L'adresse JID de l'agent de messagerie (jidAM) pour lequel
+                        la clé SSH doit être installée.
+            jidARS (str): L'adresse JID du destinataire (jidARS) du message XMPP
+                        demandant l'installation de la clé SSH.
+
+        Raises:
+            Exception: Si l'envoi du message échoue pour une raison quelconque.
+
+        """
+        msg = {
+            "action": "installkey",
+            "sessionid": self.name_random(5, "installkey"),
+            "data": {"jidAM" : jidAM},
+            "ret": 0,
+            "base64": False,
+        }
+        self.send_message(jidARS, msg)
+
+
     def callinventory(self, to):
         return self._call_remote_action(to, "inventory", "inventory")
 
