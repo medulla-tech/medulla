@@ -60,16 +60,10 @@ $p = new PageGenerator(_T("Backups list for ".$client_name, 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-function secs2date($secs,$date)
+function secs2date($secs)
 {
-    if ($secs>2147472000)
-        {
-        $date->setTimestamp(2147472000);
-        $s=$secs-2147472000;
-        $date->add(new DateInterval('PT'.$s.'S'));
-        }
-    else
-        $date->setTimestamp($secs);
+    $date = new DateTime("@$secs");
+    return $date->format('Y-m-d H:i:s');
 }
 
 function formatBytes($bytes, $precision = 2) { 
@@ -136,31 +130,15 @@ foreach ($files as $file)
     else
         $final_path = $path.$file['name'];
 
-    if ($file['dir'] == "false")
+    if ($file['dir'] == 1)
         $dir = "false";
     else
         $dir = "true";
 
-    $date=new dateTime();
-
     $before_path = trim($path, $file['name']);
 
-    $secs=$file['creat'];  //2033-12-06 08:53:20
-    secs2date($secs,$date);
-    $create_date=$date->format('Y-m-d H:i:s');
-
-    $secs=$file['access'];  //2033-12-06 08:53:20
-    secs2date($secs,$date);
-    $access_date=$date->format('Y-m-d H:i:s');
-
-    $secs=$file['mod'];  //2033-12-06 08:53:20
-    secs2date($secs,$date);
-    $mod_date=$date->format('Y-m-d H:i:s');
-
-    $now = new DateTime;
-    $secs=$now;
-    secs2date($secs,$date);
-    $nowtime=$date->format('Y-m-d H:i:s');
+    $nowDateTime = new DateTime;
+    $nowtime=$nowDateTime->format('Y-m-d H:i:s');
 
     if (isset($file['size']))
         $size = formatBytes($file['size']);
@@ -181,9 +159,9 @@ foreach ($files as $file)
                 ?>
             </td>
             <td> <?php echo $size; ?></td>
-            <td> <?php echo $create_date; ?></td>
-            <td> <?php echo $mod_date; ?></td>
-            <td> <?php echo $access_date; ?></td>
+            <td> <?php echo secs2date($file['creat']); ?></td>
+            <td> <?php echo secs2date($file['mod']); ?></td>
+            <td> <?php echo secs2date($file['access']); ?></td>
             <td>
             <ul class="action">
                 <?php
