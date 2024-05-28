@@ -136,9 +136,9 @@ function xmlrpc_client_download_backup_file($client_id, $backup_id, $path, $filt
     return xmlCall("urbackup.client_download_backup_file", [$client_id, $backup_id, $path, $filter]);
 }
 
-function xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $path, $shahash){
+function xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $path, $shahash, $filter){
     // Restore file for client, need shahash for only file
-    return xmlCall("urbackup.client_download_backup_file_shahash", [$client_id, $backup_id, $path, $shahash]);
+    return xmlCall("urbackup.client_download_backup_file_shahash", [$client_id, $backup_id, $path, $shahash, $filter]);
 }
 
 function xmlrpc_get_status(){

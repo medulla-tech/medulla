@@ -497,7 +497,7 @@ def client_download_backup_file(clientid, backupid, path, filter_path):
     return "No DATA file"
 
 
-def client_download_backup_file_shahash(clientid, backupid, path, shahash):
+def client_download_backup_file_shahash(clientid, backupid, path, shahash, filter_path):
     """
     Restore file for one client
 
@@ -509,7 +509,7 @@ def client_download_backup_file_shahash(clientid, backupid, path, shahash):
     """
     api = UrApiWrapper()
     download = api.client_download_backup_file_shahash(
-        clientid, backupid, path, shahash
+        clientid, backupid, path, shahash, filter_path
     )
     download = api.response(download)
     if "content" in download:
