@@ -47,7 +47,7 @@ if ($shahash == "")
 }
 else
 {
-    $client_restore_file_shahash = xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $path, $shahash);
+    $client_restore_file_shahash = xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $path, $shahash, $filename);
     if ($client_restore_file["ok"] == "true")
         print_r(_T("Backup file(s) request successfully asked to client.", "urbackup"));
     else
