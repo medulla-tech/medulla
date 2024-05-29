@@ -24,7 +24,7 @@
  * services module declaration
  */
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = & MMCApp::getInstance();
 
 $mod = new Module("services");
 $mod->setVersion("5.1.1");
@@ -43,58 +43,56 @@ $page = new Page("index", _T("Core services", "services"));
 $submod->addPage($page);
 
 $page = new Page("ajaxServicesFilter", _T("Core services", "services"));
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("others", _T("Others services", "services"));
 $submod->addPage($page);
 
 $page = new Page("action");
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("start");
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("stop");
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("restart");
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("reload");
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("status");
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("log", _T("Services log"));
-$page->setOptions(array("visible" => True));
+$page->setOptions(array("visible" => true));
 $submod->addPage($page);
 
 $page = new Page("ajaxLogFilter");
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("ajaxOthersServicesFilter");
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("reboot", _T("Reboot"));
-$page->setOptions(array("visible" => False));
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
 $page = new Page("poweroff", _T("Poweroff"));
-$page->setOptions(array("visible" => False));
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
 $MMCApp->addModule($mod);
-
-?>

@@ -25,12 +25,12 @@
 define("VERSION", "5.1.1");
 define("REVISION", "");
 
-function getVersion() {
-  return VERSION;
+function getVersion()
+{
+    return VERSION;
 }
 
-function getRevision() {
-  return REVISION;
+function getRevision()
+{
+    return REVISION;
 }
-
-?>
