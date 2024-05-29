@@ -1,7 +1,15 @@
 # Change Log
-## [5.2.0](https://github.com/medulla-tech/medulla/releases/tag/5.1.0) (unreleased)
+## [5.1.1](https://github.com/medulla-tech/medulla/releases/tag/5.1.1) (unreleased)
+- [FEATURE] Add button on search field in audit group deploy page
+- [FEATURE] Support newer Glpi
 - [BUGFIX]  Fix a crash when in the dashboard when no ubuntu version is provided
- 
+- [BUGFIX]  Update quick action that displays the last 100 lines of logs
+- [BUGFIX]  Fix cmd to Restart Medulla Agent service on windows
+- [BUGFIX]  Fix a crash when deploying because of a missing json key
+- [BUGFIX]  Fix quick action command launch and display
+- [BUGFIX]  Several kiosk fixes
+- [BUGFIX]  Fix displaying the machine name in the update module
+
 ## [5.1.0](https://github.com/medulla-tech/medulla/releases/tag/5.1.0) (unreleased)
 - [BUGFIX]  Fix adding files on existing packages
 - [BUGFIX]  Fix download of updates when a proxy is defined
