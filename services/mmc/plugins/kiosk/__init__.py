@@ -389,7 +389,7 @@ def handlerkioskpresence(
 
 
 def __search_software_in_glpi(
-    list_software_glpi, list_granted_packages, packageprofile, structuredatakiosk
+    list_software_glpi, list_granted_packages, packageprofile
 ):
     structuredatakioskelement = {
         "name": packageprofile[0],
