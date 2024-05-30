@@ -1659,7 +1659,10 @@ def getPanelGraph(hostname, panel_title, from_timestamp, to_timestamp):
 
 def getLastOnlineStatus(jid):
     result = XmppMasterDatabase().last_event_presence_xmpp(jid)
-    return result[0]["status"]
+    try:
+        return result[0]["status"]
+    except:
+        return False
 
 
 def get_mon_events(start, maxperpage, filter):
