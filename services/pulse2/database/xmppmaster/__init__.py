@@ -8570,7 +8570,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     Machines.agenttype == agenttype,
                 )
             )
-        machine = querymachine.one()
+        machine = querymachine.first()
         session.commit()
         session.flush()
         try:
