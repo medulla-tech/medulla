@@ -25,6 +25,9 @@ if(isset($_GET['agenttype']) && $_GET['agenttype'] == 'relayserver' or isset($_G
   $_GET['cn'] = $_GET['hostname'];
 }
 
+$hostname = !empty($_GET['hostname']) ? htmlentities($_GET['hostname']) : "";
+$_GET['cn'] = !empty($_GET['cn']) ? htmlentities($_GET['cn']) : $hostname;
+
 if(isset($_GET['cn'])){
     $zz = xmlrpc_getGuacamoleRelayServerMachineHostnameProto($_GET['cn']);
     $dd = $zz['machine'];

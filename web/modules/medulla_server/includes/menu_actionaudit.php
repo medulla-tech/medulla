@@ -61,7 +61,13 @@ $element = "guacamole";
 //         }
 //     }
 
-$paramArray = array('cn' => (isset($_SESSION['cn'])) ? $_SESSION['cn'] : $cn, 'objectUUID' => $_SESSION['objectUUID'],'vnctype' => $element, "presencemachinexmpp" => $presencemachinexmpp);
+$paramArray = array(
+    'cn' => (isset($_SESSION['cn'])) ? $_SESSION['cn'] : $cn,
+    'objectUUID' => $_SESSION['objectUUID'],
+    'vnctype' => $element,
+    "presencemachinexmpp" => $presencemachinexmpp,
+    "hostname"=>!empty($_GET['hostname']) ? htmlentities($_GET['hostname']) : "",
+);
 
 $inventAction = new ActionItem(_T("Inventory", "pulse2"), "invtabs", "inventory", "inventory", "base", "computers");
 //$extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
