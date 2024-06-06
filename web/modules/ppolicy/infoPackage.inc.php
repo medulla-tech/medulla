@@ -43,52 +43,57 @@ $base = &$MMCApp->getModule('base');
 $users = &$base->getSubmod('users');
 
 /* Add the page to the module */
-$page = new Page("indexppolicy",_T("Password policies", "ppolicy"));
-$page->setImg("modules/base/graph/access/img/icn_global_active.gif",
-              "modules/base/graph/access/img/icn_global.gif");
+$page = new Page("indexppolicy", _T("Password policies", "ppolicy"));
+$page->setImg(
+    "modules/base/graph/access/img/icn_global_active.gif",
+    "modules/base/graph/access/img/icn_global.gif"
+);
 $page->setFile("modules/ppolicy/default/index.php");
 $users->addPage($page);
 
-$page = new Page("addppolicy",_T("Add a password policy", "ppolicy"));
-$page->setImg("modules/base/graph/access/img/icn_global_active.gif",
-              "modules/base/graph/access/img/icn_global.gif");
+$page = new Page("addppolicy", _T("Add a password policy", "ppolicy"));
+$page->setImg(
+    "modules/base/graph/access/img/icn_global_active.gif",
+    "modules/base/graph/access/img/icn_global.gif"
+);
 $page->setFile("modules/ppolicy/default/add.php");
 $users->addPage($page);
 
-$page = new Page("editppolicy",_T("Edit a password policy", "ppolicy"));
+$page = new Page("editppolicy", _T("Edit a password policy", "ppolicy"));
 $page->setFile("modules/ppolicy/default/edit.php");
-$page->setOptions(array("visible" => False));
+$page->setOptions(array("visible" => false));
 $users->addPage($page);
 
-$page = new Page("deleteppolicy",_T("Delete a password policy", "ppolicy"));
-$page->setFile("modules/ppolicy/default/delete.php",
-    array("noHeader" => True, "visible" => False)
+$page = new Page("deleteppolicy", _T("Delete a password policy", "ppolicy"));
+$page->setFile(
+    "modules/ppolicy/default/delete.php",
+    array("noHeader" => true, "visible" => false)
 );
 $users->addPage($page);
 
 $page = new Page("ajaxPPoliciesFilter");
-$page->setFile("modules/ppolicy/default/ajaxPPoliciesFilter.php",
-    array("AJAX" => True, "visible" => False)
+$page->setFile(
+    "modules/ppolicy/default/ajaxPPoliciesFilter.php",
+    array("AJAX" => true, "visible" => false)
 );
 $users->addPage($page);
 
 /* Declare variable to will can set hiden it */
 $ppolicyattr = getPPolicyAttributesKeys();
 
-foreach ($ppolicyattr as $key=>$info) {    // separate right between Global Password Policies Attributes from User PPolicy Attributes
-    $mod->addACL('g'.$key, _T("Default ".$info[0],"ppolicy"));
+foreach ($ppolicyattr as $key => $info) {    // separate right between Global Password Policies Attributes from User PPolicy Attributes
+    $mod->addACL('g'.$key, _T("Default ".$info[0], "ppolicy"));
 }
 
-$mod->addACL("ppolicyactivated", _T("Enable user specific password policy","ppolicy"));
-foreach ($ppolicyattr as $key=>$info) {    // foreach the list of Supported Attributes
-    $mod->addACL($key, _T($info[0],"ppolicy"));
+$mod->addACL("ppolicyactivated", _T("Enable user specific password policy", "ppolicy"));
+foreach ($ppolicyattr as $key => $info) {    // foreach the list of Supported Attributes
+    $mod->addACL($key, _T($info[0], "ppolicy"));
 }
 
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = & MMCApp::getInstance();
 $MMCApp->addModule($mod);
 
 /* You should unset the references when you finished using them */
 unset($base);
 unset($users);
-?>

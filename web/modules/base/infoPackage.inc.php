@@ -42,16 +42,16 @@ $mod->setPriority(0);
  */
 
 $submod = new SubModule("main", _("Home"));
-$submod->setVisibility(False);
+$submod->setVisibility(false);
 $submod->setDefaultPage("base/main/default");
 $submod->setPriority(0);
 
 $page = new Page("default", _("Shortcuts"));
-$page->setOptions(array("visible" => False));
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
-$page = new Page("favorites",_("Favorites page"));
-$page->setOptions(array("visible" => False, "AJAX" => True));
+$page = new Page("favorites", _("Favorites page"));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
@@ -63,54 +63,54 @@ if (has_audit_working()) {
     $submod->setDefaultPage("base/audit/indexall");
     $submod->setPriority(1000);
 
-    $page = new Page("indexall",_T("All modules", "base"));
-    $page->setFile("modules/base/audit/indexall.php", array("AJAX" =>False,"visible"=>True));
+    $page = new Page("indexall", _T("All modules", "base"));
+    $page->setFile("modules/base/audit/indexall.php", array("AJAX" => false,"visible" => true));
     $submod->addPage($page);
 
-    $page = new Page("indexbase",_T("Users and Groups", "base"));
-    $page->setFile("modules/base/audit/indexbase.php", array("AJAX" =>False,"visible"=>True));
+    $page = new Page("indexbase", _T("Users and Groups", "base"));
+    $page->setFile("modules/base/audit/indexbase.php", array("AJAX" => false,"visible" => true));
     $submod->addPage($page);
 
     if(in_array("samba", $_SESSION["modulesList"])) {
-        $page = new Page("indexsamba",_T("Samba", "base"));
-        $page->setFile("modules/base/audit/indexsamba.php", array("AJAX" =>False,"visible"=>True));
+        $page = new Page("indexsamba", _T("Samba", "base"));
+        $page->setFile("modules/base/audit/indexsamba.php", array("AJAX" => false,"visible" => true));
         $submod->addPage($page);
     }
 
     if(in_array("mail", $_SESSION["modulesList"])) {
-        $page = new Page("indexmail",_T("Mail", "base"));
-        $page->setFile("modules/base/audit/indexmail.php", array("AJAX" =>False,"visible"=>True));
+        $page = new Page("indexmail", _T("Mail", "base"));
+        $page->setFile("modules/base/audit/indexmail.php", array("AJAX" => false,"visible" => true));
         $submod->addPage($page);
     }
 
     if(in_array("network", $_SESSION["modulesList"])) {
-        $page = new Page("indexnetwork",_T("Network", "base"));
-        $page->setFile("modules/base/audit/indexnetwork.php", array("AJAX" =>False,"visible"=>True));
+        $page = new Page("indexnetwork", _T("Network", "base"));
+        $page->setFile("modules/base/audit/indexnetwork.php", array("AJAX" => false,"visible" => true));
         $submod->addPage($page);
     }
 
     if(in_array("sshlpk", $_SESSION["modulesList"])) {
-        $page = new Page("indexsshlpk",_T("SSH public keys", "base"));
-        $page->setFile("modules/base/audit/indexsshlpk.php", array("AJAX" =>False,"visible"=>True));
+        $page = new Page("indexsshlpk", _T("SSH public keys", "base"));
+        $page->setFile("modules/base/audit/indexsshlpk.php", array("AJAX" => false,"visible" => true));
         $submod->addPage($page);
     }
 
     if(in_array("proxy", $_SESSION["modulesList"])) {
-        $page = new Page("indexproxy",_T("Proxy", "base"));
-        $page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
+        $page = new Page("indexproxy", _T("Proxy", "base"));
+        $page->setFile("modules/base/audit/indexproxy.php", array("AJAX" => false,"visible" => true));
         $submod->addPage($page);
     }
 
     $page = new Page("searchbar");
-    $page->setFile("modules/base/includes/searchbar.php", array("AJAX" =>True,"visible"=>False));
+    $page->setFile("modules/base/includes/searchbar.php", array("AJAX" => true,"visible" => false));
     $submod->addPage($page);
 
     $page = new Page("ajaxLogFilter");
-    $page->setFile("modules/base/audit/ajaxLogFilter.php", array("AJAX" =>True,"visible"=>False));
+    $page->setFile("modules/base/audit/ajaxLogFilter.php", array("AJAX" => true,"visible" => false));
     $submod->addPage($page);
 
-    $page = new Page("logview",_("View details of an action"));
-    $page->setFile("modules/base/audit/logview.php", array("AJAX" =>False,"visible"=>False));
+    $page = new Page("logview", _("View details of an action"));
+    $page->setFile("modules/base/audit/logview.php", array("AJAX" => false,"visible" => false));
     $submod->addPage($page);
 
     $mod->addSubmod($submod);
@@ -118,74 +118,74 @@ if (has_audit_working()) {
 // Deprecated module
 
 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-//  if (isLogViewEnabled()) {
+    //  if (isLogViewEnabled()) {
     $submod = new SubModule("logview");
     $submod->setDescription(_("History"));
     //$submod = new ExpertSubModule("logview", _("History"));
-    $submod->setVisibility(True);
+    $submod->setVisibility(true);
     $submod->setImg('modules/base/graph/navbar/logview');
     $submod->setDefaultPage("base/logview/index");
     $submod->setPriority(1001);
 
-    $page = new Page("index",_("logs of all the modules"));
-    $page->setFile("modules/base/logview/index.php", array("expert" => True));
+    $page = new Page("index", _("logs of all the modules"));
+    $page->setFile("modules/base/logview/index.php", array("expert" => true));
     $submod->addPage($page);
 
-    $page = new Page("logsinventory",_T("logs inventory","base"));
+    $page = new Page("logsinventory", _T("logs inventory", "base"));
     $page->setFile("modules/base/logview/logsinventory.php");
     $submod->addPage($page);
 
-    $page = new Page("logsbackuppc",_T("logs backuppc","base"));
+    $page = new Page("logsbackuppc", _T("logs backuppc", "base"));
     $page->setFile("modules/base/logview/logsbackuppc.php");
     $submod->addPage($page);
 
-    $page = new Page("logsdeployment",_T("logs deployment","base"));
+    $page = new Page("logsdeployment", _T("logs deployment", "base"));
     $page->setFile("modules/base/logview/logsdeployment.php");
     $submod->addPage($page);
 
-    $page = new Page("logsquickaction",_T("logs quickaction","base"));
+    $page = new Page("logsquickaction", _T("logs quickaction", "base"));
     $page->setFile("modules/base/logview/logsquickaction.php");
     $submod->addPage($page);
 
-    $page = new Page("logsdownload",_T("logs download","base"));
+    $page = new Page("logsdownload", _T("logs download", "base"));
     $page->setFile("modules/base/logview/logsdownload.php");
     $submod->addPage($page);
 
-    $page = new Page("logskiosk",_T("logs Kiosk","base"));
+    $page = new Page("logskiosk", _T("logs Kiosk", "base"));
     $page->setFile("modules/base/logview/logskiosk.php");
     $submod->addPage($page);
 
-    $page = new Page("logspackaging",_T("logs packaging","base"));
+    $page = new Page("logspackaging", _T("logs packaging", "base"));
     $page->setFile("modules/base/logview/logspackaging.php");
     $submod->addPage($page);
 
-    $page = new Page("logsremotedesktop",_T("logs remote desktop","base"));
+    $page = new Page("logsremotedesktop", _T("logs remote desktop", "base"));
     $page->setFile("modules/base/logview/logsremotedesktop.php");
     $submod->addPage($page);
 
-    $page = new Page("logsimaging",_T("logs Imaging","base"));
+    $page = new Page("logsimaging", _T("logs Imaging", "base"));
     $page->setFile("modules/base/logview/logsimaging.php");
     $submod->addPage($page);
 
     $page = new Page("ajax_Data_Logs");
-    $page->setFile("modules/base/logview/ajax_Data_Logs.php",array("AJAX" =>True,"visible"=>False));
+    $page->setFile("modules/base/logview/ajax_Data_Logs.php", array("AJAX" => true,"visible" => false));
     $submod->addPage($page);
 
     $mod->addSubmod($submod);
-  }
+}
 
 $submod = new SubModule("status", _("Status"));
-$submod->setVisibility(True);
+$submod->setVisibility(true);
 $submod->setImg('modules/base/graph/navbar/load');
 $submod->setDefaultPage("base/status/index");
 $submod->setPriority(10012);
 
-$page = new Page("index",_("Default status page"));
+$page = new Page("index", _("Default status page"));
 $page->setFile("modules/base/status/index.php");
 $submod->addPage($page);
 
 if (! isCommunityVersion(true)) {
-    $page = new Page("support",_("Support page"));
+    $page = new Page("support", _("Support page"));
     $page->setFile("modules/base/status/support.php");
     $submod->addPage($page);
 }
@@ -201,75 +201,99 @@ $submod->setImg('modules/base/graph/navbar/user');
 $submod->setDefaultPage("base/users/index");
 $submod->setPriority(0);
 
-$page = new Page("index",_("User list"));
-$page->setImg("modules/base/graph/users/img/icn_global_active.gif",
-              "modules/base/graph/users/img/icn_global.gif");
+$page = new Page("index", _("User list"));
+$page->setImg(
+    "modules/base/graph/users/img/icn_global_active.gif",
+    "modules/base/graph/users/img/icn_global.gif"
+);
 $submod->addPage($page);
 
 $page = new Page("ajaxAutocompleteGroup");
-$page->setFile("modules/base/users/ajaxAutocompleteGroup.php",
-               array("AJAX" =>True,"visible"=>False));
+$page->setFile(
+    "modules/base/users/ajaxAutocompleteGroup.php",
+    array("AJAX" => true,"visible" => false)
+);
 $submod->addPage($page);
 
 $page = new Page("ajaxFilter");
-$page->setFile("modules/base/users/ajaxFilter.php",
-               array("AJAX" =>True,"visible"=>False));
+$page->setFile(
+    "modules/base/users/ajaxFilter.php",
+    array("AJAX" => true,"visible" => false)
+);
 $submod->addPage($page);
 
-$page = new Page("add",_("Add a user"));
-$page->setImg("modules/base/graph/users/img/icn_addUser_active.gif",
-              "modules/base/graph/users/img/icn_addUser.gif");
+$page = new Page("add", _("Add a user"));
+$page->setImg(
+    "modules/base/graph/users/img/icn_addUser_active.gif",
+    "modules/base/graph/users/img/icn_addUser.gif"
+);
 $submod->addPage($page);
 
-$page = new Page("edit",_("Edit a user"));
-$page->setOptions(array("visible"=>False));
+$page = new Page("edit", _("Edit a user"));
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
-$page = new Page("editacl",_("Edit ACL permissions on a user"));
-$page->setOptions(array("visible"=>False));
+$page = new Page("editacl", _("Edit ACL permissions on a user"));
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
-$page = new Page("loguser",_("Logged user actions"));
-$page->setFile("modules/base/users/loguser.php",
-	               array("AJAX" =>False,"visible"=>False));
+$page = new Page("loguser", _("Logged user actions"));
+$page->setFile(
+    "modules/base/users/loguser.php",
+    array("AJAX" => false,"visible" => false)
+);
 $submod->addPage($page);
 
-$page = new Page("logview",_("Action details"));
-$page->setFile("modules/base/users/logview.php",
-                   array("AJAX" =>False,"visible"=>False));
+$page = new Page("logview", _("Action details"));
+$page->setFile(
+    "modules/base/users/logview.php",
+    array("AJAX" => false,"visible" => false)
+);
 $submod->addPage($page);
 
 $page = new Page("ajaxLogFilter");
-$page->setFile("modules/base/audit/ajaxLogFilter.php",
-	               array("AJAX" =>True,"visible"=>False));
+$page->setFile(
+    "modules/base/audit/ajaxLogFilter.php",
+    array("AJAX" => true,"visible" => false)
+);
 $submod->addPage($page);
 
-$page = new Page("delete",_("Delete a user"));
-$page->setFile("modules/base/users/delete.php",
-               array("noHeader"=>True,"visible"=>False));
+$page = new Page("delete", _("Delete a user"));
+$page->setFile(
+    "modules/base/users/delete.php",
+    array("noHeader" => true,"visible" => false)
+);
 $submod->addPage($page);
 
-$page = new Page("backup",_("Backup user files"));
-$page->setFile("modules/base/users/backup.php",
-               array("noHeader"=>True,"visible"=>False));
+$page = new Page("backup", _("Backup user files"));
+$page->setFile(
+    "modules/base/users/backup.php",
+    array("noHeader" => true,"visible" => false)
+);
 $submod->addPage($page);
 
-$page = new Page("resetpasswd",_("Reset user password"));
-$page->setImg("modules/base/graph/access/img/icn_global_active.gif",
-              "modules/base/graph/access/img/icn_global.gif");
-if ($_SESSION["login"] == 'root' || $_SESSION['AUTH_METHOD'] == "login")
-    $page->setOptions(array("visible" => False));
+$page = new Page("resetpasswd", _("Reset user password"));
+$page->setImg(
+    "modules/base/graph/access/img/icn_global_active.gif",
+    "modules/base/graph/access/img/icn_global.gif"
+);
+if ($_SESSION["login"] == 'root' || $_SESSION['AUTH_METHOD'] == "login") {
+    $page->setOptions(array("visible" => false));
+}
 $submod->addPage($page);
 
-$page = new Page("passwd",_("Change password"));
-$page->setImg("modules/base/graph/access/img/icn_global_active.gif",
-              "modules/base/graph/access/img/icn_global.gif");
-if ($_SESSION["login"] == 'root' || $_SESSION['AUTH_METHOD'] == "token")
-    $page->setOptions(array("visible" => False));
+$page = new Page("passwd", _("Change password"));
+$page->setImg(
+    "modules/base/graph/access/img/icn_global_active.gif",
+    "modules/base/graph/access/img/icn_global.gif"
+);
+if ($_SESSION["login"] == 'root' || $_SESSION['AUTH_METHOD'] == "token") {
+    $page->setOptions(array("visible" => false));
+}
 $submod->addPage($page);
 
 $page = new Page("getPhoto", _("Get user photo"));
-$page->setOptions(array("visible"=>False, "noHeader" =>True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
@@ -283,28 +307,32 @@ $submod->setImg('modules/base/graph/navbar/group');
 $submod->setDefaultPage("base/groups/index");
 $submod->setPriority(1);
 
-$page = new Page("index",_("Group list"));
+$page = new Page("index", _("Group list"));
 $submod->addPage($page);
 
-$page = new Page("add",_("Add a group"));
+$page = new Page("add", _("Add a group"));
 $submod->addPage($page);
 
-$page = new Page("delete",_("Delete a group"));
-$page->setFile("modules/base/groups/delete.php",
-               array("noHeader"=>True,"visible"=>False));
+$page = new Page("delete", _("Delete a group"));
+$page->setFile(
+    "modules/base/groups/delete.php",
+    array("noHeader" => true,"visible" => false)
+);
 $submod->addPage($page);
 
 $page = new Page("ajaxFilter");
-$page->setFile("modules/base/groups/ajaxFilter.php",
-               array("AJAX"=>True,"visible"=>False));
+$page->setFile(
+    "modules/base/groups/ajaxFilter.php",
+    array("AJAX" => true,"visible" => false)
+);
 $submod->addPage($page);
 
-$page = new Page("members",_("Group members"));
-$page->setOptions(array("visible"=>False));
+$page = new Page("members", _("Group members"));
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
-$page = new Page("edit",_("Edit a group"));
-$page->setOptions(array("visible"=>False));
+$page = new Page("edit", _("Edit a group"));
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
@@ -322,22 +350,24 @@ if (hasComputerManagerWorking()) {
 
     $page = new Page("add", _("Add computer"));
     if (!canAddComputer()) {
-        $page->setOptions(array("visible"=>False));
+        $page->setOptions(array("visible" => false));
     }
     $submod->addPage($page);
 
     $page = new Page("edit", _("Edit computer"));
-    $page->setOptions(array("visible"=>False));
+    $page->setOptions(array("visible" => false));
     $submod->addPage($page);
 
-    $page = new Page("delete",_("Delete a computer"));
-    $page->setFile("modules/base/computers/delete.php",
-                   array("noHeader"=>True,"visible"=>False));
+    $page = new Page("delete", _("Delete a computer"));
+    $page->setFile(
+        "modules/base/computers/delete.php",
+        array("noHeader" => true,"visible" => false)
+    );
     $submod->addPage($page);
 
     $page = new Page("ajaxComputersList", _("Ajax part of computers list"));
     $page->setFile("modules/base/computers/ajaxComputersList.php");
-    $page->setOptions(array("visible"=>False, "AJAX" =>True));
+    $page->setOptions(array("visible" => false, "AJAX" => true));
     $submod->addPage($page);
 
     if (in_array("inventory", $_SESSION["modulesList"])) {
@@ -359,7 +389,7 @@ if (hasComputerManagerWorking()) {
 
         $page = new Page("deleteEntityRule", _T("Delete entity rule", "inventory"));
         $page->setFile("modules/inventory/inventory/deleteEntityRule.php");
-        $page->setOptions(array("visible" => False, "noHeader" => True));
+        $page->setOptions(array("visible" => false, "noHeader" => true));
         $submod->addPage($page);
 
         $page = new Page("EditEntity", _T('Edit Entity', 'inventory'));
@@ -373,7 +403,7 @@ if (hasComputerManagerWorking()) {
 
     $page = new Page("get_file", _("Download inventory of one machine"));
     $page->setFile("modules/base/computers/get_file.php");
-    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $page->setOptions(array("visible" => false, "noHeader" => true));
     $submod->addPage($page);
 
     $mod->addSubmod($submod);
@@ -384,27 +414,25 @@ if (hasComputerManagerWorking()) {
  * ACL properties
  */
 
-$mod->addACL("jpegPhoto",_("User photo"));
-$mod->addACL("uid",_("User login"));
+$mod->addACL("jpegPhoto", _("User photo"));
+$mod->addACL("uid", _("User login"));
 $mod->addACL("sn", _("User name"));
-$mod->addACL("givenName",_("User firstname"));
-$mod->addACL("homeDir",_("User home directory"));
-$mod->addACL("loginShell",_("Login shell"));
-$mod->addACL("title",_("User title"));
-$mod->addACL("mail",_("Mail address"));
-$mod->addACL("telephoneNumber",_("Telephone number"));
-$mod->addACL("mobile",_("Mobile phone number"));
-$mod->addACL("facsimileTelephoneNumber",_("Fax number"));
-$mod->addACL("homePhone",_("Home phone number"));
-$mod->addACL("primary",_("Primary group"));
-$mod->addACL("secondary",_("Secondary groups"));
-$mod->addACL("cn",_("Common name"));
-$mod->addACL("displayName",_("Preferred name to be used"));
-$mod->addACL("pass",_("Password"));
-$mod->addACL("confpass",_("Confirm your password"));
-$mod->addACL("isBaseDesactive",_("Enable/Disable user account"));
+$mod->addACL("givenName", _("User firstname"));
+$mod->addACL("homeDir", _("User home directory"));
+$mod->addACL("loginShell", _("Login shell"));
+$mod->addACL("title", _("User title"));
+$mod->addACL("mail", _("Mail address"));
+$mod->addACL("telephoneNumber", _("Telephone number"));
+$mod->addACL("mobile", _("Mobile phone number"));
+$mod->addACL("facsimileTelephoneNumber", _("Fax number"));
+$mod->addACL("homePhone", _("Home phone number"));
+$mod->addACL("primary", _("Primary group"));
+$mod->addACL("secondary", _("Secondary groups"));
+$mod->addACL("cn", _("Common name"));
+$mod->addACL("displayName", _("Preferred name to be used"));
+$mod->addACL("pass", _("Password"));
+$mod->addACL("confpass", _("Confirm your password"));
+$mod->addACL("isBaseDesactive", _("Enable/Disable user account"));
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = & MMCApp::getInstance();
 $MMCApp->addModule($mod);
-
-?>
