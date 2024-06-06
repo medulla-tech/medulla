@@ -1,4 +1,7 @@
 # Change Log
+
+## [5.2.0](https://github.com/medulla-tech/medulla/releases/tag/5.2.0) (unreleased)
+
 ## [5.1.1](https://github.com/medulla-tech/medulla/releases/tag/5.1.1) (unreleased)
 - [FEATURE] Add button on search field in audit group deploy page
 - [FEATURE] Support newer Glpi
