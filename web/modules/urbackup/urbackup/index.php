@@ -407,6 +407,11 @@ foreach ($array as $review) {
 <h2>Logs</h2>
 
 <?php
+
+$allLogs = [];
+
+$dbLogs = xmlrpc_get_all_logs();
+
 $logs_global = xmlrpc_get_logs();
 $logs = $logs_global['logdata'];
 
@@ -432,14 +437,7 @@ foreach ($logs as $log)
     }
     else
     {
-        $date=new dateTime();
-
-        $secs=$log['time'];  //2033-12-06 08:53:20
-        secs2date($secs,$date);
-        $dt=$date->format('Y-m-d H:i:s');
-    
-        $msg = "<td>".$log['msg']."</td>";
-    
+        $msg = $log['msg'];
         $need_show_msg = "True";
     
         if (strpos($log['msg'], 'FATAL:') !== false) {
