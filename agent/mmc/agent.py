@@ -1300,12 +1300,11 @@ class messagefilexmpp:
         msg = {
             "action": "installkey",
             "sessionid": self.name_random(5, "installkey"),
-            "data": {"jidAM" : jidAM},
+            "data": {"jidAM": jidAM},
             "ret": 0,
             "base64": False,
         }
         self.send_message(jidARS, msg)
-
 
     def callinventory(self, to):
         return self._call_remote_action(to, "inventory", "inventory")
