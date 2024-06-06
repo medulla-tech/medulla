@@ -144,6 +144,7 @@ $stats = xmlrpc_get_stats();
 <h2><?php echo _T("Global statistics", 'urbackup'); ?></h2>
 <?php
 $all_size = 0;
+$files_size = 0;
 ?>
 <table class="listinfos" border="1px" cellspacing="0" cellpadding="5" >
     <thead>
