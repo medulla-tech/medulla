@@ -48,16 +48,10 @@ function formatBytes($bytes, $precision = 2)
 }
 
 //Formatage de date
-function secs2date($secs,$date)
+function secs2date($secs)
 {
-    if ($secs>2147472000)    //2038-01-19 expire dt
-    {
-        $date->setTimestamp(2147472000);
-        $s=$secs-2147472000;
-        $date->add(new DateInterval('PT'.$s.'S'));
-    }
-    else
-        $date->setTimestamp($secs);
+    $date = new DateTime("@$secs");
+    return $date->format('Y-m-d H:i:s');
 }
 
 //-----------------------------------START LOGIN FUNCTION
@@ -299,7 +293,7 @@ foreach($array_progress as $progress)
         <tr style='text-align: left;'>
           <th> <?php echo _T("Id", 'urbackup'); ?> </th>
           <th> <?php echo _T("Name", 'urbackup'); ?> </th>
-          <th> <?php echo _T("Backuptime", 'urbackup'); ?> </th>
+          <th> <?php echo _T("Date of backup", 'urbackup'); ?> </th>
           <th> <?php echo _T("Status", 'urbackup'); ?> </th>
           <th> <?php echo _T("Details", 'urbackup'); ?> </th>
           <th> <?php echo _T("Duration H:M:S", 'urbackup'); ?> </th>
@@ -376,22 +370,15 @@ foreach ($array as $review) {
     $size = formatBytes($review['size_bytes']);
     $duration = $review['duration'];
     $duration = $duration*10;
-    $duration = $duration." seconds";
 
     $seconds = round($duration);
  
     $output_duration = sprintf('%02d:%02d:%02d', ($seconds/ 3600),($seconds/ 60 % 60), $seconds% 60);
-
-    $date=new dateTime();
-
-    $secs=$review['backuptime'];
-    secs2date($secs,$date);
-    $dt=$date->format('Y-m-d H:i:s');
 ?>
         <tr>
             <td style='padding-left: 5px;'> <?php echo $review['id']; ?></td>
             <td> <?php echo $review['name']; ?></td>
-            <td> <?php echo $dt; ?></td>       
+            <td> <?php echo secs2date($review['backuptime']); ?></td>       
             <td> <?php echo $status; ?></td>
             <td> <?php echo $details; ?></td>
             <td> <?php echo $output_duration; ?></td>
