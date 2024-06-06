@@ -139,6 +139,14 @@ $array_progress = json_decode(json_encode($progress), true);
 $stats = xmlrpc_get_stats();
 
 ?>
+<script>
+    $(document).ready(function(){
+        setInterval(function() {
+            $("#progressBackups").load("index.php");
+        }, 10000);
+    });
+
+</script>
 <br>
 <br>
 <h2><?php echo _T("Global statistics", 'urbackup'); ?></h2>
@@ -172,9 +180,8 @@ $files_size = 0;
 ?>
 <br>
 <br>
+<div id="progressBackups">
 <?php
-
-
 foreach($array_progress as $progress)
 {
     if (!empty($progress))
@@ -284,7 +291,7 @@ foreach($array_progress as $progress)
     }
 }
 ?>
-
+</div>
 <h2><?php echo _T("Last activities", 'urbackup'); ?></h2>
 
 
@@ -415,8 +422,6 @@ $logs = $logs_global['logdata'];
     <tbody>
 <?php 
 
-array_multisort(array_column($logs, 'id'), SORT_DESC, $logs);
-
 foreach ($logs as $log)
 {
     if (strpos($log['msg'], "Looking") === 0 or strpos($log['msg'], "Session") === 0 or strpos($log['msg'], "Sending") === 0)
@@ -468,15 +473,14 @@ foreach ($dbLogs as $log)
 }
 
 // Comparison function 
-function date_compare($element1, $element2) { 
-    $datetime1 = strtotime($element1['time']); 
-    $datetime2 = strtotime($element2['time']); 
-    return $datetime1 - $datetime2; 
-}  
-  
-// Sort the array  
-usort($allLogs, 'date_compare'); 
-//sort($allLogs);
+function date_compare($a, $b){
+    if($a["time"] == $b["time"]){
+        return 0;
+    }
+    return ($a["time"] < $b["time"]) ? 1 : -1;
+}
+
+usort($allLogs, "date_compare");
 
 foreach ($allLogs as $log)
 {
