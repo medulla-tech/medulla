@@ -141,6 +141,11 @@ function xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $pat
     return xmlCall("urbackup.client_download_backup_file_shahash", [$client_id, $backup_id, $path, $shahash, $filter]);
 }
 
+function xmlrpc_get_all_logs(){
+    // Return status
+    return xmlCall("urbackup.getAllLogs", []);
+}
+
 function xmlrpc_get_status(){
     // Return status
     return xmlCall("urbackup.get_status", []);
