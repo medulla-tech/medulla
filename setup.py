@@ -24,8 +24,8 @@ setup(
     ],
     keywords="pulse2",
     name="pulse2",
-    version='5.2.0',  # fmt: skip
-    debian_distro='stretch',  # fmt: skip
+    version="5.2.0",  # fmt: skip
+    debian_distro="stretch",  # fmt: skip
     description="pulse2",
     url="https://www.siveo.net/",
     packages=["pulse2"],
