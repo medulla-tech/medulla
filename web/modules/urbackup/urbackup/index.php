@@ -449,15 +449,45 @@ foreach ($logs as $log)
     
         if ($need_show_msg == "True")
         {
-    ?>
-            <tr >
-                <?php echo $msg; ?>
-                <td> <?php echo $dt; ?></td>
-            </tr>
-    <?php
+            $newLog = array(
+                'msg' => $msg, 
+                'time' => $log['time'], 
+            );
+            array_push($allLogs, $newLog);
         }
     }
 }
+
+foreach ($dbLogs as $log)
+{
+    $newLog = array(
+        'msg' => $log["msg"], 
+        'time' => $log["time"], 
+    );
+    array_push($allLogs, $newLog);
+}
+
+// Comparison function 
+function date_compare($element1, $element2) { 
+    $datetime1 = strtotime($element1['time']); 
+    $datetime2 = strtotime($element2['time']); 
+    return $datetime1 - $datetime2; 
+}  
+  
+// Sort the array  
+usort($allLogs, 'date_compare'); 
+//sort($allLogs);
+
+foreach ($allLogs as $log)
+{
+    ?>
+    <tr >
+            <td> <?php echo $log["msg"]; ?> </td>
+            <td> <?php echo secs2date($log["time"]); ?> </td>
+    </tr >
+    <?php
+}
+
 ?>
     </tbody>
 </table>
