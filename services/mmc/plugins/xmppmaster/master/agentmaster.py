@@ -276,7 +276,9 @@ class MUCBot(slixmpp.ClientXMPP):
             deletion_result = simplecommandstr(deletion_command)
             logger.debug(deletion_result["result"])
         except Exception as error_deleting_old_messages:
-            logger.error(f"The deletion of the old messages failed with the error \n {error_deleting_old_messages}")
+            logger.error(
+                f"The deletion of the old messages failed with the error \n {error_deleting_old_messages}"
+            )
             pass
 
         # dictionary used for deploy
