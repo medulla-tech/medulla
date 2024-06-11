@@ -160,11 +160,7 @@ function _base_changeUser($FH, $mode)
 
     if ($mode == "add") {
         // add mode
-        if($FH->getPostValue("createHomeDir") == "on") {
-            $createHomeDir = true;
-        } else {
-            $createHomeDir = false;
-        }
+        $createHomeDir = false;
 
         if($FH->getPostValue("ownHomeDir") == "on") {
             $ownHomeDir = true;
