@@ -75,7 +75,16 @@ class GlpiAuthenticator(AuthenticatorI):
         else:
             # Gérer le cas où l'en-tête "set-cookie" est manquant
             # Peut-être qu'il y a une autre logique à appliquer ici, selon vos besoins
-            raise ValueError("Missing 'set-cookie' header in response")
+
+            params = {
+                "postdata": urllib.parse.urlencode({
+                    "login": self.user,
+                    "password": self.password.decode('utf-8') if isinstance(self.password, bytes) else self.password,
+                }).encode('utf-8')
+            }
+
+            return params
+
 
     def _cbLoginPost(self, params):
         self.logger.debug("GlpiAuthenticator: posting on login page")
