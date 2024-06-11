@@ -474,66 +474,6 @@ function _base_baseEdit($FH, $mode)
     );
 
     $f->pop();
-    $f->push(new DivExpertMode());
-    $f->push(new Table());
-
-    $f->add(
-        new TrFormElement(_("Home directory"), new InputTpl("homeDirectory")),
-        array("value" => $FH->getArrayOrPostValue("homeDirectory"))
-    );
-
-    if ($mode == "add") {
-        $f->add(
-            new TrFormElement(_("Create home directory on filesystem"), new CheckboxTpl("createHomeDir")),
-            array("value" => "checked")
-        );
-        $f->add(
-            new TrFormElement(
-                _("Force to use the home directory if it exists"),
-                new CheckboxTpl("ownHomeDir"),
-                array("tooltip" => _("Warning: an existing directory may belong to another user !"))
-            ),
-            array("value" => "")
-        );
-    }
-
-    $f->add(
-        new TrFormElement(_("Login shell"), new InputTpl("loginShell")),
-        array("value" => $FH->getArrayOrPostValue("loginShell"))
-    );
-
-    $f->add(
-        new TrFormElement(
-            _("Common name"),
-            new InputTpl("cn"),
-            array("tooltip" => _("This field is used by some LDAP clients (for example Thunderbird address book) to display user entries."))
-        ),
-        array("value" => $FH->getArrayOrPostValue("cn"))
-    );
-
-    $f->add(
-        new TrFormElement(
-            _("Preferred name to be used"),
-            new InputTpl("displayName"),
-            array("tooltip" => _("This field is used by SAMBA (and other LDAP clients) to display user name."))
-        ),
-        array("value" => $FH->getArrayOrPostValue("displayName"))
-    );
-
-    if ($mode == "edit") {
-        $f->add(
-            new TrFormElement(_("UID"), new HiddenTpl("uidNumber")),
-            array("value" => $FH->getArrayOrPostValue("uidNumber"))
-        );
-
-        $f->add(
-            new TrFormElement(_("GID"), new HiddenTpl("gidNumber")),
-            array("value" => $FH->getArrayOrPostValue("gidNumber"))
-        );
-    }
-
-    $f->pop();
-    $f->pop();
 
     return $f;
 }
