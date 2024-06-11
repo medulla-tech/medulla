@@ -1580,7 +1580,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 Command_qa.command_machine.label("command_machine"),
                 Command_action.target.label("target"),
                 Command_qa.jid_machine.label("jid_machine"),
-            ).join(Command_action, Command_qa.id == Command_action.command_id)
+            ).outerjoin(Command_action, Command_qa.id == Command_action.command_id)
             ##si on veut passer par les groupe avant d'aller sur les machine.
             ## command_qa = command_qa.group_by(Command_qa.id)
             command_qa = command_qa.order_by(desc(Command_qa.id))
@@ -1617,7 +1617,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 command_start_list.append(command.command_start)
                 command_grp_list.append(command.command_grp)
                 command_machine_list.append(command.command_machine)
-                command_target_list.append(command.target)
+                command_target_list.append(command.target if command.target is not None else "")
                 jid_machine_list.append(command.jid_machine)
             result_list.append(command_id_list)
             result_list.append(command_name_list)
