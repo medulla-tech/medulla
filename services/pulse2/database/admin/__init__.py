@@ -5,6 +5,8 @@
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy.ext.automap import automap_base
+
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
@@ -37,6 +39,20 @@ class AdminDatabase(DatabaseHelper):
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
+
+        Base = automap_base()
+        Base.prepare(self.db, reflect=True)
+
+        # Only federated tables (beginning by local_) are automatically mapped
+        # If needed, excludes tables from this list
+        exclude_table = []
+        # Dynamically add attributes to the object for each mapped class
+        for table_name, mapped_class in Base.classes.items():
+            if table_name in exclude_table:
+                continue
+            if table_name.startswith("local"):
+                setattr(self, table_name.capitalize(), mapped_class)
+
         if not self.initMappersCatchException():
             self.session = None
             return False

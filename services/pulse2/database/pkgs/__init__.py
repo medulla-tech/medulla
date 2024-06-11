@@ -23,6 +23,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.exc import NoSuchTableError
+from sqlalchemy.ext.automap import automap_base
 
 import datetime
 import magic
@@ -99,6 +100,20 @@ class PkgsDatabase(DatabaseHelper):
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
+
+        Base = automap_base()
+        Base.prepare(self.db, reflect=True)
+
+        # Only federated tables (beginning by local_) are automatically mapped
+        # If needed, excludes tables from this list
+        exclude_table = []
+        # Dynamically add attributes to the object for each mapped class
+        for table_name, mapped_class in Base.classes.items():
+            if table_name in exclude_table:
+                continue
+            if table_name.startswith("local"):
+                setattr(self, table_name.capitalize(), mapped_class)
+
         if not self.initTables():
             return False
         if not self.initMappersCatchException():

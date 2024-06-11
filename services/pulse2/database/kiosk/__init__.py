@@ -8,6 +8,7 @@ kiosk database handler
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.automap import automap_base
 
 Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
@@ -61,10 +62,23 @@ class KioskDatabase(DatabaseHelper):
             pool_recycle=self.config.dbpoolrecycle,
             pool_size=self.config.dbpoolsize,
         )
-        print(self.makeConnectionPath())
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
+
+        Base = automap_base()
+        Base.prepare(self.db, reflect=True)
+
+        # Only federated tables (beginning by local_) are automatically mapped
+        # If needed, excludes tables from this list
+        exclude_table = []
+        # Dynamically add attributes to the object for each mapped class
+        for table_name, mapped_class in Base.classes.items():
+            if table_name in exclude_table:
+                continue
+            if table_name.startswith("local"):
+                setattr(self, table_name.capitalize(), mapped_class)
+
         if not self.initMappersCatchException():
             self.session = None
             return False
