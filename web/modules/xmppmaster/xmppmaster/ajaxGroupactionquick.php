@@ -67,6 +67,7 @@ foreach ($dd[7] as $val ){
 }
 $log = array();
 $resultmachine = new ActionItem(_T("Os", "xmppmaster"),"QAcustommachgrp","audit","computer", "xmppmaster", "xmppmaster");
+$emptyAction = new EmptyActionItem();
 
 $listnamegroup=[];
 $params =  array();
@@ -107,7 +108,7 @@ for ($i=0;$i< safeCount( $dd[0] );$i++){
     $param['os']     = $dd[3][$i];
     $param['date']   = $startdate[$i];
     $param['namecmd'] =  isset($_GET["namecmd"]) ? $_GET["namecmd"] : "";
-    $logs[] = $resultmachine;
+    $logs[] = $dd[7][$i] != "" ? $resultmachine : $emptyAction;
     $params[] = $param;
 }
 
