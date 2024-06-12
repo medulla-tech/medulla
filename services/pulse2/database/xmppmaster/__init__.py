@@ -1617,7 +1617,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 command_start_list.append(command.command_start)
                 command_grp_list.append(command.command_grp)
                 command_machine_list.append(command.command_machine)
-                command_target_list.append(command.target if command.target is not None else "")
+                command_target_list.append(
+                    command.target if command.target is not None else ""
+                )
                 jid_machine_list.append(command.jid_machine)
             result_list.append(command_id_list)
             result_list.append(command_name_list)
