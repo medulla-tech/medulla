@@ -579,6 +579,7 @@ class ImagingRpcProxy(RpcProxyI):
             i = None
 
         if i != None:
+            ImagingDatabase().add_multicast(parameters)
             deferred = i.SetMulticastMultiSessionParameters(parameters)
             deferred.addCallback(lambda x: x)
         else:
@@ -763,7 +764,7 @@ class ImagingRpcProxy(RpcProxyI):
                 "Multicast while object checkThread is %s" % ImagingRpcProxy.checkThread
             )
             for i in threading.enumerate():
-                if i.getName() == "MainThread" and not i.isAlive():
+                if i.getName() == "MainThread" and not i.is_alive():
                     logging.getLogger().debug(
                         "[Multicast TERMINATE  monitorsUDPSender]"
                     )
@@ -1943,6 +1944,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
+        db.set_diskless_infos(location, config)
         # Set PXE params
         if "pxe_password" in config or "language" in config:
             db.setLocationPXEParams(location, config)
@@ -4064,6 +4066,9 @@ class ImagingRpcProxy(RpcProxyI):
             logging.getLogger().exception(e)
             return [False, str(e)]
         return [True, True]
+
+    def delete_multicast_from_db(self, infoparameters):
+        return ImagingDatabase().remove_multicast(infoparameters)
 
 
 def chooseMacAddress(ctx, uuid, macs):

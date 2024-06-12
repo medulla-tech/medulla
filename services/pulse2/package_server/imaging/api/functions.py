@@ -656,7 +656,7 @@ class Imaging(object, metaclass=SingletonN):
                 d = client.callRemote(func, *args)
                 d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
                 return d
-            return Falstype(MACAddretype(MACAddress), ss), e
+            return False
 
         if not isMACAddress(MACAddress):
             raise TypeError
@@ -1429,10 +1429,10 @@ class Imaging(object, metaclass=SingletonN):
             % (pathfiles, device)
         )
         r = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        line = [x.strip(" \t\n\r") for x in r.stdout]
+        line = [x.strip(" \t\n\r".encode("utf-8")) for x in r.stdout]
         r.wait()
         r.stdout.close()
-        return line[0]
+        return line[0].decode("utf-8")
 
     def start_process_multicast(self, objprocess):
         # start execution process multicast
