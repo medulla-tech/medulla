@@ -1,6 +1,7 @@
 # Change Log
 
 ## [5.2.0](https://github.com/medulla-tech/medulla/releases/tag/5.2.0) (unreleased)
+- [FEATURE] Use SQL to manage imaging menus.
 
 ## [5.1.1](https://github.com/medulla-tech/medulla/releases/tag/5.1.1) (unreleased)
 - [FEATURE] Add button on search field in audit group deploy page
