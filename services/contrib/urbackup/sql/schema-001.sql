@@ -40,4 +40,10 @@ CREATE TABLE IF NOT EXISTS `client_state` (
   `authkey` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `all_logs` (
+  `id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `msg` varchar(255) NOT NULL,
+  `time` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 INSERT INTO `version` VALUES (1);
