@@ -31,7 +31,8 @@ global $SYNCHROSTATE_RUNNING;
 global $SYNCHROSTATE_INIT_ERROR;
 list($SYNCHROSTATE_UNKNOWN, $SYNCHROSTATE_TODO, $SYNCHROSTATE_SYNCHRO, $SYNCHROSTATE_RUNNING, $SYNCHROSTATE_INIT_ERROR) = array(0, 1, 2, 3, 4);
 
-function getPulse2ErrorString($ERR_CODE, $DEFAULT_STRING) {
+function getPulse2ErrorString($ERR_CODE, $DEFAULT_STRING)
+{
     $errors = array(
         1000 => _T("There was an error (this is a default message).", "imaging"), // $ERR_DEFAULT
         1001 => _T("The nomenclature is missing.", "imaging"), // $ERR_MISSING_NOMENCLATURE
@@ -51,7 +52,8 @@ function getPulse2ErrorString($ERR_CODE, $DEFAULT_STRING) {
     return $DEFAULT_STRING;
 }
 
-function getCurrentLocation() {
+function getCurrentLocation()
+{
 
     $location = false;
 
@@ -66,45 +68,53 @@ function getCurrentLocation() {
     return $location;
 }
 
-class LedElement extends HtmlElement {
-    function __construct($color){
-        $this->color=$color;
-        $this->value='<img style="vertical-align: middle" src="modules/imaging/graph/images/led_circle_'.$this->color.'.png">';
+class LedElement extends HtmlElement
+{
+    public function __construct($color)
+    {
+        $this->color = $color;
+        $this->value = '<img style="vertical-align: middle" src="modules/imaging/graph/images/led_circle_'.$this->color.'.png">';
     }
-    function display($arrParam = array()){
+    public function display($arrParam = array())
+    {
         print $this->value;
     }
-    function __toString() {
+    public function __toString()
+    {
         return $this->value;
     }
 }
 
-function getParams() {
+function getParams()
+{
     $params = array();
     // GET params
     if(isset($_GET['cn']) && isset($_GET['objectUUID'])) {
         $params = array('hostname' => $_GET['cn'], 'uuid' => $_GET['objectUUID']);
-    } else if(isset($_GET['hostname']) && isset($_GET['uuid'])) {
+    } elseif(isset($_GET['hostname']) && isset($_GET['uuid'])) {
         $params = array('hostname' => $_GET['hostname'], 'uuid' => $_GET['uuid']);
-    } else if(isset($_GET['gid'])) {
+    } elseif(isset($_GET['gid'])) {
         $params = array('gid' => $_GET['gid']);
     }
     return $params;
 }
 
 // value in 'o'
-function humanSize($value) {
-    if (strlen($value) > 12)
-        return round($value/1024/1024/1024/1024, 1).'To';
-    else if (strlen($value) > 9)
-        return round($value/1024/1024/1024, 1).'Go';
-    else if (strlen($value) > 6)
-        return round($value/1024/1024, 1).'Mo';
-    else if(strlen($value) > 3)
-        return round($value/1024, 1).'Ko';
+function humanSize($value)
+{
+    if (strlen($value) > 12) {
+        return round($value / 1024 / 1024 / 1024 / 1024, 1).'To';
+    } elseif (strlen($value) > 9) {
+        return round($value / 1024 / 1024 / 1024, 1).'Go';
+    } elseif (strlen($value) > 6) {
+        return round($value / 1024 / 1024, 1).'Mo';
+    } elseif(strlen($value) > 3) {
+        return round($value / 1024, 1).'Ko';
+    }
 }
 
-function print_disk_info() {
+function print_disk_info()
+{
     /* -l option to only get local filesystem occupation */
     $df = xmlCall("base.getDisksInfos");
     unset($df[0]);
@@ -112,11 +122,13 @@ function print_disk_info() {
     echo format_disk_info($df);
 }
 
-function print_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
+function print_mem_bar($title, $max, $used, $cache = 0, $width = 320)
+{
     echo format_mem_bar($title, $max, $used, $cache, $width);
 }
 
-function print_health() {
+function print_health()
+{
     $up = xmlCall("base.getUptime");
     $up = trim($up[0]);
 
@@ -124,7 +136,8 @@ function print_health() {
     echo format_health($up, $mem);
 }
 
-function format_disk_info($df) {
+function format_disk_info($df)
+{
     $ret = '';
 
     foreach ($df as $disk) {
@@ -140,22 +153,24 @@ function format_disk_info($df) {
 
         //if device name use whole line... we skip this line
         //concatenate it with the next
-        if (!preg_match(("/[ ]/"),$disk)) {
+        if (!preg_match(("/[ ]/"), $disk)) {
             $incomplete_lines = $disk;
             continue;
         }
 
         $disk = preg_split("/[ ]+/", $disk);
 
-        if ((array_search($disk[0], array("tmpfs", "none", "udev"))!==FALSE) || ($disk[1] == "0"))
+        if ((array_search($disk[0], array("tmpfs", "none", "udev")) !== false) || ($disk[1] == "0")) {
             continue;
+        }
 
-        $ret .= format_mem_bar("<strong>$disk[5]</strong> <em>($disk[0])</em> : ".humanSize($disk[2]*1024)."/".humanSize($disk[3]*1024), $disk[1], $disk[2]);
+        $ret .= format_mem_bar("<strong>$disk[5]</strong> <em>($disk[0])</em> : ".humanSize($disk[2] * 1024)."/".humanSize($disk[3] * 1024), $disk[1], $disk[2]);
     }
     return $ret;
 }
 
-function format_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
+function format_mem_bar($title, $max, $used, $cache = 0, $width = 320)
+{
     $ret = '';
     if ($max != 0) {
         $wused = ($used / $max) * $width;
@@ -172,20 +187,21 @@ function format_mem_bar($title, $max, $used, $cache = 0, $width = 320) {
     }
     $ret .= sprintf("<div class=\"membarused\" style=\"width: %.0fpx\"></div>", $wused);
     if ($cache > 0) {
-            $ret .= "</div>";
+        $ret .= "</div>";
     }
     $ret .= "</div>\n";
     return $ret;
 }
 
-function format_health($up, $mem) {
+function format_health($up, $mem)
+{
     list($up) = explode(" ", $up);
     $ret = '';
 
-    $days = (int) ($up / (24*60*60));
-    $up -= $days * 24*60*60;
-    $hrs = (int)($up / (60*60));
-    $up -= $hrs * 60*60;
+    $days = (int) ($up / (24 * 60 * 60));
+    $up -= $days * 24 * 60 * 60;
+    $hrs = (int)($up / (60 * 60));
+    $up -= $hrs * 60 * 60;
     $mins = (int)($up / 60);
 
     ($days > 1) ? $d = "s" : $d = "";
@@ -194,7 +210,7 @@ function format_health($up, $mem) {
 
     $ret .= "<em>"._("Uptime: ")."</em>";
     if ($days > 0) {
-            $ret .= $days." "._("day").$d." ";
+        $ret .= $days." "._("day").$d." ";
     }
     if (($days > 0) || ($hrs > 0)) {
         $ret .= $hrs." "._("hour").$h." ";
@@ -203,25 +219,28 @@ function format_health($up, $mem) {
 
 
     $m = preg_split("/[ ]+/", $mem[1]);
-    $ret .= format_mem_bar("<em>"._("Memory")."</em> : ".humanSize($m[2]*1024)."/".humanSize(($m[5]+$m[6])*1024)."/".humanSize($m[1]*1024), $m[1], $m[2],$m[5]+$m[6]);
+    $ret .= format_mem_bar("<em>"._("Memory")."</em> : ".humanSize($m[2] * 1024)."/".humanSize(($m[5] + $m[6]) * 1024)."/".humanSize($m[1] * 1024), $m[1], $m[2], $m[5] + $m[6]);
     $m = preg_split("/[ ]+/", $mem[3]);
     if (isset($m[1]) && $m[1] > 0) {
-        $ret .= format_mem_bar("<em>"._("Swap")."</em> : ".humanSize($m[2]*1024)."/".humanSize($m[1]*1024), $m[1], $m[2]);
+        $ret .= format_mem_bar("<em>"._("Swap")."</em> : ".humanSize($m[2] * 1024)."/".humanSize($m[1] * 1024), $m[1], $m[2]);
     }
     return $ret;
 }
 
-function _toDate($a, $noneIsAsap = False) {
+function _toDate($a, $noneIsAsap = false)
+{
     $never = array(2031, 12, 31, 23, 59, 59);
     $asap = array(1970, 1, 1, 0, 0, 0);
 
     if (is_array($a) && (safeCount($a) == 6 || safeCount($a) == 9)) {
 
-        if (safeCount(array_diff(array_slice($a, 0, 6), $never)) == 0)
+        if (safeCount(array_diff(array_slice($a, 0, 6), $never)) == 0) {
             return _T('Never', 'msc');
+        }
 
-        if (safeCount(array_diff(array_slice($a, 0, 6), $asap)) == 0)
+        if (safeCount(array_diff(array_slice($a, 0, 6), $asap)) == 0) {
             return _T('As soon as possible', 'msc');
+        }
 
         $parsed_date = mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);
         return strftime(web_def_date_fmt(), $parsed_date);
@@ -233,7 +252,8 @@ function _toDate($a, $noneIsAsap = False) {
     }
 }
 
-function humanReadable($num, $unit='B', $base=1024) {
+function humanReadable($num, $unit = 'B', $base = 1024)
+{
     foreach (array('', 'K', 'M', 'G', 'T') as $i) {
         if ($num < $base) {
             return sprintf("%3.1f %s%s", $num, $i, $unit);
@@ -245,46 +265,48 @@ function humanReadable($num, $unit='B', $base=1024) {
 /*
  * Widget that display an image backup log
  */
-class ImageLogs extends HtmlElement {
-
+class ImageLogs extends HtmlElement
+{
     /* Logs to display */
-    var $logs;
+    public $logs;
 
-    var $errstr = "ERROR:";
+    public $errstr = "ERROR:";
 
-    var $colors = array(
-        'daemon.debug'=>'LOG_DEBUG',
-        'daemon.notice'=>'LOG_NOTICE',
-        'daemon.info'=>'LOG_INFO',
-        'daemon.warn'=>'LOG_WARNING',
-        'daemon.err'=>'LOG_ERR',
-        'syslog.debug'=>'LOG_DEBUG',
-        'syslog.notice'=>'LOG_NOTICE',
-        'syslog.info'=>'LOG_INFO',
-        'syslog.warn'=>'LOG_WARNING',
-        'syslog.err'=>'LOG_ERR',
-        'user.debug'=>'LOG_DEBUG',
-        'user.notice'=>'LOG_NOTICE',
-        'user.info'=>'LOG_INFO',
-        'user.warn'=>'LOG_WARNING',
-        'user.err'=>'LOG_ERR',
+    public $colors = array(
+        'daemon.debug' => 'LOG_DEBUG',
+        'daemon.notice' => 'LOG_NOTICE',
+        'daemon.info' => 'LOG_INFO',
+        'daemon.warn' => 'LOG_WARNING',
+        'daemon.err' => 'LOG_ERR',
+        'syslog.debug' => 'LOG_DEBUG',
+        'syslog.notice' => 'LOG_NOTICE',
+        'syslog.info' => 'LOG_INFO',
+        'syslog.warn' => 'LOG_WARNING',
+        'syslog.err' => 'LOG_ERR',
+        'user.debug' => 'LOG_DEBUG',
+        'user.notice' => 'LOG_NOTICE',
+        'user.info' => 'LOG_INFO',
+        'user.warn' => 'LOG_WARNING',
+        'user.err' => 'LOG_ERR',
     );
 
-    function __construct($logs) {
+    public function __construct($logs)
+    {
         $this->logs = $logs;
     }
 
-    function display($arrParam = array()) {
+    public function display($arrParam = array())
+    {
         $lines = array();
         $errlines = array();
         foreach($this->logs as $line => $msg) {
             if (strpos($msg, "===") === 0) {
                 $msg = "<b>" . "$msg" . "</b>";
-            }  else if(strpos($msg, $this->errstr) === 0) {
+            } elseif(strpos($msg, $this->errstr) === 0) {
                 $msg = "<span id=\"err$line\" class=\"LOG_ERR\">" . "$msg" . "</span>";
                 $errlines[] = $line;
             }
-            foreach ($this->colors as $pattern=>$color) {
+            foreach ($this->colors as $pattern => $color) {
                 if (strpos($msg, $pattern) > 0) {
                     $msg = "<span id=\"err$line\" class=\"$color\">" . "$msg" . "</span>";
                     continue;
@@ -300,9 +322,7 @@ class ImageLogs extends HtmlElement {
         $l = new ListInfos($lines, _T("Backup log messages", "imaging"));
         $l->setCssClass("imagelogs");
         $l->setRowsPerPage(safeCount($lines));
-        $l->setNavBar(False);
+        $l->setNavBar(false);
         $l->display(0, 1);
     }
 }
-
-?>
