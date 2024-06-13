@@ -22,7 +22,33 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+?>
+<style>
+    #mail {
+        color: #016080;
+    }
 
+    #mail:hover {
+        text-decoration: underline;
+    }
+
+    @keyframes rainbow {
+        0%, 100% { color: red; }
+        16% { color: orange; }
+        33% { color: yellow; }
+        50% { color: green; }
+        66% { color: blue; }
+        83% { color: indigo; }
+        100% { color: violet; }
+    }
+
+    .rainbow-animation {
+        animation: rainbow 2s infinite;
+        display: inline-block;
+    }
+</style>
+
+<?php
 global $conf;
 if(isset($_REQUEST['maxperpage'])) {
     $maxperpage = $_REQUEST['maxperpage'];
@@ -116,3 +142,19 @@ if (has_audit_working()) {
 }
 $n->setName(_("Users"));
 $n->display();
+
+?>
+<script>
+// First ever Medulla easteregg
+function applyAnimation() {
+    var currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // normalize the time at midnight to compare only the dates
+    var prideDay = new Date(currentDate.getFullYear(), 5, 28);
+    prideDay.setHours(0, 0, 0, 0);
+
+    if (currentDate.getTime() === prideDay.getTime()) {
+        document.getElementById('mail').classList.add('rainbow-animation');
+    }
+}
+applyAnimation();
+</script>
