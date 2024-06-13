@@ -58,22 +58,27 @@ for ($idx = 0; $idx < safeCount($users); $idx++) {
     $sn = is_object($users[$idx]['sn']) ? $users[$idx]['sn']->scalar : $users[$idx]['sn'];
     $arrSnUser[] = $givenName.' '.$sn;
 
-    if (strlen($users[$idx]["mail"]) > 0) {
-        $mails[] = is_object($users[$idx]["mail"]) ? '<a href="mailto:' . $users[$idx]["mail"]->scalar . '">' . $users[$idx]["mail"]->scalar . "</a>" : '<a href="mailto:' . $users[$idx]["mail"] . '">' . $users[$idx]["mail"] . "</a>";
+    if (!empty($users[$idx]["mail"])) {
+        $emailContent = is_object($users[$idx]["mail"]) ? $users[$idx]["mail"]->scalar : $users[$idx]["mail"];
+        if (!empty($emailContent)) {
+            $mails[] = '<a id="mail" href="mailto:' . htmlspecialchars($emailContent) . '">' . htmlspecialchars($emailContent) . '</a>';
+        } else {
+            $mails[] = "";
+        }
     } else {
-        $mails[] =  is_object($users[$idx]["mail"]) ? $users[$idx]["mail"]->scalar : $users[$idx]["mail"];
+        $mails[] = "";
     }
     /* We display the smallest telephone number, hopefully it is the user phone extension */
     $num = null;
-    foreach($users[$idx]["telephoneNumber"] as $_number) {
-        $number = is_object($_number) ? $_number->scalar : $_number;
-        if ($num == null) {
-            $num = is_object($number) ? $number->scalar : $number;
-        } elseif (strlen($number) < strlen($num)) {
-            $num = $number;
+    $numArray = [];
+    if (!empty($users[$idx]["telephoneNumber"])) {
+        foreach ($users[$idx]["telephoneNumber"] as $_number) {
+            $number = is_object($_number) ? $_number->scalar : $_number;
+            $numArray[] = $number;
         }
+        $num = implode("<br>", $numArray); // Concaténer les numéros avec un retour à la ligne
     }
-    $phones[] = $num;
+    $phones[] = $num === null ? "" : $num;
 }
 
 // Avoiding the CSS selector (tr id) to start with a number
