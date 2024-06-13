@@ -226,13 +226,13 @@ function _base_changeUser($FH, $mode)
         }
     }
 
-    if($FH->isUpdated('telephoneNumber')) {
-        changeUserTelephoneNumbers($uid, $FH->getValue("telephoneNumber"));
+    if(!$FH->isUpdated('givenName') or $FH->isUpdated('sn')) {
+        change_user_main_attr($uid, $uid, $_POST['givenName'], $_POST['sn']);
         $update = true;
     }
 
-    if($FH->isUpdated('givenName') or $FH->isUpdated('sn')) {
-        change_user_main_attr($uid, $uid, $FH->getValue('givenName'), $FH->getValue('sn'));
+    if(!$FH->isUpdated('telephoneNumber')) {
+        changeUserTelephoneNumbers($uid, $_POST['telephoneNumber']);
         $update = true;
     }
 
