@@ -565,6 +565,7 @@ def existUser(uid):
 
 # change main UserAttributes
 def changeUserMainAttributes(uid, newuid, name, surname):
+
     ldapObj = ldapUserGroupControl()
     try:
         gecos = delete_diacritics(f"{name} {surname}")
@@ -1134,8 +1135,8 @@ class LdapUserGroupControl:
             gecos = uid
 
         # Build a UTF-8 representation of the unicode strings
-        lastN = str(lastN.encode("utf-8"))
-        firstN = str(firstN.encode("utf-8"))
+        lastN = lastN.encode("utf-8")
+        firstN = firstN.encode("utf-8")
 
         # Create insertion array in ldap dir
         # FIXME: document shadow attributes choice
@@ -1152,8 +1153,8 @@ class LdapUserGroupControl:
             ],
             "uid": uid,
             "gecos": gecos,
-            "cn": f"{firstN} {lastN}",
-            "displayName": f"{firstN} {lastN}",
+            "cn": f"{firstN.decode('utf-8')} {lastN.decode('utf-8')}",
+            "displayName": f"{firstN.decode('utf-8')} {lastN.decode('utf-8')}",
             "sn": lastN,
             "givenName": firstN,
             "homeDirectory": homeDir,
@@ -1513,6 +1514,15 @@ class LdapUserGroupControl:
                     [(userdn, AT.USER), (attr, AT.ATTRIBUTE)],
                     attrValue,
                 )
+            if attr == "telephoneNumber" and isinstance(attrVal, list):
+                newAttrVal = []
+                for val in attrVal:
+                    if isinstance(val, str):
+                        newAttrVal.append(val.encode("utf-8"))
+                    elif isinstance(val, xmlrpc.client.Binary):
+                        newAttrVal.append(str(val.data))
+                attrVal = newAttrVal
+
             if isinstance(attrVal, str):
                 attrVal = attrVal.encode("utf-8")
             elif isinstance(attrVal, xmlrpc.client.Binary):

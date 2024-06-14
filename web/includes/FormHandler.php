@@ -28,9 +28,6 @@ class FormHandler {
     var $arr;
 
     function __construct($name, $data) {
-        //echo "<pre>";
-        //print_r($data);
-        //echo '</pre>';
         $this->name = $name;
         $this->data = array();
 
@@ -38,8 +35,7 @@ class FormHandler {
             $this->isError(false);
         }
 
-        // get the old posted data in case of
-        // error
+        // get the old posted data in case of error
         if(isset($_SESSION[$this->name])) {
             $oldFH = unserialize($_SESSION[$this->name]);
             $this->post_data = $oldFH->post_data;
@@ -56,20 +52,16 @@ class FormHandler {
         // the LDAP array
         $this->arr = array();
         $this->sanitize();
-        //echo "<pre>";
-        //print_r($this->data);
-        //echo '</pre>';
     }
 
     /* Create array with updated fields from $_POST
-       If the field_name != old_field_name store
-       the new value in $this->data */
+       If the field_name != old_field_name store the new value in $this->data */
     function sanitize() {
         // get all updated fields
         foreach($this->post_data as $name => $value) {
 
             // handle checkboxes and arrays widgets
-            if(preg_match('/^old_/', $name) > 0 and !isset($this->post_data[substr($name, 4)])) {
+            if(preg_match('/^old_/', $name) > 0 && !isset($this->post_data[substr($name, 4)])) {
                 if($value == "on") {
                     $this->data[substr($name, 4)] = "off";
                 }
@@ -185,5 +177,4 @@ class FormHandler {
     }
 
 }
-
 ?>

@@ -201,7 +201,14 @@ function disableUser($uid) {
 }
 
 function changeUserAttributes($uid, $attr, $attrval, $sslashes = True) {
-    if ($sslashes) $attrval = stripslashes($attrval);
+    if ($sslashes) {
+        if (is_array($attrval)) {
+            // Apply stripslashes recursively if $ atttrval is a table
+            $attrval = array_map('stripslashes', $attrval);
+        } else {
+            $attrval = stripslashes($attrval);
+        }
+    }
     return xmlCall("base.changeUserAttributes", array($uid, $attr, $attrval));
 }
 

@@ -1154,7 +1154,7 @@ class DeletableTrFormElement extends FormElement {
         if ($this->new) {
             $old_value = uniqid();
         } else if (isset($arrParam["value"])) {
-            $old_value = $arrParam["value"];
+            $old_value = $arrParam["value"]->scalar;
         } else {
             $old_value = "";
         }

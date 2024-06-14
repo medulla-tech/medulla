@@ -226,22 +226,24 @@ function _base_changeUser($FH, $mode)
         }
     }
 
-    if(!$FH->isUpdated('givenName') or $FH->isUpdated('sn')) {
+    if(!$FH->isUpdated('givenName') || $FH->isUpdated('sn')) {
         change_user_main_attr($uid, $uid, $_POST['givenName'], $_POST['sn']);
         $update = true;
     }
 
-    if(!$FH->isUpdated('telephoneNumber')) {
+    if($FH->isUpdated('telephoneNumber')) {
         changeUserTelephoneNumbers($uid, $_POST['telephoneNumber']);
         $update = true;
     }
 
-    foreach(array('title', 'mobile', 'facsimileTelephoneNumber', 'homePhone',
-        'cn', 'mail', 'displayName', 'preferredLanguage') as $attr) {
-        if ($FH->isUpdated($attr)) {
-            changeUserAttributes($uid, $attr, $FH->getValue($attr));
-            $update = true;
-        }
+    if ($FH->getPostValue('mail')) {
+        changeUserAttributes($uid, "mail", $FH->getPostValue("mail"));
+    }
+    if ($FH->getPostValue('mobile')) {
+        changeUserAttributes($uid, "mobile", $FH->getPostValue("mobile"));
+    }
+    if ($FH->getPostValue('title')) {
+        changeUserAttributes($uid, "title", $FH->getPostValue("title"));
     }
 
     /* Change photo */
