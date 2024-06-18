@@ -738,6 +738,11 @@ function xmlrpc_getComputerByMac($mac)
     return xmlCall("imaging.getComputerByMac", array($mac));
 }
 
+function xmlrpc_getMachineByUuidSetup($uuid)
+{
+    return xmlCall("imaging.getMachineByUuidSetup", array($uuid));
+}
+
 function xmlrpc_getComputerByUUID($uuid)
 {
     return xmlCall("imaging.getComputerByUUID", array($uuid));

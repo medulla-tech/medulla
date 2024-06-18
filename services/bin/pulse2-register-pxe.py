@@ -422,7 +422,10 @@ def senddata(query, ip="127.0.0.1", port=1001):
     )
     monSocket.sendto(bytes("\xBB%s" % query, "utf-8"), adresse)
     time.sleep(conf["pxe_timesenddata"])
-    monSocket.sendto(bytes("\xBA%s" % query, "utf-8"), adresse)
+    if conf["associate"] == "mac":
+        monSocket.sendto(bytes("\xBA%s" % query, "utf-8"), adresse)
+    elif conf["associate"] == "uuid":
+        monSocket.sendto(bytes("\xB0%s" % query, "utf-8"), adresse)
     time.sleep(conf["pxe_timesenddata"])
     monSocket.close()
 
@@ -703,6 +706,12 @@ if __name__ == "__main__":
     else:
         a, b = subnetForIpMask(conf["pxe_tftp_ip"], conf["pxe_mask"])
         conf["pxe_subnet"] = b
+
+    conf["associate"] = "mac"
+    associations = ["mac", "uuid"]
+    if cp.has_option("associate", "associate") and cp.get("associate", "associate") in associations:
+        conf["associate"] = cp.get("associate", "associate")
+
     logging.getLogger().info("configuration : %s" % conf)
 
     if daemonize:

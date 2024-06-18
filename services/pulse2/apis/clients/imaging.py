@@ -338,6 +338,22 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:getComputerByMac", MACAddress)
         return d
 
+    def getDefaultMenuForRegistering(self, MACAddress):
+        """
+        Get a computer UUID using the MAC Address
+        """
+        d = self.callRemote("getDefaultMenuForRegistering", MACAddress)
+        d.addErrback(self.onErrorRaise, "Imaging:getDefaultMenuForRegistering", MACAddress)
+        return d
+
+    def getMachineByUuidSetup(self, uuid):
+        """
+        Get a computer infos using the (real) UUID
+        """
+        d = self.callRemote("getMachineByUuidSetup", uuid)
+        d.addErrback(self.onErrorRaise, "Imaging:getMachineByUuidSetup", uuid)
+        return d
+
     # Logging stuff
     def logClientAction(self, MACAddress, level, phase, message):
         """
