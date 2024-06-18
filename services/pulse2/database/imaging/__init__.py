@@ -5923,7 +5923,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             imaging_server_uuid
         )
         target = None
-        session.query(Target).filter_by(uuid=computer_uuid).delete()
+        session.query(Target).filter_by(uuid=computer_uuid).update({"uuid":"DELETED UUID%s"%computer_uuid})
         menu = self.getEntityDefaultMenu("UUID%s" % locationServerImaging)
         new_menu = self.__duplicateMenu(
             session, menu, "UUID%s" % locationServerImaging, None, False

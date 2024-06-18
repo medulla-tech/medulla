@@ -300,6 +300,113 @@ class UUIDCache(pulse2.utils.Singleton):
         self._flush()
         return True
 
+    def setByUuid(self, _id, uuid, shortname="", domain="", entity=""):
+        """
+        Add a computer in cache.
+
+        @param id : the client glpi ID
+        @type id : str
+        @param uuid : the client uuuid
+        @type uuid : str
+        @param shortname : the client host name (default : '')
+        @type shortname : str
+        @param domain : the client domain name (default: '')
+        @type domain : str
+        @param entity : the client entity name (default: '')
+        @type entity : str
+
+        @return: True on success
+        @rtype: boolean
+        """
+        # normalization
+        fqdn = shortname + "." + domain
+        updated = int(time.time())
+
+        # check that if the UUID is already known, it's MAC is the same as our
+        answer = self.getByUuid(uuid)
+        if answer and answer["uuid"] != uuid:
+            self.log.warn(
+                "Cachefault on %s/%s (uuid already known : %s), updating"
+                % (_id, uuid, answer["uuid"])
+            )
+            self.delete(uuid)
+
+        # check that if the MAC is already known, it's UUID is the same as our
+        answer = self.getByUuid(uuid)
+        if answer and answer["id"] != _id:
+            self.log.warn(
+                "Cachefault on %s/%s (id already known : %s), updating"
+                % (id, uuid, answer["uuid"])
+            )
+            self.delete(answer["uuid"])
+
+        if not self.config.has_section(uuid):
+            self.config.add_section(uuid)
+        self.config.set(uuid, "id", _id)
+        self.config.set(uuid, "uuid", uuid)
+        self.config.set(uuid, "shortname", shortname)
+        self.config.set(uuid, "fqdn", fqdn)
+        self.config.set(uuid, "entity", entity)
+        self.config.set(uuid, "updated", updated)
+        self._flush()
+
+        return True
+
+    def getByUuid(self, uuid):
+        """
+        Get a computer by its real UUID from the cache.
+
+        @param uuid : the client real UUID (mandatory)
+        @type uuid : str
+
+        @return a dict(uuid, mac, shortname, fqdn) or False
+        @rtype dict
+        """
+
+        shortname = ""
+        fqdn = ""
+
+        if self.config.has_section(uuid):
+            # Everywhere uuid correspond to glpi_id, not the computer id
+            _id = "" # don't use id name because of the built-in function called id
+            if self.config.has_option(uuid, "uuid"):
+                _id = self.config.get(uuid, "uuid")
+
+            shortname = ""
+            if self.config.has_option(uuid, "shortname"):
+                shortname = self.config.get(uuid, "shortname")
+
+            mac = ""
+            if self.config.has_option(uuid, "mac"):
+                mac = self.config.get(uuid, "mac")
+
+            fqdn = ""
+            if self.config.has_option(uuid, "fullname"):
+                fqdn = self.config.get(uuid, "fullname")
+
+            updated = 0
+            if self.config.has_option(uuid, "updated"):
+                updated = self.config.getint(uuid, "updated")
+
+            entity = ""
+            if self.config.has_option(uuid, "entity"):
+                entity = self.config.get(uuid, "entity")
+
+            if int(time.time()) - updated > self.cacheLifetime:
+                self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
+                # do not break the flow
+                # return False
+            return {
+                "uuid": uuid,
+                "id": _id,
+                "mac": mac,
+                "shortname": shortname,
+                "fqdn": fqdn,
+                "updated": updated,
+                "entity": entity
+            }
+        return False
+
     def delete(self, uuid):
         """
         Delete a computer from the cache.
