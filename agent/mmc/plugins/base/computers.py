@@ -161,6 +161,13 @@ class ComputerI(metaclass=SingletonN):
         """
         pass
 
+    def getMachineByUuidSetup(self, uuid):
+        """
+        Get the computer who have that mac address
+        send a list with possibly more than one computer
+        """
+        pass
+
     def getComputersOS(self, uuids):
         """
         Get OS for a given computer
@@ -366,6 +373,11 @@ class ComputerManager(Singleton):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputerByMac(mac)
+
+    def getMachineByUuidSetup(self, uuid):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getMachineByUuidSetup(uuid)
 
     def getComputersOS(self, uuids):
         klass = self.components[self.main]

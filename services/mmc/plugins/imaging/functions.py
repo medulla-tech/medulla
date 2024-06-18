@@ -3684,6 +3684,36 @@ class ImagingRpcProxy(RpcProxyI):
             },
         ]
 
+    def getMachineByUuidSetup(self, uuid):
+        """
+        Called by the package server, to obtain a computer UUID/shortname/fqdn in exchange of its MAC address
+
+        @param mac: the mac address
+        @type mac: str
+
+        @results: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure else the computer as a dict
+        @rtype: list
+        """
+        try:
+            db_computer = ComputerManager().getMachineByUuidSetup(uuid)
+        except Exception as e:
+            return [False,
+                    "imaging.getComputerByUuidSetup() : Unable to find a computer corresponding to the UUID %s"%uuid]
+        if not db_computer:
+            return [
+                False,
+                "imaging.getMachineByUuidSetup() : I was unable to find a computer corresponding to the MAC address %s"
+                % uuid,
+            ]
+
+        if db_computer is None or db_computer == {}:
+            return [
+                False,"imaging.getComputerByUuidSetup() : Unable to find a computer corresponding to the UUID %s"% uuid,
+            ]
+        return [True, db_computer]
+
     def getComputerByUUID(self, uuid):
         """
         Called by the package server, to obtain a computer MAC/shortname/fqdn in exchange of uuid

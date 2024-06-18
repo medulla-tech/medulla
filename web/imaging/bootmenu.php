@@ -87,6 +87,8 @@ foreach($conffiles as $module => $conffile) {
 // Get the parameters sent through URL
 $mac = (!empty($_GET['mac'])) ? htmlentities($_GET['mac']) : "";
 $srv = (!empty($_GET['srv'])) ? htmlentities($_GET['srv']) : "";
+$uuid = (!empty($_GET["uuid"])) ? strtolower(htmlentities($_GET["uuid"])) : "";
+
 $srvHost = "";
 if(inet_pton($srv) == true) {
     $srvHost = gethostbyaddr($srv);
@@ -174,8 +176,24 @@ $debug_ipxe .= "# Next-server : $srv
 # Imaging Server id : $ims[id]
 # uuid : $ims[packageserver_uuid]
 ";
+if($uuid != ""){
+    $query = $db['glpi']->prepare("
+    SELECT
+    CONCAT('UUID', gc.id) as uuid,
+    gc.entities_id as euid,
+    gc.name as name,
+    ge.completename as entity
+    FROM glpi_networkports gnp
+    JOIN glpi_computers gc ON gc.id = gnp.items_id AND gnp.itemtype='Computer'
+    JOIN glpi_entities ge ON gc.entities_id = ge.id
+    where uuid = LOWER(?)
+    ORDER BY  gc.id LIMIT 1
+    ");
 
-if($mac != "") {
+    $query->execute([$uuid]);
+    $computer = $query->fetch(Pdo::FETCH_ASSOC);
+}
+else if($mac != "") {
 
     // Get the inventory associated to the mac address
     $query = $db['glpi']->prepare("
@@ -249,6 +267,7 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
     $multicast = ($multicast_image_uuid != null && $multicast_image_name != null) ? true : false;
     $debug_ipxe .= "# hostname : $computer[name]
 # mac : $mac
+# machine uuid : $uuid
 # entity : $computer[uuid]
 # entity name: $computer[entity]
 # menu id : $menuId
@@ -264,6 +283,7 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
 
     $debug_ipxe .= "# hostname : not registered
 # mac : $mac
+# machine uuid : $uuid
 # entity : ".(!empty($computer['uuid']) ? $computer['uuid'] : $ims['uuid'])."
 # entity name: ".(!empty($computer["entity"]) ? $computer["entity"] : $ims["name"])."
 # target : not found
