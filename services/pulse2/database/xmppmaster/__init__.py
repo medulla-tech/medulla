@@ -5660,7 +5660,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if intervalsearch:
             deploylog = deploylog.filter(
-                Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch))
+                Deploy.endcmd >= (datetime.now() - timedelta(seconds=intervalsearch))
             )
         filter_filt = ""
         if filt:
