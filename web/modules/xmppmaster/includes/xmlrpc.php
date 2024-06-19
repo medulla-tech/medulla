@@ -1051,3 +1051,18 @@ function xmlrpc_cancel_update($machineid, $updateid)
 {
     return xmlCall("xmppmaster.cancel_update", [$machineid, $updateid]);
 }
+
+function affichedebugSIVEO($a, $title=""){
+    if ($title != ""){
+        printf("<h2>%s</h2>", $title);
+    }
+    echo"<pre>";
+    print_r($a);
+    echo"</pre>";
+}
+
+function affichefile($a){
+    echo"<h3>";
+    echo $a;
+    echo"</h3>";
+}
