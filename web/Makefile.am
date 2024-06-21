@@ -23,7 +23,7 @@
 mmcdatadir = $(datadir)/mmc
 SUBDIRS = confs
 
-datapaths = graph img includes jsframework logout modules/admin modules/base  modules/dashboard \
+datapaths = graph img includes jsframework logout imaging modules/admin modules/base  modules/dashboard \
 	modules/dyngroup modules/msc modules/inventory modules/glpi modules/pkgs modules/urbackup \
 	modules/medulla_server modules/imaging modules/backuppc modules/support \
 	modules/kiosk conf/apache modules/ppolicy modules/update modules/services modules/report \
