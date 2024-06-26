@@ -31,6 +31,15 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     .popup{
         width : 500px
     }
+
+    td img {
+        transition: filter 0.3s ease;
+    }
+
+    td img:hover {
+        filter: brightness(50%);
+        cursor: pointer;
+    }
 </style>
 
     <div style="width : 600px;">
