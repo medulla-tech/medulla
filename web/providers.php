@@ -9,14 +9,55 @@ session_start();
 
 use Jumbojett\OpenIDConnectClient;
 
-function fetchProvidersConfig() {
-    $iniPath = "/etc/mmc/authproviders.ini";
-    if (is_readable($iniPath)) {
-        return parse_ini_file($iniPath, true);
-    } else {
-        echo "Error: Impossible to read the configuration file of the providers.";
-        return false;
+function parseIniSection($filePath, $section) {
+    if (!is_readable($filePath)) {
+        return [];
     }
+
+    $sectionData = [];
+    $insideSection = false;
+
+    $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (preg_match('/^\s*[;#]/', $line)) {
+            continue;
+        }
+        if (preg_match('/^\s*\[(.+?)\]\s*$/', $line, $matches)) {
+            if ($matches[1] === $section) {
+                $insideSection = true;
+            } else {
+                if ($insideSection) break;
+            }
+            continue;
+        }
+
+        if ($insideSection && preg_match('/^\s*(\S+)\s*=\s*(.*?)\s*$/', $line, $matches)) {
+            $sectionData[$matches[1]] = $matches[2];
+        }
+    }
+
+    return $sectionData;
+}
+
+function fetchBaseIni($section, $key) {
+    $localPath = "/etc/mmc/plugins/base.ini.local";
+    $iniPath = "/etc/mmc/plugins/base.ini";
+
+    $localData = parseIniSection($localPath, $section);
+    if (array_key_exists($key, $localData)) {
+        return $localData[$key];
+    }
+
+    $iniData = parseIniSection($iniPath, $section);
+    return $iniData[$key] ?? null;
+}
+
+function fetchProvidersConfig(){
+        $config = parse_ini_file("/etc/mmc/authproviders.ini", true);
+        $localConfig = parse_ini_file("/etc/mmc/authproviders.ini.local", true);
+        $config = array_replace_recursive($config, $localConfig);
+
+        return $config;
 }
 
 function generateStr($length = 50) {
@@ -64,6 +105,7 @@ if ($providersConfig && (isset($_POST['selectedProvider']) || isset($_GET['code'
                 require("modules/base/includes/users.inc.php");
                 require("modules/base/includes/edit.inc.php");
                 require("modules/base/includes/groups.inc.php");
+                require_once("includes/modules.inc.php");
 
                 global $conf;
                 $error = "";
@@ -83,9 +125,8 @@ if ($providersConfig && (isset($_POST['selectedProvider']) || isset($_GET['code'
                 $_SESSION["XMLRPC_server_description"] = $conf["server_01"]["description"];
                 $_SESSION['lang'] = $_COOKIE['userLang'];
 
-                // TODO
-                $login = "";
-                $pass = "";
+                $login = "root";
+                $pass = fetchBaseIni("ldap", "password");
 
                 include("includes/createSession.inc.php");
 
@@ -106,14 +147,14 @@ if ($providersConfig && (isset($_POST['selectedProvider']) || isset($_GET['code'
 
                 if (!$found) {
                     $add = add_user(
-                        $newUser,
-                        prepare_string($newPassUser),
-                        "family_name",
-                        "given_name",
-                        false,
-                        true,
-                        false,
-                        'MedullaUsers'
+                        $newUser,                        // uid
+                        prepare_string($newPassUser),    // password
+                        "given_name",                    // firstN
+                        "family_name",                   // lastN
+                        null,                            // homeDir (None)
+                        true,                            // createHomeDir
+                        false,                           // ownHomeDir
+                        null                             // primaryGroup (None)
                     );
 
                     if($add['code'] == 0) {
@@ -130,7 +171,7 @@ if ($providersConfig && (isset($_POST['selectedProvider']) || isset($_GET['code'
                         exit;
                     }
                 } else {
-                    $newPassUser = generateStr(50);
+                    $newPassUser = generateStr(50); // New password
                     // Here we edit the user password
                     $ret = callPluginFunction("changeUserPasswd",
                     array(array($newUser, prepare_string($newPassUser)))
