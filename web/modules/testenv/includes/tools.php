@@ -1,21 +1,26 @@
 <?php
-function remove_underscore($string){
+
+function remove_underscore($string)
+{
     $result = str_replace("_", " ", $string);
     return $result;
 }
 
-function add_underscore_for_url($string){
+function add_underscore_for_url($string)
+{
     $result = str_replace(" ", "_", $string);
     return $result;
 }
 
-function convertGointoMb($valueInGo) {
+function convertGointoMb($valueInGo)
+{
     $valueInMb = $valueInGo * 1024;
     $valueInMb = round($valueInMb, 2);
     return strval($valueInMb);
 }
 
-function parse_console_output($console_output) {
+function parse_console_output($console_output)
+{
     $vm_name = '';
     $disk_size = '';
     $status = '';
@@ -36,4 +41,3 @@ function parse_console_output($console_output) {
     sleep(2);
     return array('vm_name' => $vm_name, 'disk_size' => $disk_size, 'status' => $status);
 }
-?>

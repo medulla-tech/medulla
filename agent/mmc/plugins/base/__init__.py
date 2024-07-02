@@ -1149,7 +1149,7 @@ class LdapUserGroupControl:
                 "shadowAccount",
                 "top",
                 "person",
-                "lmcUserObject"
+                "lmcUserObject",
             ],
             "uid": uid,
             "gecos": gecos,

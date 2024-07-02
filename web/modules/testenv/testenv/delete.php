@@ -1,4 +1,5 @@
 <?php
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
@@ -8,7 +9,7 @@ require_once("modules/testenv/includes/xmlrpc.php");
 if(isset($_GET['name'])) {
     $name = add_underscore_for_url($_GET['name']);
 
-    if(xmlrpc_delete_vm($name)){
+    if(xmlrpc_delete_vm($name)) {
         $console = getLastBuildOutput('delete-vm');
 
         // Je supprime la connexion
@@ -23,10 +24,9 @@ if(isset($_GET['name'])) {
             header("Location: " . urlStrRedirect("testenv/testenv/index"));
             exit;
         }
-        } else {
-            new NotifyWidgetFailure(_T("The virtual machine could not be deleted <br>".$console_output[0]['ERROR'], "testenv"));
-            header("Location: " . urlStrRedirect("testenv/testenv/index"));
-            exit;
-        }
+    } else {
+        new NotifyWidgetFailure(_T("The virtual machine could not be deleted <br>".$console_output[0]['ERROR'], "testenv"));
+        header("Location: " . urlStrRedirect("testenv/testenv/index"));
+        exit;
+    }
 }
-?>

@@ -22,7 +22,7 @@
 # File : mmc/plugins/testenv/__init__.py
 
 import base64
-from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.testenv.config import TestenvConfig
 
@@ -50,11 +50,13 @@ APIVERSION = "1:0:0"
 logger = logging.getLogger()
 config = TestenvConfig("testenv")
 
+
 # #############################################################
 # PLUGIN GENERAL FUNCTIONS
 # #############################################################
 def getApiVersion():
     return APIVERSION
+
 
 def activate():
     logger = logging.getLogger()
@@ -64,11 +66,13 @@ def activate():
         logger.warning("Plugin testenv: disabled by configuration.")
         return False
 
-
     if not TestenvDatabase().activate(config):
-        logger.warning("Plugin testenv: an error occurred during the database initialization")
+        logger.warning(
+            "Plugin testenv: an error occurred during the database initialization"
+        )
         return False
     return True
+
 
 def tests():
     return TestenvDatabase().tests()
@@ -83,12 +87,9 @@ def buildJenkinsUrl(username, token, url):
         :return: True if the VM has been created, False otherwise
     """
     parsed_url = six.moves.urllib.parse.urlparse(url)
-    crumb_issuer = six.moves.urllib.parse.urlunparse((parsed_url.scheme,
-                                                      parsed_url.netloc,
-                                                      'crumbIssuer/api/json',
-                                                      '',
-                                                      '',
-                                                      ''))
+    crumb_issuer = six.moves.urllib.parse.urlunparse(
+        (parsed_url.scheme, parsed_url.netloc, "crumbIssuer/api/json", "", "", "")
+    )
 
     session = requests.session()
 
@@ -99,9 +100,9 @@ def buildJenkinsUrl(username, token, url):
     if result.status_code == 200 and result.text:
         try:
             json_data = result.json()
-            crumb = {json_data['crumbRequestField']: json_data['crumb']}
+            crumb = {json_data["crumbRequestField"]: json_data["crumb"]}
 
-            headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+            headers = {"Content-Type": "application/x-www-form-urlencoded"}
             headers.update(crumb)
             result = session.post(url, headers=headers, auth=auth)
 
@@ -112,6 +113,7 @@ def buildJenkinsUrl(username, token, url):
             return False
     else:
         return False
+
 
 def checkStatusJobPending(job_name):
     """
@@ -136,6 +138,7 @@ def checkStatusJobPending(job_name):
     else:
         console_output = last_build.get_console()
         return False, console_output
+
 
 def getLastBuildOutput(job_name):
     """
@@ -163,6 +166,7 @@ def getLastBuildOutput(job_name):
 
     return result, True
 
+
 def get_status_description(status_code):
     """
     Recover the description of a status code
@@ -185,6 +189,7 @@ def get_status_description(status_code):
     else:
         return "Unknown"
 
+
 def getAllVMList():
     """
     Recover the list of virtual machines
@@ -197,9 +202,9 @@ def getAllVMList():
         vm_list = []
         for i in domain:
             vm_info = {
-                'id': i.ID(),
-                'name': i.name(),
-                'status': get_status_description(i.state()[0])
+                "id": i.ID(),
+                "name": i.name(),
+                "status": get_status_description(i.state()[0]),
             }
             vm_list.append(vm_info)
 
@@ -208,6 +213,7 @@ def getAllVMList():
     except Exception as e:
         logger.error("Failure to connect to the hypervisor! '%s'", e)
         return False
+
 
 def getVMInfo(vm_name):
     """
@@ -238,10 +244,12 @@ def getVMInfo(vm_name):
             "maxMemory": int(root.findtext("memory", "No memory")) / 1024,
             "currentMemory": root.findtext("currentMemory", "No data"),
             "model": root.find("os/type").attrib.get("machine", "No model"),
-            "mac_address": root.find("devices/interface/mac").attrib.get("address", "No mac address"),
+            "mac_address": root.find("devices/interface/mac").attrib.get(
+                "address", "No mac address"
+            ),
             "state": get_status_description(domain.state()[0]),
             "persistent": root.findtext("on_poweroff", "No data"),
-            "port_vnc": root.find("devices/graphics").get("port", "No VNC port")
+            "port_vnc": root.find("devices/graphics").get("port", "No VNC port"),
         }
 
         return domain_info
@@ -249,6 +257,7 @@ def getVMInfo(vm_name):
     except Exception as e:
         logger.error("Failure to connect to the hypervisor!")
         return False
+
 
 def editNameVM(old_name, new_name):
     """
@@ -283,9 +292,13 @@ def editNameVM(old_name, new_name):
                 source = disk.find("source")
                 if source is not None:
                     old_path = source.get("file")
-                    if old_path.startswith("/var/lib/libvirt/images/{}.".format(old_name)):
-                        new_path = old_path.replace("/var/lib/libvirt/images/{}.".format(old_name),
-                                                    "/var/lib/libvirt/images/{}.".format(new_name))
+                    if old_path.startswith(
+                        "/var/lib/libvirt/images/{}.".format(old_name)
+                    ):
+                        new_path = old_path.replace(
+                            "/var/lib/libvirt/images/{}.".format(old_name),
+                            "/var/lib/libvirt/images/{}.".format(new_name),
+                        )
                         source.set("file", new_path)
 
             xml = ET.tostring(root).decode("utf-8")
@@ -298,18 +311,20 @@ def editNameVM(old_name, new_name):
                 return False
             else:
                 os.rename(image_path, new_image_path)
-                logger.debug("The '%s' file was renamed in '%s'", image_path, new_image_path)
+                logger.debug(
+                    "The '%s' file was renamed in '%s'", image_path, new_image_path
+                )
 
             vm_dict = {
                 "old_name": old_name,
                 "new_name": new_name,
-                "uuid": infoVM['uuid'],
-                "plateform": infoVM['plateform'],
-                "architecture": infoVM['architecture'],
-                "vcpu": infoVM['currentCpu'],
-                "memory": infoVM['maxMemory'],
-                "state": infoVM['state'],
-                "persistent": infoVM['persistent'],
+                "uuid": infoVM["uuid"],
+                "plateform": infoVM["plateform"],
+                "architecture": infoVM["architecture"],
+                "vcpu": infoVM["currentCpu"],
+                "memory": infoVM["maxMemory"],
+                "state": infoVM["state"],
+                "persistent": infoVM["persistent"],
             }
 
             if not TestenvDatabase().updateVM(vm_dict):
@@ -334,7 +349,9 @@ def editNameVM(old_name, new_name):
             return True
 
         except Exception as e:
-            logger.error("Domaine renamed failure '%s'\nError message: '%s'", old_name, e)
+            logger.error(
+                "Domaine renamed failure '%s'\nError message: '%s'", old_name, e
+            )
             return False
 
     except Exception as e:
@@ -356,15 +373,26 @@ def create_vm(name, desc, ram, cpu, disk_size, os):
     username = config.jenkins_username
     token = config.jenkins_token
     jenkins_url = config.jenkins_url
-    job_name = 'create-vm'
+    job_name = "create-vm"
 
     try:
         url = "{jenkins_url}/job/{job_name}/buildWithParameters?token={token}&NAME={name}&DESC={desc}&RAM={ram}&CPUS={cpu}&DISK_SIZE={disk_size}&OS={os}".format(
-            jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=name, desc=desc, ram=ram, cpu=cpu, disk_size=disk_size, os=os)
+            jenkins_url=jenkins_url,
+            job_name=job_name,
+            token=job_name,
+            name=name,
+            desc=desc,
+            ram=ram,
+            cpu=cpu,
+            disk_size=disk_size,
+            os=os,
+        )
 
         if buildJenkinsUrl(username, token, url):
             if checkStatusJobPending(job_name):
-                logger.debug("The virtual machine '%s' was successfully created !", name)
+                logger.debug(
+                    "The virtual machine '%s' was successfully created !", name
+                )
 
                 dict = getVMInfo(name)
 
@@ -399,6 +427,7 @@ def create_vm(name, desc, ram, cpu, disk_size, os):
         logger.error("Failure to build the Jenkins URL: '%s'", e)
         return False
 
+
 def delete_vm(vm_name):
     """
     This function makes it possible to delete a VM by sending a post request to the URL.
@@ -408,23 +437,32 @@ def delete_vm(vm_name):
     username = config.jenkins_username
     token = config.jenkins_token
     jenkins_url = config.jenkins_url
-    job_name = 'delete-vm'
+    job_name = "delete-vm"
 
     try:
         url = "{jenkins_url}/job/{job_name}/buildWithParameters?token={token}&NAME={name}".format(
-            jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=vm_name)
+            jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=vm_name
+        )
 
         if buildJenkinsUrl(username, token, url):
             if checkStatusJobPending(job_name):
                 logger.debug("The virtual machine '%s' is being removed.", vm_name)
                 if TestenvDatabase().deleteVM(vm_name):
-                    logger.debug("The virtual machine '%s' has been successfully removed.", vm_name)
+                    logger.debug(
+                        "The virtual machine '%s' has been successfully removed.",
+                        vm_name,
+                    )
                     return True
                 else:
-                    logger.error("Failure to remove the virtual machine '%s' in the database.", vm_name)
+                    logger.error(
+                        "Failure to remove the virtual machine '%s' in the database.",
+                        vm_name,
+                    )
                     return False
             else:
-                logger.error("The virtual machine '%s' is not being suppressed.", vm_name)
+                logger.error(
+                    "The virtual machine '%s' is not being suppressed.", vm_name
+                )
                 return False
         else:
             logger.error("Failure to create the job.")
@@ -433,6 +471,7 @@ def delete_vm(vm_name):
     except Exception as e:
         logger.error("Failure to build the Jenkins URL: '%s' ", e)
         return False
+
 
 def start_vm(vm_name):
     """
@@ -443,11 +482,12 @@ def start_vm(vm_name):
     username = config.jenkins_username
     token = config.jenkins_token
     jenkins_url = config.jenkins_url
-    job_name = 'start-vm'
+    job_name = "start-vm"
 
     try:
         url = "{jenkins_url}/job/{job_name}/buildWithParameters?token={job_name}&VM_NAME={name}".format(
-            jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=vm_name)
+            jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=vm_name
+        )
 
         if buildJenkinsUrl(username, token, url):
             if checkStatusJobPending(job_name):
@@ -455,20 +495,37 @@ def start_vm(vm_name):
 
                 dict_guac = dictGuac(vm_name)
 
-                if TestenvDatabase().updateStatutVM(vm_name, "Running") and TestenvDatabase().updateInfoGuac(dict_guac):
-                    logger.debug("The virtual machine '%s' is updated with 'Running' status in the database.", vm_name)
+                if TestenvDatabase().updateStatutVM(
+                    vm_name, "Running"
+                ) and TestenvDatabase().updateInfoGuac(dict_guac):
+                    logger.debug(
+                        "The virtual machine '%s' is updated with 'Running' status in the database.",
+                        vm_name,
+                    )
 
-                    if updateGuac(dict_guac['machine_name'], dict_guac['port']):
-                        logger.debug("The virtual machine '%s' is updated with 'Running' status in the database.", vm_name)
+                    if updateGuac(dict_guac["machine_name"], dict_guac["port"]):
+                        logger.debug(
+                            "The virtual machine '%s' is updated with 'Running' status in the database.",
+                            vm_name,
+                        )
                         return True
                     else:
-                        logger.error("Failure to update the virtual machine '%s' in Guacamole.", vm_name)
+                        logger.error(
+                            "Failure to update the virtual machine '%s' in Guacamole.",
+                            vm_name,
+                        )
                         return False
                 else:
-                    logger.error("Failure to update the status of the virtual machine '%s' in the database.", vm_name)
+                    logger.error(
+                        "Failure to update the status of the virtual machine '%s' in the database.",
+                        vm_name,
+                    )
                     return False
             else:
-                logger.error("The virtual machine '%s' is not in the process of ignition.", vm_name)
+                logger.error(
+                    "The virtual machine '%s' is not in the process of ignition.",
+                    vm_name,
+                )
                 return False
         else:
             logger.error("Failure to create the job.")
@@ -477,6 +534,7 @@ def start_vm(vm_name):
     except Exception as e:
         logger.error("Failure to build the Jenkins URL: '%s' ", e)
         return False
+
 
 def forceshutdown_vm(vm_name):
     """
@@ -487,28 +545,40 @@ def forceshutdown_vm(vm_name):
     username = config.jenkins_username
     token = config.jenkins_token
     jenkins_url = config.jenkins_url
-    job_name = 'forceshut-vm'
+    job_name = "forceshut-vm"
 
     try:
         url = "{jenkins_url}/job/{job_name}/buildWithParameters?token={job_name}&VM_NAME={name}".format(
-            jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=vm_name)
+            jenkins_url=jenkins_url, job_name=job_name, token=job_name, name=vm_name
+        )
 
         if buildJenkinsUrl(username, token, url):
             if checkStatusJobPending(job_name):
                 logger.debug("The virtual machine '%s' is being extinction.", vm_name)
                 try:
-                    logger.debug("Database update: 'Shutoff' status for the virtual machine '%s'.", vm_name)
+                    logger.debug(
+                        "Database update: 'Shutoff' status for the virtual machine '%s'.",
+                        vm_name,
+                    )
                     if TestenvDatabase().updateStatutVM(vm_name, "Shutoff"):
-                        logger.debug("Updating the database successfully performed for the virtual machine '%s'.", vm_name)
+                        logger.debug(
+                            "Updating the database successfully performed for the virtual machine '%s'.",
+                            vm_name,
+                        )
                         return True
                     else:
-                        logger.error("Failure to update the database for the virtual machine '%s'.", vm_name)
+                        logger.error(
+                            "Failure to update the database for the virtual machine '%s'.",
+                            vm_name,
+                        )
                         return False
                 except Exception as e:
                     logger.error("Error when updating the database: '%s'", e)
                     return False
             else:
-                logger.error("The virtual machine '%s' is not being extinction.", vm_name)
+                logger.error(
+                    "The virtual machine '%s' is not being extinction.", vm_name
+                )
                 return False
         else:
             logger.error("Failure to create the job.")
@@ -517,6 +587,7 @@ def forceshutdown_vm(vm_name):
     except Exception as e:
         logger.error("Failure to build the Jenkins URL: '%s'", e)
         return False
+
 
 def shutdown_vm(url):
     """
@@ -528,14 +599,16 @@ def shutdown_vm(url):
         username = config.jenkins_username
         token = config.jenkins_token
         jenkins_url = config.jenkins_url + url
-        job_name = 'forceshut-vm'
+        job_name = "forceshut-vm"
 
         buildJenkinsUrl(username, token, jenkins_url)
         logger.debug("Successful virtual machine with the URL: '%s'", url)
         return True
 
     except requests.exceptions.RequestException as e:
-        logger.error("An error occurred during the extinction of the virtual machine: '%s'", e)
+        logger.error(
+            "An error occurred during the extinction of the virtual machine: '%s'", e
+        )
         return False
 
 
@@ -545,33 +618,40 @@ def createConnectionGuac(name):
         :param name: Name of the VM
         :return: True if the connection has been created, False otherwise
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(
+        config.guacamole_url,
+        config.guacamole_username,
+        config.guacamole_password,
+        None,
+        "http",
+        "/guacamole/",
+    )
     try:
-        port = getVMInfo(name)['port_vnc']
+        port = getVMInfo(name)["port_vnc"]
 
         payload = {
             "parentIdentifier": "ROOT",
             "protocol": "vnc",
             "name": name,
             "activeConnections": 0,
-            "attributes":{"max-connections":"","max-connections-per-user":""},
+            "attributes": {"max-connections": "", "max-connections-per-user": ""},
             "parameters": {
                 "port": port,
-                "enable-menu-animations":"true",
-                "enable-desktop-composition":"true",
-                "hostname":"127.0.0.1",
-                "color-depth":"32",
-                "enable-font-smoothing":"true",
-                "ignore-cert":"true",
-                "enable-drive":"true",
-                "enable-full-window-drag":"true",
-                "security":"any",
-                "password":"",
-                "enable-wallpaper":"true",
-                "create-drive-path":"true",
-                "enable-theming":"true",
-                "console":"true",
-            }
+                "enable-menu-animations": "true",
+                "enable-desktop-composition": "true",
+                "hostname": "127.0.0.1",
+                "color-depth": "32",
+                "enable-font-smoothing": "true",
+                "ignore-cert": "true",
+                "enable-drive": "true",
+                "enable-full-window-drag": "true",
+                "security": "any",
+                "password": "",
+                "enable-wallpaper": "true",
+                "create-drive-path": "true",
+                "enable-theming": "true",
+                "console": "true",
+            },
         }
 
         guacapi.add_connection(payload)
@@ -581,20 +661,41 @@ def createConnectionGuac(name):
         logger.error("Failure to create the Guacamole connection: '%s'", e)
         return False
 
+
 def urlGuac(name):
     """
     This function allows you to recover the Guacamole URL from a connection
         :param name: Name of the VM
         :return: URL if the connection exists, False otherwise
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(
+        config.guacamole_url,
+        config.guacamole_username,
+        config.guacamole_password,
+        None,
+        "http",
+        "/guacamole/",
+    )
     try:
-        identifier = guacapi.get_connection_by_name(name)['identifier']
+        identifier = guacapi.get_connection_by_name(name)["identifier"]
 
-        token_hex = binascii.hexlify(identifier) + '00' + binascii.hexlify('c') + '00' + binascii.hexlify('mysql')
+        token_hex = (
+            binascii.hexlify(identifier)
+            + "00"
+            + binascii.hexlify("c")
+            + "00"
+            + binascii.hexlify("mysql")
+        )
         token = base64.b64encode(binascii.unhexlify(token_hex))
 
-        url = config.guacamole_url_client + token + '?username=' + config.guacamole_username + '&password=' + config.guacamole_password
+        url = (
+            config.guacamole_url_client
+            + token
+            + "?username="
+            + config.guacamole_username
+            + "&password="
+            + config.guacamole_password
+        )
 
         return url
 
@@ -602,21 +703,30 @@ def urlGuac(name):
         logger.error("Failed to recover the Guacamole URL: '%s'", e)
         return False
 
+
 def deleteGuac(name):
     """
     This function allows you to delete a Guacamole connection
         :param name: Name of the VM
         :return: True if the connection has been deleted, False otherwise
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(
+        config.guacamole_url,
+        config.guacamole_username,
+        config.guacamole_password,
+        None,
+        "http",
+        "/guacamole/",
+    )
     try:
-        identifier = guacapi.get_connection_by_name(name)['identifier']
+        identifier = guacapi.get_connection_by_name(name)["identifier"]
 
         guacapi.delete_connection(identifier)
         return True
 
     except Exception as e:
         return False
+
 
 def updateGuac(name, port):
     """
@@ -625,34 +735,41 @@ def updateGuac(name, port):
         :param port: VNC port
         :return: True if the information has been edited, False otherwise
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(
+        config.guacamole_url,
+        config.guacamole_username,
+        config.guacamole_password,
+        None,
+        "http",
+        "/guacamole/",
+    )
     try:
-        identifier = guacapi.get_connection_by_name(name)['identifier']
-        port = getVMInfo(name)['port_vnc']
+        identifier = guacapi.get_connection_by_name(name)["identifier"]
+        port = getVMInfo(name)["port_vnc"]
 
         payload = {
             "parentIdentifier": "ROOT",
             "protocol": "vnc",
             "name": name,
             "activeConnections": 0,
-            "attributes":{"max-connections":"","max-connections-per-user":""},
+            "attributes": {"max-connections": "", "max-connections-per-user": ""},
             "parameters": {
                 "port": port,
-                "enable-menu-animations":"true",
-                "enable-desktop-composition":"true",
-                "hostname":"127.0.0.1",
-                "color-depth":"32",
-                "enable-font-smoothing":"true",
-                "ignore-cert":"true",
-                "enable-drive":"true",
-                "enable-full-window-drag":"true",
-                "security":"any",
-                "password":"",
-                "enable-wallpaper":"true",
-                "create-drive-path":"true",
-                "enable-theming":"true",
-                "console":"true",
-            }
+                "enable-menu-animations": "true",
+                "enable-desktop-composition": "true",
+                "hostname": "127.0.0.1",
+                "color-depth": "32",
+                "enable-font-smoothing": "true",
+                "ignore-cert": "true",
+                "enable-drive": "true",
+                "enable-full-window-drag": "true",
+                "security": "any",
+                "password": "",
+                "enable-wallpaper": "true",
+                "create-drive-path": "true",
+                "enable-theming": "true",
+                "console": "true",
+            },
         }
 
         guacapi.edit_connection(identifier, payload)
@@ -660,39 +777,49 @@ def updateGuac(name, port):
         return True
 
     except Exception as e:
-        logger.error("An error occurred when modifying the Guacamole connection: '%s'", e)
+        logger.error(
+            "An error occurred when modifying the Guacamole connection: '%s'", e
+        )
         return False
 
+
 def editNameGuac(old_name, new_name):
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(
+        config.guacamole_url,
+        config.guacamole_username,
+        config.guacamole_password,
+        None,
+        "http",
+        "/guacamole/",
+    )
 
     try:
-        identifier = guacapi.get_connection_by_name(old_name)['identifier']
-        port = getVMInfo(new_name)['port_vnc']
+        identifier = guacapi.get_connection_by_name(old_name)["identifier"]
+        port = getVMInfo(new_name)["port_vnc"]
 
         payload = {
             "parentIdentifier": "ROOT",
             "protocol": "vnc",
             "name": new_name,
             "activeConnections": 0,
-            "attributes":{"max-connections":"","max-connections-per-user":""},
+            "attributes": {"max-connections": "", "max-connections-per-user": ""},
             "parameters": {
                 "port": port,
-                "enable-menu-animations":"true",
-                "enable-desktop-composition":"true",
-                "hostname":"127.0.0.1",
-                "color-depth":"32",
-                "enable-font-smoothing":"true",
-                "ignore-cert":"true",
-                "enable-drive":"true",
-                "enable-full-window-drag":"true",
-                "security":"any",
-                "password":"",
-                "enable-wallpaper":"true",
-                "create-drive-path":"true",
-                "enable-theming":"true",
-                "console":"true",
-            }
+                "enable-menu-animations": "true",
+                "enable-desktop-composition": "true",
+                "hostname": "127.0.0.1",
+                "color-depth": "32",
+                "enable-font-smoothing": "true",
+                "ignore-cert": "true",
+                "enable-drive": "true",
+                "enable-full-window-drag": "true",
+                "security": "any",
+                "password": "",
+                "enable-wallpaper": "true",
+                "create-drive-path": "true",
+                "enable-theming": "true",
+                "console": "true",
+            },
         }
 
         guacapi.edit_connection(identifier, payload)
@@ -700,7 +827,9 @@ def editNameGuac(old_name, new_name):
         return True
 
     except Exception as e:
-        logger.error("An error occurred when modifying the Guacamole connection: '%s'", e)
+        logger.error(
+            "An error occurred when modifying the Guacamole connection: '%s'", e
+        )
         return False
 
 
@@ -711,6 +840,7 @@ def getVMs():
     """
     return TestenvDatabase().getVMs()
 
+
 def getVMByName(vm_name):
     """
     This function allows you to recover a VM in the database
@@ -718,6 +848,7 @@ def getVMByName(vm_name):
         :return: VM
     """
     return TestenvDatabase().getVMByName(vm_name)
+
 
 def checkExistVM(name):
     """
@@ -727,26 +858,34 @@ def checkExistVM(name):
     """
     return TestenvDatabase().checkExistVM(name)
 
+
 def dictGuac(name):
     """
     This function allows you to recover the information of a VM in Guacamole
         :param name: Name of the VM
         :return: Dictionary containing the information
     """
-    guacapi = Guacamole(config.guacamole_url, config.guacamole_username, config.guacamole_password, None, 'http', '/guacamole/')
+    guacapi = Guacamole(
+        config.guacamole_url,
+        config.guacamole_username,
+        config.guacamole_password,
+        None,
+        "http",
+        "/guacamole/",
+    )
 
-    identifier = guacapi.get_connection_by_name(name)['identifier']
-    protocol = guacapi.get_connection_full(identifier)['protocol']
-    port = getVMInfo(name)['port_vnc']
-    machine_name = guacapi.get_connection_full(identifier)['name']
-    id_machines = TestenvDatabase().getVMByName(machine_name)['id']
+    identifier = guacapi.get_connection_by_name(name)["identifier"]
+    protocol = guacapi.get_connection_full(identifier)["protocol"]
+    port = getVMInfo(name)["port_vnc"]
+    machine_name = guacapi.get_connection_full(identifier)["name"]
+    id_machines = TestenvDatabase().getVMByName(machine_name)["id"]
 
     dict = {
         "idguacamole": identifier,
         "protocol": protocol,
         "port": port,
         "machine_name": machine_name,
-        "id_machines": id_machines
+        "id_machines": id_machines,
     }
 
     return dict
@@ -787,33 +926,54 @@ def updateVMResources(vm_name, new_ram, new_cpu):
             domain.undefine()
             conn.defineXML(new_xml)
 
-            logger.debug("The configuration of the virtual machine '%s' has been successfully redefined", vm_name)
+            logger.debug(
+                "The configuration of the virtual machine '%s' has been successfully redefined",
+                vm_name,
+            )
         except Exception as e:
-            logger.error("Failure to update the RAM of the virtual machine '%s'", vm_name)
+            logger.error(
+                "Failure to update the RAM of the virtual machine '%s'", vm_name
+            )
             return False
 
         try:
             domain.setVcpusFlags(new_cpu, libvirt.VIR_DOMAIN_AFFECT_CONFIG)
-            logger.debug("The number of CPUS of the virtual machine '%s' has been successfully updated", vm_name)
+            logger.debug(
+                "The number of CPUS of the virtual machine '%s' has been successfully updated",
+                vm_name,
+            )
 
         except Exception as e:
-            logger.error("Failure to update the CPU of the virtual machine '%s'", vm_name)
+            logger.error(
+                "Failure to update the CPU of the virtual machine '%s'", vm_name
+            )
             return False
 
-        logger.debug("The resources of the virtual machine '%s' have been successfully updated.RAM: %d Mo, CPU : %d", vm_name, new_ram, new_cpu)
+        logger.debug(
+            "The resources of the virtual machine '%s' have been successfully updated.RAM: %d Mo, CPU : %d",
+            vm_name,
+            new_ram,
+            new_cpu,
+        )
 
         infoVM = getVMInfo(vm_name)
         vm_dict = {
-            "name": infoVM['name'],
-            "cpu": infoVM['currentCpu'],
-            "memory": str(int(infoVM['maxMemory'])),
+            "name": infoVM["name"],
+            "cpu": infoVM["currentCpu"],
+            "memory": str(int(infoVM["maxMemory"])),
         }
 
         if not TestenvDatabase().updateRessourcesVM(vm_dict):
-            logger.error("Failure of updating the resources of the virtual machine '%s' in the database", vm_name)
+            logger.error(
+                "Failure of updating the resources of the virtual machine '%s' in the database",
+                vm_name,
+            )
             return False
         else:
-            logger.debug("The resources of the virtual machine '%s' have been successfully updated in the database", vm_name)
+            logger.debug(
+                "The resources of the virtual machine '%s' have been successfully updated in the database",
+                vm_name,
+            )
 
         if not start_vm(vm_name):
             logger.error("Machine start -up failure '%s'", vm_name)
@@ -823,5 +983,9 @@ def updateVMResources(vm_name, new_ram, new_cpu):
         return True
 
     except Exception as e:
-        logger.error("Failure to update the resources of the virtual machine '%s'. Error : '%s'", vm_name, str(e))
+        logger.error(
+            "Failure to update the resources of the virtual machine '%s'. Error : '%s'",
+            vm_name,
+            str(e),
+        )
         return False

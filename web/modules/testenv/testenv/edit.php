@@ -38,12 +38,13 @@ $infoVM = xmlrpc_getVMInfo(add_underscore_for_url($name));
 $title = new SpanElement(_T("Éditer une Machine Virtuelle", "testenv"), "testenv-title");
 
 
-$form = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
+$form = new ValidatingForm(array("onchange" => "getJSON()","onclick" => "getJSON()"));
 $form->push(new Table());
 $form->add(new TrFormElement("", $title));
 
 $form->add(
-    new TrFormElement(_T("Nom", "testenv"), new InputTpl("name")), array("value" => $name, "required" => True)
+    new TrFormElement(_T("Nom", "testenv"), new InputTpl("name")),
+    array("value" => $name, "required" => true)
 );
 
 $form->add(
@@ -118,4 +119,3 @@ if (isset($_POST['bconfirm'])) {
 
 $form->pop();
 $form->display();
-?>

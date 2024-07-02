@@ -34,4 +34,3 @@ $p->display();
 $ajax = new AjaxFilter(urlStrRedirect("testenv/testenv/ajaxListVM"));
 $ajax->display();
 $ajax->displayDivToUpdate();
-?>

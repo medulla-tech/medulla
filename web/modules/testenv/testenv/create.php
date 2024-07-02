@@ -10,10 +10,10 @@ $page = new PageGenerator(_T("Créer une Machine Virtuelle", 'testenv'));
 $page->setSideMenu($sidemenu);
 $page->display();
 
-if(isset($_SESSION['sharings'])){
+if(isset($_SESSION['sharings'])) {
     $sharings = $_SESSION['sharings'];
-} else{
-    $sharings = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login"=>$_SESSION["login"]]);
+} else {
+    $sharings = $_SESSION['sharings'] = xmlrpc_pkgs_search_share(["login" => $_SESSION["login"]]);
 }
 
 $_packages = xmlrpc_get_all_packages($_SESSION['login'], $sharings['config']['centralizedmultiplesharing'], $start, $maxperpage, $filter);
@@ -21,12 +21,12 @@ $_packages = xmlrpc_get_all_packages($_SESSION['login'], $sharings['config']['ce
 
 $title = new SpanElement(_T("Ajouter une Machine Virtuelle", "testenv"), "testenv-title");
 
-$form = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
+$form = new ValidatingForm(array("onchange" => "getJSON()","onclick" => "getJSON()"));
 $form->push(new Table());
 $form->add(new TrFormElement("", $title));
 $form->add(
     new TrFormElement(_T("Nom", "testenv"), new InputTpl("name")),
-    array("value" => $name, "required" => True)
+    array("value" => $name, "required" => true)
 );
 
 $form->add(
@@ -42,8 +42,7 @@ $select = new SelectItem("ram");
 $select->setElements($ram);
 $form->add(
     new TrFormElement(_T("RAM", "testenv"), $select),
-    array("value" => $ram, "required" => True)
-
+    array("value" => $ram, "required" => true)
 );
 
 $cpu = array(
@@ -54,7 +53,7 @@ $select = new SelectItem("cpu");
 $select->setElements($cpu);
 $form->add(
     new TrFormElement(_T("CPU", "testenv"), $select),
-    array("value" => $cpu, "required" => True)
+    array("value" => $cpu, "required" => true)
 );
 
 $disk_size = array(
@@ -66,7 +65,7 @@ $select = new SelectItem("disk");
 $select->setElements($disk_size);
 $form->add(
     new TrFormElement(_T("Disk", "testenv"), $select),
-    array("value" => $disk_size, "required" => True)
+    array("value" => $disk_size, "required" => true)
 );
 
 $os = array(
@@ -76,23 +75,23 @@ $select = new SelectItem("os");
 $select->setElements($os);
 $form->add(
     new TrFormElement(_T("OS", "testenv"), $select),
-    array("value" => $os, "required" => True)
+    array("value" => $os, "required" => true)
 );
 
-foreach($_packages['datas']['name'] as $value){
+foreach($_packages['datas']['name'] as $value) {
     $packages[] = $value;
 }
 $select_pkg = new SelectItem("packages");
 $select_pkg->setElements($packages);
 $form->add(
     new TrFormElement(_T("Packages", "testenv"), $select_pkg),
-    array("value" => $packages, "required" => True)
+    array("value" => $packages, "required" => true)
 );
 
 $form->addValidateButton("bconfirm", _T("Add", "testenv"));
 
 
-if(isset($_POST['bconfirm'])){
+if(isset($_POST['bconfirm'])) {
     $name = add_underscore_for_url($_POST['name']);
     $desc = add_underscore_for_url($_POST['description']);
     $ram = convertGointoMb($_POST['ram']);
@@ -100,13 +99,13 @@ if(isset($_POST['bconfirm'])){
     $disk_size = str_replace(" Go", "", $_POST['disk']);
     $os = str_replace("Windows 10", "win10", $_POST['os']);
 
-    if(xmlrpc_checkExistVM($name)){
+    if(xmlrpc_checkExistVM($name)) {
         new NotifyWidgetFailure(_T("A virtual machine with this name already exists", "testenv"));
     } else {
-        if(xmlrpc_create_vm($name, $desc, $ram, $cpu, $disk_size, $os)){
+        if(xmlrpc_create_vm($name, $desc, $ram, $cpu, $disk_size, $os)) {
             $console_output = getLastBuildOutput('create-vm');
 
-            if($console_output[0]['Finished'] == 'FAILURE'){
+            if($console_output[0]['Finished'] == 'FAILURE') {
                 new NotifyWidgetFailure(_T("The virtual machine could not be created <br>".$console_output[0]['ERROR'], "testenv"));
             } else {
                 $vm_info_creation = parse_console_output($console_output);
@@ -118,7 +117,8 @@ if(isset($_POST['bconfirm'])){
     }
 }
 
-function get_parsed_console_output(){
+function get_parsed_console_output()
+{
     $console_output = getLastBuildOutput('create-vm');
     $vm_info_creation = parse_console_output($console_output);
     return json_encode($vm_info_creation);

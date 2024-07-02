@@ -248,7 +248,8 @@ if (safeCount($servDescList) == 1) {
                 <br><hr>
                 <h3 style="text-align: center;">PROVIDERS</h3>
                 <?php
-                function fetchProvidersConfig() {
+                function fetchProvidersConfig()
+                {
                     $iniPath = "/etc/mmc/authproviders.ini";
                     if (is_readable($iniPath)) {
                         return parse_ini_file($iniPath, true);
@@ -258,15 +259,15 @@ if (safeCount($servDescList) == 1) {
                     }
                 }
 
-                $providersConfig = fetchProvidersConfig();
+$providersConfig = fetchProvidersConfig();
 
-                foreach ($providersConfig as $provider => $config) {
-                    $logoUrl = $config['logoUrl'];
-                    echo '<button onclick="confirmLogin(\'' . $provider . '\')" class="login-btn provider-btn">';
-                    echo '<img src="' . $logoUrl . '" alt="' . $provider . ' Logo"> Se connecter avec ' . $provider;
-                    echo '</button>';
-                }
-                ?>
+foreach ($providersConfig as $provider => $config) {
+    $logoUrl = $config['logoUrl'];
+    echo '<button onclick="confirmLogin(\'' . $provider . '\')" class="login-btn provider-btn">';
+    echo '<img src="' . $logoUrl . '" alt="' . $provider . ' Logo"> Se connecter avec ' . $provider;
+    echo '</button>';
+}
+?>
                 <input type="hidden" id="selectedProvider" name="selectedProvider" />
                 <input type="hidden" id="selectedLang" name="lang" value="<?= $_SESSION['lang'] ?>" />
             </div>

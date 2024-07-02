@@ -32,7 +32,7 @@ $mod->setPriority(2000);
 
 $submod = new SubModule("testenv");
 $submod->setDescription(_T("Testenv", "Testenv"));
-$submod->setVisibility(True);
+$submod->setVisibility(true);
 $submod->setImg('modules/testenv/graph/navbar/testenv');
 $submod->setDefaultPage("testenv/testenv/index");
 $submod->setPriority(500);
@@ -42,7 +42,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxListVM", _T("List of virtual machines", "testenv"));
 $page->setFile("modules/testenv/testenv/ajaxListVM.php");
-$page->setOptions(array("AJAX"=>True, "visible"=>False, "noHeader"=>True));
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("create", _T('Create a virtual machine', 'testenv'));
@@ -63,7 +63,7 @@ $submod->addPage($page);
 
 $page = new Page("launch", _T('Launch a virtual machine', 'testenv'));
 $page->setFile("modules/testenv/testenv/launch_vm.php");
-$page->setOptions(array("AJAX"=>True, "visible"=>False, "noHeader"=>True));
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("launch2", _T('Launch a virtual machine', 'testenv'));
@@ -76,6 +76,5 @@ $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-$MMCApp =& MMCApp::getInstance();
-$MMCApp->addModule($mod); 
-?>
+$MMCApp = & MMCApp::getInstance();
+$MMCApp->addModule($mod);

@@ -31,13 +31,12 @@ foreach ($result as $key => $value) {
     $id[] = $value['id'];
     $name[] = $value['name'];
     $name_clean[] = remove_underscore($value['name']);
-    if($value['status'] == "Shutoff"){
+    if($value['status'] == "Shutoff") {
         $presencesClass[] = "machineName";
         $actionGuac[] = new EmptyActionItem1(_T("VNC", "testenv"), "launch", "guacag", "name", "testenv", "testenv", null, 800);
         $actionStart[] = new ActionItem(_T("Start", "testenv"), "start", "start", "name", "testenv", "testenv");
         $actionStop[] = new EmptyActionItem1(_T("Stop", "testenv"), "stop", "stopg", "name", "testenv");
-    }
-    else{
+    } else {
         $presencesClass[] = "machineNamepresente";
         $actionGuac[] = new ActionPopupItem(_T("VNC", "testenv"), "launch", "guaca", "name", "testenv", "testenv", null, 800);
         $actionStart[] = new EmptyActionItem1(_T("Start", "testenv"), "start", "startg", "name", "testenv", "testenv");
@@ -45,12 +44,12 @@ foreach ($result as $key => $value) {
     }
 }
 
-foreach($name as $value){
+foreach($name as $value) {
     $info = xmlrpc_getVMInfo($value);
     $info_all_vm[] = $info;
 }
 
-foreach($info_all_vm as $key => $value){
+foreach($info_all_vm as $key => $value) {
     $architecture[] = $value['architecture'];
     $uuid[] = $value['uuid'];
     $cpu[] = $value['currentCpu'];
@@ -58,7 +57,7 @@ foreach($info_all_vm as $key => $value){
     $port_vnc[] = ($value['port_vnc'] != -1) ? $value['port_vnc'] : 'Pas de port';
 }
 
-foreach($uuid as $value){
+foreach($uuid as $value) {
     $ids[] = 'guacamole_'.$value;
 }
 

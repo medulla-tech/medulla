@@ -22,6 +22,7 @@
 # PULSE2
 from mmc.database.config import DatabaseConfig
 
+
 class TestenvDatabaseConfig(DatabaseConfig):
     dbname = "testenv"
     dbsection = "database"

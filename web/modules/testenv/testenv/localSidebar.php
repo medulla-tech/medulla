@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * (c) 2020 Siveo, http://siveo.net
  *
@@ -19,11 +19,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$sidemenu= new SideMenu();
+$sidemenu = new SideMenu();
 $sidemenu->setClass("testenv");
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Liste des Machines Virtuelles", 'testenv'), "testenv", "testenv", "index"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Créer une Machine Virtuelle", 'testenv'), "testenv", "testenv", "create"));
-
-?>

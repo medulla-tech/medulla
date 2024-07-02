@@ -24,16 +24,17 @@
 from mmc.support.config import PluginConfig
 from pulse2.database.testenv.config import TestenvDatabaseConfig
 
-class TestenvConfig(PluginConfig,TestenvDatabaseConfig):
-    def __init__(self, name = 'testenv', conffile = None):
-        if not hasattr(self, 'initdone'):
+
+class TestenvConfig(PluginConfig, TestenvDatabaseConfig):
+    def __init__(self, name="testenv", conffile=None):
+        if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile)
             TestenvDatabaseConfig.__init__(self)
             self.initdone = True
 
     def setDefault(self):
         PluginConfig.setDefault(self)
-        #self.confOption = "option1"
+        # self.confOption = "option1"
         # ...
 
     def readConf(self):
@@ -42,18 +43,40 @@ class TestenvConfig(PluginConfig,TestenvDatabaseConfig):
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
 
-        self.jenkins_username = self.get("jenkins", "username") if self.has_option("jenkins", "username") else ""
-        self.jenkins_token = self.get("jenkins", "token") if self.has_option("jenkins", "token") else ""
-        self.jenkins_url = self.get("jenkins", "url") if self.has_option("jenkins", "url") else ""
+        self.jenkins_username = (
+            self.get("jenkins", "username")
+            if self.has_option("jenkins", "username")
+            else ""
+        )
+        self.jenkins_token = (
+            self.get("jenkins", "token") if self.has_option("jenkins", "token") else ""
+        )
+        self.jenkins_url = (
+            self.get("jenkins", "url") if self.has_option("jenkins", "url") else ""
+        )
 
-        self.guacamole_username = self.get("guacamole", "username") if self.has_option("guacamole", "username") else ""
-        self.guacamole_password = self.get("guacamole", "password") if self.has_option("guacamole", "password") else ""
-        self.guacamole_url = self.get("guacamole", "url") if self.has_option("guacamole", "url") else ""
-        self.guacamole_url_client = self.get("guacamole", "url_client") if self.has_option("guacamole", "url_client") else ""
+        self.guacamole_username = (
+            self.get("guacamole", "username")
+            if self.has_option("guacamole", "username")
+            else ""
+        )
+        self.guacamole_password = (
+            self.get("guacamole", "password")
+            if self.has_option("guacamole", "password")
+            else ""
+        )
+        self.guacamole_url = (
+            self.get("guacamole", "url") if self.has_option("guacamole", "url") else ""
+        )
+        self.guacamole_url_client = (
+            self.get("guacamole", "url_client")
+            if self.has_option("guacamole", "url_client")
+            else ""
+        )
         # ...
 
     def check(self):
-        #if not self.confOption: raise ConfigException("Conf error")
+        # if not self.confOption: raise ConfigException("Conf error")
         pass
 
     @staticmethod

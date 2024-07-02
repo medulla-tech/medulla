@@ -1,4 +1,5 @@
 <?php
+
 require('phpseclib3/autoload.php');
 require_once "oidc/OpenID-Connect-PHP-master/src/OpenIDConnectClient.php";
 
@@ -9,7 +10,8 @@ session_start();
 
 use Jumbojett\OpenIDConnectClient;
 
-function fetchProvidersConfig() {
+function fetchProvidersConfig()
+{
     $iniPath = "/etc/mmc/authproviders.ini";
     if (is_readable($iniPath)) {
         return parse_ini_file($iniPath, true);
@@ -19,8 +21,9 @@ function fetchProvidersConfig() {
     }
 }
 
-function generateStr($length = 50) {
-    return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
+function generateStr($length = 50)
+{
+    return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
 }
 
 // language management
@@ -132,8 +135,9 @@ if ($providersConfig && (isset($_POST['selectedProvider']) || isset($_GET['code'
                 } else {
                     $newPassUser = generateStr(50);
                     // Here we edit the user password
-                    $ret = callPluginFunction("changeUserPasswd",
-                    array(array($newUser, prepare_string($newPassUser)))
+                    $ret = callPluginFunction(
+                        "changeUserPasswd",
+                        array(array($newUser, prepare_string($newPassUser)))
                     );
 
                     if (auth_user($newUser, $newPassUser, true)) {
@@ -159,4 +163,3 @@ if ($providersConfig && (isset($_POST['selectedProvider']) || isset($_GET['code'
         exit;
     }
 }
-?>
