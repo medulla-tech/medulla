@@ -1,10 +1,8 @@
-# Pulse
+# Medulla
 
-[![Build Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=master)](https://travis-ci.org/pulse-project/pulse2/branches)
+Medulla is a radically simple IT automation and RMM solution that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are. 
 
-Pulse is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are. 
-
-Pulse provides a real-time management solution for complex and distributed environments.
+Medulla provides a real-time management solution for complex and distributed environments.
 
 ## Main feature :
 
@@ -21,33 +19,27 @@ Pulse provides a real-time management solution for complex and distributed envir
 * Backup and Restore
 * Update management
 
+
 ## Installation
 
-* Stable branch and previous tagged version
+Installation had been simplified to easily try and use, just [download](https://medulla-tech.io/telecharger-medulla/)
 
-Read INSTALL files of each project (first mmc-core and pulse2) 
-
-* Devel branch
-
-Installation process had been simplified to easily install all differents components from one command line.
-
-[Easy install process](https://github.com/pulse-project/tools/tree/master/install)
+For large and complexe installation, follow this [links](https://github.com/medulla-tech/integration//blob/main/README.md)
 
 
 ## Supported clients
 
-Pulse manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX 
+Medulla manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX 
+
 
 ## Documentation
 
-Read [documentation](http://pulse-user-manual.readthedocs.org/) 
+Read the [documentation](https://medulla-doc.readthedocs.io/fr/latest/) 
 
-Read [code documentation](http://doc.siveo.net/)
 
 ## Community
 
-* Access community [Pulse forum](https://forum.pulse2.fr/)
-* Discuss on IRC chanel [irc.freenode.net](irc.freenode.net)
-  * Channel : #pulse-fr
-  * Channel : #pulse-en
-* Discord Channel: https://discord.gg/NfTeZkgZ
+* Discord Channel: https://discord.gg/Mj8wGGp4yH
+* Discuss on IRC chanel [irc://irc.libera.chat](https://web.libera.chat/)
+  * Channel : #medulla-fr
+  * Channel : #medulla-en
