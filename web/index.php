@@ -242,6 +242,44 @@ if (safeCount($servDescList) == 1) {
             </div>
         </form>
 
+        <!-- PROVIDER -->
+        <form action="providers.php" method="post" name="loginFormProvider" id="loginFormProvider">
+            <div class="control-group">
+                <br><hr>
+                <h3 style="text-align: center;">PROVIDERS</h3>
+                <?php
+                function fetchProvidersConfig() {
+                    $iniPath = "/etc/mmc/authproviders.ini";
+                    if (is_readable($iniPath)) {
+                        return parse_ini_file($iniPath, true);
+                    } else {
+                        echo "Erreur : Impossible de lire le fichier de configuration des providers. Vérifiez l'installation.";
+                        exit();
+                    }
+                }
+
+                $providersConfig = fetchProvidersConfig();
+
+                foreach ($providersConfig as $provider => $config) {
+                    $logoUrl = $config['logoUrl'];
+                    echo '<button onclick="confirmLogin(\'' . $provider . '\')" class="login-btn provider-btn">';
+                    echo '<img src="' . $logoUrl . '" alt="' . $provider . ' Logo"> Se connecter avec ' . $provider;
+                    echo '</button>';
+                }
+                ?>
+                <input type="hidden" id="selectedProvider" name="selectedProvider" />
+                <input type="hidden" id="selectedLang" name="lang" value="<?= $_SESSION['lang'] ?>" />
+            </div>
+        </form>
+        <script>
+            function confirmLogin(provider) {
+                document.getElementById('selectedProvider').value = provider;
+                document.getElementById('loginFormProvider').submit();
+                document.getElementById('selectedLang').submit();
+            }
+        </script>
+        <!-- ./PROVIDER -->
+
         </div> <!-- login -->
         </div> <!-- content -->
         </div> <!-- interface -->
