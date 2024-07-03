@@ -261,7 +261,7 @@ if (safeCount($servDescList) == 1) {
                 $providersConfig = fetchProvidersConfig();
 
                 foreach ($providersConfig as $provider => $config) {
-                    $logoUrl = $config['logoUrl'];
+                    $logoUrl = !empty($config['logoUrl']) ? $config['logoUrl'] : './img/login/oidc.png';
                     echo '<button onclick="confirmLogin(\'' . $provider . '\')" class="login-btn provider-btn">';
                     echo '<img src="' . $logoUrl . '" alt="' . $provider . ' Logo"> Se connecter avec ' . $provider;
                     echo '</button>';
