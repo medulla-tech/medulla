@@ -3,7 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
- * (c) 2022 Siveo, http://siveo.net
+ * (c) 2022-2024 Siveo, http://siveo.net
  *
  * $Id$
  *
@@ -92,7 +92,11 @@ $f->add(
     new TrFormElement(_T('Clonezilla parameters for restoring images', 'imaging'), new InputTpl('clonezilla_restorer_params')),
     array("value" => xmlrpc_getClonezillaRestorerParams($location))
 );
-
+$template_name = _T("Register template name", "imaging");
+$f->add(
+    new TrFormElement($template_name, new InputTpl('template_name')),
+    array("value" => (empty($imaging_server["template_name"])) ? '' : htmlentities($imaging_server["template_name"]))
+);
 $f->pop();
 
 $f->push(new DivExpertMode());

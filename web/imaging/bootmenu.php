@@ -176,6 +176,31 @@ $debug_ipxe .= "# Next-server : $srv
 # Imaging Server id : $ims[id]
 # uuid : $ims[packageserver_uuid]
 ";
+
+$nextId=1;
+$placeholder = !empty($ims["template_name"]) ?htmlentities($ims["template_name"]) : "";
+if($placeholder != ""){
+    $query = $db["glpi"]->prepare("select replace(name, ?, ?) as nextId from glpi_computers where name REGEXP ? order by id;");
+    $query->execute([$placeholder, "", '^'.$placeholder.'[0-9]{1,}$']);
+
+    $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    $idList = [];
+
+    if(!empty($result) != []){
+        foreach($result as $row){
+            $idList[] = $row['nextId'];
+        }
+    }
+    while(in_array($nextId, $idList)){
+        $nextId++;
+    }
+    $placeholder .= $nextId;
+
+}
+
+$debug_ipxe .= "# template-name: $placeholder
+";
+
 if($uuid != ""){
     $query = $db['glpi']->prepare("
     SELECT
@@ -261,7 +286,7 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
     $menuId = (!empty($target['fk_menu'])) ? $target['fk_menu'] : $menuId;
 
     $computerName = $computer['name'];
-    $title = (!empty($target['target_name'])) ? "Host $computerName - $mac registered on $srvHost" : "Host $computerName - $mac not registered on $srvHost";
+    $title = (!empty($target['target_name'])) ? "Host $computerName registered on $srv" : "Host $computerName not registered on $srv";
     $multicast_image_uuid = (!empty($target['multicast_image_uuid'])) ? $target['multicast_image_uuid'] : null;
     $multicast_image_name = (!empty($target['multicast_image_name'])) ? $target['multicast_image_name'] : null;
     $multicast = ($multicast_image_uuid != null && $multicast_image_name != null) ? true : false;
@@ -279,7 +304,7 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
 " : "# target : not found
 ";
 } else {
-    $title = "Host \${mac} is NOT registered on \${next-server}!";
+    $title = "Host is NOT registered on $srv";
 
     $debug_ipxe .= "# hostname : not registered
 # mac : $mac
@@ -469,7 +494,7 @@ foreach($keys as $key) {
 }
 
 $ipxe = preg_replace("@\#\#MACADDRESS\#\#@", $mac, $ipxe);
-
+$ipxe = preg_replace("@\#\#PLACEHOLDER\#\#@", $placeholder, $ipxe);
 if(DEBUG) {
     echo '<pre><code>';
     echo($ipxe);

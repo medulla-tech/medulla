@@ -6153,6 +6153,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                         "diskless_initrd": config["diskless_initrd"],
                         "tools_dir": config["tools_dir"],
                         "davos_opts": config["davos_opts"],
+                        "template_name": config["template_name"],
                     }
                 )
             )
@@ -6283,6 +6284,7 @@ class ImagingServer(DBObject):
         "diskless_initrd",
         "tools_dir",
         "davos_opts",
+        "template_name",
     ]
 
 
