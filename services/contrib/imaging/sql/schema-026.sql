@@ -41,10 +41,11 @@ ALTER TABLE ImagingServer add pxe_time_reboot int not null default 2;
 ALTER TABLE ImagingServer add diskless_initrd varchar(255) not null default "initrd.img";
 ALTER TABLE ImagingServer add tools_dir varchar(255) not null default "tools";
 ALTER TABLE ImagingServer add davos_opts varchar(255) not null default "nfs_server= nfs_share_masters= nfs_share_postinst=";
+ALTER TABLE ImagingServer add column template_name varchar(255) not null default "";
 
 -- Update register BootService
 UPDATE BootService SET value="set url_path http://${next-server}/downloads/##PULSE2_DISKLESS_DIR##/
-set kernel_args boot=live config noswap edd=on nomodeset raid=noautodetect fetch=${url_path}fs.squashfs davos_action=REGISTER ##PULSE2_DAVOS_OPTS## dump_path=##PULSE2_INVENTORIES_DIR## timereboot=##PULSE2_PXE_TIME_REBOOT## initrd=##PULSE2_DISKLESS_INITRD##
+set kernel_args boot=live config noswap edd=on nomodeset raid=noautodetect fetch=${url_path}fs.squashfs davos_action=REGISTER placeholder=##PLACEHOLDER## ##PULSE2_DAVOS_OPTS## dump_path=##PULSE2_INVENTORIES_DIR## timereboot=##PULSE2_PXE_TIME_REBOOT## initrd=##PULSE2_DISKLESS_INITRD##
 kernel ${url_path}##PULSE2_DISKLESS_KERNEL## ${kernel_args}
 initrd ${url_path}initrd.img
 boot || goto MENU" WHERE default_name = 'register';
@@ -62,6 +63,17 @@ UPDATE BootService SET value="set url_path http://${next-server}/downloads/##PUL
 set kernel_args boot=live config noswap edd=on nomodeset raid=noautodetect fetch=${url_path}fs.squashfs davos_debug=i ##PULSE2_DAVOS_OPTS## timereboot=##PULSE2_PXE_TIME_REBOOT## initrd=##PULSE2_DISKLESS_INITRD##
 kernel ${url_path}##PULSE2_DISKLESS_KERNEL## ${kernel_args}
 initrd ${url_path}##PULSE2_DISKLESS_INITRD## " WHERE default_name = 'diskless';
+
+update BootService set default_desc="Register as Medulla client" where id=2;
+update BootService set default_name = "medulla_utilities", default_desc="Medulla Utilities" where id=12;
+
+update Internationalization set label= "medulla_utilities" where id=43;
+
+update Internationalization set label= "Ajouter comme client Medulla" where id=5 and fk_language=2;
+update Internationalization set label= "Als Medulla registrieren" where id=5 and fk_language=4;
+
+delete from BootServiceInMenu where fk_bootservice=12 and fk_menuitem=5;
+delete from MenuItem where id=5;
 
 UPDATE version set Number = 26;
 COMMIT;
