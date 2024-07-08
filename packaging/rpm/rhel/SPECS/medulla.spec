@@ -58,6 +58,7 @@ BuildRequires:  libxslt
 %endif
 BuildRequires:  wget
 BuildRequires:  docbook-style-xsl
+BuildRequires:  systemd-rpm-macros
 
 Requires:       mmc-agent
 Requires:       mmc-web-base
