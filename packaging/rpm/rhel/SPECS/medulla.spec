@@ -81,7 +81,6 @@ Requires:       python3-mmc-urbackup
 Requires:       mmc-web-updates
 Requires:       python3-mmc-updates
 Requires:       pulse2-common
-Requires:       medulla-davos-client
 Requires:       pulse2-package-server
 Requires:       python3-pulse2-common-database-dyngroup
 Requires:       pulse-mmc-web-computers-inventory-backend
