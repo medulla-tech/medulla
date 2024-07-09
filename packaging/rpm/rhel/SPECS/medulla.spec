@@ -944,6 +944,17 @@ Requires:   python3-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python3-memory-profiler
 Requires:   python3-posix-ipc
+Requires:   python3.11-pyyaml
+Requires:   python3.11-incremental
+Requires:   python3.11-typing-extensions
+Requires:   python3.11-zope-interface
+Requires:   python3.11-constantly
+Requires:   python3.11-hyperlink
+Requires:   python3.11-sqlalchemy
+Requires:   python3.11-configobj
+Requires:   python3.11-pycryptodomex
+Requires:   python3.11-magic
+Requires:   python3.11-distro
 
 %description -n mmc-agent
 XMLRPC server of the Console API.
