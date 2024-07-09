@@ -310,7 +310,7 @@ class MscDatabase(msc.MscDatabase):
                 start_date,
                 end_date,
                 connect_as,
-                ctx.userid,
+                parameters,
                 title,
                 next_connection_delay,
                 max_connection_attempt,

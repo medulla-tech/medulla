@@ -123,6 +123,7 @@ function start_a_command($proxy = array(), $activate = true) {
     $submod = $path[1];
     $page = $path[2];
     $params = array();
+    $params['creatorLogin'] = $_SESSION['login'];
     //,'parameterspacquage'
     foreach (array( 'start_script',
                     'clean_on_success',
@@ -254,6 +255,7 @@ function start_a_command($proxy = array(), $activate = true) {
         }
 
         if (quick_get('convergence')) {
+            // Recovery of the current state of convergence
             $active = ($_POST['active'] == 'on') ? 1 : 0;
             $cmd_type = 2; // Convergence command type
             if (quick_get('editConvergence')) {
@@ -271,21 +273,19 @@ function start_a_command($proxy = array(), $activate = true) {
                     $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
                     xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0, $syncthing);
                 }
-
-                if (!$active) {
-                    // If this convergence is not active, expire this command
+                // If this convergence is not active, expire this command
+                if (!$active && $_POST['bconfirm'] != 'Reconfigurer') {
                     $start_date = _get_command_start_date($command_id);
                     extend_command($command_id, $start_date, date("Y-m-d H:i:s"));
                 }
                 /* Update convergence DB */
                 $updated_datas = array(
-                    'active' => $active,
+                    'active' => ($active || $_POST['bconfirm'] == 'Reconfigurer') ? 1 : 0,
                     'commandId' => intval($command_id),
                     'cmdPhases' => $params,
                 );
                 xmlrpc_edit_convergence_datas($gid, $pid, $updated_datas);
-            }
-            else {
+            } else {
                 /* Create convergence */
                 // create sub-groups
                 $group = new Group($gid, True);
@@ -303,8 +303,8 @@ function start_a_command($proxy = array(), $activate = true) {
                     xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id, $countmachine );
                 }
 
-                if (!$active) {
                     // If this convergence is not active, expire this command
+                if (!$active && $_POST['bconfirm'] != 'Reconfigurer') {
                     $start_date = _get_command_start_date($command_id);
                     extend_command($command_id, $start_date, date("Y-m-d H:i:s"));
                 }
@@ -312,7 +312,6 @@ function start_a_command($proxy = array(), $activate = true) {
                 // feed convergence db
                 xmlrpc_add_convergence_datas($gid, $deploy_group_id, $done_group_id, $pid, $p_api, intval($command_id), $active, $params);
             }
-//             if ($activate == false)
             header("Location: " . urlStrRedirect("base/computers/groupmsctabs", array('gid' => $gid)));
             exit;
         }
