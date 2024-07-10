@@ -1,6 +1,6 @@
 <?php
 require('phpseclib3/autoload.php');
-require_once "oidc/OpenID-Connect-PHP-master/src/OpenIDConnectClient.php";
+require_once "oidc/OpenIDConnectClient.php";
 
 // part for error management before generation of the session following the return of authentication with the provider
 require("includes/PageGenerator.php");
