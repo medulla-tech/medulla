@@ -733,7 +733,7 @@ class Imaging(object, metaclass=SingletonN):
                 _id = "UUID%s"%result["id"]
 
                 client = self._getXMLRPCClient()
-                func = "imaging.injectInventory"
+                func = "imaging.injectInventoryUuid"
                 args = (self.config.imaging_api["uuid"], _id, inventory)
                 d = client.callRemote(func, *args)
                 d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
@@ -801,6 +801,7 @@ class Imaging(object, metaclass=SingletonN):
             d = client.callRemote(func, *args)
             d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
             return d
+
     def getComputerByMac(self, MACAddress):
         """
         Method to obtain informations about a computer using its MAC address.
@@ -865,9 +866,6 @@ class Imaging(object, metaclass=SingletonN):
             d = client.callRemote(func, *args)
             d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
             return d
-
-    def getMachineByUuidSetup(self, MACAddress):
-            print("OK")
 
     def computersMenuSet(self, menus):
         """

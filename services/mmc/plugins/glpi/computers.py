@@ -289,7 +289,7 @@ class GlpiComputers(ComputerI):
         return ret
 
     def getMachineByUuidSetup(self,uuid):
-        ret = self.glpi.getMachineByUuidSetup("imaging_module", uuid)
+        ret = self.glpi.getMachineByUuidSetup(uuid)
         if isinstance(ret, list):
             if len(ret) != 0:
                 return ret[0]
