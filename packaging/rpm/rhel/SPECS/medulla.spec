@@ -935,7 +935,7 @@ Requires:   python3-gobject
 %else
 Requires:   python3
 Requires:   python3.11-pyOpenSSL
-Requires:   python3-gi
+Requires:   python3.11-gobject
 %endif
 Requires:   python3-mmc-base
 Requires:   logrotate
