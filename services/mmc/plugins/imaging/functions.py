@@ -3972,6 +3972,19 @@ class ImagingRpcProxy(RpcProxyI):
 
         return ret
 
+    def injectInventoryUuid(self, imaging_server_uuid, computer_uuid, inventory):
+        """
+        Called by the Package Server to inject an inventory.
+        """
+        db = ImagingDatabase()
+        try:
+            ret = db.injectInventory(imaging_server_uuid, computer_uuid, inventory)
+        except Exception as e:
+            logging.getLogger().exception(e)
+            ret = [False, str(e)]
+
+        return ret
+
     def getPartitionsToBackupRestore(self, computer_uuid):
         """
         Called by the web interface to get the computer disks and partitions
