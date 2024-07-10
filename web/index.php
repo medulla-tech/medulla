@@ -242,6 +242,7 @@ if (safeCount($servDescList) == 1) {
             </div>
         </form>
 
+        <?php if (file_exists(__sysconfdir__."/mmc/authproviders.ini")): ?>
         <!-- PROVIDER -->
         <form action="providers.php" method="post" name="loginFormProvider" id="loginFormProvider">
             <div class="control-group">
@@ -279,6 +280,7 @@ if (safeCount($servDescList) == 1) {
             }
         </script>
         <!-- ./PROVIDER -->
+        <?php endif; ?>
 
         </div> <!-- login -->
         </div> <!-- content -->
