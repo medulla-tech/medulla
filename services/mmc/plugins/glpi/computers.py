@@ -288,7 +288,7 @@ class GlpiComputers(ComputerI):
                 return None
         return ret
 
-    def getMachineByUuidSetup(self,uuid):
+    def getMachineByUuidSetup(self, uuid):
         ret = self.glpi.getMachineByUuidSetup(uuid)
         if isinstance(ret, list):
             if len(ret) != 0:

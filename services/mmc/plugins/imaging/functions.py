@@ -3699,8 +3699,11 @@ class ImagingRpcProxy(RpcProxyI):
         try:
             db_computer = ComputerManager().getMachineByUuidSetup(uuid)
         except Exception as e:
-            return [False,
-                    "imaging.getComputerByUuidSetup() : Unable to find a computer corresponding to the UUID %s"%uuid]
+            return [
+                False,
+                "imaging.getComputerByUuidSetup() : Unable to find a computer corresponding to the UUID %s"
+                % uuid,
+            ]
         if not db_computer:
             return [
                 False,
@@ -3710,7 +3713,9 @@ class ImagingRpcProxy(RpcProxyI):
 
         if db_computer is None or db_computer == {}:
             return [
-                False,"imaging.getComputerByUuidSetup() : Unable to find a computer corresponding to the UUID %s"% uuid,
+                False,
+                "imaging.getComputerByUuidSetup() : Unable to find a computer corresponding to the UUID %s"
+                % uuid,
             ]
         return [True, db_computer]
 
