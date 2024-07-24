@@ -1258,7 +1258,7 @@ class Glpi95(DyngroupDatabaseHelper):
                 "operatingsystemservicepacks_id",
                 "operatingsystemarchitectures_id",
                 "license_number",
-                "license_id",
+                "licenseid",
                 "operatingsystemkernelversions_id",
             ]
             for addcolumn in list_column_add_for_info:
@@ -5216,7 +5216,7 @@ class Glpi95(DyngroupDatabaseHelper):
                     "operatingsystemservicepacks_id": ret.operatingsystemservicepacks_id,
                     "operatingsystemarchitectures_id": ret.operatingsystemarchitectures_id,
                     "license_number": ret.license_number,
-                    "license_id": ret.licenseid,
+                    "licenseid": ret.licenseid,
                     "operatingsystemkernelversions_id": ret.operatingsystemkernelversions_id,
                 }
             except Exception:
