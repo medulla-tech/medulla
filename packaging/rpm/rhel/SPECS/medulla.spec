@@ -45,8 +45,6 @@ Source0:        %{name}_%{real_version}.orig.tar.gz
 #TODO: Adapt for Mageia
 Source3:        pulse2-imaging-server.service
 Source4:        pulse2-register-pxe.service
-Source5:        output.py
-Source6:        get_file.php
 
 BuildRequires:	python3.11-devel
 BuildRequires:	gettext
@@ -1337,8 +1335,6 @@ Allow the use of SQL databases within MMC framework.
 
 %prep
 %setup -q  -n medulla-%version
-cp %{SOURCE5}   agent/mmc/plugins/base
-cp %{SOURCE6}   web/modules/base/computers
 sed -e 's/python python2 //' -i configure
 
 %build
