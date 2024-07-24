@@ -1079,7 +1079,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 )
             session.commit()
 
-            updated_convergence = session.query(Convergence).filter_by(parentGroupId=gid, packageUUID=package_id).first()
+            updated_convergence = (
+                session.query(Convergence)
+                .filter_by(parentGroupId=gid, packageUUID=package_id)
+                .first()
+            )
 
             return result
         except Exception as e:
@@ -1206,7 +1210,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             )
             return None
         try:
-            ret.cmdPhases = ret.cmdPhases.encode('utf-8') if isinstance(ret.cmdPhases, str) else ret.cmdPhases
+            ret.cmdPhases = (
+                ret.cmdPhases.encode("utf-8")
+                if isinstance(ret.cmdPhases, str)
+                else ret.cmdPhases
+            )
             ret.cmdPhases = {}
 
             return ret.cmdPhases
