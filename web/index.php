@@ -250,11 +250,16 @@ if (safeCount($servDescList) == 1) {
                 <h3 style="text-align: center;">PROVIDERS</h3>
                 <?php
                 function fetchProvidersConfig() {
-                    $iniPath = "/etc/mmc/authproviders.ini";
+                    $defaultIniPath = __sysconfdir__."/mmc/authproviders.ini";
+                    $localIniPath = __sysconfdir__."/mmc/authproviders.ini.local";
+
+                    $iniPath = file_exists($localIniPath) ? $localIniPath : $defaultIniPath;
+
                     if (is_readable($iniPath)) {
-                        return parse_ini_file($iniPath, true);
+                        $config = parse_ini_file($iniPath, true);
+                        return $config;
                     } else {
-                        echo "Erreur : Impossible de lire le fichier de configuration des providers. Vérifiez l'installation.";
+                        echo "<p>Erreur : Impossible de lire le fichier de configuration des providers. Vérifiez l'installation.</p>";
                         exit();
                     }
                 }
