@@ -12,6 +12,8 @@ USE `xmppmaster`;
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Add SSH user to admins group','PowerShell Add-LocalGroupMember -SID S-1-5-32-544 -Member pulseuser -Verbose','Add pulseuser account to Administrators group');
 INSERT INTO `qa_custom_command` VALUES ('allusers','windows','Remove SSH user from admins group','PowerShell Remove-LocalGroupMember -SID S-1-5-32-544 -Member pulseuser -Verbose','Remove pulseuser account from Administrators group');
 
+ALTER TABLE `xmppmaster`.`substituteconf` ADD UNIQUE IF NOT EXISTS (type, jidsubtitute, relayserver_id);
+
 UPDATE version SET Number = 89;
 
 COMMIT;
