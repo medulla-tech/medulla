@@ -33,6 +33,7 @@ require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 <script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>
 <script type="text/javascript" src="jsframework/portlet.js"></script>
 <script src="jsframework/d3/d3.js"></script>
+<script type="text/javascript" src="jsframework/strophe/strophe.min.js"></script>
 
 <script src="modules/dashboard/graph/js/donut.js"></script>
 <script src="modules/dashboard/graph/js/line.js"></script>
