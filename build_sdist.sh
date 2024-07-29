@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION='5.0.0'
+VERSION='5.1.1'
 
 rm -f medulla-*.tar.gz medulla-*.tar.gz.md5
 git clean -fdx && ./autogen.sh && ./configure --sysconfdir=/etc --localstatedir=/var --disable-python-check --disable-conf && make distcheck
