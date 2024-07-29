@@ -65,3 +65,10 @@ forgotPassword = no
 ; cacert =
 ; Path to the file containing the local key and certificate (PEM format)
 ; localcert =
+
+[notification]
+url =
+port = 5443
+protocol = bosh
+jid = notify@pulse
+password =
