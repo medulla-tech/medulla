@@ -1805,7 +1805,9 @@ td.machineAction { text-align: right; }
     position: fixed;
     bottom: 0px;
     z-index: 1000;
-    width: 100%
+    width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 #footer a {
@@ -1813,6 +1815,115 @@ td.machineAction { text-align: right; }
     text-decoration: none;
     font-weight: bold;
     color: #8FA0B1;
+}
+
+#footer #notificationBell {
+    margin-left: auto;
+    margin-right: 40px;
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+}
+
+#notificationCenter {
+    position: fixed;
+    right: 30px;
+    bottom: 10px;
+    min-width: 250px;
+    max-width: 800px;
+    max-height: 320px;
+    background: white;
+    border: 1px solid #ccc;
+    z-index: 1001;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    display: none;
+    padding: 20px;
+    padding-top: 35px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#notificationCenter.hidden {
+    display: none;
+}
+
+#notificationCenter.no-notifications {
+    height: 150px;
+    justify-content: center;
+    align-items: center;
+}
+
+#notificationCenter #time {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #f0f0f0;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+#notificationCenter .close-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: black;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    font-size: 10px;
+}
+
+#notificationCenter p {
+    margin: 0;
+    text-align: center;
+}
+
+#notificationCenter .close-btn:hover {
+    background: #f00;
+}
+
+.notification {
+    margin-bottom: 10px;
+    margin-top: 5px;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    color: #333;
+}
+
+.notification-detail {
+    margin-top: 2px;
+    font-size: 12px;
+}
+
+.notification-time {
+    align-self: flex-end;
+    font-size: 10px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.close-notification {
+    align-self: flex-end;
+    cursor: pointer;
+    margin-top: 5px;
+    color: #f00;
+    font-weight: bold;
+}
+
+#noMessages {
+    margin: auto;
+    text-align: center;
 }
 
 /* ---------------------------------------- */
