@@ -37,6 +37,7 @@ if (!isset($_SESSION["expire"]) || $_SESSION["expire"] < time()) {
     $root = $conf["global"]["root"];
     echo "<script>\n";
     echo "window.location = '".$root."index.php". $errorcode ."';";
+    echo "localStorage.clear()";
     echo "</script>\n";
     exit;
 }
