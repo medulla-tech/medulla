@@ -1,0 +1,144 @@
+#!/usr/bin/make -f
+#
+# Copyright (C) 2010-2012 Mandriva, http://www.mandriva.com
+#
+# $Id: rules 7790 2010-12-02 14:21:28Z cdelfosse $
+#
+# This file is part of Pulse 2.
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+# We'll symlink /usr/share/doc/<package> to the pulse2-common one
+# So we need a list of available packages
+PKG_LIST = $(shell cat debian/control  | grep Package | awk '{ print $$2 }' | grep -v '^pulse2-common$$' | grep -v '^pulse2$$' | grep -v '^pulse2-uuid-resolver$$' | grep -v '^pulse2-imaging-server$$' | tr "\n" " ")
+
+PACKAGE=pulse2
+DESTDIR=$(CURDIR)/debian/tmp
+
+# Define *FLAGS
+CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
+CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
+LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
+export DH_ALWAYS_EXCLUDE=.pyc:.pyo
+
+CPPFLAGS += -Wno-error=unused-result
+
+clean: clean-real
+clean-real:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp Aq INSTALL
+	-[ ! -f Makefile ] || $(MAKE) distclean
+	dh_clean
+
+configure:
+
+config.status: configure
+	dh_testdir
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess config.guess
+endif
+	PYTHON=python3 ./configure --host=$(DEB_HOST_GNU_TYPE) \
+		    --build=$(DEB_BUILD_GNU_TYPE) \
+		    --prefix=/usr \
+		    --sysconfdir=/etc \
+		    --localstatedir=/var \
+		    --disable-python-check \
+		    --disable-silent-rules \
+		    --disable-wol \
+		    CFLAGS="$(CFLAGS) $(CPPFLAGS)" \
+		    LDFLAGS="$(LDFLAGS)"
+
+build-arch:
+build-indep:
+build: build-stamp
+build-stamp: config.status
+	dh_testdir
+	$(MAKE)
+	touch build-stamp
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	$(MAKE) install DESTDIR=$(DESTDIR)
+	rm -rf $(DESTDIR)/etc/init.d
+	mkdir -p $(DESTDIR)/usr/lib/systemd/system
+	cp $(CURDIR)/services/systemd/*.service $(DESTDIR)/usr/lib/systemd/system
+	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-scheduler.service
+	# Autotools won't listen to me...
+	rm -f $(DESTDIR)/var/lib/pulse2/clients/win32/generate-agent-pack.sh.in
+	# Useless files
+	rm -f $(DESTDIR)/usr/share/doc/pulse2/README.win32
+	rm -f $(DESTDIR)/usr/share/mmc/modules/inventory/includes/libchart/doc/DEJAVU_LICENSE
+	mkdir -p $(DESTDIR)/etc/apache2/conf-available/
+	cp $(CURDIR)/web/conf/apache/pulse.conf $(DESTDIR)/etc/apache2/conf-available/
+	mkdir -p $(DESTDIR)/var/lib/pulse2/file-transfer
+	#(workaround) Remove schema-018.sql
+	rm -fv $(DESTDIR)/usr/share/doc/pulse2/contrib/imaging/sql/schema-018.sql
+	# Remove opencliparts files
+	rm -frv $(DESTDIR)/usr/share/mmc/media/images/msc/opencliparts_0.18
+	cp  $(DESTDIR)/etc/mmc/apache/mmc.conf $(DESTDIR)/etc/apache2/conf-available/
+	# Workaround install issue
+	mkdir -p $(DESTDIR)/usr/lib/python3/dist-packages/
+	mv -f $(DESTDIR)/usr/lib/python3.11/site-packages/* $(DESTDIR)/usr/lib/python3/dist-packages/
+	# Manually copy custom SQL views into /usr/share/doc/pulse2/
+	cp services/contrib/glpi-*.sql  $(DESTDIR)/usr/share/doc/pulse2/contrib/
+
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_install --sourcedir=$(DESTDIR) --fail-missing
+	dh_python3
+	dh_fixperms -X/etc/mmc
+	dh_installchangelogs
+	dh_installdocs
+	dh_installinit
+	dh_strip
+	## TODO: Add back
+	##dh_link
+	dh_compress -X/sql/ -X.pdf
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-arch: build install
+	dh_installdirs
+	# Must be readable by backuppc
+	chmod 0644 $(DESTDIR)/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini
+	# Must be writable by web-server
+	dh_install --sourcedir=$(DESTDIR) --fail-missing
+	# This directory must be writable for www-data (first run)
+	chown www-data:root debian/python3-mmc-support/etc/mmc/plugins/support
+	chmod 750 debian/python3-mmc-support/etc/mmc/plugins/support
+	dh_fixperms -Xetc/mmc \
+                    -Xusr/share/doc/pulse2/contrib/ \
+		    -Xvar/log/mmc
+	dh_installchangelogs -Npulse2 ChangeLog
+	dh_installdocs -Npulse2
+	find debian/pulse2-common/usr/share/doc/pulse2/contrib/ -path '*/imaging/lrsgznbd/*' -prune -o -name 'Makefile*' -exec rm {} \;
+	for PKG in $(PKG_LIST); do \
+		rm -r debian/$$PKG/usr/share/doc/$$PKG; \
+		ln -sf pulse2 debian/$$PKG/usr/share/doc/$$PKG; \
+	done
+	dh_shlibdeps
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

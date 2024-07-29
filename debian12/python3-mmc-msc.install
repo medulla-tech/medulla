@@ -1,0 +1,6 @@
+usr/lib/python3/*-packages/mmc/plugins/msc
+etc/mmc/plugins/msc.ini
+usr/sbin/pulse2-msc-clean-database
+usr/share/man/man1/pulse2-msc-clean-database.1
+var/lib/pulse2/qactions
+usr/share/doc/medulla/user/msc
