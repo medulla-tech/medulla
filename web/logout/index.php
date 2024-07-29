@@ -54,3 +54,7 @@ if (isset($_POST["delog"])) {
 <form method="post" action="logout/index.php">
 <input type="submit" name="delog" class="btnPrimary" value="<?php echo  _("Logout") ?>" />
 </form>
+
+<script>
+localStorage.clear();
+</script>
