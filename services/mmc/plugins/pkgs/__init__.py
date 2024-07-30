@@ -227,10 +227,10 @@ def associatePackages(pid, fs, level=0):
                 boolsucess = False
                 errortransfert.append(rest["code"])
             try:
-                os.rmdir(source)
-            except OSError as error_removing:
+                shutil.rmtree(source)
+            except Exception as e:
                 logger.error(
-                    f"The removal of the folder {source} has failed with the error \n {str(error_removing)}"
+                    f"The removal of the folder {source} has failed with the error \n {str(e)}"
                 )
 
     chown(destination)
