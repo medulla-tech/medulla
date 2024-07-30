@@ -1200,7 +1200,9 @@ def get_plugin_lists():
                 line = line.split("#")[0]
             try:
                 meta = json.loads(line.replace("plugin =", ""))
-            except:
+            except Exception as error_loading:
+                logger.error(f"The file {file} is not loaded correctly")
+                logger.error(error_loading)
                 pass
             plugins[file] = [
                 meta["VERSION"],
