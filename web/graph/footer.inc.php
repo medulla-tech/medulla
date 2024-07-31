@@ -51,14 +51,22 @@ $pwd = $conf['notification']['password'];
     <div id="notificationCenter" class="hidden">
         <div class="close-btn" onclick="toggleNotificationCenter()">&times;</div>
         <p id="time"></p>
-        <p id="noMessages">Aucune notification</p>
+        <div class="notification-buttons">
+            <button onclick="filterNotifications('all')">All <span id="count-all">(0)</span></button>
+            <button onclick="filterNotifications('INFO')">INFO <span id="count-info">(0)</span></button>
+            <button onclick="filterNotifications('SUCCESS')">SUCCESS <span id="count-success">(0)</span></button>
+            <button onclick="filterNotifications('WARNING')">WARNING <span id="count-warning">(0)</span></button>
+            <button onclick="filterNotifications('CRITICAL')">CRITICAL <span id="count-critical">(0)</span></button>
+        </div>
+        <p id="noMessages" style="display: block;">Aucune notification</p>
         <div id="notifications"></div>
-    </div>  
+    </div>
 </footer>
 
 </div><!-- wrapper -->
 
 </body>
+<script type="text/javascript" src="jsframework/strophe/strophe.min.js"></script>
 <script>
 const PING_INTERVAL = 30000;
 const CLOSE_POPUP_DELAY = 5000;
@@ -66,6 +74,7 @@ const CLOSE_POPUP_DELAY = 5000;
 function toggleNotificationCenter() {
     const notificationCenter = document.getElementById("notificationCenter");
     notificationCenter.classList.toggle("hidden");
+    loadNotificationsFromLocalStorage();
     updateNoMessagesText();
 }
 
@@ -131,10 +140,14 @@ function processMessage(encodedMessage, from) {
         const type = messageData.type.trim();
         const receivedAt = new Date().toISOString();
 
-        // stores the necessary information in LocalStorage
-        storeMessageInLocalStorage(type, messageData, receivedAt);
+        const notificationData = {
+            type: type,
+            data: messageData,
+            receivedAt: receivedAt
+        };
+        storeMessageInLocalStorage(notificationData);
 
-        displayNotification(from, { type: type, data: messageData, receivedAt: receivedAt });
+        displayNotification(from, notificationData);
         if (document.getElementById("notificationCenter").classList.contains("hidden")) {
             toggleNotificationCenter();
         }
@@ -144,10 +157,8 @@ function processMessage(encodedMessage, from) {
     }
 }
 
-function storeMessageInLocalStorage(type, data, receivedAt) {
+function storeMessageInLocalStorage(notificationData) {
     const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-
-    const notificationData = { type, data, receivedAt };
 
     notifications.push(notificationData);
     notifications.sort((a, b) => new Date(a.receivedAt) - new Date(b.receivedAt));
@@ -156,33 +167,63 @@ function storeMessageInLocalStorage(type, data, receivedAt) {
     updateNoMessagesText();
 }
 
+function updateCounters() {
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const counts = {
+        all: notifications.length,
+        INFO: 0,
+        SUCCESS: 0,
+        WARNING: 0,
+        CRITICAL: 0
+    };
+
+    notifications.forEach(notification => {
+        if (counts[notification.type] !== undefined) {
+            counts[notification.type]++;
+        }
+    });
+
+    document.getElementById('count-all').textContent = `(${counts.all})`;
+    document.getElementById('count-info').textContent = `(${counts.INFO})`;
+    document.getElementById('count-success').textContent = `(${counts.SUCCESS})`;
+    document.getElementById('count-warning').textContent = `(${counts.WARNING})`;
+    document.getElementById('count-critical').textContent = `(${counts.CRITICAL})`;
+}
+
+function filterNotifications(type) {
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    const filteredNotifications = type === 'all' ? notifications : notifications.filter(notification => notification.type === type);
+
+    const container = document.getElementById("notifications");
+    container.innerHTML = "";
+
+    if (filteredNotifications.length > 0) {
+        filteredNotifications.forEach(notification => displayNotification("Local", notification, true));
+    }
+    updateNoMessagesText();
+}
+
 function displayNotification(de, notificationData, fromLocalStorage = false) {
     const container = document.getElementById("notifications");
     const notificationDiv = document.createElement("div");
     notificationDiv.classList.add("notification");
 
-    const typeLabel = notificationData.type;
-    const data = notificationData.data;
+    const typeLabel = notificationData.type || 'Undefined';
+    const data = notificationData.data || {};
     let backgroundColor = "#f0f0f0";
 
     switch (notificationData.type) {
         case "INFO":
-            backgroundColor = "#dff0d8";
+            backgroundColor = "#d9edf7";
+            break;
+        case "SUCCESS":
+            backgroundColor = "#d4edda";
             break;
         case "WARNING":
             backgroundColor = "#fcf8e3";
             break;
-        case "DEPLOYMENT":
-            backgroundColor = "#d9edf7";
-            break;
-        case "ALERT":
+        case "CRITICAL":
             backgroundColor = "#f8d7da";
-            break;
-        case "ERROR":
-            backgroundColor = "#f5c6cb";
-            break;
-        case "DEPLOYMENT SUCCESS":
-            backgroundColor = "#d4edda";
             break;
         default:
             backgroundColor = "#f0f0f0";
@@ -191,25 +232,38 @@ function displayNotification(de, notificationData, fromLocalStorage = false) {
 
     notificationDiv.style.backgroundColor = backgroundColor;
 
-    let contentHtml = `<span class='notification-detail'>${typeLabel}</span>`;
-    for (const [key, value] of Object.entries(data)) {
-        let keyLabel = key.charAt(0).toUpperCase() + key.slice(1);
-        if (key === 'machine' && value.includes('@')) {
-            const jidParts = value.split('@')[0].split('.');
-            contentHtml += `<span class='notification-detail'>${keyLabel}: ${jidParts[0]}</span>`;
-        } else if (key !== 'type') {
-            if (key === 'start_date') {
-                const formattedDate = new Date(value).toLocaleString();
-                contentHtml += `<span class='notification-detail'>Date de début: ${formattedDate}</span>`;
-            } else {
-                contentHtml += `<span class='notification-detail'>${keyLabel}: ${value}</span>`;
+    let contentHtml = `<div class='notification-detail'>`;
+    contentHtml += `<span>${typeLabel}</span>`;
+
+    if (data && typeof data === 'object') {
+        for (const [key, value] of Object.entries(data)) {
+            if (value !== undefined && value !== null && value !== '') {
+                let keyLabel = key.charAt(0).toUpperCase() + key.slice(1);
+                if (key === 'machine' && typeof value === 'string' && value.includes('@')) {
+                    const jidParts = value.split('@')[0].split('.');
+                    contentHtml += `<span>${keyLabel}: ${jidParts[0]}</span>`;
+                } else if (key !== 'type') {
+                    if (key === 'start_date') {
+                        const formattedDate = new Date(value).toLocaleString();
+                        contentHtml += `<span>Date de début: ${formattedDate}</span>`;
+                    } else if (key === 'end_date') {
+                        const formattedDate = new Date(value).toLocaleString();
+                        contentHtml += `<span>Date de fin: ${formattedDate}</span>`;
+                    } else {
+                        contentHtml += `<span>${keyLabel}: ${value}</span>`;
+                    }
+                }
             }
         }
     }
 
+    contentHtml += `</div>`;
+
     contentHtml += `
-        <span class='notification-time'>${new Date(notificationData.receivedAt).toLocaleTimeString()}</span>
-        <span class='close-notification' onclick='removeNotification("${notificationData.receivedAt}")'>×</span>
+        <div class='notification-time'>${new Date(notificationData.receivedAt).toLocaleTimeString()}</div>
+        <div class='notification-footer'>
+            <span class='close-notification' onclick='removeNotification("${notificationData.receivedAt}")'>×</span>
+        </div>
     `;
 
     notificationDiv.innerHTML = contentHtml;
@@ -225,21 +279,6 @@ function displayNotification(de, notificationData, fromLocalStorage = false) {
     updateNoMessagesText();
 }
 
-function removeNotification(timestamp) {
-    let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-    notifications = notifications.filter(notification => notification.receivedAt !== timestamp);
-    localStorage.setItem('notifications', JSON.stringify(notifications));
-    loadNotificationsFromLocalStorage();
-}
-
-function loadNotificationsFromLocalStorage() {
-    const container = document.getElementById("notifications");
-    container.innerHTML = "";
-    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-    notifications.forEach(notification => displayNotification("Local", notification, true));
-    updateNoMessagesText();
-}
-
 function updateNoMessagesText() {
     const container = document.getElementById("notifications");
     const noMessagesText = document.getElementById("noMessages");
@@ -251,6 +290,25 @@ function updateNoMessagesText() {
         noMessagesText.style.display = "none";
         notificationCenter.classList.remove("no-notifications");
     }
+    updateCounters();
+}
+
+function loadNotificationsFromLocalStorage() {
+    const container = document.getElementById("notifications");
+    container.innerHTML = "";
+    const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    if (notifications.length > 0) {
+        notifications.forEach(notification => displayNotification("Local", notification, true));
+    }
+    updateCounters();
+    updateNoMessagesText();
+}
+
+function removeNotification(timestamp) {
+    let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+    notifications = notifications.filter(notification => notification.receivedAt !== timestamp);
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    loadNotificationsFromLocalStorage();
 }
 
 window.onload = function() {
