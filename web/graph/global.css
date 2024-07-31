@@ -1793,7 +1793,6 @@ td.machineAction { text-align: right; }
 /* ---------------------------------------- */
 /* 5. Style pour le footer                  */
 /* ---------------------------------------- */
-
 #footer {
     color: #8FA0B1;
     font-size: 11px;
@@ -1801,9 +1800,9 @@ td.machineAction { text-align: right; }
     border-top: 3px solid #B3BECA;
     padding: 5px 0 10px 30px;
     height: 20px;
-    margin: 0px 0 0px 0;
+    margin: 0;
     position: fixed;
-    bottom: 0px;
+    bottom: 0;
     z-index: 1000;
     width: 100%;
     display: flex;
@@ -1829,7 +1828,8 @@ td.machineAction { text-align: right; }
     position: fixed;
     right: 30px;
     bottom: 10px;
-    min-width: 250px;
+    min-width: 380px;
+    min-height: 400px;
     max-width: 800px;
     max-height: 320px;
     background: white;
@@ -1851,9 +1851,12 @@ td.machineAction { text-align: right; }
 }
 
 #notificationCenter.no-notifications {
-    height: 150px;
     justify-content: center;
     align-items: center;
+}
+
+#notificationCenter.no-notifications .notification-buttons {
+    margin-bottom: 20px;
 }
 
 #notificationCenter #time {
@@ -1880,50 +1883,88 @@ td.machineAction { text-align: right; }
     font-size: 10px;
 }
 
+#notificationCenter .close-btn:hover {
+    background: #f00;
+}
+
 #notificationCenter p {
     margin: 0;
     text-align: center;
 }
 
-#notificationCenter .close-btn:hover {
-    background: #f00;
-}
-
 .notification {
-    margin-bottom: 10px;
-    margin-top: 5px;
+    margin: 10px 0 5px 0;
     padding: 10px;
     border-radius: 4px;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     justify-content: space-between;
+    align-items: center;
     color: #333;
+    position: relative;
 }
 
 .notification-detail {
-    margin-top: 2px;
+    min-height: 70px;
     font-size: 12px;
+    margin-top: 2px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.notification-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    height: 100%;
 }
 
 .notification-time {
-    align-self: flex-end;
     font-size: 10px;
     color: #666;
-    margin-top: 5px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 .close-notification {
-    align-self: flex-end;
     cursor: pointer;
-    margin-top: 5px;
     color: #f00;
     font-weight: bold;
+    margin-top: auto;
+    align-self: center;
 }
 
 #noMessages {
-    margin: auto;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    height: 100%;
+}
+
+.notification-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin: 5px 0;
+}
+
+.notification-buttons button {
+    padding: 5px 10px;
+    margin: 0 3px;
+    border: none;
+    background-color: #016080;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.notification-buttons button:hover {
+    opacity: 0.7;
 }
 
 /* ---------------------------------------- */
