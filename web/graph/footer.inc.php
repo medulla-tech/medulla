@@ -59,7 +59,7 @@ $pwd = $conf['notification']['password'];
             <button onclick="filterNotifications('CRITICAL')">CRITICAL <span id="count-critical">(0)</span></button>
         </div>
         <p id="noMessages" style="display: block;">Aucune notification</p>
-        <div id="notifications"></div>
+        <div id="notifications" class="notifications-container"></div>
     </div>
 </footer>
 
@@ -73,7 +73,13 @@ const CLOSE_POPUP_DELAY = 5000;
 
 function toggleNotificationCenter() {
     const notificationCenter = document.getElementById("notificationCenter");
-    notificationCenter.classList.toggle("hidden");
+    if (notificationCenter.classList.contains("hidden")) {
+        notificationCenter.classList.remove("hidden");
+        setTimeout(() => notificationCenter.classList.add("visible"), 10);
+    } else {
+        notificationCenter.classList.remove("visible");
+        setTimeout(() => notificationCenter.classList.add("hidden"), 800);
+    }
     loadNotificationsFromLocalStorage();
     updateNoMessagesText();
 }
@@ -81,7 +87,8 @@ function toggleNotificationCenter() {
 function closeNotificationCenterAfterDelay() {
     setTimeout(() => {
         const notificationCenter = document.getElementById("notificationCenter");
-        notificationCenter.classList.add("hidden");
+        notificationCenter.classList.remove("visible");
+        setTimeout(() => notificationCenter.classList.add("hidden"), 800);
     }, CLOSE_POPUP_DELAY);
 }
 
