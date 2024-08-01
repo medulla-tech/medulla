@@ -347,7 +347,12 @@ class synch_packages:
                 )
                 try:
                     # Try with proxy parameters as defined on the system
-                    proxy_url = os.environ.get("HTTP_PROXY") or os.environ.get("HTTPS_PROXY") or os.environ.get("http_proxy") or os.environ.get("https_proxy")
+                    proxy_url = (
+                        os.environ.get("HTTP_PROXY")
+                        or os.environ.get("HTTPS_PROXY")
+                        or os.environ.get("http_proxy")
+                        or os.environ.get("https_proxy")
+                    )
                     if proxy_url:
                         proxies = {"http": proxy_url, "https": proxy_url}
                         data = requests.get(
