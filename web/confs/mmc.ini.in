@@ -69,6 +69,6 @@ forgotPassword = no
 [notification]
 url =
 port = 5443
-protocol = bosh
+protocol = ws
 jid = notify@pulse
 password =
