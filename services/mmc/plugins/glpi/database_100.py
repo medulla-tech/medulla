@@ -6691,6 +6691,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
         final_list = []
         for machine in result:
+            if machine["version"] is None:
+                machine["version"] = "00.00"
+
             if machine["os"].startswith("Debian"):
                 machine["os"] = "Debian"
                 machine["version"] = machine["version"].split(" ")[0]
@@ -6699,11 +6702,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 machine["os"] = " ".join(machine["os"])
             elif machine["os"].startswith("Ubuntu"):
                 machine["os"] = "Ubuntu"
-                # We want just the XX.yy version number
-                if machine["version"] is None:
-                    machine["version"] = "0.0"
-                else:
-                    machine["version"] = machine["version"].split(" ")[0].split(".")
+                machine["version"] = machine["version"].split(" ")[0].split(".")
                 if len(machine["version"]) >= 2:
                     machine["version"] = machine["version"][0:2]
                 machine["version"] = ".".join(machine["version"])

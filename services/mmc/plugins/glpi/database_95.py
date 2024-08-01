@@ -6566,6 +6566,9 @@ class Glpi95(DyngroupDatabaseHelper):
 
         final_list = []
         for machine in result:
+            if machine["version"] is None:
+                machine["version"] = "00.00"
+
             if machine["os"].startswith("Debian"):
                 machine["os"] = "Debian"
                 machine["version"] = machine["version"].split(" ")[0]
