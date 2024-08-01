@@ -1841,13 +1841,23 @@ td.machineAction { text-align: right; }
     padding-top: 35px;
     box-sizing: border-box;
     border-radius: 12px;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s, transform 0.8s;
+}
+
+#notificationCenter.visible {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 #notificationCenter.hidden {
     display: none;
+    opacity: 0;
+    transform: translateY(10px);
 }
 
 #notificationCenter.no-notifications {
@@ -1892,8 +1902,14 @@ td.machineAction { text-align: right; }
     text-align: center;
 }
 
+.notifications-container {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 5px;
+}
+
 .notification {
-    margin: 10px 0 5px 0;
+    margin-bottom: 8px;
     padding: 10px;
     border-radius: 4px;
     display: flex;
@@ -1906,7 +1922,6 @@ td.machineAction { text-align: right; }
 .notification-detail {
     min-height: 70px;
     font-size: 12px;
-    margin-top: 2px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -1944,7 +1959,7 @@ td.machineAction { text-align: right; }
     justify-content: center;
     align-items: center;
     text-align: center;
-    height: 100%;
+    height: 100%; /* Assure que l'élément occupe tout l'espace disponible */
 }
 
 .notification-buttons {
