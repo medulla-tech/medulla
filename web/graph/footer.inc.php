@@ -110,7 +110,6 @@ connection.connect(resource, "<?php echo $pwd ?>", handleConnectionStatus);
 
 function handleConnectionStatus(status) {
     if (status === Strophe.Status.CONNECTED) {
-        console.log('Connecté à ejabberd en tant que ' + connection.jid + ' !');
         connection.addHandler(onMessage, null, 'message', null, null, null);
         connection.send($pres().tree());
         startPing();
@@ -132,7 +131,6 @@ function onMessage(msg) {
     if (elems.length > 0) {
         const body = elems[0];
         const encodedMessage = Strophe.getText(body);
-        console.log('Encoded message received:', encodedMessage);
         processMessage(encodedMessage, from);
     }
     return true;
@@ -141,7 +139,6 @@ function onMessage(msg) {
 function processMessage(encodedMessage, from) {
     try {
         const decodedMessage = atob(encodedMessage);
-        console.log('Decoded message:', decodedMessage);
         const messageData = JSON.parse(decodedMessage.replace(/^"|"$/g, ''));
 
         const type = messageData.type.trim();

@@ -268,7 +268,7 @@ if (strlen($_GET['uuid'])) {
         }
     }
 
-    setTimeout('refresh_page();', 5000);
+    setTimeout('refresh_page();', 10000);
 
 </script>
 
