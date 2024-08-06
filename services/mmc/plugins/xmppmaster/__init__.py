@@ -19,6 +19,7 @@ import json
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
 from pulse2.database.pkgs import PkgsDatabase
+from mmc.plugins.glpi.database import Glpi
 from pulse2.utils import xmlrpcCleanup
 
 import zlib
@@ -1854,18 +1855,38 @@ def get_count_updates_enable():
     return result
 
 
-def get_conformity_update_by_entity():
-    result = XmppMasterDatabase().get_conformity_update_by_entity()
-    resultarray = []
-    for t in result:
-        r = {
-            "entity": t,
-            "nbmachines": int(result[t]["nbmachines"]),
-            "nbupdate": int(result[t]["nbupdates"]),
-            "totalmach": int(result[t]["totalmach"]),
-            "conformite": int(result[t]["conformite"]),
+def get_conformity_update_by_entity(entities:list=[]):
+    """Get the conformity for specified entities
+    - params:
+        - entities (list): list of entities uuids
+    - returns dict
+    """
+
+    # init resultarray with default datas
+    # init entitiesarray with entities ids, this will be used in the "in" sql clause
+    resultarray = {}
+    entitieslist = []
+    for entity in entities:
+        eid=entity["uuid"].replace("UUID", "")
+        entitieslist.append(eid)
+        total = Glpi().get_machines_list1(0, 0, {"location":entity["uuid"]})
+
+        rtmp = {
+            "entity": eid,
+            "nbmachines": 0,
+            "nbupdate": 0,
+            "totalmach": total['count'],
+            "conformite": 100,
         }
-        resultarray.append(r)
+        resultarray[entity["uuid"]] = rtmp
+    result = XmppMasterDatabase().get_conformity_update_by_entity(entitieslist)
+
+    for counters in result:
+        euid = "UUID%s"%counters['entity']
+        resultarray[euid]["nbmachines"] = counters["nbmachines"] #count machines with missing updates
+        resultarray[euid]["nbupdate"] = counters["nbupdates"] # count updates for this entity
+        if resultarray[euid]["totalmach"] > 0 and int(counters["nbmachines"]) > 0:
+            resultarray[euid]["conformite"] = int(((resultarray[euid]["totalmach"] - counters["nbmachines"]) / resultarray[euid]["totalmach"]) * 100)
     return resultarray
 
 

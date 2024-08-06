@@ -13129,83 +13129,36 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_conformity_update_by_entity(self, session):
+    def get_conformity_update_by_entity(self, session, entities:list=[]):
         """
-        This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
+        This function returns the total number of machines to update and conformity in an entities list
+        - params:
+            - entities (list): list of entities uuids
+        - returns dict
         """
-        result = {}
-        sql = """select ge.glpi_id as id,
-        count(m.id) as count
-        from machines m
-join glpi_entity ge on m.glpi_entity_id = ge.id
-where m.platform like "%Windows%" and m.agenttype="machine";"""
-        datas = session.execute(sql)
+        result = []
+        entities = ",".join(entities)
 
-        for entity in datas:
-            result[str(entity.id)] = {
-                "entity": str(entity.id),
+        sql = """select
+  entities_id as id,
+  count(distinct uma.id_machine) as noncompliant,
+  count(distinct update_id) as missing
+from up_machine_activated uma
+where entities_id in (%s)
+group by entities_id;"""%entities
+        missing_updates = session.execute(sql)
+
+        for missing in missing_updates:
+            rtmp = {
+                "entity": str(missing.id),
                 "nbmachines": 0,
                 "nbupdates": 0,
-                "totalmach": entity.count,
                 "conformite": 0,
             }
 
-        sql1 = """select ge.glpi_id as id, count(distinct m.id) as count from up_machine_windows umw
-join machines m on umw.id_machine = m.id
-join glpi_entity ge on m.glpi_entity_id = ge.id
-left join up_gray_list  ugl on ugl.updateid = umw.update_id
-where
-    m.platform like "%Windows%"
-    and m.agenttype="machine"
-    and concat("UUID",ge.glpi_id) = "UUID0"
-    and ugl.valided=1;"""
-
-        machines_non_compliant = session.execute(sql1)
-        for non_compliant in machines_non_compliant:
-            if str(non_compliant.id) in result:
-                result[str(non_compliant.id)]["nbmachines"] = non_compliant.count
-
-        sql2 = """select ge.glpi_id as id,
-        count(update_id) count
-        from up_machine_windows umw
-        join machines m on umw.id_machine = m.id
-        join glpi_entity ge on m.glpi_entity_id = ge.id
-        left join up_gray_list  ugl on ugl.updateid = umw.update_id
-        where
-        m.platform like "%Windows%"
-        and m.agenttype="machine"
-        and ugl.valided = 1
-        group by ge.glpi_id, id_machine;"""
-        missing_updates = session.execute(sql2)
-        for missing_update in missing_updates:
-            if str(missing_update.id) in result:
-                result[str(missing_update.id)]["nbupdates"] += missing_update.count
-
-        sql3 = """select ge.glpi_id as id,
-        count(update_id) count
-        from up_machine_windows umw
-        join machines m on umw.id_machine = m.id
-        join glpi_entity ge on m.glpi_entity_id = ge.id
-        left join up_white_list  uwl on uwl.updateid = umw.update_id
-        where
-        m.platform like "%Windows%"
-        and m.agenttype="machine"
-        and uwl.valided = 1
-        group by ge.glpi_id, id_machine;"""
-        missing_updates = session.execute(sql3)
-        for missing_update in missing_updates:
-            if str(missing_update.id) in result:
-                result[str(missing_update.id)]["nbupdates"] += missing_update.count
-
-        for entity in result:
-            if result[entity]["totalmach"] > 0:
-                result[entity]["conformite"] = int(
-                    100
-                    * (result[entity]["totalmach"] - result[entity]["nbmachines"])
-                    / result[entity]["totalmach"]
-                )
-            else:
-                result[entity]["conformite"] = 100
+            rtmp["nbupdates"] = missing.missing
+            rtmp["nbmachines"] = missing.noncompliant
+            result.append(rtmp)
         return result
 
     @DatabaseHelper._sessionm
@@ -14540,6 +14493,7 @@ group by hostname
             .filter(
                 and_(
                     Up_history.id_machine.in_(idmachines),
+                    Deploy.state == "DEPLOYMENT SUCCESS",
                     or_(Up_history.delete_date != None, Up_history.delete_date != 0),
                 )
             )

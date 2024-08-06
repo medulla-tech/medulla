@@ -204,6 +204,35 @@ END$$
 DELIMITER ;
 ;
 
+-- new view to simplify the querying on up_machine_windows
+-- join some machine info, and allow to avoid the gray_list / white_list join on requests
+DROP VIEW IF EXISTS up_machine_activated;
+CREATE VIEW IF NOT EXISTS up_machine_activated AS(
+  SELECT 
+    (CASE WHEN ugl.kb IS NULL THEN uwl.kb ELSE ugl.kb END) AS kb,
+    id_machine,
+    substr(m.uuid_inventorymachine, 5) AS glpi_id,
+    m.hostname,
+    m.jid,
+    lgm.entities_id AS entities_id,
+    update_id,
+    curent_deploy, 
+    required_deploy, 
+    start_date, 
+    end_date, 
+    intervals, 
+    msrcseverity,
+    (CASE WHEN uwl.kb IS NULL THEN "gray" ELSE "white" END) AS list
+  FROM up_machine_windows umw
+  JOIN machines m ON m.id = umw.id_machine
+  JOIN local_glpi_machines lgm ON CONCAT("UUID",lgm.id) = m.uuid_inventorymachine
+  LEFT JOIN up_white_list uwl ON uwl.updateid = umw.update_id
+  LEFT JOIN up_gray_list ugl ON ugl.updateid = umw.update_id
+  WHERE (ugl.valided = 1 OR uwl.valided=1)
+  AND lgm.is_deleted =0 AND lgm.is_template=0
+);
+
+
 UPDATE version SET Number = 90;
 
 COMMIT;
