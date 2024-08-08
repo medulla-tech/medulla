@@ -259,7 +259,9 @@ if (safeCount($servDescList) == 1) {
                         $config = parse_ini_file($iniPath, true);
                         return $config;
                     } else {
-                        echo "<p>Erreur : Impossible de lire le fichier de configuration des providers. Vérifiez l'installation.</p>";
+                        echo "<p>";
+                        echo  _("Error reading authproviders.ini or authproviders.ini.local config file.");
+                        echo "</p>";
                         exit();
                     }
                 }
