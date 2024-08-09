@@ -234,7 +234,8 @@ CREATE VIEW IF NOT EXISTS up_machine_activated AS(
 
 
 -- new column to have relayserver public key into relayserver table
-ALTER TABLE relayserver ADD COLUMN `ssh_public_key` TEXT NULL;
+ALTER TABLE `xmppmaster`.`relayserver`
+ADD COLUMN `ssh_public_key` TEXT NULL AFTER `syncthing_port`;
 
 
 -- up_search_kb_update procedure
