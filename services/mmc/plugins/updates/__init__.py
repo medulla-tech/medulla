@@ -173,13 +173,13 @@ def get_conformity_update_by_machines(ids=[]):
         except:
             compliance = 100
         result[uuid] = {
-                "uuid": uuid,
-                "id": merged[uuid],
-                "missing": _missing,
-                "hostname": installed[uuid]["cn"],
-                "installed": count_installed,
-                "total": count_total,
-                "compliance": compliance,
-            }
+            "uuid": uuid,
+            "id": merged[uuid],
+            "missing": _missing,
+            "hostname": installed[uuid]["cn"],
+            "installed": count_installed,
+            "total": count_total,
+            "compliance": compliance,
+        }
 
     return result
