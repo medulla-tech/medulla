@@ -738,6 +738,11 @@ function xmlrpc_getComputerByMac($mac)
     return xmlCall("imaging.getComputerByMac", array($mac));
 }
 
+function xmlrpc_getMachineByUuidSetup($uuid)
+{
+    return xmlCall("imaging.getMachineByUuidSetup", array($uuid));
+}
+
 function xmlrpc_getComputerByUUID($uuid)
 {
     return xmlCall("imaging.getComputerByUUID", array($uuid));
@@ -800,4 +805,9 @@ function xmlrpc_setimaginglogxmpp(
                                                     $action,
                                                     $touser,
                                                     $fromuser));
+}
+
+function xmlrpc_delete_multicast_from_db($infoparameters)
+{
+    return xmlCall("imaging.delete_multicast_from_db", $infoparameters);
 }

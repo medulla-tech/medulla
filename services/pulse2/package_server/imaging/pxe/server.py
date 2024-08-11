@@ -123,7 +123,7 @@ class ProcessPacket:
         @type client: tuple
         """
         if result:
-            data = bytes(result + "\x00")
+            data = bytes(result + "\x00", "utf-8")
             try:
                 if client:
                     self.transport.write(data, client)  # UDP response

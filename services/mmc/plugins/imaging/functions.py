@@ -579,6 +579,7 @@ class ImagingRpcProxy(RpcProxyI):
             i = None
 
         if i != None:
+            ImagingDatabase().add_multicast(parameters)
             deferred = i.SetMulticastMultiSessionParameters(parameters)
             deferred.addCallback(lambda x: x)
         else:
@@ -763,7 +764,7 @@ class ImagingRpcProxy(RpcProxyI):
                 "Multicast while object checkThread is %s" % ImagingRpcProxy.checkThread
             )
             for i in threading.enumerate():
-                if i.getName() == "MainThread" and not i.isAlive():
+                if i.getName() == "MainThread" and not i.is_alive():
                     logging.getLogger().debug(
                         "[Multicast TERMINATE  monitorsUDPSender]"
                     )
@@ -1943,6 +1944,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: list
         """
         db = ImagingDatabase()
+        db.set_diskless_infos(location, config)
         # Set PXE params
         if "pxe_password" in config or "language" in config:
             db.setLocationPXEParams(location, config)
@@ -3682,6 +3684,36 @@ class ImagingRpcProxy(RpcProxyI):
             },
         ]
 
+    def getMachineByUuidSetup(self, uuid):
+        """
+        Called by the package server, to obtain a computer UUID/shortname/fqdn in exchange of its MAC address
+
+        @param mac: the mac address
+        @type mac: str
+
+        @results: a pair:
+            * True if succeed or False otherwise
+            * the error in case of failure else the computer as a dict
+        @rtype: list
+        """
+        try:
+            db_computer = ComputerManager().getMachineByUuidSetup(uuid)
+        except Exception as e:
+            return [False,
+                    "imaging.getComputerByUuidSetup() : Unable to find a computer corresponding to the UUID %s"%uuid]
+        if not db_computer:
+            return [
+                False,
+                "imaging.getMachineByUuidSetup() : I was unable to find a computer corresponding to the MAC address %s"
+                % uuid,
+            ]
+
+        if db_computer is None or db_computer == {}:
+            return [
+                False,"imaging.getComputerByUuidSetup() : Unable to find a computer corresponding to the UUID %s"% uuid,
+            ]
+        return [True, db_computer]
+
     def getComputerByUUID(self, uuid):
         """
         Called by the package server, to obtain a computer MAC/shortname/fqdn in exchange of uuid
@@ -3940,6 +3972,19 @@ class ImagingRpcProxy(RpcProxyI):
 
         return ret
 
+    def injectInventoryUuid(self, imaging_server_uuid, computer_uuid, inventory):
+        """
+        Called by the Package Server to inject an inventory.
+        """
+        db = ImagingDatabase()
+        try:
+            ret = db.injectInventory(imaging_server_uuid, computer_uuid, inventory)
+        except Exception as e:
+            logging.getLogger().exception(e)
+            ret = [False, str(e)]
+
+        return ret
+
     def getPartitionsToBackupRestore(self, computer_uuid):
         """
         Called by the web interface to get the computer disks and partitions
@@ -4064,6 +4109,9 @@ class ImagingRpcProxy(RpcProxyI):
             logging.getLogger().exception(e)
             return [False, str(e)]
         return [True, True]
+
+    def delete_multicast_from_db(self, infoparameters):
+        return ImagingDatabase().remove_multicast(infoparameters)
 
 
 def chooseMacAddress(ctx, uuid, macs):

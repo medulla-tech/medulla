@@ -3,7 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2017-2022 Siveo, http://http://www.siveo.net
+ * (c) 2017-2024 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -42,41 +42,52 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
     $imaging_server = $config[0];
     $default_menu = $config[1];
     if (isset($_POST["bvalid"])) {
-        $from = $_POST['from'];
-        $loc_name = $_POST['loc_name'];
-        $item_uuid = $_POST['itemid'];
+        $loc_name = (!empty($_POST['loc_name'])) ? $_POST['loc_name'] : "";
+        $item_uuid = (!empty($_POST['itemid'])) ? $_POST['itemid'] : "";
 
-        $label = urldecode($_POST['itemlabel']);
+        $label = (!empty($_POST['itemlabel'])) ? urldecode($_POST['itemlabel']) : "";
+        $name = !empty($imaging_server["name"]) ? htmlentities($imaging_server["name"]) : $location;
 
         $params = getParams();
         $params['default_name'] = $_POST['default_m_label'];
         $params['timeout'] = $_POST['default_m_timeout'];
-        $params['hidden_menu'] = $_POST['default_m_hidden_menu'];
+        $params['hidden_menu'] = (!empty($_POST['default_m_hidden_menu'])) ? $_POST['default_m_hidden_menu'] : false;
         $params['background_uri'] = $_POST['boot_xpm'];
         $params['message'] = $_POST['boot_msg'];
         $params['language'] = $_POST['language'];
         $params['pxe_login'] = $_POST['pxe_login'];
-        if ($_POST['pxe_password'] != $_POST['old_pxe_password'])
+        if ($_POST['pxe_password'] != $_POST['old_pxe_password']) {
             $params['pxe_password'] = $_POST['pxe_password'];
+        }
         $params['clonezilla_saver_params'] = $_POST['clonezilla_saver_params'];
         $params['clonezilla_restorer_params'] = $_POST['clonezilla_restorer_params'];
+        $params["diskless_dir"] = htmlentities($_POST["diskless_dir"]);
+        $params["diskless_kernel"] = htmlentities($_POST["diskless_kernel"]);
+        $params["inventories_dir"] = htmlentities($_POST["inventories_dir"]);
+        $params["pxe_time_reboot"] = htmlentities($_POST["pxe_time_reboot"]);
+        $params["diskless_initrd"] = htmlentities($_POST["diskless_initrd"]);
+        $params["tools_dir"] = htmlentities($_POST["tools_dir"]);
+        $params['davos_opts'] = htmlentities($_POST['davos_opts']);
+        $params['template_name'] = htmlentities($_POST['template_name']);
 
         $ret = xmlrpc_setImagingServerConfig($location, $params);
 
         // goto images list
         if ($ret[0] and !isXMLRPCError()) {
-            $str = sprintf(_T("Imaging server <strong>%s</strong> configuration saved.", "imaging"), $label, $loc_id);
-            xmlrpc_setfromxmppmasterlogxmpp($str,
-                                            "IMG",
-                                            '',
-                                            0,
-                                            $label ,
-                                            'Manuel',
-                                            '',
-                                            '',
-                                            '',
-                                            "session user ".$_SESSION["login"],
-                                            'Imaging | Postinstall | Menu | Configuration | Manual');
+            $str = sprintf(_T("Imaging server <strong>%s</strong> configuration saved.", "imaging"), $name);
+            xmlrpc_setfromxmppmasterlogxmpp(
+                $str,
+                "IMG",
+                '',
+                0,
+                $label,
+                'Manuel',
+                '',
+                '',
+                '',
+                "session user ".$_SESSION["login"],
+                'Imaging | Postinstall | Menu | Configuration | Manual'
+            );
             new NotifyWidgetSuccess($str);
             // Synchronize boot menu
             $ret = xmlrpc_synchroLocation($location);
@@ -91,4 +102,3 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
 }
 header("Location: " . urlStrRedirect("imaging/manage/configuration", $params));
 exit;
-?>

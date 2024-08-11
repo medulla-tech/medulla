@@ -65,6 +65,9 @@ class ImagingApi(MyXmlrpc):
     def xmlrpc_getComputerByMac(self, MACAddress):
         return self.api.getComputerByMac(MACAddress)
 
+    def xmlrpc_getMachineByUuidSetup(self, uuid):
+        return self.api.getMachineByUuidSetup(uuid)
+
     def xmlrpc_computersMenuSet(self, menus):
         return self.api.computersMenuSet(menus)
 
