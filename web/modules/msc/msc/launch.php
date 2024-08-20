@@ -546,7 +546,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     if (quick_get('launchAction')) { // Advanced Quick Action
     $ss =  new TrFormElement(
                 _T('The command must start after', 'msc'),
-                new DateTimeTpl('start_date')
+                new DateTimeTpl('start_date', $start_date)
             );
         $f->add(
            $ss, array(
@@ -557,7 +557,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
         $f->add(
             new TrFormElement(
-                _T('The command must stop before', 'msc'), new DateTimeTpl('end_date')
+                _T('The command must stop before', 'msc'), new DateTimeTpl('end_date', $start_date)
             ), array(
                 "value" => $end_date,
                 "ask_for_never" => 0
@@ -669,7 +669,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         else {
             $f->add(
                 new TrFormElement(
-                    _T('The command must start after', 'msc'), new DateTimeTpl('start_date')
+                    _T('The command must start after', 'msc'), new DateTimeTpl('start_date', $start_date)
                 ), array(
                     "value" => $start_date,
                     "ask_for_now" => 0
@@ -678,7 +678,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
             $f->add(
                 new TrFormElement(
-                    _T('The command must stop before', 'msc'), new DateTimeTpl('end_date')
+                    _T('The command must stop before', 'msc'), new DateTimeTpl('end_date', $start_date)
                 ), array(
                     "value" => $end_date,
                     "ask_for_never" => 0
@@ -752,7 +752,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         if (isExpertMode()){
             $f->add(
                 new TrFormElement(
-                    _T('Run the deployment at the specific time', 'msc'), new DateTimeTpl('exec_date'),array("trid"=>"idexecdate")
+                    _T('Run the deployment at the specific time', 'msc'), new DateTimeTpl('exec_date', $start_date),array("trid"=>"idexecdate")
                 ), array(
                     "value" => $exec_date,
                     "ask_for_never" => 0
