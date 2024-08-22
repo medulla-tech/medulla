@@ -31,8 +31,7 @@ Depends: ${misc:Depends},
          pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
          pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client,
-         pulse-imaging-scripts,
-         pulse2-homepage
+         pulse-imaging-scripts
 Description: Pulse 2 metapackage
  This empty package depends on all Pulse2/MMC required packages.
 
