@@ -21,13 +21,14 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FormHandler {
+class FormHandler
+{
+    public $post_data;
+    public $data;
+    public $arr;
 
-    var $post_data;
-    var $data;
-    var $arr;
-
-    function __construct($name, $data) {
+    public function __construct($name, $data)
+    {
         $this->name = $name;
         $this->data = array();
 
@@ -41,11 +42,11 @@ class FormHandler {
             $this->post_data = $oldFH->post_data;
             // update with new data
             foreach($data as $name => $value) {
-                if(preg_match('/^old_/', $name) == 0)
+                if(preg_match('/^old_/', $name) == 0) {
                     $this->post_data[$name] = $value;
+                }
             }
-        }
-        else {
+        } else {
             // the raw $_POST data
             $this->post_data = $data;
         }
@@ -56,7 +57,8 @@ class FormHandler {
 
     /* Create array with updated fields from $_POST
        If the field_name != old_field_name store the new value in $this->data */
-    function sanitize() {
+    public function sanitize()
+    {
         // get all updated fields
         foreach($this->post_data as $name => $value) {
 
@@ -64,8 +66,7 @@ class FormHandler {
             if(preg_match('/^old_/', $name) > 0 && !isset($this->post_data[substr($name, 4)])) {
                 if($value == "on") {
                     $this->data[substr($name, 4)] = "off";
-                }
-                else if (is_array($value)) {
+                } elseif (is_array($value)) {
                     $this->data[substr($name, 4)] = array();
                 }
             }
@@ -73,76 +74,90 @@ class FormHandler {
             if(isset($this->post_data['old_'.$name])) {
                 if($this->post_data['old_'.$name] != $this->post_data[$name]) {
                     // remove empty strings from array
-                    if(is_array($value))
+                    if(is_array($value)) {
                         $value = array_filter($value);
+                    }
                     $this->data[$name] = $value;
                 }
             }
         }
     }
 
-    function isError($state) {
+    public function isError($state)
+    {
         if ($state) {
             $_SESSION[$this->name] = serialize($this);
-        }
-        else {
-            if (isset($_SESSION[$this->name]))
+        } else {
+            if (isset($_SESSION[$this->name])) {
                 unset($_SESSION[$this->name]);
+            }
         }
     }
 
     /* Check if field has changed */
-    function isUpdated($field) {
+    public function isUpdated($field)
+    {
         return isset($this->data[$field]);
     }
 
     /* Get updated value */
-    function getValue($field) {
-        if(isset($this->data[$field]))
+    public function getValue($field)
+    {
+        if(isset($this->data[$field])) {
             return $this->data[$field];
-        else
+        } else {
             return false;
+        }
     }
 
     /* Get all updated values */
-    function getValues() {
+    public function getValues()
+    {
         return $this->data;
     }
 
     /* Update value */
-    function setValue($field, $value) {
+    public function setValue($field, $value)
+    {
         $this->data[$field] = $value;
     }
 
     /* Remove value */
-    function delValue($field) {
+    public function delValue($field)
+    {
         unset($this->data[$field]);
     }
 
     /* Get value from original $_POST array */
-    function getPostValue($field) {
-        if(isset($this->post_data[$field]) and $this->post_data[$field] != "")
+    public function getPostValue($field)
+    {
+        if(isset($this->post_data[$field]) and $this->post_data[$field] != "") {
             return $this->post_data[$field];
-        else
+        } else {
             return false;
+        }
     }
 
     /* Get all values from original $_POST array */
-    function getPostValues() {
+    public function getPostValues()
+    {
         return $this->post_data;
     }
 
     /* Update value in original $_POST array */
-    function setPostValue($field, $value) {
+    public function setPostValue($field, $value)
+    {
         $this->post_data[$field] = $value;
     }
 
     /* Remove value from original $_POST array */
-    function delPostValue($field) {
+    public function delPostValue($field)
+    {
         unset($this->post_data[$field]);
     }
 
-    function setArr($arr) {
+    public function setArr($arr)
+    {
         $this->arr = $arr;
     }
 
@@ -152,23 +167,21 @@ class FormHandler {
      * So we don't lost the user input
      * POST value is returned before the LDAP value (wanted/actual)
      */
-    function getArrayOrPostValue($field, $type = "string") {
+    public function getArrayOrPostValue($field, $type = "string")
+    {
 
         if ($type == "array") {
             $value = array('');
             if($this->getPostValue($field)) {
                 $value = $this->getPostValue($field);
-            }
-            else if(isset($this->arr[$field])) {
+            } elseif(isset($this->arr[$field])) {
                 $value = $this->arr[$field];
             }
-        }
-        else {
+        } else {
             $value = "";
             if($this->getPostValue($field)) {
                 $value = $this->getPostValue($field);
-            }
-            else if(isset($this->arr[$field][0])) {
+            } elseif(isset($this->arr[$field][0])) {
                 $value = $this->arr[$field][0];
             }
         }
@@ -177,4 +190,3 @@ class FormHandler {
     }
 
 }
-?>
