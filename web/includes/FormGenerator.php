@@ -659,11 +659,13 @@ class DynamicDateTpl extends InputTpl
 /**
  * dateTime input template
  */
-class DateTimeTpl extends AbstractTpl
-{
-    public function __construct($name)
-    {
+class DateTimeTpl extends AbstractTpl {
+    public $name;
+    public $mindate;
+
+    function __construct($name, $mindate=""){
         $this->name = $name;
+        $this->mindate = $mindate;
     }
 
     public function display($arrParam = array())
@@ -708,6 +710,7 @@ class DateTimeTpl extends AbstractTpl
             $days_short[] = substr($day, 0, 3);
         }
 
+        // Put restriction on time for selected date
         $params_json = json_encode(array(
             'closeText' => _('Close'),
             'prevText' => _('Previous'),
@@ -720,7 +723,8 @@ class DateTimeTpl extends AbstractTpl
             'dayNamesMin' => $days_short,
             'firstDay' => 1,
             'timeFormat' => "HH:mm:ss",
-            'dateFormat' => "yy-mm-dd"
+            'dateFormat' => "yy-mm-dd",
+            'minDate' => Date($this->mindate),
         ));
 
         // Dirty workaround (PHP gettext issue ?)
@@ -730,14 +734,15 @@ class DateTimeTpl extends AbstractTpl
                 'firstDay' => 1,
                 'timeFormat' => "HH:mm:ss",
                 'dateFormat' => "yy-mm-dd",
-        ));
+                'minDate' => Date($this->mindate),
+            ));
         }
 
-        // Set dateTimePicker on input
         print '
             <script type="text/javascript">
                 jQuery(function(){
                     jQuery("input#' . $this->name . '").datetimepicker(' . $params_json . ');
+
                 });
             </script>';
     }

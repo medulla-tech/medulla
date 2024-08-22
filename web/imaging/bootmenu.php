@@ -87,6 +87,8 @@ foreach($conffiles as $module => $conffile) {
 // Get the parameters sent through URL
 $mac = (!empty($_GET['mac'])) ? htmlentities($_GET['mac']) : "";
 $srv = (!empty($_GET['srv'])) ? htmlentities($_GET['srv']) : "";
+$uuid = (!empty($_GET["uuid"])) ? strtolower(htmlentities($_GET["uuid"])) : "";
+
 $srvHost = "";
 if(inet_pton($srv) == true) {
     $srvHost = gethostbyaddr($srv);
@@ -175,7 +177,48 @@ $debug_ipxe .= "# Next-server : $srv
 # uuid : $ims[packageserver_uuid]
 ";
 
-if($mac != "") {
+$nextId=1;
+$placeholder = !empty($ims["template_name"]) ?htmlentities($ims["template_name"]) : "";
+if($placeholder != ""){
+    $query = $db["glpi"]->prepare("select replace(name, ?, ?) as nextId from glpi_computers where name REGEXP ? order by id;");
+    $query->execute([$placeholder, "", '^'.$placeholder.'[0-9]{1,}$']);
+
+    $result = $query->fetchAll(PDO::FETCH_ASSOC);
+    $idList = [];
+
+    if(!empty($result) != []){
+        foreach($result as $row){
+            $idList[] = $row['nextId'];
+        }
+    }
+    while(in_array($nextId, $idList)){
+        $nextId++;
+    }
+    $placeholder .= $nextId;
+
+}
+
+$debug_ipxe .= "# template-name: $placeholder
+";
+
+if($uuid != ""){
+    $query = $db['glpi']->prepare("
+    SELECT
+    CONCAT('UUID', gc.id) as uuid,
+    gc.entities_id as euid,
+    gc.name as name,
+    ge.completename as entity
+    FROM glpi_networkports gnp
+    JOIN glpi_computers gc ON gc.id = gnp.items_id AND gnp.itemtype='Computer'
+    JOIN glpi_entities ge ON gc.entities_id = ge.id
+    where uuid = LOWER(?)
+    ORDER BY  gc.id LIMIT 1
+    ");
+
+    $query->execute([$uuid]);
+    $computer = $query->fetch(Pdo::FETCH_ASSOC);
+}
+else if($mac != "") {
 
     // Get the inventory associated to the mac address
     $query = $db['glpi']->prepare("
@@ -243,12 +286,13 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
     $menuId = (!empty($target['fk_menu'])) ? $target['fk_menu'] : $menuId;
 
     $computerName = $computer['name'];
-    $title = (!empty($target['target_name'])) ? "Host $computerName - $mac registered on $srvHost" : "Host $computerName - $mac not registered on $srvHost";
+    $title = (!empty($target['target_name'])) ? "Host $computerName registered on $srv" : "Host $computerName not registered on $srv";
     $multicast_image_uuid = (!empty($target['multicast_image_uuid'])) ? $target['multicast_image_uuid'] : null;
     $multicast_image_name = (!empty($target['multicast_image_name'])) ? $target['multicast_image_name'] : null;
     $multicast = ($multicast_image_uuid != null && $multicast_image_name != null) ? true : false;
     $debug_ipxe .= "# hostname : $computer[name]
 # mac : $mac
+# machine uuid : $uuid
 # entity : $computer[uuid]
 # entity name: $computer[entity]
 # menu id : $menuId
@@ -260,10 +304,11 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
 " : "# target : not found
 ";
 } else {
-    $title = "Host \${mac} is NOT registered on \${next-server}!";
+    $title = "Host is NOT registered on $srv";
 
     $debug_ipxe .= "# hostname : not registered
 # mac : $mac
+# machine uuid : $uuid
 # entity : ".(!empty($computer['uuid']) ? $computer['uuid'] : $ims['uuid'])."
 # entity name: ".(!empty($computer["entity"]) ? $computer["entity"] : $ims["name"])."
 # target : not found
@@ -449,7 +494,7 @@ foreach($keys as $key) {
 }
 
 $ipxe = preg_replace("@\#\#MACADDRESS\#\#@", $mac, $ipxe);
-
+$ipxe = preg_replace("@\#\#PLACEHOLDER\#\#@", $placeholder, $ipxe);
 if(DEBUG) {
     echo '<pre><code>';
     echo($ipxe);

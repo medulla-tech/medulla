@@ -203,9 +203,9 @@ $version = htmlentities($_GET['version']);
 $deployName = get_def_package_label($label, $version, "-@upd@");
 
 $current = time();
-$start_date = date("Y-m-d h:i:s", $current);
-$end_date = strtotime("+7day", $current);
-$end_date = date("Y-m-d h:i:s", $end_date);
+$start_date = date("Y-m-d H:i:s", $current);
+$_end_date = strtotime("+7day", $current);
+$end_date = date("Y-m-d H:i:s", $_end_date);
 
 if(!empty($_GET["entity"])) {
     $formtitle = _T("Schedule update deployment on entity", "update");
@@ -243,7 +243,7 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
 
     $ss =  new TrFormElement(
         _T('The command must start after', 'msc'),
-        new DateTimeTpl('start_date')
+        new DateTimeTpl('start_date', $start_date)
     );
     $f->add(
         $ss,
@@ -255,7 +255,7 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
     $f->add(
         new TrFormElement(
             _T('The command must stop before', 'msc'),
-            new DateTimeTpl('end_date')
+            new DateTimeTpl('end_date', $start_date)
         ),
         array(
             "value" => $end_date,

@@ -77,8 +77,7 @@ foreach($_entities as $entity) {
 }
 $count = count($filtered_entities);
 $entities = array_slice($filtered_entities, $start, $maxperpage, false);
-
-$entitycompliances = xmlrpc_get_conformity_update_by_entity();
+$entitycompliances = xmlrpc_get_conformity_update_by_entity($entities);
 
 $detailsByMach = new ActionItem(_T("Details by machines", "updates"), "detailsByMachines", "auditbymachine", "", "updates", "updates");
 $detailsByUpd = new ActionItem(_T("Details by updates", "updates"), "detailsByUpdates", "auditbyupdate", "", "updates", "updates");

@@ -42,6 +42,7 @@ except ImportError:
     from sqlalchemy.sql.operators import ColumnOperators
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.ext.automap import automap_base
 from mmc.support.mmctools import shlaunch
 import base64
 import json
@@ -193,6 +194,19 @@ class Glpi100(DyngroupDatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
         """
+
+        Base = automap_base()
+        Base.prepare(self.db, reflect=True)
+
+        # Only federated tables (beginning by local_) are automatically mapped
+        # If needed, excludes tables from this list
+        exclude_table = []
+        # Dynamically add attributes to the object for each mapped class
+        for table_name, mapped_class in Base.classes.items():
+            if table_name in exclude_table:
+                continue
+            if table_name.startswith("local"):
+                setattr(self, table_name.capitalize(), mapped_class)
 
         self.klass = {}
 
@@ -551,6 +565,7 @@ class Glpi100(DyngroupDatabaseHelper):
             Column("users_id", Integer, ForeignKey("glpi_users.id")),
             Column("manufacturers_id", Integer, ForeignKey("glpi_manufacturers.id")),
             Column("name", String(255), nullable=False),
+            Column("uuid", String(255), nullable=False),
             Column("serial", String(255), nullable=False),
             Column("license_number", String(255), nullable=True),
             Column("licenseid", String(255), nullable=True),
@@ -1297,7 +1312,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 "operatingsystemservicepacks_id",
                 "operatingsystemarchitectures_id",
                 "license_number",
-                "license_id",
+                "licenseid",
                 "operatingsystemkernelversions_id",
             ]
             for addcolumn in list_column_add_for_info:
@@ -5218,39 +5233,97 @@ class Glpi100(DyngroupDatabaseHelper):
                     "id": ret.id if hasattr(ret, "id") else ret.uuidglpicomputer,
                     "entities_id": ret.entities_id,
                     "name": ret.name,
-                    "serial": ret.serial,
-                    "otherserial": ret.otherserial,
-                    "contact": ret.contact,
-                    "contact_num": ret.contact_num,
-                    "users_id_tech": ret.users_id_tech,
-                    "groups_id_tech": ret.groups_id_tech,
-                    "comment": ret.comment,
-                    "date_mod": ret.date_mod,
-                    "autoupdatesystems_id": ret.autoupdatesystems_id,
-                    "locations_id": ret.locations_id,
-                    "domains_id": ret.domains_id,
-                    "networks_id": ret.networks_id,
-                    "computermodels_id": ret.computermodels_id,
-                    "computertypes_id": ret.computertypes_id,
-                    "is_template": ret.is_template,
-                    "template_name": ret.template_name,
-                    "manufacturers_id": ret.manufacturers_id,
-                    "is_deleted": ret.is_deleted,
-                    "is_dynamic": ret.is_dynamic,
-                    "users_id": ret.users_id,
-                    "groups_id": ret.groups_id,
-                    "states_id": ret.states_id,
+                    "serial": ret.serial if ret.serial is not None else "",
+                    "otherserial": (
+                        ret.otherserial if ret.otherserial is not None else ""
+                    ),
+                    "contact": ret.contact if ret.contact is not None else "",
+                    "contact_num": (
+                        ret.contact_num if ret.contact_num is not None else ""
+                    ),
+                    "users_id_tech": (
+                        ret.users_id_tech if ret.users_id_tech is not None else ""
+                    ),
+                    "groups_id_tech": (
+                        ret.groups_id_tech if ret.groups_id_tech is not None else ""
+                    ),
+                    "comment": ret.comment if ret.comment is not None else "",
+                    "date_mod": (
+                        ret.date_mod.__str__() if ret.date_mod is not None else ""
+                    ),
+                    "autoupdatesystems_id": (
+                        ret.autoupdatesystems_id
+                        if ret.autoupdatesystems_id is not None
+                        else ""
+                    ),
+                    "locations_id": (
+                        ret.locations_id if ret.locations_id is not None else ""
+                    ),
+                    "domains_id": ret.domains_id if ret.domains_id is not None else "",
+                    "networks_id": (
+                        ret.networks_id if ret.networks_id is not None else ""
+                    ),
+                    "computermodels_id": (
+                        ret.computermodels_id
+                        if ret.computermodels_id is not None
+                        else ""
+                    ),
+                    "computertypes_id": (
+                        ret.computertypes_id if ret.computertypes_id is not None else ""
+                    ),
+                    "is_template": (
+                        ret.is_template if ret.is_template is not None else ""
+                    ),
+                    "template_name": (
+                        ret.template_name if ret.template_name is not None else ""
+                    ),
+                    "manufacturers_id": (
+                        ret.manufacturers_id if ret.manufacturers_id is not None else ""
+                    ),
+                    "is_deleted": ret.is_deleted if ret.is_deleted is not None else "",
+                    "is_dynamic": ret.is_dynamic if ret.is_dynamic is not None else "",
+                    "users_id": ret.users_id if ret.users_id is not None else "",
+                    "groups_id": ret.groups_id if ret.groups_id is not None else "",
+                    "states_id": ret.states_id if ret.states_id is not None else "",
                     "ticket_tco": float(ret.ticket_tco),
-                    "uuid": ret.uuid,
-                    "date_creation": ret.date_creation,
-                    "is_recursive": ret.is_recursive,
-                    "operatingsystems_id": ret.operatingsystems_id,
-                    "operatingsystemversions_id": ret.operatingsystemversions_id,
-                    "operatingsystemservicepacks_id": ret.operatingsystemservicepacks_id,
-                    "operatingsystemarchitectures_id": ret.operatingsystemarchitectures_id,
-                    "license_number": ret.license_number,
-                    "license_id": ret.licenseid,
-                    "operatingsystemkernelversions_id": ret.operatingsystemkernelversions_id,
+                    "uuid": ret.uuid if ret.uuid is not None else "",
+                    "date_creation": (
+                        ret.date_creation.__str__()
+                        if ret.date_creation is not None
+                        else ""
+                    ),
+                    "is_recursive": (
+                        ret.is_recursive if ret.is_recursive is not None else ""
+                    ),
+                    "operatingsystems_id": (
+                        ret.operatingsystems_id
+                        if ret.operatingsystems_id is not None
+                        else ""
+                    ),
+                    "operatingsystemversions_id": (
+                        ret.operatingsystemversions_id
+                        if ret.operatingsystemversions_id is not None
+                        else ""
+                    ),
+                    "operatingsystemservicepacks_id": (
+                        ret.operatingsystemservicepacks_id
+                        if ret.operatingsystemservicepacks_id is not None
+                        else ""
+                    ),
+                    "operatingsystemarchitectures_id": (
+                        ret.operatingsystemarchitectures_id
+                        if ret.operatingsystemarchitectures_id is not None
+                        else ""
+                    ),
+                    "license_number": (
+                        ret.license_number if ret.license_number is not None else ""
+                    ),
+                    "licenseid": ret.licenseid if ret.licenseid is not None else "",
+                    "operatingsystemkernelversions_id": (
+                        ret.operatingsystemkernelversions_id
+                        if ret.operatingsystemkernelversions_id is not None
+                        else ""
+                    ),
                 }
             except Exception:
                 self.logger.error("\n%s" % (traceback.format_exc()))
@@ -6618,6 +6691,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
         final_list = []
         for machine in result:
+            if machine["version"] is None:
+                machine["version"] = "00.00"
+
             if machine["os"].startswith("Debian"):
                 machine["os"] = "Debian"
                 machine["version"] = machine["version"].split(" ")[0]
@@ -6626,11 +6702,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 machine["os"] = " ".join(machine["os"])
             elif machine["os"].startswith("Ubuntu"):
                 machine["os"] = "Ubuntu"
-                # We want just the XX.yy version number
-                if machine["version"] is None:
-                    machine["version"] = "0.0"
-                else:
-                    machine["version"] = machine["version"].split(" ")[0].split(".")
+                machine["version"] = machine["version"].split(" ")[0].split(".")
                 if len(machine["version"]) >= 2:
                     machine["version"] = machine["version"][0:2]
                 machine["version"] = ".".join(machine["version"])

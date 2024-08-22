@@ -157,7 +157,7 @@ def get_conformity_update_by_machines(ids=[]):
     else:
         missing = XmppMasterDatabase().get_count_missing_updates_by_machines(ids["ids"])
 
-    result = []
+    result = {}
     for uuid in installed:
         _missing = missing[uuid]["missing"] if uuid in missing else 0
         count_historic = 0
@@ -168,19 +168,18 @@ def get_conformity_update_by_machines(ids=[]):
         count_installed = installed[uuid]["installed"] + count_historic
         count_total = count_installed + _missing
         try:
-            compliance = ((1.0 * count_installed) / (1.0 * count_total)) * 100
+            # in python3 the result of a division (even of int values) is float
+            compliance = (count_installed / float(count_total)) * 100
         except:
             compliance = 100
-        result.append(
-            {
-                "uuid": uuid,
-                "id": merged[uuid],
-                "missing": _missing,
-                "hostname": installed[uuid]["cn"],
-                "installed": count_installed,
-                "total": count_total,
-                "compliance": compliance,
-            }
-        )
+        result[uuid] = {
+            "uuid": uuid,
+            "id": merged[uuid],
+            "missing": _missing,
+            "hostname": installed[uuid]["cn"],
+            "installed": count_installed,
+            "total": count_total,
+            "compliance": compliance,
+        }
 
     return result

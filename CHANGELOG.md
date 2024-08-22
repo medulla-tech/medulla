@@ -2,6 +2,12 @@
 
 ## [5.2.0](https://github.com/medulla-tech/medulla/releases/tag/5.2.0) (unreleased)
 - [FEATURE] Use SQL to manage imaging menus.
+- [FEATURE] Support for OIDC
+- [BUGFIX]  Fix detection of a proxy for downloading updates
+- [BUGFIX]  Prevent creation of multiple records for the same information in substituteconf
+- [BUGFIX]  Fix Audit view where the hostname was not displayed for Kiosk deployments
+- [BUGFIX]  Fix convergence owner when it was enabled on a group shared by someone else
+- [BUGFIX]  Fix the counters on patch management to take into consideration the ITSM database
 
 ## [5.1.1](https://github.com/medulla-tech/medulla/releases/tag/5.1.1) (unreleased)
 - [FEATURE] Add button on search field in audit group deploy page

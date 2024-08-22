@@ -205,6 +205,12 @@ class SendPackageCommand:
         cmd["start_file"], patternActions = MscDatabase().applyCmdPatterns(
             cmd["start_file"], _patterns
         )
+
+        if "creatorLogin" in self.params:
+            cmd["parameters"] = self.params["creatorLogin"]
+        else:
+            cmd["parameters"] = self.login
+
         addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
             self.ctx,
             self.pid,

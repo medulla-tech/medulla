@@ -38,6 +38,7 @@ nobase_pulseconf_DATA = \
 	inventory-server/xml-fix/06_Laptop_type.py \
 	inventory-server/xml-fix/07_Virtual_machine_type.py \
 	inventory-server/xml-fix/08_Microsoft_consistency.py \
+	inventory-server/xml-fix/98_remove_macaddresspxe_and_mc.py\
 	inventory-server/xml-fix/99_Strip_leading_trailing_spaces.py \
 	inventory-server/OcsNGMap.xml \
 	atftpd/pcre.conf \

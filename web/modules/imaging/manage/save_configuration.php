@@ -3,7 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2017-2022 Siveo, http://http://www.siveo.net
+ * (c) 2017-2024 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -68,6 +68,7 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $params["diskless_initrd"] = htmlentities($_POST["diskless_initrd"]);
         $params["tools_dir"] = htmlentities($_POST["tools_dir"]);
         $params['davos_opts'] = htmlentities($_POST['davos_opts']);
+        $params['template_name'] = htmlentities($_POST['template_name']);
 
         $ret = xmlrpc_setImagingServerConfig($location, $params);
 

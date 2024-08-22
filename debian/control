@@ -31,8 +31,7 @@ Depends: ${misc:Depends},
          pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
          pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client,
-         pulse-imaging-scripts,
-         pulse2-homepage
+         pulse-imaging-scripts
 Description: Pulse 2 metapackage
  This empty package depends on all Pulse2/MMC required packages.
 
@@ -511,7 +510,7 @@ Description: Management Console Agent
 
 Package: mmc-web-base
 Architecture: all
-Depends: ${misc:Depends}, php-fpm | libapache2-mod-php, php-xmlrpc, php-gd, apache2 | apache2-mpm-prefork, wwwconfig-common, node-d3
+Depends: ${misc:Depends}, php-fpm | libapache2-mod-php, php-xmlrpc, php-gd, apache2 | apache2-mpm-prefork, wwwconfig-common, node-d3, openid-connect-php
 Description: MMC web interface to interact with a MMC agent
  Management Console web interface designed by Siveo.
 

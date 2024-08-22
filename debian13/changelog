@@ -1,0 +1,17 @@
+medulla (5.1.0-1) unstable; urgency=low
+
+ * New version for 5.1.0
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Dec 2023 22:00:11 +0100
+
+medulla (5.0.0-1) unstable; urgency=low
+
+ * New preversion for 5.0.0
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 12 Apr 2023 22:00:11 +0100
+
+medulla (4.6.11-1) unstable; urgency=low
+
+ * Adapt to new name
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 01 Mar 2023 22:00:11 +0100

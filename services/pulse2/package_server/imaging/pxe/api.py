@@ -331,6 +331,17 @@ class PXEImagingApi(PXEMethodParser):
                                 return dd.text
         return ""
 
+    def uuid_xml(self, file_content):
+        root = ET.fromstring(file_content)
+        for child in root:
+            if child.tag == "CONTENT":
+                for cc in child:
+                    if cc.tag == "HARDWARE":
+                        for dd in cc:
+                            if dd.tag == "UUID":
+                                return dd.text
+        return ""
+
     @assign(0xBA)
     def InventorySysLinux(self, mac, inventory, ip_address):
         """
@@ -542,7 +553,7 @@ class PXEImagingApi(PXEMethodParser):
             inventory = inventory.decode("utf-8")
 
         inventory = '<?xml version="1.0" encoding="utf-8"?>' + inventory
-        logging.getLogger().debug("send invotory depuis _injectedInventorySend")
+        logging.getLogger().debug("send inventory from _injectedInventorySend")
 
         try:
             self.send_inventory(inventory, hostname)
@@ -1060,4 +1071,31 @@ class PXEImagingApi(PXEMethodParser):
             )
 
         d.callback(True)
+        return d
+
+    @assign(0xB0)
+    def inventoryUuidSysLinux(self, mac, inventory, ip_address):
+        """
+        Associate the inventory recieved with the uuid, not the mac address.
+        This association generates a Target in imaging database and generates the menu file
+
+        Recieve generic params:
+        Params:
+            mac (str): not used
+            inventory (str): inventory in xml format
+            ip_address (str): not used
+
+        Returns deffered
+        """
+
+        # Extract the content from REQUEST tag
+        m = re.search("<REQUEST>.*<\\/REQUEST>", inventory)
+        file_content = m.group(0)
+
+        # Extract the machine uuid from the inventory
+        #
+        uuidxml = self.uuid_xml(file_content)
+        hostnamexml = self.hostname_xml(file_content)
+
+        d = self.api.injectInventoryUuid(uuidxml, inventory)
         return d

@@ -23,12 +23,12 @@
 mmcdatadir = $(datadir)/mmc
 SUBDIRS = confs
 
-datapaths = graph img includes jsframework logout modules/admin modules/base  modules/dashboard \
+datapaths = graph img includes jsframework logout imaging modules/admin modules/base  modules/dashboard \
 	modules/dyngroup modules/msc modules/inventory modules/glpi modules/pkgs modules/urbackup \
 	modules/medulla_server modules/imaging modules/backuppc modules/support \
 	modules/kiosk conf/apache modules/ppolicy modules/update modules/services modules/report \
 	modules/xmppmaster modules/updates \
-	index.php main.php version.php license.php forgotpassword.php token.php
+	index.php main.php version.php license.php forgotpassword.php token.php providers.php
 
 datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) \
 		-type f \
