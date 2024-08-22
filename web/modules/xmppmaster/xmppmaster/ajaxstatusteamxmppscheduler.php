@@ -57,7 +57,7 @@ function convtostringdate($data){
 }
 
 foreach( $arraydeploy['tabdeploy']['start'] as $start_date){
-    $startdeploy[] =i convtostringdate($start_date);
+    $startdeploy[] = convtostringdate($start_date);
     $enddeploy[] = convtostringdate($end_date);
     }
 

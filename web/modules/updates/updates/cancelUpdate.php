@@ -39,7 +39,7 @@ if(!empty($_POST['bcancelupdate'])) {
 }
 
 $f = new PopupForm(_T("Cancel pending update", "updates"));
-$f->addText(sprintf(_T("You will cancel update <b>%s</b>.", , "updates"), $updateid));
+$f->addText(sprintf(_T("You will cancel update <b>%s</b>.", "updates"), $updateid));
 $f->addValidateButton("bcancelupdate");
 $f->addCancelButton("bback");
 $f->display();
