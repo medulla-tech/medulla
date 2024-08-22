@@ -226,22 +226,24 @@ function _base_changeUser($FH, $mode)
         }
     }
 
+    if(!$FH->isUpdated('givenName') || $FH->isUpdated('sn')) {
+        change_user_main_attr($uid, $uid, $_POST['givenName'], $_POST['sn']);
+        $update = true;
+    }
+
     if($FH->isUpdated('telephoneNumber')) {
-        changeUserTelephoneNumbers($uid, $FH->getValue("telephoneNumber"));
+        changeUserTelephoneNumbers($uid, $_POST['telephoneNumber']);
         $update = true;
     }
 
-    if($FH->isUpdated('givenName') or $FH->isUpdated('sn')) {
-        change_user_main_attr($uid, $uid, $FH->getValue('givenName'), $FH->getValue('sn'));
-        $update = true;
+    if ($FH->getPostValue('mail')) {
+        changeUserAttributes($uid, "mail", $FH->getPostValue("mail"));
     }
-
-    foreach(array('title', 'mobile', 'facsimileTelephoneNumber', 'homePhone',
-        'cn', 'mail', 'displayName', 'preferredLanguage') as $attr) {
-        if ($FH->isUpdated($attr)) {
-            changeUserAttributes($uid, $attr, $FH->getValue($attr));
-            $update = true;
-        }
+    if ($FH->getPostValue('mobile')) {
+        changeUserAttributes($uid, "mobile", $FH->getPostValue("mobile"));
+    }
+    if ($FH->getPostValue('title')) {
+        changeUserAttributes($uid, "title", $FH->getPostValue("title"));
     }
 
     /* Change photo */
@@ -352,7 +354,7 @@ function _base_baseEdit($FH, $mode)
     );
 
     $f->add(
-        new TrFormElement(_("Title")."*", new InputTpl("title")),
+        new TrFormElement(_("Title"), new InputTpl("title")),
         array("value" => $FH->getArrayOrPostValue("title"))
     );
 
@@ -377,40 +379,6 @@ function _base_baseEdit($FH, $mode)
     $f->add(
         new TrFormElement(_("Mobile number"), new InputTpl("mobile", $phoneregexp)),
         array("value" => $FH->getArrayOrPostValue("mobile"))
-    );
-
-    $f->add(
-        new TrFormElement(_("Fax number"), new InputTpl("facsimileTelephoneNumber", $phoneregexp)),
-        array("value" => $FH->getArrayOrPostValue("facsimileTelephoneNumber"))
-    );
-
-    $f->add(
-        new TrFormElement(_("Home phone number"), new InputTpl("homePhone", $phoneregexp)),
-        array("value" => $FH->getArrayOrPostValue("homePhone"))
-    );
-
-    $languages = new SelectItem("preferredLanguage");
-    $labels = array(_("Choose language")) + array_values(getLanguages());
-    $values = array("") + array_keys(getLanguages());
-    $languages->setElements($labels);
-    $languages->setElementsVal($values);
-    $f->add(
-        new TrFormElement(_("Preferred language"), $languages),
-        array("value" => $FH->getArrayOrPostValue("preferredLanguage"))
-    );
-
-    $checked = "checked";
-    if ($FH->getArrayOrPostValue("loginShell") != '/bin/false') {
-        $checked = "";
-    }
-    $f->add(
-        new TrFormElement(
-            _("Disable user's shell"),
-            new CheckboxTpl("isBaseDesactive"),
-            array("tooltip" => _("A disabled user can't log in any UNIX services.<br/>
-                                  His login shell command is replaced by /bin/false"))
-        ),
-        array("value" => $checked)
     );
 
     /* Primary group */
@@ -441,6 +409,9 @@ function _base_baseEdit($FH, $mode)
         new TrFormElement(_("Primary group"), $groupsTpl),
         array("value" => $primary)
     );
+    $f->pop();
+    $f->push(new DivExpertMode());
+    $f->push(new Table());
 
     /* Secondary groups */
     $groupsTpl = new MembersTpl("secondary");
@@ -473,6 +444,7 @@ function _base_baseEdit($FH, $mode)
         array("member" => $member, "available" => $available)
     );
 
+    $f->pop();
     $f->pop();
 
     return $f;
