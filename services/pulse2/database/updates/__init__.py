@@ -377,41 +377,31 @@ class UpdatesDatabase(DatabaseHelper):
             limit = -1
 
         try:
-            list_name = "up_%s_list" % upd_list
-
             enabled_updates_list = {
                 "nb_element_total": 0,
                 "updateid": [],
                 "title": [],
                 "kb": [],
-                "valided": [],
                 "missing": [],
                 "installed": [],
             }
 
             sql = """SELECT SQL_CALC_FOUND_ROWS
-    umw.update_id AS updateid,
+            uma.update_id as updateid,
     ud.kb AS kb,
     ud.title AS title,
     ud.description AS description,
     ud.creationdate AS creationdate,
     ud.title_short AS title_short,
-    tbl.valided as valided,
-    count(umw.update_id) as missing
+    count(uma.update_id) as missing
 FROM
-    xmppmaster.up_machine_windows umw
-LEFT JOIN xmppmaster.%s tbl ON tbl.updateid = umw.update_id
-JOIN xmppmaster.update_data ud ON umw.update_id = ud.updateid
-JOIN xmppmaster.machines ma ON umw.id_machine = ma.id
-JOIN xmppmaster.glpi_entity ge ON ge.id = ma.glpi_entity_id
+    xmppmaster.up_machine_activated uma
+JOIN xmppmaster.update_data ud ON uma.update_id = ud.updateid
 WHERE
-    tbl.valided = 1
-AND
-    ge.glpi_id = %s
-AND
-    tbl.updateid is not NULL """ % (
-                list_name,
+    entities_id = %s
+    and list = "%s" """ % (
                 entity.replace("UUID", ""),
+                upd_list,
             )
 
             if filter != "":
@@ -426,7 +416,7 @@ AND
                 )
                 sql += filterwhere
 
-            sql += "group by umw.update_id "
+            sql += "group by uma.update_id "
             filterlimit = ""
             if start != -1 and limit != -1:
                 filterlimit = "LIMIT %s, %s" % (start, limit)
@@ -449,11 +439,14 @@ AND
 
             if result:
                 for list_b in result:
-                    sql2 = """select count(ma.id) as count
+                    sql2 = """select 
+                    count(ma.id) as count
         from xmppmaster.machines ma
+        join xmppmaster.local_glpi_machines lgm on lgm.id = ma.uuid_inventorymachine
         join xmppmaster.up_history uh on uh.id_machine = ma.id
-        join xmppmaster.glpi_entity ge on ma.glpi_entity_id = ge.id
-    where uh.update_id='%s' and ge.glpi_id=%s and uh.delete_date is not NULL""" % (
+        join xmppmaster.local_glpi_entities lge on lgm.entities_id = lge.id
+    where uh.update_id='%s' and lge.id=%s and uh.delete_date is not NULL
+""" % (
                         list_b.updateid,
                         entity.replace("UUID", ""),
                     )
@@ -468,7 +461,6 @@ AND
                     enabled_updates_list["updateid"].append(list_b.updateid)
                     enabled_updates_list["title"].append(list_b.title)
                     enabled_updates_list["kb"].append(list_b.kb)
-                    enabled_updates_list["valided"].append(list_b.valided)
                     enabled_updates_list["missing"].append(list_b.missing)
                     enabled_updates_list["installed"].append(installed)
 
