@@ -365,7 +365,7 @@ class UpdatesDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_enabled_updates_list(
-        self, session, entity, upd_list="gray", start=0, limit=-1, filter=""
+        self, session, entity, upd_list="gray", start=0, limit=-1, filter="", config=None
     ):
         try:
             start = int(start)
@@ -375,6 +375,15 @@ class UpdatesDatabase(DatabaseHelper):
             limit = int(limit)
         except:
             limit = -1
+        filter_on = ""
+        if config.filter_on is not None:
+            for key in config.filter_on:
+                if key == "state":
+                    filter_on = "%s AND lgm.states_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                if key == "type":
+                    filter_on = "%s AND lgm.computertypes_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                if key == "entity":
+                    filter_on = "%s AND lgm.entities_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
 
         try:
             enabled_updates_list = {
@@ -384,6 +393,7 @@ class UpdatesDatabase(DatabaseHelper):
                 "kb": [],
                 "missing": [],
                 "installed": [],
+                "history_list" : []
             }
 
             sql = """SELECT SQL_CALC_FOUND_ROWS
@@ -396,12 +406,15 @@ class UpdatesDatabase(DatabaseHelper):
     count(uma.update_id) as missing
 FROM
     xmppmaster.up_machine_activated uma
-JOIN xmppmaster.update_data ud ON uma.update_id = ud.updateid
+    JOIN xmppmaster.update_data ud ON uma.update_id = ud.updateid
+    JOIN xmppmaster.local_glpi_machines lgm on lgm.id = uma.glpi_id
 WHERE
-    entities_id = %s
-    and list = "%s" """ % (
+    uma.entities_id = %s
+    and list = "%s"
+    %s""" % (
                 entity.replace("UUID", ""),
                 upd_list,
+                filter_on
             )
 
             if filter != "":
@@ -440,24 +453,24 @@ WHERE
             if result:
                 for list_b in result:
                     sql2 = """select 
-                    count(ma.id) as count
+                    count(ma.id) as count,
+                    coalesce(group_concat(lgm.id), NULL, "") as list
         from xmppmaster.machines ma
-        join xmppmaster.local_glpi_machines lgm on lgm.id = ma.uuid_inventorymachine
+        join xmppmaster.local_glpi_machines lgm on concat("UUID",lgm.id) = ma.uuid_inventorymachine
         join xmppmaster.up_history uh on uh.id_machine = ma.id
         join xmppmaster.local_glpi_entities lge on lgm.entities_id = lge.id
     where uh.update_id='%s' and lge.id=%s and uh.delete_date is not NULL
-""" % (
-                        list_b.updateid,
-                        entity.replace("UUID", ""),
-                    )
+    %s""" % (list_b.updateid, entity.replace("UUID", ""), filter_on )
                     try:
                         res = session.execute(sql2)
                     except Exception as e:
                         logger.error(e)
                     installed = 0
+                    history_list=""
                     if res is not None:
                         for _res in res:
                             installed = _res.count
+                            history_list = _res.list
                     enabled_updates_list["updateid"].append(list_b.updateid)
                     enabled_updates_list["title"].append(list_b.title)
                     enabled_updates_list["kb"].append(list_b.kb)

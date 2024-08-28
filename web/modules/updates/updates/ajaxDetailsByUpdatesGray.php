@@ -93,7 +93,7 @@ $complRates = [];
 $machineWithUpd = [];
 $machineWithoutUpd = [];
 $actionDetails = [];
-
+$total = [];
 $machineWithoutUpd = $enabled_updates_list['missing'];
 $i = 0;
 foreach($enabled_updates_list['kb'] as $kb) {
@@ -101,17 +101,15 @@ foreach($enabled_updates_list['kb'] as $kb) {
     $in_unique_without_Upd = "False";
 
     $params[] = array('kb' => $kb, 'updateid' => $enabled_updates_list['updateid'][$i]);
+    $with_Upd = xmlrpc_get_count_machine_with_update($kb, $uuid, $enabled_updates_list['history_list'][$i]);
 
-    //$compliances = xmlrpc_get_count_machines_by_update($enabled_updates_list['updateid'][$i]);
-    $with_Upd = xmlrpc_get_count_machine_with_update($kb);
-
+    $total[] = $enabled_updates_list["total"];
     $titles[] = $enabled_updates_list['title'][$i];
     $actionDetails[] = $detailsUpd;
 
     $machineWithUpd[] = $with_Upd['nb_machines'] + $enabled_updates_list['installed'][$i];
-    $totalMachines = $machineWithoutUpd[$i] + $with_Upd['nb_machines'];
-
-    $compliance_rate = ($totalMachines > 0) ? round(($with_Upd['nb_machines'] / $totalMachines) * 100) : 0;
+    $totalMachines = $enabled_updates_list["total"];
+    $compliance_rate = ($totalMachines > 0) ? round((($totalMachines-$machineWithoutUpd[$i]) / $totalMachines) * 100) : 100;
 
     $color = colorconf($compliance_rate);
     $complRates[] = "<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_rate."% </div>";
@@ -124,6 +122,7 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
 $n->addExtraInfo($machineWithUpd, _T("Machines with this update", "updates"));
 $n->addExtraInfo($machineWithoutUpd, _T("Machines asking for this update", "updates"));
+$n->addExtraInfo($total, _T("Total of machines", "updates"));
 
 $n->setItemCount($count_enabled_updates);
 $n->setNavBar(new AjaxNavBar($count_enabled_updates, $filter, 'updateSearchParamformGray'));

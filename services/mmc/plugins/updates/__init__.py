@@ -70,10 +70,11 @@ def get_black_list(start, end, filter=""):
 def get_enabled_updates_list(entity, upd_list="gray", start=0, end=-1, filter=""):
     if upd_list not in ["gray", "white"]:
         upd_list = "gray"
-    return UpdatesDatabase().get_enabled_updates_list(
-        entity, upd_list, start, end, filter
-    )
-
+    # The glpi config is sent to updatedatabase to get the filter_on param
+    datas = UpdatesDatabase().get_enabled_updates_list(entity, upd_list, start, end, filter, Glpi().config)
+    count_glpi = Glpi().get_machines_list1(0, 0, {"location":entity})
+    datas["total"] = count_glpi["count"]
+    return datas
 
 def get_family_list(start, end, filter=""):
     return UpdatesDatabase().get_family_list(start, end, filter)
@@ -124,8 +125,8 @@ def get_machine_with_update(kb, updateid):
     return glpi
 
 
-def get_count_machine_with_update(kb):
-    return Glpi().get_count_machine_with_update(kb)
+def get_count_machine_with_update(kb, uuid, list):
+    return Glpi().get_count_machine_with_update(kb, uuid, list)
 
 
 def get_machines_needing_update(updateid):

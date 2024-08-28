@@ -6846,27 +6846,35 @@ class Glpi100(DyngroupDatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
-    def get_count_machine_with_update(self, session, kb):
+    def get_count_machine_with_update(self, session, kb, uuid, hlist=""):
+        if hlist == "":
+            hlist = '""'
         sqlrequest = """
             SELECT 
                 COUNT(*) as nb_machines
             FROM
-                glpi_computers
+                glpi_computers_pulse gcp
                     INNER JOIN
-                glpi_items_softwareversions ON glpi_computers.id = glpi_items_softwareversions.items_id and glpi_items_softwareversions.itemtype="Computer"
+                glpi_items_softwareversions ON gcp.id = glpi_items_softwareversions.items_id and glpi_items_softwareversions.itemtype="Computer"
                     INNER JOIN
                 glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
                     INNER JOIN
                 glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
                     INNER JOIN
-                glpi_entities ON glpi_entities.id = glpi_computers.entities_id
+                glpi_entities ge ON ge.id = gcp.entities_id
             WHERE
-                glpi_computers.is_deleted = 0
+                ge.id = %s
             AND
-                glpi_computers.is_template = 0
+                gcp.is_deleted = 0
             AND
-                glpi_softwares.name LIKE 'Update (KB%s)';""" % (
-            kb
+                gcp.is_template = 0
+            AND
+                glpi_softwares.name LIKE 'Update (KB%s)'
+            AND
+                gcp.id not in (%s);""" % (
+            uuid.replace("UUID", ""),
+            kb,
+            hlist
         )
         result = {}
         res = session.execute(sqlrequest)
