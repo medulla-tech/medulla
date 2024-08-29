@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022-2023 Siveo, http://siveo.net/
+ * (c) 2022-2024 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -24,12 +24,7 @@ require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
-
-function colorconf($conf)
-{
-    $colorDisplay = array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
-    return $colorDisplay[intval(($conf - ($conf % 10)) / 10)];
-}
+require_once("modules/updates/includes/html.inc.php");
 
 $location = (isset($_GET['location'])) ? htmlentities($_GET['location']) : "";
 $gid = (isset($_GET['gid'])) ? htmlentities($_GET['gid']) : "";

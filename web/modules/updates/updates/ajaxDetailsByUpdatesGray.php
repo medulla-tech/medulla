@@ -21,6 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 require_once("modules/updates/includes/xmlrpc.php");
+require_once("modules/updates/includes/html.inc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
@@ -76,13 +77,6 @@ if ($uuid == '') {
 } else {
     $typeOfDetail = "entitie";
 }
-
-function colorconf($conf)
-{
-    $colorDisplay = array( "#ff0000","#ff3535","#ff5050","#ff8080","#ffA0A0","#c8ffc8","#97ff97","#64ff64","#2eff2e","#00ff00", "#00ff00");
-    return $colorDisplay[intval(($conf - ($conf % 10)) / 10)];
-}
-
 
 $detailsUpd = new ActionItem(_T("Details", "updates"), "detailsSpecificUpdate", "auditbymachine", "", "updates", "updates");
 
