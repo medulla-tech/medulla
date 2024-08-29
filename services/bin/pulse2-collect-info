@@ -59,8 +59,8 @@ ln -s /etc/ejabberd conf-ejabberd
 [ -x /sbin/guacd ] && ln -s /etc/guacamole conf-guacamole
 [ -x /usr/sbin/apache2 ] && ln -s /etc/apache2 conf-apache2 || ln -s /etc/httpd conf-httpd
 mkdir conf-php
-[ -x /usr/sbin/apache2 ] && cp -a /etc/php/7.0/apache2/* conf-php/ || cp -a /etc/php.* conf-php/
-[ -x /etc/init.d/tomcat8 ] && ln -s /etc/tomcat8 conf-tomcat8 || ln -s /etc/tomcat conf-tomcat
+[ -x /usr/sbin/apache2 ] && cp -a /etc/php/8.2/fpm/* conf-php/ || cp -a /etc/php.* conf-php/
+[ -x /etc/init.d/tomcat9 ] && ln -s /etc/tomcat9 conf-tomcat9 || ln -s /etc/tomcat conf-tomcat
 ln -s /var/lib/pulse2/clients/config conf-client-agent
 
 # Logs file
@@ -72,7 +72,7 @@ ln -s /var/log/pulse logs-pulse-xmpp-agent
 [ -d /var/log/mariadb/ ] && ln -s /var/log/mariadb logs-mariadb
 [ -d /var/log/mysql/ ] && ln -s /var/log/mysql logs-mysql
 [ -x /usr/sbin/apache2 ] && ln -s /var/log/apache2 logs-apache2 || ln -s /var/log/httpd logs-httpd
-[ -x /etc/init.d/tomcat8 ] && ln -s /var/log/tomcat8 logs-tomcat8 || ln -s /var/log/tomcat logs-tomcat
+[ -x /etc/init.d/tomcat9 ] && ln -s /var/log/tomcat9 logs-tomcat9 || ln -s /var/log/tomcat logs-tomcat
 
 name="isc-dhcp-server tftpd-hpa guacd ejabberd"
 for serv in $name
