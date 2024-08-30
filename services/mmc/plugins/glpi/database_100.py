@@ -6847,19 +6847,41 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_count_machine_with_update(self, session, kb, uuid, hlist=""):
+        """
+        Get the count of machines with the update specified with its KB (Knowledge Base).
+        Args:
+            session (Session): SQLAlchemy session to interact with the db
+            kb (str): The KB name (Knowledge Base) we are looking for.
+            uuid (str): the entity uuid on which we have to search.
+            hlist (str): ids of machines excluded in this search because they are already counted in history
+        Returns:
+            dict: A dict containing the count of machines with the specific update.
+            The key "nb_machines" contains the count of machine.
+        """
         if hlist == "":
             hlist = '""'
+
+        filter_on = ""
+        if self.config.filter_on is not None:
+            for key in self.config.filter_on:
+                if key == "state":
+                    filter_on = "%s AND gcp.states_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                if key == "type":
+                    filter_on = "%s AND gcp.computertypes_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                if key == "entity":
+                    filter_on = "%s AND gcp.entities_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+
         sqlrequest = """
             SELECT 
                 COUNT(*) as nb_machines
             FROM
                 glpi_computers_pulse gcp
                     INNER JOIN
-                glpi_items_softwareversions ON gcp.id = glpi_items_softwareversions.items_id and glpi_items_softwareversions.itemtype="Computer"
+                glpi_items_softwareversions gisv ON gcp.id = gisv.items_id and gisv.itemtype="Computer"
                     INNER JOIN
-                glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
+                glpi_softwareversions gsv ON gisv.softwareversions_id = gsv.id
                     INNER JOIN
-                glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
+                glpi_softwares gs on gsv.softwares_id = gs.id
                     INNER JOIN
                 glpi_entities ge ON ge.id = gcp.entities_id
             WHERE
@@ -6869,13 +6891,12 @@ class Glpi100(DyngroupDatabaseHelper):
             AND
                 gcp.is_template = 0
             AND
-                glpi_softwares.name LIKE 'Update (KB%s)'
+                gsv.name LIKE '%s'
             AND
-                gcp.id not in (%s);""" % (
-            uuid.replace("UUID", ""),
-            kb,
-            hlist
-        )
+                (gsv.comment LIKE '%%Update%%' OR COALESCE(gsv.comment, '') = '')
+            AND
+                gcp.id not in (%s)
+            %s;""" % (uuid.replace("UUID", ""), kb, hlist, filter_on)
         result = {}
         res = session.execute(sqlrequest)
         for element in res:
