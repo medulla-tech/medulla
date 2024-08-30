@@ -129,8 +129,8 @@ def get_count_machine_with_update(kb, uuid, list):
     return Glpi().get_count_machine_with_update(kb, uuid, list)
 
 
-def get_machines_needing_update(updateid):
-    return UpdatesDatabase().get_machines_needing_update(updateid)
+def get_machines_needing_update(updateid, entity, start=0, limit=-1, filter=""):
+    return UpdatesDatabase().get_machines_needing_update(updateid, entity, Glpi().config, start, limit, filter)
 
 
 def get_conformity_update_by_machines(ids=[]):

@@ -66,7 +66,7 @@ $titles_without = [];
 $plateform_without = [];
 
 $with_Upd = xmlrpc_get_machine_with_update($kb, $updateid);
-$without_Upd = xmlrpc_get_machines_needing_update($updateid);
+$without_Upd = xmlrpc_get_machines_needing_update($updateid, $location, $start, $maxperpage, $filter);
 $count_with_upd = sizeof($with_Upd[1]);
 $count_without_upd = sizeof($without_Upd);
 

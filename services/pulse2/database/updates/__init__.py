@@ -652,27 +652,81 @@ JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up
         return result
 
     @DatabaseHelper._sessionm
-    def get_machines_needing_update(self, session, updateid):
+    def get_machines_needing_update(self, session, updateid, uuid, config, start=0, limit=-1, filter=""):
         """
         This function returns the list of machines needing a specific update
         """
-        sql = """SELECT xmppmaster.machines.hostname AS hostname
-                FROM
-                    xmppmaster.up_machine_windows
-                JOIN
-                    xmppmaster.machines ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
-                WHERE
-                    (update_id = '%s');""" % (
-            updateid
-        )
+        slimit = "limit %s"%start
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
 
+        if limit != -1:
+            slimit = "%s,%s"%(slimit, limit)
+
+        filter_on = ""
+
+        sfilter = ""
+        if filter != "":
+            sfilter = """AND
+    (lgm.name LIKE '%%%s%%'
+    OR uma.update_id LIKE '%%%s%%'
+    OR m.platform LIKE '%%%s%%'
+    OR uma.kb LIKE '%%%s%%')""" % tuple(
+                    filter for x in range(0, 4)
+                )
+
+        if config.filter_on is not None:
+            for key in config.filter_on:
+                if key not in ["state", "entity", "type"]:
+                    continue
+                if key == "state":
+                    filter_on = "%s AND lgm.states_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                if key == "type":
+                    filter_on = "%s AND lgm.computertypes_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                if key == "entity":
+                    filter_on = "%s AND lgm.entities_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+
+        sql = """select
+    SQL_CALC_FOUND_ROWS
+    lgm.id,
+    lgm.name,
+    m.platform,
+    concat("KB", uma.kb) as kb
+from xmppmaster.up_machine_activated uma
+join xmppmaster.machines m on uma.id_machine = m.id
+join xmppmaster.local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
+where uma.update_id = "%s"
+and lgm.is_deleted = 0
+and lgm.is_template = 0
+and lgm.entities_id = %s
+%s
+%s
+%s;
+"""%(updateid,uuid.replace("UUID",""), sfilter, filter_on,slimit)
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result = []
+        count = session.execute("SELECT FOUND_ROWS();")
+        count = [elem[0] for elem in count][0]
+
+        result = {
+            "datas": {
+                "id": [],
+                "name": [],
+                "platform" : [],
+                "kb" : []
+            },
+            "total": count
+        }
+
         if resultquery:
             for row in resultquery:
-                result.append(row.hostname)
+                result["datas"]["id"].append(row.id)
+                result["datas"]["name"].append(row.name)
+                result["datas"]["platform"].append(row.platform)
+                result["datas"]["kb"].append(row.kb)
         return result
 
     @DatabaseHelper._sessionm

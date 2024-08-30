@@ -94,7 +94,7 @@ foreach($enabled_updates_list['kb'] as $kb) {
     $in_unique_with_Upd = "False";
     $in_unique_without_Upd = "False";
 
-    $params[] = array('kb' => $kb, 'updateid' => $enabled_updates_list['updateid'][$i]);
+    $params[] = array('kb' => $kb, 'updateid' => $enabled_updates_list['updateid'][$i], 'location'=>$uuid);
     $with_Upd = xmlrpc_get_count_machine_with_update($kb, $uuid, $enabled_updates_list['history_list'][$i]);
 
     $total[] = $enabled_updates_list["total"];

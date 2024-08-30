@@ -92,9 +92,9 @@ function xmlrpc_get_count_machine_as_not_upd($updateid)
     return xmlCall("updates.get_count_machine_as_not_upd", [$updateid]);
 }
 
-function xmlrpc_get_machines_needing_update($updateid)
+function xmlrpc_get_machines_needing_update($updateid, $entity, $start=0, $limit=-1, $filter="")
 {
-    return xmlCall("updates.get_machines_needing_update", [$updateid]);
+    return xmlCall("updates.get_machines_needing_update", [$updateid, $entity, $start, $limit, $filter]);
 }
 
 function xmlrpc_get_conformity_update_by_machines($ids = [])
