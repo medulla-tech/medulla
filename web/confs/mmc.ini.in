@@ -1,6 +1,9 @@
 [global]
 ; RPC backend to use
 backend = xmlrpc
+; Not necessary to restart mmc-agent when changing this value
+; PHP session timeout in seconds. Default is 7200 seconds (2 hours)
+sessiontimeout = 7200
 
 ; HTTP basic authentication credentials to use for XMLRPC communication
 login = mmc

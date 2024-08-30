@@ -223,6 +223,23 @@ function xmlCall($method, $params = null) {
     /* Process the received HTTP header */
     $pos = strpos($xmlResponse, "\r\n\r\n");
     $httpHeader = substr($xmlResponse, 0, $pos);
+
+    // Extract the HTTP response code from the header
+    if (preg_match('/^HTTP\/\d+\.\d+\s+(\d+)/i', $httpHeader, $matches)) {
+        $httpCode = (int)$matches[1];
+    } else {
+        $httpCode = 0;
+    }
+
+    // Session XML-RPC expired
+    if($httpCode == 401) {
+        unset($_SESSION["expire"]);
+        $_SESSION["agentsessionexpired"] = 1;
+        $root = $conf["global"]["root"];
+        header("Location: $root" . "main.php");
+        exit;
+    }
+
     if ($method == "base.ldapAuth" || $method == "base.tokenAuthenticate") {
         if ($method == "base.tokenAuthenticate")
             $_SESSION["AUTH_METHOD"] = "token";
@@ -296,7 +313,6 @@ function xmlCall($method, $params = null) {
                 $str .= "</pre>";
             }
         } else {
-        
             if ($conf["debug"]["level"]==2){
                 $temp=time() - $input;
                 $str .= "\n---RESULT---".$method."  in ".$temp."s\n";
@@ -325,7 +341,12 @@ function xmlCall($method, $params = null) {
              */
             require_once 'modules/base/includes/users-xmlrpc.inc.php';
             // Create a template array to store important session vars
-            $temp = array();
+            // Regenerate session ID to prevent session fixation attacks
+            session_regenerate_id(true);
+
+            // Preserve necessary session variables
+            $temp = [];
+            $keys = ['login', 'pass'];  // Adjust keys as necessary
             // Session keys to keep
             $keys = array('ip_addr', 'XMLRPC_agent', 'agent', 'XMLRPC_server_description',
                           'AUTH_METHOD', 'login', 'pass', 'expire', 'lang', 'RPCSESSION',
@@ -352,8 +373,7 @@ function xmlCall($method, $params = null) {
             if (auth_user($temp['login'], $temp['pass']) ){
                 // If login succeed, retry call after relogin
                 return xmlCall($method, $params);
-            }
-            else{
+            } else {
                 // Logout and request a new login
                 unset($_SESSION["expire"]);
                 $_SESSION["agentsessionexpired"] = 1;

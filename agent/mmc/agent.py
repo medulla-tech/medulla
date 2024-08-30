@@ -7,6 +7,7 @@
 """
 XML-RPC server implementation of the MMC agent.
 """
+
 from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
 import signal
 import multiprocessing as mp
@@ -1652,12 +1653,41 @@ class MmcServer(XMLRPC, object):
         requestxml = request.content.read()
         args, functionPath = xmlrpc.client.loads(requestxml)
         s = request.getSession()
+        if not hasattr(s, "loggedin"):
+            s.loggedin = False
+        if not hasattr(s, "lastModified"):
+            s.lastModified = reactor.seconds()
+        if not hasattr(s, "sessionTimeout"):
+            s.sessionTimeout = self.config.sessiontimeout
+
         try:
-            s.loggedin
-        except AttributeError:
+            # Check if session is expired
+            current_time = reactor.seconds()
+            if (
+                self.config.sessiontimeout
+                and (current_time - s.lastModified) > self.config.sessiontimeout
+            ):
+                # # Session has expired
+                logger.debug("Session expired !")
+                s.loggedin = False  # Mark session as expired
+                # Define the HTTP 401 response code
+                request.setResponseCode(http.UNAUTHORIZED)
+                request.setHeader(b"content-type", b"text/html")
+                request.setHeader(b"content-length", b"0")
+
+                request.finish()
+                return server.NOT_DONE_YET
+
+            # Update session timeout for the current session
+            s.lastModified = current_time
+
+        except AttributeError as e:
+            # Initialize session attributes if AttributeError occurs
+            logger.error(f"Attribute error: {e}")
             s.loggedin = False
             # Set session expire timeout
             s.sessionTimeout = self.config.sessiontimeout
+            return server.NOT_DONE_YET
 
         # Check authorization using HTTP Basic
         cleartext_token = self.config.login + ":" + self.config.password
@@ -1699,7 +1729,6 @@ class MmcServer(XMLRPC, object):
                 if not s.loggedin and not self._needAuth(functionPath):
                     # Provide a security context when a method which doesn't
                     # require a user authentication is called
-                    s = request.getSession()
                     s.userid = "root"
                     try:
                         self._associateContext(request, s, s.userid)
@@ -2343,9 +2372,9 @@ class MMCApp(object):
         if PluginManager().isEnabled("xmppmaster"):
             configxmppmaster = XmppMasterDatabase().config
             # create file  message
-            PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp = (
-                messagefilexmpp(self.config, configxmppmaster)
-            )
+            PluginManager().getEnabledPlugins()[
+                "xmppmaster"
+            ].modulemessagefilexmpp = messagefilexmpp(self.config, configxmppmaster)
             self.modulexmppmaster = (
                 PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp
             )

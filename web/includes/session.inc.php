@@ -30,24 +30,17 @@ session_cache_expire (30);
 session_name("PULSESESSION");
 session_start();
 
-if (!isset($_SESSION["expire"])) {
-    /* session has expired */
-    if (preg_match("/\/logout\/index.php$/", $_SERVER["SCRIPT_NAME"])) {
-        session_destroy();
-    }
-    $errorcode = "";
-    if (isset($_SESSION["agentsessionexpired"])) {
-        $errorcode = "?agentsessionexpired=1";
-        unset($_SESSION["agentsessionexpired"]);
-    }
-    /* Redirect user to the login page */
+if (!isset($_SESSION["expire"]) || $_SESSION["expire"] < time()) {
+    session_destroy();
+
+    $errorcode = isset($_SESSION["agentsessionexpired"]) ? "?agentsessionexpired=1" : "";
     $root = $conf["global"]["root"];
     echo "<script>\n";
-    echo "window.location = '".$root."index.php". $errorcode."';";
+    echo "window.location = '".$root."index.php". $errorcode ."';";
     echo "</script>\n";
     exit;
 }
 
-$_SESSION["expire"] = time() + 100* 90 * 60;
-
+$sessionTimeout = intval($conf["global"]["sessiontimeout"]);
+$_SESSION["expire"] = time() + $sessionTimeout;
 ?>
