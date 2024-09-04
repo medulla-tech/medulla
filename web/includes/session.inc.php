@@ -26,6 +26,7 @@
 /**
  * this file provide session registration
  */
+require_once("includes/config.inc.php");
 session_cache_expire (30);
 session_name("PULSESESSION");
 session_start();
