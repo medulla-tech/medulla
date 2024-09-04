@@ -972,11 +972,6 @@ function xmlrpc_reload_deploy(
                                                       $rechedule));
 }
 
-function xmlrpc_get_conformity_update_by_entity($entities = [])
-{
-    return xmlCall("xmppmaster.get_conformity_update_by_entity", [$entities]);
-}
-
 function xmlrpc_get_conformity_update_by_machine($idmachine)
 {
     return xmlCall("xmppmaster.get_conformity_update_by_machine", [$idmachine]);
