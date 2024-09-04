@@ -11,6 +11,7 @@
 - [BUGFIX]  Fix pagination issues on the update module
 - [BUGFIX]  Add constrain on the datepickers
 - [BUGFIX]  Change am/pm hour to 0-23 digit on datepicker
+- [BUGFIX]  Fix the management of sessions between xml-rpc and php
 
 ## [5.1.1](https://github.com/medulla-tech/medulla/releases/tag/5.1.1) (unreleased)
 - [FEATURE] Add button on search field in audit group deploy page
