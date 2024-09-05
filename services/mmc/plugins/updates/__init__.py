@@ -133,12 +133,8 @@ def get_machines_needing_update(updateid, entity, start=0, limit=-1, filter=""):
     return UpdatesDatabase().get_machines_needing_update(updateid, entity, Glpi().config, start, limit, filter)
 
 
-def get_conformity_update_by_entity(entities:list=[]):
-    """Get the conformity for specified entities
-    - params:
-        - entities (list): list of entities uuids
-    - returns dict
-    """
+def get_conformity_update_by_entity(entities=[]):
+    """Get the conformity for specified entities"""
 
     # init resultarray with default datas
     # init entitiesarray with entities ids, this will be used in the "in" sql clause
@@ -157,7 +153,7 @@ def get_conformity_update_by_entity(entities:list=[]):
             "conformite": 100,
         }
         resultarray[entity["uuid"]] = rtmp
-    result = XmppMasterDatabase().get_conformity_update_by_entity(entitieslist)
+    result = XmppMasterDatabase().get_conformity_update_by_entity(entitieslist, Glpi().config)
 
     for counters in result:
         euid = "UUID%s"%counters['entity']
