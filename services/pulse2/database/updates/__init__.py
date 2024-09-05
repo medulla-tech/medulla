@@ -379,11 +379,11 @@ class UpdatesDatabase(DatabaseHelper):
         if config.filter_on is not None:
             for key in config.filter_on:
                 if key == "state":
-                    filter_on = "%s AND lgm.states_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                    filter_on = "%s AND lgf.states_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
                 if key == "type":
-                    filter_on = "%s AND lgm.computertypes_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                    filter_on = "%s AND lgf.computertypes_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
                 if key == "entity":
-                    filter_on = "%s AND lgm.entities_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                    filter_on = "%s AND lgf.entities_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
 
         try:
             enabled_updates_list = {
@@ -408,6 +408,7 @@ FROM
     xmppmaster.up_machine_activated uma
     JOIN xmppmaster.update_data ud ON uma.update_id = ud.updateid
     JOIN xmppmaster.local_glpi_machines lgm on lgm.id = uma.glpi_id
+    join xmppmaster.local_glpi_filters lgf on lgf.id = lgm.id
 WHERE
     uma.entities_id = %s
     and list = "%s"
@@ -682,11 +683,11 @@ JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up
                 if key not in ["state", "entity", "type"]:
                     continue
                 if key == "state":
-                    filter_on = "%s AND lgm.states_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                    filter_on = "%s AND lgf.states_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
                 if key == "type":
-                    filter_on = "%s AND lgm.computertypes_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                    filter_on = "%s AND lgf.computertypes_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
                 if key == "entity":
-                    filter_on = "%s AND lgm.entities_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
+                    filter_on = "%s AND lgf.entities_id in (%s)"%(filter_on, ",".join(config.filter_on[key]))
 
         sql = """select
     SQL_CALC_FOUND_ROWS
@@ -697,6 +698,7 @@ JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up
 from xmppmaster.up_machine_activated uma
 join xmppmaster.machines m on uma.id_machine = m.id
 join xmppmaster.local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
+join xmppmaster.local_glpi_filters lgf on lgf.id = lgm.id
 where uma.update_id = "%s"
 and lgm.is_deleted = 0
 and lgm.is_template = 0
