@@ -2,8 +2,8 @@
 $_SESSION["login"] = $login;
 $_SESSION["pass"] = $pass;
 /* Set session expiration time */
-$sessionTimeout = intval($conf["global"]["sessiontimeout"]);
-$_SESSION["expire"] = time() + $sessionTimeout;
+$_SESSION["sessiontimeout"] = intval($conf["global"]["sessiontimeout"]);
+$_SESSION["expire"] = time() + $_SESSION["sessiontimeout"];
 
 if (isset($_POST["lang"]))
     $lang = $_POST["lang"];

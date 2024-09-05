@@ -26,7 +26,6 @@
 /**
  * this file provide session registration
  */
-global $conf;
 session_cache_expire (30);
 session_name("PULSESESSION");
 session_start();
@@ -42,6 +41,5 @@ if (!isset($_SESSION["expire"]) || $_SESSION["expire"] < time()) {
     exit;
 }
 
-$sessionTimeout = intval($conf["global"]["sessiontimeout"]);
-$_SESSION["expire"] = time() + $sessionTimeout;
+$_SESSION["expire"] = time() + $_SESSION["sessiontimeout"];
 ?>
