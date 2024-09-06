@@ -13129,7 +13129,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_conformity_update_by_entity(self, session, entities:list=[], config=None):
+    def get_conformity_update_by_entity(
+        self, session, entities: list = [], config=None
+    ):
         """
         This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
         """
@@ -13145,9 +13147,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     column = "lgf.states_id"
                 elif key == "type":
                     column = "lgf.computertypes_id"
-                filter_on = " %s AND %s in (%s) "%(filter_on, column, ",".join(config.filter_on[key]))
+                filter_on = " %s AND %s in (%s) " % (
+                    filter_on,
+                    column,
+                    ",".join(config.filter_on[key]),
+                )
         result = []
-        _entities =list(entities)
+        _entities = list(entities)
         entities = ",".join(entities)
         sql = """select
   uma.entities_id as id,
@@ -13158,7 +13164,10 @@ join local_glpi_machines lgm on lgm.id = uma.glpi_id
 join local_glpi_filters lgf on lgf.id = lgm.id
 where uma.entities_id in (%s)
 %s
-group by uma.entities_id;"""%(entities, filter_on)
+group by uma.entities_id;""" % (
+            entities,
+            filter_on,
+        )
 
         missing_updates = session.execute(sql)
         for missing in missing_updates:
