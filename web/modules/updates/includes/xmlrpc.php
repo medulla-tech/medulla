@@ -77,9 +77,8 @@ function xmlrpc_white_unlist_update($updateid)
     return xmlCall("updates.white_unlist_update", [$updateid]);
 }
 
-function xmlrpc_get_machine_with_update($kb, $updateid = "")
-{
-    return xmlCall("updates.get_machine_with_update", [$kb, $updateid]);
+function xmlrpc_get_machine_with_update($kb, $updateid="", $entity, $start=0, $limit=-1, $filter=""){
+    return xmlCall("updates.get_machine_with_update", [$kb, $updateid, $entity, $start, $limit, $filter]);
 }
 
 function xmlrpc_get_count_machine_with_update($kb, $uuid, $list)

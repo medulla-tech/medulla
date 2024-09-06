@@ -49,12 +49,8 @@ $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
-$uuid = htmlspecialchars($_GET['uuid']);
+$uuid = $location;
 $ctx['uuid'] = $uuid;
-
-//$uuidCut = substr($uuid, -1);
-
-$entityMachineList = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
 
 $withUpd = [];
 $withoutUpd = [];
@@ -65,34 +61,20 @@ $plateform_with = [];
 $titles_without = [];
 $plateform_without = [];
 
-$with_Upd = xmlrpc_get_machine_with_update($kb, $updateid);
-$without_Upd = xmlrpc_get_machines_needing_update($updateid, $location, $start, $maxperpage, $filter);
-$count_with_upd = sizeof($with_Upd[1]);
-$count_without_upd = sizeof($without_Upd);
+$result = xmlrpc_get_machine_with_update($kb, $updateid, $location, $start, $maxperpage, $filter);
 
-$count = $entityMachineList['count'];
-for($i = 0; $i < $count; $i++) {
-    if (in_array($entityMachineList['data']['hostname'][$i], $with_Upd[1])) {
-        $titles_with[] = $entityMachineList['data']['hostname'][$i];
-        $plateform_with[] = $entityMachineList['data']['platform'][$i];
-    }
-}
-
-for($i = 0; $i < $count; $i++) {
-    if (in_array($entityMachineList['data']['hostname'][$i], $without_Upd)) {
-        $titles_without[] = $entityMachineList['data']['hostname'][$i];
-        $plateform_without[] = $entityMachineList['data']['platform'][$i];
-    }
-}
-
+$machines = $result["datas"];
+$count = $result["total"];
 
 echo "<h2>"._T("Machines with update", "updates")."</h2>";
-$w = new OptimizedListInfos($titles_with, _T("Hostname", "updates"));
+$w = new OptimizedListInfos($machines["name"], _T("Machine Name", "updates"));
 $w->disableFirstColumnActionLink();
 
-$w->addExtraInfo($plateform_with, _T("Platform", "updates"));
+$w->addExtraInfo($machines["os"], _T("Platform", "updates"));
 
-$w->setItemCount($count_with_upd);
-$w->setNavBar(new AjaxNavBar($count_with_upd, $filter));
+$w->setItemCount($count);
+$w->start = 0;
+$w->end = $count;
+$w->setNavBar(new AjaxNavBar($count, $filter));
 
 $w->display();

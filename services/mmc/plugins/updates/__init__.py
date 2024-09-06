@@ -104,25 +104,9 @@ def white_unlist_update(updateid):
     return UpdatesDatabase().white_unlist_update(updateid)
 
 
-def get_machine_with_update(kb, updateid):
-    glpi = Glpi().get_machine_with_update(kb)
-    history = []
-    if updateid != "":
-        history = XmppMasterDatabase().get_history_by_update(updateid)
-
-    for machine in glpi:
-        if machine != []:
-            uuid = "UUID%s" % machine[0]
-            if uuid in history:
-                del history[uuid]
-
-    for uuid in history:
-        glpi.append(history[uuid]["id"])
-        glpi.append(history[uuid]["hostname"])
-        glpi.append(history[uuid]["entity"])
-        glpi.append(history[uuid]["kb"])
-        glpi.append(history[uuid]["numkb"])
-    return glpi
+def get_machine_with_update(kb, updateid, uuid, start=0, limit=-1, filter=""):
+    result = XmppMasterDatabase().get_machine_with_update(kb, updateid, uuid, start, limit, filter, Glpi().config)
+    return result
 
 
 def get_count_machine_with_update(kb, uuid, list):

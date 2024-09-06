@@ -13233,6 +13233,112 @@ group by uma.entities_id;"""%(entities, filter_on)
         return result
 
     @DatabaseHelper._sessionm
+    def get_machine_with_update(self, session, kb, updateid, uuid, start=0, limit=-1, filter="", config=None):
+
+        filter_on = ""
+        if config is not None and config.filter_on is not None:
+            for key in config.filter_on:
+                column = ""
+                if key not in ["entity", "state", "type"]:
+                    continue
+                if key == "entity":
+                    column = "lgf.entities_id"
+                elif key == "state":
+                    column = "lgf.states_id"
+                elif key == "type":
+                    column = "lgf.computertypes_id"
+                filter_on = " %s AND %s in (%s) "%(filter_on, column, ",".join(config.filter_on[key]))
+        try:
+            start = int(start)
+        except:
+            start = 0
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        filterlimit = ""
+        if start != -1 and limit != -1:
+            filterlimit = "LIMIT %s, %s" % (start, limit)
+
+        sfilter = ""
+        if filter != "":
+            sfilter = """AND (lgm.name LIKE '%%%s%%' OR m.platform LIKE '%%%s%%')""" % tuple(filter for x in range(0, 2))
+
+        sql = """Select SQL_CALC_FOUND_ROWS
+    lgm.id,
+    lgm.name,
+    m.platform
+from
+    up_history uh
+join
+    update_data ud on ud.updateid = uh.update_id
+join
+    deploy d on uh.id_deploy=d.id
+join
+    machines m on m.id = uh.id_machine
+join
+    local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
+join
+    local_glpi_filters lgf on lgf.id = lgm.id
+where
+    uh.update_id="%s"
+and
+    d.state="DEPLOYMENT SUCCESS"
+and
+    delete_date is not NULL and delete_date != ""
+and
+    lgm.is_deleted =0 and lgm.is_template = 0
+and lgm.entities_id = %s
+%s %s
+union
+select
+    lgm.id,
+    lgm.name,
+    m.platform
+from
+    local_glpi_machines lgm
+join
+    machines m on m.uuid_inventorymachine = concat(lgm.id)
+join
+    local_glpi_filters lgf on lgf.id = lgm.id
+join
+    local_glpi_items_softwareversions lgisv on lgisv.items_id = lgm.id and lgisv.itemtype="Computer"
+join
+    local_glpi_softwareversions lgsv on lgsv.id = lgisv.softwareversions_id
+join
+    local_glpi_softwares lgs on lgs.id = lgsv.softwares_id
+where
+    lgsv.name LIKE '%%%s%%'
+AND
+    (lgsv.comment LIKE '%%Update%%' OR COALESCE(lgsv.comment, '') = '')
+%s %s
+group by lgm.id
+order by name
+%s
+"""%(updateid, uuid.replace("UUID", ""), filter_on, sfilter, kb, filter_on, sfilter, filterlimit)
+
+        datas = session.execute(sql)
+        count = session.execute("SELECT FOUND_ROWS();")
+        result = {
+            "total":0,
+            "datas" : {
+                "id":[],
+                "name":[],
+                "os":[]
+            }
+            }
+        for elem in count:
+            result["total"] = elem[0]
+            break
+
+        for elem in datas:
+            result["datas"]["id"].append(elem.id)
+            result["datas"]["name"].append(elem.name)
+            result["datas"]["os"].append(elem.platform)
+        return result
+
+    @DatabaseHelper._sessionm
     def get_idmachine_from_name(self, session, name):
         """
         This function returns id of machine searched by hostname
