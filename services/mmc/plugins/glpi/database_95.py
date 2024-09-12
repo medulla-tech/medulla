@@ -43,6 +43,7 @@ except ImportError:
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.engine import row
 import base64
 import json
 import requests
@@ -2337,7 +2338,7 @@ class Glpi95(DyngroupDatabaseHelper):
         ret = {}
         if get != None:
             for m in machines:
-                if isinstance(m, tuple):
+                if isinstance(m, tuple|row.Row):
                     m = m[0]
                 ret[m.getUUID()] = self.__getAttr(m, get)
             return ret
