@@ -259,6 +259,13 @@ class Profile extends Group
 }
 class Group
 {
+    public $id;
+    public $name;
+    public $exists;
+    public $all_params;
+    public $type;
+    public $parent_id;
+
     public function __construct($id = null, $load = false, $ro = false, $root_context = false)
     {
         if ($id && $load) {
