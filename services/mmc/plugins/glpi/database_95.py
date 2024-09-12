@@ -2346,7 +2346,7 @@ class Glpi95(DyngroupDatabaseHelper):
         names = {}
         for m in machines:
             displayList = False
-            if isinstance(m, tuple):
+            if isinstance(m, tuple|row.Row):
                 displayList = True
                 # List of fields defined around line 439
                 # m, os, type, inventorynumber, state, entity, location, model, manufacturer, owner = m
@@ -2428,7 +2428,7 @@ class Glpi95(DyngroupDatabaseHelper):
         if advanced:
             uuids = []
             for m in machines:
-                if isinstance(m, tuple):
+                if isinstance(m, tuple|row.Row):
                     m = m[0]
                 uuids.append(m.getUUID())
 
