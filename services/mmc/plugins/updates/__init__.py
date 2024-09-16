@@ -71,10 +71,13 @@ def get_enabled_updates_list(entity, upd_list="gray", start=0, end=-1, filter=""
     if upd_list not in ["gray", "white"]:
         upd_list = "gray"
     # The glpi config is sent to updatedatabase to get the filter_on param
-    datas = UpdatesDatabase().get_enabled_updates_list(entity, upd_list, start, end, filter, Glpi().config)
-    count_glpi = Glpi().get_machines_list1(0, 0, {"location":entity})
+    datas = UpdatesDatabase().get_enabled_updates_list(
+        entity, upd_list, start, end, filter, Glpi().config
+    )
+    count_glpi = Glpi().get_machines_list1(0, 0, {"location": entity})
     datas["total"] = count_glpi["count"]
     return datas
+
 
 def get_family_list(start, end, filter=""):
     return UpdatesDatabase().get_family_list(start, end, filter)
@@ -114,7 +117,9 @@ def get_count_machine_with_update(kb, uuid, list):
 
 
 def get_machines_needing_update(updateid, entity, start=0, limit=-1, filter=""):
-    return UpdatesDatabase().get_machines_needing_update(updateid, entity, Glpi().config, start, limit, filter)
+    return UpdatesDatabase().get_machines_needing_update(
+        updateid, entity, Glpi().config, start, limit, filter
+    )
 
 
 def get_conformity_update_by_entity(entities=[]):
@@ -125,26 +130,38 @@ def get_conformity_update_by_entity(entities=[]):
     resultarray = {}
     entitieslist = []
     for entity in entities:
-        eid=entity["uuid"].replace("UUID", "")
+        eid = entity["uuid"].replace("UUID", "")
         entitieslist.append(eid)
-        total = Glpi().get_machines_list1(0, 0, {"location":entity["uuid"]})
+        total = Glpi().get_machines_list1(0, 0, {"location": entity["uuid"]})
 
         rtmp = {
             "entity": eid,
             "nbmachines": 0,
             "nbupdate": 0,
-            "totalmach": total['count'],
+            "totalmach": total["count"],
             "conformite": 100,
         }
         resultarray[entity["uuid"]] = rtmp
-    result = XmppMasterDatabase().get_conformity_update_by_entity(entitieslist, Glpi().config)
+    result = XmppMasterDatabase().get_conformity_update_by_entity(
+        entitieslist, Glpi().config
+    )
 
     for counters in result:
-        euid = "UUID%s"%counters['entity']
-        resultarray[euid]["nbmachines"] = counters["nbmachines"] #count machines with missing updates
-        resultarray[euid]["nbupdate"] = counters["nbupdates"] # count updates for this entity
+        euid = "UUID%s" % counters["entity"]
+        resultarray[euid]["nbmachines"] = counters[
+            "nbmachines"
+        ]  # count machines with missing updates
+        resultarray[euid]["nbupdate"] = counters[
+            "nbupdates"
+        ]  # count updates for this entity
         if resultarray[euid]["totalmach"] > 0 and int(counters["nbmachines"]) > 0:
-            resultarray[euid]["conformite"] = int(((resultarray[euid]["totalmach"] - counters["nbmachines"]) / resultarray[euid]["totalmach"]) * 100)
+            resultarray[euid]["conformite"] = int(
+                (
+                    (resultarray[euid]["totalmach"] - counters["nbmachines"])
+                    / resultarray[euid]["totalmach"]
+                )
+                * 100
+            )
     return resultarray
 
 
