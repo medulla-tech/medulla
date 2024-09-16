@@ -176,6 +176,19 @@ def get_client_status(client_id):
     return UrbackupDatabase().getClientStatus(client_id)
 
 
+def getAllLogs():
+    """
+    Get all logs from urbackup database
+    
+    Args:
+        None
+
+    Returns:
+        Dict Logs in database
+    """
+    return UrbackupDatabase().getAllLogs()
+
+
 def insertNewClient(client_id, authkey):
     """
     Insert new client in database
