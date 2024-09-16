@@ -13242,7 +13242,9 @@ group by uma.entities_id;""" % (
         return result
 
     @DatabaseHelper._sessionm
-    def get_machine_with_update(self, session, kb, updateid, uuid, start=0, limit=-1, filter="", config=None):
+    def get_machine_with_update(
+        self, session, kb, updateid, uuid, start=0, limit=-1, filter="", config=None
+    ):
 
         filter_on = ""
         if config is not None and config.filter_on is not None:
@@ -13256,7 +13258,11 @@ group by uma.entities_id;""" % (
                     column = "lgf.states_id"
                 elif key == "type":
                     column = "lgf.computertypes_id"
-                filter_on = " %s AND %s in (%s) "%(filter_on, column, ",".join(config.filter_on[key]))
+                filter_on = " %s AND %s in (%s) " % (
+                    filter_on,
+                    column,
+                    ",".join(config.filter_on[key]),
+                )
         try:
             start = int(start)
         except:
@@ -13272,7 +13278,10 @@ group by uma.entities_id;""" % (
 
         sfilter = ""
         if filter != "":
-            sfilter = """AND (lgm.name LIKE '%%%s%%' OR m.platform LIKE '%%%s%%')""" % tuple(filter for x in range(0, 2))
+            sfilter = (
+                """AND (lgm.name LIKE '%%%s%%' OR m.platform LIKE '%%%s%%')"""
+                % tuple(filter for x in range(0, 2))
+            )
 
         sql = """Select SQL_CALC_FOUND_ROWS
     lgm.id,
@@ -13325,18 +13334,20 @@ AND
 group by lgm.id
 order by name
 %s
-"""%(updateid, uuid.replace("UUID", ""), filter_on, sfilter, kb, filter_on, sfilter, filterlimit)
+""" % (
+            updateid,
+            uuid.replace("UUID", ""),
+            filter_on,
+            sfilter,
+            kb,
+            filter_on,
+            sfilter,
+            filterlimit,
+        )
 
         datas = session.execute(sql)
         count = session.execute("SELECT FOUND_ROWS();")
-        result = {
-            "total":0,
-            "datas" : {
-                "id":[],
-                "name":[],
-                "os":[]
-            }
-            }
+        result = {"total": 0, "datas": {"id": [], "name": [], "os": []}}
         for elem in count:
             result["total"] = elem[0]
             break
