@@ -108,7 +108,9 @@ def white_unlist_update(updateid):
 
 
 def get_machine_with_update(kb, updateid, uuid, start=0, limit=-1, filter=""):
-    result = XmppMasterDatabase().get_machine_with_update(kb, updateid, uuid, start, limit, filter, Glpi().config)
+    result = XmppMasterDatabase().get_machine_with_update(
+        kb, updateid, uuid, start, limit, filter, Glpi().config
+    )
     return result
 
 
