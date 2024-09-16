@@ -149,7 +149,7 @@ def restart_urbackup_service(jidmachine):
         1 or 0, state of function execution
     """
 
-    command = 'powershell.exe -command \"Restart-Service -Name UrBackupClientBackend\"'
+    command = 'powershell.exe -command "Restart-Service -Name UrBackupClientBackend"'
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
@@ -179,7 +179,7 @@ def get_client_status(client_id):
 def getAllLogs():
     """
     Get all logs from urbackup database
-    
+
     Args:
         None
 
@@ -420,6 +420,7 @@ def get_settings_clients():
         return list_clients["content"]
 
     return "No DATA listusers"
+
 
 def get_auth_client(clientid):
     """
