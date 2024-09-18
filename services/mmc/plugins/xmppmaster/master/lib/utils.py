@@ -43,7 +43,6 @@ import zipfile
 from functools import wraps
 import zlib
 import io
-
 import binascii
 
 logger = logging.getLogger()
@@ -2459,3 +2458,104 @@ class convert:
         if all(key in dictdata for key in array_keys):
             return True
         return False
+
+
+
+class FileManager:
+    def __init__(self, base_path=None):
+        """
+        Initialise le gestionnaire de fichiers.
+
+        :param base_path: Chemin de base pour les chemins absolus. Par défaut, '/' pour Linux et 'C:\\' pour Windows.
+        """
+        if base_path is None:
+            if platform.system() == "Windows":
+                base_path = "C:\\"
+            else:
+                base_path = "/"
+
+        self.base_path = base_path
+        self.file_list = []
+        self.exclude_directories = []
+
+    def calculate_hash(self, file_path):
+        """
+        Calcule le hachage MD5 d'un fichier.
+
+        :param file_path: Chemin absolu du fichier.
+        :return: Hachage MD5 du fichier.
+        """
+        hash_md5 = hashlib.md5()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+
+    def add_fichier(self, path_fichier):
+        """
+        Ajoute un fichier à la liste s'il n'existe pas déjà.
+
+        :param path_fichier: Chemin relatif du fichier.
+        """
+        abs_path = os.path.join(self.base_path, path_fichier)
+        if not any(f[0] == path_fichier for f in self.file_list):
+            md5 = self.calculate_hash(abs_path)
+            self.file_list.append([path_fichier, md5])
+
+    def add_tout_les_fichiers_directory(self, directory):
+        """
+        Ajoute tous les fichiers d'un répertoire à la liste, en excluant les répertoires spécifiés.
+
+        :param directory: Chemin relatif du répertoire.
+        """
+        abs_directory = os.path.join(self.base_path, directory)
+        for root, dirs, files in os.walk(abs_directory):
+            if any(exclude in root for exclude in self.exclude_directories):
+                continue
+            for file in files:
+                file_path = os.path.join(root, file)
+                relative_path = os.path.relpath(file_path, self.base_path)
+                self.add_fichier(relative_path)
+
+    def get_liste(self):
+        """
+        Retourne la liste des fichiers et leurs hachages MD5.
+
+        :return: Liste des fichiers et leurs hachages MD5.
+        """
+        return self.file_list
+
+    def supprimer_fichier(self, path_fichier):
+        """
+        Supprime un fichier de la liste.
+
+        :param path_fichier: Chemin relatif du fichier.
+        """
+        self.file_list = [f for f in self.file_list if f[0] != path_fichier]
+
+    def supprimer_tout_les_fichiers_directory(self, directory):
+        """
+        Supprime tous les fichiers d'un répertoire de la liste.
+
+        :param directory: Chemin relatif du répertoire.
+        """
+        abs_directory = os.path.join(self.base_path, directory)
+        self.file_list = [f for f in self.file_list if not os.path.join(self.base_path, f[0]).startswith(abs_directory)]
+
+    def ajouter_exclude_directory(self, directory):
+        """
+        Ajoute un répertoire à la liste des répertoires à exclure.
+
+        :param directory: Chemin relatif du répertoire à exclure.
+        """
+        abs_directory = os.path.join(self.base_path, directory)
+        self.exclude_directories.append(abs_directory)
+
+    def supprimer_exclude_directory(self, directory):
+        """
+        Supprime un répertoire de la liste des répertoires à exclure.
+
+        :param directory: Chemin relatif du répertoire à exclure.
+        """
+        abs_directory = os.path.join(self.base_path, directory)
+        self.exclude_directories.remove(abs_directory)
