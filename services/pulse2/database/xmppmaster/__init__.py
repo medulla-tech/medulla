@@ -21,7 +21,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.exc import DBAPIError
 from datetime import datetime, timedelta  # date,
-
+from sqlalchemy import text
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.msc import MscDatabase
@@ -14743,3 +14743,58 @@ group by hostname
             .first()
         )
         return query
+
+    @DatabaseHelper._sessionm
+    def search_machine(self, session, search_term):
+        """
+        Recherche une machine qui correspond à un id, uuid_inventorymachine, jid ou serialnumber.
+
+        Paramètres :
+        session (Session) : La session SQLAlchemy.
+        search_term (str) : Le terme de recherche.
+
+        Retourne :
+        dict : Les informations de la machine trouvée.
+        """
+        if not search_term:
+            return {}
+        # Requête SQL
+        query = text("""
+        SELECT
+            id,
+            uuid_inventorymachine,
+            SUBSTRING_INDEX(jid, '/', 1) AS jid,
+            uuid_serial_machine,
+            hostname,
+            enabled
+        FROM
+            xmppmaster.machines
+        WHERE
+            uuid_serial_machine = :search_term
+            OR hostname = SUBSTRING_INDEX(SUBSTRING_INDEX(:search_term, '@', 1), '.', 1)
+            OR uuid_inventorymachine = :search_term
+            OR id = :search_term
+        LIMIT 1;
+        """)
+
+        # Exécution de la requête
+        result = session.execute(query, {'search_term': search_term}).fetchone()
+
+        # Si aucun résultat n'est trouvé, retourner un dictionnaire vide
+        if result is None:
+            return {}
+        # verification de l'existances des fichiers a restaurer.
+
+
+
+        # Construire le dictionnaire de résultats
+        result_machines = {
+            'hostname': result['hostname'],
+            'jid': result['jid'],
+            'uuid_inventorymachine': result['uuid_inventorymachine'],
+            'uuid_serial_machine': result['uuid_serial_machine'],
+            'id': int(result['id']),
+            'enabled': int(result['enabled'])
+        }
+
+        return result_machines

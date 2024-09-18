@@ -102,6 +102,16 @@ function xmlrpc_localfilesystem($currentdir)
     return xmlCall("xmppmaster.localfile", array($currentdir));
 }
 
+function xmlrpc_backup_restore($destmachine, $tomachine , $basepath, $directorylist, $filelist)
+{
+    return xmlCall("xmppmaster.backup_restore",
+                   array($destmachine,
+                         $tomachine,
+                         $basepath,
+                         $directorylist,
+                         $filelist));
+}
+
 function xmlrpc_create_local_dir_transfert($pathroot, $hostname)
 {
     return xmlCall("xmppmaster.create_local_dir_transfert", array($pathroot, $hostname));

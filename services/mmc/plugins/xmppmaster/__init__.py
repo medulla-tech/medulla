@@ -23,7 +23,7 @@ from pulse2.utils import xmlrpcCleanup
 
 import zlib
 import base64
-from .master.lib.utils import name_random, file_get_contents
+from .master.lib.utils import name_random, file_get_contents, FileManager
 from .xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import (
     XmppSimpleCommand,
@@ -46,6 +46,7 @@ from mmc.plugins.xmppmaster.master.agentmaster import (
     callremoteXmppMonitoring,
 )
 from .master.lib.manage_grafana import manage_grafana
+import platform
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
@@ -1073,6 +1074,261 @@ def xmppGetAllPackages(login, filter, start, end):
 def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
 
+
+
+def extract_path(full_path):
+        """
+        Extrait le chemin jusqu'au répertoire correspondant au format yyyymm-hhmm.
+
+        Paramètres :
+        full_path (str) : Le chemin complet.
+
+        Retourne :
+        str : Le chemin extrait.
+
+        Lève :
+        ValueError : Si le format yyyymm-hhmm n'est pas trouvé dans le chemin.
+        """
+        # Définir le motif de recherche pour le format yyyymm-hhmm
+        pattern = re.compile(r'/(\d{6}-\d{4})/')
+
+        # Rechercher le motif dans le chemin complet
+        match = pattern.search(full_path)
+
+        if match:
+            # Extraire la partie du chemin jusqu'au répertoire correspondant au motif
+            extracted_path = full_path[:match.end()]
+            return extracted_path
+        else:
+            raise ValueError("Le format yyyymm-hhmm n'a pas été trouvé dans le chemin.")
+
+def my_path(nomdufichierbinaire, namefile, para_encoding='utf-8'):
+    """
+    Extrait un chemin spécifique à partir d'un fichier binaire en suivant les spécifications fournies.
+
+    Paramètres :
+    nomdufichierbinaire (str) : Le chemin du fichier binaire à lire.
+    namefile (str) : Le nom du fichier à rechercher dans le fichier binaire.
+    para_encoding (str) : L'encodage à utiliser pour décoder les bytes (par défaut 'utf-8').
+
+    Retourne :
+    str : Le chemin extrait.
+
+    exception :
+    leve ValueError : Si le fichier contient des caractères non-ASCII qui ne peuvent pas être ignorés ou si le nom du fichier n'est pas trouvé.
+    """
+    # Convertir le nom du fichier en bytes
+    filename_bytes = namefile.encode(para_encoding)
+    # Lire le fichier binaire
+    with open(nomdufichierbinaire, 'rb') as f:
+        binary_data = f.read()
+    # Supprimer les caractères non-ASCII
+    try:
+        clean_data = binary_data.decode(para_encoding, errors='ignore').encode(para_encoding)
+    except UnicodeDecodeError:
+        raise ValueError("Le fichier contient des caractères non-ASCII qui ne peuvent pas être ignorés.")
+    # Inverser le contenu du fichier
+    reversed_binary_data = clean_data[::-1]
+    # Inverser le nom du fichier
+    reversed_filename_bytes = filename_bytes[::-1]
+    # Rechercher le nom du fichier inversé
+    start_index = reversed_binary_data.find(reversed_filename_bytes)
+    if start_index == -1:
+        raise ValueError(f"Le nom du fichier '{namefile}' n'a pas été trouvé.")
+    # Rechercher la séquence 00 00 00 inversée
+    end_sequence = b'\x00\x00\x00'[::-1]
+    end_index = reversed_binary_data.find(end_sequence, start_index)
+    if end_index == -1:
+        raise ValueError("La séquence de fin 00 00 00 n'a pas été trouvée.")
+    # Extraire le chemin inversé
+    reversed_path_bytes = reversed_binary_data[start_index:end_index]
+    # Inverser le chemin extrait pour obtenir le chemin original
+    path_bytes = reversed_path_bytes[::-1]
+    # Convertir les bytes en string en ignorant les bytes non-ASCII
+    path = path_bytes.decode(para_encoding, errors='ignore')
+
+    return path
+
+
+
+def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist):
+    """
+    Cette fonction demande à une machine distante de restaurer les répertoires et les fichiers spécifiés.
+    Elle appelle un plugin distant "plugin_backup_restore" pour effectuer la restauration.
+    Tous les logs associés à cette restauration incluront un numéro de session unique (sessionid) pour faciliter le suivi des événements.
+    De plus, la restauration distante loguera également les informations concernant cette restauration avec ce numéro de session.
+
+    Important :
+    La machine de destination, qui doit restaurer ces fichiers, doit être allumée, sinon la demande de restauration échouera.
+
+    Remarques :
+    - Les fichiers à restaurer sont stockés sur le serveur UrBackup. Si la machine source est éteinte, cela ne pose pas de problème pour la restauration.
+    - De même, pour le serveur UrBackup, il n'est pas nécessaire qu'il soit allumé pendant la restauration, car UrBackup expose un système de fichiers dédié à cette tâche.
+    - L'API d'UrBackup n'est pas utilisée pour la restauration, ce qui permet la restauration même si le serveur est hors ligne.
+    - Il est possible que la machine source et la machine de destination soient identiques (cas où l'utilisateur souhaite restaurer un fichier sauvegardé de sa propre machine). Dans ce cas, la restauration fonctionne normalement car les fichiers sont toujours récupérés depuis le serveur UrBackup.
+
+    Paramètres :
+    src_machine (str) : La machine source depuis laquelle les fichiers et répertoires doivent être restaurés.
+    dest_machine (str) : La machine de destination où les fichiers et répertoires doivent être restaurés.
+    directorylist (str ou list de str) : Une liste de répertoires à restaurer. Si c'est une chaîne de caractères, elle sera convertie en liste.
+    filelist (str ou list de str) : Une liste de fichiers à restaurer. Si c'est une chaîne de caractères, elle sera convertie en liste.
+
+    Retourne :
+    dict : Un dictionnaire contenant un statut et un message :
+        - "status": -1 si aucune restauration n'est possible (ex. fichiers/répertoires non valides).
+        - "status": 0 si la restauration est exécutée avec succès.
+        - "status": 2 ou 10 si des avertissements sont rencontrés (ex. machine destination non enregistrée ou désactivée).
+        - "msg": un message décrivant l'état de l'opération (succès ou erreur).
+
+    Cas d'erreurs possibles :
+    - Si aucune machine source ou destination valide n'est trouvée dans la base de données, un message d'erreur est retourné.
+    - Si les fichiers ou répertoires à restaurer ne sont pas trouvés sur le serveur, une erreur est enregistrée dans le journal.
+    - Si la machine de destination est désactivée, la restauration peut échouer (status = 10).
+    - Si la machine de destination n'est pas enregistrée mais possède un JID valide, la restauration est tentée, mais peut échouer (status = 2).
+    """
+    status = 0
+    msg = ""
+    if not os.path.isdir(base_path):
+        return {"status": -1, "msg": "la base fichier n'est pas bonne"}
+
+    base_path_hache = os.path.join(base_path,".hashes")
+    if not os.path.isdir(base_path_hache):
+        return {"status": -1, "msg": "la base hashes fichier n'est pas bonne"}
+
+    sessionid = name_random(8, "backup_restore")
+    # Vérification de la présence de répertoires ou fichiers à restaurer
+    if not (directorylist or filelist):
+        logging.getLogger().error("%s : Aucun fichier ou répertoire sélectionné pour le backup %s %s" % (sessionid, src_machine, dest_machine))
+        logging.getLogger().error("%s : Opération de backup abandonnée" % sessionid)
+        return {"status": -1, "msg": "Aucun fichier ou répertoire sélectionné\nOpération de backup abandonnée"}
+
+    # Expression régulière pour vérifier si les machines sont des JID (Jabber IDs)
+    jid_pattern = re.compile(r'^[^@/\s]+(\.[^@/\s]+)*@[^@/\s]+(/[^@/\s]+)?$')
+
+    jid_to = None
+    jid_from = None
+
+    # Vérification de la validité des machines source et destination
+    if bool(jid_pattern.match(dest_machine)):
+        jid_to = dest_machine
+    if bool(jid_pattern.match(src_machine)):
+        jid_from = src_machine
+
+    # Conversion des répertoires et fichiers en listes si nécessaire
+    if isinstance(directorylist, str):
+        directorylist = [directorylist]
+    if isinstance(filelist, str):
+        filelist = [filelist]
+
+    # Recherche des machines dans la base de données XMPP
+    machine_src = XmppMasterDatabase().search_machine(src_machine)
+    machine_dest = XmppMasterDatabase().search_machine(dest_machine)
+
+    # Gestion des erreurs liées à la machine source
+    if not machine_src:
+        if jid_from is None:
+            msg += "Machine source non trouvée :[%s]" % src_machine
+        else:
+            logging.getLogger().warning("%s : Machine source non enregistrée" % sessionid)
+            msg += "Machine source non enregistrée\n"
+    else:
+        if machine_src['enabled'] == 0:
+            logging.getLogger().warning("%s : Machine source désactivée" % sessionid)
+            msg += "Machine source désactivée [%s]\n" % src_machine
+
+    # Gestion des erreurs liées à la machine de destination
+    if not machine_dest:
+        if jid_to is None:
+            logging.getLogger().error("%s : Machine destination non trouvée :[%s]" % (sessionid,dest_machine))
+            return {"status": -2, "msg": "Machine destination inexistante :[%s]\nOpération de backup abandonnée" % dest_machine}
+        else:
+            logging.getLogger().warning("%s : Machine destination non enregistrée" % sessionid)
+            status = 2
+            msg += "Machine destination non enregistrée\nLe backup pourrait échouer\n"
+    else:
+        jid_to = machine_dest['jid']
+        if machine_dest['enabled'] == 0:
+            status = 10
+            logging.getLogger().warning("%s : Machine destination désactivée [%s]" % ( sessionid,dest_machine))
+            msg += "Machine destination désactivée [%s]\nLe backup pourrait échouer\n" % dest_machine
+
+    # Vérification de l'existence des fichiers et répertoires sur la machine source
+    error_file_directory_exist = []
+    valid_files = []
+    valid_directories = []
+
+    # Vérification des fichiers
+    for file in filelist:
+        if os.path.isfile(os.path.join(base_path, file)):
+            valid_files.append(file)
+
+
+        else:
+            error_file_directory_exist.append(f"{sessionid} : Fichier introuvable : {file}")
+
+    # Vérification des répertoires
+    for directory in directorylist:
+        if os.path.isdir(os.path.join(base_path, directory)):
+            valid_directories.append(directory)
+
+        else:
+            error_file_directory_exist.append(f"{sessionid} : Répertoire introuvable : {directory}")
+
+    # Mise à jour des listes de fichiers et répertoires valides
+    filelist[:] = list(set(valid_files))
+    directorylist[:] = list(set(valid_directories))
+
+    # Si aucune des listes n'est valide, abandonner le backup
+    if not (directorylist or filelist):
+        logging.getLogger().error("%s : Corruption du backup, rien à restaurer" % sessionid)
+        return {"status": -1, "msg": "Aucun fichier ou répertoire valide à restaurer"}
+
+    # Affichage des erreurs de fichiers ou répertoires manquants
+    for error in error_file_directory_exist:
+        logging.getLogger().error(error)
+    if error_file_directory_exist:
+        msg += "\nIl y a %s fichiers ou répertoires manquants\n" % len(error_file_directory_exist)
+    # pas de jid pour la machine source.
+    # normalement la sauvegarde est sur le serveur urbackup.
+    # cela n'est pas fatal pour la restoration
+    if jid_from is None and machine_dest_backup is None:
+        jid_from =""
+    # Création du message XMPP au format JSON pour déclencher la restauration
+
+    # on cree les liste de couple source,  dest
+    send_file =[]
+    send_dir=[]
+    for dirsrc in directorylist:
+        try:
+            dirdest = my_path(os.path.join(base_path_hache, dirsrc),  os.path.basename(os.path.normpath(dirsrc)))
+            send_dir.append([dirsrc, dirdest])
+        except Exception:
+            logging.getLogger().error("pas trouver dir dest pour dir src : %s" % (dirsrc))
+
+    for filesrc in filelist:
+        try:
+            filedest = my_path(os.path.join(base_path_hache, filesrc), os.path.basename(os.path.normpath(filesrc)))
+            send_file.append([filesrc, filedest])
+        except Exception:
+            logging.getLogger().error("pas trouver emplacement file dest pour file src : %s" % (dirsrc))
+
+    list_backup_file_system = {
+        "action": "backup_restore",
+        "sessionid" :  sessionid,
+        "data": {
+            "machine_source_backup": machine_src if machine_src is not None else jid_from,
+            "machine_dest_backup": machine_dest if machine_dest is not None else jid_to,
+            "base_path" : base_path,
+            "directorylist": send_dir,
+            "filelist": send_file,
+        },
+    }
+    logging.getLogger().info("Appel du plugin de restauration avec la configuration : %s" % (list_backup_file_system))
+
+    # Envoi du message JSON au plugin distant pour exécuter la restauration
+    send_message_json(jid_to, list_backup_file_system)
+
+    return {"status": status, "msg": msg}
 
 def runXmppWolforuuidsarray(uuids):
     """
