@@ -51,7 +51,11 @@ class SqliteHelper:
             self.activate()
 
     @classmethod
-    @property
-    def session(cls):
-        """Simplify the creation of session, by calling self.session as an attribute"""
-        return Session(cls.engine)
+    def _session(self, func):
+        """Simplifie la création de session, à appeler comme si c'était un attribut"""
+        def wrapper(self, *args, **kwargs):
+            session = Session(self.engine)
+            result = func(self, session, *args, **kwargs)
+            session.close()
+            return result
+        return wrapper
