@@ -217,14 +217,12 @@ if(!empty($_GET["entity"])) {
 
 if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'], $_POST['deployment_intervals'])) {
 
-    $machineid = htmlentities($_GET['machineid']);
-    $inventoryid = htmlentities($_GET["inventoryid"]);
     $updateid = htmlentities($_POST['updateid']);
     $startdate = htmlentities($_POST['start_date']);
     $enddate = htmlentities($_POST['end_date']);
     $deployment_intervals = htmlentities($_POST['deployment_intervals']);
 
-    $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate, $deployment_intervals);
+    $result = xmlrpc_pending_entity_update_by_pid(htmlentities($_GET["entity"]), $updateid, $startdate, $enddate);
 
     $mesg = (!empty($result["mesg"])) ? htmlentities($result["mesg"]) : "";
     if(!empty($result["success"]) && $result["success"] == true) {
@@ -232,7 +230,7 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
     } else {
         new NotifyWidgetFailure($mesg);
     }
-    header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["cn" => htmlentities($_GET['cn']), "inventoryid" => htmlentities($_GET['inventoryid']), "machineid" => htmlentities($_GET['machineid'])]));
+    header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["entity" => htmlentities($_GET['entity'])]));
     exit;
 } else {
     $f = new PopupForm($formtitle);
