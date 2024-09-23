@@ -76,6 +76,7 @@ from pulse2.database.xmppmaster.schema import (
     Up_white_list,
     Up_gray_list,
     Up_history,
+    Up_machine_activated,
     Mmc_module_actif,
     Users_adgroups,
 )
@@ -13871,40 +13872,52 @@ order by name
         if end_date < current:
             end_date = a_week_from_current
 
-        sub = (
-            session.query(Machines.id)
-            .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
-            .filter(Glpi_entity.glpi_id == entity)
-            .subquery()
-        )
-
-        query = session.query(Up_machine_windows)
+        query = session.query(Up_machine_activated, self.Local_glpi_entities)\
+            .join(self.Local_glpi_entities,self.Local_glpi_entities.id==Up_machine_activated.entities_id )
 
         if pid == "":
             query = query.filter(
                 and_(
                     or_(
-                        Up_machine_windows.curent_deploy == None,
-                        Up_machine_windows.curent_deploy == 0,
+                        Up_machine_activated.curent_deploy == None,
+                        Up_machine_activated.curent_deploy == 0,
                     ),
                     or_(
-                        Up_machine_windows.required_deploy == None,
-                        Up_machine_windows.required_deploy == 0,
+                        Up_machine_activated.required_deploy == None,
+                        Up_machine_activated.required_deploy == 0,
                     ),
-                    Up_machine_windows.id_machine.in_(sub),
+                    Up_machine_activated.entities_id == entity.replace("UUID", "")
+                    # Up_machine_activated.id_machine.in_(sub),
                 )
             )
         else:
-            query = query.filter(and_(Up_machine_windows.update_id == pid))
+            query = query.filter(and_(Up_machine_activated.update_id == pid))
+        datas = query.all()
+        kblist = []
+        entity = None
+        result = {
+            "success": False,
+            "mesg": "Nothing to update",
+        }
+        if query is not None:
+            for element in query:
+                element.required_deploy = 1
+                element.start_date = start_date
+                element.end_date = end_date
+                session.commit()
+                session.flush()
 
-        for element in query:
-            element.required_deploy = 1
-            element.start_date = start_date
-            element.end_date = end_date
-            session.commit()
-            session.flush()
+            for upd,ent in datas:
+                if "KB%s"%upd.kb not in kblist:
+                    kblist.append("KB%s"%upd.kb)
+                if entity is None:
+                    entity = ent.name
 
-        return []
+            result["success"] = True
+            result["mesg"] = "Update(s) %s have been requested for entity %s"%(",".join(kblist), entity)
+
+
+        return result
 
     @DatabaseHelper._sessionm
     def get_updates_by_uuids(self, session, uuids, start=0, limit=-1, filter=""):

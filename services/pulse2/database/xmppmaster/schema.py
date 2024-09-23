@@ -925,6 +925,25 @@ class Users_adgroups(Base):
     lastuser = Column(String(255), nullable=False, primary_key=True)
     adname = Column(String(255), nullable=False, primary_key=True)
 
+class Up_machine_activated(Base):
+    # ====== Table name =========================
+    __tablename__ = "up_machine_activated"
+    # ====== Fields =============================
+    kb = Column(String(45), default="")
+    id_machine = Column(Integer, primary_key=True)
+    glpi_id = Column(Integer, nullable=False)
+    hostname = Column(String(45))
+    jid = Column(String(255))
+    entities_id = Column(Integer, default=0)
+    update_id = Column(String(45), nullable=False, primary_key=True)
+    curent_deploy = Column(Boolean, nullable=True, default=0)
+    required_deploy =Column(Boolean, nullable=True, default=0)
+    start_date =Column(DateTime, default=None)
+    end_date =Column(DateTime, default=None)
+    intervals =Column(String(255), nullable=True)
+    msrcseverity =Column(String(16))
+    list = Column(String(5), nullable=False)
+
 
 """
 This code is kept here as a comment, "if" we need to use it
