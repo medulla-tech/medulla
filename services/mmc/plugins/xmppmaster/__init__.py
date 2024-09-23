@@ -1288,6 +1288,7 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
     Paramètres :
     src_machine (str) : La machine source depuis laquelle les fichiers et répertoires doivent être restaurés.
     dest_machine (str) : La machine de destination où les fichiers et répertoires doivent être restaurés.
+    base_path (str) : Le chemin de base où les fichiers et répertoires sont stockés. Les listes de fichiers et de répertoires passées à cette fonction ont tous la même racine dans le système de fichiers, et cette racine est passée dans ce paramètre.
     directorylist (str ou list de str) : Une liste de répertoires à restaurer. Si c'est une chaîne de caractères, elle sera convertie en liste.
     filelist (str ou list de str) : Une liste de fichiers à restaurer. Si c'est une chaîne de caractères, elle sera convertie en liste.
 
