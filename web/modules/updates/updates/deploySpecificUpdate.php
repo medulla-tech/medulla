@@ -45,6 +45,7 @@ if(!empty($_GET['entity'])) {
     $p = new PageGenerator(_T(sprintf("Updates on machine %s", $cn)));
 }
 
+$p = new PageGenerator();
 $p->setSideMenu($sidemenu);
 $p->display();
 
