@@ -207,12 +207,16 @@ $start_date = date("Y-m-d H:i:s", $current);
 $_end_date = strtotime("+7day", $current);
 $end_date = date("Y-m-d H:i:s", $_end_date);
 
+$mode = "";
 if(!empty($_GET["entity"])) {
     $formtitle = _T("Schedule update deployment on entity", "update");
+    $mode = "entity";
 } elseif(!empty($_GET["gid"])) {
     $formtitle = _T("Schedule update deployment on group", "update");
+    $mode = "group";
 } elseif(!empty($_GET["machineid"])) {
     $formtitle = _T("Schedule update deployment on machine", "update");
+    $mode="machine";
 }
 
 if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'], $_POST['deployment_intervals'])) {
@@ -222,7 +226,16 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
     $enddate = htmlentities($_POST['end_date']);
     $deployment_intervals = htmlentities($_POST['deployment_intervals']);
 
-    $result = xmlrpc_pending_entity_update_by_pid(htmlentities($_GET["entity"]), $updateid, $startdate, $enddate);
+    switch($mode){
+        case "entity":
+            $result = xmlrpc_pending_entity_update_by_pid(htmlentities($_GET["entity"]), $updateid, $startdate, $enddate, $deployment_intervals);
+            break;
+        case "machine":
+            $machineid = htmlentities($_GET['machineid']);
+            $inventoryid = htmlentities($_GET["inventoryid"]);
+            $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate, $deployment_intervals);
+            break;
+    }
 
     $mesg = (!empty($result["mesg"])) ? htmlentities($result["mesg"]) : "";
     if(!empty($result["success"]) && $result["success"] == true) {
@@ -230,7 +243,15 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
     } else {
         new NotifyWidgetFailure($mesg);
     }
-    header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["entity" => htmlentities($_GET['entity'])]));
+
+    switch($mode){
+        case "entity":
+            header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["entity" => htmlentities($_GET['entity'])]));
+            break;
+        case "machine":
+            header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["cn" => htmlentities($_GET['cn']), "inventoryid" => htmlentities($_GET['inventoryid']), "machineid" => htmlentities($_GET['machineid'])]));
+            break;
+    }
     exit;
 } else {
     $f = new PopupForm($formtitle);
