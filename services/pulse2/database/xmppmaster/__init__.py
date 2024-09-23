@@ -14774,6 +14774,7 @@ group by hostname
             OR hostname = SUBSTRING_INDEX(SUBSTRING_INDEX(:search_term, '@', 1), '.', 1)
             OR uuid_inventorymachine = :search_term
             OR id = :search_term
+            OR jid =:search_term
         LIMIT 1;
         """)
 
