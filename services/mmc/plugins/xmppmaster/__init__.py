@@ -1268,6 +1268,54 @@ def my_path(nomdufichierbinaire, namefile, para_encoding='utf-8'):
     return path
 
 
+def trouver_premier_fichier(repertoire_racine, chemin_relatif):
+    """
+    Cette fonction prend en paramètre un répertoire racine et un chemin relatif à ce répertoire,
+    et retourne le chemin du premier fichier trouvé dans la hiérarchie relativement au répertoire racine.
+
+    :param repertoire_racine: Le chemin absolu du répertoire racine.
+    :param chemin_relatif: Le chemin relatif au répertoire racine où commencer la recherche.
+    :return: Le chemin relatif du premier fichier trouvé par rapport au répertoire racine, ou None si aucun fichier n'est trouvé.
+    """
+    chemin_absolu = os.path.join(repertoire_racine, chemin_relatif)
+    for root, dirs, files in os.walk(chemin_absolu):
+        if files:
+            premier_fichier = files[0]
+            chemin_relatif_fichier = os.path.relpath(os.path.join(root, premier_fichier), repertoire_racine)
+            return chemin_relatif_fichier
+
+    return None  # Retourne None si aucun fichier n'est trouvé
+
+def retirer_repertoire(chemin_complet, sous_chemin_a_retirer):
+    """
+    Supprime la partie d'un chemin complet correspondant à un sous-chemin spécifié.
+
+    Cette fonction prend un chemin complet et un sous-chemin à retirer. Elle supprime le
+    sous-chemin spécifié du chemin complet, normalise les séparateurs, et retourne le
+    chemin restant. Si le sous-chemin ne fait pas partie du chemin complet, elle renvoie None.
+
+    Arguments:
+        chemin_complet (str): Le chemin complet initial.
+        sous_chemin_a_retirer (str): Le sous-chemin à retirer du chemin complet.
+
+    Retour:
+        str: Le chemin complet sans le sous-chemin spécifié. Renvoie None en cas d'erreur.
+    """
+    # Normaliser les chemins pour gérer les différences de séparateurs de répertoires
+    chemin_normalise_complet = [x for x in re.split(r'[/\\]', os.path.normpath(chemin_complet)) if x.strip() != ""]
+    sous_chemin_normalise = [x for x in re.split(r'[/\\]', os.path.normpath(sous_chemin_a_retirer)) if x.strip() != ""]
+    try:
+        # Vérifier si le sous-chemin fait partie du chemin complet
+        longueur_sous_chemin = len(sous_chemin_normalise)
+        # Si le début du chemin complet correspond au sous-chemin, on le retire
+        pathreduit =  os.path.join(*chemin_normalise_complet[:longueur_sous_chemin])
+        if pathreduit[-1] == ":":
+            pathreduit = pathreduit + "\\"
+        return pathreduit
+    except Exception as e:
+        return None
+
+
 
 def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist):
     """
@@ -1338,11 +1386,9 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
         directorylist = [directorylist]
     if isinstance(filelist, str):
         filelist = [filelist]
-
     # Recherche des machines dans la base de données XMPP
     machine_src = XmppMasterDatabase().search_machine(src_machine)
     machine_dest = XmppMasterDatabase().search_machine(dest_machine)
-
     # Gestion des erreurs liées à la machine source
     if not machine_src:
         if jid_from is None:
@@ -1380,8 +1426,6 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
     for file in filelist:
         if os.path.isfile(os.path.join(base_path, file)):
             valid_files.append(file)
-
-
         else:
             error_file_directory_exist.append(f"{sessionid} : Fichier introuvable : {file}")
 
@@ -1389,7 +1433,6 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
     for directory in directorylist:
         if os.path.isdir(os.path.join(base_path, directory)):
             valid_directories.append(directory)
-
         else:
             error_file_directory_exist.append(f"{sessionid} : Répertoire introuvable : {directory}")
 
@@ -1414,15 +1457,18 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
         jid_from =""
     # Création du message XMPP au format JSON pour déclencher la restauration
 
-    # on cree les liste de couple source,  dest
+    # on cree les listes de couples source,  dest
     send_file =[]
     send_dir=[]
     for dirsrc in directorylist:
         try:
-            dirdest = my_path(os.path.join(base_path_hache, dirsrc),  os.path.basename(os.path.normpath(dirsrc)))
+            filesearch = trouver_premier_fichier(base_path, dirsrc)
+            cheminapresreellechemin = filesearch.replace(dirsrc, "")
+            filesearchpath = my_path(os.path.join(base_path_hache, filesearch),  os.path.basename(os.path.normpath(filesearch)))
+            dirdest=retirer_repertoire(filesearchpath, cheminapresreellechemin)
             send_dir.append([dirsrc, dirdest])
-        except Exception:
-            logging.getLogger().error("pas trouver dir dest pour dir src : %s" % (dirsrc))
+        except Exception as e:
+            logging.getLogger().error("pas trouver dir dest pour dir src : %s %s" % (os.path.join(base_path_hache, dirsrc), e))
 
     for filesrc in filelist:
         try:
@@ -1430,7 +1476,8 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
             send_file.append([filesrc, filedest])
         except Exception:
             logging.getLogger().error("pas trouver emplacement file dest pour file src : %s" % (dirsrc))
-
+    logging.getLogger().info("machine_dest : %s" % machine_dest)
+    logging.getLogger().info("machine_src : %s" % machine_src)
     list_backup_file_system = {
         "action": "backup_restore",
         "sessionid" :  sessionid,
@@ -1448,6 +1495,7 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
     send_message_json(jid_to, list_backup_file_system)
 
     return {"status": status, "msg": msg}
+
 
 def runXmppWolforuuidsarray(uuids):
     """
