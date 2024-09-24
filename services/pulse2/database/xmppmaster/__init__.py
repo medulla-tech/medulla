@@ -14060,13 +14060,19 @@ order by name
         self, session, machineids, start=0, limit=-1, filter=""
     ):
         query = (
-            session.query(Up_machine_activated, Update_data)\
+            session.query(Up_machine_activated, Update_data)
             .join(Update_data, Update_data.updateid == Up_machine_activated.update_id)
             .filter(
                 and_(
                     Up_machine_activated.id_machine.in_(machineids),
-                    or_(Up_machine_activated.curent_deploy == None, Up_machine_activated.curent_deploy == 0),
-                    or_(Up_machine_activated.required_deploy == None, Up_machine_activated.required_deploy == 0)
+                    or_(
+                        Up_machine_activated.curent_deploy == None,
+                        Up_machine_activated.curent_deploy == 0,
+                    ),
+                    or_(
+                        Up_machine_activated.required_deploy == None,
+                        Up_machine_activated.required_deploy == 0,
+                    ),
                 )
             )
             .order_by(
@@ -14120,7 +14126,7 @@ order by name
             update_list = element.list
             title = update_data.title
             description = update_data.description if update_data is not None else ""
-            kb=update_data.kb
+            kb = update_data.kb
 
             result["datas"].append(
                 {

@@ -178,14 +178,14 @@ def get_conformity_update_by_machines(ids=[]):
     result = {}
     for uuid in ids["uuids"]:
         result[uuid] = {
-        "uuid": "",
-        "id": "",
-        "missing": 0,
-        "hostname": "",
-        "installed": 0,
-        "total": 0,
-        "compliance": 100.0
-    }
+            "uuid": "",
+            "id": "",
+            "missing": 0,
+            "hostname": "",
+            "installed": 0,
+            "total": 0,
+            "compliance": 100.0,
+        }
     range = len(ids["uuids"])
     count = 0
     while count < range:
@@ -225,6 +225,10 @@ def get_conformity_update_by_machines(ids=[]):
 
     for uuid in result:
         result[uuid]["total"] = result[uuid]["installed"] + result[uuid]["missing"]
-        result[uuid]["compliance"] = (result[uuid]["installed"] / result[uuid]["total"]) * 100 if result[uuid]["total"] > 0 else 100
+        result[uuid]["compliance"] = (
+            (result[uuid]["installed"] / result[uuid]["total"]) * 100
+            if result[uuid]["total"] > 0
+            else 100
+        )
 
     return result
