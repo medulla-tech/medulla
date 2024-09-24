@@ -30,7 +30,7 @@ if(!empty($_GET['entity'])) {
     $entity = htmlentities($_GET['entity']);
     $completename = htmlentities($_GET['completename']);
     $params = ["entity" => $entity, "completename" => $completename];
-    $p = new PageGenerator(_T(sprintf("Updates on Entity %s", $completename)));
+    $p = new PageGenerator(_T(sprintf("Updates on Entity %s", $completename), "updates"));
 } elseif(!empty($_GET['gid'])) {
     $gid = htmlentities($_GET['gid']);
     $groupname = htmlentities($_GET['groupname']);
@@ -42,7 +42,10 @@ if(!empty($_GET['entity'])) {
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : "";
     $cn = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
     $params = ["machineid" => $id, "cn" => $cn, "inventoryid" => $inventoryid];
-    $p = new PageGenerator(_T(sprintf("Updates on machine %s", $cn)));
+    $p = new PageGenerator(_T(sprintf("Updates on machine %s", $cn), "updates"));
+}
+else{
+    $p = new PageGenerator(_T("Updates"), "updates");
 }
 
 $p = new PageGenerator();
