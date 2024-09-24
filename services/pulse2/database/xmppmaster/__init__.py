@@ -14454,17 +14454,15 @@ order by name
         ids = "(%s)" % ",".join([str(id) for id in ids])
 
         sql = (
-            """select id,
-        uuid_inventorymachine as uuid,
+            """select
+        id_machine as id,
         hostname,
-        count(update_id) as missing
-from up_machine_windows
-join machines on machines.id = up_machine_windows.id_machine
-join up_gray_list on up_machine_windows.update_id = up_gray_list.updateid
-where up_gray_list.valided = 1
+        CONCAT("UUID",glpi_id) as uuid,
+        count(distinct update_id) as missing
+from up_machine_activated uma
+where (uma.curent_deploy is NULL or uma.curent_deploy = 0)
 and id_machine in %s
-group by hostname
-;"""
+group by id_machine"""
             % ids
         )
 
@@ -14477,34 +14475,6 @@ group by hostname
                 "hostname": element.hostname,
                 "missing": element.missing,
             }
-
-        sql2 = (
-            """select id,
-        uuid_inventorymachine as uuid,
-        hostname,
-        count(update_id) as missing
-from up_machine_windows
-join machines on machines.id = up_machine_windows.id_machine
-join up_white_list on up_machine_windows.update_id = up_white_list.updateid
-where up_white_list.valided = 1
-and id_machine in %s
-group by hostname
-;"""
-            % ids
-        )
-
-        datas = session.execute(sql2)
-
-        for element in datas:
-            if element.uuid not in result:
-                result[element.uuid] = {
-                    "id": element.id,
-                    "uuid": element.uuid,
-                    "hostname": element.hostname,
-                    "missing": element.missing,
-                }
-            else:
-                result[element.uuid]["missing"] += element.missing
 
         return result
 
@@ -14628,6 +14598,7 @@ group by hostname
     def get_update_history_by_machines(self, session, idmachines):
         if idmachines == []:
             return {}
+
         query = (
             session.query(Up_history)
             .add_column(Update_data.kb)
