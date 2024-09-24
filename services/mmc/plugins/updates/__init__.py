@@ -174,47 +174,57 @@ def get_conformity_update_by_machines(ids=[]):
         "ids": [4,3]
     }
     """
-    merged = {}
+
+    result = {}
+    for uuid in ids["uuids"]:
+        result[uuid] = {
+        "uuid": "",
+        "id": "",
+        "missing": 0,
+        "hostname": "",
+        "installed": 0,
+        "total": 0,
+        "compliance": 100.0
+    }
     range = len(ids["uuids"])
     count = 0
     while count < range:
-        merged[ids["uuids"][count]] = ids["ids"][count]
+        result[ids["uuids"][count]]["id"] = ids["ids"][count]
         count += 1
 
-    history = XmppMasterDatabase().get_update_history_by_machines(ids["ids"])
+    if ids["ids"] == "" or ids["ids"] == []:
+        history = {}
+    else:
+        history = XmppMasterDatabase().get_update_history_by_machines(ids["ids"])
+    # History :
+    # {'UUID3': [{'updateid': 'fd509dc0-2dfb-463b-9af9-34dc55cc5c47', 'id_machine': 14, 'kb': '890830'}]}
+
     if ids["uuids"] == "" or ids["uuids"] == []:
         installed = {}
     else:
         installed = Glpi().get_count_installed_updates_by_machines(ids["uuids"])
+
+    # Installed :
+    # {'UUID3': {'id': 3, 'cn': 'qa-win-9', 'installed': 5}}
 
     if ids["ids"] == "" or ids["ids"] == []:
         missing = {}
     else:
         missing = XmppMasterDatabase().get_count_missing_updates_by_machines(ids["ids"])
 
-    result = {}
+    # Missing :
+    # {'UUID5': {'id': 16, 'uuid': 'UUID5', 'hostname': 'qa-win-6', 'missing': 2}}
+    for uuid in history:
+        result[uuid]["installed"] = len(history[uuid])
+
     for uuid in installed:
-        _missing = missing[uuid]["missing"] if uuid in missing else 0
-        count_historic = 0
-        try:
-            count_historic = len(history[uuid])
-        except:
-            pass
-        count_installed = installed[uuid]["installed"] + count_historic
-        count_total = count_installed + _missing
-        try:
-            # in python3 the result of a division (even of int values) is float
-            compliance = (count_installed / float(count_total)) * 100
-        except:
-            compliance = 100
-        result[uuid] = {
-            "uuid": uuid,
-            "id": merged[uuid],
-            "missing": _missing,
-            "hostname": installed[uuid]["cn"],
-            "installed": count_installed,
-            "total": count_total,
-            "compliance": compliance,
-        }
+        result[uuid]["installed"] += installed[uuid]["installed"]
+
+    for uuid in missing:
+        result[uuid]["missing"] = missing[uuid]["missing"]
+
+    for uuid in result:
+        result[uuid]["total"] = result[uuid]["installed"] + result[uuid]["missing"]
+        result[uuid]["compliance"] = (result[uuid]["installed"] / result[uuid]["total"]) * 100 if result[uuid]["total"] > 0 else 100
 
     return result
