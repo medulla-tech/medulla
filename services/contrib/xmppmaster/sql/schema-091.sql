@@ -17,6 +17,16 @@ create table local_glpi_entities(
     ancestors_cache longtext null default null
 )ENGINE=FEDERATED CONNECTION='itsm_federated/glpi_entities';
 
+
+CREATE TABLE `local_glpi_filters` (
+  `id` int(11) NOT NULL,
+  `states_id` int(10) NOT NULL DEFAULT 0,
+  `entities_id` int(10) NOT NULL DEFAULT 0,
+  `computertypes_id` int(10) NOT NULL DEFAULT 0,
+  `autoupdatesystems_id` int(10) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=FEDERATED DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci CONNECTION='itsm_federated/glpi_computers'
+
 UPDATE version SET Number = 91;
 
 COMMIT;
