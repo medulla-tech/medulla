@@ -14060,24 +14060,18 @@ order by name
         self, session, machineids, start=0, limit=-1, filter=""
     ):
         query = (
-            session.query(Up_machine_windows, Up_gray_list, Up_white_list)
-            .join(Machines, Machines.id == Up_machine_windows.id_machine)
-            .outerjoin(
-                Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id
-            )
-            .outerjoin(
-                Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id
-            )
+            session.query(Up_machine_activated, Update_data)\
+            .join(Update_data, Update_data.updateid == Up_machine_activated.update_id)
             .filter(
                 and_(
-                    Machines.id.in_(machineids),
-                    or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
+                    Up_machine_activated.id_machine.in_(machineids),
+                    or_(Up_machine_activated.curent_deploy == None, Up_machine_activated.curent_deploy == 0),
+                    or_(Up_machine_activated.required_deploy == None, Up_machine_activated.required_deploy == 0)
                 )
             )
-            .group_by(Up_machine_windows.update_id)
             .order_by(
                 func.field(
-                    Up_machine_windows.msrcseverity,
+                    Up_machine_activated.msrcseverity,
                     "Critical",
                     "Important",
                     "Corrective",
@@ -14088,16 +14082,12 @@ order by name
         if filter != "":
             query = query.filter(
                 or_(
-                    Up_machine_windows.kb.contains(filter),
-                    Up_machine_windows.update_id.contains(filter),
-                    Up_gray_list.title.contains(filter),
-                    Up_gray_list.description.contains(filter),
-                    Up_gray_list.kb.contains(filter),
-                    Up_gray_list.creationdate.contains(filter),
-                    Up_white_list.title.contains(filter),
-                    Up_white_list.description.contains(filter),
-                    Up_white_list.kb.contains(filter),
-                    Up_white_list.creationdate.contains(filter),
+                    Up_machine_activated.kb.contains(filter),
+                    Up_machine_activated.update_id.contains(filter),
+                    Update_data.title.contains(filter),
+                    Update_data.description.contains(filter),
+                    Update_data.kb.contains(filter),
+                    Update_data.creationdate.contains(filter),
                 )
             )
 
@@ -14110,7 +14100,7 @@ order by name
         pkgs_list = {}
         result = {"total": count, "datas": []}
 
-        for element, gray, white in query:
+        for element, update_data in query:
             startdate = ""
             if element.start_date is not None:
                 startdate = element.start_date
@@ -14127,17 +14117,11 @@ order by name
             if element.end_date is not None:
                 enddate = element.end_date
 
-            title = ""
-            description = ""
-            update_list = ""
-            if gray is None:
-                title = white.title
-                description = white.description if white is not None else ""
-                update_list = "white"
-            else:
-                title = gray.title
-                description = gray.description if gray is not None else ""
-                update_list = "white"
+            update_list = element.list
+            title = update_data.title
+            description = update_data.description if update_data is not None else ""
+            kb=update_data.kb
+
             result["datas"].append(
                 {
                     "id_machine": (
@@ -14146,7 +14130,7 @@ order by name
                     "update_id": element.update_id if not None else "",
                     "title": title if title is not None else "",
                     "description": description if description is not None else "",
-                    "kb": element.kb if element.kb is not None else "",
+                    "kb": kb if kb is not None else "",
                     "current_deploy": current_deploy,
                     "required_deploy": required_deploy,
                     "start_date": startdate,
