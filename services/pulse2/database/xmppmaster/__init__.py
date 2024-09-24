@@ -14597,6 +14597,7 @@ group by hostname
         )
         return [module[0] for module in modules]
 
+    @DatabaseHelper._sessionm
     def cancel_update(self, session, machineid, updateid):
         try:
             machineid = int(machineid)
