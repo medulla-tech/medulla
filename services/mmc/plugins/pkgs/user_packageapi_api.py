@@ -9,7 +9,7 @@ It provide methods to tell which package_api a user can use to modify packages.
 import logging
 from mmc.support.mmctools import Singleton
 import pulse2.apis.clients.user_packageapi_api
-
+import mmc
 
 class UserPackageApiApi(Singleton):
     initialized = False
