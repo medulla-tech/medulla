@@ -341,15 +341,13 @@ function xmlCall($method, $params = null) {
              */
             require_once 'modules/base/includes/users-xmlrpc.inc.php';
             // Create a template array to store important session vars
-            // Regenerate session ID to prevent session fixation attacks
-            session_regenerate_id(true);
 
             // Preserve necessary session variables
             $temp = [];
             $keys = ['login', 'pass'];  // Adjust keys as necessary
             // Session keys to keep
             $keys = array('ip_addr', 'XMLRPC_agent', 'agent', 'XMLRPC_server_description',
-                          'AUTH_METHOD', 'login', 'pass', 'expire', 'lang', 'RPCSESSION',
+                          'AUTH_METHOD', 'login', 'pass', 'expire', 'sessiontimeout', 'lang', 'RPCSESSION',
                           'aclattr', 'acltab', 'acl', 'supportModList', 'modListVersion',
                           'doeffect', 'modulesList'
                           );
