@@ -30,7 +30,7 @@ session_cache_expire (30);
 session_name("PULSESESSION");
 session_start();
 
-if (!isset($_SESSION["expire"])) {
+if (!isset($_SESSION["expire"]) || $_SESSION["expire"] < time()) {
     session_destroy();
 
     $errorcode = isset($_SESSION["agentsessionexpired"]) ? "?agentsessionexpired=1" : "";
