@@ -11,6 +11,7 @@ from mmc.support.mmctools import Singleton
 import pulse2.apis.clients.user_packageapi_api
 import mmc
 
+
 class UserPackageApiApi(Singleton):
     initialized = False
 
