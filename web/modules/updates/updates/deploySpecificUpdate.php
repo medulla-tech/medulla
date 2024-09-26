@@ -43,12 +43,10 @@ if(!empty($_GET['entity'])) {
     $cn = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
     $params = ["machineid" => $id, "cn" => $cn, "inventoryid" => $inventoryid];
     $p = new PageGenerator(_T(sprintf("Updates on machine %s", $cn), "updates"));
-}
-else{
-    $p = new PageGenerator(_T("Updates"), "updates");
+} else{
+    $p = new PageGenerator(_T("Updates", "updates"));
 }
 
-$p = new PageGenerator();
 $p->setSideMenu($sidemenu);
 $p->display();
 
