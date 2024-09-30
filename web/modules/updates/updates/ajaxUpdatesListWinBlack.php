@@ -63,8 +63,12 @@ for($i = 0; $i < $count; $i++) {
 }
 
 // ########## Display BlackList Table ########## //
-
+// Add css ids to each tr tag in the table
+foreach($black_list['updateid_or_kb'] as $updateid) {
+    $ids [] = 'b_'.$updateid;
+}
 $b = new OptimizedListInfos($titles_black, _T("Update name", "updates"));
+$b->setCssIds($ids);
 $b->addExtraInfo($updateids_black, _T("Update Id", "updates"));
 $b->addExtraInfo($black_list['severity'], _T("Severity", "updates"));
 $b->disableFirstColumnActionLink();
