@@ -13872,8 +13872,10 @@ order by name
         if end_date < current:
             end_date = a_week_from_current
 
-        query = session.query(Up_machine_activated, self.Local_glpi_entities)\
-            .join(self.Local_glpi_entities,self.Local_glpi_entities.id==Up_machine_activated.entities_id )
+        query = session.query(Up_machine_activated, self.Local_glpi_entities).join(
+            self.Local_glpi_entities,
+            self.Local_glpi_entities.id == Up_machine_activated.entities_id,
+        )
 
         if pid == "":
             query = query.filter(
@@ -13886,7 +13888,7 @@ order by name
                         Up_machine_activated.required_deploy == None,
                         Up_machine_activated.required_deploy == 0,
                     ),
-                    Up_machine_activated.entities_id == entity.replace("UUID", "")
+                    Up_machine_activated.entities_id == entity.replace("UUID", ""),
                     # Up_machine_activated.id_machine.in_(sub),
                 )
             )
@@ -13900,22 +13902,25 @@ order by name
             "mesg": "Nothing to update",
         }
         if query is not None:
-            for element,_ in query:
+            for element, _ in query:
                 element.required_deploy = 1
                 element.start_date = start_date
                 element.end_date = end_date
-                element.intervals=interval
+                element.intervals = interval
                 session.commit()
                 session.flush()
 
-            for upd,ent in datas:
-                if "KB%s"%upd.kb not in kblist:
-                    kblist.append("KB%s"%upd.kb)
+            for upd, ent in datas:
+                if "KB%s" % upd.kb not in kblist:
+                    kblist.append("KB%s" % upd.kb)
                 if entity is None:
                     entity = ent.name
 
             result["success"] = True
-            result["mesg"] = "Update(s) %s have been requested for entity %s"%(",".join(kblist), entity)
+            result["mesg"] = "Update(s) %s have been requested for entity %s" % (
+                ",".join(kblist),
+                entity,
+            )
 
         return result
 
@@ -14055,13 +14060,19 @@ order by name
         self, session, machineids, start=0, limit=-1, filter=""
     ):
         query = (
-            session.query(Up_machine_activated, Update_data)\
+            session.query(Up_machine_activated, Update_data)
             .join(Update_data, Update_data.updateid == Up_machine_activated.update_id)
             .filter(
                 and_(
                     Up_machine_activated.id_machine.in_(machineids),
-                    or_(Up_machine_activated.curent_deploy == None, Up_machine_activated.curent_deploy == 0),
-                    or_(Up_machine_activated.required_deploy == None, Up_machine_activated.required_deploy == 0)
+                    or_(
+                        Up_machine_activated.curent_deploy == None,
+                        Up_machine_activated.curent_deploy == 0,
+                    ),
+                    or_(
+                        Up_machine_activated.required_deploy == None,
+                        Up_machine_activated.required_deploy == 0,
+                    ),
                 )
             )
             .order_by(
@@ -14115,7 +14126,7 @@ order by name
             update_list = element.list
             title = update_data.title
             description = update_data.description if update_data is not None else ""
-            kb=update_data.kb
+            kb = update_data.kb
 
             result["datas"].append(
                 {
