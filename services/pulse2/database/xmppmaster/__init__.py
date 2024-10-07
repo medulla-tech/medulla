@@ -13161,8 +13161,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
   count(distinct uma.id_machine) as noncompliant,
   count(distinct update_id) as missing
 from up_machine_activated uma
-join local_glpi_machines lgm on lgm.id = uma.glpi_id
-join local_glpi_filters lgf on lgf.id = lgm.id
+JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
 where uma.entities_id in (%s)
 %s
 group by uma.entities_id;""" % (
