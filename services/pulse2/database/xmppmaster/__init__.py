@@ -13162,7 +13162,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
   count(distinct update_id) as missing
 from up_machine_activated uma
 JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
-where uma.entities_id in (%s)
+where uma.entities_id in ("%s")
 %s
 group by uma.entities_id;""" % (
             entities,
