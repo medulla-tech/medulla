@@ -30,7 +30,7 @@ $location = (isset($_GET['location'])) ? htmlentities($_GET['location']) : "";
 $gid = (isset($_GET['gid'])) ? htmlentities($_GET['gid']) : "";
 $groupname = (isset($_GET['groupname'])) ? htmlentities($_GET['groupname']) : "";
 $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
-$field = "allchamp";
+$field = "";
 $contains = (isset($_GET['contains'])) ? htmlentities($_GET['contains']) : "";
 
 $start = (isset($_GET['start'])) ? $_GET['start'] : 0;
