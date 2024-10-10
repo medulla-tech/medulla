@@ -71,7 +71,9 @@ class download_packages:
         try:
             data = requests.get(urlpath, stream=True)
         except Exception as e:
-            logger.error("Error trying to download update file %s: %s" % (urlpath, str(e)))
+            logger.error(
+                "Error trying to download update file %s: %s" % (urlpath, str(e))
+            )
             try:
                 # Try with proxy parameters as defined on the system
                 proxy_url = (
