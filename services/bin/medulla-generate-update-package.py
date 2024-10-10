@@ -68,7 +68,21 @@ class download_packages:
             logger.debug(f"Directory '{path_file_download}' created successfully")
         except OSError as error:
             logger.debug(f"Directory {path_file_download} can not be created")
-        data = requests.get(urlpath, stream=True)
+        try:
+            # Try with proxy parameters as defined on the system
+            proxy_url = (
+                os.environ.get("HTTP_PROXY")
+                or os.environ.get("HTTPS_PROXY")
+                or os.environ.get("http_proxy")
+                or os.environ.get("https_proxy")
+            )
+            if proxy_url:
+                proxies = {"http": proxy_url, "https": proxy_url}
+                data = requests.get(urlpath, stream=True)
+            else:
+                logger.error("No proxies defined")
+        except Exception as e:
+            logger.error("Error downloading update file: %s" % str(e))
         with open(path_file_download, "wb") as f:
             for chunk in data.iter_content(chunk_size=1024):
                 if chunk:  # filter out keep-alive new chunks
