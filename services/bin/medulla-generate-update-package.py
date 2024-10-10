@@ -78,7 +78,7 @@ class download_packages:
             )
             if proxy_url:
                 proxies = {"http": proxy_url, "https": proxy_url}
-                data = requests.get(urlpath, stream=True)
+                data = requests.get(urlpath, stream=True, proxies=proxies)
             else:
                 logger.error("No proxies defined")
         except Exception as e:
