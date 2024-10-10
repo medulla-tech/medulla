@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# File : mmc/plugins/xmppmaster/__init__.py
 """
 Plugin to manage the interface with xmppmaster
 """
@@ -14,7 +15,10 @@ from .master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 import hashlib
 import json
-
+import socket
+import psutil
+import ipaddress
+import platform
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
@@ -24,6 +28,8 @@ from pulse2.utils import xmlrpcCleanup
 import zlib
 import base64
 from .master.lib.utils import name_random, file_get_contents, FileManager
+from .master.lib.networkinfo import find_common_addresses, get_CIDR_ipv4_addresses
+
 from .xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import (
     XmppSimpleCommand,
@@ -1192,8 +1198,6 @@ def get_pkg_path(login, pkgName):
 def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
 
-
-
 def extract_path(full_path):
         """
         Extrait le chemin jusqu'au répertoire correspondant au format yyyymm-hhmm.
@@ -1316,7 +1320,6 @@ def retirer_repertoire(chemin_complet, sous_chemin_a_retirer):
         return None
 
 
-
 def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist):
     """
     Cette fonction demande à une machine distante de restaurer les répertoires et les fichiers spécifiés.
@@ -1353,8 +1356,160 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
     - Si la machine de destination est désactivée, la restauration peut échouer (status = 10).
     - Si la machine de destination n'est pas enregistrée mais possède un JID valide, la restauration est tentée, mais peut échouer (status = 2).
     """
+    # reponse vers appel web { status , msg }
     status = 0
     msg = ""
+
+
+    # def decode_and_decompress_key(encoded_key):
+    #     # Décoder la clé en base64
+    #     compressed_key = base64.b64decode(encoded_key)
+    #     # Décompresser la clé avec zlib
+    #     key_content = zlib.decompress(compressed_key).decode('utf-8')
+    #     return key_content
+    #
+    # def compress_and_encode_key(key_content):
+    #     # Compresser la clé avec zlib
+    #     compressed_key = zlib.compress(key_content.encode('utf-8'))
+    #     # Encoder en base64
+    #     encoded_key = base64.b64encode(compressed_key).decode('utf-8')
+    #     return encoded_key
+
+    def get_server_networks(exclude_local=True):
+        """
+        Récupère les adresses IP et les réseaux associés sur le serveur.
+        """
+        server_networks = []
+        # Utilise psutil pour récupérer toutes les interfaces réseau sur le serveur
+        for interface, addrs in psutil.net_if_addrs().items():
+            for addr in addrs:
+                if addr.family == socket.AF_INET:  # Nous voulons seulement les adresses IPv4
+                    ip = addr.address
+                    netmask = addr.netmask
+                    # Convertit IP et masque en réseau
+                    cidr = ipaddress.IPv4Network(f"{ip}/{netmask}", strict=False)
+                    # Exclure les adresses locales si exclude_local est True
+                    if exclude_local and cidr.is_loopback:
+                        continue
+                    server_networks.append(str(cidr))
+        return server_networks
+
+    # def get_ip_and_netmask_linux(exclude_local=True):
+    #     ip_netmask_list = []
+    #     # Parcours de toutes les interfaces réseau
+    #     for interface, addrs in psutil.net_if_addrs().items():
+    #         for addr in addrs:
+    #             if addr.family == socket.AF_INET:  # Ne prend que les adresses IPv4
+    #                 ip = addr.address
+    #                 netmask = addr.netmask
+    #
+    #                 # Exclure les adresses locales si exclude_local est True
+    #                 if exclude_local:
+    #                     ip_obj = ipaddress.ip_address(ip)
+    #                     if ip_obj.is_loopback or ip_obj.is_link_local:
+    #                         continue  # On passe à l'itération suivante si c'est une adresse locale
+    #                 ip_netmask_list.append((ip, netmask))
+    #     return ip_netmask_list
+
+    def get_ssh_key_content(user_profile_path, key_name="pulseuser_backup_id_rsa"):
+        """
+        Lit le contenu d'une clé SSH privée à partir d'un chemin spécifié.
+
+        Args:
+            user_profile_path (str): Chemin vers le répertoire de profil utilisateur.
+            key_name (str, optional): Nom du fichier de la clé privée (par défaut: "pulseuser_backup_id_rsa").
+
+        Returns:
+            str or None: Contenu de la clé privée si elle existe et est lue avec succès, sinon None.
+        """
+        # Construire le chemin complet de la clé privée
+        key_private = os.path.join(user_profile_path, ".ssh", key_name)
+
+        # Vérifier si la clé existe
+        if os.path.exists(key_private):
+            try:
+                # Ouvrir et lire le contenu de la clé privée
+                with open(key_private, 'r') as file:
+                    key_content = file.read()
+                return key_content
+            except Exception as e:
+                logger.error(f"Erreur lors de la lecture de la clé privée : {e}")
+                return None
+        else:
+            logger.error(f"Clé privée {key_name} non trouvée.")
+            logger.error(f"Vérifiez l'installation des clés {key_name}.")
+            return None
+
+    def get_home_directory(username="reversessh"):
+        """
+        Récupère le répertoire personnel d'un utilisateur donné.
+
+        Args:
+            username (str, optional): Nom d'utilisateur pour lequel récupérer le répertoire personnel (par défaut: "reversessh").
+
+        Returns:
+            str or None: Chemin du répertoire personnel si l'utilisateur existe, sinon None.
+        """
+        if platform.system() in ['Linux', 'Darwin']:  # Pour Linux et macOS
+            try:
+                import pwd
+                user_info = pwd.getpwnam(username)
+                return user_info.pw_dir  # Récupère le répertoire personnel
+            except KeyError:
+                return None  # L'utilisateur n'existe pas
+        elif platform.system() == 'Windows':
+            user_profile_path = os.path.join('C:', 'Users', username)
+            if not os.path.exists(user_profile_path):
+                return None
+        else:
+            return None  # Système d'exploitation non supporté
+
+    def get_server_networks():
+        """
+        Récupère les adresses IP et les réseaux associés sur le serveur.
+
+        Returns:
+            list: Une liste de chaînes représentant les réseaux associés aux interfaces réseau sur le serveur.
+        """
+        """
+        Récupère les adresses IP et les réseaux associés sur le serveur.
+        """
+        server_networks = []
+        # Utilise psutil pour récupérer toutes les interfaces réseau sur le serveur
+        for interface, addrs in psutil.net_if_addrs().items():
+            for addr in addrs:
+                if addr.family == socket.AF_INET:  # Nous voulons seulement les adresses IPv4
+                    ip = addr.address
+                    netmask = addr.netmask
+                    # Convertit IP et masque en réseau
+                    cidr = ipaddress.IPv4Network(f"{ip}/{netmask}", strict=False)
+                    server_networks.append(str(cidr))
+        return server_networks
+
+    compte="reversessh"
+    user_profile_path = get_home_directory(username=compte)
+    logger.warning("Pas trouvé le compte %s" % compte)
+    if not user_profile_path:
+        compte = "urbackup"
+        user_profile_path = get_home_directory(username="urbackup")
+        if not user_profile_path:
+            logger.warning("Pas trouvé le compte %s" % compte)
+            logger.error("Medulla Serveur MMC et UrBackup doivent être sur le même serveur.")
+            return {"status": -3, "msg": "Medulla Serveur MMC et UrBackup doivent être sur le même serveur pour cette fonctionnalité. verifier les cle reversessh ou urbackup"}
+
+    key_name="id_rsa"
+    key_private = get_ssh_key_content(user_profile_path, key_name=key_name)
+    if not key_private:
+        logger.warning("key name  %s no exist" % key_name)
+        # c'est error que la cle soit nomme pulseuser_backup_id_rsa
+        key_name="pulseuser_backup_id_rsa"
+        key_private = get_ssh_key_content(user_profile_path, key_name="pulseuser_backup_id_rsa")
+
+    if not key_private:
+        logger.error("key name  %s no exist" % key_name)
+        logger.error("pas trouver key %s" % key_name)
+        logger.error("voir l'installation des clef id_rsa  revesessh ou pulseuser_backup_id_rsa reverse_ssh")
+        return { "status": -4, "msg": "key reversessh [%s] est manquante " % key_private }
     if not os.path.isdir(base_path):
         return {"status": -1, "msg": "la base fichier n'est pas bonne"}
 
@@ -1464,8 +1619,11 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
         try:
             filesearch = trouver_premier_fichier(base_path, dirsrc)
             cheminapresreellechemin = filesearch.replace(dirsrc, "")
+            cheminapresreellechemin = cheminapresreellechemin.replace("\\","/")
             filesearchpath = my_path(os.path.join(base_path_hache, filesearch),  os.path.basename(os.path.normpath(filesearch)))
-            dirdest=retirer_repertoire(filesearchpath, cheminapresreellechemin)
+            filesearchpath = filesearchpath.replace("\\","/")
+            dirdest = filesearchpath.replace(cheminapresreellechemin, "")
+            # dirdest=retirer_repertoire(filesearchpath, cheminapresreellechemin)
             send_dir.append([dirsrc, dirdest])
         except Exception as e:
             logging.getLogger().error("pas trouver dir dest pour dir src : %s %s" % (os.path.join(base_path_hache, dirsrc), e))
@@ -1478,10 +1636,24 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
             logging.getLogger().error("pas trouver emplacement file dest pour file src : %s" % (dirsrc))
     logging.getLogger().info("machine_dest : %s" % machine_dest)
     logging.getLogger().info("machine_src : %s" % machine_src)
+
+    # keycompress = compress_and_encode_key(key_private)
+    # keydecompress = decode_and_decompress_key(keycompress)
+    #
+    # logging.getLogger().info("key_private : %s" % key_private)
+    # logging.getLogger().info("keycompress : %s" % keycompress)
+    # logging.getLogger().info("keydecompress : %s" % keydecompress)
+    # logging.getLogger().info("key_private : %s" % type(key_private))
+    # logging.getLogger().info("keycompress : %s" % type(keycompress))
+    # logging.getLogger().info("keydecompress : %s" % type(keydecompress))
+
     list_backup_file_system = {
         "action": "backup_restore",
         "sessionid" :  sessionid,
         "data": {
+            "key_private" : key_private,
+            "ip_list_reseau" : get_server_networks(),
+            "ip_list" : get_ip_and_netmask_linux(),
             "machine_source_backup": machine_src if machine_src is not None else jid_from,
             "machine_dest_backup": machine_dest if machine_dest is not None else jid_to,
             "base_path" : base_path,
@@ -1493,6 +1665,11 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
 
     # Envoi du message JSON au plugin distant pour exécuter la restauration
     send_message_json(jid_to, list_backup_file_system)
+
+    # appel du future plugin substitut master backup_restore_substitut
+    # list_backup_file_system["action"] = "backup_restore_substitut"
+    # # appel plugin master sur master
+    # callXmppPlugin("backup_restore_substitut", list_backup_file_system)
 
     return {"status": status, "msg": msg}
 
