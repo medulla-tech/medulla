@@ -43,7 +43,7 @@ class ValidateButtonTpl extends HtmlElement {
     function display($arrParam = array()) {
         if (isset($this->id,$this->value))
             printf('<input id="%s" title="%s" type="button" value="%s" class="%s %s" />',
-                $this->id,$this->id,
+                $this->id,
                 $this->infobulle,
                 $this->value,
                 $this->cssClass,

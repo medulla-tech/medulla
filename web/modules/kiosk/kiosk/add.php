@@ -162,7 +162,7 @@ if(is_array($ou_list)) {
 
     $f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => true));
 
-    $bo = new ValidateButtonTpl('bvalid', _T("Create", 'kiosk'), 'btnPrimary', _T("Create the profile", "kiosk"));
+    $bo = new ValidateButtonTpl('bvalid', _T("Create the profile", 'kiosk'), 'btnSecondary');
     //$rr = new TrFormElementcollapse($bo);
     $bo->setstyle("text-align: center;");
     $f->add($bo);
