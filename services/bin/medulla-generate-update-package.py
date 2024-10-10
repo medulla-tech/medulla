@@ -65,24 +65,28 @@ class download_packages:
             return end - start
         try:
             os.makedirs(dirpackage)
-            logger.debug(f"Directory '{path_file_download}' created successfully")
+            logger.debug(f"Directory '{dirpackage}' created successfully")
         except OSError as error:
-            logger.debug(f"Directory {path_file_download} can not be created")
+            logger.debug(f"Directory {dirpackage} can not be created")
         try:
-            # Try with proxy parameters as defined on the system
-            proxy_url = (
-                os.environ.get("HTTP_PROXY")
-                or os.environ.get("HTTPS_PROXY")
-                or os.environ.get("http_proxy")
-                or os.environ.get("https_proxy")
-            )
-            if proxy_url:
-                proxies = {"http": proxy_url, "https": proxy_url}
-                data = requests.get(urlpath, stream=True, proxies=proxies)
-            else:
-                logger.error("No proxies defined")
+            data = requests.get(urlpath, stream=True)
         except Exception as e:
-            logger.error("Error downloading update file: %s" % str(e))
+            logger.error("Error trying to download update file %s: %s" % (urlpath, str(e)))
+            try:
+                # Try with proxy parameters as defined on the system
+                proxy_url = (
+                    os.environ.get("HTTP_PROXY")
+                    or os.environ.get("HTTPS_PROXY")
+                    or os.environ.get("http_proxy")
+                    or os.environ.get("https_proxy")
+                )
+                if proxy_url:
+                    proxies = {"http": proxy_url, "https": proxy_url}
+                    data = requests.get(urlpath, stream=True, proxies=proxies)
+                else:
+                    logger.error("No proxies defined")
+            except Exception as e:
+                logger.error("Error downloading update file: %s" % str(e))
         with open(path_file_download, "wb") as f:
             for chunk in data.iter_content(chunk_size=1024):
                 if chunk:  # filter out keep-alive new chunks
