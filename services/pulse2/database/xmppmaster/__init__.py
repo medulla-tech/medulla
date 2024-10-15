@@ -16575,6 +16575,62 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result_machines
 
     @DatabaseHelper._sessionm
+    def network_list_machine(self, session, id_machine):
+        """
+        Renvoie la liste des réseaux associés à une machine spécifique.
+
+        Paramètres :
+        session (Session) : La session SQLAlchemy.
+        id_machine (int) : L'identifiant de la machine.
+
+        Retourne :
+        list : La liste des informations de réseau associées à la machine.
+        """
+        if not id_machine:
+            return []
+
+        # Requête SQL
+        query = text("""
+        SELECT
+            id,
+            macaddress,
+            ipaddress,
+            broadcast,
+            gateway,
+            mask,
+            mac,
+            machines_id
+        FROM
+            xmppmaster.network
+        WHERE
+            machines_id = :id_machine;
+        """)
+
+        # Exécution de la requête
+        result = session.execute(query, {'id_machine': id_machine}).fetchall()
+
+        # Si aucun résultat n'est trouvé, retourner une liste vide
+        if not result:
+            return []
+
+        # Construire la liste de résultats
+        network_list = []
+        for row in result:
+            network_info = {
+                'id': row['id'],
+                'macaddress': row['macaddress'],
+                'ipaddress': row['ipaddress'],
+                'broadcast': row['broadcast'],
+                'gateway': row['gateway'],
+                'mask': row['mask'],
+                'mac': row['mac'],
+                'machines_id': row['machines_id']
+            }
+            network_list.append(network_info)
+
+        return network_list
+
+    @DatabaseHelper._sessionm
     def get_os_xmpp_update_major_stats(self, session, presence=False):
         """
         Récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
