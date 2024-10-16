@@ -347,9 +347,13 @@ ALTER TABLE `xmppmaster`.`has_cluster_ars`
     ADD UNIQUE IF NOT EXISTS (id_ars),
     CHANGE COLUMN `id` `id` int(11) NOT NULL AUTO_INCREMENT;
 
--- Add unique key cluster_ars
+-- Add unique key on cluster_ars
 ALTER TABLE `xmppmaster`.`cluster_ars` 
     ADD UNIQUE IF NOT EXISTS (name);
+
+-- Add index on has_login_command
+ALTER TABLE `xmppmaster`.`has_login_command` 
+ADD UNIQUE INDEX IF NOT EXISTS `uniq_id_command` (`command` ASC) ;
 
 UPDATE version SET Number = 90;
 
