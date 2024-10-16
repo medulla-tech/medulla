@@ -65,13 +65,6 @@ function getCurrentLocation()
         $location = $_SESSION["location"];
     }
 
-    if (empty($location)) {
-        $str = sprintf("The configuration is not correct. Please verify the active_profiles configuration \
-                        in the file /etc/mmc/plugins/glpi.ini.local");
-
-        new NotifyWidgetFailure($str);
-    }
-
     return $location;
 }
 
