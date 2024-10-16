@@ -87,25 +87,26 @@ class download_packages:
                     logger.error("No proxies defined")
             except Exception as e:
                 logger.error("Error downloading update file: %s" % str(e))
-        with open(path_file_download, "wb") as f:
-            for chunk in data.iter_content(chunk_size=1024):
-                if chunk:  # filter out keep-alive new chunks
-                    f.write(chunk)
+        if data.status_code == 200:
+            logger.debug(f"Writing contents to {path_file_download}")
+            with open(path_file_download, "wb") as f:
+                for chunk in data.iter_content(chunk_size=1024):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
+        else:
+            logger.error(f"Failed to download {urlpath}: Error {data.status_code}")
         typename = os.path.splitext(path_file_download)[1][1:]
         file_conf_json = os.path.join(os.path.dirname(path_file_download), "conf.json")
         file_xmppdeploy_json = os.path.join(
             os.path.dirname(path_file_download), "xmppdeploy.json"
         )
         nameexecution = os.path.basename(path_file_download)
-        # logger.debug(file_conf_json)
-        # logger.debug(file_xmppdeploy_json)
-        # logger.debug (generate_conf_json(title, updateid, title))
-
+        logger.debug(f"Generating {file_conf_json}")
         with open(file_conf_json, "w") as outfile:
             outfile.write(
                 self.generate_conf_json(title, updateid, description, urlpath)
             )
-
+        logger.debug(f"Generating {file_xmppdeploy_json}")
         with open(file_xmppdeploy_json, "w") as outfile:
             outfile.write(
                 self.generate_xmppdeploy_json(
@@ -139,7 +140,7 @@ class download_packages:
                 namefile
             )
         cmd64 = base64.b64encode(bytes(cmd, "utf-8"))
-        template = """{
+        return """{
         "info": {
             "urlpath" : "%s",
             "creator": "automate_medulla",
