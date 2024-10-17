@@ -102,7 +102,22 @@ function xmlrpc_localfilesystem($currentdir)
     return xmlCall("xmppmaster.localfile", array($currentdir));
 }
 
-function xmlrpc_backup_restore($destmachine, $tomachine , $basepath, $directorylist, $filelist)
+/**
+ * Performs a backup and restore operation using XML-RPC.
+ *
+ * @param string $destmachine      The source machine for the backup (ID, JID, UUID, or hostname).
+ * @param string $tomachine        The destination machine for the restore (ID, JID, UUID, or hostname).
+ * @param string $basepath         The base path where the backup is stored.
+ * @param array  $directorylist    List of directories to be restored.
+ * @param array  $filelist         List of files to be restored.
+ *
+ * @return mixed                   The result of the XML-RPC call.
+ */
+function xmlrpc_backup_restore($destmachine,
+                               $tomachine ,
+                               $basepath,
+                               $directorylist,
+                               $filelist)
 {
     return xmlCall("xmppmaster.backup_restore",
                    array($destmachine,
@@ -110,6 +125,65 @@ function xmlrpc_backup_restore($destmachine, $tomachine , $basepath, $directoryl
                          $basepath,
                          $directorylist,
                          $filelist));
+}
+
+/**
+ * Sends a file to a specified machine using XMPP via XML-RPC.
+ *
+ * @param string $machine_dest         The destination machine address (ID, JID, UUID, or hostname).
+ * @param string $path_fichier         Path to the file to be sent.
+ * @param string $install_machine_dest Destination path on the receiving machine.
+ * @param string $contenttype          Type of content being sent. Defaults to "file".
+ *
+ * @return mixed                       The result of the XML-RPC call.
+ */
+function xmlrpc_send_file_xmpp($machine_dest,
+                               $path_fichier,
+                               $install_machine_dest,
+                               $contenttype="file"){
+   return xmlCall("xmppmaster.send_file_xmpp",
+                   array($machine_dest,
+                         $path_fichier,
+                         $install_machine_dest,
+                         $contenttype));
+
+}
+
+/**
+ * Sends a directory to a specified machine using XMPP via XML-RPC.
+ *
+ * @param string $machine_dest     The destination machine address (ID, JID, UUID, or hostname).
+ * @param string $path_directory   Path to the directory to be sent.
+ * @param string $directory_dest   Destination directory path on the receiving machine.
+ * @param string $contenttype      Type of content being sent. Defaults to "directory".
+ *
+ * @return mixed                   The result of the XML-RPC call.
+ */
+function xmlrpc_send_directory_xmpp($machine_dest,
+                                    $path_directory,
+                                    $directory_dest,
+                                    $contenttype="directory"){
+   return xmlCall("xmppmaster.send_directory_xmpp",
+                   array($machine_dest,
+                         $path_directory,
+                         $directory_dest,
+                         $contenttype));
+
+}
+
+/**
+ * Sends a list of packages to a specified machine using XMPP via XML-RPC.
+ *
+ * @param string $machine_dest       The destination machine address (ID, JID, UUID, or hostname).
+ * @param array|string $list_package_name The package name(s) to be sent. Can be a string or an array of package names.
+ *
+ * @return mixed                     The result of the XML-RPC call.
+ */
+function xmlrpc_send_list_packages_xmpp($machine_dest,
+                                    $list_package_name){
+   return xmlCall("xmppmaster.send_list_packages_xmpp",
+                   array($machine_dest,
+                         $list_package_name));
 }
 
 function xmlrpc_create_local_dir_transfert($pathroot, $hostname)
