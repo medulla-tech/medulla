@@ -1237,8 +1237,9 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
     la machine distante a 1 plugin pour recombiner les messages recu, les decompresse et les installe.
 
     Paramètres :
-    src_machine (str) : La machine source depuis laquelle les fichiers et répertoires doivent être restaurés.
-    dest_machine (str) : La machine de destination où les fichiers et répertoires doivent être restaurés.
+    src_machine (str) : La machine source  (ID, JID, UUID, or hostname) depuis laquelle les fichiers et répertoires doivent être restaurés.
+                        UUID est l'id de la machine glpi. prefixe de UUID ex UUID456
+    dest_machine (str) : La machine de destination  (ID, JID, UUID, or hostname) où les fichiers et répertoires doivent être restaurés. (ID, JID, UUID, or hostname)
     base_path (str) : Le chemin de base où les fichiers et répertoires sont stockés. Les listes de fichiers et de répertoires passées à cette fonction ont tous la même racine dans le système de fichiers, et cette racine est passée dans ce paramètre.
     directorylist (str ou list de str) : Une liste de répertoires à restaurer. Si c'est une chaîne de caractères, elle sera convertie en liste.
     filelist (str ou list de str) : Une liste de fichiers à restaurer. Si c'est une chaîne de caractères, elle sera convertie en liste.
@@ -1553,6 +1554,94 @@ def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist
         # appel plugin master sur substitut master
         callXmppPlugin("backup_restore_substitut", list_backup_file_system)
         return {"status": status, "msg": msg}
+
+
+def send_file_xmpp(machine_dest,
+                   path_fichier,
+                   install_machine_dest,
+                   contenttype="file"):
+    """
+    Sends a file to a specified machine via XMPP.
+
+    Parameters:
+    machine_dest (str): machine_dest (str): Destination machine address (ID, JID, UUID, or hostname).
+                        UUID est l'id de la machine glpi. prefixe de UUID ex UUID456
+    path_fichier (str): Path to the file that will be sent.
+    install_machine_dest (str): The destination path on the receiving machine.
+    contenttype (str, optional): The type of content being sent. Defaults to "file".
+
+    Returns:
+    None
+    """
+    sessionid = name_random(8, "send_file_xmpp")
+    file = {
+            "machine_dest": machine_dest,
+            "path_fichier" : path_fichier,
+            "install_machine_dest" : install_machine_dest,
+            "contenttype": "file",
+            "sessionid" :  sessionid
+        }
+    callXmppPlugin("send_file_xmpp", file)
+
+
+def send_directory_xmpp(machine_dest,
+                        path_directory,
+                        directory_dest,
+                        contenttype="directory",
+                        sesssion_prefixe="send_dir_xmpp"):
+    """
+    Sends a directory to a specified machine via XMPP.
+
+    Parameters:
+    machine_dest (str): Destination machine address.(ID, JID, UUID, or hostname)
+                        UUID est l'id de la machine glpi. prefixe de UUID ex UUID456
+    path_directory (str): Path to the directory that will be sent.
+    directory_dest (str): The destination directory path on the receiving machine.
+    contenttype (str, optional): The type of content being sent. Defaults to "directory".
+    session_prefixe (str, optional): Prefix for the session ID. Defaults to "send_dir_xmpp".
+
+    Returns:
+    None
+    """
+    sessionid = name_random(8, "send_dir_xmpp")
+    directory = {
+            "machine_dest": machine_dest,
+            "path_fichier" : path_directory,
+            "install_machine_dest" : directory_dest,
+            "contenttype": contenttype,
+            "sessionid" :  sessionid
+        }
+    callXmppPlugin("send_file_xmpp", directory)
+
+
+def send_list_packages_xmpp(machine_dest,
+                            liste_package_name):
+    """
+    Sends a list of packages to a specified machine via XMPP.
+
+    Parameters:
+    machine_dest (str): Destination machine address.(ID, JID, UUID, or hostname)
+                        UUID est l'id de la machine glpi. prefixe de UUID ex UUID456
+    liste_package_name (str or list): The package name(s) to be sent. Can be a string or a list of package names.
+
+    Returns:
+    None
+    """
+    if isinstance(liste_package_name, str):
+        # Transformer la chaîne de caractères en une liste avec un seul élément
+        liste_package_name = [liste_package_name]
+    for package in liste_package_name:
+        sessionid = name_random(8, "send_package")
+        directory = {
+                "machine_dest": machine_dest,
+                "path_fichier" : os.path.join("/var/lib/pulse2/packages", package),
+                "install_machine_dest" : package,
+                "contenttype": "package",
+                "sessionid" :  sessionid,
+                "type" : "package"
+            }
+    callXmppPlugin("send_file_xmpp", directory)
+
 
 def runXmppWolforuuidsarray(uuids):
     """
