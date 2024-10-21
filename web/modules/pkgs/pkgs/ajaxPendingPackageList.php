@@ -62,9 +62,12 @@ foreach ($packages as $p) {
     $desc[] = $p['description'];
     $os[] = $p['targetos'];
     $params[] = array('pid'=>base64_encode($p['id']), 'from'=>'pending', 'plabel'=>base64_encode($p['label']), 'pversion'=>base64_encode($p['version']), 'mode'=>'edit');//, 'why'=>$p['why']
+    $uuid = $p['id'];
+    $ids[] = 'p_' . $uuid;
 }
 $n = new OptimizedListInfos($names, _T("Package name", "pkgs"));
 $n->setCssClass("package");
+$n->setCssIds($ids);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($desc, _T("Description", "pkgs"));
 $n->addExtraInfo($versions, _T("Version", "pkgs"));
