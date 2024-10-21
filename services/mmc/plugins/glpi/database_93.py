@@ -5964,7 +5964,10 @@ class Glpi93(DyngroupDatabaseHelper):
                 "content-type": "application/json",
                 "Session-Token": sessionwebservice,
             }
-            parameters = {"force_purge": "1"}
+            if GlpiConfig.webservices["purge_machine"]:
+                parameters = {"force_purge": "1"}
+            else:
+                parameters = {"force_purge": "0"}
             r = requests.delete(url, headers=headers, params=parameters)
             if r.status_code == 200:
                 self.logger.debug("Machine %s deleted" % str(fromUUID(uuid)))
