@@ -6,8 +6,8 @@
 # Translators:
 # tekmans <yvan.manon@siveo.net>, 2019
 # Tom Grabherr, 2022
-# SPO <spointu@gmail.com>, 2023
 # Nicolas Lécureuil <neoclust@mageia.org>, 2024
+# SPO <spointu@gmail.com>, 2024
 # 
 #, fuzzy
 msgid ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2024\n"
+"Last-Translator: SPO <spointu@gmail.com>, 2024\n"
 "Language-Team: French (https://app.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -358,7 +358,7 @@ msgstr "Plugins distants"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:362
 msgid "Trouble to get the distant plugins"
-msgstr ""
+msgstr "Echec de récupération des plugins distants"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:365
 msgid "Remote scheduler plugins"
@@ -508,29 +508,34 @@ msgstr "Code d'erreur : "
 
 #: modules/xmppmaster/xmppmaster/deployquick.php:66
 msgid "Click here to shut down the remote machine:"
-msgstr ""
+msgstr "Cliquer ici pour éteindre la machine distante"
 
 #: modules/xmppmaster/xmppmaster/deployquick.php:67
 msgid "Click here to reboot the remote machine:"
-msgstr ""
+msgstr "Cliquer ici pour redémarrer la machine distante"
 
 #: modules/xmppmaster/xmppmaster/deployquick.php:68
 msgid "Click here to refresh the inventory for the remote machine:"
-msgstr ""
+msgstr "Cliquer ici pour demander un inventaire sur la machine distante"
 
 #: modules/xmppmaster/xmppmaster/deployquick.php:69
 msgid ""
 "Click here to change the settings for the VNC connection to the remote "
 "machine:"
 msgstr ""
+"Cliquer ici pour modifier les paramètres de la connexion VNC sur la machine "
+"distante"
 
 #: modules/xmppmaster/xmppmaster/deployquick.php:70
 msgid "Click here to install an SSH key on the remote machine:"
 msgstr ""
+"Cliquer ici pour installer la clé SSH des relais sur la machine distante"
 
 #: modules/xmppmaster/xmppmaster/deployquick.php:73
 msgid "Click here to start the remote machine if it is not already running:"
 msgstr ""
+"Cliquer ici pour démarrer la machine distante si elle n'est pas déjà "
+"démarrée"
 
 #: modules/xmppmaster/xmppmaster/shareqa.php:60
 msgid "Share the Quick Action"
@@ -568,12 +573,12 @@ msgstr "Replanifier"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:137
 msgid "deployment intervals contraints"
-msgstr ""
+msgstr "Contraintes d'intervalles de déploiement"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:140
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:145
 msgid "No deployment intervals contraint"
-msgstr ""
+msgstr "Aucune contrainte d'intervalle de déploiement"
 
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:130
 #: modules/xmppmaster/xmppmaster/listconffile.php:54
@@ -675,7 +680,7 @@ msgstr "Supprimer une Action Rapide"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:88
 msgid "Deployment Group"
-msgstr ""
+msgstr "Groupe de déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:95
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:114
@@ -689,7 +694,7 @@ msgstr "Afficher"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:105
 msgid "Deployment Info"
-msgstr ""
+msgstr "Information du déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:112
 msgid "Title"
@@ -705,15 +710,15 @@ msgstr "Fin"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:132
 msgid "Deployment Intervals"
-msgstr ""
+msgstr "Intervalles de déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:169
 msgid "Group Info"
-msgstr ""
+msgstr "Information du groupe"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:175
 msgid "Group Name"
-msgstr ""
+msgstr "Nom du groupe"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:178
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:342
@@ -723,7 +728,7 @@ msgstr "Créateur"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:182
 msgid "Number of Machines"
-msgstr ""
+msgstr "Nombre de machines"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:186
 msgid "number sharing"
@@ -731,27 +736,27 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:218
 msgid "share user"
-msgstr ""
+msgstr "Utilisateur du partage"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:223
 msgid "owner Name"
-msgstr ""
+msgstr "Nom du propriétaire"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:248
 msgid "Packages Info"
-msgstr ""
+msgstr "Infos des packages"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:254
 msgid "pkg Name"
-msgstr ""
+msgstr "Nom du package"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:257
 msgid "description"
-msgstr ""
+msgstr "Description"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:261
 msgid "version"
-msgstr ""
+msgstr "version"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:264
 msgid "uuid"
@@ -759,56 +764,56 @@ msgstr "uuid"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:267
 msgid "os"
-msgstr ""
+msgstr "os"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:271
 msgid "share Name"
-msgstr ""
+msgstr "Nom du partage"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:275
 msgid "share Comment"
-msgstr ""
+msgstr "Commentaire du partage"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:320
 msgid "Inventory detail"
-msgstr ""
+msgstr "Détails de l'inventaire"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:327
 msgid "Software Name"
-msgstr ""
+msgstr "Nom du logiciel"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:332
 msgid "Vendor software]"
-msgstr ""
+msgstr "Editeur]"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:337
 msgid "Version software"
-msgstr ""
+msgstr "Version"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:341
 msgid "number version"
-msgstr ""
+msgstr "numéro de version"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:374
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:381
 msgid "dependencies"
-msgstr ""
+msgstr "dépendances"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:402
 msgid "No problems detected in the formatting of deployment descriptor files"
-msgstr ""
+msgstr "Aucun problème détecté dans le format des descripteurs de déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:411
 msgid "package location detail"
-msgstr ""
+msgstr "détail de la localisation du package"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:450
 msgid "detail descripteur file xmppdeploy"
-msgstr ""
+msgstr "détail du descripteur xmppdeploy"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:489
 msgid "detail descripteur file conf.json"
-msgstr ""
+msgstr "détail du descripteur conf.json"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:50
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:659
