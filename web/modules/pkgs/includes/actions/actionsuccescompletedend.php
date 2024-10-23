@@ -23,6 +23,13 @@
  */
 require_once("../../../../includes/i18n.inc.php");
 extract($_POST);
+if (!isset($clear)) {
+    $clear = "True";
+}
+if (!isset($inventory)) {
+    $inventory = "noforced";
+}
+
 $lab = "END_SUCCESS";
 // $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
@@ -54,8 +61,9 @@ $lab = "END_SUCCESS";
 
 
              $optChecked = "";
-             if(isset($clear))
+             if ($clear == "True") {
                  $optChecked = "checked";
+             }
              echo '<td width="16%">
                  <input type="checkbox" '.$optChecked.'
                      onclick="if(jQuery(this).is(\':checked\')){
@@ -66,11 +74,8 @@ $lab = "END_SUCCESS";
 			     }" />'._T("Delete package","pkgs").'
              </td>';
 
-
-
-
-             if(isset($clear) && $clear == "True")
-             {
+            if(isset($clear) && $clear == "True")
+            {
 
                echo '<td width="25%">
                    <select name="clear">
@@ -78,7 +83,7 @@ $lab = "END_SUCCESS";
                        <option value="False">False</option>
                    <select>
                </td>';
-             }
+            }
              else{
                echo '<td width="25%">
                    <select name="clear">
@@ -95,8 +100,9 @@ $lab = "END_SUCCESS";
              ';
 
              $optChecked = "";
-             if(isset($inventory))
-                $optChecked = "checked";
+             if ($inventory != "False") {
+                 $optChecked = "checked";
+             }
 
              echo '<td width="16%">
                  <input type="checkbox" '.$optChecked.'

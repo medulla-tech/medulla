@@ -5859,7 +5859,10 @@ class Glpi94(DyngroupDatabaseHelper):
                 "content-type": "application/json",
                 "Session-Token": sessionwebservice,
             }
-            parameters = {"force_purge": "1"}
+            if GlpiConfig.webservices["purge_machine"]:
+                parameters = {"force_purge": "1"}
+            else:
+                parameters = {"force_purge": "0"}
             r = requests.delete(url, headers=headers, params=parameters)
             if r.status_code == 200:
                 self.logger.debug("Machine %s deleted" % str(fromUUID(uuid)))
@@ -6721,11 +6724,20 @@ class Glpi94(DyngroupDatabaseHelper):
         if self.config.filter_on is not None:
             for key in self.config.filter_on:
                 if key == "state":
-                    filter_on = "%s AND gcp.states_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                    filter_on = "%s AND gcp.states_id in (%s)" % (
+                        filter_on,
+                        ",".join(self.config.filter_on[key]),
+                    )
                 if key == "type":
-                    filter_on = "%s AND gcp.computertypes_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                    filter_on = "%s AND gcp.computertypes_id in (%s)" % (
+                        filter_on,
+                        ",".join(self.config.filter_on[key]),
+                    )
                 if key == "entity":
-                    filter_on = "%s AND gcp.entities_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                    filter_on = "%s AND gcp.entities_id in (%s)" % (
+                        filter_on,
+                        ",".join(self.config.filter_on[key]),
+                    )
 
         sqlrequest = """
             SELECT 
@@ -6752,7 +6764,12 @@ class Glpi94(DyngroupDatabaseHelper):
                 (gsv.comment LIKE '%%Update%%' OR COALESCE(gsv.comment, '') = '')
             AND
                 gcp.id not in (%s)
-            %s;""" % (uuid.replace("UUID", ""), kb, hlist, filter_on)
+            %s;""" % (
+            uuid.replace("UUID", ""),
+            kb,
+            hlist,
+            filter_on,
+        )
         result = {}
         res = session.execute(sqlrequest)
         for element in res:

@@ -338,7 +338,9 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                                     "1@lastlines"
         );
         $options = "";
-        $boolselected = false;
+        if($_POST['os']){
+            $boolselected = true;
+        }
         // search in $Post if input result
         foreach($_POST as $key=>$val){
             if (in_array($key, $posibleresultname)){
@@ -348,7 +350,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             }
         }
         if (!isset($selectresult)){
-            $selectresult = "1@lastlines";
+            $selectresult = "10@lastlines";
         }
 
        foreach($resultlist as $selectedbyscript)
@@ -389,7 +391,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             </td>
             <td>
             <select disabled onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
-                name="1@lastlines">'.$options.'</select>
+                name="10@lastlines">'.$options.'</select>
             </td>';
         }
     ?>

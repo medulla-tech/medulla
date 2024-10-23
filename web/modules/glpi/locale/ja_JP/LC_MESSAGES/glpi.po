@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-12 12:45+0100\n"
+"POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2021\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/siveo/teams/72118/ja_JP/)\n"
@@ -145,10 +145,10 @@ msgid "Parent location"
 msgstr ""
 
 #: modules/glpi/glpi/addLocation.php:101
-#: modules/glpi/glpi/ajaxMachinesList.php:405
+#: modules/glpi/glpi/ajaxMachinesList.php:406
 #: modules/glpi/glpi/addEntityRule.php:77
 #: modules/glpi/glpi/ajaxViewPart.php:234 modules/glpi/glpi/addEntity.php:100
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:247
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:248
 msgid "Description"
 msgstr "内容"
 
@@ -340,23 +340,23 @@ msgstr ""
 
 #: modules/glpi/glpi/machinesList.php:80
 #: modules/glpi/glpi/ajaxMachinesList.php:244
-#: modules/glpi/glpi/ajaxMachinesList.php:417
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:259
+#: modules/glpi/glpi/ajaxMachinesList.php:418
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:260
 msgid "Owner"
 msgstr ""
 
 #: modules/glpi/glpi/machinesList.php:81
 #: modules/glpi/glpi/ajaxMachinesList.php:245
 #: modules/glpi/glpi/ajaxViewPart.php:243
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:274
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:275
 msgid "Model"
 msgstr "モデル"
 
 #: modules/glpi/glpi/machinesList.php:82
 #: modules/glpi/glpi/ajaxMachinesList.php:246
-#: modules/glpi/glpi/ajaxMachinesList.php:432
+#: modules/glpi/glpi/ajaxMachinesList.php:433
 #: modules/glpi/glpi/ajaxViewPart.php:244
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:277
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:278
 msgid "Manufacturer"
 msgstr "メーカー"
 
@@ -562,63 +562,63 @@ msgstr ""
 msgid "Quick action"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:400
+#: modules/glpi/glpi/ajaxMachinesList.php:401
 #: modules/glpi/glpi/ajaxViewPart.php:233
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:243
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:244
 msgid "Computer Name"
 msgstr "コンピューター名"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:408
+#: modules/glpi/glpi/ajaxMachinesList.php:409
 #: modules/glpi/glpi/ajaxViewPart.php:240
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:250
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:251
 msgid "Operating System"
 msgstr "オペレーティングシステム"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:411
+#: modules/glpi/glpi/ajaxMachinesList.php:412
 #: modules/glpi/glpi/ajaxViewPart.php:241
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:253
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:254
 msgid "Computer Type"
 msgstr "コンピュータータイプ"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:414
+#: modules/glpi/glpi/ajaxMachinesList.php:415
 #: modules/glpi/glpi/ajaxViewPart.php:238
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:256
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:257
 msgid "Last Logged User"
 msgstr "最後にログに記録されたユーザー"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:420
+#: modules/glpi/glpi/ajaxMachinesList.php:421
 #: modules/glpi/glpi/ajaxViewPart.php:236
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:262
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:263
 msgid "Entity"
 msgstr "エンティティ"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:423
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:265
+#: modules/glpi/glpi/ajaxMachinesList.php:424
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:266
 msgid "Localization"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:426
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:268
+#: modules/glpi/glpi/ajaxMachinesList.php:427
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:269
 msgid "Owner Firstname"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:429
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:271
+#: modules/glpi/glpi/ajaxMachinesList.php:430
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:272
 msgid "Owner Real Name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:449
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:300
+#: modules/glpi/glpi/ajaxMachinesList.php:450
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:301
 msgid "Backup status"
 msgstr "バックアップステータス"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:459
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:310
+#: modules/glpi/glpi/ajaxMachinesList.php:460
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:311
 msgid "Urbackup"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:486
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:340
+#: modules/glpi/glpi/ajaxMachinesList.php:487
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:341
 msgid "Delete computer"
 msgstr "コンピューターの削除"
 

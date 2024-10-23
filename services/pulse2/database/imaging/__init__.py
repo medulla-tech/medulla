@@ -6154,6 +6154,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                         "tools_dir": config["tools_dir"],
                         "davos_opts": config["davos_opts"],
                         "template_name": config["template_name"],
+                        "increment":config["increment"],
+                        "digit":config["digit"],
                     }
                 )
             )
@@ -6285,6 +6287,8 @@ class ImagingServer(DBObject):
         "tools_dir",
         "davos_opts",
         "template_name",
+        "increment",
+        "digit",
     ]
 
 

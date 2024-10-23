@@ -235,7 +235,7 @@ CREATE VIEW IF NOT EXISTS up_machine_activated AS(
 
 -- new column to have relayserver public key into relayserver table
 ALTER TABLE `xmppmaster`.`relayserver`
-ADD COLUMN `ssh_public_key` TEXT NULL AFTER `syncthing_port`;
+ADD COLUMN IF NOT EXISTS `ssh_public_key` TEXT NULL AFTER `syncthing_port`;
 
 
 -- up_search_kb_update procedure
@@ -342,6 +342,18 @@ END$$
 
 DELIMITER ;
 
+-- Add unique key and auto increment on has_cluster_ars
+ALTER TABLE `xmppmaster`.`has_cluster_ars` 
+    ADD UNIQUE IF NOT EXISTS (id_ars),
+    CHANGE COLUMN `id` `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- Add unique key on cluster_ars
+ALTER TABLE `xmppmaster`.`cluster_ars` 
+    ADD UNIQUE IF NOT EXISTS (name);
+
+-- Add index on has_login_command
+ALTER TABLE `xmppmaster`.`has_login_command` 
+ADD UNIQUE INDEX IF NOT EXISTS `uniq_id_command` (`command` ASC) ;
 
 UPDATE version SET Number = 90;
 

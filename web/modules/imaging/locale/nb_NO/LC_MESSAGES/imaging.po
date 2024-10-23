@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-12 12:45+0100\n"
+"POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -924,23 +924,23 @@ msgstr ""
 "som datakontoen opprettes i. Denne kontoen er i Active Directory på en "
 "domenekontroller i domenet som datamaskinen kobles til."
 
-#: modules/imaging/includes/xmlrpc.inc.php:303
+#: modules/imaging/includes/xmlrpc.inc.php:305
 #, php-format
 msgid "Boot menu generation For machine %s"
 msgstr "Generering av oppstartsmeny for maskin %s"
 
-#: modules/imaging/includes/xmlrpc.inc.php:329
+#: modules/imaging/includes/xmlrpc.inc.php:331
 #, php-format
 msgid "Boot menu generation For Imaging Group %s"
 msgstr "Startmenygenerering for avbildingsgruppe %s"
 
-#: modules/imaging/includes/xmlrpc.inc.php:353
+#: modules/imaging/includes/xmlrpc.inc.php:355
 #, php-format
 msgid "Boot menu generation Success for Package Server on location %s"
 msgstr "Oppstartsmenygenerering. Suksess for Pakkeeserver på lokasjon %s"
 
-#: modules/imaging/includes/xmlrpc.inc.php:368
-#: modules/imaging/includes/xmlrpc.inc.php:383
+#: modules/imaging/includes/xmlrpc.inc.php:370
+#: modules/imaging/includes/xmlrpc.inc.php:385
 #, php-format
 msgid "Boot menu generation failed for package server on location %s [%s]"
 msgstr ""
@@ -950,7 +950,7 @@ msgstr ""
 #: modules/imaging/includes/ajaxcommon.inc.php:59
 #: modules/imaging/imaging/bootmenu_remove.php:93
 #: modules/imaging/imaging/addimage.php:72
-#: modules/imaging/imaging/tabs.php:115
+#: modules/imaging/imaging/tabs.php:107
 #: modules/imaging/imaging/addservice.php:69
 #: modules/imaging/imaging/ajaxImages.php:189
 msgid "root"
@@ -975,7 +975,7 @@ msgstr ""
 "%s.Vent eller last inn siden%s på nytt her%s."
 
 #: modules/imaging/includes/ajaxcommon.inc.php:127
-#: modules/imaging/imaging/tabs.php:223
+#: modules/imaging/imaging/tabs.php:215
 msgid "The registering in the imaging server has failed."
 msgstr "Registreringen på avbildingsserveren mislyktes."
 
@@ -1035,7 +1035,7 @@ msgstr "Etternavn"
 #: modules/imaging/manage/ajaxMasterLevel2.php:97
 #: modules/imaging/manage/ajaxFormWin8.php:808
 #: modules/imaging/imaging/ajaxServices.php:99
-#: modules/imaging/imaging/images.php:109
+#: modules/imaging/imaging/images.php:111
 #: modules/imaging/imaging/bootmenu.php:459
 #: modules/imaging/imaging/ajaxImages.php:171
 msgid "Description"
@@ -1049,87 +1049,87 @@ msgstr "Ordning"
 msgid "This value is already used."
 msgstr "Denne verdien er allerede brukt"
 
-#: modules/imaging/includes/includes.php:35
+#: modules/imaging/includes/includes.php:37
 msgid "There was an error (this is a default message)."
 msgstr "Det oppstod en feil (dette er en standardmelding)."
 
-#: modules/imaging/includes/includes.php:36
+#: modules/imaging/includes/includes.php:38
 msgid "The nomenclature is missing."
 msgstr "Nomenklaturen mangler."
 
-#: modules/imaging/includes/includes.php:37
+#: modules/imaging/includes/includes.php:39
 msgid "This imaging server doesn't exist."
 msgstr "Denne avbildingsserveren eksisterer ikke."
 
-#: modules/imaging/includes/includes.php:38
+#: modules/imaging/includes/includes.php:40
 msgid "This entity already exists."
 msgstr "Denne enheten eksisterer allerede."
 
-#: modules/imaging/includes/includes.php:39
+#: modules/imaging/includes/includes.php:41
 msgid "You asked for an inexistent menu item."
 msgstr "Du ba om et ikke-eksisterende menyelement."
 
-#: modules/imaging/includes/includes.php:40
+#: modules/imaging/includes/includes.php:42
 msgid "This target has no menu."
 msgstr "Dette målet har ingen meny."
 
-#: modules/imaging/includes/includes.php:41
+#: modules/imaging/includes/includes.php:43
 msgid "This entity has no default menu, you first need to set one."
 msgstr "Denne enheten har ingen standardmeny, du må først registrere en."
 
-#: modules/imaging/includes/includes.php:42
+#: modules/imaging/includes/includes.php:44
 msgid "This image already exists."
 msgstr "Dette bildet eksisterer allerede."
 
-#: modules/imaging/includes/includes.php:43
+#: modules/imaging/includes/includes.php:45
 msgid "This computer already exists."
 msgstr "Denne datamaskinen eksisterer allerede."
 
-#: modules/imaging/includes/includes.php:44
+#: modules/imaging/includes/includes.php:46
 msgid ""
 "You need to register this computer's imaging server to be able to use "
 "imaging."
 msgstr ""
 "Du må registrere datamaskinens bildeserver for å kunne kjøre avbilding."
 
-#: modules/imaging/includes/includes.php:195
+#: modules/imaging/includes/includes.php:211
 msgid "Uptime: "
 msgstr "Oppetid: "
 
-#: modules/imaging/includes/includes.php:197
+#: modules/imaging/includes/includes.php:213
 msgid "day"
 msgstr "dag"
 
-#: modules/imaging/includes/includes.php:200
+#: modules/imaging/includes/includes.php:216
 msgid "hour"
 msgstr "time"
 
-#: modules/imaging/includes/includes.php:202
+#: modules/imaging/includes/includes.php:218
 msgid "minute"
 msgstr "minutt"
 
-#: modules/imaging/includes/includes.php:206
+#: modules/imaging/includes/includes.php:222
 msgid "Memory"
 msgstr "Minne"
 
-#: modules/imaging/includes/includes.php:209
+#: modules/imaging/includes/includes.php:225
 msgid "Swap"
 msgstr "Swap"
 
-#: modules/imaging/includes/includes.php:221
+#: modules/imaging/includes/includes.php:238
 msgid "Never"
 msgstr "Aldri"
 
-#: modules/imaging/includes/includes.php:224
-#: modules/imaging/includes/includes.php:230
+#: modules/imaging/includes/includes.php:242
+#: modules/imaging/includes/includes.php:249
 msgid "As soon as possible"
 msgstr "Så fort som mulig"
 
-#: modules/imaging/includes/includes.php:232
+#: modules/imaging/includes/includes.php:251
 msgid "<i>undefined</i>"
 msgstr "<i>udefinert</i>"
 
-#: modules/imaging/includes/includes.php:300
+#: modules/imaging/includes/includes.php:322
 msgid "Backup log messages"
 msgstr "Sikkerhetskopier loggmeldinger"
 
@@ -1385,7 +1385,7 @@ msgstr "Avbildingsserver"
 #: modules/imaging/manage/ajaxFormWin7.php:735
 #: modules/imaging/manage/ajaxFormWin11-uefi.php:691
 #: modules/imaging/manage/ajaxFormWin8.php:825
-#: modules/imaging/manage/ajaxConfiguration.php:130
+#: modules/imaging/manage/ajaxConfiguration.php:186
 #: modules/imaging/manage/bootmenu_edit.php:101
 #: modules/imaging/imaging/bootmenu.php:260
 msgid "Validate"
@@ -1436,8 +1436,8 @@ msgstr "Er du sikker på at du vil slette <b>%s</b> skriptet?"
 #: modules/imaging/imaging/bootmenu_remove.php:161
 #: modules/imaging/imaging/showtarget.php:131
 #: modules/imaging/imaging/images_delete.php:73
-#: modules/imaging/imaging/configure.php:392
-#: modules/imaging/imaging/multicast.php:390
+#: modules/imaging/imaging/configure.php:388
+#: modules/imaging/imaging/multicast.php:410
 #: modules/imaging/imaging/images_iso.php:112
 msgid "Cancel"
 msgstr "Avbryt"
@@ -1981,7 +1981,7 @@ msgstr ""
 
 #: modules/imaging/manage/master_add.php:71
 #: modules/imaging/manage/master_add.php:75
-#: modules/imaging/manage/save_configuration.php:84
+#: modules/imaging/manage/save_configuration.php:95
 #: modules/imaging/manage/location.php:61
 #: modules/imaging/manage/location.php:65
 #: modules/imaging/manage/service_show_used.php:128
@@ -2046,36 +2046,36 @@ msgstr "Valgt som standard på WOL"
 msgid "Displayed on WOL"
 msgstr "Vist på WOL"
 
-#: modules/imaging/manage/multicastaction.php:68
+#: modules/imaging/manage/multicastaction.php:69
 msgid "Start Multicast of ( Master :"
 msgstr "Start Multicast av  Master :"
 
-#: modules/imaging/manage/multicastaction.php:69
-#: modules/imaging/manage/multicastaction.php:89
-#: modules/imaging/manage/multicastaction.php:136
+#: modules/imaging/manage/multicastaction.php:70
+#: modules/imaging/manage/multicastaction.php:93
+#: modules/imaging/manage/multicastaction.php:147
 msgid "on (group :"
 msgstr "på gruppe:"
 
-#: modules/imaging/manage/multicastaction.php:70
-#: modules/imaging/manage/multicastaction.php:90
-#: modules/imaging/manage/multicastaction.php:137
+#: modules/imaging/manage/multicastaction.php:71
+#: modules/imaging/manage/multicastaction.php:94
+#: modules/imaging/manage/multicastaction.php:148
 msgid "to (location : "
 msgstr "til lokasjon"
 
-#: modules/imaging/manage/multicastaction.php:88
+#: modules/imaging/manage/multicastaction.php:92
 msgid "Stop Multicast of ( Master :"
 msgstr "Stopp Multicast av  Master :"
 
-#: modules/imaging/manage/multicastaction.php:102
-#: modules/imaging/manage/multicastaction.php:121
+#: modules/imaging/manage/multicastaction.php:108
+#: modules/imaging/manage/multicastaction.php:130
 msgid "Synchro Profile Menu group : "
 msgstr "Synkro Profil Meny gruppe : "
 
-#: modules/imaging/manage/multicastaction.php:121
+#: modules/imaging/manage/multicastaction.php:130
 msgid "location : "
 msgstr "lokasjon:"
 
-#: modules/imaging/manage/multicastaction.php:135
+#: modules/imaging/manage/multicastaction.php:146
 msgid "Clear Multicast of ( Master :"
 msgstr "Fjern Multicast av  Master :"
 
@@ -2141,7 +2141,7 @@ msgid "Stop multicast deploy"
 msgstr "Stopp multicast utrulling"
 
 #: modules/imaging/manage/ajaxStatus.php:562
-#: modules/imaging/imaging/multicast.php:389
+#: modules/imaging/imaging/multicast.php:409
 msgid "Start multicast deploy"
 msgstr "Start multicast utrulling"
 
@@ -2195,7 +2195,7 @@ msgstr "Oppstartstjeneste allerede opprettet"
 msgid "Duplicate"
 msgstr "Dupliser"
 
-#: modules/imaging/manage/save_configuration.php:68
+#: modules/imaging/manage/save_configuration.php:77
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
 msgstr "Avbildningsserver <strong>%s</strong>konfigurasjon er lagret"
@@ -2346,7 +2346,7 @@ msgstr "Standard konfigurasjon av oppstartsmenyen"
 #: modules/imaging/manage/service_edit.php:56
 #: modules/imaging/manage/ajaxMasterLevel2.php:95
 #: modules/imaging/imaging/ajaxServices.php:98
-#: modules/imaging/imaging/images.php:105
+#: modules/imaging/imaging/images.php:107
 #: modules/imaging/imaging/bootmenu.php:457
 #: modules/imaging/imaging/ajaxImages.php:169
 msgid "Label"
@@ -2708,45 +2708,77 @@ msgstr "La dette feltet være tomt for å deaktivere PXE-passord"
 msgid "PXE Password"
 msgstr "PXE Passord"
 
-#: modules/imaging/manage/ajaxConfiguration.php:86
+#: modules/imaging/manage/ajaxConfiguration.php:88
 msgid "Clonezilla parameters for saving images"
 msgstr "Clonezilla-parametere for lagring av bildefiler"
 
-#: modules/imaging/manage/ajaxConfiguration.php:89
+#: modules/imaging/manage/ajaxConfiguration.php:92
 msgid "Clonezilla parameters for restoring images"
 msgstr "Clonezilla-parametere for å gjenopprette bildefiler"
 
-#: modules/imaging/manage/ajaxConfiguration.php:97
+#: modules/imaging/manage/ajaxConfiguration.php:95
+msgid "Register template name"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:105
 msgid "Default menu parameters"
 msgstr "Standard menyparametere"
 
-#: modules/imaging/manage/ajaxConfiguration.php:101
-#: modules/imaging/imaging/configure.php:45
+#: modules/imaging/manage/ajaxConfiguration.php:109
+#: modules/imaging/imaging/configure.php:44
 msgid "Default menu label"
 msgstr "Standard menyetikett"
 
-#: modules/imaging/manage/ajaxConfiguration.php:104
+#: modules/imaging/manage/ajaxConfiguration.php:113
 msgid "Default menu timeout"
 msgstr "Standard menytimeout"
 
-#: modules/imaging/manage/ajaxConfiguration.php:112
+#: modules/imaging/manage/ajaxConfiguration.php:122
 msgid "Hide menu"
 msgstr "Skjul meny"
 
-#: modules/imaging/manage/ajaxConfiguration.php:116
+#: modules/imaging/manage/ajaxConfiguration.php:127
 #: modules/imaging/imaging/configure.php:71
 msgid "Boot options"
 msgstr "Oppstartsalternativer"
 
-#: modules/imaging/manage/ajaxConfiguration.php:119
+#: modules/imaging/manage/ajaxConfiguration.php:130
 #: modules/imaging/imaging/configure.php:75
 msgid "Full path to the XPM displayed at boot"
 msgstr "Full sti til XPM vist ved oppstart"
 
-#: modules/imaging/manage/ajaxConfiguration.php:122
+#: modules/imaging/manage/ajaxConfiguration.php:134
 #: modules/imaging/imaging/configure.php:82
 msgid "Message displayed during backup/restoration"
 msgstr "Melding vises under sikkerhetskopiering/gjennoppretting"
+
+#: modules/imaging/manage/ajaxConfiguration.php:138
+msgid "Diskless Dir"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:144
+msgid "Diskless Kernel"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:150
+msgid "Inventories Dir"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:156
+msgid "PXE time Reboot"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:162
+msgid "Diskless Initrd"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:169
+msgid "Tools Dir"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:175
+msgid "Davos Opts"
+msgstr ""
 
 #: modules/imaging/manage/bootmenu_edit.php:68
 #, php-format
@@ -2794,7 +2826,7 @@ msgid "Are you sure you want to remove <b>%s</b> master ?"
 msgstr "Er du sikker på at du vil fjerne <b>%s</b>master?"
 
 #: modules/imaging/manage/ajaxMaster.php:27
-#: modules/imaging/imaging/images.php:70
+#: modules/imaging/imaging/images.php:71
 msgid "Available masters"
 msgstr "Tilgjengelige mastere"
 
@@ -3041,19 +3073,19 @@ msgstr "Avbilding på en gruppe"
 
 #: modules/imaging/infoPackage.inc.php:274
 #: modules/imaging/infoPackage.inc.php:353
-#: modules/imaging/imaging/tabs.php:243 modules/imaging/imaging/tabs.php:315
+#: modules/imaging/imaging/tabs.php:235 modules/imaging/imaging/tabs.php:307
 msgid "Boot menu"
 msgstr "Boot meny"
 
 #: modules/imaging/infoPackage.inc.php:276
 #: modules/imaging/infoPackage.inc.php:355
-#: modules/imaging/imaging/tabs.php:246
+#: modules/imaging/imaging/tabs.php:238
 msgid "Images and Masters"
 msgstr "Bilder og Mastere"
 
 #: modules/imaging/infoPackage.inc.php:278
 #: modules/imaging/infoPackage.inc.php:357
-#: modules/imaging/imaging/tabs.php:247 modules/imaging/imaging/tabs.php:317
+#: modules/imaging/imaging/tabs.php:239 modules/imaging/imaging/tabs.php:309
 msgid "Boot services"
 msgstr "Oppstartstjenester"
 
@@ -3064,7 +3096,7 @@ msgstr "Avbildingslogg"
 
 #: modules/imaging/infoPackage.inc.php:282
 #: modules/imaging/infoPackage.inc.php:361
-#: modules/imaging/imaging/tabs.php:249 modules/imaging/imaging/tabs.php:319
+#: modules/imaging/imaging/tabs.php:241 modules/imaging/imaging/tabs.php:311
 msgid "Menu configuration"
 msgstr "Meny konfigurasjon"
 
@@ -3171,7 +3203,7 @@ msgstr "Fjern bildefil %s"
 
 #: modules/imaging/imaging/bootmenu_remove.php:103
 #: modules/imaging/imaging/addimage.php:81
-#: modules/imaging/imaging/tabs.php:127
+#: modules/imaging/imaging/tabs.php:119
 #: modules/imaging/imaging/addservice.php:78
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
@@ -3220,27 +3252,26 @@ msgid "From profile"
 msgstr "Fra profil"
 
 #: modules/imaging/imaging/tabs.php:63 modules/imaging/imaging/tabs.php:71
-#: modules/imaging/imaging/tabs.php:79
 msgid "Default menu has been successfully restored."
 msgstr "Standardmenyen er gjenopprettet."
 
-#: modules/imaging/imaging/tabs.php:143
+#: modules/imaging/imaging/tabs.php:135
 #, php-format
 msgid "This computer is no longer registered : %s"
 msgstr "Denne datamaskinen er ikke lenger registrert: %s"
 
-#: modules/imaging/imaging/tabs.php:147
+#: modules/imaging/imaging/tabs.php:139
 #, php-format
 msgid "Boot Menu Generation failed for : %s"
 msgstr "Generering av oppstartsmenyen mislyktes for:%s"
 
-#: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:199
-#: modules/imaging/imaging/tabs.php:219 modules/imaging/imaging/tabs.php:239
+#: modules/imaging/imaging/tabs.php:160 modules/imaging/imaging/tabs.php:191
+#: modules/imaging/imaging/tabs.php:211 modules/imaging/imaging/tabs.php:231
 #, php-format
 msgid "%s's computer imaging"
 msgstr "%ss datamaskinavbildning"
 
-#: modules/imaging/imaging/tabs.php:174
+#: modules/imaging/imaging/tabs.php:166
 msgid ""
 "This computer can't be declared in the imaging module: it's already part of "
 "a broken imaging group."
@@ -3248,27 +3279,27 @@ msgstr ""
 "Denne datamaskinen kan ikke deklareres i avbildingsmodulen: den er allerede "
 "en del av en ødelagt bildegruppe."
 
-#: modules/imaging/imaging/tabs.php:182
+#: modules/imaging/imaging/tabs.php:174
 #, php-format
 msgid "Please declare the imaging group first %shere%s."
 msgstr "Vennligst opprett bildegruppen først %s her %s."
 
-#: modules/imaging/imaging/tabs.php:190 modules/imaging/imaging/tabs.php:276
+#: modules/imaging/imaging/tabs.php:182 modules/imaging/imaging/tabs.php:268
 #, php-format
 msgid "Reset synchronisation state for %s (%s) succeed"
 msgstr "Tilbakestill synkroniseringsstatus for %s (%s) lyktes"
 
-#: modules/imaging/imaging/tabs.php:194 modules/imaging/imaging/tabs.php:280
+#: modules/imaging/imaging/tabs.php:186 modules/imaging/imaging/tabs.php:272
 msgid "Failed to reset synchronise state."
 msgstr "Kunne ikke tilbakestille synkroniseringsstatusen."
 
-#: modules/imaging/imaging/tabs.php:205 modules/imaging/imaging/tabs.php:291
+#: modules/imaging/imaging/tabs.php:197 modules/imaging/imaging/tabs.php:283
 #, php-format
 msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
 msgstr ""
 "Genererer oppstartsmeny ... Vent eller last inn siden på nytt %sher%s.<br/>"
 
-#: modules/imaging/imaging/tabs.php:208 modules/imaging/imaging/tabs.php:294
+#: modules/imaging/imaging/tabs.php:200 modules/imaging/imaging/tabs.php:286
 msgid ""
 "If the processing exceeds 5 minutes, please reset the synchro state of this "
 "computer."
@@ -3276,42 +3307,42 @@ msgstr ""
 "Hvis behandlingen går over 5 minutter, må du tilbakestille synkronstatusen "
 "til denne datamaskinen."
 
-#: modules/imaging/imaging/tabs.php:216 modules/imaging/imaging/tabs.php:302
+#: modules/imaging/imaging/tabs.php:208 modules/imaging/imaging/tabs.php:294
 msgid "Reset Synchro state"
 msgstr "Gjenopprett Synkro status"
 
-#: modules/imaging/imaging/tabs.php:235
+#: modules/imaging/imaging/tabs.php:227
 #, php-format
 msgid "%s's computer imaging (in group)"
 msgstr "%sdatamaskinavbildning (i gruppe)"
 
-#: modules/imaging/imaging/tabs.php:243 modules/imaging/imaging/tabs.php:315
+#: modules/imaging/imaging/tabs.php:235 modules/imaging/imaging/tabs.php:307
 msgid "Current boot menu"
 msgstr "Gjeldende oppstartsmeny"
 
-#: modules/imaging/imaging/tabs.php:247 modules/imaging/imaging/tabs.php:317
+#: modules/imaging/imaging/tabs.php:239 modules/imaging/imaging/tabs.php:309
 msgid "Available boot menu services"
 msgstr "Tilgjengelige oppstartsmenytjenester"
 
-#: modules/imaging/imaging/tabs.php:248 modules/imaging/imaging/tabs.php:318
+#: modules/imaging/imaging/tabs.php:240 modules/imaging/imaging/tabs.php:310
 msgid "Imaging log"
 msgstr "Logg over avbildninger"
 
-#: modules/imaging/imaging/tabs.php:285
+#: modules/imaging/imaging/tabs.php:277
 #, php-format
 msgid "%s's profile imaging"
 msgstr "%ss profil avbilding"
 
-#: modules/imaging/imaging/tabs.php:314
+#: modules/imaging/imaging/tabs.php:306
 #, php-format
 msgid "%s's imaging group"
 msgstr "%ss avbildingsgruppe"
 
-#: modules/imaging/imaging/tabs.php:316
+#: modules/imaging/imaging/tabs.php:308
 msgid "Masters"
 msgstr "Masters"
 
-#: modules/imaging/imaging/tabs.php:327
+#: modules/imaging/imaging/tabs.php:319
 msgid "Not enough information"
 msgstr "Ikke nok informasjon"
 
@@ -3368,32 +3399,32 @@ msgstr ""
 "Denne datamaskinen er for øyeblikket medlem av \"%s\". <a href=\"%s\">Klikk "
 "her </a>for å forlate gruppen og tilpasse oppstartsmenyen."
 
-#: modules/imaging/imaging/images.php:68
+#: modules/imaging/imaging/images.php:69
 msgid "Available images"
 msgstr "Tilgjengelige bildefiler"
 
-#: modules/imaging/imaging/images.php:94
+#: modules/imaging/imaging/images.php:96
 msgid "Edition of image"
 msgstr "Redigering av Bilde"
 
-#: modules/imaging/imaging/images.php:96
+#: modules/imaging/imaging/images.php:98
 msgid "Edition of master"
 msgstr "Redigering av Master"
 
-#: modules/imaging/imaging/images.php:125
-#: modules/imaging/imaging/images.php:152
+#: modules/imaging/imaging/images.php:127
+#: modules/imaging/imaging/images.php:154
 msgid "Save"
 msgstr "Lagre"
 
-#: modules/imaging/imaging/images.php:127
+#: modules/imaging/imaging/images.php:129
 msgid "Save (converting to image)"
 msgstr "Lagre, (konverter til bilde)"
 
-#: modules/imaging/imaging/images.php:129
+#: modules/imaging/imaging/images.php:131
 msgid "Convert to master"
 msgstr "Konverter til Master"
 
-#: modules/imaging/imaging/images.php:193
+#: modules/imaging/imaging/images.php:198
 msgid "Image backup logs"
 msgstr "Sikkerhetskopierningslogg for bilde"
 
@@ -3425,68 +3456,68 @@ msgstr "Profil"
 msgid "Menu timeout"
 msgstr "Meny timeout"
 
-#: modules/imaging/imaging/configure.php:113
+#: modules/imaging/imaging/configure.php:109
 msgid "Target options"
 msgstr "Målalternativer"
 
-#: modules/imaging/imaging/configure.php:143
+#: modules/imaging/imaging/configure.php:139
 msgid "Kernel parameters"
 msgstr "Kjerneparametre"
 
-#: modules/imaging/imaging/configure.php:150
+#: modules/imaging/imaging/configure.php:146
 msgid "Image parameters"
 msgstr "Bildeparametre"
 
-#: modules/imaging/imaging/configure.php:158
+#: modules/imaging/imaging/configure.php:154
 msgid "Force raw backup mode"
 msgstr "Tvinge rå sikkerhetskopimodus"
 
-#: modules/imaging/imaging/configure.php:178
+#: modules/imaging/imaging/configure.php:174
 msgid "Hide menu (shortcut to show it : Shift - Alt - Shift)"
 msgstr "Skjul meny (snarvei for å vise den: Skift - Alt - Skift)"
 
-#: modules/imaging/imaging/configure.php:179
+#: modules/imaging/imaging/configure.php:175
 msgid "GRUB command line access"
 msgstr "GRUB kommandolinjeadgang"
 
-#: modules/imaging/imaging/configure.php:180
+#: modules/imaging/imaging/configure.php:176
 msgid "Do not check hard disk size"
 msgstr "Ikke sjekk harddiskstørrelse"
 
-#: modules/imaging/imaging/configure.php:181
+#: modules/imaging/imaging/configure.php:177
 msgid "Update the NT boot loader if the hard disk has changed"
 msgstr "Oppdater NT oppstartslasteren hvis harddisken har endret seg"
 
-#: modules/imaging/imaging/configure.php:182
+#: modules/imaging/imaging/configure.php:178
 msgid "Diskless Linux command line access"
 msgstr "Diskløs Linux kommandolinjeadgang"
 
-#: modules/imaging/imaging/configure.php:198
+#: modules/imaging/imaging/configure.php:194
 #, php-format
 msgid "choose network profile for group %s"
 msgstr "Velg nettverksprofil for gruppe %s"
 
-#: modules/imaging/imaging/configure.php:226
+#: modules/imaging/imaging/configure.php:222
 #, php-format
 msgid "choose network profile for machine %s"
 msgstr "Velg nettverksprofil for maskin %s"
 
-#: modules/imaging/imaging/configure.php:303
+#: modules/imaging/imaging/configure.php:299
 #, php-format
 msgid "Boot menu is created for <strong>%s</strong>."
 msgstr "Boot-menyen opprettes for <strong>%s</strong>."
 
-#: modules/imaging/imaging/configure.php:305
+#: modules/imaging/imaging/configure.php:301
 #, php-format
 msgid "Boot menu modified for <strong>%s</strong>."
 msgstr "Oppstartmenyen endret for <strong>%s</strong>."
 
-#: modules/imaging/imaging/configure.php:347
+#: modules/imaging/imaging/configure.php:343
 #, php-format
 msgid "Error generating the menu : %s"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:378
+#: modules/imaging/imaging/configure.php:374
 msgid ""
 "You are going to unregister this computer from the imaging module, are you "
 "sure you want to do that?"
@@ -3494,36 +3525,36 @@ msgstr ""
 "Du kommer til å avregistrere denne datamaskinen fra avbildingsmodulen, er du"
 " sikker på at du vil gjøre det?"
 
-#: modules/imaging/imaging/configure.php:384
+#: modules/imaging/imaging/configure.php:380
 msgid "Do you want a backup to be done ?"
 msgstr "Vil du gjøre en sikkerhetskopi?"
 
-#: modules/imaging/imaging/configure.php:391
-#: modules/imaging/imaging/configure.php:757
+#: modules/imaging/imaging/configure.php:387
+#: modules/imaging/imaging/configure.php:755
 msgid "Unregister this computer"
 msgstr "Avregistrer denne datamaskinen"
 
-#: modules/imaging/imaging/configure.php:406
+#: modules/imaging/imaging/configure.php:402
 #, php-format
 msgid "The computer %s has correctly been unregistered from imaging"
 msgstr "Datamaskinen %s er korrekt avregistrert fora vbildning."
 
-#: modules/imaging/imaging/configure.php:426
+#: modules/imaging/imaging/configure.php:422
 #, php-format
 msgid "Failed to unregister the computer %s"
 msgstr "Feilet i å avregistrere maskinen %s"
 
-#: modules/imaging/imaging/configure.php:458
+#: modules/imaging/imaging/configure.php:454
 #, php-format
 msgid "Register computer '%s'"
 msgstr "Registrer datamaskin '%s'"
 
-#: modules/imaging/imaging/configure.php:462
+#: modules/imaging/imaging/configure.php:458
 #, php-format
 msgid "Imaging activation for group '%s'"
 msgstr "Avbildingsaktivering for grupper '%s'"
 
-#: modules/imaging/imaging/configure.php:492
+#: modules/imaging/imaging/configure.php:490
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entity of this computer."
@@ -3531,7 +3562,7 @@ msgstr ""
 "For å registrere deg, må du først sette en standardmeny til bildeserveren "
 "som administrerer enheten til denne datamaskinen."
 
-#: modules/imaging/imaging/configure.php:494
+#: modules/imaging/imaging/configure.php:492
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entities of the computers that belongs to this profile."
@@ -3539,7 +3570,7 @@ msgstr ""
 "For å registrere deg, må du først sette en standardmeny til bildeserveren "
 "som administrerer enhetene til datamaskinene som tilhører denne profilen."
 
-#: modules/imaging/imaging/configure.php:499
+#: modules/imaging/imaging/configure.php:497
 msgid ""
 "The computer either doesn't have a MAC address, either has more than one MAC"
 " address or the only NIC doesn't have any network mask. It can't be "
@@ -3549,31 +3580,31 @@ msgstr ""
 "adresse, eller den eneste NIC-en har ikke noen nettverksmaske. Det kan ikke "
 "registreres i avbildningsmodulen."
 
-#: modules/imaging/imaging/configure.php:504
+#: modules/imaging/imaging/configure.php:502
 msgid "The profile can't be registered into the imaging module."
 msgstr "Profilen kan ikke registreres i avbildingsmodulen"
 
-#: modules/imaging/imaging/configure.php:562
+#: modules/imaging/imaging/configure.php:560
 msgid "Computer:"
 msgstr "Datamaskin"
 
-#: modules/imaging/imaging/configure.php:563
-#: modules/imaging/imaging/configure.php:736
+#: modules/imaging/imaging/configure.php:561
+#: modules/imaging/imaging/configure.php:734
 msgid "Choose the MAC address you want to use"
 msgstr "Velg MAC-adressen du vil bruke"
 
-#: modules/imaging/imaging/configure.php:577
-#: modules/imaging/imaging/configure.php:745
+#: modules/imaging/imaging/configure.php:575
+#: modules/imaging/imaging/configure.php:743
 msgid ""
 "Please switch to expert mode now if you want to change more parameters."
 msgstr "Bytt til ekspertmodus hvis du vil endre flere parametere."
 
-#: modules/imaging/imaging/configure.php:579
-#: modules/imaging/imaging/configure.php:747
+#: modules/imaging/imaging/configure.php:577
+#: modules/imaging/imaging/configure.php:745
 msgid "You can switch to standard mode now if you want less parameters."
 msgstr "Du kan bytte til standardmodus nå hvis du vil ha mindre parametere."
 
-#: modules/imaging/imaging/configure.php:597
+#: modules/imaging/imaging/configure.php:595
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entity that owns this computer."
@@ -3581,7 +3612,7 @@ msgstr ""
 "Standardverdiene for bildebehandlingsparametrene blir arvet fra "
 "bildeserveren som administrerer enheten som eier denne datamaskinen."
 
-#: modules/imaging/imaging/configure.php:599
+#: modules/imaging/imaging/configure.php:597
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entities of the computers that belongs to "
@@ -3590,44 +3621,44 @@ msgstr ""
 "Standardverdiene for avbildingsparameterne blir arvet fra bildeserveren som "
 "administrerer enhetene til datamaskinene som tilhører denne profilen."
 
-#: modules/imaging/imaging/configure.php:610
+#: modules/imaging/imaging/configure.php:608
 #, php-format
 msgid "The default values displayed here come from this %s's profile menu."
 msgstr "Standardverdiene som vises her kommer fra denne %s profilmenyen."
 
-#: modules/imaging/imaging/configure.php:624
+#: modules/imaging/imaging/configure.php:622
 msgid "Hard disks and partitions selection to backup"
 msgstr "Valg av harddisk og partisjoner for sikkerhetskopiering"
 
-#: modules/imaging/imaging/configure.php:629
+#: modules/imaging/imaging/configure.php:627
 #, php-format
 msgid "Hard disk number: %d"
 msgstr "Disk nummer:%d"
 
-#: modules/imaging/imaging/configure.php:641
+#: modules/imaging/imaging/configure.php:639
 msgid "Select this hard disk"
 msgstr "Velg denne disken"
 
-#: modules/imaging/imaging/configure.php:656
+#: modules/imaging/imaging/configure.php:654
 #, php-format
 msgid "Partition number: %d"
 msgstr "Partisjon nummer: %d"
 
 #: modules/imaging/imaging/multicast.php:48
-#: modules/imaging/imaging/multicast.php:237
+#: modules/imaging/imaging/multicast.php:250
 msgid ""
 "Multicast menu has not been created : there are no computers in the group"
 msgstr ""
 "Multicast-menyen er ikke opprettet: Det er ingen datamaskiner i gruppen"
 
-#: modules/imaging/imaging/multicast.php:66
-#: modules/imaging/imaging/multicast.php:87
+#: modules/imaging/imaging/multicast.php:68
+#: modules/imaging/imaging/multicast.php:90
 msgid "Multicast menu has not been created : number of computers missing"
 msgstr "Multicast-menyen er ikke opprettet: antall datamaskiner mangler"
 
-#: modules/imaging/imaging/multicast.php:104
-#: modules/imaging/imaging/multicast.php:121
-#: modules/imaging/imaging/multicast.php:129
+#: modules/imaging/imaging/multicast.php:109
+#: modules/imaging/imaging/multicast.php:128
+#: modules/imaging/imaging/multicast.php:136
 #, php-format
 msgid ""
 "Multicast menu has not been created : the imaging group contains %d "
@@ -3636,35 +3667,35 @@ msgstr ""
 "Multicast-menyen er ikke opprettet: bildegruppen inneholder %d datamaskiner "
 "og du har registrert %d"
 
-#: modules/imaging/imaging/multicast.php:187
+#: modules/imaging/imaging/multicast.php:197
 msgid "computers have a [IPV6] interfaces address exclusively in the group"
 msgstr "datamaskinene  i gruppen bruker kun et [IPV6] -adresse."
 
-#: modules/imaging/imaging/multicast.php:210
+#: modules/imaging/imaging/multicast.php:222
 msgid "Multicast menu has not been created : --max-time-to-wait missing"
 msgstr "Multicast-menyen er ikke opprettet: - max-time-to-wait mangler"
 
-#: modules/imaging/imaging/multicast.php:228
+#: modules/imaging/imaging/multicast.php:242
 msgid "Multicast menu has not been created : --max-time-to-wait < 60"
 msgstr "Multicast-menyen er ikke opprettet: - max-time-to-wait <60"
 
-#: modules/imaging/imaging/multicast.php:254
+#: modules/imaging/imaging/multicast.php:269
 msgid ""
 "Multicast menu has not been created : the selected master is missing on disk"
 msgstr ""
 "Multicast-menyen er ikke opprettet: Den valgte masteren mangler på disken"
 
-#: modules/imaging/imaging/multicast.php:293
+#: modules/imaging/imaging/multicast.php:310
 msgid "Multicast menu has been successfully created."
 msgstr "Multicast-menyen er opprettet."
 
-#: modules/imaging/imaging/multicast.php:311
+#: modules/imaging/imaging/multicast.php:329
 msgid ""
 "Multicast menu has not been created : check that the imaging server is "
 "running"
 msgstr "Multicast-menyen er ikke opprettet: sjekk at bildeserveren kjører"
 
-#: modules/imaging/imaging/multicast.php:348
+#: modules/imaging/imaging/multicast.php:368
 #, php-format
 msgid ""
 "deploy the master <strong>%s</strong> to this group <strong>%s</strong> in "
@@ -3673,11 +3704,11 @@ msgstr ""
 "distribuer masteren <strong>%s</strong>til denne gruppen "
 "<strong>%s</strong>i multicast"
 
-#: modules/imaging/imaging/multicast.php:355
+#: modules/imaging/imaging/multicast.php:375
 msgid "Number of machines to wait for"
 msgstr "Antall maskiner å vente på"
 
-#: modules/imaging/imaging/multicast.php:371
+#: modules/imaging/imaging/multicast.php:391
 msgid ""
 "start anyways when t seconds since first receiver connection have passed"
 msgstr ""

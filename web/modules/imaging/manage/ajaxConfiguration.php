@@ -97,6 +97,16 @@ $f->add(
     new TrFormElement($template_name, new InputTpl('template_name')),
     array("value" => (empty($imaging_server["template_name"])) ? '' : htmlentities($imaging_server["template_name"]))
 );
+$increment = _T("Increment", "imaging");
+$f->add(
+    new TrFormElement($increment, new InputTpl('increment')),
+    array("value" => (empty($imaging_server["increment"])) ? '' : htmlentities($imaging_server["increment"]))
+);
+$digits = _T("Digits", "imaging");
+$f->add(
+    new TrFormElement($digits, new InputTpl('digit')),
+    array("value" => (empty($imaging_server["digit"])) ? '' : htmlentities($imaging_server["digit"]))
+);
 $f->pop();
 
 $f->push(new DivExpertMode());

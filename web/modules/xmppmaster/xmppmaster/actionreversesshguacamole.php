@@ -50,5 +50,5 @@ xmlrpc_setfromxmppmasterlogxmpp('Reverse SSH for Guacamole on machine '. $_GET['
                                 $touser =  $_GET['cn'],
                                 $fromuser = "session user ".$_SESSION["login"],
                                 'Remote_desktop | Guacamole');
-sleep (5);
+sleep(15);
 ?>

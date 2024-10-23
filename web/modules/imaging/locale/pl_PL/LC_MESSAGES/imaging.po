@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-12 12:45+0100\n"
+"POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://app.transifex.com/siveo/teams/72118/pl_PL/)\n"
@@ -795,23 +795,23 @@ msgid ""
 " the computer is being joined."
 msgstr ""
 
-#: modules/imaging/includes/xmlrpc.inc.php:303
+#: modules/imaging/includes/xmlrpc.inc.php:305
 #, php-format
 msgid "Boot menu generation For machine %s"
 msgstr ""
 
-#: modules/imaging/includes/xmlrpc.inc.php:329
+#: modules/imaging/includes/xmlrpc.inc.php:331
 #, php-format
 msgid "Boot menu generation For Imaging Group %s"
 msgstr ""
 
-#: modules/imaging/includes/xmlrpc.inc.php:353
+#: modules/imaging/includes/xmlrpc.inc.php:355
 #, php-format
 msgid "Boot menu generation Success for Package Server on location %s"
 msgstr ""
 
-#: modules/imaging/includes/xmlrpc.inc.php:368
-#: modules/imaging/includes/xmlrpc.inc.php:383
+#: modules/imaging/includes/xmlrpc.inc.php:370
+#: modules/imaging/includes/xmlrpc.inc.php:385
 #, php-format
 msgid "Boot menu generation failed for package server on location %s [%s]"
 msgstr ""
@@ -820,7 +820,7 @@ msgstr ""
 #: modules/imaging/includes/ajaxcommon.inc.php:59
 #: modules/imaging/imaging/bootmenu_remove.php:93
 #: modules/imaging/imaging/addimage.php:72
-#: modules/imaging/imaging/tabs.php:115
+#: modules/imaging/imaging/tabs.php:107
 #: modules/imaging/imaging/addservice.php:69
 #: modules/imaging/imaging/ajaxImages.php:189
 msgid "root"
@@ -843,7 +843,7 @@ msgid ""
 msgstr ""
 
 #: modules/imaging/includes/ajaxcommon.inc.php:127
-#: modules/imaging/imaging/tabs.php:223
+#: modules/imaging/imaging/tabs.php:215
 msgid "The registering in the imaging server has failed."
 msgstr ""
 
@@ -898,7 +898,7 @@ msgstr "Nazwa"
 #: modules/imaging/manage/ajaxMasterLevel2.php:97
 #: modules/imaging/manage/ajaxFormWin8.php:808
 #: modules/imaging/imaging/ajaxServices.php:99
-#: modules/imaging/imaging/images.php:109
+#: modules/imaging/imaging/images.php:111
 #: modules/imaging/imaging/bootmenu.php:459
 #: modules/imaging/imaging/ajaxImages.php:171
 msgid "Description"
@@ -912,86 +912,86 @@ msgstr ""
 msgid "This value is already used."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:35
+#: modules/imaging/includes/includes.php:37
 msgid "There was an error (this is a default message)."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:36
+#: modules/imaging/includes/includes.php:38
 msgid "The nomenclature is missing."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:37
+#: modules/imaging/includes/includes.php:39
 msgid "This imaging server doesn't exist."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:38
+#: modules/imaging/includes/includes.php:40
 msgid "This entity already exists."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:39
+#: modules/imaging/includes/includes.php:41
 msgid "You asked for an inexistent menu item."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:40
+#: modules/imaging/includes/includes.php:42
 msgid "This target has no menu."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:41
+#: modules/imaging/includes/includes.php:43
 msgid "This entity has no default menu, you first need to set one."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:42
+#: modules/imaging/includes/includes.php:44
 msgid "This image already exists."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:43
+#: modules/imaging/includes/includes.php:45
 msgid "This computer already exists."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:44
+#: modules/imaging/includes/includes.php:46
 msgid ""
 "You need to register this computer's imaging server to be able to use "
 "imaging."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:195
+#: modules/imaging/includes/includes.php:211
 msgid "Uptime: "
 msgstr "Uptime: "
 
-#: modules/imaging/includes/includes.php:197
+#: modules/imaging/includes/includes.php:213
 msgid "day"
 msgstr "dzień"
 
-#: modules/imaging/includes/includes.php:200
+#: modules/imaging/includes/includes.php:216
 msgid "hour"
 msgstr "godznia"
 
-#: modules/imaging/includes/includes.php:202
+#: modules/imaging/includes/includes.php:218
 msgid "minute"
 msgstr "minuta"
 
-#: modules/imaging/includes/includes.php:206
+#: modules/imaging/includes/includes.php:222
 msgid "Memory"
 msgstr "Pamięć"
 
-#: modules/imaging/includes/includes.php:209
+#: modules/imaging/includes/includes.php:225
 msgid "Swap"
 msgstr "Swap"
 
-#: modules/imaging/includes/includes.php:221
+#: modules/imaging/includes/includes.php:238
 msgid "Never"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:224
-#: modules/imaging/includes/includes.php:230
+#: modules/imaging/includes/includes.php:242
+#: modules/imaging/includes/includes.php:249
 msgid "As soon as possible"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:232
+#: modules/imaging/includes/includes.php:251
 msgid "<i>undefined</i>"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:300
+#: modules/imaging/includes/includes.php:322
 msgid "Backup log messages"
 msgstr ""
 
@@ -1247,7 +1247,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin7.php:735
 #: modules/imaging/manage/ajaxFormWin11-uefi.php:691
 #: modules/imaging/manage/ajaxFormWin8.php:825
-#: modules/imaging/manage/ajaxConfiguration.php:130
+#: modules/imaging/manage/ajaxConfiguration.php:186
 #: modules/imaging/manage/bootmenu_edit.php:101
 #: modules/imaging/imaging/bootmenu.php:260
 msgid "Validate"
@@ -1297,8 +1297,8 @@ msgstr ""
 #: modules/imaging/imaging/bootmenu_remove.php:161
 #: modules/imaging/imaging/showtarget.php:131
 #: modules/imaging/imaging/images_delete.php:73
-#: modules/imaging/imaging/configure.php:392
-#: modules/imaging/imaging/multicast.php:390
+#: modules/imaging/imaging/configure.php:388
+#: modules/imaging/imaging/multicast.php:410
 #: modules/imaging/imaging/images_iso.php:112
 msgid "Cancel"
 msgstr "Anuluj"
@@ -1840,7 +1840,7 @@ msgstr ""
 
 #: modules/imaging/manage/master_add.php:71
 #: modules/imaging/manage/master_add.php:75
-#: modules/imaging/manage/save_configuration.php:84
+#: modules/imaging/manage/save_configuration.php:95
 #: modules/imaging/manage/location.php:61
 #: modules/imaging/manage/location.php:65
 #: modules/imaging/manage/service_show_used.php:128
@@ -1903,36 +1903,36 @@ msgstr ""
 msgid "Displayed on WOL"
 msgstr ""
 
-#: modules/imaging/manage/multicastaction.php:68
+#: modules/imaging/manage/multicastaction.php:69
 msgid "Start Multicast of ( Master :"
 msgstr ""
 
-#: modules/imaging/manage/multicastaction.php:69
-#: modules/imaging/manage/multicastaction.php:89
-#: modules/imaging/manage/multicastaction.php:136
+#: modules/imaging/manage/multicastaction.php:70
+#: modules/imaging/manage/multicastaction.php:93
+#: modules/imaging/manage/multicastaction.php:147
 msgid "on (group :"
 msgstr ""
 
-#: modules/imaging/manage/multicastaction.php:70
-#: modules/imaging/manage/multicastaction.php:90
-#: modules/imaging/manage/multicastaction.php:137
+#: modules/imaging/manage/multicastaction.php:71
+#: modules/imaging/manage/multicastaction.php:94
+#: modules/imaging/manage/multicastaction.php:148
 msgid "to (location : "
 msgstr ""
 
-#: modules/imaging/manage/multicastaction.php:88
+#: modules/imaging/manage/multicastaction.php:92
 msgid "Stop Multicast of ( Master :"
 msgstr ""
 
-#: modules/imaging/manage/multicastaction.php:102
-#: modules/imaging/manage/multicastaction.php:121
+#: modules/imaging/manage/multicastaction.php:108
+#: modules/imaging/manage/multicastaction.php:130
 msgid "Synchro Profile Menu group : "
 msgstr ""
 
-#: modules/imaging/manage/multicastaction.php:121
+#: modules/imaging/manage/multicastaction.php:130
 msgid "location : "
 msgstr ""
 
-#: modules/imaging/manage/multicastaction.php:135
+#: modules/imaging/manage/multicastaction.php:146
 msgid "Clear Multicast of ( Master :"
 msgstr ""
 
@@ -1998,7 +1998,7 @@ msgid "Stop multicast deploy"
 msgstr ""
 
 #: modules/imaging/manage/ajaxStatus.php:562
-#: modules/imaging/imaging/multicast.php:389
+#: modules/imaging/imaging/multicast.php:409
 msgid "Start multicast deploy"
 msgstr ""
 
@@ -2051,7 +2051,7 @@ msgstr ""
 msgid "Duplicate"
 msgstr ""
 
-#: modules/imaging/manage/save_configuration.php:68
+#: modules/imaging/manage/save_configuration.php:77
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
 msgstr ""
@@ -2200,7 +2200,7 @@ msgstr ""
 #: modules/imaging/manage/service_edit.php:56
 #: modules/imaging/manage/ajaxMasterLevel2.php:95
 #: modules/imaging/imaging/ajaxServices.php:98
-#: modules/imaging/imaging/images.php:105
+#: modules/imaging/imaging/images.php:107
 #: modules/imaging/imaging/bootmenu.php:457
 #: modules/imaging/imaging/ajaxImages.php:169
 msgid "Label"
@@ -2556,44 +2556,76 @@ msgstr ""
 msgid "PXE Password"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:86
+#: modules/imaging/manage/ajaxConfiguration.php:88
 msgid "Clonezilla parameters for saving images"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:89
+#: modules/imaging/manage/ajaxConfiguration.php:92
 msgid "Clonezilla parameters for restoring images"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:97
+#: modules/imaging/manage/ajaxConfiguration.php:95
+msgid "Register template name"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:105
 msgid "Default menu parameters"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:101
-#: modules/imaging/imaging/configure.php:45
+#: modules/imaging/manage/ajaxConfiguration.php:109
+#: modules/imaging/imaging/configure.php:44
 msgid "Default menu label"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:104
+#: modules/imaging/manage/ajaxConfiguration.php:113
 msgid "Default menu timeout"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:112
+#: modules/imaging/manage/ajaxConfiguration.php:122
 msgid "Hide menu"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:116
+#: modules/imaging/manage/ajaxConfiguration.php:127
 #: modules/imaging/imaging/configure.php:71
 msgid "Boot options"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:119
+#: modules/imaging/manage/ajaxConfiguration.php:130
 #: modules/imaging/imaging/configure.php:75
 msgid "Full path to the XPM displayed at boot"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:122
+#: modules/imaging/manage/ajaxConfiguration.php:134
 #: modules/imaging/imaging/configure.php:82
 msgid "Message displayed during backup/restoration"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:138
+msgid "Diskless Dir"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:144
+msgid "Diskless Kernel"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:150
+msgid "Inventories Dir"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:156
+msgid "PXE time Reboot"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:162
+msgid "Diskless Initrd"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:169
+msgid "Tools Dir"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:175
+msgid "Davos Opts"
 msgstr ""
 
 #: modules/imaging/manage/bootmenu_edit.php:68
@@ -2639,7 +2671,7 @@ msgid "Are you sure you want to remove <b>%s</b> master ?"
 msgstr ""
 
 #: modules/imaging/manage/ajaxMaster.php:27
-#: modules/imaging/imaging/images.php:70
+#: modules/imaging/imaging/images.php:71
 msgid "Available masters"
 msgstr ""
 
@@ -2884,19 +2916,19 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:274
 #: modules/imaging/infoPackage.inc.php:353
-#: modules/imaging/imaging/tabs.php:243 modules/imaging/imaging/tabs.php:315
+#: modules/imaging/imaging/tabs.php:235 modules/imaging/imaging/tabs.php:307
 msgid "Boot menu"
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:276
 #: modules/imaging/infoPackage.inc.php:355
-#: modules/imaging/imaging/tabs.php:246
+#: modules/imaging/imaging/tabs.php:238
 msgid "Images and Masters"
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:278
 #: modules/imaging/infoPackage.inc.php:357
-#: modules/imaging/imaging/tabs.php:247 modules/imaging/imaging/tabs.php:317
+#: modules/imaging/imaging/tabs.php:239 modules/imaging/imaging/tabs.php:309
 msgid "Boot services"
 msgstr ""
 
@@ -2907,7 +2939,7 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:282
 #: modules/imaging/infoPackage.inc.php:361
-#: modules/imaging/imaging/tabs.php:249 modules/imaging/imaging/tabs.php:319
+#: modules/imaging/imaging/tabs.php:241 modules/imaging/imaging/tabs.php:311
 msgid "Menu configuration"
 msgstr ""
 
@@ -3012,7 +3044,7 @@ msgstr ""
 
 #: modules/imaging/imaging/bootmenu_remove.php:103
 #: modules/imaging/imaging/addimage.php:81
-#: modules/imaging/imaging/tabs.php:127
+#: modules/imaging/imaging/tabs.php:119
 #: modules/imaging/imaging/addservice.php:78
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
@@ -3059,93 +3091,92 @@ msgid "From profile"
 msgstr ""
 
 #: modules/imaging/imaging/tabs.php:63 modules/imaging/imaging/tabs.php:71
-#: modules/imaging/imaging/tabs.php:79
 msgid "Default menu has been successfully restored."
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:143
+#: modules/imaging/imaging/tabs.php:135
 #, php-format
 msgid "This computer is no longer registered : %s"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:147
+#: modules/imaging/imaging/tabs.php:139
 #, php-format
 msgid "Boot Menu Generation failed for : %s"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:199
-#: modules/imaging/imaging/tabs.php:219 modules/imaging/imaging/tabs.php:239
+#: modules/imaging/imaging/tabs.php:160 modules/imaging/imaging/tabs.php:191
+#: modules/imaging/imaging/tabs.php:211 modules/imaging/imaging/tabs.php:231
 #, php-format
 msgid "%s's computer imaging"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:174
+#: modules/imaging/imaging/tabs.php:166
 msgid ""
 "This computer can't be declared in the imaging module: it's already part of "
 "a broken imaging group."
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:182
+#: modules/imaging/imaging/tabs.php:174
 #, php-format
 msgid "Please declare the imaging group first %shere%s."
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:190 modules/imaging/imaging/tabs.php:276
+#: modules/imaging/imaging/tabs.php:182 modules/imaging/imaging/tabs.php:268
 #, php-format
 msgid "Reset synchronisation state for %s (%s) succeed"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:194 modules/imaging/imaging/tabs.php:280
+#: modules/imaging/imaging/tabs.php:186 modules/imaging/imaging/tabs.php:272
 msgid "Failed to reset synchronise state."
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:205 modules/imaging/imaging/tabs.php:291
+#: modules/imaging/imaging/tabs.php:197 modules/imaging/imaging/tabs.php:283
 #, php-format
 msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:208 modules/imaging/imaging/tabs.php:294
+#: modules/imaging/imaging/tabs.php:200 modules/imaging/imaging/tabs.php:286
 msgid ""
 "If the processing exceeds 5 minutes, please reset the synchro state of this "
 "computer."
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:216 modules/imaging/imaging/tabs.php:302
+#: modules/imaging/imaging/tabs.php:208 modules/imaging/imaging/tabs.php:294
 msgid "Reset Synchro state"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:235
+#: modules/imaging/imaging/tabs.php:227
 #, php-format
 msgid "%s's computer imaging (in group)"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:243 modules/imaging/imaging/tabs.php:315
+#: modules/imaging/imaging/tabs.php:235 modules/imaging/imaging/tabs.php:307
 msgid "Current boot menu"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:247 modules/imaging/imaging/tabs.php:317
+#: modules/imaging/imaging/tabs.php:239 modules/imaging/imaging/tabs.php:309
 msgid "Available boot menu services"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:248 modules/imaging/imaging/tabs.php:318
+#: modules/imaging/imaging/tabs.php:240 modules/imaging/imaging/tabs.php:310
 msgid "Imaging log"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:285
+#: modules/imaging/imaging/tabs.php:277
 #, php-format
 msgid "%s's profile imaging"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:314
+#: modules/imaging/imaging/tabs.php:306
 #, php-format
 msgid "%s's imaging group"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:316
+#: modules/imaging/imaging/tabs.php:308
 msgid "Masters"
 msgstr ""
 
-#: modules/imaging/imaging/tabs.php:327
+#: modules/imaging/imaging/tabs.php:319
 msgid "Not enough information"
 msgstr ""
 
@@ -3194,32 +3225,32 @@ msgid ""
 "to leave the group and customize the boot menu."
 msgstr ""
 
-#: modules/imaging/imaging/images.php:68
+#: modules/imaging/imaging/images.php:69
 msgid "Available images"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:94
+#: modules/imaging/imaging/images.php:96
 msgid "Edition of image"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:96
+#: modules/imaging/imaging/images.php:98
 msgid "Edition of master"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:125
-#: modules/imaging/imaging/images.php:152
+#: modules/imaging/imaging/images.php:127
+#: modules/imaging/imaging/images.php:154
 msgid "Save"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:127
+#: modules/imaging/imaging/images.php:129
 msgid "Save (converting to image)"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:129
+#: modules/imaging/imaging/images.php:131
 msgid "Convert to master"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:193
+#: modules/imaging/imaging/images.php:198
 msgid "Image backup logs"
 msgstr ""
 
@@ -3251,240 +3282,240 @@ msgstr ""
 msgid "Menu timeout"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:113
+#: modules/imaging/imaging/configure.php:109
 msgid "Target options"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:143
+#: modules/imaging/imaging/configure.php:139
 msgid "Kernel parameters"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:150
+#: modules/imaging/imaging/configure.php:146
 msgid "Image parameters"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:158
+#: modules/imaging/imaging/configure.php:154
 msgid "Force raw backup mode"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:178
+#: modules/imaging/imaging/configure.php:174
 msgid "Hide menu (shortcut to show it : Shift - Alt - Shift)"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:179
+#: modules/imaging/imaging/configure.php:175
 msgid "GRUB command line access"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:180
+#: modules/imaging/imaging/configure.php:176
 msgid "Do not check hard disk size"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:181
+#: modules/imaging/imaging/configure.php:177
 msgid "Update the NT boot loader if the hard disk has changed"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:182
+#: modules/imaging/imaging/configure.php:178
 msgid "Diskless Linux command line access"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:198
+#: modules/imaging/imaging/configure.php:194
 #, php-format
 msgid "choose network profile for group %s"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:226
+#: modules/imaging/imaging/configure.php:222
 #, php-format
 msgid "choose network profile for machine %s"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:303
+#: modules/imaging/imaging/configure.php:299
 #, php-format
 msgid "Boot menu is created for <strong>%s</strong>."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:305
+#: modules/imaging/imaging/configure.php:301
 #, php-format
 msgid "Boot menu modified for <strong>%s</strong>."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:347
+#: modules/imaging/imaging/configure.php:343
 #, php-format
 msgid "Error generating the menu : %s"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:378
+#: modules/imaging/imaging/configure.php:374
 msgid ""
 "You are going to unregister this computer from the imaging module, are you "
 "sure you want to do that?"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:384
+#: modules/imaging/imaging/configure.php:380
 msgid "Do you want a backup to be done ?"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:391
-#: modules/imaging/imaging/configure.php:757
+#: modules/imaging/imaging/configure.php:387
+#: modules/imaging/imaging/configure.php:755
 msgid "Unregister this computer"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:406
+#: modules/imaging/imaging/configure.php:402
 #, php-format
 msgid "The computer %s has correctly been unregistered from imaging"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:426
+#: modules/imaging/imaging/configure.php:422
 #, php-format
 msgid "Failed to unregister the computer %s"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:458
+#: modules/imaging/imaging/configure.php:454
 #, php-format
 msgid "Register computer '%s'"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:462
+#: modules/imaging/imaging/configure.php:458
 #, php-format
 msgid "Imaging activation for group '%s'"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:492
+#: modules/imaging/imaging/configure.php:490
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entity of this computer."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:494
+#: modules/imaging/imaging/configure.php:492
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entities of the computers that belongs to this profile."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:499
+#: modules/imaging/imaging/configure.php:497
 msgid ""
 "The computer either doesn't have a MAC address, either has more than one MAC"
 " address or the only NIC doesn't have any network mask. It can't be "
 "registered into the imaging module."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:504
+#: modules/imaging/imaging/configure.php:502
 msgid "The profile can't be registered into the imaging module."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:562
+#: modules/imaging/imaging/configure.php:560
 msgid "Computer:"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:563
-#: modules/imaging/imaging/configure.php:736
+#: modules/imaging/imaging/configure.php:561
+#: modules/imaging/imaging/configure.php:734
 msgid "Choose the MAC address you want to use"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:577
-#: modules/imaging/imaging/configure.php:745
+#: modules/imaging/imaging/configure.php:575
+#: modules/imaging/imaging/configure.php:743
 msgid ""
 "Please switch to expert mode now if you want to change more parameters."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:579
-#: modules/imaging/imaging/configure.php:747
+#: modules/imaging/imaging/configure.php:577
+#: modules/imaging/imaging/configure.php:745
 msgid "You can switch to standard mode now if you want less parameters."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:597
+#: modules/imaging/imaging/configure.php:595
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entity that owns this computer."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:599
+#: modules/imaging/imaging/configure.php:597
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entities of the computers that belongs to "
 "this profile."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:610
+#: modules/imaging/imaging/configure.php:608
 #, php-format
 msgid "The default values displayed here come from this %s's profile menu."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:624
+#: modules/imaging/imaging/configure.php:622
 msgid "Hard disks and partitions selection to backup"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:629
+#: modules/imaging/imaging/configure.php:627
 #, php-format
 msgid "Hard disk number: %d"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:641
+#: modules/imaging/imaging/configure.php:639
 msgid "Select this hard disk"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:656
+#: modules/imaging/imaging/configure.php:654
 #, php-format
 msgid "Partition number: %d"
 msgstr ""
 
 #: modules/imaging/imaging/multicast.php:48
-#: modules/imaging/imaging/multicast.php:237
+#: modules/imaging/imaging/multicast.php:250
 msgid ""
 "Multicast menu has not been created : there are no computers in the group"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:66
-#: modules/imaging/imaging/multicast.php:87
+#: modules/imaging/imaging/multicast.php:68
+#: modules/imaging/imaging/multicast.php:90
 msgid "Multicast menu has not been created : number of computers missing"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:104
-#: modules/imaging/imaging/multicast.php:121
-#: modules/imaging/imaging/multicast.php:129
+#: modules/imaging/imaging/multicast.php:109
+#: modules/imaging/imaging/multicast.php:128
+#: modules/imaging/imaging/multicast.php:136
 #, php-format
 msgid ""
 "Multicast menu has not been created : the imaging group contains %d "
 "computers and you have entered %d"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:187
+#: modules/imaging/imaging/multicast.php:197
 msgid "computers have a [IPV6] interfaces address exclusively in the group"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:210
+#: modules/imaging/imaging/multicast.php:222
 msgid "Multicast menu has not been created : --max-time-to-wait missing"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:228
+#: modules/imaging/imaging/multicast.php:242
 msgid "Multicast menu has not been created : --max-time-to-wait < 60"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:254
+#: modules/imaging/imaging/multicast.php:269
 msgid ""
 "Multicast menu has not been created : the selected master is missing on disk"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:293
+#: modules/imaging/imaging/multicast.php:310
 msgid "Multicast menu has been successfully created."
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:311
+#: modules/imaging/imaging/multicast.php:329
 msgid ""
 "Multicast menu has not been created : check that the imaging server is "
 "running"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:348
+#: modules/imaging/imaging/multicast.php:368
 #, php-format
 msgid ""
 "deploy the master <strong>%s</strong> to this group <strong>%s</strong> in "
 "multicast"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:355
+#: modules/imaging/imaging/multicast.php:375
 msgid "Number of machines to wait for"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:371
+#: modules/imaging/imaging/multicast.php:391
 msgid ""
 "start anyways when t seconds since first receiver connection have passed"
 msgstr ""

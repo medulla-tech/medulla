@@ -65,29 +65,50 @@ class download_packages:
             return end - start
         try:
             os.makedirs(dirpackage)
-            logger.debug(f"Directory '{path_file_download}' created successfully")
+            logger.debug(f"Directory '{dirpackage}' created successfully")
         except OSError as error:
-            logger.debug(f"Directory {path_file_download} can not be created")
-        data = requests.get(urlpath, stream=True)
-        with open(path_file_download, "wb") as f:
-            for chunk in data.iter_content(chunk_size=1024):
-                if chunk:  # filter out keep-alive new chunks
-                    f.write(chunk)
+            logger.debug(f"Directory {dirpackage} can not be created")
+        try:
+            data = requests.get(urlpath, stream=True)
+        except Exception as e:
+            logger.error(
+                "Error trying to download update file %s: %s" % (urlpath, str(e))
+            )
+            try:
+                # Try with proxy parameters as defined on the system
+                proxy_url = (
+                    os.environ.get("HTTP_PROXY")
+                    or os.environ.get("HTTPS_PROXY")
+                    or os.environ.get("http_proxy")
+                    or os.environ.get("https_proxy")
+                )
+                if proxy_url:
+                    proxies = {"http": proxy_url, "https": proxy_url}
+                    data = requests.get(urlpath, stream=True, proxies=proxies)
+                else:
+                    logger.error("No proxies defined")
+            except Exception as e:
+                logger.error("Error downloading update file: %s" % str(e))
+        if data.status_code == 200:
+            logger.debug(f"Writing contents to {path_file_download}")
+            with open(path_file_download, "wb") as f:
+                for chunk in data.iter_content(chunk_size=1024):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
+        else:
+            logger.error(f"Failed to download {urlpath}: Error {data.status_code}")
         typename = os.path.splitext(path_file_download)[1][1:]
         file_conf_json = os.path.join(os.path.dirname(path_file_download), "conf.json")
         file_xmppdeploy_json = os.path.join(
             os.path.dirname(path_file_download), "xmppdeploy.json"
         )
         nameexecution = os.path.basename(path_file_download)
-        # logger.debug(file_conf_json)
-        # logger.debug(file_xmppdeploy_json)
-        # logger.debug (generate_conf_json(title, updateid, title))
-
+        logger.debug(f"Generating {file_conf_json}")
         with open(file_conf_json, "w") as outfile:
             outfile.write(
                 self.generate_conf_json(title, updateid, description, urlpath)
             )
-
+        logger.debug(f"Generating {file_xmppdeploy_json}")
         with open(file_xmppdeploy_json, "w") as outfile:
             outfile.write(
                 self.generate_xmppdeploy_json(
@@ -121,7 +142,7 @@ class download_packages:
                 namefile
             )
         cmd64 = base64.b64encode(bytes(cmd, "utf-8"))
-        template = """{
+        return """{
         "info": {
             "urlpath" : "%s",
             "creator": "automate_medulla",

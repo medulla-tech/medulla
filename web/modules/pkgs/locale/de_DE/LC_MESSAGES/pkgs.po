@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-12 12:45+0100\n"
+"POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2023\n"
 "Language-Team: German (Germany) (https://app.transifex.com/siveo/teams/72118/de_DE/)\n"
@@ -686,29 +686,30 @@ msgstr ""
 msgid "No featured appstream found."
 msgstr ""
 
-#: modules/pkgs/includes/html.inc.php:42 modules/pkgs/pkgs/edit.php:550
+#: modules/pkgs/includes/html.inc.php:44 modules/pkgs/pkgs/edit.php:553
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 msgid "Upload Queued Files"
 msgstr "Eingereihte Dateien hochladen"
 
-#: modules/pkgs/includes/html.inc.php:59 modules/pkgs/pkgs/edit.php:549
+#: modules/pkgs/includes/html.inc.php:61 modules/pkgs/pkgs/edit.php:552
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 msgid "Click here to select files"
 msgstr "Klicken Sie hier um Dateien zu whlen"
 
-#: modules/pkgs/includes/html.inc.php:60
-#: modules/pkgs/includes/html.inc.php:151
-#: modules/pkgs/includes/html.inc.php:242
+#: modules/pkgs/includes/html.inc.php:62
+#: modules/pkgs/includes/html.inc.php:155
+#: modules/pkgs/includes/html.inc.php:249
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: modules/pkgs/includes/html.inc.php:150
-#: modules/pkgs/includes/html.inc.php:241
+#: modules/pkgs/includes/html.inc.php:154
+#: modules/pkgs/includes/html.inc.php:248
 msgid "Add files"
 msgstr "Dateien hinzufgen"
 
-#: modules/pkgs/includes/html.inc.php:188
-#: modules/pkgs/includes/html.inc.php:282
+#: modules/pkgs/includes/html.inc.php:192
+#: modules/pkgs/includes/html.inc.php:298
+#: modules/pkgs/includes/html.inc.php:303
 msgid "Upload selected files"
 msgstr "Gewhlte Dateien hochladen"
 
@@ -760,7 +761,7 @@ msgid "Rule Name"
 msgstr ""
 
 #: modules/pkgs/pkgs/addRule.php:60 modules/pkgs/pkgs/editRule.php:65
-#: modules/pkgs/pkgs/edit.php:254 modules/pkgs/pkgs/add.php:232
+#: modules/pkgs/pkgs/edit.php:257 modules/pkgs/pkgs/add.php:232
 #: modules/pkgs/pkgs/ajaxPackageList.php:291
 #: modules/pkgs/pkgs/ajaxPackageList.php:430 modules/pkgs/pkgs/detail.php:208
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
@@ -994,132 +995,132 @@ msgstr "Paket erfolgreich bearbeitet"
 msgid "Files successfully added to the package <b>%s (%s)</b>"
 msgstr "Dateien erfolgreich zum Paket  <b>%s (%s)</b> hinzugefgt"
 
-#: modules/pkgs/pkgs/edit.php:144
+#: modules/pkgs/pkgs/edit.php:147
 msgid "Package failed to save"
 msgstr "Paket speicher fehlgeschlagen"
 
-#: modules/pkgs/pkgs/edit.php:177
+#: modules/pkgs/pkgs/edit.php:180
 #, php-format
 msgid "Failed to delete files%s"
 msgstr "Fehler beim Lschen von Dateien%s"
 
-#: modules/pkgs/pkgs/edit.php:179 modules/pkgs/pkgs/edit.php:183
+#: modules/pkgs/pkgs/edit.php:182 modules/pkgs/pkgs/edit.php:186
 #, php-format
 msgid "<br/>File successfully deleted. %s"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:187
+#: modules/pkgs/pkgs/edit.php:190
 msgid "Failed to delete files"
 msgstr "Fehler beim Lschen der Dateien"
 
-#: modules/pkgs/pkgs/edit.php:197 modules/pkgs/pkgs/ajaxPackageList.php:76
+#: modules/pkgs/pkgs/edit.php:200 modules/pkgs/pkgs/ajaxPackageList.php:76
 #: modules/pkgs/infoPackage.inc.php:72
 msgid "Edit a package"
 msgstr "Edit einem Paket"
 
-#: modules/pkgs/pkgs/edit.php:252
+#: modules/pkgs/pkgs/edit.php:255
 msgid "Package label"
 msgstr "Paket Beschriftung"
 
-#: modules/pkgs/pkgs/edit.php:253
+#: modules/pkgs/pkgs/edit.php:256
 msgid "Package version"
 msgstr "Paket Version"
 
-#: modules/pkgs/pkgs/edit.php:261 modules/pkgs/pkgs/add.php:247
+#: modules/pkgs/pkgs/edit.php:264 modules/pkgs/pkgs/add.php:247
 msgid "Command's name : "
 msgstr "Command Name:"
 
-#: modules/pkgs/pkgs/edit.php:261
+#: modules/pkgs/pkgs/edit.php:264
 msgid "Command : "
 msgstr "Command:"
 
-#: modules/pkgs/pkgs/edit.php:265 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:251
 msgid "Need a reboot ?"
 msgstr "Braucht einen Neustart?"
 
-#: modules/pkgs/pkgs/edit.php:272 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
 msgid "Windows"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:272 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
 msgid "Linux"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:272 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
 msgid "Mac OS"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:313 modules/pkgs/pkgs/add.php:224
+#: modules/pkgs/pkgs/edit.php:316 modules/pkgs/pkgs/add.php:224
 #: modules/pkgs/pkgs/ajaxPackageList.php:288
 msgid "Share"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:343 modules/pkgs/pkgs/add.php:275
+#: modules/pkgs/pkgs/edit.php:346 modules/pkgs/pkgs/add.php:275
 msgid "Operating System"
 msgstr "Betriebssystem"
 
-#: modules/pkgs/pkgs/edit.php:368 modules/pkgs/pkgs/add.php:295
+#: modules/pkgs/pkgs/edit.php:371 modules/pkgs/pkgs/add.php:295
 #: modules/pkgs/pkgs/detail.php:223
 msgid "Transfer method"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:378 modules/pkgs/pkgs/add.php:301
+#: modules/pkgs/pkgs/edit.php:381 modules/pkgs/pkgs/add.php:301
 #: modules/pkgs/pkgs/detail.php:227
 msgid "bandwidth throttling (ko)"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:379 modules/pkgs/pkgs/add.php:302
+#: modules/pkgs/pkgs/edit.php:382 modules/pkgs/pkgs/add.php:302
 msgid "<in ko>"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:306
 msgid "high priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:306
 msgid "ordinary priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/edit.php:394 modules/pkgs/pkgs/add.php:309
 #: modules/pkgs/pkgs/detail.php:229
 msgid "Spooling"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:399 modules/pkgs/pkgs/add.php:312
+#: modules/pkgs/pkgs/edit.php:402 modules/pkgs/pkgs/add.php:312
 msgid "Launcher (kiosk)"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:445 modules/pkgs/pkgs/add.php:321
+#: modules/pkgs/pkgs/edit.php:448 modules/pkgs/pkgs/add.php:321
 #: modules/pkgs/pkgs/detail.php:290
 msgid "Dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:455 modules/pkgs/pkgs/add.php:331
+#: modules/pkgs/pkgs/edit.php:458 modules/pkgs/pkgs/add.php:331
 msgid "Added dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:471 modules/pkgs/pkgs/add.php:347
+#: modules/pkgs/pkgs/edit.php:474 modules/pkgs/pkgs/add.php:347
 msgid "Available dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:472 modules/pkgs/pkgs/add.php:348
+#: modules/pkgs/pkgs/edit.php:475 modules/pkgs/pkgs/add.php:348
 msgid "search by name ..."
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:524 modules/pkgs/pkgs/detail.php:82
+#: modules/pkgs/pkgs/edit.php:527 modules/pkgs/pkgs/detail.php:82
 #: modules/pkgs/pkgs/detail.php:246
 msgid "File"
 msgstr "Datei"
 
-#: modules/pkgs/pkgs/edit.php:533
+#: modules/pkgs/pkgs/edit.php:536
 msgid "Delete file"
 msgstr "Datei lschen"
 
-#: modules/pkgs/pkgs/edit.php:533
+#: modules/pkgs/pkgs/edit.php:536
 msgid "Are you sure you want to delete this file?"
 msgstr "Sind Sie sicher, dass Sie die Datei lschen mchten?"
 
-#: modules/pkgs/pkgs/edit.php:625 modules/pkgs/pkgs/add.php:448
+#: modules/pkgs/pkgs/edit.php:628 modules/pkgs/pkgs/add.php:448
 msgid "Accentuated and special chars are not allowed"
 msgstr ""
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-12 12:45+0100\n"
+"POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/siveo/teams/72118/pt_BR/)\n"
@@ -71,7 +71,7 @@ msgstr "Implantao de software nesse grupo de imagens"
 
 #: modules/medulla_server/includes/menu_group_action.php:76
 #: modules/medulla_server/includes/menu_action.php:64
-#: modules/medulla_server/includes/menu_actionaudit.php:70
+#: modules/medulla_server/includes/menu_actionaudit.php:76
 msgid "Imaging management"
 msgstr "Gerenciamento de imagens"
 
@@ -92,7 +92,7 @@ msgid "Root entity"
 msgstr "Entidade root"
 
 #: modules/medulla_server/includes/menu_action.php:60
-#: modules/medulla_server/includes/menu_actionaudit.php:66
+#: modules/medulla_server/includes/menu_actionaudit.php:72
 msgid "Inventory"
 msgstr "Inventrio"
 
@@ -101,40 +101,40 @@ msgid "extTicket issue"
 msgstr "questo extTicket"
 
 #: modules/medulla_server/includes/menu_action.php:62
-#: modules/medulla_server/includes/menu_actionaudit.php:68
+#: modules/medulla_server/includes/menu_actionaudit.php:74
 msgid "Backup status"
 msgstr "Status do backup"
 
 #: modules/medulla_server/includes/menu_action.php:63
-#: modules/medulla_server/includes/menu_actionaudit.php:69
+#: modules/medulla_server/includes/menu_actionaudit.php:75
 msgid "Urbackup"
 msgstr ""
 
 #: modules/medulla_server/includes/menu_action.php:67
 #: modules/medulla_server/includes/menu_action.php:69
-#: modules/medulla_server/includes/menu_actionaudit.php:77
+#: modules/medulla_server/includes/menu_actionaudit.php:83
 msgid "Remote control"
 msgstr "Controle Remoto"
 
 #: modules/medulla_server/includes/menu_action.php:74
-#: modules/medulla_server/includes/menu_actionaudit.php:80
+#: modules/medulla_server/includes/menu_actionaudit.php:86
 msgid "xmppconsole"
 msgstr ""
 
 #: modules/medulla_server/includes/menu_action.php:75
-#: modules/medulla_server/includes/menu_actionaudit.php:71
+#: modules/medulla_server/includes/menu_actionaudit.php:77
 msgid "Quick action"
 msgstr ""
 
 #: modules/medulla_server/includes/menu_action.php:79
 #: modules/medulla_server/includes/menu_action.php:81
 #: modules/medulla_server/includes/menu_action.php:84
-#: modules/medulla_server/includes/menu_actionaudit.php:74
-#: modules/medulla_server/includes/menu_actionaudit.php:78
+#: modules/medulla_server/includes/menu_actionaudit.php:80
+#: modules/medulla_server/includes/menu_actionaudit.php:84
 msgid "Software deployment"
 msgstr "Implantao de Software"
 
-#: modules/medulla_server/includes/menu_actionaudit.php:81
+#: modules/medulla_server/includes/menu_actionaudit.php:87
 msgid "Edit config files"
 msgstr ""
 

@@ -69,6 +69,8 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $params["tools_dir"] = htmlentities($_POST["tools_dir"]);
         $params['davos_opts'] = htmlentities($_POST['davos_opts']);
         $params['template_name'] = htmlentities($_POST['template_name']);
+        $params['increment'] = htmlentities($_POST['increment']);
+        $params['digit'] = htmlentities($_POST['digit']);
 
         $ret = xmlrpc_setImagingServerConfig($location, $params);
 
