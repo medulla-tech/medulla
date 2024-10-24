@@ -40,7 +40,7 @@ ALTER TABLE ImagingServer add inventories_dir varchar(255) not null default "inv
 ALTER TABLE ImagingServer add pxe_time_reboot int not null default 2;
 ALTER TABLE ImagingServer add diskless_initrd varchar(255) not null default "initrd.img";
 ALTER TABLE ImagingServer add tools_dir varchar(255) not null default "tools";
-ALTER TABLE ImagingServer add davos_opts varchar(255) not null default "nfs_server= nfs_share_masters= nfs_share_postinst=";
+ALTER TABLE ImagingServer add davos_opts varchar(255) not null default "nfs_server= nfs_share_masters= nfs_share_postinst= fqdn=";
 ALTER TABLE ImagingServer add column template_name varchar(255) not null default "";
 
 -- Update register BootService
