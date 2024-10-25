@@ -699,11 +699,8 @@ if ($info['len'] != 0) {
 
 
             $content .= '<ul>';
-            if(isset($_action->command)) {
-                $command = base64_decode($_action->command, true) == false ? $_action->command : base64_decode($_action->command);
-                $content .= '<li>';
-                $content .= _T("Executed Command", "pkgs").' : '.htmlentities($command);
-                $content .= '</li>';
+            if (isset($_action->command)) {
+                $content .= '<li>' . _T("Executed Command", "pkgs") . ' : ' . htmlentities($_action->command) . '</li>';
             }
             if(isset($_action->typescript) && $_action->typescript != "") {
                 $content .= '<li>';
@@ -773,11 +770,8 @@ if ($info['len'] != 0) {
                 $content .= _T("Go to", "pkgs").' : <a href="#'.$cmd_id.'-'.htmlentities($associations[$_action->goto]->step).'">'.htmlentities($associations[$_action->goto]->action).' at '.htmlentities($associations[$_action->goto]->actionlabel).'</a>';
                 $content .= '</li>';
             }
-            if(isset($_action->comment)  && $_action->comment != "") {
-                $content .= '<li>';
-                $_comment = (base64_decode($_action->comment, true) == false) ? $_action->comment : base64_decode($_action->comment);
-                $content .= _T("Comment", "pkgs").' : '.nl2br(htmlentities($_comment));
-                $content .= '</li>';
+            if (isset($_action->comment) && $_action->comment != "") {
+                $content .= '<li>' . _T("Comment", "pkgs") . ' : ' . nl2br($_action->comment) . '</li>';
             }
             if(isset($_action->inventory)) {
                 $content .= '<li>';
