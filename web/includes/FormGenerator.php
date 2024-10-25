@@ -1328,57 +1328,50 @@ class DeletableTrFormElement extends FormElement
  * display a tr html tag in a form
  * using corresponding template
  */
-/**
- * display a tr html tag in a form
- * using corresponding template
- */
-class TrFormElement extends FormElement
-{
-    public $template;
-    public $desc;
-    public $cssErrorName;
+class TrFormElement extends FormElement {
 
-    public function __construct($desc, $tpl, $extraInfo = array())
-    {
+    var $template;
+    var $desc;
+    var $cssErrorName;
+    var $title; // Ajout de la propriété title
+
+    function __construct($desc, $tpl, $extraInfo = array()) {
         $this->desc = $desc;
         $this->template = &$tpl;
-        $this->tooltip = false;
+        $this->tooltip = False;
         $this->firstColWidth = "40%";
         $this->style = null; /* css style */
         $this->class = null; /* html class for the tr element */
         $this->trid = null;
+        $this->title = null; // Initialisation de la propriété title
         foreach ($extraInfo as $key => $value) {
             $this->$key = $value;
         }
     }
-
-
     /**
      *  display input Element
      *  $arrParam accept ["value"] to corresponding value
      */
-    public function display($arrParam = array())
-    {
-        if (empty($arrParam)) {
+    function display($arrParam = array()) {
+        if (empty($arrParam))
             $arrParam = $this->options;
-        }
-        if (!isset($this->cssErrorName)) {
+        if (!isset($this->cssErrorName))
             $this->cssErrorName = isset($this->template->name) ? $this->template->name : "";
-        }
 
         printf('<tr');
-        if ($this->trid !== null) {
+        if ($this->trid !== null)
             printf(' id="%s"', $this->trid);
-        }
-        if ($this->class !== null) {
+        if ($this->class !== null)
             printf(' class="%s"', $this->class);
-        }
-        if ($this->style !== null) {
+        if ($this->style !== null)
             printf(' style="%s"', $this->style);
-        }
         printf('><td class="label" width="%s" ', $this->firstColWidth);
         print displayErrorCss($this->cssErrorName);
-        print 'style = "text-align: right;">';
+        print 'style = "text-align: right;"';
+        if ($this->title !== null) {
+            printf(' title="%s"', $this->title); // Ajout de l'attribut title
+        }
+        print '>';
 
         //if we got a tooltip, we show it
         if ($this->tooltip) {
@@ -1391,17 +1384,17 @@ class TrFormElement extends FormElement
         // set hidden form with old_value for each TrFormElement field
         if (isset($arrParam["value"])) {
             // if checkbox
-            if ($arrParam["value"] == "checked") {
+            if ($arrParam["value"] == "checked")
                 $old_value = "on";
-            } else {
+            else
                 $old_value = $arrParam["value"];
-            }
-        } else {
+        }
+        else {
             $old_value = "";
         }
         if (is_object($this->template)) {
             $field_name = isset($this->template->name) ? $this->template->name : "";
-        } elseif (is_array($this->template)) {
+        } else if (is_array($this->template)) {
             $field_name = $this->template["name"];
         } else {
             $field_name = "";
@@ -1419,12 +1412,15 @@ class TrFormElement extends FormElement
         print "</td></tr>";
     }
 
-    public function displayRo($arrParam)
-    {
+    function displayRo($arrParam) {
 
         printf('<tr><td width="%s" ', $this->firstColWidth);
         print displayErrorCss($this->cssErrorName);
-        print 'style = "text-align: right;">';
+        print 'style = "text-align: right;"';
+        if ($this->title !== null) {
+            printf(' title="%s"', $this->title); // Ajout de l'attribut title
+        }
+        print '>';
 
         //if we got a tooltip, we show it
         if ($this->tooltip) {
@@ -1439,29 +1435,33 @@ class TrFormElement extends FormElement
         print '</td></tr>';
     }
 
-    public function setClass($className)
-    {
+    function setClass($className) {
         $this->class = $className;
     }
 
-    public function getClass()
-    {
+    function getClass() {
         return $this->class;
     }
 
-    public function setStyle($style)
-    {
+    function setStyle($style) {
         $this->style = $style;
     }
 
-    public function setFirstColWidth($firstColWidth)
-    {
+    function setFirstColWidth($firstColWidth) {
         $this->firstColWidth = $firstColWidth;
     }
 
-    public function getFirstColWidth()
-    {
+    function getFirstColWidth() {
         return $this->firstColWidth;
     }
 
+    function setTitle($title) {
+        $this->title = $title;
+    }
+
+    function getTitle() {
+        return $this->title;
+    }
 }
+
+?>
