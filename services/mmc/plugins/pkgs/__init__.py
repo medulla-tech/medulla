@@ -31,6 +31,8 @@ from mmc.plugins.pkgs.config import PkgsConfig
 import uuid
 import json
 
+import pwd
+import grp
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 from pulse2.database.pkgs import PkgsDatabase
@@ -382,49 +384,51 @@ def prepare_shared_folder():
         os.mkdir(packages_input_dir_sharing_global, 0o755)
 
 
-def get_share_from_descriptor(package_descriptor):
+
+def create_directories_sharing(path):
     """
-    This function allow to prepare the system to package server.
-    It creates sharing folder if it does not exist.
+    Create directories for the given path if they do not exist.
 
     Args:
-        package_descriptor: This provide informations as localisation_server.
+        path (str): The path for which directories need to be created.
     """
-    packages_input_dir_sharing = os.path.join(
-        "/", "var", "lib", "pulse2", "packages", "sharing"
-    )
-    if not "localisation_server" in package_descriptor:
-        logging.getLogger().warning(
-            "keys localisation_server missing global sharing by default"
-        )
-        return os.path.join(
-            packages_input_dir_sharing, "global", package_descriptor["id"]
-        )
-    elif (
-        "localisation_server" in package_descriptor
-        and package_descriptor["localisation_server"] == ""
-    ):
-        logging.getLogger().warning(
-            "keys localisation_server non definie global sharing by default"
-        )
-        return os.path.join(
-            packages_input_dir_sharing, "global", package_descriptor["id"]
-        )
-    else:
-        logging.getLogger().debug(
-            "local package %s"
-            % os.path.join(
-                packages_input_dir_sharing,
-                package_descriptor["localisation_server"],
-                package_descriptor["id"],
-            )
-        )
-        return os.path.join(
-            packages_input_dir_sharing,
-            package_descriptor["localisation_server"],
-            package_descriptor["id"],
-        )
+    try:
+        os.makedirs(path, exist_ok=True)
+        logging.getLogger().debug(f"Directories created successfully: {path}")
+        # Set permissions to 0755
+        os.chmod(path, 0o755)
+        # Set ownership to syncthing:syncthing
+        uid = pwd.getpwnam("syncthing").pw_uid
+        gid = grp.getgrnam("syncthing").gr_gid
+        os.chown(path, uid, gid)
+    except OSError as e:
+        logging.getLogger().error(f"Error creating directories: {e}")
 
+def get_share_from_descriptor(package_descriptor):
+    """
+    Prepare the system for the package server by creating the sharing folder if it does not exist.
+
+    Args:
+        package_descriptor (dict): A dictionary containing information about the package,
+                                   including 'localisation_server' and 'id'.
+
+    Returns:
+        str: The path to the sharing folder.
+    """
+    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
+
+    # Check if 'localisation_server' is in the package descriptor and is not empty
+    if "localisation_server" not in package_descriptor or not package_descriptor["localisation_server"]:
+        logging.getLogger().warning("keys localisation_server missing or not defined, using global sharing by default")
+        sharing = os.path.join(packages_input_dir_sharing, "global", package_descriptor["id"])
+    else:
+        logging.getLogger().debug(f"local package {os.path.join(packages_input_dir_sharing, package_descriptor['localisation_server'], package_descriptor['id'])}")
+        sharing = os.path.join(packages_input_dir_sharing, package_descriptor["localisation_server"], package_descriptor["id"])
+
+    # Create the directories for the sharing path
+    create_directories_sharing(os.path.dirname(sharing))
+
+    return sharing
 
 def test_ln(pathdirpackage):
     """
