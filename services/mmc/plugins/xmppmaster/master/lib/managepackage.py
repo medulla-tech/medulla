@@ -353,6 +353,11 @@ class apimanagepackagemsc:
                 obj1 = [obj]
                 result.append(obj1)
             except:
+                errorstr = "%s" % traceback.format_exc()
+                logger.error(
+                    "loadpackagelistmsc for package %s\n%s"
+                    % (errorstr, packagefiles)
+                )
                 continue
 
         nb = len(result)
