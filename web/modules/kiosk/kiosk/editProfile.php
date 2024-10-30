@@ -82,13 +82,14 @@ foreach($profile['packages'] as $tmpPackage) {
 // - restrictedPackages
 $row = 0;
 foreach($packages['datas']['uuid'] as $package) {
-    if(in_array($package, $allowedPackages)) {
-        $allowed_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
-    } elseif(in_array($package, $restrictedPackages)) {
-        $restricted_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
-    } else {
-        $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
-
+    if ($packages['datas']['associateinventory'][$row] == 1) {
+        if(in_array($package, $allowedPackages)) {
+            $allowed_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
+        } elseif(in_array($package, $restrictedPackages)) {
+            $restricted_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
+        } else {
+            $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
+        }
     }
     $row++;
 }

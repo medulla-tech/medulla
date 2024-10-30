@@ -107,8 +107,10 @@ if(is_array($ou_list)) {
 
     $row = 0;
     foreach($packages['datas']['uuid'] as $package) {
-        $available_packages[$packages['datas']['name'][$row]] = $package;
-        $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
+        if ($packages['datas']['associateinventory'][$row] == 1) {
+            $available_packages[$packages['datas']['name'][$row]] = $package;
+            $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package.'">'.$packages['datas']['name'][$row].'</li>';
+        }
         $row++;
     }
 
@@ -162,7 +164,7 @@ if(is_array($ou_list)) {
 
     $f->add(new HiddenTpl("jsonDatas"), array("value" => "", "hide" => true));
 
-    $bo = new ValidateButtonTpl('bvalid', _T("Create the profile", 'kiosk'), 'btnSecondary');
+    $bo = new ValidateButtonTpl('bvalid', _T("Create", 'kiosk'), 'btnPrimary', _T("Create the profile", "kiosk"));
     //$rr = new TrFormElementcollapse($bo);
     $bo->setstyle("text-align: center;");
     $f->add($bo);
