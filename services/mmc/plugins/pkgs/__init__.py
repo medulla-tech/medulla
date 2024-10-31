@@ -1862,6 +1862,7 @@ def create_msg_xmpp_quick_deploy(folder, create=False):
 def save_xmpp_json(folder, json_content):
     logger = logging.getLogger()
     logger.debug("JSON content: %s" % json_content)
+    json_content = json_content.replace('\\', '\\\\')
     structpackage = json.loads(json_content)
     qdeploy_generate(folder)
     keysupp = [
