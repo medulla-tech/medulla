@@ -1123,7 +1123,8 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
                             logging.getLogger().debug(
                                 "command propose %s" % retelt["proposition"]
                             )
-                            suggestedCommand.append(retelt["proposition"])
+                            command = retelt["proposition"].replace("'", '"') % filename
+                            suggestedCommand.append(command)
                             break
     if suggestedCommand:
         retresult["commandcmd"] = "\n".join(suggestedCommand)
