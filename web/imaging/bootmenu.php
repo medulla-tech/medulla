@@ -40,6 +40,7 @@
  * === PARAMS ===
  * mac : the machine mac address
  * srv : the {next-server} value refers to the imaging server selected
+ * uuid : the uuid refers to the machine unique uuid
  * ==============
  */
 
@@ -60,6 +61,9 @@ if (!DEBUG) {
     header('Content-type: Application/text');
 }
 
+//
+// CONFIGURATION
+//
 function read_conf($conffile)
 {
     $tmp = [];
@@ -103,6 +107,9 @@ foreach ($conffiles as $module => $conffile) {
     }
 }
 
+//
+// PARAMS
+//
 // Get the parameters sent through URL
 $mac = (!empty($_GET['mac'])) ? htmlentities($_GET['mac'], ENT_QUOTES, 'UTF-8') : "";
 $srv = (!empty($_GET['srv'])) ? htmlentities($_GET['srv'], ENT_QUOTES, 'UTF-8') : "";
@@ -113,6 +120,9 @@ if (inet_pton($srv) == true) {
     $srvHost = gethostbyaddr($srv);
 }
 
+//
+// INITIALIZATION
+//
 $computer = [];
 $target = [];
 $menuId = 2;
@@ -165,8 +175,10 @@ boot || goto MENU
 :4 = master_uuid
 */
 
+//
+// IMAGING SERVER INFOS
+//
 // Get imaging server infos
-
 if ($srvHost != "" || $srv != "") {
     // Get ImagingServer infos
     $query1 = $db['imaging']->prepare("SELECT * FROM ImagingServer ims
@@ -196,41 +208,11 @@ $debug_ipxe .= "# Next-server : $srv
 # uuid : $ims[packageserver_uuid]
 ";
 
-$placeholder = !empty($ims["template_name"]) ? htmlentities($ims["template_name"], ENT_QUOTES, 'UTF-8') : "";
-$increment = !empty($ims["increment"]) ? (int)htmlentities($ims["increment"]) : 0;
-$digit = !empty($ims["digit"]) ? (int)htmlentities($ims["digit"]) : 0;
-$nextId = ($increment != 0) ? $increment : 1;
-
-if ($placeholder != "") {
-
-        $query = $db["glpi"]->prepare("select replace(name, ?, ?) as nextId from glpi_computers where name REGEXP ? order by nextId;");
-        $query->execute([$placeholder, "", '^' . $placeholder . '[0-9]{1,}$']);
-
-    $result = $query->fetchAll(PDO::FETCH_ASSOC);
-    $idList = [];
-    if (!empty($result) && $result != []) {
-        foreach ($result as $row) {
-            if($increment != 0 && (int)$row["nextId"] < $increment){
-                $idList[] = $row['nextId'];
-                continue;
-            }
-            $idList[] = $row['nextId'];
-        }
-    }
-    while (in_array($nextId, $idList)) {
-        $nextId++;
-    }
-    if($digit != 0){
-        $nextId = sprintf('%0'.$digit.'d', $nextId);
-    }
-    $placeholder .= $nextId;
-
-}
-
-$debug_ipxe .= "# template-name: $placeholder
-";
-
+//
+// COMPUTER INFOS
+//
 if ($uuid != "") {
+    // If the computer UUID is specified
     $query = $db['glpi']->prepare("
     SELECT
     CONCAT('UUID', gc.id) as uuid,
@@ -247,7 +229,6 @@ if ($uuid != "") {
     $query->execute([$uuid]);
     $computer = $query->fetch(PDO::FETCH_ASSOC);
 } else if ($mac != "") {
-
     // Get the inventory associated to the mac address
     $query = $db['glpi']->prepare("
     SELECT
@@ -268,6 +249,52 @@ if ($uuid != "") {
     $computer = [];
 }
 
+//
+// TEMPLATE NAME / PLACEHOLDER
+//
+// Generate the template-name and put it as placeholder
+if($computer == []){
+    // Get template parameters
+    $placeholder = !empty($ims["template_name"]) ? htmlentities($ims["template_name"], ENT_QUOTES, 'UTF-8') : "";
+    $increment = !empty($ims["increment"]) ? (int)htmlentities($ims["increment"]) : 0;
+    $digit = !empty($ims["digit"]) ? (int)htmlentities($ims["digit"]) : 0;
+    $nextId = ($increment != 0) ? $increment : 1;
+
+    if($placeholder != "") {
+        // Find computers with the template name
+        $query = $db["glpi"]->prepare("select replace(name, ?, ?) as nextId from glpi_computers where name REGEXP ? order by nextId;");
+        $query->execute([$placeholder, "", '^' . $placeholder . '[0-9]{1,}$']);
+
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        $idList = [];
+        if(!empty($result) && $result != []) {
+            foreach ($result as $row) {
+                if($increment != 0 && (int)$row["nextId"] < $increment){
+                    $idList[] = $row['nextId'];
+                    continue;
+                }
+                $idList[] = $row['nextId'];
+            }
+        }
+        while (in_array($nextId, $idList)) {
+            $nextId++;
+        }
+        if($digit != 0){
+            $nextId = sprintf('%0'.$digit.'d', $nextId);
+        }
+        $placeholder .= $nextId;
+    }
+}
+else{
+    $placeholder = $computer["name"];
+}
+$debug_ipxe .= "# template-name: $placeholder
+";
+
+//
+// GROUP INFO
+//
+// If the machine is member of group, find the group infos
 if ($computer != []) {
     $query2 = $db["dyngroup"]->prepare("SELECT Machines.id AS Machines_id,
     Machines.uuid AS Machines_uuid,
@@ -344,6 +371,9 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
 ";
 }
 
+//
+// BOOT SERVICES & IMAGES
+//
 $queryLanguage = $db["imaging"]->prepare("SELECT * FROM Language WHERE id=?");
 $queryLanguage->execute([$lang]);
 $langs = $queryLanguage->fetch(PDO::FETCH_ASSOC);
@@ -412,6 +442,9 @@ foreach ($menu as $item) {
 
 $default_item = "";
 
+//
+// SINGLECAST MODE
+//
 if (!$multicast) {
 
     $ipxe = "#!ipxe
@@ -510,9 +543,15 @@ goto MENU
 
     $ipxe .= $itemValues;
 } else {
+    //
+    // MULTICAST MODE
+    //
     $ipxe = sprintf($menuMulticastTemplate, mb_convert_encoding($computerName, 'UTF-8', 'UTF-8'), $mac, $srv, mb_convert_encoding($multicast_image_name, 'UTF-8', 'UTF-8'), $mac, $multicast_image_uuid);
 }
 
+//
+// PARAMS REPLACEMENT
+//
 // Replace all ##PULSE2_PARAM_NAME## in the final menu
 $keys = ["diskless_dir", "diskless_kernel", "inventories_dir", "pxe_time_reboot", "diskless_initrd", "tools_dir", "davos_opts"];
 foreach ($keys as $key) {
