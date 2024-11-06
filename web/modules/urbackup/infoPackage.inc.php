@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net/
+ * (c) 2022-2024 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -41,6 +41,11 @@ $submod->addPage($page);
 
 $page = new Page("list_backups", _T('List Backups by Client', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/list_backups.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxList_backups", _T('List Backups by Client', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/ajaxList_backups.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader"=>true));
 $submod->addPage($page);
 
 $page = new Page("start_backup", _T('Start backup', 'urbackup'));

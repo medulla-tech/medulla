@@ -4,16 +4,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
-from sqlalchemy.orm import Session
-from sqlalchemy import (
-    create_engine,
-    MetaData,
-)
+import sqlite3
 
 class SqliteHelper:
     instances = {}
     path=""
-    is_activated = False
     name = ""
     engine = None
     base = None
@@ -34,28 +29,29 @@ class SqliteHelper:
             cls.instances[cls] = object.__new__(*args, **kwargs)
         return cls.instances[cls]
     
-    @classmethod
-    def activate(cls):
-        """Activate sqlalchemy engine for the common part of all the child classes.
-        /!\ Need cls.path and cls.name to be defined on the child class
-        Params:
-            cls: reference to the object
-        """
+    def open(self):
+        """Initialise a new connector"""
+        self.connect = sqlite3.connect("%s.db"%os.path.join(self.path, self.name))
 
-        cls.engine = create_engine(f"sqlite:///{os.path.join(cls.path, cls.name)}.db")
-        cls.metadata = MetaData()
+    def close(self):
+        """Close the connector"""
+        if self.connect is not None:
+            self.connect.close()
+            self.connect = None
 
     def __init__(self):
-        """ Object instanciation, load the sqlalchemy activation if it's not already loaded. """
-        if self.is_activated is False:
-            self.activate()
+        """ Object instanciation, load the sqlalchemy activation if it's not already loaded."""
+        pass
 
     @classmethod
     def _session(self, func):
-        """Simplifie la création de session, à appeler comme si c'était un attribut"""
+        """Manage the connection and the session"""
         def wrapper(self, *args, **kwargs):
-            session = Session(self.engine)
+            self.open()
+            session = self.connect.cursor()
             result = func(self, session, *args, **kwargs)
+            self.connect.commit()
             session.close()
+            self.close()
             return result
         return wrapper

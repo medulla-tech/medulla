@@ -1,16 +1,10 @@
-import os,sys
-from sqlalchemy.orm import Session
-from sqlalchemy import (
-    create_engine,
-    MetaData,
-    func,
-    and_,
-    desc,
-    or_,
-    distinct,
-    not_,
-)
+#!/usr/bin/python3
+# -*- coding: utf-8; -*-
+# SPDX-FileCopyrightText: 2024 Siveo <support@siveo.net>
+# SPDX-License-Identifier: GPL-3.0-or-later
 
+import os,sys
+from datetime import datetime
 from mmc.database.sqlite_helper import SqliteHelper
 import logging
 
@@ -27,44 +21,63 @@ class BackupServer(SqliteHelper):
         """Create an unique instance of BackupServer object."""
         super().__init__()
 
-    def activate(self):
-        """Activate sqlalchemy engine, for the part specific to this database"""
-        super().activate()
+    @SqliteHelper._session
+    def get_backups(self, session, clientid, start=0, limit=-1, filter=""):
         try:
-            self.connect = self.engine.connect()
-        except Exception as e:
-            logger.error("Error : %s for engine %s"%(e, self.engine))
-            self.is_activated = False
-            return False
+            start = int(start)
+        except:
+            start = 0
 
-        # Generate automatic mapping
-        self.metadata.create_all(bind=self.engine)
-        self.metadata.reflect(bind=self.engine)
-        excludes = []
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
 
-        # Bind the mapping in self.Tablename attribute, because it's more convenient than self.metadata.tables["tablename"]
-        for element in self.metadata.tables:
-            if element in excludes:
-                continue
-            setattr(self, element.capitalize(), self.metadata.tables[element])
+        limit_clause=""
+        if limit != -1:
+            limit_clause = "limit %s,%s"%(start, limit)
+        else:
+            limit_clause = "limit %s"%(start)
 
-        # Don't forget to declare the engine as activated
-        self.is_activated = True
-
-    def get_backups(self):
-        """This function has been created to get the backups list"""
-        session = self.session
-
-        query = session.query(self.Backups)
+        filter_clause = ""
+        if filter != "":
+            filter_clause = """where (path like '%%%s%%'
+            or path like '%%%s%%'
+            or incremental like '%%%s%%'
+            or archived like '%%%s%%'
+            or backuptime like '%%%s%%'
+            or size_bytes like '%%%s%%')
+            """%(tuple([filter for x in range(0,6)]))
         result = {"total":0, "datas":[]}
-        count = query.count()
-        
-        datas = query.all()
+        sql_count = "SELECT count(rowid) from backups %s"%(filter_clause)
+        count_query = session.execute(sql_count)
+        count = count_query.fetchone()
+        if isinstance(count, tuple):
+            count = count[0]
+
+        sql = """SELECT
+        id,
+        clientid,
+        path,
+        incremental,
+        archived,
+        backuptime,
+        size_bytes from backups %s
+        order by backuptime desc
+        %s
+        """%(filter_clause, limit_clause)
+        query = session.execute(sql)
+        datas = query.fetchall()
+
         for element in datas:
             result["datas"].append({
-                "id":element.id,
-                "client_id":element.clientid,
-                "path":element.path
+                "id":element[0],
+                "client_id":element[1],
+                "path":element[2],
+                "full": True if element[3] == 0 else False,
+                "archived": True if element[4] != 0 else False,
+                "backuptime": element[5] if element[5] != 0 else "",
+                "size_bytes": str(element[6])
             })
         result["total"] = count
 
@@ -78,19 +91,3 @@ class BackupSettings(SqliteHelper):
     def __init__(self):
         """Instanciate unique object of BackupSettings"""
         super().__init__()
-
-    def activate(self):
-        """Activate the sqlalchemy engine"""
-        super().activate()
-        try:
-            self.connect = self.engine.connect()
-        except Exception as e:
-            print("Error : %s for engine %s"%(e, self.engine))
-        self.metadata.create_all(bind=self.engine)
-        self.metadata.reflect(bind=self.engine)
-        excludes = []
-        for element in self.metadata.tables:
-            if element in excludes:
-                continue
-            setattr(self, element.capitalize(), self.metadata.tables[element])
-        self.is_activated = True
