@@ -623,3 +623,6 @@ def create_backup_full_file(client_id):
         return backup["content"]
 
     return "No DATA full backup file"
+
+def get_backups(clientid, start=0, limit=-1, filter=""):
+    return BackupServer().get_backups(clientid, start, limit, filter)

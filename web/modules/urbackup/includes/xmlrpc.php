@@ -170,4 +170,8 @@ function xmlrpc_get_status_client($clientname){
     // Return status
     return xmlCall("urbackup.get_status_client", [$clientname]);
 }
+
+function xmlrpc_get_backups($clientid, $start=0, $limit=-1, $filter=""){
+    return xmlCall("urbackup.get_backups",[$clientid, $start, $limit, $filter]);
+}
 ?>

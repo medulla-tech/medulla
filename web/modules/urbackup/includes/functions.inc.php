@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022-2024 Siveo, http://www.siveo.net/
+ * (c) 2024 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -20,18 +20,25 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-require("graph/navbar.inc.php");
-require("localSidebar.php");
-require_once("modules/urbackup/includes/xmlrpc.php");
 
-$clientname = htmlspecialchars($_GET["clientname"]);
+function secs2date($secs)
+{
+    $date = new DateTime("@$secs");
+    return $date->format('Y-m-d H:i:s');
+}
 
-$p = new PageGenerator(_T("Backups List ".$clientname, 'urbackup'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
-$params = $_GET;
-unset($params['action']);
-$ajax = new AjaxFilter(urlStrRedirect("urbackup/urbackup/ajaxList_backups"), 'container', $params);
-$ajax->display();
-$ajax->displayDivToUpdate();
+function formatBytes($bytes, $precision = 2) 
+{ 
+    $units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+
+    $bytes = max($bytes, 0); 
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+    $pow = min($pow, safeCount($units) - 1); 
+
+    $bytes /= pow(1024, $pow);
+
+    return round($bytes, $precision) . ' ' . $units[$pow]; 
+}
+
+?>
