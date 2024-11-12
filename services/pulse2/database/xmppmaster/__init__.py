@@ -4072,12 +4072,19 @@ class XmppMasterDatabase(DatabaseHelper):
             It returns the number of machines per status.
         """
         try:
-            machinedeploy = (
-                session.query(Deploy.state, func.count(Deploy.state))
-                .filter(and_(Deploy.command == command_id, Deploy.title == title))
-                .group_by(Deploy.state)
-            )
-            machinedeploy = machinedeploy.all()
+            sql = """
+                SELECT state, COUNT(*)
+                FROM deploy
+                WHERE (inventoryuuid, id) IN (
+                    SELECT inventoryuuid, MAX(id)
+                    FROM deploy
+                    WHERE command = :command_id AND title = :title
+                    GROUP BY inventoryuuid
+                )
+                GROUP BY state;
+            """
+            machinedeploy = session.execute(sql, {"command_id": command_id, "title": title})
+            machinedeploy = machinedeploy.fetchall()
             ret = {
                 "totalmachinedeploy": 0,
                 "deploymentsuccess": 0,
