@@ -5941,9 +5941,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             imaging_server_uuid
         )
         target = None
-        session.query(Target).filter_by(uuid=computer_uuid).update({"uuid":"DELETED UUID%s"%computer_uuid})
+        session.query(Target).filter_by(uuid=computer_uuid).update(
+            {"uuid": "DELETED UUID%s" % computer_uuid}
+        )
         if not locationServerImaging.startswith("UUID"):
-            locationServerImaging = "UUID%s"%locationServerImaging
+            locationServerImaging = "UUID%s" % locationServerImaging
         menu = self.getEntityDefaultMenu(locationServerImaging)
         new_menu = self.__duplicateMenu(
             session, menu, locationServerImaging, None, False
@@ -6158,8 +6160,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                         "tools_dir": config["tools_dir"],
                         "davos_opts": config["davos_opts"],
                         "template_name": config["template_name"],
-                        "increment":config["increment"],
-                        "digit":config["digit"],
+                        "increment": config["increment"],
+                        "digit": config["digit"],
                     }
                 )
             )
