@@ -104,6 +104,16 @@ $page = new Page("all_files_backup", _T('List of files from on backup', 'urbacku
 $page->setFile("modules/urbackup/urbackup/all_files_backup.php");
 $submod->addPage($page);
 
+$page = new Page("ajaxAll_files_backup", _T('List of files from on backup', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/ajaxAll_files_backup.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader"=>true));
+$submod->addPage($page);
+
+$page = new Page("basket", _T('List of Elements in Basket', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/basket.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader"=>true));
+$submod->addPage($page);
+
 $page = new Page("restore_file", _T('Restore file', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/restore_file.php");
 $submod->addPage($page);

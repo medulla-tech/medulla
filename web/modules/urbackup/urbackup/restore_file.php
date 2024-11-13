@@ -30,10 +30,11 @@ $p->display();
 
 $client_id = htmlspecialchars($_GET["clientid"]);
 $backup_id = htmlspecialchars($_GET["backupid"]);
-$volume_name = htmlspecialchars($_GET["volumename"]);
+$volume_name = htmlspecialchars($_GET["name"]);
 $shahash = htmlspecialchars($_GET["shahash"]);
-$path = htmlspecialchars($_GET["beforepath"]);
-$filename = htmlspecialchars($_GET["filename"]);
+$path = dirname(htmlspecialchars($_GET["forward"]));
+$filename = htmlspecialchars($_GET["name"]);
+
 ?>
 <br>
 <?php
