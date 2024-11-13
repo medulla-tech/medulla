@@ -384,7 +384,6 @@ def prepare_shared_folder():
         os.mkdir(packages_input_dir_sharing_global, 0o755)
 
 
-
 def create_directories_sharing(path):
     """
     Create directories for the given path if they do not exist.
@@ -404,6 +403,7 @@ def create_directories_sharing(path):
     except OSError as e:
         logging.getLogger().error(f"Error creating directories: {e}")
 
+
 def get_share_from_descriptor(package_descriptor):
     """
     Prepare the system for the package server by creating the sharing folder if it does not exist.
@@ -415,20 +415,36 @@ def get_share_from_descriptor(package_descriptor):
     Returns:
         str: The path to the sharing folder.
     """
-    packages_input_dir_sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
+    packages_input_dir_sharing = os.path.join(
+        "/", "var", "lib", "pulse2", "packages", "sharing"
+    )
 
     # Check if 'localisation_server' is in the package descriptor and is not empty
-    if "localisation_server" not in package_descriptor or not package_descriptor["localisation_server"]:
-        logging.getLogger().warning("keys localisation_server missing or not defined, using global sharing by default")
-        sharing = os.path.join(packages_input_dir_sharing, "global", package_descriptor["id"])
+    if (
+        "localisation_server" not in package_descriptor
+        or not package_descriptor["localisation_server"]
+    ):
+        logging.getLogger().warning(
+            "keys localisation_server missing or not defined, using global sharing by default"
+        )
+        sharing = os.path.join(
+            packages_input_dir_sharing, "global", package_descriptor["id"]
+        )
     else:
-        logging.getLogger().debug(f"local package {os.path.join(packages_input_dir_sharing, package_descriptor['localisation_server'], package_descriptor['id'])}")
-        sharing = os.path.join(packages_input_dir_sharing, package_descriptor["localisation_server"], package_descriptor["id"])
+        logging.getLogger().debug(
+            f"local package {os.path.join(packages_input_dir_sharing, package_descriptor['localisation_server'], package_descriptor['id'])}"
+        )
+        sharing = os.path.join(
+            packages_input_dir_sharing,
+            package_descriptor["localisation_server"],
+            package_descriptor["id"],
+        )
 
     # Create the directories for the sharing path
     create_directories_sharing(os.path.dirname(sharing))
 
     return sharing
+
 
 def test_ln(pathdirpackage):
     """
