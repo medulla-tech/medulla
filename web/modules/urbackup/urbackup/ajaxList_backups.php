@@ -27,7 +27,7 @@ global $maxperpage;
 
 $clientname = htmlspecialchars($_GET["clientname"]);
 $groupname = htmlspecialchars($_GET["groupname"]);
-$groupid = htmlspecialchars($_GET["groupid"]);
+$groupid = (!empty($_GET['groupid'])) ? htmlspecialchars($_GET["groupid"]) : "";
 
 $start = (!empty($_GET["start"])) ? htmlentities($_GET["start"]) : 0;
 $end = (!empty($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage;
@@ -39,25 +39,25 @@ $username_urbackup = isset($ini_array_local["usernameapi"]) ? $ini_array_local["
 $password_urbackup = isset($ini_array_local["passwordapi"]) ? $ini_array_local["passwordapi"] : $ini_array["passwordapi"];
 $url_urbackup = isset($ini_array_local["url"]) ? $ini_array_local["url"] : $ini_array["url"];
 
-$client_id = htmlspecialchars($_GET["clientid"]);
+$client_id = (!empty($_GET['clientid'])) ? htmlspecialchars($_GET["clientid"]) : '';
 $backupstate = (!empty($_GET["backupstate"])) ? htmlspecialchars($_GET["backupstate"]) : "";
 $backuptype = (!empty($_GET['backuptype'])) ? htmlspecialchars($_GET["backuptype"]) : "";
-$jidmachine = htmlspecialchars($_GET["jidmachine"]);
-$editStateClient = htmlspecialchars($_GET["editStateClient"]);
-$errorEditStateClient = htmlspecialchars($_GET["error"]);
-$newClient = htmlspecialchars($_GET["newClient"]);
-$restart_service = htmlspecialchars($_GET["restart_service"]);
+$jidmachine = (!empty($_GET['jidmachine'])) ? htmlentities($_GET["jidmachine"]) : "";
+$editStateClient = (!empty($_GET['editStateClient'])) ? htmlspecialchars($_GET["editStateClient"]) : '';
+$errorEditStateClient = (!empty($_GET['error'])) ? htmlspecialchars($_GET["error"]) : '';
+$newClient = (!empty($newClient)) ? htmlspecialchars($_GET["newClient"]) : '';
+$restart_service = (!empty($_GET['restart_service'])) ? htmlspecialchars($_GET["restart_service"]) : '';
 
 $backups = xmlrpc_get_backups($client_id, $start, $maxperpage, $filter);
 $count = $backups["total"];
 $backups = $backups["datas"];
 
-$can_delete = $array['can_delete'];
+// $can_delete = $array['can_delete'];
 
-if ($can_delete == "true")
-    $delete = "true";
-else
-    $delete = "false";
+// if ($can_delete == "true")
+//     $delete = "true";
+// else
+//     $delete = "false";
 
 // $_backups = $array['backups'];
 
@@ -102,25 +102,25 @@ $client_enable = xmlrpc_get_client_status($client_id);
 if ($client_enable == 1)
 {
 ?>
-<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start incremental backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=incremental&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Start incremental backup</a>
-<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=full&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Start full backup</a>
+<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start incremental backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=incremental&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidmachine ?>">Start incremental backup</a>
+<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=full&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidmachine ?>">Start full backup</a>
 <?php
 }
 if ($client_enable == 0)
 {
 ?>
-    <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Enable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=enable">Enable backup for this client</a>
+    <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Enable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidmachine ?>&amp;editclient=enable">Enable backup for this client</a>
 <?php
 }
 
 if ($client_enable == 1)
 {
 ?>
-    <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=disable">Disable backup for this client</a>
+    <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidmachine ?>&amp;editclient=disable">Disable backup for this client</a>
 <?php
 }
 ?>
-<a class='btn btn-small btn-primary' href="main.php?module=urbackup&amp;submod=urbackup&amp;action=restart_service&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Restart Urbackup Service on client</a>
+<a class='btn btn-small btn-primary' href="main.php?module=urbackup&amp;submod=urbackup&amp;action=restart_service&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidmachine ?>">Restart Urbackup Service on client</a>
 <br>
 <br>
 <?php echo _T("Profile name: ", 'urbackup'); ?><a href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_ongroup&amp;groupid=<?php echo $groupid ?>&groupname=<?php echo $groupname ?>"><?php echo $groupname; ?></a>
@@ -217,11 +217,13 @@ if (!empty($backups) && $client_enable == 1)
 
         $params[] = [
             "groupname"=>$groupname,
+            "groupid" =>$groupid,
             "clientid"=>$client_id,
+            "clientname"=>$clientname,
             "jidmachine"=>$jidmachine,
             "backupid"=>$backup["id"],
-            "volumename"=>"/",
-            "path"=>$base_path
+            "basename"=>implode('/', [$clientname, trim($base_path, '/')]),
+            "forward"=>"",
         ];
     }
 
