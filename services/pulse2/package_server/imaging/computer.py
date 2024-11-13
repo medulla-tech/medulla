@@ -136,7 +136,7 @@ class ImagingComputerConfiguration:
         )
         ret = True
         try:
-            fid = open(filename, "w+b")
+            fid = open(filename, "w")
             fid.write(self.hostname)
             fid.close()
             self.logger.debug("Succeeded")

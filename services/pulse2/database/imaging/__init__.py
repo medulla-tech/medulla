@@ -5912,14 +5912,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getLocationImagingServerByServerUUID(self, imaging_server_uuid):
         session = create_session()
-        ims = (
+        ims, entity = (
             session.query(ImagingServer)
+            .join(Entity, Entity.id == ImagingServer.fk_entity)
             .filter(self.imaging_server.c.packageserver_uuid == imaging_server_uuid)
             .first()
         )
-        LocationServer = ims.fk_entity
+        LocationServer = entity.uuid
+        LocationId = entity.id
         session.close()
-        return LocationServer
+        return LocationId, LocationServer
 
     # Computer basic inventory stuff
     def injectInventory(self, imaging_server_uuid, computer_uuid, inventory):
@@ -5935,14 +5937,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         session.begin()
 
-        locationServerImaging = self.getLocationImagingServerByServerUUID(
+        locationId, locationServerImaging = self.getLocationImagingServerByServerUUID(
             imaging_server_uuid
         )
         target = None
         session.query(Target).filter_by(uuid=computer_uuid).update({"uuid":"DELETED UUID%s"%computer_uuid})
-        menu = self.getEntityDefaultMenu("UUID%s" % locationServerImaging)
+        if not locationServerImaging.startswith("UUID"):
+            locationServerImaging = "UUID%s"%locationServerImaging
+        menu = self.getEntityDefaultMenu(locationServerImaging)
         new_menu = self.__duplicateMenu(
-            session, menu, "UUID%s" % locationServerImaging, None, False
+            session, menu, locationServerImaging, None, False
         )
         target = Target()
         target.fk_menu = new_menu.id
@@ -5951,7 +5955,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         target.name = inventory["shortname"]
         target.uuid = computer_uuid
         target.type = 1
-        target.fk_entity = locationServerImaging
+        target.fk_entity = locationId
 
         try:
             # Then push a new inventory

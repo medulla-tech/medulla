@@ -45,7 +45,7 @@ class UUIDCache(pulse2.utils.Singleton):
         if not os.path.isfile(self.cachePath):
             try:
                 self.log.info("Creating my UUID Cache File %s" % (self.cachePath))
-                fp = open(self.cachePath, "wb")
+                fp = open(self.cachePath, "w")
                 self.config.write(fp)
                 fp.close()
             except Exception as e:
@@ -62,7 +62,7 @@ class UUIDCache(pulse2.utils.Singleton):
         """
         try:
             self.log.debug("Writing my UUID Cache File %s" % (self.cachePath))
-            fp = open(self.cachePath, "wb")
+            fp = open(self.cachePath, "w")
             self.config.write(fp)
             fp.close()
         except Exception as e:
@@ -78,7 +78,7 @@ class UUIDCache(pulse2.utils.Singleton):
         """
         try:
             self.log.info("Reading my UUID Cache File %s" % (self.cachePath))
-            fp = open(self.cachePath, "rb")
+            fp = open(self.cachePath, "r")
             self.config.readfp(fp)
             fp.close()
         except Exception as e:

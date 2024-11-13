@@ -735,6 +735,8 @@ class Imaging(object, metaclass=SingletonN):
             inventory = {}
 
             if result and isinstance(result, dict):
+                if "name" not in result and "shortname" in result:
+                    result["name"] = result["shortname"]
                 inventory["shortname"] = result["name"]
                 _id = "UUID%s" % result["id"]
 
@@ -849,9 +851,9 @@ class Imaging(object, metaclass=SingletonN):
         # try to extract from our cache
         res = self.myUUIDCache.getByMac(MACAddress)
         if res:  # fetched from cache
-            res["shortname"] = res["shortname"].decode("utf-8")
-            res["fqdn"] = res["fqdn"].decode("utf-8")
-            res["entity"] = res["entity"].decode("utf-8")
+            res["shortname"] = res["shortname"].decode("utf-8") if isinstance(res["shortname"], bytes) else res["shortname"]
+            res["fqdn"] = res["fqdn"].decode("utf-8") if isinstance(res["fqdn"], bytes) else res["fqdn"]
+            res["entity"] = res["entity"].decode("utf-8") if isinstance(res["entity"], bytes) else res["entity"]
             return maybeDeferred(lambda x: x, res)
         else:  # cache fetching failed, try to obtain the real value
             self.logger.debug(
