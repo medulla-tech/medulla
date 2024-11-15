@@ -14460,23 +14460,22 @@ order by name
     @DatabaseHelper._sessionm
     def get_count_missing_updates_by_machines(self, session, ids):
         result = {}
-        if ids == []:
+        if not ids:
             return result
 
         ids = "(%s)" % ",".join([str(id) for id in ids])
 
-        sql = (
-            """select
-        id_machine as id,
-        hostname,
-        CONCAT("UUID",glpi_id) as uuid,
-        count(distinct update_id) as missing
-from up_machine_activated uma
-where (uma.curent_deploy is NULL or uma.curent_deploy = 0)
-and id_machine in %s
-group by id_machine"""
-            % ids
-        )
+        sql = f"""
+                SELECT
+                    uma.id_machine AS id,
+                    uma.hostname,
+                    CONCAT("UUID", uma.glpi_id) AS uuid,
+                    COUNT(DISTINCT CASE WHEN uma.curent_deploy IS NULL OR uma.curent_deploy = 0 THEN uma.update_id END) AS missing,
+                    COUNT(DISTINCT CASE WHEN uma.curent_deploy = 1 THEN uma.update_id END) AS inprogress
+                FROM up_machine_activated uma
+                WHERE uma.id_machine IN {ids}
+                GROUP BY uma.id_machine;
+        """
 
         datas = session.execute(sql)
 
@@ -14485,7 +14484,8 @@ group by id_machine"""
                 "id": element.id,
                 "uuid": element.uuid,
                 "hostname": element.hostname,
-                "missing": element.missing,
+                "missing": element.missing or 0,
+                "inprogress": element.inprogress or 0,
             }
 
         return result

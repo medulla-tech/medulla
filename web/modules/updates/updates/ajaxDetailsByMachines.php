@@ -105,6 +105,7 @@ if ($entity == '') {
         ];
         $machines["installed"][] = $installed;
         $machines["missing"][] = $missing;
+        $machines["inprogress"] = [];
         $machines["total"][] = $total;
         $machines["compliance"][] = ($missing == 0) && ($installed == 0) ? 0 : $compliance;
         $machines["complianceRate"][] = ($missing == 0) && ($installed == 0) ? "-" : $complRate;
@@ -146,6 +147,7 @@ if ($entity == '') {
 
     $countInArray = count($compliance_computers);
     $machines["missing"] = [];
+    $machines["inprogress"] = [];
     $machines["installed"] = [];
     $machines["total"] = [];
     $machines["compliance"] = [];
@@ -161,6 +163,8 @@ if ($entity == '') {
 
         $missing = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["missing"] : 0;
         $machines["missing"][] = $missing;
+        $inprogress = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["inprogress"] : 0;
+        $machines["inprogress"][] = $inprogress;
 
         $installed = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["installed"] : 0;
         $machines["installed"][] = $installed;
@@ -199,6 +203,7 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo($machines["os"], _T("Platform", "updates"));
 $n->addExtraInfo($machines["complianceRate"], _T("Compliance rate", "updates"));
 $n->addExtraInfo($machines["missing"], _T("Missing updates", "updates"));
+$n->addExtraInfo($machines["inprogress"], _T("In progress", "updates"));
 $n->addExtraInfo($machines["installed"], _T("Installed updates", "updates"));
 $n->addExtraInfo($machines["total"], _T("Total updates", "updates"));
 $n->addActionItemArray($machines["actionDetailByMachines"]);

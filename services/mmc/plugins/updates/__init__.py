@@ -181,6 +181,7 @@ def get_conformity_update_by_machines(ids=[]):
             "uuid": "",
             "id": "",
             "missing": 0,
+            "inprogress": 0,  # Ajout du champ inprogress
             "hostname": "",
             "installed": 0,
             "total": 0,
@@ -192,39 +193,27 @@ def get_conformity_update_by_machines(ids=[]):
         result[ids["uuids"][count]]["id"] = ids["ids"][count]
         count += 1
 
-    if ids["ids"] == "" or ids["ids"] == []:
-        history = {}
-    else:
-        history = XmppMasterDatabase().get_update_history_by_machines(ids["ids"])
-    # History :
-    # {'UUID3': [{'updateid': 'fd509dc0-2dfb-463b-9af9-34dc55cc5c47', 'id_machine': 14, 'kb': '890830'}]}
 
     if ids["uuids"] == "" or ids["uuids"] == []:
         installed = {}
     else:
         installed = Glpi().get_count_installed_updates_by_machines(ids["uuids"])
 
-    # Installed :
-    # {'UUID3': {'id': 3, 'cn': 'qa-win-9', 'installed': 5}}
-
     if ids["ids"] == "" or ids["ids"] == []:
         missing = {}
     else:
         missing = XmppMasterDatabase().get_count_missing_updates_by_machines(ids["ids"])
 
-    # Missing :
-    # {'UUID5': {'id': 16, 'uuid': 'UUID5', 'hostname': 'qa-win-6', 'missing': 2}}
-    for uuid in history:
-        result[uuid]["installed"] = len(history[uuid])
 
     for uuid in installed:
-        result[uuid]["installed"] += installed[uuid]["installed"]
+        result[uuid]["installed"] = installed[uuid]["installed"]
 
     for uuid in missing:
         result[uuid]["missing"] = missing[uuid]["missing"]
+        result[uuid]["inprogress"] = missing[uuid]["inprogress"]
 
     for uuid in result:
-        result[uuid]["total"] = result[uuid]["installed"] + result[uuid]["missing"]
+        result[uuid]["total"] = result[uuid]["installed"] + result[uuid]["missing"] + result[uuid]["inprogress"]
         result[uuid]["compliance"] = (
             (result[uuid]["installed"] / result[uuid]["total"]) * 100
             if result[uuid]["total"] > 0
