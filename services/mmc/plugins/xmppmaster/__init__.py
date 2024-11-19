@@ -2654,3 +2654,6 @@ def get_update_kb(updateid):
 
 def cancel_update(machineid, updateid):
     return XmppMasterDatabase().cancel_update(machineid, updateid)
+
+def get_machines_summary_list(filter=""):
+    return XmppMasterDatabase().get_machines_summary_list(filter="")

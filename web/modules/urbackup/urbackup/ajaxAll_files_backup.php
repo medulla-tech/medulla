@@ -54,12 +54,6 @@ if ($path == "")
 {
     $path = "/";
 }
-
-// if ($volume_name == "")
-// {
-//     $volume_name = "/";
-// }
-
 ?>
 
 <script>
@@ -72,6 +66,13 @@ if ($path == "")
         jQuery.get("modules/urbackup/urbackup/ajaxSetSession.php", {"method": method, "type": type, "value":value}, function(data){
             data = JSON.parse(data)
             jQuery("#total-in-basket").text(data["count"]["total"]);
+            if(data["count"]["total"] > 0){
+                jQuery("#basket-button").prop("disabled", false);
+            }
+            else{
+                jQuery("#basket-button").prop("disabled", true);
+
+            }
         })
     }
 
@@ -81,14 +82,13 @@ if ($path == "")
 
         jQuery.each(jQuery(".basket"), function(id, check){
             if(activated == true){
-                jQuery(check).attr('checked', true)
+                jQuery(check).prop('checked', true)
             }
             else{
-                jQuery(check).attr('checked', false)
+                jQuery(check).prop('checked', false)
             }
             basket(check)
         })
-        console.log("activated : "+activated)
     }
 
 </script>
@@ -177,6 +177,10 @@ $value = implode('/', [trim($basename, '/'), trim($forward, '/'), trim($file['na
 }
 $current = ($forward == "") ? "/" : $forward;
 $previous = dirname($forward);
+
+$backupfolder = xmlrpc_get_setting("backupfolder");
+$base_path = implode("/", [rtrim($backupfolder, "/"), ltrim($basename, '/')]);
+
 $previousParams = [
     "clientid" => $client_id,
     "backupid" => $backup_id,
@@ -185,16 +189,28 @@ $previousParams = [
     "jidmachine" => $jidmachine,
     "basename" => $basename,
     "forward"=>($previous == "" || $previous == ".") ? "/" : $previous,
+    "base_path" => $basepath,
+    "basename"=>$basename,
 ];
 $count_folders_basket = count($_SESSION["urbackup"]["folders"]);
 $count_files_basket = count($_SESSION["urbackup"]["files"]);
 $count_total_basket = $count_folders_basket + $count_files_basket;
 
-echo '<p>';
-echo sprintf('<a title="" onclick="PopupWindow(event,\'main.php?module=urbackup&amp;submod=urbackup&amp;action=basket\', 300); return false;" href="main.php?module=urackup&amp;submod=urbackup&amp;action=basket" id="view-basket">'._T("Basket (<span id='total-in-basket'>%s</span> elements selected)", "urbackup").'</a><br>', $count_total_basket);
 
-// echo '<a title="" href="main.php?module=urackup&amp;submod=urbackup&amp;action=basket"';
-// echo " onclick=\"PopupWindow(event,'main.php?module=urbackup&amp;submod=urbackup&amp;action=basket', 300); return false;\">Basket</a>";
+$paramsBasket = [
+    "module"=>"urbackup",
+    "submod"=>"urbackup",
+    "action" => "basket",
+    "jidmachine"=>$jidmachine,
+    "clientname"=>$clientname,
+    "base_path" => $base_path,
+    "basename"=>$basename,
+];
+
+$paramsBasketStr = http_build_query($paramsBasket);
+echo '<p>';
+$basket_disable = ($count_total_basket > 0) ? "" : "disabled";
+echo sprintf('<button id="basket-button" '.$basket_disable.' class="btn btn-small btn-primary" style="font-size:1.5em;" title="" onclick="PopupWindow(event,\'main.php?%s\', 500); return false;" href="main.php" id="view-basket">'._T("Basket (<span id='total-in-basket' style='font-size:1em'>%s</span> elements selected)", "urbackup").'</button><br>', $paramsBasketStr, $count_total_basket);
 
 
 echo sprintf(_T("You are here : %s", "urbackup"), $current).'<br>';
@@ -205,7 +221,7 @@ echo '<a class="btn btn-small btn-primary" title="'._T("Back to backup list", 'u
 echo '</p>';
 
 
-$n = new OptimizedListInfos($selections, _T("<input type='checkbox' name='select-all' onclick='basketAll(this)' id='select-all'>Selection", "urbackup"));
+$n = new OptimizedListInfos($selections, _T("<input type='checkbox' ".$checked." name='select-all' onclick='basketAll(this)' id='select-all'>Selection", "urbackup"));
 
 $n->setcssIds($ids);
 $n->disableFirstColumnActionLink();
@@ -220,8 +236,6 @@ $n->setParamInfo($params);
 
 $n->addActionItemArray($detailActions);
 $n->addActionItemArray($downloadActions);
-// TODO: restoreOnHostAction
-// $n->addActionItemArray($restoreOnHostActions);
 $n->addActionItemArray($restoreActions);
 $n->setItemCount($count);
 

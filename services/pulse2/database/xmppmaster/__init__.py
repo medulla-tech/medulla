@@ -16551,16 +16551,14 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             OR jid =:search_term
         LIMIT 1;
         """)
-
+        logger.error("search_machine query %s" % query)
+        logger.error("search_machine search_term %s" % search_term)
         # Exécution de la requête
         result = session.execute(query, {'search_term': search_term}).fetchone()
 
         # Si aucun résultat n'est trouvé, retourner un dictionnaire vide
         if result is None:
             return {}
-        # verification de l'existances des fichiers a restaurer.
-
-
 
         # Construire le dictionnaire de résultats
         result_machines = {
@@ -16629,6 +16627,22 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             network_list.append(network_info)
 
         return network_list
+
+    @DatabaseHelper._sessionm
+    def get_machines_summary_list(self, session, filter=""):
+        sql = """SELECT jid, hostname from machines WHERE agenttype = 'machine'"""
+        if filter != "":
+            sql += " AND hostname like '%%%s%%' "%filter
+
+        sql += " ORDER BY hostname asc"
+        query = session.execute(sql)
+        datas = query.all()
+
+        result = []
+        for machine in datas:
+            result.append({"jid":machine[0], "hostname": machine[1]})
+
+        return result
 
     @DatabaseHelper._sessionm
     def get_os_xmpp_update_major_stats(self, session, presence=False):

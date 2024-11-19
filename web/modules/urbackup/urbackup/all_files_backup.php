@@ -23,8 +23,48 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 if(empty($_SESSION['urbackup'])){
+    $_SESSION['urbackup'] = [
+        'files'=>[],
+        'folders' => []
+    ];
+}
+
+if(isset($_POST['basket']) ){
+    $base_path = $_POST["base_path"];
+    $basename = $_POST["basename"];
+    $dest_machine = $_POST["machinedest"];
+    $src_machine = $_POST["machinesource"];
+    $files = isset($_POST["files"]) ? $_POST["files"] : [];
+    $folders = isset($_POST["folders"]) ? $_POST["folders"] : [];
+
+    for($i=0; $i<count($files); $i++){
+        $files[$i] = str_replace($basename.'/', "", $files[$i]);
+    }
+
+    for($i=0; $i<count($folders); $i++){
+        $folders[$i] = str_replace($basename.'/', "", $folders[$i]);
+    }
+
+    if($files == []){
+        $files = "";
+    }
+    if($folders == []){
+        $folders = [];
+    }
+
+    $result = xmlrpc_backup_restore($src_machine, $dest_machine, $base_path, $folders, $files);
+
+    if($result["status"] != 0){
+        new NotifyWidgetFailure($result["msg"]);
+    }
+    else{
+        new NotifyWidgetSuccess($result["msg"]);
+    }
+
+    // Dump the basket
     $_SESSION['urbackup'] = [
         'files'=>[],
         'folders' => []
