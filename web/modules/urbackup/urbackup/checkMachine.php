@@ -26,6 +26,7 @@ require_once("modules/urbackup/includes/xmlrpc.php");
 
 $clientname = htmlspecialchars($_GET["cn"]);
 $jidMachine = htmlspecialchars($_GET["jid"]);
+$machineid = htmlentities($_GET["UUID"]);
 
 $p = new PageGenerator(_T("Assign profile to computer ".$clientname, 'urbackup'));
 $p->setSideMenu($sidemenu);
@@ -80,7 +81,7 @@ if ($clientExist = "false")
 {
     $createClient = xmlrpc_add_client($clientname);
 
-    if ($createClient["added_new_client"] == 1)
+    if (!empty($createClient["added_new_client"]) && $createClient["added_new_client"] == 1)
     {
         $id = $createClient["new_clientid"];
         $groupid = "";
@@ -119,8 +120,21 @@ if ($groupname == "")
 }
 else
 {
+    $params = [
+        "module" => "urbackup",
+        "submod" => "urbackup",
+        "action" => "list_backups",
+        "clientid" => $id,
+        "clientname" => $clientname,
+        "machineid" =>$machineid,
+        "groupid" =>$groupid,
+        "groupname" => $groupname,
+        "jidmachine" => $jidMachine,
+    ];
+
+    $paramsStr = http_build_query($params);
     //User exist and have a profile
-    $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$id.'&clientname='.$clientname.'&groupid='.$groupid.'&groupname='.$groupname.'&jidmachine='.$jidMachine;
+    $url = 'main.php?'.$paramsStr;
     header("Location: ".$url);
 }
 

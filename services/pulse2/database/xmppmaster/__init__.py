@@ -14777,16 +14777,14 @@ group by hostname
             OR jid =:search_term
         LIMIT 1;
         """)
-
+        logger.error("search_machine query %s" % query)
+        logger.error("search_machine search_term %s" % search_term)
         # Exécution de la requête
         result = session.execute(query, {'search_term': search_term}).fetchone()
 
         # Si aucun résultat n'est trouvé, retourner un dictionnaire vide
         if result is None:
             return {}
-        # verification de l'existances des fichiers a restaurer.
-
-
 
         # Construire le dictionnaire de résultats
         result_machines = {
@@ -14857,3 +14855,18 @@ group by hostname
 
         return network_list
 
+    @DatabaseHelper._sessionm
+    def get_machines_summary_list(self, session, filter=""):
+        sql = """SELECT jid, hostname from machines WHERE agenttype = 'machine'"""
+        if filter != "":
+            sql += " AND hostname like '%%%s%%' "%filter
+
+        sql += " ORDER BY hostname asc"
+        query = session.execute(sql)
+        datas = query.all()
+
+        result = []
+        for machine in datas:
+            result.append({"jid":machine[0], "hostname": machine[1]})
+
+        return result

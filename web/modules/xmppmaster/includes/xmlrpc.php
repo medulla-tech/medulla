@@ -1,7 +1,7 @@
 <?php
 
 /*
- * (c) 2015-2023 Siveo, http://www.siveo.net
+ * (c) 2015-2024 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -1129,4 +1129,8 @@ function xmlrpc_get_update_kb($updateid)
 function xmlrpc_cancel_update($machineid, $updateid)
 {
     return xmlCall("xmppmaster.cancel_update", [$machineid, $updateid]);
+}
+
+function xmlrpc_get_machines_summary_list($filter=""){
+    return xmlCall("xmppmaster.get_machines_summary_list", [$filter]);
 }
