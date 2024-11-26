@@ -48,11 +48,6 @@ $ctx['start'] = $start;
 $ctx["end"] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
-$detailsByMach = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
-$detailsByMachEmpty = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
-$pendingByMach = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
-$doneByMach = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
-
 $params = [];
 $filterOn = [];
 
@@ -123,8 +118,21 @@ if ($entity == '') {
 
     $compliance_bloc = "";
 
-    // $machines = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
-    $machines = xmlrpc_get_machines_list1($start, $maxperpage, $ctx);
+    $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
+
+    if ($source == "glpi") {
+        $detailsByMachDefault = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
+        $pendingByMachDefault = new EmptyActionItem1(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pendingg", "", "updates", "updates");
+        $doneByMachDefault = new EmptyActionItem1(_T("Updates History", "updates"), "auditUpdateByMachine", "historyg", "", "updates", "updates");
+
+        $machines = xmlrpc_get_machines_list1($start, $maxperpage, $ctx);
+    } else {
+        $detailsByMachDefault = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
+        $pendingByMachDefault = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
+        $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
+
+        $machines = xmlrpc_get_machines_xmppmaster($start, $maxperpage, $ctx);
+    }
 
     $count = $machines['count'];
     $xmppdatas = $machines["xmppdata"];
@@ -140,12 +148,24 @@ if ($entity == '') {
         $machinesIds["ids"][] = !empty($xmppdatas[$uuid]) ? $xmppdatas[$uuid]["id"] : 0;
     }
 
+    $actionsPerMachine = [];
+    foreach ($machinesIds["uuids"] as $uuid) {
+        $check_machine = xmlrpc_get_machine_in_both_sources($uuid);
+        $actionsPerMachine[$uuid] = (!empty($check_machine) && isset($check_machine[$uuid]) && $check_machine[$uuid])
+            ? [
+                "details" => new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates"),
+                "pending" => new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates"),
+                "done" => new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates"),
+            ]
+            : [
+                "details" => $detailsByMachDefault,
+                "pending" => $pendingByMachDefault,
+                "done" => $doneByMachDefault,
+            ];
+    }
+
     $compliance_computers = xmlrpc_get_conformity_update_by_machines($machinesIds);
 
-    $installed = [];
-    $compliance = [];
-
-    $countInArray = count($compliance_computers);
     $machines["missing"] = [];
     $machines["inprogress"] = [];
     $machines["installed"] = [];
@@ -158,32 +178,35 @@ if ($entity == '') {
 
     $_count = count($machines['uuid']);
     for($i = 0; $i < $_count; $i++) {
-        // $xmppdatas[$compliance_computers[$i]['uuid']]['hostname'];
         $uuid = 'UUID'.$machines["uuid"][$i];
 
         $missing = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["missing"] : 0;
-        $machines["missing"][] = $missing;
         $inprogress = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["inprogress"] : 0;
-        $machines["inprogress"][] = $inprogress;
-
         $installed = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["installed"] : 0;
-        $machines["installed"][] = $installed;
-
         $compliance = !empty($compliance_computers[$uuid]) ? round($compliance_computers[$uuid]["compliance"]) : 0;
+
+        $machines["missing"][] = $missing;
+        $machines["inprogress"][] = $inprogress;
+        $machines["installed"][] = $installed;
         $machines["compliance"][] = $compliance;
 
         $color = colorconf($compliance);
-        $complianceRate = ($missing == 0) && ($installed == 0) ? '-' : "<div class='progress' style='width: ".$compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance."% </div>";
+        $complianceRate = ($missing == 0 && $installed == 0) ? '-'
+            : "<div class='progress' style='width: {$compliance}%; background : {$color}; font-weight: bold; color : black; text-align: right;'> {$compliance}% </div>";
         $machines["complianceRate"][] = $complianceRate;
-        $machines["total"][] = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["total"] : 0;
-        // Here if missing = 0 and installed = 0: unknown, no action
-        $machines["actionDetailByMachines"][] = ($missing == 0 && $installed == 0) ? $detailsByMachEmpty : $detailsByMach;
-        $machines["actionPendingByMachines"][] = $pendingByMach;
-        $machines["actionDoneByMachines"][] = $doneByMach;
 
+        $machines["total"][] = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["total"] : 0;
+
+        $machines["actionDetailByMachines"][] = $actionsPerMachine[$uuid]["details"];
+        $machines["actionPendingByMachines"][] = $actionsPerMachine[$uuid]["pending"];
+        $machines["actionDoneByMachines"][] = $actionsPerMachine[$uuid]["done"];
+    }
+
+    $params = [];
+    foreach ($machines["uuid"] as $i => $uuid) {
         $params[] = [
-            "machineid" => $xmppdatas[$uuid]["id"],
-            "inventoryid" => $machines["uuid"][$i],
+            "machineid" => isset($xmppdatas["UUID" . $uuid]["id"]) ? $xmppdatas["UUID" . $uuid]["id"] : null,
+            "inventoryid" => $uuid,
             "cn" => $machines["cn"][$i]
         ];
     }
@@ -216,3 +239,36 @@ $n->setNavBar(new AjaxNavBar($count, $ctx['filter']));
 $n->setParamInfo($params);
 $n->display();
 ?>
+
+<script>
+    function showPopup(event, text) {
+        const popup = document.getElementById('popup');
+        popup.textContent = text;
+        popup.style.display = 'block';
+
+        const offsetX = 15;
+        const offsetY = 15;
+
+        let popupLeft = event.pageX - popup.offsetWidth - offsetX;
+        if (popupLeft < 0) {
+            popupLeft = event.pageX + offsetX;
+        }
+
+        popup.style.left = popupLeft + 'px';
+        popup.style.top = (event.pageY + offsetY) + 'px';
+    }
+
+    function hidePopup() {
+        const popup = document.getElementById('popup');
+        popup.style.display = 'none';
+    }
+
+    const message = <?php echo json_encode(_T("Actions are disabled for this machine (MISSING AGENT)")); ?>;
+    document.querySelectorAll('.displayg, .historyg, .pendingg').forEach(function(element) {
+        element.addEventListener('mouseover', function(event) {
+            showPopup(event, message);
+        });
+
+        element.addEventListener('mouseout', hidePopup);
+    });
+</script>

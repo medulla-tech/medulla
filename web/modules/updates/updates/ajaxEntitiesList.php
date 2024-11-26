@@ -41,7 +41,8 @@ foreach($_entities as $entity) {
 }
 $count = count($filtered_entities);
 $entities = array_slice($filtered_entities, $start, $maxperpage, false);
-$entitycompliances = xmlrpc_get_conformity_update_by_entity($entities);
+$source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
+$entitycompliances = xmlrpc_get_conformity_update_by_entity($entities, $source);
 
 $detailsByMach = new ActionItem(_T("Details by machines", "updates"), "detailsByMachines", "auditbymachine", "", "updates", "updates");
 $detailsByUpd = new ActionItem(_T("Details by updates", "updates"), "detailsByUpdates", "auditbyupdate", "", "updates", "updates");
@@ -76,7 +77,11 @@ foreach ($entities as $entity) {
     $actiondetailsByMachs[] = $detailsByMach;
     $actiondetailsByUpds[] = $detailsByUpd;
     $entityNames[] = $entity["completename"];
-    $params[] = array('entity' => $entity['uuid'], 'completename' => $entity['completename']);
+    $params[] = array(
+        'entity' => $entity['uuid'],
+        'completename' => $entity['completename'],
+        'source' => $source
+    );
     $color = colorconf(100);
     if (isset($identity[$id_entity])) {
         $conformite = intval($identity[$id_entity]['conformite']);

@@ -96,9 +96,19 @@ function xmlrpc_get_machines_needing_update($updateid, $entity, $start=0, $limit
     return xmlCall("updates.get_machines_needing_update", [$updateid, $entity, $start, $limit, $filter]);
 }
 
-function xmlrpc_get_conformity_update_by_entity($entities = [])
+function xmlrpc_get_conformity_update_by_entity($entities = [], $source)
 {
-    return xmlCall("updates.get_conformity_update_by_entity", [$entities]);
+    return xmlCall("updates.get_conformity_update_by_entity", [$entities, $source]);
+}
+
+function xmlrpc_get_machines_xmppmaster($start=0, $limit=-1, $filter="")
+{
+    return xmlCall("updates.get_machines_xmppmaster", [$start, $limit, $filter]);
+}
+
+function xmlrpc_get_machine_in_both_sources($glpi_uuids)
+{
+    return xmlCall("updates.get_machine_in_both_sources", [$glpi_uuids]);
 }
 
 function xmlrpc_get_conformity_update_by_machines($ids = [])

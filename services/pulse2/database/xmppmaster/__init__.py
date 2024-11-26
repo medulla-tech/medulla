@@ -13144,50 +13144,184 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
         """
         filter_on = ""
+        filter_on_noncompliant = ""
         if config is not None and config.filter_on is not None:
             for key in config.filter_on:
                 column = ""
                 if key not in ["entity", "state", "type"]:
                     continue
                 if key == "entity":
-                    column = "lgf.entities_id"
+                    column = "ge.glpi_id"
+                    filter_on += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
                 elif key == "state":
                     column = "lgf.states_id"
+                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
                 elif key == "type":
                     column = "lgf.computertypes_id"
-                filter_on = " %s AND %s in (%s) " % (
-                    filter_on,
-                    column,
-                    ",".join(config.filter_on[key]),
-                )
+                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+
+        sql_machine_details = f"""
+        SELECT m.id AS machine_id, m.hostname, ge.glpi_id AS entity_id
+        FROM machines m
+        JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+        WHERE m.agenttype = "machine"
+        {filter_on};
+        """
+        machine_details = session.execute(sql_machine_details).fetchall()
+
+        machine_by_entity = {}
+        for row in machine_details:
+            entity_id = row.entity_id
+            if entity_id not in machine_by_entity:
+                machine_by_entity[entity_id] = []
+            machine_by_entity[entity_id].append({
+                "id": row.machine_id,
+                "hostname": row.hostname,
+                "valid": row.machine_id != 0,
+            })
+
+        sql_total_machines = f"""
+        SELECT ge.glpi_id AS id, COUNT(m.hostname) AS totalmach
+        FROM machines m
+        JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+        WHERE m.agenttype = "machine"
+        {filter_on}
+        GROUP BY ge.glpi_id;
+        """
+        total_machines = {row.id: row.totalmach for row in session.execute(sql_total_machines)}
+
+        sql_noncompliant = f"""
+        SELECT uma.entities_id AS id, COUNT(DISTINCT uma.id_machine) AS noncompliant, COUNT(DISTINCT uma.update_id) AS missing
+        FROM up_machine_activated uma
+        JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
+        WHERE uma.entities_id IN ({",".join(map(str, entities))})
+        {filter_on_noncompliant}
+        GROUP BY uma.entities_id;
+        """
+        noncompliant_data = {row.id: (row.noncompliant, row.missing) for row in session.execute(sql_noncompliant)}
+
         result = []
-        _entities = list(entities)
-        entities = ",".join(entities)
-        sql = """select
-  uma.entities_id as id,
-  count(distinct uma.id_machine) as noncompliant,
-  count(distinct update_id) as missing
-from up_machine_activated uma
-JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
-where uma.entities_id in ("%s")
-%s
-group by uma.entities_id;""" % (
-            entities,
-            filter_on,
+        for entity_id in entities:
+            entity_id = int(entity_id)
+
+            machines = machine_by_entity.get(entity_id, [])
+            noncompliant, missing = noncompliant_data.get(entity_id, (0, 0))
+            total = total_machines.get(entity_id, len(machines))
+
+            result.append({
+                "entity": str(entity_id),
+                "nbmachines": noncompliant,
+                "nbupdates": missing,
+                "totalmach": total,
+            })
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_machines_xmppmaster(self, session, start, end, ctx):
+        """
+        Recovers the machines from the XMPPMaster base
+        """
+        location = ""
+        criterion = ""
+        field = ""
+        contains = ""
+
+        if "location" in ctx and ctx["location"] != "":
+            location = ctx["location"].replace("UUID", "")
+
+        if "filter" in ctx and ctx["filter"] != "":
+            criterion = ctx["filter"]
+
+        if "field" in ctx and ctx["field"] != "":
+            field = ctx["field"]
+
+        if "contains" in ctx and ctx["contains"] != "":
+            contains = ctx["contains"]
+
+        sql_query = f"""
+        SELECT
+            m.uuid_inventorymachine AS uuid,
+            m.hostname AS cn,
+            m.platform AS os,
+            m.model AS description,
+            m.manufacturer AS type,
+            m.lastuser AS user,
+            ge.complete_name AS entity
+        FROM
+            machines m
+        JOIN
+            glpi_entity ge ON m.glpi_entity_id = ge.id
+        WHERE
+            m.agenttype = 'machine'
+        AND
+            m.glpi_entity_id = (
+                SELECT id FROM glpi_entity WHERE glpi_id = {location}
+            )
+        """
+
+        if criterion != "":
+            sql_query += f" AND (m.hostname LIKE '%{criterion}%' OR ge.complete_name LIKE '%{criterion}%')"
+
+        sql_query += f" LIMIT {start}, {end}"
+
+        result = session.execute(sql_query)
+        machines = result.fetchall()
+
+        result_data = {
+            "count": len(machines),
+            "data": {
+                "uuid": [],
+                "cn": [],
+                "os": [],
+                "description": [],
+                "type": [],
+                "user": [],
+                "entity": [],
+                "presence": []
+            }
+        }
+
+        for row in machines:
+            result_data["data"]["uuid"].append(row["uuid"].replace("UUID", "") if row["uuid"] else "")
+            result_data["data"]["cn"].append(row["cn"] if row["cn"] is not None else "")
+            result_data["data"]["os"].append(row["os"] if row["os"] is not None else "")
+            result_data["data"]["description"].append(row["description"] if row["description"] is not None else "")
+            result_data["data"]["type"].append(row["type"] if row["type"] is not None else "")
+            result_data["data"]["user"].append(row["user"] if row["user"] is not None else "")
+            result_data["data"]["entity"].append(row["entity"] if row["entity"] is not None else "")
+            result_data["data"]["presence"].append(1)
+
+        uuids = []
+        for id in result_data["data"]["uuid"]:
+            uuids.append("UUID%s" % id)
+
+        result_data["xmppdata"] = []
+        result_data["xmppdata"] = XmppMasterDatabase().getmachinesbyuuids(uuids)
+
+        return result_data
+
+    @DatabaseHelper._sessionm
+    def get_machine_in_both_sources(self, session, glpi_ids):
+        """
+        This function checks if the machines are present in both sources XMPPMaster and GLPI
+        """
+        if isinstance(glpi_ids, str):
+            glpi_ids = [glpi_ids]
+
+        query_xmpp = session.execute(
+            """
+            SELECT uuid_inventorymachine
+            FROM xmppmaster.machines
+            WHERE uuid_inventorymachine IN :uuids
+            """,
+            {"uuids": tuple(glpi_ids)},
         )
 
-        missing_updates = session.execute(sql)
-        for missing in missing_updates:
-            rtmp = {
-                "entity": str(missing.id),
-                "nbmachines": 0,
-                "nbupdates": 0,
-                "conformite": 0,
-            }
+        found_uuids = {row[0] for row in query_xmpp.fetchall()}
 
-            rtmp["nbupdates"] = missing.missing
-            rtmp["nbmachines"] = missing.noncompliant
-            result.append(rtmp)
+        result = {uuid: (uuid in found_uuids) for uuid in glpi_ids}
+
         return result
 
     @DatabaseHelper._sessionm
