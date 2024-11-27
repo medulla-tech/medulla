@@ -1045,7 +1045,7 @@ class messagefilexmpp:
                         return response[longueur:]
                 return response
         except ConnectionRefusedError as e:
-            self.config_bool_done=False
+            self.config_bool_done = False
             logger.error(
                 "Erreur connection verify substitut master %s:%s"
                 % (
@@ -2378,9 +2378,9 @@ class MMCApp(object):
         if PluginManager().isEnabled("xmppmaster"):
             configxmppmaster = XmppMasterDatabase().config
             # create file  message
-            PluginManager().getEnabledPlugins()[
-                "xmppmaster"
-            ].modulemessagefilexmpp = messagefilexmpp(self, self.config, configxmppmaster)
+            PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp = (
+                messagefilexmpp(self, self.config, configxmppmaster)
+            )
             self.modulexmppmaster = (
                 PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp
             )
@@ -2436,8 +2436,8 @@ class MMCApp(object):
                 return False
 
             PluginManager().getEnabledPlugins()[
-                    "xmppmaster"
-                ].modulemessagefilexmpp.config_bool_done = True
+                "xmppmaster"
+            ].modulemessagefilexmpp.config_bool_done = True
             return True
             # appel plugin directement sur substitut master.
             # Cela remplace les plugins master. qui seront transferer sur le substitut master.
