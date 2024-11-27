@@ -985,14 +985,14 @@ class messagefilexmpp:
             d = d + a[random.randint(0, 35)]
         return d
 
-    def __init__(self, config_mcc_agent, config_xmpp):
+    def __init__(self, objmmc, config_mcc_agent, config_xmpp):
         # Lit configuration du fichier
         self.config_mcc_agent = config_mcc_agent
         self.config_xmpp = config_xmpp
         # self.config = config
         self.message_type = "json"
         self.config_bool_done = False
-
+        self.objmmc = objmmc
         self.xmppbrowsingpath = xmppbrowsing(
             defaultdir=self.config_xmpp.defaultdir,
             rootfilesystem=self.config_xmpp.rootfilesystem,
@@ -1045,6 +1045,7 @@ class messagefilexmpp:
                         return response[longueur:]
                 return response
         except ConnectionRefusedError as e:
+            self.config_bool_done=False
             logger.error(
                 "Erreur connection verify substitut master %s:%s"
                 % (
@@ -1063,7 +1064,8 @@ class messagefilexmpp:
         logger.debug("------------------- SEND MESSAGE-------------------------")
         logger.debug("---------------------------------------------------------")
         if not self.config_bool_done:
-            self.init_master_substitut()
+            if not self.objmmc.init_master_substitut():
+                return None
         try:
             msg = convert.convert_json_to_dict(msg)
             logger.debug("send_message msg format json")
@@ -1128,6 +1130,9 @@ class messagefilexmpp:
         logger.debug("---------------------------------------------------------")
         logger.debug("----------------------- SEND IQ -------------------------")
         logger.debug("---------------------------------------------------------")
+        if not self.config_bool_done:
+            if not self.objmmc.init_master_substitut():
+                return None
         try:
             msg = convert.convert_json_to_dict(msg)
             logger.debug("msg est 1 json")
@@ -1246,7 +1251,8 @@ class messagefilexmpp:
             res = self.sendstr(messagesend)
             if res != None:
                 logger.debug("Plugin call executed %s on master " % msg["action"])
-            return sessionid, res
+                return sessionid, res
+            return None, "Error connection"
 
         elif isinstance(msg, (str)):
             logger.error("Message does not have a valid format")
@@ -2374,7 +2380,7 @@ class MMCApp(object):
             # create file  message
             PluginManager().getEnabledPlugins()[
                 "xmppmaster"
-            ].modulemessagefilexmpp = messagefilexmpp(self.config, configxmppmaster)
+            ].modulemessagefilexmpp = messagefilexmpp(self, self.config, configxmppmaster)
             self.modulexmppmaster = (
                 PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp
             )
@@ -2395,13 +2401,15 @@ class MMCApp(object):
             self.init_master_substitut()
 
     def init_master_substitut(self):
+        logger.debug("INITIALISATION SUBSTITUT")
+        ree = None
         if (
             not PluginManager()
             .getEnabledPlugins()["xmppmaster"]
             .modulemessagefilexmpp.config_bool_done
         ):
             # important ici sont reunit en exemple mcanisme d'utilisation du serveur substiitut master.
-            logger.info("Start/restart MMC send module On on MMC")
+            logger.info("initialise la liste des module MMC dans substitut master")
             # list_mmc_module est appeler au lancement de la mmc.
             # list_mmc_module n'est pas 1 plugin cet appel est traité dans le plugin
             # serveur /pluginsmastersubstitute/plugin___server_mmc_master.py
@@ -2421,11 +2429,16 @@ class MMCApp(object):
                 "call plugin %s on master directement tcp/ip : sessionid  %s => %s"
                 % (result["action"], ree[0], ree[1])
             )
+            if ree[0] is None and ree[0] == "Error connection":
+                PluginManager().getEnabledPlugins()[
+                    "xmppmaster"
+                ].modulemessagefilexmpp.config_bool_done = False
+                return False
 
             PluginManager().getEnabledPlugins()[
-                "xmppmaster"
-            ].modulemessagefilexmpp.config_bool_done = True
-
+                    "xmppmaster"
+                ].modulemessagefilexmpp.config_bool_done = True
+            return True
             # appel plugin directement sur substitut master.
             # Cela remplace les plugins master. qui seront transferer sur le substitut master.
             # remarque on prefixera les plugin par mmc_ quand ceux ci seront uniquement appelable par mmc
