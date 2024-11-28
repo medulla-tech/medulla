@@ -319,7 +319,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                             array('label' => _T('10 first lines of result','pkgs'),'value' => "10@firstlines"),
                             array('label' => _T('20 first lines of result','pkgs'),'value' => "20@firstlines"),
                             array('label' => _T('30 first lines of result','pkgs'),'value' => "30@firstlines"),
-                            array('label' => _T('Complete results','pkgs'),'value' => "@resultcommand"),
+                            array('label' => _T('Complete results (limited to 10000 last characters)','pkgs'),'value' => "@resultcommand"),
                             array('label' => _T('10 last lines of result','pkgs'),'value' => "10@lastlines"),
                             array('label' => _T('20 last lines of result','pkgs'),'value' => "20@lastlines"),
                             array('label' => _T('30 last lines of result','pkgs'),'value' => "30@lastlines"),
