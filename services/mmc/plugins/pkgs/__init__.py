@@ -1078,21 +1078,35 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
         "version": "0.1",
         "commandcmd": [],
     }
-    suggestedCommand = []
-    file_size = simplecommand("du -b %s" % os.path.join(tmp_input_dir, tempdir))
+    base_dir = os.path.join(tmp_input_dir, tempdir)
+    if not os.path.isdir(base_dir):
+        retresult["commandcmd"] = "No command found with rules."
+        return retresult
 
-    file_size["result"] = [
-        line.decode("utf-8") for line in file_size["result"]
-    ]  # Convertit en UTF-8
+    suggestedCommand = []
+    file_size = simplecommand("du -b %s" % os.path.join(base_dir))
+
+    file_size["result"] = [line.decode("utf-8") for line in file_size["result"]]  # Convertit en UTF-8
     sizebytefolder = file_size["result"][0].split("\t")[0]
     sizebytefolder = int(sizebytefolder)
-
+    sizebytefolder = 0
+    rules = PkgsDatabase().list_all_extensions()
     if not isinstance(tempdir, list) and sizebytefolder <= size_max:
         if os.path.exists(tmp_input_dir):
-            for f in os.listdir(os.path.join(tmp_input_dir, tempdir)):
-                fileadd = os.path.join(tmp_input_dir, tempdir, f)
+            for f in os.listdir(base_dir):
+                fileadd = os.path.join(base_dir, f)
                 if os.path.isfile(fileadd):
-                    rules = PkgsDatabase().list_all_extensions()
+                    # Use the old system
+                    try:
+                        challenger = getCommand(fileadd)
+                        _propose = challenger.getCommand()
+                        if _propose != None:
+                            retresult["commandcmd"] = _propose
+                            return retresult
+                    except Exception:
+                        # In this case, use the rules
+                        pass
+
                     filename = fileadd.split("/")[-1]
                     filebasename = ".".join(filename.split(".")[:-1])
 
@@ -1116,7 +1130,7 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
                         stringstring = 0
                         if rule["strings"]:
                             recherche = rule["strings"].replace('"', '"')
-                            cmd = 'strings %s  | grep "%s"' % (fileadd, rule["strings"])
+                            cmd = 'strings %s  | grep -i "%s"' % (fileadd, rule["strings"])
                             result = simplecommand(cmd)
                             if result["result"]:
                                 stringstring = 1
@@ -1143,8 +1157,7 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
                             logging.getLogger().debug(
                                 "command propose %s" % retelt["proposition"]
                             )
-                            command = retelt["proposition"].replace("'", '"') % filename
-                            suggestedCommand.append(command)
+                            suggestedCommand.append(retelt["proposition"])
                             break
     if suggestedCommand:
         retresult["commandcmd"] = "\n".join(suggestedCommand)
@@ -2349,7 +2362,7 @@ esac""" % (
                     # if assemblyIdentity don't exists, try assemblyIdentity
                     identity = xmldoc.getElementsByTagName("assemblyIdentity")
 
-                if identity > 0:
+                if len(identity) > 0:
                     if identity[0].hasAttribute("name"):
                         installer = identity[0].getAttribute("name")
                         self.logger.debug("Installer: %s" % installer)
@@ -2370,9 +2383,7 @@ esac""" % (
                 return self.getNSISCommand()
             elif installer == "7zS.sfx.exe":
                 self.logger.debug("7zS.sfx detected (Mozilla app inside ?)")
-                if not os.system(
-                    "grep Mozilla '%s' > /dev/null" % self.file
-                ):  # return code is 0 if file match
+                if not os.system("grep Mozilla '%s' > /dev/null" % self.file):  # return code is 0 if file match
                     self.logger.debug("Mozilla App detected")
                     return self.getMozillaCommand()
                 else:
@@ -2399,9 +2410,7 @@ esac""" % (
                         return self.getMSICommand()
                 else:
                     return self.logger.info("No Template Key for %s" % self.file)
-        elif "Debian binary package" in file_data[self.file] or self.file.endswith(
-            ".deb"
-        ):
+        elif "Debian binary package" in file_data[self.file] or self.file.endswith(".deb"):
             self.logger.debug("Debian package detected")
             return self.getDpkgCommand()
         elif self.file.endswith(".reg"):
