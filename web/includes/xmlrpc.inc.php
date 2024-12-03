@@ -155,7 +155,7 @@ function xmlCall($method, $params = null) {
     list($sock, $errNo, $errString) = openSocket($prot, $conf);
     if (!$sock) {
         /* Connection failure */
-        $errObj = new ErrorHandlingItem('');echo "prototype";
+        $errObj = new ErrorHandlingItem('');
         $errObj->setMsg(_("Can't connect to MMC agent"));
         $errObj->setAdvice(_("MMC agent seems to be down or not correctly configured.") . '<br/> Error: '. $errNo . ' - '. $errString);
         $errObj->setTraceBackDisplay(false);
