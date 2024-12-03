@@ -1086,7 +1086,9 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
     suggestedCommand = []
     file_size = simplecommand("du -b %s" % os.path.join(base_dir))
 
-    file_size["result"] = [line.decode("utf-8") for line in file_size["result"]]  # Convertit en UTF-8
+    file_size["result"] = [
+        line.decode("utf-8") for line in file_size["result"]
+    ]  # Convertit en UTF-8
     sizebytefolder = file_size["result"][0].split("\t")[0]
     sizebytefolder = int(sizebytefolder)
     sizebytefolder = 0
@@ -1130,7 +1132,10 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
                         stringstring = 0
                         if rule["strings"]:
                             recherche = rule["strings"].replace('"', '"')
-                            cmd = 'strings %s  | grep -i "%s"' % (fileadd, rule["strings"])
+                            cmd = 'strings %s  | grep -i "%s"' % (
+                                fileadd,
+                                rule["strings"],
+                            )
                             result = simplecommand(cmd)
                             if result["result"]:
                                 stringstring = 1
@@ -2383,7 +2388,9 @@ esac""" % (
                 return self.getNSISCommand()
             elif installer == "7zS.sfx.exe":
                 self.logger.debug("7zS.sfx detected (Mozilla app inside ?)")
-                if not os.system("grep Mozilla '%s' > /dev/null" % self.file):  # return code is 0 if file match
+                if not os.system(
+                    "grep Mozilla '%s' > /dev/null" % self.file
+                ):  # return code is 0 if file match
                     self.logger.debug("Mozilla App detected")
                     return self.getMozillaCommand()
                 else:
@@ -2410,7 +2417,9 @@ esac""" % (
                         return self.getMSICommand()
                 else:
                     return self.logger.info("No Template Key for %s" % self.file)
-        elif "Debian binary package" in file_data[self.file] or self.file.endswith(".deb"):
+        elif "Debian binary package" in file_data[self.file] or self.file.endswith(
+            ".deb"
+        ):
             self.logger.debug("Debian package detected")
             return self.getDpkgCommand()
         elif self.file.endswith(".reg"):
