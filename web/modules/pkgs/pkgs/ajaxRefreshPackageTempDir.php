@@ -60,6 +60,7 @@ if(safeCount($files)) {
     // FIXME: duplicated fillForm function
     function fillForm(selectedPapi, tempdir) {
         url = '<?php echo urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand1")?>&papiid=' + selectedPapi;
+        tempdir = jQuery('#rdo_files').val();
         if (tempdir != undefined) {
             url += '&tempdir=' + tempdir;
         }
@@ -69,6 +70,13 @@ if(safeCount($files)) {
             success: function(data){
                 jQuery('#version').val(data.version);
                 jQuery('#commandcmd').val(data.commandcmd);
+
+                if(document.getElementById("autocmd")){
+                    jQuery('#autocmd').find("[name='script']").val(data.commandcmd);
+                }
+                else{
+                    jQuery("#current-actions").prepend(jQuery(document.createElement("li")).prop("id","autocmd").load("/mmc/modules/pkgs/includes/actions/actionprocessscriptfile.php",{"script":data.commandcmd,"typescript":"Batch"}));
+                }
             }
         });
     }

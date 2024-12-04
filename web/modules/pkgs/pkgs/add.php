@@ -397,6 +397,63 @@ if (isset($_POST['bconfirm'])){
 <!-- css for file upload -->
 
 <script type="text/javascript">
+    /*
+         * Auto fill fields of form
+         * if tempdir is empty (when changing packageAPI)
+         * default tempdir will be chosen in ajaxGetSuggestedCommand
+         * php file.
+         */
+        function fillForm(selectedPapi, tempdir) {
+            url = '<?php echo urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") ?>&papiid=' + selectedPapi;
+            if (tempdir != undefined) {
+                url += '&tempdir=' + tempdir;
+            }
+
+            jQuery.ajax({
+                'url': url,
+                type: 'get',
+                success: function(data) {
+                    //jQuery('#version').val(data.version);
+                    jQuery('#commandcmd').val(data.commandcmd);
+
+                }
+            });
+        }
+        /*
+         * Refresh Package API tempdir content
+         * When called, display available packages
+         * in package API tempdir
+         */
+        function refreshTempPapi() {
+            var packageMethodValue = jQuery('input:checked[type="radio"][name="package-method"]').val();
+            var selectedPapi = jQuery("#p_api").val();
+            if (packageMethodValue == "package") {
+                /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, {
+                 method: "get",
+                 evalScripts: true,
+                 onComplete: fillForm(selectedPapi)
+                 });*/
+                jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, function() {
+                    fillForm(selectedPapi);
+                });
+
+            }
+            else {
+                /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, {
+                 method: "get",
+                 evalScripts: true
+                 });*/
+
+                jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
+
+                // reset form fields
+                //jQuery('#version').val("");
+                jQuery('#commandcmd').val("");
+            }
+
+            return selectedPapi;
+        }
+
     jQuery(function() { // load this piece of code when page is loaded
 
       jQuery(".opt_bubble").on("mouseover", function(e){
@@ -451,66 +508,10 @@ if (isset($_POST['bconfirm'])){
             jQuery(this).attr('target', '_blank');
             return false; // break the loop
         });
-        /*
-         * Auto fill fields of form
-         * if tempdir is empty (when changing packageAPI)
-         * default tempdir will be chosen in ajaxGetSuggestedCommand
-         * php file.
-         */
-        function fillForm(selectedPapi, tempdir) {
-            url = '<?php echo urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand") ?>&papiid=' + selectedPapi;
-            if (tempdir != undefined) {
-                url += '&tempdir=' + tempdir;
-            }
 
-            jQuery.ajax({
-                'url': url,
-                type: 'get',
-                success: function(data) {
-                    //jQuery('#version').val(data.version);
-                    jQuery('#commandcmd').val(data.commandcmd);
-
-                }
-            });
-        }
-        /*
-         * Refresh Package API tempdir content
-         * When called, display available packages
-         * in package API tempdir
-         */
-        function refreshTempPapi() {
-            var packageMethodValue = jQuery('input:checked[type="radio"][name="package-method"]').val();
-            var selectedPapi = jQuery("#p_api").val();
-            if (packageMethodValue == "package") {
-                /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, {
-                 method: "get",
-                 evalScripts: true,
-                 onComplete: fillForm(selectedPapi)
-                 });*/
-
-                jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxRefreshPackageTempDir") ?>&papi=' + selectedPapi, function() {
-                    fillForm(selectedPapi);
-                });
-
-            }
-            else {
-                /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, {
-                 method: "get",
-                 evalScripts: true
-                 });*/
-
-                jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
-
-                // reset form fields
-                //jQuery('#version').val("");
-                jQuery('#commandcmd').val("");
-            }
-
-            return selectedPapi;
-        }
-
-        // on page load, display available temp packages
         var selectedPapi = refreshTempPapi();
+        // on page load, display available temp packages
+        selectedPapi = refreshTempPapi();
 
         // When change Package API, update available temp packages
         jQuery('#p_api').change(function() {
@@ -561,4 +562,8 @@ if (isset($_POST['bconfirm'])){
 // EOT;
 // }
 ?>
+jQuery(document).ready(function(){
+    refreshTempPapi();
+})
+
 </script>

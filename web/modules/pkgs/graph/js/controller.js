@@ -162,6 +162,7 @@ jQuery(function(){
             jQuery("#current-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+action+".php"));
         });
     }
+    refreshTempPapi();
 });
 
 //Add selected dependencies into dependencies list of the json
