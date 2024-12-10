@@ -245,12 +245,16 @@ class ExternalLdapProvisioner(ProvisionerI):
         if l.existUser(uid):
             self.logger.debug(f"User {uid} already exists, so this user won't be added")
         else:
-            givenName = userentry[self.config.ldap_givenName][0]
-            if isinstance(givenName, bytes):
-                givenName = givenName.decode("utf-8")
             sn = userentry[self.config.ldap_sn][0]
             if isinstance(sn, bytes):
                 sn = sn.decode("utf-8")
+            try:
+                givenName = userentry[self.config.ldap_givenName][0]
+            except Exception:
+                givenName = sn
+                self.logger.warning(f"The user {sn} has no givenName, sn is used to replace it")
+            if isinstance(givenName, bytes):
+                givenName = givenName.decode("utf-8")
             l.addUser(uid, authtoken.getPassword(), givenName, sn)
         if self.config.profileAttr and self.config.profilesAcl:
             # Set or update the user right
