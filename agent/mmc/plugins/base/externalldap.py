@@ -251,7 +251,9 @@ class ExternalLdapProvisioner(ProvisionerI):
             try:
                 givenName = userentry[self.config.ldap_givenName][0]
             except Exception:
-                self.logger.error(f"The user {sn} has no givenName, please check external ldap user settings")
+                self.logger.error(
+                    f"The user {sn} has no givenName, please check external ldap user settings"
+                )
             if isinstance(givenName, bytes):
                 givenName = givenName.decode("utf-8")
             l.addUser(uid, authtoken.getPassword(), givenName, sn)
