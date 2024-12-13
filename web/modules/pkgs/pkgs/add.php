@@ -2,7 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2018-2021 Siveo, http://www.siveo.net/
+ * (c) 2018-2024 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -177,6 +177,7 @@ if (isset($_POST['bconfirm'])){
     $keys = array(_T("Already uploaded on the server", "pkgs"), _T("Upload from this web page", "pkgs"), _T("Make an empty package", "pkgs"));
     $r->setValues($vals);
     $r->setChoices($keys);
+    $r->setSelected("empty");
 
 //     // Package API
 //     $f->add(
@@ -386,7 +387,6 @@ if (isset($_POST['bconfirm'])){
     $f->addValidateButton("bconfirm", _T("Add", "pkgs"));
     $f->display();
 }
-
 ?>
 
 <script src="modules/pkgs/lib/fileuploader/fileuploader.js"
@@ -438,7 +438,7 @@ if (isset($_POST['bconfirm'])){
                 });
 
             }
-            else {
+            else if(packageMethodValue == "upload") {
                 /*new Ajax.Updater('package-temp-directory', '<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi, {
                  method: "get",
                  evalScripts: true
@@ -509,9 +509,8 @@ if (isset($_POST['bconfirm'])){
             return false; // break the loop
         });
 
-        var selectedPapi = refreshTempPapi();
         // on page load, display available temp packages
-        selectedPapi = refreshTempPapi();
+        var selectedPapi = refreshTempPapi();
 
         // When change Package API, update available temp packages
         jQuery('#p_api').change(function() {
@@ -562,8 +561,4 @@ if (isset($_POST['bconfirm'])){
 // EOT;
 // }
 ?>
-jQuery(document).ready(function(){
-    refreshTempPapi();
-})
-
 </script>
