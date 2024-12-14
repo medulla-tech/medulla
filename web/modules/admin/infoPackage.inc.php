@@ -21,7 +21,7 @@
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("5.1.2");
+$mod->setVersion("5.2.0");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");
@@ -29,7 +29,7 @@ $mod->setPriority(2000);
 
 $submod = new SubModule("admin");
 $submod->setDescription(_T("Admin", "admin"));
-$submod->setVisibility(True);
+$submod->setVisibility(true);
 $submod->setImg('modules/admin/graph/navbar/admin');
 $submod->setDefaultPage("admin/admin/relaysList");
 $submod->setPriority(1001);
@@ -40,7 +40,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxRelaysList", _T("Relays List", "glpi"));
 $page->setFile("modules/admin/admin/ajaxRelaysList.php");
-$page->setOptions(array("AJAX"=>true, "visible"=>False, "noHeader"=>True));
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("packageslist", _T("Packages List", "xmppmaster"));
@@ -52,14 +52,14 @@ $page->setFile("modules/admin/admin/ajaxpackageslist.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
-$page = new Page("reconfiguremachines",_T("Reconfigure Machines","xmppmaster"));
+$page = new Page("reconfiguremachines", _T("Reconfigure Machines", "xmppmaster"));
 $page->setFile("modules/admin/admin/reconfiguremachines.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("switchrelay",_T("Switch Relay","xmppmaster"));
+$page = new Page("switchrelay", _T("Switch Relay", "xmppmaster"));
 $page->setFile("modules/admin/admin/switchrelay.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("conffile", _("Edit config files"));
@@ -69,7 +69,7 @@ $submod->addPage($page);
 // Popup qa on relays list
 $page = new Page("detailactions", _T("Launch Quick Action on Relays", "admin"));
 $page->setFile("modules/admin/admin/detailactions.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("qalaunched", _T("Qa launched on Relays", "xmppmaster"));
@@ -79,7 +79,7 @@ $submod->addPage($page);
 // List of qa launched on relay
 $page = new Page("ajaxqalaunched", _T("Qa launched on Relays", "xmppmaster"));
 $page->setFile("modules/admin/admin/ajaxqalaunched.php");
-$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 // Result of the qa launched on relay
@@ -139,7 +139,7 @@ $submod->addPage($page);
 
 $page = new Page("ajaxClustersList", _T("Clusters List", "admin"));
 $page->setFile("modules/admin/admin/ajaxClustersList.php");
-$page->setOptions(array("visible"=>False, "AJAX"=>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("editCluster", _T("Edit Cluster", "admin"));
@@ -164,7 +164,7 @@ $submod->addPage($page);
 
 $page = new Page("ban", _T("Ban Machines", "admin"));
 $page->setFile("modules/admin/admin/ban.php");
-$page->setOptions(array("AJAX" => false, "noHeader"=>true));
+$page->setOptions(array("AJAX" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("ajaxban", _T("Ban Machines", "admin"));
@@ -174,7 +174,7 @@ $submod->addPage($page);
 
 $page = new Page("unban", _T("Unban Machines", "admin"));
 $page->setFile("modules/admin/admin/unban.php");
-$page->setOptions(array("AJAX" => false, "noHeader" => True));
+$page->setOptions(array("AJAX" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("ajaxunban", _T("Unban Machines", "admin"));
@@ -185,7 +185,5 @@ $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = & MMCApp::getInstance();
 $MMCApp->addModule($mod);
-
-?>

@@ -33,15 +33,19 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $ini_array = parse_ini_file("/etc/mmc/plugins/urbackup.ini");
-$username_urbackup = $ini_array['username'];
-$password_urbackup = $ini_array['password'];
-$url_urbackup = $ini_array['url'];
+$ini_array_local = parse_ini_file("/etc/mmc/plugins/urbackup.ini.local");
+$username_urbackup = isset($ini_array_local["usernameapi"]) ? $ini_array_local["usernameapi"] : $ini_array["usernameapi"];
+$password_urbackup = isset($ini_array_local["passwordapi"]) ? $ini_array_local["passwordapi"] : $ini_array["passwordapi"];
+$url_urbackup = isset($ini_array_local["url"]) ? $ini_array_local["url"] : $ini_array["url"];
 
 $client_id = htmlspecialchars($_GET["clientid"]);
 $backupstate = htmlspecialchars($_GET["backupstate"]);
 $backuptype = htmlspecialchars($_GET["backuptype"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
-$disableClient = htmlspecialchars($_GET["disableclient"]);
+$editStateClient = htmlspecialchars($_GET["editStateClient"]);
+$errorEditStateClient = htmlspecialchars($_GET["error"]);
+$newClient = htmlspecialchars($_GET["newClient"]);
+$restart_service = htmlspecialchars($_GET["restart_service"]);
 
 //-----------------------------------START LOGIN FUNCTION
 $url = $url_urbackup."?a=login";
@@ -133,6 +137,8 @@ else
 
 $backups = $array['backups'];
 
+//-----------------------------------END GET_BACKUPS
+
 //Formatage de date
 function secs2date($secs,$date)
 {
@@ -161,11 +167,11 @@ function formatBytes($bytes, $precision = 2)
 
 $stats = xmlrpc_get_stats();
 
-?>
-<h2><?php echo _T("Statistics by client", 'urbackup'); ?></h2>
-<?php
+$client_enable = xmlrpc_get_client_status($client_id);
 
 ?>
+<h2><?php echo _T("Statistics by client", 'urbackup'); ?></h2>
+<br>
 <table class="listinfos" border="1px" cellspacing="0" cellpadding="5" >
     <thead>
         <tr style='text-align: left;'>
@@ -194,45 +200,80 @@ $stats = xmlrpc_get_stats();
 
 <br>
 <br>
+<?php 
+if ($client_enable == 1)
+{
+?>
+<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start incremental backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=incremental&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Start incremental backup</a>
+<a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=full&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Start full backup</a>
+<?php 
+}
+if ($client_enable == 0)
+{
+?>
+    <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Enable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=enable">Enable backup for this client</a>
+<?php
+}
 
-<a class='btn btn-small btn-primary' title=<?php echo _T("Start incremental backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=incremental&amp;clientid=<?php echo $client_id ?>">Start incremental backup</a>
-<a class='btn btn-small btn-primary' title=<?php echo _T("Start full backup", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=start_backup&amp;backuptype=full&amp;clientid=<?php echo $client_id ?>">Start full backup</a>
-<a class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupename=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Disable backup for this client</a>
+if ($client_enable == 1)
+{ 
+?>
+    <a onclick="confirmAction()" class='btn btn-small btn-primary' title=<?php echo _T("Disable backup for this client", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_client&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>&amp;editclient=disable">Disable backup for this client</a>
+<?php
+}
+?>
+<a class='btn btn-small btn-primary' href="main.php?module=urbackup&amp;submod=urbackup&amp;action=restart_service&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $clientname ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidMachine ?>">Restart Urbackup Service on client</a>
 <br>
 <br>
 <?php echo _T("Profile name: ", 'urbackup'); ?><a href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_ongroup&amp;groupid=<?php echo $groupid ?>&groupname=<?php echo $groupname ?>"><?php echo $groupname; ?></a>
 <br>
 <br>
 <?php
+
+// Differents alert for users informations
 if ($backupstate == "false")
 {
     if ($backuptype == "incremental") 
     {
-        ?>
-        <script>
-            alert("Incremental backup failed, be sure client urbackup is installed on computer or is online.");
-        </script>
-        <?php
+        $str = _T("Incremental backup failed, be sure client urbackup is installed on computer or is online.", "urbackup");
+        new NotifyWidgetFailure($str);
     }
     
     if ($backuptype == "full")
     {
-        ?>
-        <script>
-            alert("Full backup failed, be sure client urbackup is installed on computer or is online.");
-        </script>
-        <?php
+        $str = _T("Full backup failed, be sure client urbackup is installed on computer or is online.", "urbackup");
+        new NotifyWidgetFailure($str);
     }
 }
-
-if ($disableClient == "true")
+if ($newClient == "true")
 {
-    ?>
-    <script>
-        alert("The backups for this client has been disabled successfully.");
-    </script>
-    <?php
+    $str = _T("The installation and configuration of the urbackup client on computers can take up to 10 minutes. This is required to have a fully operational client and enable the backups. After that, fully backup will be automatically created.", "urbackup");
+    new NotifyWidgetSuccess($str);
+    $newClient = "false";
 }
+if ($editStateClient == "disable")
+{
+    $str = _T("This client has been successfully disabled.", "urbackup");
+    new NotifyWidgetSuccess($str);
+}
+if ($editStateClient == "enable")
+{
+    $str= _T("This client has been successfully enabled.", "urbackup");
+    new NotifyWidgetSuccess($str);
+}
+
+if ($errorEditStateClient == "true")
+{
+    $str= _T("This client was offline, please wait until it is online and try again.", "urbackup");
+    new NotifyWidgetFailure($str);
+}
+
+if ($restart_service == "true")
+{
+    $str= _T("Restart can take up to 5 seconds, please wait before taking any action.", "urbackup");
+    new NotifyWidgetSuccess($str);
+}
+
 ?>
 <h2> <?php echo _T("File save", 'urbackup'); ?> </h2>
 
@@ -240,7 +281,7 @@ if ($disableClient == "true")
     <thead>
         <tr style='text-align: left;'>
           <th> <?php echo _T("Id", 'urbackup'); ?> </th>
-          <th> <?php echo _T("Incremental", 'urbackup'); ?> </th>
+          <th> <?php echo _T("Type", 'urbackup'); ?> </th>
           <th> <?php echo _T("Archived ?", 'urbackup'); ?> </th>
           <th> <?php echo _T("Time", 'urbackup'); ?> </th>
           <th> <?php echo _T("Size", 'urbackup'); ?> </th>
@@ -250,76 +291,89 @@ if ($disableClient == "true")
     <tbody>
 <?php
 
-if (empty($backups))
+if (empty($backups) && $client_enable == 1)
 {
     echo "<tr style='text-align: center;'>";
         echo '<td colspan="6">'._T("No backup", 'urbackup').'</td>';
     echo '</tr>';
 }
 
-foreach ($backups as $backup) {
-    $id_backup = $backup['id'];
-    $date=new dateTime();
 
-    if (isset($file['dir']))
-        $dir = "false";
-    else
-        $dir = "true";
-
-    $secs=$backup['backuptime'];
-    secs2date($secs,$date);
-    $dt=$date->format('Y-m-d H:i:s');
-
-    $size = formatBytes($backup['size_bytes']);
-
-    if ($backup['incremental'] == "0")
-        $incremental = _T("No", 'urbackup');
-    else
-        $incremental = _T("Yes", 'urbackup');
-
-    if ($backup['archived'] == "0")
-        $archive = _T("No", 'urbackup');
-    else
-        $archive = _T("Yes", 'urbackup');
-?>
-        <tr >
-            <td>
-                <a href="main.php?module=urbackup&amp;submod=urbackup&amp;action=all_files_backup&amp;groupname=<?php echo $groupname; ?>&amp;clientid=<?php echo $client_id; ?>&amp;jidmachine=<?php echo $jidMachine; ?>&amp;backupid=<?php echo $id_backup; ?>&amp;volumename=<?php echo "/" ?>"><?php echo $backup['id']; ?></a>
-            </td>
-            <td> <?php echo $incremental; ?></td>
-            <td> <?php echo $archive; ?></td>
-            <td> <?php echo $dt; ?></td>
-            <td> <?php echo $size; ?></td>
-            <td>
-            <ul class="action">
-                <li class="display">
-                    <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=all_files_backup&amp;groupname=<?php echo $groupname; ?>&amp;clientid=<?php echo $client_id; ?>&amp;jidmachine=<?php echo $jidMachine; ?>&amp;backupid=<?php echo $id_backup; ?>&amp;volumename=<?php echo "/" ?>">&nbsp;</a>
-                </li>
-                <?php
-                if ($delete == "true")
-                {
-                    if (isset($backup['disable_delete']))
+if ($client_enable == 1)
+{
+    foreach ($backups as $backup) {
+        $id_backup = $backup['id'];
+        $date=new dateTime();
+    
+        if (isset($file['dir']))
+            $dir = "false";
+        else
+            $dir = "true";
+    
+        $secs=$backup['backuptime'];
+        secs2date($secs,$date);
+        $dt=$date->format('Y-m-d H:i:s');
+    
+        $size = formatBytes($backup['size_bytes']);
+    
+        if ($backup['incremental'] == "0")
+            $incremental = _T("Full backup", 'urbackup');
+        else
+            $incremental = _T("Incremental backup", 'urbackup');
+    
+        if ($backup['archived'] == "0")
+            $archive = _T("No", 'urbackup');
+        else
+            $archive = _T("Yes", 'urbackup');
+    ?>
+            <tr >
+                <td>
+                    <a href="main.php?module=urbackup&amp;submod=urbackup&amp;action=all_files_backup&amp;groupname=<?php echo $groupname; ?>&amp;clientid=<?php echo $client_id; ?>&amp;jidmachine=<?php echo $jidMachine; ?>&amp;backupid=<?php echo $id_backup; ?>&amp;volumename=<?php echo "/" ?>"><?php echo $backup['id']; ?></a>
+                </td>
+                <td> <?php echo $incremental; ?></td>
+                <td> <?php echo $archive; ?></td>
+                <td> <?php echo $dt; ?></td>
+                <td> <?php echo $size; ?></td>
+                <td>
+                <ul class="action">
+                    <li class="display">
+                        <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=all_files_backup&amp;groupname=<?php echo $groupname; ?>&amp;clientid=<?php echo $client_id; ?>&amp;jidmachine=<?php echo $jidMachine; ?>&amp;backupid=<?php echo $id_backup; ?>&amp;volumename=<?php echo "/" ?>">&nbsp;</a>
+                    </li>
+                    <?php
+                    if ($delete == "true")
                     {
-                        if ($backup['disable_delete'] == "false")
+                        if (isset($backup['disable_delete']))
+                        {
+                            if ($backup['disable_delete'] == "false")
+                            {
+                                echo '<li class="delete">';
+                                echo '<a title='._T("Delete", 'urbackup').' href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_backup&amp;clientid='.$client_id.'&amp;backupid='.$id_backup.'">&nbsp;</a>';
+                                echo '</li>';
+                            }
+                        }
+                        else
                         {
                             echo '<li class="delete">';
-                            echo '<a title='._T("Delete", 'urbackup').' href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_backup&amp;clientid='.$client_id.'&amp;backupid='.$id_backup.'">&nbsp;</a>';
+                                echo '<a title='._T("Delete", 'urbackup').' href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_backup&amp;clientid='.$client_id.'&amp;backupid='.$id_backup.'">&nbsp;</a>';
                             echo '</li>';
                         }
                     }
-                    else
-                    {
-                        echo '<li class="delete">';
-                            echo '<a title='._T("Delete", 'urbackup').' href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_backup&amp;clientid='.$client_id.'&amp;backupid='.$id_backup.'">&nbsp;</a>';
-                        echo '</li>';
-                    }
-                }
-                ?>
-            </ul>
-            </td>
-        </tr>
-<?php
+                    ?>
+                </ul>
+                </td>
+            </tr>
+    <?php
+    }
 }
+
+if ($client_enable == 0)
+{
+    echo "<tr style='text-align: center;'>";
+    echo '<td colspan="6">'._T("Client disabled", 'urbackup').'</td>';
+    echo '</tr>';
+}
+
 ?>
+
     </tbody>
 </table>

@@ -698,39 +698,47 @@ class Imaging(object, metaclass=SingletonN):
                     if shortname:
                         self.logger.debug(
                             "Imaging: Imaging database disks and partitions information successfully updated for client %s (%s)"
-                            % (shortname, uuid))
+                            % (shortname, uuid)
+                        )
                     else:
                         self.logger.debug(
                             "Imaging: Imaging database disks and partitions information successfully updated for unknown client (%s)"
-                            % (uuid))
+                            % (uuid)
+                        )
                     return str(True)
                 else:
                     if shortname:
                         self.logger.error(
                             "Imaging: Failed to update disks and partitions information for client %s (%s): %s"
-                            % (shortname, uuid, result[1]))
+                            % (shortname, uuid, result[1])
+                        )
                     else:
                         self.logger.error(
                             "Imaging: Failed to update disks and partitions information for unknown client (%s): %s"
-                            % (uuid, result[1]))
+                            % (uuid, result[1])
+                        )
                     return str(False)
             else:
                 if shortname:
                     self.logger.error(
                         "Imaging: Failed to update disks and partitions information for client %s (%s): %s"
-                        % (shortname, uuid, result))
+                        % (shortname, uuid, result)
+                    )
                 else:
                     self.logger.error(
                         "Imaging: Failed to update disks and partitions information for unknown client (%s): %s"
-                        % (uuid, result))
+                        % (uuid, result)
+                    )
                 return str(False)
 
         def _getuuidCB(result):
             inventory = {}
 
             if result and isinstance(result, dict):
+                if "name" not in result and "shortname" in result:
+                    result["name"] = result["shortname"]
                 inventory["shortname"] = result["name"]
-                _id = "UUID%s"%result["id"]
+                _id = "UUID%s" % result["id"]
 
                 client = self._getXMLRPCClient()
                 func = "imaging.injectInventoryUuid"
@@ -756,18 +764,12 @@ class Imaging(object, metaclass=SingletonN):
                 return False
             try:
                 if result[0]:
-                    _id = "UUID%s"%result[1]["id"]
+                    _id = "UUID%s" % result[1]["id"]
                     shortname = result[1]["name"]
                     fqdn = ""
-                    entity = "UUID%s"%result[1]["entities_id"]
+                    entity = "UUID%s" % result[1]["entities_id"]
 
-                    self.myUUIDCache.setByUuid(
-                        _id,
-                        uuid,
-                        shortname,
-                        fqdn,
-                        entity
-                    )
+                    self.myUUIDCache.setByUuid(_id, uuid, shortname, fqdn, entity)
                     self.logger.debug("Imaging: Updating cache for %s" % (uuid))
                     return result[1]
                 else:
@@ -782,7 +784,6 @@ class Imaging(object, metaclass=SingletonN):
                     % (result, type(uuid), uuid, e)
                 )
 
-
         # try to extract from our cache
         res = self.myUUIDCache.getByUuid(uuid)
         if res:  # fetched from cache
@@ -792,8 +793,7 @@ class Imaging(object, metaclass=SingletonN):
             return maybeDeferred(lambda x: x, res)
         else:  # cache fetching failed, try to obtain the real value
             self.logger.debug(
-                "Imaging: Unable to resolve %s from cache, querying database"
-                % (uuid)
+                "Imaging: Unable to resolve %s from cache, querying database" % (uuid)
             )
             client = self._getXMLRPCClient()
             func = "imaging.getMachineByUuidSetup"
@@ -851,9 +851,21 @@ class Imaging(object, metaclass=SingletonN):
         # try to extract from our cache
         res = self.myUUIDCache.getByMac(MACAddress)
         if res:  # fetched from cache
-            res["shortname"] = res["shortname"].decode("utf-8")
-            res["fqdn"] = res["fqdn"].decode("utf-8")
-            res["entity"] = res["entity"].decode("utf-8")
+            res["shortname"] = (
+                res["shortname"].decode("utf-8")
+                if isinstance(res["shortname"], bytes)
+                else res["shortname"]
+            )
+            res["fqdn"] = (
+                res["fqdn"].decode("utf-8")
+                if isinstance(res["fqdn"], bytes)
+                else res["fqdn"]
+            )
+            res["entity"] = (
+                res["entity"].decode("utf-8")
+                if isinstance(res["entity"], bytes)
+                else res["entity"]
+            )
             return maybeDeferred(lambda x: x, res)
         else:  # cache fetching failed, try to obtain the real value
             self.logger.debug(

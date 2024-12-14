@@ -1,0 +1,9 @@
+# Defaults for pulse2-inventory-server initscript
+# sourced by /etc/init.d/pulse2-inventory-server
+# installed at /etc/default/pulse2-inventory-server by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+ENABLE=no

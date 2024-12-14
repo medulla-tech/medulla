@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-12 12:45+0100\n"
+"POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2023\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -693,29 +693,30 @@ msgstr "_X_ AppStream (er) tilgjengelig for abonnering"
 msgid "No featured appstream found."
 msgstr "Ingen appstream funnet."
 
-#: modules/pkgs/includes/html.inc.php:42 modules/pkgs/pkgs/edit.php:550
+#: modules/pkgs/includes/html.inc.php:44 modules/pkgs/pkgs/edit.php:553
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 msgid "Upload Queued Files"
 msgstr "Last opp køede filer"
 
-#: modules/pkgs/includes/html.inc.php:59 modules/pkgs/pkgs/edit.php:549
+#: modules/pkgs/includes/html.inc.php:61 modules/pkgs/pkgs/edit.php:552
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 msgid "Click here to select files"
 msgstr "Klikk her for å velge filer"
 
-#: modules/pkgs/includes/html.inc.php:60
-#: modules/pkgs/includes/html.inc.php:151
-#: modules/pkgs/includes/html.inc.php:242
+#: modules/pkgs/includes/html.inc.php:62
+#: modules/pkgs/includes/html.inc.php:155
+#: modules/pkgs/includes/html.inc.php:249
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: modules/pkgs/includes/html.inc.php:150
-#: modules/pkgs/includes/html.inc.php:241
+#: modules/pkgs/includes/html.inc.php:154
+#: modules/pkgs/includes/html.inc.php:248
 msgid "Add files"
 msgstr "Legg til filer"
 
-#: modules/pkgs/includes/html.inc.php:188
-#: modules/pkgs/includes/html.inc.php:282
+#: modules/pkgs/includes/html.inc.php:192
+#: modules/pkgs/includes/html.inc.php:298
+#: modules/pkgs/includes/html.inc.php:303
 msgid "Upload selected files"
 msgstr "Last opp valgte filer"
 
@@ -767,7 +768,7 @@ msgid "Rule Name"
 msgstr "Regelnavn"
 
 #: modules/pkgs/pkgs/addRule.php:60 modules/pkgs/pkgs/editRule.php:65
-#: modules/pkgs/pkgs/edit.php:254 modules/pkgs/pkgs/add.php:232
+#: modules/pkgs/pkgs/edit.php:257 modules/pkgs/pkgs/add.php:232
 #: modules/pkgs/pkgs/ajaxPackageList.php:291
 #: modules/pkgs/pkgs/ajaxPackageList.php:430 modules/pkgs/pkgs/detail.php:208
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
@@ -1003,132 +1004,132 @@ msgstr "Pakken er redigert"
 msgid "Files successfully added to the package <b>%s (%s)</b>"
 msgstr "Filer er lagt til pakken <b>%s (%s) </b>"
 
-#: modules/pkgs/pkgs/edit.php:144
+#: modules/pkgs/pkgs/edit.php:147
 msgid "Package failed to save"
 msgstr "Pakken kunne ikke lagres"
 
-#: modules/pkgs/pkgs/edit.php:177
+#: modules/pkgs/pkgs/edit.php:180
 #, php-format
 msgid "Failed to delete files%s"
 msgstr "Kunne ikke slette filer %s"
 
-#: modules/pkgs/pkgs/edit.php:179 modules/pkgs/pkgs/edit.php:183
+#: modules/pkgs/pkgs/edit.php:182 modules/pkgs/pkgs/edit.php:186
 #, php-format
 msgid "<br/>File successfully deleted. %s"
 msgstr "<br/>Filen ble slettet. %s"
 
-#: modules/pkgs/pkgs/edit.php:187
+#: modules/pkgs/pkgs/edit.php:190
 msgid "Failed to delete files"
 msgstr "Kunne ikke slette filer"
 
-#: modules/pkgs/pkgs/edit.php:197 modules/pkgs/pkgs/ajaxPackageList.php:76
+#: modules/pkgs/pkgs/edit.php:200 modules/pkgs/pkgs/ajaxPackageList.php:76
 #: modules/pkgs/infoPackage.inc.php:72
 msgid "Edit a package"
 msgstr "Rediger en pakke"
 
-#: modules/pkgs/pkgs/edit.php:252
+#: modules/pkgs/pkgs/edit.php:255
 msgid "Package label"
 msgstr "Pakke-etikett"
 
-#: modules/pkgs/pkgs/edit.php:253
+#: modules/pkgs/pkgs/edit.php:256
 msgid "Package version"
 msgstr "Pakkeversjon"
 
-#: modules/pkgs/pkgs/edit.php:261 modules/pkgs/pkgs/add.php:247
+#: modules/pkgs/pkgs/edit.php:264 modules/pkgs/pkgs/add.php:247
 msgid "Command's name : "
 msgstr "Kommando navn:"
 
-#: modules/pkgs/pkgs/edit.php:261
+#: modules/pkgs/pkgs/edit.php:264
 msgid "Command : "
 msgstr "Kommando"
 
-#: modules/pkgs/pkgs/edit.php:265 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:251
 msgid "Need a reboot ?"
 msgstr "Trens en omstart?"
 
-#: modules/pkgs/pkgs/edit.php:272 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
 msgid "Windows"
 msgstr "Windows"
 
-#: modules/pkgs/pkgs/edit.php:272 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
 msgid "Linux"
 msgstr "Linux"
 
-#: modules/pkgs/pkgs/edit.php:272 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
 msgid "Mac OS"
 msgstr "Mac OS"
 
-#: modules/pkgs/pkgs/edit.php:313 modules/pkgs/pkgs/add.php:224
+#: modules/pkgs/pkgs/edit.php:316 modules/pkgs/pkgs/add.php:224
 #: modules/pkgs/pkgs/ajaxPackageList.php:288
 msgid "Share"
 msgstr "Del"
 
-#: modules/pkgs/pkgs/edit.php:343 modules/pkgs/pkgs/add.php:275
+#: modules/pkgs/pkgs/edit.php:346 modules/pkgs/pkgs/add.php:275
 msgid "Operating System"
 msgstr "Operativsystem"
 
-#: modules/pkgs/pkgs/edit.php:368 modules/pkgs/pkgs/add.php:295
+#: modules/pkgs/pkgs/edit.php:371 modules/pkgs/pkgs/add.php:295
 #: modules/pkgs/pkgs/detail.php:223
 msgid "Transfer method"
 msgstr "Overføringsmetode"
 
-#: modules/pkgs/pkgs/edit.php:378 modules/pkgs/pkgs/add.php:301
+#: modules/pkgs/pkgs/edit.php:381 modules/pkgs/pkgs/add.php:301
 #: modules/pkgs/pkgs/detail.php:227
 msgid "bandwidth throttling (ko)"
 msgstr "båndbredde struping (ko)"
 
-#: modules/pkgs/pkgs/edit.php:379 modules/pkgs/pkgs/add.php:302
+#: modules/pkgs/pkgs/edit.php:382 modules/pkgs/pkgs/add.php:302
 msgid "<in ko>"
 msgstr "<in ko>"
 
-#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:306
 msgid "high priority"
 msgstr "høy prioritet"
 
-#: modules/pkgs/pkgs/edit.php:388 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:306
 msgid "ordinary priority"
 msgstr "ordinær prioritet"
 
-#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/edit.php:394 modules/pkgs/pkgs/add.php:309
 #: modules/pkgs/pkgs/detail.php:229
 msgid "Spooling"
 msgstr "Spooling"
 
-#: modules/pkgs/pkgs/edit.php:399 modules/pkgs/pkgs/add.php:312
+#: modules/pkgs/pkgs/edit.php:402 modules/pkgs/pkgs/add.php:312
 msgid "Launcher (kiosk)"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:445 modules/pkgs/pkgs/add.php:321
+#: modules/pkgs/pkgs/edit.php:448 modules/pkgs/pkgs/add.php:321
 #: modules/pkgs/pkgs/detail.php:290
 msgid "Dependencies"
 msgstr "Avhengigheter"
 
-#: modules/pkgs/pkgs/edit.php:455 modules/pkgs/pkgs/add.php:331
+#: modules/pkgs/pkgs/edit.php:458 modules/pkgs/pkgs/add.php:331
 msgid "Added dependencies"
 msgstr "Avhengigheter som er lagt til"
 
-#: modules/pkgs/pkgs/edit.php:471 modules/pkgs/pkgs/add.php:347
+#: modules/pkgs/pkgs/edit.php:474 modules/pkgs/pkgs/add.php:347
 msgid "Available dependencies"
 msgstr "Tilgjengelige avhengigheter"
 
-#: modules/pkgs/pkgs/edit.php:472 modules/pkgs/pkgs/add.php:348
+#: modules/pkgs/pkgs/edit.php:475 modules/pkgs/pkgs/add.php:348
 msgid "search by name ..."
 msgstr "søk etter navn"
 
-#: modules/pkgs/pkgs/edit.php:524 modules/pkgs/pkgs/detail.php:82
+#: modules/pkgs/pkgs/edit.php:527 modules/pkgs/pkgs/detail.php:82
 #: modules/pkgs/pkgs/detail.php:246
 msgid "File"
 msgstr "Fil"
 
-#: modules/pkgs/pkgs/edit.php:533
+#: modules/pkgs/pkgs/edit.php:536
 msgid "Delete file"
 msgstr "Slett Fil"
 
-#: modules/pkgs/pkgs/edit.php:533
+#: modules/pkgs/pkgs/edit.php:536
 msgid "Are you sure you want to delete this file?"
 msgstr "Er du sikker på at du vil slette denne filen?"
 
-#: modules/pkgs/pkgs/edit.php:625 modules/pkgs/pkgs/add.php:448
+#: modules/pkgs/pkgs/edit.php:628 modules/pkgs/pkgs/add.php:448
 msgid "Accentuated and special chars are not allowed"
 msgstr "Aksentuerte og spesielle tegn er ikke tillatt"
 

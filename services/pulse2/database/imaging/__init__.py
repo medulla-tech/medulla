@@ -38,6 +38,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql.expression import alias as sa_exp_alias
 from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.ext.automap import automap_base
+
 
 # THAT REQUIRE TO BE IN A MMC SCOPE, NOT IN A PULSE2 ONE
 from pulse2.managers.profile import ComputerProfileManager
@@ -84,6 +86,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             convert_unicode=True,
         )
         self.metadata = MetaData(self.db)
+
+        Base = automap_base()
+        Base.prepare(self.db, reflect=True)
+
+        # Only federated tables (beginning by local_) are automatically mapped
+        # If needed, excludes tables from this list
+        exclude_table = []
+        # Dynamically add attributes to the object for each mapped class
+        for table_name, mapped_class in Base.classes.items():
+            if table_name in exclude_table:
+                continue
+            if table_name.startswith("local"):
+                setattr(self, table_name.capitalize(), mapped_class)
+
         if not self.initMappersCatchException():
             return False
         self.metadata.create_all()
@@ -5896,14 +5912,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getLocationImagingServerByServerUUID(self, imaging_server_uuid):
         session = create_session()
-        ims = (
+        ims, entity = (
             session.query(ImagingServer)
+            .join(Entity, Entity.id == ImagingServer.fk_entity)
             .filter(self.imaging_server.c.packageserver_uuid == imaging_server_uuid)
             .first()
         )
-        LocationServer = ims.fk_entity
+        LocationServer = entity.uuid
+        LocationId = entity.id
         session.close()
-        return LocationServer
+        return LocationId, LocationServer
 
     # Computer basic inventory stuff
     def injectInventory(self, imaging_server_uuid, computer_uuid, inventory):
@@ -5919,14 +5937,18 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         session.begin()
 
-        locationServerImaging = self.getLocationImagingServerByServerUUID(
+        locationId, locationServerImaging = self.getLocationImagingServerByServerUUID(
             imaging_server_uuid
         )
         target = None
-        session.query(Target).filter_by(uuid=computer_uuid).update({"uuid":"DELETED UUID%s"%computer_uuid})
-        menu = self.getEntityDefaultMenu("UUID%s" % locationServerImaging)
+        session.query(Target).filter_by(uuid=computer_uuid).update(
+            {"uuid": "DELETED UUID%s" % computer_uuid}
+        )
+        if not locationServerImaging.startswith("UUID"):
+            locationServerImaging = "UUID%s" % locationServerImaging
+        menu = self.getEntityDefaultMenu(locationServerImaging)
         new_menu = self.__duplicateMenu(
-            session, menu, "UUID%s" % locationServerImaging, None, False
+            session, menu, locationServerImaging, None, False
         )
         target = Target()
         target.fk_menu = new_menu.id
@@ -5935,7 +5957,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         target.name = inventory["shortname"]
         target.uuid = computer_uuid
         target.type = 1
-        target.fk_entity = locationServerImaging
+        target.fk_entity = locationId
 
         try:
             # Then push a new inventory
@@ -6138,6 +6160,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                         "tools_dir": config["tools_dir"],
                         "davos_opts": config["davos_opts"],
                         "template_name": config["template_name"],
+                        "increment": config["increment"],
+                        "digit": config["digit"],
                     }
                 )
             )
@@ -6269,6 +6293,8 @@ class ImagingServer(DBObject):
         "tools_dir",
         "davos_opts",
         "template_name",
+        "increment",
+        "digit",
     ]
 
 

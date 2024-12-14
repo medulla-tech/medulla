@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -231,7 +231,7 @@ msgid "Password policies"
 msgstr "Passordpolicier"
 
 #: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
+#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:54
 msgid "Add a password policy"
 msgstr "Legg til en Passordpolicy"
 
@@ -422,18 +422,18 @@ msgstr "Slett passordpolicy"
 msgid "Password Policy"
 msgstr "Passordpolicy"
 
-#: modules/ppolicy/infoPackage.inc.php:58
+#: modules/ppolicy/infoPackage.inc.php:62
 msgid "Edit a password policy"
 msgstr "Reddiger en Passordpolicy"
 
-#: modules/ppolicy/infoPackage.inc.php:63
+#: modules/ppolicy/infoPackage.inc.php:67
 msgid "Delete a password policy"
 msgstr "Slett en Passordpolicy"
 
-#: modules/ppolicy/infoPackage.inc.php:79
+#: modules/ppolicy/infoPackage.inc.php:85
 msgid "Default "
 msgstr "Standard"
 
-#: modules/ppolicy/infoPackage.inc.php:82
+#: modules/ppolicy/infoPackage.inc.php:88
 msgid "Enable user specific password policy"
 msgstr "Aktiver brukerspesifikk passordpolicy"

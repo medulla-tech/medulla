@@ -22,7 +22,33 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+?>
+<style>
+    #mail {
+        color: #016080;
+    }
 
+    #mail:hover {
+        text-decoration: underline;
+    }
+
+    @keyframes rainbow {
+        0%, 100% { color: red; }
+        16% { color: orange; }
+        33% { color: yellow; }
+        50% { color: green; }
+        66% { color: blue; }
+        83% { color: indigo; }
+        100% { color: violet; }
+    }
+
+    .rainbow-animation {
+        animation: rainbow 2s infinite;
+        display: inline-block;
+    }
+</style>
+
+<?php
 global $conf;
 if(isset($_REQUEST['maxperpage'])) {
     $maxperpage = $_REQUEST['maxperpage'];
@@ -58,22 +84,27 @@ for ($idx = 0; $idx < safeCount($users); $idx++) {
     $sn = is_object($users[$idx]['sn']) ? $users[$idx]['sn']->scalar : $users[$idx]['sn'];
     $arrSnUser[] = $givenName.' '.$sn;
 
-    if (strlen($users[$idx]["mail"]) > 0) {
-        $mails[] = is_object($users[$idx]["mail"]) ? '<a href="mailto:' . $users[$idx]["mail"]->scalar . '">' . $users[$idx]["mail"]->scalar . "</a>" : '<a href="mailto:' . $users[$idx]["mail"] . '">' . $users[$idx]["mail"] . "</a>";
+    if (!empty($users[$idx]["mail"])) {
+        $emailContent = is_object($users[$idx]["mail"]) ? $users[$idx]["mail"]->scalar : $users[$idx]["mail"];
+        if (!empty($emailContent)) {
+            $mails[] = '<a id="mail" href="mailto:' . htmlspecialchars($emailContent) . '">' . htmlspecialchars($emailContent) . '</a>';
+        } else {
+            $mails[] = "";
+        }
     } else {
-        $mails[] =  is_object($users[$idx]["mail"]) ? $users[$idx]["mail"]->scalar : $users[$idx]["mail"];
+        $mails[] = "";
     }
     /* We display the smallest telephone number, hopefully it is the user phone extension */
     $num = null;
-    foreach($users[$idx]["telephoneNumber"] as $_number) {
-        $number = is_object($_number) ? $_number->scalar : $_number;
-        if ($num == null) {
-            $num = is_object($number) ? $number->scalar : $number;
-        } elseif (strlen($number) < strlen($num)) {
-            $num = $number;
+    $numArray = [];
+    if (!empty($users[$idx]["telephoneNumber"])) {
+        foreach ($users[$idx]["telephoneNumber"] as $_number) {
+            $number = is_object($_number) ? $_number->scalar : $_number;
+            $numArray[] = $number;
         }
+        $num = implode("<br>", $numArray); // Concaténer les numéros avec un retour à la ligne
     }
-    $phones[] = $num;
+    $phones[] = $num === null ? "" : $num;
 }
 
 // Avoiding the CSS selector (tr id) to start with a number
@@ -111,3 +142,19 @@ if (has_audit_working()) {
 }
 $n->setName(_("Users"));
 $n->display();
+
+?>
+<script>
+// First ever Medulla easteregg
+function applyAnimation() {
+    var currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // normalize the time at midnight to compare only the dates
+    var prideDay = new Date(currentDate.getFullYear(), 5, 28);
+    prideDay.setHours(0, 0, 0, 0);
+
+    if (currentDate.getTime() === prideDay.getTime()) {
+        document.getElementById('mail').classList.add('rainbow-animation');
+    }
+}
+applyAnimation();
+</script>

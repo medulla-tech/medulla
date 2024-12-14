@@ -66,7 +66,7 @@ $paramArray = array(
     'objectUUID' => $_SESSION['objectUUID'],
     'vnctype' => $element,
     "presencemachinexmpp" => $presencemachinexmpp,
-    "hostname"=>!empty($_GET['hostname']) ? htmlentities($_GET['hostname']) : "",
+    "hostname" => !empty($_GET['hostname']) ? htmlentities($_GET['hostname']) : "",
 );
 
 $inventAction = new ActionItem(_T("Inventory", "pulse2"), "invtabs", "inventory", "inventory", "base", "computers");

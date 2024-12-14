@@ -67,7 +67,16 @@ def login():
     return False
 
 
-def check_client(jidmachine, clientid, authkey):
+def enable_client(jidmachine, clientid, authkey):
+    """
+    Write backup_enabled to 1 on updatebackupclient.ini file to enable backup for windows client
+
+    Args:
+        JID Machine, client id and authkey of client
+
+    Returns:
+        1 or 0, state of function execution
+    """
     conf_file = "/var/lib/pulse2/clients/config/updatebackupclient.ini"
 
     urbackup_conf = configparser.ConfigParser()
@@ -76,16 +85,19 @@ def check_client(jidmachine, clientid, authkey):
     urbackup_server = urbackup_conf.get("parameters", "backup_server")
     urbackup_port = urbackup_conf.get("parameters", "backup_port")
 
+    enable_client_database(clientid)
+
     command = (
         "(echo [parameters] & echo backup_enabled = 1 & echo client_id = "
         + str(clientid)
         + " & echo authkey = "
         + str(authkey)
         + " & echo backup_server = "
+        + "urbackup://"
         + str(urbackup_server)
         + " & echo backup_port = "
         + str(urbackup_port)
-        + ") > C:\progra~1\pulse\etc\\updatebackupclient.ini"
+        + ") > C:\\progra~1\\Medulla\\etc\\updatebackupclient.ini"
     )
 
     callremotecommandshell(jidmachine, command)
@@ -100,8 +112,19 @@ def check_client(jidmachine, clientid, authkey):
     send_message_json(jidmachine, msg)
 
 
-def remove_client(jidmachine):
-    command = "(echo [parameters] & echo backup_enabled = 0 ) > C:\progra~1\pulse\etc\\updatebackupclient.ini"
+def remove_client(jidmachine, clientid):
+    """
+    Write backup_enabled to 0 on updatebackupclient.ini file to disable backup for windows client
+
+    Args:
+        JID Machine and client id
+
+    Returns:
+        1 or 0, state of function execution
+    """
+    disable_client_database(clientid)
+
+    command = "(echo [parameters] & echo backup_enabled = 0) > C:\\progra~1\\Medulla\\etc\\updatebackupclient.ini"
 
     callremotecommandshell(jidmachine, command)
     sessionid = name_random(8, "update_")
@@ -113,6 +136,109 @@ def remove_client(jidmachine):
         "base64": False,
     }
     send_message_json(jidmachine, msg)
+
+
+def restart_urbackup_service(jidmachine):
+    """
+    Restart Urbackup service on client
+
+    Args:
+        JID Machine
+
+    Returns:
+        1 or 0, state of function execution
+    """
+
+    command = 'powershell.exe -command "Restart-Service -Name UrBackupClientBackend"'
+
+    callremotecommandshell(jidmachine, command)
+    sessionid = name_random(8, "update_")
+    msg = {
+        "action": "restartbot",
+        "sessionid": sessionid,
+        "data": {},
+        "ret": 0,
+        "base64": False,
+    }
+    send_message_json(jidmachine, msg)
+
+
+def get_client_status(client_id):
+    """
+    Get client status if enable or not from the database
+
+    Args:
+        Client id
+
+    Returns:
+        1 or 0, backup_enabled value
+    """
+    return UrbackupDatabase().getClientStatus(client_id)
+
+
+def getAllLogs():
+    """
+    Get all logs from urbackup database
+
+    Args:
+        None
+
+    Returns:
+        Dict Logs in database
+    """
+    return UrbackupDatabase().getAllLogs()
+
+
+def insertNewClient(client_id, authkey):
+    """
+    Insert new client in database
+
+    Args:
+        client id and auth key of client
+
+    Returns:
+        True or False
+    """
+    return UrbackupDatabase().insertNewClient(client_id, authkey)
+
+
+def enable_client_database(client_id):
+    """
+    Get client status if enable or not from the database
+
+    Args:
+        Client id
+
+    Returns:
+        1 or 0, backup_enabled value
+    """
+    return UrbackupDatabase().editClientState("1", client_id)
+
+
+def disable_client_database(client_id):
+    """
+    Get client status if enable or not from the database
+
+    Args:
+        Client id
+
+    Returns:
+        1 or 0, backup_enabled value
+    """
+    return UrbackupDatabase().editClientState("0", client_id)
+
+
+def getComputersEnableValue(jid):
+    """
+    Get enable status from xmppmaster.machines table
+
+    Args:
+        JID Machine
+
+    Returns:
+        id, jid and enabled from database xmppmaster.machines
+    """
+    return UrbackupDatabase().getComputersEnableValue(jid)
 
 
 def get_ses():
@@ -152,6 +278,9 @@ def add_client(client_name):
     """
     Create client with new id and authkey
 
+    Args:
+        Client id
+
     Returns:
         Server,
         Port,
@@ -189,8 +318,11 @@ def add_group(groupname):
     """
     Create groupe
 
+    Args:
+        New groupe name
+
     Returns:
-        Settings
+        All Settings of server
     """
     api = UrApiWrapper()
     newgroup = api.add_group(groupname)
@@ -205,8 +337,11 @@ def remove_group(groupid):
     """
     Remove groupe
 
+    Args:
+        Group id
+
     Returns:
-        Settings
+        All Settings of server
     """
     api = UrApiWrapper()
     removegroup = api.remove_group(groupid)
@@ -237,6 +372,9 @@ def save_settings(clientid, name_data, value_data):
     """
     Save settings for client of group
 
+    Args:
+        Client id, settings name to change and new value for this settings
+
     Returns:
         Settings saved for group
     """
@@ -252,6 +390,9 @@ def save_settings(clientid, name_data, value_data):
 def get_settings_clientsettings(id_client):
     """
     Get multiples settings for one client
+
+    Args:
+        Client id
 
     Returns:
         Array of client settings
@@ -281,6 +422,22 @@ def get_settings_clients():
     return "No DATA listusers"
 
 
+def get_auth_client(clientid):
+    """
+    Get auth key for one client
+
+    Returns:
+        Array of internet_authkey informations
+    """
+    api = UrApiWrapper()
+    setting_client = api.get_settings_client(clientid)
+    setting_client = api.response(setting_client)
+    if "content" in setting_client:
+        return setting_client["content"]["settings"]["internet_authkey"]
+
+    return "No DATA listusers"
+
+
 def get_backups_all_client():
     """
     Get every backups for each client
@@ -301,6 +458,9 @@ def get_backup_files(client_id, backup_id, path):
     """
     Get every files on backup
 
+    Args:
+        Client id, backup id and path of file
+
     Returns:
         Array of info from backup
     """
@@ -317,6 +477,9 @@ def delete_backup(client_id, backup_id):
     """
     Delete backup
 
+    Args:
+        Client id and backup id
+
     Returns:
         Array of info from backup deleted
     """
@@ -330,7 +493,15 @@ def delete_backup(client_id, backup_id):
 
 
 def client_download_backup_file(clientid, backupid, path, filter_path):
-    """ """
+    """
+    Restore directory for one client
+
+    Args:
+        Client id, backup id, path of directory, filter
+
+    Returns:
+        State of restoration
+    """
     api = UrApiWrapper()
     download = api.client_download_backup_file(clientid, backupid, path, filter_path)
     download = api.response(download)
@@ -340,11 +511,19 @@ def client_download_backup_file(clientid, backupid, path, filter_path):
     return "No DATA file"
 
 
-def client_download_backup_file_shahash(clientid, backupid, path, shahash):
-    """ """
+def client_download_backup_file_shahash(clientid, backupid, path, shahash, filter_path):
+    """
+    Restore file for one client
+
+    Args:
+        Client id, backup id, path of directory, shahash of file
+
+    Returns:
+        State of restoration
+    """
     api = UrApiWrapper()
     download = api.client_download_backup_file_shahash(
-        clientid, backupid, path, shahash
+        clientid, backupid, path, shahash, filter_path
     )
     download = api.response(download)
     if "content" in download:
@@ -358,7 +537,7 @@ def get_status():
     Get server and all client status
 
     Returns:
-        Array of server and all client status
+        Array of server and all client status and parameters
     """
     api = UrApiWrapper()
     status = api.get_status()
@@ -390,10 +569,10 @@ def get_status_client(clientname):
     Get status for one client
 
     Args:
-        Clientname
+        Client name
 
     Returns:
-        Array status for one client
+        Array status, and parameters for one client
     """
     api = UrApiWrapper()
     status = api.get_status()
@@ -407,7 +586,15 @@ def get_status_client(clientname):
 
 
 def create_backup_incremental_file(client_id):
-    """ """
+    """
+    Run incremental backup for one client
+
+    Args:
+        Client id
+
+    Returns:
+        State of this backup, ok or failed
+    """
     api = UrApiWrapper()
     backup = api.create_backup("incr_file", client_id)
     backup = api.response(backup)
@@ -419,7 +606,15 @@ def create_backup_incremental_file(client_id):
 
 
 def create_backup_full_file(client_id):
-    """ """
+    """
+    Run full backup for one client
+
+    Args:
+        Client id
+
+    Returns:
+        State of this backup, ok or failed
+    """
     api = UrApiWrapper()
     backup = api.create_backup("full_file", client_id)
     backup = api.response(backup)

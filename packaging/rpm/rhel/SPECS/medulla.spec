@@ -6,7 +6,7 @@
 %define mkrel(c:) %{-c: 0.%{-c*}.}%{1}%{?subrel:.%subrel}%{?distsuffix:%distsuffix}%{?!distsuffix:.el6}
 %endif
 # Turn off the brp-python3-bytecompile script
-%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python3-bytecompile[[:space:]].*$!!g')
+%global __os_install_post %(echo '%{__os_install_post}' | sed -e 's!/usr/lib[^[:space:]]*/brp-python-bytecompile[[:space:]].*$!!g')
 %define __requires_exclude ^(pear\\(graph.*|pear\\(includes.*|pear\\(modules.*)$
 
 
@@ -27,8 +27,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           5.1.2
-%define mmc_version            5.1.2
+%define real_version           5.2.0
+%define mmc_version            5.2.0
 
 Summary:	Management Console
 Name:		medulla
@@ -45,10 +45,8 @@ Source0:        %{name}_%{real_version}.orig.tar.gz
 #TODO: Adapt for Mageia
 Source3:        pulse2-imaging-server.service
 Source4:        pulse2-register-pxe.service
-Source5:        output.py
-Source6:        get_file.php
 
-BuildRequires:	python3-devel
+BuildRequires:	python3.11-devel
 BuildRequires:	gettext
 BuildRequires:	gettext-devel
 %if "%_vendor" == "Mageia"
@@ -58,6 +56,7 @@ BuildRequires:  libxslt
 %endif
 BuildRequires:  wget
 BuildRequires:  docbook-style-xsl
+BuildRequires:  systemd-rpm-macros
 
 Requires:       mmc-agent
 Requires:       mmc-web-base
@@ -81,12 +80,10 @@ Requires:       python3-mmc-urbackup
 Requires:       mmc-web-updates
 Requires:       python3-mmc-updates
 Requires:       pulse2-common
-Requires:       pulse2-davos-client
 Requires:       pulse2-package-server
 Requires:       python3-pulse2-common-database-dyngroup
 Requires:       pulse-mmc-web-computers-inventory-backend
 Requires:       pulse-python3-mmc-computers-inventory-backend
-Requires:       pulse2-homepage
 
 %description
 Management Console agent & web interface with
@@ -156,26 +153,6 @@ This package contains the backuppc plugin for the MMC agent.
 %_sbindir/pulse2-connect-machine-backuppc
 %_sbindir/pulse2-disconnect-machine-backuppc
 
-#--------------------------------------------------------------------
-
-%package -n python3-mmc-connection-manager
-Summary:    Connection Manager plugin for the MMC agent
-Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-Requires:   p7zip
-Requires:   python-pyquery
-
-%description -n python3-mmc-connection-manager
-This package contains the connection manager plugin for the MMC agent.
-
-%files -n python3-mmc-connection-manager
-%defattr(-,root,root,0755)
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/pulse2/cm
-%python2_sitelib/pulse2/cm
-%{_sysconfdir}/init.d/pulse2-cm
-%_sbindir/pulse2-cm
-%_sbindir/pulse2-create-group
-
 ##--------------------------------------------------------------------
 
 %package -n     mmc-web-backuppc
@@ -198,7 +175,7 @@ Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python3-mmc-base >= %mmc_version
 Requires:   python3-sqlalchemy >= 0.6.3
-Requires:   MySQL-python >= 1.2.1
+Requires:   python3.11-mysqlclient >= 1.2.1
 Requires:   python3-pulse2-common = %version-%release
 
 Provides:   pulse-python3-mmc-computers-inventory-backend = %version-%release
@@ -299,6 +276,7 @@ This package contains the imaging plugin for MMC agent.
 %files -n python3-mmc-imaging
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/imaging.ini
 %python3_sitelib/mmc/plugins/imaging
+%_sbindir/message-sender.py
 
 #--------------------------------------------------------------------
 
@@ -314,6 +292,7 @@ This package contains the imaging plugin for the MMC web interface.
 %files -n mmc-web-imaging
 %defattr(-,root,root,0755)
 %{_datadir}/mmc/modules/imaging
+%{_datadir}/mmc/imaging/bootmenu.php
 
 #--------------------------------------------------------------------
 
@@ -363,8 +342,8 @@ This package contains the urbackup plugin for MMC agent.
 
 %files -n python3-mmc-urbackup
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/urbackup.ini
-%python2_sitelib/mmc/plugins/urbackup
-%python2_sitelib/pulse2/database/urbackup
+%python3_sitelib/mmc/plugins/urbackup
+%python3_sitelib/pulse2/database/urbackup
 
 #--------------------------------------------------------------------
 
@@ -486,18 +465,18 @@ This package contains the pkgs plugin for the MMC agent.
 
 #--------------------------------------------------------------------
 
-%package -n python-mmc-updates
+%package -n python3-mmc-updates
 Summary:    OS Updates plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 
-%description -n python-mmc-updates
+%description -n python3-mmc-updates
 This package contains the updates plugin for the MMC agent.
 
-%files -n python-mmc-updates
+%files -n python3-mmc-updates
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/updates.ini
-%python2_sitelib/mmc/plugins/updates
-%python2_sitelib/pulse2/database/updates
+%python3_sitelib/mmc/plugins/updates
+%python3_sitelib/pulse2/database/updates
 
 
 #--------------------------------------------------------------------
@@ -642,7 +621,7 @@ Requires:   python3-mmc-kiosk = %version-%release
 Requires:   python3-mmc-updates = %version-%release
 Requires:   python3-pulse2-common = %version-%release
 Requires:   python3-sqlalchemy >= 0.6.3
-Requires:   pulse-python-mmc-computers-inventory-backend = %version-%release
+Requires:   pulse-python3-mmc-computers-inventory-backend = %version-%release
 Requires:   python-service-identity
 
 Obsoletes:  python-mmc-pulse2 < 4.7.0
@@ -706,7 +685,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/medulla_mysql_exec_update.sh
 %{_sbindir}/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 
-%_docdir/mmc/contrib/
+%_docdir/pulse2/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
 %config(noreplace) %_sysconfdir/httpd/conf.d/pulse.conf
 %_var/lib/pulse2/file-transfer
@@ -716,7 +695,7 @@ This package contains Pulse 2 common files like documentation.
 
 # Split later in its own rpm
 %python3_sitelib/pulse2/tests/test_utils.py
-%python3_sitelib/pulse2/tests/__pycache__/test_utils.*
+
 #--------------------------------------------------------------------
 
 %package -n     pulse2-inventory-server
@@ -726,7 +705,7 @@ Requires:       pulse2-common = %version-%release
 Requires:       python3-pulse2-common = %version-%release
 Requires:       python3-pulse2-common-database-inventory = %version-%release
 Requires:       python3-mmc-base >= %mmc_version
-Requires:       pyOpenSSL
+Requires:       python3.11-pyOpenSSL
 
 %description -n pulse2-inventory-server
 This package contains Pulse 2 inventory server. It collects computers
@@ -739,7 +718,6 @@ service pulse2-inventory-server start >/dev/null 2>&1 || :
 service pulse2-inventory-server stop >/dev/null 2>&1 || :
 
 %files -n pulse2-inventory-server
-%exclude %{_sysconfdir}/init.d/pulse2-inventory-server
 %config(noreplace) %{_sysconfdir}/mmc/pulse2/inventory-server/inventory-server.ini
 %{_sysconfdir}/mmc/pulse2/inventory-server/OcsNGMap.xml
 %{_sysconfdir}/mmc/pulse2/inventory-server/keys/
@@ -757,7 +735,7 @@ Requires:       pulse2-common = %version-%release
 Requires:       python3-pulse2-common = %version-%release
 Requires:       python3-mmc-core
 Requires:       genisoimage
-Requires:       pyOpenSSL
+Requires:       python3.11-pyOpenSSL
 
 Provides:       pulse2-imaging-server = %version-%release
 Obsoletes:      pulse2-imaging-server < %version-%release
@@ -877,7 +855,7 @@ Group:          System/Servers
 Requires:       pulse2-common = %version-%release
 Requires:       python3-pulse2-common = %version-%release
 Requires:       python3-sqlalchemy >= 0.6.3
-Requires:       MySQL-python
+Requires:       python3.11-mysqlclient
 
 Obsoletes:  python-pulse2-common-database < 4.7.0
 Provides:   python-pulse2-common-database = %version-%release
@@ -889,9 +867,6 @@ This package contains Pulse 2 common database files.
 %python3_sitelib/pulse2/database/__init__.py
 %python3_sitelib/pulse2/database/pulse/__init__.py
 %python3_sitelib/pulse2/database/pulse/config.py
-%python3_sitelib/pulse2/database/__pycache__/__init__.*
-%python3_sitelib/pulse2/database/pulse/__pycache__/__init__.*
-%python3_sitelib/pulse2/database/pulse/__pycache__/config.*
 
 #--------------------------------------------------------------------
 
@@ -914,7 +889,7 @@ This package contains a helper to resolve Pulse's UUID into IP address.
 Summary:        Pulse 2 common files
 Group:          System/Servers
 Requires:       pulse2-common = %version-%release
-Requires:       python3-twisted >= 2.4.0
+Requires:       python3.11-twisted >= 2.4.0
 
 Provides:       python3-pulse2-meta < 1.5.0
 Obsoletes:      python3-pulse2-meta = %version-%release
@@ -942,18 +917,9 @@ This package contains Pulse 2 common files.
 %python3_sitelib/pulse2/version.py
 %python3_sitelib/pulse2/xmlrpc.py
 %python3_sitelib/pulse2/network.py
-%python3_sitelib/pulse2/__pycache__/cache.*
-%python3_sitelib/pulse2/__pycache__/consts.*
-%python3_sitelib/pulse2/__pycache__/health.*
-%python3_sitelib/pulse2/__pycache__/network.*
-%python3_sitelib/pulse2/__pycache__/site.*
-%python3_sitelib/pulse2/__pycache__/utils.*
-%python3_sitelib/pulse2/__pycache__/version.*
-%python3_sitelib/pulse2/__pycache__/xmlrpc.*
-%python3_sitelib/pulse2/__pycache__/__init__.*
-%python3_sitelib/pulse2/__pycache__/time_intervals.*
 
 %doc %_docdir/pulse2
+%doc %_docdir/medulla
 
 #--------------------------------------------------------------------
 
@@ -966,8 +932,8 @@ Requires:   python3-OpenSSL
 Requires:   python3-gobject
 %else
 Requires:   python3
-Requires:   python3-pyOpenSSL
-Requires:   python3-gi
+Requires:   python3.11-pyOpenSSL
+Requires:   python3.11-gobject
 %endif
 Requires:   python3-mmc-base
 Requires:   logrotate
@@ -976,6 +942,17 @@ Requires:   python3-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python3-memory-profiler
 Requires:   python3-posix-ipc
+Requires:   python3.11-pyyaml
+Requires:   python3.11-incremental
+Requires:   python3.11-typing-extensions
+Requires:   python3.11-zope-interface
+Requires:   python3.11-constantly
+Requires:   python3.11-hyperlink
+Requires:   python3.11-sqlalchemy
+Requires:   python3.11-configobj
+Requires:   python3.11-pycryptodomex
+Requires:   python3.11-magic
+Requires:   python3.11-distro
 
 %description -n mmc-agent
 XMLRPC server of the Console API.
@@ -983,7 +960,6 @@ This is the underlying service used by the MMC web interface.
 
 %files -n mmc-agent
 %defattr(-,root,root,0755)
-%doc COPYING ChangeLog
 %attr(0755,root,root) %{_unitdir}/mmc-agent.service
 %attr(0755,root,root) %dir %{_sysconfdir}/mmc
 %attr(0755,root,root) %dir %{_sysconfdir}/mmc/agent
@@ -1004,8 +980,8 @@ This is the underlying service used by the MMC web interface.
 %doc %{_mandir}/man1/mmc-stats.1.*
 %dir %{python3_sitelib}/mmc
 %{python3_sitelib}/mmc/agent.py*
-%{python3_sitelib}/mmc/__pycache__/agent.*
 %{_docdir}/pulse2/contrib/monit/mmc-agent
+%{_datadir}/mmc/providers.php
 
 #--------------------------------------------------------------------
 
@@ -1015,9 +991,9 @@ Group:      System/Servers
 %if "%_vendor" == "Mageia"
 Requires:   python3-base
 %else
-Requires:   python
+Requires:   python3.11
 %endif
-Requires:   python3-twisted
+Requires:   python3.11-twisted
 
 Obsoletes:  python-mmc-core < 4.7.0
 Provides:   python-mmc-core = %version-%release
@@ -1037,12 +1013,8 @@ modules.
 %{python3_sitelib}/mmc/client
 %dir %{python3_sitelib}/mmc/plugins
 %{python3_sitelib}/mmc/plugins/__init__.py*
-%{python3_sitelib}/mmc/plugins/__pycache__/__init__.*
 
 %{_docdir}/pulse2/contrib/audit
-%{python3_sitelib}/mmc/__pycache__/__init__.*
-%{python3_sitelib}/mmc/__pycache__/site.*
-%{python3_sitelib}/mmc/__pycache__/ssl.*
 
 #--------------------------------------------------------------------
 
@@ -1052,7 +1024,7 @@ Group:      	System/Servers
 %if "%_vendor" == "Mageia"
 Requires:       python3-base
 %else
-Requires:       python
+Requires:       python3.11
 %endif
 Requires:  	python3-ldap
 Requires:   	python3-mmc-plugins-tools
@@ -1091,7 +1063,7 @@ Group:      System/Servers
 %if "%_vendor" == "Mageia"
 Requires:       python3-base
 %else
-Requires:       python
+Requires:       python3.11
 %endif
 Requires:   python3-mmc-core
 
@@ -1120,7 +1092,7 @@ Group:      System/Servers
 %if "%_vendor" == "Mageia"
 Requires:   python3-base
 %else
-Requires:   python
+Requires:   python3.11
 %endif
 Requires:   python3-mmc-base >= %{version}
 Requires:   python3-psutil >= 0.6.1
@@ -1157,7 +1129,7 @@ Group:      System/Servers
 %if "%_vendor" == "Mageia"
 Requires:   python3-base
 %else
-Requires:   python
+Requires:   python3.11
 %endif
 Requires:   python3-mmc-base >= %{version}
 Requires:   python3-systemd-dbus
@@ -1291,7 +1263,7 @@ Group:      System/Servers
 %if "%_vendor" == "Mageia"
 Requires:   python3-base
 %else
-Requires:   python
+Requires:   python3.11
 %endif
 Requires:   python3-mmc-base >= %{version}
 Requires:   python3-psutil >= 0.6.1
@@ -1346,7 +1318,7 @@ Requires:       python3-sqlalchemy >= 0.6.3
 %if "%_vendor" == "Mageia"
 Requires:       python3-mysql
 %else
-Requires:       MySQL-python
+Requires:       python3.11-mysqlclient
 %endif
 
 Obsoletes:  python-mmc-database < 4.7.0
@@ -1364,8 +1336,6 @@ Allow the use of SQL databases within MMC framework.
 
 %prep
 %setup -q  -n medulla-%version
-cp %{SOURCE5}   agent/mmc/plugins/base
-cp %{SOURCE6}   web/modules/base/computers
 sed -e 's/python python2 //' -i configure
 
 %build
@@ -1385,7 +1355,7 @@ rm -rf %buildroot%{_sysconfdir}/init.d/pulse2-imaging-server
 
 mkdir -p %buildroot%_prefix/lib/systemd/system
 
-cp %{SOURCE2} %buildroot%_prefix/lib/systemd/system
+#cp %{SOURCE2} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE3} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE4} %buildroot%_prefix/lib/systemd/system
 
@@ -1394,15 +1364,15 @@ cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/htt
 
 mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
-cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/mmc/contrib/
-cp services/contrib/glpi-94.sql %buildroot%_datadir/doc/mmc/contrib/
-cp services/contrib/glpi-95.sql %buildroot%_datadir/doc/mmc/contrib/
+cp services/contrib/glpi-92.sql %buildroot%_datadir/doc/pulse2/contrib/
+cp services/contrib/glpi-94.sql %buildroot%_datadir/doc/pulse2/contrib/
+cp services/contrib/glpi-95.sql %buildroot%_datadir/doc/pulse2/contrib/
 
-rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
-mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror.py
+rm -f %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
+mv %buildroot%python3_sitelib/pulse2/apis/clients/mirror1.py %buildroot%python3_sitelib/pulse2/apis/clients/mirror.py
 
-rm -f %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
-mv %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python2_sitelib/pulse2/apis/clients/mirror_api.py
+rm -f %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api.py
+mv %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api1.py %buildroot%python3_sitelib/pulse2/apis/clients/mirror_api.py
 
 # install log rotation stuff
 mkdir -p %{buildroot}%{_sysconfdir}/logrotate.d
@@ -1435,6 +1405,6 @@ mkdir -p %buildroot%_prefix/lib/systemd/system/
 cp services/systemd/mmc-agent.service %buildroot%_prefix/lib/systemd/system/
 
 # Cleanup
-find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
+find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' | xargs rm -fv
 rm -fv %buildroot%_sysconfdir/init.d/pulse2-cm
 rm -fv %buildroot%_sysconfdir/init.d/pulse2-scheduler

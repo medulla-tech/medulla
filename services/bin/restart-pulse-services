@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# (c) 2017 siveo, http://www.siveo.net
+# (c) 2024 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -19,42 +19,437 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-SERVICES='mmc-agent \
-          pulse2-package-server \
-          pulse-xmpp-agent-relay \
-          pulse-xmpp-agent-log \
-          pulse2-register-pxe \
-          isc-dhcp-server \
-          tftpd-hpa \
-          pulse-xmpp-master-substitute-inventory \
-          pulse-xmpp-master-substitute-registration \
-          pulse-package-watching \
-          pulse-xmpp-master-substitute-assessor \
-          pulse-xmpp-master-substitute-deployment \
-          pulse-xmpp-master-substitute-subscription \
-          pulse-xmpp-master-substitute-logger \
-          pulse-xmpp-master-substitute-reconfigurator \
-          pulse-xmpp-master-substitute-monitoring \
-          pulse-xmpp-master-substitute-master \
-          pulse-xmpp-master-substitute-updates \
-          pulse-xmpp-master-substitute-all'
+# Ce programme arrête ou redémarre tous les services en fonction du paramètre passé (start, stop, restart).
+#
 
-systemctl daemon-reload
+# La liste des chaînes
+list_of_group_service=("allservice" "allpulse" "allsubs" "mmc" "subsdep" "subsass" "subsinv" "subslog" "subsmast" "subsmon" "subssubs" "subsupd" "subdep")
 
-for service in ${SERVICES}; do
-  if systemctl is-enabled ${service} &>/dev/null ; then
-    if [ -z $1 ]; then
-        echo "Restarting ${service}"
-        systemctl restart ${service}
-    elif [ $1 = "--stop" ] || [ $1 = "stop" ]; then
-      echo "Stopping ${service}"
-      systemctl stop ${service}
-  elif [ $1 = "--restart" ] || [ $1 = "restart" ] || [ $1 = "--start" ] || [ $1 = "start" ]; then
-    echo "Restarting ${service}"
-    systemctl restart ${service}
-    else
-      echo "Usage: $0 [--stop]"
-      exit 1
-    fi
+# Variable pour vérifier si la chaîne est dans la liste
+found=false
+action=status
+
+function help(){
+ # Afficher l'aide
+    echo "Utilisation : $0 [debug] [action] [services]"
+    echo "Où :"
+    echo "  debug : activer le mode debug (facultatif)"
+    echo "  action : l'action à effectuer sur les services (start, stop, restart, status, enable, is-enabled, disable , show, show-units, is-failed , try-restart, try-reload-or-restart, clean , reset-failed)"
+    echo "  services : les services à prendre en compte (allservice, allpulse, allsubs, mmc, subsdep,"
+    echo "             subsass, subsinv, subslog, subsmast, subsmon, subssubs, subsupd, subdep)"
+    echo "Si aucune action n'est spécifiée, la commande affiche le statut des services."
+}
+
+if  echo "$*" | grep -q -i "help"; then
+    help
+    exit 1
+fi
+
+
+
+
+# Vérifier si le mot "debug" est présent sur la ligne de commande, peu importe la casse
+if echo "$*" | grep -q -i "debug"; then
+  debug=1
+else
+  debug=0
+fi
+
+# Vérifier si le mot "restart" est présent sur la ligne de commande, peu importe la casse
+if echo "$*" | grep -q -i "start"; then
+  # Effectuer des redémarrages de services
+  action=restart
+fi
+
+if echo "$*" | grep -q -i "restart"; then
+  # Effectuer des redémarrages de services
+  action=restart
+fi
+
+if echo "$*" | grep -q -i "stop"; then
+  # Effectuer des arret des services
+  action=stop
+fi
+
+if echo "$*" | grep -q -i "enable"; then
+  # Effectuer des arret des services
+  action=enable
+fi
+
+if echo "$*" | grep -q -i "is-enabled"; then
+  # Effectuer des arret des services
+  action="is-enabled"
+fi
+
+if echo "$*" | grep -q -i "disable"; then
+  # Effectuer des arret des services
+  action=disable
+fi
+
+if echo "$*" | grep -q -i "show"; then
+  # Effectuer des arret des services
+  action=show
+fi
+
+if echo "$*" | grep -q -i "show-units"; then
+  # Effectuer des arret des services
+  action="show-units"
+fi
+
+if echo "$*" | grep -q -i "show-units"; then
+  # Effectuer des arret des services
+  action="show-units"
+fi
+
+if echo "$*" | grep -q -i "is-failed"; then
+  # Effectuer des arret des services
+  action="is-failed"
+fi
+
+if echo "$*" | grep -q -i "try-restart"; then
+  # Effectuer des arret des services
+  action="try-restart"
+fi
+
+if echo "$*" | grep -q -i "try-reload-or-restart"; then
+  # Effectuer des arret des services
+  action="try-reload-or-restart"
+fi
+
+if echo "$*" | grep -q -i "clean"; then
+  # Effectuer des arret des services
+  action="clean"
+fi
+
+if echo "$*" | grep -q -i "reset-failed"; then
+  # Effectuer des arret des services
+  action="reset-failed"
+fi
+
+if echo "$*" | grep -q -i "status"; then
+  # Effectuer des arret des services
+  action=status
+fi
+
+
+function supprimer_tableau_valeurs_tableau() {
+    # Fonction pour supprimer des valeurs d'un tableau
+    # Arguments :
+    #   $1 : référence du tableau général à modifier (en entrée)
+    #   $2 : référence du tableau contenant les valeurs à supprimer (en entrée)
+    # Description :
+    #   Cette fonction prend en entrée deux références de tableaux en Bash et supprime les valeurs du premier tableau
+    #   qui correspondent aux valeurs présentes dans le deuxième tableau.
+    local -n tableau_general=$1
+    local -n tableau_a_supprimer=$2
+
+    for i in "${!tableau_general[@]}"; do
+        for j in "${tableau_a_supprimer[@]}"; do
+            if [[ "${tableau_general[$i]}" == "$j" ]]; then
+                unset tableau_general[$i]
+            fi
+        done
+    done
+}
+
+function supprimer_valeur_tableau() {
+    # Fonction pour supprimer une valeur d'un tableau
+    # Arguments :
+    #   $1 : référence du tableau à modifier (en entrée)
+    #   $2 : valeur à supprimer du tableau (en entrée)
+    # Description :
+    #   Cette fonction prend en entrée une référence de tableau et une valeur à supprimer.
+    #   Elle parcourt le tableau et supprime la première occurrence de la valeur spécifiée.
+    local -n tableau=$1
+    local valeur=$2
+
+    for i in "${!tableau[@]}"; do
+        if [[ "${tableau[$i]}" == "$valeur" ]]; then
+            unset tableau[$i]
+        fi
+    done
+}
+
+function fusionner_tableaux() {
+    # Fusionne les éléments du deuxième tableau dans le premier tableau
+
+    # Paramètres :
+    #   $1 : référence au premier tableau (tableau à modifier)
+    #   $2 : référence au deuxième tableau (tableau contenant les éléments à fusionner)
+
+    # Exemple d'utilisation :
+    #   tableau1=("elem1" "elem2")
+    #   tableau2=("elem3" "elem4")
+    #   fusionner_tableaux tableau1 tableau2
+    #   echo "${tableau1[@]}"  # affiche "elem1 elem2 elem3 elem4"
+    local -n tableau_general=$1
+    local -n tableau_a_fusionner=$2
+
+    for i in "${tableau_a_fusionner[@]}"; do
+        tableau_general+=("$i")
+    done
+}
+
+function ajouter_element_tableau() {
+  # Ajoute un élément à un tableau en Bash
+  #
+  # Arguments :
+  #   $1 : référence du tableau à modifier (en entrée)
+  #   $2 : élément à ajouter au tableau (en entrée)
+  #
+  # Exemple d'utilisation :
+  #   tableau=("elem1" "elem2")
+  #   ajouter_element_tableau tableau "elem3"
+  #   echo "${tableau[@]}"  # affiche "elem1 elem2 elem3"
+
+  local -n tableau=$1
+  local element=$2
+
+  tableau+=("$element")
+}
+
+# Initialisation des tableaux vides
+declare -a descripteur_service=()
+declare -a SERVICE=()
+declare -a substituteService=()
+declare -a substituteServicedeploy=()
+declare -a substituteServiceassessor=()
+declare -a substituteServiceinventory=()
+declare -a substituteServicelogger=()
+declare -a substituteServicemaster=()
+declare -a substituteServicemonitoring=()
+declare -a substituteServicereconfigurator=()
+declare -a substituteServicesubscription=()
+
+# Chargement du tableau des substituts de updates
+mapfile -t substituteServiceupdates < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  updates | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de configurator #####"
+    echo "${substituteServiceupdates[@]}"
+fi
+
+# Chargement du tableau des substituts de subscription
+mapfile -t substituteServicesubscription < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  subscription | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de configurator #####"
+    echo "${substituteServicesubscription[@]}"
+fi
+
+# Chargement du tableau des substituts de configurator
+mapfile -t substituteServicereconfigurator < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  configurator | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de configurator #####"
+    echo "${substituteServicereconfigurator[@]}"
+fi
+
+# Chargement du tableau des substituts de déploiement
+mapfile -t substituteServicedeploy < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  deployment | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de déploiement #####"
+    echo "${substituteServicedeploy[@]}"
+fi
+
+# Chargement du tableau des substituts de monitoring
+mapfile -t substituteServicemonitoring < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  monitoring | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de monitoring #####"
+    echo "${substituteServicemonitoring[@]}"
+fi
+
+# Chargement du tableau des substituts de master
+mapfile -t substituteServicemaster < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  master | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de master #####"
+    echo "${substituteServicemaster[@]}"
+fi
+
+# Chargement du tableau des substituts de logger
+mapfile -t substituteServicelogger < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  logger | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de logger #####"
+    echo "${substituteServicelogger[@]}"
+fi
+
+
+# Chargement du tableau des substituts de inventory
+mapfile -t substituteServiceinventory < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  inventory | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de inventory #####"
+    echo "${substituteServiceinventory[@]}"
+fi
+
+# Chargement du tableau des substituts de assessor
+mapfile -t substituteServiceassessor < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  assessor | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de assessor #####"
+    echo "${substituteServiceassessor[@]}"
+fi
+
+
+declare -a Servicepulse=()
+declare -a Serviceexclude=("pulse-xmpp-agent-log.service")
+
+# Initialisation du tableau des services à prendre en charge
+declare -a Serviceeinclude=(
+    "ejabberd.service"
+    "mariadb.service"
+    "grafana-server.service"
+    "guacd.service"
+    "php8.2-fpm.service"
+    "apache-htcacheclean.service"
+    "apache2.service"
+    "syncthing@syncthing-depl.service"
+    "syncthing@syncthing.service"
+    "ssh.service"
+    "slapd.service"
+    "tftpd-hpa.service"
+)
+
+# Chargement du tableau des substituts
+mapfile -t substituteService < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts ####"
+    echo "${substituteService[@]}"
+fi
+
+
+# Chargement du tableau des autres services Pulse
+mapfile -t Servicepulse < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep -i "pulse" | grep -v substitute | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Autres services Pulse #####"
+    echo "${Servicepulse[@]}"
+fi
+
+if [ "$debug" -eq 1 ]; then
+    echo "##### Services exclus #####"
+    echo "${Serviceexclude[@]}"
+fi
+
+if [ "$debug" -eq 1 ]; then
+    echo "##### Services inclus #####"
+    echo "${Serviceeinclude[@]}"
+fi
+
+if [ $# -eq 0 ]; then
+    action=restart
+    found=true
+    fusionner_tableaux SERVICE Servicepulse
+    ajouter_element_tableau SERVICE "mmc-agent.service"
+    fusionner_tableaux SERVICE substituteService
+elif echo "$*" | grep -q -i "allservice"; then
+# Ajout des services à prendre en charge dans le tableau général
+    fusionner_tableaux SERVICE Serviceeinclude
+    fusionner_tableaux SERVICE Servicepulse
+    ajouter_element_tableau SERVICE "mmc-agent.service"
+    fusionner_tableaux SERVICE substituteService
+    fusionner_tableaux SERVICE substituteServicedeploy
+elif echo "$*" | grep -q -i "allpulse"; then
+    # Ajout des services à prendre en charge dans le tableau général
+    fusionner_tableaux SERVICE Servicepulse
+    ajouter_element_tableau SERVICE "mmc-agent.service"
+    fusionner_tableaux SERVICE substituteService
+elif  echo "$*" | grep -q -i "mmc"; then
+    fusionner_tableaux SERVICE Servicepulse
+    ajouter_element_tableau SERVICE "mmc-agent.service"
+elif  echo "$*" | grep -q -i "allsubs"; then
+    fusionner_tableaux SERVICE substituteService
+elif  echo "$*" | grep -q -i "subsdep"; then
+    fusionner_tableaux SERVICE substituteServicedeploy
+elif  echo "$*" | grep -q -i "subsass"; then
+    fusionner_tableaux SERVICE substituteServiceassessor
+elif  echo "$*" | grep -q -i "subsinv"; then
+    fusionner_tableaux SERVICE substituteServiceinventory
+elif  echo "$*" | grep -q -i "subslog"; then
+    fusionner_tableaux SERVICE substituteServicelogger
+elif  echo "$*" | grep -q -i "subsmast"; then
+    fusionner_tableaux SERVICE substituteServicemaster
+elif  echo "$*" | grep -q -i "subsmon"; then
+    fusionner_tableaux SERVICE substituteServicemonitoring
+elif  echo "$*" | grep -q -i "subssubs"; then
+    fusionner_tableaux SERVICE substituteServicesubscription
+elif  echo "$*" | grep -q -i "subsupd"; then
+    fusionner_tableaux SERVICE substituteServiceupdates
+elif  echo "$*" | grep -q -i "subdep"; then
+    fusionner_tableaux SERVICE substituteServicedeploy
+# else
+#   # Afficher l'aide
+#   help
+#   exit 1
+fi
+# Suppression des services exclus du tableau général
+supprimer_tableau_valeurs_tableau SERVICE Serviceexclude
+
+if [ "$debug" -eq 1 ]; then
+    echo "##### Services pris en compte #####"
+    echo "${SERVICE[@]}"
+fi
+
+# Boucle à travers chaque élément de la liste
+for item in "${list_of_group_service[@]}"; do
+  if  echo "$*" | grep -q -i "$item"; then
+    found=true
+    break
   fi
 done
+
+# Vérifier si la chaîne n'est pas dans la liste
+if [[ "$found" == false ]]; then
+  #pas de groupe de service choisie.
+  echo "Veuillez sélectionner un groupe de services pour votre action  \"$action\" sur les services."
+  echo "1 groupe de services est requis pour effectuer votre demande."
+  echo "choisir parmis la liste des groupes possibles"
+  for item in "${list_of_group_service[@]}"; do
+    echo  "$item"
+  done
+  echo
+  help
+  exit 1
+fi
+
+if [ "$action" == "show-units" ]; then
+    echo "${SERVICE[@]}"
+exit 0
+fi
+
+commande1() 
+{
+    local action_local=$1
+    local service_local=$2
+
+    cmdlocal="systemctl $action_local $service_local"
+    echo $cmdlocal
+    # Effectuer l'action sur le service et afficher le résultat de la commande
+    if [ "$debug" -eq 1 ]; then
+        echo "start $cmdlocal a $SECONDS"
+    fi
+    $cmdlocal
+    if [ "$debug" -eq 1 ]; then
+        echo "fin  $cmdlocal a $SECONDS"
+    fi
+}
+
+if [ "$action" != "status" ]; then
+    for service in "${SERVICE[@]}"; do
+        if systemctl is-enabled ${service} &>/dev/null ; then
+          commande1 "$action" "$service" &
+        fi
+    done
+    wait
+    echo "Toutes les commandes sont terminées"
+    exit 0
+fi
+
+
+commande() 
+{
+    cmd=$(systemctl status "$service" | grep Active | awk '{print $2}')
+    echo "$service $cmd"
+}
+
+for service in "${SERVICE[@]}"; do
+    # Récupérer le statut du service et l'afficher avec le nom du service
+    commande &
+done
+
+# Attendre que toutes les commandes en arrière-plan se terminent
+wait

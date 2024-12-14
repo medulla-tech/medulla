@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022-2023 Siveo, http://siveo.net/
+ * (c) 2022-2024 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -21,6 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 require_once("modules/updates/includes/xmlrpc.php");
+require_once("modules/updates/includes/html.inc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
@@ -31,43 +32,6 @@ $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
 $end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 
-function colorconf($conf)
-{
-    switch($conf) {
-        case $conf <= 10:
-            $color = "#ff0000";
-            break;
-        case $conf <= 20:
-            $color = "#ff3535";
-            break;
-        case $conf <= 30:
-            $color = "#ff5050";
-            break;
-        case $conf <= 40:
-            $color = "#ff8080";
-            break;
-        case $conf <  50:
-            $color = "#ffA0A0";
-            break;
-        case $conf <=  60:
-            $color = "#c8ffc8";
-            break;
-        case $conf <= 70:
-            $color = "#97ff97";
-            break;
-        case $conf <= 80:
-            $color = "#64ff64";
-            break;
-        case $conf <=  90:
-            $color = "#2eff2e";
-            break;
-        case $conf > 90:
-            $color = "#00ff00";
-            break;
-    }
-    return $color;
-}
-
 $_entities = getUserLocations();
 $filtered_entities = [];
 foreach($_entities as $entity) {
@@ -77,8 +41,8 @@ foreach($_entities as $entity) {
 }
 $count = count($filtered_entities);
 $entities = array_slice($filtered_entities, $start, $maxperpage, false);
-
-$entitycompliances = xmlrpc_get_conformity_update_by_entity();
+$source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
+$entitycompliances = xmlrpc_get_conformity_update_by_entity($entities, $source);
 
 $detailsByMach = new ActionItem(_T("Details by machines", "updates"), "detailsByMachines", "auditbymachine", "", "updates", "updates");
 $detailsByUpd = new ActionItem(_T("Details by updates", "updates"), "detailsByUpdates", "auditbyupdate", "", "updates", "updates");
@@ -113,7 +77,11 @@ foreach ($entities as $entity) {
     $actiondetailsByMachs[] = $detailsByMach;
     $actiondetailsByUpds[] = $detailsByUpd;
     $entityNames[] = $entity["completename"];
-    $params[] = array('entity' => $entity['uuid'], 'completename' => $entity['completename']);
+    $params[] = array(
+        'entity' => $entity['uuid'],
+        'completename' => $entity['completename'],
+        'source' => $source
+    );
     $color = colorconf(100);
     if (isset($identity[$id_entity])) {
         $conformite = intval($identity[$id_entity]['conformite']);

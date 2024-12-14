@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+if [ ! -d  "/var/lib/pulse2/imaging/inventories" ]; then
+	mkdir -p /var/lib/pulse2/imaging/inventories
+fi
+
+chmod -Rv 777 /var/lib/pulse2/imaging/inventories
+
+#DEBHELPER#
+
+exit 0

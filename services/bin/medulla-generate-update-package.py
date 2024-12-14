@@ -65,29 +65,50 @@ class download_packages:
             return end - start
         try:
             os.makedirs(dirpackage)
-            logger.debug(f"Directory '{path_file_download}' created successfully")
+            logger.debug(f"Directory '{dirpackage}' created successfully")
         except OSError as error:
-            logger.debug(f"Directory {path_file_download} can not be created")
-        data = requests.get(urlpath, stream=True)
-        with open(path_file_download, "wb") as f:
-            for chunk in data.iter_content(chunk_size=1024):
-                if chunk:  # filter out keep-alive new chunks
-                    f.write(chunk)
+            logger.debug(f"Directory {dirpackage} can not be created")
+        try:
+            data = requests.get(urlpath, stream=True)
+        except Exception as e:
+            logger.error(
+                "Error trying to download update file %s: %s" % (urlpath, str(e))
+            )
+            try:
+                # Try with proxy parameters as defined on the system
+                proxy_url = (
+                    os.environ.get("HTTP_PROXY")
+                    or os.environ.get("HTTPS_PROXY")
+                    or os.environ.get("http_proxy")
+                    or os.environ.get("https_proxy")
+                )
+                if proxy_url:
+                    proxies = {"http": proxy_url, "https": proxy_url}
+                    data = requests.get(urlpath, stream=True, proxies=proxies)
+                else:
+                    logger.error("No proxies defined")
+            except Exception as e:
+                logger.error("Error downloading update file: %s" % str(e))
+        if data.status_code == 200:
+            logger.debug(f"Writing contents to {path_file_download}")
+            with open(path_file_download, "wb") as f:
+                for chunk in data.iter_content(chunk_size=1024):
+                    if chunk:  # filter out keep-alive new chunks
+                        f.write(chunk)
+        else:
+            logger.error(f"Failed to download {urlpath}: Error {data.status_code}")
         typename = os.path.splitext(path_file_download)[1][1:]
         file_conf_json = os.path.join(os.path.dirname(path_file_download), "conf.json")
         file_xmppdeploy_json = os.path.join(
             os.path.dirname(path_file_download), "xmppdeploy.json"
         )
         nameexecution = os.path.basename(path_file_download)
-        # logger.debug(file_conf_json)
-        # logger.debug(file_xmppdeploy_json)
-        # logger.debug (generate_conf_json(title, updateid, title))
-
+        logger.debug(f"Generating {file_conf_json}")
         with open(file_conf_json, "w") as outfile:
             outfile.write(
                 self.generate_conf_json(title, updateid, description, urlpath)
             )
-
+        logger.debug(f"Generating {file_xmppdeploy_json}")
         with open(file_xmppdeploy_json, "w") as outfile:
             outfile.write(
                 self.generate_xmppdeploy_json(
@@ -121,12 +142,14 @@ class download_packages:
                 namefile
             )
         cmd64 = base64.b64encode(bytes(cmd, "utf-8"))
-        template = """{
+        return """{
         "info": {
             "urlpath" : "%s",
             "creator": "automate_medulla",
             "creation_date": "%s",
             "licenses": "1.0",
+            "gotoreturncode": "3010",
+            "gotolabel": "REBOOTREQUIRED",
             "packageUuid": "%s",
             "spooling": "ordinary",
             "limit_rate_ko": "",
@@ -162,20 +185,47 @@ class download_packages:
                     "actionlabel": "02d57e96",
                     "codereturn": "",
                     "step": 1,
-                    "error": 3,
+                    "error": 6,
                     "action": "actionprocessscriptfile",
-                    "timeout": "3600"
+                    "timeout": "3600",
+                    "gotoreturncode@3010": "REBOOTREQUIRED"
+                },
+                {
+                    "action": "actionwaitandgoto",
+                    "step": 2,
+                    "codereturn": "",
+                    "actionlabel": "wait_cc66c870",
+                    "waiting": "1",
+                    "goto": "END_SUCCESS"
+                },
+                {
+                    "step": 3,
+                    "action": "action_comment",
+                    "actionlabel": "REBOOTREQUIRED",
+                    "comment": "The update has been installed but a reboot is required to apply it."
+                },
+                {
+                    "action": "action_notification",
+                    "step": 4,
+                    "codereturn": "",
+                    "actionlabel": "notif_ee9943f2",
+                    "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
+                    "sizeheader": "15",
+                    "message": "QW4gdXBkYXRlIGhhcyBiZWVuIGluc3RhbGxlZCBvbiB5b3VyIGNvbXB1dGVyIGJ5IE1lZHVsbGEuIFBsZWFzZSByZWJvb3Qgd2hlbiBwb3NzaWJsZSB0byBhcHBseSB0aGUgdXBkYXRlLg0KDQpVbmUgbWlzZSDDoCBqb3VyIGEgw6l0w6kgaW5zdGFsbMOpZSBzdXIgdm90cmUgb3JkaW5hdGV1ciBwYXIgTWVkdWxsYS4gUGVuc2V6IMOgIHJlZMOpbWFycmVyIHF1YW5kIGMnZXN0IHBvc3NpYmxlIGFmaW4gcXVlIGxhIG1pc2Ugw6Agam91ciBzb2l0IGFwcGxpcXXDqWUu",
+                    "sizemessage": "10",
+                    "textbuttonyes": "OK",
+                    "timeout": "800"
                 },
                 {
                     "action": "actionsuccescompletedend",
-                    "step": 2,
+                    "step": 5,
                     "actionlabel": "END_SUCCESS",
                     "clear": "False",
                     "inventory": "noforced"
                 },
                 {
                     "action": "actionerrorcompletedend",
-                    "step": 3,
+                    "step": 6,
                     "actionlabel": "END_ERROR"
                 }
             ]
@@ -183,10 +233,13 @@ class download_packages:
         "metaparameter": {
             "win": {
                 "label": {
-                    "END_SUCCESS": 2,
-                    "END_ERROR": 3,
                     "upd_70a70cc9": 0,
-                    "02d57e96": 1
+                    "02d57e96": 1,
+                    "wait_cc66c870": 2,
+                    "REBOOTREQUIRED": 3,
+                    "notif_ee9943f2": 4,    
+                    "END_SUCCESS": 5,
+                    "END_ERROR": 6
                 }
             },
             "os": [

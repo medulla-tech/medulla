@@ -1,0 +1,9 @@
+# Example config for using Google OIDC
+# clientId and clientSecret are obtained after enabling OAuth 2.0 in your Google account
+# lmcACL is the default ACL defined on a user using this OIDC provider
+#[Google]
+#logoUrl = "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+#urlProvider = "https://accounts.google.com"
+#clientId = ""
+#clientSecret = ""
+#lmcACL = ":base#main#default/"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-12 12:45+0100\n"
+"POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/siveo/teams/72118/zh_TW/)\n"
@@ -21,47 +21,47 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: modules/dyngroup/includes/groups.inc.php:38
+#: modules/dyngroup/includes/groups.inc.php:40
 msgid "All share entities"
 msgstr "所有共用項目"
 
-#: modules/dyngroup/includes/groups.inc.php:61
+#: modules/dyngroup/includes/groups.inc.php:71
 msgid "Group share"
 msgstr "群組共用"
 
-#: modules/dyngroup/includes/groups.inc.php:85
-#: modules/dyngroup/includes/groups.inc.php:283
+#: modules/dyngroup/includes/groups.inc.php:103
+#: modules/dyngroup/includes/groups.inc.php:310
 msgid "Confirm"
 msgstr "確認"
 
-#: modules/dyngroup/includes/groups.inc.php:86
-#: modules/dyngroup/includes/groups.inc.php:284
+#: modules/dyngroup/includes/groups.inc.php:104
+#: modules/dyngroup/includes/groups.inc.php:311
 #: modules/dyngroup/dyngroup/remove_machine.php:58
 #: modules/dyngroup/dyngroup/delete_group.php:67
 #: modules/dyngroup/dyngroup/delete_group.php:111
 msgid "Cancel"
 msgstr "取消"
 
-#: modules/dyngroup/includes/groups.inc.php:118
-#: modules/dyngroup/includes/groups.inc.php:122
+#: modules/dyngroup/includes/groups.inc.php:137
+#: modules/dyngroup/includes/groups.inc.php:141
 #: modules/dyngroup/dyngroup/import_from_file.php:74
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:111
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:113
 msgid "Group name"
 msgstr "群組名稱"
 
-#: modules/dyngroup/includes/groups.inc.php:119
-#: modules/dyngroup/includes/groups.inc.php:123
+#: modules/dyngroup/includes/groups.inc.php:138
+#: modules/dyngroup/includes/groups.inc.php:142
 #: modules/dyngroup/dyngroup/save.php:84
 msgid "Make favourite"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:120
-#: modules/dyngroup/includes/groups.inc.php:124
+#: modules/dyngroup/includes/groups.inc.php:139
+#: modules/dyngroup/includes/groups.inc.php:143
 msgid "Group members"
 msgstr "群組成員"
 
-#: modules/dyngroup/includes/groups.inc.php:167
+#: modules/dyngroup/includes/groups.inc.php:187
 #: modules/dyngroup/dyngroup/creator.php:310
 #: modules/dyngroup/dyngroup/creator.php:316
 #: modules/dyngroup/dyngroup/import_from_file.php:77
@@ -70,7 +70,7 @@ msgstr "群組成員"
 msgid "Yes"
 msgstr "是"
 
-#: modules/dyngroup/includes/groups.inc.php:168
+#: modules/dyngroup/includes/groups.inc.php:190
 #: modules/dyngroup/dyngroup/creator.php:311
 #: modules/dyngroup/dyngroup/import_from_file.php:77
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:93
@@ -78,30 +78,30 @@ msgstr "是"
 msgid "No"
 msgstr "否"
 
-#: modules/dyngroup/includes/groups.inc.php:178
+#: modules/dyngroup/includes/groups.inc.php:200
 msgid "All machines"
 msgstr "全部機器"
 
-#: modules/dyngroup/includes/groups.inc.php:242
+#: modules/dyngroup/includes/groups.inc.php:267
 msgid "Computers listed below are already part of another imaging group."
 msgstr "下面列出的電腦已經屬於另一個影像群組。"
 
-#: modules/dyngroup/includes/groups.inc.php:245
+#: modules/dyngroup/includes/groups.inc.php:271
 #, php-format
 msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
 msgstr "<li>%s  <a href=\"%s\">%s</a></li>"
 
-#: modules/dyngroup/includes/groups.inc.php:257
+#: modules/dyngroup/includes/groups.inc.php:284
 msgid "Computers listed below are already stand-alone registered in imaging."
 msgstr "下面列出的電腦已經在影像群組中獨立註冊。"
 
-#: modules/dyngroup/includes/groups.inc.php:267
+#: modules/dyngroup/includes/groups.inc.php:294
 msgid ""
 "<p>These computers will be moved to this group and their bootmenus "
 "<strong>will be rewritten</strong></p>"
 msgstr ""
 
-#: modules/dyngroup/includes/groups.inc.php:268
+#: modules/dyngroup/includes/groups.inc.php:295
 msgid "All related images to these computers will be <strong>DELETED</strong>"
 msgstr "<strong></strong>"
 
@@ -129,33 +129,33 @@ msgstr "新增一個值"
 msgid "->"
 msgstr "->"
 
-#: modules/dyngroup/includes/request.php:142
+#: modules/dyngroup/includes/request.php:143
 msgid "Search part"
 msgstr "搜尋零件"
 
-#: modules/dyngroup/includes/request.php:145
+#: modules/dyngroup/includes/request.php:146
 msgid "Edit"
 msgstr "編輯"
 
-#: modules/dyngroup/includes/request.php:146
+#: modules/dyngroup/includes/request.php:147
 msgid "Delete"
 msgstr "刪除"
 
-#: modules/dyngroup/includes/request.php:200
+#: modules/dyngroup/includes/request.php:201
 #, php-format
 msgid "%s) Search %s %s (%s) in module %s"
 msgstr "%s)  %s %s %s  (%s)"
 
-#: modules/dyngroup/includes/request.php:202
+#: modules/dyngroup/includes/request.php:203
 #, php-format
 msgid "%s) Search %s %s %s in module %s"
 msgstr "%s)  %s %s %s  %s"
 
-#: modules/dyngroup/includes/dyngroup.php:793
+#: modules/dyngroup/includes/dyngroup.php:800
 msgid "Failed to load some pkgs module"
 msgstr " pkgs "
 
-#: modules/dyngroup/includes/dyngroup.php:799
+#: modules/dyngroup/includes/dyngroup.php:806
 msgid "Failed to load some msc module"
 msgstr " msc "
 
@@ -439,11 +439,11 @@ msgstr "請選擇您要建立的群組類型"
 msgid "Share group '%s' with"
 msgstr " '%s'"
 
-#: modules/dyngroup/dyngroup/edit_share.php:81
+#: modules/dyngroup/dyngroup/edit_share.php:87
 msgid "Group successfully shared"
 msgstr "已成功共用群組"
 
-#: modules/dyngroup/dyngroup/edit_share.php:89
+#: modules/dyngroup/dyngroup/edit_share.php:95
 msgid "Group failed to share"
 msgstr "無法共用群組"
 

@@ -972,11 +972,6 @@ function xmlrpc_reload_deploy(
                                                       $rechedule));
 }
 
-function xmlrpc_get_conformity_update_by_entity()
-{
-    return xmlCall("xmppmaster.get_conformity_update_by_entity");
-}
-
 function xmlrpc_get_conformity_update_by_machine($idmachine)
 {
     return xmlCall("xmppmaster.get_conformity_update_by_machine", [$idmachine]);
@@ -1007,9 +1002,9 @@ function xmlrpc_get_updates_machines_by_entity($entity, $pid, $start = 0, $limit
     return xmlCall("xmppmaster.get_updates_machines_by_entity", [$entity, $pid, $start, $end, $filter]);
 }
 
-function xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate = "", $enddate = "")
+function xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate = "", $enddate = "", $deployment_intervals="")
 {
-    return xmlCall("xmppmaster.pending_entity_update_by_pid", [$entity, $pid, $startdate, $enddate]);
+    return xmlCall("xmppmaster.pending_entity_update_by_pid", [$entity, $pid, $startdate, $enddate, $deployment_intervals]);
 }
 
 function xmlrpc_pending_group_update_by_pid($gid, $pid, $startdate = "", $enddate = "")

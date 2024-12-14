@@ -203,28 +203,39 @@ $version = htmlentities($_GET['version']);
 $deployName = get_def_package_label($label, $version, "-@upd@");
 
 $current = time();
-$start_date = date("Y-m-d h:i:s", $current);
-$end_date = strtotime("+7day", $current);
-$end_date = date("Y-m-d h:i:s", $end_date);
+$start_date = date("Y-m-d H:i:s", $current);
+$_end_date = strtotime("+7day", $current);
+$end_date = date("Y-m-d H:i:s", $_end_date);
 
+$mode = "";
 if(!empty($_GET["entity"])) {
     $formtitle = _T("Schedule update deployment on entity", "update");
+    $mode = "entity";
 } elseif(!empty($_GET["gid"])) {
     $formtitle = _T("Schedule update deployment on group", "update");
+    $mode = "group";
 } elseif(!empty($_GET["machineid"])) {
     $formtitle = _T("Schedule update deployment on machine", "update");
+    $mode="machine";
 }
 
 if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'], $_POST['deployment_intervals'])) {
 
-    $machineid = htmlentities($_GET['machineid']);
-    $inventoryid = htmlentities($_GET["inventoryid"]);
     $updateid = htmlentities($_POST['updateid']);
     $startdate = htmlentities($_POST['start_date']);
     $enddate = htmlentities($_POST['end_date']);
     $deployment_intervals = htmlentities($_POST['deployment_intervals']);
 
-    $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate, $deployment_intervals);
+    switch($mode){
+        case "entity":
+            $result = xmlrpc_pending_entity_update_by_pid(htmlentities($_GET["entity"]), $updateid, $startdate, $enddate, $deployment_intervals);
+            break;
+        case "machine":
+            $machineid = htmlentities($_GET['machineid']);
+            $inventoryid = htmlentities($_GET["inventoryid"]);
+            $result = xmlrpc_pending_machine_update_by_pid($machineid, $inventoryid, $updateid, $deployName, htmlentities($_SESSION['login']), $startdate, $enddate, $deployment_intervals);
+            break;
+    }
 
     $mesg = (!empty($result["mesg"])) ? htmlentities($result["mesg"]) : "";
     if(!empty($result["success"]) && $result["success"] == true) {
@@ -232,7 +243,15 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
     } else {
         new NotifyWidgetFailure($mesg);
     }
-    header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["cn" => htmlentities($_GET['cn']), "inventoryid" => htmlentities($_GET['inventoryid']), "machineid" => htmlentities($_GET['machineid'])]));
+
+    switch($mode){
+        case "entity":
+            header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["entity" => htmlentities($_GET['entity'])]));
+            break;
+        case "machine":
+            header("location:". urlStrRedirect("updates/updates/deploySpecificUpdate", ["cn" => htmlentities($_GET['cn']), "inventoryid" => htmlentities($_GET['inventoryid']), "machineid" => htmlentities($_GET['machineid'])]));
+            break;
+    }
     exit;
 } else {
     $f = new PopupForm($formtitle);
@@ -243,7 +262,7 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
 
     $ss =  new TrFormElement(
         _T('The command must start after', 'msc'),
-        new DateTimeTpl('start_date')
+        new DateTimeTpl('start_date', $start_date)
     );
     $f->add(
         $ss,
@@ -255,7 +274,7 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
     $f->add(
         new TrFormElement(
             _T('The command must stop before', 'msc'),
-            new DateTimeTpl('end_date')
+            new DateTimeTpl('end_date', $start_date)
         ),
         array(
             "value" => $end_date,

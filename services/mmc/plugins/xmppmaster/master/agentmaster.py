@@ -271,11 +271,14 @@ class MUCBot(slixmpp.ClientXMPP):
 
         # Delete old messages
         logger.debug("Delete old offline ejabberd messages")
-        cmd = "ejabberdctl --no-timeout delete_old_messages 1"
+        deletion_command = "ejabberdctl --no-timeout delete_old_messages 1"
         try:
-            a = simplecommandstr(cmd)
-            logger.debug(a["result"])
-        except Exception as e:
+            deletion_result = simplecommandstr(deletion_command)
+            logger.debug(deletion_result["result"])
+        except Exception as error_deleting_old_messages:
+            logger.error(
+                f"The deletion of the old messages failed with the error \n {error_deleting_old_messages}"
+            )
             pass
 
         # dictionary used for deploy

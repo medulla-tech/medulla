@@ -1200,7 +1200,9 @@ def get_plugin_lists():
                 line = line.split("#")[0]
             try:
                 meta = json.loads(line.replace("plugin =", ""))
-            except:
+            except Exception as error_loading:
+                logger.error(f"The file {file} is not loaded correctly")
+                logger.error(error_loading)
                 pass
             plugins[file] = [
                 meta["VERSION"],
@@ -1852,21 +1854,6 @@ def get_count_updates_enable():
     return result
 
 
-def get_conformity_update_by_entity():
-    result = XmppMasterDatabase().get_conformity_update_by_entity()
-    resultarray = []
-    for t in result:
-        r = {
-            "entity": t,
-            "nbmachines": int(result[t]["nbmachines"]),
-            "nbupdate": int(result[t]["nbupdates"]),
-            "totalmach": int(result[t]["totalmach"]),
-            "conformite": int(result[t]["conformite"]),
-        }
-        resultarray.append(r)
-    return resultarray
-
-
 def ban_machines(subaction, jid_ars, machines):
     sessionid = name_random(8, "banmachines")
     boundjidbare = "master@pulse/MASTER"
@@ -1929,9 +1916,9 @@ def get_updates_machines_by_entity(entity, pid, start=0, limit=-1, filter=""):
     )
 
 
-def pending_entity_update_by_pid(entity, pid, startdate="", enddate=""):
+def pending_entity_update_by_pid(entity, pid, startdate="", enddate="", interval=""):
     return XmppMasterDatabase().pending_entity_update_by_pid(
-        entity, pid, startdate, enddate
+        entity, pid, startdate, enddate, interval
     )
 
 

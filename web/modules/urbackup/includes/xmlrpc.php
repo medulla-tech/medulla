@@ -61,14 +61,34 @@ function xmlrpc_remove_group($groupid){
     return xmlCall("urbackup.remove_group", [$groupid]);
 }
 
-function xmlrpc_check_client($jidmachine, $clientid, $authkey){
-    // Call agent to send command
-    return xmlCall("urbackup.check_client", [$jidmachine, $clientid, $authkey]);
+function xmlrpc_enable_client($jidmachine, $clientid, $authkey){
+    // Call agent to send command, enable client
+    return xmlCall("urbackup.enable_client", [$jidmachine, $clientid, $authkey]);
 }
 
-function xmlrpc_remove_client($jidmachine){
-    // Call agent to send command
-    return xmlCall("urbackup.remove_client", [$jidmachine]);
+function xmlrpc_remove_client($jidmachine, $client_id){
+    // Call agent to send command, to disable client
+    return xmlCall("urbackup.remove_client", [$jidmachine, $client_id]);
+}
+
+function xmlrpc_restart_urbackup_service($jidmachine){
+    // Call agent to send command, to restart urbackup service
+    return xmlCall("urbackup.restart_urbackup_service", [$jidmachine]);
+}
+
+function xmlrpc_get_client_status($client_id){
+    // Database request to get client status
+    return xmlCall("urbackup.get_client_status", [$client_id]);
+}
+
+function xmlrpc_insertNewClient($client_id, $authkey){
+    // Database request to insert new client
+    return xmlCall("urbackup.insertNewClient", [$client_id, $authkey]);
+}
+
+function xmlrpc_getComputersEnableValue($jid){
+    // Database request get enabled info from xmppmaster.machines
+    return xmlCall("urbackup.getComputersEnableValue", [$jid]);
 }
 
 function xmlrpc_get_settings_global(){
@@ -84,6 +104,11 @@ function xmlrpc_save_settings($clientid, $name_data, $value_data){
 function xmlrpc_get_clients(){
     // Return all user
     return xmlCall("urbackup.get_settings_clients", []);
+}
+
+function xmlrpc_get_auth_client($clientid){
+    // Return auth key for one client
+    return xmlCall("urbackup.get_auth_client", [$clientid]);
 }
 
 function xmlrpc_get_backups_all_client(){
@@ -111,9 +136,14 @@ function xmlrpc_client_download_backup_file($client_id, $backup_id, $path, $filt
     return xmlCall("urbackup.client_download_backup_file", [$client_id, $backup_id, $path, $filter]);
 }
 
-function xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $path, $shahash){
+function xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $path, $shahash, $filter){
     // Restore file for client, need shahash for only file
-    return xmlCall("urbackup.client_download_backup_file_shahash", [$client_id, $backup_id, $path, $shahash]);
+    return xmlCall("urbackup.client_download_backup_file_shahash", [$client_id, $backup_id, $path, $shahash, $filter]);
+}
+
+function xmlrpc_get_all_logs(){
+    // Return status
+    return xmlCall("urbackup.getAllLogs", []);
 }
 
 function xmlrpc_get_status(){

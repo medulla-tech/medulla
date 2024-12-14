@@ -77,14 +77,19 @@ class GlpiAuthenticator(AuthenticatorI):
             # Peut-être qu'il y a une autre logique à appliquer ici, selon vos besoins
 
             params = {
-                "postdata": urllib.parse.urlencode({
-                    "login": self.user,
-                    "password": self.password.decode('utf-8') if isinstance(self.password, bytes) else self.password,
-                }).encode('utf-8')
+                "postdata": urllib.parse.urlencode(
+                    {
+                        "login": self.user,
+                        "password": (
+                            self.password.decode("utf-8")
+                            if isinstance(self.password, bytes)
+                            else self.password
+                        ),
+                    }
+                ).encode("utf-8")
             }
 
             return params
-
 
     def _cbLoginPost(self, params):
         self.logger.debug("GlpiAuthenticator: posting on login page")

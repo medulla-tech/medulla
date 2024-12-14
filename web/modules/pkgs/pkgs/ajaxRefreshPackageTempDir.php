@@ -2,10 +2,10 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
- *
+ * (c) 2024 Siveo, http://www.siveo.net
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,6 +60,7 @@ if(safeCount($files)) {
     // FIXME: duplicated fillForm function
     function fillForm(selectedPapi, tempdir) {
         url = '<?php echo urlStrRedirect("pkgs/pkgs/ajaxGetSuggestedCommand1")?>&papiid=' + selectedPapi;
+        tempdir = jQuery('#rdo_files').val();
         if (tempdir != undefined) {
             url += '&tempdir=' + tempdir;
         }
@@ -69,6 +70,13 @@ if(safeCount($files)) {
             success: function(data){
                 jQuery('#version').val(data.version);
                 jQuery('#commandcmd').val(data.commandcmd);
+
+                if(document.getElementById("autocmd")){
+                    jQuery('#autocmd').find("[name='script']").val(data.commandcmd);
+                }
+                else{
+                    jQuery("#current-actions").prepend(jQuery(document.createElement("li")).prop("id","autocmd").load("/mmc/modules/pkgs/includes/actions/actionprocessscriptfile.php",{"script":data.commandcmd,"typescript":"Batch"}));
+                }
             }
         });
     }

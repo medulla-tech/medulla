@@ -31,6 +31,36 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 unset($_GET['action']);
 
+$allowedSources = ["xmppmaster", "glpi"];
+
+$dataSource = isset($_GET['source']) && in_array($_GET['source'], $allowedSources) ? $_GET['source'] : "xmppmaster";
+
+foreach ($allowedSources as $source) {
+    echo '<input type="radio" ';
+    if ($dataSource === $source) echo "checked";
+    echo ' id="' . $source . '" name="source" value="' . $source . '"/> ';
+    echo '<label for="' . $source . '" style="display:initial;">' . ($source === 'xmppmaster' ? 'Medulla' : ucfirst($source)) . '</label>';
+}
+?>
+
+<script type="text/javascript">
+    jQuery('input[type=radio][name=source]').change(function () {
+        var selectedValue = this.value;
+
+        var currentUrl = new URL(window.location.href);
+        var params = new URLSearchParams(currentUrl.search);
+
+        params.set("source", selectedValue);
+
+        var baseUrl = currentUrl.origin + currentUrl.pathname;
+        var newUrl = `${baseUrl}?${params.toString()}`;
+
+        window.location.href = newUrl;
+    });
+</script>
+
+<?php
+
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByMachines"), "container", $_GET);
 $ajax->display();
 $ajax->displayDivToUpdate();

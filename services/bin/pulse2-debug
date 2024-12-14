@@ -27,7 +27,7 @@ import subprocess
 import pprint
 import readline
 import atexit
-import xmlrpc.client
+from xmlrpc.client import SafeTransport, ServerProxy
 import urllib.parse
 import argparse
 from collections import namedtuple
@@ -38,8 +38,11 @@ from http.client import CannotSendRequest
 from twisted.internet import task, reactor
 from twisted.python import threadable; threadable.init(1)
 from twisted.internet.threads import deferToThread
-from twisted.web import xmlrpc
+import ssl
+import base64
+
 deferred = deferToThread.__get__ #Create a decorator for deferred functions
+
 
 HISTFILE = os.path.join(os.path.expanduser("~"), ".pulse2debughist")
 COOKIES_FILE = '/tmp/pulse2-debug-cookies'
@@ -451,90 +454,31 @@ BCOLORS = bcolors()
 # XMLRPC Client classes
 # ====================================================================================
 
-class cookietransportrequest:
-    """A Transport request method that retains cookies over its lifetime.
-
-    The regular xmlrpclib transports ignore cookies. Which causes
-    a bit of a problem when you need a cookie-based login, as with
-    the Bugzilla XMLRPC interface.
-
-    So this is a helper for defining a Transport which looks for
-    cookies being set in responses and saves them to add to all future
-    requests.
-    """
-
-    # Inspiration drawn from
-    # http://blog.godson.in/2010/09/how-to-make-python-xmlrpclib-client.html
-    # http://www.itkovian.net/base/transport-class-for-pythons-xml-rpc-lib/
-    #
-    # Note this must be an old-style class so that __init__ handling works
-    # correctly with the old-style Transport class. If you make this class
-    # a new-style class, Transport.__init__() won't be called.
-
-    cookies = []
-    def send_cookies(self, connection):
+class CookieTransport(SafeTransport):
+    def __init__(self, username, password, cookies=None, context=None):
+        super().__init__(context=context)
+        auth = f"{username}:{password}".encode("utf-8")
+        self.auth_header = "Basic %s"%base64.b64encode(auth).decode("utf-8")
+        self.cookies = cookies or {}
+    def send_headers(self, connection, headers=[]):
+        if ("Authorization",self.auth_header) not in headers:
+            headers.append(("Authorization",self.auth_header))
         if self.cookies:
-            for cookie in self.cookies:
-                connection.putheader("Cookie", cookie)
+            cookie_header = "; ".join([f"{key}={value}" for key, value in self.cookies.items()])
+            connection.putheader("Cookie", cookie_header)
+        super().send_headers(connection, headers)
+    def parse_response(self, response):
+        _headers = response.headers.get("Set-Cookie")
+        if _headers is not None:
+            headers = _headers.split("; ")
+            for header in headers:
+                cookie = header.split("=")
+                self.cookies[cookie[0]] = cookie[1] if len(cookie) == 2 else True
+        return super().parse_response(response)
+    def send_request(self, connection, handler, request_body, verbose=True):
+        # Call the parent class's method to send the request
+        return super().send_request(connection, handler, request_body, verbose)
 
-    def request(self, host, handler, request_body, verbose=0):
-        self.verbose = verbose
-
-        # issue XML-RPC request
-        h = self.make_connection(host)
-        if verbose:
-            h.set_debuglevel(1)
-
-        self.send_request(h, handler, request_body)
-        self.send_host(h, host)
-        self.send_cookies(h)
-        self.send_user_agent(h)
-        self.send_content(h, request_body)
-
-        # Deal with differences between Python 2.4-2.6 and 2.7.
-        # In the former h is a HTTP(S). In the latter it's a
-        # HTTP(S)Connection. Luckily, the 2.4-2.6 implementation of
-        # HTTP(S) has an underlying HTTP(S)Connection, so extract
-        # that and use it.
-        try:
-            response = h.getresponse()
-        except AttributeError:
-            response = h._conn.getresponse()
-
-        # Add any cookie definitions to our list.
-        for header in response.msg.getallmatchingheaders("Set-Cookie"):
-            val = header.split(": ", 1)[1]
-            cookie = val.split(";", 1)[0]
-            self.cookies.append(cookie)
-
-        if response.status != 200:
-            raise xmlrpc.client.ProtocolError(host + handler, response.status,
-                                          response.reason, response.msg.headers)
-
-        payload = response.read()
-        parser, unmarshaller = self.getparser()
-        parser.feed(payload)
-        parser.close()
-
-        return unmarshaller.close()
-
-    def transport(self, uri):
-        """Return an appropriate Transport for the URI.
-
-        If the URI type is https, return a CookieSafeTransport.
-        If the type is http, return a CookieTransport.
-        """
-        if urllib.parse.urlparse(uri, "http")[0] == "https":
-            return cookiesafetransport()
-        else:
-            return cookietransport()
-
-
-class cookietransport(cookietransportrequest, xmlrpc.client.Transport):
-    pass
-
-class cookiesafetransport(cookietransportrequest, xmlrpc.client.SafeTransport):
-    pass
 
 
 # ====================================================================================
@@ -563,9 +507,9 @@ class ConfigReader :
             sys.exit(2)
 
         config = ConfigParser()
-        config.readfp(open(inifile,'r'))
+        config.read_file(open(inifile,'r'))
         if os.path.isfile(f'{inifile}.local'):
-            config.readfp(open(f'{inifile}.local', 'r'))
+            config.read_file(open(f'{inifile}.local', 'r'))
 
         return config
 
@@ -646,10 +590,10 @@ def completer(text, state):
 @deferred
 def prompt():
     while 1:
-        input = ''
-        while not input:
+        _input = ''
+        while not _input:
             try:
-                input = raw_input("]> ").strip()
+                _input = input("]> ").strip()
             except (KeyboardInterrupt, EOFError) as e:
                 # Receive pipe-signal or EOFError
                 print('')
@@ -659,7 +603,7 @@ def prompt():
                 reactor.stop()
                 return
         try:
-            exec(input, CONSOLE_VARS)
+            exec(_input, CONSOLE_VARS)
         except Exception:
             ex_type, ex, tb = sys.exc_info()
             #print ex_type
@@ -676,16 +620,23 @@ class RpcProxy:
 
     def __init__(self, config):
         self.config = config
-        tr = cookietransportrequest()
-        self.url = config.mmc_agent_url
-        self.proxy = xmlrpc.client.ServerProxy(self.url, tr.transport(self.url))
+        self.url = config._config.get("server_01", "url")
+        username=config._config.get("global", "login")
+        password=config._config.get("global", "password")
+        context = None
+
+        if urllib.parse.urlparse(self.url, "http")[0] == "https":
+            context = ssl._create_unverified_context()
+
+        transport = CookieTransport(username, password, context=context)
+        self.proxy = ServerProxy(self.url, transport=transport)
         self.ldap_password = config.ldap_password
         self.auth()
 
 
     def auth(self):
-        self.proxy.base.ldapAuth('root', self.ldap_password)
-
+        result = self.proxy.base.ldapAuth('root', self.ldap_password)
+        print("auth OK")
 
 
 # ====================================================================================
@@ -788,6 +739,8 @@ def logSniffer():
     while True:
         line = LOGSNIFFER.stdout.readline()
 
+        if isinstance(line, bytes):
+            line = line.decode("utf-8")
         if 'DEBUG' in line:
             if 'RPC method call from user' not in line:
                 continue
@@ -839,7 +792,6 @@ if __name__ == "__main__":
     config = ConfigReader()
 
     # Init proxy
-
     p = RpcProxy(config)
     # init funcs for auto completition
     funcs = p.proxy.system.listMethods()

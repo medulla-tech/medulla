@@ -178,17 +178,17 @@ $re = xmlrpc_get_machine_for_id(
     $maxperpage
 );
 
-if($getdeployment['total'] != 0) {
-    $count = $getdeployment['total'];
-} else {
-    $count = $re['total'];
-}
 
 // STATS FROM XMPPMASTER DEPLOY
 $statsfromdeploy = xmlrpc_getstatdeploy_from_command_id_and_title($cmd_id, $title);
 // get some info from msc for this deployment
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
+if($getdeployment['total'] != 0) {
+    $count = $statsfromdeploy['totalmachinedeploy'];
+} else {
+    $count = $re['total'];
+}
 
 if ($count == 0) {
     // Refresh if no deployment is started.

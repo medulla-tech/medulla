@@ -30,68 +30,24 @@ $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $kb = (isset($_GET['kb'])) ? $_GET['kb'] : "";
 $updateid = (isset($_GET['updateid'])) ? $_GET['updateid'] : "";
 $maxperpage = $conf["global"]["maxperpage"];
-$gid = (isset($_GET['gid'])) ? $_GET['gid'] : "";
-$contains = (isset($_GET['contains'])) ? $_GET['contains'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
 $end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
-$filterCTX = "Microsoft";
-$field = "platform";
 
-$ctx = [];
-$ctx['location'] = $location;
-$ctx['filter'] = $filterCTX;
-$ctx['field'] = $field;
-$ctx['contains'] = $contains;
+$without_Upd = xmlrpc_get_machines_needing_update($updateid, $location, $start, $maxperpage, $filter);
 
-$ctx['start'] = $start;
-$ctx['end'] = $end;
-$ctx['maxperpage'] = $maxperpage;
-
-$uuid = htmlspecialchars($_GET['uuid']);
-$ctx['uuid'] = $uuid;
-
-//$uuidCut = substr($uuid, -1);
-
-$entityMachineList = xmlrpc_xmppmaster_get_machines_list($start, $end, $ctx);
-
-$withUpd = [];
-$withoutUpd = [];
-
-$titles_with = [];
-$plateform_with = [];
-
-$titles_without = [];
-$plateform_without = [];
-
-$with_Upd = xmlrpc_get_machine_with_update($kb, $updateid);
-$without_Upd = xmlrpc_get_machines_needing_update($updateid);
-$count_with_upd = sizeof($with_Upd[1]);
-$count_without_upd = sizeof($without_Upd);
-
-$count = $entityMachineList['count'];
-for($i = 0; $i < $count; $i++) {
-    if (in_array($entityMachineList['data']['hostname'][$i], $with_Upd[1])) {
-        $titles_with[] = $entityMachineList['data']['hostname'][$i];
-        $plateform_with[] = $entityMachineList['data']['platform'][$i];
-    }
-}
-
-for($i = 0; $i < $count; $i++) {
-    if (in_array($entityMachineList['data']['hostname'][$i], $without_Upd)) {
-        $titles_without[] = $entityMachineList['data']['hostname'][$i];
-        $plateform_without[] = $entityMachineList['data']['platform'][$i];
-    }
-}
-
+$machines = $without_Upd["datas"];
+$total = $without_Upd["total"];
 
 echo "<h2>"._T("Machines without update", "updates")."</h2>";
-$n = new OptimizedListInfos($titles_without, _T("Hostname", "updates"));
+$n = new OptimizedListInfos($machines["name"], _T("Hostname", "updates"));
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($plateform_without, _T("Platform", "updates"));
+$n->addExtraInfo($machines["platform"], _T("Platform", "updates"));
 
-$n->setItemCount($count_with_upd);
-$n->setNavBar(new AjaxNavBar($count_with_upd, $filter));
+$n->start=0;
+$n->end = $total;
+$n->setItemCount($total);
+$n->setNavBar(new AjaxNavBar($total, $filter, "updateSearchParamformWithout"));
 
 $n->display();

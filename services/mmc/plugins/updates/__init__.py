@@ -70,9 +70,13 @@ def get_black_list(start, end, filter=""):
 def get_enabled_updates_list(entity, upd_list="gray", start=0, end=-1, filter=""):
     if upd_list not in ["gray", "white"]:
         upd_list = "gray"
-    return UpdatesDatabase().get_enabled_updates_list(
-        entity, upd_list, start, end, filter
+    # The glpi config is sent to updatedatabase to get the filter_on param
+    datas = UpdatesDatabase().get_enabled_updates_list(
+        entity, upd_list, start, end, filter, Glpi().config
     )
+    count_glpi = Glpi().get_machines_list1(0, 0, {"location": entity})
+    datas["total"] = count_glpi["count"]
+    return datas
 
 
 def get_family_list(start, end, filter=""):
@@ -103,34 +107,140 @@ def white_unlist_update(updateid):
     return UpdatesDatabase().white_unlist_update(updateid)
 
 
-def get_machine_with_update(kb, updateid):
-    glpi = Glpi().get_machine_with_update(kb)
-    history = []
-    if updateid != "":
-        history = XmppMasterDatabase().get_history_by_update(updateid)
-
-    for machine in glpi:
-        if machine != []:
-            uuid = "UUID%s" % machine[0]
-            if uuid in history:
-                del history[uuid]
-
-    for uuid in history:
-        glpi.append(history[uuid]["id"])
-        glpi.append(history[uuid]["hostname"])
-        glpi.append(history[uuid]["entity"])
-        glpi.append(history[uuid]["kb"])
-        glpi.append(history[uuid]["numkb"])
-    return glpi
+def get_machine_with_update(kb, updateid, uuid, start=0, limit=-1, filter=""):
+    result = XmppMasterDatabase().get_machine_with_update(
+        kb, updateid, uuid, start, limit, filter, Glpi().config
+    )
+    return result
 
 
-def get_count_machine_with_update(kb):
-    return Glpi().get_count_machine_with_update(kb)
+def get_count_machine_with_update(kb, uuid, list):
+    return Glpi().get_count_machine_with_update(kb, uuid, list)
 
 
-def get_machines_needing_update(updateid):
-    return UpdatesDatabase().get_machines_needing_update(updateid)
+def get_machines_needing_update(updateid, entity, start=0, limit=-1, filter=""):
+    return UpdatesDatabase().get_machines_needing_update(
+        updateid, entity, Glpi().config, start, limit, filter
+    )
 
+
+def get_conformity_update_by_entity(entities=[], source="xmppmaster"):
+    """Get the conformity for specified entities"""
+
+    # init resultarray with default datas
+    # init entitiesarray with entities ids, this will be used in the "in" sql clause
+    resultarray = {}
+    for entity in entities:
+        eid = entity["uuid"].replace("UUID", "")
+        resultarray[entity["uuid"]] = {
+            "entity": eid,
+            "nbmachines": 0,
+            "nbupdate": 0,
+            "totalmach": 0,
+            "conformite": 0,
+        }
+
+    config = Glpi().config if source == "glpi" else None
+
+    if source == "xmppmaster":
+        result = XmppMasterDatabase().get_conformity_update_by_entity(
+            entities=[entity["uuid"].replace("UUID", "") for entity in entities],
+            config=config,
+        )
+
+        for counters in result:
+            euid = f"UUID{counters['entity']}"
+            if euid in resultarray:
+                resultarray[euid]["totalmach"] = counters.get("totalmach", 0)
+                resultarray[euid]["nbmachines"] = counters.get("nbmachines", 0)
+                resultarray[euid]["nbupdate"] = counters.get("nbupdates", 0)
+
+                if resultarray[euid]["totalmach"] > 0:
+                    resultarray[euid]["conformite"] = int(
+                        (1 - (resultarray[euid]["nbmachines"] / resultarray[euid]["totalmach"])) * 100
+                    )
+                else:
+                    resultarray[euid]["conformite"] = 100
+
+    elif source == "glpi":
+        # Recover the machines from GLPI for each entity
+        glpi_results = []
+        for entity in entities:
+            params = {
+                "location": entity["uuid"],
+                "filter": "",
+                "field": "",
+                "contains": "",
+                "start": 0,
+                "end": 20,
+                "maxperpage": 20,
+            }
+            glpi_data = Glpi().get_machines_list1(0, 20, params)
+            glpi_uuids = glpi_data["data"].get("uuid", [])
+            glpi_results.append({
+                "entity": entity["uuid"].replace("UUID", ""),
+                "machines": [{"uuid": f"UUID{uuid}"} for uuid in glpi_uuids],
+                "totalmach": len(glpi_uuids),
+            })
+
+        # Identify the machines common to GLPI and XMPPMaster
+        all_glpi_machines = [machine["uuid"] for result in glpi_results for machine in result["machines"]]
+        machines_in_both = XmppMasterDatabase().get_machine_in_both_sources(all_glpi_machines)
+
+        result = []
+        for glpi_result in glpi_results:
+            entity_id = glpi_result["entity"]
+            total_machines_glpi = glpi_result["totalmach"]
+            glpi_machine_ids = [machine["uuid"] for machine in glpi_result["machines"]]
+
+            machines_common = [uuid for uuid in glpi_machine_ids if machines_in_both.get(uuid, False)]
+
+            conformity_data = XmppMasterDatabase().get_conformity_update_by_entity(
+                entities=[entity_id],
+                config=config,
+            )
+
+            if conformity_data:
+                total_non_conform = conformity_data[0].get("nbmachines", 0)
+            else:
+                total_non_conform = 0
+
+            total_updates = sum(item.get("nbupdates", 0) for item in conformity_data)
+
+            result.append({
+                "entity": entity_id,
+                "totalmach": total_machines_glpi,
+                "nbmachines": total_non_conform,
+                "nbupdates": total_updates,
+                "common_machines_count": len(machines_common),
+            })
+
+        for counters in result:
+            euid = f"UUID{counters['entity']}"
+            if euid in resultarray:
+                resultarray[euid]["totalmach"] = counters.get("totalmach", 0)
+                resultarray[euid]["nbmachines"] = counters.get("nbmachines", 0)
+                resultarray[euid]["nbupdate"] = counters.get("nbupdates", 0)
+
+                # Calculation based solely on common machines
+                common_count = counters.get("common_machines_count", 0)
+                if common_count > 0:
+                    resultarray[euid]["conformite"] = int(
+                        (1 - (resultarray[euid]["nbmachines"] / common_count)) * 100
+                    )
+                else:
+                    resultarray[euid]["conformite"] = 100
+
+    else:
+        raise ValueError(f"Source inconnue : {source}")
+
+    return resultarray
+
+def get_machines_xmppmaster(start, end, filter=""):
+    return XmppMasterDatabase().get_machines_xmppmaster(start, end, filter)
+
+def get_machine_in_both_sources(glpi_ids):
+    return XmppMasterDatabase().get_machine_in_both_sources(glpi_ids)
 
 def get_conformity_update_by_machines(ids=[]):
     """ids is formated as :
@@ -139,14 +249,26 @@ def get_conformity_update_by_machines(ids=[]):
         "ids": [4,3]
     }
     """
-    merged = {}
+
+    result = {}
+    for uuid in ids["uuids"]:
+        result[uuid] = {
+            "uuid": "",
+            "id": "",
+            "missing": 0,
+            "inprogress": 0,  # Ajout du champ inprogress
+            "hostname": "",
+            "installed": 0,
+            "total": 0,
+            "compliance": 100.0,
+        }
     range = len(ids["uuids"])
     count = 0
     while count < range:
-        merged[ids["uuids"][count]] = ids["ids"][count]
+        result[ids["uuids"][count]]["id"] = ids["ids"][count]
         count += 1
 
-    history = XmppMasterDatabase().get_update_history_by_machines(ids["ids"])
+
     if ids["uuids"] == "" or ids["uuids"] == []:
         installed = {}
     else:
@@ -157,30 +279,20 @@ def get_conformity_update_by_machines(ids=[]):
     else:
         missing = XmppMasterDatabase().get_count_missing_updates_by_machines(ids["ids"])
 
-    result = []
+
     for uuid in installed:
-        _missing = missing[uuid]["missing"] if uuid in missing else 0
-        count_historic = 0
-        try:
-            count_historic = len(history[uuid])
-        except:
-            pass
-        count_installed = installed[uuid]["installed"] + count_historic
-        count_total = count_installed + _missing
-        try:
-            compliance = ((1.0 * count_installed) / (1.0 * count_total)) * 100
-        except:
-            compliance = 100
-        result.append(
-            {
-                "uuid": uuid,
-                "id": merged[uuid],
-                "missing": _missing,
-                "hostname": installed[uuid]["cn"],
-                "installed": count_installed,
-                "total": count_total,
-                "compliance": compliance,
-            }
+        result[uuid]["installed"] = installed[uuid]["installed"]
+
+    for uuid in missing:
+        result[uuid]["missing"] = missing[uuid]["missing"]
+        result[uuid]["inprogress"] = missing[uuid]["inprogress"]
+
+    for uuid in result:
+        result[uuid]["total"] = result[uuid]["installed"] + result[uuid]["missing"] + result[uuid]["inprogress"]
+        result[uuid]["compliance"] = (
+            (result[uuid]["installed"] / result[uuid]["total"]) * 100
+            if result[uuid]["total"] > 0
+            else 100
         )
 
     return result

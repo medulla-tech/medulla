@@ -80,6 +80,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	imaging/sql/schema-024.sql \
 	imaging/sql/schema-025.sql \
 	imaging/sql/schema-026.sql \
+	imaging/sql/schema-027.sql \
 	imaging/sysprep/sysprep-domain.inf \
 	imaging/sysprep/sysprep-name.inf \
 	imaging/sysprep/sysprep-wg.inf \
@@ -262,6 +263,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-086.sql \
 	xmppmaster/sql/schema-087.sql \
 	xmppmaster/sql/schema-088.sql \
+	xmppmaster/sql/schema-089.sql \
+	xmppmaster/sql/schema-090.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \
@@ -277,6 +280,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	pkgs/sql/schema-005.sql \
 	pkgs/sql/schema-006.sql \
 	pkgs/sql/schema-007.sql \
+	pkgs/sql/schema-008.sql \
+	pkgs/sql/schema-009.sql \
 	updates/sql/schema-001.sql \
 	urbackup/sql/schema-001.sql \
 	monit/pulse2 \

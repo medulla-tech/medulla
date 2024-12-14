@@ -347,8 +347,11 @@ class synch_packages:
                 )
                 try:
                     # Try with proxy parameters as defined on the system
-                    proxy_url = os.environ.get("HTTP_PROXY") or os.environ.get(
-                        "HTTPS_PROXY"
+                    proxy_url = (
+                        os.environ.get("HTTP_PROXY")
+                        or os.environ.get("HTTPS_PROXY")
+                        or os.environ.get("http_proxy")
+                        or os.environ.get("https_proxy")
                     )
                     if proxy_url:
                         proxies = {"http": proxy_url, "https": proxy_url}
@@ -459,6 +462,8 @@ class synch_packages:
             "edition": "automate_medulla",
             "creation_date": "%s",
             "licenses": "1.0",
+            "gotoreturncode": "3010",
+            "gotolabel": "REBOOTREQUIRED",
             "packageUuid": "%s",
             "spooling": "ordinary",
             "limit_rate_ko": "",
@@ -494,20 +499,47 @@ class synch_packages:
                     "actionlabel": "02d57e96",
                     "codereturn": "",
                     "step": 1,
-                    "error": 3,
+                    "error": 6,
                     "action": "actionprocessscriptfile",
-                    "timeout": "3600"
+                    "timeout": "3600",
+                    "gotoreturncode@3010": "REBOOTREQUIRED"
+                },
+                {
+                    "action": "actionwaitandgoto",
+                    "step": 2,
+                    "codereturn": "",
+                    "actionlabel": "wait_cc66c870",
+                    "waiting": "1",
+                    "goto": "END_SUCCESS"
+                },
+                {
+                    "step": 3,
+                    "action": "action_comment",
+                    "actionlabel": "REBOOTREQUIRED",
+                    "comment": "The update has been installed but a reboot is required to apply it."
+                },
+                {
+                    "action": "action_notification",
+                    "step": 4,
+                    "codereturn": "",
+                    "actionlabel": "notif_ee9943f2",
+                    "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
+                    "sizeheader": "15",
+                    "message": "QW4gdXBkYXRlIGhhcyBiZWVuIGluc3RhbGxlZCBvbiB5b3VyIGNvbXB1dGVyIGJ5IE1lZHVsbGEuIFBsZWFzZSByZWJvb3Qgd2hlbiBwb3NzaWJsZSB0byBhcHBseSB0aGUgdXBkYXRlLg0KDQpVbmUgbWlzZSDDoCBqb3VyIGEgw6l0w6kgaW5zdGFsbMOpZSBzdXIgdm90cmUgb3JkaW5hdGV1ciBwYXIgTWVkdWxsYS4gUGVuc2V6IMOgIHJlZMOpbWFycmVyIHF1YW5kIGMnZXN0IHBvc3NpYmxlIGFmaW4gcXVlIGxhIG1pc2Ugw6Agam91ciBzb2l0IGFwcGxpcXXDqWUu",
+                    "sizemessage": "10",
+                    "textbuttonyes": "OK",
+                    "timeout": "800"
                 },
                 {
                     "action": "actionsuccescompletedend",
-                    "step": 2,
+                    "step": 5,
                     "actionlabel": "END_SUCCESS",
                     "clear": "False",
                     "inventory": "noforced"
                 },
                 {
                     "action": "actionerrorcompletedend",
-                    "step": 3,
+                    "step": 6,
                     "actionlabel": "END_ERROR"
                 }
             ]
@@ -515,10 +547,13 @@ class synch_packages:
         "metaparameter": {
             "win": {
                 "label": {
-                    "END_SUCCESS": 2,
-                    "END_ERROR": 3,
                     "upd_70a70cc9": 0,
-                    "02d57e96": 1
+                    "02d57e96": 1,
+                    "wait_cc66c870": 2,
+                    "REBOOTREQUIRED": 3,
+                    "notif_ee9943f2": 4,    
+                    "END_SUCCESS": 5,
+                    "END_ERROR": 6
                 }
             },
             "os": [
