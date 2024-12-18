@@ -553,7 +553,7 @@ class PXEImagingApi(PXEMethodParser):
             inventory = inventory.decode("utf-8")
 
         inventory = '<?xml version="1.0" encoding="utf-8"?>' + inventory
-        logging.getLogger().debug("send invotory depuis _injectedInventorySend")
+        logging.getLogger().debug("send inventory from _injectedInventorySend")
 
         try:
             self.send_inventory(inventory, hostname)

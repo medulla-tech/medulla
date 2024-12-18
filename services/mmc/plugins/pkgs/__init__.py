@@ -31,6 +31,8 @@ from mmc.plugins.pkgs.config import PkgsConfig
 import uuid
 import json
 
+import pwd
+import grp
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 from pulse2.database.pkgs import PkgsDatabase
@@ -227,8 +229,8 @@ def associatePackages(pid, fs, level=0):
                 boolsucess = False
                 errortransfert.append(rest["code"])
             try:
-                os.rmdir(source)
-            except OSError as error_removing:
+                shutil.rmtree(source)
+            except Exception as error_removing:
                 logger.error(
                     f"The removal of the folder {source} has failed with the error \n {str(error_removing)}"
                 )
@@ -382,48 +384,66 @@ def prepare_shared_folder():
         os.mkdir(packages_input_dir_sharing_global, 0o755)
 
 
-def get_share_from_descriptor(package_descriptor):
+def create_directories_sharing(path):
     """
-    This function allow to prepare the system to package server.
-    It creates sharing folder if it does not exist.
+    Create directories for the given path if they do not exist.
 
     Args:
-        package_descriptor: This provide informations as localisation_server.
+        path (str): The path for which directories need to be created.
+    """
+    try:
+        os.makedirs(path, exist_ok=True)
+        logging.getLogger().debug(f"Directories created successfully: {path}")
+        # Set permissions to 0755
+        os.chmod(path, 0o755)
+        # Set ownership to syncthing:syncthing
+        uid = pwd.getpwnam("syncthing").pw_uid
+        gid = grp.getgrnam("syncthing").gr_gid
+        os.chown(path, uid, gid)
+    except OSError as e:
+        logging.getLogger().error(f"Error creating directories: {e}")
+
+
+def get_share_from_descriptor(package_descriptor):
+    """
+    Prepare the system for the package server by creating the sharing folder if it does not exist.
+
+    Args:
+        package_descriptor (dict): A dictionary containing information about the package,
+                                   including 'localisation_server' and 'id'.
+
+    Returns:
+        str: The path to the sharing folder.
     """
     packages_input_dir_sharing = os.path.join(
         "/", "var", "lib", "pulse2", "packages", "sharing"
     )
-    if not "localisation_server" in package_descriptor:
-        logging.getLogger().warning(
-            "keys localisation_server missing global sharing by default"
-        )
-        return os.path.join(
-            packages_input_dir_sharing, "global", package_descriptor["id"]
-        )
-    elif (
-        "localisation_server" in package_descriptor
-        and package_descriptor["localisation_server"] == ""
+
+    # Check if 'localisation_server' is in the package descriptor and is not empty
+    if (
+        "localisation_server" not in package_descriptor
+        or not package_descriptor["localisation_server"]
     ):
         logging.getLogger().warning(
-            "keys localisation_server non definie global sharing by default"
+            "keys localisation_server missing or not defined, using global sharing by default"
         )
-        return os.path.join(
+        sharing = os.path.join(
             packages_input_dir_sharing, "global", package_descriptor["id"]
         )
     else:
         logging.getLogger().debug(
-            "local package %s"
-            % os.path.join(
-                packages_input_dir_sharing,
-                package_descriptor["localisation_server"],
-                package_descriptor["id"],
-            )
+            f"local package {os.path.join(packages_input_dir_sharing, package_descriptor['localisation_server'], package_descriptor['id'])}"
         )
-        return os.path.join(
+        sharing = os.path.join(
             packages_input_dir_sharing,
             package_descriptor["localisation_server"],
             package_descriptor["id"],
         )
+
+    # Create the directories for the sharing path
+    create_directories_sharing(os.path.dirname(sharing))
+
+    return sharing
 
 
 def test_ln(pathdirpackage):
@@ -527,6 +547,278 @@ def generate_hash(path, package_id):
 
     with open(dest + ".hash", "wb") as outfile:
         outfile.write(content)
+
+
+def pkgs_get_infos_details(uuidpackage):
+    # logger.error(verify_package(uuidpackage))
+    infodetail = PkgsDatabase().pkgs_get_infos_details(uuidpackage)
+    infodetail["verify"] = verify_package(uuidpackage)
+    return infodetail
+
+
+def verify_package(uuidpackage):
+    # verify fichier existe
+    control = {
+        "Package_info": False,
+        "deploy_xmppdeploy": False,
+        "conf_confjson": False,
+    }
+    contentconf = contentxmppdeploy = ""
+    pathpackages_id = os.path.join("/", "var", "lib", "pulse2", "packages")
+    packages_id_input_dir = os.path.join(pathpackages_id, uuidpackage)
+    path_file_xmppdeploy = os.path.join(packages_id_input_dir, "xmppdeploy.json")
+    path_file_conf = os.path.join(packages_id_input_dir, "conf.json")
+
+    if not os.path.isdir(packages_id_input_dir):
+        control["Package_dirpackage"] = (
+            " Package directory %s not found" % packages_id_input_dir
+        )
+    if not os.path.islink(packages_id_input_dir):
+        control["Package_linkpackage"] = (
+            "%s is not 1 symbolic link to the share check package placement"
+            % packages_id_input_dir
+        )
+
+    nb = len([x for x in control.keys() if x.startswith("Package")])
+    if nb == 0:
+        control["Package_info"] = False
+    else:
+        control["Package_info"] = True
+    # test existance fichier json xmppdeploy et conf
+    if not os.path.isfile(path_file_xmppdeploy):
+        control["deploy_jsonxmppdeploy"] = "File %s not found" % path_file_xmppdeploy
+    if not os.path.isfile(path_file_conf):
+        control["conf_existconf"] = " File %s not found" % path_file_conf
+
+    if "deploy_jsonxmppdeploy" not in control:
+        # verification json correct
+        try:
+            with open(path_file_xmppdeploy) as mon_fichier:
+                contentxmppdeploy = json.load(mon_fichier)
+        except:
+            control["deploy_correctjsonxmppdeploy"] = (
+                "the xmppdeploy file of package %s is badly formatted" % uuidpackage
+            )
+
+        if not "deploy_correctjsonxmppdeploy" in control:
+            testkey = ["info", "metaparameter"]
+            keylist = contentxmppdeploy.keys()
+            for t in testkey:
+                if not t in contentxmppdeploy:
+                    control["deploy_xmpp_section_missing_%s" % t] = (
+                        "In xmppdeply Session main option %s missing" % t
+                    )
+            if contentxmppdeploy["info"]:
+                keylistinfo = [
+                    "localisation_server",
+                    "previous_localisation_server",
+                    "creator",
+                    "editor",
+                    "description",
+                    "version",
+                ]
+                for t in keylistinfo:
+                    if t not in contentxmppdeploy["info"]:
+                        control["deploy_info_" + t] = (
+                            "In xmppdeploy Session main/info option %s missing" % t
+                        )
+
+                list_control_type = contentxmppdeploy["info"].keys()
+                for x in list_control_type:
+                    if x in ["Dependency"]:
+                        if not isinstance(contentxmppdeploy["info"][x], list):
+                            control["deploy_type_error_%s" % x] = (
+                                "in xmppdeploy, option %s must be 1 list of dependencies"
+                                % s
+                            )
+                            continue
+                        # controle dependency exist
+                        for depend in contentxmppdeploy["info"][x]:
+                            if not os.path.isdir(os.path.join(pathpackages_id, depend)):
+                                control["deploy_dependencie_missing_%s" % depend] = (
+                                    "in xmppdeploy, this dependency %s no longer exists or is incorrectly installed"
+                                    % depend
+                                )
+                        continue
+
+                    if x in ["transferfile"]:
+                        if not isinstance(contentxmppdeploy["info"][x], bool):
+                            control["deploy_type_error_%s" % x] = (
+                                "in xmppdeploy, Section main/info option %s must be 1 boolean."
+                                % x
+                            )
+                        continue
+                    if x in [
+                        "creator",
+                        "creation_date",
+                        "version",
+                        "packageUuid",
+                        "editor",
+                        "metagenerator",
+                        "edition_date",
+                        "localisation_server",
+                        "description",
+                        "previous_localisation_server",
+                        "name",
+                        "methodetransfert",
+                        "software",
+                    ]:
+                        if not isinstance(contentxmppdeploy["info"][x], (str, unicode)):
+                            control["deploy_type_error_%s" % x] = (
+                                "in xmppdeploy, section main/info/ option %s must be 1 character string."
+                                % x
+                            )
+                            continue
+                        if contentxmppdeploy["info"][x] == "":
+                            control["deploy_value_missing_%s" % x] = (
+                                "in xmppdeploy, Section main/info/ the option %s is not filled in."
+                                % x
+                            )
+                            continue
+                    if x in ["description"]:
+                        t = [
+                            y
+                            for y in re.split(
+                                r"[^a-zA-Z0-9_,;-\\&%!;()}\[\],]",
+                                contentxmppdeploy["info"][x],
+                            )
+                            if y == ""
+                        ]
+                        if t:
+                            control["deploy_char_forbiden_%s" % x] = (
+                                "in xmppdeploy, Section main/info/ the option %s presents characters not allowed"
+                                % x
+                            )
+
+            if contentxmppdeploy["metaparameter"]:
+                keylistinfo = ["os", "uuid"]
+                for t in keylistinfo:
+                    if t not in contentxmppdeploy["metaparameter"]:
+                        control["deploy_metaparameter_" + t] = (
+                            "in xmppdeploy, Section main/metaparameter option %s missing"
+                            % t
+                        )
+
+                if (
+                    "metaparameter" in contentxmppdeploy
+                    and "os" in contentxmppdeploy["metaparameter"]
+                ):
+                    if len(contentxmppdeploy["metaparameter"]["os"]) == 0:
+                        control["deploy_metaparameter_os_missing"] = (
+                            "in xmppdeploy, Section main/metaparameter option os must contain 1 os win, linux or mac"
+                        )
+                else:
+                    control["deploy_metaparameter_section_os_missing"] = (
+                        "in xmppdeploy, Section main/metaparameter option os missing"
+                    )
+
+            r = [x for x in contentxmppdeploy.keys() if x in ["win", "linux", "mac"]]
+            # controle sequence
+            for t in r:
+                for index, listetape in enumerate(contentxmppdeploy[t]["sequence"]):
+                    # listetape = contentxmppdeploy[t]['sequence']
+                    if "actionlabel" not in listetape or "step" not in listetape:
+                        control[
+                            "deploy_sequence_%s_step_or_actionlabel_missingindex%s"
+                            % (t, index)
+                        ] = (
+                            "in xmppdeploy, section main/%s/sequence ( step %s) actionlabel or step options are required"
+                            % (t, index)
+                        )
+                        continue
+
+                    if not isinstance(listetape["step"], int):
+                        control[
+                            "deploy_sequence_%s_step_missing_etape%s" % (t, index)
+                        ] = (
+                            "in xmppdeploy, Section main/%s/sequence (step %s) the option step must be 1 integer"
+                            % (t, index)
+                        )
+                        continue
+
+                    if listetape["actionlabel"] == "":
+                        control[
+                            "deploy_sequence_%s_step%s_actionlabel_missing"
+                            % (t, contentxmppdeploy[t]["sequence"]["step"])
+                        ] = (
+                            "in xmppdeploy, Section main/%s/sequence (index %s) step %s option actionlabel must not be empty"
+                            % (t, index, contentxmppdeploy[t]["sequence"]["step"])
+                        )
+    nb = len([x for x in control.keys() if x.startswith("deploy")])
+    if nb == 0:
+        control["deploy_xmppdeploy"] = False
+    else:
+        control["deploy_xmppdeploy"] = True
+
+    if "conf_existconf" not in control:
+        try:
+            with open(path_file_conf) as mon_fichier:
+                contentconf = json.load(mon_fichier)
+        except:
+            control["conf_correctconfjson"] = (
+                "file conf.json of package %s is not correct" % uuidpackage
+            )
+
+        if not "conf_correctconfjson" in control:
+            ## verify conf
+            keycontrol = [
+                "localisation_server",
+                "sub_packages",
+                "metagenerator",
+                "description",
+                "creator",
+                "edition_date",
+                "previous_localisation_server",
+                "entity_id",
+                "creation_date",
+                "inventory",
+                "version",
+                "reboot",
+                "editor",
+                "targetos",
+                "commands",
+                "id",
+                "name",
+            ]
+            keyslist = contentconf.keys()
+            for x in keycontrol:
+                if x not in keyslist:
+                    control["conf_%s" % x] = (
+                        "in conf.json, Section main option %s missing" % x
+                    )
+
+            for x in keyslist:
+                if x in ["sub_packages"]:
+                    # verify que c'est 1 listetape
+                    if not isinstance(contentconf[x], list):
+                        control["conf_type_error_%s" % x] = (
+                            "in conf.json, Section main option %s type must be 1 list"
+                            % x
+                        )
+                    continue
+                if x in ["inventory", "commands"]:
+                    if not isinstance(contentconf[x], dict):
+                        control["conf_type_error_%s" % x] = (
+                            "in conf.json, Section main option %s type must be 1 dict"
+                            % x
+                        )
+                    continue
+
+                if x in ["reboot"]:
+                    # if not isinstance (contentconf[x], int):
+                    # control['conf_type_error_%s'%x] =  "dans conf.json, Section principal option %s type doit etre 1 entier" % x
+                    continue
+                if contentconf[x] == "":
+                    control["conf_value_missing_%s" % x] = (
+                        "in conf.json, Main section option %s value must not be filled in"
+                        % x
+                    )
+    nb = len([x for x in control.keys() if x.startswith("conf")])
+    if nb == 0:
+        control["conf_confjson"] = False
+    else:
+        control["conf_confjson"] = True
+    return control
 
 
 def putPackageDetail(package, need_assign=True):
@@ -640,7 +932,11 @@ def putPackageDetail(package, need_assign=True):
         generate_hash(package["localisation_server"], package["id"])
 
     for key in package:
-        package[key] = package[key].decode("utf-8") if isinstance(package[key], bytes) else package[key]
+        package[key] = (
+            package[key].decode("utf-8")
+            if isinstance(package[key], bytes)
+            else package[key]
+        )
 
     confjson = {
         "sub_packages": [],
@@ -782,21 +1078,37 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
         "version": "0.1",
         "commandcmd": [],
     }
+    base_dir = os.path.join(tmp_input_dir, tempdir)
+    if not os.path.isdir(base_dir):
+        retresult["commandcmd"] = "No command found with rules."
+        return retresult
+
     suggestedCommand = []
-    file_size = simplecommand("du -b %s" % os.path.join(tmp_input_dir, tempdir))
+    file_size = simplecommand("du -b %s" % os.path.join(base_dir))
 
     file_size["result"] = [
         line.decode("utf-8") for line in file_size["result"]
     ]  # Convertit en UTF-8
     sizebytefolder = file_size["result"][0].split("\t")[0]
     sizebytefolder = int(sizebytefolder)
-
+    sizebytefolder = 0
+    rules = PkgsDatabase().list_all_extensions()
     if not isinstance(tempdir, list) and sizebytefolder <= size_max:
         if os.path.exists(tmp_input_dir):
-            for f in os.listdir(os.path.join(tmp_input_dir, tempdir)):
-                fileadd = os.path.join(tmp_input_dir, tempdir, f)
+            for f in os.listdir(base_dir):
+                fileadd = os.path.join(base_dir, f)
                 if os.path.isfile(fileadd):
-                    rules = PkgsDatabase().list_all_extensions()
+                    # Use the old system
+                    try:
+                        challenger = getCommand(fileadd)
+                        _propose = challenger.getCommand()
+                        if _propose != None:
+                            retresult["commandcmd"] = _propose
+                            return retresult
+                    except Exception:
+                        # In this case, use the rules
+                        pass
+
                     filename = fileadd.split("/")[-1]
                     filebasename = ".".join(filename.split(".")[:-1])
 
@@ -820,7 +1132,10 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
                         stringstring = 0
                         if rule["strings"]:
                             recherche = rule["strings"].replace('"', '"')
-                            cmd = 'strings %s  | grep "%s"' % (fileadd, rule["strings"])
+                            cmd = 'strings %s  | grep -i "%s"' % (
+                                fileadd,
+                                rule["strings"],
+                            )
                             result = simplecommand(cmd)
                             if result["result"]:
                                 stringstring = 1
@@ -1585,6 +1900,7 @@ def create_msg_xmpp_quick_deploy(folder, create=False):
 def save_xmpp_json(folder, json_content):
     logger = logging.getLogger()
     logger.debug("JSON content: %s" % json_content)
+    json_content = json_content.replace("\\", "\\\\")
     structpackage = json.loads(json_content)
     qdeploy_generate(folder)
     keysupp = [
@@ -2051,7 +2367,7 @@ esac""" % (
                     # if assemblyIdentity don't exists, try assemblyIdentity
                     identity = xmldoc.getElementsByTagName("assemblyIdentity")
 
-                if identity > 0:
+                if len(identity) > 0:
                     if identity[0].hasAttribute("name"):
                         installer = identity[0].getAttribute("name")
                         self.logger.debug("Installer: %s" % installer)

@@ -41,19 +41,18 @@ if ($shahash == "")
 {
     $client_restore_file = xmlrpc_client_download_backup_file($client_id, $backup_id, $path, $filename);
     if ($client_restore_file["ok"] == "true")
-        print_r(_T("Backup folder request successfully asked to client.", "urbackup"));
+        $url = 'main.php?module=urbackup&submod=urbackup&action=all_files_backup&clientid='.$client_id.'&backupid='.$backup_id.'&volumename='.$path.'&restore=ok';
     else
-        print_r(_T("Backup error, please try again, check if client exist or is online.","urbackup"));
+        $url = 'main.php?module=urbackup&submod=urbackup&action=all_files_backup&clientid='.$client_id.'&backupid='.$backup_id.'&volumename='.$path.'&restore=ko';
 }
 else
 {
-    $client_restore_file_shahash = xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $path, $shahash);
-    if ($client_restore_file["ok"] == "true")
-        print_r(_T("Backup file(s) request successfully asked to client.", "urbackup"));
+    $client_restore_file_shahash = xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $path, $shahash, $filename);
+    if ($client_restore_file_shahash["ok"] == "true")
+        $url = 'main.php?module=urbackup&submod=urbackup&action=all_files_backup&clientid='.$client_id.'&backupid='.$backup_id.'&volumename='.$path.'&restore=ok';
     else
-        print_r(_T("Backup error, please try again, check if client exist or is online.","urbackup"));
+        $url = 'main.php?module=urbackup&submod=urbackup&action=all_files_backup&clientid='.$client_id.'&backupid='.$backup_id.'&volumename='.$path.'&restore=ko';
 }
 
+header("Location: ".$url);
 ?>
-<br>
-<a class='btn btn-small btn-primary' title=<?php echo _T("Back to backup list", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=all_files_backup&amp;clientid=<?php echo $client_id ?>&amp;backupid=<?php echo $backup_id ?>&amp;volumename=<?php echo $path ?>"><?php echo _T("Back to backup list", 'urbackup'); ?></a>

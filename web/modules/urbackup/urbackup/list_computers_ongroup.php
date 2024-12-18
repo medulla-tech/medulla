@@ -34,9 +34,10 @@ $p->display();
 $clients = xmlrpc_get_backups_all_client();
 
 $ini_array = parse_ini_file("/etc/mmc/plugins/urbackup.ini");
-$username_urbackup = $ini_array['username'];
-$password_urbackup = $ini_array['password'];
-$url_urbackup = $ini_array['url'];
+$ini_array_local = parse_ini_file("/etc/mmc/plugins/urbackup.ini.local");
+$username_urbackup = isset($ini_array_local["usernameapi"]) ? $ini_array_local["usernameapi"] : $ini_array["usernameapi"];
+$password_urbackup = isset($ini_array_local["passwordapi"]) ? $ini_array_local["passwordapi"] : $ini_array["passwordapi"];
+$url_urbackup = isset($ini_array_local["url"]) ? $ini_array_local["url"] : $ini_array["url"];
 
 //-----------------------------------START LOGIN FUNCTION
 $url = $url_urbackup."?a=login";
@@ -134,9 +135,13 @@ $clients = $array['navitems']['clients'];
 </form>
 <br>
 <br>
-<div style="display:flex">
-    <div style="padding: 5px;">
-        <h3 style="margin-left: 10px; margin-bottom: 5px;"> <?php echo _T("Computer <b>outside</b> the profile","urbackup"); ?></h3>
+<div style="display:flex; padding:10px; width:500px;">
+<h3 style="margin-left: 10px; margin-bottom: 5px;"> <?php echo _T("Computer <b>outside</b> the profile","urbackup"); ?></h3>
+<h3 style="margin-left: 80px; margin-bottom: 5px;"> <?php echo _T("Computer <b>inside</b> the profile","urbackup"); ?></h3>
+</div>
+
+<div style="display:flex; border:solid 1px #CCC; background-color:#F0F4F7; padding:10px; width:500px;">
+    <div style="padding: 5px; border:solid 1px #CCC; background-color:#FFFFFF; width:200px;">
         <div>
             <?php
             foreach($clients as $client)
@@ -157,8 +162,7 @@ $clients = $array['navitems']['clients'];
             ?>
         </div>
     </div>
-    <div style="margin-left: 50px; padding: 5px;">
-        <h3 style="margin-left: 10px; margin-bottom: 5px;"><?php echo _T("Computer <b>inside</b> the profile","urbackup"); ?></h3>
+    <div style="margin-left: 50px; padding: 5px; border:solid 1px #CCC; background-color:#FFFFFF; width:200px;">
         <div>
             <?php
             foreach($clients as $client)

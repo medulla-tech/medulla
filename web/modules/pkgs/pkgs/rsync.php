@@ -71,7 +71,7 @@ $nbnsp = ($nbns/$nbt)*100;
 echo "<table class='listinfos'>";
     echo "<thead>";
     echo "<tr>";
-    echo '<th headers="resultnosync" colspan="1" >'._T("Relay servers not yet synchronized : ", 'pkgs').$nbns.'/'.$nbt.' ('.$nbnsp .'%)</th>';
+    echo '<th headers="resultnosync" colspan="1" >'._T("Relay servers not yet synchronized: ", 'pkgs').$nbns.'/'.$nbt.' ('.number_format($nbnsp, 2) .'%)</th>';
     echo "</tr>";
     echo "</thead>";
     echo "<tbody>";
@@ -90,7 +90,7 @@ echo "</table>";
 echo "<table class='listinfos'>";
     echo "<thead>";
     echo "<tr>";
-    echo '<th headers="resultsync" colspan="1" >'._T("Relay servers already synchronized : ", 'pkgs').$nbs.'/'.$nbt.' ('.$nbsp .'%)</th>';
+    echo '<th headers="resultsync" colspan="1" >'._T("Relay servers already synchronized: ", 'pkgs').$nbs.'/'.$nbt.' ('.number_format($nbsp, 2) .'%)</th>';
     echo "</tr>";
     echo "</thead>";
 

@@ -77,14 +77,13 @@ function xmlrpc_white_unlist_update($updateid)
     return xmlCall("updates.white_unlist_update", [$updateid]);
 }
 
-function xmlrpc_get_machine_with_update($kb, $updateid = "")
-{
-    return xmlCall("updates.get_machine_with_update", [$kb, $updateid]);
+function xmlrpc_get_machine_with_update($kb, $updateid="", $entity, $start=0, $limit=-1, $filter=""){
+    return xmlCall("updates.get_machine_with_update", [$kb, $updateid, $entity, $start, $limit, $filter]);
 }
 
-function xmlrpc_get_count_machine_with_update($kb)
+function xmlrpc_get_count_machine_with_update($kb, $uuid, $list)
 {
-    return xmlCall("updates.get_count_machine_with_update", [$kb]);
+    return xmlCall("updates.get_count_machine_with_update", [$kb, $uuid, $list]);
 }
 
 function xmlrpc_get_count_machine_as_not_upd($updateid)
@@ -92,9 +91,24 @@ function xmlrpc_get_count_machine_as_not_upd($updateid)
     return xmlCall("updates.get_count_machine_as_not_upd", [$updateid]);
 }
 
-function xmlrpc_get_machines_needing_update($updateid)
+function xmlrpc_get_machines_needing_update($updateid, $entity, $start=0, $limit=-1, $filter="")
 {
-    return xmlCall("updates.get_machines_needing_update", [$updateid]);
+    return xmlCall("updates.get_machines_needing_update", [$updateid, $entity, $start, $limit, $filter]);
+}
+
+function xmlrpc_get_conformity_update_by_entity($entities = [], $source)
+{
+    return xmlCall("updates.get_conformity_update_by_entity", [$entities, $source]);
+}
+
+function xmlrpc_get_machines_xmppmaster($start=0, $limit=-1, $filter="")
+{
+    return xmlCall("updates.get_machines_xmppmaster", [$start, $limit, $filter]);
+}
+
+function xmlrpc_get_machine_in_both_sources($glpi_uuids)
+{
+    return xmlCall("updates.get_machine_in_both_sources", [$glpi_uuids]);
 }
 
 function xmlrpc_get_conformity_update_by_machines($ids = [])

@@ -76,6 +76,7 @@ from pulse2.database.xmppmaster.schema import (
     Up_white_list,
     Up_gray_list,
     Up_history,
+    Up_machine_activated,
     Mmc_module_actif,
     Users_adgroups,
 )
@@ -167,6 +168,16 @@ class XmppMasterDatabase(DatabaseHelper):
         # add table auto_base
         self.Update_machine = Base.classes.update_machine
         self.Ban_machines = Base.classes.ban_machines
+
+        # Only federated tables (beginning by local_) are automatically mapped
+        # If needed, excludes tables from this list
+        exclude_table = []
+        # Dynamically add attributes to the object for each mapped class
+        for table_name, mapped_class in Base.classes.items():
+            if table_name in exclude_table:
+                continue
+            if table_name.startswith("local"):
+                setattr(self, table_name.capitalize(), mapped_class)
 
         if not self.initMappersCatchException():
             self.session = None
@@ -1617,7 +1628,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 command_start_list.append(command.command_start)
                 command_grp_list.append(command.command_grp)
                 command_machine_list.append(command.command_machine)
-                command_target_list.append(command.target if command.target is not None else "")
+                command_target_list.append(
+                    command.target if command.target is not None else ""
+                )
                 jid_machine_list.append(command.jid_machine)
             result_list.append(command_id_list)
             result_list.append(command_name_list)
@@ -4059,12 +4072,19 @@ class XmppMasterDatabase(DatabaseHelper):
             It returns the number of machines per status.
         """
         try:
-            machinedeploy = (
-                session.query(Deploy.state, func.count(Deploy.state))
-                .filter(and_(Deploy.command == command_id, Deploy.title == title))
-                .group_by(Deploy.state)
-            )
-            machinedeploy = machinedeploy.all()
+            sql = """
+                SELECT state, COUNT(*)
+                FROM deploy
+                WHERE (inventoryuuid, id) IN (
+                    SELECT inventoryuuid, MAX(id)
+                    FROM deploy
+                    WHERE command = :command_id AND title = :title
+                    GROUP BY inventoryuuid
+                )
+                GROUP BY state;
+            """
+            machinedeploy = session.execute(sql, {"command_id": command_id, "title": title})
+            machinedeploy = machinedeploy.fetchall()
             ret = {
                 "totalmachinedeploy": 0,
                 "deploymentsuccess": 0,
@@ -5648,7 +5668,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if intervalsearch:
             deploylog = deploylog.filter(
-                Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch))
+                Deploy.endcmd >= (datetime.now() - timedelta(seconds=intervalsearch))
             )
         filter_filt = ""
         if filt:
@@ -13117,83 +13137,191 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_conformity_update_by_entity(self, session):
+    def get_conformity_update_by_entity(
+        self, session, entities: list = [], config=None
+    ):
         """
         This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
         """
-        result = {}
-        sql = """select ge.glpi_id as id,
-        count(m.id) as count
-        from machines m
-join glpi_entity ge on m.glpi_entity_id = ge.id
-where m.platform like "%Windows%" and m.agenttype="machine";"""
-        datas = session.execute(sql)
+        filter_on = ""
+        filter_on_noncompliant = ""
+        if config is not None and config.filter_on is not None:
+            for key in config.filter_on:
+                column = ""
+                if key not in ["entity", "state", "type"]:
+                    continue
+                if key == "entity":
+                    column = "ge.glpi_id"
+                    filter_on += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+                elif key == "state":
+                    column = "lgf.states_id"
+                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+                elif key == "type":
+                    column = "lgf.computertypes_id"
+                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
 
-        for entity in datas:
-            result[str(entity.id)] = {
-                "entity": str(entity.id),
-                "nbmachines": 0,
-                "nbupdates": 0,
-                "totalmach": entity.count,
-                "conformite": 0,
+        sql_machine_details = f"""
+        SELECT m.id AS machine_id, m.hostname, ge.glpi_id AS entity_id
+        FROM machines m
+        JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+        WHERE m.agenttype = "machine"
+        {filter_on};
+        """
+        machine_details = session.execute(sql_machine_details).fetchall()
+
+        machine_by_entity = {}
+        for row in machine_details:
+            entity_id = row.entity_id
+            if entity_id not in machine_by_entity:
+                machine_by_entity[entity_id] = []
+            machine_by_entity[entity_id].append({
+                "id": row.machine_id,
+                "hostname": row.hostname,
+                "valid": row.machine_id != 0,
+            })
+
+        sql_total_machines = f"""
+        SELECT ge.glpi_id AS id, COUNT(m.hostname) AS totalmach
+        FROM machines m
+        JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+        WHERE m.agenttype = "machine"
+        {filter_on}
+        GROUP BY ge.glpi_id;
+        """
+        total_machines = {row.id: row.totalmach for row in session.execute(sql_total_machines)}
+
+        sql_noncompliant = f"""
+        SELECT uma.entities_id AS id, COUNT(DISTINCT uma.id_machine) AS noncompliant, COUNT(DISTINCT uma.update_id) AS missing
+        FROM up_machine_activated uma
+        JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
+        WHERE uma.entities_id IN ({",".join(map(str, entities))})
+        {filter_on_noncompliant}
+        GROUP BY uma.entities_id;
+        """
+        noncompliant_data = {row.id: (row.noncompliant, row.missing) for row in session.execute(sql_noncompliant)}
+
+        result = []
+        for entity_id in entities:
+            entity_id = int(entity_id)
+
+            machines = machine_by_entity.get(entity_id, [])
+            noncompliant, missing = noncompliant_data.get(entity_id, (0, 0))
+            total = total_machines.get(entity_id, len(machines))
+
+            result.append({
+                "entity": str(entity_id),
+                "nbmachines": noncompliant,
+                "nbupdates": missing,
+                "totalmach": total,
+            })
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_machines_xmppmaster(self, session, start, end, ctx):
+        """
+        Recovers the machines from the XMPPMaster base
+        """
+        location = ""
+        criterion = ""
+        field = ""
+        contains = ""
+
+        if "location" in ctx and ctx["location"] != "":
+            location = ctx["location"].replace("UUID", "")
+
+        if "filter" in ctx and ctx["filter"] != "":
+            criterion = ctx["filter"]
+
+        if "field" in ctx and ctx["field"] != "":
+            field = ctx["field"]
+
+        if "contains" in ctx and ctx["contains"] != "":
+            contains = ctx["contains"]
+
+        sql_query = f"""
+        SELECT
+            m.uuid_inventorymachine AS uuid,
+            m.hostname AS cn,
+            m.platform AS os,
+            m.model AS description,
+            m.manufacturer AS type,
+            m.lastuser AS user,
+            ge.complete_name AS entity
+        FROM
+            machines m
+        JOIN
+            glpi_entity ge ON m.glpi_entity_id = ge.id
+        WHERE
+            m.agenttype = 'machine'
+        AND
+            m.glpi_entity_id = (
+                SELECT id FROM glpi_entity WHERE glpi_id = {location}
+            )
+        """
+
+        if criterion != "":
+            sql_query += f" AND (m.hostname LIKE '%{criterion}%' OR ge.complete_name LIKE '%{criterion}%')"
+
+        sql_query += f" LIMIT {start}, {end}"
+
+        result = session.execute(sql_query)
+        machines = result.fetchall()
+
+        result_data = {
+            "count": len(machines),
+            "data": {
+                "uuid": [],
+                "cn": [],
+                "os": [],
+                "description": [],
+                "type": [],
+                "user": [],
+                "entity": [],
+                "presence": []
             }
+        }
 
-        sql1 = """select ge.glpi_id as id, count(distinct m.id) as count from up_machine_windows umw
-join machines m on umw.id_machine = m.id
-join glpi_entity ge on m.glpi_entity_id = ge.id
-left join up_gray_list  ugl on ugl.updateid = umw.update_id
-where
-    m.platform like "%Windows%"
-    and m.agenttype="machine"
-    and concat("UUID",ge.glpi_id) = "UUID0"
-    and ugl.valided=1;"""
+        for row in machines:
+            result_data["data"]["uuid"].append(row["uuid"].replace("UUID", "") if row["uuid"] else "")
+            result_data["data"]["cn"].append(row["cn"] if row["cn"] is not None else "")
+            result_data["data"]["os"].append(row["os"] if row["os"] is not None else "")
+            result_data["data"]["description"].append(row["description"] if row["description"] is not None else "")
+            result_data["data"]["type"].append(row["type"] if row["type"] is not None else "")
+            result_data["data"]["user"].append(row["user"] if row["user"] is not None else "")
+            result_data["data"]["entity"].append(row["entity"] if row["entity"] is not None else "")
+            result_data["data"]["presence"].append(1)
 
-        machines_non_compliant = session.execute(sql1)
-        for non_compliant in machines_non_compliant:
-            if str(non_compliant.id) in result:
-                result[str(non_compliant.id)]["nbmachines"] = non_compliant.count
+        uuids = []
+        for id in result_data["data"]["uuid"]:
+            uuids.append("UUID%s" % id)
 
-        sql2 = """select ge.glpi_id as id,
-        count(update_id) count
-        from up_machine_windows umw
-        join machines m on umw.id_machine = m.id
-        join glpi_entity ge on m.glpi_entity_id = ge.id
-        left join up_gray_list  ugl on ugl.updateid = umw.update_id
-        where
-        m.platform like "%Windows%"
-        and m.agenttype="machine"
-        and ugl.valided = 1
-        group by ge.glpi_id, id_machine;"""
-        missing_updates = session.execute(sql2)
-        for missing_update in missing_updates:
-            if str(missing_update.id) in result:
-                result[str(missing_update.id)]["nbupdates"] += missing_update.count
+        result_data["xmppdata"] = []
+        result_data["xmppdata"] = XmppMasterDatabase().getmachinesbyuuids(uuids)
 
-        sql3 = """select ge.glpi_id as id,
-        count(update_id) count
-        from up_machine_windows umw
-        join machines m on umw.id_machine = m.id
-        join glpi_entity ge on m.glpi_entity_id = ge.id
-        left join up_white_list  uwl on uwl.updateid = umw.update_id
-        where
-        m.platform like "%Windows%"
-        and m.agenttype="machine"
-        and uwl.valided = 1
-        group by ge.glpi_id, id_machine;"""
-        missing_updates = session.execute(sql3)
-        for missing_update in missing_updates:
-            if str(missing_update.id) in result:
-                result[str(missing_update.id)]["nbupdates"] += missing_update.count
+        return result_data
 
-        for entity in result:
-            if result[entity]["totalmach"] > 0:
-                result[entity]["conformite"] = int(
-                    100
-                    * (result[entity]["totalmach"] - result[entity]["nbmachines"])
-                    / result[entity]["totalmach"]
-                )
-            else:
-                result[entity]["conformite"] = 100
+    @DatabaseHelper._sessionm
+    def get_machine_in_both_sources(self, session, glpi_ids):
+        """
+        This function checks if the machines are present in both sources XMPPMaster and GLPI
+        """
+        if isinstance(glpi_ids, str):
+            glpi_ids = [glpi_ids]
+
+        query_xmpp = session.execute(
+            """
+            SELECT uuid_inventorymachine
+            FROM xmppmaster.machines
+            WHERE uuid_inventorymachine IN :uuids
+            """,
+            {"uuids": tuple(glpi_ids)},
+        )
+
+        found_uuids = {row[0] for row in query_xmpp.fetchall()}
+
+        result = {uuid: (uuid in found_uuids) for uuid in glpi_ids}
+
         return result
 
     @DatabaseHelper._sessionm
@@ -13252,6 +13380,123 @@ where
         session.commit()
         session.flush()
         result = [rowproxy._asdict() for rowproxy in resultquery]
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_machine_with_update(
+        self, session, kb, updateid, uuid, start=0, limit=-1, filter="", config=None
+    ):
+
+        filter_on = ""
+        if config is not None and config.filter_on is not None:
+            for key in config.filter_on:
+                column = ""
+                if key not in ["entity", "state", "type"]:
+                    continue
+                if key == "entity":
+                    column = "lgf.entities_id"
+                elif key == "state":
+                    column = "lgf.states_id"
+                elif key == "type":
+                    column = "lgf.computertypes_id"
+                filter_on = " %s AND %s in (%s) " % (
+                    filter_on,
+                    column,
+                    ",".join(config.filter_on[key]),
+                )
+        try:
+            start = int(start)
+        except:
+            start = 0
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        filterlimit = ""
+        if start != -1 and limit != -1:
+            filterlimit = "LIMIT %s, %s" % (start, limit)
+
+        sfilter = ""
+        if filter != "":
+            sfilter = (
+                """AND (lgm.name LIKE '%%%s%%' OR m.platform LIKE '%%%s%%')"""
+                % tuple(filter for x in range(0, 2))
+            )
+
+        sql = """Select SQL_CALC_FOUND_ROWS
+    lgm.id,
+    lgm.name,
+    m.platform
+from
+    up_history uh
+join
+    update_data ud on ud.updateid = uh.update_id
+join
+    deploy d on uh.id_deploy=d.id
+join
+    machines m on m.id = uh.id_machine
+join
+    local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
+join
+    local_glpi_filters lgf on lgf.id = lgm.id
+where
+    uh.update_id="%s"
+and
+    d.state="DEPLOYMENT SUCCESS"
+and
+    delete_date is not NULL and delete_date != ""
+and
+    lgm.is_deleted =0 and lgm.is_template = 0
+and lgm.entities_id = %s
+%s %s
+union
+select
+    lgm.id,
+    lgm.name,
+    m.platform
+from
+    local_glpi_machines lgm
+join
+    machines m on m.uuid_inventorymachine = concat(lgm.id)
+join
+    local_glpi_filters lgf on lgf.id = lgm.id
+join
+    local_glpi_items_softwareversions lgisv on lgisv.items_id = lgm.id and lgisv.itemtype="Computer"
+join
+    local_glpi_softwareversions lgsv on lgsv.id = lgisv.softwareversions_id
+join
+    local_glpi_softwares lgs on lgs.id = lgsv.softwares_id
+where
+    lgsv.name LIKE '%%%s%%'
+AND
+    (lgsv.comment LIKE '%%Update%%' OR COALESCE(lgsv.comment, '') = '')
+%s %s
+group by lgm.id
+order by name
+%s
+""" % (
+            updateid,
+            uuid.replace("UUID", ""),
+            filter_on,
+            sfilter,
+            kb,
+            filter_on,
+            sfilter,
+            filterlimit,
+        )
+
+        datas = session.execute(sql)
+        count = session.execute("SELECT FOUND_ROWS();")
+        result = {"total": 0, "datas": {"id": [], "name": [], "os": []}}
+        for elem in count:
+            result["total"] = elem[0]
+            break
+
+        for elem in datas:
+            result["datas"]["id"].append(elem.id)
+            result["datas"]["name"].append(elem.name)
+            result["datas"]["os"].append(elem.platform)
         return result
 
     @DatabaseHelper._sessionm
@@ -13741,7 +13986,7 @@ where
 
     @DatabaseHelper._sessionm
     def pending_entity_update_by_pid(
-        self, session, entity, pid="", startdate="", enddate=""
+        self, session, entity, pid="", startdate="", enddate="", interval=""
     ):
         start_date = None
         end_date = None
@@ -13767,40 +14012,57 @@ where
         if end_date < current:
             end_date = a_week_from_current
 
-        sub = (
-            session.query(Machines.id)
-            .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
-            .filter(Glpi_entity.glpi_id == entity)
-            .subquery()
+        query = session.query(Up_machine_activated, self.Local_glpi_entities).join(
+            self.Local_glpi_entities,
+            self.Local_glpi_entities.id == Up_machine_activated.entities_id,
         )
-
-        query = session.query(Up_machine_windows)
 
         if pid == "":
             query = query.filter(
                 and_(
                     or_(
-                        Up_machine_windows.curent_deploy == None,
-                        Up_machine_windows.curent_deploy == 0,
+                        Up_machine_activated.curent_deploy == None,
+                        Up_machine_activated.curent_deploy == 0,
                     ),
                     or_(
-                        Up_machine_windows.required_deploy == None,
-                        Up_machine_windows.required_deploy == 0,
+                        Up_machine_activated.required_deploy == None,
+                        Up_machine_activated.required_deploy == 0,
                     ),
-                    Up_machine_windows.id_machine.in_(sub),
+                    Up_machine_activated.entities_id == entity.replace("UUID", ""),
+                    # Up_machine_activated.id_machine.in_(sub),
                 )
             )
         else:
-            query = query.filter(and_(Up_machine_windows.update_id == pid))
+            query = query.filter(and_(Up_machine_activated.update_id == pid))
+        datas = query.all()
+        kblist = []
+        entity = None
+        result = {
+            "success": False,
+            "mesg": "Nothing to update",
+        }
+        if query is not None:
+            for element, _ in query:
+                element.required_deploy = 1
+                element.start_date = start_date
+                element.end_date = end_date
+                element.intervals = interval
+                session.commit()
+                session.flush()
 
-        for element in query:
-            element.required_deploy = 1
-            element.start_date = start_date
-            element.end_date = end_date
-            session.commit()
-            session.flush()
+            for upd, ent in datas:
+                if "KB%s" % upd.kb not in kblist:
+                    kblist.append("KB%s" % upd.kb)
+                if entity is None:
+                    entity = ent.name
 
-        return []
+            result["success"] = True
+            result["mesg"] = "Update(s) %s have been requested for entity %s" % (
+                ",".join(kblist),
+                entity,
+            )
+
+        return result
 
     @DatabaseHelper._sessionm
     def get_updates_by_uuids(self, session, uuids, start=0, limit=-1, filter=""):
@@ -13938,24 +14200,24 @@ where
         self, session, machineids, start=0, limit=-1, filter=""
     ):
         query = (
-            session.query(Up_machine_windows, Up_gray_list, Up_white_list)
-            .join(Machines, Machines.id == Up_machine_windows.id_machine)
-            .outerjoin(
-                Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id
-            )
-            .outerjoin(
-                Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id
-            )
+            session.query(Up_machine_activated, Update_data)
+            .join(Update_data, Update_data.updateid == Up_machine_activated.update_id)
             .filter(
                 and_(
-                    Machines.id.in_(machineids),
-                    or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
+                    Up_machine_activated.id_machine.in_(machineids),
+                    or_(
+                        Up_machine_activated.curent_deploy == None,
+                        Up_machine_activated.curent_deploy == 0,
+                    ),
+                    or_(
+                        Up_machine_activated.required_deploy == None,
+                        Up_machine_activated.required_deploy == 0,
+                    ),
                 )
             )
-            .group_by(Up_machine_windows.update_id)
             .order_by(
                 func.field(
-                    Up_machine_windows.msrcseverity,
+                    Up_machine_activated.msrcseverity,
                     "Critical",
                     "Important",
                     "Corrective",
@@ -13966,16 +14228,12 @@ where
         if filter != "":
             query = query.filter(
                 or_(
-                    Up_machine_windows.kb.contains(filter),
-                    Up_machine_windows.update_id.contains(filter),
-                    Up_gray_list.title.contains(filter),
-                    Up_gray_list.description.contains(filter),
-                    Up_gray_list.kb.contains(filter),
-                    Up_gray_list.creationdate.contains(filter),
-                    Up_white_list.title.contains(filter),
-                    Up_white_list.description.contains(filter),
-                    Up_white_list.kb.contains(filter),
-                    Up_white_list.creationdate.contains(filter),
+                    Up_machine_activated.kb.contains(filter),
+                    Up_machine_activated.update_id.contains(filter),
+                    Update_data.title.contains(filter),
+                    Update_data.description.contains(filter),
+                    Update_data.kb.contains(filter),
+                    Update_data.creationdate.contains(filter),
                 )
             )
 
@@ -13988,7 +14246,7 @@ where
         pkgs_list = {}
         result = {"total": count, "datas": []}
 
-        for element, gray, white in query:
+        for element, update_data in query:
             startdate = ""
             if element.start_date is not None:
                 startdate = element.start_date
@@ -14005,17 +14263,11 @@ where
             if element.end_date is not None:
                 enddate = element.end_date
 
-            title = ""
-            description = ""
-            update_list = ""
-            if gray is None:
-                title = white.title
-                description = white.description if white is not None else ""
-                update_list = "white"
-            else:
-                title = gray.title
-                description = gray.description if gray is not None else ""
-                update_list = "white"
+            update_list = element.list
+            title = update_data.title
+            description = update_data.description if update_data is not None else ""
+            kb = update_data.kb
+
             result["datas"].append(
                 {
                     "id_machine": (
@@ -14024,7 +14276,7 @@ where
                     "update_id": element.update_id if not None else "",
                     "title": title if title is not None else "",
                     "description": description if description is not None else "",
-                    "kb": element.kb if element.kb is not None else "",
+                    "kb": kb if kb is not None else "",
                     "current_deploy": current_deploy,
                     "required_deploy": required_deploy,
                     "start_date": startdate,
@@ -14342,25 +14594,22 @@ where
     @DatabaseHelper._sessionm
     def get_count_missing_updates_by_machines(self, session, ids):
         result = {}
-        if ids == []:
+        if not ids:
             return result
 
         ids = "(%s)" % ",".join([str(id) for id in ids])
 
-        sql = (
-            """select id,
-        uuid_inventorymachine as uuid,
-        hostname,
-        count(update_id) as missing
-from up_machine_windows
-join machines on machines.id = up_machine_windows.id_machine
-join up_gray_list on up_machine_windows.update_id = up_gray_list.updateid
-where up_gray_list.valided = 1
-and id_machine in %s
-group by hostname
-;"""
-            % ids
-        )
+        sql = f"""
+                SELECT
+                    uma.id_machine AS id,
+                    uma.hostname,
+                    CONCAT("UUID", uma.glpi_id) AS uuid,
+                    COUNT(DISTINCT CASE WHEN uma.curent_deploy IS NULL OR uma.curent_deploy = 0 THEN uma.update_id END) AS missing,
+                    COUNT(DISTINCT CASE WHEN uma.curent_deploy = 1 THEN uma.update_id END) AS inprogress
+                FROM up_machine_activated uma
+                WHERE uma.id_machine IN {ids}
+                GROUP BY uma.id_machine;
+        """
 
         datas = session.execute(sql)
 
@@ -14369,36 +14618,9 @@ group by hostname
                 "id": element.id,
                 "uuid": element.uuid,
                 "hostname": element.hostname,
-                "missing": element.missing,
+                "missing": element.missing or 0,
+                "inprogress": element.inprogress or 0,
             }
-
-        sql2 = (
-            """select id,
-        uuid_inventorymachine as uuid,
-        hostname,
-        count(update_id) as missing
-from up_machine_windows
-join machines on machines.id = up_machine_windows.id_machine
-join up_white_list on up_machine_windows.update_id = up_white_list.updateid
-where up_white_list.valided = 1
-and id_machine in %s
-group by hostname
-;"""
-            % ids
-        )
-
-        datas = session.execute(sql2)
-
-        for element in datas:
-            if element.uuid not in result:
-                result[element.uuid] = {
-                    "id": element.id,
-                    "uuid": element.uuid,
-                    "hostname": element.hostname,
-                    "missing": element.missing,
-                }
-            else:
-                result[element.uuid]["missing"] += element.missing
 
         return result
 
@@ -14480,6 +14702,7 @@ group by hostname
         )
         return [module[0] for module in modules]
 
+    @DatabaseHelper._sessionm
     def cancel_update(self, session, machineid, updateid):
         try:
             machineid = int(machineid)
@@ -14521,6 +14744,7 @@ group by hostname
     def get_update_history_by_machines(self, session, idmachines):
         if idmachines == []:
             return {}
+
         query = (
             session.query(Up_history)
             .add_column(Update_data.kb)
@@ -14528,6 +14752,7 @@ group by hostname
             .filter(
                 and_(
                     Up_history.id_machine.in_(idmachines),
+                    Deploy.state == "DEPLOYMENT SUCCESS",
                     or_(Up_history.delete_date != None, Up_history.delete_date != 0),
                 )
             )

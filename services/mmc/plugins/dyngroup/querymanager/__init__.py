@@ -34,7 +34,7 @@ def queryGroups():
 
 
 def extendedPossibilities():
-    return ""
+    return {}
 
 
 def query(ctx, criterion, value):

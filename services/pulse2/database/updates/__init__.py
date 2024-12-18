@@ -19,6 +19,8 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy import update
 from datetime import date, datetime, timedelta
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.automap import automap_base
+
 
 # On importe la base de xmpp
 # from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -63,10 +65,24 @@ class UpdatesDatabase(DatabaseHelper):
             pool_recycle=self.config.dbpoolrecycle,
             pool_size=self.config.dbpoolsize,
         )
-        print(self.makeConnectionPath())
+
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
+
+        Base = automap_base()
+        Base.prepare(self.db, reflect=True)
+
+        # Only federated tables (beginning by local_) are automatically mapped
+        # If needed, excludes tables from this list
+        exclude_table = []
+        # Dynamically add attributes to the object for each mapped class
+        for table_name, mapped_class in Base.classes.items():
+            if table_name in exclude_table:
+                continue
+            if table_name.startswith("local"):
+                setattr(self, table_name.capitalize(), mapped_class)
+
         if not self.initMappersCatchException():
             self.session = None
             return False
@@ -349,7 +365,14 @@ class UpdatesDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_enabled_updates_list(
-        self, session, entity, upd_list="gray", start=0, limit=-1, filter=""
+        self,
+        session,
+        entity,
+        upd_list="gray",
+        start=0,
+        limit=-1,
+        filter="",
+        config=None,
     ):
         try:
             start = int(start)
@@ -359,43 +382,56 @@ class UpdatesDatabase(DatabaseHelper):
             limit = int(limit)
         except:
             limit = -1
+        filter_on = ""
+        if config.filter_on is not None:
+            for key in config.filter_on:
+                if key == "state":
+                    filter_on = "%s AND lgf.states_id in (%s)" % (
+                        filter_on,
+                        ",".join(config.filter_on[key]),
+                    )
+                if key == "type":
+                    filter_on = "%s AND lgf.computertypes_id in (%s)" % (
+                        filter_on,
+                        ",".join(config.filter_on[key]),
+                    )
+                if key == "entity":
+                    filter_on = "%s AND lgf.entities_id in (%s)" % (
+                        filter_on,
+                        ",".join(config.filter_on[key]),
+                    )
 
         try:
-            list_name = "up_%s_list" % upd_list
-
             enabled_updates_list = {
                 "nb_element_total": 0,
                 "updateid": [],
                 "title": [],
                 "kb": [],
-                "valided": [],
                 "missing": [],
                 "installed": [],
+                "history_list": [],
             }
 
             sql = """SELECT SQL_CALC_FOUND_ROWS
-    umw.update_id AS updateid,
+            uma.update_id as updateid,
     ud.kb AS kb,
     ud.title AS title,
     ud.description AS description,
     ud.creationdate AS creationdate,
     ud.title_short AS title_short,
-    tbl.valided as valided,
-    count(umw.update_id) as missing
+    count(uma.update_id) as missing
 FROM
-    xmppmaster.up_machine_windows umw
-LEFT JOIN xmppmaster.%s tbl ON tbl.updateid = umw.update_id
-JOIN xmppmaster.update_data ud ON umw.update_id = ud.updateid
-JOIN xmppmaster.machines ma ON umw.id_machine = ma.id
-JOIN xmppmaster.glpi_entity ge ON ge.id = ma.glpi_entity_id
+    xmppmaster.up_machine_activated uma
+    JOIN xmppmaster.update_data ud ON uma.update_id = ud.updateid
+    JOIN xmppmaster.local_glpi_machines lgm on lgm.id = uma.glpi_id
+    join xmppmaster.local_glpi_filters lgf on lgf.id = lgm.id
 WHERE
-    tbl.valided = 1
-AND
-    ge.glpi_id = %s
-AND
-    tbl.updateid is not NULL """ % (
-                list_name,
+    uma.entities_id = %s
+    and list = "%s"
+    %s""" % (
                 entity.replace("UUID", ""),
+                upd_list,
+                filter_on,
             )
 
             if filter != "":
@@ -410,7 +446,7 @@ AND
                 )
                 sql += filterwhere
 
-            sql += "group by umw.update_id "
+            sql += "group by uma.update_id "
             filterlimit = ""
             if start != -1 and limit != -1:
                 filterlimit = "LIMIT %s, %s" % (start, limit)
@@ -433,26 +469,32 @@ AND
 
             if result:
                 for list_b in result:
-                    sql2 = """select count(ma.id) as count
+                    sql2 = """select 
+                    count(ma.id) as count,
+                    coalesce(group_concat(lgm.id), NULL, "") as list
         from xmppmaster.machines ma
+        join xmppmaster.local_glpi_machines lgm on concat("UUID",lgm.id) = ma.uuid_inventorymachine
         join xmppmaster.up_history uh on uh.id_machine = ma.id
-        join xmppmaster.glpi_entity ge on ma.glpi_entity_id = ge.id
-    where uh.update_id='%s' and ge.glpi_id=%s and uh.delete_date is not NULL""" % (
+        join xmppmaster.local_glpi_entities lge on lgm.entities_id = lge.id
+    where uh.update_id='%s' and lge.id=%s and uh.delete_date is not NULL
+    %s""" % (
                         list_b.updateid,
                         entity.replace("UUID", ""),
+                        filter_on,
                     )
                     try:
                         res = session.execute(sql2)
                     except Exception as e:
                         logger.error(e)
                     installed = 0
+                    history_list = ""
                     if res is not None:
                         for _res in res:
                             installed = _res.count
+                            history_list = _res.list
                     enabled_updates_list["updateid"].append(list_b.updateid)
                     enabled_updates_list["title"].append(list_b.title)
                     enabled_updates_list["kb"].append(list_b.kb)
-                    enabled_updates_list["valided"].append(list_b.valided)
                     enabled_updates_list["missing"].append(list_b.missing)
                     enabled_updates_list["installed"].append(installed)
 
@@ -631,27 +673,94 @@ JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up
         return result
 
     @DatabaseHelper._sessionm
-    def get_machines_needing_update(self, session, updateid):
+    def get_machines_needing_update(
+        self, session, updateid, uuid, config, start=0, limit=-1, filter=""
+    ):
         """
         This function returns the list of machines needing a specific update
         """
-        sql = """SELECT xmppmaster.machines.hostname AS hostname
-                FROM
-                    xmppmaster.up_machine_windows
-                JOIN
-                    xmppmaster.machines ON xmppmaster.machines.id = xmppmaster.up_machine_windows.id_machine
-                WHERE
-                    (update_id = '%s');""" % (
-            updateid
-        )
+        slimit = "limit %s" % start
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
 
+        if limit != -1:
+            slimit = "%s,%s" % (slimit, limit)
+
+        filter_on = ""
+
+        sfilter = ""
+        if filter != "":
+            sfilter = """AND
+    (lgm.name LIKE '%%%s%%'
+    OR uma.update_id LIKE '%%%s%%'
+    OR m.platform LIKE '%%%s%%'
+    OR uma.kb LIKE '%%%s%%')""" % tuple(
+                filter for x in range(0, 4)
+            )
+
+        if config.filter_on is not None:
+            for key in config.filter_on:
+                if key not in ["state", "entity", "type"]:
+                    continue
+                if key == "state":
+                    filter_on = "%s AND lgf.states_id in (%s)" % (
+                        filter_on,
+                        ",".join(config.filter_on[key]),
+                    )
+                if key == "type":
+                    filter_on = "%s AND lgf.computertypes_id in (%s)" % (
+                        filter_on,
+                        ",".join(config.filter_on[key]),
+                    )
+                if key == "entity":
+                    filter_on = "%s AND lgf.entities_id in (%s)" % (
+                        filter_on,
+                        ",".join(config.filter_on[key]),
+                    )
+
+        sql = """select
+    SQL_CALC_FOUND_ROWS
+    lgm.id,
+    lgm.name,
+    m.platform,
+    concat("KB", uma.kb) as kb
+from xmppmaster.up_machine_activated uma
+join xmppmaster.machines m on uma.id_machine = m.id
+join xmppmaster.local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
+join xmppmaster.local_glpi_filters lgf on lgf.id = lgm.id
+where uma.update_id = "%s"
+and lgm.is_deleted = 0
+and lgm.is_template = 0
+and lgm.entities_id = %s
+%s
+%s
+%s;
+""" % (
+            updateid,
+            uuid.replace("UUID", ""),
+            sfilter,
+            filter_on,
+            slimit,
+        )
         resultquery = session.execute(sql)
         session.commit()
         session.flush()
-        result = []
+        count = session.execute("SELECT FOUND_ROWS();")
+        count = [elem[0] for elem in count][0]
+
+        result = {
+            "datas": {"id": [], "name": [], "platform": [], "kb": []},
+            "total": count,
+        }
+
         if resultquery:
             for row in resultquery:
-                result.append(row.hostname)
+                result["datas"]["id"].append(row.id)
+                result["datas"]["name"].append(row.name)
+                result["datas"]["platform"].append(row.platform)
+                result["datas"]["kb"].append(row.kb)
         return result
 
     @DatabaseHelper._sessionm

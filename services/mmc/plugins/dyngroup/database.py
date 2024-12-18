@@ -1070,11 +1070,26 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     @DatabaseHelper._session
     def edit_convergence_datas(self, session, gid, package_id, datas):
         datas["cmdPhases"] = pickle.dumps(datas["cmdPhases"])
-        return (
-            session.query(Convergence)
-            .filter_by(parentGroupId=gid, packageUUID=package_id)
-            .update(datas)
-        )
+        try:
+            with session.begin():
+                result = (
+                    session.query(Convergence)
+                    .filter_by(parentGroupId=gid, packageUUID=package_id)
+                    .update(datas)
+                )
+            session.commit()
+
+            updated_convergence = (
+                session.query(Convergence)
+                .filter_by(parentGroupId=gid, packageUUID=package_id)
+                .first()
+            )
+
+            return result
+        except Exception as e:
+            session.rollback()
+            self.logger.error(f"Erreur lors de la mise à jour : {e}")
+            return None
 
     @DatabaseHelper._session
     def _get_convergence_phases(self, session, cmd_id, deploy_group_id):
@@ -1118,12 +1133,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         query = session.query(Convergence).filter_by(parentGroupId=gid).all()
         ret = {}
         for line in query:
-            papi = pickle.loads(line.papi)
-            if "mountpoint" not in papi:
-                papi["mountpoint"] = "/package_api_get1"
-            if not papi["mountpoint"] in ret:
-                ret[papi["mountpoint"]] = {}
+            papi = {}
+            papi["mountpoint"] = "/package_api_get1"
+            ret[papi["mountpoint"]] = {}
             ret[papi["mountpoint"]][line.packageUUID] = line.active
+
         return ret
 
     @DatabaseHelper._session
@@ -1196,7 +1210,15 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             )
             return None
         try:
-            return pickle.loads(ret.cmdPhases)
+            ret.cmdPhases = (
+                ret.cmdPhases.encode("utf-8")
+                if isinstance(ret.cmdPhases, str)
+                else ret.cmdPhases
+            )
+            ret.cmdPhases = {}
+
+            return ret.cmdPhases
+
         except EOFError as e:
             return False
 

@@ -8,18 +8,40 @@ $groupname = htmlspecialchars($_GET["groupname"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
 $clientid = htmlspecialchars($_GET["clientid"]);
 $clientname = htmlspecialchars($_GET["clientname"]);
+$editclient = htmlspecialchars($_GET["editclient"]);
+$authkey = htmlspecialchars($_GET["authkey"]);
 
-$p = new PageGenerator(_T("Delete group", 'urbackup'));
+$p = new PageGenerator(_T("Enable or disable client", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$client_remove = xmlrpc_remove_client($jidMachine);
+$clientEnable = xmlrpc_getComputersEnableValue($jidMachine);
 
+if ($clientEnable['0']['enabled'] == '1')
+{
+    if ($editclient == "disable")
+    {
+        $clientRemove = xmlrpc_remove_client($jidMachine, $clientid);
+        $editStateClient = "disable";
+    }
+
+    if ($editclient == "enable")
+    {
+        $client = xmlrpc_get_client_status($clientid);
+        $client_authkey = $client["0"]["authkey"];
+
+        $clientAdd = xmlrpc_enable_client($jidMachine, $clientid, $client_authkey);
+        $editStateClient = "enable";
+    }
+
+    $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$clientid.'&clientname='.$clientname.'&groupname='.$groupname.'&jidmachine='.$jidMachine.'&editStateClient='.$editStateClient.'&error=false';
+}
+else
+{
+    $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$clientid.'&clientname='.$clientname.'&groupname='.$groupname.'&jidmachine='.$jidMachine.'&error=true';
+}
 ?>
 <br>
 <?php
-
-$url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$clientid.'&clientname='.$clientname.'&groupename='.$groupename.'&jidmachine='.$jidmachine.'&disableclient=true';
-
 header("Location: ".$url);
 ?>

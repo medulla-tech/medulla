@@ -2,12 +2,18 @@
 $_SESSION["login"] = $login;
 $_SESSION["pass"] = $pass;
 /* Set session expiration time */
-$_SESSION["expire"] = time() + 90 * 60;
+$_SESSION["sessiontimeout"] = intval($conf["global"]["sessiontimeout"]);
+$_SESSION["expire"] = time() + $_SESSION["sessiontimeout"];
 
 if (isset($_POST["lang"]))
     $lang = $_POST["lang"];
 if (isset($_GET["lang"]))
     $lang = $_GET["lang"];
+if (isset($_SESSION['lang'])) {
+    $lang = $_SESSION['lang'];
+}
+
+$lang = (isset($lang) && $lang != "") ? $lang : "en_US";
 
 $_SESSION['lang'] = $lang;
 setcookie('lang', $lang, time() + 3600 * 24 * 30);

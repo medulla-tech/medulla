@@ -34,5 +34,16 @@ CREATE TABLE `version` (
   `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `client_state` (
+  `client_id` int NOT NULL PRIMARY KEY,
+  `state` int NOT NULL,
+  `authkey` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `all_logs` (
+  `id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `msg` varchar(255) NOT NULL,
+  `time` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `version` VALUES (1);

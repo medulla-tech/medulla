@@ -68,7 +68,13 @@ for($i = 0; $i < $count_white; $i++) {
     $params_white[] = $tmp;
 }
 
+// Add css ids to each tr tag in the table
+foreach($white_list['updateid'] as $updateid) {
+    $ids [] = 'w_'.$updateid;
+}
+
 $w = new OptimizedListInfos($titles_white, _T("Update name", "updates"));
+$w->setCssIds($ids);
 $w->disableFirstColumnActionLink();
 $w->addExtraInfo($updateids_white, _T("Update Id", "updates"));
 $w->addExtraInfo($white_list['severity'], _T("Severity", "updates"));

@@ -24,10 +24,10 @@
  * report module declaration
  */
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = & MMCApp::getInstance();
 
 $mod = new Module("report");
-$mod->setVersion("5.1.2");
+$mod->setVersion("5.2.0");
 $mod->setRevision('');
 $mod->setDescription(_T("Reporting", "report"));
 $mod->setAPIVersion("0:0:0");
@@ -42,11 +42,9 @@ $page = new Page("index", _T("Report creation", "report"));
 $submod->addPage($page);
 
 $page = new Page("get_file", _T("Download a file from report module (report or PNG)", "report"));
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
 $MMCApp->addModule($mod);
-
-?>

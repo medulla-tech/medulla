@@ -7,6 +7,7 @@
 """
 XML-RPC server implementation of the MMC agent.
 """
+
 from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
 import signal
 import multiprocessing as mp
@@ -77,7 +78,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.1.2"
+VERSION = "5.2.0"
 
 PYTHON_VERSION = sys.version_info.major
 
@@ -984,14 +985,14 @@ class messagefilexmpp:
             d = d + a[random.randint(0, 35)]
         return d
 
-    def __init__(self, config_mcc_agent, config_xmpp):
+    def __init__(self, objmmc, config_mcc_agent, config_xmpp):
         # Lit configuration du fichier
         self.config_mcc_agent = config_mcc_agent
         self.config_xmpp = config_xmpp
         # self.config = config
         self.message_type = "json"
         self.config_bool_done = False
-
+        self.objmmc = objmmc
         self.xmppbrowsingpath = xmppbrowsing(
             defaultdir=self.config_xmpp.defaultdir,
             rootfilesystem=self.config_xmpp.rootfilesystem,
@@ -1044,6 +1045,7 @@ class messagefilexmpp:
                         return response[longueur:]
                 return response
         except ConnectionRefusedError as e:
+            self.config_bool_done = False
             logger.error(
                 "Erreur connection verify substitut master %s:%s"
                 % (
@@ -1062,7 +1064,8 @@ class messagefilexmpp:
         logger.debug("------------------- SEND MESSAGE-------------------------")
         logger.debug("---------------------------------------------------------")
         if not self.config_bool_done:
-            self.init_master_substitut()
+            if not self.objmmc.init_master_substitut():
+                return None
         try:
             msg = convert.convert_json_to_dict(msg)
             logger.debug("send_message msg format json")
@@ -1127,6 +1130,9 @@ class messagefilexmpp:
         logger.debug("---------------------------------------------------------")
         logger.debug("----------------------- SEND IQ -------------------------")
         logger.debug("---------------------------------------------------------")
+        if not self.config_bool_done:
+            if not self.objmmc.init_master_substitut():
+                return None
         try:
             msg = convert.convert_json_to_dict(msg)
             logger.debug("msg est 1 json")
@@ -1245,7 +1251,8 @@ class messagefilexmpp:
             res = self.sendstr(messagesend)
             if res != None:
                 logger.debug("Plugin call executed %s on master " % msg["action"])
-            return sessionid, res
+                return sessionid, res
+            return None, "Error connection"
 
         elif isinstance(msg, (str)):
             logger.error("Message does not have a valid format")
@@ -1300,12 +1307,11 @@ class messagefilexmpp:
         msg = {
             "action": "installkey",
             "sessionid": self.name_random(5, "installkey"),
-            "data": {"jidAM" : jidAM},
+            "data": {"jidAM": jidAM},
             "ret": 0,
             "base64": False,
         }
         self.send_message(jidARS, msg)
-
 
     def callinventory(self, to):
         return self._call_remote_action(to, "inventory", "inventory")
@@ -1401,7 +1407,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.1.2"
+VERSION = "5.2.0"
 
 
 class IncludeStartsWithFilter(logging.Filter):
@@ -1653,12 +1659,41 @@ class MmcServer(XMLRPC, object):
         requestxml = request.content.read()
         args, functionPath = xmlrpc.client.loads(requestxml)
         s = request.getSession()
+        if not hasattr(s, "loggedin"):
+            s.loggedin = False
+        if not hasattr(s, "lastModified"):
+            s.lastModified = reactor.seconds()
+        if not hasattr(s, "sessionTimeout"):
+            s.sessionTimeout = self.config.sessiontimeout
+
         try:
-            s.loggedin
-        except AttributeError:
+            # Check if session is expired
+            current_time = reactor.seconds()
+            if (
+                self.config.sessiontimeout
+                and (current_time - s.lastModified) > self.config.sessiontimeout
+            ):
+                # # Session has expired
+                logger.debug("Session expired !")
+                s.loggedin = False  # Mark session as expired
+                # Define the HTTP 401 response code
+                request.setResponseCode(http.UNAUTHORIZED)
+                request.setHeader(b"content-type", b"text/html")
+                request.setHeader(b"content-length", b"0")
+
+                request.finish()
+                return server.NOT_DONE_YET
+
+            # Update session timeout for the current session
+            s.lastModified = current_time
+
+        except AttributeError as e:
+            # Initialize session attributes if AttributeError occurs
+            logger.error(f"Attribute error: {e}")
             s.loggedin = False
             # Set session expire timeout
             s.sessionTimeout = self.config.sessiontimeout
+            return server.NOT_DONE_YET
 
         # Check authorization using HTTP Basic
         cleartext_token = self.config.login + ":" + self.config.password
@@ -1700,7 +1735,6 @@ class MmcServer(XMLRPC, object):
                 if not s.loggedin and not self._needAuth(functionPath):
                     # Provide a security context when a method which doesn't
                     # require a user authentication is called
-                    s = request.getSession()
                     s.userid = "root"
                     try:
                         self._associateContext(request, s, s.userid)
@@ -2345,7 +2379,7 @@ class MMCApp(object):
             configxmppmaster = XmppMasterDatabase().config
             # create file  message
             PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp = (
-                messagefilexmpp(self.config, configxmppmaster)
+                messagefilexmpp(self, self.config, configxmppmaster)
             )
             self.modulexmppmaster = (
                 PluginManager().getEnabledPlugins()["xmppmaster"].modulemessagefilexmpp
@@ -2367,13 +2401,15 @@ class MMCApp(object):
             self.init_master_substitut()
 
     def init_master_substitut(self):
+        logger.debug("INITIALISATION SUBSTITUT")
+        ree = None
         if (
             not PluginManager()
             .getEnabledPlugins()["xmppmaster"]
             .modulemessagefilexmpp.config_bool_done
         ):
             # important ici sont reunit en exemple mcanisme d'utilisation du serveur substiitut master.
-            logger.info("Start/restart MMC send module On on MMC")
+            logger.info("initialise la liste des module MMC dans substitut master")
             # list_mmc_module est appeler au lancement de la mmc.
             # list_mmc_module n'est pas 1 plugin cet appel est traité dans le plugin
             # serveur /pluginsmastersubstitute/plugin___server_mmc_master.py
@@ -2393,11 +2429,16 @@ class MMCApp(object):
                 "call plugin %s on master directement tcp/ip : sessionid  %s => %s"
                 % (result["action"], ree[0], ree[1])
             )
+            if ree[0] is None and ree[0] == "Error connection":
+                PluginManager().getEnabledPlugins()[
+                    "xmppmaster"
+                ].modulemessagefilexmpp.config_bool_done = False
+                return False
 
             PluginManager().getEnabledPlugins()[
                 "xmppmaster"
             ].modulemessagefilexmpp.config_bool_done = True
-
+            return True
             # appel plugin directement sur substitut master.
             # Cela remplace les plugins master. qui seront transferer sur le substitut master.
             # remarque on prefixera les plugin par mmc_ quand ceux ci seront uniquement appelable par mmc

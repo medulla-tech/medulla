@@ -29,9 +29,10 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $ini_array = parse_ini_file("/etc/mmc/plugins/urbackup.ini");
-$username_urbackup = $ini_array['username'];
-$password_urbackup = $ini_array['password'];
-$url_urbackup = $ini_array['url'];
+$ini_array_local = parse_ini_file("/etc/mmc/plugins/urbackup.ini.local");
+$username_urbackup = isset($ini_array_local["usernameapi"]) ? $ini_array_local["usernameapi"] : $ini_array["usernameapi"];
+$password_urbackup = isset($ini_array_local["passwordapi"]) ? $ini_array_local["passwordapi"] : $ini_array["passwordapi"];
+$url_urbackup = isset($ini_array_local["url"]) ? $ini_array_local["url"] : $ini_array["url"];
 
 function formatBytes($bytes, $precision = 2)
 { 
@@ -47,16 +48,10 @@ function formatBytes($bytes, $precision = 2)
 }
 
 //Formatage de date
-function secs2date($secs,$date)
+function secs2date($secs)
 {
-    if ($secs>2147472000)    //2038-01-19 expire dt
-    {
-        $date->setTimestamp(2147472000);
-        $s=$secs-2147472000;
-        $date->add(new DateInterval('PT'.$s.'S'));
-    }
-    else
-        $date->setTimestamp($secs);
+    $date = new DateTime("@$secs");
+    return $date->format('Y-m-d H:i:s');
 }
 
 //-----------------------------------START LOGIN FUNCTION
@@ -144,17 +139,26 @@ $array_progress = json_decode(json_encode($progress), true);
 $stats = xmlrpc_get_stats();
 
 ?>
+<script>
+    $(document).ready(function(){
+        setInterval(function() {
+            $("#progressBackups").load("index.php");
+        }, 10000);
+    });
+
+</script>
 <br>
 <br>
 <h2><?php echo _T("Global statistics", 'urbackup'); ?></h2>
 <?php
 $all_size = 0;
+$files_size = 0;
 ?>
 <table class="listinfos" border="1px" cellspacing="0" cellpadding="5" >
     <thead>
         <tr style='text-align: left;'>
-        <th> <?php echo _T("Computer name", 'urbackup'); ?> </th>
-        <th> <?php echo _T("File size", 'urbackup'); ?> </th>
+        <th> <?php echo _T("Space on disk used by all client", 'urbackup'); ?> </th>
+        <th> <?php echo _T("Size", 'urbackup'); ?> </th>
         </tr>
     </thead>
     <tbody>
@@ -166,8 +170,8 @@ $all_size = 0;
     }
     ?>
         <tr>
-            <td style='padding-left: 5px;'> Space on disk used by all client</td>
-            <td> <?php echo $files_size; ?></td>
+            <td style='padding-left: 5px;'>All computers</td>
+            <td><?php echo $files_size; ?></td>
         </tr>
     </tbody>
 </table>
@@ -176,9 +180,8 @@ $all_size = 0;
 ?>
 <br>
 <br>
+<div id="progressBackups">
 <?php
-
-
 foreach($array_progress as $progress)
 {
     if (!empty($progress))
@@ -187,6 +190,11 @@ foreach($array_progress as $progress)
         echo '<br>';
         $eta = $progress['eta_ms'];
         $eta = $eta/1000;
+
+        if ($eta < "0")
+        {
+            $eta = "0";
+        }
 
         $progresss = $progress['pcdone'];
 
@@ -210,6 +218,48 @@ foreach($array_progress as $progress)
         {
             $progresss = "0";
         }
+
+        switch(intval($progresss)){
+            case $progresss <= 10:
+                $color = "#ff0000";
+                break;
+            case $progresss <= 20:
+                $color = "#ff3535";
+                break;
+            case $progresss <= 30:
+                $color = "#ff5050";
+                break;
+            case $progresss <= 40:
+                $color = "#ff8080";
+                break;
+            case $progresss <  50:
+                $color = "#ffA0A0";
+                break;
+            case $progresss <=  60:
+                $color = "#c8ffc8";
+                break;
+            case $progresss <= 70:
+                $color = "#97ff97";
+                break;
+            case $progresss <= 80:
+                $color = "#64ff64";
+                break;
+            case $progresss <=  90:
+                $color = "#2eff2e";
+                break;
+            case $progresss >90:
+                $color = "#00ff00";
+                break;
+        }
+
+        $seconds = $eta;
+
+        $secs = $seconds % 60;
+        $hrs = $seconds / 60;
+        $mins = $hrs % 60;
+
+        $hrs = $hrs / 60;
+
         ?>
         <table class="listinfos" border="1px" cellspacing="0" cellpadding="5" >
             <thead>
@@ -218,7 +268,7 @@ foreach($array_progress as $progress)
                 <th> <?php echo _T("Action", 'urbackup'); ?> </th>
                 <th> <?php echo _T("Details", 'urbackup'); ?> </th>
                 <th> <?php echo _T("Progress", 'urbackup'); ?> </th>
-                <th> <?php echo _T("ETA (second(s))", 'urbackup'); ?> </th>
+                <th> <?php echo _T("ETA (approximation)", 'urbackup'); ?> </th>
                 <th> <?php echo _T("Speed (bpms)", 'urbackup'); ?> </th>
                 <th> <?php echo _T("File in queue", 'urbackup'); ?> </th>
                 </tr>
@@ -228,8 +278,8 @@ foreach($array_progress as $progress)
                     <td style='padding-left: 5px;'> <?php echo $progress['name']; ?></td>
                     <td> <?php echo $action; ?></td>
                     <td> <?php echo $progress['details']; ?></td>
-                    <td> <?php echo $progresss."%"; ?></td>
-                    <td> <?php echo $eta; ?></td>
+                    <td> <span style='background-color:<?php echo $color; ?>;'><?php echo $progresss."%"; ?></span> </td>
+                    <td> <?php echo (int)$hrs." heures " .(int)$mins." minutes ".(int)$secs." secondes"; ?></td>
                     <td> <?php echo $progress['speed_bpms']; ?></td>
                     <td> <?php echo $progress['queue']; ?></td>
                 </tr>
@@ -241,7 +291,7 @@ foreach($array_progress as $progress)
     }
 }
 ?>
-
+</div>
 <h2><?php echo _T("Last activities", 'urbackup'); ?></h2>
 
 
@@ -251,7 +301,7 @@ foreach($array_progress as $progress)
         <tr style='text-align: left;'>
           <th> <?php echo _T("Id", 'urbackup'); ?> </th>
           <th> <?php echo _T("Name", 'urbackup'); ?> </th>
-          <th> <?php echo _T("Backuptime", 'urbackup'); ?> </th>
+          <th> <?php echo _T("Date of backup", 'urbackup'); ?> </th>
           <th> <?php echo _T("Status", 'urbackup'); ?> </th>
           <th> <?php echo _T("Details", 'urbackup'); ?> </th>
           <th> <?php echo _T("Duration H:M:S", 'urbackup'); ?> </th>
@@ -328,22 +378,15 @@ foreach ($array as $review) {
     $size = formatBytes($review['size_bytes']);
     $duration = $review['duration'];
     $duration = $duration*10;
-    $duration = $duration." seconds";
 
     $seconds = round($duration);
  
     $output_duration = sprintf('%02d:%02d:%02d', ($seconds/ 3600),($seconds/ 60 % 60), $seconds% 60);
-
-    $date=new dateTime();
-
-    $secs=$review['backuptime'];
-    secs2date($secs,$date);
-    $dt=$date->format('Y-m-d H:i:s');
 ?>
         <tr>
             <td style='padding-left: 5px;'> <?php echo $review['id']; ?></td>
             <td> <?php echo $review['name']; ?></td>
-            <td> <?php echo $dt; ?></td>       
+            <td> <?php echo secs2date($review['backuptime']); ?></td>       
             <td> <?php echo $status; ?></td>
             <td> <?php echo $details; ?></td>
             <td> <?php echo $output_duration; ?></td>
@@ -359,6 +402,11 @@ foreach ($array as $review) {
 <h2>Logs</h2>
 
 <?php
+
+$allLogs = [];
+
+$dbLogs = xmlrpc_get_all_logs();
+
 $logs_global = xmlrpc_get_logs();
 $logs = $logs_global['logdata'];
 
@@ -367,7 +415,6 @@ $logs = $logs_global['logdata'];
 <table class="listinfos" border="1px" cellspacing="0" cellpadding="5" >
     <thead>
         <tr style='text-align: left;'>
-          <th> <?php echo _T("Id", 'urbackup'); ?> </th>
           <th> <?php echo _T("Message", 'urbackup'); ?> </th>
           <th> <?php echo _T("Time", 'urbackup'); ?> </th>
         </tr>
@@ -375,24 +422,15 @@ $logs = $logs_global['logdata'];
     <tbody>
 <?php 
 
-array_multisort(array_column($logs, 'id'), SORT_DESC, $logs);
-
 foreach ($logs as $log)
 {
-    if (strpos($log['msg'], "Looking") === 0 or strpos($log['msg'], "Session") === 0)
+    if (strpos($log['msg'], "Looking") === 0 or strpos($log['msg'], "Session") === 0 or strpos($log['msg'], "Sending") === 0)
     {
 
     }
     else
     {
-        $date=new dateTime();
-
-        $secs=$log['time'];  //2033-12-06 08:53:20
-        secs2date($secs,$date);
-        $dt=$date->format('Y-m-d H:i:s');
-    
-        $msg = "<td>".$log['msg']."</td>";
-    
+        $msg = $log['msg'];
         $need_show_msg = "True";
     
         if (strpos($log['msg'], 'FATAL:') !== false) {
@@ -416,16 +454,44 @@ foreach ($logs as $log)
     
         if ($need_show_msg == "True")
         {
-    ?>
-            <tr >
-                <td> <?php echo $log['id']; ?></td>
-                <?php echo $msg; ?>
-                <td> <?php echo $dt; ?></td>
-            </tr>
-    <?php
+            $newLog = array(
+                'msg' => $msg, 
+                'time' => $log['time'], 
+            );
+            array_push($allLogs, $newLog);
         }
     }
 }
+
+foreach ($dbLogs as $log)
+{
+    $newLog = array(
+        'msg' => $log["msg"], 
+        'time' => $log["time"], 
+    );
+    array_push($allLogs, $newLog);
+}
+
+// Comparison function 
+function date_compare($a, $b){
+    if($a["time"] == $b["time"]){
+        return 0;
+    }
+    return ($a["time"] < $b["time"]) ? 1 : -1;
+}
+
+usort($allLogs, "date_compare");
+
+foreach ($allLogs as $log)
+{
+    ?>
+    <tr >
+            <td> <?php echo $log["msg"]; ?> </td>
+            <td> <?php echo secs2date($log["time"]); ?> </td>
+    </tr >
+    <?php
+}
+
 ?>
     </tbody>
 </table>

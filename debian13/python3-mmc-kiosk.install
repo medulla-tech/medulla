@@ -1,0 +1,3 @@
+etc/mmc/plugins/kiosk.ini
+usr/lib/python3/*-packages/mmc/plugins/kiosk
+usr/lib/python3/*-packages/pulse2/database/kiosk

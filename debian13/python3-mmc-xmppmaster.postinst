@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        if ! getent passwd | grep -q "^pulsetransfert:"; then
+            echo -n "Adding user pulsetransfert..."
+            adduser --system --quiet \
+                    --home /var/lib/pulse2/file-transfer \
+                    --shell /bin/rbash \
+                    --disabled-password \
+                    pulsetransfert
+            echo "..done"
+        fi
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0
+~                                       

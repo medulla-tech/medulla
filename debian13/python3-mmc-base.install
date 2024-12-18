@@ -1,0 +1,8 @@
+usr/lib/python3/*-packages/mmc/plugins/base
+etc/mmc/plugins/base.ini
+usr/lib/mmc/backup-tools
+usr/lib/python3/*-packages/mmc/plugins/__init__.py
+usr/lib/python3/*-packages/mmc/site.py
+usr/share/doc/pulse2/contrib/base
+usr/share/doc/pulse2/contrib/scripts/usertoken-example
+usr/share/doc/pulse2/contrib/scripts/mmc-check-users-primary-group

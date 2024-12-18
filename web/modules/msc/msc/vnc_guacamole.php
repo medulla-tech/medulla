@@ -21,25 +21,25 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 $url = array();
-if(isset($_GET['agenttype']) && $_GET['agenttype'] == 'relayserver' or isset($_GET['uninventoried'])){
-  $_GET['cn'] = $_GET['hostname'];
+if(isset($_GET['agenttype']) && $_GET['agenttype'] == 'relayserver' or isset($_GET['uninventoried'])) {
+    $_GET['cn'] = $_GET['hostname'];
 }
 
 $hostname = !empty($_GET['hostname']) ? htmlentities($_GET['hostname']) : "";
 $_GET['cn'] = !empty($_GET['cn']) ? htmlentities($_GET['cn']) : $hostname;
 
-if(isset($_GET['cn'])){
+if(isset($_GET['cn'])) {
     $zz = xmlrpc_getGuacamoleRelayServerMachineHostnameProto($_GET['cn']);
     $dd = $zz['machine'];
     $ee = $zz['proto'];
-    foreach ($ee as $k){
+    foreach ($ee as $k) {
         $cux[$k[0]] = $k[1];
         $cux_id_hex = bin2hex($k[1]).'00'.bin2hex('c').'00'.bin2hex('mysql');
-        $cux_id=base64_encode(hex2bin($cux_id_hex));
-        $url[$k[0]] = str_replace('@@CUX_ID@@',$cux_id,$dd['urlguacamole']);
+        $cux_id = base64_encode(hex2bin($cux_id_hex));
+        $url[$k[0]] = str_replace('@@CUX_ID@@', $cux_id, $dd['urlguacamole']);
     }
 }
- ?>
+?>
     <HTML>
         <head>
             <title>Siveo Pulse</title>
@@ -49,64 +49,64 @@ if(isset($_GET['cn'])){
         <h1>REMOTE</h1>
             <table id="tablevnc">
                 <tr>
-                <?
-                foreach ($url as $clef=>$val){
-                    if ($clef == "SSH"){
-                      $os_up_case = strtoupper($dd["platform"]);
-                      if (strpos ($os_up_case, "WINDOW") !== false){
-                          $src = 'img/actions/cmd.svg';
-                          $title = "CMD";
-                          $alt = "Remote cmd View";
-                      }
-                      else {
-                        $src = 'img/actions/ssh.svg';
-                        $title = "SSH";
-                        $alt = "Remote ssh View";
-                      }
-                        echo '<td align="center" id="ssh">
+                <?php
+               foreach ($url as $clef => $val) {
+                   if ($clef == "SSH") {
+                       $os_up_case = strtoupper($dd["platform"]);
+                       if (strpos($os_up_case, "WINDOW") !== false) {
+                           $src = 'img/actions/cmd.svg';
+                           $title = "CMD";
+                           $alt = "Remote cmd View";
+                       } else {
+                           $src = 'img/actions/ssh.svg';
+                           $title = "SSH";
+                           $alt = "Remote ssh View";
+                       }
+                       echo '<td align="center" id="ssh">
                             <img src="'.$src.'"
                             alt="'.$alt.'"
                             style="width:70px;height:70px;">
                             <br>
                             <h1>'.$title.'</h1>
                         </td>';
-                        }
-                    if ($clef == "RDP"){
-                        echo '<td align="center" id="rdp">
+                   }
+                   if ($clef == "RDP") {
+                       echo '<td align="center" id="rdp">
                             <img src="img/actions/rdp.svg"
                             alt="remote rdp View"
                             style="width:70px;height:70px;">
                             <br>
                             <h1>RDP</h1>
                         </td>';
-                        }
-                    if ($clef == "VNC"){
-                        echo '<td align="center" id="vnc">
+                   }
+                   if ($clef == "VNC") {
+                       echo '<td align="center" id="vnc">
                             <img src="img/actions/vnc.svg"
                             alt="remote vnc View"
                             style="width:70px;height:70px;">
                             <br>
                             <h1>VNC</h1>
                         </td>';
-                        }
-                }
-                ?>
+                   }
+               }
+?>
                 </tr>
             </table>
-<?
-if ($dd['agenttype'] == "relayserver")
+<?php
+if ($dd['agenttype'] == "relayserver") {
     printf("SERVER");
-    else
+} else {
     printf("COMPUTER");
-    echo "<hr>";
-    echo "<br>";
-    printf("Hostname : %s<br> Platform : %s<br>architecture : %s<br>", $dd['hostname'], $dd['platform'], $dd['archi']);
-    printf("<br>IP : %s/%s<br> Macadress : %s", $dd['ip_xmpp'], $dd['subnetxmpp'], $dd['macaddress']);
+}
+echo "<hr>";
+echo "<br>";
+printf("Hostname : %s<br> Platform : %s<br>architecture : %s<br>", $dd['hostname'], $dd['platform'], $dd['archi']);
+printf("<br>IP : %s/%s<br> Macadress : %s", $dd['ip_xmpp'], $dd['subnetxmpp'], $dd['macaddress']);
 ?>
 
 </BODY>
   </HTML>
-<?
+<?php
  echo "           </BODY>
             </HTML>
 ";
@@ -117,8 +117,8 @@ if ($dd['agenttype'] == "relayserver")
 var uuid = '<?php echo $_GET['objectUUID']; ?>'
 var cn = '<?php echo $_GET['cn']; ?>'
 
-<?
-if (isset($url['SSH'])){
+<?php
+if (isset($url['SSH'])) {
     echo "jQuery('#ssh').on('click', function(){
     var ssh_url = '".$url['SSH']."';
     var ssh_cux = '".$cux['SSH']."';";
@@ -130,7 +130,7 @@ if (isset($url['SSH'])){
 });';
 };
 
-if (isset($url['RDP'])){
+if (isset($url['RDP'])) {
     echo "jQuery('#rdp').on('click', function(){
         var rdp_url = '" . $url['RDP'] ."';
         var rdp_cux = '". $cux['RDP']."';";
@@ -144,7 +144,7 @@ if (isset($url['RDP'])){
 };
 
 
-if (isset($url['VNC'])){
+if (isset($url['VNC'])) {
     echo "jQuery('#vnc').on('click', function(){
         var vnc_url = '".$url['VNC']."';
         var vnc_cux = '".$cux['VNC']."';";

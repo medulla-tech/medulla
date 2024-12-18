@@ -31,6 +31,15 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     .popup{
         width : 500px
     }
+
+    td img {
+        transition: filter 0.3s ease;
+    }
+
+    td img:hover {
+        filter: brightness(50%);
+        cursor: pointer;
+    }
 </style>
 
     <div style="width : 600px;">
@@ -53,14 +62,15 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
             <tr>
             <?
                 if ($_GET['presencemachinexmpp']){
-                    echo '<td id="shutdown0" align="center"><img src="img/actions/power.svg" height="70" width="70"> </td>';
-                    echo '<td id="reboot0" align="center"><img src="img/actions/restart.svg" height="70" width="70" ></td>';
-                    echo '<td id="inventory0" align="center"><img src="img/actions/inventory.svg" height="70" width="70" ></td>';
-                    echo '<td id="vncchangeperms0" align="center"><img src="img/actions/control.svg" height="70" width="70" ></td>';
-                    echo '<td id="installkey0" align="center"><img src="img/actions/key.svg" height="70" width="70" ></td>';
+
+                    echo sprintf("<td id='shutdown0' align='center' title='%s'><img src='img/actions/power.svg' height='70' width='70'></td>", _T("Click here to shut down the remote machine:", "xmppmaster") . " " . $_GET['cn']);
+                    echo sprintf("<td id='reboot0' align='center' title='%s'><img src='img/actions/restart.svg' height='70' width='70'></td>", _T("Click here to reboot the remote machine:", "xmppmaster") . " " . $_GET['cn']);
+                    echo sprintf("<td id='inventory0' align='center' title='%s'><img src='img/actions/inventory.svg' height='70' width='70'></td>", _T("Click here to refresh the inventory for the remote machine:", "xmppmaster") . " " . $_GET['cn']);
+                    echo sprintf("<td id='vncchangeperms0' align='center' title='%s'><img src='img/actions/control.svg' height='70' width='70'></td>", _T("Click here to change the settings for the VNC connection to the remote machine:", "xmppmaster") . " " . $_GET['cn']);
+                    echo sprintf("<td id='installkey0' align='center' title='%s'><img src='img/actions/key.svg' height='70' width='70'></td>", _T("Click here to install an SSH key on the remote machine:", "xmppmaster") . " " . $_GET['cn']);
                 }
                 else{
-                    echo '<td id="wol0" align="center"><img src="img/actions/power.svg" height="70" width="70" ></td>';
+                     echo sprintf("<td id='wol0' align='center' title='%s'><img src='img/actions/power.svg' height='70' width='70'></td>", _T("Click here to start the remote machine if it is not already running:", "xmppmaster") . " " . $_GET['cn']);
                 }
                 ?>
             </tr>

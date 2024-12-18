@@ -28,17 +28,21 @@ $group_id = $_POST['group'];
 $client_id = htmlspecialchars($_GET["clientid"]);
 $clientname = htmlspecialchars($_GET["clientname"]);
 $jidMachine = htmlspecialchars($_GET["jidmachine"]);
+$auth = htmlspecialchars($_GET["auth"]);
 
 $group_id_new = "-".$group_id;
+
+print_r($group_id_new);
 
 $p = new PageGenerator(_T("Assign member to profile", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 $ini_array = parse_ini_file("/etc/mmc/plugins/urbackup.ini");
-$username_urbackup = $ini_array['username'];
-$password_urbackup = $ini_array['password'];
-$url_urbackup = $ini_array['url'];
+$ini_array_local = parse_ini_file("/etc/mmc/plugins/urbackup.ini.local");
+$username_urbackup = isset($ini_array_local["usernameapi"]) ? $ini_array_local["usernameapi"] : $ini_array["usernameapi"];
+$password_urbackup = isset($ini_array_local["passwordapi"]) ? $ini_array_local["passwordapi"] : $ini_array["passwordapi"];
+$url_urbackup = isset($ini_array_local["url"]) ? $ini_array_local["url"] : $ini_array["url"];
 
 //-----------------------------------START LOGIN FUNCTION
 $url = $url_urbackup."?a=login";
@@ -123,12 +127,23 @@ $array = json_decode(json_encode($reviews), true);
 
 $addgroup = $result;
 $array_progress = json_decode(json_encode($addgroup), true);
+
+$clients = $array_progress['navitems']['clients'];
 //-----------------------------------END ADD MEMBER TO GROUP
 ?>
 <br>
 <?php
 
-$url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$client_id.'&clientname='.$clientname.'&groupname='.$groupname.'&jidmachine='.$jidMachine;
+foreach($clients as $client)
+{
+    if ($client['name'] == $clientname)
+    {
+        $groupname = $client['groupname'];
+    }
+}
+
+$enable_client = xmlrpc_enable_client($jidMachine, $client_id, $auth);
+$url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$client_id.'&clientname='.$clientname.'&groupname='.$groupname.'&jidmachine='.$jidMachine.'&newClient=true';
 
 header("Location: ".$url);
 ?>

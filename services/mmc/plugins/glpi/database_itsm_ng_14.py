@@ -42,6 +42,7 @@ except ImportError:
     from sqlalchemy.sql.operators import ColumnOperators
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.ext.automap import automap_base
 from mmc.support.mmctools import shlaunch
 import base64
 import json
@@ -199,6 +200,19 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
         """
+
+        Base = automap_base()
+        Base.prepare(self.db, reflect=True)
+
+        # Only federated tables (beginning by local_) are automatically mapped
+        # If needed, excludes tables from this list
+        exclude_table = []
+        # Dynamically add attributes to the object for each mapped class
+        for table_name, mapped_class in Base.classes.items():
+            if table_name in exclude_table:
+                continue
+            if table_name.startswith("local"):
+                setattr(self, table_name.capitalize(), mapped_class)
 
         self.klass = {}
 
@@ -1252,7 +1266,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 "operatingsystemservicepacks_id",
                 "operatingsystemarchitectures_id",
                 "license_number",
-                "license_id",
+                "licenseid",
                 "operatingsystemkernelversions_id",
             ]
             for addcolumn in list_column_add_for_info:
@@ -5195,7 +5209,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                     "operatingsystemservicepacks_id": ret.operatingsystemservicepacks_id,
                     "operatingsystemarchitectures_id": ret.operatingsystemarchitectures_id,
                     "license_number": ret.license_number,
-                    "license_id": ret.licenseid,
+                    "licenseid": ret.licenseid,
                     "operatingsystemkernelversions_id": ret.operatingsystemkernelversions_id,
                 }
             except Exception:
@@ -5874,7 +5888,10 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 "content-type": "application/json",
                 "Session-Token": sessionwebservice,
             }
-            parameters = {"force_purge": "1"}
+            if GlpiConfig.webservices["purge_machine"]:
+                parameters = {"force_purge": "1"}
+            else:
+                parameters = {"force_purge": "0"}
             r = requests.delete(url, headers=headers, params=parameters)
             if r.status_code == 200:
                 self.logger.debug("Machine %s deleted" % str(fromUUID(uuid)))

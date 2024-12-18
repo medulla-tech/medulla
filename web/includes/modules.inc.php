@@ -74,18 +74,25 @@ function fetchModulesList($dir) {
  */
 function fetchIniFile() {
     global $conf;
-    $INI = __sysconfdir__."/mmc/mmc.ini";
+    $INI = __sysconfdir__ . "/mmc/mmc.ini";
+    $LOCAL_INI = __sysconfdir__ . "/mmc/mmc.ini.local";
     $conf = array();
     if (is_readable($INI)) {
-        $conf = array_merge_recursive(parse_ini_file($INI, TRUE),$conf);
+        $conf = parse_ini_file($INI, TRUE);
     } else {
         print "MMC: Can't read $INI configuration file. Please check your installation.";
         exit();
     }
-    /* If password is obfusctated, decode it */
+    // Check if a local configuration file exists and replace configurations if it does
+    if (is_readable($LOCAL_INI)) {
+        $localConf = parse_ini_file($LOCAL_INI, TRUE);
+        $conf = array_replace_recursive($conf, $localConf);
+    }
+
+    // If password is obfuscated, decode it
     if (isset($conf["global"]["password"])) {
         $value = $conf["global"]["password"];
-        /* We only support base64 encoded password */
+        // We only support base64 encoded password
         if (preg_match('/^{base64}(.+)$/', $value, $matches)) {
             $value = base64_decode($matches[1]);
             if ($value === False) {

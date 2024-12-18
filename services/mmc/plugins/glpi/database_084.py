@@ -41,6 +41,7 @@ except ImportError:
     from sqlalchemy.sql.operators import ColumnOperators
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.ext.automap import automap_base
 import requests
 from mmc.site import mmcconfdir
 from mmc.database.database_helper import DatabaseHelper
@@ -193,6 +194,19 @@ class Glpi084(DyngroupDatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
         """
+
+        Base = automap_base()
+        Base.prepare(self.db, reflect=True)
+
+        # Only federated tables (beginning by local_) are automatically mapped
+        # If needed, excludes tables from this list
+        exclude_table = []
+        # Dynamically add attributes to the object for each mapped class
+        for table_name, mapped_class in Base.classes.items():
+            if table_name in exclude_table:
+                continue
+            if table_name.startswith("local"):
+                setattr(self, table_name.capitalize(), mapped_class)
 
         self.klass = {}
 
@@ -6331,28 +6345,55 @@ class Glpi084(DyngroupDatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
-    def get_count_machine_with_update(self, session, kb):
+    def get_count_machine_with_update(self, session, kb, uuid, hlist=""):
+        """
+        Get the count of machines with the update specified with its KB (Knowledge Base).
+        Args:
+            session (Session): SQLAlchemy session to interact with the db
+            kb (str): The KB name (Knowledge Base) we are looking for.
+            uuid (str): the entity uuid on which we have to search.
+            hlist (str): ids of machines excluded in this search because they are already counted in history
+        Returns:
+            dict: A dict containing the count of machines with the specific update.
+            The key "nb_machines" contains the count of machine.
+        """
+        if hlist == "":
+            hlist = '""'
+
+        filter_on = ""
+        if self.config.filter_on is not None:
+            for key in self.config.filter_on:
+                if key == "state":
+                    filter_on = "%s AND gcp.states_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                if key == "type":
+                    filter_on = "%s AND gcp.computertypes_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                if key == "entity":
+                    filter_on = "%s AND gcp.entities_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+
         sqlrequest = """
-            SELECT 
-                COUNT(*) as nb_machines
+            SELECT
+                COUNT(*) AS nb_machines
             FROM
-                glpi_computers
+                glpi_computers_pulse gcp
+                    JOIN
+                glpi_computers_softwareversions gcsv ON gcp.id = gcsv.computers_id
+                    JOIN
+                glpi_softwareversions gsv ON gcsv.softwareversions_id = gsv.id
+                    JOIN
+                glpi_softwares gs ON gs.id = gsv.softwares_id
                     INNER JOIN
-                glpi_items_softwareversions ON glpi_computers.id = glpi_items_softwareversions.items_id and glpi_items_softwareversions.itemtype="Computer"
-                    INNER JOIN
-                glpi_softwareversions ON glpi_items_softwareversions.softwareversions_id = glpi_softwareversions.id
-                    INNER JOIN
-                glpi_softwares on glpi_softwareversions.softwares_id = glpi_softwares.id
-                    INNER JOIN
-                glpi_entities ON glpi_entities.id = glpi_computers.entities_id
+                glpi_entities AS ge ON ge.id = gcp.entities_id
             WHERE
-                glpi_computers.is_deleted = 0
+                ge.id = %s
             AND
-                glpi_computers.is_template = 0
+                gcp.is_deleted = 0 AND gcp.is_template = 0
             AND
-                glpi_softwares.name LIKE 'Update (KB%s)';""" % (
-            kb
-        )
+                gsv.name LIKE '%s'
+            AND
+                (gsv.comment LIKE '%%Update%%' OR COALESCE(gsv.comment, '') = '')
+            AND
+                gcp.id not in (%s)
+            %s;""" % (uuid.replace("UUID", ""), kb, hlist, filter_on)
         result = {}
         res = session.execute(sqlrequest)
         for element in res:

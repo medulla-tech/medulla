@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-24 10:40+0100\n"
+"POT-Creation-Date: 2024-09-16 22:40+0200\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2023\n"
 "Language-Team: Spanish (Spain) (https://app.transifex.com/siveo/teams/72118/es_ES/)\n"
@@ -26,76 +26,83 @@ msgid "List of profils"
 msgstr ""
 
 #: modules/kiosk/kiosk/editProfile.php:97
-#: modules/kiosk/kiosk/ajaxProfilesList.php:37
-#: modules/kiosk/infoPackage.inc.php:71
+#: modules/kiosk/kiosk/ajaxProfilesList.php:39
+#: modules/kiosk/infoPackage.inc.php:76
 msgid "Edit Profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:119
-#: modules/kiosk/kiosk/ajaxProfilesList.php:65
-#: modules/kiosk/kiosk/ajaxAcknowledges.php:75 modules/kiosk/kiosk/add.php:80
+#: modules/kiosk/kiosk/editProfile.php:121
+#: modules/kiosk/kiosk/ajaxProfilesList.php:66
+#: modules/kiosk/kiosk/ajaxAcknowledges.php:75 modules/kiosk/kiosk/add.php:84
 msgid "Profile Name"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:120 modules/kiosk/kiosk/add.php:81
+#: modules/kiosk/kiosk/editProfile.php:122 modules/kiosk/kiosk/add.php:85
 msgid "Name"
 msgstr "Nombre"
 
-#: modules/kiosk/kiosk/editProfile.php:126 modules/kiosk/kiosk/add.php:87
+#: modules/kiosk/kiosk/editProfile.php:128 modules/kiosk/kiosk/add.php:91
 msgid "Set the profile to active / inactive state"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:127
-#: modules/kiosk/kiosk/ajaxProfilesList.php:52 modules/kiosk/kiosk/add.php:88
+#: modules/kiosk/kiosk/editProfile.php:129
+#: modules/kiosk/kiosk/ajaxProfilesList.php:53 modules/kiosk/kiosk/add.php:92
 msgid "Active"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:127
-#: modules/kiosk/kiosk/ajaxProfilesList.php:52 modules/kiosk/kiosk/add.php:88
+#: modules/kiosk/kiosk/editProfile.php:129
+#: modules/kiosk/kiosk/ajaxProfilesList.php:53 modules/kiosk/kiosk/add.php:92
 msgid "Inactive"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:130
-#: modules/kiosk/kiosk/ajaxProfilesList.php:68 modules/kiosk/kiosk/add.php:91
+#: modules/kiosk/kiosk/editProfile.php:132
+#: modules/kiosk/kiosk/ajaxProfilesList.php:69 modules/kiosk/kiosk/add.php:95
 msgid "Profile Status"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:140 modules/kiosk/kiosk/add.php:99
+#: modules/kiosk/kiosk/editProfile.php:142 modules/kiosk/kiosk/add.php:103
 msgid "Manage packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:145 modules/kiosk/kiosk/add.php:116
-msgid "Available packages"
-msgstr ""
-
-#: modules/kiosk/kiosk/editProfile.php:150 modules/kiosk/kiosk/add.php:121
+#: modules/kiosk/kiosk/editProfile.php:146
+#: modules/kiosk/kiosk/editProfile.php:151 modules/kiosk/kiosk/add.php:116
 msgid "Restricted packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:155 modules/kiosk/kiosk/add.php:127
+#: modules/kiosk/kiosk/editProfile.php:162 modules/kiosk/kiosk/add.php:124
+msgid "Available packages"
+msgstr ""
+
+#: modules/kiosk/kiosk/editProfile.php:163
+#: modules/kiosk/kiosk/editProfile.php:167 modules/kiosk/kiosk/add.php:125
+#: modules/kiosk/kiosk/add.php:129
+msgid "Search by name ..."
+msgstr ""
+
+#: modules/kiosk/kiosk/editProfile.php:166 modules/kiosk/kiosk/add.php:128
 msgid "Allowed packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:172 modules/kiosk/kiosk/add.php:145
-msgid "Select OUs"
+#: modules/kiosk/kiosk/editProfile.php:182 modules/kiosk/kiosk/add.php:143
+msgid "Source"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:178
+#: modules/kiosk/kiosk/editProfile.php:201
 msgid "modify"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:178
+#: modules/kiosk/kiosk/editProfile.php:201
 msgid "Modify the profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/ajaxProfilesList.php:38
-#: modules/kiosk/infoPackage.inc.php:75
+#: modules/kiosk/kiosk/ajaxProfilesList.php:40
+#: modules/kiosk/infoPackage.inc.php:80
 msgid "Delete Profile"
 msgstr ""
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:46
 #: modules/kiosk/kiosk/modifyAcknowledge.php:69
-#: modules/kiosk/infoPackage.inc.php:89
+#: modules/kiosk/infoPackage.inc.php:94
 msgid "Modify Installation Authorisations"
 msgstr ""
 
@@ -124,55 +131,54 @@ msgstr ""
 msgid "Status"
 msgstr "Estado"
 
-#: modules/kiosk/kiosk/localSidebar.php:24
+#: modules/kiosk/kiosk/localSidebar.php:26
 #: modules/kiosk/infoPackage.inc.php:43 modules/kiosk/infoPackage.inc.php:47
 msgid "Profile List"
 msgstr ""
 
-#: modules/kiosk/kiosk/localSidebar.php:25
+#: modules/kiosk/kiosk/localSidebar.php:27
 #: modules/kiosk/infoPackage.inc.php:52
 msgid "Add Profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/localSidebar.php:26
-#: modules/kiosk/kiosk/acknowledges.php:7 modules/kiosk/infoPackage.inc.php:80
-#: modules/kiosk/infoPackage.inc.php:84
+#: modules/kiosk/kiosk/localSidebar.php:29
+#: modules/kiosk/kiosk/acknowledges.php:7 modules/kiosk/infoPackage.inc.php:85
+#: modules/kiosk/infoPackage.inc.php:89
 msgid "Installation Requests"
 msgstr ""
 
-#: modules/kiosk/kiosk/ajaxEditProfile.php:43
+#: modules/kiosk/kiosk/ajaxEditProfile.php:37
 #, php-format
 msgid "The profile %s has been updated"
 msgstr ""
 
-#: modules/kiosk/kiosk/ajaxEditProfile.php:46
-#, php-format
-msgid "Unable to update the profile %s"
+#: modules/kiosk/kiosk/ajaxEditProfile.php:40
+msgid "Unable to update the profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/ajaxAddProfile.php:46
+#: modules/kiosk/kiosk/ajaxAddProfile.php:47
 #, php-format
 msgid "Profile %s successfully added"
 msgstr ""
 
-#: modules/kiosk/kiosk/ajaxAddProfile.php:50
+#: modules/kiosk/kiosk/ajaxAddProfile.php:49
 #, php-format
 msgid "Unable to create the profile %s"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:60
+#: modules/kiosk/kiosk/add.php:61
 msgid "Add New Profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:151
+#: modules/kiosk/kiosk/add.php:165
 msgid "Create"
 msgstr "Crear"
 
-#: modules/kiosk/kiosk/add.php:151
+#: modules/kiosk/kiosk/add.php:165
 msgid "Create the profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:162
+#: modules/kiosk/kiosk/add.php:174
 msgid "The LDAP is not configured correctly. Please check your configuration."
 msgstr ""
 

@@ -1536,6 +1536,22 @@ li.pending a {
     color: #FFF;
 }
 
+li.pendingg a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/pending.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
+
 li.history a {
     padding: 5px 0px  5px 22px;
     margin: 0 0px 0 0px;
@@ -1546,6 +1562,22 @@ li.history a {
     line-height: 18px;
     text-decoration: none;
     color: #FFF;
+}
+
+li.historyg a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/history.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
 }
 
 .user_container {

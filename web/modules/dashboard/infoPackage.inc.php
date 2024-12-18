@@ -25,7 +25,7 @@
  * dashboard module declaration
  */
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = & MMCApp::getInstance();
 /* Get the base module instance reference */
 $base = &$MMCApp->getModule('base');
 /* Get the main sub-module instance reference */
@@ -33,7 +33,7 @@ $base = &$MMCApp->getModule('base');
 $main = &$base->getSubmod('main');
 
 $mod = new Module("dashboard");
-$mod->setVersion("5.1.2");
+$mod->setVersion("5.2.0");
 $mod->setRevision('');
 $mod->setDescription(_T("Dashboard", "dashboard"));
 $mod->setAPIVersion("0:0:0");
@@ -51,12 +51,12 @@ $submod->addPage($page);
 $main->addPage($page);
 
 $page = new Page("ajaxPanels", _T("Panels", "dashboard"));
-$page->setOptions(array("visible" => False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("ajaxSessionPanels", _T("Session Panels", "dashboard"));
 $page->setFile("modules/dashboard/main/ajaxSessionPanels.php");
-$page->setOptions(array("visible" => False, "AJAX" =>True));
+$page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
 $page = new Page("computersOnline_dashboard", _T("Computers Online Panel", "dashboard"));
@@ -85,6 +85,4 @@ $MMCApp->addModule($mod);
 
 # hide status submod in base module
 $status = &$base->getSubmod('status');
-$status->setVisibility(False);
-
-?>
+$status->setVisibility(false);

@@ -26,6 +26,9 @@ require_once("modules/urbackup/includes/xmlrpc.php");
 
 $type_backup = htmlspecialchars($_GET["backuptype"]);
 $client_id = htmlspecialchars($_GET["clientid"]);
+$client_name = htmlspecialchars($_GET["clientname"]);
+$groupe_name = htmlspecialchars($_GET["groupname"]);
+$jid_machine = htmlspecialchars($_GET["jidmachine"]);
 
 $p = new PageGenerator(_T("Start ".$type_backup." backup", 'urbackup'));
 $p->setSideMenu($sidemenu);
@@ -45,13 +48,13 @@ foreach($start_backup as $back)
 {
     if ($back["start_ok"] == "1")
     {
-        $url = 'main.php?module=urbackup&submod=urbackup&action=index&clientid='.$client_id;
+        $url = 'main.php?module=urbackup&submod=urbackup&action=index&clientid='.$client_id."&clientname=".$client_name."&groupname=".$groupe_name."&jidmachine=".$jid_machine;
         header("Location: ".$url);  
     }
     else
     {
         $backupstate = "false";
-        $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$client_id."&backupstate=".$backupstate."&backuptype=".$type_backup;
+        $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$client_id."&backupstate=".$backupstate."&backuptype=".$type_backup."&clientname=".$client_name."&groupname=".$groupe_name."&jidmachine=".$jid_machine;
         header("Location: ".$url);  
     }
 }
