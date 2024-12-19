@@ -1,9 +1,5 @@
 <?php
 /**
-<<<<<<< HEAD
- * @TODO: Licence
-*/
-=======
  * (c) 2023-2024 Siveo, http://siveo.net/
  *
  * $Id$
@@ -24,7 +20,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
->>>>>>> integration
 
 /**
  * Differents possibilities to call this page
@@ -45,21 +40,14 @@
  * === PARAMS ===
  * mac : the machine mac address
  * srv : the {next-server} value refers to the imaging server selected
-<<<<<<< HEAD
-=======
  * uuid : the uuid refers to the machine unique uuid
->>>>>>> integration
  * ==============
  */
 
 // set DEBUG to true to display debug elements
 // set DEBUG to false to return the text file content
-<<<<<<< HEAD
-if(!empty($_GET['debug']) && $_GET['debug'] = 1) {
-=======
 header('Content-Type: text/plain; charset=UTF-8');
 if (!empty($_GET['debug']) && $_GET['debug'] == 1) {
->>>>>>> integration
     define("DEBUG", true);
 } else {
     define("DEBUG", false);
@@ -67,22 +55,12 @@ if (!empty($_GET['debug']) && $_GET['debug'] == 1) {
 
 $debug_ipxe = "";
 
-<<<<<<< HEAD
-if(!DEBUG) {
-=======
 if (!DEBUG) {
->>>>>>> integration
     // Need to print text this page as text content
     // The Content-type header is the first element to be set
     header('Content-type: Application/text');
 }
 
-<<<<<<< HEAD
-function read_conf($conffile)
-{
-    $tmp = [];
-    if(is_file($conffile)) {
-=======
 //
 // CONFIGURATION
 //
@@ -90,7 +68,6 @@ function read_conf($conffile)
 {
     $tmp = [];
     if (is_file($conffile)) {
->>>>>>> integration
         $content = file_get_contents($conffile);
         $content = str_replace("#", ";", $content);
         $tmp = parse_ini_string($content, false, INI_SCANNER_RAW);
@@ -109,22 +86,6 @@ $conffiles = [
 $config = [];
 $db = [];
 
-<<<<<<< HEAD
-foreach($conffiles as $module => $conffile) {
-    $config[$module] = read_conf($conffile);
-    $config[$module] = array_replace($config[$module], read_conf($conffile.'.local'));
-
-    if(!empty($config[$module]['dbhost'])) {
-        $host = (!empty($config[$module]['dbhost'])) ? htmlentities($config[$module]['dbhost']) : "localhost";
-        $port = (!empty($config[$module]['dbport'])) ? htmlentities($config[$module]['dbport']) : 3306;
-        $user = (!empty($config[$module]['dbuser'])) ? htmlentities($config[$module]['dbuser']) : "mmc";
-        $passwd = (!empty($config[$module]['dbpasswd'])) ? htmlentities($config[$module]['dbpasswd']) : "";
-        $name = (!empty($config[$module]['dbname'])) ? htmlentities($config[$module]['dbname']) : $module;
-        $driver = (!empty($config[$module]['driver'])) ? explode("+", htmlentities($config[$module]['driver']))[0] : ((!empty($config[$module]['dbdriver'])) ? explode("+", htmlentities($config[$module]['dbdriver']))[0] : "mysql");
-        try {
-            $db[$module] = new PDO($driver.':host='.$host.';dbname='.$name.';port='.$port, $user, $passwd, [PDO::ATTR_PERSISTENT => false]);
-        } catch(Exception $e) {
-=======
 foreach ($conffiles as $module => $conffile) {
     $config[$module] = read_conf($conffile);
     $config[$module] = array_replace($config[$module], read_conf($conffile . '.local'));
@@ -139,7 +100,6 @@ foreach ($conffiles as $module => $conffile) {
         try {
             $db[$module] = new PDO($driver . ':host=' . $host . ';dbname=' . $name . ';port=' . $port . ';charset=utf8mb4', $user, $passwd, [PDO::ATTR_PERSISTENT => false]);
         } catch (Exception $e) {
->>>>>>> integration
             // Uncomment this line to see the error message
             // echo $e->getMessage();
             exit;
@@ -147,18 +107,6 @@ foreach ($conffiles as $module => $conffile) {
     }
 }
 
-<<<<<<< HEAD
-// Get the parameters sent through URL
-$mac = (!empty($_GET['mac'])) ? htmlentities($_GET['mac']) : "";
-$srv = (!empty($_GET['srv'])) ? htmlentities($_GET['srv']) : "";
-$uuid = (!empty($_GET["uuid"])) ? strtolower(htmlentities($_GET["uuid"])) : "";
-
-$srvHost = "";
-if(inet_pton($srv) == true) {
-    $srvHost = gethostbyaddr($srv);
-}
-
-=======
 //
 // PARAMS
 //
@@ -175,7 +123,6 @@ if (inet_pton($srv) == true) {
 //
 // INITIALIZATION
 //
->>>>>>> integration
 $computer = [];
 $target = [];
 $menuId = 2;
@@ -228,15 +175,10 @@ boot || goto MENU
 :4 = master_uuid
 */
 
-<<<<<<< HEAD
-// Get imaging server infos
-
-=======
 //
 // IMAGING SERVER INFOS
 //
 // Get imaging server infos
->>>>>>> integration
 if ($srvHost != "" || $srv != "") {
     // Get ImagingServer infos
     $query1 = $db['imaging']->prepare("SELECT * FROM ImagingServer ims
@@ -266,39 +208,11 @@ $debug_ipxe .= "# Next-server : $srv
 # uuid : $ims[packageserver_uuid]
 ";
 
-<<<<<<< HEAD
-$nextId=1;
-$placeholder = !empty($ims["template_name"]) ?htmlentities($ims["template_name"]) : "";
-if($placeholder != ""){
-    $query = $db["glpi"]->prepare("select replace(name, ?, ?) as nextId from glpi_computers where name REGEXP ? order by id;");
-    $query->execute([$placeholder, "", '^'.$placeholder.'[0-9]{1,}$']);
-
-    $result = $query->fetchAll(PDO::FETCH_ASSOC);
-    $idList = [];
-
-    if(!empty($result) != []){
-        foreach($result as $row){
-            $idList[] = $row['nextId'];
-        }
-    }
-    while(in_array($nextId, $idList)){
-        $nextId++;
-    }
-    $placeholder .= $nextId;
-
-}
-
-$debug_ipxe .= "# template-name: $placeholder
-";
-
-if($uuid != ""){
-=======
 //
 // COMPUTER INFOS
 //
 if ($uuid != "") {
     // If the computer UUID is specified
->>>>>>> integration
     $query = $db['glpi']->prepare("
     SELECT
     CONCAT('UUID', gc.id) as uuid,
@@ -313,15 +227,8 @@ if ($uuid != "") {
     ");
 
     $query->execute([$uuid]);
-<<<<<<< HEAD
-    $computer = $query->fetch(Pdo::FETCH_ASSOC);
-}
-else if($mac != "") {
-
-=======
     $computer = $query->fetch(PDO::FETCH_ASSOC);
 } else if ($mac != "") {
->>>>>>> integration
     // Get the inventory associated to the mac address
     $query = $db['glpi']->prepare("
     SELECT
@@ -337,32 +244,11 @@ else if($mac != "") {
     ");
 
     $query->execute([$mac]);
-<<<<<<< HEAD
-    $computer = $query->fetch(Pdo::FETCH_ASSOC);
-=======
     $computer = $query->fetch(PDO::FETCH_ASSOC);
->>>>>>> integration
 } else {
     $computer = [];
 }
 
-<<<<<<< HEAD
-if($computer != []) {
-    $query2 = $db["dyngroup"]->prepare("SELECT Machines.id AS Machines_id, 
-    Machines.uuid AS Machines_uuid, 
-    Machines.name AS Machines_name, 
-    Groups.id AS Groups_id, 
-    Groups.name AS Groups_name, 
-    Groups.query AS Groups_query, 
-    Groups.bool AS Groups_bool, 
-    Groups.FK_users AS Groups_FK_users, 
-    Groups.type AS Groups_type, 
-    Groups.parent_id AS Groups_parent_id
-FROM Machines 
-LEFT OUTER JOIN ProfilesResults ON Machines.id = ProfilesResults.FK_machines 
-LEFT OUTER JOIN Groups ON Groups.id = ProfilesResults.FK_groups 
-LEFT OUTER JOIN GroupType ON GroupType.id = Groups.type 
-=======
 //
 // TEMPLATE NAME / PLACEHOLDER
 //
@@ -424,26 +310,17 @@ FROM Machines
 LEFT OUTER JOIN ProfilesResults ON Machines.id = ProfilesResults.FK_machines
 LEFT OUTER JOIN Groups ON Groups.id = ProfilesResults.FK_groups
 LEFT OUTER JOIN GroupType ON GroupType.id = Groups.type
->>>>>>> integration
 WHERE GroupType.value = ? AND Machines.uuid = ? ");
 
     $query2->execute(["profile", $computer["uuid"]]);
     $group = $query2->fetch(PDO::FETCH_ASSOC);
 
     $gid = null;
-<<<<<<< HEAD
-    if($group != []) {
-        $gid = $group['Groups_id'];
-    }
-    // try to load the menu for the selected machine
-    if($ims != []) {
-=======
     if ($group != []) {
         $gid = $group['Groups_id'];
     }
     // try to load the menu for the selected machine
     if ($ims != []) {
->>>>>>> integration
         $query3 = $db["imaging"]->prepare("SELECT t.name as target_name, t.*, ims.*, m.image_uuid as multicast_image_uuid, m.image_name as multicast_image_name from Target t
         join Entity e on t.fk_entity = e.id
         join ImagingServer ims on e.id=ims.fk_entity
@@ -452,11 +329,7 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
     } else {
         $query3 = $db["imaging"]->prepare("SELECT *,name as target_name from Target t where t.uuid = ?");
     }
-<<<<<<< HEAD
-    if($gid == null) {
-=======
     if ($gid == null) {
->>>>>>> integration
         $query3->execute([$computer["uuid"]]);
     } else {
         $query3->execute([$gid]);
@@ -491,34 +364,22 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
     $debug_ipxe .= "# hostname : not registered
 # mac : $mac
 # machine uuid : $uuid
-<<<<<<< HEAD
-# entity : ".(!empty($computer['uuid']) ? $computer['uuid'] : $ims['uuid'])."
-# entity name: ".(!empty($computer["entity"]) ? $computer["entity"] : $ims["name"])."
-=======
 # entity : " . (!empty($computer['uuid']) ? $computer['uuid'] : $ims['uuid']) . "
 # entity name: " . (!empty($computer["entity"]) ? $computer["entity"] : $ims["name"]) . "
->>>>>>> integration
 # target : not found
 # menu id : $menuId
 ";
 }
 
-<<<<<<< HEAD
-=======
 //
 // BOOT SERVICES & IMAGES
 //
->>>>>>> integration
 $queryLanguage = $db["imaging"]->prepare("SELECT * FROM Language WHERE id=?");
 $queryLanguage->execute([$lang]);
 $langs = $queryLanguage->fetch(PDO::FETCH_ASSOC);
 
 $keymap = "en";
-<<<<<<< HEAD
-if($langs["keymap"] != "C") {
-=======
 if ($langs["keymap"] != "C") {
->>>>>>> integration
     $keymap = substr($langs["keymap"], 0, 2);
 }
 $debug_ipxe .= "# Lang : $langs[label] - $keymap
@@ -547,39 +408,17 @@ order by mi.order ASC
 ");
 $query4->execute(
     [
-<<<<<<< HEAD
-    "lang1" => $lang,
-    "lang2" => $lang,
-    "lang3" => $lang,
-    "menuId" => $menuId]
-);
-$menu = $query4->fetchAll(Pdo::FETCH_ASSOC);
-=======
         "lang1" => $lang,
         "lang2" => $lang,
         "lang3" => $lang,
     "menuId" => $menuId]
 );
 $menu = $query4->fetchAll(PDO::FETCH_ASSOC);
->>>>>>> integration
 
 $timeout = (!empty($menu[0]) && !empty($menu[0]['timeout'])) ? $menu[0]['timeout'] : $timeout;
 $timeoutMs = $timeout * 1000;
 $debug_ipxe .= "# items:
 ";
-<<<<<<< HEAD
-foreach($menu as $item) {
-    if(empty($item['bootService_name']) && empty($item['name'])) {
-        continue;
-    }
-    if($item['type'] == 'service') {
-        $debug_ipxe .= "#    - $item[bootService_name] $item[bootService_desc] - $item[type]";
-    } elseif($item['type'] == 'image' && !empty($mac)) {
-        $debug_ipxe .= "#    - $item[name] $item[desc] - $item[type]";
-    }
-
-    if($item['default_item'] == '1') {
-=======
 foreach ($menu as $item) {
     if (empty($item['bootService_name']) && empty($item['name'])) {
         continue;
@@ -591,7 +430,6 @@ foreach ($menu as $item) {
     }
 
     if ($item['default_item'] == '1') {
->>>>>>> integration
         $debug_ipxe .= " (default)
 ";
     } else {
@@ -604,14 +442,10 @@ foreach ($menu as $item) {
 
 $default_item = "";
 
-<<<<<<< HEAD
-if(!$multicast) {
-=======
 //
 // SINGLECAST MODE
 //
 if (!$multicast) {
->>>>>>> integration
 
     $ipxe = "#!ipxe
 
@@ -659,18 +493,6 @@ cpair --foreground 4 4 ||\n";
 item --gap -- -------------------------------------
 ";
     $itemValues = "";
-<<<<<<< HEAD
-    foreach($menu as $item) {
-        if(empty($item['bootService_name']) && empty($item['name'])) {
-            continue;
-        }
-
-        if($item['type'] == 'service') {
-            $ipxe .= "item $item[bootService_name] $item[bootService_desc]
-";
-        } elseif($item['type'] == 'image' && !empty($mac)) {
-            $ipxe .= "item ".str_replace(" ", "-", $item["name"])." $item[name]
-=======
     foreach ($menu as $item) {
         if (empty($item['bootService_name']) && empty($item['name'])) {
             continue;
@@ -681,24 +503,10 @@ item --gap -- -------------------------------------
 ";
         } elseif ($item['type'] == 'image' && !empty($mac)) {
             $ipxe .= "item " . str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')) . " " . mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8') . "
->>>>>>> integration
 ";
         }
 
         if ($item["default_item"] == 1) {
-<<<<<<< HEAD
-            $default_item = !empty($item["bootService_name"]) ? $item['bootService_name'] : $item['name'];
-        }
-
-        if($item['type'] == 'service') {
-            $itemValues .= ":$item[bootService_name]
-$item[value]
-";
-        } elseif($item['type'] == 'image' && !empty($mac)) {
-            $itemValues .= ":".str_replace(" ", "-", $item["name"])."
-set url_path http://\${next-server}/downloads/davos/
-set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=".strtoupper($mac)." davos_action=RESTORE_IMAGE image_uuid=$item[uuid] initrd=initrd.img
-=======
             $default_item = !empty($item["bootService_name"]) ? mb_convert_encoding($item['bootService_name'], 'UTF-8', 'UTF-8') : mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8');
         }
 
@@ -710,7 +518,6 @@ $item[value]
             $itemValues .= ":" . str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')) . "
 set url_path http://\${next-server}/downloads/davos/
 set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=" . strtoupper($mac) . " davos_action=RESTORE_IMAGE image_uuid=$item[uuid] initrd=initrd.img
->>>>>>> integration
 kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot || goto MENU
@@ -727,11 +534,7 @@ goto \${loaded-menu}
 ### The next 2 lines (I believe) override the options picked up via DHCP (i.e. options 67 etc)
 ### Set 210 --&gt; configure the destination TFTP server (holding the PXELinux kernel and config files)
 set 210:string tftp://\${next-server}/bootloader/
-<<<<<<< HEAD
-### Set 209 --&gt; configure the location to the GRUB-format config files in PXELinux 
-=======
 ### Set 209 --&gt; configure the location to the GRUB-format config files in PXELinux
->>>>>>> integration
 set 209:string pxelinux.cfg/localboot.cfg
 ### Chain --&gt; Load the new PXELinux kernel
 chain tftp://\${next-server}/bootloader/pxelinux.0
@@ -740,17 +543,6 @@ goto MENU
 
     $ipxe .= $itemValues;
 } else {
-<<<<<<< HEAD
-    $ipxe = sprintf($menuMulticastTemplate, $computerName, $mac, $srv, $multicast_image_name, $mac, $multicast_image_uuid);
-}
-
-// Replace all ##PULSE2_PARAM_NAME## in the final menu
-$keys = ["diskless_dir", "diskless_kernel", "inventories_dir", "pxe_time_reboot", "diskless_initrd", "tools_dir", "davos_opts"];
-foreach($keys as $key) {
-    $regex = "PULSE2_".strtoupper($key);
-    $value = $ims[$key];
-    $ipxe = preg_replace("@\#\#".$regex."\#\#@", $value, $ipxe);
-=======
     //
     // MULTICAST MODE
     //
@@ -766,24 +558,16 @@ foreach ($keys as $key) {
     $regex = "PULSE2_" . strtoupper($key);
     $value = $ims[$key];
     $ipxe = preg_replace("@\#\#" . $regex . "\#\#@", $value, $ipxe);
->>>>>>> integration
 }
 
 $ipxe = preg_replace("@\#\#MACADDRESS\#\#@", $mac, $ipxe);
 $ipxe = preg_replace("@\#\#PLACEHOLDER\#\#@", $placeholder, $ipxe);
-<<<<<<< HEAD
-if(DEBUG) {
-=======
 if (DEBUG) {
->>>>>>> integration
     echo '<pre><code>';
     echo($ipxe);
     echo '</code></pre>';
 } else {
     print($ipxe);
 }
-<<<<<<< HEAD
-=======
 ?>
 
->>>>>>> integration
