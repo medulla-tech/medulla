@@ -87,8 +87,6 @@ class synch_packages:
         self.verify_packages_uninstall()
 
     def create_directory_in_partage(self):
-        logger.debug("function create_directory_in_partage")
-        logger.debug(f"package create directory '{self.path_in_partage}'")
         if not os.path.exists(self.path_in_partage):
             try:
                 os.makedirs(self.path_in_partage)
@@ -96,8 +94,6 @@ class synch_packages:
                 logger.error(f"{str(e)} : create_directory '{self.path_in_partage}'")
 
     def create_directory_in_base(self):
-        logger.debug("function create_directory_in_base")
-        logger.debug(f"package create directory '{self.path_in_base}'")
         if not os.path.exists(self.path_in_base):
             try:
                 os.makedirs(self.path_in_base)
@@ -106,7 +102,6 @@ class synch_packages:
 
     def mv_base_to_partage(self):
         # mv base vers partages
-        logger.debug("function mv_base_to_partage")
         if os.path.isdir(self.path_in_base):
             logger.debug(
                 f"function make transfert {self.path_in_base} to {self.path_in_partage}"
@@ -126,7 +121,6 @@ class synch_packages:
     def mv_partage_to_base(self):
         # mv de partages vers base
         # mv_partage_to_base
-        logger.debug("function mv_partage_to_base")
         if os.path.isdir(self.path_in_partage):
             logger.debug(
                 f"function make transfert {self.path_in_partage} to {self.path_in_base}"
@@ -146,8 +140,6 @@ class synch_packages:
         """
         supprime completement les fichiers du package de la base fichier
         """
-        logger.debug("function del_package")
-        logger.debug(f"del package '{self.path_in_base}'")
         if os.path.isdir(self.path_in_base):
             try:
                 shutil.rmtree(self.path_in_base)
@@ -170,7 +162,6 @@ class synch_packages:
         """
         supprime completement les fichiers du package de la base
         """
-        logger.debug("function del_package_pkgs")
         try:
             sql = (
                 """DELETE
@@ -251,11 +242,9 @@ class synch_packages:
         """
         list tout les packages in le partages
         """
-        logger.debug("function search_list_package")
         return [f for f in os.listdir(self.dirpartageupdate) if uuid_validate(f)]
 
     def search_file_update(self):
-        logger.debug("function search_file_update")
         self.update_file_windows = {}
         sql = """SELECT
                     updateid, kb, revisionid, title, description
@@ -301,8 +290,6 @@ class synch_packages:
         """
         download file from url urlpath in directory
         """
-        logger.debug("function create_package_file")
-        logger.debug(f"function create_package_file {self.path_in_base}")
         if os.path.isdir(self.path_in_base):
             ff = os.listdir(self.path_in_base)
             if len(ff) >= 3:
@@ -435,7 +422,6 @@ class synch_packages:
         kb,
         date_edition_windows_update,
     ):
-        logger.debug("function generate_xmppdeploy_json")
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         if typename == "cab":
@@ -576,7 +562,6 @@ class synch_packages:
         return template
 
     def id_partage(self):
-        logger.debug("function id_partage")
         self.partage_id = None
         sql = (
             """SELECT
@@ -628,7 +613,6 @@ class synch_packages:
         return None
 
     def check_in_base(self):
-        logger.debug("function check_in_base")
         sql = (
             """SELECT
                 id
@@ -649,7 +633,6 @@ class synch_packages:
 
     def install_package(self):
         try:
-            logger.debug("function install_package")
             # search id_partage winupdates
             if self.check_in_base():
                 return
@@ -842,7 +825,6 @@ class synch_packages:
             logger.error("\n%s" % (errorstr))
 
     def generate_conf_json(self, name, id, description, urlpath):
-        logger.debug("function generate_conf_json")
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         return """{
