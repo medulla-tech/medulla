@@ -18,8 +18,6 @@
 
 START TRANSACTION;
 
-USE glpi;
-
 CREATE OR REPLACE VIEW glpi_computers_pulse AS
     SELECT 
         computers.id,
@@ -89,7 +87,7 @@ CREATE OR REPLACE VIEW glpi_view_computers_items_printer AS
         is_deleted,
         is_dynamic
     FROM
-        glpi.glpi_computers_items
+        glpi_computers_items
     WHERE
         itemtype = 'Printer';
 
@@ -101,7 +99,7 @@ CREATE OR REPLACE VIEW glpi_view_computers_items_peripheral AS
         is_deleted,
         is_dynamic
     FROM
-        glpi.glpi_computers_items
+        glpi_computers_items
     WHERE
         itemtype = 'Peripheral';
 
@@ -109,6 +107,6 @@ CREATE OR REPLACE VIEW glpi_view_peripherals_manufacturers AS
     SELECT
        *
     FROM
-        glpi.glpi_manufacturers;
+        glpi_manufacturers;
 
 COMMIT;
