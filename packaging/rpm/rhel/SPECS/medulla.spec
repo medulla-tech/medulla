@@ -1214,6 +1214,7 @@ fi
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/apache/mmc.conf
 %attr(0640,root,root) %config(noreplace) %_webappconfdir/mmc.conf
 %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mmc/mmc.ini
+%attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mmc/authproviders.ini
 %dir %{_datadir}/mmc
 %{_datadir}/mmc/forgotpassword.php
 %{_datadir}/mmc/license.php
