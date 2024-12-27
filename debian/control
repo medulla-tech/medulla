@@ -510,7 +510,7 @@ Description: Management Console Agent
 
 Package: mmc-web-base
 Architecture: all
-Depends: ${misc:Depends}, php-fpm | libapache2-mod-php, php-xmlrpc, php-gd, apache2 | apache2-mpm-prefork, wwwconfig-common, node-d3, openid-connect-php
+Depends: ${misc:Depends}, php-fpm | libapache2-mod-php, php-xmlrpc, php-gd, apache2 | apache2-mpm-prefork, wwwconfig-common, node-d3, openid-connect-php, php-phpseclib3
 Description: MMC web interface to interact with a MMC agent
  Management Console web interface designed by Siveo.
 
