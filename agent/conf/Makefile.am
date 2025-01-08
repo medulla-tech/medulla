@@ -40,7 +40,7 @@ edit = sed \
         -e 's|@localstatedir[@]|$(localstatedir)|g' \
         -e 's|@libdir[@]|$(libdir)|g'
 
-plugins/base.ini plugins/services.ini agent/config.ini: Makefile
+plugins/base.ini plugins/services.ini agent/config.ini agent/authproviders.ini: Makefile
 	rm -f $@ $@.tmp
 	$(MKDIR_P) $(@D)
 	srcdir=''; \
