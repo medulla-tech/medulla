@@ -18,15 +18,13 @@
 
 START TRANSACTION;
 
-use glpi;
-
 Create or replace view glpi_computers_pulse as select computers.id, computers.entities_id, computers.name, computers.serial, computers.otherserial, computers.contact, computers.contact_num, computers.users_id_tech, computers.groups_id_tech, computers.comment, computers.date_mod, os.operatingsystems_id, os.operatingsystemversions_id, os.operatingsystemservicepacks_id, os.operatingsystemarchitectures_id, os.license_number, os.license_id, os.operatingsystemkernelversions_id, computers.autoupdatesystems_id, computers.locations_id, computers.domains_id, computers.networks_id, computers.computermodels_id, computers.computertypes_id, computers.is_template, computers.template_name, computers.manufacturers_id, computers.is_deleted, computers.is_dynamic, computers.users_id, computers.groups_id, computers.states_id, computers.ticket_tco, computers.uuid, computers.date_creation, computers.is_recursive from glpi_computers computers inner join glpi_items_operatingsystems os on computers.id = os.items_id;
 
 CREATE or replace VIEW glpi_view_computers_items_printer AS
     SELECT
         id, items_id, computers_id, is_deleted, is_dynamic
     FROM
-        glpi.glpi_computers_items
+        glpi_computers_items
     WHERE
         itemtype = 'Printer';
 
@@ -34,7 +32,7 @@ CREATE or replace VIEW glpi_view_computers_items_peripheral AS
     SELECT
         id, items_id, computers_id, is_deleted, is_dynamic
     FROM
-        glpi.glpi_computers_items
+        glpi_computers_items
     WHERE
         itemtype = 'Peripheral';
 
@@ -42,6 +40,6 @@ CREATE OR REPLACE VIEW glpi_view_peripherals_manufacturers AS
    SELECT
        *
    FROM
-     glpi.glpi_manufacturers;
+     glpi_manufacturers;
 
 COMMIT;

@@ -1,4 +1,5 @@
 etc/mmc/mmc.ini
+etc/mmc/authproviders.ini
 etc/mmc/apache/mmc.conf
 etc/apache2/conf-available/mmc.conf
 usr/share/mmc/graph

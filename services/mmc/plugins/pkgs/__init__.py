@@ -596,6 +596,7 @@ def verify_package(uuidpackage):
             with open(path_file_xmppdeploy) as mon_fichier:
                 contentxmppdeploy = json.load(mon_fichier)
         except:
+            logger.error(f"The xmppdeploy file of package {uuidpackage} is badly formatted")
             control["deploy_correctjsonxmppdeploy"] = (
                 "the xmppdeploy file of package %s is badly formatted" % uuidpackage
             )
@@ -605,8 +606,10 @@ def verify_package(uuidpackage):
             keylist = contentxmppdeploy.keys()
             for t in testkey:
                 if not t in contentxmppdeploy:
+                    logger.error("In xmppdeploy Session main option {t} missing")
+
                     control["deploy_xmpp_section_missing_%s" % t] = (
-                        "In xmppdeply Session main option %s missing" % t
+                        "In xmppdeploy Session main option %s missing" % t
                     )
             if contentxmppdeploy["info"]:
                 keylistinfo = [
@@ -871,7 +874,7 @@ def putPackageDetail(package, need_assign=True):
 
     centralizedmultiplesharing = PkgsConfig("pkgs").centralizedmultiplesharing
 
-    logger.debug("centralized multiple sharing mode%s" % centralizedmultiplesharing)
+    logger.debug(f"centralized multiple sharing mode {centralizedmultiplesharing}")
 
     if centralizedmultiplesharing:
         directorysharing = get_share_from_descriptor(package)
@@ -985,12 +988,16 @@ def putPackageDetail(package, need_assign=True):
     if "mode" in package and package["mode"] != "creation":
         typesynchro = "chang"
     if not os.path.exists(os.path.join(packages_id_input_dir, "xmppdeploy.json")):
-        # write file to xmpp deploy
-        xmppdeployfile = to_json_xmppdeploy(package)
-        with open(
-            os.path.join(packages_id_input_dir, "xmppdeploy.json"), "w"
-        ) as fichier:
-            fichier.write(xmppdeployfile)
+        try:
+            # write file to xmpp deploy
+            xmppdeployfile = to_json_xmppdeploy(package)
+            with open(
+                os.path.join(packages_id_input_dir, "xmppdeploy.json"), "w"
+            ) as fichier:
+                fichier.write(xmppdeployfile)
+        except Exception as e:
+            logger.error(f"We got a problem whild writing the file {xmppdeployfile}")
+            logger.error(f"The error encountered is {e}")
 
         parsexmppjsonfile(os.path.join(packages_id_input_dir, "xmppdeploy.json"))
 
@@ -1046,8 +1053,14 @@ def putPackageDetail(package, need_assign=True):
         pkgmanage().add_package(confjson, pkgs_share_id)
 
     # write file to package directory
-    with open(os.path.join(packages_id_input_dir, "conf.json"), "w") as outfile:
-        json.dump(confjson, outfile, indent=4)
+    confJsonFile = os.path.join(packages_id_input_dir, "conf.json")
+    try:
+        with open(confJsonFile, "w") as outfile:
+            json.dump(confjson, outfile, indent=4)
+    except Exception as error_writing:
+        logger.error(f"We got a problem whild writing the file {confJsonFile}")
+        logger.error(f"The error encountered is {error_writing}")
+
 
     logger.debug("Hash generation: %s" % PkgsConfig("pkgs").generate_hash)
 
