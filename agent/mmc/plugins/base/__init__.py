@@ -1128,13 +1128,14 @@ class LdapUserGroupControl:
 
         # For the gecos LDAP field, make a full ASCII string
         try:
-            gecosFirstN = str(delete_diacritics((firstN.encode("UTF-8"))))
-            gecosLastN = str(delete_diacritics((lastN.encode("UTF-8"))))
+            gecosFirstN = delete_diacritics(firstN)
+            gecosLastN = delete_diacritics(lastN)
             gecos = f"{gecosFirstN} {gecosLastN}"
         except UnicodeEncodeError:
             gecos = uid
 
         # Build a UTF-8 representation of the unicode strings
+        displayName = cn = f"{firstN} {lastN}"
         lastN = lastN.encode("utf-8")
         firstN = firstN.encode("utf-8")
 
@@ -1154,8 +1155,8 @@ class LdapUserGroupControl:
             ],
             "uid": uid,
             "gecos": gecos,
-            "cn": f"{firstN.decode('utf-8')} {lastN.decode('utf-8')}",
-            "displayName": f"{firstN.decode('utf-8')} {lastN.decode('utf-8')}",
+            "cn": cn,
+            "displayName": displayName,
             "sn": lastN,
             "givenName": firstN,
             "homeDirectory": homeDir,
