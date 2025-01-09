@@ -205,7 +205,7 @@ $debug_ipxe .= "# Next-server : $srv
 # Imaging host : $srvHost
 # Imaging url : $ims[url]
 # Imaging Server id : $ims[id]
-# uuid : $ims[packageserver_uuid]
+# Imaging Server uuid : $ims[packageserver_uuid]
 ";
 
 //
@@ -215,10 +215,11 @@ if ($uuid != "") {
     // If the computer UUID is specified
     $query = $db['glpi']->prepare("
     SELECT
-    CONCAT('UUID', gc.id) as uuid,
+    CONCAT('UUID', gc.id) as id,
     gc.entities_id as euid,
     gc.name as name,
-    ge.completename as entity
+    ge.completename as entity,
+    gc.uuid
     FROM glpi_networkports gnp
     JOIN glpi_computers gc ON gc.id = gnp.items_id AND gnp.itemtype='Computer'
     JOIN glpi_entities ge ON gc.entities_id = ge.id
@@ -232,10 +233,11 @@ if ($uuid != "") {
     // Get the inventory associated to the mac address
     $query = $db['glpi']->prepare("
     SELECT
-    CONCAT('UUID', gc.id) as uuid,
+    CONCAT('UUID', gc.id) as id,
     gc.entities_id as euid,
     gc.name as name,
-    ge.completename as entity
+    ge.completename as entity,
+    gc.uuid
     FROM glpi_networkports gnp
     JOIN glpi_computers gc ON gc.id = gnp.items_id AND gnp.itemtype='Computer'
     JOIN glpi_entities ge ON gc.entities_id = ge.id
@@ -312,7 +314,7 @@ LEFT OUTER JOIN Groups ON Groups.id = ProfilesResults.FK_groups
 LEFT OUTER JOIN GroupType ON GroupType.id = Groups.type
 WHERE GroupType.value = ? AND Machines.uuid = ? ");
 
-    $query2->execute(["profile", $computer["uuid"]]);
+    $query2->execute(["profile", $computer["id"]]);
     $group = $query2->fetch(PDO::FETCH_ASSOC);
 
     $gid = null;
@@ -325,12 +327,12 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
         join Entity e on t.fk_entity = e.id
         join ImagingServer ims on e.id=ims.fk_entity
         left join Multicast m on m.target_uuid = t.uuid
-        where t.uuid = ?");
+        where t.uuid = ? or t.uuid = ?");
     } else {
-        $query3 = $db["imaging"]->prepare("SELECT *,name as target_name from Target t where t.uuid = ?");
+        $query3 = $db["imaging"]->prepare("SELECT *,name as target_name from Target t where t.uuid = ? or t.uuid = ?");
     }
     if ($gid == null) {
-        $query3->execute([$computer["uuid"]]);
+        $query3->execute([$computer["uuid"], $computer["id"]]);
     } else {
         $query3->execute([$gid]);
     }
@@ -347,8 +349,8 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
     $multicast = ($multicast_image_uuid != null && $multicast_image_name != null) ? true : false;
     $debug_ipxe .= "# hostname : $computer[name]
 # mac : $mac
-# machine uuid : $uuid
-# entity : $computer[uuid]
+# machine id : $computer[id]
+# entity : $computer[euid]
 # entity name: $computer[entity]
 # menu id : $menuId
 # multicast : $multicast
