@@ -99,7 +99,7 @@ install: build
 	mv -f $(DESTDIR)/usr/lib/python3.13/site-packages/* $(DESTDIR)/usr/lib/python3/dist-packages/
 	# Manually copy custom SQL views into /usr/share/doc/pulse2/
 	cp services/contrib/glpi-*.sql  $(DESTDIR)/usr/share/doc/pulse2/contrib/
-	cp ./agent/conf/agent/authproviders.ini.in $(DESTDIR)/etc/mmc/authproviders.in
+	cp ./agent/conf/agent/authproviders.ini.in $(DESTDIR)/etc/mmc/authproviders.ini
 
 binary-indep: build install
 	dh_testdir
