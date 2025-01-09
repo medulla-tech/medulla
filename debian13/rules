@@ -96,7 +96,7 @@ install: build
 	cp  $(DESTDIR)/etc/mmc/apache/mmc.conf $(DESTDIR)/etc/apache2/conf-available/
 	# Workaround install issue
 	mkdir -p $(DESTDIR)/usr/lib/python3/dist-packages/
-	mv -f $(DESTDIR)/usr/lib/python3.12/site-packages/* $(DESTDIR)/usr/lib/python3/dist-packages/
+	mv -f $(DESTDIR)/usr/lib/python3.13/site-packages/* $(DESTDIR)/usr/lib/python3/dist-packages/
 	# Manually copy custom SQL views into /usr/share/doc/pulse2/
 	cp services/contrib/glpi-*.sql  $(DESTDIR)/usr/share/doc/pulse2/contrib/
 
