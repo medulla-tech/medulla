@@ -68,8 +68,18 @@ function fetchBaseIni($section, $key, $configPaths)
 
 function fetchProvidersConfig($configPaths)
 {
-    $config      = parse_ini_file($configPaths['PROVIDERS_INI_PATH'], true);
-    $localConfig = parse_ini_file($configPaths['PROVIDERS_LOCAL_INI_PATH'], true);
+    $config = @parse_ini_file($configPaths['PROVIDERS_INI_PATH'], true);
+    if ($config === false || empty($config)) {
+        $config = [];
+    }
+
+    $localConfig = @parse_ini_file($configPaths['PROVIDERS_LOCAL_INI_PATH'], true);
+    if ($localConfig === false || empty($localConfig)) {
+        error_log("Notice : Le fichier " . $configPaths['PROVIDERS_LOCAL_INI_PATH'] . " est vide ou invalide.");
+        $localConfig = [];
+    }
+
+    // Merge configurations with priority to the .local file
     return array_replace_recursive($config, $localConfig);
 }
 
