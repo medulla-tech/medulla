@@ -103,8 +103,8 @@ function generateStr($length = 50)
 
 function handleSession()
 {
-    if (isset($_POST['selectedLang'])) {
-        $lang = filter_var($_POST['selectedLang'], FILTER_SANITIZE_STRING);
+    if (isset($_POST['lang'])) {
+        $lang = filter_var($_POST['lang'], FILTER_SANITIZE_STRING);
         setcookie('userLang', $lang, time() + 86400, '/');
     }
 }
