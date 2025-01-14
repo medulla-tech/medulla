@@ -7,3 +7,8 @@
 #clientId = ""
 #clientSecret = ""
 #lmcACL = ":base#main#default/"
+#User mapping allows to map fields obtained from OIDC scopes to different LDAP fields
+#ldap_uid = preferred_username
+#ldap_givenName = given_name
+#ldap_sn = family_name
+#ldap_mail = email

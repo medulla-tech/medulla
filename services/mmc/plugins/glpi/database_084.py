@@ -6687,6 +6687,7 @@ class Machine(object):
     def to_a(self):
         owner_login, owner_firstname, owner_realname = Glpi084().getMachineOwner(self)
         return [
+            ["id", self.id],
             ["name", self.name],
             ["comments", self.comment],
             ["serial", self.serial],

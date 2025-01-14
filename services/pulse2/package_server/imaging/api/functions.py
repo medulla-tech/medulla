@@ -733,12 +733,11 @@ class Imaging(object, metaclass=SingletonN):
 
         def _getuuidCB(result):
             inventory = {}
-
             if result and isinstance(result, dict):
                 if "name" not in result and "shortname" in result:
                     result["name"] = result["shortname"]
                 inventory["shortname"] = result["name"]
-                _id = "UUID%s" % result["id"]
+                _id = result["id"]
 
                 client = self._getXMLRPCClient()
                 func = "imaging.injectInventoryUuid"
@@ -764,7 +763,7 @@ class Imaging(object, metaclass=SingletonN):
                 return False
             try:
                 if result[0]:
-                    _id = "UUID%s" % result[1]["id"]
+                    _id = result[1]["id"]
                     shortname = result[1]["name"]
                     fqdn = ""
                     entity = "UUID%s" % result[1]["entities_id"]
