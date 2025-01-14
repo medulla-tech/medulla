@@ -447,6 +447,12 @@ $default_item = "";
 //
 if (!$multicast) {
 
+    $pxeLogin = $ims["pxe_login"];
+    $pxePassword = $ims["pxe_password"];
+    $pxePasswordMd5 = md5($pxePassword);
+
+    $selectedMenu = ($pxePassword == "") ? "MENU" : "MAIN";
+
     $ipxe = "#!ipxe
 
 # ###
@@ -456,7 +462,7 @@ $debug_ipxe
 # ###
 
 set keymap $keymap
-set loaded-menu MENU
+set loaded-menu $selectedMenu
 cpuid --ext 29 && set arch x86_64 || set arch i386
 goto get_console
 :console_set
@@ -528,7 +534,7 @@ boot || goto MENU
     $ipxe .= "choose --default $default_item --timeout $timeoutMs target && goto \${target}
 :protected
 login || goto \${loaded-menu}
-iseq \${username}  && iseq \${password}  && set loaded-menu MENU || set loaded-menu MAIN
+iseq \${username} $pxeLogin && iseq \${password} $pxePassword && set loaded-menu MENU || set loaded-menu MAIN
 goto \${loaded-menu}
 :exceptions
 ### The next 2 lines (I believe) override the options picked up via DHCP (i.e. options 67 etc)
