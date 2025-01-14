@@ -82,21 +82,22 @@ class AuthenticationManager(Singleton):
         for name, klass in self.components:
             instance = klass()
             self.logger.debug(f"Try to authenticate user with {name} / {str(klass)}")
+            methods = instance.config.method.lower().split()
 
-            if "externalldap" not in instance.config.method.split():
-                self.logger.debug("Skipping authonly and exclude checks for external LDAP method")
-            else:
-                if instance.config.authonly:
-                    if user.lower() not in instance.config.authonly:
-                        self.logger.debug(
-                            f"User {user} is not in the authonly list of this authenticator, so we skip it"
-                        )
-                        continue
-                if instance.config.exclude:
-                    if user.lower() in instance.config.exclude:
-                        self.logger.debug(
-                            f"User {user} is in the exclude list of this authenticator, so we skip it"
-                        )
+            if instance.config.authonly:
+                if "oidc" in methods:
+                    logging.getLogger().error("'OIDC' is present, we bypass Authonly control.")
+                elif user.lower() not in instance.config.authonly:
+                    self.logger.debug(
+                        f"User {user} is not in authonly list for authenticator {name}, skipping."
+                    )
+                    continue
+
+            if instance.config.exclude:
+                if user.lower() in instance.config.exclude:
+                    self.logger.debug(
+                        f"User {user} is in the exclude list of this authenticator, so we skip it"
+                    )
 
             try:
                 token = instance.authenticate(user, password)

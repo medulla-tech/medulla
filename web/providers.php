@@ -166,7 +166,7 @@ function handleAuthentication($providerKey, $providersConfig)
     try {
         $oidc = new MyOpenIDConnectClient($clientUrl, $clientId, $clientSecret);
 
-        $hostname = gethostname();
+        $hostname = $_SERVER['HTTP_HOST'];
         $redirectUri = 'https://' . $hostname . '/mmc/providers.php';
         $oidc->setRedirectURL($redirectUri);
         $oidc->addScope(['email']);
@@ -233,7 +233,7 @@ function handleAuthentication($providerKey, $providersConfig)
             if (!$userExists) {
                 $add = add_user(
                     $newUser,                                   // uid
-                    prepare_string($newPassUser),               // password
+                    prepare_string($newPassUser),               // password 
                     $userMappedData['givenName'] ?? 'unknown',  // firstN
                     $userMappedData['sn'] ?? 'unknown',         // lastN
                     null,                                       // homeDir
@@ -246,14 +246,28 @@ function handleAuthentication($providerKey, $providersConfig)
                     $setlmcACL = setAcl($newUser, $aclString);
 
                     // Session opening under the new user
-                    $login = $newUser;
-                    $pass  = $newPassUser;
-                    include("includes/createSession.inc.php");
+                    $newPassUser = generateStr(50);
+                    callPluginFunction("changeUserPasswd", [
+                        [$newUser, prepare_string($newPassUser)]
+                    ]);
 
-                    $_SESSION['selectedProvider'] = $providerKey;
-                    $_SESSION['id_token']        = $tokens->id_token;
-                    header("Location: main.php");
-                    exit;
+                    if (auth_user($newUser, $newPassUser, true)) {
+                        $login = $newUser;
+                        $pass  = $newPassUser;
+                        include("includes/createSession.inc.php");
+
+                        $_SESSION['selectedProvider'] = $providerKey;
+                        $_SESSION['id_token']         = $tokens->id_token;
+                        header("Location: main.php");
+                        exit;
+                    } else {
+                        new NotifyWidgetFailure(
+                            "Authentication failed for the newly created user $newUser.", 
+                            "Authentication Error"
+                        );
+                        header("Location: /mmc/index.php");
+                        exit;
+                    }
                 } else {
                     new NotifyWidgetFailure("Impossible to set up acls for the user $newUser", "Erreur acl");
                     header("Location: /mmc/index.php");
