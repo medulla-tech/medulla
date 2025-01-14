@@ -70,6 +70,7 @@ function fetchProvidersConfig($configPaths)
 {
     $config = @parse_ini_file($configPaths['PROVIDERS_INI_PATH'], true);
     if ($config === false || empty($config)) {
+        error_log(sprintf('Error loading providers config file %s: File is invalid or empty', $configPaths['PROVIDERS_INI_PATH']));
         $config = [];
     }
 
@@ -165,8 +166,8 @@ function handleAuthentication($providerKey, $providersConfig)
 
     try {
         $oidc = new MyOpenIDConnectClient($clientUrl, $clientId, $clientSecret);
-
-        $hostname = $_SERVER['HTTP_HOST'];
+        global $conf;
+        $hostname = $conf["server_01"]["description"];
         $redirectUri = 'https://' . $hostname . '/mmc/providers.php';
         $oidc->setRedirectURL($redirectUri);
         $oidc->addScope(['email']);
@@ -175,15 +176,24 @@ function handleAuthentication($providerKey, $providersConfig)
         if (!isset($_GET['code'])) {
             $oidc->authenticate();
         } else {
-            $code = filter_var($_GET['code'], FILTER_SANITIZE_STRING);
-            $tokens = $oidc->getTokens($code, $redirectUri);
+            $code = $_GET['code'];
+            if (preg_match('/^[a-zA-Z0-9_.-]+$/', $code)) {
+                try {
+                    $tokens = $oidc->getTokens($code, $redirectUri);
+
+                } catch (Exception $e) {
+                    error_log("Erreur OAuth : " . $e->getMessage());
+                    die("Une erreur est survenue lors de l'authentification.");
+                }
+            } else {
+                die("Code OAuth non valide.");
+            }
 
             // Definition of access token, USERINFO recovery
             $oidc->setAccessToken($tokens->access_token);
             $userInfo = $oidc->requestUserInfo();
 
             // Creation of local MMC session
-            global $conf;
             $error = "";
             $login = "";
 
@@ -199,7 +209,8 @@ function handleAuthentication($providerKey, $providersConfig)
             $_SESSION["XMLRPC_server_description"] = $conf["server_01"]["description"];
             $_SESSION['lang']                     = htmlspecialchars($_COOKIE['userLang'] ?? 'en', ENT_QUOTES, 'UTF-8');
 
-            $login = "root";
+            $auth  = fetchBaseIni('authentication_baseldap', 'authonly', $GLOBALS['configPaths']);
+            $login = explode(' ', $auth)[0];
             $pass  = fetchBaseIni('ldap', 'password', $GLOBALS['configPaths']);
             include("includes/createSession.inc.php");
 
@@ -262,7 +273,7 @@ function handleAuthentication($providerKey, $providersConfig)
                         exit;
                     } else {
                         new NotifyWidgetFailure(
-                            "Authentication failed for the newly created user $newUser.", 
+                            "Authentication failed for the newly created user $newUser.",
                             "Authentication Error"
                         );
                         header("Location: /mmc/index.php");
