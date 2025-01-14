@@ -5913,7 +5913,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getLocationImagingServerByServerUUID(self, imaging_server_uuid):
         session = create_session()
         ims, entity = (
-            session.query(ImagingServer)
+            session.query(ImagingServer, Entity)
             .join(Entity, Entity.id == ImagingServer.fk_entity)
             .filter(self.imaging_server.c.packageserver_uuid == imaging_server_uuid)
             .first()
@@ -5937,9 +5937,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         session.begin()
 
-        locationId, locationServerImaging = self.getLocationImagingServerByServerUUID(
-            imaging_server_uuid
-        )
+        locationId, locationServerImaging = self.getLocationImagingServerByServerUUID(imaging_server_uuid)
         target = None
         session.query(Target).filter_by(uuid=computer_uuid).update(
             {"uuid": "DELETED UUID%s" % computer_uuid}

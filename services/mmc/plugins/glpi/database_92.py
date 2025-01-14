@@ -3977,7 +3977,6 @@ class Glpi92(DyngroupDatabaseHelper):
         # Mutable dict options used as default argument to a method or function
         options = options or {}
         session = create_session()
-        # knokno
         uuid = int(uuid.replace("UUID", ""))
         query = session.query(distinct(Computersitems.itemtype)).filter(
             Computersitems.computers_id == uuid
@@ -7271,6 +7270,7 @@ class Machine(object):
     def to_a(self):
         owner_login, owner_firstname, owner_realname = Glpi92().getMachineOwner(self)
         return [
+            ["id", self.id],
             ["name", self.name],
             ["comments", self.comment],
             ["serial", self.serial],
