@@ -82,17 +82,23 @@ class AuthenticationManager(Singleton):
         for name, klass in self.components:
             instance = klass()
             self.logger.debug(f"Try to authenticate user with {name} / {str(klass)}")
+            methods = instance.config.method.lower().split()
+
             if instance.config.authonly:
-                if user.lower() not in instance.config.authonly:
+                if "oidc" in methods:
+                    logging.getLogger().error("'OIDC' is present, we bypass Authonly control.")
+                elif user.lower() not in instance.config.authonly:
                     self.logger.debug(
-                        f"User {user} is not in the authonly list of this authenticator, so we skip it"
+                        f"User {user} is not in authonly list for authenticator {name}, skipping."
                     )
                     continue
+
             if instance.config.exclude:
                 if user.lower() in instance.config.exclude:
                     self.logger.debug(
                         f"User {user} is in the exclude list of this authenticator, so we skip it"
                     )
+
             try:
                 token = instance.authenticate(user, password)
             except Exception as e:
@@ -139,6 +145,13 @@ class AuthenticatorConfig(MMCConfigParser):
                 pass
             except NoOptionError:
                 pass
+
+        try:
+            self.method = self.get("provisioning", "method")
+        except NoSectionError:
+            pass
+        except NoOptionError:
+            pass
 
     def setDefault(self):
         self.authonly = None

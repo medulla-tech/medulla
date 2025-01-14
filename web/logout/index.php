@@ -35,6 +35,12 @@ require("modules/base/includes/edit.inc.php");
 $root = $conf["global"]["root"];
 
 if (isset($_POST["delog"])) {
+    // redirect to the treatment of OIDC disconnection
+    if (isset($_SESSION['selectedProvider'])) {
+        header("Location: " . $root . "providers.php?signout=1");
+        exit;
+    }
+
     $_SESSION = array();
     if (isset($_COOKIE[session_name()])) {
         setcookie(session_name(), '', time()-42000, '/');
