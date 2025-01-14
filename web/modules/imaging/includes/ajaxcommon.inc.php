@@ -115,13 +115,6 @@ foreach ($ret as $r) {
     }
 }
 
-if (safeCount($running_on) > 0) {
-    $a_href_open = "<a href=''>";
-    print "<p>";
-    print sprintf(_T("Boot menu generation is still in progress for the following items : %s. Please wait or reload the page %shere%s.", "imaging"), join(', ', $running_on), $a_href_open, '</a>');
-    print "</p>";
-}
-
 if (safeCount($initerror_on) > 0) {
     print "<p>";
     print _T("The registering in the imaging server has failed.", "imaging");
