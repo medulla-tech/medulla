@@ -392,13 +392,17 @@ class UUIDCache(pulse2.utils.Singleton):
             if self.config.has_option(uuid, "entity"):
                 entity = self.config.get(uuid, "entity")
 
+            id = ""
+            if self.config.has_option(uuid, "id"):
+                id = self.config.get(uuid, "id")
+
             if int(time.time()) - updated > self.cacheLifetime:
                 self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
                 # do not break the flow
                 # return False
             return {
                 "uuid": uuid,
-                "id": _id,
+                "id": id,
                 "mac": mac,
                 "shortname": shortname,
                 "fqdn": fqdn,
