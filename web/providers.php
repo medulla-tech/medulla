@@ -110,6 +110,17 @@ function handleSession()
     }
 }
 
+function updateUserMail($uid, $mail)
+{
+    if (!$uid || !$mail) {
+        error_log("UID or missing email");
+        return false;
+    }
+
+    return changeUserAttributes($uid, "mail", $mail);
+}
+
+
 // manages the supplier selection
 function handleProviderSelection($providersConfig)
 {
@@ -228,7 +239,7 @@ function handleAuthentication($providerKey, $providersConfig)
                 }
             }
 
-            $newUser       = $userMappedData['uid'] ?? 'unknown';
+            $newUser       = $userMappedData['uid'] ?? $userInfo->preferred_username;
             $newPassUser   = generateStr(50); // Mot de passe aléatoire
             $aclString     = $providersConfig[$providerKey]['lmcACL'];
             $userExists    = false;
@@ -243,15 +254,17 @@ function handleAuthentication($providerKey, $providersConfig)
 
             if (!$userExists) {
                 $add = add_user(
-                    $newUser,                                   // uid
-                    prepare_string($newPassUser),               // password 
-                    $userMappedData['givenName'] ?? 'unknown',  // firstN
-                    $userMappedData['sn'] ?? 'unknown',         // lastN
-                    null,                                       // homeDir
-                    true,                                       // createHomeDir
-                    false,                                      // ownHomeDir
-                    null                                        // primaryGroup
+                    $newUser,                                               // uid
+                    prepare_string($newPassUser),                           // password
+                    $userMappedData['givenName'] ?? $userInfo->given_name,  // firstN
+                    $userMappedData['sn'] ?? $userInfo->family_name,        // lastN
+                    null,                                                   // homeDir
+                    true,                                                   // createHomeDir
+                    false,                                                  // ownHomeDir
+                    null                                                    // primaryGroup
                 );
+
+                $mail = updateUserMail($newUser, $userMappedData['mail'] ?? $userInfo->email);
 
                 if ($add['code'] == 0) {
                     $setlmcACL = setAcl($newUser, $aclString);
