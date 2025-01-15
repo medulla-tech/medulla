@@ -243,50 +243,54 @@ if (safeCount($servDescList) == 1) {
         </form>
 
         <?php if (file_exists(__sysconfdir__."/mmc/authproviders.ini")): ?>
-        <!-- PROVIDER -->
-        <form action="providers.php" method="post" name="loginFormProvider" id="loginFormProvider">
-            <div class="control-group">
-                <br><hr>
-                <h3 style="text-align: center;">PROVIDERS</h3>
-                <?php
-                function fetchProvidersConfig() {
-                    $defaultIniPath = __sysconfdir__."/mmc/authproviders.ini";
-                    $localIniPath = __sysconfdir__."/mmc/authproviders.ini.local";
+            <?php
+            function fetchProvidersConfig() {
+                $defaultIniPath = __sysconfdir__."/mmc/authproviders.ini";
+                $localIniPath = __sysconfdir__."/mmc/authproviders.ini.local";
 
-                    $iniPath = file_exists($localIniPath) ? $localIniPath : $defaultIniPath;
+                $iniPath = file_exists($localIniPath) ? $localIniPath : $defaultIniPath;
 
-                    if (is_readable($iniPath)) {
-                        $config = parse_ini_file($iniPath, true);
-                        return $config;
-                    } else {
-                        echo "<p>";
-                        echo  _("Error reading authproviders.ini or authproviders.ini.local config file.");
-                        echo "</p>";
-                        exit();
-                    }
+                if (is_readable($iniPath)) {
+                    $config = parse_ini_file($iniPath, true);
+                    return $config ?: [];
+                } else {
+                    echo "<p>";
+                    echo  _("Error reading authproviders.ini or authproviders.ini.local config file.");
+                    echo "</p>";
+                    exit();
                 }
-
-                $providersConfig = fetchProvidersConfig();
-
-                foreach ($providersConfig as $provider => $config) {
-                    $logoUrl = !empty($config['logoUrl']) ? $config['logoUrl'] : './img/login/oidc.png';
-                    echo '<button onclick="confirmLogin(\'' . $provider . '\')" class="login-btn provider-btn">';
-                    echo '<img src="' . $logoUrl . '" alt="' . $provider . ' Logo"> Se connecter avec ' . $provider;
-                    echo '</button>';
-                }
-                ?>
-                <input type="hidden" id="selectedProvider" name="selectedProvider" />
-                <input type="hidden" id="selectedLang" name="lang" value="<?= $_SESSION['lang'] ?>" />
-            </div>
-        </form>
-        <script>
-            function confirmLogin(provider) {
-                document.getElementById('selectedProvider').value = provider;
-                document.getElementById('loginFormProvider').submit();
-                document.getElementById('selectedLang').submit();
             }
-        </script>
-        <!-- ./PROVIDER -->
+
+            $providersConfig = fetchProvidersConfig();
+            ?>
+
+            <?php if (!empty($providersConfig)): ?>
+                <!-- PROVIDER -->
+                <form action="providers.php" method="post" name="loginFormProvider" id="loginFormProvider">
+                    <div class="control-group">
+                        <br><hr>
+                        <h3 style="text-align: center;">PROVIDERS</h3>
+                        <?php
+                        foreach ($providersConfig as $provider => $config) {
+                            $logoUrl = !empty($config['logoUrl']) ? $config['logoUrl'] : './img/login/oidc.png';
+                            echo '<button onclick="confirmLogin(\'' . $provider . '\')" class="login-btn provider-btn">';
+                            echo '<img src="' . $logoUrl . '" alt="' . $provider . ' Logo"> Se connecter avec ' . $provider;
+                            echo '</button>';
+                        }
+                        ?>
+                        <input type="hidden" id="selectedProvider" name="selectedProvider" />
+                        <input type="hidden" id="selectedLang" name="lang" value="<?= $_SESSION['lang'] ?>" />
+                    </div>
+                </form>
+                <script>
+                    function confirmLogin(provider) {
+                        document.getElementById('selectedProvider').value = provider;
+                        document.getElementById('loginFormProvider').submit();
+                        document.getElementById('selectedLang').submit();
+                    }
+                </script>
+                <!-- ./PROVIDER -->
+            <?php endif; ?>
         <?php endif; ?>
 
         </div> <!-- login -->
