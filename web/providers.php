@@ -149,7 +149,7 @@ function getAclString($userInfo, $providersConfig, $providerKey)
 {
     $userRoles = $userInfo->realm_access->roles ?? [];
 
-    $profileOrder = explode(' ', $providersConfig[$providerKey]['profile_order'] ?? '');
+    $profileOrder = explode(' ', $providersConfig[$providerKey]['profiles_order'] ?? '');
 
     $aclMappings = [];
     foreach ($providersConfig[$providerKey] as $key => $value) {
