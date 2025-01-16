@@ -84,6 +84,12 @@ if (isset($_GET["agentsessionexpired"])) {
     $error = _("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
 }
 
+if (isset($_GET["signout"])) {
+    $error = _("You have been successfully logged out.");
+    $_SESSION = array();
+    session_destroy();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -272,21 +278,23 @@ if (safeCount($servDescList) == 1) {
                         <h3 style="text-align: center;">PROVIDERS</h3>
                         <?php
                         foreach ($providersConfig as $provider => $config) {
-                            $logoUrl = !empty($config['logoUrl']) ? $config['logoUrl'] : './img/login/oidc.png';
-                            echo '<button onclick="confirmLogin(\'' . $provider . '\')" class="login-btn provider-btn">';
-                            echo '<img src="' . $logoUrl . '" alt="' . $provider . ' Logo"> Se connecter avec ' . $provider;
+                            $providerSafe = htmlspecialchars($provider, ENT_QUOTES, 'UTF-8');
+                            $logoUrl = !empty($config['logoUrl']) ? htmlspecialchars($config['logoUrl'], ENT_QUOTES, 'UTF-8') : './img/login/oidc.png';
+
+                            echo '<button onclick="confirmLogin(\'' . $providerSafe . '\')" class="login-btn provider-btn">';
+                            echo '<img src="' . $logoUrl . '" alt="' . $providerSafe . ' Logo"> Se connecter avec ' . $providerSafe;
                             echo '</button>';
                         }
                         ?>
                         <input type="hidden" id="selectedProvider" name="selectedProvider" />
-                        <input type="hidden" id="selectedLang" name="lang" value="<?= $_SESSION['lang'] ?>" />
+                        <input type="hidden" id="selectedLang" name="lang" value="<?= htmlspecialchars($_SESSION['lang'], ENT_QUOTES, 'UTF-8') ?>" />
                     </div>
                 </form>
                 <script>
                     function confirmLogin(provider) {
                         document.getElementById('selectedProvider').value = provider;
+                        document.getElementById('selectedLang').value = document.getElementById('lang').value;
                         document.getElementById('loginFormProvider').submit();
-                        document.getElementById('selectedLang').submit();
                     }
                 </script>
                 <!-- ./PROVIDER -->
