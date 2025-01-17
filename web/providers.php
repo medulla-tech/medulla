@@ -105,9 +105,22 @@ function generateStr($length = 50)
 function handleSession()
 {
     if (isset($_POST['lang'])) {
-        $lang = filter_var($_POST['lang'], FILTER_SANITIZE_STRING);
-        setcookie('userLang', $lang, time() + 86400, '/');
+        $lang = htmlspecialchars($_POST['lang'], ENT_QUOTES, 'UTF-8');
+        $_SESSION['lang'] = $_POST['lang'];
     }
+}
+
+function updateUserMail($uid, $mail)
+{
+    if (!$uid) {
+        new NotifyWidgetFailure(
+            "An error occurred while updating the user's email.",
+            "Email Update Error"
+        );
+        header("Location: /mmc/index.php");
+        exit;
+    }
+    return changeUserAttributes($uid, "mail", $mail);
 }
 
 // manages the supplier selection
@@ -130,6 +143,29 @@ function handleProviderSelection($providersConfig)
     }
 
     return strtoupper($provider);
+}
+
+function getAclString($userInfo, $providersConfig, $providerKey)
+{
+    $userRoles = $userInfo->realm_access->roles ?? [];
+
+    $profileOrder = explode(' ', $providersConfig[$providerKey]['profiles_order'] ?? '');
+
+    $aclMappings = [];
+    foreach ($providersConfig[$providerKey] as $key => $value) {
+        if (str_starts_with($key, 'acl_')) {
+            $role = substr($key, 4);
+            $aclMappings[$role] = $value;
+        }
+    }
+
+    foreach ($profileOrder as $role) {
+        if (in_array($role, $userRoles)) {
+            return $aclMappings[$role] ?? '';
+        }
+    }
+
+    return $providersConfig[$providerKey]['lmcACL'] ?? '';
 }
 
 // manages the Openid Connect authentication process (Auth + Return phase)
@@ -207,7 +243,7 @@ function handleAuthentication($providerKey, $providersConfig)
             $_SESSION["XMLRPC_agent"]             = parse_url($conf["server_01"]["url"]);
             $_SESSION["agent"]                    = "server_01";
             $_SESSION["XMLRPC_server_description"] = $conf["server_01"]["description"];
-            $_SESSION['lang']                     = htmlspecialchars($_COOKIE['userLang'] ?? 'en', ENT_QUOTES, 'UTF-8');
+            $_SESSION['lang']                     = htmlspecialchars($_SESSION['lang'] ?? 'en', ENT_QUOTES, 'UTF-8');
 
             $auth  = fetchBaseIni('authentication_baseldap', 'authonly', $GLOBALS['configPaths']);
             $login = explode(' ', $auth)[0];
@@ -228,9 +264,8 @@ function handleAuthentication($providerKey, $providersConfig)
                 }
             }
 
-            $newUser       = $userMappedData['uid'] ?? 'unknown';
+            $newUser       = $userMappedData['uid'] ?? $userInfo->preferred_username;
             $newPassUser   = generateStr(50); // Mot de passe aléatoire
-            $aclString     = $providersConfig[$providerKey]['lmcACL'];
             $userExists    = false;
 
             // travels from existing users
@@ -243,17 +278,20 @@ function handleAuthentication($providerKey, $providersConfig)
 
             if (!$userExists) {
                 $add = add_user(
-                    $newUser,                                   // uid
-                    prepare_string($newPassUser),               // password 
-                    $userMappedData['givenName'] ?? 'unknown',  // firstN
-                    $userMappedData['sn'] ?? 'unknown',         // lastN
-                    null,                                       // homeDir
-                    true,                                       // createHomeDir
-                    false,                                      // ownHomeDir
-                    null                                        // primaryGroup
+                    $newUser,                                               // uid
+                    prepare_string($newPassUser),                           // password
+                    $userMappedData['givenName'] ?? $userInfo->given_name,  // firstN
+                    $userMappedData['sn'] ?? $userInfo->family_name,        // lastN
+                    null,                                                   // homeDir
+                    true,                                                   // createHomeDir
+                    false,                                                  // ownHomeDir
+                    null                                                    // primaryGroup
                 );
 
+                $mail = updateUserMail($newUser, $userMappedData['mail'] ?? $userInfo->email);
+
                 if ($add['code'] == 0) {
+                    $aclString = getAclString($userInfo, $providersConfig, $providerKey);
                     $setlmcACL = setAcl($newUser, $aclString);
 
                     // Session opening under the new user
@@ -289,6 +327,8 @@ function handleAuthentication($providerKey, $providersConfig)
                 callPluginFunction("changeUserPasswd", [
                     [$newUser, prepare_string($newPassUser)]
                 ]);
+                $aclString = getAclString($userInfo, $providersConfig, $providerKey);
+                $setlmcACL = setAcl($newUser, $aclString);
 
                 if (auth_user($newUser, $newPassUser, true)) {
                     $login = $newUser;
@@ -356,17 +396,9 @@ function handleSignout()
 
             // Disconnects the user from the OIDC provider
             $idToken     = $_SESSION['id_token'];
-            $redirectUri = 'https://' . gethostname() . '/mmc/index.php';
+            $redirectUri = 'https://' . gethostname() . '/mmc/index.php?signout=1';
             $oidc->signOut($idToken, $redirectUri);
 
-            // destroy the local session
-            $_SESSION = [];
-            if (isset($_COOKIE[session_name()])) {
-                setcookie(session_name(), '', time() - 42000, '/');
-            }
-            session_destroy();
-
-            exit;
         } catch (Exception $e) {
             error_log("SignOut Exception: " . $e->getMessage());
             new NotifyWidgetFailure("An error occurred during signout.");
