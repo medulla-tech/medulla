@@ -743,7 +743,7 @@ class ImagingRpcProxy(RpcProxyI):
             stdout=subprocess.PIPE,
         )
         for x in s.stdout:
-            returnprocesspid.append(x.strip(" \t\n\r"))
+            returnprocesspid.append(x.decode('utf-8').strip(" \t\n\r"))
         s.stdout.close()
         return returnprocesspid
 
