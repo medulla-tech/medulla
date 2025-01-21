@@ -1138,9 +1138,7 @@ def get_agent_descriptor_base():
         resultdata_str = resultdata.decode("utf-8")
         resultdata = json.loads(resultdata_str)
 
-        logger.debug(
-            "get_agent_descriptor_base resultdata: %s" % str(resultdata)
-        )
+        logger.debug("get_agent_descriptor_base resultdata: %s" % str(resultdata))
 
         agent_descriptor = resultdata.get("agentdescriptor", "{}")
         pathagent = resultdata.get("pathagent", "")
