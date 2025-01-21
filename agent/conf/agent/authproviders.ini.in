@@ -12,3 +12,6 @@
 #ldap_givenName = given_name
 #ldap_sn = family_name
 #ldap_mail = email
+#profiles_order = xxxxx yyyyy
+#acl_xxxxx = ":base#main#default/"
+#acl_yyyyy = ":base#main#default/"
