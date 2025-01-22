@@ -89,6 +89,8 @@ function duplicate_postimaging_scripts() {
 
     local NEW_IMAGE_ID=$(echo "SELECT ImageOnImagingServer.fk_image FROM Image INNER JOIN ImageOnImagingServer ON ImageOnImagingServer.fk_image = Image.id INNER JOIN Entity ON ImageOnImagingServer.fk_imaging_server = Entity.id WHERE Image.uuid = '$MASTER_UUID' AND Entity.uuid = 'UUID${TO_ENTITY_ID}';" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent --skip-column-names)
 
+    # Delete previous PostInstallScript to handle deletion
+    echo "DELETE FROM PostInstallScriptInImage WHERE fk_image=$NEW_IMAGE_ID;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent
     # Insert postinstall script in duplicate image with insert or update
     echo "INSERT INTO PostInstallScriptInImage (fk_image, fk_post_install_script, \`order\`)
     SELECT $NEW_IMAGE_ID, fk_post_install_script, \`order\`
