@@ -6980,7 +6980,6 @@ class XmppMasterDatabase(DatabaseHelper):
             "glpi_owner_firstname",
             "glpi_owner_realname",
             "glpi_owner",
-            "glpi_entity_id",
             "glpi_location_id",
             "model",
             "manufacturer",
@@ -6990,8 +6989,8 @@ class XmppMasterDatabase(DatabaseHelper):
         # fiel for table ent and alias
         entityfield = {
             "entityname": "name",
-            "entitypath": "complete_name",
-            "entityid": "glpi_id",
+            "entitypath": "completename",
+            "entityid": "id",
         }
         # fiel for table location and alias
         locationfield = {
@@ -7044,9 +7043,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         recherchefild = " AND %s IS NULL " % ctx["field"]
                     elif ctx["field"] in [
                         "mach.id",
-                        "mach.glpi_entity_id",
                         "mach.glpi_location_id",
-                        "ent.glpi_id",
+                        "ent.id",
                         "loc.glpi_id",
                     ]:
                         recherchefild = " AND %s = '%s'" % (ctx["field"], ctx["filter"])
@@ -7071,7 +7069,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 ]
                 if entitylist:
                     entitystrlist = ",".join(entitylist)
-                    entity = " AND ent.glpi_id in (%s) " % entitystrlist
+                    entity = " AND ent.id in (%s) " % entitystrlist
 
         ordered = ""
         if self.config.ordered == 1:
@@ -7108,7 +7106,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     mach.glpi_owner_firstname,
                     mach.glpi_owner_realname,
                     mach.glpi_owner,
-                    mach.glpi_entity_id,
                     mach.glpi_location_id,
                     mach.model,
                     mach.manufacturer,
@@ -7118,8 +7115,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     loc.complete_name AS locationpath,
                     loc.glpi_id AS locationid,
                     ent.name AS entityname,
-                    ent.complete_name AS entitypath,
-                    ent.glpi_id AS entityid,
+                    ent.completename AS entitypath,
+                    ent.id AS entityid,
                     GROUP_CONCAT(DISTINCT IF( netw.ipaddress='', null,netw.ipaddress) SEPARATOR ',') AS listipadress,
                     GROUP_CONCAT(DISTINCT IF( netw.broadcast='', null,netw.broadcast) SEPARATOR ',') AS broadcast,
                     GROUP_CONCAT(DISTINCT IF( netw.gateway='', null,netw.gateway) SEPARATOR ',') AS gateway,
@@ -7127,9 +7124,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 FROM
                     xmppmaster.machines mach
                         LEFT OUTER JOIN
+                    local_glpi_filters lgf on CONCAT("UUID", lgf.id) = mach.uuid_inventorymachine
+                        LEFT OUTER JOIN
                     glpi_location loc ON loc.id = mach.glpi_location_id
                         LEFT OUTER JOIN
-                    glpi_entity ent ON ent.id = mach.glpi_entity_id
+                    local_glpi_entities ent ON ent.id = lgf.entities_id
                         LEFT OUTER JOIN
                     glpi_register_keys reg ON reg.machines_id = mach.id
                         LEFT OUTER JOIN
@@ -7149,7 +7148,6 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if debugfunction:
             logger.info("SQL request :  %s" % sql)
-
         result = session.execute(sql)
         sql_count = "SELECT FOUND_ROWS();"
         ret_count = session.execute(sql_count)
