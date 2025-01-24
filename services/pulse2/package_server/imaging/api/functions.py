@@ -783,23 +783,15 @@ class Imaging(object, metaclass=SingletonN):
                     % (result, type(uuid), uuid, e)
                 )
 
-        # try to extract from our cache
-        res = self.myUUIDCache.getByUuid(uuid)
-        if res:  # fetched from cache
-            res["shortname"] = res["shortname"]
-            res["fqdn"] = res["fqdn"]
-            res["entity"] = res["entity"]
-            return maybeDeferred(lambda x: x, res)
-        else:  # cache fetching failed, try to obtain the real value
-            self.logger.debug(
-                "Imaging: Unable to resolve %s from cache, querying database" % (uuid)
-            )
-            client = self._getXMLRPCClient()
-            func = "imaging.getMachineByUuidSetup"
-            args = [uuid]
-            d = client.callRemote(func, *args)
-            d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
-            return d
+        self.logger.debug(
+            "Imaging: Unable to resolve %s from cache, querying database" % (uuid)
+        )
+        client = self._getXMLRPCClient()
+        func = "imaging.getMachineByUuidSetup"
+        args = [uuid]
+        d = client.callRemote(func, *args)
+        d.addCallbacks(_onSuccess, client.onError, errbackArgs=(func, args, 0))
+        return d
 
     def getComputerByMac(self, MACAddress):
         """
