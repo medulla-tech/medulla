@@ -107,7 +107,7 @@ $l->addActionItem(
     new ActionItem(_T("Edit image", "imaging"),
     "master_edit", "edit", "master", "imaging", "manage")
 );
-$process  = xmlrpc_checkProcessCloneMasterToLocation("synch-masters");
+$process  = xmlrpc_checkProcessCloneMasterToLocation("/bin/bash /usr/bin/pulse2-synch-masters");
 if (safeCount($process) > 0){
       $l->addActionItem(
     new ActionItem(_T("copy master In progress", "imaging"),
