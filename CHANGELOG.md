@@ -1,5 +1,7 @@
 # Change Log
 
+- [BUGFIX] Add several fixes in the OIDC support
+- [BUGFIX] Fix the pulse2-synch-masters script
 - [BUGFIX] Fix deploying masters by stop using datas from uuid-cache.txt
 
 ## [5.2.0](https://github.com/medulla-tech/medulla/releases/tag/5.2.0) (unreleased)
