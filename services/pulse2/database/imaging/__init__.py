@@ -5931,9 +5931,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
 
         if isinstance(computer_uuid, int):
-             computer_uuid = "UUID%s"%computer_uuid
+            computer_uuid = "UUID%s" % computer_uuid
         elif isinstance(computer_uuid, str):
-            computer_uuid = computer_uuid if computer_uuid.startswith("UUID") else "UUID%s"%computer_uuid
+            computer_uuid = (
+                computer_uuid
+                if computer_uuid.startswith("UUID")
+                else "UUID%s" % computer_uuid
+            )
 
         if not isUUID(imaging_server_uuid):
             raise TypeError("Bad imaging server UUID: %s" % imaging_server_uuid)
@@ -5942,7 +5946,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         session.begin()
 
-        locationId, locationServerImaging = self.getLocationImagingServerByServerUUID(imaging_server_uuid)
+        locationId, locationServerImaging = self.getLocationImagingServerByServerUUID(
+            imaging_server_uuid
+        )
         target = None
         session.query(Target).filter_by(uuid=computer_uuid).update(
             {"uuid": "DELETED UUID%s" % computer_uuid}
