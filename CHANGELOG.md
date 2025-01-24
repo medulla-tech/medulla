@@ -1,5 +1,10 @@
 # Change Log
 
+- [BUGFIX] Add several fixes in the OIDC support
+- [BUGFIX] Fix the pulse2-synch-masters script
+- [BUGFIX] Fix deploying masters by stop using datas from uuid-cache.txt
+- [BUGFIX] Fix deploying masters by using the full path of the pulse2-synch-masters script
+
 ## [5.2.0](https://github.com/medulla-tech/medulla/releases/tag/5.2.0) (unreleased)
 - [FEATURE] Use SQL to manage imaging menus.
 - [FEATURE] Support for OIDC
