@@ -1,5 +1,7 @@
 # Change Log
 
+- [BUGFIX] Fix deploying masters by stop using datas from uuid-cache.txt
+
 ## [5.2.0](https://github.com/medulla-tech/medulla/releases/tag/5.2.0) (unreleased)
 - [FEATURE] Use SQL to manage imaging menus.
 - [FEATURE] Support for OIDC
