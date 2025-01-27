@@ -4186,6 +4186,8 @@ def getJustOneMacPerComputer(ctx, macs):
 
 def synchroComputers(ctx, uuids, ctype=P2IT.COMPUTER):
     """see __synchroTargets"""
+    # Not used anymore thanks to ipxe bootmenus
+    return True
     ret = synchroTargets(ctx, uuids, ctype)
     return xmlrpcCleanup(ret)
 
