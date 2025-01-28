@@ -4083,7 +4083,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 )
                 GROUP BY state;
             """
-            machinedeploy = session.execute(sql, {"command_id": command_id, "title": title})
+            machinedeploy = session.execute(
+                sql, {"command_id": command_id, "title": title}
+            )
             machinedeploy = machinedeploy.fetchall()
             ret = {
                 "totalmachinedeploy": 0,
@@ -13172,11 +13174,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             entity_id = row.entity_id
             if entity_id not in machine_by_entity:
                 machine_by_entity[entity_id] = []
-            machine_by_entity[entity_id].append({
-                "id": row.machine_id,
-                "hostname": row.hostname,
-                "valid": row.machine_id != 0,
-            })
+            machine_by_entity[entity_id].append(
+                {
+                    "id": row.machine_id,
+                    "hostname": row.hostname,
+                    "valid": row.machine_id != 0,
+                }
+            )
 
         sql_total_machines = f"""
         SELECT ge.glpi_id AS id, COUNT(m.hostname) AS totalmach
@@ -13186,7 +13190,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         {filter_on}
         GROUP BY ge.glpi_id;
         """
-        total_machines = {row.id: row.totalmach for row in session.execute(sql_total_machines)}
+        total_machines = {
+            row.id: row.totalmach for row in session.execute(sql_total_machines)
+        }
 
         sql_noncompliant = f"""
         SELECT uma.entities_id AS id, COUNT(DISTINCT uma.id_machine) AS noncompliant, COUNT(DISTINCT uma.update_id) AS missing
@@ -13196,7 +13202,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         {filter_on_noncompliant}
         GROUP BY uma.entities_id;
         """
-        noncompliant_data = {row.id: (row.noncompliant, row.missing) for row in session.execute(sql_noncompliant)}
+        noncompliant_data = {
+            row.id: (row.noncompliant, row.missing)
+            for row in session.execute(sql_noncompliant)
+        }
 
         result = []
         for entity_id in entities:
@@ -13206,12 +13215,14 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             noncompliant, missing = noncompliant_data.get(entity_id, (0, 0))
             total = total_machines.get(entity_id, len(machines))
 
-            result.append({
-                "entity": str(entity_id),
-                "nbmachines": noncompliant,
-                "nbupdates": missing,
-                "totalmach": total,
-            })
+            result.append(
+                {
+                    "entity": str(entity_id),
+                    "nbmachines": noncompliant,
+                    "nbupdates": missing,
+                    "totalmach": total,
+                }
+            )
 
         return result
 
@@ -13276,18 +13287,28 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 "type": [],
                 "user": [],
                 "entity": [],
-                "presence": []
-            }
+                "presence": [],
+            },
         }
 
         for row in machines:
-            result_data["data"]["uuid"].append(row["uuid"].replace("UUID", "") if row["uuid"] else "")
+            result_data["data"]["uuid"].append(
+                row["uuid"].replace("UUID", "") if row["uuid"] else ""
+            )
             result_data["data"]["cn"].append(row["cn"] if row["cn"] is not None else "")
             result_data["data"]["os"].append(row["os"] if row["os"] is not None else "")
-            result_data["data"]["description"].append(row["description"] if row["description"] is not None else "")
-            result_data["data"]["type"].append(row["type"] if row["type"] is not None else "")
-            result_data["data"]["user"].append(row["user"] if row["user"] is not None else "")
-            result_data["data"]["entity"].append(row["entity"] if row["entity"] is not None else "")
+            result_data["data"]["description"].append(
+                row["description"] if row["description"] is not None else ""
+            )
+            result_data["data"]["type"].append(
+                row["type"] if row["type"] is not None else ""
+            )
+            result_data["data"]["user"].append(
+                row["user"] if row["user"] is not None else ""
+            )
+            result_data["data"]["entity"].append(
+                row["entity"] if row["entity"] is not None else ""
+            )
             result_data["data"]["presence"].append(1)
 
         uuids = []
