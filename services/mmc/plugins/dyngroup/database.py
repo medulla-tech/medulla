@@ -36,6 +36,7 @@ from pulse2.database.dyngroup import (
 # Imported last
 import re
 import pickle
+import base64
 
 logger = logging.getLogger()
 
@@ -1058,18 +1059,18 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         convergence.parentGroupId = parent_group_id
         convergence.deployGroupId = deploy_group_id
         convergence.doneGroupId = done_group_id
-        convergence.papi = pickle.dumps(p_api)
+        convergence.papi = base64.b64encode(pickle.dumps(p_api)).decode("utf-8")
         convergence.packageUUID = pid
         convergence.commandId = command_id
         convergence.active = active
-        convergence.cmdPhases = pickle.dumps(cmdPhases)
+        convergence.cmdPhases = base64.b64encode(pickle.dumps(cmdPhases)).decode("utf-8")
         session.add(convergence)
         session.flush()
         return True
 
     @DatabaseHelper._session
     def edit_convergence_datas(self, session, gid, package_id, datas):
-        datas["cmdPhases"] = pickle.dumps(datas["cmdPhases"])
+        datas["cmdPhases"] = base64.b64encode(pickle.dumps(datas["cmdPhases"])).decode("utf-8")
         try:
             with session.begin():
                 result = (
@@ -1112,7 +1113,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             self.logger.warn("We encountered the error: %s" % no_convergence)
         if ret:
             try:
-                return pickle.loads(ret.cmdPhases)
+                return pickle.loads(base64.b64decode(ret.cmdPhases))
             except EOFError as e:
                 self.logger.warn("No phases found for command %s" % cmd_id)
         return {}
