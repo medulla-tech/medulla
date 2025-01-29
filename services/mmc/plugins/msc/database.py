@@ -714,8 +714,10 @@ class MscDatabase(msc.MscDatabase):
         )
         return [x for x in machines_in_deploy_group if x not in machines_in_command]
 
+    @DatabaseHelper._sessionm
     def addMachinesToCommand(
         self,
+        session,
         ctx,
         cmd_id,
         targets,
@@ -741,12 +743,12 @@ class MscDatabase(msc.MscDatabase):
 
         """
         cmd = self.getCommands(ctx, cmd_id)
-        if root == None:
+        if root is None:
             root = self.config.repopath
         targets_to_insert = []
         coh_to_insert = []
         target_uuids = targets
-        existing_coh_ids = [coh.id for coh in cmd.getCohIds(target_uuids=target_uuids)]
+        existing_coh_ids = [coh.id for coh in cmd.getCohIds(session, target_uuids=target_uuids)]
         targets, targetsdata = self.getComputersData(ctx, targets, group_id)
 
         if len(targets) == 0:
@@ -759,9 +761,6 @@ class MscDatabase(msc.MscDatabase):
             uri = ""
             for i in range(len(targets)):
                 targets_to_insert.append((targetsdata[i], targets[i][1], None))
-
-            session = create_session()
-            session.begin()
 
             for atarget, target_name, ascheduler in targets_to_insert:
                 target = Target()
@@ -810,7 +809,7 @@ class MscDatabase(msc.MscDatabase):
 
             cohs = [
                 coh
-                for coh in cmd.getCohIds(target_uuids=target_uuids)
+                for coh in cmd.getCohIds(session, target_uuids=target_uuids)
                 if coh.id not in existing_coh_ids
             ]
 
