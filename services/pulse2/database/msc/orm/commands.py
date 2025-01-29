@@ -149,12 +149,11 @@ class Commands(object):
         now = datetime.datetime.now()
         return now > self.start_date and now < self.end_date
 
-    def getCohIds(self, target_uuids=[]):
+    def getCohIds(self, session, target_uuids=[]):
         """
         Returns the list of commands_on_host linked to this command
         If list of target_uuids, returns only uuids of this list
         """
-        session = sqlalchemy.orm.create_session()
         myCommandOnHosts = session.query(CommandsOnHost)
         if target_uuids:
             myCommandOnHosts = myCommandOnHosts.join(Target)
@@ -164,7 +163,6 @@ class Commands(object):
         myCommandOnHosts = myCommandOnHosts.filter(
             CommandsOnHost.fk_commands == self.getId()
         )
-        session.close()
         return myCommandOnHosts.all()
 
     def getFilesList(self):
