@@ -57,6 +57,9 @@ $submod->addPage($page);
 $page = new Page("auditteam", _T('XMPP My teams tasks', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("auditconvergence", _T('XMPP My Convergence', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -315,6 +318,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxstatusteamxmpp", _T("List all groups of computers by teams", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php");
+$page->setOptions(array("visible" => false, "AJAX" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxconvergence", _T("My Convergence", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxconvergence.php");
 $page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 

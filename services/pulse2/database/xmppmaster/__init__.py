@@ -4194,6 +4194,148 @@ class XmppMasterDatabase(DatabaseHelper):
             return ret
 
     @DatabaseHelper._sessionm
+    def getstatdeploy_from_command_id_and_title_for_convergence(self, session, command_id, title_partial):
+        """
+        Retrieve the deploy statistics based on the command_id and partial title match for convergence.
+
+        Args:
+            session: The SQLAlchemy session.
+            command_id: ID of the deploy.
+            title_partial: Partial title for a LIKE query.
+
+        Return:
+            dict: Statistics of deployments grouped by state.
+        """
+        try:
+            latest_start_subquery = session.query(
+                func.max(Deploy.start)
+            ).filter(
+                Deploy.command == command_id,
+                Deploy.title.like(f"%{title_partial}%")
+            ).scalar()
+
+            if not latest_start_subquery:
+                return {"totalmachinedeploy": 0}
+
+            sql = """
+                SELECT state, COUNT(*)
+                FROM deploy
+                WHERE start = :latest_start
+                AND command = :command_id
+                AND title LIKE :title_partial
+                GROUP BY state;
+            """
+            machinedeploy = session.execute(sql, {
+                "command_id": command_id,
+                "latest_start": latest_start_subquery,
+                "title_partial": f"%{title_partial}%"
+            }).fetchall()
+
+            if not machinedeploy:
+                return {"totalmachinedeploy": 0}
+
+            ret = {
+                "totalmachinedeploy": 0,
+                "deploymentsuccess": 0,
+                "abortontimeout": 0,
+                "abortmissingagent": 0,
+                "abortinconsistentglpiinformation": 0,
+                "abortrelaydown": 0,
+                "abortalternativerelaysdown": 0,
+                "abortinforelaymissing": 0,
+                "errorunknownerror": 0,
+                "abortpackageidentifiermissing": 0,
+                "abortpackagenamemissing": 0,
+                "abortpackageversionmissing": 0,
+                "abortpackageworkflowerror": 0,
+                "abortdescriptormissing": 0,
+                "abortmachinedisappeared": 0,
+                "abortdeploymentcancelledbyuser": 0,
+                "aborttransferfailed": 0,
+                "abortpackageexecutionerror": 0,
+                "abortduplicatemachines": 0,
+                "deploymentstart": 0,
+                "wol1": 0,
+                "wol2": 0,
+                "wol3": 0,
+                "waitingmachineonline": 0,
+                "deploymentpending": 0,
+                "deploymentdelayed": 0,
+                "deploymentspooled": 0,
+                "errorhashmissing": 0,
+                "aborthashinvalid": 0,
+                "errortransferfailed": 0,
+                "abortpackageexecutioncancelled": 0,
+                "abortmissingdependency": 0,
+                "restartdeploy": 0,
+                "otherstatus": 0,
+            }
+
+            liststatus = {x[0]: x[1] for x in machinedeploy}
+            for t in liststatus:
+                ret["totalmachinedeploy"] += liststatus[t]
+
+                if t == "DEPLOYMENT SUCCESS":
+                    ret["deploymentsuccess"] = liststatus[t]
+                elif t == "ABORT ON TIMEOUT":
+                    ret["abortontimeout"] = liststatus[t]
+                elif t == "ABORT MISSING AGENT":
+                    ret["abortmissingagent"] = liststatus[t]
+                elif t == "ABORT INCONSISTENT GLPI INFORMATION":
+                    ret["abortinconsistentglpiinformation"] = liststatus[t]
+                elif t == "ABORT RELAY DOWN":
+                    ret["abortrelaydown"] = liststatus[t]
+                elif t == "ABORT ALTERNATIVE RELAYS DOWN":
+                    ret["abortalternativerelaysdown"] = liststatus[t]
+                elif t == "ABORT INFO RELAY MISSING":
+                    ret["abortinforelaymissing"] = liststatus[t]
+                elif t == "ERROR UNKNOWN ERROR":
+                    ret["errorunknownerror"] = liststatus[t]
+                elif t == "ABORT PACKAGE IDENTIFIER MISSING":
+                    ret["abortpackageidentifiermissing"] = liststatus[t]
+                elif t == "ABORT PACKAGE NAME MISSING":
+                    ret["abortpackagenamemissing"] = liststatus[t]
+                elif t == "ABORT PACKAGE VERSION MISSING":
+                    ret["abortpackageversionmissing"] = liststatus[t]
+                elif t == "ABORT PACKAGE WORKFLOW ERROR":
+                    ret["abortpackageworkflowerror"] = liststatus[t]
+                elif t == "ABORT DESCRIPTOR MISSING":
+                    ret["abortdescriptormissing"] = liststatus[t]
+                elif t == "ABORT MACHINE DISAPPEARED":
+                    ret["abortmachinedisappeared"] = liststatus[t]
+                elif t == "ABORT DEPLOYMENT CANCELLED BY USER":
+                    ret["abortdeploymentcancelledbyuser"] = liststatus[t]
+                elif t == "ABORT PACKAGE EXECUTION ERROR":
+                    ret["abortpackageexecutionerror"] = liststatus[t]
+                elif t == "ABORT DUPLICATE MACHINES":
+                    ret["abortduplicatemachines"] = liststatus[t]
+                elif t == "DEPLOYMENT START":
+                    ret["deploymentstart"] = liststatus[t]
+                elif t == "WOL 1":
+                    ret["wol1"] = liststatus[t]
+                elif t == "WOL 2":
+                    ret["wol2"] = liststatus[t]
+                elif t == "WOL 3":
+                    ret["wol3"] = liststatus[t]
+                elif t == "WAITING MACHINE ONLINE":
+                    ret["waitingmachineonline"] = liststatus[t]
+                elif t == "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)":
+                    ret["deploymentpending"] = liststatus[t]
+                elif t == "DEPLOYMENT DELAYED":
+                    ret["deploymentdelayed"] = liststatus[t]
+                elif t == "ERROR HASH MISSING":
+                    ret["errorhashmissing"] = liststatus[t]
+                elif t == "ABORT HASH INVALID":
+                    ret["aborthashinvalid"] = liststatus[t]
+                else:
+                    ret["otherstatus"] += liststatus[t]
+
+            return ret
+        except Exception as e:
+            logging.getLogger().error(f"ERROR: {str(e)}")
+            return {"totalmachinedeploy": 0}
+
+    @DatabaseHelper._sessionm
     def getdeployment_cmd_and_title(
         self, session, command_id, title, filter="", start=0, limit=-1
     ):
@@ -4256,6 +4398,75 @@ class XmppMasterDatabase(DatabaseHelper):
             elements["uuid"].append(deployment.inventoryuuid)
             elements["status"].append(deployment.state)
         return {"total": count, "datas": elements}
+
+    @DatabaseHelper._sessionm
+    def getdeployment_cmd_and_title_for_convergence(
+        self, session, command_id, title, filter="", start=0, limit=-1
+    ):
+        """
+        Get the most recent deploys based on command_id and partial title match,
+        returning a simplified data format for the convergence.
+
+        Args:
+            session: SQLAlchemy session.
+            command_id: The command ID to match.
+            title: Partial title for a LIKE query.
+            filter: Optional filters for status or other criteria.
+            start: Offset for pagination.
+            limit: Maximum number of records to return.
+
+        Returns:
+            dict: Contains the most recent deployments with simplified fields.
+        """
+        start = int(start)
+        limit = int(limit)
+
+        latest_title_subquery = (
+            session.query(func.max(Deploy.title))
+            .filter(Deploy.command == command_id, Deploy.title.like(f"%{title}%"))
+            .scalar_subquery()
+        )
+
+        subquery = (
+            session.query(
+                Deploy.command.label("command"),
+                Deploy.title.label("title"),
+                Deploy.inventoryuuid.label("inventoryuuid"),
+                Deploy.jidmachine.label("jidmachine"),
+                func.max(Deploy.id).label("latest_id"),
+            )
+            .filter(
+                Deploy.command == command_id,
+                Deploy.title == latest_title_subquery
+            )
+            .group_by(Deploy.command, Deploy.title, Deploy.inventoryuuid, Deploy.jidmachine)
+            .subquery()
+        )
+
+        query = session.query(Deploy).join(
+            subquery,
+            Deploy.id == subquery.c.latest_id
+        )
+
+        if limit != -1:
+            query = query.offset(start).limit(limit)
+
+        result = query.all()
+
+        elements = {
+            "total": len(result),
+            "datas": {
+                "id": [],
+                "uuid": [],
+                "status": [],
+            },
+        }
+
+        for deploy in result:
+            elements["datas"]["id"].append(deploy.inventoryuuid.replace("UUID", ""))
+            elements["datas"]["uuid"].append(deploy.inventoryuuid)
+            elements["datas"]["status"].append(deploy.state)
+        return elements
 
     @DatabaseHelper._sessionm
     def getdeployment(self, session, command_id, filter="", start=0, limit=-1):
@@ -4331,6 +4542,65 @@ class XmppMasterDatabase(DatabaseHelper):
             arraylist.append(obj)
         ret["objectdeploy"] = arraylist
         return ret
+
+    @DatabaseHelper._sessionm
+    def getdeployfromcommandid_for_convergence(self, session, command_id, uuid):
+        try:
+            if uuid == "UUID_NONE":
+                latest_start_subquery = session.query(
+                    func.max(Deploy.start)
+                ).filter(Deploy.command == command_id).scalar()
+
+                if not latest_start_subquery:
+                    return {"len": 0, "objectdeploy": []}
+
+                relayserver = session.query(Deploy).filter(
+                    and_(
+                        Deploy.command == command_id,
+                        Deploy.start == latest_start_subquery
+                    )
+                )
+            else:
+                latest_start_subquery = session.query(
+                    func.max(Deploy.start)
+                ).filter(
+                    and_(Deploy.inventoryuuid == uuid, Deploy.command == command_id)
+                ).scalar()
+
+                if not latest_start_subquery:
+                    return {"len": 0, "objectdeploy": []}
+
+                relayserver = session.query(Deploy).filter(
+                    and_(
+                        Deploy.inventoryuuid == uuid,
+                        Deploy.command == command_id,
+                        Deploy.start == latest_start_subquery
+                    )
+                )
+            relayserver = relayserver.all()
+            ret = {"len": len(relayserver), "objectdeploy": []}
+
+            for t in relayserver:
+                obj = {
+                    "pathpackage": t.pathpackage,
+                    "jid_relay": t.jid_relay,
+                    "inventoryuuid": t.inventoryuuid,
+                    "jidmachine": t.jidmachine,
+                    "state": t.state,
+                    "sessionid": t.sessionid,
+                    "start": t.start,
+                    "result": t.result if t.result else "",
+                    "host": t.host,
+                    "user": t.user,
+                    "login": str(t.login),
+                    "command": t.command,
+                }
+                ret["objectdeploy"].append(obj)
+            return ret
+
+        except Exception as e:
+            logging.getLogger().error(f"ERROR : {str(e)}")
+            return {"len": 0, "objectdeploy": []}
 
     @DatabaseHelper._sessionm
     def getlinelogssession(self, session, sessionnamexmpp):
@@ -5463,6 +5733,8 @@ class XmppMasterDatabase(DatabaseHelper):
             If intervalsearch is not used it is by default in the last 24 hours.
         """
         deploylog = session.query(Deploy)
+        # Do not show convergence deploy
+        deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
         deploylog = deploylog.filter(Deploy.sessionid.like("%s%%" % typedeploy))
         if login:
             deploylog = deploylog.filter(Deploy.login == login)
@@ -5628,6 +5900,125 @@ class XmppMasterDatabase(DatabaseHelper):
             ret["tabdeploy"]["jidmachine"].append(linedeploy.jidmachine)
             ret["tabdeploy"]["jid_relay"].append(linedeploy.jid_relay)
             ret["tabdeploy"]["title"].append(linedeploy.title)
+        return ret
+
+    @DatabaseHelper._sessionm
+    def get_deploy_convergence(
+        self,
+        session,
+        login,
+        intervalsearch,
+        minimum=None,
+        maximum=None,
+        filt=None,
+        typedeploy="command",
+    ):
+        """
+        Retrieves and aggregates convergence deployments, grouping all machines under each command and group_uuid while selecting the latest start date per inventoryuuid.
+
+        Returns:
+            dict:
+                {
+                    "lentotal": X,
+                    "tabdeploy": {
+                        "command": [...],
+                        "group_uuid": [...],
+                        "title": [...],
+                        "nb_machines": [...],
+                        "start": [...],
+                        "endcmd": [...],
+                        "machine_details_json": [...],
+                        "login": [...],
+                    }
+                }
+        """
+        subquery = session.query(
+            Deploy.command,
+            Deploy.group_uuid,
+            func.max(Deploy.start).label("latest_start")
+        ).group_by(Deploy.command, Deploy.group_uuid).subquery()
+
+        deployagg = (
+            session.query(
+                Deploy.command.label("command"),
+                Deploy.group_uuid.label("group_uuid"),
+                Deploy.login.label("login"),
+                Deploy.title.label("title"),
+                func.count(distinct(Deploy.inventoryuuid)).label("nb_machines"),
+                Deploy.start.label("start"),
+                func.max(Deploy.endcmd).label("endcmd"),
+                func.json_arrayagg(
+                    func.json_object(
+                        "host", Deploy.host,
+                        "state", Deploy.state,
+                        "inventoryuuid", Deploy.inventoryuuid,
+                        "jid_relay", Deploy.jid_relay,
+                        "sessionid", Deploy.sessionid,
+                        "start", func.date_format(Deploy.start, "%Y-%m-%d %H:%i:%s"),
+                        "end", func.date_format(Deploy.endcmd, "%Y-%m-%d %H:%i:%s")
+                    )
+                ).label("machine_details_json"),
+            )
+            .join(subquery, (Deploy.command == subquery.c.command) & (Deploy.group_uuid == subquery.c.group_uuid))
+            .filter(Deploy.start == subquery.c.latest_start)
+            .filter(Deploy.sessionid.like(f"{typedeploy}%"))
+            .filter(Deploy.title.like("%Convergence%"))
+        )
+
+        if login:
+            deployagg = deployagg.filter(Deploy.login.like(login))
+
+        if intervalsearch:
+            since_date = datetime.now() - timedelta(seconds=intervalsearch)
+            deployagg = deployagg.filter(Deploy.start >= since_date)
+
+        if filt:
+            deployagg = deployagg.filter(
+                or_(
+                    Deploy.state.like(f"%{filt}%"),
+                    Deploy.pathpackage.like(f"%{filt}%"),
+                    Deploy.start.like(f"%{filt}%"),
+                    Deploy.login.like(f"%{filt}%"),
+                    Deploy.host.like(f"%{filt}%"),
+                )
+            )
+
+        deployagg = deployagg.group_by(Deploy.command, Deploy.group_uuid, Deploy.login, Deploy.title, Deploy.start)
+        deployagg = deployagg.order_by(desc("command"))
+
+        results_for_count = deployagg.all()
+        lentotal = len(results_for_count)
+
+        if minimum is not None and maximum is not None:
+            deployagg = deployagg.offset(int(minimum)).limit(int(maximum) - int(minimum))
+
+        results = deployagg.all()
+        session.commit()
+        session.flush()
+
+        ret = {
+            "lentotal": lentotal,
+            "tabdeploy": {
+                "command": [],
+                "group_uuid": [],
+                "title": [],
+                "nb_machines": [],
+                "start": [],
+                "endcmd": [],
+                "machine_details_json": [],
+                "login": [],
+            },
+        }
+
+        for row in results:
+            ret["tabdeploy"]["command"].append(row.command)
+            ret["tabdeploy"]["group_uuid"].append(row.group_uuid)
+            ret["tabdeploy"]["title"].append(row.title)
+            ret["tabdeploy"]["nb_machines"].append(row.nb_machines)
+            ret["tabdeploy"]["start"].append(row.start)
+            ret["tabdeploy"]["endcmd"].append(row.endcmd)
+            ret["tabdeploy"]["machine_details_json"].append(row.machine_details_json)
+            ret["tabdeploy"]["login"].append(row.login)
         return ret
 
     @DatabaseHelper._sessionm

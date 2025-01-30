@@ -78,9 +78,14 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
 include_once('modules/glpi/includes/xmlrpc.php');
 include_once('modules/pkgs/includes/xmlrpc.php');
 
-// Retrieve information deploy. For cmn_id
 
-$info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+// Retrieve information deploy. For cmn_id
+$isconvergence = is_commands_convergence_type($cmd_id);
+if($isconvergence != 0) {
+    $info = xmlrpc_getdeployfromcommandid_for_convergence($cmd_id, $uuid);
+} else {
+    $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+}
 
 if($info["len"] == 0) {?>
     <script>
