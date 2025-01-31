@@ -748,7 +748,9 @@ class MscDatabase(msc.MscDatabase):
         targets_to_insert = []
         coh_to_insert = []
         target_uuids = targets
-        existing_coh_ids = [coh.id for coh in cmd.getCohIds(session, target_uuids=target_uuids)]
+        existing_coh_ids = [
+            coh.id for coh in cmd.getCohIds(session, target_uuids=target_uuids)
+        ]
         targets, targetsdata = self.getComputersData(ctx, targets, group_id)
 
         if len(targets) == 0:
