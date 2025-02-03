@@ -7300,6 +7300,104 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
             }
 
         return result
+###JFKJFK
+    @DatabaseHelper._sessionm
+    def get_os_update_major_stats(self, session):
+        """
+        Cette fonction récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
+        Elle retourne un dictionnaire contenant le nombre total de machines Windows 10 et Windows 11, ainsi que des statistiques
+        par entité pour les mises à jour nécessaires.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation.
+
+        Raises:
+            Exception: En cas d'erreur lors de l'exécution des requêtes SQL.
+        """
+        try:
+            # Dictionnaire final des résultats
+            results = {
+                "total_machine": {
+                    "total_win10": 0,
+                    "total_win11": 0,
+                },
+                "entity": {}
+            }
+
+            # Requête pour le total des Windows 10 et Windows 11
+            total_os_sql = """
+            SELECT
+                os.name AS os_name,
+                COUNT(*) AS count
+            FROM
+                glpi.glpi_computers AS c
+                INNER JOIN glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                INNER JOIN glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+            WHERE
+                os.name LIKE '%Windows 10%' OR os.name LIKE '%Windows 11%'
+            GROUP BY os.name;
+            """
+            total_os_result = session.execute(total_os_sql).fetchall()
+            for row in total_os_result:
+                if "Windows 10" in row.os_name:
+                    results["total_machine"]["total_win10"] = row.count
+                elif "Windows 11" in row.os_name:
+                    results["total_machine"]["total_win11"] = row.count
+
+            # Requête pour les statistiques par entité
+            entity_sql = """
+            SELECT
+                e.name AS entity_name,
+                e.completename AS entity_completename,
+                os.name AS os_name,
+                COUNT(*) AS count
+            FROM
+                glpi.glpi_computers AS c
+                INNER JOIN glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                INNER JOIN glpi.glpi_entities AS e ON e.id = c.entities_id
+                INNER JOIN glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                INNER JOIN glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+            WHERE
+                (os.name LIKE '%Windows 10%' AND v.name != '22H2') -- Windows 10 needing updates
+                OR (os.name LIKE '%Windows 10%' AND v.name = '22H2') -- Windows 10 to Windows 11
+                OR (os.name LIKE '%Windows 11%' AND v.name != '23H2') -- Windows 11 needing updates
+            GROUP BY e.name, e.completename, os.name
+            ORDER BY e.name, os.name;
+            """
+            entity_result = session.execute(entity_sql).fetchall()
+            for row in entity_result:
+                entity_name = row.entity_name
+                os_name = row.os_name
+                count = row.count
+
+                # Initialiser la structure si l'entité n'existe pas encore
+                if entity_name not in results["entity"]:
+                    results["entity"][entity_name] = {
+                        "complete_name": row.entity_completename,
+                        "win10towin10": 0,
+                        "win10towin11": 0,
+                        "win11towin11": 0
+                    }
+
+                # Ajouter les valeurs correspondantes
+                if "Windows 10" in os_name:
+                    if "22H2" not in row.os_name:  # Windows 10 needing updates
+                        results["entity"][entity_name]["win10towin10"] += count
+                    else:  # Windows 10 to Windows 11
+                        results["entity"][entity_name]["win10towin11"] += count
+                elif "Windows 11" in os_name and "23H2" not in row.os_name:
+                    results["entity"][entity_name]["win11towin11"] += count
+
+            return results
+
+        except Exception as e:
+            # Gérer les exceptions et logger l'erreur
+            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            raise
 
     @DatabaseHelper._sessionm
     def get_plugin_inventory_state(self, session, plugin_name=""):
