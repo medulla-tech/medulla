@@ -405,7 +405,7 @@ join Protocol p on p.id = m.fk_protocol
 left join Internationalization i1 on i1.id = m.fk_name and i1.fk_language=:lang1
 left join Internationalization i2 on i2.id = bs.fk_name and i2.fk_language=:lang2
 left join Internationalization i3 on i3.id = bs.fk_desc and i3.fk_language=:lang3
-where m.id = :menuId
+where m.id = :menuId AND mi.hidden = 0
 order by mi.order ASC
 ");
 $query4->execute(
@@ -427,7 +427,7 @@ foreach ($menu as $item) {
     }
     if ($item['type'] == 'service') {
         $debug_ipxe .= "#    - $item[bootService_name] $item[bootService_desc] - $item[type]";
-    } elseif ($item['type'] == 'image' && !empty($mac)) {
+    } elseif ($item['type'] == 'image') {
         $debug_ipxe .= "#    - $item[name] $item[desc] - $item[type]";
     }
 
@@ -509,7 +509,7 @@ item --gap -- -------------------------------------
         if ($item['type'] == 'service') {
             $ipxe .= "item " . mb_convert_encoding($item['bootService_name'], 'UTF-8', 'UTF-8') . " " . mb_convert_encoding($item['bootService_desc'], 'UTF-8', 'UTF-8') . "
 ";
-        } elseif ($item['type'] == 'image' && !empty($mac)) {
+        } elseif ($item['type'] == 'image') {
             $ipxe .= "item " . str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')) . " " . mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8') . "
 ";
         }
@@ -522,10 +522,10 @@ item --gap -- -------------------------------------
             $itemValues .= ":" . mb_convert_encoding($item['bootService_name'], 'UTF-8', 'UTF-8') . "
 $item[value]
 ";
-        } elseif ($item['type'] == 'image' && !empty($mac)) {
+        } elseif ($item['type'] == 'image') {
             $itemValues .= ":" . str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')) . "
 set url_path http://\${next-server}/downloads/davos/
-set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=" . strtoupper($mac) . " davos_action=RESTORE_IMAGE image_uuid=$item[uuid] initrd=initrd.img
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} davos_action=RESTORE_IMAGE image_uuid=$item[uuid] initrd=initrd.img
 kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot || goto MENU
