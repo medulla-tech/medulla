@@ -3596,6 +3596,7 @@ class Glpi92(DyngroupDatabaseHelper):
                     ["Model / Type", modelType],
                     ["Manufacturer", manufacturer],
                     ["Serial Number", serialNumber],
+                    ["Uuid", machine.uuid if machine.uuid is not None else ""],
                     [
                         "Inventory Number",
                         ["inventory_number", "text", machine.otherserial],
