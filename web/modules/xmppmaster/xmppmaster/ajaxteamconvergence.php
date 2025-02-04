@@ -1,4 +1,4 @@
-<?php
+<?
 /*
  * (c) 2015-2021 Siveo, http://www.siveo.net
  *
@@ -20,34 +20,76 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * file ajaxconvergence.php
+ * file ajaxteamconvergence.php
  */
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+?>
 
+<?php
 global $conf;
+
+function convtostringdate($data){
+    if (is_array($data) && safeCount($data) == 9){
+        return date("Y-m-d H:i:s", mktime( $data[3],
+                        $data[4],
+                        $data[5],
+                        $data[1],
+                        $data[2],
+                        $data[0]));
+    }elseif(is_object ($data) && xmlrpc_get_type($data) == "datetime" ){
+        return convtostringdate($data->timestamp);
+    }elseif(is_string($data)){
+        return $data;
+    }elseif( is_numeric($data) || is_int($data)){
+        return gmdate("Y-m-d H:i:s", $data);
+    }else{
+    return "error date";}
+}
+
+
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = $_GET["filter"];
 
-$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
-$start = isset($_GET['start']) ? $_GET['start'] : 0;
-$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
+$filter  = isset($_GET['filter'])?$_GET['filter']:"";
+$start = isset($_GET['start'])?$_GET['start']:0;
+$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
-if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1') {
-    $status = "";
-    $convergence = True;
-    $LastdeployINsecond = 3600 * 24;
-    echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
-    $arraydeploy = xmlrpc_get_deploy_convergence($_GET['login'], $LastdeployINsecond, $start, $end, $filter, "command");
-
-    $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
-} else {
-    echo "<h2>" . _T("Past tasks (last 3 months)") ."</h2>";
+if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1'){
+  $status="";
+  $LastdeployINsecond = 3600*24;
+  echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
+  $arraydeploy = xmlrpc_getdeploybyteamuserrecent_for_convergence(  $_GET['login'] ,
+                                                    $status,
+                                                    $LastdeployINsecond,
+                                                    $start,
+                                                    $end,
+                                                    $filter) ;
+    $arraynotdeploy = xmlrpc_getnotdeploybyteamuserrecent(  $_GET['login'],
+                                                            $LastdeployINsecond,
+                                                            $start,
+                                                            $end,
+                                                            $filter); 
+}
+else {
+  $LastdeployINsecond = 3600*2160;
+  echo "<h2>" . _T("Past tasks (last 3 months)") ."</h2>";
+  $arraydeploy = xmlrpc_get_deploy_by_team_finished($_GET['login'],
+                                                $LastdeployINsecond,
+                                                $start,
+                                                $end,
+                                                $filter) ;
 }
 
-$tab = xmlrpc_get_conrainte_slot_deployment_commands($arraydeploy['tabdeploy']['command']);
-
+if (isset($arraydeploy['total_of_rows']))
+{
+  $arraydeploy['lentotal'] = $arraydeploy['total_of_rows'];
+  if (isset($arraynotdeploy['total']))
+  {
+    $arraydeploy['lentotal'] += $arraynotdeploy['total'];
+  }
+}
 $arrayname = array();
 $arraytitlename = array();
 $arraystate = array();
@@ -56,44 +98,39 @@ $logs   = array();
 $startdeploy = array();
 $endcmd = array();
 $startcmd = array();
-$tolmach = array();
-$successmach = array();
-$errormach = array();
+$tolmach=array();
+$successmach=array();
+$errormach=array();
 $abortmachuser = array();
 $processmachr = array();
-$reloads = array();
-$contrainte = array();
 
-foreach ($arraydeploy['tabdeploy']['command'] as $dd => $ss) {
-    if ($tab[$arraydeploy['tabdeploy']['command'][$dd]] != "") {
-        $arraydeploy['tabdeploy']['state'][$dd] = $arraydeploy['tabdeploy']['state'][$dd].'<br><span title="'._T("Deployment Interval Constraint", "xmppmaster"). '" style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Constraint: ", "xmppmaster").$tab[$arraydeploy['tabdeploy']['command'][$dd]]."</span>";
+
+foreach( $arraydeploy['tabdeploy']['start'] as $ss){
+    if (gettype($ss) == "string"){
+        $startdeploy[]=$ss;
     }
 }
+    $arraydeploy['tabdeploy']['start'] = $startdeploy;
 
-foreach($arraydeploy['tabdeploy']['start'] as $ss) {
-    if (gettype($ss) == "string") {
-        $startdeploy[] = $ss;
-    }
+foreach( $arraydeploy['tabdeploy']['endcmd'] as $ss){
+    $ee =  get_object_vars ( $ss);
+    $endcmd[]=gmdate("Y-m-d H:i:s", $ee['timestamp']);
 }
+    $arraydeploy['tabdeploy']['endcmd'] = $endcmd;
 
-$arraydeploy['tabdeploy']['start'] = $startdeploy;
-
-foreach($arraydeploy['tabdeploy']['endcmd'] as $ss) {
-    $ee =  get_object_vars($ss);
-    $endcmd[] = gmdate("Y-m-d H:i:s", $ee['timestamp']);
+    foreach( $arraydeploy['tabdeploy']['startcmd'] as $ss){
+    $ee =  get_object_vars ( $ss);
+    $startcmd[]=gmdate("Y-m-d H:i:s", $ee['timestamp']);
 }
-$arraydeploy['tabdeploy']['endcmd'] = $endcmd;
+    $arraydeploy['tabdeploy']['startcmd'] = $startcmd;
 
-foreach($arraydeploy['tabdeploy']['start'] as $ss) {
-    $ee =  get_object_vars($ss);
-    $startcmd[] = gmdate("Y-m-d H:i:s", $ee['timestamp']);
-}
-$arraydeploy['tabdeploy']['startcmd'] = $startcmd;
 
-$previous = isset($_GET['previous']) ? $_GET['previous'] : null;
-
-$logs = [];
-$reloads = [];
+$logAction = new ActionItem(_("View deployment details"),
+                                "viewlogs",
+                                "audit",
+                                "computer",
+                                "xmppmaster",
+                                "xmppmaster");
 
 foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
     $machineDetails = json_decode($arraydeploy['tabdeploy']['machine_details_json'][$index], true);
@@ -124,18 +161,18 @@ foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
     }
 }
 
-for ($i = 0;$i < safeCount($arraydeploy['tabdeploy']['start']);$i++) {
-    $param = array();
-    $param['uuid'] = $arraydeploy['tabdeploy']['inventoryuuid'][$i];
-    $param['hostname'] = $arraydeploy['tabdeploy']['host'][$i];
-    $param['gid'] = $arraydeploy['tabdeploy']['group_uuid'][$i];
-    $param['cmd_id'] = $arraydeploy['tabdeploy']['command'][$i];
-    $param['login'] = $arraydeploy['tabdeploy']['login'][$i];
-    $param['title'] = $arraydeploy['tabdeploy']['title'][$i];
-    $param['start'] = $arraydeploy['tabdeploy']['start'][$i];
-    $param['endcmd'] = $arraydeploy['tabdeploy']['endcmd'][$i];
-    $param['startcmd'] = $arraydeploy['tabdeploy']['startcmd'][$i];
-    $param['sessionid'] = $arraydeploy['tabdeploy']['sessionid'][$i];
+for ($i=0;$i< safeCount( $arraydeploy['tabdeploy']['start']);$i++){
+    $param=array();
+    $param['uuid']= $arraydeploy['tabdeploy']['inventoryuuid'][$i];
+    $param['hostname']=$arraydeploy['tabdeploy']['host'][$i];
+    $param['gid']=$arraydeploy['tabdeploy']['group_uuid'][$i];
+    $param['cmd_id']=$arraydeploy['tabdeploy']['command'][$i];
+    $param['login']=$arraydeploy['tabdeploy']['login'][$i];
+    $param['title']=$arraydeploy['tabdeploy']['title'][$i];
+    $param['start']=$arraydeploy['tabdeploy']['start'][$i];
+    $param['endcmd']=$arraydeploy['tabdeploy']['endcmd'][$i];
+    $param['startcmd']=$arraydeploy['tabdeploy']['startcmd'][$i];
+    $logs[] = $logAction;
     $params[] = $param;
 }
 
@@ -144,7 +181,6 @@ $statarray = xmlrpc_getarraystatbycmd($arraydeploy['tabdeploy']['command']);
 $convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
 $groupname = getInfosNameGroup($arraydeploy['tabdeploy']['group_uuid']);
 $index = 0;
-
 foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
     $error = false;
 
@@ -230,64 +266,63 @@ foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
     }
 }
 
-if(isset($arraynotdeploy)) {
-    foreach($arraynotdeploy['elements'] as $id => $deploy) {
-        $param = [
-        'cmd_id' => $deploy['cmd_id'],
-        'login' => $deploy['login'],
-        'gid' => $deploy['gid'],
-        'uuid' => $deploy['uuid_inventory']];
-        $logs[] = $logAction;
-        $params[] = $param;
+if(isset($arraynotdeploy))
+{
+  foreach($arraynotdeploy['elements'] as $id=>$deploy)
+  {
+      $param = [
+      'cmd_id'=>$deploy['cmd_id'],
+      'login'=>$deploy['login'],
+      'gid'=>$deploy['gid'],
+      'uuid'=>$deploy['uuid_inventory']];
+      $logs[] = $logAction;
+      $params[] = $param;
 
-        $arraytitlename[] = '<img style="position:relative;top : 5px;" src="img/other/package.svg" width="25" height="25" /> '.$deploy['package_name'];
+      $arraytitlename[] = '<img style="position:relative;top : 5px;" src="img/other/package.svg"  width="25" height="25" /> '.$deploy['package_name'];
 
-        $name = "";
-        if($deploy['gid'] != "") {
-            $name = getInfosNameGroup($deploy['gid']);
-            $name = $name[$deploy['gid']]['name'];
-            $name = '<img style="position:relative;top : 5px;" src="img/other/machinegroup.svg" width="25" height="25" /> '.$name;
-        } else {
-            $name = $deploy['machine_name'];
-            $name = '<img style="position:relative;top : 5px;" src="img/other/machine_down.svg" width="25" height="25" /> '.$name;
+      $name = "";
+      if($deploy['gid'] != "")
+      {
+          $name = getInfosNameGroup($deploy['gid']);
+          $name = $name[$deploy['gid']]['name'];
+          $name = '<img style="position:relative;top : 5px;" src="img/other/machinegroup.svg" width="25" height="25" /> '.$name;
         }
-        $arrayname[] = $name;
 
-        $date = (array)$deploy['date_start'];
-        $arraydeploy['tabdeploy']['start'][] = substr($date['scalar'], 0, 4).'-'.substr($date['scalar'], 4, 2).'-'.substr($date['scalar'], 6, 2).' '.substr($date['scalar'], 9);
-        if ($deploy['deployment_intervals'] != "") {
-            $arraystate[] = '<span style="font-weight: bold; color : orange;">Pending<br><span style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Constraint: ", "xmppmaster").
-            $deploy['deployment_intervals'].'</span></span>';
-        } else {
-            $arraystate[] = '<span style="font-weight : bold; color : orange;">Pending</span>';
-        }
-        $tolmach[] = $deploy['nb_machines'];
-        $processmachr[] = '0 (0%)';
-        $successmach[] = '0 (0%)';
-        $errormach[] = '0 (0%)';
-        $abortmachuser[] = '0 (0%)';
-        $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
-        $reloads[] = $reloadAction;
-    }
+      else
+      {
+          $name = $deploy['machine_name'];
+          $name = '<img style="position:relative;top : 5px;" src="img/other/machine_down.svg" width="25" height="25" /> '.$name;
+      }
+      $arrayname[] = $name;
+
+      $date = (array)$deploy['date_start'];
+      $arraydeploy['tabdeploy']['start'][] = date("Y-m-d H:i:s",$date['timestamp']);
+      //TODO
+      $arraystate[] = '<span style="font-weight: bold; color : orange;">Pending</span>';
+      $tolmach[] = $deploy['nb_machines'];
+      $processmachr[] = '0 (0%)';
+      $successmach[] = '0 (0%)';
+      $errormach[] = '0 (0%)';
+      $abortmachuser[] = '0 (0%)';
+      $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
+  }
 }
 
-$n = new OptimizedListInfos($arraytitlename, _T("Deployment", "xmppmaster"));
+$n = new OptimizedListInfos( $arraytitlename, _T("Deployment", "xmppmaster"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($arrayname, _T("Target", "xmppmaster"));
-$n->addExtraInfo($arraystate, _T("Progress / Status", "xmppmaster"));
-$n->addExtraInfo($tolmach, _T("Total Machines", "xmppmaster"));
-$n->addExtraInfo($processmachr, _T("In progress", "xmppmaster"));
-$n->addExtraInfo($successmach, _T("Success", "xmppmaster"));
-$n->addExtraInfo($errormach, _T("Error", "xmppmaster"));
-$n->addExtraInfo($abortmachuser, _T("Aborted", "xmppmaster"));
-$n->addExtraInfo($arraydeploy['tabdeploy']['login'], _T("User", "xmppmaster"));
+$n->addExtraInfo( $arrayname, _T("Target", "xmppmaster"));
+$n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("Start date", "xmppmaster"));
+$n->addExtraInfo( $arraystate, _T("Progress / Status", "xmppmaster"));
+$n->addExtraInfo( $tolmach, _T("Total Machines", "xmppmaster"));
+$n->addExtraInfo( $processmachr, _T("In progress", "xmppmaster"));
+$n->addExtraInfo( $successmach, _T("Success", "xmppmaster"));
+$n->addExtraInfo( $errormach, _T("Error", "xmppmaster"));
+$n->addExtraInfo( $abortmachuser, _T("Aborted", "xmppmaster"));
+$n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning"));
-
 $n->addActionItemArray($logs);
-$n->addActionItemArray($reloads);
-
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $arraydeploy['lentotal'];

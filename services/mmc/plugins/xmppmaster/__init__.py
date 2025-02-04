@@ -607,6 +607,42 @@ def get_deploy_by_team_member(
         login, state, intervalsearch, minimum, maximum, filt, typedeploy
     )
 
+def get_deploy_by_team_member_for_convergence(
+    login,
+    state,
+    intervalsearch,
+    minimum=None,
+    maximum=None,
+    filt=None,
+    typedeploy="command",
+):
+    """
+    This function is used to retrieve the deployements of a team.
+    This team is found based on the login of a member.
+
+    Args:
+        session: The SQL Alchemy session
+        login: The login of the user
+        state: State of the deployment (Started, Error, etc.)
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+        Returns:
+            It returns all the deployement done by a specific team.
+            It can be done by time search too.
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    if filt == "":
+        filt = None
+    return XmppMasterDatabase().get_deploy_by_team_member_for_convergence(
+        login, state, intervalsearch, minimum, maximum, filt, typedeploy
+    )
+
 
 def get_deploy_inprogress_by_team_member(
     login, intervalsearch, minimum=None, maximum=None, filt=None, typedeploy="command"

@@ -5548,6 +5548,7 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = session.query(Deploy).filter(
             Deploy.sessionid.like("%s%%" % typedeploy)
         )
+        deploylog = deploylog.filter(~Deploy.title.like("Convergence%"))
 
         if not pulse_usersid or len(pulse_usersid) == 1 and pulse_usersid[0] == "root":
             return self.get_deploy_by_user_with_interval(
@@ -5706,6 +5707,154 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
+    def get_deploy_by_team_member_for_convergence(
+        self,
+        session,
+        login,
+        state,
+        intervalsearch,
+        minimum=None,
+        maximum=None,
+        filt=None,
+        typedeploy="command",
+    ):
+        """
+        Recovers and aggregates the deployments of a team for convergence,
+        In order to return only the last deployment (by order) for research.
+
+        Args:
+        Session: SQLALCHEMY session.
+        Login: user login (used to find team members).
+        State: state of deployment.
+        Intervalsearch: Second interval for research.
+        Minimum: starting index for pagination.
+        Maximum: end index for pagination.
+        Filt: Filter on various fields.
+        Typedeploy: type of deployment (by default "command").
+
+        Returns:
+            dict: {
+                "lentotal": total des résultats,
+                "tabdeploy": {
+                    "command": [...],
+                    "group_uuid": [...],
+                    "title": [...],
+                    "nb_machines": [...],
+                    "start": [...],
+                    "endcmd": [...],
+                    "machine_details_json": [...],
+                    "login": [...],
+                }
+            }
+        """
+        pulse_usersid = self.get_teammembers_from_login(login)
+        if not pulse_usersid or (len(pulse_usersid) == 1 and pulse_usersid[0] == "root"):
+            return self.get_deploy_by_user_with_interval(
+                login,
+                state,
+                intervalsearch,
+                minimum=None,
+                maximum=None,
+                filt=None,
+                typedeploy=typedeploy,
+            )
+
+        subquery = session.query(
+            Deploy.command,
+            Deploy.group_uuid,
+            func.max(Deploy.start).label("latest_start")
+        ).group_by(Deploy.command, Deploy.group_uuid).subquery()
+
+        deployagg = session.query(
+            Deploy.command.label("command"),
+            Deploy.group_uuid.label("group_uuid"),
+            Deploy.login.label("login"),
+            Deploy.title.label("title"),
+            func.count(distinct(Deploy.inventoryuuid)).label("nb_machines"),
+            Deploy.start.label("start"),
+            func.max(Deploy.endcmd).label("endcmd"),
+            func.json_arrayagg(
+                func.json_object(
+                    "host", Deploy.host,
+                    "state", Deploy.state,
+                    "inventoryuuid", Deploy.inventoryuuid,
+                    "jid_relay", Deploy.jid_relay,
+                    "sessionid", Deploy.sessionid,
+                    "start", func.date_format(Deploy.start, "%Y-%m-%d %H:%i:%s"),
+                    "end", func.date_format(Deploy.endcmd, "%Y-%m-%d %H:%i:%s")
+                )
+            ).label("machine_details_json"),
+        )\
+        .join(
+            subquery,
+            (Deploy.command == subquery.c.command) &
+            (Deploy.group_uuid == subquery.c.group_uuid)
+        )\
+        .filter(Deploy.start == subquery.c.latest_start)\
+        .filter(Deploy.sessionid.like(f"{typedeploy}%"))\
+        .filter(Deploy.title.like("Convergence%"))
+
+        team_filter = or_(*[Deploy.login.op("regexp")(uid) for uid in pulse_usersid])
+        deployagg = deployagg.filter(team_filter)
+
+        if state:
+            deployagg = deployagg.filter(Deploy.state == state)
+
+        if intervalsearch:
+            since_date = datetime.now() - timedelta(seconds=intervalsearch)
+            deployagg = deployagg.filter(Deploy.start >= since_date)
+
+        if filt:
+            deployagg = deployagg.filter(
+                or_(
+                    Deploy.state.like(f"%{filt}%"),
+                    Deploy.pathpackage.like(f"%{filt}%"),
+                    Deploy.start.like(f"%{filt}%"),
+                    Deploy.login.like(f"%{filt}%"),
+                    Deploy.host.like(f"%{filt}%"),
+                )
+            )
+
+        deployagg = deployagg.group_by(Deploy.command, Deploy.group_uuid, Deploy.login, Deploy.title, Deploy.start)
+        deployagg = deployagg.order_by(desc(Deploy.command))
+
+        results_for_count = deployagg.all()
+        lentotal = len(results_for_count)
+
+        if minimum is not None and maximum is not None:
+            deployagg = deployagg.offset(int(minimum)).limit(int(maximum) - int(minimum))
+
+        results = deployagg.all()
+        session.commit()
+        session.flush()
+
+        ret = {
+            "lentotal": lentotal,
+            "tabdeploy": {
+                "command": [],
+                "group_uuid": [],
+                "title": [],
+                "nb_machines": [],
+                "start": [],
+                "endcmd": [],
+                "machine_details_json": [],
+                "login": [],
+            },
+        }
+
+        for row in results:
+            ret["tabdeploy"]["command"].append(row.command)
+            ret["tabdeploy"]["group_uuid"].append(row.group_uuid)
+            ret["tabdeploy"]["title"].append(row.title)
+            ret["tabdeploy"]["nb_machines"].append(row.nb_machines)
+            ret["tabdeploy"]["start"].append(row.start)
+            ret["tabdeploy"]["endcmd"].append(row.endcmd)
+            ret["tabdeploy"]["machine_details_json"].append(row.machine_details_json)
+            ret["tabdeploy"]["login"].append(row.login)
+
+        return ret
+
+    @DatabaseHelper._sessionm
     def get_deploy_by_user_with_interval(
         self,
         session,
@@ -5734,7 +5883,7 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         deploylog = session.query(Deploy)
         # Do not show convergence deploy
-        deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
+        deploylog = deploylog.filter(~Deploy.title.like("Convergence%"))
         deploylog = deploylog.filter(Deploy.sessionid.like("%s%%" % typedeploy))
         if login:
             deploylog = deploylog.filter(Deploy.login == login)
@@ -5962,7 +6111,7 @@ class XmppMasterDatabase(DatabaseHelper):
             .join(subquery, (Deploy.command == subquery.c.command) & (Deploy.group_uuid == subquery.c.group_uuid))
             .filter(Deploy.start == subquery.c.latest_start)
             .filter(Deploy.sessionid.like(f"{typedeploy}%"))
-            .filter(Deploy.title.like("%Convergence%"))
+            .filter(Deploy.title.like("Convergence%"))
         )
 
         if login:

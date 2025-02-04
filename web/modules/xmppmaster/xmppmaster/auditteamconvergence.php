@@ -19,24 +19,33 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * file auditconvergence.php
+ * file : xmppmaster/xmppmaster/auditteam.php
  */
-
 require("graph/navbar.inc.php");
-require_once("modules/xmppmaster/includes/html.inc.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
+require_once("modules/xmppmaster/includes/html.inc.php");
+require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("modules/medulla_server/includes/utilities.php");
 
-$refresh = new RefreshButton();
-$p = new PageGenerator(_T("All users convergence", 'xmppmaster'));
+//Force the presence of all computers
+$_SESSION['computerpresence'] = "all_computer";
 
+$delete = isset($_GET['postaction'])?true:false;
+
+if ($delete) {
+    delete_command($_GET['cmd_id']);
+}
+$p = new PageGenerator(_T("My teams convergence [".$_SESSION['login']."]", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
-$refresh->display();
 
-$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxconvergence"), "container", array('login' => '', 'currenttasks' => '1'), 'formRunning' );
+$refresh = new RefreshButton();
+$refresh->display();
+print "<br/><br/><br/>";
+$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxteamconvergence"),
+                                            "container", array('login' => $_SESSION['login'],
+                                            'currenttasks' => '1'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 print "<br/><br/><br/>";

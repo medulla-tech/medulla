@@ -381,6 +381,26 @@ function xmlrpc_getdeploybyteamuserrecent(
                                                                 $filt,
                                                                 $typedeploy));
 }
+
+function xmlrpc_getdeploybyteamuserrecent_for_convergence(
+    $login,
+    $state,
+    $duree,
+    $min = null,
+    $max = null,
+    $filt = null,
+    $typedeploy = "command"
+) {
+    return xmlCall("xmppmaster.get_deploy_by_team_member_for_convergence", array($login,
+                                                                $state,
+                                                                $duree,
+                                                                $min,
+                                                                $max,
+                                                                $filt,
+                                                                $typedeploy));
+
+}
+
 function xmlrpc_getnotdeploybyteamuserrecent(
     $login,
     $duree,
