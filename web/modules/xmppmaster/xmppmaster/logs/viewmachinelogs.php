@@ -110,7 +110,7 @@ if($isUpdate) {
     $update_kb = xmlrpc_get_update_kb($deploymachine['package_id']);
 }
 
-$hostname = quickGet('hostname');
+$hostname = explode('.', $info['objectdeploy'][0]['host'], 2)[0];
 
 $p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$hostname."]");
 $p->setSideMenu($sidemenu);
