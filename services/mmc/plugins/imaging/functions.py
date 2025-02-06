@@ -4118,6 +4118,9 @@ class ImagingRpcProxy(RpcProxyI):
     def delete_multicast_from_db(self, infoparameters):
         return ImagingDatabase().remove_multicast(infoparameters)
 
+    def getPostInstalls(self, master_uuid, target_uuid):
+        return ImagingDatabase().getPostInstalls(master_uuid, target_uuid)
+
 
 def chooseMacAddress(ctx, uuid, macs):
     # should pass uuids and the list of uuids

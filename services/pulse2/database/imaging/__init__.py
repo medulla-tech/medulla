@@ -6178,6 +6178,36 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         session.close()
 
+    def getPostInstalls(self, master_uuid, target_uuid):
+        session = create_session(self.db)
+
+        result = []
+
+        sql="""select
+    pis.id,
+    pis.default_name,
+    pis.default_desc,
+    pis.value,
+    pisii.order
+from PostInstallScript pis
+join PostInstallScriptInImage pisii on pisii.fk_post_install_script = pis.id
+join Image i on i.id = pisii.fk_image
+join ImageInMenu iim on iim.fk_image = pisii.fk_image
+join MenuItem mi on mi.id = iim.fk_menuitem
+join Menu m on mi.fk_menu = m.id
+join Target t on t.fk_menu = m.id
+where t.uuid = "%s" and i.uuid= "%s"
+order by pisii.order"""%(target_uuid, master_uuid)
+
+        datas = session.execute(sql)
+        for row in datas:
+            result.append({
+                "id":row[0],
+                "name":row[1] if row[1] is not None else "",
+                "description": row[2] if row[2] is not None else "",
+                "value":row[3] if row[3] is not None else ""
+            })
+        return result
 
 def id2uuid(id):
     return "UUID%d" % id

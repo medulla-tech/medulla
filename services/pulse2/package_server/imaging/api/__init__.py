@@ -153,3 +153,6 @@ class ImagingApi(MyXmlrpc):
 
     def xmlrpc_getClonezillaParamsForTarget(self, computerUUID):
         return self.api.getClonezillaParamsForTarget(computerUUID)
+
+    def xmlrpc_getPostInstalls(self, master_uuid, target_uuid):
+        return self.api.getPostInstalls(master_uuid, target_uuid)
