@@ -78,9 +78,14 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
 include_once('modules/glpi/includes/xmlrpc.php');
 include_once('modules/pkgs/includes/xmlrpc.php');
 
-// Retrieve information deploy. For cmn_id
 
-$info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+// Retrieve information deploy. For cmn_id
+$isconvergence = is_commands_convergence_type($cmd_id);
+if($isconvergence != 0) {
+    $info = xmlrpc_getdeployfromcommandid_for_convergence($cmd_id, $uuid);
+} else {
+    $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+}
 
 if($info["len"] == 0) {?>
     <script>
@@ -454,15 +459,32 @@ if ($info['len'] != 0) {
         }
     }
     $state = $info['objectdeploy'][0]['state'];
-    $start = get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
+    $startData = $info['objectdeploy'][0]['start'];
+
+    if (is_array($startData)) {
+        $timestamp  = isset($startData['timestamp']) ? $startData['timestamp'] : null;
+        $scalarDate = isset($startData['scalar'])    ? $startData['scalar']    : null;
+    } elseif (is_object($startData)) {
+        $temp       = get_object_vars($startData);
+        $timestamp  = isset($temp['timestamp']) ? $temp['timestamp'] : null;
+        $scalarDate = isset($temp['scalar'])    ? $temp['scalar']    : null;
+    }
+    $start = $timestamp;
     $host = $info['objectdeploy'][0]['host'];
     $jidmachine = $info['objectdeploy'][0]['jidmachine'];
     $jid_relay = $info['objectdeploy'][0]['jid_relay'];
-    $datestart =  date("Y-m-d H:i:s", $start);
-    $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
-    $formateddate = substr($scalardate, 0, 4).'-'.substr($scalardate, 4, 2).'-'.substr($scalardate, 6, 2).' '.substr($scalardate, 9);
+    $datestart = $start ? date("Y-m-d H:i:s", $start) : '';
+    if (!empty($scalarDate) && strlen($scalarDate) >= 11) {
+        $formateddate = substr($scalarDate, 0, 4) . '-' .
+                        substr($scalarDate, 4, 2) . '-' .
+                        substr($scalarDate, 6, 2) . ' ' .
+                        substr($scalarDate, 9);
+    } else {
+        $formateddate = $datestart;
+    }
+
     echo "<div>";
-    echo '<H2 style="align=center;">'._T("Start deployment : ", "xmppmaster").$formateddate.'</H2>';
+    echo '<h2 style="align=center;">'._T("Start deployment : ", "xmppmaster").$formateddate.'</h2>';
     echo "</div>";
     if (isset($infoslist)) {
         if ($info['len'] != 0) {

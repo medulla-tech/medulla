@@ -256,6 +256,11 @@ function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE")
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
 
+function xmlrpc_getdeployfromcommandid_for_convergence($command_id, $uuid = "UUID_NONE")
+{
+    return xmlCall("xmppmaster.getdeployfromcommandid_for_convergence", array($command_id, $uuid));
+}
+
 function xmlrpc_getdeployment_cmd_and_title($command_id, $title, $filter = "", $start, $limit)
 {
     return xmlCall("xmppmaster.getdeployment_cmd_and_title", array( $command_id,
@@ -265,9 +270,24 @@ function xmlrpc_getdeployment_cmd_and_title($command_id, $title, $filter = "", $
                                                                     $limit));
 }
 
+function xmlrpc_getdeployment_cmd_and_title_for_convergence($command_id, $title, $filter = "", $start, $limit)
+{
+    return xmlCall("xmppmaster.getdeployment_cmd_and_title_for_convergence", array( $command_id,
+                                                                    $title,
+                                                                    $filter,
+                                                                    $start,
+                                                                    $limit));
+}
+
 function xmlrpc_getstatdeploy_from_command_id_and_title($command_id, $title)
 {
     return xmlCall("xmppmaster.getstatdeploy_from_command_id_and_title", array($command_id,
+                                                                        $title));
+}
+
+function xmlrpc_getstatdeploy_from_command_id_and_title_for_convergence($command_id, $title)
+{
+    return xmlCall("xmppmaster.getstatdeploy_from_command_id_and_title_for_convergence", array($command_id,
                                                                         $title));
 }
 
@@ -361,6 +381,30 @@ function xmlrpc_getdeploybyteamuserrecent(
                                                                 $filt,
                                                                 $typedeploy));
 }
+
+function xmlrpc_getdeploybyteamuserrecent_for_convergence(
+    $login,
+    $state,
+    $duree,
+    $min = null,
+    $max = null,
+    $filt = null,
+    $typedeploy = "command"
+) {
+    return xmlCall("xmppmaster.get_deploy_by_team_member_for_convergence", array($login,
+                                                                $state,
+                                                                $duree,
+                                                                $min,
+                                                                $max,
+                                                                $filt,
+                                                                $typedeploy));
+
+}
+
+function xmlrpc_convergence_reschedule($cmd_id) {
+    return xmlCall("msc.convergence_reschedule_one", array($cmd_id));
+}
+
 function xmlrpc_getnotdeploybyteamuserrecent(
     $login,
     $duree,
@@ -416,6 +460,23 @@ function xmlrpc_get_deploy_by_user_with_interval(
     return xmlCall("xmppmaster.get_deploy_by_user_with_interval", array($login, $state, $duree,
                                                                         $min, $max, $filt,
                                                                         $typedeploy));
+}
+
+function xmlrpc_get_deploy_convergence(
+    $login,
+    $duree,
+    $min = null,
+    $max = null,
+    $filt = null,
+    $typedeploy = "command",
+) {
+    return xmlCall("xmppmaster.get_deploy_convergence", array(
+        $login,
+        $duree,
+        $min,
+        $max,
+        $filt,
+        $typedeploy));
 }
 
 function xmlrpc_get_deploy_by_user_finished(

@@ -1063,18 +1063,14 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         convergence.packageUUID = pid
         convergence.commandId = command_id
         convergence.active = active
-        convergence.cmdPhases = base64.b64encode(pickle.dumps(cmdPhases)).decode(
-            "utf-8"
-        )
+        convergence.cmdPhases = base64.b64encode(pickle.dumps(cmdPhases)).decode("utf-8")
         session.add(convergence)
         session.flush()
         return True
 
     @DatabaseHelper._session
     def edit_convergence_datas(self, session, gid, package_id, datas):
-        datas["cmdPhases"] = base64.b64encode(pickle.dumps(datas["cmdPhases"])).decode(
-            "utf-8"
-        )
+        datas["cmdPhases"] = base64.b64encode(pickle.dumps(datas["cmdPhases"])).decode("utf-8")
         try:
             with session.begin():
                 result = (

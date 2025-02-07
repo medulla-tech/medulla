@@ -387,6 +387,8 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+def getdeployfromcommandid_for_convergence(command_id, uuid):
+    return XmppMasterDatabase().getdeployfromcommandid_for_convergence(command_id, uuid)
 
 def getdeployment_cmd_and_title(command_id, title, search_filter="", start=0, limit=-1):
     """
@@ -408,6 +410,26 @@ def getdeployment_cmd_and_title(command_id, title, search_filter="", start=0, li
         command_id, title, search_filter, start, limit
     )
 
+def getdeployment_cmd_and_title_for_convergence(command_id, title, search_filter="", start=0, limit=-1):
+    """
+    Get the list of deploys based on the command_id and title of the packages for convergence.
+
+    Arg:
+        sesion: The SQL Alchemy session
+        command_id: The id the package
+        title: Name of the package
+        search_filter: Used filters in the web page
+        start: Number of the first package to show.
+        limit: Maximum number of deploys sent at once.
+
+    Return:
+        It returns the list of the deploys
+
+    """
+    return XmppMasterDatabase().getdeployment_cmd_and_title_for_convergence(
+        command_id, title, search_filter, start, limit
+    )
+
 
 def getstatdeploy_from_command_id_and_title(command_id, title):
     """
@@ -420,6 +442,20 @@ def getstatdeploy_from_command_id_and_title(command_id, title):
         It returns the number of machines per status.
     """
     return XmppMasterDatabase().getstatdeploy_from_command_id_and_title(
+        command_id, title
+    )
+
+def getstatdeploy_from_command_id_and_title_for_convergence(command_id, title):
+    """
+    Retrieve the deploy statistics based on the command_id and name for convergence
+    Args:
+        session: The SQL Alchemy session
+        command_id: id of the deploy
+        title: The name of deploy
+    Return:
+        It returns the number of machines per status.
+    """
+    return XmppMasterDatabase().getstatdeploy_from_command_id_and_title_for_convergence(
         command_id, title
     )
 
@@ -571,6 +607,42 @@ def get_deploy_by_team_member(
         login, state, intervalsearch, minimum, maximum, filt, typedeploy
     )
 
+def get_deploy_by_team_member_for_convergence(
+    login,
+    state,
+    intervalsearch,
+    minimum=None,
+    maximum=None,
+    filt=None,
+    typedeploy="command",
+):
+    """
+    This function is used to retrieve the deployements of a team.
+    This team is found based on the login of a member.
+
+    Args:
+        session: The SQL Alchemy session
+        login: The login of the user
+        state: State of the deployment (Started, Error, etc.)
+        intervalsearch: The interval on which we search the deploys.
+        minimum: Minimum value ( for pagination )
+        maximum: Maximum value ( for pagination )
+        filt: Filter of the search
+        Returns:
+            It returns all the deployement done by a specific team.
+            It can be done by time search too.
+    """
+
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    if filt == "":
+        filt = None
+    return XmppMasterDatabase().get_deploy_by_team_member_for_convergence(
+        login, state, intervalsearch, minimum, maximum, filt, typedeploy
+    )
+
 
 def get_deploy_inprogress_by_team_member(
     login, intervalsearch, minimum=None, maximum=None, filt=None, typedeploy="command"
@@ -686,6 +758,21 @@ def get_deploy_by_user_with_interval(
         login, state, intervalsearch, minimum, maximum, filt, typedeploy
     )
 
+def get_deploy_convergence(
+    login,
+    intervalsearch,
+    minimum=None,
+    maximum=None,
+    filt=None,
+    typedeploy="command"
+):
+    if minimum == "":
+        minimum = None
+    if maximum == "":
+        maximum = None
+    return XmppMasterDatabase().get_deploy_convergence(
+        login, intervalsearch, minimum, maximum, filt, typedeploy
+    )
 
 def get_deploy_by_user_finished(
     login, intervalsearch, minimum=None, maximum=None, filt=None, typedeploy="command"
