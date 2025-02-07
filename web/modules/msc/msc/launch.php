@@ -575,11 +575,21 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     }
     else {
         if(! in_array("xmppmaster", $_SESSION["modulesList"])) {
-            $f->add(
-                new TrFormElement(
-                    _T('Command name', 'msc'), new InputTpl('ltitle')
-                ), array("value" => $name)
-            );
+            if (isset($_GET['convergence']) && $_GET['convergence'] == 1) {
+                $inputTpl = new InputTpl('ltitle');
+                $inputTpl->setAttributCustom('readonly');
+                $f->add(
+                    new TrFormElement(
+                        _T('Command name', 'xmppmaster'), $inputTpl
+                    ), array("value" => $name)
+                );
+            } else {
+                $f->add(
+                    new TrFormElement(
+                        _T('Command name', 'xmppmaster'), new InputTpl('ltitle')
+                    ), array("value" => $name)
+                );
+            }
 
             $f->add(
                 new TrFormElement(
@@ -623,12 +633,22 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                 ), array("value" => quick_get('issue_halt_to_done', True) == 'on' ? 'checked' : '')
             );
         }
-        else{
-            $f->add(
-                new TrFormElement(
-                    _T('Command name', 'xmppmaster'), new InputTpl('ltitle')
-                ), array("value" => $name)
-            );
+        else {
+            if (isset($_GET['convergence']) && $_GET['convergence'] == 1) {
+                $inputTpl = new InputTpl('ltitle');
+                $inputTpl->setAttributCustom('readonly');
+                $f->add(
+                    new TrFormElement(
+                        _T('Command name', 'xmppmaster'), $inputTpl
+                    ), array("value" => $name)
+                );
+            } else {
+                $f->add(
+                    new TrFormElement(
+                        _T('Command name', 'xmppmaster'), new InputTpl('ltitle')
+                    ), array("value" => $name)
+                );
+            }
 
            $f->add(new HiddenTpl('start_script'), array("value" => 'on' , "hide" => True));
            $f->add(new HiddenTpl('old_start_script'), array("value" => 'on' , "hide" => True));
