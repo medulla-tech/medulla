@@ -6183,7 +6183,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         result = []
 
-        sql="""select
+        sql = """select
     pis.id,
     pis.default_name,
     pis.default_desc,
@@ -6197,17 +6197,23 @@ join MenuItem mi on mi.id = iim.fk_menuitem
 join Menu m on mi.fk_menu = m.id
 join Target t on t.fk_menu = m.id
 where t.uuid = "%s" and i.uuid= "%s"
-order by pisii.order"""%(target_uuid, master_uuid)
+order by pisii.order""" % (
+            target_uuid,
+            master_uuid,
+        )
 
         datas = session.execute(sql)
         for row in datas:
-            result.append({
-                "id":row[0],
-                "name":row[1] if row[1] is not None else "",
-                "description": row[2] if row[2] is not None else "",
-                "value":row[3] if row[3] is not None else ""
-            })
+            result.append(
+                {
+                    "id": row[0],
+                    "name": row[1] if row[1] is not None else "",
+                    "description": row[2] if row[2] is not None else "",
+                    "value": row[3] if row[3] is not None else "",
+                }
+            )
         return result
+
 
 def id2uuid(id):
     return "UUID%d" % id
