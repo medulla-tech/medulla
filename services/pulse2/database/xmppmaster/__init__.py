@@ -6293,6 +6293,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 If login is a list, this returns all the past deploys for the group this user belong to.
         """
         deploylog = session.query(Deploy)
+        deploylog = deploylog.filter(~Deploy.title.like("Convergence%"))
         deploylog = deploylog.filter(Deploy.sessionid.like("%s%%" % typedeploy))
         if login:
             if isinstance(login, list):
