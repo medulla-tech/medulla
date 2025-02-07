@@ -426,6 +426,10 @@ $page->setFile("modules/xmppmaster/xmppmaster/popupReloadDeploy.php");
 $page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
+$page = new Page("rescheduleconvergence", _T("Reschedule Convergence", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/rescheduleconvergence.php");
+$submod->addPage($page);
+
 $page = new Page("reloaddeploy", _T('Reload Deploy', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/reloaddeploy.php");
 //$page->setOptions(array("visible" => True, "noHeader" => False));

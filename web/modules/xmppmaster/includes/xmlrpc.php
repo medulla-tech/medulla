@@ -401,6 +401,10 @@ function xmlrpc_getdeploybyteamuserrecent_for_convergence(
 
 }
 
+function xmlrpc_convergence_reschedule($cmd_id) {
+    return xmlCall("msc.convergence_reschedule_one", array($cmd_id));
+}
+
 function xmlrpc_getnotdeploybyteamuserrecent(
     $login,
     $duree,

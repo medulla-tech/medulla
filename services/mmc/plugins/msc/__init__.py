@@ -1090,3 +1090,24 @@ def convergence_reschedule(all=False):
                 )
     else:
         logger.info("Convergence cron: no convergence commands will be rescheduled")
+
+def convergence_reschedule_one(cmd_id):
+    """
+    Check and replavate a specific convergence command identified by CMD_ID.
+
+    @Param cmd_id: order identifier to be replaced
+    @Type cmd_id: int or str
+    """
+    logger = logging.getLogger()
+    logger.info("Cron convergence: control of the command %s" % cmd_id)
+    try:
+        convergence_deploy_group_id, user = _get_convergence_deploy_group_id_and_user(cmd_id)
+        ctx = getContext(user=user)
+        new_machine_ids = _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
+        if new_machine_ids:
+            logger.info("%s machines will be added to the convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
+            phases = _get_convergence_phases(cmd_id, convergence_deploy_group_id)
+            _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id, phases=phases)
+        _update_convergence_dates(cmd_id)
+    except TypeError as e:
+        logger.warn("Error when recovering the deployment group and the user for the order %s: %s" % (cmd_id, e))

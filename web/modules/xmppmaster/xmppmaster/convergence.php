@@ -45,7 +45,7 @@ $refresh = new RefreshButton();
 $refresh->display();
 
 print "<br/><br/><br/>";
-$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxconvergence"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1', 'previous'=>'index'), 'formRunning'  );
+$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxconvergence"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1', 'previous'=>'convergence'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 print "<br/><br/><br/>";
