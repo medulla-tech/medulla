@@ -303,7 +303,13 @@ if (isset($arraynotdeploy)) {
     }
 }
 
-$n = new OptimizedListInfos($arraytitlename, _T("Deployment", "xmppmaster"));
+$newArrayTitleName = array();
+foreach ($arraytitlename as $line) {
+    $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $line);
+    $newArrayTitleName[] = trim($lineWithoutDateTime);
+}
+
+$n = new OptimizedListInfos($newArrayTitleName, _T("Deployment", "xmppmaster"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($arrayname, _T("Target", "xmppmaster"));
