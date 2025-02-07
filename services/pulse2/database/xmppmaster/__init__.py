@@ -4083,7 +4083,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 )
                 GROUP BY state;
             """
-            machinedeploy = session.execute(sql, {"command_id": command_id, "title": title})
+            machinedeploy = session.execute(
+                sql, {"command_id": command_id, "title": title}
+            )
             machinedeploy = machinedeploy.fetchall()
             ret = {
                 "totalmachinedeploy": 0,
@@ -7615,7 +7617,6 @@ class XmppMasterDatabase(DatabaseHelper):
             "glpi_owner_firstname",
             "glpi_owner_realname",
             "glpi_owner",
-            "glpi_entity_id",
             "glpi_location_id",
             "model",
             "manufacturer",
@@ -7625,8 +7626,8 @@ class XmppMasterDatabase(DatabaseHelper):
         # fiel for table ent and alias
         entityfield = {
             "entityname": "name",
-            "entitypath": "complete_name",
-            "entityid": "glpi_id",
+            "entitypath": "completename",
+            "entityid": "id",
         }
         # fiel for table location and alias
         locationfield = {
@@ -7679,9 +7680,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         recherchefild = " AND %s IS NULL " % ctx["field"]
                     elif ctx["field"] in [
                         "mach.id",
-                        "mach.glpi_entity_id",
                         "mach.glpi_location_id",
-                        "ent.glpi_id",
+                        "ent.id",
                         "loc.glpi_id",
                     ]:
                         recherchefild = " AND %s = '%s'" % (ctx["field"], ctx["filter"])
@@ -7706,7 +7706,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 ]
                 if entitylist:
                     entitystrlist = ",".join(entitylist)
-                    entity = " AND ent.glpi_id in (%s) " % entitystrlist
+                    entity = " AND ent.id in (%s) " % entitystrlist
 
         ordered = ""
         if self.config.ordered == 1:
@@ -7743,7 +7743,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     mach.glpi_owner_firstname,
                     mach.glpi_owner_realname,
                     mach.glpi_owner,
-                    mach.glpi_entity_id,
                     mach.glpi_location_id,
                     mach.model,
                     mach.manufacturer,
@@ -7753,8 +7752,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     loc.complete_name AS locationpath,
                     loc.glpi_id AS locationid,
                     ent.name AS entityname,
-                    ent.complete_name AS entitypath,
-                    ent.glpi_id AS entityid,
+                    ent.completename AS entitypath,
+                    ent.id AS entityid,
                     GROUP_CONCAT(DISTINCT IF( netw.ipaddress='', null,netw.ipaddress) SEPARATOR ',') AS listipadress,
                     GROUP_CONCAT(DISTINCT IF( netw.broadcast='', null,netw.broadcast) SEPARATOR ',') AS broadcast,
                     GROUP_CONCAT(DISTINCT IF( netw.gateway='', null,netw.gateway) SEPARATOR ',') AS gateway,
@@ -7762,9 +7761,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 FROM
                     xmppmaster.machines mach
                         LEFT OUTER JOIN
+                    local_glpi_filters lgf on CONCAT("UUID", lgf.id) = mach.uuid_inventorymachine
+                        LEFT OUTER JOIN
                     glpi_location loc ON loc.id = mach.glpi_location_id
                         LEFT OUTER JOIN
-                    glpi_entity ent ON ent.id = mach.glpi_entity_id
+                    local_glpi_entities ent ON ent.id = lgf.entities_id
                         LEFT OUTER JOIN
                     glpi_register_keys reg ON reg.machines_id = mach.id
                         LEFT OUTER JOIN
@@ -7784,7 +7785,6 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if debugfunction:
             logger.info("SQL request :  %s" % sql)
-
         result = session.execute(sql)
         sql_count = "SELECT FOUND_ROWS();"
         ret_count = session.execute(sql_count)
@@ -13809,11 +13809,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             entity_id = row.entity_id
             if entity_id not in machine_by_entity:
                 machine_by_entity[entity_id] = []
-            machine_by_entity[entity_id].append({
-                "id": row.machine_id,
-                "hostname": row.hostname,
-                "valid": row.machine_id != 0,
-            })
+            machine_by_entity[entity_id].append(
+                {
+                    "id": row.machine_id,
+                    "hostname": row.hostname,
+                    "valid": row.machine_id != 0,
+                }
+            )
 
         sql_total_machines = f"""
         SELECT ge.glpi_id AS id, COUNT(m.hostname) AS totalmach
@@ -13823,7 +13825,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         {filter_on}
         GROUP BY ge.glpi_id;
         """
-        total_machines = {row.id: row.totalmach for row in session.execute(sql_total_machines)}
+        total_machines = {
+            row.id: row.totalmach for row in session.execute(sql_total_machines)
+        }
 
         sql_noncompliant = f"""
         SELECT uma.entities_id AS id, COUNT(DISTINCT uma.id_machine) AS noncompliant, COUNT(DISTINCT uma.update_id) AS missing
@@ -13833,7 +13837,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         {filter_on_noncompliant}
         GROUP BY uma.entities_id;
         """
-        noncompliant_data = {row.id: (row.noncompliant, row.missing) for row in session.execute(sql_noncompliant)}
+        noncompliant_data = {
+            row.id: (row.noncompliant, row.missing)
+            for row in session.execute(sql_noncompliant)
+        }
 
         result = []
         for entity_id in entities:
@@ -13843,12 +13850,14 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             noncompliant, missing = noncompliant_data.get(entity_id, (0, 0))
             total = total_machines.get(entity_id, len(machines))
 
-            result.append({
-                "entity": str(entity_id),
-                "nbmachines": noncompliant,
-                "nbupdates": missing,
-                "totalmach": total,
-            })
+            result.append(
+                {
+                    "entity": str(entity_id),
+                    "nbmachines": noncompliant,
+                    "nbupdates": missing,
+                    "totalmach": total,
+                }
+            )
 
         return result
 
@@ -13913,18 +13922,28 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 "type": [],
                 "user": [],
                 "entity": [],
-                "presence": []
-            }
+                "presence": [],
+            },
         }
 
         for row in machines:
-            result_data["data"]["uuid"].append(row["uuid"].replace("UUID", "") if row["uuid"] else "")
+            result_data["data"]["uuid"].append(
+                row["uuid"].replace("UUID", "") if row["uuid"] else ""
+            )
             result_data["data"]["cn"].append(row["cn"] if row["cn"] is not None else "")
             result_data["data"]["os"].append(row["os"] if row["os"] is not None else "")
-            result_data["data"]["description"].append(row["description"] if row["description"] is not None else "")
-            result_data["data"]["type"].append(row["type"] if row["type"] is not None else "")
-            result_data["data"]["user"].append(row["user"] if row["user"] is not None else "")
-            result_data["data"]["entity"].append(row["entity"] if row["entity"] is not None else "")
+            result_data["data"]["description"].append(
+                row["description"] if row["description"] is not None else ""
+            )
+            result_data["data"]["type"].append(
+                row["type"] if row["type"] is not None else ""
+            )
+            result_data["data"]["user"].append(
+                row["user"] if row["user"] is not None else ""
+            )
+            result_data["data"]["entity"].append(
+                row["entity"] if row["entity"] is not None else ""
+            )
             result_data["data"]["presence"].append(1)
 
         uuids = []
