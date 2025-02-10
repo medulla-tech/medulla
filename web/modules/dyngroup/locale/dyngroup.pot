@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 15:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,7 +40,7 @@ msgstr ""
 
 #: modules/dyngroup/includes/groups.inc.php:137
 #: modules/dyngroup/includes/groups.inc.php:141
-#: modules/dyngroup/dyngroup/import_from_file.php:74
+#: modules/dyngroup/dyngroup/import_from_file.php:81
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:111
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:113
 msgid "Group name"
@@ -60,7 +60,7 @@ msgstr ""
 #: modules/dyngroup/includes/groups.inc.php:187
 #: modules/dyngroup/dyngroup/creator.php:310
 #: modules/dyngroup/dyngroup/creator.php:316
-#: modules/dyngroup/dyngroup/import_from_file.php:77
+#: modules/dyngroup/dyngroup/import_from_file.php:84
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:93
 #: modules/dyngroup/dyngroup/save.php:84
 msgid "Yes"
@@ -68,7 +68,7 @@ msgstr ""
 
 #: modules/dyngroup/includes/groups.inc.php:190
 #: modules/dyngroup/dyngroup/creator.php:311
-#: modules/dyngroup/dyngroup/import_from_file.php:77
+#: modules/dyngroup/dyngroup/import_from_file.php:84
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:93
 #: modules/dyngroup/dyngroup/save.php:84
 msgid "No"
@@ -529,7 +529,7 @@ msgid "Imaging group successfully modified"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/add_groups.php:213
-#: modules/dyngroup/dyngroup/import_from_file.php:64
+#: modules/dyngroup/dyngroup/import_from_file.php:70
 msgid "Group successfully created"
 msgstr ""
 
@@ -557,7 +557,7 @@ msgid "You must specify an imaging group name"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/add_groups.php:265
-#: modules/dyngroup/dyngroup/import_from_file.php:68
+#: modules/dyngroup/dyngroup/import_from_file.php:39
 #: modules/dyngroup/dyngroup/save.php:98
 #, php-format
 msgid "A group already exists with name '%s'"
@@ -602,15 +602,19 @@ msgstr ""
 msgid "Add a group"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/import_from_file.php:80
+#: modules/dyngroup/dyngroup/import_from_file.php:42
+msgid "Error: Unloaded file or invalid temporary path."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/import_from_file.php:87
 msgid "Add shortcut"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/import_from_file.php:82
+#: modules/dyngroup/dyngroup/import_from_file.php:89
 msgid "Select the file you want to import"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/import_from_file.php:92
+#: modules/dyngroup/dyngroup/import_from_file.php:99
 msgid "Select what is inside the file"
 msgstr ""
 
