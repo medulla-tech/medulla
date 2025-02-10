@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2023
+# Yuri Chornoivan <yurchor@ukr.net>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 15:27+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr "Скасувати"
 
 #: modules/dyngroup/includes/groups.inc.php:137
 #: modules/dyngroup/includes/groups.inc.php:141
-#: modules/dyngroup/dyngroup/import_from_file.php:74
+#: modules/dyngroup/dyngroup/import_from_file.php:81
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:111
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:113
 msgid "Group name"
@@ -64,7 +64,7 @@ msgstr "Члени групи"
 #: modules/dyngroup/includes/groups.inc.php:187
 #: modules/dyngroup/dyngroup/creator.php:310
 #: modules/dyngroup/dyngroup/creator.php:316
-#: modules/dyngroup/dyngroup/import_from_file.php:77
+#: modules/dyngroup/dyngroup/import_from_file.php:84
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:93
 #: modules/dyngroup/dyngroup/save.php:84
 msgid "Yes"
@@ -72,7 +72,7 @@ msgstr "Так"
 
 #: modules/dyngroup/includes/groups.inc.php:190
 #: modules/dyngroup/dyngroup/creator.php:311
-#: modules/dyngroup/dyngroup/import_from_file.php:77
+#: modules/dyngroup/dyngroup/import_from_file.php:84
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:93
 #: modules/dyngroup/dyngroup/save.php:84
 msgid "No"
@@ -545,7 +545,7 @@ msgid "Imaging group successfully modified"
 msgstr "Групу образів успішно змінено"
 
 #: modules/dyngroup/dyngroup/add_groups.php:213
-#: modules/dyngroup/dyngroup/import_from_file.php:64
+#: modules/dyngroup/dyngroup/import_from_file.php:70
 msgid "Group successfully created"
 msgstr "Групу успішно створено"
 
@@ -573,7 +573,7 @@ msgid "You must specify an imaging group name"
 msgstr "Вам слід вказати назву групу образів"
 
 #: modules/dyngroup/dyngroup/add_groups.php:265
-#: modules/dyngroup/dyngroup/import_from_file.php:68
+#: modules/dyngroup/dyngroup/import_from_file.php:39
 #: modules/dyngroup/dyngroup/save.php:98
 #, php-format
 msgid "A group already exists with name '%s'"
@@ -618,15 +618,19 @@ msgstr "Усі групи"
 msgid "Add a group"
 msgstr "Додати групу"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:80
+#: modules/dyngroup/dyngroup/import_from_file.php:42
+msgid "Error: Unloaded file or invalid temporary path."
+msgstr "Помилка: вивантажений файл або некоректний тимчасовий шлях."
+
+#: modules/dyngroup/dyngroup/import_from_file.php:87
 msgid "Add shortcut"
 msgstr "Додати скорочення"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:82
+#: modules/dyngroup/dyngroup/import_from_file.php:89
 msgid "Select the file you want to import"
 msgstr "Виберіть файл, який ви хочете імпортувати"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:92
+#: modules/dyngroup/dyngroup/import_from_file.php:99
 msgid "Select what is inside the file"
 msgstr "Виберіть вміст файла"
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 15:28+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -38,33 +38,37 @@ msgid ""
 "and the MMC agent expired."
 msgstr "您已登出，因为 MMC 网页介面与 MMC 代理程式之间的工作阶段已过期。"
 
-#: index.php:199
+#: index.php:88
+msgid "You have been successfully logged out."
+msgstr ""
+
+#: index.php:205
 msgid "Forgot password ?"
 msgstr "忘记密码？"
 
-#: index.php:208
+#: index.php:214
 msgid "Server"
 msgstr "伺服器"
 
-#: index.php:215
+#: index.php:221
 msgid "Language"
 msgstr "语言"
 
-#: index.php:221 modules/base/includes/publicFunc.php:318
+#: index.php:227 modules/base/includes/publicFunc.php:318
 #: modules/base/users/ajaxFilter.php:117 modules/base/views/index.tpl.php:78
 msgid "Login"
 msgstr "登入"
 
-#: index.php:227 modules/base/includes/publicFunc.php:333
+#: index.php:233 modules/base/includes/publicFunc.php:333
 #: modules/base/infoPackage.inc.php:433
 msgid "Password"
 msgstr "密码"
 
-#: index.php:240
+#: index.php:246
 msgid "Connect"
 msgstr "连线"
 
-#: index.php:263
+#: index.php:264
 msgid ""
 "Error reading authproviders.ini or authproviders.ini.local config file."
 msgstr ""
@@ -136,11 +140,11 @@ msgid ""
 "version."
 msgstr "MMC 代理程式无法为我们提供工作阶段号码。请检查 MMC 代理程式版本。"
 
-#: includes/xmlrpc.inc.php:390
+#: includes/xmlrpc.inc.php:388
 msgid "unknown error"
 msgstr "未知的错误"
 
-#: includes/xmlrpc.inc.php:391
+#: includes/xmlrpc.inc.php:389
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -512,11 +516,11 @@ msgid ""
 "subscription plan."
 msgstr "按一下此处以取得有关我们支援和维护订阅计划的更多资讯。"
 
-#: logout/index.php:48 logout/index.php:55 graph/navbar.inc.php:83
+#: logout/index.php:54 logout/index.php:61 graph/navbar.inc.php:83
 msgid "Logout"
 msgstr "登出"
 
-#: logout/index.php:51
+#: logout/index.php:57
 msgid "Your session will be closed"
 msgstr "将关闭您的工作阶段"
 
@@ -616,16 +620,19 @@ msgstr "远端控制"
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:73
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:125
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:108
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:259
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:78
 #: modules/base/includes/computers_list.inc.php:109
 msgid "View deployment details"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:125
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:701
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:719
 msgid "Restart deployment"
 msgstr ""
 
@@ -660,27 +667,27 @@ msgstr ""
 msgid "Delete deploy"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:348
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:362
 msgid "cluster list"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:349
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:363
 msgid "cluster nb ars"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:350
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:364
 msgid "machine"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:351
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:365
 msgid "progress"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:352
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:366
 msgid "start"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:353
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:367
 msgid "end"
 msgstr ""
 
@@ -791,6 +798,11 @@ msgstr ""
 #: modules/dashboard/includes/panels/alertsentity.inc.php:50
 #: modules/dashboard/includes/panels/alerts.inc.php:49
 msgid "Detail"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:117
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:295
+msgid "Reschedule Convergence"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:165

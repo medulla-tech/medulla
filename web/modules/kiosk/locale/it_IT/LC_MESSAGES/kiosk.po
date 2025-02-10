@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 15:27+0100\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2023\n"
 "Language-Team: Italian (Italy) (https://app.transifex.com/siveo/teams/72118/it_IT/)\n"
@@ -25,73 +25,73 @@ msgstr ""
 msgid "List of profils"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:97
+#: modules/kiosk/kiosk/editProfile.php:98
 #: modules/kiosk/kiosk/ajaxProfilesList.php:39
 #: modules/kiosk/infoPackage.inc.php:76
 msgid "Edit Profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:121
+#: modules/kiosk/kiosk/editProfile.php:122
 #: modules/kiosk/kiosk/ajaxProfilesList.php:66
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:75 modules/kiosk/kiosk/add.php:84
 msgid "Profile Name"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:122 modules/kiosk/kiosk/add.php:85
+#: modules/kiosk/kiosk/editProfile.php:123 modules/kiosk/kiosk/add.php:85
 msgid "Name"
 msgstr "Nome"
 
-#: modules/kiosk/kiosk/editProfile.php:128 modules/kiosk/kiosk/add.php:91
+#: modules/kiosk/kiosk/editProfile.php:129 modules/kiosk/kiosk/add.php:91
 msgid "Set the profile to active / inactive state"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:129
+#: modules/kiosk/kiosk/editProfile.php:130
 #: modules/kiosk/kiosk/ajaxProfilesList.php:53 modules/kiosk/kiosk/add.php:92
 msgid "Active"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:129
+#: modules/kiosk/kiosk/editProfile.php:130
 #: modules/kiosk/kiosk/ajaxProfilesList.php:53 modules/kiosk/kiosk/add.php:92
 msgid "Inactive"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:132
+#: modules/kiosk/kiosk/editProfile.php:133
 #: modules/kiosk/kiosk/ajaxProfilesList.php:69 modules/kiosk/kiosk/add.php:95
 msgid "Profile Status"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:142 modules/kiosk/kiosk/add.php:103
+#: modules/kiosk/kiosk/editProfile.php:143 modules/kiosk/kiosk/add.php:103
 msgid "Manage packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:146
-#: modules/kiosk/kiosk/editProfile.php:151 modules/kiosk/kiosk/add.php:116
+#: modules/kiosk/kiosk/editProfile.php:147
+#: modules/kiosk/kiosk/editProfile.php:152 modules/kiosk/kiosk/add.php:118
 msgid "Restricted packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:162 modules/kiosk/kiosk/add.php:124
+#: modules/kiosk/kiosk/editProfile.php:163 modules/kiosk/kiosk/add.php:126
 msgid "Available packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:163
-#: modules/kiosk/kiosk/editProfile.php:167 modules/kiosk/kiosk/add.php:125
-#: modules/kiosk/kiosk/add.php:129
+#: modules/kiosk/kiosk/editProfile.php:164
+#: modules/kiosk/kiosk/editProfile.php:168 modules/kiosk/kiosk/add.php:127
+#: modules/kiosk/kiosk/add.php:131
 msgid "Search by name ..."
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:166 modules/kiosk/kiosk/add.php:128
+#: modules/kiosk/kiosk/editProfile.php:167 modules/kiosk/kiosk/add.php:130
 msgid "Allowed packages"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:182 modules/kiosk/kiosk/add.php:143
+#: modules/kiosk/kiosk/editProfile.php:183 modules/kiosk/kiosk/add.php:145
 msgid "Source"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:201
+#: modules/kiosk/kiosk/editProfile.php:202
 msgid "modify"
 msgstr ""
 
-#: modules/kiosk/kiosk/editProfile.php:201
+#: modules/kiosk/kiosk/editProfile.php:202
 msgid "Modify the profile"
 msgstr ""
 
@@ -170,15 +170,15 @@ msgstr ""
 msgid "Add New Profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:165
+#: modules/kiosk/kiosk/add.php:167
 msgid "Create"
 msgstr "Crea"
 
-#: modules/kiosk/kiosk/add.php:165
+#: modules/kiosk/kiosk/add.php:167
 msgid "Create the profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/add.php:174
+#: modules/kiosk/kiosk/add.php:176
 msgid "The LDAP is not configured correctly. Please check your configuration."
 msgstr ""
 

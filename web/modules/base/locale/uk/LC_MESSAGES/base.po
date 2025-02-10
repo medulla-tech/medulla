@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
-# Yuri Chornoivan <yurchor@ukr.net>, 2023
+# Yuri Chornoivan <yurchor@ukr.net>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 15:28+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +32,8 @@ msgid ""
 "Login failed. Please make sure that you entered the right username and "
 "password. Both fields are case sensitive."
 msgstr ""
+"Не вдалося увійти. Будь ласка, переконайтеся, що вами введено правильне ім'я"
+" користувача і пароль. В обох полях слід враховувати регістр символів."
 
 #: index.php:84
 msgid ""
@@ -41,36 +43,42 @@ msgstr ""
 "Ваш сеанс роботи завершено через перевищення граничної тривалості сеансу між"
 " вебінтерфейсом MMC та агентом MMC."
 
-#: index.php:199
+#: index.php:88
+msgid "You have been successfully logged out."
+msgstr "Ви успішно вийшли з системи"
+
+#: index.php:205
 msgid "Forgot password ?"
 msgstr "Забули пароль?"
 
-#: index.php:208
+#: index.php:214
 msgid "Server"
 msgstr "Сервер"
 
-#: index.php:215
+#: index.php:221
 msgid "Language"
 msgstr "Мова"
 
-#: index.php:221 modules/base/includes/publicFunc.php:318
+#: index.php:227 modules/base/includes/publicFunc.php:318
 #: modules/base/users/ajaxFilter.php:117 modules/base/views/index.tpl.php:78
 msgid "Login"
 msgstr "Реєстраційне ім'я"
 
-#: index.php:227 modules/base/includes/publicFunc.php:333
+#: index.php:233 modules/base/includes/publicFunc.php:333
 #: modules/base/infoPackage.inc.php:433
 msgid "Password"
 msgstr "Пароль"
 
-#: index.php:240
+#: index.php:246
 msgid "Connect"
 msgstr "З'єднатися"
 
-#: index.php:263
+#: index.php:264
 msgid ""
 "Error reading authproviders.ini or authproviders.ini.local config file."
 msgstr ""
+"Помилка під час спроби прочитати файл налаштувань authproviders.ini або "
+"authproviders.ini.local."
 
 #: includes/ErrorHandling.php:78
 msgid "Copied"
@@ -145,11 +153,11 @@ msgstr ""
 "Агент MMC не повідомив номер сеансу. Будь ласка, перевірте, чи встановлено "
 "належну версію агента MMC."
 
-#: includes/xmlrpc.inc.php:390
+#: includes/xmlrpc.inc.php:388
 msgid "unknown error"
 msgstr "невідома помилка"
 
-#: includes/xmlrpc.inc.php:391
+#: includes/xmlrpc.inc.php:389
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -536,11 +544,11 @@ msgstr ""
 "Натисніть тут, щоб дізнатися більше про наші умови передплати підтримки та "
 "супроводу."
 
-#: logout/index.php:48 logout/index.php:55 graph/navbar.inc.php:83
+#: logout/index.php:54 logout/index.php:61 graph/navbar.inc.php:83
 msgid "Logout"
 msgstr "Вийти"
 
-#: logout/index.php:51
+#: logout/index.php:57
 msgid "Your session will be closed"
 msgstr "Ваш сеанс буде закрито"
 
@@ -642,22 +650,25 @@ msgstr "Дистанційне керування"
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:73
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:125
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:108
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:259
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:78
 #: modules/base/includes/computers_list.inc.php:109
 msgid "View deployment details"
 msgstr "Переглянути подробиці щодо розгортання"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:125
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:701
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:719
 msgid "Restart deployment"
 msgstr "Перезапустити розгортання"
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:362
 msgid "Trouble to get the distant plugins"
-msgstr ""
+msgstr "Проблема із отримання списку віддалених додатків"
 
 #: modules/xmppmaster/xmppmaster/machinesList.php:39
 #: modules/glpi/glpi/machinesList.php:39
@@ -686,27 +697,27 @@ msgstr "Комп'ютери поза мережею"
 msgid "Delete deploy"
 msgstr "Вилучити розгорнуте"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:348
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:362
 msgid "cluster list"
 msgstr "список кластерів"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:349
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:363
 msgid "cluster nb ars"
 msgstr "к-ть стовпчиків кл."
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:350
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:364
 msgid "machine"
 msgstr "комп'ютер"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:351
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:365
 msgid "progress"
 msgstr "поступ"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:352
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:366
 msgid "start"
 msgstr "початок"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:353
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:367
 msgid "end"
 msgstr "кінець"
 
@@ -831,6 +842,11 @@ msgstr "Оповіщення"
 msgid "Detail"
 msgstr "Подробиці"
 
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:117
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:295
+msgid "Reschedule Convergence"
+msgstr "Перепланувати збіжність"
+
 #: modules/glpi/glpi/ajaxMachinesList.php:165
 #: modules/glpi/glpi/ajaxMachinesList.php:168
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:73
@@ -946,7 +962,7 @@ msgstr "Розблокувати"
 
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:36
 msgid "Enable for manual update"
-msgstr ""
+msgstr "Увімкніть для оновлення вручну"
 
 #: modules/base/logview/index.php:419
 #: modules/base/logview/logsbackuppc.php:306

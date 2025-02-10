@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 15:27+0100\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://app.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -835,38 +835,31 @@ msgstr ""
 msgid "the entity itself"
 msgstr "объект"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:121
-#, php-format
-msgid ""
-"Boot menu generation is still in progress for the following items : %s. "
-"Please wait or reload the page %shere%s."
-msgstr ""
-
-#: modules/imaging/includes/ajaxcommon.inc.php:127
+#: modules/imaging/includes/ajaxcommon.inc.php:120
 #: modules/imaging/imaging/tabs.php:215
 msgid "The registering in the imaging server has failed."
 msgstr "      ."
 
-#: modules/imaging/includes/ajaxcommon.inc.php:136
+#: modules/imaging/includes/ajaxcommon.inc.php:129
 #, php-format
 msgid ""
 "You have modified the boot menu for the following items : %s. If you are "
 "done please click on \"Generate Menu\" to update the computer boot menu."
 msgstr ""
 
-#: modules/imaging/includes/ajaxcommon.inc.php:142
+#: modules/imaging/includes/ajaxcommon.inc.php:135
 #: modules/imaging/imaging/header.php:38
 msgid "Generate Menu"
 msgstr ""
 
-#: modules/imaging/includes/ajaxcommon.inc.php:147
+#: modules/imaging/includes/ajaxcommon.inc.php:140
 #: modules/imaging/imaging/header.php:43
 msgid ""
 "Click on \"Force Generation\" if you want to force the update of the boot "
 "menu"
 msgstr ""
 
-#: modules/imaging/includes/ajaxcommon.inc.php:153
+#: modules/imaging/includes/ajaxcommon.inc.php:146
 #: modules/imaging/imaging/header.php:46
 msgid "Force Generation"
 msgstr ""
@@ -1247,7 +1240,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin7.php:735
 #: modules/imaging/manage/ajaxFormWin11-uefi.php:691
 #: modules/imaging/manage/ajaxFormWin8.php:825
-#: modules/imaging/manage/ajaxConfiguration.php:186
+#: modules/imaging/manage/ajaxConfiguration.php:196
 #: modules/imaging/manage/bootmenu_edit.php:101
 #: modules/imaging/imaging/bootmenu.php:260
 msgid "Validate"
@@ -1840,7 +1833,7 @@ msgstr ""
 
 #: modules/imaging/manage/master_add.php:71
 #: modules/imaging/manage/master_add.php:75
-#: modules/imaging/manage/save_configuration.php:95
+#: modules/imaging/manage/save_configuration.php:97
 #: modules/imaging/manage/location.php:61
 #: modules/imaging/manage/location.php:65
 #: modules/imaging/manage/service_show_used.php:128
@@ -2051,7 +2044,7 @@ msgstr ""
 msgid "Duplicate"
 msgstr "Дублировать"
 
-#: modules/imaging/manage/save_configuration.php:77
+#: modules/imaging/manage/save_configuration.php:79
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
 msgstr "   <strong>%s</strong> ."
@@ -2568,63 +2561,71 @@ msgstr ""
 msgid "Register template name"
 msgstr ""
 
+#: modules/imaging/manage/ajaxConfiguration.php:100
+msgid "Increment"
+msgstr ""
+
 #: modules/imaging/manage/ajaxConfiguration.php:105
+msgid "Digits"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:115
 msgid "Default menu parameters"
 msgstr "Параметры меню по умолчанию"
 
-#: modules/imaging/manage/ajaxConfiguration.php:109
+#: modules/imaging/manage/ajaxConfiguration.php:119
 #: modules/imaging/imaging/configure.php:44
 msgid "Default menu label"
 msgstr "Ярлык меню по умолчанию"
 
-#: modules/imaging/manage/ajaxConfiguration.php:113
+#: modules/imaging/manage/ajaxConfiguration.php:123
 msgid "Default menu timeout"
 msgstr "Таймаут меню по умолчанию"
 
-#: modules/imaging/manage/ajaxConfiguration.php:122
+#: modules/imaging/manage/ajaxConfiguration.php:132
 msgid "Hide menu"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:127
+#: modules/imaging/manage/ajaxConfiguration.php:137
 #: modules/imaging/imaging/configure.php:71
 msgid "Boot options"
 msgstr "Варианты загрузки"
 
-#: modules/imaging/manage/ajaxConfiguration.php:130
+#: modules/imaging/manage/ajaxConfiguration.php:140
 #: modules/imaging/imaging/configure.php:75
 msgid "Full path to the XPM displayed at boot"
 msgstr "      XPM "
 
-#: modules/imaging/manage/ajaxConfiguration.php:134
+#: modules/imaging/manage/ajaxConfiguration.php:144
 #: modules/imaging/imaging/configure.php:82
 msgid "Message displayed during backup/restoration"
 msgstr ",    /"
 
-#: modules/imaging/manage/ajaxConfiguration.php:138
+#: modules/imaging/manage/ajaxConfiguration.php:148
 msgid "Diskless Dir"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:144
+#: modules/imaging/manage/ajaxConfiguration.php:154
 msgid "Diskless Kernel"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:150
+#: modules/imaging/manage/ajaxConfiguration.php:160
 msgid "Inventories Dir"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:156
+#: modules/imaging/manage/ajaxConfiguration.php:166
 msgid "PXE time Reboot"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:162
+#: modules/imaging/manage/ajaxConfiguration.php:172
 msgid "Diskless Initrd"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:169
+#: modules/imaging/manage/ajaxConfiguration.php:179
 msgid "Tools Dir"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:175
+#: modules/imaging/manage/ajaxConfiguration.php:185
 msgid "Davos Opts"
 msgstr ""
 

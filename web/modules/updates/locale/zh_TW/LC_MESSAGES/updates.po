@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2023
+# Nicolas Lécureuil <neoclust@mageia.org>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 15:27+0100\n"
 "PO-Revision-Date: 2023-12-12 11:56+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2023\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/siveo/teams/72118/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,9 @@ msgstr ""
 
 #: modules/updates/updates/ajaxPendingUpdateByMachine.php:66
 #: modules/updates/updates/pendingUpdateByMachine.php:27
-#: modules/updates/updates/ajaxDetailsByMachines.php:53
+#: modules/updates/updates/ajaxDetailsByMachines.php:125
+#: modules/updates/updates/ajaxDetailsByMachines.php:131
+#: modules/updates/updates/ajaxDetailsByMachines.php:157
 #: modules/updates/infoPackage.inc.php:176
 #: modules/updates/infoPackage.inc.php:179
 msgid "Pending Updates"
@@ -73,24 +75,24 @@ msgstr "狀態"
 
 #: modules/updates/updates/ajaxDeploySpecificUpdate.php:112
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:84
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:71
+#: modules/updates/updates/ajaxUpdatesListWinWhite.php:76
 #: modules/updates/updates/ajaxDetailsByUpdatesGray.php:113
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:113
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:67
+#: modules/updates/updates/ajaxUpdatesListWinBlack.php:70
 msgid "Update name"
 msgstr ""
 
 #: modules/updates/updates/ajaxDeploySpecificUpdate.php:113
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:88
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:73
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:68
+#: modules/updates/updates/ajaxUpdatesListWinWhite.php:79
+#: modules/updates/updates/ajaxUpdatesListWinBlack.php:72
 msgid "Update Id"
 msgstr ""
 
 #: modules/updates/updates/ajaxDeploySpecificUpdate.php:114
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:89
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:74
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:69
+#: modules/updates/updates/ajaxUpdatesListWinWhite.php:80
+#: modules/updates/updates/ajaxUpdatesListWinBlack.php:73
 msgid "Severity"
 msgstr ""
 
@@ -143,31 +145,31 @@ msgstr ""
 msgid "Wrong deployment intervals"
 msgstr ""
 
-#: modules/updates/updates/deployUpdate.php:211
+#: modules/updates/updates/deployUpdate.php:212
 msgid "Schedule update deployment on entity"
 msgstr ""
 
-#: modules/updates/updates/deployUpdate.php:213
+#: modules/updates/updates/deployUpdate.php:215
 msgid "Schedule update deployment on group"
 msgstr ""
 
-#: modules/updates/updates/deployUpdate.php:215
+#: modules/updates/updates/deployUpdate.php:218
 msgid "Schedule update deployment on machine"
 msgstr ""
 
-#: modules/updates/updates/deployUpdate.php:245
+#: modules/updates/updates/deployUpdate.php:264
 msgid "The command must start after"
 msgstr ""
 
-#: modules/updates/updates/deployUpdate.php:257
+#: modules/updates/updates/deployUpdate.php:276
 msgid "The command must stop before"
 msgstr ""
 
-#: modules/updates/updates/deployUpdate.php:267
+#: modules/updates/updates/deployUpdate.php:286
 msgid "Example for lunch and night (24h format): 12-14,20-24,0-8"
 msgstr ""
 
-#: modules/updates/updates/deployUpdate.php:277
+#: modules/updates/updates/deployUpdate.php:296
 #: modules/updates/updates/ajaxDeployAllUpdates.php:52
 msgid "Deployment interval"
 msgstr ""
@@ -186,17 +188,23 @@ msgid "Machine Name"
 msgstr ""
 
 #: modules/updates/updates/ajaxDetailsSpecificUpdate.php:73
-#: modules/updates/updates/ajaxDetailsByMachines.php:199
+#: modules/updates/updates/ajaxDetailsByMachines.php:226
 #: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:46
 msgid "Platform"
 msgstr ""
+
+#: modules/updates/updates/deploySpecificUpdate.php:47
+#: modules/updates/infoPackage.inc.php:28
+#: modules/updates/infoPackage.inc.php:33
+msgid "Updates"
+msgstr "更新"
 
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:33
 #: modules/updates/infoPackage.inc.php:142
 msgid "Unlist update"
 msgstr ""
 
-#: modules/updates/updates/ajaxUpdatesListWinWhite.php:82
+#: modules/updates/updates/ajaxUpdatesListWinWhite.php:88
 msgid "White list (automatic updates)"
 msgstr ""
 
@@ -269,9 +277,9 @@ msgid "Details"
 msgstr ""
 
 #: modules/updates/updates/ajaxDetailsByUpdatesGray.php:116
-#: modules/updates/updates/ajaxDetailsByMachines.php:200
+#: modules/updates/updates/ajaxDetailsByMachines.php:227
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:116
-#: modules/updates/updates/ajaxEntitiesList.php:119
+#: modules/updates/updates/ajaxEntitiesList.php:124
 msgid "Compliance rate"
 msgstr ""
 
@@ -296,7 +304,9 @@ msgid "Updates history for machine %s"
 msgstr ""
 
 #: modules/updates/updates/auditUpdateByMachine.php:27
-#: modules/updates/updates/ajaxDetailsByMachines.php:54
+#: modules/updates/updates/ajaxDetailsByMachines.php:126
+#: modules/updates/updates/ajaxDetailsByMachines.php:132
+#: modules/updates/updates/ajaxDetailsByMachines.php:158
 #: modules/updates/infoPackage.inc.php:183
 #: modules/updates/infoPackage.inc.php:186
 msgid "Updates History"
@@ -325,36 +335,45 @@ msgstr ""
 msgid "<b>Disable</b> update %s (%s) ?"
 msgstr ""
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:51
-#: modules/updates/updates/ajaxDetailsByMachines.php:52
-msgid "View details"
-msgstr "檢視詳請"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:113
+#: modules/updates/updates/ajaxDetailsByMachines.php:109
 #, php-format
 msgid "Computers from group %s"
 msgstr ""
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:119
+#: modules/updates/updates/ajaxDetailsByMachines.php:115
 #, php-format
 msgid "Computers from entity %s"
 msgstr ""
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:197
+#: modules/updates/updates/ajaxDetailsByMachines.php:124
+#: modules/updates/updates/ajaxDetailsByMachines.php:130
+#: modules/updates/updates/ajaxDetailsByMachines.php:156
+msgid "View details"
+msgstr "檢視詳請"
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:224
 msgid "Machine name"
 msgstr ""
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:201
-#: modules/updates/updates/ajaxEntitiesList.php:120
+#: modules/updates/updates/ajaxDetailsByMachines.php:228
+#: modules/updates/updates/ajaxEntitiesList.php:125
 msgid "Missing updates"
 msgstr ""
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:202
+#: modules/updates/updates/ajaxDetailsByMachines.php:229
+msgid "In progress"
+msgstr "進行中"
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:230
 msgid "Installed updates"
 msgstr ""
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:203
+#: modules/updates/updates/ajaxDetailsByMachines.php:231
 msgid "Total updates"
+msgstr ""
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:266
+msgid "Actions are disabled for this machine (MISSING AGENT)"
 msgstr ""
 
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:30
@@ -402,7 +421,7 @@ msgstr ""
 msgid "Unban update"
 msgstr ""
 
-#: modules/updates/updates/ajaxUpdatesListWinBlack.php:78
+#: modules/updates/updates/ajaxUpdatesListWinBlack.php:82
 msgid "Black list (banned updates)"
 msgstr ""
 
@@ -416,33 +435,33 @@ msgstr ""
 msgid "The package %s (%s) hasn't been unbanned."
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:46
+#: modules/updates/updates/ajaxEntitiesList.php:47
 msgid "Details by machines"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:47
+#: modules/updates/updates/ajaxEntitiesList.php:48
 msgid "Details by updates"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:48
 #: modules/updates/updates/ajaxEntitiesList.php:49
+#: modules/updates/updates/ajaxEntitiesList.php:50
 msgid "Deploy all updates"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:50
 #: modules/updates/updates/ajaxEntitiesList.php:51
+#: modules/updates/updates/ajaxEntitiesList.php:52
 msgid "Deploy specific updates"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:115
+#: modules/updates/updates/ajaxEntitiesList.php:120
 msgid "Entity name"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:121
+#: modules/updates/updates/ajaxEntitiesList.php:126
 msgid "Non-compliant machines"
 msgstr ""
 
-#: modules/updates/updates/ajaxEntitiesList.php:122
+#: modules/updates/updates/ajaxEntitiesList.php:127
 msgid "Total machines"
 msgstr ""
 
@@ -486,11 +505,6 @@ msgstr ""
 #: modules/updates/updates/greylistUpdate.php:44
 msgid "Unlist Update"
 msgstr ""
-
-#: modules/updates/infoPackage.inc.php:28
-#: modules/updates/infoPackage.inc.php:33
-msgid "Updates"
-msgstr "更新"
 
 #: modules/updates/infoPackage.inc.php:65
 msgid "Deploy Specific Updates On Entity"

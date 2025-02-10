@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2023
+# Yuri Chornoivan <yurchor@ukr.net>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 15:27+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgid "Remove uploaded files"
 msgstr "Вилучити вивантажені файли"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:48
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:46
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:53
 #: modules/pkgs/includes/actions/action_set_config_file.php:53
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:43
 #: modules/pkgs/includes/actions/actionrestart.php:72
@@ -40,13 +40,13 @@ msgstr "Мітка кроку:"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:62
 #: modules/pkgs/includes/actions/action_loop_question.php:302
-#: modules/pkgs/includes/actions/actionprocessscript.php:346
+#: modules/pkgs/includes/actions/actionprocessscript.php:348
 #: modules/pkgs/includes/actions/action_set_config_file.php:84
 #: modules/pkgs/includes/actions/action_section_update.php:49
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:243
 #: modules/pkgs/includes/actions/actionrestart.php:96
 #: modules/pkgs/includes/actions/action_section_uninstall.php:50
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:510
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:512
 #: modules/pkgs/includes/actions/action_download.php:138
 #: modules/pkgs/includes/actions/action_unzip_file.php:372
 #: modules/pkgs/includes/actions/action_question.php:294
@@ -62,11 +62,11 @@ msgstr "Вилучити"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:63
 #: modules/pkgs/includes/actions/action_loop_question.php:306
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:140
-#: modules/pkgs/includes/actions/actionprocessscript.php:347
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:146
+#: modules/pkgs/includes/actions/actionprocessscript.php:349
 #: modules/pkgs/includes/actions/action_set_config_file.php:89
 #: modules/pkgs/includes/actions/actionrestart.php:97
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:511
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:513
 #: modules/pkgs/includes/actions/action_download.php:139
 #: modules/pkgs/includes/actions/action_unzip_file.php:373
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:58
@@ -82,11 +82,11 @@ msgstr "Параметри"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:97
 msgid "User Postpone Options"
-msgstr ""
+msgstr "Параметри відкладання користувача"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:103
 msgid "Allow the connected user to postpone an action"
-msgstr ""
+msgstr "Дозволити з'єднаному користувачу відкладати дію"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:112
 #: modules/pkgs/includes/actions/actionprocessscript.php:71
@@ -100,19 +100,19 @@ msgstr "Мітка кроку:"
 #: modules/pkgs/includes/actions/action_question.php:127
 #: modules/pkgs/includes/actions/action_notification.php:126
 msgid "Message box title"
-msgstr ""
+msgstr "Заголовок панелі повідомлення"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:124
 #: modules/pkgs/includes/actions/action_question.php:130
 #: modules/pkgs/includes/actions/action_notification.php:129
 msgid "Insert title of message box"
-msgstr ""
+msgstr "Вставити заголовок панелі повідомлення"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:127
 #: modules/pkgs/includes/actions/action_question.php:133
 #: modules/pkgs/includes/actions/action_notification.php:132
 msgid "Define text size for message box title"
-msgstr ""
+msgstr "Визначити розмір тексту для заголовка панелі повідомлення"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:128
 #: modules/pkgs/includes/actions/action_loop_question.php:142
@@ -121,88 +121,92 @@ msgstr ""
 #: modules/pkgs/includes/actions/action_notification.php:133
 #: modules/pkgs/includes/actions/action_notification.php:147
 msgid "Text size"
-msgstr ""
+msgstr "Розмір тексту"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:135
 #: modules/pkgs/includes/actions/action_question.php:141
 msgid "Question"
-msgstr ""
+msgstr "Питання"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:138
 #: modules/pkgs/includes/actions/action_question.php:144
 msgid "Insert question for user"
-msgstr ""
+msgstr "Вставити питання для користувача"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:141
 #: modules/pkgs/includes/actions/action_question.php:147
 msgid "Define text size for question"
-msgstr ""
+msgstr "Визначити розмір тексту для питання"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:152
 #: modules/pkgs/includes/actions/action_question.php:159
 #: modules/pkgs/includes/actions/action_notification.php:158
 msgid "True button text"
-msgstr ""
+msgstr "Текст кнопки «Істина»"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:155
 #: modules/pkgs/includes/actions/action_question.php:162
 #: modules/pkgs/includes/actions/action_notification.php:161
 msgid "Define text to be shown on button returning True"
-msgstr ""
+msgstr "Визначити текст, який слід показати на кнопці, яка повертає «Істина»"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:167
 #: modules/pkgs/includes/actions/action_question.php:174
 msgid "False button text"
-msgstr ""
+msgstr "Текст кнопки «Хиба»"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:170
 #: modules/pkgs/includes/actions/action_question.php:177
 msgid "Define text to be shown on button returning False"
-msgstr ""
+msgstr "Визначити текст, який слід показати на кнопці, яка повертає «Хиба»"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:181
 #: modules/pkgs/includes/actions/action_question.php:191
 msgid "If 'True' go to step"
-msgstr ""
+msgstr "Якщо «Істина», перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:184
 #: modules/pkgs/includes/actions/action_question.php:194
 msgid "Define step label if user response is True"
-msgstr ""
+msgstr "Визначити мітку кнопки, якщо відповіддю користувача є «Істина»"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:195
 msgid "If 'Max Postponements Reached' go to step"
-msgstr ""
+msgstr "Якщо «Досягнути макс. відкладань», перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:198
 msgid "Define step label if the maximum number of postponements reached"
 msgstr ""
+"Визначити мітку кроку, якщо досягнуто максимальної кількості відкладань"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:209
 #: modules/pkgs/includes/actions/action_question.php:224
 msgid "If 'No User' go to step"
-msgstr ""
+msgstr "Якщо «Немає користувача», перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:212
 #: modules/pkgs/includes/actions/action_question.php:227
 msgid "Define step label if no user is connected"
 msgstr ""
+"Визначити мітку кроку, якщо не встановлено з'єднання з жодним користувачем"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:225
 #: modules/pkgs/includes/actions/action_question.php:241
 msgid "If 'Timeout' go to step"
-msgstr ""
+msgstr "Якщо «Перевищено час очікування», перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:228
 #: modules/pkgs/includes/actions/action_question.php:244
 msgid "Define step label if no response is given before the timeout"
 msgstr ""
+"Визначити мітку кроку, якщо до завершення часу очікування не було надано "
+"відповіді"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:238
 #: modules/pkgs/includes/actions/action_question.php:256
 #: modules/pkgs/includes/actions/action_notification.php:172
 msgid "Set maximum time waiting for a response"
-msgstr ""
+msgstr "Встановити максимальний час очікування на відповідь"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:249
 #: modules/pkgs/includes/actions/action_loop_question.php:264
@@ -220,62 +224,63 @@ msgstr "Встановити час очікування (у секундах)"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:276
 msgid "Maximum allowed postponements"
-msgstr ""
+msgstr "Максимальна кількість дозволених відкладань"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:279
 msgid "Define the maximum number of times a user can postpone the question"
 msgstr ""
+"Визначити максимальну кількість відкладань користувачем відповіді на питання"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:288
 msgid "Interval"
-msgstr ""
+msgstr "Інтервал"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:291
 msgid "Define the interval between two questions to the user"
-msgstr ""
+msgstr "Визначити інтервал між двома питаннями користувачеві"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:301
 #: modules/pkgs/includes/actions/action_question.php:293
 #: modules/pkgs/includes/actions/action_kiosknotification.php:165
 #: modules/pkgs/includes/actions/action_notification.php:213
 msgid "Delete this step"
-msgstr ""
+msgstr "Вилучити цей крок"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:305
 #: modules/pkgs/includes/actions/action_question.php:296
 #: modules/pkgs/includes/actions/action_kiosknotification.php:168
 #: modules/pkgs/includes/actions/action_notification.php:216
 msgid "Show additional options for this step"
-msgstr ""
+msgstr "Показати додаткові варіанти для цього кроку"
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:32
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:39
 msgid "End Success"
 msgstr "Кінцевий успіх"
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:66
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:74
 msgid "Delete package"
 msgstr "Вилучити пакунок"
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:108
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:114
 #: modules/pkgs/pkgs/detail.php:230
 msgid "Inventory"
 msgstr "Облік"
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:116
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:121
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:126
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:122
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:127
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:132
 msgid "Forced inventory"
 msgstr "Примусовий облік"
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:117
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:122
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:127
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:123
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:128
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:133
 msgid "No inventory"
 msgstr "Без обліку"
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:118
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:123
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:128
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:124
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:129
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:134
 msgid "Inventory on change"
 msgstr "Облік при зміні"
 
@@ -325,8 +330,8 @@ msgstr "30 перших рядків результату"
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:94
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:322
 #: modules/pkgs/includes/actions/action_unzip_file.php:148
-msgid "Complete results"
-msgstr "Результати повністю"
+msgid "Complete results (limited to 10000 last characters)"
+msgstr "Повні результати (обмежено 10000 останніми символами)"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:160
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:95
@@ -360,25 +365,25 @@ msgstr "30 останніх рядків результату"
 msgid "The last line of result"
 msgstr "Останній рядок результату"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:210
-#: modules/pkgs/includes/actions/actionprocessscript.php:225
+#: modules/pkgs/includes/actions/actionprocessscript.php:212
+#: modules/pkgs/includes/actions/actionprocessscript.php:227
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:145
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:160
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:373
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:388
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:375
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:390
 #: modules/pkgs/includes/actions/action_unzip_file.php:199
 msgid "Return result"
 msgstr "Повернути результат"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:323
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:487
+#: modules/pkgs/includes/actions/actionprocessscript.php:325
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:489
 msgid "On return code, goto "
-msgstr ""
+msgstr "При коді повернення перейти"
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:324
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:488
+#: modules/pkgs/includes/actions/actionprocessscript.php:326
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:490
 msgid "Add goto"
-msgstr ""
+msgstr "Додати перехід"
 
 #: modules/pkgs/includes/actions/action_set_config_file.php:36
 msgid "Set config file parameter"
@@ -543,19 +548,19 @@ msgstr "Кінцева помилка"
 
 #: modules/pkgs/includes/actions/action_question.php:101
 msgid "User Question"
-msgstr ""
+msgstr "Питання користувачеві"
 
 #: modules/pkgs/includes/actions/action_question.php:106
 msgid "Submit a question to the connected user"
-msgstr ""
+msgstr "Поставити з'єднаному користувачеві питання"
 
 #: modules/pkgs/includes/actions/action_question.php:207
 msgid "If 'False' go to step"
-msgstr ""
+msgstr "Якщо «Хиба», перейти до кроку"
 
 #: modules/pkgs/includes/actions/action_question.php:210
 msgid "Define step label if user response is False"
-msgstr ""
+msgstr "Визначити мітку кнопки, якщо відповіддю користувача є «Хиба»"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:45
 msgid "Wait and go to step"
@@ -583,11 +588,11 @@ msgstr "Ваші коментарі до журналу!"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:94
 msgid "Kiosk Notification"
-msgstr ""
+msgstr "Сповіщення кіоска"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:100
 msgid "Send a notification to the kiosk"
-msgstr ""
+msgstr "Надіслати сповіщення кіоску"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:116
 #: modules/pkgs/includes/actions/action_notification.php:140
@@ -596,16 +601,16 @@ msgstr "Повідомлення"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:119
 msgid "Define text for message to be shown in kiosk"
-msgstr ""
+msgstr "Визначити текст повідомлення, яке буде показано у кіоску"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:136
 #: modules/pkgs/includes/actions/action_kiosknotification.php:146
 msgid "Progression (percentage)"
-msgstr ""
+msgstr "Поступ (відсотки)"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:150
 msgid "Define progression percentage to be shown in kiosk"
-msgstr ""
+msgstr "Визначити відсоток поступу для показу у кіоску"
 
 #: modules/pkgs/includes/actions/action_section_install.php:43
 msgid "Install Section"
@@ -625,19 +630,19 @@ msgstr "Змінна середовища"
 
 #: modules/pkgs/includes/actions/action_notification.php:99
 msgid "User Notification"
-msgstr ""
+msgstr "Сповіщення користувача"
 
 #: modules/pkgs/includes/actions/action_notification.php:105
 msgid "Send a notification to the connected user"
-msgstr ""
+msgstr "Надіслати сповіщення з'єднаному користувачу"
 
 #: modules/pkgs/includes/actions/action_notification.php:143
 msgid "Insert message for user"
-msgstr ""
+msgstr "Вставити повідомлення користувачеві"
 
 #: modules/pkgs/includes/actions/action_notification.php:146
 msgid "Define text size for message"
-msgstr ""
+msgstr "Визначити розмір тексту повідомлення"
 
 #: modules/pkgs/includes/query.php:38
 msgid ""
@@ -665,10 +670,10 @@ msgstr "Постачальник"
 msgid "Software"
 msgstr "Програмне забезпечення"
 
-#: modules/pkgs/includes/query.php:88 modules/pkgs/pkgs/add.php:231
+#: modules/pkgs/includes/query.php:88 modules/pkgs/pkgs/add.php:232
 #: modules/pkgs/pkgs/ajaxPackageList.php:292
 #: modules/pkgs/pkgs/ajaxPackageList.php:431 modules/pkgs/pkgs/detail.php:209
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:73
 msgid "Version"
 msgstr "Версія"
 
@@ -720,11 +725,11 @@ msgid "Upload selected files"
 msgstr "Вивантажити позначені файли"
 
 #: modules/pkgs/pkgs/rsync.php:74
-msgid "Relay servers not yet synchronized : "
+msgid "Relay servers not yet synchronized: "
 msgstr "Проміжні сервери, які ще не синхронізовано:"
 
 #: modules/pkgs/pkgs/rsync.php:93
-msgid "Relay servers already synchronized : "
+msgid "Relay servers already synchronized: "
 msgstr "Проміжні сервери, які вже синхронізовано:"
 
 #: modules/pkgs/pkgs/index.php:30 modules/pkgs/pkgs/localSidebar.php:38
@@ -767,10 +772,10 @@ msgid "Rule Name"
 msgstr "Назва правила"
 
 #: modules/pkgs/pkgs/addRule.php:60 modules/pkgs/pkgs/editRule.php:65
-#: modules/pkgs/pkgs/edit.php:257 modules/pkgs/pkgs/add.php:232
+#: modules/pkgs/pkgs/edit.php:257 modules/pkgs/pkgs/add.php:233
 #: modules/pkgs/pkgs/ajaxPackageList.php:291
 #: modules/pkgs/pkgs/ajaxPackageList.php:430 modules/pkgs/pkgs/detail.php:208
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:72
 msgid "Description"
 msgstr "Опис"
 
@@ -815,7 +820,7 @@ msgid "Element in Strings Result"
 msgstr "Елемент у результаті Strings"
 
 #: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
-#: modules/pkgs/pkgs/add.php:386
+#: modules/pkgs/pkgs/add.php:387
 msgid "Add"
 msgstr "Додати"
 
@@ -835,7 +840,7 @@ msgstr "Пакунок"
 msgid "The relays <b>"
 msgstr "Зміни <b>"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:101
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:109
 msgid "Package API temporary directory is empty"
 msgstr "Тимчасовий каталог програмного інтерфейсу пакунка є порожнім"
 
@@ -843,7 +848,7 @@ msgstr "Тимчасовий каталог програмного інтерф�
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
 #: modules/pkgs/pkgs/ajaxPackageList.php:285
 #: modules/pkgs/pkgs/ajaxPackageList.php:427
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:68
 msgid "Package name"
 msgstr "Назва пакунка"
 
@@ -1034,7 +1039,7 @@ msgstr "Мітка пакунка"
 msgid "Package version"
 msgstr "Версія пакунка"
 
-#: modules/pkgs/pkgs/edit.php:264 modules/pkgs/pkgs/add.php:247
+#: modules/pkgs/pkgs/edit.php:264 modules/pkgs/pkgs/add.php:248
 msgid "Command's name : "
 msgstr "Назва програми: "
 
@@ -1042,76 +1047,76 @@ msgstr "Назва програми: "
 msgid "Command : "
 msgstr "Команда:"
 
-#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:252
 msgid "Need a reboot ?"
 msgstr "Потребує перезавантаження?"
 
-#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:257
 msgid "Windows"
 msgstr "Windows"
 
-#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:257
 msgid "Linux"
 msgstr "Linux"
 
-#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:257
 msgid "Mac OS"
 msgstr "Mac OS"
 
-#: modules/pkgs/pkgs/edit.php:316 modules/pkgs/pkgs/add.php:224
+#: modules/pkgs/pkgs/edit.php:316 modules/pkgs/pkgs/add.php:225
 #: modules/pkgs/pkgs/ajaxPackageList.php:288
 msgid "Share"
 msgstr "Спільний"
 
-#: modules/pkgs/pkgs/edit.php:346 modules/pkgs/pkgs/add.php:275
+#: modules/pkgs/pkgs/edit.php:346 modules/pkgs/pkgs/add.php:276
 msgid "Operating System"
 msgstr "Операційна система"
 
-#: modules/pkgs/pkgs/edit.php:371 modules/pkgs/pkgs/add.php:295
+#: modules/pkgs/pkgs/edit.php:371 modules/pkgs/pkgs/add.php:296
 #: modules/pkgs/pkgs/detail.php:223
 msgid "Transfer method"
 msgstr "Спосіб передавання"
 
-#: modules/pkgs/pkgs/edit.php:381 modules/pkgs/pkgs/add.php:301
+#: modules/pkgs/pkgs/edit.php:381 modules/pkgs/pkgs/add.php:302
 #: modules/pkgs/pkgs/detail.php:227
 msgid "bandwidth throttling (ko)"
 msgstr "звуження каналу (кілооктети)"
 
-#: modules/pkgs/pkgs/edit.php:382 modules/pkgs/pkgs/add.php:302
+#: modules/pkgs/pkgs/edit.php:382 modules/pkgs/pkgs/add.php:303
 msgid "<in ko>"
 msgstr "<у ko>"
 
-#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:307
 msgid "high priority"
 msgstr "висока пріоритетність"
 
-#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:307
 msgid "ordinary priority"
 msgstr "звичайна пріоритетність"
 
-#: modules/pkgs/pkgs/edit.php:394 modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/edit.php:394 modules/pkgs/pkgs/add.php:310
 #: modules/pkgs/pkgs/detail.php:229
 msgid "Spooling"
 msgstr "Буферизація"
 
-#: modules/pkgs/pkgs/edit.php:402 modules/pkgs/pkgs/add.php:312
+#: modules/pkgs/pkgs/edit.php:402 modules/pkgs/pkgs/add.php:313
 msgid "Launcher (kiosk)"
 msgstr "Засіб запуску (kiosk)"
 
-#: modules/pkgs/pkgs/edit.php:448 modules/pkgs/pkgs/add.php:321
+#: modules/pkgs/pkgs/edit.php:448 modules/pkgs/pkgs/add.php:322
 #: modules/pkgs/pkgs/detail.php:290
 msgid "Dependencies"
 msgstr "Залежності"
 
-#: modules/pkgs/pkgs/edit.php:458 modules/pkgs/pkgs/add.php:331
+#: modules/pkgs/pkgs/edit.php:458 modules/pkgs/pkgs/add.php:332
 msgid "Added dependencies"
 msgstr "Додані залежності"
 
-#: modules/pkgs/pkgs/edit.php:474 modules/pkgs/pkgs/add.php:347
+#: modules/pkgs/pkgs/edit.php:474 modules/pkgs/pkgs/add.php:348
 msgid "Available dependencies"
 msgstr "Доступні залежності"
 
-#: modules/pkgs/pkgs/edit.php:475 modules/pkgs/pkgs/add.php:348
+#: modules/pkgs/pkgs/edit.php:475 modules/pkgs/pkgs/add.php:349
 msgid "search by name ..."
 msgstr "шукати за назвою…"
 
@@ -1128,7 +1133,7 @@ msgstr "Вилучити файл"
 msgid "Are you sure you want to delete this file?"
 msgstr "Ви справді хочете вилучити цей файл?"
 
-#: modules/pkgs/pkgs/edit.php:628 modules/pkgs/pkgs/add.php:448
+#: modules/pkgs/pkgs/edit.php:628 modules/pkgs/pkgs/add.php:505
 msgid "Accentuated and special chars are not allowed"
 msgstr "Не можна використовувати символи з акцентами або спеціальні символи"
 
@@ -1156,31 +1161,31 @@ msgstr "Вивантажити з цієї сторінки"
 msgid "Make an empty package"
 msgstr "Створити порожній пакунок"
 
-#: modules/pkgs/pkgs/add.php:186
+#: modules/pkgs/pkgs/add.php:187
 msgid "Package source"
 msgstr "Джерело пакунка"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:527
+#: modules/pkgs/pkgs/add.php:188 modules/pkgs/pkgs/add.php:527
 msgid "Files directory"
 msgstr "Каталог файлів"
 
-#: modules/pkgs/pkgs/add.php:190
+#: modules/pkgs/pkgs/add.php:191
 msgid "Package Creation"
 msgstr "Створення пакунка"
 
-#: modules/pkgs/pkgs/add.php:230
+#: modules/pkgs/pkgs/add.php:231
 msgid "Name"
 msgstr "Назва"
 
-#: modules/pkgs/pkgs/add.php:230
+#: modules/pkgs/pkgs/add.php:231
 msgid "<fill_package_name>"
 msgstr "<вкажіть_назву_пакунка>"
 
-#: modules/pkgs/pkgs/add.php:239
+#: modules/pkgs/pkgs/add.php:240
 msgid "Command:"
 msgstr "Команда:"
 
-#: modules/pkgs/pkgs/add.php:240
+#: modules/pkgs/pkgs/add.php:241
 msgid ""
 "Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
 "        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
@@ -1263,7 +1268,7 @@ msgstr "Ліцензії"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:294
 #: modules/pkgs/pkgs/ajaxPackageList.php:433
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:71
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:74
 msgid "Os"
 msgstr "ОС"
 
@@ -1505,15 +1510,15 @@ msgstr "Оновлення Appstream"
 msgid "Associate package"
 msgstr "Пов'язати пакунок"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:82
 msgid "Remove all packages from pending"
 msgstr "Вилучити усі пакунки зі списку запланованого"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:80
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:83
 msgid "Show mirrors"
 msgstr "Показати дзеркала"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:81
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:84
 msgid "Remove packages from pending"
 msgstr "Вилучити пакунки зі списку запланованого"
 

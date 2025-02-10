@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 15:27+0100\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: SPO <spointu@gmail.com>, 2024\n"
 "Language-Team: French (https://app.transifex.com/siveo/teams/72118/fr/)\n"
@@ -997,21 +997,12 @@ msgstr "Serveur d'imaging de l'entité %s"
 msgid "the entity itself"
 msgstr "l'entité elle-même"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:121
-#, php-format
-msgid ""
-"Boot menu generation is still in progress for the following items : %s. "
-"Please wait or reload the page %shere%s."
-msgstr ""
-"La génération du menu de démarrage est en cours pour les éléments suivants :"
-" %s. Merci de patienter ou rechargez la page en cliquant %sici%s."
-
-#: modules/imaging/includes/ajaxcommon.inc.php:127
+#: modules/imaging/includes/ajaxcommon.inc.php:120
 #: modules/imaging/imaging/tabs.php:215
 msgid "The registering in the imaging server has failed."
 msgstr "L'enregistrement dans le serveur d'imaging a échoué."
 
-#: modules/imaging/includes/ajaxcommon.inc.php:136
+#: modules/imaging/includes/ajaxcommon.inc.php:129
 #, php-format
 msgid ""
 "You have modified the boot menu for the following items : %s. If you are "
@@ -1021,12 +1012,12 @@ msgstr ""
 "pas d'autres modifications à faire merci de cliquer sur \"Générer\" pour "
 "finaliser cette modification."
 
-#: modules/imaging/includes/ajaxcommon.inc.php:142
+#: modules/imaging/includes/ajaxcommon.inc.php:135
 #: modules/imaging/imaging/header.php:38
 msgid "Generate Menu"
 msgstr "Générer le menu"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:147
+#: modules/imaging/includes/ajaxcommon.inc.php:140
 #: modules/imaging/imaging/header.php:43
 msgid ""
 "Click on \"Force Generation\" if you want to force the update of the boot "
@@ -1035,7 +1026,7 @@ msgstr ""
 "Cliquez sur \"Forcer la génération\" si vous voulez forcer la mise à jour du"
 " menu de démarrage."
 
-#: modules/imaging/includes/ajaxcommon.inc.php:153
+#: modules/imaging/includes/ajaxcommon.inc.php:146
 #: modules/imaging/imaging/header.php:46
 msgid "Force Generation"
 msgstr "Forcer la génération"
@@ -1420,7 +1411,7 @@ msgstr "Serveur d'imaging"
 #: modules/imaging/manage/ajaxFormWin7.php:735
 #: modules/imaging/manage/ajaxFormWin11-uefi.php:691
 #: modules/imaging/manage/ajaxFormWin8.php:825
-#: modules/imaging/manage/ajaxConfiguration.php:186
+#: modules/imaging/manage/ajaxConfiguration.php:196
 #: modules/imaging/manage/bootmenu_edit.php:101
 #: modules/imaging/imaging/bootmenu.php:260
 msgid "Validate"
@@ -2018,7 +2009,7 @@ msgstr ""
 
 #: modules/imaging/manage/master_add.php:71
 #: modules/imaging/manage/master_add.php:75
-#: modules/imaging/manage/save_configuration.php:95
+#: modules/imaging/manage/save_configuration.php:97
 #: modules/imaging/manage/location.php:61
 #: modules/imaging/manage/location.php:65
 #: modules/imaging/manage/service_show_used.php:128
@@ -2236,7 +2227,7 @@ msgstr "Le service de démarrage existe déjà"
 msgid "Duplicate"
 msgstr "Dupliquer"
 
-#: modules/imaging/manage/save_configuration.php:77
+#: modules/imaging/manage/save_configuration.php:79
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
 msgstr ""
@@ -2776,63 +2767,71 @@ msgstr "Paramètres de Clonezilla pour restaurer les images"
 msgid "Register template name"
 msgstr "Nom du template d'enregistrement"
 
+#: modules/imaging/manage/ajaxConfiguration.php:100
+msgid "Increment"
+msgstr ""
+
 #: modules/imaging/manage/ajaxConfiguration.php:105
+msgid "Digits"
+msgstr ""
+
+#: modules/imaging/manage/ajaxConfiguration.php:115
 msgid "Default menu parameters"
 msgstr "Paramètres du menu par défaut"
 
-#: modules/imaging/manage/ajaxConfiguration.php:109
+#: modules/imaging/manage/ajaxConfiguration.php:119
 #: modules/imaging/imaging/configure.php:44
 msgid "Default menu label"
 msgstr "Libellé du menu par défaut"
 
-#: modules/imaging/manage/ajaxConfiguration.php:113
+#: modules/imaging/manage/ajaxConfiguration.php:123
 msgid "Default menu timeout"
 msgstr "Timeout du menu par défaut"
 
-#: modules/imaging/manage/ajaxConfiguration.php:122
+#: modules/imaging/manage/ajaxConfiguration.php:132
 msgid "Hide menu"
 msgstr "Masquer le menu"
 
-#: modules/imaging/manage/ajaxConfiguration.php:127
+#: modules/imaging/manage/ajaxConfiguration.php:137
 #: modules/imaging/imaging/configure.php:71
 msgid "Boot options"
 msgstr "Options de démarrage"
 
-#: modules/imaging/manage/ajaxConfiguration.php:130
+#: modules/imaging/manage/ajaxConfiguration.php:140
 #: modules/imaging/imaging/configure.php:75
 msgid "Full path to the XPM displayed at boot"
 msgstr "Chemin complet vers le fichier XPM affiché au démarrage"
 
-#: modules/imaging/manage/ajaxConfiguration.php:134
+#: modules/imaging/manage/ajaxConfiguration.php:144
 #: modules/imaging/imaging/configure.php:82
 msgid "Message displayed during backup/restoration"
 msgstr "Message affiché pendant les opérations de sauvegarde/restauration"
 
-#: modules/imaging/manage/ajaxConfiguration.php:138
+#: modules/imaging/manage/ajaxConfiguration.php:148
 msgid "Diskless Dir"
 msgstr "Répertoire Diskless"
 
-#: modules/imaging/manage/ajaxConfiguration.php:144
+#: modules/imaging/manage/ajaxConfiguration.php:154
 msgid "Diskless Kernel"
 msgstr "Noyau Diskless"
 
-#: modules/imaging/manage/ajaxConfiguration.php:150
+#: modules/imaging/manage/ajaxConfiguration.php:160
 msgid "Inventories Dir"
 msgstr "Répertoire Inventories"
 
-#: modules/imaging/manage/ajaxConfiguration.php:156
+#: modules/imaging/manage/ajaxConfiguration.php:166
 msgid "PXE time Reboot"
 msgstr ""
 
-#: modules/imaging/manage/ajaxConfiguration.php:162
+#: modules/imaging/manage/ajaxConfiguration.php:172
 msgid "Diskless Initrd"
 msgstr "Initrd Diskless"
 
-#: modules/imaging/manage/ajaxConfiguration.php:169
+#: modules/imaging/manage/ajaxConfiguration.php:179
 msgid "Tools Dir"
 msgstr "Répertoire Tools"
 
-#: modules/imaging/manage/ajaxConfiguration.php:175
+#: modules/imaging/manage/ajaxConfiguration.php:185
 msgid "Davos Opts"
 msgstr "Options Davos"
 
