@@ -85,12 +85,17 @@ function xmlrpc_get_count_machine_with_update($kb, $uuid, $list)
 {
     return xmlCall("updates.get_count_machine_with_update", [$kb, $uuid, $list]);
 }
-//JFKJFK
-//
-function xmlrpc_get_os_update_major_stats($kb, $uuid, $list)
+
+function xmlrpc_get_os_update_major_stats()
 {
     return xmlCall("updates.get_os_update_major_stats", []);
 }
+
+function xmlrpc_get_os_xmpp_update_major_stats()
+{
+    return xmlCall("updates.get_os_xmpp_update_major_stats", []);
+}
+
 function xmlrpc_get_count_machine_as_not_upd($updateid)
 {
     return xmlCall("updates.get_count_machine_as_not_upd", [$updateid]);

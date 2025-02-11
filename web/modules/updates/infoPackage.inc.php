@@ -44,6 +44,15 @@ $page->setFile("modules/updates/updates/ajaxEntitiesList.php");
 $page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
+$page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("updatesListMajorWin", _T('Manage Updates Major Lists', 'updates'));
+$page->setFile("modules/updates/updates/updatesListMajorWin.php");
+$submod->addPage($page);
+
 $page = new Page("detailsByMachines", _T('Details by Machines', 'updates'));
 $page->setFile("modules/updates/updates/detailsByMachines.php");
 $submod->addPage($page);

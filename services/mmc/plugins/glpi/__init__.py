@@ -324,6 +324,10 @@ def getMachinesMac(uuid):
         return ""
 
 
+def get_os_xmpp_update_major_stats( presence=False):
+    return xmlrpcCleanup(Glpi().get_os_xmpp_update_major_stats(presence))
+
+
 def get_machine_for_hostname(strlisthostnale, filter="", start=0, end=0):
     return xmlrpcCleanup(
         Glpi().get_machine_for_hostname(strlisthostnale, filter, start, end)
