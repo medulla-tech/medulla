@@ -2208,6 +2208,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         regwindokey,
                         value=glpiinformation["data"]["reg"][regwindokey][0],
                     )
+        # type au lieu de model pour etre conforme and model remplace manufactured
+        # pour avoir meme information que glpi
         return self.updateGLPI_information_machine(
             idmachine,
             "UUID%s" % glpiinformation["data"]["uuidglpicomputer"][0],
@@ -2215,8 +2217,8 @@ class XmppMasterDatabase(DatabaseHelper):
             glpiinformation["data"]["owner_firstname"][0],
             glpiinformation["data"]["owner_realname"][0],
             glpiinformation["data"]["owner"][0],
+            glpiinformation["data"]["type"][0],
             glpiinformation["data"]["model"][0],
-            glpiinformation["data"]["manufacturer"][0],
             entity_id_xmpp,
             location_id_xmpp,
         )
@@ -14261,66 +14263,66 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             )
 
         sql = """Select SQL_CALC_FOUND_ROWS
-    lgm.id,
-    lgm.name,
-    m.platform
-from
-    up_history uh
-join
-    update_data ud on ud.updateid = uh.update_id
-join
-    deploy d on uh.id_deploy=d.id
-join
-    machines m on m.id = uh.id_machine
-join
-    local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
-join
-    local_glpi_filters lgf on lgf.id = lgm.id
-where
-    uh.update_id="%s"
-and
-    d.state="DEPLOYMENT SUCCESS"
-and
-    delete_date is not NULL and delete_date != ""
-and
-    lgm.is_deleted =0 and lgm.is_template = 0
-and lgm.entities_id = %s
-%s %s
-union
-select
-    lgm.id,
-    lgm.name,
-    m.platform
-from
-    local_glpi_machines lgm
-join
-    machines m on m.uuid_inventorymachine = concat(lgm.id)
-join
-    local_glpi_filters lgf on lgf.id = lgm.id
-join
-    local_glpi_items_softwareversions lgisv on lgisv.items_id = lgm.id and lgisv.itemtype="Computer"
-join
-    local_glpi_softwareversions lgsv on lgsv.id = lgisv.softwareversions_id
-join
-    local_glpi_softwares lgs on lgs.id = lgsv.softwares_id
-where
-    lgsv.name LIKE '%%%s%%'
-AND
-    (lgsv.comment LIKE '%%Update%%' OR COALESCE(lgsv.comment, '') = '')
-%s %s
-group by lgm.id
-order by name
-%s
-""" % (
-            updateid,
-            uuid.replace("UUID", ""),
-            filter_on,
-            sfilter,
-            kb,
-            filter_on,
-            sfilter,
-            filterlimit,
-        )
+                    lgm.id,
+                    lgm.name,
+                    m.platform
+                from
+                    up_history uh
+                join
+                    update_data ud on ud.updateid = uh.update_id
+                join
+                    deploy d on uh.id_deploy=d.id
+                join
+                    machines m on m.id = uh.id_machine
+                join
+                    local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
+                join
+                    local_glpi_filters lgf on lgf.id = lgm.id
+                where
+                    uh.update_id="%s"
+                and
+                    d.state="DEPLOYMENT SUCCESS"
+                and
+                    delete_date is not NULL and delete_date != ""
+                and
+                    lgm.is_deleted =0 and lgm.is_template = 0
+                and lgm.entities_id = %s
+                %s %s
+                union
+                select
+                    lgm.id,
+                    lgm.name,
+                    m.platform
+                from
+                    local_glpi_machines lgm
+                join
+                    machines m on m.uuid_inventorymachine = concat(lgm.id)
+                join
+                    local_glpi_filters lgf on lgf.id = lgm.id
+                join
+                    local_glpi_items_softwareversions lgisv on lgisv.items_id = lgm.id and lgisv.itemtype="Computer"
+                join
+                    local_glpi_softwareversions lgsv on lgsv.id = lgisv.softwareversions_id
+                join
+                    local_glpi_softwares lgs on lgs.id = lgsv.softwares_id
+                where
+                    lgsv.name LIKE '%%%s%%'
+                AND
+                    (lgsv.comment LIKE '%%Update%%' OR COALESCE(lgsv.comment, '') = '')
+                %s %s
+                group by lgm.id
+                order by name
+                %s
+                """ % (
+                            updateid,
+                            uuid.replace("UUID", ""),
+                            filter_on,
+                            sfilter,
+                            kb,
+                            filter_on,
+                            sfilter,
+                            filterlimit,
+                        )
 
         datas = session.execute(sql)
         count = session.execute("SELECT FOUND_ROWS();")
@@ -15699,3 +15701,109 @@ order by name
             .first()
         )
         return query
+
+
+    @DatabaseHelper._sessionm
+    def get_os_xmpp_update_major_stats(self, session, presence=False):
+        """
+        Récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données.
+            presence (bool, optional): Filtrer uniquement les machines activées si True. Par défaut, True.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation.
+        """
+        try:
+            # Dictionnaire final des résultats
+            cols=["W10to10", "W10to11", "W11to11"]
+            results = {"entity": {}}
+
+            # Condition de filtre sur xma.enabled
+            presence_filter = "AND xma.enabled = 1" if presence else ""
+
+            # Requête pour le nombre total de machines par entité
+            total_os_sql = f'''
+                SELECT
+                    xe.name AS entity_name,
+                    xe.complete_name AS complete_name,
+                    COUNT(*) AS count
+                FROM
+                    xmppmaster.machines xma
+                INNER JOIN xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+                WHERE
+                    xma.platform LIKE '%Windows%'
+                    {presence_filter}
+                GROUP BY xe.id;
+            '''
+
+
+            total_os_result = session.execute(total_os_sql).fetchall()
+            for row in total_os_result:
+                results["entity"].setdefault(row.complete_name, {"count" :  int(row.count)})
+
+            # Requête pour les statistiques par entité
+            entity_sql = f'''
+                        SELECT
+                            xe.name AS entity_name,
+                            xe.complete_name AS complete_name,
+                            COUNT(*) AS nbwin,
+                            CASE
+                                WHEN
+                                    xma.platform LIKE '%Windows 10%'
+                                        AND xma.platform NOT LIKE '%[22H2]'
+                                THEN
+                                    'W10to10'
+                                WHEN
+                                    xma.platform LIKE '%Windows 10%'
+                                        AND xma.platform LIKE '%[22H2]'
+                                THEN
+                                    'W10to11'
+                                WHEN
+                                    xma.platform LIKE '%Windows 11%'
+                                        AND xma.platform NOT LIKE '%[24H2]'
+                                THEN
+                                    'W11to11'
+                                WHEN
+                                    xma.platform LIKE '%Windows%'
+                                        AND xma.platform NOT REGEXP '\[[0-9]{2}H[0-9]\]$'
+                                THEN
+                                    'winVers_missing'
+                                ELSE 'not_win'
+                            END AS os
+                        FROM
+                            xmppmaster.machines xma
+                                INNER JOIN
+                            xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+                        WHERE
+                            xma.platform LIKE '%Windows%'
+                            {presence_filter}
+                        GROUP BY xe.id , os
+                        ORDER BY xe.complete_name , os;
+            '''
+
+            entity_result = session.execute(entity_sql).fetchall()
+            for row in entity_result:
+                 # initialisation
+                results["entity"].setdefault(row.complete_name, {})
+                results["entity"][row.complete_name]["name"]=row.entity_name
+                results["entity"][row.complete_name][row.os ]=int(row.nbwin)
+              # Calcul de la conformité
+            for entity, data in results["entity"].items():
+                total=results["entity"][entity]["count"]
+                non_conforme = sum(data.get(key, 0) for key in cols)
+                results["entity"][entity]["conformite"] = round(((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2)
+
+            # Copier les clés existantes avant d'itérer
+            existing_entities = list(results["entity"].keys())
+            for entity in existing_entities:  # Itérer sur la copie des clés
+                for col in cols:
+                    if col not in results["entity"][entity]:
+                        results["entity"][entity][col] = 0
+            return results
+
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            return {}

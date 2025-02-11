@@ -27,29 +27,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 
 global $conf;
-$maxperpage = $conf["global"]["maxperpage"];
-$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
-$start = isset($_GET['start']) ? $_GET['start'] : 0;
-$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
-
-$_entities = getUserLocations();
-$filtered_entities = [];
-foreach($_entities as $entity) {
-    if(preg_match("#".$filter."#i", $entity['name']) || preg_match("#".$filter."#i", $entity['completename'])) {
-        $filtered_entities[] = $entity;
-    }
-}
-$count = count($filtered_entities);
-$entities = array_slice($filtered_entities, $start, $maxperpage, false);
-$source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
-$entitycompliances = xmlrpc_get_conformity_update_by_entity($entities, $source);
-
-$detailsByMach = new ActionItem(_T("Details by machines", "updates"), "detailsByMachines", "auditbymachine", "", "updates", "updates");
-$detailsByUpd = new ActionItem(_T("Details by updates", "updates"), "detailsByUpdates", "auditbyupdate", "", "updates", "updates");
-$deployAll = new ActionItem(_T("Deploy all updates", "updates"), "deployAllUpdates", "updateall", "", "updates", "updates");
-$emptyDeployAll = new EmptyActionItem1(_T("Deploy all updates", "updates"), "deployAllUpdates", "updateallg", "", "updates", "updates");
-$deploySpecific = new ActionItem(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateone", "", "updates", "updates");
-$emptyDeploySpecific = new EmptyActionItem1(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateoneg", "", "updates", "updates");
 
 $params = [];
 $actiondetailsByMachs = [];
@@ -58,39 +35,97 @@ $actiondeployAlls = [];
 $actiondeploySpecifics = [];
 $entityNames = [];
 $complRates = [];
+$conformite = [];
 $totalMachine = [];
 $nbupdate = [];
+$ids_entity = []; // id des ligne de la list
 $identity = array();
 
-foreach ($entitycompliances as $entitycompliance) {
-    $identity[$entitycompliance['entity']] = array(
-        "conformite" => $entitycompliance['conformite'],
-        "totalmach" => $entitycompliance['totalmach'],
-        "nbupdate" => $entitycompliance['nbupdate'],
-        "nbmachines" => $entitycompliance['nbmachines'],
-        "entity" => $entitycompliance['entity']);
+
+
+// definition des actions
+$detailsByMach = new ActionItem(_T("Details by machines", "updates"), "detailsByMachines", "auditbymachine", "", "updates", "updates");
+$detailsByUpd = new ActionItem(_T("Details by updates", "updates"), "detailsByUpdates", "auditbyupdate", "", "updates", "updates");
+$deployAll = new ActionItem(_T("Deploy all updates", "updates"), "deployAllUpdates", "updateall", "", "updates", "updates");
+$emptyDeployAll = new EmptyActionItem1(_T("Deploy all updates", "updates"), "deployAllUpdates", "updateallg", "", "updates", "updates");
+$deploySpecific = new ActionItem(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateone", "", "updates", "updates");
+$emptyDeploySpecific = new EmptyActionItem1(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateoneg", "", "updates", "updates");
+$texte_help = _T("%s updates for %s machines in the %s entity" , "updates");
+
+
+$maxperpage = $conf["global"]["maxperpage"];
+$filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
+$start = isset($_GET['start']) ? $_GET['start'] : 0;
+$end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
+// Récupérer les emplacements de l'utilisateur
+$_entities = getUserLocations();
+
+// Filtrer les entités en fonction d'un motif de recherche
+$filtered_entities = [];
+foreach ($_entities as $entity) {
+    if (preg_match("#" . $filter . "#i", $entity['name']) || preg_match("#" . $filter . "#i", $entity['completename'])) {
+        $filtered_entities[] = $entity;
+    }
 }
 
-foreach ($entities as $entity) {
-    $nbmachines = 0;
-    $id_entity = intval(substr($entity["uuid"], 4));
+// Compter le nombre d'entités filtrées
+$count = count($filtered_entities);
+
+// Paginer les entités filtrées pour afficher uniquement un sous-ensemble
+$entities = array_slice($filtered_entities, $start, $maxperpage, false);
+
+// Déterminer la source à partir des paramètres GET ou utiliser une valeur par défaut
+$source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
+
+// Récupérer les mises à jour de conformité pour les entités paginées
+$entitycompliances = xmlrpc_get_conformity_update_by_entity($entities, $source);
+
+// Tableau pour stocker le résultat fusionné
+$merged_array = [];
+
+// Cette boucle parcourt chaque entité dans le tableau $filtered_entities.
+// Pour chaque entité, elle extrait l'UUID, le transforme, et vérifie s'il existe une correspondance dans le tableau $entitycompliances.
+// Si une correspondance est trouvée, les données sont fusionnées. Sinon, des valeurs par défaut sont utilisées pour compléter les informations manquantes.
+foreach ($filtered_entities as $entity) {
+    // Extraire l'UUID et le transformer
+    $uuid = $entity['uuid'];
+    $transformed_uuid = intval(substr($uuid, 4));
+
+    // Trouver l'élément correspondant dans $entitycompliances
+    if (isset($entitycompliances[$uuid])) {
+        $compliance = $entitycompliances[$uuid];
+        // Fusionner les données
+        $merged_array[] = array_merge($entity, $compliance);
+    } else {
+        $missing_entity = array(
+            "entity" => $transformed_uuid,
+            "nbmachines" => 0,
+            "nbupdate" => 0,
+            "totalmach" => 0,
+            "conformite" => 100
+        );
+        $merged_array[] = array_merge($entity, $missing_entity);
+    }
+}
+// Cette boucle extraitdepuis $merged_array les information pour creer la OptimizedListInfos Conformité des entités
+foreach ($merged_array as $index_tab => $entitycompliance) {
     $actiondetailsByMachs[] = $detailsByMach;
     $actiondetailsByUpds[] = $detailsByUpd;
-    $entityNames[] = $entity["completename"];
-    $params[] = array(
-        'entity' => $entity['uuid'],
-        'completename' => $entity['completename'],
-        'source' => $source
-    );
-    $color = colorconf(100);
-    if (isset($identity[$id_entity])) {
-        $conformite = intval($identity[$id_entity]['conformite']);
-        $color = colorconf($conformite);
-        $totalmach = intval($identity[$id_entity]['totalmach']);
-        $nbupdateentity = intval($identity[$id_entity]['nbupdate']);
-        $nbmachines = intval($identity[$id_entity]['nbmachines']);
 
-        if($conformite == 100) {
+    $nbupdate[] = $entitycompliance['nbupdate'] ;
+    $entityNames[] =$entitycompliance['completename'] ;
+    // $conformite[] =$entitycompliance['conformite'] ;
+    $complRates[] = (string) new medulla_progressbar_static($entitycompliance['conformite'],
+                                                        "",
+                                                         sprintf($texte_help ,
+                                                                 $entitycompliance['nbupdate'] ,
+                                                                 $entitycompliance['nbmachines'],
+                                                                 $entitycompliance['name']  ));
+    $nbMachines[] =$entitycompliance['nbmachines'] ;
+    $totalMachine[] =$entitycompliance['totalmach'] ;
+    $ids_entity[] = str_replace(" ", "-", "id".$entitycompliance['entity']."-".$entitycompliance['name']);
+    // action suivant conformite
+    if($entitycompliance['conformite'] == 100) {
             $actiondeployAlls[] = $emptyDeployAll;
             $actiondeploySpecifics[] = $emptyDeploySpecific;
 
@@ -98,23 +133,13 @@ foreach ($entities as $entity) {
             $actiondeployAlls[] = $deployAll;
             $actiondeploySpecifics[] = $deploySpecific;
         }
-    } else {
-        $conformite = "100";
-        $totalmach = 0;
-        $nbupdateentity = 0;
-        $actiondeployAlls[] = $emptyDeployAll;
-        $actiondeploySpecifics[] = $emptyDeploySpecific;
-    }
-    $complRates[] = "<div class='progress' style='width: ".$conformite."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$conformite."% </div>";
-    $totalMachine[] = $totalmach;
-    $nbupdate[] = $nbupdateentity ;
-    $nbMachines[] = $nbmachines;
-}
 
-// Avoiding the CSS selector (tr id) to start with a number
-$ids_entity = [];
-foreach($entityNames as $name_entity) {
-    $ids_entity[] = 'e_'.$name_entity;
+    // pour chaque action on passe les parametres
+    $params[] = array(
+        'entity' => $entitycompliance['uuid'],// $transformed_uuid, //
+        'completename' => $entitycompliance['completename'],
+        'source' => $source
+    );
 }
 
 $n = new OptimizedListInfos($entityNames, _T("Entity name", "updates"));
@@ -137,3 +162,4 @@ $n->addActionItemArray($actiondeploySpecifics);
 $n->start = 0;
 $n->end = $count;
 $n->display();
+?>
