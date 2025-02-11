@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * file : xmppmaster/xmppmaster/index.php
+ * file : xmppmaster/xmppmaster/convergence.php
  */
 require("graph/navbar.inc.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
@@ -36,14 +36,12 @@ $delete = isset($_GET['postaction'])?true:false;
 if ($delete) {
     delete_command($_GET['cmd_id']);
 }
-
-$p = new PageGenerator(_T("My Convergence [".$_SESSION['login']."]", 'xmppmaster'));
+$p = new PageGenerator(_T("My teams convergence" . " [" .$_SESSION['login'] . "]", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 $refresh = new RefreshButton();
 $refresh->display();
-
 print "<br/><br/><br/>";
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxconvergence"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1', 'previous'=>'convergence'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
