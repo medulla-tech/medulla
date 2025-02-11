@@ -36,7 +36,7 @@ $delete = isset($_GET['postaction'])?true:false;
 if ($delete) {
     delete_command($_GET['cmd_id']);
 }
-$p = new PageGenerator(_T("My teams convergence [".$_SESSION['login']."]", 'xmppmaster'));
+$p = new PageGenerator(_T("My teams convergence" . " [" . $_SESSION['login'] . "]", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 

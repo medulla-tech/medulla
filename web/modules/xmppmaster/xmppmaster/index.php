@@ -39,7 +39,7 @@ if ($delete) {
     delete_command($_GET['cmd_id']);
 }
 
-$p = new PageGenerator(_T("My Tasks [".$_SESSION['login']."]", 'xmppmaster'));
+$p = new PageGenerator(_T("My Tasks" . " [" . $_SESSION['login'] . "]", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
