@@ -6178,6 +6178,49 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         session.close()
 
+    def get_profiles_location(self, location, start=0, limit=-1, filter=""):
+
+        session = create_session(self.db)
+
+        limit_str = ""
+        if limit != -1:
+            limit_str = "limit %s, %s"%(start, limit)
+
+        filter_str =""
+        if filter != "":
+
+            filter_str = "AND (Profile.id like '%%%s%%' or Profile.name like '%%%s%%' or Profile.description like '%%%s%%')"%(filter, filter, filter)
+        sql = """SELECT
+    Profile.id,
+    Profile.name,
+    Profile.description
+from Profile
+join ImagingServer ims on ims.id = Profile.fk_imagingserver
+join Entity e on e.id=ims.fk_entity
+where e.uuid = '%s' %s
+ORDER BY Profile.name
+%s"""%(location, filter_str, limit_str)
+
+        sql_count = """select count(p.id) from Profile p join ImagingServer ims on ims.id =
+p.fk_imagingserver join Entity e on e.id = ims.fk_entity where e.uuid='%s'"""%(location)
+
+        query = session.execute(sql)
+        ret_count = session.execute(sql_count)
+
+        count = ret_count.first()[0]
+        session.flush()
+        session.close()
+
+        result = {"total":count,"datas":[]}
+
+        for element in query:
+            result["datas"].append({
+                "id":element[0],
+                "name": element[1],
+                "description":element[2]
+            })
+        return result
+
     def getPostInstalls(self, master_uuid, target_uuid):
         session = create_session(self.db)
 
@@ -6208,6 +6251,332 @@ order by pisii.order"""%(target_uuid, master_uuid)
                 "value":row[3] if row[3] is not None else ""
             })
         return result
+
+    def get_all_postinstall_for_profile(self, location, profile_id, start=0, limit=-1, filter = ""):
+        session = create_session(self.db)
+
+        result = []
+
+        if location == "":
+            return result
+        sql_all = """select
+    SQL_CALC_FOUND_ROWS
+    pis.id,
+    pis.default_name,
+    pis.default_desc
+from PostInstallScript pis
+
+left join PostInstallScriptOnImagingServer pisois on pisois.fk_post_install_script = pis.id
+where pisois.fk_imaging_server is NULL
+union
+select
+    pis.id,
+    pis.default_name,
+    pis.default_desc
+from PostInstallScriptOnImagingServer pisois
+join ImagingServer ims on ims.id = pisois.fk_imaging_server
+left join PostInstallScript pis on pisois.fk_post_install_script = pis.id
+join Entity e on ims.fk_entity = e.id
+where e.uuid = "%s";
+ """%(location)
+
+        sql_selected = """select
+    SQL_CALC_FOUND_ROWS
+    pis.id,
+    pisip.order
+from PostInstallInProfile pisip
+join PostInstallScript pis on pisip.fk_post_install_script = pis.id
+where pisip.fk_profile=%s"""%(profile_id)
+
+        datas = session.execute(sql_all)
+        selection = session.execute(sql_selected)
+
+        selected = {}
+
+        for element in selection:
+            selected["UUID%s"%element[0]] = element[1]
+
+        for element in datas:
+            result.append({
+                "id":element[0],
+                "name":element[1] if element[1] is not None else "",
+                "description":element[2] if element[2] is not None else "",
+                "order": selected["UUID%s"%element[0]] if "UUID%s"%element[0] in selected else -1
+            })
+
+        session.close()
+        return result
+
+    def update_postinstalls_in_profile(self, profileId, name, description, orders):
+        session = create_session(self.db)
+        _orders = {}
+
+        # Clean all the -1 values from the postinstalls orders list
+        for id in orders:
+            if int(orders[id]) != -1:
+                _orders[id] = int(orders[id])
+
+        try:
+            sql_update = """UPDATE Profile set name="%s", description="%s" where id=%s"""%(name, description, profileId)
+            session.execute(sql_update)
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status": False, "msg": "Error when updating profile attributes"}
+
+        try:
+            sql_delete = """DELETE FROM PostInstallInProfile WHERE fk_profile = %s"""%profileId
+            session.execute(sql_delete)
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status": False, "msg": "Error when cleanning profile's posts installs"}
+
+        try:
+            for script in _orders:
+
+                sql_insert = """INSERT INTO PostInstallInProfile (fk_profile, fk_post_install_script, `order`) VALUES(%s, %s, %s)"""%(profileId, script, _orders[script])
+                session.execute(sql_insert)
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status": False, "msg": "Error when inserting post installs in profile"}
+
+        session.close()
+        return {"status": True, "msg": ""}
+
+    def add_postinstalls_in_profile(self, location, name, description, orders):
+        session = create_session(self.db)
+
+        # Clean all the -1 values from the postinstalls orders list
+        _orders = {}
+        for id in orders:
+            if int(orders[id]) != -1:
+                _orders[id] = int(orders[id])
+
+        try:
+            sql_imaging_server = """SELECT ImagingServer.id from ImagingServer
+
+join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%(location)
+            imaging_id = session.execute(sql_imaging_server).first()[0]
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status": False, "msg": "Error when selecting imagingServer id"}
+
+        try:
+            sql_profile = """INSERT INTO Profile(fk_imagingserver, name, description) VALUES (%s, "%s", "%s")"""%(imaging_id, name, description)
+            query_profile = session.execute(sql_profile)
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status": False, "msg": "Error when inserting new profile"}
+        try:
+            sql_profile_id = "select id from Profile order by id DESC limit 1"
+
+            profile_id = session.execute(sql_profile_id).first()[0]
+            logging.getLogger().error
+
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status": False, "msg": "Error when selecting last inserted profile"}
+
+        try:
+            for script in _orders:
+                sql_insert = """INSERT INTO PostInstallInProfile (fk_profile, fk_post_install_script, `order`) VALUES(%s, %s, %s)"""%(profile_id, script, _orders[script])
+                session.execute(sql_insert)
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status": False, "msg": "Error when inserting post installs in profile"}
+        session.close()
+        return {"status": True, "msg": ""}
+
+    def delete_profile(self, id):
+        session = create_session(self.db)
+
+        # delete the profile
+        # Possibility to use delete on cascade property to delete everything with this first deletion
+        try:
+            sql_profile = """DELETE FROM Profile where id = %s"""%id
+            session.execute(sql_profile)
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status":False, "msg": "Problem during the profile deletion"}
+
+        try:
+            sql_postinstalls = """DELETE FROM PostInstallInProfile where fk_profile = %s"""%id
+            session.execute(sql_postinstalls)
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status":False, "msg": "Problem during the deletion of the postinstalls associated to the profile"}
+
+        try:
+            sql_menu = """DELETE FROM ProfileInMenu where fk_profile = %s"""%id
+            session.execute(sql_menu)
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status":False, "msg": "Problem during the deletion of the profile associated to menus"}
+
+        session.close()
+        return {"status":True, "msg": ""}
+
+    def get_profile_in_menu(self, menuitem_id):
+        session = create_session(self.db)
+        result = []
+        pim = []
+        datas = []
+        datas_inmenu = []
+
+        menuitem_id = menuitem_id.replace("UUID", "") if menuitem_id.startswith("UUID") else menuitem_id
+
+        try:
+            sql_profile = """select
+
+    p.id,
+    p.fk_imagingserver,
+    p.name,
+    p.description
+from Profile p
+where p.fk_imagingserver = (select
+
+    distinct(ims.id)
+from ImagingServer ims
+join ImageOnImagingServer iois on iois.fk_imaging_server = ims.id
+join Image i on iois.fk_image = i.id
+join ImageInMenu iim on iim.fk_image = i.id
+join MenuItem mi on iim.fk_menuitem = mi.id
+where mi.id = %s);"""%(menuitem_id)
+
+            datas = session.execute(sql_profile)
+        except Exception as e:
+            result = []
+        try:
+            sql_in_menu = """select
+    pim.fk_profile
+from ProfileInMenu pim where fk_menuitem = %s"""%menuitem_id
+
+            datas_inmenu = session.execute(sql_in_menu)
+        except Exception as e:
+            datas_inmenu = []
+
+        for elem in datas_inmenu:
+            pim.append(elem[0])
+
+        for element in datas:
+                result.append({
+                    "id":element[0],
+                    "fk_imagingserver": element[1],
+                    "name": element[2] if element[2] is not None else "",
+                    "description": element[3] if element[3] is not None else "",
+                    "in_menu": 1 if element[0] in pim else 0
+                })
+        session.close()
+        return result
+
+    def update_profiles_in_menu(self, menuitem_id, profiles=[]):
+        session = create_session(self.db)
+
+        if menuitem_id.startswith("UUID"):
+            menuitem_id = menuitem_id.replace("UUID", "")
+        try:
+            sql_delete = """delete from ProfileInMenu where fk_menuitem = %s"""%menuitem_id
+            session.execute(sql_delete)
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status": False, "msg": "Error while deleting Profiles associated to MenuItem"}
+
+        try:
+            for id in profiles:
+                sql_insert = """INSERT INTO ProfileInMenu (fk_menuitem, fk_profile) values (%s, %s)"""%(menuitem_id, id)
+                session.execute(sql_insert)
+                session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status": False, "msg": "Error while associating Profile to MenuItem"}
+        session.close()
+        return {"status":True, "msg":""}
+
+    def get_all_postinstall_for_menu(self, menuitem_id):
+        session = create_session(self.db)
+        datas = []
+        datas_in_menu = []
+        in_menu = []
+        result = []
+
+        menuitem_id = menuitem_id.replace("UUID", "") if menuitem_id.startswith("UUID") else menuitem_id
+
+        try:
+            sql_all = """select
+    SQL_CALC_FOUND_ROWS
+    pis.id,
+    pis.default_name,
+    pis.default_desc,
+    pisois.fk_imaging_server
+from PostInstallScript pis
+
+left join PostInstallScriptOnImagingServer pisois on pisois.fk_post_install_script = pis.id
+where pisois.fk_imaging_server is NULL or pisois.fk_imaging_server = (select
+    distinct(ims.id)
+from ImagingServer ims
+join Entity e on ims.fk_entity = e.id
+join Target t on t.fk_entity=e.id
+join Menu m on m.id = t.fk_menu
+join MenuItem mi on mi.fk_menu = m.id
+where mi.id = %s)"""%menuitem_id
+
+            datas = session.execute(sql_all)
+        except Exception as e:
+            logging.getLogger().error(e)
+            return []
+
+        try:
+            sql_in_menu = """select
+    piim.fk_post_install_script
+from PostInstallInMenu piim
+where piim.fk_menuitem = %s"""%menuitem_id
+            datas_in_menu = session.execute(sql_in_menu)
+        except Exception as e:
+            datas_in_menu = []
+
+        for elem in datas_in_menu:
+            in_menu.append(elem[0])
+
+        for element in datas:
+            result.append({
+                "id":element[0],
+                "name": element[1],
+                "description":element[2],
+                "in_menu": 1 if element[0] in in_menu else 0
+            })
+        return result
+
+    def update_postinstalls_in_menu(self, menuitem_id, postinstalls=[]):
+        session = create_session(self.db)
+
+        menuitem_id = menuitem_id.replace("UUID", "") if menuitem_id.startswith("UUID") else menuitem_id
+
+        try:
+            sql_delete_old = """DELETE FROM PostInstallInMenu where fk_menuitem = %s"""%menuitem_id
+            session.execute(sql_delete_old)
+            session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status":False, "msg":"Error during deletion of old associations"}
+
+        try:
+            for id in postinstalls:
+                sql_insert_new = """INSERT INTO PostInstallInMenu (fk_menuitem, fk_post_install_script) values (%s, %s)"""%(menuitem_id, id)
+
+                session.execute(sql_insert_new)
+                session.flush()
+        except Exception as e:
+            logging.getLogger().error(e)
+            return {"status":False, "msg":"Error during inssertion of new associations"}
+        session.close()
+
+        return {"status":True, "msg":""}
 
 def id2uuid(id):
     return "UUID%d" % id
