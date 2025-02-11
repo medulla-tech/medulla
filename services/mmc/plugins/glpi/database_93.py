@@ -5331,7 +5331,7 @@ class Glpi93(DyngroupDatabaseHelper):
                     "license_number": (
                         ret.license_number if ret.license_number is not None else ""
                     ),
-                    "licenseid": ret.licenseid if ret.licenseid is not None else "",
+                    "license_id": ret.license_id if ret.license_id is not None else "",
                     "operatingsystemkernelversions_id": (
                         ret.operatingsystemkernelversions_id
                         if ret.operatingsystemkernelversions_id is not None
