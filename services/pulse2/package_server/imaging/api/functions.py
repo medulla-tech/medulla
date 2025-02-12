@@ -1751,3 +1751,17 @@ class Imaging(object, metaclass=SingletonN):
         args = (master_uuid, target_uuid)
         d = client.callRemote(func, *args)
         return d
+
+    def getPostInstall(self, postinstall_id):
+        client = self._getXMLRPCClient()
+        func = "imaging.getPostInstall"
+        args = (postinstall_id,)
+        d = client.callRemote(func, *args)
+        return d
+
+    def getPostInstallsFromProfile(self, profile_id):
+        client = self._getXMLRPCClient()
+        func = "imaging.getPostInstallsFromProfile"
+        args = (profile_id,)
+        d = client.callRemote(func, *args)
+        return d

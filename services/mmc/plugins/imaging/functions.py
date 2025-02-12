@@ -4128,6 +4128,12 @@ class ImagingRpcProxy(RpcProxyI):
     def getPostInstalls(self, master_uuid, target_uuid):
         return ImagingDatabase().getPostInstalls(master_uuid, target_uuid)
 
+    def getPostInstall(self, postinstall_id):
+        return ImagingDatabase().getPostInstall(postinstall_id)
+
+    def getPostInstallsFromProfile(self, profile_id):
+        return ImagingDatabase().getPostInstallsFromProfile(profile_id)
+
     def update_postinstalls_in_profile(self, profileId, name, description="", orders=[]):
         return ImagingDatabase().update_postinstalls_in_profile(profileId, name, description, orders)
 

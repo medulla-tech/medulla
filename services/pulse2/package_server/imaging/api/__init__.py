@@ -156,3 +156,9 @@ class ImagingApi(MyXmlrpc):
 
     def xmlrpc_getPostInstalls(self, master_uuid, target_uuid):
         return self.api.getPostInstalls(master_uuid, target_uuid)
+
+    def xmlrpc_getPostInstall(self, postinstall_id):
+        return self.api.getPostInstall(postinstall_id)
+
+    def xmlrpc_getPostInstallsFromProfile(self, profile_id):
+        return self.api.getPostInstallsFromProfile(profile_id)
