@@ -421,6 +421,9 @@ $timeout = (!empty($menu[0]) && !empty($menu[0]['timeout'])) ? $menu[0]['timeout
 $timeoutMs = $timeout * 1000;
 $debug_ipxe .= "# items:
 ";
+
+$i = 0;
+$virtuals = [];
 foreach ($menu as $item) {
     if (empty($item['bootService_name']) && empty($item['name'])) {
         continue;
@@ -428,6 +431,16 @@ foreach ($menu as $item) {
     if ($item['type'] == 'service') {
         $debug_ipxe .= "#    - $item[bootService_name] $item[bootService_desc] - $item[type]";
     } elseif ($item['type'] == 'image') {
+        // HERE ADD THE VIRTUALS
+        $profiles_query = $db["imaging"]->prepare("SELECT p.id,p.name, 'profile' as type from ProfileInMenu pim join Profile p on pim.fk_profile = p.id where fk_menuitem = :itemMenuId");
+        $profiles_query->execute(["itemMenuId"=>$item["id"]]);
+        $profiles = $profiles_query->fetchAll(PDO::FETCH_ASSOC);
+
+        $postinstalls_query = $db["imaging"]->prepare("SELECT pis.id, pis.default_name as name, 'postinstall' as type from PostInstallInMenu piim join PostInstallScript pis on piim.fk_post_install_script = pis.id where fk_menuitem = :itemMenuId");
+        $postinstalls_query->execute(["itemMenuId"=>$item["id"]]);
+        $postinstalls = $postinstalls_query->fetchAll(PDO::FETCH_ASSOC);
+
+        $virtuals[$item["id"]] = array_merge($profiles, $postinstalls);
         $debug_ipxe .= "#    - $item[name] $item[desc] - $item[type]";
     }
 
@@ -438,6 +451,14 @@ foreach ($menu as $item) {
         $debug_ipxe .= "
 ";
     }
+
+    if(!empty($virtuals[$item["id"]])){
+        foreach($virtuals[$item["id"]] as $virtual){
+            $debug_ipxe .= "#    - $item[name] - $virtual[type] - $virtual[name]
+";
+        }
+    }
+    $i++;
 }
 
 // error_log('call with params: srv:'.$srv.', mac: '.$mac.', default: '.$default.', uuid: '.$uuid);
@@ -507,11 +528,20 @@ item --gap -- -------------------------------------
         }
 
         if ($item['type'] == 'service') {
-            $ipxe .= "item " . mb_convert_encoding($item['bootService_name'], 'UTF-8', 'UTF-8') . " " . mb_convert_encoding($item['bootService_desc'], 'UTF-8', 'UTF-8') . "
+            $encodedName = mb_convert_encoding($item['bootService_name'], 'UTF-8', 'UTF-8');
+            $ipxe .= "item " .$encodedName. " ".$encodedName."
 ";
         } elseif ($item['type'] == 'image') {
-            $ipxe .= "item " . str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')) . " " . mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8') . "
+            $encodedName = str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8'));
+            $ipxe .= "item " . $encodedName . " " . $encodedName . "
 ";
+            if(!empty($virtuals[$item['id']])){
+                foreach($virtuals[$item['id']] as $virtual){
+                    $encodedName = str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')).'-'.$virtual['type'].'-'.str_replace(" ", "-", mb_convert_encoding($virtual["name"], 'UTF-8', 'UTF-8'));
+                    $ipxe .= "item ".$encodedName.' '.$encodedName."
+";
+                }
+            }
         }
 
         if ($item["default_item"] == 1) {
@@ -530,6 +560,16 @@ kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot || goto MENU
 ";
+            foreach($virtuals[$item['id']] as $virtual){
+                $encodedName = str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')).'-'.$virtual['type'].'-'.str_replace(" ", "-", mb_convert_encoding($virtual["name"], 'UTF-8', 'UTF-8'));
+                $itemValues .= ":".$encodedName."
+set url_path http://\${next-server}/downloads/davos/
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} davos_action=RESTORE_IMAGE $virtual[type]=$virtual[id] image_uuid=$item[uuid] initrd=initrd.img
+kernel \${url_path}vmlinuz \${kernel_args}
+initrd \${url_path}initrd.img
+boot || goto MENU
+";
+            }
         }
     }
 

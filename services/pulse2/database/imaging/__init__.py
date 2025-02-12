@@ -6226,8 +6226,7 @@ p.fk_imagingserver join Entity e on e.id = ims.fk_entity where e.uuid='%s'"""%(l
     pis.id,
     pis.default_name,
     pis.default_desc,
-    pis.value,
-    pisii.order
+    pis.value
 from PostInstallScript pis
 join PostInstallScriptInImage pisii on pisii.fk_post_install_script = pis.id
 join Image i on i.id = pisii.fk_image
@@ -6238,7 +6237,12 @@ join Target t on t.fk_menu = m.id
 where t.uuid = "%s" and i.uuid= "%s"
 order by pisii.order"""%(target_uuid, master_uuid)
 
-        datas = session.execute(sql)
+        try:
+            datas = session.execute(sql)
+        except Exception as e:
+            session.close()
+            return []
+
         for row in datas:
             result.append({
                 "id":row[0],
@@ -6246,6 +6250,63 @@ order by pisii.order"""%(target_uuid, master_uuid)
                 "description": row[2] if row[2] is not None else "",
                 "value":row[3] if row[3] is not None else ""
             })
+        session.close()
+        return result
+
+    def getPostInstall(self, postinstall_id):
+        session = create_session(self.db)
+        result = []
+        sql = """SELECT
+    pis.id,
+    pis.default_name,
+    pis.default_desc,
+    pis.value
+from PostInstallScript pis
+where pis.id = %s"""%postinstall_id
+
+        try:
+            datas = session.execute(sql)
+        except Exception as e:
+            session.close()
+            return []
+
+        for row in datas:
+            result.append({
+                "id":row[0],
+                "name":row[1] if row[1] is not None else "",
+                "description": row[2] if row[2] is not None else "",
+                "value":row[3] if row[3] is not None else ""
+            })
+        session.close()
+        return result
+
+    def getPostInstallsFromProfile(self, profile_id):
+        session = create_session(self.db)
+        result = []
+        sql = """SELECT
+    pis.id,
+    pis.default_name,
+    pis.default_desc,
+    pis.value,
+from PostInstallInProfile piip
+join PostInstallScript pis on piip.fk_post_install_script = pis.id
+where piip.fk_profile=%s
+order by piip.order"""%profile_id
+
+        try:
+            datas = session.execute(sql)
+        except Exception as e:
+            session.close()
+            return []
+
+        for row in datas:
+            result.append({
+                "id":row[0],
+                "name":row[1] if row[1] is not None else "",
+                "description": row[2] if row[2] is not None else "",
+                "value":row[3] if row[3] is not None else ""
+            })
+        session.close()
         return result
 
     def get_all_postinstall_for_profile(self, location, profile_id, start=0, limit=-1, filter = ""):
@@ -6317,6 +6378,7 @@ where pisip.fk_profile=%s"""%(profile_id)
             session.execute(sql_update)
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status": False, "msg": "Error when updating profile attributes"}
 
         try:
@@ -6324,6 +6386,7 @@ where pisip.fk_profile=%s"""%(profile_id)
             session.execute(sql_delete)
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status": False, "msg": "Error when cleanning profile's posts installs"}
 
         try:
@@ -6334,6 +6397,7 @@ where pisip.fk_profile=%s"""%(profile_id)
             session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status": False, "msg": "Error when inserting post installs in profile"}
 
         session.close()
@@ -6355,6 +6419,7 @@ join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%
             imaging_id = session.execute(sql_imaging_server).first()[0]
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status": False, "msg": "Error when selecting imagingServer id"}
 
         try:
@@ -6363,15 +6428,17 @@ join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%
             session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status": False, "msg": "Error when inserting new profile"}
+
         try:
             sql_profile_id = "select id from Profile order by id DESC limit 1"
-
             profile_id = session.execute(sql_profile_id).first()[0]
             logging.getLogger().error
 
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status": False, "msg": "Error when selecting last inserted profile"}
 
         try:
@@ -6381,6 +6448,7 @@ join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%
             session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status": False, "msg": "Error when inserting post installs in profile"}
         session.close()
         return {"status": True, "msg": ""}
@@ -6396,6 +6464,7 @@ join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%
             session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status":False, "msg": "Problem during the profile deletion"}
 
         try:
@@ -6404,6 +6473,7 @@ join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%
             session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status":False, "msg": "Problem during the deletion of the postinstalls associated to the profile"}
 
         try:
@@ -6412,6 +6482,7 @@ join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%
             session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status":False, "msg": "Problem during the deletion of the profile associated to menus"}
 
         session.close()
@@ -6428,14 +6499,12 @@ join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%
 
         try:
             sql_profile = """select
-
     p.id,
     p.fk_imagingserver,
     p.name,
     p.description
 from Profile p
 where p.fk_imagingserver = (select
-
     distinct(ims.id)
 from ImagingServer ims
 join ImageOnImagingServer iois on iois.fk_imaging_server = ims.id
@@ -6481,6 +6550,7 @@ from ProfileInMenu pim where fk_menuitem = %s"""%menuitem_id
             session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status": False, "msg": "Error while deleting Profiles associated to MenuItem"}
 
         try:
@@ -6490,6 +6560,7 @@ from ProfileInMenu pim where fk_menuitem = %s"""%menuitem_id
                 session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status": False, "msg": "Error while associating Profile to MenuItem"}
         session.close()
         return {"status":True, "msg":""}
@@ -6525,6 +6596,7 @@ where mi.id = %s)"""%menuitem_id
             datas = session.execute(sql_all)
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return []
 
         try:
@@ -6559,6 +6631,7 @@ where piim.fk_menuitem = %s"""%menuitem_id
             session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status":False, "msg":"Error during deletion of old associations"}
 
         try:
@@ -6569,6 +6642,7 @@ where piim.fk_menuitem = %s"""%menuitem_id
                 session.flush()
         except Exception as e:
             logging.getLogger().error(e)
+            session.close()
             return {"status":False, "msg":"Error during inssertion of new associations"}
         session.close()
 
