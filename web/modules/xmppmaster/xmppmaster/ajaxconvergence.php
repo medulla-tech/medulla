@@ -53,6 +53,7 @@ $arraytitlename = array();
 $arraystate = array();
 $params = array();
 $logs   = array();
+$edit = array();
 $startdeploy = array();
 $endcmd = array();
 $startcmd = array();
@@ -100,6 +101,9 @@ $arraydeploy['tabdeploy']['startcmd'] = $startcmd;
 
 $previous = isset($_GET['previous']) ? $_GET['previous'] : null;
 
+$filter = "";
+$start = "0";
+$maxperpage = "10";
 
 $actionParams = array();
 foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
@@ -113,29 +117,89 @@ foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
         "xmppmaster"
     );
 
-    $reloads[] = new ActionItem(
-        _("Reschedule Convergence"),
-        "rescheduleconvergence",
-        "reload",
-        "",
-        "xmppmaster",
-        "xmppmaster"
+    $edit[] = new ActionItem(
+        _T("Convergence", "msc"),
+        "convergence",
+        "edit",
+        "msc",
+        "base",
+        "computers"
     );
 
+    // Title cleaning to obtain the name of the package
+    $line = $arraydeploy['tabdeploy']['title'][$index] ?? '';
+    $lineWithoutPrefix = preg_replace('/^Convergence on\s*/i', '', $line);
+    // Delete date and time
+    $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $lineWithoutPrefix);
+    $titleClean = trim($lineWithoutDateTime);
+
+    // PID recovery corresponding to the title cleaned
+    $path = xmlrpc_get_pkg_path($titleClean); // New Function
+    $pid = $path ? ltrim($path, '/') : '';
+
+    $parentId = xmlrpc_get_convergence_parent_group_id($arraydeploy['tabdeploy']['group_uuid'][$index]);
+
+    // Get the status of the convergence
+    $status = xmlrpc_getConvergenceStatusByCommandId($command_id); // New Function
+    $rawStatus = $status['/package_api_get1'][$pid];
+
+    switch ($rawStatus) {
+        case 1:
+            $actionConvergenceText = _T('Active', 'msc');
+            $statusparam = 1; // Actif
+            $reloads[] = new ActionItem(
+                _("Reschedule Convergence"),
+                "rescheduleconvergence",
+                "reload",
+                "convergenceg",
+                "xmppmaster",
+                "xmppmaster"
+            );
+            break;
+        case 0:
+            $actionConvergenceText = _T('Inactive', 'msc');
+            $statusparam = 2; // Inactif
+            $reloads[] = new EmptyActionItem1(
+                _("Reschedule Convergence"),
+                "rescheduleconvergence",
+                "reloadg",
+                "convergenceg",
+                "xmppmaster",
+                "xmppmaster"
+            );
+            break;
+        default:
+            $statusparam = 0; // Not available
+            $actionConvergenceText = _T('Not available', 'msc');
+            break;
+    }
+
     $actionParams[] = array(
-        "cmd_id" => $command_id,
-        "gid"    => $arraydeploy['tabdeploy']['group_uuid'][$index],
-        "convergence" => '1',
-        "previous" => $previous,
+        "actionconvergenceint"  => $statusparam,
+        "actionconvergence"     => $actionConvergenceText,
+        "cmd_id"                => $command_id,
+        "convergence"           => 1,
+        "editConvergence"       => $statusparam,
+        "papi"                  => '',
+        "from"                  => "base|computers|groupmsctabs|tablogs",
+        "gid"                   => $parentId,
+        "name"                  => $titleClean,
+        "pid"                   => $pid,
+        "previous"              => $previous,
     );
-    $machineDetails = json_decode($arraydeploy['tabdeploy']['machine_details_json'][$index], true);
-    if (!empty($machineDetails)) {
-        foreach ($machineDetails as $details) {
-            $host = $details['host'] ?? 'Unknown';
-            $state = $details['state'] ?? 'Unknown';
+
+    $machineDetails = $arraydeploy['tabdeploy']['machine_details_json'][$index] ?? null;
+    if ($machineDetails) {
+        $machineDetails = json_decode($machineDetails, true);
+        if (!empty($machineDetails)) {
+            foreach ($machineDetails as $details) {
+                $host = $details['host'] ?? 'Unknown';
+                $state = $details['state'] ?? 'Unknown';
+            }
         }
     }
 }
+
 
 for ($i = 0; $i < safeCount($arraydeploy['tabdeploy']['start']); $i++) {
     $param = array();
@@ -155,7 +219,7 @@ for ($i = 0; $i < safeCount($arraydeploy['tabdeploy']['start']); $i++) {
 $lastcommandid = get_array_last_commands_on_cmd_id_start_end($arraydeploy['tabdeploy']['command']);
 $statarray = xmlrpc_getarraystatbycmd($arraydeploy['tabdeploy']['command']);
 $convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
-$groupname = getInfosNameGroup($arraydeploy['tabdeploy']['group_uuid']);
+$groupname = getDisplayGroupName($arraydeploy['tabdeploy']['group_uuid']); // New Function
 $index = 0;
 
 foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
@@ -233,7 +297,7 @@ foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
         $arraystate[] = "<span style='background-color:{$color};'>{$progressrate}%</span>";
     }
 
-    $namegrp = $groupname[$groupid]['name'] ?? _T("This group doesn't exist", "xmppmaster");
+    $namegrp = $groupname[$groupid] ?? _T("This group doesn't exist", "xmppmaster");
     $arrayname[] = "<span style='text-decoration: underline;'><img style='position:relative;top: 5px;' src='img/other/machinegroup.svg' width='25' height='25' /> {$namegrp}</span>";
 
     if ($convergence[$arraydeploy['tabdeploy']['command'][$index]] != 0) {
@@ -264,6 +328,16 @@ if (isset($arraynotdeploy)) {
             "xmppmaster"
         );
         $logs[] = $logAction;
+
+        $editAction = new ActionItem(
+            _T("Convergence", "msc"),
+            "convergence",
+            "edit",
+            "msc",
+            "base",
+            "computers"
+        );
+        $edit[] = $editAction;
 
         $arraytitlename[] = '<img style="position:relative;top:5px;" src="img/other/package.svg" width="25" height="25" /> ' . $deploy['package_name'];
 
@@ -325,6 +399,7 @@ $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchPar
 $n->setParamInfo($actionParams);
 
 $n->addActionItemArray($logs);
+$n->addActionItemArray($edit);
 $n->addActionItemArray($reloads);
 
 $n->start = 0;

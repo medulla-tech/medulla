@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * file msc/convergence.php
  */
 
 require('modules/msc/includes/utilities.php');
@@ -28,119 +29,102 @@ require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
 require_once('modules/dyngroup/includes/dyngroup.php');
-$from = $_GET['from'];
-$path =  explode('|', $from);
-$module = $path[0];
-$submod = $path[1];
-$page = $path[2];
-$tab = $path[3];
 
-$params = array();
-
-$name = $_GET['name'];
-$version = $_GET['version'];
-$hostname = $_GET['hostname'];
-
-if (!empty($_GET['uuid'])) {
-    $uuid = $_GET['uuid'];
-} else {
-    $uuid = null;
+function getParam($key, $default = '') {
+    return isset($_GET[$key]) ? $_GET[$key] : $default;
 }
 
-if (!empty($_GET['gid'])) {
-    $gid = $_GET['gid'];
-} else {
-    $gid = null;
-}
+$from = getParam('from');
+$path = explode('|', $from);
+$module  = isset($path[0]) ? $path[0] : '';
+$submod  = isset($path[1]) ? $path[1] : '';
+$page    = isset($path[2]) ? $path[2] : '';
+$tab     = isset($path[3]) ? $path[3] : '';
 
-$pid = $_GET['pid'];
-$papi =  $_GET["papi"];
 $p_api = new ServerAPI();
-$p_api->fromURI($papi);
+$p_api->fromURI(getParam('papi'));
 
-$cible = $hostname;
-
-if ($gid) {
-    $group = new Group($_GET['gid'], true);
+$cible = getParam('hostname');
+if (getParam('gid')) {
+    $group = new Group(getParam('gid'), true);
     $cible = $group->getName();
 }
-$params["actionconvergenceint"] = $_GET['actionconvergenceint'];
-$params["actionconvergence"] = $_GET['actionconvergence'];
-$params["papi"] = $papi;
-$params["name"] = $hostname;
-$params["hostname"] = $hostname;
-$params["uuid"] = $uuid;
-$params["gid"] = $gid;
-$params["from"] = $from;
-$params["pid"] = $pid;
-$params["create_directory"] = 'on';
-$params["next_connection_delay"] = web_def_delay();
-$params["max_connection_attempt"] = web_def_attempts();
-$params["papi"] = $papi;
 
-if ($_GET['editConvergence']) {
+$params = array(
+    "actionconvergenceint"   => getParam('actionconvergenceint'),
+    "actionconvergence"      => getParam('actionconvergence'),
+    "papi"                   => getParam('papi'),
+    "name"                   => getParam('hostname'),
+    "hostname"               => getParam('hostname'),
+    "uuid"                   => getParam('uuid', null),
+    "gid"                    => getParam('gid', null),
+    "from"                   => $from,
+    "pid"                    => getParam('pid'),
+    "create_directory"       => 'on',
+    "next_connection_delay"  => web_def_delay(),
+    "max_connection_attempt" => web_def_attempts(),
+);
+
+if (getParam('editConvergence')) {
     $ServerAPI = new ServerAPI();
-    $ServerAPI->fromURI($papi);
-    $cmd_id = xmlrpc_get_convergence_command_id($gid, $pid);
+    $ServerAPI->fromURI(getParam('papi'));
+
+    $cmd_id          = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
     $command_details = command_detail($cmd_id);
-    $command_phases = xmlrpc_get_convergence_phases($gid, $pid);
+    $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
 
-    $params["ltitle"] = $command_details['title'];
-    $params["maxbw"] = $command_details['maxbw'] / 1024;
-    $params["copy_mode"] = $command_details['copy_mode'];
+    $params["ltitle"]               = $command_details['title'];
+    $params["maxbw"]                = $command_details['maxbw'] / 1024;
+    $params["copy_mode"]            = $command_details['copy_mode'];
     $params["deployment_intervals"] = $command_details['deployment_intervals'];
-    $params["parameters"] = $command_details['parameters'];
-    $params["editConvergence"] = True;
-    $params["active"] = (xmlrpc_is_convergence_active($gid, $pid)) ? 'on' : '';
+    $params["parameters"]           = $command_details['parameters'];
+    $params["editConvergence"]      = true;
+    $params["actionconvergenceint"] = getParam('actionconvergenceint');
+    $params["actionconvergence"]    = getParam('actionconvergence');
+    $params["active"]               = xmlrpc_is_convergence_active(getParam('gid', null), getParam('pid')) ? 'on' : 'inactive';
 
-    // phases
-    foreach(array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'do_inventory', 'do_halt') as $key) {
-        if ($command_phases) { // $command_phases is False with old convergence implementation (without phases stored in Convergence DB)
+    foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'do_inventory', 'do_halt') as $key) {
+        if ($command_phases) {
             if ($key == 'do_halt') {
-                $params['issue_halt_to_done'] = (in_array('done', $command_phases['issue_halt_to'])) ? 'on' : '';
-            }
-            else {
+                $params['issue_halt_to_done'] = in_array('done', $command_phases['issue_halt_to']) ? 'on' : '';
+            } else {
                 $params[$key] = $command_phases[$key];
             }
-        }
-        else {
+        } else {
             if ($key == 'do_halt') {
                 $params['issue_halt_to_done'] = ($command_details[$key] == 'enable') ? 'on' : '';
-            }
-            else {
+            } else {
                 $params[$key] = ($command_details[$key] == 'enable') ? 'on' : '';
             }
         }
     }
 }
 else {
-    $params["ltitle"] = _T('Convergence on ') . $name;
-    $params["start_script"] = 'on';
-    $params["clean_on_success"] = 'on';
-    $params["do_reboot"] = '';
-    $params["do_wol"] = web_def_awake() == 1 ? 'on' : '';
-    $params["do_inventory"] = web_def_inventory() == 1 ? 'on' : '';
-    $params["maxbw"] = web_def_maxbw();
-    $params["copy_mode"] = web_def_mode();
+    $params["ltitle"]               = _T('Convergence on ') . getParam('name');
+    $params["start_script"]         = 'on';
+    $params["clean_on_success"]     = 'on';
+    $params["do_reboot"]            = '';
+    $params["do_wol"]               = (web_def_awake() == 1) ? 'on' : '';
+    $params["do_inventory"]         = (web_def_inventory() == 1) ? 'on' : '';
+    $params["maxbw"]                = web_def_maxbw();
+    $params["copy_mode"]            = web_def_mode();
     $params["deployment_intervals"] = web_def_deployment_intervals();
-    $params["active"] = 'off';
+    $params["active"]               = 'off';
 
     $halt = web_def_issue_halt_to();
     foreach ($halt as $h) {
-        $params["issue_halt_to_".$h] = 'on';
+        $params["issue_halt_to_" . $h] = 'on';
     }
 }
+
 $prefix = '';
-if (strlen($_POST["gid"])) {
-        $prefix = 'group';
+if (!empty($_POST["gid"]) && strlen($_POST["gid"])) {
+    $prefix = 'group';
 }
+$params['tab']       = $prefix . 'tablaunch';
+$params['badvanced'] = true;
+$params['convergence'] = true;
 
-$params['tab'] = $prefix.'tablaunch';
-$params['badvanced'] = True;
-
-$params['convergence'] = True;
-
- header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
+header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
 exit;
-
 ?>

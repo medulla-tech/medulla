@@ -246,6 +246,60 @@ function xmlrpc_addlogincommand(
                                                         $params));
 }
 
+function xmlrpc_update_login_command(
+    $login,
+    $commandid,
+    $grpid = '',
+    $nb_machine_in_grp = '',
+    $instructions_nb_machine_for_exec = '',
+    $instructions_datetime_for_exec = '',
+    $parameterspackage = '',
+    $rebootrequired = 0,
+    $shutdownrequired = 0,
+    $limit_rate_ko = 0,
+    $syncthing = 0,
+    $params = array()
+) {
+
+    if($rebootrequired != "0") {
+        $rebootrequired = 1;
+    } else {
+        $rebootrequired = 0;
+    }
+    if($shutdownrequired != "0") {
+        $shutdownrequired = 1;
+    } else {
+        $shutdownrequired = 0;
+    }
+    return xmlCall("xmppmaster.update_login_command", array( $login,
+                                                        $commandid,
+                                                        $grpid,
+                                                        $nb_machine_in_grp,
+                                                        $instructions_nb_machine_for_exec,
+                                                        $instructions_datetime_for_exec,
+                                                        $parameterspackage,
+                                                        $rebootrequired,
+                                                        $shutdownrequired,
+                                                        $limit_rate_ko,
+                                                        $syncthing,
+                                                        $params));
+}
+
+function xmlrpc_update_msc_command(
+    $login,
+    $commandid,
+    $bandwidth = 0,
+    $params = array()
+) {
+    return xmlCall("msc.update_msc_command", array(
+        $login,
+        $commandid,
+        $bandwidth,
+        $params
+    ));
+}
+
+
 function xmlrpc_loginbycommand($commandid)
 {
     return xmlCall("xmppmaster.loginbycommand", array( $commandid));
@@ -734,6 +788,11 @@ function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage)
 function xmlrpc_xmppGetAllPackages($filter, $start, $end)
 {
     return xmlCall("xmppmaster.xmppGetAllPackages", array($_SESSION['login'], $filter, $start, $end));
+}
+
+function xmlrpc_get_pkg_path($pkgName)
+{
+    return xmlCall("xmppmaster.get_pkg_path", array($_SESSION['login'], $pkgName));
 }
 
 function xmpp_getPackageDetail($pid)
