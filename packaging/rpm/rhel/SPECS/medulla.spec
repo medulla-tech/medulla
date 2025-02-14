@@ -1405,6 +1405,8 @@ cp %{buildroot}%{_sysconfdir}/mmc/apache/mmc.conf %{buildroot}%_webappconfdir/mm
 mkdir -p %buildroot%_prefix/lib/systemd/system/
 cp services/systemd/mmc-agent.service %buildroot%_prefix/lib/systemd/system/
 
+cp ./agent/conf/agent/authproviders.ini.in %buildroot%_sysconfdir/mmc/authproviders.ini
+
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' | xargs rm -fv
 rm -fv %buildroot%_sysconfdir/init.d/pulse2-cm
