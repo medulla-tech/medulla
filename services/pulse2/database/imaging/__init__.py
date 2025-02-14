@@ -35,7 +35,7 @@ from sqlalchemy import (
     ForeignKeyConstraint,
     not_,
 )
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm import create_session, mapper, relation,load_only
 from sqlalchemy.sql.expression import alias as sa_exp_alias
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.automap import automap_base
@@ -216,6 +216,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(TargetType, self.target_type)
         mapper(User, self.user)
         mapper(Multicast, self.multicast)
+        mapper(Profile, self.profile)
+        mapper(PostInstallInMenu, self.postinstall_in_menu)
+        mapper(PostInstallInProfile, self.postinstall_in_profile)
+        mapper(ProfileInMenu, self.profile_in_menu)
 
     def initTables(self):
         """
@@ -436,6 +440,41 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column("target_uuid", Text, nullable=False),
             Column("image_uuid", Text, nullable=False),
             Column("image_name", Text, nullable=False),
+            autoload=True,
+        )
+
+        self.profile = Table(
+            "Profile",
+            self.metadata,
+            Column("id", Integer, primary_key=True),
+            Column("fk_imagingserver",Integer),
+            Column("name", Text, nullable=False),
+            Column("description", Text, nullable=True, default=""),
+            autoload=True,
+        )
+
+        self.profile_in_menu = Table(
+            "ProfileInMenu",
+            self.metadata,
+            Column("fk_profile", Integer, ForeignKey("Profile.id"), primary_key=True),
+            Column("fk_menuitem", Integer, primary_key=True),
+            autoload=True,
+        )
+
+        self.postinstall_in_menu = Table(
+            "PostInstallInMenu",
+            self.metadata,
+            Column("fk_post_install_script", Integer, primary_key=True),
+            Column("fk_menuitem", Integer, primary_key=True),
+            autoload=True,
+        )
+
+        self.postinstall_in_profile = Table(
+            "PostInstallInProfile",
+            self.metadata,
+            Column("fk_profile", Integer, ForeignKey("Profile.id"), primary_key=True),
+            Column("fk_post_install_script",Integer, primary_key=True),
+            Column("order", Integer, nullable=False, default=0),
             autoload=True,
         )
 
@@ -3092,6 +3131,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             # TODO : get all i18n to remove orphans!
 
             for iim in iims:
+                session.query(ProfileInMenu).filter(ProfileInMenu.fk_menuitem == iim.fk_menuitem).delete()
+                session.query(PostInstallInMenu).filter(PostInstallInMenu.fk_menuitem == iim.fk_menuitem).delete()
+
                 self.logger.debug(
                     "Remove ImageInMenu %s %s"
                     % (str(iim.fk_menuitem), str(iim.fk_image))
@@ -4217,6 +4259,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 iim.fk_menuitem = menu_item.id
                 iim.fk_image = default_iim.fk_image
                 session.add(iim)
+
+                # Copy Profiles for the new ImageInMenu
+                query = session.query(ProfileInMenu).filter(ProfileInMenu.fk_menuitem == default_iim.fk_menuitem).all()
+                for profile in query:
+                    tmp = ProfileInMenu()
+                    tmp.fk_menuitem = iim.fk_menuitem
+                    tmp.fk_profile = profile.fk_profile
+                    session.add(tmp)
+
+                # Copy PostInstallScript for the new ImageInMenu
+                query = session.query(PostInstallInMenu).filter(PostInstallInMenu.fk_menuitem == default_iim.fk_menuitem)
+                for postinstall in query:
+                    tmp = PostInstallInMenu()
+                    tmp.fk_menuitem = iim.fk_menuitem
+                    tmp.fk_post_install_script = postinstall.fk_post_install_script
+                    session.add(tmp)
         session.flush()
         return [ret, mi_out]
 
@@ -6175,45 +6233,34 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
 
     def get_profiles_location(self, location, start=0, limit=-1, filter=""):
-
         session = create_session(self.db)
 
-        limit_str = ""
-        if limit != -1:
-            limit_str = "limit %s, %s"%(start, limit)
+        query = session.query(Profile)\
+            .join(ImagingServer, ImagingServer.id == Profile.fk_imagingserver)\
+            .join(Entity, Entity.id == ImagingServer.fk_entity)\
+            .filter(Entity.uuid == location)
 
-        filter_str =""
         if filter != "":
+            query = query.filter(or_(
+                Profile.id.contains(filter),
+                Profile.name.contains(filter),
+                Profile.description.contains(filter)
+                ))
+        count = query.count()
+        query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
 
-            filter_str = "AND (Profile.id like '%%%s%%' or Profile.name like '%%%s%%' or Profile.description like '%%%s%%')"%(filter, filter, filter)
-        sql = """SELECT
-    Profile.id,
-    Profile.name,
-    Profile.description
-from Profile
-join ImagingServer ims on ims.id = Profile.fk_imagingserver
-join Entity e on e.id=ims.fk_entity
-where e.uuid = '%s' %s
-ORDER BY Profile.name
-%s"""%(location, filter_str, limit_str)
-
-        sql_count = """select count(p.id) from Profile p join ImagingServer ims on ims.id =
-p.fk_imagingserver join Entity e on e.id = ims.fk_entity where e.uuid='%s'"""%(location)
-
-        query = session.execute(sql)
-        ret_count = session.execute(sql_count)
-
-        count = ret_count.first()[0]
+        datas = query.all()
         session.flush()
         session.close()
 
         result = {"total":count,"datas":[]}
-
-        for element in query:
+        for element in datas:
             result["datas"].append({
-                "id":element[0],
-                "name": element[1],
-                "description":element[2]
+                "id":element.id,
+                "name": element.name if element.name is not None else "",
+                "description": element.description if element.description is not None else ""
             })
         return result
 
@@ -6373,33 +6420,16 @@ where pisip.fk_profile=%s"""%(profile_id)
             if int(orders[id]) != -1:
                 _orders[id] = int(orders[id])
 
-        try:
-            sql_update = """UPDATE Profile set name="%s", description="%s" where id=%s"""%(name, description, profileId)
-            session.execute(sql_update)
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status": False, "msg": "Error when updating profile attributes"}
+        session.query(Profile).filter(Profile.id == profileId).update({"name":name, "description":description})
+        session.query(PostInstallInProfile).filter(PostInstallInProfile.fk_profile == profileId).delete()
+        for script in _orders:
+            tmp = PostInstallInProfile()
+            tmp.fk_profile = profileId
+            tmp.fk_post_install_script = script
+            tmp.order = _orders[script]
+            session.add(tmp)
 
-        try:
-            sql_delete = """DELETE FROM PostInstallInProfile WHERE fk_profile = %s"""%profileId
-            session.execute(sql_delete)
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status": False, "msg": "Error when cleanning profile's posts installs"}
-
-        try:
-            for script in _orders:
-
-                sql_insert = """INSERT INTO PostInstallInProfile (fk_profile, fk_post_install_script, `order`) VALUES(%s, %s, %s)"""%(profileId, script, _orders[script])
-                session.execute(sql_insert)
-            session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status": False, "msg": "Error when inserting post installs in profile"}
-
+        session.flush()
         session.close()
         return {"status": True, "msg": ""}
 
@@ -6412,44 +6442,33 @@ where pisip.fk_profile=%s"""%(profile_id)
             if int(orders[id]) != -1:
                 _orders[id] = int(orders[id])
 
-        try:
-            sql_imaging_server = """SELECT ImagingServer.id from ImagingServer
+        query_location = session.query(ImagingServer)\
+            .join(Entity, Entity.id == ImagingServer.fk_entity)\
+            .filter(Entity.uuid == location).first()
 
-join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%(location)
-            imaging_id = session.execute(sql_imaging_server).first()[0]
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status": False, "msg": "Error when selecting imagingServer id"}
+        if query_location is None:
+            return {"status": False, "msg": "No ImagingServer found for location %s"%location}
 
-        try:
-            sql_profile = """INSERT INTO Profile(fk_imagingserver, name, description) VALUES (%s, "%s", "%s")"""%(imaging_id, name, description)
-            query_profile = session.execute(sql_profile)
-            session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
+        imaging_id = query_location.id
+
+        tmp = Profile()
+        tmp.fk_imagingserver = imaging_id
+        tmp.name = name
+        tmp.description = description
+
+        session.add(tmp)
+        session.flush()
+
+        if tmp.id == 0:
             return {"status": False, "msg": "Error when inserting new profile"}
 
-        try:
-            sql_profile_id = "select id from Profile order by id DESC limit 1"
-            profile_id = session.execute(sql_profile_id).first()[0]
-            logging.getLogger().error
-
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status": False, "msg": "Error when selecting last inserted profile"}
-
-        try:
-            for script in _orders:
-                sql_insert = """INSERT INTO PostInstallInProfile (fk_profile, fk_post_install_script, `order`) VALUES(%s, %s, %s)"""%(profile_id, script, _orders[script])
-                session.execute(sql_insert)
-            session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status": False, "msg": "Error when inserting post installs in profile"}
+        for script in _orders:
+            tmp2 = PostInstallInProfile()
+            tmp2.fk_profile = tmp.id
+            tmp2.fk_post_install_script = script
+            tmp2.order = _orders[script]
+            session.add(tmp2)
+        session.flush()
         session.close()
         return {"status": True, "msg": ""}
 
@@ -6457,33 +6476,9 @@ join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%
         session = create_session(self.db)
 
         # delete the profile
-        # Possibility to use delete on cascade property to delete everything with this first deletion
-        try:
-            sql_profile = """DELETE FROM Profile where id = %s"""%id
-            session.execute(sql_profile)
-            session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status":False, "msg": "Problem during the profile deletion"}
-
-        try:
-            sql_postinstalls = """DELETE FROM PostInstallInProfile where fk_profile = %s"""%id
-            session.execute(sql_postinstalls)
-            session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status":False, "msg": "Problem during the deletion of the postinstalls associated to the profile"}
-
-        try:
-            sql_menu = """DELETE FROM ProfileInMenu where fk_profile = %s"""%id
-            session.execute(sql_menu)
-            session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status":False, "msg": "Problem during the deletion of the profile associated to menus"}
+        # ProfileInMenu and PostInstallInProfile elements are automatically deleted thanks to on delete cascade foreign key
+        session.query(Profile).filter(Profile.id == id).delete()
+        session.flush()
 
         session.close()
         return {"status":True, "msg": ""}
@@ -6492,50 +6487,38 @@ join Entity on ImagingServer.fk_entity = Entity.id where Entity.uuid = "%s";"""%
         session = create_session(self.db)
         result = []
         pim = []
-        datas = []
-        datas_inmenu = []
 
         menuitem_id = menuitem_id.replace("UUID", "") if menuitem_id.startswith("UUID") else menuitem_id
 
-        try:
-            sql_profile = """select
-    p.id,
-    p.fk_imagingserver,
-    p.name,
-    p.description
-from Profile p
-where p.fk_imagingserver = (select
-    distinct(ims.id)
-from ImagingServer ims
-join ImageOnImagingServer iois on iois.fk_imaging_server = ims.id
-join Image i on iois.fk_image = i.id
-join ImageInMenu iim on iim.fk_image = i.id
-join MenuItem mi on iim.fk_menuitem = mi.id
-where mi.id = %s);"""%(menuitem_id)
+        query = session.query(ImagingServer)\
+            .options(load_only(ImagingServer.id))\
+            .join(ImageOnImagingServer, ImageOnImagingServer.fk_imaging_server == ImagingServer.id)\
+            .join(Image, Image.id == ImageOnImagingServer.fk_image)\
+            .join(ImageInMenu, ImageInMenu.fk_image == Image.id)\
+            .join(MenuItem, MenuItem.id == ImageInMenu.fk_menuitem)\
+            .filter(MenuItem.id == menuitem_id).first()
 
-            datas = session.execute(sql_profile)
-        except Exception as e:
-            result = []
-        try:
-            sql_in_menu = """select
-    pim.fk_profile
-from ProfileInMenu pim where fk_menuitem = %s"""%menuitem_id
+        # No ImagingServer found
+        if query is None:
+            return []
+        imagingserver_id = query.id
 
-            datas_inmenu = session.execute(sql_in_menu)
-        except Exception as e:
-            datas_inmenu = []
+        query = session.query(ProfileInMenu).options(load_only('fk_profile')).filter(ProfileInMenu.fk_menuitem == menuitem_id).all()
+        pim = [element.fk_profile for element in query]
 
-        for elem in datas_inmenu:
-            pim.append(elem[0])
+        query = session.query(Profile)\
+            .filter(Profile.fk_imagingserver == imagingserver_id).all()
 
-        for element in datas:
-                result.append({
-                    "id":element[0],
-                    "fk_imagingserver": element[1],
-                    "name": element[2] if element[2] is not None else "",
-                    "description": element[3] if element[3] is not None else "",
-                    "in_menu": 1 if element[0] in pim else 0
-                })
+        result = []
+        for element in query:
+            result.append({
+                "id":element.id,
+                "fk_imagingserver": element.fk_imagingserver,
+                "name": element.name if element.name is not None else "",
+                "description": element.description if element.description is not None else "",
+                "in_menu": 1 if element.id in pim else 0
+            })
+
         session.close()
         return result
 
@@ -6544,24 +6527,15 @@ from ProfileInMenu pim where fk_menuitem = %s"""%menuitem_id
 
         if menuitem_id.startswith("UUID"):
             menuitem_id = menuitem_id.replace("UUID", "")
-        try:
-            sql_delete = """delete from ProfileInMenu where fk_menuitem = %s"""%menuitem_id
-            session.execute(sql_delete)
-            session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status": False, "msg": "Error while deleting Profiles associated to MenuItem"}
 
-        try:
-            for id in profiles:
-                sql_insert = """INSERT INTO ProfileInMenu (fk_menuitem, fk_profile) values (%s, %s)"""%(menuitem_id, id)
-                session.execute(sql_insert)
-                session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status": False, "msg": "Error while associating Profile to MenuItem"}
+        session.query(ProfileInMenu).filter(ProfileInMenu.fk_menuitem == menuitem_id).delete()
+
+        for id in profiles:
+            tmp = ProfileInMenu()
+            tmp.fk_menuitem = menuitem_id
+            tmp.fk_profile = id
+            session.add(tmp)
+        session.flush()
         session.close()
         return {"status":True, "msg":""}
 
@@ -6573,50 +6547,39 @@ from ProfileInMenu pim where fk_menuitem = %s"""%menuitem_id
         result = []
 
         menuitem_id = menuitem_id.replace("UUID", "") if menuitem_id.startswith("UUID") else menuitem_id
+        query = session.query(ImagingServer)\
+            .distinct(ImagingServer.id)\
+            .options(load_only(ImagingServer.id))\
+            .join(ImageOnImagingServer, ImageOnImagingServer.fk_imaging_server == ImagingServer.id)\
+            .join(Image, Image.id == ImageOnImagingServer.fk_image)\
+            .join(ImageInMenu, ImageInMenu.fk_image == Image.id)\
+            .join(MenuItem, MenuItem.id == ImageInMenu.fk_menuitem)\
+            .filter(MenuItem.id == menuitem_id).first()
 
-        try:
-            sql_all = """select
-    SQL_CALC_FOUND_ROWS
-    pis.id,
-    pis.default_name,
-    pis.default_desc,
-    pisois.fk_imaging_server
-from PostInstallScript pis
-
-left join PostInstallScriptOnImagingServer pisois on pisois.fk_post_install_script = pis.id
-where pisois.fk_imaging_server is NULL or pisois.fk_imaging_server = (select
-    distinct(ims.id)
-from ImagingServer ims
-join Entity e on ims.fk_entity = e.id
-join Target t on t.fk_entity=e.id
-join Menu m on m.id = t.fk_menu
-join MenuItem mi on mi.fk_menu = m.id
-where mi.id = %s)"""%menuitem_id
-
-            datas = session.execute(sql_all)
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
+        # No ImagingServer found
+        if query is None:
             return []
+        imagingserver_id = query.id
 
-        try:
-            sql_in_menu = """select
-    piim.fk_post_install_script
-from PostInstallInMenu piim
-where piim.fk_menuitem = %s"""%menuitem_id
-            datas_in_menu = session.execute(sql_in_menu)
-        except Exception as e:
-            datas_in_menu = []
+        query = session.query(PostInstallInMenu)\
+            .options(load_only(PostInstallInMenu.fk_post_install_script))\
+            .filter(PostInstallInMenu.fk_menuitem == menuitem_id).all()
 
-        for elem in datas_in_menu:
-            in_menu.append(elem[0])
+        piim = [ element.fk_post_install_script for element in query]
 
-        for element in datas:
+        query = session.query(PostInstallScript)\
+            .outerjoin(PostInstallScriptOnImagingServer, PostInstallScriptOnImagingServer.fk_post_install_script == PostInstallScript.id)\
+            .filter(or_(
+                PostInstallScriptOnImagingServer.fk_imaging_server == None,
+                PostInstallScriptOnImagingServer.fk_imaging_server == imagingserver_id,
+            ))
+
+        for element in query:
             result.append({
-                "id":element[0],
-                "name": element[1],
-                "description":element[2],
-                "in_menu": 1 if element[0] in in_menu else 0
+                "id":element.id,
+                "name": element.default_name if element.default_name is not None else "",
+                "description":element.default_desc if element.default_desc is not None else "",
+                "in_menu": 1 if element.id in piim else 0
             })
         return result
 
@@ -6624,26 +6587,14 @@ where piim.fk_menuitem = %s"""%menuitem_id
         session = create_session(self.db)
 
         menuitem_id = menuitem_id.replace("UUID", "") if menuitem_id.startswith("UUID") else menuitem_id
+        session.query(PostInstallInMenu).filter(PostInstallInMenu.fk_menuitem == menuitem_id).delete()
 
-        try:
-            sql_delete_old = """DELETE FROM PostInstallInMenu where fk_menuitem = %s"""%menuitem_id
-            session.execute(sql_delete_old)
-            session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status":False, "msg":"Error during deletion of old associations"}
-
-        try:
-            for id in postinstalls:
-                sql_insert_new = """INSERT INTO PostInstallInMenu (fk_menuitem, fk_post_install_script) values (%s, %s)"""%(menuitem_id, id)
-
-                session.execute(sql_insert_new)
-                session.flush()
-        except Exception as e:
-            logging.getLogger().error(e)
-            session.close()
-            return {"status":False, "msg":"Error during inssertion of new associations"}
+        for id in postinstalls:
+            tmp = PostInstallInMenu()
+            tmp.fk_menuitem = menuitem_id
+            tmp.fk_post_install_script =id
+            session.add(tmp)
+        session.flush()
         session.close()
 
         return {"status":True, "msg":""}
@@ -6883,3 +6834,19 @@ class User(DBObject):
 
 class Multicast(DBObject):
     to_be_exported = ["id", "location", "target_uuid", "image_uuid", "image_name"]
+
+
+class PostInstallInMenu(DBObject):
+    to_be_exported = ["fk_menuitem", "fk_post_install_script"]
+
+
+class PostInstallInProfile(DBObject):
+    to_be_exported = ["fk_profile", "fk_post_install_script", "order"]
+
+
+class Profile(DBObject):
+    to_be_exported = ["id","fk_imagingserver", "name", "description"]
+
+
+class ProfileInMenu(DBObject):
+    to_be_exported = ["id", "fk_menuitem", "fk_profile"]
