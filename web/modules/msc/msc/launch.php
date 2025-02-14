@@ -316,8 +316,13 @@ function start_a_command($proxy = array(), $activate = true) {
                 // feed convergence db
                 xmlrpc_add_convergence_datas($gid, $deploy_group_id, $done_group_id, $pid, $p_api, intval($command_id), $active, $params);
             }
-            header("Location: " . urlStrRedirect("base/computers/groupmsctabs", array('gid' => $gid)));
-            exit;
+            if(isset($_GET['previous']) && $_GET['previous'] != '') {
+                header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/" . $_GET['previous']));
+                exit;
+            } else {
+                header("Location: " . urlStrRedirect("base/computers/groupmsctabs", array('gid' => $gid)));
+                exit;
+            }
         }
         else {
             // deploy on group
@@ -746,21 +751,23 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                         _T('Dynamic parameters Packages', 'msc'), new InputTpl('parameterspacquage')
                     ), array("value" => quick_get('parameterspacquage'))
             );
-            $f->add(
-                new TrFormElement(
-                    _T('Reboot required', 'msc'), new CheckboxTpl('rebootrequired')
-                ), array("value" => quick_get('do_reboot', True) == 'enable' ? 'checked' : '')
-            );
-            $f->add(
-                new TrFormElement(
-                    _T('Shutdown required', 'msc'), new CheckboxTpl('shutdownrequired')
-                ), array("value" => quick_get('shutdownrequired', True) == 'on' ? 'shutdownrequired' : '')
-            );
-            $f->add(
-                new TrFormElement(
-                    _T('Delay install', 'msc'), new CheckboxTpl('Delay_install')
-                ), array("value" => quick_get('Delay_install', True) == 'on' ? 'checked' : ''), array('trid' => "tr_delay_install")
-            );
+            if(!isset($_GET['convergence']) && $_GET['convergence'] != 1) {
+                $f->add(
+                    new TrFormElement(
+                        _T('Reboot required', 'msc'), new CheckboxTpl('rebootrequired')
+                    ), array("value" => quick_get('do_reboot', True) == 'enable' ? 'checked' : '')
+                );
+                $f->add(
+                    new TrFormElement(
+                        _T('Shutdown required', 'msc'), new CheckboxTpl('shutdownrequired')
+                    ), array("value" => quick_get('shutdownrequired', True) == 'on' ? 'shutdownrequired' : '')
+                );
+                $f->add(
+                    new TrFormElement(
+                        _T('Delay install', 'msc'), new CheckboxTpl('Delay_install')
+                    ), array("value" => quick_get('Delay_install', True) == 'on' ? 'checked' : ''), array('trid' => "tr_delay_install")
+                );
+            }
             if( isset($gid)){
                 $rb = new RadioTpl("choix_methode_exec");
                 $rb->setChoices(array(_T('Time constraint', 'msc'), _T('Successful transfer rate', 'msc')));
