@@ -525,6 +525,9 @@ class RpcProxy(RpcProxyI):
     def getInfosNameGroup(self, arrayuuidgroup):
         return DyngroupDatabase().getInfosNameGroup(arrayuuidgroup)
 
+    def getDisplayGroupName(self, arrayuuidgroup):
+        return DyngroupDatabase().getDisplayGroupName(arrayuuidgroup)
+
     def getMachineforentityList(self, min, max, filt):
         return ComputerManager().getMachineforentityList(min, max, filt)
 
@@ -597,6 +600,10 @@ class RpcProxy(RpcProxyI):
 
     def getConvergenceStatus(self, gid):
         ret = DyngroupDatabase().getConvergenceStatus(gid)
+        return xmlrpcCleanup(ret)
+
+    def getConvergenceStatusByCommandId(self, gid):
+        ret = DyngroupDatabase().getConvergenceStatusByCommandId(gid)
         return xmlrpcCleanup(ret)
 
     def get_active_convergence_for_host(self, host_uuid):

@@ -379,6 +379,34 @@ def addlogincommand(
         params,
     )
 
+def update_login_command(
+    login,
+    commandid,
+    grpid,
+    nb_machine_in_grp,
+    instructions_nb_machine_for_exec,
+    instructions_datetime_for_exec,
+    parameterspackage,
+    rebootrequired,
+    shutdownrequired,
+    limit_rate_ko,
+    syncthing,
+    params,
+):
+    return XmppMasterDatabase().update_login_command(
+        login,
+        commandid,
+        grpid,
+        nb_machine_in_grp,
+        instructions_nb_machine_for_exec,
+        instructions_datetime_for_exec,
+        parameterspackage,
+        rebootrequired,
+        shutdownrequired,
+        limit_rate_ko,
+        syncthing,
+        params,
+    )
 
 def loginbycommand(commandid):
     return XmppMasterDatabase().loginbycommand(commandid)
@@ -1155,6 +1183,9 @@ def getCountOnlineMachine():
 ############### package #####################
 def xmppGetAllPackages(login, filter, start, end):
     return apimanagepackagemsc.loadpackagelistmsc(login, filter, start, end)
+
+def get_pkg_path(login, pkgName):
+    return apimanagepackagemsc.get_path_from_title(login, pkgName)
 
 
 def xmpp_getPackageDetail(pid_package):

@@ -4196,14 +4196,13 @@ class XmppMasterDatabase(DatabaseHelper):
             return ret
 
     @DatabaseHelper._sessionm
-    def getstatdeploy_from_command_id_and_title_for_convergence(self, session, command_id, title_partial):
+    def getstatdeploy_from_command_id_and_title_for_convergence(self, session, command_id, title):
         """
         Retrieve the deploy statistics based on the command_id and partial title match for convergence.
 
         Args:
-            session: The SQLAlchemy session.
             command_id: ID of the deploy.
-            title_partial: Partial title for a LIKE query.
+            title: title for a LIKE query.
 
         Return:
             dict: Statistics of deployments grouped by state.
@@ -4211,7 +4210,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             global_deploy = session.query(Deploy).filter(
                 Deploy.command == command_id,
-                Deploy.title.like(f"%{title_partial}%")
+                Deploy.title.like(f"%{title}%")
             ).order_by(Deploy.start.desc()).first()
 
             if not global_deploy:
@@ -4219,27 +4218,27 @@ class XmppMasterDatabase(DatabaseHelper):
 
             group_uuid = global_deploy.group_uuid
 
-
             sql = """
-                SELECT d.state, COUNT(*) as count
+                SELECT d.state, COUNT(*) AS count
                 FROM deploy d
                 JOIN (
-                    SELECT jidmachine, MAX(start) as latest_start
+                    SELECT inventoryuuid, MAX(id) AS latest_id
                     FROM deploy
                     WHERE command = :command_id
                     AND group_uuid = :group_uuid
-                    AND title LIKE :title_partial
-                    GROUP BY jidmachine
-                ) ld ON d.jidmachine = ld.jidmachine AND d.start = ld.latest_start
+                    AND title LIKE :title_like
+                    GROUP BY inventoryuuid
+                ) ld ON d.inventoryuuid = ld.inventoryuuid
+                AND d.id = ld.latest_id
                 WHERE d.command = :command_id
                 AND d.group_uuid = :group_uuid
-                AND d.title LIKE :title_partial
+                AND d.title LIKE :title_like
                 GROUP BY d.state;
             """
             result = session.execute(sql, {
                 "command_id": command_id,
                 "group_uuid": group_uuid,
-                "title_partial": f"%{title_partial}%"
+                "title_like": f"%{title}%"
             }).fetchall()
 
             if not result:
@@ -4281,6 +4280,15 @@ class XmppMasterDatabase(DatabaseHelper):
                 "restartdeploy": 0,
                 "otherstatus": 0,
             }
+
+            dynamic_status_list = self.get_log_status()
+            dynamic_label = []
+            dynamic_status = []
+            if dynamic_status_list:
+                for status in dynamic_status_list:
+                    ret[status["label"]] = 0
+                    dynamic_label.append(status["label"])
+                    dynamic_status.append(status["status"])
 
             liststatus = {row[0]: row[1] for row in result}
             for status, count in liststatus.items():
@@ -4348,6 +4356,9 @@ class XmppMasterDatabase(DatabaseHelper):
                     ret["abortmissingdependency"] = count
                 elif status == "RESTART DEPLOY":
                     ret["restartdeploy"] = count
+                elif status in dynamic_status:
+                    index = dynamic_status.index(status)
+                    ret[dynamic_label[index]] = count
                 else:
                     ret["otherstatus"] += count
 
@@ -4797,6 +4808,65 @@ class XmppMasterDatabase(DatabaseHelper):
             if existing_logincommand
             else new_logincommand.id if new_logincommand else None
         )
+
+    @DatabaseHelper._sessionm
+    def update_login_command(
+        self,
+        session,
+        login,
+        commandid,
+        grpid,
+        nb_machine_in_grp,
+        instructions_nb_machine_for_exec,
+        instructions_datetime_for_exec,
+        parameterspackage,
+        rebootrequired,
+        shutdownrequired,
+        bandwidth,
+        syncthing,
+        params,
+    ):
+        try:
+            login_command = session.query(Has_login_command).filter_by(command=commandid).first()
+            if not login_command:
+                logger.error(f"Aucune commande trouvée pour command id {commandid}.")
+                return None
+
+            login_command.login = login
+            login_command.count_deploy_progress = 0
+            login_command.bandwidth = int(bandwidth)
+            if grpid != "":
+                login_command.grpid = grpid
+            if instructions_datetime_for_exec != "":
+                login_command.start_exec_on_time = instructions_datetime_for_exec
+            if nb_machine_in_grp != "":
+                login_command.nb_machine_for_deploy = nb_machine_in_grp
+            if instructions_nb_machine_for_exec != "":
+                login_command.start_exec_on_nb_deploy = instructions_nb_machine_for_exec
+            if parameterspackage != "":
+                login_command.parameters_deploy = parameterspackage
+
+            login_command.rebootrequired = bool(rebootrequired)
+            login_command.shutdownrequired = bool(shutdownrequired)
+            login_command.syncthing = bool(syncthing)
+
+            if isinstance(params, dict):
+                logging.getLogger().error(f"111 - Voila ma variable params {params}")
+                if 'do_reboot' in params:
+                    login_command.do_reboot = params['do_reboot']
+                if 'deployment_intervals' in params:
+                    login_command.deployment_intervals = params['deployment_intervals']
+
+            if isinstance(params, (list, dict)) and len(params) != 0:
+                login_command.params_json = json.dumps(params)
+
+            session.commit()
+            session.flush()
+            return login_command.id
+        except Exception as e:
+            logger.error(f"Error when updating the login command: {e}")
+            session.rollback()
+            return None
 
     @DatabaseHelper._sessionm
     def getListPresenceRelay(self, session):
@@ -5597,7 +5667,6 @@ class XmppMasterDatabase(DatabaseHelper):
             It can be done by time search too.
         """
         pulse_usersid = self.get_teammembers_from_login(login)
-
         deploylog = session.query(Deploy).filter(
             Deploy.sessionid.like("%s%%" % typedeploy)
         )

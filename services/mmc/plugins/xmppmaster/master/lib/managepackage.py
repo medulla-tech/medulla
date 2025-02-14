@@ -361,6 +361,18 @@ class apimanagepackagemsc:
         else:
             return (nb, result)
 
+    @staticmethod
+    def get_path_from_title(login, title):
+        nb, packages = apimanagepackagemsc.loadpackagelistmsc(login, filter={}, start=0, end=100)
+
+        # PID search from the title
+        for group in packages:
+            for pkg in group:
+                if pkg.get("name") == title or pkg.get("label") == title:
+                    files = pkg.get("files", [])
+                    if files:
+                        return files[0].get("path")
+        return None
 
 class managepackage:
     exclude_name_package = ["sharing", ".stfolder", ".stignore"]
@@ -587,7 +599,6 @@ class managepackage:
     @staticmethod
     def getpathpackage(uuidpackage):
         return os.path.join(managepackage.packagedir(), uuidpackage)
-
 
 class search_list_of_deployment_packages:
     """

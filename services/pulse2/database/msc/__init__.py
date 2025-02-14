@@ -2707,7 +2707,7 @@ class MscDatabase(DatabaseHelper):
                 pass
         return result
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getCommands(self, session, ctx, cmd_id):
         if cmd_id == "0" or cmd_id is None or cmd_id == "":
             return False

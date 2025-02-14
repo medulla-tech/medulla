@@ -768,6 +768,11 @@ function xmlrpc_getConvergenceStatus($gid)
     return xmlCall("dyngroup.getConvergenceStatus", array($gid));
 }
 
+function xmlrpc_getConvergenceStatusByCommandId($gid)
+{
+    return xmlCall("dyngroup.getConvergenceStatusByCommandId", array($gid));
+}
+
 // function xmlrpc_get_convergence_groups_to_update($papi_id, $package) {
 //     return xmlCall("dyngroup.get_convergence_groups_to_update", array($papi_id, $package));
 // }

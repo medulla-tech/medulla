@@ -1026,6 +1026,8 @@ def _set_command_ready(cmd_id):
 def _update_convergence_dates(cmd_id):
     return MscDatabase()._update_convergence_dates(cmd_id)
 
+def update_msc_command(login, commandid, bandwidth, params):
+    return MscDatabase().update_msc_command(login, commandid, bandwidth, params)
 
 def _get_machines_in_command(cmd_id):
     return MscDatabase()._get_machines_in_command(cmd_id)
@@ -1093,7 +1095,7 @@ def convergence_reschedule(all=False):
 
 def convergence_reschedule_one(cmd_id):
     """
-    Check and replavate a specific convergence command identified by CMD_ID.
+    Check and reschedule a specific convergence command identified by CMD_ID.
 
     @Param cmd_id: order identifier to be replaced
     @Type cmd_id: int or str
@@ -1104,9 +1106,31 @@ def convergence_reschedule_one(cmd_id):
         convergence_deploy_group_id, user = _get_convergence_deploy_group_id_and_user(cmd_id)
         ctx = getContext(user=user)
         new_machine_ids = _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
+        logger.debug(f"New machines to add: {new_machine_ids}")
+
         if new_machine_ids:
             logger.info("%s machines will be added to the convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
             phases = _get_convergence_phases(cmd_id, convergence_deploy_group_id)
+
+            if isinstance(phases, dict):
+                logger.debug(f"Phases trouvées: {phases}")
+            elif isinstance(phases, str):
+                try:
+                    import base64
+                    import pickle
+                    decoded = base64.b64decode(phases)
+                    phases = pickle.loads(decoded)
+                    if isinstance(phases, dict):
+                        logger.debug(f"Phases décodées: {phases}")
+                    else:
+                        phases = {}
+                except Exception as e:
+                    logger.error(f"Impossible de décoder cmdPhases pour cmd_id={cmd_id}. Erreur: {e}")
+                    phases = {}
+            else:
+                logger.error(f"cmdPhases a un type inattendu ({type(phases)}), cmd_id={cmd_id}.")
+                phases = {}
+
             _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id, phases=phases)
         _update_convergence_dates(cmd_id)
     except TypeError as e:

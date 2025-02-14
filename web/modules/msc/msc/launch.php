@@ -258,30 +258,34 @@ function start_a_command($proxy = array(), $activate = true) {
             // Recovery of the current state of convergence
             $active = ($_POST['active'] == 'on') ? 1 : 0;
             $cmd_type = 2; // Convergence command type
-            if (quick_get('editConvergence')) {
+            if (quick_get('editConvergence') || (isset($_POST['actionconvergenceint']) && $_POST['actionconvergenceint'] == 2)) {
                 /* Stop command */
                 $cmd_id = xmlrpc_get_convergence_command_id($gid, $pid);
                 stop_command($cmd_id);
                 /* Set end date of this command to now(), don't touch to start date */
                 $start_date = _get_command_start_date($cmd_id);
                 extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
-                /* Create new command */
                 $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $pid);
-                $command_id = add_command_api($pid, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+
+                $params['do_reboot'] = (isset($_POST['rebootrequired']) && $_POST['rebootrequired'] == 'on') ? 'enable' : 'disable';
+                $params['deployment_intervals'] = isset($_POST['deployment_intervals']) ? $_POST['deployment_intervals'] : '';
+                $params['state'] = (isset($_POST['active']) && $_POST['active'] == 'on') ? 'active' : 'disabled';
+
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
                     $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0, $syncthing);
+                    xmlrpc_update_login_command($_SESSION['login'], $cmd_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0, $syncthing, $params);
+                    xmlrpc_update_msc_command($_SESSION['login'], $cmd_id, $limit_rate_ko, $params);
                 }
                 // If this convergence is not active, expire this command
                 if (!$active && $_POST['bconfirm'] != 'Reconfigurer') {
-                    $start_date = _get_command_start_date($command_id);
-                    extend_command($command_id, $start_date, date("Y-m-d H:i:s"));
+                    $start_date = _get_command_start_date($cmd_id);
+                    extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
                 }
                 /* Update convergence DB */
                 $updated_datas = array(
                     'active' => ($active || $_POST['bconfirm'] == 'Reconfigurer') ? 1 : 0,
-                    'commandId' => intval($command_id),
+                    'commandId' => intval($cmd_id),
                     'cmdPhases' => $params,
                 );
                 xmlrpc_edit_convergence_datas($gid, $pid, $updated_datas);
@@ -671,7 +675,13 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                     ), array("value" => "<span style='font-style: gras;color:green'>"._T('ACTIVE', 'msc')."</span>"));
                     $f->add(new HiddenTpl('active'), array("value" => 'off' , "hide" => True));
             }
-            else{
+            elseif (quick_get('actionconvergenceint') == 2){
+                $f->add(
+                    new TrFormElement(
+                        _T('Convergence', 'msc'), new TextlabelTpl('active1')
+                    ), array("value" => "<span style='font-style: gras; color:blue'>"._T('Inactive', 'msc')."</span>"));
+                    $f->add(new HiddenTpl('active'), array("value" => 'on' , "hide" => True));
+            } else {
                 $f->add(
                     new TrFormElement(
                         _T('Convergence', 'msc'), new TextlabelTpl('active1')
@@ -739,7 +749,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             $f->add(
                 new TrFormElement(
                     _T('Reboot required', 'msc'), new CheckboxTpl('rebootrequired')
-                ), array("value" => quick_get('rebootrequired', True) == 'on' ? 'checked' : '')
+                ), array("value" => quick_get('do_reboot', True) == 'enable' ? 'checked' : '')
             );
             $f->add(
                 new TrFormElement(

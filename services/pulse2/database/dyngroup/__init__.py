@@ -450,6 +450,52 @@ class DyngroupDatabase(DatabaseHelper):
             }
         return result
 
+    def getDisplayGroupName(self, arrayuuidgroup):
+        """
+        Recovers the display name for a list of groups.
+        For each group:
+        - If the group has a parent (no, no zero and different from 0)
+        And that the parent exists with a defined name, the name of the parent is used.
+        - Otherwise, it is the name of the group itself which has returned.
+
+        Args:
+        Arrayuuuidgroup (List): List of group identifiers (in STR or INT).
+
+        Returns:
+        Dictate: Dictionary where the key is the group's identifier (in the form of a chain)
+        and the value the associated display name.
+        Example: {'272': 'Parent name', '274': 'Group name'}
+        """
+        arrayuuidgroup = list({x for x in arrayuuidgroup if x})
+        session = create_session()
+
+        groups = session.query(Groups).filter(Groups.id.in_(arrayuuidgroup)).all()
+
+        parent_ids = []
+        for group in groups:
+            if group.parent_id and int(group.parent_id) != 0:
+                parent_ids.append(group.parent_id)
+        parent_ids = list(set(parent_ids))
+
+        # Recover parents groups and build an ID Dictionary> Name
+        parent_names = {}
+        if parent_ids:
+            parent_groups = session.query(Groups).filter(Groups.id.in_(parent_ids)).all()
+            for parent in parent_groups:
+                parent_names[parent.id] = parent.name
+
+        result = {}
+        for group in groups:
+            # If the group has a defined parent (and different from 0) and the name of the parent is available,
+            # We use the name of the parent;Otherwise, the name of the group itself.
+            if group.parent_id and int(group.parent_id) != 0 and parent_names.get(group.parent_id):
+                display_name = parent_names[group.parent_id]
+            else:
+                display_name = group.name
+            result[str(group.id)] = display_name
+
+        return result
+
     ####################################
     # PROFILE ACCESS
     def getProfileByNameImagingServer(self, name, is_uuid):

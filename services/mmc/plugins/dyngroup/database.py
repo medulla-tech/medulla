@@ -1015,19 +1015,19 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
     @DatabaseHelper._session
     def get_deploy_group_id(self, session, gid, package_id):
-        query = session.query(Convergence).filter_by(
-            parentGroupId=gid, packageUUID=package_id
+        query = (
+            session.query(Convergence)
+            .filter_by(parentGroupId=gid, packageUUID=package_id)
+            .order_by(Convergence.id.desc())
         )
-        try:
-            query = query.one()
-        except (MultipleResultsFound, NoResultFound) as e:
+        ret = query.first()
+        if ret is None:
             self.logger.error(
-                "Error where fetching deploy group for group %s (package %s): %s"
-                % (gid, package_id, e)
+                "Error while fetching deploy group for group %s (package %s): No record found"
+                % (gid, package_id)
             )
             return False
-
-        return query.deployGroupId
+        return ret.deployGroupId
 
     @DatabaseHelper._session
     def get_convergence_group_parent_id(self, session, gid):
@@ -1042,7 +1042,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         return query.parent_id
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def add_convergence_datas(
         self,
         session,
@@ -1055,22 +1055,43 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         active,
         cmdPhases,
     ):
-        convergence = Convergence()
-        convergence.parentGroupId = parent_group_id
-        convergence.deployGroupId = deploy_group_id
-        convergence.doneGroupId = done_group_id
-        convergence.papi = base64.b64encode(pickle.dumps(p_api)).decode("utf-8")
-        convergence.packageUUID = pid
-        convergence.commandId = command_id
-        convergence.active = active
-        convergence.cmdPhases = base64.b64encode(pickle.dumps(cmdPhases)).decode("utf-8")
-        session.add(convergence)
+        convergence = session.query(Convergence).filter_by(
+            parentGroupId=parent_group_id,
+            packageUUID=pid
+        ).first()
+
+        if convergence:
+            convergence.deployGroupId = deploy_group_id
+            convergence.doneGroupId = done_group_id
+            convergence.papi = base64.b64encode(pickle.dumps(p_api)).decode("utf-8")
+            convergence.commandId = command_id
+            convergence.active = active
+            convergence.cmdPhases = base64.b64encode(pickle.dumps(cmdPhases)).decode("utf-8")
+        else:
+            convergence = Convergence()
+            convergence.parentGroupId = parent_group_id
+            convergence.deployGroupId = deploy_group_id
+            convergence.doneGroupId = done_group_id
+            convergence.papi = base64.b64encode(pickle.dumps(p_api)).decode("utf-8")
+            convergence.packageUUID = pid
+            convergence.commandId = command_id
+            convergence.active = active
+            convergence.cmdPhases = base64.b64encode(pickle.dumps(cmdPhases)).decode("utf-8")
+            session.add(convergence)
+
+        session.commit()
         session.flush()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def edit_convergence_datas(self, session, gid, package_id, datas):
-        datas["cmdPhases"] = base64.b64encode(pickle.dumps(datas["cmdPhases"])).decode("utf-8")
+        try:
+            if "cmdPhases" in datas:
+                datas["cmdPhases"] = base64.b64encode(pickle.dumps(datas["cmdPhases"])).decode("utf-8")
+        except Exception as e:
+            self.logger.error(f"Erreur lors de l'encodage de cmdPhases : {e}")
+            return None
+
         try:
             with session.begin():
                 result = (
@@ -1078,68 +1099,91 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                     .filter_by(parentGroupId=gid, packageUUID=package_id)
                     .update(datas)
                 )
-            session.commit()
-
-            updated_convergence = (
-                session.query(Convergence)
-                .filter_by(parentGroupId=gid, packageUUID=package_id)
-                .first()
-            )
 
             return result
         except Exception as e:
             session.rollback()
-            self.logger.error(f"Erreur lors de la mise à jour : {e}")
+            self.logger.error(f"Error when updating convergence : {e}")
             return None
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def _get_convergence_phases(self, session, cmd_id, deploy_group_id):
-        ret = False
         try:
             ret = (
                 session.query(Convergence)
                 .filter_by(commandId=cmd_id, deployGroupId=deploy_group_id)
-                .one()
+                .one_or_none()
             )
-        except MultipleResultsFound as multiple_convergences:
-            self.logger.error(
-                "We found several convergences with the same command id: %s" % cmd_id
-            )
-            self.logger.error("We encountered the error: %s" % multiple_convergences)
-        except NoResultFound as no_convergence:
-            self.logger.warn(
-                "We did not find any convergence for the command_id %s" % cmd_id
-            )
-            self.logger.warn("We encountered the error: %s" % no_convergence)
-        if ret:
-            try:
-                return pickle.loads(base64.b64decode(ret.cmdPhases))
-            except EOFError as e:
-                self.logger.warn("No phases found for command %s" % cmd_id)
-        return {}
 
-    @DatabaseHelper._session
+            if ret is None:
+                self.logger.warning(f"No cmdPhases found for cmd_id={cmd_id}, deployGroupId={deploy_group_id}")
+                return {}
+
+            if isinstance(ret.cmdPhases, dict):
+                return ret.cmdPhases
+
+            if isinstance(ret.cmdPhases, str):
+                try:
+                    decoded = base64.b64decode(ret.cmdPhases)
+                    phases = pickle.loads(decoded)
+                    if isinstance(phases, dict):
+                        return phases
+                    else:
+                        return {}
+                except Exception as e:
+                    self.logger.error(f"Impossible to decode cmdPhases for cmd_id={cmd_id}. Erreur: {e}")
+                    return {}
+
+            self.logger.error(f"cmdPhases has an unexpected type ({type(ret.cmdPhases)}), cmd_id={cmd_id}.")
+            return {}
+
+        except MultipleResultsFound as e:
+            self.logger.error(f"Several recordings found for cmd_id={cmd_id}, deployGroupId={deploy_group_id}. Erreur: {e}")
+            return {}
+
+        except NoResultFound:
+            self.logger.error(f"No recording found for cmd_id={cmd_id}, deployGroupId={deploy_group_id}.")
+            return {}
+
+
+    @DatabaseHelper._sessionm
     def getConvergenceStatus(self, session, gid):
         """
-        Get Convergence status for given group id
+        Recovers the convergence status for a given group.
 
-        ret = {
-            papi_mountpoint: {
-                packageUUID1: active,
-                packageUUID2: active,
-                etc..
+        Returns a dictionary of the form:
+        {
+            "/Package_api_get1": {
+                Packageuuid1: active,
+                Packageuuid2: active,
+                ...
             }
         }
         """
         query = session.query(Convergence).filter_by(parentGroupId=gid).all()
         ret = {}
         for line in query:
-            papi = {}
-            papi["mountpoint"] = "/package_api_get1"
-            ret[papi["mountpoint"]] = {}
-            ret[papi["mountpoint"]][line.packageUUID] = line.active
-
+            mountpoint = "/package_api_get1"
+            if mountpoint not in ret:
+                ret[mountpoint] = {}
+            ret[mountpoint][line.packageUUID] = line.active
         return ret
+
+    @DatabaseHelper._sessionm
+    def getConvergenceStatusByCommandId(self, session, commandId):
+        """
+        Returns a dictionary of the type:
+        {"/Package_api_get1": {<Packageuuid>: <active>}}
+        for the recording corresponding to the given commandid.
+        If no recording is found, refers {"/Package_api_get1": {}}.
+        """
+        mountpoint = "/package_api_get1"
+        row = session.query(Convergence).filter(Convergence.commandId == commandId).first()
+
+        if row is None:
+            return {mountpoint: {}}
+
+        return {mountpoint: {row.packageUUID: row.active}}
 
     @DatabaseHelper._session
     def get_active_convergence_commands(self, session, package_id):
@@ -1184,20 +1228,21 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
     @DatabaseHelper._session
     def get_convergence_command_id(self, session, gid, package_id):
-        query = session.query(Convergence).filter_by(
-            parentGroupId=gid, packageUUID=package_id
+        query = (
+            session.query(Convergence)
+            .filter_by(parentGroupId=gid, packageUUID=package_id)
+            .order_by(Convergence.id.desc())
         )
-        try:
-            ret = query.one()
-            return ret.commandId
-        except (MultipleResultsFound, NoResultFound) as e:
+        ret = query.first()
+        if ret is None:
             self.logger.warn(
-                "Error while fetching convergence command id for group %s (package UUID %s): %s"
-                % (gid, package_id, e)
+                "Error while fetching convergence command id for group %s (package UUID %s): No record found"
+                % (gid, package_id)
             )
             return None
+        return ret.commandId
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def get_convergence_phases(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId=gid, packageUUID=package_id
@@ -1206,22 +1251,27 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             ret = query.one()
         except (MultipleResultsFound, NoResultFound) as e:
             self.logger.warn(
-                "Error while fetching convergence command id for group %s (package UUID %s): %s"
-                % (gid, package_id, e)
+                f"Error while fetching convergence command id for group {gid} (package UUID {package_id}): {e}"
             )
             return None
+
         try:
-            ret.cmdPhases = (
-                ret.cmdPhases.encode("utf-8")
-                if isinstance(ret.cmdPhases, str)
-                else ret.cmdPhases
-            )
-            ret.cmdPhases = {}
+            if isinstance(ret.cmdPhases, str):
+                ret.cmdPhases = base64.b64decode(ret.cmdPhases)
+
+            if isinstance(ret.cmdPhases, bytes):
+                ret.cmdPhases = pickle.loads(ret.cmdPhases)
+            if not isinstance(ret.cmdPhases, dict):
+                self.logger.error(f"cmdPhases is not a dictionary pour gid={gid}, package_id={package_id}")
+                return {}
+
 
             return ret.cmdPhases
 
-        except EOFError as e:
-            return False
+        except (EOFError, pickle.UnpicklingError, base64.binascii.Error) as e:
+            self.logger.error(f"Impossible to decode cmdPhases for gid={gid}, package_id={package_id}. Erreur: {e}")
+            return {}
+
 
     @DatabaseHelper._session
     def is_convergence_active(self, session, gid, package_id):
