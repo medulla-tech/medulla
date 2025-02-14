@@ -81,6 +81,7 @@ if (getParam('editConvergence')) {
     $params["editConvergence"]      = true;
     $params["actionconvergenceint"] = getParam('actionconvergenceint');
     $params["actionconvergence"]    = getParam('actionconvergence');
+    $params["previous"]             = getParam('previous');
     $params["active"]               = xmlrpc_is_convergence_active(getParam('gid', null), getParam('pid')) ? 'on' : 'inactive';
 
     foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'do_inventory', 'do_halt') as $key) {
