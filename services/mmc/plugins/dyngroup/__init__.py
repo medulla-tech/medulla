@@ -525,6 +525,9 @@ class RpcProxy(RpcProxyI):
     def getInfosNameGroup(self, arrayuuidgroup):
         return DyngroupDatabase().getInfosNameGroup(arrayuuidgroup)
 
+    def getDisplayGroupName(self, arrayuuidgroup):
+        return DyngroupDatabase().getDisplayGroupName(arrayuuidgroup)
+
     def getMachineforentityList(self, min, max, filt):
         return ComputerManager().getMachineforentityList(min, max, filt)
 
