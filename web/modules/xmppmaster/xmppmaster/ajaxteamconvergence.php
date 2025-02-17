@@ -55,7 +55,6 @@ $end        = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage)
 if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1') {
     $status = "";
     $LastdeployINsecond = 3600 * 24;
-    echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
     $arraydeploy = xmlrpc_getdeploybyteamuserrecent_for_convergence($_GET['login'], $status, $LastdeployINsecond, $start, $end, $filter);
     $arraynotdeploy = xmlrpc_getnotdeploybyteamuserrecent($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 } else {
@@ -161,7 +160,7 @@ for ($i = 0; $i < safeCount($arraydeploy['tabdeploy']['start']); $i++) {
 $lastcommandid = get_array_last_commands_on_cmd_id_start_end($arraydeploy['tabdeploy']['command']);
 $statarray     = xmlrpc_getarraystatbycmd($arraydeploy['tabdeploy']['command']);
 $convergence   = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
-$groupname     = getInfosNameGroup($arraydeploy['tabdeploy']['group_uuid']);
+$groupname     = getDisplayGroupName($arraydeploy['tabdeploy']['group_uuid']);
 $index = 0;
 foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
     $machineDetails = json_decode($arraydeploy['tabdeploy']['machine_details_json'][$index], true);
@@ -217,7 +216,7 @@ foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
     } else {
         $arraystate[] = "<span style='background-color:{$color};'>{$progressrate}%</span>";
     }
-    $namegrp = $groupname[$groupid]['name'] ?? _T("This group doesn't exist", "xmppmaster");
+    $namegrp = $groupname[$groupid] ?? _T("This group doesn't exist", "xmppmaster");
     $arrayname[] = "<span style='text-decoration: underline;'><img style='position:relative;top: 5px;' src='img/other/machinegroup.svg' width='25' height='25' /> {$namegrp}</span>";
     if ($convergence[$arraydeploy['tabdeploy']['command'][$index]] != 0) {
         $arraytitlename[] = "<img style='position:relative;top: 5px;' src='img/other/convergence.svg' width='25' height='25' /> {$arraydeploy['tabdeploy']['title'][$index]}";

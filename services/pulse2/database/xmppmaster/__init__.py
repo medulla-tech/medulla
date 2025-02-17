@@ -5760,6 +5760,119 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
+    def get_convergence_deploys_by_user_with_interval(
+        self,
+        session,
+        login,
+        state,
+        intervalsearch,
+        minimum=None,
+        maximum=None,
+        filt=None,
+        typedeploy="command",
+    ):
+        """
+        Retrieve recent deployments for a user, filtering only those with "Convergence" in the title.
+
+        Args:
+            session: SQLAlchemy session.
+            login: User login.
+            state: Deployment state.
+            intervalsearch: Search interval in seconds.
+            minimum: Pagination start index.
+            maximum: Pagination end index.
+            filt: Additional filter.
+
+        Returns:
+            Dictionary with deployment details filtered by user and "Convergence".
+        """
+        deploylog = session.query(Deploy)
+        deploylog = deploylog.filter(Deploy.title.like("Convergence%"))
+        deploylog = deploylog.filter(Deploy.sessionid.like(f"{typedeploy}%"))
+
+        if login:
+            deploylog = deploylog.filter(Deploy.login == login)
+
+        if state:
+            deploylog = deploylog.filter(Deploy.state == state)
+
+        if intervalsearch:
+            deploylog = deploylog.filter(
+                Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch))
+            )
+
+        if filt:
+            deploylog = deploylog.filter(
+                or_(
+                    Deploy.state.like(f"%{filt}%"),
+                    Deploy.pathpackage.like(f"%{filt}%"),
+                    Deploy.start.like(f"%{filt}%"),
+                    Deploy.login.like(f"%{filt}%"),
+                    Deploy.host.like(f"%{filt}%"),
+                )
+            )
+
+        len_query = self.get_count(deploylog)
+
+        deploylog = deploylog.group_by(Deploy.title).order_by(desc(Deploy.id))
+
+        if minimum and maximum:
+            deploylog = deploylog.offset(int(minimum)).limit(int(maximum) - int(minimum))
+
+        result = deploylog.all()
+        session.commit()
+        session.flush()
+
+        ret = {
+            "total_of_rows": len_query,
+            "lentotal": len(result),
+            "tabdeploy": {
+                "state": [],
+                "pathpackage": [],
+                "sessionid": [],
+                "start": [],
+                "inventoryuuid": [],
+                "command": [],
+                "login": [],
+                "host": [],
+                "macadress": [],
+                "group_uuid": [],
+                "startcmd": [],
+                "endcmd": [],
+                "jidmachine": [],
+                "jid_relay": [],
+                "title": [],
+            },
+        }
+
+        reg = r"(.*)\.(.*)@(.*)/(.*)"
+        for linedeploy in result:
+            hostname = (
+                linedeploy.host.split(".")[0]
+                if re.match(reg, linedeploy.host)
+                else linedeploy.host.split("/")[1] if "/" in linedeploy.host else linedeploy.host
+            )
+
+            ret["tabdeploy"]["state"].append(linedeploy.state)
+            ret["tabdeploy"]["pathpackage"].append(linedeploy.pathpackage.split("/")[-1])
+            ret["tabdeploy"]["sessionid"].append(linedeploy.sessionid)
+            ret["tabdeploy"]["start"].append(str(linedeploy.start))
+            ret["tabdeploy"]["inventoryuuid"].append(linedeploy.inventoryuuid)
+            ret["tabdeploy"]["command"].append(linedeploy.command)
+            ret["tabdeploy"]["login"].append(linedeploy.login)
+            ret["tabdeploy"]["host"].append(hostname)
+            ret["tabdeploy"]["macadress"].append(linedeploy.macadress)
+            ret["tabdeploy"]["group_uuid"].append(linedeploy.group_uuid)
+            ret["tabdeploy"]["startcmd"].append(linedeploy.startcmd)
+            ret["tabdeploy"]["endcmd"].append(linedeploy.endcmd)
+            ret["tabdeploy"]["jidmachine"].append(linedeploy.jidmachine)
+            ret["tabdeploy"]["jid_relay"].append(linedeploy.jid_relay)
+            ret["tabdeploy"]["title"].append(linedeploy.title)
+
+        return ret
+
+
+    @DatabaseHelper._sessionm
     def get_deploy_by_team_member_for_convergence(
         self,
         session,
@@ -5802,7 +5915,7 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         pulse_usersid = self.get_teammembers_from_login(login)
         if not pulse_usersid or (len(pulse_usersid) == 1 and pulse_usersid[0] == "root"):
-            return self.get_deploy_by_user_with_interval(
+            return self.get_convergence_deploys_by_user_with_interval(
                 login,
                 state,
                 intervalsearch,
