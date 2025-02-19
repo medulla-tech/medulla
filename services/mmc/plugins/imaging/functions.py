@@ -3707,7 +3707,7 @@ class ImagingRpcProxy(RpcProxyI):
         if not db_computer:
             return [
                 False,
-                "imaging.getMachineByUuidSetup() : I was unable to find a computer corresponding to the MAC address %s"
+                "imaging.getMachineByUuidSetup() : I was unable to find a computer corresponding to the UUID %s"
                 % uuid,
             ]
 
