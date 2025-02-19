@@ -33,9 +33,10 @@ from sqlalchemy import (
     desc,
     func,
     distinct,
+    inspect
 )
 from sqlalchemy.orm import create_session, mapper, relationship
-
+from sqlalchemy.exc import NoSuchTableError
 try:
     from sqlalchemy.sql.expression import ColumnOperators
 except ImportError:
@@ -695,17 +696,14 @@ class Glpi100(DyngroupDatabaseHelper):
                 Column("entities_id", Integer, ForeignKey("glpi_entities.id")),
                 autoload=True,
             )
-            mapper(Collects, self.collects)
-        except:
+        except  NoSuchTableError:
             self.collects = Table(
                 "glpi_plugin_glpiinventory_collects",
                 self.metadata,
-                Column("entities_id", Integer, ForeignKey("glpi_entities.id")),
                 autoload=True,
             )
-            mapper(Collects, self.collects)
+        mapper(Collects, self.collects)
 
-        # registries
         try:
             self.registries = Table(
                 "glpi_plugin_fusioninventory_collects_registries",
@@ -717,21 +715,14 @@ class Glpi100(DyngroupDatabaseHelper):
                 ),
                 autoload=True,
             )
-            mapper(Registries, self.registries)
-        except:
+        except  NoSuchTableError:
             self.registries = Table(
                 "glpi_plugin_glpiinventory_collects_registries",
                 self.metadata,
-                Column(
-                    "plugin_fusioninventory_collects_id",
-                    Integer,
-                    ForeignKey("glpi_plugin_fusioninventory_collects.id"),
-                ),
                 autoload=True,
             )
-            mapper(Registries, self.registries)
+        mapper(Registries, self.registries)
 
-        # registries contents
         try:
             self.regcontents = Table(
                 "glpi_plugin_fusioninventory_collects_registries_contents",
@@ -744,20 +735,13 @@ class Glpi100(DyngroupDatabaseHelper):
                 ),
                 autoload=True,
             )
-            mapper(RegContents, self.regcontents)
         except:
             self.regcontents = Table(
                 "glpi_plugin_glpiinventory_collects_registries_contents",
                 self.metadata,
-                Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
-                Column(
-                    "plugin_glpiinventory_collects_registries_id",
-                    Integer,
-                    ForeignKey("glpi_plugin_glpiinventory_collects_registries.id"),
-                ),
                 autoload=True,
             )
-            mapper(RegContents, self.regcontents)
+        mapper(RegContents, self.regcontents)
 
         # items contents
         self.computersitems = Table(
@@ -3470,16 +3454,27 @@ class Glpi100(DyngroupDatabaseHelper):
         @param value: The new value
         @param value: string
         """
-
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. setGlpiEditableValue")
+            return True
         self.logger.debug("Update an editable field")
         self.logger.debug("%s: Set %s as new value for %s" % (uuid, value, name))
         try:
             session = create_session()
 
+            # table plugin
+            tables_with_prefix = [table for table in self.metadata.tables if table.startswith("glpi_plugin_glpiinventory")]
+
+            # inspector = inspect(session.bind)
             # Get SQL field who will be updated
             table, field = self.__getTableAndFieldFromName(name)
             session.query(table).filter_by(id=fromUUID(uuid)).update({field: value})
 
+            if tables_with_prefix:
+                # plugin glpiinventory ne prends pas en charge FusionLocks
+                self.logger.warning("During a GLPI re-enrollment, the customized computer name or description will not be protected.")
+                session.close()
+                return True
             # Set updated field as a locked field so it won't be updated
             # at next inventory
             query = session.query(FusionLocks).filter(
@@ -3503,10 +3498,10 @@ class Glpi100(DyngroupDatabaseHelper):
                         }
                     )
                 )
-
             session.close()
             return True
         except Exception as e:
+            self.logger.error("\n%s" % (traceback.format_exc()))
             self.logger.error(e)
             return False
 
@@ -6019,6 +6014,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def addUser(self, session, username, password, entity_rights=None):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. addUser")
+            return True
         # Check if the user exits or not
         try:
             user = session.query(User).filter_by(name=username).one()
@@ -6045,6 +6043,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def setUserPassword(self, session, username, password):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. setUserPassword")
+            return True
         try:
             user = session.query(User).filter_by(name=username).one()
         except NoResultFound:
@@ -6062,6 +6063,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def addEntity(self, session, entity_name, parent_id, comment):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. addEntity")
+            return True
         entity = Entities()
         entity.id = session.query(func.max(Entities.id)).scalar() + 1
         entity.entities_id = parent_id  # parent
@@ -6085,6 +6089,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def editEntity(self, session, id, entity_name, parent_id, comment):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. addEntityRule")
+            return True
         entity = session.query(Entities).filter_by(id=id).one()
         entity.entities_id = parent_id  # parent
         entity.name = entity_name
@@ -6119,6 +6126,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def addLocation(self, session, name, parent_id, comment):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. addLocation")
+            return True
         location = Locations()
         location.entities_id = 0  # entity is root
         location.name = name
@@ -6147,6 +6157,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def editLocation(self, session, id, name, parent_id, comment):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. editLocation")
+            return True
         location = session.query(Locations).filter_by(id=id).one()
         location.locations_id = parent_id  # parent
         location.name = name
@@ -6194,6 +6207,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def addEntityRule(self, session, rule_data):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. addEntityRule")
+            return True
         rule = Rule()
         # root entity (this means that rule is appliable on root entity and all subentities)
         rule.entities_id = 0
@@ -6284,6 +6300,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def moveEntityRuleUp(self, session, id):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. moveEntityRuleUp")
+            return True
         rule = session.query(Rule).filter_by(id=id).one()
         # get previous rule
         previous = (
@@ -6307,6 +6326,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def moveEntityRuleDown(self, session, id):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. moveEntityRuleDown")
+            return True
         rule = session.query(Rule).filter_by(id=id).one()
         # get next rule
         next_ = (
@@ -6330,6 +6352,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def editEntityRule(self, session, id, rule_data):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. editEntityRule")
+            return True
         rule = session.query(Rule).filter_by(id=id).one()
         # Delete associated criteria and actions
         session.query(RuleCriterion).filter_by(rules_id=id).delete()
@@ -6417,6 +6442,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def deleteEntityRule(self, session, id):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. deleteEntityRule")
+            return True
         # Delete rule
         session.query(Rule).filter_by(id=id).delete()
         # Delete associated criteria and actions
@@ -6449,6 +6477,9 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def setLocationsForUser(self, session, username, profiles):
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. setLocationsForUser")
+            return True
         user_id = session.query(User).filter_by(name=username).one().id
         # Delete all user entity profiles
         session.query(UserProfile).filter_by(users_id=user_id).delete()
@@ -6477,11 +6508,16 @@ class Glpi100(DyngroupDatabaseHelper):
         @return: id of the registry collect
         @rtype: int
         """
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. getRegistryCollect")
+            return False
+        parts = full_key.split("\\")
 
-        # Split into hive / path / key
-        hive = full_key.split("\\")[0]
-        key = full_key.split("\\")[-1]
+        hive = parts[0]
+        key = parts[-1]
+
         path = full_key.replace(hive + "\\", "").replace("\\" + key, "")
+
         path = "/" + path + "/"
         # Get registry_id
         try:
@@ -6510,15 +6546,23 @@ class Glpi100(DyngroupDatabaseHelper):
         @return: success of the operation
         @rtype: bool
         """
-
+        if self.config.dbreadonly:
+            self.logger.debug("Impossible d'exécuter GLPI  en mode lecture seule. addRegistryCollect")
+            return True
         # Split into hive / path / key
-        hive = full_key.split("\\")[0]
-        key = full_key.split("\\")[-1]
+        parts = full_key.split("\\")
+
+        hive = parts[0]
+        key = parts[-1]
+
+
         path = full_key.replace(hive + "\\", "").replace("\\" + key, "")
+
         path = "/" + path + "/"
         # Insert in database
         registry = Registries()
         registry.name = key_name
+
         # Get collects_id
         try:
             collects_id = (
@@ -6529,7 +6573,16 @@ class Glpi100(DyngroupDatabaseHelper):
             )
         except:
             return False
-        registry.plugin_fusioninventory_collects_id = collects_id
+
+        # Determine the correct field to use
+        if hasattr(registry, 'plugin_fusioninventory_collects_id'):
+            registry.plugin_fusioninventory_collects_id = collects_id
+        elif hasattr(registry, 'plugin_glpiinventory_collects_id'):
+            registry.plugin_glpiinventory_collects_id = collects_id
+        else:
+            self.logger.error("No valid collects_id field found in Registries table.")
+            return False
+
         registry.hive = hive
         registry.path = path
         registry.key = key
@@ -6537,6 +6590,7 @@ class Glpi100(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
         return True
+
 
     def getAllOsVersions(self, ctx, filt=""):
         """@return: all os versions defined in the GLPI database"""
@@ -6586,7 +6640,7 @@ class Glpi100(DyngroupDatabaseHelper):
         @param computers_id: the computer_id from glpi_computers_pulse
         @type computers_id: str
 
-        @param registry_id: the registry_id from plugin_fusioninventory_collects_registries
+        @param registry_id: the registry_id from plugin_fusioninventory_collects_registries or plugin_glpiinventory_collects_registries
         @type registry_id: str
 
         @param key: the registry key name
@@ -6598,38 +6652,46 @@ class Glpi100(DyngroupDatabaseHelper):
         @return: success of the operation
         @rtype: bool
         """
+        if self.config.dbreadonly:
+            self.logger.warning("Impossible d'exécuter, GLPI  en mode lecture seule. (RegistryCollectContent)")
+            return True
+        # Déterminer le bon champ selon le plugin actif
+        fusioninventory_field = "plugin_fusioninventory_collects_registries_id"
+        glpiinventory_field = "plugin_glpiinventory_collects_registries_id"
 
-        # Check if already present
-        try:
-            contents_id = (
-                session.query(RegContents)
-                .filter_by(
-                    computers_id=computers_id,
-                    plugin_fusioninventory_collects_registries_id=registry_id,
-                    key=key,
-                )
-                .first()
-                .id
-            )
-            if contents_id:
-                # Update database
-                session.query(RegContents).filter_by(id=contents_id).update(
-                    {"value": str(value)}
-                )
-                session.commit()
-                session.flush()
-                return True
-        except AttributeError:
-            # Insert in database
+        if hasattr(RegContents, fusioninventory_field):
+            registry_field = fusioninventory_field
+        elif hasattr(RegContents, glpiinventory_field):
+            registry_field = glpiinventory_field
+        else:
+            self.logger.error("Aucun champ valide trouvé pour les registres GLPI/FusionInventory.")
+            return False  # Échec car aucun champ valide
+
+        # Vérifier si l'entrée existe déjà
+        query = session.query(RegContents).filter_by(computers_id=computers_id, key=key)
+        query = query.filter_by(**{registry_field: registry_id})
+
+        contents = query.first()  # Récupérer l'entrée existante (s'il y en a une)
+
+        if contents:
+            # Mettre à jour la valeur existante
+            session.query(RegContents).filter_by(id=contents.id).update({"value": str(value)})
+            session.commit()
+            session.flush()
+            return True
+        else:
+            # Insérer une nouvelle entrée
             regcontents = RegContents()
             regcontents.computers_id = int(computers_id)
-            regcontents.plugin_fusioninventory_collects_registries_id = int(registry_id)
+            # selon le plugin actif
+            setattr(regcontents, registry_field, int(registry_id))  # Définir dynamiquement le bon champ
             regcontents.key = str(key)
             regcontents.value = str(value)
             session.add(regcontents)
             session.commit()
             session.flush()
             return True
+
 
     @DatabaseHelper._sessionm
     def get_os_for_dashboard(self, session):
