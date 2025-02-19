@@ -72,14 +72,15 @@ if ($entity == '') {
         "actionPendingByMachines"=>[],
         "actionDoneByMachines"=>[],
     ];
-    foreach($_machines as $uuid=> $mach){
+    foreach($_machines as $uuid => $mach){
         $machines["uuid"][] = $uuid;
         $machines["cn"][] = $mach[1]["cn"][0];
         $machines["os"][] = $mach[1]["os"];
+        $compliance_bloc = "";
 
-        $machines["actionPendingByMachines"][] = $pendingByMach;
-        $machines["actionDetailByMachines"][] = $detailsByMach;
-        $machines["actionDoneByMachines"][] = $doneByMach;
+        $machines["actionPendingByMachines"][] = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
+        $machines["actionDetailByMachines"][] = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
+        $machines["actionDoneByMachines"][] = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
 
         //FUNCTION TO GET ID
         $xmppdatas = xmlrpc_get_idmachine_from_name($mach[1]["cn"][0]);
@@ -93,11 +94,14 @@ if ($entity == '') {
         $color = colorconf($compliance);
 
         $complRate = "<div class='progress' style='width: ".$compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance."% </div>";
-        $params[] = [
-            "machineid" => $id_machine,
-            "inventoryid" => $k,
-            "cn" => $v[1]['cn'][0]
-        ];
+        $params = [];
+        foreach ($_machines as $k => $v) {
+            $params[] = [
+                "machineid" => $id_machine,
+                "inventoryid" => $k,
+                "cn" => isset($v[1]['cn'][0]) ? $v[1]['cn'][0] : 'Unknown'
+            ];
+        }
         $machines["installed"][] = $installed;
         $machines["missing"][] = $missing;
         $machines["inprogress"] = [];
