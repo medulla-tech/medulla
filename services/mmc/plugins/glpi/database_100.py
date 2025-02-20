@@ -723,6 +723,7 @@ class Glpi100(DyngroupDatabaseHelper):
             )
         mapper(Registries, self.registries)
 
+        # registries contents
         try:
             self.regcontents = Table(
                 "glpi_plugin_fusioninventory_collects_registries_contents",
@@ -735,10 +736,16 @@ class Glpi100(DyngroupDatabaseHelper):
                 ),
                 autoload=True,
             )
-        except:
+        except  NoSuchTableError:
             self.regcontents = Table(
                 "glpi_plugin_glpiinventory_collects_registries_contents",
                 self.metadata,
+                Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+                Column(
+                    "plugin_glpiinventory_collects_registries_id",
+                    Integer,
+                    ForeignKey("glpi_plugin_glpiinventory_collects_registries.id"),
+                ),
                 autoload=True,
             )
         mapper(RegContents, self.regcontents)
