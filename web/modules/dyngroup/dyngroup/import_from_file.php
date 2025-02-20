@@ -43,7 +43,7 @@ if (isset($groupname) && $groupname != '') {
         } else {
             $group = new Group();
             $group->create($groupname, ($visibility == 'visible'));
-            $content = file($_FILES['importfile']['tmp_name']);
+            $content = file($_FILES['importfile']['tmp_name'], FILE_SKIP_EMPTY_LINES|FILE_IGNORE_NEW_LINES);
             $content = array_map('chop', $content);
 
             $oldSystemCriterion = [

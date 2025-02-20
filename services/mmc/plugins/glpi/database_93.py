@@ -2372,15 +2372,14 @@ class Glpi93(DyngroupDatabaseHelper):
         ret = {}
         if get != None:
             for m in machines:
-                if isinstance(m, tuple):
-                    m = m[0]
+                m = m[0] if isinstance(m, (tuple, Row)) else m
                 ret[m.getUUID()] = self.__getAttr(m, get)
             return ret
 
         names = {}
         for m in machines:
             displayList = False
-            if isinstance(m, tuple):
+            if isinstance(m, (tuple, Row)):
                 displayList = True
                 # List of fields defined around line 439
                 # m, os, type, inventorynumber, state, entity, location, model, manufacturer, owner = m
@@ -2544,6 +2543,7 @@ class Glpi93(DyngroupDatabaseHelper):
 
         ret = None, None, None
         session = create_session()
+        machine = machine[0] if isinstance(machine, (tuple, Row)) else machine
         query = session.query(User).select_from(self.user.join(self.machine))
         query = query.filter(self.machine.c.id == machine.id).first()
         if query is not None:
