@@ -744,8 +744,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 ),
                 autoload=True,
             )
-            mapper(RegContents, self.regcontents)
-        except:
+        except  NoSuchTableError:
             self.regcontents = Table(
                 "glpi_plugin_glpiinventory_collects_registries_contents",
                 self.metadata,
@@ -757,7 +756,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 ),
                 autoload=True,
             )
-            mapper(RegContents, self.regcontents)
+        mapper(RegContents, self.regcontents)
 
         # items contents
         self.computersitems = Table(
