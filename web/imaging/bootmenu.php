@@ -135,7 +135,7 @@ $multicast = false;
 $multicast_image_uuid = null;
 $multicast_image_name = null;
 $timeout = 10;
-$menuMulticastTemplate = "#!ipxe
+$menuMulticastTemplateHeader = "#!ipxe
 set loaded-menu MENU
 cpuid --ext 29 && set arch x86_64 || set arch i386
 goto get_console
@@ -157,13 +157,15 @@ colour --rgb 0xff0000 0 ||
 cpair --foreground 1 1 ||
 cpair --foreground 0 3 ||
 cpair --foreground 4 4 ||
-item --gap Host %s - %s registered on %s!
+item --gap Host %s - \${mac} registered on %s!
 item --gap -- -------------------------------------
 item clonezilla Restore Multicast %s
-choose --default clonezilla --timeout 10000 target && goto \${target}
+";
+
+$menuMulticastTemplateItem = "choose --default clonezilla --timeout 10000 target && goto \${target}
 :clonezilla
 set url_path http://\${next-server}/downloads/davos/
-set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST initrd=initrd.img
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST initrd=initrd.img
 kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot || goto MENU
@@ -334,7 +336,8 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
     if ($gid == null) {
         $query3->execute([$computer["uuid"], $computer["id"]]);
     } else {
-        $query3->execute([$gid]);
+        // $gid is doubled to match with the number of parameters in the query
+        $query3->execute([$gid, $gid]);
     }
 
     $target = $query3->fetch(PDO::FETCH_ASSOC);
@@ -347,6 +350,40 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
     $multicast_image_uuid = (!empty($target['multicast_image_uuid'])) ? $target['multicast_image_uuid'] : null;
     $multicast_image_name = (!empty($target['multicast_image_name'])) ? $target['multicast_image_name'] : null;
     $multicast = ($multicast_image_uuid != null && $multicast_image_name != null) ? true : false;
+    $multicastVirtuals = [];
+
+    if($multicast == true){
+        $multicastPostinstalls = $db["imaging"]->prepare("select
+    pis.id,
+    pis.default_name as name,
+    ? as type
+from MenuItem mi
+join ImageInMenu iim on iim.fk_menuitem = mi.id
+join Image i on i.id = iim.fk_image and uuid=?
+join PostInstallInMenu pim on pim.fk_menuitem = mi.id
+join PostInstallScript pis on pis.id = pim.fk_post_install_script
+where fk_menu = ?");
+
+        $multicastPostinstalls->execute(["postinstall", $multicast_image_uuid, $target["fk_menu"]]);
+        $tmp = $multicastPostinstalls->fetchAll(PDO::FETCH_ASSOC);
+
+        $multicastProfiles = $db["imaging"]->prepare("select
+    p.id,
+    p.name,
+    ? as type
+from MenuItem mi
+join ImageInMenu iim on iim.fk_menuitem = mi.id
+join Image i on i.id = iim.fk_image and uuid=?
+join ProfileInMenu pim on pim.fk_menuitem = mi.id
+join Profile p on p.id = pim.fk_profile
+where fk_menu = ?");
+
+        $multicastProfiles->execute(["profile", $multicast_image_uuid, $target["fk_menu"]]);
+        $tmp2 = $multicastProfiles->fetchAll(PDO::FETCH_ASSOC);
+
+        $multicastVirtuals = array_merge($tmp, $tmp2);
+    }
+
     $debug_ipxe .= "# hostname : $computer[name]
 # mac : $mac
 # machine id : $computer[id]
@@ -594,7 +631,26 @@ goto MENU
     //
     // MULTICAST MODE
     //
-    $ipxe = sprintf($menuMulticastTemplate, mb_convert_encoding($computerName, 'UTF-8', 'UTF-8'), $mac, $srv, mb_convert_encoding($multicast_image_name, 'UTF-8', 'UTF-8'), $mac, $multicast_image_uuid);
+    $cn = mb_convert_encoding($computerName, 'UTF-8', 'UTF-8');
+    $imageName = mb_convert_encoding($multicast_image_name, 'UTF-8', 'UTF-8');
+
+    $ipxe = sprintf($menuMulticastTemplateHeader, $cn, $srv, $imageName);
+    foreach($multicastVirtuals as $virtual){
+        $virtualLabel = $virtual["type"].'-'.str_replace(' ', '-', $virtual["name"]);
+        $ipxe .= "item clonezilla-".$virtualLabel." Restore Multicast ".$imageName." with ".$virtual["type"]." ".$virtual["name"]."
+";
+    }
+    $ipxe .= sprintf($menuMulticastTemplateItem, $multicast_image_uuid);
+    foreach($multicastVirtuals as $virtual){
+        $virtualLabel = $virtual["type"].'-'.str_replace(' ', '-', $virtual["name"]);
+        $ipxe .=":clonezilla-".$virtualLabel."
+set url_path http://\${next-server}/downloads/davos/
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} revorestorenfs image_uuid=".$multicast_image_uuid." davos_action=RESTORE_IMAGE_MULTICAST $virtual[type]=$virtual[id] initrd=initrd.img
+kernel \${url_path}vmlinuz \${kernel_args}
+initrd \${url_path}initrd.img
+boot || goto MENU
+";
+    }
 }
 
 //
