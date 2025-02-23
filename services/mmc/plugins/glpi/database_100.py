@@ -737,7 +737,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 ),
                 autoload=True,
             )
-        except  NoSuchTableError:
+        except NoSuchTableError:
             self.regcontents = Table(
                 "glpi_plugin_glpiinventory_collects_registries_contents",
                 self.metadata,
