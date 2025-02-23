@@ -7343,7 +7343,6 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
         return result
 
-
     @DatabaseHelper._sessionm
     def get_os_update_major_stats(self, session):
         """
@@ -7375,9 +7374,9 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
         """
         try:
             # Dictionnaire final des résultats
-            cols=["W10to10", "W10to11", "W11to11"]
+            cols = ["W10to10", "W10to11", "W11to11"]
             results = {"entity": {}}
-            total_os_sql =f'''
+            total_os_sql = f"""
                         SELECT
                                 e.name AS entity_name,
                                 e.completename AS complete_name,
@@ -7396,14 +7395,16 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                                 os.name LIKE '%Windows%'
                             GROUP BY e.id
                             ORDER BY e.name;
-            '''
+            """
             total_os_result = session.execute(total_os_sql).fetchall()
             for row in total_os_result:
-                results["entity"].setdefault(row.complete_name, {"count" :  int(row.count)})
+                results["entity"].setdefault(
+                    row.complete_name, {"count": int(row.count)}
+                )
                 # results["entity"][row.complete_name]["count"] = int(row.count)
 
             # Requête pour les statistiques par entité
-            entity_sql = '''
+            entity_sql = """
                         SELECT
                         e.name AS entity_name,
                         e.completename AS complete_name,
@@ -7442,20 +7443,22 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                         os.name LIKE '%Windows%'
                     GROUP BY e.name, os
                     ORDER BY e.name;
-            '''
+            """
             entity_result = session.execute(entity_sql).fetchall()
 
             for row in entity_result:
                 # initialisation
                 results["entity"].setdefault(row.complete_name, {})
-                results["entity"][row.complete_name]["name"]=row.entity_name
-                results["entity"][row.complete_name][row.os ]=int(row.nbwin)
+                results["entity"][row.complete_name]["name"] = row.entity_name
+                results["entity"][row.complete_name][row.os] = int(row.nbwin)
 
             # Calcul de la conformité
             for entity, data in results["entity"].items():
-                total=results["entity"][entity]["count"]
+                total = results["entity"][entity]["count"]
                 non_conforme = sum(data.get(key, 0) for key in cols)
-                results["entity"][entity]["conformite"] = round(((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2)
+                results["entity"][entity]["conformite"] = round(
+                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                )
             # Copier les clés existantes avant d'itérer
             existing_entities = list(results["entity"].keys())
 
@@ -7467,7 +7470,9 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
             return results
 
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+            )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
