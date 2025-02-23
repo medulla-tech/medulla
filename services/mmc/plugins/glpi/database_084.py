@@ -6365,11 +6365,20 @@ class Glpi084(DyngroupDatabaseHelper):
         if self.config.filter_on is not None:
             for key in self.config.filter_on:
                 if key == "state":
-                    filter_on = "%s AND gcp.states_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                    filter_on = "%s AND gcp.states_id in (%s)" % (
+                        filter_on,
+                        ",".join(self.config.filter_on[key]),
+                    )
                 if key == "type":
-                    filter_on = "%s AND gcp.computertypes_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                    filter_on = "%s AND gcp.computertypes_id in (%s)" % (
+                        filter_on,
+                        ",".join(self.config.filter_on[key]),
+                    )
                 if key == "entity":
-                    filter_on = "%s AND gcp.entities_id in (%s)"%(filter_on, ",".join(self.config.filter_on[key]))
+                    filter_on = "%s AND gcp.entities_id in (%s)" % (
+                        filter_on,
+                        ",".join(self.config.filter_on[key]),
+                    )
 
         sqlrequest = """
             SELECT
@@ -6394,7 +6403,12 @@ class Glpi084(DyngroupDatabaseHelper):
                 (gsv.comment LIKE '%%Update%%' OR COALESCE(gsv.comment, '') = '')
             AND
                 gcp.id not in (%s)
-            %s;""" % (uuid.replace("UUID", ""), kb, hlist, filter_on)
+            %s;""" % (
+            uuid.replace("UUID", ""),
+            kb,
+            hlist,
+            filter_on,
+        )
         result = {}
         res = session.execute(sqlrequest)
         for element in res:
@@ -6678,8 +6692,10 @@ class Glpi084(DyngroupDatabaseHelper):
     def get_plugin_inventory_state(self, session, plugin_name=""):
         where_clause = ""
         if plugin_name != "":
-            where_clause = "where directory = '%s'"%plugin_name
-        query = session.execute("""select id, directory, name, state from glpi_plugins %s"""%where_clause)
+            where_clause = "where directory = '%s'" % plugin_name
+        query = session.execute(
+            """select id, directory, name, state from glpi_plugins %s""" % where_clause
+        )
 
         result = {}
 
@@ -6688,9 +6704,10 @@ class Glpi084(DyngroupDatabaseHelper):
                 "id": element[0],
                 "directory": element[1],
                 "name": element[2],
-                "state": "enabled" if element[3] == 1 else "disabled"
+                "state": "enabled" if element[3] == 1 else "disabled",
             }
         return result
+
 
 # Class for SQLalchemy mapping
 class Machine(object):
