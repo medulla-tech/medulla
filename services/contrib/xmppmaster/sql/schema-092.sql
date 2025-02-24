@@ -75,10 +75,8 @@ END$$
 DELIMITER ;
 ;
 
-
 USE `xmppmaster`;
-DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_21H2`;
-;
+DROP procedure IF EXISTS `up_init_packages_Win11_X64_21H2`;
 
 DELIMITER $$
 USE `xmppmaster`$$
@@ -122,11 +120,10 @@ WHERE
 		AND aa.title NOT LIKE '%ARM64%'
 		AND aa.title NOT LIKE '%X86%'
         AND aa.title not like '%Dynamic%';
-        --
 END$$
 
 DELIMITER ;
-;
+
 
 
 USE `xmppmaster`;
