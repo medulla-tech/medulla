@@ -555,6 +555,8 @@ def pkgs_get_infos_details(uuidpackage):
     infodetail["verify"] = verify_package(uuidpackage)
     return infodetail
 
+def pkgsGetDetails(uuidpackage):
+    return PkgsDatabase().pkgsGetDetails(uuidpackage)
 
 def verify_package(uuidpackage):
     # verify fichier existe
