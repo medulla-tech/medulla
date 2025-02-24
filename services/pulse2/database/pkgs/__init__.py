@@ -1719,6 +1719,64 @@ class PkgsDatabase(DatabaseHelper):
         ]
 
     @DatabaseHelper._sessionm
+    def pkgsGetDetails(self, session, uuid):
+        """
+        Recover the details of a package from its Uuid and returns a dictionary.
+        """
+        try:
+            sql = """
+                SELECT
+                    pkgs.packages.label,
+                    pkgs.packages.description,
+                    pkgs.packages.uuid,
+                    pkgs.packages.version,
+                    pkgs.packages.os,
+                    pkgs.packages.inventory_licenses AS AssoINVinventorylicence,
+                    pkgs.packages.Qversion AS AssoINVversion,
+                    pkgs.packages.Qvendor AS AssoINVvendor,
+                    pkgs.packages.Qsoftware AS AssoINVsoftware,
+                    pkgs.pkgs_shares.name AS sharename,
+                    pkgs.pkgs_shares.comments AS sharecomments,
+                    GROUP_CONCAT(pkgs.dependencies.uuid_dependency) AS dependencies
+                FROM
+                    pkgs.packages
+                INNER JOIN
+                    pkgs.pkgs_shares ON pkgs.pkgs_shares.id = pkgs.packages.pkgs_share_id
+                LEFT JOIN
+                    pkgs.dependencies ON pkgs.dependencies.uuid_package = pkgs.packages.uuid
+                WHERE
+                    pkgs.packages.uuid = :uuid
+                GROUP BY
+                    pkgs.packages.uuid;
+            """
+
+            result = session.execute(sql, {"uuid": uuid}).mappings().first()
+            session.commit()
+
+            if not result:
+                return None
+
+            return {
+                "label": result["label"],
+                "description": result["description"],
+                "uuid": result["uuid"],
+                "version": result["version"],
+                "os": result["os"],
+                "AssoINVinventorylicence": result["AssoINVinventorylicence"],
+                "AssoINVversion": result["AssoINVversion"],
+                "AssoINVvendor": result["AssoINVvendor"],
+                "AssoINVsoftware": result["AssoINVsoftware"],
+                "sharename": result["sharename"],
+                "sharecomments": result["sharecomments"],
+                "dependencies": result["dependencies"].split(",") if result["dependencies"] else [],
+            }
+
+        except Exception:
+            session.rollback()
+            self.logger.error("Unknown error :\n%s", traceback.format_exc())
+            raise
+
+    @DatabaseHelper._sessionm
     def pkgs_get_sharing_list_login(self, session, loginname):
         sql = """SELECT
                     distinct pkgs.pkgs_shares.id as id_sharing,
