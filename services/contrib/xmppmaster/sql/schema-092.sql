@@ -77,13 +77,6 @@ DELIMITER ;
 
 
 USE `xmppmaster`;
-DROP procedure IF EXISTS `up_init_packages_Win11_X64`;
-
-
-USE `xmppmaster`;
-DROP procedure IF EXISTS `up_init_packages_Win11_X64_21H2`;
-
-USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_21H2`;
 ;
 
