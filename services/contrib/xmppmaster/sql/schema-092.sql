@@ -128,8 +128,6 @@ END$$
 DELIMITER ;
 ;
 
-USE `xmppmaster`;
-DROP procedure IF EXISTS `up_init_packages_Win11_X64_22H2`;
 
 USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_22H2`;
@@ -185,9 +183,6 @@ DELIMITER ;
 
 
 USE `xmppmaster`;
-DROP procedure IF EXISTS `up_init_packages_Win11_X64_23H2`;
-
-USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_23H2`;
 ;
 
@@ -241,9 +236,6 @@ DELIMITER ;
 
 
 USE `xmppmaster`;
-DROP procedure IF EXISTS `up_init_packages_Win11_X64_24H2`;
-
-USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_24H2`;
 ;
 
@@ -295,9 +287,6 @@ DELIMITER ;
 ;
 
 
-
-USE `xmppmaster`;
-DROP procedure IF EXISTS `up_create_product_tables`;
 
 USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_create_product_tables`;
