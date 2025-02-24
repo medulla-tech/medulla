@@ -63,13 +63,14 @@ FROM
         JOIN
     xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
 WHERE
-		aa.product LIKE '%Windows 11%'
+		aa.title LIKE '%Windows 11%'
+		AND aa.product LIKE '%Windows 11%'
 		AND aa.title NOT LIKE '%ARM64%'
 		AND aa.title NOT LIKE '%X86%'
         AND aa.title not like '%Dynamic%'
-        and aa.title not like '%22H2%'
-        and aa.title not like '%23H2%'
-        and aa.title not like '%21H2%';
+        AND aa.title not like '%22H2%'
+        AND aa.title not like '%23H2%'
+        AND aa.title not like '%21H2%';
 END$$
 
 DELIMITER ;
