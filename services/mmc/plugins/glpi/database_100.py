@@ -33,8 +33,11 @@ from sqlalchemy import (
     desc,
     func,
     distinct,
+    text,
+    inspect
 )
-from sqlalchemy.orm import create_session, mapper, relationship
+from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
+from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
 
 try:
     from sqlalchemy.sql.expression import ColumnOperators
@@ -7480,6 +7483,26 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                 for row in entity_result
             ]
 
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_plugin_inventory_state(self, session, plugin_name=""):
+        where_clause = ""
+        if plugin_name != "":
+            where_clause = "where directory = '%s'" % plugin_name
+        query = session.execute(
+            """select id, directory, name, state from glpi_plugins %s""" % where_clause
+        )
+
+        result = {}
+
+        for element in query:
+            result[element[1]] = {
+                "id": element[0],
+                "directory": element[1],
+                "name": element[2],
+                "state": "enabled" if element[3] == 1 else "disabled",
+            }
         return result
 
 # Class for SQLalchemy mapping

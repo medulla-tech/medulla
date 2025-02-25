@@ -121,7 +121,6 @@ def get_count_machine_with_update(kb, uuid, list):
 def get_os_update_major_stats():
     return Glpi().get_os_update_major_stats()
 
-
 def get_os_update_major_details(entity_id,
                                 filter="",
                                 start=0,

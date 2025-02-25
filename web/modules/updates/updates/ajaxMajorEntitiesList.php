@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * file modules/updates/updates/ajaxMajorEntitiesList.php
  */
 require_once("modules/updates/includes/html.inc.php");
 require_once("modules/glpi/includes/xmlrpc.php");

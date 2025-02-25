@@ -115,3 +115,23 @@ function xmlrpc_get_conformity_update_by_machines($ids = [])
 {
     return xmlCall("updates.get_conformity_update_by_machines", [$ids]);
 }
+
+function xmlrpc_get_os_update_major_stats()
+{
+    return xmlCall("updates.get_os_update_major_stats", []);
+}
+
+function xmlrpc_get_os_xmpp_update_major_stats()
+{
+    return xmlCall("updates.get_os_xmpp_update_major_stats", []);
+}
+
+function xmlrpc_get_os_update_major_details($entity_id, $filter="", $start=0, $limit=-1)
+{
+    return xmlCall("updates.get_os_update_major_details", [$entity_id, $filter, $start, $limit]);
+}
+
+function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1, )
+{
+    return xmlCall("updates.get_os_xmpp_update_major_details", [$entity_id, $filter, $start, $limit]);
+}
