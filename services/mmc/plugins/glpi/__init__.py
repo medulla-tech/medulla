@@ -332,3 +332,18 @@ def get_machine_for_hostname(strlisthostnale, filter="", start=0, end=0):
 
 def get_machine_for_id(strlistuuid, filter="", start=0, end=0):
     return xmlrpcCleanup(Glpi().get_machine_for_id(strlistuuid, filter, start, end))
+
+
+def get_os_update_major_stats():
+    return Glpi().get_os_update_major_stats()
+
+def get_os_update_major_details(entity_id,
+                                filter="",
+                                start=0,
+                                limit=-1,
+                                colonne=True):
+    return Glpi().get_os_update_major_details(entity_id,
+                                              filter,
+                                              start,
+                                              limit,
+                                              colonne)
