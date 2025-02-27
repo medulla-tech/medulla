@@ -2,10 +2,11 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
+ * (c) 2025 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -122,28 +123,6 @@ if (safeCount($initerror_on) > 0) {
     exit();
 }
 
-if (safeCount($todo_on) > 0) {
-    # DISPLAY the sync link
+print "<table><tr><td><b>";
+print "</b></font></td><td>";
 
-    print "<table><tr><td><b>";
-    print sprintf(_T('You have modified the boot menu for the following items : %s. If you are done please click on "Generate Menu" to update the computer boot menu.', 'imaging'), join(', ', $todo_on));
-    print "</b></font></td><td>";
-
-    $f = new ValidatingForm();
-    $f->add(new HiddenTpl("location_uuid"), array("value" => $location,  "hide" => true));
-
-    $f->addButton("bsync", _T("Generate Menu", "imaging"));
-    $f->display();
-    print "</td></tr></table>";
-} elseif (isExpertMode()) {
-    print "<table><tr><td>";
-    print _T('Click on "Force Generation" if you want to force the update of the boot menu', 'imaging');
-    print "</td><td>";
-
-    $f = new ValidatingForm();
-    $f->add(new HiddenTpl("location_uuid"), array("value" => $location,  "hide" => true));
-
-    $f->addButton("bsync", _T("Force Generation", "imaging"));
-    $f->display();
-    print "</td></tr></table>";
-}
