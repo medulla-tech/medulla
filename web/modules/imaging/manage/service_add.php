@@ -61,7 +61,6 @@ if (isset($_POST["bconfirm"])) {
         new NotifyWidgetSuccess($str);
         // Synchronize boot menu
         $ret = xmlrpc_synchroLocation($location);
-        new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging")));
         if (isXMLRPCError()) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
         }
