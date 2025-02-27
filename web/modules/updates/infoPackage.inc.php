@@ -200,6 +200,30 @@ $page = new Page("cancelUpdate", _T('Cancel Update', 'updates'));
 $page->setFile("modules/updates/updates/cancelUpdate.php", array("noHeader" => true,"visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
+// Major update
+$page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("updatesListMajorWin", _T('Manage Updates Major Lists', 'updates'));
+$page->setFile("modules/updates/updates/updatesListMajorWin.php");
+$submod->addPage($page);
+
+$page = new Page("deployUpdatemajor", _T('Deploy Major Updates On Machine', 'updates'));
+$page->setFile("modules/updates/updates/deployUpdatemajor.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorDetailsByMachines", _T("Details by Machines for major update", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorDetailsByMachines.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("majorDetailsByMachines", _T('Machines major update', 'updates'));
+$page->setFile("modules/updates/updates/majorDetailsByMachines.php");
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();
