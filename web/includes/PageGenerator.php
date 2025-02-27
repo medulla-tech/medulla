@@ -3246,9 +3246,9 @@ EOT;
 
 }
 
-
 class medulla_progressbar extends HtmlElement
 {
+    private static $scriptIncluded = false;
     /** @var int $value Valeur de la barre de progression (entre 0 et 100). */
     private $value;
 
@@ -3275,6 +3275,10 @@ class medulla_progressbar extends HtmlElement
         $this->value = max(0, min(100, (int)$value));
         $this->dataValue = $dataValue;
         $this->title = $title;
+        if (!self::$scriptIncluded) {
+            $this->includeScript();
+            self::$scriptIncluded = true;
+        }
     }
 
     /**
@@ -3284,7 +3288,8 @@ class medulla_progressbar extends HtmlElement
      */
     public function display($arrParam = array())
     {
-        echo $this->toString();
+        // echo $this->toString();
+        echo $this->my_string();
     }
 
     /**
@@ -3295,6 +3300,7 @@ class medulla_progressbar extends HtmlElement
     public function my_string()
     {
         return $this->generateHtml();
+
     }
 
     /**
@@ -3307,6 +3313,10 @@ class medulla_progressbar extends HtmlElement
         return $this->generateHtml();
     }
 
+   private function toString() {
+        // Retourne une représentation sous forme de chaîne de caractères de l'objet
+        return $this->generateHtml();
+    }
     /**
      * Génère le code HTML de la barre de progression.
      *
@@ -3320,6 +3330,144 @@ class medulla_progressbar extends HtmlElement
         return str_replace(array("\r", "\n"), ' ', '<div class="' . $this->cssClass . '">
                     <span class="value_progress"' . $titleAttr . ' style="display: none;"' . $dataValueAttr . '>' . (string)$this->value . '</span>
                 </div>');
+    }
+
+    private function includeScript() {
+        echo <<<EOT
+<script type="text/javascript">
+    /**
+     * Fonction qui renvoie une couleur intermédiaire entre rouge, jaune et vert en fonction d'une valeur de 0 à 100.
+     * @param {number} value - Valeur entre 0 et 100.
+     * @return {string} - Couleur au format RGB.
+     */
+    function getColor(value) {
+        // Assure que la valeur est entre 0 et 100
+        value = Math.max(0, Math.min(100, value));
+        let r, g, b;
+
+        if (value < 50) {
+            // Interpolation entre rouge (0%) et jaune (50%)
+            r = 255;
+            g = Math.round((255 * value) / 50);
+            b = 0;
+        } else {
+            // Interpolation entre jaune (50%) et vert (100%)
+            r = Math.round(255 * (1 - (value - 50) / 50));
+            g = 255;
+            b = 0;
+        }
+        // Retourne la couleur au format RGB string
+        return 'rgb('+r+','+g+','+b+')';
+    }
+
+    jQuery(document).ready(function() {
+        // console.log("Le script est inclus une seule fois par page. URL: " + window.location.href);
+
+        jQuery(".progressbarstaticvalue_med").each(function() {
+            // Récupère l'élément <span> enfant avec la classe "value_progress"
+            let spanChild = jQuery(this).find(".value_progress");
+
+            // Récupère la valeur cachée de la barre de progression
+            let spanInteger = parseInt(spanChild.text(), 10) || 0; // Convertit en entier
+            let spanIntegertrue = spanInteger; // Convertit en entier sécurisé
+
+            // Récupère la couleur en fonction de la valeur
+            let colorgraph = getColor(spanInteger);
+
+            // Récupère les valeurs des attributs data-value et title
+            let spanValueData = spanChild.attr('data-value') || '';
+
+            let spanTitle = spanChild.attr('title') || '';
+
+            // Ajoute l'attribut title au <div> parent si présent
+            if (spanChild.length > 0 && spanChild.attr('title')) {
+                jQuery(this).attr('title', spanTitle);
+            }
+
+            // Initialise la barre de progression jQuery UI avec la valeur récupérée
+            jQuery(this).progressbar({ value: 100 });
+            jQuery(this).find(".ui-progressbar-value")
+                .css({
+                    "background": colorgraph, // Si valeur == 0, barre grise
+                    "color": spanInteger >= 30 && spanInteger <= 70 ? "#000" : "#fff", // Couleur du texte en noir si entre 30 et 70, sinon blanc
+                    "text-align": "center", // Centre le texte
+                    "line-height": "20px", // Ajuste la hauteur pour aligner le texte verticalement
+                    "border-radius": "5px"
+                })
+                .attr("data-value", spanInteger); // Ajoute un attribut data pour stockage
+
+            // Applique un style à la barre de progression vide (fond)
+            jQuery(this).find(".ui-progressbar")
+                .css({
+                    "background-color": "transparent", // Fond transparent
+                    "border-radius": "5px", // Coins arrondis
+                    "height": "15px", // Hauteur de la barre
+                    "border": "1px solid #999" // Bordure grise
+                });
+
+            // Définit le texte de la barre de progression
+            jQuery(this).find(".ui-progressbar-value").text(spanValueData + " " + spanIntegertrue + "%");
+        });
+        jQuery(".progressbar_med").each(function() {
+            // Récupère la valeur cachée de la barre de progression
+            let spanChild = jQuery(this).find(".value_progress");
+            let spanInteger = parseInt(spanChild.text(), 10) || 0; // Convertit en entier
+            let spanIntegertrue = spanInteger; // Convertit en entiersécurisé
+            // Détermine la couleur de fin en fonction de la valeur
+            let startcolor = "#FF0000"; // Rouge par défaut
+            let endcolor = "#FF0000"; // Rouge par défaut
+            if (spanInteger >= 25) endcolor = "#e2a846"; // Orange
+            if (spanInteger >= 50) endcolor = "#f4f529"; // Jaune
+            if (spanInteger >= 75) endcolor = "#bcf529"; // Vert clair
+            if (spanInteger >= 90) endcolor = "#02ab17"; // Vert foncé
+            // Déclare la variable backgroundinput
+            let backgroundinput = 0;
+
+            // Si la valeur est inférieure à 20, change la couleur et définit la barre à 100%
+            if (spanInteger < 20) {
+                backgroundinput = 1; // Utilise directement la variable globale
+                endcolor = "red"; // Fixe la couleur rouge
+                startcolor= "red";
+                spanInteger = 100; // Définit la valeur à 100%
+            }
+            if (spanInteger == 20) {
+                backgroundinput = 1; // Utilise directement la variable globale
+                endcolor = "green"; // Fixe la couleur rouge
+                startcolor= "green";
+                spanInteger = 100; // Définit la valeur à 100%
+            }
+            // Initialise la barre de progression jQuery UI avec la valeur récupérée
+            jQuery(this).progressbar({ value: spanInteger });
+            // Applique un dégradé de couleur sur la partie remplie de la barre de progression
+            jQuery(this).find(".ui-progressbar-value")
+                .css({
+                    "background": spanInteger > 0 ? "linear-gradient(to right," + startcolor + ", " + endcolor + ")" : "#ccc", // Si valeur == 0, barre grise
+                    "color": "#fff", // Couleur du texte en blanc
+                    "text-align": "center", // Centre le texte
+                    "line-height": "20px", // Ajuste la hauteur pour aligner le texte verticalement
+                    "border-radius": "5px"
+                })
+                .attr("data-value", spanInteger); // Ajoute un attribut data pour stockage
+
+            // Applique un style à la barre de progression vide (fond)
+            jQuery(this).find(".ui-progressbar")
+                .css({
+                    "background-color": "transparent", // Fond transparent
+                    "border-radius": "5px", // Coins arrondis
+                    "height": "15px", // Hauteur de la barre
+                    "border": "1px solid #999" // Bordure grise
+                });
+
+            // Si la condition de fond est remplie, affiche "0%", sinon affiche la valeur
+            if (backgroundinput == 1) {
+                jQuery(this).find(".ui-progressbar-value").text(spanIntegertrue+ "%");
+            } else {
+                jQuery(this).find(".ui-progressbar-value").text(spanInteger + "%");
+            }
+        });
+    });
+</script>
+EOT;
     }
 }
 
@@ -3340,146 +3488,3 @@ class medulla_progressbar_static extends medulla_progressbar
     }
 }
 ?>
-
-<script>
-
- /**
-    * Fonction qui renvoie une couleur intermédiaire entre rouge, jaune et vert en fonction d'une valeur de 0 à 100.
-    * @param {number} value - Valeur entre 0 et 100.
-    * @return {string} - Couleur au format RGB.
-    */
-    function getColor(value) {
-        // Assure que la valeur est entre 0 et 100
-        value = Math.max(0, Math.min(100, value));
-
-        let r, g, b;
-
-        if (value < 50) {
-            // Interpolation entre rouge (0%) et jaune (50%)
-            r = 255;
-            g = Math.round((255 * value) / 50);
-            b = 0;
-        } else {
-            // Interpolation entre jaune (50%) et vert (100%)
-            r = Math.round(255 * (1 - (value - 50) / 50));
-            g = 255;
-            b = 0;
-        }
-        // Retourne la couleur au format RGB
-        return `rgb(${r},${g},${b})`;
-    }
-
-jQuery(document).ready(function() {
-    jQuery(".progressbarstaticvalue_med").each(function() {
-        // Récupère l'élément <span> enfant avec la classe "value_progress"
-        let spanChild = jQuery(this).find(".value_progress");
-
-        // Récupère la valeur cachée de la barre de progression
-        let spanInteger = parseInt(spanChild.text(), 10) || 0; // Convertit en entier
-        console.log('Valeur de spanInteger :', spanInteger);
-        let spanIntegertrue = spanInteger; // Convertit en entier sécurisé
-
-        // Récupère la couleur en fonction de la valeur
-        let colorgraph = getColor(spanInteger);
-        console.log('Valeur de colorgraph :', colorgraph);
-
-        // Récupère les valeurs des attributs data-value et title
-        let spanValueData = spanChild.attr('data-value') || '';
-        console.log('Valeur de spanValueData :', spanValueData);
-
-        let spanTitle = spanChild.attr('title') || '';
-        console.log('Valeur de spanTitle :', spanTitle);
-
-        // Ajoute l'attribut title au <div> parent si présent
-        if (spanChild.length > 0 && spanChild.attr('title')) {
-            jQuery(this).attr('title', spanTitle);
-        }
-
-        // Initialise la barre de progression jQuery UI avec la valeur récupérée
-        jQuery(this).progressbar({ value: 100 });
-        jQuery(this).find(".ui-progressbar-value")
-            .css({
-                "background": colorgraph, // Si valeur == 0, barre grise
-                "color": spanInteger >= 30 && spanInteger <= 70 ? "#000" : "#fff", // Couleur du texte en noir si entre 30 et 70, sinon blanc
-                "text-align": "center", // Centre le texte
-                "line-height": "20px", // Ajuste la hauteur pour aligner le texte verticalement
-                "border-radius": "5px"
-            })
-            .attr("data-value", spanInteger); // Ajoute un attribut data pour stockage
-
-        // Applique un style à la barre de progression vide (fond)
-        jQuery(this).find(".ui-progressbar")
-            .css({
-                "background-color": "transparent", // Fond transparent
-                "border-radius": "5px", // Coins arrondis
-                "height": "15px", // Hauteur de la barre
-                "border": "1px solid #999" // Bordure grise
-            });
-
-        // Définit le texte de la barre de progression
-        jQuery(this).find(".ui-progressbar-value").text(spanValueData + " " + spanIntegertrue + "%");
-    });
-
-
-    jQuery(".progressbar_med").each(function() {
-        // Récupère la valeur cachée de la barre de progression
-        let spanChild = jQuery(this).find(".value_progress");
-        let spanInteger = parseInt(spanChild.text(), 10) || 0; // Convertit en entier
-        let spanIntegertrue = spanInteger; // Convertit en entiersécurisé
-        // Détermine la couleur de fin en fonction de la valeur
-        let startcolor = "#FF0000"; // Rouge par défaut
-        let endcolor = "#FF0000"; // Rouge par défaut
-        if (spanInteger >= 25) endcolor = "#e2a846"; // Orange
-        if (spanInteger >= 50) endcolor = "#f4f529"; // Jaune
-        if (spanInteger >= 75) endcolor = "#bcf529"; // Vert clair
-        if (spanInteger >= 90) endcolor = "#02ab17"; // Vert foncé
-
-        // Déclare la variable backgroundinput
-        let backgroundinput = 0;
-
-        // Si la valeur est inférieure à 20, change la couleur et définit la barre à 100%
-        if (spanInteger < 20) {
-            backgroundinput = 1; // Utilise directement la variable globale
-            endcolor = "red"; // Fixe la couleur rouge
-            startcolor= "red";
-            spanInteger = 100; // Définit la valeur à 100%
-        }
-        if (spanInteger == 20) {
-            backgroundinput = 1; // Utilise directement la variable globale
-            endcolor = "green"; // Fixe la couleur rouge
-            startcolor= "green";
-            spanInteger = 100; // Définit la valeur à 100%
-        }
-        // Initialise la barre de progression jQuery UI avec la valeur récupérée
-        jQuery(this).progressbar({ value: spanInteger });
-
-        // Applique un dégradé de couleur sur la partie remplie de la barre de progression
-        jQuery(this).find(".ui-progressbar-value")
-            .css({
-                "background": spanInteger > 0 ? "linear-gradient(to right," + startcolor + ", " + endcolor + ")" : "#ccc", // Si valeur == 0, barre grise
-                "color": "#fff", // Couleur du texte en blanc
-                "text-align": "center", // Centre le texte
-                "line-height": "20px", // Ajuste la hauteur pour aligner le texte verticalement
-                "border-radius": "5px"
-            })
-            .attr("data-value", spanInteger); // Ajoute un attribut data pour stockage
-
-        // Applique un style à la barre de progression vide (fond)
-        jQuery(this).find(".ui-progressbar")
-            .css({
-                "background-color": "transparent", // Fond transparent
-                "border-radius": "5px", // Coins arrondis
-                "height": "15px", // Hauteur de la barre
-                "border": "1px solid #999" // Bordure grise
-            });
-
-        // Si la condition de fond est remplie, affiche "0%", sinon affiche la valeur
-        if (backgroundinput == 1) {
-            jQuery(this).find(".ui-progressbar-value").text(spanIntegertrue+ "%");
-        } else {
-            jQuery(this).find(".ui-progressbar-value").text(spanInteger + "%");
-        }
-    });
-});
-
- </script>
