@@ -125,6 +125,36 @@ def get_os_update_major_stats():
 def get_os_xmpp_update_major_stats():
     return XmppMasterDatabase().get_os_xmpp_update_major_stats()
 
+def get_os_update_major_stats():
+    return Glpi().get_os_update_major_stats()
+
+
+def get_os_update_major_details(entity_id,
+                                filter="",
+                                start=0,
+                                limit=-1,
+                                colonne=True):
+    return Glpi().get_os_update_major_details(entity_id,
+                                              filter="",
+                                              start=0,
+                                              limit=-1,
+                                              colonne=True)
+
+
+def get_os_xmpp_update_major_stats():
+    return XmppMasterDatabase().get_os_xmpp_update_major_stats()
+
+
+def get_os_xmpp_update_major_details(entity_id,
+                                     filter="",
+                                     start=0,
+                                     limit=-1,
+                                     colonne=True):
+    return XmppMasterDatabase().get_os_xmpp_update_major_details( entity_id,
+                                                                 filter,
+                                                                 start,
+                                                                 limit,
+                                                                 colonne)
 
 def get_machines_needing_update(updateid, entity, start=0, limit=-1, filter=""):
     return UpdatesDatabase().get_machines_needing_update(

@@ -7342,6 +7342,256 @@ ORDER BY
             }
         return result
 
+    @DatabaseHelper._sessionm
+    def get_os_update_major_stats(self, session):
+        """
+        Récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
+
+        Cette fonction retourne un dictionnaire contenant le nombre total de machines Windows 10 et Windows 11, ainsi que des statistiques
+        par entité pour les mises à jour nécessaires. Les résultats incluent également un calcul de conformité pour chaque entité.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données utilisée pour exécuter les requêtes SQL.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation. La structure du dictionnaire est :
+                {
+                    "entity": {
+                        "<complete_name>": {
+                            "name": "<entity_name>",
+                            "count": <total_count>,
+                            "W10to10": <count_windows_10_not_22H2>,
+                            "W10to11": <count_windows_10_22H2>,
+                            "W11to11": <count_windows_11_not_24H2>,
+                            "conformite": <conformity_percentage>
+                        }
+                    }
+                }
+
+        Raises:
+            Exception: En cas d'erreur lors de l'exécution des requêtes SQL.
+        """
+        try:
+            # Dictionnaire final des résultats
+            cols=["W10to10", "W10to11", "W11to11"]
+            results = {"entity": {}}
+            total_os_sql =f'''
+                        SELECT
+                                e.name AS entity_name,
+                                e.completename AS complete_name,
+                                COUNT(*) AS count
+                            FROM
+                                glpi.glpi_computers AS c
+                                    INNER JOIN
+                                glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                                    INNER JOIN
+                                glpi.glpi_entities AS e ON e.id = c.entities_id
+                                    INNER JOIN
+                                glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                                    INNER JOIN
+                                glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                            WHERE
+                                os.name LIKE '%Windows%'
+                            GROUP BY e.id
+                            ORDER BY e.name;
+            '''
+            total_os_result = session.execute(total_os_sql).fetchall()
+            for row in total_os_result:
+                results["entity"].setdefault(row.complete_name, {"count" :  int(row.count)})
+                # results["entity"][row.complete_name]["count"] = int(row.count)
+
+            # Requête pour les statistiques par entité
+            entity_sql = '''
+                    SELECT
+                        e.id AS entity_id,
+                        e.name AS entity_name,
+                        e.completename AS complete_name,
+                        COUNT(*) AS nbwin,
+                        v.name as ver,
+                        os.name as namewin,
+                        CASE
+                            WHEN
+                                os.name LIKE '%Windows 10%'
+                                    AND v.name != '22H2'
+                            THEN
+                                'W10to10'
+                            WHEN
+                                os.name LIKE '%Windows 10%'
+                                    AND v.name = '22H2'
+                            THEN
+                                'W10to11'
+                            WHEN
+                                os.name LIKE '%Windows 11%'
+                                    AND v.name != '24H2'
+                            THEN
+                                'W11to11'
+                            ELSE 'not_win'
+                        END AS os
+                    FROM
+                        glpi.glpi_computers AS c
+                            INNER JOIN
+                        glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                            INNER JOIN
+                        glpi.glpi_entities AS e ON e.id = c.entities_id
+                            INNER JOIN
+                        glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                            INNER JOIN
+                        glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                    WHERE
+                        os.name LIKE '%Windows%'
+                    GROUP BY e.name, os
+                    ORDER BY e.name;
+            '''
+            entity_result = session.execute(entity_sql).fetchall()
+
+            for row in entity_result:
+                # initialisation
+                results["entity"].setdefault(row.complete_name, {})
+                results["entity"][row.complete_name]["name"]=row.entity_name
+                results["entity"][row.complete_name][row.os ]=int(row.nbwin)
+                results["entity"][row.complete_name]["entity_id" ]=int(row.entity_id)
+            # Calcul de la conformiténbwin
+            for entity, data in results["entity"].items():
+                total=results["entity"][entity]["count"]
+                non_conforme = sum(data.get(key, 0) for key in cols)
+                results["entity"][entity]["conformite"] = round(((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2)
+            # Copier les clés existantes avant d'itérer
+            existing_entities = list(results["entity"].keys())
+
+            for entity in existing_entities:  # Itérer sur la copie des clés
+                for col in cols:
+                    if col not in results["entity"][entity]:
+                        results["entity"][entity][col] = 0
+
+            return results
+
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            return {}
+
+
+    @DatabaseHelper._sessionm
+    def get_os_update_major_details(self, session, entity_id, filter="", start=0, limit=-1, colonne=True):
+        """
+        Récupère les détails des machines avec des systèmes d'exploitation Windows à partir de la base de données GLPI.
+
+        Cette fonction exécute une requête SQL pour récupérer des informations sur les machines
+        avec des systèmes d'exploitation Windows, y compris une colonne calculée 'os' qui
+        catégorise la version du système d'exploitation et indique les mises à jour majeures
+        nécessaires entre la version actuelle et la prochaine mise à jour majeure. Les résultats
+        peuvent être retournés soit dans un format détaillé ligne par ligne, soit dans un format
+        en colonnes, selon le paramètre 'colonne'.
+
+        Paramètres :
+            session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
+            entity_id (int) : L'ID de l'entité pour filtrer les résultats.
+            filter (str) : Critères de filtrage supplémentaires pour filtrer par nom de machine.
+            start (int) : Le décalage pour commencer à retourner les lignes.
+            limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
+            colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+
+        Retourne :
+            dict : Un dictionnaire contenant le nombre de lignes correspondantes et soit
+                   des résultats détaillés ligne par ligne, soit des résultats en colonnes,
+                   selon le paramètre 'colonne'. La colonne 'os' indique les mises à jour majeures
+                   nécessaires, telles que 'W10to10' pour une mise à jour entre versions de Windows 10,
+                   'W10to11' pour une mise à jour de Windows 10 vers Windows 11, et 'W11to11' pour une
+                   mise à jour entre versions de Windows 11.
+        """
+
+        # Base SQL query
+        total_os_sql = '''
+            SELECT
+                SQL_CALC_FOUND_ROWS
+                c.id as id_machine,
+                c.name AS machine,
+                os.name AS platform,
+                v.name AS version,
+                -- e.id AS entity_id,
+                -- e.name AS entity_name,
+                -- e.completename AS complete_name,
+                CASE
+                    WHEN os.name LIKE '%Windows 10%' AND v.name != '22H2' THEN 'W10to10'
+                    WHEN os.name LIKE '%Windows 10%' AND v.name = '22H2' THEN 'W10to11'
+                    WHEN os.name LIKE '%Windows 11%' AND v.name != '24H2' THEN 'W11to11'
+                    ELSE 'not_win'
+                END AS 'update'
+            FROM
+                glpi.glpi_computers AS c
+                INNER JOIN glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                INNER JOIN glpi.glpi_entities AS e ON e.id = c.entities_id
+                INNER JOIN glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                INNER JOIN glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+            WHERE
+                os.name LIKE '%Windows%' AND e.id = :entity_id
+        '''
+
+        # Add filter condition if filter is not empty
+        if filter:
+            total_os_sql += " AND c.name LIKE :filter"
+
+        # Add ORDER BY and LIMIT/OFFSET if limit is not -1
+        total_os_sql += " ORDER BY  c.name"
+        if limit != -1:
+            total_os_sql += " LIMIT :limit OFFSET :start"
+
+        # Convert to text for parameter binding
+        total_os_sql = text(total_os_sql)
+
+        # Log the SQL query with parameters
+        logger.debug("Executing SQL query: %s", total_os_sql)
+        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s", entity_id, f"%{filter}%", limit, start)
+
+        # Execute the SQL query with parameters
+        entity_result = session.execute(total_os_sql, {
+            'entity_id': entity_id,
+            'filter': f"%{filter}%",
+            'limit': limit,
+            'start': start
+        }).fetchall()
+
+        # Count the total number of matching elements using FOUND_ROWS()
+        sql_count = text("SELECT FOUND_ROWS();")
+        ret_count = session.execute(sql_count).scalar()
+
+        # Extract common fields from the first row
+        # common_entity_id = entity_result[0].entity_id if entity_result else ""
+        # common_entity_name = entity_result[0].entity_name if entity_result else ""
+        # common_complete_name = entity_result[0].complete_name if entity_result else ""
+
+        # Prepare the result dictionary with the count of matching rows and common fields
+        result = {
+            'nb_machine': ret_count,
+            # 'entity_id': common_entity_id,
+            # 'entity_name': common_entity_name,
+            # 'complete_name': common_complete_name
+        }
+
+        if colonne:
+            # If colonne is True, return results in columnar format
+            result.update({
+                'id_machine': [row.id_machine if row.id_machine is not None else "" for row in entity_result],
+                'machine': [row.machine if row.machine is not None else "" for row in entity_result],
+                'platform': [row.platform if row.platform is not None else "" for row in entity_result],
+                'version': [row.version if row.version is not None else "" for row in entity_result],
+                'update': [row.update  if row.update is not None else "" for row in entity_result]
+            })
+        else:
+            # If colonne is False, return detailed results in row-wise format
+            result['details'] = [
+                {
+                    'id_machine': row.id_machine if row.id_machine is not None else "",
+                    'machine': row.machine if row.machine is not None else "",
+                    'platform': row.platform if row.platform is not None else "",
+                    'version':  row.version if row.version is not None else "",
+                    'update': row.update if row.update is not None else ""
+                }
+                for row in entity_result
+            ]
+
+        return result
+
 
 # Class for SQLalchemy mapping
 class Machine(object):
