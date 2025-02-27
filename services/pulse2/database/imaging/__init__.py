@@ -1579,7 +1579,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __createNewMenuItem(self, session, menu_id, params):
         mi = MenuItem()
-        params["order"] = self.getLastMenuItemOrder(menu_id) + 1
+        if "order" not in params:
+            params["order"] = 0
+        else:
+            params["order"] = self.getLastMenuItemOrder(menu_id) + 1
         mi = self.__fillMenuItem(session, mi, menu_id, params)
         return mi
 
