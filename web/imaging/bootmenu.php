@@ -500,7 +500,7 @@ foreach ($menu as $item) {
 
 // error_log('call with params: srv:'.$srv.', mac: '.$mac.', default: '.$default.', uuid: '.$uuid);
 
-$default_item = "";
+$default_item = "continue";
 
 //
 // SINGLECAST MODE
@@ -581,8 +581,8 @@ item --gap -- -------------------------------------
             }
         }
 
-        if ($item["default_item"] == 1) {
-            $default_item = !empty($item["bootService_name"]) ? mb_convert_encoding($item['bootService_name'], 'UTF-8', 'UTF-8') : mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8');
+        if ($item["fk_default_item"] == $item["id"]) {
+            $default_item = !empty($item["bootService_name"]) ? mb_convert_encoding($item['bootService_name'], 'UTF-8', 'UTF-8') : str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8'));
         }
 
         if ($item['type'] == 'service') {
