@@ -37,6 +37,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	dyngroup/sql/schema-004.sql \
 	dyngroup/sql/schema-005.sql \
 	dyngroup/sql/schema-006.sql \
+	dyngroup/sql/schema-007.sql \
 	imaging-server/README.dhcpd.conf \
 	imaging-server/README.exports \
 	imaging-server/README.pci.ids \
