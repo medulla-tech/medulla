@@ -348,6 +348,7 @@ function xmlrpc_synchroProfile($id) //require_once('modules/dyngroup/includes/dy
 
 function xmlrpc_synchroLocation($id)
 {
+    return true;
     $ret = xmlCall("imaging.synchroLocation", array($id));
     $location_name = xmlrpc_getLocationName($id);
 
