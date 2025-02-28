@@ -1457,13 +1457,13 @@ class Imaging(object, metaclass=SingletonN):
                 shell=True,
                 stdout=subprocess.PIPE,
             )
-            line = [x.strip(" \t\n\r") for x in r.stdout]
+            line = [x.strip(b" \t\n\r") for x in r.stdout]
             r.wait()
             r.stdout.close()
             lineinformation = [
-                x.strip(" \t\n\r")
-                for x in line[0].split(" ")
-                if x.strip(" \t\n\r") != ""
+                x.strip(b" \t\n\r")
+                for x in line[0].split(b" ")
+                if x.strip(b" \t\n\r") != ""
             ]
             if lineinformation[0] != "-1" and len(lineinformation) >= 3:
                 result["indexpartition"] = int(lineinformation[0])
