@@ -4199,7 +4199,9 @@ class XmppMasterDatabase(DatabaseHelper):
             return ret
 
     @DatabaseHelper._sessionm
-    def getstatdeploy_from_command_id_and_title_for_convergence(self, session, command_id, title):
+    def getstatdeploy_from_command_id_and_title_for_convergence(
+        self, session, command_id, title
+    ):
         """
         Retrieve the deploy statistics based on the command_id and partial title match for convergence.
 
@@ -4211,10 +4213,12 @@ class XmppMasterDatabase(DatabaseHelper):
             dict: Statistics of deployments grouped by state.
         """
         try:
-            global_deploy = session.query(Deploy).filter(
-                Deploy.command == command_id,
-                Deploy.title.like(f"%{title}%")
-            ).order_by(Deploy.start.desc()).first()
+            global_deploy = (
+                session.query(Deploy)
+                .filter(Deploy.command == command_id, Deploy.title.like(f"%{title}%"))
+                .order_by(Deploy.start.desc())
+                .first()
+            )
 
             if not global_deploy:
                 return {"totalmachinedeploy": 0}
@@ -4238,11 +4242,14 @@ class XmppMasterDatabase(DatabaseHelper):
                 AND d.title LIKE :title_like
                 GROUP BY d.state;
             """
-            result = session.execute(sql, {
-                "command_id": command_id,
-                "group_uuid": group_uuid,
-                "title_like": f"%{title}%"
-            }).fetchall()
+            result = session.execute(
+                sql,
+                {
+                    "command_id": command_id,
+                    "group_uuid": group_uuid,
+                    "title_like": f"%{title}%",
+                },
+            ).fetchall()
 
             if not result:
                 return {"totalmachinedeploy": 0}
@@ -4454,10 +4461,12 @@ class XmppMasterDatabase(DatabaseHelper):
             dict: Contains the most recent deployments with simplified fields.
         """
         try:
-            global_deploy = session.query(Deploy).filter(
-                Deploy.command == command_id,
-                Deploy.title.like(f"%{title}%")
-            ).order_by(Deploy.start.desc()).first()
+            global_deploy = (
+                session.query(Deploy)
+                .filter(Deploy.command == command_id, Deploy.title.like(f"%{title}%"))
+                .order_by(Deploy.start.desc())
+                .first()
+            )
 
             if not global_deploy:
                 return {"total": 0, "datas": {"id": [], "uuid": [], "status": []}}
@@ -4467,27 +4476,31 @@ class XmppMasterDatabase(DatabaseHelper):
             subq = (
                 session.query(
                     Deploy.jidmachine.label("jidmachine"),
-                    func.max(Deploy.start).label("latest_start")
+                    func.max(Deploy.start).label("latest_start"),
                 )
                 .filter(
                     Deploy.command == command_id,
                     Deploy.group_uuid == group_uuid,
-                    Deploy.title.like(f"%{title}%")
+                    Deploy.title.like(f"%{title}%"),
                 )
                 .group_by(Deploy.jidmachine)
                 .subquery()
             )
 
-            query = session.query(Deploy).join(
-                subq,
-                and_(
-                    Deploy.jidmachine == subq.c.jidmachine,
-                    Deploy.start == subq.c.latest_start
+            query = (
+                session.query(Deploy)
+                .join(
+                    subq,
+                    and_(
+                        Deploy.jidmachine == subq.c.jidmachine,
+                        Deploy.start == subq.c.latest_start,
+                    ),
                 )
-            ).filter(
-                Deploy.command == command_id,
-                Deploy.group_uuid == group_uuid,
-                Deploy.title.like(f"%{title}%")
+                .filter(
+                    Deploy.command == command_id,
+                    Deploy.group_uuid == group_uuid,
+                    Deploy.title.like(f"%{title}%"),
+                )
             )
 
             if limit != -1:
@@ -4595,42 +4608,57 @@ class XmppMasterDatabase(DatabaseHelper):
     def getdeployfromcommandid_for_convergence(self, session, command_id, uuid):
         try:
             if uuid == "UUID_NONE":
-                global_deploy = session.query(Deploy).filter(
-                    Deploy.command == command_id,
-                    Deploy.title.like("%Convergence%")
-                ).order_by(Deploy.start.desc()).first()
+                global_deploy = (
+                    session.query(Deploy)
+                    .filter(
+                        Deploy.command == command_id, Deploy.title.like("%Convergence%")
+                    )
+                    .order_by(Deploy.start.desc())
+                    .first()
+                )
 
                 if not global_deploy:
                     return {"len": 0, "objectdeploy": []}
 
                 group_uuid = global_deploy.group_uuid
 
-                subq = session.query(
-                    Deploy.jidmachine.label("jidmachine"),
-                    func.max(Deploy.start).label("latest_start")
-                ).filter(
-                    Deploy.command == command_id,
-                    Deploy.group_uuid == group_uuid,
-                    Deploy.title.like("%Convergence%")
-                ).group_by(Deploy.jidmachine).subquery()
-
-                query = session.query(Deploy).join(
-                    subq,
-                    and_(
-                        Deploy.jidmachine == subq.c.jidmachine,
-                        Deploy.start == subq.c.latest_start
+                subq = (
+                    session.query(
+                        Deploy.jidmachine.label("jidmachine"),
+                        func.max(Deploy.start).label("latest_start"),
                     )
-                ).filter(
-                    Deploy.command == command_id,
-                    Deploy.group_uuid == group_uuid,
-                    Deploy.title.like("%Convergence%")
+                    .filter(
+                        Deploy.command == command_id,
+                        Deploy.group_uuid == group_uuid,
+                        Deploy.title.like("%Convergence%"),
+                    )
+                    .group_by(Deploy.jidmachine)
+                    .subquery()
+                )
+
+                query = (
+                    session.query(Deploy)
+                    .join(
+                        subq,
+                        and_(
+                            Deploy.jidmachine == subq.c.jidmachine,
+                            Deploy.start == subq.c.latest_start,
+                        ),
+                    )
+                    .filter(
+                        Deploy.command == command_id,
+                        Deploy.group_uuid == group_uuid,
+                        Deploy.title.like("%Convergence%"),
+                    )
                 )
             else:
-                latest_start = session.query(
-                    func.max(Deploy.start)
-                ).filter(
-                    and_(Deploy.inventoryuuid == uuid, Deploy.command == command_id)
-                ).scalar()
+                latest_start = (
+                    session.query(func.max(Deploy.start))
+                    .filter(
+                        and_(Deploy.inventoryuuid == uuid, Deploy.command == command_id)
+                    )
+                    .scalar()
+                )
 
                 if not latest_start:
                     return {"len": 0, "objectdeploy": []}
@@ -4639,7 +4667,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     and_(
                         Deploy.inventoryuuid == uuid,
                         Deploy.command == command_id,
-                        Deploy.start == latest_start
+                        Deploy.start == latest_start,
                     )
                 )
             relayserver = query.all()
@@ -4830,7 +4858,9 @@ class XmppMasterDatabase(DatabaseHelper):
         params,
     ):
         try:
-            login_command = session.query(Has_login_command).filter_by(command=commandid).first()
+            login_command = (
+                session.query(Has_login_command).filter_by(command=commandid).first()
+            )
             if not login_command:
                 logger.error(f"Aucune commande trouvée pour command id {commandid}.")
                 return None
@@ -4855,10 +4885,10 @@ class XmppMasterDatabase(DatabaseHelper):
 
             if isinstance(params, dict):
                 logging.getLogger().error(f"111 - Voila ma variable params {params}")
-                if 'do_reboot' in params:
-                    login_command.do_reboot = params['do_reboot']
-                if 'deployment_intervals' in params:
-                    login_command.deployment_intervals = params['deployment_intervals']
+                if "do_reboot" in params:
+                    login_command.do_reboot = params["do_reboot"]
+                if "deployment_intervals" in params:
+                    login_command.deployment_intervals = params["deployment_intervals"]
 
             if isinstance(params, (list, dict)) and len(params) != 0:
                 login_command.params_json = json.dumps(params)
@@ -5889,7 +5919,9 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = deploylog.group_by(Deploy.title).order_by(desc(Deploy.id))
 
         if minimum and maximum:
-            deploylog = deploylog.offset(int(minimum)).limit(int(maximum) - int(minimum))
+            deploylog = deploylog.offset(int(minimum)).limit(
+                int(maximum) - int(minimum)
+            )
 
         result = deploylog.all()
         session.commit()
@@ -5922,11 +5954,17 @@ class XmppMasterDatabase(DatabaseHelper):
             hostname = (
                 linedeploy.host.split(".")[0]
                 if re.match(reg, linedeploy.host)
-                else linedeploy.host.split("/")[1] if "/" in linedeploy.host else linedeploy.host
+                else (
+                    linedeploy.host.split("/")[1]
+                    if "/" in linedeploy.host
+                    else linedeploy.host
+                )
             )
 
             ret["tabdeploy"]["state"].append(linedeploy.state)
-            ret["tabdeploy"]["pathpackage"].append(linedeploy.pathpackage.split("/")[-1])
+            ret["tabdeploy"]["pathpackage"].append(
+                linedeploy.pathpackage.split("/")[-1]
+            )
             ret["tabdeploy"]["sessionid"].append(linedeploy.sessionid)
             ret["tabdeploy"]["start"].append(str(linedeploy.start))
             ret["tabdeploy"]["inventoryuuid"].append(linedeploy.inventoryuuid)
@@ -5942,7 +5980,6 @@ class XmppMasterDatabase(DatabaseHelper):
             ret["tabdeploy"]["title"].append(linedeploy.title)
 
         return ret
-
 
     @DatabaseHelper._sessionm
     def get_deploy_by_team_member_for_convergence(
@@ -5986,7 +6023,9 @@ class XmppMasterDatabase(DatabaseHelper):
             }
         """
         pulse_usersid = self.get_teammembers_from_login(login)
-        if not pulse_usersid or (len(pulse_usersid) == 1 and pulse_usersid[0] == "root"):
+        if not pulse_usersid or (
+            len(pulse_usersid) == 1 and pulse_usersid[0] == "root"
+        ):
             return self.get_convergence_deploys_by_user_with_interval(
                 login,
                 state,
@@ -5998,8 +6037,7 @@ class XmppMasterDatabase(DatabaseHelper):
             )
 
         query_base = session.query(Deploy).filter(
-            Deploy.sessionid.like(f"{typedeploy}%"),
-            Deploy.title.like("Convergence%")
+            Deploy.sessionid.like(f"{typedeploy}%"), Deploy.title.like("Convergence%")
         )
         if intervalsearch:
             since_date = datetime.now() - timedelta(seconds=intervalsearch)
@@ -6011,7 +6049,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     Deploy.pathpackage.like(f"%{filt}%"),
                     Deploy.start.like(f"%{filt}%"),
                     Deploy.login.like(f"%{filt}%"),
-                    Deploy.host.like(f"%{filt}%")
+                    Deploy.host.like(f"%{filt}%"),
                 )
             )
 
@@ -6021,19 +6059,23 @@ class XmppMasterDatabase(DatabaseHelper):
         if state:
             query_base = query_base.filter(Deploy.state == state)
 
-        global_subq = query_base.with_entities(
-            Deploy.command,
-            Deploy.group_uuid,
-            func.max(Deploy.start).label("global_latest_start")
-        ).group_by(Deploy.command, Deploy.group_uuid).subquery()
+        global_subq = (
+            query_base.with_entities(
+                Deploy.command,
+                Deploy.group_uuid,
+                func.max(Deploy.start).label("global_latest_start"),
+            )
+            .group_by(Deploy.command, Deploy.group_uuid)
+            .subquery()
+        )
 
         global_deploy_query = session.query(Deploy).join(
             global_subq,
             and_(
                 Deploy.command == global_subq.c.command,
                 Deploy.group_uuid == global_subq.c.group_uuid,
-                Deploy.start == global_subq.c.global_latest_start
-            )
+                Deploy.start == global_subq.c.global_latest_start,
+            ),
         )
         global_deploy_raw = global_deploy_query.all()
         unique_global = {}
@@ -6047,60 +6089,86 @@ class XmppMasterDatabase(DatabaseHelper):
         for global_deploy in global_deploy_list:
             machine_query = query_base.filter(
                 Deploy.command == global_deploy.command,
-                Deploy.group_uuid == global_deploy.group_uuid
+                Deploy.group_uuid == global_deploy.group_uuid,
             )
-            machine_subq = machine_query.with_entities(
-                Deploy.inventoryuuid,
-                func.max(Deploy.start).label("machine_latest_start")
-            ).group_by(Deploy.inventoryuuid).subquery()
-
-            deploy_per_machine_query = session.query(
-                Deploy.command,
-                Deploy.group_uuid,
-                Deploy.login,
-                Deploy.host,
-                Deploy.inventoryuuid,
-                Deploy.state,
-                Deploy.jid_relay,
-                Deploy.sessionid,
-                Deploy.start,
-                Deploy.endcmd
-            ).join(
-                machine_subq,
-                and_(
-                    Deploy.inventoryuuid == machine_subq.c.inventoryuuid,
-                    Deploy.start == machine_subq.c.machine_latest_start
+            machine_subq = (
+                machine_query.with_entities(
+                    Deploy.inventoryuuid,
+                    func.max(Deploy.start).label("machine_latest_start"),
                 )
-            ).order_by(Deploy.start.desc())
+                .group_by(Deploy.inventoryuuid)
+                .subquery()
+            )
+
+            deploy_per_machine_query = (
+                session.query(
+                    Deploy.command,
+                    Deploy.group_uuid,
+                    Deploy.login,
+                    Deploy.host,
+                    Deploy.inventoryuuid,
+                    Deploy.state,
+                    Deploy.jid_relay,
+                    Deploy.sessionid,
+                    Deploy.start,
+                    Deploy.endcmd,
+                )
+                .join(
+                    machine_subq,
+                    and_(
+                        Deploy.inventoryuuid == machine_subq.c.inventoryuuid,
+                        Deploy.start == machine_subq.c.machine_latest_start,
+                    ),
+                )
+                .order_by(Deploy.start.desc())
+            )
             machine_results = deploy_per_machine_query.all()
             total_machine_count = len(machine_results)
 
             machine_details_list = []
             for row in machine_results:
-                machine_details_list.append({
-                    "host": row.host,
-                    "state": row.state,
-                    "inventoryuuid": row.inventoryuuid,
-                    "jid_relay": row.jid_relay,
-                    "sessionid": row.sessionid,
-                    "start": row.start.strftime("%Y-%m-%d %H:%M:%S") if row.start else None,
-                    "end": row.endcmd.strftime("%Y-%m-%d %H:%M:%S") if row.endcmd else None,
-                })
+                machine_details_list.append(
+                    {
+                        "host": row.host,
+                        "state": row.state,
+                        "inventoryuuid": row.inventoryuuid,
+                        "jid_relay": row.jid_relay,
+                        "sessionid": row.sessionid,
+                        "start": (
+                            row.start.strftime("%Y-%m-%d %H:%M:%S")
+                            if row.start
+                            else None
+                        ),
+                        "end": (
+                            row.endcmd.strftime("%Y-%m-%d %H:%M:%S")
+                            if row.endcmd
+                            else None
+                        ),
+                    }
+                )
 
             aggregated = {
                 "command": global_deploy.command,
                 "group_uuid": global_deploy.group_uuid,
                 "title": global_deploy.title,
                 "nb_machines": total_machine_count,
-                "start": {"timestamp": int(global_deploy.start.timestamp())} if global_deploy.start else None,
-                "endcmd": {"timestamp": int(global_deploy.endcmd.timestamp())} if global_deploy.endcmd else None,
+                "start": (
+                    {"timestamp": int(global_deploy.start.timestamp())}
+                    if global_deploy.start
+                    else None
+                ),
+                "endcmd": (
+                    {"timestamp": int(global_deploy.endcmd.timestamp())}
+                    if global_deploy.endcmd
+                    else None
+                ),
                 "machine_details_json": json.dumps(machine_details_list),
                 "login": global_deploy.login,
             }
             aggregated_list.append(aggregated)
 
         if minimum is not None and maximum is not None:
-            aggregated_list = aggregated_list[int(minimum):int(maximum)]
+            aggregated_list = aggregated_list[int(minimum) : int(maximum)]
         lentotal = len(aggregated_list)
 
         ret = {
@@ -6112,9 +6180,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 "nb_machines": [a["nb_machines"] for a in aggregated_list],
                 "start": [a["start"] for a in aggregated_list],
                 "endcmd": [a["endcmd"] for a in aggregated_list],
-                "machine_details_json": [a["machine_details_json"] for a in aggregated_list],
+                "machine_details_json": [
+                    a["machine_details_json"] for a in aggregated_list
+                ],
                 "login": [a["login"] for a in aggregated_list],
-            }
+            },
         }
 
         session.commit()
@@ -6330,8 +6400,7 @@ class XmppMasterDatabase(DatabaseHelper):
         typedeploy="command",
     ):
         query_base = session.query(Deploy).filter(
-            Deploy.sessionid.like(f"{typedeploy}%"),
-            Deploy.title.like("Convergence%")
+            Deploy.sessionid.like(f"{typedeploy}%"), Deploy.title.like("Convergence%")
         )
         if login:
             query_base = query_base.filter(Deploy.login.like(login))
@@ -6345,23 +6414,27 @@ class XmppMasterDatabase(DatabaseHelper):
                     Deploy.pathpackage.like(f"%{filt}%"),
                     Deploy.start.like(f"%{filt}%"),
                     Deploy.login.like(f"%{filt}%"),
-                    Deploy.host.like(f"%{filt}%")
+                    Deploy.host.like(f"%{filt}%"),
                 )
             )
 
-        global_subq = query_base.with_entities(
-            Deploy.command,
-            Deploy.group_uuid,
-            func.max(Deploy.start).label("global_latest_start")
-        ).group_by(Deploy.command, Deploy.group_uuid).subquery()
+        global_subq = (
+            query_base.with_entities(
+                Deploy.command,
+                Deploy.group_uuid,
+                func.max(Deploy.start).label("global_latest_start"),
+            )
+            .group_by(Deploy.command, Deploy.group_uuid)
+            .subquery()
+        )
 
         global_deploy_query = session.query(Deploy).join(
             global_subq,
             and_(
                 Deploy.command == global_subq.c.command,
                 Deploy.group_uuid == global_subq.c.group_uuid,
-                Deploy.start == global_subq.c.global_latest_start
-            )
+                Deploy.start == global_subq.c.global_latest_start,
+            ),
         )
         global_deploy_raw = global_deploy_query.all()
 
@@ -6376,61 +6449,87 @@ class XmppMasterDatabase(DatabaseHelper):
         for global_deploy in global_deploy_list:
             machine_query = query_base.filter(
                 Deploy.command == global_deploy.command,
-                Deploy.group_uuid == global_deploy.group_uuid
+                Deploy.group_uuid == global_deploy.group_uuid,
             )
 
-            machine_subq = machine_query.with_entities(
-                Deploy.inventoryuuid,
-                func.max(Deploy.start).label("machine_latest_start")
-            ).group_by(Deploy.inventoryuuid).subquery()
-
-            deploy_per_machine_query = session.query(
-                Deploy.command,
-                Deploy.group_uuid,
-                Deploy.login,
-                Deploy.host,
-                Deploy.inventoryuuid,
-                Deploy.state,
-                Deploy.jid_relay,
-                Deploy.sessionid,
-                Deploy.start,
-                Deploy.endcmd
-            ).join(
-                machine_subq,
-                and_(
-                    Deploy.inventoryuuid == machine_subq.c.inventoryuuid,
-                    Deploy.start == machine_subq.c.machine_latest_start
+            machine_subq = (
+                machine_query.with_entities(
+                    Deploy.inventoryuuid,
+                    func.max(Deploy.start).label("machine_latest_start"),
                 )
-            ).order_by(Deploy.start.desc())
+                .group_by(Deploy.inventoryuuid)
+                .subquery()
+            )
+
+            deploy_per_machine_query = (
+                session.query(
+                    Deploy.command,
+                    Deploy.group_uuid,
+                    Deploy.login,
+                    Deploy.host,
+                    Deploy.inventoryuuid,
+                    Deploy.state,
+                    Deploy.jid_relay,
+                    Deploy.sessionid,
+                    Deploy.start,
+                    Deploy.endcmd,
+                )
+                .join(
+                    machine_subq,
+                    and_(
+                        Deploy.inventoryuuid == machine_subq.c.inventoryuuid,
+                        Deploy.start == machine_subq.c.machine_latest_start,
+                    ),
+                )
+                .order_by(Deploy.start.desc())
+            )
             machine_results = deploy_per_machine_query.all()
             total_machine_count = len(machine_results)
 
             machine_details_list = []
             for row in machine_results:
-                machine_details_list.append({
-                    "host": row.host,
-                    "state": row.state,
-                    "inventoryuuid": row.inventoryuuid,
-                    "jid_relay": row.jid_relay,
-                    "sessionid": row.sessionid,
-                    "start": row.start.strftime("%Y-%m-%d %H:%M:%S") if row.start else None,
-                    "end": row.endcmd.strftime("%Y-%m-%d %H:%M:%S") if row.endcmd else None,
-                })
+                machine_details_list.append(
+                    {
+                        "host": row.host,
+                        "state": row.state,
+                        "inventoryuuid": row.inventoryuuid,
+                        "jid_relay": row.jid_relay,
+                        "sessionid": row.sessionid,
+                        "start": (
+                            row.start.strftime("%Y-%m-%d %H:%M:%S")
+                            if row.start
+                            else None
+                        ),
+                        "end": (
+                            row.endcmd.strftime("%Y-%m-%d %H:%M:%S")
+                            if row.endcmd
+                            else None
+                        ),
+                    }
+                )
 
             aggregated = {
                 "command": global_deploy.command,
                 "group_uuid": global_deploy.group_uuid,
                 "title": global_deploy.title,
                 "nb_machines": total_machine_count,
-                "start": {"timestamp": int(global_deploy.start.timestamp())} if global_deploy.start else None,
-                "endcmd": {"timestamp": int(global_deploy.endcmd.timestamp())} if global_deploy.endcmd else None,
+                "start": (
+                    {"timestamp": int(global_deploy.start.timestamp())}
+                    if global_deploy.start
+                    else None
+                ),
+                "endcmd": (
+                    {"timestamp": int(global_deploy.endcmd.timestamp())}
+                    if global_deploy.endcmd
+                    else None
+                ),
                 "machine_details_json": json.dumps(machine_details_list),
                 "login": global_deploy.login,
             }
             aggregated_list.append(aggregated)
 
         if minimum is not None and maximum is not None:
-            aggregated_list = aggregated_list[int(minimum):int(maximum)]
+            aggregated_list = aggregated_list[int(minimum) : int(maximum)]
         lentotal = len(aggregated_list)
 
         ret = {
@@ -6442,9 +6541,11 @@ class XmppMasterDatabase(DatabaseHelper):
                 "nb_machines": [a["nb_machines"] for a in aggregated_list],
                 "start": [a["start"] for a in aggregated_list],
                 "endcmd": [a["endcmd"] for a in aggregated_list],
-                "machine_details_json": [a["machine_details_json"] for a in aggregated_list],
+                "machine_details_json": [
+                    a["machine_details_json"] for a in aggregated_list
+                ],
                 "login": [a["login"] for a in aggregated_list],
-            }
+            },
         }
 
         session.commit()
@@ -14319,15 +14420,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 order by name
                 %s
                 """ % (
-                            updateid,
-                            uuid.replace("UUID", ""),
-                            filter_on,
-                            sfilter,
-                            kb,
-                            filter_on,
-                            sfilter,
-                            filterlimit,
-                        )
+            updateid,
+            uuid.replace("UUID", ""),
+            filter_on,
+            sfilter,
+            kb,
+            filter_on,
+            sfilter,
+            filterlimit,
+        )
 
         datas = session.execute(sql)
         count = session.execute("SELECT FOUND_ROWS();")
@@ -15187,9 +15288,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_machines_infos(self, session, mom_keys_for_search,
-        data_search, exclude_keys=None
-        ):
+    def get_machines_infos(
+        self, session, mom_keys_for_search, data_search, exclude_keys=None
+    ):
         """
         Récupère les informations des machines en fonction des critères de recherche spécifiés,
         avec la possibilité d'exclure certaines clés des résultats.
@@ -15220,14 +15321,19 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             mom_keys_for_search = [mom_keys_for_search]
 
         if len(mom_keys_for_search) != len(data_search):
-            return {"error": "mom_keys_for_search and data_search must have the same number of elements."}
+            return {
+                "error": "mom_keys_for_search and data_search must have the same number of elements."
+            }
 
         if exclude_keys is None:
             exclude_keys = []
 
         try:
             # Construire la requête dynamiquement
-            filters = [getattr(Machines, key) == value for key, value in zip(mom_keys_for_search, data_search)]
+            filters = [
+                getattr(Machines, key) == value
+                for key, value in zip(mom_keys_for_search, data_search)
+            ]
             query = session.query(Machines).filter(and_(*filters))
 
             # Exécuter la requête et récupérer les résultats
@@ -15267,7 +15373,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         "model": machine.model,
                         "manufacturer": machine.manufacturer,
                         "glpi_entity_id": machine.glpi_entity_id,
-                        "glpi_location_id": machine.glpi_location_id
+                        "glpi_location_id": machine.glpi_location_id,
                     }
                     # Exclure les clés spécifiées
                     for key in exclude_keys:
@@ -15282,7 +15388,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return {"error": str(e)}
 
     @DatabaseHelper._sessionm
-    def get_machines_infos_reg(self, session, mom_keys_for_search, data_search, exclude_keys=None):
+    def get_machines_infos_reg(
+        self, session, mom_keys_for_search, data_search, exclude_keys=None
+    ):
         """
         Récupère les informations des machines en fonction des critères de recherche spécifiés,
         avec la possibilité d'exclure certaines clés des résultats.
@@ -15314,7 +15422,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             mom_keys_for_search = [mom_keys_for_search]
 
         if len(mom_keys_for_search) != len(data_search):
-            return {"error": "mom_keys_for_search and data_search must have the same number of elements."}
+            return {
+                "error": "mom_keys_for_search and data_search must have the same number of elements."
+            }
 
         if exclude_keys is None:
             exclude_keys = []
@@ -15327,13 +15437,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 if isinstance(value, list):
                     # Cas où la valeur est une liste d'éléments
                     filters.append(column.in_(value))
-                elif isinstance(value, str) and '%' in value:
+                elif isinstance(value, str) and "%" in value:
                     # Cas où la valeur contient des '%'
                     filters.append(column.like(value))
-                elif isinstance(value, str) and value.startswith('regex:'):
+                elif isinstance(value, str) and value.startswith("regex:"):
                     # Cas où la valeur est une expression régulière
-                    regex = value[len('regex:'):]
-                    filters.append(column.op('REGEXP')(regex))
+                    regex = value[len("regex:") :]
+                    filters.append(column.op("REGEXP")(regex))
                 else:
                     # Cas par défaut : égalité stricte
                     filters.append(column == value)
@@ -15377,7 +15487,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         "model": machine.model,
                         "manufacturer": machine.manufacturer,
                         "glpi_entity_id": machine.glpi_entity_id,
-                        "glpi_location_id": machine.glpi_location_id
+                        "glpi_location_id": machine.glpi_location_id,
                     }
                     # Exclure les clés spécifiées
                     for key in exclude_keys:
@@ -15391,10 +15501,17 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         except Exception as e:
             return {"error": str(e)}
 
-
-
     @DatabaseHelper._sessionm
-    def get_machines_infos_generic(self, session, mom_keys_for_search, data_search, include_keys=None, offset=0, limit=-1, colonne=True):
+    def get_machines_infos_generic(
+        self,
+        session,
+        mom_keys_for_search,
+        data_search,
+        include_keys=None,
+        offset=0,
+        limit=-1,
+        colonne=True,
+    ):
         """
         Récupère les informations des machines en fonction des critères de recherche spécifiés,
         en incluant uniquement les clés spécifiées dans les résultats.
@@ -15442,20 +15559,22 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             mom_keys_for_search = [mom_keys_for_search]
 
         if len(mom_keys_for_search) != len(data_search):
-            return {"error": "mom_keys_for_search and data_search must have the same number of elements."}
+            return {
+                "error": "mom_keys_for_search and data_search must have the same number of elements."
+            }
 
         if not include_keys:
             include_keys = [
-            "id",
-            "hostname",
-            "platform",
-            "jid",
-            "uuid_serial_machine",
-            "uuid_inventorymachine",
-            "model",
-            "manufacturer",
-            "enabled"
-        ]
+                "id",
+                "hostname",
+                "platform",
+                "jid",
+                "uuid_serial_machine",
+                "uuid_inventorymachine",
+                "model",
+                "manufacturer",
+                "enabled",
+            ]
 
         # # Si include_keys est vide, inclure uniquement l'ID
         # if not include_keys:
@@ -15469,19 +15588,23 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 if isinstance(value, list):
                     # Cas où la valeur est une liste d'éléments
                     filters.append(column.in_(value))
-                elif isinstance(value, str) and '%' in value:
+                elif isinstance(value, str) and "%" in value:
                     # Cas où la valeur contient des '%'
                     filters.append(column.like(value))
-                elif isinstance(value, str) and value.startswith('regex:'):
+                elif isinstance(value, str) and value.startswith("regex:"):
                     # Cas où la valeur est une expression régulière
-                    regex = value[len('regex:'):]
-                    filters.append(column.op('REGEXP')(regex))
+                    regex = value[len("regex:") :]
+                    filters.append(column.op("REGEXP")(regex))
                 else:
                     # Cas par défaut : égalité stricte
                     filters.append(column == value)
 
             # Optimiser la requête pour ne sélectionner que les colonnes nécessaires
-            query = session.query(Machines).options(load_only(*include_keys)).filter(and_(*filters))
+            query = (
+                session.query(Machines)
+                .options(load_only(*include_keys))
+                .filter(and_(*filters))
+            )
 
             # Calculer le nombre total d'enregistrements sans offset et limit
             total_count = query.count()
@@ -15500,17 +15623,26 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     for machine in machines:
                         for key in include_keys:
                             value = getattr(machine, key)
-                            machines_info[key].append(value if value is not None else "")
+                            machines_info[key].append(
+                                value if value is not None else ""
+                            )
                 else:
                     machines_info = []
                     for machine in machines:
-                        machine_info = {key: (getattr(machine, key) if getattr(machine, key) is not None else "") for key in include_keys}
+                        machine_info = {
+                            key: (
+                                getattr(machine, key)
+                                if getattr(machine, key) is not None
+                                else ""
+                            )
+                            for key in include_keys
+                        }
                         machines_info.append(machine_info)
 
                 return {
                     "total": total_count,
                     "partielle_total": len(machines),
-                    "result": machines_info
+                    "result": machines_info,
                 }
             else:
                 return {"error": "No machines found matching the criteria."}
@@ -15519,7 +15651,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return {"error": str(e)}
 
     @DatabaseHelper._sessionm
-    def get_machines_infos_additif(self, session, mom_keys_for_search, data_search, include_keys=None):
+    def get_machines_infos_additif(
+        self, session, mom_keys_for_search, data_search, include_keys=None
+    ):
         """
         Récupère les informations des machines en fonction des critères de recherche spécifiés,
         en incluant uniquement les clés spécifiées dans les résultats.
@@ -15551,7 +15685,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             mom_keys_for_search = [mom_keys_for_search]
 
         if len(mom_keys_for_search) != len(data_search):
-            return {"error": "mom_keys_for_search and data_search must have the same number of elements."}
+            return {
+                "error": "mom_keys_for_search and data_search must have the same number of elements."
+            }
 
         if include_keys is None:
             include_keys = []
@@ -15568,19 +15704,23 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 if isinstance(value, list):
                     # Cas où la valeur est une liste d'éléments
                     filters.append(column.in_(value))
-                elif isinstance(value, str) and '%' in value:
+                elif isinstance(value, str) and "%" in value:
                     # Cas où la valeur contient des '%'
                     filters.append(column.like(value))
-                elif isinstance(value, str) and value.startswith('regex:'):
+                elif isinstance(value, str) and value.startswith("regex:"):
                     # Cas où la valeur est une expression régulière
-                    regex = value[len('regex:'):]
-                    filters.append(column.op('REGEXP')(regex))
+                    regex = value[len("regex:") :]
+                    filters.append(column.op("REGEXP")(regex))
                 else:
                     # Cas par défaut : égalité stricte
                     filters.append(column == value)
 
             # Optimiser la requête pour ne sélectionner que les colonnes nécessaires
-            query = session.query(Machines).options(load_only(*include_keys)).filter(and_(*filters))
+            query = (
+                session.query(Machines)
+                .options(load_only(*include_keys))
+                .filter(and_(*filters))
+            )
 
             # Exécuter la requête et récupérer les résultats
             machines = query.all()
@@ -15598,6 +15738,268 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         except Exception as e:
             return {"error": str(e)}
 
+    @DatabaseHelper._sessionm
+    def get_os_xmpp_update_major_stats(self, session, presence=False):
+        """
+        Récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données.
+            presence (bool, optional): Filtrer uniquement les machines activées si True. Par défaut, True.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation.
+        """
+        try:
+            # Dictionnaire final des résultats
+            cols = ["W10to10", "W10to11", "W11to11"]
+            results = {"entity": {}}
+
+            # Condition de filtre sur xma.enabled
+            presence_filter = "AND xma.enabled = 1" if presence else ""
+
+            # Requête pour le nombre total de machines par entité
+            total_os_sql = f"""
+                SELECT
+                    xe.name AS entity_name,
+                    xe.complete_name AS complete_name,
+                    COUNT(*) AS count
+                FROM
+                    xmppmaster.machines xma
+                INNER JOIN xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+                WHERE
+                    xma.platform LIKE '%Windows%'
+                    {presence_filter}
+                GROUP BY xe.id;
+            """
+
+            total_os_result = session.execute(total_os_sql).fetchall()
+            for row in total_os_result:
+                results["entity"].setdefault(
+                    row.complete_name, {"count": int(row.count)}
+                )
+
+            # Requête pour les statistiques par entité
+            entity_sql = f"""
+                        SELECT
+                            xe.glpi_id as entity_id,
+                            xe.name AS entity_name,
+                            xe.complete_name AS complete_name,
+                            COUNT(*) AS nbwin,
+                            CASE
+                                WHEN
+                                    xma.platform LIKE '%Windows 10%'
+                                        AND xma.platform NOT LIKE '%[22H2]'
+                                THEN
+                                    'W10to10'
+                                WHEN
+                                    xma.platform LIKE '%Windows 10%'
+                                        AND xma.platform LIKE '%[22H2]'
+                                THEN
+                                    'W10to11'
+                                WHEN
+                                    xma.platform LIKE '%Windows 11%'
+                                        AND xma.platform NOT LIKE '%[24H2]'
+                                THEN
+                                    'W11to11'
+                                WHEN
+                                    xma.platform LIKE '%Windows%'
+                                        AND xma.platform NOT REGEXP '\[[0-9]{2}H[0-9]\]$'
+                                THEN
+                                    'winVers_missing'
+                                ELSE 'not_win'
+                            END AS os
+                        FROM
+                            xmppmaster.machines xma
+                                INNER JOIN
+                            xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+                        WHERE
+                            xma.platform LIKE '%Windows%'
+                            {presence_filter}
+                        GROUP BY xe.id , os
+                        ORDER BY xe.complete_name , os;
+            """
+
+            entity_result = session.execute(entity_sql).fetchall()
+            for row in entity_result:
+                # initialisation
+                results["entity"].setdefault(row.complete_name, {})
+                results["entity"][row.complete_name]["name"] = row.entity_name
+                results["entity"][row.complete_name][row.os] = int(row.nbwin)
+                results["entity"][row.complete_name]["entity_id"] = int(row.entity_id)
+            # Calcul de la conformité
+            for entity, data in results["entity"].items():
+                total = results["entity"][entity]["count"]
+                non_conforme = sum(data.get(key, 0) for key in cols)
+                results["entity"][entity]["conformite"] = round(
+                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                )
+
+            # Copier les clés existantes avant d'itérer
+            existing_entities = list(results["entity"].keys())
+            for entity in existing_entities:  # Itérer sur la copie des clés
+                for col in cols:
+                    if col not in results["entity"][entity]:
+                        results["entity"][entity][col] = 0
+            return results
+
+        except Exception as e:
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+            )
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            return {}
+
+    @DatabaseHelper._sessionm
+    def get_os_xmpp_update_major_details(
+        self, session, entity_id, filter="", start=0, limit=-1, colonne=True
+    ):
+        """
+        Récupère les détails des machines avec des systèmes d'exploitation Windows à partir de la base de données XMPPMaster.
+
+        Cette fonction exécute une requête SQL pour récupérer des informations sur les machines
+        avec des systèmes d'exploitation Windows, y compris une colonne calculée 'os' qui
+        catégorise la version du système d'exploitation et indique les mises à jour majeures
+        nécessaires entre la version actuelle et la prochaine mise à jour majeure. Les résultats
+        peuvent être retournés soit dans un format détaillé ligne par ligne, soit dans un format
+        en colonnes, selon le paramètre 'colonne'.
+
+        Paramètres :
+            session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
+            entity_id (int) : L'ID de l'entité pour filtrer les résultats.
+            filter (str) : Critères de filtrage supplémentaires pour filtrer par nom de machine.
+            start (int) : Le décalage pour commencer à retourner les lignes.
+            limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
+            colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+
+        Retourne :
+            dict : Un dictionnaire contenant le nombre de lignes correspondantes et soit
+                   des résultats détaillés ligne par ligne, soit des résultats en colonnes,
+                   selon le paramètre 'colonne'. La colonne 'update' indique les mises à jour majeures
+                   nécessaires, telles que 'W10to10' pour une mise à jour entre versions de Windows 10,
+                   'W10to11' pour une mise à jour de Windows 10 vers Windows 11, et 'W11to11' pour une
+                   mise à jour entre versions de Windows 11.
+        """
+
+        # Base SQL query
+        total_os_sql = """
+            SELECT
+                SQL_CALC_FOUND_ROWS
+                xma.id AS id_machine,
+                xma.hostname AS machine,
+                xma.platform AS platform,
+                -- xe.glpi_id AS entity_id,
+                -- xe.name AS entity_name,
+                -- xe.complete_name AS complete_name,
+                CASE
+                    WHEN xma.platform REGEXP '\\\\[([0-9]{2}H[0-9])\\\\]$' THEN
+                        SUBSTRING_INDEX(SUBSTRING_INDEX(xma.platform, '[', -1), ']', 1)
+                    ELSE NULL
+                END AS version,
+                CASE
+                    WHEN xma.platform LIKE '%Windows 10%' AND xma.platform NOT LIKE '%[22H2]' THEN 'W10to10'
+                    WHEN xma.platform LIKE '%Windows 10%' AND xma.platform LIKE '%[22H2]' THEN 'W10to11'
+                    WHEN xma.platform LIKE '%Windows 11%' AND xma.platform NOT LIKE '%[24H2]' THEN 'W11to11'
+                    WHEN xma.platform LIKE '%Windows%' AND xma.platform NOT REGEXP '[[0-9]{2}H[0-9]]$' THEN 'winVers_missing'
+                    ELSE 'not_win'
+                END AS 'update'
+            FROM
+                xmppmaster.machines xma
+                INNER JOIN xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+            WHERE
+                xma.platform LIKE '%Windows%' AND xe.glpi_id = :entity_id
+        """
+        # Add filter condition if filter is not empty
+        if filter:
+            total_os_sql += " AND xma.hostname LIKE :filter"
+
+        # Add ORDER BY and LIMIT/OFFSET if limit is not -1
+        total_os_sql += " ORDER BY xma.hostname "
+        if limit != -1:
+            logger.error("limit %s " % limit)
+            total_os_sql += " LIMIT :limit OFFSET :start"
+
+        # Convert to text for parameter binding
+        total_os_sql = text(total_os_sql)
+
+        # Log the SQL query with parameters
+        logger.debug("Executing SQL query: %s", total_os_sql)
+        logger.debug(
+            "With parameters: entity_id=%s, filter=%s, limit=%s, start=%s",
+            entity_id,
+            f"%{filter}%",
+            limit,
+            start,
+        )
+
+        # Execute the SQL query with parameters
+        entity_result = session.execute(
+            total_os_sql,
+            {
+                "entity_id": entity_id,
+                "filter": f"%{filter}%",
+                "limit": limit,
+                "start": start,
+            },
+        ).fetchall()
+
+        # Count the total number of matching elements using FOUND_ROWS()
+        sql_count = text("SELECT FOUND_ROWS();")
+        ret_count = session.execute(sql_count).scalar()
+
+        # Extract common fields from the first row
+        # common_entity_id = entity_result[0].entity_id if entity_result else ""
+        # common_entity_name = entity_result[0].entity_name if entity_result else ""
+        # common_complete_name = entity_result[0].complete_name if entity_result else ""
+
+        # Prepare the result dictionary with the count of matching rows and common fields
+        result = {
+            "nb_machine": ret_count,
+            # 'entity_id': common_entity_id,
+            # 'entity_name': common_entity_name,
+            # 'complete_name': common_complete_name
+        }
+
+        if colonne:
+            # If colonne is True, return results in columnar format
+            result.update(
+                {
+                    "id_machine": [
+                        row.id_machine if row.id_machine is not None else ""
+                        for row in entity_result
+                    ],
+                    "machine": [
+                        row.machine if row.machine is not None else ""
+                        for row in entity_result
+                    ],
+                    "platform": [
+                        row.platform if row.platform is not None else ""
+                        for row in entity_result
+                    ],
+                    "version": [
+                        row.version if row.version is not None else ""
+                        for row in entity_result
+                    ],
+                    "update": [
+                        row.update if row.update is not None else ""
+                        for row in entity_result
+                    ],
+                }
+            )
+        else:
+            # If colonne is False, return detailed results in row-wise format
+            result["details"] = [
+                {
+                    "id_machine": row.id_machine if row.id_machine is not None else "",
+                    "machine": row.machine if row.machine is not None else "",
+                    "platform": row.platform if row.platform is not None else "",
+                    "version": row.version if row.version is not None else "",
+                    "update": row.update if row.update is not None else "",
+                }
+                for row in entity_result
+            ]
+
+        return result
 
     @DatabaseHelper._sessionm
     def pending_machine_update_by_pid(
@@ -16120,7 +16522,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         )
         return query
 
-
     @DatabaseHelper._sessionm
     def get_os_xmpp_update_major_stats(self, session, presence=False):
         """
@@ -16135,14 +16536,14 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         try:
             # Dictionnaire final des résultats
-            cols=["W10to10", "W10to11", "W11to11"]
+            cols = ["W10to10", "W10to11", "W11to11"]
             results = {"entity": {}}
 
             # Condition de filtre sur xma.enabled
             presence_filter = "AND xma.enabled = 1" if presence else ""
 
             # Requête pour le nombre total de machines par entité
-            total_os_sql = f'''
+            total_os_sql = f"""
                 SELECT
                     xe.name AS entity_name,
                     xe.complete_name AS complete_name,
@@ -16154,15 +16555,16 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     xma.platform LIKE '%Windows%'
                     {presence_filter}
                 GROUP BY xe.id;
-            '''
-
+            """
 
             total_os_result = session.execute(total_os_sql).fetchall()
             for row in total_os_result:
-                results["entity"].setdefault(row.complete_name, {"count" :  int(row.count)})
+                results["entity"].setdefault(
+                    row.complete_name, {"count": int(row.count)}
+                )
 
             # Requête pour les statistiques par entité
-            entity_sql = f'''
+            entity_sql = f"""
                         SELECT
                             xe.glpi_id as entity_id,
                             xe.name AS entity_name,
@@ -16200,20 +16602,22 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             {presence_filter}
                         GROUP BY xe.id , os
                         ORDER BY xe.complete_name , os;
-            '''
+            """
 
             entity_result = session.execute(entity_sql).fetchall()
             for row in entity_result:
-                 # initialisation
+                # initialisation
                 results["entity"].setdefault(row.complete_name, {})
                 results["entity"][row.complete_name]["name"]=row.entity_name
                 results["entity"][row.complete_name][row.os ]=int(row.nbwin)
                 results["entity"][row.complete_name]['entity_id']=int(row.entity_id)
               # Calcul de la conformité
             for entity, data in results["entity"].items():
-                total=results["entity"][entity]["count"]
+                total = results["entity"][entity]["count"]
                 non_conforme = sum(data.get(key, 0) for key in cols)
-                results["entity"][entity]["conformite"] = round(((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2)
+                results["entity"][entity]["conformite"] = round(
+                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                )
 
             # Copier les clés existantes avant d'itérer
             existing_entities = list(results["entity"].keys())
@@ -16224,7 +16628,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return results
 
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+            )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
