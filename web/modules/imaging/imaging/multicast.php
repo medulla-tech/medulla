@@ -40,7 +40,7 @@ $label = urldecode($_GET['itemlabel']);
 $params = getParams();
 if ($_POST) {
     $nb = extract($_POST);
-    $location = getCurrentLocation();
+    $location = xmlrpc_getGroupLocation($gid);
     $list = getRestrictedComputersList(0, -1, array('gid' => $gid, 'hostname' => '', 'location' => $location), false);
     list($count, $masters) = xmlrpc_getLocationImages($location);
 
@@ -285,7 +285,6 @@ if ($_POST) {
         exit;
     }
 
-    $locationparameter = getCurrentLocation();
     $list =  xmlrpc_imagingServermenuMulticast($objval);
     if($list[0] == 1) {
         $Paramsmulticast = array(
@@ -297,7 +296,7 @@ if ($_POST) {
             "itemlabel" => $itemlabel,
             "target_uuid" => $target_uuid,
             "target_name" => $target_name,
-            "location" => $locationparameter,
+            "location" => $location,
         );
 
         xmlrpc_SetMulticastMultiSessionParameters($Paramsmulticast);

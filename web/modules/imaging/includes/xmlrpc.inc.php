@@ -849,4 +849,8 @@ function get_all_postinstall_for_menu($menuitem_id){
 function xmlrpc_update_postinstalls_in_menu($itemid, $postinstalls=[]){
     return xmlCall("imaging.update_postinstalls_in_menu", [$itemid, $postinstalls]);
 }
+
+function xmlrpc_getGroupLocation($gid){
+    return xmlCall("imaging.getGroupLocation", [$gid]);
+}
 ?>
