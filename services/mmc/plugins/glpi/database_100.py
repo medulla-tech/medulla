@@ -34,7 +34,7 @@ from sqlalchemy import (
     func,
     distinct,
     text,
-    inspect
+    inspect,
 )
 from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
 from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
@@ -7529,9 +7529,9 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
         """
         try:
             # Dictionnaire final des résultats
-            cols=["W10to10", "W10to11", "W11to11"]
+            cols = ["W10to10", "W10to11", "W11to11"]
             results = {"entity": {}}
-            total_os_sql =f'''
+            total_os_sql = f"""
                         SELECT
                                 e.name AS entity_name,
                                 e.completename AS complete_name,
@@ -7550,14 +7550,16 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                                 os.name LIKE '%Windows%'
                             GROUP BY e.id
                             ORDER BY e.name;
-            '''
+            """
             total_os_result = session.execute(total_os_sql).fetchall()
             for row in total_os_result:
-                results["entity"].setdefault(row.complete_name, {"count" :  int(row.count)})
+                results["entity"].setdefault(
+                    row.complete_name, {"count": int(row.count)}
+                )
                 # results["entity"][row.complete_name]["count"] = int(row.count)
 
             # Requête pour les statistiques par entité
-            entity_sql = '''
+            entity_sql = """
                     SELECT
                         e.id AS entity_id,
                         e.name AS entity_name,
@@ -7597,20 +7599,22 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                         os.name LIKE '%Windows%'
                     GROUP BY e.name, os
                     ORDER BY e.name;
-            '''
+            """
             entity_result = session.execute(entity_sql).fetchall()
 
             for row in entity_result:
                 # initialisation
                 results["entity"].setdefault(row.complete_name, {})
-                results["entity"][row.complete_name]["name"]=row.entity_name
-                results["entity"][row.complete_name][row.os ]=int(row.nbwin)
-                results["entity"][row.complete_name]["entity_id" ]=int(row.entity_id)
+                results["entity"][row.complete_name]["name"] = row.entity_name
+                results["entity"][row.complete_name][row.os] = int(row.nbwin)
+                results["entity"][row.complete_name]["entity_id"] = int(row.entity_id)
             # Calcul de la conformiténbwin
             for entity, data in results["entity"].items():
-                total=results["entity"][entity]["count"]
+                total = results["entity"][entity]["count"]
                 non_conforme = sum(data.get(key, 0) for key in cols)
-                results["entity"][entity]["conformite"] = round(((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2)
+                results["entity"][entity]["conformite"] = round(
+                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                )
             # Copier les clés existantes avant d'itérer
             existing_entities = list(results["entity"].keys())
 
@@ -7622,13 +7626,16 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
             return results
 
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+            )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
-
     @DatabaseHelper._sessionm
-    def get_os_update_major_details(self, session, entity_id, filter="", start=0, limit=-1, colonne=True):
+    def get_os_update_major_details(
+        self, session, entity_id, filter="", start=0, limit=-1, colonne=True
+    ):
         """
         Récupère les détails des machines avec des systèmes d'exploitation Windows à partir de la base de données GLPI.
 
@@ -7657,7 +7664,7 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
         """
 
         # Base SQL query
-        total_os_sql = '''
+        total_os_sql = """
             SELECT
                 SQL_CALC_FOUND_ROWS
                 c.id as id_machine,
@@ -7681,7 +7688,7 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                 INNER JOIN glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
             WHERE
                 os.name LIKE '%Windows%' AND e.id = :entity_id
-        '''
+        """
 
         # Add filter condition if filter is not empty
         if filter:
@@ -7697,15 +7704,24 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
         # Log the SQL query with parameters
         logger.debug("Executing SQL query: %s", total_os_sql)
-        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s", entity_id, f"%{filter}%", limit, start)
+        logger.debug(
+            "With parameters: entity_id=%s, filter=%s, limit=%s, start=%s",
+            entity_id,
+            f"%{filter}%",
+            limit,
+            start,
+        )
 
         # Execute the SQL query with parameters
-        entity_result = session.execute(total_os_sql, {
-            'entity_id': entity_id,
-            'filter': f"%{filter}%",
-            'limit': limit,
-            'start': start
-        }).fetchall()
+        entity_result = session.execute(
+            total_os_sql,
+            {
+                "entity_id": entity_id,
+                "filter": f"%{filter}%",
+                "limit": limit,
+                "start": start,
+            },
+        ).fetchall()
 
         # Count the total number of matching elements using FOUND_ROWS()
         sql_count = text("SELECT FOUND_ROWS();")
@@ -7718,7 +7734,7 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
         # Prepare the result dictionary with the count of matching rows and common fields
         result = {
-            'nb_machine': ret_count,
+            "nb_machine": ret_count,
             # 'entity_id': common_entity_id,
             # 'entity_name': common_entity_name,
             # 'complete_name': common_complete_name
@@ -7726,27 +7742,45 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
         if colonne:
             # If colonne is True, return results in columnar format
-            result.update({
-                'id_machine': [row.id_machine if row.id_machine is not None else "" for row in entity_result],
-                'machine': [row.machine if row.machine is not None else "" for row in entity_result],
-                'platform': [row.platform if row.platform is not None else "" for row in entity_result],
-                'version': [row.version if row.version is not None else "" for row in entity_result],
-                'update': [row.update  if row.update is not None else "" for row in entity_result]
-            })
+            result.update(
+                {
+                    "id_machine": [
+                        row.id_machine if row.id_machine is not None else ""
+                        for row in entity_result
+                    ],
+                    "machine": [
+                        row.machine if row.machine is not None else ""
+                        for row in entity_result
+                    ],
+                    "platform": [
+                        row.platform if row.platform is not None else ""
+                        for row in entity_result
+                    ],
+                    "version": [
+                        row.version if row.version is not None else ""
+                        for row in entity_result
+                    ],
+                    "update": [
+                        row.update if row.update is not None else ""
+                        for row in entity_result
+                    ],
+                }
+            )
         else:
             # If colonne is False, return detailed results in row-wise format
-            result['details'] = [
+            result["details"] = [
                 {
-                    'id_machine': row.id_machine if row.id_machine is not None else "",
-                    'machine': row.machine if row.machine is not None else "",
-                    'platform': row.platform if row.platform is not None else "",
-                    'version':  row.version if row.version is not None else "",
-                    'update': row.update if row.update is not None else ""
+                    "id_machine": row.id_machine if row.id_machine is not None else "",
+                    "machine": row.machine if row.machine is not None else "",
+                    "platform": row.platform if row.platform is not None else "",
+                    "version": row.version if row.version is not None else "",
+                    "update": row.update if row.update is not None else "",
                 }
                 for row in entity_result
             ]
 
         return result
+
 
 # Class for SQLalchemy mapping
 class Machine(object):
