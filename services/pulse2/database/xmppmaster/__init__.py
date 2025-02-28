@@ -15595,14 +15595,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return {"error": str(e)}
 
     @DatabaseHelper._sessionm
-    def pending_machine_update_by_pid(
-        self,
-@ -15699,3 +16112,241 @@ order by name
-            .first()
-        )
-        return query
-
-    @DatabaseHelper._sessionm
     def get_os_xmpp_update_major_stats(self, session, presence=False):
         """
         Récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
