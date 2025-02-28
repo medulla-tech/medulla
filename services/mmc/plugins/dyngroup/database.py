@@ -329,6 +329,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         groups = self.__allgroups_query(ctx, params, session, type)
         groups = groups.order_by(self.groups.c.name)
 
+        # Exclude groups where the name starts with "_@Grp_Major_update_win_"
+        groups = groups.filter(~self.groups.c.name.startswith("_@med_Grp_Major_update_win_"))
+
         min = 0
         try:
             if params["min"]:
@@ -450,45 +453,58 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session.query(Groups).filter_by(parent_id=parent_id).delete()
         session.query(Convergence).filter_by(parentGroupId=parent_id).delete()
         return True
-
     @DatabaseHelper._session
     def delete_group(self, session, ctx, id):
         """
-        delete a group defined by it's id
-        delete the results and the machines linked to that group if needed
+        Delete a group defined by its ID.
+        Delete the results and the machines linked to that group if needed.
         """
-        # Is current group a profile ?
-        if self.isprofile(ctx, id):
-            resultTable = self.profilesResults
-            resultKlass = ProfilesResults
-        else:
-            resultTable = self.results
-            resultKlass = Results
+        try:
+            # Check if the current group is a profile
+            if self.isprofile(ctx, id):
+                resultTable = self.profilesResults
+                resultKlass = ProfilesResults
+            else:
+                resultTable = self.results
+                resultKlass = Results
 
-        self.__getOrCreateUser(ctx)
-        connection = self.getDbConnection()
-        trans = connection.begin()
-        # get machines to possibly delete
-        to_delete = [
-            x.id
-            for x in session.query(Machines)
-            .select_from(self.machines.join(resultTable))
-            .filter(resultTable.c.FK_groups == id)
-        ]
-        # Delete the previous results for this group in the Results table
-        session.query(resultKlass).filter_by(FK_groups=id).delete()
-        # Delete all shares on the group before delete group
-        self.__deleteShares(id, session)
-        # Update the Machines table to remove ghost records
-        self.__updateMachinesTable(connection, to_delete)
-        # Delete the group from the Groups table
-        session.query(ProfilesData).filter_by(FK_groups=id).delete()
-        session.query(Groups).filter_by(id=id).delete()
-        # Delete convergence groups for this id
-        self.delete_convergence_groups(id)
-        session.flush()
-        trans.commit()
-        return True
+            self.__getOrCreateUser(ctx)
+            connection = self.getDbConnection()
+            trans = connection.begin()
+
+            # Get machines to possibly delete
+            to_delete = [
+                x.id
+                for x in session.query(Machines)
+                .select_from(self.machines.join(resultTable))
+                .filter(resultTable.c.FK_groups == id)
+            ]
+
+            # Delete the previous results for this group in the Results table
+            session.query(resultKlass).filter_by(FK_groups=id).delete()
+
+            # Delete all shares on the group before deleting the group
+            self.__deleteShares(id, session)
+
+            # Update the Machines table to remove ghost records
+            self.__updateMachinesTable(connection, to_delete)
+
+            # Delete the group from the Groups table
+            session.query(ProfilesData).filter_by(FK_groups=id).delete()
+            session.query(Groups).filter_by(id=id).delete()
+
+            # Delete convergence groups for this id
+            self.delete_convergence_groups(id)
+
+            session.flush()
+            trans.commit()
+            return [True, "succes delete group"]
+
+        except Exception as e:
+            # Log the warning message and rollback the transaction
+            self.logger.warning(f"Failed to delete group {id}: {str(e)}")
+            trans.rollback()
+            return [False, f"Failed to delete group {id}: {str(e)}"]
 
     def create_group(self, ctx, name, visibility, type=0, parent_id=None):
         """
