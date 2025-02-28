@@ -33,10 +33,12 @@ from sqlalchemy import (
     desc,
     func,
     distinct,
-    inspect,
+    text,
+    inspect
 )
-from sqlalchemy.orm import create_session, mapper, relationship
-from sqlalchemy.exc import NoSuchTableError
+from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
+from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
+
 
 try:
     from sqlalchemy.sql.expression import ColumnOperators
