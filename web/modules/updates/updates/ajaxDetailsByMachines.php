@@ -55,7 +55,6 @@ if ($entity == '') {
     $typeOfDetail = "group";
     $filterOn = array('gid' => $gid);
     $ctx['gid'] = $gid;
-
     // Needed all machines of the group to calculate the compliance rate
     $_machines = getRestrictedComputersList($start, $start+$maxperpage, $ctx, true);
 
@@ -72,15 +71,14 @@ if ($entity == '') {
         "actionPendingByMachines"=>[],
         "actionDoneByMachines"=>[],
     ];
-    foreach($_machines as $uuid => $mach){
+    foreach($_machines as $uuid=> $mach){
         $machines["uuid"][] = $uuid;
         $machines["cn"][] = $mach[1]["cn"][0];
         $machines["os"][] = $mach[1]["os"];
-        $compliance_bloc = "";
 
-        $machines["actionPendingByMachines"][] = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
-        $machines["actionDetailByMachines"][] = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
-        $machines["actionDoneByMachines"][] = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
+        $machines["actionPendingByMachines"][] = $pendingByMach;
+        $machines["actionDetailByMachines"][] = $detailsByMach;
+        $machines["actionDoneByMachines"][] = $doneByMach;
 
         //FUNCTION TO GET ID
         $xmppdatas = xmlrpc_get_idmachine_from_name($mach[1]["cn"][0]);
@@ -94,14 +92,11 @@ if ($entity == '') {
         $color = colorconf($compliance);
 
         $complRate = "<div class='progress' style='width: ".$compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance."% </div>";
-        $params = [];
-        foreach ($_machines as $k => $v) {
-            $params[] = [
-                "machineid" => $id_machine,
-                "inventoryid" => $k,
-                "cn" => isset($v[1]['cn'][0]) ? $v[1]['cn'][0] : 'Unknown'
-            ];
-        }
+        $params[] = [
+            "machineid" => $id_machine,
+            "inventoryid" => $k,
+            "cn" => $v[1]['cn'][0]
+        ];
         $machines["installed"][] = $installed;
         $machines["missing"][] = $missing;
         $machines["inprogress"] = [];
@@ -242,6 +237,7 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $ctx['filter']));
 $n->setParamInfo($params);
 $n->display();
+
 ?>
 
 <script>

@@ -72,7 +72,7 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
         }
     }
 }
-
+echo "kkkkkkkkkkkkkkkkkkkkkkkkkkk";
 $cl = getRestrictedComputersList($start, $start + $maxperpage, $filter, False);
 $cl1 = array();
 foreach ($cl as $k => $v) {

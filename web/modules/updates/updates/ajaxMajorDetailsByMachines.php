@@ -28,6 +28,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/updates/includes/html.inc.php");
 
+
 $location = (isset($_GET['location'])) ? htmlentities($_GET['location']) : "";
 $gid = (isset($_GET['gid'])) ? htmlentities($_GET['gid']) : "";
 $groupname = (isset($_GET['groupname'])) ? htmlentities($_GET['groupname']) : "";
@@ -41,13 +42,43 @@ $end = (isset($_GET['end'])) ? (int)htmlentities($_GET['end']) : $start+$maxperp
 $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['name']) ? htmlentities($_GET['name']) : "";
 $entityCompleteName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
-$p = new PageGenerator(sprintf("%s [%s]",_T("Entitie", 'updates'),$entityName));
-$p->setSideMenu($sidemenu);
-$p->display();
+
+$n = new ListInfos(array( $_GET['W10to10']), _T("update Win 10 to Win 10", "updates"));
+$n->addExtraInfo(array( $_GET['W10to11']), _T("update  Win 10 to Win 11", "updates"));
+$n->addExtraInfo(array( $_GET['W11to11']), _T("update Win 11 to 11", "updates"));
+$n->addExtraInfo(array( $_GET['UPDATED']), _T("Machine à Jour", "updates"));
+$n->addExtraInfo(array( $_GET['nb_missing']), _T("Machine sans information", "updates"));
+$n->addExtraInfo(array( $_GET['totalmachineentity']), _T("total Machines dans entitées", "updates"));
+$n->setNavBar ="";
+$n->start = 0;
+$n->end =1;
+$converter = new ConvertCouleur();
+
+$n->setCaptionText(sprintf("%s [%s]",
+                           _T("Répartition des mises à jours majeures sur l'entité", 'updates'),
+                            $entityName));
+
+$n->setCssCaption(  $border = 1,
+                    $bold = 0,
+                    $bgColor = "lightgray",
+                    $textColor = "black",
+                    $padding = "10px 0",
+                    $size = "20",
+                    $emboss = 1,
+                    $rowColor = $converter->convert("lightgray"));
+
+        $n->disableFirstColumnActionLink();
+        //$n->setParamInfo($params);
+        //$n->addActionItemArray($actionEdit);
+        $n->display($navbar = 0, $header = 0);
+
     if ($_GET['source'] == "xmppmaster" ){
-        $statglpiversion = xmlrpc_get_os_xmpp_update_major_details($_GET['entity'],$filter);
+        // $statglpiversion = xmlrpc_get_os_xmpp_update_major_details($_GET['entity'],$filter);
+        $statglpiversion = xmlrpc_get_os_update_major_details($_GET['entity'],$filter);
+
     }else{
         $statglpiversion=xmlrpc_get_os_update_major_details($_GET['entity'],$filter );
+
     };
 
 // Nom machine	Système d'exploitation	Mises à jour Major
@@ -60,20 +91,30 @@ $idmachinefrom_xmpp_or_glpi='machineidmajor'; // id xmppmaster
     }
 
 foreach($statglpiversion['id_machine'] as $key=>$valeur){
-$actionspeclistUpds[] = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $statglpiversion['machine'][$key]), "updates"), "deployUpdatemajor", "updateone", "", "updates", "updates");
-        $parammachineinfo="";
- $params[] = array(
-        'entity_id' => $entity,
-        'entity_name' => $entityName,
-        'complete_name' =>$entityCompleteName,
-        'maxperpage' => $maxperpage,
-        'source' => $source,
-         $idmachinefrom_xmpp_or_glpi => $valeur,
-        'cn'=> $statglpiversion['machine'][$key],
-        'platform'=> $statglpiversion['platform'][$key],
-        'version'=> $statglpiversion['version'][$key],
-        'update'=> $statglpiversion['update'][$key],
-    );
+    $actionspeclistUpds[] = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $statglpiversion['machine'][$key]), "updates"),
+                                                "deployUpdatemajor",
+                                                "updateone",
+                                                '',
+                                                "updates",
+                                                "updates",
+                                                null,
+                                                320,"machine");
+    $parammachineinfo="";
+    $params[] = array(
+            'entity_id' => $entity,
+            'entity_name' => $entityName,
+            'complete_name' =>$entityCompleteName,
+            'maxperpage' => $maxperpage,
+            'source' => $source,
+            $idmachinefrom_xmpp_or_glpi => $valeur,
+            'cn'=> $statglpiversion['machine'][$key],
+            'platform'=> $statglpiversion['platform'][$key],
+            'version'=> $statglpiversion['version'][$key],
+            'update'=> $statglpiversion['update'][$key],
+            'uuid_inventorymachine'=> $statglpiversion['uuid_inventorymachine'][$key],
+            'package_id'=> $statglpiversion['package_id'][$key],
+            'installeur'=> $statglpiversion['installeur'][$key]
+        );
 }
 
 $n = new OptimizedListInfos($statglpiversion["machine"], _T("Machine name", "updates"));
@@ -81,7 +122,7 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo($statglpiversion["platform"], _T("Platform", "updates"));
 $n->addExtraInfo($statglpiversion["version"], _T("version", "updates"));
 $n->addExtraInfo($statglpiversion["update"], _T("update", "updates"));
-//$n->addActionItemArray($actionspeclistUpds);
+$n->addActionItemArray($actionspeclistUpds);
 
 $n->start = 0;
 $n->end = $statglpiversion["nb_machine"];

@@ -44,14 +44,6 @@ $page->setFile("modules/updates/updates/ajaxEntitiesList.php");
 $page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
-$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("updatesListMajorWin", _T('Manage Updates Major Lists', 'updates'));
-$page->setFile("modules/updates/updates/updatesListMajorWin.php");
-$submod->addPage($page);
 
 $page = new Page("detailsByMachines", _T('Details by Machines', 'updates'));
 $page->setFile("modules/updates/updates/detailsByMachines.php");
@@ -75,6 +67,7 @@ $page = new Page("deployUpdate", _T('Deploy Specific Updates On Entity', 'update
 $page->setFile("modules/updates/updates/deployUpdate.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
+
 
 $page = new Page("deploySpecificUpdate", _T('Deploy specific update', 'updates'));
 $page->setFile("modules/updates/updates/deploySpecificUpdate.php");
@@ -215,6 +208,12 @@ $page->setFile("modules/updates/updates/deployUpdatemajor.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+$page = new Page("grpDeployUpdatemajor", _T('Deploy Major Updates On entity', 'updates'));
+$page->setFile("modules/updates/updates/grpDeployUpdatemajor.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+
 $page = new Page("ajaxMajorDetailsByMachines", _T("Details by Machines for major update", "updates"));
 $page->setFile("modules/updates/updates/ajaxMajorDetailsByMachines.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
@@ -223,6 +222,17 @@ $submod->addPage($page);
 $page = new Page("majorDetailsByMachines", _T('Machines major update', 'updates'));
 $page->setFile("modules/updates/updates/majorDetailsByMachines.php");
 $submod->addPage($page);
+
+$page = new Page("ajaxgroupUpdateMajorEntity", _T("Detail deploy on group entity", "updates"));
+$page->setFile("modules/updates/updates/ajaxgroupUpdateMajorEntity.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+
+$page = new Page("groupUpdateMajorEntity", _T('Machines major update', 'updates'));
+$page->setFile("modules/updates/updates/groupUpdateMajorEntity.php");
+$submod->addPage($page);
+
 
 $mod->addSubmod($submod);
 

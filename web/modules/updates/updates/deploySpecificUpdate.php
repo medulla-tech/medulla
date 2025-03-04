@@ -23,7 +23,6 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-
 $params = [];
 
 if(!empty($_GET['entity'])) {

@@ -2041,6 +2041,13 @@ def pending_entity_update_by_pid(entity, pid, startdate="", enddate="", interval
 def pending_group_update_by_pid(gid, pid, startdate="", enddate=""):
     pass
 
+def get_machines_infos_additif(id, l_value_id, include_keys=None):
+    if include_keys is None:
+        return XmppMasterDatabase().get_machines_infos_additif(id, l_value_id)
+    return XmppMasterDatabase().get_machines_infos_additif(id, l_value_id, include_keys=include_keys)
+
+def get_machines_infos_generic(mom_keys_for_search, data_search, include_keys=None, offset=0, limit=-1, colonne=True):
+    return XmppMasterDatabase().get_machines_infos_generic(mom_keys_for_search, data_search, include_keys, offset, limit, colonne)
 
 def pending_machine_update_by_pid(
     machineid,
@@ -2085,3 +2092,4 @@ def get_update_kb(updateid):
 
 def cancel_update(machineid, updateid):
     return XmppMasterDatabase().cancel_update(machineid, updateid)
+

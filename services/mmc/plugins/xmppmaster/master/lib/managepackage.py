@@ -600,6 +600,7 @@ class managepackage:
     def getpathpackage(uuidpackage):
         return os.path.join(managepackage.packagedir(), uuidpackage)
 
+
 class search_list_of_deployment_packages:
     """
     Recursively search for all dependencies for this package

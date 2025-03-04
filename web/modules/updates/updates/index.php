@@ -24,7 +24,7 @@
 
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-
+require_once("modules/updates/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Entities Compliance", 'updates'));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -60,7 +60,8 @@ foreach ($allowedSources as $source) {
 require_once("modules/updates/includes/xmlrpc.php");
 
 $params = ["source" => $dataSource];
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesList"), "container", $params);
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesList"),
+                       "container", $params);
 $ajax->display();
 $ajax->displayDivToUpdate();
 

@@ -22,7 +22,7 @@ from sqlalchemy import (
     distinct,
 )
 from sqlalchemy.orm import create_session, mapper
-from sqlalchemy.exc import NoSuchTableError
+from sqlalchemy.exc import NoSuchTableError, SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
 
 import datetime
