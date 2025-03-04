@@ -985,6 +985,8 @@ class ImagingBootServiceItem(ImagingItem):
 
         # Create and write sh file
         try:
+            script_file[0] = script_file[0].decode("utf-8") if isinstance(script_file[0], bytes) else script_file[0]
+            script_file[1] = script_file[1].decode("utf-8") if isinstance(script_file[1], bytes) else script_file[1]
             f = open(os.path.join(postinst_scripts_folder, script_file[0]), "w")
             f.write("#!/bin/bash\n")
             f.write("\n")
@@ -1124,11 +1126,11 @@ class ImagingImageItem(ImagingItem):
                     f.write("\n")
                     f.write(
                         'echo "==> postinstall script #%d : %s"\n'
-                        % (order, script["name"].encode("utf-8"))
+                        % (order, script["name"])
                     )
                     f.write("set -v\n")
                     f.write("\n")
-                    f.write(script["value"].encode("utf-8"))
+                    f.write(script["value"])
                     f.close()
                     os.chmod(postinst, stat.S_IRUSR | stat.S_IXUSR)
                     self.logger.debug("Successfully wrote script: %s" % postinst)
