@@ -4164,6 +4164,15 @@ class ImagingRpcProxy(RpcProxyI):
     def update_postinstalls_in_menu(self, menuitem_id, postinstalls=[]):
         return ImagingDatabase().update_postinstalls_in_menu(menuitem_id, postinstalls)
 
+    def getGroupLocation(self, gid):
+        if not isinstance(gid, list):
+            gid = [gid]
+        entities = ImagingDatabase().getTargetsEntity(gid)
+        entity = "UUID0"
+        if entities is not None or entities != []:
+            entity = entities[0][0].uuid
+        return entity
+
 
 def chooseMacAddress(ctx, uuid, macs):
     # should pass uuids and the list of uuids
