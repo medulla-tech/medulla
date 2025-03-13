@@ -117,26 +117,8 @@ if (quickGet('valid')) {
                 exit;
             }
             else{
-                $ret = xmlrpc_synchroProfile($target_uuid);
                 xmlrpc_clear_script_multicast($objprocess);
             }
-        } else {
-            $ret = xmlrpc_synchroComputer($target_uuid);
-        }
-        if (isXMLRPCError()) {
-        $msg=sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1]));
-        xmlrpc_setfromxmppmasterlogxmpp($msg,
-                                    "IMG",
-                                    '',
-                                    0,
-                                    "" ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | Menu | server | Manual');
-            new NotifyWidgetFailure($msg);
         }
     } elseif (!$ret[0]) {
         new NotifyWidgetFailure($ret[1]);
