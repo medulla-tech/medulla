@@ -92,15 +92,8 @@ if (isset($_POST["bconfirm"])) {
                 exit;
             }
             else{
-                $ret = xmlrpc_synchroProfile($target_uuid);
                 xmlrpc_clear_script_multicast($objprocess);
             }
-        }
-        else {
-            $ret = xmlrpc_synchroComputer($target_uuid);
-        }
-        if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1])));
         }
         $urlRedirect = ($type == 'group') ? 'imaging/manage/' : 'base/computers/';
         header("Location: ".urlStrRedirect($urlRedirect.$type."imgtabs/".$type."tabservices", $params));
