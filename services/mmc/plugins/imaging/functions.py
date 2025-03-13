@@ -229,26 +229,16 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: bool
         """
         old_bootMenu = self.getComputerBootMenu(uuid)
-        if uuid.startswith("UUID"):
-            # Adding location default menu entries
-            # get computer location
-            try:
-                entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[
-                    uuid
-                ]["uuid"]
-
-            except KeyError:
-                raise Exception(
-                    "Unable to generate menu for computer %s: deleted but still present in imaging database"
-                    % uuid
-                )
-        else:
+        if not uuid.startswith("UUID"):
             id_menu = old_bootMenu[1][0]["fk_menu"] if old_bootMenu[0] > 0 else 0
             if id_menu == 0:
                 return False
-            entity = ImagingDatabase().getTargetsEntity([uuid])
-            entity_uuid = entity[0][0].uuid
-
+        entity = ImagingDatabase().getTargetsEntity([uuid])
+        entity_uuid = entity[0][0].uuid
+        target = entity[0][1]
+        # Do not touch to menus of computers in groups
+        if target.type == 3:
+            return True
         # get location bootMenu
         locationBM = self.getLocationBootMenu(entity_uuid)
         # return locationBM
@@ -279,9 +269,6 @@ class ImagingRpcProxy(RpcProxyI):
 
         # Reset custom_menu flag
         self.setComputerCustomMenuFlag(uuid, 0)
-
-        # Synchronize Boot menu with imaging server
-        self.synchroComputer(uuid)
         return True
 
     def applyLocationDefaultBootMenu(self, loc_uuid, immediate=False):
@@ -2439,6 +2426,7 @@ class ImagingRpcProxy(RpcProxyI):
 
     def synchroComputer(self, uuid, mac=False, wol=False):
         """see __synchroTargets"""
+        return True
         logging.getLogger().debug(
             "I'm going to synchronize computer %s bootmenu, Wake-on-lan is %s"
             % (uuid, wol and "on" or "off")
