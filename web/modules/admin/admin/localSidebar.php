@@ -24,10 +24,16 @@ $sidemenu->setClass("admin");
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("List of Relays","admin"), "admin", "admin", "relaysList")
 );
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Clusters List", 'admin'), "admin", "admin", "clustersList"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("New Cluster", 'admin'), "admin", "admin", "newCluster"));
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Clusters List", 'admin'), "admin", "admin", "clustersList")
+);
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("New Cluster", 'admin'), "admin", "admin", "newCluster")
+);
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Rules","admin"), "admin", "admin", "rules")
 );
-
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Server Logs","admin"), "admin", "admin", "webSocket_logs")
+);
 ?>
