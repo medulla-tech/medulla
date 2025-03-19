@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 15:27+0100\n"
+"POT-Creation-Date: 2025-02-10 23:50+0100\n"
 "PO-Revision-Date: 2023-12-12 11:56+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: modules/updates/updates/ajaxPendingUpdateByMachine.php:31
 #: modules/updates/infoPackage.inc.php:190
 msgid "Cancel Update"
-msgstr ""
+msgstr "Скасувати оновлення"
 
 #: modules/updates/updates/ajaxPendingUpdateByMachine.php:66
 #: modules/updates/updates/pendingUpdateByMachine.php:27
@@ -35,7 +35,7 @@ msgstr ""
 #: modules/updates/infoPackage.inc.php:176
 #: modules/updates/infoPackage.inc.php:179
 msgid "Pending Updates"
-msgstr ""
+msgstr "Оновлення у черзі"
 
 #: modules/updates/updates/ajaxPendingUpdateByMachine.php:68
 msgid "Description"
@@ -43,7 +43,7 @@ msgstr "Опис"
 
 #: modules/updates/updates/ajaxPendingUpdateByMachine.php:69
 msgid "Kb"
-msgstr ""
+msgstr "кБ"
 
 #: modules/updates/updates/ajaxPendingUpdateByMachine.php:70
 msgid "Update"
@@ -67,7 +67,7 @@ msgstr "Звертання"
 
 #: modules/updates/updates/ajaxAuditUpdateByMachine.php:51
 msgid "Started at"
-msgstr ""
+msgstr "Початок о"
 
 #: modules/updates/updates/ajaxAuditUpdateByMachine.php:53
 msgid "Status"
@@ -80,21 +80,21 @@ msgstr "Стан"
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:113
 #: modules/updates/updates/ajaxUpdatesListWinBlack.php:70
 msgid "Update name"
-msgstr ""
+msgstr "Назва оновлення"
 
 #: modules/updates/updates/ajaxDeploySpecificUpdate.php:113
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:88
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:79
 #: modules/updates/updates/ajaxUpdatesListWinBlack.php:72
 msgid "Update Id"
-msgstr ""
+msgstr "Ід. оновлення"
 
 #: modules/updates/updates/ajaxDeploySpecificUpdate.php:114
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:89
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:80
 #: modules/updates/updates/ajaxUpdatesListWinBlack.php:73
 msgid "Severity"
-msgstr ""
+msgstr "Критичність"
 
 #: modules/updates/updates/ajaxDeploySpecificUpdate.php:116
 msgid "Machine"
@@ -109,7 +109,7 @@ msgstr "Jid"
 #: modules/updates/infoPackage.inc.php:39
 #: modules/updates/infoPackage.inc.php:42
 msgid "Entities Compliance"
-msgstr ""
+msgstr "Сумісність із записами"
 
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:35
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:36
@@ -121,24 +121,24 @@ msgstr "Увімкніть для оновлення вручну"
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:38
 #: modules/updates/infoPackage.inc.php:130
 msgid "Disable for manual update"
-msgstr ""
+msgstr "Вимкнути для оновлень вручну"
 
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:39
 #: modules/updates/updates/whitelistUpdate.php:44
 #: modules/updates/infoPackage.inc.php:134
 msgid "Approve for automatic update"
-msgstr ""
+msgstr "Затвердити для автоматичного оновлення"
 
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:40
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:34
 #: modules/updates/infoPackage.inc.php:138
 #: modules/updates/infoPackage.inc.php:163
 msgid "Ban update"
-msgstr ""
+msgstr "Заблокувати оновлення"
 
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:93
 msgid "Grey list (manual updates)"
-msgstr ""
+msgstr "Сірий список (оновлення вручну)"
 
 #: modules/updates/updates/deployUpdate.php:89
 #: modules/updates/updates/deployUpdate.php:122
@@ -147,15 +147,15 @@ msgstr "Помилкові інтервали розгортання"
 
 #: modules/updates/updates/deployUpdate.php:212
 msgid "Schedule update deployment on entity"
-msgstr ""
+msgstr "Запланувати розгортання оновлення для запису"
 
 #: modules/updates/updates/deployUpdate.php:215
 msgid "Schedule update deployment on group"
-msgstr ""
+msgstr "Запланувати розгортання оновлення для групи"
 
 #: modules/updates/updates/deployUpdate.php:218
 msgid "Schedule update deployment on machine"
-msgstr ""
+msgstr "Запланувати розгортання оновлення для машини"
 
 #: modules/updates/updates/deployUpdate.php:264
 msgid "The command must start after"
@@ -177,11 +177,11 @@ msgstr "Інтервал розгортання"
 #: modules/updates/updates/pendingUpdateByMachine.php:27
 #, php-format
 msgid "Pending Updates for machine %s"
-msgstr ""
+msgstr "Оновлення у черзі для машини %s"
 
 #: modules/updates/updates/ajaxDetailsSpecificUpdate.php:69
 msgid "Machines with update"
-msgstr ""
+msgstr "Машини з оновленням"
 
 #: modules/updates/updates/ajaxDetailsSpecificUpdate.php:70
 msgid "Machine Name"
@@ -197,79 +197,79 @@ msgstr "Платформа"
 #: modules/updates/infoPackage.inc.php:28
 #: modules/updates/infoPackage.inc.php:33
 msgid "Updates"
-msgstr ""
+msgstr "Оновлення"
 
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:33
 #: modules/updates/infoPackage.inc.php:142
 msgid "Unlist update"
-msgstr ""
+msgstr "Виключити оновлення зі списку"
 
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:88
 msgid "White list (automatic updates)"
-msgstr ""
+msgstr "Білий список (автоматичні оновлення)"
 
 #: modules/updates/updates/cancelUpdate.php:33
 #, php-format
 msgid "The update %s has been removed from pending"
-msgstr ""
+msgstr "Оновлення %s було вилучено з черги"
 
 #: modules/updates/updates/cancelUpdate.php:35
 #, php-format
 msgid "A problem occurs, impossible to remove %s from pending"
-msgstr ""
+msgstr "Трапилася проблема, не вдалося вилучити %s з черги"
 
 #: modules/updates/updates/cancelUpdate.php:41
 msgid "Cancel pending update"
-msgstr ""
+msgstr "Скасувати оновлення з черги"
 
 #: modules/updates/updates/cancelUpdate.php:42
 #, php-format
 msgid "You will cancel update <b>%s</b>."
-msgstr ""
+msgstr "Ви скасуєте оновлення <b>%s</b>."
 
 #: modules/updates/updates/whiteUnlist.php:31
 #, php-format
 msgid "The update %s (%s) has been unlisted."
-msgstr ""
+msgstr "Оновлення %s (%s) було виключено зі списку."
 
 #: modules/updates/updates/whiteUnlist.php:35
 #, php-format
 msgid "The update %s (%s) hasn't been unlisted"
-msgstr ""
+msgstr "Оновлення %s (%s) не виключено зі списку"
 
 #: modules/updates/updates/whiteUnlist.php:42
 #, php-format
 msgid "<b>Unlist</b> update %s (%s) ?"
-msgstr ""
+msgstr "<b>Виключити</b> зі списку оновлення %s (%s) ?"
 
 #: modules/updates/updates/detailsByUpdates.php:28
 msgid "Details by Updates"
-msgstr ""
+msgstr "Подробиці за оновленнями"
 
 #: modules/updates/updates/grayApprove.php:31
 #, php-format
 msgid "The update %s (%s) has been approved."
-msgstr ""
+msgstr "Оновлення %s (%s) було затверджено."
 
 #: modules/updates/updates/grayApprove.php:35
 #, php-format
 msgid "The update %s (%s) hasn't been approved"
-msgstr ""
+msgstr "Оновлення %s (%s) не було затверджено"
 
 #: modules/updates/updates/grayApprove.php:42
 #, php-format
 msgid "<b>Approve</b> update %s (%s) ?"
-msgstr ""
+msgstr "<b>Затвердити</b> оновлення %s (%s) ?"
 
 #: modules/updates/updates/detailsByMachines.php:26
 #: modules/updates/infoPackage.inc.php:47
 #: modules/updates/infoPackage.inc.php:51
 msgid "Details by Machines"
-msgstr ""
+msgstr "Подробиці за машинами"
 
 #: modules/updates/updates/ajaxDetailsByUpdatesGray.php:30
 msgid "Details by Gray Updates"
-msgstr ""
+msgstr "Подробиці за сірими оновленнями"
 
 #: modules/updates/updates/ajaxDetailsByUpdatesGray.php:81
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:81
@@ -281,27 +281,27 @@ msgstr "Подробиці"
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:116
 #: modules/updates/updates/ajaxEntitiesList.php:124
 msgid "Compliance rate"
-msgstr ""
+msgstr "Рівень сумісності"
 
 #: modules/updates/updates/ajaxDetailsByUpdatesGray.php:117
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:117
 msgid "Machines with this update"
-msgstr ""
+msgstr "Машини з цим оновленням"
 
 #: modules/updates/updates/ajaxDetailsByUpdatesGray.php:118
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:118
 msgid "Machines asking for this update"
-msgstr ""
+msgstr "Машини, які запитують про це оновлення"
 
 #: modules/updates/updates/ajaxDetailsByUpdatesGray.php:119
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:119
 msgid "Total of machines"
-msgstr ""
+msgstr "Загалом машин"
 
 #: modules/updates/updates/auditUpdateByMachine.php:27
 #, php-format
 msgid "Updates history for machine %s"
-msgstr ""
+msgstr "Журнал оновлень за машиною %s"
 
 #: modules/updates/updates/auditUpdateByMachine.php:27
 #: modules/updates/updates/ajaxDetailsByMachines.php:126
@@ -310,40 +310,40 @@ msgstr ""
 #: modules/updates/infoPackage.inc.php:183
 #: modules/updates/infoPackage.inc.php:186
 msgid "Updates History"
-msgstr ""
+msgstr "Журнал оновлень"
 
 #: modules/updates/updates/whitelistUpdate.php:33
 msgid "Package moved successfully to white list"
-msgstr ""
+msgstr "Пакунок успішно пересунуто до «білого» списку"
 
 #: modules/updates/updates/whitelistUpdate.php:37
 msgid "Error moving package to white list"
-msgstr ""
+msgstr "Помилка під час спроби пересунути пакунок до «білого» списку"
 
 #: modules/updates/updates/grayDisable.php:31
 #, php-format
 msgid "The update %s (%s) has been disabled."
-msgstr ""
+msgstr "Оновлення %s (%s) було вимкнено."
 
 #: modules/updates/updates/grayDisable.php:34
 #, php-format
 msgid "The update %s (%s) hasn't been disabled"
-msgstr ""
+msgstr "Оновлення %s (%s) не було вимкнено"
 
 #: modules/updates/updates/grayDisable.php:40
 #, php-format
 msgid "<b>Disable</b> update %s (%s) ?"
-msgstr ""
+msgstr "<b>Вимкнути</b> оновлення %s (%s) ?"
 
 #: modules/updates/updates/ajaxDetailsByMachines.php:109
 #, php-format
 msgid "Computers from group %s"
-msgstr ""
+msgstr "Комп'ютер з групи %s"
 
 #: modules/updates/updates/ajaxDetailsByMachines.php:115
 #, php-format
 msgid "Computers from entity %s"
-msgstr ""
+msgstr "Комп'ютери з запису %s"
 
 #: modules/updates/updates/ajaxDetailsByMachines.php:124
 #: modules/updates/updates/ajaxDetailsByMachines.php:130
@@ -358,7 +358,7 @@ msgstr "Назва комп'ютера"
 #: modules/updates/updates/ajaxDetailsByMachines.php:228
 #: modules/updates/updates/ajaxEntitiesList.php:125
 msgid "Missing updates"
-msgstr ""
+msgstr "Пропущені оновлення"
 
 #: modules/updates/updates/ajaxDetailsByMachines.php:229
 msgid "In progress"
@@ -366,29 +366,29 @@ msgstr "Виконується"
 
 #: modules/updates/updates/ajaxDetailsByMachines.php:230
 msgid "Installed updates"
-msgstr ""
+msgstr "Встановлені оновлення"
 
 #: modules/updates/updates/ajaxDetailsByMachines.php:231
 msgid "Total updates"
-msgstr ""
+msgstr "Загалом оновлень"
 
 #: modules/updates/updates/ajaxDetailsByMachines.php:266
 msgid "Actions are disabled for this machine (MISSING AGENT)"
-msgstr ""
+msgstr "Дії вимкнено для цієї машини (НЕМАЄ АГЕНТА)"
 
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:30
 msgid "Details by White Updates"
-msgstr ""
+msgstr "Подробиці за «білими» оновленнями"
 
 #: modules/updates/updates/ajaxDeployAllUpdates.php:43
 #, php-format
 msgid "Run all updates on entitie : \"%s\""
-msgstr ""
+msgstr "Запустити усі оновлення для запису: «%s»"
 
 #: modules/updates/updates/ajaxDeployAllUpdates.php:45
 #, php-format
 msgid "Run all updates on group : \"%s\""
-msgstr ""
+msgstr "Запустити усі оновлення для групи: «%s»"
 
 #: modules/updates/updates/ajaxDeployAllUpdates.php:61
 msgid "bandwidth throttling (ko)"
@@ -405,53 +405,53 @@ msgstr "<у ko>"
 #: modules/updates/infoPackage.inc.php:116
 #: modules/updates/infoPackage.inc.php:121
 msgid "Manage Updates Lists"
-msgstr ""
+msgstr "Керування списками оновлень"
 
 #: modules/updates/updates/grayEnable.php:30
 #, php-format
 msgid "The update %s (%s) has been enabled."
-msgstr ""
+msgstr "Було увімкнено оновлення %s (%s)."
 
 #: modules/updates/updates/grayEnable.php:34
 #, php-format
 msgid "The update %s (%s) hasn't been enabled."
-msgstr ""
+msgstr "Оновлення %s (%s) не увімкнено."
 
 #: modules/updates/updates/ajaxUpdatesListWinBlack.php:33
 msgid "Unban update"
-msgstr ""
+msgstr "Розблокувати оновлення"
 
 #: modules/updates/updates/ajaxUpdatesListWinBlack.php:82
 msgid "Black list (banned updates)"
-msgstr ""
+msgstr "Чорний список (заблоковані оновлення)"
 
 #: modules/updates/updates/blackUnban.php:32
 #, php-format
 msgid "The package %s (%s) has been unbanned."
-msgstr ""
+msgstr "Пакунок %s (%s) було розблоковано."
 
 #: modules/updates/updates/blackUnban.php:36
 #, php-format
 msgid "The package %s (%s) hasn't been unbanned."
-msgstr ""
+msgstr "Пакунок %s (%s) не було розблоковано."
 
 #: modules/updates/updates/ajaxEntitiesList.php:47
 msgid "Details by machines"
-msgstr ""
+msgstr "Подробиці за машинами"
 
 #: modules/updates/updates/ajaxEntitiesList.php:48
 msgid "Details by updates"
-msgstr ""
+msgstr "Подробиці за оновленнями"
 
 #: modules/updates/updates/ajaxEntitiesList.php:49
 #: modules/updates/updates/ajaxEntitiesList.php:50
 msgid "Deploy all updates"
-msgstr ""
+msgstr "Розгорнути усі оновлення"
 
 #: modules/updates/updates/ajaxEntitiesList.php:51
 #: modules/updates/updates/ajaxEntitiesList.php:52
 msgid "Deploy specific updates"
-msgstr ""
+msgstr "Розгорнути певні оновлення"
 
 #: modules/updates/updates/ajaxEntitiesList.php:120
 msgid "Entity name"
@@ -459,7 +459,7 @@ msgstr "Назва запису"
 
 #: modules/updates/updates/ajaxEntitiesList.php:126
 msgid "Non-compliant machines"
-msgstr ""
+msgstr "Несумісні машини"
 
 #: modules/updates/updates/ajaxEntitiesList.php:127
 msgid "Total machines"
@@ -467,7 +467,7 @@ msgstr "Загалом машин"
 
 #: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:42
 msgid "Machines without update"
-msgstr ""
+msgstr "Машини без оновлення"
 
 #: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:43
 msgid "Hostname"
@@ -476,89 +476,89 @@ msgstr "Назва вузла"
 #: modules/updates/updates/banUpdate.php:31
 #, php-format
 msgid "The package %s (%s) has been banned."
-msgstr ""
+msgstr "Пакунок %s (%s) було заблоковано."
 
 #: modules/updates/updates/banUpdate.php:35
 #, php-format
 msgid "The package %s (%s) failed to move"
-msgstr ""
+msgstr "Пакунок %s (%s) не вдалося пересунути"
 
 #: modules/updates/updates/banUpdate.php:42
 #, php-format
 msgid "<b>Ban</b> update %s (%s) ?"
-msgstr ""
+msgstr "<b>Заблокувати</b> оновлення %s (%s) ?"
 
 #: modules/updates/updates/deployAllUpdates.php:27
 #: modules/updates/infoPackage.inc.php:56
 #: modules/updates/infoPackage.inc.php:60
 msgid "Deploy all Updates"
-msgstr ""
+msgstr "Розгорнути усі оновлення"
 
 #: modules/updates/updates/greylistUpdate.php:33
 msgid "Package moved successfully to grey list"
-msgstr ""
+msgstr "Пакунок успішно пересунуто до сірого списку"
 
 #: modules/updates/updates/greylistUpdate.php:37
 msgid "Error moving package to grey list"
-msgstr ""
+msgstr "Помилка під час спроби пересунути пакунок до сірого списку"
 
 #: modules/updates/updates/greylistUpdate.php:44
 msgid "Unlist Update"
-msgstr ""
+msgstr "Виключити оновлення зі списку"
 
 #: modules/updates/infoPackage.inc.php:65
 msgid "Deploy Specific Updates On Entity"
-msgstr ""
+msgstr "Розгорнути для запису лише певні оновлення"
 
 #: modules/updates/infoPackage.inc.php:70
 msgid "Deploy specific update"
-msgstr ""
+msgstr "Розгорнути певне оновлення"
 
 #: modules/updates/infoPackage.inc.php:74
 msgid "List updates"
-msgstr ""
+msgstr "Список оновлень"
 
 #: modules/updates/infoPackage.inc.php:78
 msgid "Machine details for specific update"
-msgstr ""
+msgstr "Подробиці для машини для певного оновлення"
 
 #: modules/updates/infoPackage.inc.php:82
 #: modules/updates/infoPackage.inc.php:87
 msgid "Manage machine details for specific update"
-msgstr ""
+msgstr "Керувати подробицями машини для певного оновлення"
 
 #: modules/updates/infoPackage.inc.php:92
 msgid "Manage deploy specific update"
-msgstr ""
+msgstr "Керувати розгортанням певного оновлення"
 
 #: modules/updates/infoPackage.inc.php:97
 msgid "Manage Gray List Updates"
-msgstr ""
+msgstr "Керування оновленнями за сірим списком"
 
 #: modules/updates/infoPackage.inc.php:102
 msgid "Manage White List Updates"
-msgstr ""
+msgstr "Керувати оновленнями за білим списком"
 
 #: modules/updates/infoPackage.inc.php:146
 msgid "UnBan update"
-msgstr ""
+msgstr "Розблокувати оновлення"
 
 #: modules/updates/infoPackage.inc.php:150
 msgid "Gray Enable"
-msgstr ""
+msgstr "Увімкнути сіре"
 
 #: modules/updates/infoPackage.inc.php:154
 msgid "Grey Disable"
-msgstr ""
+msgstr "Вимкнути сіре"
 
 #: modules/updates/infoPackage.inc.php:158
 msgid "Grey Approve"
-msgstr ""
+msgstr "Затвердити сіре"
 
 #: modules/updates/infoPackage.inc.php:167
 msgid "White Unlist"
-msgstr ""
+msgstr "Виключити з білого списку"
 
 #: modules/updates/infoPackage.inc.php:172
 msgid "Black Unban"
-msgstr ""
+msgstr "Розблокувати чорне"

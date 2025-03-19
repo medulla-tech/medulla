@@ -1728,11 +1728,11 @@ msgstr "Скасувати"
 
 #: modules/xmppmaster/xmppmaster/rescheduleconvergence.php:8
 msgid "Convergence has been successfully rescheduled."
-msgstr ""
+msgstr "Збіжність успішно переплановано."
 
 #: modules/xmppmaster/xmppmaster/rescheduleconvergence.php:12
 msgid "An error occurred while rescheduling convergence."
-msgstr ""
+msgstr "Під час спроби перепланувати збіжність сталася помилка."
 
 #: modules/xmppmaster/xmppmaster/popupReloadDeploy.php:14
 #: modules/xmppmaster/xmppmaster/popupReloadDeploy.php:17

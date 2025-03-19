@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 15:27+0100\n"
+"POT-Creation-Date: 2025-02-10 23:50+0100\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
@@ -204,20 +204,22 @@ msgstr "Не вдалося вилучити профіль %s"
 #: modules/kiosk/kiosk/modifyAcknowledge.php:43
 #, php-format
 msgid "%s has been granted the rights %s on package %s (%s) from %s to %s."
-msgstr ""
+msgstr "%s було надано права %s щодо пакунка %s (%s) з %s до %s."
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:47
 msgid "Error while changing the authorisations"
-msgstr ""
+msgstr "Помилка під час спроби змінити уповноваження"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:70
 msgid "This authorisation can't be edited (missing parameter)"
-msgstr ""
+msgstr "Це уповноваження не можна редагувати (пропущено параметр)"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:75
 #, php-format
 msgid "%s requested installation authorisation for package %s (profile %s)"
 msgstr ""
+"%s надіслано запит щодо уповноваження на встановлення для пакунка %s "
+"(профіль %s)"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:82
 msgid "Start Date"
